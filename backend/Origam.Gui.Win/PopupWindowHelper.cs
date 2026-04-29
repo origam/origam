@@ -141,17 +141,17 @@ public delegate void PopupCancelEventHandler(object sender, PopupCancelEventArgs
 public class PopupWindowHelper : NativeWindow
 {
     #region Unmanaged Code
-    [DllImport("user32", CharSet = CharSet.Auto)]
+    [DllImport(dllName: "user32", CharSet = CharSet.Auto)]
     private static extern int SendMessage(IntPtr handle, int msg, int wParam, IntPtr lParam);
 
-    [DllImport("user32", CharSet = CharSet.Auto)]
+    [DllImport(dllName: "user32", CharSet = CharSet.Auto)]
     private static extern int PostMessage(IntPtr handle, int msg, int wParam, IntPtr lParam);
 
     private const int WM_ACTIVATE = 0x006;
     private const int WM_ACTIVATEAPP = 0x01C;
     private const int WM_NCACTIVATE = 0x086;
 
-    [DllImport("user32")]
+    [DllImport(dllName: "user32")]
     private static extern void keybd_event(byte bVk, byte bScan, int dwFlags, int dwExtraInfo);
 
     private const int KEYEVENTF_KEYUP = 0x0002;
@@ -223,12 +223,12 @@ public class PopupWindowHelper : NativeWindow
         this.owner = owner;
         this.popup = popup;
         // Start checking for the popup being cancelled
-        Application.AddMessageFilter(filter);
+        Application.AddMessageFilter(value: filter);
         // Set the location of the popup form:
         popup.StartPosition = FormStartPosition.Manual;
         popup.Location = location;
         // Make it owned by the window that's displaying it:
-        owner.AddOwnedForm(popup);
+        owner.AddOwnedForm(ownedForm: popup);
         // Respond to the Closed event in case the popup
         // is closed by its own internal means
         popClosedHandler = new EventHandler(popup_Closed);
@@ -277,7 +277,7 @@ public class PopupWindowHelper : NativeWindow
     /// <param name="m">Window Procedure Message</param>
     protected override void WndProc(ref Message m)
     {
-        base.WndProc(ref m);
+        base.WndProc(m: ref m);
         if (this.popupShowing)
         {
             // check for WM_ACTIVATE and WM_NCACTIVATE
@@ -287,7 +287,12 @@ public class PopupWindowHelper : NativeWindow
                 if (((int)m.WParam) == 0)
                 {
                     // If so reactivate it.
-                    SendMessage(this.Handle, WM_NCACTIVATE, 1, IntPtr.Zero);
+                    SendMessage(
+                        handle: this.Handle,
+                        msg: WM_NCACTIVATE,
+                        wParam: 1,
+                        lParam: IntPtr.Zero
+                    );
 
                     // Note it's no good to try and consume this message;
                     // if you try to do that you'll end up with windows
@@ -302,7 +307,12 @@ public class PopupWindowHelper : NativeWindow
                     // It is so cancel the popup:
                     ClosePopup();
                     // And put the title bar into the inactive state:
-                    PostMessage(this.Handle, WM_NCACTIVATE, 0, IntPtr.Zero);
+                    PostMessage(
+                        handle: this.Handle,
+                        msg: WM_NCACTIVATE,
+                        wParam: 0,
+                        lParam: IntPtr.Zero
+                    );
                 }
             }
         }
@@ -320,12 +330,12 @@ public class PopupWindowHelper : NativeWindow
                 if (!skipClose)
                 {
                     // Raise event to owner
-                    OnPopupClosed(new PopupClosedEventArgs(this.popup));
+                    OnPopupClosed(e: new PopupClosedEventArgs(popup: this.popup));
                 }
                 skipClose = false;
                 // Make sure the popup is closed and we've cleaned
                 // up:
-                this.owner.RemoveOwnedForm(this.popup);
+                this.owner.RemoveOwnedForm(ownedForm: this.popup);
                 this.popupShowing = false;
                 this.popup.Closed -= popClosedHandler;
                 this.popClosedHandler = null;
@@ -334,15 +344,15 @@ public class PopupWindowHelper : NativeWindow
             catch (Exception ex)
             {
                 Origam.UI.AsMessageBox.ShowError(
-                    this.owner,
-                    ResourceUtils.GetString("ErrorDropDownClose"),
-                    ResourceUtils.GetString("ErrorDropDownCloseTitle"),
-                    ex
+                    owner: this.owner,
+                    text: ResourceUtils.GetString(key: "ErrorDropDownClose"),
+                    caption: ResourceUtils.GetString(key: "ErrorDropDownCloseTitle"),
+                    exception: ex
                 );
             }
             // No longer need to filter for clicks outside the
             // popup.
-            Application.RemoveMessageFilter(filter);
+            Application.RemoveMessageFilter(value: filter);
             // If we did something from the popup which shifted
             // focus to a new form, like showing another popup
             // or dialog, then Windows won't know how to bring
@@ -367,13 +377,13 @@ public class PopupWindowHelper : NativeWindow
     {
         if (this.PopupClosed != null)
         {
-            this.PopupClosed(this, e);
+            this.PopupClosed(sender: this, e: e);
         }
     }
 
     private void popup_Cancel(object sender, PopupCancelEventArgs e)
     {
-        OnPopupCancel(e);
+        OnPopupCancel(e: e);
     }
 
     /// <summary>
@@ -385,7 +395,7 @@ public class PopupWindowHelper : NativeWindow
     {
         if (this.PopupCancel != null)
         {
-            this.PopupCancel(this, e);
+            this.PopupCancel(sender: this, e: e);
             if (!e.Cancel)
             {
                 skipClose = true;
@@ -400,7 +410,7 @@ public class PopupWindowHelper : NativeWindow
     /// method to attach this class to the form you want to show popups from.</remarks>
     public PopupWindowHelper()
     {
-        filter = new PopupWindowHelperMessageFilter(this);
+        filter = new PopupWindowHelperMessageFilter(owner: this);
         filter.PopupCancel += new PopupCancelEventHandler(popup_Cancel);
     }
 }
@@ -497,10 +507,10 @@ public class PopupWindowHelperMessageFilter : IMessageFilter
         // Get the cursor location
         Point cursorPos = Cursor.Position;
         // Check if it is within the popup form
-        if (!popup.Bounds.Contains(cursorPos))
+        if (!popup.Bounds.Contains(pt: cursorPos))
         {
             // If not, then call to see if it should be closed
-            OnCancelPopup(new PopupCancelEventArgs(popup, cursorPos));
+            OnCancelPopup(e: new PopupCancelEventArgs(popup: popup, location: cursorPos));
         }
     }
 
@@ -513,7 +523,7 @@ public class PopupWindowHelperMessageFilter : IMessageFilter
     {
         if (this.PopupCancel != null)
         {
-            this.PopupCancel(this, e);
+            this.PopupCancel(sender: this, e: e);
         }
         if (!e.Cancel)
         {

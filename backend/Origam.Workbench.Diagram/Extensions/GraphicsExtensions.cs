@@ -37,13 +37,22 @@ public static class GraphicsExtensions
         {
             using (Matrix saveM = m.Clone())
             {
-                using (var m2 = new Matrix(1, 0, 0, -1, 0, 2 * yAxisCoordinate))
+                using (
+                    var m2 = new Matrix(
+                        m11: 1,
+                        m12: 0,
+                        m21: 0,
+                        m22: -1,
+                        dx: 0,
+                        dy: 2 * yAxisCoordinate
+                    )
+                )
                 {
-                    m.Multiply(m2);
+                    m.Multiply(matrix: m2);
                 }
 
                 graphics.Transform = m;
-                drawAction(graphics);
+                drawAction(obj: graphics);
                 graphics.Transform = saveM;
                 graphics.ResetClip();
             }

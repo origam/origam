@@ -24,8 +24,8 @@ using Origam.DA.Common;
 
 namespace Origam.Schema.GuiModel;
 
-[SchemaItemDescription("CheckBox Widget", "icon_checkbox-widget.png")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "CheckBox Widget", iconName: "icon_checkbox-widget.png")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class CheckBoxDashboardWidget : AbstractSimpleDashboardWidget
 {
     public CheckBoxDashboardWidget()
@@ -35,13 +35,13 @@ public class CheckBoxDashboardWidget : AbstractSimpleDashboardWidget
     }
 
     public CheckBoxDashboardWidget(Guid schemaExtensionId)
-        : base(schemaExtensionId)
+        : base(schemaExtensionId: schemaExtensionId)
     {
         Init();
     }
 
     public CheckBoxDashboardWidget(Key primaryKey)
-        : base(primaryKey)
+        : base(primaryKey: primaryKey)
     {
         Init();
     }

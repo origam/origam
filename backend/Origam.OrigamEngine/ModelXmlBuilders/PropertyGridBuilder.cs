@@ -35,46 +35,50 @@ public class PropertyGridBuilder
     public static XmlDocument Build(ISchemaItem item)
     {
         XmlDocument doc = FormXmlBuilder.GetWindowBaseXml(
-            item.Name,
-            item.Id,
-            0,
-            false,
-            false,
-            false
+            name: item.Name,
+            menuId: item.Id,
+            autoRefreshInterval: 0,
+            refreshOnFocus: false,
+            autoSaveOnListRecordChange: false,
+            requestSaveAfterUpdate: false
         );
-        XmlElement windowElement = FormXmlBuilder.WindowElement(doc);
-        XmlElement uiRootElement = FormXmlBuilder.UIRootElement(windowElement);
-        XmlElement bindingsElement = FormXmlBuilder.ComponentBindingsElement(windowElement);
-        XmlElement dataSourcesElement = FormXmlBuilder.DataSourcesElement(windowElement);
-        CollapsibleContainerBuilder.Build(uiRootElement);
-        XmlElement children = doc.CreateElement("UIChildren");
-        uiRootElement.AppendChild(children);
-        PropertyDescriptorCollection properties = GetProperties(item);
+        XmlElement windowElement = FormXmlBuilder.WindowElement(doc: doc);
+        XmlElement uiRootElement = FormXmlBuilder.UIRootElement(windowElement: windowElement);
+        XmlElement bindingsElement = FormXmlBuilder.ComponentBindingsElement(
+            windowElement: windowElement
+        );
+        XmlElement dataSourcesElement = FormXmlBuilder.DataSourcesElement(
+            windowElement: windowElement
+        );
+        CollapsibleContainerBuilder.Build(parentNode: uiRootElement);
+        XmlElement children = doc.CreateElement(name: "UIChildren");
+        uiRootElement.AppendChild(newChild: children);
+        PropertyDescriptorCollection properties = GetProperties(component: item);
         Hashtable categories = new Hashtable();
         Hashtable categoryWidths = new Hashtable();
         foreach (PropertyDescriptor prop in properties)
         {
             XmlElement categoryChildren;
-            if (categories.Contains(prop.Category))
+            if (categories.Contains(key: prop.Category))
             {
-                categoryChildren = categories[prop.Category] as XmlElement;
+                categoryChildren = categories[key: prop.Category] as XmlElement;
             }
             else
             {
-                XmlElement categoryElement = doc.CreateElement("UIElement");
-                children.AppendChild(categoryElement);
-                categoryChildren = doc.CreateElement("UIChildren");
-                categoryElement.AppendChild(categoryChildren);
+                XmlElement categoryElement = doc.CreateElement(name: "UIElement");
+                children.AppendChild(newChild: categoryElement);
+                categoryChildren = doc.CreateElement(name: "UIChildren");
+                categoryElement.AppendChild(newChild: categoryChildren);
                 UIElementRenderData renderData = new UIElementRenderData();
                 renderData.Text = prop.Category;
                 renderData.IndentLevel = 0;
                 renderData.IsHeightFixed = false;
                 renderData.IsOpen = true;
-                CollapsiblePanelBuilder.Build(categoryElement, renderData);
-                categories.Add(prop.Category, categoryChildren);
-                categoryWidths.Add(prop.Category, 0);
-                XmlElement panelElement = doc.CreateElement("UIElement");
-                categoryChildren.AppendChild(panelElement);
+                CollapsiblePanelBuilder.Build(parentNode: categoryElement, renderData: renderData);
+                categories.Add(key: prop.Category, value: categoryChildren);
+                categoryWidths.Add(key: prop.Category, value: 0);
+                XmlElement panelElement = doc.CreateElement(name: "UIElement");
+                categoryChildren.AppendChild(newChild: panelElement);
                 /*
                                 AsPanelBuilder.Build(panelElement, prop.Category, item.Id.ToString() + prop.Category, false,
                                     false, true, false, false, false, "", "", "", "", "", "", "", "", item.Id.ToString() + prop.Category,
@@ -89,6 +93,6 @@ public class PropertyGridBuilder
     private static PropertyDescriptorCollection GetProperties(object component)
     {
         Attribute[] attributes = new Attribute[] { BrowsableAttribute.Yes };
-        return TypeDescriptor.GetProperties(component, attributes);
+        return TypeDescriptor.GetProperties(component: component, attributes: attributes);
     }
 }

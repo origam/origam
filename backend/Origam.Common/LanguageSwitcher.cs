@@ -34,12 +34,12 @@ public class LanguageSwitcher : IDisposable
     {
         originalCulture = null;
         originalUICulture = null;
-        if (!string.IsNullOrEmpty(langIetf))
+        if (!string.IsNullOrEmpty(value: langIetf))
         {
             originalUICulture = Thread.CurrentThread.CurrentUICulture;
             originalCulture = Thread.CurrentThread.CurrentCulture;
-            Thread.CurrentThread.CurrentUICulture = new CultureInfo(langIetf);
-            Thread.CurrentThread.CurrentCulture = new CultureInfo(langIetf);
+            Thread.CurrentThread.CurrentUICulture = new CultureInfo(name: langIetf);
+            Thread.CurrentThread.CurrentCulture = new CultureInfo(name: langIetf);
         }
     }
 
@@ -65,7 +65,7 @@ public class LanguageSwitcher : IDisposable
 
     public void Dispose()
     {
-        Dispose(true);
+        Dispose(disposing: true);
     }
     #endregion
 }

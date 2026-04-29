@@ -47,7 +47,13 @@ public class ShowModelElementXmlCommand : AbstractMenuCommand
                 || Owner is Schema.MenuModel.FormReferenceMenuItem
                 || (Owner is AbstractDashboardWidget && !(Owner is DashboardWidgetFolder));
         }
-        set { throw new ArgumentException("Cannot set this property", "IsEnabled"); }
+        set
+        {
+            throw new ArgumentException(
+                message: "Cannot set this property",
+                paramName: "IsEnabled"
+            );
+        }
     }
 
     public override void Run()
@@ -55,13 +61,21 @@ public class ShowModelElementXmlCommand : AbstractMenuCommand
         Origam.Workbench.Commands.ViewOutputPad outputPad =
             new Origam.Workbench.Commands.ViewOutputPad();
         outputPad.Run();
-        OutputPad o = WorkbenchSingleton.Workbench.GetPad(typeof(OutputPad)) as OutputPad;
+        OutputPad o = WorkbenchSingleton.Workbench.GetPad(type: typeof(OutputPad)) as OutputPad;
         XmlDocument doc = null;
         if (Owner is FormControlSet)
         {
             FormControlSet item = Owner as FormControlSet;
             doc = FormXmlBuilder
-                .GetXml(item, item.Name, true, Guid.Empty, item.DataStructure, false, "")
+                .GetXml(
+                    item: item,
+                    name: item.Name,
+                    isPreloaded: true,
+                    menuId: Guid.Empty,
+                    structure: item.DataStructure,
+                    forceReadOnly: false,
+                    confirmSelectionChangeEntity: ""
+                )
                 .Document;
         }
         else if (Owner is Schema.MenuModel.FormReferenceMenuItem)
@@ -70,26 +84,34 @@ public class ShowModelElementXmlCommand : AbstractMenuCommand
                 Owner as Schema.MenuModel.FormReferenceMenuItem;
             doc = FormXmlBuilder
                 .GetXml(
-                    formMenu.Screen,
-                    formMenu.DisplayName,
-                    formMenu.ListDataStructure == null,
-                    formMenu.Id,
-                    formMenu.Screen.DataStructure,
-                    formMenu.ReadOnlyAccess,
-                    formMenu.SelectionChangeEntity
+                    item: formMenu.Screen,
+                    name: formMenu.DisplayName,
+                    isPreloaded: formMenu.ListDataStructure == null,
+                    menuId: formMenu.Id,
+                    structure: formMenu.Screen.DataStructure,
+                    forceReadOnly: formMenu.ReadOnlyAccess,
+                    confirmSelectionChangeEntity: formMenu.SelectionChangeEntity
                 )
                 .Document;
         }
         else if (Owner is Schema.MenuModel.Menu)
         {
             Schema.MenuModel.Menu item = Owner as Schema.MenuModel.Menu;
-            doc = MenuXmlBuilder.GetXml(item);
+            doc = MenuXmlBuilder.GetXml(menu: item);
         }
         else if (Owner is WorkQueueClass)
         {
             WorkQueueClass item = Owner as WorkQueueClass;
-            DataSet dataset = new DatasetGenerator(true).CreateDataSet(item.WorkQueueStructure);
-            doc = FormXmlBuilder.GetXml(item, dataset, strings.Massages_XmlItem, null, Guid.Empty);
+            DataSet dataset = new DatasetGenerator(userDefinedParameters: true).CreateDataSet(
+                ds: item.WorkQueueStructure
+            );
+            doc = FormXmlBuilder.GetXml(
+                workQueueClass: item,
+                dataset: dataset,
+                screenTitle: strings.Massages_XmlItem,
+                customScreen: null,
+                queueId: Guid.Empty
+            );
         }
         else if (Owner is AbstractDashboardWidget)
         {
@@ -101,13 +123,18 @@ public class ShowModelElementXmlCommand : AbstractMenuCommand
                 + "\" componentId=\""
                 + item.Id.ToString()
                 + "\" left=\"0\" top=\"0\" colSpan=\"1\" rowSpan=\"1\"/></configuration>";
-            doc = FormXmlBuilder.GetXml(config, "test", item.Id, null);
+            doc = FormXmlBuilder.GetXml(
+                dashboardViewConfig: config,
+                name: "test",
+                menuId: item.Id,
+                dashboardViews: null
+            );
         }
         System.Text.StringBuilder sb = new System.Text.StringBuilder();
-        System.IO.StringWriter sw = new System.IO.StringWriter(sb);
-        XmlTextWriter xw = new XmlTextWriter(sw);
+        System.IO.StringWriter sw = new System.IO.StringWriter(sb: sb);
+        XmlTextWriter xw = new XmlTextWriter(w: sw);
         xw.Formatting = Formatting.Indented;
-        doc.WriteTo(xw);
-        o.SetOutputText(sb.ToString());
+        doc.WriteTo(w: xw);
+        o.SetOutputText(sText: sb.ToString());
     }
 }

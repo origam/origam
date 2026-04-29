@@ -76,8 +76,8 @@ public class EditConfiguration : AbstractMenuCommand
     public override void Run()
     {
         OrigamSettingsEditor editor = new OrigamSettingsEditor();
-        editor.LoadObject(ConfigurationManager.GetAllUserHomeConfigurations());
-        WorkbenchSingleton.Workbench.ShowView(editor);
+        editor.LoadObject(objectToLoad: ConfigurationManager.GetAllUserHomeConfigurations());
+        WorkbenchSingleton.Workbench.ShowView(content: editor);
     }
 }
 
@@ -97,7 +97,10 @@ public class SaveContent : AbstractMenuCommand
         }
         set
         {
-            throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
+            throw new ArgumentException(
+                message: ResourceUtils.GetString(key: "ErrorSetProperty"),
+                paramName: "IsEnabled"
+            );
         }
     }
 
@@ -111,13 +114,13 @@ public class SaveContent : AbstractMenuCommand
         catch (Exception ex)
         {
             AsMessageBox.ShowError(
-                WorkbenchSingleton.Workbench as IWin32Window,
-                ex.Message,
-                ResourceUtils.GetString(
-                    "ErrorWhenSaving",
-                    WorkbenchSingleton.Workbench.ActiveDocument.TitleName
+                owner: WorkbenchSingleton.Workbench as IWin32Window,
+                text: ex.Message,
+                caption: ResourceUtils.GetString(
+                    key: "ErrorWhenSaving",
+                    args: WorkbenchSingleton.Workbench.ActiveDocument.TitleName
                 ),
-                ex
+                exception: ex
             );
         }
     }
@@ -137,7 +140,10 @@ public class RefreshContent : AbstractMenuCommand
         }
         set
         {
-            throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
+            throw new ArgumentException(
+                message: ResourceUtils.GetString(key: "ErrorSetProperty"),
+                paramName: "IsEnabled"
+            );
         }
     }
 
@@ -150,13 +156,13 @@ public class RefreshContent : AbstractMenuCommand
         catch (Exception ex)
         {
             AsMessageBox.ShowError(
-                WorkbenchSingleton.Workbench as IWin32Window,
-                ex.Message,
-                ResourceUtils.GetString(
-                    "ErrorWhenRefreshForm",
-                    WorkbenchSingleton.Workbench.ActiveDocument.TitleName
+                owner: WorkbenchSingleton.Workbench as IWin32Window,
+                text: ex.Message,
+                caption: ResourceUtils.GetString(
+                    key: "ErrorWhenRefreshForm",
+                    args: WorkbenchSingleton.Workbench.ActiveDocument.TitleName
                 ),
-                ex
+                exception: ex
             );
         }
     }
@@ -172,7 +178,10 @@ public class ExitWorkbench : AbstractMenuCommand
         get { return true; }
         set
         {
-            throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
+            throw new ArgumentException(
+                message: ResourceUtils.GetString(key: "ErrorSetProperty"),
+                paramName: "IsEnabled"
+            );
         }
     }
 
@@ -188,7 +197,7 @@ public class ExitWorkbench : AbstractMenuCommand
 public class DeployVersion : AbstractMenuCommand
 {
     SchemaService _schema =
-        ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
+        ServiceManager.Services.GetService(serviceType: typeof(SchemaService)) as SchemaService;
     public override bool IsEnabled
     {
         get
@@ -198,11 +207,11 @@ public class DeployVersion : AbstractMenuCommand
                 try
                 {
                     IDeploymentService deployment =
-                        ServiceManager.Services.GetService(typeof(IDeploymentService))
+                        ServiceManager.Services.GetService(serviceType: typeof(IDeploymentService))
                         as IDeploymentService;
                     return _schema
-                        .ActiveExtension.IncludedPackages.Append(_schema.ActiveExtension)
-                        .Any(deployment.CanUpdate);
+                        .ActiveExtension.IncludedPackages.Append(element: _schema.ActiveExtension)
+                        .Any(predicate: deployment.CanUpdate);
                 }
                 catch (DatabaseTableNotFoundException ex)
                 {
@@ -218,7 +227,10 @@ public class DeployVersion : AbstractMenuCommand
         }
         set
         {
-            throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
+            throw new ArgumentException(
+                message: ResourceUtils.GetString(key: "ErrorSetProperty"),
+                paramName: "IsEnabled"
+            );
         }
     }
 
@@ -227,7 +239,8 @@ public class DeployVersion : AbstractMenuCommand
         Origam.Workbench.Commands.ViewLogPad logPad = new Origam.Workbench.Commands.ViewLogPad();
         logPad.Run();
         IDeploymentService deployment =
-            ServiceManager.Services.GetService(typeof(IDeploymentService)) as IDeploymentService;
+            ServiceManager.Services.GetService(serviceType: typeof(IDeploymentService))
+            as IDeploymentService;
         deployment.Deploy();
     }
 

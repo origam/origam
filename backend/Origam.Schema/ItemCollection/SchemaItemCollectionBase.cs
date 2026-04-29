@@ -49,7 +49,7 @@ public abstract class SchemaItemCollectionBase<T> : IList<T>, IDisposable
 
     public SchemaItemCollectionBase(int capacity)
     {
-        list = new List<T>(capacity);
+        list = new List<T>(capacity: capacity);
     }
 
     protected void SetDerivedFrom(ISchemaItem item)
@@ -57,7 +57,7 @@ public abstract class SchemaItemCollectionBase<T> : IList<T>, IDisposable
         if (item.ParentItem != null)
         {
             // If we assign derived items, we mark them
-            if (!item.ParentItem.PrimaryKey.Equals(ParentSchemaItem.PrimaryKey))
+            if (!item.ParentItem.PrimaryKey.Equals(obj: ParentSchemaItem.PrimaryKey))
             {
                 item.DerivedFrom = item.ParentItem;
                 item.ParentItem = ParentSchemaItem;
@@ -121,37 +121,40 @@ public abstract class SchemaItemCollectionBase<T> : IList<T>, IDisposable
     {
         if ((index < 0) || (index >= InnerList.Count))
         {
-            throw new ArgumentOutOfRangeException(nameof(index), "ArgumentOutOfRange_Index");
+            throw new ArgumentOutOfRangeException(
+                paramName: nameof(index),
+                message: "ArgumentOutOfRange_Index"
+            );
         }
 
-        T value = InnerList[index];
-        OnValidate(value);
-        OnRemove(index, value);
-        InnerList.RemoveAt(index);
+        T value = InnerList[index: index];
+        OnValidate(value: value);
+        OnRemove(index: index, value: value);
+        InnerList.RemoveAt(index: index);
         try
         {
-            OnRemoveComplete(index, value);
+            OnRemoveComplete(index: index, value: value);
         }
         catch
         {
-            InnerList.Insert(index, value);
+            InnerList.Insert(index: index, item: value);
             throw;
         }
     }
 
     public virtual void Add(T value)
     {
-        OnValidate(value);
-        OnInsert(InnerList.Count, value);
+        OnValidate(value: value);
+        OnInsert(index: InnerList.Count, value: value);
         int index = InnerList.Count;
-        InnerList.Add(value);
+        InnerList.Add(item: value);
         try
         {
-            OnInsertComplete(index, value);
+            OnInsertComplete(index: index, value: value);
         }
         catch
         {
-            InnerList.RemoveAt(index);
+            InnerList.RemoveAt(index: index);
             throw;
         }
     }
@@ -160,53 +163,56 @@ public abstract class SchemaItemCollectionBase<T> : IList<T>, IDisposable
 
     public bool Contains(T value)
     {
-        return InnerList.Contains(value);
+        return InnerList.Contains(item: value);
     }
 
     public int IndexOf(T value)
     {
-        return InnerList.IndexOf(value);
+        return InnerList.IndexOf(item: value);
     }
 
     public void Insert(int index, T value)
     {
         if ((index < 0) || (index > InnerList.Count))
         {
-            throw new ArgumentOutOfRangeException(nameof(index), "ArgumentOutOfRange_Index");
+            throw new ArgumentOutOfRangeException(
+                paramName: nameof(index),
+                message: "ArgumentOutOfRange_Index"
+            );
         }
 
-        OnValidate(value);
-        OnInsert(index, value);
-        InnerList.Insert(index, value);
+        OnValidate(value: value);
+        OnInsert(index: index, value: value);
+        InnerList.Insert(index: index, item: value);
         try
         {
-            OnInsertComplete(index, value);
+            OnInsertComplete(index: index, value: value);
         }
         catch
         {
-            InnerList.RemoveAt(index);
+            InnerList.RemoveAt(index: index);
             throw;
         }
     }
 
     public bool Remove(T value)
     {
-        OnValidate(value);
-        int index = InnerList.IndexOf(value);
+        OnValidate(value: value);
+        int index = InnerList.IndexOf(item: value);
         if (index < 0)
         {
             return false;
         }
 
-        OnRemove(index, value);
-        InnerList.RemoveAt(index);
+        OnRemove(index: index, value: value);
+        InnerList.RemoveAt(index: index);
         try
         {
-            OnRemoveComplete(index, value);
+            OnRemoveComplete(index: index, value: value);
         }
         catch
         {
-            InnerList.Insert(index, value);
+            InnerList.Insert(index: index, item: value);
             throw;
         }
 
@@ -234,29 +240,35 @@ public abstract class SchemaItemCollectionBase<T> : IList<T>, IDisposable
         {
             if ((index < 0) || (index >= InnerList.Count))
             {
-                throw new ArgumentOutOfRangeException(nameof(index), "ArgumentOutOfRange_Index");
+                throw new ArgumentOutOfRangeException(
+                    paramName: nameof(index),
+                    message: "ArgumentOutOfRange_Index"
+                );
             }
 
-            return InnerList[index];
+            return InnerList[index: index];
         }
         set
         {
             if ((index < 0) || (index >= InnerList.Count))
             {
-                throw new ArgumentOutOfRangeException(nameof(index), "ArgumentOutOfRange_Index");
+                throw new ArgumentOutOfRangeException(
+                    paramName: nameof(index),
+                    message: "ArgumentOutOfRange_Index"
+                );
             }
 
-            OnValidate(value);
-            T oldValue = InnerList[index];
-            OnSet(index, oldValue, value);
-            InnerList[index] = value;
+            OnValidate(value: value);
+            T oldValue = InnerList[index: index];
+            OnSet(index: index, oldValue: oldValue, newValue: value);
+            InnerList[index: index] = value;
             try
             {
-                OnSetComplete(index, oldValue, value);
+                OnSetComplete(index: index, oldValue: oldValue, newValue: value);
             }
             catch
             {
-                InnerList[index] = oldValue;
+                InnerList[index: index] = oldValue;
                 throw;
             }
         }
@@ -264,7 +276,7 @@ public abstract class SchemaItemCollectionBase<T> : IList<T>, IDisposable
 
     public void CopyTo(T[] array, int arrayIndex)
     {
-        InnerList.CopyTo(array, arrayIndex);
+        InnerList.CopyTo(array: array, arrayIndex: arrayIndex);
     }
 
     public void Dispose()

@@ -88,7 +88,7 @@ public class CreateFieldWithLookupEntityWizard : System.Windows.Forms.Form
                 components.Dispose();
             }
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
 
     #region Windows Form Designer generated code
@@ -406,10 +406,10 @@ public class CreateFieldWithLookupEntityWizard : System.Windows.Forms.Form
         if (LookupName == "" || (txtCaption.Visible && LookupCaption == ""))
         {
             MessageBox.Show(
-                ResourceUtils.GetString("EnterAllInfo"),
-                ResourceUtils.GetString("LookupWiz"),
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Asterisk
+                text: ResourceUtils.GetString(key: "EnterAllInfo"),
+                caption: ResourceUtils.GetString(key: "LookupWiz"),
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Asterisk
             );
             return;
         }
@@ -417,10 +417,10 @@ public class CreateFieldWithLookupEntityWizard : System.Windows.Forms.Form
         {
             if (
                 MessageBox.Show(
-                    ResourceUtils.GetString("DefaultValueNotSet"),
-                    ResourceUtils.GetString("LookupWiz"),
-                    MessageBoxButtons.OKCancel,
-                    MessageBoxIcon.Warning
+                    text: ResourceUtils.GetString(key: "DefaultValueNotSet"),
+                    caption: ResourceUtils.GetString(key: "LookupWiz"),
+                    buttons: MessageBoxButtons.OKCancel,
+                    icon: MessageBoxIcon.Warning
                 ) == DialogResult.Cancel
             )
             {
@@ -524,7 +524,7 @@ public class CreateFieldWithLookupEntityWizard : System.Windows.Forms.Form
         if (chkTwoColumn.Checked)
         {
             grdInitialValues.Columns.AddRange(
-                new DataGridViewColumn[] { colDefault, colCode, colName }
+                dataGridViewColumns: new DataGridViewColumn[] { colDefault, colCode, colName }
             );
             colCode.DisplayIndex = 0;
             colName.DisplayIndex = 1;
@@ -532,7 +532,9 @@ public class CreateFieldWithLookupEntityWizard : System.Windows.Forms.Form
         }
         else
         {
-            grdInitialValues.Columns.AddRange(new DataGridViewColumn[] { colDefault, colName });
+            grdInitialValues.Columns.AddRange(
+                dataGridViewColumns: new DataGridViewColumn[] { colDefault, colName }
+            );
             colName.DisplayIndex = 0;
             colDefault.DisplayIndex = 1;
         }

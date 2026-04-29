@@ -41,11 +41,11 @@ public class LogPadStreamWriter : TextWriter
     {
         _newLineTest[0] = _newLineTest[1];
         _newLineTest[1] = value;
-        _buffer.Append(value);
+        _buffer.Append(value: value);
 
-        if (_newLine[0].Equals(_newLineTest[0]) && _newLine[1].Equals(_newLineTest[1]))
+        if (_newLine[0].Equals(obj: _newLineTest[0]) && _newLine[1].Equals(obj: _newLineTest[1]))
         {
-            _output.AddText(_buffer.ToString());
+            _output.AddText(sText: _buffer.ToString());
             _buffer = new StringBuilder();
         }
     }

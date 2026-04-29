@@ -30,15 +30,15 @@ namespace Origam.Workbench.Services;
 public class LoggingService : ILoggingService
 {
     private SchemaService _schema =
-        ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
+        ServiceManager.Services.GetService(serviceType: typeof(SchemaService)) as SchemaService;
     IServiceAgent _dataServiceAgent;
 
     public LoggingService()
     {
         _dataServiceAgent = (
-            ServiceManager.Services.GetService(typeof(IBusinessServicesService))
+            ServiceManager.Services.GetService(serviceType: typeof(IBusinessServicesService))
             as IBusinessServicesService
-        ).GetAgent("DataService", null, null);
+        ).GetAgent(serviceType: "DataService", ruleEngine: null, workflowEngine: null);
     }
 
     #region ILoggingService Members
@@ -68,8 +68,8 @@ public class LoggingService : ILoggingService
         row.FinishError = (errorInfo != null);
         row.RecordCreated = DateTime.Now;
         row.RecordCreatedBy = profile.Id;
-        log.OrigamProcessLog.AddOrigamProcessLogRow(row);
-        SaveLog(log);
+        log.OrigamProcessLog.AddOrigamProcessLogRow(row: row);
+        SaveLog(log: log);
     }
 
     public void LogProcessStart(
@@ -81,7 +81,16 @@ public class LoggingService : ILoggingService
         string remark
     )
     {
-        LogProcess(id, workflowId, formId, processName, start, DateTime.MinValue, remark, null);
+        LogProcess(
+            id: id,
+            workflowId: workflowId,
+            formId: formId,
+            processName: processName,
+            start: start,
+            finish: DateTime.MinValue,
+            remark: remark,
+            errorInfo: null
+        );
     }
 
     public void LogProcessEnd(Guid logId, DateTime finish, string remark, string errorInfo)
@@ -94,12 +103,12 @@ public class LoggingService : ILoggingService
     {
         // store to the database
         DataStructureQuery query = new DataStructureQuery(
-            new Guid("9b8e3021-e9ac-447e-8107-703382c740b1")
+            dataStructureId: new Guid(g: "9b8e3021-e9ac-447e-8107-703382c740b1")
         );
         _dataServiceAgent.MethodName = "StoreDataByQuery";
         _dataServiceAgent.Parameters.Clear();
-        _dataServiceAgent.Parameters.Add("Query", query);
-        _dataServiceAgent.Parameters.Add("Data", log);
+        _dataServiceAgent.Parameters.Add(key: "Query", value: query);
+        _dataServiceAgent.Parameters.Add(key: "Data", value: log);
         _dataServiceAgent.Run();
     }
 

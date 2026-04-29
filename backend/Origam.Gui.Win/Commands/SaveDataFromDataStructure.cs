@@ -33,15 +33,21 @@ namespace Origam.Gui.Win.Commands;
 public class SaveDataFromDataStructure : AbstractMenuCommand
 {
     WorkbenchSchemaService _schemaService =
-        ServiceManager.Services.GetService(typeof(WorkbenchSchemaService))
+        ServiceManager.Services.GetService(serviceType: typeof(WorkbenchSchemaService))
         as WorkbenchSchemaService;
     SchemaBrowser _schemaBrowser =
-        WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+        WorkbenchSingleton.Workbench.GetPad(type: typeof(SchemaBrowser)) as SchemaBrowser;
     IServiceAgent _dataServiceAgent;
     public override bool IsEnabled
     {
         get { return Owner is DataStructure || Owner is DataStructureMethod; }
-        set { throw new ArgumentException("Cannot set this property", "IsEnabled"); }
+        set
+        {
+            throw new ArgumentException(
+                message: "Cannot set this property",
+                paramName: "IsEnabled"
+            );
+        }
     }
 
     public override void Run()
@@ -59,10 +65,10 @@ public class SaveDataFromDataStructure : AbstractMenuCommand
         }
 
         _dataServiceAgent = (
-            ServiceManager.Services.GetService(typeof(IBusinessServicesService))
+            ServiceManager.Services.GetService(serviceType: typeof(IBusinessServicesService))
             as IBusinessServicesService
-        ).GetAgent("DataService", null, null);
-        DataStructureQuery query = new DataStructureQuery(structure.Id);
+        ).GetAgent(serviceType: "DataService", ruleEngine: null, workflowEngine: null);
+        DataStructureQuery query = new DataStructureQuery(dataStructureId: structure.Id);
         if (method != null)
         {
             query.MethodId = method.Id;
@@ -78,7 +84,8 @@ public class SaveDataFromDataStructure : AbstractMenuCommand
             dialog.Title = strings.SaveXmlResult_Title;
             if (dialog.ShowDialog() == DialogResult.OK)
             {
-                LoadData(query).WriteXml(dialog.FileName, XmlWriteMode.WriteSchema);
+                LoadData(query: query)
+                    .WriteXml(fileName: dialog.FileName, mode: XmlWriteMode.WriteSchema);
             }
         }
         finally
@@ -94,7 +101,7 @@ public class SaveDataFromDataStructure : AbstractMenuCommand
     {
         _dataServiceAgent.MethodName = "LoadDataByQuery";
         _dataServiceAgent.Parameters.Clear();
-        _dataServiceAgent.Parameters.Add("Query", query);
+        _dataServiceAgent.Parameters.Add(key: "Query", value: query);
         _dataServiceAgent.Run();
         return _dataServiceAgent.Result as DataSet;
     }
@@ -107,6 +114,6 @@ public class SaveDataFromDataStructure : AbstractMenuCommand
 
     public override int GetImageIndex(string icon)
     {
-        return _schemaBrowser.ImageIndex(icon);
+        return _schemaBrowser.ImageIndex(icon: icon);
     }
 }

@@ -30,10 +30,10 @@ namespace Origam.Schema.GuiModel;
 /// <summary>
 /// Summary description for Graphics.
 /// </summary>
-[SchemaItemDescription("Keyboard Shortcut", "icon_shortcut.png")]
-[HelpTopic("Keyboard+Shortcuts")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Keyboard Shortcut", iconName: "icon_shortcut.png")]
+[HelpTopic(topic: "Keyboard+Shortcuts")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class KeyboardShortcut : AbstractSchemaItem
 {
     public const string CategoryConst = "KeyboardShortcut";
@@ -42,10 +42,10 @@ public class KeyboardShortcut : AbstractSchemaItem
         : base() { }
 
     public KeyboardShortcut(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public KeyboardShortcut(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Overriden ISchemaItem Members
     public override string ItemType
@@ -56,8 +56,8 @@ public class KeyboardShortcut : AbstractSchemaItem
     #region Properties
     private bool _isShift = false;
 
-    [DefaultValue(false)]
-    [XmlAttribute("shift")]
+    [DefaultValue(value: false)]
+    [XmlAttribute(attributeName: "shift")]
     public bool IsShift
     {
         get { return _isShift; }
@@ -65,8 +65,8 @@ public class KeyboardShortcut : AbstractSchemaItem
     }
     private bool _isControl = false;
 
-    [DefaultValue(false)]
-    [XmlAttribute("control")]
+    [DefaultValue(value: false)]
+    [XmlAttribute(attributeName: "control")]
     public bool IsControl
     {
         get { return _isControl; }
@@ -74,8 +74,8 @@ public class KeyboardShortcut : AbstractSchemaItem
     }
     private bool _isAlt = false;
 
-    [DefaultValue(false)]
-    [XmlAttribute("alt")]
+    [DefaultValue(value: false)]
+    [XmlAttribute(attributeName: "alt")]
     public bool IsAlt
     {
         get { return _isAlt; }
@@ -83,8 +83,8 @@ public class KeyboardShortcut : AbstractSchemaItem
     }
     private int _keyCode = 0;
 
-    [DefaultValue(false)]
-    [XmlAttribute("keyCode")]
+    [DefaultValue(value: false)]
+    [XmlAttribute(attributeName: "keyCode")]
     public int KeyCode
     {
         get { return _keyCode; }

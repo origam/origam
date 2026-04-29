@@ -31,7 +31,12 @@ public class JsonUtils
 {
     public static void SerializeToJson(TextWriter textWriter, object value, bool omitRootElement)
     {
-        SerializeToJson(textWriter, value, omitRootElement, false);
+        SerializeToJson(
+            textWriter: textWriter,
+            value: value,
+            omitRootElement: omitRootElement,
+            omitMainElement: false
+        );
     }
 
     public static void SerializeToJson(
@@ -43,8 +48,8 @@ public class JsonUtils
     {
         JsonSerializer serializer = new JsonSerializer();
         // remove standard DataSet and XML converters
-        RemoveJsonConverter(serializer, typeof(DataSetConverter));
-        RemoveJsonConverter(serializer, typeof(XmlNodeConverter));
+        RemoveJsonConverter(serializer: serializer, type: typeof(DataSetConverter));
+        RemoveJsonConverter(serializer: serializer, type: typeof(XmlNodeConverter));
         // add our custom converters
         if (value is DataSet)
         {
@@ -52,27 +57,27 @@ public class JsonUtils
                 omitRootElement: omitRootElement,
                 omitMainElement: omitMainElement
             );
-            serializer.Converters.Add(datasetConverter);
-            serializer.Converters.Add(new DataRowConverter());
+            serializer.Converters.Add(item: datasetConverter);
+            serializer.Converters.Add(item: new DataRowConverter());
         }
         else
         {
             XmlNodeConverter xmlConverter = new XmlNodeConverter();
             xmlConverter.OmitRootObject = omitRootElement;
-            serializer.Converters.Add(xmlConverter);
+            serializer.Converters.Add(item: xmlConverter);
         }
-        JsonWriter writer = new JsonTextWriter(textWriter);
+        JsonWriter writer = new JsonTextWriter(textWriter: textWriter);
         //JsonWriter writer = new JsonTextWriter(textWriter);
         serializer.DateTimeZoneHandling = DateTimeZoneHandling.Local;
-        serializer.Serialize(writer, value);
+        serializer.Serialize(jsonWriter: writer, value: value);
     }
 
     public static void RemoveJsonConverter(JsonSerializer serializer, Type type)
     {
-        JsonConverter converter = GetJsonConverter(serializer, type);
+        JsonConverter converter = GetJsonConverter(serializer: serializer, type: type);
         if (converter != null)
         {
-            serializer.Converters.Remove(converter);
+            serializer.Converters.Remove(item: converter);
         }
     }
 
@@ -81,7 +86,7 @@ public class JsonUtils
         JsonConverter result = null;
         foreach (JsonConverter converter in serializer.Converters)
         {
-            if (type.Equals(converter.GetType()))
+            if (type.Equals(o: converter.GetType()))
             {
                 result = converter;
                 break;

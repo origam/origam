@@ -34,11 +34,11 @@ public class RenderTools
         {
             foreach (
                 var subAction in action.ChildItemsByType<EntityUIAction>(
-                    EntityUIAction.CategoryConst
+                    itemType: EntityUIAction.CategoryConst
                 )
             )
             {
-                if (ShouldRenderAction(subAction, formId, panelId))
+                if (ShouldRenderAction(action: subAction, formId: formId, panelId: panelId))
                 {
                     return true;
                 }
@@ -46,22 +46,23 @@ public class RenderTools
             return false;
         }
 
-        return (!action.ScreenIds.Any() || action.ScreenIds.Contains(formId))
-            && (!action.ScreenSectionIds.Any() || action.ScreenSectionIds.Contains(panelId))
-            && ShouldRender(action.Features, action.Roles);
+        return (!action.ScreenIds.Any() || action.ScreenIds.Contains(value: formId))
+            && (!action.ScreenSectionIds.Any() || action.ScreenSectionIds.Contains(value: panelId))
+            && ShouldRender(features: action.Features, roles: action.Roles);
     }
 
     public static bool ShouldRender(ControlSetItem control)
     {
-        return ShouldRender(control.Features, control.Roles);
+        return ShouldRender(features: control.Features, roles: control.Roles);
     }
 
     public static bool ShouldRender(string features, string roles)
     {
         IParameterService parameterService =
-            ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
+            ServiceManager.Services.GetService(serviceType: typeof(IParameterService))
+            as IParameterService;
         // check features
-        if (!parameterService.IsFeatureOn(features))
+        if (!parameterService.IsFeatureOn(featureCode: features))
         {
             return false;
         }
@@ -71,7 +72,7 @@ public class RenderTools
             if (
                 !SecurityManager
                     .GetAuthorizationProvider()
-                    .Authorize(SecurityManager.CurrentPrincipal, roles)
+                    .Authorize(principal: SecurityManager.CurrentPrincipal, context: roles)
             )
             {
                 return false;

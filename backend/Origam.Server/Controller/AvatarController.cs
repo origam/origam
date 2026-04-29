@@ -28,48 +28,53 @@ using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Server.Controller;
 
-[Route("chatrooms/[controller]")]
-[Route("internalApi/[controller]")]
+[Route(template: "chatrooms/[controller]")]
+[Route(template: "internalApi/[controller]")]
 [ApiController]
 public class AvatarController : ControllerBase
 {
-    [HttpGet("{avatarId:guid}")]
+    [HttpGet(template: "{avatarId:guid}")]
     public IActionResult GetAvatarRequest(Guid avatarId)
     {
         QueryParameterCollection parameters = new QueryParameterCollection
         {
-            new QueryParameter("BusinessPartner_parId", avatarId),
+            new QueryParameter(_parameterName: "BusinessPartner_parId", value: avatarId),
         };
         DataSet datasetUsersForInvite = LoadData(
-            new Guid("d11d9049-8dcb-4d3f-824d-8d63d0fb0ba5"),
-            new Guid("d014e645-dda1-4999-b577-d82221715583"),
-            Guid.Empty,
-            Guid.Empty,
-            null,
-            parameters
+            dataStructureId: new Guid(g: "d11d9049-8dcb-4d3f-824d-8d63d0fb0ba5"),
+            methodId: new Guid(g: "d014e645-dda1-4999-b577-d82221715583"),
+            defaultSetId: Guid.Empty,
+            sortSetId: Guid.Empty,
+            transactionId: null,
+            parameters: parameters
         );
-        if (datasetUsersForInvite.Tables[0].Rows.Count == 0)
+        if (datasetUsersForInvite.Tables[index: 0].Rows.Count == 0)
         {
             return NotFound();
         }
-        DataRow userRow = datasetUsersForInvite.Tables[0].Rows[0];
-        byte[] imageBytes = userRow.Field<byte[]>("AvatarFile");
+        DataRow userRow = datasetUsersForInvite.Tables[index: 0].Rows[index: 0];
+        byte[] imageBytes = userRow.Field<byte[]>(columnName: "AvatarFile");
         if (imageBytes == null)
         {
-            return Content(MakeInitialsSvg(userRow), "image/svg+xml; charset=utf-8");
+            return Content(
+                content: MakeInitialsSvg(userRow: userRow),
+                contentType: "image/svg+xml; charset=utf-8"
+            );
         }
         return File(
-            imageBytes,
-            HttpTools.Instance.GetMimeType(userRow.Field<string>("AvatarFilename"))
+            fileContents: imageBytes,
+            contentType: HttpTools.Instance.GetMimeType(
+                fileName: userRow.Field<string>(columnName: "AvatarFilename")
+            )
         );
     }
 
     private static string MakeInitialsSvg(DataRow userRow)
     {
-        string name = userRow.Field<string>("Name");
-        string firstName = userRow.Field<string>("FirstName");
+        string name = userRow.Field<string>(columnName: "Name");
+        string firstName = userRow.Field<string>(columnName: "FirstName");
         string initials = "";
-        if (!string.IsNullOrEmpty(firstName))
+        if (!string.IsNullOrEmpty(value: firstName))
         {
             initials += firstName.First().ToString().ToUpper();
         }
@@ -91,12 +96,12 @@ public class AvatarController : ControllerBase
     )
     {
         return DataService.Instance.LoadData(
-            dataStructureId,
-            methodId,
-            defaultSetId,
-            sortSetId,
-            transactionId,
-            parameters
+            dataStructureId: dataStructureId,
+            methodId: methodId,
+            defaultSetId: defaultSetId,
+            sortSetId: sortSetId,
+            transactionId: transactionId,
+            parameters: parameters
         );
     }
 }

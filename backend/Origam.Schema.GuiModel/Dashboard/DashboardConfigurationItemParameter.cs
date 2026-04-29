@@ -36,21 +36,21 @@ public class DashboardConfigurationItemParameter
 
     public DashboardConfigurationItemParameter() { }
 
-    [XmlAttribute("name")]
+    [XmlAttribute(attributeName: "name")]
     public string Name
     {
         get { return _name; }
         set { _name = value; }
     }
 
-    [XmlAttribute("isBound")]
+    [XmlAttribute(attributeName: "isBound")]
     public bool IsBound
     {
         get { return _isBound; }
         set { _isBound = value; }
     }
 
-    [XmlAttribute("value")]
+    [XmlAttribute(attributeName: "value")]
     public string Value
     {
         get { return _value; }
@@ -60,16 +60,16 @@ public class DashboardConfigurationItemParameter
     {
         get
         {
-            string[] paramArray = this.Value.Split(".".ToCharArray());
+            string[] paramArray = this.Value.Split(separator: ".".ToCharArray());
 
-            return new Guid(paramArray[0]);
+            return new Guid(g: paramArray[0]);
         }
     }
     public string BoundItemProperty
     {
         get
         {
-            string[] paramArray = this.Value.Split(".".ToCharArray());
+            string[] paramArray = this.Value.Split(separator: ".".ToCharArray());
 
             return paramArray[1];
         }

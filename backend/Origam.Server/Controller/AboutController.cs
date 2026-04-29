@@ -31,7 +31,7 @@ namespace Origam.Server.Controller;
 
 [Authorize(Policy = "InternalApi")]
 [ApiController]
-[Route("internalApi/[controller]")]
+[Route(template: "internalApi/[controller]")]
 public class AboutController : AbstractController
 {
     public AboutController(
@@ -39,13 +39,13 @@ public class AboutController : AbstractController
         SessionObjects sessionObjects,
         IWebHostEnvironment environment
     )
-        : base(log, sessionObjects, environment) { }
+        : base(log: log, sessionObjects: sessionObjects, environment: environment) { }
 
     [HttpGet]
     public IActionResult Get()
     {
         return Ok(
-            new AboutInfo
+            value: new AboutInfo
             {
                 ServerVersion = "ServerVersion Placeholder to be changed at build time",
                 LinkToCommit =

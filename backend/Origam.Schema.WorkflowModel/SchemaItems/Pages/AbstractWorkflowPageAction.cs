@@ -32,9 +32,9 @@ namespace Origam.Schema.WorkflowModel;
 /// <summary>
 /// Summary description for ServiceMethod.
 /// </summary>
-[SchemaItemDescription("Action", "Actions", 18)]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Action", folderName: "Actions", icon: 18)]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class AbstractWorkflowPageAction : AbstractSchemaItem
 {
     public const string CategoryConst = "WorkflowPageAction";
@@ -46,44 +46,47 @@ public class AbstractWorkflowPageAction : AbstractSchemaItem
     }
 
     public AbstractWorkflowPageAction(Guid schemaExtensionId)
-        : base(schemaExtensionId)
+        : base(extensionId: schemaExtensionId)
     {
         Init();
     }
 
     public AbstractWorkflowPageAction(Key primaryKey)
-        : base(primaryKey)
+        : base(primaryKey: primaryKey)
     {
         Init();
     }
 
     private void Init()
     {
-        this.ChildItemTypes.Add(typeof(WorkflowPageActionParameter));
+        this.ChildItemTypes.Add(item: typeof(WorkflowPageActionParameter));
     }
 
     #region Properties
     public Guid ConditionRuleId;
 
-    [Category("Conditions")]
-    [TypeConverter(typeof(StartRuleConverter))]
-    [XmlReference("conditionRule", "ConditionRuleId")]
+    [Category(category: "Conditions")]
+    [TypeConverter(type: typeof(StartRuleConverter))]
+    [XmlReference(attributeName: "conditionRule", idField: "ConditionRuleId")]
     public IStartRule ConditionRule
     {
         get
         {
             return (IStartRule)
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(this.ConditionRuleId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: this.ConditionRuleId)
                 );
         }
-        set { this.ConditionRuleId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]); }
+        set
+        {
+            this.ConditionRuleId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]);
+        }
     }
     private int _sortOrder = 100;
 
-    [DefaultValue(100)]
-    [XmlAttribute("sortOrder")]
+    [DefaultValue(value: 100)]
+    [XmlAttribute(attributeName: "sortOrder")]
     public int SortOrder
     {
         get { return _sortOrder; }
@@ -91,10 +94,10 @@ public class AbstractWorkflowPageAction : AbstractSchemaItem
     }
     private string _roles = "*";
 
-    [Category("Conditions")]
+    [Category(category: "Conditions")]
     [NotNullModelElementRule()]
-    [DefaultValue("*")]
-    [XmlAttribute("roles")]
+    [DefaultValue(value: "*")]
+    [XmlAttribute(attributeName: "roles")]
     public string Roles
     {
         get { return _roles; }
@@ -102,8 +105,8 @@ public class AbstractWorkflowPageAction : AbstractSchemaItem
     }
     private string _features;
 
-    [Category("Conditions")]
-    [XmlAttribute("features")]
+    [Category(category: "Conditions")]
+    [XmlAttribute(attributeName: "features")]
     public string Features
     {
         get { return _features; }
@@ -122,10 +125,10 @@ public class AbstractWorkflowPageAction : AbstractSchemaItem
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        base.GetExtraDependencies(dependencies);
+        base.GetExtraDependencies(dependencies: dependencies);
         if (this.ConditionRule != null)
         {
-            dependencies.Add(this.ConditionRule);
+            dependencies.Add(item: this.ConditionRule);
         }
     }
     #endregion
@@ -136,11 +139,11 @@ public class AbstractWorkflowPageAction : AbstractSchemaItem
         if (compareItem == null)
         {
             throw new InvalidCastException(
-                ResourceUtils.GetString("ErrorCompareAbstractWorkflowPageAction")
+                message: ResourceUtils.GetString(key: "ErrorCompareAbstractWorkflowPageAction")
             );
         }
 
-        return this.SortOrder.CompareTo(compareItem.SortOrder);
+        return this.SortOrder.CompareTo(value: compareItem.SortOrder);
     }
     #endregion
 }

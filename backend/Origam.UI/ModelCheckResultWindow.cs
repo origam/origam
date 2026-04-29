@@ -40,12 +40,12 @@ public partial class ModelCheckResultWindow : Form
         errorListBox.DrawMode = DrawMode.OwnerDrawFixed;
         foreach (var section in modelErrorSections)
         {
-            errorListBox.Items.Add(section);
+            errorListBox.Items.Add(item: section);
             foreach (var message in section.ErrorMessages)
             {
-                errorListBox.Items.Add(message);
+                errorListBox.Items.Add(item: message);
             }
-            errorListBox.Items.Add(ErrorMessage.Empty);
+            errorListBox.Items.Add(item: ErrorMessage.Empty);
         }
     }
 
@@ -59,18 +59,18 @@ public partial class ModelCheckResultWindow : Form
         if ((e.State & DrawItemState.Selected) == DrawItemState.Selected)
         {
             e = new DrawItemEventArgs(
-                e.Graphics,
-                e.Font,
-                e.Bounds,
-                e.Index,
-                DrawItemState.Default,
-                e.ForeColor,
-                Color.Transparent
+                graphics: e.Graphics,
+                font: e.Font,
+                rect: e.Bounds,
+                index: e.Index,
+                state: DrawItemState.Default,
+                foreColor: e.ForeColor,
+                backColor: Color.Transparent
             );
         }
 
         ListBox listBox = sender as ListBox;
-        var currentItem = listBox.Items[e.Index];
+        var currentItem = listBox.Items[index: e.Index];
         string text = currentItem.ToString();
 
         if (
@@ -80,58 +80,62 @@ public partial class ModelCheckResultWindow : Form
         {
             e.DrawBackground();
             e.Graphics.DrawString(
-                text,
-                e.Font,
-                Brushes.Black,
-                e.Bounds,
-                StringFormat.GenericDefault
+                s: text,
+                font: e.Font,
+                brush: Brushes.Black,
+                layoutRectangle: e.Bounds,
+                format: StringFormat.GenericDefault
             );
             return;
         }
         if (currentItem is ErrorMessage errorMessage)
         {
             e.DrawBackground();
-            int indexOfLinkStart = errorMessage.Text.IndexOf(errorMessage.Link);
-            string part1 = new string(errorMessage.Text.Take(indexOfLinkStart).ToArray());
+            int indexOfLinkStart = errorMessage.Text.IndexOf(value: errorMessage.Link);
+            string part1 = new string(
+                value: errorMessage.Text.Take(count: indexOfLinkStart).ToArray()
+            );
             e.Graphics.DrawString(
-                part1,
-                e.Font,
-                Brushes.Black,
-                e.Bounds,
-                StringFormat.GenericDefault
+                s: part1,
+                font: e.Font,
+                brush: Brushes.Black,
+                layoutRectangle: e.Bounds,
+                format: StringFormat.GenericDefault
             );
 
-            var part1Size = e.Graphics.MeasureString(part1, e.Font);
+            var part1Size = e.Graphics.MeasureString(text: part1, font: e.Font);
             var linkBounds = new Rectangle(
-                e.Bounds.X + (int)part1Size.Width,
-                e.Bounds.Y,
-                e.Bounds.Width,
-                e.Bounds.Height
+                x: e.Bounds.X + (int)part1Size.Width,
+                y: e.Bounds.Y,
+                width: e.Bounds.Width,
+                height: e.Bounds.Height
             );
             e.Graphics.DrawString(
-                errorMessage.Link,
-                e.Font,
-                Brushes.Blue,
-                linkBounds,
-                StringFormat.GenericDefault
+                s: errorMessage.Link,
+                font: e.Font,
+                brush: Brushes.Blue,
+                layoutRectangle: linkBounds,
+                format: StringFormat.GenericDefault
             );
 
-            var linkSize = e.Graphics.MeasureString(errorMessage.Link, e.Font);
+            var linkSize = e.Graphics.MeasureString(text: errorMessage.Link, font: e.Font);
             var part2Bounds = new Rectangle(
-                e.Bounds.X + (int)part1Size.Width + (int)linkSize.Width,
-                e.Bounds.Y,
-                e.Bounds.Width,
-                e.Bounds.Height
+                x: e.Bounds.X + (int)part1Size.Width + (int)linkSize.Width,
+                y: e.Bounds.Y,
+                width: e.Bounds.Width,
+                height: e.Bounds.Height
             );
             string part2 = new string(
-                errorMessage.Text.Skip(indexOfLinkStart + errorMessage.Link.Length).ToArray()
+                value: errorMessage
+                    .Text.Skip(count: indexOfLinkStart + errorMessage.Link.Length)
+                    .ToArray()
             );
             e.Graphics.DrawString(
-                part2,
-                e.Font,
-                Brushes.Black,
-                part2Bounds,
-                StringFormat.GenericDefault
+                s: part2,
+                font: e.Font,
+                brush: Brushes.Black,
+                layoutRectangle: part2Bounds,
+                format: StringFormat.GenericDefault
             );
             return;
         }
@@ -142,15 +146,15 @@ public partial class ModelCheckResultWindow : Form
     {
         ListBox listBox = sender as ListBox;
         string link = (listBox?.SelectedItem as ErrorMessage)?.Link;
-        if (!string.IsNullOrWhiteSpace(link))
+        if (!string.IsNullOrWhiteSpace(value: link))
         {
-            if (File.Exists(link))
+            if (File.Exists(path: link))
             {
-                Process.Start(link);
+                Process.Start(fileName: link);
             }
-            else if (Directory.Exists(link))
+            else if (Directory.Exists(path: link))
             {
-                Process.Start("explorer.exe", link);
+                Process.Start(fileName: "explorer.exe", arguments: link);
             }
         }
         listBox.SelectedItem = null;

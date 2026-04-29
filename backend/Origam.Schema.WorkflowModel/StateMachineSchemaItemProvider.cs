@@ -35,20 +35,22 @@ public class StateMachineSchemaItemProvider : AbstractSchemaItemProvider
         var childItems = ChildItems;
         foreach (StateMachine stateMachine in childItems)
         {
-            if (stateMachine.EntityId.Equals(entityId) && stateMachine.FieldId.Equals(fieldId))
+            if (
+                stateMachine.EntityId.Equals(g: entityId) && stateMachine.FieldId.Equals(g: fieldId)
+            )
             {
-                result.Add(stateMachine);
+                result.Add(item: stateMachine);
             }
         }
         if (result.Count == 1)
         {
-            return result[0];
+            return result[index: 0];
         }
         if (result.Count > 1)
         {
-            var stateMachine = result[0];
+            var stateMachine = result[index: 0];
             throw new Exception(
-                $"More than 1 state machine defined on an entity {stateMachine.Entity.Name} field {stateMachine.Field.Name}. Only one state machine can be defined."
+                message: $"More than 1 state machine defined on an entity {stateMachine.Entity.Name} field {stateMachine.Field.Name}. Only one state machine can be defined."
             );
         }
         return null;
@@ -60,9 +62,12 @@ public class StateMachineSchemaItemProvider : AbstractSchemaItemProvider
         var childItems = ChildItems;
         foreach (StateMachine stateMachine in childItems)
         {
-            if (stateMachine.EntityId.Equals(entityId) && stateMachine.FieldId.Equals(Guid.Empty))
+            if (
+                stateMachine.EntityId.Equals(g: entityId)
+                && stateMachine.FieldId.Equals(g: Guid.Empty)
+            )
             {
-                result.Add(stateMachine);
+                result.Add(item: stateMachine);
             }
         }
         return result;
@@ -92,9 +97,9 @@ public class StateMachineSchemaItemProvider : AbstractSchemaItemProvider
     public override T NewItem<T>(Guid schemaExtensionId, SchemaItemGroup group)
     {
         return base.NewItem<T>(
-            schemaExtensionId,
-            group,
-            typeof(T) == typeof(StateMachine) ? "NewStateMachine" : null
+            schemaExtensionId: schemaExtensionId,
+            group: group,
+            itemName: typeof(T) == typeof(StateMachine) ? "NewStateMachine" : null
         );
     }
     #endregion

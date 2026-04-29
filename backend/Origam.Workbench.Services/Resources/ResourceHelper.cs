@@ -30,13 +30,13 @@ internal static class UpdateScriptHelper
     static UpdateScriptHelper()
     {
         m_resourceManager = new ResourceManager(
-            "Origam.Workbench.Services.RepositoryUpdateScripts",
-            typeof(DataLookupService).Assembly
+            baseName: "Origam.Workbench.Services.RepositoryUpdateScripts",
+            assembly: typeof(DataLookupService).Assembly
         );
     }
 
     public static string GetScript(string name)
     {
-        return m_resourceManager.GetString(name);
+        return m_resourceManager.GetString(name: name);
     }
 }

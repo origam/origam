@@ -24,8 +24,8 @@ using Origam.DA.Common;
 
 namespace Origam.Schema.GuiModel;
 
-[SchemaItemDescription("Vertical Container", "icon_vertical-container.png")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Vertical Container", iconName: "icon_vertical-container.png")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class VerticalContainerDashboardWidget : AbstractDashboardWidget
 {
     public VerticalContainerDashboardWidget()
@@ -35,13 +35,13 @@ public class VerticalContainerDashboardWidget : AbstractDashboardWidget
     }
 
     public VerticalContainerDashboardWidget(Guid schemaExtensionId)
-        : base(schemaExtensionId)
+        : base(schemaExtensionId: schemaExtensionId)
     {
         Init();
     }
 
     public VerticalContainerDashboardWidget(Key primaryKey)
-        : base(primaryKey)
+        : base(primaryKey: primaryKey)
     {
         Init();
     }

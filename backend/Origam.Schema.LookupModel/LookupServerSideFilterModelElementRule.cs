@@ -28,7 +28,7 @@ namespace Origam.Schema.LookupModel;
 /// Summary description for NotNullModelElementRuleAttribute.
 /// </summary>
 [AttributeUsage(
-    AttributeTargets.Property | AttributeTargets.Field,
+    validOn: AttributeTargets.Property | AttributeTargets.Field,
     AllowMultiple = false,
     Inherited = true
 )]
@@ -38,7 +38,9 @@ public class LookupServerSideFilterModelElementRuleAttribute : AbstractModelElem
 
     public override Exception CheckRule(object instance)
     {
-        return new NotSupportedException(ResourceUtils.GetString("MemberNameRequired"));
+        return new NotSupportedException(
+            message: ResourceUtils.GetString(key: "MemberNameRequired")
+        );
     }
 
     public override Exception CheckRule(object instance, string memberName)
@@ -55,7 +57,7 @@ public class LookupServerSideFilterModelElementRuleAttribute : AbstractModelElem
                         || lookup.ServersideFilterParameter == string.Empty
                     )
                     {
-                        return new ArgumentNullException("ServersideFilterParameter");
+                        return new ArgumentNullException(paramName: "ServersideFilterParameter");
                     }
                     break;
                 }
@@ -64,7 +66,7 @@ public class LookupServerSideFilterModelElementRuleAttribute : AbstractModelElem
                 {
                     if (lookup.ListMethod == null)
                     {
-                        return new ArgumentNullException("ListMethod");
+                        return new ArgumentNullException(paramName: "ListMethod");
                     }
                     break;
                 }

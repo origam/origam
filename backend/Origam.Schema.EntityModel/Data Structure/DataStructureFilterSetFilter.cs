@@ -32,11 +32,11 @@ namespace Origam.Schema.EntityModel;
 /// <summary>
 /// Summary description for DataStructureFilterSetFilter.
 /// </summary>
-[SchemaItemDescription("Filter", "icon_filter.png")]
-[HelpTopic("Filter+Set+Filter")]
-[XmlModelRoot(CategoryConst)]
-[DefaultProperty("Entity")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Filter", iconName: "icon_filter.png")]
+[HelpTopic(topic: "Filter+Set+Filter")]
+[XmlModelRoot(category: CategoryConst)]
+[DefaultProperty(name: "Entity")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class DataStructureFilterSetFilter : AbstractSchemaItem
 {
     public const string CategoryConst = "DataStructureFilterSetFilter";
@@ -45,33 +45,35 @@ public class DataStructureFilterSetFilter : AbstractSchemaItem
         : base() { }
 
     public DataStructureFilterSetFilter(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public DataStructureFilterSetFilter(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Properties
     public Guid DataStructureEntityId;
 
-    [TypeConverter(typeof(DataQueryEntityConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [Description("An entity from this data structure on which the filter will be applied.")]
+    [TypeConverter(type: typeof(DataQueryEntityConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [Description(
+        description: "An entity from this data structure on which the filter will be applied."
+    )]
     [NotNullModelElementRule()]
-    [XmlReference("entity", "DataStructureEntityId")]
+    [XmlReference(attributeName: "entity", idField: "DataStructureEntityId")]
     public DataStructureEntity Entity
     {
         get
         {
             return (DataStructureEntity)
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(DataStructureEntity),
-                    new ModelElementKey(this.DataStructureEntityId)
+                    type: typeof(DataStructureEntity),
+                    primaryKey: new ModelElementKey(id: this.DataStructureEntityId)
                 );
         }
         set
         {
             this.DataStructureEntityId = (
-                value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]
+                value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]
             );
             this.Filter = null;
             UpdateName();
@@ -80,59 +82,59 @@ public class DataStructureFilterSetFilter : AbstractSchemaItem
 
     public Guid FilterId;
 
-    [TypeConverter(typeof(DataQueryEntityFilterConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [Description("A filter that will be applied.")]
+    [TypeConverter(type: typeof(DataQueryEntityFilterConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [Description(description: "A filter that will be applied.")]
     [NotNullModelElementRule()]
-    [XmlReference("filter", "FilterId")]
+    [XmlReference(attributeName: "filter", idField: "FilterId")]
     public EntityFilter Filter
     {
         get
         {
             return (EntityFilter)
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(EntityFilter),
-                    new ModelElementKey(this.FilterId)
+                    type: typeof(EntityFilter),
+                    primaryKey: new ModelElementKey(id: this.FilterId)
                 );
         }
         set
         {
-            this.FilterId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
+            this.FilterId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]);
             UpdateName();
         }
     }
     public Guid IgnoreFilterConstantId;
 
-    [TypeConverter(typeof(DataConstantConverter))]
-    [Category("Condition")]
+    [TypeConverter(type: typeof(DataConstantConverter))]
+    [Category(category: "Condition")]
     [Description(
-        "This filter will be ignored (or not ignored if PassWhenParameterMatch = true) if a query parameter is equal to this value.\nWhen not set, it tests if the parameter is filled or not."
+        description: "This filter will be ignored (or not ignored if PassWhenParameterMatch = true) if a query parameter is equal to this value.\nWhen not set, it tests if the parameter is filled or not."
     )]
-    [XmlReference("ignoreFilterConstant", "IgnoreFilterConstantId")]
+    [XmlReference(attributeName: "ignoreFilterConstant", idField: "IgnoreFilterConstantId")]
     public DataConstant IgnoreFilterConstant
     {
         get
         {
             return (DataConstant)
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(EntityFilter),
-                    new ModelElementKey(this.IgnoreFilterConstantId)
+                    type: typeof(EntityFilter),
+                    primaryKey: new ModelElementKey(id: this.IgnoreFilterConstantId)
                 );
         }
         set
         {
             this.IgnoreFilterConstantId = (
-                value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]
+                value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]
             );
         }
     }
     private string _ignoreFilterParameterName;
 
-    [Category("Condition")]
+    [Category(category: "Condition")]
     [Description(
-        "Name of the parameter that will be evaluated. If it matches with the IgnoreFilterConstant this filter will be ignored (or not ignored if PassWhenParameterMatch = true)."
+        description: "Name of the parameter that will be evaluated. If it matches with the IgnoreFilterConstant this filter will be ignored (or not ignored if PassWhenParameterMatch = true)."
     )]
-    [XmlAttribute("ignoreFilterParameterName")]
+    [XmlAttribute(attributeName: "ignoreFilterParameterName")]
     public string IgnoreFilterParameterName
     {
         get { return _ignoreFilterParameterName; }
@@ -148,10 +150,12 @@ public class DataStructureFilterSetFilter : AbstractSchemaItem
     }
     private bool _passWhenParameterMatch = false;
 
-    [Category("Condition")]
-    [DefaultValue(false)]
-    [Description("Applies the filter condition instead of ignoring it (revert condition).")]
-    [XmlAttribute("passWhenParameterMatch")]
+    [Category(category: "Condition")]
+    [DefaultValue(value: false)]
+    [Description(
+        description: "Applies the filter condition instead of ignoring it (revert condition)."
+    )]
+    [XmlAttribute(attributeName: "passWhenParameterMatch")]
     public bool PassWhenParameterMatch
     {
         get { return _passWhenParameterMatch; }
@@ -159,11 +163,11 @@ public class DataStructureFilterSetFilter : AbstractSchemaItem
     }
     private string _roles = "";
 
-    [Category("Condition"), RefreshProperties(RefreshProperties.Repaint)]
+    [Category(category: "Condition"), RefreshProperties(refresh: RefreshProperties.Repaint)]
     [Description(
-        "An Application role. This filter will be used only if a user has this role assigned. If * or empty the filter will be always applied."
+        description: "An Application role. This filter will be used only if a user has this role assigned. If * or empty the filter will be always applied."
     )]
-    [XmlAttribute("roles")]
+    [XmlAttribute(attributeName: "roles")]
     public string Roles
     {
         get { return _roles; }
@@ -184,20 +188,20 @@ public class DataStructureFilterSetFilter : AbstractSchemaItem
         if (this.Filter != null)
         {
             var references = new Dictionary<string, ParameterReference>();
-            base.GetParameterReferences(this.Filter, references);
+            base.GetParameterReferences(parentItem: this.Filter, list: references);
             foreach (var entry in references)
             {
                 string key = this.Entity.Name + "_" + (string)entry.Key;
-                if (!list.ContainsKey(key))
+                if (!list.ContainsKey(key: key))
                 {
-                    list.Add(key, entry.Value);
+                    list.Add(key: key, value: entry.Value);
                 }
             }
             if (this.IgnoreFilterParameterName != null)
             {
-                if (!list.ContainsKey(IgnoreFilterParameterName))
+                if (!list.ContainsKey(key: IgnoreFilterParameterName))
                 {
-                    list.Add(IgnoreFilterParameterName, null);
+                    list.Add(key: IgnoreFilterParameterName, value: null);
                 }
             }
         }
@@ -205,10 +209,10 @@ public class DataStructureFilterSetFilter : AbstractSchemaItem
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(this.Entity);
-        dependencies.Add(this.Filter);
-        dependencies.Add(this.IgnoreFilterConstant);
-        base.GetExtraDependencies(dependencies);
+        dependencies.Add(item: this.Entity);
+        dependencies.Add(item: this.Filter);
+        dependencies.Add(item: this.IgnoreFilterConstant);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override void UpdateReferences()
@@ -217,7 +221,7 @@ public class DataStructureFilterSetFilter : AbstractSchemaItem
         {
             if (item.OldPrimaryKey != null)
             {
-                if (item.OldPrimaryKey.Equals(this.Entity.PrimaryKey))
+                if (item.OldPrimaryKey.Equals(obj: this.Entity.PrimaryKey))
                 {
                     // store the old filter because setting an entity will reset the filter
                     EntityFilter oldFilter = this.Filter;
@@ -235,7 +239,7 @@ public class DataStructureFilterSetFilter : AbstractSchemaItem
         if (newNode is DataStructureFilterSet)
         {
             // only inside the same data structure
-            return this.RootItem.Equals((newNode as ISchemaItem).RootItem);
+            return this.RootItem.Equals(obj: (newNode as ISchemaItem).RootItem);
         }
 
         return false;

@@ -55,8 +55,8 @@ public abstract class AbstractServiceAgent : IServiceAgent
 
     public DataSet CreateEmptyOutputData()
     {
-        DatasetGenerator dg = new DatasetGenerator(true);
-        DataSet data = dg.CreateDataSet(OutputStructure as DataStructure);
+        DatasetGenerator dg = new DatasetGenerator(userDefinedParameters: true);
+        DataSet data = dg.CreateDataSet(ds: OutputStructure as DataStructure);
         data.EnforceConstraints = !DisableOutputStructureConstraints;
         return data;
     }
@@ -70,7 +70,7 @@ public abstract class AbstractServiceAgent : IServiceAgent
         set
         {
             _persistence = value;
-            OnPersistenceProviderChanged(EventArgs.Empty);
+            OnPersistenceProviderChanged(e: EventArgs.Empty);
         }
     }
     RuleEngine _ruleEngine;
@@ -103,7 +103,7 @@ public abstract class AbstractServiceAgent : IServiceAgent
 
     public virtual string ExecuteUpdate(string command, string transactionId)
     {
-        throw new Exception("ExecuteUpdate not implemented by the service.");
+        throw new Exception(message: "ExecuteUpdate not implemented by the service.");
     }
 
     public abstract object Result { get; }
@@ -120,7 +120,7 @@ public abstract class AbstractServiceAgent : IServiceAgent
         {
             exception = ex;
         }
-        OnFinished(new ServiceFinishedEventArgs(exception));
+        OnFinished(e: new ServiceFinishedEventArgs(exception: exception));
     }
 
     public virtual IList<string> ExpectedParameterNames(
@@ -137,7 +137,7 @@ public abstract class AbstractServiceAgent : IServiceAgent
     {
         if (PersistenceProviderChanged != null)
         {
-            PersistenceProviderChanged(this, e);
+            PersistenceProviderChanged(sender: this, e: e);
         }
     }
 
@@ -145,7 +145,7 @@ public abstract class AbstractServiceAgent : IServiceAgent
     {
         if (Finished != null)
         {
-            Finished(this, e);
+            Finished(sender: this, e: e);
         }
     }
     #endregion

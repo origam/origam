@@ -28,16 +28,16 @@ namespace Origam.Schema.GuiModel;
 /// <summary>
 /// Summary description for ExcelReport.
 /// </summary>
-[SchemaItemDescription("Excel Report", "icon_excel-report.png")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Excel Report", iconName: "icon_excel-report.png")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class ExcelReport : AbstractDataReport, IDataStructureReference
 {
     public ExcelReport()
         : base() { }
 
     public ExcelReport(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(schemaExtensionId: schemaExtensionId) { }
 
     public ExcelReport(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 }

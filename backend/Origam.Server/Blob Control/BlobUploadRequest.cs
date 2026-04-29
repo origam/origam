@@ -116,71 +116,71 @@ public class BlobUploadRequest
     }
     public string BlobMember
     {
-        get { return (string)this.Parameters["BlobMember"]; }
+        get { return (string)this.Parameters[key: "BlobMember"]; }
     }
     public string FileSizeMember
     {
-        get { return (string)this.Parameters["FileSizeMember"]; }
+        get { return (string)this.Parameters[key: "FileSizeMember"]; }
     }
     public Guid ThumbnailHeightConstantId
     {
-        get { return new Guid((string)this.Parameters["ThumbnailHeightConstantId"]); }
+        get { return new Guid(g: (string)this.Parameters[key: "ThumbnailHeightConstantId"]); }
     }
     public Guid DefaultCompressionConstantId
     {
-        get { return new Guid((string)this.Parameters["DefaultCompressionConstantId"]); }
+        get { return new Guid(g: (string)this.Parameters[key: "DefaultCompressionConstantId"]); }
     }
     public Guid BlobLookupId
     {
-        get { return new Guid((string)this.Parameters["BlobLookupId"]); }
+        get { return new Guid(g: (string)this.Parameters[key: "BlobLookupId"]); }
     }
     public string GridColumnCaption
     {
-        get { return (string)this.Parameters["GridColumnCaption"]; }
+        get { return (string)this.Parameters[key: "GridColumnCaption"]; }
     }
     public string AuthorMember
     {
-        get { return (string)this.Parameters["AuthorMember"]; }
+        get { return (string)this.Parameters[key: "AuthorMember"]; }
     }
     public Guid StorageTypeDefaultConstantId
     {
-        get { return new Guid((string)this.Parameters["StorageTypeDefaultConstantId"]); }
+        get { return new Guid(g: (string)this.Parameters[key: "StorageTypeDefaultConstantId"]); }
     }
     public string ThumbnailMember
     {
-        get { return (string)this.Parameters["ThumbnailMember"]; }
+        get { return (string)this.Parameters[key: "ThumbnailMember"]; }
     }
     public string DateCreatedMember
     {
-        get { return (string)this.Parameters["DateCreatedMember"]; }
+        get { return (string)this.Parameters[key: "DateCreatedMember"]; }
     }
     public string RemarkMember
     {
-        get { return (string)this.Parameters["RemarkMember"]; }
+        get { return (string)this.Parameters[key: "RemarkMember"]; }
     }
     public string DisplayStorageTypeSelection
     {
-        get { return (string)this.Parameters["DisplayStorageTypeSelection"]; }
+        get { return (string)this.Parameters[key: "DisplayStorageTypeSelection"]; }
     }
     public Guid ThumbnailWidthConstantId
     {
-        get { return new Guid((string)this.Parameters["ThumbnailWidthConstantId"]); }
+        get { return new Guid(g: (string)this.Parameters[key: "ThumbnailWidthConstantId"]); }
     }
     public string DateLastModifiedMember
     {
-        get { return (string)this.Parameters["DateLastModifiedMember"]; }
+        get { return (string)this.Parameters[key: "DateLastModifiedMember"]; }
     }
     public string OriginalPathMember
     {
-        get { return (string)this.Parameters["OriginalPathMember"]; }
+        get { return (string)this.Parameters[key: "OriginalPathMember"]; }
     }
     public string FileName
     {
-        get { return (string)this.Parameters["FileName"]; }
+        get { return (string)this.Parameters[key: "FileName"]; }
     }
     public string CompressionStateMember
     {
-        get { return (string)this.Parameters["CompressionStateMember"]; }
+        get { return (string)this.Parameters[key: "CompressionStateMember"]; }
     }
     public bool ShouldCompress
     {
@@ -189,15 +189,15 @@ public class BlobUploadRequest
             if (this.CompressionStateMember != "" && this.CompressionStateMember != null)
             {
                 IParameterService param =
-                    ServiceManager.Services.GetService(typeof(IParameterService))
+                    ServiceManager.Services.GetService(serviceType: typeof(IParameterService))
                     as IParameterService;
                 bool compress = false;
                 if (DefaultCompressionConstantId != Guid.Empty)
                 {
                     compress = (bool)
                         param.GetParameterValue(
-                            DefaultCompressionConstantId,
-                            OrigamDataType.Boolean
+                            id: DefaultCompressionConstantId,
+                            targetType: OrigamDataType.Boolean
                         );
                 }
                 return compress;

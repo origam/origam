@@ -37,9 +37,9 @@ public class LookupListInput : AbstractLookupRowDataInput
     public bool ShowUniqueValues { get; set; }
     public string SearchText { get; set; }
 
-    [Range(-1, 10_000)]
+    [Range(minimum: -1, maximum: 10_000)]
     public int PageSize { get; set; } = -1;
 
-    [Range(1, 10_000)]
+    [Range(minimum: 1, maximum: 10_000)]
     public int PageNumber { get; set; } = -1;
 }

@@ -36,7 +36,7 @@ public class LoadSelectedPackage : AbstractMenuCommand
         get
         {
             return (
-                    WorkbenchSingleton.Workbench.GetPad(typeof(Pads.ExtensionPad))
+                    WorkbenchSingleton.Workbench.GetPad(type: typeof(Pads.ExtensionPad))
                     as Pads.ExtensionPad
                 ).SelectedExtension != null;
         }
@@ -46,12 +46,13 @@ public class LoadSelectedPackage : AbstractMenuCommand
     public override void Run()
     {
         Package extension = (
-            WorkbenchSingleton.Workbench.GetPad(typeof(Pads.ExtensionPad)) as Pads.ExtensionPad
+            WorkbenchSingleton.Workbench.GetPad(type: typeof(Pads.ExtensionPad))
+            as Pads.ExtensionPad
         ).SelectedExtension;
 
         SchemaService schema =
-            ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
-        if (schema.LoadSchema((Guid)extension.PrimaryKey["Id"]))
+            ServiceManager.Services.GetService(serviceType: typeof(SchemaService)) as SchemaService;
+        if (schema.LoadSchema(schemaExtensionId: (Guid)extension.PrimaryKey[key: "Id"]))
         {
             Commands.ViewSchemaBrowserPad cmd =
                 new Origam.Workbench.Commands.ViewSchemaBrowserPad();

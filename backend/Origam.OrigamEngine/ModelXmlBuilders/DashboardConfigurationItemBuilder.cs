@@ -40,8 +40,8 @@ public class DashboardConfigurationItemBuilder
         XmlElement dataSourcesElement
     )
     {
-        XmlElement itemElement = doc.CreateElement("UIElement");
-        children.AppendChild(itemElement);
+        XmlElement itemElement = doc.CreateElement(name: "UIElement");
+        children.AppendChild(newChild: itemElement);
         // build a chrome around the dashboard widget
         UIElementRenderData renderData = new UIElementRenderData();
         renderData.Text = item.Label;
@@ -49,10 +49,16 @@ public class DashboardConfigurationItemBuilder
         renderData.LeftCell = item.Left;
         renderData.HeightCells = item.RowSpan;
         renderData.WidthCells = item.ColSpan;
-        GridLayoutPanelItemBuilder.Build(itemElement, renderData);
-        XmlElement itemChildren = doc.CreateElement("UIChildren");
-        itemElement.AppendChild(itemChildren);
-        BuildComponent(doc, itemChildren, menuId, item, dataSourcesElement);
+        GridLayoutPanelItemBuilder.Build(parentNode: itemElement, renderData: renderData);
+        XmlElement itemChildren = doc.CreateElement(name: "UIChildren");
+        itemElement.AppendChild(newChild: itemChildren);
+        BuildComponent(
+            doc: doc,
+            itemChildren: itemChildren,
+            menuId: menuId,
+            item: item,
+            dataSourcesElement: dataSourcesElement
+        );
     }
 
     private static void BuildComponent(
@@ -64,11 +70,12 @@ public class DashboardConfigurationItemBuilder
     )
     {
         IPersistenceService ps =
-            ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+            ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+            as IPersistenceService;
         AbstractDashboardWidget widget =
             ps.SchemaProvider.RetrieveInstance(
-                typeof(AbstractDashboardWidget),
-                new ModelElementKey(item.ComponentId)
+                type: typeof(AbstractDashboardWidget),
+                primaryKey: new ModelElementKey(id: item.ComponentId)
             ) as AbstractDashboardWidget;
         PanelDashboardWidget panelWidget = widget as PanelDashboardWidget;
         AbstractSimpleDashboardWidget simpleWidget = widget as AbstractSimpleDashboardWidget;
@@ -78,53 +85,63 @@ public class DashboardConfigurationItemBuilder
         if (panelWidget != null)
         {
             DashboardPanelBuilder.Build(
-                panelWidget,
-                menuId,
-                item.Id,
-                itemChildren,
-                dataSourcesElement
+                panelWidget: panelWidget,
+                menuId: menuId,
+                dashboardItemId: item.Id,
+                itemChildren: itemChildren,
+                dataSourcesElement: dataSourcesElement
             );
         }
         else if (simpleWidget != null)
         {
             DashboardSimpleWidgetBuilder.Build(
-                doc,
-                simpleWidget,
-                item.Id,
-                item.Label,
-                itemChildren,
-                dataSourcesElement
+                doc: doc,
+                simpleWidget: simpleWidget,
+                dashboardItemId: item.Id,
+                caption: item.Label,
+                itemChildren: itemChildren,
+                dataSourcesElement: dataSourcesElement
             );
         }
         else if (hboxWidget != null)
         {
             XmlElement element =
-                itemChildren.AppendChild(doc.CreateElement("UIElement")) as XmlElement;
-            HBoxBuilder.Build(element);
+                itemChildren.AppendChild(newChild: doc.CreateElement(name: "UIElement"))
+                as XmlElement;
+            HBoxBuilder.Build(parentNode: element);
         }
         else if (vboxWidget != null)
         {
             XmlElement element =
-                itemChildren.AppendChild(doc.CreateElement("UIElement")) as XmlElement;
-            VBoxBuilder.Build(element);
+                itemChildren.AppendChild(newChild: doc.CreateElement(name: "UIElement"))
+                as XmlElement;
+            VBoxBuilder.Build(parentNode: element);
         }
         else
         {
-            throw new ArgumentOutOfRangeException("widget", widget, "Unsupported widget type.");
+            throw new ArgumentOutOfRangeException(
+                paramName: "widget",
+                actualValue: widget,
+                message: "Unsupported widget type."
+            );
         }
         XmlElement panelElement = itemChildren.FirstChild as XmlElement;
         bool hasBoundParameter = false;
         if (item.Parameters != null)
         {
-            XmlNode parametersElement = panelElement.AppendChild(doc.CreateElement("Parameters"));
+            XmlNode parametersElement = panelElement.AppendChild(
+                newChild: doc.CreateElement(name: "Parameters")
+            );
             foreach (DashboardConfigurationItemParameter param in item.Parameters)
             {
                 if (!param.IsBound)
                 {
                     XmlElement parameterElement =
-                        parametersElement.AppendChild(doc.CreateElement("Parameter")) as XmlElement;
-                    parameterElement.SetAttribute("Name", param.Name);
-                    parameterElement.SetAttribute("Value", param.Value);
+                        parametersElement.AppendChild(
+                            newChild: doc.CreateElement(name: "Parameter")
+                        ) as XmlElement;
+                    parameterElement.SetAttribute(name: "Name", value: param.Name);
+                    parameterElement.SetAttribute(name: "Value", value: param.Value);
                 }
                 else
                 {
@@ -134,15 +151,21 @@ public class DashboardConfigurationItemBuilder
         }
         if (hasBoundParameter)
         {
-            panelElement.SetAttribute("IsRootGrid", "false");
+            panelElement.SetAttribute(name: "IsRootGrid", value: "false");
         }
         if (item.Items != null && item.Items.Length > 0)
         {
-            XmlElement childChildren = doc.CreateElement("UIChildren");
-            panelElement.AppendChild(childChildren);
+            XmlElement childChildren = doc.CreateElement(name: "UIChildren");
+            panelElement.AppendChild(newChild: childChildren);
             foreach (DashboardConfigurationItem child in item.Items)
             {
-                BuildComponent(doc, childChildren, menuId, child, dataSourcesElement);
+                BuildComponent(
+                    doc: doc,
+                    itemChildren: childChildren,
+                    menuId: menuId,
+                    item: child,
+                    dataSourcesElement: dataSourcesElement
+                );
             }
         }
     }

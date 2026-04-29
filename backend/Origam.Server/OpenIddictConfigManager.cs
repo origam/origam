@@ -46,10 +46,10 @@ public static class OpenIddictConfigManager
         >();
         var scopes = scope.ServiceProvider.GetRequiredService<IOpenIddictScopeManager>();
 
-        if (await scopes.FindByNameAsync(InternalApiScope) is null)
+        if (await scopes.FindByNameAsync(name: InternalApiScope) is null)
         {
             await scopes.CreateAsync(
-                new OpenIddictScopeDescriptor
+                descriptor: new OpenIddictScopeDescriptor
                 {
                     Name = InternalApiScope,
                     Resources = { "internal_api" },
@@ -59,13 +59,13 @@ public static class OpenIddictConfigManager
 
         var applicationConfigs = config.ClientApplicationTemplates;
         // ===== serverClient (ROPC, confidential) =====
-        await CreateOrUpdatreServerClient(applicationConfigs, apps);
+        await CreateOrUpdatreServerClient(config: applicationConfigs, apps: apps);
 
         // ===== origamMobileClient (public, code+PKCE) =====
-        await CreateOrUpdateMobileClient(applicationConfigs, apps);
+        await CreateOrUpdateMobileClient(config: applicationConfigs, apps: apps);
 
         // ===== origamWebClient (public, code+PKCE) =====
-        await CreateOrUpdateWebClient(applicationConfigs, apps);
+        await CreateOrUpdateWebClient(config: applicationConfigs, apps: apps);
     }
 
     private static async Task CreateOrUpdateWebClient(
@@ -90,23 +90,25 @@ public static class OpenIddictConfigManager
         foreach (var uri in config.WebClient.RedirectUris ?? [])
         {
             Uri uriObject = CreateAbsoluteUri(
-                uri,
-                nameof(config.WebClient) + "." + nameof(config.WebClient.RedirectUris)
+                uri: uri,
+                configOrigin: nameof(config.WebClient) + "." + nameof(config.WebClient.RedirectUris)
             );
-            descriptor.RedirectUris.Add(uriObject);
+            descriptor.RedirectUris.Add(item: uriObject);
         }
 
         foreach (var uri in config.WebClient.PostLogoutRedirectUris ?? [])
         {
             Uri uriObject = CreateAbsoluteUri(
-                uri,
-                nameof(config.WebClient) + "." + nameof(config.WebClient.PostLogoutRedirectUris)
+                uri: uri,
+                configOrigin: nameof(config.WebClient)
+                    + "."
+                    + nameof(config.WebClient.PostLogoutRedirectUris)
             );
-            descriptor.PostLogoutRedirectUris.Add(uriObject);
+            descriptor.PostLogoutRedirectUris.Add(item: uriObject);
         }
 
         descriptor.Permissions.AddRange(
-            new[]
+            items: new[]
             {
                 Permissions.Endpoints.Authorization,
                 Permissions.Endpoints.Token,
@@ -121,14 +123,14 @@ public static class OpenIddictConfigManager
             }
         );
 
-        var result = await apps.FindByClientIdAsync("origamWebClient");
+        var result = await apps.FindByClientIdAsync(identifier: "origamWebClient");
         if (result is not OpenIddictEntityFrameworkCoreApplication application)
         {
-            await apps.CreateAsync(descriptor);
+            await apps.CreateAsync(descriptor: descriptor);
         }
         else
         {
-            await apps.UpdateAsync(application, descriptor);
+            await apps.UpdateAsync(application: application, descriptor: descriptor);
         }
     }
 
@@ -154,24 +156,27 @@ public static class OpenIddictConfigManager
         foreach (var uri in config.MobileClient.RedirectUris ?? [])
         {
             Uri uriObject = CreateAbsoluteUri(
-                uri,
-                nameof(config.MobileClient) + "." + nameof(config.MobileClient.RedirectUris)
+                uri: uri,
+                configOrigin: nameof(config.MobileClient)
+                    + "."
+                    + nameof(config.MobileClient.RedirectUris)
             );
-            descriptor.RedirectUris.Add(uriObject);
+            descriptor.RedirectUris.Add(item: uriObject);
         }
 
         foreach (var uri in config.MobileClient.PostLogoutRedirectUris ?? [])
         {
             Uri uriObject = CreateAbsoluteUri(
-                uri,
-                nameof(config.MobileClient)
+                uri: uri,
+                configOrigin: nameof(config.MobileClient)
                     + "."
                     + nameof(config.MobileClient.PostLogoutRedirectUris)
             );
-            descriptor.PostLogoutRedirectUris.Add(uriObject);
+            descriptor.PostLogoutRedirectUris.Add(item: uriObject);
         }
 
         descriptor.Permissions.AddRange(
+            items:
             [
                 Permissions.Endpoints.Authorization,
                 Permissions.Endpoints.Token,
@@ -186,14 +191,14 @@ public static class OpenIddictConfigManager
             ]
         );
 
-        var result = await apps.FindByClientIdAsync("origamMobileClient");
+        var result = await apps.FindByClientIdAsync(identifier: "origamMobileClient");
         if (result is not OpenIddictEntityFrameworkCoreApplication application)
         {
-            await apps.CreateAsync(descriptor);
+            await apps.CreateAsync(descriptor: descriptor);
         }
         else
         {
-            await apps.UpdateAsync(application, descriptor);
+            await apps.UpdateAsync(application: application, descriptor: descriptor);
         }
     }
 
@@ -222,24 +227,24 @@ public static class OpenIddictConfigManager
             },
         };
 
-        var result = await apps.FindByClientIdAsync("serverClient");
+        var result = await apps.FindByClientIdAsync(identifier: "serverClient");
         if (result is not OpenIddictEntityFrameworkCoreApplication application)
         {
-            await apps.CreateAsync(descriptor);
+            await apps.CreateAsync(descriptor: descriptor);
         }
         else
         {
-            await apps.UpdateAsync(application, descriptor);
+            await apps.UpdateAsync(application: application, descriptor: descriptor);
         }
     }
 
     private static Uri CreateAbsoluteUri(string uri, string configOrigin)
     {
-        if (!Uri.TryCreate(uri, UriKind.Absolute, out var result))
+        if (!Uri.TryCreate(uriString: uri, uriKind: UriKind.Absolute, result: out var result))
         {
             throw new ArgumentException(
-                $"Invalid absolute URI '{uri}' configured at '{configOrigin}'. Check appsettings or environment configuration.",
-                nameof(uri)
+                message: $"Invalid absolute URI '{uri}' configured at '{configOrigin}'. Check appsettings or environment configuration.",
+                paramName: nameof(uri)
             );
         }
 

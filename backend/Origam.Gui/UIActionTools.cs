@@ -42,18 +42,22 @@ public class UIActionTools
         if (entityId != Guid.Empty)
         {
             IPersistenceService ps =
-                ServiceManager.Services.GetService(typeof(IPersistenceService))
+                ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
                 as IPersistenceService;
             AbstractDataEntity entity = (AbstractDataEntity)
                 ps.SchemaProvider.RetrieveInstance(
-                    typeof(AbstractDataEntity),
-                    new ModelElementKey(entityId)
+                    type: typeof(AbstractDataEntity),
+                    primaryKey: new ModelElementKey(id: entityId)
                 );
-            var actionsSorted = entity.ChildItemsByTypeRecursive(EntityUIAction.CategoryConst);
-            actionsSorted.Sort(new EntityUIActionOrderComparer());
+            var actionsSorted = entity.ChildItemsByTypeRecursive(
+                itemType: EntityUIAction.CategoryConst
+            );
+            actionsSorted.Sort(comparer: new EntityUIActionOrderComparer());
             foreach (EntityUIAction action in actionsSorted)
             {
-                if (RenderTools.ShouldRenderAction(action, formId, panelId))
+                if (
+                    RenderTools.ShouldRenderAction(action: action, formId: formId, panelId: panelId)
+                )
                 {
                     if (
                         (action.Mode != PanelActionMode.ActiveRecord)
@@ -64,7 +68,7 @@ public class UIActionTools
                     }
                     if (disableActionButtons == false)
                     {
-                        validActions.Add(action);
+                        validActions.Add(item: action);
                     }
                 }
             }
@@ -77,13 +81,13 @@ public class UIActionTools
         var originalDataParameters = new List<string>();
         foreach (
             var mapping in action.ChildItemsByType<EntityUIActionParameterMapping>(
-                EntityUIActionParameterMapping.CategoryConst
+                itemType: EntityUIActionParameterMapping.CategoryConst
             )
         )
         {
             if (mapping.Type == EntityUIActionParameterMappingType.Original)
             {
-                originalDataParameters.Add(mapping.Name);
+                originalDataParameters.Add(item: mapping.Name);
             }
         }
         return originalDataParameters;
@@ -91,10 +95,10 @@ public class UIActionTools
 
     public static EntityUIAction GetAction(string action)
     {
-        return !Guid.TryParse(action, out Guid actionId)
+        return !Guid.TryParse(input: action, result: out Guid actionId)
             ? null
             : ServiceManager
                 .Services.GetService<IPersistenceService>()
-                .SchemaProvider.RetrieveInstance<EntityUIAction>(actionId);
+                .SchemaProvider.RetrieveInstance<EntityUIAction>(instanceId: actionId);
     }
 }

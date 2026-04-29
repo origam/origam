@@ -30,7 +30,7 @@ namespace Origam.Workbench.Services;
 public class TracingService : ITracingService
 {
     private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
-        MethodBase.GetCurrentMethod().DeclaringType
+        type: MethodBase.GetCurrentMethod().DeclaringType
     );
 
     private IBusinessServicesService businessServicesService;
@@ -45,16 +45,19 @@ public class TracingService : ITracingService
         {
             if (log.IsDebugEnabled)
             {
-                log.Debug("Trace is disabled, workflow is not traced.");
+                log.Debug(message: "Trace is disabled, workflow is not traced.");
             }
             return;
         }
 
         try
         {
-            DataSet loadWorkflowData = LoadWorkflowInstanceData(workflowInstanceId);
+            DataSet loadWorkflowData = LoadWorkflowInstanceData(
+                workflowInstanceId: workflowInstanceId
+            );
             bool alreadyInitialized =
-                loadWorkflowData.Tables.Count > 0 && loadWorkflowData.Tables[0].Rows.Count > 0;
+                loadWorkflowData.Tables.Count > 0
+                && loadWorkflowData.Tables[index: 0].Rows.Count > 0;
             if (alreadyInitialized)
             {
                 return;
@@ -70,7 +73,7 @@ public class TracingService : ITracingService
             row.RecordCreatedBy = profile.Id;
             row.WorkflowName = workflowName;
             row.WorkflowId = workflowId;
-            data.OrigamTraceWorkflow.AddOrigamTraceWorkflowRow(row);
+            data.OrigamTraceWorkflow.AddOrigamTraceWorkflowRow(row: row);
             StoreTraceData(
                 dataSet: data,
                 dataStructureQueryId: "309843cc-39ec-4eca-8848-8c69c885790c"
@@ -78,7 +81,7 @@ public class TracingService : ITracingService
         }
         catch (Exception ex)
         {
-            log.LogOrigamError(ex);
+            log.LogOrigamError(ex: ex);
         }
     }
 
@@ -98,7 +101,7 @@ public class TracingService : ITracingService
         {
             if (log.IsDebugEnabled)
             {
-                log.Debug("Trace is disabled, step is not traced.");
+                log.Debug(message: "Trace is disabled, step is not traced.");
             }
             return;
         }
@@ -139,7 +142,7 @@ public class TracingService : ITracingService
             row.Subcategory = subCategory;
             row.WorkflowStepId = stepId;
             row.WorkflowStepPath = stepPath;
-            data.OrigamTraceWorkflowStep.AddOrigamTraceWorkflowStepRow(row);
+            data.OrigamTraceWorkflowStep.AddOrigamTraceWorkflowStepRow(row: row);
 
             StoreTraceData(
                 dataSet: data,
@@ -148,13 +151,19 @@ public class TracingService : ITracingService
         }
         catch (Exception ex)
         {
-            log.LogOrigamError(ex);
+            log.LogOrigamError(ex: ex);
         }
     }
 
     public void TraceRule(Guid ruleId, string ruleName, string ruleInput, string ruleResult)
     {
-        TraceRule(ruleId, ruleName, ruleInput, ruleResult, Guid.Empty);
+        TraceRule(
+            ruleId: ruleId,
+            ruleName: ruleName,
+            ruleInput: ruleInput,
+            ruleResult: ruleResult,
+            workflowInstanceId: Guid.Empty
+        );
     }
 
     public void TraceRule(
@@ -169,7 +178,7 @@ public class TracingService : ITracingService
         {
             if (log.IsDebugEnabled)
             {
-                log.Debug("Trace is disabled, step is not traced.");
+                log.Debug(message: "Trace is disabled, step is not traced.");
             }
             return;
         }
@@ -199,7 +208,7 @@ public class TracingService : ITracingService
             row.RuleId = ruleId;
             row.RuleName = ruleName;
 
-            data.OrigamTraceRule.AddOrigamTraceRuleRow(row);
+            data.OrigamTraceRule.AddOrigamTraceRuleRow(row: row);
 
             StoreTraceData(
                 dataSet: data,
@@ -208,18 +217,20 @@ public class TracingService : ITracingService
         }
         catch (Exception ex)
         {
-            log.LogOrigamError(ex);
+            log.LogOrigamError(ex: ex);
         }
     }
 
     private void StoreTraceData(DataSet dataSet, string dataStructureQueryId)
     {
         IServiceAgent dataServiceAgent = CreateDataServiceAgent();
-        DataStructureQuery query = new DataStructureQuery(new Guid(dataStructureQueryId));
+        DataStructureQuery query = new DataStructureQuery(
+            dataStructureId: new Guid(g: dataStructureQueryId)
+        );
         dataServiceAgent.MethodName = "StoreDataByQuery";
         dataServiceAgent.Parameters.Clear();
-        dataServiceAgent.Parameters.Add("Query", query);
-        dataServiceAgent.Parameters.Add("Data", dataSet);
+        dataServiceAgent.Parameters.Add(key: "Query", value: query);
+        dataServiceAgent.Parameters.Add(key: "Data", value: dataSet);
         dataServiceAgent.Run();
     }
 
@@ -227,20 +238,29 @@ public class TracingService : ITracingService
     {
         IServiceAgent dataServiceAgent = CreateDataServiceAgent();
         DataStructureQuery query = new DataStructureQuery(
-            new Guid("309843cc-39ec-4eca-8848-8c69c885790c"),
-            new Guid("4e6594b7-0462-4c1f-bc36-8fa37016995a")
+            dataStructureId: new Guid(g: "309843cc-39ec-4eca-8848-8c69c885790c"),
+            methodId: new Guid(g: "4e6594b7-0462-4c1f-bc36-8fa37016995a")
         );
-        query.Parameters.Add(new QueryParameter("OrigamTraceWorkflow_parId", workflowInstanceId));
+        query.Parameters.Add(
+            value: new QueryParameter(
+                _parameterName: "OrigamTraceWorkflow_parId",
+                value: workflowInstanceId
+            )
+        );
         dataServiceAgent.MethodName = "LoadDataByQuery";
         dataServiceAgent.Parameters.Clear();
-        dataServiceAgent.Parameters.Add("Query", query);
+        dataServiceAgent.Parameters.Add(key: "Query", value: query);
         dataServiceAgent.Run();
         return dataServiceAgent.Result as DataSet;
     }
 
     private IServiceAgent CreateDataServiceAgent()
     {
-        return businessServicesService.GetAgent("DataService", null, null);
+        return businessServicesService.GetAgent(
+            serviceType: "DataService",
+            ruleEngine: null,
+            workflowEngine: null
+        );
     }
 
     #endregion

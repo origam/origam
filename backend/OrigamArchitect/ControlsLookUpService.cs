@@ -52,20 +52,22 @@ public class ControlsLookUpService : IControlsLookUpService
     public void AddLookupControl(ILookupControl lookupControl, Form form, bool showEditCommand)
     {
         System.Diagnostics.Debug.Assert(
-            form != null,
-            ResourceUtils.GetString("ErrorFormLookupControlFail")
+            condition: form != null,
+            message: ResourceUtils.GetString(key: "ErrorFormLookupControlFail")
         );
-        _controls.Add(lookupControl, form);
-        AbstractDataLookup lookup = dataLookupService.GetLookup(lookupControl.LookupId);
+        _controls.Add(key: lookupControl, value: form);
+        AbstractDataLookup lookup = dataLookupService.GetLookup(lookupId: lookupControl.LookupId);
         if (lookup == null)
         {
             throw new NullReferenceException(
-                "Lookup not specified in control: " + (lookupControl as Control).Name
+                message: "Lookup not specified in control: " + (lookupControl as Control).Name
             );
         }
         // set the EditMenu visibility, if user can or cannot run the Edit command
-        lookupControl.LookupShowEditButton = (showEditCommand & HasEditListMenuBinding(lookup));
-        lookupControl.LookupCanEditSourceRecord = HasEditRecordMenuBinding(lookup);
+        lookupControl.LookupShowEditButton = (
+            showEditCommand & HasEditListMenuBinding(lookup: lookup)
+        );
+        lookupControl.LookupCanEditSourceRecord = HasEditRecordMenuBinding(lookup: lookup);
         lookupControl.LookupListDisplayMember = lookup.ListDisplayMember;
         lookupControl.LookupListValueMember = lookup.ListValueMember;
         lookupControl.LookupListTreeParentMember = lookup.TreeParentMember;
@@ -84,7 +86,7 @@ public class ControlsLookUpService : IControlsLookUpService
         lookupControl.LookupListRefreshRequested -= lookupControl_LookupListRefreshRequested;
         lookupControl.LookupEditSourceRecordRequested -=
             lookupControl_LookupEditSourceRecordRequested;
-        _controls.Remove(lookupControl);
+        _controls.Remove(key: lookupControl);
     }
 
     public void RemoveLookupControlsByForm(Form form)
@@ -92,9 +94,9 @@ public class ControlsLookUpService : IControlsLookUpService
         var controls = _controls.Keys.Cast<Control>().ToList();
         foreach (Control control in controls)
         {
-            if (_controls[control].Equals(form))
+            if (_controls[key: control].Equals(obj: form))
             {
-                this.RemoveLookupControl(control as ILookupControl);
+                this.RemoveLookupControl(lookupControl: control as ILookupControl);
             }
         }
     }
@@ -103,11 +105,14 @@ public class ControlsLookUpService : IControlsLookUpService
     {
         ILookupControl control = sender as ILookupControl;
         DataServiceDataLookup lookup =
-            dataLookupService.GetLookup(control.LookupId) as DataServiceDataLookup;
-        DataLookupMenuBinding binding = dataLookupService.GetMenuBindingElement(lookup, null);
+            dataLookupService.GetLookup(lookupId: control.LookupId) as DataServiceDataLookup;
+        DataLookupMenuBinding binding = dataLookupService.GetMenuBindingElement(
+            lookup: lookup,
+            value: null
+        );
         if (binding != null)
         {
-            OnLookupShowSourceListRequested(binding.MenuItem, EventArgs.Empty);
+            OnLookupShowSourceListRequested(menuItem: binding.MenuItem, e: EventArgs.Empty);
         }
     }
 
@@ -115,19 +120,22 @@ public class ControlsLookUpService : IControlsLookUpService
     {
         ILookupControl control = sender as ILookupControl;
         DataServiceDataLookup lookup =
-            dataLookupService.GetLookup(control.LookupId) as DataServiceDataLookup;
+            dataLookupService.GetLookup(lookupId: control.LookupId) as DataServiceDataLookup;
         DataLookupMenuBinding binding = dataLookupService.GetMenuBindingElement(
-            lookup,
-            control.LookupValue
+            lookup: lookup,
+            value: control.LookupValue
         );
         if (binding != null)
         {
             ParameterizedEventArgs args = new ParameterizedEventArgs();
             foreach (
-                var entry in dataLookupService.LinkParameters(binding.MenuItem, control.LookupValue)
+                var entry in dataLookupService.LinkParameters(
+                    linkTarget: binding.MenuItem,
+                    value: control.LookupValue
+                )
             )
             {
-                args.Parameters.Add(entry.Key, entry.Value);
+                args.Parameters.Add(key: entry.Key, value: entry.Value);
             }
             if (binding.MenuItem is FormReferenceMenuItem)
             {
@@ -137,7 +145,7 @@ public class ControlsLookUpService : IControlsLookUpService
                     args.SourceForm = form;
                 }
             }
-            OnLookupEditSourceRecordRequested(binding.MenuItem, args);
+            OnLookupEditSourceRecordRequested(menuItem: binding.MenuItem, e: args);
         }
     }
 
@@ -160,7 +168,11 @@ public class ControlsLookUpService : IControlsLookUpService
             return;
         }
 
-        WorkbenchSingleton.Workbench.ProcessGuiLink(args.SourceForm, menuItem, args.Parameters);
+        WorkbenchSingleton.Workbench.ProcessGuiLink(
+            sourceForm: args.SourceForm,
+            linkTarget: menuItem,
+            parameters: args.Parameters
+        );
     }
 
     private bool HasEditListMenuBinding(AbstractDataLookup lookup)
@@ -172,7 +184,11 @@ public class ControlsLookUpService : IControlsLookUpService
         {
             if (
                 binding.SelectionLookup == null
-                && dataLookupService.AuthorizeMenuBinding(authorizationProvider, principal, binding)
+                && dataLookupService.AuthorizeMenuBinding(
+                    authorizationProvider: authorizationProvider,
+                    principal: principal,
+                    binding: binding
+                )
             )
             {
                 return true;
@@ -189,9 +205,9 @@ public class ControlsLookUpService : IControlsLookUpService
         {
             if (
                 dataLookupService.AuthorizeMenuBinding(
-                    authorizationProvider,
-                    SecurityManager.CurrentPrincipal,
-                    binding
+                    authorizationProvider: authorizationProvider,
+                    principal: SecurityManager.CurrentPrincipal,
+                    binding: binding
                 )
             )
             {
@@ -208,14 +224,14 @@ public class ControlsLookUpService : IControlsLookUpService
         if (!settings.UseProgressiveCaching)
         {
             // clear cache
-            dataLookupService.RemoveFromCache(control.LookupId);
+            dataLookupService.RemoveFromCache(id: control.LookupId);
             // refresh current text
-            lookupControl_LookupDisplayTextRequested(sender, e);
+            lookupControl_LookupDisplayTextRequested(sender: sender, e: e);
         }
         DataTable lookupTable = dataLookupService.GetList(
-            ILookupControlToLookupListRequest(control)
+            request: ILookupControlToLookupListRequest(control: control)
         );
-        DataView view = new DataView(lookupTable);
+        DataView view = new DataView(table: lookupTable);
         control.LookupList = view;
     }
 
@@ -223,7 +239,11 @@ public class ControlsLookUpService : IControlsLookUpService
     {
         ILookupControl control = sender as ILookupControl;
         control.LookupDisplayText = dataLookupService
-            .GetDisplayText(control.LookupId, control.LookupValue, null)
+            .GetDisplayText(
+                lookupId: control.LookupId,
+                lookupValue: control.LookupValue,
+                transactionId: null
+            )
             .ToString();
     }
 

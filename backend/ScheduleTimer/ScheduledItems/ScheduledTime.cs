@@ -60,8 +60,9 @@ public class ScheduledTime : IScheduledItem
     public ScheduledTime(string StrBase, string StrOffset)
     {
         //TODO:Create an IScheduled time factory method.
-        _Base = (EventTimeBase)Enum.Parse(typeof(EventTimeBase), StrBase, true);
-        Init(StrOffset);
+        _Base = (EventTimeBase)
+            Enum.Parse(enumType: typeof(EventTimeBase), value: StrBase, ignoreCase: true);
+        Init(StrOffset: StrOffset);
     }
 
     public int ArrayAccess(string[] Arr, int i)
@@ -71,27 +72,27 @@ public class ScheduledTime : IScheduledItem
             return 0;
         }
 
-        return int.Parse(Arr[i]);
+        return int.Parse(s: Arr[i]);
     }
 
     public void AddEventsInInterval(DateTime Begin, DateTime End, List<DateTime> List)
     {
-        DateTime Next = NextRunTime(Begin, true);
+        DateTime Next = NextRunTime(time: Begin, AllowExact: true);
 
         System.Diagnostics.Debug.WriteLine(
-            "Testing event. Next: " + Next.ToString() + ", Current: " + End.ToString()
+            message: "Testing event. Next: " + Next.ToString() + ", Current: " + End.ToString()
         );
 
         while (Next < End)
         {
-            List.Add(Next);
-            Next = IncInterval(Next);
+            List.Add(item: Next);
+            Next = IncInterval(Last: Next);
         }
     }
 
     public DateTime NextRunTime(DateTime time, bool AllowExact)
     {
-        DateTime NextRun = LastSyncForTime(time) + _Offset;
+        DateTime NextRun = LastSyncForTime(time: time) + _Offset;
         if (NextRun == time && AllowExact)
         {
             return time;
@@ -102,7 +103,7 @@ public class ScheduledTime : IScheduledItem
             return NextRun;
         }
 
-        return IncInterval(NextRun);
+        return IncInterval(Last: NextRun);
     }
 
     private DateTime LastSyncForTime(DateTime time)
@@ -112,38 +113,52 @@ public class ScheduledTime : IScheduledItem
             case EventTimeBase.BySecond:
             {
                 return new DateTime(
-                    time.Year,
-                    time.Month,
-                    time.Day,
-                    time.Hour,
-                    time.Minute,
-                    time.Second
+                    year: time.Year,
+                    month: time.Month,
+                    day: time.Day,
+                    hour: time.Hour,
+                    minute: time.Minute,
+                    second: time.Second
                 );
             }
             case EventTimeBase.ByMinute:
             {
-                return new DateTime(time.Year, time.Month, time.Day, time.Hour, time.Minute, 0);
+                return new DateTime(
+                    year: time.Year,
+                    month: time.Month,
+                    day: time.Day,
+                    hour: time.Hour,
+                    minute: time.Minute,
+                    second: 0
+                );
             }
             case EventTimeBase.Hourly:
             {
-                return new DateTime(time.Year, time.Month, time.Day, time.Hour, 0, 0);
+                return new DateTime(
+                    year: time.Year,
+                    month: time.Month,
+                    day: time.Day,
+                    hour: time.Hour,
+                    minute: 0,
+                    second: 0
+                );
             }
             case EventTimeBase.Daily:
             {
-                return new DateTime(time.Year, time.Month, time.Day);
+                return new DateTime(year: time.Year, month: time.Month, day: time.Day);
             }
             case EventTimeBase.Weekly:
             {
-                return (new DateTime(time.Year, time.Month, time.Day)).AddDays(
-                    -(int)time.DayOfWeek
+                return (new DateTime(year: time.Year, month: time.Month, day: time.Day)).AddDays(
+                    value: -(int)time.DayOfWeek
                 );
             }
             case EventTimeBase.Monthly:
             {
-                return new DateTime(time.Year, time.Month, 1);
+                return new DateTime(year: time.Year, month: time.Month, day: 1);
             }
         }
-        throw new Exception("Invalid base specified for timer.");
+        throw new Exception(message: "Invalid base specified for timer.");
     }
 
     private DateTime IncInterval(DateTime Last)
@@ -152,30 +167,30 @@ public class ScheduledTime : IScheduledItem
         {
             case EventTimeBase.BySecond:
             {
-                return Last.AddSeconds(1);
+                return Last.AddSeconds(value: 1);
             }
             case EventTimeBase.ByMinute:
             {
-                return Last.AddMinutes(1);
+                return Last.AddMinutes(value: 1);
             }
             case EventTimeBase.Hourly:
             {
-                return Last.AddHours(1);
+                return Last.AddHours(value: 1);
             }
             case EventTimeBase.Daily:
             {
-                return Last.AddDays(1);
+                return Last.AddDays(value: 1);
             }
             case EventTimeBase.Weekly:
             {
-                return Last.AddDays(7);
+                return Last.AddDays(value: 7);
             }
             case EventTimeBase.Monthly:
             {
-                return Last.AddMonths(1);
+                return Last.AddMonths(months: 1);
             }
         }
-        throw new Exception("Invalid base specified for timer.");
+        throw new Exception(message: "Invalid base specified for timer.");
     }
 
     private void Init(string StrOffset)
@@ -185,17 +200,23 @@ public class ScheduledTime : IScheduledItem
             case EventTimeBase.BySecond:
             {
                 {
-                    int offset = int.Parse(StrOffset);
+                    int offset = int.Parse(s: StrOffset);
                     if (offset >= 1000 || offset < 0)
                     {
                         throw new ArgumentOutOfRangeException(
-                            "offset",
-                            offset,
-                            "millisecond offset must be between 0 and 1000.  If you need an event every n seconds use simpleinterval."
+                            paramName: "offset",
+                            actualValue: offset,
+                            message: "millisecond offset must be between 0 and 1000.  If you need an event every n seconds use simpleinterval."
                         );
                     }
 
-                    _Offset = new TimeSpan(0, 0, 0, 0, int.Parse(StrOffset));
+                    _Offset = new TimeSpan(
+                        days: 0,
+                        hours: 0,
+                        minutes: 0,
+                        seconds: 0,
+                        milliseconds: int.Parse(s: StrOffset)
+                    );
                 }
                 break;
             }
@@ -203,31 +224,37 @@ public class ScheduledTime : IScheduledItem
             case EventTimeBase.ByMinute:
             {
                 {
-                    string[] ArrMinute = StrOffset.Split(',');
-                    if (ArrayAccess(ArrMinute, 0) >= 60 || ArrayAccess(ArrMinute, 0) < 0)
+                    string[] ArrMinute = StrOffset.Split(separator: ',');
+                    if (
+                        ArrayAccess(Arr: ArrMinute, i: 0) >= 60
+                        || ArrayAccess(Arr: ArrMinute, i: 0) < 0
+                    )
                     {
                         throw new ArgumentOutOfRangeException(
-                            "offset",
-                            ArrayAccess(ArrMinute, 0),
-                            "second offset must be between 0 and 60.  If you need an event every n minutes use simpleinterval."
+                            paramName: "offset",
+                            actualValue: ArrayAccess(Arr: ArrMinute, i: 0),
+                            message: "second offset must be between 0 and 60.  If you need an event every n minutes use simpleinterval."
                         );
                     }
 
-                    if (ArrayAccess(ArrMinute, 1) >= 1000 || ArrayAccess(ArrMinute, 1) < 0)
+                    if (
+                        ArrayAccess(Arr: ArrMinute, i: 1) >= 1000
+                        || ArrayAccess(Arr: ArrMinute, i: 1) < 0
+                    )
                     {
                         throw new ArgumentOutOfRangeException(
-                            "offset",
-                            ArrayAccess(ArrMinute, 1),
-                            "millisecond offset must be between 0 and 1000."
+                            paramName: "offset",
+                            actualValue: ArrayAccess(Arr: ArrMinute, i: 1),
+                            message: "millisecond offset must be between 0 and 1000."
                         );
                     }
 
                     _Offset = new TimeSpan(
-                        0,
-                        0,
-                        0,
-                        ArrayAccess(ArrMinute, 0),
-                        ArrayAccess(ArrMinute, 1)
+                        days: 0,
+                        hours: 0,
+                        minutes: 0,
+                        seconds: ArrayAccess(Arr: ArrMinute, i: 0),
+                        milliseconds: ArrayAccess(Arr: ArrMinute, i: 1)
                     );
                 }
                 break;
@@ -236,40 +263,49 @@ public class ScheduledTime : IScheduledItem
             case EventTimeBase.Hourly:
             {
                 {
-                    string[] ArrHour = StrOffset.Split(',');
-                    if (ArrayAccess(ArrHour, 0) >= 60 || ArrayAccess(ArrHour, 0) < 0)
+                    string[] ArrHour = StrOffset.Split(separator: ',');
+                    if (
+                        ArrayAccess(Arr: ArrHour, i: 0) >= 60
+                        || ArrayAccess(Arr: ArrHour, i: 0) < 0
+                    )
                     {
                         throw new ArgumentOutOfRangeException(
-                            "offset",
-                            ArrayAccess(ArrHour, 0),
-                            "minute offset must be between 0 and 60.  If you need an event every n hours use simpleinterval."
+                            paramName: "offset",
+                            actualValue: ArrayAccess(Arr: ArrHour, i: 0),
+                            message: "minute offset must be between 0 and 60.  If you need an event every n hours use simpleinterval."
                         );
                     }
 
-                    if (ArrayAccess(ArrHour, 1) >= 60 || ArrayAccess(ArrHour, 1) < 0)
+                    if (
+                        ArrayAccess(Arr: ArrHour, i: 1) >= 60
+                        || ArrayAccess(Arr: ArrHour, i: 1) < 0
+                    )
                     {
                         throw new ArgumentOutOfRangeException(
-                            "offset",
-                            ArrayAccess(ArrHour, 1),
-                            "second offset must be between 0 and 60."
+                            paramName: "offset",
+                            actualValue: ArrayAccess(Arr: ArrHour, i: 1),
+                            message: "second offset must be between 0 and 60."
                         );
                     }
 
-                    if (ArrayAccess(ArrHour, 2) >= 1000 || ArrayAccess(ArrHour, 2) < 0)
+                    if (
+                        ArrayAccess(Arr: ArrHour, i: 2) >= 1000
+                        || ArrayAccess(Arr: ArrHour, i: 2) < 0
+                    )
                     {
                         throw new ArgumentOutOfRangeException(
-                            "offset",
-                            ArrayAccess(ArrHour, 2),
-                            "millisecond offset must be between 0 and 1000."
+                            paramName: "offset",
+                            actualValue: ArrayAccess(Arr: ArrHour, i: 2),
+                            message: "millisecond offset must be between 0 and 1000."
                         );
                     }
 
                     _Offset = new TimeSpan(
-                        0,
-                        0,
-                        ArrayAccess(ArrHour, 0),
-                        ArrayAccess(ArrHour, 1),
-                        ArrayAccess(ArrHour, 2)
+                        days: 0,
+                        hours: 0,
+                        minutes: ArrayAccess(Arr: ArrHour, i: 0),
+                        seconds: ArrayAccess(Arr: ArrHour, i: 1),
+                        milliseconds: ArrayAccess(Arr: ArrHour, i: 2)
                     );
                 }
                 break;
@@ -278,13 +314,13 @@ public class ScheduledTime : IScheduledItem
             case EventTimeBase.Daily:
             {
                 {
-                    DateTime Daytime = DateTime.Parse(StrOffset);
+                    DateTime Daytime = DateTime.Parse(s: StrOffset);
                     _Offset = new TimeSpan(
-                        0,
-                        Daytime.Hour,
-                        Daytime.Minute,
-                        Daytime.Second,
-                        Daytime.Millisecond
+                        days: 0,
+                        hours: Daytime.Hour,
+                        minutes: Daytime.Minute,
+                        seconds: Daytime.Second,
+                        milliseconds: Daytime.Millisecond
                     );
                 }
                 break;
@@ -293,24 +329,24 @@ public class ScheduledTime : IScheduledItem
             case EventTimeBase.Weekly:
             {
                 {
-                    string[] ArrWeek = StrOffset.Split(',');
-                    int offset = int.Parse(ArrWeek[0]);
+                    string[] ArrWeek = StrOffset.Split(separator: ',');
+                    int offset = int.Parse(s: ArrWeek[0]);
                     if (ArrWeek.Length != 2 || offset < 0 || offset >= 7)
                     {
                         throw new ArgumentOutOfRangeException(
-                            "offset",
-                            offset,
-                            "Weekly offset must be in the format n, time where n is the day of the week starting with 0 for sunday"
+                            paramName: "offset",
+                            actualValue: offset,
+                            message: "Weekly offset must be in the format n, time where n is the day of the week starting with 0 for sunday"
                         );
                     }
 
-                    DateTime WeekTime = DateTime.Parse(ArrWeek[1]);
+                    DateTime WeekTime = DateTime.Parse(s: ArrWeek[1]);
                     _Offset = new TimeSpan(
-                        offset,
-                        WeekTime.Hour,
-                        WeekTime.Minute,
-                        WeekTime.Second,
-                        WeekTime.Millisecond
+                        days: offset,
+                        hours: WeekTime.Hour,
+                        minutes: WeekTime.Minute,
+                        seconds: WeekTime.Second,
+                        milliseconds: WeekTime.Millisecond
                     );
                 }
                 break;
@@ -319,22 +355,22 @@ public class ScheduledTime : IScheduledItem
             case EventTimeBase.Monthly:
             {
                 {
-                    string[] ArrMonth = StrOffset.Split(',');
-                    int offset = int.Parse(ArrMonth[0]);
+                    string[] ArrMonth = StrOffset.Split(separator: ',');
+                    int offset = int.Parse(s: ArrMonth[0]);
                     if (ArrMonth.Length != 2)
                     {
                         throw new Exception(
-                            "Monthly offset must be in the format n, time where n is the day of the month starting with 1 for the first day of the month."
+                            message: "Monthly offset must be in the format n, time where n is the day of the month starting with 1 for the first day of the month."
                         );
                     }
 
-                    DateTime MonthTime = DateTime.Parse(ArrMonth[1]);
+                    DateTime MonthTime = DateTime.Parse(s: ArrMonth[1]);
                     _Offset = new TimeSpan(
-                        offset - 1,
-                        MonthTime.Hour,
-                        MonthTime.Minute,
-                        MonthTime.Second,
-                        MonthTime.Millisecond
+                        days: offset - 1,
+                        hours: MonthTime.Hour,
+                        minutes: MonthTime.Minute,
+                        seconds: MonthTime.Second,
+                        milliseconds: MonthTime.Millisecond
                     );
                 }
                 break;
@@ -342,7 +378,7 @@ public class ScheduledTime : IScheduledItem
 
             default:
             {
-                throw new Exception("Invalid base specified for timer.");
+                throw new Exception(message: "Invalid base specified for timer.");
             }
         }
     }

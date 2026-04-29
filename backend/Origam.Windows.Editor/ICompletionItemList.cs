@@ -113,15 +113,23 @@ public class DefaultCompletionItemList : ICompletionItemList
     {
         // the user might use method names is his language, so sort using CurrentCulture
         items.Sort(
-            (a, b) =>
+            comparison: (a, b) =>
             {
-                int r = string.Compare(a.Text, b.Text, StringComparison.CurrentCultureIgnoreCase);
+                int r = string.Compare(
+                    strA: a.Text,
+                    strB: b.Text,
+                    comparisonType: StringComparison.CurrentCultureIgnoreCase
+                );
                 if (r != 0)
                 {
                     return r;
                 }
 
-                return string.Compare(a.Text, b.Text, StringComparison.CurrentCulture);
+                return string.Compare(
+                    strA: a.Text,
+                    strB: b.Text,
+                    comparisonType: StringComparison.CurrentCulture
+                );
             }
         );
     }
@@ -147,7 +155,7 @@ public class DefaultCompletionItemList : ICompletionItemList
     /// <inheritdoc/>
     public virtual CompletionItemListKeyResult ProcessInput(char key)
     {
-        if (char.IsLetterOrDigit(key) || key == '_')
+        if (char.IsLetterOrDigit(c: key) || key == '_')
         {
             InsertSpace = false; // don't insert space if user types normally
             return CompletionItemListKeyResult.NormalKey;
@@ -172,8 +180,8 @@ public class DefaultCompletionItemList : ICompletionItemList
         if (InsertSpace)
         {
             InsertSpace = false;
-            area.Document.Insert(segment.Offset, " ");
+            area.Document.Insert(offset: segment.Offset, text: " ");
         }
-        item.Complete(area, segment, e);
+        item.Complete(textArea: area, completionSegment: segment, insertionRequestEventArgs: e);
     }
 }

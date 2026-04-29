@@ -27,7 +27,7 @@ namespace Origam.Utils.Sql;
 
 class MsSqlRunner : SqlRunner
 {
-    public MsSqlRunner(ILog log) : base(log) { }
+    public MsSqlRunner(ILog log) : base(log: log) { }
 
     protected override string BuildRootVersionSql()
     {
@@ -42,10 +42,10 @@ class MsSqlRunner : SqlRunner
 
     protected override void ExecuteSqlCommand(string connectionString, string sqlCommand)
     {
-        using var connection = new SqlConnection(connectionString);
-        using var command = new SqlCommand(sqlCommand, connection);
+        using var connection = new SqlConnection(connectionString: connectionString);
+        using var command = new SqlCommand(cmdText: sqlCommand, connection: connection);
         connection.Open();
         var result = command.ExecuteScalar();
-        Console.Write(result?.ToString());
+        Console.Write(value: result?.ToString());
     }
 }

@@ -40,9 +40,13 @@ public class SearchHandler
         IPrincipal principal = SecurityManager.CurrentPrincipal;
         return GetSearchSchemaItemProvider()
             .ChildItems.OfType<SearchDataSource>()
-            .Where(dataSource => authorizationProvider.Authorize(principal, dataSource.Roles))
+            .Where(predicate: dataSource =>
+                authorizationProvider.Authorize(principal: principal, context: dataSource.Roles)
+            )
             .ToList()
-            .SelectMany(dataSource => AttachResultsToResponse(dataSource, searchTerm));
+            .SelectMany(selector: dataSource =>
+                AttachResultsToResponse(dataSource: dataSource, searchTerm: searchTerm)
+            );
     }
 
     private IEnumerable<SearchResult> AttachResultsToResponse(
@@ -51,26 +55,26 @@ public class SearchHandler
     )
     {
         var results = DataService.Instance.LoadData(
-            dataSource.DataStructureId,
-            dataSource.DataStructureMethodId,
-            Guid.Empty,
-            Guid.Empty,
-            null,
-            dataSource.FilterParameter,
-            searchTerm
+            dataStructureId: dataSource.DataStructureId,
+            methodId: dataSource.DataStructureMethodId,
+            defaultSetId: Guid.Empty,
+            sortSetId: Guid.Empty,
+            transactionId: null,
+            paramName1: dataSource.FilterParameter,
+            paramValue1: searchTerm
         );
-        DataTable resultTable = results.Tables[0];
-        bool containsDescription = resultTable.Columns.Contains("Description");
+        DataTable resultTable = results.Tables[index: 0];
+        bool containsDescription = resultTable.Columns.Contains(name: "Description");
         foreach (DataRow result in resultTable.Rows)
         {
             yield return new SearchResult
             {
                 Group = dataSource.GroupLabel,
                 DataSourceId = dataSource.Id,
-                Label = result["Name"].ToString(),
-                Description = containsDescription ? (string)result["Description"] : "",
+                Label = result[columnName: "Name"].ToString(),
+                Description = containsDescription ? (string)result[columnName: "Description"] : "",
                 DataSourceLookupId = dataSource.LookupId,
-                ReferenceId = result["ReferenceId"].ToString(),
+                ReferenceId = result[columnName: "ReferenceId"].ToString(),
             };
         }
     }

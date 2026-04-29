@@ -28,9 +28,13 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.GuiModel;
 
-[SchemaItemDescription("Alternative", "Alternatives", "icon_alternative.png")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(
+    name: "Alternative",
+    folderName: "Alternatives",
+    iconName: "icon_alternative.png"
+)]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class ControlSetItem : AbstractSchemaItem
 {
     public const string CategoryConst = "ControlSetItem";
@@ -38,29 +42,29 @@ public class ControlSetItem : AbstractSchemaItem
     public ControlSetItem() { }
 
     public ControlSetItem(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public ControlSetItem(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Properties
     public Guid ControlId;
 
-    [XmlReference("widget", "ControlId")]
+    [XmlReference(attributeName: "widget", idField: "ControlId")]
     public ControlItem ControlItem
     {
         get =>
             (ControlItem)
                 PersistenceProvider.RetrieveInstance(
-                    typeof(ControlItem),
-                    new ModelElementKey(ControlId)
+                    type: typeof(ControlItem),
+                    primaryKey: new ModelElementKey(id: ControlId)
                 );
-        set => ControlId = (Guid)value.PrimaryKey["Id"];
+        set => ControlId = (Guid)value.PrimaryKey[key: "Id"];
     }
 
     private string _roles;
 
-    [XmlAttribute("roles")]
+    [XmlAttribute(attributeName: "roles")]
     public string Roles
     {
         get => _roles;
@@ -68,7 +72,7 @@ public class ControlSetItem : AbstractSchemaItem
     }
     private string _features;
 
-    [XmlAttribute("features")]
+    [XmlAttribute(attributeName: "features")]
     public string Features
     {
         get => _features;
@@ -76,7 +80,7 @@ public class ControlSetItem : AbstractSchemaItem
     }
     private Guid _multiColumnAdapterFieldCondition;
 
-    [XmlAttribute("multiColumnAdapterFieldCondition")]
+    [XmlAttribute(attributeName: "multiColumnAdapterFieldCondition")]
     public Guid MultiColumnAdapterFieldCondition
     {
         get => _multiColumnAdapterFieldCondition;
@@ -84,7 +88,7 @@ public class ControlSetItem : AbstractSchemaItem
     }
     private bool _isAlternative = false;
 
-    [XmlAttribute("isAlternative")]
+    [XmlAttribute(attributeName: "isAlternative")]
     public bool IsAlternative
     {
         get => _isAlternative;
@@ -92,7 +96,7 @@ public class ControlSetItem : AbstractSchemaItem
     }
     private bool _requestSaveAfterChange = false;
 
-    [XmlAttribute("requestSaveAfterChange")]
+    [XmlAttribute(attributeName: "requestSaveAfterChange")]
     public bool RequestSaveAfterChange
     {
         get => _requestSaveAfterChange;
@@ -100,7 +104,7 @@ public class ControlSetItem : AbstractSchemaItem
     }
     private int _level = 100;
 
-    [XmlAttribute("level")]
+    [XmlAttribute(attributeName: "level")]
     public int Level
     {
         get => _level;
@@ -119,10 +123,10 @@ public class ControlSetItem : AbstractSchemaItem
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(ControlItem);
+        dependencies.Add(item: ControlItem);
         if (ControlItem.PanelControlSet != null)
         {
-            dependencies.Add(ControlItem.PanelControlSet);
+            dependencies.Add(item: ControlItem.PanelControlSet);
         }
         var lookupId = Guid.Empty;
         var reportId = Guid.Empty;
@@ -130,7 +134,9 @@ public class ControlSetItem : AbstractSchemaItem
         var workflowId = Guid.Empty;
         var constantId = Guid.Empty;
         foreach (
-            var property in ChildItemsByType<PropertyValueItem>(PropertyValueItem.CategoryConst)
+            var property in ChildItemsByType<PropertyValueItem>(
+                itemType: PropertyValueItem.CategoryConst
+            )
         )
         {
             if (property.ControlPropertyItem == null)
@@ -185,21 +191,19 @@ public class ControlSetItem : AbstractSchemaItem
             {
                 var item =
                     PersistenceProvider.RetrieveInstance(
-                        typeof(ISchemaItem),
-                        new ModelElementKey(lookupId)
+                        type: typeof(ISchemaItem),
+                        primaryKey: new ModelElementKey(id: lookupId)
                     ) as ISchemaItem;
-                dependencies.Add(item);
+                dependencies.Add(item: item);
             }
             catch
             {
                 throw new ArgumentOutOfRangeException(
-                    "lookupId",
-                    lookupId,
-                    ResourceUtils.GetString(
-                        "ErrorLookupNotFound",
-                        Name,
-                        RootItem.ItemType,
-                        RootItem.Name
+                    paramName: "lookupId",
+                    actualValue: lookupId,
+                    message: ResourceUtils.GetString(
+                        key: "ErrorLookupNotFound",
+                        args: new object[] { Name, RootItem.ItemType, RootItem.Name }
                     )
                 );
             }
@@ -210,21 +214,19 @@ public class ControlSetItem : AbstractSchemaItem
             {
                 var item =
                     PersistenceProvider.RetrieveInstance(
-                        typeof(ISchemaItem),
-                        new ModelElementKey(constantId)
+                        type: typeof(ISchemaItem),
+                        primaryKey: new ModelElementKey(id: constantId)
                     ) as ISchemaItem;
-                dependencies.Add(item);
+                dependencies.Add(item: item);
             }
             catch
             {
                 throw new ArgumentOutOfRangeException(
-                    "constantId",
-                    lookupId,
-                    ResourceUtils.GetString(
-                        "ErrorConstantNotFound",
-                        Name,
-                        RootItem.ItemType,
-                        RootItem.Name
+                    paramName: "constantId",
+                    actualValue: lookupId,
+                    message: ResourceUtils.GetString(
+                        key: "ErrorConstantNotFound",
+                        args: new object[] { Name, RootItem.ItemType, RootItem.Name }
                     )
                 );
             }
@@ -235,21 +237,19 @@ public class ControlSetItem : AbstractSchemaItem
             {
                 var item =
                     PersistenceProvider.RetrieveInstance(
-                        typeof(ISchemaItem),
-                        new ModelElementKey(reportId)
+                        type: typeof(ISchemaItem),
+                        primaryKey: new ModelElementKey(id: reportId)
                     ) as ISchemaItem;
-                dependencies.Add(item);
+                dependencies.Add(item: item);
             }
             catch
             {
                 throw new ArgumentOutOfRangeException(
-                    "reportId",
-                    reportId,
-                    ResourceUtils.GetString(
-                        "ErrorReportNotFound",
-                        Name,
-                        RootItem.ItemType,
-                        RootItem.Name
+                    paramName: "reportId",
+                    actualValue: reportId,
+                    message: ResourceUtils.GetString(
+                        key: "ErrorReportNotFound",
+                        args: new object[] { Name, RootItem.ItemType, RootItem.Name }
                     )
                 );
             }
@@ -260,21 +260,19 @@ public class ControlSetItem : AbstractSchemaItem
             {
                 var item =
                     PersistenceProvider.RetrieveInstance(
-                        typeof(ISchemaItem),
-                        new ModelElementKey(graphicsId)
+                        type: typeof(ISchemaItem),
+                        primaryKey: new ModelElementKey(id: graphicsId)
                     ) as ISchemaItem;
-                dependencies.Add(item);
+                dependencies.Add(item: item);
             }
             catch
             {
                 throw new ArgumentOutOfRangeException(
-                    "graphicsId",
-                    graphicsId,
-                    ResourceUtils.GetString(
-                        "ErrorGraphicsNotFound",
-                        Name,
-                        RootItem.ItemType,
-                        RootItem.Name
+                    paramName: "graphicsId",
+                    actualValue: graphicsId,
+                    message: ResourceUtils.GetString(
+                        key: "ErrorGraphicsNotFound",
+                        args: new object[] { Name, RootItem.ItemType, RootItem.Name }
                     )
                 );
             }
@@ -285,26 +283,24 @@ public class ControlSetItem : AbstractSchemaItem
             {
                 var item =
                     PersistenceProvider.RetrieveInstance(
-                        typeof(ISchemaItem),
-                        new ModelElementKey(workflowId)
+                        type: typeof(ISchemaItem),
+                        primaryKey: new ModelElementKey(id: workflowId)
                     ) as ISchemaItem;
-                dependencies.Add(item);
+                dependencies.Add(item: item);
             }
             catch
             {
                 throw new ArgumentOutOfRangeException(
-                    "workflowId",
-                    workflowId,
-                    ResourceUtils.GetString(
-                        "ErrorWorkflowNotFound",
-                        Name,
-                        RootItem.ItemType,
-                        RootItem.Name
+                    paramName: "workflowId",
+                    actualValue: workflowId,
+                    message: ResourceUtils.GetString(
+                        key: "ErrorWorkflowNotFound",
+                        args: new object[] { Name, RootItem.ItemType, RootItem.Name }
                     )
                 );
             }
         }
-        base.GetExtraDependencies(dependencies);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
     #endregion
     #region ISchemaItemFactory Members
@@ -336,18 +332,24 @@ public class ControlSetItem : AbstractSchemaItem
         {
             itemName = "NewColumnParameterMapping";
         }
-        return base.NewItem<T>(schemaExtensionId, group, itemName);
+        return base.NewItem<T>(
+            schemaExtensionId: schemaExtensionId,
+            group: group,
+            itemName: itemName
+        );
     }
     #endregion
 
     public PropertyValueItem GetProperty(string propertyName)
     {
-        return ChildItems.OfType<PropertyValueItem>().First(x => x.Name == propertyName);
+        return ChildItems.OfType<PropertyValueItem>().First(predicate: x => x.Name == propertyName);
     }
 
     public PropertyValueItem GetPropertyOrNull(string propertyName)
     {
-        return ChildItems.OfType<PropertyValueItem>().FirstOrDefault(x => x.Name == propertyName);
+        return ChildItems
+            .OfType<PropertyValueItem>()
+            .FirstOrDefault(predicate: x => x.Name == propertyName);
     }
 }
 
@@ -358,26 +360,34 @@ public class ControlSetItemComparer : IComparer<ISchemaItem>
     {
         if (!(x is ControlSetItem xItem))
         {
-            throw new ArgumentOutOfRangeException("x", x, "Unsupported type for comparison.");
+            throw new ArgumentOutOfRangeException(
+                paramName: "x",
+                actualValue: x,
+                message: "Unsupported type for comparison."
+            );
         }
         if (!(y is ControlSetItem yItem))
         {
-            throw new ArgumentOutOfRangeException("y", y, "Unsupported type for comparison.");
+            throw new ArgumentOutOfRangeException(
+                paramName: "y",
+                actualValue: y,
+                message: "Unsupported type for comparison."
+            );
         }
-        var tabX = TabIndex(xItem);
-        var tabY = TabIndex(yItem);
+        var tabX = TabIndex(control: xItem);
+        var tabY = TabIndex(control: yItem);
         if (tabX == -1 || tabY == -1)
         {
-            return xItem.Name.CompareTo(yItem.Name);
+            return xItem.Name.CompareTo(strB: yItem.Name);
         }
-        return tabX.CompareTo(tabY);
+        return tabX.CompareTo(value: tabY);
     }
     #endregion
     private int TabIndex(ControlSetItem control)
     {
         foreach (
             var property in control.ChildItemsByType<PropertyValueItem>(
-                PropertyValueItem.CategoryConst
+                itemType: PropertyValueItem.CategoryConst
             )
         )
         {
@@ -397,13 +407,21 @@ public class AlternativeControlSetItemComparer : IComparer<ControlSetItem>
     {
         if (x is null)
         {
-            throw new ArgumentOutOfRangeException("x", x, "Unsupported type for comparison.");
+            throw new ArgumentOutOfRangeException(
+                paramName: "x",
+                actualValue: x,
+                message: "Unsupported type for comparison."
+            );
         }
         if (y is null)
         {
-            throw new ArgumentOutOfRangeException("y", y, "Unsupported type for comparison.");
+            throw new ArgumentOutOfRangeException(
+                paramName: "y",
+                actualValue: y,
+                message: "Unsupported type for comparison."
+            );
         }
-        return x.Level.CompareTo(y.Level);
+        return x.Level.CompareTo(value: y.Level);
     }
     #endregion
 }

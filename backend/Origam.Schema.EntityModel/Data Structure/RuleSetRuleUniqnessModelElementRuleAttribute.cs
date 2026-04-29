@@ -30,7 +30,7 @@ using Origam.DA.ObjectPersistence;
 namespace Origam.Schema.EntityModel;
 
 [AttributeUsage(
-    AttributeTargets.Property | AttributeTargets.Field,
+    validOn: AttributeTargets.Property | AttributeTargets.Field,
     AllowMultiple = false,
     Inherited = true
 )]
@@ -55,7 +55,10 @@ public class RuleSetRuleUniqnessModelElementRuleAttribute : AbstractModelElement
         {
             try
             {
-                ruleSet.AddUniqueRuleSetIds(ruleSetUniqIds, currentRuleSetReference);
+                ruleSet.AddUniqueRuleSetIds(
+                    ruleSetUniqIds: ruleSetUniqIds,
+                    curRuleSetReference: currentRuleSetReference
+                );
             }
             catch (Exception ex)
             {
@@ -69,6 +72,6 @@ public class RuleSetRuleUniqnessModelElementRuleAttribute : AbstractModelElement
 
     public override Exception CheckRule(object instance, string memberName)
     {
-        return CheckRule(instance);
+        return CheckRule(instance: instance);
     }
 }

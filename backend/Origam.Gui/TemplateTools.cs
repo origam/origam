@@ -44,21 +44,21 @@ public static class TemplateTools
         IXmlContainer doc;
         if (parentRow == null)
         {
-            doc = DataDocumentFactory.New(new DataSet("ROOT"));
+            doc = DataDocumentFactory.New(dataSet: new DataSet(dataSetName: "ROOT"));
         }
         else
         {
             DataSet slice = formData.Clone();
             DatasetTools.GetDataSlice(
-                slice,
-                new List<DataRow> { parentRow },
-                null,
-                false,
-                new List<string>()
+                target: slice,
+                rows: new List<DataRow> { parentRow },
+                profileId: null,
+                copy: false,
+                tablesToSkip: new List<string>()
             );
             try
             {
-                doc = DataDocumentFactory.New(slice);
+                doc = DataDocumentFactory.New(dataSet: slice);
             }
             catch
             {
@@ -68,16 +68,19 @@ public static class TemplateTools
         try
         {
             templatePosition = AddTemplateRecord(
-                dataMember,
-                template,
-                doc,
-                dataStructureId,
-                formData
+                dataMember: dataMember,
+                template: template,
+                dataSource: doc,
+                dataStructureId: dataStructureId,
+                formData: formData
             );
         }
         catch (Exception ex)
         {
-            throw new Exception(ResourceUtils.GetString("ErrorProcessTemplate"), ex);
+            throw new Exception(
+                message: ResourceUtils.GetString(key: "ErrorProcessTemplate"),
+                innerException: ex
+            );
         }
         return templatePosition;
     }
@@ -92,25 +95,38 @@ public static class TemplateTools
     {
         if (template == null)
         {
-            throw new NullReferenceException(ResourceUtils.GetString("ErrorNoTemplate"));
+            throw new NullReferenceException(
+                message: ResourceUtils.GetString(key: "ErrorNoTemplate")
+            );
         }
 
         if (dataMember != template.Entity.Name)
         {
-            if (dataMember != GetDataMember(template.Entity))
+            if (dataMember != GetDataMember(entity: template.Entity))
             {
                 return null;
             }
         }
-        DataSet newData = NewRecord(template, dataSource, dataStructureId);
+        DataSet newData = NewRecord(
+            template: template,
+            dataSource: dataSource,
+            dataStructureId: dataStructureId
+        );
         if (newData == null)
         {
             return null;
         }
 
         UserProfile profile = SecurityManager.CurrentUserProfile();
-        DatasetTools.MergeDataSet(formData, newData, null, new MergeParams(profile.Id));
-        return DatasetTools.PrimaryKey(newData.Tables[template.Entity.Name].Rows[0]);
+        DatasetTools.MergeDataSet(
+            inout_dsTarget: formData,
+            in_dsSource: newData,
+            changeList: null,
+            mergeParams: new MergeParams(ProfileId: profile.Id)
+        );
+        return DatasetTools.PrimaryKey(
+            row: newData.Tables[name: template.Entity.Name].Rows[index: 0]
+        );
     }
 
     public static DataSet NewRecord(
@@ -123,24 +139,27 @@ public static class TemplateTools
             (template as DataStructureTransformationTemplate).Transformation as XslTransformation;
         IDataStructure outputStructure =
             xslt.PersistenceProvider.RetrieveInstance(
-                typeof(ISchemaItem),
-                new ModelElementKey(dataStructureId)
+                type: typeof(ISchemaItem),
+                primaryKey: new ModelElementKey(id: dataStructureId)
             ) as IDataStructure;
-        IXsltEngine transform = new CompiledXsltEngine(template.PersistenceProvider);
+        IXsltEngine transform = new CompiledXsltEngine(persistence: template.PersistenceProvider);
         IXmlContainer result = transform.Transform(
-            dataSource,
-            xslt.TextStore,
-            null,
-            null,
-            outputStructure,
-            false
+            data: dataSource,
+            xsl: xslt.TextStore,
+            parameters: null,
+            transactionId: null,
+            outputStructure: outputStructure,
+            validateOnly: false
         );
         if (result is IDataDocument)
         {
             return (result as IDataDocument).DataSet;
         }
         throw new Exception(
-            ResourceUtils.GetString("ErrorResultNotSupported", result.GetType().ToString())
+            message: ResourceUtils.GetString(
+                key: "ErrorResultNotSupported",
+                args: result.GetType().ToString()
+            )
         );
     }
 

@@ -57,7 +57,7 @@ public class XsdEditor : AbstractEditor
     private void InitializeComponent()
     {
         System.ComponentModel.ComponentResourceManager resources =
-            new System.ComponentModel.ComponentResourceManager(typeof(XsdEditor));
+            new System.ComponentModel.ComponentResourceManager(t: typeof(XsdEditor));
         this.txtName = new System.Windows.Forms.TextBox();
         this.lblXsdName = new System.Windows.Forms.Label();
         this.lblText = new System.Windows.Forms.Label();
@@ -76,25 +76,25 @@ public class XsdEditor : AbstractEditor
                 )
             )
         );
-        this.txtName.Location = new System.Drawing.Point(136, 10);
+        this.txtName.Location = new System.Drawing.Point(x: 136, y: 10);
         this.txtName.Name = "txtName";
-        this.txtName.Size = new System.Drawing.Size(586, 20);
+        this.txtName.Size = new System.Drawing.Size(width: 586, height: 20);
         this.txtName.TabIndex = 0;
         this.txtName.TextChanged += new System.EventHandler(this.txtName_TextChanged);
         //
         // lblXsdName
         //
-        this.lblXsdName.Location = new System.Drawing.Point(16, 10);
+        this.lblXsdName.Location = new System.Drawing.Point(x: 16, y: 10);
         this.lblXsdName.Name = "lblXsdName";
-        this.lblXsdName.Size = new System.Drawing.Size(112, 16);
+        this.lblXsdName.Size = new System.Drawing.Size(width: 112, height: 16);
         this.lblXsdName.TabIndex = 2;
         this.lblXsdName.Text = "Name";
         //
         // lblText
         //
-        this.lblText.Location = new System.Drawing.Point(16, 34);
+        this.lblText.Location = new System.Drawing.Point(x: 16, y: 34);
         this.lblText.Name = "lblText";
-        this.lblText.Size = new System.Drawing.Size(120, 16);
+        this.lblText.Size = new System.Drawing.Size(width: 120, height: 16);
         this.lblText.TabIndex = 3;
         this.lblText.Text = "Xsd:";
         //
@@ -112,41 +112,41 @@ public class XsdEditor : AbstractEditor
                 )
             )
         );
-        this.txtText.Location = new System.Drawing.Point(0, 53);
+        this.txtText.Location = new System.Drawing.Point(x: 0, y: 53);
         this.txtText.Name = "txtText";
-        this.txtText.Size = new System.Drawing.Size(722, 449);
+        this.txtText.Size = new System.Drawing.Size(width: 722, height: 449);
         this.txtText.TabIndex = 5;
         //
         // panel1
         //
-        this.panel1.Controls.Add(this.lblXsdName);
-        this.panel1.Controls.Add(this.txtText);
-        this.panel1.Controls.Add(this.lblText);
-        this.panel1.Controls.Add(this.txtName);
+        this.panel1.Controls.Add(value: this.lblXsdName);
+        this.panel1.Controls.Add(value: this.txtText);
+        this.panel1.Controls.Add(value: this.lblText);
+        this.panel1.Controls.Add(value: this.txtName);
         this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-        this.panel1.Location = new System.Drawing.Point(0, 40);
+        this.panel1.Location = new System.Drawing.Point(x: 0, y: 40);
         this.panel1.Name = "panel1";
-        this.panel1.Size = new System.Drawing.Size(728, 502);
+        this.panel1.Size = new System.Drawing.Size(width: 728, height: 502);
         this.panel1.TabIndex = 6;
         //
         // XsdEditor
         //
-        this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-        this.ClientSize = new System.Drawing.Size(807, 542);
-        this.Controls.Add(this.panel1);
+        this.AutoScaleBaseSize = new System.Drawing.Size(width: 5, height: 13);
+        this.ClientSize = new System.Drawing.Size(width: 807, height: 542);
+        this.Controls.Add(value: this.panel1);
         this.Font = new System.Drawing.Font(
-            "Microsoft Sans Serif",
-            8.25F,
-            System.Drawing.FontStyle.Regular,
-            System.Drawing.GraphicsUnit.Point,
-            ((byte)(238))
+            familyName: "Microsoft Sans Serif",
+            emSize: 8.25F,
+            style: System.Drawing.FontStyle.Regular,
+            unit: System.Drawing.GraphicsUnit.Point,
+            gdiCharSet: ((byte)(238))
         );
         this.Name = "XsdEditor";
         this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-        this.Controls.SetChildIndex(this.panel1, 0);
-        this.panel1.ResumeLayout(false);
+        this.Controls.SetChildIndex(child: this.panel1, newIndex: 0);
+        this.panel1.ResumeLayout(performLayout: false);
         this.panel1.PerformLayout();
-        this.ResumeLayout(false);
+        this.ResumeLayout(performLayout: false);
         this.PerformLayout();
     }
 
@@ -189,7 +189,9 @@ public class XsdEditor : AbstractEditor
         }
         else
         {
-            throw new InvalidCastException(ResourceUtils.GetString("ErrorXsdDataStructureOnly"));
+            throw new InvalidCastException(
+                message: ResourceUtils.GetString(key: "ErrorXsdDataStructureOnly")
+            );
         }
     }
 }

@@ -30,33 +30,33 @@ public class AsRadioButton : IControl
 {
     public bool ReadOnly { get; set; }
 
-    [Category("Appearance")]
+    [Category(category: "Appearance")]
     public string Text { get; set; }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public Object Value { get; set; }
 
-    [Category("Layout")]
-    [Browsable(false)]
+    [Category(category: "Layout")]
+    [Browsable(browsable: false)]
     public int Top { get; set; }
 
-    [Category("Layout")]
-    [Browsable(false)]
+    [Category(category: "Layout")]
+    [Browsable(browsable: false)]
     public int Left { get; set; }
 
-    [Category("Layout")]
-    [Browsable(false)]
+    [Category(category: "Layout")]
+    [Browsable(browsable: false)]
     public int Height { get; set; } = 200;
 
-    [Category("Layout")]
-    [Browsable(false)]
+    [Category(category: "Layout")]
+    [Browsable(browsable: false)]
     public int Width { get; set; } = 200;
 
-    [Category("Behavior")]
+    [Category(category: "Behavior")]
     public int TabIndex { get; set; }
 
-    [ReferenceProperty("ValueConstant")]
-    [TypeConverter(typeof(DataConstantConverter))]
+    [ReferenceProperty(name: "ValueConstant")]
+    [TypeConverter(type: typeof(DataConstantConverter))]
     public Guid DataConstantId { get; set; }
 
     public virtual void Initialize(ControlSetItem controlSetItem) { }

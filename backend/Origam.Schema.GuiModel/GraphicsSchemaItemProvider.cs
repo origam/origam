@@ -50,9 +50,9 @@ public class GraphicsSchemaItemProvider : AbstractSchemaItemProvider
     public override T NewItem<T>(Guid schemaExtensionId, SchemaItemGroup group)
     {
         return base.NewItem<T>(
-            schemaExtensionId,
-            group,
-            typeof(T) == typeof(Graphics) ? "NewGraphics" : null
+            schemaExtensionId: schemaExtensionId,
+            group: group,
+            itemName: typeof(T) == typeof(Graphics) ? "NewGraphics" : null
         );
     }
     #endregion

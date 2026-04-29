@@ -362,9 +362,9 @@ public class AttachmentPad : AbstractPadContent
         CurrencyManager cm = (sender as CurrencyManager);
         if (cm != null && cm.Count > 0 && (cm.Current as DataRowView).IsNew)
         {
-            (cm.Current as DataRowView).Row[ID_COLUMN] = Guid.NewGuid();
-            (cm.Current as DataRowView).Row[PARENT_COLUMN] = this.ParentId;
-            (cm.Current as DataRowView).Row[PARENT_ENTITY_COLUMN] = this.ParentEntityId;
+            (cm.Current as DataRowView).Row[columnName: ID_COLUMN] = Guid.NewGuid();
+            (cm.Current as DataRowView).Row[columnName: PARENT_COLUMN] = this.ParentId;
+            (cm.Current as DataRowView).Row[columnName: PARENT_ENTITY_COLUMN] = this.ParentEntityId;
         }
     }
 
@@ -374,7 +374,7 @@ public class AttachmentPad : AbstractPadContent
     )
     {
         (sender as ToolBar).Focus();
-        switch (toolBar.Buttons.IndexOf(e.Button))
+        switch (toolBar.Buttons.IndexOf(button: e.Button))
         {
             case 0:
             {
@@ -425,10 +425,15 @@ public class AttachmentPad : AbstractPadContent
             return;
         }
         _query = new DataStructureQuery(
-            new Guid("04a07967-4b59-4c14-8320-e6d073f6f77f"),
-            new Guid("b3624c91-526d-4b2b-a282-6d99e62a1eb5")
+            dataStructureId: new Guid(g: "04a07967-4b59-4c14-8320-e6d073f6f77f"),
+            methodId: new Guid(g: "b3624c91-526d-4b2b-a282-6d99e62a1eb5")
         );
-        _query.Parameters.Add(new QueryParameter("Attachment_parRefParentRecordId", recordId));
+        _query.Parameters.Add(
+            value: new QueryParameter(
+                _parameterName: "Attachment_parRefParentRecordId",
+                value: recordId
+            )
+        );
 
 #if ORIGAM_CLIENT
 #else
@@ -438,21 +443,23 @@ public class AttachmentPad : AbstractPadContent
         IServiceAgent dataServiceAgent = GetDataServiceAgent();
         dataServiceAgent.MethodName = "LoadDataByQuery";
         dataServiceAgent.Parameters.Clear();
-        dataServiceAgent.Parameters.Add("Query", _query);
+        dataServiceAgent.Parameters.Add(key: "Query", value: _query);
         dataServiceAgent.Run();
         DataSet result = dataServiceAgent.Result as DataSet;
         if (merge)
         {
-            _dataset.Merge(result);
+            _dataset.Merge(dataSet: result);
         }
         else
         {
             _dataset.Clear();
-            _dataset.Merge(result);
+            _dataset.Merge(dataSet: result);
             _dataset.Attachment.DefaultView.AllowNew = false;
             _dataset.Attachment.DefaultView.AllowDelete = false;
 
-            _cm = this.BindingContext[_dataset, _dataset.Attachment.TableName] as CurrencyManager;
+            _cm =
+                this.BindingContext[dataSource: _dataset, dataMember: _dataset.Attachment.TableName]
+                as CurrencyManager;
             _cm.CurrentChanged -= new EventHandler(_cm_CurrentChanged);
             _cm.CurrentChanged += new EventHandler(_cm_CurrentChanged);
 
@@ -481,18 +488,27 @@ public class AttachmentPad : AbstractPadContent
             _cm.AddNew();
             row = (_cm.Current as DataRowView).Row;
             //int FileNameIndex= row.Table.Columns.IndexOf(FILE_NAME_COLUMN);
-            row[FILE_NAME_COLUMN] = System.IO.Path.GetFileName(_dlgOpen.FileName);
-            row[DATE_COLUMN] = DateTime.Now;
+            row[columnName: FILE_NAME_COLUMN] = System.IO.Path.GetFileName(path: _dlgOpen.FileName);
+            row[columnName: DATE_COLUMN] = DateTime.Now;
 
             try
             {
-                ByteArrayConverter.SaveToDataSet(_dlgOpen.FileName, row, DATA_COLUMN); //sloupec blob ma index 1
+                ByteArrayConverter.SaveToDataSet(
+                    fullFileName: _dlgOpen.FileName,
+                    dataRow: row,
+                    columnName: DATA_COLUMN
+                ); //sloupec blob ma index 1
                 _cm.EndCurrentEdit();
                 AttUpdate();
             }
             catch (Exception ex)
             {
-                AsMessageBox.ShowError(this, ex.Message, ResourceUtils.GetString("ErrorTitle"), ex);
+                AsMessageBox.ShowError(
+                    owner: this,
+                    text: ex.Message,
+                    caption: ResourceUtils.GetString(key: "ErrorTitle"),
+                    exception: ex
+                );
                 _cm.CancelCurrentEdit();
             }
             finally
@@ -507,20 +523,30 @@ public class AttachmentPad : AbstractPadContent
         DataRow row = CurrentRow;
         if (row == null)
         {
-            MessageBox.Show(ResourceUtils.GetString("NoAttachments"));
+            MessageBox.Show(text: ResourceUtils.GetString(key: "NoAttachments"));
             return;
         }
         _dlgSave.OverwritePrompt = true;
-        _dlgSave.FileName = (string)row[FILE_NAME_COLUMN];
+        _dlgSave.FileName = (string)row[columnName: FILE_NAME_COLUMN];
         if (_dlgSave.ShowDialog() == DialogResult.OK)
         {
             try
             {
-                ByteArrayConverter.SaveFromDataSet(_dlgSave.FileName, row, DATA_COLUMN, false);
+                ByteArrayConverter.SaveFromDataSet(
+                    fullFileName: _dlgSave.FileName,
+                    dataRow: row,
+                    columnName: DATA_COLUMN,
+                    compressed: false
+                );
             }
             catch (Exception ex)
             {
-                AsMessageBox.ShowError(this, ex.Message, ResourceUtils.GetString("ErrorTitle"), ex);
+                AsMessageBox.ShowError(
+                    owner: this,
+                    text: ex.Message,
+                    caption: ResourceUtils.GetString(key: "ErrorTitle"),
+                    exception: ex
+                );
             }
         }
     }
@@ -531,30 +557,38 @@ public class AttachmentPad : AbstractPadContent
         if (row == null)
         {
             MessageBox.Show(
-                this,
-                ResourceUtils.GetString("NoAttachments"),
-                ResourceUtils.GetString("ErrorTitle"),
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Asterisk
+                owner: this,
+                text: ResourceUtils.GetString(key: "NoAttachments"),
+                caption: ResourceUtils.GetString(key: "ErrorTitle"),
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Asterisk
             );
             return;
         }
 
         string fileName = System.IO.Path.GetTempPath();
-        string filePath = System.IO.Path.Combine(fileName, (string)row[FILE_NAME_COLUMN]);
-        ByteArrayConverter.SaveFromDataSet(filePath, row, DATA_COLUMN, false);
+        string filePath = System.IO.Path.Combine(
+            path1: fileName,
+            path2: (string)row[columnName: FILE_NAME_COLUMN]
+        );
+        ByteArrayConverter.SaveFromDataSet(
+            fullFileName: filePath,
+            dataRow: row,
+            columnName: DATA_COLUMN,
+            compressed: false
+        );
         try
         {
-            System.Diagnostics.Process.Start(filePath);
+            System.Diagnostics.Process.Start(fileName: filePath);
         }
         catch
         {
             MessageBox.Show(
-                this,
-                ResourceUtils.GetString("ErrorExecuteFile", filePath),
-                ResourceUtils.GetString("ErrorTitle"),
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Asterisk
+                owner: this,
+                text: ResourceUtils.GetString(key: "ErrorExecuteFile", args: filePath),
+                caption: ResourceUtils.GetString(key: "ErrorTitle"),
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Asterisk
             );
         }
     }
@@ -565,11 +599,11 @@ public class AttachmentPad : AbstractPadContent
         if (row == null)
         {
             MessageBox.Show(
-                this,
-                "Data neobsahují žádné pøílohy",
-                "Chyba",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Asterisk
+                owner: this,
+                text: "Data neobsahují žádné pøílohy",
+                caption: "Chyba",
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Asterisk
             );
             return;
         }
@@ -587,11 +621,11 @@ public class AttachmentPad : AbstractPadContent
     private bool CanDelete()
     {
         return MessageBox.Show(
-                this,
-                ResourceHelper.GetString("Attachments.DeleteQuestionText"),
-                ResourceHelper.GetString("Attachments.DeleteQuestionTitle"),
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question
+                owner: this,
+                text: ResourceHelper.GetString(name: "Attachments.DeleteQuestionText"),
+                caption: ResourceHelper.GetString(name: "Attachments.DeleteQuestionTitle"),
+                buttons: MessageBoxButtons.YesNo,
+                icon: MessageBoxIcon.Question
             ) == DialogResult.Yes;
     }
 
@@ -605,8 +639,8 @@ public class AttachmentPad : AbstractPadContent
 
         dataServiceAgent.MethodName = "StoreDataByQuery";
         dataServiceAgent.Parameters.Clear();
-        dataServiceAgent.Parameters.Add("Query", _query);
-        dataServiceAgent.Parameters.Add("Data", _dataset);
+        dataServiceAgent.Parameters.Add(key: "Query", value: _query);
+        dataServiceAgent.Parameters.Add(key: "Data", value: _dataset);
         dataServiceAgent.Run();
         OnAttachmentsUpdated();
     }
@@ -614,9 +648,11 @@ public class AttachmentPad : AbstractPadContent
     private IServiceAgent GetDataServiceAgent()
     {
         IBusinessServicesService services =
-            ServiceManager.Services.GetService(typeof(IBusinessServicesService))
+            ServiceManager.Services.GetService(serviceType: typeof(IBusinessServicesService))
             as IBusinessServicesService;
-        return services == null ? null : services.GetAgent("DataService", null, null);
+        return services == null
+            ? null
+            : services.GetAgent(serviceType: "DataService", ruleEngine: null, workflowEngine: null);
     }
     #endregion
     #region Private Properties
@@ -626,7 +662,7 @@ public class AttachmentPad : AbstractPadContent
         {
             try
             {
-                return _dataset.Attachment.DefaultView[dataGrid1.CurrentRowIndex].Row;
+                return _dataset.Attachment.DefaultView[recordIndex: dataGrid1.CurrentRowIndex].Row;
             }
             catch
             {
@@ -673,10 +709,14 @@ public class AttachmentPad : AbstractPadContent
         }
         //			try
         //			{
-        RetrieveAttachments(this.ParentEntityId, this.ParentId, false);
+        RetrieveAttachments(entityId: this.ParentEntityId, recordId: this.ParentId, merge: false);
         foreach (RecordReference reference in this.ChildReferences.Values)
         {
-            RetrieveAttachments(reference.EntityId, reference.RecordId, true);
+            RetrieveAttachments(
+                entityId: reference.EntityId,
+                recordId: reference.RecordId,
+                merge: true
+            );
         }
         UpdateToolbar();
         //			}
@@ -691,7 +731,7 @@ public class AttachmentPad : AbstractPadContent
         if (AttachmentsUpdated != null)
         {
             //Invokes the delegates.
-            AttachmentsUpdated(this, EventArgs.Empty);
+            AttachmentsUpdated(sender: this, e: EventArgs.Empty);
         }
     }
     #endregion
@@ -722,6 +762,6 @@ public class AttachmentPad : AbstractPadContent
             }
             _query = null;
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
 }

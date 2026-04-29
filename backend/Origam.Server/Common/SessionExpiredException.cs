@@ -26,5 +26,5 @@ namespace Origam.Server;
 public class SessionExpiredException : Exception
 {
     public SessionExpiredException()
-        : base(Resources.ErrorSessionExpired) { }
+        : base(message: Resources.ErrorSessionExpired) { }
 }

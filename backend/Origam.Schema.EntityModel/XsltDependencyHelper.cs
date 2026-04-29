@@ -46,18 +46,18 @@ public class XsltDependencyHelper
         int found = 0;
         for (int i = 0; i < text.Length; i++)
         {
-            found = text.IndexOf("model://", i);
+            found = text.IndexOf(value: "model://", startIndex: i);
             if (found > 0)
             {
-                string id = text.Substring(found + 8, 36);
+                string id = text.Substring(startIndex: found + 8, length: 36);
                 try
                 {
                     ISchemaItem reference =
                         persistenceprovider.RetrieveInstance(
-                            typeof(ISchemaItem),
-                            new ModelElementKey(new Guid(id))
+                            type: typeof(ISchemaItem),
+                            primaryKey: new ModelElementKey(id: new Guid(g: id))
                         ) as ISchemaItem;
-                    dependencies.Add(reference);
+                    dependencies.Add(item: reference);
                 }
                 catch (System.FormatException)
                 {
@@ -75,11 +75,14 @@ public class XsltDependencyHelper
         var constants = new List<string>();
         for (int i = 0; i < text.Length; i++)
         {
-            found = text.IndexOf(":GetConstant('", i);
+            found = text.IndexOf(value: ":GetConstant('", startIndex: i);
             if (found > 0)
             {
                 constants.Add(
-                    text.Substring(found + 14, text.IndexOf("'", found + 14) - found - 14)
+                    item: text.Substring(
+                        startIndex: found + 14,
+                        length: text.IndexOf(value: "'", startIndex: found + 14) - found - 14
+                    )
                 );
                 i = found;
             }
@@ -89,21 +92,26 @@ public class XsltDependencyHelper
             }
         }
         List<DataConstant> listDataconstant =
-            persistenceprovider.RetrieveListByCategory<DataConstant>(DataConstant.CategoryConst);
+            persistenceprovider.RetrieveListByCategory<DataConstant>(
+                category: DataConstant.CategoryConst
+            );
         foreach (string c in constants)
         {
             foreach (DataConstant child in listDataconstant)
             {
                 if (child.Name == c)
                 {
-                    dependencies.Add(child);
+                    dependencies.Add(item: child);
                     break;
                 }
             }
             if (dependencies.Count == 0)
             {
                 throw new ArgumentOutOfRangeException(
-                    ResourceUtils.GetString("ErrorConstantNotFound", c, item.ItemType, item.Name)
+                    paramName: ResourceUtils.GetString(
+                        key: "ErrorConstantNotFound",
+                        args: new object[] { c, item.ItemType, item.Name }
+                    )
                 );
             }
         }
@@ -113,10 +121,15 @@ public class XsltDependencyHelper
         var strings = new List<string>();
         for (int i = 0; i < text.Length; i++)
         {
-            found = text.IndexOf(":GetString('", i);
+            found = text.IndexOf(value: ":GetString('", startIndex: i);
             if (found > 0)
             {
-                strings.Add(text.Substring(found + 12, text.IndexOf("'", found + 12) - found - 12));
+                strings.Add(
+                    item: text.Substring(
+                        startIndex: found + 12,
+                        length: text.IndexOf(value: "'", startIndex: found + 12) - found - 12
+                    )
+                );
                 i = found;
             }
             else
@@ -125,7 +138,7 @@ public class XsltDependencyHelper
             }
         }
         List<StringItem> listStringItem = persistenceprovider.RetrieveListByCategory<StringItem>(
-            StringItem.CategoryConst
+            category: StringItem.CategoryConst
         );
         foreach (string s in strings)
         {
@@ -133,14 +146,17 @@ public class XsltDependencyHelper
             {
                 if (child.Name == s)
                 {
-                    dependencies.Add(child);
+                    dependencies.Add(item: child);
                     break;
                 }
             }
             if (dependencies.Count == 0)
             {
                 throw new ArgumentOutOfRangeException(
-                    ResourceUtils.GetString("ErrorStringNotFound", s, item.ItemType, item.Name)
+                    paramName: ResourceUtils.GetString(
+                        key: "ErrorStringNotFound",
+                        args: new object[] { s, item.ItemType, item.Name }
+                    )
                 );
             }
         }
@@ -149,14 +165,19 @@ public class XsltDependencyHelper
         var lookups = new List<Guid>();
         for (int i = 0; i < text.Length; i++)
         {
-            found = text.IndexOf(":LookupValue('", i);
+            found = text.IndexOf(value: ":LookupValue('", startIndex: i);
             if (found > 0)
             {
                 try
                 {
                     lookups.Add(
-                        new Guid(
-                            text.Substring(found + 14, text.IndexOf("'", found + 14) - found - 14)
+                        item: new Guid(
+                            g: text.Substring(
+                                startIndex: found + 14,
+                                length: text.IndexOf(value: "'", startIndex: found + 14)
+                                    - found
+                                    - 14
+                            )
                         )
                     );
                 }
@@ -174,14 +195,19 @@ public class XsltDependencyHelper
         }
         for (int i = 0; i < text.Length; i++)
         {
-            found = text.IndexOf(":LookupValueEx('", i);
+            found = text.IndexOf(value: ":LookupValueEx('", startIndex: i);
             if (found > 0)
             {
                 try
                 {
                     lookups.Add(
-                        new Guid(
-                            text.Substring(found + 16, text.IndexOf("'", found + 16) - found - 16)
+                        item: new Guid(
+                            g: text.Substring(
+                                startIndex: found + 16,
+                                length: text.IndexOf(value: "'", startIndex: found + 16)
+                                    - found
+                                    - 16
+                            )
                         )
                     );
                 }
@@ -196,16 +222,22 @@ public class XsltDependencyHelper
         foreach (Guid l in lookups)
         {
             if (
-                persistenceprovider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(l))
+                persistenceprovider.RetrieveInstance(
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: l)
+                )
                 is ISchemaItem lookup
             )
             {
-                dependencies.Add(lookup);
+                dependencies.Add(item: lookup);
             }
             if (dependencies.Count == 0)
             {
                 throw new ArgumentOutOfRangeException(
-                    ResourceUtils.GetString("ErrorLookupNotFound", l, item.ItemType, item.Name)
+                    paramName: ResourceUtils.GetString(
+                        key: "ErrorLookupNotFound",
+                        args: new object[] { l, item.ItemType, item.Name }
+                    )
                 );
             }
         }

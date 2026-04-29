@@ -59,21 +59,23 @@ public class FilePersistenceService : IPersistenceService
     {
         this.metaModelUpgradeService = metaModelUpgradeService;
         this.defaultFolders = defaultFolders;
-        DirectoryInfo topDirectory = GetTopDirectory(basePath);
+        DirectoryInfo topDirectory = GetTopDirectory(basePath: basePath);
         topDirectory.Create();
         this.pathToRuntimeModelConfig = CheckRuntimeModelConfigPathAndUpdateGitIgnore(
-            pathToRuntimeModelConfig,
-            topDirectory
+            pathCandidate: pathToRuntimeModelConfig,
+            topDirectory: topDirectory
         );
-        var pathFactory = new OrigamPathFactory(topDirectory);
-        var pathToIndexBin = new FileInfo(Path.Combine(topDirectory.FullName, "index.bin"));
-        var index = new FilePersistenceIndex(pathFactory);
+        var pathFactory = new OrigamPathFactory(toDirectory: topDirectory);
+        var pathToIndexBin = new FileInfo(
+            fileName: Path.Combine(path1: topDirectory.FullName, path2: "index.bin")
+        );
+        var index = new FilePersistenceIndex(pathFactory: pathFactory);
         var ignoredFileFilter = new FileFilter(
             fileExtensionsToIgnore: new HashSet<string> { "bak", "debug" },
             filesToIgnore: new List<FileInfo>
             {
                 pathToIndexBin,
-                new FileInfo(this.pathToRuntimeModelConfig),
+                new FileInfo(fileName: this.pathToRuntimeModelConfig),
             },
             directoryNamesToIgnore: new List<string> { ".git", "l10n" }
         );
@@ -82,25 +84,32 @@ public class FilePersistenceService : IPersistenceService
             watchFileChanges: watchFileChanges,
             ignoredFileFilter: ignoredFileFilter
         );
-        FileEventQueue = new FileEventQueue(index, fileChangesWatchDog);
-        var origamFileManager = new OrigamFileManager(index, pathFactory, FileEventQueue);
-        var origamFileFactory = new OrigamFileFactory(
-            origamFileManager,
-            defaultFolders,
-            pathFactory,
-            FileEventQueue
+        FileEventQueue = new FileEventQueue(index: index, watchDog: fileChangesWatchDog);
+        var origamFileManager = new OrigamFileManager(
+            index: index,
+            origamPathFactory: pathFactory,
+            fileEventQueue: FileEventQueue
         );
-        var objectFileDataFactory = new ObjectFileDataFactory(origamFileFactory, defaultFolders);
+        var origamFileFactory = new OrigamFileFactory(
+            origamFileManager: origamFileManager,
+            defaultParentFolders: defaultFolders,
+            origamPathFactory: pathFactory,
+            fileEventQueue: FileEventQueue
+        );
+        var objectFileDataFactory = new ObjectFileDataFactory(
+            origamFileFactory: origamFileFactory,
+            parentFolders: defaultFolders
+        );
         var xmlFileDataFactory = new XmlFileDataFactory();
         var trackerLoaderFactory = new TrackerLoaderFactory(
-            topDirectory,
-            objectFileDataFactory,
-            origamFileFactory,
-            xmlFileDataFactory,
-            pathToIndexBin,
-            useBinFile,
-            index,
-            metaModelUpgradeService
+            topDirectory: topDirectory,
+            objectFileDataFactory: objectFileDataFactory,
+            origamFileFactory: origamFileFactory,
+            xmlFileDataFactory: xmlFileDataFactory,
+            pathToIndexFile: pathToIndexBin,
+            useBinFile: useBinFile,
+            filePersistence: index,
+            metaModelUpgradeService: metaModelUpgradeService
         );
         index.InitItemTracker(trackerLoaderFactory: trackerLoaderFactory, mode: mode);
 
@@ -113,7 +122,9 @@ public class FilePersistenceService : IPersistenceService
             index: index,
             origamFileManager: origamFileManager,
             checkRules: checkRules,
-            runtimeModelConfig: new RuntimeModelConfig(this.pathToRuntimeModelConfig)
+            runtimeModelConfig: new RuntimeModelConfig(
+                pathToConfigFile: this.pathToRuntimeModelConfig
+            )
         );
 
         FileEventQueue.ReloadNeeded += OnReloadNeeded;
@@ -125,20 +136,26 @@ public class FilePersistenceService : IPersistenceService
         DirectoryInfo topDirectory
     )
     {
-        if (string.IsNullOrWhiteSpace(pathCandidate))
+        if (string.IsNullOrWhiteSpace(value: pathCandidate))
         {
             string configFileName = "RuntimeModelConfiguration.json";
 #if !NETSTANDARD
-            IgnoreFileTools.TryAdd(topDirectory.FullName, configFileName);
+            IgnoreFileTools.TryAdd(
+                ignoreFileDir: topDirectory.FullName,
+                ignoreFileEntry: configFileName
+            );
 #endif
-            return Path.Combine(topDirectory.FullName, configFileName);
+            return Path.Combine(path1: topDirectory.FullName, path2: configFileName);
         }
-        if (!Path.IsPathRooted(pathCandidate))
+        if (!Path.IsPathRooted(path: pathCandidate))
         {
 #if !NETSTANDARD
-            IgnoreFileTools.TryAdd(topDirectory.FullName, pathCandidate);
+            IgnoreFileTools.TryAdd(
+                ignoreFileDir: topDirectory.FullName,
+                ignoreFileEntry: pathCandidate
+            );
 #endif
-            return Path.Combine(topDirectory.FullName, pathCandidate);
+            return Path.Combine(path1: topDirectory.FullName, path2: pathCandidate);
         }
         return pathCandidate;
     }
@@ -149,20 +166,20 @@ public class FilePersistenceService : IPersistenceService
         {
             basePath = ConfigurationManager.GetActiveConfiguration().ModelSourceControlLocation;
         }
-        if (string.IsNullOrEmpty(basePath))
+        if (string.IsNullOrEmpty(value: basePath))
         {
             throw new ArgumentException(
-                "File system persisted model cannot be open because the "
+                message: "File system persisted model cannot be open because the "
                     + nameof(OrigamSettings.ModelSourceControlLocation)
                     + " is not set. "
             );
         }
-        return new DirectoryInfo(basePath);
+        return new DirectoryInfo(path: basePath);
     }
 
     private void OnReloadNeeded(object sender, FileSystemChangeEventArgs args)
     {
-        ReloadNeeded?.Invoke(this, args);
+        ReloadNeeded?.Invoke(sender: this, e: args);
     }
 
     private IFileChangesWatchDog GetNewWatchDog(
@@ -175,7 +192,7 @@ public class FilePersistenceService : IPersistenceService
         {
             return new NullWatchDog();
         }
-        return new FileChangesWatchDog(topDir, ignoredFileFilter);
+        return new FileChangesWatchDog(topDir: topDir, ignoreFileFilter: ignoredFileFilter);
     }
 
     public Maybe<XmlLoadError> Reload() => schemaProvider.ReloadFiles();
@@ -184,16 +201,18 @@ public class FilePersistenceService : IPersistenceService
     {
         schemaProvider.FlushCache();
         var loadedSchema =
-            schemaProvider.RetrieveInstance(typeof(Package), new ModelElementKey(schemaExtensionId))
-            as Package;
+            schemaProvider.RetrieveInstance(
+                type: typeof(Package),
+                primaryKey: new ModelElementKey(id: schemaExtensionId)
+            ) as Package;
         if (loadedSchema == null)
         {
-            throw new Exception("Shema: " + schemaExtensionId + " could not be found");
+            throw new Exception(message: "Shema: " + schemaExtensionId + " could not be found");
         }
         HashSet<Guid> loadedPackageIds = new HashSet<Guid>(
-            loadedSchema.IncludedPackages.Select(package => package.Id)
+            collection: loadedSchema.IncludedPackages.Select(selector: package => package.Id)
         );
-        loadedPackageIds.Add(loadedSchema.Id);
+        loadedPackageIds.Add(item: loadedSchema.Id);
         schemaProvider.LoadedPackages = loadedPackageIds;
         return loadedSchema;
     }
@@ -204,7 +223,7 @@ public class FilePersistenceService : IPersistenceService
     {
         try
         {
-            schemaProvider.PersistIndex(true);
+            schemaProvider.PersistIndex(unloadProject: true);
         }
         finally
         {
@@ -215,8 +234,8 @@ public class FilePersistenceService : IPersistenceService
     public object Clone()
     {
         return new FilePersistenceService(
-            metaModelUpgradeService,
-            defaultFolders,
+            metaModelUpgradeService: metaModelUpgradeService,
+            defaultFolders: defaultFolders,
             pathToRuntimeModelConfig: pathToRuntimeModelConfig,
             mode: MetaModelUpgradeMode.Ignore
         );

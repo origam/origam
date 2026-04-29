@@ -26,9 +26,9 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.GuiModel;
 
-[SchemaItemDescription("Folder", 68)]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Folder", icon: 68)]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class DashboardWidgetFolder : AbstractDashboardWidget
 {
     public DashboardWidgetFolder()
@@ -38,29 +38,29 @@ public class DashboardWidgetFolder : AbstractDashboardWidget
     }
 
     public DashboardWidgetFolder(Guid schemaExtensionId)
-        : base(schemaExtensionId)
+        : base(schemaExtensionId: schemaExtensionId)
     {
         Init();
     }
 
     public DashboardWidgetFolder(Key primaryKey)
-        : base(primaryKey)
+        : base(primaryKey: primaryKey)
     {
         Init();
     }
 
     private void Init()
     {
-        this.ChildItemTypes.Add(typeof(PanelDashboardWidget));
-        this.ChildItemTypes.Add(typeof(ChartDashboardWidget));
-        this.ChildItemTypes.Add(typeof(DashboardWidgetFolder));
-        this.ChildItemTypes.Add(typeof(TextDashboardWidget));
-        this.ChildItemTypes.Add(typeof(DateDashboardWidget));
-        this.ChildItemTypes.Add(typeof(CurrencyDashboardWidget));
-        this.ChildItemTypes.Add(typeof(LookupDashboardWidget));
-        this.ChildItemTypes.Add(typeof(CheckBoxDashboardWidget));
-        this.ChildItemTypes.Add(typeof(HorizontalContainerDashboardWidget));
-        this.ChildItemTypes.Add(typeof(VerticalContainerDashboardWidget));
+        this.ChildItemTypes.Add(item: typeof(PanelDashboardWidget));
+        this.ChildItemTypes.Add(item: typeof(ChartDashboardWidget));
+        this.ChildItemTypes.Add(item: typeof(DashboardWidgetFolder));
+        this.ChildItemTypes.Add(item: typeof(TextDashboardWidget));
+        this.ChildItemTypes.Add(item: typeof(DateDashboardWidget));
+        this.ChildItemTypes.Add(item: typeof(CurrencyDashboardWidget));
+        this.ChildItemTypes.Add(item: typeof(LookupDashboardWidget));
+        this.ChildItemTypes.Add(item: typeof(CheckBoxDashboardWidget));
+        this.ChildItemTypes.Add(item: typeof(HorizontalContainerDashboardWidget));
+        this.ChildItemTypes.Add(item: typeof(VerticalContainerDashboardWidget));
     }
 
     public override bool CanMove(Origam.UI.IBrowserNode2 newNode)
@@ -82,14 +82,14 @@ public class DashboardWidgetFolder : AbstractDashboardWidget
         get { return CategoryConst; }
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public new string Roles
     {
         get { return null; }
         set { }
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public new string Features
     {
         get { return null; }

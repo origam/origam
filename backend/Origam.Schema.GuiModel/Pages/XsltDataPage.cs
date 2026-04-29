@@ -32,9 +32,9 @@ using Origam.Workbench.Services;
 
 namespace Origam.Schema.GuiModel;
 
-[SchemaItemDescription("Data Page", "data-page.png")]
-[HelpTopic("Data+Page")]
-[ClassMetaVersion("6.2.0")]
+[SchemaItemDescription(name: "Data Page", iconName: "data-page.png")]
+[HelpTopic(topic: "Data+Page")]
+[ClassMetaVersion(versionStr: "6.2.0")]
 public class XsltDataPage : AbstractPage, IDataStructureReference
 {
     public static readonly string FiltersParameterName = "filters";
@@ -47,58 +47,62 @@ public class XsltDataPage : AbstractPage, IDataStructureReference
     }
 
     public XsltDataPage(Guid schemaExtensionId)
-        : base(schemaExtensionId)
+        : base(schemaExtensionId: schemaExtensionId)
     {
         Init();
     }
 
     public XsltDataPage(Key primaryKey)
-        : base(primaryKey)
+        : base(primaryKey: primaryKey)
     {
         Init();
     }
 
     private void Init()
     {
-        ChildItemTypes.Add(typeof(PageParameterMapping));
+        ChildItemTypes.Add(item: typeof(PageParameterMapping));
     }
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
         if (Transformation != null)
         {
-            dependencies.Add(Transformation);
+            dependencies.Add(item: Transformation);
         }
         if (DataStructure != null)
         {
-            dependencies.Add(DataStructure);
+            dependencies.Add(item: DataStructure);
         }
         if (Method != null)
         {
-            dependencies.Add(Method);
+            dependencies.Add(item: Method);
         }
         if (SortSet != null)
         {
-            dependencies.Add(SortSet);
+            dependencies.Add(item: SortSet);
         }
         if (SaveValidationBeforeMerge != null)
         {
-            dependencies.Add(SaveValidationBeforeMerge);
+            dependencies.Add(item: SaveValidationBeforeMerge);
         }
         if (SaveValidationAfterMerge != null)
         {
-            dependencies.Add(SaveValidationAfterMerge);
+            dependencies.Add(item: SaveValidationAfterMerge);
         }
         if (LogTransformation != null)
         {
-            dependencies.Add(LogTransformation);
+            dependencies.Add(item: LogTransformation);
         }
         if (DefaultSet != null)
         {
-            dependencies.Add(DefaultSet);
+            dependencies.Add(item: DefaultSet);
         }
-        XsltDependencyHelper.GetDependencies(this, dependencies, ResultXPath);
-        base.GetExtraDependencies(dependencies);
+        XsltDependencyHelper.GetDependencies(
+            item: this,
+            dependencies: dependencies,
+            text: ResultXPath
+        );
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override IList<string> NewTypeNames
@@ -130,76 +134,88 @@ public class XsltDataPage : AbstractPage, IDataStructureReference
     #region Properties
     public Guid DataStructureId;
 
-    [TypeConverter(typeof(DataStructureConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [XmlReference("dataStructure", "DataStructureId")]
+    [TypeConverter(type: typeof(DataStructureConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [XmlReference(attributeName: "dataStructure", idField: "DataStructureId")]
     public DataStructure DataStructure
     {
-        get => PersistenceProvider.RetrieveInstance<DataStructure>(DataStructureId);
+        get => PersistenceProvider.RetrieveInstance<DataStructure>(instanceId: DataStructureId);
         set
         {
             Method = null;
             SortSet = null;
             DefaultSet = null;
-            DataStructureId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+            DataStructureId = value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"];
         }
     }
 
     public Guid DataStructureMethodId;
 
-    [TypeConverter(typeof(DataStructureReferenceMethodConverter))]
-    [XmlReference("method", "DataStructureMethodId")]
+    [TypeConverter(type: typeof(DataStructureReferenceMethodConverter))]
+    [XmlReference(attributeName: "method", idField: "DataStructureMethodId")]
     public DataStructureMethod Method
     {
-        get => PersistenceProvider.RetrieveInstance<DataStructureMethod>(DataStructureMethodId);
-        set => DataStructureMethodId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+        get =>
+            PersistenceProvider.RetrieveInstance<DataStructureMethod>(
+                instanceId: DataStructureMethodId
+            );
+        set =>
+            DataStructureMethodId = value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"];
     }
 
     public Guid DataStructureSortSetId;
 
-    [TypeConverter(typeof(DataStructureReferenceSortSetConverter))]
-    [XmlReference("sortSet", "DataStructureSortSetId")]
+    [TypeConverter(type: typeof(DataStructureReferenceSortSetConverter))]
+    [XmlReference(attributeName: "sortSet", idField: "DataStructureSortSetId")]
     [SortSetRequiredForCustomFiltersRule]
     public DataStructureSortSet SortSet
     {
-        get => PersistenceProvider.RetrieveInstance<DataStructureSortSet>(DataStructureSortSetId);
-        set => DataStructureSortSetId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+        get =>
+            PersistenceProvider.RetrieveInstance<DataStructureSortSet>(
+                instanceId: DataStructureSortSetId
+            );
+        set =>
+            DataStructureSortSetId = value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"];
     }
 
     public Guid DefaultSetId;
 
-    [TypeConverter(typeof(DataStructureReferenceDefaultSetConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [XmlReference("defaultSet", "DefaultSetId")]
+    [TypeConverter(type: typeof(DataStructureReferenceDefaultSetConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [XmlReference(attributeName: "defaultSet", idField: "DefaultSetId")]
     public DataStructureDefaultSet DefaultSet
     {
-        get => PersistenceProvider.RetrieveInstance<DataStructureDefaultSet>(DefaultSetId);
-        set => DefaultSetId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+        get =>
+            PersistenceProvider.RetrieveInstance<DataStructureDefaultSet>(instanceId: DefaultSetId);
+        set => DefaultSetId = value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"];
     }
 
     public Guid TransformationId;
 
-    [Category("Xslt")]
-    [TypeConverter(typeof(TransformationConverter))]
+    [Category(category: "Xslt")]
+    [TypeConverter(type: typeof(TransformationConverter))]
     [Description(
-        "A transformation to be applied on output data."
+        description: "A transformation to be applied on output data."
             + " When a field MimeType is application/json, please consider"
             + " to define also TransformationOutputStructure."
     )]
-    [XmlReference("transformation", "TransformationId")]
+    [XmlReference(attributeName: "transformation", idField: "TransformationId")]
     public AbstractTransformation Transformation
     {
-        get => PersistenceProvider.RetrieveInstance<AbstractTransformation>(TransformationId);
-        set => TransformationId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+        get =>
+            PersistenceProvider.RetrieveInstance<AbstractTransformation>(
+                instanceId: TransformationId
+            );
+        set => TransformationId = value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"];
     }
 
     public Guid TransformationOutputStructureId;
 
-    [Category("Xslt")]
-    [TypeConverter(typeof(DataStructureConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
+    [Category(category: "Xslt")]
+    [TypeConverter(type: typeof(DataStructureConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
     [Description(
-        "A data structure where an output of a Transformation"
+        description: "A data structure where an output of a Transformation"
             + " will be merged into."
             + " It's applied only when a ResultXpath is not set and"
             + " a MimeType field is set to application/json."
@@ -211,55 +227,76 @@ public class XsltDataPage : AbstractPage, IDataStructureReference
             + " conversion, which performs the standard way"
             + " (as without transformation)."
     )]
-    [XmlReference("transformationOutputStructure", "TransformationOutputStructureId")]
+    [XmlReference(
+        attributeName: "transformationOutputStructure",
+        idField: "TransformationOutputStructureId"
+    )]
     public DataStructure TransformationOutputStructure
     {
-        get => PersistenceProvider.RetrieveInstance<DataStructure>(TransformationOutputStructureId);
+        get =>
+            PersistenceProvider.RetrieveInstance<DataStructure>(
+                instanceId: TransformationOutputStructureId
+            );
         set =>
             TransformationOutputStructureId =
-                value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+                value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"];
     }
 
     public Guid SaveValidationBeforeMergeRuleId;
 
-    [Category("Updating")]
-    [TypeConverter(typeof(EndRuleConverter))]
-    [XmlReference("saveValidationBeforeMerge", "SaveValidationBeforeMergeRuleId")]
+    [Category(category: "Updating")]
+    [TypeConverter(type: typeof(EndRuleConverter))]
+    [XmlReference(
+        attributeName: "saveValidationBeforeMerge",
+        idField: "SaveValidationBeforeMergeRuleId"
+    )]
     public IEndRule SaveValidationBeforeMerge
     {
-        get => PersistenceProvider.RetrieveInstance<IEndRule>(SaveValidationBeforeMergeRuleId);
+        get =>
+            PersistenceProvider.RetrieveInstance<IEndRule>(
+                instanceId: SaveValidationBeforeMergeRuleId
+            );
         set =>
             SaveValidationBeforeMergeRuleId =
-                value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+                value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"];
     }
 
     public Guid SaveValidationAfterMergeRuleId;
 
-    [Category("Updating")]
-    [TypeConverter(typeof(EndRuleConverter))]
-    [XmlReference("saveValidationAfterMerge", "SaveValidationAfterMergeRuleId")]
+    [Category(category: "Updating")]
+    [TypeConverter(type: typeof(EndRuleConverter))]
+    [XmlReference(
+        attributeName: "saveValidationAfterMerge",
+        idField: "SaveValidationAfterMergeRuleId"
+    )]
     public IEndRule SaveValidationAfterMerge
     {
-        get => PersistenceProvider.RetrieveInstance<IEndRule>(SaveValidationAfterMergeRuleId);
+        get =>
+            PersistenceProvider.RetrieveInstance<IEndRule>(
+                instanceId: SaveValidationAfterMergeRuleId
+            );
         set =>
             SaveValidationAfterMergeRuleId =
-                value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+                value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"];
     }
 
     public Guid LogTransformationId;
 
-    [Category("Logging")]
-    [TypeConverter(typeof(TransformationConverter))]
-    [XmlReference("logTransformation", "LogTransformationId")]
+    [Category(category: "Logging")]
+    [TypeConverter(type: typeof(TransformationConverter))]
+    [XmlReference(attributeName: "logTransformation", idField: "LogTransformationId")]
     public AbstractTransformation LogTransformation
     {
-        get => PersistenceProvider.RetrieveInstance<AbstractTransformation>(LogTransformationId);
-        set => LogTransformationId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+        get =>
+            PersistenceProvider.RetrieveInstance<AbstractTransformation>(
+                instanceId: LogTransformationId
+            );
+        set => LogTransformationId = value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"];
     }
 
-    [Category("Xslt")]
+    [Category(category: "Xslt")]
     [Description(
-        "An xpath to be run on a result. A string"
+        description: "An xpath to be run on a result. A string"
             + " value of the resulting Xpath navigator is used."
             + " It's mainly used for"
             + " extracting pure text out of the result xml."
@@ -267,48 +304,51 @@ public class XsltDataPage : AbstractPage, IDataStructureReference
             + " then resulting JSON conversion is always done as"
             + " a non-typed XML->JSON conversion"
     )]
-    [XmlAttribute("resultXPath")]
+    [XmlAttribute(attributeName: "resultXPath")]
     public string ResultXPath { get; set; }
 
-    [Category("JSON")]
+    [Category(category: "JSON")]
     [Description(
-        "Applicable to media type application/json."
+        description: "Applicable to media type application/json."
             + " If true 'ROOT' element is removed from the output."
     )]
-    [XmlAttribute("omitJsonRootElement")]
+    [XmlAttribute(attributeName: "omitJsonRootElement")]
     public bool OmitJsonRootElement { get; set; }
 
-    [Category("JSON")]
+    [Category(category: "JSON")]
     [Description(
-        "Applicable to media type application/json."
+        description: "Applicable to media type application/json."
             + " If true the main element is removed from the output."
     )]
-    [XmlAttribute("omitJsonMainElement")]
+    [XmlAttribute(attributeName: "omitJsonMainElement")]
     public bool OmitJsonMainElement { get; set; }
 
-    [Category("InputValidation")]
-    [XmlAttribute("disableConstraintForInputValidation")]
+    [Category(category: "InputValidation")]
+    [XmlAttribute(attributeName: "disableConstraintForInputValidation")]
     public bool DisableConstraintForInputValidation { get; set; }
 
-    [Category("Security")]
-    [XmlAttribute("processGetReadRowLevelRules")]
+    [Category(category: "Security")]
+    [XmlAttribute(attributeName: "processGetReadRowLevelRules")]
     [Description(
-        "Enable checking of field-based row level security rules"
+        description: "Enable checking of field-based row level security rules"
             + " on the output data for GET requests."
             + " Actually only DENY READ field based rules will be"
             + " checked and applied if this is turned on."
     )]
     public bool ProcessReadFieldRowLevelRulesForGetRequests { get; set; }
 
-    [XmlAttribute("allowCustomFilters")]
-    [LocalizedDescription(nameof(Strings.AllowCustomFiltersDescription), typeof(Strings))]
+    [XmlAttribute(attributeName: "allowCustomFilters")]
+    [LocalizedDescription(
+        resourceKey: nameof(Strings.AllowCustomFiltersDescription),
+        resourceType: typeof(Strings)
+    )]
     [SingleEntityDataStructureForCustomFiltersRule]
     public bool AllowCustomFilters { get; set; }
 
     #endregion
 }
 
-[AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
+[AttributeUsage(validOn: AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
 public class SingleEntityDataStructureForCustomFiltersRuleAttribute
     : AbstractModelElementRuleAttribute
 {
@@ -317,7 +357,10 @@ public class SingleEntityDataStructureForCustomFiltersRuleAttribute
         if (instance is not XsltDataPage page)
         {
             throw new Exception(
-                string.Format(Strings.ErrorXsltDataPageInstanceType, nameof(XsltDataPage))
+                message: string.Format(
+                    format: Strings.ErrorXsltDataPageInstanceType,
+                    arg0: nameof(XsltDataPage)
+                )
             );
         }
 
@@ -327,25 +370,25 @@ public class SingleEntityDataStructureForCustomFiltersRuleAttribute
         }
 
         var topEntities = page
-            .DataStructure.Entities.Where(entity => entity.Parents.Count() == 1)
+            .DataStructure.Entities.Where(predicate: entity => entity.Parents.Count() == 1)
             .ToList();
         if (topEntities.Count != 1)
         {
             return new InvalidOperationException(
-                string.Format(
-                    Strings.ErrorAllowCustomFiltersSingleTopEntity,
-                    nameof(XsltDataPage.AllowCustomFilters)
+                message: string.Format(
+                    format: Strings.ErrorAllowCustomFiltersSingleTopEntity,
+                    arg0: nameof(XsltDataPage.AllowCustomFilters)
                 )
             );
         }
         var topEntity = topEntities.First();
         var otherEntities = page
-            .DataStructure.Entities.Where(entity => entity.Id != topEntity.Id)
+            .DataStructure.Entities.Where(predicate: entity => entity.Id != topEntity.Id)
             .ToList();
-        if (otherEntities.Any(entity => entity.Columns.Count > 0))
+        if (otherEntities.Any(predicate: entity => entity.Columns.Count > 0))
         {
             return new InvalidOperationException(
-                Strings.ErrorAllowCustomFiltersSingleTopEntityFieldsOnly
+                message: Strings.ErrorAllowCustomFiltersSingleTopEntityFieldsOnly
             );
         }
 
@@ -357,18 +400,18 @@ public class SingleEntityDataStructureForCustomFiltersRuleAttribute
         if (memberName != nameof(XsltDataPage.AllowCustomFilters))
         {
             throw new Exception(
-                string.Format(
-                    Strings.ErrorSingleEntityDataStructureForCustomFiltersRuleAttributeInvalidTarget,
-                    nameof(SingleEntityDataStructureForCustomFiltersRuleAttribute),
-                    nameof(XsltDataPage.AllowCustomFilters)
+                message: string.Format(
+                    format: Strings.ErrorSingleEntityDataStructureForCustomFiltersRuleAttributeInvalidTarget,
+                    arg0: nameof(SingleEntityDataStructureForCustomFiltersRuleAttribute),
+                    arg1: nameof(XsltDataPage.AllowCustomFilters)
                 )
             );
         }
-        return CheckRule(instance);
+        return CheckRule(instance: instance);
     }
 }
 
-[AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
+[AttributeUsage(validOn: AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
 public class SortSetRequiredForCustomFiltersRuleAttribute : AbstractModelElementRuleAttribute
 {
     public override Exception CheckRule(object instance)
@@ -376,17 +419,20 @@ public class SortSetRequiredForCustomFiltersRuleAttribute : AbstractModelElement
         if (instance is not XsltDataPage page)
         {
             throw new Exception(
-                string.Format(Strings.ErrorXsltDataPageInstanceType, nameof(XsltDataPage))
+                message: string.Format(
+                    format: Strings.ErrorXsltDataPageInstanceType,
+                    arg0: nameof(XsltDataPage)
+                )
             );
         }
 
         if (page.AllowCustomFilters && page.SortSet == null)
         {
             return new InvalidOperationException(
-                string.Format(
-                    Strings.ErrorSortSetRequiredForCustomFilters,
-                    nameof(XsltDataPage.SortSet),
-                    nameof(XsltDataPage.AllowCustomFilters)
+                message: string.Format(
+                    format: Strings.ErrorSortSetRequiredForCustomFilters,
+                    arg0: nameof(XsltDataPage.SortSet),
+                    arg1: nameof(XsltDataPage.AllowCustomFilters)
                 )
             );
         }
@@ -399,13 +445,13 @@ public class SortSetRequiredForCustomFiltersRuleAttribute : AbstractModelElement
         if (memberName != nameof(XsltDataPage.SortSet))
         {
             throw new Exception(
-                string.Format(
-                    Strings.ErrorSortSetRequiredForCustomFiltersRuleAttributeInvalidTarget,
-                    nameof(SortSetRequiredForCustomFiltersRuleAttribute),
-                    nameof(XsltDataPage.SortSet)
+                message: string.Format(
+                    format: Strings.ErrorSortSetRequiredForCustomFiltersRuleAttributeInvalidTarget,
+                    arg0: nameof(SortSetRequiredForCustomFiltersRuleAttribute),
+                    arg1: nameof(XsltDataPage.SortSet)
                 )
             );
         }
-        return CheckRule(instance);
+        return CheckRule(instance: instance);
     }
 }

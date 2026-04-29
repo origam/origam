@@ -28,9 +28,13 @@ namespace Origam.Schema.GuiModel;
 /// <summary>
 /// Summary description for EntityDropdownAction.
 /// </summary>
-[SchemaItemDescription("Dropdown Action", "UI Actions", "icon_dropdown-action.png")]
-[HelpTopic("DropDown+Action")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(
+    name: "Dropdown Action",
+    folderName: "UI Actions",
+    iconName: "icon_dropdown-action.png"
+)]
+[HelpTopic(topic: "DropDown+Action")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class EntityDropdownAction : EntityUIAction
 {
     public EntityDropdownAction()
@@ -40,23 +44,23 @@ public class EntityDropdownAction : EntityUIAction
     }
 
     public EntityDropdownAction(Guid schemaExtensionId)
-        : base(schemaExtensionId)
+        : base(schemaExtensionId: schemaExtensionId)
     {
         Init();
     }
 
     public EntityDropdownAction(Key primaryKey)
-        : base(primaryKey)
+        : base(primaryKey: primaryKey)
     {
         Init();
     }
 
     private void Init()
     {
-        this.ChildItemTypes.Remove(typeof(EntityUIActionParameterMapping));
+        this.ChildItemTypes.Remove(item: typeof(EntityUIActionParameterMapping));
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public override PanelActionType ActionType
     {
         get { return PanelActionType.Dropdown; }

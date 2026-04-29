@@ -61,7 +61,7 @@ public class CreateDatabaseBuilderTask : AbstractDatabaseBuilderTask, ICreateDat
 
     private string BuildConnectionString(Project project, string databaseName)
     {
-        return DataService(project.DatabaseType)
+        return DataService(databaseType: project.DatabaseType)
             .BuildConnectionString(
                 serverName: project.DatabaseHost,
                 port: project.DatabasePort,

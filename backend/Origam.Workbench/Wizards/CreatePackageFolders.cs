@@ -31,14 +31,17 @@ namespace Origam.Schema.Wizards;
 public class CreatePackageFolders : AbstractMenuCommand
 {
     WorkbenchSchemaService _schema =
-        ServiceManager.Services.GetService(typeof(WorkbenchSchemaService))
+        ServiceManager.Services.GetService(serviceType: typeof(WorkbenchSchemaService))
         as WorkbenchSchemaService;
     public override bool IsEnabled
     {
         get { return _schema.ActiveNode is Package; }
         set
         {
-            throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
+            throw new ArgumentException(
+                message: ResourceUtils.GetString(key: "ErrorSetProperty"),
+                paramName: "IsEnabled"
+            );
         }
     }
 
@@ -46,7 +49,9 @@ public class CreatePackageFolders : AbstractMenuCommand
     {
         foreach (ISchemaItemProvider provider in _schema.Providers)
         {
-            SchemaItemGroup group = provider.NewGroup(_schema.ActiveSchemaExtensionId);
+            SchemaItemGroup group = provider.NewGroup(
+                schemaExtensionId: _schema.ActiveSchemaExtensionId
+            );
             group.Name = _schema.ActiveExtension.Name;
             group.Persist();
         }
@@ -60,7 +65,7 @@ public class CreatePackageFolders : AbstractMenuCommand
         {
             if (child.DerivedFrom == null)
             {
-                SetInheritance(child, value);
+                SetInheritance(item: child, value: value);
             }
         }
     }

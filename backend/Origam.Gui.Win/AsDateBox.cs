@@ -33,8 +33,8 @@ namespace Origam.Gui.Win;
 /// Represents a Windows date time picker control. It enhances the .NET standard <b>DateTimePicker</b>
 /// control with a ReadOnly mode as well as with the possibility to show empty values (null values).
 /// </summary>
-[ComVisible(false)]
-[ToolboxBitmap(typeof(AsDateBox))]
+[ComVisible(visibility: false)]
+[ToolboxBitmap(t: typeof(AsDateBox))]
 public class AsDateBox : BaseDropDownControl, INotifyPropertyChanged
 {
     public event EventHandler dateValueChanged;
@@ -153,25 +153,25 @@ public class AsDateBox : BaseDropDownControl, INotifyPropertyChanged
                 if (value is DateTime)
                 {
                     DateTime dt = (DateTime)value;
-                    converted = dt.ToString(this.EditControl.CustomFormat);
+                    converted = dt.ToString(format: this.EditControl.CustomFormat);
                     //value = DateTime.Parse(converted);
                 }
                 if (value is string)
                 {
-                    DateTime dt = DateTime.Parse((string)value);
-                    converted = dt.ToString(this.EditControl.CustomFormat);
+                    DateTime dt = DateTime.Parse(s: (string)value);
+                    converted = dt.ToString(format: this.EditControl.CustomFormat);
                     //value = DateTime.Parse(converted);
                 }
                 if (
                     (_selectedValue == null & value != DBNull.Value & value != null)
-                    || (_selectedValue != null && !_selectedValue.Equals(value))
+                    || (_selectedValue != null && !_selectedValue.Equals(obj: value))
                 )
                 {
                     _selectedValue = value;
                     if (
                         !valueChangedByUser
                         && !(
-                            this.EditControl.Value.Equals(converted)
+                            this.EditControl.Value.Equals(obj: converted)
                             || (this.EditControl.Value == DBNull.Value && converted == null)
                         )
                     )
@@ -180,7 +180,7 @@ public class AsDateBox : BaseDropDownControl, INotifyPropertyChanged
                         this.DisplayText = converted;
                         _settingValue = false;
                     }
-                    OnDateValueChanged(EventArgs.Empty);
+                    OnDateValueChanged(e: EventArgs.Empty);
                 }
             }
         }
@@ -191,8 +191,8 @@ public class AsDateBox : BaseDropDownControl, INotifyPropertyChanged
     /// </summary>
     /// <value>One of the <see cref="DateTimePickerFormat"/> values. The default is
     /// <see cref="DateTimePickerFormat.Long"/>.</value>
-    [Browsable(true)]
-    [DefaultValue(DateTimePickerFormat.Long), TypeConverter(typeof(Enum))]
+    [Browsable(browsable: true)]
+    [DefaultValue(value: DateTimePickerFormat.Long), TypeConverter(type: typeof(Enum))]
     public DateTimePickerFormat Format
     {
         get => format;
@@ -214,7 +214,7 @@ public class AsDateBox : BaseDropDownControl, INotifyPropertyChanged
     /// reference (<b>Nothing</b> in Visual Basic).</value>
     /// </summary>
     ///
-    [DefaultValue("dd.MMMM yyyy")]
+    [DefaultValue(value: "dd.MMMM yyyy")]
     public String CustomFormat
     {
         get => customFormat;
@@ -267,7 +267,7 @@ public class AsDateBox : BaseDropDownControl, INotifyPropertyChanged
         {
             this.EditControl.KeyUp -= EditControl_KeyUp;
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
 
     public override IDropDownPart CreatePopup()
@@ -278,8 +278,11 @@ public class AsDateBox : BaseDropDownControl, INotifyPropertyChanged
     #region OnXXXX()
     void OnDateValueChanged(EventArgs e)
     {
-        dateValueChanged?.Invoke(this, e);
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("DateValue"));
+        dateValueChanged?.Invoke(sender: this, e: e);
+        PropertyChanged?.Invoke(
+            sender: this,
+            e: new PropertyChangedEventArgs(propertyName: "DateValue")
+        );
     }
     /// <summary>
     /// This member overrides <see cref="Control.OnKeyDown"/>.
@@ -333,14 +336,14 @@ public class AsDateBox : BaseDropDownControl, INotifyPropertyChanged
             return;
         }
 
-        if (!this.DateValue.Equals(this.EditControl.Value))
+        if (!this.DateValue.Equals(obj: this.EditControl.Value))
         {
             valueChangedByUser = true;
             if (EditControl.Value != null && EditControl.Value != DBNull.Value)
             {
                 DateTime dt = (DateTime)EditControl.Value;
-                string converted = dt.ToString(EditControl.CustomFormat);
-                var pasrseSucessful = DateTime.TryParse(converted, out var parsedDate);
+                string converted = dt.ToString(format: EditControl.CustomFormat);
+                var pasrseSucessful = DateTime.TryParse(s: converted, result: out var parsedDate);
                 if (pasrseSucessful)
                 {
                     this.DateValue = parsedDate;
@@ -348,14 +351,14 @@ public class AsDateBox : BaseDropDownControl, INotifyPropertyChanged
                 else
                 {
                     throw new ArgumentException(
-                        String.Format(
-                            ResourceUtils.GetString("WrongCustomFormatMeaasge"),
-                            dt.ToString(),
-                            EditControl.CustomFormat
+                        message: String.Format(
+                            format: ResourceUtils.GetString(key: "WrongCustomFormatMeaasge"),
+                            arg0: dt.ToString(),
+                            arg1: EditControl.CustomFormat
                         )
                     );
                 }
-                onTextBoxValueChanged?.Invoke(this, e);
+                onTextBoxValueChanged?.Invoke(sender: this, e: e);
             }
             else
             {
@@ -372,8 +375,8 @@ public class AsDateBox : BaseDropDownControl, INotifyPropertyChanged
             if (!(e.Popup as IDropDownPart).Canceled)
             {
                 DateTime dt = (DateTime)(e.Popup as IDropDownPart).SelectedValue;
-                string converted = dt.ToString(this.EditControl.CustomFormat);
-                this.DateValue = DateTime.Parse(converted);
+                string converted = dt.ToString(format: this.EditControl.CustomFormat);
+                this.DateValue = DateTime.Parse(s: converted);
             }
         }
         this.DroppedDown = false;

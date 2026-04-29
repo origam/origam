@@ -34,12 +34,18 @@ namespace OrigamArchitect.Commands;
 public class GenerateXamlCommand : AbstractMenuCommand
 {
     WorkbenchSchemaService _schema =
-        ServiceManager.Services.GetService(typeof(WorkbenchSchemaService))
+        ServiceManager.Services.GetService(serviceType: typeof(WorkbenchSchemaService))
         as WorkbenchSchemaService;
     public override bool IsEnabled
     {
         get { return _schema.ActiveNode is Origam.Schema.MenuModel.Menu; }
-        set { throw new ArgumentException("Cannot set this property", "IsEnabled"); }
+        set
+        {
+            throw new ArgumentException(
+                message: "Cannot set this property",
+                paramName: "IsEnabled"
+            );
+        }
     }
 
     public override void Run()
@@ -47,11 +53,16 @@ public class GenerateXamlCommand : AbstractMenuCommand
         SaveFileDialog dialog = new SaveFileDialog();
         dialog.DefaultExt = "xml";
         dialog.FileName = "menu.xml";
-        if (dialog.ShowDialog(WorkbenchSingleton.Workbench as IWin32Window) == DialogResult.OK)
+        if (
+            dialog.ShowDialog(owner: WorkbenchSingleton.Workbench as IWin32Window)
+            == DialogResult.OK
+        )
         {
             Origam.Schema.MenuModel.Menu item = _schema.ActiveNode as Origam.Schema.MenuModel.Menu;
-            Origam.OrigamEngine.ModelXmlBuilders.MenuXmlBuilder.GetXml(item).Save(dialog.FileName);
-            string path = Path.GetDirectoryName(dialog.FileName);
+            Origam
+                .OrigamEngine.ModelXmlBuilders.MenuXmlBuilder.GetXml(menu: item)
+                .Save(filename: dialog.FileName);
+            string path = Path.GetDirectoryName(path: dialog.FileName);
             foreach (ISchemaItem child in item.ChildItemsRecursive)
             {
                 FormReferenceMenuItem formMenu = child as FormReferenceMenuItem;
@@ -59,20 +70,20 @@ public class GenerateXamlCommand : AbstractMenuCommand
                 {
                     FormControlSet form = formMenu.Screen;
                     string formPath = Path.Combine(
-                        path,
-                        formMenu.Name + "_" + formMenu.Id.ToString() + ".xml"
+                        path1: path,
+                        path2: formMenu.Name + "_" + formMenu.Id.ToString() + ".xml"
                     );
                     Origam
                         .OrigamEngine.ModelXmlBuilders.FormXmlBuilder.GetXml(
-                            form,
-                            formMenu.DisplayName,
-                            formMenu.ListDataStructure == null,
-                            formMenu.Id,
-                            form.DataStructure,
-                            formMenu.ReadOnlyAccess,
-                            formMenu.SelectionChangeEntity
+                            item: form,
+                            name: formMenu.DisplayName,
+                            isPreloaded: formMenu.ListDataStructure == null,
+                            menuId: formMenu.Id,
+                            structure: form.DataStructure,
+                            forceReadOnly: formMenu.ReadOnlyAccess,
+                            confirmSelectionChangeEntity: formMenu.SelectionChangeEntity
                         )
-                        .Document.Save(formPath);
+                        .Document.Save(filename: formPath);
                 }
             }
         }

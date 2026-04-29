@@ -28,7 +28,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 <h3 class="confirmation-text">
-    @SharedLocalizer["UnknownError"]
+    @SharedLocalizer[name: "UnknownError"]
 </h3>
 @if (error != null)
 {
@@ -45,7 +45,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 <div class="centered">
     <div class="go-to-login-statement">
-        @SharedLocalizer["ToLogin1"]<a class="in-page-link" asp-controller="Account" asp-route-returnUrl="/Account/Login">
-            @SharedLocalizer["ToLogin2"]</a>@SharedLocalizer["ToLogin3"]
+        @SharedLocalizer[name: "ToLogin1"]<a class="in-page-link" asp-controller="Account" asp-route-returnUrl="/Account/Login">
+            @SharedLocalizer[name: "ToLogin2"]</a>@SharedLocalizer[name: "ToLogin3"]
     </div>
 </div>

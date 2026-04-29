@@ -51,7 +51,7 @@ public class WorkQueueIataBspFileLoader : WorkQueueLoaderAdapter
             {
                 return null;
             }
-            buffer.Enqueue(line);
+            buffer.Enqueue(item: line);
             return line;
         }
 
@@ -66,7 +66,7 @@ public class WorkQueueIataBspFileLoader : WorkQueueLoaderAdapter
     }
 
     private static readonly ILog log = LogManager.GetLogger(
-        MethodBase.GetCurrentMethod().DeclaringType
+        type: MethodBase.GetCurrentMethod().DeclaringType
     );
     private string transactionId;
     private bool isLocalTransaction = false;
@@ -96,48 +96,53 @@ public class WorkQueueIataBspFileLoader : WorkQueueLoaderAdapter
     {
         if (log.IsInfoEnabled)
         {
-            log.Info("Connecting " + connection);
+            log.Info(message: "Connecting " + connection);
         }
-        SetupTransaction(transactionId);
-        ParseParameters(connection);
-        InitializeStream(connection);
+        SetupTransaction(transactionId: transactionId);
+        ParseParameters(connection: connection);
+        InitializeStream(connection: connection);
     }
 
     private void InitializeStream(string connection)
     {
         try
         {
-            hashIndexFile = new HashIndexFile(indexFile);
+            hashIndexFile = new HashIndexFile(indexFile: indexFile);
         }
         catch (Exception ex)
         {
             if (log.IsErrorEnabled)
             {
-                log.LogOrigamError("Failed to open hash index file.", ex);
+                log.LogOrigamError(message: "Failed to open hash index file.", ex: ex);
             }
             throw;
         }
-        string fileName = hashIndexFile.GetFirstUnprocessedFile(path, searchPattern);
+        string fileName = hashIndexFile.GetFirstUnprocessedFile(path: path, mask: searchPattern);
         if (fileName != null)
         {
-            fileInfo = new FileInfo(fileName);
-            streamReader = new StreamReader(OpenFileExclusively(fileName));
-            adapter = new PeekableStreamReaderAdapter(streamReader);
+            fileInfo = new FileInfo(fileName: fileName);
+            streamReader = new StreamReader(stream: OpenFileExclusively(fileName: fileName));
+            adapter = new PeekableStreamReaderAdapter(streamReader: streamReader);
             MoveToFirstTransaction();
         }
     }
 
     private Stream OpenFileExclusively(string fileName)
     {
-        return File.Open(fileName, FileMode.Open, FileAccess.Read, FileShare.None);
+        return File.Open(
+            path: fileName,
+            mode: FileMode.Open,
+            access: FileAccess.Read,
+            share: FileShare.None
+        );
     }
 
     private void ParseParameters(string connection)
     {
-        string[] cnParts = connection.Split(";".ToCharArray());
+        string[] cnParts = connection.Split(separator: ";".ToCharArray());
         foreach (string part in cnParts)
         {
-            string[] pair = part.Split("=".ToCharArray());
+            string[] pair = part.Split(separator: "=".ToCharArray());
             if (pair.Length == 2)
             {
                 switch (pair[0])
@@ -187,9 +192,9 @@ public class WorkQueueIataBspFileLoader : WorkQueueLoaderAdapter
                     default:
                     {
                         throw new ArgumentOutOfRangeException(
-                            "connectionParameterName",
-                            pair[0],
-                            ResourceUtils.GetString("ErrorInvalidConnectionString")
+                            paramName: "connectionParameterName",
+                            actualValue: pair[0],
+                            message: ResourceUtils.GetString(key: "ErrorInvalidConnectionString")
                         );
                     }
                 }
@@ -197,27 +202,27 @@ public class WorkQueueIataBspFileLoader : WorkQueueLoaderAdapter
         }
         if (path == null)
         {
-            throw new Exception(ResourceUtils.GetString("ErrorNoPath"));
+            throw new Exception(message: ResourceUtils.GetString(key: "ErrorNoPath"));
         }
         if (indexFile == null)
         {
-            throw new Exception(ResourceUtils.GetString("ErrorNoIndexFile"));
+            throw new Exception(message: ResourceUtils.GetString(key: "ErrorNoIndexFile"));
         }
         if (searchPattern == null)
         {
-            throw new Exception(ResourceUtils.GetString("ErrorNoSearchPattern"));
+            throw new Exception(message: ResourceUtils.GetString(key: "ErrorNoSearchPattern"));
         }
         if (segmentMarker == null)
         {
-            throw new Exception(ResourceUtils.GetString("ErrorNoSegmentMarker"));
+            throw new Exception(message: ResourceUtils.GetString(key: "ErrorNoSegmentMarker"));
         }
         if (footerMarker == null)
         {
-            throw new Exception(ResourceUtils.GetString("ErrorNoFooterMarker"));
+            throw new Exception(message: ResourceUtils.GetString(key: "ErrorNoFooterMarker"));
         }
         if (lastRowMarker == null)
         {
-            throw new Exception(ResourceUtils.GetString("ErrorNoLastRowMarker"));
+            throw new Exception(message: ResourceUtils.GetString(key: "ErrorNoLastRowMarker"));
         }
     }
 
@@ -237,12 +242,13 @@ public class WorkQueueIataBspFileLoader : WorkQueueLoaderAdapter
         {
             CheckLastRowMarker();
             hashIndexFile.AddEntryToIndexFile(
-                hashIndexFile.CreateIndexFileEntry(fileInfo.FullName) + $"|{segmentsCounter}"
+                entry: hashIndexFile.CreateIndexFileEntry(filename: fileInfo.FullName)
+                    + $"|{segmentsCounter}"
             );
         }
         if (isLocalTransaction)
         {
-            ResourceMonitor.Commit(transactionId);
+            ResourceMonitor.Commit(transactionId: transactionId);
         }
         hashIndexFile.Dispose();
     }
@@ -251,7 +257,9 @@ public class WorkQueueIataBspFileLoader : WorkQueueLoaderAdapter
     {
         if ((segmentsCounter > 0) && !lastRowMarkerReached)
         {
-            throw new Exception(ResourceUtils.GetString("ErrorLastRowMarkerNotReached"));
+            throw new Exception(
+                message: ResourceUtils.GetString(key: "ErrorLastRowMarkerNotReached")
+            );
         }
     }
 
@@ -262,14 +270,14 @@ public class WorkQueueIataBspFileLoader : WorkQueueLoaderAdapter
             return null;
         }
         string firstLine = adapter.ReadLine();
-        while ((firstLine != null) && !firstLine.StartsWith(segmentMarker))
+        while ((firstLine != null) && !firstLine.StartsWith(value: segmentMarker))
         {
-            if (firstLine.StartsWith(lastRowMarker))
+            if (firstLine.StartsWith(value: lastRowMarker))
             {
                 lastRowMarkerReached = true;
                 if (addLastRowToQueue)
                 {
-                    return ReadSegmentAndReturnAsWQResult(firstLine);
+                    return ReadSegmentAndReturnAsWQResult(firstLine: firstLine);
                 }
             }
             firstLine = adapter.ReadLine();
@@ -280,37 +288,43 @@ public class WorkQueueIataBspFileLoader : WorkQueueLoaderAdapter
             CheckLastRowMarker();
             return null;
         }
-        return ReadSegmentAndReturnAsWQResult(firstLine);
+        return ReadSegmentAndReturnAsWQResult(firstLine: firstLine);
     }
 
     private WorkQueueAdapterResult ReadSegmentAndReturnAsWQResult(string firstLine)
     {
-        string fileSegment = ReadFileSegment(firstLine);
+        string fileSegment = ReadFileSegment(firstLine: firstLine);
         DataTable dataTable = CreateFileDataset();
         DataRow row = dataTable.NewRow();
         try
         {
             // Add file metadata (times)
-            row["CreationTime"] = fileInfo.CreationTime;
-            row["LastWriteTime"] = fileInfo.LastWriteTime;
-            row["LastAccessTime"] = fileInfo.LastAccessTime;
+            row[columnName: "CreationTime"] = fileInfo.CreationTime;
+            row[columnName: "LastWriteTime"] = fileInfo.LastWriteTime;
+            row[columnName: "LastAccessTime"] = fileInfo.LastAccessTime;
         }
         catch { }
-        row["Name"] = fileInfo.Name;
-        row["Data"] = fileSegment;
-        row["SequenceNumber"] = segmentsCounter++;
-        dataTable.Rows.Add(row);
-        return new WorkQueueAdapterResult(DataDocumentFactory.New(dataTable.DataSet));
+        row[columnName: "Name"] = fileInfo.Name;
+        row[columnName: "Data"] = fileSegment;
+        row[columnName: "SequenceNumber"] = segmentsCounter++;
+        dataTable.Rows.Add(row: row);
+        return new WorkQueueAdapterResult(
+            document: DataDocumentFactory.New(dataSet: dataTable.DataSet)
+        );
     }
 
     private string ReadFileSegment(string firstLine)
     {
         StringBuilder output = new StringBuilder();
-        output.AppendLine(firstLine);
+        output.AppendLine(value: firstLine);
         string line = adapter.PeekLine();
-        while ((line != null) && !line.StartsWith(segmentMarker) && !line.StartsWith(footerMarker))
+        while (
+            (line != null)
+            && !line.StartsWith(value: segmentMarker)
+            && !line.StartsWith(value: footerMarker)
+        )
         {
-            output.AppendLine(adapter.ReadLine());
+            output.AppendLine(value: adapter.ReadLine());
             line = adapter.PeekLine();
         }
         return output.ToString();
@@ -319,7 +333,7 @@ public class WorkQueueIataBspFileLoader : WorkQueueLoaderAdapter
     private void MoveToFirstTransaction()
     {
         string line = adapter.PeekLine();
-        while ((line != null) && !(line.StartsWith(segmentMarker)))
+        while ((line != null) && !(line.StartsWith(value: segmentMarker)))
         {
             line = adapter.ReadLine();
             line = adapter.PeekLine();
@@ -328,15 +342,15 @@ public class WorkQueueIataBspFileLoader : WorkQueueLoaderAdapter
 
     private DataTable CreateFileDataset()
     {
-        DataSet dataSet = new DataSet("ROOT");
-        DataTable dataTable = dataSet.Tables.Add("File");
-        dataTable.Columns.Add("Name", typeof(string));
-        dataTable.Columns.Add("Data", typeof(string));
+        DataSet dataSet = new DataSet(dataSetName: "ROOT");
+        DataTable dataTable = dataSet.Tables.Add(name: "File");
+        dataTable.Columns.Add(columnName: "Name", type: typeof(string));
+        dataTable.Columns.Add(columnName: "Data", type: typeof(string));
         // Add file metadata (times)
-        dataTable.Columns.Add("CreationTime", typeof(DateTime));
-        dataTable.Columns.Add("LastWriteTime", typeof(DateTime));
-        dataTable.Columns.Add("LastAccessTime", typeof(DateTime));
-        dataTable.Columns.Add("SequenceNumber", typeof(int));
+        dataTable.Columns.Add(columnName: "CreationTime", type: typeof(DateTime));
+        dataTable.Columns.Add(columnName: "LastWriteTime", type: typeof(DateTime));
+        dataTable.Columns.Add(columnName: "LastAccessTime", type: typeof(DateTime));
+        dataTable.Columns.Add(columnName: "SequenceNumber", type: typeof(int));
         return dataTable;
     }
 }

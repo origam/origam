@@ -36,7 +36,10 @@ public class TextBoxBuilder
             || (buildDefinition.Type == OrigamDataType.Long)
         )
         {
-            propertyElement.SetAttribute("IsInteger", XmlConvert.ToString(true));
+            propertyElement.SetAttribute(
+                name: "IsInteger",
+                value: XmlConvert.ToString(value: true)
+            );
         }
         if (
             (buildDefinition.Type == OrigamDataType.Integer)
@@ -45,31 +48,37 @@ public class TextBoxBuilder
             || (buildDefinition.Type == OrigamDataType.Currency)
         )
         {
-            propertyElement.SetAttribute("Entity", buildDefinition.Type.ToString());
-            propertyElement.SetAttribute("Column", "Number");
-            propertyElement.SetAttribute("CustomNumericFormat", buildDefinition.CustomNumberFormat);
+            propertyElement.SetAttribute(name: "Entity", value: buildDefinition.Type.ToString());
+            propertyElement.SetAttribute(name: "Column", value: "Number");
+            propertyElement.SetAttribute(
+                name: "CustomNumericFormat",
+                value: buildDefinition.CustomNumberFormat
+            );
         }
         else
         {
-            propertyElement.SetAttribute("Entity", "String");
-            propertyElement.SetAttribute("Column", "Text");
-            propertyElement.SetAttribute("Dock", buildDefinition.Dock);
+            propertyElement.SetAttribute(name: "Entity", value: "String");
+            propertyElement.SetAttribute(name: "Column", value: "Text");
+            propertyElement.SetAttribute(name: "Dock", value: buildDefinition.Dock);
             propertyElement.SetAttribute(
-                "Multiline",
-                XmlConvert.ToString(buildDefinition.Multiline)
+                name: "Multiline",
+                value: XmlConvert.ToString(value: buildDefinition.Multiline)
             );
             propertyElement.SetAttribute(
-                "IsPassword",
-                XmlConvert.ToString(buildDefinition.IsPassword)
+                name: "IsPassword",
+                value: XmlConvert.ToString(value: buildDefinition.IsPassword)
             );
             propertyElement.SetAttribute(
-                "IsRichText",
-                XmlConvert.ToString(buildDefinition.IsRichText)
+                name: "IsRichText",
+                value: XmlConvert.ToString(value: buildDefinition.IsRichText)
             );
-            propertyElement.SetAttribute("AllowTab", XmlConvert.ToString(buildDefinition.AllowTab));
             propertyElement.SetAttribute(
-                "MaxLength",
-                XmlConvert.ToString(buildDefinition.MaxLength)
+                name: "AllowTab",
+                value: XmlConvert.ToString(value: buildDefinition.AllowTab)
+            );
+            propertyElement.SetAttribute(
+                name: "MaxLength",
+                value: XmlConvert.ToString(value: buildDefinition.MaxLength)
             );
         }
     }

@@ -32,9 +32,9 @@ public class DocumentationHelperService
         string label
     )
     {
-        var entries = Enum.GetValues(typeof(DocumentationType))
+        var entries = Enum.GetValues(enumType: typeof(DocumentationType))
             .Cast<DocumentationType>()
-            .Select(docType => new EditorProperty(
+            .Select(selector: docType => new EditorProperty(
                 name: docType.ToString(),
                 controlPropertyId: null,
                 type: "string",
@@ -44,13 +44,13 @@ public class DocumentationHelperService
                 description: "",
                 readOnly: false
             ))
-            .ToDictionary(prop => prop.Name, prop => prop);
+            .ToDictionary(keySelector: prop => prop.Name, elementSelector: prop => prop);
 
         foreach (
             DocumentationComplete.DocumentationRow row in documentationComplete.Documentation.Rows
         )
         {
-            entries[row.Category] = new EditorProperty(
+            entries[key: row.Category] = new EditorProperty(
                 name: row.Category,
                 controlPropertyId: null,
                 type: "string",
@@ -74,12 +74,12 @@ public class DocumentationHelperService
                 .Documentation;
             DocumentationComplete.DocumentationRow row = table
                 .Rows.Cast<DocumentationComplete.DocumentationRow>()
-                .FirstOrDefault(row => row.Category == propertyChange.Name);
-            if (string.IsNullOrEmpty(propertyChange.Value))
+                .FirstOrDefault(predicate: row => row.Category == propertyChange.Name);
+            if (string.IsNullOrEmpty(value: propertyChange.Value))
             {
                 if (row != null)
                 {
-                    table.RemoveDocumentationRow(row);
+                    table.RemoveDocumentationRow(row: row);
                     editor.IsDirty = true;
                 }
 
@@ -93,7 +93,7 @@ public class DocumentationHelperService
                 row.Data = propertyChange.Value;
                 row.refSchemaItemId = changes.SchemaItemId;
                 row.Id = Guid.NewGuid();
-                table.Rows.Add(row);
+                table.Rows.Add(row: row);
             }
             else
             {

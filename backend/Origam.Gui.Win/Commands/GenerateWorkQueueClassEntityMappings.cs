@@ -29,22 +29,28 @@ namespace Origam.Gui.Win.Commands;
 public class GenerateWorkQueueClassEntityMappings : AbstractMenuCommand
 {
     SchemaBrowser _schemaBrowser =
-        WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+        WorkbenchSingleton.Workbench.GetPad(type: typeof(SchemaBrowser)) as SchemaBrowser;
     public override bool IsEnabled
     {
         get { return Owner is WorkQueueClass; }
-        set { throw new ArgumentException("Cannot set this property", "IsEnabled"); }
+        set
+        {
+            throw new ArgumentException(
+                message: "Cannot set this property",
+                paramName: "IsEnabled"
+            );
+        }
     }
 
     public override void Run()
     {
         Origam.Schema.WorkflowModel.WorkflowHelper.GenerateWorkQueueClassEntityMappings(
-            Owner as WorkQueueClass
+            workQueueClass: Owner as WorkQueueClass
         );
     }
 
     public override int GetImageIndex(string icon)
     {
-        return _schemaBrowser.ImageIndex(icon);
+        return _schemaBrowser.ImageIndex(icon: icon);
     }
 }

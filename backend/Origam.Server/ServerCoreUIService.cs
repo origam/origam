@@ -60,7 +60,7 @@ public class ServerCoreUIService : IBasicUIService
 
     // ReSharper disable once InconsistentNaming
     private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
-        System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
+        type: System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
     );
     private readonly UIManager uiManager;
     private readonly SessionManager sessionManager;
@@ -71,8 +71,8 @@ public class ServerCoreUIService : IBasicUIService
     {
         this.uiManager = uiManager;
         this.sessionManager = sessionManager;
-        sessionHelper = new SessionHelper(sessionManager);
-        reportManager = new ServerCoreReportManager(sessionManager);
+        sessionHelper = new SessionHelper(sessionManager: sessionManager);
+        reportManager = new ServerCoreReportManager(sessionManager: sessionManager);
     }
 
     public string GetReportStandalone(
@@ -81,7 +81,11 @@ public class ServerCoreUIService : IBasicUIService
         DataReportExportFormatType dataReportExportFormatType
     )
     {
-        return reportManager.GetReportStandalone(reportId, parameters, dataReportExportFormatType);
+        return reportManager.GetReportStandalone(
+            reportId: reportId,
+            parameters: parameters,
+            dataReportExportFormatType: dataReportExportFormatType
+        );
     }
 
     public UIResult InitUI(UIRequest request)
@@ -98,7 +102,7 @@ public class ServerCoreUIService : IBasicUIService
     {
         OrigamUserContext.Reset();
         var profile = SecurityTools.CurrentUserProfile();
-        var result = new PortalResult(MenuXmlBuilder.GetMenu());
+        var result = new PortalResult(menu: MenuXmlBuilder.GetMenu());
         var settings = ConfigurationManager.GetActiveConfiguration();
         if (settings != null)
         {
@@ -114,22 +118,24 @@ public class ServerCoreUIService : IBasicUIService
         }
         // load favorites
         var favorites = CoreServices.DataService.Instance.LoadData(
-            dataStructureId: new Guid("e564c554-ca83-47eb-980d-95b4faba8fb8"),
-            methodId: new Guid("e468076e-a641-4b7d-b9b4-7d80ff312b1c"),
+            dataStructureId: new Guid(g: "e564c554-ca83-47eb-980d-95b4faba8fb8"),
+            methodId: new Guid(g: "e468076e-a641-4b7d-b9b4-7d80ff312b1c"),
             defaultSetId: Guid.Empty,
             sortSetId: Guid.Empty,
             transactionId: null,
             paramName1: "OrigamFavoritesUserConfig_parBusinessPartnerId",
             paramValue1: profile.Id
         );
-        if (favorites.Tables["OrigamFavoritesUserConfig"].Rows.Count > 0)
+        if (favorites.Tables[name: "OrigamFavoritesUserConfig"].Rows.Count > 0)
         {
             result.Favorites = (string)
-                favorites.Tables["OrigamFavoritesUserConfig"].Rows[0]["ConfigXml"];
+                favorites.Tables[name: "OrigamFavoritesUserConfig"].Rows[index: 0][
+                    columnName: "ConfigXml"
+                ];
         }
         sessionManager.AddOrUpdatePortalSession(
             id: profile.Id,
-            addSession: id => new PortalSessionStore(profile.Id),
+            addSession: id => new PortalSessionStore(profileId: profile.Id),
             updateSession: (storeId, portalSessionStore) =>
             {
                 var clearAll = portalSessionStore.ShouldBeCleared();
@@ -139,9 +145,9 @@ public class ServerCoreUIService : IBasicUIService
                 {
                     if (clearAll)
                     {
-                        sessionsToDestroy.Add(mainSessionStore.Id);
+                        sessionsToDestroy.Add(item: mainSessionStore.Id);
                     }
-                    else if (sessionManager.HasFormSession(mainSessionStore.Id))
+                    else if (sessionManager.HasFormSession(id: mainSessionStore.Id))
                     {
                         var sessionStore = mainSessionStore.ActiveSession ?? mainSessionStore;
                         if (
@@ -149,7 +155,7 @@ public class ServerCoreUIService : IBasicUIService
                             || sessionStore.IsModalDialog
                         )
                         {
-                            sessionsToDestroy.Add(sessionStore.Id);
+                            sessionsToDestroy.Add(item: sessionStore.Id);
                         }
                         else
                         {
@@ -158,16 +164,16 @@ public class ServerCoreUIService : IBasicUIService
                             {
                                 askWorkflowClose = workflowSessionStore.AskWorkflowClose;
                             }
-                            var hasChanges = HasChanges(sessionStore);
+                            var hasChanges = HasChanges(sessionStore: sessionStore);
                             result.Sessions.Add(
-                                new PortalResultSession(
-                                    sessionStore.Id,
-                                    sessionStore.Request.ObjectId,
-                                    hasChanges,
-                                    sessionStore.Request.Type,
-                                    sessionStore.Request.Caption,
-                                    sessionStore.Request.Icon,
-                                    askWorkflowClose
+                                item: new PortalResultSession(
+                                    formSessionId: sessionStore.Id,
+                                    objectId: sessionStore.Request.ObjectId,
+                                    isDirty: hasChanges,
+                                    type: sessionStore.Request.Type,
+                                    caption: sessionStore.Request.Caption,
+                                    icon: sessionStore.Request.Icon,
+                                    askWorkflowClose: askWorkflowClose
                                 )
                             );
                         }
@@ -177,22 +183,22 @@ public class ServerCoreUIService : IBasicUIService
                         // session is registered in the user's portal,
                         // but not in the UIService anymore,
                         // we have to destroy it
-                        sessionsToDestroy.Add(mainSessionStore.Id);
+                        sessionsToDestroy.Add(item: mainSessionStore.Id);
                     }
                 }
                 foreach (Guid id in sessionsToDestroy)
                 {
                     try
                     {
-                        DestroyUI(id);
+                        DestroyUI(sessionFormIdentifier: id);
                     }
                     catch (Exception ex)
                     {
                         if (log.IsFatalEnabled)
                         {
                             log.LogOrigamError(
-                                "Failed to destroy session " + id.ToString() + ".",
-                                ex
+                                message: "Failed to destroy session " + id.ToString() + ".",
+                                ex: ex
                             );
                         }
                     }
@@ -220,8 +226,8 @@ public class ServerCoreUIService : IBasicUIService
             .GetProvider<MenuSchemaItemProvider>();
         return menuProvider
             .ChildItemsRecursive.OfType<AbstractMenuItem>()
-            .Where(x => x is ReportReferenceMenuItem || x is FormReferenceMenuItem)
-            .FirstOrDefault(FormTools.IsFormMenuInitialScreen)
+            .Where(predicate: x => x is ReportReferenceMenuItem || x is FormReferenceMenuItem)
+            .FirstOrDefault(predicate: FormTools.IsFormMenuInitialScreen)
             ?.Id.ToString();
     }
 
@@ -242,12 +248,14 @@ public class ServerCoreUIService : IBasicUIService
         }
         while (pss.FormSessions.Count > 0)
         {
-            DestroyUI(pss.FormSessions[0].Id);
+            DestroyUI(sessionFormIdentifier: pss.FormSessions[index: 0].Id);
         }
-        Analytics.Instance.Log("UI_LOGOUT");
-        sessionManager.RemovePortalSession(SecurityTools.CurrentUserProfile().Id);
-        Task.Run(() =>
-            SecurityTools.RemoveOrigamOnlineUser(SecurityManager.CurrentPrincipal.Identity.Name)
+        Analytics.Instance.Log(message: "UI_LOGOUT");
+        sessionManager.RemovePortalSession(id: SecurityTools.CurrentUserProfile().Id);
+        Task.Run(action: () =>
+            SecurityTools.RemoveOrigamOnlineUser(
+                username: SecurityManager.CurrentPrincipal.Identity.Name
+            )
         );
         OrigamUserContext.Reset();
     }
@@ -255,7 +263,7 @@ public class ServerCoreUIService : IBasicUIService
     // ReSharper disable once InconsistentNaming
     public void DestroyUI(Guid sessionFormIdentifier)
     {
-        sessionHelper.DeleteSession(sessionFormIdentifier);
+        sessionHelper.DeleteSession(sessionFormIdentifier: sessionFormIdentifier);
         CreateUpdateOrigamOnlineUser();
     }
 
@@ -267,7 +275,7 @@ public class ServerCoreUIService : IBasicUIService
         }
         foreach (var sessionFormIdentifier in sessionFormIdentifiers)
         {
-            sessionHelper.DeleteSession(sessionFormIdentifier);
+            sessionHelper.DeleteSession(sessionFormIdentifier: sessionFormIdentifier);
         }
         CreateUpdateOrigamOnlineUser();
     }
@@ -277,16 +285,15 @@ public class ServerCoreUIService : IBasicUIService
         IStringLocalizer<SharedResources> localizer
     )
     {
-        var sessionStore = sessionManager.GetSession(sessionFormIdentifier);
-        var result = sessionStore.ExecuteAction(SessionStore.ACTION_REFRESH);
+        var sessionStore = sessionManager.GetSession(sessionFormIdentifier: sessionFormIdentifier);
+        var result = sessionStore.ExecuteAction(actionId: SessionStore.ACTION_REFRESH);
         CreateUpdateOrigamOnlineUser();
         if (!(result is DataSet))
         {
             throw new Exception(
-                localizer[
-                    "ErrorRefreshReturnInvalid",
-                    sessionStore.GetType().Name,
-                    SessionStore.ACTION_REFRESH
+                message: localizer[
+                    name: "ErrorRefreshReturnInvalid",
+                    arguments: [sessionStore.GetType().Name, SessionStore.ACTION_REFRESH]
                 ]
             );
         }
@@ -298,47 +305,49 @@ public class ServerCoreUIService : IBasicUIService
             columns = sessionStore.DataListLoadedColumns;
         }
         return DataTools.DatasetToDictionary(
-            result as DataSet,
-            columns,
-            INITIAL_PAGE_NUMBER_OF_RECORDS,
-            sessionStore.CurrentRecordId,
-            sessionStore.DataListEntity,
-            sessionStore
+            data: result as DataSet,
+            columns: columns,
+            firstPageRecords: INITIAL_PAGE_NUMBER_OF_RECORDS,
+            firstRecordId: sessionStore.CurrentRecordId,
+            dataListEntity: sessionStore.DataListEntity,
+            ss: sessionStore
         );
     }
 
     public List<ChangeInfo> RestoreData(RestoreDataInput input)
     {
-        var sessionStore = sessionManager.GetSession(input.SessionFormIdentifier);
-        return sessionStore.RestoreData(input.ObjectId);
+        var sessionStore = sessionManager.GetSession(
+            sessionFormIdentifier: input.SessionFormIdentifier
+        );
+        return sessionStore.RestoreData(parentId: input.ObjectId);
     }
 
     public RuleExceptionDataCollection SaveDataQuery(Guid sessionFormIdentifier)
     {
-        var sessionStore = sessionManager.GetSession(sessionFormIdentifier);
+        var sessionStore = sessionManager.GetSession(sessionFormIdentifier: sessionFormIdentifier);
         if (sessionStore.Data.HasErrors)
         {
-            throw new RuleException(Origam.Server.Resources.ErrorInForm);
+            throw new RuleException(message: Origam.Server.Resources.ErrorInForm);
         }
         if ((sessionStore.ConfirmationRule == null) || !sessionStore.Data.HasChanges())
         {
             return new RuleExceptionDataCollection();
         }
         var hasRows = false;
-        var clone = DatasetTools.CloneDataSet(sessionStore.Data);
+        var clone = DatasetTools.CloneDataSet(dataset: sessionStore.Data);
         var rootTables = sessionStore
             .Data.Tables.Cast<DataTable>()
-            .Where(table => table.ParentRelations.Count == 0)
+            .Where(predicate: table => table.ParentRelations.Count == 0)
             .ToList();
         foreach (var rootTable in rootTables)
         {
             foreach (DataRow row in rootTable.Rows)
             {
-                if ((row.RowState == DataRowState.Deleted) || !IsRowDirty(row))
+                if ((row.RowState == DataRowState.Deleted) || !IsRowDirty(row: row))
                 {
                     continue;
                 }
-                DatasetTools.GetDataSlice(clone, new List<DataRow> { row });
+                DatasetTools.GetDataSlice(target: clone, rows: new List<DataRow> { row });
                 hasRows = true;
             }
         }
@@ -346,27 +355,32 @@ public class ServerCoreUIService : IBasicUIService
         {
             return new RuleExceptionDataCollection();
         }
-        var xmlDoc = DataDocumentFactory.New(clone);
-        return sessionStore.RuleEngine.EvaluateEndRule(sessionStore.ConfirmationRule, xmlDoc);
+        var xmlDoc = DataDocumentFactory.New(dataSet: clone);
+        return sessionStore.RuleEngine.EvaluateEndRule(
+            rule: sessionStore.ConfirmationRule,
+            data: xmlDoc
+        );
     }
 
     public IList SaveData(Guid sessionFormIdentifier)
     {
-        var sessionStore = sessionManager.GetSession(sessionFormIdentifier);
-        var output = (IList)sessionStore.ExecuteAction(SessionStore.ACTION_SAVE);
+        var sessionStore = sessionManager.GetSession(sessionFormIdentifier: sessionFormIdentifier);
+        var output = (IList)sessionStore.ExecuteAction(actionId: SessionStore.ACTION_SAVE);
         CreateUpdateOrigamOnlineUser();
         return output;
     }
 
     public IList CreateObject(CreateObjectInput input)
     {
-        var sessionStore = sessionManager.GetSession(input.SessionFormIdentifier);
+        var sessionStore = sessionManager.GetSession(
+            sessionFormIdentifier: input.SessionFormIdentifier
+        );
         // todo: propagate requesting grid as guid?
         IList output = sessionStore.CreateObject(
-            input.Entity,
-            input.Values,
-            input.Parameters,
-            input.RequestingGridId.ToString()
+            entity: input.Entity,
+            values: input.Values,
+            parameters: input.Parameters,
+            requestingGrid: input.RequestingGridId.ToString()
         );
         CreateUpdateOrigamOnlineUser();
         return output;
@@ -374,13 +388,15 @@ public class ServerCoreUIService : IBasicUIService
 
     public IList CopyObject(CopyObjectInput input)
     {
-        var sessionStore = sessionManager.GetSession(input.SessionFormIdentifier);
+        var sessionStore = sessionManager.GetSession(
+            sessionFormIdentifier: input.SessionFormIdentifier
+        );
         IList output = sessionStore.CopyObject(
-            input.Entity,
-            input.OriginalId,
-            input.RequestingGridId.ToString(),
-            input.Entities,
-            input.ForcedValues
+            entity: input.Entity,
+            originalId: input.OriginalId,
+            requestingGrid: input.RequestingGridId.ToString(),
+            entities: input.Entities,
+            forcedValues: input.ForcedValues
         );
         CreateUpdateOrigamOnlineUser();
         return output;
@@ -388,33 +404,42 @@ public class ServerCoreUIService : IBasicUIService
 
     public IList UpdateObject(UpdateObjectInput input)
     {
-        var sessionStore = sessionManager.GetSession(input.SessionFormIdentifier);
-        IList output = sessionStore.UpdateObjectBatch(input.Entity, input.UpdateData);
+        var sessionStore = sessionManager.GetSession(
+            sessionFormIdentifier: input.SessionFormIdentifier
+        );
+        IList output = sessionStore.UpdateObjectBatch(
+            entity: input.Entity,
+            updateDataArray: input.UpdateData
+        );
         CreateUpdateOrigamOnlineUser();
         return output;
     }
 
     public IList DeleteObject(DeleteObjectInput input)
     {
-        var sessionStore = sessionManager.GetSession(input.SessionFormIdentifier);
-        IList output = sessionStore.DeleteObject(input.Entity, input.Id);
+        var sessionStore = sessionManager.GetSession(
+            sessionFormIdentifier: input.SessionFormIdentifier
+        );
+        IList output = sessionStore.DeleteObject(entity: input.Entity, id: input.Id);
         CreateUpdateOrigamOnlineUser();
         return output;
     }
 
     public IList DeleteObjectInOrderedList(DeleteObjectInOrderedListInput input)
     {
-        SessionStore ss = sessionManager.GetSession(new Guid(input.SessionFormIdentifier));
-        List<ChangeInfo> changes = ss.UpdateObjectBatch(
-            input.Entity,
-            input.OrderProperty,
-            input.UpdatedOrderValues
+        SessionStore ss = sessionManager.GetSession(
+            sessionFormIdentifier: new Guid(g: input.SessionFormIdentifier)
         );
-        changes.AddRange(ss.DeleteObject(input.Entity, input.Id));
-        Task.Run(() =>
+        List<ChangeInfo> changes = ss.UpdateObjectBatch(
+            entity: input.Entity,
+            property: input.OrderProperty,
+            values: input.UpdatedOrderValues
+        );
+        changes.AddRange(collection: ss.DeleteObject(entity: input.Entity, id: input.Id));
+        Task.Run(action: () =>
             SecurityTools.CreateUpdateOrigamOnlineUser(
-                SecurityManager.CurrentPrincipal.Identity.Name,
-                sessionManager.GetSessionStats()
+                username: SecurityManager.CurrentPrincipal.Identity.Name,
+                stats: sessionManager.GetSessionStats()
             )
         );
         return changes;
@@ -422,17 +447,22 @@ public class ServerCoreUIService : IBasicUIService
 
     public List<ChangeInfo> GetRowData(MasterRecordInput input)
     {
-        SessionStore sessionStore = GetSessionStore(input.SessionFormIdentifier);
+        SessionStore sessionStore = GetSessionStore(sessionId: input.SessionFormIdentifier);
         if (sessionStore == null)
         {
             return new List<ChangeInfo>();
         }
-        return sessionStore.GetRowData(input.Entity, input.RowId, false);
+        return sessionStore.GetRowData(
+            entity: input.Entity,
+            id: input.RowId,
+            ignoreDirtyState: false
+        );
     }
 
     public ChangeInfo GetRow(MasterRecordInput input)
     {
-        return GetSessionStore(input.SessionFormIdentifier)?.GetRow(input.Entity, input.RowId);
+        return GetSessionStore(sessionId: input.SessionFormIdentifier)
+            ?.GetRow(entity: input.Entity, id: input.RowId);
     }
 
     public IDictionary GetParameters(Guid sessionFormIdentifier)
@@ -441,42 +471,48 @@ public class ServerCoreUIService : IBasicUIService
         {
             return new Hashtable();
         }
-        SessionStore sessionStore = GetSessionStore(sessionFormIdentifier);
+        SessionStore sessionStore = GetSessionStore(sessionId: sessionFormIdentifier);
         return sessionStore == null ? new Hashtable() : sessionStore.Request.Parameters;
     }
 
     public List<List<object>> GetData(GetDataInput input)
     {
-        SessionStore sessionStore = GetSessionStore(input.SessionFormIdentifier);
+        SessionStore sessionStore = GetSessionStore(sessionId: input.SessionFormIdentifier);
         if (sessionStore == null)
         {
             return new List<List<object>>();
         }
-        return sessionStore.GetData(input.ChildEntity, input.ParentRecordId, input.RootRecordId);
+        return sessionStore.GetData(
+            childEntity: input.ChildEntity,
+            parentRecordId: input.ParentRecordId,
+            rootRecordId: input.RootRecordId
+        );
     }
 
     private SessionStore GetSessionStore(Guid sessionId)
     {
         try
         {
-            return sessionManager.GetSession(sessionId);
+            return sessionManager.GetSession(sessionFormIdentifier: sessionId);
         }
         catch (Exception ex)
         {
-            log.Warn(ex.Message, ex);
+            log.Warn(message: ex.Message, exception: ex);
             return null;
         }
     }
 
     public IList RowStates(RowStatesInput input)
     {
-        var sessionStore = sessionManager.GetSession(input.SessionFormIdentifier);
-        return sessionStore.RowStates(input.Entity, input.Ids);
+        var sessionStore = sessionManager.GetSession(
+            sessionFormIdentifier: input.SessionFormIdentifier
+        );
+        return sessionStore.RowStates(entity: input.Entity, ids: input.Ids);
     }
 
     public RuleExceptionDataCollection ExecuteActionQuery(ExecuteActionQueryInput input)
     {
-        EntityUIAction action = GetAction(input.ActionId);
+        EntityUIAction action = GetAction(actionId: input.ActionId);
         // work queue commands are treated as actions,
         // but they're not part of the model,
         // so the GetAction can return null
@@ -485,23 +521,28 @@ public class ServerCoreUIService : IBasicUIService
         {
             bool isAuthorized = SecurityManager
                 .GetAuthorizationProvider()
-                .Authorize(SecurityManager.CurrentPrincipal, menuAction.Menu.Roles);
+                .Authorize(
+                    principal: SecurityManager.CurrentPrincipal,
+                    context: menuAction.Menu.Roles
+                );
             if (!isAuthorized)
             {
                 return new RuleExceptionDataCollection(
-                    new[]
+                    value: new[]
                     {
                         new RuleExceptionData(
-                            string.Format(
-                                Origam.Server.Resources.MenuNotAuthorized,
-                                menuAction.Menu.NodeText
+                            message: string.Format(
+                                format: Origam.Server.Resources.MenuNotAuthorized,
+                                arg0: menuAction.Menu.NodeText
                             )
                         ),
                     }
                 );
             }
         }
-        var sessionStore = sessionManager.GetSession(input.SessionFormIdentifier);
+        var sessionStore = sessionManager.GetSession(
+            sessionFormIdentifier: input.SessionFormIdentifier
+        );
         // check if action is on data list entity
         // we can't execute multiple checkboxes action on list entity,
         // but it is OK to execute them on details
@@ -514,37 +555,46 @@ public class ServerCoreUIService : IBasicUIService
         )
         {
             throw new Exception(
-                "Only actions with merge type Ignore can be invoked in lazily loaded screens."
+                message: "Only actions with merge type Ignore can be invoked in lazily loaded screens."
             );
         }
         if (action?.ConfirmationRule == null)
         {
             return new RuleExceptionDataCollection();
         }
-        List<DataRow> rows = sessionStore.GetRows(input.Entity, input.SelectedIds);
-        IXmlContainer xml = DatasetTools.GetRowXml(rows, DataRowVersion.Default);
-        var result = sessionStore.RuleEngine.EvaluateEndRule(action.ConfirmationRule, xml);
+        List<DataRow> rows = sessionStore.GetRows(entity: input.Entity, ids: input.SelectedIds);
+        IXmlContainer xml = DatasetTools.GetRowXml(rows: rows, version: DataRowVersion.Default);
+        var result = sessionStore.RuleEngine.EvaluateEndRule(
+            rule: action.ConfirmationRule,
+            data: xml
+        );
         return result ?? new RuleExceptionDataCollection();
     }
 
     public IList ExecuteAction(ExecuteActionInput input)
     {
-        EntityUIAction action = GetAction(input.ActionId);
+        EntityUIAction action = GetAction(actionId: input.ActionId);
         if (action is EntityMenuAction menuAction)
         {
             bool isAuthorized = SecurityManager
                 .GetAuthorizationProvider()
-                .Authorize(SecurityManager.CurrentPrincipal, menuAction.Menu.Roles);
+                .Authorize(
+                    principal: SecurityManager.CurrentPrincipal,
+                    context: menuAction.Menu.Roles
+                );
             if (!isAuthorized)
             {
                 throw new OrigamSecurityException(
-                    string.Format(Resources.MenuNotAuthorized, menuAction.Menu.NodeText)
+                    message: string.Format(
+                        format: Resources.MenuNotAuthorized,
+                        arg0: menuAction.Menu.NodeText
+                    )
                 );
             }
         }
         var actionRunnerClient = new ServerEntityUIActionRunnerClient(
-            sessionManager,
-            input.SessionFormIdentifier.ToString()
+            sessionManager: sessionManager,
+            sessionFormIdentifier: input.SessionFormIdentifier.ToString()
         );
         var actionRunner = new ServerCoreEntityUIActionRunner(
             actionRunnerClient: actionRunnerClient,
@@ -554,14 +604,14 @@ public class ServerCoreUIService : IBasicUIService
             reportManager: reportManager
         );
         return actionRunner.ExecuteAction(
-            input.SessionFormIdentifier.ToString(),
-            input.RequestingGrid.ToString(),
-            input.Entity,
-            input.ActionType,
-            input.ActionId,
-            input.ParameterMappings,
-            input.SelectedIds,
-            input.InputParameters
+            sessionFormIdentifier: input.SessionFormIdentifier.ToString(),
+            requestingGrid: input.RequestingGrid.ToString(),
+            entity: input.Entity,
+            actionType: input.ActionType,
+            actionId: input.ActionId,
+            parameterMappings: input.ParameterMappings,
+            selectedIds: input.SelectedIds,
+            inputParameters: input.InputParameters
         );
     }
 
@@ -569,7 +619,7 @@ public class ServerCoreUIService : IBasicUIService
     {
         try
         {
-            return UIActionTools.GetAction(actionId);
+            return UIActionTools.GetAction(action: actionId);
         }
         catch
         {
@@ -585,20 +635,20 @@ public class ServerCoreUIService : IBasicUIService
         Guid rowId
     )
     {
-        SessionStore sessionStore = GetSessionStore(sessionFormIdentifier);
+        SessionStore sessionStore = GetSessionStore(sessionId: sessionFormIdentifier);
         switch (sessionStore)
         {
             case null:
             {
                 return Result.Success<RowData, IActionResult>(
-                    new RowData { Row = null, Entity = null }
+                    value: new RowData { Row = null, Entity = null }
                 );
             }
             default:
             {
-                var row = sessionStore.GetSessionRow(entity, rowId);
+                var row = sessionStore.GetSessionRow(entity: entity, id: rowId);
                 return Result.Success<RowData, IActionResult>(
-                    new RowData { Row = row, Entity = dataStructureEntity }
+                    value: new RowData { Row = row, Entity = dataStructureEntity }
                 );
             }
         }
@@ -606,22 +656,22 @@ public class ServerCoreUIService : IBasicUIService
 
     public Result<Guid, IActionResult> GetEntityId(Guid sessionFormIdentifier, string entity)
     {
-        SessionStore sessionStore = GetSessionStore(sessionFormIdentifier);
+        SessionStore sessionStore = GetSessionStore(sessionId: sessionFormIdentifier);
         switch (sessionStore)
         {
             case null:
             {
-                return Result.Success<Guid, IActionResult>(Guid.Empty);
+                return Result.Success<Guid, IActionResult>(value: Guid.Empty);
             }
             default:
             {
-                var table = sessionStore.GetDataTable(entity, sessionStore.Data);
+                var table = sessionStore.GetDataTable(entity: entity, data: sessionStore.Data);
                 var entityId = Guid.Empty;
-                if (table.ExtendedProperties.Contains("EntityId"))
+                if (table.ExtendedProperties.Contains(key: "EntityId"))
                 {
-                    entityId = (Guid)table.ExtendedProperties["EntityId"];
+                    entityId = (Guid)table.ExtendedProperties[key: "EntityId"];
                 }
-                return Result.Success<Guid, IActionResult>(entityId);
+                return Result.Success<Guid, IActionResult>(value: entityId);
             }
         }
     }
@@ -629,26 +679,28 @@ public class ServerCoreUIService : IBasicUIService
     public UIResult WorkflowNext(WorkflowNextInput workflowNextInput)
     {
         if (
-            sessionManager.GetSession(workflowNextInput.SessionFormIdentifier)
+            sessionManager.GetSession(
+                sessionFormIdentifier: workflowNextInput.SessionFormIdentifier
+            )
             is WorkflowSessionStore workflowSessionStore
         )
         {
-            return (UIResult)workflowSessionStore.ExecuteAction(SessionStore.ACTION_NEXT);
+            return (UIResult)workflowSessionStore.ExecuteAction(actionId: SessionStore.ACTION_NEXT);
         }
         return null;
     }
 
     public RuleExceptionDataCollection WorkflowNextQuery(Guid sessionFormIdentifier)
     {
-        var sessionStore = sessionManager.GetSession(sessionFormIdentifier);
+        var sessionStore = sessionManager.GetSession(sessionFormIdentifier: sessionFormIdentifier);
         return (RuleExceptionDataCollection)
-            sessionStore.ExecuteAction(SessionStore.ACTION_QUERYNEXT);
+            sessionStore.ExecuteAction(actionId: SessionStore.ACTION_QUERYNEXT);
     }
 
     public UIResult WorkflowAbort(Guid sessionFormIdentifier)
     {
-        var sessionStore = sessionManager.GetSession(sessionFormIdentifier);
-        return (UIResult)sessionStore.ExecuteAction(SessionStore.ACTION_ABORT);
+        var sessionStore = sessionManager.GetSession(sessionFormIdentifier: sessionFormIdentifier);
+        return (UIResult)sessionStore.ExecuteAction(actionId: SessionStore.ACTION_ABORT);
     }
 #pragma warning disable 1998
     public async Task<UIResult> WorkflowRepeat(
@@ -659,12 +711,12 @@ public class ServerCoreUIService : IBasicUIService
     {
         if (
             !(
-                sessionManager.GetSession(sessionFormIdentifier)
+                sessionManager.GetSession(sessionFormIdentifier: sessionFormIdentifier)
                 is WorkflowSessionStore workflowSessionStore
             )
         )
         {
-            throw new Exception(localizer["ErrorWorkflowSessionInvalid"]);
+            throw new Exception(message: localizer[name: "ErrorWorkflowSessionInvalid"]);
         }
         var request = new UIRequest
         {
@@ -676,14 +728,14 @@ public class ServerCoreUIService : IBasicUIService
             Caption = workflowSessionStore.Request.Caption,
             Parameters = workflowSessionStore.Request.Parameters,
         };
-        DestroyUI(sessionFormIdentifier);
-        return InitUI(request);
+        DestroyUI(sessionFormIdentifier: sessionFormIdentifier);
+        return InitUI(request: request);
     }
 
     public int AttachmentCount(AttachmentCountInput input)
     {
         SecurityTools.CurrentUserProfile();
-        SessionStore sessionStore = GetSessionStore(input.SessionFormIdentifier);
+        SessionStore sessionStore = GetSessionStore(sessionId: input.SessionFormIdentifier);
         if (sessionStore == null)
         {
             return 0;
@@ -695,7 +747,10 @@ public class ServerCoreUIService : IBasicUIService
         // and we don't want to hear messages about this).
         try
         {
-            ChildrenRecordsIds(idList, sessionStore.GetSessionRow(input.Entity, input.Id));
+            ChildrenRecordsIds(
+                list: idList,
+                row: sessionStore.GetSessionRow(entity: input.Entity, id: input.Id)
+            );
         }
         catch
         {
@@ -710,7 +765,7 @@ public class ServerCoreUIService : IBasicUIService
             var lookupService = ServiceManager.Services.GetService<IDataLookupService>();
             var oneRecordCount = (int)
                 lookupService.GetDisplayText(
-                    lookupId: new Guid("fbf2cadd-e529-401d-80ce-d68de0a89f13"),
+                    lookupId: new Guid(g: "fbf2cadd-e529-401d-80ce-d68de0a89f13"),
                     lookupValue: recordId,
                     useCache: false,
                     returnMessageIfNull: false,
@@ -724,31 +779,38 @@ public class ServerCoreUIService : IBasicUIService
     public IList<Attachment> AttachmentList(AttachmentListInput input)
     {
         SecurityTools.CurrentUserProfile();
-        var sessionStore = sessionManager.GetSession(input.SessionFormIdentifier);
+        var sessionStore = sessionManager.GetSession(
+            sessionFormIdentifier: input.SessionFormIdentifier
+        );
         var result = new List<Attachment>();
         var idList = new List<object>();
-        ChildrenRecordsIds(idList, sessionStore.GetSessionRow(input.Entity, input.Id));
+        ChildrenRecordsIds(
+            list: idList,
+            row: sessionStore.GetSessionRow(entity: input.Entity, id: input.Id)
+        );
         foreach (var recordId in idList)
         {
             var oneRecordList = CoreServices.DataService.Instance.LoadData(
-                dataStructureId: new Guid("44a25061-750f-4b42-a6de-09f3363f8621"),
-                methodId: new Guid("0fda540f-e5de-4ab6-93d2-76b0abe6fd77"),
+                dataStructureId: new Guid(g: "44a25061-750f-4b42-a6de-09f3363f8621"),
+                methodId: new Guid(g: "0fda540f-e5de-4ab6-93d2-76b0abe6fd77"),
                 defaultSetId: Guid.Empty,
                 sortSetId: Guid.Empty,
                 transactionId: null,
                 paramName1: "Attachment_parRefParentRecordId",
                 paramValue1: recordId
             );
-            foreach (DataRow row in oneRecordList.Tables[0].Rows)
+            foreach (DataRow row in oneRecordList.Tables[index: 0].Rows)
             {
                 var user = "";
-                if (!row.IsNull("RecordCreatedBy"))
+                if (!row.IsNull(columnName: "RecordCreatedBy"))
                 {
                     try
                     {
                         var profileProvider = SecurityManager.GetProfileProvider();
                         var profile =
-                            profileProvider.GetProfile((Guid)row["RecordCreatedBy"]) as UserProfile;
+                            profileProvider.GetProfile(
+                                profileId: (Guid)row[columnName: "RecordCreatedBy"]
+                            ) as UserProfile;
                         // ReSharper disable once PossibleNullReferenceException
                         user = profile.FullName;
                     }
@@ -759,18 +821,18 @@ public class ServerCoreUIService : IBasicUIService
                 }
                 var attachment = new Attachment
                 {
-                    Id = row["Id"].ToString(),
+                    Id = row[columnName: "Id"].ToString(),
                     CreatorName = user,
-                    DateCreated = (DateTime)row["RecordCreated"],
-                    FileName = (string)row["FileName"],
+                    DateCreated = (DateTime)row[columnName: "RecordCreated"],
+                    FileName = (string)row[columnName: "FileName"],
                 };
-                if (!row.IsNull("Note"))
+                if (!row.IsNull(columnName: "Note"))
                 {
-                    attachment.Description = (string)row["Note"];
+                    attachment.Description = (string)row[columnName: "Note"];
                 }
-                var extension = Path.GetExtension(attachment.FileName).ToLower();
+                var extension = Path.GetExtension(path: attachment.FileName).ToLower();
                 attachment.Icon = "extensions/" + extension + ".png";
-                result.Add(attachment);
+                result.Add(item: attachment);
             }
         }
         return result;
@@ -794,41 +856,44 @@ public class ServerCoreUIService : IBasicUIService
             var workQueueService = ServiceManager.Services.GetService<IWorkQueueService>();
             var lookupService = ServiceManager.Services.GetService<IDataLookupService>();
             var data = workQueueService.UserQueueList();
-            var queueList = data.Tables["WorkQueue"];
+            var queueList = data.Tables[name: "WorkQueue"];
             foreach (DataRow row in queueList.Rows)
             {
-                var workQueueId = row["Id"];
-                var workQueueClassName = (string)row["WorkQueueClass"];
+                var workQueueId = row[columnName: "Id"];
+                var workQueueClassName = (string)row[columnName: "WorkQueueClass"];
                 long cnt = 0;
-                if ((bool)row["IsMessageCountDisplayed"])
+                if ((bool)row[columnName: "IsMessageCountDisplayed"])
                 {
                     if (
-                        workQueueService.WQClass(workQueueClassName)
+                        workQueueService.WQClass(name: workQueueClassName)
                         is WorkQueueClass workQueueClass
                     )
                     {
                         cnt = (long)
                             lookupService.GetDisplayText(
-                                workQueueClass.WorkQueueItemCountLookupId,
-                                workQueueId,
-                                false,
-                                false,
-                                null
+                                lookupId: workQueueClass.WorkQueueItemCountLookupId,
+                                lookupValue: workQueueId,
+                                useCache: false,
+                                returnMessageIfNull: false,
+                                transactionId: null
                             );
                     }
                 }
                 var workQueueInfo = new WorkQueueInfo(
-                    workQueueId.ToString(),
-                    (string)row["Name"],
-                    cnt
+                    id: workQueueId.ToString(),
+                    name: (string)row[columnName: "Name"],
+                    countTotal: cnt
                 );
-                result.Add(workQueueInfo);
+                result.Add(item: workQueueInfo);
             }
             return result;
         }
         catch (Exception ex)
         {
-            throw new Exception(localizer["ErrorLoadingWorkQueueList"], ex);
+            throw new Exception(
+                message: localizer[name: "ErrorLoadingWorkQueueList"],
+                innerException: ex
+            );
         }
     }
 
@@ -838,48 +903,73 @@ public class ServerCoreUIService : IBasicUIService
 
         IPersistenceService persistence = ServiceManager.Services.GetService<IPersistenceService>();
         var item = persistence.SchemaProvider.RetrieveInstance<FormReferenceMenuItem>(
-            input.ObjectInstanceId
+            instanceId: input.ObjectInstanceId
         );
         item.Screen.ChildrenRecursive.OfType<ControlSetItem>()
-            .Where(controlSetItem => controlSetItem.ControlItem.IsComplexType)
-            .Select(controlSetItem => controlSetItem.Id)
-            .ForEach(screenSectionId => ResetConfiguration(screenSectionId, profileId));
+            .Where(predicate: controlSetItem => controlSetItem.ControlItem.IsComplexType)
+            .Select(selector: controlSetItem => controlSetItem.Id)
+            .ForEach(action: screenSectionId =>
+                ResetConfiguration(screenSectionId: screenSectionId, profileId: profileId)
+            );
     }
 
     private void ResetConfiguration(Guid screenSectionId, Guid profileId)
     {
-        var userConfig = OrigamPanelConfigDA.LoadConfigData(screenSectionId, Guid.Empty, profileId);
-        if (userConfig.Tables["OrigamFormPanelConfig"].Rows.Count == 0)
+        var userConfig = OrigamPanelConfigDA.LoadConfigData(
+            panelInstanceId: screenSectionId,
+            workflowId: Guid.Empty,
+            profileId: profileId
+        );
+        if (userConfig.Tables[name: "OrigamFormPanelConfig"].Rows.Count == 0)
         {
             return;
         }
-        object data = userConfig.Tables["OrigamFormPanelConfig"].Rows[0]["SettingsData"];
+        object data = userConfig.Tables[name: "OrigamFormPanelConfig"].Rows[index: 0][
+            columnName: "SettingsData"
+        ];
         if (!(data is string strData))
         {
-            OrigamPanelConfigDA.DeleteUserConfig(screenSectionId, Guid.Empty, profileId);
+            OrigamPanelConfigDA.DeleteUserConfig(
+                screenSectionId: screenSectionId,
+                workflowId: Guid.Empty,
+                profileId: profileId
+            );
             return;
         }
         var xDocument = new XmlDocument();
-        xDocument.LoadXml(strData);
+        xDocument.LoadXml(xml: strData);
         var allNodes = xDocument.GetAllNodes();
-        if (allNodes.Where(node => node.Name == "TableConfiguration").Count() < 2)
+        if (allNodes.Where(predicate: node => node.Name == "TableConfiguration").Count() < 2)
         {
-            OrigamPanelConfigDA.DeleteUserConfig(screenSectionId, Guid.Empty, profileId);
+            OrigamPanelConfigDA.DeleteUserConfig(
+                screenSectionId: screenSectionId,
+                workflowId: Guid.Empty,
+                profileId: profileId
+            );
             return;
         }
-        var configurationNodes = allNodes.FirstOrDefault(node =>
+        var configurationNodes = allNodes.FirstOrDefault(predicate: node =>
             node.Name == "tableConfigurations"
         );
         configurationNodes
             ?.ChildNodes.Cast<XmlNode>()
-            .Where(configNode =>
-                configNode?.Attributes?["isActive"]?.Value == "true"
-                || configNode?.Attributes?["name"]?.Value == ""
+            .Where(predicate: configNode =>
+                configNode?.Attributes?[name: "isActive"]?.Value == "true"
+                || configNode?.Attributes?[name: "name"]?.Value == ""
             )
             .ToList()
-            .ForEach(nodeToRemove => configurationNodes.RemoveChild(nodeToRemove));
-        userConfig.Tables["OrigamFormPanelConfig"].Rows[0]["SettingsData"] = xDocument.OuterXml;
-        OrigamPanelConfigDA.SaveUserConfig(userConfig, screenSectionId, Guid.Empty, profileId);
+            .ForEach(action: nodeToRemove =>
+                configurationNodes.RemoveChild(oldChild: nodeToRemove)
+            );
+        userConfig.Tables[name: "OrigamFormPanelConfig"].Rows[index: 0][
+            columnName: "SettingsData"
+        ] = xDocument.OuterXml;
+        OrigamPanelConfigDA.SaveUserConfig(
+            userConfig: userConfig,
+            panelInstanceId: screenSectionId,
+            workflowId: Guid.Empty,
+            profileId: profileId
+        );
     }
 
     public void SaveObjectConfig(SaveObjectConfigInput input)
@@ -889,54 +979,55 @@ public class ServerCoreUIService : IBasicUIService
         if (input.SessionFormIdentifier != Guid.Empty)
         {
             workflowSessionStore =
-                sessionManager.GetSession(input.SessionFormIdentifier) as WorkflowSessionStore;
+                sessionManager.GetSession(sessionFormIdentifier: input.SessionFormIdentifier)
+                as WorkflowSessionStore;
         }
         var workflowId = workflowSessionStore?.WorkflowId ?? Guid.Empty;
         var userConfig = OrigamPanelConfigDA.LoadConfigData(
-            input.ObjectInstanceId,
-            workflowId,
-            profileId
+            panelInstanceId: input.ObjectInstanceId,
+            workflowId: workflowId,
+            profileId: profileId
         );
-        if (userConfig.Tables["OrigamFormPanelConfig"].Rows.Count == 0)
+        if (userConfig.Tables[name: "OrigamFormPanelConfig"].Rows.Count == 0)
         {
             OrigamPanelConfigDA.CreatePanelConfigRow(
-                userConfig.Tables["OrigamFormPanelConfig"],
-                input.ObjectInstanceId,
-                workflowId,
-                profileId,
-                OrigamPanelViewMode.Grid
+                configTable: userConfig.Tables[name: "OrigamFormPanelConfig"],
+                panelInstanceId: input.ObjectInstanceId,
+                workflowId: workflowId,
+                profileId: profileId,
+                defaultView: OrigamPanelViewMode.Grid
             );
         }
         var currentSettings = new XmlDocument();
         var newSettings = currentSettings.CreateDocumentFragment();
         foreach (var sectionNameAndData in input.SectionNameAndData)
         {
-            var newSettingsNode = currentSettings.CreateElement(sectionNameAndData.Key);
+            var newSettingsNode = currentSettings.CreateElement(name: sectionNameAndData.Key);
             newSettingsNode.InnerXml = sectionNameAndData.Value;
-            newSettings.AppendChild(newSettingsNode);
+            newSettings.AppendChild(newChild: newSettingsNode);
             XmlNode configNode;
-            var settingsRow = userConfig.Tables["OrigamFormPanelConfig"].Rows[0];
-            if (settingsRow.IsNull("SettingsData"))
+            var settingsRow = userConfig.Tables[name: "OrigamFormPanelConfig"].Rows[index: 0];
+            if (settingsRow.IsNull(columnName: "SettingsData"))
             {
-                configNode = currentSettings.CreateElement("Configuration");
-                currentSettings.AppendChild(configNode);
+                configNode = currentSettings.CreateElement(name: "Configuration");
+                currentSettings.AppendChild(newChild: configNode);
             }
             else
             {
-                currentSettings.LoadXml((string)settingsRow["SettingsData"]);
+                currentSettings.LoadXml(xml: (string)settingsRow[columnName: "SettingsData"]);
                 configNode = currentSettings.FirstChild;
             }
-            foreach (XmlNode node in configNode.SelectNodes(sectionNameAndData.Key))
+            foreach (XmlNode node in configNode.SelectNodes(xpath: sectionNameAndData.Key))
             {
-                node.ParentNode.RemoveChild(node);
+                node.ParentNode.RemoveChild(oldChild: node);
             }
-            configNode.AppendChild(newSettings);
-            settingsRow["SettingsData"] = currentSettings.OuterXml;
+            configNode.AppendChild(newChild: newSettings);
+            settingsRow[columnName: "SettingsData"] = currentSettings.OuterXml;
             OrigamPanelConfigDA.SaveUserConfig(
-                userConfig,
-                input.ObjectInstanceId,
-                workflowId,
-                profileId
+                userConfig: userConfig,
+                panelInstanceId: input.ObjectInstanceId,
+                workflowId: workflowId,
+                profileId: profileId
             );
         }
     }
@@ -945,11 +1036,11 @@ public class ServerCoreUIService : IBasicUIService
     {
         SecurityTools.CurrentUserProfile();
         OrigamPanelColumnConfigDA.PersistColumnConfig(
-            input.InstanceId,
-            "splitPanel",
-            0,
-            input.Position,
-            false
+            panelId: input.InstanceId,
+            columnName: "splitPanel",
+            position: 0,
+            width: input.Position,
+            hidden: false
         );
     }
 
@@ -958,43 +1049,43 @@ public class ServerCoreUIService : IBasicUIService
         var profile = SecurityTools.CurrentUserProfile();
         // save favorites
         var favorites = CoreServices.DataService.Instance.LoadData(
-            new Guid("e564c554-ca83-47eb-980d-95b4faba8fb8"),
-            new Guid("e468076e-a641-4b7d-b9b4-7d80ff312b1c"),
-            Guid.Empty,
-            Guid.Empty,
-            null,
-            "OrigamFavoritesUserConfig_parBusinessPartnerId",
-            profile.Id
+            dataStructureId: new Guid(g: "e564c554-ca83-47eb-980d-95b4faba8fb8"),
+            methodId: new Guid(g: "e468076e-a641-4b7d-b9b4-7d80ff312b1c"),
+            defaultSetId: Guid.Empty,
+            sortSetId: Guid.Empty,
+            transactionId: null,
+            paramName1: "OrigamFavoritesUserConfig_parBusinessPartnerId",
+            paramValue1: profile.Id
         );
-        if (favorites.Tables["OrigamFavoritesUserConfig"].Rows.Count > 0)
+        if (favorites.Tables[name: "OrigamFavoritesUserConfig"].Rows.Count > 0)
         {
-            var row = favorites.Tables["OrigamFavoritesUserConfig"].Rows[0];
-            row["ConfigXml"] = input.ConfigXml;
-            row["RecordUpdated"] = DateTime.Now;
-            row["RecordUpdatedBy"] = profile.Id;
-            row["refBusinessPartnerId"] = profile.Id;
+            var row = favorites.Tables[name: "OrigamFavoritesUserConfig"].Rows[index: 0];
+            row[columnName: "ConfigXml"] = input.ConfigXml;
+            row[columnName: "RecordUpdated"] = DateTime.Now;
+            row[columnName: "RecordUpdatedBy"] = profile.Id;
+            row[columnName: "refBusinessPartnerId"] = profile.Id;
         }
         else
         {
-            var row = favorites.Tables["OrigamFavoritesUserConfig"].NewRow();
-            row["Id"] = Guid.NewGuid();
-            row["RecordCreated"] = DateTime.Now;
-            row["RecordCreatedBy"] = profile.Id;
-            row["ConfigXml"] = input.ConfigXml;
-            row["refBusinessPartnerId"] = profile.Id;
-            favorites.Tables["OrigamFavoritesUserConfig"].Rows.Add(row);
+            var row = favorites.Tables[name: "OrigamFavoritesUserConfig"].NewRow();
+            row[columnName: "Id"] = Guid.NewGuid();
+            row[columnName: "RecordCreated"] = DateTime.Now;
+            row[columnName: "RecordCreatedBy"] = profile.Id;
+            row[columnName: "ConfigXml"] = input.ConfigXml;
+            row[columnName: "refBusinessPartnerId"] = profile.Id;
+            favorites.Tables[name: "OrigamFavoritesUserConfig"].Rows.Add(row: row);
         }
         CoreServices.DataService.Instance.StoreData(
-            new Guid("e564c554-ca83-47eb-980d-95b4faba8fb8"),
-            favorites,
-            false,
-            null
+            dataStructureId: new Guid(g: "e564c554-ca83-47eb-980d-95b4faba8fb8"),
+            data: favorites,
+            loadActualValuesAfterUpdate: false,
+            transactionId: null
         );
     }
 
     public List<ChangeInfo> GetPendingChanges(Guid sessionFormIdentifier)
     {
-        var sessionStore = sessionManager.GetSession(sessionFormIdentifier);
+        var sessionStore = sessionManager.GetSession(sessionFormIdentifier: sessionFormIdentifier);
         var changes = sessionStore.PendingChanges;
         sessionStore.PendingChanges = null;
         return changes ?? new List<ChangeInfo>();
@@ -1002,10 +1093,18 @@ public class ServerCoreUIService : IBasicUIService
 
     public List<ChangeInfo> GetChanges(ChangesInput input)
     {
-        var sessionStore = sessionManager.GetSession(input.SessionFormIdentifier);
+        var sessionStore = sessionManager.GetSession(
+            sessionFormIdentifier: input.SessionFormIdentifier
+        );
         var hasErrors = sessionStore.Data.HasErrors;
         var hasChanges = sessionStore.Data.HasChanges();
-        return sessionStore.GetChanges(input.Entity, input.RowId, 0, hasErrors, hasChanges);
+        return sessionStore.GetChanges(
+            entity: input.Entity,
+            id: input.RowId,
+            operation: 0,
+            hasErrors: hasErrors,
+            hasChanges: hasChanges
+        );
     }
 
     public static Result<Guid, IActionResult> SaveFilter(
@@ -1024,26 +1123,26 @@ public class ServerCoreUIService : IBasicUIService
         filterRow.ProfileId = profileId;
         filterRow.RecordCreated = DateTime.Now;
         filterRow.RecordCreatedBy = profileId;
-        storedFilter.PanelFilter.Rows.Add(filterRow);
+        storedFilter.PanelFilter.Rows.Add(row: filterRow);
         foreach (var filterDetail in input.Filter.Details)
         {
-            if (entity.Column(filterDetail.Property) == null)
+            if (entity.Column(name: filterDetail.Property) == null)
             {
                 continue;
             }
-            ConvertValues(entity, filterDetail);
+            ConvertValues(entity: entity, filterDetail: filterDetail);
             OrigamPanelFilterDA.AddPanelFilterDetailRow(
-                storedFilter,
-                profileId,
-                filterRow.Id,
-                filterDetail.Property,
-                filterDetail.Operator,
-                filterDetail.Value1,
-                filterDetail.Value2
+                filterDS: storedFilter,
+                profileId: profileId,
+                filterId: filterRow.Id,
+                columnName: filterDetail.Property,
+                oper: filterDetail.Operator,
+                value1: filterDetail.Value1,
+                value2: filterDetail.Value2
             );
         }
-        OrigamPanelFilterDA.PersistFilter(storedFilter);
-        return Result.Success<Guid, IActionResult>(filterRow.Id);
+        OrigamPanelFilterDA.PersistFilter(filter: storedFilter);
+        return Result.Success<Guid, IActionResult>(value: filterRow.Id);
     }
 
     private static void ConvertValues(
@@ -1051,7 +1150,7 @@ public class ServerCoreUIService : IBasicUIService
         UIGridFilterFieldConfiguration filterDetail
     )
     {
-        OrigamDataType dataType = entity.Column(filterDetail.Property).DataType;
+        OrigamDataType dataType = entity.Column(name: filterDetail.Property).DataType;
         switch (dataType)
         {
             case OrigamDataType.UniqueIdentifier:
@@ -1059,7 +1158,7 @@ public class ServerCoreUIService : IBasicUIService
                 var filterOperator = (FilterOperator)filterDetail.Operator;
                 if (filterDetail.Value1 is string value1)
                 {
-                    if (Guid.TryParse(value1, out var parsedValue))
+                    if (Guid.TryParse(input: value1, result: out var parsedValue))
                     {
                         filterDetail.Value1 = parsedValue;
                     }
@@ -1073,7 +1172,7 @@ public class ServerCoreUIService : IBasicUIService
                 {
                     if (filterDetail.Value2 is string value2)
                     {
-                        if (Guid.TryParse(value2, out var parsedValue))
+                        if (Guid.TryParse(input: value2, result: out var parsedValue))
                         {
                             filterDetail.Value2 = parsedValue;
                         }
@@ -1085,10 +1184,10 @@ public class ServerCoreUIService : IBasicUIService
             {
                 if (
                     float.TryParse(
-                        filterDetail.Value1 as string,
-                        NumberStyles.Number | NumberStyles.Float,
-                        CultureInfo.InvariantCulture,
-                        out var value1Parsed
+                        s: filterDetail.Value1 as string,
+                        style: NumberStyles.Number | NumberStyles.Float,
+                        provider: CultureInfo.InvariantCulture,
+                        result: out var value1Parsed
                     )
                 )
                 {
@@ -1096,10 +1195,10 @@ public class ServerCoreUIService : IBasicUIService
                 }
                 if (
                     float.TryParse(
-                        filterDetail.Value2 as string,
-                        NumberStyles.Number | NumberStyles.Float,
-                        CultureInfo.InvariantCulture,
-                        out var value2Parsed
+                        s: filterDetail.Value2 as string,
+                        style: NumberStyles.Number | NumberStyles.Float,
+                        provider: CultureInfo.InvariantCulture,
+                        result: out var value2Parsed
                     )
                 )
                 {
@@ -1109,11 +1208,11 @@ public class ServerCoreUIService : IBasicUIService
             }
             case OrigamDataType.Integer:
             {
-                if (int.TryParse(filterDetail.Value1 as string, out var value1Parsed))
+                if (int.TryParse(s: filterDetail.Value1 as string, result: out var value1Parsed))
                 {
                     filterDetail.Value1 = value1Parsed;
                 }
-                if (int.TryParse(filterDetail.Value2 as string, out var value2Parsed))
+                if (int.TryParse(s: filterDetail.Value2 as string, result: out var value2Parsed))
                 {
                     filterDetail.Value2 = value2Parsed;
                 }
@@ -1121,11 +1220,11 @@ public class ServerCoreUIService : IBasicUIService
             }
             case OrigamDataType.Long:
             {
-                if (long.TryParse(filterDetail.Value1 as string, out var value1Parsed))
+                if (long.TryParse(s: filterDetail.Value1 as string, result: out var value1Parsed))
                 {
                     filterDetail.Value1 = value1Parsed;
                 }
-                if (long.TryParse(filterDetail.Value2 as string, out var value2Parsed))
+                if (long.TryParse(s: filterDetail.Value2 as string, result: out var value2Parsed))
                 {
                     filterDetail.Value2 = value2Parsed;
                 }
@@ -1135,10 +1234,10 @@ public class ServerCoreUIService : IBasicUIService
             {
                 if (
                     decimal.TryParse(
-                        filterDetail.Value1 as string,
-                        NumberStyles.Number | NumberStyles.Float,
-                        CultureInfo.InvariantCulture,
-                        out var value1Parsed
+                        s: filterDetail.Value1 as string,
+                        style: NumberStyles.Number | NumberStyles.Float,
+                        provider: CultureInfo.InvariantCulture,
+                        result: out var value1Parsed
                     )
                 )
                 {
@@ -1146,10 +1245,10 @@ public class ServerCoreUIService : IBasicUIService
                 }
                 if (
                     decimal.TryParse(
-                        filterDetail.Value2 as string,
-                        NumberStyles.Number | NumberStyles.Float,
-                        CultureInfo.InvariantCulture,
-                        out var value2Parsed
+                        s: filterDetail.Value2 as string,
+                        style: NumberStyles.Number | NumberStyles.Float,
+                        provider: CultureInfo.InvariantCulture,
+                        result: out var value2Parsed
                     )
                 )
                 {
@@ -1162,9 +1261,9 @@ public class ServerCoreUIService : IBasicUIService
 
     public static void DeleteFilter(Guid filterId)
     {
-        var filter = OrigamPanelFilterDA.LoadFilter(filterId);
-        filter.PanelFilter.Rows[0].Delete();
-        OrigamPanelFilterDA.PersistFilter(filter);
+        var filter = OrigamPanelFilterDA.LoadFilter(id: filterId);
+        filter.PanelFilter.Rows[index: 0].Delete();
+        OrigamPanelFilterDA.PersistFilter(filter: filter);
     }
 
     public void SetDefaultFilter(SetDefaultFilterInput input, DataStructureEntity entity)
@@ -1173,7 +1272,7 @@ public class ServerCoreUIService : IBasicUIService
         Guid workflowId;
         if (
             !(
-                sessionManager.GetSession(input.SessionFormIdentifier)
+                sessionManager.GetSession(sessionFormIdentifier: input.SessionFormIdentifier)
                 is WorkflowSessionStore workflowSessionStore
             )
         )
@@ -1185,42 +1284,47 @@ public class ServerCoreUIService : IBasicUIService
             workflowId = workflowSessionStore.WorkflowId;
         }
         var userConfig = OrigamPanelConfigDA.LoadConfigData(
-            input.PanelInstanceId,
-            workflowId,
-            profileId
+            panelInstanceId: input.PanelInstanceId,
+            workflowId: workflowId,
+            profileId: profileId
         );
-        if (userConfig.Tables["OrigamFormPanelConfig"].Rows.Count == 0)
+        if (userConfig.Tables[name: "OrigamFormPanelConfig"].Rows.Count == 0)
         {
             OrigamPanelConfigDA.CreatePanelConfigRow(
-                userConfig.Tables["OrigamFormPanelConfig"],
-                input.PanelInstanceId,
-                workflowId,
-                profileId,
-                OrigamPanelViewMode.Form
+                configTable: userConfig.Tables[name: "OrigamFormPanelConfig"],
+                panelInstanceId: input.PanelInstanceId,
+                workflowId: workflowId,
+                profileId: profileId,
+                defaultView: OrigamPanelViewMode.Form
             );
         }
         var shouldDeleteFilter = false;
         var oldFilterId = Guid.Empty;
         if (
-            userConfig.Tables["OrigamFormPanelConfig"].Rows[0]["refOrigamPanelFilterId"]
-            != DBNull.Value
+            userConfig.Tables[name: "OrigamFormPanelConfig"].Rows[index: 0][
+                columnName: "refOrigamPanelFilterId"
+            ] != DBNull.Value
         )
         {
             shouldDeleteFilter = true;
             oldFilterId = (Guid)
-                userConfig.Tables["OrigamFormPanelConfig"].Rows[0]["refOrigamPanelFilterId"];
+                userConfig.Tables[name: "OrigamFormPanelConfig"].Rows[index: 0][
+                    columnName: "refOrigamPanelFilterId"
+                ];
         }
-        var filterId = SaveFilter(entity, input).Value;
-        userConfig.Tables["OrigamFormPanelConfig"].Rows[0]["refOrigamPanelFilterId"] = filterId;
+        var filterId = SaveFilter(entity: entity, input: input).Value;
+        userConfig.Tables[name: "OrigamFormPanelConfig"].Rows[index: 0][
+            columnName: "refOrigamPanelFilterId"
+        ] = filterId;
         OrigamPanelConfigDA.SaveUserConfig(
-            userConfig,
-            input.PanelInstanceId,
-            workflowId,
-            profileId
+            userConfig: userConfig,
+            panelInstanceId: input.PanelInstanceId,
+            workflowId: workflowId,
+            profileId: profileId
         );
         if (shouldDeleteFilter)
         {
-            DeleteFilter(oldFilterId);
+            DeleteFilter(filterId: oldFilterId);
         }
     }
 
@@ -1230,7 +1334,7 @@ public class ServerCoreUIService : IBasicUIService
         Guid workflowId;
         if (
             !(
-                sessionManager.GetSession(input.SessionFormIdentifier)
+                sessionManager.GetSession(sessionFormIdentifier: input.SessionFormIdentifier)
                 is WorkflowSessionStore workflowSessionStore
             )
         )
@@ -1242,35 +1346,40 @@ public class ServerCoreUIService : IBasicUIService
             workflowId = workflowSessionStore.WorkflowId;
         }
         var userConfig = OrigamPanelConfigDA.LoadConfigData(
-            input.PanelInstanceId,
-            workflowId,
-            profileId
+            panelInstanceId: input.PanelInstanceId,
+            workflowId: workflowId,
+            profileId: profileId
         );
         if (
-            (userConfig.Tables["OrigamFormPanelConfig"].Rows.Count == 0)
+            (userConfig.Tables[name: "OrigamFormPanelConfig"].Rows.Count == 0)
             || (
-                userConfig.Tables["OrigamFormPanelConfig"].Rows[0]["refOrigamPanelFilterId"]
-                == DBNull.Value
+                userConfig.Tables[name: "OrigamFormPanelConfig"].Rows[index: 0][
+                    columnName: "refOrigamPanelFilterId"
+                ] == DBNull.Value
             )
         )
         {
             return;
         }
         var filterId = (Guid)
-            userConfig.Tables["OrigamFormPanelConfig"].Rows[0]["refOrigamPanelFilterId"];
-        userConfig.Tables["OrigamFormPanelConfig"].Rows[0]["refOrigamPanelFilterId"] = DBNull.Value;
+            userConfig.Tables[name: "OrigamFormPanelConfig"].Rows[index: 0][
+                columnName: "refOrigamPanelFilterId"
+            ];
+        userConfig.Tables[name: "OrigamFormPanelConfig"].Rows[index: 0][
+            columnName: "refOrigamPanelFilterId"
+        ] = DBNull.Value;
         OrigamPanelConfigDA.SaveUserConfig(
-            userConfig,
-            input.PanelInstanceId,
-            workflowId,
-            profileId
+            userConfig: userConfig,
+            panelInstanceId: input.PanelInstanceId,
+            workflowId: workflowId,
+            profileId: profileId
         );
-        DeleteFilter(filterId);
+        DeleteFilter(filterId: filterId);
     }
 
     public string ReportFromMenu(Guid menuId)
     {
-        return reportManager.GetReportFromMenu(menuId);
+        return reportManager.GetReportFromMenu(menuId: menuId);
     }
 
     private static bool IsRowDirty(DataRow row)
@@ -1281,15 +1390,15 @@ public class ServerCoreUIService : IBasicUIService
         }
         foreach (DataRelation childRelation in row.Table.ChildRelations)
         {
-            if (row.GetChildRows(childRelation).Any(IsRowDirty))
+            if (row.GetChildRows(relation: childRelation).Any(predicate: IsRowDirty))
             {
                 return true;
             }
             // look for deleted children. They aren't returned by
             // previous ChetChildRows call.
             if (
-                row.GetChildRows(childRelation, DataRowVersion.Original)
-                    .Any(childRow => childRow.RowState == DataRowState.Deleted)
+                row.GetChildRows(relation: childRelation, version: DataRowVersion.Original)
+                    .Any(predicate: childRow => childRow.RowState == DataRowState.Deleted)
             )
             {
                 return true;
@@ -1335,12 +1444,12 @@ public class ServerCoreUIService : IBasicUIService
     private void CreateUpdateOrigamOnlineUser()
     {
         var principal = SecurityManager.CurrentPrincipal;
-        Task.Run(() =>
+        Task.Run(action: () =>
         {
             Thread.CurrentPrincipal = principal;
             SecurityTools.CreateUpdateOrigamOnlineUser(
-                SecurityManager.CurrentPrincipal.Identity.Name,
-                sessionManager.GetSessionStats()
+                username: SecurityManager.CurrentPrincipal.Identity.Name,
+                stats: sessionManager.GetSessionStats()
             );
         });
     }
@@ -1354,12 +1463,12 @@ public class ServerCoreUIService : IBasicUIService
             return;
         }
 
-        list.Add(row[row.Table.PrimaryKey[0]]);
+        list.Add(item: row[column: row.Table.PrimaryKey[0]]);
         foreach (DataRelation childRelation in row.Table.ChildRelations)
         {
-            foreach (var childRow in row.GetChildRows(childRelation))
+            foreach (var childRow in row.GetChildRows(relation: childRelation))
             {
-                ChildrenRecordsIds(list, childRow);
+                ChildrenRecordsIds(list: list, row: childRow);
             }
         }
     }
@@ -1371,52 +1480,65 @@ public class ServerCoreUIService : IBasicUIService
     )
     {
         var xmlDocument = new XmlDocument();
-        var tooltipElement = xmlDocument.CreateElement("tooltip");
-        tooltipElement.SetAttribute("title", row.Table.DisplayExpression);
-        xmlDocument.AppendChild(tooltipElement);
+        var tooltipElement = xmlDocument.CreateElement(name: "tooltip");
+        tooltipElement.SetAttribute(name: "title", value: row.Table.DisplayExpression);
+        xmlDocument.AppendChild(newChild: tooltipElement);
         var y = 1;
-        if (row.Table.Columns.Contains("Id"))
+        if (row.Table.Columns.Contains(name: "Id"))
         {
-            CreateGenericRecordTooltipCell(xmlDocument, tooltipElement, y, "Id " + row["Id"]);
+            CreateGenericRecordTooltipCell(
+                xmlDocument: xmlDocument,
+                parentElement: tooltipElement,
+                y: y,
+                text: "Id " + row[columnName: "Id"]
+            );
             y++;
         }
         var profileProvider = SecurityManager.GetProfileProvider();
-        if (row.Table.Columns.Contains("RecordCreated") && !row.IsNull("RecordCreated"))
+        if (
+            row.Table.Columns.Contains(name: "RecordCreated")
+            && !row.IsNull(columnName: "RecordCreated")
+        )
         {
             string profileName;
             try
             {
                 profileName = (
-                    (UserProfile)profileProvider.GetProfile((Guid)row["RecordCreatedBy"])
+                    (UserProfile)
+                        profileProvider.GetProfile(
+                            profileId: (Guid)row[columnName: "RecordCreatedBy"]
+                        )
                 ).FullName;
             }
             catch
             {
-                profileName = row["RecordCreatedBy"].ToString();
+                profileName = row[columnName: "RecordCreatedBy"].ToString();
             }
             CreateGenericRecordTooltipCell(
-                xmlDocument,
-                tooltipElement,
-                y,
-                string.Format(
-                    localizer["DefaultTooltipRecordCreated"],
-                    profileName,
-                    ((DateTime)row["RecordCreated"]).ToString(cultureInfo)
+                xmlDocument: xmlDocument,
+                parentElement: tooltipElement,
+                y: y,
+                text: string.Format(
+                    format: localizer[name: "DefaultTooltipRecordCreated"],
+                    arg0: profileName,
+                    arg1: ((DateTime)row[columnName: "RecordCreated"]).ToString(
+                        provider: cultureInfo
+                    )
                 )
             );
             y++;
         }
-        if (!row.Table.Columns.Contains("RecordUpdated"))
+        if (!row.Table.Columns.Contains(name: "RecordUpdated"))
         {
             return xmlDocument;
         }
-        if (row.IsNull("RecordUpdated"))
+        if (row.IsNull(columnName: "RecordUpdated"))
         {
             CreateGenericRecordTooltipCell(
-                xmlDocument,
-                tooltipElement,
-                y,
-                localizer["DefaultTooltipNoChange"]
+                xmlDocument: xmlDocument,
+                parentElement: tooltipElement,
+                y: y,
+                text: localizer[name: "DefaultTooltipNoChange"]
             );
         }
         else
@@ -1425,21 +1547,26 @@ public class ServerCoreUIService : IBasicUIService
             try
             {
                 profileName = (
-                    (UserProfile)profileProvider.GetProfile((Guid)row["RecordUpdatedBy"])
+                    (UserProfile)
+                        profileProvider.GetProfile(
+                            profileId: (Guid)row[columnName: "RecordUpdatedBy"]
+                        )
                 ).FullName;
             }
             catch
             {
-                profileName = row["RecordUpdatedBy"].ToString();
+                profileName = row[columnName: "RecordUpdatedBy"].ToString();
             }
             CreateGenericRecordTooltipCell(
-                xmlDocument,
-                tooltipElement,
-                y,
-                string.Format(
-                    localizer["DefaultTooltipRecordUpdated"],
-                    profileName,
-                    ((DateTime)row["RecordUpdated"]).ToString(cultureInfo)
+                xmlDocument: xmlDocument,
+                parentElement: tooltipElement,
+                y: y,
+                text: string.Format(
+                    format: localizer[name: "DefaultTooltipRecordUpdated"],
+                    arg0: profileName,
+                    arg1: ((DateTime)row[columnName: "RecordUpdated"]).ToString(
+                        provider: cultureInfo
+                    )
                 )
             );
         }
@@ -1453,14 +1580,14 @@ public class ServerCoreUIService : IBasicUIService
         string text
     )
     {
-        var gridElement = xmlDocument.CreateElement("cell");
-        gridElement.SetAttribute("type", "text");
-        gridElement.SetAttribute("x", "0");
-        gridElement.SetAttribute("y", y.ToString());
-        gridElement.SetAttribute("height", "1");
-        gridElement.SetAttribute("width", "1");
+        var gridElement = xmlDocument.CreateElement(name: "cell");
+        gridElement.SetAttribute(name: "type", value: "text");
+        gridElement.SetAttribute(name: "x", value: "0");
+        gridElement.SetAttribute(name: "y", value: y.ToString());
+        gridElement.SetAttribute(name: "height", value: "1");
+        gridElement.SetAttribute(name: "width", value: "1");
         gridElement.InnerText = text;
-        parentElement.AppendChild(gridElement);
+        parentElement.AppendChild(newChild: gridElement);
     }
 
     public static XmlDocument NotificationBoxContent()
@@ -1472,9 +1599,9 @@ public class ServerCoreUIService : IBasicUIService
         {
             List<DataServiceDataTooltip> tooltips =
                 logoNotificationBox.ChildItemsByType<DataServiceDataTooltip>(
-                    DataServiceDataTooltip.CategoryConst
+                    itemType: DataServiceDataTooltip.CategoryConst
                 );
-            doc = GetTooltip(null, tooltips)?.Xml;
+            doc = GetTooltip(id: null, tooltips: tooltips)?.Xml;
         }
         if (doc == null)
         {
@@ -1489,7 +1616,10 @@ public class ServerCoreUIService : IBasicUIService
         DataServiceDataTooltip tooltip = null;
         foreach (DataServiceDataTooltip tt in tooltips)
         {
-            if (FeatureTools.IsFeatureOn(tt.Features) && SecurityTools.IsInRole(tt.Roles))
+            if (
+                FeatureTools.IsFeatureOn(featureCode: tt.Features)
+                && SecurityTools.IsInRole(roleName: tt.Roles)
+            )
             {
                 tooltip = tt;
             }
@@ -1504,26 +1634,26 @@ public class ServerCoreUIService : IBasicUIService
         {
             foreach (string paramName in tooltip.TooltipLoadMethod.ParameterReferences.Keys)
             {
-                qparams.Add(new QueryParameter(paramName, id));
+                qparams.Add(value: new QueryParameter(_parameterName: paramName, value: id));
             }
         }
         DataSet data = CoreServices.DataService.Instance.LoadData(
-            tooltip.TooltipDataStructureId,
-            tooltip.TooltipDataStructureMethodId,
-            Guid.Empty,
-            Guid.Empty,
-            null,
-            qparams
+            dataStructureId: tooltip.TooltipDataStructureId,
+            methodId: tooltip.TooltipDataStructureMethodId,
+            defaultSetId: Guid.Empty,
+            sortSetId: Guid.Empty,
+            transactionId: null,
+            parameters: qparams
         );
         IPersistenceService persistence = ServiceManager.Services.GetService<IPersistenceService>();
-        IXsltEngine transformer = new CompiledXsltEngine(persistence.SchemaProvider);
+        IXsltEngine transformer = new CompiledXsltEngine(persistence: persistence.SchemaProvider);
         IXmlContainer result = transformer.Transform(
-            DataDocumentFactory.New(data),
-            tooltip.TooltipTransformationId,
-            new Hashtable(),
-            null,
-            null,
-            false
+            data: DataDocumentFactory.New(dataSet: data),
+            transformationId: tooltip.TooltipTransformationId,
+            parameters: new Hashtable(),
+            transactionId: null,
+            outputStructure: null,
+            validateOnly: false
         );
         return result;
     }
@@ -1531,12 +1661,14 @@ public class ServerCoreUIService : IBasicUIService
     private static XmlDocument DefaultNotificationBoxContent()
     {
         XmlDocument doc = new XmlDocument();
-        doc.LoadXml("<div class=\"logo-left\"><img src=\"./img/origam-logo.svg\"/></div>");
+        doc.LoadXml(xml: "<div class=\"logo-left\"><img src=\"./img/origam-logo.svg\"/></div>");
         return doc;
     }
 
     public void RevertChanges(RevertChangesInput input)
     {
-        sessionManager.GetSession(input.SessionFormIdentifier).RevertChanges();
+        sessionManager
+            .GetSession(sessionFormIdentifier: input.SessionFormIdentifier)
+            .RevertChanges();
     }
 }

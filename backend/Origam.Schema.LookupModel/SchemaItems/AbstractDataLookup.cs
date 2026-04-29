@@ -29,8 +29,8 @@ using Origam.Schema.EntityModel;
 
 namespace Origam.Schema.LookupModel;
 
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public abstract class AbstractDataLookup : AbstractSchemaItem, IDataLookup
 {
     public const string CategoryConst = "DataLookup";
@@ -38,10 +38,10 @@ public abstract class AbstractDataLookup : AbstractSchemaItem, IDataLookup
     public AbstractDataLookup() { }
 
     public AbstractDataLookup(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public AbstractDataLookup(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Overriden ISchemaItem Members
 
@@ -53,56 +53,58 @@ public abstract class AbstractDataLookup : AbstractSchemaItem, IDataLookup
         Dictionary<string, ParameterReference> list
     )
     {
-        base.GetParameterReferences(ListMethod, list);
+        base.GetParameterReferences(parentItem: ListMethod, list: list);
     }
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(ListDataStructure);
-        dependencies.Add(ValueDataStructure);
+        dependencies.Add(item: ListDataStructure);
+        dependencies.Add(item: ValueDataStructure);
         if (ListMethod != null)
         {
-            dependencies.Add(ListMethod);
+            dependencies.Add(item: ListMethod);
         }
         if (ValueMethod != null)
         {
-            dependencies.Add(ValueMethod);
+            dependencies.Add(item: ValueMethod);
         }
         if (ValueSortSet != null)
         {
-            dependencies.Add(ValueSortSet);
+            dependencies.Add(item: ValueSortSet);
         }
         if (ListSortSet != null)
         {
-            dependencies.Add(ListSortSet);
+            dependencies.Add(item: ListSortSet);
         }
-        base.GetExtraDependencies(dependencies);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
     #endregion
     #region Properties
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public List<DataLookupMenuBinding> MenuBindings =>
-        ChildItemsByType<DataLookupMenuBinding>(DataLookupMenuBinding.CategoryConst);
+        ChildItemsByType<DataLookupMenuBinding>(itemType: DataLookupMenuBinding.CategoryConst);
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public bool HasTooltip
     {
         get
         {
-            var tooltips = ChildItemsByType<AbstractDataTooltip>(AbstractDataTooltip.CategoryConst);
+            var tooltips = ChildItemsByType<AbstractDataTooltip>(
+                itemType: AbstractDataTooltip.CategoryConst
+            );
             return tooltips.Count > 0;
         }
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public List<AbstractDataTooltip> Tooltips =>
-        ChildItemsByType<AbstractDataTooltip>(AbstractDataTooltip.CategoryConst);
+        ChildItemsByType<AbstractDataTooltip>(itemType: AbstractDataTooltip.CategoryConst);
     #region List
     private string _listValueMember;
 
-    [Category("List")]
+    [Category(category: "List")]
     [NotNullModelElementRule()]
-    [XmlAttribute("listValueMember")]
+    [XmlAttribute(attributeName: "listValueMember")]
     public string ListValueMember
     {
         get => _listValueMember;
@@ -110,9 +112,9 @@ public abstract class AbstractDataLookup : AbstractSchemaItem, IDataLookup
     }
     private string _listDisplayMember;
 
-    [Category("List")]
+    [Category(category: "List")]
     [NotNullModelElementRule()]
-    [XmlAttribute("listDisplayMember")]
+    [XmlAttribute(attributeName: "listDisplayMember")]
     public string ListDisplayMember
     {
         get => _listDisplayMember;
@@ -120,9 +122,9 @@ public abstract class AbstractDataLookup : AbstractSchemaItem, IDataLookup
     }
     private bool _isTree;
 
-    [Category("List")]
-    [DefaultValue(false)]
-    [XmlAttribute("isTree")]
+    [Category(category: "List")]
+    [DefaultValue(value: false)]
+    [XmlAttribute(attributeName: "isTree")]
     public bool IsTree
     {
         get => _isTree;
@@ -130,8 +132,8 @@ public abstract class AbstractDataLookup : AbstractSchemaItem, IDataLookup
     }
     private string _treeParentMember = "";
 
-    [Category("List")]
-    [XmlAttribute("treeParentMember")]
+    [Category(category: "List")]
+    [XmlAttribute(attributeName: "treeParentMember")]
     public string TreeParentMember
     {
         get => _treeParentMember;
@@ -140,31 +142,32 @@ public abstract class AbstractDataLookup : AbstractSchemaItem, IDataLookup
 
     public Guid ListDataStructureId;
 
-    [Category("List")]
-    [TypeConverter(typeof(DataStructureConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
+    [Category(category: "List")]
+    [TypeConverter(type: typeof(DataStructureConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
     [NotNullModelElementRule()]
-    [XmlReference("listDataStructure", "ListDataStructureId")]
+    [XmlReference(attributeName: "listDataStructure", idField: "ListDataStructureId")]
     public DataStructure ListDataStructure
     {
         get
         {
             var key = new ModelElementKey { Id = ListDataStructureId };
-            return (ISchemaItem)PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key)
+            return (ISchemaItem)
+                    PersistenceProvider.RetrieveInstance(type: typeof(ISchemaItem), primaryKey: key)
                 as DataStructure;
         }
         set
         {
-            ListDataStructureId = (Guid)value.PrimaryKey["Id"];
+            ListDataStructureId = (Guid)value.PrimaryKey[key: "Id"];
             ListMethod = null;
             ListSortSet = null;
         }
     }
     private bool _suppressEmptyColumns;
 
-    [Category("List")]
-    [DefaultValue(false)]
-    [XmlAttribute("suppressEmptyColumns")]
+    [Category(category: "List")]
+    [DefaultValue(value: false)]
+    [XmlAttribute(attributeName: "suppressEmptyColumns")]
     public bool SuppressEmptyColumns
     {
         get => _suppressEmptyColumns;
@@ -172,9 +175,9 @@ public abstract class AbstractDataLookup : AbstractSchemaItem, IDataLookup
     }
     private bool _alwaysAllowReturnToForm;
 
-    [Category("List")]
-    [DefaultValue(false)]
-    [XmlAttribute("alwaysAllowReturnToForm")]
+    [Category(category: "List")]
+    [DefaultValue(value: false)]
+    [XmlAttribute(attributeName: "alwaysAllowReturnToForm")]
     public bool AlwaysAllowReturnToForm
     {
         get => _alwaysAllowReturnToForm;
@@ -182,9 +185,9 @@ public abstract class AbstractDataLookup : AbstractSchemaItem, IDataLookup
     }
     private bool _isFilteredServerside;
 
-    [Category("List")]
-    [DefaultValue(false)]
-    [XmlAttribute("isFilteredServerside")]
+    [Category(category: "List")]
+    [DefaultValue(value: false)]
+    [XmlAttribute(attributeName: "isFilteredServerside")]
     public bool IsFilteredServerside
     {
         get => _isFilteredServerside;
@@ -192,9 +195,9 @@ public abstract class AbstractDataLookup : AbstractSchemaItem, IDataLookup
     }
     private string _serversideFilterParameter;
 
-    [Category("List")]
+    [Category(category: "List")]
     [LookupServerSideFilterModelElementRule()]
-    [XmlAttribute("serversideFilterParameter")]
+    [XmlAttribute(attributeName: "serversideFilterParameter")]
     public string ServersideFilterParameter
     {
         get => _serversideFilterParameter;
@@ -202,9 +205,9 @@ public abstract class AbstractDataLookup : AbstractSchemaItem, IDataLookup
     }
     private bool _searchByFirstColumnOnly;
 
-    [Category("List")]
-    [DefaultValue(false)]
-    [XmlAttribute("searchByFirstColumnOnly")]
+    [Category(category: "List")]
+    [DefaultValue(value: false)]
+    [XmlAttribute(attributeName: "searchByFirstColumnOnly")]
     public bool SearchByFirstColumnOnly
     {
         get => _searchByFirstColumnOnly;
@@ -214,10 +217,10 @@ public abstract class AbstractDataLookup : AbstractSchemaItem, IDataLookup
     #region Value
     private string _valueValueMember;
 
-    [Category("Value")]
-    [NotNullModelElementRule("ValueDataStructure")]
-    [XmlAttribute("valueValueMember")]
-    [RefreshProperties(RefreshProperties.Repaint)]
+    [Category(category: "Value")]
+    [NotNullModelElementRule(conditionField: "ValueDataStructure")]
+    [XmlAttribute(attributeName: "valueValueMember")]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
     public string ValueValueMember
     {
         get => _valueValueMember;
@@ -225,10 +228,10 @@ public abstract class AbstractDataLookup : AbstractSchemaItem, IDataLookup
     }
     private string _valueDisplayMember;
 
-    [Category("Value")]
-    [NotNullModelElementRule("ValueDataStructure")]
-    [XmlAttribute("valueDisplayMember")]
-    [RefreshProperties(RefreshProperties.Repaint)]
+    [Category(category: "Value")]
+    [NotNullModelElementRule(conditionField: "ValueDataStructure")]
+    [XmlAttribute(attributeName: "valueDisplayMember")]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
     public string ValueDisplayMember
     {
         get => _valueDisplayMember;
@@ -236,37 +239,37 @@ public abstract class AbstractDataLookup : AbstractSchemaItem, IDataLookup
     }
     public Guid ValueDataStructureId;
 
-    [Category("Value")]
-    [TypeConverter(typeof(DataStructureConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [XmlReference("valueDataStructure", "ValueDataStructureId")]
+    [Category(category: "Value")]
+    [TypeConverter(type: typeof(DataStructureConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [XmlReference(attributeName: "valueDataStructure", idField: "ValueDataStructureId")]
     public DataStructure ValueDataStructure
     {
         get =>
             (ISchemaItem)
                 PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(ValueDataStructureId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: ValueDataStructureId)
                 ) as DataStructure;
         set
         {
-            ValueDataStructureId = (Guid)value.PrimaryKey["Id"];
+            ValueDataStructureId = (Guid)value.PrimaryKey[key: "Id"];
             ValueMethod = null;
             ValueSortSet = null;
         }
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public DataStructureEntity ValueEntity =>
-        ValueDataStructure?.Entities[0] as DataStructureEntity;
-    public DataStructureColumn ValueColumn => ValueEntity?.Column(ValueValueMember);
-    public DataStructureColumn ValueDisplayColumn => ValueEntity?.Column(ValueDisplayMember);
+        ValueDataStructure?.Entities[index: 0] as DataStructureEntity;
+    public DataStructureColumn ValueColumn => ValueEntity?.Column(name: ValueValueMember);
+    public DataStructureColumn ValueDisplayColumn => ValueEntity?.Column(name: ValueDisplayMember);
     #endregion
     #region Filters
     private string _roleFilterMember;
 
-    [Category("Filter")]
-    [XmlAttribute("roleFilterMember")]
+    [Category(category: "Filter")]
+    [XmlAttribute(attributeName: "roleFilterMember")]
     public string RoleFilterMember
     {
         get => _roleFilterMember;
@@ -274,8 +277,8 @@ public abstract class AbstractDataLookup : AbstractSchemaItem, IDataLookup
     }
     private string _featureFilterMember;
 
-    [Category("Filter")]
-    [XmlAttribute("featureFilterMember")]
+    [Category(category: "Filter")]
+    [XmlAttribute(attributeName: "featureFilterMember")]
     public string FeatureFilterMember
     {
         get => _featureFilterMember;
@@ -285,71 +288,72 @@ public abstract class AbstractDataLookup : AbstractSchemaItem, IDataLookup
 
     public Guid ListDataStructureMethodId;
 
-    [TypeConverter(typeof(DataServiceDataLookupListMethodConverter))]
+    [TypeConverter(type: typeof(DataServiceDataLookupListMethodConverter))]
     [LookupServerSideFilterModelElementRule()]
-    [Category("List")]
-    [XmlReference("listMethod", "ListDataStructureMethodId")]
+    [Category(category: "List")]
+    [XmlReference(attributeName: "listMethod", idField: "ListDataStructureMethodId")]
     public DataStructureMethod ListMethod
     {
         get =>
             (DataStructureMethod)
                 PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(ListDataStructureMethodId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: ListDataStructureMethodId)
                 );
         set =>
-            ListDataStructureMethodId = (value == null) ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+            ListDataStructureMethodId =
+                (value == null) ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"];
     }
     public Guid ValueDataStructureMethodId;
 
-    [TypeConverter(typeof(DataServiceDataLookupValueFilterConverter))]
-    [Category("Value")]
-    [XmlReference("valueMethod", "ValueDataStructureMethodId")]
+    [TypeConverter(type: typeof(DataServiceDataLookupValueFilterConverter))]
+    [Category(category: "Value")]
+    [XmlReference(attributeName: "valueMethod", idField: "ValueDataStructureMethodId")]
     public DataStructureMethod ValueMethod
     {
         get =>
             (DataStructureMethod)
                 PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(ValueDataStructureMethodId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: ValueDataStructureMethodId)
                 );
         set =>
             ValueDataStructureMethodId =
-                (value == null) ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+                (value == null) ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"];
     }
     public Guid ValueDataStructureSortSetId;
 
-    [TypeConverter(typeof(DataServiceDataLookupValueSortSetConverter))]
-    [Category("Value")]
-    [XmlReference("valueSortSet", "ValueDataStructureSortSetId")]
+    [TypeConverter(type: typeof(DataServiceDataLookupValueSortSetConverter))]
+    [Category(category: "Value")]
+    [XmlReference(attributeName: "valueSortSet", idField: "ValueDataStructureSortSetId")]
     public DataStructureSortSet ValueSortSet
     {
         get =>
             (DataStructureSortSet)
                 PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(ValueDataStructureSortSetId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: ValueDataStructureSortSetId)
                 );
         set =>
             ValueDataStructureSortSetId =
-                (value == null) ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+                (value == null) ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"];
     }
     public Guid ListDataStructureSortSetId;
 
-    [TypeConverter(typeof(DataServiceDataLookupListSortSetConverter))]
-    [Category("List")]
-    [XmlReference("listSortSet", "ListDataStructureSortSetId")]
+    [TypeConverter(type: typeof(DataServiceDataLookupListSortSetConverter))]
+    [Category(category: "List")]
+    [XmlReference(attributeName: "listSortSet", idField: "ListDataStructureSortSetId")]
     public DataStructureSortSet ListSortSet
     {
         get =>
             (DataStructureSortSet)
                 PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(ListDataStructureSortSetId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: ListDataStructureSortSetId)
                 );
         set =>
             ListDataStructureSortSetId =
-                (value == null) ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+                (value == null) ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"];
     }
     #endregion
     #region ISchemaItemFactory Members
@@ -372,7 +376,11 @@ public abstract class AbstractDataLookup : AbstractSchemaItem, IDataLookup
         {
             itemName = "NewTooltip";
         }
-        return base.NewItem<T>(schemaExtensionId, group, itemName);
+        return base.NewItem<T>(
+            schemaExtensionId: schemaExtensionId,
+            group: group,
+            itemName: itemName
+        );
     }
     #endregion
 }

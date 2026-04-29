@@ -38,23 +38,26 @@ public static class XsltFunctionContainerFactory
         var businessServicesService =
             ServiceManager.Services.GetService<IBusinessServicesService>();
         return Create(
-            businessServicesService,
-            ServiceManager
+            businessService: businessServicesService,
+            xsltFunctionSchemaItemProvider: ServiceManager
                 .Services.GetService<SchemaService>()
                 .GetProvider<XsltFunctionSchemaItemProvider>(),
-            ServiceManager.Services.GetService<IPersistenceService>(),
-            ServiceManager.Services.GetService<IDataLookupService>(),
-            ServiceManager.Services.GetService<IParameterService>(),
-            ServiceManager.Services.GetService<IStateMachineService>(),
-            ServiceManager.Services.GetService<ITracingService>(),
-            ServiceManager.Services.GetService<IDocumentationService>(),
-            DataService.Instance,
-            SecurityManager.GetAuthorizationProvider(),
-            SecurityManager.CurrentUserProfile,
-            XpathEvaluator.Instance,
-            HttpTools.Instance,
-            new ResourceTools(businessServicesService, SecurityManager.CurrentUserProfile),
-            transactionId
+            persistence: ServiceManager.Services.GetService<IPersistenceService>(),
+            lookupService: ServiceManager.Services.GetService<IDataLookupService>(),
+            parameterService: ServiceManager.Services.GetService<IParameterService>(),
+            stateMachineService: ServiceManager.Services.GetService<IStateMachineService>(),
+            tracingService: ServiceManager.Services.GetService<ITracingService>(),
+            documentationService: ServiceManager.Services.GetService<IDocumentationService>(),
+            dataService: DataService.Instance,
+            authorizationProvider: SecurityManager.GetAuthorizationProvider(),
+            userProfileGetter: SecurityManager.CurrentUserProfile,
+            xpathEvaluator: XpathEvaluator.Instance,
+            httpTools: HttpTools.Instance,
+            resourceTools: new ResourceTools(
+                businessService: businessServicesService,
+                userProfileGetter: SecurityManager.CurrentUserProfile
+            ),
+            transactionId: transactionId
         );
     }
 
@@ -78,12 +81,14 @@ public static class XsltFunctionContainerFactory
     )
     {
         return xsltFunctionSchemaItemProvider
-            .ChildItemsByType<XsltFunctionCollection>(XsltFunctionCollection.CategoryConst)
-            .Select(collection =>
+            .ChildItemsByType<XsltFunctionCollection>(
+                itemType: XsltFunctionCollection.CategoryConst
+            )
+            .Select(selector: collection =>
             {
                 object container = Reflector.InvokeObject(
-                    collection.FullClassName,
-                    collection.AssemblyName
+                    classname: collection.FullClassName,
+                    assembly: collection.AssemblyName
                 );
                 if (container is IOrigamDependentXsltFunctionContainer origamContainer)
                 {

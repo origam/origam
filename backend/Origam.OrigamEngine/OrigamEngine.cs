@@ -41,9 +41,9 @@ public class OrigamEngine
     #region Private Members
     private const string LAST_RESTART_REQUEST_CONST_NAME = "LastRestartRequest";
     private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
-        System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
+        type: System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
     );
-    private static System.Timers.Timer RestartTimer = new System.Timers.Timer(1000);
+    private static System.Timers.Timer RestartTimer = new System.Timers.Timer(interval: 1000);
     private static DateTime LastRestartRequestDate;
     private static IRuntimeServiceFactory serviceFactory = new RuntimeServiceFactory();
     #endregion
@@ -57,34 +57,34 @@ public class OrigamEngine
         service.RemoveAllProviders();
         foreach (var schemaItemProvider in new OrigamProviderBuilder().GetAll())
         {
-            service.AddProvider(schemaItemProvider);
+            service.AddProvider(provider: schemaItemProvider);
         }
         AbstractSchemaItem.ExtensionChildItemTypes.Add(
-            new Type[] { typeof(AbstractDataEntity), typeof(EntityMenuAction) }
+            item: new Type[] { typeof(AbstractDataEntity), typeof(EntityMenuAction) }
         );
         AbstractSchemaItem.ExtensionChildItemTypes.Add(
-            new Type[] { typeof(AbstractDataEntity), typeof(EntityReportAction) }
+            item: new Type[] { typeof(AbstractDataEntity), typeof(EntityReportAction) }
         );
         AbstractSchemaItem.ExtensionChildItemTypes.Add(
-            new Type[] { typeof(AbstractDataEntity), typeof(EntityWorkflowAction) }
+            item: new Type[] { typeof(AbstractDataEntity), typeof(EntityWorkflowAction) }
         );
         AbstractSchemaItem.ExtensionChildItemTypes.Add(
-            new Type[] { typeof(AbstractDataEntity), typeof(EntityDropdownAction) }
+            item: new Type[] { typeof(AbstractDataEntity), typeof(EntityDropdownAction) }
         );
         AbstractSchemaItem.ExtensionChildItemTypes.Add(
-            new Type[] { typeof(AbstractDataStructure), typeof(DataStructureWorkflowMethod) }
+            item: new Type[] { typeof(AbstractDataStructure), typeof(DataStructureWorkflowMethod) }
         );
         AbstractSchemaItem.ExtensionChildItemTypes.Add(
-            new Type[] { typeof(EntityDropdownAction), typeof(EntityMenuAction) }
+            item: new Type[] { typeof(EntityDropdownAction), typeof(EntityMenuAction) }
         );
         AbstractSchemaItem.ExtensionChildItemTypes.Add(
-            new Type[] { typeof(EntityDropdownAction), typeof(EntityReportAction) }
+            item: new Type[] { typeof(EntityDropdownAction), typeof(EntityReportAction) }
         );
         AbstractSchemaItem.ExtensionChildItemTypes.Add(
-            new Type[] { typeof(EntityDropdownAction), typeof(EntityWorkflowAction) }
+            item: new Type[] { typeof(EntityDropdownAction), typeof(EntityWorkflowAction) }
         );
         AbstractSchemaItemProvider.ExtensionChildItemTypes.Add(
-            new Type[] { typeof(PagesSchemaItemProvider), typeof(WorkflowPage) }
+            item: new Type[] { typeof(PagesSchemaItemProvider), typeof(WorkflowPage) }
         );
     }
 
@@ -112,10 +112,10 @@ public class OrigamEngine
         IRuntimeServiceFactory customServiceFactory = null
     )
     {
-        log.Info("Connecting ORIGAM Runtime.");
-        AppDomain.CurrentDomain.SetPrincipalPolicy(PrincipalPolicy.NoPrincipal);
+        log.Info(message: "Connecting ORIGAM Runtime.");
+        AppDomain.CurrentDomain.SetPrincipalPolicy(policy: PrincipalPolicy.NoPrincipal);
         SecurityManager.SetServerIdentity();
-        SetActiveConfiguration(configName);
+        SetActiveConfiguration(configName: configName);
         var settings = ConfigurationManager.GetActiveConfiguration();
         if (customServiceFactory != null)
         {
@@ -128,25 +128,26 @@ public class OrigamEngine
 
         SchemaService schema = ServiceManager.Services.GetService<SchemaService>();
         log.Info(
-            "Loading model "
+            message: "Loading model "
                 + settings.Name
                 + ", Package ID: "
                 + settings.DefaultSchemaExtensionId.ToString()
         );
-        schema.LoadSchema(settings.DefaultSchemaExtensionId);
+        schema.LoadSchema(schemaExtensionId: settings.DefaultSchemaExtensionId);
         log.Info(
-            "Loading model finished successfully. Version loaded: " + schema.ActiveExtension.Version
+            message: "Loading model finished successfully. Version loaded: "
+                + schema.ActiveExtension.Version
         );
-        InitializeSchemaItemProviders(schema);
+        InitializeSchemaItemProviders(service: schema);
 
         // upgrade database
         if (settings.ExecuteUpgradeScriptsOnStart)
         {
-            log.Info("Checking database version.");
+            log.Info(message: "Checking database version.");
             IDeploymentService deployment =
                 ServiceManager.Services.GetService<IDeploymentService>();
             deployment.Deploy();
-            log.Info("Database version check finished.");
+            log.Info(message: "Database version check finished.");
         }
         IParameterService parameterService =
             ServiceManager.Services.GetService<IParameterService>();
@@ -157,14 +158,14 @@ public class OrigamEngine
             RestartTimer.Elapsed += RestartTimer_Elapsed;
             RestartTimer.Start();
         }
-        log.Info("ORIGAM Runtime Connected");
+        log.Info(message: "ORIGAM Runtime Connected");
     }
 
     private static void SetActiveConfiguration(string configName = "")
     {
         var configurations = ConfigurationManager.GetAllConfigurations();
-        var origamSettings = GetSettings(configName, configurations);
-        ConfigurationManager.SetActiveConfiguration(origamSettings);
+        var origamSettings = GetSettings(configName: configName, configurations: configurations);
+        ConfigurationManager.SetActiveConfiguration(configuration: origamSettings);
     }
 
     private static OrigamSettings GetSettings(
@@ -172,37 +173,40 @@ public class OrigamEngine
         OrigamSettingsCollection configurations
     )
     {
-        if (string.IsNullOrEmpty(configName))
+        if (string.IsNullOrEmpty(value: configName))
         {
             if (configurations.Count != 1)
             {
-                throw new Exception(ResourceUtils.GetString("ErrorOnlyOneOrigamSettings"));
+                throw new Exception(
+                    message: ResourceUtils.GetString(key: "ErrorOnlyOneOrigamSettings")
+                );
             }
-            return configurations[0];
+            return configurations[index: 0];
         }
         return configurations
                 .Cast<OrigamSettings>()
-                .FirstOrDefault(settings => settings.Name == configName)
+                .FirstOrDefault(predicate: settings => settings.Name == configName)
             ?? throw new ArgumentException(
-                $"Configuration {configName} not found in settings file."
+                message: $"Configuration {configName} not found in settings file."
             );
     }
 
     public static void SetRestart()
     {
         IParameterService parameterService =
-            ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
+            ServiceManager.Services.GetService(serviceType: typeof(IParameterService))
+            as IParameterService;
         parameterService.SetCustomParameterValue(
-            LAST_RESTART_REQUEST_CONST_NAME,
-            DateTime.Now,
-            Guid.Empty,
-            0,
-            null,
-            false,
-            0,
-            0,
-            DateTime.Now,
-            false
+            parameterName: LAST_RESTART_REQUEST_CONST_NAME,
+            value: DateTime.Now,
+            guidValue: Guid.Empty,
+            intValue: 0,
+            stringValue: null,
+            boolValue: false,
+            floatValue: 0,
+            currencyValue: 0,
+            dateValue: DateTime.Now,
+            useIdentity: false
         );
     }
 
@@ -219,8 +223,11 @@ public class OrigamEngine
     private static DateTime GetLastRestartRequestDate()
     {
         IParameterService parameterService =
-            ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
-        object value = parameterService.GetCustomParameterValue(LAST_RESTART_REQUEST_CONST_NAME);
+            ServiceManager.Services.GetService(serviceType: typeof(IParameterService))
+            as IParameterService;
+        object value = parameterService.GetCustomParameterValue(
+            parameterName: LAST_RESTART_REQUEST_CONST_NAME
+        );
         if (value == null)
         {
             return DateTime.MinValue;
@@ -233,7 +240,7 @@ public class OrigamEngine
     {
         SecurityManager.SetServerIdentity();
         DateTime newDate = GetLastRestartRequestDate();
-        return !LastRestartRequestDate.Equals(newDate);
+        return !LastRestartRequestDate.Equals(value: newDate);
     }
 
     #region Event Handlers
@@ -244,7 +251,7 @@ public class OrigamEngine
 #if ORIGAM_SERVER
             if (IsRestartPending())
             {
-                AppDomain.Unload(AppDomain.CurrentDomain);
+                AppDomain.Unload(domain: AppDomain.CurrentDomain);
             }
 #endif
             RestartTimer.Interval = 1000;
@@ -255,10 +262,10 @@ public class OrigamEngine
             if (log.IsErrorEnabled)
             {
                 log.LogOrigamError(
-                    "Could not get restart status. Will retry in "
+                    message: "Could not get restart status. Will retry in "
                         + (RestartTimer.Interval / 1000)
                         + "seconds.",
-                    ex
+                    ex: ex
                 );
             }
         }

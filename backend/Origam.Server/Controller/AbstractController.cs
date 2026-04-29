@@ -46,7 +46,7 @@ namespace Origam.Server.Controller;
 
 [Authorize(Policy = "InternalApi")]
 [ApiController]
-[Route("internalApi/[controller]")]
+[Route(template: "internalApi/[controller]")]
 public abstract class AbstractController : ControllerBase
 {
     protected readonly SessionObjects sessionObjects;
@@ -80,20 +80,22 @@ public abstract class AbstractController : ControllerBase
         get
         {
             const string allowedLookups = "AllowedLookups";
-            if (!OrigamUserContext.Context.ContainsKey(allowedLookups))
+            if (!OrigamUserContext.Context.ContainsKey(key: allowedLookups))
             {
-                OrigamUserContext.Context.Add(allowedLookups, new MenuLookupIndex());
+                OrigamUserContext.Context.Add(key: allowedLookups, value: new MenuLookupIndex());
             }
-            var lookupIndex = (MenuLookupIndex)OrigamUserContext.Context[allowedLookups];
+            var lookupIndex = (MenuLookupIndex)OrigamUserContext.Context[key: allowedLookups];
             return lookupIndex;
         }
     }
 
     protected Result<AbstractMenuItem, IActionResult> Authorize(AbstractMenuItem menuItem)
     {
-        return SecurityManager.GetAuthorizationProvider().Authorize(User, menuItem.Roles)
-            ? Result.Success<AbstractMenuItem, IActionResult>(menuItem)
-            : Result.Failure<AbstractMenuItem, IActionResult>(Forbid());
+        return SecurityManager
+            .GetAuthorizationProvider()
+            .Authorize(principal: User, context: menuItem.Roles)
+            ? Result.Success<AbstractMenuItem, IActionResult>(value: menuItem)
+            : Result.Failure<AbstractMenuItem, IActionResult>(error: Forbid());
     }
 
     protected Result<T, IActionResult> FindItem<T>(Guid id)
@@ -102,11 +104,18 @@ public abstract class AbstractController : ControllerBase
         return !(
             ServiceManager
                 .Services.GetService<IPersistenceService>()
-                .SchemaProvider.RetrieveInstance(typeof(T), new Key(id), true, false)
+                .SchemaProvider.RetrieveInstance(
+                    type: typeof(T),
+                    primaryKey: new Key(id: id),
+                    useCache: true,
+                    throwNotFoundException: false
+                )
             is T instance
         )
-            ? Result.Failure<T, IActionResult>(NotFound("Object with requested id not found."))
-            : Result.Success<T, IActionResult>(instance);
+            ? Result.Failure<T, IActionResult>(
+                error: NotFound(value: "Object with requested id not found.")
+            )
+            : Result.Success<T, IActionResult>(value: instance);
     }
 
     protected Result<EntityData, IActionResult> GetEntityData(
@@ -114,8 +123,8 @@ public abstract class AbstractController : ControllerBase
         FormReferenceMenuItem menuItem
     )
     {
-        return FindEntity(dataStructureEntityId)
-            .Map(entity => new EntityData { MenuItem = menuItem, Entity = entity });
+        return FindEntity(id: dataStructureEntityId)
+            .Map(func: entity => new EntityData { MenuItem = menuItem, Entity = entity });
     }
 
     protected Result<EntityData, IActionResult> CheckEntityBelongsToMenu(EntityData entityData)
@@ -123,9 +132,9 @@ public abstract class AbstractController : ControllerBase
         return (
             entityData.MenuItem.Screen.DataStructure.Id == entityData.Entity.RootEntity.ParentItemId
         )
-            ? Result.Success<EntityData, IActionResult>(entityData)
+            ? Result.Success<EntityData, IActionResult>(value: entityData)
             : Result.Failure<EntityData, IActionResult>(
-                BadRequest("The requested Entity does not belong to the menu.")
+                error: BadRequest(error: "The requested Entity does not belong to the menu.")
             );
     }
 
@@ -138,20 +147,20 @@ public abstract class AbstractController : ControllerBase
     )
     {
         var rows = SessionStore.LoadRows(
-            dataService,
-            entity,
-            dataStructureEntityId,
-            methodId,
-            new List<Guid> { rowId }
+            dataService: dataService,
+            entity: entity,
+            dataStructureEntityId: dataStructureEntityId,
+            methodId: methodId,
+            rowIds: new List<Guid> { rowId }
         );
         if (rows.Count == 0)
         {
             return Result.Failure<RowData, IActionResult>(
-                NotFound("Requested data row was not found.")
+                error: NotFound(value: "Requested data row was not found.")
             );
         }
         return Result.Success<RowData, IActionResult>(
-            new RowData { Row = rows[0], Entity = entity }
+            value: new RowData { Row = rows[index: 0], Entity = entity }
         );
     }
 
@@ -162,10 +171,12 @@ public abstract class AbstractController : ControllerBase
 
     protected Result<DataStructureEntity, IActionResult> FindEntity(Guid id)
     {
-        return FindItem<DataStructureEntity>(id)
-            .OnFailureCompensate(error =>
+        return FindItem<DataStructureEntity>(id: id)
+            .OnFailureCompensate(func: error =>
                 Result.Failure<DataStructureEntity, IActionResult>(
-                    NotFound("Requested DataStructureEntity not found. " + error.GetMessage())
+                    error: NotFound(
+                        value: "Requested DataStructureEntity not found. " + error.GetMessage()
+                    )
                 )
             );
     }
@@ -183,14 +194,14 @@ public abstract class AbstractController : ControllerBase
         }
         catch (DBConcurrencyException ex)
         {
-            if (string.IsNullOrEmpty(ex.Message) && (ex.InnerException != null))
+            if (string.IsNullOrEmpty(value: ex.Message) && (ex.InnerException != null))
             {
-                return Conflict(ex.InnerException.Message);
+                return Conflict(error: ex.InnerException.Message);
             }
-            return Conflict(ex.Message);
+            return Conflict(error: ex.Message);
         }
         return Ok(
-            SessionStore.GetChangeInfo(
+            value: SessionStore.GetChangeInfo(
                 requestingGrid: null,
                 row: rowData.Row,
                 operation: operation,
@@ -206,48 +217,48 @@ public abstract class AbstractController : ControllerBase
     {
         if (input.SessionFormIdentifier == Guid.Empty)
         {
-            return FindItem<FormReferenceMenuItem>(input.MenuId)
+            return FindItem<FormReferenceMenuItem>(id: input.MenuId)
                 .BindSuccessFailure(
                     onSuccess: item =>
-                        Authorize(item)
-                            .Bind(menuItem =>
+                        Authorize(menuItem: item)
+                            .Bind(func: menuItem =>
                                 GetEntityData(
-                                    input.DataStructureEntityId,
-                                    (FormReferenceMenuItem)menuItem
+                                    dataStructureEntityId: input.DataStructureEntityId,
+                                    menuItem: (FormReferenceMenuItem)menuItem
                                 )
                             )
-                            .Bind(CheckEntityBelongsToMenu)
-                            .Bind(entityData =>
+                            .Bind(func: CheckEntityBelongsToMenu)
+                            .Bind(func: entityData =>
                                 GetRow(
-                                    dataService,
-                                    entityData.Entity,
-                                    input.DataStructureEntityId,
-                                    Guid.Empty,
-                                    input.RowId
+                                    dataService: dataService,
+                                    entity: entityData.Entity,
+                                    dataStructureEntityId: input.DataStructureEntityId,
+                                    methodId: Guid.Empty,
+                                    rowId: input.RowId
                                 )
                             ),
                     onFailure: () =>
-                        AuthorizeQueueItem(input.MenuId)
-                            .Bind(_ => FindEntity(input.DataStructureEntityId))
-                            .Bind(entity =>
+                        AuthorizeQueueItem(menuId: input.MenuId)
+                            .Bind(func: _ => FindEntity(id: input.DataStructureEntityId))
+                            .Bind(func: entity =>
                                 GetRow(
-                                    dataService,
-                                    entity,
-                                    input.DataStructureEntityId,
-                                    Guid.Empty,
-                                    input.RowId
+                                    dataService: dataService,
+                                    entity: entity,
+                                    dataStructureEntityId: input.DataStructureEntityId,
+                                    methodId: Guid.Empty,
+                                    rowId: input.RowId
                                 )
                             )
                 );
         }
 
-        return FindEntity(input.DataStructureEntityId)
-            .Bind(dataStructureEntity =>
+        return FindEntity(id: input.DataStructureEntityId)
+            .Bind(func: dataStructureEntity =>
                 sessionObjects.UIService.GetRow(
-                    input.SessionFormIdentifier,
-                    dataStructureEntity.Name,
-                    dataStructureEntity,
-                    input.RowId
+                    sessionFormIdentifier: input.SessionFormIdentifier,
+                    entity: dataStructureEntity.Name,
+                    dataStructureEntity: dataStructureEntity,
+                    rowId: input.RowId
                 )
             );
     }
@@ -257,29 +268,37 @@ public abstract class AbstractController : ControllerBase
         DataTable workQueues = ServiceManager
             .Services.GetService<IWorkQueueService>()
             .UserQueueList()
-            .Tables[0];
+            .Tables[index: 0];
         bool menuIdBelongToReachableQueue = workQueues
             .Rows.Cast<DataRow>()
-            .Any(row => (Guid)row["Id"] == menuId);
+            .Any(predicate: row => (Guid)row[columnName: "Id"] == menuId);
         return menuIdBelongToReachableQueue
-            ? Result.Success<Guid, IActionResult>(menuId)
-            : Result.Failure<Guid, IActionResult>(NotFound("Object with requested id not found."));
+            ? Result.Success<Guid, IActionResult>(value: menuId)
+            : Result.Failure<Guid, IActionResult>(
+                error: NotFound(value: "Object with requested id not found.")
+            );
     }
 
     protected Result<Guid, IActionResult> AmbiguousInputToEntityId(AmbiguousInput input)
     {
         if (input.SessionFormIdentifier == Guid.Empty)
         {
-            return FindItem<FormReferenceMenuItem>(input.MenuId)
-                .Bind(Authorize)
-                .Bind(menuItem =>
-                    GetEntityData(input.DataStructureEntityId, (FormReferenceMenuItem)menuItem)
+            return FindItem<FormReferenceMenuItem>(id: input.MenuId)
+                .Bind(func: Authorize)
+                .Bind(func: menuItem =>
+                    GetEntityData(
+                        dataStructureEntityId: input.DataStructureEntityId,
+                        menuItem: (FormReferenceMenuItem)menuItem
+                    )
                 )
-                .Bind(CheckEntityBelongsToMenu)
-                .Bind(EntityDataToEntityId);
+                .Bind(func: CheckEntityBelongsToMenu)
+                .Bind(func: EntityDataToEntityId);
         }
 
-        return sessionObjects.UIService.GetEntityId(input.SessionFormIdentifier, input.Entity);
+        return sessionObjects.UIService.GetEntityId(
+            sessionFormIdentifier: input.SessionFormIdentifier,
+            entity: input.Entity
+        );
     }
 
     protected Result<EntityData, IActionResult> EntityIdentificationToEntityData(
@@ -288,26 +307,34 @@ public abstract class AbstractController : ControllerBase
     {
         if (input.SessionFormIdentifier == Guid.Empty)
         {
-            return FindItem<FormReferenceMenuItem>(input.MenuId)
-                .Bind(Authorize)
-                .Bind(menuItem =>
-                    GetEntityData(input.DataStructureEntityId, (FormReferenceMenuItem)menuItem)
+            return FindItem<FormReferenceMenuItem>(id: input.MenuId)
+                .Bind(func: Authorize)
+                .Bind(func: menuItem =>
+                    GetEntityData(
+                        dataStructureEntityId: input.DataStructureEntityId,
+                        menuItem: (FormReferenceMenuItem)menuItem
+                    )
                 )
-                .Bind(CheckEntityBelongsToMenu);
+                .Bind(func: CheckEntityBelongsToMenu);
         }
 
-        return FindItem<FormReferenceMenuItem>(input.MenuId)
-            .Bind(menuItem => GetEntityData(input.DataStructureEntityId, menuItem));
+        return FindItem<FormReferenceMenuItem>(id: input.MenuId)
+            .Bind(func: menuItem =>
+                GetEntityData(
+                    dataStructureEntityId: input.DataStructureEntityId,
+                    menuItem: menuItem
+                )
+            );
     }
 
     protected Result<Guid, IActionResult> EntityDataToEntityId(EntityData entityData)
     {
-        return Result.Success<Guid, IActionResult>(entityData.Entity.EntityId);
+        return Result.Success<Guid, IActionResult>(value: entityData.Entity.EntityId);
     }
 
     protected IActionResult ToActionResult(object obj)
     {
-        return Ok(obj);
+        return Ok(value: obj);
     }
 
     protected Result<DataStructureQuery, IActionResult> AddMethodAndSource(
@@ -326,29 +353,41 @@ public abstract class AbstractController : ControllerBase
                 query.SortSetId = entityData.MenuItem.ListSortSetId;
                 query.DataSourceId = entityData.MenuItem.ListDataStructure.Id;
                 // get parameters from session store
-                var parameters = sessionObjects.UIService.GetParameters(sessionFormIdentifier);
+                var parameters = sessionObjects.UIService.GetParameters(
+                    sessionFormIdentifier: sessionFormIdentifier
+                );
                 foreach (var key in parameters.Keys)
                 {
-                    query.Parameters.Add(new QueryParameter(key.ToString(), parameters[key]));
+                    query.Parameters.Add(
+                        value: new QueryParameter(
+                            _parameterName: key.ToString(),
+                            value: parameters[key: key]
+                        )
+                    );
                 }
             }
             else
             {
-                return FindItem<DataStructureMethod>(entityData.MenuItem.MethodId)
-                    .Map(CustomParameterService.GetFirstNonCustomParameter)
-                    .Bind(parameterName =>
+                return FindItem<DataStructureMethod>(id: entityData.MenuItem.MethodId)
+                    .Map(func: CustomParameterService.GetFirstNonCustomParameter)
+                    .Bind(func: parameterName =>
                     {
                         query.DataSourceId = entityData.Entity.RootEntity.ParentItemId;
-                        query.Parameters.Add(new QueryParameter(parameterName, masterRowId));
+                        query.Parameters.Add(
+                            value: new QueryParameter(
+                                _parameterName: parameterName,
+                                value: masterRowId
+                            )
+                        );
                         if (masterRowId == Guid.Empty)
                         {
                             return Result.Failure<DataStructureQuery, IActionResult>(
-                                BadRequest("MasterRowId cannot be empty")
+                                error: BadRequest(error: "MasterRowId cannot be empty")
                             );
                         }
                         query.MethodId = entityData.MenuItem.MethodId;
                         query.SortSetId = entityData.MenuItem.SortSetId;
-                        return Result.Success<DataStructureQuery, IActionResult>(query);
+                        return Result.Success<DataStructureQuery, IActionResult>(value: query);
                     });
             }
         }
@@ -358,14 +397,14 @@ public abstract class AbstractController : ControllerBase
             query.SortSetId = entityData.MenuItem.SortSetId;
             query.DataSourceId = entityData.Entity.RootEntity.ParentItemId;
         }
-        return Result.Success<DataStructureQuery, IActionResult>(query);
+        return Result.Success<DataStructureQuery, IActionResult>(value: query);
     }
 
     protected CustomOrderings GetOrderings(List<IRowOrdering> orderingList)
     {
         var orderings = orderingList
             .Select(
-                (inputOrdering, i) =>
+                selector: (inputOrdering, i) =>
                     new Ordering(
                         columnName: inputOrdering.ColumnId,
                         direction: inputOrdering.Direction,
@@ -374,7 +413,7 @@ public abstract class AbstractController : ControllerBase
                     )
             )
             .ToList();
-        return new CustomOrderings(orderings);
+        return new CustomOrderings(orderings: orderings);
     }
 
     protected Result<DataStructureQuery, IActionResult> GetRowsGetQuery(
@@ -382,12 +421,12 @@ public abstract class AbstractController : ControllerBase
         EntityData entityData
     )
     {
-        var customOrderings = GetOrderings(input.OrderingList);
+        var customOrderings = GetOrderings(orderingList: input.OrderingList);
         if (input.RowOffset != 0 && customOrderings.IsEmpty)
         {
             return Result.Failure<DataStructureQuery, IActionResult>(
-                BadRequest(
-                    $"Ordering must be specified if \"{nameof(input.RowOffset)}\" is specified"
+                error: BadRequest(
+                    error: $"Ordering must be specified if \"{nameof(input.RowOffset)}\" is specified"
                 )
             );
         }
@@ -403,10 +442,10 @@ public abstract class AbstractController : ControllerBase
             RowLimit = input.RowLimit,
             RowOffset = input.RowOffset,
             ColumnsInfo = new ColumnsInfo(
-                input
-                    .ColumnNames.Select(colName =>
+                columns: input
+                    .ColumnNames.Select(selector: colName =>
                     {
-                        var column = entityData.Entity.Column(colName);
+                        var column = entityData.Entity.Column(name: colName);
                         var field = column.Field;
                         return new ColumnData(
                             name: colName,
@@ -425,14 +464,16 @@ public abstract class AbstractController : ControllerBase
         {
             foreach (var pair in input.Parameters)
             {
-                query.Parameters.Add(new QueryParameter(pair.Key, pair.Value));
+                query.Parameters.Add(
+                    value: new QueryParameter(_parameterName: pair.Key, value: pair.Value)
+                );
             }
         }
         return AddMethodAndSource(
-            input.SessionFormIdentifier,
-            input.MasterRowId,
-            entityData,
-            query
+            sessionFormIdentifier: input.SessionFormIdentifier,
+            masterRowId: input.MasterRowId,
+            entityData: entityData,
+            query: query
         );
     }
 
@@ -441,8 +482,10 @@ public abstract class AbstractController : ControllerBase
         IActionResult
     > ExecuteDataReaderGetPairs(DataStructureQuery dataStructureQuery)
     {
-        var linesAsPairs = dataService.ExecuteDataReaderReturnPairs(dataStructureQuery);
-        return Result.Success<IEnumerable<Dictionary<string, object>>, IActionResult>(linesAsPairs);
+        var linesAsPairs = dataService.ExecuteDataReaderReturnPairs(query: dataStructureQuery);
+        return Result.Success<IEnumerable<Dictionary<string, object>>, IActionResult>(
+            value: linesAsPairs
+        );
     }
 
     protected Result<IEnumerable<object>, IActionResult> ExecuteDataReader(
@@ -451,20 +494,26 @@ public abstract class AbstractController : ControllerBase
     )
     {
         Result<DataStructureMethod, IActionResult> method = FindItem<DataStructureMethod>(
-            dataStructureQuery.MethodId
+            id: dataStructureQuery.MethodId
         );
         if (method.IsSuccess)
         {
             var structureMethod = method.Value;
             if (structureMethod is DataStructureWorkflowMethod)
             {
-                var menuItem = FindItem<FormReferenceMenuItem>(methodId).Value;
-                IEnumerable<object> result = LoadData(menuItem, dataStructureQuery).ToList();
-                return Result.Success<IEnumerable<object>, IActionResult>(result);
+                var menuItem = FindItem<FormReferenceMenuItem>(id: methodId).Value;
+                IEnumerable<object> result = LoadData(
+                        menuItem: menuItem,
+                        dataStructureQuery: dataStructureQuery
+                    )
+                    .ToList();
+                return Result.Success<IEnumerable<object>, IActionResult>(value: result);
             }
         }
-        var linesAsArrays = dataService.ExecuteDataReader(dataStructureQuery).ToList();
-        return Result.Success<IEnumerable<object>, IActionResult>(linesAsArrays);
+        var linesAsArrays = dataService
+            .ExecuteDataReader(dataStructureQuery: dataStructureQuery)
+            .ToList();
+        return Result.Success<IEnumerable<object>, IActionResult>(value: linesAsArrays);
     }
 
     private IEnumerable<object> LoadData(
@@ -474,37 +523,39 @@ public abstract class AbstractController : ControllerBase
     {
         var datasetBuilder = new DataSetBuilder();
         var data = datasetBuilder.InitializeFullStructure(
-            menuItem.ListDataStructureId,
-            menuItem.DefaultSet
+            id: menuItem.ListDataStructureId,
+            defaultSet: menuItem.DefaultSet
         );
         var listData = datasetBuilder.InitializeListStructure(
-            data,
-            menuItem.ListEntity.Name,
-            false
+            data: data,
+            listEntity: menuItem.ListEntity.Name,
+            isDbSource: false
         );
         return TransformData(
-            datasetBuilder.LoadListData(
-                new List<string>(),
-                listData,
-                menuItem.ListEntity.Name,
-                menuItem.ListSortSet,
-                menuItem
+            dataSet: datasetBuilder.LoadListData(
+                dataListLoadedColumns: new List<string>(),
+                data: listData,
+                listEntity: menuItem.ListEntity.Name,
+                sortSet: menuItem.ListSortSet,
+                _menuItem: menuItem
             ),
-            dataStructureQuery
+            query: dataStructureQuery
         );
     }
 
     private IEnumerable<object> TransformData(DataSet dataSet, DataStructureQuery query)
     {
-        var table = dataSet.Tables[0];
+        var table = dataSet.Tables[index: 0];
         foreach (DataRow dataRow in table.Rows)
         {
             var values = new object[query.ColumnsInfo.Count];
             for (var i = 0; i < query.ColumnsInfo.Count; i++)
             {
-                values[i] = dataRow.Field<object>(query.ColumnsInfo.Columns[i].Name);
+                values[i] = dataRow.Field<object>(
+                    columnName: query.ColumnsInfo.Columns[index: i].Name
+                );
             }
-            yield return ProcessReaderOutput(values, query.ColumnsInfo);
+            yield return ProcessReaderOutput(values: values, columnsInfo: query.ColumnsInfo);
         }
     }
 
@@ -512,12 +563,12 @@ public abstract class AbstractController : ControllerBase
     {
         if (columnsInfo == null)
         {
-            throw new ArgumentNullException(nameof(columnsInfo));
+            throw new ArgumentNullException(paramName: nameof(columnsInfo));
         }
         var updatedValues = new List<object>();
         for (var i = 0; i < columnsInfo.Count; i++)
         {
-            updatedValues.Add(values[i]);
+            updatedValues.Add(item: values[i]);
         }
         return updatedValues;
     }
@@ -527,12 +578,12 @@ public abstract class AbstractController : ControllerBase
         WorkQueueSessionStore sessionStore
     )
     {
-        var customOrderings = GetOrderings(input.OrderingList);
+        var customOrderings = GetOrderings(orderingList: input.OrderingList);
         if (input.RowOffset != 0 && customOrderings.IsEmpty)
         {
             return Result.Failure<DataStructureQuery, IActionResult>(
-                BadRequest(
-                    $"Ordering must be specified if \"{nameof(input.RowOffset)}\" is specified"
+                error: BadRequest(
+                    error: $"Ordering must be specified if \"{nameof(input.RowOffset)}\" is specified"
                 )
             );
         }
@@ -548,8 +599,8 @@ public abstract class AbstractController : ControllerBase
             RowLimit = input.RowLimit,
             RowOffset = input.RowOffset,
             ColumnsInfo = new ColumnsInfo(
-                input
-                    .ColumnNames.Select(colName =>
+                columns: input
+                    .ColumnNames.Select(selector: colName =>
                     {
                         return new ColumnData(
                             name: colName,
@@ -570,16 +621,28 @@ public abstract class AbstractController : ControllerBase
         {
             foreach (var pair in input.Parameters)
             {
-                query.Parameters.Add(new QueryParameter(pair.Key, pair.Value));
+                query.Parameters.Add(
+                    value: new QueryParameter(_parameterName: pair.Key, value: pair.Value)
+                );
             }
         }
-        var parameters = sessionObjects.UIService.GetParameters(sessionStore.Id);
+        var parameters = sessionObjects.UIService.GetParameters(
+            sessionFormIdentifier: sessionStore.Id
+        );
         foreach (var key in parameters.Keys)
         {
-            query.Parameters.Add(new QueryParameter(key.ToString(), parameters[key]));
+            query.Parameters.Add(
+                value: new QueryParameter(
+                    _parameterName: key.ToString(),
+                    value: parameters[key: key]
+                )
+            );
         }
         query.Parameters.Add(
-            new QueryParameter("WorkQueueEntry_parWorkQueueId", sessionStore.Request.ObjectId)
+            value: new QueryParameter(
+                _parameterName: "WorkQueueEntry_parWorkQueueId",
+                value: sessionStore.Request.ObjectId
+            )
         );
         return query;
     }

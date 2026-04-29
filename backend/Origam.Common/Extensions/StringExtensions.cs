@@ -33,21 +33,23 @@ namespace Origam.Extensions;
 
 public static class StringExtensions
 {
-    private static readonly Graphics graphics = Graphics.FromImage(new Bitmap(1, 1));
+    private static readonly Graphics graphics = Graphics.FromImage(
+        image: new Bitmap(width: 1, height: 1)
+    );
 
     public static int Width(this string text, Font font)
     {
-        return (int)graphics.MeasureString(text, font).Width;
+        return (int)graphics.MeasureString(text: text, font: font).Width;
     }
 
     public static int Height(this string text, Font font)
     {
-        return (int)graphics.MeasureString(text, font).Height;
+        return (int)graphics.MeasureString(text: text, font: font).Height;
     }
 
     public static string Wrap(this String text, int widthInPixels, Font font)
     {
-        var unwrapedTextWidth = text.Width(font);
+        var unwrapedTextWidth = text.Width(font: font);
         if (unwrapedTextWidth > widthInPixels)
         {
             var indexAtButtonEdge = WidthToIndex(
@@ -55,8 +57,14 @@ public static class StringExtensions
                 targetPosition: widthInPixels,
                 font: font
             );
-            var indexOfNearestSpace = GetIndexOfNearestSpace(text, indexAtButtonEdge);
-            var wrappedText = text.Insert(indexOfNearestSpace, Environment.NewLine);
+            var indexOfNearestSpace = GetIndexOfNearestSpace(
+                text: text,
+                pivotIndex: indexAtButtonEdge
+            );
+            var wrappedText = text.Insert(
+                startIndex: indexOfNearestSpace,
+                value: Environment.NewLine
+            );
             return wrappedText;
         }
         return text;
@@ -68,7 +76,10 @@ public static class StringExtensions
         int i = indexEstimation;
         for (int n = 0; n < text.Length; n++)
         {
-            var position = (int)graphics.MeasureString(text.Substring(0, i), font).Width;
+            var position = (int)
+                graphics
+                    .MeasureString(text: text.Substring(startIndex: 0, length: i), font: font)
+                    .Width;
             var error = targetPosition - position;
             if (error < 5)
             {
@@ -93,20 +104,20 @@ public static class StringExtensions
                 return 0;
             }
         }
-        throw new Exception("Could not convert pixels to index in suplied string.");
+        throw new Exception(message: "Could not convert pixels to index in suplied string.");
     }
 
     private static int GetIndexOfNearestSpace(string text, int pivotIndex)
     {
-        var canBeSplit = text.Contains(' ');
+        var canBeSplit = text.Contains(value: ' ');
         if (!canBeSplit)
         {
             return text.Length;
         }
 
-        var spaceIndices = FindAllSpaceIndices(text);
+        var spaceIndices = FindAllSpaceIndices(text: text);
         return spaceIndices
-            .OrderBy(spaceIndex => Math.Abs(pivotIndex - spaceIndex))
+            .OrderBy(keySelector: spaceIndex => Math.Abs(value: pivotIndex - spaceIndex))
             .FirstOrDefault();
     }
 
@@ -115,9 +126,9 @@ public static class StringExtensions
         var indicesOfSpaces = new List<int>();
         for (int i = 0; i < text.Length; i++)
         {
-            if (text[i] == ' ')
+            if (text[index: i] == ' ')
             {
-                indicesOfSpaces.Add(i);
+                indicesOfSpaces.Add(item: i);
             }
         }
         return indicesOfSpaces;
@@ -129,21 +140,25 @@ public static class StringExtensions
         {
             case null:
             {
-                throw new ArgumentNullException(nameof(input));
+                throw new ArgumentNullException(paramName: nameof(input));
             }
             case "":
             {
-                throw new ArgumentException($"{nameof(input)} cannot be empty", nameof(input));
+                throw new ArgumentException(
+                    message: $"{nameof(input)} cannot be empty",
+                    paramName: nameof(input)
+                );
             }
             default:
             {
-                return input.Substring(0, 1).ToUpper() + input.Substring(1).ToLower();
+                return input.Substring(startIndex: 0, length: 1).ToUpper()
+                    + input.Substring(startIndex: 1).ToLower();
             }
         }
     }
 
     public static string[] Split(this string str, string splitWith) =>
-        str.Split(new[] { splitWith }, StringSplitOptions.None);
+        str.Split(separator: new[] { splitWith }, options: StringSplitOptions.None);
 
     public static string ReplaceInvalidFileCharacters(
         this string fileNameCandidate,
@@ -151,22 +166,24 @@ public static class StringExtensions
     )
     {
         string regex = String.Format(
-            "[{0}]",
-            Regex.Escape(new string(Path.GetInvalidFileNameChars()))
+            format: "[{0}]",
+            arg0: Regex.Escape(str: new string(value: Path.GetInvalidFileNameChars()))
         );
         Regex removeInvalidChars = new Regex(
-            regex,
-            RegexOptions.Singleline | RegexOptions.Compiled | RegexOptions.CultureInvariant
+            pattern: regex,
+            options: RegexOptions.Singleline | RegexOptions.Compiled | RegexOptions.CultureInvariant
         );
-        return removeInvalidChars.Replace(fileNameCandidate, replaceWith);
+        return removeInvalidChars.Replace(input: fileNameCandidate, replacement: replaceWith);
     }
 
     public static string GetBase64Hash(this string str)
     {
-        byte[] bytes = Encoding.UTF8.GetBytes(str);
+        byte[] bytes = Encoding.UTF8.GetBytes(s: str);
         using (MD5 md5 = MD5.Create())
         {
-            return Convert.ToBase64String(md5.ComputeHash(new MemoryStream(bytes)));
+            return Convert.ToBase64String(
+                inArray: md5.ComputeHash(inputStream: new MemoryStream(buffer: bytes))
+            );
         }
     }
 
@@ -176,8 +193,13 @@ public static class StringExtensions
             .GetExecutingAssembly()
             .GetCustomAttribute<AssemblyFileVersionAttribute>()
             .Version;
-        Console.WriteLine(string.Format("Current version is {0}", currentVersion));
-        if (!currentVersion.StartsWith("1.0.0.0") && !currentVersion.StartsWith("0.0.0.0"))
+        Console.WriteLine(
+            value: string.Format(format: "Current version is {0}", arg0: currentVersion)
+        );
+        if (
+            !currentVersion.StartsWith(value: "1.0.0.0")
+            && !currentVersion.StartsWith(value: "0.0.0.0")
+        )
         {
             tag = currentVersion;
         }
@@ -192,7 +214,7 @@ public static class StringExtensions
         }
         if (maxLength < 0)
         {
-            return input.Truncate(0);
+            return input.Truncate(maxLength: 0);
         }
         if (maxLength == 0)
         {
@@ -202,6 +224,6 @@ public static class StringExtensions
         {
             return input;
         }
-        return input.Substring(0, maxLength);
+        return input.Substring(startIndex: 0, length: maxLength);
     }
 }

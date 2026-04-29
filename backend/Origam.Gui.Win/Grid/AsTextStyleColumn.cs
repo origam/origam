@@ -70,26 +70,37 @@ public class AsTextBoxStyleColumn : DataGridTextBoxColumn
     {
         Brush myBackBrush = backBrush;
         Brush myForeBrush = foreBrush;
-        EntityFormatting formatting = DataGridColumnStyleHelper.Formatting(this, source, rowNum);
+        EntityFormatting formatting = DataGridColumnStyleHelper.Formatting(
+            columnStyle: this,
+            source: source,
+            rowNum: rowNum
+        );
         if (formatting != null)
         {
             if (!formatting.UseDefaultBackColor)
             {
-                myBackBrush = new SolidBrush(formatting.BackColor);
+                myBackBrush = new SolidBrush(color: formatting.BackColor);
             }
 
             if (!formatting.UseDefaultForeColor)
             {
-                myForeBrush = new SolidBrush(formatting.ForeColor);
+                myForeBrush = new SolidBrush(color: formatting.ForeColor);
             }
         }
         try
         {
-            string text = this.GetText(this.GetColumnValueAtRow(source, rowNum));
+            string text = this.GetText(
+                value: this.GetColumnValueAtRow(source: source, rowNum: rowNum)
+            );
             RuleEngine ruleEngine = GetRuleEngine();
             if (ruleEngine != null)
             {
-                if (IsReadDenied(((DataView)source.List)[rowNum].Row, ruleEngine))
+                if (
+                    IsReadDenied(
+                        row: ((DataView)source.List)[recordIndex: rowNum].Row,
+                        ruleEngine: ruleEngine
+                    )
+                )
                 {
                     text = "";
                 }
@@ -109,15 +120,15 @@ public class AsTextBoxStyleColumn : DataGridTextBoxColumn
                             : StringAlignment.Far
                     );
             //format.FormatFlags |= StringFormatFlags.NoWrap;
-            g.FillRectangle(myBackBrush, rect);
-            rect.Offset(0, 2 * 1);
+            g.FillRectangle(brush: myBackBrush, rect: rect);
+            rect.Offset(x: 0, y: 2 * 1);
             rect.Height -= 2 * 1;
             g.DrawString(
-                (text.Length > 100000 ? text.Substring(0, 100000) : text),
-                this.DataGridTableStyle.DataGrid.Font,
-                myForeBrush,
-                rect,
-                format
+                s: (text.Length > 100000 ? text.Substring(startIndex: 0, length: 100000) : text),
+                font: this.DataGridTableStyle.DataGrid.Font,
+                brush: myForeBrush,
+                layoutRectangle: rect,
+                format: format
             );
             format.Dispose();
         }
@@ -138,7 +149,10 @@ public class AsTextBoxStyleColumn : DataGridTextBoxColumn
         {
             try
             {
-                return ((IFormattable)value).ToString(this.Format, this.FormatInfo);
+                return ((IFormattable)value).ToString(
+                    format: this.Format,
+                    formatProvider: this.FormatInfo
+                );
             }
             catch (Exception)
             {
@@ -148,20 +162,22 @@ public class AsTextBoxStyleColumn : DataGridTextBoxColumn
         if (
             (
                 System.ComponentModel.TypeDescriptor.GetConverter(
-                    this.PropertyDescriptor.PropertyType
+                    type: this.PropertyDescriptor.PropertyType
                 ) != null
             )
             && System
-                .ComponentModel.TypeDescriptor.GetConverter(this.PropertyDescriptor.PropertyType)
-                .CanConvertTo(typeof(string))
+                .ComponentModel.TypeDescriptor.GetConverter(
+                    type: this.PropertyDescriptor.PropertyType
+                )
+                .CanConvertTo(destinationType: typeof(string))
         )
         {
             return (string)
                 System
                     .ComponentModel.TypeDescriptor.GetConverter(
-                        this.PropertyDescriptor.PropertyType
+                        type: this.PropertyDescriptor.PropertyType
                     )
-                    .ConvertTo(value, typeof(string));
+                    .ConvertTo(value: value, destinationType: typeof(string));
         }
         Label_0084:
         if (value == null)
@@ -187,7 +203,7 @@ public class AsTextBoxStyleColumn : DataGridTextBoxColumn
             return;
         }
 
-        base.Abort(rowNum);
+        base.Abort(rowNum: rowNum);
     }
 
     protected override void Edit(
@@ -206,15 +222,20 @@ public class AsTextBoxStyleColumn : DataGridTextBoxColumn
                 RuleEngine ruleEngine = GetRuleEngine();
                 if (ruleEngine != null)
                 {
-                    if (IsReadDenied((source.Current as DataRowView).Row, ruleEngine))
+                    if (
+                        IsReadDenied(
+                            row: (source.Current as DataRowView).Row,
+                            ruleEngine: ruleEngine
+                        )
+                    )
                     {
                         this.AsTextBox.Bounds = Rectangle.Empty;
                         return;
                     }
                     AsTextBox.ReadOnly = !ruleEngine.EvaluateRowLevelSecurityState(
-                        (source.Current as DataRowView).Row,
-                        this.MappingName,
-                        CredentialType.Update
+                        row: (source.Current as DataRowView).Row,
+                        field: this.MappingName,
+                        type: CredentialType.Update
                     );
                 }
             }
@@ -223,13 +244,27 @@ public class AsTextBoxStyleColumn : DataGridTextBoxColumn
                 AsTextBox.ReadOnly = true;
             }
             //WORKAROUND: bug in datagrid - if there is a calculated column, the textbox hangs in the grid after changing the row
-            if (((DataView)source.List).Table.Columns[this.MappingName].ReadOnly)
+            if (((DataView)source.List).Table.Columns[name: this.MappingName].ReadOnly)
             {
-                base.Edit(source, rowNum, bounds, readOnly, instantText, cellIsVisible);
+                base.Edit(
+                    source: source,
+                    rowNum: rowNum,
+                    bounds: bounds,
+                    readOnly: readOnly,
+                    displayText: instantText,
+                    cellIsVisible: cellIsVisible
+                );
                 return;
             }
             this.AsTextBox.Enabled = true;
-            base.Edit(source, rowNum, bounds, readOnly, instantText, cellIsVisible);
+            base.Edit(
+                source: source,
+                rowNum: rowNum,
+                bounds: bounds,
+                readOnly: readOnly,
+                displayText: instantText,
+                cellIsVisible: cellIsVisible
+            );
             AsTextBox.Parent = this.TextBox.Parent;
             AsTextBox.Location = bounds.Location;
 
@@ -238,10 +273,10 @@ public class AsTextBoxStyleColumn : DataGridTextBoxColumn
                     ? AsTextBox.PreferredHeight
                     : bounds.Height
             );
-            AsTextBox.Size = new Size(this.TextBox.Size.Width, height);
+            AsTextBox.Size = new Size(width: this.TextBox.Size.Width, height: height);
 
             //AsTextBox.Value = this.TextBox.Text;
-            AsTextBox.Value = this.GetColumnValueAtRow(source, rowNum);
+            AsTextBox.Value = this.GetColumnValueAtRow(source: source, rowNum: rowNum);
 
             AsTextBox.Visible = true;
             AsTextBox.BringToFront();
@@ -256,7 +291,7 @@ public class AsTextBoxStyleColumn : DataGridTextBoxColumn
         }
         if (AsTextBox.Visible)
         {
-            DataGridTableStyle.DataGrid.Invalidate(bounds);
+            DataGridTableStyle.DataGrid.Invalidate(rc: bounds);
         }
     }
 
@@ -271,9 +306,9 @@ public class AsTextBoxStyleColumn : DataGridTextBoxColumn
     private bool IsReadDenied(DataRow row, RuleEngine ruleEngine)
     {
         return !ruleEngine.EvaluateRowLevelSecurityState(
-            row,
-            this.MappingName,
-            CredentialType.Read
+            row: row,
+            field: this.MappingName,
+            type: CredentialType.Read
         );
     }
 
@@ -286,19 +321,22 @@ public class AsTextBoxStyleColumn : DataGridTextBoxColumn
             try
             {
                 object val = (AsTextBox.Text == "" ? DBNull.Value : AsTextBox.Value);
-                SetColumnValueAtRow(dataSource, rowNum, val);
+                SetColumnValueAtRow(source: dataSource, rowNum: rowNum, value: val);
                 // force form items to reread data values to prevent loss of data
-                DataBindingTools.UpdateBindedFormComponent(dataSource.Bindings, MappingName);
+                DataBindingTools.UpdateBindedFormComponent(
+                    bindings: dataSource.Bindings,
+                    mappingName: MappingName
+                );
             }
             catch
             {
-                Abort(rowNum);
+                Abort(rowNum: rowNum);
                 return false;
             }
         }
         else
         {
-            Abort(rowNum);
+            Abort(rowNum: rowNum);
             return true;
         }
         _isEditing = false;
@@ -325,7 +363,7 @@ public class AsTextBoxStyleColumn : DataGridTextBoxColumn
                 this.AsTextBox = null;
             }
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
 
     private void AsTextBox_ModifiedChanged(object sender, EventArgs e)
@@ -338,7 +376,7 @@ public class AsTextBoxStyleColumn : DataGridTextBoxColumn
         _isEditing = true;
         try
         {
-            ColumnStartedEditing((Control)sender);
+            ColumnStartedEditing(editingControl: (Control)sender);
         }
         catch
         {
@@ -393,7 +431,7 @@ public class AsTextBoxStyleColumn : DataGridTextBoxColumn
             _isEditing = true;
             try
             {
-                ColumnStartedEditing((Control)sender);
+                ColumnStartedEditing(editingControl: (Control)sender);
             }
             catch
             {
@@ -415,7 +453,7 @@ public class AsTextBoxStyleColumn : DataGridTextBoxColumn
             _isEditing = true;
             try
             {
-                ColumnStartedEditing((Control)sender);
+                ColumnStartedEditing(editingControl: (Control)sender);
             }
             catch
             {
@@ -453,6 +491,6 @@ internal class NoKeyUpTextBox : AsTextBox
                 return false;
             }
         }
-        return base.ProcessKeyMessage(ref m);
+        return base.ProcessKeyMessage(m: ref m);
     }
 }

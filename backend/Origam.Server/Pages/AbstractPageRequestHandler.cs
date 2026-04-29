@@ -67,22 +67,28 @@ public abstract class AbstractPageRequestHandler : IPageRequestHandler
     {
         Hashtable preprocessorParams = new Hashtable();
         XmlDocument capabDoc = new XmlDocument();
-        XmlElement capabilities = capabDoc.CreateElement("BrowserCapabilities");
-        capabDoc.AppendChild(capabilities);
+        XmlElement capabilities = capabDoc.CreateElement(name: "BrowserCapabilities");
+        capabDoc.AppendChild(newChild: capabilities);
         foreach (DictionaryEntry capEntry in request.BrowserCapabilities)
         {
-            XmlElement capability = capabDoc.CreateElement("Capability");
-            capability.SetAttribute("Name", capEntry.Key.ToString());
-            capability.SetAttribute("Value", Origam.XmlTools.ConvertToString(capEntry.Value));
-            capabilities.AppendChild(capability);
+            XmlElement capability = capabDoc.CreateElement(name: "Capability");
+            capability.SetAttribute(name: "Name", value: capEntry.Key.ToString());
+            capability.SetAttribute(
+                name: "Value",
+                value: Origam.XmlTools.ConvertToString(val: capEntry.Value)
+            );
+            capabilities.AppendChild(newChild: capability);
         }
-        preprocessorParams.Add("UserAgent", request.UserAgent);
+        preprocessorParams.Add(key: "UserAgent", value: request.UserAgent);
         if (request.UserLanguages != null)
         {
-            preprocessorParams.Add("UserLanguages", string.Join(";", request.UserLanguages));
+            preprocessorParams.Add(
+                key: "UserLanguages",
+                value: string.Join(separator: ";", values: request.UserLanguages)
+            );
         }
-        preprocessorParams.Add("BrowserCapabilities", capabilities);
-        preprocessorParams.Add("HttpMethod", request.HttpMethod);
+        preprocessorParams.Add(key: "BrowserCapabilities", value: capabilities);
+        preprocessorParams.Add(key: "HttpMethod", value: request.HttpMethod);
         return preprocessorParams;
     }
 
@@ -96,14 +102,14 @@ public abstract class AbstractPageRequestHandler : IPageRequestHandler
         if (validation != null)
         {
             RuleExceptionDataCollection result = ruleEngine.EvaluateEndRule(
-                validation,
-                data,
-                transformParams
+                rule: validation,
+                data: data,
+                parameters: transformParams
             );
             // if there are some exceptions, we actually throw them
             if (result != null && result.Count != 0)
             {
-                throw new RuleException(result);
+                throw new RuleException(result: result);
             }
         }
     }

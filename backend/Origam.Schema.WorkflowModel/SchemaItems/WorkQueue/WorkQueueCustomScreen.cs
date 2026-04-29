@@ -29,9 +29,13 @@ using Origam.Schema.GuiModel;
 
 namespace Origam.Schema.WorkflowModel;
 
-[SchemaItemDescription("Custom Screen", "Custom Screens", "icon_screen.png")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(
+    name: "Custom Screen",
+    folderName: "Custom Screens",
+    iconName: "icon_screen.png"
+)]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class WorkQueueCustomScreen : AbstractSchemaItem
 {
     public const string CategoryConst = "WorkQueueCustomScreen";
@@ -41,58 +45,58 @@ public class WorkQueueCustomScreen : AbstractSchemaItem
     public WorkQueueCustomScreen() { }
 
     public WorkQueueCustomScreen(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public WorkQueueCustomScreen(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     public Guid ScreenId;
 
-    [Category("Custom Work Queue Screen")]
-    [TypeConverter(typeof(FormControlSetConverter))]
+    [Category(category: "Custom Work Queue Screen")]
+    [TypeConverter(type: typeof(FormControlSetConverter))]
     [NotNullModelElementRule]
-    [XmlReference("screen", "ScreenId")]
+    [XmlReference(attributeName: "screen", idField: "ScreenId")]
     public FormControlSet Screen
     {
         get =>
             (FormControlSet)
                 PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(ScreenId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: ScreenId)
                 );
         set
         {
-            if ((value == null) || !ScreenId.Equals((Guid)value.PrimaryKey["Id"]))
+            if ((value == null) || !ScreenId.Equals(g: (Guid)value.PrimaryKey[key: "Id"]))
             {
                 Method = null;
             }
-            ScreenId = (value == null) ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+            ScreenId = (value == null) ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"];
         }
     }
     public Guid MethodId;
 
-    [Category("Custom Work Queue Screen")]
-    [TypeConverter(typeof(WorkQueueCustomScreenMethodConverter))]
-    [XmlReference("method", "MethodId")]
+    [Category(category: "Custom Work Queue Screen")]
+    [TypeConverter(type: typeof(WorkQueueCustomScreenMethodConverter))]
+    [XmlReference(attributeName: "method", idField: "MethodId")]
     public DataStructureMethod Method
     {
         get =>
             (DataStructureMethod)
                 PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(MethodId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: MethodId)
                 );
-        set => MethodId = (value == null) ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+        set => MethodId = (value == null) ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"];
     }
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(Screen);
+        dependencies.Add(item: Screen);
         if (Method != null)
         {
-            dependencies.Add(Method);
+            dependencies.Add(item: Method);
         }
-        base.GetExtraDependencies(dependencies);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 }
 
@@ -117,21 +121,22 @@ class WorkQueueCustomScreenMethodConverter : TypeConverter
         List<DataStructureMethod> methods = currentItem?.Screen?.DataStructure?.Methods;
         if (methods == null)
         {
-            return new StandardValuesCollection(new List<DataStructureMethod>());
+            return new StandardValuesCollection(values: new List<DataStructureMethod>());
         }
-        var output = new List<DataStructureMethod>(methods.Count);
+        var output = new List<DataStructureMethod>(capacity: methods.Count);
         foreach (DataStructureMethod method in methods)
         {
-            output.Add(method);
+            output.Add(item: method);
         }
-        output.Add(null);
+        output.Add(item: null);
         output.Sort();
-        return new StandardValuesCollection(output);
+        return new StandardValuesCollection(values: output);
     }
 
     public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
     {
-        return (sourceType == typeof(string)) || base.CanConvertFrom(context, sourceType);
+        return (sourceType == typeof(string))
+            || base.CanConvertFrom(context: context, sourceType: sourceType);
     }
 
     public override object ConvertFrom(
@@ -142,7 +147,7 @@ class WorkQueueCustomScreenMethodConverter : TypeConverter
     {
         if (value?.GetType() != typeof(string))
         {
-            return base.ConvertFrom(context, culture, value);
+            return base.ConvertFrom(context: context, culture: culture, value: value);
         }
         var currentItem = context.Instance as WorkQueueCustomScreen;
         List<DataStructureMethod> methods = currentItem?.Screen.DataStructure.Methods;

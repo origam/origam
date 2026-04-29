@@ -37,7 +37,7 @@ public class NameCreationServiceImpl : INameCreationService
     {
         if (host == null)
         {
-            throw new ArgumentException("designerHost");
+            throw new ArgumentException(message: "designerHost");
         }
         designerHost = host;
     }
@@ -53,23 +53,23 @@ public class NameCreationServiceImpl : INameCreationService
     {
         if (container == null)
         {
-            throw new ArgumentException("container");
+            throw new ArgumentException(message: "container");
         }
         if (dataType == null)
         {
-            throw new ArgumentException("dataType");
+            throw new ArgumentException(message: "dataType");
         }
         // look to see if the container already has this type
         // of component, if it does, then iterate until you
         // find a unique name
         int count = 1;
         string compName = dataType.Name + count.ToString();
-        if (container.Components[compName] != null)
+        if (container.Components[name: compName] != null)
         {
             for (int i = 1; i < container.Components.Count; i++)
             {
                 compName = dataType.Name + (i + 1).ToString();
-                if (container.Components[compName] == null)
+                if (container.Components[name: compName] == null)
                 {
                     break;
                 }
@@ -80,7 +80,7 @@ public class NameCreationServiceImpl : INameCreationService
 
     public bool IsValidName(string name)
     {
-        ValidateName(name);
+        ValidateName(name: name);
         return true;
     }
 
@@ -90,7 +90,7 @@ public class NameCreationServiceImpl : INameCreationService
         // make sure that the name is not used already
         if (designerHost.Container == null)
         {
-            throw new Exception("Null container.");
+            throw new Exception(message: "Null container.");
         }
         // if we have some components
         if (
@@ -100,9 +100,9 @@ public class NameCreationServiceImpl : INameCreationService
         {
             foreach (IComponent comp in designerHost.Container.Components)
             {
-                if (string.Compare(name, comp.Site.Name) == 0)
+                if (string.Compare(strA: name, strB: comp.Site.Name) == 0)
                 {
-                    throw new Exception("Name alreay in use.");
+                    throw new Exception(message: "Name alreay in use.");
                 }
             }
         }

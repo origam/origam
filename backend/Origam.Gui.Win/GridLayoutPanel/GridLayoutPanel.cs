@@ -26,7 +26,7 @@ namespace Origam.Gui.Win;
 /// <summary>
 /// Summary description for GridLayoutPanel.
 /// </summary>
-[Designer(typeof(GridLayoutPanelDesigner))]
+[Designer(designerType: typeof(GridLayoutPanelDesigner))]
 public class GridLayoutPanel : AsTabControl
 {
     public GridLayoutPanel()

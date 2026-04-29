@@ -27,7 +27,7 @@ namespace Origam.Workbench.Editors;
 class UiActionEditor : PropertyGridEditor
 {
     public UiActionEditor(bool closeOnLinkClick)
-        : base(closeOnLinkClick) { }
+        : base(closeOnLinkClick: closeOnLinkClick) { }
 
     public override List<ToolStrip> GetToolStrips(int maxWidth = -1)
     {
@@ -36,8 +36,12 @@ class UiActionEditor : PropertyGridEditor
             return new List<ToolStrip>();
         }
 
-        var actions = ActionsBuilder.BuildSubmenu(Content);
-        var actionToolStrip = MakeLabeledToolStrip(actions, "Actions", maxWidth / 2);
+        var actions = ActionsBuilder.BuildSubmenu(owner: Content);
+        var actionToolStrip = MakeLabeledToolStrip(
+            items: actions,
+            toolStripName: "Actions",
+            maxWidth: maxWidth / 2
+        );
         return new List<ToolStrip> { actionToolStrip };
     }
 }

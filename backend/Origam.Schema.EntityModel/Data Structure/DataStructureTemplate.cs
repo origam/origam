@@ -31,8 +31,8 @@ namespace Origam.Schema.EntityModel;
 /// <summary>
 /// Summary description for DataStructureTemplate.
 /// </summary>
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public abstract class DataStructureTemplate : AbstractSchemaItem
 {
     public const string CategoryConst = "DataStructureTemplate";
@@ -41,18 +41,18 @@ public abstract class DataStructureTemplate : AbstractSchemaItem
         : base() { }
 
     public DataStructureTemplate(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public DataStructureTemplate(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Properties
     public Guid DataStructureEntityId;
 
-    [TypeConverter(typeof(DataQueryEntityConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
+    [TypeConverter(type: typeof(DataQueryEntityConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
     [NotNullModelElementRuleAttribute()]
-    [XmlReference("entity", "DataStructureEntityId")]
+    [XmlReference(attributeName: "entity", idField: "DataStructureEntityId")]
     public DataStructureEntity Entity
     {
         get
@@ -60,7 +60,10 @@ public abstract class DataStructureTemplate : AbstractSchemaItem
             ModelElementKey key = new ModelElementKey();
             key.Id = this.DataStructureEntityId;
             return (DataStructureEntity)
-                this.PersistenceProvider.RetrieveInstance(typeof(DataStructureEntity), key);
+                this.PersistenceProvider.RetrieveInstance(
+                    type: typeof(DataStructureEntity),
+                    primaryKey: key
+                );
         }
         set
         {
@@ -70,7 +73,7 @@ public abstract class DataStructureTemplate : AbstractSchemaItem
             }
             else
             {
-                this.DataStructureEntityId = (Guid)value.PrimaryKey["Id"];
+                this.DataStructureEntityId = (Guid)value.PrimaryKey[key: "Id"];
             }
         }
     }
@@ -87,8 +90,8 @@ public abstract class DataStructureTemplate : AbstractSchemaItem
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(this.Entity);
-        base.GetExtraDependencies(dependencies);
+        dependencies.Add(item: this.Entity);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override void UpdateReferences()
@@ -97,7 +100,7 @@ public abstract class DataStructureTemplate : AbstractSchemaItem
         {
             if (item.OldPrimaryKey != null)
             {
-                if (item.OldPrimaryKey.Equals(this.Entity.PrimaryKey))
+                if (item.OldPrimaryKey.Equals(obj: this.Entity.PrimaryKey))
                 {
                     this.Entity = item as DataStructureEntity;
                     break;

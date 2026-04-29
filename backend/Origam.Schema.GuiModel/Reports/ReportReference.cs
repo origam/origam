@@ -31,11 +31,11 @@ namespace Origam.Schema.GuiModel;
 /// <summary>
 /// Summary description for RuleReference.
 /// </summary>
-[SchemaItemDescription("Report Reference", "icon_report-reference.png")]
-[HelpTopic("Report+Reference")]
-[DefaultProperty("Report")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Report Reference", iconName: "icon_report-reference.png")]
+[HelpTopic(topic: "Report+Reference")]
+[DefaultProperty(name: "Report")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class ReportReference : AbstractSchemaItem
 {
     public const string CategoryConst = "ReportReference";
@@ -44,10 +44,10 @@ public class ReportReference : AbstractSchemaItem
         : base() { }
 
     public ReportReference(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public ReportReference(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Overriden AbstractDataEntityColumn Members
 
@@ -63,14 +63,14 @@ public class ReportReference : AbstractSchemaItem
     {
         if (this.Report != null)
         {
-            base.GetParameterReferences(Report, list);
+            base.GetParameterReferences(parentItem: Report, list: list);
         }
     }
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(this.Report);
-        base.GetExtraDependencies(dependencies);
+        dependencies.Add(item: this.Report);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override ISchemaItemCollection ChildItems
@@ -81,22 +81,25 @@ public class ReportReference : AbstractSchemaItem
     #region Properties
     public Guid ReportId;
 
-    [Category("Reference")]
-    [TypeConverter(typeof(ReportConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [XmlReference("report", "ReportId")]
+    [Category(category: "Reference")]
+    [TypeConverter(type: typeof(ReportConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [XmlReference(attributeName: "report", idField: "ReportId")]
     public AbstractReport Report
     {
         get
         {
             ModelElementKey key = new ModelElementKey();
             key.Id = this.ReportId;
-            return (ISchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key)
-                as AbstractReport;
+            return (ISchemaItem)
+                    this.PersistenceProvider.RetrieveInstance(
+                        type: typeof(ISchemaItem),
+                        primaryKey: key
+                    ) as AbstractReport;
         }
         set
         {
-            this.ReportId = (Guid)value.PrimaryKey["Id"];
+            this.ReportId = (Guid)value.PrimaryKey[key: "Id"];
             //this.Name = this.Report.Name;
         }
     }

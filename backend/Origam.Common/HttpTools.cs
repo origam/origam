@@ -39,7 +39,7 @@ namespace Origam;
 public class HttpTools : IHttpTools
 {
     private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
-        System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType
+        type: System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType
     );
 
     public static HttpTools Instance { get; set; } = new();
@@ -55,11 +55,14 @@ public class HttpTools : IHttpTools
 
     private void FixCookies(HttpWebRequest request, HttpWebResponse response)
     {
-        if (response.Headers.Get("Set-Cookie") is string setCookieHeader)
+        if (response.Headers.Get(name: "Set-Cookie") is string setCookieHeader)
         {
-            List<string> singleCookies = SplitCookiesHeaderToSingleCookies(setCookieHeader);
-            string host = request.Host.Split(':')[0];
-            CookiesFromStrings(host, singleCookies).ForEach(cookie => response.Cookies.Add(cookie));
+            List<string> singleCookies = SplitCookiesHeaderToSingleCookies(
+                setCookieHeader: setCookieHeader
+            );
+            string host = request.Host.Split(separator: ':')[0];
+            CookiesFromStrings(host: host, singleCookies: singleCookies)
+                .ForEach(action: cookie => response.Cookies.Add(cookie: cookie));
         }
     }
 
@@ -68,13 +71,18 @@ public class HttpTools : IHttpTools
         List<Cookie> cookies = new List<Cookie>();
         foreach (string singleCookie in singleCookies)
         {
-            Match match = Regex.Match(singleCookie, @"(\S+?)=(.+?);");
+            Match match = Regex.Match(input: singleCookie, pattern: @"(\S+?)=(.+?);");
             if (match.Captures.Count == 0)
             {
                 continue;
             }
             cookies.Add(
-                new Cookie(match.Groups[1].ToString(), match.Groups[2].ToString(), "/", host)
+                item: new Cookie(
+                    name: match.Groups[groupnum: 1].ToString(),
+                    value: match.Groups[groupnum: 2].ToString(),
+                    path: "/",
+                    domain: host
+                )
             );
         }
         return cookies;
@@ -82,21 +90,23 @@ public class HttpTools : IHttpTools
 
     public List<string> SplitCookiesHeaderToSingleCookies(string setCookieHeader)
     {
-        string[] cookieSegments = setCookieHeader.Split(',');
+        string[] cookieSegments = setCookieHeader.Split(separator: ',');
         List<string> singleCookies = new List<string>();
         int i = 0;
         while (i < cookieSegments.Length)
         {
             bool containsExpiresParameter =
-                cookieSegments[i].IndexOf("expires=", StringComparison.OrdinalIgnoreCase) > 0;
+                cookieSegments[i]
+                    .IndexOf(value: "expires=", comparisonType: StringComparison.OrdinalIgnoreCase)
+                > 0;
             if (containsExpiresParameter)
             {
-                singleCookies.Add(cookieSegments[i] + "," + cookieSegments[i + 1]);
+                singleCookies.Add(item: cookieSegments[i] + "," + cookieSegments[i + 1]);
                 i++;
             }
             else
             {
-                singleCookies.Add(cookieSegments[i]);
+                singleCookies.Add(item: cookieSegments[i]);
             }
             i++;
         }
@@ -122,17 +132,19 @@ public class HttpTools : IHttpTools
                 value = entry.Value.ToString();
             }
             string replacement = "{" + key + "}";
-            if (url.IndexOf(replacement) > -1)
+            if (url.IndexOf(value: replacement) > -1)
             {
                 if (value == null)
                 {
-                    throw new Exception(ResourceUtils.GetString("UrlPartParameterNull"));
+                    throw new Exception(
+                        message: ResourceUtils.GetString(key: "UrlPartParameterNull")
+                    );
                 }
-                url = url.Replace(replacement, value);
+                url = url.Replace(oldValue: replacement, newValue: value);
             }
             else
             {
-                urlParameters.Add(key, value);
+                urlParameters.Add(key: key, value: value);
             }
         }
         var parameterBuilder = new StringBuilder();
@@ -143,22 +155,22 @@ public class HttpTools : IHttpTools
             var key = (string)entry.Key;
             var value = (string)entry.Value;
             string paramSign = isFirst ? "?" : "&";
-            parameterBuilder.Append(paramSign);
-            parameterBuilder.Append(MyUri.EscapeUriString(key));
+            parameterBuilder.Append(value: paramSign);
+            parameterBuilder.Append(value: MyUri.EscapeUriString(stringToEscape: key));
             if (value != null)
             {
-                parameterBuilder.Append("=");
-                parameterBuilder.Append(MyUri.EscapeUriString(value));
+                parameterBuilder.Append(value: "=");
+                parameterBuilder.Append(value: MyUri.EscapeUriString(stringToEscape: value));
             }
             isFirst = false;
         }
-        string result = isUrlEscaped ? url : MyUri.EscapeUriString(url);
+        string result = isUrlEscaped ? url : MyUri.EscapeUriString(stringToEscape: url);
         result += parameterBuilder.ToString();
-        if (!forceExternal || result.IndexOf(":") != -1)
+        if (!forceExternal || result.IndexOf(value: ":") != -1)
         {
             return result;
         }
-        if (string.IsNullOrEmpty(externalScheme))
+        if (string.IsNullOrEmpty(value: externalScheme))
         {
             externalScheme = "http";
         }
@@ -175,24 +187,27 @@ public class HttpTools : IHttpTools
     {
         try
         {
-            using WebResponse response = GetResponse(request);
+            using WebResponse response = GetResponse(request: request);
             if (response is not HttpWebResponse httpResponse)
             {
-                throw new Exception("WebResponse is not of HttpResponse type.");
+                throw new Exception(message: "WebResponse is not of HttpResponse type.");
             }
             return new HttpResult(
-                Content: ProcessReturnValue(request.ReturnAsStream, httpResponse),
+                Content: ProcessReturnValue(
+                    returnAsStream: request.ReturnAsStream,
+                    response: httpResponse
+                ),
                 StatusCode: (int)httpResponse.StatusCode,
                 StatusDescription: httpResponse.StatusDescription,
                 Headers: httpResponse.Headers.AllKeys.ToDictionary(
-                    key => key,
-                    key => httpResponse.Headers[key]
+                    keySelector: key => key,
+                    elementSelector: key => httpResponse.Headers[name: key]
                 )
             );
         }
         catch (WebException webException)
         {
-            return HandleWebException(request, webException);
+            return HandleWebException(request: request, webException: webException);
         }
     }
 
@@ -203,21 +218,27 @@ public class HttpTools : IHttpTools
             var info = "";
             if (webException.Response is HttpWebResponse httpResponse)
             {
-                info = ReadResponseTextRespectingContentEncoding(httpResponse);
+                info = ReadResponseTextRespectingContentEncoding(httpResponse: httpResponse);
             }
-            throw new Exception(webException.Message + Environment.NewLine + info, webException);
+            throw new Exception(
+                message: webException.Message + Environment.NewLine + info,
+                innerException: webException
+            );
         }
         else
         {
             if (webException.Response is HttpWebResponse httpResponse)
             {
                 return new HttpResult(
-                    Content: ProcessReturnValue(request.ReturnAsStream, httpResponse),
+                    Content: ProcessReturnValue(
+                        returnAsStream: request.ReturnAsStream,
+                        response: httpResponse
+                    ),
                     StatusCode: (int)httpResponse.StatusCode,
                     StatusDescription: httpResponse.StatusDescription,
                     Headers: httpResponse.Headers.AllKeys.ToDictionary(
-                        key => key,
-                        key => httpResponse.Headers[key]
+                        keySelector: key => key,
+                        elementSelector: key => httpResponse.Headers[name: key]
                     )
                 );
             }
@@ -234,15 +255,15 @@ public class HttpTools : IHttpTools
 
     private object ProcessReturnValue(bool returnAsStream, HttpWebResponse response)
     {
-        using Stream responseStream = StreamFromResponse(response);
+        using Stream responseStream = StreamFromResponse(response: response);
         if (returnAsStream)
         {
             return responseStream;
         }
         if (
-            response.ContentType.Equals("text/xml")
-            || response.ContentType.Equals("application/xml")
-            || response.ContentType.EndsWith("+xml")
+            response.ContentType.Equals(value: "text/xml")
+            || response.ContentType.Equals(value: "application/xml")
+            || response.ContentType.EndsWith(value: "+xml")
         )
         {
             // for xml we will ignore encoding set in the HTTP header
@@ -252,21 +273,21 @@ public class HttpTools : IHttpTools
             IXmlContainer container = new XmlContainer();
             if (response.ContentLength != 0)
             {
-                container.Xml.Load(responseStream);
+                container.Xml.Load(inStream: responseStream);
             }
             return container;
         }
-        if (response.ContentType.StartsWith("text/"))
+        if (response.ContentType.StartsWith(value: "text/"))
         {
             // result is text
-            return ReadResponseText(response, responseStream);
+            return ReadResponseText(httpResponse: response, responseStream: responseStream);
         }
         if (
-            response.ContentType.StartsWith("application/json")
-            || response.ContentType.EndsWith("+json")
+            response.ContentType.StartsWith(value: "application/json")
+            || response.ContentType.EndsWith(value: "+json")
         )
         {
-            string body = ReadResponseText(response, responseStream);
+            string body = ReadResponseText(httpResponse: response, responseStream: responseStream);
             XmlDocument xmlDocument;
             // deserialize from JSON to XML
             try
@@ -287,24 +308,30 @@ public class HttpTools : IHttpTools
                     encodeSpecialCharacters: true
                 );
             }
-            return new XmlContainer(xmlDocument);
+            return new XmlContainer(xmlDocument: xmlDocument);
         }
         // result is binary
-        return StreamTools.ReadToEnd(responseStream);
+        return StreamTools.ReadToEnd(input: responseStream);
     }
 
     private static Stream StreamFromResponse(HttpWebResponse response)
     {
-        var encodingString = string.IsNullOrEmpty(response.ContentEncoding)
+        var encodingString = string.IsNullOrEmpty(value: response.ContentEncoding)
             ? ""
             : response.ContentEncoding.ToLower();
-        if (encodingString.Contains("gzip"))
+        if (encodingString.Contains(value: "gzip"))
         {
-            return new GZipStream(response.GetResponseStream(), CompressionMode.Decompress);
+            return new GZipStream(
+                stream: response.GetResponseStream(),
+                mode: CompressionMode.Decompress
+            );
         }
-        if (encodingString.Contains("deflate"))
+        if (encodingString.Contains(value: "deflate"))
         {
-            return new DeflateStream(response.GetResponseStream(), CompressionMode.Decompress);
+            return new DeflateStream(
+                stream: response.GetResponseStream(),
+                mode: CompressionMode.Decompress
+            );
         }
         return response.GetResponseStream();
     }
@@ -315,15 +342,15 @@ public class HttpTools : IHttpTools
         {
             var providerContainer =
                 serviceProvider.GetService<ClientAuthenticationProviderContainer>();
-            providerContainer.TryAuthenticate(request.Url, request.Headers);
+            providerContainer.TryAuthenticate(url: request.Url, headers: request.Headers);
         }
         else
         {
             log.Warn(
-                "Request could not be authenticated because serviceProvider is null. This is expected if you send Http requests from the Architect."
+                message: "Request could not be authenticated because serviceProvider is null. This is expected if you send Http requests from the Architect."
             );
         }
-        var webRequest = WebRequest.Create(request.Url);
+        var webRequest = WebRequest.Create(requestUriString: request.Url);
         var httpWebRequest = webRequest as HttpWebRequest;
         if (request.Timeout != null)
         {
@@ -346,7 +373,7 @@ public class HttpTools : IHttpTools
                 httpWebRequest.CookieContainer = new CookieContainer();
                 foreach (Cookie cookie in request.Cookies)
                 {
-                    httpWebRequest.CookieContainer.Add(cookie);
+                    httpWebRequest.CookieContainer.Add(cookie: cookie);
                 }
             }
         }
@@ -358,14 +385,17 @@ public class HttpTools : IHttpTools
                 string value = (string)entry.Value;
                 if (
                     httpWebRequest != null
-                    && name.Equals("User-Agent", StringComparison.InvariantCultureIgnoreCase)
+                    && name.Equals(
+                        value: "User-Agent",
+                        comparisonType: StringComparison.InvariantCultureIgnoreCase
+                    )
                 )
                 {
                     httpWebRequest.UserAgent = value;
                 }
                 else
                 {
-                    httpWebRequest?.Headers.Add(name, value);
+                    httpWebRequest?.Headers.Add(name: name, value: value);
                 }
             }
         }
@@ -376,25 +406,25 @@ public class HttpTools : IHttpTools
         if (request.AuthenticationType != null)
         {
             var credentials = Convert.ToBase64String(
-                Encoding.ASCII.GetBytes(request.UserName + ":" + request.Password)
+                inArray: Encoding.ASCII.GetBytes(s: request.UserName + ":" + request.Password)
             );
-            webRequest.Headers[HttpRequestHeader.Authorization] =
+            webRequest.Headers[header: HttpRequestHeader.Authorization] =
                 $"{request.AuthenticationType} {credentials}";
         }
         if (request.Content != null)
         {
             webRequest.ContentType = request.ContentType;
             var encoding = new UTF8Encoding();
-            byte[] bytes = encoding.GetBytes(request.Content);
+            byte[] bytes = encoding.GetBytes(s: request.Content);
             webRequest.ContentLength = bytes.LongLength;
             Stream stream = webRequest.GetRequestStream();
-            StreamTools.Write(stream, bytes);
+            StreamTools.Write(output: stream, bytes: bytes);
             stream.Close();
         }
         WebResponse response = webRequest.GetResponse();
         if (httpWebRequest != null && response is HttpWebResponse httpWebResponse)
         {
-            FixCookies(httpWebRequest, httpWebResponse);
+            FixCookies(request: httpWebRequest, response: httpWebResponse);
         }
         return response;
     }
@@ -402,8 +432,8 @@ public class HttpTools : IHttpTools
     public string ReadResponseText(HttpWebResponse httpResponse, Stream responseStream)
     {
         using var streamReader = new StreamReader(
-            responseStream,
-            EncodingFromResponse(httpResponse)
+            stream: responseStream,
+            encoding: EncodingFromResponse(response: httpResponse)
         );
         return streamReader.ReadToEnd();
     }
@@ -417,36 +447,36 @@ public class HttpTools : IHttpTools
         string encoding = httpResponse.ContentEncoding.ToLower();
         using Stream responseStream = encoding switch
         {
-            not null when encoding.Contains("gzip") => new GZipStream(
-                httpResponse.GetResponseStream()!,
-                CompressionMode.Decompress
+            not null when encoding.Contains(value: "gzip") => new GZipStream(
+                stream: httpResponse.GetResponseStream()!,
+                mode: CompressionMode.Decompress
             ),
-            not null when encoding.Contains("deflate") => new DeflateStream(
-                httpResponse.GetResponseStream()!,
-                CompressionMode.Decompress
+            not null when encoding.Contains(value: "deflate") => new DeflateStream(
+                stream: httpResponse.GetResponseStream()!,
+                mode: CompressionMode.Decompress
             ),
             _ => httpResponse.GetResponseStream(),
         };
         using var streamReader = new StreamReader(
-            responseStream!,
-            EncodingFromResponse(httpResponse)
+            stream: responseStream!,
+            encoding: EncodingFromResponse(response: httpResponse)
         );
         return streamReader.ReadToEnd();
     }
 
     public Encoding EncodingFromResponse(HttpWebResponse response)
     {
-        if (!string.IsNullOrEmpty(response.CharacterSet))
+        if (!string.IsNullOrEmpty(value: response.CharacterSet))
         {
-            return Encoding.GetEncoding(response.CharacterSet);
+            return Encoding.GetEncoding(name: response.CharacterSet);
         }
-        string[] contentType = response.ContentType.Split(";".ToCharArray());
+        string[] contentType = response.ContentType.Split(separator: ";".ToCharArray());
         foreach (string contentTypePart in contentType)
         {
-            if (contentTypePart.Trim().ToLower().StartsWith("charset="))
+            if (contentTypePart.Trim().ToLower().StartsWith(value: "charset="))
             {
-                string[] charset = contentTypePart.Split("=".ToCharArray());
-                return Encoding.GetEncoding(charset[1]);
+                string[] charset = contentTypePart.Split(separator: "=".ToCharArray());
+                return Encoding.GetEncoding(name: charset[1]);
             }
         }
         return Encoding.UTF8;
@@ -454,7 +484,10 @@ public class HttpTools : IHttpTools
 
     public string GetMimeType(string fileName)
     {
-        new FileExtensionContentTypeProvider().TryGetContentType(fileName, out string contentType);
+        new FileExtensionContentTypeProvider().TryGetContentType(
+            subpath: fileName,
+            contentType: out string contentType
+        );
         return contentType ?? "application/unknown";
     }
 
@@ -463,8 +496,8 @@ public class HttpTools : IHttpTools
         var extensionMimeTypePair =
             new FileExtensionContentTypeProvider()
                 .Mappings.Cast<KeyValuePair<string, string>?>()
-                .FirstOrDefault(pair => pair.Value.Value == mimeType)
-            ?? new KeyValuePair<string, string>(string.Empty, "");
+                .FirstOrDefault(predicate: pair => pair.Value.Value == mimeType)
+            ?? new KeyValuePair<string, string>(key: string.Empty, value: "");
         return extensionMimeTypePair.Key;
     }
 
@@ -472,14 +505,16 @@ public class HttpTools : IHttpTools
     public string EscapeDataStringLong(string value)
     {
         int limit = 2000;
-        var stringBuilder = new StringBuilder(value.Length);
+        var stringBuilder = new StringBuilder(capacity: value.Length);
         int loops = value.Length / limit;
         for (int i = 0; i <= loops; i++)
         {
             stringBuilder.Append(
-                i < loops
-                    ? Uri.EscapeDataString(value.Substring(limit * i, limit))
-                    : Uri.EscapeDataString(value.Substring(limit * i))
+                value: i < loops
+                    ? Uri.EscapeDataString(
+                        stringToEscape: value.Substring(startIndex: limit * i, length: limit)
+                    )
+                    : Uri.EscapeDataString(stringToEscape: value.Substring(startIndex: limit * i))
             );
         }
         return stringBuilder.ToString();
@@ -497,15 +532,15 @@ public record HttpResult(
 public class MyUri : Uri
 {
     public MyUri(string url)
-        : base(url) { }
+        : base(uriString: url) { }
 
     public static new string EscapeUriString(string stringToEscape)
     {
-        return Uri.EscapeUriString(stringToEscape);
+        return Uri.EscapeUriString(stringToEscape: stringToEscape);
     }
 
     public static new string EscapeDataString(string stringToEscape)
     {
-        return Uri.EscapeDataString(stringToEscape);
+        return Uri.EscapeDataString(stringToEscape: stringToEscape);
     }
 }

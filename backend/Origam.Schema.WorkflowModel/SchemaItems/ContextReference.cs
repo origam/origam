@@ -32,11 +32,15 @@ namespace Origam.Schema.WorkflowModel;
 /// <summary>
 /// Summary description for ContextReference.
 /// </summary>
-[SchemaItemDescription("Context Store Reference", "Parameters", "context-store-reference.png")]
-[HelpTopic("Context+Store+Reference")]
-[DefaultProperty("ContextStore")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(
+    name: "Context Store Reference",
+    folderName: "Parameters",
+    iconName: "context-store-reference.png"
+)]
+[HelpTopic(topic: "Context+Store+Reference")]
+[DefaultProperty(name: "ContextStore")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class ContextReference : AbstractSchemaItem, IContextReference
 {
     public const string CategoryConst = "WorkflowContextReference";
@@ -45,10 +49,10 @@ public class ContextReference : AbstractSchemaItem, IContextReference
         : base() { }
 
     public ContextReference(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public ContextReference(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Overriden ISchemaItem Members
 
@@ -56,9 +60,13 @@ public class ContextReference : AbstractSchemaItem, IContextReference
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        XsltDependencyHelper.GetDependencies(this, dependencies, this.XPath);
-        dependencies.Add(this.ContextStore);
-        base.GetExtraDependencies(dependencies);
+        XsltDependencyHelper.GetDependencies(
+            item: this,
+            dependencies: dependencies,
+            text: this.XPath
+        );
+        dependencies.Add(item: this.ContextStore);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override void UpdateReferences()
@@ -67,7 +75,7 @@ public class ContextReference : AbstractSchemaItem, IContextReference
         {
             if (item.OldPrimaryKey != null)
             {
-                if (item.OldPrimaryKey.Equals(this.ContextStore.PrimaryKey))
+                if (item.OldPrimaryKey.Equals(obj: this.ContextStore.PrimaryKey))
                 {
                     this.ContextStore = item as IContextStore;
                     break;
@@ -83,10 +91,10 @@ public class ContextReference : AbstractSchemaItem, IContextReference
 
     public Guid ContextStoreId;
 
-    [TypeConverter(typeof(ContextStoreConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
+    [TypeConverter(type: typeof(ContextStoreConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
     [NotNullModelElementRule()]
-    [XmlReference("contextStore", "ContextStoreId")]
+    [XmlReference(attributeName: "contextStore", idField: "ContextStoreId")]
     public IContextStore ContextStore
     {
         get
@@ -94,7 +102,10 @@ public class ContextReference : AbstractSchemaItem, IContextReference
             ModelElementKey key = new ModelElementKey();
             key.Id = this.ContextStoreId;
             return (IContextStore)
-                this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
+                this.PersistenceProvider.RetrieveInstance(
+                    type: typeof(ISchemaItem),
+                    primaryKey: key
+                );
         }
         set
         {
@@ -105,7 +116,7 @@ public class ContextReference : AbstractSchemaItem, IContextReference
             }
             else
             {
-                this.ContextStoreId = (Guid)value.PrimaryKey["Id"];
+                this.ContextStoreId = (Guid)value.PrimaryKey[key: "Id"];
                 if (this.Name == "NewContextReference")
                 {
                     this.Name = this.ContextStore.Name;
@@ -115,15 +126,15 @@ public class ContextReference : AbstractSchemaItem, IContextReference
     }
 
     [NotNullModelElementRule()]
-    [DefaultValue("/")]
-    [XmlAttribute("xPath")]
+    [DefaultValue(value: "/")]
+    [XmlAttribute(attributeName: "xPath")]
     public string XPath { get; set; } = "/";
 
-    [DefaultValue(OrigamDataType.String)]
+    [DefaultValue(value: OrigamDataType.String)]
     [Description(
-        "Select a data type which will be used to convert a value to. Very handy to use e.g. when called service accepts an array."
+        description: "Select a data type which will be used to convert a value to. Very handy to use e.g. when called service accepts an array."
     )]
-    [XmlAttribute("castToDataType")]
+    [XmlAttribute(attributeName: "castToDataType")]
     public OrigamDataType CastToDataType { get; set; } = OrigamDataType.String;
     #endregion
 }

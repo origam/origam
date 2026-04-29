@@ -35,31 +35,31 @@ public abstract class AbstractWorkflowBlock : AbstractWorkflowStep, IWorkflowBlo
     }
 
     public AbstractWorkflowBlock(Guid schemaExtensionId)
-        : base(schemaExtensionId)
+        : base(schemaExtensionId: schemaExtensionId)
     {
         Init();
     }
 
     public AbstractWorkflowBlock(Key primaryKey)
-        : base(primaryKey)
+        : base(primaryKey: primaryKey)
     {
         Init();
     }
 
     private void Init()
     {
-        this.ChildItemTypes.Add(typeof(ServiceMethodCallTask));
-        this.ChildItemTypes.Add(typeof(UIFormTask));
-        this.ChildItemTypes.Add(typeof(WorkflowCallTask));
-        this.ChildItemTypes.Add(typeof(SetWorkflowPropertyTask));
-        this.ChildItemTypes.Add(typeof(UpdateContextTask));
-        this.ChildItemTypes.Add(typeof(AcceptContextStoreChangesTask));
-        this.ChildItemTypes.Add(typeof(TransactionWorkflowBlock));
-        this.ChildItemTypes.Add(typeof(ForeachWorkflowBlock));
-        this.ChildItemTypes.Add(typeof(LoopWorkflowBlock));
-        this.ChildItemTypes.Add(typeof(ContextStore));
-        this.ChildItemTypes.Add(typeof(CheckRuleStep));
-        this.ChildItemTypes.Add(typeof(WaitTask));
+        this.ChildItemTypes.Add(item: typeof(ServiceMethodCallTask));
+        this.ChildItemTypes.Add(item: typeof(UIFormTask));
+        this.ChildItemTypes.Add(item: typeof(WorkflowCallTask));
+        this.ChildItemTypes.Add(item: typeof(SetWorkflowPropertyTask));
+        this.ChildItemTypes.Add(item: typeof(UpdateContextTask));
+        this.ChildItemTypes.Add(item: typeof(AcceptContextStoreChangesTask));
+        this.ChildItemTypes.Add(item: typeof(TransactionWorkflowBlock));
+        this.ChildItemTypes.Add(item: typeof(ForeachWorkflowBlock));
+        this.ChildItemTypes.Add(item: typeof(LoopWorkflowBlock));
+        this.ChildItemTypes.Add(item: typeof(ContextStore));
+        this.ChildItemTypes.Add(item: typeof(CheckRuleStep));
+        this.ChildItemTypes.Add(item: typeof(WaitTask));
     }
 
     #region Overriden ISchemaItem Members

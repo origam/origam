@@ -40,7 +40,7 @@ public class WorkflowHelper
     )
     {
         // Initialize view for this workflow
-        WorkflowForm form = new WorkflowForm(host);
+        WorkflowForm form = new WorkflowForm(host: host);
         if (icon != null)
         {
             (form as Form).Icon = icon;
@@ -48,7 +48,7 @@ public class WorkflowHelper
         form.FormGenerator = new FormGenerator();
         form.TitleName = titleName;
         form.WorkflowId = workflowId;
-        WorkbenchSingleton.Workbench.ShowView(form);
+        WorkbenchSingleton.Workbench.ShowView(content: form);
         Application.DoEvents();
         return form;
     }

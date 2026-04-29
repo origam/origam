@@ -27,16 +27,16 @@ namespace Origam.Architect.Server.Controls;
 
 public class AsCheckBox : ControlBase, IAsControl
 {
-    [Category("(ORIGAM)")]
+    [Category(category: "(ORIGAM)")]
     [Description(
-        "Column Width (in pixels) to be used in grid-view. If the value is less than then zero, then the column is hidden by default. However, when it's enabled, the abs(configured value) is used."
+        description: "Column Width (in pixels) to be used in grid-view. If the value is less than then zero, then the column is hidden by default. However, when it's enabled, the abs(configured value) is used."
     )]
     public int GridColumnWidth { get; set; } = 100;
 
     public string Text { get; set; }
 
-    [Browsable(true)]
-    [Category("Behavior")]
+    [Browsable(browsable: true)]
+    [Category(category: "Behavior")]
     public bool ReadOnly { get; set; } = false;
 
     public Object Value { get; set; }

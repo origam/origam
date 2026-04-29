@@ -38,14 +38,17 @@ public class SetInheritanceOff : AbstractMenuCommand
         }
         set
         {
-            throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
+            throw new ArgumentException(
+                message: ResourceUtils.GetString(key: "ErrorSetProperty"),
+                paramName: "IsEnabled"
+            );
         }
     }
 
     public override void Run()
     {
         ISchemaItem item = Owner as ISchemaItem;
-        SetInheritance(item, false);
+        SetInheritance(item: item, value: false);
         item.ClearCacheOnPersist = false;
         item.Persist();
         item.ClearCacheOnPersist = true;
@@ -58,7 +61,7 @@ public class SetInheritanceOff : AbstractMenuCommand
         {
             if (child.DerivedFrom == null)
             {
-                SetInheritance(child, value);
+                SetInheritance(item: child, value: value);
             }
         }
     }

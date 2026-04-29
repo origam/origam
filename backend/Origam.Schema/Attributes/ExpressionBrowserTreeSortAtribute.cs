@@ -24,7 +24,7 @@ using System.Collections;
 
 namespace Origam.Schema.Attributes;
 
-[AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
+[AttributeUsage(validOn: AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
 public sealed class ExpressionBrowserTreeSortAtribute : Attribute
 {
     private readonly Type ttype;
@@ -36,6 +36,6 @@ public sealed class ExpressionBrowserTreeSortAtribute : Attribute
 
     public IComparer GetComparator()
     {
-        return Activator.CreateInstance(ttype) as IComparer;
+        return Activator.CreateInstance(type: ttype) as IComparer;
     }
 }

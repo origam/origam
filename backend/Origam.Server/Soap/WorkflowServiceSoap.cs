@@ -44,31 +44,31 @@ public class WorkflowServiceSoap : IWorkflowServiceSoap
 
     public Task<object> ExecuteWorkflow0Async(string workflowId)
     {
-        if (log.IsEnabled(LogLevel.Information))
+        if (log.IsEnabled(logLevel: LogLevel.Information))
         {
-            log.Log(LogLevel.Information, "ExecuteWorkflow0");
+            log.Log(logLevel: LogLevel.Information, message: "ExecuteWorkflow0");
         }
-        Guid guid = new Guid(workflowId);
-        object result = CoreServices.WorkflowService.ExecuteWorkflow(guid);
-        object diffGram = ToDiffGram(result, "ExecuteWorkflow0Result");
-        return Task.FromResult(diffGram);
+        Guid guid = new Guid(g: workflowId);
+        object result = CoreServices.WorkflowService.ExecuteWorkflow(workflowId: guid);
+        object diffGram = ToDiffGram(result: result, rootElementName: "ExecuteWorkflow0Result");
+        return Task.FromResult(result: diffGram);
     }
 
     public Task<object> ExecuteWorkflowAsync(string workflowId, Parameter[] parameters)
     {
-        if (log.IsEnabled(LogLevel.Information))
+        if (log.IsEnabled(logLevel: LogLevel.Information))
         {
-            log.Log(LogLevel.Information, "ExecuteWorkflow");
+            log.Log(logLevel: LogLevel.Information, message: "ExecuteWorkflow");
         }
-        Guid guid = new Guid(workflowId);
-        var parameterCollection = ParameterUtils.ToQueryParameterCollection(parameters);
+        Guid guid = new Guid(g: workflowId);
+        var parameterCollection = ParameterUtils.ToQueryParameterCollection(parameters: parameters);
         object result = CoreServices.WorkflowService.ExecuteWorkflow(
-            guid,
-            parameterCollection,
-            null
+            workflowId: guid,
+            parameters: parameterCollection,
+            transactionId: null
         );
-        object diffGram = ToDiffGram(result, "ExecuteWorkflowResult");
-        return Task.FromResult(diffGram);
+        object diffGram = ToDiffGram(result: result, rootElementName: "ExecuteWorkflowResult");
+        return Task.FromResult(result: diffGram);
     }
 
     public Task<object> ExecuteWorkflow1Async(
@@ -77,16 +77,20 @@ public class WorkflowServiceSoap : IWorkflowServiceSoap
         string paramValue
     )
     {
-        if (log.IsEnabled(LogLevel.Information))
+        if (log.IsEnabled(logLevel: LogLevel.Information))
         {
-            log.Log(LogLevel.Information, "ExecuteWorkflow1");
+            log.Log(logLevel: LogLevel.Information, message: "ExecuteWorkflow1");
         }
-        Guid guid = new Guid(workflowId);
+        Guid guid = new Guid(g: workflowId);
         QueryParameterCollection parameters = new QueryParameterCollection();
-        parameters.Add(new QueryParameter(paramName, paramValue));
-        object result = CoreServices.WorkflowService.ExecuteWorkflow(guid, parameters, null);
-        object diffGram = ToDiffGram(result, "ExecuteWorkflow1Result");
-        return Task.FromResult(diffGram);
+        parameters.Add(value: new QueryParameter(_parameterName: paramName, value: paramValue));
+        object result = CoreServices.WorkflowService.ExecuteWorkflow(
+            workflowId: guid,
+            parameters: parameters,
+            transactionId: null
+        );
+        object diffGram = ToDiffGram(result: result, rootElementName: "ExecuteWorkflow1Result");
+        return Task.FromResult(result: diffGram);
     }
 
     private static object ToDiffGram(object result, string rootElementName)
@@ -95,10 +99,10 @@ public class WorkflowServiceSoap : IWorkflowServiceSoap
         if (result is IDataDocument document)
         {
             StringBuilder sb = new StringBuilder();
-            XmlTextWriter writer = new XmlTextWriter(new StringWriter(sb));
-            writer.WriteStartElement(rootElementName, defaultNamespace);
-            document.DataSet.WriteXmlSchema(writer);
-            document.DataSet.WriteXml(writer, XmlWriteMode.DiffGram);
+            XmlTextWriter writer = new XmlTextWriter(w: new StringWriter(sb: sb));
+            writer.WriteStartElement(localName: rootElementName, ns: defaultNamespace);
+            document.DataSet.WriteXmlSchema(writer: writer);
+            document.DataSet.WriteXml(writer: writer, mode: XmlWriteMode.DiffGram);
             writer.WriteEndElement();
             return sb.ToString();
         }

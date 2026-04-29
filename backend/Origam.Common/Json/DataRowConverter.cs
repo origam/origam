@@ -46,18 +46,18 @@ class DataRowConverter : JsonConverter
             }
             if (
                 serializer.NullValueHandling == NullValueHandling.Ignore
-                && (row[column] == null || row[column] == DBNull.Value)
+                && (row[column: column] == null || row[column: column] == DBNull.Value)
             )
             {
                 continue;
             }
 
             writer.WritePropertyName(
-                (resolver != null)
-                    ? resolver.GetResolvedPropertyName(column.ColumnName)
+                name: (resolver != null)
+                    ? resolver.GetResolvedPropertyName(propertyName: column.ColumnName)
                     : column.ColumnName
             );
-            serializer.Serialize(writer, row[column]);
+            serializer.Serialize(jsonWriter: writer, value: row[column: column]);
         }
         foreach (DataRelation relation in row.Table.ChildRelations)
         {
@@ -65,33 +65,33 @@ class DataRowConverter : JsonConverter
             {
                 string childTableName = relation.ChildTable.TableName;
                 writer.WritePropertyName(
-                    (resolver != null)
-                        ? resolver.GetResolvedPropertyName(childTableName)
+                    name: (resolver != null)
+                        ? resolver.GetResolvedPropertyName(propertyName: childTableName)
                         : childTableName
                 );
                 bool serializeAsSingleJsonObject =
                     relation.ChildTable.ExtendedProperties.ContainsKey(
-                        Constants.SerializeAsSingleJsonObject
+                        key: Constants.SerializeAsSingleJsonObject
                     )
                         ? relation.ChildTable.ExtendedProperties.Get<bool>(
-                            Constants.SerializeAsSingleJsonObject
+                            key: Constants.SerializeAsSingleJsonObject
                         )
                         : false;
-                if (serializeAsSingleJsonObject && row.GetChildRows(relation).Length > 1)
+                if (serializeAsSingleJsonObject && row.GetChildRows(relation: relation).Length > 1)
                 {
                     throw new OrigamException(
-                        "JSON Serialization failed. "
+                        message: "JSON Serialization failed. "
                             + $"Table '{childTableName}' is defined to serialize to a "
-                            + $"single object, but multiple objects came ({row.GetChildRows(relation).Length})."
+                            + $"single object, but multiple objects came ({row.GetChildRows(relation: relation).Length})."
                     );
                 }
                 if (!serializeAsSingleJsonObject)
                 {
                     writer.WriteStartArray();
                 }
-                foreach (DataRow childRow in row.GetChildRows(relation))
+                foreach (DataRow childRow in row.GetChildRows(relation: relation))
                 {
-                    this.WriteJson(writer, childRow, serializer);
+                    this.WriteJson(writer: writer, value: childRow, serializer: serializer);
                 }
                 if (!serializeAsSingleJsonObject)
                 {
@@ -114,6 +114,6 @@ class DataRowConverter : JsonConverter
 
     public override bool CanConvert(Type objectType)
     {
-        return typeof(DataRow).IsAssignableFrom(objectType);
+        return typeof(DataRow).IsAssignableFrom(c: objectType);
     }
 }

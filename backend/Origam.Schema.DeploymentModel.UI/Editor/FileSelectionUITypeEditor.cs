@@ -45,40 +45,40 @@ public class FileSelectionUITypeEditor : UITypeEditor
     )
     {
         _dialog.Filter = "All files (*.*)|*.*";
-        _dialog.Title = ResourceUtils.GetString("LoadFile");
+        _dialog.Title = ResourceUtils.GetString(key: "LoadFile");
 
         if (_dialog.ShowDialog() == DialogResult.OK)
         {
             Crc32 crc = new Crc32();
             MemoryStream stream = new MemoryStream();
-            ZipOutputStream zipStream = new ZipOutputStream(stream);
-            zipStream.SetLevel(9);
-            BinaryReader br = new BinaryReader(stream);
+            ZipOutputStream zipStream = new ZipOutputStream(baseOutputStream: stream);
+            zipStream.SetLevel(level: 9);
+            BinaryReader br = new BinaryReader(input: stream);
             byte[] byteArray;
             try
             {
-                FileStream fs = File.OpenRead(_dialog.FileName);
+                FileStream fs = File.OpenRead(path: _dialog.FileName);
                 byte[] buffer = new byte[fs.Length];
-                fs.Read(buffer, 0, buffer.Length);
-                ZipEntry entry = new ZipEntry(@"file");
-                entry.DateTime = File.GetCreationTimeUtc(_dialog.FileName);
+                fs.Read(array: buffer, offset: 0, count: buffer.Length);
+                ZipEntry entry = new ZipEntry(name: @"file");
+                entry.DateTime = File.GetCreationTimeUtc(path: _dialog.FileName);
                 entry.Comment = _dialog.FileName;
                 entry.ZipFileIndex = 1;
                 entry.Size = fs.Length;
                 fs.Close();
                 crc.Reset();
-                crc.Update(buffer);
+                crc.Update(buffer: buffer);
                 entry.Crc = crc.Value;
-                zipStream.PutNextEntry(entry);
-                zipStream.Write(buffer, 0, buffer.Length);
+                zipStream.PutNextEntry(entry: entry);
+                zipStream.Write(buffer: buffer, offset: 0, count: buffer.Length);
                 zipStream.Finish();
                 if (stream.Length > 50000000)
                 {
-                    throw new Exception(ResourceUtils.GetString("ErrorFileBig"));
+                    throw new Exception(message: ResourceUtils.GetString(key: "ErrorFileBig"));
                 }
 
                 stream.Position = 0;
-                byteArray = br.ReadBytes((int)stream.Length);
+                byteArray = br.ReadBytes(count: (int)stream.Length);
             }
             finally
             {
@@ -99,7 +99,7 @@ public class FileSelectionUITypeEditor : UITypeEditor
             }
             else
             {
-                activity.FileName = Path.GetFileName(_dialog.FileName);
+                activity.FileName = Path.GetFileName(path: _dialog.FileName);
             }
         }
         return value;

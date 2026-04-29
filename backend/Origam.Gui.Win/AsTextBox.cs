@@ -34,7 +34,7 @@ namespace Origam.Gui.Win;
 /// <summary>
 /// Summary description for AsTextBox.
 /// </summary>
-[ToolboxBitmap(typeof(AsTextBox))]
+[ToolboxBitmap(t: typeof(AsTextBox))]
 public class AsTextBox
     : EnhancedTextBox,
         IAsCaptionControl,
@@ -44,12 +44,14 @@ public class AsTextBox
 {
     Label _captionLabel = new Label();
     private readonly IPersistenceService persistence =
-        ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+        ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+        as IPersistenceService;
 
     public AsTextBox()
     {
-        Click += (sender, args) => EditorClick?.Invoke(null, EventArgs.Empty);
-        DoubleClick += (sender, args) => EditorDoubleClick?.Invoke(null, EventArgs.Empty);
+        Click += (sender, args) => EditorClick?.Invoke(sender: null, e: EventArgs.Empty);
+        DoubleClick += (sender, args) =>
+            EditorDoubleClick?.Invoke(sender: null, e: EventArgs.Empty);
     }
 
     #region Handling base events
@@ -75,24 +77,24 @@ public class AsTextBox
         {
             if (
                 this.Parent != null
-                && this.Parent.Controls.Contains(_captionLabel)
+                && this.Parent.Controls.Contains(control: _captionLabel)
                 && _captionLabel.IsDisposed == false
             )
             {
-                this.Parent.Controls.Remove(_captionLabel);
+                this.Parent.Controls.Remove(value: _captionLabel);
             }
             _captionLabel = null;
         }
         try
         {
-            base.Dispose(disposing);
+            base.Dispose(disposing: disposing);
         }
         catch { }
     }
 
     protected override void OnMove(EventArgs e)
     {
-        base.OnMove(e);
+        base.OnMove(e: e);
         PaintCaption();
     }
 
@@ -101,7 +103,7 @@ public class AsTextBox
     {
         if (!this.Disposing)
         {
-            base.OnValidated(e);
+            base.OnValidated(e: e);
         }
     }
     #endregion
@@ -114,7 +116,7 @@ public class AsTextBox
     }
     private int captionLength = 100;
 
-    [Category("(ORIGAM)")]
+    [Category(category: "(ORIGAM)")]
     public int CaptionLength
     {
         get => captionLength;
@@ -139,7 +141,7 @@ public class AsTextBox
     }
 
     [Description(
-        "Valid only for numeric data types. If specified, it will override default formatting for the given data type."
+        description: "Valid only for numeric data types. If specified, it will override default formatting for the given data type."
     )]
     public string CustomNumericFormat { get; set; } = "";
     #endregion
@@ -157,8 +159,11 @@ public class AsTextBox
         set
         {
             base.Text = value;
-            OnTextChanged(EventArgs.Empty);
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Text"));
+            OnTextChanged(e: EventArgs.Empty);
+            PropertyChanged?.Invoke(
+                sender: this,
+                e: new PropertyChangedEventArgs(propertyName: "Text")
+            );
         }
     }
     public bool IsPassword
@@ -177,27 +182,27 @@ public class AsTextBox
         }
     }
 
-    [DefaultValue(false)]
+    [DefaultValue(value: false)]
     public bool IsRichText { get; set; } = false;
 
-    [DefaultValue(false)]
+    [DefaultValue(value: false)]
     public bool AllowTab { get; set; } = false;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public Guid StyleId { get; set; }
 
-    [TypeConverter(typeof(StylesConverter))]
+    [TypeConverter(type: typeof(StylesConverter))]
     public UIStyle Style
     {
         get
         {
             return (UIStyle)
                 persistence.SchemaProvider.RetrieveInstance(
-                    typeof(UIStyle),
-                    new ModelElementKey(this.StyleId)
+                    type: typeof(UIStyle),
+                    primaryKey: new ModelElementKey(id: this.StyleId)
                 );
         }
-        set { this.StyleId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]); }
+        set { this.StyleId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]); }
     }
 
     #region private methods
@@ -210,16 +215,16 @@ public class AsTextBox
 
         if (this.CaptionPosition == CaptionPosition.None)
         {
-            if (this.Parent.Controls.Contains(_captionLabel))
+            if (this.Parent.Controls.Contains(control: _captionLabel))
             {
-                this.Parent.Controls.Remove(_captionLabel);
+                this.Parent.Controls.Remove(value: _captionLabel);
             }
         }
         else
         {
-            if (!this.Parent.Controls.Contains(_captionLabel))
+            if (!this.Parent.Controls.Contains(control: _captionLabel))
             {
-                this.Parent.Controls.Add(_captionLabel);
+                this.Parent.Controls.Add(value: _captionLabel);
             }
         }
         this._captionLabel.Width = this.CaptionLength;
@@ -281,7 +286,7 @@ public class AsTextBox
             return;
         }
 
-        if (!string.IsNullOrEmpty(this.Caption))
+        if (!string.IsNullOrEmpty(value: this.Caption))
         {
             return;
         }
@@ -304,7 +309,7 @@ public class AsTextBox
         {
             try
             {
-                this._captionLabel.Text = ColumnCaption((e.Element as Binding));
+                this._captionLabel.Text = ColumnCaption(binding: (e.Element as Binding));
             }
             catch
             {
@@ -315,7 +320,7 @@ public class AsTextBox
 
     private void ResetCaption()
     {
-        if (!string.IsNullOrEmpty(this.Caption))
+        if (!string.IsNullOrEmpty(value: this.Caption))
         {
             return;
         }
@@ -326,7 +331,7 @@ public class AsTextBox
             {
                 try
                 {
-                    this._captionLabel.Text = ColumnCaption(binding);
+                    this._captionLabel.Text = ColumnCaption(binding: binding);
                 }
                 catch
                 {
@@ -341,13 +346,13 @@ public class AsTextBox
         // In case that dataMember is a path through relations, we find the last table
         // so we can take a caption out of it
         string tableName = "";
-        if (dataMember.IndexOf(".") > 0)
+        if (dataMember.IndexOf(value: ".") > 0)
         {
-            string[] path = dataMember.Split(".".ToCharArray());
-            DataTable table = ds.Tables[path[0]];
+            string[] path = dataMember.Split(separator: ".".ToCharArray());
+            DataTable table = ds.Tables[name: path[0]];
             for (int i = 1; i < path.Length - 1; i++)
             {
-                table = table.ChildRelations[path[i]].ChildTable;
+                table = table.ChildRelations[name: path[i]].ChildTable;
             }
             if (table != null)
             {
@@ -369,14 +374,14 @@ public class AsTextBox
             DataSet dataset = binding.DataSource as DataSet;
             // Get Table
             DataTable table = dataset.Tables[
-                TableName(dataset, binding.BindingMemberInfo.BindingMember)
+                name: TableName(ds: dataset, dataMember: binding.BindingMemberInfo.BindingMember)
             ];
 
             if (table != null)
             {
-                if (table.Columns.Contains(binding.BindingMemberInfo.BindingField))
+                if (table.Columns.Contains(name: binding.BindingMemberInfo.BindingField))
                 {
-                    return table.Columns[binding.BindingMemberInfo.BindingField].Caption;
+                    return table.Columns[name: binding.BindingMemberInfo.BindingField].Caption;
                 }
             }
         }
@@ -387,25 +392,25 @@ public class AsTextBox
     {
         if (this.Parent is AsDataGrid grid)
         {
-            grid.OnControlMouseWheel(e);
+            grid.OnControlMouseWheel(e: e);
         }
         else
         {
-            base.OnMouseWheel(e);
+            base.OnMouseWheel(e: e);
         }
     }
     #endregion
     #region IAsCaptionControl Members
-    [Category("(ORIGAM)")]
-    [DefaultValue(100)]
-    [Description(CaptionDoc.GridColumnWidthDescription)]
+    [Category(category: "(ORIGAM)")]
+    [DefaultValue(value: 100)]
+    [Description(description: CaptionDoc.GridColumnWidthDescription)]
     public int GridColumnWidth { get; set; }
 
-    [Category("(ORIGAM)")]
+    [Category(category: "(ORIGAM)")]
     public string GridColumnCaption { get; set; } = "";
     string _caption = "";
 
-    [Category("(ORIGAM)")]
+    [Category(category: "(ORIGAM)")]
     public string Caption
     {
         get => _caption;
@@ -418,7 +423,7 @@ public class AsTextBox
     }
     CaptionPosition _captionPosition = CaptionPosition.Left;
 
-    [Category("(ORIGAM)")]
+    [Category(category: "(ORIGAM)")]
     public CaptionPosition CaptionPosition
     {
         get => _captionPosition;

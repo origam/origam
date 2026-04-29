@@ -26,7 +26,7 @@ namespace Origam.Gui.Win;
 /// <summary>
 /// Summary description for CollapsibleContainer.
 /// </summary>
-[Designer(typeof(CollapsibleContainerDesigner))]
+[Designer(designerType: typeof(CollapsibleContainerDesigner))]
 public class CollapsibleContainer : AsTabControl
 {
     public CollapsibleContainer()

@@ -40,19 +40,19 @@ public class StatusBarService : IStatusBarService
 
     public void UnloadService()
     {
-        OnUnload(EventArgs.Empty);
+        OnUnload(e: EventArgs.Empty);
     }
 
     public void InitializeService()
     {
-        OnInitialize(EventArgs.Empty);
+        OnInitialize(e: EventArgs.Empty);
     }
 
     protected void OnInitialize(EventArgs e)
     {
         if (Initialize != null)
         {
-            Initialize(this, e);
+            Initialize(sender: this, e: e);
         }
     }
 
@@ -60,7 +60,7 @@ public class StatusBarService : IStatusBarService
     {
         if (Unload != null)
         {
-            Unload(this, e);
+            Unload(sender: this, e: e);
         }
     }
     #endregion
@@ -77,11 +77,11 @@ public class StatusBarService : IStatusBarService
             if (this.statusBar.InvokeRequired)
             {
                 SetStatusTextDelegate setText = new SetStatusTextDelegate(SetStatusText);
-                this.statusBar.Invoke(setText, new object[] { text });
+                this.statusBar.Invoke(method: setText, args: new object[] { text });
             }
             else
             {
-                this.statusBar.Panels[0].Text = text;
+                this.statusBar.Panels[index: 0].Text = text;
             }
         }
     }
@@ -90,7 +90,7 @@ public class StatusBarService : IStatusBarService
     {
         if (CanSetStatus())
         {
-            this.statusBar.Panels[1].Text = bytes.ToString("N");
+            this.statusBar.Panels[index: 1].Text = bytes.ToString(format: "N");
             // Application.DoEvents();
         }
     }

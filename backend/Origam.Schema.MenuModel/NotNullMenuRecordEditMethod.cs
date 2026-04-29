@@ -29,16 +29,22 @@ public class NotNullMenuRecordEditMethod : AbstractModelElementRuleAttribute
 {
     public override Exception CheckRule(object instance)
     {
-        return new NotSupportedException(ResourceUtils.GetString("MemberNameRequired"));
+        return new NotSupportedException(
+            message: ResourceUtils.GetString(key: "MemberNameRequired")
+        );
     }
 
     public override Exception CheckRule(object instance, string memberName)
     {
         if (memberName == String.Empty || memberName == null)
         {
-            CheckRule(instance);
+            CheckRule(instance: instance);
         }
-        object value = Reflector.GetValue(instance.GetType(), instance, memberName);
+        object value = Reflector.GetValue(
+            type: instance.GetType(),
+            instance: instance,
+            memberName: memberName
+        );
         if (value is FormReferenceMenuItem formReferenceMenuItem)
         {
             if (
@@ -47,7 +53,7 @@ public class NotNullMenuRecordEditMethod : AbstractModelElementRuleAttribute
             )
             {
                 return new DataException(
-                    "The target menu item has to have a property RecordEditMethod set."
+                    s: "The target menu item has to have a property RecordEditMethod set."
                 );
             }
         }

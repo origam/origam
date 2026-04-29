@@ -26,5 +26,5 @@ namespace Origam.DA.ObjectPersistence;
 public class XmlPackageRoot : XmlRootAttribute
 {
     public XmlPackageRoot(string category)
-        : base(category) { }
+        : base(elementName: category) { }
 }

@@ -34,7 +34,7 @@ public static class DataServiceFactory
 
     public static IDataService GetDataService()
     {
-        return GetDataService(null);
+        return GetDataService(deployPlatform: null);
     }
 
     public static IDataService GetDataService(Platform deployPlatform)
@@ -44,43 +44,51 @@ public static class DataServiceFactory
         {
             dictionarykey = deployPlatform.Name;
         }
-        KeyValuePair<string, IDataService> keyValue = _dataServiceDictionary.FirstOrDefault(dict =>
-            dict.Key == dictionarykey
+        KeyValuePair<string, IDataService> keyValue = _dataServiceDictionary.FirstOrDefault(
+            predicate: dict => dict.Key == dictionarykey
         );
-        if (string.IsNullOrEmpty(keyValue.Key))
+        if (string.IsNullOrEmpty(value: keyValue.Key))
         {
-            _dataServiceDictionary.Add(dictionarykey, CreateDataService(deployPlatform));
+            _dataServiceDictionary.Add(
+                key: dictionarykey,
+                value: CreateDataService(deployPlatform: deployPlatform)
+            );
         }
-        return _dataServiceDictionary.First(dict => dict.Key == dictionarykey).Value;
+        return _dataServiceDictionary.First(predicate: dict => dict.Key == dictionarykey).Value;
     }
 
     private static IDataService CreateDataService(Platform deployPlatform)
     {
         IDataService dataService = null;
         IPersistenceService persistence =
-            ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+            ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+            as IPersistenceService;
         OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
         if (settings == null)
         {
-            throw new NullReferenceException(ResourceUtils.GetString("ErrorSettingsNotFound"));
+            throw new NullReferenceException(
+                message: ResourceUtils.GetString(key: "ErrorSettingsNotFound")
+            );
         }
-        string assembly = settings.DataDataService.Split(",".ToCharArray())[0].Trim();
-        string classname = settings.DataDataService.Split(",".ToCharArray())[1].Trim();
+        string assembly = settings.DataDataService.Split(separator: ",".ToCharArray())[0].Trim();
+        string classname = settings.DataDataService.Split(separator: ",".ToCharArray())[1].Trim();
 
         if (deployPlatform != null)
         {
-            assembly = deployPlatform.DataService.Split(",".ToCharArray())[0].Trim();
-            classname = deployPlatform.DataService.Split(",".ToCharArray())[1].Trim();
+            assembly = deployPlatform.DataService.Split(separator: ",".ToCharArray())[0].Trim();
+            classname = deployPlatform.DataService.Split(separator: ",".ToCharArray())[1].Trim();
         }
-        dataService = Reflector.InvokeObject(assembly, classname) as IDataService;
+        dataService =
+            Reflector.InvokeObject(classname: assembly, assembly: classname) as IDataService;
         dataService.ConnectionString = settings.DataConnectionString;
         dataService.BulkInsertThreshold = settings.DataBulkInsertThreshold;
         dataService.UpdateBatchSize = settings.DataUpdateBatchSize;
         dataService.StateMachine =
-            ServiceManager.Services.GetService(typeof(IStateMachineService))
+            ServiceManager.Services.GetService(serviceType: typeof(IStateMachineService))
             as IStateMachineService;
         dataService.AttachmentService =
-            ServiceManager.Services.GetService(typeof(IAttachmentService)) as IAttachmentService;
+            ServiceManager.Services.GetService(serviceType: typeof(IAttachmentService))
+            as IAttachmentService;
         dataService.UserDefinedParameters = true;
         (dataService as AbstractDataService).PersistenceProvider = persistence.SchemaProvider;
         if (deployPlatform != null)

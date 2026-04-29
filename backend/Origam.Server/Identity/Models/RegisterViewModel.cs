@@ -30,26 +30,26 @@ public class RegisterViewModel
     public string Email { get; set; }
 
     [Required(ErrorMessage = "UserNameRequired")]
-    [DataType(DataType.Text)]
+    [DataType(dataType: DataType.Text)]
     public string UserName { get; set; }
 
     [Required(ErrorMessage = "NameRequired")]
-    [StringLength(100)]
-    [DataType(DataType.Text)]
+    [StringLength(maximumLength: 100)]
+    [DataType(dataType: DataType.Text)]
     public string Name { get; set; }
 
     [Required(ErrorMessage = "FirstNameRequired")]
-    [StringLength(100)]
-    [DataType(DataType.Text)]
+    [StringLength(maximumLength: 100)]
+    [DataType(dataType: DataType.Text)]
     public string FirstName { get; set; }
 
     [Required(ErrorMessage = "PasswordRequired")]
-    [DataType(DataType.Password)]
+    [DataType(dataType: DataType.Password)]
     public string Password { get; set; }
 
-    [DataType(DataType.Password)]
+    [DataType(dataType: DataType.Password)]
     [Display(Name = "Confirm password")]
-    [Compare("Password", ErrorMessage = "PasswordsDontMatch")]
+    [Compare(otherProperty: "Password", ErrorMessage = "PasswordsDontMatch")]
     public string ConfirmPassword { get; set; }
     public string Code { get; set; }
 }

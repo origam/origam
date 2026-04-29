@@ -25,10 +25,10 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.EntityModel;
 
-[SchemaItemDescription("Sort Set", "Sort Sets", "icon_sort-set.png")]
-[HelpTopic("Sort+Sets")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Sort Set", folderName: "Sort Sets", iconName: "icon_sort-set.png")]
+[HelpTopic(topic: "Sort+Sets")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class DataStructureSortSet : AbstractSchemaItem
 {
     public const string CategoryConst = "DataStructureSortSet";
@@ -36,10 +36,10 @@ public class DataStructureSortSet : AbstractSchemaItem
     public DataStructureSortSet() { }
 
     public DataStructureSortSet(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public DataStructureSortSet(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Overriden AbstractDataEntityColumn Members
 
@@ -48,7 +48,7 @@ public class DataStructureSortSet : AbstractSchemaItem
 
     public override bool CanMove(UI.IBrowserNode2 newNode)
     {
-        return ((ISchemaItem)newNode).PrimaryKey.Equals(ParentItem.PrimaryKey);
+        return ((ISchemaItem)newNode).PrimaryKey.Equals(obj: ParentItem.PrimaryKey);
     }
     #endregion
     #region ISchemaItemFactory Members
@@ -57,9 +57,9 @@ public class DataStructureSortSet : AbstractSchemaItem
     public override T NewItem<T>(Guid schemaExtensionId, SchemaItemGroup group)
     {
         return base.NewItem<T>(
-            schemaExtensionId,
-            group,
-            typeof(T) == typeof(DataStructureSortSetItem) ? "NewSortSetItem" : null
+            schemaExtensionId: schemaExtensionId,
+            group: group,
+            itemName: typeof(T) == typeof(DataStructureSortSetItem) ? "NewSortSetItem" : null
         );
     }
     #endregion

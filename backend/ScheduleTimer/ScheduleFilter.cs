@@ -60,7 +60,7 @@ public class FirstEventFilter : IResultFilter
         }
 
         List.Sort();
-        List.RemoveRange(1, List.Count - 1);
+        List.RemoveRange(index: 1, count: List.Count - 1);
     }
 }
 
@@ -86,6 +86,6 @@ public class LastEventFilter : IResultFilter
         }
 
         List.Sort();
-        List.RemoveRange(0, List.Count - 1);
+        List.RemoveRange(index: 0, count: List.Count - 1);
     }
 }

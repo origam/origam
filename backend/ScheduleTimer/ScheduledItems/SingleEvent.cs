@@ -30,7 +30,7 @@ public class SingleEvent : IScheduledItem
     {
         if (Begin <= _EventTime && End > _EventTime)
         {
-            List.Add(_EventTime);
+            List.Add(item: _EventTime);
         }
     }
 

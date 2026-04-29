@@ -30,6 +30,6 @@ public static class QueryParameterExtensions
         this IEnumerable<QueryParameter> parameters
     )
     {
-        return new QueryParameterCollection(parameters.ToArray());
+        return new QueryParameterCollection(value: parameters.ToArray());
     }
 }

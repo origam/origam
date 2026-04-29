@@ -35,7 +35,7 @@ public static class BitmapExtensions
 
         using (var stream = new MemoryStream())
         {
-            bitmap.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
+            bitmap.Save(stream: stream, format: System.Drawing.Imaging.ImageFormat.Png);
             return stream.ToArray();
         }
     }

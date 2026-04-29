@@ -39,7 +39,7 @@ public abstract class AbstractDatabaseBuilder : AbstractBuilder
     {
         if (_dataService == null)
         {
-            _dataService = CreateService(DatabaseType);
+            _dataService = CreateService(DatabaseType: DatabaseType);
         }
         return _dataService;
     }
@@ -54,6 +54,9 @@ public abstract class AbstractDatabaseBuilder : AbstractBuilder
         {
             return new PgSqlDataService();
         }
-        throw new ArgumentOutOfRangeException("DatabaseType is wrong ", DatabaseType.ToString());
+        throw new ArgumentOutOfRangeException(
+            paramName: "DatabaseType is wrong ",
+            message: DatabaseType.ToString()
+        );
     }
 }

@@ -27,7 +27,11 @@ namespace Origam.Server;
 public class ReportRequest
 {
     public ReportRequest(string reportId, Hashtable parameters)
-        : this(reportId, parameters, DataReportExportFormatType.PDF) { }
+        : this(
+            reportId: reportId,
+            parameters: parameters,
+            dataReportExportFormatType: DataReportExportFormatType.PDF
+        ) { }
 
     public ReportRequest(
         string reportId,

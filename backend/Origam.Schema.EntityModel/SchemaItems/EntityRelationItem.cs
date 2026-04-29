@@ -28,35 +28,40 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.EntityModel;
 
-[SchemaItemDescription("Relationship", "Relationships", "icon_relationship.png")]
-[HelpTopic("Relationships")]
-[XmlModelRoot(CategoryConst)]
-[DefaultProperty("RelatedEntity")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(
+    name: "Relationship",
+    folderName: "Relationships",
+    iconName: "icon_relationship.png"
+)]
+[HelpTopic(topic: "Relationships")]
+[XmlModelRoot(category: CategoryConst)]
+[DefaultProperty(name: "RelatedEntity")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class EntityRelationItem : AbstractSchemaItem, IAssociation
 {
     public EntityRelationItem() { }
 
     public EntityRelationItem(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public EntityRelationItem(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     public const string CategoryConst = "EntityRelation";
     #region Properties
     public Guid RelatedEntityId;
 
-    [TypeConverter(typeof(EntityConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
+    [TypeConverter(type: typeof(EntityConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
     [NotNullModelElementRule()]
-    [XmlReference("relatedEntity", "RelatedEntityId")]
+    [XmlReference(attributeName: "relatedEntity", idField: "RelatedEntityId")]
     public IDataEntity RelatedEntity
     {
         get
         {
             var key = new ModelElementKey { Id = RelatedEntityId };
-            return (IDataEntity)PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
+            return (IDataEntity)
+                PersistenceProvider.RetrieveInstance(type: typeof(ISchemaItem), primaryKey: key);
         }
         set
         {
@@ -67,7 +72,7 @@ public class EntityRelationItem : AbstractSchemaItem, IAssociation
             }
             else
             {
-                RelatedEntityId = (Guid)value.PrimaryKey["Id"];
+                RelatedEntityId = (Guid)value.PrimaryKey[key: "Id"];
                 Name = RelatedEntity.Name;
             }
             // We have to delete all child items
@@ -76,7 +81,7 @@ public class EntityRelationItem : AbstractSchemaItem, IAssociation
     }
     private bool _isParentChild = false;
 
-    [XmlAttribute("parentChild")]
+    [XmlAttribute(attributeName: "parentChild")]
     public bool IsParentChild
     {
         get => _isParentChild;
@@ -84,11 +89,11 @@ public class EntityRelationItem : AbstractSchemaItem, IAssociation
     }
 
     [SelfJoinSameBaseRule]
-    [XmlAttribute("selfJoin")]
+    [XmlAttribute(attributeName: "selfJoin")]
     public bool IsSelfJoin { get; set; }
     private bool _isOR = false;
 
-    [XmlAttribute("or")]
+    [XmlAttribute(attributeName: "or")]
     public bool IsOR
     {
         get => _isOR;
@@ -104,34 +109,37 @@ public class EntityRelationItem : AbstractSchemaItem, IAssociation
     {
         try
         {
-            dependencies.Add(RelatedEntity);
+            dependencies.Add(item: RelatedEntity);
         }
         catch
         {
             throw new ArgumentOutOfRangeException(
-                "RelatedEntityId",
-                RelatedEntityId,
-                ResourceUtils.GetString("ErrorRelatedEntity", Name, BaseEntity.Name)
+                paramName: "RelatedEntityId",
+                actualValue: RelatedEntityId,
+                message: ResourceUtils.GetString(
+                    key: "ErrorRelatedEntity",
+                    args: new object[] { Name, BaseEntity.Name }
+                )
             );
         }
-        base.GetExtraDependencies(dependencies);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override bool CanMove(UI.IBrowserNode2 newNode)
     {
         var item = newNode as ISchemaItem;
-        return (item != null) && item.PrimaryKey.Equals(ParentItem.PrimaryKey);
+        return (item != null) && item.PrimaryKey.Equals(obj: ParentItem.PrimaryKey);
     }
     #endregion
     #region IAssociation Members
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public IDataEntity BaseEntity => ParentItem as IDataEntity;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public IDataEntity AssociatedEntity => RelatedEntity;
     #endregion
     #region ISchemaItemFactory Members
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public override Type[] NewItemTypes =>
         new[] { typeof(EntityRelationColumnPairItem), typeof(EntityRelationFilter) };
 
@@ -146,7 +154,11 @@ public class EntityRelationItem : AbstractSchemaItem, IAssociation
         {
             itemName = "NewEntityRelationFilter";
         }
-        return base.NewItem<T>(schemaExtensionId, group, itemName);
+        return base.NewItem<T>(
+            schemaExtensionId: schemaExtensionId,
+            group: group,
+            itemName: itemName
+        );
     }
     #endregion
 }

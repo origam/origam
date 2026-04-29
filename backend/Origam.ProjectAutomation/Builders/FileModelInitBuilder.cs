@@ -32,7 +32,7 @@ public class FileModelInitBuilder : AbstractBuilder
     public override void Execute(Project project)
     {
         OrigamEngine.OrigamEngine.InitializeRuntimeServices();
-        LoadBaseSchema(project);
+        LoadBaseSchema(project: project);
     }
 
     private void LoadBaseSchema(Project project)
@@ -40,7 +40,10 @@ public class FileModelInitBuilder : AbstractBuilder
         schema = ServiceManager.Services.GetService<SchemaService>();
         try
         {
-            schema.LoadSchema(new Guid(project.BasePackageId), isInteractive: true);
+            schema.LoadSchema(
+                schemaExtensionId: new Guid(g: project.BasePackageId),
+                isInteractive: true
+            );
         }
         catch
         {

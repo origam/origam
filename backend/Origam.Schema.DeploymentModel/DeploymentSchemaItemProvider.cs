@@ -37,7 +37,7 @@ public class DeploymentSchemaItemProvider : AbstractSchemaItemProvider
         {
             var version = (DeploymentVersion)abstractSchemaItem;
             // only version from the current extension
-            if (version.Package.PrimaryKey.Equals(schemaService.ActiveExtension.PrimaryKey))
+            if (version.Package.PrimaryKey.Equals(obj: schemaService.ActiveExtension.PrimaryKey))
             {
                 if (version.IsCurrentVersion)
                 {
@@ -69,18 +69,21 @@ public class DeploymentSchemaItemProvider : AbstractSchemaItemProvider
     {
         if (typeof(T) != typeof(DeploymentVersion))
         {
-            return base.NewItem<T>(schemaExtensionId, group);
+            return base.NewItem<T>(schemaExtensionId: schemaExtensionId, group: group);
         }
         var schemaService = ServiceManager.Services.GetService<ISchemaService>();
         var packages = schemaService.ActiveExtension.IncludedPackages;
-        var deploymentVersion = new DeploymentVersion(schemaExtensionId, packages.ToList())
+        var deploymentVersion = new DeploymentVersion(
+            schemaExtensionId: schemaExtensionId,
+            packagesToDependOn: packages.ToList()
+        )
         {
             RootProvider = this,
             PersistenceProvider = PersistenceProvider,
             Name = "NewDeploymentVersion",
             Group = group,
         };
-        ChildItems.Add(deploymentVersion);
+        ChildItems.Add(item: deploymentVersion);
         return deploymentVersion as T;
     }
     #endregion

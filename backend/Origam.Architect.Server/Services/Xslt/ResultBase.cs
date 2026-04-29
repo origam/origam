@@ -30,6 +30,6 @@ public class ResultBase : IResult
 
     public void AddToOutput(string text)
     {
-        output.AppendLine(text);
+        output.AppendLine(value: text);
     }
 }

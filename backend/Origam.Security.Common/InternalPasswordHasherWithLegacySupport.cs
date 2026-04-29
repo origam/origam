@@ -33,15 +33,18 @@ public class InternalPasswordHasherWithLegacySupport : AdaptivePasswordHasher
         string providedPassword
     )
     {
-        if (String.IsNullOrWhiteSpace(hashedPassword))
+        if (String.IsNullOrWhiteSpace(value: hashedPassword))
         {
             return VerificationResult.Failed;
         }
-        string[] passwordProperties = hashedPassword.Split('|');
+        string[] passwordProperties = hashedPassword.Split(separator: '|');
         if (passwordProperties.Length != 2)
         {
             // use AdaptiveHasher
-            return base.VerifyHashedPassword(hashedPassword, providedPassword);
+            return base.VerifyHashedPassword(
+                hashedPassword: hashedPassword,
+                providedPassword: providedPassword
+            );
         }
         // migrated account from NetMembership
         // format hashedFormat|salt
@@ -50,9 +53,9 @@ public class InternalPasswordHasherWithLegacySupport : AdaptivePasswordHasher
 
         if (
             String.Equals(
-                EncryptPassword(providedPassword, salt),
-                passwordHash,
-                StringComparison.CurrentCultureIgnoreCase
+                a: EncryptPassword(pass: providedPassword, salt: salt),
+                b: passwordHash,
+                comparisonType: StringComparison.CurrentCultureIgnoreCase
             )
         )
         {
@@ -64,10 +67,10 @@ public class InternalPasswordHasherWithLegacySupport : AdaptivePasswordHasher
 
     private string EncryptPassword(string pass, string salt)
     {
-        byte[] bIn = Encoding.Unicode.GetBytes(pass);
-        byte[] bSalt = Convert.FromBase64String(salt);
+        byte[] bIn = Encoding.Unicode.GetBytes(s: pass);
+        byte[] bSalt = Convert.FromBase64String(s: salt);
         byte[] bRet = null;
-        HashAlgorithm hm = HashAlgorithm.Create("SHA1");
+        HashAlgorithm hm = HashAlgorithm.Create(hashName: "SHA1");
         if (hm is KeyedHashAlgorithm)
         {
             KeyedHashAlgorithm kha = (KeyedHashAlgorithm)hm;
@@ -78,7 +81,13 @@ public class InternalPasswordHasherWithLegacySupport : AdaptivePasswordHasher
             else if (kha.Key.Length < bSalt.Length)
             {
                 byte[] bKey = new byte[kha.Key.Length];
-                Buffer.BlockCopy(bSalt, 0, bKey, 0, bKey.Length);
+                Buffer.BlockCopy(
+                    src: bSalt,
+                    srcOffset: 0,
+                    dst: bKey,
+                    dstOffset: 0,
+                    count: bKey.Length
+                );
                 kha.Key = bKey;
             }
             else
@@ -86,21 +95,39 @@ public class InternalPasswordHasherWithLegacySupport : AdaptivePasswordHasher
                 byte[] bKey = new byte[kha.Key.Length];
                 for (int iter = 0; iter < bKey.Length; )
                 {
-                    int len = Math.Min(bSalt.Length, bKey.Length - iter);
-                    Buffer.BlockCopy(bSalt, 0, bKey, iter, len);
+                    int len = Math.Min(val1: bSalt.Length, val2: bKey.Length - iter);
+                    Buffer.BlockCopy(
+                        src: bSalt,
+                        srcOffset: 0,
+                        dst: bKey,
+                        dstOffset: iter,
+                        count: len
+                    );
                     iter += len;
                 }
                 kha.Key = bKey;
             }
-            bRet = kha.ComputeHash(bIn);
+            bRet = kha.ComputeHash(buffer: bIn);
         }
         else
         {
             byte[] bAll = new byte[bSalt.Length + bIn.Length];
-            Buffer.BlockCopy(bSalt, 0, bAll, 0, bSalt.Length);
-            Buffer.BlockCopy(bIn, 0, bAll, bSalt.Length, bIn.Length);
-            bRet = hm.ComputeHash(bAll);
+            Buffer.BlockCopy(
+                src: bSalt,
+                srcOffset: 0,
+                dst: bAll,
+                dstOffset: 0,
+                count: bSalt.Length
+            );
+            Buffer.BlockCopy(
+                src: bIn,
+                srcOffset: 0,
+                dst: bAll,
+                dstOffset: bSalt.Length,
+                count: bIn.Length
+            );
+            bRet = hm.ComputeHash(buffer: bAll);
         }
-        return Convert.ToBase64String(bRet);
+        return Convert.ToBase64String(inArray: bRet);
     }
 }

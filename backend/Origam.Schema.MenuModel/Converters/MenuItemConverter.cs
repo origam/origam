@@ -29,7 +29,7 @@ namespace Origam.Schema.MenuModel;
 public class MenuItemConverter : TypeConverter
 {
     ISchemaService _schema =
-        ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
+        ServiceManager.Services.GetService(serviceType: typeof(ISchemaService)) as ISchemaService;
 
     public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
     {
@@ -49,18 +49,18 @@ public class MenuItemConverter : TypeConverter
     )
     {
         MenuSchemaItemProvider menu =
-            _schema.GetProvider(typeof(MenuSchemaItemProvider)) as MenuSchemaItemProvider;
+            _schema.GetProvider(type: typeof(MenuSchemaItemProvider)) as MenuSchemaItemProvider;
         var menuArray = new List<string>();
         foreach (ISchemaItem item in menu.ChildItemsRecursive)
         {
             if (item is AbstractMenuItem && !(item is Menu || item is Submenu))
             {
-                menuArray.Add(item.Path);
+                menuArray.Add(item: item.Path);
             }
         }
-        menuArray.Add(null);
+        menuArray.Add(item: null);
         menuArray.Sort();
-        return new StandardValuesCollection(menuArray);
+        return new StandardValuesCollection(values: menuArray);
     }
 
     public override bool CanConvertFrom(
@@ -73,7 +73,7 @@ public class MenuItemConverter : TypeConverter
             return true;
         }
 
-        return base.CanConvertFrom(context, sourceType);
+        return base.CanConvertFrom(context: context, sourceType: sourceType);
     }
 
     public override object ConvertFrom(
@@ -85,7 +85,7 @@ public class MenuItemConverter : TypeConverter
         if (value.GetType() == typeof(string))
         {
             MenuSchemaItemProvider menu =
-                _schema.GetProvider(typeof(MenuSchemaItemProvider)) as MenuSchemaItemProvider;
+                _schema.GetProvider(type: typeof(MenuSchemaItemProvider)) as MenuSchemaItemProvider;
             foreach (ISchemaItem item in menu.ChildItemsRecursive)
             {
                 if (item.Path == value.ToString())
@@ -96,6 +96,6 @@ public class MenuItemConverter : TypeConverter
             return null;
         }
 
-        return base.ConvertFrom(context, culture, value);
+        return base.ConvertFrom(context: context, culture: culture, value: value);
     }
 }

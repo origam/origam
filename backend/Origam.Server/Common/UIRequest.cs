@@ -77,7 +77,9 @@ public class UIRequest
             QueryParameterCollection qparams = new QueryParameterCollection();
             foreach (DictionaryEntry entry in Parameters)
             {
-                qparams.Add(new QueryParameter((string)entry.Key, entry.Value));
+                qparams.Add(
+                    value: new QueryParameter(_parameterName: (string)entry.Key, value: entry.Value)
+                );
             }
             return qparams;
         }

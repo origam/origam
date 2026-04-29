@@ -45,30 +45,33 @@ public class GuiHelper
     {
         var schemaService = ServiceManager.Services.GetService<ISchemaService>();
         var formSchemaItemProvider = schemaService.GetProvider<FormSchemaItemProvider>();
-        var schemaItemGroup = formSchemaItemProvider.GetGroup(groupName);
+        var schemaItemGroup = formSchemaItemProvider.GetGroup(name: groupName);
         var form = formSchemaItemProvider.NewItem<FormControlSet>(
-            schemaService.ActiveSchemaExtensionId,
-            null
+            schemaExtensionId: schemaService.ActiveSchemaExtensionId,
+            group: null
         );
         form.Name = dataSource.Name;
         form.Group = schemaItemGroup;
         form.DataStructure = dataSource;
-        var rootControl = CreateControl(form, GetFormControl());
-        var formProperties = new Hashtable { ["Width"] = 700, ["Height"] = 400 };
-        PopulateControlProperties(rootControl, formProperties);
+        var rootControl = CreateControl(parentControl: form, controlType: GetFormControl());
+        var formProperties = new Hashtable { [key: "Width"] = 700, [key: "Height"] = 400 };
+        PopulateControlProperties(control: rootControl, properties: formProperties);
         if (defaultPanel != null)
         {
-            var panelControl = CreateControl(rootControl, defaultPanel.PanelControl);
+            var panelControl = CreateControl(
+                parentControl: rootControl,
+                controlType: defaultPanel.PanelControl
+            );
             // clone the panel's properties
             foreach (
                 var originalProperty in defaultPanel
-                    .ChildItems[0]
-                    .ChildItemsByType<PropertyValueItem>(PropertyValueItem.CategoryConst)
+                    .ChildItems[index: 0]
+                    .ChildItemsByType<PropertyValueItem>(itemType: PropertyValueItem.CategoryConst)
             )
             {
                 var property = panelControl.NewItem<PropertyValueItem>(
-                    schemaService.ActiveSchemaExtensionId,
-                    null
+                    schemaExtensionId: schemaService.ActiveSchemaExtensionId,
+                    group: null
                 );
                 property.ControlPropertyItem = originalProperty.ControlPropertyItem;
                 if (property.ControlPropertyItem.Name == "DataMember")
@@ -94,7 +97,12 @@ public class GuiHelper
         Hashtable fieldsToPopulate
     )
     {
-        return CreatePanel(groupName, entity, fieldsToPopulate, entity.Name);
+        return CreatePanel(
+            groupName: groupName,
+            entity: entity,
+            fieldsToPopulate: fieldsToPopulate,
+            name: entity.Name
+        );
     }
 
     public static PanelControlSet CreatePanel(
@@ -106,40 +114,47 @@ public class GuiHelper
     {
         var schemaService = ServiceManager.Services.GetService<ISchemaService>();
         var panelSchemaItemProvider = schemaService.GetProvider<PanelSchemaItemProvider>();
-        var schemaItemGroup = panelSchemaItemProvider.GetGroup(groupName);
+        var schemaItemGroup = panelSchemaItemProvider.GetGroup(name: groupName);
         var panel = panelSchemaItemProvider.NewItem<PanelControlSet>(
-            schemaService.ActiveSchemaExtensionId,
-            null
+            schemaExtensionId: schemaService.ActiveSchemaExtensionId,
+            group: null
         );
         panel.Name = name;
         panel.Group = schemaItemGroup;
         panel.DataEntity = entity;
-        var rootControl = CreateControl(panel, GetPanelControl());
+        var rootControl = CreateControl(parentControl: panel, controlType: GetPanelControl());
         var panelProperties = new Hashtable
         {
-            ["PanelTitle"] = entity.Caption,
-            ["Width"] = 600,
-            ["Height"] = 300,
-            ["GridVisible"] = true,
-            ["ShowNewButton"] = true,
-            ["ShowDeleteButton"] = true,
+            [key: "PanelTitle"] = entity.Caption,
+            [key: "Width"] = 600,
+            [key: "Height"] = 300,
+            [key: "GridVisible"] = true,
+            [key: "ShowNewButton"] = true,
+            [key: "ShowDeleteButton"] = true,
         };
-        PopulateControlProperties(rootControl, panelProperties);
+        PopulateControlProperties(control: rootControl, properties: panelProperties);
         var x = 108;
         var y = 36;
         var i = 0;
         foreach (IDataEntityColumn column in entity.EntityColumns)
         {
-            if (!fieldsToPopulate.Contains(column.Name))
+            if (!fieldsToPopulate.Contains(key: column.Name))
             {
                 continue;
             }
-            BuildDefaultControl(rootControl, entity, column, x, y, i);
+            BuildDefaultControl(
+                parentControl: rootControl,
+                entity: entity,
+                column: column,
+                x: x,
+                y: y,
+                tabIndex: i
+            );
             y += 18;
             i++;
         }
         panel.Persist();
-        CreatePanelControl(panel);
+        CreatePanelControl(panel: panel);
         return panel;
     }
 
@@ -154,13 +169,13 @@ public class GuiHelper
     {
         var properties = new Hashtable
         {
-            ["Left"] = x,
-            ["Top"] = y,
-            ["Height"] = 19,
-            ["Width"] = 400,
-            ["Caption"] = "",
-            ["CaptionLength"] = 100,
-            ["TabIndex"] = tabIndex,
+            [key: "Left"] = x,
+            [key: "Top"] = y,
+            [key: "Height"] = 19,
+            [key: "Width"] = 400,
+            [key: "Caption"] = "",
+            [key: "CaptionLength"] = 100,
+            [key: "TabIndex"] = tabIndex,
         };
         switch (column.DataType)
         {
@@ -172,28 +187,52 @@ public class GuiHelper
             case OrigamDataType.Geography:
             case OrigamDataType.String:
             {
-                var textBox = CreateControl(parentControl, GetTextBoxControl());
+                var textBox = CreateControl(
+                    parentControl: parentControl,
+                    controlType: GetTextBoxControl()
+                );
                 textBox.Name = textBox.ControlItem.Name + tabIndex;
-                PopulateControlProperties(textBox, properties);
-                PopulateControlBindings(textBox, entity.Name, column.Name, "Value");
+                PopulateControlProperties(control: textBox, properties: properties);
+                PopulateControlBindings(
+                    control: textBox,
+                    entity: entity.Name,
+                    field: column.Name,
+                    property: "Value"
+                );
                 break;
             }
             case OrigamDataType.Boolean:
             {
-                properties["Text"] = column.Caption;
-                properties["Left"] = x - (int)properties["CaptionLength"]; //checkbox starts on the left
-                var checkBox = CreateControl(parentControl, GetCheckBoxControl());
+                properties[key: "Text"] = column.Caption;
+                properties[key: "Left"] = x - (int)properties[key: "CaptionLength"]; //checkbox starts on the left
+                var checkBox = CreateControl(
+                    parentControl: parentControl,
+                    controlType: GetCheckBoxControl()
+                );
                 checkBox.Name = checkBox.ControlItem.Name + tabIndex;
-                PopulateControlProperties(checkBox, properties);
-                PopulateControlBindings(checkBox, entity.Name, column.Name, "Value");
+                PopulateControlProperties(control: checkBox, properties: properties);
+                PopulateControlBindings(
+                    control: checkBox,
+                    entity: entity.Name,
+                    field: column.Name,
+                    property: "Value"
+                );
                 break;
             }
             case OrigamDataType.Date:
             {
-                var dateBox = CreateControl(parentControl, GetDateBoxControl());
+                var dateBox = CreateControl(
+                    parentControl: parentControl,
+                    controlType: GetDateBoxControl()
+                );
                 dateBox.Name = dateBox.ControlItem.Name + tabIndex;
-                PopulateControlProperties(dateBox, properties);
-                PopulateControlBindings(dateBox, entity.Name, column.Name, "DateValue");
+                PopulateControlProperties(control: dateBox, properties: properties);
+                PopulateControlBindings(
+                    control: dateBox,
+                    entity: entity.Name,
+                    field: column.Name,
+                    property: "DateValue"
+                );
                 break;
             }
             case OrigamDataType.UniqueIdentifier:
@@ -201,36 +240,47 @@ public class GuiHelper
                 if (column.DefaultLookup == null)
                 {
                     throw new Exception(
-                        ResourceUtils.GetString(
-                            "ErrorLookupNotSet",
-                            entity.Name + "/" + column.Name
+                        message: ResourceUtils.GetString(
+                            key: "ErrorLookupNotSet",
+                            args: entity.Name + "/" + column.Name
                         )
                     );
                 }
-                properties["LookupId"] = column.DefaultLookup.PrimaryKey["Id"];
-                var comboBox = CreateControl(parentControl, GetComboBoxControl());
+                properties[key: "LookupId"] = column.DefaultLookup.PrimaryKey[key: "Id"];
+                var comboBox = CreateControl(
+                    parentControl: parentControl,
+                    controlType: GetComboBoxControl()
+                );
                 comboBox.Name = comboBox.ControlItem.Name + tabIndex;
-                PopulateControlProperties(comboBox, properties);
-                PopulateControlBindings(comboBox, entity.Name, column.Name, "LookupValue");
+                PopulateControlProperties(control: comboBox, properties: properties);
+                PopulateControlBindings(
+                    control: comboBox,
+                    entity: entity.Name,
+                    field: column.Name,
+                    property: "LookupValue"
+                );
                 break;
             }
             case OrigamDataType.Object:
             {
                 var multiColumnAdapterFieldWrapper = CreateControl(
-                    parentControl,
-                    GetMultiColumnAdapterFieldWrapperControl()
+                    parentControl: parentControl,
+                    controlType: GetMultiColumnAdapterFieldWrapperControl()
                 );
                 multiColumnAdapterFieldWrapper.Name =
                     multiColumnAdapterFieldWrapper.ControlItem.Name + tabIndex;
-                PopulateControlProperties(multiColumnAdapterFieldWrapper, properties);
+                PopulateControlProperties(
+                    control: multiColumnAdapterFieldWrapper,
+                    properties: properties
+                );
                 break;
             }
             default:
             {
                 throw new ArgumentOutOfRangeException(
-                    "DataType",
-                    column.DataType,
-                    "Default control of this data type is not supported by the control builder."
+                    paramName: "DataType",
+                    actualValue: column.DataType,
+                    message: "Default control of this data type is not supported by the control builder."
                 );
             }
         }
@@ -240,8 +290,8 @@ public class GuiHelper
     {
         var schemaService = ServiceManager.Services.GetService<ISchemaService>();
         var control = parentControl.NewItem<ControlSetItem>(
-            schemaService.ActiveSchemaExtensionId,
-            null
+            schemaExtensionId: schemaService.ActiveSchemaExtensionId,
+            group: null
         );
         control.ControlItem = controlType;
         return control;
@@ -253,8 +303,8 @@ public class GuiHelper
         var userControlSchemaItemProvider =
             schemaService.GetProvider<UserControlSchemaItemProvider>();
         var newControl = userControlSchemaItemProvider.NewItem<ControlItem>(
-            schemaService.ActiveSchemaExtensionId,
-            null
+            schemaExtensionId: schemaService.ActiveSchemaExtensionId,
+            group: null
         );
         newControl.Name = panel.Name;
         newControl.IsComplexType = true;
@@ -276,37 +326,37 @@ public class GuiHelper
 
     public static ControlItem GetPanelControl()
     {
-        return GetControlByName(CONTROL_NAME_PANEL);
+        return GetControlByName(name: CONTROL_NAME_PANEL);
     }
 
     public static ControlItem GetFormControl()
     {
-        return GetControlByName(CONTROL_NAME_FORM);
+        return GetControlByName(name: CONTROL_NAME_FORM);
     }
 
     public static ControlItem GetTextBoxControl()
     {
-        return GetControlByName(CONTROL_NAME_TEXTBOX);
+        return GetControlByName(name: CONTROL_NAME_TEXTBOX);
     }
 
     public static ControlItem GetCheckBoxControl()
     {
-        return GetControlByName(CONTROL_NAME_CHECKBOX);
+        return GetControlByName(name: CONTROL_NAME_CHECKBOX);
     }
 
     public static ControlItem GetDateBoxControl()
     {
-        return GetControlByName(CONTROL_NAME_DATEBOX);
+        return GetControlByName(name: CONTROL_NAME_DATEBOX);
     }
 
     public static ControlItem GetMultiColumnAdapterFieldWrapperControl()
     {
-        return GetControlByName(CONTROL_NAME_MULTICOLUMNADAPTERFIELD);
+        return GetControlByName(name: CONTROL_NAME_MULTICOLUMNADAPTERFIELD);
     }
 
     public static ControlItem GetComboBoxControl()
     {
-        return GetControlByName(CONTROL_NAME_COMBOBOX);
+        return GetControlByName(name: CONTROL_NAME_COMBOBOX);
     }
 
     public static ControlItem GetControlByName(string name)
@@ -314,8 +364,10 @@ public class GuiHelper
         var schemaService = ServiceManager.Services.GetService<ISchemaService>();
         var userControlSchemaItemProvider =
             schemaService.GetProvider<UserControlSchemaItemProvider>();
-        return userControlSchemaItemProvider.GetChildByName(name, ControlItem.CategoryConst)
-            as ControlItem;
+        return userControlSchemaItemProvider.GetChildByName(
+                name: name,
+                itemType: ControlItem.CategoryConst
+            ) as ControlItem;
     }
 
     private static void PopulateControlBindings(
@@ -327,11 +379,11 @@ public class GuiHelper
     {
         var schemaService = ServiceManager.Services.GetService<ISchemaService>();
         var propertyBindingInfo = control.NewItem<PropertyBindingInfo>(
-            schemaService.ActiveSchemaExtensionId,
-            null
+            schemaExtensionId: schemaService.ActiveSchemaExtensionId,
+            group: null
         );
         propertyBindingInfo.ControlPropertyItem =
-            control.ControlItem.GetChildByName(property) as ControlPropertyItem;
+            control.ControlItem.GetChildByName(name: property) as ControlPropertyItem;
         propertyBindingInfo.Value = field;
         propertyBindingInfo.DesignDataSetPath = entity + "." + field;
     }
@@ -341,18 +393,18 @@ public class GuiHelper
         var schema = ServiceManager.Services.GetService<ISchemaService>();
         foreach (
             var propertyDef in control.ControlItem.ChildItemsByType<ControlPropertyItem>(
-                ControlPropertyItem.CategoryConst
+                itemType: ControlPropertyItem.CategoryConst
             )
         )
         {
             var propertyValueItem = control.NewItem<PropertyValueItem>(
-                schema.ActiveSchemaExtensionId,
-                null
+                schemaExtensionId: schema.ActiveSchemaExtensionId,
+                group: null
             );
             propertyValueItem.ControlPropertyItem = propertyDef;
-            if (properties.Contains(propertyDef.Name))
+            if (properties.Contains(key: propertyDef.Name))
             {
-                propertyValueItem.SetValue(properties[propertyDef.Name]);
+                propertyValueItem.SetValue(value: properties[key: propertyDef.Name]);
             }
         }
     }

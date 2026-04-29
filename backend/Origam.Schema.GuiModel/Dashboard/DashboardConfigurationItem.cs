@@ -42,64 +42,64 @@ public class DashboardConfigurationItem
 
     public DashboardConfigurationItem() { }
 
-    [XmlAttribute("label")]
+    [XmlAttribute(attributeName: "label")]
     public string Label
     {
         get { return _label; }
         set { _label = value; }
     }
 
-    [XmlAttribute("id")]
+    [XmlAttribute(attributeName: "id")]
     public Guid Id
     {
         get { return _id; }
         set { _id = value; }
     }
 
-    [XmlAttribute("componentId")]
+    [XmlAttribute(attributeName: "componentId")]
     public Guid ComponentId
     {
         get { return _componentId; }
         set { _componentId = value; }
     }
 
-    [XmlAttribute("left")]
+    [XmlAttribute(attributeName: "left")]
     public int Left
     {
         get { return _left; }
         set { _left = value; }
     }
 
-    [XmlAttribute("top")]
+    [XmlAttribute(attributeName: "top")]
     public int Top
     {
         get { return _top; }
         set { _top = value; }
     }
 
-    [XmlAttribute("colSpan")]
+    [XmlAttribute(attributeName: "colSpan")]
     public int ColSpan
     {
         get { return _colSpan; }
         set { _colSpan = value; }
     }
 
-    [XmlAttribute("rowSpan")]
+    [XmlAttribute(attributeName: "rowSpan")]
     public int RowSpan
     {
         get { return _rowSpan; }
         set { _rowSpan = value; }
     }
 
-    [XmlElement("parameter", typeof(DashboardConfigurationItemParameter))]
+    [XmlElement(elementName: "parameter", type: typeof(DashboardConfigurationItemParameter))]
     public DashboardConfigurationItemParameter[] Parameters
     {
         get { return _parameters; }
         set { _parameters = value; }
     }
 
-    [XmlArray("children")]
-    [XmlArrayItem("item", typeof(DashboardConfigurationItem))]
+    [XmlArray(elementName: "children")]
+    [XmlArrayItem(elementName: "item", type: typeof(DashboardConfigurationItem))]
     public DashboardConfigurationItem[] Items
     {
         get { return _items; }

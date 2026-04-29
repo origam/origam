@@ -28,7 +28,7 @@ public partial class FindReplaceForm : Form
 
     private void btnFindNext_Click(object sender, EventArgs e)
     {
-        if (!FindNext(txtFind.Text))
+        if (!FindNext(textToFind: txtFind.Text))
         {
             SystemSounds.Beep.Play();
         }
@@ -36,16 +36,23 @@ public partial class FindReplaceForm : Form
 
     private void btnReplace_Click(object sender, EventArgs e)
     {
-        Regex regex = GetRegEx(txtFind.Text);
-        string input = Editor.Text.Substring(Editor.SelectionStart, Editor.SelectionLength);
-        Match match = regex.Match(input);
+        Regex regex = GetRegEx(textToFind: txtFind.Text);
+        string input = Editor.Text.Substring(
+            startIndex: Editor.SelectionStart,
+            length: Editor.SelectionLength
+        );
+        Match match = regex.Match(input: input);
         bool replaced = false;
         if (match.Success && match.Index == 0 && match.Length == input.Length)
         {
-            Editor.Document.Replace(Editor.SelectionStart, Editor.SelectionLength, txtReplace.Text);
+            Editor.Document.Replace(
+                offset: Editor.SelectionStart,
+                length: Editor.SelectionLength,
+                text: txtReplace.Text
+            );
             replaced = true;
         }
-        if (!FindNext(txtFind.Text) && !replaced)
+        if (!FindNext(textToFind: txtFind.Text) && !replaced)
         {
             SystemSounds.Beep.Play();
         }
@@ -55,23 +62,27 @@ public partial class FindReplaceForm : Form
     {
         if (
             MessageBox.Show(
-                "Are you sure you want to Replace All occurences of \""
+                text: "Are you sure you want to Replace All occurences of \""
                     + txtFind.Text
                     + "\" with \""
                     + txtReplace.Text
                     + "\"?",
-                "Replace All",
-                MessageBoxButtons.OKCancel,
-                MessageBoxIcon.Question
+                caption: "Replace All",
+                buttons: MessageBoxButtons.OKCancel,
+                icon: MessageBoxIcon.Question
             ) == DialogResult.OK
         )
         {
-            Regex regex = GetRegEx(txtFind.Text, true);
+            Regex regex = GetRegEx(textToFind: txtFind.Text, leftToRight: true);
             int offset = 0;
             Editor.BeginChange();
-            foreach (Match match in regex.Matches(Editor.Text))
+            foreach (Match match in regex.Matches(input: Editor.Text))
             {
-                Editor.Document.Replace(offset + match.Index, match.Length, txtReplace.Text);
+                Editor.Document.Replace(
+                    offset: offset + match.Index,
+                    length: match.Length,
+                    text: txtReplace.Text
+                );
                 offset += txtReplace.Text.Length - match.Length;
             }
             Editor.EndChange();
@@ -80,27 +91,27 @@ public partial class FindReplaceForm : Form
 
     private bool FindNext(string textToFind)
     {
-        Regex regex = GetRegEx(textToFind);
-        int start = regex.Options.HasFlag(RegexOptions.RightToLeft)
+        Regex regex = GetRegEx(textToFind: textToFind);
+        int start = regex.Options.HasFlag(flag: RegexOptions.RightToLeft)
             ? Editor.SelectionStart
             : Editor.SelectionStart + Editor.SelectionLength;
-        Match match = regex.Match(Editor.Text, start);
+        Match match = regex.Match(input: Editor.Text, startat: start);
         if (!match.Success) // start again from beginning or end
         {
-            if (regex.Options.HasFlag(RegexOptions.RightToLeft))
+            if (regex.Options.HasFlag(flag: RegexOptions.RightToLeft))
             {
-                match = regex.Match(Editor.Text, Editor.Text.Length);
+                match = regex.Match(input: Editor.Text, startat: Editor.Text.Length);
             }
             else
             {
-                match = regex.Match(Editor.Text, 0);
+                match = regex.Match(input: Editor.Text, startat: 0);
             }
         }
         if (match.Success)
         {
-            Editor.Select(match.Index, match.Length);
-            TextLocation loc = Editor.Document.GetLocation(match.Index);
-            Editor.ScrollTo(loc.Line, loc.Column);
+            Editor.Select(start: match.Index, length: match.Length);
+            TextLocation loc = Editor.Document.GetLocation(offset: match.Index);
+            Editor.ScrollTo(line: loc.Line, column: loc.Column);
         }
         return match.Success;
     }
@@ -120,12 +131,14 @@ public partial class FindReplaceForm : Form
 
         if (cbRegex.Checked == true)
         {
-            return new Regex(textToFind, options);
+            return new Regex(pattern: textToFind, options: options);
         }
-        string pattern = Regex.Escape(textToFind);
+        string pattern = Regex.Escape(str: textToFind);
         if (cbWildcards.Checked)
         {
-            pattern = pattern.Replace("\\*", ".*").Replace("\\?", ".");
+            pattern = pattern
+                .Replace(oldValue: "\\*", newValue: ".*")
+                .Replace(oldValue: "\\?", newValue: ".");
         }
 
         if (cbWholeWord.Checked)
@@ -133,7 +146,7 @@ public partial class FindReplaceForm : Form
             pattern = "\\b" + pattern + "\\b";
         }
 
-        return new Regex(pattern, options);
+        return new Regex(pattern: pattern, options: options);
     }
 
     protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
@@ -143,6 +156,6 @@ public partial class FindReplaceForm : Form
             this.Close();
             return true;
         }
-        return base.ProcessCmdKey(ref msg, keyData);
+        return base.ProcessCmdKey(msg: ref msg, keyData: keyData);
     }
 }

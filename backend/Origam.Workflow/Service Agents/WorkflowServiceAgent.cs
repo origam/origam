@@ -46,8 +46,8 @@ public class WorkflowServiceAgent : AbstractServiceAgent, IAsyncAgent
         {
             wf =
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(workflowId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: workflowId)
                 ) as IWorkflow;
         }
         catch
@@ -57,47 +57,56 @@ public class WorkflowServiceAgent : AbstractServiceAgent, IAsyncAgent
         if (wf == null || invalidWorkflowDefinition)
         {
             throw new ArgumentOutOfRangeException(
-                "workflowId",
-                workflowId,
-                ResourceUtils.GetString("ErrorWorkflowDefinition")
+                paramName: "workflowId",
+                actualValue: workflowId,
+                message: ResourceUtils.GetString(key: "ErrorWorkflowDefinition")
             );
         }
         WorkflowEngine engine = new WorkflowEngine();
         engine.PersistenceProvider = this.PersistenceProvider;
         engine.WorkflowBlock = wf;
         engine.TransactionBehavior = wf.TransactionBehavior;
-        engine.SetTransactionId(TransactionId, wf.TransactionBehavior);
+        engine.SetTransactionId(
+            transactionId: TransactionId,
+            transactionBehavior: wf.TransactionBehavior
+        );
         engine.WorkflowInstanceId = this.TraceWorkflowId;
         engine.CallingWorkflow = this.WorkflowEngine as WorkflowEngine;
-        engine.Name = string.IsNullOrEmpty(wf.Name) ? "WorkFlow" : wf.Name;
+        engine.Name = string.IsNullOrEmpty(value: wf.Name) ? "WorkFlow" : wf.Name;
         engine.Trace = this.Trace;
         workflowUniqueId = engine.WorkflowUniqueId;
         // input parameters
         foreach (DictionaryEntry entry in parameters)
         {
-            ISchemaItem context = wf.GetChildByName((string)entry.Key, ContextStore.CategoryConst);
+            ISchemaItem context = wf.GetChildByName(
+                name: (string)entry.Key,
+                itemType: ContextStore.CategoryConst
+            );
 
             if (context == null)
             {
                 throw new ArgumentOutOfRangeException(
-                    "name",
-                    entry.Key,
-                    ResourceUtils.GetString("ErrorWorkflowContext", ((ISchemaItem)wf).Path)
+                    paramName: "name",
+                    actualValue: entry.Key,
+                    message: ResourceUtils.GetString(
+                        key: "ErrorWorkflowContext",
+                        args: ((ISchemaItem)wf).Path
+                    )
                 );
             }
             object contextValue = entry.Value;
             if (contextValue is DataSet)
             {
-                contextValue = DataDocumentFactory.New(contextValue as DataSet);
+                contextValue = DataDocumentFactory.New(dataSet: contextValue as DataSet);
             }
 
-            engine.InputContexts.Add(context.PrimaryKey, contextValue);
+            engine.InputContexts.Add(key: context.PrimaryKey, value: contextValue);
         }
         var host = GetHost();
         host.WorkflowFinished += OnHostOnWorkflowFinished;
         host.WorkflowMessage += Host_WorkflowMessage;
 
-        host.ExecuteWorkflow(engine);
+        host.ExecuteWorkflow(engine: engine);
         if (engine.WorkflowException != null)
         {
             throw engine.WorkflowException;
@@ -114,24 +123,27 @@ public class WorkflowServiceAgent : AbstractServiceAgent, IAsyncAgent
 
     private void OnHostOnWorkflowFinished(object sender, WorkflowHostEventArgs e)
     {
-        if (e.Engine.WorkflowUniqueId.Equals(workflowUniqueId))
+        if (e.Engine.WorkflowUniqueId.Equals(g: workflowUniqueId))
         {
             UnsubscribeEvents();
             AsyncCallFinished?.Invoke(
-                null,
-                new AsyncReturnValues { Result = e.Engine.ReturnValue, Exception = e.Exception }
+                sender: null,
+                e: new AsyncReturnValues { Result = e.Engine.ReturnValue, Exception = e.Exception }
             );
         }
     }
 
     private void Host_WorkflowMessage(object sender, WorkflowHostMessageEventArgs e)
     {
-        if (e.Engine.WorkflowUniqueId.Equals(workflowUniqueId))
+        if (e.Engine.WorkflowUniqueId.Equals(g: workflowUniqueId))
         {
             if (e.Exception != null)
             {
                 UnsubscribeEvents();
-                AsyncCallFinished?.Invoke(null, new AsyncReturnValues { Exception = e.Exception });
+                AsyncCallFinished?.Invoke(
+                    sender: null,
+                    e: new AsyncReturnValues { Exception = e.Exception }
+                );
             }
         }
     }
@@ -158,19 +170,23 @@ public class WorkflowServiceAgent : AbstractServiceAgent, IAsyncAgent
             case "ExecuteWorkflow":
             {
                 // Check input parameters
-                if (!(this.Parameters["Workflow"] is Guid))
+                if (!(this.Parameters[key: "Workflow"] is Guid))
                 {
-                    throw new InvalidCastException(ResourceUtils.GetString("ErrorWorkflowNotGuid"));
+                    throw new InvalidCastException(
+                        message: ResourceUtils.GetString(key: "ErrorWorkflowNotGuid")
+                    );
                 }
 
-                if (!(this.Parameters["Parameters"] is Hashtable))
+                if (!(this.Parameters[key: "Parameters"] is Hashtable))
                 {
-                    throw new InvalidCastException(ResourceUtils.GetString("ErrorNotHashtable"));
+                    throw new InvalidCastException(
+                        message: ResourceUtils.GetString(key: "ErrorNotHashtable")
+                    );
                 }
 
                 _result = this.ExecuteWorkflow(
-                    (Guid)this.Parameters["Workflow"],
-                    (Hashtable)this.Parameters["Parameters"]
+                    workflowId: (Guid)this.Parameters[key: "Workflow"],
+                    parameters: (Hashtable)this.Parameters[key: "Parameters"]
                 );
                 break;
             }
@@ -178,9 +194,9 @@ public class WorkflowServiceAgent : AbstractServiceAgent, IAsyncAgent
             default:
             {
                 throw new ArgumentOutOfRangeException(
-                    "MethodName",
-                    this.MethodName,
-                    ResourceUtils.GetString("InvalidMethodName")
+                    paramName: "MethodName",
+                    actualValue: this.MethodName,
+                    message: ResourceUtils.GetString(key: "InvalidMethodName")
                 );
             }
         }
@@ -197,13 +213,15 @@ public class WorkflowServiceAgent : AbstractServiceAgent, IAsyncAgent
         ServiceMethodCallTask task = item as ServiceMethodCallTask;
         if (task != null)
         {
-            wf = ResolveServiceMethodCallTask(task);
+            wf = ResolveServiceMethodCallTask(task: task);
         }
         if (wf != null && method == "ExecuteWorkflow" && parameter == "Parameters")
         {
-            foreach (var cs in wf.ChildItemsByType<ContextStore>(ContextStore.CategoryConst))
+            foreach (
+                var cs in wf.ChildItemsByType<ContextStore>(itemType: ContextStore.CategoryConst)
+            )
             {
-                result.Add(cs.Name);
+                result.Add(item: cs.Name);
             }
         }
         return result;
@@ -211,10 +229,10 @@ public class WorkflowServiceAgent : AbstractServiceAgent, IAsyncAgent
 
     private IWorkflow ResolveServiceMethodCallTask(ServiceMethodCallTask task)
     {
-        ISchemaItem wfParam = task.GetChildByName("Workflow");
+        ISchemaItem wfParam = task.GetChildByName(name: "Workflow");
         if (wfParam.ChildItems.Count == 1)
         {
-            WorkflowReference wfRef = wfParam.ChildItems[0] as WorkflowReference;
+            WorkflowReference wfRef = wfParam.ChildItems[index: 0] as WorkflowReference;
             if (wfRef != null)
             {
                 return wfRef.Workflow;

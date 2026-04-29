@@ -39,8 +39,14 @@ public class MonitoredMsSqlDataService : MsSqlDataService, ITraceService
         bool forceBulkInsert
     )
     {
-        monitor.TraceUpdateData(dataset);
-        return base.UpdateData(query, userProfile, dataset, transactionId, forceBulkInsert);
+        monitor.TraceUpdateData(dataset: dataset);
+        return base.UpdateData(
+            query: query,
+            userProfile: userProfile,
+            dataset: dataset,
+            transactionId: transactionId,
+            forceBulkInsert: forceBulkInsert
+        );
     }
 }
 
@@ -57,8 +63,14 @@ public class MonitoredPgSqlDataService : PgSqlDataService, ITraceService
         bool forceBulkInsert
     )
     {
-        monitor.TraceUpdateData(dataset);
-        return base.UpdateData(query, userProfile, dataset, transactionId, forceBulkInsert);
+        monitor.TraceUpdateData(dataset: dataset);
+        return base.UpdateData(
+            query: query,
+            userProfile: userProfile,
+            dataset: dataset,
+            transactionId: transactionId,
+            forceBulkInsert: forceBulkInsert
+        );
     }
 }
 
@@ -73,7 +85,7 @@ public class SqlDataServiceMonitor
 
     private void AddOperation(Operation operation)
     {
-        Operations.Add(operation);
+        Operations.Add(item: operation);
     }
 
     public void TraceUpdateData(DataSet dataset)
@@ -87,14 +99,15 @@ public class SqlDataServiceMonitor
                 };
         if (deletesWorkQueueEntry)
         {
-            dataset.Tables[0].Rows[0].RejectChanges();
-            var deletedRowId = (Guid)dataset.Tables[0].Rows[0]["Id"];
-            var refWorkQueueId = (Guid)dataset.Tables[0].Rows[0]["refWorkQueueId"];
-            dataset.Tables[0].Rows[0].Delete();
+            dataset.Tables[index: 0].Rows[index: 0].RejectChanges();
+            var deletedRowId = (Guid)dataset.Tables[index: 0].Rows[index: 0][columnName: "Id"];
+            var refWorkQueueId = (Guid)
+                dataset.Tables[index: 0].Rows[index: 0][columnName: "refWorkQueueId"];
+            dataset.Tables[index: 0].Rows[index: 0].Delete();
             AddOperation(
-                new DeleteWorkQueueEntryOperation(
-                    "UpdateData",
-                    new Dictionary<string, object>
+                operation: new DeleteWorkQueueEntryOperation(
+                    Name: "UpdateData",
+                    Parameters: new Dictionary<string, object>
                     {
                         { "refWorkQueueId", refWorkQueueId },
                         { "deletedRowId", deletedRowId },
@@ -110,14 +123,17 @@ public record Operation(string Name, Dictionary<string, object> Parameters)
 {
     public override string ToString()
     {
-        string parameters = string.Join(", ", Parameters.Select(x => $"[{x.Key}, {x.Value}]"));
+        string parameters = string.Join(
+            separator: ", ",
+            values: Parameters.Select(selector: x => $"[{x.Key}, {x.Value}]")
+        );
         return $"Operation: {Name}, Parameters: {parameters}";
     }
 }
 
 public record DeleteWorkQueueEntryOperation(string Name, Dictionary<string, object> Parameters)
-    : Operation(Name, Parameters)
+    : Operation(Name: Name, Parameters: Parameters)
 {
-    public Guid RowId => (Guid)Parameters["deletedRowId"];
-    public DateTime ExecutedAt => (DateTime)Parameters["executedAt"];
+    public Guid RowId => (Guid)Parameters[key: "deletedRowId"];
+    public DateTime ExecutedAt => (DateTime)Parameters[key: "executedAt"];
 }

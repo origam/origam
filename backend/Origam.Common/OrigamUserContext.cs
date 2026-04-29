@@ -32,20 +32,20 @@ public class OrigamUserContext
 {
     private static IDictionary<string, Hashtable> _contexts = new Dictionary<string, Hashtable>();
     private static object _lock = new object();
-    public static Hashtable Context => GetContext(UserKey());
+    public static Hashtable Context => GetContext(key: UserKey());
 
     public static void Reset()
     {
         string currentUsername = UserKey();
-        Reset(currentUsername);
+        Reset(username: currentUsername);
     }
 
     public static void Reset(string username)
     {
         lock (_lock)
         {
-            DisposeCachedObjects(username);
-            _contexts.Remove(username);
+            DisposeCachedObjects(username: username);
+            _contexts.Remove(key: username);
         }
     }
 
@@ -55,7 +55,7 @@ public class OrigamUserContext
         {
             foreach (var contextEntry in _contexts)
             {
-                DisposeCachedObjects(contextEntry.Key);
+                DisposeCachedObjects(username: contextEntry.Key);
             }
             _contexts.Clear();
         }
@@ -65,17 +65,17 @@ public class OrigamUserContext
     {
         lock (_lock)
         {
-            if (!_contexts.ContainsKey(key))
+            if (!_contexts.ContainsKey(key: key))
             {
-                _contexts.Add(key, new Hashtable());
+                _contexts.Add(key: key, value: new Hashtable());
             }
-            return _contexts[key] as Hashtable;
+            return _contexts[key: key] as Hashtable;
         }
     }
 
     private static void DisposeCachedObjects(string username)
     {
-        Hashtable context = GetContext(username);
+        Hashtable context = GetContext(key: username);
         foreach (DictionaryEntry entry in context)
         {
             IDisposable disposableObject = entry.Value as IDisposable;
@@ -99,11 +99,11 @@ public class OrigamUserContext
     {
         lock (_lock)
         {
-            if (!Context.Contains(cacheName))
+            if (!Context.Contains(key: cacheName))
             {
-                Context.Add(cacheName, new Hashtable());
+                Context.Add(key: cacheName, value: new Hashtable());
             }
-            return (Hashtable)Context[cacheName];
+            return (Hashtable)Context[key: cacheName];
         }
     }
 }

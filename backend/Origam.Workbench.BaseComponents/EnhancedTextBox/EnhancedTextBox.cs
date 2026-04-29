@@ -39,7 +39,7 @@ public class EnhancedTextBox : TextBox
         KeyPress += OnKeyPress;
         Leave += OnLeave;
         LostFocus += OnLeave;
-        formatter = new StringFormatter(this);
+        formatter = new StringFormatter(textBox: this);
         this.timeNowFunc = timeNowFunc ?? (() => DateTime.Now);
     }
 
@@ -50,11 +50,15 @@ public class EnhancedTextBox : TextBox
         {
             if (value == typeof(DateTime))
             {
-                formatter = new DatetimeFormatter(this, customFormat, timeNowFunc);
+                formatter = new DatetimeFormatter(
+                    textBox: this,
+                    customFormat: customFormat,
+                    timeNowFunc: timeNowFunc
+                );
             }
             else if (value == typeof(string))
             {
-                formatter = new StringFormatter(this);
+                formatter = new StringFormatter(textBox: this);
             }
             else if (value == typeof(long))
             {
@@ -62,7 +66,11 @@ public class EnhancedTextBox : TextBox
                     textBox: this,
                     customFormat: customFormat,
                     textParseFunc: text =>
-                        long.Parse(text, Formatter.WholeNumberStyle, CurrentNumFormat)
+                        long.Parse(
+                            s: text,
+                            style: Formatter.WholeNumberStyle,
+                            provider: CurrentNumFormat
+                        )
                 );
             }
             else if (value == typeof(int))
@@ -71,7 +79,11 @@ public class EnhancedTextBox : TextBox
                     textBox: this,
                     customFormat: customFormat,
                     textParseFunc: text =>
-                        int.Parse(text, Formatter.WholeNumberStyle, CurrentNumFormat)
+                        int.Parse(
+                            s: text,
+                            style: Formatter.WholeNumberStyle,
+                            provider: CurrentNumFormat
+                        )
                 );
             }
             else if (value == typeof(decimal))
@@ -80,7 +92,11 @@ public class EnhancedTextBox : TextBox
                     textBox: this,
                     format: customFormat,
                     textParseFunc: text =>
-                        decimal.Parse(text, Formatter.RealNumberStyle, CurrentNumFormat)
+                        decimal.Parse(
+                            s: text,
+                            style: Formatter.RealNumberStyle,
+                            provider: CurrentNumFormat
+                        )
                 );
             }
             else if (value == typeof(float))
@@ -89,7 +105,11 @@ public class EnhancedTextBox : TextBox
                     textBox: this,
                     format: customFormat,
                     textParseFunc: text =>
-                        float.Parse(text, Formatter.RealNumberStyle, CurrentNumFormat)
+                        float.Parse(
+                            s: text,
+                            style: Formatter.RealNumberStyle,
+                            provider: CurrentNumFormat
+                        )
                 );
             }
             else if (value == typeof(double))
@@ -98,12 +118,16 @@ public class EnhancedTextBox : TextBox
                     textBox: this,
                     format: customFormat,
                     textParseFunc: text =>
-                        double.Parse(text, Formatter.RealNumberStyle, CurrentNumFormat)
+                        double.Parse(
+                            s: text,
+                            style: Formatter.RealNumberStyle,
+                            provider: CurrentNumFormat
+                        )
                 );
             }
             else
             {
-                formatter = new StringFormatter(this);
+                formatter = new StringFormatter(textBox: this);
             }
             dataType = value;
         }
@@ -121,8 +145,8 @@ public class EnhancedTextBox : TextBox
             }
             Text = value.ToString();
 
-            formatter.OnLeave(null, EventArgs.Empty);
-            OnValueChanged(EventArgs.Empty);
+            formatter.OnLeave(sender: null, e: EventArgs.Empty);
+            OnValueChanged(e: EventArgs.Empty);
         }
     }
     public string CustomFormat
@@ -136,32 +160,32 @@ public class EnhancedTextBox : TextBox
     }
     public event EventHandler ValueChanged
     {
-        add => Events.AddHandler(ValueChangedEventKey, value);
-        remove => Events.RemoveHandler(ValueChangedEventKey, value);
+        add => Events.AddHandler(key: ValueChangedEventKey, value: value);
+        remove => Events.RemoveHandler(key: ValueChangedEventKey, value: value);
     }
 
     private void OnValueChanged(EventArgs e)
     {
-        if (!(Events[ValueChangedEventKey] is EventHandler eventHandler))
+        if (!(Events[key: ValueChangedEventKey] is EventHandler eventHandler))
         {
             return;
         }
-        eventHandler(this, e);
+        eventHandler(sender: this, e: e);
     }
 
     private void OnKeyDown(object sender, KeyEventArgs e)
     {
-        formatter.OnKeyDown(sender, e);
+        formatter.OnKeyDown(sender: sender, e: e);
     }
 
     private void OnKeyPress(object sender, KeyPressEventArgs e)
     {
-        formatter.OnKeyPress(sender, e);
+        formatter.OnKeyPress(sender: sender, e: e);
     }
 
     private void OnLeave(object sender, EventArgs e)
     {
-        formatter.OnLeave(sender, e);
-        OnValueChanged(e);
+        formatter.OnLeave(sender: sender, e: e);
+        OnValueChanged(e: e);
     }
 }

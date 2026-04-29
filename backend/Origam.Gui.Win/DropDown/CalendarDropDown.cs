@@ -64,7 +64,7 @@ public class CalendarDropDown : System.Windows.Forms.Form, IDropDownPart
                 components.Dispose();
             }
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
 
     #region Windows Form Designer generated code
@@ -119,7 +119,7 @@ public class CalendarDropDown : System.Windows.Forms.Form, IDropDownPart
         get
         {
             return monthCalendar1.SelectionStart.ToString(
-                this.DropDownControl.EditControl.CustomFormat
+                format: this.DropDownControl.EditControl.CustomFormat
             );
         }
         set { throw new NotImplementedException(); }

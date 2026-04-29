@@ -29,23 +29,27 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.EntityModel;
 
-[SchemaItemDescription("Function Call", "Fields", "icon_function-call.png")]
-[HelpTopic("Function+Call+Field")]
-[DefaultProperty("Function")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(
+    name: "Function Call",
+    folderName: "Fields",
+    iconName: "icon_function-call.png"
+)]
+[HelpTopic(topic: "Function+Call+Field")]
+[DefaultProperty(name: "Function")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class FunctionCall : AbstractDataEntityColumn
 {
     public FunctionCall() { }
 
     public FunctionCall(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(schemaExtensionId: schemaExtensionId) { }
 
     public FunctionCall(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Overriden AbstractDataEntityColumn Members
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public override bool UseFolders => false;
     public override string FieldType => "FunctionCall";
     public override bool ReadOnly
@@ -69,18 +73,18 @@ public class FunctionCall : AbstractDataEntityColumn
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(Function);
-        base.GetExtraDependencies(dependencies);
+        dependencies.Add(item: Function);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
     #endregion
     #region Properties
     public Guid FunctionId;
 
-    [Category("Function")]
-    [TypeConverter(typeof(FunctionConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
+    [Category(category: "Function")]
+    [TypeConverter(type: typeof(FunctionConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
     [NotNullModelElementRule()]
-    [XmlReference("function", "FunctionId")]
+    [XmlReference(attributeName: "function", idField: "FunctionId")]
     public Function Function
     {
         get
@@ -88,7 +92,8 @@ public class FunctionCall : AbstractDataEntityColumn
             var key = new ModelElementKey { Id = this.FunctionId };
             try
             {
-                return (Function)PersistenceProvider.RetrieveInstance(typeof(Function), key);
+                return (Function)
+                    PersistenceProvider.RetrieveInstance(type: typeof(Function), primaryKey: key);
             }
             catch
             {
@@ -109,7 +114,7 @@ public class FunctionCall : AbstractDataEntityColumn
             }
             else
             {
-                FunctionId = (Guid)value.PrimaryKey["Id"];
+                FunctionId = (Guid)value.PrimaryKey[key: "Id"];
                 if (Name == null)
                 {
                     Name = Function.Name;
@@ -119,8 +124,8 @@ public class FunctionCall : AbstractDataEntityColumn
                 {
                     var parameter = (FunctionParameter)abstractSchemaItem;
                     var functionCallParameter = NewItem<FunctionCallParameter>(
-                        SchemaExtensionId,
-                        null
+                        schemaExtensionId: SchemaExtensionId,
+                        group: null
                     );
                     functionCallParameter.FunctionParameter = parameter;
                     functionCallParameter.Name = parameter.Name;
@@ -130,8 +135,8 @@ public class FunctionCall : AbstractDataEntityColumn
     }
     private bool _forceDatabaseCalculation = false;
 
-    [Category("Function"), DefaultValue(false)]
-    [XmlAttribute("forceDatabaseCalculation")]
+    [Category(category: "Function"), DefaultValue(value: false)]
+    [XmlAttribute(attributeName: "forceDatabaseCalculation")]
     public bool ForceDatabaseCalculation
     {
         get => _forceDatabaseCalculation;
@@ -139,14 +144,14 @@ public class FunctionCall : AbstractDataEntityColumn
     }
     #endregion
     #region ISchemaItemFactory Members
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public override Type[] NewItemTypes
     {
         get
         {
             var functionCallParameterType = new[] { typeof(FunctionCallParameter) };
             return ParentItem is IDataEntity
-                ? functionCallParameterType.Concat(base.NewItemTypes).ToArray()
+                ? functionCallParameterType.Concat(second: base.NewItemTypes).ToArray()
                 : functionCallParameterType;
         }
     }
@@ -154,9 +159,9 @@ public class FunctionCall : AbstractDataEntityColumn
     public override T NewItem<T>(Guid schemaExtensionId, SchemaItemGroup group)
     {
         return base.NewItem<T>(
-            schemaExtensionId,
-            group,
-            typeof(T) == typeof(FunctionCallParameter) ? "NewFunctionCallParameter" : null
+            schemaExtensionId: schemaExtensionId,
+            group: group,
+            itemName: typeof(T) == typeof(FunctionCallParameter) ? "NewFunctionCallParameter" : null
         );
     }
     #endregion
@@ -171,10 +176,10 @@ public class FunctionCall : AbstractDataEntityColumn
 
     protected override ISchemaItem ConvertTo<T>()
     {
-        var converted = ParentItem.NewItem<T>(SchemaExtensionId, Group);
+        var converted = ParentItem.NewItem<T>(schemaExtensionId: SchemaExtensionId, group: Group);
         if (converted is AbstractDataEntityColumn column)
         {
-            CopyFieldMembers(this, column);
+            CopyFieldMembers(source: this, destination: column);
         }
         if (converted is FieldMappingItem fieldMappingItem)
         {
@@ -186,7 +191,7 @@ public class FunctionCall : AbstractDataEntityColumn
             return base.ConvertTo<T>();
         }
         // does the common conversion tasks and persists both this and converted objects
-        FinishConversion(this, converted);
+        FinishConversion(source: this, converted: converted);
         return converted;
     }
     #endregion

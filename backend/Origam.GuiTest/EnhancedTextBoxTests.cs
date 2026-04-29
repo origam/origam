@@ -31,139 +31,143 @@ namespace Origam.GuiTest;
 [TestFixture]
 public class EnhancedTextBoxTests
 {
-    [TestCase("0912", "cs-CZ", "09.12.2017")]
-    [TestCase("0912", "cs-CZ", "09.12.2017")]
-    [TestCase("09122020", "cs-CZ", "09.12.2020")]
-    [TestCase("091220", "cs-CZ", "09.12.2020")]
-    [TestCase("0912 1230", "cs-CZ", "09.12.2017 12:30:00")]
-    [TestCase("0912 12", "cs-CZ", "09.12.2017 12:00:00")]
-    [TestCase("09122020 123020", "cs-CZ", "09.12.2020 12:30:20")]
-    [TestCase("129", "en-US", "12/9/2017")]
-    [TestCase("12092020", "en-US", "12/9/2020")]
-    [TestCase("120920", "en-US", "12/9/2020")]
-    [TestCase("129 1230", "en-US", "12/9/2017 12:30:00 PM")]
-    [TestCase("129 12", "en-US", "12/9/2017 12:00:00 PM")]
-    [TestCase("1209 12", "en-US", "12/9/2017 12:00:00 PM")]
-    [TestCase("12092020 123020", "en-US", "12/9/2020 12:30:20 PM")]
-    [TestCase("Tuesday, December 5, 2017", "en-US", "12/5/2017")]
-    [TestCase("5/5", "en-US", "5/5/2017")]
-    [TestCase("5/5 14", "en-US", "5/5/2017 2:00:00 PM")]
-    [TestCase("5/5 1430", "en-US", "5/5/2017 2:30:00 PM")]
-    [TestCase("5/5 14:30", "en-US", "5/5/2017 2:30:00 PM")]
-    [TestCase("5/5/16", "en-US", "5/5/2016")]
-    [TestCase("5 ", "en-US", "12/5/2017")]
-    [TestCase("5 ", "cs-CZ", "05.12.2017")]
-    [TestCase("05 ", "cs-CZ", "05.12.2017")]
-    [TestCase("05 ", "zh", "2017/12/5")]
-    [TestCase("0503 ", "zh", "2017/5/3")]
-    [TestCase("5/3 ", "zh", "2017/5/3")]
-    [TestCase("20170503 ", "zh", "2017/5/3")]
-    [TestCase("5/3 12", "zh", "2017/5/3 12:00:00")]
+    [TestCase(arg1: "0912", arg2: "cs-CZ", arg3: "09.12.2017")]
+    [TestCase(arg1: "0912", arg2: "cs-CZ", arg3: "09.12.2017")]
+    [TestCase(arg1: "09122020", arg2: "cs-CZ", arg3: "09.12.2020")]
+    [TestCase(arg1: "091220", arg2: "cs-CZ", arg3: "09.12.2020")]
+    [TestCase(arg1: "0912 1230", arg2: "cs-CZ", arg3: "09.12.2017 12:30:00")]
+    [TestCase(arg1: "0912 12", arg2: "cs-CZ", arg3: "09.12.2017 12:00:00")]
+    [TestCase(arg1: "09122020 123020", arg2: "cs-CZ", arg3: "09.12.2020 12:30:20")]
+    [TestCase(arg1: "129", arg2: "en-US", arg3: "12/9/2017")]
+    [TestCase(arg1: "12092020", arg2: "en-US", arg3: "12/9/2020")]
+    [TestCase(arg1: "120920", arg2: "en-US", arg3: "12/9/2020")]
+    [TestCase(arg1: "129 1230", arg2: "en-US", arg3: "12/9/2017 12:30:00 PM")]
+    [TestCase(arg1: "129 12", arg2: "en-US", arg3: "12/9/2017 12:00:00 PM")]
+    [TestCase(arg1: "1209 12", arg2: "en-US", arg3: "12/9/2017 12:00:00 PM")]
+    [TestCase(arg1: "12092020 123020", arg2: "en-US", arg3: "12/9/2020 12:30:20 PM")]
+    [TestCase(arg1: "Tuesday, December 5, 2017", arg2: "en-US", arg3: "12/5/2017")]
+    [TestCase(arg1: "5/5", arg2: "en-US", arg3: "5/5/2017")]
+    [TestCase(arg1: "5/5 14", arg2: "en-US", arg3: "5/5/2017 2:00:00 PM")]
+    [TestCase(arg1: "5/5 1430", arg2: "en-US", arg3: "5/5/2017 2:30:00 PM")]
+    [TestCase(arg1: "5/5 14:30", arg2: "en-US", arg3: "5/5/2017 2:30:00 PM")]
+    [TestCase(arg1: "5/5/16", arg2: "en-US", arg3: "5/5/2016")]
+    [TestCase(arg1: "5 ", arg2: "en-US", arg3: "12/5/2017")]
+    [TestCase(arg1: "5 ", arg2: "cs-CZ", arg3: "05.12.2017")]
+    [TestCase(arg1: "05 ", arg2: "cs-CZ", arg3: "05.12.2017")]
+    [TestCase(arg1: "05 ", arg2: "zh", arg3: "2017/12/5")]
+    [TestCase(arg1: "0503 ", arg2: "zh", arg3: "2017/5/3")]
+    [TestCase(arg1: "5/3 ", arg2: "zh", arg3: "2017/5/3")]
+    [TestCase(arg1: "20170503 ", arg2: "zh", arg3: "2017/5/3")]
+    [TestCase(arg1: "5/3 12", arg2: "zh", arg3: "2017/5/3 12:00:00")]
     public void ShouldAutoCompleteDateAndTime(
         string incompleteDate,
         string culture,
         string expectedDate
     )
     {
-        SetCulture(culture);
-        var sut = new EnhancedTextBox(timeNowFunc: () => new DateTime(2017, 12, 14))
+        SetCulture(culture: culture);
+        var sut = new EnhancedTextBox(timeNowFunc: () =>
+            new DateTime(year: 2017, month: 12, day: 14)
+        )
         {
             DataType = typeof(DateTime),
             Text = incompleteDate,
         };
-        TriggerLeaveEvent(sut);
+        TriggerLeaveEvent(sut: sut);
 
-        Assert.That(sut.Text, Is.EqualTo(expectedDate));
-        Assert.That(sut.Value, Is.TypeOf<DateTime>());
+        Assert.That(actual: sut.Text, expression: Is.EqualTo(expected: expectedDate));
+        Assert.That(actual: sut.Value, expression: Is.TypeOf<DateTime>());
     }
 
-    [TestCase("dd. MM. yyyy HH:mm:ss.fff", "21. 12. 2017 12:11:57.000", "en-US")]
-    [TestCase("dd. MM. yyyy HH:mm:ss.fff", "21. 12. 2017 12:11:57.000", "cs-CZ")]
-    [TestCase("dd. MM. yyyy HH:mm:ss.fff", "21. 12. 2017 12:11:57.000", "zh")]
+    [TestCase(arg1: "dd. MM. yyyy HH:mm:ss.fff", arg2: "21. 12. 2017 12:11:57.000", arg3: "en-US")]
+    [TestCase(arg1: "dd. MM. yyyy HH:mm:ss.fff", arg2: "21. 12. 2017 12:11:57.000", arg3: "cs-CZ")]
+    [TestCase(arg1: "dd. MM. yyyy HH:mm:ss.fff", arg2: "21. 12. 2017 12:11:57.000", arg3: "zh")]
     public void ShouldParseDateInCustomFormatRegardlessOfCurrentCulture(
         string customFormat,
         string dateToParse,
         string culture
     )
     {
-        SetCulture(culture);
-        var sut = new EnhancedTextBox(timeNowFunc: () => new DateTime(2017, 12, 14))
+        SetCulture(culture: culture);
+        var sut = new EnhancedTextBox(timeNowFunc: () =>
+            new DateTime(year: 2017, month: 12, day: 14)
+        )
         {
             DataType = typeof(DateTime),
             CustomFormat = customFormat,
             Text = dateToParse,
         };
-        TriggerLeaveEvent(sut);
-        Assert.That(sut.Value, Is.TypeOf<DateTime>());
+        TriggerLeaveEvent(sut: sut);
+        Assert.That(actual: sut.Value, expression: Is.TypeOf<DateTime>());
     }
 
-    [TestCase("52", "cs-CZ")]
-    [TestCase("0121", "cs-CZ")]
-    [TestCase("521", "cs-CZ")]
-    [TestCase("11111111111111", "cs-CZ")]
-    [TestCase("52", "en-US")]
-    [TestCase("521", "en-US")]
-    [TestCase("11111111111111", "en-US")]
-    [TestCase("Saturday, February 1, 2017", "en-US")] // 2/1/2017 is not Saturday!
-    [TestCase("20175503", "zh")]
+    [TestCase(arg1: "52", arg2: "cs-CZ")]
+    [TestCase(arg1: "0121", arg2: "cs-CZ")]
+    [TestCase(arg1: "521", arg2: "cs-CZ")]
+    [TestCase(arg1: "11111111111111", arg2: "cs-CZ")]
+    [TestCase(arg1: "52", arg2: "en-US")]
+    [TestCase(arg1: "521", arg2: "en-US")]
+    [TestCase(arg1: "11111111111111", arg2: "en-US")]
+    [TestCase(arg1: "Saturday, February 1, 2017", arg2: "en-US")] // 2/1/2017 is not Saturday!
+    [TestCase(arg1: "20175503", arg2: "zh")]
     //[TestCase("300503","zh")]
     public void ShouldFailToAutoCompleteDateAndTimeWithoutThrowingExceptions(
         string incompleteDate,
         string culture
     )
     {
-        SetCulture(culture);
+        SetCulture(culture: culture);
         var sut = new EnhancedTextBox { DataType = typeof(DateTime), Text = incompleteDate };
-        TriggerLeaveEvent(sut);
+        TriggerLeaveEvent(sut: sut);
 
         // no change in Text indicates failure to parse the date
-        Assert.That(sut.Text, Is.EqualTo(incompleteDate));
-        Assert.That(sut.Value, Is.EqualTo(DBNull.Value));
+        Assert.That(actual: sut.Text, expression: Is.EqualTo(expected: incompleteDate));
+        Assert.That(actual: sut.Value, expression: Is.EqualTo(expected: DBNull.Value));
     }
 
-    [TestCase(1000, typeof(int), "en-US", "1,000")]
-    [TestCase(-1000, typeof(int), "en-US", "-1,000")]
-    [TestCase("-1,000", typeof(int), "en-US", "-1,000")]
-    [TestCase(1000000, typeof(long), "en-US", "1,000,000")]
-    [TestCase("1,000,000", typeof(long), "en-US", "1,000,000")]
-    [TestCase(-1000000, typeof(long), "en-US", "-1,000,000")]
-    [TestCase("-1,000,000", typeof(long), "en-US", "-1,000,000")]
-    [TestCase(151513.258, typeof(float), "en-US", "151,513.3")]
-    [TestCase(-151513.258, typeof(float), "en-US", "-151,513.3")]
-    [TestCase("-151,513.258", typeof(float), "en-US", "-151,513.3")]
-    [TestCase(151513.258, typeof(double), "en-US", "151,513.258")]
-    [TestCase(-151513.258, typeof(double), "en-US", "-151,513.258")]
-    [TestCase("-151,513.258", typeof(double), "en-US", "-151,513.258")]
-    [TestCase(151513.258, typeof(decimal), "en-US", "151,513.258")]
-    [TestCase(-151513.258, typeof(decimal), "en-US", "-151,513.258")]
-    [TestCase("-151,513.258", typeof(decimal), "en-US", "-151,513.258")]
+    [TestCase(arguments: new object[] { 1000, typeof(int), "en-US", "1,000" })]
+    [TestCase(arguments: new object[] { -1000, typeof(int), "en-US", "-1,000" })]
+    [TestCase(arguments: new object[] { "-1,000", typeof(int), "en-US", "-1,000" })]
+    [TestCase(arguments: new object[] { 1000000, typeof(long), "en-US", "1,000,000" })]
+    [TestCase(arguments: new object[] { "1,000,000", typeof(long), "en-US", "1,000,000" })]
+    [TestCase(arguments: new object[] { -1000000, typeof(long), "en-US", "-1,000,000" })]
+    [TestCase(arguments: new object[] { "-1,000,000", typeof(long), "en-US", "-1,000,000" })]
+    [TestCase(arguments: new object[] { 151513.258, typeof(float), "en-US", "151,513.3" })]
+    [TestCase(arguments: new object[] { -151513.258, typeof(float), "en-US", "-151,513.3" })]
+    [TestCase(arguments: new object[] { "-151,513.258", typeof(float), "en-US", "-151,513.3" })]
+    [TestCase(arguments: new object[] { 151513.258, typeof(double), "en-US", "151,513.258" })]
+    [TestCase(arguments: new object[] { -151513.258, typeof(double), "en-US", "-151,513.258" })]
+    [TestCase(arguments: new object[] { "-151,513.258", typeof(double), "en-US", "-151,513.258" })]
+    [TestCase(arguments: new object[] { 151513.258, typeof(decimal), "en-US", "151,513.258" })]
+    [TestCase(arguments: new object[] { -151513.258, typeof(decimal), "en-US", "-151,513.258" })]
+    [TestCase(arguments: new object[] { "-151,513.258", typeof(decimal), "en-US", "-151,513.258" })]
     public void ShouldFormatNumber(object input, Type inpType, string culture, string expectedText)
     {
-        SetCulture(culture);
+        SetCulture(culture: culture);
         var sut = new EnhancedTextBox { DataType = inpType, Text = input.ToString() };
-        Console.WriteLine(sut.Text);
-        TriggerLeaveEvent(sut);
+        Console.WriteLine(value: sut.Text);
+        TriggerLeaveEvent(sut: sut);
 
-        Assert.That(sut.Text, Is.EqualTo(expectedText));
-        Assert.True(sut.Value.GetType() == inpType);
+        Assert.That(actual: sut.Text, expression: Is.EqualTo(expected: expectedText));
+        Assert.True(condition: sut.Value.GetType() == inpType);
     }
 
     private void SetCulture(string culture)
     {
-        Thread.CurrentThread.CurrentCulture = new CultureInfo(culture);
-        Thread.CurrentThread.CurrentUICulture = new CultureInfo(culture);
+        Thread.CurrentThread.CurrentCulture = new CultureInfo(name: culture);
+        Thread.CurrentThread.CurrentUICulture = new CultureInfo(name: culture);
     }
 
     private static void TriggerLeaveEvent(EnhancedTextBox sut)
     {
         var dynMethod = sut.GetType()
             .GetMethod(
-                "OnLeave",
-                BindingFlags.NonPublic | BindingFlags.Instance,
-                Type.DefaultBinder,
-                new[] { typeof(EventArgs) },
-                null
+                name: "OnLeave",
+                bindingAttr: BindingFlags.NonPublic | BindingFlags.Instance,
+                binder: Type.DefaultBinder,
+                types: new[] { typeof(EventArgs) },
+                modifiers: null
             );
-        dynMethod.Invoke(sut, new object[] { EventArgs.Empty });
+        dynMethod.Invoke(obj: sut, parameters: new object[] { EventArgs.Empty });
     }
 }

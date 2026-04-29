@@ -29,7 +29,7 @@ public class EncodingStringWriter : StringWriter
     private readonly Encoding _encoding;
 
     public EncodingStringWriter(StringBuilder builder, Encoding encoding)
-        : base(builder)
+        : base(sb: builder)
     {
         _encoding = encoding;
     }

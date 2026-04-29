@@ -63,14 +63,15 @@ public partial class SqlViewer : AbstractViewContent, IToolStripContainer
 
     private void btnExecuteSql_Click(object sender, EventArgs e)
     {
-        if (string.IsNullOrWhiteSpace(editor.Text))
+        if (string.IsNullOrWhiteSpace(value: editor.Text))
         {
             return;
         }
-        var dataService = core.DataServiceFactory.GetDataService(Platform);
-        string result = dataService.ExecuteUpdate(editor.Text, null);
-        OutputPad outputPad = WorkbenchSingleton.Workbench.GetPad(typeof(OutputPad)) as OutputPad;
-        outputPad.SetOutputText(result);
+        var dataService = core.DataServiceFactory.GetDataService(deployPlatform: Platform);
+        string result = dataService.ExecuteUpdate(command: editor.Text, transactionId: null);
+        OutputPad outputPad =
+            WorkbenchSingleton.Workbench.GetPad(type: typeof(OutputPad)) as OutputPad;
+        outputPad.SetOutputText(sText: result);
         outputPad.Show();
         editor.Focus();
     }

@@ -26,7 +26,7 @@ using Origam.DA.Common;
 
 namespace Origam.Schema.GuiModel;
 
-[ClassMetaVersion("6.0.0")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public abstract class AbstractCartesianSeries : AbstractSeries
 {
     public AbstractCartesianSeries()
@@ -36,13 +36,13 @@ public abstract class AbstractCartesianSeries : AbstractSeries
     }
 
     public AbstractCartesianSeries(Guid schemaExtensionId)
-        : base(schemaExtensionId)
+        : base(schemaExtensionId: schemaExtensionId)
     {
         Init();
     }
 
     public AbstractCartesianSeries(Key primaryKey)
-        : base(primaryKey)
+        : base(primaryKey: primaryKey)
     {
         Init();
     }
@@ -52,8 +52,8 @@ public abstract class AbstractCartesianSeries : AbstractSeries
     #region Properties
     private string _zAxisField = "";
 
-    [Category("Series")]
-    [XmlAttribute("zAxisField")]
+    [Category(category: "Series")]
+    [XmlAttribute(attributeName: "zAxisField")]
     public string ZAxisField
     {
         get { return _zAxisField; }

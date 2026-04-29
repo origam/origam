@@ -27,10 +27,10 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.EntityModel;
 
-[SchemaItemDescription("Parameter", 15)]
-[HelpTopic("Function+Call+Field")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Parameter", icon: 15)]
+[HelpTopic(topic: "Function+Call+Field")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class FunctionCallParameter : AbstractSchemaItem
 {
     public const string CategoryConst = "FunctionCallParameter";
@@ -38,43 +38,46 @@ public class FunctionCallParameter : AbstractSchemaItem
     public FunctionCallParameter() { }
 
     public FunctionCallParameter(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public FunctionCallParameter(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Overriden AbstractDataEntityColumn Members
 
     public override string ItemType => CategoryConst;
     public override string Icon => "15";
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public override bool UseFolders => false;
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(FunctionParameter);
-        base.GetExtraDependencies(dependencies);
+        dependencies.Add(item: FunctionParameter);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
     #endregion
     #region Properties
     public Guid FunctionParameterId;
 
     [NotNullModelElementRule()]
-    [XmlReference("parameter", "FunctionParameterId")]
+    [XmlReference(attributeName: "parameter", idField: "FunctionParameterId")]
     public FunctionParameter FunctionParameter
     {
         get
         {
             var key = new ModelElementKey { Id = FunctionParameterId };
             return (FunctionParameter)
-                PersistenceProvider.RetrieveInstance(typeof(FunctionParameter), key);
+                PersistenceProvider.RetrieveInstance(
+                    type: typeof(FunctionParameter),
+                    primaryKey: key
+                );
         }
-        set => FunctionParameterId = (Guid)value.PrimaryKey["Id"];
+        set => FunctionParameterId = (Guid)value.PrimaryKey[key: "Id"];
     }
     #endregion
     #region ISchemaItemFactory Members
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public override Type[] NewItemTypes =>
         new[]
         {
@@ -92,10 +95,10 @@ public class FunctionCallParameter : AbstractSchemaItem
         if (obj is FunctionCallParameter functionCallParameter)
         {
             return FunctionParameter.OrdinalPosition.CompareTo(
-                functionCallParameter.FunctionParameter.OrdinalPosition
+                value: functionCallParameter.FunctionParameter.OrdinalPosition
             );
         }
-        return base.CompareTo(obj);
+        return base.CompareTo(obj: obj);
     }
     #endregion
 }

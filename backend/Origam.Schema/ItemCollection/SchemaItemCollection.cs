@@ -43,7 +43,7 @@ public static class SchemaItemCollection
     )
     {
 #if ORIGAM_CLIENT
-        return new ServerSchemaItemCollection(parentItem);
+        return new ServerSchemaItemCollection(parentSchemaItem: parentItem);
 #else
         return new ArchitectISchemaItemCollection(persistence, provider, parentItem);
 #endif

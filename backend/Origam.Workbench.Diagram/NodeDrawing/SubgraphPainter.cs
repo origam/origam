@@ -47,86 +47,89 @@ internal class SubgraphPainter : INodeItemPainter
         if (((BlockSubGraph)node).IsEmpty)
         {
             return CurveFactory.CreateRectangle(
-                emptySubgraphWidth,
-                emptySubgraphHeight,
-                new Point()
+                width: emptySubgraphWidth,
+                height: emptySubgraphHeight,
+                center: new Point()
             );
         }
 
         var clusterBoundary = ((Cluster)node.GeometryNode).RectangularBoundary;
         var height = clusterBoundary.TopMargin;
-        var labelWidth = painter.GetLabelWidth(node);
+        var labelWidth = painter.GetLabelWidth(node: node);
         var width =
             clusterBoundary.MinWidth > labelWidth
                 ? clusterBoundary.MinWidth
                 : labelWidth + (painter.LabelSideMargin * 2);
-        return CurveFactory.CreateRectangle(width, height, new Point());
+        return CurveFactory.CreateRectangle(width: width, height: height, center: new Point());
     }
 
     public bool Draw(Node node, object graphicsObj)
     {
         INodeData nodeData = (INodeData)node.UserData;
-        var borderSize = new Size((int)node.BoundingBox.Width, (int)node.BoundingBox.Height);
+        var borderSize = new Size(
+            width: (int)node.BoundingBox.Width,
+            height: (int)node.BoundingBox.Height
+        );
         Graphics editorGraphics = (Graphics)graphicsObj;
-        var labelWidth = painter.GetLabelWidth(node);
+        var labelWidth = painter.GetLabelWidth(node: node);
         double centerX = node.GeometryNode.Center.X;
         double centerY = node.GeometryNode.Center.Y;
         var borderCorner = new System.Drawing.Point(
-            (int)centerX - (borderSize.Width / 2),
-            (int)centerY - (borderSize.Height / 2)
+            x: (int)centerX - (borderSize.Width / 2),
+            y: (int)centerY - (borderSize.Height / 2)
         );
-        Rectangle border = new Rectangle(borderCorner, borderSize);
+        Rectangle border = new Rectangle(location: borderCorner, size: borderSize);
         var labelPoint = new PointF(
-            (float)(
+            x: (float)(
                 centerX
                 - (labelWidth / 2)
                 + painter.ImageLeftMargin
                 + nodeData.PrimaryImage.Width
                 + painter.ImageRightMargin
             ),
-            (float)centerY - (border.Height / 2.0f) + painter.LabelTopMargin
+            y: (float)centerY - (border.Height / 2.0f) + painter.LabelTopMargin
         );
         var imagePoint = new PointF(
-            (float)(centerX - (labelWidth / 2) + painter.ImageLeftMargin),
-            (float)(centerY - (border.Height / 2.0f) + painter.ImageTopMargin)
+            x: (float)(centerX - (labelWidth / 2) + painter.ImageLeftMargin),
+            y: (float)(centerY - (border.Height / 2.0f) + painter.ImageTopMargin)
         );
         Rectangle imageBackground = new Rectangle(
-            borderCorner,
-            new Size(border.Width, painter.HeadingBackgroundHeight)
+            location: borderCorner,
+            size: new Size(width: border.Width, height: painter.HeadingBackgroundHeight)
         );
 
         var secondaryImagePoint = new PointF(
-            imagePoint.X - nodeData.SecondaryImage?.Width ?? 0 - imageGap,
-            imagePoint.Y
+            x: imagePoint.X - nodeData.SecondaryImage?.Width ?? 0 - imageGap,
+            y: imagePoint.Y
         );
-        var (emptyMessagePoint, emptyGraphMessage) = GetEmptyNodeMessage(node);
+        var (emptyMessagePoint, emptyGraphMessage) = GetEmptyNodeMessage(node: node);
 
         editorGraphics.DrawUpSideDown(
             drawAction: graphics =>
             {
-                graphics.FillRectangle(painter.LightGreyBrush, imageBackground);
+                graphics.FillRectangle(brush: painter.LightGreyBrush, rect: imageBackground);
                 graphics.DrawString(
-                    node.LabelText,
-                    painter.Font,
-                    painter.GetTextBrush(nodeData.IsFromActivePackage),
-                    labelPoint,
-                    painter.DrawFormat
+                    s: node.LabelText,
+                    font: painter.Font,
+                    brush: painter.GetTextBrush(isFromActivePackage: nodeData.IsFromActivePackage),
+                    point: labelPoint,
+                    format: painter.DrawFormat
                 );
-                if (!string.IsNullOrWhiteSpace(emptyGraphMessage))
+                if (!string.IsNullOrWhiteSpace(value: emptyGraphMessage))
                 {
                     graphics.DrawString(
-                        emptyGraphMessage,
-                        painter.Font,
-                        painter.BlackBrush,
-                        emptyMessagePoint,
-                        painter.DrawFormat
+                        s: emptyGraphMessage,
+                        font: painter.Font,
+                        brush: painter.BlackBrush,
+                        point: emptyMessagePoint,
+                        format: painter.DrawFormat
                     );
                 }
-                graphics.DrawRectangle(painter.GetActiveBorderPen(node), border);
-                graphics.DrawImage(nodeData.PrimaryImage, imagePoint);
+                graphics.DrawRectangle(pen: painter.GetActiveBorderPen(node: node), rect: border);
+                graphics.DrawImage(image: nodeData.PrimaryImage, point: imagePoint);
                 if (nodeData.SecondaryImage != null)
                 {
-                    graphics.DrawImage(nodeData.SecondaryImage, secondaryImagePoint);
+                    graphics.DrawImage(image: nodeData.SecondaryImage, point: secondaryImagePoint);
                 }
             },
             yAxisCoordinate: (float)node.GeometryNode.Center.Y
@@ -141,15 +144,15 @@ internal class SubgraphPainter : INodeItemPainter
 
         if (!((BlockSubGraph)node).IsEmpty)
         {
-            return new Tuple<PointF, string>(new PointF(), "");
+            return new Tuple<PointF, string>(item1: new PointF(), item2: "");
         }
         string emptyGraphMessage = Strings.SubgraphPainter_Right_click_to_add_steps;
-        SizeF messageSize = painter.MeasureString(emptyGraphMessage);
+        SizeF messageSize = painter.MeasureString(nodeLabelText: emptyGraphMessage);
         var emptyMessagePoint = new PointF(
-            (float)centerX - (messageSize.Width / 2),
-            (float)centerY + (painter.HeadingBackgroundHeight / 2) - (messageSize.Height / 2)
+            x: (float)centerX - (messageSize.Width / 2),
+            y: (float)centerY + (painter.HeadingBackgroundHeight / 2) - (messageSize.Height / 2)
         );
 
-        return new Tuple<PointF, string>(emptyMessagePoint, emptyGraphMessage);
+        return new Tuple<PointF, string>(item1: emptyMessagePoint, item2: emptyGraphMessage);
     }
 }

@@ -30,13 +30,13 @@ public static class GraphExtensions
 {
     public static void RemoveNodeEverywhere(this Graph graph, Node node)
     {
-        graph.RemoveNode(node);
+        graph.RemoveNode(node: node);
         foreach (var keyValPair in graph.SubgraphMap)
         {
             Subgraph subGraph = keyValPair.Value;
-            if (subGraph.Nodes.Contains(node))
+            if (subGraph.Nodes.Contains(value: node))
             {
-                subGraph.RemoveNode(node);
+                subGraph.RemoveNode(node: node);
                 return;
             }
         }
@@ -50,21 +50,22 @@ public static class GraphExtensions
         }
 
         IEnumerable<Subgraph> blockInnerSubgraphs = graph
-            .SubgraphMap.Select(x => x.Value)
+            .SubgraphMap.Select(selector: x => x.Value)
             .OfType<BlockSubGraph>()
-            .SelectMany(x => x.Subgraphs);
+            .SelectMany(selector: x => x.Subgraphs);
         return graph
-            .SubgraphMap.Select(x => x.Value)
-            .Concat(new[] { graph.RootSubgraph })
-            .Concat(blockInnerSubgraphs)
-            .FirstOrDefault(subgraph =>
-                subgraph.Subgraphs.Contains(node) || subgraph.Nodes.Any(x => x.Id == node.Id)
+            .SubgraphMap.Select(selector: x => x.Value)
+            .Concat(second: new[] { graph.RootSubgraph })
+            .Concat(second: blockInnerSubgraphs)
+            .FirstOrDefault(predicate: subgraph =>
+                subgraph.Subgraphs.Contains(value: node)
+                || subgraph.Nodes.Any(predicate: x => x.Id == node.Id)
             );
     }
 
     public static Node FindNodeOrSubgraph(this Graph graph, string id)
     {
-        if (string.IsNullOrWhiteSpace(id))
+        if (string.IsNullOrWhiteSpace(value: id))
         {
             return null;
         }
@@ -74,13 +75,13 @@ public static class GraphExtensions
             return graph.RootSubgraph;
         }
 
-        Node node = graph.FindNode(id);
+        Node node = graph.FindNode(nodeId: id);
         if (node != null)
         {
             return node;
         }
 
-        return graph.SubgraphMap.ContainsKey(id) ? graph.SubgraphMap[id] : null;
+        return graph.SubgraphMap.ContainsKey(key: id) ? graph.SubgraphMap[key: id] : null;
     }
 
     public static bool AreRelatives(this Graph graph, Node node1, Node node2)
@@ -90,31 +91,31 @@ public static class GraphExtensions
             return false;
         }
 
-        if (Equals(node1, node2))
+        if (Equals(objA: node1, objB: node2))
         {
             return true;
         }
 
-        if (node1 is Subgraph subgraph1 && subgraph1.Nodes.Contains(node2))
+        if (node1 is Subgraph subgraph1 && subgraph1.Nodes.Contains(value: node2))
         {
             return true;
         }
-        if (node2 is Subgraph subgraph2 && subgraph2.Nodes.Contains(node1))
+        if (node2 is Subgraph subgraph2 && subgraph2.Nodes.Contains(value: node1))
         {
             return true;
         }
-        Subgraph parent = graph.FindParentSubGraph(node1);
+        Subgraph parent = graph.FindParentSubGraph(node: node1);
         if (parent == null)
         {
             return false;
         }
 
-        if (Equals(parent, node2))
+        if (Equals(objA: parent, objB: node2))
         {
             return true;
         }
 
-        if (parent.Nodes.Contains(node2))
+        if (parent.Nodes.Contains(value: node2))
         {
             return true;
         }
@@ -126,7 +127,7 @@ public static class GraphExtensions
     {
         foreach (Subgraph childSubGraph in subGraph.Subgraphs)
         {
-            foreach (Node childNode in GetAllNodes(childSubGraph))
+            foreach (Node childNode in GetAllNodes(subGraph: childSubGraph))
             {
                 yield return childNode;
             }
@@ -142,7 +143,7 @@ public static class GraphExtensions
     {
         foreach (Subgraph childSubgraph in subGraph.Subgraphs)
         {
-            foreach (Subgraph childSubgraph1 in GetAllSubgraphs(childSubgraph))
+            foreach (Subgraph childSubgraph1 in GetAllSubgraphs(subGraph: childSubgraph))
             {
                 yield return childSubgraph1;
             }

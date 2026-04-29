@@ -27,37 +27,37 @@ namespace Origam.Architect.Server.Controls;
 
 public class ImageBox : IControl
 {
-    [Category("(ORIGAM)")]
+    [Category(category: "(ORIGAM)")]
     [Description(
-        "Column Width (in pixels) to be used in grid-view. If the value is less than then zero, then the column is hidden by default. However, when it's enabled, the abs(configured value) is used."
+        description: "Column Width (in pixels) to be used in grid-view. If the value is less than then zero, then the column is hidden by default. However, when it's enabled, the abs(configured value) is used."
     )]
     public int GridColumnWidth { get; set; } = 100;
 
-    [Category("(ORIGAM)")]
+    [Category(category: "(ORIGAM)")]
     public string GridColumnCaption { get; set; }
 
-    [Browsable(true)]
+    [Browsable(browsable: true)]
     public ImageBoxSourceType SourceType { get; set; }
 
     public Object ImageData { get; set; }
 
-    [Category("Layout")]
-    [Browsable(false)]
+    [Category(category: "Layout")]
+    [Browsable(browsable: false)]
     public int Top { get; set; }
 
-    [Category("Layout")]
-    [Browsable(false)]
+    [Category(category: "Layout")]
+    [Browsable(browsable: false)]
     public int Left { get; set; }
 
-    [Category("Layout")]
-    [Browsable(false)]
+    [Category(category: "Layout")]
+    [Browsable(browsable: false)]
     public int Height { get; set; } = 200;
 
-    [Category("Layout")]
-    [Browsable(false)]
+    [Category(category: "Layout")]
+    [Browsable(browsable: false)]
     public int Width { get; set; } = 200;
 
-    [Category("Behavior")]
+    [Category(category: "Behavior")]
     public int TabIndex { get; set; }
 
     public virtual void Initialize(ControlSetItem controlSetItem) { }

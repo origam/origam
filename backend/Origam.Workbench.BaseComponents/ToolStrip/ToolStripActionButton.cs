@@ -36,7 +36,7 @@ public sealed class ToolStripActionButton : BigToolStripButton, IActionContainer
     public ToolStripActionButton(EntityUIAction action)
     {
         this.action = action;
-        ToolStripButtonTools.InitActionButton(this, action);
+        ToolStripButtonTools.InitActionButton(actionButton: this, action: action);
     }
 
     public EntityUIAction GetAction()

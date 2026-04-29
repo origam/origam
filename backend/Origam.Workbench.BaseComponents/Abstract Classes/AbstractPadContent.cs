@@ -35,7 +35,7 @@ public class AbstractPadContent : DockContent, IPadContent
     public AbstractPadContent() { }
 
     public AbstractPadContent(string title)
-        : this(title, null) { }
+        : this(title: title, iconResoureName: null) { }
 
     public AbstractPadContent(string title, string iconResoureName)
     {
@@ -71,7 +71,7 @@ public class AbstractPadContent : DockContent, IPadContent
     {
         if (TitleChanged != null)
         {
-            TitleChanged(this, e);
+            TitleChanged(sender: this, e: e);
         }
     }
 
@@ -79,7 +79,7 @@ public class AbstractPadContent : DockContent, IPadContent
     {
         if (IconChanged != null)
         {
-            IconChanged(this, e);
+            IconChanged(sender: this, e: e);
         }
     }
 
@@ -88,8 +88,8 @@ public class AbstractPadContent : DockContent, IPadContent
         //
         // AbstractPadContent
         //
-        this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-        this.ClientSize = new System.Drawing.Size(292, 273);
+        this.AutoScaleBaseSize = new System.Drawing.Size(width: 5, height: 13);
+        this.ClientSize = new System.Drawing.Size(width: 292, height: 273);
         this.DockAreas = (
             (DockAreas)(
                 (

@@ -39,10 +39,10 @@ public class WorkQueueThrottle
     }
 
     private static readonly Guid WorkQueueStateDataStructureId = new(
-        "954f8044-54b8-4554-8777-f5ecc8a839b0"
+        g: "954f8044-54b8-4554-8777-f5ecc8a839b0"
     );
 
-    private static readonly Guid GetByWorkQueueId = new("7ee32027-ffe9-486c-83ca-e10699475618");
+    private static readonly Guid GetByWorkQueueId = new(g: "7ee32027-ffe9-486c-83ca-e10699475618");
 
     public bool CanRunNow(WorkQueueData.WorkQueueRow queue)
     {
@@ -50,25 +50,26 @@ public class WorkQueueThrottle
         {
             return true;
         }
-        DataRow stateRow = GetThrottlingState(queue.Id);
+        DataRow stateRow = GetThrottlingState(queueId: queue.Id);
         if (stateRow == null)
         {
-            StoreThrottlingState(queue.Id, DateTime.Now, 0);
+            StoreThrottlingState(queueId: queue.Id, intervalStart: DateTime.Now, itemsProcessed: 0);
             return queue.ThrottlingItemsPerInterval > 0;
         }
 
-        DateTime endOfInterval = ((DateTime)stateRow["ThrottlingIntervalStart"]).AddSeconds(
-            queue.ThrottlingIntervalSeconds
-        );
+        DateTime endOfInterval = (
+            (DateTime)stateRow[columnName: "ThrottlingIntervalStart"]
+        ).AddSeconds(value: queue.ThrottlingIntervalSeconds);
         if (endOfInterval < DateTime.Now)
         {
-            stateRow["ThrottlingItemsProcessed"] = 0;
-            stateRow["ThrottlingIntervalStart"] = DateTime.Now;
-            StoreThrottlingState(stateRow);
+            stateRow[columnName: "ThrottlingItemsProcessed"] = 0;
+            stateRow[columnName: "ThrottlingIntervalStart"] = DateTime.Now;
+            StoreThrottlingState(row: stateRow);
             return queue.ThrottlingItemsPerInterval > 0;
         }
 
-        return (int)stateRow["ThrottlingItemsProcessed"] < queue.ThrottlingItemsPerInterval;
+        return (int)stateRow[columnName: "ThrottlingItemsProcessed"]
+            < queue.ThrottlingItemsPerInterval;
     }
 
     public void ReportProcessed(WorkQueueData.WorkQueueRow queue)
@@ -78,41 +79,42 @@ public class WorkQueueThrottle
             return;
         }
 
-        DataRow row = GetThrottlingState(queue.Id);
+        DataRow row = GetThrottlingState(queueId: queue.Id);
         if (row == null)
         {
-            StoreThrottlingState(queue.Id, DateTime.Now, 1);
+            StoreThrottlingState(queueId: queue.Id, intervalStart: DateTime.Now, itemsProcessed: 1);
         }
         else
         {
-            row["ThrottlingItemsProcessed"] = (int)row["ThrottlingItemsProcessed"] + 1;
-            StoreThrottlingState(row);
+            row[columnName: "ThrottlingItemsProcessed"] =
+                (int)row[columnName: "ThrottlingItemsProcessed"] + 1;
+            StoreThrottlingState(row: row);
         }
     }
 
     private void StoreThrottlingState(Guid queueId, DateTime intervalStart, int itemsProcessed)
     {
         var dataStructure = persistenceService.SchemaProvider.RetrieveInstance<DataStructure>(
-            WorkQueueStateDataStructureId
+            instanceId: WorkQueueStateDataStructureId
         );
-        var datasetGenerator = new DatasetGenerator(false);
-        var dataSet = datasetGenerator.CreateDataSet(dataStructure);
-        var row = dataSet.Tables["WorkQueueState"].NewRow();
-        row["Id"] = Guid.NewGuid();
-        row["refWorkQueueId"] = queueId;
-        row["ThrottlingIntervalStart"] = intervalStart;
-        row["ThrottlingItemsProcessed"] = itemsProcessed;
-        dataSet.Tables["WorkQueueState"].Rows.Add(row);
-        StoreThrottlingState(row);
+        var datasetGenerator = new DatasetGenerator(userDefinedParameters: false);
+        var dataSet = datasetGenerator.CreateDataSet(ds: dataStructure);
+        var row = dataSet.Tables[name: "WorkQueueState"].NewRow();
+        row[columnName: "Id"] = Guid.NewGuid();
+        row[columnName: "refWorkQueueId"] = queueId;
+        row[columnName: "ThrottlingIntervalStart"] = intervalStart;
+        row[columnName: "ThrottlingItemsProcessed"] = itemsProcessed;
+        dataSet.Tables[name: "WorkQueueState"].Rows.Add(row: row);
+        StoreThrottlingState(row: row);
     }
 
     private void StoreThrottlingState(DataRow row)
     {
         core.DataService.Instance.StoreData(
-            WorkQueueStateDataStructureId,
-            row.Table.DataSet,
-            false,
-            null
+            dataStructureId: WorkQueueStateDataStructureId,
+            data: row.Table.DataSet,
+            loadActualValuesAfterUpdate: false,
+            transactionId: null
         );
     }
 
@@ -120,7 +122,7 @@ public class WorkQueueThrottle
     {
         var parameters = new QueryParameterCollection
         {
-            new("WorkQueueState_parWorkQueueId", queueId),
+            new(_parameterName: "WorkQueueState_parWorkQueueId", value: queueId),
         };
         DataSet dataSet = core.DataService.Instance.LoadData(
             dataStructureId: WorkQueueStateDataStructureId,
@@ -132,12 +134,12 @@ public class WorkQueueThrottle
         );
         if (
             dataSet.Tables.Count == 0
-            || dataSet.Tables["WorkQueueState"] == null
-            || dataSet.Tables["WorkQueueState"].Rows.Count == 0
+            || dataSet.Tables[name: "WorkQueueState"] == null
+            || dataSet.Tables[name: "WorkQueueState"].Rows.Count == 0
         )
         {
             return null;
         }
-        return dataSet.Tables["WorkQueueState"].Rows[0];
+        return dataSet.Tables[name: "WorkQueueState"].Rows[index: 0];
     }
 }

@@ -65,12 +65,12 @@ public class MenuCommandServiceImpl : System.ComponentModel.Design.IMenuCommandS
     {
         if (command == null)
         {
-            throw new ArgumentException("command");
+            throw new ArgumentException(message: "command");
         }
         // don't add commands twice
-        if (FindCommand(command.CommandID) == null)
+        if (FindCommand(commandID: command.CommandID) == null)
         {
-            commands.Add(command.CommandID, command);
+            commands.Add(key: command.CommandID, value: command);
         }
     }
 
@@ -79,9 +79,9 @@ public class MenuCommandServiceImpl : System.ComponentModel.Design.IMenuCommandS
     {
         if (command == null)
         {
-            throw new ArgumentException("command");
+            throw new ArgumentException(message: "command");
         }
-        commands.Remove(command.CommandID);
+        commands.Remove(key: command.CommandID);
     }
 
     /// called when to add a global verb
@@ -89,14 +89,14 @@ public class MenuCommandServiceImpl : System.ComponentModel.Design.IMenuCommandS
     {
         if (verb == null)
         {
-            throw new ArgumentException("verb");
+            throw new ArgumentException(message: "verb");
         }
-        globalVerbs.Add(verb);
+        globalVerbs.Add(value: verb);
         // create a menu item for the verb and add it to the context menu
-        MenuItem menuItem = new MenuItem(verb.Text);
+        MenuItem menuItem = new MenuItem(text: verb.Text);
         menuItem.Click += new EventHandler(MenuItemClickHandler);
-        menuItemVerb.Add(menuItem, verb);
-        contextMenu.MenuItems.Add(menuItem);
+        menuItemVerb.Add(key: menuItem, value: verb);
+        contextMenu.MenuItems.Add(item: menuItem);
     }
 
     /// called to remove global verb
@@ -104,10 +104,10 @@ public class MenuCommandServiceImpl : System.ComponentModel.Design.IMenuCommandS
     {
         if (verb == null)
         {
-            throw new ArgumentException("verb");
+            throw new ArgumentException(message: "verb");
         }
 
-        globalVerbs.Remove(verb);
+        globalVerbs.Remove(value: verb);
         // find the menu item associated with the verb
         MenuItem associatedMenuItem = null;
         foreach (DictionaryEntry de in menuItemVerb)
@@ -121,10 +121,10 @@ public class MenuCommandServiceImpl : System.ComponentModel.Design.IMenuCommandS
         // if we found the verb's menu item, remove it
         if (associatedMenuItem != null)
         {
-            menuItemVerb.Remove(associatedMenuItem);
+            menuItemVerb.Remove(key: associatedMenuItem);
         }
         // remove the verb from the context menu too
-        contextMenu.MenuItems.Remove(associatedMenuItem);
+        contextMenu.MenuItems.Remove(item: associatedMenuItem);
     }
 
     /// returns the MenuCommand associated with the commandId.
@@ -132,14 +132,14 @@ public class MenuCommandServiceImpl : System.ComponentModel.Design.IMenuCommandS
         System.ComponentModel.Design.CommandID commandID
     )
     {
-        return commands[commandID] as MenuCommand;
+        return commands[key: commandID] as MenuCommand;
     }
 
     /// called to invoke a command
     public bool GlobalInvoke(System.ComponentModel.Design.CommandID commandID)
     {
         bool result = false;
-        MenuCommand command = FindCommand(commandID);
+        MenuCommand command = FindCommand(commandID: commandID);
         if (command != null)
         {
             command.Invoke();
@@ -152,7 +152,7 @@ public class MenuCommandServiceImpl : System.ComponentModel.Design.IMenuCommandS
     public void ShowContextMenu(System.ComponentModel.Design.CommandID menuID, int x, int y)
     {
         ISelectionService selectionService =
-            host.GetService(typeof(ISelectionService)) as ISelectionService;
+            host.GetService(serviceType: typeof(ISelectionService)) as ISelectionService;
         // get the primary component
         IComponent primarySelection = selectionService.PrimarySelection as IComponent;
         // if the he clicked on the same component again then just show the context
@@ -164,7 +164,7 @@ public class MenuCommandServiceImpl : System.ComponentModel.Design.IMenuCommandS
             // remove all non-global menu items from the context menu
             ResetContextMenu();
             // get the designer
-            IDesigner designer = host.GetDesigner(primarySelection);
+            IDesigner designer = host.GetDesigner(component: primarySelection);
             // not all controls need a desinger
             if (designer != null)
             {
@@ -173,7 +173,7 @@ public class MenuCommandServiceImpl : System.ComponentModel.Design.IMenuCommandS
                 foreach (DesignerVerb verb in verbs)
                 {
                     // add new menu items to the context menu
-                    CreateAndAddLocalVerb(verb);
+                    CreateAndAddLocalVerb(verb: verb);
                 }
             }
         }
@@ -181,8 +181,8 @@ public class MenuCommandServiceImpl : System.ComponentModel.Design.IMenuCommandS
         if (primarySelection is Control)
         {
             Control comp = primarySelection as Control;
-            Point pt = comp.PointToScreen(new Point(0, 0));
-            contextMenu.Show(comp, new Point(x - pt.X, y - pt.Y));
+            Point pt = comp.PointToScreen(p: new Point(x: 0, y: 0));
+            contextMenu.Show(control: comp, pos: new Point(x: x - pt.X, y: y - pt.Y));
         }
         // keep the selected component for next time
         lastSelectedComponent = primarySelection;
@@ -198,18 +198,18 @@ public class MenuCommandServiceImpl : System.ComponentModel.Design.IMenuCommandS
             // add the global verbs
             if (globalVerbs != null && globalVerbs.Count > 0)
             {
-                availableVerbs.AddRange(globalVerbs);
+                availableVerbs.AddRange(value: globalVerbs);
             }
             // now add the local verbs
             ISelectionService selectionService =
-                host.GetService(typeof(ISelectionService)) as ISelectionService;
+                host.GetService(serviceType: typeof(ISelectionService)) as ISelectionService;
             IComponent primaryComponent = selectionService.PrimarySelection as IComponent;
             if (primaryComponent != null)
             {
-                IDesigner designer = host.GetDesigner(primaryComponent);
+                IDesigner designer = host.GetDesigner(component: primaryComponent);
                 if (designer != null && designer.Verbs != null && designer.Verbs.Count > 0)
                 {
-                    availableVerbs.AddRange(designer.Verbs);
+                    availableVerbs.AddRange(value: designer.Verbs);
                 }
             }
             return availableVerbs;
@@ -224,7 +224,7 @@ public class MenuCommandServiceImpl : System.ComponentModel.Design.IMenuCommandS
         if (menuItem != null)
         {
             // get and invoke the verb
-            DesignerVerb verb = menuItemVerb[menuItem] as DesignerVerb;
+            DesignerVerb verb = menuItemVerb[key: menuItem] as DesignerVerb;
             if (verb != null)
             {
                 try
@@ -242,16 +242,16 @@ public class MenuCommandServiceImpl : System.ComponentModel.Design.IMenuCommandS
         if (contextMenu != null && contextMenu.MenuItems != null && contextMenu.MenuItems.Count > 0)
         {
             MenuItem[] menuItemArray = new MenuItem[contextMenu.MenuItems.Count];
-            contextMenu.MenuItems.CopyTo(menuItemArray, 0);
+            contextMenu.MenuItems.CopyTo(dest: menuItemArray, index: 0);
             foreach (MenuItem menuItem in menuItemArray)
             {
                 // if its not in the global list, remove it
-                if (!IsInGlobalList(menuItem.Text))
+                if (!IsInGlobalList(verbText: menuItem.Text))
                 {
-                    contextMenu.MenuItems.Remove(menuItem);
+                    contextMenu.MenuItems.Remove(item: menuItem);
                 }
                 // get rid of the menu item from the mapping
-                menuItemVerb.Remove(menuItem);
+                menuItemVerb.Remove(key: menuItem);
             }
         }
     }
@@ -261,16 +261,16 @@ public class MenuCommandServiceImpl : System.ComponentModel.Design.IMenuCommandS
     {
         if (verb == null)
         {
-            throw new ArgumentException("verb");
+            throw new ArgumentException(message: "verb");
         }
         // get the associated menuItem
-        MenuItem menuItem = GetMenuItemForVerb(verb);
+        MenuItem menuItem = GetMenuItemForVerb(verb: verb);
         if (menuItem != null)
         {
             // undo mapping
-            menuItemVerb.Remove(menuItem);
+            menuItemVerb.Remove(key: menuItem);
             // remove from context menu
-            contextMenu.MenuItems.Remove(menuItem);
+            contextMenu.MenuItems.Remove(item: menuItem);
         }
     }
 
@@ -279,17 +279,17 @@ public class MenuCommandServiceImpl : System.ComponentModel.Design.IMenuCommandS
     {
         if (verb == null)
         {
-            throw new ArgumentException("verb");
+            throw new ArgumentException(message: "verb");
         }
-        VerifyVerb(verb);
+        VerifyVerb(verb: verb);
         // create a menu item for the verb
-        MenuItem menuItem = new MenuItem(verb.Text);
+        MenuItem menuItem = new MenuItem(text: verb.Text);
         // attach the menu item click listener
         menuItem.Click += new EventHandler(MenuItemClickHandler);
         // do the menuItem-verb mapping
-        menuItemVerb.Add(menuItem, verb);
+        menuItemVerb.Add(key: menuItem, value: verb);
         // add to context menu
-        contextMenu.MenuItems.Add(menuItem);
+        contextMenu.MenuItems.Add(item: menuItem);
     }
 
     /// returns the MenuItem associated with the verb
@@ -319,7 +319,7 @@ public class MenuCommandServiceImpl : System.ComponentModel.Design.IMenuCommandS
         {
             foreach (DesignerVerb dv in globalVerbs)
             {
-                if (string.Compare(dv.Text, verbText, true) == 0)
+                if (string.Compare(strA: dv.Text, strB: verbText, ignoreCase: true) == 0)
                 {
                     found = true;
                     break;
@@ -334,16 +334,16 @@ public class MenuCommandServiceImpl : System.ComponentModel.Design.IMenuCommandS
     {
         if (verb == null)
         {
-            throw new ArgumentException("verb");
+            throw new ArgumentException(message: "verb");
         }
         // make sure the verb is not in the global list
         if (globalVerbs != null && globalVerbs.Count > 0)
         {
             foreach (DesignerVerb dv in globalVerbs)
             {
-                if (string.Compare(dv.Text, verb.Text, true) == 0)
+                if (string.Compare(strA: dv.Text, strB: verb.Text, ignoreCase: true) == 0)
                 {
-                    throw new Exception("Cannot add the same verb twice.");
+                    throw new Exception(message: "Cannot add the same verb twice.");
                 }
             }
         }
@@ -352,9 +352,9 @@ public class MenuCommandServiceImpl : System.ComponentModel.Design.IMenuCommandS
         {
             foreach (DesignerVerb dv in menuItemVerb.Values)
             {
-                if (string.Compare(dv.Text, verb.Text, true) == 0)
+                if (string.Compare(strA: dv.Text, strB: verb.Text, ignoreCase: true) == 0)
                 {
-                    throw new Exception("Cannot add the same verb twice.");
+                    throw new Exception(message: "Cannot add the same verb twice.");
                 }
             }
         }

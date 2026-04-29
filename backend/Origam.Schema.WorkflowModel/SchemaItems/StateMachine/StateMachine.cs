@@ -34,11 +34,11 @@ using Origam.Workbench.Services;
 
 namespace Origam.Schema.WorkflowModel;
 
-[SchemaItemDescription("State Workflow", "state-workflow-2.png")]
-[HelpTopic("State+Workflows")]
-[DefaultProperty("Entity")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "State Workflow", iconName: "state-workflow-2.png")]
+[HelpTopic(topic: "State+Workflows")]
+[DefaultProperty(name: "Entity")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class StateMachine : AbstractSchemaItem
 {
     public const string CategoryConst = "WorkflowStateMachine";
@@ -46,17 +46,17 @@ public class StateMachine : AbstractSchemaItem
     public StateMachine() { }
 
     public StateMachine(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public StateMachine(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Public Methods
     public StateMachineState GetState(object value)
     {
         return AllStates()
-            .FirstOrDefault(state =>
-                (state.Type != StateMachineStateType.Group) && state.Value.Equals(value)
+            .FirstOrDefault(predicate: state =>
+                (state.Type != StateMachineStateType.Group) && state.Value.Equals(obj: value)
             );
     }
 
@@ -67,7 +67,7 @@ public class StateMachine : AbstractSchemaItem
         {
             if (item is StateMachineState state)
             {
-                result.Add(state);
+                result.Add(item: state);
             }
         }
         return result;
@@ -79,40 +79,40 @@ public class StateMachine : AbstractSchemaItem
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(Entity);
+        dependencies.Add(item: Entity);
         if (Field != null)
         {
-            dependencies.Add(Field);
+            dependencies.Add(item: Field);
         }
         if (DynamicOperationsLookup != null)
         {
-            dependencies.Add(DynamicOperationsLookup);
+            dependencies.Add(item: DynamicOperationsLookup);
         }
         if (DynamicStatesLookup != null)
         {
-            dependencies.Add(DynamicStatesLookup);
+            dependencies.Add(item: DynamicStatesLookup);
         }
-        base.GetExtraDependencies(dependencies);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
     #endregion
     #region Properties
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public List<StateMachineEvent> Events =>
-        ChildItemsByType<StateMachineEvent>(StateMachineEvent.CategoryConst);
+        ChildItemsByType<StateMachineEvent>(itemType: StateMachineEvent.CategoryConst);
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public List<StateMachineDynamicLookupParameterMapping> ParameterMappings =>
         ChildItemsByType<StateMachineDynamicLookupParameterMapping>(
-            StateMachineDynamicLookupParameterMapping.CategoryConst
+            itemType: StateMachineDynamicLookupParameterMapping.CategoryConst
         );
 
     public object[] DynamicOperations(IXmlContainer data)
     {
-        var dataView = GetDynamicList(DynamicOperationsLookupId, data);
+        var dataView = GetDynamicList(lookupId: DynamicOperationsLookupId, data: data);
         var result = new object[dataView.Count];
         for (var i = 0; i < dataView.Count; i++)
         {
-            result[i] = dataView[i][DynamicOperationsLookup.ListValueMember];
+            result[i] = dataView[recordIndex: i][property: DynamicOperationsLookup.ListValueMember];
         }
         return result;
     }
@@ -127,19 +127,19 @@ public class StateMachine : AbstractSchemaItem
             {
                 if (state.Type == StateMachineStateType.Initial)
                 {
-                    list.Add(state.Value);
+                    list.Add(item: state.Value);
                 }
             }
         }
         else
         {
-            var dataView = GetDynamicList(DynamicStatesLookupId, data);
+            var dataView = GetDynamicList(lookupId: DynamicStatesLookupId, data: data);
             // dynamic state list from the data source
             foreach (DataRowView dataRowView in dataView)
             {
-                if ((bool)dataRowView["IsInitial"])
+                if ((bool)dataRowView[property: "IsInitial"])
                 {
-                    list.Add(dataRowView["Id"]);
+                    list.Add(item: dataRowView[property: "Id"]);
                 }
             }
         }
@@ -152,13 +152,13 @@ public class StateMachine : AbstractSchemaItem
         var dataLookupService = ServiceManager.Services.GetService<IDataLookupService>();
         if (ParameterMappings.Count == 0)
         {
-            view = dataLookupService.GetList(lookupId, null);
+            view = dataLookupService.GetList(lookupId: lookupId, transactionId: null);
         }
         else
         {
             if (data == null)
             {
-                view = new DataView(new OrigamDataTable());
+                view = new DataView(table: new OrigamDataTable());
             }
             else
             {
@@ -177,7 +177,7 @@ public class StateMachine : AbstractSchemaItem
                         )
                         + parameterMapping.Field.Name;
                     var xPathNavigator = data.Xml.CreateNavigator();
-                    var value = xPathNavigator.Evaluate(xpath);
+                    var value = xPathNavigator.Evaluate(xpath: xpath);
                     if (value is XPathNodeIterator iterator)
                     {
                         if (iterator.Count == 0)
@@ -194,9 +194,13 @@ public class StateMachine : AbstractSchemaItem
                     {
                         value = null;
                     }
-                    parameters.Add(parameterMapping.Name, value);
+                    parameters.Add(key: parameterMapping.Name, value: value);
                 }
-                view = dataLookupService.GetList(lookupId, parameters, null);
+                view = dataLookupService.GetList(
+                    lookupId: lookupId,
+                    parameters: parameters,
+                    transactionId: null
+                );
             }
         }
         return view;
@@ -205,91 +209,94 @@ public class StateMachine : AbstractSchemaItem
     public Guid EntityId;
 
     [NotNullModelElementRule]
-    [TypeConverter(typeof(EntityConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [XmlReference("entity", "EntityId")]
+    [TypeConverter(type: typeof(EntityConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [XmlReference(attributeName: "entity", idField: "EntityId")]
     public IDataEntity Entity
     {
         get =>
             (IDataEntity)
                 PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(EntityId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: EntityId)
                 );
         set
         {
-            EntityId = (value == null) ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+            EntityId = (value == null) ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"];
             SetName();
         }
     }
 
     public Guid FieldId;
 
-    [TypeConverter(typeof(StateMachineEntityFieldConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [XmlReference("field", "FieldId")]
+    [TypeConverter(type: typeof(StateMachineEntityFieldConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [XmlReference(attributeName: "field", idField: "FieldId")]
     public IDataEntityColumn Field
     {
         get =>
             (IDataEntityColumn)
                 PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(FieldId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: FieldId)
                 );
         set
         {
-            FieldId = (value == null) ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+            FieldId = (value == null) ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"];
             SetName();
         }
     }
 
     public Guid DynamicStatesLookupId;
 
-    [TypeConverter(typeof(DataLookupConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [XmlReference("dynamicStatesLookup", "DynamicStatesLookupId")]
+    [TypeConverter(type: typeof(DataLookupConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [XmlReference(attributeName: "dynamicStatesLookup", idField: "DynamicStatesLookupId")]
     public IDataLookup DynamicStatesLookup
     {
         get =>
             (IDataLookup)
                 PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(DynamicStatesLookupId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: DynamicStatesLookupId)
                 );
-        set => DynamicStatesLookupId = (value == null) ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+        set =>
+            DynamicStatesLookupId =
+                (value == null) ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"];
     }
 
     public Guid DynamicOperationsLookupId;
 
-    [TypeConverter(typeof(DataLookupConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [XmlReference("dynamicOperationsLookup", "DynamicOperationsLookupId")]
+    [TypeConverter(type: typeof(DataLookupConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [XmlReference(attributeName: "dynamicOperationsLookup", idField: "DynamicOperationsLookupId")]
     public IDataLookup DynamicOperationsLookup
     {
         get =>
             (IDataLookup)
                 PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(DynamicOperationsLookupId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: DynamicOperationsLookupId)
                 );
         set =>
-            DynamicOperationsLookupId = (value == null) ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+            DynamicOperationsLookupId =
+                (value == null) ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"];
     }
 
     public Guid ReverseLookupId;
 
-    [TypeConverter(typeof(DataLookupConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [XmlReference("reverseLookup", "ReverseLookupId")]
+    [TypeConverter(type: typeof(DataLookupConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [XmlReference(attributeName: "reverseLookup", idField: "ReverseLookupId")]
     public IDataLookup ReverseLookup
     {
         get =>
             (IDataLookup)
                 PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(ReverseLookupId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: ReverseLookupId)
                 );
-        set => ReverseLookupId = (value == null) ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+        set => ReverseLookupId = (value == null) ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"];
     }
     #endregion
     #region Private Methods
@@ -333,7 +340,11 @@ public class StateMachine : AbstractSchemaItem
         {
             itemName = "NewParameterMapping";
         }
-        return base.NewItem<T>(schemaExtensionId, group, itemName);
+        return base.NewItem<T>(
+            schemaExtensionId: schemaExtensionId,
+            group: group,
+            itemName: itemName
+        );
     }
     #endregion
 }

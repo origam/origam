@@ -39,10 +39,10 @@ public enum ControlToolBoxVisibility
 /// <summary>
 /// Summary description for ControlItem.
 /// </summary>
-[SchemaItemDescription("Widget", "icon_widget.png")]
-[HelpTopic("Widgets")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Widget", iconName: "icon_widget.png")]
+[HelpTopic(topic: "Widgets")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class ControlItem : AbstractSchemaItem, ISchemaItemFactory
 {
     public const string CategoryConst = "Control";
@@ -54,27 +54,27 @@ public class ControlItem : AbstractSchemaItem, ISchemaItemFactory
     }
 
     public ControlItem(Guid schemaExtensionId)
-        : base(schemaExtensionId)
+        : base(extensionId: schemaExtensionId)
     {
         Init();
     }
 
     public ControlItem(Key primaryKey)
-        : base(primaryKey)
+        : base(primaryKey: primaryKey)
     {
         Init();
     }
 
     private void Init()
     {
-        this.ChildItemTypes.Add(typeof(ControlPropertyItem));
-        this.ChildItemTypes.Add(typeof(ControlStyleProperty));
+        this.ChildItemTypes.Add(item: typeof(ControlPropertyItem));
+        this.ChildItemTypes.Add(item: typeof(ControlStyleProperty));
     }
 
     #region Properties
     private ControlToolBoxVisibility _controlToolBoxVisibility;
 
-    [XmlAttribute("toolboxVisibility")]
+    [XmlAttribute(attributeName: "toolboxVisibility")]
     public ControlToolBoxVisibility ControlToolBoxVisibility
     {
         get { return _controlToolBoxVisibility; }
@@ -82,7 +82,7 @@ public class ControlItem : AbstractSchemaItem, ISchemaItemFactory
     }
     private string _controlType;
 
-    [XmlAttribute("typeName")]
+    [XmlAttribute(attributeName: "typeName")]
     public string ControlType
     {
         get { return _controlType; }
@@ -90,7 +90,7 @@ public class ControlItem : AbstractSchemaItem, ISchemaItemFactory
     }
     private string _controlNamespace;
 
-    [XmlAttribute("namespace")]
+    [XmlAttribute(attributeName: "namespace")]
     public string ControlNamespace
     {
         get { return _controlNamespace; }
@@ -98,7 +98,7 @@ public class ControlItem : AbstractSchemaItem, ISchemaItemFactory
     }
     private bool _isComplexType;
 
-    [XmlAttribute("isComplex")]
+    [XmlAttribute(attributeName: "isComplex")]
     public bool IsComplexType
     {
         get { return _isComplexType; }
@@ -106,7 +106,7 @@ public class ControlItem : AbstractSchemaItem, ISchemaItemFactory
     }
     public Guid PanelControlSetId;
 
-    [XmlReference("screenSection", "PanelControlSetId")]
+    [XmlReference(attributeName: "screenSection", idField: "PanelControlSetId")]
     public PanelControlSet PanelControlSet
     {
         get
@@ -117,7 +117,10 @@ public class ControlItem : AbstractSchemaItem, ISchemaItemFactory
             try
             {
                 return (PanelControlSet)
-                    this.PersistenceProvider.RetrieveInstance(typeof(PanelControlSet), key);
+                    this.PersistenceProvider.RetrieveInstance(
+                        type: typeof(PanelControlSet),
+                        primaryKey: key
+                    );
             }
             catch
             {
@@ -128,7 +131,7 @@ public class ControlItem : AbstractSchemaItem, ISchemaItemFactory
         {
             if (value != null)
             {
-                this.PanelControlSetId = (Guid)value.PrimaryKey["Id"];
+                this.PanelControlSetId = (Guid)value.PrimaryKey[key: "Id"];
             }
             else
             {
@@ -138,7 +141,7 @@ public class ControlItem : AbstractSchemaItem, ISchemaItemFactory
     }
     private bool _requestSaveAfterChangeAllowed;
 
-    [XmlAttribute("requestSaveAfterChangeAllowed")]
+    [XmlAttribute(attributeName: "requestSaveAfterChangeAllowed")]
     public bool RequestSaveAfterChangeAllowed
     {
         get { return _requestSaveAfterChangeAllowed; }
@@ -146,7 +149,7 @@ public class ControlItem : AbstractSchemaItem, ISchemaItemFactory
     }
     #endregion
     #region Overriden ISchemaItem Members
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public override bool CanDelete
     {
         get
@@ -169,7 +172,7 @@ public class ControlItem : AbstractSchemaItem, ISchemaItemFactory
         // we will not add panel control set, because panel handles deletion of this control,
         // instead, ControlSetItem references directly the Panel definition
         //if(this.PanelControlSet != null) dependencies.Add(this.PanelControlSet);
-        base.GetExtraDependencies(dependencies);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
     #endregion
 }

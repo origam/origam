@@ -26,23 +26,23 @@ namespace Origam.Architect.Server.Controls;
 
 public class AsForm : IControl
 {
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public string ExtraControlBindings { get; set; }
 
-    [Category("Layout")]
-    [Browsable(false)]
+    [Category(category: "Layout")]
+    [Browsable(browsable: false)]
     public int Top { get; set; }
 
-    [Category("Layout")]
-    [Browsable(false)]
+    [Category(category: "Layout")]
+    [Browsable(browsable: false)]
     public int Left { get; set; }
 
-    [Category("Layout")]
-    [Browsable(false)]
+    [Category(category: "Layout")]
+    [Browsable(browsable: false)]
     public int Height { get; set; } = 200;
 
-    [Category("Layout")]
-    [Browsable(false)]
+    [Category(category: "Layout")]
+    [Browsable(browsable: false)]
     public int Width { get; set; } = 200;
 
     public void Initialize(ControlSetItem controlSetItem) { }

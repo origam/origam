@@ -33,9 +33,9 @@ public static class ByteExtensions
             return null;
         }
 
-        using (var ms = new MemoryStream(array))
+        using (var ms = new MemoryStream(buffer: array))
         {
-            return new Bitmap(ms);
+            return new Bitmap(stream: ms);
         }
     }
 }

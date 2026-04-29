@@ -110,9 +110,9 @@ public class LoadingCircle : Control
     /// </summary>
     /// <value>The lightest color of the circle.</value>
     [
-        TypeConverter("System.Drawing.ColorConverter"),
-        Category("LoadingCircle"),
-        Description("Sets the color of spoke.")
+        TypeConverter(typeName: "System.Drawing.ColorConverter"),
+        Category(category: "LoadingCircle"),
+        Description(description: "Sets the color of spoke.")
     ]
     public Color Color
     {
@@ -130,8 +130,8 @@ public class LoadingCircle : Control
     /// </summary>
     /// <value>The outer circle radius.</value>
     [
-        System.ComponentModel.Description("Gets or sets the radius of outer circle."),
-        System.ComponentModel.Category("LoadingCircle")
+        System.ComponentModel.Description(description: "Gets or sets the radius of outer circle."),
+        System.ComponentModel.Category(category: "LoadingCircle")
     ]
     public int OuterCircleRadius
     {
@@ -156,8 +156,8 @@ public class LoadingCircle : Control
     /// </summary>
     /// <value>The inner circle radius.</value>
     [
-        System.ComponentModel.Description("Gets or sets the radius of inner circle."),
-        System.ComponentModel.Category("LoadingCircle")
+        System.ComponentModel.Description(description: "Gets or sets the radius of inner circle."),
+        System.ComponentModel.Category(category: "LoadingCircle")
     ]
     public int InnerCircleRadius
     {
@@ -182,8 +182,8 @@ public class LoadingCircle : Control
     /// </summary>
     /// <value>The number of spoke.</value>
     [
-        System.ComponentModel.Description("Gets or sets the number of spoke."),
-        System.ComponentModel.Category("LoadingCircle")
+        System.ComponentModel.Description(description: "Gets or sets the number of spoke."),
+        System.ComponentModel.Category(category: "LoadingCircle")
     ]
     public int NumberSpoke
     {
@@ -213,8 +213,8 @@ public class LoadingCircle : Control
     /// </summary>
     /// <value><c>true</c> if active; otherwise, <c>false</c>.</value>
     [
-        System.ComponentModel.Description("Gets or sets the number of spoke."),
-        System.ComponentModel.Category("LoadingCircle")
+        System.ComponentModel.Description(description: "Gets or sets the number of spoke."),
+        System.ComponentModel.Category(category: "LoadingCircle")
     ]
     public bool Active
     {
@@ -231,8 +231,8 @@ public class LoadingCircle : Control
     /// </summary>
     /// <value>The spoke thickness.</value>
     [
-        System.ComponentModel.Description("Gets or sets the thickness of a spoke."),
-        System.ComponentModel.Category("LoadingCircle")
+        System.ComponentModel.Description(description: "Gets or sets the thickness of a spoke."),
+        System.ComponentModel.Category(category: "LoadingCircle")
     ]
     public int SpokeThickness
     {
@@ -258,8 +258,10 @@ public class LoadingCircle : Control
     /// </summary>
     /// <value>The rotation speed.</value>
     [
-        System.ComponentModel.Description("Gets or sets the rotation speed. Higher the slower."),
-        System.ComponentModel.Category("LoadingCircle")
+        System.ComponentModel.Description(
+            description: "Gets or sets the rotation speed. Higher the slower."
+        ),
+        System.ComponentModel.Category(category: "LoadingCircle")
     ]
     public int RotationSpeed
     {
@@ -278,9 +280,11 @@ public class LoadingCircle : Control
     /// </summary>
     /// <value>The style preset.</value>
     [
-        Category("LoadingCircle"),
-        Description("Quickly sets the style to one of these presets, or a custom style if desired"),
-        DefaultValue(typeof(StylePresets), "Custom")
+        Category(category: "LoadingCircle"),
+        Description(
+            description: "Quickly sets the style to one of these presets, or a custom style if desired"
+        ),
+        DefaultValue(type: typeof(StylePresets), value: "Custom")
     ]
     public StylePresets StylePreset
     {
@@ -293,10 +297,10 @@ public class LoadingCircle : Control
                 case StylePresets.MacOSX:
                 {
                     SetCircleAppearance(
-                        MacOSXNumberOfSpoke,
-                        MacOSXSpokeThickness,
-                        MacOSXInnerCircleRadius,
-                        MacOSXOuterCircleRadius
+                        numberSpoke: MacOSXNumberOfSpoke,
+                        spokeThickness: MacOSXSpokeThickness,
+                        innerCircleRadius: MacOSXInnerCircleRadius,
+                        outerCircleRadius: MacOSXOuterCircleRadius
                     );
                     break;
                 }
@@ -304,10 +308,10 @@ public class LoadingCircle : Control
                 case StylePresets.Firefox:
                 {
                     SetCircleAppearance(
-                        FireFoxNumberOfSpoke,
-                        FireFoxSpokeThickness,
-                        FireFoxInnerCircleRadius,
-                        FireFoxOuterCircleRadius
+                        numberSpoke: FireFoxNumberOfSpoke,
+                        spokeThickness: FireFoxSpokeThickness,
+                        innerCircleRadius: FireFoxInnerCircleRadius,
+                        outerCircleRadius: FireFoxOuterCircleRadius
                     );
                     break;
                 }
@@ -315,10 +319,10 @@ public class LoadingCircle : Control
                 case StylePresets.IE7:
                 {
                     SetCircleAppearance(
-                        IE7NumberOfSpoke,
-                        IE7SpokeThickness,
-                        IE7InnerCircleRadius,
-                        IE7OuterCircleRadius
+                        numberSpoke: IE7NumberOfSpoke,
+                        spokeThickness: IE7SpokeThickness,
+                        innerCircleRadius: IE7InnerCircleRadius,
+                        outerCircleRadius: IE7OuterCircleRadius
                     );
                     break;
                 }
@@ -326,10 +330,10 @@ public class LoadingCircle : Control
                 case StylePresets.Custom:
                 {
                     SetCircleAppearance(
-                        DefaultNumberOfSpoke,
-                        DefaultSpokeThickness,
-                        DefaultInnerCircleRadius,
-                        DefaultOuterCircleRadius
+                        numberSpoke: DefaultNumberOfSpoke,
+                        spokeThickness: DefaultSpokeThickness,
+                        innerCircleRadius: DefaultInnerCircleRadius,
+                        outerCircleRadius: DefaultOuterCircleRadius
                     );
                     break;
                 }
@@ -343,10 +347,10 @@ public class LoadingCircle : Control
     /// </summary>
     public LoadingCircle()
     {
-        SetStyle(ControlStyles.UserPaint, true);
-        SetStyle(ControlStyles.DoubleBuffer, true);
-        SetStyle(ControlStyles.ResizeRedraw, true);
-        SetStyle(ControlStyles.SupportsTransparentBackColor, true);
+        SetStyle(flag: ControlStyles.UserPaint, value: true);
+        SetStyle(flag: ControlStyles.DoubleBuffer, value: true);
+        SetStyle(flag: ControlStyles.ResizeRedraw, value: true);
+        SetStyle(flag: ControlStyles.SupportsTransparentBackColor, value: true);
         m_Color = DefaultColor;
         GenerateColorsPallet();
         GetSpokesAngles();
@@ -387,7 +391,7 @@ public class LoadingCircle : Control
 
         using (Graphics g = this.ParentControl.CreateGraphics())
         {
-            MyPaint(g);
+            MyPaint(g: g);
         }
     }
 
@@ -404,8 +408,8 @@ public class LoadingCircle : Control
     /// <param name="e">A <see cref="T:System.Windows.Forms.PaintEventArgs"></see> that contains the event data.</param>
     protected override void OnPaint(PaintEventArgs e)
     {
-        MyPaint(e.Graphics);
-        base.OnPaint(e);
+        MyPaint(g: e.Graphics);
+        base.OnPaint(e: e);
     }
 
     private bool _inPaint = false;
@@ -428,11 +432,19 @@ public class LoadingCircle : Control
                 {
                     intPosition = intPosition % m_NumberOfSpoke;
                     DrawLine(
-                        g,
-                        GetCoordinate(m_CenterPoint, m_InnerCircleRadius, m_Angles[intPosition]),
-                        GetCoordinate(m_CenterPoint, m_OuterCircleRadius, m_Angles[intPosition]),
-                        m_Colors[intCounter],
-                        m_SpokeThickness
+                        _objGraphics: g,
+                        _objPointOne: GetCoordinate(
+                            _objCircleCenter: m_CenterPoint,
+                            _intRadius: m_InnerCircleRadius,
+                            _dblAngle: m_Angles[intPosition]
+                        ),
+                        _objPointTwo: GetCoordinate(
+                            _objCircleCenter: m_CenterPoint,
+                            _intRadius: m_OuterCircleRadius,
+                            _dblAngle: m_Angles[intPosition]
+                        ),
+                        _objColor: m_Colors[intCounter],
+                        _intLineThickness: m_SpokeThickness
                     );
                     intPosition++;
                     //System.Diagnostics.Debug.WriteLine(intPosition);
@@ -472,10 +484,10 @@ public class LoadingCircle : Control
         int intGreen = _objColor.G;
         int intBlue = _objColor.B;
         return Color.FromArgb(
-            _intPercent,
-            Math.Min(intRed, byte.MaxValue),
-            Math.Min(intGreen, byte.MaxValue),
-            Math.Min(intBlue, byte.MaxValue)
+            alpha: _intPercent,
+            red: Math.Min(val1: intRed, val2: byte.MaxValue),
+            green: Math.Min(val1: intGreen, val2: byte.MaxValue),
+            blue: Math.Min(val1: intBlue, val2: byte.MaxValue)
         );
     }
 
@@ -484,7 +496,11 @@ public class LoadingCircle : Control
     /// </summary>
     private void GenerateColorsPallet()
     {
-        m_Colors = GenerateColorsPallet(m_Color, Active, m_NumberOfSpoke);
+        m_Colors = GenerateColorsPallet(
+            _objColor: m_Color,
+            _blnShadeColor: Active,
+            _intNbSpoke: m_NumberOfSpoke
+        );
     }
 
     /// <summary>
@@ -520,7 +536,10 @@ public class LoadingCircle : Control
                         PERCENTAGE_OF_DARKEN = byte.MaxValue;
                     }
                     // Determine the spoke forecolor
-                    objColors[intCursor] = Darken(_objColor, PERCENTAGE_OF_DARKEN);
+                    objColors[intCursor] = Darken(
+                        _objColor: _objColor,
+                        _intPercent: PERCENTAGE_OF_DARKEN
+                    );
                 }
             }
             else
@@ -536,7 +555,7 @@ public class LoadingCircle : Control
     /// </summary>
     private void GetControlCenterPoint()
     {
-        m_CenterPoint = GetControlCenterPoint(this);
+        m_CenterPoint = GetControlCenterPoint(_objControl: this);
     }
 
     /// <summary>
@@ -547,8 +566,8 @@ public class LoadingCircle : Control
     {
         //			return new PointF(_objControl.Width / 2, (_objControl.Height / 2) - 1);
         return new PointF(
-            _objControl.Left + (_objControl.Width / 2),
-            _objControl.Top + (_objControl.Height / 2) - 1
+            x: _objControl.Left + (_objControl.Width / 2),
+            y: _objControl.Top + (_objControl.Height / 2) - 1
         );
     }
 
@@ -577,20 +596,25 @@ public class LoadingCircle : Control
 
             using (
                 Pen objPen = new Pen(
-                    new SolidBrush(this.ParentControl.BackColor),
-                    _intLineThickness
+                    brush: new SolidBrush(color: this.ParentControl.BackColor),
+                    width: _intLineThickness
                 )
             )
             {
                 objPen.StartCap = LineCap.Round;
                 objPen.EndCap = LineCap.Round;
-                _objGraphics.DrawLine(objPen, _objPointOne, _objPointTwo);
+                _objGraphics.DrawLine(pen: objPen, pt1: _objPointOne, pt2: _objPointTwo);
             }
-            using (Pen objPen = new Pen(new SolidBrush(_objColor), _intLineThickness))
+            using (
+                Pen objPen = new Pen(
+                    brush: new SolidBrush(color: _objColor),
+                    width: _intLineThickness
+                )
+            )
             {
                 objPen.StartCap = LineCap.Round;
                 objPen.EndCap = LineCap.Round;
-                _objGraphics.DrawLine(objPen, _objPointOne, _objPointTwo);
+                _objGraphics.DrawLine(pen: objPen, pt1: _objPointOne, pt2: _objPointTwo);
             }
         }
         catch
@@ -612,8 +636,8 @@ public class LoadingCircle : Control
     {
         double dblAngle = Math.PI * _dblAngle / NumberOfDegreesInHalfCircle;
         return new PointF(
-            _objCircleCenter.X + (_intRadius * (float)Math.Cos(dblAngle)),
-            _objCircleCenter.Y + (_intRadius * (float)Math.Sin(dblAngle))
+            x: _objCircleCenter.X + (_intRadius * (float)Math.Cos(d: dblAngle)),
+            y: _objCircleCenter.Y + (_intRadius * (float)Math.Sin(a: dblAngle))
         );
     }
 
@@ -622,7 +646,7 @@ public class LoadingCircle : Control
     /// </summary>
     private void GetSpokesAngles()
     {
-        m_Angles = GetSpokesAngles(NumberSpoke);
+        m_Angles = GetSpokesAngles(_intNumberSpoke: NumberSpoke);
     }
 
     /// <summary>
@@ -651,10 +675,10 @@ public class LoadingCircle : Control
         if (m_IsTimerActive)
         {
             m_Timer = new System.Threading.Timer(
-                new System.Threading.TimerCallback(aTimer_Tick),
-                null,
-                0,
-                _timerInterval
+                callback: new System.Threading.TimerCallback(aTimer_Tick),
+                state: null,
+                dueTime: 0,
+                period: _timerInterval
             );
         }
         else
@@ -709,6 +733,6 @@ public class LoadingCircle : Control
         {
             components.Dispose();
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
 }

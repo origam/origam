@@ -36,14 +36,14 @@ public class IndexedRuleQueue : IEnumerable<object[]>
 
     public void Enqueue(object[] entry)
     {
-        hashSet.Add(GetHash(entry));
-        queue.Enqueue(entry);
+        hashSet.Add(item: GetHash(entry: entry));
+        queue.Enqueue(item: entry);
     }
 
     public bool Contains(DataRow row, DataStructureRuleSet ruleSet)
     {
-        int hash = GetHash(row, ruleSet);
-        return hashSet.Contains(hash);
+        int hash = GetHash(row: row, ruleSet: ruleSet);
+        return hashSet.Contains(item: hash);
     }
 
     public object[] Peek()
@@ -54,8 +54,8 @@ public class IndexedRuleQueue : IEnumerable<object[]>
     public object[] Dequeue()
     {
         var entry = queue.Dequeue();
-        int hash = GetHash(entry);
-        hashSet.Remove(hash);
+        int hash = GetHash(entry: entry);
+        hashSet.Remove(item: hash);
         return entry;
     }
 
@@ -78,8 +78,8 @@ public class IndexedRuleQueue : IEnumerable<object[]>
     private int GetHash(DataRow row, DataStructureRuleSet ruleSet)
     {
         HashCode hash = new();
-        hash.Add(row.GetHashCode());
-        hash.Add(ruleSet?.Id);
+        hash.Add(value: row.GetHashCode());
+        hash.Add(value: ruleSet?.Id);
         return hash.ToHashCode();
     }
 
@@ -87,6 +87,6 @@ public class IndexedRuleQueue : IEnumerable<object[]>
     {
         var row = entry[0] as DataRow;
         var ruleSet = entry[1] as DataStructureRuleSet;
-        return GetHash(row, ruleSet);
+        return GetHash(row: row, ruleSet: ruleSet);
     }
 }

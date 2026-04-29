@@ -61,13 +61,13 @@ class Program
         services.AddSingleton<ICreateNewUserBuilderTask, CreateNewUserBuilderTask>();
         services.AddSingleton<IPrintOrigamSettingsBuilderTask, PrintOrigamSettingsBuilderTask>();
 
-        var registrar = new OrigamTypeRegistrar(services);
-        var app = new CommandApp(registrar);
-        app.Configure(config =>
+        var registrar = new OrigamTypeRegistrar(services: services);
+        var app = new CommandApp(registrar: registrar);
+        app.Configure(configuration: config =>
         {
-            config.AddCommand<CreateCommand>("create");
+            config.AddCommand<CreateCommand>(name: "create");
         });
 
-        await app.RunAsync(args);
+        await app.RunAsync(args: args);
     }
 }

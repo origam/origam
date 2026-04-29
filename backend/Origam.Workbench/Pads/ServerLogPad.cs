@@ -33,7 +33,7 @@ namespace Origam.Workbench.Pads;
 public class ServerLogPad : OutputPad
 {
     private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
-        System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
+        type: System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
     );
     private Timer timer;
     private System.ComponentModel.IContainer components;
@@ -74,8 +74,8 @@ public class ServerLogPad : OutputPad
     {
         this.components = new System.ComponentModel.Container();
         System.ComponentModel.ComponentResourceManager resources =
-            new System.ComponentModel.ComponentResourceManager(typeof(ServerLogPad));
-        this.timer = new System.Windows.Forms.Timer(this.components);
+            new System.ComponentModel.ComponentResourceManager(t: typeof(ServerLogPad));
+        this.timer = new System.Windows.Forms.Timer(container: this.components);
         this.pauseCheckbox = new System.Windows.Forms.CheckBox();
         this.lblLogSize = new System.Windows.Forms.Label();
         this.toolBar.SuspendLayout();
@@ -83,9 +83,9 @@ public class ServerLogPad : OutputPad
         //
         // toolBar
         //
-        this.toolBar.Controls.Add(this.lblLogSize);
-        this.toolBar.Controls.Add(this.pauseCheckbox);
-        this.toolBar.Size = new System.Drawing.Size(292, 27);
+        this.toolBar.Controls.Add(value: this.lblLogSize);
+        this.toolBar.Controls.Add(value: this.pauseCheckbox);
+        this.toolBar.Size = new System.Drawing.Size(width: 292, height: 27);
         //
         // timer
         //
@@ -93,9 +93,9 @@ public class ServerLogPad : OutputPad
         //
         // pauseCheckbox
         //
-        this.pauseCheckbox.Location = new System.Drawing.Point(13, 6);
+        this.pauseCheckbox.Location = new System.Drawing.Point(x: 13, y: 6);
         this.pauseCheckbox.Name = "pauseCheckbox";
-        this.pauseCheckbox.Size = new System.Drawing.Size(56, 17);
+        this.pauseCheckbox.Size = new System.Drawing.Size(width: 56, height: 17);
         this.pauseCheckbox.TabIndex = 0;
         this.pauseCheckbox.Text = "Pause";
         this.pauseCheckbox.CheckedChanged += new System.EventHandler(
@@ -105,19 +105,19 @@ public class ServerLogPad : OutputPad
         // lblLogSize
         //
         this.lblLogSize.AutoSize = true;
-        this.lblLogSize.Location = new System.Drawing.Point(85, 7);
+        this.lblLogSize.Location = new System.Drawing.Point(x: 85, y: 7);
         this.lblLogSize.Name = "lblLogSize";
-        this.lblLogSize.Size = new System.Drawing.Size(0, 13);
+        this.lblLogSize.Size = new System.Drawing.Size(width: 0, height: 13);
         this.lblLogSize.TabIndex = 1;
         //
         // ServerLogPad
         //
-        this.ClientSize = new System.Drawing.Size(292, 271);
-        this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+        this.ClientSize = new System.Drawing.Size(width: 292, height: 271);
+        this.Icon = ((System.Drawing.Icon)(resources.GetObject(name: "$this.Icon")));
         this.Name = "ServerLogPad";
-        this.toolBar.ResumeLayout(false);
+        this.toolBar.ResumeLayout(performLayout: false);
         this.toolBar.PerformLayout();
-        this.ResumeLayout(false);
+        this.ResumeLayout(performLayout: false);
         this.PerformLayout();
     }
 
@@ -129,24 +129,24 @@ public class ServerLogPad : OutputPad
                 ConfigurationManager.GetActiveConfiguration() as OrigamSettings;
             if (settings == null)
             {
-                SetOutputText("Configuration not selected.");
+                SetOutputText(sText: "Configuration not selected.");
                 return;
             }
             string url = settings.ServerLogUrl;
             if (url == "" || url == null)
             {
-                SetOutputText("ServerLogUrl not set in the settings.");
+                SetOutputText(sText: "ServerLogUrl not set in the settings.");
                 return;
             }
             ServicePointManager.SecurityProtocol =
                 SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
-            HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(url);
+            HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(requestUriString: url);
             request.Timeout = 1000;
-            int size = GetFileSize(url);
-            lblLogSize.Text = "Log Size: " + size.ToString("#,0") + " bytes";
+            int size = GetFileSize(url: url);
+            lblLogSize.Text = "Log Size: " + size.ToString(format: "#,0") + " bytes";
             if (_lastPosition == 0)
             {
-                request.AddRange(-GetInitialSize(url));
+                request.AddRange(range: -GetInitialSize(url: url));
             }
             else
             {
@@ -159,15 +159,15 @@ public class ServerLogPad : OutputPad
                 if (size >= _lastPosition)
                 {
                     // file grew, we request the increment
-                    request.AddRange(_lastPosition, size);
+                    request.AddRange(from: _lastPosition, to: size);
                 }
                 else
                 {
                     // file is smaller (different file), we go from the beginning
-                    request.AddRange(-GetInitialSize(url));
+                    request.AddRange(range: -GetInitialSize(url: url));
                 }
             }
-            RetrieveLogFromServer(request);
+            RetrieveLogFromServer(request: request);
             timer.Interval = INTERVAL;
         }
         catch (Exception ex)
@@ -175,10 +175,10 @@ public class ServerLogPad : OutputPad
             timer.Interval *= 10;
             string message =
                 "Could not load server log. Will retry in " + (timer.Interval / 1000) + " seconds.";
-            SetOutputText(message);
+            SetOutputText(sText: message);
             if (log.IsErrorEnabled)
             {
-                log.LogOrigamError(message, ex);
+                log.LogOrigamError(message: message, ex: ex);
             }
         }
     }
@@ -189,13 +189,18 @@ public class ServerLogPad : OutputPad
         {
             using (Stream responseStream = response.GetResponseStream())
             {
-                string range = response.Headers["Content-Range"];
+                string range = response.Headers[name: "Content-Range"];
                 if (range != null)
                 {
-                    _lastPosition = Convert.ToInt32(range.Substring(range.IndexOf("/") + 1));
+                    _lastPosition = Convert.ToInt32(
+                        value: range.Substring(startIndex: range.IndexOf(value: "/") + 1)
+                    );
                 }
-                string result = HttpTools.Instance.ReadResponseText(response, responseStream);
-                AddText(result);
+                string result = HttpTools.Instance.ReadResponseText(
+                    httpResponse: response,
+                    responseStream: responseStream
+                );
+                AddText(sText: result);
                 if (_isFirst)
                 {
                     _isFirst = false;
@@ -207,7 +212,7 @@ public class ServerLogPad : OutputPad
     private static int GetInitialSize(string url)
     {
         int initSize = 10240;
-        int size = GetFileSize(url);
+        int size = GetFileSize(url: url);
         if (size < initSize)
         {
             return size;
@@ -222,12 +227,12 @@ public class ServerLogPad : OutputPad
             SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 
         int size;
-        HttpWebRequest headRequest = (HttpWebRequest)HttpWebRequest.Create(url);
+        HttpWebRequest headRequest = (HttpWebRequest)HttpWebRequest.Create(requestUriString: url);
         headRequest.Timeout = 1000;
         headRequest.Method = "HEAD";
         using (HttpWebResponse headResponse = (HttpWebResponse)headRequest.GetResponse())
         {
-            size = Convert.ToInt32(headResponse.ContentLength);
+            size = Convert.ToInt32(value: headResponse.ContentLength);
         }
         return size;
     }

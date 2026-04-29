@@ -78,7 +78,7 @@ public class FilterPanel : System.Windows.Forms.UserControl
                 components.Dispose();
             }
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
 
     #region Component Designer generated code
@@ -113,7 +113,7 @@ public class FilterPanel : System.Windows.Forms.UserControl
             if (_query != value)
             {
                 _query = value;
-                OnQueryChanged(_query);
+                OnQueryChanged(query: _query);
             }
         }
     }
@@ -129,12 +129,12 @@ public class FilterPanel : System.Windows.Forms.UserControl
     #region Public Methods
     public void AddFilterPart(FilterPart part)
     {
-        if (!_filterParts.Contains(part.GridColumnName))
+        if (!_filterParts.Contains(key: part.GridColumnName))
         {
-            _filterParts.Add(part.GridColumnName, part);
+            _filterParts.Add(key: part.GridColumnName, value: part);
             part.QueryChanged += new DataViewQueryChanged(part_QueryChanged);
             part.ControlsChanged += new EventHandler(part_ControlsChanged);
-            PlotControls(part);
+            PlotControls(part: part);
         }
     }
 
@@ -173,22 +173,28 @@ public class FilterPanel : System.Windows.Forms.UserControl
         int height = 0;
         foreach (DataGridColumnStyle columnStyle in tableStyle.GridColumnStyles)
         {
-            FilterPart part = _filterParts[columnStyle.MappingName] as FilterPart;
+            FilterPart part = _filterParts[key: columnStyle.MappingName] as FilterPart;
             if (part != null)
             {
-                tabIndex = SizeControls(part, left, columnStyle.Width, tabIndex, ref height);
+                tabIndex = SizeControls(
+                    part: part,
+                    left: left,
+                    width: columnStyle.Width,
+                    startingTabIndex: tabIndex,
+                    height: ref height
+                );
             }
             left += columnStyle.Width;
         }
         foreach (FilterPart part in _filterParts.Values)
         {
-            if (!tableStyle.GridColumnStyles.Contains(part.GridColumnName))
+            if (!tableStyle.GridColumnStyles.Contains(name: part.GridColumnName))
             {
-                HideControls(part);
+                HideControls(part: part);
             }
         }
         this.Height = height;
-        this.ResumeLayout(true);
+        this.ResumeLayout(performLayout: true);
     }
 
     public void ApplyFilter(OrigamPanelFilter.PanelFilterRow filter)
@@ -206,19 +212,19 @@ public class FilterPanel : System.Windows.Forms.UserControl
                     OrigamPanelFilter.PanelFilterDetailRow detail in filter.GetPanelFilterDetailRows()
                 )
                 {
-                    if (_filterParts.ContainsKey(detail.ColumnName))
+                    if (_filterParts.ContainsKey(key: detail.ColumnName))
                     {
-                        FilterPart part = _filterParts[detail.ColumnName] as FilterPart;
+                        FilterPart part = _filterParts[key: detail.ColumnName] as FilterPart;
                         part.Operator = (FilterOperator)detail.Operator;
                         part.Value1 = OrigamPanelFilterDA.StoredFilterValue(
-                            detail,
-                            part.DataType,
-                            1
+                            row: detail,
+                            type: part.DataType,
+                            valueNumber: 1
                         );
                         part.Value2 = OrigamPanelFilterDA.StoredFilterValue(
-                            detail,
-                            part.DataType,
-                            2
+                            row: detail,
+                            type: part.DataType,
+                            valueNumber: 2
                         );
                         part.LoadValues();
                     }
@@ -243,13 +249,13 @@ public class FilterPanel : System.Windows.Forms.UserControl
             if (part.Query != null)
             {
                 OrigamPanelFilterDA.AddPanelFilterDetailRow(
-                    filterDS,
-                    profileId,
-                    filter.Id,
-                    part.GridColumnName,
-                    (int)part.Operator,
-                    part.Value1,
-                    part.Value2
+                    filterDS: filterDS,
+                    profileId: profileId,
+                    filterId: filter.Id,
+                    columnName: part.GridColumnName,
+                    oper: (int)part.Operator,
+                    value1: part.Value1,
+                    value2: part.Value2
                 );
             }
         }
@@ -261,28 +267,28 @@ public class FilterPanel : System.Windows.Forms.UserControl
         this.SuspendLayout();
         foreach (FilterPart part in _filterParts.Values)
         {
-            PlotControls(part);
+            PlotControls(part: part);
         }
-        this.ResumeLayout(true);
+        this.ResumeLayout(performLayout: true);
     }
 
     private void PlotControls(FilterPart part)
     {
-        if (!this.Controls.Contains(part.LabelControl))
+        if (!this.Controls.Contains(control: part.LabelControl))
         {
-            this.Controls.Add(part.LabelControl);
+            this.Controls.Add(value: part.LabelControl);
         }
-        if (!this.Controls.Contains(part.OperatorLabelControl))
+        if (!this.Controls.Contains(control: part.OperatorLabelControl))
         {
-            this.Controls.Add(part.OperatorLabelControl);
+            this.Controls.Add(value: part.OperatorLabelControl);
         }
         part.OperatorLabelControl.BringToFront();
         foreach (Control c in part.FilterControls)
         {
-            if (!this.Controls.Contains(c))
+            if (!this.Controls.Contains(control: c))
             {
                 c.Enter += new EventHandler(filterControl_Enter);
-                this.Controls.Add(c);
+                this.Controls.Add(value: c);
             }
         }
     }
@@ -354,7 +360,7 @@ public class FilterPanel : System.Windows.Forms.UserControl
     {
         if (this.QueryChanged != null)
         {
-            this.QueryChanged(this, query);
+            this.QueryChanged(sender: this, query: query);
         }
     }
 
@@ -369,14 +375,14 @@ public class FilterPanel : System.Windows.Forms.UserControl
                 if (panel != null & !(part is DropDownFilterPart))
                 {
                     // dynamicaly add temp sort column, e.g. if column is parametrized lookup
-                    panel.GetSortColumn(part.GridColumnName);
+                    panel.GetSortColumn(originalColumnName: part.GridColumnName);
                 }
                 if (result.Length > 0)
                 {
-                    result.Append(" AND ");
+                    result.Append(value: " AND ");
                 }
 
-                result.AppendFormat("({0})", part.Query);
+                result.AppendFormat(format: "({0})", arg0: part.Query);
             }
         }
         return result.ToString();
@@ -396,7 +402,7 @@ public class FilterPanel : System.Windows.Forms.UserControl
 
     private void part_ControlsChanged(object sender, EventArgs e)
     {
-        SizeControls(_lastTableStyle, _lastOffset);
+        SizeControls(tableStyle: _lastTableStyle, offset: _lastOffset);
     }
 
     private void keyboardTimer_Tick(object sender, System.EventArgs e)
@@ -413,11 +419,11 @@ public class FilterPanel : System.Windows.Forms.UserControl
             // we activate the filter part on which the user clicked otherwise
             // the focus could be stolen by a grid, resulting in lost focus and
             // writing into another control
-            Control child = this.GetChildAtPoint(this.PointToClient(MousePosition));
+            Control child = this.GetChildAtPoint(pt: this.PointToClient(p: MousePosition));
             if (child == null)
             {
-                System.Diagnostics.Debug.WriteLine(this.PointToClient(MousePosition));
-                child = this.Controls[0];
+                System.Diagnostics.Debug.WriteLine(value: this.PointToClient(p: MousePosition));
+                child = this.Controls[index: 0];
             }
             this.ActiveControl = child;
         }
@@ -465,7 +471,7 @@ public class FilterPanel : System.Windows.Forms.UserControl
             {
                 return;
             }
-            SizeControls(_lastTableStyle, this.ScrollOffset);
+            SizeControls(tableStyle: _lastTableStyle, offset: this.ScrollOffset);
             grid.HorizontalScrollPosition = this.ScrollOffset;
             c.Focus();
         }

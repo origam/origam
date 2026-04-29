@@ -29,7 +29,7 @@ namespace Origam.Gui.Designer;
 public class AsTreeNode : TreeNode
 {
     public AsTreeNode(string name)
-        : base(name) { }
+        : base(text: name) { }
 
     public bool IsComplexType;
     public bool IsExternal;

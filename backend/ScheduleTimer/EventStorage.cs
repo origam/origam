@@ -75,20 +75,20 @@ public class FileEventStorage : IEventStorage
 
     public void RecordLastTime(DateTime Time)
     {
-        _Doc.SelectSingleNode(_XPath).Value = Time.ToString();
-        _Doc.Save(_FileName);
+        _Doc.SelectSingleNode(xpath: _XPath).Value = Time.ToString();
+        _Doc.Save(filename: _FileName);
     }
 
     public DateTime ReadLastTime()
     {
-        _Doc.Load(_FileName);
-        string Value = _Doc.SelectSingleNode(_XPath).Value;
+        _Doc.Load(filename: _FileName);
+        string Value = _Doc.SelectSingleNode(xpath: _XPath).Value;
         if (Value == null || Value == string.Empty)
         {
             return DateTime.Now;
         }
 
-        return DateTime.Parse(Value);
+        return DateTime.Parse(s: Value);
     }
 
     string _FileName;

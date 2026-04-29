@@ -32,14 +32,14 @@ namespace Origam;
 public class AsXmlTextWriter : XmlTextWriter
 {
     public AsXmlTextWriter(TextWriter tw)
-        : base(tw) { }
+        : base(w: tw) { }
 
     public void WriteNode(XPathNavigator navigator)
     {
         bool flag;
         if (navigator == null)
         {
-            throw new ArgumentNullException("navigator");
+            throw new ArgumentNullException(paramName: "navigator");
         }
         int num = 0;
         navigator = navigator.Clone();
@@ -56,27 +56,27 @@ public class AsXmlTextWriter : XmlTextWriter
             case XPathNodeType.Element:
             {
                 this.WriteStartElement(
-                    navigator.Prefix,
-                    navigator.LocalName,
-                    navigator.NamespaceURI
+                    prefix: navigator.Prefix,
+                    localName: navigator.LocalName,
+                    ns: navigator.NamespaceURI
                 );
                 if (navigator.MoveToFirstAttribute())
                 {
                     do
                     {
                         this.WriteStartAttribute(
-                            navigator.Prefix,
-                            navigator.LocalName,
-                            navigator.NamespaceURI
+                            prefix: navigator.Prefix,
+                            localName: navigator.LocalName,
+                            ns: navigator.NamespaceURI
                         );
-                        this.WriteString(navigator.Value);
+                        this.WriteString(text: navigator.Value);
                         this.WriteEndAttribute();
                     } while (navigator.MoveToNextAttribute());
                     navigator.MoveToParent();
                 }
-                if (navigator.MoveToFirstNamespace(XPathNamespaceScope.Local))
+                if (navigator.MoveToFirstNamespace(namespaceScope: XPathNamespaceScope.Local))
                 {
-                    this.WriteLocalNamespaces(navigator);
+                    this.WriteLocalNamespaces(nsNav: navigator);
                     navigator.MoveToParent();
                 }
                 flag = true;
@@ -85,26 +85,26 @@ public class AsXmlTextWriter : XmlTextWriter
 
             case XPathNodeType.Text:
             {
-                this.WriteString(navigator.Value);
+                this.WriteString(text: navigator.Value);
                 break;
             }
 
             case XPathNodeType.SignificantWhitespace:
             case XPathNodeType.Whitespace:
             {
-                this.WriteWhitespace(navigator.Value);
+                this.WriteWhitespace(ws: navigator.Value);
                 break;
             }
 
             case XPathNodeType.ProcessingInstruction:
             {
-                this.WriteProcessingInstruction(navigator.LocalName, navigator.Value);
+                this.WriteProcessingInstruction(name: navigator.LocalName, text: navigator.Value);
                 break;
             }
 
             case XPathNodeType.Comment:
             {
-                this.WriteComment(navigator.Value);
+                this.WriteComment(text: navigator.Value);
                 break;
             }
         }
@@ -146,17 +146,27 @@ public class AsXmlTextWriter : XmlTextWriter
     {
         string localName = nsNav.LocalName;
         string str2 = nsNav.Value;
-        if (nsNav.MoveToNextNamespace(XPathNamespaceScope.Local))
+        if (nsNav.MoveToNextNamespace(namespaceScope: XPathNamespaceScope.Local))
         {
-            this.WriteLocalNamespaces(nsNav);
+            this.WriteLocalNamespaces(nsNav: nsNav);
         }
         if (localName.Length == 0)
         {
-            this.WriteAttributeString(string.Empty, "xmlns", "http://www.w3.org/2000/xmlns/", str2);
+            this.WriteAttributeString(
+                prefix: string.Empty,
+                localName: "xmlns",
+                ns: "http://www.w3.org/2000/xmlns/",
+                value: str2
+            );
         }
         else
         {
-            this.WriteAttributeString("xmlns", localName, "http://www.w3.org/2000/xmlns/", str2);
+            this.WriteAttributeString(
+                prefix: "xmlns",
+                localName: localName,
+                ns: "http://www.w3.org/2000/xmlns/",
+                value: str2
+            );
         }
     }
 }

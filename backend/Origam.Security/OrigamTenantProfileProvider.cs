@@ -31,10 +31,10 @@ namespace Origam.Security;
 public class OrigamTenantProfileProvider : AbstractProfileProvider
 {
     static readonly Guid CURRENT_ORGANIZATION_BUSINESS_PARTNER_ID_GUID = new Guid(
-        "24d35dbd-f113-4925-99d4-d3136aa43ae6"
+        g: "24d35dbd-f113-4925-99d4-d3136aa43ae6"
     );
     static readonly Guid CURRENT_ORGANIZATION_BUSINESS_PARTNER_ID__NOT_SET_YET = new Guid(
-        "79fe3ab3-4313-4e22-80f0-679c94322b84"
+        g: "79fe3ab3-4313-4e22-80f0-679c94322b84"
     );
 
     #region IProfileProvider Members
@@ -46,9 +46,9 @@ public class OrigamTenantProfileProvider : AbstractProfileProvider
     public override object GetProfile(string userName)
     {
         Hashtable profileCacheByIdentity = GetCacheByName();
-        if (profileCacheByIdentity.Contains(userName))
+        if (profileCacheByIdentity.Contains(key: userName))
         {
-            return profileCacheByIdentity[userName];
+            return profileCacheByIdentity[key: userName];
         }
 
         try
@@ -57,64 +57,77 @@ public class OrigamTenantProfileProvider : AbstractProfileProvider
             lock (profileCacheByIdentity)
             {
                 DataStructureQuery query = new DataStructureQuery(
-                    new Guid("c1b5852d-9c79-408f-84d1-71cf5f8a899a"),
-                    new Guid("42160561-5c04-4a97-b836-53e2d6fe9d97"),
-                    Guid.Empty,
-                    new Guid("fbbcda00-5df4-425c-8d2e-d3b6ae73caa0")
+                    dataStructureId: new Guid(g: "c1b5852d-9c79-408f-84d1-71cf5f8a899a"),
+                    methodId: new Guid(g: "42160561-5c04-4a97-b836-53e2d6fe9d97"),
+                    defaultSetId: Guid.Empty,
+                    sortSetId: new Guid(g: "fbbcda00-5df4-425c-8d2e-d3b6ae73caa0")
                 );
-                query.Parameters.Add(new QueryParameter("BusinessPartner_parUserName", userName));
+                query.Parameters.Add(
+                    value: new QueryParameter(
+                        _parameterName: "BusinessPartner_parUserName",
+                        value: userName
+                    )
+                );
                 // if data service would try to get identity,
                 //we would get into recursion
                 query.LoadByIdentity = false;
                 IServiceAgent dataServiceAgent = GetAgent();
                 dataServiceAgent.MethodName = "LoadDataByQuery";
                 dataServiceAgent.Parameters.Clear();
-                dataServiceAgent.Parameters.Add("Query", query);
+                dataServiceAgent.Parameters.Add(key: "Query", value: query);
                 dataServiceAgent.Run();
                 DataSet result = (DataSet)dataServiceAgent.Result;
-                if (result.Tables["BusinessPartner"].Rows.Count == 0)
+                if (result.Tables[name: "BusinessPartner"].Rows.Count == 0)
                 {
                     throw new ProfileNotFoundException(
-                        ResourceUtils.GetString("ErrorProfileUnavailable", userName)
+                        message: ResourceUtils.GetString(
+                            key: "ErrorProfileUnavailable",
+                            args: userName
+                        )
                     );
                 }
-                DataRow row = result.Tables["BusinessPartner"].Rows[0];
-                profile.Id = (Guid)row["Id"];
+                DataRow row = result.Tables[name: "BusinessPartner"].Rows[index: 0];
+                profile.Id = (Guid)row[columnName: "Id"];
                 // find out about current switch obp
                 IParameterService _parameterService =
-                    ServiceManager.Services.GetService(typeof(IParameterService))
+                    ServiceManager.Services.GetService(serviceType: typeof(IParameterService))
                     as IParameterService;
                 Guid? switchBusinessPartnerId =
                     _parameterService.GetParameterValue(
-                        CURRENT_ORGANIZATION_BUSINESS_PARTNER_ID_GUID,
-                        profile.Id
+                        id: CURRENT_ORGANIZATION_BUSINESS_PARTNER_ID_GUID,
+                        overridenProfileId: profile.Id
                     ) as Guid?;
                 DataRow obpRow = null;
                 if (
-                    result.Tables["OrganizationBusinessPartner"].Rows.Count > 0
+                    result.Tables[name: "OrganizationBusinessPartner"].Rows.Count > 0
                     && CURRENT_ORGANIZATION_BUSINESS_PARTNER_ID__NOT_SET_YET.Equals(
-                        switchBusinessPartnerId
+                        o: switchBusinessPartnerId
                     )
                 )
                 {
-                    obpRow = result.Tables["OrganizationBusinessPartner"].Rows[0];
+                    obpRow = result.Tables[name: "OrganizationBusinessPartner"].Rows[index: 0];
                 }
                 // switched to some particular organization business partner?
                 if (
                     switchBusinessPartnerId != null
-                    && !Guid.Empty.Equals(switchBusinessPartnerId.Value)
+                    && !Guid.Empty.Equals(g: switchBusinessPartnerId.Value)
                     && !CURRENT_ORGANIZATION_BUSINESS_PARTNER_ID__NOT_SET_YET.Equals(
-                        switchBusinessPartnerId
+                        o: switchBusinessPartnerId
                     )
                 )
                 {
-                    foreach (DataRow iObpRow in result.Tables["OrganizationBusinessPartner"].Rows)
+                    foreach (
+                        DataRow iObpRow in result.Tables[name: "OrganizationBusinessPartner"].Rows
+                    )
                     {
-                        if (switchBusinessPartnerId.Equals((Guid)iObpRow["Id"]))
+                        if (switchBusinessPartnerId.Equals(other: (Guid)iObpRow[columnName: "Id"]))
                         {
                             // we found the organization business partner
                             // switch must be valid - must not to other's obp profile
-                            if ((Guid)iObpRow["refSwitchUserBusinessPartnerId"] == profile.Id)
+                            if (
+                                (Guid)iObpRow[columnName: "refSwitchUserBusinessPartnerId"]
+                                == profile.Id
+                            )
                             {
                                 obpRow = iObpRow;
                                 break;
@@ -127,23 +140,26 @@ public class OrigamTenantProfileProvider : AbstractProfileProvider
                 {
                     // we switch to a particular organization
                     // profile.FullName = (string)obpRow["SwitchFullName"];
-                    profile.OrganizationId = (Guid)obpRow["refSwitchOrganizationId"];
+                    profile.OrganizationId = (Guid)obpRow[columnName: "refSwitchOrganizationId"];
                 }
 
-                profile.FullName = (string)row["FullName"] + " (" + userName + ")";
+                profile.FullName = (string)row[columnName: "FullName"] + " (" + userName + ")";
 
-                if (row.Table.Columns.Contains("Resource_Id") && (!row.IsNull("Resource_Id")))
-                {
-                    profile.ResourceId = (Guid)row["Resource_Id"];
-                }
                 if (
-                    row.Table.Columns.Contains("BusinessUnit_Id")
-                    && (!row.IsNull("BusinessUnit_Id"))
+                    row.Table.Columns.Contains(name: "Resource_Id")
+                    && (!row.IsNull(columnName: "Resource_Id"))
                 )
                 {
-                    profile.BusinessUnitId = (Guid)row["BusinessUnit_Id"];
+                    profile.ResourceId = (Guid)row[columnName: "Resource_Id"];
                 }
-                profileCacheByIdentity[userName] = profile;
+                if (
+                    row.Table.Columns.Contains(name: "BusinessUnit_Id")
+                    && (!row.IsNull(columnName: "BusinessUnit_Id"))
+                )
+                {
+                    profile.BusinessUnitId = (Guid)row[columnName: "BusinessUnit_Id"];
+                }
+                profileCacheByIdentity[key: userName] = profile;
             }
             return profile;
         }
@@ -151,7 +167,7 @@ public class OrigamTenantProfileProvider : AbstractProfileProvider
         {
             if (log.IsErrorEnabled)
             {
-                log.LogOrigamError(ex.Message, ex);
+                log.LogOrigamError(message: ex.Message, ex: ex);
             }
             throw;
         }
@@ -159,16 +175,16 @@ public class OrigamTenantProfileProvider : AbstractProfileProvider
         {
             if (log.IsErrorEnabled)
             {
-                log.LogOrigamError(ex.Message, ex);
+                log.LogOrigamError(message: ex.Message, ex: ex);
             }
             throw new Exception(
-                ResourceUtils.GetString("ErrorUnableToLoadProfile0")
+                message: ResourceUtils.GetString(key: "ErrorUnableToLoadProfile0")
                     + Environment.NewLine
                     + Environment.NewLine
-                    + ResourceUtils.GetString("ErrorUnableToLoadProfile1")
+                    + ResourceUtils.GetString(key: "ErrorUnableToLoadProfile1")
                     + Environment.NewLine
-                    + ResourceUtils.GetString("ErrorUnableToLoadProfile2"),
-                ex
+                    + ResourceUtils.GetString(key: "ErrorUnableToLoadProfile2"),
+                innerException: ex
             );
         }
     }

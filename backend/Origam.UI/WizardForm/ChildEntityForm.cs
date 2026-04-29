@@ -47,9 +47,9 @@ public class ChildEntityForm : AbstractWizardForm
             object selectedItem = null;
             foreach (IDataEntity entity in this.Entity1.RootProvider.ChildItems)
             {
-                cboEntity1.Items.Add(entity);
-                cboEntity2.Items.Add(entity);
-                if (entity.PrimaryKey.Equals(this.Entity1.PrimaryKey))
+                cboEntity1.Items.Add(item: entity);
+                cboEntity2.Items.Add(item: entity);
+                if (entity.PrimaryKey.Equals(obj: this.Entity1.PrimaryKey))
                 {
                     selectedItem = entity;
                 }

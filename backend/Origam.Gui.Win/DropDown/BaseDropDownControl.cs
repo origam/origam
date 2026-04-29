@@ -46,7 +46,7 @@ public class BaseDropDownControl : BaseCaptionControl, IAsGridEditor
         {
             if (!_noKeyUp)
             {
-                return base.ProcessKeyMessage(ref m);
+                return base.ProcessKeyMessage(m: ref m);
             }
             // ignore cursor keys and tab key
             if (m.Msg == WM_KEYDOWN)
@@ -62,7 +62,7 @@ public class BaseDropDownControl : BaseCaptionControl, IAsGridEditor
                 }
                 if (this.DataType == typeof(DateTime))
                 {
-                    return this.ProcessKeyEventArgs(ref m);
+                    return this.ProcessKeyEventArgs(m: ref m);
                 }
             }
 
@@ -76,12 +76,12 @@ public class BaseDropDownControl : BaseCaptionControl, IAsGridEditor
                 {
                     if (m.WParam.ToInt32() == KEY_CURSOR_DOWN)
                     {
-                        this.OnCursorDownPressed(EventArgs.Empty);
+                        this.OnCursorDownPressed(e: EventArgs.Empty);
                     }
 
                     if (m.WParam.ToInt32() == KEY_CURSOR_UP)
                     {
-                        this.OnCursorUpPressed(EventArgs.Empty);
+                        this.OnCursorUpPressed(e: EventArgs.Empty);
                     }
 
                     return true;
@@ -97,10 +97,10 @@ public class BaseDropDownControl : BaseCaptionControl, IAsGridEditor
                 }
                 if (this.DataType == typeof(DateTime))
                 {
-                    return this.ProcessKeyEventArgs(ref m);
+                    return this.ProcessKeyEventArgs(m: ref m);
                 }
             }
-            return base.ProcessKeyMessage(ref m);
+            return base.ProcessKeyMessage(m: ref m);
         }
 
         protected override void OnMouseWheel(MouseEventArgs e)
@@ -108,11 +108,11 @@ public class BaseDropDownControl : BaseCaptionControl, IAsGridEditor
             BaseCaptionControl bcc = this.Parent as BaseCaptionControl;
             if (bcc != null)
             {
-                bcc.OnControlMouseWheel(e);
+                bcc.OnControlMouseWheel(e: e);
             }
             else
             {
-                base.OnMouseWheel(e);
+                base.OnMouseWheel(e: e);
             }
         }
 
@@ -140,7 +140,7 @@ public class BaseDropDownControl : BaseCaptionControl, IAsGridEditor
         {
             if (this.CursorDownPressed != null)
             {
-                this.CursorDownPressed(this, e);
+                this.CursorDownPressed(sender: this, e: e);
             }
         }
 
@@ -150,7 +150,7 @@ public class BaseDropDownControl : BaseCaptionControl, IAsGridEditor
         {
             if (this.CursorUpPressed != null)
             {
-                this.CursorUpPressed(this, e);
+                this.CursorUpPressed(sender: this, e: e);
             }
         }
     }
@@ -169,19 +169,21 @@ public class BaseDropDownControl : BaseCaptionControl, IAsGridEditor
     public BaseDropDownControl()
     {
         InitializeComponent();
-        txtEdit.DoubleClick += (sender, args) => EditorDoubleClick?.Invoke(null, EventArgs.Empty);
-        txtEdit.MouseDown += (sender, args) => EditorClick?.Invoke(null, EventArgs.Empty);
+        txtEdit.DoubleClick += (sender, args) =>
+            EditorDoubleClick?.Invoke(sender: null, e: EventArgs.Empty);
+        txtEdit.MouseDown += (sender, args) =>
+            EditorClick?.Invoke(sender: null, e: EventArgs.Empty);
 
         this.btnDropDown.BackColor = OrigamColorScheme.ButtonBackColor;
         this.btnOpenList.BackColor = OrigamColorScheme.ButtonBackColor;
         if (ImgListStreamer == null)
         {
             System.Resources.ResourceManager resources = new System.Resources.ResourceManager(
-                typeof(BaseDropDownControl)
+                resourceSource: typeof(BaseDropDownControl)
             );
             ImgListStreamer = (
                 (System.Windows.Forms.ImageListStreamer)(
-                    resources.GetObject("imageList1.ImageStream")
+                    resources.GetObject(name: "imageList1.ImageStream")
                 )
             );
         }
@@ -195,7 +197,7 @@ public class BaseDropDownControl : BaseCaptionControl, IAsGridEditor
         this.components = new System.ComponentModel.Container();
         this.txtEdit = new Origam.Gui.Win.BaseDropDownControl.NoKeyUpTextBox();
         this.btnDropDown = new System.Windows.Forms.Button();
-        this.imageList1 = new System.Windows.Forms.ImageList(this.components);
+        this.imageList1 = new System.Windows.Forms.ImageList(container: this.components);
         this.btnOpenList = new System.Windows.Forms.Button();
         this.SuspendLayout();
         //
@@ -203,10 +205,10 @@ public class BaseDropDownControl : BaseCaptionControl, IAsGridEditor
         //
         this.txtEdit.Dock = System.Windows.Forms.DockStyle.Fill;
         this.txtEdit.IgnoreCursorDown = false;
-        this.txtEdit.Location = new System.Drawing.Point(0, 0);
+        this.txtEdit.Location = new System.Drawing.Point(x: 0, y: 0);
         this.txtEdit.Name = "txtEdit";
         this.txtEdit.NoKeyUp = false;
-        this.txtEdit.Size = new System.Drawing.Size(144, 19);
+        this.txtEdit.Size = new System.Drawing.Size(width: 144, height: 19);
         this.txtEdit.TabIndex = 0;
         this.txtEdit.Tag = null;
         this.txtEdit.GotFocus += new System.EventHandler(this.txtEdit_GotFocus);
@@ -214,18 +216,18 @@ public class BaseDropDownControl : BaseCaptionControl, IAsGridEditor
         // btnDropDown
         //
         this.btnDropDown.BackColor = System.Drawing.Color.FromArgb(
-            ((System.Byte)(214)),
-            ((System.Byte)(203)),
-            ((System.Byte)(111))
+            red: ((System.Byte)(214)),
+            green: ((System.Byte)(203)),
+            blue: ((System.Byte)(111))
         );
         this.btnDropDown.Dock = System.Windows.Forms.DockStyle.Right;
         this.btnDropDown.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         this.btnDropDown.ForeColor = System.Drawing.Color.White;
         this.btnDropDown.ImageIndex = 0;
         this.btnDropDown.ImageList = this.imageList1;
-        this.btnDropDown.Location = new System.Drawing.Point(160, 0);
+        this.btnDropDown.Location = new System.Drawing.Point(x: 160, y: 0);
         this.btnDropDown.Name = "btnDropDown";
-        this.btnDropDown.Size = new System.Drawing.Size(16, 20);
+        this.btnDropDown.Size = new System.Drawing.Size(width: 16, height: 20);
         this.btnDropDown.TabIndex = 4;
         this.btnDropDown.TabStop = false;
         this.btnDropDown.Click += new System.EventHandler(this.btnDropDown_Click);
@@ -233,37 +235,37 @@ public class BaseDropDownControl : BaseCaptionControl, IAsGridEditor
         // imageList1
         //
         this.imageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth24Bit;
-        this.imageList1.ImageSize = new System.Drawing.Size(16, 16);
+        this.imageList1.ImageSize = new System.Drawing.Size(width: 16, height: 16);
         this.imageList1.TransparentColor = System.Drawing.Color.Magenta;
         //
         // btnOpenList
         //
         this.btnOpenList.BackColor = System.Drawing.Color.FromArgb(
-            ((System.Byte)(214)),
-            ((System.Byte)(203)),
-            ((System.Byte)(111))
+            red: ((System.Byte)(214)),
+            green: ((System.Byte)(203)),
+            blue: ((System.Byte)(111))
         );
         this.btnOpenList.Dock = System.Windows.Forms.DockStyle.Right;
         this.btnOpenList.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         this.btnOpenList.ForeColor = System.Drawing.Color.White;
         this.btnOpenList.ImageIndex = 1;
         this.btnOpenList.ImageList = this.imageList1;
-        this.btnOpenList.Location = new System.Drawing.Point(144, 0);
+        this.btnOpenList.Location = new System.Drawing.Point(x: 144, y: 0);
         this.btnOpenList.Name = "btnOpenList";
-        this.btnOpenList.Size = new System.Drawing.Size(16, 20);
+        this.btnOpenList.Size = new System.Drawing.Size(width: 16, height: 20);
         this.btnOpenList.TabIndex = 2;
         this.btnOpenList.TabStop = false;
         //
         // BaseDropDownControl
         //
-        this.Controls.Add(this.txtEdit);
-        this.Controls.Add(this.btnOpenList);
-        this.Controls.Add(this.btnDropDown);
+        this.Controls.Add(value: this.txtEdit);
+        this.Controls.Add(value: this.btnOpenList);
+        this.Controls.Add(value: this.btnDropDown);
         this.Name = "BaseDropDownControl";
-        this.Size = new System.Drawing.Size(176, 20);
+        this.Size = new System.Drawing.Size(width: 176, height: 20);
         this.VisibleChanged += new System.EventHandler(this.BaseDropDownControl_VisibleChanged);
         this.SizeChanged += new System.EventHandler(this.BaseDropDownControl_SizeChanged);
-        this.ResumeLayout(false);
+        this.ResumeLayout(performLayout: false);
     }
 
     protected override void Dispose(bool disposing)
@@ -282,7 +284,7 @@ public class BaseDropDownControl : BaseCaptionControl, IAsGridEditor
             this.VisibleChanged -= new EventHandler(BaseDropDownControl_VisibleChanged);
         }
 
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
 
     protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
@@ -297,7 +299,7 @@ public class BaseDropDownControl : BaseCaptionControl, IAsGridEditor
         {
             _popupHelper.ClosePopup();
         }
-        return base.ProcessCmdKey(ref msg, keyData);
+        return base.ProcessCmdKey(msg: ref msg, keyData: keyData);
     }
 
     internal BaseDropDownControl.NoKeyUpTextBox EditControl
@@ -374,7 +376,7 @@ public class BaseDropDownControl : BaseCaptionControl, IAsGridEditor
     }
     private IDropDownPart _popup;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public IDropDownPart Popup
     {
         get { return _popup; }
@@ -386,7 +388,7 @@ public class BaseDropDownControl : BaseCaptionControl, IAsGridEditor
     }
     private string _displayText;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public string DisplayText
     {
         get { return _displayText; }
@@ -400,8 +402,8 @@ public class BaseDropDownControl : BaseCaptionControl, IAsGridEditor
     {
         get
         {
-            Point point = this.PointToScreen(new Point(txtEdit.Left, btnDropDown.Bottom));
-            return new ScreenLocation(point.X, point.Y);
+            Point point = this.PointToScreen(p: new Point(x: txtEdit.Left, y: btnDropDown.Bottom));
+            return new ScreenLocation(x: point.X, y: point.Y);
         }
     }
     private bool _droppedDown = false;
@@ -428,7 +430,7 @@ public class BaseDropDownControl : BaseCaptionControl, IAsGridEditor
                     form = form.Parent.FindForm();
                 }
 
-                _popupHelper.AssignHandle(form.Handle);
+                _popupHelper.AssignHandle(handle: form.Handle);
             }
             if (_droppedDown)
             {
@@ -437,8 +439,11 @@ public class BaseDropDownControl : BaseCaptionControl, IAsGridEditor
 
             txtEdit.Focus();
             _popup = this.CreatePopup();
-            Rectangle screen = Screen.FromControl(this).WorkingArea;
-            Point location = new System.Drawing.Point(this.ScreenLocation.X, this.ScreenLocation.Y);
+            Rectangle screen = Screen.FromControl(control: this).WorkingArea;
+            Point location = new System.Drawing.Point(
+                x: this.ScreenLocation.X,
+                y: this.ScreenLocation.Y
+            );
             int screenTotalWidth = screen.X + screen.Width;
             int screenTotalHeight = screen.Y + screen.Height;
             if (location.X + _popup.Width > screenTotalWidth)
@@ -450,7 +455,11 @@ public class BaseDropDownControl : BaseCaptionControl, IAsGridEditor
                 location.Y -= (txtEdit.Height + _popup.Height);
             }
             _popup.DropDownControl = this;
-            _popupHelper.ShowPopup(this.FindForm(), _popup as Form, location);
+            _popupHelper.ShowPopup(
+                owner: this.FindForm(),
+                popup: _popup as Form,
+                location: location
+            );
 
             _popup.SelectedValue = this.SelectedValue;
 
@@ -468,10 +477,10 @@ public class BaseDropDownControl : BaseCaptionControl, IAsGridEditor
         catch (Exception ex)
         {
             AsMessageBox.ShowError(
-                this.FindForm(),
-                ex.Message,
-                ResourceUtils.GetString("ErrorOpenList", this.Caption),
-                ex
+                owner: this.FindForm(),
+                text: ex.Message,
+                caption: ResourceUtils.GetString(key: "ErrorOpenList", args: this.Caption),
+                exception: ex
             );
         }
     }
@@ -496,10 +505,10 @@ public class BaseDropDownControl : BaseCaptionControl, IAsGridEditor
         catch (Exception ex)
         {
             AsMessageBox.ShowError(
-                this.FindForm(),
-                ex.Message,
-                ResourceUtils.GetString("ErrorOpenList", this.Caption),
-                ex
+                owner: this.FindForm(),
+                text: ex.Message,
+                caption: ResourceUtils.GetString(key: "ErrorOpenList", args: this.Caption),
+                exception: ex
             );
         }
     }
@@ -518,12 +527,12 @@ public class BaseDropDownControl : BaseCaptionControl, IAsGridEditor
             if (
                 txtEdit.Focused
                 & txtEdit.Visible
-                & e.CursorLocation.X >= txtEdit.PointToScreen(new Point(0, 0)).X
+                & e.CursorLocation.X >= txtEdit.PointToScreen(p: new Point(x: 0, y: 0)).X
                 & e.CursorLocation.X
-                    <= txtEdit.PointToScreen(new Point(txtEdit.Width, txtEdit.Height)).X
-                & e.CursorLocation.Y >= txtEdit.PointToScreen(new Point(0, 0)).Y
+                    <= txtEdit.PointToScreen(p: new Point(x: txtEdit.Width, y: txtEdit.Height)).X
+                & e.CursorLocation.Y >= txtEdit.PointToScreen(p: new Point(x: 0, y: 0)).Y
                 & e.CursorLocation.Y
-                    <= txtEdit.PointToScreen(new Point(txtEdit.Width, txtEdit.Height)).Y
+                    <= txtEdit.PointToScreen(p: new Point(x: txtEdit.Width, y: txtEdit.Height)).Y
             )
             {
                 //System.Diagnostics.Debug.WriteLine("Popup cancelled");
@@ -537,12 +546,16 @@ public class BaseDropDownControl : BaseCaptionControl, IAsGridEditor
                 txtEdit.SelectAll();
             }
             if (
-                e.CursorLocation.X >= btnDropDown.PointToScreen(new Point(0, 0)).X
+                e.CursorLocation.X >= btnDropDown.PointToScreen(p: new Point(x: 0, y: 0)).X
                 & e.CursorLocation.X
-                    <= btnDropDown.PointToScreen(new Point(btnDropDown.Width, btnDropDown.Height)).X
-                & e.CursorLocation.Y >= btnDropDown.PointToScreen(new Point(0, 0)).Y
+                    <= btnDropDown
+                        .PointToScreen(p: new Point(x: btnDropDown.Width, y: btnDropDown.Height))
+                        .X
+                & e.CursorLocation.Y >= btnDropDown.PointToScreen(p: new Point(x: 0, y: 0)).Y
                 & e.CursorLocation.Y
-                    <= btnDropDown.PointToScreen(new Point(btnDropDown.Width, btnDropDown.Height)).Y
+                    <= btnDropDown
+                        .PointToScreen(p: new Point(x: btnDropDown.Width, y: btnDropDown.Height))
+                        .Y
             )
             {
                 _dropDownCanceledByButton = true;
@@ -568,7 +581,7 @@ public class BaseDropDownControl : BaseCaptionControl, IAsGridEditor
     {
         if (this.readOnlyChanged != null)
         {
-            this.readOnlyChanged(this, e);
+            this.readOnlyChanged(sender: this, e: e);
         }
     }
     #endregion

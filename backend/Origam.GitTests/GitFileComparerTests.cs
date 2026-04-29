@@ -54,32 +54,40 @@ public class GitFileComparerTests : AbstractFileTestClass
             + "     <SchemaItem Id=\"7e595fe7-9e86-412c-8e70-310cdcf931ce\" ItemType=\"EntityUIActionParameterMapping\" Name=\"UserName\" TargetType=\"Origam.Schema.GuiModel.EntityUIActionParameterMapping\" IsAbstract=\"true\" SS01=\"UserName\" refSchemaExtensionId=\"951f2cda-2867-4b99-8824-071fa8749ead\" refParentItemId=\"17071b0b-2910-425a-8268-2d07ed497c09\" />"
             + Environment.NewLine;
 
-        FileInfo pathToOld = new FileInfo(Path.Combine(TestFilesDir.FullName, "old.xml"));
-        FileInfo pathToNew = new FileInfo(Path.Combine(TestFilesDir.FullName, "new.xml"));
+        FileInfo pathToOld = new FileInfo(
+            fileName: Path.Combine(path1: TestFilesDir.FullName, path2: "old.xml")
+        );
+        FileInfo pathToNew = new FileInfo(
+            fileName: Path.Combine(path1: TestFilesDir.FullName, path2: "new.xml")
+        );
         var gitFileComparer = new GitFileComparer();
-        GitDiff gitDiff = gitFileComparer.GetGitDiff(pathToOld, pathToNew);
+        GitDiff gitDiff = gitFileComparer.GetGitDiff(oldFile: pathToOld, newFile: pathToNew);
         string actualDiffBody = string.Join(
-            Environment.NewLine,
-            gitDiff
-                .Text.Split('\n')
-                .Skip(5)
-                .Select(line =>
+            separator: Environment.NewLine,
+            values: gitDiff
+                .Text.Split(separator: '\n')
+                .Skip(count: 5)
+                .Select(selector: line =>
                 {
-                    return line.Replace("\r", "");
+                    return line.Replace(oldValue: "\r", newValue: "");
                 })
                 .ToList()
         );
 
-        StringAssert.AreEqualIgnoringCase(actualDiffBody, expectedDiffBody);
+        StringAssert.AreEqualIgnoringCase(expected: actualDiffBody, actual: expectedDiffBody);
     }
 
     [Test]
     public void ShouldReturnEmptyDiffIfNoDifferenecesExist()
     {
-        FileInfo pathToOld = new FileInfo(Path.Combine(TestFilesDir.FullName, "old.xml"));
-        FileInfo pathToNew = new FileInfo(Path.Combine(TestFilesDir.FullName, "old.xml"));
+        FileInfo pathToOld = new FileInfo(
+            fileName: Path.Combine(path1: TestFilesDir.FullName, path2: "old.xml")
+        );
+        FileInfo pathToNew = new FileInfo(
+            fileName: Path.Combine(path1: TestFilesDir.FullName, path2: "old.xml")
+        );
         var gitFileComparer = new GitFileComparer();
-        GitDiff gitDiff = gitFileComparer.GetGitDiff(pathToOld, pathToNew);
-        Assert.That(gitDiff.IsEmpty);
+        GitDiff gitDiff = gitFileComparer.GetGitDiff(oldFile: pathToOld, newFile: pathToNew);
+        Assert.That(condition: gitDiff.IsEmpty);
     }
 }

@@ -59,19 +59,26 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
         var ruleEngine = RuleEngine.Create(contextStores: null, transactionId: null);
         var transformParams = new Hashtable();
         var queryParameterCollection = new QueryParameterCollection();
-        Hashtable preprocessorParams = GetPreprocessorParameters(request);
+        Hashtable preprocessorParams = GetPreprocessorParameters(request: request);
         // convert parameters to QueryParameterCollection for data service and hashtable for transformation service
         foreach (KeyValuePair<string, object> parameter in parameters)
         {
-            queryParameterCollection.Add(new QueryParameter(parameter.Key, parameter.Value));
-            transformParams.Add(parameter.Key, parameter.Value);
+            queryParameterCollection.Add(
+                value: new QueryParameter(_parameterName: parameter.Key, value: parameter.Value)
+            );
+            transformParams.Add(key: parameter.Key, value: parameter.Value);
         }
         // copy also the preprocessor parameters to the transformation parameters
         foreach (DictionaryEntry parameter in preprocessorParams)
         {
-            transformParams.Add(parameter.Key, parameter.Value);
+            transformParams.Add(key: parameter.Key, value: parameter.Value);
         }
-        Validate(data: null, transformParams, ruleEngine, xsltPage!.InputValidationRule);
+        Validate(
+            data: null,
+            transformParams: transformParams,
+            ruleEngine: ruleEngine,
+            validation: xsltPage!.InputValidationRule
+        );
         if (xsltPage.DisableConstraintForInputValidation)
         {
             // reenable constraints for context parameter
@@ -86,27 +93,31 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
         IXmlContainer xmlData;
         DataSet data = null;
         var isProcessed = false;
-        bool xpath = !string.IsNullOrEmpty(xsltPage.ResultXPath);
+        bool xpath = !string.IsNullOrEmpty(value: xsltPage.ResultXPath);
         if (xsltPage.DataStructure == null)
         {
             // no data source
-            xmlData = new XmlContainer("<ROOT/>");
+            xmlData = new XmlContainer(xmlString: "<ROOT/>");
         }
         else
         {
             if (xsltPage.AllowCustomFilters)
             {
-                data = LoadWithFilters(xsltPage, parameters, request);
+                data = LoadWithFilters(
+                    xsltPage: xsltPage,
+                    parameters: parameters,
+                    request: request
+                );
             }
             else
             {
                 data = CoreServices.DataService.Instance.LoadData(
-                    xsltPage.DataStructureId,
-                    xsltPage.DataStructureMethodId,
+                    dataStructureId: xsltPage.DataStructureId,
+                    methodId: xsltPage.DataStructureMethodId,
                     defaultSetId: Guid.Empty,
-                    xsltPage.DataStructureSortSetId,
+                    sortSetId: xsltPage.DataStructureSortSetId,
                     transactionId: null,
-                    queryParameterCollection
+                    parameters: queryParameterCollection
                 );
             }
 
@@ -114,7 +125,7 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
             {
                 if (xsltPage.ProcessReadFieldRowLevelRulesForGetRequests)
                 {
-                    ProcessReadFieldRuleState(data, ruleEngine);
+                    ProcessReadFieldRuleState(data: data, ruleEngine: ruleEngine);
                 }
             }
             if (
@@ -126,12 +137,12 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
             )
             {
                 // pure dataset > json serialization
-                response.WriteToOutput(textWriter =>
+                response.WriteToOutput(writeAction: textWriter =>
                     JsonUtils.SerializeToJson(
-                        textWriter,
-                        data,
-                        xsltPage.OmitJsonRootElement,
-                        xsltPage.OmitJsonMainElement
+                        textWriter: textWriter,
+                        value: data,
+                        omitRootElement: xsltPage.OmitJsonRootElement,
+                        omitMainElement: xsltPage.OmitJsonMainElement
                     )
                 );
                 xmlData = null;
@@ -139,23 +150,28 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
             }
             else
             {
-                xmlData = DataDocumentFactory.New(data);
+                xmlData = DataDocumentFactory.New(dataSet: data);
             }
             switch (request.HttpMethod)
             {
                 case "DELETE":
                 {
-                    HandleDelete(xsltPage, data, transformParams, ruleEngine);
+                    HandleDelete(
+                        xsltPage: xsltPage,
+                        data: data,
+                        transformParams: transformParams,
+                        ruleEngine: ruleEngine
+                    );
                     return;
                 }
                 case "PUT":
                 {
                     HandlePut(
-                        parameters,
-                        xsltPage,
-                        (IDataDocument)xmlData,
-                        transformParams,
-                        ruleEngine
+                        parameters: parameters,
+                        xsltPage: xsltPage,
+                        data: (IDataDocument)xmlData,
+                        transformParams: transformParams,
+                        ruleEngine: ruleEngine
                     );
                     return;
                 }
@@ -171,15 +187,17 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
             }
             else
             {
-                var transformer = new CompiledXsltEngine(persistenceService.SchemaProvider);
+                var transformer = new CompiledXsltEngine(
+                    persistence: persistenceService.SchemaProvider
+                );
                 result = transformer.Transform(
-                    xmlData,
-                    xsltPage.TransformationId,
-                    retransformationId: new Guid("5b4f2532-a0e1-4ffc-9486-3f35d766af71"),
+                    data: xmlData,
+                    transformationId: xsltPage.TransformationId,
+                    retransformationId: new Guid(g: "5b4f2532-a0e1-4ffc-9486-3f35d766af71"),
                     parameters: transformParams,
                     transactionId: null,
                     retransformationParameters: preprocessorParams,
-                    xsltPage.TransformationOutputStructure,
+                    outputStructure: xsltPage.TransformationOutputStructure,
                     validateOnly: false
                 );
                 // pure dataset > json serialization
@@ -189,12 +207,12 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
                     && (page.MimeType == MimeJson)
                 )
                 {
-                    response.WriteToOutput(textWriter =>
+                    response.WriteToOutput(writeAction: textWriter =>
                         JsonUtils.SerializeToJson(
-                            textWriter,
-                            resultDataDocument.DataSet,
-                            xsltPage.OmitJsonRootElement,
-                            xsltPage.OmitJsonMainElement
+                            textWriter: textWriter,
+                            value: resultDataDocument.DataSet,
+                            omitRootElement: xsltPage.OmitJsonRootElement,
+                            omitMainElement: xsltPage.OmitJsonMainElement
                         )
                     );
                     isProcessed = true;
@@ -209,21 +227,21 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
                     // so json | html serialization would have to be produced by the
                     // xslt or stored directly in the resulting data
                     XPathNavigator xPathNavigator = result.Xml.CreateNavigator();
-                    xPathNavigator!.Select(xsltPage.ResultXPath);
-                    byte[] bytes = Encoding.UTF8.GetBytes(xPathNavigator.Value);
-                    response.AddHeader("Content-Length", bytes.LongLength.ToString());
-                    response.BinaryWrite(bytes);
+                    xPathNavigator!.Select(xpath: xsltPage.ResultXPath);
+                    byte[] bytes = Encoding.UTF8.GetBytes(s: xPathNavigator.Value);
+                    response.AddHeader(name: "Content-Length", value: bytes.LongLength.ToString());
+                    response.BinaryWrite(bytes: bytes);
                 }
                 else
                 {
                     if (page.MimeType == MimeJson)
                     {
-                        response.WriteToOutput(textWriter =>
+                        response.WriteToOutput(writeAction: textWriter =>
                             JsonUtils.SerializeToJson(
-                                textWriter,
-                                result.Xml,
-                                xsltPage.OmitJsonRootElement,
-                                xsltPage.OmitJsonMainElement
+                                textWriter: textWriter,
+                                value: result.Xml,
+                                omitRootElement: xsltPage.OmitJsonRootElement,
+                                omitMainElement: xsltPage.OmitJsonMainElement
                             )
                         );
                     }
@@ -231,9 +249,11 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
                     {
                         if (page.MimeType == MimeHtml)
                         {
-                            response.Write("<!DOCTYPE html>");
+                            response.Write(message: "<!DOCTYPE html>");
                         }
-                        response.WriteToOutput(textWriter => textWriter.Write(result.Xml.InnerXml));
+                        response.WriteToOutput(writeAction: textWriter =>
+                            textWriter.Write(value: result.Xml.InnerXml)
+                        );
                     }
                 }
             }
@@ -242,19 +262,21 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
         {
             return;
         }
-        xmlData ??= DataDocumentFactory.New(data);
+        xmlData ??= DataDocumentFactory.New(dataSet: data);
         Type type = GetType();
-        IXsltEngine logTransformer = new CompiledXsltEngine(persistenceService.SchemaProvider);
+        IXsltEngine logTransformer = new CompiledXsltEngine(
+            persistence: persistenceService.SchemaProvider
+        );
         IXmlContainer log = logTransformer.Transform(
-            xmlData,
-            xsltPage.LogTransformationId,
-            transformParams,
+            data: xmlData,
+            transformationId: xsltPage.LogTransformationId,
+            parameters: transformParams,
             transactionId: null,
             outputStructure: null,
             validateOnly: false
         );
         XPathNavigator logXPathNavigator = log.Xml.CreateNavigator();
-        XPathNodeIterator xPathNodeIterator = logXPathNavigator!.Select("/ROOT/LogContext");
+        XPathNodeIterator xPathNodeIterator = logXPathNavigator!.Select(xpath: "/ROOT/LogContext");
         while (xPathNodeIterator.MoveNext())
         {
             var properties = new Dictionary<string, string>();
@@ -263,9 +285,9 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
             currentNode.MoveToFirstAttribute();
             do
             {
-                properties[currentNode.Name] = currentNode.Value;
+                properties[key: currentNode.Name] = currentNode.Value;
             } while (currentNode.MoveToNextAttribute());
-            Analytics.Instance.Log(type, message, properties);
+            Analytics.Instance.Log(type: type, message: message, properties: properties);
         }
     }
 
@@ -278,12 +300,12 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
     {
         DataStructure dataStructure =
             persistenceService.SchemaListProvider.RetrieveInstance<DataStructure>(
-                xsltPage.DataStructureId
+                instanceId: xsltPage.DataStructureId
             );
         DataStructureEntity entity = dataStructure.Entities.First();
 
         List<ColumnData> columns = entity
-            .Columns.Select(column =>
+            .Columns.Select(selector: column =>
             {
                 IDataEntityColumn field = column.Field;
                 return new ColumnData(
@@ -295,22 +317,24 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
             })
             .ToList();
 
-        string body = ReadRequestBody(request);
-        XsltDataPageFilterInput filterInput = DeserializeFilterInput(body);
-        List<Ordering> orderings = GetOrderings(filterInput);
+        string body = ReadRequestBody(request: request);
+        XsltDataPageFilterInput filterInput = DeserializeFilterInput(body: body);
+        List<Ordering> orderings = GetOrderings(filterInput: filterInput);
 
         var parameterCollection = new QueryParameterCollection();
         foreach (KeyValuePair<string, object> parameter in parameters)
         {
-            parameterCollection.Add(new QueryParameter(parameter.Key, parameter.Value));
+            parameterCollection.Add(
+                value: new QueryParameter(_parameterName: parameter.Key, value: parameter.Value)
+            );
         }
 
         var query = new DataStructureQuery
         {
             Entity = entity.Name,
             DataSourceId = xsltPage.DataStructureId,
-            RowLimit = GetIntParameterValue(parameters, "_pageSize"),
-            RowOffset = GetIntParameterValue(parameters, "_pageNumber"),
+            RowLimit = GetIntParameterValue(parameters: parameters, parameterName: "_pageSize"),
+            RowOffset = GetIntParameterValue(parameters: parameters, parameterName: "_pageNumber"),
             Parameters = parameterCollection,
             CustomFilters = new CustomFilters
             {
@@ -319,23 +343,23 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
             },
             MethodId = xsltPage.DataStructureMethodId,
             SortSetId = xsltPage.DataStructureSortSetId,
-            CustomOrderings = new CustomOrderings(orderings),
+            CustomOrderings = new CustomOrderings(orderings: orderings),
             ColumnsInfo = new ColumnsInfo(columns: columns, renderSqlForDetachedFields: true),
             ForceDatabaseCalculation = true,
         };
         IDataService dataService = CoreServices.DataServiceFactory.GetDataService();
         IEnumerable<Dictionary<string, object>> lines = dataService.ExecuteDataReaderReturnPairs(
-            query
+            query: query
         );
 
-        DataSet data = dataService.GetEmptyDataSet(xsltPage.DataStructureId);
-        DataTable dataTable = data.Tables[entity.Name];
+        DataSet data = dataService.GetEmptyDataSet(dataStructureId: xsltPage.DataStructureId);
+        DataTable dataTable = data.Tables[name: entity.Name];
         foreach (Dictionary<string, object> line in lines)
         {
             DataRow row = dataTable.NewRow();
             foreach (KeyValuePair<string, object> cell in line)
             {
-                if (!dataTable.Columns.Contains(cell.Key))
+                if (!dataTable.Columns.Contains(name: cell.Key))
                 {
                     continue;
                 }
@@ -343,16 +367,16 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
                 if (
                     value is ICollection collection
                     && (
-                        dataTable.Columns[cell.Key].DataType == typeof(long)
-                        || dataTable.Columns[cell.Key].DataType == typeof(int)
+                        dataTable.Columns[name: cell.Key].DataType == typeof(long)
+                        || dataTable.Columns[name: cell.Key].DataType == typeof(int)
                     )
                 )
                 {
                     value = collection.Count;
                 }
-                row[cell.Key] = value;
+                row[columnName: cell.Key] = value;
             }
-            dataTable.Rows.Add(row);
+            dataTable.Rows.Add(row: row);
         }
 
         return data;
@@ -377,8 +401,8 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
         }
 
         using var reader = new StreamReader(
-            inputStream,
-            request.ContentEncoding ?? Encoding.UTF8,
+            stream: inputStream,
+            encoding: request.ContentEncoding ?? Encoding.UTF8,
             detectEncodingFromByteOrderMarks: true,
             leaveOpen: true
         );
@@ -392,12 +416,12 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
 
     private static XsltDataPageFilterInput DeserializeFilterInput(string body)
     {
-        if (string.IsNullOrWhiteSpace(body))
+        if (string.IsNullOrWhiteSpace(value: body))
         {
             return null;
         }
 
-        return JsonConvert.DeserializeObject<XsltDataPageFilterInput>(body);
+        return JsonConvert.DeserializeObject<XsltDataPageFilterInput>(value: body);
     }
 
     private static List<Ordering> GetOrderings(XsltDataPageFilterInput filterInput)
@@ -409,7 +433,7 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
 
         return filterInput
             .Ordering.Select(
-                (ordering, index) =>
+                selector: (ordering, index) =>
                     new Ordering(
                         columnName: ordering.ColumnId,
                         direction: ordering.Direction,
@@ -422,14 +446,18 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
 
     private int GetIntParameterValue(Dictionary<string, object> parameters, string parameterName)
     {
-        if (!parameters.TryGetValue(parameterName, out object objValue))
+        if (!parameters.TryGetValue(key: parameterName, value: out object objValue))
         {
             return 0;
         }
-        if (!int.TryParse(objValue.ToString(), out int value))
+        if (!int.TryParse(s: objValue.ToString(), result: out int value))
         {
             throw new ArgumentException(
-                string.Format(Resources.ErrorInvalidIntParameterValue, parameterName, objValue)
+                message: string.Format(
+                    format: Resources.ErrorInvalidIntParameterValue,
+                    arg0: parameterName,
+                    arg1: objValue
+                )
             );
         }
         return value;
@@ -441,8 +469,10 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
         var persistence = ServiceManager.Services.GetService<IPersistenceService>();
         foreach (DataTable dataTable in dataTables)
         {
-            var entityId = (Guid)dataTable.ExtendedProperties["EntityId"]!;
-            IDataEntity entity = persistence.SchemaProvider.RetrieveInstance<IDataEntity>(entityId);
+            var entityId = (Guid)dataTable.ExtendedProperties[key: "EntityId"]!;
+            IDataEntity entity = persistence.SchemaProvider.RetrieveInstance<IDataEntity>(
+                instanceId: entityId
+            );
             if (!entity.HasEntityAFieldDenyReadRule())
             {
                 continue;
@@ -452,21 +482,24 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
             dataTable
                 .Columns.Cast<DataColumn>()
                 .ToList()
-                .ForEach(column => column.AllowDBNull = true);
+                .ForEach(action: column => column.AllowDBNull = true);
             foreach (DataRow dataRow in dataTable.Rows)
             {
                 RowSecurityState rowSecurity =
-                    RowSecurityStateBuilder.BuildWithoutRelationsAndActions(ruleEngine, dataRow);
+                    RowSecurityStateBuilder.BuildWithoutRelationsAndActions(
+                        ruleEngine: ruleEngine,
+                        row: dataRow
+                    );
                 if (rowSecurity == null)
                 {
                     continue;
                 }
                 List<FieldSecurityState> listState = rowSecurity
-                    .Columns.Where(columnState => !columnState.AllowRead)
+                    .Columns.Where(predicate: columnState => !columnState.AllowRead)
                     .ToList();
                 foreach (FieldSecurityState securityState in listState)
                 {
-                    dataRow[securityState.Name] = DBNull.Value;
+                    dataRow[columnName: securityState.Name] = DBNull.Value;
                 }
             }
         }
@@ -480,25 +513,37 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
         RuleEngine ruleEngine
     )
     {
-        Validate(data, transformParams, ruleEngine, xsltPage.SaveValidationBeforeMerge);
-        string bodyKey = parameters.Keys.FirstOrDefault(key => parameters[key] is IDataDocument);
+        Validate(
+            data: data,
+            transformParams: transformParams,
+            ruleEngine: ruleEngine,
+            validation: xsltPage.SaveValidationBeforeMerge
+        );
+        string bodyKey = parameters.Keys.FirstOrDefault(predicate: key =>
+            parameters[key: key] is IDataDocument
+        );
         if (bodyKey == null)
         {
-            throw new Exception(Resources.ErrorPseudoparameterBodyNotDefined);
+            throw new Exception(message: Resources.ErrorPseudoparameterBodyNotDefined);
         }
         UserProfile profile = SecurityManager.CurrentUserProfile();
-        DataSet original = (parameters[bodyKey] as IDataDocument)?.DataSet;
-        var mergeParams = new MergeParams(profile.Id) { TrueDelete = true };
+        DataSet original = (parameters[key: bodyKey] as IDataDocument)?.DataSet;
+        var mergeParams = new MergeParams(ProfileId: profile.Id) { TrueDelete = true };
         DatasetTools.MergeDataSet(
             inout_dsTarget: data.DataSet,
             in_dsSource: original,
             changeList: null,
-            mergeParams
+            mergeParams: mergeParams
         );
-        Validate(data, transformParams, ruleEngine, xsltPage.SaveValidationAfterMerge);
+        Validate(
+            data: data,
+            transformParams: transformParams,
+            ruleEngine: ruleEngine,
+            validation: xsltPage.SaveValidationAfterMerge
+        );
         CoreServices.DataService.Instance.StoreData(
-            xsltPage.DataStructureId,
-            data.DataSet,
+            dataStructureId: xsltPage.DataStructureId,
+            data: data.DataSet,
             loadActualValuesAfterUpdate: false,
             transactionId: null
         );
@@ -512,8 +557,13 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
     )
     {
         IXmlContainer xmlContainer = new XmlContainer();
-        xmlContainer.Xml.LoadXml(data.GetXml());
-        Validate(xmlContainer, transformParams, ruleEngine, xsltPage.SaveValidationBeforeMerge);
+        xmlContainer.Xml.LoadXml(xml: data.GetXml());
+        Validate(
+            data: xmlContainer,
+            transformParams: transformParams,
+            ruleEngine: ruleEngine,
+            validation: xsltPage.SaveValidationBeforeMerge
+        );
         foreach (DataTable table in data.Tables)
         {
             foreach (DataRow row in table.Rows)
@@ -522,8 +572,8 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
             }
         }
         CoreServices.DataService.Instance.StoreData(
-            xsltPage.DataStructureId,
-            data,
+            dataStructureId: xsltPage.DataStructureId,
+            data: data,
             loadActualValuesAfterUpdate: false,
             transactionId: null
         );

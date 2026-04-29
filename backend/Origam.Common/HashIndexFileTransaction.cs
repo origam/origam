@@ -35,7 +35,7 @@ public class HashIndexFileTransaction : OrigamTransaction
     {
         this.indexFile = indexFile;
         this.processedFiles = processedFiles;
-        hashIndexFile = new HashIndexFile(indexFile);
+        hashIndexFile = new HashIndexFile(indexFile: indexFile);
     }
 
     public override void Commit()
@@ -54,22 +54,27 @@ public class HashIndexFileTransaction : OrigamTransaction
     {
         foreach (string filename in processedFiles)
         {
-            string[] filenameSegments = filename.Split('|');
+            string[] filenameSegments = filename.Split(separator: '|');
             if (filenameSegments.Length == 1)
             {
                 hashIndexFile.AddEntryToIndexFile(
-                    hashIndexFile.CreateIndexFileEntry(filenameSegments[0])
+                    entry: hashIndexFile.CreateIndexFileEntry(filename: filenameSegments[0])
                 );
             }
             else
             {
-                using (FileStream fileStream = new FileStream(filenameSegments[0], FileMode.Open))
-                using (ZipArchive archive = new ZipArchive(fileStream))
+                using (
+                    FileStream fileStream = new FileStream(
+                        path: filenameSegments[0],
+                        mode: FileMode.Open
+                    )
+                )
+                using (ZipArchive archive = new ZipArchive(stream: fileStream))
                 {
                     hashIndexFile.AddEntryToIndexFile(
-                        hashIndexFile.CreateIndexFileEntry(
-                            filenameSegments[0],
-                            archive.GetEntry(filenameSegments[1])
+                        entry: hashIndexFile.CreateIndexFileEntry(
+                            archiveName: filenameSegments[0],
+                            archiveEntry: archive.GetEntry(entryName: filenameSegments[1])
                         )
                     );
                 }

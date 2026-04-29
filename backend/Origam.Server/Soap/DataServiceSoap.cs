@@ -52,24 +52,28 @@ public class DataServiceSoap : IDataServiceSoap
         Parameter[] parameters
     )
     {
-        if (log.IsEnabled(LogLevel.Information))
+        if (log.IsEnabled(logLevel: LogLevel.Information))
         {
-            log.Log(LogLevel.Information, "LoadData");
+            log.Log(logLevel: LogLevel.Information, message: "LoadData");
         }
-        Guid dsId = new Guid(dataStructureId);
-        Guid fId = string.IsNullOrWhiteSpace(filterId) ? Guid.Empty : new Guid(filterId);
-        Guid dId = string.IsNullOrWhiteSpace(defaultSetId) ? Guid.Empty : new Guid(defaultSetId);
-        Guid sId = string.IsNullOrWhiteSpace(sortSetId) ? Guid.Empty : new Guid(sortSetId);
-        var parameterCollection = ParameterUtils.ToQueryParameterCollection(parameters);
+        Guid dsId = new Guid(g: dataStructureId);
+        Guid fId = string.IsNullOrWhiteSpace(value: filterId) ? Guid.Empty : new Guid(g: filterId);
+        Guid dId = string.IsNullOrWhiteSpace(value: defaultSetId)
+            ? Guid.Empty
+            : new Guid(g: defaultSetId);
+        Guid sId = string.IsNullOrWhiteSpace(value: sortSetId)
+            ? Guid.Empty
+            : new Guid(g: sortSetId);
+        var parameterCollection = ParameterUtils.ToQueryParameterCollection(parameters: parameters);
         var dataSet = CoreServices.DataService.Instance.LoadData(
-            dsId,
-            fId,
-            dId,
-            sId,
-            null,
-            parameterCollection
+            dataStructureId: dsId,
+            methodId: fId,
+            defaultSetId: dId,
+            sortSetId: sId,
+            transactionId: null,
+            parameters: parameterCollection
         );
-        return Task.FromResult(dataSet);
+        return Task.FromResult(result: dataSet);
     }
 
     public Task<DataSet> LoadData0Async(
@@ -79,16 +83,26 @@ public class DataServiceSoap : IDataServiceSoap
         string defaultSetId
     )
     {
-        if (log.IsEnabled(LogLevel.Information))
+        if (log.IsEnabled(logLevel: LogLevel.Information))
         {
-            log.Log(LogLevel.Information, "LoadData0");
+            log.Log(logLevel: LogLevel.Information, message: "LoadData0");
         }
-        Guid dsId = new Guid(dataStructureId);
-        Guid fId = string.IsNullOrWhiteSpace(filterId) ? Guid.Empty : new Guid(filterId);
-        Guid dId = string.IsNullOrWhiteSpace(defaultSetId) ? Guid.Empty : new Guid(defaultSetId);
-        Guid sId = string.IsNullOrWhiteSpace(sortSetId) ? Guid.Empty : new Guid(sortSetId);
-        var dataSet = CoreServices.DataService.Instance.LoadData(dsId, fId, dId, sId, null);
-        return Task.FromResult(dataSet);
+        Guid dsId = new Guid(g: dataStructureId);
+        Guid fId = string.IsNullOrWhiteSpace(value: filterId) ? Guid.Empty : new Guid(g: filterId);
+        Guid dId = string.IsNullOrWhiteSpace(value: defaultSetId)
+            ? Guid.Empty
+            : new Guid(g: defaultSetId);
+        Guid sId = string.IsNullOrWhiteSpace(value: sortSetId)
+            ? Guid.Empty
+            : new Guid(g: sortSetId);
+        var dataSet = CoreServices.DataService.Instance.LoadData(
+            dataStructureId: dsId,
+            methodId: fId,
+            defaultSetId: dId,
+            sortSetId: sId,
+            transactionId: null
+        );
+        return Task.FromResult(result: dataSet);
     }
 
     public Task<DataSet> LoadData1Async(
@@ -100,24 +114,28 @@ public class DataServiceSoap : IDataServiceSoap
         string paramValue1
     )
     {
-        if (log.IsEnabled(LogLevel.Information))
+        if (log.IsEnabled(logLevel: LogLevel.Information))
         {
-            log.Log(LogLevel.Information, "LoadData1");
+            log.Log(logLevel: LogLevel.Information, message: "LoadData1");
         }
-        Guid dsId = new Guid(dataStructureId);
-        Guid fId = string.IsNullOrWhiteSpace(filterId) ? Guid.Empty : new Guid(filterId);
-        Guid dId = string.IsNullOrWhiteSpace(defaultSetId) ? Guid.Empty : new Guid(defaultSetId);
-        Guid sId = string.IsNullOrWhiteSpace(sortSetId) ? Guid.Empty : new Guid(sortSetId);
+        Guid dsId = new Guid(g: dataStructureId);
+        Guid fId = string.IsNullOrWhiteSpace(value: filterId) ? Guid.Empty : new Guid(g: filterId);
+        Guid dId = string.IsNullOrWhiteSpace(value: defaultSetId)
+            ? Guid.Empty
+            : new Guid(g: defaultSetId);
+        Guid sId = string.IsNullOrWhiteSpace(value: sortSetId)
+            ? Guid.Empty
+            : new Guid(g: sortSetId);
         var dataSet = CoreServices.DataService.Instance.LoadData(
-            dsId,
-            fId,
-            dId,
-            sId,
-            null,
-            paramName1,
-            paramValue1
+            dataStructureId: dsId,
+            methodId: fId,
+            defaultSetId: dId,
+            sortSetId: sId,
+            transactionId: null,
+            paramName1: paramName1,
+            paramValue1: paramValue1
         );
-        return Task.FromResult(dataSet);
+        return Task.FromResult(result: dataSet);
     }
 
     public Task<DataSet> LoadData2Async(
@@ -131,39 +149,43 @@ public class DataServiceSoap : IDataServiceSoap
         string paramValue2
     )
     {
-        if (log.IsEnabled(LogLevel.Information))
+        if (log.IsEnabled(logLevel: LogLevel.Information))
         {
-            log.Log(LogLevel.Information, "LoadData2");
+            log.Log(logLevel: LogLevel.Information, message: "LoadData2");
         }
-        Guid dsId = new Guid(dataStructureId);
-        Guid fId = string.IsNullOrWhiteSpace(filterId) ? Guid.Empty : new Guid(filterId);
-        Guid dId = string.IsNullOrWhiteSpace(defaultSetId) ? Guid.Empty : new Guid(defaultSetId);
-        Guid sId = string.IsNullOrWhiteSpace(sortSetId) ? Guid.Empty : new Guid(sortSetId);
+        Guid dsId = new Guid(g: dataStructureId);
+        Guid fId = string.IsNullOrWhiteSpace(value: filterId) ? Guid.Empty : new Guid(g: filterId);
+        Guid dId = string.IsNullOrWhiteSpace(value: defaultSetId)
+            ? Guid.Empty
+            : new Guid(g: defaultSetId);
+        Guid sId = string.IsNullOrWhiteSpace(value: sortSetId)
+            ? Guid.Empty
+            : new Guid(g: sortSetId);
         var dataSet = CoreServices.DataService.Instance.LoadData(
-            dsId,
-            fId,
-            dId,
-            sId,
-            null,
-            paramName1,
-            paramValue1,
-            paramName2,
-            paramValue2
+            dataStructureId: dsId,
+            methodId: fId,
+            defaultSetId: dId,
+            sortSetId: sId,
+            transactionId: null,
+            paramName1: paramName1,
+            paramValue1: paramValue1,
+            paramName2: paramName2,
+            paramValue2: paramValue2
         );
-        return Task.FromResult(dataSet);
+        return Task.FromResult(result: dataSet);
     }
 
     public Task<DataSet> ExecuteProcedureAsync(string procedureName, Parameter[] parameters)
     {
-        log.Log(LogLevel.Information, "ExecuteProcedure");
+        log.Log(logLevel: LogLevel.Information, message: "ExecuteProcedure");
 
-        var parameterCollection = ParameterUtils.ToQueryParameterCollection(parameters);
+        var parameterCollection = ParameterUtils.ToQueryParameterCollection(parameters: parameters);
         var dataSet = CoreServices.DataService.Instance.ExecuteProcedure(
-            procedureName,
-            parameterCollection,
-            null
+            procedureName: procedureName,
+            parameters: parameterCollection,
+            transactionId: null
         );
-        return Task.FromResult(dataSet);
+        return Task.FromResult(result: dataSet);
     }
 
     public Task<DataSet> StoreDataAsync(
@@ -172,55 +194,58 @@ public class DataServiceSoap : IDataServiceSoap
         bool loadActualValuesAfterUpdate
     )
     {
-        if (log.IsEnabled(LogLevel.Information))
+        if (log.IsEnabled(logLevel: LogLevel.Information))
         {
-            log.Log(LogLevel.Information, "StoreData");
-            log.Log(LogLevel.Information, data.GetXml());
+            log.Log(logLevel: LogLevel.Information, message: "StoreData");
+            log.Log(logLevel: LogLevel.Information, message: data.GetXml());
         }
 
-        Guid guid = new Guid(dataStructureId);
+        Guid guid = new Guid(g: dataStructureId);
         IPersistenceService service =
-            ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+            ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+            as IPersistenceService;
         DataStructure structure =
             service.SchemaProvider.RetrieveInstance(
-                typeof(DataStructure),
-                new ModelElementKey(guid)
+                type: typeof(DataStructure),
+                primaryKey: new ModelElementKey(id: guid)
             ) as DataStructure;
-        DataSet set = new DatasetGenerator(true).CreateDataSet(structure);
+        DataSet set = new DatasetGenerator(userDefinedParameters: true).CreateDataSet(
+            ds: structure
+        );
         foreach (DataTable table in data.Tables)
         {
-            if (set.Tables.Contains(table.TableName))
+            if (set.Tables.Contains(name: table.TableName))
             {
-                DataTable setTable = set.Tables[table.TableName];
+                DataTable setTable = set.Tables[name: table.TableName];
                 table.ExtendedProperties.Clear();
                 foreach (DictionaryEntry entry in setTable.ExtendedProperties)
                 {
-                    table.ExtendedProperties.Add(entry.Key, entry.Value);
+                    table.ExtendedProperties.Add(key: entry.Key, value: entry.Value);
                 }
                 foreach (DataColumn col in table.Columns)
                 {
-                    if (setTable.Columns.Contains(col.ColumnName))
+                    if (setTable.Columns.Contains(name: col.ColumnName))
                     {
                         col.ExtendedProperties.Clear();
                         foreach (
                             DictionaryEntry entry in setTable
-                                .Columns[col.ColumnName]
+                                .Columns[name: col.ColumnName]
                                 .ExtendedProperties
                         )
                         {
-                            col.ExtendedProperties.Add(entry.Key, entry.Value);
+                            col.ExtendedProperties.Add(key: entry.Key, value: entry.Value);
                         }
                     }
                 }
             }
         }
         DataSet returnDataSet = CoreServices.DataService.Instance.StoreData(
-            guid,
-            data,
-            loadActualValuesAfterUpdate,
-            null
+            dataStructureId: guid,
+            data: data,
+            loadActualValuesAfterUpdate: loadActualValuesAfterUpdate,
+            transactionId: null
         );
-        return Task.FromResult(returnDataSet);
+        return Task.FromResult(result: returnDataSet);
     }
 
     public Task<DataSet> StoreXmlAsync(
@@ -229,23 +254,28 @@ public class DataServiceSoap : IDataServiceSoap
         bool loadActualValuesAfterUpdate
     )
     {
-        if (log.IsEnabled(LogLevel.Information))
+        if (log.IsEnabled(logLevel: LogLevel.Information))
         {
-            log.Log(LogLevel.Information, "StoreXml");
-            log.Log(LogLevel.Information, xml.OuterXml);
+            log.Log(logLevel: LogLevel.Information, message: "StoreXml");
+            log.Log(logLevel: LogLevel.Information, message: xml.OuterXml);
         }
-        Guid guid = new Guid(dataStructureId);
+        Guid guid = new Guid(g: dataStructureId);
         IPersistenceService service =
-            ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+            ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+            as IPersistenceService;
         DataStructure structure =
             service.SchemaProvider.RetrieveInstance(
-                typeof(DataStructure),
-                new ModelElementKey(guid)
+                type: typeof(DataStructure),
+                primaryKey: new ModelElementKey(id: guid)
             ) as DataStructure;
-        DataSet set = new DatasetGenerator(true).CreateDataSet(structure);
+        DataSet set = new DatasetGenerator(userDefinedParameters: true).CreateDataSet(
+            ds: structure
+        );
         set.EnforceConstraints = false;
-        set.ReadXml(new XmlNodeReader(xml));
-        DataSet set2 = new DatasetGenerator(true).CreateDataSet(structure);
+        set.ReadXml(reader: new XmlNodeReader(node: xml));
+        DataSet set2 = new DatasetGenerator(userDefinedParameters: true).CreateDataSet(
+            ds: structure
+        );
         object obj2 = SecurityManager.CurrentUserProfile().Id;
         MergeParams mergeParams = new MergeParams
         {
@@ -255,18 +285,23 @@ public class DataServiceSoap : IDataServiceSoap
             ProfileId = obj2,
             TrueDelete = false,
         };
-        DatasetTools.MergeDataSet(set2, set, null, mergeParams);
-        if (log.IsEnabled(LogLevel.Debug))
+        DatasetTools.MergeDataSet(
+            inout_dsTarget: set2,
+            in_dsSource: set,
+            changeList: null,
+            mergeParams: mergeParams
+        );
+        if (log.IsEnabled(logLevel: LogLevel.Debug))
         {
-            log.Log(LogLevel.Debug, "StoreXml - merged xml below");
-            log.Log(LogLevel.Debug, set2.GetXml());
+            log.Log(logLevel: LogLevel.Debug, message: "StoreXml - merged xml below");
+            log.Log(logLevel: LogLevel.Debug, message: set2.GetXml());
         }
         DataSet dataSet = CoreServices.DataService.Instance.StoreData(
-            guid,
-            set2,
-            loadActualValuesAfterUpdate,
-            null
+            dataStructureId: guid,
+            data: set2,
+            loadActualValuesAfterUpdate: loadActualValuesAfterUpdate,
+            transactionId: null
         );
-        return Task.FromResult(dataSet);
+        return Task.FromResult(result: dataSet);
     }
 }

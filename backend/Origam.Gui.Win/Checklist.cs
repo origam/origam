@@ -36,7 +36,8 @@ namespace Origam.Gui.Win;
 public class Checklist : BaseCaptionControl, IOrigamMetadataConsumer
 {
     private IPersistenceService _persistence =
-        ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+        ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+        as IPersistenceService;
     private System.Windows.Forms.ColorDialog colorDialog1;
     private System.Windows.Forms.TextBox textBox1;
 
@@ -64,7 +65,7 @@ public class Checklist : BaseCaptionControl, IOrigamMetadataConsumer
                 components.Dispose();
             }
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
 
     #region Component Designer generated code
@@ -103,7 +104,7 @@ public class Checklist : BaseCaptionControl, IOrigamMetadataConsumer
     #region Properties
     private Guid _lookupId;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public Guid LookupId
     {
         get { return _lookupId; }
@@ -128,13 +129,13 @@ public class Checklist : BaseCaptionControl, IOrigamMetadataConsumer
     }
     ColumnParameterMappingCollection _parameterMappings = new ColumnParameterMappingCollection();
 
-    [TypeConverter(typeof(ColumnParameterMappingCollectionConverter))]
+    [TypeConverter(type: typeof(ColumnParameterMappingCollectionConverter))]
     public ColumnParameterMappingCollection ParameterMappings
     {
         get { return _parameterMappings; }
     }
 
-    [TypeConverter(typeof(DataLookupConverter))]
+    [TypeConverter(type: typeof(DataLookupConverter))]
     public AbstractDataLookup DataLookup
     {
         get
@@ -142,7 +143,10 @@ public class Checklist : BaseCaptionControl, IOrigamMetadataConsumer
             ModelElementKey key = new ModelElementKey();
             key.Id = this.LookupId;
             return (AbstractDataLookup)
-                _persistence.SchemaProvider.RetrieveInstance(typeof(AbstractDataLookup), key);
+                _persistence.SchemaProvider.RetrieveInstance(
+                    type: typeof(AbstractDataLookup),
+                    primaryKey: key
+                );
         }
         set
         {
@@ -154,12 +158,12 @@ public class Checklist : BaseCaptionControl, IOrigamMetadataConsumer
             else
             {
                 // if same as before, no action is needed
-                if (this.LookupId == (Guid)value.PrimaryKey["Id"])
+                if (this.LookupId == (Guid)value.PrimaryKey[key: "Id"])
                 {
                     return;
                 }
 
-                this.LookupId = (Guid)value.PrimaryKey["Id"];
+                this.LookupId = (Guid)value.PrimaryKey[key: "Id"];
                 ClearMappingItems();
                 CreateMappingItemsCollection();
             }
@@ -179,7 +183,9 @@ public class Checklist : BaseCaptionControl, IOrigamMetadataConsumer
             }
 
             var col = _origamMetadata
-                .ChildItemsByType<ColumnParameterMapping>(ColumnParameterMapping.CategoryConst)
+                .ChildItemsByType<ColumnParameterMapping>(
+                    itemType: ColumnParameterMapping.CategoryConst
+                )
                 .ToList();
             foreach (ColumnParameterMapping mapping in col)
             {
@@ -188,7 +194,7 @@ public class Checklist : BaseCaptionControl, IOrigamMetadataConsumer
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine("AsDropDown:ERROR=>" + ex.ToString());
+            System.Diagnostics.Debug.WriteLine(message: "AsDropDown:ERROR=>" + ex.ToString());
         }
     }
 
@@ -205,14 +211,14 @@ public class Checklist : BaseCaptionControl, IOrigamMetadataConsumer
             {
                 string parameterName = entry.Key;
                 ColumnParameterMapping mapping = _origamMetadata.NewItem<ColumnParameterMapping>(
-                    _origamMetadata.SchemaExtensionId,
-                    null
+                    schemaExtensionId: _origamMetadata.SchemaExtensionId,
+                    group: null
                 );
                 mapping.Name = parameterName;
             }
         }
         //Refill Parameter collection (and dictionary)
-        FillParameterCache(this._origamMetadata as ControlSetItem);
+        FillParameterCache(controlItem: this._origamMetadata as ControlSetItem);
     }
 
     private void FillParameterCache(ControlSetItem controlItem)
@@ -226,13 +232,13 @@ public class Checklist : BaseCaptionControl, IOrigamMetadataConsumer
 
         foreach (
             var mapInfo in controlItem.ChildItemsByType<ColumnParameterMapping>(
-                ColumnParameterMapping.CategoryConst
+                itemType: ColumnParameterMapping.CategoryConst
             )
         )
         {
             if (!mapInfo.IsDeleted)
             {
-                ParameterMappings.Add(mapInfo);
+                ParameterMappings.Add(value: mapInfo);
             }
         }
     }
@@ -246,7 +252,7 @@ public class Checklist : BaseCaptionControl, IOrigamMetadataConsumer
         {
             _origamMetadata = value;
             _itemsLoaded = true;
-            FillParameterCache(_origamMetadata as ControlSetItem);
+            FillParameterCache(controlItem: _origamMetadata as ControlSetItem);
         }
     }
     #endregion

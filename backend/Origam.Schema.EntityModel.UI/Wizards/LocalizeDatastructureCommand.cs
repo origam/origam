@@ -37,7 +37,10 @@ public class LocalizeDatastructureCommand : AbstractMenuCommand
         }
         set
         {
-            throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
+            throw new ArgumentException(
+                message: ResourceUtils.GetString(key: "ErrorSetProperty"),
+                paramName: "IsEnabled"
+            );
         }
     }
 
@@ -51,17 +54,18 @@ public class LocalizeDatastructureCommand : AbstractMenuCommand
         {
             TableMappingItem table = dsEntity.Entity as TableMappingItem;
             ISchemaService schema =
-                ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
+                ServiceManager.Services.GetService(serviceType: typeof(ISchemaService))
+                as ISchemaService;
             // create new datastructure entity using localization relation
             DataStructureEntity localizationDSEntity = dsEntity.NewItem<DataStructureEntity>(
-                schema.ActiveSchemaExtensionId,
-                null
+                schemaExtensionId: schema.ActiveSchemaExtensionId,
+                group: null
             );
             localizationDSEntity.RelationType = RelationType.LeftJoin;
             localizationDSEntity.AllFields = false;
             localizationDSEntity.Entity = table.LocalizationRelation;
             localizationDSEntity.Persist();
-            GeneratedModelElements.Add(localizationDSEntity);
+            GeneratedModelElements.Add(item: localizationDSEntity);
         }
         ds.Persist();
     }

@@ -32,6 +32,6 @@ class GlobalValueStore
 
     public void Add(string key, object value)
     {
-        valueStore.Add(key, value);
+        valueStore.Add(key: key, value: value);
     }
 }

@@ -50,14 +50,14 @@ public class WorkflowForm : AsForm
     private void InitializeComponent()
     {
         System.Resources.ResourceManager resources = new System.Resources.ResourceManager(
-            typeof(WorkflowForm)
+            resourceSource: typeof(WorkflowForm)
         );
         //
         // WorkflowForm
         //
-        this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-        this.ClientSize = new System.Drawing.Size(648, 373);
-        this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+        this.AutoScaleBaseSize = new System.Drawing.Size(width: 5, height: 13);
+        this.ClientSize = new System.Drawing.Size(width: 648, height: 373);
+        this.Icon = ((System.Drawing.Icon)(resources.GetObject(name: "$this.Icon")));
         this.CloseButton = false;
         this.Name = "WorkflowForm";
         this.Closing += this.WorkflowForm_Closing;
@@ -100,7 +100,7 @@ public class WorkflowForm : AsForm
 
     private void AbortTask()
     {
-        this.FormGenerator.UnloadForm(true);
+        this.FormGenerator.UnloadForm(showCurtain: true);
         // isDirty: false is set here because it was not immediately obvious how to get the actual value.
         // Desktop Architect will be at end of life soon anyway.
         this.Host.AbortWorkflowForm(taskId: _taskId, isDirty: false);
@@ -122,23 +122,23 @@ public class WorkflowForm : AsForm
         {
             // in case of exception we don't exit the form
             UI.AsMessageBox.ShowError(
-                this,
-                ex.Message,
-                ResourceUtils.GetString("ErrorWhenFormCheck", this.TitleName),
-                ex
+                owner: this,
+                text: ex.Message,
+                caption: ResourceUtils.GetString(key: "ErrorWhenFormCheck", args: this.TitleName),
+                exception: ex
             );
             return;
         }
         if (this.NextData.DataSet.HasErrors)
         {
             UI.AsMessageBox.ShowError(
-                this,
-                ResourceUtils.GetString("ErrorsInForm1")
+                owner: this,
+                text: ResourceUtils.GetString(key: "ErrorsInForm1")
                     + Environment.NewLine
                     + Environment.NewLine
-                    + DatasetTools.GetDatasetErrors(this.NextData.DataSet),
-                ResourceUtils.GetString("ErrorWhenFormCheck", this.TitleName),
-                null
+                    + DatasetTools.GetDatasetErrors(dataset: this.NextData.DataSet),
+                caption: ResourceUtils.GetString(key: "ErrorWhenFormCheck", args: this.TitleName),
+                exception: null
             );
             return;
         }
@@ -146,12 +146,16 @@ public class WorkflowForm : AsForm
         {
             if (this.EndRule != null)
             {
-                this.WorkflowEngine.EvaluateEndRule(this.EndRule, this.NextData, null);
+                this.WorkflowEngine.EvaluateEndRule(
+                    rule: this.EndRule,
+                    data: this.NextData,
+                    step: null
+                );
             }
         }
         catch (RuleException ruleEx)
         {
-            bool shouldReturn = FormGenerator.DisplayRuleException(this, ruleEx);
+            bool shouldReturn = FormGenerator.DisplayRuleException(window: this, ruleEx: ruleEx);
             if (shouldReturn)
             {
                 return;
@@ -160,20 +164,20 @@ public class WorkflowForm : AsForm
         catch (Exception ex)
         {
             UI.AsMessageBox.ShowError(
-                this,
-                ex.Message,
-                ResourceUtils.GetString("ErrorWhenFormCheck", this.TitleName),
-                ex
+                owner: this,
+                text: ex.Message,
+                caption: ResourceUtils.GetString(key: "ErrorWhenFormCheck", args: this.TitleName),
+                exception: ex
             );
             return;
         }
         this.CanFinishTask = false;
-        this.FormGenerator.UnloadForm(true);
+        this.FormGenerator.UnloadForm(showCurtain: true);
         this.CanAbort = false;
         this.CloseButton = false;
         Application.DoEvents();
         this.TaskFinished = true;
-        this.Host.FinishWorkflowForm(_taskId, this.NextData);
+        this.Host.FinishWorkflowForm(taskId: _taskId, data: this.NextData);
     }
 
     /// <summary>
@@ -193,14 +197,14 @@ public class WorkflowForm : AsForm
 
     internal void ShowFinishScreen()
     {
-        this.FormGenerator.UnloadForm(true);
+        this.FormGenerator.UnloadForm(showCurtain: true);
         this.DockPadding.All = 5;
-        this.StatusText = ResourceUtils.GetString("ProcessFinished");
+        this.StatusText = ResourceUtils.GetString(key: "ProcessFinished");
         AppendProcessLog(
-            Environment.NewLine
+            text: Environment.NewLine
                 + messageSeparator
                 + Environment.NewLine
-                + ResourceUtils.GetString("ProcessFinished")
+                + ResourceUtils.GetString(key: "ProcessFinished")
         );
         this.CanFinishTask = false;
         this.CloseButton = true;
@@ -208,12 +212,12 @@ public class WorkflowForm : AsForm
         this.CanAbort = true;
 
         Label logLabel = new Label();
-        logLabel.Text = ResourceUtils.GetString("ProcessFinished");
+        logLabel.Text = ResourceUtils.GetString(key: "ProcessFinished");
         logLabel.Dock = DockStyle.Top;
         logLabel.Font = new System.Drawing.Font(
-            logLabel.Font.FontFamily,
-            14,
-            System.Drawing.FontStyle.Bold
+            family: logLabel.Font.FontFamily,
+            emSize: 14,
+            style: System.Drawing.FontStyle.Bold
         );
         logLabel.AutoSize = true;
         logLabel.BorderStyle = BorderStyle.None;
@@ -227,11 +231,11 @@ public class WorkflowForm : AsForm
         btnClose.Height = 25;
         btnClose.Width = 130;
         btnClose.FlatStyle = FlatStyle.Flat;
-        btnClose.Text = ResourceUtils.GetString("ButtonClose");
+        btnClose.Text = ResourceUtils.GetString(key: "ButtonClose");
         btnClose.Image = Origam.Workbench.Images.Delete;
         btnClose.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
         btnClose.Click += btnClose_Click;
-        buttonPanel.Controls.Add(btnClose);
+        buttonPanel.Controls.Add(value: btnClose);
         Button btnRepeat = null;
         if (this.WorkflowEngine.IsRepeatable)
         {
@@ -242,11 +246,11 @@ public class WorkflowForm : AsForm
             btnRepeat.Height = 25;
             btnRepeat.Width = 130;
             btnRepeat.FlatStyle = FlatStyle.Flat;
-            btnRepeat.Text = ResourceUtils.GetString("ButtonRepeat");
+            btnRepeat.Text = ResourceUtils.GetString(key: "ButtonRepeat");
             btnRepeat.Image = Workbench.Images.RecurringWorkflow;
             btnRepeat.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             btnRepeat.Click += btnRepeat_Click;
-            buttonPanel.Controls.Add(btnRepeat);
+            buttonPanel.Controls.Add(value: btnRepeat);
         }
         TextBox logBox = new TextBox();
         logBox.TabIndex = 2;
@@ -254,7 +258,7 @@ public class WorkflowForm : AsForm
         logBox.Top = logLabel.Height;
         logBox.Width = 500;
         logBox.Height = 500;
-        logBox.Text = ResourceUtils.GetString("ProcessSteps");
+        logBox.Text = ResourceUtils.GetString(key: "ProcessSteps");
         logBox.Text += Environment.NewLine + messageSeparator;
         logBox.Text += Environment.NewLine + _processLog;
         logBox.ScrollBars = ScrollBars.Both;
@@ -263,9 +267,9 @@ public class WorkflowForm : AsForm
         logBox.ReadOnly = true;
         logBox.BackColor = System.Drawing.Color.White;
         logBox.Dock = DockStyle.Fill;
-        this.Controls.Add(logBox);
-        this.Controls.Add(logLabel);
-        this.Controls.Add(buttonPanel);
+        this.Controls.Add(value: logBox);
+        this.Controls.Add(value: logLabel);
+        this.Controls.Add(value: buttonPanel);
         logLabel.BringToFront();
         buttonPanel.BringToFront();
         logBox.BringToFront();
@@ -286,17 +290,23 @@ public class WorkflowForm : AsForm
     {
         try
         {
-            this.StatusText = ResourceUtils.GetString("FormLoading");
+            this.StatusText = ResourceUtils.GetString(key: "FormLoading");
             Cursor.Current = Cursors.WaitCursor;
             this.TaskFinished = false;
             this.FormGenerator.LoadFormWithData(
-                this,
-                this.NextData.DataSet,
-                this.NextData,
-                this.NextForm
+                form: this,
+                formData: this.NextData.DataSet,
+                xmlData: this.NextData,
+                formControlSet: this.NextForm
             );
             this.EndCurrentEdit();
-            this.SelectNextControl(this, true, true, true, true);
+            this.SelectNextControl(
+                ctl: this,
+                forward: true,
+                tabStopOnly: true,
+                nested: true,
+                wrap: true
+            );
             this.StatusText = this.NextDescription;
             if (this.NameLabel != null)
             {
@@ -318,31 +328,34 @@ public class WorkflowForm : AsForm
         if (this.InvokeRequired)
         {
             ShowMessageDelegate showMessage = ShowMessage;
-            this.Invoke(showMessage, new object[] { message, ex });
+            this.Invoke(method: showMessage, args: new object[] { message, ex });
         }
         else
         {
             if (ex is WorkflowCancelledByUserException)
             {
                 MessageBox.Show(
-                    this,
-                    message,
-                    ResourceUtils.GetString("WorkflowFinishedTitle"),
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information
+                    owner: this,
+                    text: message,
+                    caption: ResourceUtils.GetString(key: "WorkflowFinishedTitle"),
+                    buttons: MessageBoxButtons.OK,
+                    icon: MessageBoxIcon.Information
                 );
             }
             else
             {
                 UI.AsMessageBox.ShowError(
-                    this,
-                    message,
-                    ResourceUtils.GetString("WorkflowReportTitle", this.TitleName),
-                    ex
+                    owner: this,
+                    text: message,
+                    caption: ResourceUtils.GetString(
+                        key: "WorkflowReportTitle",
+                        args: this.TitleName
+                    ),
+                    exception: ex
                 );
             }
             AppendProcessLog(
-                Environment.NewLine
+                text: Environment.NewLine
                     + messageSeparator
                     + Environment.NewLine
                     + message
@@ -356,7 +369,7 @@ public class WorkflowForm : AsForm
     {
         this.StatusText = description;
 
-        AppendProcessLog(description);
+        AppendProcessLog(text: description);
         Application.DoEvents();
     }
 
@@ -381,7 +394,7 @@ public class WorkflowForm : AsForm
 
     void OnStatusChanged(EventArgs e)
     {
-        StatusChanged?.Invoke(this, e);
+        StatusChanged?.Invoke(sender: this, e: e);
     }
     #endregion
     private string _processLog = "";
@@ -405,7 +418,7 @@ public class WorkflowForm : AsForm
             NextForm = null;
             WorkflowEngine = null;
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
 
     private void btnClose_Click(object sender, EventArgs e)
@@ -417,7 +430,7 @@ public class WorkflowForm : AsForm
     {
         Button btn = sender as Button;
         btn.Click -= btnClose_Click;
-        this.Controls.Remove(btn);
+        this.Controls.Remove(value: btn);
         this.Controls.Clear();
         this.DockPadding.All = 0;
         this.CanFinishTask = false;
@@ -426,12 +439,12 @@ public class WorkflowForm : AsForm
         this.CanAbort = false;
         _finishScreen = false;
         this.WorkflowEngine.WorkflowInstanceId = Guid.NewGuid();
-        WorkflowHost.DefaultHost.ExecuteWorkflow(this.WorkflowEngine);
+        WorkflowHost.DefaultHost.ExecuteWorkflow(engine: this.WorkflowEngine);
     }
 
     private void Host_FormRequested(object sender, WorkflowHostFormEventArgs e)
     {
-        if (e.Engine.WorkflowInstanceId.Equals(this.WorkflowEngine.WorkflowInstanceId))
+        if (e.Engine.WorkflowInstanceId.Equals(g: this.WorkflowEngine.WorkflowInstanceId))
         {
             this.WorkflowEngine = e.Engine;
             this.NextData = e.Data;
@@ -441,40 +454,40 @@ public class WorkflowForm : AsForm
             this.FormGenerator.RuleSet = e.RuleSet;
             this.EndRule = e.EndRule;
             _taskId = e.TaskId;
-            this.Invoke(new MethodInvoker(this.ShowWorkflowUI));
+            this.Invoke(method: new MethodInvoker(this.ShowWorkflowUI));
         }
     }
 
     private void Host_WorkflowFinished(object sender, WorkflowHostEventArgs e)
     {
-        if (e.Engine.WorkflowInstanceId.Equals(this.WorkflowEngine.WorkflowInstanceId))
+        if (e.Engine.WorkflowInstanceId.Equals(g: this.WorkflowEngine.WorkflowInstanceId))
         {
             if (e.Engine.CallingWorkflow == null)
             {
                 WorkflowEngine = e.Engine;
                 if (
                     e.Exception != null
-                    && e.Exception.Data["onFailure"] is not StepFailureMode.Suppress
+                    && e.Exception.Data[key: "onFailure"] is not StepFailureMode.Suppress
                 )
                 {
-                    ShowMessage(e.Exception.Message, e.Exception);
+                    ShowMessage(message: e.Exception.Message, ex: e.Exception);
                 }
-                Invoke(new MethodInvoker(ShowFinishScreen));
+                Invoke(method: new MethodInvoker(ShowFinishScreen));
             }
         }
     }
 
     private void Host_WorkflowMessage(object sender, WorkflowHostMessageEventArgs e)
     {
-        if (e.Engine.WorkflowInstanceId.Equals(this.WorkflowEngine.WorkflowInstanceId))
+        if (e.Engine.WorkflowInstanceId.Equals(g: this.WorkflowEngine.WorkflowInstanceId))
         {
             if (e.Popup)
             {
-                this.ShowMessage(e.Message, e.Exception);
+                this.ShowMessage(message: e.Message, ex: e.Exception);
             }
             else
             {
-                this.SetWorkflowDescription(e.Message);
+                this.SetWorkflowDescription(description: e.Message);
             }
         }
     }

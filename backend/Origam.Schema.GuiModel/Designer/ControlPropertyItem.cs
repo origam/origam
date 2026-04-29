@@ -41,9 +41,9 @@ public enum ControlPropertyValueType
     UniqueIdentifier,
 }
 
-[SchemaItemDescription("Property", "Properties", "icon_property.png")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Property", folderName: "Properties", iconName: "icon_property.png")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class ControlPropertyItem : AbstractSchemaItem
 {
     public const string CategoryConst = "ControlPropertyItem";
@@ -52,15 +52,15 @@ public class ControlPropertyItem : AbstractSchemaItem
         : base() { }
 
     public ControlPropertyItem(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public ControlPropertyItem(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Properties
     private ControlPropertyValueType _propertyType;
 
-    [XmlAttribute("propertyType")]
+    [XmlAttribute(attributeName: "propertyType")]
     public ControlPropertyValueType PropertyType
     {
         get { return _propertyType; }
@@ -68,7 +68,7 @@ public class ControlPropertyItem : AbstractSchemaItem
     }
     private bool _isBindOnly;
 
-    [XmlAttribute("bindOnly")]
+    [XmlAttribute(attributeName: "bindOnly")]
     public bool IsBindOnly
     {
         get { return _isBindOnly; }
@@ -76,7 +76,7 @@ public class ControlPropertyItem : AbstractSchemaItem
     }
     private bool _isLocalizable;
 
-    [XmlAttribute("localizable")]
+    [XmlAttribute(attributeName: "localizable")]
     public bool IsLocalizable
     {
         get { return _isLocalizable; }
@@ -94,7 +94,7 @@ public class ControlPropertyItem : AbstractSchemaItem
         get { return SchemaItemCollection.Create(); }
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public Type SystemType
     {
         get

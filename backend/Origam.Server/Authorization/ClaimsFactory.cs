@@ -31,17 +31,26 @@ namespace Origam.Server.Authorization;
 public class ClaimsFactory : UserClaimsPrincipalFactory<IOrigamUser>
 {
     public ClaimsFactory(UserManager<IOrigamUser> userManager, IOptions<IdentityOptions> options)
-        : base(userManager, options) { }
+        : base(userManager: userManager, optionsAccessor: options) { }
 
     protected override async Task<ClaimsIdentity> GenerateClaimsAsync(IOrigamUser user)
     {
-        var id = await base.GenerateClaimsAsync(user);
-        id.RemoveClaim(id.FindFirst(OpenIddictConstants.Claims.Subject));
-        id.AddClaim(new Claim(OpenIddictConstants.Claims.Subject, user.BusinessPartnerId));
-        id.AddClaim(new Claim(OpenIddictConstants.Claims.Name, user.UserName ?? ""));
-        if (!string.IsNullOrEmpty(user.Email))
+        var id = await base.GenerateClaimsAsync(user: user);
+        id.RemoveClaim(claim: id.FindFirst(type: OpenIddictConstants.Claims.Subject));
+        id.AddClaim(
+            claim: new Claim(
+                type: OpenIddictConstants.Claims.Subject,
+                value: user.BusinessPartnerId
+            )
+        );
+        id.AddClaim(
+            claim: new Claim(type: OpenIddictConstants.Claims.Name, value: user.UserName ?? "")
+        );
+        if (!string.IsNullOrEmpty(value: user.Email))
         {
-            id.AddClaim(new Claim(OpenIddictConstants.Claims.Email, user.Email));
+            id.AddClaim(
+                claim: new Claim(type: OpenIddictConstants.Claims.Email, value: user.Email)
+            );
         }
 
         return id;

@@ -61,7 +61,7 @@ public class StoredFilterProperties : System.Windows.Forms.Form
                 components.Dispose();
             }
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
 
     #region Windows Form Designer generated code
@@ -151,11 +151,11 @@ public class StoredFilterProperties : System.Windows.Forms.Form
         if (txtFilterName.Text == "")
         {
             MessageBox.Show(
-                this,
-                ResourceUtils.GetString("EnterFileName"),
-                ResourceUtils.GetString("SaveFilter"),
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error
+                owner: this,
+                text: ResourceUtils.GetString(key: "EnterFileName"),
+                caption: ResourceUtils.GetString(key: "SaveFilter"),
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Error
             );
         }
         else

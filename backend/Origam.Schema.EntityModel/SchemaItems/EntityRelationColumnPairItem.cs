@@ -31,11 +31,11 @@ namespace Origam.Schema.EntityModel;
 /// <summary>
 /// Summary description for EntityRelationColumnPairItem.
 /// </summary>
-[SchemaItemDescription("Key", 3)]
-[HelpTopic("Relationship+Key")]
-[XmlModelRoot(CategoryConst)]
-[DefaultProperty("BaseEntityField")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Key", icon: 3)]
+[HelpTopic(topic: "Relationship+Key")]
+[XmlModelRoot(category: CategoryConst)]
+[DefaultProperty(name: "BaseEntityField")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class EntityRelationColumnPairItem : AbstractSchemaItem
 {
     public const string CategoryConst = "EntityRelationColumnPair";
@@ -44,17 +44,17 @@ public class EntityRelationColumnPairItem : AbstractSchemaItem
         : base() { }
 
     public EntityRelationColumnPairItem(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public EntityRelationColumnPairItem(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Properties
     public Guid BaseEntityColumnId;
 
-    [TypeConverter(typeof(RelationPrimaryKeyColumnConverter))]
+    [TypeConverter(type: typeof(RelationPrimaryKeyColumnConverter))]
     [NotNullModelElementRuleAttribute()]
-    [XmlReference("baseEntityField", "BaseEntityColumnId")]
+    [XmlReference(attributeName: "baseEntityField", idField: "BaseEntityColumnId")]
     public IDataEntityColumn BaseEntityField
     {
         get
@@ -62,7 +62,10 @@ public class EntityRelationColumnPairItem : AbstractSchemaItem
             ModelElementKey key = new ModelElementKey();
             key.Id = this.BaseEntityColumnId;
             return (IDataEntityColumn)
-                this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
+                this.PersistenceProvider.RetrieveInstance(
+                    type: typeof(ISchemaItem),
+                    primaryKey: key
+                );
         }
         set
         {
@@ -72,15 +75,15 @@ public class EntityRelationColumnPairItem : AbstractSchemaItem
             }
             else
             {
-                this.BaseEntityColumnId = (Guid)value.PrimaryKey["Id"];
+                this.BaseEntityColumnId = (Guid)value.PrimaryKey[key: "Id"];
             }
         }
     }
     public Guid RelatedEntityColumnId;
 
-    [TypeConverter(typeof(RelationForeignKeyColumnConverter))]
+    [TypeConverter(type: typeof(RelationForeignKeyColumnConverter))]
     [NotNullModelElementRuleAttribute()]
-    [XmlReference("relatedEntityField", "RelatedEntityColumnId")]
+    [XmlReference(attributeName: "relatedEntityField", idField: "RelatedEntityColumnId")]
     public IDataEntityColumn RelatedEntityField
     {
         get
@@ -88,7 +91,10 @@ public class EntityRelationColumnPairItem : AbstractSchemaItem
             ModelElementKey key = new ModelElementKey();
             key.Id = this.RelatedEntityColumnId;
             return (IDataEntityColumn)
-                this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
+                this.PersistenceProvider.RetrieveInstance(
+                    type: typeof(ISchemaItem),
+                    primaryKey: key
+                );
         }
         set
         {
@@ -98,7 +104,7 @@ public class EntityRelationColumnPairItem : AbstractSchemaItem
             }
             else
             {
-                this.RelatedEntityColumnId = (Guid)value.PrimaryKey["Id"];
+                this.RelatedEntityColumnId = (Guid)value.PrimaryKey[key: "Id"];
             }
         }
     }
@@ -118,15 +124,15 @@ public class EntityRelationColumnPairItem : AbstractSchemaItem
         Dictionary<string, ParameterReference> list
     )
     {
-        BaseEntityField.GetParameterReferences(BaseEntityField, list);
-        RelatedEntityField.GetParameterReferences(RelatedEntityField, list);
+        BaseEntityField.GetParameterReferences(parentItem: BaseEntityField, list: list);
+        RelatedEntityField.GetParameterReferences(parentItem: RelatedEntityField, list: list);
     }
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(this.BaseEntityField);
-        dependencies.Add(this.RelatedEntityField);
-        base.GetExtraDependencies(dependencies);
+        dependencies.Add(item: this.BaseEntityField);
+        dependencies.Add(item: this.RelatedEntityField);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override void UpdateReferences()
@@ -135,7 +141,7 @@ public class EntityRelationColumnPairItem : AbstractSchemaItem
         {
             if (item.OldPrimaryKey != null)
             {
-                if (item.OldPrimaryKey.Equals(this.BaseEntityField.PrimaryKey))
+                if (item.OldPrimaryKey.Equals(obj: this.BaseEntityField.PrimaryKey))
                 {
                     this.BaseEntityField = item as IDataEntityColumn;
                     break;

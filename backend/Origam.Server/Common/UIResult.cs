@@ -131,7 +131,7 @@ public class UIResult
             string[] result = new string[this.Notifications.Count];
             for (int i = 0; i < this.Notifications.Count; i++)
             {
-                result[i] = this.Notifications[i].Text;
+                result[i] = this.Notifications[index: i].Text;
             }
             return result;
         }

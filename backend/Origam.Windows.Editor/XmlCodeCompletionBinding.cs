@@ -49,26 +49,32 @@ public class XmlCodeCompletionBinding
     )
     {
         int offset = editor.TextArea.Caret.Offset;
-        string textUpToCursor = editor.Document.GetText(0, offset);
+        string textUpToCursor = editor.Document.GetText(offset: 0, length: offset);
         XmlCompletionItemCollection items = new XmlCompletionItemCollection();
-        if (XmlParser.IsInsideAttributeValue(textUpToCursor, offset))
+        if (XmlParser.IsInsideAttributeValue(xml: textUpToCursor, index: offset))
         {
-            items = schemas.GetNamespaceCompletion(textUpToCursor);
+            items = schemas.GetNamespaceCompletion(textUpToCursor: textUpToCursor);
             if (items.Count == 0)
             {
                 items = schemas.GetAttributeValueCompletion(
-                    textUpToCursor,
-                    editor.TextArea.Caret.Offset,
-                    defaultSchema
+                    text: textUpToCursor,
+                    offset: editor.TextArea.Caret.Offset,
+                    defaultSchema: defaultSchema
                 );
             }
         }
         else
         {
-            items = schemas.GetAttributeCompletion(textUpToCursor, defaultSchema);
+            items = schemas.GetAttributeCompletion(
+                textUpToCursor: textUpToCursor,
+                defaultSchema: defaultSchema
+            );
             if (items.Count == 0)
             {
-                items = schemas.GetElementCompletion(textUpToCursor, defaultSchema);
+                items = schemas.GetElementCompletion(
+                    textUpToCursor: textUpToCursor,
+                    defaultSchema: defaultSchema
+                );
             }
         }
         return items;
@@ -79,7 +85,7 @@ public class XmlCodeCompletionBinding
         XmlCompletionItemCollection completionItems
     )
     {
-        XmlCompletionItem firstListItem = completionItems[0];
+        XmlCompletionItem firstListItem = completionItems[index: 0];
         if (firstListItem.DataType == XmlCompletionItemType.NamespaceUri)
         {
             completionWindow.Width = double.NaN;
@@ -89,20 +95,32 @@ public class XmlCodeCompletionBinding
     public bool CtrlSpace(OrigamTextEditor editor, char ch)
     {
         int elementStartIndex = XmlParser.GetActiveElementStartIndex(
-            editor.Document.Text,
-            editor.TextArea.Caret.Offset
+            xml: editor.Document.Text,
+            index: editor.TextArea.Caret.Offset
         );
         if (elementStartIndex <= -1)
         {
             return false;
         }
 
-        if (ElementStartsWith("<!", elementStartIndex, editor.Document))
+        if (
+            ElementStartsWith(
+                text: "<!",
+                elementStartIndex: elementStartIndex,
+                document: editor.Document
+            )
+        )
         {
             return false;
         }
 
-        if (ElementStartsWith("<?", elementStartIndex, editor.Document))
+        if (
+            ElementStartsWith(
+                text: "<?",
+                elementStartIndex: elementStartIndex,
+                document: editor.Document
+            )
+        )
         {
             return false;
         }
@@ -110,31 +128,37 @@ public class XmlCodeCompletionBinding
         XmlSchemaCompletion defaultSchema = null;
         if (DefaultSchema != null)
         {
-            TextReader tr = new StringReader(DefaultSchema);
-            defaultSchema = new XmlSchemaCompletion(tr);
+            TextReader tr = new StringReader(s: DefaultSchema);
+            defaultSchema = new XmlSchemaCompletion(reader: tr);
         }
-        XmlCompletionItemCollection completionItems = GetCompletionItems(editor, defaultSchema);
+        XmlCompletionItemCollection completionItems = GetCompletionItems(
+            editor: editor,
+            defaultSchema: defaultSchema
+        );
         if (completionItems.HasItems)
         {
             completionItems.Sort();
             string identifier = XmlParser.GetXmlIdentifierBeforeIndex(
-                editor.Document,
-                editor.TextArea.Caret.Offset
+                document: editor.Document,
+                index: editor.TextArea.Caret.Offset
             );
             completionItems.PreselectionLength = identifier.Length;
-            CompletionWindow completionWindow = new CompletionWindow(editor.TextArea);
-            if (!(char.IsWhiteSpace(ch) || ch == '<'))
+            CompletionWindow completionWindow = new CompletionWindow(textArea: editor.TextArea);
+            if (!(char.IsWhiteSpace(c: ch) || ch == '<'))
             {
                 completionWindow.StartOffset--;
             }
             foreach (var item in completionItems)
             {
-                completionWindow.CompletionList.CompletionData.Add(item);
+                completionWindow.CompletionList.CompletionData.Add(item: item);
             }
             completionWindow.Show();
             if (completionWindow != null)
             {
-                SetCompletionWindowWidth(completionWindow, completionItems);
+                SetCompletionWindowWidth(
+                    completionWindow: completionWindow,
+                    completionItems: completionItems
+                );
             }
             return true;
         }
@@ -143,30 +167,33 @@ public class XmlCodeCompletionBinding
 
     bool ElementStartsWith(string text, int elementStartIndex, ITextSource document)
     {
-        int textLength = Math.Min(text.Length, document.TextLength - elementStartIndex);
+        int textLength = Math.Min(val1: text.Length, val2: document.TextLength - elementStartIndex);
         return document
-            .GetText(elementStartIndex, textLength)
-            .Equals(text, StringComparison.OrdinalIgnoreCase);
+            .GetText(offset: elementStartIndex, length: textLength)
+            .Equals(value: text, comparisonType: StringComparison.OrdinalIgnoreCase);
     }
 
     public bool HandleKeyPressed(OrigamTextEditor editor, char ch)
     {
         //if (char.IsWhiteSpace(ch) || editor.SelectionLength > 0)
         //    return false;
-        if (ignoredChars.Contains(ch))
+        if (ignoredChars.Contains(value: ch))
         {
             return false;
         }
 
         if (
             XmlParser
-                .GetXmlIdentifierBeforeIndex(editor.Document, editor.TextArea.Caret.Offset)
+                .GetXmlIdentifierBeforeIndex(
+                    document: editor.Document,
+                    index: editor.TextArea.Caret.Offset
+                )
                 .Length > 1
         )
         {
             return false;
         }
 
-        return CtrlSpace(editor, ch);
+        return CtrlSpace(editor: editor, ch: ch);
     }
 }

@@ -25,10 +25,14 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.EntityModel;
 
-[SchemaItemDescription("Default Set", "Default Sets", "icon_default-set.png")]
-[HelpTopic("Default+Set+Default")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(
+    name: "Default Set",
+    folderName: "Default Sets",
+    iconName: "icon_default-set.png"
+)]
+[HelpTopic(topic: "Default+Set+Default")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class DataStructureDefaultSet : AbstractSchemaItem
 {
     public const string CategoryConst = "DataStructureDefaultSet";
@@ -36,10 +40,10 @@ public class DataStructureDefaultSet : AbstractSchemaItem
     public DataStructureDefaultSet() { }
 
     public DataStructureDefaultSet(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public DataStructureDefaultSet(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Overriden AbstractDataEntityColumn Members
     public override string ItemType => CategoryConst;
@@ -51,9 +55,9 @@ public class DataStructureDefaultSet : AbstractSchemaItem
     public override T NewItem<T>(Guid schemaExtensionId, SchemaItemGroup group)
     {
         return base.NewItem<T>(
-            schemaExtensionId,
-            group,
-            typeof(T) == typeof(DataStructureDefaultSetDefault)
+            schemaExtensionId: schemaExtensionId,
+            group: group,
+            itemName: typeof(T) == typeof(DataStructureDefaultSetDefault)
                 ? "NewDataStructureDefaultSetDefault"
                 : null
         );

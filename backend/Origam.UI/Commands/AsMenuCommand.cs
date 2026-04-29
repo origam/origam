@@ -37,14 +37,14 @@ public class AsMenuCommand : ToolStripMenuItem, IStatusUpdate, IDisposable
     }
 
     public AsMenuCommand(string label)
-        : base(label)
+        : base(text: label)
     {
         this.Description = label;
         DefaultImageScaling();
     }
 
     public AsMenuCommand(string label, object caller)
-        : base(label)
+        : base(text: label)
     {
         this.Description = label;
         this.caller = caller;
@@ -52,7 +52,7 @@ public class AsMenuCommand : ToolStripMenuItem, IStatusUpdate, IDisposable
     }
 
     public AsMenuCommand(string label, ICommand menuCommand)
-        : base(label)
+        : base(text: label)
     {
         this.Description = label;
         this.Command = menuCommand;
@@ -60,7 +60,7 @@ public class AsMenuCommand : ToolStripMenuItem, IStatusUpdate, IDisposable
     }
 
     public AsMenuCommand(AsMenuCommand other)
-        : base(other.Description)
+        : base(text: other.Description)
     {
         this.Description = other.Description;
         this.caller = other.caller;
@@ -69,7 +69,7 @@ public class AsMenuCommand : ToolStripMenuItem, IStatusUpdate, IDisposable
         this.Image = other.Image;
         this.ShortcutKeys = other.ShortcutKeys;
         DefaultImageScaling();
-        ShareAllEventHandlers(other);
+        ShareAllEventHandlers(other: other);
     }
 
     private void DefaultImageScaling()
@@ -84,11 +84,11 @@ public class AsMenuCommand : ToolStripMenuItem, IStatusUpdate, IDisposable
     private void ShareAllEventHandlers(AsMenuCommand other)
     {
         var eventsField = typeof(Component).GetField(
-            "events",
-            BindingFlags.NonPublic | BindingFlags.Instance
+            name: "events",
+            bindingAttr: BindingFlags.NonPublic | BindingFlags.Instance
         );
-        var eventHandlerList = eventsField.GetValue(other);
-        eventsField.SetValue(this, eventHandlerList);
+        var eventHandlerList = eventsField.GetValue(obj: other);
+        eventsField.SetValue(obj: this, value: eventHandlerList);
     }
 
     public List<object> SubItems { get; } = new();
@@ -125,7 +125,7 @@ public class AsMenuCommand : ToolStripMenuItem, IStatusUpdate, IDisposable
             this.DropDownItems.Clear();
             foreach (object item in SubItems)
             {
-                PopulateMenu(item);
+                PopulateMenu(item: item);
             }
             this.Enabled = (DropDownItems.Count != 0);
         }
@@ -135,21 +135,21 @@ public class AsMenuCommand : ToolStripMenuItem, IStatusUpdate, IDisposable
     {
         if (DropDownItems.Count == 1)
         {
-            if (DropDownItems[0] is SubmenuBuilderPlaceholder builderPlaceholder)
+            if (DropDownItems[index: 0] is SubmenuBuilderPlaceholder builderPlaceholder)
             {
-                this.DropDownItems.RemoveAt(0);
-                PopulateBuilder(builderPlaceholder.Builder);
+                this.DropDownItems.RemoveAt(index: 0);
+                PopulateBuilder(builder: builderPlaceholder.Builder);
             }
         }
-        base.OnDropDownShow(e);
+        base.OnDropDownShow(e: e);
     }
 
     private void PopulateBuilder(ISubmenuBuilder builder)
     {
-        ToolStripMenuItem[] submenu = builder.BuildSubmenu(caller);
+        ToolStripMenuItem[] submenu = builder.BuildSubmenu(owner: caller);
         foreach (var subItem in submenu)
         {
-            PopulateMenu(subItem);
+            PopulateMenu(item: subItem);
         }
     }
 
@@ -161,12 +161,14 @@ public class AsMenuCommand : ToolStripMenuItem, IStatusUpdate, IDisposable
             {
                 if (submenuBuilder.HasItems())
                 {
-                    DropDownItems.Add(new SubmenuBuilderPlaceholder(submenuBuilder));
+                    DropDownItems.Add(
+                        value: new SubmenuBuilderPlaceholder(builder: submenuBuilder)
+                    );
                 }
             }
             else
             {
-                PopulateBuilder(submenuBuilder);
+                PopulateBuilder(builder: submenuBuilder);
             }
         }
         else
@@ -175,7 +177,7 @@ public class AsMenuCommand : ToolStripMenuItem, IStatusUpdate, IDisposable
             {
                 update.UpdateItemsToDisplay();
             }
-            DropDownItems.Add((ToolStripItem)item);
+            DropDownItems.Add(value: (ToolStripItem)item);
         }
     }
     #endregion

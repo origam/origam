@@ -54,7 +54,7 @@ public class DataLookupService : IDataLookupService
 {
     public const string SCHEMA_LOOKUP_ID = "3396e71f-6ee9-4c1d-8fad-739822c8df96";
     private static readonly ILog log = LogManager.GetLogger(
-        System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
+        type: System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
     );
 
     private enum QueryType
@@ -84,7 +84,11 @@ public class DataLookupService : IDataLookupService
 
     public DataView GetList(Guid lookupId, string transactionId)
     {
-        return GetList(lookupId, new Dictionary<string, object>(), transactionId);
+        return GetList(
+            lookupId: lookupId,
+            parameters: new Dictionary<string, object>(),
+            transactionId: transactionId
+        );
     }
 
     public DataView GetList(
@@ -94,27 +98,35 @@ public class DataLookupService : IDataLookupService
     )
     {
         IServiceAgent dataServiceAgent = GetAgent();
-        DataServiceDataLookup lookup = GetLookup(lookupId) as DataServiceDataLookup;
-        DataStructureQuery query = GetQuery(lookup, QueryType.List);
+        DataServiceDataLookup lookup = GetLookup(lookupId: lookupId) as DataServiceDataLookup;
+        DataStructureQuery query = GetQuery(lookup: lookup, queryType: QueryType.List);
         foreach (var entry in parameters)
         {
-            query.Parameters.Add(new QueryParameter(entry.Key, entry.Value));
+            query.Parameters.Add(
+                value: new QueryParameter(_parameterName: entry.Key, value: entry.Value)
+            );
         }
         dataServiceAgent.TransactionId = transactionId;
         dataServiceAgent.MethodName = "LoadDataByQuery";
         dataServiceAgent.Parameters.Clear();
-        dataServiceAgent.Parameters.Add("Query", query);
+        dataServiceAgent.Parameters.Add(key: "Query", value: query);
         dataServiceAgent.Run();
         DataSet data = dataServiceAgent.Result as DataSet;
-        DataView view = new DataView(data.Tables[0]);
-        PostProcessLookupList(lookup, view.Table);
+        DataView view = new DataView(table: data.Tables[index: 0]);
+        PostProcessLookupList(lookup: lookup, lookupTable: view.Table);
         view.Table.AcceptChanges();
         return view;
     }
 
     public object GetDisplayText(Guid lookupId, object lookupValue, string transactionId)
     {
-        return GetDisplayText(lookupId, lookupValue, true, true, transactionId);
+        return GetDisplayText(
+            lookupId: lookupId,
+            lookupValue: lookupValue,
+            useCache: true,
+            returnMessageIfNull: true,
+            transactionId: transactionId
+        );
     }
 
     public object GetDisplayText(
@@ -130,17 +142,23 @@ public class DataLookupService : IDataLookupService
             return "";
         }
         var parameters = new Dictionary<string, object>();
-        DataServiceDataLookup lookup = GetLookup(lookupId) as DataServiceDataLookup;
+        DataServiceDataLookup lookup = GetLookup(lookupId: lookupId) as DataServiceDataLookup;
         if (lookup.ValueMethod != null)
         {
             var keys = lookup.ValueMethod.ParameterReferences.Keys;
             foreach (string parameterName in keys)
             {
-                parameters.Add(parameterName, lookupValue);
+                parameters.Add(key: parameterName, value: lookupValue);
             }
         }
 
-        return GetDisplayText(lookupId, parameters, useCache, returnMessageIfNull, transactionId);
+        return GetDisplayText(
+            lookupId: lookupId,
+            parameters: parameters,
+            useCache: useCache,
+            returnMessageIfNull: returnMessageIfNull,
+            transactionId: transactionId
+        );
     }
 
     public object GetDisplayText(
@@ -154,52 +172,62 @@ public class DataLookupService : IDataLookupService
         string internalTransactionId = transactionId;
         if (parameters == null)
         {
-            throw new NullReferenceException(ResourceUtils.GetString("ErrorParametersNull"));
+            throw new NullReferenceException(
+                message: ResourceUtils.GetString(key: "ErrorParametersNull")
+            );
         }
 
         bool canUseCache = (parameters.Count == 1 & useCache);
         object cachableValue = null;
         object val = null;
-        DataServiceDataLookup lookup = GetLookup(lookupId) as DataServiceDataLookup;
+        DataServiceDataLookup lookup = GetLookup(lookupId: lookupId) as DataServiceDataLookup;
         if (canUseCache)
         {
             foreach (var entry in parameters)
             {
                 cachableValue = entry.Value;
             }
-            if (_valueCache.ContainsKey(lookupId))
+            if (_valueCache.ContainsKey(key: lookupId))
             {
-                Hashtable cache = _valueCache[lookupId] as Hashtable;
-                if (cache.ContainsKey(cachableValue))
+                Hashtable cache = _valueCache[key: lookupId] as Hashtable;
+                if (cache.ContainsKey(key: cachableValue))
                 {
-                    return cache[cachableValue];
+                    return cache[key: cachableValue];
                 }
             }
             else
             {
                 lock (_valueCache)
                 {
-                    _valueCache.Add(lookupId, new Hashtable());
+                    _valueCache.Add(key: lookupId, value: new Hashtable());
                     OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
 
                     // fill cache with all values
                     if (settings.UseProgressiveCaching)
                     {
                         IServiceAgent dataServiceAgent = GetAgent();
-                        DataStructureQuery cacheQuery = GetQuery(lookup, QueryType.ValueCacheList);
+                        DataStructureQuery cacheQuery = GetQuery(
+                            lookup: lookup,
+                            queryType: QueryType.ValueCacheList
+                        );
                         dataServiceAgent.MethodName = "LoadDataByQuery";
                         dataServiceAgent.Parameters.Clear();
-                        dataServiceAgent.Parameters.Add("Query", cacheQuery);
+                        dataServiceAgent.Parameters.Add(key: "Query", value: cacheQuery);
                         dataServiceAgent.TransactionId = internalTransactionId;
                         dataServiceAgent.Run();
                         DataSet data = dataServiceAgent.Result as DataSet;
-                        string[] columns = lookup.ValueDisplayMember.Split(";".ToCharArray());
-                        foreach (DataRow row in data.Tables[0].Rows)
+                        string[] columns = lookup.ValueDisplayMember.Split(
+                            separator: ";".ToCharArray()
+                        );
+                        foreach (DataRow row in data.Tables[index: 0].Rows)
                         {
-                            object currentVal = ValueFromRow(row, columns);
-                            object id = row[lookup.ValueValueMember];
-                            (_valueCache[lookupId] as Hashtable).Add(id, currentVal);
-                            if (id.Equals(cachableValue))
+                            object currentVal = ValueFromRow(row: row, columns: columns);
+                            object id = row[columnName: lookup.ValueValueMember];
+                            (_valueCache[key: lookupId] as Hashtable).Add(
+                                key: id,
+                                value: currentVal
+                            );
+                            if (id.Equals(obj: cachableValue))
                             {
                                 val = currentVal;
                             }
@@ -212,37 +240,39 @@ public class DataLookupService : IDataLookupService
                 }
             }
         }
-        if (lookup.ValueDisplayMember.IndexOf(".") > -1)
+        if (lookup.ValueDisplayMember.IndexOf(value: ".") > -1)
         {
             return "wrong display member";
         }
 
-        DataStructureQuery query = GetQuery(lookup, QueryType.Value);
+        DataStructureQuery query = GetQuery(lookup: lookup, queryType: QueryType.Value);
         //if(lookup.ValueFilterSet == null) throw new NullReferenceException("ValueFilterSet cannot be null. Cannot get display text for lookup '" + lookup.Name + "'");
         foreach (var parameter in parameters)
         {
-            query.Parameters.Add(new QueryParameter(parameter.Key, parameter.Value));
+            query.Parameters.Add(
+                value: new QueryParameter(_parameterName: parameter.Key, value: parameter.Value)
+            );
         }
         bool error = false;
         try
         {
-            if (lookup.ValueDisplayMember.IndexOf(";") > 0)
+            if (lookup.ValueDisplayMember.IndexOf(value: ";") > 0)
             {
                 IServiceAgent dataServiceAgent = GetAgent();
                 dataServiceAgent.MethodName = "LoadDataByQuery";
                 dataServiceAgent.Parameters.Clear();
-                dataServiceAgent.Parameters.Add("Query", query);
+                dataServiceAgent.Parameters.Add(key: "Query", value: query);
                 dataServiceAgent.TransactionId = internalTransactionId;
                 dataServiceAgent.Run();
                 DataSet data = dataServiceAgent.Result as DataSet;
-                string[] columns = lookup.ValueDisplayMember.Split(";".ToCharArray());
-                if (data.Tables[0].Rows.Count == 0)
+                string[] columns = lookup.ValueDisplayMember.Split(separator: ";".ToCharArray());
+                if (data.Tables[index: 0].Rows.Count == 0)
                 {
                     val = null;
                 }
                 else
                 {
-                    val = ValueFromRow(data.Tables[0].Rows[0], columns);
+                    val = ValueFromRow(row: data.Tables[index: 0].Rows[index: 0], columns: columns);
                 }
             }
             else
@@ -250,8 +280,11 @@ public class DataLookupService : IDataLookupService
                 IServiceAgent dataServiceAgent = GetAgent();
                 dataServiceAgent.MethodName = "GetScalarValueByQuery";
                 dataServiceAgent.Parameters.Clear();
-                dataServiceAgent.Parameters.Add("Query", query);
-                dataServiceAgent.Parameters.Add("ColumnName", lookup.ValueDisplayMember);
+                dataServiceAgent.Parameters.Add(key: "Query", value: query);
+                dataServiceAgent.Parameters.Add(
+                    key: "ColumnName",
+                    value: lookup.ValueDisplayMember
+                );
                 dataServiceAgent.TransactionId = internalTransactionId;
                 dataServiceAgent.Run();
                 object result = dataServiceAgent.Result;
@@ -280,8 +313,11 @@ public class DataLookupService : IDataLookupService
             else
             {
                 throw new OrigamException(
-                    ResourceUtils.GetString("ErrorGetLookupText", lookupId.ToString()),
-                    ex
+                    message: ResourceUtils.GetString(
+                        key: "ErrorGetLookupText",
+                        args: lookupId.ToString()
+                    ),
+                    innerException: ex
                 );
             }
         }
@@ -303,11 +339,14 @@ public class DataLookupService : IDataLookupService
         {
             if (canUseCache & error == false)
             {
-                if (!(_valueCache[lookupId] as Hashtable).Contains(cachableValue))
+                if (!(_valueCache[key: lookupId] as Hashtable).Contains(key: cachableValue))
                 {
-                    lock (_valueCache[lookupId])
+                    lock (_valueCache[key: lookupId])
                     {
-                        (_valueCache[lookupId] as Hashtable).Add(cachableValue, val);
+                        (_valueCache[key: lookupId] as Hashtable).Add(
+                            key: cachableValue,
+                            value: val
+                        );
                     }
                 }
             }
@@ -320,12 +359,12 @@ public class DataLookupService : IDataLookupService
         StringBuilder resultBuilder = new StringBuilder();
         foreach (string column in columns)
         {
-            object columnValue = row[column];
+            object columnValue = row[columnName: column];
             if (columnValue != DBNull.Value && columnValue.ToString() != "")
             {
                 if (resultBuilder.Length > 0)
                 {
-                    resultBuilder.Append(", ");
+                    resultBuilder.Append(value: ", ");
                 }
                 DateTime dateValue = DateTime.MinValue;
                 if (columnValue is DateTime)
@@ -338,11 +377,11 @@ public class DataLookupService : IDataLookupService
                     && (dateValue.Hour == 0 & dateValue.Minute == 0 & dateValue.Second == 0)
                 )
                 {
-                    resultBuilder.Append(dateValue.ToShortDateString());
+                    resultBuilder.Append(value: dateValue.ToShortDateString());
                 }
                 else
                 {
-                    resultBuilder.Append(columnValue.ToString());
+                    resultBuilder.Append(value: columnValue.ToString());
                 }
             }
         }
@@ -352,8 +391,8 @@ public class DataLookupService : IDataLookupService
     public object LinkTarget(ILookupControl lookupControl, object value)
     {
         DataLookupMenuBinding binding = GetMenuBindingElement(
-            GetLookup(lookupControl.LookupId),
-            value
+            lookup: GetLookup(lookupId: lookupControl.LookupId),
+            value: value
         );
         if (binding != null)
         {
@@ -374,7 +413,7 @@ public class DataLookupService : IDataLookupService
                 FormReferenceMenuItem formRef = menu as FormReferenceMenuItem;
                 if (formRef.RecordEditMethod == null)
                 {
-                    result.Add("Id", value);
+                    result.Add(key: "Id", value: value);
                 }
                 else
                 {
@@ -384,7 +423,7 @@ public class DataLookupService : IDataLookupService
                             .ParameterReferences
                     )
                     {
-                        result.Add(entry.Key, value);
+                        result.Add(key: entry.Key, value: value);
                     }
                 }
             }
@@ -396,9 +435,9 @@ public class DataLookupService : IDataLookupService
     private IServiceAgent GetAgent()
     {
         return (
-            ServiceManager.Services.GetService(typeof(IBusinessServicesService))
+            ServiceManager.Services.GetService(serviceType: typeof(IBusinessServicesService))
             as IBusinessServicesService
-        ).GetAgent("DataService", null, null);
+        ).GetAgent(serviceType: "DataService", ruleEngine: null, workflowEngine: null);
     }
 
     /// <summary>
@@ -408,16 +447,22 @@ public class DataLookupService : IDataLookupService
     /// <returns></returns>
     public AbstractDataLookup GetLookup(Guid lookupId)
     {
-        ModelElementKey key = new ModelElementKey(lookupId);
+        ModelElementKey key = new ModelElementKey(id: lookupId);
         IPersistenceService persistence =
-            ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+            ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+            as IPersistenceService;
         AbstractDataLookup lookup =
-            persistence.SchemaProvider.RetrieveInstance(typeof(AbstractDataLookup), key)
-            as AbstractDataLookup;
+            persistence.SchemaProvider.RetrieveInstance(
+                type: typeof(AbstractDataLookup),
+                primaryKey: key
+            ) as AbstractDataLookup;
         if (lookup == null)
         {
             throw new OrigamException(
-                string.Format("Couldn't find a lookup with id {0}.", lookupId)
+                message: string.Format(
+                    format: "Couldn't find a lookup with id {0}.",
+                    arg0: lookupId
+                )
             );
         }
         return lookup;
@@ -433,33 +478,35 @@ public class DataLookupService : IDataLookupService
                 case QueryType.List:
                 {
                     return new DataStructureQuery(
-                        dataLookup.ListDataStructureId,
-                        dataLookup.ListDataStructureMethodId,
-                        Guid.Empty,
-                        dataLookup.ListDataStructureSortSetId
+                        dataStructureId: dataLookup.ListDataStructureId,
+                        methodId: dataLookup.ListDataStructureMethodId,
+                        defaultSetId: Guid.Empty,
+                        sortSetId: dataLookup.ListDataStructureSortSetId
                     );
                 }
                 case QueryType.Value:
                 {
                     if (dataLookup.ValueDataStructureMethodId == null)
                     {
-                        log.Warn("DataLookup has no ValueDataStructureMethodId !!");
+                        log.Warn(message: "DataLookup has no ValueDataStructureMethodId !!");
                     }
                     return new DataStructureQuery(
-                        dataLookup.ValueDataStructureId,
-                        dataLookup.ValueDataStructureMethodId,
-                        Guid.Empty,
-                        dataLookup.ValueDataStructureSortSetId
+                        dataStructureId: dataLookup.ValueDataStructureId,
+                        methodId: dataLookup.ValueDataStructureMethodId,
+                        defaultSetId: Guid.Empty,
+                        sortSetId: dataLookup.ValueDataStructureSortSetId
                     );
                 }
 
                 case QueryType.ValueCacheList:
                 {
-                    return new DataStructureQuery(dataLookup.ValueDataStructureId);
+                    return new DataStructureQuery(dataStructureId: dataLookup.ValueDataStructureId);
                 }
             }
         }
-        throw new ArgumentOutOfRangeException(ResourceUtils.GetString("ErrorUnknownLookupType"));
+        throw new ArgumentOutOfRangeException(
+            paramName: ResourceUtils.GetString(key: "ErrorUnknownLookupType")
+        );
     }
 
     private bool HasEditListMenuBinding(AbstractDataLookup lookup)
@@ -472,7 +519,11 @@ public class DataLookupService : IDataLookupService
         {
             if (
                 binding.SelectionLookup == null
-                && AuthorizeMenuBinding(authorizationProvider, principal, binding)
+                && AuthorizeMenuBinding(
+                    authorizationProvider: authorizationProvider,
+                    principal: principal,
+                    binding: binding
+                )
             )
             {
                 return true;
@@ -489,9 +540,9 @@ public class DataLookupService : IDataLookupService
         {
             if (
                 AuthorizeMenuBinding(
-                    authorizationProvider,
-                    SecurityManager.CurrentPrincipal,
-                    binding
+                    authorizationProvider: authorizationProvider,
+                    principal: SecurityManager.CurrentPrincipal,
+                    binding: binding
                 )
             )
             {
@@ -511,7 +562,11 @@ public class DataLookupService : IDataLookupService
         {
             if (
                 binding.SelectionLookup != null
-                && AuthorizeMenuBinding(authorizationProvider, principal, binding)
+                && AuthorizeMenuBinding(
+                    authorizationProvider: authorizationProvider,
+                    principal: principal,
+                    binding: binding
+                )
             )
             {
                 return true;
@@ -523,38 +578,43 @@ public class DataLookupService : IDataLookupService
     public bool HasMenuBindingWithSelection(Guid lookupId)
     {
         IPersistenceService ps =
-            ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+            ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+            as IPersistenceService;
         AbstractDataLookup lookup = (AbstractDataLookup)
             ps.SchemaProvider.RetrieveInstance(
-                typeof(AbstractDataLookup),
-                new ModelElementKey(lookupId)
+                type: typeof(AbstractDataLookup),
+                primaryKey: new ModelElementKey(id: lookupId)
             );
-        return HasMenuBindingWithSelection(lookup);
+        return HasMenuBindingWithSelection(lookup: lookup);
     }
 
     public IMenuBindingResult GetMenuBinding(Guid lookupId, object value)
     {
         IPersistenceService ps =
-            ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+            ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+            as IPersistenceService;
         AbstractDataLookup lookup = (AbstractDataLookup)
             ps.SchemaProvider.RetrieveInstance(
-                typeof(AbstractDataLookup),
-                new ModelElementKey(lookupId)
+                type: typeof(AbstractDataLookup),
+                primaryKey: new ModelElementKey(id: lookupId)
             );
-        DataLookupMenuBinding binding = GetMenuBindingElement(lookup, value);
+        DataLookupMenuBinding binding = GetMenuBindingElement(lookup: lookup, value: value);
         if (binding == null)
         {
             return new MenuBindingResult();
         }
 
-        return new MenuBindingResult(binding.MenuItemId.ToString(), binding.SelectionPanelId);
+        return new MenuBindingResult(
+            menuId: binding.MenuItemId.ToString(),
+            panelId: binding.SelectionPanelId
+        );
     }
 
     public NewRecordScreenBinding GetNewRecordScreenBinding(AbstractDataLookup lookup)
     {
         return lookup
             .ChildItems.OfType<NewRecordScreenBinding>()
-            .FirstOrDefault(x => x.IsAvailable);
+            .FirstOrDefault(predicate: x => x.IsAvailable);
     }
 
     public DataLookupMenuBinding GetMenuBindingElement(AbstractDataLookup lookup, object value)
@@ -572,7 +632,11 @@ public class DataLookupService : IDataLookupService
             if (
                 value == null
                 && binding.SelectionLookup == null
-                && AuthorizeMenuBinding(authorizationProvider, principal, binding)
+                && AuthorizeMenuBinding(
+                    authorizationProvider: authorizationProvider,
+                    principal: principal,
+                    binding: binding
+                )
             )
             {
                 return binding;
@@ -580,9 +644,13 @@ public class DataLookupService : IDataLookupService
             // get record - without selection
 
             if (
-                HasMenuBindingWithSelection(lookup) == false
+                HasMenuBindingWithSelection(lookup: lookup) == false
                 && binding.SelectionLookup == null
-                && AuthorizeMenuBinding(authorizationProvider, principal, binding)
+                && AuthorizeMenuBinding(
+                    authorizationProvider: authorizationProvider,
+                    principal: principal,
+                    binding: binding
+                )
             )
             {
                 return binding;
@@ -592,27 +660,31 @@ public class DataLookupService : IDataLookupService
             if (
                 value != null
                 && binding.SelectionLookup != null
-                && AuthorizeMenuBinding(authorizationProvider, principal, binding)
+                && AuthorizeMenuBinding(
+                    authorizationProvider: authorizationProvider,
+                    principal: principal,
+                    binding: binding
+                )
             )
             {
-                if (!selectionCache.Contains(binding.SelectionLookupId))
+                if (!selectionCache.Contains(key: binding.SelectionLookupId))
                 {
-                    selectionCache[binding.SelectionLookupId] = GetDisplayText(
-                        binding.SelectionLookupId,
-                        value,
-                        false,
-                        false,
-                        null
+                    selectionCache[key: binding.SelectionLookupId] = GetDisplayText(
+                        lookupId: binding.SelectionLookupId,
+                        lookupValue: value,
+                        useCache: false,
+                        returnMessageIfNull: false,
+                        transactionId: null
                     );
                 }
                 IParameterService paramService =
-                    ServiceManager.Services.GetService(typeof(IParameterService))
+                    ServiceManager.Services.GetService(serviceType: typeof(IParameterService))
                     as IParameterService;
 
                 if (binding.SelectionConstant == null)
                 {
                     // if anything was found by the lookup, this is the right menu
-                    if (selectionCache[binding.SelectionLookupId] != null)
+                    if (selectionCache[key: binding.SelectionLookupId] != null)
                     {
                         return binding;
                     }
@@ -620,10 +692,12 @@ public class DataLookupService : IDataLookupService
                 else
                 {
                     // if specific value was found by the lookup, this is the right menu
-                    object paramValue = paramService.GetParameterValue(binding.SelectionConstantId);
+                    object paramValue = paramService.GetParameterValue(
+                        id: binding.SelectionConstantId
+                    );
                     if (
-                        selectionCache[binding.SelectionLookupId] != null
-                        && selectionCache[binding.SelectionLookupId].Equals(paramValue)
+                        selectionCache[key: binding.SelectionLookupId] != null
+                        && selectionCache[key: binding.SelectionLookupId].Equals(obj: paramValue)
                     )
                     {
                         return binding;
@@ -641,11 +715,18 @@ public class DataLookupService : IDataLookupService
     )
     {
         IParameterService param =
-            ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
+            ServiceManager.Services.GetService(serviceType: typeof(IParameterService))
+            as IParameterService;
         return (
-            authorizationProvider.Authorize(principal, binding.AuthorizationContext)
-            && authorizationProvider.Authorize(principal, binding.MenuItem.AuthorizationContext)
-            && param.IsFeatureOn(binding.MenuItem.Features)
+            authorizationProvider.Authorize(
+                principal: principal,
+                context: binding.AuthorizationContext
+            )
+            && authorizationProvider.Authorize(
+                principal: principal,
+                context: binding.MenuItem.AuthorizationContext
+            )
+            && param.IsFeatureOn(featureCode: binding.MenuItem.Features)
         );
     }
     #endregion
@@ -653,25 +734,32 @@ public class DataLookupService : IDataLookupService
     private void lookupControl_LookupDisplayTextRequested(object sender, EventArgs e)
     {
         ILookupControl control = sender as ILookupControl;
-        control.LookupDisplayText = GetDisplayText(control.LookupId, control.LookupValue, null)
+        control.LookupDisplayText = GetDisplayText(
+                lookupId: control.LookupId,
+                lookupValue: control.LookupValue,
+                transactionId: null
+            )
             .ToString();
     }
 
     public DataTable GetList(LookupListRequest request)
     {
-        DataServiceDataLookup lookup = GetLookup(request.LookupId) as DataServiceDataLookup;
-        DataStructureQuery query = GetQuery(lookup, QueryType.List);
+        DataServiceDataLookup lookup =
+            GetLookup(lookupId: request.LookupId) as DataServiceDataLookup;
+        DataStructureQuery query = GetQuery(lookup: lookup, queryType: QueryType.List);
         if (request.CurrentRow != null)
         {
             // set parameters
             foreach (
                 DictionaryEntry entry in DatasetTools.RetrieveParameters(
-                    request.ParameterMappings,
-                    new List<DataRow> { request.CurrentRow }
+                    parameterMappings: request.ParameterMappings,
+                    rows: new List<DataRow> { request.CurrentRow }
                 )
             )
             {
-                query.Parameters.Add(new QueryParameter((string)entry.Key, entry.Value));
+                query.Parameters.Add(
+                    value: new QueryParameter(_parameterName: (string)entry.Key, value: entry.Value)
+                );
             }
         }
         if (lookup.IsFilteredServerside)
@@ -679,43 +767,55 @@ public class DataLookupService : IDataLookupService
             if (lookup.ListMethod == null)
             {
                 throw new ArgumentNullException(
-                    "ListMethod",
-                    "Lookup is defined as IsFilteredServerside but ListMethod is not set."
+                    paramName: "ListMethod",
+                    message: "Lookup is defined as IsFilteredServerside but ListMethod is not set."
                 );
             }
             if (lookup.ServersideFilterParameter == null)
             {
                 throw new ArgumentNullException(
-                    "ServersideFilterParameter",
-                    "Lookup is defined as IsFilteredServerside but ServersideFilterParameter is not set."
+                    paramName: "ServersideFilterParameter",
+                    message: "Lookup is defined as IsFilteredServerside but ServersideFilterParameter is not set."
                 );
             }
             query.Parameters.Add(
-                new QueryParameter(lookup.ServersideFilterParameter, request.SearchText)
+                value: new QueryParameter(
+                    _parameterName: lookup.ServersideFilterParameter,
+                    value: request.SearchText
+                )
             );
             if (request.PageNumber != -1)
             {
-                query.Parameters.Add(new QueryParameter("_pageSize", request.PageSize));
-                query.Parameters.Add(new QueryParameter("_pageNumber", request.PageNumber));
+                query.Parameters.Add(
+                    value: new QueryParameter(_parameterName: "_pageSize", value: request.PageSize)
+                );
+                query.Parameters.Add(
+                    value: new QueryParameter(
+                        _parameterName: "_pageNumber",
+                        value: request.PageNumber
+                    )
+                );
             }
         }
         IServiceAgent dataServiceAgent = GetAgent();
         dataServiceAgent.TransactionId = request.TransactionId;
         dataServiceAgent.MethodName = "LoadDataByQuery";
         dataServiceAgent.Parameters.Clear();
-        dataServiceAgent.Parameters.Add("Query", query);
+        dataServiceAgent.Parameters.Add(key: "Query", value: query);
         dataServiceAgent.Run();
         DataSet data = dataServiceAgent.Result as DataSet;
-        DataTable lookupTable = data.Tables[0];
+        DataTable lookupTable = data.Tables[index: 0];
         IStateMachineService stateMachine =
-            ServiceManager.Services.GetService(typeof(IStateMachineService))
+            ServiceManager.Services.GetService(serviceType: typeof(IStateMachineService))
             as IStateMachineService;
         object originalValue = DBNull.Value;
         if (request.CurrentRow != null) // only go to state machine evaluation, if the control can give us current row context
         {
-            Guid entityId = (Guid)request.CurrentRow.Table.ExtendedProperties["EntityId"];
+            Guid entityId = (Guid)request.CurrentRow.Table.ExtendedProperties[key: "EntityId"];
             Guid fieldId = (Guid)
-                request.CurrentRow.Table.Columns[request.FieldName].ExtendedProperties["Id"];
+                request.CurrentRow.Table.Columns[name: request.FieldName].ExtendedProperties[
+                    key: "Id"
+                ];
             switch (request.CurrentRow.RowState)
             {
                 case DataRowState.Detached:
@@ -728,33 +828,39 @@ public class DataLookupService : IDataLookupService
                 }
                 case DataRowState.Modified:
                 {
-                    originalValue = request.CurrentRow[request.FieldName, DataRowVersion.Original];
+                    originalValue = request.CurrentRow[
+                        columnName: request.FieldName,
+                        version: DataRowVersion.Original
+                    ];
                     break;
                 }
 
                 default:
                 {
-                    originalValue = request.CurrentRow[request.FieldName, DataRowVersion.Current];
+                    originalValue = request.CurrentRow[
+                        columnName: request.FieldName,
+                        version: DataRowVersion.Current
+                    ];
                     break;
                 }
             }
             object[] allowedStates = stateMachine.AllowedStateValues(
-                entityId,
-                fieldId,
-                originalValue,
-                request.CurrentRow,
-                null
+                entityId: entityId,
+                fieldId: fieldId,
+                currentStateValue: originalValue,
+                dataRow: request.CurrentRow,
+                transactionId: null
             );
             if (allowedStates != null)
             {
                 // this is a state machine, so we remove all non-allowed states from the list
                 foreach (DataRow row in lookupTable.Rows)
                 {
-                    object rowValue = row[lookup.ListValueMember];
+                    object rowValue = row[columnName: lookup.ListValueMember];
                     bool found = false;
                     foreach (object allowedValue in allowedStates)
                     {
-                        if (allowedValue.Equals(rowValue))
+                        if (allowedValue.Equals(obj: rowValue))
                         {
                             found = true;
                             break;
@@ -767,7 +873,7 @@ public class DataLookupService : IDataLookupService
                 }
             }
         }
-        PostProcessLookupList(lookup, lookupTable);
+        PostProcessLookupList(lookup: lookup, lookupTable: lookupTable);
         // filter unique values
         if (request.ShowUniqueValues)
         {
@@ -778,9 +884,12 @@ public class DataLookupService : IDataLookupService
                     if (
                         request
                             .CurrentRow.Table.Select(
-                                request.FieldName + "= '" + row[lookup.ValueValueMember] + "'"
+                                filterExpression: request.FieldName
+                                    + "= '"
+                                    + row[columnName: lookup.ValueValueMember]
+                                    + "'"
                             )
-                            .GetLength(0) > 0
+                            .GetLength(dimension: 0) > 0
                     )
                     {
                         row.Delete();
@@ -797,23 +906,23 @@ public class DataLookupService : IDataLookupService
         // filter roles
         if (lookup.RoleFilterMember != "" & lookup.RoleFilterMember != null)
         {
-            if (!lookupTable.Columns.Contains(lookup.RoleFilterMember))
+            if (!lookupTable.Columns.Contains(name: lookup.RoleFilterMember))
             {
                 throw new ArgumentOutOfRangeException(
-                    "RoleFilterMember",
-                    lookup.RoleFilterMember,
-                    ResourceUtils.GetString("ErrorNoSuchColumn")
+                    paramName: "RoleFilterMember",
+                    actualValue: lookup.RoleFilterMember,
+                    message: ResourceUtils.GetString(key: "ErrorNoSuchColumn")
                 );
             }
             IOrigamAuthorizationProvider authorizationProvider =
                 SecurityManager.GetAuthorizationProvider();
             foreach (DataRow row in lookupTable.Rows)
             {
-                object context = row[lookup.RoleFilterMember];
+                object context = row[columnName: lookup.RoleFilterMember];
                 if (
                     !authorizationProvider.Authorize(
-                        SecurityManager.CurrentPrincipal,
-                        context == DBNull.Value ? null : (string)context
+                        principal: SecurityManager.CurrentPrincipal,
+                        context: context == DBNull.Value ? null : (string)context
                     )
                 )
                 {
@@ -824,19 +933,20 @@ public class DataLookupService : IDataLookupService
         // filter features
         if (lookup.FeatureFilterMember != "" & lookup.FeatureFilterMember != null)
         {
-            if (!lookupTable.Columns.Contains(lookup.FeatureFilterMember))
+            if (!lookupTable.Columns.Contains(name: lookup.FeatureFilterMember))
             {
                 throw new ArgumentOutOfRangeException(
-                    "FeatureFilterMember",
-                    lookup.FeatureFilterMember,
-                    ResourceUtils.GetString("ErrorNoSuchColumn")
+                    paramName: "FeatureFilterMember",
+                    actualValue: lookup.FeatureFilterMember,
+                    message: ResourceUtils.GetString(key: "ErrorNoSuchColumn")
                 );
             }
             IParameterService param =
-                ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
+                ServiceManager.Services.GetService(serviceType: typeof(IParameterService))
+                as IParameterService;
             foreach (DataRow row in lookupTable.Rows)
             {
-                if (!param.IsFeatureOn(lookup.FeatureFilterMember))
+                if (!param.IsFeatureOn(featureCode: lookup.FeatureFilterMember))
                 {
                     row.Delete();
                 }
@@ -851,15 +961,17 @@ public class DataLookupService : IDataLookupService
         if (!settings.UseProgressiveCaching)
         {
             // clear cache
-            if (_valueCache.ContainsKey(control.LookupId))
+            if (_valueCache.ContainsKey(key: control.LookupId))
             {
-                _valueCache.Remove(control.LookupId);
+                _valueCache.Remove(key: control.LookupId);
             }
             // refresh current text
-            lookupControl_LookupDisplayTextRequested(sender, e);
+            lookupControl_LookupDisplayTextRequested(sender: sender, e: e);
         }
-        DataTable lookupTable = GetList(ILookupControlToLookupListRequest(control));
-        DataView view = new DataView(lookupTable);
+        DataTable lookupTable = GetList(
+            request: ILookupControlToLookupListRequest(control: control)
+        );
+        DataView view = new DataView(table: lookupTable);
         control.LookupList = view;
     }
 
@@ -893,59 +1005,68 @@ public class DataLookupService : IDataLookupService
     )
     {
         Guid newId = Guid.NewGuid();
-        var lookup = GetLookup(lookupId);
-        DatasetGenerator dg = new DatasetGenerator(true);
-        DataSet data = dg.CreateDataSet(lookup.ListDataStructure);
+        var lookup = GetLookup(lookupId: lookupId);
+        DatasetGenerator dg = new DatasetGenerator(userDefinedParameters: true);
+        DataSet data = dg.CreateDataSet(ds: lookup.ListDataStructure);
         Schema.EntityModel.DataStructureEntity entity =
-            lookup.ListDataStructure.Entities[0] as Schema.EntityModel.DataStructureEntity;
+            lookup.ListDataStructure.Entities[index: 0] as Schema.EntityModel.DataStructureEntity;
         if (!entity.AllFields)
         {
             throw new Exception(
-                "Data structure entity "
+                message: "Data structure entity "
                     + entity.Path
                     + " has to have AllFields = true in order to create new records through lookups."
             );
         }
-        DataTable table = data.Tables[entity.Name];
+        DataTable table = data.Tables[name: entity.Name];
         var row = table.NewRow();
-        row[lookup.ListValueMember] = newId;
-        DatasetTools.UpdateOrigamSystemColumns(row, true, SecurityManager.CurrentUserProfile().Id);
+        row[columnName: lookup.ListValueMember] = newId;
+        DatasetTools.UpdateOrigamSystemColumns(
+            row: row,
+            isNew: true,
+            profileId: SecurityManager.CurrentUserProfile().Id
+        );
         foreach (var item in values)
         {
             string columnName = (string)item.Key;
-            if (!table.Columns.Contains(columnName))
+            if (!table.Columns.Contains(name: columnName))
             {
                 throw new ArgumentOutOfRangeException(
-                    "columnName",
-                    columnName,
-                    "Field not found in the ListDataStructure of lookup " + lookup.Path
+                    paramName: "columnName",
+                    actualValue: columnName,
+                    message: "Field not found in the ListDataStructure of lookup " + lookup.Path
                 );
             }
-            Type type = table.Columns[columnName].DataType;
+            Type type = table.Columns[name: columnName].DataType;
             object value = DBNull.Value;
             if (item.Value != null)
             {
                 if (type == typeof(Guid))
                 {
-                    value = new Guid(item.Value.ToString());
+                    value = new Guid(g: item.Value.ToString());
                 }
                 else
                 {
-                    value = Convert.ChangeType(item.Value, type);
+                    value = Convert.ChangeType(value: item.Value, conversionType: type);
                 }
             }
-            row[item.Key] = value;
+            row[columnName: item.Key] = value;
         }
-        table.Rows.Add(row);
-        DataService.Instance.StoreData(lookup.ListDataStructureId, data, false, transactionId);
+        table.Rows.Add(row: row);
+        DataService.Instance.StoreData(
+            dataStructureId: lookup.ListDataStructureId,
+            data: data,
+            loadActualValuesAfterUpdate: false,
+            transactionId: transactionId
+        );
         return newId;
     }
     #endregion
     public void RemoveFromCache(Guid id)
     {
-        if (_valueCache.Contains(id))
+        if (_valueCache.Contains(key: id))
         {
-            _valueCache.Remove(id);
+            _valueCache.Remove(key: id);
         }
     }
 }

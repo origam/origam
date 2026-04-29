@@ -38,9 +38,13 @@ public enum TrueFalseEnum
     True,
 }
 
-[SchemaItemDescription("(Task) User Interface", "Tasks", "task-user-interface.png")]
-[HelpTopic("User+Interface+Task")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(
+    name: "(Task) User Interface",
+    folderName: "Tasks",
+    iconName: "task-user-interface.png"
+)]
+[HelpTopic(topic: "User+Interface+Task")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class UIFormTask : WorkflowTask
 {
     public UIFormTask()
@@ -49,13 +53,13 @@ public class UIFormTask : WorkflowTask
     }
 
     public UIFormTask(Guid schemaExtensionId)
-        : base(schemaExtensionId)
+        : base(schemaExtensionId: schemaExtensionId)
     {
         OutputMethod = ServiceOutputMethod.FullMerge;
     }
 
     public UIFormTask(Key primaryKey)
-        : base(primaryKey)
+        : base(primaryKey: primaryKey)
     {
         OutputMethod = ServiceOutputMethod.FullMerge;
     }
@@ -63,59 +67,59 @@ public class UIFormTask : WorkflowTask
     #region Override ISchemaItem Members
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(Screen);
+        dependencies.Add(item: Screen);
         if (RefreshDataStructure != null)
         {
-            dependencies.Add(RefreshDataStructure);
+            dependencies.Add(item: RefreshDataStructure);
         }
         if (RefreshMethod != null)
         {
-            dependencies.Add(RefreshMethod);
+            dependencies.Add(item: RefreshMethod);
         }
         if (RefreshSortSet != null)
         {
-            dependencies.Add(RefreshSortSet);
+            dependencies.Add(item: RefreshSortSet);
         }
         if (SaveDataStructure != null)
         {
-            dependencies.Add(SaveDataStructure);
+            dependencies.Add(item: SaveDataStructure);
         }
         if (SaveConfirmationRule != null)
         {
-            dependencies.Add(SaveConfirmationRule);
+            dependencies.Add(item: SaveConfirmationRule);
         }
-        base.GetExtraDependencies(dependencies);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
     #endregion
     #region Properties
     public Guid ScreenId;
 
-    [TypeConverter(typeof(FormControlSetConverter))]
+    [TypeConverter(type: typeof(FormControlSetConverter))]
     [NotNullModelElementRule()]
-    [XmlReference("screen", "ScreenId")]
+    [XmlReference(attributeName: "screen", idField: "ScreenId")]
     public FormControlSet Screen
     {
         get =>
             (FormControlSet)
                 PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(ScreenId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: ScreenId)
                 );
-        set => ScreenId = (value == null) ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+        set => ScreenId = (value == null) ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"];
     }
     public Guid RefreshDataStructureId;
 
-    [Category("Data Refresh Parameters")]
-    [TypeConverter(typeof(DataStructureConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [XmlReference("refreshDataStructure", "RefreshDataStructureId")]
+    [Category(category: "Data Refresh Parameters")]
+    [TypeConverter(type: typeof(DataStructureConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [XmlReference(attributeName: "refreshDataStructure", idField: "RefreshDataStructureId")]
     public DataStructure RefreshDataStructure
     {
         get =>
             (ISchemaItem)
                 PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(RefreshDataStructureId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: RefreshDataStructureId)
                 ) as DataStructure;
         set
         {
@@ -125,7 +129,7 @@ public class UIFormTask : WorkflowTask
             }
             else
             {
-                RefreshDataStructureId = (Guid)value.PrimaryKey["Id"];
+                RefreshDataStructureId = (Guid)value.PrimaryKey[key: "Id"];
             }
             RefreshMethod = null;
             RefreshSortSet = null;
@@ -134,89 +138,92 @@ public class UIFormTask : WorkflowTask
 
     public Guid RefreshMethodId;
 
-    [TypeConverter(typeof(UIFormTaskMethodConverter))]
-    [Category("Data Refresh Parameters")]
-    [XmlReference("refreshMethod", "RefreshMethodId")]
+    [TypeConverter(type: typeof(UIFormTaskMethodConverter))]
+    [Category(category: "Data Refresh Parameters")]
+    [XmlReference(attributeName: "refreshMethod", idField: "RefreshMethodId")]
     public DataStructureMethod RefreshMethod
     {
         get =>
             (DataStructureMethod)
                 PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(RefreshMethodId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: RefreshMethodId)
                 );
-        set => RefreshMethodId = (value == null) ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+        set => RefreshMethodId = (value == null) ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"];
     }
 
     public Guid RefreshSortSetId;
 
-    [TypeConverter(typeof(UIFormTaskSortSetConverter))]
-    [Category("Data Refresh Parameters")]
-    [XmlReference("refreshSortSet", "RefreshSortSetId")]
+    [TypeConverter(type: typeof(UIFormTaskSortSetConverter))]
+    [Category(category: "Data Refresh Parameters")]
+    [XmlReference(attributeName: "refreshSortSet", idField: "RefreshSortSetId")]
     public DataStructureSortSet RefreshSortSet
     {
         get =>
             (DataStructureSortSet)
                 PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(RefreshSortSetId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: RefreshSortSetId)
                 );
-        set => RefreshSortSetId = (value == null) ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+        set => RefreshSortSetId = (value == null) ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"];
     }
 
     public Guid SaveDataStructureId;
 
-    [Category("Save Parameters")]
-    [TypeConverter(typeof(DataStructureConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [XmlReference("saveDataStructure", "SaveDataStructureId")]
+    [Category(category: "Save Parameters")]
+    [TypeConverter(type: typeof(DataStructureConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [XmlReference(attributeName: "saveDataStructure", idField: "SaveDataStructureId")]
     public DataStructure SaveDataStructure
     {
         get =>
             (ISchemaItem)
                 PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(SaveDataStructureId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: SaveDataStructureId)
                 ) as DataStructure;
-        set => SaveDataStructureId = (value == null) ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+        set =>
+            SaveDataStructureId = (value == null) ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"];
     }
 
-    [DefaultValue(false)]
-    [XmlAttribute("isFinalForm")]
+    [DefaultValue(value: false)]
+    [XmlAttribute(attributeName: "isFinalForm")]
     public bool IsFinalForm { get; set; } = false;
 
-    [DefaultValue(false)]
-    [Category("Save Parameters")]
-    [XmlAttribute("allowSave")]
+    [DefaultValue(value: false)]
+    [Category(category: "Save Parameters")]
+    [XmlAttribute(attributeName: "allowSave")]
     public bool AllowSave { get; set; } = false;
 
     public Guid SaveConfirmationRuleId;
 
-    [Category("Save Parameters")]
-    [TypeConverter(typeof(EndRuleConverter))]
-    [XmlReference("saveConfirmationRule", "SaveConfirmationRuleId")]
+    [Category(category: "Save Parameters")]
+    [TypeConverter(type: typeof(EndRuleConverter))]
+    [XmlReference(attributeName: "saveConfirmationRule", idField: "SaveConfirmationRuleId")]
     public IEndRule SaveConfirmationRule
     {
         get =>
             (IEndRule)
                 PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(SaveConfirmationRuleId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: SaveConfirmationRuleId)
                 );
-        set => SaveConfirmationRuleId = (value == null) ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+        set =>
+            SaveConfirmationRuleId =
+                (value == null) ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"];
     }
 
-    [DefaultValue(false)]
-    [XmlAttribute("autoNext")]
+    [DefaultValue(value: false)]
+    [XmlAttribute(attributeName: "autoNext")]
     public bool AutoNext { get; set; } = false;
 
-    [DefaultValue(true)]
-    [XmlAttribute("isRefreshSuppressedBeforeFirstSave")]
+    [DefaultValue(value: true)]
+    [XmlAttribute(attributeName: "isRefreshSuppressedBeforeFirstSave")]
     public bool IsRefreshSuppressedBeforeFirstSave { get; set; } = true;
 
-    [DefaultValue(TrueFalseEnum.False)]
-    [Description("If true, the client will refresh its menu after saving data.")]
-    [XmlAttribute("refreshPortalAfterSave")]
+    [DefaultValue(value: TrueFalseEnum.False)]
+    [Description(description: "If true, the client will refresh its menu after saving data.")]
+    [XmlAttribute(attributeName: "refreshPortalAfterSave")]
     public TrueFalseEnum RefreshPortalAfterSave { get; set; } = TrueFalseEnum.False;
     public List<ISchemaItem> RefreshParameters
     {
@@ -231,7 +238,7 @@ public class UIFormTask : WorkflowTask
                     || (item is SystemFunctionCall)
                 )
                 {
-                    result.Add(item);
+                    result.Add(item: item);
                 }
             }
             return result;
@@ -267,7 +274,11 @@ public class UIFormTask : WorkflowTask
         {
             itemName = "NewWorkflowTaskDependency";
         }
-        return base.NewItem<T>(schemaExtensionId, group, itemName);
+        return base.NewItem<T>(
+            schemaExtensionId: schemaExtensionId,
+            group: group,
+            itemName: itemName
+        );
     }
     #endregion
 }

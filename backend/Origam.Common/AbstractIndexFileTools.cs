@@ -34,6 +34,6 @@ public class AbstractIndexFileTools<T>
 
     public void AddEntryToIndexFile(string indexFile, string entry)
     {
-        File.AppendAllText(indexFile, entry + Environment.NewLine);
+        File.AppendAllText(path: indexFile, contents: entry + Environment.NewLine);
     }
 }

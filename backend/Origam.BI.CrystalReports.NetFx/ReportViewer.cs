@@ -63,11 +63,11 @@ public class ReportViewer : AbstractViewContent
     }
 
     public ReportViewer(CrystalReport reportElement, string titleName, Hashtable parameters)
-        : this(reportElement, titleName)
+        : this(reportElement: reportElement, titleName: titleName)
     {
         foreach (DictionaryEntry entry in parameters)
         {
-            _parameters.Add(entry.Key, entry.Value);
+            _parameters.Add(key: entry.Key, value: entry.Value);
         }
     }
 
@@ -98,10 +98,10 @@ public class ReportViewer : AbstractViewContent
         catch (Exception ex)
         {
             Origam.UI.AsMessageBox.ShowError(
-                this,
-                ex.Message,
-                Origam.BI.CrystalReports.ResourceUtils.GetString("ErrorReportUpdate"),
-                ex
+                owner: this,
+                text: ex.Message,
+                caption: Origam.BI.CrystalReports.ResourceUtils.GetString(key: "ErrorReportUpdate"),
+                exception: ex
             );
         }
         finally
@@ -117,8 +117,12 @@ public class ReportViewer : AbstractViewContent
         {
             Cursor.Current = Cursors.WaitCursor;
             CrystalReportHelper helper = new CrystalReportHelper();
-            this.ReportSource = helper.CreateReport(_reportElement.Id, _parameters, null);
-            this.crViewer.Zoom(1);
+            this.ReportSource = helper.CreateReport(
+                reportId: _reportElement.Id,
+                parameters: _parameters,
+                transactionId: null
+            );
+            this.crViewer.Zoom(ZoomLevel: 1);
         }
         finally
         {
@@ -139,7 +143,7 @@ public class ReportViewer : AbstractViewContent
                 components.Dispose();
             }
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
 
     #region Windows Form Designer generated code
@@ -220,7 +224,7 @@ public class ReportViewer : AbstractViewContent
         {
             ClearReportSource();
             crViewer.ReportSource = value;
-            this.crViewer.Zoom(1);
+            this.crViewer.Zoom(ZoomLevel: 1);
         }
     }
     private Hashtable _parameters = new Hashtable();
@@ -252,11 +256,11 @@ public class ReportViewer : AbstractViewContent
 
     protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
     {
-        if (pnlToolbar.ProcessCommand(ref msg, keyData))
+        if (pnlToolbar.ProcessCommand(msg: ref msg, keyData: keyData))
         {
             return true;
         }
-        return base.ProcessCmdKey(ref msg, keyData);
+        return base.ProcessCmdKey(msg: ref msg, keyData: keyData);
     }
 
     private void pnlToolbar_ReportRefreshRequested(object sender, EventArgs e)

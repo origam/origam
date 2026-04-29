@@ -34,16 +34,21 @@ public class Images
         System.Reflection.Assembly thisExe;
         thisExe = System.Reflection.Assembly.GetExecutingAssembly();
         System.IO.Stream file = thisExe.GetManifestResourceStream(
-            "Origam.Workbench.BaseComponents.ImageList16.png"
+            name: "Origam.Workbench.BaseComponents.ImageList16.png"
         );
-        Bitmap bitmap = (Bitmap)Bitmap.FromStream(file);
-        bitmap.MakeTransparent(Color.Magenta);
+        Bitmap bitmap = (Bitmap)Bitmap.FromStream(stream: file);
+        bitmap.MakeTransparent(transparentColor: Color.Magenta);
         int count = (int)(bitmap.Width / bitmap.Height);
         images = new Image[count];
-        Rectangle rectangle = new Rectangle(0, 0, bitmap.Height, bitmap.Height);
+        Rectangle rectangle = new Rectangle(
+            x: 0,
+            y: 0,
+            width: bitmap.Height,
+            height: bitmap.Height
+        );
         for (int i = 0; i < count; i++)
         {
-            images[i] = bitmap.Clone(rectangle, bitmap.PixelFormat);
+            images[i] = bitmap.Clone(rect: rectangle, format: bitmap.PixelFormat);
             rectangle.X += bitmap.Height;
         }
     }

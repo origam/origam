@@ -37,13 +37,13 @@ public class PanelLabelBuilder
         int width
     )
     {
-        XmlElement formElement = childrenElement.OwnerDocument.CreateElement("FormElement");
-        childrenElement.AppendChild(formElement);
-        formElement.SetAttribute("Type", "Label");
-        formElement.SetAttribute("Title", text);
-        formElement.SetAttribute("X", XmlConvert.ToString(left));
-        formElement.SetAttribute("Y", XmlConvert.ToString(top));
-        formElement.SetAttribute("Width", XmlConvert.ToString(width));
-        formElement.SetAttribute("Height", XmlConvert.ToString(height));
+        XmlElement formElement = childrenElement.OwnerDocument.CreateElement(name: "FormElement");
+        childrenElement.AppendChild(newChild: formElement);
+        formElement.SetAttribute(name: "Type", value: "Label");
+        formElement.SetAttribute(name: "Title", value: text);
+        formElement.SetAttribute(name: "X", value: XmlConvert.ToString(value: left));
+        formElement.SetAttribute(name: "Y", value: XmlConvert.ToString(value: top));
+        formElement.SetAttribute(name: "Width", value: XmlConvert.ToString(value: width));
+        formElement.SetAttribute(name: "Height", value: XmlConvert.ToString(value: height));
     }
 }

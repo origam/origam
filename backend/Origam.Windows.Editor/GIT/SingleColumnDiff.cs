@@ -25,9 +25,12 @@ public partial class SingleColumnDiff : UserControl
     {
         var margin = new DiffInfoMargin { Lines = diffInfo.Lines };
         var backgroundRenderer = new DiffLineBackgroundRenderer { Lines = diffInfo.Lines };
-        Editor.TextArea.LeftMargins.Add(margin);
-        Editor.TextArea.TextView.BackgroundRenderers.Add(backgroundRenderer);
-        Editor.Text = String.Join("\r\n", diffInfo.Lines.Select(x => x.Text));
+        Editor.TextArea.LeftMargins.Add(item: margin);
+        Editor.TextArea.TextView.BackgroundRenderers.Add(item: backgroundRenderer);
+        Editor.Text = String.Join(
+            separator: "\r\n",
+            values: diffInfo.Lines.Select(selector: x => x.Text)
+        );
     }
 }
 
@@ -51,34 +54,39 @@ public class DiffParser
 
     public DiffParser(string gitDiff)
     {
-        allLines = gitDiff.Split('\n').Select(x => x.TrimEnd()).ToList();
+        allLines = gitDiff.Split(separator: '\n').Select(selector: x => x.TrimEnd()).ToList();
     }
 
     public DiffModelInfo ParseToLines(int maxLinesToReturn)
     {
-        var lineNumbers = Enumerable.Range(0, allLines.Count);
+        var lineNumbers = Enumerable.Range(start: 0, count: allLines.Count);
         return allLines
-            .Zip(lineNumbers, (x, index) => new { Line = x, Index = index })
-            .Where(x => x.Line.StartsWith("diff --git a"))
-            .Select(x => ToLineViewList(x.Index, maxLinesToReturn))
+            .Zip(second: lineNumbers, resultSelector: (x, index) => new { Line = x, Index = index })
+            .Where(predicate: x => x.Line.StartsWith(value: "diff --git a"))
+            .Select(selector: x =>
+                ToLineViewList(headerIndex: x.Index, maxLinesToReturn: maxLinesToReturn)
+            )
             .First();
     }
 
     private DiffModelInfo ToLineViewList(int headerIndex, int maxLinesToReturn)
     {
-        List<string> hunkElements = GetLinesFromHeaderIndex(headerIndex);
-        List<DiffSectionViewModel> sections = ParseToSections(hunkElements);
-        List<DiffSectionViewModel> filteredSections = ReduceByLineCount(sections, maxLinesToReturn);
+        List<string> hunkElements = GetLinesFromHeaderIndex(headerIndex: headerIndex);
+        List<DiffSectionViewModel> sections = ParseToSections(hunkElements: hunkElements);
+        List<DiffSectionViewModel> filteredSections = ReduceByLineCount(
+            sections: sections,
+            maxLineCount: maxLinesToReturn
+        );
         return new DiffModelInfo(
-            lines: ToSingleLineModelList(filteredSections),
-            linesReturned: CountMixedDiffLines(filteredSections),
-            linesTotal: CountMixedDiffLines(sections)
+            lines: ToSingleLineModelList(sections: filteredSections),
+            linesReturned: CountMixedDiffLines(sections: filteredSections),
+            linesTotal: CountMixedDiffLines(sections: sections)
         );
     }
 
     private int CountMixedDiffLines(List<DiffSectionViewModel> sections)
     {
-        return sections.Select(sec => sec.MixedDiff.Count).Sum();
+        return sections.Select(selector: sec => sec.MixedDiff.Count).Sum();
     }
 
     private List<DiffSectionViewModel> ReduceByLineCount(
@@ -95,7 +103,7 @@ public class DiffParser
                 return filtered;
             }
 
-            filtered.Add(section);
+            filtered.Add(item: section);
             lineCount += section.MixedDiff.Count;
         }
         return filtered;
@@ -106,14 +114,14 @@ public class DiffParser
     )
     {
         return sections
-            .Select(sec => sec.MixedDiff)
+            .Select(selector: sec => sec.MixedDiff)
             .Aggregate(
-                new List<DiffLineViewModel>(),
-                (allDiffLines, sectionLines) =>
+                seed: new List<DiffLineViewModel>(),
+                func: (allDiffLines, sectionLines) =>
                 {
-                    allDiffLines.Add(DiffLineViewModel.Empty());
-                    allDiffLines.Add(DiffLineViewModel.Empty());
-                    allDiffLines.AddRange(sectionLines);
+                    allDiffLines.Add(item: DiffLineViewModel.Empty());
+                    allDiffLines.Add(item: DiffLineViewModel.Empty());
+                    allDiffLines.AddRange(collection: sectionLines);
                     return allDiffLines;
                 }
             );
@@ -122,47 +130,56 @@ public class DiffParser
     private List<string> GetLinesFromHeaderIndex(int headerIndex)
     {
         var hunkElements = allLines
-            .Skip(headerIndex + 1)
-            .TakeWhile(x => !x.StartsWith("diff --git a"))
+            .Skip(count: headerIndex + 1)
+            .TakeWhile(predicate: x => !x.StartsWith(value: "diff --git a"))
             .ToList();
         return hunkElements;
     }
 
     private List<DiffSectionViewModel> ParseToSections(IEnumerable<string> hunkElements)
     {
-        List<string> diffContents = hunkElements.Skip(3).ToList();
-        List<string> sectionHeaders = diffContents.Where(x => x.StartsWith("@@ ")).ToList();
+        List<string> diffContents = hunkElements.Skip(count: 3).ToList();
+        List<string> sectionHeaders = diffContents
+            .Where(predicate: x => x.StartsWith(value: "@@ "))
+            .ToList();
         var lineNumberRegEx = new Regex(
-            @"\-(?<leftStart>\d{1,})(\,(?<leftCount>\d{1,}))*\s\+(?<rightStart>\d{1,})(\,(?<rightCount>\d{1,}))*",
-            RegexOptions.Compiled | RegexOptions.IgnoreCase
+            pattern: @"\-(?<leftStart>\d{1,})(\,(?<leftCount>\d{1,}))*\s\+(?<rightStart>\d{1,})(\,(?<rightCount>\d{1,}))*",
+            options: RegexOptions.Compiled | RegexOptions.IgnoreCase
         );
         var sections = new List<DiffSectionViewModel>();
         foreach (var header in sectionHeaders)
         {
-            Match lineNumberResult = lineNumberRegEx.Match(header);
-            var startIndex = diffContents.IndexOf(header);
-            IEnumerable<int> diffPositions = Enumerable.Range(0, diffContents.Count);
+            Match lineNumberResult = lineNumberRegEx.Match(input: header);
+            var startIndex = diffContents.IndexOf(item: header);
+            IEnumerable<int> diffPositions = Enumerable.Range(start: 0, count: diffContents.Count);
             var innerDiffContents = diffContents
-                .Zip(diffPositions, (line, pos) => new { PositionInDiff = pos, Line = line })
-                .Skip(startIndex + 1)
+                .Zip(
+                    second: diffPositions,
+                    resultSelector: (line, pos) => new { PositionInDiff = pos, Line = line }
+                )
+                .Skip(count: startIndex + 1)
                 .ToList();
-            var leftStart = int.Parse(lineNumberResult.Groups["leftStart"].Value);
-            var leftDiffSize = string.IsNullOrEmpty(lineNumberResult.Groups["leftCount"].Value)
+            var leftStart = int.Parse(s: lineNumberResult.Groups[groupname: "leftStart"].Value);
+            var leftDiffSize = string.IsNullOrEmpty(
+                value: lineNumberResult.Groups[groupname: "leftCount"].Value
+            )
                 ? leftStart
-                : int.Parse(lineNumberResult.Groups["leftCount"].Value);
-            var rightStart = int.Parse(lineNumberResult.Groups["rightStart"].Value);
-            var rightDiffSize = string.IsNullOrEmpty(lineNumberResult.Groups["rightCount"].Value)
+                : int.Parse(s: lineNumberResult.Groups[groupname: "leftCount"].Value);
+            var rightStart = int.Parse(s: lineNumberResult.Groups[groupname: "rightStart"].Value);
+            var rightDiffSize = string.IsNullOrEmpty(
+                value: lineNumberResult.Groups[groupname: "rightCount"].Value
+            )
                 ? rightStart
-                : int.Parse(lineNumberResult.Groups["rightCount"].Value);
+                : int.Parse(s: lineNumberResult.Groups[groupname: "rightCount"].Value);
             var leftLineNumbers = Enumerable
-                .Range(leftStart, leftDiffSize)
-                .Select(x => x.ToString(CultureInfo.InvariantCulture));
+                .Range(start: leftStart, count: leftDiffSize)
+                .Select(selector: x => x.ToString(provider: CultureInfo.InvariantCulture));
             // left section - all context + deletes
             List<DiffLineViewModel> leftDiff = innerDiffContents
-                .Where(x => !x.Line.StartsWith("+"))
+                .Where(predicate: x => !x.Line.StartsWith(value: "+"))
                 .Zip(
-                    leftLineNumbers,
-                    (x, line) =>
+                    second: leftLineNumbers,
+                    resultSelector: (x, line) =>
                         new
                         {
                             x.Line,
@@ -170,17 +187,23 @@ public class DiffParser
                             LineNumber = line,
                         }
                 )
-                .Select(x => DiffLineViewModel.Create(x.PositionInDiff, x.LineNumber, x.Line))
+                .Select(selector: x =>
+                    DiffLineViewModel.Create(
+                        positionInSection: x.PositionInDiff,
+                        lineNumber: x.LineNumber,
+                        text: x.Line
+                    )
+                )
                 .ToList();
             // right section - all context + adds
             var rightLineNumbers = Enumerable
-                .Range(rightStart, rightDiffSize)
-                .Select(x => x.ToString(CultureInfo.InvariantCulture));
+                .Range(start: rightStart, count: rightDiffSize)
+                .Select(selector: x => x.ToString(provider: CultureInfo.InvariantCulture));
             List<DiffLineViewModel> rightDiff = innerDiffContents
-                .Where(x => !x.Line.StartsWith("-"))
+                .Where(predicate: x => !x.Line.StartsWith(value: "-"))
                 .Zip(
-                    rightLineNumbers,
-                    (x, line) =>
+                    second: rightLineNumbers,
+                    resultSelector: (x, line) =>
                         new
                         {
                             x.Line,
@@ -188,7 +211,13 @@ public class DiffParser
                             LineNumber = line,
                         }
                 )
-                .Select(x => DiffLineViewModel.Create(x.PositionInDiff, x.LineNumber, x.Line))
+                .Select(selector: x =>
+                    DiffLineViewModel.Create(
+                        positionInSection: x.PositionInDiff,
+                        lineNumber: x.LineNumber,
+                        text: x.Line
+                    )
+                )
                 .ToList();
             var section = new DiffSectionViewModel(
                 diffSectionHeader: header,
@@ -196,7 +225,7 @@ public class DiffParser
                 rightDiff: rightDiff
             );
 
-            sections.Add(section);
+            sections.Add(item: section);
         }
         return sections;
     }

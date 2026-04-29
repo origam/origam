@@ -59,21 +59,21 @@ public class AbstractPersistent : IPersistent
     {
         foreach (string key in correctKeys)
         {
-            if (!primaryKey.ContainsKey(key))
+            if (!primaryKey.ContainsKey(key: key))
             {
                 throw new ArgumentOutOfRangeException(
-                    "primaryKey",
-                    primaryKey,
-                    ResourceUtils.GetString("NoKeyInPrimaryKey", key)
+                    paramName: "primaryKey",
+                    actualValue: primaryKey,
+                    message: ResourceUtils.GetString(key: "NoKeyInPrimaryKey", args: key)
                 );
             }
         }
-        if (primaryKey.Count != correctKeys.GetLength(0))
+        if (primaryKey.Count != correctKeys.GetLength(dimension: 0))
         {
             throw new ArgumentOutOfRangeException(
-                "primaryKey",
-                primaryKey,
-                ResourceUtils.GetString("InvalidNumberKeys")
+                paramName: "primaryKey",
+                actualValue: primaryKey,
+                message: ResourceUtils.GetString(key: "InvalidNumberKeys")
             );
         }
 
@@ -83,7 +83,7 @@ public class AbstractPersistent : IPersistent
     #region IPersistent Members
     private bool _isDeleted = false;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public virtual bool IsDeleted
     {
         get { return _isDeleted; }
@@ -91,35 +91,35 @@ public class AbstractPersistent : IPersistent
     }
     Key _primaryKey = new Key();
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public virtual Key PrimaryKey
     {
         get => _primaryKey;
         set => _primaryKey = value;
     }
-    public Guid Id => (Guid)PrimaryKey["Id"];
+    public Guid Id => (Guid)PrimaryKey[key: "Id"];
 
     public virtual void Persist()
     {
         bool isNew = (!this.IsPersisted);
-        this.PersistenceProvider.Persist(this);
+        this.PersistenceProvider.Persist(obj: this);
         if (IsDeleted)
         {
-            OnDeleted(EventArgs.Empty);
-            PersistenceProvider.OnTransactionEnded(this);
+            OnDeleted(e: EventArgs.Empty);
+            PersistenceProvider.OnTransactionEnded(sender: this);
         }
 #if !NETSTANDARD
-        GitManager.PersistPath(Files);
+        GitManager.PersistPath(files: Files);
 #endif
         if (isNew)
         {
-            OnChanged(EventArgs.Empty);
+            OnChanged(e: EventArgs.Empty);
         }
     }
 
     private bool _isPersisted = false;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public bool IsPersisted
     {
         get { return _isPersisted; }
@@ -129,14 +129,14 @@ public class AbstractPersistent : IPersistent
             if (!value)
             {
 #if DEBUG
-                System.Diagnostics.Debug.WriteLine(false, "IsPersisted");
+                System.Diagnostics.Debug.WriteLine(value: false, category: "IsPersisted");
 #endif
             }
         }
     }
     private bool _useObjectCache = true;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public virtual bool UseObjectCache
     {
         get { return _useObjectCache; }
@@ -145,38 +145,41 @@ public class AbstractPersistent : IPersistent
 
     public virtual void Refresh()
     {
-        this.PersistenceProvider.RefreshInstance(this);
-        OnChanged(EventArgs.Empty);
+        this.PersistenceProvider.RefreshInstance(persistentObject: this);
+        OnChanged(e: EventArgs.Empty);
     }
 
     public virtual IPersistent GetFreshItem()
     {
         IPersistent freshItem =
-            this.PersistenceProvider.RetrieveInstance(this.GetType(), this.PrimaryKey, false)
-            as IPersistent;
+            this.PersistenceProvider.RetrieveInstance(
+                type: this.GetType(),
+                primaryKey: this.PrimaryKey,
+                useCache: false
+            ) as IPersistent;
         return freshItem;
     }
 
     private IPersistenceProvider _persistenceProvider = null;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public virtual IPersistenceProvider PersistenceProvider
     {
         get { return _persistenceProvider; }
         set { _persistenceProvider = value; }
     }
 
-    [Browsable(false)]
-    public List<string> Files => _persistenceProvider.Files(this);
+    [Browsable(browsable: false)]
+    public List<string> Files => _persistenceProvider.Files(item: this);
     #endregion
     #region IDisposable Members
     public void Dispose()
     {
 #if DEBUG
-        System.Diagnostics.Debug.WriteLine("Persistent object disposed");
+        System.Diagnostics.Debug.WriteLine(message: "Persistent object disposed");
 #endif
-        Dispose(true);
-        GC.SuppressFinalize(this); // Finalization is now unnecessary
+        Dispose(disposing: true);
+        GC.SuppressFinalize(obj: this); // Finalization is now unnecessary
     }
 
     private bool _disposed = false;
@@ -201,7 +204,7 @@ public class AbstractPersistent : IPersistent
     {
         if (Deleted != null)
         {
-            Deleted(this, e);
+            Deleted(sender: this, e: e);
         }
     }
 
@@ -211,7 +214,7 @@ public class AbstractPersistent : IPersistent
     {
         if (Changed != null)
         {
-            Changed(this, e);
+            Changed(sender: this, e: e);
         }
     }
 }

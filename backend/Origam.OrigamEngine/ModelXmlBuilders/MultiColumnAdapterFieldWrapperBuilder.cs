@@ -32,8 +32,8 @@ public class MultiColumnAdapterFieldWrapperBuilder
         string controlMember
     )
     {
-        propertyElement.SetAttribute("Entity", "Object");
-        propertyElement.SetAttribute("Column", "Polymorph");
-        propertyElement.SetAttribute("ControlPropertyId", controlMember);
+        propertyElement.SetAttribute(name: "Entity", value: "Object");
+        propertyElement.SetAttribute(name: "Column", value: "Polymorph");
+        propertyElement.SetAttribute(name: "ControlPropertyId", value: controlMember);
     }
 }

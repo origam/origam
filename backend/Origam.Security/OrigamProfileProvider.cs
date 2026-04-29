@@ -41,16 +41,18 @@ public class OrigamProfileProvider : AbstractProfileProvider
     override public void AddUser(string name, string userName)
     {
         // load existing
-        DataSet data = GetProfileData(userName);
-        DataTable table = data.Tables["BusinessPartner"];
+        DataSet data = GetProfileData(userName: userName);
+        DataTable table = data.Tables[name: "BusinessPartner"];
         DataRow row = table.NewRow();
-        row["Id"] = Guid.NewGuid();
-        row["Name"] = name;
-        row["UserName"] = userName;
-        row["RecordCreated"] = DateTime.Now;
-        table.Rows.Add(row);
+        row[columnName: "Id"] = Guid.NewGuid();
+        row[columnName: "Name"] = name;
+        row[columnName: "UserName"] = userName;
+        row[columnName: "RecordCreated"] = DateTime.Now;
+        table.Rows.Add(row: row);
         // store
-        DataStructureQuery query = new DataStructureQuery(new Guid(NEW_PROFILE_DATA_STRUCTURE));
+        DataStructureQuery query = new DataStructureQuery(
+            dataStructureId: new Guid(g: NEW_PROFILE_DATA_STRUCTURE)
+        );
         // if data service would try to get identity,
         // we would get into recursion
         query.LoadByIdentity = false;
@@ -58,17 +60,17 @@ public class OrigamProfileProvider : AbstractProfileProvider
         IServiceAgent dataServiceAgent = GetAgent();
         dataServiceAgent.MethodName = "StoreDataByQuery";
         dataServiceAgent.Parameters.Clear();
-        dataServiceAgent.Parameters.Add("Query", query);
-        dataServiceAgent.Parameters.Add("Data", data);
+        dataServiceAgent.Parameters.Add(key: "Query", value: query);
+        dataServiceAgent.Parameters.Add(key: "Data", value: data);
         dataServiceAgent.Run();
     }
 
     public override object GetProfile(string userName)
     {
         Hashtable profileCacheByIdentity = GetCacheByName();
-        if (profileCacheByIdentity.Contains(userName))
+        if (profileCacheByIdentity.Contains(key: userName))
         {
-            return profileCacheByIdentity[userName];
+            return profileCacheByIdentity[key: userName];
         }
 
         try
@@ -76,39 +78,48 @@ public class OrigamProfileProvider : AbstractProfileProvider
             UserProfile profile = new UserProfile();
             lock (profileCacheByIdentity)
             {
-                DataSet result = GetProfileData(userName);
-                if (result.Tables["BusinessPartner"].Rows.Count == 0)
+                DataSet result = GetProfileData(userName: userName);
+                if (result.Tables[name: "BusinessPartner"].Rows.Count == 0)
                 {
                     throw new ProfileNotFoundException(
-                        ResourceUtils.GetString("ErrorProfileUnavailable", userName)
+                        message: ResourceUtils.GetString(
+                            key: "ErrorProfileUnavailable",
+                            args: userName
+                        )
                     );
                 }
-                DataRow row = result.Tables["BusinessPartner"].Rows[0];
-                profile.Id = (Guid)row["Id"];
-                profile.FullName = (string)row["FullName"];
-                if (row.Table.Columns.Contains("Resource_Id") && (!row.IsNull("Resource_Id")))
-                {
-                    profile.ResourceId = (Guid)row["Resource_Id"];
-                }
+                DataRow row = result.Tables[name: "BusinessPartner"].Rows[index: 0];
+                profile.Id = (Guid)row[columnName: "Id"];
+                profile.FullName = (string)row[columnName: "FullName"];
                 if (
-                    row.Table.Columns.Contains("BusinessUnit_Id")
-                    && (!row.IsNull("BusinessUnit_Id"))
+                    row.Table.Columns.Contains(name: "Resource_Id")
+                    && (!row.IsNull(columnName: "Resource_Id"))
                 )
                 {
-                    profile.BusinessUnitId = (Guid)row["BusinessUnit_Id"];
+                    profile.ResourceId = (Guid)row[columnName: "Resource_Id"];
                 }
                 if (
-                    row.Table.Columns.Contains("Organization_Id")
-                    && (!row.IsNull("Organization_Id"))
+                    row.Table.Columns.Contains(name: "BusinessUnit_Id")
+                    && (!row.IsNull(columnName: "BusinessUnit_Id"))
                 )
                 {
-                    profile.OrganizationId = (Guid)row["Organization_Id"];
+                    profile.BusinessUnitId = (Guid)row[columnName: "BusinessUnit_Id"];
                 }
-                if (row.Table.Columns.Contains("UserEmail") && (!row.IsNull("UserEmail")))
+                if (
+                    row.Table.Columns.Contains(name: "Organization_Id")
+                    && (!row.IsNull(columnName: "Organization_Id"))
+                )
                 {
-                    profile.Email = (string)row["UserEmail"];
+                    profile.OrganizationId = (Guid)row[columnName: "Organization_Id"];
                 }
-                profileCacheByIdentity[userName] = profile;
+                if (
+                    row.Table.Columns.Contains(name: "UserEmail")
+                    && (!row.IsNull(columnName: "UserEmail"))
+                )
+                {
+                    profile.Email = (string)row[columnName: "UserEmail"];
+                }
+                profileCacheByIdentity[key: userName] = profile;
             }
             return profile;
         }
@@ -116,7 +127,7 @@ public class OrigamProfileProvider : AbstractProfileProvider
         {
             if (log.IsErrorEnabled)
             {
-                log.LogOrigamError(ex.Message, ex);
+                log.LogOrigamError(message: ex.Message, ex: ex);
             }
             throw;
         }
@@ -124,16 +135,16 @@ public class OrigamProfileProvider : AbstractProfileProvider
         {
             if (log.IsErrorEnabled)
             {
-                log.LogOrigamError(ex.Message, ex);
+                log.LogOrigamError(message: ex.Message, ex: ex);
             }
             throw new Exception(
-                ResourceUtils.GetString("ErrorUnableToLoadProfile0")
+                message: ResourceUtils.GetString(key: "ErrorUnableToLoadProfile0")
                     + Environment.NewLine
                     + Environment.NewLine
-                    + ResourceUtils.GetString("ErrorUnableToLoadProfile1")
+                    + ResourceUtils.GetString(key: "ErrorUnableToLoadProfile1")
                     + Environment.NewLine
-                    + ResourceUtils.GetString("ErrorUnableToLoadProfile2"),
-                ex
+                    + ResourceUtils.GetString(key: "ErrorUnableToLoadProfile2"),
+                innerException: ex
             );
         }
     }
@@ -141,11 +152,16 @@ public class OrigamProfileProvider : AbstractProfileProvider
     private static DataSet GetProfileData(string userName)
     {
         DataStructureQuery query = GetProfileQuery();
-        query.Parameters.Add(new QueryParameter("BusinessPartner_parUserName", userName));
+        query.Parameters.Add(
+            value: new QueryParameter(
+                _parameterName: "BusinessPartner_parUserName",
+                value: userName
+            )
+        );
         IServiceAgent dataServiceAgent = GetAgent();
         dataServiceAgent.MethodName = "LoadDataByQuery";
         dataServiceAgent.Parameters.Clear();
-        dataServiceAgent.Parameters.Add("Query", query);
+        dataServiceAgent.Parameters.Add(key: "Query", value: query);
         dataServiceAgent.Run();
         DataSet result = (DataSet)dataServiceAgent.Result;
         return result;
@@ -154,8 +170,8 @@ public class OrigamProfileProvider : AbstractProfileProvider
     private static DataStructureQuery GetProfileQuery()
     {
         DataStructureQuery query = new DataStructureQuery(
-            new Guid(PROFILE_DATA_STRUCTURE),
-            new Guid(PROFILE_METHOD)
+            dataStructureId: new Guid(g: PROFILE_DATA_STRUCTURE),
+            methodId: new Guid(g: PROFILE_METHOD)
         );
         // if data service would try to get identity,
         // we would get into recursion

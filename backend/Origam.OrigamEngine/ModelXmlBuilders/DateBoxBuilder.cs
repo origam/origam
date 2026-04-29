@@ -34,7 +34,7 @@ public class DateBoxBuilder
     {
         string pattern;
         CultureInfo culture = CultureInfo.CurrentCulture;
-        if (format == "Custom" && !string.IsNullOrEmpty(customFormat))
+        if (format == "Custom" && !string.IsNullOrEmpty(value: customFormat))
         {
             switch (customFormat)
             {
@@ -74,14 +74,14 @@ public class DateBoxBuilder
 
                 case "ddd d. MMMM yyyy":
                 {
-                    pattern = AddDayName(culture.DateTimeFormat.LongDatePattern);
+                    pattern = AddDayName(netPattern: culture.DateTimeFormat.LongDatePattern);
                     break;
                 }
 
                 case "ddd d. MMMM yyyy HH:mm":
                 {
                     pattern =
-                        AddDayName(culture.DateTimeFormat.LongDatePattern)
+                        AddDayName(netPattern: culture.DateTimeFormat.LongDatePattern)
                         + " "
                         + culture.DateTimeFormat.ShortTimePattern;
                     break;
@@ -118,18 +118,18 @@ public class DateBoxBuilder
 
                 default:
                 {
-                    throw new NotImplementedException("Unknown option " + format);
+                    throw new NotImplementedException(message: "Unknown option " + format);
                 }
             }
         }
-        propertyElement.SetAttribute("Entity", "Date");
-        propertyElement.SetAttribute("Column", "Date");
-        propertyElement.SetAttribute("FormatterPattern", pattern);
+        propertyElement.SetAttribute(name: "Entity", value: "Date");
+        propertyElement.SetAttribute(name: "Column", value: "Date");
+        propertyElement.SetAttribute(name: "FormatterPattern", value: pattern);
     }
 
     private static string AddDayName(string netPattern)
     {
-        if (netPattern.IndexOf("ddd") == -1)
+        if (netPattern.IndexOf(value: "ddd") == -1)
         {
             return "ddd " + netPattern;
         }

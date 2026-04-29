@@ -36,7 +36,7 @@ class NodePositionTracker
     private readonly Node originalNode;
     private Node updatedNode;
     private Point CurrentSourcePoint => updatedNode.GeometryNode.Center;
-    public bool NodeExists => !string.IsNullOrWhiteSpace(nodeId) && updatedNode != null;
+    public bool NodeExists => !string.IsNullOrWhiteSpace(value: nodeId) && updatedNode != null;
 
     public PlaneTransformation UpdatedTransformation
     {
@@ -48,12 +48,14 @@ class NodePositionTracker
             }
 
             return new PlaneTransformation(
-                originalTransformation[0, 0],
-                originalTransformation[0, 1],
-                pointOnScreen.X - (CurrentSourcePoint.X * originalTransformation[0, 0]),
-                originalTransformation[1, 0],
-                originalTransformation[1, 1],
-                pointOnScreen.Y + (CurrentSourcePoint.Y * originalTransformation[0, 0])
+                matrixElement00: originalTransformation[rowIndex: 0, columnIndex: 0],
+                matrixElement01: originalTransformation[rowIndex: 0, columnIndex: 1],
+                matrixElement02: pointOnScreen.X
+                    - (CurrentSourcePoint.X * originalTransformation[rowIndex: 0, columnIndex: 0]),
+                matrixElement10: originalTransformation[rowIndex: 1, columnIndex: 0],
+                matrixElement11: originalTransformation[rowIndex: 1, columnIndex: 1],
+                matrixElement12: pointOnScreen.Y
+                    + (CurrentSourcePoint.Y * originalTransformation[rowIndex: 0, columnIndex: 0])
             );
         }
     }
@@ -62,14 +64,14 @@ class NodePositionTracker
     {
         this.gViewer = gViewer;
         this.nodeId = nodeId;
-        originalNode = gViewer.Graph.FindNodeOrSubgraph(nodeId);
+        originalNode = gViewer.Graph.FindNodeOrSubgraph(id: nodeId);
         if (originalNode == null)
         {
             return;
         }
 
         originalTransformation = gViewer.Transform;
-        if (string.IsNullOrWhiteSpace(this.nodeId))
+        if (string.IsNullOrWhiteSpace(value: this.nodeId))
         {
             return;
         }
@@ -79,6 +81,6 @@ class NodePositionTracker
 
     public void LoadUpdatedState()
     {
-        updatedNode = gViewer.Graph.FindNodeOrSubgraph(nodeId);
+        updatedNode = gViewer.Graph.FindNodeOrSubgraph(id: nodeId);
     }
 }

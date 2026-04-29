@@ -30,9 +30,9 @@ public class BlobUploadHandler
 {
     public static byte[] FixedSizeBytes(Image image, int width, int height)
     {
-        using Image thumbnail = FixedSize(image, width, height);
+        using Image thumbnail = FixedSize(sourceImage: image, width: width, height: height);
         using var memoryStream = new MemoryStream();
-        thumbnail.SaveAsPng(memoryStream, new PngEncoder());
+        thumbnail.SaveAsPng(stream: memoryStream, encoder: new PngEncoder());
         return memoryStream.ToArray();
     }
 
@@ -48,19 +48,27 @@ public class BlobUploadHandler
         if (nPercentH < nPercentW)
         {
             nPercent = nPercentH;
-            destX = System.Convert.ToInt16((width - (sourceWidth * nPercent)) / 2);
+            destX = System.Convert.ToInt16(value: (width - (sourceWidth * nPercent)) / 2);
         }
         else
         {
             nPercent = nPercentW;
-            destY = System.Convert.ToInt16((height - (sourceHeight * nPercent)) / 2);
+            destY = System.Convert.ToInt16(value: (height - (sourceHeight * nPercent)) / 2);
         }
         int destWidth = (int)(sourceWidth * nPercent);
         int destHeight = (int)(sourceHeight * nPercent);
-        Image backgroundImage = new Image<Rgba32>(width, height);
-        backgroundImage.Mutate(x => x.Fill(Color.Black));
-        using Image resizedImage = sourceImage.Clone(ctx => ctx.Resize(destWidth, destHeight));
-        backgroundImage.Mutate(x => x.DrawImage(resizedImage, new Point(destX, destY), 1f));
+        Image backgroundImage = new Image<Rgba32>(width: width, height: height);
+        backgroundImage.Mutate(operation: x => x.Fill(color: Color.Black));
+        using Image resizedImage = sourceImage.Clone(operation: ctx =>
+            ctx.Resize(width: destWidth, height: destHeight)
+        );
+        backgroundImage.Mutate(operation: x =>
+            x.DrawImage(
+                foreground: resizedImage,
+                backgroundLocation: new Point(x: destX, y: destY),
+                opacity: 1f
+            )
+        );
         return backgroundImage;
     }
 }

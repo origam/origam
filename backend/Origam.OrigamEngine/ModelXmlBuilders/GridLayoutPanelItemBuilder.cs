@@ -30,12 +30,16 @@ public class GridLayoutPanelItemBuilder
 {
     public static void Build(XmlElement parentNode, UIElementRenderData renderData)
     {
-        parentNode.SetAttribute("type", "http://www.w3.org/2001/XMLSchema-instance", "UIElement");
-        parentNode.SetAttribute("Type", "GridLayoutPanelItem");
-        parentNode.SetAttribute("Label", renderData.Text);
-        parentNode.SetAttribute("TopCell", renderData.TopCell.ToString());
-        parentNode.SetAttribute("LeftCell", renderData.LeftCell.ToString());
-        parentNode.SetAttribute("HeightCells", renderData.HeightCells.ToString());
-        parentNode.SetAttribute("WidthCells", renderData.WidthCells.ToString());
+        parentNode.SetAttribute(
+            localName: "type",
+            namespaceURI: "http://www.w3.org/2001/XMLSchema-instance",
+            value: "UIElement"
+        );
+        parentNode.SetAttribute(name: "Type", value: "GridLayoutPanelItem");
+        parentNode.SetAttribute(name: "Label", value: renderData.Text);
+        parentNode.SetAttribute(name: "TopCell", value: renderData.TopCell.ToString());
+        parentNode.SetAttribute(name: "LeftCell", value: renderData.LeftCell.ToString());
+        parentNode.SetAttribute(name: "HeightCells", value: renderData.HeightCells.ToString());
+        parentNode.SetAttribute(name: "WidthCells", value: renderData.WidthCells.ToString());
     }
 }

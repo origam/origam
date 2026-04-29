@@ -35,18 +35,18 @@ namespace Origam.Schema.RuleModel;
 /// <summary>
 /// Summary description for XPathRule.
 /// </summary>
-[SchemaItemDescription("Start Rule", "icon_27_rules.png")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Start Rule", iconName: "icon_27_rules.png")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class XPathRule : AbstractRule
 {
     public XPathRule()
         : base() { }
 
     public XPathRule(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(schemaExtensionId: schemaExtensionId) { }
 
     public XPathRule(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     public override ISchemaItemCollection ChildItems
     {
@@ -55,19 +55,23 @@ public class XPathRule : AbstractRule
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        XsltDependencyHelper.GetDependencies(this, dependencies, this.XPath);
-        base.GetExtraDependencies(dependencies);
+        XsltDependencyHelper.GetDependencies(
+            item: this,
+            dependencies: dependencies,
+            text: this.XPath
+        );
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     #region Properties
-    [XmlAttribute("xPath")]
+    [XmlAttribute(attributeName: "xPath")]
 #if !NETSTANDARD
-    [Editor(typeof(MultiLineTextEditor), typeof(UITypeEditor))]
+    [Editor(type: typeof(MultiLineTextEditor), baseType: typeof(UITypeEditor))]
 #endif
     public string XPath { get; set; } = "";
 
-    [DefaultValue(false)]
-    [XmlAttribute("isPathRelative")]
+    [DefaultValue(value: false)]
+    [XmlAttribute(attributeName: "isPathRelative")]
     public override bool IsPathRelative { get; set; } = false;
     #endregion
 }

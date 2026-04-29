@@ -38,10 +38,10 @@ public enum StateMachineStateType
     Group = 4,
 }
 
-[SchemaItemDescription("State", "States", "state.png")]
-[HelpTopic("State")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "State", folderName: "States", iconName: "state.png")]
+[HelpTopic(topic: "State")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class StateMachineState : AbstractSchemaItem
 {
     public const string CategoryConst = "StateMachineState";
@@ -49,10 +49,10 @@ public class StateMachineState : AbstractSchemaItem
     public StateMachineState() { }
 
     public StateMachineState(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public StateMachineState(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Overriden ISchemaItem Members
 
@@ -91,15 +91,15 @@ public class StateMachineState : AbstractSchemaItem
     {
         if (DefaultSubstate != null)
         {
-            dependencies.Add(DefaultSubstate);
+            dependencies.Add(item: DefaultSubstate);
         }
-        base.GetExtraDependencies(dependencies);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override bool CanMove(UI.IBrowserNode2 newNode)
     {
         // move between same parent type withing the same state machine
-        return ((ISchemaItem)newNode).RootItem.PrimaryKey.Equals(RootItem.PrimaryKey)
+        return ((ISchemaItem)newNode).RootItem.PrimaryKey.Equals(obj: RootItem.PrimaryKey)
             && (
                 ((ISchemaItem)newNode).ItemType == "WorkflowStateMachine"
                 || (((ISchemaItem)newNode).ItemType == "StateMachineState")
@@ -107,11 +107,11 @@ public class StateMachineState : AbstractSchemaItem
     }
     #endregion
     #region Properties
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public List<StateMachineOperation> Operations =>
-        ChildItemsByType<StateMachineOperation>(StateMachineOperation.CategoryConst);
+        ChildItemsByType<StateMachineOperation>(itemType: StateMachineOperation.CategoryConst);
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public List<StateMachineState> SubStates
     {
         get
@@ -121,7 +121,7 @@ public class StateMachineState : AbstractSchemaItem
             {
                 if (item is StateMachineState state)
                 {
-                    result.Add(state);
+                    result.Add(item: state);
                 }
             }
             return result;
@@ -130,12 +130,13 @@ public class StateMachineState : AbstractSchemaItem
 
     public bool IsState(object value)
     {
-        return Value.Equals(value) || SubStates.Any(state => state.Value.Equals(value));
+        return Value.Equals(obj: value)
+            || SubStates.Any(predicate: state => state.Value.Equals(obj: value));
     }
 
     private StateMachineStateType _type;
 
-    [XmlAttribute("type")]
+    [XmlAttribute(attributeName: "type")]
     public StateMachineStateType Type
     {
         get => _type;
@@ -143,7 +144,7 @@ public class StateMachineState : AbstractSchemaItem
     }
     private int _intValue;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public int IntValue
     {
         get => _intValue;
@@ -151,7 +152,7 @@ public class StateMachineState : AbstractSchemaItem
     }
     private Guid _guidValue;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public Guid GuidValue
     {
         get => _guidValue;
@@ -159,7 +160,7 @@ public class StateMachineState : AbstractSchemaItem
     }
     private string _stringValue;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public string StringValue
     {
         get => _stringValue;
@@ -167,7 +168,7 @@ public class StateMachineState : AbstractSchemaItem
     }
     bool _booleanValue = false;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public bool BooleanValue
     {
         get => _booleanValue;
@@ -175,7 +176,7 @@ public class StateMachineState : AbstractSchemaItem
     }
     decimal _currencyValue = 0;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public decimal CurrencyValue
     {
         get => _currencyValue;
@@ -183,7 +184,7 @@ public class StateMachineState : AbstractSchemaItem
     }
     decimal _floatValue = 0;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public decimal FloatValue
     {
         get => _floatValue;
@@ -191,7 +192,7 @@ public class StateMachineState : AbstractSchemaItem
     }
     object _dateValue = null;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public object DateValue
     {
         get => _dateValue;
@@ -204,16 +205,16 @@ public class StateMachineState : AbstractSchemaItem
             else
             {
                 throw new ArgumentOutOfRangeException(
-                    "DateValue",
-                    value,
-                    ResourceUtils.GetString("ErrorNotDateTime")
+                    paramName: "DateValue",
+                    actualValue: value,
+                    message: ResourceUtils.GetString(key: "ErrorNotDateTime")
                 );
             }
         }
     }
 
-    [TypeConverter(typeof(StateMachineStateLookupReaderConverter))]
-    [XmlAttribute("value")]
+    [TypeConverter(type: typeof(StateMachineStateLookupReaderConverter))]
+    [XmlAttribute(attributeName: "value")]
     public object Value
     {
         get
@@ -228,25 +229,24 @@ public class StateMachineState : AbstractSchemaItem
                     if (DefaultSubstate == null)
                     {
                         throw new ArgumentNullException(
-                            "DefaultSubstate",
-                            ResourceUtils.GetString(
-                                "ErrorDefaultSubstateNotSet",
-                                stateMachine.Name,
-                                Name
+                            paramName: "DefaultSubstate",
+                            message: ResourceUtils.GetString(
+                                key: "ErrorDefaultSubstateNotSet",
+                                args: new object[] { stateMachine.Name, Name }
                             )
                         );
                     }
                     targetState = DefaultSubstate;
                 }
                 return DataConstant.ConvertValue(
-                    stateMachine.Field.DataType,
-                    targetState.StringValue,
-                    targetState.IntValue,
-                    targetState.GuidValue,
-                    targetState.CurrencyValue,
-                    targetState.FloatValue,
-                    targetState.BooleanValue,
-                    targetState.DateValue
+                    dataType: stateMachine.Field.DataType,
+                    stringValue: targetState.StringValue,
+                    intValue: targetState.IntValue,
+                    guidValue: targetState.GuidValue,
+                    currencyValue: targetState.CurrencyValue,
+                    floatValue: targetState.FloatValue,
+                    booleanValue: targetState.BooleanValue,
+                    dateValue: targetState.DateValue
                 );
             }
             return null;
@@ -266,31 +266,31 @@ public class StateMachineState : AbstractSchemaItem
                     case OrigamDataType.Memo:
                     case OrigamDataType.String:
                     {
-                        var stringValue = Convert.ToString(value);
+                        var stringValue = Convert.ToString(value: value);
                         StringValue = stringValue;
                         break;
                     }
                     case OrigamDataType.Integer:
                     {
-                        var intValue = Convert.ToInt32(value);
+                        var intValue = Convert.ToInt32(value: value);
                         IntValue = intValue;
                         break;
                     }
                     case OrigamDataType.Currency:
                     {
-                        var currencyValue = Convert.ToDecimal(value);
+                        var currencyValue = Convert.ToDecimal(value: value);
                         CurrencyValue = currencyValue;
                         break;
                     }
                     case OrigamDataType.Float:
                     {
-                        var floatValue = Convert.ToDecimal(value);
+                        var floatValue = Convert.ToDecimal(value: value);
                         FloatValue = floatValue;
                         break;
                     }
                     case OrigamDataType.Boolean:
                     {
-                        var booleanValue = Convert.ToBoolean(value);
+                        var booleanValue = Convert.ToBoolean(value: value);
                         BooleanValue = booleanValue;
                         break;
                     }
@@ -302,7 +302,7 @@ public class StateMachineState : AbstractSchemaItem
                         }
                         else
                         {
-                            var dateValue = Convert.ToDateTime(value);
+                            var dateValue = Convert.ToDateTime(value: value);
                             DateValue = dateValue;
                         }
                         break;
@@ -320,7 +320,7 @@ public class StateMachineState : AbstractSchemaItem
                             {
                                 case "System.String":
                                 {
-                                    guidValue = new Guid((string)value);
+                                    guidValue = new Guid(g: (string)value);
                                     break;
                                 }
 
@@ -333,9 +333,9 @@ public class StateMachineState : AbstractSchemaItem
                                 default:
                                 {
                                     throw new ArgumentOutOfRangeException(
-                                        "value",
-                                        value,
-                                        ResourceUtils.GetString("ErrorConvertToGuid")
+                                        paramName: "value",
+                                        actualValue: value,
+                                        message: ResourceUtils.GetString(key: "ErrorConvertToGuid")
                                     );
                                 }
                             }
@@ -350,16 +350,16 @@ public class StateMachineState : AbstractSchemaItem
 
     public Guid DefaultSubstateId;
 
-    [TypeConverter(typeof(StateMachineSubstateConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [XmlReference("defaultSubstate", "DefaultSubstateId")]
+    [TypeConverter(type: typeof(StateMachineSubstateConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [XmlReference(attributeName: "defaultSubstate", idField: "DefaultSubstateId")]
     public StateMachineState DefaultSubstate
     {
         get
         {
             var key = new ModelElementKey { Id = DefaultSubstateId };
             return (StateMachineState)
-                PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
+                PersistenceProvider.RetrieveInstance(type: typeof(ISchemaItem), primaryKey: key);
         }
         set
         {
@@ -369,7 +369,7 @@ public class StateMachineState : AbstractSchemaItem
             }
             else
             {
-                DefaultSubstateId = (Guid)value.PrimaryKey["Id"];
+                DefaultSubstateId = (Guid)value.PrimaryKey[key: "Id"];
             }
         }
     }
@@ -385,9 +385,9 @@ public class StateMachineState : AbstractSchemaItem
             if (Type != StateMachineStateType.Group)
             {
                 throw new ArgumentOutOfRangeException(
-                    "Type",
-                    Type,
-                    ResourceUtils.GetString("ErrorAddSubstate")
+                    paramName: "Type",
+                    actualValue: Type,
+                    message: ResourceUtils.GetString(key: "ErrorAddSubstate")
                 );
             }
         }
@@ -400,7 +400,11 @@ public class StateMachineState : AbstractSchemaItem
         {
             itemName = "NewOperation";
         }
-        return base.NewItem<T>(schemaExtensionId, group, itemName);
+        return base.NewItem<T>(
+            schemaExtensionId: schemaExtensionId,
+            group: group,
+            itemName: itemName
+        );
     }
     #endregion
 }

@@ -38,7 +38,7 @@ public class MultiLanguageIdentityErrorDescriber : IdentityErrorDescriber
         return new IdentityError()
         {
             Code = nameof(DuplicateEmail),
-            Description = string.Format(_localizer["EmailTaken"], email),
+            Description = string.Format(format: _localizer[name: "EmailTaken"], arg0: email),
         };
     }
 
@@ -47,7 +47,7 @@ public class MultiLanguageIdentityErrorDescriber : IdentityErrorDescriber
         return new IdentityError
         {
             Code = nameof(DefaultError),
-            Description = _localizer["UnknownFailure"],
+            Description = _localizer[name: "UnknownFailure"],
         };
     }
 
@@ -56,7 +56,7 @@ public class MultiLanguageIdentityErrorDescriber : IdentityErrorDescriber
         return new IdentityError
         {
             Code = nameof(ConcurrencyFailure),
-            Description = _localizer["ObjectModified"],
+            Description = _localizer[name: "ObjectModified"],
         };
     }
 
@@ -65,7 +65,7 @@ public class MultiLanguageIdentityErrorDescriber : IdentityErrorDescriber
         return new IdentityError
         {
             Code = nameof(PasswordMismatch),
-            Description = _localizer["IncorrectPassword"],
+            Description = _localizer[name: "IncorrectPassword"],
         };
     }
 
@@ -74,7 +74,7 @@ public class MultiLanguageIdentityErrorDescriber : IdentityErrorDescriber
         return new IdentityError
         {
             Code = nameof(InvalidToken),
-            Description = _localizer["InvalidToken"],
+            Description = _localizer[name: "InvalidToken"],
         };
     }
 
@@ -83,7 +83,7 @@ public class MultiLanguageIdentityErrorDescriber : IdentityErrorDescriber
         return new IdentityError
         {
             Code = nameof(LoginAlreadyAssociated),
-            Description = _localizer["LoginExists"],
+            Description = _localizer[name: "LoginExists"],
         };
     }
 
@@ -92,7 +92,10 @@ public class MultiLanguageIdentityErrorDescriber : IdentityErrorDescriber
         return new IdentityError
         {
             Code = nameof(InvalidUserName),
-            Description = string.Format(_localizer["UserNameInvalid"], userName),
+            Description = string.Format(
+                format: _localizer[name: "UserNameInvalid"],
+                arg0: userName
+            ),
         };
     }
 
@@ -101,7 +104,7 @@ public class MultiLanguageIdentityErrorDescriber : IdentityErrorDescriber
         return new IdentityError
         {
             Code = nameof(InvalidEmail),
-            Description = string.Format(_localizer["EmailIsInvalid"], email),
+            Description = string.Format(format: _localizer[name: "EmailIsInvalid"], arg0: email),
         };
     }
 
@@ -110,7 +113,7 @@ public class MultiLanguageIdentityErrorDescriber : IdentityErrorDescriber
         return new IdentityError
         {
             Code = nameof(DuplicateUserName),
-            Description = string.Format(_localizer["UserNameTaken"], userName),
+            Description = string.Format(format: _localizer[name: "UserNameTaken"], arg0: userName),
         };
     }
 
@@ -119,7 +122,7 @@ public class MultiLanguageIdentityErrorDescriber : IdentityErrorDescriber
         return new IdentityError
         {
             Code = nameof(InvalidRoleName),
-            Description = string.Format(_localizer["RoleInvalid"], role),
+            Description = string.Format(format: _localizer[name: "RoleInvalid"], arg0: role),
         };
     }
 
@@ -128,7 +131,7 @@ public class MultiLanguageIdentityErrorDescriber : IdentityErrorDescriber
         return new IdentityError
         {
             Code = nameof(DuplicateRoleName),
-            Description = string.Format(_localizer["RoleNameTaken"], role),
+            Description = string.Format(format: _localizer[name: "RoleNameTaken"], arg0: role),
         };
     }
 
@@ -137,7 +140,7 @@ public class MultiLanguageIdentityErrorDescriber : IdentityErrorDescriber
         return new IdentityError
         {
             Code = nameof(UserAlreadyHasPassword),
-            Description = _localizer["PasswordAlreadySet"],
+            Description = _localizer[name: "PasswordAlreadySet"],
         };
     }
 
@@ -146,7 +149,7 @@ public class MultiLanguageIdentityErrorDescriber : IdentityErrorDescriber
         return new IdentityError
         {
             Code = nameof(UserLockoutNotEnabled),
-            Description = _localizer["LockOutNotEnabled"],
+            Description = _localizer[name: "LockOutNotEnabled"],
         };
     }
 
@@ -155,7 +158,7 @@ public class MultiLanguageIdentityErrorDescriber : IdentityErrorDescriber
         return new IdentityError
         {
             Code = nameof(UserAlreadyInRole),
-            Description = string.Format(_localizer["UserInRole"], role),
+            Description = string.Format(format: _localizer[name: "UserInRole"], arg0: role),
         };
     }
 
@@ -164,7 +167,7 @@ public class MultiLanguageIdentityErrorDescriber : IdentityErrorDescriber
         return new IdentityError
         {
             Code = nameof(UserNotInRole),
-            Description = string.Format(_localizer["UserNotInRole"], role),
+            Description = string.Format(format: _localizer[name: "UserNotInRole"], arg0: role),
         };
     }
 
@@ -173,7 +176,7 @@ public class MultiLanguageIdentityErrorDescriber : IdentityErrorDescriber
         return new IdentityError
         {
             Code = nameof(PasswordTooShort),
-            Description = string.Format(_localizer["PasswordTooShort"], length),
+            Description = string.Format(format: _localizer[name: "PasswordTooShort"], arg0: length),
         };
     }
 
@@ -182,7 +185,7 @@ public class MultiLanguageIdentityErrorDescriber : IdentityErrorDescriber
         return new IdentityError
         {
             Code = nameof(PasswordRequiresNonAlphanumeric),
-            Description = _localizer["MustBeNonAlphaNumeric"],
+            Description = _localizer[name: "MustBeNonAlphaNumeric"],
         };
     }
 
@@ -191,7 +194,7 @@ public class MultiLanguageIdentityErrorDescriber : IdentityErrorDescriber
         return new IdentityError
         {
             Code = nameof(PasswordRequiresDigit),
-            Description = _localizer["MustContainDigit"],
+            Description = _localizer[name: "MustContainDigit"],
         };
     }
 
@@ -200,7 +203,7 @@ public class MultiLanguageIdentityErrorDescriber : IdentityErrorDescriber
         return new IdentityError
         {
             Code = nameof(PasswordRequiresLower),
-            Description = _localizer["MustHaveLowerCase"],
+            Description = _localizer[name: "MustHaveLowerCase"],
         };
     }
 
@@ -209,7 +212,7 @@ public class MultiLanguageIdentityErrorDescriber : IdentityErrorDescriber
         return new IdentityError
         {
             Code = nameof(PasswordRequiresUpper),
-            Description = _localizer["MustHaveUpperCase"],
+            Description = _localizer[name: "MustHaveUpperCase"],
         };
     }
 
@@ -218,7 +221,7 @@ public class MultiLanguageIdentityErrorDescriber : IdentityErrorDescriber
         return new IdentityError
         {
             Code = nameof(PasswordRequiresUniqueChars),
-            Description = _localizer["PasswordRequiresUniqueChars"],
+            Description = _localizer[name: "PasswordRequiresUniqueChars"],
         };
     }
 
@@ -227,7 +230,7 @@ public class MultiLanguageIdentityErrorDescriber : IdentityErrorDescriber
         return new IdentityError
         {
             Code = nameof(RecoveryCodeRedemptionFailed),
-            Description = _localizer["RecoveryCodeRedemptionFailed"],
+            Description = _localizer[name: "RecoveryCodeRedemptionFailed"],
         };
     }
 }

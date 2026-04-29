@@ -51,11 +51,11 @@ public static class SecurityManager
         {
             string[] providerSplit = ConfigurationManager
                 .GetActiveConfiguration()
-                .AuthorizationProvider.Split(',');
+                .AuthorizationProvider.Split(separator: ',');
             string assembly = providerSplit[0].Trim();
             string className = providerSplit[1].Trim();
             _authorizationProvider = (IOrigamAuthorizationProvider)
-                Reflector.InvokeObject(assembly, className);
+                Reflector.InvokeObject(classname: assembly, assembly: className);
         }
         return _authorizationProvider;
     }
@@ -66,10 +66,11 @@ public static class SecurityManager
         {
             string[] providerSplit = ConfigurationManager
                 .GetActiveConfiguration()
-                .ProfileProvider.Split(',');
+                .ProfileProvider.Split(separator: ',');
             string assembly = providerSplit[0].Trim();
             string className = providerSplit[1].Trim();
-            _profileProvider = (IOrigamProfileProvider)Reflector.InvokeObject(assembly, className);
+            _profileProvider = (IOrigamProfileProvider)
+                Reflector.InvokeObject(classname: assembly, assembly: className);
         }
         return _profileProvider;
     }
@@ -82,12 +83,12 @@ public static class SecurityManager
 
     public static string GetReadOnlyRoles(string roles)
     {
-        return AddRoleSuffix(roles, READ_ONLY_ROLE_SUFFIX);
+        return AddRoleSuffix(roles: roles, suffix: READ_ONLY_ROLE_SUFFIX);
     }
 
     public static string GetInitialScreenRoles(string roles)
     {
-        return AddRoleSuffix(roles, INITIAL_SCREEN_ROLE_SUFFIX);
+        return AddRoleSuffix(roles: roles, suffix: INITIAL_SCREEN_ROLE_SUFFIX);
     }
 
     private static string AddRoleSuffix(string roles, string suffix)
@@ -95,7 +96,7 @@ public static class SecurityManager
         string authContext = "";
         if (roles != null)
         {
-            string[] roleList = roles.Split(";".ToCharArray());
+            string[] roleList = roles.Split(separator: ";".ToCharArray());
             foreach (string role in roleList)
             {
                 authContext += role + ROLE_SUFFIX_DIVIDER + suffix + ";";
@@ -106,14 +107,20 @@ public static class SecurityManager
 
     public static void SetServerIdentity()
     {
-        Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity("origam_server"), null);
+        Thread.CurrentPrincipal = new GenericPrincipal(
+            identity: new GenericIdentity(name: "origam_server"),
+            roles: null
+        );
     }
 
     public static void SetCustomIdentity(string userName, HttpContext context)
     {
-        var principal = new GenericPrincipal(new GenericIdentity(userName), null);
+        var principal = new GenericPrincipal(
+            identity: new GenericIdentity(name: userName),
+            roles: null
+        );
         Thread.CurrentPrincipal = principal;
-        context.User = new ClaimsPrincipal(principal);
+        context.User = new ClaimsPrincipal(principal: principal);
     }
 
     public static IPrincipal CurrentPrincipal
@@ -148,6 +155,6 @@ public static class SecurityManager
     public static UserProfile CurrentUserProfile()
     {
         IOrigamProfileProvider profileProvider = GetProfileProvider();
-        return (UserProfile)profileProvider.GetProfile(CurrentPrincipal.Identity);
+        return (UserProfile)profileProvider.GetProfile(identity: CurrentPrincipal.Identity);
     }
 }

@@ -50,16 +50,18 @@ public class CustomPropertyGrid : System.Windows.Forms.PropertyGrid
         initTypes();
     }
 
-    [Description("Name of the type that will be internally created")]
-    [DefaultValue("DefType")]
+    [Description(description: "Name of the type that will be internally created")]
+    [DefaultValue(value: "DefType")]
     public string TypeName
     {
         get { return typeName; }
         set { typeName = value; }
     }
 
-    [DefaultValue(true)]
-    [Description("If true, the Setting.Update() event will be called when a property changes")]
+    [DefaultValue(value: true)]
+    [Description(
+        description: "If true, the Setting.Update() event will be called when a property changes"
+    )]
     public bool InstantUpdate
     {
         get { return instantUpdate; }
@@ -68,19 +70,19 @@ public class CustomPropertyGrid : System.Windows.Forms.PropertyGrid
 
     protected override void OnPropertyValueChanged(PropertyValueChangedEventArgs e)
     {
-        base.OnPropertyValueChanged(e);
+        base.OnPropertyValueChanged(e: e);
         if (settings == null)
         {
             return;
         }
-        ((Setting)settings[e.ChangedItem.Label]).Value = e.ChangedItem.Value;
+        ((Setting)settings[key: e.ChangedItem.Label]).Value = e.ChangedItem.Value;
         if (instantUpdate)
         {
-            ((Setting)settings[e.ChangedItem.Label]).FireUpdate(e);
+            ((Setting)settings[key: e.ChangedItem.Label]).FireUpdate(e: e);
         }
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public Settings Settings
     {
         set
@@ -93,12 +95,12 @@ public class CustomPropertyGrid : System.Windows.Forms.PropertyGrid
             //Only save the custom-type dll while debugging
 #if SaveDLL && DEBUG
             AssemblyBuilder assemblyBuilder = myDomain.DefineDynamicAssembly(
-                myAsmName,
-                AssemblyBuilderAccess.RunAndSave
+                name: myAsmName,
+                access: AssemblyBuilderAccess.RunAndSave
             );
             ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule(
-                "TempModule",
-                "Test.dll"
+                name: "TempModule",
+                fileName: "Test.dll"
             );
 #else
             AssemblyBuilder assemblyBuilder = myDomain.DefineDynamicAssembly(
@@ -109,44 +111,44 @@ public class CustomPropertyGrid : System.Windows.Forms.PropertyGrid
 #endif
             //create our type
             TypeBuilder newType = moduleBuilder.DefineType(
-                typeName,
-                TypeAttributes.Public,
-                typeof(System.ComponentModel.Component)
+                name: typeName,
+                attr: TypeAttributes.Public,
+                parent: typeof(System.ComponentModel.Component)
             );
             //create the hashtable used to store property values
             FieldBuilder hashField = newType.DefineField(
-                "table",
-                typeof(Hashtable),
-                FieldAttributes.Private
+                fieldName: "table",
+                type: typeof(Hashtable),
+                attributes: FieldAttributes.Private
             );
             createHashMethod(
-                newType.DefineProperty(
-                    "Hash",
-                    PropertyAttributes.None,
-                    typeof(Hashtable),
-                    new Type[] { }
+                propBuild: newType.DefineProperty(
+                    name: "Hash",
+                    attributes: PropertyAttributes.None,
+                    returnType: typeof(Hashtable),
+                    parameterTypes: new Type[] { }
                 ),
-                newType,
-                hashField
+                typeBuild: newType,
+                hash: hashField
             );
 
             Hashtable h = new Hashtable();
             foreach (string key in settings.Keys)
             {
-                Setting s = settings[key];
-                h[key] = s.Value;
-                emitProperty(newType, hashField, s, key);
+                Setting s = settings[key: key];
+                h[key: key] = s.Value;
+                emitProperty(tb: newType, hash: hashField, s: s, name: key);
             }
             Type myType = newType.CreateType();
 #if SaveDLL && DEBUG
-            assemblyBuilder.Save("Test.dll");
+            assemblyBuilder.Save(assemblyFileName: "Test.dll");
 #endif
-            ConstructorInfo ci = myType.GetConstructor(new Type[] { });
+            ConstructorInfo ci = myType.GetConstructor(types: new Type[] { });
             System.ComponentModel.Component o =
-                ci.Invoke(new Object[] { }) as System.ComponentModel.Component;
+                ci.Invoke(parameters: new Object[] { }) as System.ComponentModel.Component;
             //set the object's hashtable - in the future i would like to do this in the emitted object's constructor
-            PropertyInfo pi = myType.GetProperty("Hash");
-            pi.SetValue(o, h, null);
+            PropertyInfo pi = myType.GetProperty(name: "Hash");
+            pi.SetValue(obj: o, value: h, index: null);
             //o.Site = new Origam.Gui.Designer.SiteImpl(o, "propertyComponent", settings.DesignerHost);
             //settings.DesignerHost.Add(o, "propertyComponent");
             SelectedObject = o;
@@ -161,34 +163,39 @@ public class CustomPropertyGrid : System.Windows.Forms.PropertyGrid
     {
         // First, we'll define the behavior of the "get" property for Hash as a method.
         MethodBuilder typeHashGet = typeBuild.DefineMethod(
-            "GetHash",
-            MethodAttributes.Public,
-            typeof(Hashtable),
-            new Type[] { }
+            name: "GetHash",
+            attributes: MethodAttributes.Public,
+            returnType: typeof(Hashtable),
+            parameterTypes: new Type[] { }
         );
         ILGenerator ilg = typeHashGet.GetILGenerator();
-        ilg.Emit(OpCodes.Ldarg_0);
-        ilg.Emit(OpCodes.Ldfld, hash);
-        ilg.Emit(OpCodes.Ret);
+        ilg.Emit(opcode: OpCodes.Ldarg_0);
+        ilg.Emit(opcode: OpCodes.Ldfld, field: hash);
+        ilg.Emit(opcode: OpCodes.Ret);
         // Now, we'll define the behavior of the "set" property for Hash.
         MethodBuilder typeHashSet = typeBuild.DefineMethod(
-            "SetHash",
-            MethodAttributes.Public,
-            null,
-            new Type[] { typeof(Hashtable) }
+            name: "SetHash",
+            attributes: MethodAttributes.Public,
+            returnType: null,
+            parameterTypes: new Type[] { typeof(Hashtable) }
         );
         ilg = typeHashSet.GetILGenerator();
-        ilg.Emit(OpCodes.Ldarg_0);
-        ilg.Emit(OpCodes.Ldarg_1);
-        ilg.Emit(OpCodes.Stfld, hash);
-        ilg.Emit(OpCodes.Ret);
+        ilg.Emit(opcode: OpCodes.Ldarg_0);
+        ilg.Emit(opcode: OpCodes.Ldarg_1);
+        ilg.Emit(opcode: OpCodes.Stfld, field: hash);
+        ilg.Emit(opcode: OpCodes.Ret);
         // map the two methods created above to their property
-        propBuild.SetGetMethod(typeHashGet);
-        propBuild.SetSetMethod(typeHashSet);
+        propBuild.SetGetMethod(mdBuilder: typeHashGet);
+        propBuild.SetSetMethod(mdBuilder: typeHashSet);
         //add the [Browsable(false)] property to the Hash property so it doesnt show up on the property list
-        ConstructorInfo ci = typeof(BrowsableAttribute).GetConstructor(new Type[] { typeof(bool) });
-        CustomAttributeBuilder cab = new CustomAttributeBuilder(ci, new object[] { false });
-        propBuild.SetCustomAttribute(cab);
+        ConstructorInfo ci = typeof(BrowsableAttribute).GetConstructor(
+            types: new Type[] { typeof(bool) }
+        );
+        CustomAttributeBuilder cab = new CustomAttributeBuilder(
+            con: ci,
+            constructorArgs: new object[] { false }
+        );
+        propBuild.SetCustomAttribute(customBuilder: cab);
     }
 
     /// <summary>
@@ -197,18 +204,18 @@ public class CustomPropertyGrid : System.Windows.Forms.PropertyGrid
     private void initTypes()
     {
         typeHash = new Hashtable();
-        typeHash[typeof(sbyte)] = OpCodes.Ldind_I1;
-        typeHash[typeof(byte)] = OpCodes.Ldind_U1;
-        typeHash[typeof(char)] = OpCodes.Ldind_U2;
-        typeHash[typeof(short)] = OpCodes.Ldind_I2;
-        typeHash[typeof(ushort)] = OpCodes.Ldind_U2;
-        typeHash[typeof(int)] = OpCodes.Ldind_I4;
-        typeHash[typeof(uint)] = OpCodes.Ldind_U4;
-        typeHash[typeof(long)] = OpCodes.Ldind_I8;
-        typeHash[typeof(ulong)] = OpCodes.Ldind_I8;
-        typeHash[typeof(bool)] = OpCodes.Ldind_I1;
-        typeHash[typeof(double)] = OpCodes.Ldind_R8;
-        typeHash[typeof(float)] = OpCodes.Ldind_R4;
+        typeHash[key: typeof(sbyte)] = OpCodes.Ldind_I1;
+        typeHash[key: typeof(byte)] = OpCodes.Ldind_U1;
+        typeHash[key: typeof(char)] = OpCodes.Ldind_U2;
+        typeHash[key: typeof(short)] = OpCodes.Ldind_I2;
+        typeHash[key: typeof(ushort)] = OpCodes.Ldind_U2;
+        typeHash[key: typeof(int)] = OpCodes.Ldind_I4;
+        typeHash[key: typeof(uint)] = OpCodes.Ldind_U4;
+        typeHash[key: typeof(long)] = OpCodes.Ldind_I8;
+        typeHash[key: typeof(ulong)] = OpCodes.Ldind_I8;
+        typeHash[key: typeof(bool)] = OpCodes.Ldind_I1;
+        typeHash[key: typeof(double)] = OpCodes.Ldind_R8;
+        typeHash[key: typeof(float)] = OpCodes.Ldind_R4;
     }
 
     /// <summary>
@@ -225,104 +232,118 @@ public class CustomPropertyGrid : System.Windows.Forms.PropertyGrid
 
         //define the property first
         PropertyBuilder pb = tb.DefineProperty(
-            name,
-            PropertyAttributes.None,
-            s.Type,
-            new Type[] { }
+            name: name,
+            attributes: PropertyAttributes.None,
+            returnType: s.Type,
+            parameterTypes: new Type[] { }
         );
         Type objType = s.Type;
         //now we define the get method for the property
         MethodBuilder getMethod = tb.DefineMethod(
-            "get_" + name,
-            MethodAttributes.Public,
-            objType,
-            new Type[] { }
+            name: "get_" + name,
+            attributes: MethodAttributes.Public,
+            returnType: objType,
+            parameterTypes: new Type[] { }
         );
         ILGenerator ilg = getMethod.GetILGenerator();
-        ilg.DeclareLocal(objType);
-        ilg.Emit(OpCodes.Ldarg_0);
-        ilg.Emit(OpCodes.Ldfld, hash);
-        ilg.Emit(OpCodes.Ldstr, name);
+        ilg.DeclareLocal(localType: objType);
+        ilg.Emit(opcode: OpCodes.Ldarg_0);
+        ilg.Emit(opcode: OpCodes.Ldfld, field: hash);
+        ilg.Emit(opcode: OpCodes.Ldstr, str: name);
 
-        ilg.EmitCall(OpCodes.Callvirt, typeof(Hashtable).GetMethod("get_Item"), null);
+        ilg.EmitCall(
+            opcode: OpCodes.Callvirt,
+            methodInfo: typeof(Hashtable).GetMethod(name: "get_Item"),
+            optionalParameterTypes: null
+        );
         if (objType.IsValueType)
         {
-            ilg.Emit(OpCodes.Unbox, objType);
-            if (typeHash[objType] != null)
+            ilg.Emit(opcode: OpCodes.Unbox, cls: objType);
+            if (typeHash[key: objType] != null)
             {
-                ilg.Emit((OpCode)typeHash[objType]);
+                ilg.Emit(opcode: (OpCode)typeHash[key: objType]);
             }
             else
             {
-                ilg.Emit(OpCodes.Ldobj, objType);
+                ilg.Emit(opcode: OpCodes.Ldobj, cls: objType);
             }
         }
         else
         {
-            ilg.Emit(OpCodes.Castclass, objType);
+            ilg.Emit(opcode: OpCodes.Castclass, cls: objType);
         }
 
-        ilg.Emit(OpCodes.Stloc_0);
-        ilg.Emit(OpCodes.Br_S, (byte)0);
-        ilg.Emit(OpCodes.Ldloc_0);
-        ilg.Emit(OpCodes.Ret);
+        ilg.Emit(opcode: OpCodes.Stloc_0);
+        ilg.Emit(opcode: OpCodes.Br_S, arg: (byte)0);
+        ilg.Emit(opcode: OpCodes.Ldloc_0);
+        ilg.Emit(opcode: OpCodes.Ret);
         //now we generate the set method for the property
         MethodBuilder setMethod = tb.DefineMethod(
-            "set_" + name,
-            MethodAttributes.Public,
-            null,
-            new Type[] { objType }
+            name: "set_" + name,
+            attributes: MethodAttributes.Public,
+            returnType: null,
+            parameterTypes: new Type[] { objType }
         );
         ilg = setMethod.GetILGenerator();
-        ilg.Emit(OpCodes.Ldarg_0);
-        ilg.Emit(OpCodes.Ldfld, hash);
-        ilg.Emit(OpCodes.Ldstr, name);
-        ilg.Emit(OpCodes.Ldarg_1);
+        ilg.Emit(opcode: OpCodes.Ldarg_0);
+        ilg.Emit(opcode: OpCodes.Ldfld, field: hash);
+        ilg.Emit(opcode: OpCodes.Ldstr, str: name);
+        ilg.Emit(opcode: OpCodes.Ldarg_1);
         if (objType.IsValueType)
         {
-            ilg.Emit(OpCodes.Box, objType);
+            ilg.Emit(opcode: OpCodes.Box, cls: objType);
         }
 
-        ilg.EmitCall(OpCodes.Callvirt, typeof(Hashtable).GetMethod("set_Item"), null);
-        ilg.Emit(OpCodes.Ret);
+        ilg.EmitCall(
+            opcode: OpCodes.Callvirt,
+            methodInfo: typeof(Hashtable).GetMethod(name: "set_Item"),
+            optionalParameterTypes: null
+        );
+        ilg.Emit(opcode: OpCodes.Ret);
         //put the get/set methods in with the property
-        pb.SetGetMethod(getMethod);
-        pb.SetSetMethod(setMethod);
+        pb.SetGetMethod(mdBuilder: getMethod);
+        pb.SetSetMethod(mdBuilder: setMethod);
         //if we specified a description, we will now add the DescriptionAttribute to our property
         if (s.Description != null)
         {
             ConstructorInfo ci = typeof(DescriptionAttribute).GetConstructor(
-                new Type[] { typeof(string) }
+                types: new Type[] { typeof(string) }
             );
             CustomAttributeBuilder cab = new CustomAttributeBuilder(
-                ci,
-                new object[] { s.Description }
+                con: ci,
+                constructorArgs: new object[] { s.Description }
             );
-            pb.SetCustomAttribute(cab);
+            pb.SetCustomAttribute(customBuilder: cab);
         }
         //add a CategoryAttribute if specified
         if (s.Category != null)
         {
             ConstructorInfo ci = typeof(CategoryAttribute).GetConstructor(
-                new Type[] { typeof(string) }
+                types: new Type[] { typeof(string) }
             );
             CustomAttributeBuilder cab = new CustomAttributeBuilder(
-                ci,
-                new object[] { s.Category }
+                con: ci,
+                constructorArgs: new object[] { s.Category }
             );
-            pb.SetCustomAttribute(cab);
+            pb.SetCustomAttribute(customBuilder: cab);
         }
         if (s.TypeConverter != null)
         {
-            ConstructorInfo ci = s.TypeConverter.GetType().GetConstructor(new Type[] { });
-            CustomAttributeBuilder cab = new CustomAttributeBuilder(ci, new object[] { });
-            pb.SetCustomAttribute(cab);
+            ConstructorInfo ci = s.TypeConverter.GetType().GetConstructor(types: new Type[] { });
+            CustomAttributeBuilder cab = new CustomAttributeBuilder(
+                con: ci,
+                constructorArgs: new object[] { }
+            );
+            pb.SetCustomAttribute(customBuilder: cab);
         }
         if (s.UITypeEditor != null)
         {
-            ConstructorInfo ci = s.UITypeEditor.GetType().GetConstructor(new Type[] { });
-            CustomAttributeBuilder cab = new CustomAttributeBuilder(ci, new object[] { });
-            pb.SetCustomAttribute(cab);
+            ConstructorInfo ci = s.UITypeEditor.GetType().GetConstructor(types: new Type[] { });
+            CustomAttributeBuilder cab = new CustomAttributeBuilder(
+                con: ci,
+                constructorArgs: new object[] { }
+            );
+            pb.SetCustomAttribute(customBuilder: cab);
         }
     }
 }

@@ -30,5 +30,5 @@ public class WorkflowCancelledByUserException : WorkflowException
         : base() { }
 
     public WorkflowCancelledByUserException(string message)
-        : base(message) { }
+        : base(message: message) { }
 }

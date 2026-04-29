@@ -34,7 +34,7 @@ public class MultiRecordTextReaderOptions
 
     private MultiRecordTextReaderRecordType[] _recordTypes;
 
-    [XmlArrayItem("Type", typeof(MultiRecordTextReaderRecordType))]
+    [XmlArrayItem(elementName: "Type", type: typeof(MultiRecordTextReaderRecordType))]
     public MultiRecordTextReaderRecordType[] RecordTypes
     {
         get { return _recordTypes; }

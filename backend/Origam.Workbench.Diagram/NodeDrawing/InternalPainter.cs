@@ -37,21 +37,23 @@ internal class InternalPainter
     public readonly int HeadingBackgroundHeight = 30;
     public readonly int Margin = 3;
     public readonly int TextSideMargin = 15;
-    public readonly Font Font = new Font("Arial", 10);
+    public readonly Font Font = new Font(familyName: "Arial", emSize: 10);
     public readonly StringFormat DrawFormat = new StringFormat();
     private readonly Graphics measurementGraphics = new Control().CreateGraphics();
-    private Pen BoldBlackPen = new Pen(System.Drawing.Color.Black, 2);
-    public Pen BlackPen { get; } = new Pen(System.Drawing.Color.Black, 1);
-    public readonly SolidBrush BlackBrush = new SolidBrush(System.Drawing.Color.Black);
-    public readonly SolidBrush LightGreyBrush = new SolidBrush(System.Drawing.Color.LightGray);
-    public readonly SolidBrush DarkGreyBrush = new SolidBrush(System.Drawing.Color.DarkGray);
+    private Pen BoldBlackPen = new Pen(color: System.Drawing.Color.Black, width: 2);
+    public Pen BlackPen { get; } = new Pen(color: System.Drawing.Color.Black, width: 1);
+    public readonly SolidBrush BlackBrush = new SolidBrush(color: System.Drawing.Color.Black);
+    public readonly SolidBrush LightGreyBrush = new SolidBrush(
+        color: System.Drawing.Color.LightGray
+    );
+    public readonly SolidBrush DarkGreyBrush = new SolidBrush(color: System.Drawing.Color.DarkGray);
     public readonly SolidBrush GreenBrush = new SolidBrush(
-        System.Drawing.Color.FromArgb(0, 154, 41)
+        color: System.Drawing.Color.FromArgb(red: 0, green: 154, blue: 41)
     );
     public readonly SolidBrush RedBrush = new SolidBrush(
-        System.Drawing.Color.FromArgb(255, 73, 61)
+        color: System.Drawing.Color.FromArgb(red: 255, green: 73, blue: 61)
     );
-    public readonly Brush WhiteBrush = new SolidBrush(System.Drawing.Color.White);
+    public readonly Brush WhiteBrush = new SolidBrush(color: System.Drawing.Color.White);
     public readonly int NodeHeaderHeight = 25;
     private readonly GViewer gViewer;
     internal INodeSelector NodeSelector { get; }
@@ -65,11 +67,11 @@ internal class InternalPainter
     internal Pen GetActiveBorderPen(Node node)
     {
         bool markAsSelected =
-            Equals(NodeSelector.Selected, node)
+            Equals(objA: NodeSelector.Selected, objB: node)
             || (
                 node is IWorkflowSubgraph subgraph
                 && NodeSelector.Selected is IWorkflowSubgraph selectedSubgraph
-                && Equals(subgraph.WorkflowItemId, selectedSubgraph.WorkflowItemId)
+                && Equals(objA: subgraph.WorkflowItemId, objB: selectedSubgraph.WorkflowItemId)
             );
         return markAsSelected ? BoldBlackPen : BlackPen;
     }
@@ -77,7 +79,7 @@ internal class InternalPainter
     internal Size CalculateMinHeaderBorder(Node node)
     {
         var nodeData = (INodeData)node.UserData;
-        SizeF stringSize = measurementGraphics.MeasureString(node.LabelText, Font);
+        SizeF stringSize = measurementGraphics.MeasureString(text: node.LabelText, font: Font);
         int totalWidth = (int)(
             Margin + NodeHeaderHeight + TextSideMargin + stringSize.Width + TextSideMargin
         );
@@ -86,19 +88,19 @@ internal class InternalPainter
             totalWidth += NodeHeaderHeight;
         }
 
-        return new Size(totalWidth, NodeHeaderHeight);
+        return new Size(width: totalWidth, height: NodeHeaderHeight);
     }
 
     internal SizeF MeasureString(string nodeLabelText)
     {
-        return measurementGraphics.MeasureString(nodeLabelText, Font);
+        return measurementGraphics.MeasureString(text: nodeLabelText, font: Font);
     }
 
     internal float GetLabelWidth(Node node)
     {
         var nodeData = (INodeData)node.UserData;
         Image image = nodeData.PrimaryImage;
-        SizeF stringSize = MeasureString(node.LabelText);
+        SizeF stringSize = MeasureString(nodeLabelText: node.LabelText);
         var labelWidth = stringSize.Width + ImageRightMargin + image?.Width ?? 0;
         return labelWidth;
     }

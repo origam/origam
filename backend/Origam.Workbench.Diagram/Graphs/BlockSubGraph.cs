@@ -37,10 +37,10 @@ public class BlockSubGraph : Subgraph, IWorkflowSubgraph
         (ContextStoreSubgraph == null || !ContextStoreSubgraph.Nodes.Any())
         && !MainDrawingSubgraf.Nodes.Any()
         && !MainDrawingSubgraf.Subgraphs.Any();
-    public Guid WorkflowItemId => IdTranslator.ToSchemaId(this);
+    public Guid WorkflowItemId => IdTranslator.ToSchemaId(node: this);
 
     public BlockSubGraph(string id)
-        : base(id)
+        : base(id: id)
     {
         contextStoreSubgraphId = "contextStores_" + id;
         mainSubgraphId = "mainSubGraph_" + id;
@@ -59,20 +59,23 @@ public class BlockSubGraph : Subgraph, IWorkflowSubgraph
         {
             return Subgraphs
                 .OfType<InfrastructureSubgraph>()
-                .SingleOrDefault(x => x.Id == contextStoreSubgraphId);
+                .SingleOrDefault(predicate: x => x.Id == contextStoreSubgraphId);
         }
     }
 
     private void InitContextStoreSubgraph()
     {
-        InfrastructureSubgraph child = new InfrastructureSubgraph(contextStoreSubgraphId, this);
+        InfrastructureSubgraph child = new InfrastructureSubgraph(
+            id: contextStoreSubgraphId,
+            parent: this
+        );
         child.LayoutSettings = new SugiyamaLayoutSettings
         {
             ClusterMargin = 20,
             PackingAspectRatio = 2.0 / 5.0,
             SelfMarginsOverride = new Margins { Left = 0.1 },
         };
-        AddSubgraph(child);
+        AddSubgraph(subgraph: child);
     }
 
     public InfrastructureSubgraph MainDrawingSubgraf
@@ -81,12 +84,12 @@ public class BlockSubGraph : Subgraph, IWorkflowSubgraph
         {
             InfrastructureSubgraph child = Subgraphs
                 .OfType<InfrastructureSubgraph>()
-                .SingleOrDefault(x => x.Id == mainSubgraphId);
+                .SingleOrDefault(predicate: x => x.Id == mainSubgraphId);
             if (child == null)
             {
-                child = new InfrastructureSubgraph(mainSubgraphId, this);
+                child = new InfrastructureSubgraph(id: mainSubgraphId, parent: this);
                 child.LayoutSettings = new SugiyamaLayoutSettings { PackingAspectRatio = 0.001 };
-                AddSubgraph(child);
+                AddSubgraph(subgraph: child);
             }
             return child;
         }
@@ -98,6 +101,6 @@ public class BlockSubGraph : Subgraph, IWorkflowSubgraph
         {
             InitContextStoreSubgraph();
         }
-        ContextStoreSubgraph.AddNode(node);
+        ContextStoreSubgraph.AddNode(node: node);
     }
 }

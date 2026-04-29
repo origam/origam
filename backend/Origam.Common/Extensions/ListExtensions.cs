@@ -29,6 +29,8 @@ public static class ListExtensions
 {
     public static void Remove<T>(this IList<T> list, Type type)
     {
-        list.Where(x => x.GetType() == type).ToList().ForEach(obj => list.Remove(obj));
+        list.Where(predicate: x => x.GetType() == type)
+            .ToList()
+            .ForEach(action: obj => list.Remove(item: obj));
     }
 }

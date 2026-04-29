@@ -41,7 +41,7 @@ namespace Origam.Rule.Xslt;
 public abstract class AbstractXsltEngine : IXsltEngine
 {
     private ITracingService _tracingService =
-        ServiceManager.Services.GetService(typeof(ITracingService)) as ITracingService;
+        ServiceManager.Services.GetService(serviceType: typeof(ITracingService)) as ITracingService;
 #if ORIGAM_CLIENT
     private readonly object _lock = new object();
 #endif
@@ -102,14 +102,14 @@ public abstract class AbstractXsltEngine : IXsltEngine
     )
     {
         return this.Transform(
-            data,
-            transformationId,
-            Guid.Empty,
-            parameters,
-            transactionId,
-            new Hashtable(),
-            outputStructure,
-            validateOnly
+            data: data,
+            transformationId: transformationId,
+            retransformationId: Guid.Empty,
+            parameters: parameters,
+            transactionId: transactionId,
+            retransformationParameters: new Hashtable(),
+            outputStructure: outputStructure,
+            validateOnly: validateOnly
         );
     }
 
@@ -126,17 +126,17 @@ public abstract class AbstractXsltEngine : IXsltEngine
     {
         object xsltEngine;
 #if ORIGAM_CLIENT
-        if (IsTransformationCached(transformationId))
+        if (IsTransformationCached(transformationId: transformationId))
         {
-            xsltEngine = GetCachedTransformation(transformationId);
+            xsltEngine = GetCachedTransformation(tranformationId: transformationId);
         }
         else
         {
 #endif
             ISchemaItem transf =
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(transformationId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: transformationId)
                 ) as ISchemaItem;
             string xsl;
             if (transf is XslTransformation)
@@ -150,39 +150,42 @@ public abstract class AbstractXsltEngine : IXsltEngine
             else
             {
                 throw new ArgumentOutOfRangeException(
-                    "transformationId",
-                    transformationId,
-                    "Invalid transformation id."
+                    paramName: "transformationId",
+                    actualValue: transformationId,
+                    message: "Invalid transformation id."
                 );
             }
             xsltEngine = GetTransform(
-                xsl,
-                retransformationId,
-                retransformationParameters,
-                transactionId
+                xsl: xsl,
+                retransformTemplateId: retransformationId,
+                retransformationParameters: retransformationParameters,
+                transactionId: transactionId
             );
 #if ORIGAM_CLIENT
             lock (_lock)
             {
-                PutTransformationToCache(transformationId, xsltEngine);
+                PutTransformationToCache(
+                    transformationId: transformationId,
+                    transformation: xsltEngine
+                );
             }
         }
 #endif
         using (
             MiniProfiler.Current.CustomTiming(
-                "xsl",
-                "transformationId: " + transformationId,
-                "XslTransform"
+                category: "xsl",
+                commandString: "transformationId: " + transformationId,
+                executeType: "XslTransform"
             )
         )
         {
             return Transform(
-                data,
-                xsltEngine,
-                parameters,
-                transactionId,
-                outputStructure,
-                validateOnly
+                data: data,
+                xsltEngine: xsltEngine,
+                parameters: parameters,
+                transactionId: transactionId,
+                outputStructure: outputStructure,
+                validateOnly: validateOnly
             );
         }
     }
@@ -197,17 +200,17 @@ public abstract class AbstractXsltEngine : IXsltEngine
     {
         object xsltEngine;
 #if ORIGAM_CLIENT
-        if (IsTransformationCached(transformationId))
+        if (IsTransformationCached(transformationId: transformationId))
         {
-            xsltEngine = GetCachedTransformation(transformationId);
+            xsltEngine = GetCachedTransformation(tranformationId: transformationId);
         }
         else
         {
 #endif
             ISchemaItem transf =
                 PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(transformationId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: transformationId)
                 ) as ISchemaItem;
             string xsl;
             if (transf is XslTransformation)
@@ -221,20 +224,34 @@ public abstract class AbstractXsltEngine : IXsltEngine
             else
             {
                 throw new ArgumentOutOfRangeException(
-                    "transformationId",
-                    transformationId,
-                    "Invalid transformation id."
+                    paramName: "transformationId",
+                    actualValue: transformationId,
+                    message: "Invalid transformation id."
                 );
             }
-            xsltEngine = GetTransform(xsl, Guid.Empty, new Hashtable(), transactionId);
+            xsltEngine = GetTransform(
+                xsl: xsl,
+                retransformTemplateId: Guid.Empty,
+                retransformationParameters: new Hashtable(),
+                transactionId: transactionId
+            );
 #if ORIGAM_CLIENT
             lock (_lock)
             {
-                PutTransformationToCache(transformationId, xsltEngine);
+                PutTransformationToCache(
+                    transformationId: transformationId,
+                    transformation: xsltEngine
+                );
             }
         }
 #endif
-        Transform(input, xsltEngine, parameters, transactionId, output);
+        Transform(
+            input: input,
+            xstlEngine: xsltEngine,
+            parameters: parameters,
+            transactionId: transactionId,
+            output: output
+        );
     }
 
     public object GetTransform(
@@ -246,19 +263,19 @@ public abstract class AbstractXsltEngine : IXsltEngine
     {
         if (retransformTemplateId == Guid.Empty)
         {
-            return GetTransform(xsl);
+            return GetTransform(xsl: xsl);
         }
-        IXmlContainer oldXslt = new XmlContainer(xsl);
+        IXmlContainer oldXslt = new XmlContainer(xmlString: xsl);
         IXmlContainer newXslt = Transform(
-            oldXslt,
-            retransformTemplateId,
-            retransformationParameters,
-            transactionId,
-            null,
-            false
+            data: oldXslt,
+            transformationId: retransformTemplateId,
+            parameters: retransformationParameters,
+            transactionId: transactionId,
+            outputStructure: null,
+            validateOnly: false
         );
 
-        return GetTransform(newXslt);
+        return GetTransform(xslt: newXslt);
     }
 
     internal abstract object GetTransform(IXmlContainer xslt);
@@ -273,14 +290,19 @@ public abstract class AbstractXsltEngine : IXsltEngine
         bool validateOnly
     )
     {
-        object xsltEngine = GetTransform(xsl, Guid.Empty, null, transactionId);
+        object xsltEngine = GetTransform(
+            xsl: xsl,
+            retransformTemplateId: Guid.Empty,
+            retransformationParameters: null,
+            transactionId: transactionId
+        );
         return Transform(
-            data,
-            xsltEngine,
-            parameters,
-            transactionId,
-            outputStructure,
-            validateOnly
+            data: data,
+            xsltEngine: xsltEngine,
+            parameters: parameters,
+            transactionId: transactionId,
+            outputStructure: outputStructure,
+            validateOnly: validateOnly
         );
     }
 
@@ -314,11 +336,13 @@ public abstract class AbstractXsltEngine : IXsltEngine
     #region Private Methods
     internal DataSet GetEmptyData(Key dataStructureKey)
     {
-        DatasetGenerator gen = new DatasetGenerator(true);
+        DatasetGenerator gen = new DatasetGenerator(userDefinedParameters: true);
         DataStructure ds =
-            this.PersistenceProvider.RetrieveInstance(typeof(DataStructure), dataStructureKey)
-            as DataStructure;
-        return gen.CreateDataSet(ds);
+            this.PersistenceProvider.RetrieveInstance(
+                type: typeof(DataStructure),
+                primaryKey: dataStructureKey
+            ) as DataStructure;
+        return gen.CreateDataSet(ds: ds);
     }
     #endregion
     #region Transformation Cache

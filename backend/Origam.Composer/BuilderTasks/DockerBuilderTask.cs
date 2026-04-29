@@ -36,16 +36,16 @@ public class DockerBuilderTask(IConnectionStringService connectionStringService)
 
     public void Execute(Project project)
     {
-        Directory.CreateDirectory(project.DockerFolder);
+        Directory.CreateDirectory(path: project.DockerFolder);
 
-        DockerConfig dockerConfigLinux = GetDockerConfigLinux(project);
+        DockerConfig dockerConfigLinux = GetDockerConfigLinux(project: project);
         CreateEnvFile(project: project, config: dockerConfigLinux);
         CreateCmdFile(project: project, config: dockerConfigLinux);
         CreateCmdFileArchitect(project: project, config: dockerConfigLinux);
 
         if (project.CommandsAddWindowsContainers)
         {
-            DockerConfig dockerConfigWin = GetDockerConfigWindows(project);
+            DockerConfig dockerConfigWin = GetDockerConfigWindows(project: project);
             CreateEnvFile(project: project, config: dockerConfigWin);
             CreateCmdFile(project: project, config: dockerConfigWin);
             CreateCmdFileArchitect(project: project, config: dockerConfigWin);
@@ -60,18 +60,20 @@ public class DockerBuilderTask(IConnectionStringService connectionStringService)
                 : project.DatabaseType.ToString().ToLower();
 
         var sb = new StringBuilder();
-        sb.AppendLine($"OrigamSettings__DefaultSchemaExtensionId={project.NewPackageId}");
+        sb.AppendLine(handler: $"OrigamSettings__DefaultSchemaExtensionId={project.NewPackageId}");
         sb.AppendLine(
-            $"OrigamSettings__DataConnectionString={connectionStringService.GetConnectionString(project)}"
+            handler: $"OrigamSettings__DataConnectionString={connectionStringService.GetConnectionString(project: project)}"
         );
-        sb.AppendLine($"OrigamSettings__Name={project.Name}");
-        sb.AppendLine($"CustomAssetsConfig__PathToCustomAssetsFolder={config.CustomAssetsPath}");
-        sb.AppendLine($"CustomAssetsConfig__RouteToCustomAssetsFolder=/customAssets");
-        sb.AppendLine($"DatabaseType={dbType}");
-        sb.AppendLine($"ExternalDomain_SetOnStart={WebSiteUrl(project)}");
-        sb.Append("TZ=Europe/Prague");
+        sb.AppendLine(handler: $"OrigamSettings__Name={project.Name}");
+        sb.AppendLine(
+            handler: $"CustomAssetsConfig__PathToCustomAssetsFolder={config.CustomAssetsPath}"
+        );
+        sb.AppendLine(value: $"CustomAssetsConfig__RouteToCustomAssetsFolder=/customAssets");
+        sb.AppendLine(handler: $"DatabaseType={dbType}");
+        sb.AppendLine(handler: $"ExternalDomain_SetOnStart={WebSiteUrl(project: project)}");
+        sb.Append(value: "TZ=Europe/Prague");
 
-        File.WriteAllText(config.EnvFilePath, sb.ToString());
+        File.WriteAllText(path: config.EnvFilePath, contents: sb.ToString());
     }
 
     private void CreateCmdFile(Project project, DockerConfig config)
@@ -82,24 +84,27 @@ public class DockerBuilderTask(IConnectionStringService connectionStringService)
         var sb = new StringBuilder();
         if (project.CommandsOutputFormat == CommandOutputFormat.Sh)
         {
-            sb.AppendLine("#!/bin/bash");
+            sb.AppendLine(value: "#!/bin/bash");
             sb.AppendLine();
         }
-        sb.AppendLine($"docker run --env-file \"{config.EnvFilePath}\" {endChar}");
-        sb.AppendLine($"  -it --name {project.Name}_Client {endChar}");
-        sb.AppendLine($"  -v \"{project.ModelFolder}\":{config.ModelPath} {endChar}");
+        sb.AppendLine(handler: $"docker run --env-file \"{config.EnvFilePath}\" {endChar}");
+        sb.AppendLine(handler: $"  -it --name {project.Name}_Client {endChar}");
+        sb.AppendLine(handler: $"  -v \"{project.ModelFolder}\":{config.ModelPath} {endChar}");
         sb.AppendLine(
-            $"  -v \"{project.ProjectFolder}\\customAssets\":{config.CustomAssetsPath} {endChar}"
+            handler: $"  -v \"{project.ProjectFolder}\\customAssets\":{config.CustomAssetsPath} {endChar}"
         );
-        sb.AppendLine($"  -p {project.DockerPort}:443 {endChar}");
-        sb.AppendLine($"  {config.ClientBaseImage}");
+        sb.AppendLine(handler: $"  -p {project.DockerPort}:443 {endChar}");
+        sb.AppendLine(handler: $"  {config.ClientBaseImage}");
         sb.AppendLine();
-        sb.AppendLine($"{commentChar} Open Client web application: https://localhost");
+        sb.AppendLine(handler: $"{commentChar} Open Client web application: https://localhost");
         sb.AppendLine();
-        sb.AppendLine($"{commentChar} Official releases:");
-        sb.Append($"{commentChar} https://github.com/origam/origam/releases");
+        sb.AppendLine(handler: $"{commentChar} Official releases:");
+        sb.Append(handler: $"{commentChar} https://github.com/origam/origam/releases");
 
-        File.WriteAllText(config.ClientCmdFilePath + config.CmdFileExtension, sb.ToString());
+        File.WriteAllText(
+            path: config.ClientCmdFilePath + config.CmdFileExtension,
+            contents: sb.ToString()
+        );
     }
 
     private void CreateCmdFileArchitect(Project project, DockerConfig config)
@@ -110,23 +115,26 @@ public class DockerBuilderTask(IConnectionStringService connectionStringService)
         var sb = new StringBuilder();
         if (project.CommandsOutputFormat == CommandOutputFormat.Sh)
         {
-            sb.AppendLine("#!/bin/bash");
+            sb.AppendLine(value: "#!/bin/bash");
             sb.AppendLine();
         }
-        sb.AppendLine($"docker run --env-file \"{config.EnvFilePath}\" {endChar}");
-        sb.AppendLine($"  -it --name {project.Name}_Architect {endChar}");
-        sb.AppendLine($"  -v \"{project.ModelFolder}\":{config.ModelPath} {endChar}");
-        sb.AppendLine($"  -p {project.ArchitectPort}:8081 {endChar}");
-        sb.AppendLine($"  {config.ArchitectBaseImage}");
+        sb.AppendLine(handler: $"docker run --env-file \"{config.EnvFilePath}\" {endChar}");
+        sb.AppendLine(handler: $"  -it --name {project.Name}_Architect {endChar}");
+        sb.AppendLine(handler: $"  -v \"{project.ModelFolder}\":{config.ModelPath} {endChar}");
+        sb.AppendLine(handler: $"  -p {project.ArchitectPort}:8081 {endChar}");
+        sb.AppendLine(handler: $"  {config.ArchitectBaseImage}");
         sb.AppendLine();
         sb.AppendLine(
-            $"{commentChar} Open Architect web application: https://localhost:{project.ArchitectPort}"
+            handler: $"{commentChar} Open Architect web application: https://localhost:{project.ArchitectPort}"
         );
         sb.AppendLine();
-        sb.AppendLine($"{commentChar} Official releases:");
-        sb.Append($"{commentChar} https://github.com/origam/origam/releases");
+        sb.AppendLine(handler: $"{commentChar} Official releases:");
+        sb.Append(handler: $"{commentChar} https://github.com/origam/origam/releases");
 
-        File.WriteAllText(config.ArchitectCmdFilePath + config.CmdFileExtension, sb.ToString());
+        File.WriteAllText(
+            path: config.ArchitectCmdFilePath + config.CmdFileExtension,
+            contents: sb.ToString()
+        );
     }
 
     private DockerConfig GetDockerConfigLinux(Project project)

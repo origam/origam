@@ -32,26 +32,34 @@ namespace Origam.Schema.WorkflowModel;
 /// <summary>
 /// Summary description for ForeachWorkflowBlock.
 /// </summary>
-[SchemaItemDescription("(Block) For-each", "Tasks", "block-for-each.png")]
-[HelpTopic("For-Each+Block")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(
+    name: "(Block) For-each",
+    folderName: "Tasks",
+    iconName: "block-for-each.png"
+)]
+[HelpTopic(topic: "For-Each+Block")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class ForeachWorkflowBlock : AbstractWorkflowBlock
 {
     public ForeachWorkflowBlock()
         : base() { }
 
     public ForeachWorkflowBlock(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(schemaExtensionId: schemaExtensionId) { }
 
     public ForeachWorkflowBlock(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Overriden ISchemaItem Members
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        XsltDependencyHelper.GetDependencies(this, dependencies, this.IteratorXPath);
-        dependencies.Add(this.SourceContextStore);
-        base.GetExtraDependencies(dependencies);
+        XsltDependencyHelper.GetDependencies(
+            item: this,
+            dependencies: dependencies,
+            text: this.IteratorXPath
+        );
+        dependencies.Add(item: this.SourceContextStore);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override void UpdateReferences()
@@ -60,7 +68,7 @@ public class ForeachWorkflowBlock : AbstractWorkflowBlock
         {
             if (item.OldPrimaryKey != null)
             {
-                if (item.OldPrimaryKey.Equals(this.SourceContextStore.PrimaryKey))
+                if (item.OldPrimaryKey.Equals(obj: this.SourceContextStore.PrimaryKey))
                 {
                     this.SourceContextStore = item as IContextStore;
                     break;
@@ -73,9 +81,9 @@ public class ForeachWorkflowBlock : AbstractWorkflowBlock
     #region Properties
     public Guid ContextStoreId;
 
-    [TypeConverter(typeof(ContextStoreConverter))]
+    [TypeConverter(type: typeof(ContextStoreConverter))]
     [NotNullModelElementRule()]
-    [XmlReference("sourceContextStore", "ContextStoreId")]
+    [XmlReference(attributeName: "sourceContextStore", idField: "ContextStoreId")]
     public IContextStore SourceContextStore
     {
         get
@@ -83,7 +91,10 @@ public class ForeachWorkflowBlock : AbstractWorkflowBlock
             ModelElementKey key = new ModelElementKey();
             key.Id = this.ContextStoreId;
             return (IContextStore)
-                this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
+                this.PersistenceProvider.RetrieveInstance(
+                    type: typeof(ISchemaItem),
+                    primaryKey: key
+                );
         }
         set
         {
@@ -93,14 +104,14 @@ public class ForeachWorkflowBlock : AbstractWorkflowBlock
             }
             else
             {
-                this.ContextStoreId = (Guid)value.PrimaryKey["Id"];
+                this.ContextStoreId = (Guid)value.PrimaryKey[key: "Id"];
             }
         }
     }
     string _xpath;
 
     [StringNotEmptyModelElementRule]
-    [XmlAttribute("iteratorXPath")]
+    [XmlAttribute(attributeName: "iteratorXPath")]
     public string IteratorXPath
     {
         get { return _xpath; }
@@ -108,8 +119,8 @@ public class ForeachWorkflowBlock : AbstractWorkflowBlock
     }
     bool _ignoreSourceContextChanges = false;
 
-    [DefaultValue(false)]
-    [XmlAttribute("ignoreSourceContextChanges")]
+    [DefaultValue(value: false)]
+    [XmlAttribute(attributeName: "ignoreSourceContextChanges")]
     public bool IgnoreSourceContextChanges
     {
         get { return _ignoreSourceContextChanges; }

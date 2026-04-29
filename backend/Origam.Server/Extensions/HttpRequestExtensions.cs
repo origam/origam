@@ -28,8 +28,8 @@ public static class HttpRequestExtensions
 {
     public static string GetUserAgent(this HttpRequest request)
     {
-        return request.Headers.ContainsKey(HeaderNames.UserAgent)
-            ? request.Headers[HeaderNames.UserAgent].ToString()
+        return request.Headers.ContainsKey(key: HeaderNames.UserAgent)
+            ? request.Headers[key: HeaderNames.UserAgent].ToString()
             : string.Empty;
     }
 }

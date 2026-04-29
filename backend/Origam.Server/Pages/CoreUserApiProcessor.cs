@@ -28,7 +28,7 @@ namespace Origam.Server.Pages;
 public class CoreUserApiProcessor : UserApiProcessor
 {
     public CoreUserApiProcessor(IHttpTools httpTools, IWebHostEnvironment environment)
-        : base(httpTools, environment) { }
+        : base(httpTools: httpTools, environment: environment) { }
 
     protected override void Handle404(IHttpContextWrapper context)
     {

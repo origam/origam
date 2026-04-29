@@ -33,8 +33,8 @@ namespace Origam.Schema.LookupModel;
 /// <summary>
 /// Summary description for AbstractDataTooltip.
 /// </summary>
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class AbstractDataTooltip : AbstractSchemaItem, IComparable
 {
     public const string CategoryConst = "DataTooltip";
@@ -43,10 +43,10 @@ public class AbstractDataTooltip : AbstractSchemaItem, IComparable
         : base() { }
 
     public AbstractDataTooltip(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public AbstractDataTooltip(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Overriden ISchemaItem Members
     public override string ItemType
@@ -59,15 +59,15 @@ public class AbstractDataTooltip : AbstractSchemaItem, IComparable
         Dictionary<string, ParameterReference> list
     )
     {
-        base.GetParameterReferences(this.TooltipLoadMethod, list);
+        base.GetParameterReferences(parentItem: this.TooltipLoadMethod, list: list);
     }
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(this.TooltipDataStructure);
-        dependencies.Add(this.TooltipLoadMethod);
-        dependencies.Add(this.TooltipTransformation);
-        base.GetExtraDependencies(dependencies);
+        dependencies.Add(item: this.TooltipDataStructure);
+        dependencies.Add(item: this.TooltipLoadMethod);
+        dependencies.Add(item: this.TooltipTransformation);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override ISchemaItemCollection ChildItems
@@ -83,72 +83,72 @@ public class AbstractDataTooltip : AbstractSchemaItem, IComparable
     #region Properties
     public Guid TooltipDataStructureId;
 
-    [Category("Tooltip")]
-    [TypeConverter(typeof(DataStructureConverter))]
+    [Category(category: "Tooltip")]
+    [TypeConverter(type: typeof(DataStructureConverter))]
     [NotNullModelElementRule()]
-    [XmlReference("looltipDataStructure", "TooltipDataStructureId")]
+    [XmlReference(attributeName: "looltipDataStructure", idField: "TooltipDataStructureId")]
     public DataStructure TooltipDataStructure
     {
         get
         {
             return (ISchemaItem)
                     this.PersistenceProvider.RetrieveInstance(
-                        typeof(ISchemaItem),
-                        new ModelElementKey(this.TooltipDataStructureId)
+                        type: typeof(ISchemaItem),
+                        primaryKey: new ModelElementKey(id: this.TooltipDataStructureId)
                     ) as DataStructure;
         }
         set
         {
-            this.TooltipDataStructureId = (Guid)value.PrimaryKey["Id"];
+            this.TooltipDataStructureId = (Guid)value.PrimaryKey[key: "Id"];
             this.TooltipLoadMethod = null;
         }
     }
 
     public Guid TooltipDataStructureMethodId;
 
-    [TypeConverter(typeof(DataServiceDataTooltipFilterConverter))]
-    [Category("Tooltip")]
-    [NotNullModelElementRule("TooltipDataStructure")]
-    [XmlReference("tooltipLoadMethod", "TooltipDataStructureMethodId")]
+    [TypeConverter(type: typeof(DataServiceDataTooltipFilterConverter))]
+    [Category(category: "Tooltip")]
+    [NotNullModelElementRule(conditionField: "TooltipDataStructure")]
+    [XmlReference(attributeName: "tooltipLoadMethod", idField: "TooltipDataStructureMethodId")]
     public DataStructureMethod TooltipLoadMethod
     {
         get
         {
             return (DataStructureMethod)
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(this.TooltipDataStructureMethodId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: this.TooltipDataStructureMethodId)
                 );
         }
         set
         {
             this.TooltipDataStructureMethodId = (
-                value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]
+                value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]
             );
         }
     }
     public Guid TooltipTransformationId;
 
-    [Category("Tooltip")]
-    [TypeConverter(typeof(TransformationConverter))]
+    [Category(category: "Tooltip")]
+    [TypeConverter(type: typeof(TransformationConverter))]
     [NotNullModelElementRule()]
-    [XmlReference("tooltipTransformation", "TooltipTransformationId")]
+    [XmlReference(attributeName: "tooltipTransformation", idField: "TooltipTransformationId")]
     public ITransformation TooltipTransformation
     {
         get
         {
             return (ISchemaItem)
                     this.PersistenceProvider.RetrieveInstance(
-                        typeof(ISchemaItem),
-                        new ModelElementKey(this.TooltipTransformationId)
+                        type: typeof(ISchemaItem),
+                        primaryKey: new ModelElementKey(id: this.TooltipTransformationId)
                     ) as ITransformation;
         }
-        set { this.TooltipTransformationId = (Guid)value.PrimaryKey["Id"]; }
+        set { this.TooltipTransformationId = (Guid)value.PrimaryKey[key: "Id"]; }
     }
     private string _roles = "*";
 
-    [Category("Condition"), DefaultValue("*")]
-    [XmlAttribute("roles")]
+    [Category(category: "Condition"), DefaultValue(value: "*")]
+    [XmlAttribute(attributeName: "roles")]
     public virtual string Roles
     {
         get
@@ -164,8 +164,8 @@ public class AbstractDataTooltip : AbstractSchemaItem, IComparable
     }
     private string _features;
 
-    [Category("Condition")]
-    [XmlAttribute("features")]
+    [Category(category: "Condition")]
+    [XmlAttribute(attributeName: "features")]
     public virtual string Features
     {
         get { return _features; }
@@ -173,8 +173,12 @@ public class AbstractDataTooltip : AbstractSchemaItem, IComparable
     }
     private int _level = 100;
 
-    [Category("Condition"), DefaultValue(100), RefreshProperties(RefreshProperties.Repaint)]
-    [XmlAttribute("level")]
+    [
+        Category(category: "Condition"),
+        DefaultValue(value: 100),
+        RefreshProperties(refresh: RefreshProperties.Repaint)
+    ]
+    [XmlAttribute(attributeName: "level")]
     public int Level
     {
         get { return _level; }
@@ -187,10 +191,10 @@ public class AbstractDataTooltip : AbstractSchemaItem, IComparable
         EntityFieldDynamicLabel compared = obj as EntityFieldDynamicLabel;
         if (compared != null)
         {
-            return this.Level.CompareTo(compared.Level);
+            return this.Level.CompareTo(value: compared.Level);
         }
 
-        return base.CompareTo(obj);
+        return base.CompareTo(obj: obj);
     }
     #endregion
 }

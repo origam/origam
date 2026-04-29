@@ -105,16 +105,16 @@ public class ChangeInfo
     {
         return Entity == other.Entity
             && Operation == other.Operation
-            && Equals(ObjectId, other.ObjectId);
+            && Equals(objA: ObjectId, objB: other.ObjectId);
     }
 
     public override bool Equals(object obj)
     {
-        if (ReferenceEquals(null, obj))
+        if (ReferenceEquals(objA: null, objB: obj))
         {
             return false;
         }
-        if (ReferenceEquals(this, obj))
+        if (ReferenceEquals(objA: this, objB: obj))
         {
             return true;
         }
@@ -122,11 +122,11 @@ public class ChangeInfo
         {
             return false;
         }
-        return Equals((ChangeInfo)obj);
+        return Equals(other: (ChangeInfo)obj);
     }
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(Entity, (int)Operation, ObjectId);
+        return HashCode.Combine(value1: Entity, value2: (int)Operation, value3: ObjectId);
     }
 }

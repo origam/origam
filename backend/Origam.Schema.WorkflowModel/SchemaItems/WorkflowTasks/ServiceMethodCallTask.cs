@@ -27,39 +27,44 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.WorkflowModel;
 
-[SchemaItemDescription("(Task) Service Method Call", "Tasks", "task-service-method-call.png")]
-[HelpTopic("Service+Method+Call+Task")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(
+    name: "(Task) Service Method Call",
+    folderName: "Tasks",
+    iconName: "task-service-method-call.png"
+)]
+[HelpTopic(topic: "Service+Method+Call+Task")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class ServiceMethodCallTask : WorkflowTask
 {
     public ServiceMethodCallTask() { }
 
     public ServiceMethodCallTask(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(schemaExtensionId: schemaExtensionId) { }
 
     public ServiceMethodCallTask(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Overriden ISchemaItem members
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(Service);
-        dependencies.Add(ServiceMethod);
-        base.GetExtraDependencies(dependencies);
+        dependencies.Add(item: Service);
+        dependencies.Add(item: ServiceMethod);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
     #endregion
     #region Properties
     public Guid ServiceMethodId;
 
-    [TypeConverter(typeof(ServiceMethodConverter))]
+    [TypeConverter(type: typeof(ServiceMethodConverter))]
     [NotNullModelElementRule()]
-    [XmlReference("serviceMethod", "ServiceMethodId")]
+    [XmlReference(attributeName: "serviceMethod", idField: "ServiceMethodId")]
     public IServiceMethod ServiceMethod
     {
         get
         {
             var key = new ModelElementKey { Id = this.ServiceMethodId };
-            return (ServiceMethod)PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
+            return (ServiceMethod)
+                PersistenceProvider.RetrieveInstance(type: typeof(ISchemaItem), primaryKey: key);
         }
         set
         {
@@ -77,13 +82,13 @@ public class ServiceMethodCallTask : WorkflowTask
             }
             else
             {
-                ServiceMethodId = (Guid)value.PrimaryKey["Id"];
+                ServiceMethodId = (Guid)value.PrimaryKey[key: "Id"];
                 // We generate all parameters to the function
                 foreach (ServiceMethodParameter parameter in ServiceMethod.ChildItems)
                 {
                     var serviceMethodCallParameter = NewItem<ServiceMethodCallParameter>(
-                        SchemaExtensionId,
-                        null
+                        schemaExtensionId: SchemaExtensionId,
+                        group: null
                     );
                     serviceMethodCallParameter.ServiceMethodParameter = parameter;
                     serviceMethodCallParameter.Name = parameter.Name;
@@ -94,15 +99,16 @@ public class ServiceMethodCallTask : WorkflowTask
 
     public Guid ServiceId;
 
-    [TypeConverter(typeof(ServiceConverter))]
+    [TypeConverter(type: typeof(ServiceConverter))]
     [NotNullModelElementRule()]
-    [XmlReference("service", "ServiceId")]
+    [XmlReference(attributeName: "service", idField: "ServiceId")]
     public IService Service
     {
         get
         {
             var key = new ModelElementKey { Id = ServiceId };
-            return (IService)PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
+            return (IService)
+                PersistenceProvider.RetrieveInstance(type: typeof(ISchemaItem), primaryKey: key);
         }
         set
         {
@@ -112,7 +118,7 @@ public class ServiceMethodCallTask : WorkflowTask
             }
             else
             {
-                ServiceId = (Guid)value.PrimaryKey["Id"];
+                ServiceId = (Guid)value.PrimaryKey[key: "Id"];
             }
             // Reset Method
             ServiceMethod = null;
@@ -134,7 +140,11 @@ public class ServiceMethodCallTask : WorkflowTask
         {
             itemName = "NewServiceMethodCallParameter";
         }
-        return base.NewItem<T>(schemaExtensionId, group, itemName);
+        return base.NewItem<T>(
+            schemaExtensionId: schemaExtensionId,
+            group: group,
+            itemName: itemName
+        );
     }
     #endregion
 }

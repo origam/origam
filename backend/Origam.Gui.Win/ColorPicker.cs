@@ -58,7 +58,7 @@ public class ColorPicker : BaseCaptionControl
                 components.Dispose();
             }
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
 
     #region Component Designer generated code
@@ -111,15 +111,15 @@ public class ColorPicker : BaseCaptionControl
             {
                 _selectedColor = -1;
                 this.button1.BackColor = Color.Transparent;
-                OnSelectedColorChanged(EventArgs.Empty);
+                OnSelectedColorChanged(e: EventArgs.Empty);
             }
             else
             {
                 if (_selectedColor != (int)value)
                 {
                     _selectedColor = (int)value;
-                    this.button1.BackColor = Color.FromArgb((int)value);
-                    OnSelectedColorChanged(EventArgs.Empty);
+                    this.button1.BackColor = Color.FromArgb(argb: (int)value);
+                    OnSelectedColorChanged(e: EventArgs.Empty);
                 }
             }
         }
@@ -135,7 +135,7 @@ public class ColorPicker : BaseCaptionControl
     {
         if (selectedColorChanged != null)
         {
-            selectedColorChanged(this, e);
+            selectedColorChanged(sender: this, e: e);
         }
     }
 
@@ -147,7 +147,7 @@ public class ColorPicker : BaseCaptionControl
         }
 
         colorDialog1.Color = this.button1.BackColor;
-        DialogResult result = colorDialog1.ShowDialog(this.FindForm() as IWin32Window);
+        DialogResult result = colorDialog1.ShowDialog(owner: this.FindForm() as IWin32Window);
 
         this.SelectedColor = colorDialog1.Color.ToArgb();
     }

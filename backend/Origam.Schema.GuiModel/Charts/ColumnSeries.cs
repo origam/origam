@@ -26,9 +26,13 @@ using Origam.DA.Common;
 
 namespace Origam.Schema.GuiModel;
 
-[SchemaItemDescription("Column Series", "Data Series", "icon_column-series.png")]
-[HelpTopic("Column+Series")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(
+    name: "Column Series",
+    folderName: "Data Series",
+    iconName: "icon_column-series.png"
+)]
+[HelpTopic(topic: "Column+Series")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class ColumnSeries : AbstractCartesianSeries
 {
     public ColumnSeries()
@@ -38,13 +42,13 @@ public class ColumnSeries : AbstractCartesianSeries
     }
 
     public ColumnSeries(Guid schemaExtensionId)
-        : base(schemaExtensionId)
+        : base(schemaExtensionId: schemaExtensionId)
     {
         Init();
     }
 
     public ColumnSeries(Key primaryKey)
-        : base(primaryKey)
+        : base(primaryKey: primaryKey)
     {
         Init();
     }
@@ -54,8 +58,8 @@ public class ColumnSeries : AbstractCartesianSeries
     #region Properties
     private ColumnSeriesType _type = ColumnSeriesType.Clustered;
 
-    [Category("Series"), DefaultValue(ColumnSeriesType.Clustered)]
-    [XmlAttribute("type")]
+    [Category(category: "Series"), DefaultValue(value: ColumnSeriesType.Clustered)]
+    [XmlAttribute(attributeName: "type")]
     public ColumnSeriesType Type
     {
         get { return _type; }

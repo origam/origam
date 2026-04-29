@@ -63,20 +63,24 @@ public class SessionHelper
         // if session not found, we just remove it from the list of sessions
         try
         {
-            ss = sessionManager.GetSession(sessionFormIdentifier, true);
+            ss = sessionManager.GetSession(
+                sessionFormIdentifier: sessionFormIdentifier,
+                rootSession: true
+            );
             // if the form was a modal dialog that needs to pass data to its parent,
             // we do it here
             if (ss.Request.ParentSessionId != null && ss.IsModalDialogCommited)
             {
                 SessionStore parentSession = sessionManager.GetSession(
-                    new Guid(ss.Request.ParentSessionId)
+                    sessionFormIdentifier: new Guid(g: ss.Request.ParentSessionId)
                 );
                 parentSession.PendingChanges = new List<ChangeInfo>();
                 EntityWorkflowAction ewa =
-                    UIActionTools.GetAction(ss.Request.SourceActionId) as EntityWorkflowAction;
+                    UIActionTools.GetAction(action: ss.Request.SourceActionId)
+                    as EntityWorkflowAction;
                 var actionRunnerClient = new ServerEntityUIActionRunnerClient(
-                    sessionManager,
-                    parentSession
+                    sessionManager: sessionManager,
+                    sessionStore: parentSession
                 );
                 actionRunnerClient.ProcessWorkflowResults(
                     profile: SecurityTools.CurrentUserProfile(),
@@ -102,21 +106,21 @@ public class SessionHelper
                 throw;
             }
         }
-        sessionManager.RemoveFormSession(sessionFormIdentifier);
+        sessionManager.RemoveFormSession(sessionFormIdentifier: sessionFormIdentifier);
         if (ss != null && !ss.Request.IsStandalone)
         {
             PortalSessionStore pss = sessionManager.GetPortalSession();
             IList<SessionStore> toRemove = new List<SessionStore>();
             foreach (SessionStore childSS in pss.FormSessions)
             {
-                if (childSS.Id.Equals(ss.Id))
+                if (childSS.Id.Equals(g: ss.Id))
                 {
-                    toRemove.Add(childSS);
+                    toRemove.Add(item: childSS);
                 }
             }
             foreach (SessionStore rem in toRemove)
             {
-                pss.FormSessions.Remove(rem);
+                pss.FormSessions.Remove(item: rem);
                 pss.IsExclusiveScreenOpen = false;
             }
         }

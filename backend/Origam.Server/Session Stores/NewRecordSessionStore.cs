@@ -41,7 +41,7 @@ public class NewRecordSessionStore : FormSessionStore
         string name,
         Analytics analytics
     )
-        : base(service, request, name, analytics)
+        : base(service: service, request: request, name: name, analytics: analytics)
     {
         IsModalDialog = true;
     }
@@ -51,24 +51,32 @@ public class NewRecordSessionStore : FormSessionStore
         var persistence = ServiceManager.Services.GetService<IPersistenceService>();
         var schemaProvider = persistence.SchemaProvider;
         var formMenuItem = schemaProvider.RetrieveInstance<FormReferenceMenuItem>(
-            new Guid(Request.ObjectId)
+            instanceId: new Guid(g: Request.ObjectId)
         );
-        var screen = schemaProvider.RetrieveInstance<FormControlSet>(formMenuItem.ScreenId);
-        var dataStructure = schemaProvider.RetrieveInstance<DataStructure>(screen.DataSourceId);
-        var rootEntity = ((DataStructureEntity)dataStructure.Entities[0])!.RootEntity;
+        var screen = schemaProvider.RetrieveInstance<FormControlSet>(
+            instanceId: formMenuItem.ScreenId
+        );
+        var dataStructure = schemaProvider.RetrieveInstance<DataStructure>(
+            instanceId: screen.DataSourceId
+        );
+        var rootEntity = ((DataStructureEntity)dataStructure.Entities[index: 0])!.RootEntity;
         var dataService = DataServiceFactory.GetDataService();
         var dataSet = dataService.GetEmptyDataSet(
-            rootEntity.ParentItemId,
-            CultureInfo.InvariantCulture
+            dataStructureId: rootEntity.ParentItemId,
+            culture: CultureInfo.InvariantCulture
         );
-        var table = dataSet.Tables[rootEntity.Name];
+        var table = dataSet.Tables[name: rootEntity.Name];
         var row = table!.NewRow();
-        DatasetTools.ApplyPrimaryKey(row);
-        DatasetTools.UpdateOrigamSystemColumns(row, true, SecurityManager.CurrentUserProfile().Id);
+        DatasetTools.ApplyPrimaryKey(row: row);
+        DatasetTools.UpdateOrigamSystemColumns(
+            row: row,
+            isNew: true,
+            profileId: SecurityManager.CurrentUserProfile().Id
+        );
         dataSet.RemoveNullConstraints();
-        table.Rows.Add(row);
-        SetDataSource(dataSet);
-        FillInitialValues(row);
+        table.Rows.Add(row: row);
+        SetDataSource(dataSource: dataSet);
+        FillInitialValues(row: row);
     }
 
     private void FillInitialValues(DataRow row)
@@ -81,12 +89,12 @@ public class NewRecordSessionStore : FormSessionStore
             var sortedColumnNames = Request.NewRecordInitialValues.Keys.CastToList<string>();
             sortedColumnNames.Sort();
             foreach (
-                var columnName in sortedColumnNames.Where(columnName =>
-                    Request.NewRecordInitialValues[columnName] != null
+                var columnName in sortedColumnNames.Where(predicate: columnName =>
+                    Request.NewRecordInitialValues[key: columnName] != null
                 )
             )
             {
-                row[columnName] = Request.NewRecordInitialValues[columnName]!;
+                row[columnName: columnName] = Request.NewRecordInitialValues[key: columnName]!;
             }
         }
         finally

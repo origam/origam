@@ -27,11 +27,11 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.EntityModel;
 
-[SchemaItemDescription("Rule Set Reference", "icon_rule-set-reference.png")]
-[HelpTopic("Rule+Set+Reference")]
-[XmlModelRoot(CategoryConst)]
-[DefaultProperty("RuleSet")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Rule Set Reference", iconName: "icon_rule-set-reference.png")]
+[HelpTopic(topic: "Rule+Set+Reference")]
+[XmlModelRoot(category: CategoryConst)]
+[DefaultProperty(name: "RuleSet")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class DataStructureRuleSetReference : AbstractSchemaItem
 {
     public const string CategoryConst = "DataStructureRuleSetReference";
@@ -40,37 +40,37 @@ public class DataStructureRuleSetReference : AbstractSchemaItem
         : base() { }
 
     public DataStructureRuleSetReference(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public DataStructureRuleSetReference(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Properties
     public Guid DataStructureRuleSetId;
 
-    [Category("Ruleset reference")]
+    [Category(category: "Ruleset reference")]
     [Description(
-        "Choose a ruleset (from current datastructure). All rules of chosen ruleset will be applied in the current (parent) ruleset. Could be handy if you have to many rules and want to organize them or you don't want to run all rules for some reasons (e.g. optimization reasons)."
+        description: "Choose a ruleset (from current datastructure). All rules of chosen ruleset will be applied in the current (parent) ruleset. Could be handy if you have to many rules and want to organize them or you don't want to run all rules for some reasons (e.g. optimization reasons)."
     )]
-    [TypeConverter(typeof(DataStructureRuleSetConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
+    [TypeConverter(type: typeof(DataStructureRuleSetConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
     [RuleSetRuleUniqnessModelElementRule()]
     [NotNullModelElementRule()]
-    [XmlReference("ruleSet", "DataStructureRuleSetId")]
+    [XmlReference(attributeName: "ruleSet", idField: "DataStructureRuleSetId")]
     public DataStructureRuleSet RuleSet
     {
         get
         {
             return (DataStructureRuleSet)
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(DataStructureRuleSet),
-                    new ModelElementKey(this.DataStructureRuleSetId)
+                    type: typeof(DataStructureRuleSet),
+                    primaryKey: new ModelElementKey(id: this.DataStructureRuleSetId)
                 );
         }
         set
         {
             this.DataStructureRuleSetId = (
-                value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]
+                value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]
             );
             if (this.RuleSet != null)
             {
@@ -89,9 +89,9 @@ public class DataStructureRuleSetReference : AbstractSchemaItem
     {
         if (RuleSet != null)
         {
-            dependencies.Add(RuleSet);
+            dependencies.Add(item: RuleSet);
         }
-        base.GetExtraDependencies(dependencies);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
     #endregion
     public override void UpdateReferences()
@@ -100,7 +100,7 @@ public class DataStructureRuleSetReference : AbstractSchemaItem
         {
             if (item.OldPrimaryKey != null && this.RuleSet != null)
             {
-                if (item.OldPrimaryKey.Equals(this.RuleSet.PrimaryKey))
+                if (item.OldPrimaryKey.Equals(obj: this.RuleSet.PrimaryKey))
                 {
                     this.DataStructureRuleSetId = (item as DataStructureRuleSet).Id;
                     break;
@@ -114,7 +114,7 @@ public class DataStructureRuleSetReference : AbstractSchemaItem
     {
         if ((obj as DataStructureRuleSetReference) != null)
         {
-            return this.Name.CompareTo((obj as DataStructureRuleSetReference).Name);
+            return this.Name.CompareTo(strB: (obj as DataStructureRuleSetReference).Name);
         }
         // rulesets are always an top, so rules are lower
         return -1;

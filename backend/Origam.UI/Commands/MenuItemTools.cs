@@ -38,10 +38,10 @@ internal static class MenuItemTools
             if (item is ISubmenuBuilder)
             {
                 ISubmenuBuilder submenuBuilder = (ISubmenuBuilder)item;
-                ToolStripItem[] submenu = submenuBuilder.BuildSubmenu(caller);
+                ToolStripItem[] submenu = submenuBuilder.BuildSubmenu(owner: caller);
                 if (submenu.Length > 0)
                 {
-                    itemsToUpdate.AddRange(submenu);
+                    itemsToUpdate.AddRange(toolStripItems: submenu);
                 }
             }
             else
@@ -50,7 +50,7 @@ internal static class MenuItemTools
                 {
                     update.UpdateItemsToDisplay();
                 }
-                itemsToUpdate.Add(item);
+                itemsToUpdate.Add(value: item);
             }
         }
     }

@@ -30,7 +30,11 @@ public class HBoxBuilder
 {
     public static void Build(XmlElement parentNode)
     {
-        parentNode.SetAttribute("type", "http://www.w3.org/2001/XMLSchema-instance", "UIElement");
-        parentNode.SetAttribute("Type", "HBox");
+        parentNode.SetAttribute(
+            localName: "type",
+            namespaceURI: "http://www.w3.org/2001/XMLSchema-instance",
+            value: "UIElement"
+        );
+        parentNode.SetAttribute(name: "Type", value: "HBox");
     }
 }

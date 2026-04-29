@@ -25,29 +25,29 @@ public class DiffLineViewModel
         viewModel.LineNumber = lineNumber;
         viewModel.PositionInSection = positionInSection;
 
-        if (text.StartsWith("+"))
+        if (text.StartsWith(value: "+"))
         {
             viewModel.Style = DiffContext.Added;
             viewModel.PrefixForStyle = "+";
-            viewModel.Text = text.Substring(1);
+            viewModel.Text = text.Substring(startIndex: 1);
         }
-        else if (text.StartsWith("-"))
+        else if (text.StartsWith(value: "-"))
         {
             viewModel.Style = DiffContext.Deleted;
             viewModel.PrefixForStyle = "-";
-            viewModel.Text = text.Substring(1);
+            viewModel.Text = text.Substring(startIndex: 1);
         }
         else
         {
             viewModel.Style = DiffContext.Context;
             viewModel.PrefixForStyle = "";
-            viewModel.Text = text.Length > 1 ? text.Substring(1) : text;
+            viewModel.Text = text.Length > 1 ? text.Substring(startIndex: 1) : text;
         }
         return viewModel;
     }
 
     public override string ToString()
     {
-        return String.Format("{0}{1}", PrefixForStyle, Text);
+        return String.Format(format: "{0}{1}", arg0: PrefixForStyle, arg1: Text);
     }
 }

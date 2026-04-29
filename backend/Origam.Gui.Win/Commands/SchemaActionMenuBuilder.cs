@@ -41,7 +41,7 @@ namespace Origam.Gui.Win.Commands;
 public class SchemaActionsMenuBuilder : ISubmenuBuilder
 {
     WorkbenchSchemaService _schemaService =
-        ServiceManager.Services.GetService(typeof(WorkbenchSchemaService))
+        ServiceManager.Services.GetService(serviceType: typeof(WorkbenchSchemaService))
         as WorkbenchSchemaService;
     object _owner = null;
     #region ISubmenuBuilder Members
@@ -61,110 +61,230 @@ public class SchemaActionsMenuBuilder : ISubmenuBuilder
         var list = new List<AsMenuCommand>();
         //			CreateMenuItem(list, "Generate &Test Documentation", new Commands.GenerateTestDocumentation(), null);
         //			CreateMenuItem(list, "Generate &Use Case Documentation", new Commands.GenerateUseCaseDocumentation(), null);
-        CreateMenuItem(list, "Show SQL", new ShowDataStructureSql(), null);
-        CreateMenuItem(list, "Show SQL", new ShowDataStructureFilterSetSql(), null);
-        CreateMenuItem(list, "Show SQL", new ShowDataStructureSortSetSql(), null);
-        CreateMenuItem(list, "Show SQL", new ShowDataStructureEntitySql(), null);
         CreateMenuItem(
-            list,
-            "Generate Entity Fields",
-            new GenerateDataStructureEntityColumns(),
-            null
-        );
-        CreateMenuItem(list, "Save Data to File...", new SaveDataFromDataStructure(), null);
-        CreateMenuItem(list, "Create Lookup...", new CreateLookupFromEntityCommand(), null);
-        CreateMenuItem(
-            list,
-            "Create Lookup Field (incl. entity)...",
-            new CreateFieldWithLookupEntityCommand(),
-            null
-        );
-        CreateMenuItem(list, "Create Screen...", new CreateFormFromEntityCommand(), null);
-        CreateMenuItem(list, "Create Screen Section...", new CreatePanelFromEntityCommand(), null);
-        CreateMenuItem(
-            list,
-            "Create Relationship with key...",
-            new CreateFieldWithRelationshipEntityCommand(),
-            null
-        );
-        CreateMenuItem(list, "Create Menu Item...", new CreateCompleteUICommand(), null);
-        CreateMenuItem(list, "Create Screen", new CreateFormFromPanelCommand(), null);
-        CreateMenuItem(list, "Create Menu Item...", new CreateMenuFromFormCommand(), null);
-        CreateMenuItem(list, "Create Menu Item...", new CreateMenuFromDataConstantCommand(), null);
-        CreateMenuItem(
-            list,
-            "Create Menu Item...",
-            new CreateMenuFromSequentialWorkflowCommand(),
-            null
+            list: list,
+            text: "Show SQL",
+            command: new ShowDataStructureSql(),
+            image: null
         );
         CreateMenuItem(
-            list,
-            "Create Data Structure",
-            new CreateDataStructureFromEntityCommand(),
-            null
-        );
-        CreateMenuItem(list, "Create Child Entity...", new CreateChildEntityCommand(), null);
-        CreateMenuItem(
-            list,
-            "Create Localization Child Entity...",
-            new CreateLanguageTranslationEntityCommand(),
-            null
-        );
-        CreateMenuItem(list, "Localize", new LocalizeDatastructureCommand(), null);
-        CreateMenuItem(list, "Make Version Current", new MakeActiveVersionCurrent(), null);
-        CreateMenuItem(list, "Create (=) Filter", new CreateFilterByFieldCommand(), null);
-        CreateMenuItem(
-            list,
-            "Create (=) Filter With Parameter",
-            new CreateFilterWithParameterByFieldCommand(),
-            null
-        );
-        CreateMenuItem(list, "Create (Like) Filter", new CreateFilterLikeByFieldCommand(), null);
-        CreateMenuItem(
-            list,
-            "Create (Like) Filter With Parameter",
-            new CreateFilterLikeWithParameterByFieldCommand(),
-            null
+            list: list,
+            text: "Show SQL",
+            command: new ShowDataStructureFilterSetSql(),
+            image: null
         );
         CreateMenuItem(
-            list,
-            "Create (List) Filter With Parameter",
-            new CreateFilterByListWithParameterByFieldCommand(),
-            null
+            list: list,
+            text: "Show SQL",
+            command: new ShowDataStructureSortSetSql(),
+            image: null
         );
         CreateMenuItem(
-            list,
-            "Create (Between) Filter With Parameters",
-            new CreateFilterBetweenWithParameterByFieldCommand(),
-            null
+            list: list,
+            text: "Show SQL",
+            command: new ShowDataStructureEntitySql(),
+            image: null
         );
-        CreateMenuItem(list, "Create Foreign Key...", new CreateForeignKeyCommand(), null);
         CreateMenuItem(
-            list,
-            "Create Work Queue Class...",
-            new CreateWorkQueueClassFromEntityCommand(),
-            null
+            list: list,
+            text: "Generate Entity Fields",
+            command: new GenerateDataStructureEntityColumns(),
+            image: null
         );
-        CreateMenuItem(list, "Create Role", new CreateRoleCommand(), null);
-        CreateMenuItem(list, "Set Inheritance Off", new SetInheritanceOff(), null);
+        CreateMenuItem(
+            list: list,
+            text: "Save Data to File...",
+            command: new SaveDataFromDataStructure(),
+            image: null
+        );
+        CreateMenuItem(
+            list: list,
+            text: "Create Lookup...",
+            command: new CreateLookupFromEntityCommand(),
+            image: null
+        );
+        CreateMenuItem(
+            list: list,
+            text: "Create Lookup Field (incl. entity)...",
+            command: new CreateFieldWithLookupEntityCommand(),
+            image: null
+        );
+        CreateMenuItem(
+            list: list,
+            text: "Create Screen...",
+            command: new CreateFormFromEntityCommand(),
+            image: null
+        );
+        CreateMenuItem(
+            list: list,
+            text: "Create Screen Section...",
+            command: new CreatePanelFromEntityCommand(),
+            image: null
+        );
+        CreateMenuItem(
+            list: list,
+            text: "Create Relationship with key...",
+            command: new CreateFieldWithRelationshipEntityCommand(),
+            image: null
+        );
+        CreateMenuItem(
+            list: list,
+            text: "Create Menu Item...",
+            command: new CreateCompleteUICommand(),
+            image: null
+        );
+        CreateMenuItem(
+            list: list,
+            text: "Create Screen",
+            command: new CreateFormFromPanelCommand(),
+            image: null
+        );
+        CreateMenuItem(
+            list: list,
+            text: "Create Menu Item...",
+            command: new CreateMenuFromFormCommand(),
+            image: null
+        );
+        CreateMenuItem(
+            list: list,
+            text: "Create Menu Item...",
+            command: new CreateMenuFromDataConstantCommand(),
+            image: null
+        );
+        CreateMenuItem(
+            list: list,
+            text: "Create Menu Item...",
+            command: new CreateMenuFromSequentialWorkflowCommand(),
+            image: null
+        );
+        CreateMenuItem(
+            list: list,
+            text: "Create Data Structure",
+            command: new CreateDataStructureFromEntityCommand(),
+            image: null
+        );
+        CreateMenuItem(
+            list: list,
+            text: "Create Child Entity...",
+            command: new CreateChildEntityCommand(),
+            image: null
+        );
+        CreateMenuItem(
+            list: list,
+            text: "Create Localization Child Entity...",
+            command: new CreateLanguageTranslationEntityCommand(),
+            image: null
+        );
+        CreateMenuItem(
+            list: list,
+            text: "Localize",
+            command: new LocalizeDatastructureCommand(),
+            image: null
+        );
+        CreateMenuItem(
+            list: list,
+            text: "Make Version Current",
+            command: new MakeActiveVersionCurrent(),
+            image: null
+        );
+        CreateMenuItem(
+            list: list,
+            text: "Create (=) Filter",
+            command: new CreateFilterByFieldCommand(),
+            image: null
+        );
+        CreateMenuItem(
+            list: list,
+            text: "Create (=) Filter With Parameter",
+            command: new CreateFilterWithParameterByFieldCommand(),
+            image: null
+        );
+        CreateMenuItem(
+            list: list,
+            text: "Create (Like) Filter",
+            command: new CreateFilterLikeByFieldCommand(),
+            image: null
+        );
+        CreateMenuItem(
+            list: list,
+            text: "Create (Like) Filter With Parameter",
+            command: new CreateFilterLikeWithParameterByFieldCommand(),
+            image: null
+        );
+        CreateMenuItem(
+            list: list,
+            text: "Create (List) Filter With Parameter",
+            command: new CreateFilterByListWithParameterByFieldCommand(),
+            image: null
+        );
+        CreateMenuItem(
+            list: list,
+            text: "Create (Between) Filter With Parameters",
+            command: new CreateFilterBetweenWithParameterByFieldCommand(),
+            image: null
+        );
+        CreateMenuItem(
+            list: list,
+            text: "Create Foreign Key...",
+            command: new CreateForeignKeyCommand(),
+            image: null
+        );
+        CreateMenuItem(
+            list: list,
+            text: "Create Work Queue Class...",
+            command: new CreateWorkQueueClassFromEntityCommand(),
+            image: null
+        );
+        CreateMenuItem(
+            list: list,
+            text: "Create Role",
+            command: new CreateRoleCommand(),
+            image: null
+        );
+        CreateMenuItem(
+            list: list,
+            text: "Set Inheritance Off",
+            command: new SetInheritanceOff(),
+            image: null
+        );
         //			CreateMenuItem(list, "Generate Default Folders", new Origam.Schema.Wizards.CreatePackageFolders(), null);
-        CreateMenuItem(list, "Show XML", new ShowModelElementXmlCommand(), null);
+        CreateMenuItem(
+            list: list,
+            text: "Show XML",
+            command: new ShowModelElementXmlCommand(),
+            image: null
+        );
         //			CreateMenuItem(list, "Generate XAML...", new Commands.GenerateXamlCommand(), null);
         CreateMenuItem(
-            list,
-            "Generate Mappings...",
-            new GenerateWorkQueueClassEntityMappings(),
-            null
+            list: list,
+            text: "Generate Mappings...",
+            command: new GenerateWorkQueueClassEntityMappings(),
+            image: null
         );
         //			CreateMenuItem(list, "Show Editor XML", new ShowEditorXml(), null);
-        CreateMenuItem(list, "New LoadData Task", new CreateLoadDataCommand(), null);
-        CreateMenuItem(list, "New StoreData Task", new CreateStoreDataCommand(), null);
-        CreateMenuItem(list, "New Transform Task", new CreateTransformDataCommand(), null);
         CreateMenuItem(
-            list,
-            "Load/Transform/Save Tasks",
-            new CreateLoadTransformSaveCommand(),
-            null
+            list: list,
+            text: "New LoadData Task",
+            command: new CreateLoadDataCommand(),
+            image: null
+        );
+        CreateMenuItem(
+            list: list,
+            text: "New StoreData Task",
+            command: new CreateStoreDataCommand(),
+            image: null
+        );
+        CreateMenuItem(
+            list: list,
+            text: "New Transform Task",
+            command: new CreateTransformDataCommand(),
+            image: null
+        );
+        CreateMenuItem(
+            list: list,
+            text: "Load/Transform/Save Tasks",
+            command: new CreateLoadTransformSaveCommand(),
+            image: null
         );
         return list.ToArray();
     }
@@ -183,14 +303,14 @@ public class SchemaActionsMenuBuilder : ISubmenuBuilder
             if (cmd.Command.GeneratedModelElements.Count > 0)
             {
                 FindSchemaItemResultsPad findResults =
-                    WorkbenchSingleton.Workbench.GetPad(typeof(FindSchemaItemResultsPad))
+                    WorkbenchSingleton.Workbench.GetPad(type: typeof(FindSchemaItemResultsPad))
                     as FindSchemaItemResultsPad;
-                findResults.DisplayResults(cmd.Command.GeneratedModelElements.ToArray());
+                findResults.DisplayResults(results: cmd.Command.GeneratedModelElements.ToArray());
                 MessageBox.Show(
-                    strings.ModelElementsUpdate_Message,
-                    strings.Results_Title,
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information
+                    text: strings.ModelElementsUpdate_Message,
+                    caption: strings.Results_Title,
+                    buttons: MessageBoxButtons.OK,
+                    icon: MessageBoxIcon.Information
                 );
             }
             // offer to execute any newly created deployment scripts
@@ -201,25 +321,25 @@ public class SchemaActionsMenuBuilder : ISubmenuBuilder
                 var activity = item as AbstractUpdateScriptActivity;
                 if (activity != null)
                 {
-                    activities.Add(activity);
+                    activities.Add(item: activity);
                 }
             }
             if (
                 activities.Count > 0
                 && MessageBox.Show(
-                    strings.ExecuteDeploymentScripts_Question,
-                    strings.DeploymentScripts_Title,
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Question
+                    text: strings.ExecuteDeploymentScripts_Question,
+                    caption: strings.DeploymentScripts_Title,
+                    buttons: MessageBoxButtons.YesNo,
+                    icon: MessageBoxIcon.Question
                 ) == DialogResult.Yes
             )
             {
                 IDeploymentService deploymentService =
-                    ServiceManager.Services.GetService(typeof(IDeploymentService))
+                    ServiceManager.Services.GetService(serviceType: typeof(IDeploymentService))
                     as IDeploymentService;
                 foreach (var activity in activities)
                 {
-                    deploymentService.ExecuteActivity(activity.PrimaryKey);
+                    deploymentService.ExecuteActivity(key: activity.PrimaryKey);
                 }
             }
             persistenceProvider.EndTransaction();
@@ -228,10 +348,10 @@ public class SchemaActionsMenuBuilder : ISubmenuBuilder
         {
             persistenceProvider.EndTransactionDontSave();
             AsMessageBox.ShowError(
-                WorkbenchSingleton.Workbench as Form,
-                ex.Message,
-                strings.GenericError_Title,
-                ex
+                owner: WorkbenchSingleton.Workbench as Form,
+                text: ex.Message,
+                caption: strings.GenericError_Title,
+                exception: ex
             );
         }
     }
@@ -243,7 +363,7 @@ public class SchemaActionsMenuBuilder : ISubmenuBuilder
         Image image
     )
     {
-        AsMenuCommand menuItem = new AsMenuCommand(text, command);
+        AsMenuCommand menuItem = new AsMenuCommand(label: text, menuCommand: command);
         command.Owner = _owner;
 
         if (menuItem.IsEnabled)
@@ -254,7 +374,7 @@ public class SchemaActionsMenuBuilder : ISubmenuBuilder
             {
                 menuItem.Image = image;
             }
-            list.Add(menuItem);
+            list.Add(item: menuItem);
         }
         else
         {

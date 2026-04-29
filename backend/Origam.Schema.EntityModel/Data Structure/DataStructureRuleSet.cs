@@ -27,10 +27,10 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.EntityModel;
 
-[SchemaItemDescription("Rule Set", "Rule Sets", "icon_rule-set.png")]
-[HelpTopic("Rule+Sets")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Rule Set", folderName: "Rule Sets", iconName: "icon_rule-set.png")]
+[HelpTopic(topic: "Rule+Sets")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class DataStructureRuleSet : AbstractSchemaItem
 {
     public const string CategoryConst = "DataStructureRuleSet";
@@ -39,25 +39,25 @@ public class DataStructureRuleSet : AbstractSchemaItem
     public DataStructureRuleSet() { }
 
     public DataStructureRuleSet(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public DataStructureRuleSet(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Public Methods
     public List<DataStructureRule> Rules()
     {
-        var result = ChildItemsByType<DataStructureRule>(DataStructureRule.CategoryConst);
+        var result = ChildItemsByType<DataStructureRule>(itemType: DataStructureRule.CategoryConst);
         // add all child rule sets
         foreach (
             var childRuleSet in ChildItemsByType<DataStructureRuleSetReference>(
-                DataStructureRuleSetReference.CategoryConst
+                itemType: DataStructureRuleSetReference.CategoryConst
             )
         )
         {
             if (childRuleSet.RuleSet != null)
             {
-                result.AddRange(childRuleSet.RuleSet.Rules());
+                result.AddRange(collection: childRuleSet.RuleSet.Rules());
             }
         }
         return result;
@@ -68,16 +68,16 @@ public class DataStructureRuleSet : AbstractSchemaItem
         DataStructureRuleSetReference curRuleSetReference
     )
     {
-        if (!ruleSetUniqIds.Add(Id))
+        if (!ruleSetUniqIds.Add(item: Id))
         {
             throw new NullReferenceException(
-                $"Ruleset `{Name}' ({Id}) found twice. Circular ruleset reference found."
+                message: $"Ruleset `{Name}' ({Id}) found twice. Circular ruleset reference found."
             );
         }
         var addCurrent = true;
         foreach (
             var ruleSetReference in ChildItemsByType<DataStructureRuleSetReference>(
-                DataStructureRuleSetReference.CategoryConst
+                itemType: DataStructureRuleSetReference.CategoryConst
             )
         )
         {
@@ -86,12 +86,18 @@ public class DataStructureRuleSet : AbstractSchemaItem
                 // current already processed
                 addCurrent = false;
             }
-            ruleSetReference.RuleSet.AddUniqueRuleSetIds(ruleSetUniqIds, curRuleSetReference);
+            ruleSetReference.RuleSet.AddUniqueRuleSetIds(
+                ruleSetUniqIds: ruleSetUniqIds,
+                curRuleSetReference: curRuleSetReference
+            );
         }
         // add current ruleset virtually - if we are in proper parent ruleset
         if (curRuleSetReference != null && curRuleSetReference.ParentItemId == Id && addCurrent)
         {
-            curRuleSetReference.RuleSet.AddUniqueRuleSetIds(ruleSetUniqIds, curRuleSetReference);
+            curRuleSetReference.RuleSet.AddUniqueRuleSetIds(
+                ruleSetUniqIds: ruleSetUniqIds,
+                curRuleSetReference: curRuleSetReference
+            );
         }
     }
 
@@ -102,7 +108,7 @@ public class DataStructureRuleSet : AbstractSchemaItem
         {
             if (rule.EntityName == entityName && rule.RuleDependencies.Count == 0)
             {
-                result.Add(rule);
+                result.Add(item: rule);
             }
         }
         return result;
@@ -115,7 +121,7 @@ public class DataStructureRuleSet : AbstractSchemaItem
         {
             if (rule.Entity.Name == entityName && rule.RuleDependencies.Count > 0)
             {
-                result[rule.PrimaryKey] = rule;
+                result[key: rule.PrimaryKey] = rule;
             }
         }
         return result;
@@ -132,7 +138,7 @@ public class DataStructureRuleSet : AbstractSchemaItem
         string cacheId = Id + entityName + fieldId + includeOtherEntities;
         lock (_lock)
         {
-            if (_ruleCache.TryGetValue(cacheId, out var rules))
+            if (_ruleCache.TryGetValue(key: cacheId, value: out var rules))
             {
                 return rules;
             }
@@ -151,12 +157,12 @@ public class DataStructureRuleSet : AbstractSchemaItem
                         && dep.FieldId == fieldId
                     )
                     {
-                        result.Add(rule);
+                        result.Add(item: rule);
                     }
                 }
             }
 #if ORIGAM_CLIENT
-            _ruleCache.Add(cacheId, result);
+            _ruleCache.Add(key: cacheId, value: result);
         }
 #endif
         return result;
@@ -188,7 +194,11 @@ public class DataStructureRuleSet : AbstractSchemaItem
         {
             itemName = "NewRuleSetReference";
         }
-        return base.NewItem<T>(schemaExtensionId, group, itemName);
+        return base.NewItem<T>(
+            schemaExtensionId: schemaExtensionId,
+            group: group,
+            itemName: itemName
+        );
     }
     #endregion
 }

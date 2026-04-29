@@ -47,26 +47,28 @@ class DependencyTaskRunner
     )
     {
         deferedTasks.Add(
-            new AddDependencyTask(
-                persistenceProvider,
-                independentItem,
-                dependentItem,
-                triggerItemId
+            item: new AddDependencyTask(
+                persistenceProvider: persistenceProvider,
+                independentItem: independentItem,
+                dependentItem: dependentItem,
+                triggerItemId: triggerItemId
             )
         );
     }
 
     public void RemoveDependencyTask(WorkflowTaskDependency dependency, Guid triggerItemId)
     {
-        deferedTasks.Add(new RemoveDependencyTask(dependency, triggerItemId));
+        deferedTasks.Add(
+            item: new RemoveDependencyTask(dependency: dependency, triggerItemId: triggerItemId)
+        );
     }
 
     internal void UpdateDependencies(ISchemaItem persistedSchemaItem)
     {
         deferedTasks
             .ToArray()
-            .Where(task => task.TryRun(persistedSchemaItem))
-            .ForEach(task => deferedTasks.Remove(task));
+            .Where(predicate: task => task.TryRun(persistedItem: persistedSchemaItem))
+            .ForEach(action: task => deferedTasks.Remove(item: task));
     }
 }
 

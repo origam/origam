@@ -37,12 +37,14 @@ public class XmlJsonConvertServiceAgent : AbstractServiceAgent
         {
             case "TypedXml2Json":
             {
-                StringWriter stringWriter = new StringWriter(CultureInfo.InvariantCulture);
+                StringWriter stringWriter = new StringWriter(
+                    formatProvider: CultureInfo.InvariantCulture
+                );
                 JsonUtils.SerializeToJson(
                     textWriter: stringWriter,
-                    value: Parameters.Get<IDataDocument>("Data").DataSet,
-                    omitRootElement: Parameters.TryGet<bool>("OmitRootElement"),
-                    omitMainElement: Parameters.TryGet<bool>("OmitMainElement")
+                    value: Parameters.Get<IDataDocument>(key: "Data").DataSet,
+                    omitRootElement: Parameters.TryGet<bool>(key: "OmitRootElement"),
+                    omitMainElement: Parameters.TryGet<bool>(key: "OmitMainElement")
                 );
                 result = stringWriter.ToString();
                 break;

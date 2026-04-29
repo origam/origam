@@ -38,13 +38,17 @@ public class DataSetBuilder
 
     public DataSet InitializeFullStructure(Guid id, DataStructureDefaultSet defaultSet)
     {
-        return new DatasetGenerator(true).CreateDataSet(DataStructure(id), true, defaultSet);
+        return new DatasetGenerator(userDefinedParameters: true).CreateDataSet(
+            ds: DataStructure(id: id),
+            includeCalculatedColumns: true,
+            defaultSet: defaultSet
+        );
     }
 
     public DataSet InitializeListStructure(DataSet data, string listEntity, bool isDbSource)
     {
-        DataSet listData = DatasetTools.CloneDataSet(data);
-        DataTable listTable = listData.Tables[listEntity];
+        DataSet listData = DatasetTools.CloneDataSet(dataset: data);
+        DataTable listTable = listData.Tables[name: listEntity];
         // turn off constraints checking because we will be loading only partial
         // data to the list
         listData.EnforceConstraints = false;
@@ -63,7 +67,10 @@ public class DataSetBuilder
         // the database
         if (isDbSource)
         {
-            DataColumn loadedFlagColumn = listTable.Columns.Add("___ORIGAM_IsLoaded", typeof(bool));
+            DataColumn loadedFlagColumn = listTable.Columns.Add(
+                columnName: "___ORIGAM_IsLoaded",
+                type: typeof(bool)
+            );
             loadedFlagColumn.AllowDBNull = false;
             loadedFlagColumn.DefaultValue = false;
         }
@@ -75,10 +82,11 @@ public class DataSetBuilder
     internal DataStructure DataStructure(Guid id)
     {
         IPersistenceService persistence =
-            ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+            ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+            as IPersistenceService;
         return persistence.SchemaProvider.RetrieveInstance(
-                typeof(DataStructure),
-                new ModelElementKey(id)
+                type: typeof(DataStructure),
+                primaryKey: new ModelElementKey(id: id)
             ) as DataStructure;
     }
 
@@ -92,52 +100,52 @@ public class DataSetBuilder
     )
     {
         dataListLoadedColumns.Clear();
-        string initialColumns = ListPrimaryKeyColumns(data, listEntity);
+        string initialColumns = ListPrimaryKeyColumns(data: data, listEntity: listEntity);
         if (sortSet != null)
         {
             foreach (
                 var sortItem in sortSet.ChildItemsByType<DataStructureSortSetItem>(
-                    DataStructureSortSetItem.CategoryConst
+                    itemType: DataStructureSortSetItem.CategoryConst
                 )
             )
             {
                 if (sortItem.Entity.Name == listEntity)
                 {
                     initialColumns += ";" + sortItem.FieldName;
-                    dataListLoadedColumns.Add(sortItem.FieldName);
+                    dataListLoadedColumns.Add(item: sortItem.FieldName);
                 }
             }
         }
         // load list entity
         DataSet result = DataService.Instance.LoadData(
-            _menuItem.ListDataStructureId,
-            _menuItem.ListMethodId,
-            Guid.Empty,
-            _menuItem.ListSortSetId,
-            null,
-            queryParameter,
-            data,
-            listEntity,
-            initialColumns
+            dataStructureId: _menuItem.ListDataStructureId,
+            methodId: _menuItem.ListMethodId,
+            defaultSetId: Guid.Empty,
+            sortSetId: _menuItem.ListSortSetId,
+            transactionId: null,
+            parameters: queryParameter,
+            currentData: data,
+            entity: listEntity,
+            columnName: initialColumns
         );
         // load all array field child entities - there is no way how to read
         // only children of a specific record (inside LazyLoadListRowData) so
         // we preload all array fields here
         var arrayColumns = new List<string>();
-        foreach (DataColumn col in result.Tables[listEntity].Columns)
+        foreach (DataColumn col in result.Tables[name: listEntity].Columns)
         {
-            if (IsColumnArray(col))
+            if (IsColumnArray(dataColumn: col))
             {
-                arrayColumns.Add(col.ColumnName);
+                arrayColumns.Add(item: col.ColumnName);
             }
         }
         LoadArrayColumns(
-            result,
-            listEntity,
-            queryParameter,
-            arrayColumns,
-            dataListLoadedColumns,
-            _menuItem
+            dataset: result,
+            entity: listEntity,
+            qparams: queryParameter,
+            arrayColumns: arrayColumns,
+            DataListLoadedColumns: dataListLoadedColumns,
+            _menuItem: _menuItem
         );
         return result;
     }
@@ -155,22 +163,22 @@ public class DataSetBuilder
         {
             foreach (string column in arrayColumns)
             {
-                if (!DataListLoadedColumns.Contains(column))
+                if (!DataListLoadedColumns.Contains(item: column))
                 {
-                    DataColumn col = dataset.Tables[entity].Columns[column];
-                    string relationName = (string)col.ExtendedProperties[Const.ArrayRelation];
+                    DataColumn col = dataset.Tables[name: entity].Columns[name: column];
+                    string relationName = (string)col.ExtendedProperties[key: Const.ArrayRelation];
                     DataService.Instance.LoadData(
-                        _menuItem.ListDataStructureId,
-                        _menuItem.ListMethodId,
-                        Guid.Empty,
-                        _menuItem.ListSortSetId,
-                        null,
-                        qparams,
-                        dataset,
-                        relationName,
-                        null
+                        dataStructureId: _menuItem.ListDataStructureId,
+                        methodId: _menuItem.ListMethodId,
+                        defaultSetId: Guid.Empty,
+                        sortSetId: _menuItem.ListSortSetId,
+                        transactionId: null,
+                        parameters: qparams,
+                        currentData: dataset,
+                        entity: relationName,
+                        columnName: null
                     );
-                    DataListLoadedColumns.Add(column);
+                    DataListLoadedColumns.Add(item: column);
                 }
             }
         }
@@ -178,9 +186,9 @@ public class DataSetBuilder
 
     public static bool IsColumnArray(DataColumn dataColumn)
     {
-        if (dataColumn.ExtendedProperties.Contains(Const.OrigamDataType))
+        if (dataColumn.ExtendedProperties.Contains(key: Const.OrigamDataType))
         {
-            return ((Schema.OrigamDataType)dataColumn.ExtendedProperties[Const.OrigamDataType])
+            return ((Schema.OrigamDataType)dataColumn.ExtendedProperties[key: Const.OrigamDataType])
                 == Schema.OrigamDataType.Array;
         }
 
@@ -190,7 +198,7 @@ public class DataSetBuilder
     public string ListPrimaryKeyColumns(DataSet data, string listEntity)
     {
         string initialColumns = "";
-        foreach (var pkCol in data.Tables[listEntity].PrimaryKey)
+        foreach (var pkCol in data.Tables[name: listEntity].PrimaryKey)
         {
             if (initialColumns != "")
             {

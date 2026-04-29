@@ -30,29 +30,29 @@ public class AttachmentUtils
     public static DataRow LoadAttachmentInfo(object id)
     {
         DataSet result = CoreServices.DataService.Instance.LoadData(
-            new Guid("44a25061-750f-4b42-a6de-09f3363f8621"),
-            new Guid("08a7d05e-c3e8-414e-a9a3-11bee9a26025"),
-            Guid.Empty,
-            Guid.Empty,
-            null,
-            "Attachment_parId",
-            id
+            dataStructureId: new Guid(g: "44a25061-750f-4b42-a6de-09f3363f8621"),
+            methodId: new Guid(g: "08a7d05e-c3e8-414e-a9a3-11bee9a26025"),
+            defaultSetId: Guid.Empty,
+            sortSetId: Guid.Empty,
+            transactionId: null,
+            paramName1: "Attachment_parId",
+            paramValue1: id
         );
-        DataTable t = result.Tables["Attachment"];
+        DataTable t = result.Tables[name: "Attachment"];
         if (t.Rows.Count == 0)
         {
-            throw new Exception(Resources.ErrorAttachmentNotFoundInDb);
+            throw new Exception(message: Resources.ErrorAttachmentNotFoundInDb);
         }
-        return t.Rows[0];
+        return t.Rows[index: 0];
     }
 
     public static void SaveAttachmentInfo(DataRow row)
     {
         CoreServices.DataService.Instance.StoreData(
-            new Guid("44a25061-750f-4b42-a6de-09f3363f8621"),
-            row.Table.DataSet,
-            false,
-            null
+            dataStructureId: new Guid(g: "44a25061-750f-4b42-a6de-09f3363f8621"),
+            data: row.Table.DataSet,
+            loadActualValuesAfterUpdate: false,
+            transactionId: null
         );
     }
 }

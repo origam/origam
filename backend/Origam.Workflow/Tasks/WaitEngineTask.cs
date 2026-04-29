@@ -36,10 +36,14 @@ public class WaitEngineTask : AbstractWorkflowEngineTask
     protected override void OnExecute()
     {
         IParameterService param =
-            ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
+            ServiceManager.Services.GetService(serviceType: typeof(IParameterService))
+            as IParameterService;
         WaitTask wait = this.Step as WaitTask;
         int waitTime = (int)
-            param.GetParameterValue(wait.WaitTimeDataConstantId, OrigamDataType.Integer);
-        System.Threading.Thread.Sleep(waitTime);
+            param.GetParameterValue(
+                id: wait.WaitTimeDataConstantId,
+                targetType: OrigamDataType.Integer
+            );
+        System.Threading.Thread.Sleep(millisecondsTimeout: waitTime);
     }
 }

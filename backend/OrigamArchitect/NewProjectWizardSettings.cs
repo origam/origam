@@ -26,50 +26,50 @@ namespace OrigamArchitect;
 public class NewProjectWizardSettings : ApplicationSettingsBase
 {
     [UserScopedSetting()]
-    [DefaultSettingValue(@"localhost")]
+    [DefaultSettingValue(value: @"localhost")]
     public string DatabaseServerName
     {
-        get { return (string)this["DatabaseServerName"]; }
-        set { this["DatabaseServerName"] = value; }
+        get { return (string)this[propertyName: "DatabaseServerName"]; }
+        set { this[propertyName: "DatabaseServerName"] = value; }
     }
 
     [UserScopedSetting()]
-    [DefaultSettingValue("c:\\OrigamProjects")]
+    [DefaultSettingValue(value: "c:\\OrigamProjects")]
     public string SourcesFolder
     {
-        get { return (string)this["SourcesFolder"]; }
-        set { this["SourcesFolder"] = value; }
+        get { return (string)this[propertyName: "SourcesFolder"]; }
+        set { this[propertyName: "SourcesFolder"] = value; }
     }
 
     [UserScopedSetting()]
-    [DefaultSettingValue(@"C:\inetpub")]
+    [DefaultSettingValue(value: @"C:\inetpub")]
     public string BinFolder
     {
-        get { return (string)this["BinFolder"]; }
-        set { this["BinFolder"] = value; }
+        get { return (string)this[propertyName: "BinFolder"]; }
+        set { this[propertyName: "BinFolder"] = value; }
     }
 
     [UserScopedSetting()]
-    [DefaultSettingValue("Microsoft Sql Server")]
+    [DefaultSettingValue(value: "Microsoft Sql Server")]
     public string DatabaseTypeText
     {
-        get { return (string)this["DatabaseTypeText"]; }
-        set { this["DatabaseTypeText"] = value; }
+        get { return (string)this[propertyName: "DatabaseTypeText"]; }
+        set { this[propertyName: "DatabaseTypeText"] = value; }
     }
 
     [UserScopedSetting()]
-    [DefaultSettingValue("http://localhost:2375")]
+    [DefaultSettingValue(value: "http://localhost:2375")]
     public string DockerApiAdress
     {
-        get { return (string)this["DockerApiAdress"]; }
-        set { this["DockerApiAdress"] = value; }
+        get { return (string)this[propertyName: "DockerApiAdress"]; }
+        set { this[propertyName: "DockerApiAdress"] = value; }
     }
 
     [UserScopedSetting()]
-    [DefaultSettingValue("")]
+    [DefaultSettingValue(value: "")]
     public string DockerSourceFolder
     {
-        get { return (string)this["DockerSourceFolder"]; }
-        set { this["DockerSourceFolder"] = value; }
+        get { return (string)this[propertyName: "DockerSourceFolder"]; }
+        set { this[propertyName: "DockerSourceFolder"] = value; }
     }
 }

@@ -38,7 +38,7 @@ namespace Origam.Workflow;
 public class WorkflowHost : IDisposable
 {
     private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
-        System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
+        type: System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
     );
     private static WorkflowHost _defaultHost = new WorkflowHost();
     private List<WorkflowEngine> _runningWorkflows = new();
@@ -68,7 +68,7 @@ public class WorkflowHost : IDisposable
     {
         lock (_runningWorkflows)
         {
-            _runningWorkflows.Add(engine);
+            _runningWorkflows.Add(item: engine);
         }
         engine.Host = this;
         engine.RunWorkflowFromHost();
@@ -87,11 +87,19 @@ public class WorkflowHost : IDisposable
             // fire event
             if (WorkflowFinished != null)
             {
-                Exception exceptionToPassOn = PassExceptionOn(engine, exception) ? exception : null;
-                WorkflowFinished(this, new WorkflowHostEventArgs(engine, exceptionToPassOn));
+                Exception exceptionToPassOn = PassExceptionOn(engine: engine, exception: exception)
+                    ? exception
+                    : null;
+                WorkflowFinished(
+                    sender: this,
+                    e: new WorkflowHostEventArgs(
+                        workflowEngine: engine,
+                        exception: exceptionToPassOn
+                    )
+                );
                 if (exception != null)
                 {
-                    log.LogOrigamError(exception);
+                    log.LogOrigamError(ex: exception);
                 }
             }
         }
@@ -99,7 +107,7 @@ public class WorkflowHost : IDisposable
         {
             lock (_runningWorkflows)
             {
-                _runningWorkflows.Remove(engine);
+                _runningWorkflows.Remove(item: engine);
             }
             engine.Host = null;
         }
@@ -111,7 +119,8 @@ public class WorkflowHost : IDisposable
         {
             return true;
         }
-        return exception != null && exception.Data["onFailure"] is not StepFailureMode.Suppress;
+        return exception != null
+            && exception.Data[key: "onFailure"] is not StepFailureMode.Suppress;
     }
 
     internal void OnWorkflowUserMessage(
@@ -125,8 +134,13 @@ public class WorkflowHost : IDisposable
         if (WorkflowMessage != null)
         {
             this.WorkflowMessage(
-                this,
-                new WorkflowHostMessageEventArgs(engine, message, exception, popup)
+                sender: this,
+                e: new WorkflowHostMessageEventArgs(
+                    engine: engine,
+                    message: message,
+                    exception: exception,
+                    popup: popup
+                )
             );
         }
     }
@@ -154,32 +168,32 @@ public class WorkflowHost : IDisposable
     {
         UICheck();
         Guid taskId = Guid.NewGuid();
-        _runningForms.Add(taskId, task);
+        _runningForms.Add(key: taskId, value: task);
         // fire event
         if (FormRequested != null)
         {
             this.FormRequested(
-                this,
-                new WorkflowHostFormEventArgs(
-                    taskId,
-                    task.Engine,
-                    data,
-                    description,
-                    notification,
-                    form,
-                    ruleSet,
-                    endRule,
-                    structure,
-                    refreshMethod,
-                    refreshSort,
-                    saveStructure,
-                    isFinalForm,
-                    allowSave,
-                    isAutoNext,
-                    parameters,
-                    isRefreshSuppressedBeforeFirstSave,
-                    saveConfirmationRule,
-                    refreshPortalAfterSave
+                sender: this,
+                e: new WorkflowHostFormEventArgs(
+                    taskId: taskId,
+                    engine: task.Engine,
+                    data: data,
+                    description: description,
+                    notification: notification,
+                    form: form,
+                    ruleSet: ruleSet,
+                    endRule: endRule,
+                    structure: structure,
+                    refreshMethod: refreshMethod,
+                    refreshSort: refreshSort,
+                    saveStructure: saveStructure,
+                    isFinalForm: isFinalForm,
+                    allowSave: allowSave,
+                    isAutoNext: isAutoNext,
+                    parameters: parameters,
+                    isRefreshSuppressedBeforeFirstSave: isRefreshSuppressedBeforeFirstSave,
+                    saveConfirmationRule: saveConfirmationRule,
+                    refreshPortalAfterSave: refreshPortalAfterSave
                 )
             );
         }
@@ -187,32 +201,38 @@ public class WorkflowHost : IDisposable
 
     public void AbortWorkflowForm(Guid taskId, bool isDirty)
     {
-        Tasks.UIEngineTask task = _runningForms[taskId];
+        Tasks.UIEngineTask task = _runningForms[key: taskId];
         if (task == null)
         {
             throw new ArgumentOutOfRangeException(
-                ResourceUtils.GetString("ErrorTaskNotRunning", taskId.ToString())
+                paramName: ResourceUtils.GetString(
+                    key: "ErrorTaskNotRunning",
+                    args: taskId.ToString()
+                )
             );
         }
-        _runningForms.Remove(taskId);
-        Thread thread = new Thread(() => task.Abort(isDirty));
-        PrepareAndStartThread(thread, task);
+        _runningForms.Remove(key: taskId);
+        Thread thread = new Thread(start: () => task.Abort(isDirty: isDirty));
+        PrepareAndStartThread(thread: thread, task: task);
     }
 
     public void FinishWorkflowForm(Guid taskId, IDataDocument data)
     {
-        Tasks.UIEngineTask task = _runningForms[taskId];
+        Tasks.UIEngineTask task = _runningForms[key: taskId];
         if (task == null)
         {
             throw new ArgumentOutOfRangeException(
-                ResourceUtils.GetString("ErrorTaskNotRunning", taskId.ToString())
+                paramName: ResourceUtils.GetString(
+                    key: "ErrorTaskNotRunning",
+                    args: taskId.ToString()
+                )
             );
         }
-        _runningForms.Remove(taskId);
+        _runningForms.Remove(key: taskId);
 
         task.Result = data;
-        Thread thread = new Thread(task.Finish);
-        PrepareAndStartThread(thread, task);
+        Thread thread = new Thread(start: task.Finish);
+        PrepareAndStartThread(thread: thread, task: task);
     }
 
     private static void PrepareAndStartThread(Thread thread, Tasks.UIEngineTask task)
@@ -228,7 +248,9 @@ public class WorkflowHost : IDisposable
     {
         if (!SupportsUI)
         {
-            throw new NullReferenceException(ResourceUtils.GetString("ErrorNoWorkflowUI"));
+            throw new NullReferenceException(
+                message: ResourceUtils.GetString(key: "ErrorNoWorkflowUI")
+            );
         }
     }
 

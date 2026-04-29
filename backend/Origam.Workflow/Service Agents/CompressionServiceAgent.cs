@@ -40,18 +40,18 @@ public class CompressionServiceAgent : AbstractServiceAgent
             case "CompressText":
             {
                 result = CompressText(
-                    compressionAlgorithm: Parameters.Get<string>("CompressionAlgorithm"),
-                    inputText: Parameters.Get<string>("InputText"),
-                    internalFileName: Parameters.TryGet<string>("InternalFileName")
+                    compressionAlgorithm: Parameters.Get<string>(key: "CompressionAlgorithm"),
+                    inputText: Parameters.Get<string>(key: "InputText"),
+                    internalFileName: Parameters.TryGet<string>(key: "InternalFileName")
                 );
                 break;
             }
             default:
             {
                 throw new ArgumentOutOfRangeException(
-                    nameof(MethodName),
-                    MethodName,
-                    ResourceUtils.GetString("InvalidMethodName")
+                    paramName: nameof(MethodName),
+                    actualValue: MethodName,
+                    message: ResourceUtils.GetString(key: "InvalidMethodName")
                 );
             }
         }
@@ -63,31 +63,41 @@ public class CompressionServiceAgent : AbstractServiceAgent
         string internalFileName
     )
     {
-        byte[] inputBytes = Encoding.UTF8.GetBytes(inputText);
+        byte[] inputBytes = Encoding.UTF8.GetBytes(s: inputText);
         using var outputStream = new MemoryStream();
-        if (compressionAlgorithm.Equals("zip", StringComparison.OrdinalIgnoreCase))
+        if (
+            compressionAlgorithm.Equals(
+                value: "zip",
+                comparisonType: StringComparison.OrdinalIgnoreCase
+            )
+        )
         {
-            if (string.IsNullOrWhiteSpace(internalFileName))
+            if (string.IsNullOrWhiteSpace(value: internalFileName))
             {
-                throw new ArgumentNullException("InternalFileName");
+                throw new ArgumentNullException(paramName: "InternalFileName");
             }
 
-            using var zipStream = new ZipOutputStream(outputStream);
-            zipStream.SetLevel(9); // Maximum compression
-            var entry = new ZipEntry(internalFileName) { DateTime = DateTime.Now };
-            zipStream.PutNextEntry(entry);
-            zipStream.Write(inputBytes, 0, inputBytes.Length);
+            using var zipStream = new ZipOutputStream(baseOutputStream: outputStream);
+            zipStream.SetLevel(level: 9); // Maximum compression
+            var entry = new ZipEntry(name: internalFileName) { DateTime = DateTime.Now };
+            zipStream.PutNextEntry(entry: entry);
+            zipStream.Write(buffer: inputBytes, offset: 0, count: inputBytes.Length);
             zipStream.CloseEntry();
         }
-        else if (compressionAlgorithm.Equals("bzip2", StringComparison.OrdinalIgnoreCase))
+        else if (
+            compressionAlgorithm.Equals(
+                value: "bzip2",
+                comparisonType: StringComparison.OrdinalIgnoreCase
+            )
+        )
         {
-            using var bzip2Stream = new BZip2OutputStream(outputStream);
-            bzip2Stream.Write(inputBytes, 0, inputBytes.Length);
+            using var bzip2Stream = new BZip2OutputStream(stream: outputStream);
+            bzip2Stream.Write(buffer: inputBytes, offset: 0, count: inputBytes.Length);
         }
         else
         {
             throw new NotSupportedException(
-                "Unsupported compression algorithm: " + compressionAlgorithm
+                message: "Unsupported compression algorithm: " + compressionAlgorithm
             );
         }
         return outputStream.ToArray();

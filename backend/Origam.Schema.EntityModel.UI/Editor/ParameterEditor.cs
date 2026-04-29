@@ -65,7 +65,7 @@ namespace Origam.Schema.EntityModel
                     components.Dispose();
                 }
             }
-            base.Dispose(disposing);
+            base.Dispose(disposing: disposing);
         }
 
         #region Windows Form Designer generated code
@@ -149,22 +149,26 @@ namespace Origam.Schema.EntityModel
         protected override void ViewSpecificLoad(object objectToLoad)
         {
             propertyGrid1.BrowsableAttributes = new AttributeCollection(
-                new[] { new CategoryAttribute("Value") }
+                attributes: new[] { new CategoryAttribute(category: "Value") }
             );
 
             DataConstant constant = objectToLoad as DataConstant;
 
             IParameterService svc =
-                ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
-            constant.Value = svc.GetParameterValue(constant.Id);
+                ServiceManager.Services.GetService(serviceType: typeof(IParameterService))
+                as IParameterService;
+            constant.Value = svc.GetParameterValue(id: constant.Id);
 
             propertyGrid1.SelectedObject = constant;
 
             IDocumentationService doc =
-                ServiceManager.Services.GetService(typeof(IDocumentationService))
+                ServiceManager.Services.GetService(serviceType: typeof(IDocumentationService))
                 as IDocumentationService;
 
-            lblHelp.Text = doc.GetDocumentation(constant.Id, DocumentationType.USER_LONG_HELP);
+            lblHelp.Text = doc.GetDocumentation(
+                schemaItemId: constant.Id,
+                docType: DocumentationType.USER_LONG_HELP
+            );
             lblName.Text = this.TitleName + " (" + constant.Name + ")";
         }
 
@@ -175,31 +179,31 @@ namespace Origam.Schema.EntityModel
                 DataConstant constant = propertyGrid1.SelectedObject as DataConstant;
 
                 IParameterService svc =
-                    ServiceManager.Services.GetService(typeof(IParameterService))
+                    ServiceManager.Services.GetService(serviceType: typeof(IParameterService))
                     as IParameterService;
 
                 svc.SetCustomParameterValue(
-                    constant.Id,
-                    constant.Value,
-                    constant.GuidValue,
-                    constant.IntValue,
-                    constant.StringValue,
-                    constant.BooleanValue,
-                    constant.FloatValue,
-                    constant.CurrencyValue,
-                    constant.DateValue
+                    id: constant.Id,
+                    value: constant.Value,
+                    guidValue: constant.GuidValue,
+                    intValue: constant.IntValue,
+                    stringValue: constant.StringValue,
+                    boolValue: constant.BooleanValue,
+                    floatValue: constant.FloatValue,
+                    currencyValue: constant.CurrencyValue,
+                    dateValue: constant.DateValue
                 );
             }
             catch (Exception ex)
             {
                 Origam.UI.AsMessageBox.ShowError(
-                    this,
-                    ResourceUtils.GetString(
-                        "ErrorParameterSaveFailed",
-                        Environment.NewLine + ex.Message
+                    owner: this,
+                    text: ResourceUtils.GetString(
+                        key: "ErrorParameterSaveFailed",
+                        args: Environment.NewLine + ex.Message
                     ),
-                    ResourceUtils.GetString("ParameterTitle"),
-                    ex
+                    caption: ResourceUtils.GetString(key: "ParameterTitle"),
+                    exception: ex
                 );
             }
         }
@@ -217,10 +221,10 @@ namespace Origam.Schema.EntityModel
             if (IsDirty)
             {
                 DialogResult result = MessageBox.Show(
-                    ResourceUtils.GetString("DoYouWishSave", this.TitleName),
-                    ResourceUtils.GetString("SaveTitle"),
-                    MessageBoxButtons.YesNoCancel,
-                    MessageBoxIcon.Question
+                    text: ResourceUtils.GetString(key: "DoYouWishSave", args: this.TitleName),
+                    caption: ResourceUtils.GetString(key: "SaveTitle"),
+                    buttons: MessageBoxButtons.YesNoCancel,
+                    icon: MessageBoxIcon.Question
                 );
 
                 switch (result)

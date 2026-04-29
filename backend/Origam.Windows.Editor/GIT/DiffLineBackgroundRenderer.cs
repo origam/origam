@@ -15,23 +15,23 @@ public class DiffLineBackgroundRenderer : IBackgroundRenderer
 
     static DiffLineBackgroundRenderer()
     {
-        AddedBackground = new SolidColorBrush(Color.FromRgb(0x6e, 0xff, 0x6e));
+        AddedBackground = new SolidColorBrush(color: Color.FromRgb(r: 0x6e, g: 0xff, b: 0x6e));
         AddedBackground.Opacity = 0.5;
         AddedBackground.Freeze();
         DeletedBackground = new SolidColorBrush(
-            Color.FromRgb(
-                OrigamColorScheme.DirtyColor.R,
-                OrigamColorScheme.DirtyColor.G,
-                OrigamColorScheme.DirtyColor.B
+            color: Color.FromRgb(
+                r: OrigamColorScheme.DirtyColor.R,
+                g: OrigamColorScheme.DirtyColor.G,
+                b: OrigamColorScheme.DirtyColor.B
             )
         );
         DeletedBackground.Opacity = 0.3;
         DeletedBackground.Freeze();
-        BlankBackground = new SolidColorBrush(Color.FromRgb(0xfa, 0xfa, 0xfa));
+        BlankBackground = new SolidColorBrush(color: Color.FromRgb(r: 0xfa, g: 0xfa, b: 0xfa));
         BlankBackground.Freeze();
-        var transparentBrush = new SolidColorBrush(Colors.Transparent);
+        var transparentBrush = new SolidColorBrush(color: Colors.Transparent);
         transparentBrush.Freeze();
-        BorderlessPen = new Pen(transparentBrush, 0.0);
+        BorderlessPen = new Pen(brush: transparentBrush, thickness: 0.0);
         BorderlessPen.Freeze();
     }
 
@@ -50,7 +50,7 @@ public class DiffLineBackgroundRenderer : IBackgroundRenderer
                 continue;
             }
 
-            var diffLine = Lines[linenum];
+            var diffLine = Lines[index: linenum];
             if (diffLine.Style == DiffContext.Context)
             {
                 continue;
@@ -78,13 +78,23 @@ public class DiffLineBackgroundRenderer : IBackgroundRenderer
                 }
             }
             foreach (
-                var rc in BackgroundGeometryBuilder.GetRectsFromVisualSegment(textView, v, 0, 1000)
+                var rc in BackgroundGeometryBuilder.GetRectsFromVisualSegment(
+                    textView: textView,
+                    line: v,
+                    startVC: 0,
+                    endVC: 1000
+                )
             )
             {
                 drawingContext.DrawRectangle(
-                    brush,
-                    BorderlessPen,
-                    new Rect(0, rc.Top, textView.ActualWidth, rc.Height)
+                    brush: brush,
+                    pen: BorderlessPen,
+                    rectangle: new Rect(
+                        x: 0,
+                        y: rc.Top,
+                        width: textView.ActualWidth,
+                        height: rc.Height
+                    )
                 );
             }
         }

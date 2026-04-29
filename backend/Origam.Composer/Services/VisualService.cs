@@ -29,12 +29,12 @@ public class VisualService : IVisualService
 {
     public void PrintHeader(string title)
     {
-        var headerPanel = new Panel($"[orange1 bold]ORIGAM Composer[/] [orange1]| {title}[/]")
-            .Border(BoxBorder.Double)
-            .BorderColor(Color.Orange1)
-            .Padding(1, 0);
+        var headerPanel = new Panel(text: $"[orange1 bold]ORIGAM Composer[/] [orange1]| {title}[/]")
+            .Border(border: BoxBorder.Double)
+            .BorderColor(color: Color.Orange1)
+            .Padding(horizontal: 1, vertical: 0);
 
-        AnsiConsole.Write(headerPanel);
+        AnsiConsole.Write(renderable: headerPanel);
         AnsiConsole.WriteLine();
     }
 
@@ -48,24 +48,24 @@ public class VisualService : IVisualService
     )
     {
         var table = new Table()
-            .Border(TableBorder.Rounded)
-            .BorderColor(Color.Green)
-            .AddColumn("[bold]Parameter[/]")
-            .AddColumn("[bold]Value[/]");
+            .Border(border: TableBorder.Rounded)
+            .BorderColor(color: Color.Green)
+            .AddColumn(column: "[bold]Parameter[/]")
+            .AddColumn(column: "[bold]Value[/]");
 
-        table.AddRow("Name", name);
-        table.AddRow("Folder", folder);
-        table.AddRow("Admin username", adminName);
-        table.AddRow("Admin email", adminEmail);
-        table.AddRow("Admin password", "[dim]-- masked --[/]");
-        table.AddRow("Docker image (linux)", dockerImageLinux);
-        table.AddRow("Docker image (win)", dockerImageWindows);
+        table.AddRow(columns: ["Name", name]);
+        table.AddRow(columns: ["Folder", folder]);
+        table.AddRow(columns: ["Admin username", adminName]);
+        table.AddRow(columns: ["Admin email", adminEmail]);
+        table.AddRow(columns: ["Admin password", "[dim]-- masked --[/]"]);
+        table.AddRow(columns: ["Docker image (linux)", dockerImageLinux]);
+        table.AddRow(columns: ["Docker image (win)", dockerImageWindows]);
 
-        var panel = new Panel(table)
-            .Header(Strings.Project_Configuration_Header)
-            .BorderColor(Color.Green);
+        var panel = new Panel(content: table)
+            .Header(text: Strings.Project_Configuration_Header)
+            .BorderColor(color: Color.Green);
 
-        AnsiConsole.Write(panel);
+        AnsiConsole.Write(renderable: panel);
         AnsiConsole.WriteLine();
     }
 
@@ -78,63 +78,63 @@ public class VisualService : IVisualService
     )
     {
         var table = new Table()
-            .Border(TableBorder.Rounded)
-            .BorderColor(Color.Blue)
-            .AddColumn("[bold]Parameter[/]")
-            .AddColumn("[bold]Value[/]");
+            .Border(border: TableBorder.Rounded)
+            .BorderColor(color: Color.Blue)
+            .AddColumn(column: "[bold]Parameter[/]")
+            .AddColumn(column: "[bold]Value[/]");
 
-        table.AddRow("Type", type);
-        table.AddRow("Host", host);
-        table.AddRow("Port", port.ToString());
-        table.AddRow("Name", name);
-        table.AddRow("Username", username);
-        table.AddRow("Password", "[dim]-- masked --[/]");
+        table.AddRow(columns: ["Type", type]);
+        table.AddRow(columns: ["Host", host]);
+        table.AddRow(columns: ["Port", port.ToString()]);
+        table.AddRow(columns: ["Name", name]);
+        table.AddRow(columns: ["Username", username]);
+        table.AddRow(columns: ["Password", "[dim]-- masked --[/]"]);
 
-        var panel = new Panel(table)
-            .Header(Strings.Database_Configuration_Header)
-            .BorderColor(Color.Blue);
+        var panel = new Panel(content: table)
+            .Header(text: Strings.Database_Configuration_Header)
+            .BorderColor(color: Color.Blue);
 
-        AnsiConsole.Write(panel);
+        AnsiConsole.Write(renderable: panel);
         AnsiConsole.WriteLine();
     }
 
     public void PrintArchitectValues(string dockerImageLinux, string dockerImageWindows, int port)
     {
         var table = new Table()
-            .Border(TableBorder.Rounded)
-            .BorderColor(Color.Purple)
-            .AddColumn("[bold]Parameter[/]")
-            .AddColumn("[bold]Value[/]");
+            .Border(border: TableBorder.Rounded)
+            .BorderColor(color: Color.Purple)
+            .AddColumn(column: "[bold]Parameter[/]")
+            .AddColumn(column: "[bold]Value[/]");
 
-        table.AddRow("Docker image (linux)", dockerImageLinux);
-        table.AddRow("Docker image (win)", dockerImageWindows);
-        table.AddRow("Docker port", port.ToString());
+        table.AddRow(columns: ["Docker image (linux)", dockerImageLinux]);
+        table.AddRow(columns: ["Docker image (win)", dockerImageWindows]);
+        table.AddRow(columns: ["Docker port", port.ToString()]);
 
-        var panel = new Panel(table)
-            .Header(Strings.Architect_Configuration_Header)
-            .BorderColor(Color.Purple);
+        var panel = new Panel(content: table)
+            .Header(text: Strings.Architect_Configuration_Header)
+            .BorderColor(color: Color.Purple);
 
-        AnsiConsole.Write(panel);
+        AnsiConsole.Write(renderable: panel);
         AnsiConsole.WriteLine();
     }
 
     public void PrintGitValues(bool isEnabled, string user, string email)
     {
         var table = new Table()
-            .Border(TableBorder.Rounded)
-            .BorderColor(Color.Cyan1)
-            .AddColumn("[bold]Parameter[/]")
-            .AddColumn("[bold]Value[/]");
+            .Border(border: TableBorder.Rounded)
+            .BorderColor(color: Color.Cyan1)
+            .AddColumn(column: "[bold]Parameter[/]")
+            .AddColumn(column: "[bold]Value[/]");
 
-        table.AddRow("Git", isEnabled ? "[green]Enabled[/]" : "[red]Disabled[/]");
-        table.AddRow("Git user", user);
-        table.AddRow("Git email", email);
+        table.AddRow(columns: ["Git", isEnabled ? "[green]Enabled[/]" : "[red]Disabled[/]"]);
+        table.AddRow(columns: ["Git user", user]);
+        table.AddRow(columns: ["Git email", email]);
 
-        var panel = new Panel(table)
-            .Header(Strings.Git_Configuration_Header)
-            .BorderColor(Color.Cyan1);
+        var panel = new Panel(content: table)
+            .Header(text: Strings.Git_Configuration_Header)
+            .BorderColor(color: Color.Cyan1);
 
-        AnsiConsole.Write(panel);
+        AnsiConsole.Write(renderable: panel);
         AnsiConsole.WriteLine();
     }
 
@@ -143,46 +143,48 @@ public class VisualService : IVisualService
         var actionsList = new List<string>();
         foreach (IBuilderTask projectBuilderTask in tasks)
         {
-            actionsList.Add(projectBuilderTask.Name);
+            actionsList.Add(item: projectBuilderTask.Name);
         }
 
         var table = new Table()
-            .Border(TableBorder.Rounded)
-            .BorderColor(Color.Orange1)
-            .AddColumn(Strings.Actions_to_be_performed);
+            .Border(border: TableBorder.Rounded)
+            .BorderColor(color: Color.Orange1)
+            .AddColumn(column: Strings.Actions_to_be_performed);
 
         foreach (var action in actionsList)
         {
-            table.AddRow(action);
+            table.AddRow(columns: action);
         }
 
-        var panel = new Panel(table)
-            .Header(Strings.Project_Creation_Tasks_Header)
-            .BorderColor(Color.Orange1);
+        var panel = new Panel(content: table)
+            .Header(text: Strings.Project_Creation_Tasks_Header)
+            .BorderColor(color: Color.Orange1);
 
-        AnsiConsole.Write(panel);
+        AnsiConsole.Write(renderable: panel);
         AnsiConsole.WriteLine();
     }
 
     public void PrintBye()
     {
         AnsiConsole.WriteLine();
-        AnsiConsole.MarkupLine(Strings.All_steps_completed);
+        AnsiConsole.MarkupLine(value: Strings.All_steps_completed);
     }
 
     public void PrintProjectAlreadyExists(string folder)
     {
         var panel = new Panel(
-            new Markup($"[bold]{folder.EscapeMarkup()}[/]\n\nNothing to do, Composer will exit.")
+            content: new Markup(
+                text: $"[bold]{folder.EscapeMarkup()}[/]\n\nNothing to do, Composer will exit."
+            )
         )
         {
-            Header = new PanelHeader("[yellow] Model already exists [/]"),
+            Header = new PanelHeader(text: "[yellow] Model already exists [/]"),
             Border = BoxBorder.Rounded,
             BorderStyle = new Style(foreground: Color.Yellow),
-            Padding = new Padding(1, 0, 1, 0),
+            Padding = new Padding(left: 1, top: 0, right: 1, bottom: 0),
         };
         AnsiConsole.WriteLine();
-        AnsiConsole.Write(panel);
+        AnsiConsole.Write(renderable: panel);
         AnsiConsole.WriteLine();
     }
 }

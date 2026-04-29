@@ -51,18 +51,18 @@ public class OrigamPanelConfigDA
     )
     {
         DataRow row = configTable.NewRow();
-        row["Id"] = Guid.NewGuid();
-        row["RecordCreated"] = DateTime.Now;
-        row["RecordCreatedBy"] = profileId;
-        row["FormPanelId"] = panelInstanceId;
+        row[columnName: "Id"] = Guid.NewGuid();
+        row[columnName: "RecordCreated"] = DateTime.Now;
+        row[columnName: "RecordCreatedBy"] = profileId;
+        row[columnName: "FormPanelId"] = panelInstanceId;
         if (workflowId != Guid.Empty)
         {
-            row["WorkflowId"] = workflowId;
+            row[columnName: "WorkflowId"] = workflowId;
         }
 
-        row["ProfileId"] = profileId;
-        row["DefaultView"] = defaultView;
-        configTable.Rows.Add(row);
+        row[columnName: "ProfileId"] = profileId;
+        row[columnName: "DefaultView"] = defaultView;
+        configTable.Rows.Add(row: row);
         return row;
     }
 
@@ -77,32 +77,43 @@ public class OrigamPanelConfigDA
         {
             // we are in a form view
             query = new DataStructureQuery(
-                new Guid("218890ad-cd12-43a9-9166-4a02028d6125"),
-                new Guid("59d68a5a-0f9c-405b-957b-1d698535310e")
+                dataStructureId: new Guid(g: "218890ad-cd12-43a9-9166-4a02028d6125"),
+                methodId: new Guid(g: "59d68a5a-0f9c-405b-957b-1d698535310e")
             );
         }
         else
         {
             // we are in a workflow view
             query = new DataStructureQuery(
-                new Guid("218890ad-cd12-43a9-9166-4a02028d6125"),
-                new Guid("3d5bb832-50d7-44d8-a7c5-abdf88d5df74")
+                dataStructureId: new Guid(g: "218890ad-cd12-43a9-9166-4a02028d6125"),
+                methodId: new Guid(g: "3d5bb832-50d7-44d8-a7c5-abdf88d5df74")
             );
             query.Parameters.Add(
-                new QueryParameter("OrigamFormPanelConfig_parWorkflowId", workflowId)
+                value: new QueryParameter(
+                    _parameterName: "OrigamFormPanelConfig_parWorkflowId",
+                    value: workflowId
+                )
             );
         }
         query.Parameters.Add(
-            new QueryParameter("OrigamFormPanelConfig_parFormPanelId", panelInstanceId)
+            value: new QueryParameter(
+                _parameterName: "OrigamFormPanelConfig_parFormPanelId",
+                value: panelInstanceId
+            )
         );
-        query.Parameters.Add(new QueryParameter("OrigamFormPanelConfig_parProfileId", profileId));
+        query.Parameters.Add(
+            value: new QueryParameter(
+                _parameterName: "OrigamFormPanelConfig_parProfileId",
+                value: profileId
+            )
+        );
         IServiceAgent dataServiceAgent = (
-            ServiceManager.Services.GetService(typeof(IBusinessServicesService))
+            ServiceManager.Services.GetService(serviceType: typeof(IBusinessServicesService))
             as IBusinessServicesService
-        ).GetAgent("DataService", null, null);
+        ).GetAgent(serviceType: "DataService", ruleEngine: null, workflowEngine: null);
         dataServiceAgent.MethodName = "LoadDataByQuery";
         dataServiceAgent.Parameters.Clear();
-        dataServiceAgent.Parameters.Add("Query", query);
+        dataServiceAgent.Parameters.Add(key: "Query", value: query);
         dataServiceAgent.Run();
         return dataServiceAgent.Result as DataSet;
     }
@@ -122,25 +133,38 @@ public class OrigamPanelConfigDA
             }
 
             DataSet configCopy = userConfig.Copy();
-            DataSet actualConfig = LoadConfigData(panelInstanceId, workflowId, profileId);
-            if (actualConfig.Tables[0].Rows.Count > 0)
+            DataSet actualConfig = LoadConfigData(
+                panelInstanceId: panelInstanceId,
+                workflowId: workflowId,
+                profileId: profileId
+            );
+            if (actualConfig.Tables[index: 0].Rows.Count > 0)
             {
                 configCopy.AcceptChanges();
             }
-            DatasetTools.MergeDataSet(userConfig, configCopy, null, new MergeParams(profileId));
-            SaveConfigData(userConfig);
+            DatasetTools.MergeDataSet(
+                inout_dsTarget: userConfig,
+                in_dsSource: configCopy,
+                changeList: null,
+                mergeParams: new MergeParams(ProfileId: profileId)
+            );
+            SaveConfigData(userConfig: userConfig);
         }
         catch { }
     }
 
     public static void DeleteUserConfig(Guid screenSectionId, Guid workflowId, Guid profileId)
     {
-        DataSet actualConfig = LoadConfigData(screenSectionId, workflowId, profileId);
-        if (actualConfig.Tables["OrigamFormPanelConfig"].Rows.Count > 0)
+        DataSet actualConfig = LoadConfigData(
+            panelInstanceId: screenSectionId,
+            workflowId: workflowId,
+            profileId: profileId
+        );
+        if (actualConfig.Tables[name: "OrigamFormPanelConfig"].Rows.Count > 0)
         {
-            actualConfig.Tables["OrigamFormPanelConfig"].Rows[0].Delete();
+            actualConfig.Tables[name: "OrigamFormPanelConfig"].Rows[index: 0].Delete();
         }
-        SaveConfigData(actualConfig);
+        SaveConfigData(userConfig: actualConfig);
     }
 
     private static void SaveConfigData(DataSet userConfig)
@@ -148,15 +172,15 @@ public class OrigamPanelConfigDA
         try
         {
             DataStructureQuery query = new DataStructureQuery(
-                new Guid("218890ad-cd12-43a9-9166-4a02028d6125")
+                dataStructureId: new Guid(g: "218890ad-cd12-43a9-9166-4a02028d6125")
             );
             IServiceAgent dataServiceAgent = (
                 ServiceManager.Services.GetService<IBusinessServicesService>()
-            ).GetAgent("DataService", null, null);
+            ).GetAgent(serviceType: "DataService", ruleEngine: null, workflowEngine: null);
             dataServiceAgent.MethodName = "StoreDataByQuery";
             dataServiceAgent.Parameters.Clear();
-            dataServiceAgent.Parameters.Add("Query", query);
-            dataServiceAgent.Parameters.Add("Data", userConfig);
+            dataServiceAgent.Parameters.Add(key: "Query", value: query);
+            dataServiceAgent.Parameters.Add(key: "Data", value: userConfig);
             dataServiceAgent.Run();
         }
         catch { }

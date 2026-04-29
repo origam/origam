@@ -27,6 +27,9 @@ public static class RectangleExtensions
 {
     public static Point GetCenter(this Rectangle rectangle)
     {
-        return new Point(rectangle.X + (rectangle.Width / 2), rectangle.Y + (rectangle.Height / 2));
+        return new Point(
+            x: rectangle.X + (rectangle.Width / 2),
+            y: rectangle.Y + (rectangle.Height / 2)
+        );
     }
 }

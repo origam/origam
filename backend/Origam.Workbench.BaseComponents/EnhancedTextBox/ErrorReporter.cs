@@ -36,11 +36,11 @@ public class ErrorReporter : IErrorReporter
 
     public void NotifyInputError(string message)
     {
-        Console.WriteLine(message);
+        Console.WriteLine(value: message);
 
         //control.Focus();
 
         var toolTip = new ToolTip();
-        toolTip.Show(message, control, ErrorToolTipDuration);
+        toolTip.Show(text: message, window: control, duration: ErrorToolTipDuration);
     }
 }

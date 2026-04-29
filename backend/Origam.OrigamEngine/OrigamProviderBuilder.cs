@@ -38,41 +38,41 @@ public class OrigamProviderBuilder
 
     public OrigamProviderBuilder()
     {
-        providers.Add(new StringSchemaItemProvider());
-        providers.Add(new FeatureSchemaItemProvider());
-        providers.Add(new EntityModelSchemaItemProvider());
-        providers.Add(new DataConstantSchemaItemProvider());
-        providers.Add(new DatabaseDataTypeSchemaItemProvider());
-        providers.Add(new UserControlSchemaItemProvider());
-        providers.Add(new PanelSchemaItemProvider());
-        providers.Add(new FormSchemaItemProvider());
-        providers.Add(new DataStructureSchemaItemProvider());
-        providers.Add(new FunctionSchemaItemProvider());
-        providers.Add(new ServiceSchemaItemProvider());
-        providers.Add(new WorkflowSchemaItemProvider());
-        providers.Add(new TransformationSchemaItemProvider());
-        providers.Add(new ReportSchemaItemProvider());
-        providers.Add(new RuleSchemaItemProvider());
-        providers.Add(new MenuSchemaItemProvider());
+        providers.Add(item: new StringSchemaItemProvider());
+        providers.Add(item: new FeatureSchemaItemProvider());
+        providers.Add(item: new EntityModelSchemaItemProvider());
+        providers.Add(item: new DataConstantSchemaItemProvider());
+        providers.Add(item: new DatabaseDataTypeSchemaItemProvider());
+        providers.Add(item: new UserControlSchemaItemProvider());
+        providers.Add(item: new PanelSchemaItemProvider());
+        providers.Add(item: new FormSchemaItemProvider());
+        providers.Add(item: new DataStructureSchemaItemProvider());
+        providers.Add(item: new FunctionSchemaItemProvider());
+        providers.Add(item: new ServiceSchemaItemProvider());
+        providers.Add(item: new WorkflowSchemaItemProvider());
+        providers.Add(item: new TransformationSchemaItemProvider());
+        providers.Add(item: new ReportSchemaItemProvider());
+        providers.Add(item: new RuleSchemaItemProvider());
+        providers.Add(item: new MenuSchemaItemProvider());
         //			AbstractSchemaItemProviders.Add(new TestScenarioSchemaItemProvider());
         //			AbstractSchemaItemProviders.Add(new TestChecklistRuleSchemaItemProvider());
-        providers.Add(new WorkflowScheduleSchemaItemProvider());
-        providers.Add(new ScheduleTimeSchemaItemProvider());
-        providers.Add(new DataLookupSchemaItemProvider());
-        providers.Add(new DeploymentSchemaItemProvider());
-        providers.Add(new GraphicsSchemaItemProvider());
-        providers.Add(new StateMachineSchemaItemProvider());
-        providers.Add(new WorkQueueClassSchemaItemProvider());
-        providers.Add(new ChartSchemaItemProvider());
-        providers.Add(new PagesSchemaItemProvider());
-        providers.Add(new DashboardWidgetsSchemaItemProvider());
-        providers.Add(new StylesSchemaItemProvider());
-        providers.Add(new NotificationBoxSchemaItemProvider());
-        providers.Add(new TreeStructureSchemaItemProvider());
-        providers.Add(new KeyboardShortcutsSchemaItemProvider());
-        providers.Add(new SearchSchemaItemProvider());
-        providers.Add(new DeepLinkCategorySchemaItemProvider());
-        providers.Add(new XsltFunctionSchemaItemProvider());
+        providers.Add(item: new WorkflowScheduleSchemaItemProvider());
+        providers.Add(item: new ScheduleTimeSchemaItemProvider());
+        providers.Add(item: new DataLookupSchemaItemProvider());
+        providers.Add(item: new DeploymentSchemaItemProvider());
+        providers.Add(item: new GraphicsSchemaItemProvider());
+        providers.Add(item: new StateMachineSchemaItemProvider());
+        providers.Add(item: new WorkQueueClassSchemaItemProvider());
+        providers.Add(item: new ChartSchemaItemProvider());
+        providers.Add(item: new PagesSchemaItemProvider());
+        providers.Add(item: new DashboardWidgetsSchemaItemProvider());
+        providers.Add(item: new StylesSchemaItemProvider());
+        providers.Add(item: new NotificationBoxSchemaItemProvider());
+        providers.Add(item: new TreeStructureSchemaItemProvider());
+        providers.Add(item: new KeyboardShortcutsSchemaItemProvider());
+        providers.Add(item: new SearchSchemaItemProvider());
+        providers.Add(item: new DeepLinkCategorySchemaItemProvider());
+        providers.Add(item: new XsltFunctionSchemaItemProvider());
     }
 
     public List<AbstractSchemaItemProvider> GetAll()

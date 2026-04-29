@@ -28,13 +28,16 @@ public static class CategoryFactory
 {
     public static string Create(Type type)
     {
-        XmlRootAttribute rootAttribute = FindRootAttribute(type);
+        XmlRootAttribute rootAttribute = FindRootAttribute(type: type);
         return rootAttribute?.ElementName;
     }
 
     private static XmlRootAttribute FindRootAttribute(Type type)
     {
-        object[] attributes = type.GetCustomAttributes(typeof(XmlRootAttribute), true);
+        object[] attributes = type.GetCustomAttributes(
+            attributeType: typeof(XmlRootAttribute),
+            inherit: true
+        );
 
         if (attributes != null && attributes.Length > 0)
         {

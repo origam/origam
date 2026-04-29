@@ -26,18 +26,18 @@ using Origam.DA.Common;
 
 namespace Origam.Schema.GuiModel;
 
-[SchemaItemDescription("Web Report", "icon_web-report.png")]
-[HelpTopic("Web+Report")]
-[ClassMetaVersion("6.0.1")]
+[SchemaItemDescription(name: "Web Report", iconName: "icon_web-report.png")]
+[HelpTopic(topic: "Web+Report")]
+[ClassMetaVersion(versionStr: "6.0.1")]
 public class WebReport : AbstractReport
 {
     public WebReport() { }
 
     public WebReport(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(schemaExtensionId: schemaExtensionId) { }
 
     public WebReport(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     private string _url;
     private string _externalUrlScheme;
@@ -45,36 +45,36 @@ public class WebReport : AbstractReport
     private bool _isUrlEscaped = false;
     private WebPageOpenMethod _openMethod = WebPageOpenMethod.OrigamTab;
 
-    [XmlAttribute("url")]
+    [XmlAttribute(attributeName: "url")]
     public string Url
     {
         get { return _url; }
         set { _url = value; }
     }
 
-    [XmlAttribute("externalUrlScheme")]
+    [XmlAttribute(attributeName: "externalUrlScheme")]
     public string ExternalUrlScheme
     {
         get { return _externalUrlScheme; }
         set { _externalUrlScheme = value; }
     }
 
-    [XmlAttribute("forceExternalUrl")]
+    [XmlAttribute(attributeName: "forceExternalUrl")]
     public bool ForceExternalUrl
     {
         get { return _forceExternalUrl; }
         set { _forceExternalUrl = value; }
     }
 
-    [XmlAttribute("isUrlEscaped")]
+    [XmlAttribute(attributeName: "isUrlEscaped")]
     public bool IsUrlEscaped
     {
         get { return _isUrlEscaped; }
         set { _isUrlEscaped = value; }
     }
 
-    [DefaultValue(WebPageOpenMethod.OrigamTab)]
-    [XmlAttribute("openMethod")]
+    [DefaultValue(value: WebPageOpenMethod.OrigamTab)]
+    [XmlAttribute(attributeName: "openMethod")]
     public WebPageOpenMethod OpenMethod
     {
         get { return _openMethod; }

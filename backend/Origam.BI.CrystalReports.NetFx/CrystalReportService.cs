@@ -45,13 +45,13 @@ public class CrystalReportService : IReportService
         Hashtable parameters
     )
     {
-        var report = ReportHelper.GetReportElement<CrystalReport>(reportId);
+        var report = ReportHelper.GetReportElement<CrystalReport>(reportId: reportId);
         if (data is not (IDataDocument or null))
         {
             throw new ArgumentOutOfRangeException(
-                nameof(data),
-                data,
-                ResourceUtils.GetString("OnlyXmlDocSupported")
+                paramName: nameof(data),
+                actualValue: data,
+                message: ResourceUtils.GetString(key: "OnlyXmlDocSupported")
             );
         }
         DataSet dataset = null;
@@ -59,38 +59,38 @@ public class CrystalReportService : IReportService
         {
             dataset = dataDocument.DataSet;
         }
-        ReportDocument.EnableEventLog(EventLogLevel.LogEngineErrors);
+        ReportDocument.EnableEventLog(elLevel: EventLogLevel.LogEngineErrors);
         System.Diagnostics.Debug.WriteLine(
-            ReportDocument.GetConcurrentUsage(),
+            value: ReportDocument.GetConcurrentUsage(),
             category: "Crystal Reports Concurrent Usage"
         );
         using var languageSwitcher = new LanguageSwitcher(
-            langIetf: ReportHelper.ResolveLanguage(data, report)
+            langIetf: ReportHelper.ResolveLanguage(doc: data, reportElement: report)
         );
         using ReportDocument reportDoc = crystalReportHelper.CreateReport(
-            report.Id,
-            dataset,
-            parameters
+            reportId: report.Id,
+            data: dataset,
+            parameters: parameters
         );
         printerName ??= new PrinterSettings().PrinterName;
         ReportHelper.LogInfo(
-            System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType,
-            $"Printing report '{report.Name}' to printer '{printerName}'"
+            type: System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType,
+            message: $"Printing report '{report.Name}' to printer '{printerName}'"
         );
         var printLayout = new PrintLayoutSettings();
         var printerSettings = new PrinterSettings
         {
-            Copies = Convert.ToInt16(copies),
+            Copies = Convert.ToInt16(value: copies),
             PrinterName = printerName,
         };
         reportDoc.PrintOptions.PrinterDuplex = PrinterDuplex.Simplex;
-        var pageSettings = new PageSettings(printerSettings);
+        var pageSettings = new PageSettings(printerSettings: printerSettings);
         reportDoc.PrintOptions.DissociatePageSizeAndPrinterPaperSize = true;
         reportDoc.PrintToPrinter(
-            printerSettings,
-            pageSettings,
+            printerSettings: printerSettings,
+            pageSettings: pageSettings,
             reformatReportPageSettings: false,
-            printLayout
+            layoutSettings: printLayout
         );
         reportDoc.Close();
     }
@@ -103,21 +103,21 @@ public class CrystalReportService : IReportService
         string dbTransaction
     )
     {
-        var report = ReportHelper.GetReportElement<AbstractDataReport>(reportId);
+        var report = ReportHelper.GetReportElement<AbstractDataReport>(reportId: reportId);
         IDataDocument xmlDataDoc = ReportHelper.LoadOrUseReportData(
-            report,
-            data,
-            parameters,
-            dbTransaction
+            report: report,
+            data: data,
+            parameters: parameters,
+            dbTransaction: dbTransaction
         );
         DataSet dataset = xmlDataDoc.DataSet;
         using var languageSwitcher = new LanguageSwitcher(
-            langIetf: ReportHelper.ResolveLanguage(xmlDataDoc, report)
+            langIetf: ReportHelper.ResolveLanguage(doc: xmlDataDoc, reportElement: report)
         );
         using ReportDocument reportDoc = crystalReportHelper.CreateReport(
-            report.Id,
-            dataset,
-            parameters
+            reportId: report.Id,
+            data: dataset,
+            parameters: parameters
         );
         ExportFormatType type = format switch
         {
@@ -130,18 +130,18 @@ public class CrystalReportService : IReportService
             "TEXT" => ExportFormatType.Text,
             "XML" => ExportFormatType.Xml,
             _ => throw new ArgumentOutOfRangeException(
-                nameof(format),
-                format,
-                ResourceUtils.GetString("FormatNotSupported")
+                paramName: nameof(format),
+                actualValue: format,
+                message: ResourceUtils.GetString(key: "FormatNotSupported")
             ),
         };
         ReportHelper.LogInfo(
-            System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType,
-            $"Exporting report '{report.Name}' to {format}"
+            type: System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType,
+            message: $"Exporting report '{report.Name}' to {format}"
         );
-        Stream stream = reportDoc.ExportToStream(type);
+        Stream stream = reportDoc.ExportToStream(formatType: type);
         var result = new byte[stream.Length];
-        stream.Read(result, offset: 0, count: Convert.ToInt32(stream.Length));
+        stream.Read(buffer: result, offset: 0, count: Convert.ToInt32(value: stream.Length));
         stream.Close();
         reportDoc.Close();
         return result;

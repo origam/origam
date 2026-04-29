@@ -49,12 +49,12 @@ public class DataGridColumnStyleHelper
             AsPanel panel = columnStyle.DataGridTableStyle.DataGrid.Parent as AsPanel;
             if (panel != null)
             {
-                DataRow row = (source.List[rowNum] as DataRowView).Row;
-                if (row.Table.Columns.Contains("Id"))
+                DataRow row = (source.List[index: rowNum] as DataRowView).Row;
+                if (row.Table.Columns.Contains(name: "Id"))
                 {
-                    if (row["id"] is Guid)
+                    if (row[columnName: "id"] is Guid)
                     {
-                        return panel.Formatting(row, (Guid)row["Id"]);
+                        return panel.Formatting(row: row, id: (Guid)row[columnName: "Id"]);
                     }
                 }
             }

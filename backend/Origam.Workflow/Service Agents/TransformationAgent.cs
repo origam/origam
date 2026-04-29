@@ -44,7 +44,7 @@ namespace Origam.Workflow;
 public class TransformationAgent : AbstractServiceAgent
 {
     private static readonly ILog log = LogManager.GetLogger(
-        MethodBase.GetCurrentMethod().DeclaringType
+        type: MethodBase.GetCurrentMethod().DeclaringType
     );
     IXsltEngine _transformer = null;
 
@@ -70,43 +70,47 @@ public class TransformationAgent : AbstractServiceAgent
             {
                 bool validateOnly = false;
                 if (
-                    this.Parameters.Contains("ValidateOnly")
-                    && (bool)this.Parameters["ValidateOnly"] == true
+                    this.Parameters.Contains(key: "ValidateOnly")
+                    && (bool)this.Parameters[key: "ValidateOnly"] == true
                 )
                 {
                     validateOnly = true;
                 }
                 // Check input parameters
-                if (!(this.Parameters["Data"] is IXmlContainer))
-                {
-                    throw new InvalidCastException(ResourceUtils.GetString("ErrorNotXmlDocument"));
-                }
-
-                if (!(this.Parameters["XslScript"] is Guid))
+                if (!(this.Parameters[key: "Data"] is IXmlContainer))
                 {
                     throw new InvalidCastException(
-                        ResourceUtils.GetString("ErrorXslScriptNotGuid")
+                        message: ResourceUtils.GetString(key: "ErrorNotXmlDocument")
+                    );
+                }
+
+                if (!(this.Parameters[key: "XslScript"] is Guid))
+                {
+                    throw new InvalidCastException(
+                        message: ResourceUtils.GetString(key: "ErrorXslScriptNotGuid")
                     );
                 }
 
                 if (
                     !(
-                        this.Parameters["Parameters"] == null
-                        || this.Parameters["Parameters"] is Hashtable
+                        this.Parameters[key: "Parameters"] == null
+                        || this.Parameters[key: "Parameters"] is Hashtable
                     )
                 )
                 {
-                    throw new InvalidCastException(ResourceUtils.GetString("ErrorNotHashtable"));
+                    throw new InvalidCastException(
+                        message: ResourceUtils.GetString(key: "ErrorNotHashtable")
+                    );
                 }
 
                 InitializeTransformer();
                 _result = _transformer.Transform(
-                    this.Parameters["Data"] as IXmlContainer,
-                    (Guid)this.Parameters["XslScript"],
-                    this.Parameters["Parameters"] as Hashtable,
-                    (RuleEngine as RuleEngine).TransactionId,
-                    this.OutputStructure as AbstractDataStructure,
-                    validateOnly
+                    data: this.Parameters[key: "Data"] as IXmlContainer,
+                    transformationId: (Guid)this.Parameters[key: "XslScript"],
+                    parameters: this.Parameters[key: "Parameters"] as Hashtable,
+                    transactionId: (RuleEngine as RuleEngine).TransactionId,
+                    outputStructure: this.OutputStructure as AbstractDataStructure,
+                    validateOnly: validateOnly
                 );
                 break;
             }
@@ -126,9 +130,9 @@ public class TransformationAgent : AbstractServiceAgent
             default:
             {
                 throw new ArgumentOutOfRangeException(
-                    "MethodName",
-                    this.MethodName,
-                    ResourceUtils.GetString("InvalidMethodName")
+                    paramName: "MethodName",
+                    actualValue: this.MethodName,
+                    message: ResourceUtils.GetString(key: "InvalidMethodName")
                 );
             }
         }
@@ -139,17 +143,20 @@ public class TransformationAgent : AbstractServiceAgent
         ValidateTransformTextParameters();
         InitializeTransformer();
         bool validateOnly = false;
-        if (Parameters.Contains("ValidateOnly") && ((bool)Parameters["ValidateOnly"] == true))
+        if (
+            Parameters.Contains(key: "ValidateOnly")
+            && ((bool)Parameters[key: "ValidateOnly"] == true)
+        )
         {
             validateOnly = true;
         }
         _result = _transformer.Transform(
-            Parameters["Data"] as IXmlContainer,
-            (string)Parameters["XslScript"],
-            Parameters["Parameters"] as Hashtable,
-            (RuleEngine as RuleEngine).TransactionId,
-            OutputStructure as AbstractDataStructure,
-            validateOnly
+            data: Parameters[key: "Data"] as IXmlContainer,
+            xsl: (string)Parameters[key: "XslScript"],
+            parameters: Parameters[key: "Parameters"] as Hashtable,
+            transactionId: (RuleEngine as RuleEngine).TransactionId,
+            outputStructure: OutputStructure as AbstractDataStructure,
+            validateOnly: validateOnly
         );
     }
 
@@ -159,7 +166,7 @@ public class TransformationAgent : AbstractServiceAgent
         Stream output = null;
         if (log.IsDebugEnabled)
         {
-            log.Debug("Validating parameters...");
+            log.Debug(message: "Validating parameters...");
         }
         ValidateTransformDataParameters();
         try
@@ -167,42 +174,44 @@ public class TransformationAgent : AbstractServiceAgent
             if (log.IsDebugEnabled)
             {
                 log.DebugFormat(
-                    "Opening output file {0}...",
-                    Parameters.ContainsKey("OutputFile") ? Parameters["OutputFile"] : ""
+                    format: "Opening output file {0}...",
+                    arg0: Parameters.ContainsKey(key: "OutputFile")
+                        ? Parameters[key: "OutputFile"]
+                        : ""
                 );
             }
             output = File.Open(
-                Parameters["OutputFile"] as string,
-                FileMode.Create,
-                FileAccess.Write,
-                FileShare.None
+                path: Parameters[key: "OutputFile"] as string,
+                mode: FileMode.Create,
+                access: FileAccess.Write,
+                share: FileShare.None
             );
             if (log.IsDebugEnabled)
             {
-                log.Debug("Aquiring DataReader...");
+                log.Debug(message: "Aquiring DataReader...");
             }
             dataReader = GetDataReader();
             DataReaderXPathNavigator navigator = new DataReaderXPathNavigator(
-                dataReader,
-                Parameters["EntityName"] as string,
-                -1,
-                false
+                dataReader: dataReader,
+                entityName: Parameters[key: "EntityName"] as string,
+                position: -1,
+                wasMoveToFirstChildInvoked: false
             );
             if (log.IsDebugEnabled)
             {
-                log.Debug("Initializing transformation...");
+                log.Debug(message: "Initializing transformation...");
             }
             InitializeTransformer();
             _transformer.Transform(
-                navigator,
-                (Guid)Parameters["XslScript"],
-                Parameters["XslParameters"] as Hashtable,
-                (RuleEngine as RuleEngine).TransactionId,
-                output
+                input: navigator,
+                transformationId: (Guid)Parameters[key: "XslScript"],
+                parameters: Parameters[key: "XslParameters"] as Hashtable,
+                transactionId: (RuleEngine as RuleEngine).TransactionId,
+                output: output
             );
             if (log.IsDebugEnabled)
             {
-                log.Debug("Transformation finished...");
+                log.Debug(message: "Transformation finished...");
             }
         }
         finally
@@ -222,81 +231,111 @@ public class TransformationAgent : AbstractServiceAgent
     private IDataReader GetDataReader()
     {
         DataStructureReference dataStructureReference;
-        dataStructureReference = Parameters["DataStructure"] as DataStructureReference;
+        dataStructureReference = Parameters[key: "DataStructure"] as DataStructureReference;
         DataStructureQuery query = new DataStructureQuery(
-            dataStructureReference.DataStructureId,
-            dataStructureReference.DataStructureMethodId,
-            Guid.Empty,
-            dataStructureReference.DataStructureSortSetId
+            dataStructureId: dataStructureReference.DataStructureId,
+            methodId: dataStructureReference.DataStructureMethodId,
+            defaultSetId: Guid.Empty,
+            sortSetId: dataStructureReference.DataStructureSortSetId
         );
-        Hashtable parameters = Parameters["DataParameters"] as Hashtable;
+        Hashtable parameters = Parameters[key: "DataParameters"] as Hashtable;
         if (parameters != null)
         {
             foreach (DictionaryEntry entry in parameters)
             {
-                query.Parameters.Add(new QueryParameter(entry.Key as string, entry.Value));
+                query.Parameters.Add(
+                    value: new QueryParameter(
+                        _parameterName: entry.Key as string,
+                        value: entry.Value
+                    )
+                );
             }
         }
         IDataService dataService = DataServiceFactory.GetDataService();
         return dataService.ExecuteDataReader(
-            query,
-            SecurityManager.CurrentPrincipal,
-            TransactionId
+            dataStructureQuery: query,
+            userProfile: SecurityManager.CurrentPrincipal,
+            transactionId: TransactionId
         );
     }
 
     private void ValidateTransformTextParameters()
     {
-        if (!(Parameters["Data"] is IXmlContainer))
+        if (!(Parameters[key: "Data"] is IXmlContainer))
         {
-            throw new InvalidCastException(ResourceUtils.GetString("ErrorNotXmlDocument"));
+            throw new InvalidCastException(
+                message: ResourceUtils.GetString(key: "ErrorNotXmlDocument")
+            );
         }
-        if (!(Parameters["XslScript"] is string))
+        if (!(Parameters[key: "XslScript"] is string))
         {
-            throw new InvalidCastException(ResourceUtils.GetString("ErrorXslScriptNotGuid"));
+            throw new InvalidCastException(
+                message: ResourceUtils.GetString(key: "ErrorXslScriptNotGuid")
+            );
         }
 
-        if (!((Parameters["Parameters"] == null) || (Parameters["Parameters"] is Hashtable)))
+        if (
+            !(
+                (Parameters[key: "Parameters"] == null)
+                || (Parameters[key: "Parameters"] is Hashtable)
+            )
+        )
         {
-            throw new InvalidCastException(ResourceUtils.GetString("ErrorNotHashtable"));
+            throw new InvalidCastException(
+                message: ResourceUtils.GetString(key: "ErrorNotHashtable")
+            );
         }
     }
 
     private void ValidateTransformDataParameters()
     {
         DataStructureReference dataStructureReference;
-        dataStructureReference = Parameters["DataStructure"] as DataStructureReference;
+        dataStructureReference = Parameters[key: "DataStructure"] as DataStructureReference;
         if (dataStructureReference == null)
         {
             throw new InvalidCastException(
-                ResourceUtils.GetString("ErrorNotDataStructureReference")
+                message: ResourceUtils.GetString(key: "ErrorNotDataStructureReference")
             );
         }
         if (
-            !((Parameters["DataParameters"] == null) || (Parameters["DataParameters"] is Hashtable))
+            !(
+                (Parameters[key: "DataParameters"] == null)
+                || (Parameters[key: "DataParameters"] is Hashtable)
+            )
         )
         {
             throw new InvalidCastException(
-                ResourceUtils.GetString("ErrorDataParametersNotHashtable")
+                message: ResourceUtils.GetString(key: "ErrorDataParametersNotHashtable")
             );
         }
-        if (!(Parameters["EntityName"] is string))
-        {
-            throw new InvalidCastException(ResourceUtils.GetString("ErrorEntityNameNotString"));
-        }
-        if (!(Parameters["XslScript"] is Guid))
-        {
-            throw new InvalidCastException(ResourceUtils.GetString("ErrorXslScriptNotGuid"));
-        }
-        if (!((Parameters["XslParameters"] == null) || (Parameters["XslParameters"] is Hashtable)))
+        if (!(Parameters[key: "EntityName"] is string))
         {
             throw new InvalidCastException(
-                ResourceUtils.GetString("ErrorXslParametersNotHashtable")
+                message: ResourceUtils.GetString(key: "ErrorEntityNameNotString")
             );
         }
-        if (!(Parameters["OutputFile"] is string))
+        if (!(Parameters[key: "XslScript"] is Guid))
         {
-            throw new InvalidCastException(ResourceUtils.GetString("ErrorOutputFileNotString"));
+            throw new InvalidCastException(
+                message: ResourceUtils.GetString(key: "ErrorXslScriptNotGuid")
+            );
+        }
+        if (
+            !(
+                (Parameters[key: "XslParameters"] == null)
+                || (Parameters[key: "XslParameters"] is Hashtable)
+            )
+        )
+        {
+            throw new InvalidCastException(
+                message: ResourceUtils.GetString(key: "ErrorXslParametersNotHashtable")
+            );
+        }
+        if (!(Parameters[key: "OutputFile"] is string))
+        {
+            throw new InvalidCastException(
+                message: ResourceUtils.GetString(key: "ErrorOutputFileNotString")
+            );
         }
     }
 
@@ -311,22 +350,24 @@ public class TransformationAgent : AbstractServiceAgent
         ServiceMethodCallTask task = item as ServiceMethodCallTask;
         if (task != null)
         {
-            transformation = ResolveServiceMethodCallTask(task);
+            transformation = ResolveServiceMethodCallTask(task: task);
         }
         if (transformation != null && method == "Transform" && parameter == "Parameters")
         {
             string transformationText = transformation.TextStore;
-            result = XmlTools.ResolveTransformationParameters(transformationText);
+            result = XmlTools.ResolveTransformationParameters(
+                transformationText: transformationText
+            );
         }
         return result;
     }
 
     private XslTransformation ResolveServiceMethodCallTask(ServiceMethodCallTask task)
     {
-        ISchemaItem tParam = task.GetChildByName("XslScript");
+        ISchemaItem tParam = task.GetChildByName(name: "XslScript");
         if (tParam.ChildItems.Count == 1)
         {
-            TransformationReference tfRef = tParam.ChildItems[0] as TransformationReference;
+            TransformationReference tfRef = tParam.ChildItems[index: 0] as TransformationReference;
             if (tfRef != null)
             {
                 return tfRef.Transformation as XslTransformation;
@@ -338,8 +379,9 @@ public class TransformationAgent : AbstractServiceAgent
     private void InitializeTransformer()
     {
         IPersistenceService persistence =
-            ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-        _transformer = new CompiledXsltEngine(persistence.SchemaProvider);
+            ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+            as IPersistenceService;
+        _transformer = new CompiledXsltEngine(persistence: persistence.SchemaProvider);
         _transformer.Trace = this.Trace;
         _transformer.TraceStepName = this.TraceStepName;
         _transformer.TraceWorkflowId = this.TraceWorkflowId;

@@ -47,7 +47,7 @@ namespace Origam.Server;
 public class PanelActionResult : ActionResult
 {
     public PanelActionResult(ActionResultType type)
-        : base(type) { }
+        : base(type: type) { }
 
     public UIResult UIResult { get; set; }
     public UIRequest Request { get; set; }

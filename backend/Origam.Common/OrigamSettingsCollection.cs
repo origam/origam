@@ -52,7 +52,7 @@ public class OrigamSettingsCollection : CollectionBase
     /// </param>
     public OrigamSettingsCollection(OrigamSettingsCollection value)
     {
-        this.AddRange(value);
+        this.AddRange(value: value);
     }
 
     /// <summary>
@@ -65,7 +65,7 @@ public class OrigamSettingsCollection : CollectionBase
     /// </param>
     public OrigamSettingsCollection(OrigamSettings[] value)
     {
-        this.AddRange(value);
+        this.AddRange(value: value);
     }
 
     /// <summary>
@@ -78,8 +78,8 @@ public class OrigamSettingsCollection : CollectionBase
     /// <exception cref='System.ArgumentOutOfRangeException'><paramref name='index'/> is outside the valid range of indexes for the collection.</exception>
     public OrigamSettings this[int index]
     {
-        get { return ((OrigamSettings)(List[index])); }
-        set { List[index] = value; }
+        get { return ((OrigamSettings)(List[index: index])); }
+        set { List[index: index] = value; }
     }
 
     /// <summary>
@@ -93,7 +93,7 @@ public class OrigamSettingsCollection : CollectionBase
     /// <seealso cref='Origam.OrigamSettingsCollection.AddRange'/>
     public int Add(OrigamSettings value)
     {
-        return List.Add(value);
+        return List.Add(value: value);
     }
 
     /// <summary>
@@ -110,7 +110,7 @@ public class OrigamSettingsCollection : CollectionBase
     {
         for (int i = 0; (i < value.Length); i = (i + 1))
         {
-            this.Add(value[i]);
+            this.Add(value: value[i]);
         }
     }
 
@@ -130,7 +130,7 @@ public class OrigamSettingsCollection : CollectionBase
     {
         for (int i = 0; (i < value.Count); i = (i + 1))
         {
-            this.Add(value[i]);
+            this.Add(value: value[index: i]);
         }
     }
 
@@ -146,7 +146,7 @@ public class OrigamSettingsCollection : CollectionBase
     /// <seealso cref='Origam.OrigamSettingsCollection.IndexOf'/>
     public bool Contains(OrigamSettings value)
     {
-        return List.Contains(value);
+        return List.Contains(value: value);
     }
 
     /// <summary>
@@ -164,7 +164,7 @@ public class OrigamSettingsCollection : CollectionBase
     /// <seealso cref='System.Array'/>
     public void CopyTo(OrigamSettings[] array, int index)
     {
-        List.CopyTo(array, index);
+        List.CopyTo(array: array, index: index);
     }
 
     /// <summary>
@@ -179,7 +179,7 @@ public class OrigamSettingsCollection : CollectionBase
     /// <seealso cref='Origam.OrigamSettingsCollection.Contains'/>
     public int IndexOf(OrigamSettings value)
     {
-        return List.IndexOf(value);
+        return List.IndexOf(value: value);
     }
 
     /// <summary>
@@ -191,7 +191,7 @@ public class OrigamSettingsCollection : CollectionBase
     /// <seealso cref='Origam.OrigamSettingsCollection.Add'/>
     public void Insert(int index, OrigamSettings value)
     {
-        List.Insert(index, value);
+        List.Insert(index: index, value: value);
     }
 
     /// <summary>
@@ -202,7 +202,7 @@ public class OrigamSettingsCollection : CollectionBase
     /// <seealso cref='System.Collections.IEnumerator'/>
     public new OrigamSettingsEnumerator GetEnumerator()
     {
-        return new OrigamSettingsEnumerator(this);
+        return new OrigamSettingsEnumerator(mappings: this);
     }
 
     /// <summary>
@@ -214,7 +214,7 @@ public class OrigamSettingsCollection : CollectionBase
     /// <exception cref='System.ArgumentException'><paramref name='value'/> is not found in the Collection. </exception>
     public void Remove(OrigamSettings value)
     {
-        List.Remove(value);
+        List.Remove(value: value);
     }
 
     public OrigamSettings[] ToArray()

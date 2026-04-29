@@ -25,17 +25,17 @@
 */
 using System.Reflection;
 
-[assembly: AssemblyTitle("POP3 Mail MIME Parser Library")]
-[assembly: AssemblyDescription("POP3 Mail MIME Parser Library")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Hamid Qureshi and Unruled Boy")]
-[assembly: AssemblyProduct("POP3 Mail MIME Parser Library")]
-[assembly: AssemblyCopyright("Hamid Qureshi and Unruled Boy")]
-[assembly: AssemblyTrademark("POP3 Mail MIME Parser Library")]
-[assembly: AssemblyCulture("")]
+[assembly: AssemblyTitle(title: "POP3 Mail MIME Parser Library")]
+[assembly: AssemblyDescription(description: "POP3 Mail MIME Parser Library")]
+[assembly: AssemblyConfiguration(configuration: "")]
+[assembly: AssemblyCompany(company: "Hamid Qureshi and Unruled Boy")]
+[assembly: AssemblyProduct(product: "POP3 Mail MIME Parser Library")]
+[assembly: AssemblyCopyright(copyright: "Hamid Qureshi and Unruled Boy")]
+[assembly: AssemblyTrademark(trademark: "POP3 Mail MIME Parser Library")]
+[assembly: AssemblyCulture(culture: "")]
 
-[assembly: AssemblyVersion("2004.05.08.12")]
+[assembly: AssemblyVersion(version: "2004.05.08.12")]
 
-[assembly: AssemblyDelaySign(false)]
+[assembly: AssemblyDelaySign(delaySign: false)]
 //[assembly: AssemblyKeyFile("..\\..\\..\\..\\AssemblySigning\\origamKey.snk")]
 //[assembly: AssemblyKeyName("")]

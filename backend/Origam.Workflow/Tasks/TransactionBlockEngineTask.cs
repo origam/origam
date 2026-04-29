@@ -31,7 +31,7 @@ namespace Origam.Workflow.Tasks;
 public class TransactionBlockEngineTask : BlockEngineTask
 {
     private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
-        System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
+        type: System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
     );
     WorkflowEngine _call;
 
@@ -48,7 +48,7 @@ public class TransactionBlockEngineTask : BlockEngineTask
         catch (Exception ex)
         {
             exception = ex;
-            OnFinished(new WorkflowEngineTaskEventArgs(exception));
+            OnFinished(e: new WorkflowEngineTaskEventArgs(exception: exception));
         }
     }
 
@@ -57,37 +57,40 @@ public class TransactionBlockEngineTask : BlockEngineTask
         this.Engine.Host.WorkflowFinished += new WorkflowHostEvent(Host_WorkflowFinished);
         this.Engine.Host.WorkflowMessage += new WorkflowHostMessageEvent(Host_WorkflowMessage);
         TransactionWorkflowBlock block = this.Step as TransactionWorkflowBlock;
-        _call = this.Engine.GetSubEngine(block, Engine.TransactionBehavior);
+        _call = this.Engine.GetSubEngine(
+            block: block,
+            transactionBehavior: Engine.TransactionBehavior
+        );
         // if the transaction is atomic, we start it, except if the transaction exists already
         if (block.TransactionType == TransactionTypes.Atomic & this.Engine.TransactionId == null)
         {
             _call.SetTransactionId(
-                Guid.NewGuid().ToString(),
-                WorkflowTransactionBehavior.InheritExisting
+                transactionId: Guid.NewGuid().ToString(),
+                transactionBehavior: WorkflowTransactionBehavior.InheritExisting
             );
             if (log.IsInfoEnabled)
             {
-                log.Info("Starting new atomic transaction: " + _call.TransactionId);
+                log.Info(message: "Starting new atomic transaction: " + _call.TransactionId);
             }
         }
         // Fill input context stores
         foreach (Key key in this.Engine.RuleEngine.ContextStoreKeys)
         {
             // pass directly the context, no cloning
-            _call.ParentContexts.Add(key, this.Engine.RuleEngine.GetContext(key));
+            _call.ParentContexts.Add(key: key, value: this.Engine.RuleEngine.GetContext(key: key));
         }
         // Run
-        Engine.ExecuteSubEngineWorkflow(_call);
+        Engine.ExecuteSubEngineWorkflow(subEngine: _call);
     }
 
     private void Host_WorkflowFinished(object sender, WorkflowHostEventArgs e)
     {
-        if (e.Engine.WorkflowUniqueId.Equals(_call.WorkflowUniqueId))
+        if (e.Engine.WorkflowUniqueId.Equals(g: _call.WorkflowUniqueId))
         {
             UnsubscribeEvents();
             if (e.Exception != null)
             {
-                HandleException(e.Exception);
+                HandleException(ex: e.Exception);
                 return;
             }
             // commit the transaction, if we initiated the transaction
@@ -97,20 +100,20 @@ public class TransactionBlockEngineTask : BlockEngineTask
                 {
                     if (log.IsInfoEnabled)
                     {
-                        log.Info("Committing atomic transaction: " + _call.TransactionId);
+                        log.Info(message: "Committing atomic transaction: " + _call.TransactionId);
                     }
-                    ResourceMonitor.Commit(_call.TransactionId);
+                    ResourceMonitor.Commit(transactionId: _call.TransactionId);
                 }
                 catch (Exception ex)
                 {
                     OnFinished(
-                        new WorkflowEngineTaskEventArgs(
-                            new Exception(
-                                ResourceUtils.GetString(
-                                    "ErrorWhenCommit",
-                                    Environment.NewLine + ex.Message
+                        e: new WorkflowEngineTaskEventArgs(
+                            exception: new Exception(
+                                message: ResourceUtils.GetString(
+                                    key: "ErrorWhenCommit",
+                                    args: Environment.NewLine + ex.Message
                                 ),
-                                ex
+                                innerException: ex
                             )
                         )
                     );
@@ -122,22 +125,22 @@ public class TransactionBlockEngineTask : BlockEngineTask
             foreach (DictionaryEntry entry in _call.ParentContexts)
             {
                 this.Engine.RuleEngine.SetContext(
-                    entry.Key as Key,
-                    _call.RuleEngine.GetContext(entry.Key as Key)
+                    key: entry.Key as Key,
+                    value: _call.RuleEngine.GetContext(key: entry.Key as Key)
                 );
             }
-            OnFinished(new WorkflowEngineTaskEventArgs(e.Exception));
+            OnFinished(e: new WorkflowEngineTaskEventArgs(exception: e.Exception));
         }
     }
 
     private void Host_WorkflowMessage(object sender, WorkflowHostMessageEventArgs e)
     {
-        if (e.Engine.WorkflowUniqueId.Equals(_call.WorkflowUniqueId))
+        if (e.Engine.WorkflowUniqueId.Equals(g: _call.WorkflowUniqueId))
         {
             if (e.Exception != null)
             {
                 UnsubscribeEvents();
-                HandleException(e.Exception);
+                HandleException(ex: e.Exception);
             }
         }
     }
@@ -149,18 +152,21 @@ public class TransactionBlockEngineTask : BlockEngineTask
         {
             if (log.IsInfoEnabled)
             {
-                log.Info("Rolling back atomic transaction: " + _call.TransactionId);
+                log.Info(message: "Rolling back atomic transaction: " + _call.TransactionId);
             }
             try
             {
-                ResourceMonitor.Rollback(_call.TransactionId);
+                ResourceMonitor.Rollback(transactionId: _call.TransactionId);
             }
             catch (Exception rollbackEx)
             {
-                ex = new Exception(ResourceUtils.GetString("ErrorRollBackFailed"), rollbackEx);
+                ex = new Exception(
+                    message: ResourceUtils.GetString(key: "ErrorRollBackFailed"),
+                    innerException: rollbackEx
+                );
             }
         }
-        OnFinished(new WorkflowEngineTaskEventArgs(ex));
+        OnFinished(e: new WorkflowEngineTaskEventArgs(exception: ex));
     }
 
     private void UnsubscribeEvents()

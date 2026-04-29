@@ -28,28 +28,28 @@ using Origam.Architect.Server.Services;
 namespace Origam.Architect.Server.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route(template: "[controller]")]
 public class PropertyEditorController(
     PropertyEditorService propertyService,
     EditorService editorService
 ) : ControllerBase
 {
-    [HttpPost("Update")]
+    [HttpPost(template: "Update")]
     public UpdatePropertiesResult Update([FromBody] ChangesModel changes)
     {
-        EditorData editor = editorService.ChangesToEditorData(changes);
+        EditorData editor = editorService.ChangesToEditorData(input: changes);
         PropertyInfo[] properties = editor.Item.GetType().GetProperties();
         IEnumerable<PropertyUpdate> propertyUpdates = propertyService
-            .GetEditorProperties(editor.Item)
-            .Select(editorProperty =>
+            .GetEditorProperties(item: editor.Item)
+            .Select(selector: editorProperty =>
             {
-                PropertyInfo property = properties.FirstOrDefault(x =>
+                PropertyInfo property = properties.FirstOrDefault(predicate: x =>
                     x.Name == editorProperty.Name
                 );
                 return new PropertyUpdate
                 {
                     PropertyName = editorProperty.Name,
-                    Errors = propertyService.GetRuleErrors(property, editor.Item),
+                    Errors = propertyService.GetRuleErrors(property: property, item: editor.Item),
                     DropDownValues = editorProperty.DropDownValues ?? Array.Empty<DropDownValue>(),
                 };
             });

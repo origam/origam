@@ -33,17 +33,17 @@ public static class DataSetExtensions
         using (var stream = new MemoryStream())
         {
             using (
-                var xmlTextWriter = new XmlTextWriter(stream, Encoding.UTF8)
+                var xmlTextWriter = new XmlTextWriter(w: stream, encoding: Encoding.UTF8)
                 {
                     Formatting = Formatting.None,
                 }
             )
             {
-                dataSet.WriteXml(xmlTextWriter);
+                dataSet.WriteXml(writer: xmlTextWriter);
                 stream.Position = 0;
-                var xmlReader = XmlReader.Create(stream);
+                var xmlReader = XmlReader.Create(input: stream);
                 xmlReader.MoveToContent();
-                return XDocument.Load(xmlReader);
+                return XDocument.Load(reader: xmlReader);
             }
         }
     }
@@ -55,8 +55,8 @@ public static class DataSetExtensions
             foreach (DataColumn col in table.Columns)
             {
                 if (
-                    col.ExtendedProperties.Contains("AllowNulls")
-                    && (bool)col.ExtendedProperties["AllowNulls"] == false
+                    col.ExtendedProperties.Contains(key: "AllowNulls")
+                    && (bool)col.ExtendedProperties[key: "AllowNulls"] == false
                 )
                 {
                     col.AllowDBNull = false;
@@ -71,7 +71,7 @@ public static class DataSetExtensions
         {
             foreach (DataColumn col in table.Columns)
             {
-                if (col.AllowDBNull == false & IsKey(col) == false)
+                if (col.AllowDBNull == false & IsKey(column: col) == false)
                 {
                     col.AllowDBNull = true;
                 }
@@ -82,28 +82,28 @@ public static class DataSetExtensions
     private static bool IsKey(DataColumn column)
     {
         // primary key
-        bool found = IsInColumns(column, column.Table.PrimaryKey);
+        bool found = IsInColumns(searchedColumn: column, columns: column.Table.PrimaryKey);
         if (found)
         {
             return true;
         }
 
         // parent relations
-        found = IsInRelations(column, column.Table.ParentRelations);
+        found = IsInRelations(column: column, relations: column.Table.ParentRelations);
         if (found)
         {
             return true;
         }
 
         // child relations
-        return IsInRelations(column, column.Table.ChildRelations);
+        return IsInRelations(column: column, relations: column.Table.ChildRelations);
     }
 
     private static bool IsInRelations(DataColumn column, DataRelationCollection relations)
     {
         foreach (DataRelation relation in relations)
         {
-            if (IsRelationKey(column, relation))
+            if (IsRelationKey(column: column, relation: relation))
             {
                 return true;
             }
@@ -115,7 +115,7 @@ public static class DataSetExtensions
     private static bool IsRelationKey(DataColumn column, DataRelation relation)
     {
         // parent columns
-        bool found = IsInColumns(column, relation.ParentColumns);
+        bool found = IsInColumns(searchedColumn: column, columns: relation.ParentColumns);
 
         if (found)
         {
@@ -123,14 +123,14 @@ public static class DataSetExtensions
         }
 
         // child columns
-        return IsInColumns(column, relation.ChildColumns);
+        return IsInColumns(searchedColumn: column, columns: relation.ChildColumns);
     }
 
     private static bool IsInColumns(DataColumn searchedColumn, DataColumn[] columns)
     {
         foreach (DataColumn col in columns)
         {
-            if (col.Equals(searchedColumn))
+            if (col.Equals(obj: searchedColumn))
             {
                 return true;
             }

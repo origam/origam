@@ -35,36 +35,36 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 @{
     var currentCulture = Context.Features.Get<IRequestCultureFeature>().RequestCulture.Culture.Name;
-    var returnUrl = !string.IsNullOrEmpty(Model.ReturnUrl)
+    var returnUrl = !string.IsNullOrEmpty(value: Model.ReturnUrl)
         ? Model.ReturnUrl
-        : string.IsNullOrEmpty(Context.Request.Path)
+        : string.IsNullOrEmpty(value: Context.Request.Path)
             ? "~/"
             : $"~{Context.Request.Path}";
 }
 
 @{
-    ViewData["Title"] = "Sign in";
+    ViewData[index: "Title"] = "Sign in";
 }
 
 @if (Model.EnableLocalLogin)
 {
     <div class="detailview-container">
         <div class="detailview-module with-title">
-            <h2>@SharedLocalizer["LocalLogin"]</h2>
+            <h2>@SharedLocalizer[name: "LocalLogin"]</h2>
             <div class="input-form">
                 <form asp-route="Login">
                     <div class="input-row">
-                        <label asp-for="UserName">@SharedLocalizer["UserName"]</label>
-                        <input id="userNameInput" placeholder="@SharedLocalizer["UserName"]" asp-for="UserName" autofocus>
+                        <label asp-for="UserName">@SharedLocalizer[name: "UserName"]</label>
+                        <input id="userNameInput" placeholder="@SharedLocalizer[name: "UserName"]" asp-for="UserName" autofocus>
                     </div>
                     <div class="input-row">
-                        <label asp-for="Password">@SharedLocalizer["Password"]</label>
-                        <input id="passInput" type="password" placeholder="@SharedLocalizer["Password"]" asp-for="Password" autocomplete="off">
+                        <label asp-for="Password">@SharedLocalizer[name: "Password"]</label>
+                        <input id="passInput" type="password" placeholder="@SharedLocalizer[name: "Password"]" asp-for="Password" autocomplete="off">
                     </div>
                     
                     <div class="input-row">
-                        <a id="loginButton" class="btn normal-size primary submit-link" value="login" href=#>@SharedLocalizer["Login"]</a>
-                        <a id="cancelButton" class="btn normal-size primary submit-link" value="cancel" href=#>@SharedLocalizer["Cancel"]</a>
+                        <a id="loginButton" class="btn normal-size primary submit-link" value="login" href=#>@SharedLocalizer[name: "Login"]</a>
+                        <a id="cancelButton" class="btn normal-size primary submit-link" value="cancel" href=#>@SharedLocalizer[name: "Cancel"]</a>
                     </div>
                 </form>
             </div>
@@ -98,8 +98,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     {
         <div class="centered">
             <div class="reset-password-statement">
-                @SharedLocalizer["ToResetPassword1"]<a class="in-page-link" asp-controller="Account" asp-action="ForgotPassword" asp-route-returnUrl="@Model.ReturnUrl">
-                    @SharedLocalizer["ToResetPassword2"]</a>@SharedLocalizer["ToResetPassword3"]
+                @SharedLocalizer[name: "ToResetPassword1"]<a class="in-page-link" asp-controller="Account" asp-action="ForgotPassword" asp-route-returnUrl="@Model.ReturnUrl">
+                    @SharedLocalizer[name: "ToResetPassword2"]</a>@SharedLocalizer[name: "ToResetPassword3"]
             </div>
         </div>
     }
@@ -109,11 +109,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
             <div class="initial-user-statement">
                 @if (UserTools.IsInitialSetupNeeded())
                 {
-                @SharedLocalizer["ToInitialUser1"]<a class="in-page-link" href="/account/registerinitialuser">@SharedLocalizer["ToInitialUser2"]</a>@SharedLocalizer["ToInitialUser3"]
+                @SharedLocalizer[name: "ToInitialUser1"]<a class="in-page-link" href="/account/registerinitialuser">@SharedLocalizer[name: "ToInitialUser2"]</a>@SharedLocalizer[name: "ToInitialUser3"]
                 }
                 else
                 {
-                @SharedLocalizer["ToInitialUser1"]<a class="in-page-link" href="/account/register">@SharedLocalizer["ToInitialUser2"]</a>@SharedLocalizer["ToInitialUser3"]
+                @SharedLocalizer[name: "ToInitialUser1"]<a class="in-page-link" href="/account/register">@SharedLocalizer[name: "ToInitialUser2"]</a>@SharedLocalizer[name: "ToInitialUser3"]
                 }
             </div>
         </div>
@@ -123,7 +123,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 @if (Model.VisibleExternalProviders != null && Model.VisibleExternalProviders.Any())
 {
     <div class="detailview-module with-title">
-        <h2>@SharedLocalizer["ExternalLogin"]</h2>
+        <h2>@SharedLocalizer[name: "ExternalLogin"]</h2>
         <div class="input-form">
             <div class="input-row">
                 @foreach (var provider in Model.VisibleExternalProviders)
@@ -135,7 +135,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
                         asp-action="Challenge"
                         asp-route-provider="@provider.AuthenticationScheme"
                         asp-route-returnUrl="@Model.ReturnUrl">
-                        @SharedLocalizer[provider.DisplayName]
+                        @SharedLocalizer[name: provider.DisplayName]
                     </a>
                 }
             </div>
@@ -148,8 +148,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 @if (!Model.EnableLocalLogin && (Model.VisibleExternalProviders == null || !Model.VisibleExternalProviders.Any()))
 {
     <div class="alert alert-warning">
-        <strong>@SharedLocalizer["InvalidLoginRequest"]</strong>
-        @SharedLocalizer["NoLoginSchemes"]
+        <strong>@SharedLocalizer[name: "InvalidLoginRequest"]</strong>
+        @SharedLocalizer[name: "NoLoginSchemes"]
     </div>
 }
 

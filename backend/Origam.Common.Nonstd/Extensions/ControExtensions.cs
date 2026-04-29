@@ -32,7 +32,7 @@ public static class ControlExtensions
         T result = default(T);
         if (control.InvokeRequired)
         {
-            control.Invoke(new Action(() => result = func()));
+            control.Invoke(method: new Action(() => result = func()));
         }
         else
         {
@@ -45,7 +45,7 @@ public static class ControlExtensions
     {
         if (control.InvokeRequired)
         {
-            control.Invoke(action);
+            control.Invoke(method: action);
         }
         else
         {
@@ -57,9 +57,9 @@ public static class ControlExtensions
     {
         if (control.InvokeRequired)
         {
-            Task.Run(() =>
+            Task.Run(action: () =>
             {
-                control.Invoke(action);
+                control.Invoke(method: action);
             });
         }
         else

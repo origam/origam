@@ -25,17 +25,17 @@ using Origam.Schema.EntityModel;
 
 namespace Origam.Schema.RuleModel;
 
-[SchemaItemDescription("Simple Data Rule", "simple-data-rule.png")]
-[HelpTopic("Simple+Data+Rule")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Simple Data Rule", iconName: "simple-data-rule.png")]
+[HelpTopic(topic: "Simple+Data+Rule")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class SimpleDataRule : XPathRule, IDataRule
 {
     public SimpleDataRule()
         : base() { }
 
     public SimpleDataRule(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(schemaExtensionId: schemaExtensionId) { }
 
     public SimpleDataRule(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 }

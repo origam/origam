@@ -37,8 +37,8 @@ public class CreateNewPackageBuilderTask : ICreateNewPackageBuilderTask
         schema.UnloadSchema();
         PackageHelper.CreatePackage(
             packageName: project.Name,
-            packageId: new Guid(project.NewPackageId),
-            referencePackageId: new Guid(project.BasePackageId)
+            packageId: new Guid(g: project.NewPackageId),
+            referencePackageId: new Guid(g: project.BasePackageId)
         );
         schema.UnloadSchema();
     }

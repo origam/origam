@@ -52,7 +52,7 @@ public class SchemaBrowser : AbstractPadContent, IBrowserPad
         {
             components?.Dispose();
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
 
     #region Windows Form Designer generated code
@@ -118,7 +118,7 @@ public class SchemaBrowser : AbstractPadContent, IBrowserPad
     private void _schemaService_SchemaLoaded(object sender, bool isInteractive)
     {
         EbrSchemaBrowser.RemoveAllNodes();
-        EbrSchemaBrowser.AddRootNode(schemaService.ActiveExtension);
+        EbrSchemaBrowser.AddRootNode(node: schemaService.ActiveExtension);
     }
 
     public override void RedrawContent()
@@ -128,6 +128,6 @@ public class SchemaBrowser : AbstractPadContent, IBrowserPad
 
     public int ImageIndex(string icon)
     {
-        return this.ImageList.ImageIndex(icon);
+        return this.ImageList.ImageIndex(icon: icon);
     }
 }

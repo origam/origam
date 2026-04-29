@@ -63,68 +63,82 @@ public class ExternalController : Microsoft.AspNetCore.Mvc.Controller
     [HttpGet]
     public IActionResult Challenge(string provider, string returnUrl)
     {
-        if (string.IsNullOrEmpty(returnUrl))
+        if (string.IsNullOrEmpty(value: returnUrl))
         {
-            returnUrl = Url.Content("~/");
+            returnUrl = Url.Content(contentPath: "~/");
         }
 
         // Only allow local URLs to avoid open redirects.
-        if (!Url.IsLocalUrl(returnUrl))
+        if (!Url.IsLocalUrl(url: returnUrl))
         {
-            throw new Exception("Invalid return URL");
+            throw new Exception(message: "Invalid return URL");
         }
 
-        var redirectUrl = Url.Action(nameof(Callback), "External", new { returnUrl });
-        var props = signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+        var redirectUrl = Url.Action(
+            action: nameof(Callback),
+            controller: "External",
+            values: new { returnUrl }
+        );
+        var props = signInManager.ConfigureExternalAuthenticationProperties(
+            provider: provider,
+            redirectUrl: redirectUrl
+        );
 
-        return Challenge(props, provider);
+        return Challenge(properties: props, authenticationSchemes: provider);
     }
 
     // Post-processing of external authentication.
     [HttpGet]
     public async Task<IActionResult> Callback(string returnUrl = null, string remoteError = null)
     {
-        returnUrl ??= Url.Content("~/");
+        returnUrl ??= Url.Content(contentPath: "~/");
 
-        if (!Url.IsLocalUrl(returnUrl))
+        if (!Url.IsLocalUrl(url: returnUrl))
         {
-            returnUrl = Url.Content("~/");
+            returnUrl = Url.Content(contentPath: "~/");
         }
 
         if (remoteError != null)
         {
-            logger.LogWarning("External provider error: {RemoteError}", remoteError);
-            return RedirectToAction("Login", "Account", new { returnUrl });
+            logger.LogWarning(message: "External provider error: {RemoteError}", args: remoteError);
+            return RedirectToAction(
+                actionName: "Login",
+                controllerName: "Account",
+                routeValues: new { returnUrl }
+            );
         }
 
         var info = await signInManager.GetExternalLoginInfoAsync();
         if (info == null)
         {
-            logger.LogWarning("GetExternalLoginInfoAsync returned null.");
-            return RedirectToAction("Login", "Account", new { returnUrl });
+            logger.LogWarning(message: "GetExternalLoginInfoAsync returned null.");
+            return RedirectToAction(
+                actionName: "Login",
+                controllerName: "Account",
+                routeValues: new { returnUrl }
+            );
         }
 
-        var (user, provider, providerUserId, claims) = FindUserFromExternalProvider(info);
+        var (user, provider, providerUserId, claims) = FindUserFromExternalProvider(info: info);
         if (user == null)
         {
             logger.LogWarning(
-                "External login rejected. Provider: {Provider}, ProviderUserId: {ProviderUserId}",
-                provider,
-                providerUserId
+                message: "External login rejected. Provider: {Provider}, ProviderUserId: {ProviderUserId}",
+                args: [provider, providerUserId]
             );
 
             // Clear external cookie if any.
-            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
-            return Redirect("/Account/AccessDenied");
+            await HttpContext.SignOutAsync(scheme: IdentityConstants.ExternalScheme);
+            return Redirect(url: "/Account/AccessDenied");
         }
 
         // At this point, the user is accepted – sign in with the normal app cookie.
-        await signInManager.SignInAsync(user, isPersistent: false);
+        await signInManager.SignInAsync(user: user, isPersistent: false);
 
         // Clear external cookie explicitly (SignInManager does this in some flows, we are explicit here).
-        await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+        await HttpContext.SignOutAsync(scheme: IdentityConstants.ExternalScheme);
 
-        return LocalRedirect(returnUrl);
+        return LocalRedirect(localUrl: returnUrl);
     }
 
     private (
@@ -136,7 +150,7 @@ public class ExternalController : Microsoft.AspNetCore.Mvc.Controller
     {
         if (info.Principal == null)
         {
-            throw new Exception("External principal is null.");
+            throw new Exception(message: "External principal is null.");
         }
 
         var externalUser = info.Principal;
@@ -145,26 +159,29 @@ public class ExternalController : Microsoft.AspNetCore.Mvc.Controller
         var claims = externalUser.Claims.ToList();
 
         var externalCallbackProcessingInfo = openIddictConfig.GetExternalCallbackProcessingInfo(
-            provider
+            authenticationScheme: provider
         );
 
-        var checkedClaim = externalUser.FindFirst(claim =>
+        var checkedClaim = externalUser.FindFirst(match: claim =>
             claim.Type == externalCallbackProcessingInfo.ClaimType
         );
 
         if (checkedClaim == null)
         {
             logger.LogError(
-                "ClaimType {ClaimType} not found in external principal.",
-                externalCallbackProcessingInfo.ClaimType
+                message: "ClaimType {ClaimType} not found in external principal.",
+                args: externalCallbackProcessingInfo.ClaimType
             );
             return (null, provider, providerUserId, claims);
         }
 
         IOrigamUser user =
             externalCallbackProcessingInfo.AuthenticationType == AuthenticationType.Email
-                ? userManager.FindByEmailAsync(checkedClaim.Value).GetAwaiter().GetResult()
-                : userManager.FindByNameAsync(checkedClaim.Value).GetAwaiter().GetResult();
+                ? userManager.FindByEmailAsync(email: checkedClaim.Value).GetAwaiter().GetResult()
+                : userManager
+                    .FindByNameAsync(userName: checkedClaim.Value)
+                    .GetAwaiter()
+                    .GetResult();
 
         if (user == null)
         {
@@ -173,11 +190,11 @@ public class ExternalController : Microsoft.AspNetCore.Mvc.Controller
         }
 
         var postProcessorResult = authenticationPostProcessor.Validate(
-            user.BusinessPartnerId,
-            user.UserName,
-            provider,
-            providerUserId,
-            claims
+            userId: user.BusinessPartnerId,
+            username: user.UserName,
+            externalProvider: provider,
+            providerUserId: providerUserId,
+            claims: claims
         );
 
         return postProcessorResult

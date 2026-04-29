@@ -29,11 +29,11 @@ public class FilenameIndexFileTools : AbstractIndexFileTools<FilenameIndexFileTo
 {
     public string GetFirstUnprocessedFile(string path, string mask, string indexFile)
     {
-        string[] filenames = Directory.GetFiles(path, mask);
-        List<string> processedFiles = GetProcessedFiles(indexFile);
+        string[] filenames = Directory.GetFiles(path: path, searchPattern: mask);
+        List<string> processedFiles = GetProcessedFiles(indexFile: indexFile);
         foreach (string filename in filenames)
         {
-            if (!processedFiles.Any(str => str == filename))
+            if (!processedFiles.Any(predicate: str => str == filename))
             {
                 return filename;
             }
@@ -43,9 +43,9 @@ public class FilenameIndexFileTools : AbstractIndexFileTools<FilenameIndexFileTo
 
     private List<string> GetProcessedFiles(string indexFile)
     {
-        if (File.Exists(indexFile))
+        if (File.Exists(path: indexFile))
         {
-            return File.ReadAllLines(indexFile).ToList();
+            return File.ReadAllLines(path: indexFile).ToList();
         }
 
         return new List<string>();

@@ -59,7 +59,11 @@ public class ScheduleTimeSchemaItemProvider : AbstractSchemaItemProvider
         {
             itemName = "NewScheduleGroup";
         }
-        return base.NewItem<T>(schemaExtensionId, group, itemName);
+        return base.NewItem<T>(
+            schemaExtensionId: schemaExtensionId,
+            group: group,
+            itemName: itemName
+        );
     }
     #endregion
 }

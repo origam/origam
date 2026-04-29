@@ -25,7 +25,7 @@ using Origam.Schema.EntityModel;
 
 namespace Origam.DA.EntityModel;
 
-[AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
+[AttributeUsage(validOn: AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
 public class NoNestedCountAggregationsRule : AbstractModelElementRuleAttribute
 {
     public override Exception CheckRule(object instance)
@@ -33,7 +33,7 @@ public class NoNestedCountAggregationsRule : AbstractModelElementRuleAttribute
         if (!(instance is AggregatedColumn aggregatedColumn))
         {
             throw new Exception(
-                $"{nameof(NoNestedCountAggregationsRule)} can be only applied to type {nameof(AggregatedColumn)}"
+                message: $"{nameof(NoNestedCountAggregationsRule)} can be only applied to type {nameof(AggregatedColumn)}"
             );
         }
         if (!(aggregatedColumn.Field is AggregatedColumn referencedColumn))
@@ -53,7 +53,7 @@ public class NoNestedCountAggregationsRule : AbstractModelElementRuleAttribute
         )
         {
             return new Exception(
-                $"Nested aggregation error. Column must have the property {nameof(AggregationType)} set to the same\n"
+                message: $"Nested aggregation error. Column must have the property {nameof(AggregationType)} set to the same\n"
                     + $"value as {nameof(AggregationType)} of the field it references \"{referencedColumn.Name}\"\n"
                     + "The only exception is a combination of Count(Count()) which is not allowed and should be\n"
                     + "replaced by Sum(Count()) to calculate the total count."
@@ -65,6 +65,6 @@ public class NoNestedCountAggregationsRule : AbstractModelElementRuleAttribute
 
     public override Exception CheckRule(object instance, string memberName)
     {
-        return CheckRule(instance);
+        return CheckRule(instance: instance);
     }
 }

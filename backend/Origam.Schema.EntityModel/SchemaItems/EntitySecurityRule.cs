@@ -32,31 +32,31 @@ namespace Origam.Schema.EntityModel;
 /// Summary description for EntitySecurityRule.
 /// </summary>
 [SchemaItemDescription(
-    "Row Level Security Rule",
-    "Row Level Security",
-    "icon_row-level-security-rule.png"
+    name: "Row Level Security Rule",
+    folderName: "Row Level Security",
+    iconName: "icon_row-level-security-rule.png"
 )]
-[HelpTopic("Row+Level+Security+Rules")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.1.0")]
+[HelpTopic(topic: "Row+Level+Security+Rules")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.1.0")]
 public class EntitySecurityRule : AbstractEntitySecurityRule
 {
     public EntitySecurityRule()
         : base() { }
 
     public EntitySecurityRule(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(schemaExtensionId: schemaExtensionId) { }
 
     public EntitySecurityRule(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Properties
 
-    [TypeConverter(typeof(EntityRuleConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
+    [TypeConverter(type: typeof(EntityRuleConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
     [NoRuleForExportRowLevelSecurityRule]
-    [Category("Security")]
-    [XmlReference("rule", "RuleId")]
+    [Category(category: "Security")]
+    [XmlReference(attributeName: "rule", idField: "RuleId")]
     public override IEntityRule Rule
     {
         get => base.Rule;
@@ -65,9 +65,13 @@ public class EntitySecurityRule : AbstractEntitySecurityRule
 
     private bool create = true;
 
-    [Category("Credentials"), DefaultValue(false), RefreshProperties(RefreshProperties.Repaint)]
-    [Description("If set to true, the rule is applied to create operation.")]
-    [XmlAttribute("createCredential")]
+    [
+        Category(category: "Credentials"),
+        DefaultValue(value: false),
+        RefreshProperties(refresh: RefreshProperties.Repaint)
+    ]
+    [Description(description: "If set to true, the rule is applied to create operation.")]
+    [XmlAttribute(attributeName: "createCredential")]
     public bool CreateCredential
     {
         get => create;
@@ -80,9 +84,13 @@ public class EntitySecurityRule : AbstractEntitySecurityRule
 
     private bool update = true;
 
-    [Category("Credentials"), DefaultValue(false), RefreshProperties(RefreshProperties.Repaint)]
-    [Description("If set to true, the rule is applied to update operation.")]
-    [XmlAttribute("updateCredential")]
+    [
+        Category(category: "Credentials"),
+        DefaultValue(value: false),
+        RefreshProperties(refresh: RefreshProperties.Repaint)
+    ]
+    [Description(description: "If set to true, the rule is applied to update operation.")]
+    [XmlAttribute(attributeName: "updateCredential")]
     public bool UpdateCredential
     {
         get => update;
@@ -95,9 +103,13 @@ public class EntitySecurityRule : AbstractEntitySecurityRule
 
     private bool delete = true;
 
-    [Category("Credentials"), DefaultValue(false), RefreshProperties(RefreshProperties.Repaint)]
-    [Description("If set to true, the rule is applied to delete operation.")]
-    [XmlAttribute("deleteCredential")]
+    [
+        Category(category: "Credentials"),
+        DefaultValue(value: false),
+        RefreshProperties(refresh: RefreshProperties.Repaint)
+    ]
+    [Description(description: "If set to true, the rule is applied to delete operation.")]
+    [XmlAttribute(attributeName: "deleteCredential")]
     public bool DeleteCredential
     {
         get => delete;
@@ -110,9 +122,13 @@ public class EntitySecurityRule : AbstractEntitySecurityRule
 
     private bool export = true;
 
-    [Category("Credentials"), DefaultValue(false), RefreshProperties(RefreshProperties.Repaint)]
-    [Description("If set to true, the rule is applied to export operation.")]
-    [XmlAttribute("exportCredential")]
+    [
+        Category(category: "Credentials"),
+        DefaultValue(value: false),
+        RefreshProperties(refresh: RefreshProperties.Repaint)
+    ]
+    [Description(description: "If set to true, the rule is applied to export operation.")]
+    [XmlAttribute(attributeName: "exportCredential")]
     public bool ExportCredential
     {
         get => export;
@@ -130,19 +146,19 @@ public class EntitySecurityRule : AbstractEntitySecurityRule
             var stringBuilder = new StringBuilder();
             if (CreateCredential)
             {
-                stringBuilder.Append("Create");
+                stringBuilder.Append(value: "Create");
             }
             if (UpdateCredential)
             {
-                stringBuilder.Append("Update");
+                stringBuilder.Append(value: "Update");
             }
             if (DeleteCredential)
             {
-                stringBuilder.Append("Delete");
+                stringBuilder.Append(value: "Delete");
             }
             if (ExportCredential)
             {
-                stringBuilder.Append("Export");
+                stringBuilder.Append(value: "Export");
             }
             return stringBuilder.ToString();
         }

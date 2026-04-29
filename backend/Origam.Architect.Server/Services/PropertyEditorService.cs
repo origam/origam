@@ -35,8 +35,8 @@ public class PropertyEditorService(EditorPropertyFactory propertyFactory)
     {
         var properties = item.GetType()
             .GetProperties()
-            .Where(prop => names.Contains(prop.Name))
-            .Select(prop => propertyFactory.Create(prop, item));
+            .Where(predicate: prop => names.Contains(value: prop.Name))
+            .Select(selector: prop => propertyFactory.Create(property: prop, instance: item));
         return properties;
     }
 
@@ -45,8 +45,10 @@ public class PropertyEditorService(EditorPropertyFactory propertyFactory)
         List<string> ruleErrors = property
             .GetCustomAttributes()
             .OfType<IModelElementRule>()
-            .Select(rule => rule.CheckRule(item, property.Name)?.Message)
-            .Where(message => message != null)
+            .Select(selector: rule =>
+                rule.CheckRule(instance: item, memberName: property.Name)?.Message
+            )
+            .Where(predicate: message => message != null)
             .ToList();
         return ruleErrors.Count == 0 ? null : ruleErrors;
     }
@@ -56,8 +58,8 @@ public class PropertyEditorService(EditorPropertyFactory propertyFactory)
         if (item is XslTransformation xsltTransformation)
         {
             IEnumerable<EditorProperty> xsltProperties = GetEditorPropertiesByName(
-                xsltTransformation,
-                ["Id", "Package", "TextStore", "XsltEngineType", "Name"]
+                item: xsltTransformation,
+                names: ["Id", "Package", "TextStore", "XsltEngineType", "Name"]
             );
             return xsltProperties;
         }
@@ -65,25 +67,27 @@ public class PropertyEditorService(EditorPropertyFactory propertyFactory)
         if (item is XslRule xslRule)
         {
             IEnumerable<EditorProperty> xsltProperties = GetEditorPropertiesByName(
-                xslRule,
-                ["Xsl", "Name", "Structure"]
+                item: xslRule,
+                names: ["Xsl", "Name", "Structure"]
             );
             return xsltProperties;
         }
 
         IEnumerable<EditorProperty> properties = item.GetType()
             .GetProperties()
-            .Select(prop => propertyFactory.CreateIfMarkedAsEditable(prop, item))
-            .Where(x => x != null);
+            .Select(selector: prop =>
+                propertyFactory.CreateIfMarkedAsEditable(property: prop, item: item)
+            )
+            .Where(predicate: x => x != null);
         return properties;
     }
 
     public IEnumerable<EditorProperty> GetEditorPropertiesWithErrors(ISchemaItem item)
     {
-        var editorProperties = GetEditorProperties(item)
-            .Peek(property =>
+        var editorProperties = GetEditorProperties(item: item)
+            .Peek(action: property =>
             {
-                property.Errors = GetRuleErrorsIfExist(property, item);
+                property.Errors = GetRuleErrorsIfExist(editorProperty: property, item: item);
             });
         return editorProperties;
     }
@@ -92,9 +96,9 @@ public class PropertyEditorService(EditorPropertyFactory propertyFactory)
     {
         Type type = item.GetType();
         PropertyInfo[] properties = type.GetProperties();
-        PropertyInfo propertyInfo = properties.First(property =>
+        PropertyInfo propertyInfo = properties.First(predicate: property =>
             property.Name == editorProperty.Name
         );
-        return GetRuleErrors(propertyInfo, item);
+        return GetRuleErrors(property: propertyInfo, item: item);
     }
 }

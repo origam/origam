@@ -33,7 +33,7 @@ namespace Origam.Workflow;
 public class EDIFACT2XMLServiceAgent : AbstractServiceAgent
 {
     private static readonly ILog log = LogManager.GetLogger(
-        MethodBase.GetCurrentMethod().DeclaringType
+        type: MethodBase.GetCurrentMethod().DeclaringType
     );
     private object result;
     public override object Result => result;
@@ -58,9 +58,9 @@ public class EDIFACT2XMLServiceAgent : AbstractServiceAgent
             default:
             {
                 throw new ArgumentOutOfRangeException(
-                    "MethodName",
-                    MethodName,
-                    ResourceUtils.GetString("InvalidMethodName")
+                    paramName: "MethodName",
+                    actualValue: MethodName,
+                    message: ResourceUtils.GetString(key: "InvalidMethodName")
                 );
             }
         }
@@ -73,41 +73,43 @@ public class EDIFACT2XMLServiceAgent : AbstractServiceAgent
         {
             if (log.IsDebugEnabled)
             {
-                log.Debug("Initializing parser...");
+                log.Debug(message: "Initializing parser...");
             }
             parser.Init(
-                GetMessageFormat(),
-                EDIFACTMessageGrammar.FromString(Parameters["Grammar"] as string),
-                GetStreamReader()
+                messageFormat: GetMessageFormat(),
+                messageGrammar: EDIFACTMessageGrammar.FromString(
+                    grammar: Parameters[key: "Grammar"] as string
+                ),
+                input: GetStreamReader()
             );
             if (log.IsDebugEnabled)
             {
                 log.DebugFormat(
-                    "Processing input file {0}...",
-                    Parameters.ContainsKey("Filename") ? Parameters["Filename"] : ""
+                    format: "Processing input file {0}...",
+                    arg0: Parameters.ContainsKey(key: "Filename") ? Parameters[key: "Filename"] : ""
                 );
             }
-            GenerateXMLFiles(parser);
+            GenerateXMLFiles(parser: parser);
         }
     }
 
     private StreamReader GetStreamReader()
     {
-        FileInfo fileInfo = new FileInfo(Parameters["Filename"] as string);
+        FileInfo fileInfo = new FileInfo(fileName: Parameters[key: "Filename"] as string);
         switch (fileInfo.Extension)
         {
             case ".gz":
             {
                 return new StreamReader(
-                    new GZipStream(
-                        File.OpenRead(Parameters["Filename"] as string),
-                        CompressionMode.Decompress
+                    stream: new GZipStream(
+                        stream: File.OpenRead(path: Parameters[key: "Filename"] as string),
+                        mode: CompressionMode.Decompress
                     )
                 );
             }
             default:
             {
-                return new StreamReader(Parameters["Filename"] as string);
+                return new StreamReader(path: Parameters[key: "Filename"] as string);
             }
         }
     }
@@ -119,44 +121,44 @@ public class EDIFACT2XMLServiceAgent : AbstractServiceAgent
         int counter = 0;
         int position = 0;
         int limit = 0;
-        if (Parameters["Limit"] != null)
+        if (Parameters[key: "Limit"] != null)
         {
-            limit = (int)Parameters["Limit"];
+            limit = (int)Parameters[key: "Limit"];
         }
-        string filename = GetOutputFilename(timestamp, counter);
+        string filename = GetOutputFilename(timestamp: timestamp, counter: counter);
         if (log.IsDebugEnabled)
         {
-            log.DebugFormat("Generating output file {0}...", filename);
+            log.DebugFormat(format: "Generating output file {0}...", arg0: filename);
         }
         try
         {
-            writer = new StreamWriter(filename, false);
-            writer.WriteLine("<EDIFACT>");
+            writer = new StreamWriter(path: filename, append: false);
+            writer.WriteLine(value: "<EDIFACT>");
             EDIFACTSegment segment = parser.GetNextTopLevelSegment();
             while (segment != null)
             {
                 if ((limit != 0) && (position > 0) && ((position % 1000) == 0))
                 {
-                    writer.Write("</EDIFACT>");
+                    writer.Write(value: "</EDIFACT>");
                     writer.Close();
                     counter++;
-                    filename = GetOutputFilename(timestamp, counter);
+                    filename = GetOutputFilename(timestamp: timestamp, counter: counter);
                     if (log.IsDebugEnabled)
                     {
-                        log.DebugFormat("Generating output file {0}...", filename);
+                        log.DebugFormat(format: "Generating output file {0}...", arg0: filename);
                     }
-                    writer = new StreamWriter(filename, false);
-                    writer.WriteLine("<EDIFACT>");
+                    writer = new StreamWriter(path: filename, append: false);
+                    writer.WriteLine(value: "<EDIFACT>");
                 }
-                segment.ToXML(writer);
+                segment.ToXML(writer: writer);
                 position++;
                 segment = parser.GetNextTopLevelSegment();
             }
-            writer.Write("</EDIFACT>");
+            writer.Write(value: "</EDIFACT>");
             writer.Close();
             if (log.IsDebugEnabled)
             {
-                log.Debug("Done...");
+                log.Debug(message: "Done...");
             }
         }
         finally
@@ -170,39 +172,47 @@ public class EDIFACT2XMLServiceAgent : AbstractServiceAgent
 
     private string GetOutputFilename(DateTime timestamp, int counter)
     {
-        FileInfo fileInfo = new FileInfo(Parameters["Filename"] as string);
+        FileInfo fileInfo = new FileInfo(fileName: Parameters[key: "Filename"] as string);
         StringBuilder output = new StringBuilder();
-        output.Append(Parameters["OutputFolder"] as string);
-        if (!(Parameters["OutputFolder"] as string).EndsWith("\\"))
+        output.Append(value: Parameters[key: "OutputFolder"] as string);
+        if (!(Parameters[key: "OutputFolder"] as string).EndsWith(value: "\\"))
         {
-            output.Append("\\");
+            output.Append(value: "\\");
         }
-        output.Append(Path.GetFileNameWithoutExtension(fileInfo.Name));
-        output.Append("_");
-        output.Append(timestamp.ToString("yyyyMMddHHmmss"));
-        output.Append("_");
-        output.Append(String.Format("{0:000}", counter));
-        output.Append(".xml");
+        output.Append(value: Path.GetFileNameWithoutExtension(path: fileInfo.Name));
+        output.Append(value: "_");
+        output.Append(value: timestamp.ToString(format: "yyyyMMddHHmmss"));
+        output.Append(value: "_");
+        output.Append(value: String.Format(format: "{0:000}", arg0: counter));
+        output.Append(value: ".xml");
         return output.ToString();
     }
 
     private void ValidateParseFileParameters()
     {
-        if (!(Parameters["Grammar"] is string))
+        if (!(Parameters[key: "Grammar"] is string))
         {
-            throw new InvalidCastException(ResourceUtils.GetString("ErrorGrammarNotString"));
+            throw new InvalidCastException(
+                message: ResourceUtils.GetString(key: "ErrorGrammarNotString")
+            );
         }
-        if (!(Parameters["Filename"] is string))
+        if (!(Parameters[key: "Filename"] is string))
         {
-            throw new InvalidCastException(ResourceUtils.GetString("ErrorFilenameNotString"));
+            throw new InvalidCastException(
+                message: ResourceUtils.GetString(key: "ErrorFilenameNotString")
+            );
         }
-        if (!(Parameters["OutputFolder"] is string))
+        if (!(Parameters[key: "OutputFolder"] is string))
         {
-            throw new InvalidCastException(ResourceUtils.GetString("ErrorOutputFolderNotString"));
+            throw new InvalidCastException(
+                message: ResourceUtils.GetString(key: "ErrorOutputFolderNotString")
+            );
         }
-        if (!((Parameters["Limit"] == null) || (Parameters["Limit"] is int)))
+        if (!((Parameters[key: "Limit"] == null) || (Parameters[key: "Limit"] is int)))
         {
-            throw new InvalidCastException(ResourceUtils.GetString("ErrorLimitNotInt"));
+            throw new InvalidCastException(
+                message: ResourceUtils.GetString(key: "ErrorLimitNotInt")
+            );
         }
     }
 
@@ -213,37 +223,43 @@ public class EDIFACT2XMLServiceAgent : AbstractServiceAgent
         {
             if (log.IsDebugEnabled)
             {
-                log.Debug("Initializing parser...");
+                log.Debug(message: "Initializing parser...");
             }
             parser.Init(
-                GetMessageFormat(),
-                EDIFACTMessageGrammar.FromString(Parameters["Grammar"] as string),
-                new StringReader(Parameters["Message"] as string)
+                messageFormat: GetMessageFormat(),
+                messageGrammar: EDIFACTMessageGrammar.FromString(
+                    grammar: Parameters[key: "Grammar"] as string
+                ),
+                input: new StringReader(s: Parameters[key: "Message"] as string)
             );
             StringWriter writer = new StringWriter();
-            writer.WriteLine("<EDIFACT>");
+            writer.WriteLine(value: "<EDIFACT>");
             EDIFACTSegment segment = parser.GetNextTopLevelSegment();
             while (segment != null)
             {
-                segment.ToXML(writer);
+                segment.ToXML(writer: writer);
                 segment = parser.GetNextTopLevelSegment();
             }
-            writer.WriteLine("</EDIFACT>");
+            writer.WriteLine(value: "</EDIFACT>");
             XmlDocument xmlDocument = new XmlDocument();
-            xmlDocument.LoadXml(writer.ToString());
+            xmlDocument.LoadXml(xml: writer.ToString());
             result = xmlDocument;
         }
     }
 
     private void ValidateParseStringParameters()
     {
-        if (!(Parameters["Grammar"] is string))
+        if (!(Parameters[key: "Grammar"] is string))
         {
-            throw new InvalidCastException(ResourceUtils.GetString("ErrorGrammarNotString"));
+            throw new InvalidCastException(
+                message: ResourceUtils.GetString(key: "ErrorGrammarNotString")
+            );
         }
-        if (!(Parameters["Message"] is string))
+        if (!(Parameters[key: "Message"] is string))
         {
-            throw new InvalidCastException(ResourceUtils.GetString("ErrorMessageNotString"));
+            throw new InvalidCastException(
+                message: ResourceUtils.GetString(key: "ErrorMessageNotString")
+            );
         }
     }
 

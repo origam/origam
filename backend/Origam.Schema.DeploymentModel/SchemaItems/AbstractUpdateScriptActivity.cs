@@ -31,8 +31,8 @@ namespace Origam.Schema.DeploymentModel;
 /// <summary>
 /// Summary description for AbstractUpdateScriptActivity.
 /// </summary>
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public abstract class AbstractUpdateScriptActivity : AbstractSchemaItem, IComparable
 {
     public const string CategoryConst = "DeploymentUpdateScriptActivity";
@@ -41,10 +41,10 @@ public abstract class AbstractUpdateScriptActivity : AbstractSchemaItem, ICompar
         : base() { }
 
     public AbstractUpdateScriptActivity(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public AbstractUpdateScriptActivity(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Overriden ISchemaItem Members
 
@@ -60,14 +60,14 @@ public abstract class AbstractUpdateScriptActivity : AbstractSchemaItem, ICompar
         {
             return true;
         }
-        return base.CanMove(newNode);
+        return base.CanMove(newNode: newNode);
     }
     #endregion
     #region Properties
     private int _activityOrder;
 
-    [Category("Update Script Activity")]
-    [XmlAttribute("activityOrder")]
+    [Category(category: "Update Script Activity")]
+    [XmlAttribute(attributeName: "activityOrder")]
     public int ActivityOrder
     {
         get { return _activityOrder; }
@@ -84,18 +84,22 @@ public abstract class AbstractUpdateScriptActivity : AbstractSchemaItem, ICompar
         if (obj is AbstractUpdateScriptActivity)
         {
             AbstractUpdateScriptActivity compared = obj as AbstractUpdateScriptActivity;
-            Version n = new Version(this.Version.VersionString);
-            Version o = new Version(compared.Version.VersionString);
-            int versionCompare = n.CompareTo(o);
+            Version n = new Version(version: this.Version.VersionString);
+            Version o = new Version(version: compared.Version.VersionString);
+            int versionCompare = n.CompareTo(value: o);
             if (versionCompare == 0)
             {
-                return this.ActivityOrder.CompareTo(compared.ActivityOrder);
+                return this.ActivityOrder.CompareTo(value: compared.ActivityOrder);
             }
 
             return versionCompare;
         }
 
-        throw new ArgumentOutOfRangeException("obj", obj, ResourceUtils.GetString("ErrorCompare"));
+        throw new ArgumentOutOfRangeException(
+            paramName: "obj",
+            actualValue: obj,
+            message: ResourceUtils.GetString(key: "ErrorCompare")
+        );
     }
     #endregion
 }

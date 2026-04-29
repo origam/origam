@@ -31,9 +31,9 @@ public class StreamTools
         using (MemoryStream ms = new MemoryStream())
         {
             int read;
-            while ((read = input.Read(buffer, 0, buffer.Length)) > 0)
+            while ((read = input.Read(buffer: buffer, offset: 0, count: buffer.Length)) > 0)
             {
-                ms.Write(buffer, 0, read);
+                ms.Write(buffer: buffer, offset: 0, count: read);
             }
             return ms.ToArray();
         }
@@ -41,8 +41,8 @@ public class StreamTools
 
     public static void Write(Stream output, byte[] bytes)
     {
-        BinaryWriter bw = new BinaryWriter(output);
-        bw.Write(bytes);
+        BinaryWriter bw = new BinaryWriter(output: output);
+        bw.Write(buffer: bytes);
         bw.Flush();
         bw.Close();
     }

@@ -31,9 +31,9 @@ using Origam.Workbench.Services;
 
 namespace Origam.Schema.WorkflowModel;
 
-[SchemaItemDescription("Workflow Page", "workflow-page.png")]
-[HelpTopic("Workflow+Page")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Workflow Page", iconName: "workflow-page.png")]
+[HelpTopic(topic: "Workflow+Page")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class WorkflowPage : AbstractPage
 {
     public WorkflowPage()
@@ -43,28 +43,28 @@ public class WorkflowPage : AbstractPage
     }
 
     public WorkflowPage(Guid schemaExtensionId)
-        : base(schemaExtensionId)
+        : base(schemaExtensionId: schemaExtensionId)
     {
         Init();
     }
 
     public WorkflowPage(Key primaryKey)
-        : base(primaryKey)
+        : base(primaryKey: primaryKey)
     {
         Init();
     }
 
     private void Init()
     {
-        this.ChildItemTypes.Add(typeof(PageParameterMapping));
-        this.ChildItemTypes.Add(typeof(PageParameterFileMapping));
-        this.ChildItemTypes.Add(typeof(RedirectWorkflowPageAction));
+        this.ChildItemTypes.Add(item: typeof(PageParameterMapping));
+        this.ChildItemTypes.Add(item: typeof(PageParameterFileMapping));
+        this.ChildItemTypes.Add(item: typeof(RedirectWorkflowPageAction));
     }
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(this.Workflow);
-        base.GetExtraDependencies(dependencies);
+        dependencies.Add(item: this.Workflow);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override IList<string> NewTypeNames
@@ -74,10 +74,19 @@ public class WorkflowPage : AbstractPage
             try
             {
                 IBusinessServicesService agents =
-                    ServiceManager.Services.GetService(typeof(IBusinessServicesService))
-                    as IBusinessServicesService;
-                IServiceAgent agent = agents.GetAgent("WorkflowService", null, null);
-                return agent.ExpectedParameterNames(this.Workflow, "ExecuteWorkflow", "Parameters");
+                    ServiceManager.Services.GetService(
+                        serviceType: typeof(IBusinessServicesService)
+                    ) as IBusinessServicesService;
+                IServiceAgent agent = agents.GetAgent(
+                    serviceType: "WorkflowService",
+                    ruleEngine: null,
+                    workflowEngine: null
+                );
+                return agent.ExpectedParameterNames(
+                    item: this.Workflow,
+                    method: "ExecuteWorkflow",
+                    parameter: "Parameters"
+                );
             }
             catch
             {
@@ -90,26 +99,26 @@ public class WorkflowPage : AbstractPage
     #region Properties
     public Guid WorkflowId;
 
-    [Category("Workflow")]
-    [TypeConverter(typeof(WorkflowConverter))]
+    [Category(category: "Workflow")]
+    [TypeConverter(type: typeof(WorkflowConverter))]
     [NotNullModelElementRule()]
-    [XmlReference("workflow", "WorkflowId")]
+    [XmlReference(attributeName: "workflow", idField: "WorkflowId")]
     public Workflow Workflow
     {
         get =>
             (Workflow)
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(this.WorkflowId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: this.WorkflowId)
                 );
-        set { this.WorkflowId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]; }
+        set { this.WorkflowId = value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]; }
     }
 
-    [Category("InputValidation")]
-    [XmlAttribute("disableConstraintForInputValidation")]
+    [Category(category: "InputValidation")]
+    [XmlAttribute(attributeName: "disableConstraintForInputValidation")]
     public bool DisableConstraintForInputValidation { get; set; }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public new DataConstant CacheMaxAge
     {
         get { return null; }

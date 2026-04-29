@@ -34,7 +34,12 @@ public static class PackageHelper
             persistenceService: persistenceService,
             action: () =>
             {
-                CreatePackage(packageName, packageId, referencePackageId, persistenceService);
+                CreatePackage(
+                    packageName: packageName,
+                    packageId: packageId,
+                    referencePackageId: referencePackageId,
+                    persistenceService: persistenceService
+                );
             }
         );
     }
@@ -47,7 +52,7 @@ public static class PackageHelper
     )
     {
         string versionNumber = "1.0.0";
-        Package newExtension = new Package(new ModelElementKey(packageId));
+        Package newExtension = new Package(primaryKey: new ModelElementKey(id: packageId));
         newExtension.PersistenceProvider = persistenceService.SchemaListProvider;
         newExtension.Name = packageName;
         newExtension.VersionString = versionNumber;
@@ -58,26 +63,33 @@ public static class PackageHelper
         newExtension.Persist();
         origamRootReference.Persist();
         SchemaService schema =
-            ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
-        schema.LoadSchema(packageId, isInteractive: true);
+            ServiceManager.Services.GetService(serviceType: typeof(SchemaService)) as SchemaService;
+        schema.LoadSchema(schemaExtensionId: packageId, isInteractive: true);
         foreach (ISchemaItemProvider provider in schema.Providers)
         {
             if (provider.AutoCreateFolder)
             {
-                SchemaItemGroup group = provider.NewGroup(schema.ActiveSchemaExtensionId);
+                SchemaItemGroup group = provider.NewGroup(
+                    schemaExtensionId: schema.ActiveSchemaExtensionId
+                );
                 @group.Name = packageName;
                 @group.Persist();
                 if (provider.GetType().Name == "DeploymentSchemaItemProvider")
                 {
                     IDeploymentService depl =
-                        ServiceManager.Services.GetService(typeof(IDeploymentService))
+                        ServiceManager.Services.GetService(serviceType: typeof(IDeploymentService))
                         as IDeploymentService;
-                    depl.CreateNewModelVersion(@group, versionNumber, versionNumber);
+                    depl.CreateNewModelVersion(
+                        group: @group,
+                        name: versionNumber,
+                        version: versionNumber
+                    );
                 }
             }
         }
         IDeploymentService deployment =
-            ServiceManager.Services.GetService(typeof(IDeploymentService)) as IDeploymentService;
+            ServiceManager.Services.GetService(serviceType: typeof(IDeploymentService))
+            as IDeploymentService;
         deployment.Deploy();
     }
 
@@ -88,7 +100,7 @@ public static class PackageHelper
     {
         if (persistenceService is FilePersistenceService service)
         {
-            service.FileEventQueue.IgnoreChanges(action);
+            service.FileEventQueue.IgnoreChanges(action: action);
         }
         else
         {

@@ -46,7 +46,11 @@ public abstract class AbstractSchemaItemProvider : ISchemaItemProvider
         {
             if (_childItems == null)
             {
-                _childItems = SchemaItemCollection.Create(this.PersistenceProvider, this, null);
+                _childItems = SchemaItemCollection.Create(
+                    persistence: this.PersistenceProvider,
+                    provider: this,
+                    parentItem: null
+                );
             }
             ISchemaItemCollection childItems;
 #if ! ORIGAM_CLIENT
@@ -72,25 +76,25 @@ public abstract class AbstractSchemaItemProvider : ISchemaItemProvider
     public ISchemaItemCollection LoadChildItems()
     {
         ISchemaItemCollection childItems = SchemaItemCollection.Create(
-            this.PersistenceProvider,
-            this,
-            null
+            persistence: this.PersistenceProvider,
+            provider: this,
+            parentItem: null
         );
-        childItems.AddRange(ChildItemsByType<ISchemaItem>(RootItemType).ToArray());
+        childItems.AddRange(value: ChildItemsByType<ISchemaItem>(itemType: RootItemType).ToArray());
         return childItems;
     }
 
     public virtual List<T> ChildItemsByType<T>(string itemType)
         where T : ISchemaItem
     {
-        List<T> list = PersistenceProvider.RetrieveListByCategory<T>(itemType);
+        List<T> list = PersistenceProvider.RetrieveListByCategory<T>(category: itemType);
         var result = new List<T>();
         foreach (T item in list)
         {
             if (item.ParentItemId == Guid.Empty)
             {
                 item.RootProvider = this;
-                result.Add(item);
+                result.Add(item: item);
             }
         }
         return result;
@@ -105,12 +109,12 @@ public abstract class AbstractSchemaItemProvider : ISchemaItemProvider
             {
                 if (item.Group == null & group == null)
                 {
-                    list.Add(item);
+                    list.Add(item: item);
                 }
             }
-            else if (item.Group.PrimaryKey.Equals(group.PrimaryKey))
+            else if (item.Group.PrimaryKey.Equals(obj: group.PrimaryKey))
             {
-                list.Add(item);
+                list.Add(item: item);
             }
         }
         return list;
@@ -123,12 +127,12 @@ public abstract class AbstractSchemaItemProvider : ISchemaItemProvider
 
     public bool HasChildItemsByType(string itemType)
     {
-        return ChildItemsByType<AbstractSchemaItem>(itemType).Count > 0;
+        return ChildItemsByType<AbstractSchemaItem>(itemType: itemType).Count > 0;
     }
 
     public bool HasChildItemsByGroup(SchemaItemGroup group)
     {
-        return this.ChildItemsByGroup(group).Count > 0;
+        return this.ChildItemsByGroup(group: group).Count > 0;
     }
 
     IPersistenceProvider _persistenceProvider;
@@ -213,8 +217,8 @@ public abstract class AbstractSchemaItemProvider : ISchemaItemProvider
             var items = new List<ISchemaItem>();
             foreach (ISchemaItem item in this.ChildItems)
             {
-                items.Add(item);
-                items.AddRange(GetChildItemsRecursive(item));
+                items.Add(item: item);
+                items.AddRange(collection: GetChildItemsRecursive(parentItem: item));
             }
             return items;
         }
@@ -226,11 +230,16 @@ public abstract class AbstractSchemaItemProvider : ISchemaItemProvider
     public abstract string Group { get; }
     #endregion
     #region IBrowserNode Members
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public bool Hide
     {
         get { return false; }
-        set { throw new InvalidOperationException(ResourceUtils.GetString("ErrorSetHide")); }
+        set
+        {
+            throw new InvalidOperationException(
+                message: ResourceUtils.GetString(key: "ErrorSetHide")
+            );
+        }
     }
     public bool HasChildNodes
     {
@@ -247,7 +256,9 @@ public abstract class AbstractSchemaItemProvider : ISchemaItemProvider
 
     public void Delete()
     {
-        throw new InvalidOperationException(ResourceUtils.GetString("ErrorDeleteProvider"));
+        throw new InvalidOperationException(
+            message: ResourceUtils.GetString(key: "ErrorDeleteProvider")
+        );
     }
 
     public abstract string Icon { get; }
@@ -262,13 +273,13 @@ public abstract class AbstractSchemaItemProvider : ISchemaItemProvider
             List<SchemaItemGroup> result = new List<SchemaItemGroup>();
             List<SchemaItemGroup> list =
                 this.PersistenceProvider.RetrieveListByGroup<SchemaItemGroup>(
-                    new ModelElementKey(Guid.Empty)
+                    primaryKey: new ModelElementKey(id: Guid.Empty)
                 );
             foreach (SchemaItemGroup group in list)
             {
                 if (group.RootItemType == RootItemType)
                 {
-                    result.Add(group);
+                    result.Add(item: group);
                     group.RootProvider = this;
                 }
             }
@@ -282,20 +293,20 @@ public abstract class AbstractSchemaItemProvider : ISchemaItemProvider
         // get root groups
         foreach (IBrowserNode2 nod in this.ChildGroups)
         {
-            col.Add(nod);
+            col.Add(value: nod);
         }
         // only return nodes without groups
         foreach (ISchemaItem item in this.ChildItems)
         {
             if (item.Group == null)
             {
-                col.Add(item);
+                col.Add(value: item);
             }
         }
         return col;
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public string NodeId
     {
         get { return this.GetType().ToString(); }
@@ -303,7 +314,10 @@ public abstract class AbstractSchemaItemProvider : ISchemaItemProvider
     public virtual string NodeText
     {
         get { return "Schema Items"; }
-        set { throw new ArgumentException(ResourceUtils.GetString("ErrorRenameNode")); }
+        set
+        {
+            throw new ArgumentException(message: ResourceUtils.GetString(key: "ErrorRenameNode"));
+        }
     }
     public virtual string NodeToolTipText
     {
@@ -319,14 +333,19 @@ public abstract class AbstractSchemaItemProvider : ISchemaItemProvider
         return false;
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public IBrowserNode2 ParentNode
     {
         get { return null; }
-        set { throw new InvalidOperationException(ResourceUtils.GetString("ErrorMoveProvider")); }
+        set
+        {
+            throw new InvalidOperationException(
+                message: ResourceUtils.GetString(key: "ErrorMoveProvider")
+            );
+        }
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public virtual string FontStyle
     {
         get { return "Regular"; }
@@ -336,44 +355,50 @@ public abstract class AbstractSchemaItemProvider : ISchemaItemProvider
     public virtual T NewItem<T>(Guid schemaExtensionId, SchemaItemGroup group)
         where T : class, ISchemaItem
     {
-        return NewItem<T>(schemaExtensionId, group, null);
+        return NewItem<T>(schemaExtensionId: schemaExtensionId, group: group, itemName: null);
     }
 
     protected T NewItem<T>(Guid schemaExtensionId, SchemaItemGroup group, string itemName)
         where T : ISchemaItem
     {
         T item;
-        if (((IList)NewItemTypes).Contains(typeof(T)))
+        if (((IList)NewItemTypes).Contains(value: typeof(T)))
         {
             item = (T)
                 typeof(T)
-                    .GetConstructor(new Type[] { typeof(Guid) })
-                    .Invoke(new object[] { schemaExtensionId });
+                    .GetConstructor(types: new Type[] { typeof(Guid) })
+                    .Invoke(parameters: new object[] { schemaExtensionId });
         }
         else
         {
             throw new ArgumentOutOfRangeException(
-                "type",
-                typeof(T),
-                ResourceUtils.GetString("ErrorTypeNotSupported", this.GetType().Name)
+                paramName: "type",
+                actualValue: typeof(T),
+                message: ResourceUtils.GetString(
+                    key: "ErrorTypeNotSupported",
+                    args: this.GetType().Name
+                )
             );
         }
         item.Group = group;
         item.RootProvider = this;
         item.PersistenceProvider = PersistenceProvider;
-        if (!string.IsNullOrEmpty(itemName))
+        if (!string.IsNullOrEmpty(value: itemName))
         {
             item.Name = itemName;
         }
-        ChildItems.Add(item);
-        ItemCreated?.Invoke(item);
+        ChildItems.Add(item: item);
+        ItemCreated?.Invoke(obj: item);
         return item;
     }
 
     public virtual SchemaItemGroup NewGroup(Guid schemaExtensionId, string groupName)
     {
-        SchemaItemGroup group = new SchemaItemGroup(schemaExtensionId);
-        group.Name = SchemaItemGroup.GetNextDefaultName(groupName, ChildGroups);
+        SchemaItemGroup group = new SchemaItemGroup(extensionId: schemaExtensionId);
+        group.Name = SchemaItemGroup.GetNextDefaultName(
+            defaultName: groupName,
+            childGroups: ChildGroups
+        );
         group.PersistenceProvider = this.PersistenceProvider;
         group.RootItemType = this.RootItemType;
         group.RootProvider = this;
@@ -383,7 +408,7 @@ public abstract class AbstractSchemaItemProvider : ISchemaItemProvider
 
     private List<Type> _childItemTypes = new();
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public List<Type> ChildItemTypes
     {
         get
@@ -391,11 +416,11 @@ public abstract class AbstractSchemaItemProvider : ISchemaItemProvider
             foreach (Type[] entry in ExtensionChildItemTypes)
             {
                 if (
-                    (entry[0].Equals(GetType()) || GetType().IsSubclassOf(entry[0]))
-                    && !_childItemTypes.Contains(entry[1])
+                    (entry[0].Equals(o: GetType()) || GetType().IsSubclassOf(c: entry[0]))
+                    && !_childItemTypes.Contains(item: entry[1])
                 )
                 {
-                    _childItemTypes.Add(entry[1]);
+                    _childItemTypes.Add(item: entry[1]);
                 }
             }
             return _childItemTypes;
@@ -404,13 +429,13 @@ public abstract class AbstractSchemaItemProvider : ISchemaItemProvider
 
     public static List<Type[]> ExtensionChildItemTypes { get; } = new();
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public virtual Type[] NewItemTypes
     {
         get { return ChildItemTypes.ToArray(); }
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public virtual IList<string> NewTypeNames
     {
         get { return new List<string>(); }
@@ -420,7 +445,7 @@ public abstract class AbstractSchemaItemProvider : ISchemaItemProvider
     /// By default all NewItemTypes are nameable. Override if only a subset of types can
     /// be populated with NewTypeNames.
     /// </summary>
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public virtual Type[] NameableTypes
     {
         get { return NewItemTypes; }
@@ -432,8 +457,8 @@ public abstract class AbstractSchemaItemProvider : ISchemaItemProvider
         var items = new List<ISchemaItem>();
         foreach (ISchemaItem childItem in parentItem.ChildItems)
         {
-            items.Add(childItem);
-            items.AddRange(GetChildItemsRecursive(childItem));
+            items.Add(item: childItem);
+            items.AddRange(collection: GetChildItemsRecursive(parentItem: childItem));
         }
         return items;
     }
@@ -471,7 +496,7 @@ public abstract class AbstractSchemaItemProvider : ISchemaItemProvider
             throw new InvalidCastException();
         }
 
-        return this.NodeText.CompareTo(compareItem.NodeText);
+        return this.NodeText.CompareTo(strB: compareItem.NodeText);
     }
     #endregion
 }

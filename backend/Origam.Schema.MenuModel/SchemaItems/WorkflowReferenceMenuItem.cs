@@ -34,9 +34,9 @@ using Origam.Workbench.Services;
 
 namespace Origam.Schema.MenuModel;
 
-[SchemaItemDescription("Sequential Workflow Reference", "menu_workflow.png")]
-[HelpTopic("Sequential+Workflow+Menu+Item")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Sequential Workflow Reference", iconName: "menu_workflow.png")]
+[HelpTopic(topic: "Sequential+Workflow+Menu+Item")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class WorkflowReferenceMenuItem : AbstractMenuItem
 {
     private ISchemaService _schemaService = ServiceManager.Services.GetService<ISchemaService>();
@@ -44,15 +44,15 @@ public class WorkflowReferenceMenuItem : AbstractMenuItem
     public WorkflowReferenceMenuItem() { }
 
     public WorkflowReferenceMenuItem(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(schemaExtensionId: schemaExtensionId) { }
 
     public WorkflowReferenceMenuItem(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(Workflow);
-        base.GetExtraDependencies(dependencies);
+        dependencies.Add(item: Workflow);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override UI.BrowserNodeCollection ChildNodes()
@@ -65,7 +65,7 @@ public class WorkflowReferenceMenuItem : AbstractMenuItem
     }
 
     #region Properties
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public bool IsRepeatable
     {
         get => true;
@@ -73,18 +73,18 @@ public class WorkflowReferenceMenuItem : AbstractMenuItem
     }
     public Guid WorkflowId;
 
-    [TypeConverter(typeof(WorkflowConverter))]
+    [TypeConverter(type: typeof(WorkflowConverter))]
     [NotNullModelElementRule()]
-    [XmlReference("workflow", "WorkflowId")]
+    [XmlReference(attributeName: "workflow", idField: "WorkflowId")]
     public IWorkflow Workflow
     {
         get =>
             (IWorkflow)
                 PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(WorkflowId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: WorkflowId)
                 );
-        set => WorkflowId = (value == null) ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+        set => WorkflowId = (value == null) ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"];
     }
     #endregion
     #region Private Methods
@@ -92,10 +92,10 @@ public class WorkflowReferenceMenuItem : AbstractMenuItem
     {
         var dataServiceAgent = ServiceManager
             .Services.GetService<IBusinessServicesService>()
-            .GetAgent("DataService", null, null);
+            .GetAgent(serviceType: "DataService", ruleEngine: null, workflowEngine: null);
         dataServiceAgent.MethodName = "LoadDataByQuery";
         dataServiceAgent.Parameters.Clear();
-        dataServiceAgent.Parameters.Add("Query", query);
+        dataServiceAgent.Parameters.Add(key: "Query", value: query);
         dataServiceAgent.Run();
         return dataServiceAgent.Result as DataSet;
     }
@@ -104,16 +104,16 @@ public class WorkflowReferenceMenuItem : AbstractMenuItem
     {
         var dataServiceAgent = ServiceManager
             .Services.GetService<IBusinessServicesService>()
-            .GetAgent("DataService", null, null);
+            .GetAgent(serviceType: "DataService", ruleEngine: null, workflowEngine: null);
         dataServiceAgent.MethodName = "StoreDataByQuery";
         dataServiceAgent.Parameters.Clear();
-        dataServiceAgent.Parameters.Add("Query", query);
-        dataServiceAgent.Parameters.Add("Data", data);
+        dataServiceAgent.Parameters.Add(key: "Query", value: query);
+        dataServiceAgent.Parameters.Add(key: "Data", value: data);
         dataServiceAgent.Run();
     }
     #endregion
     #region ISchemaItemFactory Members
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public override Type[] NewItemTypes =>
         new[]
         {
@@ -137,7 +137,11 @@ public class WorkflowReferenceMenuItem : AbstractMenuItem
         {
             itemName = "NewSystemFunctionCall";
         }
-        return base.NewItem<T>(schemaExtensionId, group, itemName);
+        return base.NewItem<T>(
+            schemaExtensionId: schemaExtensionId,
+            group: group,
+            itemName: itemName
+        );
     }
 
     public override IList<string> NewTypeNames
@@ -148,8 +152,16 @@ public class WorkflowReferenceMenuItem : AbstractMenuItem
             {
                 var businessServicesService =
                     ServiceManager.Services.GetService<IBusinessServicesService>();
-                var agent = businessServicesService.GetAgent("WorkflowService", null, null);
-                return agent.ExpectedParameterNames(Workflow, "ExecuteWorkflow", "Parameters");
+                var agent = businessServicesService.GetAgent(
+                    serviceType: "WorkflowService",
+                    ruleEngine: null,
+                    workflowEngine: null
+                );
+                return agent.ExpectedParameterNames(
+                    item: Workflow,
+                    method: "ExecuteWorkflow",
+                    parameter: "Parameters"
+                );
             }
             catch
             {

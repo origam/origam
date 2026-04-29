@@ -32,102 +32,105 @@ namespace Origam.Schema.GuiModel;
 /// <summary>
 /// Summary description for AbstractDataReport.
 /// </summary>
-[ClassMetaVersion("6.0.0")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public abstract class AbstractDataReport : AbstractReport
 {
     public AbstractDataReport()
         : base() { }
 
     public AbstractDataReport(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(schemaExtensionId: schemaExtensionId) { }
 
     public AbstractDataReport(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Properties
     private string _reportFileName;
     public Guid DataStructureId;
 
-    [TypeConverter(typeof(DataStructureConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [XmlReference("dataStructure", "DataStructureId")]
+    [TypeConverter(type: typeof(DataStructureConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [XmlReference(attributeName: "dataStructure", idField: "DataStructureId")]
     public DataStructure DataStructure
     {
         get
         {
             return (DataStructure)
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(this.DataStructureId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: this.DataStructureId)
                 );
         }
         set
         {
             this.Method = null;
             this.SortSet = null;
-            this.DataStructureId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
+            this.DataStructureId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]);
         }
     }
     public Guid DataStructureMethodId;
 
-    [TypeConverter(typeof(DataStructureReferenceMethodConverter))]
-    [XmlReference("method", "DataStructureMethodId")]
+    [TypeConverter(type: typeof(DataStructureReferenceMethodConverter))]
+    [XmlReference(attributeName: "method", idField: "DataStructureMethodId")]
     public DataStructureMethod Method
     {
         get
         {
             return (DataStructureMethod)
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(this.DataStructureMethodId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: this.DataStructureMethodId)
                 );
         }
         set
         {
             this.DataStructureMethodId = (
-                value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]
+                value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]
             );
         }
     }
     public Guid DataStructureSortSetId;
 
-    [TypeConverter(typeof(DataStructureReferenceSortSetConverter))]
-    [XmlReference("sortSet", "DataStructureSortSetId")]
+    [TypeConverter(type: typeof(DataStructureReferenceSortSetConverter))]
+    [XmlReference(attributeName: "sortSet", idField: "DataStructureSortSetId")]
     public DataStructureSortSet SortSet
     {
         get
         {
             return (DataStructureSortSet)
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(this.DataStructureSortSetId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: this.DataStructureSortSetId)
                 );
         }
         set
         {
             this.DataStructureSortSetId = (
-                value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]
+                value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]
             );
         }
     }
     public Guid TransformationId;
 
-    [TypeConverter(typeof(TransformationConverter))]
-    [XmlReference("transformation", "TransformationId")]
+    [TypeConverter(type: typeof(TransformationConverter))]
+    [XmlReference(attributeName: "transformation", idField: "TransformationId")]
     public AbstractTransformation Transformation
     {
         get
         {
             return (AbstractTransformation)
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(this.TransformationId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: this.TransformationId)
                 );
         }
-        set { this.TransformationId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]; }
+        set
+        {
+            this.TransformationId = value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"];
+        }
     }
 
-    [XmlAttribute("reportFileName")]
+    [XmlAttribute(attributeName: "reportFileName")]
     public string ReportFileName
     {
         get { return _reportFileName; }
@@ -136,9 +139,9 @@ public abstract class AbstractDataReport : AbstractReport
     string _localeXPath;
 
     [Description(
-        "XPath should return locale IETF tag (e.g. en-US) to be used as current thread culture and UI culture for the report."
+        description: "XPath should return locale IETF tag (e.g. en-US) to be used as current thread culture and UI culture for the report."
     )]
-    [XmlAttribute("localeXPath")]
+    [XmlAttribute(attributeName: "localeXPath")]
     public string LocaleXPath
     {
         get { return _localeXPath; }
@@ -152,32 +155,32 @@ public abstract class AbstractDataReport : AbstractReport
     {
         if (this.Method != null)
         {
-            base.GetParameterReferences(Method, list);
+            base.GetParameterReferences(parentItem: Method, list: list);
         }
         else
         {
-            base.GetParameterReferences(DataStructure, list);
+            base.GetParameterReferences(parentItem: DataStructure, list: list);
         }
     }
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(this.DataStructure);
+        dependencies.Add(item: this.DataStructure);
         if (this.Method != null)
         {
-            dependencies.Add(this.Method);
+            dependencies.Add(item: this.Method);
         }
 
         if (this.SortSet != null)
         {
-            dependencies.Add(this.SortSet);
+            dependencies.Add(item: this.SortSet);
         }
 
         if (this.Transformation != null)
         {
-            dependencies.Add(this.Transformation);
+            dependencies.Add(item: this.Transformation);
         }
 
-        base.GetExtraDependencies(dependencies);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 }

@@ -116,7 +116,7 @@ public class ReportToolbar : System.Windows.Forms.UserControl
                 components.Dispose();
             }
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
 
     #region Component Designer generated code
@@ -497,7 +497,7 @@ public class ReportToolbar : System.Windows.Forms.UserControl
 
         if (e.Button == btnClose)
         {
-            ReportViewer.CloseView(null);
+            ReportViewer.CloseView(viewURI: null);
         }
         else if (e.Button == btnFirst)
         {
@@ -506,7 +506,10 @@ public class ReportToolbar : System.Windows.Forms.UserControl
         else if (e.Button == btnLast)
         {
             ReportViewer.ShowLastPage();
-            UpdateNavigationButtons(ReportViewer.GetCurrentPageNumber(), false);
+            UpdateNavigationButtons(
+                pageNumber: ReportViewer.GetCurrentPageNumber(),
+                showNextLast: false
+            );
         }
         else if (e.Button == btnNext)
         {
@@ -514,7 +517,7 @@ public class ReportToolbar : System.Windows.Forms.UserControl
             ReportViewer.ShowNextPage();
             if (oldPageNumber == ReportViewer.GetCurrentPageNumber())
             {
-                UpdateNavigationButtons(oldPageNumber, false);
+                UpdateNavigationButtons(pageNumber: oldPageNumber, showNextLast: false);
             }
         }
         else if (e.Button == btnPrevious)
@@ -535,7 +538,7 @@ public class ReportToolbar : System.Windows.Forms.UserControl
         }
         else if (e.Button == btnZoom)
         {
-            ReportViewer.Zoom(100);
+            ReportViewer.Zoom(ZoomLevel: 100);
         }
         else if (e.Button == btnGroupTree)
         {
@@ -558,7 +561,7 @@ public class ReportToolbar : System.Windows.Forms.UserControl
     {
         if (e.KeyCode == Keys.Enter)
         {
-            ReportViewer.SearchForText(txtFindText.Text);
+            ReportViewer.SearchForText(text: txtFindText.Text);
             e.Handled = true;
         }
     }
@@ -569,7 +572,7 @@ public class ReportToolbar : System.Windows.Forms.UserControl
         if (ReportRefreshRequested != null)
         {
             //Invokes the delegates.
-            ReportRefreshRequested(this, EventArgs.Empty);
+            ReportRefreshRequested(sender: this, e: EventArgs.Empty);
         }
     }
     #endregion
@@ -577,7 +580,7 @@ public class ReportToolbar : System.Windows.Forms.UserControl
     {
         if (ReportViewer != null)
         {
-            ReportViewer.Zoom(400);
+            ReportViewer.Zoom(ZoomLevel: 400);
         }
     }
 
@@ -585,7 +588,7 @@ public class ReportToolbar : System.Windows.Forms.UserControl
     {
         if (ReportViewer != null)
         {
-            ReportViewer.Zoom(300);
+            ReportViewer.Zoom(ZoomLevel: 300);
         }
     }
 
@@ -593,7 +596,7 @@ public class ReportToolbar : System.Windows.Forms.UserControl
     {
         if (ReportViewer != null)
         {
-            ReportViewer.Zoom(200);
+            ReportViewer.Zoom(ZoomLevel: 200);
         }
     }
 
@@ -601,7 +604,7 @@ public class ReportToolbar : System.Windows.Forms.UserControl
     {
         if (ReportViewer != null)
         {
-            ReportViewer.Zoom(150);
+            ReportViewer.Zoom(ZoomLevel: 150);
         }
     }
 
@@ -609,7 +612,7 @@ public class ReportToolbar : System.Windows.Forms.UserControl
     {
         if (ReportViewer != null)
         {
-            ReportViewer.Zoom(100);
+            ReportViewer.Zoom(ZoomLevel: 100);
         }
     }
 
@@ -617,7 +620,7 @@ public class ReportToolbar : System.Windows.Forms.UserControl
     {
         if (ReportViewer != null)
         {
-            ReportViewer.Zoom(75);
+            ReportViewer.Zoom(ZoomLevel: 75);
         }
     }
 
@@ -625,7 +628,7 @@ public class ReportToolbar : System.Windows.Forms.UserControl
     {
         if (ReportViewer != null)
         {
-            ReportViewer.Zoom(50);
+            ReportViewer.Zoom(ZoomLevel: 50);
         }
     }
 
@@ -633,7 +636,7 @@ public class ReportToolbar : System.Windows.Forms.UserControl
     {
         if (ReportViewer != null)
         {
-            ReportViewer.Zoom(25);
+            ReportViewer.Zoom(ZoomLevel: 25);
         }
     }
 
@@ -641,7 +644,7 @@ public class ReportToolbar : System.Windows.Forms.UserControl
     {
         if (ReportViewer != null)
         {
-            ReportViewer.Zoom(1);
+            ReportViewer.Zoom(ZoomLevel: 1);
         }
     }
 
@@ -649,7 +652,7 @@ public class ReportToolbar : System.Windows.Forms.UserControl
     {
         if (ReportViewer != null)
         {
-            ReportViewer.Zoom(2);
+            ReportViewer.Zoom(ZoomLevel: 2);
         }
     }
 
@@ -672,7 +675,7 @@ public class ReportToolbar : System.Windows.Forms.UserControl
         if (txtFindText.Text == "")
         {
             txtFindText.ForeColor = SystemColors.GrayText;
-            txtFindText.Text = ResourceUtils.GetString("TextToSearch");
+            txtFindText.Text = ResourceUtils.GetString(key: "TextToSearch");
             _searchEmpty = true;
         }
     }
@@ -684,7 +687,7 @@ public class ReportToolbar : System.Windows.Forms.UserControl
     {
         if (e.Button == btnFind & _searchEmpty == false)
         {
-            ReportViewer.SearchForText(txtFindText.Text);
+            ReportViewer.SearchForText(text: txtFindText.Text);
         }
     }
 
@@ -710,7 +713,7 @@ public class ReportToolbar : System.Windows.Forms.UserControl
 
     private void value_Navigate(object source, CrystalDecisions.Windows.Forms.NavigateEventArgs e)
     {
-        UpdateNavigationButtons(e.NewPageNumber, true);
+        UpdateNavigationButtons(pageNumber: e.NewPageNumber, showNextLast: true);
     }
 
     private void UpdateNavigationButtons(int pageNumber, bool showNextLast)

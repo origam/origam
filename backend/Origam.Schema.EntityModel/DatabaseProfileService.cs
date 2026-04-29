@@ -38,26 +38,31 @@ public class DatabaseProfileService : IDatabaseProfile, IWorkbenchService
         {
             nameof(DatabaseType.PgSql) => new PostgresProfile(),
             nameof(DatabaseType.MsSql) => new MsSqlProfile(),
-            _ => throw new Exception(string.Format(Strings.UnknownPlatform, platform)),
+            _ => throw new Exception(
+                message: string.Format(format: Strings.UnknownPlatform, arg0: platform)
+            ),
         };
     }
 
     public DatabaseProfileService(OrigamSettings settings)
     {
-        includedDatabaseProfiles = settings.GetAllPlatforms().Select(ToDatabaseProperties).ToList();
+        includedDatabaseProfiles = settings
+            .GetAllPlatforms()
+            .Select(selector: ToDatabaseProperties)
+            .ToList();
     }
 
     public string CheckIdentifierLength(int length)
     {
         return includedDatabaseProfiles
-            .Select(x => x.CheckIdentifierLength(length))
+            .Select(selector: x => x.CheckIdentifierLength(length: length))
             .FirstOrDefault();
     }
 
     public string CheckIndexNameLength(string indexName)
     {
         return includedDatabaseProfiles
-            .Select(x => x.CheckIndexNameLength(indexName))
+            .Select(selector: x => x.CheckIndexNameLength(indexName: indexName))
             .FirstOrDefault();
     }
 

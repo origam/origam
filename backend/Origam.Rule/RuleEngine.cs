@@ -54,15 +54,17 @@ public class RuleEngine
 {
     private readonly Guid _tracingWorkflowId;
     private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
-        System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
+        type: System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
     );
     private static System.Xml.Serialization.XmlSerializer _ruleExceptionSerializer =
         new System.Xml.Serialization.XmlSerializer(
-            typeof(RuleExceptionDataCollection),
-            new System.Xml.Serialization.XmlRootAttribute("RuleExceptionDataCollection")
+            type: typeof(RuleExceptionDataCollection),
+            root: new System.Xml.Serialization.XmlRootAttribute(
+                elementName: "RuleExceptionDataCollection"
+            )
         );
 
-    private Color NullColor = Color.FromArgb(0, 0, 0, 0);
+    private Color NullColor = Color.FromArgb(alpha: 0, red: 0, green: 0, blue: 0);
     IXsltEngine _transformer;
     private IPersistenceService _persistence;
     private IDataLookupService _lookupService;
@@ -72,8 +74,8 @@ public class RuleEngine
     private IOrigamAuthorizationProvider _authorizationProvider;
     private Func<UserProfile> _userProfileGetter;
     private readonly ResourceTools resourceTools = new(
-        ServiceManager.Services.GetService<IBusinessServicesService>(),
-        SecurityManager.CurrentUserProfile
+        businessService: ServiceManager.Services.GetService<IBusinessServicesService>(),
+        userProfileGetter: SecurityManager.CurrentUserProfile
     );
 
     public static RuleEngine Create(
@@ -83,36 +85,36 @@ public class RuleEngine
     )
     {
         return new RuleEngine(
-            contextStores,
-            transactionId,
-            tracingWorkflowId,
-            ServiceManager.Services.GetService<IPersistenceService>(),
-            ServiceManager.Services.GetService<IDataLookupService>(),
-            ServiceManager.Services.GetService<IParameterService>(),
-            ServiceManager.Services.GetService<ITracingService>(),
-            ServiceManager.Services.GetService<IDocumentationService>(),
-            SecurityManager.GetAuthorizationProvider(),
-            SecurityManager.CurrentUserProfile
+            contextStores: contextStores,
+            transactionId: transactionId,
+            tracingWorkflowId: tracingWorkflowId,
+            persistence: ServiceManager.Services.GetService<IPersistenceService>(),
+            lookupService: ServiceManager.Services.GetService<IDataLookupService>(),
+            parameterService: ServiceManager.Services.GetService<IParameterService>(),
+            tracingService: ServiceManager.Services.GetService<ITracingService>(),
+            documentationService: ServiceManager.Services.GetService<IDocumentationService>(),
+            authorizationProvider: SecurityManager.GetAuthorizationProvider(),
+            userProfileGetter: SecurityManager.CurrentUserProfile
         );
     }
 
     public static RuleEngine Create()
     {
-        return Create(new Hashtable(), null);
+        return Create(contextStores: new Hashtable(), transactionId: null);
     }
 
     public static RuleEngine Create(Hashtable contextStores, string transactionId)
     {
         return new RuleEngine(
-            contextStores,
-            transactionId,
-            ServiceManager.Services.GetService<IPersistenceService>(),
-            ServiceManager.Services.GetService<IDataLookupService>(),
-            ServiceManager.Services.GetService<IParameterService>(),
-            ServiceManager.Services.GetService<ITracingService>(),
-            ServiceManager.Services.GetService<IDocumentationService>(),
-            SecurityManager.GetAuthorizationProvider(),
-            SecurityManager.CurrentUserProfile
+            contextStores: contextStores,
+            transactionId: transactionId,
+            persistence: ServiceManager.Services.GetService<IPersistenceService>(),
+            lookupService: ServiceManager.Services.GetService<IDataLookupService>(),
+            parameterService: ServiceManager.Services.GetService<IParameterService>(),
+            tracingService: ServiceManager.Services.GetService<ITracingService>(),
+            documentationService: ServiceManager.Services.GetService<IDocumentationService>(),
+            authorizationProvider: SecurityManager.GetAuthorizationProvider(),
+            userProfileGetter: SecurityManager.CurrentUserProfile
         );
     }
 
@@ -129,15 +131,15 @@ public class RuleEngine
         Func<UserProfile> userProfileGetter
     )
         : this(
-            contextStores,
-            transactionId,
-            persistence,
-            lookupService,
-            parameterService,
-            tracingService,
-            documentationService,
-            authorizationProvider,
-            userProfileGetter
+            contextStores: contextStores,
+            transactionId: transactionId,
+            persistence: persistence,
+            lookupService: lookupService,
+            parameterService: parameterService,
+            tracingService: tracingService,
+            documentationService: documentationService,
+            authorizationProvider: authorizationProvider,
+            userProfileGetter: userProfileGetter
         )
     {
         _tracingWorkflowId = tracingWorkflowId;
@@ -166,25 +168,27 @@ public class RuleEngine
         _userProfileGetter = userProfileGetter;
         if (_persistence == null)
         {
-            throw new InvalidOperationException(ResourceUtils.GetString("ErrorInitializeEngine"));
+            throw new InvalidOperationException(
+                message: ResourceUtils.GetString(key: "ErrorInitializeEngine")
+            );
         }
-        _transformer = new CompiledXsltEngine(_persistence.SchemaProvider);
+        _transformer = new CompiledXsltEngine(persistence: _persistence.SchemaProvider);
     }
 
     #region Properties
     public static string ValidationNotMetMessage()
     {
-        return ResourceUtils.GetString("ErrorOutputRuleFailed");
+        return ResourceUtils.GetString(key: "ErrorOutputRuleFailed");
     }
 
     public static string ValidationContinueMessage(string message)
     {
-        return ResourceUtils.GetString("DoYouWishContinue", message);
+        return ResourceUtils.GetString(key: "DoYouWishContinue", args: message);
     }
 
     public static string ValidationWarningMessage()
     {
-        return ResourceUtils.GetString("Warning");
+        return ResourceUtils.GetString(key: "Warning");
     }
 
     public static void ConvertStringValueToContextValue(
@@ -209,41 +213,41 @@ public class RuleEngine
                 {
                     case OrigamDataType.Integer:
                     {
-                        contextValue = XmlConvert.ToInt32(inputString);
+                        contextValue = XmlConvert.ToInt32(s: inputString);
                         break;
                     }
 
                     case OrigamDataType.Long:
                     {
-                        contextValue = XmlConvert.ToInt64(inputString);
+                        contextValue = XmlConvert.ToInt64(s: inputString);
                         break;
                     }
 
                     case OrigamDataType.UniqueIdentifier:
                     {
-                        contextValue = XmlConvert.ToGuid(inputString);
+                        contextValue = XmlConvert.ToGuid(s: inputString);
                         break;
                     }
 
                     case OrigamDataType.Currency:
                     case OrigamDataType.Float:
                     {
-                        contextValue = XmlConvert.ToDecimal(inputString);
+                        contextValue = XmlConvert.ToDecimal(s: inputString);
                         break;
                     }
 
                     case OrigamDataType.Date:
                     {
                         contextValue = XmlConvert.ToDateTime(
-                            inputString,
-                            XmlDateTimeSerializationMode.RoundtripKind
+                            s: inputString,
+                            dateTimeOption: XmlDateTimeSerializationMode.RoundtripKind
                         );
                         break;
                     }
 
                     case OrigamDataType.Boolean:
                     {
-                        contextValue = XmlConvert.ToBoolean(inputString);
+                        contextValue = XmlConvert.ToBoolean(s: inputString);
                         break;
                     }
 
@@ -255,9 +259,9 @@ public class RuleEngine
                     default:
                     {
                         throw new ArgumentOutOfRangeException(
-                            "dataType",
-                            origamDataType,
-                            "Unsupported data type."
+                            paramName: "dataType",
+                            actualValue: origamDataType,
+                            message: "Unsupported data type."
                         );
                     }
                 }
@@ -286,20 +290,25 @@ public class RuleEngine
     private string LookupValue(string lookupId, string recordId)
     {
         object result = _lookupService.GetDisplayText(
-            new Guid(lookupId),
-            recordId,
-            false,
-            false,
-            this.TransactionId
+            lookupId: new Guid(g: lookupId),
+            lookupValue: recordId,
+            useCache: false,
+            returnMessageIfNull: false,
+            transactionId: this.TransactionId
         );
 
-        return XmlTools.FormatXmlString(result);
+        return XmlTools.FormatXmlString(value: result);
     }
     #endregion
     #region Other Functions
     public object EvaluateRule(IRule rule, object data, XPathNodeIterator contextPosition)
     {
-        return EvaluateRule(rule, data, contextPosition, false);
+        return EvaluateRule(
+            rule: rule,
+            data: data,
+            contextPosition: contextPosition,
+            parentIsTracing: false
+        );
     }
 
     public object EvaluateRule(
@@ -311,21 +320,25 @@ public class RuleEngine
     {
         try
         {
-            IXmlContainer xmlData = GetXmlDocumentFromData(data);
+            IXmlContainer xmlData = GetXmlDocumentFromData(inputData: data);
             bool ruleEvaluationDidRun = false;
             object ruleResult = null;
             switch (rule)
             {
                 case XPathRule pathRule:
                 {
-                    ruleResult = EvaluateRule(pathRule, xmlData, contextPosition);
+                    ruleResult = EvaluateRule(
+                        rule: pathRule,
+                        context: xmlData,
+                        contextPosition: contextPosition
+                    );
                     ruleEvaluationDidRun = true;
                     break;
                 }
 
                 case XslRule xslRule:
                 {
-                    ruleResult = EvaluateRule(xslRule, xmlData);
+                    ruleResult = EvaluateRule(rule: xslRule, context: xmlData);
                     ruleEvaluationDidRun = true;
                     break;
                 }
@@ -354,25 +367,30 @@ public class RuleEngine
         }
         catch (Exception ex)
         {
-            string errorMessage = ResourceUtils.GetString("ErrorRuleFailed", rule.Name);
+            string errorMessage = ResourceUtils.GetString(key: "ErrorRuleFailed", args: rule.Name);
             if (_documentationService != null)
             {
                 string doc = _documentationService.GetDocumentation(
-                    (Guid)rule.PrimaryKey["Id"],
-                    DocumentationType.RULE_EXCEPTION_MESSAGE
+                    schemaItemId: (Guid)rule.PrimaryKey[key: "Id"],
+                    docType: DocumentationType.RULE_EXCEPTION_MESSAGE
                 );
                 if (doc != "")
                 {
                     errorMessage += Environment.NewLine + doc;
                 }
             }
-            throw new Exception(errorMessage, ex);
+            throw new Exception(message: errorMessage, innerException: ex);
         }
     }
 
     public RuleExceptionDataCollection EvaluateEndRule(IEndRule rule, object data)
     {
-        return EvaluateEndRule(rule, data, new Hashtable(), false);
+        return EvaluateEndRule(
+            rule: rule,
+            data: data,
+            parameters: new Hashtable(),
+            parentIsTracing: false
+        );
     }
 
     public RuleExceptionDataCollection EvaluateEndRule(
@@ -381,7 +399,12 @@ public class RuleEngine
         bool parentIsTracing
     )
     {
-        return EvaluateEndRule(rule, data, new Hashtable(), parentIsTracing);
+        return EvaluateEndRule(
+            rule: rule,
+            data: data,
+            parameters: new Hashtable(),
+            parentIsTracing: parentIsTracing
+        );
     }
 
     public RuleExceptionDataCollection EvaluateEndRule(
@@ -390,7 +413,12 @@ public class RuleEngine
         Hashtable parameters
     )
     {
-        return EvaluateEndRule(rule, data, parameters, false);
+        return EvaluateEndRule(
+            rule: rule,
+            data: data,
+            parameters: parameters,
+            parentIsTracing: false
+        );
     }
 
     public RuleExceptionDataCollection EvaluateEndRule(
@@ -400,7 +428,7 @@ public class RuleEngine
         bool parentIsTracing
     )
     {
-        IXmlContainer context = GetXmlDocumentFromData(data);
+        IXmlContainer context = GetXmlDocumentFromData(inputData: data);
         IXmlContainer result = null;
         try
         {
@@ -408,32 +436,35 @@ public class RuleEngine
             {
                 XslRule xslRule = rule as XslRule;
                 result = _transformer.Transform(
-                    context,
-                    xslRule.Id,
-                    parameters,
-                    _transactionId,
-                    new XsdDataStructure(),
-                    false
+                    data: context,
+                    transformationId: xslRule.Id,
+                    parameters: parameters,
+                    transactionId: _transactionId,
+                    outputStructure: new XsdDataStructure(),
+                    validateOnly: false
                 );
             }
             else if (rule is XPathRule)
             {
-                string ruleText = (string)this.EvaluateRule(rule, context, null);
+                string ruleText = (string)
+                    this.EvaluateRule(rule: rule, data: context, contextPosition: null);
                 result = _transformer.Transform(
-                    context,
-                    ruleText,
-                    parameters,
-                    TransactionId,
-                    new XsdDataStructure(),
-                    false
+                    data: context,
+                    xsl: ruleText,
+                    parameters: parameters,
+                    transactionId: TransactionId,
+                    outputStructure: new XsdDataStructure(),
+                    validateOnly: false
                 );
             }
             else
             {
-                throw new Exception(ResourceUtils.GetString("ErrorOnlyXslRuleSupported"));
+                throw new Exception(
+                    message: ResourceUtils.GetString(key: "ErrorOnlyXslRuleSupported")
+                );
             }
 
-            RuleExceptionDataCollection exceptions = DeserializeRuleExceptions(result.Xml);
+            RuleExceptionDataCollection exceptions = DeserializeRuleExceptions(xmlDoc: result.Xml);
 
             if (
                 rule.Trace == Origam.Trace.Yes
@@ -459,7 +490,10 @@ public class RuleEngine
         }
         catch (Exception ex)
         {
-            throw new Exception(ResourceUtils.GetString("ErrorRuleFailed1", rule.Name), ex);
+            throw new Exception(
+                message: ResourceUtils.GetString(key: "ErrorRuleFailed1", args: rule.Name),
+                innerException: ex
+            );
         }
     }
 
@@ -469,14 +503,14 @@ public class RuleEngine
         {
             return null;
         }
-        XmlNodeReader reader = new XmlNodeReader(xmlDoc);
+        XmlNodeReader reader = new XmlNodeReader(node: xmlDoc);
         RuleExceptionDataCollection exceptions = null;
         try
         {
-            if (reader.ReadToFollowing("RuleExceptionDataCollection"))
+            if (reader.ReadToFollowing(name: "RuleExceptionDataCollection"))
             {
                 exceptions = (RuleExceptionDataCollection)
-                    _ruleExceptionSerializer.Deserialize(reader);
+                    _ruleExceptionSerializer.Deserialize(xmlReader: reader);
             }
         }
         finally
@@ -490,17 +524,17 @@ public class RuleEngine
     {
         if (item is DataStructureReference)
         {
-            return Evaluate(item as DataStructureReference);
+            return Evaluate(reference: item as DataStructureReference);
         }
 
         if (item is SystemFunctionCall)
         {
-            return Evaluate(item as SystemFunctionCall);
+            return Evaluate(functionCall: item as SystemFunctionCall);
         }
 
         if (item is TransformationReference)
         {
-            return Evaluate(item as TransformationReference);
+            return Evaluate(reference: item as TransformationReference);
         }
 
         if (item is ReportReference)
@@ -511,7 +545,7 @@ public class RuleEngine
         if (item is DataConstantReference)
         {
             return _parameterService.GetParameterValue(
-                (item as DataConstantReference).DataConstant.Id
+                id: (item as DataConstantReference).DataConstant.Id
             );
         }
 
@@ -521,9 +555,9 @@ public class RuleEngine
         }
 
         throw new ArgumentOutOfRangeException(
-            "item",
-            item,
-            ResourceUtils.GetString("ErrorRuleInvalidType")
+            paramName: "item",
+            actualValue: item,
+            message: ResourceUtils.GetString(key: "ErrorRuleInvalidType")
         );
     }
 
@@ -538,7 +572,7 @@ public class RuleEngine
     {
         bool result;
         bool constraintsWereEnforced = inout_dsTarget.EnforceConstraints;
-        DatasetTools.BeginLoadData(inout_dsTarget);
+        DatasetTools.BeginLoadData(dataset: inout_dsTarget);
         try
         {
             MergeParams mergeParams = new MergeParams();
@@ -547,11 +581,16 @@ public class RuleEngine
             mergeParams.SourceIsFragment = in_bSourceIsFragment;
             mergeParams.PreserveNewRowState = preserveNewRowState;
             mergeParams.ProfileId = _userProfileGetter().Id;
-            result = DatasetTools.MergeDataSet(inout_dsTarget, in_dsSource, null, mergeParams);
+            result = DatasetTools.MergeDataSet(
+                inout_dsTarget: inout_dsTarget,
+                in_dsSource: in_dsSource,
+                changeList: null,
+                mergeParams: mergeParams
+            );
         }
         finally
         {
-            DatasetTools.EndLoadData(inout_dsTarget);
+            DatasetTools.EndLoadData(dataset: inout_dsTarget);
             inout_dsTarget.EnforceConstraints = constraintsWereEnforced;
         }
         return result;
@@ -572,7 +611,7 @@ public class RuleEngine
                 return context;
             }
             // convert value to XML
-            context = GetXmlDocumentFromData(context).Xml;
+            context = GetXmlDocumentFromData(inputData: context).Xml;
         }
 
         if (context is XmlDocument)
@@ -581,21 +620,24 @@ public class RuleEngine
             {
                 return context;
             }
-            OrigamXsltContext ctx = OrigamXsltContext.Create(new NameTable(), _transactionId);
+            OrigamXsltContext ctx = OrigamXsltContext.Create(
+                nameTable: new NameTable(),
+                transactionId: _transactionId
+            );
             XPathNavigator nav = ((XmlDocument)context).CreateNavigator();
-            XPathExpression expr = nav.Compile(xpath);
-            expr.SetContext(ctx);
+            XPathExpression expr = nav.Compile(xpath: xpath);
+            expr.SetContext(nsManager: ctx);
 
             if (dataType == OrigamDataType.Array)
             {
-                object expressionResult = nav.Evaluate(expr);
+                object expressionResult = nav.Evaluate(expr: expr);
                 result = new ArrayList();
                 if (expressionResult is XPathNodeIterator)
                 {
                     XPathNodeIterator iterator = expressionResult as XPathNodeIterator;
                     while (iterator.MoveNext())
                     {
-                        ((ArrayList)result).Add(iterator.Current.Value);
+                        ((ArrayList)result).Add(value: iterator.Current.Value);
                     }
                 }
             }
@@ -603,7 +645,7 @@ public class RuleEngine
             {
                 // Result is other than XML
 
-                result = nav.Evaluate(expr);
+                result = nav.Evaluate(expr: expr);
                 if (result is XPathNodeIterator)
                 {
                     XPathNodeIterator iterator = result as XPathNodeIterator;
@@ -623,9 +665,11 @@ public class RuleEngine
                     {
                         if (!(result is String))
                         {
-                            throw new InvalidCastException("Only string can be converted to blob.");
+                            throw new InvalidCastException(
+                                message: "Only string can be converted to blob."
+                            );
                         }
-                        result = Convert.FromBase64String((string)result);
+                        result = Convert.FromBase64String(s: (string)result);
                         break;
                     }
 
@@ -662,7 +706,7 @@ public class RuleEngine
                             }
                             else
                             {
-                                result = new Guid(result.ToString());
+                                result = new Guid(g: result.ToString());
                             }
                         }
                         break;
@@ -672,7 +716,7 @@ public class RuleEngine
                     {
                         if (!(result is Int32) & result != null)
                         {
-                            result = Convert.ToInt32(result);
+                            result = Convert.ToInt32(value: result);
                         }
                         break;
                     }
@@ -682,7 +726,7 @@ public class RuleEngine
                     {
                         if (!(result is Decimal) && result != null)
                         {
-                            result = XmlConvert.ToDecimal(result.ToString());
+                            result = XmlConvert.ToDecimal(s: result.ToString());
                         }
                         break;
                     }
@@ -692,8 +736,8 @@ public class RuleEngine
                         if (!(result is DateTime) && result != null)
                         {
                             result = XmlConvert.ToDateTime(
-                                result.ToString(),
-                                XmlDateTimeSerializationMode.RoundtripKind
+                                s: result.ToString(),
+                                dateTimeOption: XmlDateTimeSerializationMode.RoundtripKind
                             );
                         }
                         break;
@@ -703,13 +747,13 @@ public class RuleEngine
             else
             {
                 // result is XML
-                XmlNodeList results = new XPathNodeList(nav.Select(expr));
+                XmlNodeList results = new XPathNodeList(iterator: nav.Select(expr: expr));
                 XmlDocument resultDoc = new XmlDocument();
                 XmlNode docElement = resultDoc.ImportNode(
-                    ((XmlDocument)context).DocumentElement,
-                    false
+                    node: ((XmlDocument)context).DocumentElement,
+                    deep: false
                 );
-                resultDoc.AppendChild(docElement);
+                resultDoc.AppendChild(newChild: docElement);
 
                 foreach (XmlNode node in results)
                 {
@@ -719,35 +763,43 @@ public class RuleEngine
                     }
                     else
                     {
-                        docElement.AppendChild(resultDoc.ImportNode(node, true));
+                        docElement.AppendChild(
+                            newChild: resultDoc.ImportNode(node: node, deep: true)
+                        );
                     }
                 }
                 if (targetStructure is DataStructure)
                 {
                     // we clone the dataset (no data, just the structure)
-                    DataSet dataset = new DatasetGenerator(true).CreateDataSet(
-                        targetStructure as DataStructure
-                    );
+                    DataSet dataset = new DatasetGenerator(
+                        userDefinedParameters: true
+                    ).CreateDataSet(ds: targetStructure as DataStructure);
 
                     dataset.EnforceConstraints = false;
                     // we load the iteration data into the dataset
                     try
                     {
-                        dataset.ReadXml(new XmlNodeReader(resultDoc), XmlReadMode.IgnoreSchema);
+                        dataset.ReadXml(
+                            reader: new XmlNodeReader(node: resultDoc),
+                            mode: XmlReadMode.IgnoreSchema
+                        );
                     }
                     catch (Exception ex)
                     {
                         throw new Exception(
-                            ResourceUtils.GetString("ErrorEvaluateContextFailed", ex.Message),
-                            ex
+                            message: ResourceUtils.GetString(
+                                key: "ErrorEvaluateContextFailed",
+                                args: ex.Message
+                            ),
+                            innerException: ex
                         );
                     }
                     // we add the context into the called engine
-                    result = DataDocumentFactory.New(dataset);
+                    result = DataDocumentFactory.New(dataSet: dataset);
                 }
                 else
                 {
-                    result = new XmlContainer(resultDoc);
+                    result = new XmlContainer(xmlDocument: resultDoc);
                 }
             }
         }
@@ -771,9 +823,9 @@ public class RuleEngine
         else
         {
             throw new ArgumentOutOfRangeException(
-                "data",
-                data,
-                ResourceUtils.GetString("ErrorTypeNotProcessable")
+                paramName: "data",
+                actualValue: data,
+                message: ResourceUtils.GetString(key: "ErrorTypeNotProcessable")
             );
         }
         _ruleSet = ruleSet;
@@ -783,26 +835,26 @@ public class RuleEngine
         if (contextRow == null) // whole dataset
         {
             Hashtable cols = new Hashtable();
-            CompleteChildColumnReferences(data.DataSet, cols);
+            CompleteChildColumnReferences(data: data.DataSet, cols: cols);
 
-            EnqueueAllRows(data, ruleSet, cols);
+            EnqueueAllRows(data: data, ruleSet: ruleSet, columns: cols);
         }
         else // current row
         {
             Hashtable cols = new Hashtable();
-            CompleteChildColumnReferences(contextRow.Table, cols);
+            CompleteChildColumnReferences(table: contextRow.Table, cols: cols);
 
-            EnqueueAllRows(contextRow, data, ruleSet, cols);
+            EnqueueAllRows(currentRow: contextRow, data: data, ruleSet: ruleSet, columns: cols);
         }
         /********************************************************************
          * Row bound rules
          ********************************************************************/
-        List<DataTable> sortedTables = GetSortedTables(data.DataSet);
+        List<DataTable> sortedTables = GetSortedTables(dataset: data.DataSet);
         try
         {
             foreach (DataTable table in sortedTables)
             {
-                RegisterTableEvents(table);
+                RegisterTableEvents(table: table);
             }
             ProcessRuleQueue();
         }
@@ -810,7 +862,7 @@ public class RuleEngine
         {
             foreach (DataTable table in sortedTables)
             {
-                UnregisterTableEvents(table);
+                UnregisterTableEvents(table: table);
             }
 
             _ruleSet = null;
@@ -833,14 +885,14 @@ public class RuleEngine
     {
         foreach (DataColumn col in table.Columns)
         {
-            if (col.ExtendedProperties.Contains("Id"))
+            if (col.ExtendedProperties.Contains(key: "Id"))
             {
-                cols[ColumnKey(col)] = col;
+                cols[key: ColumnKey(col: col)] = col;
             }
         }
         foreach (DataRelation rel in table.ChildRelations)
         {
-            CompleteChildColumnReferences(rel.ChildTable, cols);
+            CompleteChildColumnReferences(table: rel.ChildTable, cols: cols);
         }
     }
 
@@ -850,9 +902,9 @@ public class RuleEngine
         {
             foreach (DataColumn col in table.Columns)
             {
-                if (col.ExtendedProperties.Contains("Id"))
+                if (col.ExtendedProperties.Contains(key: "Id"))
                 {
-                    cols[ColumnKey(col)] = col;
+                    cols[key: ColumnKey(col: col)] = col;
                 }
             }
         }
@@ -865,7 +917,7 @@ public class RuleEngine
         {
             if (table.ParentRelations.Count == 0)
             {
-                GetChildTables(table, result);
+                GetChildTables(table: table, list: result);
             }
         }
         return result;
@@ -875,9 +927,9 @@ public class RuleEngine
     {
         foreach (DataRelation childRelation in table.ChildRelations)
         {
-            GetChildTables(childRelation.ChildTable, list);
+            GetChildTables(table: childRelation.ChildTable, list: list);
         }
-        list.Add(table);
+        list.Add(item: table);
     }
 
     /// <summary>
@@ -893,7 +945,14 @@ public class RuleEngine
         DataStructureRuleSet ruleSet
     )
     {
-        ProcessRulesInternal(rowChanged, data, columnChanged, ruleSet, null, false);
+        ProcessRulesInternal(
+            rowChanged: rowChanged,
+            data: data,
+            columnChanged: columnChanged,
+            ruleSet: ruleSet,
+            columnsChanged: null,
+            isFromRuleQueue: false
+        );
     }
 
     internal void ProcessRules(
@@ -903,7 +962,14 @@ public class RuleEngine
         DataStructureRuleSet ruleSet
     )
     {
-        ProcessRulesInternal(rowChanged, data, null, ruleSet, columnsChanged, false);
+        ProcessRulesInternal(
+            rowChanged: rowChanged,
+            data: data,
+            columnChanged: null,
+            ruleSet: ruleSet,
+            columnsChanged: columnsChanged,
+            isFromRuleQueue: false
+        );
     }
 
     private bool ProcessRulesFromQueue(
@@ -913,7 +979,14 @@ public class RuleEngine
         ICollection columnsChanged
     )
     {
-        return ProcessRulesInternal(rowChanged, data, null, ruleSet, columnsChanged, true);
+        return ProcessRulesInternal(
+            rowChanged: rowChanged,
+            data: data,
+            columnChanged: null,
+            ruleSet: ruleSet,
+            columnsChanged: columnsChanged,
+            isFromRuleQueue: true
+        );
     }
 
     private IndexedRuleQueue _ruleQueue = new();
@@ -921,7 +994,7 @@ public class RuleEngine
 
     private bool IsEntryInQueue(DataRow rowChanged, DataStructureRuleSet ruleSet)
     {
-        return _ruleQueue.Contains(rowChanged, ruleSet);
+        return _ruleQueue.Contains(row: rowChanged, ruleSet: ruleSet);
     }
 
     private void UpdateQueueEntries(
@@ -933,15 +1006,15 @@ public class RuleEngine
         foreach (object[] queueEntry in _ruleQueue)
         {
             if (
-                !queueEntry[0].Equals(rowChanged)
+                !queueEntry[0].Equals(obj: rowChanged)
                 && (
-                    (queueEntry[1] != null && queueEntry[1].Equals(ruleSet))
+                    (queueEntry[1] != null && queueEntry[1].Equals(obj: ruleSet))
                     || (queueEntry[1] == null && ruleSet == null)
                 )
             )
             {
                 Hashtable h = queueEntry[2] as Hashtable;
-                h[ColumnKey(column)] = column;
+                h[key: ColumnKey(col: column)] = column;
             }
         }
     }
@@ -964,19 +1037,19 @@ public class RuleEngine
             columns = new Hashtable();
             foreach (DataColumn col in _ruleColumnChanges.Values)
             {
-                if (!col.Table.TableName.Equals(rowChanged.Table.TableName))
+                if (!col.Table.TableName.Equals(value: rowChanged.Table.TableName))
                 {
-                    columns.Add(ColumnKey(col), col);
+                    columns.Add(key: ColumnKey(col: col), value: col);
                 }
             }
         }
         object[] queueEntry = new object[4] { rowChanged, ruleSet, columns, data };
-        _ruleQueue.Enqueue(queueEntry);
+        _ruleQueue.Enqueue(entry: queueEntry);
     }
 
     private static string ColumnKey(DataColumn col)
     {
-        return col.Table.TableName + "_" + col.ExtendedProperties["Id"].ToString();
+        return col.Table.TableName + "_" + col.ExtendedProperties[key: "Id"].ToString();
     }
 
     private void EnqueueAllRows(
@@ -986,22 +1059,28 @@ public class RuleEngine
         Hashtable columns
     )
     {
-        if (!IsEntryInQueue(currentRow, ruleSet))
+        if (!IsEntryInQueue(rowChanged: currentRow, ruleSet: ruleSet))
         {
-            EnqueueEntry(currentRow, data, ruleSet, columns);
+            EnqueueEntry(rowChanged: currentRow, data: data, ruleSet: ruleSet, columns: columns);
         }
-        EnqueueChildRows(currentRow, data, ruleSet, columns);
-        EnqueueParentRows(currentRow, data, ruleSet, columns, null);
+        EnqueueChildRows(parentRow: currentRow, data: data, ruleSet: ruleSet, columns: columns);
+        EnqueueParentRows(
+            childRow: currentRow,
+            data: data,
+            ruleSet: ruleSet,
+            columns: columns,
+            parentRows: null
+        );
     }
 
     private void EnqueueAllRows(IDataDocument data, DataStructureRuleSet ruleSet, Hashtable columns)
     {
-        List<DataTable> tables = GetSortedTables(data.DataSet);
+        List<DataTable> tables = GetSortedTables(dataset: data.DataSet);
         for (int i = tables.Count - 1; i >= 0; i--)
         {
-            foreach (DataRow row in tables[i].Rows)
+            foreach (DataRow row in tables[index: i].Rows)
             {
-                EnqueueEntry(row, data, ruleSet, columns);
+                EnqueueEntry(rowChanged: row, data: data, ruleSet: ruleSet, columns: columns);
             }
         }
     }
@@ -1020,13 +1099,23 @@ public class RuleEngine
         {
             foreach (DataRelation childRelation in parentRow.Table.ChildRelations)
             {
-                foreach (DataRow row in parentRow.GetChildRows(childRelation))
+                foreach (DataRow row in parentRow.GetChildRows(relation: childRelation))
                 {
-                    if (!IsEntryInQueue(row, ruleSet))
+                    if (!IsEntryInQueue(rowChanged: row, ruleSet: ruleSet))
                     {
-                        EnqueueEntry(row, data, ruleSet, columns);
+                        EnqueueEntry(
+                            rowChanged: row,
+                            data: data,
+                            ruleSet: ruleSet,
+                            columns: columns
+                        );
                     }
-                    EnqueueChildRows(row, data, ruleSet, columns);
+                    EnqueueChildRows(
+                        parentRow: row,
+                        data: data,
+                        ruleSet: ruleSet,
+                        columns: columns
+                    );
                 }
             }
         }
@@ -1045,29 +1134,35 @@ public class RuleEngine
         {
             foreach (DataRelation parentRelation in childRow.Table.ParentRelations)
             {
-                foreach (DataRow row in childRow.GetParentRows(parentRelation))
+                foreach (DataRow row in childRow.GetParentRows(relation: parentRelation))
                 {
-                    rows.Add(row);
+                    rows.Add(item: row);
                 }
             }
         }
         else
         {
-            rows.AddRange(parentRows);
+            rows.AddRange(collection: parentRows);
         }
         foreach (DataRow row in rows)
         {
-            if (!IsEntryInQueue(row, ruleSet))
+            if (!IsEntryInQueue(rowChanged: row, ruleSet: ruleSet))
             {
-                EnqueueEntry(row, data, ruleSet, columns);
+                EnqueueEntry(rowChanged: row, data: data, ruleSet: ruleSet, columns: columns);
             }
-            EnqueueParentRows(row, data, ruleSet, columns, null);
+            EnqueueParentRows(
+                childRow: row,
+                data: data,
+                ruleSet: ruleSet,
+                columns: columns,
+                parentRows: null
+            );
         }
     }
 
     public void ProcessRules(DataRow rowChanged, IDataDocument data, DataStructureRuleSet ruleSet)
     {
-        ProcessRules(rowChanged, data, ruleSet, null);
+        ProcessRules(rowChanged: rowChanged, data: data, ruleSet: ruleSet, parentRows: null);
     }
 
     /// <summary>
@@ -1083,25 +1178,31 @@ public class RuleEngine
     )
     {
         bool wasQueued = false;
-        if (IsEntryInQueue(rowChanged, ruleSet))
+        if (IsEntryInQueue(rowChanged: rowChanged, ruleSet: ruleSet))
         {
             wasQueued = true;
         }
         else
         {
-            EnqueueEntry(rowChanged, data, ruleSet, null);
+            EnqueueEntry(rowChanged: rowChanged, data: data, ruleSet: ruleSet, columns: null);
         }
-        EnqueueChildRows(rowChanged, data, ruleSet, null);
+        EnqueueChildRows(parentRow: rowChanged, data: data, ruleSet: ruleSet, columns: null);
         Hashtable columns = null;
         if (rowChanged.RowState == DataRowState.Deleted)
         {
             columns = new Hashtable();
             foreach (DataColumn col in rowChanged.Table.Columns)
             {
-                columns[ColumnKey(col)] = col;
+                columns[key: ColumnKey(col: col)] = col;
             }
         }
-        EnqueueParentRows(rowChanged, data, ruleSet, columns, parentRows);
+        EnqueueParentRows(
+            childRow: rowChanged,
+            data: data,
+            ruleSet: ruleSet,
+            columns: columns,
+            parentRows: parentRows
+        );
         if (wasQueued)
         {
             return;
@@ -1138,7 +1239,14 @@ public class RuleEngine
                 try
                 {
                     // Process rules on the changed row.
-                    if (ProcessRulesFromQueue(row, data, rs, changedColumns.Values))
+                    if (
+                        ProcessRulesFromQueue(
+                            rowChanged: row,
+                            data: data,
+                            ruleSet: rs,
+                            columnsChanged: changedColumns.Values
+                        )
+                    )
                     {
                         try
                         {
@@ -1147,11 +1255,11 @@ public class RuleEngine
                         catch (Exception ex)
                         {
                             throw new Exception(
-                                ex.Message
+                                message: ex.Message
                                     + Environment.NewLine
-                                    + ResourceUtils.GetString("RowState")
+                                    + ResourceUtils.GetString(key: "RowState")
                                     + row.RowState.ToString(),
-                                ex
+                                innerException: ex
                             );
                         }
                     }
@@ -1161,7 +1269,10 @@ public class RuleEngine
                     row.CancelEdit();
                     if (log.IsErrorEnabled)
                     {
-                        log.Error("Exception ocurred during evaluation of rule queue", e);
+                        log.Error(
+                            message: "Exception ocurred during evaluation of rule queue",
+                            exception: e
+                        );
                     }
                     _ruleQueue.Clear();
                     throw;
@@ -1191,7 +1302,7 @@ public class RuleEngine
             return false;
         }
 
-        if (!DatasetTools.HasRowValidParent(rowChanged))
+        if (!DatasetTools.HasRowValidParent(row: rowChanged))
         {
             return false;
         }
@@ -1204,50 +1315,54 @@ public class RuleEngine
             List<DataStructureRule> rules;
             if (columnChanged == null)
             {
-                rules = ruleSet.Rules(rowChanged.Table.TableName);
+                rules = ruleSet.Rules(entityName: rowChanged.Table.TableName);
                 foreach (DataColumn col in columnsChanged)
                 {
                     // get all the rules
-                    if (col.ExtendedProperties.Contains("Id"))
+                    if (col.ExtendedProperties.Contains(key: "Id"))
                     {
-                        Guid fieldId = (Guid)col.ExtendedProperties["Id"];
+                        Guid fieldId = (Guid)col.ExtendedProperties[key: "Id"];
                         List<DataStructureRule> r = ruleSet.Rules(
-                            col.Table.TableName,
-                            fieldId,
-                            isFromRuleQueue
+                            entityName: col.Table.TableName,
+                            fieldId: fieldId,
+                            includeOtherEntities: isFromRuleQueue
                         );
                         foreach (DataStructureRule rule in r)
                         {
-                            if (rule.Entity.Name.Equals(rowChanged.Table.TableName))
+                            if (rule.Entity.Name.Equals(value: rowChanged.Table.TableName))
                             {
-                                if (!rules.Contains(rule))
+                                if (!rules.Contains(item: rule))
                                 {
-                                    rules.Add(rule);
+                                    rules.Add(item: rule);
                                 }
                             }
                         }
                     }
                     if (!isFromRuleQueue)
                     {
-                        UpdateQueueEntries(rowChanged, ruleSet, col);
-                        _ruleColumnChanges[ColumnKey(col)] = col;
+                        UpdateQueueEntries(rowChanged: rowChanged, ruleSet: ruleSet, column: col);
+                        _ruleColumnChanges[key: ColumnKey(col: col)] = col;
                     }
                 }
             }
             else
             {
                 // columns we cannot recognize will not fire any events
-                if (!columnChanged.ExtendedProperties.Contains("Id"))
+                if (!columnChanged.ExtendedProperties.Contains(key: "Id"))
                 {
                     return false;
                 }
 
-                Guid fieldId = (Guid)columnChanged.ExtendedProperties["Id"];
-                rules = ruleSet.Rules(rowChanged.Table.TableName, fieldId, false);
-                UpdateQueueEntries(rowChanged, ruleSet, columnChanged);
-                _ruleColumnChanges[ColumnKey(columnChanged)] = columnChanged;
+                Guid fieldId = (Guid)columnChanged.ExtendedProperties[key: "Id"];
+                rules = ruleSet.Rules(
+                    entityName: rowChanged.Table.TableName,
+                    fieldId: fieldId,
+                    includeOtherEntities: false
+                );
+                UpdateQueueEntries(rowChanged: rowChanged, ruleSet: ruleSet, column: columnChanged);
+                _ruleColumnChanges[key: ColumnKey(col: columnChanged)] = columnChanged;
             }
-            rules.Sort(new ProcessRuleComparer());
+            rules.Sort(comparer: new ProcessRuleComparer());
             if (rules.Count > 0)
             {
                 if (outputPad != null)
@@ -1260,24 +1375,33 @@ public class RuleEngine
                             pk += ", ";
                         }
 
-                        pk += column.ColumnName + ": " + rowChanged[column].ToString();
+                        pk += column.ColumnName + ": " + rowChanged[column: column].ToString();
                     }
                     if (log.IsDebugEnabled)
                     {
                         log.Debug(
-                            ResourceUtils.GetString(
-                                "PadProcessingRules",
-                                DateTime.Now.ToString(),
-                                ruleSet.Name,
-                                rowChanged.Table.TableName,
-                                pk,
-                                (columnChanged == null ? "<none>" : columnChanged?.ColumnName)
+                            message: ResourceUtils.GetString(
+                                key: "PadProcessingRules",
+                                args:
+                                [
+                                    DateTime.Now.ToString(),
+                                    ruleSet.Name,
+                                    rowChanged.Table.TableName,
+                                    pk,
+                                    (columnChanged == null ? "<none>" : columnChanged?.ColumnName),
+                                ]
                             )
                         );
                     }
                 }
             }
-            resultRules = ProcessRulesInternalFinish(rules, data, rowChanged, outputPad, ruleSet);
+            resultRules = ProcessRulesInternalFinish(
+                rules: rules,
+                data: data,
+                rowChanged: rowChanged,
+                outputPad: outputPad,
+                ruleSet: ruleSet
+            );
         }
         // check for lookup fields changes
         if (columnChanged == null)
@@ -1287,13 +1411,16 @@ public class RuleEngine
             {
                 if (col.Table.TableName == rowChanged.Table.TableName)
                 {
-                    result = ProcessRulesLookupFields(rowChanged, col.ColumnName);
+                    result = ProcessRulesLookupFields(row: rowChanged, columnName: col.ColumnName);
                 }
             }
         }
         else
         {
-            result = ProcessRulesLookupFields(rowChanged, columnChanged.ColumnName);
+            result = ProcessRulesLookupFields(
+                row: rowChanged,
+                columnName: columnChanged.ColumnName
+            );
         }
         return result || resultRules;
     }
@@ -1304,7 +1431,7 @@ public class RuleEngine
 #if !NETSTANDARD
         if (WorkbenchSingleton.Workbench != null)
         {
-            outputPad = WorkbenchSingleton.Workbench.GetPad(typeof(IOutputPad)) as IOutputPad;
+            outputPad = WorkbenchSingleton.Workbench.GetPad(type: typeof(IOutputPad)) as IOutputPad;
         }
 #endif
         return outputPad;
@@ -1314,30 +1441,30 @@ public class RuleEngine
     {
         bool changed = false;
         DataTable t = row.Table;
-        Guid columnFieldId = (Guid)t.Columns[columnName].ExtendedProperties["Id"];
+        Guid columnFieldId = (Guid)t.Columns[name: columnName].ExtendedProperties[key: "Id"];
         foreach (DataColumn column in t.Columns)
         {
-            if (column.ExtendedProperties.Contains(Const.OriginalFieldId))
+            if (column.ExtendedProperties.Contains(key: Const.OriginalFieldId))
             {
-                Guid originalFieldId = (Guid)column.ExtendedProperties[Const.OriginalFieldId];
+                Guid originalFieldId = (Guid)column.ExtendedProperties[key: Const.OriginalFieldId];
                 // we find all columns that depend on the changed one
-                if (originalFieldId.Equals(columnFieldId))
+                if (originalFieldId.Equals(g: columnFieldId))
                 {
-                    if (column.ExtendedProperties.Contains(Const.OriginalLookupIdAttribute))
+                    if (column.ExtendedProperties.Contains(key: Const.OriginalLookupIdAttribute))
                     {
                         // and we reload the value by the original lookup
                         Guid originalLookupId = (Guid)
-                            column.ExtendedProperties[Const.OriginalLookupIdAttribute];
+                            column.ExtendedProperties[key: Const.OriginalLookupIdAttribute];
                         object newValue = DBNull.Value;
 
-                        if (!row.IsNull(columnName))
+                        if (!row.IsNull(columnName: columnName))
                         {
                             newValue = _lookupService.GetDisplayText(
-                                originalLookupId,
-                                row[columnName],
-                                false,
-                                false,
-                                this.TransactionId
+                                lookupId: originalLookupId,
+                                lookupValue: row[columnName: columnName],
+                                useCache: false,
+                                returnMessageIfNull: false,
+                                transactionId: this.TransactionId
                             );
                         }
 
@@ -1345,18 +1472,18 @@ public class RuleEngine
                         {
                             newValue = DBNull.Value;
                         }
-                        if (row[column] != newValue)
+                        if (row[column: column] != newValue)
                         {
-                            row[column] = newValue;
+                            row[column: column] = newValue;
                             changed = true;
                         }
                     }
                     else
                     {
                         // or we just copy the original value (copied fields)
-                        if (row[column] != row[columnName])
+                        if (row[column: column] != row[columnName: columnName])
                         {
-                            row[column] = row[columnName];
+                            row[column: column] = row[columnName: columnName];
                         }
                     }
                 }
@@ -1375,13 +1502,13 @@ public class RuleEngine
     )
     {
         bool changed = false;
-        var myRules = new List<DataStructureRule>(rules);
+        var myRules = new List<DataStructureRule>(collection: rules);
         foreach (DataStructureRule rule in myRules)
         {
             if (log.IsDebugEnabled)
             {
                 log.Debug(
-                    "Evaluating Rule: "
+                    message: "Evaluating Rule: "
                         + rule?.Name
                         + ", Target Field: "
                         + (rule?.TargetField == null ? "<none>" : rule?.TargetField.Name)
@@ -1390,21 +1517,20 @@ public class RuleEngine
             // columns which don't allow nulls will not get processed when empty
             foreach (DataStructureRuleDependency dependency in rule.RuleDependencies)
             {
-                if (dependency.Entity.Name.Equals(rowChanged.Table.TableName))
+                if (dependency.Entity.Name.Equals(value: rowChanged.Table.TableName))
                 {
                     if (
                         !dependency.Field.AllowNulls
-                        && rowChanged[dependency.Field.Name] == DBNull.Value
+                        && rowChanged[columnName: dependency.Field.Name] == DBNull.Value
                     )
                     {
                         if (log.IsDebugEnabled)
                         {
                             log.Debug(
-                                "   "
+                                message: "   "
                                     + ResourceUtils.GetString(
-                                        "PadAllowNulls",
-                                        dependency.Entity.Name,
-                                        dependency.Field.Name
+                                        key: "PadAllowNulls",
+                                        args: [dependency.Entity.Name, dependency.Field.Name]
                                     )
                             );
                         }
@@ -1414,13 +1540,16 @@ public class RuleEngine
             }
             XPathNodeIterator iterator = null;
             // we do a fresh slice after evaluating each rule, because data could have changed
-            DataSet dataSlice = DatasetTools.CloneDataSet(rowChanged.Table.DataSet, false);
-            DatasetTools.GetDataSlice(dataSlice, new List<DataRow> { rowChanged });
-            IDataDocument xmlSlice = DataDocumentFactory.New(dataSlice);
+            DataSet dataSlice = DatasetTools.CloneDataSet(
+                dataset: rowChanged.Table.DataSet,
+                cloneExpressions: false
+            );
+            DatasetTools.GetDataSlice(target: dataSlice, rows: new List<DataRow> { rowChanged });
+            IDataDocument xmlSlice = DataDocumentFactory.New(dataSet: dataSlice);
             if (rule.ValueRule == null)
             {
                 throw new Exception(
-                    $"{nameof(DataStructureRule.ValueRule)} in {nameof(DataStructureRule)} {rule.Id} is null"
+                    message: $"{nameof(DataStructureRule.ValueRule)} in {nameof(DataStructureRule)} {rule.Id} is null"
                 );
             }
             if (rule.ValueRule.IsPathRelative)
@@ -1428,7 +1557,7 @@ public class RuleEngine
                 if (data == null)
                 {
                     throw new NullReferenceException(
-                        "Rule has IsPathRelative set but no XmlDataDocument has been provided. Cannot evaluate rule."
+                        message: "Rule has IsPathRelative set but no XmlDataDocument has been provided. Cannot evaluate rule."
                     );
                 }
                 // HERE WE HAVE TO USE THE SLICE, BECAUSE IF WE USED THE ORIGINA XML DOCUMENT (E.G. FROM THE FORM)
@@ -1450,9 +1579,9 @@ public class RuleEngine
                 DataTable t = rowChanged.Table;
                 while (t.ParentRelations.Count > 0)
                 {
-                    if (t.ParentRelations[0].Nested)
+                    if (t.ParentRelations[index: 0].Nested)
                     {
-                        t = t.ParentRelations[0].ParentTable;
+                        t = t.ParentRelations[index: 0].ParentTable;
                         path = t.TableName + "/" + path;
                     }
                     else
@@ -1464,7 +1593,7 @@ public class RuleEngine
 
                 // move to the same position in the xml slice
                 XPathNavigator nav = xmlSlice.Xml.CreateNavigator();
-                iterator = nav.Select(path);
+                iterator = nav.Select(xpath: path);
                 iterator.MoveNext();
             }
             // if exists, check condition, if the rule will be actually evaluated
@@ -1473,19 +1602,24 @@ public class RuleEngine
                 if (rule.ConditionRule.IsPathRelative != rule.ValueRule.IsPathRelative)
                 {
                     throw new ArgumentOutOfRangeException(
-                        "IsPathRelative",
-                        rule.ConditionRule.IsPathRelative,
-                        ResourceUtils.GetString("ErrorRuleConditionEqual", rule.Path)
+                        paramName: "IsPathRelative",
+                        actualValue: rule.ConditionRule.IsPathRelative,
+                        message: ResourceUtils.GetString(
+                            key: "ErrorRuleConditionEqual",
+                            args: rule.Path
+                        )
                     );
                 }
                 if (log.IsDebugEnabled)
                 {
-                    log.Debug("   " + ResourceUtils.GetString("PadEvaluatingCondition"));
+                    log.Debug(
+                        message: "   " + ResourceUtils.GetString(key: "PadEvaluatingCondition")
+                    );
                 }
                 object shouldEvaluate = this.EvaluateRule(
-                    rule.ConditionRule,
-                    xmlSlice,
-                    iterator == null ? null : iterator.Clone()
+                    rule: rule.ConditionRule,
+                    data: xmlSlice,
+                    contextPosition: iterator == null ? null : iterator.Clone()
                 );
                 if (shouldEvaluate is bool)
                 {
@@ -1493,7 +1627,9 @@ public class RuleEngine
                     {
                         if (log.IsDebugEnabled)
                         {
-                            log.Debug("   " + ResourceUtils.GetString("PadConditionFalse"));
+                            log.Debug(
+                                message: "   " + ResourceUtils.GetString(key: "PadConditionFalse")
+                            );
                         }
                         goto nextRule;
                     }
@@ -1501,7 +1637,7 @@ public class RuleEngine
                 else
                 {
                     throw new InvalidCastException(
-                        ResourceUtils.GetString("ErrorNotBool", rule.Path)
+                        message: ResourceUtils.GetString(key: "ErrorNotBool", args: rule.Path)
                     );
                 }
             }
@@ -1514,7 +1650,11 @@ public class RuleEngine
             object result;
             try
             {
-                result = this.EvaluateRule(rule.ValueRule, xmlSlice, iterator);
+                result = this.EvaluateRule(
+                    rule: rule.ValueRule,
+                    data: xmlSlice,
+                    contextPosition: iterator
+                );
             }
             catch
             {
@@ -1524,25 +1664,27 @@ public class RuleEngine
             #region TRACE
             if (log.IsDebugEnabled)
             {
-                log.RunHandled(() =>
+                log.RunHandled(loggingAction: () =>
                 {
                     if (rule.TargetField != null)
                     {
                         string columnName = rule.TargetField.Name;
-                        DataColumn col = rowChanged.Table.Columns[columnName];
-                        object oldValue = rowChanged[col];
+                        DataColumn col = rowChanged.Table.Columns[name: columnName];
+                        object oldValue = rowChanged[column: col];
                         string newLookupValue = null;
                         string oldLookupValue = null;
-                        if (col.ExtendedProperties.Contains(Const.DefaultLookupIdAttribute))
+                        if (col.ExtendedProperties.Contains(key: Const.DefaultLookupIdAttribute))
                         {
                             if (result != DBNull.Value && !(result is XmlDocument))
                             {
                                 try
                                 {
                                     newLookupValue = LookupValue(
-                                        col.ExtendedProperties[Const.DefaultLookupIdAttribute]
+                                        lookupId: col.ExtendedProperties[
+                                                key: Const.DefaultLookupIdAttribute
+                                            ]
                                             .ToString(),
-                                        result.ToString()
+                                        recordId: result.ToString()
                                     );
                                 }
                                 catch (Exception ex)
@@ -1555,9 +1697,11 @@ public class RuleEngine
                                 try
                                 {
                                     oldLookupValue = LookupValue(
-                                        col.ExtendedProperties[Const.DefaultLookupIdAttribute]
+                                        lookupId: col.ExtendedProperties[
+                                                key: Const.DefaultLookupIdAttribute
+                                            ]
                                             .ToString(),
-                                        oldValue.ToString()
+                                        recordId: oldValue.ToString()
                                     );
                                 }
                                 catch (Exception ex)
@@ -1567,13 +1711,13 @@ public class RuleEngine
                             }
                         }
                         log.Debug(
-                            "   "
-                                + ResourceUtils.GetString("PadRuleResult0")
+                            message: "   "
+                                + ResourceUtils.GetString(key: "PadRuleResult0")
                                 + result.ToString()
                                 + (newLookupValue == null ? "" : " (" + newLookupValue + ")")
-                                + ResourceUtils.GetString("PadRuleResult1")
+                                + ResourceUtils.GetString(key: "PadRuleResult1")
                                 + columnName
-                                + ResourceUtils.GetString("PadRuleResult2")
+                                + ResourceUtils.GetString(key: "PadRuleResult2")
                                 + oldValue.ToString()
                                 + (oldLookupValue == null ? "" : " (" + oldLookupValue + ")")
                         );
@@ -1581,7 +1725,9 @@ public class RuleEngine
                     else
                     {
                         log.Debug(
-                            "   " + ResourceUtils.GetString("PadRuleResult0") + result.ToString()
+                            message: "   "
+                                + ResourceUtils.GetString(key: "PadRuleResult0")
+                                + result.ToString()
                         );
                     }
                 });
@@ -1591,91 +1737,102 @@ public class RuleEngine
             {
                 // RESULT IS DATASET
                 DataTable resultTable = (result as IDataDocument).DataSet.Tables[
-                    rowChanged.Table.TableName
+                    name: rowChanged.Table.TableName
                 ];
                 if (resultTable == null)
                 {
                     string message = ResourceUtils.GetString(
-                        "PadRuleInvalidStructure",
-                        rowChanged.Table.TableName
+                        key: "PadRuleInvalidStructure",
+                        args: rowChanged.Table.TableName
                     );
                     if (log.IsDebugEnabled)
                     {
-                        log.Debug(message);
+                        log.Debug(message: message);
                     }
-                    throw new Exception(message);
+                    throw new Exception(message: message);
                 }
                 // find the record in the transformed document
-                DataRow resultRow = resultTable.Rows.Find(DatasetTools.PrimaryKey(rowChanged));
+                DataRow resultRow = resultTable.Rows.Find(
+                    keys: DatasetTools.PrimaryKey(row: rowChanged)
+                );
                 if (resultRow == null)
                 {
                     // row was not generated by the rule, this is a problem, the row must always be returned
-                    string message = ResourceUtils.GetString("PadRuleInvalidNoData");
+                    string message = ResourceUtils.GetString(key: "PadRuleInvalidNoData");
                     if (log.IsDebugEnabled)
                     {
-                        log.Debug(message);
+                        log.Debug(message: message);
                     }
-                    throw new Exception(message);
+                    throw new Exception(message: message);
                 }
 
                 var changedColumns = new List<DataColumn>();
-                var changedTargetColumns = new List<DataColumn>(changedColumns.Count);
+                var changedTargetColumns = new List<DataColumn>(capacity: changedColumns.Count);
                 foreach (DataColumn col in resultRow.Table.Columns)
                 {
                     if (
-                        rowChanged.Table.Columns.Contains(col.ColumnName)
-                        && !(resultRow[col].Equals(rowChanged[col.ColumnName]))
+                        rowChanged.Table.Columns.Contains(name: col.ColumnName)
+                        && !(
+                            resultRow[column: col]
+                                .Equals(obj: rowChanged[columnName: col.ColumnName])
+                        )
                     )
                     {
-                        changedColumns.Add(col);
-                        changedTargetColumns.Add(rowChanged.Table.Columns[col.ColumnName]);
+                        changedColumns.Add(item: col);
+                        changedTargetColumns.Add(
+                            item: rowChanged.Table.Columns[name: col.ColumnName]
+                        );
                     }
                 }
                 #region TRACE
                 if (log.IsDebugEnabled)
                 {
-                    log.RunHandled(() =>
+                    log.RunHandled(loggingAction: () =>
                     {
                         foreach (DataColumn col in changedColumns)
                         {
                             string newLookupValue = null;
                             string oldLookupValue = null;
-                            object resultValue = resultRow[col];
-                            object oldValue = rowChanged[col.ColumnName];
+                            object resultValue = resultRow[column: col];
+                            object oldValue = rowChanged[columnName: col.ColumnName];
                             string columnName = col.ColumnName;
                             if (
-                                col.ExtendedProperties.Contains(Const.DefaultLookupIdAttribute)
-                                && col.ExtendedProperties.Contains(Const.OrigamDataType)
+                                col.ExtendedProperties.Contains(key: Const.DefaultLookupIdAttribute)
+                                && col.ExtendedProperties.Contains(key: Const.OrigamDataType)
                                 && !OrigamDataType.Array.Equals(
-                                    col.ExtendedProperties[Const.OrigamDataType]
+                                    obj: col.ExtendedProperties[key: Const.OrigamDataType]
                                 )
                             )
                             {
                                 if (resultValue != DBNull.Value)
                                 {
                                     newLookupValue = LookupValue(
-                                        col.ExtendedProperties[Const.DefaultLookupIdAttribute]
+                                        lookupId: col.ExtendedProperties[
+                                                key: Const.DefaultLookupIdAttribute
+                                            ]
                                             .ToString(),
-                                        resultValue.ToString()
+                                        recordId: resultValue.ToString()
                                     );
                                 }
                                 if (oldValue != DBNull.Value)
                                 {
                                     oldLookupValue = LookupValue(
-                                        col.ExtendedProperties[Const.DefaultLookupIdAttribute]
+                                        lookupId: col.ExtendedProperties[
+                                                key: Const.DefaultLookupIdAttribute
+                                            ]
                                             .ToString(),
-                                        oldValue.ToString()
+                                        recordId: oldValue.ToString()
                                     );
                                 }
                             }
                             log.Debug(
-                                "   "
+                                message: "   "
                                     + columnName
                                     + ": "
                                     + resultValue.ToString()
                                     + (newLookupValue == null ? "" : " (" + newLookupValue + ")")
-                                    + ResourceUtils.GetString("PadRuleResult1")
-                                    + ResourceUtils.GetString("PadRuleResult2")
+                                    + ResourceUtils.GetString(key: "PadRuleResult1")
+                                    + ResourceUtils.GetString(key: "PadRuleResult2")
                                     + oldValue.ToString()
                                     + (oldLookupValue == null ? "" : " (" + oldLookupValue + ")")
                             );
@@ -1686,10 +1843,10 @@ public class RuleEngine
                 // copy the values into the source row
                 PauseRuleProcessing();
                 bool localChanged = DatasetTools.CopyRecordValues(
-                    resultRow,
-                    DataRowVersion.Current,
-                    rowChanged,
-                    true
+                    sourceRow: resultRow,
+                    sourceVersion: DataRowVersion.Current,
+                    destinationRow: rowChanged,
+                    enforceNullValues: true
                 );
                 ResumeRuleProcessing();
                 if (!changed)
@@ -1697,44 +1854,53 @@ public class RuleEngine
                     changed = localChanged;
                 }
 
-                ProcessRules(rowChanged, data, changedTargetColumns, ruleSet);
+                ProcessRules(
+                    rowChanged: rowChanged,
+                    data: data,
+                    columnsChanged: changedTargetColumns,
+                    ruleSet: ruleSet
+                );
             }
             else if (result is XmlDocument)
             {
                 // XML IS NOT SUPPORTED
-                string message = ResourceUtils.GetString("PadXmlDocument");
+                string message = ResourceUtils.GetString(key: "PadXmlDocument");
                 if (rule.ValueRule != null && rule.ValueRule is Origam.Schema.RuleModel.XslRule)
                 {
                     message += ResourceUtils.GetString(
-                        "FixXslRuleWithDestinationDataStructure",
-                        rule.ValueRule.ToString()
+                        key: "FixXslRuleWithDestinationDataStructure",
+                        args: rule.ValueRule.ToString()
                     );
                 }
                 if (log.IsDebugEnabled)
                 {
-                    log.Debug(message);
+                    log.Debug(message: message);
                 }
-                throw new NotSupportedException(message);
+                throw new NotSupportedException(message: message);
             }
             else
             {
                 // SIMPLE DATA TYE (e.g. XPath Rule). TargetField must be used to return the result to a specific column.
                 if (rule.TargetField == null)
                 {
-                    string message = ResourceUtils.GetString("PadTargetField");
+                    string message = ResourceUtils.GetString(key: "PadTargetField");
                     if (log.IsDebugEnabled)
                     {
-                        log.Debug(message);
+                        log.Debug(message: message);
                     }
-                    throw new Exception(message);
+                    throw new Exception(message: message);
                 }
                 foreach (DataColumn column in rowChanged.Table.Columns)
                 {
-                    if (column.ExtendedProperties["Id"].Equals(rule.TargetField.PrimaryKey["Id"]))
+                    if (
+                        column
+                            .ExtendedProperties[key: "Id"]
+                            .Equals(obj: rule.TargetField.PrimaryKey[key: "Id"])
+                    )
                     {
-                        if (!rowChanged[column].Equals(result))
+                        if (!rowChanged[column: column].Equals(obj: result))
                         {
-                            rowChanged[column] = result;
+                            rowChanged[column: column] = result;
                             changed = true;
                         }
                         break;
@@ -1747,7 +1913,12 @@ public class RuleEngine
         }
         if (log.IsDebugEnabled && myRules.Count > 0)
         {
-            log.Debug(ResourceUtils.GetString("PadRuleFinished", DateTime.Now, changed.ToString()));
+            log.Debug(
+                message: ResourceUtils.GetString(
+                    key: "PadRuleFinished",
+                    args: [DateTime.Now, changed.ToString()]
+                )
+            );
         }
         return changed;
     }
@@ -1760,26 +1931,29 @@ public class RuleEngine
         XPathNodeIterator contextPosition
     )
     {
-        EntityFormatting formatting = new EntityFormatting(NullColor, NullColor);
+        EntityFormatting formatting = new EntityFormatting(
+            foreColor: NullColor,
+            backColor: NullColor
+        );
         var entityRules = new List<EntityConditionalFormatting>();
         IDataEntity entity =
             _persistence.SchemaProvider.RetrieveInstance(
-                typeof(ISchemaItem),
-                new ModelElementKey(entityId)
+                type: typeof(ISchemaItem),
+                primaryKey: new ModelElementKey(id: entityId)
             ) as IDataEntity;
 
         if (fieldId == Guid.Empty)
         {
-            entityRules.AddRange(entity.ConditionalFormattingRules);
+            entityRules.AddRange(collection: entity.ConditionalFormattingRules);
         }
         else
         {
             // we retrieve the column from the child-items list
             // this is very cost efficient, because when retrieving abstract columns (i.e. Id, RecordCreated, RecordUpdated), they are never cached
-            IDataEntityColumn field = entity.GetChildById(fieldId) as IDataEntityColumn;
+            IDataEntityColumn field = entity.GetChildById(id: fieldId) as IDataEntityColumn;
             if (field != null)
             {
-                entityRules.AddRange(field.ConditionalFormattingRules);
+                entityRules.AddRange(collection: field.ConditionalFormattingRules);
             }
         }
         if (entityRules.Count > 0)
@@ -1788,7 +1962,14 @@ public class RuleEngine
 
             foreach (EntityConditionalFormatting rule in entityRules)
             {
-                if (IsRuleMatching(data, rule.Rule, rule.Roles, contextPosition))
+                if (
+                    IsRuleMatching(
+                        data: data,
+                        rule: rule.Rule,
+                        roles: rule.Roles,
+                        contextPosition: contextPosition
+                    )
+                )
                 {
                     Color foreColor = rule.ForegroundColor;
                     Color backColor = rule.BackgroundColor;
@@ -1806,7 +1987,11 @@ public class RuleEngine
                                     : ""
                             )
                             + rule.DynamicColorLookupField.Name;
-                        lookupParam = EvaluateRule(xpr, data, contextPosition);
+                        lookupParam = EvaluateRule(
+                            rule: xpr,
+                            context: data,
+                            contextPosition: contextPosition
+                        );
                     }
                     if (lookupParam != DBNull.Value)
                     {
@@ -1815,21 +2000,23 @@ public class RuleEngine
                             if (rule.DynamicColorLookupField == null)
                             {
                                 throw new Exception(
-                                    ResourceUtils.GetString("ErrorNoForegroundDynamicColorLookup")
+                                    message: ResourceUtils.GetString(
+                                        key: "ErrorNoForegroundDynamicColorLookup"
+                                    )
                                 );
                             }
 
                             object color = _lookupService.GetDisplayText(
-                                rule.ForeColorLookupId,
-                                lookupParam,
-                                false,
-                                false,
-                                null
+                                lookupId: rule.ForeColorLookupId,
+                                lookupValue: lookupParam,
+                                useCache: false,
+                                returnMessageIfNull: false,
+                                transactionId: null
                             );
 
                             if (color is int)
                             {
-                                foreColor = System.Drawing.Color.FromArgb((int)color);
+                                foreColor = System.Drawing.Color.FromArgb(argb: (int)color);
                             }
                         }
                         if (rule.BackgroundColorLookup != null)
@@ -1837,21 +2024,23 @@ public class RuleEngine
                             if (rule.DynamicColorLookupField == null)
                             {
                                 throw new Exception(
-                                    ResourceUtils.GetString("ErrorNoBackgroundDynamicColorLookup")
+                                    message: ResourceUtils.GetString(
+                                        key: "ErrorNoBackgroundDynamicColorLookup"
+                                    )
                                 );
                             }
 
                             object color = _lookupService.GetDisplayText(
-                                rule.BackColorLookupId,
-                                lookupParam,
-                                false,
-                                false,
-                                null
+                                lookupId: rule.BackColorLookupId,
+                                lookupValue: lookupParam,
+                                useCache: false,
+                                returnMessageIfNull: false,
+                                transactionId: null
                             );
 
                             if (color is int)
                             {
-                                backColor = System.Drawing.Color.FromArgb((int)color);
+                                backColor = System.Drawing.Color.FromArgb(argb: (int)color);
                             }
                         }
                     }
@@ -1884,27 +2073,34 @@ public class RuleEngine
 
         IDataEntity entity =
             _persistence.SchemaProvider.RetrieveInstance(
-                typeof(ISchemaItem),
-                new ModelElementKey(entityId)
+                type: typeof(ISchemaItem),
+                primaryKey: new ModelElementKey(id: entityId)
             ) as IDataEntity;
-        IDataEntityColumn field = entity.GetChildById(fieldId) as IDataEntityColumn;
+        IDataEntityColumn field = entity.GetChildById(id: fieldId) as IDataEntityColumn;
         if (field == null)
         {
             return null; // lookup fields in a data structure
         }
 
-        rules.AddRange(field.DynamicLabels);
+        rules.AddRange(collection: field.DynamicLabels);
         if (rules.Count > 0)
         {
             rules.Sort();
             foreach (EntityFieldDynamicLabel rule in rules)
             {
-                if (IsRuleMatching(data, rule.Rule, rule.Roles, contextPosition))
+                if (
+                    IsRuleMatching(
+                        data: data,
+                        rule: rule.Rule,
+                        roles: rule.Roles,
+                        contextPosition: contextPosition
+                    )
+                )
                 {
                     string result = (string)
                         _parameterService.GetParameterValue(
-                            rule.LabelConstantId,
-                            OrigamDataType.String
+                            id: rule.LabelConstantId,
+                            targetType: OrigamDataType.String
                         );
                     return result;
                 }
@@ -1916,32 +2112,36 @@ public class RuleEngine
     #region Row Level Security Functions
     public bool EvaluateRowLevelSecurityState(DataRow row, string field, CredentialType type)
     {
-        if (!DatasetTools.HasRowValidParent(row))
+        if (!DatasetTools.HasRowValidParent(row: row))
         {
             return true;
         }
 
         Guid entityId = Guid.Empty;
         Guid fieldId = Guid.Empty;
-        if (row.Table.ExtendedProperties.Contains("EntityId"))
+        if (row.Table.ExtendedProperties.Contains(key: "EntityId"))
         {
-            XmlContainer originalData = DatasetTools.GetRowXml(row, DataRowVersion.Original);
+            XmlContainer originalData = DatasetTools.GetRowXml(
+                row: row,
+                version: DataRowVersion.Original
+            );
             XmlContainer actualData = DatasetTools.GetRowXml(
-                row,
-                row.HasVersion(DataRowVersion.Proposed)
+                row: row,
+                version: row.HasVersion(version: DataRowVersion.Proposed)
                     ? DataRowVersion.Proposed
                     : DataRowVersion.Default
             );
-            fieldId = (Guid)row.Table.Columns[field].ExtendedProperties["Id"];
-            entityId = (Guid)row.Table.ExtendedProperties["EntityId"];
+            fieldId = (Guid)row.Table.Columns[name: field].ExtendedProperties[key: "Id"];
+            entityId = (Guid)row.Table.ExtendedProperties[key: "EntityId"];
             return EvaluateRowLevelSecurityState(
-                originalData,
-                actualData,
-                field,
-                type,
-                entityId,
-                fieldId,
-                row.RowState == DataRowState.Added || row.RowState == DataRowState.Detached
+                originalData: originalData,
+                actualData: actualData,
+                field: field,
+                type: type,
+                entityId: entityId,
+                fieldId: fieldId,
+                isNewRow: row.RowState == DataRowState.Added
+                    || row.RowState == DataRowState.Detached
             );
         }
 
@@ -1956,23 +2156,31 @@ public class RuleEngine
     )
     {
         var result = new List<string>();
-        IDataEntity entity = _persistence.SchemaProvider.RetrieveInstance<IDataEntity>(entityId);
+        IDataEntity entity = _persistence.SchemaProvider.RetrieveInstance<IDataEntity>(
+            instanceId: entityId
+        );
         foreach (
-            EntityUIAction action in entity.ChildItemsByTypeRecursive(EntityUIAction.CategoryConst)
+            EntityUIAction action in entity.ChildItemsByTypeRecursive(
+                itemType: EntityUIAction.CategoryConst
+            )
         )
         {
             // Performance sensitive! RuleDisablesAction method should not
             // be invoked unless it is really necessary.
             if (
-                IsFeatureOff(action)
-                || IsDisabledByMode(actualData, action)
-                || IsDisabledByScreenCondition(formId, action)
-                || IsDisabledByScreenSectionCondition(formId, action)
-                || IsDisabledByRoles(action)
-                || RuleDisablesAction(originalData, actualData, action)
+                IsFeatureOff(action: action)
+                || IsDisabledByMode(actualData: actualData, action: action)
+                || IsDisabledByScreenCondition(formId: formId, action: action)
+                || IsDisabledByScreenSectionCondition(formId: formId, action: action)
+                || IsDisabledByRoles(action: action)
+                || RuleDisablesAction(
+                    originalData: originalData,
+                    actualData: actualData,
+                    action: action
+                )
             )
             {
-                result.Add(action.Id.ToString());
+                result.Add(item: action.Id.ToString());
             }
         }
         return result;
@@ -1984,7 +2192,10 @@ public class RuleEngine
         {
             return false;
         }
-        return !_authorizationProvider.Authorize(SecurityManager.CurrentPrincipal, action.Roles);
+        return !_authorizationProvider.Authorize(
+            principal: SecurityManager.CurrentPrincipal,
+            context: action.Roles
+        );
     }
 
     private bool IsDisabledByScreenSectionCondition(Guid formId, EntityUIAction action)
@@ -1994,19 +2205,23 @@ public class RuleEngine
             return false;
         }
         var panelIds = _persistence
-            .SchemaProvider.RetrieveInstance<FormControlSet>(formId)
+            .SchemaProvider.RetrieveInstance<FormControlSet>(instanceId: formId)
             .ChildrenRecursive.OfType<ControlSetItem>()
-            .Select(controlSet => controlSet.ControlItem.PanelControlSetId)
-            .Where(panelId => panelId != Guid.Empty)
+            .Select(selector: controlSet => controlSet.ControlItem.PanelControlSetId)
+            .Where(predicate: panelId => panelId != Guid.Empty)
             .ToList();
         return action.ScreenSectionIds.Any()
             && panelIds.Count > 0
-            && !panelIds.Any(panelId => action.ScreenSectionIds.Contains(panelId));
+            && !panelIds.Any(predicate: panelId =>
+                action.ScreenSectionIds.Contains(value: panelId)
+            );
     }
 
     private static bool IsDisabledByScreenCondition(Guid formId, EntityUIAction action)
     {
-        return formId != Guid.Empty && action.ScreenIds.Any() && !action.ScreenIds.Contains(formId);
+        return formId != Guid.Empty
+            && action.ScreenIds.Any()
+            && !action.ScreenIds.Contains(value: formId);
     }
 
     private static bool IsDisabledByMode(XmlContainer actualData, EntityUIAction action)
@@ -2016,7 +2231,7 @@ public class RuleEngine
 
     private bool IsFeatureOff(EntityUIAction action)
     {
-        return !_parameterService.IsFeatureOn(action.Features);
+        return !_parameterService.IsFeatureOn(featureCode: action.Features);
     }
 
     // Performance sensitive! RuleDisablesAction method should not
@@ -2030,7 +2245,12 @@ public class RuleEngine
         XmlContainer dataToUseForRule =
             action.ValueType == CredentialValueType.ActualValue ? actualData : originalData;
         return action.Rule != null
-            && !IsRuleMatching(dataToUseForRule, action.Rule, action.Roles, null);
+            && !IsRuleMatching(
+                data: dataToUseForRule,
+                rule: action.Rule,
+                roles: action.Roles,
+                contextPosition: null
+            );
     }
 
     public bool EvaluateRowLevelSecurityState(
@@ -2048,8 +2268,8 @@ public class RuleEngine
 
         IDataEntity entity =
             _persistence.SchemaProvider.RetrieveInstance(
-                typeof(ISchemaItem),
-                new ModelElementKey(entityId)
+                type: typeof(ISchemaItem),
+                primaryKey: new ModelElementKey(id: entityId)
             ) as IDataEntity;
         // field-level rules
         IDataEntityColumn column = null;
@@ -2058,7 +2278,7 @@ public class RuleEngine
             // we retrieve the column from the child-items list
             // this is very cost efficient, because when retrieving
             // abstract columns (i.e. Id, RecordCreated, RecordUpdated), they are never cached
-            column = entity.GetChildById(fieldId) as IDataEntityColumn;
+            column = entity.GetChildById(id: fieldId) as IDataEntityColumn;
             // field not found, this would be e.g. a looked up column,
             // which does not point to a real entity field id
             if (column != null)
@@ -2067,7 +2287,10 @@ public class RuleEngine
                 {
                     // shortcircuit processing of row level security rules
                     // for a column without it's own rules
-                    Boolean? result = ruleEvaluationCache?.GetRulelessFieldResult(entityId, type);
+                    Boolean? result = ruleEvaluationCache?.GetRulelessFieldResult(
+                        entityId: entityId,
+                        type: type
+                    );
                     if (result != null)
                     {
                         return result.Value;
@@ -2075,7 +2298,7 @@ public class RuleEngine
                 }
                 else
                 {
-                    rules.AddRange(column.RowLevelSecurityRules);
+                    rules.AddRange(collection: column.RowLevelSecurityRules);
                 }
             }
         }
@@ -2083,7 +2306,7 @@ public class RuleEngine
         List<AbstractEntitySecurityRule> entityRules = entity.RowLevelSecurityRules;
         if (entityRules.Count > 0)
         {
-            rules.AddRange(entityRules);
+            rules.AddRange(collection: entityRules);
         }
         // no rules - permit
         if (rules.Count == 0)
@@ -2099,7 +2322,13 @@ public class RuleEngine
                 if (entityRule.DeleteCredential && type == CredentialType.Delete && isNewRow)
                 {
                     // always allow to delete new (not saved) records
-                    return PutToRulelessCache(type, entityId, ruleEvaluationCache, column, true);
+                    return PutToRulelessCache(
+                        type: type,
+                        entityId: entityId,
+                        ruleEvaluationCache: ruleEvaluationCache,
+                        column: column,
+                        value: true
+                    );
                 }
 
                 if (
@@ -2109,25 +2338,29 @@ public class RuleEngine
                     || (entityRule.DeleteCredential && type == CredentialType.Delete)
                 )
                 {
-                    bool? result = ruleEvaluationCache?.Get(entityRule, entityId);
+                    bool? result = ruleEvaluationCache?.Get(rule: entityRule, entityId: entityId);
                     if (result == null)
                     {
                         result = IsRowLevelSecurityRuleMatching(
-                            entityRule,
-                            entityRule.ValueType == CredentialValueType.ActualValue
+                            rule: entityRule,
+                            data: entityRule.ValueType == CredentialValueType.ActualValue
                                 ? actualData
                                 : originalData
                         );
-                        ruleEvaluationCache?.Put(entityRule, entityId, result.Value);
+                        ruleEvaluationCache?.Put(
+                            rule: entityRule,
+                            entityId: entityId,
+                            value: result.Value
+                        );
                     }
                     if (result.Value)
                     {
                         return PutToRulelessCache(
-                            type,
-                            entityId,
-                            ruleEvaluationCache,
-                            column,
-                            entityRule.Type == PermissionType.Permit
+                            type: type,
+                            entityId: entityId,
+                            ruleEvaluationCache: ruleEvaluationCache,
+                            column: column,
+                            value: entityRule.Type == PermissionType.Permit
                         );
                     }
                 }
@@ -2140,25 +2373,29 @@ public class RuleEngine
                     | (fieldRule.ReadCredential & type == CredentialType.Read)
                 )
                 {
-                    Boolean? result = ruleEvaluationCache?.Get(fieldRule, entityId);
+                    Boolean? result = ruleEvaluationCache?.Get(rule: fieldRule, entityId: entityId);
                     if (result == null)
                     {
                         result = IsRowLevelSecurityRuleMatching(
-                            fieldRule,
-                            fieldRule.ValueType == CredentialValueType.ActualValue
+                            rule: fieldRule,
+                            data: fieldRule.ValueType == CredentialValueType.ActualValue
                                 ? actualData
                                 : originalData
                         );
-                        ruleEvaluationCache?.Put(fieldRule, entityId, result.Value);
+                        ruleEvaluationCache?.Put(
+                            rule: fieldRule,
+                            entityId: entityId,
+                            value: result.Value
+                        );
                     }
                     if (result.Value)
                     {
                         return PutToRulelessCache(
-                            type,
-                            entityId,
-                            ruleEvaluationCache,
-                            column,
-                            fieldRule.Type == PermissionType.Permit
+                            type: type,
+                            entityId: entityId,
+                            ruleEvaluationCache: ruleEvaluationCache,
+                            column: column,
+                            value: fieldRule.Type == PermissionType.Permit
                         );
                     }
                 }
@@ -2167,10 +2404,22 @@ public class RuleEngine
         // no match
         if (type == CredentialType.Read)
         {
-            return PutToRulelessCache(type, entityId, ruleEvaluationCache, column, true);
+            return PutToRulelessCache(
+                type: type,
+                entityId: entityId,
+                ruleEvaluationCache: ruleEvaluationCache,
+                column: column,
+                value: true
+            );
         }
 
-        return PutToRulelessCache(type, entityId, ruleEvaluationCache, column, false);
+        return PutToRulelessCache(
+            type: type,
+            entityId: entityId,
+            ruleEvaluationCache: ruleEvaluationCache,
+            column: column,
+            value: false
+        );
     }
 
     private static bool PutToRulelessCache(
@@ -2183,14 +2432,23 @@ public class RuleEngine
     {
         if (column?.RowLevelSecurityRules.Count == 0 && ruleEvaluationCache != null)
         {
-            ruleEvaluationCache.PutRulelessFieldResult(entityId, type, value);
+            ruleEvaluationCache.PutRulelessFieldResult(
+                entityId: entityId,
+                type: type,
+                value: value
+            );
         }
         return value;
     }
 
     private bool IsRowLevelSecurityRuleMatching(AbstractEntitySecurityRule rule, XmlContainer data)
     {
-        return IsRuleMatching(data, rule.Rule, rule.Roles, null);
+        return IsRuleMatching(
+            data: data,
+            rule: rule.Rule,
+            roles: rule.Roles,
+            contextPosition: null
+        );
     }
 
     private bool IsRuleMatching(
@@ -2201,21 +2459,30 @@ public class RuleEngine
     )
     {
         // check roles
-        if (!_authorizationProvider.Authorize(SecurityManager.CurrentPrincipal, roles))
+        if (
+            !_authorizationProvider.Authorize(
+                principal: SecurityManager.CurrentPrincipal,
+                context: roles
+            )
+        )
         {
             return false;
         }
         // check business rule
         if (rule != null)
         {
-            object result = this.EvaluateRule(rule, data, contextPosition);
+            object result = this.EvaluateRule(
+                rule: rule,
+                data: data,
+                contextPosition: contextPosition
+            );
             if (result is bool)
             {
                 return (bool)result;
             }
 
             throw new ArgumentException(
-                "Rule resulted in a result which is not boolean. Cannot evaluate non-boolean rules. Rule: "
+                message: "Rule resulted in a result which is not boolean. Cannot evaluate non-boolean rules. Rule: "
                     + ((ISchemaItem)rule).Path
             );
         }
@@ -2225,11 +2492,13 @@ public class RuleEngine
     public bool IsExportAllowed(Guid entityId)
     {
         var rules = new List<AbstractEntitySecurityRule>();
-        var entity = _persistence.SchemaProvider.RetrieveInstance<IDataEntity>(entityId);
+        var entity = _persistence.SchemaProvider.RetrieveInstance<IDataEntity>(
+            instanceId: entityId
+        );
         List<AbstractEntitySecurityRule> entityRules = entity.RowLevelSecurityRules;
         if (entityRules.Count > 0)
         {
-            rules.AddRange(entityRules);
+            rules.AddRange(collection: entityRules);
         }
         // no rules - permit
         if (rules.Count == 0)
@@ -2260,17 +2529,17 @@ public class RuleEngine
 
     public object GetContext(Key key)
     {
-        return _contextStores[key];
+        return _contextStores[key: key];
     }
 
     public void SetContext(Key key, object value)
     {
-        _contextStores[key] = value;
+        _contextStores[key: key] = value;
     }
 
     public object GetContext(IContextStore contextStore)
     {
-        return GetContext(contextStore.PrimaryKey);
+        return GetContext(key: contextStore.PrimaryKey);
     }
 
     public ICollection ContextStoreKeys
@@ -2290,7 +2559,7 @@ public class RuleEngine
         if (contextStore != null)
         {
             // Get the rule's context store
-            data = GetContext(contextStore);
+            data = GetContext(contextStore: contextStore);
         }
         IXmlContainer xmlDocument = data as IXmlContainer;
         if (xmlDocument != null)
@@ -2304,47 +2573,52 @@ public class RuleEngine
             // this shouldn't happen. XmlContainer should be as and input all the time.
             // But if it was XmlDocument, we convert it here and log it.
             log.ErrorFormat(
-                "GetXmlDocumentFromData called with System.Xml.XmlDataDocuement."
+                format: "GetXmlDocumentFromData called with System.Xml.XmlDataDocuement."
                     + "This isn't expected. Refactor code to be called with IXmlContainer. (documentElement:{0})",
-                xmlDoc.DocumentElement.Name
+                arg0: xmlDoc.DocumentElement.Name
             );
-            return new XmlContainer(xmlDoc);
+            return new XmlContainer(xmlDocument: xmlDoc);
         }
         if (data is int)
         {
-            data = XmlConvert.ToString((int)data);
+            data = XmlConvert.ToString(value: (int)data);
         }
         else if (data is Guid)
         {
-            data = XmlConvert.ToString((Guid)data);
+            data = XmlConvert.ToString(value: (Guid)data);
         }
         else if (data is long)
         {
-            data = XmlConvert.ToString((long)data);
+            data = XmlConvert.ToString(value: (long)data);
         }
         else if (data is decimal)
         {
-            data = XmlConvert.ToString((decimal)data);
+            data = XmlConvert.ToString(value: (decimal)data);
         }
         else if (data is bool)
         {
-            data = XmlConvert.ToString((bool)data);
+            data = XmlConvert.ToString(value: (bool)data);
         }
         else if (data is DateTime)
         {
-            data = XmlConvert.ToString((DateTime)data, XmlDateTimeSerializationMode.RoundtripKind);
+            data = XmlConvert.ToString(
+                value: (DateTime)data,
+                dateTimeOption: XmlDateTimeSerializationMode.RoundtripKind
+            );
         }
         else if (data == null)
         {
-            return new XmlContainer("<ROOT/>");
+            return new XmlContainer(xmlString: "<ROOT/>");
         }
         else if (data is IList)
         {
             doc = new XmlContainer();
-            XmlElement root = (XmlElement)doc.Xml.AppendChild(doc.Xml.CreateElement("ROOT"));
+            XmlElement root = (XmlElement)
+                doc.Xml.AppendChild(newChild: doc.Xml.CreateElement(name: "ROOT"));
             foreach (object item in data as IList)
             {
-                root.AppendChild(doc.Xml.CreateElement("value")).InnerText = item.ToString();
+                root.AppendChild(newChild: doc.Xml.CreateElement(name: "value")).InnerText =
+                    item.ToString();
             }
             return doc;
         }
@@ -2353,7 +2627,7 @@ public class RuleEngine
             data = data.ToString();
         }
         doc = new XmlContainer();
-        doc.Xml.LoadXml("<ROOT><value /></ROOT>");
+        doc.Xml.LoadXml(xml: "<ROOT><value /></ROOT>");
         doc.Xml.FirstChild.FirstChild.InnerText = (string)data;
         return doc;
     }
@@ -2374,9 +2648,9 @@ public class RuleEngine
             default:
             {
                 throw new ArgumentOutOfRangeException(
-                    "Function",
-                    functionCall.Function,
-                    ResourceUtils.GetString("ErrorUnsupportedFunction")
+                    paramName: "Function",
+                    actualValue: functionCall.Function,
+                    message: ResourceUtils.GetString(key: "ErrorUnsupportedFunction")
                 );
             }
         }
@@ -2402,27 +2676,35 @@ public class RuleEngine
         XmlDocument xmlDocument = context?.Xml;
         if (xmlDocument == null)
         {
-            throw new NullReferenceException(ResourceUtils.GetString("ErrorEvaluateContextNull"));
+            throw new NullReferenceException(
+                message: ResourceUtils.GetString(key: "ErrorEvaluateContextNull")
+            );
         }
         if (log.IsDebugEnabled)
         {
-            log.Debug("Evaluating XPath Rule: " + rule?.Name);
+            log.Debug(message: "Evaluating XPath Rule: " + rule?.Name);
             if (contextPosition != null)
             {
-                log.Debug("Current Position: " + contextPosition?.Current?.Name);
+                log.Debug(message: "Current Position: " + contextPosition?.Current?.Name);
             }
-            log.Debug("  Input data: " + xmlDocument.OuterXml);
+            log.Debug(message: "  Input data: " + xmlDocument.OuterXml);
         }
         XPathNavigator nav = xmlDocument.CreateNavigator();
-        using (MiniProfiler.Current.CustomTiming("rule", rule.Name, "XPathRuleEvaluation"))
+        using (
+            MiniProfiler.Current.CustomTiming(
+                category: "rule",
+                commandString: rule.Name,
+                executeType: "XPathRuleEvaluation"
+            )
+        )
         {
             return XpathEvaluator.Instance.Evaluate(
-                rule.XPath,
-                rule.IsPathRelative,
-                rule.DataType,
-                nav,
-                contextPosition,
-                _transactionId
+                xpath: rule.XPath,
+                isPathRelative: rule.IsPathRelative,
+                returnDataType: rule.DataType,
+                nav: nav,
+                contextPosition: contextPosition,
+                transactionId: _transactionId
             );
         }
     }
@@ -2431,15 +2713,21 @@ public class RuleEngine
     {
         try
         {
-            using (MiniProfiler.Current.CustomTiming("rule", rule.Name, "XslRuleEvaluation"))
+            using (
+                MiniProfiler.Current.CustomTiming(
+                    category: "rule",
+                    commandString: rule.Name,
+                    executeType: "XslRuleEvaluation"
+                )
+            )
             {
                 IXmlContainer result = _transformer.Transform(
-                    context,
-                    rule.Id,
-                    null,
-                    _transactionId,
-                    rule.Structure,
-                    false
+                    data: context,
+                    transformationId: rule.Id,
+                    parameters: null,
+                    transactionId: _transactionId,
+                    outputStructure: rule.Structure,
+                    validateOnly: false
                 );
                 return result;
             }
@@ -2450,18 +2738,26 @@ public class RuleEngine
         }
         catch (Exception ex)
         {
-            throw new Exception(ResourceUtils.GetString("ErrorRuleFailed2"), ex);
+            throw new Exception(
+                message: ResourceUtils.GetString(key: "ErrorRuleFailed2"),
+                innerException: ex
+            );
         }
     }
     #endregion
     private void table_RowChanged(object sender, DataRowChangeEventArgs e)
     {
-        ProcessRules(e.Row, _currentRuleDocument, _ruleSet);
+        ProcessRules(rowChanged: e.Row, data: _currentRuleDocument, ruleSet: _ruleSet);
     }
 
     private void table_ColumnChanged(object sender, DataColumnChangeEventArgs e)
     {
-        ProcessRules(e.Row, _currentRuleDocument, e.Column, _ruleSet);
+        ProcessRules(
+            rowChanged: e.Row,
+            data: _currentRuleDocument,
+            columnChanged: e.Column,
+            ruleSet: _ruleSet
+        );
     }
 }
 
@@ -2484,7 +2780,7 @@ public class XPathNodeList : XmlNodeList
 
     public override IEnumerator GetEnumerator()
     {
-        return new XmlNodeListEnumerator(this);
+        return new XmlNodeListEnumerator(list: this);
     }
 
     private XmlNode GetNode(XPathNavigator n)
@@ -2497,11 +2793,11 @@ public class XPathNodeList : XmlNodeList
     {
         if (index >= this.list.Count)
         {
-            this.ReadUntil(index);
+            this.ReadUntil(index: index);
         }
         if ((index < this.list.Count) && (index >= 0))
         {
-            return (XmlNode)this.list[index];
+            return (XmlNode)this.list[index: index];
         }
         return null;
     }
@@ -2513,10 +2809,10 @@ public class XPathNodeList : XmlNodeList
         {
             if (this.iterator.MoveNext())
             {
-                XmlNode node1 = this.GetNode(this.iterator.Current);
+                XmlNode node1 = this.GetNode(n: this.iterator.Current);
                 if (node1 != null)
                 {
-                    this.list.Add(node1);
+                    this.list.Add(item: node1);
                     num1++;
                 }
             }
@@ -2536,7 +2832,7 @@ public class XPathNodeList : XmlNodeList
         {
             if (!this.done)
             {
-                this.ReadUntil(0x7fffffff);
+                this.ReadUntil(index: 0x7fffffff);
             }
             return this.list.Count;
         }
@@ -2562,12 +2858,12 @@ internal class XmlNodeListEnumerator : IEnumerator
     public bool MoveNext()
     {
         this.index++;
-        int num1 = this.list.ReadUntil(this.index + 1);
+        int num1 = this.list.ReadUntil(index: this.index + 1);
         if (this.index > (num1 - 1))
         {
             return false;
         }
-        this.valid = this.list[this.index] != null;
+        this.valid = this.list[i: this.index] != null;
         return this.valid;
     }
 
@@ -2583,7 +2879,7 @@ internal class XmlNodeListEnumerator : IEnumerator
         {
             if (this.valid)
             {
-                return this.list[this.index];
+                return this.list[i: this.index];
             }
             return null;
         }
@@ -2602,7 +2898,7 @@ public class ProcessRuleComparer : IComparer<DataStructureRule>
     {
         if (x != null && y != null)
         {
-            return x.Priority.CompareTo(y.Priority);
+            return x.Priority.CompareTo(value: y.Priority);
         }
         // rulesets are always an top, so rules are greater
         return 1;

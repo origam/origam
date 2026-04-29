@@ -28,69 +28,79 @@ using Origam.Schema.GuiModel;
 namespace Origam.Architect.Server.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route(template: "[controller]")]
 public class ScreenEditorController(
     DesignerEditorService designerService,
     EditorService editorService
 ) : ControllerBase
 {
-    [HttpPost("Update")]
+    [HttpPost(template: "Update")]
     public ActionResult<ScreenEditorData> Update([FromBody] SectionEditorChangesModel input)
     {
-        EditorData editor = editorService.OpenDefaultEditor(input.SchemaItemId);
+        EditorData editor = editorService.OpenDefaultEditor(schemaItemId: input.SchemaItemId);
         if (editor.Item is not FormControlSet screenSection)
         {
-            return BadRequest($"item id: {input.SchemaItemId} is not a PanelControlSet");
+            return BadRequest(error: $"item id: {input.SchemaItemId} is not a PanelControlSet");
         }
 
-        editor.IsDirty = designerService.Update(screenSection, input);
-        var editorData = designerService.GetScreenEditorData(screenSection);
-        return Ok(new ScreenEditorModel { Data = editorData, IsDirty = editor.IsDirty });
+        editor.IsDirty = designerService.Update(screenSection: screenSection, input: input);
+        var editorData = designerService.GetScreenEditorData(editedItem: screenSection);
+        return Ok(value: new ScreenEditorModel { Data = editorData, IsDirty = editor.IsDirty });
     }
 
-    [HttpPost("Delete")]
+    [HttpPost(template: "Delete")]
     public ActionResult<ScreenEditorModel> Delete([FromBody] ScreenEditorDeleteItemModel input)
     {
-        EditorData editor = editorService.OpenDefaultEditor(input.EditorSchemaItemId);
+        EditorData editor = editorService.OpenDefaultEditor(schemaItemId: input.EditorSchemaItemId);
         if (editor.Item is FormControlSet screenSection)
         {
-            designerService.DeleteItem(input.SchemaItemIds, screenSection);
+            designerService.DeleteItem(schemaItemIds: input.SchemaItemIds, rootItem: screenSection);
             editor.IsDirty = true;
-            var editorData = designerService.GetScreenEditorData(screenSection);
+            var editorData = designerService.GetScreenEditorData(editedItem: screenSection);
             return new ScreenEditorModel { Data = editorData, IsDirty = true };
         }
 
-        return BadRequest($"item id: {input.EditorSchemaItemId} is not a PanelControlSet");
+        return BadRequest(error: $"item id: {input.EditorSchemaItemId} is not a PanelControlSet");
     }
 
-    [HttpPost("CreateItem")]
+    [HttpPost(template: "CreateItem")]
     public ActionResult<ScreenEditorItem> CreateItem([FromBody] ScreenEditorItemModel itemModelData)
     {
-        EditorData editor = editorService.OpenDefaultEditor(itemModelData.EditorSchemaItemId);
+        EditorData editor = editorService.OpenDefaultEditor(
+            schemaItemId: itemModelData.EditorSchemaItemId
+        );
         ISchemaItem item = editor.Item;
         if (item is FormControlSet screenSection)
         {
-            ScreenEditorItem newItem = designerService.CreateNewItem(itemModelData, screenSection);
+            ScreenEditorItem newItem = designerService.CreateNewItem(
+                itemModelData: itemModelData,
+                screen: screenSection
+            );
             editor.IsDirty = true;
-            return Ok(newItem);
+            return Ok(value: newItem);
         }
 
-        return BadRequest($"item id: {itemModelData.EditorSchemaItemId} is not a PanelControlSet");
+        return BadRequest(
+            error: $"item id: {itemModelData.EditorSchemaItemId} is not a PanelControlSet"
+        );
     }
 
-    [HttpGet("GetSections")]
+    [HttpGet(template: "GetSections")]
     public ActionResult<Dictionary<Guid, ApiControl>> GetSections(
         [FromQuery(Name = "sectionIds[]")] Guid[] sectionIds,
         [FromQuery] Guid editorSchemaItemId
     )
     {
-        EditorData editor = editorService.OpenDefaultEditor(editorSchemaItemId);
+        EditorData editor = editorService.OpenDefaultEditor(schemaItemId: editorSchemaItemId);
         ISchemaItem item = editor.Item;
         if (item is FormControlSet screenSection)
         {
-            return designerService.LoadSections(screenSection, sectionIds);
+            return designerService.LoadSections(
+                formControlSet: screenSection,
+                sectionIds: sectionIds
+            );
         }
 
-        return BadRequest($"item id: {editorSchemaItemId} is not a PanelControlSet");
+        return BadRequest(error: $"item id: {editorSchemaItemId} is not a PanelControlSet");
     }
 }

@@ -30,11 +30,11 @@ namespace Origam.Schema;
 /// <summary>
 /// Summary description for ParameterReference.
 /// </summary>
-[SchemaItemDescription("Parameter Reference", "icon_parameter-reference.png")]
-[HelpTopic("Parameter+Reference")]
-[XmlModelRoot(CategoryConst)]
-[DefaultProperty("Parameter")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Parameter Reference", iconName: "icon_parameter-reference.png")]
+[HelpTopic(topic: "Parameter+Reference")]
+[XmlModelRoot(category: CategoryConst)]
+[DefaultProperty(name: "Parameter")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class ParameterReference : AbstractSchemaItem
 {
     public const string CategoryConst = "ParameterReference";
@@ -43,10 +43,10 @@ public class ParameterReference : AbstractSchemaItem
         : base() { }
 
     public ParameterReference(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public ParameterReference(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Overriden AbstractDataEntityColumn Members
 
@@ -57,8 +57,8 @@ public class ParameterReference : AbstractSchemaItem
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(this.Parameter);
-        base.GetExtraDependencies(dependencies);
+        dependencies.Add(item: this.Parameter);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override void UpdateReferences()
@@ -67,7 +67,7 @@ public class ParameterReference : AbstractSchemaItem
         {
             if (item.OldPrimaryKey != null)
             {
-                if (item.OldPrimaryKey.Equals(this.Parameter.PrimaryKey))
+                if (item.OldPrimaryKey.Equals(obj: this.Parameter.PrimaryKey))
                 {
                     this.Parameter = item as SchemaItemParameter;
                     break;
@@ -80,23 +80,23 @@ public class ParameterReference : AbstractSchemaItem
     #region Properties
     public Guid ParameterId;
 
-    [Category("Reference")]
-    [TypeConverter(typeof(ParameterReferenceConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [XmlReference("parameter", "ParameterId")]
+    [Category(category: "Reference")]
+    [TypeConverter(type: typeof(ParameterReferenceConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [XmlReference(attributeName: "parameter", idField: "ParameterId")]
     public SchemaItemParameter Parameter
     {
         get
         {
             return (SchemaItemParameter)
                     this.PersistenceProvider.RetrieveInstance(
-                        typeof(SchemaItemParameter),
-                        new ModelElementKey(this.ParameterId)
+                        type: typeof(SchemaItemParameter),
+                        primaryKey: new ModelElementKey(id: this.ParameterId)
                     ) as SchemaItemParameter;
         }
         set
         {
-            this.ParameterId = (Guid)value.PrimaryKey["Id"];
+            this.ParameterId = (Guid)value.PrimaryKey[key: "Id"];
             if (this.Name == null)
             {
                 this.Name = this.Parameter.Name;

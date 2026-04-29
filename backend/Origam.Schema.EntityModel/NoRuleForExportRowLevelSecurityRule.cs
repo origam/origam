@@ -32,18 +32,18 @@ public class NoRuleForExportRowLevelSecurityRule : AbstractModelElementRuleAttri
         if (instance is not EntitySecurityRule entitySecurityRule)
         {
             return new Exception(
-                $"{nameof(NoRuleForExportRowLevelSecurityRule)} can be only applied to type {nameof(EntitySecurityRule)}"
+                message: $"{nameof(NoRuleForExportRowLevelSecurityRule)} can be only applied to type {nameof(EntitySecurityRule)}"
             );
         }
         if (entitySecurityRule.ExportCredential && entitySecurityRule.Rule is not null)
         {
-            return new Exception("Export row level security rule can't have a rule set.");
+            return new Exception(message: "Export row level security rule can't have a rule set.");
         }
         return null;
     }
 
     public override Exception CheckRule(object instance, string memberName)
     {
-        return CheckRule(instance);
+        return CheckRule(instance: instance);
     }
 }

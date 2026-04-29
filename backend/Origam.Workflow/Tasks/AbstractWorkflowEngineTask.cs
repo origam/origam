@@ -51,9 +51,9 @@ public abstract class AbstractWorkflowEngineTask : IWorkflowEngineTask
         {
             if (e.Exception != null && Step.OnFailure == StepFailureMode.Suppress)
             {
-                e.Exception.Data["onFailure"] = Step.OnFailure;
+                e.Exception.Data[key: "onFailure"] = Step.OnFailure;
             }
-            this.Finished(this, e);
+            this.Finished(sender: this, e: e);
         }
     }
 
@@ -96,7 +96,7 @@ public abstract class AbstractWorkflowEngineTask : IWorkflowEngineTask
         {
             exception = ex;
         }
-        OnFinished(new WorkflowEngineTaskEventArgs(exception));
+        OnFinished(e: new WorkflowEngineTaskEventArgs(exception: exception));
     }
 
     internal object Evaluate(ISchemaItem item)
@@ -110,22 +110,27 @@ public abstract class AbstractWorkflowEngineTask : IWorkflowEngineTask
                 if (contextReference.ContextStore == null)
                 {
                     throw new NullReferenceException(
-                        ResourceUtils.GetString("ErrorNoContextStore", contextReference.Path)
+                        message: ResourceUtils.GetString(
+                            key: "ErrorNoContextStore",
+                            args: contextReference.Path
+                        )
                     );
                 }
                 return this.Engine.RuleEngine.EvaluateContext(
-                    contextReference.XPath,
-                    this.Engine.RuleEngine.GetContext(contextReference.ContextStore),
-                    contextReference.CastToDataType,
-                    null
+                    xpath: contextReference.XPath,
+                    context: this.Engine.RuleEngine.GetContext(
+                        contextStore: contextReference.ContextStore
+                    ),
+                    dataType: contextReference.CastToDataType,
+                    targetStructure: null
                 );
             }
 
-            return this.Engine.RuleEngine.Evaluate(item);
+            return this.Engine.RuleEngine.Evaluate(item: item);
         }
         catch (Exception ex)
         {
-            throw new Exception("Failed evaluating " + item.Path, ex);
+            throw new Exception(message: "Failed evaluating " + item.Path, innerException: ex);
         }
     }
     #endregion

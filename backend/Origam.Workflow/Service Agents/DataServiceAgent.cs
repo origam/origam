@@ -46,7 +46,7 @@ namespace Origam.Workflow;
 public class DataServiceAgent : AbstractServiceAgent
 {
     private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
-        System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
+        type: System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
     );
     private IDataService _dataService = null;
 
@@ -74,25 +74,30 @@ public class DataServiceAgent : AbstractServiceAgent
     {
         // (_dataService as MsSqlDataService).PersistenceProvider = this.PersistenceProvider;
         DataStructureQuery query = new DataStructureQuery(
-            dataStructureId,
-            methodId,
-            Guid.Empty,
-            sortSetId
+            dataStructureId: dataStructureId,
+            methodId: methodId,
+            defaultSetId: Guid.Empty,
+            sortSetId: sortSetId
         );
         // Fill parameters
         if (parameters != null)
         {
             foreach (DictionaryEntry entry in parameters)
             {
-                query.Parameters.Add(new QueryParameter(entry.Key as string, entry.Value));
+                query.Parameters.Add(
+                    value: new QueryParameter(
+                        _parameterName: entry.Key as string,
+                        value: entry.Value
+                    )
+                );
             }
         }
-        return DataDocumentFactory.New(LoadData(query, null));
+        return DataDocumentFactory.New(dataSet: LoadData(query: query, data: null));
     }
 
     private DataSet LoadData(DataStructureQuery query)
     {
-        return LoadData(query, null);
+        return LoadData(query: query, data: null);
     }
 
     private DataSet LoadData(DataStructureQuery query, DataSet data)
@@ -100,25 +105,25 @@ public class DataServiceAgent : AbstractServiceAgent
         DataStructureMethod method;
         method =
             this.PersistenceProvider.RetrieveInstance(
-                typeof(DataStructureMethod),
-                new ModelElementKey(query.MethodId)
+                type: typeof(DataStructureMethod),
+                primaryKey: new ModelElementKey(id: query.MethodId)
             ) as DataStructureMethod;
         if (method == null || method is DataStructureFilterSet)
         {
             if (data == null)
             {
                 return _dataService.LoadDataSet(
-                    query,
-                    SecurityManager.CurrentPrincipal,
-                    this.TransactionId
+                    dataStructureQuery: query,
+                    userProfile: SecurityManager.CurrentPrincipal,
+                    transactionId: this.TransactionId
                 );
             }
 
             return _dataService.LoadDataSet(
-                query,
-                SecurityManager.CurrentPrincipal,
-                data,
-                this.TransactionId
+                dataStructureQuery: query,
+                userProfile: SecurityManager.CurrentPrincipal,
+                dataSet: data,
+                transactionId: this.TransactionId
             );
         }
 
@@ -133,23 +138,25 @@ public class DataServiceAgent : AbstractServiceAgent
             {
                 // return contextstore not found
                 throw new ArgumentException(
-                    String.Format(
-                        "The input data was sent to method {0}"
+                    message: String.Format(
+                        format: "The input data was sent to method {0}"
                             + "while there is no context store defined with `IsReturnValue' set for workflow {1},",
-                        method.Id,
-                        dataStructureWorkflowMethod.LoadWorkflowId
+                        arg0: method.Id,
+                        arg1: dataStructureWorkflowMethod.LoadWorkflowId
                     )
                 );
             }
             if (data != null)
             // current data was sent, we have to pass them into main (output) contextstore of our workflow
             {
-                query.Parameters.Add(new QueryParameter(returnContext.Name, data));
+                query.Parameters.Add(
+                    value: new QueryParameter(_parameterName: returnContext.Name, value: data)
+                );
             }
             Object res = core.WorkflowService.ExecuteWorkflow(
-                dataStructureWorkflowMethod.LoadWorkflowId,
-                query.Parameters,
-                this.TransactionId
+                workflowId: dataStructureWorkflowMethod.LoadWorkflowId,
+                parameters: query.Parameters,
+                transactionId: this.TransactionId
             );
             if (res is IDataDocument)
             {
@@ -167,20 +174,20 @@ public class DataServiceAgent : AbstractServiceAgent
             catch (System.InvalidCastException e)
             {
                 throw new System.InvalidCastException(
-                    String.Format(
-                        "{0} (Try to change "
+                    message: String.Format(
+                        format: "{0} (Try to change "
                             + " your workflow connected to DataStructureWorkflowMethod to return "
                             + "the same datastructure as the WorkflowMethod is connected to.)",
-                        e.Message
+                        arg0: e.Message
                     )
                 );
             }
         }
 
         throw new ArgumentException(
-            String.Format(
-                "MethodId ({0}) schema item element not found or not of proper type",
-                method.Id
+            message: String.Format(
+                format: "MethodId ({0}) schema item element not found or not of proper type",
+                arg0: method.Id
             )
         );
     }
@@ -190,16 +197,16 @@ public class DataServiceAgent : AbstractServiceAgent
         DataStructureMethod method;
         method =
             this.PersistenceProvider.RetrieveInstance(
-                typeof(DataStructureMethod),
-                new ModelElementKey(query.MethodId)
+                type: typeof(DataStructureMethod),
+                primaryKey: new ModelElementKey(id: query.MethodId)
             ) as DataStructureMethod;
         if (method == null || method is DataStructureFilterSet)
         {
             return _dataService.GetScalarValue(
-                query,
-                columnsInfo,
-                SecurityManager.CurrentPrincipal,
-                this.TransactionId
+                query: query,
+                columnsInfo: columnsInfo,
+                userProfile: SecurityManager.CurrentPrincipal,
+                transactionId: this.TransactionId
             );
         }
 
@@ -214,9 +221,9 @@ public class DataServiceAgent : AbstractServiceAgent
             {
                 // return contextstore not found
                 throw new ArgumentException(
-                    String.Format(
-                        "Return context store not found for workflow {0}.",
-                        dataStructureWorkflowMethod.LoadWorkflowId
+                    message: String.Format(
+                        format: "Return context store not found for workflow {0}.",
+                        arg0: dataStructureWorkflowMethod.LoadWorkflowId
                     )
                 );
             }
@@ -225,24 +232,24 @@ public class DataServiceAgent : AbstractServiceAgent
             {
                 // return contextstore is not scalar
                 throw new ArgumentException(
-                    String.Format(
-                        "Return context store is not of scalar type for workflow {0}",
-                        dataStructureWorkflowMethod.LoadWorkflowId
+                    message: String.Format(
+                        format: "Return context store is not of scalar type for workflow {0}",
+                        arg0: dataStructureWorkflowMethod.LoadWorkflowId
                     )
                 );
             }
             // call workflow
             return core.WorkflowService.ExecuteWorkflow(
-                dataStructureWorkflowMethod.LoadWorkflowId,
-                query.Parameters,
-                this.TransactionId
+                workflowId: dataStructureWorkflowMethod.LoadWorkflowId,
+                parameters: query.Parameters,
+                transactionId: this.TransactionId
             );
         }
 
         throw new ArgumentException(
-            String.Format(
-                "MethodId ({0}) schema item element not found or not of proper type",
-                method.Id
+            message: String.Format(
+                format: "MethodId ({0}) schema item element not found or not of proper type",
+                arg0: method.Id
             )
         );
     }
@@ -252,28 +259,33 @@ public class DataServiceAgent : AbstractServiceAgent
         DataStructureQuery query = new DataStructureQuery();
         if (this.OutputStructure != null)
         {
-            query.DataSourceId = (Guid)this.OutputStructure.PrimaryKey["Id"];
+            query.DataSourceId = (Guid)this.OutputStructure.PrimaryKey[key: "Id"];
         }
 
         if (parameters != null)
         {
             foreach (DictionaryEntry entry in parameters)
             {
-                query.Parameters.Add(new QueryParameter(entry.Key as string, entry.Value));
+                query.Parameters.Add(
+                    value: new QueryParameter(
+                        _parameterName: entry.Key as string,
+                        value: entry.Value
+                    )
+                );
             }
         }
         DataSet result = _dataService.ExecuteProcedure(
-            name,
-            entityOrder,
-            query,
-            this.TransactionId
+            name: name,
+            entityOrder: entityOrder,
+            query: query,
+            transactionId: this.TransactionId
         );
         if (result == null)
         {
             return null;
         }
 
-        return DataDocumentFactory.New(result);
+        return DataDocumentFactory.New(dataSet: result);
     }
 
     private IDataDocument SaveData(
@@ -287,10 +299,10 @@ public class DataServiceAgent : AbstractServiceAgent
         DataSet dataset = data.DataSet;
         //			(_dataService as MsSqlDataService).PersistenceProvider = this.PersistenceProvider;
         DataStructureQuery query = new DataStructureQuery(
-            dataStructureId,
-            methodId,
-            Guid.Empty,
-            sortSetId
+            dataStructureId: dataStructureId,
+            methodId: methodId,
+            defaultSetId: Guid.Empty,
+            sortSetId: sortSetId
         );
 
         if (this.OutputMethod == ServiceOutputMethod.Ignore)
@@ -304,17 +316,17 @@ public class DataServiceAgent : AbstractServiceAgent
         try
         {
             _dataService.UpdateData(
-                query,
-                SecurityManager.CurrentPrincipal,
-                dataset,
-                TransactionId,
-                forceBulkInsert
+                dataStructureQuery: query,
+                userProfile: SecurityManager.CurrentPrincipal,
+                ds: dataset,
+                transactionId: TransactionId,
+                forceBulkInsert: forceBulkInsert
             );
         }
         catch (ConstraintException)
         {
             // make the exception far more verbose
-            throw new ConstraintException(DatasetTools.GetDatasetErrors(dataset));
+            throw new ConstraintException(s: DatasetTools.GetDatasetErrors(dataset: dataset));
         }
         return data;
     }
@@ -328,12 +340,17 @@ public class DataServiceAgent : AbstractServiceAgent
             {
                 principal = SecurityManager.CurrentPrincipal;
             }
-            _dataService.UpdateData(query, principal, data, TransactionId);
+            _dataService.UpdateData(
+                dataStructureQuery: query,
+                userProfile: principal,
+                ds: data,
+                transactionId: TransactionId
+            );
         }
         catch (ConstraintException)
         {
             // make the exception far more verbose
-            throw new ConstraintException(DatasetTools.GetDatasetErrors(data));
+            throw new ConstraintException(s: DatasetTools.GetDatasetErrors(dataset: data));
         }
         return data;
     }
@@ -342,42 +359,54 @@ public class DataServiceAgent : AbstractServiceAgent
     {
         TableMappingItem originalEntity =
             this.PersistenceProvider.RetrieveInstance(
-                typeof(TableMappingItem),
-                new ModelElementKey(entityId)
+                type: typeof(TableMappingItem),
+                primaryKey: new ModelElementKey(id: entityId)
             ) as TableMappingItem;
         if (originalEntity == null)
         {
             throw new ArgumentException(
-                ResourceUtils.GetString("ErrorTableMappingNotFound", entityId.ToString())
+                message: ResourceUtils.GetString(
+                    key: "ErrorTableMappingNotFound",
+                    args: entityId.ToString()
+                )
             );
         }
         List<IDataEntityColumn> pkList = originalEntity.EntityPrimaryKey;
         if (pkList.Count == 0)
         {
             throw new InvalidOperationException(
-                ResourceUtils.GetString("ErrorNoPrimaryKey", originalEntity.Path)
+                message: ResourceUtils.GetString(
+                    key: "ErrorNoPrimaryKey",
+                    args: originalEntity.Path
+                )
             );
         }
 
         if (pkList.Count > 1)
         {
             throw new InvalidOperationException(
-                ResourceUtils.GetString("ErrorMultiColumnPrimaryKey", originalEntity.Path)
+                message: ResourceUtils.GetString(
+                    key: "ErrorMultiColumnPrimaryKey",
+                    args: originalEntity.Path
+                )
             );
         }
 
-        FieldMappingItem originalKey = pkList[0] as FieldMappingItem;
+        FieldMappingItem originalKey = pkList[index: 0] as FieldMappingItem;
         if (originalKey == null)
         {
             throw new InvalidOperationException(
-                ResourceUtils.GetString("ErrorPrimaryKeyNotMapped", originalEntity.Path)
+                message: ResourceUtils.GetString(
+                    key: "ErrorPrimaryKeyNotMapped",
+                    args: originalEntity.Path
+                )
             );
         }
 
         SchemaService schema =
-            ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
+            ServiceManager.Services.GetService(serviceType: typeof(SchemaService)) as SchemaService;
         EntityModelSchemaItemProvider entities =
-            schema.GetProvider(typeof(EntityModelSchemaItemProvider))
+            schema.GetProvider(type: typeof(EntityModelSchemaItemProvider))
             as EntityModelSchemaItemProvider;
         int result = 0;
         string transactionId = this.TransactionId;
@@ -387,19 +416,20 @@ public class DataServiceAgent : AbstractServiceAgent
         }
 
         ITracingService trace =
-            ServiceManager.Services.GetService(typeof(ITracingService)) as ITracingService;
+            ServiceManager.Services.GetService(serviceType: typeof(ITracingService))
+            as ITracingService;
         if (this.Trace)
         {
             trace.TraceStep(
-                this.TraceWorkflowId,
-                this.TraceStepName,
-                this.TraceStepId,
-                "Deduplication",
-                "Start",
-                originalEntity.MappedObjectName,
-                "",
-                "",
-                "Old Id: "
+                workflowInstanceId: this.TraceWorkflowId,
+                stepPath: this.TraceStepName,
+                stepId: this.TraceStepId,
+                category: "Deduplication",
+                subCategory: "Start",
+                remark: originalEntity.MappedObjectName,
+                data1: "",
+                data2: "",
+                message: "Old Id: "
                     + oldValue.ToString()
                     + Environment.NewLine
                     + "New Id: "
@@ -421,22 +451,26 @@ public class DataServiceAgent : AbstractServiceAgent
                     {
                         if (
                             column.ForeignKeyEntity != null
-                            && column.ForeignKeyEntity.PrimaryKey.Equals(originalEntity.PrimaryKey)
+                            && column.ForeignKeyEntity.PrimaryKey.Equals(
+                                obj: originalEntity.PrimaryKey
+                            )
                             && column is FieldMappingItem
                         )
                         {
                             if (
                                 column.ForeignKeyField != null
-                                && column.ForeignKeyField.PrimaryKey.Equals(originalKey.PrimaryKey)
+                                && column.ForeignKeyField.PrimaryKey.Equals(
+                                    obj: originalKey.PrimaryKey
+                                )
                             )
                             {
                                 int records = this.DataService.UpdateField(
-                                    table.Id,
-                                    (Guid)column.PrimaryKey["Id"],
-                                    oldValue,
-                                    newValue,
-                                    SecurityManager.CurrentPrincipal,
-                                    transactionId
+                                    entityId: table.Id,
+                                    fieldId: (Guid)column.PrimaryKey[key: "Id"],
+                                    oldValue: oldValue,
+                                    newValue: newValue,
+                                    userProfile: SecurityManager.CurrentPrincipal,
+                                    transactionId: transactionId
                                 );
                                 result += records;
                                 if (records > 0)
@@ -453,20 +487,20 @@ public class DataServiceAgent : AbstractServiceAgent
                                             + (column as FieldMappingItem).MappedColumnName;
                                         if (log.IsInfoEnabled)
                                         {
-                                            log.Info(logText);
+                                            log.Info(message: logText);
                                         }
                                         if (this.Trace)
                                         {
                                             trace?.TraceStep(
-                                                this.TraceWorkflowId,
-                                                this.TraceStepName,
-                                                this.TraceStepId,
-                                                "Deduplication",
-                                                "Progress",
-                                                originalEntity.MappedObjectName,
-                                                "Audit: " + table.AuditingType,
-                                                "",
-                                                logText
+                                                workflowInstanceId: this.TraceWorkflowId,
+                                                stepPath: this.TraceStepName,
+                                                stepId: this.TraceStepId,
+                                                category: "Deduplication",
+                                                subCategory: "Progress",
+                                                remark: originalEntity.MappedObjectName,
+                                                data1: "Audit: " + table.AuditingType,
+                                                data2: "",
+                                                message: logText
                                             );
                                         }
                                     }
@@ -481,17 +515,17 @@ public class DataServiceAgent : AbstractServiceAgent
         {
             if (log.IsErrorEnabled)
             {
-                log.LogOrigamError("Updating references failed.", ex);
+                log.LogOrigamError(message: "Updating references failed.", ex: ex);
             }
             if (this.TransactionId == null)
             {
-                ResourceMonitor.Rollback(transactionId);
+                ResourceMonitor.Rollback(transactionId: transactionId);
             }
             throw;
         }
         if (this.TransactionId == null)
         {
-            ResourceMonitor.Commit(transactionId);
+            ResourceMonitor.Commit(transactionId: transactionId);
         }
 
         return result;
@@ -501,65 +535,78 @@ public class DataServiceAgent : AbstractServiceAgent
     {
         TableMappingItem originalEntity =
             this.PersistenceProvider.RetrieveInstance(
-                typeof(TableMappingItem),
-                new ModelElementKey(entityId)
+                type: typeof(TableMappingItem),
+                primaryKey: new ModelElementKey(id: entityId)
             ) as TableMappingItem;
         if (originalEntity == null)
         {
             throw new ArgumentException(
-                ResourceUtils.GetString("ErrorTableMappingNotFound", entityId.ToString())
+                message: ResourceUtils.GetString(
+                    key: "ErrorTableMappingNotFound",
+                    args: entityId.ToString()
+                )
             );
         }
         List<IDataEntityColumn> pkList = originalEntity.EntityPrimaryKey;
         if (pkList.Count == 0)
         {
             throw new InvalidOperationException(
-                ResourceUtils.GetString("ErrorNoPrimaryKey", originalEntity.Path)
+                message: ResourceUtils.GetString(
+                    key: "ErrorNoPrimaryKey",
+                    args: originalEntity.Path
+                )
             );
         }
 
         if (pkList.Count > 1)
         {
             throw new InvalidOperationException(
-                ResourceUtils.GetString("ErrorMultiColumnPrimaryKey", originalEntity.Path)
+                message: ResourceUtils.GetString(
+                    key: "ErrorMultiColumnPrimaryKey",
+                    args: originalEntity.Path
+                )
             );
         }
 
-        FieldMappingItem originalKey = pkList[0] as FieldMappingItem;
+        FieldMappingItem originalKey = pkList[index: 0] as FieldMappingItem;
         if (originalKey == null)
         {
             throw new InvalidOperationException(
-                ResourceUtils.GetString("ErrorPrimaryKeyNotMapped", originalEntity.Path)
+                message: ResourceUtils.GetString(
+                    key: "ErrorPrimaryKeyNotMapped",
+                    args: originalEntity.Path
+                )
             );
         }
 
         List<IDataEntity> skipRelationships = originalEntity.ChildEntitiesRecursive;
         SchemaService schema =
-            ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
+            ServiceManager.Services.GetService(serviceType: typeof(SchemaService)) as SchemaService;
         EntityModelSchemaItemProvider entities =
-            schema.GetProvider(typeof(EntityModelSchemaItemProvider))
+            schema.GetProvider(type: typeof(EntityModelSchemaItemProvider))
             as EntityModelSchemaItemProvider;
         int result = 0;
         string transactionId = this.TransactionId;
         ITracingService trace =
-            ServiceManager.Services.GetService(typeof(ITracingService)) as ITracingService;
+            ServiceManager.Services.GetService(serviceType: typeof(ITracingService))
+            as ITracingService;
         if (this.Trace)
         {
             trace.TraceStep(
-                this.TraceWorkflowId,
-                this.TraceStepName,
-                this.TraceStepId,
-                "ReferenceCount",
-                "",
-                originalEntity.MappedObjectName,
-                "",
-                "",
-                "Id: " + value.ToString()
+                workflowInstanceId: this.TraceWorkflowId,
+                stepPath: this.TraceStepName,
+                stepId: this.TraceStepId,
+                category: "ReferenceCount",
+                subCategory: "",
+                remark: originalEntity.MappedObjectName,
+                data1: "",
+                data2: "",
+                message: "Id: " + value.ToString()
             );
         }
         foreach (IDataEntity entity in entities.ChildItems)
         {
-            if (!skipRelationships.Contains(entity))
+            if (!skipRelationships.Contains(item: entity))
             {
                 TableMappingItem table = entity as TableMappingItem;
                 if (
@@ -572,21 +619,25 @@ public class DataServiceAgent : AbstractServiceAgent
                     {
                         if (
                             column.ForeignKeyEntity != null
-                            && column.ForeignKeyEntity.PrimaryKey.Equals(originalEntity.PrimaryKey)
+                            && column.ForeignKeyEntity.PrimaryKey.Equals(
+                                obj: originalEntity.PrimaryKey
+                            )
                             && column is FieldMappingItem
                         )
                         {
                             if (
                                 column.ForeignKeyField != null
-                                && column.ForeignKeyField.PrimaryKey.Equals(originalKey.PrimaryKey)
+                                && column.ForeignKeyField.PrimaryKey.Equals(
+                                    obj: originalKey.PrimaryKey
+                                )
                             )
                             {
                                 int records = this.DataService.ReferenceCount(
-                                    table.Id,
-                                    (Guid)column.PrimaryKey["Id"],
-                                    value,
-                                    SecurityManager.CurrentPrincipal,
-                                    transactionId
+                                    entityId: table.Id,
+                                    fieldId: (Guid)column.PrimaryKey[key: "Id"],
+                                    value: value,
+                                    userProfile: SecurityManager.CurrentPrincipal,
+                                    transactionId: transactionId
                                 );
                                 result += records;
                             }
@@ -604,11 +655,11 @@ public class DataServiceAgent : AbstractServiceAgent
         string result = "";
         //set position to beginning of the stream
         s.Position = 0;
-        using (StreamReader sr = new StreamReader(s))
+        using (StreamReader sr = new StreamReader(stream: s))
         {
             char[] buf = new char[s.Length];
-            sr.ReadBlock(buf, 0, (int)s.Length - 1);
-            result = new string(buf);
+            sr.ReadBlock(buffer: buf, index: 0, count: (int)s.Length - 1);
+            result = new string(value: buf);
         }
         return result;
     }
@@ -638,7 +689,7 @@ public class DataServiceAgent : AbstractServiceAgent
 
     public override string ExecuteUpdate(string command, string transactionId)
     {
-        return _dataService.ExecuteUpdate(command, transactionId);
+        return _dataService.ExecuteUpdate(command: command, transactionId: transactionId);
     }
 
     public override void Run()
@@ -649,7 +700,7 @@ public class DataServiceAgent : AbstractServiceAgent
             case "LoadData":
             case "StoreData":
             {
-                dsRef = this.Parameters["DataStructure"] as DataStructureReference;
+                dsRef = this.Parameters[key: "DataStructure"] as DataStructureReference;
                 Guid dsId;
                 Guid methodId = Guid.Empty;
                 Guid sortId = Guid.Empty;
@@ -657,13 +708,13 @@ public class DataServiceAgent : AbstractServiceAgent
                 // Check input parameters
                 if (dsRef == null)
                 {
-                    if (this.Parameters["DataStructure"] != null)
+                    if (this.Parameters[key: "DataStructure"] != null)
                     {
                         throw new InvalidCastException(
-                            ResourceUtils.GetString("ErrorNotDataStructureReference")
+                            message: ResourceUtils.GetString(key: "ErrorNotDataStructureReference")
                         );
                     }
-                    dsId = (Guid)this.OutputStructure.PrimaryKey["Id"];
+                    dsId = (Guid)this.OutputStructure.PrimaryKey[key: "Id"];
                 }
                 else
                 {
@@ -675,42 +726,42 @@ public class DataServiceAgent : AbstractServiceAgent
                 {
                     if (
                         !(
-                            this.Parameters["Parameters"] == null
-                            || this.Parameters["Parameters"] is Hashtable
+                            this.Parameters[key: "Parameters"] == null
+                            || this.Parameters[key: "Parameters"] is Hashtable
                         )
                     )
                     {
                         throw new InvalidCastException(
-                            ResourceUtils.GetString("ErrorNotHashtable")
+                            message: ResourceUtils.GetString(key: "ErrorNotHashtable")
                         );
                     }
 
                     _result = this.LoadData(
-                        dsId,
-                        this.Parameters["Parameters"] as Hashtable,
-                        methodId,
-                        sortId
+                        dataStructureId: dsId,
+                        parameters: this.Parameters[key: "Parameters"] as Hashtable,
+                        methodId: methodId,
+                        sortSetId: sortId
                     );
                 }
                 else // StoreData
                 {
-                    if (!(Parameters["Data"] is IDataDocument))
+                    if (!(Parameters[key: "Data"] is IDataDocument))
                     {
                         throw new InvalidCastException(
-                            ResourceUtils.GetString("ErrorNotXmlDataDocument")
+                            message: ResourceUtils.GetString(key: "ErrorNotXmlDataDocument")
                         );
                     }
 
-                    if (Parameters.Contains("ForceBulkInsert"))
+                    if (Parameters.Contains(key: "ForceBulkInsert"))
                     {
-                        forceBulkInsert = (bool)Parameters["ForceBulkInsert"];
+                        forceBulkInsert = (bool)Parameters[key: "ForceBulkInsert"];
                     }
                     _result = SaveData(
-                        dsId,
-                        methodId,
-                        sortId,
-                        Parameters["Data"] as IDataDocument,
-                        forceBulkInsert
+                        dataStructureId: dsId,
+                        methodId: methodId,
+                        sortSetId: sortId,
+                        data: Parameters[key: "Data"] as IDataDocument,
+                        forceBulkInsert: forceBulkInsert
                     );
                 }
                 break;
@@ -718,48 +769,54 @@ public class DataServiceAgent : AbstractServiceAgent
 
             case "LoadDataByQuery":
             {
-                if (this.Parameters.Contains("Data"))
+                if (this.Parameters.Contains(key: "Data"))
                 {
-                    if (!(this.Parameters["Data"] is DataSet))
+                    if (!(this.Parameters[key: "Data"] is DataSet))
                     {
-                        throw new InvalidCastException("Data is not of type DataSet");
+                        throw new InvalidCastException(message: "Data is not of type DataSet");
                     }
 
                     _result = this.LoadData(
-                        this.Parameters["Query"] as DataStructureQuery,
-                        this.Parameters["Data"] as DataSet
+                        query: this.Parameters[key: "Query"] as DataStructureQuery,
+                        data: this.Parameters[key: "Data"] as DataSet
                     );
                 }
                 else
                 {
-                    _result = this.LoadData(this.Parameters["Query"] as DataStructureQuery);
+                    _result = this.LoadData(
+                        query: this.Parameters[key: "Query"] as DataStructureQuery
+                    );
                 }
                 break;
             }
             case "GetScalarValueByQuery":
             {
                 _result = this.GetScalarValue(
-                    this.Parameters["Query"] as DataStructureQuery,
-                    new ColumnsInfo((string)this.Parameters["ColumnName"])
+                    query: this.Parameters[key: "Query"] as DataStructureQuery,
+                    columnsInfo: new ColumnsInfo(
+                        columnName: (string)this.Parameters[key: "ColumnName"]
+                    )
                 );
                 break;
             }
             case "StoreDataByQuery":
             {
                 // Check input parameters
-                if (!(this.Parameters["Query"] is DataStructureQuery))
+                if (!(this.Parameters[key: "Query"] is DataStructureQuery))
                 {
-                    throw new InvalidCastException("Query is not of type DataStructureQuery");
+                    throw new InvalidCastException(
+                        message: "Query is not of type DataStructureQuery"
+                    );
                 }
 
-                if (!(this.Parameters["Data"] is DataSet))
+                if (!(this.Parameters[key: "Data"] is DataSet))
                 {
-                    throw new InvalidCastException("Data is not of type DataSet");
+                    throw new InvalidCastException(message: "Data is not of type DataSet");
                 }
 
                 _result = this.SaveData(
-                    this.Parameters["Query"] as DataStructureQuery,
-                    this.Parameters["Data"] as DataSet
+                    query: this.Parameters[key: "Query"] as DataStructureQuery,
+                    data: this.Parameters[key: "Data"] as DataSet
                 );
                 break;
             }
@@ -767,30 +824,34 @@ public class DataServiceAgent : AbstractServiceAgent
             case "ExecuteProcedure":
             {
                 // Check input parameters
-                if (!(this.Parameters["Name"] is string))
+                if (!(this.Parameters[key: "Name"] is string))
                 {
-                    throw new InvalidCastException(ResourceUtils.GetString("ErrorNameNotString"));
+                    throw new InvalidCastException(
+                        message: ResourceUtils.GetString(key: "ErrorNameNotString")
+                    );
                 }
 
                 if (
                     !(
-                        this.Parameters["Parameters"] == null
-                        || this.Parameters["Parameters"] is Hashtable
+                        this.Parameters[key: "Parameters"] == null
+                        || this.Parameters[key: "Parameters"] is Hashtable
                     )
                 )
                 {
-                    throw new InvalidCastException(ResourceUtils.GetString("ErrorNotHashtable"));
+                    throw new InvalidCastException(
+                        message: ResourceUtils.GetString(key: "ErrorNotHashtable")
+                    );
                 }
 
                 string entityOrder = null;
-                if (this.Parameters.Contains("EntityOrder"))
+                if (this.Parameters.Contains(key: "EntityOrder"))
                 {
-                    entityOrder = (string)this.Parameters["EntityOrder"];
+                    entityOrder = (string)this.Parameters[key: "EntityOrder"];
                 }
                 _result = this.ExecuteProcedure(
-                    (string)this.Parameters["Name"],
-                    this.Parameters["Parameters"] as Hashtable,
-                    entityOrder
+                    name: (string)this.Parameters[key: "Name"],
+                    parameters: this.Parameters[key: "Parameters"] as Hashtable,
+                    entityOrder: entityOrder
                 );
                 break;
             }
@@ -798,15 +859,17 @@ public class DataServiceAgent : AbstractServiceAgent
             case "UpdateReferences":
             {
                 // Check input parameters
-                if (!(this.Parameters["EntityId"] is Guid))
+                if (!(this.Parameters[key: "EntityId"] is Guid))
                 {
-                    throw new InvalidCastException(ResourceUtils.GetString("ErrorEntityIdNotGuid"));
+                    throw new InvalidCastException(
+                        message: ResourceUtils.GetString(key: "ErrorEntityIdNotGuid")
+                    );
                 }
 
                 _result = this.UpdateReferences(
-                    (Guid)this.Parameters["EntityId"],
-                    this.Parameters["oldValue"],
-                    this.Parameters["newValue"]
+                    entityId: (Guid)this.Parameters[key: "EntityId"],
+                    oldValue: this.Parameters[key: "oldValue"],
+                    newValue: this.Parameters[key: "newValue"]
                 );
                 break;
             }
@@ -814,27 +877,29 @@ public class DataServiceAgent : AbstractServiceAgent
             case "ReferenceCount":
             {
                 // Check input parameters
-                if (!(this.Parameters["EntityId"] is Guid))
+                if (!(this.Parameters[key: "EntityId"] is Guid))
                 {
-                    throw new InvalidCastException(ResourceUtils.GetString("ErrorEntityIdNotGuid"));
+                    throw new InvalidCastException(
+                        message: ResourceUtils.GetString(key: "ErrorEntityIdNotGuid")
+                    );
                 }
 
                 _result = this.ReferenceCount(
-                    (Guid)this.Parameters["EntityId"],
-                    this.Parameters["Value"]
+                    entityId: (Guid)this.Parameters[key: "EntityId"],
+                    value: this.Parameters[key: "Value"]
                 );
                 break;
             }
 
             case "EntityDdl":
             {
-                _result = DataService.EntityDdl((Guid)Parameters["EntityId"]);
+                _result = DataService.EntityDdl(entityId: (Guid)Parameters[key: "EntityId"]);
                 break;
             }
 
             case "FieldDdl":
             {
-                _result = DataService.FieldDdl((Guid)Parameters["FieldId"]);
+                _result = DataService.FieldDdl(fieldId: (Guid)Parameters[key: "FieldId"]);
                 break;
             }
 
@@ -847,8 +912,8 @@ public class DataServiceAgent : AbstractServiceAgent
             case "ExecuteSql":
             {
                 _result = DataService.ExecuteUpdate(
-                    (string)Parameters["Command"],
-                    this.TransactionId
+                    command: (string)Parameters[key: "Command"],
+                    transactionId: this.TransactionId
                 );
                 break;
             }
@@ -856,9 +921,9 @@ public class DataServiceAgent : AbstractServiceAgent
             default:
             {
                 throw new ArgumentOutOfRangeException(
-                    "MethodName",
-                    this.MethodName,
-                    ResourceUtils.GetString("InvalidMethodName")
+                    paramName: "MethodName",
+                    actualValue: this.MethodName,
+                    message: ResourceUtils.GetString(key: "InvalidMethodName")
                 );
             }
         }
@@ -885,34 +950,34 @@ public class DataServiceAgent : AbstractServiceAgent
             DataStructureMethod dsMethod = null;
             if (call != null)
             {
-                ResolveServiceMethodCallTask(call, out ds, out dsMethod);
+                ResolveServiceMethodCallTask(task: call, ds: out ds, method: out dsMethod);
             }
             else if (dataPage != null)
             {
-                ResolveXsltDataPage(dataPage, out ds, out dsMethod);
+                ResolveXsltDataPage(page: dataPage, ds: out ds, method: out dsMethod);
             }
             else if (downloadPage != null)
             {
-                ResolveFileDownloadPage(downloadPage, out ds, out dsMethod);
+                ResolveFileDownloadPage(page: downloadPage, ds: out ds, method: out dsMethod);
             }
             else if (formMenu != null)
             {
-                ResolveFormReferenceMenuItem(formMenu, out ds, out dsMethod);
+                ResolveFormReferenceMenuItem(menu: formMenu, ds: out ds, method: out dsMethod);
             }
             else if (report != null)
             {
-                ResolveReport(report, out ds, out dsMethod);
+                ResolveReport(report: report, ds: out ds, method: out dsMethod);
             }
             else if (filterLookup != null)
             {
-                ResolveFilterLookup(filterLookup, out ds, out dsMethod);
+                ResolveFilterLookup(reference: filterLookup, ds: out ds, method: out dsMethod);
                 // add "lookup" prefix to all parameters because as sub-queries they will
                 // be prefixed
                 prefix = "lookup";
             }
             else if (abstractDataLookup != null)
             {
-                ResolveLookup(abstractDataLookup, out ds, out dsMethod);
+                ResolveLookup(reference: abstractDataLookup, ds: out ds, method: out dsMethod);
             }
             if (ds != null)
             {
@@ -921,13 +986,18 @@ public class DataServiceAgent : AbstractServiceAgent
                 if (wm != null)
                 {
                     IBusinessServicesService agents =
-                        ServiceManager.Services.GetService(typeof(IBusinessServicesService))
-                        as IBusinessServicesService;
-                    IServiceAgent agent = agents.GetAgent("WorkflowService", null, null);
+                        ServiceManager.Services.GetService(
+                            serviceType: typeof(IBusinessServicesService)
+                        ) as IBusinessServicesService;
+                    IServiceAgent agent = agents.GetAgent(
+                        serviceType: "WorkflowService",
+                        ruleEngine: null,
+                        workflowEngine: null
+                    );
                     return agent.ExpectedParameterNames(
-                        wm.LoadWorkflow,
-                        "ExecuteWorkflow",
-                        "Parameters"
+                        item: wm.LoadWorkflow,
+                        method: "ExecuteWorkflow",
+                        parameter: "Parameters"
                     );
                 }
                 var sqlGenerator = ((AbstractDataService)_dataService).DbDataAdapterFactory;
@@ -936,18 +1006,18 @@ public class DataServiceAgent : AbstractServiceAgent
                 foreach (DataStructureEntity entity in ds.Entities)
                 {
                     List<string> parameters = sqlGenerator.Parameters(
-                        ds,
-                        entity,
-                        fs,
-                        null,
-                        false,
-                        null
+                        ds: ds,
+                        entity: entity,
+                        filter: fs,
+                        sort: null,
+                        paging: false,
+                        columnName: null
                     );
                     foreach (string newParameter in parameters)
                     {
-                        if (!result.Contains(newParameter))
+                        if (!result.Contains(item: newParameter))
                         {
-                            result.Add(newParameter);
+                            result.Add(item: newParameter);
                         }
                     }
                 }
@@ -958,7 +1028,7 @@ public class DataServiceAgent : AbstractServiceAgent
         {
             for (int i = 0; i < result.Count; i++)
             {
-                result[i] = prefix + result[i];
+                result[index: i] = prefix + result[index: i];
             }
         }
         return result;
@@ -970,10 +1040,10 @@ public class DataServiceAgent : AbstractServiceAgent
         out DataStructureMethod method
     )
     {
-        ISchemaItem dsParam = task.GetChildByName("DataStructure");
+        ISchemaItem dsParam = task.GetChildByName(name: "DataStructure");
         if (dsParam.ChildItems.Count == 1)
         {
-            DataStructureReference dsRef = dsParam.ChildItems[0] as DataStructureReference;
+            DataStructureReference dsRef = dsParam.ChildItems[index: 0] as DataStructureReference;
             if (dsRef != null)
             {
                 ds = dsRef.DataStructure;

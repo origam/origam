@@ -39,7 +39,7 @@ public class FileServiceAgent : AbstractServiceAgent
 {
     private object _result;
     private static readonly log4net.ILog log = LogManager.GetLogger(
-        System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
+        type: System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
     );
 
     private IXmlContainer ReadDelimitedFile(
@@ -49,12 +49,18 @@ public class FileServiceAgent : AbstractServiceAgent
     )
     {
         DataSet data = CreateEmptyOutputData();
-        DataTable dt = data.Tables[entity];
-        TextReaderOptions options = TextReaderOptions.Deserialize(optionsXml.Xml);
-        var typeExtender = new TypeExtender(entity);
-        typeExtender.AddAttribute<IgnoreFirstAttribute>(new object[] { options.IgnoreFirst });
-        typeExtender.AddAttribute<IgnoreLastAttribute>(new object[] { options.IgnoreLast });
-        typeExtender.AddAttribute<DelimitedRecordAttribute>(new object[] { options.Separator, "" });
+        DataTable dt = data.Tables[name: entity];
+        TextReaderOptions options = TextReaderOptions.Deserialize(doc: optionsXml.Xml);
+        var typeExtender = new TypeExtender(className: entity);
+        typeExtender.AddAttribute<IgnoreFirstAttribute>(
+            attributeCtorParams: new object[] { options.IgnoreFirst }
+        );
+        typeExtender.AddAttribute<IgnoreLastAttribute>(
+            attributeCtorParams: new object[] { options.IgnoreLast }
+        );
+        typeExtender.AddAttribute<DelimitedRecordAttribute>(
+            attributeCtorParams: new object[] { options.Separator, "" }
+        );
 
         foreach (TextReaderOptionsField trof in options.FieldOptions)
         {
@@ -63,14 +69,14 @@ public class FileServiceAgent : AbstractServiceAgent
             Type dataType = typeof(string);
             if (!trof.IsIgnored)
             {
-                col = dt.Columns[trof.Name];
+                col = dt.Columns[name: trof.Name];
                 dataType = col.DataType;
                 if (col == null)
                 {
                     throw new ArgumentOutOfRangeException(
-                        "columnName",
-                        trof.Name,
-                        "Column specified in options was not found in the data structure."
+                        paramName: "columnName",
+                        actualValue: trof.Name,
+                        message: "Column specified in options was not found in the data structure."
                     );
                 }
                 if (col.AllowDBNull)
@@ -80,38 +86,44 @@ public class FileServiceAgent : AbstractServiceAgent
                     // back to value types internally.
                     if (col.DataType.IsValueType)
                     {
-                        dataType = typeof(Nullable<>).MakeGenericType(col.DataType);
+                        dataType = typeof(Nullable<>).MakeGenericType(typeArguments: col.DataType);
                     }
                 }
             }
 
             if (dataType == typeof(DateTime))
             {
-                attributeParameters.Add(typeof(FieldConverterAttribute), new List<object>());
+                attributeParameters.Add(
+                    key: typeof(FieldConverterAttribute),
+                    value: new List<object>()
+                );
                 if (trof.AlternativeFormats == null)
                 {
-                    attributeParameters[typeof(FieldConverterAttribute)].Add(ConverterKind.Date);
-                    attributeParameters[typeof(FieldConverterAttribute)].Add(trof.Format);
+                    attributeParameters[key: typeof(FieldConverterAttribute)]
+                        .Add(item: ConverterKind.Date);
+                    attributeParameters[key: typeof(FieldConverterAttribute)]
+                        .Add(item: trof.Format);
                 }
                 else
                 {
-                    attributeParameters[typeof(FieldConverterAttribute)]
-                        .Add(ConverterKind.DateMultiFormat);
-                    attributeParameters[typeof(FieldConverterAttribute)].Add(trof.Format);
+                    attributeParameters[key: typeof(FieldConverterAttribute)]
+                        .Add(item: ConverterKind.DateMultiFormat);
+                    attributeParameters[key: typeof(FieldConverterAttribute)]
+                        .Add(item: trof.Format);
                     if (trof.AlternativeFormats.Length > 0)
                     {
-                        attributeParameters[typeof(FieldConverterAttribute)]
-                            .Add(trof.AlternativeFormats[0]);
+                        attributeParameters[key: typeof(FieldConverterAttribute)]
+                            .Add(item: trof.AlternativeFormats[0]);
                     }
                     if (trof.AlternativeFormats.Length > 1)
                     {
-                        attributeParameters[typeof(FieldConverterAttribute)]
-                            .Add(trof.AlternativeFormats[1]);
+                        attributeParameters[key: typeof(FieldConverterAttribute)]
+                            .Add(item: trof.AlternativeFormats[1]);
                     }
                     if (trof.AlternativeFormats.Length > 2)
                     {
                         throw new ArgumentException(
-                            "Maximum 2 alternative date formats can be used by this function."
+                            message: "Maximum 2 alternative date formats can be used by this function."
                         );
                     }
                 }
@@ -119,21 +131,24 @@ public class FileServiceAgent : AbstractServiceAgent
             else if (dataType == typeof(decimal))
             {
                 attributeParameters.Add(
-                    typeof(FieldConverterAttribute),
-                    new List<object> { ConverterKind.Decimal, trof.DecimalSeparator }
+                    key: typeof(FieldConverterAttribute),
+                    value: new List<object> { ConverterKind.Decimal, trof.DecimalSeparator }
                 );
             }
             if (trof.IsOptional)
             {
-                attributeParameters.Add(typeof(FieldOptionalAttribute), new List<object>());
+                attributeParameters.Add(
+                    key: typeof(FieldOptionalAttribute),
+                    value: new List<object>()
+                );
             }
             if (trof.IsQuoted)
             {
-                if (!string.IsNullOrEmpty(trof.QuoteChar))
+                if (!string.IsNullOrEmpty(value: trof.QuoteChar))
                 {
                     attributeParameters.Add(
-                        typeof(FieldQuotedAttribute),
-                        new List<object>
+                        key: typeof(FieldQuotedAttribute),
+                        value: new List<object>
                         {
                             trof.QuoteChar,
                             QuoteMode.OptionalForRead,
@@ -144,40 +159,57 @@ public class FileServiceAgent : AbstractServiceAgent
                 else
                 {
                     attributeParameters.Add(
-                        typeof(FieldQuotedAttribute),
-                        new List<object> { QuoteMode.OptionalForRead, MultilineMode.AllowForRead }
+                        key: typeof(FieldQuotedAttribute),
+                        value: new List<object>
+                        {
+                            QuoteMode.OptionalForRead,
+                            MultilineMode.AllowForRead,
+                        }
                     );
                 }
             }
             if (trof.NullValue != null && col != null)
             {
-                var nullValue = Convert.ChangeType(trof.NullValue, col.DataType);
+                var nullValue = Convert.ChangeType(
+                    value: trof.NullValue,
+                    conversionType: col.DataType
+                );
                 attributeParameters.Add(
-                    typeof(FieldNullValueAttribute),
-                    new List<object> { nullValue }
+                    key: typeof(FieldNullValueAttribute),
+                    value: new List<object> { nullValue }
                 );
             }
-            typeExtender.AddField(trof.Name, dataType, attributeParameters);
+            typeExtender.AddField(
+                fieldName: trof.Name,
+                fieldType: dataType,
+                attributeTypesAndParameters: attributeParameters
+            );
         }
         UserProfile profile = SecurityManager.CurrentUserProfile();
-        FileHelperEngine engine = new FileHelperEngine(typeExtender.FetchType());
-        DataTable newDt = engine.ReadStreamAsDT(reader);
+        FileHelperEngine engine = new FileHelperEngine(recordType: typeExtender.FetchType());
+        DataTable newDt = engine.ReadStreamAsDT(reader: reader);
         if (log.IsInfoEnabled)
         {
-            log.InfoFormat("Read {0} records from a file.", newDt?.Rows.Count);
+            log.InfoFormat(format: "Read {0} records from a file.", arg0: newDt?.Rows.Count);
         }
         dt.TableNewRow += new DataTableNewRowEventHandler(dt_TableNewRow);
         MergeParams mergeParams = new MergeParams();
         mergeParams.SourceIsFragment = true;
         mergeParams.ProfileId = profile.Id;
-        DatasetTools.MergeDataTable(dt, newDt, null, null, mergeParams);
+        DatasetTools.MergeDataTable(
+            inout_dtTarget: dt,
+            in_dtSource: newDt,
+            changeList: null,
+            expressions: null,
+            mergeParams: mergeParams
+        );
         dt.TableNewRow -= new DataTableNewRowEventHandler(dt_TableNewRow);
-        return DataDocumentFactory.New(data);
+        return DataDocumentFactory.New(dataSet: data);
     }
 
     void dt_TableNewRow(object sender, DataTableNewRowEventArgs e)
     {
-        DatasetTools.ApplyPrimaryKey(e.Row);
+        DatasetTools.ApplyPrimaryKey(row: e.Row);
     }
 
     private IXmlContainer ReadFile(
@@ -190,27 +222,27 @@ public class FileServiceAgent : AbstractServiceAgent
     {
         string stringFile = file as string;
         byte[] blobFile = file as byte[];
-        Encoding encoding = FileSystemServiceAgent.GetEncoding(encodingName);
+        Encoding encoding = FileSystemServiceAgent.GetEncoding(encoding: encodingName);
         if (stringFile != null)
         {
-            using (StringReader sr = new StringReader(stringFile))
+            using (StringReader sr = new StringReader(s: stringFile))
             {
-                return ReadDelimitedFile(sr, optionsXml, entity);
+                return ReadDelimitedFile(reader: sr, optionsXml: optionsXml, entity: entity);
             }
         }
 
         if (blobFile != null)
         {
-            MemoryStream ms = new MemoryStream(blobFile);
-            using (TextReader tr = new StreamReader(ms, encoding))
+            MemoryStream ms = new MemoryStream(buffer: blobFile);
+            using (TextReader tr = new StreamReader(stream: ms, encoding: encoding))
             {
-                return ReadDelimitedFile(tr, optionsXml, entity);
+                return ReadDelimitedFile(reader: tr, optionsXml: optionsXml, entity: entity);
             }
         }
 
-        using (TextReader tr = new StreamReader(fileName, encoding))
+        using (TextReader tr = new StreamReader(path: fileName, encoding: encoding))
         {
-            return ReadDelimitedFile(tr, optionsXml, entity);
+            return ReadDelimitedFile(reader: tr, optionsXml: optionsXml, entity: entity);
         }
     }
 
@@ -248,9 +280,9 @@ public class FileServiceAgent : AbstractServiceAgent
     {
         if (log.IsDebugEnabled)
         {
-            log.RunHandled(() =>
+            log.RunHandled(loggingAction: () =>
             {
-                log.DebugFormat("Executing {0}", this.MethodName);
+                log.DebugFormat(format: "Executing {0}", arg0: this.MethodName);
                 foreach (DictionaryEntry item in Parameters)
                 {
                     string value;
@@ -267,7 +299,11 @@ public class FileServiceAgent : AbstractServiceAgent
                         value = item.Value.ToString();
                     }
 
-                    log.DebugFormat("Parameter {0}, Value {1}", item.Key, value);
+                    log.DebugFormat(
+                        format: "Parameter {0}, Value {1}",
+                        arg0: item.Key,
+                        arg1: value
+                    );
                 }
             });
         }
@@ -276,19 +312,24 @@ public class FileServiceAgent : AbstractServiceAgent
             case "ReadTextFile":
             {
                 // Check input parameters
-                if (!(this.Parameters["Entity"] is string || this.Parameters["Entity"] == null))
+                if (
+                    !(
+                        this.Parameters[key: "Entity"] is string
+                        || this.Parameters[key: "Entity"] == null
+                    )
+                )
                 {
                     throw new InvalidCastException(
-                        ResourceUtils.GetString("ErrorViewNameNotString")
+                        message: ResourceUtils.GetString(key: "ErrorViewNameNotString")
                     );
                 }
 
                 _result = this.ReadFile(
-                    this.Parameters["FileName"] as String,
-                    this.Parameters["Options"] as XmlContainer,
-                    this.Parameters["Entity"] as String,
-                    this.Parameters["File"],
-                    this.Parameters["Encoding"] as string
+                    fileName: this.Parameters[key: "FileName"] as String,
+                    optionsXml: this.Parameters[key: "Options"] as XmlContainer,
+                    entity: this.Parameters[key: "Entity"] as String,
+                    file: this.Parameters[key: "File"],
+                    encodingName: this.Parameters[key: "Encoding"] as string
                 );
                 break;
             }

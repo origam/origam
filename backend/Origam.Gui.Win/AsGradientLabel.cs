@@ -55,27 +55,33 @@ public class AsGradientLabel : System.Windows.Forms.Label
     {
         // declare linear gradient brush for fill background of label
         LinearGradientBrush GBrush = new LinearGradientBrush(
-            new Point(0, 0),
-            new Point(this.Width, 0),
-            cLeft,
-            cRight
+            point1: new Point(x: 0, y: 0),
+            point2: new Point(x: this.Width, y: 0),
+            color1: cLeft,
+            color2: cRight
         );
-        Rectangle rect = new Rectangle(0, 0, this.Width, this.Height);
+        Rectangle rect = new Rectangle(x: 0, y: 0, width: this.Width, height: this.Height);
         // Fill with gradient
-        e.Graphics.FillRectangle(GBrush, rect);
+        e.Graphics.FillRectangle(brush: GBrush, rect: rect);
         // draw text on label
-        SolidBrush drawBrush = new SolidBrush(this.ForeColor);
+        SolidBrush drawBrush = new SolidBrush(color: this.ForeColor);
         StringFormat sf = new StringFormat();
         // align with center
         sf.Alignment = StringAlignment.Near;
         // set rectangle bound text
         RectangleF rectF = new RectangleF(
-            0,
-            (this.Height / 2) - (Font.Height / 2),
-            this.Width,
-            this.Height
+            x: 0,
+            y: (this.Height / 2) - (Font.Height / 2),
+            width: this.Width,
+            height: this.Height
         );
         // output string
-        e.Graphics.DrawString(this.Text, this.Font, drawBrush, rectF, sf);
+        e.Graphics.DrawString(
+            s: this.Text,
+            font: this.Font,
+            brush: drawBrush,
+            layoutRectangle: rectF,
+            format: sf
+        );
     }
 }

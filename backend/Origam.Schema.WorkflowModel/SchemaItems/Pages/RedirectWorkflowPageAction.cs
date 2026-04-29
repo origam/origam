@@ -29,28 +29,28 @@ namespace Origam.Schema.WorkflowModel;
 /// <summary>
 /// Summary description for RedirectWorkflowPageAction.
 /// </summary>
-[SchemaItemDescription("Redirect", "Actions", "redirect.png")]
-[HelpTopic("Redirect+Action")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Redirect", folderName: "Actions", iconName: "redirect.png")]
+[HelpTopic(topic: "Redirect+Action")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class RedirectWorkflowPageAction : AbstractWorkflowPageAction
 {
     public RedirectWorkflowPageAction()
         : base() { }
 
     public RedirectWorkflowPageAction(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(schemaExtensionId: schemaExtensionId) { }
 
     public RedirectWorkflowPageAction(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Properties
     private string _xpath;
 
-    [Category("Result")]
+    [Category(category: "Result")]
     [Description(
-        "An XPath expression from the context of the data returned by the workflow. The result will be used as the URL."
+        description: "An XPath expression from the context of the data returned by the workflow. The result will be used as the URL."
     )]
-    [XmlAttribute("xPath")]
+    [XmlAttribute(attributeName: "xPath")]
     public string XPath
     {
         get { return _xpath; }
@@ -58,9 +58,11 @@ public class RedirectWorkflowPageAction : AbstractWorkflowPageAction
     }
     private bool _isUrlEscaped;
 
-    [Category("Result")]
-    [Description("Indicates if the result is already a complete URL that needs no escaping.")]
-    [XmlAttribute("escapeUrl")]
+    [Category(category: "Result")]
+    [Description(
+        description: "Indicates if the result is already a complete URL that needs no escaping."
+    )]
+    [XmlAttribute(attributeName: "escapeUrl")]
     public bool IsUrlEscaped
     {
         get { return _isUrlEscaped; }

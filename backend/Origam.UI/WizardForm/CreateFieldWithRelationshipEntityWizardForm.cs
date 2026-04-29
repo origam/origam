@@ -74,7 +74,7 @@ public class CreateFieldWithRelationshipEntityWizardForm : AbstractWizardForm
             txtRelationName.Text = this.Entity.Name;
             foreach (ISchemaItem abstractSchemaIttem in this.Entity.RootProvider.ChildItems)
             {
-                tableRelation.Items.Add(abstractSchemaIttem);
+                tableRelation.Items.Add(item: abstractSchemaIttem);
             }
         }
     }
@@ -93,13 +93,15 @@ public class CreateFieldWithRelationshipEntityWizardForm : AbstractWizardForm
         }
 
         txtKeyName.Text = RelatedEntity.NodeText + "_RelationtionKey";
-        foreach (var filter in RelatedEntity.ChildItemsByType<ISchemaItem>("DataEntityColumn"))
+        foreach (
+            var filter in RelatedEntity.ChildItemsByType<ISchemaItem>(itemType: "DataEntityColumn")
+        )
         {
-            RelatedEntityField.Items.Add(filter);
+            RelatedEntityField.Items.Add(item: filter);
         }
         foreach (IDataEntityColumn column in this.Entity.EntityColumns)
         {
-            BaseEntityField.Items.Add(column);
+            BaseEntityField.Items.Add(item: column);
         }
     }
 }

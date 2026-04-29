@@ -32,12 +32,12 @@ namespace Origam.Schema.EntityModel;
 /// Summary description for DeaultValueParameter.
 /// </summary>
 [SchemaItemDescription(
-    "Xslt Initial Value Parameter",
-    "Parameters",
-    "icon_xslt-initial-value-parameter.png"
+    name: "Xslt Initial Value Parameter",
+    folderName: "Parameters",
+    iconName: "icon_xslt-initial-value-parameter.png"
 )]
-[HelpTopic("Xslt+Initial+ValueParameter")]
-[ClassMetaVersion("6.0.0")]
+[HelpTopic(topic: "Xslt+Initial+ValueParameter")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class XsltInitialValueParameter : SchemaItemParameter
 {
     private List<OrigamDataType> osArray;
@@ -65,26 +65,26 @@ public class XsltInitialValueParameter : SchemaItemParameter
     }
 
     public XsltInitialValueParameter(Guid schemaExtensionId)
-        : base(schemaExtensionId)
+        : base(schemaExtensionId: schemaExtensionId)
     {
         InitArray();
     }
 
     public XsltInitialValueParameter(Key primaryKey)
-        : base(primaryKey)
+        : base(primaryKey: primaryKey)
     {
         InitArray();
     }
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(this.Transformation);
+        dependencies.Add(item: this.Transformation);
     }
 
     #region Properties
     //protected OrigamDataType _dataType;
-    [XmlAttribute("dataType")]
-    [TypeConverter(typeof(TransformOutputScalarOrigamDataTypeConverter))]
+    [XmlAttribute(attributeName: "dataType")]
+    [TypeConverter(type: typeof(TransformOutputScalarOrigamDataTypeConverter))]
     public override OrigamDataType DataType
     {
         get { return _dataType; }
@@ -93,13 +93,13 @@ public class XsltInitialValueParameter : SchemaItemParameter
 
     public Guid transformationId;
 
-    [Category("Reference")]
-    [TypeConverter(typeof(TransformationConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
+    [Category(category: "Reference")]
+    [TypeConverter(type: typeof(TransformationConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
     [NotNullModelElementRule()]
-    [XmlReference("transformation", "transformationId")]
+    [XmlReference(attributeName: "transformation", idField: "transformationId")]
     [Description(
-        "XSLT transformation that computes a value for a parameter. The transformation can use other non-xslt parameters as an input (as <xsl:param>s). The transformation has always <ROOT/> XmlDocument as an input (data). The value for a parameter is taken from /ROOT/Value output of the transformation."
+        description: "XSLT transformation that computes a value for a parameter. The transformation can use other non-xslt parameters as an input (as <xsl:param>s). The transformation has always <ROOT/> XmlDocument as an input (data). The value for a parameter is taken from /ROOT/Value output of the transformation."
     )]
     public XslTransformation Transformation
     {
@@ -109,18 +109,21 @@ public class XsltInitialValueParameter : SchemaItemParameter
             {
                 return (ISchemaItem)
                         this.PersistenceProvider.RetrieveInstance(
-                            typeof(ISchemaItem),
-                            new ModelElementKey(this.transformationId)
+                            type: typeof(ISchemaItem),
+                            primaryKey: new ModelElementKey(id: this.transformationId)
                         ) as XslTransformation;
             }
             catch
             {
                 throw new Exception(
-                    ResourceUtils.GetString("ERRTransformationNotFound", this.transformationId)
+                    message: ResourceUtils.GetString(
+                        key: "ERRTransformationNotFound",
+                        args: this.transformationId
+                    )
                 );
             }
         }
-        set { this.transformationId = (Guid)value.PrimaryKey["Id"]; }
+        set { this.transformationId = (Guid)value.PrimaryKey[key: "Id"]; }
     }
 
     public List<OrigamDataType> getOrigamDataType()

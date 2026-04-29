@@ -22,5 +22,5 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 @inject IHtmlLocalizer<SharedResources> SharedLocalizer
 
 <h3 class="confirmation-text">
-    @SharedLocalizer["EmailConfirmation1"] <a class="in-page-link" asp-controller="Account" asp-action="Login">@SharedLocalizer["EmailConfirmation2"]</a> @SharedLocalizer["EmailConfirmation3"]
+    @SharedLocalizer[name: "EmailConfirmation1"] <a class="in-page-link" asp-controller="Account" asp-action="Login">@SharedLocalizer[name: "EmailConfirmation2"]</a> @SharedLocalizer[name: "EmailConfirmation3"]
 </h3>

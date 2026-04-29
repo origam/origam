@@ -40,19 +40,23 @@ public enum AggregationType
     CumulativeSum = 6,
 }
 
-[SchemaItemDescription("Aggregated Field", "Fields", "icon_agregated-field.png")]
-[HelpTopic("Aggregated+Field")]
-[DefaultProperty("Relation")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(
+    name: "Aggregated Field",
+    folderName: "Fields",
+    iconName: "icon_agregated-field.png"
+)]
+[HelpTopic(topic: "Aggregated+Field")]
+[DefaultProperty(name: "Relation")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class AggregatedColumn : AbstractDataEntityColumn, IRelationReference
 {
     public AggregatedColumn() { }
 
     public AggregatedColumn(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(schemaExtensionId: schemaExtensionId) { }
 
     public AggregatedColumn(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Overriden AbstractDataEntityColumn Members
     public override string FieldType => "AggregatedColumn";
@@ -60,9 +64,9 @@ public class AggregatedColumn : AbstractDataEntityColumn, IRelationReference
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(Field);
-        dependencies.Add(Relation);
-        base.GetExtraDependencies(dependencies);
+        dependencies.Add(item: Field);
+        dependencies.Add(item: Relation);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override void UpdateReferences()
@@ -71,7 +75,7 @@ public class AggregatedColumn : AbstractDataEntityColumn, IRelationReference
         {
             foreach (ISchemaItem item in RootItem.ChildItemsRecursive)
             {
-                if (item.OldPrimaryKey?.Equals(Relation.PrimaryKey) == true)
+                if (item.OldPrimaryKey?.Equals(obj: Relation.PrimaryKey) == true)
                 {
                     // store the old field because setting an entity will reset the field
                     var oldField = Field;
@@ -88,20 +92,20 @@ public class AggregatedColumn : AbstractDataEntityColumn, IRelationReference
     private AggregationType _aggregationType = AggregationType.Sum;
 
     [NoDuplicateNamesInParentRule]
-    [Category("(Schema Item)")]
+    [Category(category: "(Schema Item)")]
     [StringNotEmptyModelElementRule]
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [XmlAttribute("name")]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [XmlAttribute(attributeName: "name")]
     public override string Name
     {
         get => base.Name;
         set => base.Name = value;
     }
 
-    [Category("Aggregation")]
+    [Category(category: "Aggregation")]
     [NotNullModelElementRule()]
     [NoNestedCountAggregationsRule]
-    [XmlAttribute("aggregationType")]
+    [XmlAttribute(attributeName: "aggregationType")]
     public AggregationType AggregationType
     {
         get => _aggregationType;
@@ -109,44 +113,44 @@ public class AggregatedColumn : AbstractDataEntityColumn, IRelationReference
     }
     public Guid RelationId;
 
-    [Category("Aggregation")]
-    [TypeConverter(typeof(EntityRelationConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
+    [Category(category: "Aggregation")]
+    [TypeConverter(type: typeof(EntityRelationConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
     [NotNullModelElementRule()]
-    [XmlReference("relation", "RelationId")]
+    [XmlReference(attributeName: "relation", idField: "RelationId")]
     public IAssociation Relation
     {
         get =>
             (ISchemaItem)
                 PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(RelationId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: RelationId)
                 ) as IAssociation;
         set
         {
-            RelationId = (Guid)value.PrimaryKey["Id"];
+            RelationId = (Guid)value.PrimaryKey[key: "Id"];
             Field = null;
         }
     }
 
     public Guid ColumnId;
 
-    [Category("Aggregation")]
-    [TypeConverter(typeof(EntityRelationColumnsConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
+    [Category(category: "Aggregation")]
+    [TypeConverter(type: typeof(EntityRelationColumnsConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
     [NotNullModelElementRule()]
-    [XmlReference("field", "ColumnId")]
+    [XmlReference(attributeName: "field", idField: "ColumnId")]
     public IDataEntityColumn Field
     {
         get =>
             (ISchemaItem)
                 PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(ColumnId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: ColumnId)
                 ) as IDataEntityColumn;
         set
         {
-            ColumnId = (value == null) ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+            ColumnId = (value == null) ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"];
             if (Field == null)
             {
                 return;
@@ -167,10 +171,10 @@ public class AggregatedColumn : AbstractDataEntityColumn, IRelationReference
 
     protected override ISchemaItem ConvertTo<T>()
     {
-        var converted = ParentItem.NewItem<T>(SchemaExtensionId, Group);
+        var converted = ParentItem.NewItem<T>(schemaExtensionId: SchemaExtensionId, group: Group);
         if (converted is AbstractDataEntityColumn abstractDataEntityColumn)
         {
-            CopyFieldMembers(this, abstractDataEntityColumn);
+            CopyFieldMembers(source: this, destination: abstractDataEntityColumn);
         }
         if (converted is FieldMappingItem fieldMappingItem)
         {
@@ -182,7 +186,7 @@ public class AggregatedColumn : AbstractDataEntityColumn, IRelationReference
             return base.ConvertTo<T>();
         }
         // does the common conversion tasks and persists both this and converted objects
-        FinishConversion(this, converted);
+        FinishConversion(source: this, converted: converted);
         return converted;
     }
     #endregion

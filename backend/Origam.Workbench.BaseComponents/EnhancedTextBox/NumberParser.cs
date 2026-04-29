@@ -32,20 +32,20 @@ public class NumberParser
     public NumberParser(Func<string, object> textParseFunc, IErrorReporter errorReporter)
     {
         this.textParseFunc = textParseFunc;
-        ValueType = GetValueType(textParseFunc);
+        ValueType = GetValueType(textParseFunc: textParseFunc);
         this.errorReporter = errorReporter;
     }
 
     public object Parse(string text)
     {
-        if (string.IsNullOrEmpty(text))
+        if (string.IsNullOrEmpty(value: text))
         {
             return 0;
         }
 
         try
         {
-            return textParseFunc.Invoke(text);
+            return textParseFunc.Invoke(arg: text);
         }
         catch (OverflowException)
         {
@@ -57,7 +57,9 @@ public class NumberParser
         }
         catch (FormatException)
         {
-            errorReporter.NotifyInputError($"Cannot parse \"{text}\" to" + $" {ValueType.Name}");
+            errorReporter.NotifyInputError(
+                message: $"Cannot parse \"{text}\" to" + $" {ValueType.Name}"
+            );
             return "";
         }
     }
@@ -66,11 +68,11 @@ public class NumberParser
     {
         try
         {
-            return textParseFunc.Invoke("1").GetType();
+            return textParseFunc.Invoke(arg: "1").GetType();
         }
         catch
         {
-            throw new ArgumentException("textParseFunc cannot parse numeric values");
+            throw new ArgumentException(message: "textParseFunc cannot parse numeric values");
         }
     }
 }

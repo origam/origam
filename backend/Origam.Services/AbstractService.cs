@@ -27,19 +27,19 @@ public abstract class AbstractService : IWorkbenchService
 {
     public virtual void InitializeService()
     {
-        OnInitialize(EventArgs.Empty);
+        OnInitialize(e: EventArgs.Empty);
     }
 
     public virtual void UnloadService()
     {
-        OnUnload(EventArgs.Empty);
+        OnUnload(e: EventArgs.Empty);
     }
 
     protected virtual void OnInitialize(EventArgs e)
     {
         if (Initialize != null)
         {
-            Initialize(this, e);
+            Initialize(sender: this, e: e);
         }
     }
 
@@ -47,7 +47,7 @@ public abstract class AbstractService : IWorkbenchService
     {
         if (Unload != null)
         {
-            Unload(this, e);
+            Unload(sender: this, e: e);
         }
     }
 

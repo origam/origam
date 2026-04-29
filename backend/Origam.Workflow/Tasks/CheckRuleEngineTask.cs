@@ -38,11 +38,13 @@ public class CheckRuleEngineTask : AbstractWorkflowEngineTask
         CheckRuleStep task = this.Step as CheckRuleStep;
         if (task.ValidationRule == null)
         {
-            throw new NullReferenceException(ResourceUtils.GetString("ErrorNoEndRule", task.Path));
+            throw new NullReferenceException(
+                message: ResourceUtils.GetString(key: "ErrorNoEndRule", args: task.Path)
+            );
         }
         try
         {
-            this.Engine.EvaluateEndRule(task);
+            this.Engine.EvaluateEndRule(step: task);
         }
         catch (RuleException ruleException)
         {

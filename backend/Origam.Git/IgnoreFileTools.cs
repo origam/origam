@@ -29,27 +29,27 @@ namespace Origam.Git;
 public static class IgnoreFileTools
 {
     private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
-        MethodBase.GetCurrentMethod().DeclaringType
+        type: MethodBase.GetCurrentMethod().DeclaringType
     );
 
     public static void TryAdd(string ignoreFileDir, string ignoreFileEntry)
     {
-        string pathToIgnoreFile = Path.Combine(ignoreFileDir, ".gitignore");
+        string pathToIgnoreFile = Path.Combine(path1: ignoreFileDir, path2: ".gitignore");
         try
         {
-            var lines = File.Exists(pathToIgnoreFile)
-                ? File.ReadAllLines(pathToIgnoreFile).ToList()
+            var lines = File.Exists(path: pathToIgnoreFile)
+                ? File.ReadAllLines(path: pathToIgnoreFile).ToList()
                 : new List<string>();
-            if (lines.Any(line => line.Trim() == ignoreFileEntry))
+            if (lines.Any(predicate: line => line.Trim() == ignoreFileEntry))
             {
                 return;
             }
-            lines.Add(ignoreFileEntry);
-            File.WriteAllLines(pathToIgnoreFile, lines);
+            lines.Add(item: ignoreFileEntry);
+            File.WriteAllLines(path: pathToIgnoreFile, contents: lines);
         }
         catch (IOException ex)
         {
-            log.Warn($"Could not write to \"{pathToIgnoreFile}\"", ex);
+            log.Warn(message: $"Could not write to \"{pathToIgnoreFile}\"", exception: ex);
         }
     }
 }

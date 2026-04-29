@@ -29,7 +29,7 @@ namespace Origam.Schema.GuiModel;
 /// Summary description for DashboardConfiguration.
 /// </summary>
 [Serializable()]
-[XmlRoot("configuration")]
+[XmlRoot(elementName: "configuration")]
 public class DashboardConfiguration
 {
     private DashboardConfigurationItem[] _items;
@@ -43,12 +43,12 @@ public class DashboardConfiguration
             return new DashboardConfiguration();
         }
 
-        XmlSerializer ser = new XmlSerializer(typeof(DashboardConfiguration));
-        XmlNodeReader reader = new XmlNodeReader(doc);
-        return (DashboardConfiguration)ser.Deserialize(reader);
+        XmlSerializer ser = new XmlSerializer(type: typeof(DashboardConfiguration));
+        XmlNodeReader reader = new XmlNodeReader(node: doc);
+        return (DashboardConfiguration)ser.Deserialize(xmlReader: reader);
     }
 
-    [XmlElement("item", typeof(DashboardConfigurationItem))]
+    [XmlElement(elementName: "item", type: typeof(DashboardConfigurationItem))]
     public DashboardConfigurationItem[] Items
     {
         get { return _items; }

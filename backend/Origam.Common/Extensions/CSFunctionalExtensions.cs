@@ -34,7 +34,7 @@ public static class CsFunctionalExtensions
     {
         if (result.IsSuccess)
         {
-            return onSuccess(result.Value);
+            return onSuccess(arg: result.Value);
         }
         return onFailure();
     }

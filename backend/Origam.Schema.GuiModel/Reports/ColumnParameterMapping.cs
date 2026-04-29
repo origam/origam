@@ -27,8 +27,8 @@ using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.GuiModel;
 
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class ColumnParameterMapping : AbstractSchemaItem
 {
     public const string CategoryConst = "ColumnParameterMapping";
@@ -37,15 +37,15 @@ public class ColumnParameterMapping : AbstractSchemaItem
         : base() { }
 
     public ColumnParameterMapping(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public ColumnParameterMapping(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Properties
     private string _columnName;
 
-    [XmlAttribute("field")]
+    [XmlAttribute(attributeName: "field")]
     public string ColumnName
     {
         get { return _columnName; }

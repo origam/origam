@@ -32,28 +32,28 @@ namespace Origam.Schema.EntityModel;
 /// <summary>
 /// Summary description for DataEntityIndexField.
 /// </summary>
-[SchemaItemDescription("Index Field", "Fields", "icon_index-field.png")]
-[HelpTopic("Index+Field")]
-[XmlModelRoot(CategoryConst)]
-[DefaultProperty("Field")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Index Field", folderName: "Fields", iconName: "icon_index-field.png")]
+[HelpTopic(topic: "Index+Field")]
+[XmlModelRoot(category: CategoryConst)]
+[DefaultProperty(name: "Field")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class DataEntityIndexField : AbstractSchemaItem
 {
     public DataEntityIndexField()
         : base() { }
 
     public DataEntityIndexField(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public DataEntityIndexField(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     public const string CategoryConst = "DataEntityIndexField";
     #region Properties
     private DataEntityIndexSortOrder _sortOrder = DataEntityIndexSortOrder.Ascending;
 
     [NotNullModelElementRule()]
-    [XmlAttribute("sortOrder")]
+    [XmlAttribute(attributeName: "sortOrder")]
     public DataEntityIndexSortOrder SortOrder
     {
         get { return _sortOrder; }
@@ -62,7 +62,7 @@ public class DataEntityIndexField : AbstractSchemaItem
     private int _ordinalPosition;
 
     [NotNullModelElementRule()]
-    [XmlAttribute("ordinalPosition")]
+    [XmlAttribute(attributeName: "ordinalPosition")]
     public int OrdinalPosition
     {
         get { return _ordinalPosition; }
@@ -75,10 +75,10 @@ public class DataEntityIndexField : AbstractSchemaItem
 
     public Guid ColumnId;
 
-    [TypeConverter(typeof(EntityColumnReferenceConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
+    [TypeConverter(type: typeof(EntityColumnReferenceConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
     [NotNullModelElementRule()]
-    [XmlReference("field", "ColumnId")]
+    [XmlReference(attributeName: "field", idField: "ColumnId")]
     public IDataEntityColumn Field
     {
         get
@@ -86,17 +86,20 @@ public class DataEntityIndexField : AbstractSchemaItem
             ModelElementKey key = new ModelElementKey();
             key.Id = this.ColumnId;
             return (IDataEntityColumn)
-                this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
+                this.PersistenceProvider.RetrieveInstance(
+                    type: typeof(ISchemaItem),
+                    primaryKey: key
+                );
         }
         set
         {
-            this.ColumnId = (Guid)value.PrimaryKey["Id"];
+            this.ColumnId = (Guid)value.PrimaryKey[key: "Id"];
             UpdateName();
         }
     }
     #endregion
     #region Overriden ISchemaItem Members
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public override bool UseFolders
     {
         get { return false; }
@@ -113,8 +116,8 @@ public class DataEntityIndexField : AbstractSchemaItem
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(this.Field);
-        base.GetExtraDependencies(dependencies);
+        dependencies.Add(item: this.Field);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override void UpdateReferences()
@@ -123,7 +126,7 @@ public class DataEntityIndexField : AbstractSchemaItem
         {
             if (item.OldPrimaryKey != null)
             {
-                if (item.OldPrimaryKey.Equals(this.Field.PrimaryKey))
+                if (item.OldPrimaryKey.Equals(obj: this.Field.PrimaryKey))
                 {
                     this.Field = item as IDataEntityColumn;
                     break;
@@ -148,10 +151,10 @@ public class DataEntityIndexField : AbstractSchemaItem
         {
             DataEntityIndexField f = obj as DataEntityIndexField;
 
-            return this.OrdinalPosition.CompareTo(f.OrdinalPosition);
+            return this.OrdinalPosition.CompareTo(value: f.OrdinalPosition);
         }
 
-        return base.CompareTo(obj);
+        return base.CompareTo(obj: obj);
     }
     #endregion
 }

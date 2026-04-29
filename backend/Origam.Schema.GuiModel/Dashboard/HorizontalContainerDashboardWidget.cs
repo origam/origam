@@ -24,8 +24,8 @@ using Origam.DA.Common;
 
 namespace Origam.Schema.GuiModel;
 
-[SchemaItemDescription("Horizontal Container", "icon_horizontal-container.png")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Horizontal Container", iconName: "icon_horizontal-container.png")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class HorizontalContainerDashboardWidget : AbstractDashboardWidget
 {
     public HorizontalContainerDashboardWidget()
@@ -35,13 +35,13 @@ public class HorizontalContainerDashboardWidget : AbstractDashboardWidget
     }
 
     public HorizontalContainerDashboardWidget(Guid schemaExtensionId)
-        : base(schemaExtensionId)
+        : base(schemaExtensionId: schemaExtensionId)
     {
         Init();
     }
 
     public HorizontalContainerDashboardWidget(Key primaryKey)
-        : base(primaryKey)
+        : base(primaryKey: primaryKey)
     {
         Init();
     }

@@ -123,14 +123,14 @@ public class UIElementRenderData
         UIElementRenderData renderData = new UIElementRenderData();
         foreach (
             var property in control.ChildItemsByType<PropertyValueItem>(
-                PropertyValueItem.CategoryConst
+                itemType: PropertyValueItem.CategoryConst
             )
         )
         {
             string stringValue = property.Value;
-            if (stringValue != null && DatasetGenerator.IsCaptionExpression(stringValue))
+            if (stringValue != null && DatasetGenerator.IsCaptionExpression(caption: stringValue))
             {
-                stringValue = DatasetGenerator.EvaluateCaptionExpression(stringValue);
+                stringValue = DatasetGenerator.EvaluateCaptionExpression(caption: stringValue);
             }
             switch (property.ControlPropertyItem.Name)
             {
@@ -610,25 +610,25 @@ public class UIElementRenderData
 
                 case "StyleId":
                 {
-                    if (!property.GuidValue.Equals(Guid.Empty))
+                    if (!property.GuidValue.Equals(g: Guid.Empty))
                     {
-                        renderData.Style = GetStyle(property);
+                        renderData.Style = GetStyle(property: property);
                     }
                     break;
                 }
 
                 case "CalendarViewStyleId":
                 {
-                    if (!property.GuidValue.Equals(Guid.Empty))
+                    if (!property.GuidValue.Equals(g: Guid.Empty))
                     {
-                        renderData.CalendarViewStyle = GetStyle(property);
+                        renderData.CalendarViewStyle = GetStyle(property: property);
                     }
                     break;
                 }
 
                 default:
                 {
-                    renderData.DynamicProperties[property.Name] = property.Value;
+                    renderData.DynamicProperties[key: property.Name] = property.Value;
                     break;
                 }
             }
@@ -639,10 +639,11 @@ public class UIElementRenderData
     private static UIStyle GetStyle(PropertyValueItem property)
     {
         IPersistenceService persistence =
-            ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+            ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+            as IPersistenceService;
         return persistence.SchemaProvider.RetrieveInstance(
-                typeof(UIStyle),
-                new ModelElementKey(property.GuidValue)
+                type: typeof(UIStyle),
+                primaryKey: new ModelElementKey(id: property.GuidValue)
             ) as UIStyle;
     }
 }

@@ -32,7 +32,7 @@ public class DebugTimerTests
     {
         using (new DebugTimer())
         {
-            Thread.Sleep(1000);
+            Thread.Sleep(millisecondsTimeout: 1000);
         }
     }
 }

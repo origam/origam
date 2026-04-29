@@ -37,8 +37,12 @@ public class RuleEvaluationCache
     {
         if (
             rules.TryGetValue(
-                new Tuple<Guid, CredentialValueType, Guid>(rule.Id, rule.ValueType, entityId),
-                out var result
+                key: new Tuple<Guid, CredentialValueType, Guid>(
+                    item1: rule.Id,
+                    item2: rule.ValueType,
+                    item3: entityId
+                ),
+                value: out var result
             )
         )
         {
@@ -50,8 +54,12 @@ public class RuleEvaluationCache
     public void Put(AbstractEntitySecurityRule rule, Guid entityId, bool value)
     {
         rules.Add(
-            new Tuple<Guid, CredentialValueType, Guid>(rule.Id, rule.ValueType, entityId),
-            value
+            key: new Tuple<Guid, CredentialValueType, Guid>(
+                item1: rule.Id,
+                item2: rule.ValueType,
+                item3: entityId
+            ),
+            value: value
         );
     }
 
@@ -59,8 +67,8 @@ public class RuleEvaluationCache
     {
         if (
             rulelessFieldSecurityRuleResults.TryGetValue(
-                new Tuple<Guid, CredentialType>(entityId, type),
-                out var result
+                key: new Tuple<Guid, CredentialType>(item1: entityId, item2: type),
+                value: out var result
             )
         )
         {
@@ -72,8 +80,8 @@ public class RuleEvaluationCache
     public void PutRulelessFieldResult(Guid entityId, CredentialType type, bool value)
     {
         rulelessFieldSecurityRuleResults.Add(
-            new Tuple<Guid, CredentialType>(entityId, type),
-            value
+            key: new Tuple<Guid, CredentialType>(item1: entityId, item2: type),
+            value: value
         );
     }
 }

@@ -93,189 +93,201 @@ public class TypeDescriptorFilterServiceImpl : ITypeDescriptorFilterService
             // Load all properties we want to see
             foreach (
                 var propItem in ctrlSet.ControlItem.ChildItemsByType<ControlPropertyItem>(
-                    ControlPropertyItem.CategoryConst
+                    itemType: ControlPropertyItem.CategoryConst
                 )
             )
             {
-                finalprops.Add(propItem.Name, propItem.Name);
+                finalprops.Add(key: propItem.Name, value: propItem.Name);
             }
-            AddInheritedProperties(component, finalprops);
-            if (!finalprops.ContainsKey("Size"))
+            AddInheritedProperties(component: component, finalProps: finalprops);
+            if (!finalprops.ContainsKey(key: "Size"))
             {
-                finalprops.Add("Size", "Size");
-            }
-
-            if (!finalprops.ContainsKey("Location"))
-            {
-                finalprops.Add("Location", "Location");
+                finalprops.Add(key: "Size", value: "Size");
             }
 
-            if (!finalprops.ContainsKey("DataSource"))
+            if (!finalprops.ContainsKey(key: "Location"))
             {
-                finalprops.Add("DataSource", "DataSource");
+                finalprops.Add(key: "Location", value: "Location");
             }
 
-            if (!finalprops.ContainsKey("TextDetached"))
+            if (!finalprops.ContainsKey(key: "DataSource"))
             {
-                finalprops.Add("TextDetached", "TextDetached");
+                finalprops.Add(key: "DataSource", value: "DataSource");
             }
 
-            if (!finalprops.ContainsKey("DataBindings"))
+            if (!finalprops.ContainsKey(key: "TextDetached"))
             {
-                finalprops.Add("DataBindings", "DataBindings");
+                finalprops.Add(key: "TextDetached", value: "TextDetached");
             }
 
-            if (!finalprops.ContainsKey("CrystalReport"))
+            if (!finalprops.ContainsKey(key: "DataBindings"))
             {
-                finalprops.Add("CrystalReport", "CrystalReport");
+                finalprops.Add(key: "DataBindings", value: "DataBindings");
             }
 
-            if (!finalprops.ContainsKey("ParameterMappings"))
+            if (!finalprops.ContainsKey(key: "CrystalReport"))
             {
-                finalprops.Add("ParameterMappings", "ParameterMappings");
+                finalprops.Add(key: "CrystalReport", value: "CrystalReport");
             }
 
-            if (!finalprops.ContainsKey("Panel"))
+            if (!finalprops.ContainsKey(key: "ParameterMappings"))
             {
-                finalprops.Add("Panel", "Panel");
+                finalprops.Add(key: "ParameterMappings", value: "ParameterMappings");
             }
 
-            if (!finalprops.ContainsKey("DataLookup"))
+            if (!finalprops.ContainsKey(key: "Panel"))
             {
-                finalprops.Add("DataLookup", "DataLookup");
+                finalprops.Add(key: "Panel", value: "Panel");
             }
 
-            if (!finalprops.ContainsKey("SchemaItemName"))
+            if (!finalprops.ContainsKey(key: "DataLookup"))
             {
-                finalprops.Add("SchemaItemName", "SchemaItemName");
+                finalprops.Add(key: "DataLookup", value: "DataLookup");
             }
 
-            if (!finalprops.ContainsKey("SchemaItemId"))
+            if (!finalprops.ContainsKey(key: "SchemaItemName"))
             {
-                finalprops.Add("SchemaItemId", "SchemaItemId");
+                finalprops.Add(key: "SchemaItemName", value: "SchemaItemName");
             }
 
-            if (!finalprops.ContainsKey("Roles"))
+            if (!finalprops.ContainsKey(key: "SchemaItemId"))
             {
-                finalprops.Add("Roles", "Roles");
+                finalprops.Add(key: "SchemaItemId", value: "SchemaItemId");
             }
 
-            if (!finalprops.ContainsKey("Features"))
+            if (!finalprops.ContainsKey(key: "Roles"))
             {
-                finalprops.Add("Features", "Features");
+                finalprops.Add(key: "Roles", value: "Roles");
             }
 
-            if (!finalprops.ContainsKey("TitleIcon"))
+            if (!finalprops.ContainsKey(key: "Features"))
             {
-                finalprops.Add("TitleIcon", "TitleIcon");
+                finalprops.Add(key: "Features", value: "Features");
             }
 
-            if (!finalprops.ContainsKey("Workflow"))
+            if (!finalprops.ContainsKey(key: "TitleIcon"))
             {
-                finalprops.Add("Workflow", "Workflow");
+                finalprops.Add(key: "TitleIcon", value: "TitleIcon");
             }
 
-            if (!finalprops.ContainsKey("Icon"))
+            if (!finalprops.ContainsKey(key: "Workflow"))
             {
-                finalprops.Add("Icon", "Icon");
+                finalprops.Add(key: "Workflow", value: "Workflow");
             }
 
-            if (!finalprops.ContainsKey("ThumbnailWidthConstant"))
+            if (!finalprops.ContainsKey(key: "Icon"))
             {
-                finalprops.Add("ThumbnailWidthConstant", "ThumbnailWidthConstant");
+                finalprops.Add(key: "Icon", value: "Icon");
             }
 
-            if (!finalprops.ContainsKey("ThumbnailHeightConstant"))
+            if (!finalprops.ContainsKey(key: "ThumbnailWidthConstant"))
             {
-                finalprops.Add("ThumbnailHeightConstant", "ThumbnailHeightConstant");
+                finalprops.Add(key: "ThumbnailWidthConstant", value: "ThumbnailWidthConstant");
             }
 
-            if (!finalprops.ContainsKey("BlobLookup"))
+            if (!finalprops.ContainsKey(key: "ThumbnailHeightConstant"))
             {
-                finalprops.Add("BlobLookup", "BlobLookup");
+                finalprops.Add(key: "ThumbnailHeightConstant", value: "ThumbnailHeightConstant");
             }
 
-            if (!finalprops.ContainsKey("StorageTypeDefaultConstant"))
+            if (!finalprops.ContainsKey(key: "BlobLookup"))
             {
-                finalprops.Add("StorageTypeDefaultConstant", "StorageTypeDefaultConstant");
+                finalprops.Add(key: "BlobLookup", value: "BlobLookup");
             }
 
-            if (!finalprops.ContainsKey("DefaultCompressionConstant"))
+            if (!finalprops.ContainsKey(key: "StorageTypeDefaultConstant"))
             {
-                finalprops.Add("DefaultCompressionConstant", "DefaultCompressionConstant");
+                finalprops.Add(
+                    key: "StorageTypeDefaultConstant",
+                    value: "StorageTypeDefaultConstant"
+                );
             }
 
-            if (!finalprops.ContainsKey("PipelineStateLookup"))
+            if (!finalprops.ContainsKey(key: "DefaultCompressionConstant"))
             {
-                finalprops.Add("PipelineStateLookup", "PipelineStateLookup");
+                finalprops.Add(
+                    key: "DefaultCompressionConstant",
+                    value: "DefaultCompressionConstant"
+                );
             }
 
-            if (!finalprops.ContainsKey("IndependentDataSource"))
+            if (!finalprops.ContainsKey(key: "PipelineStateLookup"))
             {
-                finalprops.Add("IndependentDataSource", "IndependentDataSource");
+                finalprops.Add(key: "PipelineStateLookup", value: "PipelineStateLookup");
             }
 
-            if (!finalprops.ContainsKey("IndependentDataSourceFilter"))
+            if (!finalprops.ContainsKey(key: "IndependentDataSource"))
             {
-                finalprops.Add("IndependentDataSourceFilter", "IndependentDataSourceFilter7");
+                finalprops.Add(key: "IndependentDataSource", value: "IndependentDataSource");
             }
 
-            if (!finalprops.ContainsKey("IndependentDataSourceSort"))
+            if (!finalprops.ContainsKey(key: "IndependentDataSourceFilter"))
             {
-                finalprops.Add("IndependentDataSourceSort", "IndependentDataSourceSort");
+                finalprops.Add(
+                    key: "IndependentDataSourceFilter",
+                    value: "IndependentDataSourceFilter7"
+                );
             }
 
-            if (!finalprops.ContainsKey("ComponentBindings"))
+            if (!finalprops.ContainsKey(key: "IndependentDataSourceSort"))
             {
-                finalprops.Add("ComponentBindings", "ComponentBindings");
+                finalprops.Add(
+                    key: "IndependentDataSourceSort",
+                    value: "IndependentDataSourceSort"
+                );
             }
 
-            if (!finalprops.ContainsKey("Style"))
+            if (!finalprops.ContainsKey(key: "ComponentBindings"))
             {
-                finalprops.Add("Style", "Style");
+                finalprops.Add(key: "ComponentBindings", value: "ComponentBindings");
             }
 
-            if (!finalprops.ContainsKey("Tree"))
+            if (!finalprops.ContainsKey(key: "Style"))
             {
-                finalprops.Add("Tree", "Tree");
+                finalprops.Add(key: "Style", value: "Style");
             }
 
-            if (!finalprops.ContainsKey("ValueConstant"))
+            if (!finalprops.ContainsKey(key: "Tree"))
             {
-                finalprops.Add("ValueConstant", "ValueConstant");
+                finalprops.Add(key: "Tree", value: "Tree");
             }
 
-            if (!finalprops.ContainsKey("CalendarRowHeight"))
+            if (!finalprops.ContainsKey(key: "ValueConstant"))
             {
-                finalprops.Add("CalendarRowHeight", "CalendarRowHeight");
+                finalprops.Add(key: "ValueConstant", value: "ValueConstant");
             }
 
-            if (!finalprops.ContainsKey("MappingCondition"))
+            if (!finalprops.ContainsKey(key: "CalendarRowHeight"))
             {
-                finalprops.Add("MappingCondition", "MappingCondition");
+                finalprops.Add(key: "CalendarRowHeight", value: "CalendarRowHeight");
             }
 
-            if (!finalprops.ContainsKey("RequestSaveAfterChange"))
+            if (!finalprops.ContainsKey(key: "MappingCondition"))
             {
-                finalprops.Add("RequestSaveAfterChange", "RequestSaveAfterChange");
+                finalprops.Add(key: "MappingCondition", value: "MappingCondition");
             }
 
-            if (!finalprops.ContainsKey("CustomNumberFormat"))
+            if (!finalprops.ContainsKey(key: "RequestSaveAfterChange"))
             {
-                finalprops.Add("CustomNumberFormat", "CustomNumberFormat");
+                finalprops.Add(key: "RequestSaveAfterChange", value: "RequestSaveAfterChange");
+            }
+
+            if (!finalprops.ContainsKey(key: "CustomNumberFormat"))
+            {
+                finalprops.Add(key: "CustomNumberFormat", value: "CustomNumberFormat");
             }
             // needed for C1.TextBox
-            if (!finalprops.ContainsKey("VisualStyle"))
+            if (!finalprops.ContainsKey(key: "VisualStyle"))
             {
-                finalprops.Add("VisualStyle", "VisualStyle");
+                finalprops.Add(key: "VisualStyle", value: "VisualStyle");
             }
 
-            if (!finalprops.ContainsKey("CalendarViewStyle"))
+            if (!finalprops.ContainsKey(key: "CalendarViewStyle"))
             {
-                finalprops.Add("CalendarViewStyle", "CalendarViewStyle");
+                finalprops.Add(key: "CalendarViewStyle", value: "CalendarViewStyle");
             }
 
-            var keys = new List<object>(properties.Count);
+            var keys = new List<object>(capacity: properties.Count);
             // Sometimes keys are not exactly the member names, they are renamed (e.g. Feature_118 instead of just Feature.
             // Therefore we must dig into the member definition to get the real name.
             foreach (DictionaryEntry entry in properties)
@@ -283,18 +295,18 @@ public class TypeDescriptorFilterServiceImpl : ITypeDescriptorFilterService
                 MemberDescriptor md = entry.Value as MemberDescriptor;
                 if (md == null)
                 {
-                    keys.Add(entry.Key);
+                    keys.Add(item: entry.Key);
                 }
                 else
                 {
-                    keys.Add(md.Name);
+                    keys.Add(item: md.Name);
                 }
             }
             foreach (object key in keys)
             {
-                if (!finalprops.ContainsKey(key))
+                if (!finalprops.ContainsKey(key: key))
                 {
-                    properties.Remove(key);
+                    properties.Remove(key: key);
                 }
             }
         }
@@ -305,7 +317,7 @@ public class TypeDescriptorFilterServiceImpl : ITypeDescriptorFilterService
     private static void AddInheritedProperties(IComponent component, Hashtable finalProps)
     {
         ControlItem inheritorItem = DynamicTypeFactory.GetAssociatedControlItem(
-            component.GetType()
+            maybeDynamicType: component.GetType()
         );
         if (inheritorItem == null)
         {
@@ -314,11 +326,11 @@ public class TypeDescriptorFilterServiceImpl : ITypeDescriptorFilterService
 
         foreach (
             var propItem in inheritorItem.ChildItemsByType<ControlPropertyItem>(
-                ControlPropertyItem.CategoryConst
+                itemType: ControlPropertyItem.CategoryConst
             )
         )
         {
-            finalProps[propItem.Name] = propItem.Name;
+            finalProps[key: propItem.Name] = propItem.Name;
         }
     }
     #endregion

@@ -47,6 +47,6 @@ public class DefaultCompletionItem : ICompletionData
 
     public virtual void Complete(TextArea area, ISegment segment, EventArgs e)
     {
-        area.Document.Replace(segment.Offset, segment.Length, this.Text);
+        area.Document.Replace(offset: segment.Offset, length: segment.Length, text: this.Text);
     }
 }

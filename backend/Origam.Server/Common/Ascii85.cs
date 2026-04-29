@@ -72,10 +72,10 @@ class Ascii85
     {
         if (EnforceMarks)
         {
-            if (!s.StartsWith(PrefixMark) | !s.EndsWith(SuffixMark))
+            if (!s.StartsWith(value: PrefixMark) | !s.EndsWith(value: SuffixMark))
             {
                 throw new Exception(
-                    "ASCII85 encoded data should begin with '"
+                    message: "ASCII85 encoded data should begin with '"
                         + PrefixMark
                         + "' and end with '"
                         + SuffixMark
@@ -85,13 +85,13 @@ class Ascii85
         }
 
         // strip prefix and suffix if present
-        if (s.StartsWith(PrefixMark))
+        if (s.StartsWith(value: PrefixMark))
         {
-            s = s.Substring(PrefixMark.Length);
+            s = s.Substring(startIndex: PrefixMark.Length);
         }
-        if (s.EndsWith(SuffixMark))
+        if (s.EndsWith(value: SuffixMark))
         {
-            s = s.Substring(0, s.Length - SuffixMark.Length);
+            s = s.Substring(startIndex: 0, length: s.Length - SuffixMark.Length);
         }
 
         MemoryStream ms = new MemoryStream();
@@ -107,14 +107,14 @@ class Ascii85
                     if (count != 0)
                     {
                         throw new Exception(
-                            "The character 'z' is invalid inside an ASCII85 block."
+                            message: "The character 'z' is invalid inside an ASCII85 block."
                         );
                     }
                     _decodedBlock[0] = 0;
                     _decodedBlock[1] = 0;
                     _decodedBlock[2] = 0;
                     _decodedBlock[3] = 0;
-                    ms.Write(_decodedBlock, 0, _decodedBlock.Length);
+                    ms.Write(buffer: _decodedBlock, offset: 0, count: _decodedBlock.Length);
                     processChar = false;
                     break;
                 }
@@ -135,7 +135,7 @@ class Ascii85
                     if (c < '!' || c > 'u')
                     {
                         throw new Exception(
-                            "Bad character '"
+                            message: "Bad character '"
                                 + c
                                 + "' found. ASCII85 only allows characters '!' to 'u'."
                         );
@@ -152,7 +152,7 @@ class Ascii85
                 if (count == _encodedBlock.Length)
                 {
                     DecodeBlock();
-                    ms.Write(_decodedBlock, 0, _decodedBlock.Length);
+                    ms.Write(buffer: _decodedBlock, offset: 0, count: _decodedBlock.Length);
                     _tuple = 0;
                     count = 0;
                 }
@@ -164,14 +164,16 @@ class Ascii85
         {
             if (count == 1)
             {
-                throw new Exception("The last block of ASCII85 data cannot be a single byte.");
+                throw new Exception(
+                    message: "The last block of ASCII85 data cannot be a single byte."
+                );
             }
             count--;
             _tuple += pow85[count];
-            DecodeBlock(count);
+            DecodeBlock(bytes: count);
             for (int i = 0; i < count; i++)
             {
-                ms.WriteByte(_decodedBlock[i]);
+                ms.WriteByte(value: _decodedBlock[i]);
             }
         }
 
@@ -186,13 +188,13 @@ class Ascii85
     public string Encode(byte[] ba)
     {
         StringBuilder sb = new StringBuilder(
-            (int)(ba.Length * (_encodedBlock.Length / _decodedBlock.Length))
+            capacity: (int)(ba.Length * (_encodedBlock.Length / _decodedBlock.Length))
         );
         _linePos = 0;
 
         if (EnforceMarks)
         {
-            AppendString(sb, PrefixMark);
+            AppendString(sb: sb, s: PrefixMark);
         }
 
         int count = 0;
@@ -204,11 +206,11 @@ class Ascii85
                 _tuple |= b;
                 if (_tuple == 0)
                 {
-                    AppendChar(sb, 'z');
+                    AppendChar(sb: sb, c: 'z');
                 }
                 else
                 {
-                    EncodeBlock(sb);
+                    EncodeBlock(sb: sb);
                 }
                 _tuple = 0;
                 count = 0;
@@ -223,19 +225,19 @@ class Ascii85
         // if we have some bytes left over at the end..
         if (count > 0)
         {
-            EncodeBlock(count + 1, sb);
+            EncodeBlock(count: count + 1, sb: sb);
         }
 
         if (EnforceMarks)
         {
-            AppendString(sb, SuffixMark);
+            AppendString(sb: sb, s: SuffixMark);
         }
         return sb.ToString();
     }
 
     private void EncodeBlock(StringBuilder sb)
     {
-        EncodeBlock(_encodedBlock.Length, sb);
+        EncodeBlock(count: _encodedBlock.Length, sb: sb);
     }
 
     private void EncodeBlock(int count, StringBuilder sb)
@@ -249,13 +251,13 @@ class Ascii85
         for (int i = 0; i < count; i++)
         {
             char c = (char)_encodedBlock[i];
-            AppendChar(sb, c);
+            AppendChar(sb: sb, c: c);
         }
     }
 
     private void DecodeBlock()
     {
-        DecodeBlock(_decodedBlock.Length);
+        DecodeBlock(bytes: _decodedBlock.Length);
     }
 
     private void DecodeBlock(int bytes)
@@ -271,23 +273,23 @@ class Ascii85
         if (LineLength > 0 && (_linePos + s.Length > LineLength))
         {
             _linePos = 0;
-            sb.Append('\n');
+            sb.Append(value: '\n');
         }
         else
         {
             _linePos += s.Length;
         }
-        sb.Append(s);
+        sb.Append(value: s);
     }
 
     private void AppendChar(StringBuilder sb, char c)
     {
-        sb.Append(c);
+        sb.Append(value: c);
         _linePos++;
         if (LineLength > 0 && (_linePos >= LineLength))
         {
             _linePos = 0;
-            sb.Append('\n');
+            sb.Append(value: '\n');
         }
     }
 }

@@ -34,7 +34,7 @@ namespace Origam.Workflow.Tasks;
 public class ServiceMethodCallEngineTask : AbstractWorkflowEngineTask
 {
     private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
-        System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
+        type: System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
     );
     private IServiceAgent serviceAgent;
     private IServiceAgent ServiceAgent
@@ -45,12 +45,14 @@ public class ServiceMethodCallEngineTask : AbstractWorkflowEngineTask
             {
                 ServiceMethodCallTask task = Step as ServiceMethodCallTask;
                 ServiceAgentFactory serviceAgentFactory = new ServiceAgentFactory(
-                    externalAgent => new ExternalAgentWrapper(externalAgent)
+                    fromExternalAgent: externalAgent => new ExternalAgentWrapper(
+                        externalServiceAgent: externalAgent
+                    )
                 );
                 serviceAgent = serviceAgentFactory.GetAgent(
-                    task.Service.Name,
-                    this.Engine.RuleEngine,
-                    this.Engine
+                    serviceName: task.Service.Name,
+                    ruleEngine: this.Engine.RuleEngine,
+                    workflowEngine: this.Engine
                 );
             }
             return serviceAgent;
@@ -81,14 +83,14 @@ public class ServiceMethodCallEngineTask : AbstractWorkflowEngineTask
             if (exception != null)
             {
                 OnAsyncAgentOnAsyncCallFinished(
-                    this,
-                    new AsyncReturnValues { Exception = exception }
+                    sender: this,
+                    args: new AsyncReturnValues { Exception = exception }
                 );
             }
         }
         else
         {
-            OnFinished(new WorkflowEngineTaskEventArgs(exception));
+            OnFinished(e: new WorkflowEngineTaskEventArgs(exception: exception));
         }
         if (ServiceAgent is IDisposable disposableServiceAgent)
         {
@@ -103,7 +105,7 @@ public class ServiceMethodCallEngineTask : AbstractWorkflowEngineTask
             asyncAgent.AsyncCallFinished -= OnAsyncAgentOnAsyncCallFinished;
         }
         Result = args.Result;
-        OnFinished(new WorkflowEngineTaskEventArgs(args.Exception));
+        OnFinished(e: new WorkflowEngineTaskEventArgs(exception: args.Exception));
     }
 
     protected override void OnExecute()
@@ -111,7 +113,7 @@ public class ServiceMethodCallEngineTask : AbstractWorkflowEngineTask
         ServiceMethodCallTask task = Step as ServiceMethodCallTask;
         IServiceAgent agent = ServiceAgent;
 
-        agent.Trace = Engine.IsTrace(task);
+        agent.Trace = Engine.IsTrace(workflowStep: task);
         agent.TraceStepName = task.Path;
         agent.TraceWorkflowId = this.Engine.WorkflowInstanceId;
         agent.TraceStepId = task.Id;
@@ -120,7 +122,7 @@ public class ServiceMethodCallEngineTask : AbstractWorkflowEngineTask
         // Parameters
         foreach (
             var parameter in task.ChildItemsByType<ServiceMethodCallParameter>(
-                ServiceMethodCallParameter.CategoryConst
+                itemType: ServiceMethodCallParameter.CategoryConst
             )
         )
         {
@@ -130,17 +132,19 @@ public class ServiceMethodCallEngineTask : AbstractWorkflowEngineTask
                 // where Key is Name of the value
                 if (parameter.ServiceMethodParameter.DataType == OrigamDataType.Array)
                 {
-                    Hashtable paramList = new Hashtable(parameter.ChildItems.Count);
+                    Hashtable paramList = new Hashtable(capacity: parameter.ChildItems.Count);
                     foreach (ISchemaItem item in parameter.ChildItems)
                     {
-                        paramList.Add(item.Name, this.Evaluate(item));
+                        paramList.Add(key: item.Name, value: this.Evaluate(item: item));
                     }
                     if (log.IsDebugEnabled)
                     {
-                        log.RunHandled(() =>
+                        log.RunHandled(loggingAction: () =>
                         {
                             log.Debug(
-                                "Passing array of values into parameter '" + parameter.Name + "'"
+                                message: "Passing array of values into parameter '"
+                                    + parameter.Name
+                                    + "'"
                             );
                             foreach (DictionaryEntry entry in paramList)
                             {
@@ -150,7 +154,7 @@ public class ServiceMethodCallEngineTask : AbstractWorkflowEngineTask
                                     v = "array: {";
                                     for (int i = 0; i < list.Count; i++)
                                     {
-                                        object av = list[i];
+                                        object av = list[index: i];
                                         if (i != 0)
                                         {
                                             v += ", ";
@@ -165,19 +169,24 @@ public class ServiceMethodCallEngineTask : AbstractWorkflowEngineTask
                                     }
                                     v += "}";
                                 }
-                                log.Debug("     Key: '" + entry.Key + "' Value: '" + v + "'");
+                                log.Debug(
+                                    message: "     Key: '" + entry.Key + "' Value: '" + v + "'"
+                                );
                             }
                         });
                     }
-                    agent.Parameters.Add(parameter.ServiceMethodParameter.Name, paramList);
+                    agent.Parameters.Add(
+                        key: parameter.ServiceMethodParameter.Name,
+                        value: paramList
+                    );
                 }
                 else
                 {
-                    if (parameter.ChildItems[0] is ContextReference)
+                    if (parameter.ChildItems[index: 0] is ContextReference)
                     {
                         // We have to evaluate the context reference here, because here we have the context data
                         ContextReference contextReference =
-                            parameter.ChildItems[0] as ContextReference;
+                            parameter.ChildItems[index: 0] as ContextReference;
                         OrigamDataType targetType = parameter.ServiceMethodParameter.DataType;
                         if (
                             contextReference.CastToDataType != OrigamDataType.String
@@ -187,16 +196,21 @@ public class ServiceMethodCallEngineTask : AbstractWorkflowEngineTask
                             targetType = contextReference.CastToDataType;
                         }
                         object result = this.Engine.RuleEngine.EvaluateContext(
-                            contextReference.XPath,
-                            this.Engine.RuleEngine.GetContext(contextReference.ContextStore),
-                            targetType,
-                            null
+                            xpath: contextReference.XPath,
+                            context: this.Engine.RuleEngine.GetContext(
+                                contextStore: contextReference.ContextStore
+                            ),
+                            dataType: targetType,
+                            targetStructure: null
                         );
-                        agent.Parameters.Add(parameter.ServiceMethodParameter.Name, result);
+                        agent.Parameters.Add(
+                            key: parameter.ServiceMethodParameter.Name,
+                            value: result
+                        );
                         if (log.IsDebugEnabled)
                         {
                             log.Debug(
-                                "Passing value into parameter '"
+                                message: "Passing value into parameter '"
                                     + parameter.Name
                                     + "': "
                                     + (result == null ? "NULL" : result.ToString())
@@ -205,12 +219,17 @@ public class ServiceMethodCallEngineTask : AbstractWorkflowEngineTask
                     }
                     else
                     {
-                        object result = this.Engine.RuleEngine.Evaluate(parameter.ChildItems[0]);
-                        agent.Parameters.Add(parameter.ServiceMethodParameter.Name, result);
+                        object result = this.Engine.RuleEngine.Evaluate(
+                            item: parameter.ChildItems[index: 0]
+                        );
+                        agent.Parameters.Add(
+                            key: parameter.ServiceMethodParameter.Name,
+                            value: result
+                        );
                         if (log.IsDebugEnabled)
                         {
                             log.Debug(
-                                "Passing value into parameter '"
+                                message: "Passing value into parameter '"
                                     + parameter.Name
                                     + "': "
                                     + (result == null ? "NULL" : result.ToString())
@@ -223,7 +242,7 @@ public class ServiceMethodCallEngineTask : AbstractWorkflowEngineTask
             {
                 if (log.IsDebugEnabled)
                 {
-                    log.Debug("Parameter '" + parameter?.Name + "' has no value set.");
+                    log.Debug(message: "Parameter '" + parameter?.Name + "' has no value set.");
                 }
             }
         }
@@ -232,7 +251,7 @@ public class ServiceMethodCallEngineTask : AbstractWorkflowEngineTask
         agent.OutputMethod = task.OutputMethod;
         agent.DisableOutputStructureConstraints = task.OutputContextStore.DisableConstraints;
 
-        ProfilingTools.SetCurrentTaskToThreadLoggingContext(task);
+        ProfilingTools.SetCurrentTaskToThreadLoggingContext(task: task);
         agent.Run();
 
         ProfilingTools.ClearThreadLoggingContext();

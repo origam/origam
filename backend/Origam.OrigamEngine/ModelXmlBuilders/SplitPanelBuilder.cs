@@ -44,7 +44,11 @@ public class SplitPanelBuilder
         {
             type = (fixedSize ? "HBox" : "HSplit");
         }
-        parentNode.SetAttribute("type", "http://www.w3.org/2001/XMLSchema-instance", "UIElement");
-        parentNode.SetAttribute("Type", type);
+        parentNode.SetAttribute(
+            localName: "type",
+            namespaceURI: "http://www.w3.org/2001/XMLSchema-instance",
+            value: "UIElement"
+        );
+        parentNode.SetAttribute(name: "Type", value: type);
     }
 }

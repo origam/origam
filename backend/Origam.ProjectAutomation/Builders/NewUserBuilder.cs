@@ -34,33 +34,49 @@ public class NewUserBuilder : AbstractDatabaseBuilder
     public override void Execute(Project project)
     {
         var adaptivePassword = new InternalPasswordHasherWithLegacySupport();
-        string hashPassword = adaptivePassword.HashPassword(project.WebUserPassword);
+        string hashPassword = adaptivePassword.HashPassword(password: project.WebUserPassword);
         _databaseType = project.DatabaseType;
-        DataService(_databaseType).DbUser = project.Name;
-        DataService(_databaseType).ConnectionString = project.BuilderDataConnectionString;
+        DataService(DatabaseType: _databaseType).DbUser = project.Name;
+        DataService(DatabaseType: _databaseType).ConnectionString =
+            project.BuilderDataConnectionString;
         QueryParameterCollection parameters = new QueryParameterCollection();
-        parameters.Add(new QueryParameter("Id", Guid.NewGuid().ToString()));
-        parameters.Add(new QueryParameter("UserName", project.WebUserName));
-        parameters.Add(new QueryParameter("Password", hashPassword));
-        parameters.Add(new QueryParameter("FirstName", project.WebFirstName));
-        parameters.Add(new QueryParameter("Name", project.WebSurname));
-        parameters.Add(new QueryParameter("Email", project.WebEmail));
-        parameters.Add(new QueryParameter("RoleId", "E0AD1A0B-3E05-4B97-BE38-12FF63E7F2F2"));
-        parameters.Add(new QueryParameter("RequestEmailConfirmation", "false"));
-        DataService(_databaseType).CreateFirstNewWebUser(parameters);
+        parameters.Add(
+            value: new QueryParameter(_parameterName: "Id", value: Guid.NewGuid().ToString())
+        );
+        parameters.Add(
+            value: new QueryParameter(_parameterName: "UserName", value: project.WebUserName)
+        );
+        parameters.Add(value: new QueryParameter(_parameterName: "Password", value: hashPassword));
+        parameters.Add(
+            value: new QueryParameter(_parameterName: "FirstName", value: project.WebFirstName)
+        );
+        parameters.Add(
+            value: new QueryParameter(_parameterName: "Name", value: project.WebSurname)
+        );
+        parameters.Add(value: new QueryParameter(_parameterName: "Email", value: project.WebEmail));
+        parameters.Add(
+            value: new QueryParameter(
+                _parameterName: "RoleId",
+                value: "E0AD1A0B-3E05-4B97-BE38-12FF63E7F2F2"
+            )
+        );
+        parameters.Add(
+            value: new QueryParameter(_parameterName: "RequestEmailConfirmation", value: "false")
+        );
+        DataService(DatabaseType: _databaseType).CreateFirstNewWebUser(parameters: parameters);
     }
 
     private string BuildConnectionString(Project project)
     {
-        return DataService(_databaseType)
+        return DataService(DatabaseType: _databaseType)
             .BuildConnectionString(
-                project.DatabaseServerName,
-                project.DatabasePort,
-                project.DataDatabaseName,
-                project.DatabaseUserName,
-                project.DatabasePassword,
-                project.DatabaseIntegratedAuthentication,
-                false
+                serverName: project.DatabaseServerName,
+                port: project.DatabasePort,
+                databaseName: project.DataDatabaseName,
+                userName: project.DatabaseUserName,
+                password: project.DatabasePassword,
+                integratedAuthentication: project.DatabaseIntegratedAuthentication,
+                pooling: false
             );
     }
 

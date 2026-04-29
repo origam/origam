@@ -51,10 +51,10 @@ public class WorkQueueSessionStore : SessionStore
         string name,
         Analytics analytics
     )
-        : base(service, request, name, analytics)
+        : base(service: service, request: request, name: name, analytics: analytics)
     {
         RefreshOnInitUI = true;
-        RetrieveWorkQueueClassAndCustomScreen(new Guid(request.ObjectId));
+        RetrieveWorkQueueClassAndCustomScreen(workQueueId: new Guid(g: request.ObjectId));
         InitializeMethodId();
         InitializeDataStructureId();
     }
@@ -62,26 +62,33 @@ public class WorkQueueSessionStore : SessionStore
     private void RetrieveWorkQueueClassAndCustomScreen(Guid workQueueId)
     {
         var workQueueService = ServiceManager.Services.GetService<IWorkQueueService>();
-        workQueueClass = workQueueService.WQClass(workQueueId) as WorkQueueClass;
+        workQueueClass = workQueueService.WQClass(queueId: workQueueId) as WorkQueueClass;
         if (workQueueClass == null)
         {
-            throw new Exception(string.Format(Resources.ErrorWorkQueueClassNotFound, workQueueId));
+            throw new Exception(
+                message: string.Format(
+                    format: Resources.ErrorWorkQueueClassNotFound,
+                    arg0: workQueueId
+                )
+            );
         }
         SortSet = workQueueClass.WorkQueueStructureSortSet;
-        string customScreenName = workQueueService.CustomScreenName(workQueueId);
-        if (string.IsNullOrEmpty(customScreenName))
+        string customScreenName = workQueueService.CustomScreenName(queueId: workQueueId);
+        if (string.IsNullOrEmpty(value: customScreenName))
         {
             return;
         }
         customScreen =
-            workQueueClass.GetChildByName(customScreenName, WorkQueueCustomScreen.CategoryConst)
-            as WorkQueueCustomScreen;
+            workQueueClass.GetChildByName(
+                name: customScreenName,
+                itemType: WorkQueueCustomScreen.CategoryConst
+            ) as WorkQueueCustomScreen;
         if (customScreen is null)
         {
             throw new Exception(
-                string.Format(
-                    Resources.ErrorSpecifiedCustomWorkQueueScreenNotFound,
-                    customScreenName
+                message: string.Format(
+                    format: Resources.ErrorSpecifiedCustomWorkQueueScreenNotFound,
+                    arg0: customScreenName
                 )
             );
         }
@@ -93,14 +100,14 @@ public class WorkQueueSessionStore : SessionStore
             customScreen?.MethodId
             ?? workQueueClass
                 .WorkQueueStructure.Methods.Cast<DataStructureFilterSet>()
-                .FirstOrDefault(x => x.Name == "GetById")
+                .FirstOrDefault(predicate: x => x.Name == "GetById")
                 ?.Id;
         if (methodId == null)
         {
             throw new Exception(
-                string.Format(
-                    Resources.ErrorNoGetByIdFilterSet,
-                    workQueueClass.WorkQueueStructure.Id
+                message: string.Format(
+                    format: Resources.ErrorNoGetByIdFilterSet,
+                    arg0: workQueueClass.WorkQueueStructure.Id
                 )
             );
         }
@@ -115,14 +122,14 @@ public class WorkQueueSessionStore : SessionStore
     private void PrepareData()
     {
         var data = InitializeFullStructure();
-        SetDataSource(data);
+        SetDataSource(dataSource: data);
         IsDelayedLoading = true;
         DataListEntity = "WorkQueueEntry";
     }
 
     private DataSet InitializeFullStructure()
     {
-        return dataSetBuilder.InitializeFullStructure(dataStructureId, defaultSet: null);
+        return dataSetBuilder.InitializeFullStructure(id: dataStructureId, defaultSet: null);
     }
 
     public override List<ChangeInfo> GetRowData(string entity, object id, bool ignoreDirtyState)
@@ -135,17 +142,17 @@ public class WorkQueueSessionStore : SessionStore
                 CurrentRecordId = null;
                 return result;
             }
-            DataRow row = GetSessionRow(entity, id);
+            DataRow row = GetSessionRow(entity: entity, id: id);
             // for new rows we don't even try to load the data from the database
             if (row is not { RowState: DataRowState.Added })
             {
                 if (!ignoreDirtyState && Data.HasChanges())
                 {
-                    throw new Exception(Resources.ErrorDataNotSavedWhileChangingRow);
+                    throw new Exception(message: Resources.ErrorDataNotSavedWhileChangingRow);
                 }
                 CurrentRecordId = null;
                 SetDataSource(
-                    CoreServices.DataService.Instance.LoadData(
+                    dataSource: CoreServices.DataService.Instance.LoadData(
                         dataStructureId: dataStructureId,
                         methodId: methodId!.Value,
                         defaultSetId: Guid.Empty,
@@ -157,21 +164,21 @@ public class WorkQueueSessionStore : SessionStore
                 );
             }
             CurrentRecordId = id;
-            DataRow actualDataRow = GetSessionRow(entity, id);
+            DataRow actualDataRow = GetSessionRow(entity: entity, id: id);
             if (actualDataRow == null)
             {
                 throw new RowNotFoundException();
             }
-            UpdateListRow(actualDataRow);
+            UpdateListRow(r: actualDataRow);
             ChangeInfo changeInfo = GetChangeInfo(
                 requestingGrid: null,
                 row: actualDataRow,
                 operation: 0
             );
-            result.Add(changeInfo);
+            result.Add(item: changeInfo);
             if (actualDataRow.RowState == DataRowState.Unchanged)
             {
-                result.Add(ChangeInfo.SavedChangeInfo());
+                result.Add(item: ChangeInfo.SavedChangeInfo());
             }
         }
         return result;
@@ -183,7 +190,11 @@ public class WorkQueueSessionStore : SessionStore
         object rootRecordId
     )
     {
-        return GetDataImplementation(childEntity, parentRecordId, rootRecordId);
+        return GetDataImplementation(
+            childEntity: childEntity,
+            parentRecordId: parentRecordId,
+            rootRecordId: rootRecordId
+        );
     }
 
     public override void Init()
@@ -197,9 +208,9 @@ public class WorkQueueSessionStore : SessionStore
         {
             ACTION_REFRESH => Refresh(),
             _ => throw new ArgumentOutOfRangeException(
-                nameof(actionId),
-                actionId,
-                Resources.ErrorContextUnknownAction
+                paramName: nameof(actionId),
+                actualValue: actionId,
+                message: Resources.ErrorContextUnknownAction
             ),
         };
     }
@@ -211,7 +222,7 @@ public class WorkQueueSessionStore : SessionStore
             dataset: Data,
             screenTitle: Request.Caption,
             customScreen: customScreen,
-            queueId: new Guid(Request.ObjectId)
+            queueId: new Guid(g: Request.ObjectId)
         );
         return formXml;
     }

@@ -47,9 +47,9 @@ public class PropertyGridEditor : AbstractEditor
         //
         this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
         this.propertyGrid1.HelpBackColor = System.Drawing.Color.LightYellow;
-        this.propertyGrid1.Location = new System.Drawing.Point(0, 40);
+        this.propertyGrid1.Location = new System.Drawing.Point(x: 0, y: 40);
         this.propertyGrid1.Name = "propertyGrid1";
-        this.propertyGrid1.Size = new System.Drawing.Size(687, 526);
+        this.propertyGrid1.Size = new System.Drawing.Size(width: 687, height: 526);
         this.propertyGrid1.TabIndex = 0;
         this.propertyGrid1.PropertyValueChanged +=
             new System.Windows.Forms.PropertyValueChangedEventHandler(
@@ -58,22 +58,22 @@ public class PropertyGridEditor : AbstractEditor
         //
         // TestEditor
         //
-        this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-        this.ClientSize = new System.Drawing.Size(766, 566);
-        this.Controls.Add(this.propertyGrid1);
+        this.AutoScaleBaseSize = new System.Drawing.Size(width: 5, height: 13);
+        this.ClientSize = new System.Drawing.Size(width: 766, height: 566);
+        this.Controls.Add(value: this.propertyGrid1);
         this.Font = new System.Drawing.Font(
-            "Microsoft Sans Serif",
-            8.25F,
-            System.Drawing.FontStyle.Regular,
-            System.Drawing.GraphicsUnit.Point,
-            ((byte)(238))
+            familyName: "Microsoft Sans Serif",
+            emSize: 8.25F,
+            style: System.Drawing.FontStyle.Regular,
+            unit: System.Drawing.GraphicsUnit.Point,
+            gdiCharSet: ((byte)(238))
         );
         this.Name = "TestEditor";
         this.ShowIcon = false;
         this.ShowInTaskbar = false;
         this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-        this.Controls.SetChildIndex(this.propertyGrid1, 0);
-        this.ResumeLayout(false);
+        this.Controls.SetChildIndex(child: this.propertyGrid1, newIndex: 0);
+        this.ResumeLayout(performLayout: false);
         this.PerformLayout();
     }
 
@@ -118,13 +118,16 @@ public class PropertyGridEditor : AbstractEditor
     {
         if (this.IsReadOnly)
         {
-            e.ChangedItem.PropertyDescriptor.SetValue(propertyGrid1.SelectedObject, e.OldValue);
+            e.ChangedItem.PropertyDescriptor.SetValue(
+                component: propertyGrid1.SelectedObject,
+                value: e.OldValue
+            );
             MessageBox.Show(
-                this,
-                ResourceUtils.GetString("ErrorElementReadOnly"),
-                ResourceUtils.GetString("ErrorTitle"),
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error
+                owner: this,
+                text: ResourceUtils.GetString(key: "ErrorElementReadOnly"),
+                caption: ResourceUtils.GetString(key: "ErrorTitle"),
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Error
             );
         }
         else

@@ -34,18 +34,21 @@ public class ProjectBuilder
 
     public ProjectBuilder()
     {
-        dockerBuilder = new DockerBuilder(dataDatabaseBuilder);
+        dockerBuilder = new DockerBuilder(dataDatabaseBuilder: dataDatabaseBuilder);
     }
 
     public void Create(Project project)
     {
         dataDatabaseBuilder.ResetDataservice();
-        project.DataConnectionString = dataDatabaseBuilder.BuildConnectionString(project, true);
-        project.BuilderDataConnectionString = dataDatabaseBuilder.BuildConnectionStringArchitect(
-            project,
-            false
+        project.DataConnectionString = dataDatabaseBuilder.BuildConnectionString(
+            project: project,
+            pooling: true
         );
-        project.BaseUrl = dockerBuilder.WebSiteUrl(project);
+        project.BuilderDataConnectionString = dataDatabaseBuilder.BuildConnectionStringArchitect(
+            project: project,
+            pooling: false
+        );
+        project.BaseUrl = dockerBuilder.WebSiteUrl(project: project);
         IProjectBuilder activeTask = null;
         try
         {
@@ -53,7 +56,7 @@ public class ProjectBuilder
             {
                 activeTask = builder;
                 builder.State = TaskState.Running;
-                builder.Execute(project);
+                builder.Execute(project: project);
                 builder.State = TaskState.Finished;
             }
         }
@@ -62,7 +65,7 @@ public class ProjectBuilder
             activeTask.State = TaskState.Failed;
             for (int i = tasks.Count - 1; i >= 0; i--)
             {
-                Rollback(tasks[i]);
+                Rollback(builder: tasks[index: i]);
             }
             throw;
         }
@@ -73,34 +76,34 @@ public class ProjectBuilder
         tasks.Clear();
         if (project.DatabaseType == DatabaseType.MsSql)
         {
-            tasks.Add(settingsBuilder);
-            tasks.Add(dataDatabaseBuilder);
-            tasks.Add(new FileModelImportBuilder());
-            tasks.Add(new FileModelInitBuilder());
-            tasks.Add(new DataDatabaseStructureBuilder());
-            tasks.Add(new ApplyDatabasePermissionsBuilder());
-            tasks.Add(new NewPackageBuilder());
+            tasks.Add(item: settingsBuilder);
+            tasks.Add(item: dataDatabaseBuilder);
+            tasks.Add(item: new FileModelImportBuilder());
+            tasks.Add(item: new FileModelInitBuilder());
+            tasks.Add(item: new DataDatabaseStructureBuilder());
+            tasks.Add(item: new ApplyDatabasePermissionsBuilder());
+            tasks.Add(item: new NewPackageBuilder());
         }
         if (project.DatabaseType == DatabaseType.PgSql)
         {
-            tasks.Add(new FileModelImportBuilder());
-            tasks.Add(settingsBuilder);
-            tasks.Add(dataDatabaseBuilder);
-            tasks.Add(new ApplyDatabasePermissionsBuilder());
-            tasks.Add(new FileModelInitBuilder());
-            tasks.Add(new DataDatabaseStructureBuilder());
-            tasks.Add(new NewPackageBuilder());
+            tasks.Add(item: new FileModelImportBuilder());
+            tasks.Add(item: settingsBuilder);
+            tasks.Add(item: dataDatabaseBuilder);
+            tasks.Add(item: new ApplyDatabasePermissionsBuilder());
+            tasks.Add(item: new FileModelInitBuilder());
+            tasks.Add(item: new DataDatabaseStructureBuilder());
+            tasks.Add(item: new NewPackageBuilder());
         }
-        tasks.Add(new NewUserBuilder());
-        tasks.Add(dockerBuilder);
-        AddGitTasks(project);
+        tasks.Add(item: new NewUserBuilder());
+        tasks.Add(item: dockerBuilder);
+        AddGitTasks(project: project);
     }
 
     private void AddGitTasks(Project project)
     {
         if (project.GitRepository)
         {
-            tasks.Add(new CreateGitRepository());
+            tasks.Add(item: new CreateGitRepository());
         }
     }
 

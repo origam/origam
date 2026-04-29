@@ -26,7 +26,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 @inject IOptions<CustomAssetsConfig> ConfigOptions;
 @{
     CustomAssetsConfig config = ConfigOptions.Value;
-    var logoUrl = string.IsNullOrWhiteSpace(config.IdentityGuiLogoUrl)
+    var logoUrl = string.IsNullOrWhiteSpace(value: config.IdentityGuiLogoUrl)
         ? "/assets/identity/icons/origam-logo.svg"
         : config.IdentityGuiLogoUrl;
 
@@ -38,7 +38,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@string.Format(SharedLocalizer.GetString("IdentityServerTitle"), settings.TitleText )</title>
+    <title>@string.Format(format: SharedLocalizer.GetString(name: "IdentityServerTitle"), arg0: settings.TitleText )</title>
     <link rel="stylesheet" href="~/assets/identity/css/css.css?version=0.0.0.0" />
     <link rel="stylesheet" href="~/assets/identity/css/main.css?version=0.0.0.0" />
     <link rel="stylesheet" href="~/assets/identity/css/login.css?version=0.0.0.0" />
@@ -46,7 +46,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 <body>
 <div id="overlay" class="page-content">
     <h3>
-        @SharedLocalizer["BrowserNotCompatible"]
+        @SharedLocalizer[name: "BrowserNotCompatible"]
     </h3>
     <div id="browserLinks">
         <a class="btn normal-size primary" href="https://www.google.com/chrome/">Chrome</a>
@@ -55,7 +55,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
         <a class="btn normal-size primary" id="safariLink" href="https://www.apple.com/safari/">Safari</a>
     </div>
     <div class="input-row">
-        <a id="continueAnywayLink">@SharedLocalizer["ContinueAnyway"]</a>
+        <a id="continueAnywayLink">@SharedLocalizer[name: "ContinueAnyway"]</a>
     </div>
 </div>
 <div id="page-container" class="page-content">
@@ -69,6 +69,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 <script src="~/assets/identity/js/custom.js?version=0.0.0.0"></script>
 <script src="~/assets/supportedBrowserRegEx.js?version=0.0.0.0"></script>
 <script src="~/assets/identity/js/browser-check.js?version=0.0.0.0"></script>
-@RenderSection("scripts", required: false)
+@RenderSection(name: "scripts", required: false)
 </body>
 </html>

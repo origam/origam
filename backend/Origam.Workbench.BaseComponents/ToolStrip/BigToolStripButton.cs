@@ -30,26 +30,31 @@ public class BigToolStripButton : ToolStripButton
 {
     public BigToolStripButton()
     {
-        Font = new Font(Font.Name, 8);
-        ToolStripButtonTools.InitBigButton(this);
+        Font = new Font(familyName: Font.Name, emSize: 8);
+        ToolStripButtonTools.InitBigButton(actionButton: this);
     }
 
     public override string Text
     {
         get => base.Text;
-        set => SetTextWithCorrectWidth(value);
+        set => SetTextWithCorrectWidth(value: value);
     }
 
     private void SetTextWithCorrectWidth(string value)
     {
         string valueWithSpace =
-            " " + (value.EndsWith("...") ? value.Substring(0, value.Length - 3) : value);
-        base.Text = valueWithSpace.Wrap(Width, Font);
-        if (!base.Text.Contains(Environment.NewLine))
+            " "
+            + (
+                value.EndsWith(value: "...")
+                    ? value.Substring(startIndex: 0, length: value.Length - 3)
+                    : value
+            );
+        base.Text = valueWithSpace.Wrap(widthInPixels: Width, font: Font);
+        if (!base.Text.Contains(value: Environment.NewLine))
         {
             base.Text += Environment.NewLine;
         }
-        if (base.Text.EndsWith(Environment.NewLine))
+        if (base.Text.EndsWith(value: Environment.NewLine))
         {
             base.Text += " ";
         }
@@ -57,14 +62,14 @@ public class BigToolStripButton : ToolStripButton
 
     protected override void OnPaint(PaintEventArgs e)
     {
-        PaintButtonBackground(e);
-        ToolStripButtonTools.PaintImage(this, e);
-        this.PaintText(e);
+        PaintButtonBackground(e: e);
+        ToolStripButtonTools.PaintImage(actionButton: this, e: e);
+        this.PaintText(e: e);
     }
 
     private void PaintButtonBackground(PaintEventArgs e)
     {
-        var eventArgs = new ToolStripItemRenderEventArgs(e.Graphics, this);
-        Owner.Renderer.DrawButtonBackground(eventArgs);
+        var eventArgs = new ToolStripItemRenderEventArgs(g: e.Graphics, item: this);
+        Owner.Renderer.DrawButtonBackground(e: eventArgs);
     }
 }

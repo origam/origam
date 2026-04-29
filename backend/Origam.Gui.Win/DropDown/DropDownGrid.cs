@@ -63,7 +63,7 @@ public class DropDownGrid : System.Windows.Forms.Form, ILookupDropDownPart
             }
             this.DataSource = null;
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
 
     protected override bool ProcessTabKey(bool forward)
@@ -186,23 +186,23 @@ public class DropDownGrid : System.Windows.Forms.Form, ILookupDropDownPart
             // more rows than displayed, we have to calculate with the vertical scrollbar for the total width of the dropdown
             w += SystemInformation.VerticalScrollBarWidth;
         }
-        foreach (DataGridColumnStyle st in grid.TableStyles[0].GridColumnStyles)
+        foreach (DataGridColumnStyle st in grid.TableStyles[index: 0].GridColumnStyles)
         {
-            ColAutoResize(st);
+            ColAutoResize(style: st);
             w += st.Width;
         }
         if (w < this.Width & this.ColumnList.Length == 1)
         {
-            grid.TableStyles[0].GridColumnStyles[0].Width = this.Width - 5;
+            grid.TableStyles[index: 0].GridColumnStyles[index: 0].Width = this.Width - 5;
         }
         else if (w > this.Width)
         {
             this.Width = w;
         }
-        Rectangle screen = Screen.FromControl(this.DropDownControl).WorkingArea;
+        Rectangle screen = Screen.FromControl(control: this.DropDownControl).WorkingArea;
         Point location = new System.Drawing.Point(
-            this.DropDownControl.ScreenLocation.X,
-            this.DropDownControl.ScreenLocation.Y
+            x: this.DropDownControl.ScreenLocation.X,
+            y: this.DropDownControl.ScreenLocation.Y
         );
         int screenTotalWidth = screen.X + screen.Width;
         int screenTotalHeight = screen.Y + screen.Height;
@@ -224,7 +224,7 @@ public class DropDownGrid : System.Windows.Forms.Form, ILookupDropDownPart
 
     private void ColAutoResize(DataGridColumnStyle style)
     {
-        DataGridTableStyle myGridTable = grid.TableStyles[0];
+        DataGridTableStyle myGridTable = grid.TableStyles[index: 0];
         CurrencyManager listManager = this.Context as CurrencyManager;
         if (listManager != null)
         {
@@ -234,23 +234,24 @@ public class DropDownGrid : System.Windows.Forms.Form, ILookupDropDownPart
                 string headerText = style.HeaderText;
                 headerFont = myGridTable.HeaderFont;
                 int num =
-                    ((int)graphics.MeasureString(headerText, headerFont).Width)
+                    ((int)graphics.MeasureString(text: headerText, font: headerFont).Width)
                     + (grid.ColumnHeadersVisible ? 25 : 0); // + this.layout.ColumnHeaders.Height) + 1;
                 int count = listManager.Count;
 
                 bool emptyColumn = true;
                 for (int i = 0; i < count; i++)
                 {
-                    string columnValueAtRow = (listManager.List as DataView)[i]
-                        [style.MappingName]
+                    string columnValueAtRow = (listManager.List as DataView)[recordIndex: i]
+                        [property: style.MappingName]
                         .ToString();
-                    if (!columnValueAtRow.Equals(""))
+                    if (!columnValueAtRow.Equals(value: ""))
                     {
                         emptyColumn = false;
                     }
 
                     int width =
-                        ((int)graphics.MeasureString(columnValueAtRow, grid.Font).Width) + 2;
+                        ((int)graphics.MeasureString(text: columnValueAtRow, font: grid.Font).Width)
+                        + 2;
                     if (width > num)
                     {
                         num = width;
@@ -324,7 +325,7 @@ public class DropDownGrid : System.Windows.Forms.Form, ILookupDropDownPart
                     ts.AlternatingBackColor = grid.AlternatingBackColor;
                     foreach (string col in ColumnList)
                     {
-                        DataColumn dataCol = (value as DataView).Table.Columns[col];
+                        DataColumn dataCol = (value as DataView).Table.Columns[name: col];
                         DropDownTextColumn c = new DropDownTextColumn();
                         c.NullText = "";
                         c.Alignment = (
@@ -337,12 +338,12 @@ public class DropDownGrid : System.Windows.Forms.Form, ILookupDropDownPart
                         );
                         c.MappingName = col;
                         c.HeaderText = dataCol.Caption;
-                        ts.GridColumnStyles.Add(c);
+                        ts.GridColumnStyles.Add(column: c);
                     }
-                    grid.TableStyles.Add(ts);
+                    grid.TableStyles.Add(table: ts);
                 }
             }
-            grid.SetDataBinding(value, "");
+            grid.SetDataBinding(dataSource: value, dataMember: "");
             if (value == null)
             {
                 return;
@@ -366,11 +367,11 @@ public class DropDownGrid : System.Windows.Forms.Form, ILookupDropDownPart
     }
     private string[] ColumnList
     {
-        get { return this.DisplayMember.Split(";".ToCharArray()); }
+        get { return this.DisplayMember.Split(separator: ";".ToCharArray()); }
     }
     private BindingManagerBase Context
     {
-        get { return this.grid.BindingContext[this.DataSource, ""]; }
+        get { return this.grid.BindingContext[dataSource: this.DataSource, dataMember: ""]; }
     }
     public string SelectedText
     {
@@ -378,7 +379,8 @@ public class DropDownGrid : System.Windows.Forms.Form, ILookupDropDownPart
         {
             if (this.Context.Position >= 0)
             {
-                return (this.Context.Current as DataRowView)[this.ColumnList[0]].ToString();
+                return (this.Context.Current as DataRowView)[property: this.ColumnList[0]]
+                    .ToString();
             }
 
             return null;
@@ -395,7 +397,7 @@ public class DropDownGrid : System.Windows.Forms.Form, ILookupDropDownPart
                 return DBNull.Value;
             }
 
-            return (this.Context.Current as DataRowView)[this.ValueMember];
+            return (this.Context.Current as DataRowView)[property: this.ValueMember];
             //				return this.list.SelectedValue;
         }
         set
@@ -414,7 +416,11 @@ public class DropDownGrid : System.Windows.Forms.Form, ILookupDropDownPart
                     DataView view = (this.Context as CurrencyManager).List as DataView;
                     for (int i = 0; i < view.Count; i++)
                     {
-                        if (view[i].Row[this.ValueMember].Equals(value))
+                        if (
+                            view[recordIndex: i]
+                                .Row[columnName: this.ValueMember]
+                                .Equals(obj: value)
+                        )
                         {
                             this.Context.Position = i;
                         }
@@ -465,10 +471,18 @@ public class DropDownGrid : System.Windows.Forms.Form, ILookupDropDownPart
         {
             if (source.Position == rowNum)
             {
-                backBrush = new SolidBrush(this.DataGridTableStyle.SelectionBackColor);
-                foreBrush = new SolidBrush(this.DataGridTableStyle.SelectionForeColor);
+                backBrush = new SolidBrush(color: this.DataGridTableStyle.SelectionBackColor);
+                foreBrush = new SolidBrush(color: this.DataGridTableStyle.SelectionForeColor);
             }
-            base.Paint(g, bounds, source, rowNum, backBrush, foreBrush, alignToRight);
+            base.Paint(
+                g: g,
+                bounds: bounds,
+                source: source,
+                rowNum: rowNum,
+                backBrush: backBrush,
+                foreBrush: foreBrush,
+                alignToRight: alignToRight
+            );
         }
     }
 
@@ -479,8 +493,8 @@ public class DropDownGrid : System.Windows.Forms.Form, ILookupDropDownPart
 
         protected override void OnMouseUp(MouseEventArgs e)
         {
-            base.OnMouseUp(e);
-            DataGrid.HitTestInfo hti = this.HitTest(e.X, e.Y);
+            base.OnMouseUp(e: e);
+            DataGrid.HitTestInfo hti = this.HitTest(x: e.X, y: e.Y);
             if (hti.Row >= 0)
             {
                 DropDownGrid parent = this.Parent as DropDownGrid;
@@ -506,11 +520,11 @@ public class DropDownGrid : System.Windows.Forms.Form, ILookupDropDownPart
                 }
                 if ((keyData & Keys.KeyCode) == Keys.Tab)
                 {
-                    parent.ProcessTabKey(true);
+                    parent.ProcessTabKey(forward: true);
                     return true;
                 }
             }
-            return base.ProcessCmdKey(ref msg, keyData);
+            return base.ProcessCmdKey(msg: ref msg, keyData: keyData);
         }
     }
 }

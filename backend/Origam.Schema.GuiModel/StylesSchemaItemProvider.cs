@@ -28,7 +28,7 @@ public class StylesSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemF
 {
     public StylesSchemaItemProvider()
     {
-        this.ChildItemTypes.Add(typeof(UIStyle));
+        this.ChildItemTypes.Add(item: typeof(UIStyle));
     }
 
     #region ISchemaItemProvider Members

@@ -30,14 +30,21 @@ public class CollapsiblePanelBuilder
 {
     public static void Build(XmlElement parentNode, UIElementRenderData renderData)
     {
-        parentNode.SetAttribute("type", "http://www.w3.org/2001/XMLSchema-instance", "UIElement");
-        parentNode.SetAttribute("Type", "CollapsiblePanel");
-        parentNode.SetAttribute("Label", renderData.Text);
-        parentNode.SetAttribute("IndentLevel", renderData.IndentLevel.ToString());
-        parentNode.SetAttribute("IsOpen", XmlConvert.ToString(renderData.IsOpen));
+        parentNode.SetAttribute(
+            localName: "type",
+            namespaceURI: "http://www.w3.org/2001/XMLSchema-instance",
+            value: "UIElement"
+        );
+        parentNode.SetAttribute(name: "Type", value: "CollapsiblePanel");
+        parentNode.SetAttribute(name: "Label", value: renderData.Text);
+        parentNode.SetAttribute(name: "IndentLevel", value: renderData.IndentLevel.ToString());
+        parentNode.SetAttribute(
+            name: "IsOpen",
+            value: XmlConvert.ToString(value: renderData.IsOpen)
+        );
         if (!renderData.IsHeightFixed)
         {
-            parentNode.SetAttribute("Height", "0");
+            parentNode.SetAttribute(name: "Height", value: "0");
         }
     }
 }

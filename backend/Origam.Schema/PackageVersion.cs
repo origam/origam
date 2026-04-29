@@ -31,17 +31,25 @@ public class PackageVersion : IComparable<PackageVersion>
 
     public static bool TryParse(string completeVersionString, out PackageVersion version)
     {
-        if (!TryParseToVersionNums(completeVersionString, out List<int> versionNums))
+        if (
+            !TryParseToVersionNums(
+                completeVersionString: completeVersionString,
+                versionNums: out List<int> versionNums
+            )
+        )
         {
             version = null;
             return false;
         }
-        version = new PackageVersion(completeVersionString, versionNums);
+        version = new PackageVersion(
+            completeVersionString: completeVersionString,
+            versionNums: versionNums
+        );
         return true;
     }
 
-    public static PackageVersion Five { get; } = new PackageVersion("5.0");
-    public static PackageVersion Zero { get; } = new PackageVersion("0.0");
+    public static PackageVersion Five { get; } = new PackageVersion(completeVersionString: "5.0");
+    public static PackageVersion Zero { get; } = new PackageVersion(completeVersionString: "0.0");
 
     private static bool TryParseToVersionNums(
         string completeVersionString,
@@ -49,13 +57,13 @@ public class PackageVersion : IComparable<PackageVersion>
     )
     {
         versionNums = new List<int>();
-        foreach (string versionStr in completeVersionString.Split('.'))
+        foreach (string versionStr in completeVersionString.Split(separator: '.'))
         {
-            if (!int.TryParse(versionStr, out int versionNum))
+            if (!int.TryParse(s: versionStr, result: out int versionNum))
             {
                 return false;
             }
-            versionNums.Add(versionNum);
+            versionNums.Add(item: versionNum);
         }
         return versionNums.Count != 0;
     }
@@ -68,13 +76,18 @@ public class PackageVersion : IComparable<PackageVersion>
 
     public PackageVersion(string completeVersionString)
     {
-        this.completeVersionString = string.IsNullOrEmpty(completeVersionString)
+        this.completeVersionString = string.IsNullOrEmpty(value: completeVersionString)
             ? "0.0"
             : completeVersionString;
-        if (!TryParseToVersionNums(this.completeVersionString, out versionNums))
+        if (
+            !TryParseToVersionNums(
+                completeVersionString: this.completeVersionString,
+                versionNums: out versionNums
+            )
+        )
         {
             throw new ArgumentException(
-                $"Could not parse: {completeVersionString} to {nameof(PackageVersion)}"
+                message: $"Could not parse: {completeVersionString} to {nameof(PackageVersion)}"
             );
         }
     }
@@ -86,7 +99,7 @@ public class PackageVersion : IComparable<PackageVersion>
             return 1;
         }
 
-        return CompareNumVersions(versionNums, other.versionNums);
+        return CompareNumVersions(versions1: versionNums, versions2: other.versionNums);
     }
 
     public static implicit operator string(PackageVersion packageVersion) =>
@@ -94,37 +107,37 @@ public class PackageVersion : IComparable<PackageVersion>
 
     public static bool operator >(PackageVersion x, PackageVersion y)
     {
-        return x.CompareTo(y) == 1;
+        return x.CompareTo(other: y) == 1;
     }
 
     public static bool operator <(PackageVersion x, PackageVersion y)
     {
-        return x.CompareTo(y) == -1;
+        return x.CompareTo(other: y) == -1;
     }
 
     public static bool operator >=(PackageVersion x, PackageVersion y)
     {
-        return x.CompareTo(y) >= 0;
+        return x.CompareTo(other: y) >= 0;
     }
 
     public static bool operator <=(PackageVersion x, PackageVersion y)
     {
-        return x.CompareTo(y) <= 0;
+        return x.CompareTo(other: y) <= 0;
     }
 
     public static bool operator ==(PackageVersion x, PackageVersion y)
     {
-        if (ReferenceEquals(x, null) && ReferenceEquals(y, null))
+        if (ReferenceEquals(objA: x, objB: null) && ReferenceEquals(objA: y, objB: null))
         {
             return true;
         }
 
-        if (ReferenceEquals(x, null) && !ReferenceEquals(y, null))
+        if (ReferenceEquals(objA: x, objB: null) && !ReferenceEquals(objA: y, objB: null))
         {
             return false;
         }
 
-        return x.Equals(y);
+        return x.Equals(other: y);
     }
 
     public static bool operator !=(PackageVersion x, PackageVersion y)
@@ -135,16 +148,16 @@ public class PackageVersion : IComparable<PackageVersion>
     private int CompareNumVersions(List<int> versions1, List<int> versions2)
     {
         int versionNumCount = versions1.Count < versions2.Count ? versions2.Count : versions1.Count;
-        List<int> paddedversions1 = PadWithZeros(versions1, versionNumCount);
-        List<int> paddedversions2 = PadWithZeros(versions2, versionNumCount);
+        List<int> paddedversions1 = PadWithZeros(list: versions1, newLength: versionNumCount);
+        List<int> paddedversions2 = PadWithZeros(list: versions2, newLength: versionNumCount);
         for (int i = 0; i < versionNumCount; i++)
         {
-            if (paddedversions1[i] > paddedversions2[i])
+            if (paddedversions1[index: i] > paddedversions2[index: i])
             {
                 return 1;
             }
 
-            if (paddedversions1[i] < paddedversions2[i])
+            if (paddedversions1[index: i] < paddedversions2[index: i])
             {
                 return -1;
             }
@@ -172,23 +185,23 @@ public class PackageVersion : IComparable<PackageVersion>
         List<int> longerList = new List<int>();
         for (int i = 0; i < newLength; i++)
         {
-            longerList.Add(i < list.Count ? list[i] : 0);
+            longerList.Add(item: i < list.Count ? list[index: i] : 0);
         }
         return longerList;
     }
 
     public override string ToString() => completeVersionString;
 
-    protected bool Equals(PackageVersion other) => CompareTo(other) == 0;
+    protected bool Equals(PackageVersion other) => CompareTo(other: other) == 0;
 
     public override bool Equals(object obj)
     {
-        if (ReferenceEquals(null, obj))
+        if (ReferenceEquals(objA: null, objB: obj))
         {
             return false;
         }
 
-        if (ReferenceEquals(this, obj))
+        if (ReferenceEquals(objA: this, objB: obj))
         {
             return true;
         }
@@ -198,7 +211,7 @@ public class PackageVersion : IComparable<PackageVersion>
             return false;
         }
 
-        return Equals((PackageVersion)obj);
+        return Equals(other: (PackageVersion)obj);
     }
 
     public override int GetHashCode()

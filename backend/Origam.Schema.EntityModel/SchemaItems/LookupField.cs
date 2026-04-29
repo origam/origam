@@ -29,10 +29,14 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.EntityModel;
 
-[SchemaItemDescription("Lookup Field", "Fields", "icon_lookup-field.png")]
-[HelpTopic("Lookup+Field")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(
+    name: "Lookup Field",
+    folderName: "Fields",
+    iconName: "icon_lookup-field.png"
+)]
+[HelpTopic(topic: "Lookup+Field")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class LookupField : AbstractSchemaItem, IDataEntityColumn
 {
     public const string CategoryConst = "DataEntityColumn";
@@ -40,14 +44,14 @@ public class LookupField : AbstractSchemaItem, IDataEntityColumn
     public LookupField() { }
 
     public LookupField(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public LookupField(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region IDataEntityColumn Members
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public OrigamDataType DataType
     {
         get
@@ -56,7 +60,7 @@ public class LookupField : AbstractSchemaItem, IDataEntityColumn
             {
                 return OrigamDataType.Boolean;
             }
-            if (Lookup.ValueDisplayMember.Contains(";"))
+            if (Lookup.ValueDisplayMember.Contains(value: ";"))
             {
                 // concatenated lookup field
                 return OrigamDataType.String;
@@ -64,7 +68,7 @@ public class LookupField : AbstractSchemaItem, IDataEntityColumn
             if (Lookup.ValueDisplayColumn == null)
             {
                 throw new ArgumentOutOfRangeException(
-                    $"ValueDisplayMember {Lookup.ValueDisplayMember} not found in lookup {Lookup.NodeId}."
+                    paramName: $"ValueDisplayMember {Lookup.ValueDisplayMember} not found in lookup {Lookup.NodeId}."
                 );
             }
             return Lookup.ValueDisplayColumn.DataType;
@@ -72,7 +76,7 @@ public class LookupField : AbstractSchemaItem, IDataEntityColumn
         set => throw new NotSupportedException();
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public int DataLength
     {
         get
@@ -84,7 +88,7 @@ public class LookupField : AbstractSchemaItem, IDataEntityColumn
             if (Lookup.ValueColumn == null)
             {
                 throw new ArgumentOutOfRangeException(
-                    $"ValueValueMember {Lookup.ValueValueMember} not found in lookup {Lookup.NodeId}."
+                    paramName: $"ValueValueMember {Lookup.ValueValueMember} not found in lookup {Lookup.NodeId}."
                 );
             }
             return Lookup.ValueColumn.FinalColumn.Field.DataLength;
@@ -92,50 +96,50 @@ public class LookupField : AbstractSchemaItem, IDataEntityColumn
         set => throw new NotSupportedException();
     }
 
-    [Category("Entity Column"), DefaultValue(true)]
-    [XmlAttribute("allowNulls")]
+    [Category(category: "Entity Column"), DefaultValue(value: true)]
+    [XmlAttribute(attributeName: "allowNulls")]
     [Description(
-        "Indicates if the field allows empty values or not. If set to False, also the database column will be generated so that it does not allow nulls. In the user interface the user will have to enter a value before saving the record."
+        description: "Indicates if the field allows empty values or not. If set to False, also the database column will be generated so that it does not allow nulls. In the user interface the user will have to enter a value before saving the record."
     )]
     public bool AllowNulls { get; set; } = true;
 
-    [Category("Entity Column"), DefaultValue(false)]
-    [XmlAttribute("isPrimaryKey")]
+    [Category(category: "Entity Column"), DefaultValue(value: false)]
+    [XmlAttribute(attributeName: "isPrimaryKey")]
     [Description(
-        "Indicates if the field is a primary key. If set to True, also a database primary key is generated. IMPORTANT: Every entity should have a primary key specified, otherwise data merges will not be able to correlate existing records. NOTE: Multi-column primary keys are possible but GUI expects always only single-column primary keys."
+        description: "Indicates if the field is a primary key. If set to True, also a database primary key is generated. IMPORTANT: Every entity should have a primary key specified, otherwise data merges will not be able to correlate existing records. NOTE: Multi-column primary keys are possible but GUI expects always only single-column primary keys."
     )]
     public bool IsPrimaryKey { get; set; } = false;
 
-    [Category("Entity Column")]
-    [XmlAttribute("caption")]
-    [Localizable(true)]
+    [Category(category: "Entity Column")]
+    [XmlAttribute(attributeName: "caption")]
+    [Localizable(isLocalizable: true)]
     [Description(
-        "Default label for the field in a GUI. Audit log viewer also gets the field names from here."
+        description: "Default label for the field in a GUI. Audit log viewer also gets the field names from here."
     )]
     public string Caption { get; set; } = "";
 
-    [Category("Entity Column"), DefaultValue(false)]
-    [XmlAttribute("excludeFromAllFields")]
+    [Category(category: "Entity Column"), DefaultValue(value: false)]
+    [XmlAttribute(attributeName: "excludeFromAllFields")]
     [Description(
-        "If set to True, the field will not be included in the list of fields in a Data Structure if 'AllFields=True' is set in a Data Structure Entity. This is useful e.g. for database function calls that are expensive and used only for lookups that would otherwise slow down the system if loaded e.g. to forms."
+        description: "If set to True, the field will not be included in the list of fields in a Data Structure if 'AllFields=True' is set in a Data Structure Entity. This is useful e.g. for database function calls that are expensive and used only for lookups that would otherwise slow down the system if loaded e.g. to forms."
     )]
     public bool ExcludeFromAllFields { get; set; } = false;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public bool AutoIncrement
     {
         get => false;
         set => throw new NotSupportedException();
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public long AutoIncrementSeed
     {
         get => 0;
         set => throw new NotSupportedException();
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public long AutoIncrementStep
     {
         get => 1;
@@ -143,8 +147,8 @@ public class LookupField : AbstractSchemaItem, IDataEntityColumn
     }
     public Guid DefaultLookupId;
 
-    [Browsable(false)]
-    [XmlReference("defaultLookup", "DefaultLookupId")]
+    [Browsable(browsable: false)]
+    [XmlReference(attributeName: "defaultLookup", idField: "DefaultLookupId")]
     public IDataLookup DefaultLookup
     {
         get
@@ -152,7 +156,11 @@ public class LookupField : AbstractSchemaItem, IDataEntityColumn
             var key = new ModelElementKey { Id = DefaultLookupId };
             try
             {
-                return (IDataLookup)PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
+                return (IDataLookup)
+                    PersistenceProvider.RetrieveInstance(
+                        type: typeof(ISchemaItem),
+                        primaryKey: key
+                    );
             }
             catch
             {
@@ -167,14 +175,16 @@ public class LookupField : AbstractSchemaItem, IDataEntityColumn
             }
             else
             {
-                DefaultLookupId = (Guid)value.PrimaryKey["Id"];
+                DefaultLookupId = (Guid)value.PrimaryKey[key: "Id"];
             }
         }
     }
 
-    [TypeConverter(typeof(DataLookupConverter))]
-    [Category("Lookup")]
-    [Description("Lookup to be used by the data service to lookup value by the provided Field.")]
+    [TypeConverter(type: typeof(DataLookupConverter))]
+    [Category(category: "Lookup")]
+    [Description(
+        description: "Lookup to be used by the data service to lookup value by the provided Field."
+    )]
     [NotNullModelElementRule()]
     public IDataLookup Lookup
     {
@@ -182,82 +192,86 @@ public class LookupField : AbstractSchemaItem, IDataEntityColumn
         set => DefaultLookup = value;
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public IDataEntity ForeignKeyEntity
     {
         get => null;
         set => throw new NotSupportedException();
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public IDataEntityColumn ForeignKeyField
     {
         get => null;
         set => throw new NotSupportedException();
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public DataConstant DefaultValue
     {
         get => null;
         set => throw new NotSupportedException();
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public SchemaItemParameter DefaultValueParameter
     {
         get => null;
         set => throw new NotSupportedException();
     }
 
-    [Category("Entity Column"), DefaultValue(EntityColumnXmlMapping.Attribute)]
-    [XmlAttribute("xmlMappingType")]
+    [Category(category: "Entity Column"), DefaultValue(value: EntityColumnXmlMapping.Attribute)]
+    [XmlAttribute(attributeName: "xmlMappingType")]
     public EntityColumnXmlMapping XmlMappingType { get; set; } = EntityColumnXmlMapping.Attribute;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public OnCopyActionType OnCopyAction
     {
         get => OnCopyActionType.Copy;
         set => throw new NotSupportedException();
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public List<AbstractEntitySecurityRule> RowLevelSecurityRules =>
-        ChildItemsByType<AbstractEntitySecurityRule>(AbstractEntitySecurityRule.CategoryConst);
+        ChildItemsByType<AbstractEntitySecurityRule>(
+            itemType: AbstractEntitySecurityRule.CategoryConst
+        );
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public List<EntityConditionalFormatting> ConditionalFormattingRules =>
-        ChildItemsByType<EntityConditionalFormatting>(EntityConditionalFormatting.CategoryConst);
+        ChildItemsByType<EntityConditionalFormatting>(
+            itemType: EntityConditionalFormatting.CategoryConst
+        );
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public List<EntityFieldDynamicLabel> DynamicLabels =>
-        ChildItemsByType<EntityFieldDynamicLabel>(EntityFieldDynamicLabel.CategoryConst);
+        ChildItemsByType<EntityFieldDynamicLabel>(itemType: EntityFieldDynamicLabel.CategoryConst);
     #endregion
     #region Properties
     public Guid FieldId;
 
-    [TypeConverter(typeof(EntityColumnReferenceConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
+    [TypeConverter(type: typeof(EntityColumnReferenceConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
     [NotNullModelElementRule()]
-    [Category("Lookup")]
-    [XmlReference("field", "FieldId")]
+    [Category(category: "Lookup")]
+    [XmlReference(attributeName: "field", idField: "FieldId")]
     public IDataEntityColumn Field
     {
         get =>
             (IDataEntityColumn)
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(this.FieldId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: this.FieldId)
                 );
-        set => this.FieldId = (Guid)value.PrimaryKey["Id"];
+        set => this.FieldId = (Guid)value.PrimaryKey[key: "Id"];
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public DataEntityConstraint ForeignKeyConstraint => null;
     public string FieldType { get; } = "LookupField";
     #endregion
     #region Overriden ISchemaItem Methods
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public bool ReadOnly => false;
 
     public override bool CanMove(UI.IBrowserNode2 newNode) => newNode is IDataEntity;
@@ -268,21 +282,21 @@ public class LookupField : AbstractSchemaItem, IDataEntityColumn
     {
         if (DefaultLookup != null)
         {
-            dependencies.Add(DefaultLookup);
+            dependencies.Add(item: DefaultLookup);
         }
         if (DefaultValue != null)
         {
-            dependencies.Add(DefaultValue);
+            dependencies.Add(item: DefaultValue);
         }
         if (DefaultValueParameter != null)
         {
-            dependencies.Add(DefaultValueParameter);
+            dependencies.Add(item: DefaultValueParameter);
         }
         if (Field != null)
         {
-            dependencies.Add(Field);
+            dependencies.Add(item: Field);
         }
-        base.GetExtraDependencies(dependencies);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override void GetParameterReferences(
@@ -294,7 +308,7 @@ public class LookupField : AbstractSchemaItem, IDataEntityColumn
     {
         foreach (ISchemaItem item in RootItem.ChildItemsRecursive)
         {
-            if (item.OldPrimaryKey?.Equals(Field.PrimaryKey) == true)
+            if (item.OldPrimaryKey?.Equals(obj: Field.PrimaryKey) == true)
             {
                 Field = item as IDataEntityColumn;
                 break;
@@ -304,7 +318,7 @@ public class LookupField : AbstractSchemaItem, IDataEntityColumn
     }
     #endregion
     #region ISchemaItemFactory Members
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public override Type[] NewItemTypes =>
         new[]
         {
@@ -333,7 +347,11 @@ public class LookupField : AbstractSchemaItem, IDataEntityColumn
         {
             itemName = "NewDynamicLabel";
         }
-        return base.NewItem<T>(schemaExtensionId, group, itemName);
+        return base.NewItem<T>(
+            schemaExtensionId: schemaExtensionId,
+            group: group,
+            itemName: itemName
+        );
     }
     #endregion
 }

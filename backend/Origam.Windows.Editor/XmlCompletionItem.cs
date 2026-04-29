@@ -45,16 +45,17 @@ public class XmlCompletionItem : DefaultCompletionItem, IComparable<XmlCompletio
     string description = String.Empty;
 
     public XmlCompletionItem(string text)
-        : this(text, String.Empty, XmlCompletionItemType.XmlElement) { }
+        : this(text: text, description: String.Empty, dataType: XmlCompletionItemType.XmlElement)
+    { }
 
     public XmlCompletionItem(string text, string description)
-        : this(text, description, XmlCompletionItemType.XmlElement) { }
+        : this(text: text, description: description, dataType: XmlCompletionItemType.XmlElement) { }
 
     public XmlCompletionItem(string text, XmlCompletionItemType dataType)
-        : this(text, String.Empty, dataType) { }
+        : this(text: text, description: String.Empty, dataType: dataType) { }
 
     public XmlCompletionItem(string text, string description, XmlCompletionItemType dataType)
-        : base(text)
+        : base(text: text)
     {
         this.description = description;
         this.dataType = dataType;
@@ -75,13 +76,13 @@ public class XmlCompletionItem : DefaultCompletionItem, IComparable<XmlCompletio
 
     public override void Complete(TextArea area, ISegment segment, EventArgs e)
     {
-        base.Complete(area, segment, e);
+        base.Complete(area: area, segment: segment, e: e);
         int endOffset = segment.Offset + segment.Length;
         switch (dataType)
         {
             case XmlCompletionItemType.XmlAttribute:
             {
-                area.Document.Insert(endOffset, "=\"\"");
+                area.Document.Insert(offset: endOffset, text: "=\"\"");
                 area.Caret.Offset--;
                 //					XmlCodeCompletionBinding.Instance.CtrlSpace(context.Editor);
                 break;
@@ -111,6 +112,6 @@ public class XmlCompletionItem : DefaultCompletionItem, IComparable<XmlCompletio
 
     public int CompareTo(XmlCompletionItem other)
     {
-        return Text.CompareTo(other.Text);
+        return Text.CompareTo(strB: other.Text);
     }
 }

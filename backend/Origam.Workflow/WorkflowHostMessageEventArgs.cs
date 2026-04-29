@@ -39,7 +39,7 @@ public class WorkflowHostMessageEventArgs : WorkflowHostEventArgs
         Exception exception,
         bool popup
     )
-        : base(engine, exception)
+        : base(workflowEngine: engine, exception: exception)
     {
         _message = message;
         _popup = popup;

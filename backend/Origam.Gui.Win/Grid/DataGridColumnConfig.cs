@@ -63,7 +63,7 @@ public class DataGridColumnConfig : System.Windows.Forms.Form
                 components.Dispose();
             }
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
 
     #region Windows Form Designer generated code
@@ -171,7 +171,7 @@ public class DataGridColumnConfig : System.Windows.Forms.Form
     private void listView1_ItemCheck(object sender, System.Windows.Forms.ItemCheckEventArgs e)
     {
         DataGridColumnStyleHolder column =
-            listView1.Items[e.Index].Tag as DataGridColumnStyleHolder;
+            listView1.Items[index: e.Index].Tag as DataGridColumnStyleHolder;
 
         if (e.NewValue == CheckState.Checked)
         {
@@ -189,7 +189,7 @@ public class DataGridColumnConfig : System.Windows.Forms.Form
     {
         if (listView1.SelectedItems.Count == 1)
         {
-            ListViewItem item = listView1.SelectedItems[0];
+            ListViewItem item = listView1.SelectedItems[index: 0];
             if (item.Index == 0)
             {
                 return;
@@ -200,7 +200,7 @@ public class DataGridColumnConfig : System.Windows.Forms.Form
             {
                 int oldIndex = item.Index;
                 item.Remove();
-                listView1.Items.Insert(oldIndex - 1, item);
+                listView1.Items.Insert(index: oldIndex - 1, item: item);
                 UpdateIndexes();
                 item.Selected = true;
                 item.Focused = true;
@@ -217,7 +217,7 @@ public class DataGridColumnConfig : System.Windows.Forms.Form
     {
         if (listView1.SelectedItems.Count == 1)
         {
-            ListViewItem item = listView1.SelectedItems[0];
+            ListViewItem item = listView1.SelectedItems[index: 0];
             if (item.Index == listView1.Items.Count - 1)
             {
                 return;
@@ -228,7 +228,7 @@ public class DataGridColumnConfig : System.Windows.Forms.Form
             {
                 int oldIndex = item.Index;
                 item.Remove();
-                listView1.Items.Insert(oldIndex + 1, item);
+                listView1.Items.Insert(index: oldIndex + 1, item: item);
                 UpdateIndexes();
                 item.Selected = true;
                 item.Focused = true;
@@ -276,7 +276,7 @@ public class DataGridColumnConfig : System.Windows.Forms.Form
                     item.Tag = column;
                     item.Text = column.Style.HeaderText;
                     item.Checked = (!column.Hidden);
-                    listView1.Items.Add(item);
+                    listView1.Items.Add(value: item);
                 }
             }
             this.listView1.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(

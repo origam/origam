@@ -28,9 +28,9 @@ public static class ImageListExtensions
     public static int ImageIndex(this ImageList imglist, string icon)
     {
         int imageIndex;
-        if (!int.TryParse(icon, out imageIndex))
+        if (!int.TryParse(s: icon, result: out imageIndex))
         {
-            imageIndex = imglist.Images.IndexOfKey(icon);
+            imageIndex = imglist.Images.IndexOfKey(key: icon);
         }
         return imageIndex;
     }

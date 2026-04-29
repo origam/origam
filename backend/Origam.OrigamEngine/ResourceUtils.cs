@@ -33,8 +33,8 @@ public class ResourceUtils
     {
         if (_rm == null)
         {
-            _rm = new ResourceManager(BASENAME, typeof(ResourceUtils).Assembly);
+            _rm = new ResourceManager(baseName: BASENAME, assembly: typeof(ResourceUtils).Assembly);
         }
-        return _rm.GetString(key, Thread.CurrentThread.CurrentCulture);
+        return _rm.GetString(name: key, culture: Thread.CurrentThread.CurrentCulture);
     }
 }

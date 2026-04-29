@@ -29,11 +29,11 @@ namespace Origam.Security;
 public class ProfileNotFoundException : Exception
 {
     public ProfileNotFoundException(string message)
-        : base(message) { }
+        : base(message: message) { }
 
     public ProfileNotFoundException()
         : base() { }
 
     public ProfileNotFoundException(string message, Exception innerException)
-        : base(message, innerException) { }
+        : base(message: message, innerException: innerException) { }
 }

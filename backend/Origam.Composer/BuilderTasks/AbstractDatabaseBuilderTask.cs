@@ -42,7 +42,7 @@ public abstract class AbstractDatabaseBuilderTask : IBuilderTask
     {
         if (DataServicePointer == null)
         {
-            DataServicePointer = CreateService(databaseType);
+            DataServicePointer = CreateService(DatabaseType: databaseType);
         }
         return DataServicePointer;
     }
@@ -57,6 +57,9 @@ public abstract class AbstractDatabaseBuilderTask : IBuilderTask
         {
             return new PgSqlDataService();
         }
-        throw new ArgumentOutOfRangeException(nameof(DatabaseType), DatabaseType.ToString());
+        throw new ArgumentOutOfRangeException(
+            paramName: nameof(DatabaseType),
+            message: DatabaseType.ToString()
+        );
     }
 }

@@ -64,7 +64,7 @@ public class AddPackage : System.Windows.Forms.Form
                 components.Dispose();
             }
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
 
     #region Windows Form Designer generated code
@@ -141,10 +141,10 @@ public class AddPackage : System.Windows.Forms.Form
         if (txtName.Text.Trim() == "")
         {
             Origam.UI.AsMessageBox.ShowError(
-                null,
-                "Enter package name.",
-                "Add Package Error",
-                null
+                owner: null,
+                text: "Enter package name.",
+                caption: "Add Package Error",
+                exception: null
             );
         }
         this.DialogResult = DialogResult.OK;

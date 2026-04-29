@@ -56,18 +56,18 @@ public abstract class EntityUIActionRunner
     )
     {
         ExecuteActionProcessData processData = actionRunnerClient.CreateExecuteActionProcessData(
-            sessionFormIdentifier,
-            requestingGrid,
-            actionType,
-            entity,
-            selectedIds,
-            actionId,
-            parameterMappings,
-            inputParameters
+            sessionFormIdentifier: sessionFormIdentifier,
+            requestingGrid: requestingGrid,
+            actionType: actionType,
+            entity: entity,
+            selectedIds: selectedIds,
+            actionId: actionId,
+            parameterMappings: parameterMappings,
+            inputParameters: inputParameters
         );
-        actionRunnerClient.CheckActionConditions(processData);
-        PerformAppropriateAction(processData);
-        actionRunnerClient.SetModalDialogSize(resultList, processData);
+        actionRunnerClient.CheckActionConditions(processData: processData);
+        PerformAppropriateAction(processData: processData);
+        actionRunnerClient.SetModalDialogSize(results: resultList, processData: processData);
         return resultList;
     }
 
@@ -77,13 +77,13 @@ public abstract class EntityUIActionRunner
         {
             case PanelActionType.Workflow:
             {
-                ExecuteWorkflowAction(processData);
+                ExecuteWorkflowAction(processData: processData);
                 break;
             }
 
             case PanelActionType.Report:
             {
-                ExecuteOpenFormAction(processData);
+                ExecuteOpenFormAction(processData: processData);
                 break;
             }
 
@@ -93,7 +93,7 @@ public abstract class EntityUIActionRunner
             }
             case PanelActionType.OpenForm:
             {
-                ExecuteOpenFormAction(processData);
+                ExecuteOpenFormAction(processData: processData);
                 break;
             }
 
@@ -114,33 +114,33 @@ public abstract class EntityUIActionRunner
     {
         if ((processData.Action == null) || (processData.Action.Mode != PanelActionMode.Always))
         {
-            CheckSelectedRowsCountPositive(processData.SelectedIds.Count);
+            CheckSelectedRowsCountPositive(count: processData.SelectedIds.Count);
         }
-        ActionResult result = MakeActionResult(ActionResultType.UpdateData);
+        ActionResult result = MakeActionResult(type: ActionResultType.UpdateData);
         if (!(processData.Action is EntityWorkflowAction entityWorkflowAction))
         {
             throw new ArgumentOutOfRangeException(
-                "action",
-                processData.Action,
-                Properties.Resources.ErrorWorkflowActionNotSupported
+                paramName: "action",
+                actualValue: processData.Action,
+                message: Properties.Resources.ErrorWorkflowActionNotSupported
             );
         }
         if (entityWorkflowAction.Workflow == null)
         {
-            throw new NullReferenceException(Properties.Resources.ErrorWorkflowNotSet);
+            throw new NullReferenceException(message: Properties.Resources.ErrorWorkflowNotSet);
         }
         Key resultContextKey = null;
         foreach (
             var mapping in entityWorkflowAction.ChildItemsByType<EntityUIActionParameterMapping>(
-                EntityUIActionParameterMapping.CategoryConst
+                itemType: EntityUIActionParameterMapping.CategoryConst
             )
         )
         {
-            if (DatasetTools.IsParameterViableAsResultContext(mapping))
+            if (DatasetTools.IsParameterViableAsResultContext(mapping: mapping))
             {
                 foreach (
                     var store in entityWorkflowAction.Workflow.ChildItemsByType<ContextStore>(
-                        ContextStore.CategoryConst
+                        itemType: ContextStore.CategoryConst
                     )
                 )
                 {
@@ -154,41 +154,44 @@ public abstract class EntityUIActionRunner
         }
         var changes = new List<ChangeInfo>();
         var transactionId = Guid.NewGuid().ToString();
-        SetTransactionId(processData, transactionId);
+        SetTransactionId(processData: processData, transactionId: transactionId);
         try
         {
             WorkflowEngine engine = WorkflowEngine.PrepareWorkflow(
-                entityWorkflowAction.Workflow,
-                new Hashtable(processData.Parameters),
-                false,
-                ""
+                workflow: entityWorkflowAction.Workflow,
+                parameters: new Hashtable(d: processData.Parameters),
+                isRepeatable: false,
+                titleName: ""
             );
             engine.SetTransactionId(
-                transactionId,
-                entityWorkflowAction.Workflow.TransactionBehavior
+                transactionId: transactionId,
+                transactionBehavior: entityWorkflowAction.Workflow.TransactionBehavior
             );
             using (WorkflowHost host = new WorkflowHost())
             {
                 host.SupportsUI = false;
                 WorkflowCallbackHandler handler = new WorkflowCallbackHandler(
-                    host,
-                    engine.WorkflowInstanceId
+                    host: host,
+                    workflowInstanceId: engine.WorkflowInstanceId
                 );
                 handler.Subscribe();
-                host.ExecuteWorkflow(engine);
+                host.ExecuteWorkflow(engine: engine);
                 handler.Event.WaitOne();
                 if (handler.Result.Exception != null)
                 {
                     throw handler.Result.Exception;
                 }
-                actionRunnerClient.ProcessModalDialogCloseType(processData, entityWorkflowAction);
+                actionRunnerClient.ProcessModalDialogCloseType(
+                    processData: processData,
+                    entityWorkflowAction: entityWorkflowAction
+                );
                 if (
                     (resultContextKey != null)
                     && (entityWorkflowAction.MergeType != ServiceOutputMethod.Ignore)
                 )
                 {
                     DataSet sourceData = (
-                        engine.RuleEngine.GetContext(resultContextKey) as IDataDocument
+                        engine.RuleEngine.GetContext(key: resultContextKey) as IDataDocument
                     ).DataSet;
                     actionRunnerClient.ProcessWorkflowResults(
                         profile: processData.Profile,
@@ -205,30 +208,30 @@ public abstract class EntityUIActionRunner
                     changes: changes
                 );
             }
-            ResourceMonitor.Commit(transactionId);
+            ResourceMonitor.Commit(transactionId: transactionId);
             result.Changes = changes;
-            resultList.Add(result);
-            AppendScriptCalls(entityWorkflowAction, processData);
+            resultList.Add(item: result);
+            AppendScriptCalls(entityWorkflowAction: entityWorkflowAction, processData: processData);
             // add a special result to close the screen
             if (entityWorkflowAction.CloseType != ModalDialogCloseType.None)
             {
-                resultList.Add(MakeActionResult(ActionResultType.DestroyForm));
+                resultList.Add(item: MakeActionResult(type: ActionResultType.DestroyForm));
             }
         }
         catch
         {
-            ResourceMonitor.Rollback(transactionId);
+            ResourceMonitor.Rollback(transactionId: transactionId);
             throw;
         }
         finally
         {
-            SetTransactionId(processData, null);
+            SetTransactionId(processData: processData, transactionId: null);
         }
     }
 
     protected virtual ActionResult MakeActionResult(ActionResultType type)
     {
-        return new ActionResult(type);
+        return new ActionResult(type: type);
     }
 
     protected abstract void SetTransactionId(
@@ -242,20 +245,20 @@ public abstract class EntityUIActionRunner
     )
     {
         var scriptCalls = entityWorkflowAction.ChildItemsByType<EntityWorkflowActionScriptCall>(
-            EntityWorkflowActionScriptCall.CategoryConst
+            itemType: EntityWorkflowActionScriptCall.CategoryConst
         );
         if (scriptCalls.Count == 0)
         {
             return;
         }
-        scriptCalls.Sort(new EntityWorkflowActionScriptCallComparer());
+        scriptCalls.Sort(comparer: new EntityWorkflowActionScriptCallComparer());
         foreach (EntityWorkflowActionScriptCall scriptCall in scriptCalls)
         {
-            if (IsScriptAllowed(scriptCall, processData))
+            if (IsScriptAllowed(scriptCall: scriptCall, processData: processData))
             {
-                ActionResult result = MakeActionResult(ActionResultType.Script);
+                ActionResult result = MakeActionResult(type: ActionResultType.Script);
                 result.Script = scriptCall.Script;
-                resultList.Add(result);
+                resultList.Add(item: result);
             }
         }
     }
@@ -264,7 +267,7 @@ public abstract class EntityUIActionRunner
     {
         if (count == 0)
         {
-            throw new RuleException(Properties.Resources.ErrorNoRecordsSelectedForAction);
+            throw new RuleException(message: Properties.Resources.ErrorNoRecordsSelectedForAction);
         }
     }
 
@@ -275,34 +278,50 @@ public abstract class EntityUIActionRunner
     {
         // check features
         IParameterService param =
-            ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
-        if (!param.IsFeatureOn(scriptCall.Features))
+            ServiceManager.Services.GetService(serviceType: typeof(IParameterService))
+            as IParameterService;
+        if (!param.IsFeatureOn(featureCode: scriptCall.Features))
         {
             return false;
         }
         // check roles
         IOrigamAuthorizationProvider authorizationProvider =
             SecurityManager.GetAuthorizationProvider();
-        if (!authorizationProvider.Authorize(SecurityManager.CurrentPrincipal, scriptCall.Roles))
+        if (
+            !authorizationProvider.Authorize(
+                principal: SecurityManager.CurrentPrincipal,
+                context: scriptCall.Roles
+            )
+        )
         {
             return false;
         }
         // check business rule
         if ((scriptCall.Rule != null) && (processData.Action.Mode != PanelActionMode.Always))
         {
-            RuleEngine ruleEngine = RuleEngine.Create(new Hashtable(), null);
-            XmlContainer rowXml = DatasetTools.GetRowXml(
-                processData.SelectedRows[0],
-                DataRowVersion.Current
+            RuleEngine ruleEngine = RuleEngine.Create(
+                contextStores: new Hashtable(),
+                transactionId: null
             );
-            object result = ruleEngine.EvaluateRule(scriptCall.Rule, rowXml, null);
+            XmlContainer rowXml = DatasetTools.GetRowXml(
+                row: processData.SelectedRows[index: 0],
+                version: DataRowVersion.Current
+            );
+            object result = ruleEngine.EvaluateRule(
+                rule: scriptCall.Rule,
+                data: rowXml,
+                contextPosition: null
+            );
             if (result is bool)
             {
                 return (bool)result;
             }
 
             throw new ArgumentException(
-                Origam.Workflow.ResourceUtils.GetString("ErrorResultNotBool", scriptCall.Path)
+                message: Origam.Workflow.ResourceUtils.GetString(
+                    key: "ErrorResultNotBool",
+                    args: scriptCall.Path
+                )
             );
         }
         return true;

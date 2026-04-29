@@ -28,11 +28,11 @@ using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.EntityModel;
 
-[SchemaItemDescription("Database Data Type", "icon_08_database-data-types.png")]
-[HelpTopic("Database+Data+Type")]
-[DefaultProperty("DataType")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Database Data Type", iconName: "icon_08_database-data-types.png")]
+[HelpTopic(topic: "Database+Data+Type")]
+[DefaultProperty(name: "DataType")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class DatabaseDataType : AbstractSchemaItem
 {
     public const string CategoryConst = "DatabaseDataType";
@@ -41,20 +41,20 @@ public class DatabaseDataType : AbstractSchemaItem
         : base() { }
 
     public DatabaseDataType(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public DatabaseDataType(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Properties
     OrigamDataType _dataType = OrigamDataType.String;
 
-    [RefreshProperties(RefreshProperties.Repaint)]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
     [NotNullModelElementRule()]
-    [Category("Mapping")]
-    [DisplayName("Data Type")]
-    [Description("Base ORIGAM data type to which the mapping is assigned.")]
-    [XmlAttribute("dataType")]
+    [Category(category: "Mapping")]
+    [DisplayName(displayName: "Data Type")]
+    [Description(description: "Base ORIGAM data type to which the mapping is assigned.")]
+    [XmlAttribute(attributeName: "dataType")]
     public OrigamDataType DataType
     {
         get { return _dataType; }
@@ -62,12 +62,12 @@ public class DatabaseDataType : AbstractSchemaItem
     }
     string _mappedDatabaseTypeName = "";
 
-    [Category("Mapping")]
-    [Description("Name of the data type as used by the current database engine.")]
-    [DisplayName("Database Specific Data Type")]
-    [TypeConverter(typeof(DataTypeMappingAvailableTypesConverter))]
+    [Category(category: "Mapping")]
+    [Description(description: "Name of the data type as used by the current database engine.")]
+    [DisplayName(displayName: "Database Specific Data Type")]
+    [TypeConverter(type: typeof(DataTypeMappingAvailableTypesConverter))]
     [NotNullModelElementRule()]
-    [XmlAttribute("mappedDatabaseTypeName")]
+    [XmlAttribute(attributeName: "mappedDatabaseTypeName")]
     public string MappedDatabaseTypeName
     {
         get { return _mappedDatabaseTypeName; }

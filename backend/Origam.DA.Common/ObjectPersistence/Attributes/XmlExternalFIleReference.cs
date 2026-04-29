@@ -24,7 +24,7 @@ using System.IO;
 
 namespace Origam.DA.ObjectPersistence;
 
-[AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
+[AttributeUsage(validOn: AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
 public class XmlExternalFileReference : Attribute
 {
     public ExternalFileExtension Extension { get; }
@@ -87,12 +87,12 @@ public static class ExternalFileExtensionTools
     }
 
     public static bool TryParse(FileInfo fileinfo, out ExternalFileExtension value) =>
-        TryParsePrivate(fileinfo.Extension, out value);
+        TryParsePrivate(extension: fileinfo.Extension, ext: out value);
 
     public static bool TryParse(string filePath, out ExternalFileExtension value)
     {
-        string extension = Path.GetExtension(filePath);
-        return TryParsePrivate(extension, out value);
+        string extension = Path.GetExtension(path: filePath);
+        return TryParsePrivate(extension: extension, ext: out value);
     }
 
     private static bool TryParsePrivate(string extension, out ExternalFileExtension ext)
@@ -102,7 +102,7 @@ public static class ExternalFileExtensionTools
             ext = ExternalFileExtension.Bin;
             return false;
         }
-        string extensionWithoutDot = extension.Substring(1);
+        string extensionWithoutDot = extension.Substring(startIndex: 1);
         bool parseSucess = Enum.TryParse(
             value: extensionWithoutDot,
             ignoreCase: true,

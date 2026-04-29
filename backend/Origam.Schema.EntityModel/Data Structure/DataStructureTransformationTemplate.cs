@@ -30,39 +30,45 @@ namespace Origam.Schema.EntityModel;
 /// <summary>
 /// Summary description for DataStructureTransformationTemplate.
 /// </summary>
-[SchemaItemDescription("Transformation Template", "icon_transformation-template.png")]
-[HelpTopic("Template+Set+Template")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(
+    name: "Transformation Template",
+    iconName: "icon_transformation-template.png"
+)]
+[HelpTopic(topic: "Template+Set+Template")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class DataStructureTransformationTemplate : DataStructureTemplate
 {
     public DataStructureTransformationTemplate()
         : base() { }
 
     public DataStructureTransformationTemplate(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(schemaExtensionId: schemaExtensionId) { }
 
     public DataStructureTransformationTemplate(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Properties
     public Guid TransformationId;
 
-    [Category("Reference")]
-    [TypeConverter(typeof(TransformationConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [XmlReference("transformation", "TransformationId")]
+    [Category(category: "Reference")]
+    [TypeConverter(type: typeof(TransformationConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [XmlReference(attributeName: "transformation", idField: "TransformationId")]
     public ITransformation Transformation
     {
         get
         {
             ModelElementKey key = new ModelElementKey();
             key.Id = this.TransformationId;
-            return (ISchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key)
-                as ITransformation;
+            return (ISchemaItem)
+                    this.PersistenceProvider.RetrieveInstance(
+                        type: typeof(ISchemaItem),
+                        primaryKey: key
+                    ) as ITransformation;
         }
         set
         {
-            this.TransformationId = (Guid)value.PrimaryKey["Id"];
+            this.TransformationId = (Guid)value.PrimaryKey[key: "Id"];
             this.Name = this.Transformation.Name;
         }
     }
@@ -72,10 +78,10 @@ public class DataStructureTransformationTemplate : DataStructureTemplate
     {
         if (this.Transformation != null)
         {
-            dependencies.Add(this.Transformation);
+            dependencies.Add(item: this.Transformation);
         }
 
-        base.GetExtraDependencies(dependencies);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
     #endregion
 }

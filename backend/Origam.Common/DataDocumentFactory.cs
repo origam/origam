@@ -30,18 +30,18 @@ public class DataDocumentFactory
     public static IDataDocument New(XmlDocument xmlDoc)
     {
 #if NETSTANDARD
-        return new DataDocumentCore(xmlDoc);
+        return new DataDocumentCore(xmlDocument: xmlDoc);
 # else
-        return new DataDocumentFx(xmlDoc);
+        return new DataDocumentFx(xmlDoc: xmlDoc);
 #endif
     }
 
     public static IDataDocument New(DataSet dataSet)
     {
 #if NETSTANDARD
-        return new DataDocumentCore(dataSet);
+        return new DataDocumentCore(dataSet: dataSet);
 #else
-        return new DataDocumentFx(dataSet);
+        return new DataDocumentFx(dataSet: dataSet);
 #endif
     }
 }

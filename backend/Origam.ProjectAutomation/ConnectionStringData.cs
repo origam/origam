@@ -46,14 +46,18 @@ public class ConnectionStringData : IConnectionStringData
     {
         DatabaseType = databaseType;
         DatabaseServerName =
-            databaseServerName ?? throw new ArgumentNullException(nameof(databaseServerName));
+            databaseServerName
+            ?? throw new ArgumentNullException(paramName: nameof(databaseServerName));
         DatabasePort = databasePort;
         DataDatabaseName =
-            dataDatabaseName ?? throw new ArgumentNullException(nameof(dataDatabaseName));
+            dataDatabaseName
+            ?? throw new ArgumentNullException(paramName: nameof(dataDatabaseName));
         DatabaseUserName =
-            databaseUserName ?? throw new ArgumentNullException(nameof(databaseUserName));
+            databaseUserName
+            ?? throw new ArgumentNullException(paramName: nameof(databaseUserName));
         DatabasePassword =
-            databasePassword ?? throw new ArgumentNullException(nameof(databasePassword));
+            databasePassword
+            ?? throw new ArgumentNullException(paramName: nameof(databasePassword));
         DatabaseIntegratedAuthentication = databaseIntegratedAuthentication;
     }
 }

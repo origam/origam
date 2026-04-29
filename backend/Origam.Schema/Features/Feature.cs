@@ -28,10 +28,10 @@ namespace Origam.Schema;
 /// <summary>
 /// Summary description for Feature.
 /// </summary>
-[SchemaItemDescription("Feature", "icon_feature.png")]
-[HelpTopic("Features")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Feature", iconName: "icon_feature.png")]
+[HelpTopic(topic: "Features")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class Feature : AbstractSchemaItem
 {
     public const string CategoryConst = "Feature";
@@ -40,10 +40,10 @@ public class Feature : AbstractSchemaItem
         : base() { }
 
     public Feature(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public Feature(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Overriden ISchemaItem Members
 

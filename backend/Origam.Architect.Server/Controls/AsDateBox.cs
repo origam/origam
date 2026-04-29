@@ -32,10 +32,10 @@ public class AsDateBox : LabeledEditor, IAsControl
 
     public string CustomFormat { get; set; } = "dd.MMMM yyyy";
 
-    [Category("(ORIGAM)")]
+    [Category(category: "(ORIGAM)")]
     public string GridColumnCaption { get; set; }
 
-    [Category("(ORIGAM)")]
+    [Category(category: "(ORIGAM)")]
     public string Caption { get; set; }
 
     public Object DateValue { get; set; }

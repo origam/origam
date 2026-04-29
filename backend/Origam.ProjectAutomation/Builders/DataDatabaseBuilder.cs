@@ -36,12 +36,10 @@ public class DataDatabaseBuilder : AbstractDatabaseBuilder
     {
         _databaseType = project.DatabaseType;
         _databaseName = project.DataDatabaseName;
-        CreateDatabase(project);
-        CreateSchema(project);
-        DataService(_databaseType).ConnectionString = BuildConnectionStringCreateDatabase(
-            project,
-            ""
-        );
+        CreateDatabase(project: project);
+        CreateSchema(project: project);
+        DataService(DatabaseType: _databaseType).ConnectionString =
+            BuildConnectionStringCreateDatabase(project: project, databaseName: "");
     }
 
     public string BuildConnectionStringCreateDatabase(
@@ -49,15 +47,15 @@ public class DataDatabaseBuilder : AbstractDatabaseBuilder
         string databaseName
     )
     {
-        return DataService(_databaseType)
+        return DataService(DatabaseType: _databaseType)
             .BuildConnectionString(
-                project.DatabaseServerName,
-                project.DatabasePort,
-                databaseName,
-                project.DatabaseUserName,
-                project.DatabasePassword,
-                project.DatabaseIntegratedAuthentication,
-                false
+                serverName: project.DatabaseServerName,
+                port: project.DatabasePort,
+                databaseName: databaseName,
+                userName: project.DatabaseUserName,
+                password: project.DatabasePassword,
+                integratedAuthentication: project.DatabaseIntegratedAuthentication,
+                pooling: false
             );
     }
 
@@ -69,15 +67,15 @@ public class DataDatabaseBuilder : AbstractDatabaseBuilder
     public string BuildConnectionString(IConnectionStringData project, bool pooling)
     {
         _databaseType = project.DatabaseType;
-        return DataService(project.DatabaseType)
+        return DataService(DatabaseType: project.DatabaseType)
             .BuildConnectionString(
-                project.DatabaseServerName,
-                project.DatabasePort,
-                project.DataDatabaseName,
-                project.DatabaseUserName,
-                project.DatabasePassword,
-                project.DatabaseIntegratedAuthentication,
-                pooling
+                serverName: project.DatabaseServerName,
+                port: project.DatabasePort,
+                databaseName: project.DataDatabaseName,
+                userName: project.DatabaseUserName,
+                password: project.DatabasePassword,
+                integratedAuthentication: project.DatabaseIntegratedAuthentication,
+                pooling: pooling
             );
     }
 
@@ -86,20 +84,20 @@ public class DataDatabaseBuilder : AbstractDatabaseBuilder
         _databaseType = project.DatabaseType;
         if (_databaseType == DatabaseType.MsSql)
         {
-            return BuildConnectionString(project, pooling);
+            return BuildConnectionString(project: project, pooling: pooling);
         }
         if (_databaseType == DatabaseType.PgSql)
         {
-            this.DataService(_databaseType).DbUser = project.Name;
-            return DataService(project.DatabaseType)
+            this.DataService(DatabaseType: _databaseType).DbUser = project.Name;
+            return DataService(DatabaseType: project.DatabaseType)
                 .BuildConnectionString(
-                    project.DatabaseServerName,
-                    project.DatabasePort,
-                    project.DataDatabaseName,
-                    DataService(_databaseType).DbUser,
-                    project.UserPassword,
-                    project.DatabaseIntegratedAuthentication,
-                    pooling
+                    serverName: project.DatabaseServerName,
+                    port: project.DatabasePort,
+                    databaseName: project.DataDatabaseName,
+                    userName: DataService(DatabaseType: _databaseType).DbUser,
+                    password: project.UserPassword,
+                    integratedAuthentication: project.DatabaseIntegratedAuthentication,
+                    pooling: pooling
                 );
         }
         return null;
@@ -107,25 +105,24 @@ public class DataDatabaseBuilder : AbstractDatabaseBuilder
 
     private void CreateSchema(Project project)
     {
-        DataService(_databaseType).ConnectionString = BuildConnectionStringCreateDatabase(
-            project,
-            project.DataDatabaseName
-        );
-        DataService(_databaseType).CreateSchema(_databaseName);
+        DataService(DatabaseType: _databaseType).ConnectionString =
+            BuildConnectionStringCreateDatabase(
+                project: project,
+                databaseName: project.DataDatabaseName
+            );
+        DataService(DatabaseType: _databaseType).CreateSchema(databaseName: _databaseName);
     }
 
     private void CreateDatabase(Project project)
     {
-        DataService(_databaseType).ConnectionString = BuildConnectionStringCreateDatabase(
-            project,
-            ""
-        );
-        DataService(_databaseType).CreateDatabase(_databaseName);
+        DataService(DatabaseType: _databaseType).ConnectionString =
+            BuildConnectionStringCreateDatabase(project: project, databaseName: "");
+        DataService(DatabaseType: _databaseType).CreateDatabase(name: _databaseName);
     }
 
     public override void Rollback()
     {
         OrigamUserContext.Reset();
-        DataService(_databaseType).DeleteDatabase(_databaseName);
+        DataService(DatabaseType: _databaseType).DeleteDatabase(name: _databaseName);
     }
 }

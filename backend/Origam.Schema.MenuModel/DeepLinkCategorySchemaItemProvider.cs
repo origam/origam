@@ -25,7 +25,7 @@ public class DeepLinkCategorySchemaItemProvider : AbstractSchemaItemProvider, IS
 {
     public DeepLinkCategorySchemaItemProvider()
     {
-        this.ChildItemTypes.Add(typeof(DeepLinkCategory));
+        this.ChildItemTypes.Add(item: typeof(DeepLinkCategory));
     }
 
     #region ISchemaItemProvider Members

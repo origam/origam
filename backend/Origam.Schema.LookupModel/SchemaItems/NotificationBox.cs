@@ -27,10 +27,10 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.LookupModel;
 
-[SchemaItemDescription("Notification Box", "icon_notification-box.png")]
-[HelpTopic("Notification+Boxes+And+Tooltips")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Notification Box", iconName: "icon_notification-box.png")]
+[HelpTopic(topic: "Notification+Boxes+And+Tooltips")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class NotificationBox : AbstractSchemaItem
 {
     public const string CategoryConst = "NotificationBox";
@@ -38,16 +38,16 @@ public class NotificationBox : AbstractSchemaItem
     public NotificationBox() { }
 
     public NotificationBox(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public NotificationBox(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Properties
     private NotificationBoxType _type = NotificationBoxType.Logo;
 
-    [Description("One of the predefined notification box types.")]
-    [XmlAttribute("type")]
+    [Description(description: "One of the predefined notification box types.")]
+    [XmlAttribute(attributeName: "type")]
     public NotificationBoxType Type
     {
         get => _type;
@@ -55,8 +55,8 @@ public class NotificationBox : AbstractSchemaItem
     }
     private int _refreshInterval = 0;
 
-    [Description("Refresh interval in seconds.")]
-    [XmlAttribute("refreshInterval")]
+    [Description(description: "Refresh interval in seconds.")]
+    [XmlAttribute(attributeName: "refreshInterval")]
     public int RefreshInterval
     {
         get => _refreshInterval;
@@ -73,9 +73,11 @@ public class NotificationBox : AbstractSchemaItem
     public override T NewItem<T>(Guid schemaExtensionId, SchemaItemGroup group)
     {
         return base.NewItem<T>(
-            schemaExtensionId,
-            group,
-            typeof(T) == typeof(DataServiceDataTooltip) ? "NewDataServiceDataTooltip" : null
+            schemaExtensionId: schemaExtensionId,
+            group: group,
+            itemName: typeof(T) == typeof(DataServiceDataTooltip)
+                ? "NewDataServiceDataTooltip"
+                : null
         );
     }
     #endregion

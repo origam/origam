@@ -32,7 +32,7 @@ internal class DatetimeFormatter : Formatter
     private readonly Func<DateTime> timeNowFunc;
 
     public DatetimeFormatter(TextBox textBox, string customFormat, Func<DateTime> timeNowFunc)
-        : base(textBox, customFormat)
+        : base(textBox: textBox, customFormat: customFormat)
     {
         this.timeNowFunc = timeNowFunc;
     }
@@ -44,62 +44,62 @@ internal class DatetimeFormatter : Formatter
     public override void OnLeave(object sender, EventArgs e)
     {
         Text = Text.Trim();
-        if (string.IsNullOrEmpty(Text))
+        if (string.IsNullOrEmpty(value: Text))
         {
             return;
         }
 
-        var dateStr = IsAutoCompleteAble(Text) ? AutoComplete(Text) : Text;
-        var result = ParseToDate(dateStr);
+        var dateStr = IsAutoCompleteAble(dateStr: Text) ? AutoComplete(text: Text) : Text;
+        var result = ParseToDate(dateStr: dateStr);
         var parseSuccess = result.Item1;
         var date = result.Item2;
         if (!parseSuccess)
         {
-            NotifyInputError("Text cannot be parsed to a valid date.");
+            NotifyInputError(message: "Text cannot be parsed to a valid date.");
             return;
         }
-        WriteToTextInProperFormat(date);
+        WriteToTextInProperFormat(date: date);
     }
 
     private void WriteToTextInProperFormat(DateTime date)
     {
-        if (string.IsNullOrEmpty(customFormat))
+        if (string.IsNullOrEmpty(value: customFormat))
         {
             Text = date.IsMidnight() ? date.ToShortDateString() : date.ToString();
         }
         else
         {
-            Text = date.ToString(customFormat);
+            Text = date.ToString(format: customFormat);
         }
     }
 
     private (bool parseSucess, DateTime parsedDate) ParseToDate(string dateStr)
     {
-        var defaultFormatParseSuccess = DateTime.TryParse(dateStr, out var date1);
-        if (defaultFormatParseSuccess || string.IsNullOrEmpty(customFormat))
+        var defaultFormatParseSuccess = DateTime.TryParse(s: dateStr, result: out var date1);
+        if (defaultFormatParseSuccess || string.IsNullOrEmpty(value: customFormat))
         {
             return (defaultFormatParseSuccess, date1);
         }
         var customFormatParseSuccess = DateTime.TryParseExact(
-            dateStr,
-            customFormat,
-            CultureInfo.InvariantCulture,
-            DateTimeStyles.None,
-            out var date2
+            s: dateStr,
+            format: customFormat,
+            provider: CultureInfo.InvariantCulture,
+            style: DateTimeStyles.None,
+            result: out var date2
         );
         return (customFormatParseSuccess, date2);
     }
 
     private bool IsAutoCompleteAble(string dateStr)
     {
-        var dateParts = dateStr.Split(DateTimeSeparator);
+        var dateParts = dateStr.Split(splitWith: DateTimeSeparator);
         if (dateParts.Length > 2)
         {
             return false;
         }
 
         var datePart = dateParts[0];
-        if (datePart.Contains(DateSeparator))
+        if (datePart.Contains(value: DateSeparator))
         {
             if (datePart.Length > 10)
             {
@@ -123,7 +123,7 @@ internal class DatetimeFormatter : Formatter
 
     public override object GetValue()
     {
-        (bool parseSucess, DateTime parsedDate) = ParseToDate(Text);
+        (bool parseSucess, DateTime parsedDate) = ParseToDate(dateStr: Text);
         if (parseSucess)
         {
             return parsedDate;
@@ -139,7 +139,7 @@ internal class DatetimeFormatter : Formatter
             timeSeparator: TimeSeparator,
             dateTimeSeparator: DateTimeSeparator,
             timeNowFunc: timeNowFunc
-        ).AutoComplete(text);
+        ).AutoComplete(text: text);
     }
 
     protected override bool IsValidChar(char input)
@@ -173,13 +173,13 @@ class DateCompleter
 
     public string AutoComplete(string text)
     {
-        var dateAndTime = text.Split(dateTimeSeparator);
+        var dateAndTime = text.Split(splitWith: dateTimeSeparator);
         var dateText = dateAndTime[0];
-        var completeDate = AutoCompleteDate(dateText);
+        var completeDate = AutoCompleteDate(incompleteDate: dateText);
         if (dateAndTime.Length == 2)
         {
             var timeText = dateAndTime[1];
-            var completeTime = AutoCompleteTime(timeText);
+            var completeTime = AutoCompleteTime(incompleteTime: timeText);
             return completeDate + dateTimeSeparator + completeTime;
         }
         return completeDate;
@@ -187,11 +187,11 @@ class DateCompleter
 
     private string AutoCompleteTime(string incompleteTime)
     {
-        if (incompleteTime.Contains(timeSeparator))
+        if (incompleteTime.Contains(value: timeSeparator))
         {
-            return CompleteTimeWithSeparators(incompleteTime);
+            return CompleteTimeWithSeparators(incompleteTime: incompleteTime);
         }
-        return CompleteTimeWithoutSeparators(incompleteTime);
+        return CompleteTimeWithoutSeparators(incompleteTime: incompleteTime);
     }
 
     private string CompleteTimeWithoutSeparators(string incompleteTime)
@@ -206,44 +206,44 @@ class DateCompleter
             case 3:
             case 4:
             {
-                return incompleteTime.Substring(0, 2)
+                return incompleteTime.Substring(startIndex: 0, length: 2)
                     + timeSeparator
-                    + incompleteTime.Substring(2)
+                    + incompleteTime.Substring(startIndex: 2)
                     + timeSeparator
                     + "00";
             }
             default:
             {
-                return incompleteTime.Substring(0, 2)
+                return incompleteTime.Substring(startIndex: 0, length: 2)
                     + timeSeparator
-                    + incompleteTime.Substring(2, 2)
+                    + incompleteTime.Substring(startIndex: 2, length: 2)
                     + timeSeparator
-                    + incompleteTime.Substring(4);
+                    + incompleteTime.Substring(startIndex: 4);
             }
         }
     }
 
     private static string CompleteTimeWithSeparators(string incompleteTime)
     {
-        var parseSuccess = DateTime.TryParse(incompleteTime, out var date);
+        var parseSuccess = DateTime.TryParse(s: incompleteTime, result: out var date);
         return parseSuccess ? date.ToShortTimeString() : incompleteTime;
     }
 
     private string AutoCompleteDate(string incompleteDate)
     {
         if (
-            incompleteDate.Contains(dateSeparator)
-            && (incompleteDate.Split(dateSeparator).Length - 1) == 2
+            incompleteDate.Contains(value: dateSeparator)
+            && (incompleteDate.Split(splitWith: dateSeparator).Length - 1) == 2
         )
         {
-            return CompleteDateWithSeparators(incompleteDate);
+            return CompleteDateWithSeparators(incompleteDate: incompleteDate);
         }
-        return CompleteDateWithoutSeparators(incompleteDate);
+        return CompleteDateWithoutSeparators(incompleteDate: incompleteDate);
     }
 
     private string CompleteDateWithSeparators(string incompleteDate)
     {
-        var parseSuccess = DateTime.TryParse(incompleteDate, out var date);
+        var parseSuccess = DateTime.TryParse(s: incompleteDate, result: out var date);
         return parseSuccess ? date.ToShortDateString() : incompleteDate;
     }
 
@@ -255,25 +255,25 @@ class DateCompleter
             case 2:
             {
                 // assuming input is day.
-                return AddMonthAndYear(incompleteDate);
+                return AddMonthAndYear(day: incompleteDate);
             }
             case 3:
             case 4:
             {
                 // assuming input is day and month in order specified by
                 // current culture
-                return AddYear(incompleteDate);
+                return AddYear(dayAndMonth: incompleteDate);
             }
             case 6:
             {
                 // assuming input is day and month in order specified by
                 // current culture followed by incomplete year (yy)
-                var incompleteWithSeparators = AddSeparators(incompleteDate);
+                var incompleteWithSeparators = AddSeparators(incompleteDate: incompleteDate);
                 return incompleteWithSeparators;
             }
             default:
             {
-                return AddSeparators(incompleteDate);
+                return AddSeparators(incompleteDate: incompleteDate);
             }
         }
     }
@@ -283,19 +283,21 @@ class DateCompleter
         var now = timeNowFunc.Invoke();
         var usDateString = $"{now.Month}/{day}/{now.Year}";
         var isValidDate = DateTime.TryParse(
-            usDateString,
-            CultureInfo.CreateSpecificCulture("en-US"),
-            DateTimeStyles.None,
-            out var date
+            s: usDateString,
+            provider: CultureInfo.CreateSpecificCulture(name: "en-US"),
+            styles: DateTimeStyles.None,
+            result: out var date
         );
         return isValidDate ? date.ToShortDateString() : day;
     }
 
     private string AddYear(string dayAndMonth)
     {
-        return dayAndMonth.Substring(0, 2).Replace(dateSeparator, "")
+        return dayAndMonth
+                .Substring(startIndex: 0, length: 2)
+                .Replace(oldValue: dateSeparator, newValue: "")
             + dateSeparator
-            + dayAndMonth.Substring(2).Replace(dateSeparator, "")
+            + dayAndMonth.Substring(startIndex: 2).Replace(oldValue: dateSeparator, newValue: "")
             + dateSeparator
             + timeNowFunc.Invoke().Year;
     }
@@ -303,22 +305,25 @@ class DateCompleter
     private string AddSeparators(string incompleteDate)
     {
         var format = GetDoubleDayAndMonthFormat();
-        var firstIndex = format.IndexOf(dateSeparator);
-        var secondIndex = format.LastIndexOf(dateSeparator);
+        var firstIndex = format.IndexOf(value: dateSeparator);
+        var secondIndex = format.LastIndexOf(value: dateSeparator);
         var dateLength = incompleteDate.Length;
         if (firstIndex < dateLength & secondIndex >= dateLength)
         {
-            return incompleteDate.Substring(0, firstIndex)
+            return incompleteDate.Substring(startIndex: 0, length: firstIndex)
                 + dateSeparator
-                + incompleteDate.Substring(firstIndex);
+                + incompleteDate.Substring(startIndex: firstIndex);
         }
         if (firstIndex < dateLength & secondIndex < dateLength)
         {
-            return incompleteDate.Substring(0, firstIndex)
+            return incompleteDate.Substring(startIndex: 0, length: firstIndex)
                 + dateSeparator
-                + incompleteDate.Substring(firstIndex, secondIndex - firstIndex - 1)
+                + incompleteDate.Substring(
+                    startIndex: firstIndex,
+                    length: secondIndex - firstIndex - 1
+                )
                 + dateSeparator
-                + incompleteDate.Substring(secondIndex - 1);
+                + incompleteDate.Substring(startIndex: secondIndex - 1);
         }
         return incompleteDate;
     }
@@ -331,7 +336,10 @@ class DateCompleter
         string format;
         if (formatHasSingleDigitDayAndMonth)
         {
-            format = dateFormat.ToLower().Replace("d", "dd").Replace("m", "mm");
+            format = dateFormat
+                .ToLower()
+                .Replace(oldValue: "d", newValue: "dd")
+                .Replace(oldValue: "m", newValue: "mm");
         }
         else
         {

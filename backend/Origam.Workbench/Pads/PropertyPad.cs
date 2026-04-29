@@ -41,7 +41,7 @@ public class PropertyPad : AbstractPadContent, IPropertyPad
     private void InitializeComponent()
     {
         System.ComponentModel.ComponentResourceManager resources =
-            new System.ComponentModel.ComponentResourceManager(typeof(PropertyPad));
+            new System.ComponentModel.ComponentResourceManager(t: typeof(PropertyPad));
         this.pgrid = new Origam.Workbench.PropertyGrid.PropertyGridEx();
         this.cboComponents = new System.Windows.Forms.ComboBox();
         this.SuspendLayout();
@@ -51,9 +51,9 @@ public class PropertyPad : AbstractPadContent, IPropertyPad
         this.pgrid.Dock = System.Windows.Forms.DockStyle.Fill;
         this.pgrid.HelpBackColor = System.Drawing.Color.LightYellow;
         this.pgrid.LineColor = System.Drawing.SystemColors.ScrollBar;
-        this.pgrid.Location = new System.Drawing.Point(0, 21);
+        this.pgrid.Location = new System.Drawing.Point(x: 0, y: 21);
         this.pgrid.Name = "pgrid";
-        this.pgrid.Size = new System.Drawing.Size(292, 252);
+        this.pgrid.Size = new System.Drawing.Size(width: 292, height: 252);
         this.pgrid.TabIndex = 0;
         this.pgrid.PropertyValueChanged +=
             new System.Windows.Forms.PropertyValueChangedEventHandler(
@@ -64,9 +64,9 @@ public class PropertyPad : AbstractPadContent, IPropertyPad
         //
         this.cboComponents.Dock = System.Windows.Forms.DockStyle.Top;
         this.cboComponents.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-        this.cboComponents.Location = new System.Drawing.Point(0, 0);
+        this.cboComponents.Location = new System.Drawing.Point(x: 0, y: 0);
         this.cboComponents.Name = "cboComponents";
-        this.cboComponents.Size = new System.Drawing.Size(292, 21);
+        this.cboComponents.Size = new System.Drawing.Size(width: 292, height: 21);
         this.cboComponents.Sorted = true;
         this.cboComponents.TabIndex = 1;
         this.cboComponents.SelectedIndexChanged += new System.EventHandler(
@@ -75,10 +75,10 @@ public class PropertyPad : AbstractPadContent, IPropertyPad
         //
         // PropertyPad
         //
-        this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-        this.ClientSize = new System.Drawing.Size(292, 273);
-        this.Controls.Add(this.pgrid);
-        this.Controls.Add(this.cboComponents);
+        this.AutoScaleBaseSize = new System.Drawing.Size(width: 5, height: 13);
+        this.ClientSize = new System.Drawing.Size(width: 292, height: 273);
+        this.Controls.Add(value: this.pgrid);
+        this.Controls.Add(value: this.cboComponents);
         this.DockAreas = (
             (WeifenLuo.WinFormsUI.Docking.DockAreas)(
                 (
@@ -94,18 +94,18 @@ public class PropertyPad : AbstractPadContent, IPropertyPad
             )
         );
         this.Font = new System.Drawing.Font(
-            "Microsoft Sans Serif",
-            8.25F,
-            System.Drawing.FontStyle.Regular,
-            System.Drawing.GraphicsUnit.Point,
-            ((byte)(238))
+            familyName: "Microsoft Sans Serif",
+            emSize: 8.25F,
+            style: System.Drawing.FontStyle.Regular,
+            unit: System.Drawing.GraphicsUnit.Point,
+            gdiCharSet: ((byte)(238))
         );
         this.HideOnClose = true;
-        this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+        this.Icon = ((System.Drawing.Icon)(resources.GetObject(name: "$this.Icon")));
         this.Name = "PropertyPad";
         this.TabText = "Properties";
         this.Text = "Properties";
-        this.ResumeLayout(false);
+        this.ResumeLayout(performLayout: false);
     }
 
     public PropertyPad()
@@ -144,10 +144,11 @@ public class PropertyPad : AbstractPadContent, IPropertyPad
         if (item != null)
         {
             ISelectionService svc =
-                item.Control.Site.GetService(typeof(ISelectionService)) as ISelectionService;
+                item.Control.Site.GetService(serviceType: typeof(ISelectionService))
+                as ISelectionService;
             var list = new List<Control>();
-            list.Add(item.Control);
-            svc.SetSelectedComponents(list);
+            list.Add(item: item.Control);
+            svc.SetSelectedComponents(components: list);
         }
     }
 
@@ -155,15 +156,22 @@ public class PropertyPad : AbstractPadContent, IPropertyPad
 
     private void pgrid_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
     {
-        if (ReadOnlyGetter != null && ReadOnlyGetter() && !Equals(e.OldValue, e.ChangedItem.Value))
+        if (
+            ReadOnlyGetter != null
+            && ReadOnlyGetter()
+            && !Equals(objA: e.OldValue, objB: e.ChangedItem.Value)
+        )
         {
-            e.ChangedItem.PropertyDescriptor.SetValue(pgrid.SelectedObject, e.OldValue);
+            e.ChangedItem.PropertyDescriptor.SetValue(
+                component: pgrid.SelectedObject,
+                value: e.OldValue
+            );
             MessageBox.Show(
-                this,
-                ResourceUtils.GetString("ErrorElementReadOnly"),
-                ResourceUtils.GetString("ErrorTitle"),
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error
+                owner: this,
+                text: ResourceUtils.GetString(key: "ErrorElementReadOnly"),
+                caption: ResourceUtils.GetString(key: "ErrorTitle"),
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Error
             );
             return;
         }
@@ -186,8 +194,8 @@ public class PropertyPad : AbstractPadContent, IPropertyPad
                     Control control = component as Control;
                     if (control != null && control.Tag is ISchemaItem)
                     {
-                        PropertyPadListItem item = new PropertyPadListItem(control);
-                        cboComponents.Items.Add(item);
+                        PropertyPadListItem item = new PropertyPadListItem(control: control);
+                        cboComponents.Items.Add(item: item);
                         if (pgrid.SelectedObjects.Length == 1 && selectedItem == control)
                         {
                             selectedCboItem = item;

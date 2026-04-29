@@ -39,26 +39,26 @@ public class CrystalReportService : IReportService
         Hashtable parameters
     )
     {
-        var report = ReportHelper.GetReportElement<CrystalReport>(reportId);
+        var report = ReportHelper.GetReportElement<CrystalReport>(reportId: reportId);
         var xmlDataDoc = ReportHelper.LoadOrUseReportData(
-            report,
-            data,
-            parameters,
+            report: report,
+            data: data,
+            parameters: parameters,
             dbTransaction: null
         );
         using var langSwitcher = new LanguageSwitcher(
-            langIetf: ReportHelper.ResolveLanguage(xmlDataDoc, report)
+            langIetf: ReportHelper.ResolveLanguage(doc: xmlDataDoc, reportElement: report)
         );
         ReportHelper.LogInfo(
-            System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType,
-            $"Printing report '{report.Name}' to {printerName}"
+            type: System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType,
+            message: $"Printing report '{report.Name}' to {printerName}"
         );
         crystalReportHelper.PrintReport(
-            report.Id,
-            xmlDataDoc.DataSet,
-            parameters,
-            printerName,
-            copies
+            reportId: report.Id,
+            data: xmlDataDoc.DataSet,
+            parameters: parameters,
+            printerName: printerName,
+            copies: copies
         );
     }
 
@@ -70,16 +70,26 @@ public class CrystalReportService : IReportService
         string dbTransaction
     )
     {
-        var report = ReportHelper.GetReportElement<CrystalReport>(reportId);
-        var xmlDataDoc = ReportHelper.LoadOrUseReportData(report, data, parameters, dbTransaction);
+        var report = ReportHelper.GetReportElement<CrystalReport>(reportId: reportId);
+        var xmlDataDoc = ReportHelper.LoadOrUseReportData(
+            report: report,
+            data: data,
+            parameters: parameters,
+            dbTransaction: dbTransaction
+        );
         using var langSwitcher = new LanguageSwitcher(
-            langIetf: ReportHelper.ResolveLanguage(xmlDataDoc, report)
+            langIetf: ReportHelper.ResolveLanguage(doc: xmlDataDoc, reportElement: report)
         );
         ReportHelper.LogInfo(
-            System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType,
-            $"Exporting report '{report.Name}' to {format}"
+            type: System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType,
+            message: $"Exporting report '{report.Name}' to {format}"
         );
-        return crystalReportHelper.CreateReport(report.Id, xmlDataDoc.DataSet, parameters, format);
+        return crystalReportHelper.CreateReport(
+            reportId: report.Id,
+            data: xmlDataDoc.DataSet,
+            parameters: parameters,
+            format: format
+        );
     }
 
     public void SetTraceTaskInfo(TraceTaskInfo traceTaskInfo)
@@ -95,20 +105,25 @@ public class CrystalReportService : IReportService
         string dbTransaction
     )
     {
-        var report = ReportHelper.GetReportElement<CrystalReport>(reportId);
-        var xmlDataDoc = ReportHelper.LoadOrUseReportData(report, data, parameters, dbTransaction);
+        var report = ReportHelper.GetReportElement<CrystalReport>(reportId: reportId);
+        var xmlDataDoc = ReportHelper.LoadOrUseReportData(
+            report: report,
+            data: data,
+            parameters: parameters,
+            dbTransaction: dbTransaction
+        );
         using var langSwitcher = new LanguageSwitcher(
-            langIetf: ReportHelper.ResolveLanguage(xmlDataDoc, report)
+            langIetf: ReportHelper.ResolveLanguage(doc: xmlDataDoc, reportElement: report)
         );
         ReportHelper.LogInfo(
-            System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType,
-            $"Exporting report '{report.Name}' to {format}"
+            type: System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType,
+            message: $"Exporting report '{report.Name}' to {format}"
         );
         return crystalReportHelper.PrepareReport(
-            report,
-            xmlDataDoc.DataSet,
-            parameters,
-            DataReportExportFormatType.RPT.ToString()
+            report: report,
+            data: xmlDataDoc.DataSet,
+            parameters: parameters,
+            format: DataReportExportFormatType.RPT.ToString()
         );
     }
     #endregion

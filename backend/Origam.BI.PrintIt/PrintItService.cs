@@ -43,23 +43,23 @@ public class PrintItService : IReportService
         if (format != DataReportExportFormatType.PDF.ToString())
         {
             throw new ArgumentOutOfRangeException(
-                "format",
-                format,
-                ResourceUtils.GetString("FormatNotSupported")
+                paramName: "format",
+                actualValue: format,
+                message: ResourceUtils.GetString(key: "FormatNotSupported")
             );
         }
-        var report = ReportHelper.GetReportElement<AbstractDataReport>(reportId);
-        ReportHelper.PopulateDefaultValues(report, parameters);
-        ReportHelper.ComputeXsltValueParameters(report, parameters);
+        var report = ReportHelper.GetReportElement<AbstractDataReport>(reportId: reportId);
+        ReportHelper.PopulateDefaultValues(report: report, parameters: parameters);
+        ReportHelper.ComputeXsltValueParameters(report: report, parameters: parameters);
         IDataDocument xmlDataDoc = ReportHelper.LoadOrUseReportData(
-            report,
-            data,
-            parameters,
-            dbTransaction
+            report: report,
+            data: data,
+            parameters: parameters,
+            dbTransaction: dbTransaction
         );
         using (
             LanguageSwitcher langSwitcher = new LanguageSwitcher(
-                ReportHelper.ResolveLanguage(xmlDataDoc, report)
+                langIetf: ReportHelper.ResolveLanguage(doc: xmlDataDoc, reportElement: report)
             )
         )
         {
@@ -68,19 +68,21 @@ public class PrintItService : IReportService
             if (report.Transformation != null)
             {
                 IPersistenceService persistence =
-                    ServiceManager.Services.GetService(typeof(IPersistenceService))
+                    ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
                     as IPersistenceService;
-                IXsltEngine transformer = new CompiledXsltEngine(persistence.SchemaProvider);
+                IXsltEngine transformer = new CompiledXsltEngine(
+                    persistence: persistence.SchemaProvider
+                );
                 //Hashtable transformParams = new Hashtable();
                 //QueryParameterCollection qparams = new QueryParameterCollection();
                 //Hashtable preprocessorParams = GetPreprocessorParameters(request);
                 result = transformer.Transform(
-                    xmlDataDoc,
-                    report.TransformationId,
-                    parameters,
-                    null,
-                    null,
-                    false
+                    data: xmlDataDoc,
+                    transformationId: report.TransformationId,
+                    parameters: parameters,
+                    transactionId: null,
+                    outputStructure: null,
+                    validateOnly: false
                 );
             }
             else
@@ -91,18 +93,26 @@ public class PrintItService : IReportService
             using (MemoryStream stream = new MemoryStream())
             {
                 string postData = null;
-                using (StreamWriter writer = new StreamWriter(stream))
+                using (StreamWriter writer = new StreamWriter(stream: stream))
                 {
-                    JsonUtils.SerializeToJson(writer, result, true);
+                    JsonUtils.SerializeToJson(
+                        textWriter: writer,
+                        value: result,
+                        omitRootElement: true
+                    );
                     //JsonUtils.SerializeToJson(response, result, xsltPage.OmitJsonRootElement);
                     writer.Flush();
                     stream.Position = 0;
-                    StreamReader reader = new StreamReader(stream);
+                    StreamReader reader = new StreamReader(stream: stream);
                     string jsonString = reader.ReadToEnd();
-                    TraceReportData(jsonString, report.ReportFileName, parameters);
+                    TraceReportData(
+                        data: jsonString,
+                        reportName: report.ReportFileName,
+                        parameters: parameters
+                    );
                     postData = string.Format(
-                        "jargs={0}",
-                        HttpTools.Instance.EscapeDataStringLong(jsonString)
+                        format: "jargs={0}",
+                        arg0: HttpTools.Instance.EscapeDataStringLong(value: jsonString)
                     );
                 }
                 OrigamSettings settings =
@@ -111,7 +121,7 @@ public class PrintItService : IReportService
                 // send request to PrintIt service
                 return HttpTools
                     .Instance.SendRequest(
-                        new Request(
+                        request: new Request(
                             url: serviceUrl,
                             method: "POST",
                             content: postData,
@@ -129,25 +139,30 @@ public class PrintItService : IReportService
         {
             OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
             string path = Path.Combine(
-                settings.ReportsFolder(),
-                ReportHelper.ExpandCurlyBracketPlaceholdersWithParameters(reportName, parameters)
-                    + ".json"
+                path1: settings.ReportsFolder(),
+                path2: ReportHelper.ExpandCurlyBracketPlaceholdersWithParameters(
+                    input: reportName,
+                    parameters: parameters
+                ) + ".json"
             );
-            if (!IOTools.IsSubPathOf(path, settings.ReportsFolder()))
+            if (!IOTools.IsSubPathOf(path: path, basePath: settings.ReportsFolder()))
             {
-                throw new Exception(Strings.PathNotOnReportPath);
+                throw new Exception(message: Strings.PathNotOnReportPath);
             }
-            using (StreamWriter file = new StreamWriter(path))
+            using (StreamWriter file = new StreamWriter(path: path))
             {
-                file.Write(data);
+                file.Write(value: data);
                 file.Close();
             }
         }
         catch (Exception e)
         {
             ReportHelper.LogError(
-                System.Reflection.MethodBase.GetCurrentMethod().DeclaringType,
-                string.Format("Can't write PrintIt Report debug info: {0}", e.Message)
+                type: System.Reflection.MethodBase.GetCurrentMethod().DeclaringType,
+                message: string.Format(
+                    format: "Can't write PrintIt Report debug info: {0}",
+                    arg0: e.Message
+                )
             );
         }
     }

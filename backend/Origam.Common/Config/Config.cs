@@ -32,7 +32,7 @@ using Newtonsoft.Json.Linq;
 
 public class Config : IConfig
 {
-    private static readonly Lazy<string> userSecretsId = new(ResolveUserSecretsId);
+    private static readonly Lazy<string> userSecretsId = new(valueFactory: ResolveUserSecretsId);
 
     private static string ResolveUserSecretsId()
     {
@@ -41,7 +41,7 @@ public class Config : IConfig
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
             foreach (var asm in assemblies)
             {
-                foreach (var attr in asm.GetCustomAttributes(false))
+                foreach (var attr in asm.GetCustomAttributes(inherit: false))
                 {
                     var type = attr.GetType();
                     if (
@@ -50,10 +50,10 @@ public class Config : IConfig
                     )
                     {
                         var prop = type.GetProperty(
-                            "UserSecretsId",
-                            BindingFlags.Public | BindingFlags.Instance
+                            name: "UserSecretsId",
+                            bindingAttr: BindingFlags.Public | BindingFlags.Instance
                         );
-                        return prop?.GetValue(attr) as string;
+                        return prop?.GetValue(obj: attr) as string;
                     }
                 }
             }
@@ -73,18 +73,18 @@ public class Config : IConfig
         value = null;
         try
         {
-            if (!File.Exists(filePath))
+            if (!File.Exists(path: filePath))
             {
                 return false;
             }
 
-            var jsonText = File.ReadAllText(filePath);
-            var token = JToken.Parse(jsonText);
+            var jsonText = File.ReadAllText(path: filePath);
+            var token = JToken.Parse(json: jsonText);
             foreach (var segment in path)
             {
                 if (token is JObject obj)
                 {
-                    token = obj[segment];
+                    token = obj[propertyName: segment];
                     if (token == null)
                     {
                         return false;
@@ -99,7 +99,7 @@ public class Config : IConfig
             if (token.Type == JTokenType.String)
             {
                 value = token.Value<string>();
-                return !string.IsNullOrWhiteSpace(value);
+                return !string.IsNullOrWhiteSpace(value: value);
             }
 
             if (token.Type == JTokenType.Integer || token.Type == JTokenType.Float)
@@ -131,57 +131,63 @@ public class Config : IConfig
 
         string basePath = AppContext.BaseDirectory;
         string environment =
-            Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")
-            ?? Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT")
+            Environment.GetEnvironmentVariable(variable: "ASPNETCORE_ENVIRONMENT")
+            ?? Environment.GetEnvironmentVariable(variable: "DOTNET_ENVIRONMENT")
             ?? "Production";
 
         string value;
 
-        var appsettingsPath = Path.Combine(basePath, "appsettings.json");
+        var appsettingsPath = Path.Combine(path1: basePath, path2: "appsettings.json");
         if (
-            TryGetJsonValue(appsettingsPath, appSettingsPath, out value)
-            && !string.IsNullOrWhiteSpace(value)
+            TryGetJsonValue(filePath: appsettingsPath, path: appSettingsPath, value: out value)
+            && !string.IsNullOrWhiteSpace(value: value)
         )
         {
-            if (long.TryParse(value, out long parsed) && parsed > 0)
+            if (long.TryParse(s: value, result: out long parsed) && parsed > 0)
             {
                 return parsed;
             }
         }
 
-        var envAppsettingsPath = Path.Combine(basePath, $"appsettings.{environment}.json");
+        var envAppsettingsPath = Path.Combine(
+            path1: basePath,
+            path2: $"appsettings.{environment}.json"
+        );
         if (
-            TryGetJsonValue(envAppsettingsPath, appSettingsPath, out value)
-            && !string.IsNullOrWhiteSpace(value)
+            TryGetJsonValue(filePath: envAppsettingsPath, path: appSettingsPath, value: out value)
+            && !string.IsNullOrWhiteSpace(value: value)
         )
         {
-            if (long.TryParse(value, out long parsed) && parsed > 0)
+            if (long.TryParse(s: value, result: out long parsed) && parsed > 0)
             {
                 return parsed;
             }
         }
 
         var secretsId = userSecretsId.Value;
-        if (!string.IsNullOrWhiteSpace(secretsId))
+        if (!string.IsNullOrWhiteSpace(value: secretsId))
         {
             try
             {
                 var userProfile = Environment.GetFolderPath(
-                    Environment.SpecialFolder.ApplicationData
+                    folder: Environment.SpecialFolder.ApplicationData
                 );
                 var secretsPath = Path.Combine(
-                    userProfile,
-                    "Microsoft",
-                    "UserSecrets",
-                    secretsId,
-                    "secrets.json"
+                    paths: new[]
+                    {
+                        userProfile,
+                        "Microsoft",
+                        "UserSecrets",
+                        secretsId,
+                        "secrets.json",
+                    }
                 );
                 if (
-                    TryGetJsonValue(secretsPath, appSettingsPath, out value)
-                    && !string.IsNullOrWhiteSpace(value)
+                    TryGetJsonValue(filePath: secretsPath, path: appSettingsPath, value: out value)
+                    && !string.IsNullOrWhiteSpace(value: value)
                 )
                 {
-                    if (long.TryParse(value, out long parsed) && parsed > 0)
+                    if (long.TryParse(s: value, result: out long parsed) && parsed > 0)
                     {
                         return parsed;
                     }
@@ -195,23 +201,23 @@ public class Config : IConfig
             }
         }
 
-        string keyColon = string.Join(":", appSettingsPath);
-        value = Environment.GetEnvironmentVariable(keyColon);
-        if (string.IsNullOrWhiteSpace(value))
+        string keyColon = string.Join(separator: ":", value: appSettingsPath);
+        value = Environment.GetEnvironmentVariable(variable: keyColon);
+        if (string.IsNullOrWhiteSpace(value: value))
         {
-            string keySingle = string.Join("_", appSettingsPath);
-            value = Environment.GetEnvironmentVariable(keySingle);
+            string keySingle = string.Join(separator: "_", value: appSettingsPath);
+            value = Environment.GetEnvironmentVariable(variable: keySingle);
         }
 
-        if (string.IsNullOrWhiteSpace(value))
+        if (string.IsNullOrWhiteSpace(value: value))
         {
-            string keyDouble = string.Join("__", appSettingsPath);
-            value = Environment.GetEnvironmentVariable(keyDouble);
+            string keyDouble = string.Join(separator: "__", value: appSettingsPath);
+            value = Environment.GetEnvironmentVariable(variable: keyDouble);
         }
 
         if (
-            !string.IsNullOrWhiteSpace(value)
-            && long.TryParse(value, out long parsedEnv)
+            !string.IsNullOrWhiteSpace(value: value)
+            && long.TryParse(s: value, result: out long parsedEnv)
             && parsedEnv > 0
         )
         {

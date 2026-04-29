@@ -31,14 +31,16 @@ public class RelationTypeModelElementRuleAttribute : AbstractModelElementRuleAtt
 
     public override Exception CheckRule(object instance)
     {
-        return new NotSupportedException(ResourceUtils.GetString("MemberNameRequired"));
+        return new NotSupportedException(
+            message: ResourceUtils.GetString(key: "MemberNameRequired")
+        );
     }
 
     public override Exception CheckRule(object instance, string memberName)
     {
         if (memberName == String.Empty | memberName == null)
         {
-            CheckRule(instance);
+            CheckRule(instance: instance);
         }
 
         var dataStructure = (DataStructureEntity)instance;
@@ -49,13 +51,13 @@ public class RelationTypeModelElementRuleAttribute : AbstractModelElementRuleAtt
             if (allFields)
             {
                 return new DataException(
-                    "Field 'AllFields' MUST BE false, if RelationType is set LeftJoin or InnerJoin"
+                    s: "Field 'AllFields' MUST BE false, if RelationType is set LeftJoin or InnerJoin"
                 );
             }
         }
         // pro prohledavani childu a zjistovani jestli tam neni field.
         var schemaItems = dataStructure.ChildItemsByType<DataStructureColumn>(
-            DataStructureColumn.CategoryConst
+            itemType: DataStructureColumn.CategoryConst
         );
         if (
             schemaItems.Count > 0
@@ -63,7 +65,7 @@ public class RelationTypeModelElementRuleAttribute : AbstractModelElementRuleAtt
         )
         {
             return new DataException(
-                "Child Entities are DataField, but RelationType is set to LeftJoin or InnerJoin"
+                s: "Child Entities are DataField, but RelationType is set to LeftJoin or InnerJoin"
             );
         }
         return null;

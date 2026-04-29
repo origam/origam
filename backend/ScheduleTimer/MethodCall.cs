@@ -96,12 +96,12 @@ public class NamedParameterSetter : IParameterSetter
     public bool GetParameterValue(ParameterInfo pi, int ParameterLoc, ref object parameter)
     {
         string ParamName = pi.Name;
-        if (!_Params.ContainsKey(ParamName))
+        if (!_Params.ContainsKey(key: ParamName))
         {
             return false;
         }
 
-        parameter = _Params[ParamName];
+        parameter = _Params[key: ParamName];
         return true;
     }
 
@@ -117,7 +117,7 @@ public class ParameterSetterList
 {
     public void Add(IParameterSetter setter)
     {
-        _List.Add(setter);
+        _List.Add(item: setter);
     }
 
     public IParameterSetter[] ToArray()
@@ -140,7 +140,7 @@ public class ParameterSetterList
         //TODO: Update to iterate backwards
         for (int i = 0; i < Params.Length; ++i)
         {
-            SetValue(Params[i], i, ref Values[i]);
+            SetValue(Info: Params[i], i: i, Value: ref Values[i]);
         }
 
         return Values;
@@ -153,9 +153,13 @@ public class ParameterSetterList
         //TODO: Update to iterate backwards
         for (int i = 0; i < Params.Length; ++i)
         {
-            if (!SetValue(Params[i], i, ref Values[i]))
+            if (!SetValue(Info: Params[i], i: i, Value: ref Values[i]))
             {
-                LastSetter.GetParameterValue(Params[i], i, ref Values[i]);
+                LastSetter.GetParameterValue(
+                    pi: Params[i],
+                    ParameterLoc: i,
+                    parameter: ref Values[i]
+                );
             }
         }
         return Values;
@@ -165,7 +169,7 @@ public class ParameterSetterList
     {
         foreach (IParameterSetter Setter in _List)
         {
-            if (Setter.GetParameterValue(Info, i, ref Value))
+            if (Setter.GetParameterValue(pi: Info, ParameterLoc: i, parameter: ref Value))
             {
                 return true;
             }
@@ -207,17 +211,20 @@ public class DelegateMethodCall : MethodCallBase, IMethodCall
     {
         if (f.Method.GetParameters().Length < Params.Length)
         {
-            throw new ArgumentException("Too many parameters specified for delegate", "f");
+            throw new ArgumentException(
+                message: "Too many parameters specified for delegate",
+                paramName: "f"
+            );
         }
 
         _f = f;
-        ParamList.Add(new OrderParameterSetter(Params));
+        ParamList.Add(setter: new OrderParameterSetter(_Params: Params));
     }
 
     public DelegateMethodCall(Delegate f, IParameterSetter Params)
     {
         _f = f;
-        ParamList.Add(Params);
+        ParamList.Add(setter: Params);
     }
 
     Delegate _f;
@@ -233,12 +240,12 @@ public class DelegateMethodCall : MethodCallBase, IMethodCall
 
     public object Execute()
     {
-        return f.DynamicInvoke(GetParameterList(Method));
+        return f.DynamicInvoke(args: GetParameterList(Method: Method));
     }
 
     public object Execute(IParameterSetter Params)
     {
-        return f.DynamicInvoke(GetParameterList(Method, Params));
+        return f.DynamicInvoke(args: GetParameterList(Method: Method, Params: Params));
     }
 
     public void EventHandler(object obj, EventArgs e)
@@ -251,13 +258,13 @@ public class DelegateMethodCall : MethodCallBase, IMethodCall
     public IAsyncResult BeginExecute(AsyncCallback callback, object obj)
     {
         _exec = new Exec(Execute);
-        return _exec.BeginInvoke(callback, obj);
+        return _exec.BeginInvoke(callback: callback, @object: obj);
     }
 
     public IAsyncResult BeginExecute(IParameterSetter Params, AsyncCallback callback, object obj)
     {
         Exec2 exec = new Exec2(Execute);
-        return exec.BeginInvoke(Params, callback, obj);
+        return exec.BeginInvoke(Params: Params, callback: callback, @object: obj);
     }
 }
 
@@ -279,7 +286,7 @@ public class DynamicMethodCall : MethodCallBase, IMethodCall
     {
         _obj = obj;
         _method = method;
-        ParamList.Add(setter);
+        ParamList.Add(setter: setter);
     }
 
     object _obj;
@@ -292,12 +299,15 @@ public class DynamicMethodCall : MethodCallBase, IMethodCall
 
     public object Execute()
     {
-        return _method.Invoke(_obj, GetParameterList(Method));
+        return _method.Invoke(obj: _obj, parameters: GetParameterList(Method: Method));
     }
 
     public object Execute(IParameterSetter Params)
     {
-        return _method.Invoke(_obj, GetParameterList(Method, Params));
+        return _method.Invoke(
+            obj: _obj,
+            parameters: GetParameterList(Method: Method, Params: Params)
+        );
     }
 
     public void EventHandler(object obj, EventArgs e)
@@ -310,13 +320,13 @@ public class DynamicMethodCall : MethodCallBase, IMethodCall
     public IAsyncResult BeginExecute(AsyncCallback callback, object obj)
     {
         _exec = new Exec(Execute);
-        return _exec.BeginInvoke(callback, null);
+        return _exec.BeginInvoke(callback: callback, @object: null);
     }
 
     public IAsyncResult BeginExecute(IParameterSetter Params, AsyncCallback callback, object obj)
     {
         Exec2 exec = new Exec2(Execute);
-        return exec.BeginInvoke(Params, callback, null);
+        return exec.BeginInvoke(Params: Params, callback: callback, @object: null);
     }
 }
 
@@ -334,14 +344,14 @@ public class MethodCallBase
     protected object[] GetParameterList(MethodInfo Method)
     {
         ParamList.reset();
-        object[] Params = ParamList.GetParameters(Method);
+        object[] Params = ParamList.GetParameters(Method: Method);
         return Params;
     }
 
     protected object[] GetParameterList(MethodInfo Method, IParameterSetter Params)
     {
         ParamList.reset();
-        object[] objParams = ParamList.GetParameters(Method, Params);
+        object[] objParams = ParamList.GetParameters(Method: Method, LastSetter: Params);
         return objParams;
     }
 }

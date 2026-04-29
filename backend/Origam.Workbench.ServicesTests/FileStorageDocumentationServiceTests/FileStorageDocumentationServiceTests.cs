@@ -37,90 +37,111 @@ public class FileStorageDocumentationServiceTests
     [Test]
     public void ShouldAddTwoDocumentationItems()
     {
-        ConfigurationManager.SetActiveConfiguration(new OrigamSettings());
-        var sut = GetFileStorageDocumentationService(WritingTestFiles);
-        DocumentationComplete dataSet = GetTestDataSet("inputDataSet_2Items.xml");
-        sut.SaveDocumentation(dataSet);
+        ConfigurationManager.SetActiveConfiguration(configuration: new OrigamSettings());
+        var sut = GetFileStorageDocumentationService(storageDir: WritingTestFiles);
+        DocumentationComplete dataSet = GetTestDataSet(name: "inputDataSet_2Items.xml");
+        sut.SaveDocumentation(documentationData: dataSet);
         XmlDocument xmlDocument = GetOutDocument();
-        Assert.That(xmlDocument.FirstChild.ChildNodes, Has.Count.EqualTo(2));
+        Assert.That(
+            actual: xmlDocument.FirstChild.ChildNodes,
+            expression: Has.Count.EqualTo(expected: 2)
+        );
     }
 
     [Test]
     public void ShouldUpdateOneDocumentationItem()
     {
-        var sut = GetFileStorageDocumentationService(WritingTestFiles);
-        DocumentationComplete dataSet = GetTestDataSet("inputDataSet_1UpdatedItem.xml");
-        sut.SaveDocumentation(dataSet);
+        var sut = GetFileStorageDocumentationService(storageDir: WritingTestFiles);
+        DocumentationComplete dataSet = GetTestDataSet(name: "inputDataSet_1UpdatedItem.xml");
+        sut.SaveDocumentation(documentationData: dataSet);
         XmlDocument xmlDocument = GetOutDocument();
-        Assert.That(xmlDocument.FirstChild.ChildNodes, Has.Count.EqualTo(2));
-        XmlNode updatedNode = xmlDocument.FirstChild.ChildNodes[0];
-        Assert.That(updatedNode.ChildNodes[0].InnerText == "Updated text");
+        Assert.That(
+            actual: xmlDocument.FirstChild.ChildNodes,
+            expression: Has.Count.EqualTo(expected: 2)
+        );
+        XmlNode updatedNode = xmlDocument.FirstChild.ChildNodes[i: 0];
+        Assert.That(condition: updatedNode.ChildNodes[i: 0].InnerText == "Updated text");
     }
 
     [Test]
     public void ShouldReadDatSet()
     {
-        var sut = GetFileStorageDocumentationService(ReadingTestFiles);
+        var sut = GetFileStorageDocumentationService(storageDir: ReadingTestFiles);
         DocumentationComplete loadedSet = sut.LoadDocumentation(
-            new Guid("df7c2a53-c56a-426a-b748-08e656ae46db")
+            schemaItemId: new Guid(g: "df7c2a53-c56a-426a-b748-08e656ae46db")
         );
 
-        Assert.That(loadedSet.Tables[0].Rows, Has.Count.EqualTo(2));
+        Assert.That(
+            actual: loadedSet.Tables[index: 0].Rows,
+            expression: Has.Count.EqualTo(expected: 2)
+        );
     }
 
     [Test]
     public void ShouldLoadDocumentationOfSpecifiedType()
     {
-        ConfigurationManager.SetActiveConfiguration(new OrigamSettings());
-        var sut = GetFileStorageDocumentationService(ReadingTestFiles);
+        ConfigurationManager.SetActiveConfiguration(configuration: new OrigamSettings());
+        var sut = GetFileStorageDocumentationService(storageDir: ReadingTestFiles);
         string loadedDoc = sut.GetDocumentation(
-            new Guid("df7c2a53-c56a-426a-b748-08e656ae46db"),
-            DocumentationType.USER_SHORT_HELP
+            schemaItemId: new Guid(g: "df7c2a53-c56a-426a-b748-08e656ae46db"),
+            docType: DocumentationType.USER_SHORT_HELP
         );
 
-        Assert.That(loadedDoc == "Short help");
+        Assert.That(condition: loadedDoc == "Short help");
     }
 
     [Test]
     public void ShouldThrowBecauseCategoryNameIsWrong()
     {
-        ConfigurationManager.SetActiveConfiguration(new OrigamSettings());
-        var sut = GetFileStorageDocumentationService(GetDirectory("WrongCategoryName"));
+        ConfigurationManager.SetActiveConfiguration(configuration: new OrigamSettings());
+        var sut = GetFileStorageDocumentationService(
+            storageDir: GetDirectory(dirName: "WrongCategoryName")
+        );
 
-        Assert.Throws<ArgumentException>(() =>
+        Assert.Throws<ArgumentException>(code: () =>
         {
-            sut.LoadDocumentation(new Guid("df7c2a53-c56a-426a-b748-08e656ae46db"));
+            sut.LoadDocumentation(
+                schemaItemId: new Guid(g: "df7c2a53-c56a-426a-b748-08e656ae46db")
+            );
         });
     }
 
     [Test]
     public void ShouldThrowBecauseAStringCannotBeParsedToGuid()
     {
-        ConfigurationManager.SetActiveConfiguration(new OrigamSettings());
-        var sut = GetFileStorageDocumentationService(GetDirectory("WrongGuid"));
+        ConfigurationManager.SetActiveConfiguration(configuration: new OrigamSettings());
+        var sut = GetFileStorageDocumentationService(
+            storageDir: GetDirectory(dirName: "WrongGuid")
+        );
 
-        Assert.Throws<ArgumentException>(() =>
+        Assert.Throws<ArgumentException>(code: () =>
         {
-            sut.LoadDocumentation(new Guid("df7c2a53-c56a-426a-b748-08e656ae46db"));
+            sut.LoadDocumentation(
+                schemaItemId: new Guid(g: "df7c2a53-c56a-426a-b748-08e656ae46db")
+            );
         });
     }
 
     [Test]
     public void ShouldThrowBecauseANodeNameIsWrong()
     {
-        ConfigurationManager.SetActiveConfiguration(new OrigamSettings());
-        var sut = GetFileStorageDocumentationService(GetDirectory("WrongNodeName"));
+        ConfigurationManager.SetActiveConfiguration(configuration: new OrigamSettings());
+        var sut = GetFileStorageDocumentationService(
+            storageDir: GetDirectory(dirName: "WrongNodeName")
+        );
 
-        Assert.Throws<ArgumentException>(() =>
+        Assert.Throws<ArgumentException>(code: () =>
         {
-            sut.LoadDocumentation(new Guid("df7c2a53-c56a-426a-b748-08e656ae46db"));
+            sut.LoadDocumentation(
+                schemaItemId: new Guid(g: "df7c2a53-c56a-426a-b748-08e656ae46db")
+            );
         });
     }
 
     private DirectoryInfo GetDirectory(string dirName)
     {
-        string pathToDir = Path.Combine(ReadingTestFiles.FullName, dirName);
-        var directoryInfo = new DirectoryInfo(pathToDir);
+        string pathToDir = Path.Combine(path1: ReadingTestFiles.FullName, path2: dirName);
+        var directoryInfo = new DirectoryInfo(path: pathToDir);
         return directoryInfo;
     }
 
@@ -128,12 +149,14 @@ public class FileStorageDocumentationServiceTests
         DirectoryInfo storageDir
     )
     {
-        var mockFileProvider = new MockFileProvider(storageDir);
+        var mockFileProvider = new MockFileProvider(testDir: storageDir);
         var fileStorageDocumentationService = new FileStorageDocumentationService(
-            mockFileProvider,
-            new FileEventQueue(
-                new FilePersistenceIndex(new OrigamPathFactory(storageDir)),
-                new NullWatchDog()
+            persistenceService: mockFileProvider,
+            fileEventQueue: new FileEventQueue(
+                index: new FilePersistenceIndex(
+                    pathFactory: new OrigamPathFactory(toDirectory: storageDir)
+                ),
+                watchDog: new NullWatchDog()
             )
         );
         return fileStorageDocumentationService;
@@ -141,34 +164,34 @@ public class FileStorageDocumentationServiceTests
 
     private XmlDocument GetOutDocument()
     {
-        string outFilePath = Path.Combine(WritingTestFiles.FullName, ".origamDoc");
+        string outFilePath = Path.Combine(path1: WritingTestFiles.FullName, path2: ".origamDoc");
         var xmlDocument = new XmlDocument();
-        xmlDocument.Load(outFilePath);
+        xmlDocument.Load(filename: outFilePath);
         return xmlDocument;
     }
 
     private DocumentationComplete GetTestDataSet(string name)
     {
-        string testInputPath = Path.Combine(WritingTestFiles.FullName, name);
+        string testInputPath = Path.Combine(path1: WritingTestFiles.FullName, path2: name);
         var dataSet = new DocumentationComplete();
-        dataSet.ReadXml(testInputPath);
+        dataSet.ReadXml(fileName: testInputPath);
         return dataSet;
     }
 
     protected static readonly DirectoryInfo projectDir = new DirectoryInfo(
-        TestContext.CurrentContext.TestDirectory
+        path: TestContext.CurrentContext.TestDirectory
     );
     protected DirectoryInfo WritingTestFiles
     {
         get
         {
             string path = Path.Combine(
-                projectDir.FullName,
-                "FileStorageDocumentationServiceTests",
-                "WritingTestFiles"
+                path1: projectDir.FullName,
+                path2: "FileStorageDocumentationServiceTests",
+                path3: "WritingTestFiles"
             );
-            Directory.CreateDirectory(path);
-            return new DirectoryInfo(path);
+            Directory.CreateDirectory(path: path);
+            return new DirectoryInfo(path: path);
         }
     }
     protected DirectoryInfo ReadingTestFiles
@@ -176,12 +199,12 @@ public class FileStorageDocumentationServiceTests
         get
         {
             string path = Path.Combine(
-                projectDir.FullName,
-                "FileStorageDocumentationServiceTests",
-                "ReadingTestFiles"
+                path1: projectDir.FullName,
+                path2: "FileStorageDocumentationServiceTests",
+                path3: "ReadingTestFiles"
             );
-            Directory.CreateDirectory(path);
-            return new DirectoryInfo(path);
+            Directory.CreateDirectory(path: path);
+            return new DirectoryInfo(path: path);
         }
     }
 }

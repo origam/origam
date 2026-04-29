@@ -65,20 +65,25 @@ class WorkflowPageRequestHandler : AbstractPageRequestHandler
         WorkflowPage workflowPage = page as WorkflowPage;
         QueryParameterCollection qparams = new QueryParameterCollection();
         Hashtable transformParams = new Hashtable();
-        Hashtable preprocessorParams = GetPreprocessorParameters(request);
+        Hashtable preprocessorParams = GetPreprocessorParameters(request: request);
         // convert parameters to QueryParameterCollection for data service and hashtable for transformation service
         foreach (KeyValuePair<string, object> p in parameters)
         {
-            qparams.Add(new QueryParameter(p.Key, p.Value));
-            transformParams.Add(p.Key, p.Value);
+            qparams.Add(value: new QueryParameter(_parameterName: p.Key, value: p.Value));
+            transformParams.Add(key: p.Key, value: p.Value);
         }
         // copy also the preprocessor parameters to the transformation parameters
         foreach (DictionaryEntry rp in preprocessorParams)
         {
-            transformParams.Add(rp.Key, rp.Value);
+            transformParams.Add(key: rp.Key, value: rp.Value);
         }
-        RuleEngine ruleEngine = RuleEngine.Create(null, null);
-        Validate(null, transformParams, ruleEngine, workflowPage.InputValidationRule);
+        RuleEngine ruleEngine = RuleEngine.Create(contextStores: null, transactionId: null);
+        Validate(
+            data: null,
+            transformParams: transformParams,
+            ruleEngine: ruleEngine,
+            validation: workflowPage.InputValidationRule
+        );
         if (workflowPage.DisableConstraintForInputValidation)
         {
             // reenable constraints for context parameter
@@ -91,27 +96,32 @@ class WorkflowPageRequestHandler : AbstractPageRequestHandler
             }
         }
         object workflowResult = CoreServices.WorkflowService.ExecuteWorkflow(
-            workflowPage.WorkflowId,
-            qparams,
-            null
+            workflowId: workflowPage.WorkflowId,
+            parameters: qparams,
+            transactionId: null
         );
         bool handled = false;
         var actions = workflowPage.ChildItemsByType<AbstractWorkflowPageAction>(
-            AbstractWorkflowPageAction.CategoryConst
+            itemType: AbstractWorkflowPageAction.CategoryConst
         );
         actions.Sort();
-        RuleEngine re = RuleEngine.Create(new Hashtable(), null);
+        RuleEngine re = RuleEngine.Create(contextStores: new Hashtable(), transactionId: null);
         foreach (AbstractWorkflowPageAction action in actions)
         {
             bool conditionResult = true;
             if (action.ConditionRule != null)
             {
-                conditionResult = (bool)re.EvaluateRule(action.ConditionRule, workflowResult, null);
+                conditionResult = (bool)
+                    re.EvaluateRule(
+                        rule: action.ConditionRule,
+                        data: workflowResult,
+                        contextPosition: null
+                    );
             }
             if (
                 conditionResult
-                && SecurityTools.IsInRole(action.Roles)
-                && FeatureTools.IsFeatureOn(action.Features)
+                && SecurityTools.IsInRole(roleName: action.Roles)
+                && FeatureTools.IsFeatureOn(featureCode: action.Features)
             )
             {
                 IWorkflowPageActionHandler handler;
@@ -123,12 +133,17 @@ class WorkflowPageRequestHandler : AbstractPageRequestHandler
                 else
                 {
                     throw new ArgumentOutOfRangeException(
-                        "action",
-                        action,
-                        Resources.ErrorUnknownWorkflowPageAction
+                        paramName: "action",
+                        actualValue: action,
+                        message: Resources.ErrorUnknownWorkflowPageAction
                     );
                 }
-                handler.Execute(action, workflowResult, request, response);
+                handler.Execute(
+                    action: action,
+                    workflowResult: workflowResult,
+                    request: request,
+                    response: response
+                );
 
                 // execute the first valid action
                 break;
@@ -136,9 +151,9 @@ class WorkflowPageRequestHandler : AbstractPageRequestHandler
         }
         if (!handled)
         {
-            if (!string.IsNullOrEmpty(request.UrlReferrerAbsoluteUri))
+            if (!string.IsNullOrEmpty(value: request.UrlReferrerAbsoluteUri))
             {
-                response.Redirect(request.UrlReferrerAbsoluteUri);
+                response.Redirect(requestUrlReferrerAbsolutePath: request.UrlReferrerAbsoluteUri);
             }
         }
     }

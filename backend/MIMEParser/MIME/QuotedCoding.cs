@@ -48,26 +48,29 @@ public class QuotedCoding
         {
             for (int i = 0; i < s.Length; i++)
             {
-                if (s[i] == '=')
+                if (s[index: i] == '=')
                 {
-                    if (s[i + 1] == '\r' && s[i + 2] == '\n')
+                    if (s[index: i + 1] == '\r' && s[index: i + 2] == '\n')
                     {
                         bufferPosition--;
                     }
                     else
                     {
-                        buffer[bufferPosition] = System.Convert.ToByte(s.Substring(i + 1, 2), 16);
+                        buffer[bufferPosition] = System.Convert.ToByte(
+                            value: s.Substring(startIndex: i + 1, length: 2),
+                            fromBase: 16
+                        );
                     }
 
                     i += 2;
                 }
-                else if (s[i] == '_')
+                else if (s[index: i] == '_')
                 {
                     buffer[bufferPosition] = 32;
                 }
                 else
                 {
-                    buffer[bufferPosition] = (byte)s[i];
+                    buffer[bufferPosition] = (byte)s[index: i];
                 }
 
                 bufferPosition++;
@@ -78,7 +81,7 @@ public class QuotedCoding
             buffer[bufferPosition] = 32;
         }
         byte[] newArray = new byte[bufferPosition];
-        Array.Copy(buffer, newArray, bufferPosition);
+        Array.Copy(sourceArray: buffer, destinationArray: newArray, length: bufferPosition);
         return newArray;
     }
 
@@ -92,8 +95,8 @@ public class QuotedCoding
     public static string DecodeOne(string s)
     {
         char[] separator = { '?' };
-        string[] sArray = s.Split(separator);
-        if (sArray[0].Equals("=") == false)
+        string[] sArray = s.Split(separator: separator);
+        if (sArray[0].Equals(value: "=") == false)
         {
             return s;
         }
@@ -102,19 +105,19 @@ public class QuotedCoding
         //rozpoznaj rodzj kodowania
         if (sArray[2].ToUpper() == "Q") //querystring
         {
-            bArray = GetByteArray(sArray[3]);
+            bArray = GetByteArray(s: sArray[3]);
         }
         else if (sArray[2].ToUpper() == "B") //base64
         {
-            bArray = Convert.FromBase64String(sArray[3]);
+            bArray = Convert.FromBase64String(s: sArray[3]);
         }
         else
         {
             return s;
         }
         //pobierz strone kodowa
-        Encoding encoding = Encoding.GetEncoding(sArray[1]);
-        return encoding.GetString(bArray);
+        Encoding encoding = Encoding.GetEncoding(name: sArray[1]);
+        return encoding.GetString(bytes: bArray);
     }
 
     /// <summary>
@@ -130,20 +133,22 @@ public class QuotedCoding
             stop;
         for (; ; )
         {
-            start = s.IndexOf("=?", start);
+            start = s.IndexOf(value: "=?", startIndex: start);
             if (start == -1)
             {
-                retstring.Append(s, old, s.Length - old);
+                retstring.Append(value: s, startIndex: old, count: s.Length - old);
                 return retstring.ToString();
             }
-            stop = s.IndexOf("?=", start + 2);
+            stop = s.IndexOf(value: "?=", startIndex: start + 2);
             if (stop == -1) //blad w stringu
             {
                 return s;
             }
 
-            retstring.Append(s, old, start - old);
-            retstring.Append(DecodeOne(s.Substring(start, stop - start + 2)));
+            retstring.Append(value: s, startIndex: old, count: start - old);
+            retstring.Append(
+                value: DecodeOne(s: s.Substring(startIndex: start, length: stop - start + 2))
+            );
             start = stop + 2;
             old = stop + 2;
         }

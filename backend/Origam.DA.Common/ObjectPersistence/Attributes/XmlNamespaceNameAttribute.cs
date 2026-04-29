@@ -25,7 +25,7 @@ using System;
 
 namespace Origam.DA.Common.ObjectPersistence.Attributes;
 
-[AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+[AttributeUsage(validOn: AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
 public class XmlNamespaceNameAttribute : Attribute
 {
     public string XmlNamespaceName { get; }

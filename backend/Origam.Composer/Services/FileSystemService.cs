@@ -27,29 +27,33 @@ public class FileSystemService : IFileSystemService
 {
     public void DeleteDirectory(string directoryPath)
     {
-        if (!Directory.Exists(directoryPath))
+        if (!Directory.Exists(path: directoryPath))
         {
             return;
         }
 
-        var files = Directory.GetFiles(directoryPath);
-        var directories = Directory.GetDirectories(directoryPath);
+        var files = Directory.GetFiles(path: directoryPath);
+        var directories = Directory.GetDirectories(path: directoryPath);
         foreach (var file in files)
         {
             // Delete hidden attribute + archive and read only attributes
-            File.SetAttributes(file, File.GetAttributes(file) & ~FileAttributes.Hidden);
             File.SetAttributes(
-                file,
-                File.GetAttributes(file) & ~(FileAttributes.Archive | FileAttributes.ReadOnly)
+                path: file,
+                fileAttributes: File.GetAttributes(path: file) & ~FileAttributes.Hidden
             );
-            File.Delete(file);
+            File.SetAttributes(
+                path: file,
+                fileAttributes: File.GetAttributes(path: file)
+                    & ~(FileAttributes.Archive | FileAttributes.ReadOnly)
+            );
+            File.Delete(path: file);
         }
 
         foreach (var dir in directories)
         {
-            DeleteDirectory(dir);
+            DeleteDirectory(directoryPath: dir);
         }
-        File.SetAttributes(directoryPath, FileAttributes.Normal);
-        Directory.Delete(directoryPath, false);
+        File.SetAttributes(path: directoryPath, fileAttributes: FileAttributes.Normal);
+        Directory.Delete(path: directoryPath, recursive: false);
     }
 }

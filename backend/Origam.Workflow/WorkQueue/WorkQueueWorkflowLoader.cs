@@ -42,7 +42,7 @@ namespace Origam.Workflow.WorkQueue;
 public class WorkQueueWorkflowLoader : WorkQueueLoaderAdapter
 {
     private static readonly ILog log = LogManager.GetLogger(
-        System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType
+        type: System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType
     );
 
     private readonly Hashtable inputParameters = new();
@@ -65,15 +65,15 @@ public class WorkQueueWorkflowLoader : WorkQueueLoaderAdapter
     {
         if (log.IsInfoEnabled)
         {
-            log.Info("Connecting " + connection);
+            log.Info(message: "Connecting " + connection);
         }
-        inputParameters.Add("userName", userName);
-        inputParameters.Add("password", password);
+        inputParameters.Add(key: "userName", value: userName);
+        inputParameters.Add(key: "password", value: password);
         string name = null;
-        string[] connectionStringParts = connection.Split(";".ToCharArray());
+        string[] connectionStringParts = connection.Split(separator: ";".ToCharArray());
         foreach (string connectionStringPart in connectionStringParts)
         {
-            string[] pair = connectionStringPart.Split("=".ToCharArray());
+            string[] pair = connectionStringPart.Split(separator: "=".ToCharArray());
             if (pair.Length == 2)
             {
                 switch (pair[0])
@@ -86,14 +86,14 @@ public class WorkQueueWorkflowLoader : WorkQueueLoaderAdapter
 
                     default:
                     {
-                        inputParameters[pair[0]] = pair[1];
+                        inputParameters[key: pair[0]] = pair[1];
                         break;
                     }
                 }
             }
         }
-        this.workQueueClass = service.WQClass(queueId) as WorkQueueClass;
-        WorkqueueLoader loader = this.workQueueClass?.GetLoader(name);
+        this.workQueueClass = service.WQClass(queueId: queueId) as WorkQueueClass;
+        WorkqueueLoader loader = this.workQueueClass?.GetLoader(name: name);
         workflow = loader?.Workflow;
     }
 
@@ -107,7 +107,7 @@ public class WorkQueueWorkflowLoader : WorkQueueLoaderAdapter
     {
         if (!executed)
         {
-            if (LoadData(lastState))
+            if (LoadData(lastState: lastState))
             {
                 executed = true;
             }
@@ -117,11 +117,11 @@ public class WorkQueueWorkflowLoader : WorkQueueLoaderAdapter
                 return null;
             }
         }
-        DataTable attachmentTable = attachmentSource.DataSet.Tables["Attachment"];
+        DataTable attachmentTable = attachmentSource.DataSet.Tables[name: "Attachment"];
         if ((resultIterator.Count > 1) && (attachmentTable.Rows.Count > 0))
         {
             throw new Exception(
-                "Workflow returned multiple results and attachments. Returning attachments is not supported when returning multiple results by a workflow to the work queue."
+                message: "Workflow returned multiple results and attachments. Returning attachments is not supported when returning multiple results by a workflow to the work queue."
             );
         }
         if (!resultIterator.MoveNext())
@@ -132,23 +132,27 @@ public class WorkQueueWorkflowLoader : WorkQueueLoaderAdapter
         {
             return null;
         }
-        IXmlContainer document = DataDocumentFactory.New(XmlTools.GetXmlSlice(resultIterator));
-        var result = new WorkQueueAdapterResult(document)
+        IXmlContainer document = DataDocumentFactory.New(
+            xmlDoc: XmlTools.GetXmlSlice(iter: resultIterator)
+        );
+        var result = new WorkQueueAdapterResult(document: document)
         {
             State = resultState,
             Attachments = new WorkQueueAttachment[attachmentTable.Rows.Count],
         };
         if (log.IsDebugEnabled)
         {
-            log.Debug($"Workflow loader returned {attachmentTable.Rows.Count} attachments.");
-            log.Debug(document.Xml.OuterXml);
+            log.Debug(
+                message: $"Workflow loader returned {attachmentTable.Rows.Count} attachments."
+            );
+            log.Debug(message: document.Xml.OuterXml);
         }
         for (int i = 0; i < attachmentTable.Rows.Count; i++)
         {
             result.Attachments[i] = new WorkQueueAttachment
             {
-                Name = (string)attachmentTable.Rows[i]["FileName"],
-                Data = (byte[])attachmentTable.Rows[i]["Data"],
+                Name = (string)attachmentTable.Rows[index: i][columnName: "FileName"],
+                Data = (byte[])attachmentTable.Rows[index: i][columnName: "Data"],
             };
         }
         return result;
@@ -156,30 +160,30 @@ public class WorkQueueWorkflowLoader : WorkQueueLoaderAdapter
 
     private bool LoadData(string lastState)
     {
-        inputParameters["lastState"] = lastState;
+        inputParameters[key: "lastState"] = lastState;
         WorkflowHost host = WorkflowHost.DefaultHost;
         WorkflowEngine workflowEngine = WorkflowEngine.PrepareWorkflow(
-            workflow,
-            inputParameters,
+            workflow: workflow,
+            parameters: inputParameters,
             isRepeatable: false,
-            workflow.Name
+            titleName: workflow.Name
         );
         if (log.IsDebugEnabled)
         {
-            log.Debug("Starting workflow " + workflow.Name);
+            log.Debug(message: "Starting workflow " + workflow.Name);
         }
-        host.ExecuteWorkflow(workflowEngine);
+        host.ExecuteWorkflow(engine: workflowEngine);
         if (log.IsDebugEnabled)
         {
-            log.Debug("Finishing workflow " + workflow.Name);
+            log.Debug(message: "Finishing workflow " + workflow.Name);
         }
         if (workflowEngine.WorkflowException != null)
         {
             if (log.IsErrorEnabled)
             {
                 log.LogOrigamError(
-                    workflowEngine.WorkflowException.Message,
-                    workflowEngine.WorkflowException
+                    message: workflowEngine.WorkflowException.Message,
+                    ex: workflowEngine.WorkflowException
                 );
             }
             throw workflowEngine.WorkflowException;
@@ -187,30 +191,30 @@ public class WorkQueueWorkflowLoader : WorkQueueLoaderAdapter
         var resultData = workflowEngine.ReturnValue as IXmlContainer;
         resultState = (string)
             workflowEngine.RuleEngine.GetContext(
-                new ModelElementKey(new Guid("f405cef2-2fad-4d58-a71c-10df3831e966"))
+                key: new ModelElementKey(id: new Guid(g: "f405cef2-2fad-4d58-a71c-10df3831e966"))
             );
         attachmentSource = (IDataDocument)
             workflowEngine.RuleEngine.GetContext(
-                new ModelElementKey(new Guid("b0caa6ec-8a54-4524-8387-8504e34d206c"))
+                key: new ModelElementKey(id: new Guid(g: "b0caa6ec-8a54-4524-8387-8504e34d206c"))
             );
         if (log.IsDebugEnabled)
         {
-            log.Debug("Workflow loader result:");
-            log.Debug(resultData?.Xml.OuterXml);
+            log.Debug(message: "Workflow loader result:");
+            log.Debug(message: resultData?.Xml.OuterXml);
         }
         if (resultData == null)
         {
             if (log.IsDebugEnabled)
             {
-                log.Debug("Workflow loader result was null.");
+                log.Debug(message: "Workflow loader result was null.");
             }
-            throw new Exception("Result of work queue loader must be an IXmlContainer.");
+            throw new Exception(message: "Result of work queue loader must be an IXmlContainer.");
         }
         if (resultData.Xml.DocumentElement == null)
         {
             if (log.IsDebugEnabled)
             {
-                log.Debug("Workflow loader result was an empty XML Document.");
+                log.Debug(message: "Workflow loader result was an empty XML Document.");
             }
             return false;
         }
@@ -236,7 +240,7 @@ public class WorkQueueWorkflowLoader : WorkQueueLoaderAdapter
             xpath = "/ROOT/" + workQueueClass.Entity.Name;
         }
         XPathNavigator navigator = resultData.Xml.CreateNavigator();
-        resultIterator = navigator?.Select(xpath);
+        resultIterator = navigator?.Select(xpath: xpath);
         return true;
     }
 }

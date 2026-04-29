@@ -32,7 +32,7 @@ public class ColorPickerBuilder
 
     public static void Build(XmlElement propertyElement)
     {
-        propertyElement.SetAttribute("Entity", "Integer");
-        propertyElement.SetAttribute("Column", "Color");
+        propertyElement.SetAttribute(name: "Entity", value: "Integer");
+        propertyElement.SetAttribute(name: "Column", value: "Color");
     }
 }

@@ -41,94 +41,100 @@ public class PropertyParser(IPersistenceService persistenceService)
 
         if (property.PropertyType == typeof(bool))
         {
-            if (bool.TryParse(value, out var boolValue))
+            if (bool.TryParse(value: value, result: out var boolValue))
             {
                 return boolValue;
             }
 
-            throw MakeCouldNotParseException(property);
+            throw MakeCouldNotParseException(property: property);
         }
 
         if (property.PropertyType == typeof(int))
         {
-            if (int.TryParse(value, out var intValue))
+            if (int.TryParse(s: value, result: out var intValue))
             {
                 return intValue;
             }
 
-            throw MakeCouldNotParseException(property);
+            throw MakeCouldNotParseException(property: property);
         }
 
         if (property.PropertyType == typeof(long))
         {
-            if (long.TryParse(value, out var intValue))
+            if (long.TryParse(s: value, result: out var intValue))
             {
                 return intValue;
             }
 
-            throw MakeCouldNotParseException(property);
+            throw MakeCouldNotParseException(property: property);
         }
 
         if (property.PropertyType == typeof(double))
         {
-            if (double.TryParse(value, out var doubleValue))
+            if (double.TryParse(s: value, result: out var doubleValue))
             {
                 return doubleValue;
             }
 
-            throw MakeCouldNotParseException(property);
+            throw MakeCouldNotParseException(property: property);
         }
 
         if (property.PropertyType == typeof(decimal))
         {
-            if (decimal.TryParse(value, out var decimalValue))
+            if (decimal.TryParse(s: value, result: out var decimalValue))
             {
                 return decimalValue;
             }
 
-            throw MakeCouldNotParseException(property);
+            throw MakeCouldNotParseException(property: property);
         }
 
         if (property.PropertyType.IsEnum)
         {
-            if (Enum.TryParse(property.PropertyType, value, out var enumValue))
+            if (
+                Enum.TryParse(
+                    enumType: property.PropertyType,
+                    value: value,
+                    result: out var enumValue
+                )
+            )
             {
                 return enumValue;
             }
 
-            throw MakeCouldNotParseException(property);
+            throw MakeCouldNotParseException(property: property);
         }
 
         if (property.PropertyType == typeof(Guid))
         {
-            return ParseGuid(value, property);
+            return ParseGuid(value: value, property: property);
         }
 
-        if (property.PropertyType.IsAssignableTo(typeof(IPersistent)))
+        if (property.PropertyType.IsAssignableTo(targetType: typeof(IPersistent)))
         {
-            Guid id = ParseGuid(value, property);
-            return persistenceService.SchemaProvider.RetrieveInstance<IPersistent>(id);
+            Guid id = ParseGuid(value: value, property: property);
+            return persistenceService.SchemaProvider.RetrieveInstance<IPersistent>(instanceId: id);
         }
 
         throw new Exception(
-            $"Type {property.PropertyType.Name} of property {property.Name} cannot be parsed."
+            message: $"Type {property.PropertyType.Name} of property {property.Name} cannot be parsed."
         );
     }
 
     private Guid ParseGuid(string value, PropertyInfo property)
     {
-        if (Guid.TryParse(value, out var guidValue))
+        if (Guid.TryParse(input: value, result: out var guidValue))
         {
             return guidValue;
         }
 
-        throw MakeCouldNotParseException(property);
+        throw MakeCouldNotParseException(property: property);
     }
 
     private Exception MakeCouldNotParseException(PropertyInfo property)
     {
         return new Exception(
-            $"Could not parse value of property {property.Name} to {property.PropertyType.Name}"
+            message: $"Could not parse value of property {property.Name} to {property.PropertyType.Name}"
         );
     }
 }

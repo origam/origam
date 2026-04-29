@@ -37,10 +37,13 @@ public class SchemaDbCompareResultsService(
 {
     public List<SchemaDbCompareResult> GetByPlatform(Platform platform)
     {
-        var dataService = (AbstractSqlDataService)DataServiceFactory.GetDataService(platform);
+        var dataService = (AbstractSqlDataService)
+            DataServiceFactory.GetDataService(deployPlatform: platform);
         dataService.PersistenceProvider = persistenceService.SchemaProvider;
 
-        var dbCompareResults = dataService.CompareSchema(persistenceService.SchemaProvider);
+        var dbCompareResults = dataService.CompareSchema(
+            provider: persistenceService.SchemaProvider
+        );
         foreach (SchemaDbCompareResult result in dbCompareResults)
         {
             result.Platform = platform;
@@ -50,10 +53,12 @@ public class SchemaDbCompareResultsService(
 
     public List<SchemaDbCompareResult> GetByIds(List<Guid> schemaItemIds, Platform platform)
     {
-        var dbCompareResults = GetByPlatform(platform);
+        var dbCompareResults = GetByPlatform(platform: platform);
 
         var selectedResults = dbCompareResults
-            .Where(r => r.SchemaItem != null && schemaItemIds.Contains(r.SchemaItem.Id))
+            .Where(predicate: r =>
+                r.SchemaItem != null && schemaItemIds.Contains(item: r.SchemaItem.Id)
+            )
             .ToList();
 
         return selectedResults;
@@ -61,11 +66,11 @@ public class SchemaDbCompareResultsService(
 
     public List<SchemaDbCompareResult> GetByNames(List<string> schemaItemNames, Platform platform)
     {
-        var dbCompareResults = GetByPlatform(platform);
+        var dbCompareResults = GetByPlatform(platform: platform);
 
         var selectedResults = dbCompareResults
-            .Where(r => r.SchemaItem != null)
-            .Where(r => schemaItemNames.Contains(r.SchemaItem.Name))
+            .Where(predicate: r => r.SchemaItem != null)
+            .Where(predicate: r => schemaItemNames.Contains(item: r.SchemaItem.Name))
             .ToList();
 
         return selectedResults;
@@ -73,19 +78,19 @@ public class SchemaDbCompareResultsService(
 
     public ListResponseModel PrepareListResponseModel(string platform)
     {
-        Platform platformParsed = platformResolveService.Resolve(platform);
-        var schemaDbCompareResults = GetByPlatform(platformParsed);
+        Platform platformParsed = platformResolveService.Resolve(requestedPlatformName: platform);
+        var schemaDbCompareResults = GetByPlatform(platform: platformParsed);
 
         var deploymentVersions = schemaService
             .GetProvider<DeploymentSchemaItemProvider>()
             .ChildItems.Cast<DeploymentVersion>()
-            .OrderBy(deploymentVersion => deploymentVersion.Version);
+            .OrderBy(keySelector: deploymentVersion => deploymentVersion.Version);
 
         List<SchemaDeploymentVersionDto> possibleDeploymentVersions = [];
         DeploymentVersion currentVersion = null;
         foreach (DeploymentVersion version in deploymentVersions)
         {
-            if (version.Package.PrimaryKey.Equals(schemaService.ActiveExtension.PrimaryKey))
+            if (version.Package.PrimaryKey.Equals(obj: schemaService.ActiveExtension.PrimaryKey))
             {
                 if (version.IsCurrentVersion)
                 {
@@ -93,7 +98,7 @@ public class SchemaDbCompareResultsService(
                 }
 
                 possibleDeploymentVersions.Add(
-                    new SchemaDeploymentVersionDto { Id = version.Id, Name = version.Name }
+                    item: new SchemaDeploymentVersionDto { Id = version.Id, Name = version.Name }
                 );
             }
         }
@@ -103,7 +108,7 @@ public class SchemaDbCompareResultsService(
             CurrentDeploymentVersionId = currentVersion != null ? currentVersion.Id : null,
             DeploymentVersions = possibleDeploymentVersions,
             Results = schemaDbCompareResults
-                .Select(result => new SchemaDbCompareResultDto
+                .Select(selector: result => new SchemaDbCompareResultDto
                 {
                     SchemaItemId = result.SchemaItem?.Id.ToString() ?? string.Empty,
                     SchemaItemType = result.SchemaItemType?.Name ?? string.Empty,

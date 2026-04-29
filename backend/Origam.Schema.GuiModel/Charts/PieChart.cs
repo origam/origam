@@ -24,9 +24,9 @@ using Origam.DA.Common;
 
 namespace Origam.Schema.GuiModel;
 
-[SchemaItemDescription("Pie Chart", "icon_pie-chart.png")]
-[HelpTopic("Pie+Charts")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Pie Chart", iconName: "icon_pie-chart.png")]
+[HelpTopic(topic: "Pie+Charts")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class PieChart : AbstractChart
 {
     public PieChart()
@@ -36,19 +36,19 @@ public class PieChart : AbstractChart
     }
 
     public PieChart(Guid schemaExtensionId)
-        : base(schemaExtensionId)
+        : base(schemaExtensionId: schemaExtensionId)
     {
         Init();
     }
 
     public PieChart(Key primaryKey)
-        : base(primaryKey)
+        : base(primaryKey: primaryKey)
     {
         Init();
     }
 
     private void Init()
     {
-        this.ChildItemTypes.Add(typeof(PieSeries));
+        this.ChildItemTypes.Add(item: typeof(PieSeries));
     }
 }

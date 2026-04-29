@@ -30,9 +30,9 @@ namespace Origam.Schema.WorkflowModel;
 /// <summary>
 /// Summary description for WorkqueueLoader.
 /// </summary>
-[SchemaItemDescription("Loader", "Loaders", "loader-3.png")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Loader", folderName: "Loaders", iconName: "loader-3.png")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class WorkqueueLoader : AbstractSchemaItem
 {
     public const string CategoryConst = "WorkqueueLoader";
@@ -44,13 +44,13 @@ public class WorkqueueLoader : AbstractSchemaItem
     }
 
     public WorkqueueLoader(Guid schemaExtensionId)
-        : base(schemaExtensionId)
+        : base(extensionId: schemaExtensionId)
     {
         Init();
     }
 
     public WorkqueueLoader(Key primaryKey)
-        : base(primaryKey)
+        : base(primaryKey: primaryKey)
     {
         Init();
     }
@@ -66,27 +66,27 @@ public class WorkqueueLoader : AbstractSchemaItem
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(this.Workflow);
-        base.GetExtraDependencies(dependencies);
+        dependencies.Add(item: this.Workflow);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
     #endregion
     #region Properties
     public Guid WorkflowId;
 
-    [Category("References")]
-    [TypeConverter(typeof(WorkflowConverter)), NotNullModelElementRule()]
-    [XmlReference("workflow", "WorkflowId")]
+    [Category(category: "References")]
+    [TypeConverter(type: typeof(WorkflowConverter)), NotNullModelElementRule()]
+    [XmlReference(attributeName: "workflow", idField: "WorkflowId")]
     public IWorkflow Workflow
     {
         get
         {
             return (IWorkflow)
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(this.WorkflowId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: this.WorkflowId)
                 );
         }
-        set { this.WorkflowId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]); }
+        set { this.WorkflowId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]); }
     }
     #endregion
 }

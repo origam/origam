@@ -67,10 +67,10 @@ public class ElongatedButton
             Rectangle rc = this.ClientRectangle;
             if (rc.Height % 2 == 0)
             {
-                return new Rectangle(1, 1, rc.Width - 3, rc.Height - 2);
+                return new Rectangle(x: 1, y: 1, width: rc.Width - 3, height: rc.Height - 2);
             }
 
-            return new Rectangle(1, 1, rc.Width - 3, rc.Height - 3);
+            return new Rectangle(x: 1, y: 1, width: rc.Width - 3, height: rc.Height - 3);
         }
     }
     #endregion
@@ -94,8 +94,8 @@ public class ElongatedButton
         set
         {
             mColorScheme = value;
-            ColorScheme oColorScheme = new ColorScheme(mColorScheme);
-            oColorScheme.SetColorScheme(this);
+            ColorScheme oColorScheme = new ColorScheme(aoColorScheme: mColorScheme);
+            oColorScheme.SetColorScheme(aCtrl: this);
         }
     }
     #endregion
@@ -196,7 +196,7 @@ public class ElongatedButton
         get { return this.myDialogResult; }
         set
         {
-            if (Enum.IsDefined(typeof(DialogResult), value))
+            if (Enum.IsDefined(enumType: typeof(DialogResult), value: value))
             {
                 this.myDialogResult = value;
             }
@@ -217,7 +217,7 @@ public class ElongatedButton
     {
         if (this.CanSelect)
         {
-            this.OnClick(EventArgs.Empty);
+            this.OnClick(e: EventArgs.Empty);
         }
     }
     #endregion
@@ -225,27 +225,27 @@ public class ElongatedButton
         : base()
     {
         this.SetStyle(
-            ControlStyles.UserPaint
+            flag: ControlStyles.UserPaint
                 | ControlStyles.AllPaintingInWmPaint
                 | ControlStyles.DoubleBuffer,
-            true
+            value: true
         );
         this.Height = 17;
-        this.Font = new Font("Tahoma", 8);
-        clrBackground1 = Color.FromArgb(248, 245, 224);
-        clrBackground2 = Color.FromArgb(194, 168, 120);
+        this.Font = new Font(familyName: "Tahoma", emSize: 8);
+        clrBackground1 = Color.FromArgb(red: 248, green: 245, blue: 224);
+        clrBackground2 = Color.FromArgb(red: 194, green: 168, blue: 120);
 
-        clrFontDisabled = Color.FromArgb(156, 147, 113);
-        clrFontMouseUp = Color.FromArgb(96, 83, 43);
+        clrFontDisabled = Color.FromArgb(red: 156, green: 147, blue: 113);
+        clrFontMouseUp = Color.FromArgb(red: 96, green: 83, blue: 43);
         clrFontMouseDown = Color.Black;
 
-        clrBorder1 = Color.FromArgb(229, 219, 196);
-        clrBorder2 = Color.FromArgb(194, 168, 120);
+        clrBorder1 = Color.FromArgb(red: 229, green: 219, blue: 196);
+        clrBorder2 = Color.FromArgb(red: 194, green: 168, blue: 120);
 
-        clrDefaultBorder = Color.FromArgb(189, 153, 74);
+        clrDefaultBorder = Color.FromArgb(red: 189, green: 153, blue: 74);
 
-        clrDisabledBackground1 = Color.FromArgb(241, 236, 212);
-        clrDisabledBackground2 = Color.FromArgb(216, 198, 159);
+        clrDisabledBackground1 = Color.FromArgb(red: 241, green: 236, blue: 212);
+        clrDisabledBackground2 = Color.FromArgb(red: 216, green: 198, blue: 159);
     }
 
     #region Private Methods
@@ -258,10 +258,15 @@ public class ElongatedButton
         int intAlphaOffset = 35;
         int intMaxAlpha = cintShadow * intAlphaOffset;
 
-        for (int intIndex = 0; intIndex <= arrBrushes.GetUpperBound(0); intIndex++)
+        for (int intIndex = 0; intIndex <= arrBrushes.GetUpperBound(dimension: 0); intIndex++)
         {
             arrBrushes[intIndex] = new SolidBrush(
-                Color.FromArgb(intMaxAlpha - (intIndex * intAlphaOffset), 174, 167, 124)
+                color: Color.FromArgb(
+                    alpha: intMaxAlpha - (intIndex * intAlphaOffset),
+                    red: 174,
+                    green: 167,
+                    blue: 124
+                )
             );
         }
 
@@ -271,13 +276,13 @@ public class ElongatedButton
     private void OnDrawDefault(Graphics g)
     {
         Rectangle rcBorder = this.BorderRectangle;
-        GraphicsPath myPath = GetGraphicPath(rcBorder);
+        GraphicsPath myPath = GetGraphicPath(rc: rcBorder);
 
         LinearGradientBrush brushBackGround = new LinearGradientBrush(
-            rcBorder,
-            clrBackground1,
-            clrBackground2,
-            LinearGradientMode.Vertical
+            rect: rcBorder,
+            color1: clrBackground1,
+            color2: clrBackground2,
+            linearGradientMode: LinearGradientMode.Vertical
         );
         Single[] relativeIntensisities = new Single[] { 0.0F, 0.08F, 1.0F };
         Single[] relativePositions = new Single[] { 0.0F, 0.44F, 1.0F };
@@ -287,42 +292,42 @@ public class ElongatedButton
         blend.Positions = relativePositions;
         brushBackGround.Blend = blend;
 
-        g.FillPath(brushBackGround, myPath);
+        g.FillPath(brush: brushBackGround, path: myPath);
 
         //Draw dark to light border for default button
-        SolidBrush brushPen = new SolidBrush(clrDefaultBorder);
-        Pen ps = new Pen(brushPen);
+        SolidBrush brushPen = new SolidBrush(color: clrDefaultBorder);
+        Pen ps = new Pen(brush: brushPen);
 
-        DrawBorder(g, ps, this.BorderRectangle);
-        brushPen = new SolidBrush(Color.FromArgb(128, clrDefaultBorder));
-        ps = new Pen(brushPen);
+        DrawBorder(g: g, p: ps, rc: this.BorderRectangle);
+        brushPen = new SolidBrush(color: Color.FromArgb(alpha: 128, baseColor: clrDefaultBorder));
+        ps = new Pen(brush: brushPen);
         Rectangle rc = new Rectangle(
-            this.BorderRectangle.X + 1,
-            this.BorderRectangle.Y + 1,
-            this.BorderRectangle.Width - 2,
-            this.BorderRectangle.Height - 2
+            x: this.BorderRectangle.X + 1,
+            y: this.BorderRectangle.Y + 1,
+            width: this.BorderRectangle.Width - 2,
+            height: this.BorderRectangle.Height - 2
         );
-        DrawBorder(g, ps, rc);
+        DrawBorder(g: g, p: ps, rc: rc);
         rc.X += 1;
         rc.Y += 1;
         rc.Width -= 2;
         rc.Height -= 2;
-        brushPen = new SolidBrush(Color.FromArgb(64, clrDefaultBorder));
-        ps = new Pen(brushPen);
-        DrawBorder(g, ps, rc);
+        brushPen = new SolidBrush(color: Color.FromArgb(alpha: 64, baseColor: clrDefaultBorder));
+        ps = new Pen(brush: brushPen);
+        DrawBorder(g: g, p: ps, rc: rc);
     }
 
     private void OnDrawNormal(Graphics g)
     {
         Rectangle rcBorder = this.BorderRectangle;
-        GraphicsPath myPath = GetGraphicPath(rcBorder);
-        Region rgn = new Region(this.BorderRectangle);
-        rgn.Intersect(myPath);
+        GraphicsPath myPath = GetGraphicPath(rc: rcBorder);
+        Region rgn = new Region(rect: this.BorderRectangle);
+        rgn.Intersect(path: myPath);
         LinearGradientBrush brushBackGround = new LinearGradientBrush(
-            rcBorder,
-            clrBackground1,
-            clrBackground2,
-            LinearGradientMode.Vertical
+            rect: rcBorder,
+            color1: clrBackground1,
+            color2: clrBackground2,
+            linearGradientMode: LinearGradientMode.Vertical
         );
         Single[] relativeIntensisities = new Single[] { 0.0F, 0.08F, 1.0F };
         Single[] relativePositions = new Single[] { 0.0F, 0.44F, 1.0F };
@@ -331,19 +336,19 @@ public class ElongatedButton
         blend.Positions = relativePositions;
         brushBackGround.Blend = blend;
 
-        g.FillRegion(brushBackGround, rgn);
+        g.FillRegion(brush: brushBackGround, region: rgn);
 
         LinearGradientBrush brushPen = new LinearGradientBrush(
-            this.BorderRectangle,
-            clrBorder1,
-            clrBorder2,
-            LinearGradientMode.ForwardDiagonal
+            rect: this.BorderRectangle,
+            color1: clrBorder1,
+            color2: clrBorder2,
+            linearGradientMode: LinearGradientMode.ForwardDiagonal
         );
 
         brushPen.Blend = blend;
-        Pen ps = new Pen(brushPen);
+        Pen ps = new Pen(brush: brushPen);
 
-        DrawBorder(g, ps, this.BorderRectangle);
+        DrawBorder(g: g, p: ps, rc: this.BorderRectangle);
     }
 
     //Create Grahics Path for the elongated buttons
@@ -355,22 +360,36 @@ public class ElongatedButton
 
         //Add Top Line
         Mypath.AddLine(
-            rc.Left + (Single)(rc.Height / 2),
-            rc.Top,
-            rc.Right - (Single)(rc.Height / 2),
-            rc.Top
+            x1: rc.Left + (Single)(rc.Height / 2),
+            y1: rc.Top,
+            x2: rc.Right - (Single)(rc.Height / 2),
+            y2: rc.Top
         );
         //Add Right Semi Circle
-        Mypath.AddArc(rc.Right - rc.Height, rc.Top, rc.Height, rc.Height, 270, 180);
+        Mypath.AddArc(
+            x: rc.Right - rc.Height,
+            y: rc.Top,
+            width: rc.Height,
+            height: rc.Height,
+            startAngle: 270,
+            sweepAngle: 180
+        );
         //Add Bottom Line
         Mypath.AddLine(
-            rc.Right - (Single)(rc.Height / 2) - adjust,
-            rc.Bottom,
-            rc.Left + (Single)(rc.Height / 2) + adjust,
-            rc.Bottom
+            x1: rc.Right - (Single)(rc.Height / 2) - adjust,
+            y1: rc.Bottom,
+            x2: rc.Left + (Single)(rc.Height / 2) + adjust,
+            y2: rc.Bottom
         );
         //Add Left Semi Circle
-        Mypath.AddArc(rc.Left, rc.Top, rc.Height, rc.Height, 90, 180);
+        Mypath.AddArc(
+            x: rc.Left,
+            y: rc.Top,
+            width: rc.Height,
+            height: rc.Height,
+            startAngle: 90,
+            sweepAngle: 180
+        );
 
         return Mypath;
     }
@@ -380,33 +399,49 @@ public class ElongatedButton
         int adjust = rc.Height % 2 == 0 ? 0 : 1;
 
         g.DrawLine(
-            p,
-            rc.Left + (Single)(rc.Height / 2),
-            rc.Top,
-            rc.Right - (Single)(rc.Height / 2),
-            rc.Top
+            pen: p,
+            x1: rc.Left + (Single)(rc.Height / 2),
+            y1: rc.Top,
+            x2: rc.Right - (Single)(rc.Height / 2),
+            y2: rc.Top
         );
-        g.DrawArc(p, rc.Right - rc.Height, rc.Top, rc.Height, rc.Height, 270, 180);
+        g.DrawArc(
+            pen: p,
+            x: rc.Right - rc.Height,
+            y: rc.Top,
+            width: rc.Height,
+            height: rc.Height,
+            startAngle: 270,
+            sweepAngle: 180
+        );
         g.DrawLine(
-            p,
-            rc.Right - (Single)(rc.Height / 2) - adjust,
-            rc.Bottom,
-            rc.Left + (Single)(rc.Height / 2) + adjust,
-            rc.Bottom
+            pen: p,
+            x1: rc.Right - (Single)(rc.Height / 2) - adjust,
+            y1: rc.Bottom,
+            x2: rc.Left + (Single)(rc.Height / 2) + adjust,
+            y2: rc.Bottom
         );
-        g.DrawArc(p, rc.Left, rc.Top, rc.Height, rc.Height, 90, 180);
+        g.DrawArc(
+            pen: p,
+            x: rc.Left,
+            y: rc.Top,
+            width: rc.Height,
+            height: rc.Height,
+            startAngle: 90,
+            sweepAngle: 180
+        );
     }
 
     private void OnDrawDisabled(Graphics g)
     {
         Rectangle rcBorder = this.BorderRectangle;
-        GraphicsPath myPath = GetGraphicPath(rcBorder);
+        GraphicsPath myPath = GetGraphicPath(rc: rcBorder);
 
         LinearGradientBrush brushBackGround = new LinearGradientBrush(
-            rcBorder,
-            clrDisabledBackground1,
-            clrDisabledBackground2,
-            LinearGradientMode.Vertical
+            rect: rcBorder,
+            color1: clrDisabledBackground1,
+            color2: clrDisabledBackground2,
+            linearGradientMode: LinearGradientMode.Vertical
         );
 
         Single[] relativeIntensisities = new Single[] { 0.0F, 0.08F, 1.0F };
@@ -416,28 +451,28 @@ public class ElongatedButton
         blend.Factors = relativeIntensisities;
         blend.Positions = relativePositions;
         brushBackGround.Blend = blend;
-        g.FillPath(brushBackGround, myPath);
+        g.FillPath(brush: brushBackGround, path: myPath);
         LinearGradientBrush brushPen = new LinearGradientBrush(
-            this.BorderRectangle,
-            clrBorder1,
-            clrBorder2,
-            LinearGradientMode.ForwardDiagonal
+            rect: this.BorderRectangle,
+            color1: clrBorder1,
+            color2: clrBorder2,
+            linearGradientMode: LinearGradientMode.ForwardDiagonal
         );
         brushPen.Blend = blend;
-        Pen ps = new Pen(brushPen);
-        DrawBorder(g, ps, this.BorderRectangle);
+        Pen ps = new Pen(brush: brushPen);
+        DrawBorder(g: g, p: ps, rc: this.BorderRectangle);
     }
 
     private void OnDrawPressed(Graphics g)
     {
         Rectangle rcBorder = this.BorderRectangle;
-        GraphicsPath myPath = GetGraphicPath(rcBorder);
+        GraphicsPath myPath = GetGraphicPath(rc: rcBorder);
 
         LinearGradientBrush brushBackGround = new LinearGradientBrush(
-            rcBorder,
-            clrBackground2,
-            clrBackground1,
-            LinearGradientMode.Vertical
+            rect: rcBorder,
+            color1: clrBackground2,
+            color2: clrBackground1,
+            linearGradientMode: LinearGradientMode.Vertical
         );
 
         Single[] relativeIntensisities = new Single[] { 0.0F, 0.32F, 1.0F };
@@ -447,54 +482,69 @@ public class ElongatedButton
         blend.Factors = relativeIntensisities;
         blend.Positions = relativePositions;
         brushBackGround.Blend = blend;
-        g.FillPath(brushBackGround, myPath);
+        g.FillPath(brush: brushBackGround, path: myPath);
         LinearGradientBrush brushPen = new LinearGradientBrush(
-            this.BorderRectangle,
-            clrBorder1,
-            clrBorder2,
-            LinearGradientMode.ForwardDiagonal
+            rect: this.BorderRectangle,
+            color1: clrBorder1,
+            color2: clrBorder2,
+            linearGradientMode: LinearGradientMode.ForwardDiagonal
         );
 
         brushPen.Blend = blend;
-        Pen ps = new Pen(brushPen);
-        DrawBorder(g, ps, this.BorderRectangle);
+        Pen ps = new Pen(brush: brushPen);
+        DrawBorder(g: g, p: ps, rc: this.BorderRectangle);
     }
 
     private void OnDrawText(Graphics g)
     {
-        SizeF sz = g.MeasureString(this.Text, this.Font);
+        SizeF sz = g.MeasureString(text: this.Text, font: this.Font);
         Brush[] br = GetShadowBrushes();
         RectangleF rcText = new RectangleF(
-            this.BorderRectangle.Left + ((this.BorderRectangle.Width - sz.Width) / 2),
-            this.BorderRectangle.Top + ((this.BorderRectangle.Height - sz.Height) / 2),
-            sz.Width,
-            sz.Height
+            x: this.BorderRectangle.Left + ((this.BorderRectangle.Width - sz.Width) / 2),
+            y: this.BorderRectangle.Top + ((this.BorderRectangle.Height - sz.Height) / 2),
+            width: sz.Width,
+            height: sz.Height
         );
 
-        for (int intIndex = 0; intIndex <= br.GetUpperBound(0); intIndex++)
+        for (int intIndex = 0; intIndex <= br.GetUpperBound(dimension: 0); intIndex++)
         {
             g.DrawString(
-                this.Text,
-                this.Font,
-                br[intIndex],
-                rcText.X + (br.GetUpperBound(0) - intIndex),
-                rcText.Y + (br.GetUpperBound(0) - intIndex)
+                s: this.Text,
+                font: this.Font,
+                brush: br[intIndex],
+                x: rcText.X + (br.GetUpperBound(dimension: 0) - intIndex),
+                y: rcText.Y + (br.GetUpperBound(dimension: 0) - intIndex)
             );
         }
         if (enmState == ControlState.Normal)
         {
             if (this.Enabled)
             {
-                g.DrawString(this.Text, this.Font, new SolidBrush(clrFontMouseUp), rcText);
+                g.DrawString(
+                    s: this.Text,
+                    font: this.Font,
+                    brush: new SolidBrush(color: clrFontMouseUp),
+                    layoutRectangle: rcText
+                );
             }
             else
             {
-                g.DrawString(this.Text, this.Font, new SolidBrush(clrFontDisabled), rcText);
+                g.DrawString(
+                    s: this.Text,
+                    font: this.Font,
+                    brush: new SolidBrush(color: clrFontDisabled),
+                    layoutRectangle: rcText
+                );
             }
         }
         else
         {
-            g.DrawString(this.Text, this.Font, new SolidBrush(clrFontMouseDown), rcText);
+            g.DrawString(
+                s: this.Text,
+                font: this.Font,
+                brush: new SolidBrush(color: clrFontMouseDown),
+                layoutRectangle: rcText
+            );
         }
     }
     #endregion
@@ -503,7 +553,7 @@ public class ElongatedButton
 
     protected override void OnPaint(System.Windows.Forms.PaintEventArgs e)
     {
-        this.OnPaintBackground(e);
+        this.OnPaintBackground(pevent: e);
         SmoothingMode oldSmothing = e.Graphics.SmoothingMode;
         e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
         switch (enmState)
@@ -515,18 +565,18 @@ public class ElongatedButton
                     if (this.Focused || this.IsDefault)
                     {
                         //when the control has the focus this method is called
-                        OnDrawDefault(e.Graphics);
+                        OnDrawDefault(g: e.Graphics);
                     }
                     else
                     {
                         //when the contrl does not have the focus this method is acalled
-                        OnDrawNormal(e.Graphics);
+                        OnDrawNormal(g: e.Graphics);
                     }
                 }
                 else
                 {
                     //when the button is disabled this method is called
-                    OnDrawDisabled(e.Graphics);
+                    OnDrawDisabled(g: e.Graphics);
                 }
                 break;
             }
@@ -534,19 +584,19 @@ public class ElongatedButton
             case ControlState.Pressed:
             {
                 //when the mouse is pressed over the button
-                OnDrawPressed(e.Graphics);
+                OnDrawPressed(g: e.Graphics);
                 break;
             }
         }
-        OnDrawText(e.Graphics);
+        OnDrawText(g: e.Graphics);
 
         Rectangle rc = new Rectangle(
-            this.BorderRectangle.X - 1,
-            this.BorderRectangle.Y - 1,
-            this.BorderRectangle.Width + 2,
-            this.BorderRectangle.Height + 2
+            x: this.BorderRectangle.X - 1,
+            y: this.BorderRectangle.Y - 1,
+            width: this.BorderRectangle.Width + 2,
+            height: this.BorderRectangle.Height + 2
         );
-        this.Region = new Region(GetGraphicPath(rc));
+        this.Region = new Region(path: GetGraphicPath(rc: rc));
         e.Graphics.SmoothingMode = oldSmothing;
     }
 
@@ -559,7 +609,7 @@ public class ElongatedButton
     //Change the state to pressed
     protected override void OnMouseDown(System.Windows.Forms.MouseEventArgs e)
     {
-        base.OnMouseDown(e);
+        base.OnMouseDown(mevent: e);
         if (e.Button == MouseButtons.Left && e.Clicks == 1)
         {
             enmState = ControlState.Pressed;
@@ -570,7 +620,7 @@ public class ElongatedButton
     //Change the state to normal
     protected override void OnClick(EventArgs e)
     {
-        base.OnClick(e);
+        base.OnClick(e: e);
         enmState = ControlState.Normal;
         this.Invalidate();
     }

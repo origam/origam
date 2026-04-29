@@ -33,15 +33,17 @@ public class DataDatabaseStructureBuilder : AbstractDatabaseBuilder
     public override void Execute(Project project)
     {
         IDeploymentService deployment =
-            ServiceManager.Services.GetService(typeof(IDeploymentService)) as IDeploymentService;
+            ServiceManager.Services.GetService(serviceType: typeof(IDeploymentService))
+            as IDeploymentService;
         deployment.Deploy();
         IParameterService parameterService =
-            ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
+            ServiceManager.Services.GetService(serviceType: typeof(IParameterService))
+            as IParameterService;
         parameterService.RefreshParameters();
         IOrigamProfileProvider profileProvider = SecurityManager.GetProfileProvider();
         profileProvider.AddUser(
-            "Architect (" + project.ArchitectUserName + ")",
-            project.ArchitectUserName
+            name: "Architect (" + project.ArchitectUserName + ")",
+            userName: project.ArchitectUserName
         );
     }
 

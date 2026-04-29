@@ -52,7 +52,9 @@ internal class StandardHttpRequestWrapper : IRequestWrapper
         clientInfo = GetClientInfo();
         Params = GetParameters();
         mediaTypeHeader =
-            request.ContentType != null ? MediaTypeHeaderValue.Parse(request.ContentType) : null;
+            request.ContentType != null
+                ? MediaTypeHeaderValue.Parse(input: request.ContentType)
+                : null;
     }
 
     public string AppRelativeCurrentExecutionFilePath => request.Path.ToUriComponent();
@@ -62,7 +64,7 @@ internal class StandardHttpRequestWrapper : IRequestWrapper
     public string HttpMethod => request.Method;
     public string RawUrl => request.GetDisplayUrl();
     public string Url => request.Host.ToUriComponent() + "/" + request.Path.ToUriComponent();
-    public string UrlReferrer => headerDictionary[HeaderNames.Referer].ToString();
+    public string UrlReferrer => headerDictionary[key: HeaderNames.Referer].ToString();
     public string UserAgent => httpContext.Request.GetUserAgent();
     public string Browser => clientInfo != null ? clientInfo.UA.Family : "";
     public string BrowserVersion =>
@@ -73,19 +75,19 @@ internal class StandardHttpRequestWrapper : IRequestWrapper
     {
         get
         {
-            var languages = httpContext.Request.Headers[HeaderNames.AcceptLanguage].ToArray();
-            return languages.Length == 0 ? new string[0] : languages[0].Split(',');
+            var languages = httpContext.Request.Headers[key: HeaderNames.AcceptLanguage].ToArray();
+            return languages.Length == 0 ? new string[0] : languages[0].Split(separator: ',');
         }
     }
     public Encoding ContentEncoding => mediaTypeHeader?.Encoding;
     public long ContentLength => request.ContentLength ?? 0;
     public IDictionary BrowserCapabilities => new Dictionary<string, string>(); //
-    public string UrlReferrerAbsoluteUri => headerDictionary[HeaderNames.Referer];
+    public string UrlReferrerAbsoluteUri => headerDictionary[key: HeaderNames.Referer];
     public Parameters Params { get; }
 
     public PostedFile FilesGet(string name)
     {
-        var httpPostedFile = request.Form.Files[name];
+        var httpPostedFile = request.Form.Files[name: name];
         return new PostedFile
         {
             ContentType = httpPostedFile.ContentType,
@@ -97,31 +99,31 @@ internal class StandardHttpRequestWrapper : IRequestWrapper
 
     private ClientInfo GetClientInfo()
     {
-        if (string.IsNullOrEmpty(request.Headers[HeaderNames.UserAgent]))
+        if (string.IsNullOrEmpty(value: request.Headers[key: HeaderNames.UserAgent]))
         {
             return null;
         }
         var uaParser = Parser.GetDefault();
-        return uaParser.Parse(request.Headers[HeaderNames.UserAgent]);
+        return uaParser.Parse(uaString: request.Headers[key: HeaderNames.UserAgent]);
     }
 
     private Parameters GetParameters()
     {
         var parameters = request.Query.Keys.ToDictionary(
-            key => key,
-            key => request.Query[key].ToString()
+            keySelector: key => key,
+            elementSelector: key => request.Query[key: key].ToString()
         );
         foreach (var keyValuePair in request.Cookies)
         {
-            parameters.Add(keyValuePair.Key, keyValuePair.Value);
+            parameters.Add(key: keyValuePair.Key, value: keyValuePair.Value);
         }
         if (request.HasFormContentType)
         {
             foreach (var keyValuePair in request.Form)
             {
-                parameters.Add(keyValuePair.Key, keyValuePair.Value);
+                parameters.Add(key: keyValuePair.Key, value: keyValuePair.Value);
             }
         }
-        return new Parameters(parameters);
+        return new Parameters(parameters: parameters);
     }
 }

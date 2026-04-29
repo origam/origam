@@ -31,10 +31,10 @@ namespace Origam.Schema.EntityModel;
 /// <summary>
 /// Summary description for TransformationReference.
 /// </summary>
-[SchemaItemDescription("Lookup Reference", "icon_lookup-reference.png")]
-[HelpTopic("Lookup+Reference")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Lookup Reference", iconName: "icon_lookup-reference.png")]
+[HelpTopic(topic: "Lookup+Reference")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class EntityFilterLookupReference : AbstractSchemaItem
 {
     public const string CategoryConst = "EntityFilterLookupReference";
@@ -46,13 +46,13 @@ public class EntityFilterLookupReference : AbstractSchemaItem
     }
 
     public EntityFilterLookupReference(Guid schemaExtensionId)
-        : base(schemaExtensionId)
+        : base(extensionId: schemaExtensionId)
     {
         Init();
     }
 
     public EntityFilterLookupReference(Key primaryKey)
-        : base(primaryKey)
+        : base(primaryKey: primaryKey)
     {
         Init();
     }
@@ -60,7 +60,7 @@ public class EntityFilterLookupReference : AbstractSchemaItem
     private void Init()
     {
         this.ChildItemTypes.AddRange(
-            new Type[]
+            collection: new Type[]
             {
                 typeof(ParameterReference),
                 typeof(EntityColumnReference),
@@ -84,16 +84,16 @@ public class EntityFilterLookupReference : AbstractSchemaItem
     {
         if (this.Lookup != null)
         {
-            base.GetParameterReferences(Lookup, list);
+            base.GetParameterReferences(parentItem: Lookup, list: list);
         }
 
-        base.GetParameterReferences(this, list);
+        base.GetParameterReferences(parentItem: this, list: list);
     }
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(this.Lookup);
-        base.GetExtraDependencies(dependencies);
+        dependencies.Add(item: this.Lookup);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override IList<string> NewTypeNames
@@ -103,10 +103,19 @@ public class EntityFilterLookupReference : AbstractSchemaItem
             try
             {
                 IBusinessServicesService agents =
-                    ServiceManager.Services.GetService(typeof(IBusinessServicesService))
-                    as IBusinessServicesService;
-                IServiceAgent agent = agents.GetAgent("DataService", null, null);
-                return agent.ExpectedParameterNames(this, "LoadData", "Parameters");
+                    ServiceManager.Services.GetService(
+                        serviceType: typeof(IBusinessServicesService)
+                    ) as IBusinessServicesService;
+                IServiceAgent agent = agents.GetAgent(
+                    serviceType: "DataService",
+                    ruleEngine: null,
+                    workflowEngine: null
+                );
+                return agent.ExpectedParameterNames(
+                    item: this,
+                    method: "LoadData",
+                    parameter: "Parameters"
+                );
             }
             catch
             {
@@ -118,24 +127,24 @@ public class EntityFilterLookupReference : AbstractSchemaItem
     #region Properties
     public Guid LookupId;
 
-    [Category("Reference")]
-    [TypeConverter(typeof(DataLookupConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
+    [Category(category: "Reference")]
+    [TypeConverter(type: typeof(DataLookupConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
     [NotNullModelElementRule()]
-    [XmlReference("lookup", "LookupId")]
+    [XmlReference(attributeName: "lookup", idField: "LookupId")]
     public IDataLookup Lookup
     {
         get
         {
             return (ISchemaItem)
                     this.PersistenceProvider.RetrieveInstance(
-                        typeof(ISchemaItem),
-                        new ModelElementKey(this.LookupId)
+                        type: typeof(ISchemaItem),
+                        primaryKey: new ModelElementKey(id: this.LookupId)
                     ) as IDataLookup;
         }
         set
         {
-            this.LookupId = (Guid)value.PrimaryKey["Id"];
+            this.LookupId = (Guid)value.PrimaryKey[key: "Id"];
             this.Name = this.Lookup.Name;
         }
     }

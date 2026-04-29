@@ -30,15 +30,20 @@ public class PlatformResolveService : IPlatformResolveService
         OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
         var platforms = settings.GetAllPlatforms();
 
-        if (string.IsNullOrWhiteSpace(requestedPlatformName))
+        if (string.IsNullOrWhiteSpace(value: requestedPlatformName))
         {
             Platform platform = platforms.FirstOrDefault();
-            return platform ?? throw new InvalidOperationException("No platforms are configured.");
+            return platform
+                ?? throw new InvalidOperationException(message: "No platforms are configured.");
         }
 
         var requested = requestedPlatformName.Trim();
-        Platform match = platforms.FirstOrDefault(p =>
-            string.Equals(p.Name, requested, StringComparison.OrdinalIgnoreCase)
+        Platform match = platforms.FirstOrDefault(predicate: p =>
+            string.Equals(
+                a: p.Name,
+                b: requested,
+                comparisonType: StringComparison.OrdinalIgnoreCase
+            )
         );
 
         if (match != null)
@@ -46,9 +51,12 @@ public class PlatformResolveService : IPlatformResolveService
             return match;
         }
 
-        var available = string.Join(", ", platforms.Select(p => p.Name));
+        var available = string.Join(
+            separator: ", ",
+            values: platforms.Select(selector: p => p.Name)
+        );
         throw new InvalidOperationException(
-            $"Unknown platform '{requested}'. Available platforms: {available}."
+            message: $"Unknown platform '{requested}'. Available platforms: {available}."
         );
     }
 }

@@ -31,7 +31,7 @@ namespace Origam.Server.Controller;
 
 [Authorize(Policy = "InternalApi")]
 [Controller]
-[Route("internalApi/[controller]")]
+[Route(template: "internalApi/[controller]")]
 public class SearchController : AbstractController
 {
     private readonly SearchHandler searchHandler;
@@ -42,17 +42,17 @@ public class SearchController : AbstractController
         SearchHandler searchHandler,
         IWebHostEnvironment environment
     )
-        : base(log, sessionObjects, environment)
+        : base(log: log, sessionObjects: sessionObjects, environment: environment)
     {
         this.searchHandler = searchHandler;
     }
 
     // .NetCore 3.1 cannot stream data, looks like this will be possible in .Net 5.0.0
     // https://github.com/dotnet/runtime/issues/1570
-    [HttpGet("{*searchTerm}")]
-    [DecodeQueryParameter("searchTerm")]
+    [HttpGet(template: "{*searchTerm}")]
+    [DecodeQueryParameter(parameterName: "searchTerm")]
     public IActionResult Get(string searchTerm)
     {
-        return Ok(searchHandler.Search(searchTerm));
+        return Ok(value: searchHandler.Search(searchTerm: searchTerm));
     }
 }

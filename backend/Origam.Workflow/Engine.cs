@@ -47,7 +47,7 @@ namespace Origam.Workflow;
 public class WorkflowEngine : IDisposable
 {
     private static readonly ILog log = LogManager.GetLogger(
-        System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType
+        type: System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType
     );
     private DatasetGenerator datasetGenerator = new(userDefinedParameters: true);
     private ITracingService tracingService = ServiceManager.Services.GetService<ITracingService>();
@@ -64,7 +64,7 @@ public class WorkflowEngine : IDisposable
     {
         lock (lockObject)
         {
-            return string.Join("\n", disposeCallStackTraces);
+            return string.Join(separator: "\n", values: disposeCallStackTraces);
         }
     }
 
@@ -187,13 +187,13 @@ public class WorkflowEngine : IDisposable
         {
             foreach (
                 IContextStore resultContext in WorkflowBlock.ChildItemsByType<ContextStore>(
-                    ContextStore.CategoryConst
+                    itemType: ContextStore.CategoryConst
                 )
             )
             {
                 if (resultContext.IsReturnValue)
                 {
-                    return RuleEngine.GetContext(resultContext);
+                    return RuleEngine.GetContext(contextStore: resultContext);
                 }
             }
             return null;
@@ -274,21 +274,21 @@ public class WorkflowEngine : IDisposable
         {
             string parameterName = (string)entry.Key;
             ISchemaItem context = workflow.GetChildByName(
-                parameterName,
-                ContextStore.CategoryConst
+                name: parameterName,
+                itemType: ContextStore.CategoryConst
             );
             if (context == null)
             {
                 throw new ArgumentOutOfRangeException(
-                    "name",
-                    parameterName,
-                    string.Format(
-                        ResourceUtils.GetString("ErrorWorkflowParameterNotFound"),
-                        ((ISchemaItem)workflow).Path
+                    paramName: "name",
+                    actualValue: parameterName,
+                    message: string.Format(
+                        format: ResourceUtils.GetString(key: "ErrorWorkflowParameterNotFound"),
+                        arg0: ((ISchemaItem)workflow).Path
                     )
                 );
             }
-            workflowEngine.InputContexts.Add(context.PrimaryKey, entry.Value);
+            workflowEngine.InputContexts.Add(key: context.PrimaryKey, value: entry.Value);
         }
         workflowEngine.TransactionBehavior = workflow.TransactionBehavior;
         workflowEngine.WorkflowBlock = workflow;
@@ -302,7 +302,7 @@ public class WorkflowEngine : IDisposable
     {
         if (ProfilingTools.IsDebugEnabled)
         {
-            localOperationTimer.Start(GetHashCode());
+            localOperationTimer.Start(hash: GetHashCode());
         }
         RunWorkflow();
     }
@@ -335,11 +335,15 @@ public class WorkflowEngine : IDisposable
     {
         if (WorkflowBlock == null)
         {
-            throw new InvalidOperationException(ResourceUtils.GetString("ErrorNoWorkflow"));
+            throw new InvalidOperationException(
+                message: ResourceUtils.GetString(key: "ErrorNoWorkflow")
+            );
         }
         if (Host == null)
         {
-            throw new InvalidOperationException(ResourceUtils.GetString("ErrorNoHost"));
+            throw new InvalidOperationException(
+                message: ResourceUtils.GetString(key: "ErrorNoHost")
+            );
         }
         taskResults.Clear();
         try
@@ -347,12 +351,12 @@ public class WorkflowEngine : IDisposable
             if (log.IsDebugEnabled)
             {
                 log.Debug(
-                    "---------------------------------------------------------------------------------------"
+                    message: "---------------------------------------------------------------------------------------"
                 );
-                log.Debug("------------------- Starting workflow: " + WorkflowBlock.Name);
-                log.Debug("------------------- Transaction ID: " + TransactionId);
+                log.Debug(message: "------------------- Starting workflow: " + WorkflowBlock.Name);
+                log.Debug(message: "------------------- Transaction ID: " + TransactionId);
                 log.Debug(
-                    "---------------------------------------------------------------------------------------"
+                    message: "---------------------------------------------------------------------------------------"
                 );
             }
             if (CallingWorkflow == null)
@@ -361,28 +365,34 @@ public class WorkflowEngine : IDisposable
                 Notification = "";
                 ResultMessage = "";
             }
-            if (IsTrace(WorkflowBlock))
+            if (IsTrace(workflowStep: WorkflowBlock))
             {
                 tracingService.TraceWorkflow(
                     workflowInstanceId: WorkflowInstanceId,
-                    workflowId: (Guid)WorkflowBlock.PrimaryKey["Id"],
-                    WorkflowBlock.Name
+                    workflowId: (Guid)WorkflowBlock.PrimaryKey[key: "Id"],
+                    workflowName: WorkflowBlock.Name
                 );
             }
             // Initialize all context stores (resume paused ones?)
             var contextStores = new Hashtable();
             // Initialize RuleEngine for this session
-            Guid tracingWorkflowId = IsTrace(WorkflowBlock) ? WorkflowInstanceId : Guid.Empty;
-            ruleEngine = RuleEngine.Create(contextStores, TransactionId, tracingWorkflowId);
+            Guid tracingWorkflowId = IsTrace(workflowStep: WorkflowBlock)
+                ? WorkflowInstanceId
+                : Guid.Empty;
+            ruleEngine = RuleEngine.Create(
+                contextStores: contextStores,
+                transactionId: TransactionId,
+                tracingWorkflowId: tracingWorkflowId
+            );
             foreach (
                 IContextStore contextStore in WorkflowBlock.ChildItemsByType<ContextStore>(
-                    ContextStore.CategoryConst
+                    itemType: ContextStore.CategoryConst
                 )
             )
             {
                 if (log.IsDebugEnabled)
                 {
-                    log.Debug("Initializing data store: " + contextStore?.Name);
+                    log.Debug(message: "Initializing data store: " + contextStore?.Name);
                 }
                 // Otherwise we generate an empty store
                 if (contextStore!.DataType == OrigamDataType.Xml)
@@ -392,52 +402,55 @@ public class WorkflowEngine : IDisposable
                         case DataStructure dataStructure:
                         {
                             DataSet dataset = datasetGenerator.CreateDataSet(
-                                dataStructure,
-                                contextStore.DefaultSet
+                                ds: dataStructure,
+                                defaultSet: contextStore.DefaultSet
                             );
                             if (contextStore.DisableConstraints)
                             {
                                 dataset.EnforceConstraints = false;
                             }
                             contextStores.Add(
-                                contextStore.PrimaryKey,
-                                DataDocumentFactory.New(dataset)
+                                key: contextStore.PrimaryKey,
+                                value: DataDocumentFactory.New(dataSet: dataset)
                             );
                             break;
                         }
                         case XsdDataStructure:
                         {
-                            contextStores.Add(contextStore.PrimaryKey, new XmlContainer());
+                            contextStores.Add(
+                                key: contextStore.PrimaryKey,
+                                value: new XmlContainer()
+                            );
                             break;
                         }
                         case null:
                         {
                             throw new NullReferenceException(
-                                ResourceUtils.GetString("ErrorNoXmlStore")
+                                message: ResourceUtils.GetString(key: "ErrorNoXmlStore")
                             );
                         }
                         default:
                         {
                             throw new ArgumentOutOfRangeException(
-                                "DataType",
-                                contextStore.DataType,
-                                ResourceUtils.GetString("ErrorUnsupportedXmlStore")
+                                paramName: "DataType",
+                                actualValue: contextStore.DataType,
+                                message: ResourceUtils.GetString(key: "ErrorUnsupportedXmlStore")
                             );
                         }
                     }
                 }
                 else
                 {
-                    contextStores.Add(contextStore.PrimaryKey, null);
+                    contextStores.Add(key: contextStore.PrimaryKey, value: null);
                 }
-                if (InputContexts.ContainsKey(contextStore.PrimaryKey))
+                if (InputContexts.ContainsKey(key: contextStore.PrimaryKey))
                 {
                     // If we have input data, we use them
                     if (log.IsDebugEnabled)
                     {
-                        log.Debug("Passing input context");
+                        log.Debug(message: "Passing input context");
                     }
-                    if (IsTrace(WorkflowBlock))
+                    if (IsTrace(workflowStep: WorkflowBlock))
                     {
                         tracingService.TraceStep(
                             workflowInstanceId: WorkflowInstanceId,
@@ -446,14 +459,16 @@ public class WorkflowEngine : IDisposable
                             category: "Input Context",
                             subCategory: contextStore.Name,
                             remark: "",
-                            data1: ContextData(InputContexts[contextStore.PrimaryKey]),
+                            data1: ContextData(
+                                context: InputContexts[key: contextStore.PrimaryKey]
+                            ),
                             data2: null,
                             message: null
                         );
                     }
                     MergeContext(
                         resultContextKey: contextStore.PrimaryKey,
-                        inputContext: InputContexts[contextStore.PrimaryKey],
+                        inputContext: InputContexts[key: contextStore.PrimaryKey],
                         step: null,
                         contextName: contextStore.Name,
                         method: ServiceOutputMethod.AppendMergeExisting
@@ -463,15 +478,15 @@ public class WorkflowEngine : IDisposable
             // Include all contexts from the parent block
             foreach (DictionaryEntry entry in ParentContexts)
             {
-                contextStores.Add(entry.Key, entry.Value);
+                contextStores.Add(key: entry.Key, value: entry.Value);
             }
             List<AbstractWorkflowStep> tasks = WorkflowBlock.ChildItemsByType<AbstractWorkflowStep>(
-                AbstractWorkflowStep.CategoryConst
+                itemType: AbstractWorkflowStep.CategoryConst
             );
             // Set states of each task to "not run"
             foreach (AbstractWorkflowStep task in tasks)
             {
-                SetStepStatus(task, WorkflowStepResult.Ready);
+                SetStepStatus(step: task, status: WorkflowStepResult.Ready);
             }
             // clear input contexts - they will not be needed anymore
             InputContexts.Clear();
@@ -479,7 +494,7 @@ public class WorkflowEngine : IDisposable
         }
         catch (Exception ex)
         {
-            HandleWorkflowException(ex);
+            HandleWorkflowException(exception: ex);
         }
     }
 
@@ -507,44 +522,54 @@ public class WorkflowEngine : IDisposable
     private void ResumeWorkflow()
     {
         List<AbstractWorkflowStep> tasks = WorkflowBlock.ChildItemsByType<AbstractWorkflowStep>(
-            AbstractWorkflowStep.CategoryConst
+            itemType: AbstractWorkflowStep.CategoryConst
         );
         if (tasks.Count == 0)
         {
-            FinishWorkflow(null);
+            FinishWorkflow(exception: null);
             return;
         }
         for (int i = 0; i < tasks.Count; i++)
         {
             if (WorkflowCompleted())
             {
-                FinishWorkflow(null);
+                FinishWorkflow(exception: null);
                 break;
             }
             // Check if the task is ready to run by start event
-            if (CanStepRun(tasks[i] as IWorkflowStep))
+            if (CanStepRun(step: tasks[index: i] as IWorkflowStep))
             {
                 // Now check if the task will ever run by startup rule
-                if (EvaluateStartRuleTimed(tasks[i] as IWorkflowStep))
+                if (EvaluateStartRuleTimed(task: tasks[index: i] as IWorkflowStep))
                 {
-                    var currentModelStep = tasks[i] as IWorkflowStep;
-                    IWorkflowEngineTask engineTask = WorkflowTaskFactory.GetTask(currentModelStep);
+                    var currentModelStep = tasks[index: i] as IWorkflowStep;
+                    IWorkflowEngineTask engineTask = WorkflowTaskFactory.GetTask(
+                        step: currentModelStep
+                    );
                     engineTask.Engine = this;
                     engineTask.Step = currentModelStep;
                     if (log.IsDebugEnabled)
                     {
                         log.Debug(
-                            "---------------------------------------------------------------------------------------"
+                            message: "---------------------------------------------------------------------------------------"
                         );
                         log.Debug(
-                            "Starting " + engineTask.GetType().Name + ": " + currentModelStep?.Name
+                            message: "Starting "
+                                + engineTask.GetType().Name
+                                + ": "
+                                + currentModelStep?.Name
                         );
                     }
-                    workflowStackTrace.RecordStepStart(WorkflowBlock.Name, currentModelStep?.Name);
-                    SetStepStatus(currentModelStep, WorkflowStepResult.Running);
+                    workflowStackTrace.RecordStepStart(
+                        workflowName: WorkflowBlock.Name,
+                        stepName: currentModelStep?.Name
+                    );
+                    SetStepStatus(step: currentModelStep, status: WorkflowStepResult.Running);
                     engineTask.Finished += OnEngineTaskFinished;
                     using (
-                        MiniProfiler.Current.Step(WorkflowBlock.Name + ":" + currentModelStep?.Name)
+                        MiniProfiler.Current.Step(
+                            name: WorkflowBlock.Name + ":" + currentModelStep?.Name
+                        )
                     )
                     {
                         engineTask.Execute();
@@ -552,7 +577,10 @@ public class WorkflowEngine : IDisposable
                     break;
                 }
                 // Task will never run, startup rule returned false
-                SetStepStatus(tasks[i] as IWorkflowStep, WorkflowStepResult.NotRun);
+                SetStepStatus(
+                    step: tasks[index: i] as IWorkflowStep,
+                    status: WorkflowStepResult.NotRun
+                );
             }
             if (i == tasks.Count - 1)
             {
@@ -564,17 +592,17 @@ public class WorkflowEngine : IDisposable
 
     private void HandleStepException(IWorkflowStep step, Exception exception)
     {
-        SetStepStatus(step, WorkflowStepResult.Failure);
+        SetStepStatus(step: step, status: WorkflowStepResult.Failure);
         if (exception is RuleException && log.IsDebugEnabled)
         {
-            log.Debug($"{step?.GetType().Name} {step?.Path} failed.");
+            log.Debug(message: $"{step?.GetType().Name} {step?.Path} failed.");
         }
         else if (log.IsErrorEnabled)
         {
-            log.Error($"{step?.GetType().Name} {step?.Path} failed.");
+            log.Error(message: $"{step?.GetType().Name} {step?.Path} failed.");
         }
         // Trace the error
-        if (IsTrace(step))
+        if (IsTrace(workflowStep: step))
         {
             tracingService.TraceStep(
                 workflowInstanceId: WorkflowInstanceId,
@@ -585,31 +613,33 @@ public class WorkflowEngine : IDisposable
                 remark: null,
                 data1: null,
                 data2: null,
-                exception.Message
+                message: exception.Message
             );
         }
         // suppress all tasks that had not run yet and have no dependencies
         List<AbstractWorkflowStep> tasks = WorkflowBlock.ChildItemsByType<AbstractWorkflowStep>(
-            AbstractWorkflowStep.CategoryConst
+            itemType: AbstractWorkflowStep.CategoryConst
         );
         for (int i = 0; i < tasks.Count; i++)
         {
-            var siblingStep = tasks[i] as IWorkflowStep;
+            var siblingStep = tasks[index: i] as IWorkflowStep;
             if (
                 (siblingStep!.Dependencies.Count == 0)
-                && taskResults[siblingStep.PrimaryKey] == WorkflowStepResult.Ready
+                && taskResults[key: siblingStep.PrimaryKey] == WorkflowStepResult.Ready
             )
             {
-                SetStepStatus(siblingStep, WorkflowStepResult.NotRun);
+                SetStepStatus(step: siblingStep, status: WorkflowStepResult.NotRun);
             }
         }
-        if (IsFailureHandled(step))
+        if (IsFailureHandled(failedStep: step))
         {
             caughtException = exception;
             return;
         }
         // cancel the workflow and rethrow the exception up, if root workflow
-        HandleWorkflowException(GetStepException(exception, step!.Name));
+        HandleWorkflowException(
+            exception: GetStepException(exception: exception, stepName: step!.Name)
+        );
     }
 
     /// <summary>
@@ -619,11 +649,11 @@ public class WorkflowEngine : IDisposable
     private bool IsFailureHandled(IWorkflowStep failedStep)
     {
         List<AbstractWorkflowStep> tasks = WorkflowBlock.ChildItemsByType<AbstractWorkflowStep>(
-            AbstractWorkflowStep.CategoryConst
+            itemType: AbstractWorkflowStep.CategoryConst
         );
         foreach (IWorkflowStep step in tasks)
         {
-            var dependencyOnFailedStep = step.Dependencies.FirstOrDefault(dependency =>
+            var dependencyOnFailedStep = step.Dependencies.FirstOrDefault(predicate: dependency =>
                 dependency.Task == failedStep
             );
             if (dependencyOnFailedStep is { StartEvent: WorkflowStepStartEvent.Failure })
@@ -640,12 +670,12 @@ public class WorkflowEngine : IDisposable
         var keys = taskResults.Keys.ToList();
         foreach (Key key in keys)
         {
-            if (taskResults[key] == WorkflowStepResult.Ready)
+            if (taskResults[key: key] == WorkflowStepResult.Ready)
             {
-                taskResults[key] = WorkflowStepResult.NotRun;
+                taskResults[key: key] = WorkflowStepResult.NotRun;
             }
         }
-        if (IsTrace(WorkflowBlock))
+        if (IsTrace(workflowStep: WorkflowBlock))
         {
             string recursiveExceptionText = exception.Message;
             Exception recursiveException = exception;
@@ -661,36 +691,39 @@ public class WorkflowEngine : IDisposable
             tracingService.TraceStep(
                 workflowInstanceId: WorkflowInstanceId,
                 stepPath: WorkflowBlock?.Path,
-                stepId: (Guid)WorkflowBlock.PrimaryKey["Id"],
+                stepId: (Guid)WorkflowBlock.PrimaryKey[key: "Id"],
                 category: "Process",
                 subCategory: "Error",
                 remark: null,
                 data1: recursiveExceptionText,
                 data2: recursiveException.StackTrace,
-                exception.Message
+                message: exception.Message
             );
         }
         if (exception is not WorkflowCancelledByUserException && log.IsErrorEnabled)
         {
-            log.LogOrigamError($"{exception.Message}\n{workflowStackTrace}", exception);
+            log.LogOrigamError(
+                message: $"{exception.Message}\n{workflowStackTrace}",
+                ex: exception
+            );
         }
-        FinishWorkflow(exception);
+        FinishWorkflow(exception: exception);
     }
 
     private void SetStepStatus(IWorkflowStep step, WorkflowStepResult status)
     {
-        taskResults[step.PrimaryKey] = status;
+        taskResults[key: step.PrimaryKey] = status;
     }
 
     private WorkflowStepResult StepStatus(IWorkflowStep step)
     {
-        return taskResults[step.PrimaryKey];
+        return taskResults[key: step.PrimaryKey];
     }
 
     private void EvaluateEndRuleTimed(IEndRule rule, object data, IWorkflowStep step)
     {
         ProfilingTools.ExecuteAndLogDuration(
-            action: () => EvaluateEndRule(rule, data, step),
+            action: () => EvaluateEndRule(rule: rule, data: data, step: step),
             logEntryType: "Validation Rule",
             task: step
         );
@@ -705,18 +738,18 @@ public class WorkflowEngine : IDisposable
         RuleExceptionDataCollection result = RuleEngine.EvaluateEndRule(
             rule: rule,
             data: data,
-            parentIsTracing: IsTrace(step)
+            parentIsTracing: IsTrace(workflowStep: step)
         );
-        if (step != null && IsTrace(step))
+        if (step != null && IsTrace(workflowStep: step))
         {
             tracingService.TraceStep(
                 workflowInstanceId: WorkflowInstanceId,
                 stepPath: step!.Path,
-                stepId: (Guid)step.PrimaryKey["Id"],
+                stepId: (Guid)step.PrimaryKey[key: "Id"],
                 category: "End Rule",
                 subCategory: "Input",
                 remark: step.ValidationRuleContextStore.Name,
-                data1: ContextData(data),
+                data1: ContextData(context: data),
                 data2: null,
                 message: null
             );
@@ -724,7 +757,7 @@ public class WorkflowEngine : IDisposable
         // if there are some exceptions, we actually throw them
         if ((result != null) && (result.Count != 0))
         {
-            throw new RuleException(result);
+            throw new RuleException(result: result);
         }
     }
 
@@ -737,7 +770,11 @@ public class WorkflowEngine : IDisposable
                     or OrigamValidationException;
         return shouldBeDisplayedToUser
             ? exception
-            : new OrigamException(exception.Message, stepName, exception);
+            : new OrigamException(
+                message: exception.Message,
+                customStackTrace: stepName,
+                innerException: exception
+            );
     }
     #endregion
 
@@ -758,7 +795,7 @@ public class WorkflowEngine : IDisposable
     private bool CanStepRun(IWorkflowStep step)
     {
         // Check if this task has been already completed, don't run it again
-        if (StepStatus(step) != WorkflowStepResult.Ready)
+        if (StepStatus(step: step) != WorkflowStepResult.Ready)
         {
             return false;
         }
@@ -766,16 +803,21 @@ public class WorkflowEngine : IDisposable
         {
             try
             {
-                if (!taskResults.ContainsKey(dependency.Task.PrimaryKey))
+                if (!taskResults.ContainsKey(key: dependency.Task.PrimaryKey))
                 {
-                    throw new Exception("Workflow task dependency invalid. Task: " + step.Name);
+                    throw new Exception(
+                        message: "Workflow task dependency invalid. Task: " + step.Name
+                    );
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception("Workflow task dependency invalid. Task: " + step.Name, ex);
+                throw new Exception(
+                    message: "Workflow task dependency invalid. Task: " + step.Name,
+                    innerException: ex
+                );
             }
-            WorkflowStepResult dependencyResult = StepStatus(dependency.Task);
+            WorkflowStepResult dependencyResult = StepStatus(step: dependency.Task);
             switch (dependencyResult)
             {
                 case WorkflowStepResult.Running:
@@ -784,7 +826,7 @@ public class WorkflowEngine : IDisposable
                 }
                 case WorkflowStepResult.FailureNotRun:
                 {
-                    SetStepStatus(step, WorkflowStepResult.FailureNotRun);
+                    SetStepStatus(step: step, status: WorkflowStepResult.FailureNotRun);
                     return false;
                 }
                 case WorkflowStepResult.NotRun:
@@ -795,7 +837,7 @@ public class WorkflowEngine : IDisposable
                     {
                         // We check if any of tasks we depend on has state NotRun.
                         // In that case current task will not run as well.
-                        SetStepStatus(step, WorkflowStepResult.NotRun);
+                        SetStepStatus(step: step, status: WorkflowStepResult.NotRun);
                         return false;
                     }
                     break;
@@ -809,13 +851,13 @@ public class WorkflowEngine : IDisposable
                         {
                             // for failures we only start tasks
                             // marked to start on failure
-                            SetStepStatus(step, WorkflowStepResult.FailureNotRun);
+                            SetStepStatus(step: step, status: WorkflowStepResult.FailureNotRun);
                             return false;
                         }
                         case WorkflowStepResult.Failure
                             when dependency.StartEvent != WorkflowStepStartEvent.Failure:
                         {
-                            SetStepStatus(step, WorkflowStepResult.FailureNotRun);
+                            SetStepStatus(step: step, status: WorkflowStepResult.FailureNotRun);
                             return false;
                         }
                         case WorkflowStepResult.Ready:
@@ -836,7 +878,7 @@ public class WorkflowEngine : IDisposable
     {
         string path = task is ISchemaItem schemaItem ? schemaItem.Path : "";
         return ProfilingTools.ExecuteAndLogDuration(
-            funcToExecute: () => EvaluateStartRule(task),
+            funcToExecute: () => EvaluateStartRule(task: task),
             logEntryType: "Start Rule",
             path: path + "/Start Rule",
             id: task.NodeId,
@@ -847,23 +889,25 @@ public class WorkflowEngine : IDisposable
     private bool EvaluateStartRule(IWorkflowStep task)
     {
         // check features
-        if (!parameterService.IsFeatureOn(task.Features))
+        if (!parameterService.IsFeatureOn(featureCode: task.Features))
         {
             if (log.IsDebugEnabled)
             {
-                log.Debug("Step will not execute because of feature being turned off.");
+                log.Debug(message: "Step will not execute because of feature being turned off.");
             }
             return false;
         }
         if (
             !SecurityManager
                 .GetAuthorizationProvider()
-                .Authorize(SecurityManager.CurrentPrincipal, task.Roles)
+                .Authorize(principal: SecurityManager.CurrentPrincipal, context: task.Roles)
         )
         {
             if (log.IsDebugEnabled)
             {
-                log.Debug("Step will not execute because the user has not been authorized.");
+                log.Debug(
+                    message: "Step will not execute because the user has not been authorized."
+                );
             }
             return false;
         }
@@ -874,18 +918,18 @@ public class WorkflowEngine : IDisposable
         }
         if (log.IsDebugEnabled)
         {
-            log.Debug("Evaluating startup rule for step " + task.Name);
+            log.Debug(message: "Evaluating startup rule for step " + task.Name);
         }
         var result = (bool)
             RuleEngine.EvaluateRule(
                 rule: task.StartConditionRule,
                 data: task.StartConditionRuleContextStore,
                 contextPosition: null,
-                parentIsTracing: IsTrace(task)
+                parentIsTracing: IsTrace(workflowStep: task)
             );
         if (log.IsDebugEnabled)
         {
-            log.Debug("Rule evaluated and returned " + result);
+            log.Debug(message: "Rule evaluated and returned " + result);
         }
         return result;
     }
@@ -899,16 +943,16 @@ public class WorkflowEngine : IDisposable
         }
         if (log.IsDebugEnabled)
         {
-            log.Debug("Evaluating validation rule for step " + step.Name);
+            log.Debug(message: "Evaluating validation rule for step " + step.Name);
         }
         RuleExceptionDataCollection result = RuleEngine.EvaluateEndRule(
-            step.ValidationRule,
-            step.ValidationRuleContextStore
+            rule: step.ValidationRule,
+            data: step.ValidationRuleContextStore
         );
         if (result == null)
         {
             throw new OrigamException(
-                "Programming error: there is not any "
+                message: "Programming error: there is not any "
                     + $"RuleExceptionDataCollection in the output of the validation rule `{step.ValidationRule.Name}' ({step.ValidationRule.PrimaryKey}). "
                     + "Please review the rule and add <RuleExceptionDataCollection> tag."
             );
@@ -916,7 +960,7 @@ public class WorkflowEngine : IDisposable
         // if there are some exceptions, we actually throw them
         if (result.Count != 0)
         {
-            throw new RuleException(result);
+            throw new RuleException(result: result);
         }
     }
 
@@ -933,7 +977,10 @@ public class WorkflowEngine : IDisposable
         subEngine.Host = Host;
         subEngine.TransactionBehavior = transactionBehavior;
         subEngine.WorkflowInstanceId = WorkflowInstanceId;
-        subEngine.SetTransactionId(TransactionId, transactionBehavior);
+        subEngine.SetTransactionId(
+            transactionId: TransactionId,
+            transactionBehavior: transactionBehavior
+        );
         subEngine.IterationTotal = IterationTotal;
         subEngine.IterationNumber = IterationNumber;
         subEngine.Trace = Trace;
@@ -942,7 +989,7 @@ public class WorkflowEngine : IDisposable
 
     internal void ExecuteSubEngineWorkflow(WorkflowEngine subEngine)
     {
-        Host.ExecuteWorkflow(subEngine);
+        Host.ExecuteWorkflow(engine: subEngine);
     }
 
     internal object CloneContext(object context, bool returnDataSet)
@@ -950,7 +997,7 @@ public class WorkflowEngine : IDisposable
         return context switch
         {
             IDataDocument document when returnDataSet => document.DataSet.Copy(),
-            IDataDocument document => DataDocumentFactory.New(document.DataSet.Copy()),
+            IDataDocument document => DataDocumentFactory.New(dataSet: document.DataSet.Copy()),
             IXmlContainer container => container.Clone(),
             // value types - we return the value itself, don't need a clone
             _ => context,
@@ -959,27 +1006,29 @@ public class WorkflowEngine : IDisposable
 
     public IWorkflowStep Step(Key key)
     {
-        return PersistenceProvider.RetrieveInstance<IWorkflowStep>((Guid)key["Id"]);
+        return PersistenceProvider.RetrieveInstance<IWorkflowStep>(
+            instanceId: (Guid)key[key: "Id"]
+        );
     }
 
     private ContextStore GetContextStore(Key key)
     {
-        return PersistenceProvider.RetrieveInstance<ContextStore>((Guid)key["Id"]);
+        return PersistenceProvider.RetrieveInstance<ContextStore>(instanceId: (Guid)key[key: "Id"]);
     }
 
     internal string ContextStoreName(Key key)
     {
-        return GetContextStore(key).Name;
+        return GetContextStore(key: key).Name;
     }
 
     internal DataStructureRuleSet ContextStoreRuleSet(Key key)
     {
-        return GetContextStore(key).RuleSet;
+        return GetContextStore(key: key).RuleSet;
     }
 
     internal OrigamDataType ContextStoreType(Key key)
     {
-        return GetContextStore(key).DataType;
+        return GetContextStore(key: key).DataType;
     }
 
     internal bool MergeContext(
@@ -994,7 +1043,7 @@ public class WorkflowEngine : IDisposable
         {
             return false;
         }
-        object resultContext = RuleEngine.GetContext(resultContextKey);
+        object resultContext = RuleEngine.GetContext(key: resultContextKey);
         bool changed = false;
         if (log.IsInfoEnabled)
         {
@@ -1003,20 +1052,20 @@ public class WorkflowEngine : IDisposable
             {
                 stepNameLog = ", Step '" + step!.Path + "'";
             }
-            log.Info("Merging context '" + contextName + "'" + stepNameLog);
+            log.Info(message: "Merging context '" + contextName + "'" + stepNameLog);
         }
         try
         {
-            if ((step != null) && IsTrace(step))
+            if ((step != null) && IsTrace(workflowStep: step))
             {
                 tracingService.TraceStep(
                     workflowInstanceId: WorkflowInstanceId,
                     stepPath: step.Path,
-                    stepId: (Guid)step.PrimaryKey["Id"],
+                    stepId: (Guid)step.PrimaryKey[key: "Id"],
                     category: "Merge Context",
                     subCategory: "Input",
                     remark: contextName,
-                    data1: ContextData(inputContext),
+                    data1: ContextData(context: inputContext),
                     data2: null,
                     message: null
                 );
@@ -1051,15 +1100,19 @@ public class WorkflowEngine : IDisposable
                     {
                         foreach (DataTable inputTable in input.Tables)
                         {
-                            if (!output.Tables.Contains(inputTable.TableName))
+                            if (!output.Tables.Contains(name: inputTable.TableName))
                             {
                                 continue;
                             }
-                            DataTable outputTable = output.Tables[inputTable.TableName];
+                            DataTable outputTable = output.Tables[name: inputTable.TableName];
                             foreach (DataRow inputRow in inputTable.Rows)
                             {
-                                object[] inputRowPrimaryKey = DatasetTools.PrimaryKey(inputRow);
-                                DataRow rowToDelete = outputTable.Rows.Find(inputRowPrimaryKey);
+                                object[] inputRowPrimaryKey = DatasetTools.PrimaryKey(
+                                    row: inputRow
+                                );
+                                DataRow rowToDelete = outputTable.Rows.Find(
+                                    keys: inputRowPrimaryKey
+                                );
                                 if (rowToDelete != null)
                                 {
                                     rowToDelete.Delete();
@@ -1072,26 +1125,26 @@ public class WorkflowEngine : IDisposable
                     default:
                     {
                         throw new ArgumentOutOfRangeException(
-                            "method",
-                            method,
-                            "Unsupported merge method."
+                            paramName: "method",
+                            actualValue: method,
+                            message: "Unsupported merge method."
                         );
                     }
                 }
             }
             else if (inputXmlDoc != null)
             {
-                ContextStore contextStore = GetContextStore(resultContextKey);
+                ContextStore contextStore = GetContextStore(key: resultContextKey);
                 if (contextStore.DataType == OrigamDataType.String)
                 {
-                    RuleEngine.SetContext(resultContextKey, inputXmlDoc.Xml.InnerText);
+                    RuleEngine.SetContext(key: resultContextKey, value: inputXmlDoc.Xml.InnerText);
                 }
                 else
                 {
                     if (resultXmlDoc == null)
                     {
                         throw new Exception(
-                            "Cannot merge data into a context, which is not XML type. Context: "
+                            message: "Cannot merge data into a context, which is not XML type. Context: "
                                 + contextName
                                 + ", type: "
                                 + (
@@ -1113,7 +1166,10 @@ public class WorkflowEngine : IDisposable
                                     .DataSet
                                     .EnforceConstraints;
                                 resultDataDoc.DataSet.EnforceConstraints = false;
-                                resultDataDoc.AppendChild(inputXmlDoc.Xml.DocumentElement, true);
+                                resultDataDoc.AppendChild(
+                                    documentElement: inputXmlDoc.Xml.DocumentElement,
+                                    deep: true
+                                );
                                 try
                                 {
                                     resultDataDoc.DataSet.EnforceConstraints =
@@ -1122,18 +1178,20 @@ public class WorkflowEngine : IDisposable
                                 catch (Exception ex)
                                 {
                                     throw new Exception(
-                                        DebugClass.ListRowErrors(resultDataDoc.DataSet),
-                                        ex
+                                        message: DebugClass.ListRowErrors(
+                                            dataSet: resultDataDoc.DataSet
+                                        ),
+                                        innerException: ex
                                     );
                                 }
                             }
                             else
                             {
                                 XmlNode newDoc = resultXmlDoc.Xml.ImportNode(
-                                    inputXmlDoc.Xml.DocumentElement,
-                                    true
+                                    node: inputXmlDoc.Xml.DocumentElement,
+                                    deep: true
                                 );
-                                resultXmlDoc.Xml.AppendChild(newDoc);
+                                resultXmlDoc.Xml.AppendChild(newChild: newDoc);
                             }
                         }
                         else
@@ -1143,7 +1201,7 @@ public class WorkflowEngine : IDisposable
                             {
                                 if (node is not XmlDeclaration)
                                 {
-                                    resultXmlDoc.DocumentElementAppendChild(node);
+                                    resultXmlDoc.DocumentElementAppendChild(node: node);
                                 }
                             }
                         }
@@ -1154,7 +1212,7 @@ public class WorkflowEngine : IDisposable
             {
                 // Web Service support - they send XML as string
                 changed = true;
-                var resultXml = RuleEngine.GetContext(resultContextKey) as IXmlContainer;
+                var resultXml = RuleEngine.GetContext(key: resultContextKey) as IXmlContainer;
                 var xmlDataDoc = resultXml as IDataDocument;
                 bool previousEnforceConstraints = false;
                 if (xmlDataDoc != null)
@@ -1165,25 +1223,32 @@ public class WorkflowEngine : IDisposable
                 var inputString = inputContext as string;
                 if ((resultXml != null) && (inputString != null))
                 {
-                    resultXml.LoadXml(inputString);
+                    resultXml.LoadXml(xmlString: inputString);
                     if (xmlDataDoc != null)
                     {
                         // set default values (loading xml will not set them automatically)
-                        SetDataSetDefaultValues(xmlDataDoc.DataSet);
+                        SetDataSetDefaultValues(dataSet: xmlDataDoc.DataSet);
                         try
                         {
                             xmlDataDoc.DataSet.EnforceConstraints = previousEnforceConstraints;
                         }
                         catch (Exception ex)
                         {
-                            throw new Exception(DebugClass.ListRowErrors(xmlDataDoc.DataSet), ex);
+                            throw new Exception(
+                                message: DebugClass.ListRowErrors(dataSet: xmlDataDoc.DataSet),
+                                innerException: ex
+                            );
                         }
                         object profileId = SecurityManager.CurrentUserProfile().Id;
                         foreach (DataTable table in xmlDataDoc.DataSet.Tables)
                         {
                             foreach (DataRow row in table.Rows)
                             {
-                                DatasetTools.UpdateOrigamSystemColumns(row, true, profileId);
+                                DatasetTools.UpdateOrigamSystemColumns(
+                                    row: row,
+                                    isNew: true,
+                                    profileId: profileId
+                                );
                             }
                         }
                     }
@@ -1191,63 +1256,63 @@ public class WorkflowEngine : IDisposable
                 // everything else (simple data types) - we just copy the value
                 else
                 {
-                    OrigamDataType contextType = ContextStoreType(resultContextKey);
+                    OrigamDataType contextType = ContextStoreType(key: resultContextKey);
                     RuleEngine.ConvertStringValueToContextValue(
-                        contextType,
-                        inputString,
-                        ref inputContext
+                        origamDataType: contextType,
+                        inputString: inputString,
+                        contextValue: ref inputContext
                     );
-                    RuleEngine.SetContext(resultContextKey, inputContext);
+                    RuleEngine.SetContext(key: resultContextKey, value: inputContext);
                 }
             }
-            if ((step != null) && IsTrace(step))
+            if ((step != null) && IsTrace(workflowStep: step))
             {
                 tracingService.TraceStep(
                     workflowInstanceId: WorkflowInstanceId,
                     stepPath: step.Path,
-                    stepId: (Guid)step.PrimaryKey["Id"],
+                    stepId: (Guid)step.PrimaryKey[key: "Id"],
                     category: "Merge Context",
                     subCategory: "Result",
                     remark: contextName,
                     data1: changed
-                        ? ContextData(RuleEngine.GetContext(resultContextKey))
+                        ? ContextData(context: RuleEngine.GetContext(key: resultContextKey))
                         : "-- no change --",
                     data2: null,
                     message: null
                 );
             }
-            DataStructureRuleSet ruleSet = ContextStoreRuleSet(resultContextKey);
+            DataStructureRuleSet ruleSet = ContextStoreRuleSet(key: resultContextKey);
             if (
                 changed
                 && (ruleSet != null)
                 && step is (null or IWorkflowTask or CheckRuleStep) and not UIFormTask
             )
             {
-                ProcessRulesTimed(resultContextKey, ruleSet, step);
-                if ((step != null) && IsTrace(step))
+                ProcessRulesTimed(resultContextKey: resultContextKey, ruleSet: ruleSet, step: step);
+                if ((step != null) && IsTrace(workflowStep: step))
                 {
                     tracingService.TraceStep(
                         workflowInstanceId: WorkflowInstanceId,
                         stepPath: step.Path,
-                        stepId: (Guid)step.PrimaryKey["Id"],
+                        stepId: (Guid)step.PrimaryKey[key: "Id"],
                         category: "Rule Processing",
                         subCategory: "Result",
                         remark: contextName,
-                        data1: ContextData(RuleEngine.GetContext(resultContextKey)),
+                        data1: ContextData(context: RuleEngine.GetContext(key: resultContextKey)),
                         data2: null,
                         message: null
                     );
                 }
-                if ((step == null) && IsTrace(WorkflowBlock))
+                if ((step == null) && IsTrace(workflowStep: WorkflowBlock))
                 {
                     tracingService.TraceStep(
                         workflowInstanceId: WorkflowInstanceId,
                         stepPath: WorkflowBlock.Path,
-                        stepId: (Guid)WorkflowBlock.PrimaryKey["Id"],
+                        stepId: (Guid)WorkflowBlock.PrimaryKey[key: "Id"],
                         category: "Rule Processing",
                         subCategory: "Result",
                         remark: contextName,
-                        data1: ContextData(RuleEngine.GetContext(resultContextKey)),
+                        data1: ContextData(context: RuleEngine.GetContext(key: resultContextKey)),
                         data2: null,
                         message: null
                     );
@@ -1263,7 +1328,7 @@ public class WorkflowEngine : IDisposable
             }
             string inputString = inputContext as string ?? "";
             throw new Exception(
-                "Merge context '"
+                message: "Merge context '"
                     + contextName
                     + "'"
                     + stepNameLog
@@ -1271,7 +1336,7 @@ public class WorkflowEngine : IDisposable
                     + inputString
                     + ". Original exception message: "
                     + ex.Message,
-                ex
+                innerException: ex
             );
         }
         if (log.IsInfoEnabled)
@@ -1281,7 +1346,7 @@ public class WorkflowEngine : IDisposable
             {
                 stepNameLog = ", Step '" + step.Path + "'";
             }
-            log.Info("Finished merging context '" + contextName + "'" + stepNameLog);
+            log.Info(message: "Finished merging context '" + contextName + "'" + stepNameLog);
         }
         return changed;
     }
@@ -1297,10 +1362,10 @@ public class WorkflowEngine : IDisposable
                     if (
                         !column.AllowDBNull
                         && (column.DefaultValue != null)
-                        && (row[column] == DBNull.Value)
+                        && (row[column: column] == DBNull.Value)
                     )
                     {
-                        row[column] = column.DefaultValue;
+                        row[column: column] = column.DefaultValue;
                     }
                 }
             }
@@ -1317,7 +1382,7 @@ public class WorkflowEngine : IDisposable
             action: () =>
             {
                 ruleEngine.ProcessRules(
-                    data: RuleEngine.GetContext(resultContextKey) as IDataDocument,
+                    data: RuleEngine.GetContext(key: resultContextKey) as IDataDocument,
                     ruleSet: ruleSet,
                     contextRow: null
                 );
@@ -1334,10 +1399,10 @@ public class WorkflowEngine : IDisposable
             case IXmlContainer xmlContainer:
             {
                 var stringBuilder = new StringBuilder();
-                var stringWriter = new StringWriter(stringBuilder);
-                var xmlTextWriter = new XmlTextWriter(stringWriter);
+                var stringWriter = new StringWriter(sb: stringBuilder);
+                var xmlTextWriter = new XmlTextWriter(w: stringWriter);
                 xmlTextWriter.Formatting = Formatting.Indented;
-                xmlContainer.Xml.WriteTo(xmlTextWriter);
+                xmlContainer.Xml.WriteTo(w: xmlTextWriter);
                 xmlTextWriter.Close();
                 stringWriter.Close();
                 return stringBuilder.ToString();
@@ -1370,10 +1435,10 @@ public class WorkflowEngine : IDisposable
             return task.Name + append;
         }
         string documentation = documentationService.GetDocumentation(
-            (Guid)task.PrimaryKey["Id"],
-            DocumentationType.USER_WFSTEP_DESCRIPTION
+            schemaItemId: (Guid)task.PrimaryKey[key: "Id"],
+            docType: DocumentationType.USER_WFSTEP_DESCRIPTION
         );
-        if (string.IsNullOrEmpty(documentation))
+        if (string.IsNullOrEmpty(value: documentation))
         {
             documentation = task.Name;
         }
@@ -1402,16 +1467,16 @@ public class WorkflowEngine : IDisposable
                     if (currentModelStep.ValidationRuleContextStore == null)
                     {
                         throw new NullReferenceException(
-                            $"End Rule Context Store is not set. Task '{task?.Name}'"
+                            message: $"End Rule Context Store is not set. Task '{task?.Name}'"
                         );
                     }
                     object validationRuleStore = RuleEngine.GetContext(
-                        currentModelStep.ValidationRuleContextStore
+                        contextStore: currentModelStep.ValidationRuleContextStore
                     );
                     if (
                         (task != null)
                         && task.OutputContextStore.PrimaryKey.Equals(
-                            task.ValidationRuleContextStore.PrimaryKey
+                            obj: task.ValidationRuleContextStore.PrimaryKey
                         )
                     )
                     {
@@ -1420,9 +1485,9 @@ public class WorkflowEngine : IDisposable
                     try
                     {
                         EvaluateEndRuleTimed(
-                            currentModelStep.ValidationRule,
-                            validationRuleStore,
-                            currentModelStep
+                            rule: currentModelStep.ValidationRule,
+                            data: validationRuleStore,
+                            step: currentModelStep
                         );
                     }
                     catch (RuleException ruleException)
@@ -1441,7 +1506,10 @@ public class WorkflowEngine : IDisposable
                     )
                     {
                         throw new NullReferenceException(
-                            ResourceUtils.GetString("ErrorNoOutputContext", task.Name)
+                            message: ResourceUtils.GetString(
+                                key: "ErrorNoOutputContext",
+                                args: task.Name
+                            )
                         );
                     }
                     // nothing has happened after evaluating end rule, we process the results
@@ -1460,11 +1528,11 @@ public class WorkflowEngine : IDisposable
                             action: () =>
                             {
                                 MergeContext(
-                                    task.OutputContextStore.PrimaryKey,
-                                    engineTask.Result,
-                                    task,
-                                    task.OutputContextStore.Name,
-                                    task.OutputMethod
+                                    resultContextKey: task.OutputContextStore.PrimaryKey,
+                                    inputContext: engineTask.Result,
+                                    step: task,
+                                    contextName: task.OutputContextStore.Name,
+                                    method: task.OutputMethod
                                 );
                             },
                             logEntryType: "Merge",
@@ -1472,11 +1540,11 @@ public class WorkflowEngine : IDisposable
                         );
                     }
                 }
-                SetStepStatus(currentModelStep, WorkflowStepResult.Success);
+                SetStepStatus(step: currentModelStep, status: WorkflowStepResult.Success);
                 if (log.IsDebugEnabled)
                 {
                     log.Debug(
-                        $"{engineTask?.GetType().Name} {currentModelStep?.Name} finished successfully."
+                        message: $"{engineTask?.GetType().Name} {currentModelStep?.Name} finished successfully."
                     );
                 }
                 if (Host.SupportsUI)
@@ -1486,7 +1554,7 @@ public class WorkflowEngine : IDisposable
                         {
                             Host.OnWorkflowUserMessage(
                                 engine: this,
-                                message: GetTaskDescription(currentModelStep),
+                                message: GetTaskDescription(task: currentModelStep),
                                 exception: null,
                                 popup: false
                             );
@@ -1498,12 +1566,12 @@ public class WorkflowEngine : IDisposable
             }
             else
             {
-                HandleStepException(currentModelStep, e.Exception);
+                HandleStepException(step: currentModelStep, exception: e.Exception);
             }
         }
         catch (Exception ex)
         {
-            HandleStepException(currentModelStep, ex);
+            HandleStepException(step: currentModelStep, exception: ex);
         }
         finally
         {
@@ -1524,36 +1592,36 @@ public class WorkflowEngine : IDisposable
         }
         if (log.IsDebugEnabled)
         {
-            log.Debug($"Block '{WorkflowBlock?.Name}' completed");
+            log.Debug(message: $"Block '{WorkflowBlock?.Name}' completed");
             // Show finish screen if this is the root workflow
             if (CallingWorkflow == null)
             {
-                log.Debug("Workflow completed");
+                log.Debug(message: "Workflow completed");
             }
         }
         if (ProfilingTools.IsDebugEnabled)
         {
-            Stopwatch stopwatch = localOperationTimer.Stop(GetHashCode());
-            if (string.IsNullOrEmpty(Name))
+            Stopwatch stopwatch = localOperationTimer.Stop(hash: GetHashCode());
+            if (string.IsNullOrEmpty(value: Name))
             {
-                LogBlockIteration(stopwatch);
+                LogBlockIteration(stopwatch: stopwatch);
             }
             else
             {
-                LogWorkflowEnd(stopwatch);
+                LogWorkflowEnd(stopwatch: stopwatch);
             }
-            OperationTimer.Global.StopAndLog(GetHashCode());
+            OperationTimer.Global.StopAndLog(hash: GetHashCode());
         }
         if ((exception == null) && (caughtException != null))
         {
             if (log.IsDebugEnabled)
             {
-                log.Debug($"Throwing caught exception {caughtException}");
+                log.Debug(message: $"Throwing caught exception {caughtException}");
             }
             WorkflowException = caughtException;
             exception = caughtException;
         }
-        Host.OnWorkflowFinished(this, exception);
+        Host.OnWorkflowFinished(engine: this, exception: exception);
     }
 
     #region IDisposable Members
@@ -1562,7 +1630,7 @@ public class WorkflowEngine : IDisposable
     {
         lock (lockObject)
         {
-            disposeCallStackTraces.Add(Environment.StackTrace);
+            disposeCallStackTraces.Add(item: Environment.StackTrace);
             host = null;
             callingWorkflow = null;
             datasetGenerator = null;

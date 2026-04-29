@@ -49,14 +49,16 @@ public class AuditLogPad : AbstractPadContent
 
         protected override object GetColumnValueAtRow(CurrencyManager source, int rowNum)
         {
-            Guid columnId = (Guid)base.GetColumnValueAtRow(source, rowNum);
+            Guid columnId = (Guid)base.GetColumnValueAtRow(source: source, rowNum: rowNum);
             ISchemaItem item;
             try
             {
                 SchemaService schema = ServiceManager.Services.GetService<SchemaService>();
                 IPersistenceService persistence;
                 persistence = ServiceManager.Services.GetService<IPersistenceService>();
-                item = persistence.SchemaProvider.RetrieveInstance<ISchemaItem>(columnId);
+                item = persistence.SchemaProvider.RetrieveInstance<ISchemaItem>(
+                    instanceId: columnId
+                );
             }
             catch
             {
@@ -69,7 +71,7 @@ public class AuditLogPad : AbstractPadContent
 
             if (item is ICaptionSchemaItem captionItem)
             {
-                if (!string.IsNullOrEmpty(captionItem.Caption))
+                if (!string.IsNullOrEmpty(value: captionItem.Caption))
                 {
                     return captionItem.Caption;
                 }
@@ -91,23 +93,23 @@ public class AuditLogPad : AbstractPadContent
 
         protected override object GetColumnValueAtRow(CurrencyManager source, int rowNum)
         {
-            switch ((int)base.GetColumnValueAtRow(source, rowNum))
+            switch ((int)base.GetColumnValueAtRow(source: source, rowNum: rowNum))
             {
                 case 4:
                 {
-                    return ResourceUtils.GetString("New");
+                    return ResourceUtils.GetString(key: "New");
                 }
                 case 8:
                 {
-                    return ResourceUtils.GetString("Deleted");
+                    return ResourceUtils.GetString(key: "Deleted");
                 }
                 case 16:
                 {
-                    return ResourceUtils.GetString("Change");
+                    return ResourceUtils.GetString(key: "Change");
                 }
                 case 32:
                 {
-                    return ResourceUtils.GetString("Deduplication");
+                    return ResourceUtils.GetString(key: "Deduplication");
                 }
                 default:
                 {
@@ -127,7 +129,7 @@ public class AuditLogPad : AbstractPadContent
 
         protected override object GetColumnValueAtRow(CurrencyManager source, int rowNum)
         {
-            object o = base.GetColumnValueAtRow(source, rowNum);
+            object o = base.GetColumnValueAtRow(source: source, rowNum: rowNum);
             if (o == DBNull.Value)
             {
                 return null;
@@ -137,7 +139,8 @@ public class AuditLogPad : AbstractPadContent
             try
             {
                 UserProfile profile =
-                    (profileProvider as IOrigamProfileProvider).GetProfile((Guid)o) as UserProfile;
+                    (profileProvider as IOrigamProfileProvider).GetProfile(profileId: (Guid)o)
+                    as UserProfile;
                 return profile.FullName;
             }
             catch (Exception ex)
@@ -149,7 +152,7 @@ public class AuditLogPad : AbstractPadContent
         protected override void Dispose(bool disposing)
         {
             if (disposing) { }
-            base.Dispose(disposing);
+            base.Dispose(disposing: disposing);
         }
     }
 
@@ -340,8 +343,8 @@ public class AuditLogPad : AbstractPadContent
     {
         try
         {
-            DataSet result = AuditLogDA.RetrieveLog(entityId, recordId);
-            _dataset.Merge(result);
+            DataSet result = AuditLogDA.RetrieveLog(entityId: entityId, recordId: recordId);
+            _dataset.Merge(dataSet: result);
         }
         catch
         {
@@ -359,7 +362,7 @@ public class AuditLogPad : AbstractPadContent
         {
             try
             {
-                return _dataset.AuditRecord.DefaultView[dataGrid1.CurrentRowIndex].Row;
+                return _dataset.AuditRecord.DefaultView[recordIndex: dataGrid1.CurrentRowIndex].Row;
             }
             catch
             {
@@ -398,7 +401,7 @@ public class AuditLogPad : AbstractPadContent
         try
         {
             this.dataGrid1.DataSource = null;
-            RetrieveLog(this.ParentEntityId, this.ParentId);
+            RetrieveLog(entityId: this.ParentEntityId, recordId: this.ParentId);
             _dataset.AuditRecord.DefaultView.AllowNew = false;
             _dataset.AuditRecord.DefaultView.AllowDelete = false;
             _dataset.AuditRecord.DefaultView.Sort = "RecordCreated DESC";
@@ -430,6 +433,6 @@ public class AuditLogPad : AbstractPadContent
                 _dataset = null;
             }
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
 }

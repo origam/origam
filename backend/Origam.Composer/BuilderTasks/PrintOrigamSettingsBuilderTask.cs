@@ -42,14 +42,14 @@ public class PrintOrigamSettingsBuilderTask(IConnectionStringService connectionS
         {
             Name = project.Name,
             TitleText = project.Name,
-            DataConnectionString = connectionStringService.GetConnectionString(project),
+            DataConnectionString = connectionStringService.GetConnectionString(project: project),
             DataDataService = project.GetDataDataService,
             SchemaDataService = project.GetDataDataService,
             ModelSourceControlLocation = project.ModelFolder,
         };
 
         var origamSettingsCollection = new OrigamSettingsCollection { _setting };
-        PrintToConsole(_setting);
+        PrintToConsole(settings: _setting);
     }
 
     private void PrintToConsole(OrigamSettings settings)
@@ -58,13 +58,13 @@ public class PrintOrigamSettingsBuilderTask(IConnectionStringService connectionS
         XPathNavigator nav = xmlDocument.CreateNavigator();
         using (XmlWriter writer = nav.AppendChild())
         {
-            var xmlSerializer = new XmlSerializer(typeof(OrigamSettings));
-            xmlSerializer.Serialize(writer, settings);
+            var xmlSerializer = new XmlSerializer(type: typeof(OrigamSettings));
+            xmlSerializer.Serialize(xmlWriter: writer, o: settings);
         }
 
-        AnsiConsole.WriteLine("----------");
-        AnsiConsole.WriteLine(xmlDocument.InnerXml);
-        AnsiConsole.WriteLine("----------");
+        AnsiConsole.WriteLine(value: "----------");
+        AnsiConsole.WriteLine(value: xmlDocument.InnerXml);
+        AnsiConsole.WriteLine(value: "----------");
     }
 
     public void Rollback(Project project) { }

@@ -49,29 +49,34 @@ class FileDownloadPageRequestHandler : AbstractPageRequestHandler
         FileDownloadPage fdPage = page as FileDownloadPage;
         QueryParameterCollection qparams = new QueryParameterCollection();
         Hashtable transformParams = new Hashtable();
-        Hashtable preprocessorParams = GetPreprocessorParameters(request);
+        Hashtable preprocessorParams = GetPreprocessorParameters(request: request);
         // convert parameters to QueryParameterCollection for data service and hashtable for transformation service
         foreach (KeyValuePair<string, object> p in parameters)
         {
-            qparams.Add(new QueryParameter(p.Key, p.Value));
-            transformParams.Add(p.Key, p.Value);
+            qparams.Add(value: new QueryParameter(_parameterName: p.Key, value: p.Value));
+            transformParams.Add(key: p.Key, value: p.Value);
         }
         // copy also the preprocessor parameters to the transformation parameters
         foreach (DictionaryEntry rp in preprocessorParams)
         {
-            transformParams.Add(rp.Key, rp.Value);
+            transformParams.Add(key: rp.Key, value: rp.Value);
         }
-        RuleEngine ruleEngine = RuleEngine.Create(null, null);
-        Validate(null, transformParams, ruleEngine, fdPage.InputValidationRule);
-        DataSet data = CoreServices.DataService.Instance.LoadData(
-            fdPage.DataStructureId,
-            fdPage.DataStructureMethodId,
-            Guid.Empty,
-            fdPage.DataStructureSortSetId,
-            null,
-            qparams
+        RuleEngine ruleEngine = RuleEngine.Create(contextStores: null, transactionId: null);
+        Validate(
+            data: null,
+            transformParams: transformParams,
+            ruleEngine: ruleEngine,
+            validation: fdPage.InputValidationRule
         );
-        DataTable table = data.Tables[0];
+        DataSet data = CoreServices.DataService.Instance.LoadData(
+            dataStructureId: fdPage.DataStructureId,
+            methodId: fdPage.DataStructureMethodId,
+            defaultSetId: Guid.Empty,
+            sortSetId: fdPage.DataStructureSortSetId,
+            transactionId: null,
+            parameters: qparams
+        );
+        DataTable table = data.Tables[index: 0];
         bool notFound = false;
         byte[] bytes = null;
         if (table.Rows.Count == 0)
@@ -81,10 +86,10 @@ class FileDownloadPageRequestHandler : AbstractPageRequestHandler
 
         if (!notFound)
         {
-            bytes = table.Rows[0][fdPage.ContentField] as byte[];
+            bytes = table.Rows[index: 0][columnName: fdPage.ContentField] as byte[];
             if (bytes == null)
             {
-                throw new Exception("Field is not a byte array.");
+                throw new Exception(message: "Field is not a byte array.");
             }
             if (bytes.LongLength == 0)
             {
@@ -99,12 +104,12 @@ class FileDownloadPageRequestHandler : AbstractPageRequestHandler
                 contentType = fdPage.MimeType;
             }
             httpTools.WriteFile(
-                request,
-                response,
-                bytes,
-                (string)table.Rows[0][fdPage.FileNameField],
-                true,
-                contentType
+                request: request,
+                response: response,
+                file: bytes,
+                fileName: (string)table.Rows[index: 0][columnName: fdPage.FileNameField],
+                isPreview: true,
+                overrideContentType: contentType
             );
         }
         else

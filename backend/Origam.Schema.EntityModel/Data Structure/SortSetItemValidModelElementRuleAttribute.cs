@@ -30,7 +30,7 @@ namespace Origam.Schema.EntityModel;
 /// provided that AllFields flag on datastructure entity is set.
 /// </summary>
 [AttributeUsage(
-    AttributeTargets.Property | AttributeTargets.Field,
+    validOn: AttributeTargets.Property | AttributeTargets.Field,
     AllowMultiple = false,
     Inherited = true
 )]
@@ -51,7 +51,7 @@ public class SortSetItemValidModelElementRuleAttribute : AbstractModelElementRul
         // if there is a column from "FieldName" property
         foreach (
             var col in sortSetItem.Entity.ChildItemsByType<DataStructureColumn>(
-                DataStructureColumn.CategoryConst
+                itemType: DataStructureColumn.CategoryConst
             )
         )
         {
@@ -68,12 +68,15 @@ public class SortSetItemValidModelElementRuleAttribute : AbstractModelElementRul
             }
         }
         return new NullReferenceException(
-            ResourceUtils.GetString("ErrorSortSetItemInvalid", sortSetItem.FieldName)
+            message: ResourceUtils.GetString(
+                key: "ErrorSortSetItemInvalid",
+                args: sortSetItem.FieldName
+            )
         );
     }
 
     public override Exception CheckRule(object instance, string memberName)
     {
-        return CheckRule(instance);
+        return CheckRule(instance: instance);
     }
 }

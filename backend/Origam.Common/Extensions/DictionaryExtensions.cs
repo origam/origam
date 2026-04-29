@@ -43,13 +43,13 @@ public static class DictionaryExtensions
         if (duplicatevaluesExist)
         {
             throw new ArgumentException(
-                "Dictionary cannot be inverted because it contains duplicate values."
+                message: "Dictionary cannot be inverted because it contains duplicate values."
             );
         }
         var invertedDict = new Dictionary<TValue, TKey>();
         foreach (var entry in source)
         {
-            invertedDict[entry.Value] = entry.Key;
+            invertedDict[key: entry.Value] = entry.Key;
         }
         return invertedDict;
     }
@@ -60,12 +60,12 @@ public static class DictionaryExtensions
     )
         where V : class
     {
-        List<KeyValuePair<K, V>> entriesToRemove = dict.Where(entry =>
-                valueSelectorFunc.Invoke(entry.Value)
+        List<KeyValuePair<K, V>> entriesToRemove = dict.Where(predicate: entry =>
+                valueSelectorFunc.Invoke(arg: entry.Value)
             )
             .ToList();
 
-        entriesToRemove.ForEach(entryToRemove => dict.Remove(entryToRemove));
+        entriesToRemove.ForEach(action: entryToRemove => dict.Remove(item: entryToRemove));
         return entriesToRemove;
     }
 
@@ -75,32 +75,32 @@ public static class DictionaryExtensions
     )
         where V : class
     {
-        List<KeyValuePair<K, V>> entriesToRemove = dict.Where(entry =>
-                keySelectorFunc.Invoke(entry.Key)
+        List<KeyValuePair<K, V>> entriesToRemove = dict.Where(predicate: entry =>
+                keySelectorFunc.Invoke(arg: entry.Key)
             )
             .ToList();
 
-        entriesToRemove.ForEach(entryToRemove => dict.Remove(entryToRemove));
+        entriesToRemove.ForEach(action: entryToRemove => dict.Remove(item: entryToRemove));
         return entriesToRemove;
     }
 
     public static void RemoveIfPresent<K, V>(this IDictionary<K, V> dict, K key)
     {
-        if (dict.ContainsKey(key))
+        if (dict.ContainsKey(key: key))
         {
-            dict.Remove(key);
+            dict.Remove(key: key);
         }
     }
 
     public static void AddOrReplace<K, V>(this Dictionary<K, V> dict, K key, V value)
     {
-        if (dict.ContainsKey(key))
+        if (dict.ContainsKey(key: key))
         {
-            dict[key] = value;
+            dict[key: key] = value;
         }
         else
         {
-            dict.Add(key, value);
+            dict.Add(key: key, value: value);
         }
     }
 
@@ -115,7 +115,7 @@ public static class DictionaryExtensions
         }
         foreach (var keyValuePair in otherDict)
         {
-            dict[keyValuePair.Key] = keyValuePair.Value;
+            dict[key: keyValuePair.Key] = keyValuePair.Value;
         }
     }
 
@@ -123,10 +123,10 @@ public static class DictionaryExtensions
     {
         if (inLine)
         {
-            return dict.Select(x => x.Key + ": " + x.Value).Aggregate("{", (x, y) => $"{x}, {y}")
-                + "}";
+            return dict.Select(selector: x => x.Key + ": " + x.Value)
+                    .Aggregate(seed: "{", func: (x, y) => $"{x}, {y}") + "}";
         }
-        return dict.Select(x => x.Key + ": " + x.Value).Aggregate("\t\t", (x, y) => $"{x}\n\t\t{y}")
-            + "\n";
+        return dict.Select(selector: x => x.Key + ": " + x.Value)
+                .Aggregate(seed: "\t\t", func: (x, y) => $"{x}\n\t\t{y}") + "\n";
     }
 }

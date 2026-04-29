@@ -29,10 +29,14 @@ using Origam.Schema.EntityModel;
 
 namespace Origam.Schema.GuiModel;
 
-[SchemaItemDescription("Parameter Mapping", "Parameter Mappings", "file-mapping.png")]
-[HelpTopic("Parameter+Mapping")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.1")]
+[SchemaItemDescription(
+    name: "Parameter Mapping",
+    folderName: "Parameter Mappings",
+    iconName: "file-mapping.png"
+)]
+[HelpTopic(topic: "Parameter+Mapping")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.1")]
 public class PageParameterMapping : AbstractSchemaItem
 {
     public const string CategoryConst = "PageParameterMapping";
@@ -44,13 +48,13 @@ public class PageParameterMapping : AbstractSchemaItem
     }
 
     public PageParameterMapping(Guid schemaExtensionId)
-        : base(schemaExtensionId)
+        : base(extensionId: schemaExtensionId)
     {
         Init();
     }
 
     public PageParameterMapping(Key primaryKey)
-        : base(primaryKey)
+        : base(primaryKey: primaryKey)
     {
         Init();
     }
@@ -61,69 +65,72 @@ public class PageParameterMapping : AbstractSchemaItem
     {
         if (DefaultValue != null)
         {
-            dependencies.Add(DefaultValue);
+            dependencies.Add(item: DefaultValue);
         }
     }
 
     #region Properties
-    [Category("Mapping")]
+    [Category(category: "Mapping")]
     [Description(
-        "Name of url query string parameter, e.g. in case http://my-api/my-page?searchstring=value the mapped parametr should be 'searchstring'"
+        description: "Name of url query string parameter, e.g. in case http://my-api/my-page?searchstring=value the mapped parametr should be 'searchstring'"
     )]
-    [XmlAttribute("mappedParameter")]
+    [XmlAttribute(attributeName: "mappedParameter")]
     public string MappedParameter { get; set; } = "";
 
-    [Category("Mapping")]
+    [Category(category: "Mapping")]
     [Description(
-        "Name of a datastructure entity in a mapped context "
+        description: "Name of a datastructure entity in a mapped context "
             + "store's datastructure. If defined, the incoming json body is "
             + "wrapped by a new object with the given name. So that way, the"
             + " original input json object is expected as just datastructure "
             + "entity object itself or a list of datastructure entity objects"
             + " on json top level."
     )]
-    [DefaultValue("")]
-    [XmlAttribute("entityName")]
+    [DefaultValue(value: "")]
+    [XmlAttribute(attributeName: "entityName")]
     public string DatastructureEntityName { get; set; } = "";
     public Guid DataConstantId;
 
-    [Category("Mapping")]
-    [TypeConverter(typeof(DataConstantConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [XmlReference("defaultValue", "DataConstantId")]
+    [Category(category: "Mapping")]
+    [TypeConverter(type: typeof(DataConstantConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [XmlReference(attributeName: "defaultValue", idField: "DataConstantId")]
     public DataConstant DefaultValue
     {
         get =>
             (ISchemaItem)
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(this.DataConstantId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: this.DataConstantId)
                 ) as DataConstant;
-        set { this.DataConstantId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]); }
+        set
+        {
+            this.DataConstantId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]);
+        }
     }
 
-    [Category("Lists")]
-    [DefaultValue(false)]
-    [XmlAttribute("isList")]
+    [Category(category: "Lists")]
+    [DefaultValue(value: false)]
+    [XmlAttribute(attributeName: "isList")]
     public bool IsList { get; set; } = false;
     public Guid SeparatorDataConstantId;
 
-    [Category("Lists")]
-    [TypeConverter(typeof(DataConstantConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [XmlReference("listSeparator", "SeparatorDataConstantId")]
+    [Category(category: "Lists")]
+    [TypeConverter(type: typeof(DataConstantConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [XmlReference(attributeName: "listSeparator", idField: "SeparatorDataConstantId")]
     public DataConstant ListSeparator
     {
         get =>
             (ISchemaItem)
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(this.SeparatorDataConstantId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: this.SeparatorDataConstantId)
                 ) as DataConstant;
         set
         {
             this.SeparatorDataConstantId = (
-                value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]
+                value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]
             );
         }
     }

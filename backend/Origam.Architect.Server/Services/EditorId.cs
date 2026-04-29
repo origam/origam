@@ -29,43 +29,43 @@ public class EditorId
 
     public static EditorId Default(Guid schemaItemId)
     {
-        return new EditorId(schemaItemId, EditorType.Default);
+        return new EditorId(schemaItemId: schemaItemId, editorType: EditorType.Default);
     }
 
     public static EditorId Documentation(Guid schemaItemId)
     {
-        return new EditorId(schemaItemId, EditorType.DocumentationEditor);
+        return new EditorId(schemaItemId: schemaItemId, editorType: EditorType.DocumentationEditor);
     }
 
     public EditorId(string editorId)
     {
-        if (string.IsNullOrEmpty(editorId))
+        if (string.IsNullOrEmpty(value: editorId))
         {
-            throw new ArgumentException($"Could not parse {editorId} to editor Id");
+            throw new ArgumentException(message: $"Could not parse {editorId} to editor Id");
         }
 
-        string[] strings = editorId.Split("_");
+        string[] strings = editorId.Split(separator: "_");
         if (strings.Length != 2)
         {
-            throw new ArgumentException($"Could not parse {editorId} to editor Id");
+            throw new ArgumentException(message: $"Could not parse {editorId} to editor Id");
         }
 
-        if (Enum.TryParse(strings[0], out EditorType editorType))
+        if (Enum.TryParse(value: strings[0], result: out EditorType editorType))
         {
             Type = editorType;
         }
         else
         {
-            throw new ArgumentException($"Could not parse {editorId} to editor Id");
+            throw new ArgumentException(message: $"Could not parse {editorId} to editor Id");
         }
 
-        if (Guid.TryParse(strings[1], out Guid parsedId))
+        if (Guid.TryParse(input: strings[1], result: out Guid parsedId))
         {
             SchemaItemId = parsedId;
         }
         else
         {
-            throw new ArgumentException($"Could not parse {editorId} to editor Id");
+            throw new ArgumentException(message: $"Could not parse {editorId} to editor Id");
         }
 
         id = editorId;
@@ -89,7 +89,7 @@ public class EditorId
         {
             return false;
         }
-        if (ReferenceEquals(this, obj))
+        if (ReferenceEquals(objA: this, objB: obj))
         {
             return true;
         }
@@ -97,7 +97,7 @@ public class EditorId
         {
             return false;
         }
-        return Equals((EditorId)obj);
+        return Equals(other: (EditorId)obj);
     }
 
     public override int GetHashCode()

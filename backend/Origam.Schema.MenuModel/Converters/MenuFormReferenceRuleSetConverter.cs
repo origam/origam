@@ -46,15 +46,15 @@ public class MenuFormReferenceRuleSetConverter : TypeConverter
     {
         FormReferenceMenuItem currentItem = context.Instance as FormReferenceMenuItem;
         List<DataStructureRuleSet> ruleSets = currentItem.Screen.DataStructure.RuleSets;
-        var array = new List<DataStructureRuleSet>(ruleSets.Count);
+        var array = new List<DataStructureRuleSet>(capacity: ruleSets.Count);
         foreach (var item in ruleSets)
         {
-            array.Add(item);
+            array.Add(item: item);
         }
-        array.Add(null);
+        array.Add(item: null);
 
         array.Sort();
-        return new StandardValuesCollection(array);
+        return new StandardValuesCollection(values: array);
     }
 
     public override bool CanConvertFrom(
@@ -67,7 +67,7 @@ public class MenuFormReferenceRuleSetConverter : TypeConverter
             return true;
         }
 
-        return base.CanConvertFrom(context, sourceType);
+        return base.CanConvertFrom(context: context, sourceType: sourceType);
     }
 
     public override object ConvertFrom(
@@ -90,6 +90,6 @@ public class MenuFormReferenceRuleSetConverter : TypeConverter
             return null;
         }
 
-        return base.ConvertFrom(context, culture, value);
+        return base.ConvertFrom(context: context, culture: culture, value: value);
     }
 }

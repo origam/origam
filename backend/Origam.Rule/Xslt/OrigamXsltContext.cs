@@ -39,27 +39,27 @@ public class OrigamXsltContext : XsltContext
 
     public static OrigamXsltContext Create(XmlNameTable nameTable, string transactionId)
     {
-        var functionContainers = XsltFunctionContainerFactory.Create(transactionId);
-        return new OrigamXsltContext(nameTable, functionContainers);
+        var functionContainers = XsltFunctionContainerFactory.Create(transactionId: transactionId);
+        return new OrigamXsltContext(nt: nameTable, xsltFunctionsDefinitions: functionContainers);
     }
 
     public OrigamXsltContext(
         XmlNameTable nt,
         IEnumerable<XsltFunctionsDefinition> xsltFunctionsDefinitions
     )
-        : base((NameTable)nt)
+        : base(table: (NameTable)nt)
     {
-        _exslt = new ExsltContext(nt);
+        _exslt = new ExsltContext(nt: nt);
         _xslFunctionsDict = new Dictionary<string, object>();
         foreach (var xsltFunctionsDefinition in xsltFunctionsDefinitions)
         {
             AddNamespace(
-                xsltFunctionsDefinition.NameSpacePrefix,
-                xsltFunctionsDefinition.NameSpaceUri
+                prefix: xsltFunctionsDefinition.NameSpacePrefix,
+                uri: xsltFunctionsDefinition.NameSpaceUri
             );
             _xslFunctionsDict.Add(
-                xsltFunctionsDefinition.NameSpaceUri,
-                xsltFunctionsDefinition.Container
+                key: xsltFunctionsDefinition.NameSpaceUri,
+                value: xsltFunctionsDefinition.Container
             );
         }
     }
@@ -86,37 +86,44 @@ public class OrigamXsltContext : XsltContext
     )
     {
         object functionContainer;
-        String ns = LookupNamespace(prefix);
+        String ns = LookupNamespace(prefix: prefix);
         if (ns != null)
         {
-            if (_xslFunctionsDict.TryGetValue(ns, out functionContainer))
+            if (_xslFunctionsDict.TryGetValue(key: ns, value: out functionContainer))
             {
                 IXsltContextFunction func = null;
-                func = GetExtensionMethod(ns, name, ArgTypes, functionContainer);
+                func = GetExtensionMethod(
+                    ns: ns,
+                    name: name,
+                    argTypes: ArgTypes,
+                    extension: functionContainer
+                );
                 if (func == null)
                 {
-                    throw new XsltException(String.Format("Unknown Xslt function {0}", name));
+                    throw new XsltException(
+                        message: String.Format(format: "Unknown Xslt function {0}", arg0: name)
+                    );
                 }
                 if (ArgTypes.Length < func.Minargs || func.Maxargs < ArgTypes.Length)
                 {
                     throw new XsltException(
-                        String.Format(
-                            "Function {0} has wrong number of params {1}",
-                            name,
-                            ArgTypes.Length.ToString(CultureInfo.InvariantCulture)
+                        message: String.Format(
+                            format: "Function {0} has wrong number of params {1}",
+                            arg0: name,
+                            arg1: ArgTypes.Length.ToString(provider: CultureInfo.InvariantCulture)
                         )
                     );
                 }
                 return func;
             }
         }
-        if (string.IsNullOrEmpty(prefix))
+        if (string.IsNullOrEmpty(value: prefix))
         {
             throw new Exception(
-                $"Could not resolve xslt function \"{name}\" with namespace prefix \"{prefix}\""
+                message: $"Could not resolve xslt function \"{name}\" with namespace prefix \"{prefix}\""
             );
         }
-        return _exslt.ResolveFunction(prefix, name, ArgTypes);
+        return _exslt.ResolveFunction(prefix: prefix, name: name, ArgTypes: ArgTypes);
     }
 
     public override IXsltContextVariable ResolveVariable(string prefix, string name)
@@ -128,16 +135,19 @@ public class OrigamXsltContext : XsltContext
     private bool Equals(string a, string b, bool ignoreCase)
     {
         return string.Compare(
-                a,
-                b,
-                ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal
+                strA: a,
+                strB: b,
+                comparisonType: ignoreCase
+                    ? StringComparison.OrdinalIgnoreCase
+                    : StringComparison.Ordinal
             ) == 0;
     }
 
     private string GetNameFromAttribute(MethodInfo method)
     {
         var xsltFunctionAttribute =
-            method.GetCustomAttribute(typeof(XsltFunctionAttribute)) as XsltFunctionAttribute;
+            method.GetCustomAttribute(attributeType: typeof(XsltFunctionAttribute))
+            as XsltFunctionAttribute;
         return xsltFunctionAttribute?.XsltName;
     }
 
@@ -155,8 +165,12 @@ public class OrigamXsltContext : XsltContext
         for (int i = 0; i < length; i++)
         {
             if (
-                Equals(name, methods[i].Name, ignoreCase)
-                || Equals(name, GetNameFromAttribute(methods[i]), ignoreCase)
+                Equals(a: name, b: methods[i].Name, ignoreCase: ignoreCase)
+                || Equals(
+                    a: name,
+                    b: GetNameFromAttribute(method: methods[i]),
+                    ignoreCase: ignoreCase
+                )
             )
             {
                 if (!publicOnly || methods[i].GetBaseDefinition().IsPublic)
@@ -205,7 +219,7 @@ public class OrigamXsltContext : XsltContext
                 {
                     continue; // Any means we don't know type and can't discriminate by it
                 }
-                XPathResultType actual = GetXPathType(parameters[par].ParameterType);
+                XPathResultType actual = GetXPathType(type: parameters[par].ParameterType);
                 if (
                     actual != required
                     && actual != XPathResultType.Any // actual arg is object and we can pass everithing here.
@@ -235,22 +249,22 @@ public class OrigamXsltContext : XsltContext
     )
     {
         MethodInfo method = FindBestMethod(
-            extension.GetType().GetMethods(bindingFlags), /*ignoreCase:*/
-            false, /*publicOnly:*/
-            true,
-            name,
-            argTypes
+            methods: extension.GetType().GetMethods(bindingAttr: bindingFlags), /*ignoreCase:*/
+            ignoreCase: false, /*publicOnly:*/
+            publicOnly: true,
+            name: name,
+            argTypes: argTypes
         );
         if (method != null)
         {
-            return new FuncExtension(extension, method, null);
+            return new FuncExtension(extension: extension, method: method, permissions: null);
         }
         return null;
     }
 
     public static XPathResultType GetXPathType(Type type)
     {
-        switch (Type.GetTypeCode(type))
+        switch (Type.GetTypeCode(type: type))
         {
             case TypeCode.String:
             {
@@ -263,13 +277,13 @@ public class OrigamXsltContext : XsltContext
             case TypeCode.Object:
             {
                 if (
-                    typeof(XPathNavigator).IsAssignableFrom(type)
-                    || typeof(IXPathNavigable).IsAssignableFrom(type)
+                    typeof(XPathNavigator).IsAssignableFrom(c: type)
+                    || typeof(IXPathNavigable).IsAssignableFrom(c: type)
                 )
                 {
                     return XPathResultType.Navigator;
                 }
-                if (typeof(XPathNodeIterator).IsAssignableFrom(type))
+                if (typeof(XPathNodeIterator).IsAssignableFrom(c: type))
                 {
                     return XPathResultType.NodeSet;
                 }
@@ -297,12 +311,12 @@ public class OrigamXsltContext : XsltContext
 
         public FuncExtension(object extension, MethodInfo method, PermissionSet permissions)
         {
-            System.Diagnostics.Debug.Assert(extension != null);
-            System.Diagnostics.Debug.Assert(method != null);
+            System.Diagnostics.Debug.Assert(condition: extension != null);
+            System.Diagnostics.Debug.Assert(condition: method != null);
             this.extension = extension;
             this.method = method;
             this.permissions = permissions;
-            XPathResultType returnType = GetXPathType(method.ReturnType);
+            XPathResultType returnType = GetXPathType(type: method.ReturnType);
             ParameterInfo[] parameters = method.GetParameters();
             int minArgs = parameters.Length;
             int maxArgs = parameters.Length;
@@ -311,8 +325,8 @@ public class OrigamXsltContext : XsltContext
             bool optionalParams = true; // we allow only last params be optional. Set false on the first non optional.
             for (int i = parameters.Length - 1; 0 <= i; i--)
             { // Revers order is essential: counting optional parameters
-                typeCodes[i] = Type.GetTypeCode(parameters[i].ParameterType);
-                argTypes[i] = GetXPathType(parameters[i].ParameterType);
+                typeCodes[i] = Type.GetTypeCode(type: parameters[i].ParameterType);
+                argTypes[i] = GetXPathType(type: parameters[i].ParameterType);
                 if (optionalParams)
                 {
                     if (parameters[i].IsOptional)
@@ -325,7 +339,12 @@ public class OrigamXsltContext : XsltContext
                     }
                 }
             }
-            base.Init(minArgs, maxArgs, returnType, argTypes);
+            base.Init(
+                minArgs: minArgs,
+                maxArgs: maxArgs,
+                returnType: returnType,
+                argTypes: argTypes
+            );
         }
 
         public override object Invoke(
@@ -335,18 +354,22 @@ public class OrigamXsltContext : XsltContext
         )
         {
             System.Diagnostics.Debug.Assert(
-                args.Length <= this.Minargs,
-                "We cheking this on resolve time"
+                condition: args.Length <= this.Minargs,
+                message: "We cheking this on resolve time"
             );
             for (int i = args.Length - 1; 0 <= i; i--)
             {
-                args[i] = ConvertToXPathType(args[i], this.ArgTypes[i], this.typeCodes[i]);
+                args[i] = ConvertToXPathType(
+                    val: args[i],
+                    xt: this.ArgTypes[i],
+                    typeCode: this.typeCodes[i]
+                );
             }
             if (this.permissions != null)
             {
                 this.permissions.PermitOnly();
             }
-            return method.Invoke(extension, args);
+            return method.Invoke(obj: extension, parameters: args);
         }
     }
 
@@ -366,7 +389,12 @@ public class OrigamXsltContext : XsltContext
             XPathResultType[] argTypes
         )
         {
-            this.Init(minArgs, maxArgs, returnType, argTypes);
+            this.Init(
+                minArgs: minArgs,
+                maxArgs: maxArgs,
+                returnType: returnType,
+                argTypes: argTypes
+            );
         }
 
         protected void Init(
@@ -410,7 +438,7 @@ public class OrigamXsltContext : XsltContext
             XPathNodeIterator it = argument as XPathNodeIterator;
             if (it == null)
             {
-                throw new XsltException("Can't convert to nodeset");
+                throw new XsltException(message: "Can't convert to nodeset");
             }
             return it;
         }
@@ -420,14 +448,14 @@ public class OrigamXsltContext : XsltContext
             XPathNavigator nav = argument as XPathNavigator;
             if (nav == null)
             {
-                throw new XsltException("Can't convert to navigator.");
+                throw new XsltException(message: "Can't convert to navigator.");
             }
             return nav;
         }
 
         private static string IteratorToString(XPathNodeIterator it)
         {
-            System.Diagnostics.Debug.Assert(it != null);
+            System.Diagnostics.Debug.Assert(condition: it != null);
             if (it.MoveNext())
             {
                 return it.Current.Value;
@@ -440,10 +468,10 @@ public class OrigamXsltContext : XsltContext
             XPathNodeIterator it = argument as XPathNodeIterator;
             if (it != null)
             {
-                return IteratorToString(it);
+                return IteratorToString(it: it);
             }
             //return XmlConvert.ToXPathString(argument);
-            return XmlTools.ConvertToString(argument);
+            return XmlTools.ConvertToString(val: argument);
         }
 
         public static bool ToBoolean(object argument)
@@ -451,14 +479,20 @@ public class OrigamXsltContext : XsltContext
             XPathNodeIterator it = argument as XPathNodeIterator;
             if (it != null)
             {
-                return Convert.ToBoolean(IteratorToString(it), CultureInfo.InvariantCulture);
+                return Convert.ToBoolean(
+                    value: IteratorToString(it: it),
+                    provider: CultureInfo.InvariantCulture
+                );
             }
             XPathNavigator nav = argument as XPathNavigator;
             if (nav != null)
             {
-                return Convert.ToBoolean(nav.ToString(), CultureInfo.InvariantCulture);
+                return Convert.ToBoolean(
+                    value: nav.ToString(),
+                    provider: CultureInfo.InvariantCulture
+                );
             }
-            return Convert.ToBoolean(argument, CultureInfo.InvariantCulture);
+            return Convert.ToBoolean(value: argument, provider: CultureInfo.InvariantCulture);
         }
 
         public static double ToNumber(object argument)
@@ -467,21 +501,25 @@ public class OrigamXsltContext : XsltContext
             if (it != null)
             {
                 //return XmlConvert.ToXPathDouble(IteratorToString(it));
-                return XmlConvert.ToDouble(IteratorToString(it));
+                return XmlConvert.ToDouble(s: IteratorToString(it: it));
             }
             XPathNavigator nav = argument as XPathNavigator;
             if (nav != null)
             {
                 //return XmlConvert.ToXPathDouble(nav.ToString());
-                return XmlConvert.ToDouble(nav.ToString());
+                return XmlConvert.ToDouble(s: nav.ToString());
             }
             //return XmlConvert.ToXPathDouble(argument);
-            return XmlConvert.ToDouble(XmlTools.ConvertToString(argument));
+            return XmlConvert.ToDouble(s: XmlTools.ConvertToString(val: argument));
         }
 
         private static object ToNumeric(object argument, TypeCode typeCode)
         {
-            return Convert.ChangeType(ToNumber(argument), typeCode, CultureInfo.InvariantCulture);
+            return Convert.ChangeType(
+                value: ToNumber(argument: argument),
+                typeCode: typeCode,
+                provider: CultureInfo.InvariantCulture
+            );
         }
 
         public static object ConvertToXPathType(object val, XPathResultType xt, TypeCode typeCode)
@@ -494,23 +532,23 @@ public class OrigamXsltContext : XsltContext
                     // Fortunately we have typeCode hare so let's discriminate by typeCode
                     if (typeCode == TypeCode.String)
                     {
-                        return ToString(val);
+                        return ToString(argument: val);
                     }
 
-                    return ToNavigator(val);
+                    return ToNavigator(argument: val);
                 }
 
                 case XPathResultType.Number:
                 {
-                    return ToNumeric(val, typeCode);
+                    return ToNumeric(argument: val, typeCode: typeCode);
                 }
                 case XPathResultType.Boolean:
                 {
-                    return ToBoolean(val);
+                    return ToBoolean(argument: val);
                 }
                 case XPathResultType.NodeSet:
                 {
-                    return ToIterator(val);
+                    return ToIterator(argument: val);
                 }
                 case XPathResultType.Any:
                 case XPathResultType.Error:
@@ -519,7 +557,10 @@ public class OrigamXsltContext : XsltContext
                 }
                 default:
                 {
-                    System.Diagnostics.Debug.Assert(false, "unexpected XPath type");
+                    System.Diagnostics.Debug.Assert(
+                        condition: false,
+                        message: "unexpected XPath type"
+                    );
                     return val;
                 }
             }

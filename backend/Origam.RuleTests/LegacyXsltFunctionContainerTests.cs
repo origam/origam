@@ -28,15 +28,15 @@ namespace Origam.RuleTests;
 [TestFixture]
 class LegacyXsltFunctionContainerTests
 {
-    [TestCase("0000000000{", 2, 0.0)]
-    [TestCase("5545A", 2, 554.51)]
-    [TestCase("45a", 0, 451)]
-    [TestCase("10}", 2, -1.00)]
-    [TestCase("45D", 3, 0.454)]
-    [TestCase("45d", 0, 454.0)]
-    [TestCase("21M", 1, -21.4)]
-    [TestCase("21}", 0, -210.0)]
-    [TestCase("21{", 0, 210.0)]
+    [TestCase(arg1: "0000000000{", arg2: 2, arg3: 0.0)]
+    [TestCase(arg1: "5545A", arg2: 2, arg3: 554.51)]
+    [TestCase(arg1: "45a", arg2: 0, arg3: 451)]
+    [TestCase(arg1: "10}", arg2: 2, arg3: -1.00)]
+    [TestCase(arg1: "45D", arg2: 3, arg3: 0.454)]
+    [TestCase(arg1: "45d", arg2: 0, arg3: 454.0)]
+    [TestCase(arg1: "21M", arg2: 1, arg3: -21.4)]
+    [TestCase(arg1: "21}", arg2: 0, arg3: -210.0)]
+    [TestCase(arg1: "21{", arg2: 0, arg3: 210.0)]
     public void ShouldDecodeSignedOverpunch(
         string signedOverpunchVal,
         int decimalPlaces,
@@ -44,24 +44,30 @@ class LegacyXsltFunctionContainerTests
     )
     {
         var decodedNum = LegacyXsltFunctionContainer.DecodeSignedOverpunch(
-            signedOverpunchVal,
-            decimalPlaces
+            stringToDecode: signedOverpunchVal,
+            decimalPlaces: decimalPlaces
         );
-        Assert.That(decodedNum, Is.EqualTo(expectedNumber).Within(0.000000000000001));
+        Assert.That(
+            actual: decodedNum,
+            expression: Is.EqualTo(expected: expectedNumber).Within(amount: 0.000000000000001)
+        );
     }
 
-    [TestCase("21+", 1)]
-    [TestCase("21535", 2)]
-    [TestCase("dvdb", 1)]
-    [TestCase("dvdbA", 1)]
-    [TestCase("", 0)]
-    [TestCase("1", 0)]
-    [TestCase(null, 1)]
-    [TestCase("45D", 5)]
+    [TestCase(arg1: "21+", arg2: 1)]
+    [TestCase(arg1: "21535", arg2: 2)]
+    [TestCase(arg1: "dvdb", arg2: 1)]
+    [TestCase(arg1: "dvdbA", arg2: 1)]
+    [TestCase(arg1: "", arg2: 0)]
+    [TestCase(arg1: "1", arg2: 0)]
+    [TestCase(arg1: null, arg2: 1)]
+    [TestCase(arg1: "45D", arg2: 5)]
     public void ShouldFailToDecodeSignedOverpunch(string invalidOverpunchVal, int decimalPlaces)
     {
-        Assert.Throws<ArgumentException>(() =>
-            LegacyXsltFunctionContainer.DecodeSignedOverpunch(invalidOverpunchVal, decimalPlaces)
+        Assert.Throws<ArgumentException>(code: () =>
+            LegacyXsltFunctionContainer.DecodeSignedOverpunch(
+                stringToDecode: invalidOverpunchVal,
+                decimalPlaces: decimalPlaces
+            )
         );
     }
 }

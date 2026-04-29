@@ -33,9 +33,13 @@ namespace Origam.Schema.WorkflowModel;
 /// <summary>
 /// Summary description for ContextStore.
 /// </summary>
-[SchemaItemDescription("Input Mapping", "Input Mappings", "input-mapping.png")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(
+    name: "Input Mapping",
+    folderName: "Input Mappings",
+    iconName: "input-mapping.png"
+)]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class WorkQueueClassEntityMapping : AbstractSchemaItem, IComparable
 {
     public const string CategoryConst = "WorkQueueClassEntityMapping";
@@ -44,10 +48,10 @@ public class WorkQueueClassEntityMapping : AbstractSchemaItem, IComparable
         : base() { }
 
     public WorkQueueClassEntityMapping(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public WorkQueueClassEntityMapping(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Overriden ISchemaItem Members
 
@@ -55,14 +59,18 @@ public class WorkQueueClassEntityMapping : AbstractSchemaItem, IComparable
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        XsltDependencyHelper.GetDependencies(this, dependencies, this.XPath);
-        base.GetExtraDependencies(dependencies);
+        XsltDependencyHelper.GetDependencies(
+            item: this,
+            dependencies: dependencies,
+            text: this.XPath
+        );
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override ISchemaItemCollection ChildItems => SchemaItemCollection.Create();
 
     public override bool CanMove(Origam.UI.IBrowserNode2 newNode) =>
-        newNode.GetType().Equals(this.ParentItem.GetType());
+        newNode.GetType().Equals(o: this.ParentItem.GetType());
     #endregion
     #region Properties
     //		public Guid FieldId;
@@ -80,14 +88,14 @@ public class WorkQueueClassEntityMapping : AbstractSchemaItem, IComparable
     //				this.FieldId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
     //			}
     //		}
-    [XmlAttribute("xPath")]
+    [XmlAttribute(attributeName: "xPath")]
     public string XPath { get; set; }
 
-    [XmlAttribute("formatPattern")]
+    [XmlAttribute(attributeName: "formatPattern")]
     public string FormatPattern { get; set; }
 
-    [Category("GUI")]
-    [XmlAttribute("sortOrder")]
+    [Category(category: "GUI")]
+    [XmlAttribute(attributeName: "sortOrder")]
     public int SortOrder { get; set; }
     #endregion
     #region IComparable Members
@@ -96,10 +104,10 @@ public class WorkQueueClassEntityMapping : AbstractSchemaItem, IComparable
         WorkQueueClassEntityMapping compareItem = obj as WorkQueueClassEntityMapping;
         if (compareItem == null)
         {
-            return base.CompareTo(obj);
+            return base.CompareTo(obj: obj);
         }
 
-        return this.SortOrder.CompareTo(compareItem.SortOrder);
+        return this.SortOrder.CompareTo(value: compareItem.SortOrder);
     }
     #endregion
 }

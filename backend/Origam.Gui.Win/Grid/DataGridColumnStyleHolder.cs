@@ -64,9 +64,11 @@ public class DataGridColumnStyleHolder : IComparable
     {
         if (obj is DataGridColumnStyleHolder)
         {
-            return _index.CompareTo((obj as DataGridColumnStyleHolder).Index);
+            return _index.CompareTo(value: (obj as DataGridColumnStyleHolder).Index);
         }
-        throw new ArgumentException(ResourceUtils.GetString("ErrorNotColumnStyleHolder"));
+        throw new ArgumentException(
+            message: ResourceUtils.GetString(key: "ErrorNotColumnStyleHolder")
+        );
     }
     #endregion
 }

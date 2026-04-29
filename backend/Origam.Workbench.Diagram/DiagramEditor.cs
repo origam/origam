@@ -82,7 +82,7 @@ public class DiagramEditor : AbstractViewContent, IToolStripContainer
         {
             int dx = args.Location.X - lastMouseLocation.X;
             int dy = args.Location.Y - lastMouseLocation.Y;
-            gViewer.Pan(dx, dy);
+            gViewer.Pan(deltaX: dx, deltaY: dy);
         }
         lastMouseLocation = args.Location;
     }
@@ -93,7 +93,7 @@ public class DiagramEditor : AbstractViewContent, IToolStripContainer
         {
             internalEditor.Dispose();
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
 
     #region Windows Form Designer generated code
@@ -214,7 +214,7 @@ public class DiagramEditor : AbstractViewContent, IToolStripContainer
         int delta = e.Delta / 3;
         if (delta != 0)
         {
-            gViewer.Pan(0, delta);
+            gViewer.Pan(deltaX: 0, deltaY: delta);
         }
     }
 
@@ -229,7 +229,11 @@ public class DiagramEditor : AbstractViewContent, IToolStripContainer
                     gViewer: gViewer,
                     parentForm: this,
                     persistenceProvider: persistenceProvider,
-                    factory: new WorkFlowDiagramFactory(nodeSelector, gViewer, schemaService),
+                    factory: new WorkFlowDiagramFactory(
+                        nodeSelector: nodeSelector,
+                        gViewer: gViewer,
+                        schemaService: schemaService
+                    ),
                     nodeSelector: nodeSelector
                 );
                 break;
@@ -241,10 +245,10 @@ public class DiagramEditor : AbstractViewContent, IToolStripContainer
                     gViewer: gViewer,
                     schemaItem: contextStore,
                     factory: new ContextStoreDiagramFactory(
-                        persistenceProvider,
-                        nodeSelector,
-                        gViewer,
-                        schemaService
+                        persistenceProvider: persistenceProvider,
+                        nodeSelector: nodeSelector,
+                        gViewer: gViewer,
+                        schemaService: schemaService
                     ),
                     persistenceProvider: persistenceProvider
                 );
@@ -266,31 +270,31 @@ public class DiagramEditor : AbstractViewContent, IToolStripContainer
 
     public List<ToolStrip> GetToolStrips(int maxWidth = -1)
     {
-        LabeledToolStrip toolStrip = new LabeledToolStrip(this);
+        LabeledToolStrip toolStrip = new LabeledToolStrip(owner: this);
         toolStrip.Text = Diagram.Strings.DiagramEditor_ToolStrip_Title;
 
         BigToolStripButton zoomHomeButton = new BigToolStripButton();
         zoomHomeButton.Text = Diagram.Strings.DiagramEditor_ToolStrip_Zoom_Home;
         zoomHomeButton.Image = ImageRes.UnknownIcon;
         zoomHomeButton.Click += ZoomHome;
-        toolStrip.Items.Add(zoomHomeButton);
+        toolStrip.Items.Add(value: zoomHomeButton);
         BigToolStripButton zoomInButton = new BigToolStripButton();
         zoomInButton.Text = Diagram.Strings.DiagramEditor_ToolStrip_Zoom_PLUS;
         zoomInButton.Image = ImageRes.UnknownIcon;
         zoomInButton.Click += (sender, args) => gViewer.ZoomInPressed();
-        toolStrip.Items.Add(zoomInButton);
+        toolStrip.Items.Add(value: zoomInButton);
 
         BigToolStripButton zoomOutButton = new BigToolStripButton();
         zoomOutButton.Text = Diagram.Strings.DiagramEditor_ToolStrip_Zoom_MINUS;
         zoomOutButton.Image = ImageRes.UnknownIcon;
         zoomOutButton.Click += (sender, args) => gViewer.ZoomOutPressed();
-        toolStrip.Items.Add(zoomOutButton);
+        toolStrip.Items.Add(value: zoomOutButton);
 
         BigToolStripButton edgeButton = new BigToolStripButton();
         edgeButton.Text = Diagram.Strings.DiagramEditor_ToolStrip_Dependency;
         edgeButton.Image = ImageRes.UnknownIcon;
         edgeButton.Click += ToggleInsertEdge;
-        toolStrip.Items.Add(edgeButton);
+        toolStrip.Items.Add(value: edgeButton);
         return new List<ToolStrip> { toolStrip };
     }
 
@@ -336,7 +340,7 @@ public class DiagramEditor : AbstractViewContent, IToolStripContainer
 
         double distanceFromCenter =
             (focusSubgraph.Width / 100 * e.NewValue) - (focusSubgraph.Width / 2);
-        gViewer.CenterToXCoordinate(focusSubgraph.Pos.X + distanceFromCenter);
+        gViewer.CenterToXCoordinate(x: focusSubgraph.Pos.X + distanceFromCenter);
     }
     //        private void VScrollBar_Scroll(object sender, ScrollEventArgs e)
     //        {

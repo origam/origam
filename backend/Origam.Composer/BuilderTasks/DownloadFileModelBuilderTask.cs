@@ -41,86 +41,105 @@ public class DownloadFileModelBuilderTask(
 
     public void Execute(Project project)
     {
-        repositoryZipPath = Path.Combine(project.ProjectFolder, "master.zip");
-        
+        repositoryZipPath = Path.Combine(path1: project.ProjectFolder, path2: "master.zip");
+
         DownloadModelFromRepository(origamRepositoryUrl: project.OrigamRepositoryUrl);
         UnzipDefaultModelAndCopy(projectFolder: project.ProjectFolder);
         CreateCustomAssetsFolder(projectFolder: project.ProjectFolder);
-        CreateEnvFile(project);
+        CreateEnvFile(project: project);
     }
 
     private void CleanupUnnecessaryFiles(string projectFolder)
     {
-        var buildPath = Path.Combine(projectFolder, "build");
-        fileSystemService.DeleteDirectory(buildPath);
+        var buildPath = Path.Combine(path1: projectFolder, path2: "build");
+        fileSystemService.DeleteDirectory(directoryPath: buildPath);
 
-        DeleteFileIfExists(Path.Combine(projectFolder, "LICENSE"));
-        DeleteFileIfExists(Path.Combine(projectFolder, ".gitignore"));
+        DeleteFileIfExists(filePath: Path.Combine(path1: projectFolder, path2: "LICENSE"));
+        DeleteFileIfExists(filePath: Path.Combine(path1: projectFolder, path2: ".gitignore"));
     }
 
     private static void DeleteFileIfExists(string filePath)
     {
-        if (!File.Exists(filePath))
+        if (!File.Exists(path: filePath))
         {
             return;
         }
 
-        File.SetAttributes(filePath, FileAttributes.Normal);
-        File.Delete(filePath);
+        File.SetAttributes(path: filePath, fileAttributes: FileAttributes.Normal);
+        File.Delete(path: filePath);
     }
 
     private void DownloadModelFromRepository(string origamRepositoryUrl)
     {
         if (repositoryZipPath == null)
         {
-            throw new Exception(Strings.RepositoryZipPath_not_set);
+            throw new Exception(message: Strings.RepositoryZipPath_not_set);
         }
 
         using var client = new HttpClient();
-        HttpResponseMessage response = client.GetAsync(origamRepositoryUrl).Result;
+        HttpResponseMessage response = client.GetAsync(requestUri: origamRepositoryUrl).Result;
         response.EnsureSuccessStatusCode();
 
-        using var fs = new FileStream(repositoryZipPath, FileMode.Create, FileAccess.Write);
-        response.Content.CopyToAsync(fs).Wait();
+        using var fs = new FileStream(
+            path: repositoryZipPath,
+            mode: FileMode.Create,
+            access: FileAccess.Write
+        );
+        response.Content.CopyToAsync(stream: fs).Wait();
     }
 
     private void UnzipDefaultModelAndCopy(string projectFolder)
     {
         if (repositoryZipPath == null)
         {
-            throw new Exception("RepositoryZipPath is not set.");
+            throw new Exception(message: "RepositoryZipPath is not set.");
         }
 
-        var tempExtractPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
-        ZipFile.ExtractToDirectory(repositoryZipPath, tempExtractPath);
+        var tempExtractPath = Path.Combine(
+            path1: Path.GetTempPath(),
+            path2: Guid.NewGuid().ToString()
+        );
+        ZipFile.ExtractToDirectory(
+            sourceArchiveFileName: repositoryZipPath,
+            destinationDirectoryName: tempExtractPath
+        );
 
-        var modelRootPath = Path.Combine(tempExtractPath, "origam-master", "model-root");
+        var modelRootPath = Path.Combine(
+            path1: tempExtractPath,
+            path2: "origam-master",
+            path3: "model-root"
+        );
 
-        if (Directory.Exists(modelRootPath))
+        if (Directory.Exists(path: modelRootPath))
         {
-            CleanupUnnecessaryFiles(modelRootPath);
-            CopyDirectory(modelRootPath, projectFolder);
+            CleanupUnnecessaryFiles(projectFolder: modelRootPath);
+            CopyDirectory(sourceDir: modelRootPath, destinationDir: projectFolder);
         }
         else
         {
             throw new DirectoryNotFoundException(
-                string.Format(Strings.Model_root_directory_not_found, modelRootPath)
+                message: string.Format(
+                    format: Strings.Model_root_directory_not_found,
+                    arg0: modelRootPath
+                )
             );
         }
 
-        if (Directory.Exists(tempExtractPath))
+        if (Directory.Exists(path: tempExtractPath))
         {
-            Directory.Delete(tempExtractPath, true);
+            Directory.Delete(path: tempExtractPath, recursive: true);
         }
-        if (File.Exists(repositoryZipPath))
+        if (File.Exists(path: repositoryZipPath))
         {
-            File.Delete(repositoryZipPath);
+            File.Delete(path: repositoryZipPath);
         }
     }
 
     private void CreateCustomAssetsFolder(string projectFolder)
     {
-        var dir = new DirectoryInfo(Path.Combine(projectFolder, "customAssets"));
+        var dir = new DirectoryInfo(
+            path: Path.Combine(path1: projectFolder, path2: "customAssets")
+        );
         if (!dir.Exists)
         {
             dir.Create();
@@ -129,29 +148,29 @@ public class DownloadFileModelBuilderTask(
 
     private void CopyDirectory(string sourceDir, string destinationDir)
     {
-        var dir = new DirectoryInfo(sourceDir);
+        var dir = new DirectoryInfo(path: sourceDir);
 
         if (!dir.Exists)
         {
             throw new DirectoryNotFoundException(
-                string.Format(Strings.Source_directory_not_found, sourceDir)
+                message: string.Format(format: Strings.Source_directory_not_found, arg0: sourceDir)
             );
         }
 
         DirectoryInfo[] dirs = dir.GetDirectories();
 
-        Directory.CreateDirectory(destinationDir);
+        Directory.CreateDirectory(path: destinationDir);
 
         foreach (FileInfo file in dir.GetFiles())
         {
-            string targetFilePath = Path.Combine(destinationDir, file.Name);
-            file.CopyTo(targetFilePath);
+            string targetFilePath = Path.Combine(path1: destinationDir, path2: file.Name);
+            file.CopyTo(destFileName: targetFilePath);
         }
 
         foreach (DirectoryInfo subDir in dirs)
         {
-            string newDestinationDir = Path.Combine(destinationDir, subDir.Name);
-            CopyDirectory(subDir.FullName, newDestinationDir);
+            string newDestinationDir = Path.Combine(path1: destinationDir, path2: subDir.Name);
+            CopyDirectory(sourceDir: subDir.FullName, destinationDir: newDestinationDir);
         }
     }
 
@@ -163,23 +182,26 @@ public class DownloadFileModelBuilderTask(
                 : project.DatabaseType.ToString().ToLower();
 
         var sb = new StringBuilder();
-        sb.AppendLine($"OrigamSettings__DefaultSchemaExtensionId={project.NewPackageId}");
+        sb.AppendLine(handler: $"OrigamSettings__DefaultSchemaExtensionId={project.NewPackageId}");
         sb.AppendLine(
-            $"OrigamSettings__DataConnectionString={connectionStringService.GetConnectionString(project)}"
+            handler: $"OrigamSettings__DataConnectionString={connectionStringService.GetConnectionString(project: project)}"
         );
 
-        sb.AppendLine($"OrigamSettings__Name={project.Name}");
+        sb.AppendLine(handler: $"OrigamSettings__Name={project.Name}");
         sb.AppendLine(
-            $"CustomAssetsConfig__PathToCustomAssetsFolder={"/home/origam/projectData/customAssets"}"
+            value: $"CustomAssetsConfig__PathToCustomAssetsFolder={"/home/origam/projectData/customAssets"}"
         );
-        sb.AppendLine($"CustomAssetsConfig__RouteToCustomAssetsFolder=/customAssets");
-        sb.AppendLine($"DatabaseType={dbType}");
-        sb.AppendLine($"ExternalDomain_SetOnStart={WebSiteUrl(project)}");
-        sb.Append("TZ=Europe/Prague");
+        sb.AppendLine(value: $"CustomAssetsConfig__RouteToCustomAssetsFolder=/customAssets");
+        sb.AppendLine(handler: $"DatabaseType={dbType}");
+        sb.AppendLine(handler: $"ExternalDomain_SetOnStart={WebSiteUrl(project: project)}");
+        sb.Append(value: "TZ=Europe/Prague");
 
         File.WriteAllText(
-            Path.Combine(project.ProjectFolder, $"{project.Name}_Environments.env"),
-            sb.ToString()
+            path: Path.Combine(
+                path1: project.ProjectFolder,
+                path2: $"{project.Name}_Environments.env"
+            ),
+            contents: sb.ToString()
         );
     }
 

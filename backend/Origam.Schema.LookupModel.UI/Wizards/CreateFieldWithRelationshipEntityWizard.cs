@@ -83,7 +83,7 @@ public class CreateFieldWithRelationshipEntityWizard : System.Windows.Forms.Form
                 components.Dispose();
             }
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
 
     #region Windows Form Designer generated code
@@ -344,10 +344,10 @@ public class CreateFieldWithRelationshipEntityWizard : System.Windows.Forms.Form
         )
         {
             MessageBox.Show(
-                ResourceUtils.GetString("EnterAllInfo"),
-                ResourceUtils.GetString("LookupWiz"),
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Asterisk
+                text: ResourceUtils.GetString(key: "EnterAllInfo"),
+                caption: ResourceUtils.GetString(key: "LookupWiz"),
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Asterisk
             );
             return;
         }
@@ -413,7 +413,7 @@ public class CreateFieldWithRelationshipEntityWizard : System.Windows.Forms.Form
         txtName.Text = "Transaction " + this.Entity.Name;
         foreach (ISchemaItem abstractSchemaItem in this.Entity.RootProvider.ChildItems)
         {
-            tableRelation.Items.Add(abstractSchemaItem);
+            tableRelation.Items.Add(item: abstractSchemaItem);
         }
     }
 
@@ -428,14 +428,16 @@ public class CreateFieldWithRelationshipEntityWizard : System.Windows.Forms.Form
 
         txtKeyName.Text = RelatedEntity.NodeText + " TransactionKey";
         foreach (
-            ISchemaItem filter in RelatedEntity.ChildItemsByType<ISchemaItem>("DataEntityColumn")
+            ISchemaItem filter in RelatedEntity.ChildItemsByType<ISchemaItem>(
+                itemType: "DataEntityColumn"
+            )
         )
         {
-            RelatedEntityField.Items.Add(filter);
+            RelatedEntityField.Items.Add(item: filter);
         }
         foreach (IDataEntityColumn column in this.Entity.EntityColumns)
         {
-            BaseEntityField.Items.Add(column);
+            BaseEntityField.Items.Add(item: column);
         }
     }
     #endregion

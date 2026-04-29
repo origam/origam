@@ -24,36 +24,36 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 <div class="detailview-container">
     <div class="detailview-module with-title">
-        <h2>@SharedLocalizer["CreateAccount"]</h2>
+        <h2>@SharedLocalizer[name: "CreateAccount"]</h2>
         <div class="input-form">
             <form asp-controller="Account" asp-action="Register">
                 <div class="input-row">
-                    <label asp-for="UserName">@SharedLocalizer["UserName"]</label>
+                    <label asp-for="UserName">@SharedLocalizer[name: "UserName"]</label>
                     <input asp-for="UserName" autofocus>
                 </div>                  
                 <div class="input-row">
-                    <label asp-for="Name">@SharedLocalizer["Name"]</label>
+                    <label asp-for="Name">@SharedLocalizer[name: "Name"]</label>
                     <input asp-for="Name">
                 </div>                  
                 <div class="input-row">
-                    <label asp-for="FirstName">@SharedLocalizer["FirstName"]</label>
+                    <label asp-for="FirstName">@SharedLocalizer[name: "FirstName"]</label>
                     <input asp-for="FirstName">
                 </div>                
                 <div class="input-row">
-                    <label asp-for="Email">@SharedLocalizer["Email"]</label>
+                    <label asp-for="Email">@SharedLocalizer[name: "Email"]</label>
                     <input asp-for="Email">
                 </div>
                 <div class="input-row">
-                    <label asp-for="Password">@SharedLocalizer["Password"]</label>
+                    <label asp-for="Password">@SharedLocalizer[name: "Password"]</label>
                     <input type="password" asp-for="Password" autocomplete="off">
                 </div>                
                 <div class="input-row">
-                    <label asp-for="ConfirmPassword">@SharedLocalizer["ConfirmPassword"]</label>
+                    <label asp-for="ConfirmPassword">@SharedLocalizer[name: "ConfirmPassword"]</label>
                     <input type="password" asp-for="ConfirmPassword" autocomplete="off">
                 </div>
                 
                 <div class="input-row">
-                    <a id="createButton" class="btn normal-size primary submit-link" href=#>@SharedLocalizer["Create"]</a>
+                    <a id="createButton" class="btn normal-size primary submit-link" href=#>@SharedLocalizer[name: "Create"]</a>
                 </div>
             </form>
         </div>

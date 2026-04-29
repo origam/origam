@@ -26,10 +26,10 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.EntityModel;
 
-[SchemaItemDescription("Filter", "Filters", "icon_filter.png")]
-[HelpTopic("Filters")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Filter", folderName: "Filters", iconName: "icon_filter.png")]
+[HelpTopic(topic: "Filters")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class EntityFilter : AbstractSchemaItem
 {
     public const string CategoryConst = "EntityFilter";
@@ -37,10 +37,10 @@ public class EntityFilter : AbstractSchemaItem
     public EntityFilter() { }
 
     public EntityFilter(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public EntityFilter(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Overriden ISchemaItem Members
     public override bool CanMove(UI.IBrowserNode2 newNode)
@@ -52,7 +52,7 @@ public class EntityFilter : AbstractSchemaItem
     public override bool UseFolders => false;
     #endregion
     #region ISchemaItemFactory Members
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public override Type[] NewItemTypes => new[] { typeof(FunctionCall) };
     #endregion
 }

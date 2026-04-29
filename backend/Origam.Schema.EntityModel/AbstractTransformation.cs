@@ -27,7 +27,7 @@ namespace Origam.Schema.EntityModel;
 /// <summary>
 /// Summary description for AbstractTransformation.
 /// </summary>
-[XmlModelRoot(CategoryConst)]
+[XmlModelRoot(category: CategoryConst)]
 public abstract class AbstractTransformation : AbstractSchemaItem, ITransformation
 {
     public const string CategoryConst = "Transformation";
@@ -36,10 +36,10 @@ public abstract class AbstractTransformation : AbstractSchemaItem, ITransformati
         : base() { }
 
     public AbstractTransformation(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public AbstractTransformation(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Overriden AbstractDataEntityColumn Members
 

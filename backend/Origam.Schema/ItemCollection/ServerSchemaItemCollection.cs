@@ -36,10 +36,10 @@ class ServerSchemaItemCollection : SchemaItemCollectionBase<ISchemaItem>, ISchem
 
     public override void Add(ISchemaItem value)
     {
-        base.Add(value);
+        base.Add(value: value);
         if (value.IsAbstract)
         {
-            SetDerivedFrom(value);
+            SetDerivedFrom(item: value);
         }
     }
 
@@ -47,7 +47,7 @@ class ServerSchemaItemCollection : SchemaItemCollectionBase<ISchemaItem>, ISchem
     {
         foreach (var item in other)
         {
-            Add(item);
+            Add(value: item);
         }
     }
 
@@ -64,7 +64,7 @@ class ServerSchemaItemCollection : SchemaItemCollectionBase<ISchemaItem>, ISchem
     {
         if (item.IsAbstract)
         {
-            SetDerivedFrom(item);
+            SetDerivedFrom(item: item);
         }
         if (UpdateParentItem)
         {

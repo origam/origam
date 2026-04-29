@@ -60,7 +60,11 @@ public class DataStructureSchemaItemProvider : AbstractSchemaItemProvider
         {
             itemName = "NewXsdDataStructure";
         }
-        return base.NewItem<T>(schemaExtensionId, group, itemName);
+        return base.NewItem<T>(
+            schemaExtensionId: schemaExtensionId,
+            group: group,
+            itemName: itemName
+        );
     }
     #endregion
 }

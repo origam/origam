@@ -35,9 +35,9 @@ using InvalidCastException = System.InvalidCastException;
 
 namespace Origam.Schema;
 
-[XmlModelRoot("group")]
-[ClassMetaVersion("6.0.0")]
-[XmlNamespaceName("g")]
+[XmlModelRoot(category: "group")]
+[ClassMetaVersion(versionStr: "6.0.0")]
+[XmlNamespaceName(xmlNamespaceName: "g")]
 public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider, IFilePersistent
 {
     public SchemaItemGroup()
@@ -52,7 +52,7 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider, IFilePer
     }
 
     public SchemaItemGroup(Key primaryKey)
-        : base(primaryKey, primaryKey.KeyArray) { }
+        : base(primaryKey: primaryKey, correctKeys: primaryKey.KeyArray) { }
 
     public override string ToString() => Name;
 
@@ -63,34 +63,38 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider, IFilePer
     [XmlAttribute(AttributeName = "name")]
     public string Name { get; set; }
 
-    [XmlParent(typeof(Package))]
+    [XmlParent(type: typeof(Package))]
     public Guid SchemaExtensionId;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public Package Package
     {
         get
         {
             var key = new ModelElementKey { Id = SchemaExtensionId };
-            return (Package)PersistenceProvider.RetrieveInstance(typeof(Package), key);
+            return (Package)
+                PersistenceProvider.RetrieveInstance(type: typeof(Package), primaryKey: key);
         }
-        set => SchemaExtensionId = (Guid)value.PrimaryKey["Id"];
+        set => SchemaExtensionId = (Guid)value.PrimaryKey[key: "Id"];
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public ISchemaItem ParentItem { get; set; }
 
-    [XmlParent(typeof(SchemaItemGroup))]
+    [XmlParent(type: typeof(SchemaItemGroup))]
     public Guid ParentGroupId;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public SchemaItemGroup ParentGroup
     {
         get
         {
             var key = new ModelElementKey { Id = ParentGroupId };
             return (SchemaItemGroup)
-                PersistenceProvider.RetrieveInstance(typeof(SchemaItemGroup), key);
+                PersistenceProvider.RetrieveInstance(
+                    type: typeof(SchemaItemGroup),
+                    primaryKey: key
+                );
         }
         set
         {
@@ -100,13 +104,13 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider, IFilePer
             }
             else
             {
-                ParentGroupId = (Guid)value.PrimaryKey["Id"];
+                ParentGroupId = (Guid)value.PrimaryKey[key: "Id"];
             }
         }
     }
 
-    [Browsable(false)]
-    public string Path => GetPath(this);
+    [Browsable(browsable: false)]
+    public string Path => GetPath(item: this);
     public bool IsFileRootElement => FileParentId == Guid.Empty;
     #endregion
     private string GetPath(SchemaItemGroup item)
@@ -115,15 +119,17 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider, IFilePer
         {
             return Name;
         }
-        return System.IO.Path.Combine(ParentGroup.Path, Name);
+        return System.IO.Path.Combine(path1: ParentGroup.Path, path2: Name);
     }
 
-    [Browsable(false)]
-    public SchemaItemGroup RootGroup => GetRootGroup(this);
+    [Browsable(browsable: false)]
+    public SchemaItemGroup RootGroup => GetRootGroup(parentItem: this);
 
     private SchemaItemGroup GetRootGroup(SchemaItemGroup parentItem)
     {
-        return parentItem.ParentGroup == null ? parentItem : GetRootGroup(parentItem.ParentGroup);
+        return parentItem.ParentGroup == null
+            ? parentItem
+            : GetRootGroup(parentItem: parentItem.ParentGroup);
     }
 
     private List<ISchemaItem> GetChildItemsRecursive(ISchemaItem parentItem)
@@ -131,8 +137,8 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider, IFilePer
         var items = new List<ISchemaItem>();
         foreach (var childItem in parentItem.ChildItems)
         {
-            items.Add(childItem);
-            items.AddRange(GetChildItemsRecursive(childItem));
+            items.Add(item: childItem);
+            items.AddRange(collection: GetChildItemsRecursive(parentItem: childItem));
         }
         return items;
     }
@@ -150,11 +156,14 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider, IFilePer
     }
 
     #region IBrowserNode2 Members
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public bool Hide
     {
         get => !IsPersisted;
-        set => throw new InvalidOperationException(ResourceUtils.GetString("ErrorSetHide"));
+        set =>
+            throw new InvalidOperationException(
+                message: ResourceUtils.GetString(key: "ErrorSetHide")
+            );
     }
     public bool CanDelete => true;
 
@@ -162,7 +171,9 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider, IFilePer
     {
         if (ParentItem?.DerivedFrom != null)
         {
-            throw new InvalidOperationException(ResourceUtils.GetString("ErrorDeleteDerivedGroup"));
+            throw new InvalidOperationException(
+                message: ResourceUtils.GetString(key: "ErrorDeleteDerivedGroup")
+            );
         }
         foreach (IBrowserNode2 node in ChildNodes())
         {
@@ -174,18 +185,21 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider, IFilePer
 
     public bool CanMove(IBrowserNode2 newNode) => false;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public IBrowserNode2 ParentNode
     {
         get => null;
-        set => throw new InvalidOperationException(ResourceUtils.GetString("ErrorMoveGroup"));
+        set =>
+            throw new InvalidOperationException(
+                message: ResourceUtils.GetString(key: "ErrorMoveGroup")
+            );
     }
     public byte[] NodeImage => null;
 
-    [Browsable(false)]
-    public string NodeId => PrimaryKey["Id"].ToString();
+    [Browsable(browsable: false)]
+    public string NodeId => PrimaryKey[key: "Id"].ToString();
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public virtual string FontStyle => "Regular";
     #endregion
     #region IBrowserNode Members
@@ -198,14 +212,14 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider, IFilePer
         // Child groups
         foreach (IBrowserNode2 node in ChildGroups)
         {
-            browserNodeCollection.Add(node);
+            browserNodeCollection.Add(value: node);
         }
         // Child nodes
         foreach (IBrowserNode2 node in this.ChildItems)
         {
             if (!((ISchemaItem)node).IsDeleted)
             {
-                browserNodeCollection.Add(node);
+                browserNodeCollection.Add(value: node);
             }
         }
         return browserNodeCollection;
@@ -232,13 +246,13 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider, IFilePer
             // We browse the collection because it has all the items correctly set
             var provider = ParentItem ?? RootProvider;
             var ISchemaItemCollection = SchemaItemCollection.Create(
-                PersistenceProvider,
-                provider,
-                ParentItem
+                persistence: PersistenceProvider,
+                provider: provider,
+                parentItem: ParentItem
             );
-            foreach (ISchemaItem item in provider.ChildItemsByGroup(this))
+            foreach (ISchemaItem item in provider.ChildItemsByGroup(group: this))
             {
-                ISchemaItemCollection.Add(item);
+                ISchemaItemCollection.Add(item: item);
             }
             return ISchemaItemCollection;
         }
@@ -250,9 +264,9 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider, IFilePer
         var list = new List<T>();
         // We look for all child items of our parent schema item that have this group
         // We browse the collection because it has all the items correctly set
-        foreach (ISchemaItem item in ParentItem.ChildItemsByGroup(this))
+        foreach (ISchemaItem item in ParentItem.ChildItemsByGroup(group: this))
         {
-            list.Add((T)item);
+            list.Add(item: (T)item);
         }
         return list;
     }
@@ -264,10 +278,10 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider, IFilePer
         {
             if (
                 (item.Group == null && group == null)
-                || item.Group.PrimaryKey.Equals(group.PrimaryKey)
+                || item.Group.PrimaryKey.Equals(obj: group.PrimaryKey)
             )
             {
-                list.Add(item);
+                list.Add(item: item);
             }
         }
         return list;
@@ -275,22 +289,25 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider, IFilePer
 
     public SchemaItemGroup GetGroup(string name)
     {
-        return ChildGroups.FirstOrDefault(group => group.Name == name);
+        return ChildGroups.FirstOrDefault(predicate: group => group.Name == name);
     }
 
     public bool HasChildItems => ChildItems.Count > 0;
 
     public bool HasChildItemsByType(string itemType) =>
-        ChildItemsByType<ISchemaItem>(itemType).Count > 0;
+        ChildItemsByType<ISchemaItem>(itemType: itemType).Count > 0;
 
-    public bool HasChildItemsByGroup(SchemaItemGroup group) => ChildItemsByGroup(group).Count > 0;
+    public bool HasChildItemsByGroup(SchemaItemGroup group) =>
+        ChildItemsByGroup(group: group).Count > 0;
 
     public List<SchemaItemGroup> ChildGroups
     {
         get
         {
             // We retrieve all child groups
-            var list = PersistenceProvider.RetrieveListByGroup<SchemaItemGroup>(PrimaryKey);
+            var list = PersistenceProvider.RetrieveListByGroup<SchemaItemGroup>(
+                primaryKey: PrimaryKey
+            );
             // Set parent for each child
             foreach (var group in list)
             {
@@ -324,8 +341,8 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider, IFilePer
             var items = new List<ISchemaItem>();
             foreach (var item in ChildItems)
             {
-                items.Add(item);
-                items.AddRange(GetChildItemsRecursive(item));
+                items.Add(item: item);
+                items.AddRange(collection: GetChildItemsRecursive(parentItem: item));
             }
             return items;
         }
@@ -335,9 +352,9 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider, IFilePer
     public void ClearCache() { }
     #endregion
     #region ISchemaItemFactory Members
-    public List<Type> ChildItemTypes => new(NewItemTypes);
+    public List<Type> ChildItemTypes => new(collection: NewItemTypes);
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public Type[] NewItemTypes
     {
         get
@@ -350,7 +367,7 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider, IFilePer
         }
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public virtual IList<string> NewTypeNames =>
         ParentItem == null
             ? RootProvider.NewTypeNames
@@ -360,16 +377,16 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider, IFilePer
     /// By default all NewItemTypes are nameable. Override if only a subset of types can
     /// be populated with NewTypeNames.
     /// </summary>
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public virtual Type[] NameableTypes => NewItemTypes;
     public event Action<ISchemaItem> ItemCreated;
     public string RelativeFilePath =>
         System.IO.Path.Combine(
-            Package.Name,
-            RootItemType,
-            Path.Replace('/', System.IO.Path.DirectorySeparatorChar)
-                .Replace('\\', System.IO.Path.DirectorySeparatorChar),
-            PersistenceFiles.GroupFileName
+            path1: Package.Name,
+            path2: RootItemType,
+            path3: Path.Replace(oldChar: '/', newChar: System.IO.Path.DirectorySeparatorChar)
+                .Replace(oldChar: '\\', newChar: System.IO.Path.DirectorySeparatorChar),
+            path4: PersistenceFiles.GroupFileName
         );
     public bool IsFolder => true;
     public Guid FileParentId
@@ -380,8 +397,8 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider, IFilePer
     public IDictionary<string, Guid> ParentFolderIds =>
         new Dictionary<string, Guid>
         {
-            { CategoryFactory.Create(typeof(Package)), SchemaExtensionId },
-            { CategoryFactory.Create(typeof(SchemaItemGroup)), ParentGroupId },
+            { CategoryFactory.Create(type: typeof(Package)), SchemaExtensionId },
+            { CategoryFactory.Create(type: typeof(SchemaItemGroup)), ParentGroupId },
         };
 
     public virtual T NewItem<T>(Guid schemaExtensionId, SchemaItemGroup group)
@@ -390,73 +407,82 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider, IFilePer
         T newItem;
         if (ParentItem == null)
         {
-            newItem = RootProvider.NewItem<T>(schemaExtensionId, this);
+            newItem = RootProvider.NewItem<T>(schemaExtensionId: schemaExtensionId, group: this);
         }
         else
         {
-            newItem = (ParentItem as ISchemaItemFactory).NewItem<T>(schemaExtensionId, this);
+            newItem = (ParentItem as ISchemaItemFactory).NewItem<T>(
+                schemaExtensionId: schemaExtensionId,
+                group: this
+            );
         }
-        ItemCreated?.Invoke(newItem);
+        ItemCreated?.Invoke(obj: newItem);
         return newItem;
     }
 
     public bool CanRenameTo(string nameCandidate)
     {
-        if (string.IsNullOrEmpty(nameCandidate?.Trim()))
+        if (string.IsNullOrEmpty(value: nameCandidate?.Trim()))
         {
             return false;
         }
-        if (nameCandidate.EndsWith(" "))
+        if (nameCandidate.EndsWith(value: " "))
         {
             return false;
         }
         return GetGroupsOnTheSameLevel()
-            .All(x => x.NodeText.ToLower().Trim() != nameCandidate.ToLower().Trim());
+            .All(predicate: x => x.NodeText.ToLower().Trim() != nameCandidate.ToLower().Trim());
     }
 
     private IEnumerable<SchemaItemGroup> GetGroupsOnTheSameLevel()
     {
         if (ParentGroup != null)
         {
-            return ParentGroup.ChildGroups.Where(x => x != this);
+            return ParentGroup.ChildGroups.Where(predicate: x => x != this);
         }
         return PersistenceProvider
             .RetrieveList<SchemaItemGroup>()
-            .Where(x => x.RootItemType == RootItemType)
-            .Where(x => x.ParentGroupId == Guid.Empty)
-            .Where(x => x != this);
+            .Where(predicate: x => x.RootItemType == RootItemType)
+            .Where(predicate: x => x.ParentGroupId == Guid.Empty)
+            .Where(predicate: x => x != this);
     }
 
     public static string GetNextDefaultName(string defaultName, List<SchemaItemGroup> childGroups)
     {
-        var defaultNamedGroupsExists = childGroups.Any(x => x.NodeText.Contains(defaultName));
+        var defaultNamedGroupsExists = childGroups.Any(predicate: x =>
+            x.NodeText.Contains(value: defaultName)
+        );
         if (!defaultNamedGroupsExists)
         {
             return defaultName;
         }
         var nextGroupNumber =
             childGroups
-                .Select(x =>
-                    Regex.Match(x.NodeText, defaultName + @"\s*(\d*)", RegexOptions.IgnoreCase)
+                .Select(selector: x =>
+                    Regex.Match(
+                        input: x.NodeText,
+                        pattern: defaultName + @"\s*(\d*)",
+                        options: RegexOptions.IgnoreCase
+                    )
                 )
-                .Where(match => match.Success)
-                .Select(match => match.Groups[1].Value)
-                .Select(x => x == "" ? "0" : x)
-                .Select(int.Parse)
+                .Where(predicate: match => match.Success)
+                .Select(selector: match => match.Groups[groupnum: 1].Value)
+                .Select(selector: x => x == "" ? "0" : x)
+                .Select(selector: int.Parse)
                 .Max() + 1;
         return $"{defaultName} {nextGroupNumber}";
     }
 
     public virtual SchemaItemGroup NewGroup(Guid schemaExtensionId, string groupName)
     {
-        var group = new SchemaItemGroup(schemaExtensionId);
-        group.Name = GetNextDefaultName(groupName, ChildGroups);
+        var group = new SchemaItemGroup(extensionId: schemaExtensionId);
+        group.Name = GetNextDefaultName(defaultName: groupName, childGroups: ChildGroups);
         group.PersistenceProvider = PersistenceProvider;
         group.RootItemType = RootItemType;
         group.RootProvider = RootProvider;
         group.ParentItem = ParentItem;
         group.ParentGroup = this;
-        ChildGroups.Add(group);
+        ChildGroups.Add(item: group);
         group.Persist();
         return group;
     }
@@ -467,7 +493,7 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider, IFilePer
         return obj switch
         {
             ISchemaItem item => -1,
-            SchemaItemGroup group => Name.CompareTo(group.Name),
+            SchemaItemGroup group => Name.CompareTo(strB: group.Name),
             _ => throw new InvalidCastException(),
         };
     }

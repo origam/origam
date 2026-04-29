@@ -45,9 +45,9 @@ public class Program
     private delegate bool EventHandler(CtrlType sig);
     private static EventHandler cancelHandler;
     private static readonly log4net.ILog log =
-        log4net.LogManager.GetLogger(System.Reflection.MethodBase
+        log4net.LogManager.GetLogger(type: System.Reflection.MethodBase
             .GetCurrentMethod().DeclaringType);
-    [DllImport("Kernel32")]
+    [DllImport(dllName: "Kernel32")]
     private static extern bool SetConsoleCtrlHandler(EventHandler handler,
         bool add);
     private enum CtrlType
@@ -58,146 +58,146 @@ public class Program
         CTRL_LOGOFF_EVENT = 5,
         CTRL_SHUTDOWN_EVENT = 6
     }
-    [Verb("create-hash-index",
+    [Verb(name: "create-hash-index",
         HelpText =
             "Creates hash index file on the contents of the given folder.")]
     class CreateHashIndexOptions
     {
-        [Option('i', "input", Required = true,
+        [Option(shortName: 'i', longName: "input", Required = true,
             HelpText = "Folder for which the index will be created.")]
         public string Input { get; set; }
-        [Option('m', "mask", Required = true,
+        [Option(shortName: 'm', longName: "mask", Required = true,
             HelpText = "Search pattern.")]
         public string Mask { get; set; }
-        [Option('o', "output", Required = true,
+        [Option(shortName: 'o', longName: "output", Required = true,
             HelpText = "Path/Name of file where the index will be stored.")]
         public string Output { get; set; }
     }
-    [Verb("run-scripts", HelpText = "Runs update scripts.")]
+    [Verb(name: "run-scripts", HelpText = "Runs update scripts.")]
     class RunUpdateScriptsOptions
     {
     }
-    [Verb("restart-server", HelpText = "Invokes server restart.")]
+    [Verb(name: "restart-server", HelpText = "Invokes server restart.")]
     class RestartServerOptions
     {
     }
-    [Verb("compare-schema",
+    [Verb(name: "compare-schema",
         HelpText =
             "Compares schema with database. If no comparison switches are defined, no comparison is done. More than one switch can be enabled.")]
     class CompareSchemaOptions
     {
-        [Option('d', "missing-in-db", Default = false,
+        [Option(shortName: 'd', longName: "missing-in-db", Default = false,
             HelpText = "Display elements missing in database.")]
         public bool MissingInDb { get; set; }
-        [Option('s', "missing-in-schema", Default = false,
+        [Option(shortName: 's', longName: "missing-in-schema", Default = false,
             HelpText = "Display elements missing in schema.")]
         public bool MissingInSchema { get; set; }
-        [Option('x', "existing-but-different", Default = false,
+        [Option(shortName: 'x', longName: "existing-but-different", Default = false,
             HelpText = "Display elements, that exist but are different.")]
         public bool ExistingButDifferent { get; set; }
     }
-    [Verb("process-queue", HelpText = "Process a queue.")]
+    [Verb(name: "process-queue", HelpText = "Process a queue.")]
     private class ProcessQueueOptions
     {
-        [Option('c', "queueCode", Required = true,
+        [Option(shortName: 'c', longName: "queueCode", Required = true,
             HelpText = "Reference code of the queue to process.")]
         public string QueueRefCode { get; set; }
-        [Option('p', "parallelism", Required = true,
+        [Option(shortName: 'p', longName: "parallelism", Required = true,
             HelpText = "MaxDegreeOfParallelism.")]
         public int Parallelism { get; set; }
-        [Option('w', "forceWait", Required = false, Default = 0,
+        [Option(shortName: 'w', longName: "forceWait", Required = false, Default = 0,
             HelpText =
                 "Delay between processing of queue items in milliseconds.")]
         public int ForceWaitMs { get; set; }
-        [Option('v', "verbose", Default = true,
+        [Option(shortName: 'v', longName: "verbose", Default = true,
             HelpText = "Prints all messages to standard output.")]
         public bool Verbose { get; set; }
     }
-    [Verb("process-check-rules", HelpText = "Check rules in project.")]
+    [Verb(name: "process-check-rules", HelpText = "Check rules in project.")]
     class ProcessCheckRulesOptions
     {
     }
     
-    [Verb("get-root-version", HelpText = "Try get Root package version to test if the model has been initialized in the database. Return 0 if successful.")]
+    [Verb(name: "get-root-version", HelpText = "Try get Root package version to test if the model has been initialized in the database. Return 0 if successful.")]
     public class GetRootVersionOptions
     {
-        [Option('a', "attempts", Required = true,
+        [Option(shortName: 'a', longName: "attempts", Required = true,
             HelpText = "Number of test attempts.")]
         public int Attempts { get; set; }
-        [Option('d', "delay", Required = true,
+        [Option(shortName: 'd', longName: "delay", Required = true,
             HelpText = "Delay between attempts in milliseconds.")]
         public int Delay { get; set; }
     } 
-    [Verb("run-sql", HelpText = "Try to connect to database and run a sql command. Return 0 if successful.")]
+    [Verb(name: "run-sql", HelpText = "Try to connect to database and run a sql command. Return 0 if successful.")]
     public class RunSqlCommandOptions
     {
-        [Option('a', "attempts", Required = true,
+        [Option(shortName: 'a', longName: "attempts", Required = true,
             HelpText = "Number of test attempts.")]
         public int Attempts { get; set; }
-        [Option('d', "delay", Required = true,
+        [Option(shortName: 'd', longName: "delay", Required = true,
             HelpText = "Delay between attempts in milliseconds.")]
         public int Delay { get; set; }
-        [Option('c', "sql-command", Required = true,
+        [Option(shortName: 'c', longName: "sql-command", Required = true,
             HelpText = "SQL command to run.")]
         public string SqlCommand { get; set; }
     } 
-    [Verb("run-sql-procedure", HelpText = "Try to connect to database and run a sql procedure. Return 0 if successful.")]
+    [Verb(name: "run-sql-procedure", HelpText = "Try to connect to database and run a sql procedure. Return 0 if successful.")]
     public class RunSqlProcedureCommandOptions
     {
-        [Option('a', "attempts", Required = true,
+        [Option(shortName: 'a', longName: "attempts", Required = true,
             HelpText = "Number of test attempts.")]
         public int Attempts { get; set; }
-        [Option('d', "delay", Required = true,
+        [Option(shortName: 'd', longName: "delay", Required = true,
             HelpText = "Delay between attempts in milliseconds.")]
         public int Delay { get; set; }
-        [Option('c', "sql-command", Required = true,
+        [Option(shortName: 'c', longName: "sql-command", Required = true,
             HelpText = "SQL procedure to run.")]
         public string ProcedureName { get; set; }
     }
-    [Verb("process-doc-generator",
+    [Verb(name: "process-doc-generator",
         HelpText = "Generate Menu into output with xslt template.")]
     class ProcessDocGeneratorOptions
     {
-        [Option('o', "output", Required = true,
+        [Option(shortName: 'o', longName: "output", Required = true,
             HelpText = "Output directory")]
         public string Output { get; set; }
-        [Option('l', "language", Required = true,
+        [Option(shortName: 'l', longName: "language", Required = true,
             HelpText = "Localization(ie. cs-CZ).")]
         public string Language { get; set; }
-        [Option('x', "xslt", Required = true, HelpText = "Xslt template")]
+        [Option(shortName: 'x', longName: "xslt", Required = true, HelpText = "Xslt template")]
         public string Xslt { get; set; }
-        [Option('r', "rootfilename", Required = true,
+        [Option(shortName: 'r', longName: "rootfilename", Required = true,
             HelpText = "Output File")]
         public string RootFile { get; set; }
     }
-    [Verb("normalize-file-format",
+    [Verb(name: "normalize-file-format",
         HelpText =
             "Formats all files in the model according to the actual formatting rules.")]
     class NormalizeFileFormatOptions
     {
     }
-    [Verb("generate-password-hash",
+    [Verb(name: "generate-password-hash",
         HelpText =
             "Generate hash of supplied password. The hash can be inserted into column Password in OrigamUser table as development password reset.")]
     class GeneratePassHashOptions
     {
-        [Option('p', "password", Required = true,
+        [Option(shortName: 'p', longName: "password", Required = true,
             HelpText = "String to hash")]
         public string Password { get; set; }
     }
     private static bool CancelHandler(CtrlType sig)
     {
-        log.Info("Exiting system due to external CTRL-C," +
-                 " or process kill, or shutdown, please wait...");
+        log.Info(message: "Exiting system due to external CTRL-C," +
+                          " or process kill, or shutdown, please wait...");
         queueProcessor.Cancel();
-        log.Info("Cleanup complete");
-        Environment.Exit(-1);
+        log.Info(message: "Cleanup complete");
+        Environment.Exit(exitCode: -1);
         return true;
     }
     static int Main(string[] args)
     {
-        return Parser.Default.ParseArguments(args, GetVerbs())
-            .MapResult(Run, errors => 1);
+        return Parser.Default.ParseArguments(args: args, types: GetVerbs())
+            .MapResult(parsedFunc: Run, notParsedFunc: errors => 1);
     }
     private static int Run(object parsedOptions)
     {
@@ -206,23 +206,23 @@ public class Program
             case ProcessCheckRulesOptions options:
             {
                 EntryAssembly();
-                return ProcessRule(options);
+                return ProcessRule(invokedVerbInstance: options);
             }
             case ProcessDocGeneratorOptions options:
             {
                 EntryAssembly();
-                return ProcessDocGenerator(options);
+                return ProcessDocGenerator(config: options);
             }
             case GeneratePassHashOptions options:
             {
                 EntryAssembly();
-                return HashPassword(options);
+                return HashPassword(options: options);
             }
 #if !NETCORE2_1
             case ProcessQueueOptions options:
             {
                 EntryAssembly();
-                return ProcessQueue(options);
+                return ProcessQueue(options: options);
             }
             case RunUpdateScriptsOptions _:
             {
@@ -237,24 +237,24 @@ public class Program
             case CreateHashIndexOptions options:
             {
                 EntryAssembly();
-                return CreateHashIndex(options);
+                return CreateHashIndex(options: options);
             }
             case CompareSchemaOptions options:
             {
                 EntryAssembly();
-                return CompareSchema(options);
+                return CompareSchema(options: options);
             }
             case GetRootVersionOptions options:
             {
-                return SqlRunner.Create(log).GetRootVersion(options);
+                return SqlRunner.Create(log: log).GetRootVersion(arguments: options);
             }
             case RunSqlCommandOptions options:
             {
-                return SqlRunner.Create(log).RunSqlCommand(options);
+                return SqlRunner.Create(log: log).RunSqlCommand(arguments: options);
             }
             case RunSqlProcedureCommandOptions options:
             {
-                return SqlRunner.Create(log).RunSqlProcedure(options);
+                return SqlRunner.Create(log: log).RunSqlProcedure(arguments: options);
             }
             case NormalizeFileFormatOptions _:
             {
@@ -292,8 +292,8 @@ public class Program
     }
     private static void EntryAssembly()
     {
-        Console.WriteLine(string.Format(Strings.ShortGnu,
-                System.Reflection.Assembly.GetEntryAssembly().GetName().Name));
+        Console.WriteLine(value: string.Format(format: Strings.ShortGnu,
+                arg0: System.Reflection.Assembly.GetEntryAssembly().GetName().Name));
     }
     private static int NormalizeFileFormat()
     {
@@ -304,47 +304,47 @@ public class Program
             if (configurations.Count != 1)
             {
                 Console.WriteLine(
-                    "OrigamSettings.config doesn't contain exactly one configuration.");
+                    value: "OrigamSettings.config doesn't contain exactly one configuration.");
                 return -1;
             }
         } catch
         {
-            Console.WriteLine("Failed to load OrigamSettings.config");
+            Console.WriteLine(value: "Failed to load OrigamSettings.config");
             return -1;
         }
 		Directory
             .EnumerateFiles(
-                configurations[0].ModelSourceControlLocation, 
-                "*.origam", 
-                SearchOption.AllDirectories)
+                path: configurations[index: 0].ModelSourceControlLocation, 
+                searchPattern: "*.origam", 
+                searchOption: SearchOption.AllDirectories)
             .AsParallel()
-            .ForEach(path =>
+            .ForEach(action: path =>
             {
-                Console.Write("Processing ");
-                Console.Write(path);
-                Console.Write("...");
-                var source = new OrigamXmlDocument(path);
+                Console.Write(value: "Processing ");
+                Console.Write(value: path);
+                Console.Write(value: "...");
+                var source = new OrigamXmlDocument(pathToXml: path);
                 var xmlToWrite = OrigamDocumentSorter
-                    .CopyAndSort(source)
+                    .CopyAndSort(doc: source)
                     .ToBeautifulString();
-                File.WriteAllText(path, xmlToWrite);
-                Console.WriteLine("DONE");
+                File.WriteAllText(path: path, contents: xmlToWrite);
+                Console.WriteLine(value: "DONE");
             });
         return 0;
     }
     private static int HashPassword(GeneratePassHashOptions options)
     {
         var hash =
-            new AdaptivePasswordHasher().HashPassword(options.Password);
-        log.Info("");
-        log.Info("Password: " + options.Password);
-        log.Info("Hash: " + hash);
+            new AdaptivePasswordHasher().HashPassword(password: options.Password);
+        log.Info(message: "");
+        log.Info(message: "Password: " + options.Password);
+        log.Info(message: "Hash: " + hash);
         return 0;
     }
     private static int ProcessDocGenerator(ProcessDocGeneratorOptions config)
     {
         Thread.CurrentThread.CurrentUICulture 
-            = new CultureInfo(config.Language);
+            = new CultureInfo(name: config.Language);
         var runtimeServiceFactory = new RuntimeServiceFactoryProcessor();
         OrigamEngine.OrigamEngine.ConnectRuntime(
             customServiceFactory: runtimeServiceFactory);
@@ -358,13 +358,13 @@ public class Program
         };
         var persistenceProvider 
             = (FilePersistenceProvider)persistenceService.SchemaProvider;
-        persistenceService.LoadSchema(settings.DefaultSchemaExtensionId);
+        persistenceService.LoadSchema(schemaExtensionId: settings.DefaultSchemaExtensionId);
         var documentation = new FileStorageDocumentationService(
-            persistenceProvider,
-            persistenceService.FileEventQueue);
-        new DocProcessor(config.Output, config.Xslt, config.RootFile,
-            documentation,
-            menuProvider, persistenceService, null).Run();
+            persistenceService: persistenceProvider,
+            fileEventQueue: persistenceService.FileEventQueue);
+        new DocProcessor(path: config.Output, xslt: config.Xslt, rootfile: config.RootFile,
+            documentation: documentation,
+            menuprovider: menuProvider, persprovider: persistenceService, xmlfile: null).Run();
         return 0;
     }
     private static int ProcessRule(ProcessCheckRulesOptions invokedVerbInstance)
@@ -374,39 +374,39 @@ public class Program
     }
     private static int ProcessQueue(ProcessQueueOptions options)
     {
-        log.Info("------------ Input -------------");
-        log.Info($"queueCode: {options.QueueRefCode}");
-        log.Info($"parallelism: {options.Parallelism}");
-        log.Info($"forceWait_ms: {options.ForceWaitMs}");
-        log.Info($"-------------------------------");
+        log.Info(message: "------------ Input -------------");
+        log.Info(message: $"queueCode: {options.QueueRefCode}");
+        log.Info(message: $"parallelism: {options.Parallelism}");
+        log.Info(message: $"forceWait_ms: {options.ForceWaitMs}");
+        log.Info(message: $"-------------------------------");
         cancelHandler += CancelHandler;
-        SetConsoleCtrlHandler(cancelHandler, true);
-        RunQueueProcessor(options);
-        log.Info("Exiting...");
+        SetConsoleCtrlHandler(handler: cancelHandler, add: true);
+        RunQueueProcessor(options: options);
+        log.Info(message: "Exiting...");
         return 0;
     }
     private static void RunQueueProcessor(ProcessQueueOptions options)
     {
         try
         {
-            log.Info(options);
+            log.Info(message: options);
             queueProcessor = new QueueProcessor(
-                options.QueueRefCode,
-                options.Parallelism,
-                options.ForceWaitMs
+                queueRefCode: options.QueueRefCode,
+                parallelism: options.Parallelism,
+                forceWait_ms: options.ForceWaitMs
             );
             queueProcessor.Run();
         }
         catch (Exception ex)
         {
-            log.LogOrigamError(ex);
+            log.LogOrigamError(ex: ex);
         }
     }
     private static int RunUpdateScripts()
     {
         if (log.IsInfoEnabled)
         {
-            log.Info("Running update scripts...");
+            log.Info(message: "Running update scripts...");
         }
         OrigamEngine.OrigamEngine.ConnectRuntime(
             runRestartTimer: false, loadDeploymentScripts: true);
@@ -425,7 +425,7 @@ public class Program
     {
         if (log.IsInfoEnabled)
         {
-            log.Info("Invoking server restart...");
+            log.Info(message: "Invoking server restart...");
         }
         OrigamEngine.OrigamEngine.SetRestart();
     }
@@ -434,24 +434,24 @@ public class Program
         if (log.IsInfoEnabled)
         {
             log.InfoFormat(
-                "Creating hash index file {1} on folder {0} with pattern {2}.",
-                options?.Input, options?.Output, options?.Mask);
+                format: "Creating hash index file {1} on folder {0} with pattern {2}.",
+                arg0: options?.Input, arg1: options?.Output, arg2: options?.Mask);
         }
         var fileNames 
-            = Directory.GetFiles(options.Input, options.Mask);
-        var hashIndexFile = new HashIndexFile(options.Output);
+            = Directory.GetFiles(path: options.Input, searchPattern: options.Mask);
+        var hashIndexFile = new HashIndexFile(indexFile: options.Output);
         foreach (var filename in fileNames)
         {
             if (log.IsInfoEnabled)
             {
-                log.InfoFormat("Hashing {0}...", filename);
+                log.InfoFormat(format: "Hashing {0}...", arg0: filename);
             }
             hashIndexFile.AddEntryToIndexFile(
-                hashIndexFile.CreateIndexFileEntry(filename));
+                entry: hashIndexFile.CreateIndexFileEntry(filename: filename));
         }
         if (log.IsInfoEnabled)
         {
-            log.Info("Hash index file finished.");
+            log.Info(message: "Hash index file finished.");
         }
         hashIndexFile.Dispose();
         return 0;
@@ -464,7 +464,7 @@ public class Program
         {
             if (log.IsInfoEnabled)
             {
-                log.Info("No comparison switches enabled...");
+                log.Info(message: "No comparison switches enabled...");
             }
             return 0;
         }
@@ -472,7 +472,7 @@ public class Program
         if (log.IsInfoEnabled)
         {
             log.Info(
-                $@"Comparing schema with database: missing in database({
+                message: $@"Comparing schema with database: missing in database({
                     options.MissingInDb}), missing in schema({
                         options.MissingInSchema}), existing but different({
                             options.ExistingButDifferent})...");
@@ -481,21 +481,21 @@ public class Program
             = ServiceManager.Services.GetService<IPersistenceService>();
         var settings = ConfigurationManager.GetActiveConfiguration();
         var dataService = new MsSqlDataService(
-            settings.DataConnectionString,
-            settings.DataBulkInsertThreshold,
-            settings.DataUpdateBatchSize);
+            connection: settings.DataConnectionString,
+            bulkInsertThreshold: settings.DataBulkInsertThreshold,
+            updateBatchSize: settings.DataUpdateBatchSize);
         dataService.PersistenceProvider = persistenceService.SchemaProvider;
         List<SchemaDbCompareResult> results = dataService.CompareSchema(
-            persistenceService.SchemaProvider);
+            provider: persistenceService.SchemaProvider);
         if (results.Count == 0)
         {
             if (log.IsInfoEnabled)
             {
-                log.Info("No differences found.");
+                log.Info(message: "No differences found.");
             }
             return 0;
         }
-        return DisplaySchemaComparisonResults(options, results);
+        return DisplaySchemaComparisonResults(options: options, results: results);
     }
     private static int DisplaySchemaComparisonResults(
         CompareSchemaOptions options, List<SchemaDbCompareResult> results)
@@ -509,17 +509,17 @@ public class Program
             {
                 case DbCompareResultType.ExistingButDifferent:
                 {
-                    existingButDifferent.Add(result);
+                    existingButDifferent.Add(item: result);
                     break;
                 }
                 case DbCompareResultType.MissingInDatabase:
                 {
-                    missingInDatabase.Add(result);
+                    missingInDatabase.Add(item: result);
                     break;
                 }
                 case DbCompareResultType.MissingInSchema:
                 {
-                    missingInSchema.Add(result);
+                    missingInSchema.Add(item: result);
                     break;
                 }
             }
@@ -528,26 +528,26 @@ public class Program
         if (options.MissingInDb)
         {
             DisplayComparisonResultGroup(
-                missingInDatabase, "Missing in Database:");
+                results: missingInDatabase, header: "Missing in Database:");
             displayedResultsCount += missingInDatabase.Count;
         }
         if (options.MissingInSchema)
         {
             DisplayComparisonResultGroup(
-                missingInSchema, "Missing in Schema:");
+                results: missingInSchema, header: "Missing in Schema:");
             displayedResultsCount += missingInSchema.Count;
         }
         if (options.ExistingButDifferent)
         {
             DisplayComparisonResultGroup(
-                existingButDifferent, "Existing But Different:");
+                results: existingButDifferent, header: "Existing But Different:");
             displayedResultsCount += existingButDifferent.Count;
         }
         if (displayedResultsCount == 0)
         {
             if (log.IsInfoEnabled)
             {
-                log.Info("No differences found.");
+                log.Info(message: "No differences found.");
             }
             return 0;
         }
@@ -558,11 +558,11 @@ public class Program
     {
         if ((results.Count > 0) && log.IsInfoEnabled)
         {
-            log.Info(header);
+            log.Info(message: header);
             foreach (SchemaDbCompareResult result in results)
             {
                 log.Info(
-                    $@"{result?.SchemaItemType.SchemaItemDescription()?.Name} {
+                    message: $@"{result?.SchemaItemType.SchemaItemDescription()?.Name} {
                         result?.ItemName} {result?.Remark}");
             }
         }

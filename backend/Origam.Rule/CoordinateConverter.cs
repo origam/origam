@@ -36,7 +36,7 @@ public static class CoordinateConverter
 {
     public static Coordinates JtskToWgs(double x, double y)
     {
-        return JtskToWgs(x, y, 0);
+        return JtskToWgs(x: x, y: y, h: 0);
     }
 
     public static Coordinates JtskToWgs(double x, double y, double h)
@@ -52,7 +52,7 @@ public static class CoordinateConverter
             (x, y) = (y, x);
         }
         ;
-        return JtskToWgsInternal(x, y, h);
+        return JtskToWgsInternal(x: x, y: y, h: h);
     }
 
     private static Coordinates JtskToWgsInternal(double x, double y, double h)
@@ -72,39 +72,40 @@ public static class CoordinateConverter
         double k = 1.003419163966575;
 
         // Step 1: Convert planar to geographic coordinates
-        double ro = Math.Sqrt((x * x) + (y * y));
-        double epsilon = 2 * Math.Atan2(y, ro + x);
+        double ro = Math.Sqrt(d: (x * x) + (y * y));
+        double epsilon = 2 * Math.Atan2(y: y, x: ro + x);
         double d = epsilon / n;
-        double s = (2 * Math.Atan(Math.Exp(1 / n * Math.Log(constURo / ro)))) - (Math.PI / 2);
-        double sinS = Math.Sin(s);
-        double cosS = Math.Cos(s);
-        double sinU = (sinUq * sinS) - (cosUq * cosS * Math.Cos(d));
-        double cosU = Math.Sqrt(1 - (sinU * sinU));
-        double sinDv = Math.Sin(d) * cosS / cosU;
-        double cosDv = Math.Sqrt(1 - (sinDv * sinDv));
+        double s =
+            (2 * Math.Atan(d: Math.Exp(d: 1 / n * Math.Log(d: constURo / ro)))) - (Math.PI / 2);
+        double sinS = Math.Sin(a: s);
+        double cosS = Math.Cos(d: s);
+        double sinU = (sinUq * sinS) - (cosUq * cosS * Math.Cos(d: d));
+        double cosU = Math.Sqrt(d: 1 - (sinU * sinU));
+        double sinDv = Math.Sin(a: d) * cosS / cosU;
+        double cosDv = Math.Sqrt(d: 1 - (sinDv * sinDv));
         double sinV = (sinVq * cosDv) - (cosVq * sinDv);
         double cosV = (cosVq * cosDv) + (sinVq * sinDv);
-        double ljtsk = 2 * Math.Atan2(sinV, 1 + cosV) / alfa;
-        double t = Math.Exp(2 / alfa * Math.Log((1 + sinU) / (cosU * k)));
+        double ljtsk = 2 * Math.Atan2(y: sinV, x: 1 + cosV) / alfa;
+        double t = Math.Exp(d: 2 / alfa * Math.Log(d: (1 + sinU) / (cosU * k)));
         double pom = (t - 1) / (t + 1);
 
         double sinB;
         do
         {
             sinB = pom;
-            pom = t * Math.Exp(e * Math.Log((1 + (e * sinB)) / (1 - (e * sinB))));
+            pom = t * Math.Exp(d: e * Math.Log(d: (1 + (e * sinB)) / (1 - (e * sinB))));
             pom = (pom - 1) / (pom + 1);
-        } while (Math.Abs(pom - sinB) > 1e-14);
+        } while (Math.Abs(value: pom - sinB) > 1e-14);
 
-        double bjtsk = Math.Atan(pom / Math.Sqrt(1 - (pom * pom)));
+        double bjtsk = Math.Atan(d: pom / Math.Sqrt(d: 1 - (pom * pom)));
 
         // Step 2: Cartesian coordinates in S-JTSK
         double f1 = 299.152812853;
-        double e2 = 1 - Math.Pow(1 - (1 / f1), 2);
-        ro = a / Math.Sqrt(1 - (e2 * Math.Sin(bjtsk) * Math.Sin(bjtsk)));
-        double xCartesian = (ro + h) * Math.Cos(bjtsk) * Math.Cos(ljtsk);
-        double yCartesian = (ro + h) * Math.Cos(bjtsk) * Math.Sin(ljtsk);
-        double zCartesian = (((1 - e2) * ro) + h) * Math.Sin(bjtsk);
+        double e2 = 1 - Math.Pow(x: 1 - (1 / f1), y: 2);
+        ro = a / Math.Sqrt(d: 1 - (e2 * Math.Sin(a: bjtsk) * Math.Sin(a: bjtsk)));
+        double xCartesian = (ro + h) * Math.Cos(d: bjtsk) * Math.Cos(d: ljtsk);
+        double yCartesian = (ro + h) * Math.Cos(d: bjtsk) * Math.Sin(a: ljtsk);
+        double zCartesian = (((1 - e2) * ro) + h) * Math.Sin(a: bjtsk);
 
         // Step 3: Transform to WGS-84 Cartesian coordinates
         double dx = 570.69,
@@ -123,39 +124,41 @@ public static class CoordinateConverter
         a = 6378137.0;
         f1 = 298.257223563;
         double aB = f1 / (f1 - 1);
-        double p = Math.Sqrt((xn * xn) + (yn * yn));
-        e2 = 1 - Math.Pow(1 - (1 / f1), 2);
+        double p = Math.Sqrt(d: (xn * xn) + (yn * yn));
+        e2 = 1 - Math.Pow(x: 1 - (1 / f1), y: 2);
 
-        double theta = Math.Atan(zn * aB / p);
-        double sinTheta = Math.Sin(theta);
-        double cosTheta = Math.Cos(theta);
-        t = (zn + (e2 * aB * a * Math.Pow(sinTheta, 3))) / (p - (e2 * a * Math.Pow(cosTheta, 3)));
-        double b = Math.Atan(t);
-        double l = 2 * Math.Atan2(yn, p + xn);
-        h = Math.Sqrt(1 + (t * t)) * (p - (a / Math.Sqrt(1 + ((1 - e2) * t * t))));
+        double theta = Math.Atan(d: zn * aB / p);
+        double sinTheta = Math.Sin(a: theta);
+        double cosTheta = Math.Cos(d: theta);
+        t =
+            (zn + (e2 * aB * a * Math.Pow(x: sinTheta, y: 3)))
+            / (p - (e2 * a * Math.Pow(x: cosTheta, y: 3)));
+        double b = Math.Atan(d: t);
+        double l = 2 * Math.Atan2(y: yn, x: p + xn);
+        h = Math.Sqrt(d: 1 + (t * t)) * (p - (a / Math.Sqrt(d: 1 + ((1 - e2) * t * t))));
 
         // Final formatting
         b = b * 180 / Math.PI;
-        coordinates.Latitude = Math.Round(b, 12); // Rounding makes the results consistent, 12 decimal places corresponds to about 1.1132e-7 meters.
+        coordinates.Latitude = Math.Round(value: b, digits: 12); // Rounding makes the results consistent, 12 decimal places corresponds to about 1.1132e-7 meters.
         string latitudeDir = b < 0 ? "S" : "N";
-        b = Math.Abs(b);
-        int degLat = (int)Math.Floor(b);
+        b = Math.Abs(value: b);
+        int degLat = (int)Math.Floor(d: b);
         b = (b - degLat) * 60;
-        int minLat = (int)Math.Floor(b);
-        double secLat = Math.Round((b - minLat) * 60 * 1000) / 1000;
+        int minLat = (int)Math.Floor(d: b);
+        double secLat = Math.Round(a: (b - minLat) * 60 * 1000) / 1000;
         coordinates.Wgs84Latitude = $"{degLat}°{minLat}'{secLat}{latitudeDir}";
 
         l = l * 180 / Math.PI;
-        coordinates.Longitude = Math.Round(l, 12);
+        coordinates.Longitude = Math.Round(value: l, digits: 12);
         string longitudeDir = l < 0 ? "W" : "E";
-        l = Math.Abs(l);
-        int degLon = (int)Math.Floor(l);
+        l = Math.Abs(value: l);
+        int degLon = (int)Math.Floor(d: l);
         l = (l - degLon) * 60;
-        int minLon = (int)Math.Floor(l);
-        double secLon = Math.Round((l - minLon) * 60 * 1000) / 1000;
+        int minLon = (int)Math.Floor(d: l);
+        double secLon = Math.Round(a: (l - minLon) * 60 * 1000) / 1000;
         coordinates.Wgs84Longitude = $"{degLon}°{minLon}'{secLon}{longitudeDir}";
 
-        coordinates.Height = Math.Round(h * 100) / 100;
+        coordinates.Height = Math.Round(a: h * 100) / 100;
 
         return coordinates;
     }

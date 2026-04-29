@@ -45,10 +45,13 @@ public class UserApiMiddleware
 
     public async Task Invoke(HttpContext context, IWebHostEnvironment environment)
     {
-        await SetThreadCultureFromCookie(context);
-        var userApiProcessor = new CoreUserApiProcessor(new CoreHttpTools(), environment);
-        var contextWrapper = new StandardHttpContextWrapper(context);
-        userApiProcessor.Process(contextWrapper);
+        await SetThreadCultureFromCookie(context: context);
+        var userApiProcessor = new CoreUserApiProcessor(
+            httpTools: new CoreHttpTools(),
+            environment: environment
+        );
+        var contextWrapper = new StandardHttpContextWrapper(context: context);
+        userApiProcessor.Process(context: contextWrapper);
         await Task.CompletedTask;
     }
 
@@ -57,16 +60,18 @@ public class UserApiMiddleware
         var cultureProvider = requestLocalizationOptions
             .RequestCultureProviders.OfType<OrigamCookieRequestCultureProvider>()
             .First();
-        var cultureResult = await cultureProvider.DetermineProviderCultureResult(context);
+        var cultureResult = await cultureProvider.DetermineProviderCultureResult(
+            httpContext: context
+        );
         var culture = cultureResult?.Cultures.FirstOrDefault();
         if (culture != null)
         {
-            Thread.CurrentThread.CurrentUICulture = new CultureInfo(culture.Value.ToString());
+            Thread.CurrentThread.CurrentUICulture = new CultureInfo(name: culture.Value.ToString());
         }
         var uiCulture = cultureResult?.UICultures.FirstOrDefault();
         if (uiCulture != null)
         {
-            Thread.CurrentThread.CurrentCulture = new CultureInfo(uiCulture.Value.ToString());
+            Thread.CurrentThread.CurrentCulture = new CultureInfo(name: uiCulture.Value.ToString());
         }
     }
 }

@@ -48,37 +48,47 @@ public class ResourceTools : IResourceTools
     public string ResourceIdByActiveProfile()
     {
         DataStructureQuery query = new DataStructureQuery(
-            new Guid("d0d0d847-36dc-4987-95e5-43c4d8d0d78f"),
-            new Guid("84848e4c-129c-4079-95a4-6319e21399af")
+            dataStructureId: new Guid(g: "d0d0d847-36dc-4987-95e5-43c4d8d0d78f"),
+            methodId: new Guid(g: "84848e4c-129c-4079-95a4-6319e21399af")
         );
 
         query.Parameters.Add(
-            new QueryParameter("Resource_parBusinessPartnerId", userProfileGetter().Id)
+            value: new QueryParameter(
+                _parameterName: "Resource_parBusinessPartnerId",
+                value: userProfileGetter().Id
+            )
         );
 
-        DataSet ds = LoadData(query);
+        DataSet ds = LoadData(query: query);
 
-        if (ds.Tables["Resource"].Rows.Count == 0)
+        if (ds.Tables[name: "Resource"].Rows.Count == 0)
         {
-            throw new Exception(ResourceUtils.GetString("ErrorNoResource"));
+            throw new Exception(message: ResourceUtils.GetString(key: "ErrorNoResource"));
         }
 
-        if (ds.Tables["Resource"].Rows.Count > 1)
+        if (ds.Tables[name: "Resource"].Rows.Count > 1)
         {
             throw new Exception(
-                ResourceUtils.GetString("ErrorMoreResources", userProfileGetter().Id)
+                message: ResourceUtils.GetString(
+                    key: "ErrorMoreResources",
+                    args: userProfileGetter().Id
+                )
             );
         }
 
-        return ds.Tables["Resource"].Rows[0]["Id"].ToString();
+        return ds.Tables[name: "Resource"].Rows[index: 0][columnName: "Id"].ToString();
     }
 
     private DataSet LoadData(DataStructureQuery query)
     {
-        var dataServiceAgent = businessService.GetAgent("DataService", null, null);
+        var dataServiceAgent = businessService.GetAgent(
+            serviceType: "DataService",
+            ruleEngine: null,
+            workflowEngine: null
+        );
         dataServiceAgent.MethodName = "LoadDataByQuery";
         dataServiceAgent.Parameters.Clear();
-        dataServiceAgent.Parameters.Add("Query", query);
+        dataServiceAgent.Parameters.Add(key: "Query", value: query);
 
         dataServiceAgent.Run();
 

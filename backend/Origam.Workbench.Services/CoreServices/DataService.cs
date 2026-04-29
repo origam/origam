@@ -41,7 +41,14 @@ public class DataService : ICoreDataService
         string transactionId
     )
     {
-        return LoadData(dataStructureId, methodId, defaultSetId, sortSetId, transactionId, null);
+        return LoadData(
+            dataStructureId: dataStructureId,
+            methodId: methodId,
+            defaultSetId: defaultSetId,
+            sortSetId: sortSetId,
+            transactionId: transactionId,
+            parameters: null
+        );
     }
 
     public DataSet LoadData(
@@ -56,11 +63,18 @@ public class DataService : ICoreDataService
     {
         if (paramName1 == null)
         {
-            throw new ArgumentNullException(nameof(paramName1));
+            throw new ArgumentNullException(paramName: nameof(paramName1));
         }
         QueryParameterCollection p = new QueryParameterCollection();
-        p.Add(new QueryParameter(paramName1, paramValue1));
-        return LoadData(dataStructureId, methodId, defaultSetId, sortSetId, transactionId, p);
+        p.Add(value: new QueryParameter(_parameterName: paramName1, value: paramValue1));
+        return LoadData(
+            dataStructureId: dataStructureId,
+            methodId: methodId,
+            defaultSetId: defaultSetId,
+            sortSetId: sortSetId,
+            transactionId: transactionId,
+            parameters: p
+        );
     }
 
     public DataSet LoadData(
@@ -76,10 +90,17 @@ public class DataService : ICoreDataService
     )
     {
         QueryParameterCollection p = new QueryParameterCollection();
-        p.Add(new QueryParameter(paramName1, paramValue1));
-        p.Add(new QueryParameter(paramName2, paramValue2));
+        p.Add(value: new QueryParameter(_parameterName: paramName1, value: paramValue1));
+        p.Add(value: new QueryParameter(_parameterName: paramName2, value: paramValue2));
 
-        return LoadData(dataStructureId, methodId, defaultSetId, sortSetId, transactionId, p);
+        return LoadData(
+            dataStructureId: dataStructureId,
+            methodId: methodId,
+            defaultSetId: defaultSetId,
+            sortSetId: sortSetId,
+            transactionId: transactionId,
+            parameters: p
+        );
     }
 
     public DataSet LoadData(
@@ -92,13 +113,13 @@ public class DataService : ICoreDataService
     )
     {
         return LoadData(
-            dataStructureId,
-            methodId,
-            defaultSetId,
-            sortSetId,
-            transactionId,
-            parameters,
-            null
+            dataStructureId: dataStructureId,
+            methodId: methodId,
+            defaultSetId: defaultSetId,
+            sortSetId: sortSetId,
+            transactionId: transactionId,
+            parameters: parameters,
+            currentData: null
         );
     }
 
@@ -113,15 +134,15 @@ public class DataService : ICoreDataService
     )
     {
         return LoadData(
-            dataStructureId,
-            methodId,
-            defaultSetId,
-            sortSetId,
-            transactionId,
-            parameters,
-            currentData,
-            null,
-            null
+            dataStructureId: dataStructureId,
+            methodId: methodId,
+            defaultSetId: defaultSetId,
+            sortSetId: sortSetId,
+            transactionId: transactionId,
+            parameters: parameters,
+            currentData: currentData,
+            entity: null,
+            columnName: null
         );
     }
 
@@ -138,27 +159,27 @@ public class DataService : ICoreDataService
     )
     {
         IServiceAgent dataServiceAgent = (
-            ServiceManager.Services.GetService(typeof(IBusinessServicesService))
+            ServiceManager.Services.GetService(serviceType: typeof(IBusinessServicesService))
             as IBusinessServicesService
-        ).GetAgent("DataService", null, null);
+        ).GetAgent(serviceType: "DataService", ruleEngine: null, workflowEngine: null);
         DataStructureQuery q = new DataStructureQuery(
-            dataStructureId,
-            methodId,
-            defaultSetId,
-            sortSetId
+            dataStructureId: dataStructureId,
+            methodId: methodId,
+            defaultSetId: defaultSetId,
+            sortSetId: sortSetId
         );
-        q.ColumnsInfo = new ColumnsInfo(columnName);
+        q.ColumnsInfo = new ColumnsInfo(columnName: columnName);
         q.Entity = entity;
         if (parameters != null)
         {
-            q.Parameters.AddRange(parameters);
+            q.Parameters.AddRange(value: parameters);
         }
         dataServiceAgent.MethodName = "LoadDataByQuery";
         dataServiceAgent.Parameters.Clear();
-        dataServiceAgent.Parameters.Add("Query", q);
+        dataServiceAgent.Parameters.Add(key: "Query", value: q);
         if (currentData != null)
         {
-            dataServiceAgent.Parameters.Add("Data", currentData);
+            dataServiceAgent.Parameters.Add(key: "Data", value: currentData);
             q.EnforceConstraints = currentData.EnforceConstraints;
         }
         if (!q.ColumnsInfo.IsEmpty)
@@ -180,21 +201,24 @@ public class DataService : ICoreDataService
     )
     {
         IServiceAgent dataServiceAgent = (
-            ServiceManager.Services.GetService(typeof(IBusinessServicesService))
+            ServiceManager.Services.GetService(serviceType: typeof(IBusinessServicesService))
             as IBusinessServicesService
-        ).GetAgent("DataService", null, null);
-        DataStructureQuery q = new DataStructureQuery(dataStructureEntityId, filterSetId);
+        ).GetAgent(serviceType: "DataService", ruleEngine: null, workflowEngine: null);
+        DataStructureQuery q = new DataStructureQuery(
+            dataStructureId: dataStructureEntityId,
+            methodId: filterSetId
+        );
         q.DataSourceType = QueryDataSourceType.DataStructureEntity;
         if (parameters != null)
         {
-            q.Parameters.AddRange(parameters);
+            q.Parameters.AddRange(value: parameters);
         }
         dataServiceAgent.MethodName = "LoadDataByQuery";
         dataServiceAgent.Parameters.Clear();
-        dataServiceAgent.Parameters.Add("Query", q);
+        dataServiceAgent.Parameters.Add(key: "Query", value: q);
         if (currentData != null)
         {
-            dataServiceAgent.Parameters.Add("Data", currentData);
+            dataServiceAgent.Parameters.Add(key: "Data", value: currentData);
         }
         dataServiceAgent.TransactionId = transactionId;
         dataServiceAgent.Run();
@@ -215,7 +239,11 @@ public class DataService : ICoreDataService
             MethodId = Guid.Empty,
             LoadActualValuesAfterUpdate = loadActualValuesAfterUpdate,
         };
-        return StoreData(dataStructureQuery, data, transactionId);
+        return StoreData(
+            dataStructureQuery: dataStructureQuery,
+            data: data,
+            transactionId: transactionId
+        );
     }
 
     public DataSet StoreData(
@@ -226,11 +254,11 @@ public class DataService : ICoreDataService
     {
         IServiceAgent dataServiceAgent = ServiceManager
             .Services.GetService<IBusinessServicesService>()
-            .GetAgent("DataService", null, null);
+            .GetAgent(serviceType: "DataService", ruleEngine: null, workflowEngine: null);
         dataServiceAgent.MethodName = "StoreDataByQuery";
         dataServiceAgent.Parameters.Clear();
-        dataServiceAgent.Parameters.Add("Query", dataStructureQuery);
-        dataServiceAgent.Parameters.Add("Data", data);
+        dataServiceAgent.Parameters.Add(key: "Query", value: dataStructureQuery);
+        dataServiceAgent.Parameters.Add(key: "Data", value: data);
         dataServiceAgent.TransactionId = transactionId;
         dataServiceAgent.Run();
         DataSet ds = dataServiceAgent.Result as DataSet;
@@ -244,18 +272,18 @@ public class DataService : ICoreDataService
     )
     {
         IServiceAgent dataServiceAgent = (
-            ServiceManager.Services.GetService(typeof(IBusinessServicesService))
+            ServiceManager.Services.GetService(serviceType: typeof(IBusinessServicesService))
             as IBusinessServicesService
-        ).GetAgent("DataService", null, null);
-        Hashtable ht = new Hashtable(parameters.Count);
+        ).GetAgent(serviceType: "DataService", ruleEngine: null, workflowEngine: null);
+        Hashtable ht = new Hashtable(capacity: parameters.Count);
         foreach (QueryParameter p in parameters)
         {
-            ht.Add(p.Name, p.Value);
+            ht.Add(key: p.Name, value: p.Value);
         }
         dataServiceAgent.MethodName = "ExecuteProcedure";
         dataServiceAgent.Parameters.Clear();
-        dataServiceAgent.Parameters.Add("Name", procedureName);
-        dataServiceAgent.Parameters.Add("Parameters", ht);
+        dataServiceAgent.Parameters.Add(key: "Name", value: procedureName);
+        dataServiceAgent.Parameters.Add(key: "Parameters", value: ht);
         dataServiceAgent.TransactionId = transactionId;
         dataServiceAgent.Run();
         DataSet ds = dataServiceAgent.Result as DataSet;
@@ -265,13 +293,13 @@ public class DataService : ICoreDataService
     public long ReferenceCount(Guid entityId, object value, string transactionId)
     {
         IServiceAgent dataServiceAgent = (
-            ServiceManager.Services.GetService(typeof(IBusinessServicesService))
+            ServiceManager.Services.GetService(serviceType: typeof(IBusinessServicesService))
             as IBusinessServicesService
-        ).GetAgent("DataService", null, null);
+        ).GetAgent(serviceType: "DataService", ruleEngine: null, workflowEngine: null);
         dataServiceAgent.MethodName = "ReferenceCount";
         dataServiceAgent.Parameters.Clear();
-        dataServiceAgent.Parameters.Add("EntityId", entityId);
-        dataServiceAgent.Parameters.Add("Value", value);
+        dataServiceAgent.Parameters.Add(key: "EntityId", value: entityId);
+        dataServiceAgent.Parameters.Add(key: "Value", value: value);
         dataServiceAgent.TransactionId = transactionId;
         dataServiceAgent.Run();
         long result = (long)dataServiceAgent.Result;
@@ -281,12 +309,12 @@ public class DataService : ICoreDataService
     public string EntityDdl(Guid entityId)
     {
         IServiceAgent dataServiceAgent = (
-            ServiceManager.Services.GetService(typeof(IBusinessServicesService))
+            ServiceManager.Services.GetService(serviceType: typeof(IBusinessServicesService))
             as IBusinessServicesService
-        ).GetAgent("DataService", null, null);
+        ).GetAgent(serviceType: "DataService", ruleEngine: null, workflowEngine: null);
         dataServiceAgent.MethodName = "EntityDdl";
         dataServiceAgent.Parameters.Clear();
-        dataServiceAgent.Parameters.Add("EntityId", entityId);
+        dataServiceAgent.Parameters.Add(key: "EntityId", value: entityId);
         dataServiceAgent.Run();
         string result = (string)dataServiceAgent.Result;
         return result;
@@ -295,12 +323,12 @@ public class DataService : ICoreDataService
     public string[] FieldDdl(Guid fieldId)
     {
         IServiceAgent dataServiceAgent = (
-            ServiceManager.Services.GetService(typeof(IBusinessServicesService))
+            ServiceManager.Services.GetService(serviceType: typeof(IBusinessServicesService))
             as IBusinessServicesService
-        ).GetAgent("DataService", null, null);
+        ).GetAgent(serviceType: "DataService", ruleEngine: null, workflowEngine: null);
         dataServiceAgent.MethodName = "FieldDdl";
         dataServiceAgent.Parameters.Clear();
-        dataServiceAgent.Parameters.Add("FieldId", fieldId);
+        dataServiceAgent.Parameters.Add(key: "FieldId", value: fieldId);
         dataServiceAgent.Run();
         string[] result = (string[])dataServiceAgent.Result;
         return result;
@@ -309,12 +337,12 @@ public class DataService : ICoreDataService
     public string ExecuteSql(string command)
     {
         IServiceAgent dataServiceAgent = (
-            ServiceManager.Services.GetService(typeof(IBusinessServicesService))
+            ServiceManager.Services.GetService(serviceType: typeof(IBusinessServicesService))
             as IBusinessServicesService
-        ).GetAgent("DataService", null, null);
+        ).GetAgent(serviceType: "DataService", ruleEngine: null, workflowEngine: null);
         dataServiceAgent.MethodName = "ExecuteSql";
         dataServiceAgent.Parameters.Clear();
-        dataServiceAgent.Parameters.Add("Command", command);
+        dataServiceAgent.Parameters.Add(key: "Command", value: command);
         dataServiceAgent.Run();
         string result = (string)dataServiceAgent.Result;
         return result;

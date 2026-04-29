@@ -38,25 +38,37 @@ public class ReportServiceAgent : AbstractServiceAgent
         Hashtable parameters
     )
     {
-        AbstractReport report = GetReport(reportId);
-        IReportService service = GetService(report);
-        service.SetTraceTaskInfo(TraceTaskInfo);
-        service.PrintReport(reportId, data, printerName, copies, parameters);
+        AbstractReport report = GetReport(reportId: reportId);
+        IReportService service = GetService(report: report);
+        service.SetTraceTaskInfo(traceTaskInfo: TraceTaskInfo);
+        service.PrintReport(
+            reportId: reportId,
+            data: data,
+            printerName: printerName,
+            copies: copies,
+            parameters: parameters
+        );
     }
 
     private object GetReport(Guid reportId, IXmlContainer data, string format, Hashtable parameters)
     {
-        AbstractReport report = GetReport(reportId);
-        IReportService service = GetService(report);
-        service.SetTraceTaskInfo(TraceTaskInfo);
-        return service.GetReport(reportId, data, format, parameters, TransactionId);
+        AbstractReport report = GetReport(reportId: reportId);
+        IReportService service = GetService(report: report);
+        service.SetTraceTaskInfo(traceTaskInfo: TraceTaskInfo);
+        return service.GetReport(
+            reportId: reportId,
+            data: data,
+            format: format,
+            parameters: parameters,
+            dbTransaction: TransactionId
+        );
     }
 
     private static AbstractReport GetReport(Guid reportId)
     {
         IPersistenceService persistence = ServiceManager.Services.GetService<IPersistenceService>();
         AbstractReport report = persistence.SchemaProvider.RetrieveInstance<AbstractReport>(
-            reportId
+            instanceId: reportId
         );
         return report;
     }
@@ -72,12 +84,12 @@ public class ReportServiceAgent : AbstractServiceAgent
             SSRSReport => "Origam.BI.SSRS.SSRSService,Origam.BI.SSRS",
             FastReport => "Origam.BI.FastReport.FastReportService,Origam.BI.FastReport",
             _ => throw new ArgumentOutOfRangeException(
-                nameof(report),
-                report,
-                "Unsupported report type."
+                paramName: nameof(report),
+                actualValue: report,
+                message: "Unsupported report type."
             ),
         };
-        string[] split = serviceName.Split(",".ToCharArray());
+        string[] split = serviceName.Split(separator: ",".ToCharArray());
         return (Reflector.InvokeObject(classname: split[0], assembly: split[1]) as IReportService)!;
     }
 
@@ -92,11 +104,11 @@ public class ReportServiceAgent : AbstractServiceAgent
             case "PrintReport":
             {
                 PrintReport(
-                    Parameters.Get<Guid>("Report"),
-                    Parameters.TryGet<IXmlContainer>("Data"),
-                    Parameters.TryGet<string>("PrinterName"),
-                    Parameters.Get<int>("Copies"),
-                    Parameters.TryGet<Hashtable>("Parameters")
+                    reportId: Parameters.Get<Guid>(key: "Report"),
+                    data: Parameters.TryGet<IXmlContainer>(key: "Data"),
+                    printerName: Parameters.TryGet<string>(key: "PrinterName"),
+                    copies: Parameters.Get<int>(key: "Copies"),
+                    parameters: Parameters.TryGet<Hashtable>(key: "Parameters")
                 );
                 break;
             }
@@ -104,10 +116,10 @@ public class ReportServiceAgent : AbstractServiceAgent
             case "GetReport":
             {
                 result = GetReport(
-                    Parameters.Get<Guid>("Report"),
-                    Parameters.TryGet<IXmlContainer>("Data"),
-                    Parameters.TryGet<string>("Format"),
-                    Parameters.TryGet<Hashtable>("Parameters")
+                    reportId: Parameters.Get<Guid>(key: "Report"),
+                    data: Parameters.TryGet<IXmlContainer>(key: "Data"),
+                    format: Parameters.TryGet<string>(key: "Format"),
+                    parameters: Parameters.TryGet<Hashtable>(key: "Parameters")
                 );
                 break;
             }
@@ -115,9 +127,9 @@ public class ReportServiceAgent : AbstractServiceAgent
             default:
             {
                 throw new ArgumentOutOfRangeException(
-                    nameof(MethodName),
-                    MethodName,
-                    ResourceUtils.GetString("InvalidMethodName")
+                    paramName: nameof(MethodName),
+                    actualValue: MethodName,
+                    message: ResourceUtils.GetString(key: "InvalidMethodName")
                 );
             }
         }

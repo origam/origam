@@ -27,19 +27,19 @@ namespace Origam.Schema.EntityModel;
 /// <summary>
 /// Maps physical table to an entity.
 /// </summary>
-[SchemaItemDescription("Virtual Entity", "icon_virtual-entity.png")]
-[HelpTopic("Entities")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Virtual Entity", iconName: "icon_virtual-entity.png")]
+[HelpTopic(topic: "Entities")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class DetachedEntity : AbstractDataEntity
 {
     public DetachedEntity()
         : base() { }
 
     public DetachedEntity(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(schemaExtensionId: schemaExtensionId) { }
 
     public DetachedEntity(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
     //		public override bool CanConvertTo(Type type)
     //		{
     //			return (type == typeof(TableMappingItem));

@@ -25,22 +25,22 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("")]
-[assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Advantage Solutions, s. r. o.")]
-[assembly: AssemblyProduct("Advantage ORIGAM")]
-[assembly: AssemblyCopyright("(c) 2005 - 2021 Advantage Solutions, s. r. o.")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
+[assembly: AssemblyTitle(title: "")]
+[assembly: AssemblyDescription(description: "")]
+[assembly: AssemblyConfiguration(configuration: "")]
+[assembly: AssemblyCompany(company: "Advantage Solutions, s. r. o.")]
+[assembly: AssemblyProduct(product: "Advantage ORIGAM")]
+[assembly: AssemblyCopyright(copyright: "(c) 2005 - 2021 Advantage Solutions, s. r. o.")]
+[assembly: AssemblyTrademark(trademark: "")]
+[assembly: AssemblyCulture(culture: "")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
 // to COM components.  If you need to access a type in this assembly from
 // COM, set the ComVisible attribute to true on that type.
-[assembly: ComVisible(false)]
+[assembly: ComVisible(visibility: false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("eb88ab0d-5e29-488e-8edb-29e7c9568e3c")]
+[assembly: Guid(guid: "eb88ab0d-5e29-488e-8edb-29e7c9568e3c")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -52,5 +52,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.0.0.0")]
-[assembly: AssemblyFileVersion("0.0.0.0")]
+[assembly: AssemblyVersion(version: "0.0.0.0")]
+[assembly: AssemblyFileVersion(version: "0.0.0.0")]

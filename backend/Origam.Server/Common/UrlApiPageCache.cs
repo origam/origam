@@ -42,7 +42,7 @@ class UrlApiPageCache
     }
 
     private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
-        System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
+        type: System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
     );
     private Dictionary<string, PageCacheForOneCulture> pageCachesForPerCultures = null;
     private PagesSchemaItemProvider pageProvider = null;
@@ -58,13 +58,13 @@ class UrlApiPageCache
     {
         CultureInfo currentCulture = Thread.CurrentThread.CurrentUICulture;
         lck.WaitOne();
-        if (!pageCachesForPerCultures.ContainsKey(currentCulture.Name))
+        if (!pageCachesForPerCultures.ContainsKey(key: currentCulture.Name))
         {
-            BuildCacheForCurrentCulture(currentCulture);
+            BuildCacheForCurrentCulture(currentCulture: currentCulture);
         }
-        PageCacheForOneCulture cur = pageCachesForPerCultures[currentCulture.Name];
-        AbstractPage ret = cur.parameterlessPages.ContainsKey(incommingPath)
-            ? cur.parameterlessPages[incommingPath]
+        PageCacheForOneCulture cur = pageCachesForPerCultures[key: currentCulture.Name];
+        AbstractPage ret = cur.parameterlessPages.ContainsKey(key: incommingPath)
+            ? cur.parameterlessPages[key: incommingPath]
             : null;
         lck.ReleaseMutex();
         return ret;
@@ -74,11 +74,11 @@ class UrlApiPageCache
     {
         CultureInfo currentCulture = Thread.CurrentThread.CurrentUICulture;
         lck.WaitOne();
-        if (!pageCachesForPerCultures.ContainsKey(currentCulture.Name))
+        if (!pageCachesForPerCultures.ContainsKey(key: currentCulture.Name))
         {
-            BuildCacheForCurrentCulture(currentCulture);
+            BuildCacheForCurrentCulture(currentCulture: currentCulture);
         }
-        PageCacheForOneCulture cur = pageCachesForPerCultures[currentCulture.Name];
+        PageCacheForOneCulture cur = pageCachesForPerCultures[key: currentCulture.Name];
         List<AbstractPage> ret = cur.parameterPages;
         lck.ReleaseMutex();
         return ret;
@@ -89,30 +89,30 @@ class UrlApiPageCache
         PageCacheForOneCulture newCulture = new PageCacheForOneCulture();
         foreach (AbstractPage page in pageProvider.ChildItems.ToList())
         {
-            if (page.Url.Contains("{"))
+            if (page.Url.Contains(value: "{"))
             {
-                newCulture.parameterPages.Add(page);
+                newCulture.parameterPages.Add(item: page);
             }
             else
             {
-                if (newCulture.parameterlessPages.ContainsKey(page.Url))
+                if (newCulture.parameterlessPages.ContainsKey(key: page.Url))
                 {
                     throw new OrigamException(
-                        string.Format(
-                            "Can't initialize API Url resolver. Duplicate API route '{0}'",
-                            page.Url
+                        message: string.Format(
+                            format: "Can't initialize API Url resolver. Duplicate API route '{0}'",
+                            arg0: page.Url
                         )
                     );
                 }
-                newCulture.parameterlessPages.Add(page.Url, page);
+                newCulture.parameterlessPages.Add(key: page.Url, value: page);
             }
         }
-        pageCachesForPerCultures[currentCulture.Name] = newCulture;
+        pageCachesForPerCultures[key: currentCulture.Name] = newCulture;
         if (log.IsDebugEnabled)
         {
             log.DebugFormat(
-                "parameterless URL Api resolver initialised for culture {0}.",
-                currentCulture
+                format: "parameterless URL Api resolver initialised for culture {0}.",
+                arg0: currentCulture
             );
         }
     }

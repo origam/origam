@@ -80,11 +80,11 @@ public class Utility
             {
                 strFile = strFile.ToLower();
                 if (
-                    strFile.EndsWith(".jpg")
-                    || strFile.EndsWith(".bmp")
-                    || strFile.EndsWith(".ico")
-                    || strFile.EndsWith(".gif")
-                    || strFile.EndsWith(".png")
+                    strFile.EndsWith(value: ".jpg")
+                    || strFile.EndsWith(value: ".bmp")
+                    || strFile.EndsWith(value: ".ico")
+                    || strFile.EndsWith(value: ".gif")
+                    || strFile.EndsWith(value: ".png")
                 )
                 {
                     return true;
@@ -109,15 +109,15 @@ public class Utility
     public static string ParseEmailDate(string strDate)
     {
         string strRet = strDate.Trim();
-        int indexOfTag = strRet.IndexOf(",");
+        int indexOfTag = strRet.IndexOf(value: ",");
         if (indexOfTag != -1)
         {
-            strRet = strRet.Substring(indexOfTag + 1);
+            strRet = strRet.Substring(startIndex: indexOfTag + 1);
         }
-        strRet = QuoteText(strRet, "+");
-        strRet = QuoteText(strRet, "-");
-        strRet = QuoteText(strRet, "GMT");
-        strRet = QuoteText(strRet, "CST");
+        strRet = QuoteText(strText: strRet, strTag: "+");
+        strRet = QuoteText(strText: strRet, strTag: "-");
+        strRet = QuoteText(strText: strRet, strTag: "GMT");
+        strRet = QuoteText(strText: strRet, strTag: "CST");
         return strRet.Trim();
     }
 
@@ -129,10 +129,10 @@ public class Utility
     /// <returns>Quoted Text</returns>
     public static string QuoteText(string strText, string strTag)
     {
-        int indexOfTag = strText.IndexOf(strTag);
+        int indexOfTag = strText.IndexOf(value: strTag);
         if (indexOfTag != -1)
         {
-            return strText.Substring(0, indexOfTag - 1);
+            return strText.Substring(startIndex: 0, length: indexOfTag - 1);
         }
 
         return strText;
@@ -147,23 +147,23 @@ public class Utility
     {
         string strTag;
         strTag = "filename=";
-        int intPos = strHeader.ToLower().IndexOf(strTag);
+        int intPos = strHeader.ToLower().IndexOf(value: strTag);
         if (intPos == -1)
         {
             strTag = "name=";
-            intPos = strHeader.ToLower().IndexOf(strTag);
+            intPos = strHeader.ToLower().IndexOf(value: strTag);
         }
         string strRet;
         if (intPos != -1)
         {
-            strRet = strHeader.Substring(intPos + strTag.Length);
-            intPos = strRet.ToLower().IndexOf(";");
+            strRet = strHeader.Substring(startIndex: intPos + strTag.Length);
+            intPos = strRet.ToLower().IndexOf(value: ";");
             if (intPos != -1)
             {
-                strRet = strRet.Substring(1, intPos - 1);
+                strRet = strRet.Substring(startIndex: 1, length: intPos - 1);
             }
 
-            strRet = RemoveQuote(strRet);
+            strRet = RemoveQuote(strText: strRet);
         }
         else
         {
@@ -186,15 +186,15 @@ public class Utility
         ref string strAddress
     )
     {
-        int indexOfAB = strEmailAddress.Trim().LastIndexOf("<");
-        int indexOfEndAB = strEmailAddress.Trim().LastIndexOf(">");
+        int indexOfAB = strEmailAddress.Trim().LastIndexOf(value: "<");
+        int indexOfEndAB = strEmailAddress.Trim().LastIndexOf(value: ">");
         strUser = strEmailAddress;
         strAddress = strEmailAddress;
         if (indexOfAB >= 0 && indexOfEndAB >= 0)
         {
             if (indexOfAB > 0)
             {
-                strUser = strUser.Substring(0, indexOfAB - 1);
+                strUser = strUser.Substring(startIndex: 0, length: indexOfAB - 1);
                 //					strUser=strUser.Substring(0,indexOfAB-1).Trim('\"');
                 //					if(strUser.IndexOf("\"")>=0)
                 //					{
@@ -202,11 +202,14 @@ public class Utility
                 //					}
             }
             strUser = strUser.Trim();
-            strUser = strUser.Trim('\"');
-            strAddress = strAddress.Substring(indexOfAB + 1, indexOfEndAB - (indexOfAB + 1));
+            strUser = strUser.Trim(trimChars: '\"');
+            strAddress = strAddress.Substring(
+                startIndex: indexOfAB + 1,
+                length: indexOfEndAB - (indexOfAB + 1)
+            );
         }
         strUser = strUser.Trim();
-        strUser = DecodeText(strUser);
+        strUser = DecodeText(strText: strUser);
         strAddress = strAddress.Trim();
         return true;
     }
@@ -221,19 +224,19 @@ public class Utility
     {
         try
         {
-            if (File.Exists(strFile))
+            if (File.Exists(path: strFile))
             {
-                File.Delete(strFile);
+                File.Delete(path: strFile);
             }
 
-            FileStream fs = File.Create(strFile);
-            fs.Write(bytContent, 0, bytContent.Length);
+            FileStream fs = File.Create(path: strFile);
+            fs.Write(array: bytContent, offset: 0, count: bytContent.Length);
             fs.Close();
             return true;
         }
         catch (Exception e)
         {
-            Utility.LogError("SaveByteContentToFile():" + e.Message);
+            Utility.LogError(strText: "SaveByteContentToFile():" + e.Message);
             return false;
         }
     }
@@ -250,11 +253,11 @@ public class Utility
         try
         {
             bool blnRet = true;
-            if (File.Exists(strFile))
+            if (File.Exists(path: strFile))
             {
                 if (blnReplaceExists)
                 {
-                    File.Delete(strFile);
+                    File.Delete(path: strFile);
                 }
                 else
                 {
@@ -263,15 +266,15 @@ public class Utility
             }
             if (blnRet == true)
             {
-                StreamWriter sw = File.CreateText(strFile);
-                sw.Write(strText);
+                StreamWriter sw = File.CreateText(path: strFile);
+                sw.Write(value: strText);
                 sw.Close();
             }
             return blnRet;
         }
         catch (Exception e)
         {
-            Utility.LogError("SavePlainTextToFile():" + e.Message);
+            Utility.LogError(strText: "SavePlainTextToFile():" + e.Message);
             return false;
         }
     }
@@ -284,9 +287,9 @@ public class Utility
     /// <returns>True if reading succeeded, false if failed</returns>
     public static bool ReadPlainTextFromFile(string strFile, ref string strText)
     {
-        if (File.Exists(strFile))
+        if (File.Exists(path: strFile))
         {
-            StreamReader fs = new StreamReader(strFile);
+            StreamReader fs = new StreamReader(path: strFile);
             strText = fs.ReadToEnd();
             fs.Close();
             return true;
@@ -304,15 +307,18 @@ public class Utility
     {
         if (strRawHeader == null)
         {
-            throw new ArgumentNullException("strRawHeader", "Argument was null");
+            throw new ArgumentNullException(
+                paramName: "strRawHeader",
+                message: "Argument was null"
+            );
         }
 
         string[] array = new string[2] { "", "" };
-        int indexOfColon = strRawHeader.IndexOf(":");
+        int indexOfColon = strRawHeader.IndexOf(value: ":");
         try
         {
-            array[0] = strRawHeader.Substring(0, indexOfColon).Trim();
-            array[1] = strRawHeader.Substring(indexOfColon + 1).Trim();
+            array[0] = strRawHeader.Substring(startIndex: 0, length: indexOfColon).Trim();
+            array[1] = strRawHeader.Substring(startIndex: indexOfColon + 1).Trim();
         }
         catch (Exception) { }
         return array;
@@ -329,20 +335,20 @@ public class Utility
     {
         if (strText == null)
         {
-            throw new ArgumentNullException("strText", "Argument was null");
+            throw new ArgumentNullException(paramName: "strText", message: "Argument was null");
         }
 
         string[] array = new string[2] { "", "" };
-        int indexOfstrSplitter = strText.IndexOf(strSplitter);
+        int indexOfstrSplitter = strText.IndexOf(value: strSplitter);
         try
         {
-            array[0] = strText.Substring(0, indexOfstrSplitter).Trim();
-            array[1] = strText.Substring(indexOfstrSplitter + 1).Trim();
-            int pos = array[1].IndexOf("\"");
+            array[0] = strText.Substring(startIndex: 0, length: indexOfstrSplitter).Trim();
+            array[1] = strText.Substring(startIndex: indexOfstrSplitter + 1).Trim();
+            int pos = array[1].IndexOf(value: "\"");
             if (pos != -1)
             {
-                int pos2 = array[1].IndexOf("\"", pos + 1);
-                array[1] = array[1].Substring(pos + 1, pos2 - pos - 1);
+                int pos2 = array[1].IndexOf(value: "\"", startIndex: pos + 1);
+                array[1] = array[1].Substring(startIndex: pos + 1, length: pos2 - pos - 1);
             }
         }
         catch (Exception) { }
@@ -380,8 +386,8 @@ public class Utility
             return strText;
         }
 
-        byte[] b = Encoding.Default.GetBytes(strText);
-        return new string(Encoding.GetEncoding(strCharset).GetChars(b));
+        byte[] b = Encoding.Default.GetBytes(s: strText);
+        return new string(value: Encoding.GetEncoding(name: strCharset).GetChars(bytes: b));
     }
 
     /// <summary>
@@ -391,7 +397,7 @@ public class Utility
     /// <returns>standard base 64 text</returns>
     public static string RemoveNonB64(string strText)
     {
-        return strText.Replace("\0", "");
+        return strText.Replace(oldValue: "\0", newValue: "");
     }
 
     /// <summary>
@@ -401,7 +407,9 @@ public class Utility
     /// <returns>Text with white blanks</returns>
     public static string RemoveWhiteBlanks(string strText)
     {
-        return strText.Replace("\0", "").Replace("\r\n", "");
+        return strText
+            .Replace(oldValue: "\0", newValue: "")
+            .Replace(oldValue: "\r\n", newValue: "");
     }
 
     /// <summary>
@@ -412,14 +420,14 @@ public class Utility
     public static string RemoveQuote(string strText)
     {
         string strRet = strText;
-        if (strRet.StartsWith("\""))
+        if (strRet.StartsWith(value: "\""))
         {
-            strRet = strRet.Substring(1);
+            strRet = strRet.Substring(startIndex: 1);
         }
 
-        if (strRet.EndsWith("\""))
+        if (strRet.EndsWith(value: "\""))
         {
-            strRet = strRet.Substring(0, strRet.Length - 1);
+            strRet = strRet.Substring(startIndex: 0, length: strRet.Length - 1);
         }
 
         return strRet;
@@ -432,7 +440,7 @@ public class Utility
     /// <returns>Decoded text</returns>
     public static string DecodeLine(string strText)
     {
-        return DecodeText(RemoveWhiteBlanks(strText));
+        return DecodeText(strText: RemoveWhiteBlanks(strText: strText));
     }
 
     /// <summary>
@@ -442,8 +450,12 @@ public class Utility
     /// <returns>True if MIME text, false if not</returns>
     private static bool IsValidMIMEText(string strText)
     {
-        int intPos = strText.IndexOf("=?");
-        return (intPos != -1 && strText.IndexOf("?=", intPos + 6) != -1 && strText.Length > 7);
+        int intPos = strText.IndexOf(value: "=?");
+        return (
+            intPos != -1
+            && strText.IndexOf(value: "?=", startIndex: intPos + 6) != -1
+            && strText.Length > 7
+        );
     }
 
     /// <summary>
@@ -488,29 +500,32 @@ public class Utility
         try
         {
             string strRet = "";
-            string[] strParts = Regex.Split(strText, "\r\n");
+            string[] strParts = Regex.Split(input: strText, pattern: "\r\n");
             string strBody = "";
             const string strRegEx = @"\=\?(?<Charset>\S+)\?(?<Encoding>\w)\?(?<Content>\S+)\?\=";
             Match m = null;
             for (int i = 0; i < strParts.Length; i++)
             {
-                m = Regex.Match(strParts[i], strRegEx);
+                m = Regex.Match(input: strParts[i], pattern: strRegEx);
                 if (m.Success)
                 {
-                    strBody = m.Groups["Content"].Value;
-                    switch (m.Groups["Encoding"].Value.ToUpper())
+                    strBody = m.Groups[groupname: "Content"].Value;
+                    switch (m.Groups[groupname: "Encoding"].Value.ToUpper())
                     {
                         case "B":
                         {
-                            strBody = deCodeB64s(strBody, m.Groups["Charset"].Value);
+                            strBody = deCodeB64s(
+                                strText: strBody,
+                                strEncoding: m.Groups[groupname: "Charset"].Value
+                            );
                             break;
                         }
 
                         case "Q":
                         {
                             strBody = DecodeQP.ConvertHexContent(
-                                strBody,
-                                m.Groups["Charset"].Value
+                                Hexstring: strBody,
+                                encoding: m.Groups[groupname: "Charset"].Value
                             );
                             break;
                         }
@@ -524,7 +539,7 @@ public class Utility
                 }
                 else
                 {
-                    if (!IsValidMIMEText(strParts[i]))
+                    if (!IsValidMIMEText(strText: strParts[i]))
                     {
                         strRet += strParts[i];
                     }
@@ -601,7 +616,7 @@ public class Utility
     /// <returns></returns>
     public static string deCodeB64s(string strText)
     {
-        return Encoding.Default.GetString(deCodeB64(strText));
+        return Encoding.Default.GetString(bytes: deCodeB64(strText: strText));
     }
 
     public static string deCodeB64s(string strText, string strEncoding)
@@ -610,14 +625,16 @@ public class Utility
         {
             if (strEncoding.ToLower() == "ISO-8859-1".ToLower())
             {
-                return deCodeB64s(strText);
+                return deCodeB64s(strText: strText);
             }
 
-            return Encoding.GetEncoding(strEncoding).GetString(deCodeB64(strText));
+            return Encoding
+                .GetEncoding(name: strEncoding)
+                .GetString(bytes: deCodeB64(strText: strText));
         }
         catch
         {
-            return deCodeB64s(strText);
+            return deCodeB64s(strText: strText);
         }
     }
 
@@ -628,14 +645,14 @@ public class Utility
         {
             if (strText != "")
             {
-                by = Convert.FromBase64String(strText);
+                by = Convert.FromBase64String(s: strText);
                 //strText=Encoding.Default.GetString(by);
             }
         }
         catch (Exception e)
         {
-            by = Encoding.Default.GetBytes("\0");
-            LogError("deCodeB64():" + e.Message);
+            by = Encoding.Default.GetBytes(s: "\0");
+            LogError(strText: "deCodeB64():" + e.Message);
         }
         return by;
     }
@@ -660,13 +677,13 @@ public class Utility
             StreamWriter sw = null;
             try
             {
-                file = new FileInfo(m_strLogFile);
+                file = new FileInfo(fileName: m_strLogFile);
                 sw = file.AppendText();
                 //fs = new FileStream(m_strLogFile, FileMode.OpenOrCreate, FileAccess.Write);
                 //sw = new StreamWriter(fs);
-                sw.WriteLine(DateTime.Now);
-                sw.WriteLine(strText);
-                sw.WriteLine("\r\n");
+                sw.WriteLine(value: DateTime.Now);
+                sw.WriteLine(value: strText);
+                sw.WriteLine(value: "\r\n");
                 sw.Flush();
             }
             finally
@@ -709,11 +726,11 @@ public class Utility
     {
         if (strText == null)
         {
-            throw new ArgumentNullException("strText", "Argument was null");
+            throw new ArgumentNullException(paramName: "strText", message: "Argument was null");
         }
 
         string[] array = null;
-        int indexOfColon = strText.IndexOf(";");
+        int indexOfColon = strText.IndexOf(value: ";");
         if (indexOfColon < 0)
         {
             array = new string[1];
@@ -724,8 +741,8 @@ public class Utility
         array = new string[2];
         try
         {
-            array[0] = strText.Substring(0, indexOfColon).Trim();
-            array[1] = strText.Substring(indexOfColon + 1).Trim();
+            array[0] = strText.Substring(startIndex: 0, length: indexOfColon).Trim();
+            array[1] = strText.Substring(startIndex: indexOfColon + 1).Trim();
         }
         catch (Exception) { }
         return array;

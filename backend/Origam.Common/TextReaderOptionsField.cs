@@ -59,7 +59,7 @@ public class TextReaderOptionsField
         set { _format = value; }
     }
 
-    [XmlArrayItem("Format", typeof(string))]
+    [XmlArrayItem(elementName: "Format", type: typeof(string))]
     public string[] AlternativeFormats
     {
         get { return _alternativeFormats; }
@@ -129,7 +129,7 @@ public class TextReaderOptionsField
             return CultureInfo.InvariantCulture;
         }
 
-        return new CultureInfo(_culture);
+        return new CultureInfo(name: _culture);
     }
 
     public string[] Formats
@@ -152,7 +152,7 @@ public class TextReaderOptionsField
             }
             string[] result = new string[this.AlternativeFormats.LongLength + 1];
             result[0] = this.Format;
-            this.AlternativeFormats.CopyTo(result, 1);
+            this.AlternativeFormats.CopyTo(array: result, index: 1);
 
             return result;
         }

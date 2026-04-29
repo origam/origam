@@ -31,7 +31,7 @@ public static class ObjectExtensions
 
     public static bool IsDefault(this object obj)
     {
-        if (ReferenceEquals(obj, null))
+        if (ReferenceEquals(objA: obj, objB: null))
         {
             return true;
         }
@@ -39,19 +39,19 @@ public static class ObjectExtensions
         Type type = obj.GetType();
         if (type.IsValueType)
         {
-            return obj.Equals(GetValueTypeDefault(type));
+            return obj.Equals(obj: GetValueTypeDefault(type: type));
         }
         return false;
     }
 
     private static object GetValueTypeDefault(Type type)
     {
-        if (caschedDefaultTypes.ContainsKey(type))
+        if (caschedDefaultTypes.ContainsKey(key: type))
         {
-            return caschedDefaultTypes[type];
+            return caschedDefaultTypes[key: type];
         }
-        object defValue = Activator.CreateInstance(type);
-        caschedDefaultTypes.Add(type, defValue);
+        object defValue = Activator.CreateInstance(type: type);
+        caschedDefaultTypes.Add(key: type, value: defValue);
         return defValue;
     }
 }

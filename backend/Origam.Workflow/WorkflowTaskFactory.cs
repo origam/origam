@@ -77,9 +77,9 @@ public class WorkflowTaskFactory
             default:
             {
                 throw new ArgumentOutOfRangeException(
-                    "step",
-                    step,
-                    ResourceUtils.GetString("ErrorStepNotImplemented")
+                    paramName: "step",
+                    actualValue: step,
+                    message: ResourceUtils.GetString(key: "ErrorStepNotImplemented")
                 );
             }
         }

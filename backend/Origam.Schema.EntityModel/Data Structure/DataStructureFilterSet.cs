@@ -29,24 +29,28 @@ namespace Origam.Schema.EntityModel;
 /// <summary>
 /// Summary description for DataQuery.
 /// </summary>
-[SchemaItemDescription("Filter Set", "Filter Sets", "icon_filter-set.png")]
-[HelpTopic("Filter+Sets")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(
+    name: "Filter Set",
+    folderName: "Filter Sets",
+    iconName: "icon_filter-set.png"
+)]
+[HelpTopic(topic: "Filter+Sets")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class DataStructureFilterSet : DataStructureMethod
 {
     public DataStructureFilterSet() { }
 
     public DataStructureFilterSet(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(schemaExtensionId: schemaExtensionId) { }
 
     public DataStructureFilterSet(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Properties
     private bool _isDynamic = false;
 
-    [DefaultValue(false)]
-    [XmlAttribute("dynamic")]
+    [DefaultValue(value: false)]
+    [XmlAttribute(attributeName: "dynamic")]
     [DynamicModelElementRule]
     public bool IsDynamic
     {
@@ -68,7 +72,11 @@ public class DataStructureFilterSet : DataStructureMethod
         {
             itemName = "OR";
         }
-        return base.NewItem<T>(schemaExtensionId, group, itemName);
+        return base.NewItem<T>(
+            schemaExtensionId: schemaExtensionId,
+            group: group,
+            itemName: itemName
+        );
     }
     #endregion
 }

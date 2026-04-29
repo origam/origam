@@ -34,13 +34,13 @@ namespace Origam.Schema.EntityModel;
 /// Summary description for EntitySecurityRule.
 /// </summary>
 [SchemaItemDescription(
-    "Conditional Formatting Rule",
-    "Conditional Formatting",
-    "icon_conditional-formatting-rule.png"
+    name: "Conditional Formatting Rule",
+    folderName: "Conditional Formatting",
+    iconName: "icon_conditional-formatting-rule.png"
 )]
-[HelpTopic("Conditional+Formatting+Rules")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[HelpTopic(topic: "Conditional+Formatting+Rules")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class EntityConditionalFormatting : AbstractSchemaItem, IComparable
 {
     public const string CategoryConst = "EntityConditionalFormatting";
@@ -49,10 +49,10 @@ public class EntityConditionalFormatting : AbstractSchemaItem, IComparable
         : base() { }
 
     public EntityConditionalFormatting(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public EntityConditionalFormatting(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Overriden AbstractDataEntityColumn Members
 
@@ -68,29 +68,29 @@ public class EntityConditionalFormatting : AbstractSchemaItem, IComparable
     {
         if (this.Rule != null)
         {
-            base.GetParameterReferences(Rule, list);
+            base.GetParameterReferences(parentItem: Rule, list: list);
         }
     }
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(this.Rule);
+        dependencies.Add(item: this.Rule);
         if (this.ForegroundColorLookup != null)
         {
-            dependencies.Add(this.ForegroundColorLookup);
+            dependencies.Add(item: this.ForegroundColorLookup);
         }
 
         if (this.BackgroundColorLookup != null)
         {
-            dependencies.Add(this.BackgroundColorLookup);
+            dependencies.Add(item: this.BackgroundColorLookup);
         }
 
         if (this.DynamicColorLookupField != null)
         {
-            dependencies.Add(this.DynamicColorLookupField);
+            dependencies.Add(item: this.DynamicColorLookupField);
         }
 
-        base.GetExtraDependencies(dependencies);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override void UpdateReferences()
@@ -99,7 +99,7 @@ public class EntityConditionalFormatting : AbstractSchemaItem, IComparable
         {
             if (item.OldPrimaryKey != null)
             {
-                if (item.OldPrimaryKey.Equals(this.Rule.PrimaryKey))
+                if (item.OldPrimaryKey.Equals(obj: this.Rule.PrimaryKey))
                 {
                     this.Rule = item as IEntityRule;
                     break;
@@ -122,7 +122,7 @@ public class EntityConditionalFormatting : AbstractSchemaItem, IComparable
         {
             name += "_" + this.Rule.Name;
         }
-        name += "_" + this.Roles.Replace(";", "_");
+        name += "_" + this.Roles.Replace(oldValue: ";", newValue: "_");
         this.Name = name;
     }
     #endregion
@@ -134,9 +134,9 @@ public class EntityConditionalFormatting : AbstractSchemaItem, IComparable
 
     private string _roles = "";
 
-    [Category("Condition"), RefreshProperties(RefreshProperties.Repaint)]
+    [Category(category: "Condition"), RefreshProperties(refresh: RefreshProperties.Repaint)]
     [StringNotEmptyModelElementRule()]
-    [XmlAttribute("roles")]
+    [XmlAttribute(attributeName: "roles")]
     public string Roles
     {
         get { return _roles; }
@@ -147,14 +147,14 @@ public class EntityConditionalFormatting : AbstractSchemaItem, IComparable
         }
     }
 
-    [Browsable(false)]
-    [XmlAttribute("backgroundColor")]
+    [Browsable(browsable: false)]
+    [XmlAttribute(attributeName: "backgroundColor")]
     public int _backColorInt;
 
-    [Category("Formatting"), RefreshProperties(RefreshProperties.Repaint)]
+    [Category(category: "Formatting"), RefreshProperties(refresh: RefreshProperties.Repaint)]
     public Color BackgroundColor
     {
-        get { return Color.FromArgb(_backColorInt); }
+        get { return Color.FromArgb(argb: _backColorInt); }
         set
         {
             _backColorInt = value.ToArgb();
@@ -162,14 +162,14 @@ public class EntityConditionalFormatting : AbstractSchemaItem, IComparable
         }
     }
 
-    [Browsable(false)]
-    [XmlAttribute("foregroundColor")]
+    [Browsable(browsable: false)]
+    [XmlAttribute(attributeName: "foregroundColor")]
     public int _foreColorInt;
 
-    [Category("Formatting"), RefreshProperties(RefreshProperties.Repaint)]
+    [Category(category: "Formatting"), RefreshProperties(refresh: RefreshProperties.Repaint)]
     public Color ForegroundColor
     {
-        get { return Color.FromArgb(_foreColorInt); }
+        get { return Color.FromArgb(argb: _foreColorInt); }
         set
         {
             _foreColorInt = value.ToArgb();
@@ -178,8 +178,12 @@ public class EntityConditionalFormatting : AbstractSchemaItem, IComparable
     }
     private int _level = 100;
 
-    [Category("Condition"), DefaultValue(100), RefreshProperties(RefreshProperties.Repaint)]
-    [XmlAttribute("level")]
+    [
+        Category(category: "Condition"),
+        DefaultValue(value: 100),
+        RefreshProperties(refresh: RefreshProperties.Repaint)
+    ]
+    [XmlAttribute(attributeName: "level")]
     public int Level
     {
         get { return _level; }
@@ -191,23 +195,23 @@ public class EntityConditionalFormatting : AbstractSchemaItem, IComparable
     }
     public Guid RuleId;
 
-    [TypeConverter(typeof(EntityRuleConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [Category("Condition")]
-    [XmlReference("rule", "RuleId")]
+    [TypeConverter(type: typeof(EntityRuleConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [Category(category: "Condition")]
+    [XmlReference(attributeName: "rule", idField: "RuleId")]
     public IEntityRule Rule
     {
         get
         {
             return (IEntityRule)
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(this.RuleId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: this.RuleId)
                 );
         }
         set
         {
-            this.RuleId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
+            this.RuleId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]);
 
             UpdateName();
         }
@@ -215,65 +219,72 @@ public class EntityConditionalFormatting : AbstractSchemaItem, IComparable
 
     public Guid ForeColorLookupId;
 
-    [TypeConverter(typeof(DataLookupConverter))]
-    [Category("Dynamic Color")]
-    [XmlReference("foregroundColorLookup", "ForeColorLookupId")]
+    [TypeConverter(type: typeof(DataLookupConverter))]
+    [Category(category: "Dynamic Color")]
+    [XmlReference(attributeName: "foregroundColorLookup", idField: "ForeColorLookupId")]
     public IDataLookup ForegroundColorLookup
     {
         get
         {
             return (IDataLookup)
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(this.ForeColorLookupId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: this.ForeColorLookupId)
                 );
         }
         set
         {
-            this.ForeColorLookupId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
+            this.ForeColorLookupId = (
+                value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]
+            );
         }
     }
 
     public Guid BackColorLookupId;
 
-    [TypeConverter(typeof(DataLookupConverter))]
-    [Category("Dynamic Color")]
-    [XmlReference("backgroundColorLookup", "BackColorLookupId")]
+    [TypeConverter(type: typeof(DataLookupConverter))]
+    [Category(category: "Dynamic Color")]
+    [XmlReference(attributeName: "backgroundColorLookup", idField: "BackColorLookupId")]
     public IDataLookup BackgroundColorLookup
     {
         get
         {
             return (IDataLookup)
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(this.BackColorLookupId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: this.BackColorLookupId)
                 );
         }
         set
         {
-            this.BackColorLookupId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
+            this.BackColorLookupId = (
+                value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]
+            );
         }
     }
     public Guid DynamicColorLookupFieldId;
 
-    [TypeConverter(typeof(EntityColumnReferenceConverter))]
-    [NotNullModelElementRule("ForegroundColorLookup", "BackgroundColorLookup")]
-    [Category("Dynamic Color")]
-    [XmlReference("dynamicColorLookupField", "DynamicColorLookupFieldId")]
+    [TypeConverter(type: typeof(EntityColumnReferenceConverter))]
+    [NotNullModelElementRule(
+        conditionField1: "ForegroundColorLookup",
+        conditionField2: "BackgroundColorLookup"
+    )]
+    [Category(category: "Dynamic Color")]
+    [XmlReference(attributeName: "dynamicColorLookupField", idField: "DynamicColorLookupFieldId")]
     public IDataEntityColumn DynamicColorLookupField
     {
         get
         {
             return (IDataEntityColumn)
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(this.DynamicColorLookupFieldId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: this.DynamicColorLookupFieldId)
                 );
         }
         set
         {
             this.DynamicColorLookupFieldId = (
-                value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]
+                value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]
             );
         }
     }
@@ -284,10 +295,10 @@ public class EntityConditionalFormatting : AbstractSchemaItem, IComparable
         EntityConditionalFormatting compared = obj as EntityConditionalFormatting;
         if (compared != null)
         {
-            return this.Level.CompareTo(compared.Level);
+            return this.Level.CompareTo(value: compared.Level);
         }
 
-        return base.CompareTo(obj);
+        return base.CompareTo(obj: obj);
     }
     #endregion
 }
@@ -314,10 +325,16 @@ public class EntityFormatting
     }
     public bool UseDefaultForeColor
     {
-        get { return this.ForeColor.Equals(Color.FromArgb(0, 0, 0, 0)); }
+        get
+        {
+            return this.ForeColor.Equals(obj: Color.FromArgb(alpha: 0, red: 0, green: 0, blue: 0));
+        }
     }
     public bool UseDefaultBackColor
     {
-        get { return this.BackColor.Equals(Color.FromArgb(0, 0, 0, 0)); }
+        get
+        {
+            return this.BackColor.Equals(obj: Color.FromArgb(alpha: 0, red: 0, green: 0, blue: 0));
+        }
     }
 }

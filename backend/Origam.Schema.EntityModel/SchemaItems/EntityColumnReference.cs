@@ -31,11 +31,11 @@ namespace Origam.Schema.EntityModel;
 /// <summary>
 /// Summary description for EntityColumnReference.
 /// </summary>
-[SchemaItemDescription("Field Reference", "icon_field-reference.png")]
-[HelpTopic("Field+Reference")]
-[XmlModelRoot(CategoryConst)]
-[DefaultProperty("Field")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Field Reference", iconName: "icon_field-reference.png")]
+[HelpTopic(topic: "Field+Reference")]
+[XmlModelRoot(category: CategoryConst)]
+[DefaultProperty(name: "Field")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class EntityColumnReference : AbstractSchemaItem
 {
     public const string CategoryConst = "EntityColumnReference";
@@ -44,10 +44,10 @@ public class EntityColumnReference : AbstractSchemaItem
         : base() { }
 
     public EntityColumnReference(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public EntityColumnReference(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Overriden AbstractDataEntityColumn Members
     public override string ItemType
@@ -76,14 +76,14 @@ public class EntityColumnReference : AbstractSchemaItem
     {
         if (this.Field != null)
         {
-            base.GetParameterReferences(Field, list);
+            base.GetParameterReferences(parentItem: Field, list: list);
         }
     }
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(this.Field);
-        base.GetExtraDependencies(dependencies);
+        dependencies.Add(item: this.Field);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override void UpdateReferences()
@@ -92,7 +92,7 @@ public class EntityColumnReference : AbstractSchemaItem
         {
             if (item.OldPrimaryKey != null)
             {
-                if (item.OldPrimaryKey.Equals(this.Field.PrimaryKey))
+                if (item.OldPrimaryKey.Equals(obj: this.Field.PrimaryKey))
                 {
                     this.Field = item as IDataEntityColumn;
                     break;
@@ -110,23 +110,26 @@ public class EntityColumnReference : AbstractSchemaItem
     #region Properties
     public Guid FieldId;
 
-    [Category("Reference")]
-    [TypeConverter(typeof(EntityColumnReferenceConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
+    [Category(category: "Reference")]
+    [TypeConverter(type: typeof(EntityColumnReferenceConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
     [NotNullModelElementRule()]
-    [XmlReference("field", "FieldId")]
+    [XmlReference(attributeName: "field", idField: "FieldId")]
     public IDataEntityColumn Field
     {
         get
         {
             ModelElementKey key = new ModelElementKey();
             key.Id = this.FieldId;
-            return (ISchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key)
-                as IDataEntityColumn;
+            return (ISchemaItem)
+                    this.PersistenceProvider.RetrieveInstance(
+                        type: typeof(ISchemaItem),
+                        primaryKey: key
+                    ) as IDataEntityColumn;
         }
         set
         {
-            this.FieldId = (Guid)value.PrimaryKey["Id"];
+            this.FieldId = (Guid)value.PrimaryKey[key: "Id"];
             if (this.Name == null)
             {
                 this.Name = this.Field.Name;

@@ -34,7 +34,7 @@ public class CreateDatabaseStructureBuilderTask
     public override void Execute(Project project)
     {
         var schema = ServiceManager.Services.GetService<SchemaService>();
-        OrigamEngine.OrigamEngine.InitializeSchemaItemProviders(schema);
+        OrigamEngine.OrigamEngine.InitializeSchemaItemProviders(service: schema);
 
         var deploymentService = ServiceManager.Services.GetService<IDeploymentService>();
         deploymentService.Deploy();

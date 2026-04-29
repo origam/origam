@@ -54,17 +54,19 @@ namespace Origam.Server.Model.Chat
         )
         {
             List<OrigamChatRoom> chatRoom = new List<OrigamChatRoom>();
-            DataTable table = ChatRoomDataSet.Tables["OrigamChatRoom"];
+            DataTable table = ChatRoomDataSet.Tables[name: "OrigamChatRoom"];
             foreach (DataRow row in table.Rows)
             {
-                Guid chatRoomId = row.Field<Guid>("Id");
+                Guid chatRoomId = row.Field<Guid>(columnName: "Id");
                 chatRoom.Add(
-                    new OrigamChatRoom(
-                        row.Field<Guid>("Id"),
-                        row.Field<string>("Name"),
-                        unreadMessages.ContainsKey(chatRoomId) ? unreadMessages[chatRoomId] : 0,
-                        row.Field<string>("ReferenceEntity"),
-                        row.Field<Nullable<Guid>>("ReferenceId")
+                    item: new OrigamChatRoom(
+                        id: row.Field<Guid>(columnName: "Id"),
+                        topic: row.Field<string>(columnName: "Name"),
+                        unreadMessageCount: unreadMessages.ContainsKey(key: chatRoomId)
+                            ? unreadMessages[key: chatRoomId]
+                            : 0,
+                        categoryName: row.Field<string>(columnName: "ReferenceEntity"),
+                        referenceId: row.Field<Nullable<Guid>>(columnName: "ReferenceId")
                     )
                 );
             }

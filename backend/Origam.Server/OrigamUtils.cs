@@ -58,14 +58,14 @@ public static class OrigamUtils
                 {
                     errorMessage += ex.Message + "\n" + ex.StackTrace;
                 }
-                if (!string.IsNullOrWhiteSpace(errorMessage))
+                if (!string.IsNullOrWhiteSpace(value: errorMessage))
                 {
                     FatalErrorMiddleware.ErrorMessage =
                         "An error has occured during automatic model reload. Please restart the server.\n"
                         + errorMessage;
                     loggerFactory
-                        .CreateLogger("Model Reload")
-                        .Log(LogLevel.Error, FatalErrorMiddleware.ErrorMessage);
+                        .CreateLogger(categoryName: "Model Reload")
+                        .Log(logLevel: LogLevel.Error, message: FatalErrorMiddleware.ErrorMessage);
                 }
             };
         }

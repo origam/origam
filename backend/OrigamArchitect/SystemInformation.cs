@@ -29,7 +29,7 @@ class SystemInformation : SplashScreenPopUp
     protected override void SystemInformation_Load(object sender, EventArgs e)
     {
         Origam.Workflow.DebugInfo di = new Origam.Workflow.DebugInfo();
-        SetText(di.GetInfo());
+        SetText(text: di.GetInfo());
     }
 
     protected override string GetTitle()
@@ -42,9 +42,9 @@ class Attributions : SplashScreenPopUp
 {
     protected override void SystemInformation_Load(object sender, EventArgs e)
     {
-        if (File.Exists("Attributions.txt"))
+        if (File.Exists(path: "Attributions.txt"))
         {
-            SetText(File.ReadAllText("Attributions.txt"));
+            SetText(text: File.ReadAllText(path: "Attributions.txt"));
         }
     }
 

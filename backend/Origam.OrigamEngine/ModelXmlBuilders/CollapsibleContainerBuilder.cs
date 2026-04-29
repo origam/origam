@@ -30,6 +30,6 @@ public class CollapsibleContainerBuilder
 {
     public static void Build(XmlElement parentNode)
     {
-        VBoxBuilder.Build(parentNode);
+        VBoxBuilder.Build(parentNode: parentNode);
     }
 }

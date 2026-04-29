@@ -56,7 +56,7 @@ public class XmlTools
 
             return "";
         }
-        return ConvertToString(arg);
+        return ConvertToString(val: arg);
     }
 
     public static string ConvertToString(object val)
@@ -72,32 +72,35 @@ public class XmlTools
 
         if (val is double)
         {
-            return XmlConvert.ToString((double)val);
+            return XmlConvert.ToString(value: (double)val);
         }
 
         if (val is int)
         {
-            return XmlConvert.ToString((int)val);
+            return XmlConvert.ToString(value: (int)val);
         }
 
         if (val is bool)
         {
-            return XmlConvert.ToString((bool)val);
+            return XmlConvert.ToString(value: (bool)val);
         }
 
         if (val is DateTime)
         {
-            return XmlConvert.ToString((DateTime)val, XmlDateTimeSerializationMode.Unspecified);
+            return XmlConvert.ToString(
+                value: (DateTime)val,
+                dateTimeOption: XmlDateTimeSerializationMode.Unspecified
+            );
         }
 
         if (val is decimal)
         {
-            return XmlConvert.ToString((decimal)val);
+            return XmlConvert.ToString(value: (decimal)val);
         }
 
         if (val is byte[])
         {
-            return Convert.ToBase64String((byte[])val);
+            return Convert.ToBase64String(inArray: (byte[])val);
         }
 
         if (val is IList)
@@ -129,16 +132,18 @@ public class XmlTools
             // skip the topmost element
             if (!(currentNode is XmlDocument))
             {
-                XmlNode currentNodeCopy = result.ImportNode(currentNode, false);
+                XmlNode currentNodeCopy = result.ImportNode(node: currentNode, deep: false);
                 // now get all nodes except of any node with a name of the previous node
                 foreach (XmlNode childNode in (currentNode.ChildNodes))
                 {
                     if (childNode.Name != previousNode.Name)
                     {
-                        currentNodeCopy.AppendChild(result.ImportNode(childNode, true));
+                        currentNodeCopy.AppendChild(
+                            newChild: result.ImportNode(node: childNode, deep: true)
+                        );
                     }
                 }
-                nodes.Add(currentNodeCopy);
+                nodes.Add(item: currentNodeCopy);
 
                 previousNode = currentNode;
             }
@@ -147,60 +152,65 @@ public class XmlTools
         XmlNode currentElement = result;
         for (int i = nodes.Count - 1; i >= 0; i--)
         {
-            currentElement = currentElement.AppendChild(nodes[i]);
+            currentElement = currentElement.AppendChild(newChild: nodes[index: i]);
         }
         // finally add our current element and all its children (deep copy)
-        XmlNode deepCopy = result.ImportNode(((IHasXmlNode)iter.Current).GetNode(), true);
-        currentElement.AppendChild(deepCopy);
+        XmlNode deepCopy = result.ImportNode(
+            node: ((IHasXmlNode)iter.Current).GetNode(),
+            deep: true
+        );
+        currentElement.AppendChild(newChild: deepCopy);
         return result;
     }
 
     public static IList<string> ResolveTransformationParameters(string transformationText)
     {
         XmlDocument doc = new XmlDocument();
-        doc.LoadXml(transformationText);
-        return ResolveTransformationParameters(doc);
+        doc.LoadXml(xml: transformationText);
+        return ResolveTransformationParameters(doc: doc);
     }
 
     public static IList<string> ResolveTransformationParameters(XmlDocument doc)
     {
-        return ResolveTransformationParameterElements(doc)
-            .Select(node => node.GetAttribute("name"))
+        return ResolveTransformationParameterElements(doc: doc)
+            .Select(selector: node => node.GetAttribute(name: "name"))
             .ToList();
     }
 
     public static IList<XmlElement> ResolveTransformationParameterElements(XmlDocument doc)
     {
-        XmlNamespaceManager nsmgr = new XmlNamespaceManager(doc.NameTable);
-        nsmgr.AddNamespace("xsl", XslNameSpace);
-        return doc.SelectNodes("/xsl:stylesheet/xsl:param", nsmgr).Cast<XmlElement>().ToList();
+        XmlNamespaceManager nsmgr = new XmlNamespaceManager(nameTable: doc.NameTable);
+        nsmgr.AddNamespace(prefix: "xsl", uri: XslNameSpace);
+        return doc.SelectNodes(xpath: "/xsl:stylesheet/xsl:param", nsmgr: nsmgr)
+            .Cast<XmlElement>()
+            .ToList();
     }
 
     public static string FormatXmlString(object value)
     {
         if (value is DateTime)
         {
-            return FormatXmlDateTime((DateTime)value);
+            return FormatXmlDateTime(date: (DateTime)value);
         }
 
         if (value is decimal)
         {
-            return XmlConvert.ToString((decimal)value);
+            return XmlConvert.ToString(value: (decimal)value);
         }
 
         if (value is float)
         {
-            return XmlConvert.ToString((float)value);
+            return XmlConvert.ToString(value: (float)value);
         }
 
         if (value is double)
         {
-            return XmlConvert.ToString((double)value);
+            return XmlConvert.ToString(value: (double)value);
         }
 
         if (value is bool)
         {
-            return XmlConvert.ToString((bool)value);
+            return XmlConvert.ToString(value: (bool)value);
         }
 
         if (value == null || value == DBNull.Value)
@@ -215,19 +225,19 @@ public class XmlTools
     {
         if (date.Hour == 0 & date.Minute == 0 & date.Second == 0 & date.Millisecond == 0)
         {
-            TimeSpan offset = TimeZoneInfo.Local.GetUtcOffset(date);
+            TimeSpan offset = TimeZoneInfo.Local.GetUtcOffset(dateTime: date);
             int hours = offset.Duration().Hours;
             string sign = hours >= 0 ? "+" : "-";
             string result =
-                date.ToString("yyyy-MM-dd")
+                date.ToString(format: "yyyy-MM-dd")
                 + "T00:00:00.0000000"
                 + sign
-                + hours.ToString("00")
+                + hours.ToString(format: "00")
                 + ":"
-                + offset.Minutes.ToString("00");
+                + offset.Minutes.ToString(format: "00");
             return result;
         }
 
-        return date.ToString("yyyy-MM-ddTHH:mm:ss.fffffffzzz");
+        return date.ToString(format: "yyyy-MM-ddTHH:mm:ss.fffffffzzz");
     }
 }

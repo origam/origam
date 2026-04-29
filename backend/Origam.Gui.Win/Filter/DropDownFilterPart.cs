@@ -38,7 +38,14 @@ public class DropDownFilterPart : FilterPart
         string label,
         FormGenerator formGenerator
     )
-        : base(filteredControl, dataType, dataMember, gridColumnName, label, formGenerator)
+        : base(
+            filteredControl: filteredControl,
+            dataType: dataType,
+            dataMember: dataMember,
+            gridColumnName: gridColumnName,
+            label: label,
+            formGenerator: formGenerator
+        )
     {
         this.FilterDropDown.CaptionPosition = CaptionPosition.None;
     }
@@ -79,18 +86,20 @@ public class DropDownFilterPart : FilterPart
         this.FilterControls.Clear();
         if (this.DropDown == null)
         {
-            throw new NullReferenceException(ResourceUtils.GetString("ErrorDropDownNotSource"));
+            throw new NullReferenceException(
+                message: ResourceUtils.GetString(key: "ErrorDropDownNotSource")
+            );
         }
 
         if (this.DropDown.ParameterMappings.Count > 0)
         {
-            throw new Exception(ResourceUtils.GetString("ErrorNoParams"));
+            throw new Exception(message: ResourceUtils.GetString(key: "ErrorNoParams"));
         }
         this.FilterDropDown.Tag = (
             this.Operator != FilterOperator.IsNull & this.Operator != FilterOperator.NotIsNull
         );
         this.FilterDropDown.LookupId = this.DropDown.LookupId;
-        this.FilterControls.Add(this.FilterDropDown);
+        this.FilterControls.Add(item: this.FilterDropDown);
         SubscribeEvents();
         OnControlsChanged();
     }
@@ -110,7 +119,7 @@ public class DropDownFilterPart : FilterPart
                 _filterDropDown = null;
             }
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
     #endregion
     #region EventHandlers
@@ -124,7 +133,11 @@ public class DropDownFilterPart : FilterPart
     {
         ServiceManager
             .Services.GetService<IControlsLookUpService>()
-            .AddLookupControl(this.FilterDropDown, this.FormGenerator.Form, false);
+            .AddLookupControl(
+                lookupControl: this.FilterDropDown,
+                form: this.FormGenerator.Form,
+                showEditCommand: false
+            );
         this.FilterDropDown.lookupValueChanged += new EventHandler(
             FilterDropDown_lookupValueChanged
         );
@@ -134,7 +147,7 @@ public class DropDownFilterPart : FilterPart
     {
         ServiceManager
             .Services.GetService<IControlsLookUpService>()
-            .RemoveLookupControl(this.FilterDropDown);
+            .RemoveLookupControl(lookupControl: this.FilterDropDown);
         this.FilterDropDown.lookupValueChanged -= new EventHandler(
             FilterDropDown_lookupValueChanged
         );

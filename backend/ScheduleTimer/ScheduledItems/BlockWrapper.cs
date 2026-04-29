@@ -27,47 +27,52 @@ public class BlockWrapper : IScheduledItem
     public BlockWrapper(IScheduledItem item, string StrBase, string BeginOffset, string EndOffset)
     {
         _Item = item;
-        _Begin = new ScheduledTime(StrBase, BeginOffset);
-        _End = new ScheduledTime(StrBase, EndOffset);
+        _Begin = new ScheduledTime(StrBase: StrBase, StrOffset: BeginOffset);
+        _End = new ScheduledTime(StrBase: StrBase, StrOffset: EndOffset);
     }
 
     public void AddEventsInInterval(DateTime Begin, DateTime End, List<DateTime> List)
     {
-        DateTime Next = NextRunTime(Begin, true);
+        DateTime Next = NextRunTime(time: Begin, AllowExact: true);
         while (Next < End)
         {
-            List.Add(Next);
-            Next = NextRunTime(Next, false);
+            List.Add(item: Next);
+            Next = NextRunTime(time: Next, AllowExact: false);
         }
     }
 
     public DateTime NextRunTime(DateTime time, bool AllowExact)
     {
-        return NextRunTime(time, 100, AllowExact);
+        return NextRunTime(time: time, count: 100, AllowExact: AllowExact);
     }
 
     DateTime NextRunTime(DateTime time, int count, bool AllowExact)
     {
         if (count == 0)
         {
-            throw new Exception("Invalid block wrapper combination.");
+            throw new Exception(message: "Invalid block wrapper combination.");
         }
 
-        DateTime temp = _Item.NextRunTime(time, AllowExact),
-            begin = _Begin.NextRunTime(time, true),
-            end = _End.NextRunTime(time, true);
+        DateTime temp = _Item.NextRunTime(time: time, IncludeStartTime: AllowExact),
+            begin = _Begin.NextRunTime(time: time, AllowExact: true),
+            end = _End.NextRunTime(time: time, AllowExact: true);
         System.Diagnostics.Debug.WriteLine(
-            string.Format("{0} {1} {2} {3}", time, begin, end, temp)
+            message: string.Format(
+                format: "{0} {1} {2} {3}",
+                args: new object[] { time, begin, end, temp }
+            )
         );
         bool A = temp > end,
             B = temp < begin,
             C = end < begin;
-        System.Diagnostics.Debug.WriteLine(string.Format("{0} {1} {2}", A, B, C));
+        System.Diagnostics.Debug.WriteLine(
+            message: string.Format(format: "{0} {1} {2}", arg0: A, arg1: B, arg2: C)
+        );
         if (C)
         {
             if (A && B)
             {
-                return NextRunTime(begin, --count, false);
+                return NextRunTime(time: begin, count: --count, AllowExact: false);
             }
 
             return temp;
@@ -80,10 +85,10 @@ public class BlockWrapper : IScheduledItem
 
         if (!A)
         {
-            return NextRunTime(begin, --count, false);
+            return NextRunTime(time: begin, count: --count, AllowExact: false);
         }
 
-        return NextRunTime(end, --count, false);
+        return NextRunTime(time: end, count: --count, AllowExact: false);
     }
 
     private IScheduledItem _Item;

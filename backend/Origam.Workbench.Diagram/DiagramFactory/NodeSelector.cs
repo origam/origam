@@ -40,7 +40,7 @@ public class NodeSelector : INodeSelector
         get => selected;
         set
         {
-            SelectedNodeId = GetSelectedNodeId(value);
+            SelectedNodeId = GetSelectedNodeId(node: value);
             selected = value;
         }
     }
@@ -51,7 +51,7 @@ public class NodeSelector : INodeSelector
         {
             return infrastructureSubgraph.WorkflowItemId;
         }
-        return IdTranslator.NodeToSchema(node?.Id);
+        return IdTranslator.NodeToSchema(nodeId: node?.Id);
     }
 
     public bool MarkedForExpansion { get; set; }

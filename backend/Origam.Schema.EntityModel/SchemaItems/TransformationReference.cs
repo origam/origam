@@ -31,11 +31,11 @@ namespace Origam.Schema.EntityModel;
 /// <summary>
 /// Summary description for TransformationReference.
 /// </summary>
-[SchemaItemDescription("Transformation Reference", 16)]
-[HelpTopic("Transformation+Reference")]
-[XmlModelRoot(CategoryConst)]
-[DefaultProperty("Transformation")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Transformation Reference", icon: 16)]
+[HelpTopic(topic: "Transformation+Reference")]
+[XmlModelRoot(category: CategoryConst)]
+[DefaultProperty(name: "Transformation")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class TransformationReference : AbstractSchemaItem
 {
     public const string CategoryConst = "TransformationReference";
@@ -44,10 +44,10 @@ public class TransformationReference : AbstractSchemaItem
         : base() { }
 
     public TransformationReference(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public TransformationReference(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Overriden AbstractDataEntityColumn Members
 
@@ -67,14 +67,14 @@ public class TransformationReference : AbstractSchemaItem
     {
         if (this.Transformation != null)
         {
-            base.GetParameterReferences(Transformation, list);
+            base.GetParameterReferences(parentItem: Transformation, list: list);
         }
     }
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(this.Transformation);
-        base.GetExtraDependencies(dependencies);
+        dependencies.Add(item: this.Transformation);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override ISchemaItemCollection ChildItems
@@ -85,24 +85,24 @@ public class TransformationReference : AbstractSchemaItem
     #region Properties
     public Guid TransformationId;
 
-    [Category("Reference")]
-    [TypeConverter(typeof(TransformationConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
+    [Category(category: "Reference")]
+    [TypeConverter(type: typeof(TransformationConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
     [NotNullModelElementRule()]
-    [XmlReference("transformation", "TransformationId")]
+    [XmlReference(attributeName: "transformation", idField: "TransformationId")]
     public ITransformation Transformation
     {
         get
         {
             return (ISchemaItem)
                     this.PersistenceProvider.RetrieveInstance(
-                        typeof(ISchemaItem),
-                        new ModelElementKey(this.TransformationId)
+                        type: typeof(ISchemaItem),
+                        primaryKey: new ModelElementKey(id: this.TransformationId)
                     ) as ITransformation;
         }
         set
         {
-            this.TransformationId = (Guid)value.PrimaryKey["Id"];
+            this.TransformationId = (Guid)value.PrimaryKey[key: "Id"];
             this.Name = this.Transformation.Name;
         }
     }

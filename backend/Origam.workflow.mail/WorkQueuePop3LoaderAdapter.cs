@@ -46,10 +46,10 @@ public class WorkQueuePop3LoaderAdapter : WorkQueueLoaderAdapter
         string server = null;
         int port = 0;
         bool ssl = false;
-        string[] cnParts = connection.Split(";".ToCharArray());
+        string[] cnParts = connection.Split(separator: ";".ToCharArray());
         foreach (string part in cnParts)
         {
-            string[] pair = part.Split("=".ToCharArray());
+            string[] pair = part.Split(separator: "=".ToCharArray());
             if (pair.Length == 2)
             {
                 switch (pair[0].Trim())
@@ -62,22 +62,22 @@ public class WorkQueuePop3LoaderAdapter : WorkQueueLoaderAdapter
 
                     case "port":
                     {
-                        port = int.Parse(pair[1]);
+                        port = int.Parse(s: pair[1]);
                         break;
                     }
 
                     case "ssl":
                     {
-                        ssl = bool.Parse(pair[1]);
+                        ssl = bool.Parse(value: pair[1]);
                         break;
                     }
 
                     default:
                     {
                         throw new ArgumentOutOfRangeException(
-                            "connectionParameterName",
-                            pair[0],
-                            ResourceUtils.GetString("ErrorInvalidConnectionString")
+                            paramName: "connectionParameterName",
+                            actualValue: pair[0],
+                            message: ResourceUtils.GetString(key: "ErrorInvalidConnectionString")
                         );
                     }
                 }
@@ -85,12 +85,12 @@ public class WorkQueuePop3LoaderAdapter : WorkQueueLoaderAdapter
         }
         if (server == null)
         {
-            throw new Exception(ResourceUtils.GetString("ErrorNoServer"));
+            throw new Exception(message: ResourceUtils.GetString(key: "ErrorNoServer"));
         }
 
         if (port == 0)
         {
-            throw new Exception(ResourceUtils.GetString("ErrorNoString"));
+            throw new Exception(message: ResourceUtils.GetString(key: "ErrorNoString"));
         }
 
         _popClient = AbstractMailService.GetPopClient(
@@ -118,17 +118,21 @@ public class WorkQueuePop3LoaderAdapter : WorkQueueLoaderAdapter
             return null;
         }
 
-        AbstractMailService.RetrieveMailNext(mailData, _popClient, true);
+        AbstractMailService.RetrieveMailNext(
+            mailData: mailData,
+            popClient: _popClient,
+            delete: true
+        );
         WorkQueueAdapterResult result = new WorkQueueAdapterResult(
-            DataDocumentFactory.New(mailData)
+            document: DataDocumentFactory.New(dataSet: mailData)
         );
         result.Attachments = new WorkQueueAttachment[mailData.MailAttachment.Rows.Count];
-        result.State = mailData.Mail[0].MessageId;
+        result.State = mailData.Mail[index: 0].MessageId;
         for (int i = 0; i < mailData.MailAttachment.Rows.Count; i++)
         {
             WorkQueueAttachment att = new WorkQueueAttachment();
-            att.Data = mailData.MailAttachment[i].Data;
-            att.Name = mailData.MailAttachment[i].FileName;
+            att.Data = mailData.MailAttachment[index: i].Data;
+            att.Name = mailData.MailAttachment[index: i].FileName;
             result.Attachments[i] = att;
         }
         return result;

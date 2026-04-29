@@ -51,12 +51,12 @@ public class TreeNodeFactory
         return new TreeNode
         {
             OrigamId = node.NodeId,
-            Id = TreeNode.ToTreeNodeId(node),
+            Id = TreeNode.ToTreeNodeId(node: node),
             NodeText = node.NodeText,
             IsNonPersistentItem = node is NonpersistentSchemaItemNode,
             HasChildNodes = node.HasChildNodes,
-            DefaultEditor = GetEditorType(node),
-            IconUrl = GetIcon(node),
+            DefaultEditor = GetEditorType(node: node),
+            IconUrl = GetIcon(node: node),
             ItemType = node.GetType().FullName,
             IsCurrentVersion = (node as Schema.DeploymentModel.DeploymentVersion)?.IsCurrentVersion,
         };

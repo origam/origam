@@ -28,8 +28,8 @@ namespace Origam.Schema.TestModel;
 /// <summary>
 /// Summary description for TestChecklistRule.
 /// </summary>
-[SchemaItemDescription("Checklist Rule", "Checklist Rules", 16)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Checklist Rule", folderName: "Checklist Rules", icon: 16)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class TestChecklistRule : AbstractSchemaItem
 {
     public const string CategoryConst = "TestChecklistRule";
@@ -38,10 +38,10 @@ public class TestChecklistRule : AbstractSchemaItem
         : base() { }
 
     public TestChecklistRule(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public TestChecklistRule(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Overriden ISchemaItem Members
 

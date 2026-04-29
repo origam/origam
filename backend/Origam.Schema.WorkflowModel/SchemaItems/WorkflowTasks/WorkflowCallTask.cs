@@ -27,38 +27,43 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.WorkflowModel;
 
-[SchemaItemDescription("(Task) Workflow Call", "Tasks", "task-workflow-call.png")]
-[HelpTopic("Workflow+Call+Task")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(
+    name: "(Task) Workflow Call",
+    folderName: "Tasks",
+    iconName: "task-workflow-call.png"
+)]
+[HelpTopic(topic: "Workflow+Call+Task")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class WorkflowCallTask : WorkflowTask
 {
     public WorkflowCallTask() { }
 
     public WorkflowCallTask(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(schemaExtensionId: schemaExtensionId) { }
 
     public WorkflowCallTask(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Override ISchemaItem Members
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(Workflow);
-        base.GetExtraDependencies(dependencies);
+        dependencies.Add(item: Workflow);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
     #endregion
     #region Properties
     public Guid WorkflowId;
 
-    [TypeConverter(typeof(WorkflowConverter))]
+    [TypeConverter(type: typeof(WorkflowConverter))]
     [NotNullModelElementRule()]
-    [XmlReference("workflow", "WorkflowId")]
+    [XmlReference(attributeName: "workflow", idField: "WorkflowId")]
     public IWorkflow Workflow
     {
         get
         {
             var key = new ModelElementKey { Id = WorkflowId };
-            return (IWorkflow)PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
+            return (IWorkflow)
+                PersistenceProvider.RetrieveInstance(type: typeof(ISchemaItem), primaryKey: key);
         }
         set
         {
@@ -77,7 +82,7 @@ public class WorkflowCallTask : WorkflowTask
             }
             else
             {
-                WorkflowId = (Guid)value.PrimaryKey["Id"];
+                WorkflowId = (Guid)value.PrimaryKey[key: "Id"];
             }
         }
     }
@@ -97,7 +102,11 @@ public class WorkflowCallTask : WorkflowTask
         {
             itemName = "NewContextStoreLink";
         }
-        return base.NewItem<T>(schemaExtensionId, group, itemName);
+        return base.NewItem<T>(
+            schemaExtensionId: schemaExtensionId,
+            group: group,
+            itemName: itemName
+        );
     }
     #endregion
 }

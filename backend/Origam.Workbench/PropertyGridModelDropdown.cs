@@ -35,7 +35,7 @@ public partial class PropertyGridModelDropdown : UserControl
     IDictionary<string, ISchemaItem> _list = new Dictionary<string, ISchemaItem>();
     IWindowsFormsEditorService _service;
     SchemaBrowser _schemaBrowser =
-        WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+        WorkbenchSingleton.Workbench.GetPad(type: typeof(SchemaBrowser)) as SchemaBrowser;
     bool _isStringList = false;
 
     public PropertyGridModelDropdown(
@@ -48,8 +48,8 @@ public partial class PropertyGridModelDropdown : UserControl
         _service = service;
         listBox1.SmallImageList = _schemaBrowser.EbrSchemaBrowser.imgList;
         IEnumerable standardValues =
-            context.PropertyDescriptor.Converter.GetStandardValues(context)
-            ?? new TypeConverter.StandardValuesCollection(new List<object>());
+            context.PropertyDescriptor.Converter.GetStandardValues(context: context)
+            ?? new TypeConverter.StandardValuesCollection(values: new List<object>());
 
         foreach (object item in standardValues)
         {
@@ -58,20 +58,20 @@ public partial class PropertyGridModelDropdown : UserControl
                 _isStringList = true;
             }
             ISchemaItem schemaItem = item as ISchemaItem;
-            string key = GetKey(item);
+            string key = GetKey(item: item);
             try
             {
-                _list.Add(key, schemaItem);
+                _list.Add(key: key, value: schemaItem);
             }
             catch (System.ArgumentException e)
             {
                 throw new OrigamException(
-                    String.Format(
-                        "Error while adding key to a dropdown '{0}': {1}",
-                        key,
-                        e.Message
+                    message: String.Format(
+                        format: "Error while adding key to a dropdown '{0}': {1}",
+                        arg0: key,
+                        arg1: e.Message
                     ),
-                    e
+                    innerException: e
                 );
             }
         }
@@ -79,10 +79,10 @@ public partial class PropertyGridModelDropdown : UserControl
         if (value != null)
         {
             this.SelectedValue = value;
-            ListViewItem selectedItem = this.listBox1.Items[GetKey(value)];
+            ListViewItem selectedItem = this.listBox1.Items[key: GetKey(item: value)];
             if (selectedItem != null)
             {
-                SelectItem(selectedItem);
+                SelectItem(selectedItem: selectedItem);
             }
         }
     }
@@ -93,7 +93,7 @@ public partial class PropertyGridModelDropdown : UserControl
         string key = "";
         if (!_isStringList && schemaItem != null)
         {
-            key = schemaItem.PrimaryKey["Id"].ToString();
+            key = schemaItem.PrimaryKey[key: "Id"].ToString();
         }
         else if (item != null)
         {
@@ -112,7 +112,7 @@ public partial class PropertyGridModelDropdown : UserControl
     private void Populate()
     {
         string filter = textBox1.Text;
-        bool doFilter = string.IsNullOrEmpty(filter);
+        bool doFilter = string.IsNullOrEmpty(value: filter);
         listBox1.BeginUpdate();
         listBox1.Items.Clear();
         foreach (var item in _list)
@@ -123,9 +123,9 @@ public partial class PropertyGridModelDropdown : UserControl
                 && (
                     doFilter
                     || CultureInfo.CurrentUICulture.CompareInfo.IndexOf(
-                        value,
-                        filter,
-                        CompareOptions.IgnoreCase
+                        source: value,
+                        value: filter,
+                        options: CompareOptions.IgnoreCase
                     ) >= 0
                 )
             )
@@ -133,9 +133,9 @@ public partial class PropertyGridModelDropdown : UserControl
                 int icon = -1;
                 if (item.Value != null)
                 {
-                    icon = _schemaBrowser.ImageIndex(item.Value.Icon);
+                    icon = _schemaBrowser.ImageIndex(icon: item.Value.Icon);
                 }
-                ListViewItem lvi = listBox1.Items.Add(item.Key, value, icon);
+                ListViewItem lvi = listBox1.Items.Add(key: item.Key, text: value, imageIndex: icon);
                 // in case we are displaying a string list we will return a string
                 // instead of the model element
                 lvi.Tag = item.Value;
@@ -145,7 +145,7 @@ public partial class PropertyGridModelDropdown : UserControl
                 }
             }
         }
-        listBox1.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+        listBox1.AutoResizeColumns(headerAutoResize: ColumnHeaderAutoResizeStyle.ColumnContent);
         listBox1.EndUpdate();
     }
 
@@ -167,7 +167,7 @@ public partial class PropertyGridModelDropdown : UserControl
     {
         if (listBox1.SelectedItems.Count == 1)
         {
-            this.SelectedValue = listBox1.SelectedItems[0].Tag;
+            this.SelectedValue = listBox1.SelectedItems[index: 0].Tag;
         }
     }
 
@@ -177,7 +177,7 @@ public partial class PropertyGridModelDropdown : UserControl
         if (listBox1.SelectedIndices.Count == 0 && listBox1.Items.Count > 0)
         {
             listBox1.SelectedItems.Clear();
-            SelectItem(listBox1.Items[0]);
+            SelectItem(selectedItem: listBox1.Items[index: 0]);
         }
     }
 
@@ -209,7 +209,7 @@ public partial class PropertyGridModelDropdown : UserControl
     private void listBox1_KeyPress(object sender, KeyPressEventArgs e)
     {
         textBox1.Focus();
-        SendKeys.Send(e.KeyChar.ToString());
+        SendKeys.Send(keys: e.KeyChar.ToString());
         textBox1.SelectionStart = 1;
         textBox1.SelectionLength = 0;
     }

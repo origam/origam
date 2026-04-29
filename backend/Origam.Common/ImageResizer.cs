@@ -32,12 +32,12 @@ public static class ImageResizer
 {
     private static byte[] FixedSizeBytes(Image img, int width, int height)
     {
-        using (Image thumbnail = FixedSize(img, width, height))
+        using (Image thumbnail = FixedSize(imgPhoto: img, Width: width, Height: height))
         {
             MemoryStream ms = new MemoryStream();
             try
             {
-                thumbnail.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                thumbnail.Save(stream: ms, format: System.Drawing.Imaging.ImageFormat.Png);
                 return ms.GetBuffer();
             }
             finally
@@ -57,7 +57,7 @@ public static class ImageResizer
             return image;
         }
 
-        return Resize(image, width, width, true);
+        return Resize(imgPhoto: image, Width: width, Height: width, KeepAspectRatio: true);
     }
 
     private static byte[] ResizeBytes(
@@ -68,12 +68,19 @@ public static class ImageResizer
         System.Drawing.Imaging.ImageFormat outFormat
     )
     {
-        using (Image resized = Resize(img, width, height, keepAspectRatio))
+        using (
+            Image resized = Resize(
+                imgPhoto: img,
+                Width: width,
+                Height: height,
+                KeepAspectRatio: keepAspectRatio
+            )
+        )
         {
             MemoryStream ms = new MemoryStream();
             try
             {
-                resized.Save(ms, outFormat);
+                resized.Save(stream: ms, format: outFormat);
                 return ms.GetBuffer();
             }
             finally
@@ -119,29 +126,36 @@ public static class ImageResizer
             default:
             {
                 throw new OrigamException(
-                    String.Format(
-                        "Invalid program exception. Unexpected " + "output image format: {0}",
-                        outFormat
+                    message: String.Format(
+                        format: "Invalid program exception. Unexpected "
+                            + "output image format: {0}",
+                        arg0: outFormat
                     )
                 );
             }
         }
-        MemoryStream ms = new MemoryStream(imgBytes);
-        Image img = Image.FromStream(ms);
-        return ResizeBytes(img, width, height, keepAspectRatio, format);
+        MemoryStream ms = new MemoryStream(buffer: imgBytes);
+        Image img = Image.FromStream(stream: ms);
+        return ResizeBytes(
+            img: img,
+            width: width,
+            height: height,
+            keepAspectRatio: keepAspectRatio,
+            outFormat: format
+        );
     }
 
     public static byte[] FixedSizeBytesInBytesOut(byte[] imgBytes, int width, int height)
     {
-        MemoryStream ms = new MemoryStream(imgBytes);
-        Image img = Image.FromStream(ms);
-        return FixedSizeBytes(img, width, height);
+        MemoryStream ms = new MemoryStream(buffer: imgBytes);
+        Image img = Image.FromStream(stream: ms);
+        return FixedSizeBytes(img: img, width: width, height: height);
     }
 
     public static int[] GetImageDimensions(byte[] imgBytes)
     {
-        MemoryStream ms = new MemoryStream(imgBytes);
-        Image img = Image.FromStream(ms);
+        MemoryStream ms = new MemoryStream(buffer: imgBytes);
+        Image img = Image.FromStream(stream: ms);
         return new int[2] { img.Width, img.Height };
     }
 
@@ -161,26 +175,38 @@ public static class ImageResizer
         if (nPercentH < nPercentW)
         {
             nPercent = nPercentH;
-            destX = System.Convert.ToInt16((Width - (sourceWidth * nPercent)) / 2);
+            destX = System.Convert.ToInt16(value: (Width - (sourceWidth * nPercent)) / 2);
         }
         else
         {
             nPercent = nPercentW;
-            destY = System.Convert.ToInt16((Height - (sourceHeight * nPercent)) / 2);
+            destY = System.Convert.ToInt16(value: (Height - (sourceHeight * nPercent)) / 2);
         }
         int destWidth = (int)(sourceWidth * nPercent);
         int destHeight = (int)(sourceHeight * nPercent);
-        Bitmap bmPhoto = new Bitmap(Width, Height, PixelFormat.Format24bppRgb);
-        bmPhoto.SetResolution(imgPhoto.HorizontalResolution, imgPhoto.VerticalResolution);
-        bmPhoto.MakeTransparent(Color.Transparent);
-        System.Drawing.Graphics grPhoto = System.Drawing.Graphics.FromImage(bmPhoto);
-        grPhoto.Clear(Color.Transparent);
+        Bitmap bmPhoto = new Bitmap(
+            width: Width,
+            height: Height,
+            format: PixelFormat.Format24bppRgb
+        );
+        bmPhoto.SetResolution(
+            xDpi: imgPhoto.HorizontalResolution,
+            yDpi: imgPhoto.VerticalResolution
+        );
+        bmPhoto.MakeTransparent(transparentColor: Color.Transparent);
+        System.Drawing.Graphics grPhoto = System.Drawing.Graphics.FromImage(image: bmPhoto);
+        grPhoto.Clear(color: Color.Transparent);
         grPhoto.InterpolationMode = InterpolationMode.HighQualityBicubic;
         grPhoto.DrawImage(
-            imgPhoto,
-            new Rectangle(destX, destY, destWidth, destHeight),
-            new Rectangle(sourceX, sourceY, sourceWidth, sourceHeight),
-            GraphicsUnit.Pixel
+            image: imgPhoto,
+            destRect: new Rectangle(x: destX, y: destY, width: destWidth, height: destHeight),
+            srcRect: new Rectangle(
+                x: sourceX,
+                y: sourceY,
+                width: sourceWidth,
+                height: sourceHeight
+            ),
+            srcUnit: GraphicsUnit.Pixel
         );
         grPhoto.Dispose();
         return bmPhoto;
@@ -189,9 +215,9 @@ public static class ImageResizer
     private static Image Resize(Image imgPhoto, int Width, int Height, bool KeepAspectRatio)
     {
         // fix iphone rotation
-        if (imgPhoto.PropertyIdList.Contains(0x0112))
+        if (imgPhoto.PropertyIdList.Contains(value: 0x0112))
         {
-            int rotationValue = imgPhoto.GetPropertyItem(0x0112).Value[0];
+            int rotationValue = imgPhoto.GetPropertyItem(propid: 0x0112).Value[0];
             switch (rotationValue)
             {
                 case 1: // landscape, do nothing
@@ -245,17 +271,24 @@ public static class ImageResizer
             destWidth = Width;
             destHeight = Height;
         }
-        Bitmap bmPhoto = new Bitmap(destWidth, destHeight, PixelFormat.Format24bppRgb);
-        bmPhoto.SetResolution(imgPhoto.HorizontalResolution, imgPhoto.VerticalResolution);
+        Bitmap bmPhoto = new Bitmap(
+            width: destWidth,
+            height: destHeight,
+            format: PixelFormat.Format24bppRgb
+        );
+        bmPhoto.SetResolution(
+            xDpi: imgPhoto.HorizontalResolution,
+            yDpi: imgPhoto.VerticalResolution
+        );
         //bmPhoto.MakeTransparent(Color.Transparent);
-        System.Drawing.Graphics grPhoto = System.Drawing.Graphics.FromImage(bmPhoto);
+        System.Drawing.Graphics grPhoto = System.Drawing.Graphics.FromImage(image: bmPhoto);
         //grPhoto.Clear(Color.Transparent);
         grPhoto.InterpolationMode = InterpolationMode.HighQualityBicubic;
         grPhoto.DrawImage(
-            imgPhoto,
-            new Rectangle(0, 0, destWidth, destHeight),
-            new Rectangle(0, 0, sourceWidth, sourceHeight),
-            GraphicsUnit.Pixel
+            image: imgPhoto,
+            destRect: new Rectangle(x: 0, y: 0, width: destWidth, height: destHeight),
+            srcRect: new Rectangle(x: 0, y: 0, width: sourceWidth, height: sourceHeight),
+            srcUnit: GraphicsUnit.Pixel
         );
         grPhoto.Dispose();
         return bmPhoto;

@@ -29,29 +29,29 @@ namespace Origam.Gui.Designer;
 /// <summary>
 /// Summary description for ControlExtenderProvider.
 /// </summary>
-[ProvideProperty("SchemaItemName", typeof(Control))]
-[ProvideProperty("Roles", typeof(Control))]
-[ProvideProperty("Features", typeof(Control))]
-[ProvideProperty("SchemaItemId", typeof(Control))]
+[ProvideProperty(propertyName: "SchemaItemName", receiverType: typeof(Control))]
+[ProvideProperty(propertyName: "Roles", receiverType: typeof(Control))]
+[ProvideProperty(propertyName: "Features", receiverType: typeof(Control))]
+[ProvideProperty(propertyName: "SchemaItemId", receiverType: typeof(Control))]
 public class ControlExtenderProvider : IExtenderProvider
 {
     public ControlExtenderProvider() { }
 
     [ExtenderProvidedProperty()]
-    [Category("(ORIGAM)")]
+    [Category(category: "(ORIGAM)")]
     public string GetSchemaItemId(Control acontrol)
     {
         ISchemaItem si = acontrol.Tag as ISchemaItem;
         if (si != null)
         {
-            return si.PrimaryKey["Id"].ToString();
+            return si.PrimaryKey[key: "Id"].ToString();
         }
 
         return null;
     }
 
     [ExtenderProvidedProperty()]
-    [Category("(ORIGAM)")]
+    [Category(category: "(ORIGAM)")]
     public string GetSchemaItemName(Control acontrol)
     {
         ISchemaItem si = acontrol.Tag as ISchemaItem;
@@ -72,7 +72,7 @@ public class ControlExtenderProvider : IExtenderProvider
         }
     }
 
-    [Category("(ORIGAM)")]
+    [Category(category: "(ORIGAM)")]
     public string GetRoles(Control acontrol)
     {
         ControlSetItem csi = acontrol.Tag as ControlSetItem;
@@ -93,7 +93,7 @@ public class ControlExtenderProvider : IExtenderProvider
         }
     }
 
-    [Category("(ORIGAM)")]
+    [Category(category: "(ORIGAM)")]
     public string GetFeatures(Control acontrol)
     {
         ControlSetItem csi = acontrol.Tag as ControlSetItem;

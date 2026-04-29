@@ -48,7 +48,7 @@ namespace Origam.Server;
 public class UIManager
 {
     internal static readonly log4net.ILog log = log4net.LogManager.GetLogger(
-        System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
+        type: System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
     );
     private readonly int initialPageNumberOfRecords;
     private readonly SessionManager sessionManager;
@@ -78,15 +78,15 @@ public class UIManager
         // and then converted back to DataDocumentFx
         foreach (object key in request.Parameters.Keys.CastToList<object>())
         {
-            object value = request.Parameters[key];
+            object value = request.Parameters[key: key];
             if (value is XmlDocument xmlDoc)
             {
-                request.Parameters[key] = new XmlContainer(xmlDoc);
+                request.Parameters[key: key] = new XmlContainer(xmlDocument: xmlDoc);
             }
             if (value is JObject jobj)
             {
-                request.Parameters[key] = new XmlContainer(
-                    JsonConvert.DeserializeXmlNode(jobj.ToString())
+                request.Parameters[key: key] = new XmlContainer(
+                    xmlDocument: JsonConvert.DeserializeXmlNode(value: jobj.ToString())
                 );
             }
         }
@@ -99,24 +99,24 @@ public class UIManager
             {
                 if (pss.FormSessions.Count >= settings.MaxOpenTabs)
                 {
-                    throw new RuleException(Resources.ErrorTooManyTabsOpen);
+                    throw new RuleException(message: Resources.ErrorTooManyTabsOpen);
                 }
             }
-            if (!request.ObjectId.Contains("|"))
+            if (!request.ObjectId.Contains(value: "|"))
             {
                 if (
                     request.Type != UIRequestType.Dashboard
                     && request.Type != UIRequestType.WorkQueue
-                    && Guid.TryParse(request.ObjectId, out var objectId)
+                    && Guid.TryParse(input: request.ObjectId, result: out var objectId)
                 )
                 {
                     IPersistenceService persistence =
-                        ServiceManager.Services.GetService(typeof(IPersistenceService))
+                        ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
                         as IPersistenceService;
                     AbstractMenuItem menu =
                         persistence.SchemaProvider.RetrieveInstance(
-                            typeof(AbstractMenuItem),
-                            new ModelElementKey(objectId)
+                            type: typeof(AbstractMenuItem),
+                            primaryKey: new ModelElementKey(id: objectId)
                         ) as AbstractMenuItem;
                     if (menu != null) // can be a workflow
                     {
@@ -124,9 +124,9 @@ public class UIManager
                         if (menu.OpenExclusively && pss.FormSessions.Count > 0)
                         {
                             throw new RuleException(
-                                string.Format(
-                                    Resources.ErrorCannotOpenFormExclusively,
-                                    request.Caption
+                                message: string.Format(
+                                    format: Resources.ErrorCannotOpenFormExclusively,
+                                    arg0: request.Caption
                                 )
                             );
                         }
@@ -137,7 +137,7 @@ public class UIManager
         UserProfile profile = SecurityTools.CurrentUserProfile();
         if (request.Type == UIRequestType.Dashboard)
         {
-            return InitDashboardView(request);
+            return InitDashboardView(request: request);
         }
         SessionStore ss;
         if (
@@ -146,27 +146,42 @@ public class UIManager
             || request.RegisterSession == false
         )
         {
-            ss = sessionManager.CreateSessionStore(request, basicUIService);
-            analytics.SetProperty("OrigamFormId", ss.FormId);
-            analytics.SetProperty("OrigamFormName", ss.Name);
-            analytics.Log("UI_OPENFORM");
-            if (ss.SupportsFormXmlAsync && IsFormXmlNotCachedOnClient(request, ss))
+            ss = sessionManager.CreateSessionStore(
+                request: request,
+                basicUIService: basicUIService
+            );
+            analytics.SetProperty(propertyName: "OrigamFormId", value: ss.FormId);
+            analytics.SetProperty(propertyName: "OrigamFormName", value: ss.Name);
+            analytics.Log(message: "UI_OPENFORM");
+            if (ss.SupportsFormXmlAsync && IsFormXmlNotCachedOnClient(request: request, ss: ss))
             {
-                getFormXmlTask = Task.Run(() => ss.PrepareFormXml());
+                getFormXmlTask = Task.Run(action: () => ss.PrepareFormXml());
             }
-            RegisterSession(request, addChildSession, parentSession, ss);
+            RegisterSession(
+                request: request,
+                addChildSession: addChildSession,
+                parentSession: parentSession,
+                ss: ss
+            );
             ss.Init();
             ss.IsExclusive = isExclusive;
         }
         else
         {
             // USE EXISTING SESSION
-            ss = sessionManager.GetSession(new Guid(request.FormSessionId));
+            ss = sessionManager.GetSession(
+                sessionFormIdentifier: new Guid(g: request.FormSessionId)
+            );
             if (ss.RefreshOnInitUI)
             {
-                ss.ExecuteAction(SessionStore.ACTION_REFRESH);
+                ss.ExecuteAction(actionId: SessionStore.ACTION_REFRESH);
             }
-            RegisterSession(request, addChildSession, parentSession, ss);
+            RegisterSession(
+                request: request,
+                addChildSession: addChildSession,
+                parentSession: parentSession,
+                ss: ss
+            );
         }
         // finalize
         FormSessionStore fss = ss as FormSessionStore;
@@ -181,16 +196,16 @@ public class UIManager
             // (primary keys + all the initial sort columns)
             columns = ss.DataListLoadedColumns;
         }
-        DatasetTools.CheckRowErrorOfChangedRows(ss.InitialData);
+        DatasetTools.CheckRowErrorOfChangedRows(dataSet: ss.InitialData);
         UIResult result = new UIResult(
             sessionId: ss.Id,
             data: DataTools.DatasetToDictionary(
-                ss.InitialData,
-                columns,
-                initialPageNumberOfRecords,
-                ss.CurrentRecordId,
-                ss.DataListEntity,
-                ss
+                data: ss.InitialData,
+                columns: columns,
+                firstPageRecords: initialPageNumberOfRecords,
+                firstRecordId: ss.CurrentRecordId,
+                dataListEntity: ss.DataListEntity,
+                ss: ss
             ),
             variables: ss.Variables,
             isDirty: ss.HasChanges()
@@ -206,25 +221,25 @@ public class UIManager
             result.CurrentRecordId =
                 ss.CurrentRecordId == null ? null : ss.CurrentRecordId.ToString();
         }
-        if (IsFormXmlNotCachedOnClient(request, ss))
+        if (IsFormXmlNotCachedOnClient(request: request, ss: ss))
         {
             // wait for asynchronously loaded form xml
             if (getFormXmlTask != null)
             {
                 if (log.IsDebugEnabled)
                 {
-                    log.Debug("Waiting for XML...");
+                    log.Debug(message: "Waiting for XML...");
                 }
-                Task.WaitAll(getFormXmlTask);
+                Task.WaitAll(tasks: getFormXmlTask);
                 if (log.IsDebugEnabled)
                 {
-                    log.Debug("Waiting for XML is over...");
+                    log.Debug(message: "Waiting for XML is over...");
                 }
             }
             // FORM XML
-            SetFormXml(result, profile, ss);
+            SetFormXml(result: result, profile: profile, ss: ss);
         }
-        result.Tooltip = ToolTipTools.NextTooltip(ss.HelpTooltipFormId);
+        result.Tooltip = ToolTipTools.NextTooltip(formId: ss.HelpTooltipFormId);
         result.FormDefinitionId = ss.FormId.ToString();
         result.Title = ss.Title;
         return result;
@@ -239,33 +254,33 @@ public class UIManager
     {
         if (request.RegisterSession)
         {
-            sessionManager.RegisterSession(ss);
+            sessionManager.RegisterSession(ss: ss);
         }
         if (addChildSession)
         {
             ss.ParentSession = parentSession;
-            parentSession.AddChildSession(ss);
+            parentSession.AddChildSession(ss: ss);
             parentSession.ActiveSession = ss;
         }
         if (request.RegisterSession)
         {
             var principal = SecurityManager.CurrentPrincipal;
-            Task.Run(() =>
+            Task.Run(action: () =>
             {
                 Thread.CurrentPrincipal = principal;
                 SecurityTools.CreateUpdateOrigamOnlineUser(
-                    SecurityManager.CurrentPrincipal.Identity.Name,
-                    sessionManager.GetSessionStats()
+                    username: SecurityManager.CurrentPrincipal.Identity.Name,
+                    stats: sessionManager.GetSessionStats()
                 );
             });
         }
         if (
             request.IsNewSession
             && request.RegisterSession
-            && FeatureTools.IsFeatureOn(OrigamEvent.OpenScreen.FeatureCode)
+            && FeatureTools.IsFeatureOn(featureCode: OrigamEvent.OpenScreen.FeatureCode)
         )
         {
-            OrigamEventTools.RecordOpenScreen(ss);
+            OrigamEventTools.RecordOpenScreen(sessionStore: ss);
         }
     }
 
@@ -276,18 +291,32 @@ public class UIManager
         formXml = ss.GetFormXml();
         if (wss == null)
         {
-            FormXmlPostProcessing(result, ss.Data, formXml, profile, Guid.Empty, ss.SortSet);
+            FormXmlPostProcessing(
+                result: result,
+                data: ss.Data,
+                formXml: formXml,
+                profile: profile,
+                workflowId: Guid.Empty,
+                sortSet: ss.SortSet
+            );
         }
         else
         {
-            FormXmlPostProcessing(result, ss.Data, formXml, profile, wss.WorkflowId, ss.SortSet);
+            FormXmlPostProcessing(
+                result: result,
+                data: ss.Data,
+                formXml: formXml,
+                profile: profile,
+                workflowId: wss.WorkflowId,
+                sortSet: ss.SortSet
+            );
         }
-        System.Diagnostics.Debug.Assert(result.FormDefinition != null);
+        System.Diagnostics.Debug.Assert(condition: result.FormDefinition != null);
     }
 
     private static bool IsFormXmlNotCachedOnClient(UIRequest request, SessionStore ss)
     {
-        return !(request.IsDataOnly || request.CachedFormIds.Contains(ss.FormId.ToString()));
+        return !(request.IsDataOnly || request.CachedFormIds.Contains(item: ss.FormId.ToString()));
     }
 
     private static void FormXmlPostProcessing(
@@ -301,52 +330,63 @@ public class UIManager
     {
         result.FormDefinition = formXml.OuterXml;
 
-        XmlNodeList configurableNodes = formXml.SelectNodes("//*[@HasPanelConfiguration='true']");
+        XmlNodeList configurableNodes = formXml.SelectNodes(
+            xpath: "//*[@HasPanelConfiguration='true']"
+        );
         foreach (XmlElement element in configurableNodes)
         {
             UIPanel panel = new UIPanel();
-            panel.Entity = element.GetAttribute("Entity");
-            panel.Id = XmlConvert.ToGuid(element.GetAttribute("ModelId"));
-            panel.InstanceId = XmlConvert.ToGuid(element.GetAttribute("ModelInstanceId"));
-            if (element.GetAttribute("DefaultPanelView") != "") { }
-            UIPanelConfig panelConfig = GetPanelConfig(workflowId, profile, data, panel, element);
-            result.PanelConfigurations.Add(panelConfig);
+            panel.Entity = element.GetAttribute(name: "Entity");
+            panel.Id = XmlConvert.ToGuid(s: element.GetAttribute(name: "ModelId"));
+            panel.InstanceId = XmlConvert.ToGuid(s: element.GetAttribute(name: "ModelInstanceId"));
+            if (element.GetAttribute(name: "DefaultPanelView") != "") { }
+            UIPanelConfig panelConfig = GetPanelConfig(
+                workflowId: workflowId,
+                profile: profile,
+                data: data,
+                panel: panel,
+                grid: element
+            );
+            result.PanelConfigurations.Add(item: panelConfig);
             // default sort
-            if (sortSet != null && element.AttributeIsFalseOrMissing("IsHeadless"))
+            if (sortSet != null && element.AttributeIsFalseOrMissing(attributeName: "IsHeadless"))
             {
-                if (element.GetAttribute("DisableActionButtons") == "true")
+                if (element.GetAttribute(name: "DisableActionButtons") == "true")
                 {
-                    throw new Exception(Resources.ActionButtonsCannotBeDisabled);
+                    throw new Exception(message: Resources.ActionButtonsCannotBeDisabled);
                 }
                 List<DataStructureSortSetItem> sorts = new List<DataStructureSortSetItem>();
                 foreach (
                     var item in sortSet.ChildItemsByType<DataStructureSortSetItem>(
-                        DataStructureSortSetItem.CategoryConst
+                        itemType: DataStructureSortSetItem.CategoryConst
                     )
                 )
                 {
                     if (item.Entity.Name == panel.Entity)
                     {
-                        sorts.Add(item);
+                        sorts.Add(item: item);
                     }
                 }
                 sorts.Sort();
                 foreach (DataStructureSortSetItem item in sorts)
                 {
                     panelConfig.DefaultSort.Add(
-                        new UIGridSortConfiguration(item.FieldName, item.SortDirection.ToString())
+                        item: new UIGridSortConfiguration(
+                            field: item.FieldName,
+                            direction: item.SortDirection.ToString()
+                        )
                     );
                 }
             }
         }
         // SPLITTER CONFIG
-        XmlNodeList splitters = formXml.SelectNodes("//*[@Type='VSplit' or @Type='HSplit']");
+        XmlNodeList splitters = formXml.SelectNodes(xpath: "//*[@Type='VSplit' or @Type='HSplit']");
         foreach (XmlElement s in splitters)
         {
-            Guid instanceId = XmlConvert.ToGuid(s.GetAttribute("ModelInstanceId"));
+            Guid instanceId = XmlConvert.ToGuid(s: s.GetAttribute(name: "ModelInstanceId"));
             OrigamPanelColumnConfig loadedConfig = OrigamPanelColumnConfigDA.LoadUserConfig(
-                instanceId,
-                profile.Id
+                panelId: instanceId,
+                profileId: profile.Id
             );
             if (loadedConfig.PanelColumnConfig.Count > 0)
             {
@@ -354,24 +394,25 @@ public class UIManager
                 UIPanel panel = new UIPanel();
                 panel.InstanceId = instanceId;
                 splitConfig.Panel = panel;
-                splitConfig.Position = loadedConfig.PanelColumnConfig[0].ColumnWidth;
-                result.PanelConfigurations.Add(splitConfig);
+                splitConfig.Position = loadedConfig.PanelColumnConfig[index: 0].ColumnWidth;
+                result.PanelConfigurations.Add(item: splitConfig);
             }
         }
         // MENU MAPPINGS
         IDataLookupService ls =
-            ServiceManager.Services.GetService(typeof(IDataLookupService)) as IDataLookupService;
-        XmlNodeList lookups = formXml.SelectNodes("//*[string(@LookupId)]");
+            ServiceManager.Services.GetService(serviceType: typeof(IDataLookupService))
+            as IDataLookupService;
+        XmlNodeList lookups = formXml.SelectNodes(xpath: "//*[string(@LookupId)]");
         foreach (XmlElement l in lookups)
         {
-            Guid lookupId = XmlConvert.ToGuid(l.GetAttribute("LookupId"));
-            IMenuBindingResult binding = ls.GetMenuBinding(lookupId, null);
+            Guid lookupId = XmlConvert.ToGuid(s: l.GetAttribute(name: "LookupId"));
+            IMenuBindingResult binding = ls.GetMenuBinding(lookupId: lookupId, value: null);
             result.LookupMenuMappings.Add(
-                new LookupConfig(
-                    lookupId,
-                    binding.MenuId,
-                    ls.HasMenuBindingWithSelection(lookupId),
-                    binding.PanelId
+                item: new LookupConfig(
+                    lookupId: lookupId,
+                    menuId: binding.MenuId,
+                    dependsOnValue: ls.HasMenuBindingWithSelection(lookupId: lookupId),
+                    selectionPanelId: binding.PanelId
                 )
             );
         }
@@ -379,14 +420,19 @@ public class UIManager
 
     private UIResult InitDashboardView(UIRequest request)
     {
-        return InitDashboardView(request.ObjectId, null);
+        return InitDashboardView(objectId: request.ObjectId, viewId: null);
     }
 
     private UIResult InitDashboardView(string objectId, string viewId)
     {
         UserProfile profile = SecurityTools.CurrentUserProfile();
-        UIResult result = new UIResult(Guid.Empty, null, null, false);
-        XmlDocument dashboardViews = DashboardViews(objectId);
+        UIResult result = new UIResult(
+            sessionId: Guid.Empty,
+            data: null,
+            variables: null,
+            isDirty: false
+        );
+        XmlDocument dashboardViews = DashboardViews(menuId: objectId);
         XmlDocument formXml;
         if (dashboardViews.FirstChild.ChildNodes.Count > 0)
         {
@@ -398,41 +444,48 @@ public class UIManager
             else
             {
                 viewNode = dashboardViews.SelectSingleNode(
-                    "/dashboardViews/view[@id='" + viewId + "']"
+                    xpath: "/dashboardViews/view[@id='" + viewId + "']"
                 );
             }
             if (viewNode == null)
             {
                 throw new ArgumentOutOfRangeException(
-                    "viewId",
-                    viewId,
-                    Resources.ErrorDashboardViewNotFound
+                    paramName: "viewId",
+                    actualValue: viewId,
+                    message: Resources.ErrorDashboardViewNotFound
                 );
             }
-            string selectedViewId = viewNode.Attributes["id"].Value;
-            string selectedViewName = viewNode.Attributes["name"].Value;
-            string config = DashboardViewConfig(selectedViewId);
+            string selectedViewId = viewNode.Attributes[name: "id"].Value;
+            string selectedViewName = viewNode.Attributes[name: "name"].Value;
+            string config = DashboardViewConfig(viewId: selectedViewId);
             formXml = FormXmlBuilder.GetXml(
-                config,
-                selectedViewName,
-                new Guid(objectId),
-                dashboardViews
+                dashboardViewConfig: config,
+                name: selectedViewName,
+                menuId: new Guid(g: objectId),
+                dashboardViews: dashboardViews
             );
         }
         else
         {
             formXml = FormXmlBuilder.GetXml(
-                "<configuration/>",
-                "",
-                new Guid(objectId),
-                dashboardViews
+                dashboardViewConfig: "<configuration/>",
+                name: "",
+                menuId: new Guid(g: objectId),
+                dashboardViews: dashboardViews
             );
         }
-        FormXmlPostProcessing(result, null, formXml, profile, Guid.Empty, null);
-        Task.Run(() =>
+        FormXmlPostProcessing(
+            result: result,
+            data: null,
+            formXml: formXml,
+            profile: profile,
+            workflowId: Guid.Empty,
+            sortSet: null
+        );
+        Task.Run(action: () =>
             SecurityTools.CreateUpdateOrigamOnlineUser(
-                SecurityManager.CurrentPrincipal.Identity.Name,
-                sessionManager.GetSessionStats()
+                username: SecurityManager.CurrentPrincipal.Identity.Name,
+                stats: sessionManager.GetSessionStats()
             )
         );
         return result;
@@ -455,51 +508,69 @@ public class UIManager
             // getting security rule for the parent record. Since the root grid
             // has no parent record, we use an empty <ROOT/>.
             if (
-                !grid.GetAttribute("DataMember").Contains(".")
-                && grid.GetAttribute("ShowAddButton") == "true"
+                !grid.GetAttribute(name: "DataMember").Contains(value: ".")
+                && grid.GetAttribute(name: "ShowAddButton") == "true"
             )
             {
-                RuleEngine re = RuleEngine.Create(new Hashtable(), null);
+                RuleEngine re = RuleEngine.Create(
+                    contextStores: new Hashtable(),
+                    transactionId: null
+                );
                 XmlContainer newRecordData = new XmlContainer();
-                newRecordData.Xml.AppendChild(newRecordData.Xml.CreateElement("ROOT"));
+                newRecordData.Xml.AppendChild(
+                    newChild: newRecordData.Xml.CreateElement(name: "ROOT")
+                );
                 panelConfig.AllowCreate = re.EvaluateRowLevelSecurityState(
-                    newRecordData,
-                    newRecordData,
-                    null,
-                    CredentialType.Create,
-                    (Guid)data.Tables[panel.Entity].ExtendedProperties["EntityId"],
-                    Guid.Empty,
-                    true
+                    originalData: newRecordData,
+                    actualData: newRecordData,
+                    field: null,
+                    type: CredentialType.Create,
+                    entityId: (Guid)
+                        data.Tables[name: panel.Entity].ExtendedProperties[key: "EntityId"],
+                    fieldId: Guid.Empty,
+                    isNewRow: true
                 );
             }
             // filters
-            foreach (UIGridFilterConfiguration uigfc in GetFilters(panel.Id, data, panel.Entity))
+            foreach (
+                UIGridFilterConfiguration uigfc in GetFilters(
+                    panelId: panel.Id,
+                    data: data,
+                    entity: panel.Entity
+                )
+            )
             {
-                panelConfig.Filters.Add(uigfc);
+                panelConfig.Filters.Add(item: uigfc);
             }
             // default filter and grid visibility
             DataSet userConfig = OrigamPanelConfigDA.LoadConfigData(
-                panel.InstanceId,
-                workflowId,
-                profile.Id
+                panelInstanceId: panel.InstanceId,
+                workflowId: workflowId,
+                profileId: profile.Id
             );
-            if (userConfig.Tables["OrigamFormPanelConfig"].Rows.Count == 0)
+            if (userConfig.Tables[name: "OrigamFormPanelConfig"].Rows.Count == 0)
             {
                 panelConfig.Panel.DefaultPanelView = panel.DefaultPanelView;
             }
             else
             {
-                DataRow userConfigRow = userConfig.Tables["OrigamFormPanelConfig"].Rows[0];
+                DataRow userConfigRow = userConfig.Tables[name: "OrigamFormPanelConfig"].Rows[
+                    index: 0
+                ];
                 panelConfig.Panel.DefaultPanelView = (OrigamPanelViewMode)
-                    userConfigRow["DefaultView"];
-                if (userConfigRow["refOrigamPanelFilterId"] != DBNull.Value)
+                    userConfigRow[columnName: "DefaultView"];
+                if (userConfigRow[columnName: "refOrigamPanelFilterId"] != DBNull.Value)
                 {
                     OrigamPanelFilter defaultFilter = OrigamPanelFilterDA.LoadFilter(
-                        (Guid)userConfigRow["refOrigamPanelFilterId"]
+                        id: (Guid)userConfigRow[columnName: "refOrigamPanelFilterId"]
                     );
                     foreach (OrigamPanelFilter.PanelFilterRow pfr in defaultFilter.PanelFilter.Rows)
                     {
-                        UIGridFilterConfiguration uigfc = GetFilter(pfr, data, panel.Entity);
+                        UIGridFilterConfiguration uigfc = GetFilter(
+                            pfr: pfr,
+                            data: data,
+                            entity: panel.Entity
+                        );
                         panelConfig.InitialFilter = uigfc;
                     }
                 }
@@ -515,10 +586,10 @@ public class UIManager
     )
     {
         List<UIGridFilterConfiguration> result = new List<UIGridFilterConfiguration>();
-        OrigamPanelFilter pf = OrigamPanelFilterDA.LoadFilters(panelId);
+        OrigamPanelFilter pf = OrigamPanelFilterDA.LoadFilters(panelId: panelId);
         foreach (OrigamPanelFilter.PanelFilterRow pfr in pf.PanelFilter.Rows)
         {
-            result.Add(GetFilter(pfr, data, entity));
+            result.Add(item: GetFilter(pfr: pfr, data: data, entity: entity));
         }
         return result;
     }
@@ -530,19 +601,19 @@ public class UIManager
     )
     {
         UIGridFilterConfiguration uigfc = new UIGridFilterConfiguration(
-            pfr.Id,
-            pfr.Name,
-            pfr.IsGlobal
+            id: pfr.Id,
+            name: pfr.Name,
+            isGlobal: pfr.IsGlobal
         );
-        if (data.Tables.Contains(entity))
+        if (data.Tables.Contains(name: entity))
         {
             foreach (OrigamPanelFilter.PanelFilterDetailRow pfdr in pfr.GetPanelFilterDetailRows())
             {
                 // check if the column stored in the filter was not removed from the entity, in that
                 // case just ignore this field
-                if (data.Tables[entity].Columns.Contains(pfdr.ColumnName))
+                if (data.Tables[name: entity].Columns.Contains(name: pfdr.ColumnName))
                 {
-                    Type t = data.Tables[entity].Columns[pfdr.ColumnName].DataType;
+                    Type t = data.Tables[name: entity].Columns[name: pfdr.ColumnName].DataType;
                     FilterOperator op = (FilterOperator)pfdr.Operator;
                     if (
                         t == typeof(Guid)
@@ -553,11 +624,19 @@ public class UIManager
                         t = typeof(string);
                     }
                     uigfc.Details.Add(
-                        new UIGridFilterFieldConfiguration(
-                            pfdr.ColumnName,
-                            OrigamPanelFilterDA.StoredFilterValue(pfdr, t, 1),
-                            OrigamPanelFilterDA.StoredFilterValue(pfdr, t, 2),
-                            pfdr.Operator
+                        item: new UIGridFilterFieldConfiguration(
+                            property: pfdr.ColumnName,
+                            value1: OrigamPanelFilterDA.StoredFilterValue(
+                                row: pfdr,
+                                type: t,
+                                valueNumber: 1
+                            ),
+                            value2: OrigamPanelFilterDA.StoredFilterValue(
+                                row: pfdr,
+                                type: t,
+                                valueNumber: 2
+                            ),
+                            oper: pfdr.Operator
                         )
                     );
                 }
@@ -569,13 +648,14 @@ public class UIManager
     private static string DashboardViewConfig(string viewId)
     {
         IDataLookupService ls =
-            ServiceManager.Services.GetService(typeof(IDataLookupService)) as IDataLookupService;
+            ServiceManager.Services.GetService(serviceType: typeof(IDataLookupService))
+            as IDataLookupService;
         return ls.GetDisplayText(
-                new Guid("d27877bc-3fd5-4fe6-a5c9-b4119fb821b6"),
-                viewId,
-                false,
-                false,
-                null
+                lookupId: new Guid(g: "d27877bc-3fd5-4fe6-a5c9-b4119fb821b6"),
+                lookupValue: viewId,
+                useCache: false,
+                returnMessageIfNull: false,
+                transactionId: null
             )
             .ToString();
     }
@@ -583,28 +663,28 @@ public class UIManager
     private static XmlDocument DashboardViews(string menuId)
     {
         XmlDocument doc = new XmlDocument();
-        XmlElement rootElement = doc.CreateElement("dashboardViews");
-        doc.AppendChild(rootElement);
+        XmlElement rootElement = doc.CreateElement(name: "dashboardViews");
+        doc.AppendChild(newChild: rootElement);
         IPrincipal principal = SecurityManager.CurrentPrincipal;
         DataSet data = CoreServices.DataService.Instance.LoadData(
-            new Guid("e6b7e890-032c-4837-b3e1-592f9d6f9d0f"),
-            new Guid("916f8028-9d89-49b2-bb66-97548bde8b7d"),
-            Guid.Empty,
-            Guid.Empty,
-            null,
-            "OrigamDashboardView_parMenuId",
-            menuId
+            dataStructureId: new Guid(g: "e6b7e890-032c-4837-b3e1-592f9d6f9d0f"),
+            methodId: new Guid(g: "916f8028-9d89-49b2-bb66-97548bde8b7d"),
+            defaultSetId: Guid.Empty,
+            sortSetId: Guid.Empty,
+            transactionId: null,
+            paramName1: "OrigamDashboardView_parMenuId",
+            paramValue1: menuId
         );
-        foreach (DataRow row in data.Tables["OrigamDashboardView"].Rows)
+        foreach (DataRow row in data.Tables[name: "OrigamDashboardView"].Rows)
         {
             IOrigamAuthorizationProvider auth = SecurityManager.GetAuthorizationProvider();
-            if (auth.Authorize(principal, (string)row["Roles"]))
+            if (auth.Authorize(principal: principal, context: (string)row[columnName: "Roles"]))
             {
-                XmlElement viewElement = doc.CreateElement("view");
-                viewElement.SetAttribute("id", row["Id"].ToString());
-                viewElement.SetAttribute("name", (string)row["Name"]);
-                viewElement.SetAttribute("roles", (string)row["Roles"]);
-                rootElement.AppendChild(viewElement);
+                XmlElement viewElement = doc.CreateElement(name: "view");
+                viewElement.SetAttribute(name: "id", value: row[columnName: "Id"].ToString());
+                viewElement.SetAttribute(name: "name", value: (string)row[columnName: "Name"]);
+                viewElement.SetAttribute(name: "roles", value: (string)row[columnName: "Roles"]);
+                rootElement.AppendChild(newChild: viewElement);
             }
         }
         return doc;

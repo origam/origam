@@ -34,10 +34,10 @@ namespace Origam.Schema.WorkflowModel;
 /// <summary>
 /// Summary description for Workflow.
 /// </summary>
-[SchemaItemDescription("Sequential Workflow", "sequential-workflow.png")]
-[HelpTopic("Sequential+Workflows")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.2")]
+[SchemaItemDescription(name: "Sequential Workflow", iconName: "sequential-workflow.png")]
+[HelpTopic(topic: "Sequential+Workflows")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.2")]
 public class Workflow : AbstractSchemaItem, IWorkflow
 {
     public const string CategoryConst = "Workflow";
@@ -49,31 +49,31 @@ public class Workflow : AbstractSchemaItem, IWorkflow
     }
 
     public Workflow(Guid schemaExtensionId)
-        : base(schemaExtensionId)
+        : base(extensionId: schemaExtensionId)
     {
         Init();
     }
 
     public Workflow(Key primaryKey)
-        : base(primaryKey)
+        : base(primaryKey: primaryKey)
     {
         Init();
     }
 
     private void Init()
     {
-        this.ChildItemTypes.Add(typeof(ServiceMethodCallTask));
-        this.ChildItemTypes.Add(typeof(UIFormTask));
-        this.ChildItemTypes.Add(typeof(WorkflowCallTask));
-        this.ChildItemTypes.Add(typeof(SetWorkflowPropertyTask));
-        this.ChildItemTypes.Add(typeof(UpdateContextTask));
-        this.ChildItemTypes.Add(typeof(AcceptContextStoreChangesTask));
-        this.ChildItemTypes.Add(typeof(TransactionWorkflowBlock));
-        this.ChildItemTypes.Add(typeof(ForeachWorkflowBlock));
-        this.ChildItemTypes.Add(typeof(LoopWorkflowBlock));
-        this.ChildItemTypes.Add(typeof(ContextStore));
-        this.ChildItemTypes.Add(typeof(CheckRuleStep));
-        this.ChildItemTypes.Add(typeof(WaitTask));
+        this.ChildItemTypes.Add(item: typeof(ServiceMethodCallTask));
+        this.ChildItemTypes.Add(item: typeof(UIFormTask));
+        this.ChildItemTypes.Add(item: typeof(WorkflowCallTask));
+        this.ChildItemTypes.Add(item: typeof(SetWorkflowPropertyTask));
+        this.ChildItemTypes.Add(item: typeof(UpdateContextTask));
+        this.ChildItemTypes.Add(item: typeof(AcceptContextStoreChangesTask));
+        this.ChildItemTypes.Add(item: typeof(TransactionWorkflowBlock));
+        this.ChildItemTypes.Add(item: typeof(ForeachWorkflowBlock));
+        this.ChildItemTypes.Add(item: typeof(LoopWorkflowBlock));
+        this.ChildItemTypes.Add(item: typeof(ContextStore));
+        this.ChildItemTypes.Add(item: typeof(CheckRuleStep));
+        this.ChildItemTypes.Add(item: typeof(WaitTask));
     }
 
     /* @Short returns a name of context store that is used for returning values.
@@ -82,7 +82,11 @@ public class Workflow : AbstractSchemaItem, IWorkflow
      * */
     public ContextStore GetReturnContext()
     {
-        foreach (ContextStore context in ChildItemsByType<ContextStore>(ContextStore.CategoryConst))
+        foreach (
+            ContextStore context in ChildItemsByType<ContextStore>(
+                itemType: ContextStore.CategoryConst
+            )
+        )
         {
             if (context.IsReturnValue)
             {
@@ -93,12 +97,12 @@ public class Workflow : AbstractSchemaItem, IWorkflow
     }
 
     #region IWorkflowStep Members
-    [DefaultValue(WorkflowTransactionBehavior.InheritExisting)]
-    [Category("Transactions"), RefreshProperties(RefreshProperties.Repaint)]
-    [DisplayName("Transaction Behavior")]
-    [XmlAttribute("transactionBehavior")]
+    [DefaultValue(value: WorkflowTransactionBehavior.InheritExisting)]
+    [Category(category: "Transactions"), RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [DisplayName(displayName: "Transaction Behavior")]
+    [XmlAttribute(attributeName: "transactionBehavior")]
     [Description(
-        "Controls how will workflow interact with incoming transactions. The default behavior is to inherit them."
+        description: "Controls how will workflow interact with incoming transactions. The default behavior is to inherit them."
     )]
     public WorkflowTransactionBehavior TransactionBehavior { get; set; } =
         WorkflowTransactionBehavior.InheritExisting;
@@ -111,21 +115,21 @@ public class Workflow : AbstractSchemaItem, IWorkflow
     }
     #endregion
     #region IWorkflowStep Members
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public List<WorkflowTaskDependency> Dependencies => new();
 
     // It does not really make sense to change this property on Workflow.
     // That is why it is not visible in the Architect and not persisted in XML.
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public StepFailureMode OnFailure { get; set; } = StepFailureMode.WorkflowFails;
 
-    [DefaultValue(Trace.InheritFromParent)]
-    [Category("Tracing"), RefreshProperties(RefreshProperties.Repaint)]
-    [RuntimeConfigurable("traceLevel")]
-    [DisplayName("Trace Level")]
+    [DefaultValue(value: Trace.InheritFromParent)]
+    [Category(category: "Tracing"), RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [RuntimeConfigurable(name: "traceLevel")]
+    [DisplayName(displayName: "Trace Level")]
     public Trace TraceLevel { get; set; } = Trace.InheritFromParent;
 
-    [Category("Tracing")]
+    [Category(category: "Tracing")]
     public Trace Trace
     {
         get
@@ -142,7 +146,7 @@ public class Workflow : AbstractSchemaItem, IWorkflow
                     if (workflowStep is WorkflowCallTask workflowCallTask)
                     {
                         // skip any direct recursion
-                        if (!workflowCallTask.Workflow.PrimaryKey.Equals(this.PrimaryKey))
+                        if (!workflowCallTask.Workflow.PrimaryKey.Equals(obj: this.PrimaryKey))
                         {
                             Trace result = workflowCallTask.Workflow.Trace;
                             if (result == Trace.Yes)
@@ -157,46 +161,46 @@ public class Workflow : AbstractSchemaItem, IWorkflow
         }
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public StartRule StartConditionRule
     {
         get { return null; }
-        set { throw new InvalidOperationException("Cannot set start rule to Workflow"); }
+        set { throw new InvalidOperationException(message: "Cannot set start rule to Workflow"); }
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public IContextStore StartConditionRuleContextStore
     {
         get { return null; }
-        set { throw new InvalidOperationException("Cannot set start rule to Workflow"); }
+        set { throw new InvalidOperationException(message: "Cannot set start rule to Workflow"); }
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public IEndRule ValidationRule
     {
         get { return null; }
-        set { throw new InvalidOperationException("Cannot set end rule to Workflow"); }
+        set { throw new InvalidOperationException(message: "Cannot set end rule to Workflow"); }
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public IContextStore ValidationRuleContextStore
     {
         get { return null; }
-        set { throw new InvalidOperationException("Cannot set end rule to Workflow"); }
+        set { throw new InvalidOperationException(message: "Cannot set end rule to Workflow"); }
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public string Roles
     {
         get { return null; }
-        set { throw new InvalidOperationException("Cannot set Roles to Workflow"); }
+        set { throw new InvalidOperationException(message: "Cannot set Roles to Workflow"); }
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public string Features
     {
         get { return null; }
-        set { throw new InvalidOperationException("Cannot set Features to Workflow"); }
+        set { throw new InvalidOperationException(message: "Cannot set Features to Workflow"); }
     }
     #endregion
 }

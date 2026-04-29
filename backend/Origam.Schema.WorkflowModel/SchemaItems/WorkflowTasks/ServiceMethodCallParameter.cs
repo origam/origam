@@ -30,10 +30,14 @@ using Origam.Workbench.Services;
 
 namespace Origam.Schema.WorkflowModel;
 
-[SchemaItemDescription("Parameter", "Parameters", "parameter-mapping-blm.png")]
-[HelpTopic("Service+Method+Call+Parameter")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(
+    name: "Parameter",
+    folderName: "Parameters",
+    iconName: "parameter-mapping-blm.png"
+)]
+[HelpTopic(topic: "Service+Method+Call+Parameter")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class ServiceMethodCallParameter : AbstractSchemaItem
 {
     public const string CategoryConst = "ServiceMethodCallParameter";
@@ -41,42 +45,45 @@ public class ServiceMethodCallParameter : AbstractSchemaItem
     public ServiceMethodCallParameter() { }
 
     public ServiceMethodCallParameter(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public ServiceMethodCallParameter(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Overriden AbstractDataEntityColumn Members
 
     public override string ItemType => CategoryConst;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public override bool UseFolders => false;
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(ServiceMethodParameter);
-        base.GetExtraDependencies(dependencies);
+        dependencies.Add(item: ServiceMethodParameter);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
     #endregion
     #region Properties
     public Guid ServiceMethodParameterId;
 
-    [XmlReference("serviceMethodParameter", "ServiceMethodParameterId")]
-    [ReadOnly(true)]
+    [XmlReference(attributeName: "serviceMethodParameter", idField: "ServiceMethodParameterId")]
+    [ReadOnly(isReadOnly: true)]
     public ServiceMethodParameter ServiceMethodParameter
     {
         get
         {
             var key = new ModelElementKey { Id = ServiceMethodParameterId };
             return (ServiceMethodParameter)
-                PersistenceProvider.RetrieveInstance(typeof(ServiceMethodParameter), key);
+                PersistenceProvider.RetrieveInstance(
+                    type: typeof(ServiceMethodParameter),
+                    primaryKey: key
+                );
         }
-        set => ServiceMethodParameterId = (Guid)value.PrimaryKey["Id"];
+        set => ServiceMethodParameterId = (Guid)value.PrimaryKey[key: "Id"];
     }
     #endregion
     #region ISchemaItemFactory Members
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public override Type[] NewItemTypes
     {
         get
@@ -84,31 +91,31 @@ public class ServiceMethodCallParameter : AbstractSchemaItem
             var result = new List<Type>();
             if (ServiceMethodParameter.AllowContextReference)
             {
-                result.Add(typeof(ContextReference));
+                result.Add(item: typeof(ContextReference));
             }
             if (ServiceMethodParameter.AllowDataConstantReference)
             {
-                result.Add(typeof(DataConstantReference));
+                result.Add(item: typeof(DataConstantReference));
             }
             if (ServiceMethodParameter.AllowSystemFunctionCall)
             {
-                result.Add(typeof(SystemFunctionCall));
+                result.Add(item: typeof(SystemFunctionCall));
             }
             if (ServiceMethodParameter.AllowDataStructureReference)
             {
-                result.Add(typeof(DataStructureReference));
+                result.Add(item: typeof(DataStructureReference));
             }
             if (ServiceMethodParameter.AllowTransformationReference)
             {
-                result.Add(typeof(TransformationReference));
+                result.Add(item: typeof(TransformationReference));
             }
             if (ServiceMethodParameter.AllowReportReference)
             {
-                result.Add(typeof(ReportReference));
+                result.Add(item: typeof(ReportReference));
             }
             if (ServiceMethodParameter.AllowWorkflowReference)
             {
-                result.Add(typeof(WorkflowReference));
+                result.Add(item: typeof(WorkflowReference));
             }
             return result.ToArray();
         }
@@ -145,7 +152,11 @@ public class ServiceMethodCallParameter : AbstractSchemaItem
         {
             itemName = "NewSystemFunctionCall";
         }
-        return base.NewItem<T>(schemaExtensionId, group, itemName);
+        return base.NewItem<T>(
+            schemaExtensionId: schemaExtensionId,
+            group: group,
+            itemName: itemName
+        );
     }
 
     public override IList<string> NewTypeNames
@@ -158,14 +169,14 @@ public class ServiceMethodCallParameter : AbstractSchemaItem
                 var businessServicesService =
                     ServiceManager.Services.GetService<IBusinessServicesService>();
                 var serviceAgent = businessServicesService.GetAgent(
-                    serviceMethodCallTask.Service.Name,
-                    null,
-                    null
+                    serviceType: serviceMethodCallTask.Service.Name,
+                    ruleEngine: null,
+                    workflowEngine: null
                 );
                 return serviceAgent.ExpectedParameterNames(
-                    serviceMethodCallTask,
-                    serviceMethodCallTask.ServiceMethod.Name,
-                    ServiceMethodParameter.Name
+                    item: serviceMethodCallTask,
+                    method: serviceMethodCallTask.ServiceMethod.Name,
+                    parameter: ServiceMethodParameter.Name
                 );
             }
             catch

@@ -26,5 +26,5 @@ namespace Origam;
 public class OrigamValidationException : Exception
 {
     public OrigamValidationException(string message)
-        : base(message) { }
+        : base(message: message) { }
 }

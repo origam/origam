@@ -30,48 +30,48 @@ using Origam.Workbench.Services;
 namespace Origam.Architect.Server.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route(template: "[controller]")]
 public class DeploymentScriptsController(
     IPersistenceService persistenceService,
     DeploymentScriptRunnerService deploymentScriptRunner,
     DeploymentVersionCurrentService deploymentVersionCurrentService
 ) : ControllerBase
 {
-    [HttpPost("SetVersionCurrent")]
+    [HttpPost(template: "SetVersionCurrent")]
     public IActionResult SetVersionCurrent(
         [Required] [FromBody] SetVersionCurrentRequestModel requestModel
     )
     {
         var targetVersion = persistenceService.SchemaProvider.RetrieveInstance<ISchemaItem>(
-            requestModel.SchemaItemId,
+            instanceId: requestModel.SchemaItemId,
             useCache: false
         );
 
         if (targetVersion is not DeploymentVersion version)
         {
-            throw new Exception("DeploymentVersion is not found.");
+            throw new Exception(message: "DeploymentVersion is not found.");
         }
 
-        deploymentVersionCurrentService.SetVersionCurrent(version);
+        deploymentVersionCurrentService.SetVersionCurrent(deploymentVersion: version);
 
         return Ok();
     }
 
-    [HttpPost("Run")]
+    [HttpPost(template: "Run")]
     public IActionResult Run([Required] [FromBody] RunRequestModel requestModel)
     {
         var updateScriptActivity = persistenceService.SchemaProvider.RetrieveInstance<ISchemaItem>(
-            requestModel.SchemaItemId,
+            instanceId: requestModel.SchemaItemId,
             useCache: false
         );
 
         if (updateScriptActivity is not AbstractUpdateScriptActivity script)
         {
-            throw new Exception("UpdateScriptActivity is not found.");
+            throw new Exception(message: "UpdateScriptActivity is not found.");
         }
 
         SecurityManager.SetServerIdentity();
-        deploymentScriptRunner.RunDeploymentScript(script);
+        deploymentScriptRunner.RunDeploymentScript(script: script);
 
         return Ok();
     }

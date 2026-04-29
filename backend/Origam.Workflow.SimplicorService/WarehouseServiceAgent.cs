@@ -42,44 +42,54 @@ public class WarehouseServiceAgent : AbstractServiceAgent
     public WarehouseServiceAgent()
     {
         _weightedAveragePricingMethodId = (Guid)
-            parameterService.GetParameterValue("WarehousePricingMethod_WeightedAverage");
+            parameterService.GetParameterValue(
+                parameterName: "WarehousePricingMethod_WeightedAverage"
+            );
     }
 
     #region Private Methods
     private string GetConstant(string name)
     {
-        return (string)parameterService.GetParameterValue(name, OrigamDataType.String);
+        return (string)
+            parameterService.GetParameterValue(
+                parameterName: name,
+                targetType: OrigamDataType.String
+            );
     }
 
     private IXmlContainer RecalculateWeightedAverage(PriceRecalculationData data)
     {
         Hashtable inventory = new Hashtable();
         data.InventoryOperationDetail.Columns.Add(
-            "OperationDate",
-            typeof(System.DateTime),
-            "Parent.Date"
+            columnName: "OperationDate",
+            type: typeof(System.DateTime),
+            expression: "Parent.Date"
         );
         data.InventoryOperationDetail.Columns.Add(
-            "OperationType",
-            typeof(System.Guid),
-            "Parent.refInventoryOperationTypeId"
+            columnName: "OperationType",
+            type: typeof(System.Guid),
+            expression: "Parent.refInventoryOperationTypeId"
         );
         data.InventoryOperationDetail.Columns.Add(
-            "IsCancelled",
-            typeof(bool),
-            "Parent.IsCancelled"
+            columnName: "IsCancelled",
+            type: typeof(bool),
+            expression: "Parent.IsCancelled"
         );
         data.InventoryOperationDetail.Columns.Add(
-            "IsCancellation",
-            typeof(bool),
-            "Parent.IsCancellation"
+            columnName: "IsCancellation",
+            type: typeof(bool),
+            expression: "Parent.IsCancellation"
         );
-        data.InventoryOperationDetail.Columns.Add("SortOrder", typeof(int), "Parent.SortOrder");
+        data.InventoryOperationDetail.Columns.Add(
+            columnName: "SortOrder",
+            type: typeof(int),
+            expression: "Parent.SortOrder"
+        );
         DataView operations = new DataView(
-            data.InventoryOperationDetail,
-            "",
-            "OperationDate, IsCancelled DESC, IsCancellation DESC, SortOrder, RecordCreated",
-            DataViewRowState.CurrentRows
+            table: data.InventoryOperationDetail,
+            RowFilter: "",
+            Sort: "OperationDate, IsCancelled DESC, IsCancellation DESC, SortOrder, RecordCreated",
+            RowState: DataViewRowState.CurrentRows
         );
         //			if(inventory.IsWeightedAverageLastPriceNull()) inventory.WeightedAverageLastPrice = 0;
         //			if(inventory.IsWeightedAverageLastQuantityNull()) inventory.WeightedAverageLastQuantity = 0;
@@ -95,15 +105,15 @@ public class WarehouseServiceAgent : AbstractServiceAgent
             if (!operation.InventoryOperationRow.IsrefOldWarehouseIdNull())
             {
                 isOldWarehouseAverage = IsWarehouseWeightedAverage(
-                    data,
-                    operation.InventoryOperationRow.refOldWarehouseId
+                    data: data,
+                    warehouseId: operation.InventoryOperationRow.refOldWarehouseId
                 );
             }
             if (!operation.InventoryOperationRow.IsrefNewWarehouseIdNull())
             {
                 isNewWarehouseAverage = IsWarehouseWeightedAverage(
-                    data,
-                    operation.InventoryOperationRow.refNewWarehouseId
+                    data: data,
+                    warehouseId: operation.InventoryOperationRow.refNewWarehouseId
                 );
             }
             bool isWarehouseAverage = (isOldWarehouseAverage || isNewWarehouseAverage);
@@ -112,42 +122,51 @@ public class WarehouseServiceAgent : AbstractServiceAgent
             if (!operation.InventoryOperationRow.IsrefOldWarehouseIdNull())
             {
                 oldInventoryId = GetInventoryId(
-                    operation.InventoryOperationRow.refOldWarehouseId,
-                    operation.refProductId
+                    warehouseId: operation.InventoryOperationRow.refOldWarehouseId,
+                    productId: operation.refProductId
                 );
             }
             if (!operation.InventoryOperationRow.IsrefNewWarehouseIdNull())
             {
                 newInventoryId = GetInventoryId(
-                    operation.InventoryOperationRow.refNewWarehouseId,
-                    operation.refProductId
+                    warehouseId: operation.InventoryOperationRow.refNewWarehouseId,
+                    productId: operation.refProductId
                 );
             }
             // set initial balance - load from the db
-            if (!inventory.Contains(oldInventoryId))
+            if (!inventory.Contains(key: oldInventoryId))
             {
                 inventory.Add(
-                    oldInventoryId,
-                    InitialBalance(oldInventoryId, operation.InventoryOperationRow.Date)
+                    key: oldInventoryId,
+                    value: InitialBalance(
+                        inventoryId: oldInventoryId,
+                        date: operation.InventoryOperationRow.Date
+                    )
                 );
             }
-            if (!inventory.Contains(newInventoryId))
+            if (!inventory.Contains(key: newInventoryId))
             {
                 inventory.Add(
-                    newInventoryId,
-                    InitialBalance(newInventoryId, operation.InventoryOperationRow.Date)
+                    key: newInventoryId,
+                    value: InitialBalance(
+                        inventoryId: newInventoryId,
+                        date: operation.InventoryOperationRow.Date
+                    )
                 );
             }
             // basic inventory is the new inventory (there we have to update the average price because of receipts and receipt-transfers)
             Guid inventoryId = (
-                newInventoryId.Equals(Guid.Empty) ? oldInventoryId : newInventoryId
+                newInventoryId.Equals(g: Guid.Empty) ? oldInventoryId : newInventoryId
             );
-            object[] o = (object[])inventory[inventoryId];
+            object[] o = (object[])inventory[key: inventoryId];
             decimal lastQuantity = (decimal)o[0];
             decimal lastPrice = (decimal)o[1];
             decimal totalPrice = (decimal)o[2];
             decimal factor = 1;
-            if ((bool)operation["IsCancelled"] || (bool)operation["IsCancellation"])
+            if (
+                (bool)operation[columnName: "IsCancelled"]
+                || (bool)operation[columnName: "IsCancellation"]
+            )
             {
                 // CANCELED OPERATIONS - WE IGNORE THEM
                 operation.SetPriceAverageNull();
@@ -155,11 +174,15 @@ public class WarehouseServiceAgent : AbstractServiceAgent
             }
             else if (
                 operation.InventoryOperationRow.refInventoryOperationTypeId
-                    == new Guid(GetConstant("InventoryOperationType_WarehouseReceipt"))
+                    == new Guid(g: GetConstant(name: "InventoryOperationType_WarehouseReceipt"))
                 || operation.InventoryOperationRow.refInventoryOperationTypeId
-                    == new Guid(GetConstant("InventoryOperationType_WarehouseStocktakingExtra"))
+                    == new Guid(
+                        g: GetConstant(name: "InventoryOperationType_WarehouseStocktakingExtra")
+                    )
                 || operation.InventoryOperationRow.refInventoryOperationTypeId
-                    == new Guid(GetConstant("InventoryOperationType_WarehouseReturnInbound"))
+                    == new Guid(
+                        g: GetConstant(name: "InventoryOperationType_WarehouseReturnInbound")
+                    )
             )
             {
                 // RECEIPTS
@@ -169,10 +192,12 @@ public class WarehouseServiceAgent : AbstractServiceAgent
                     PriceRecalculationData.InventoryOperationDetailRow[] mrpRequisitions =
                         (PriceRecalculationData.InventoryOperationDetailRow[])
                             data.InventoryOperationDetail.Select(
-                                "refManufacturingReportId='"
+                                filterExpression: "refManufacturingReportId='"
                                     + operation.refManufacturingReportId.ToString()
                                     + "' and OperationType = '"
-                                    + GetConstant("InventoryOperationType_WarehouseRequisition")
+                                    + GetConstant(
+                                        name: "InventoryOperationType_WarehouseRequisition"
+                                    )
                                     + "'"
                             );
                     decimal totalMrpPrice = 0;
@@ -182,7 +207,10 @@ public class WarehouseServiceAgent : AbstractServiceAgent
                     {
                         totalMrpPrice += requisition.PriceLocalTotal;
                     }
-                    operation.PriceLocal = decimal.Round(totalMrpPrice / operation.Quantity, 4);
+                    operation.PriceLocal = decimal.Round(
+                        d: totalMrpPrice / operation.Quantity,
+                        decimals: 4
+                    );
                     operation.PriceForeign = operation.PriceLocal;
                 }
 
@@ -197,9 +225,9 @@ public class WarehouseServiceAgent : AbstractServiceAgent
                 {
                     // recalculate the average
                     decimal average = decimal.Round(
-                        ((lastPrice * lastQuantity) + (operation.PriceLocalTotal * factor))
+                        d: ((lastPrice * lastQuantity) + (operation.PriceLocalTotal * factor))
                             / (lastQuantity + (operation.Quantity * factor)),
-                        4
+                        decimals: 4
                     );
                     lastPrice = average;
                     lastQuantity = newQuantity;
@@ -208,11 +236,11 @@ public class WarehouseServiceAgent : AbstractServiceAgent
             }
             else if (
                 operation.InventoryOperationRow.refInventoryOperationTypeId
-                == new Guid(GetConstant("InventoryOperationType_WarehouseTransfer"))
+                == new Guid(g: GetConstant(name: "InventoryOperationType_WarehouseTransfer"))
             )
             {
                 // TRANSFERS
-                object[] old = (object[])inventory[oldInventoryId];
+                object[] old = (object[])inventory[key: oldInventoryId];
                 decimal oldQuantity = (decimal)old[0];
                 decimal oldLastPrice = (decimal)old[1];
                 decimal oldTotalPrice = (decimal)old[2];
@@ -249,36 +277,42 @@ public class WarehouseServiceAgent : AbstractServiceAgent
                 {
                     // recalculate the average and quantity for the new warehouse
                     decimal average = decimal.Round(
-                        ((lastPrice * lastQuantity) + operation.PriceLocalTotal)
+                        d: ((lastPrice * lastQuantity) + operation.PriceLocalTotal)
                             / (lastQuantity + operation.Quantity),
-                        4
+                        decimals: 4
                     );
                     lastPrice = average;
                     lastQuantity = lastQuantity + operation.Quantity;
                     totalPrice += operation.PriceLocalTotal;
                 }
                 // update the old quantity
-                inventory[oldInventoryId] = new object[]
+                inventory[key: oldInventoryId] = new object[]
                 {
                     oldQuantity - operation.Quantity,
                     oldLastPrice,
                     oldTotalPrice - operation.PriceLocalTotal + operation.PriceLocalCorrection,
                 };
                 UpdateBalances(
-                    data,
-                    oldInventoryId,
-                    operation.InventoryOperationRow.Date,
-                    oldLastPrice,
-                    oldTotalPrice - operation.PriceLocalTotal + operation.PriceLocalCorrection
+                    data: data,
+                    inventoryId: oldInventoryId,
+                    date: operation.InventoryOperationRow.Date,
+                    lastPrice: oldLastPrice,
+                    totalPrice: oldTotalPrice
+                        - operation.PriceLocalTotal
+                        + operation.PriceLocalCorrection
                 );
             }
             else if (
                 operation.InventoryOperationRow.refInventoryOperationTypeId
-                    == new Guid(GetConstant("InventoryOperationType_WarehouseRequisition"))
+                    == new Guid(g: GetConstant(name: "InventoryOperationType_WarehouseRequisition"))
                 || operation.InventoryOperationRow.refInventoryOperationTypeId
-                    == new Guid(GetConstant("InventoryOperationType_WarehouseStocktakingMissing"))
+                    == new Guid(
+                        g: GetConstant(name: "InventoryOperationType_WarehouseStocktakingMissing")
+                    )
                 || operation.InventoryOperationRow.refInventoryOperationTypeId
-                    == new Guid(GetConstant("InventoryOperationType_WarehouseReturnOutbound"))
+                    == new Guid(
+                        g: GetConstant(name: "InventoryOperationType_WarehouseReturnOutbound")
+                    )
             )
             {
                 decimal newQuantity = lastQuantity - (operation.Quantity * factor);
@@ -311,9 +345,9 @@ public class WarehouseServiceAgent : AbstractServiceAgent
             else
             {
                 throw new ArgumentOutOfRangeException(
-                    "InventoryOperation.refInventoryOperationTypeId",
-                    operation.InventoryOperationRow.refInventoryOperationTypeId,
-                    ResourceUtils.GetString("ErrorUnknownInventoryOperation")
+                    paramName: "InventoryOperation.refInventoryOperationTypeId",
+                    actualValue: operation.InventoryOperationRow.refInventoryOperationTypeId,
+                    message: ResourceUtils.GetString(key: "ErrorUnknownInventoryOperation")
                 );
             }
             operation.PriceAverageQuantity = lastQuantity;
@@ -324,15 +358,15 @@ public class WarehouseServiceAgent : AbstractServiceAgent
 
             operation.EndEdit();
             UpdateBalances(
-                data,
-                inventoryId,
-                operation.InventoryOperationRow.Date,
-                lastPrice,
-                totalPrice
+                data: data,
+                inventoryId: inventoryId,
+                date: operation.InventoryOperationRow.Date,
+                lastPrice: lastPrice,
+                totalPrice: totalPrice
             );
-            inventory[inventoryId] = new object[] { lastQuantity, lastPrice, totalPrice };
+            inventory[key: inventoryId] = new object[] { lastQuantity, lastPrice, totalPrice };
         }
-        return DataDocumentFactory.New(data);
+        return DataDocumentFactory.New(dataSet: data);
     }
 
     /// <summary>
@@ -345,27 +379,30 @@ public class WarehouseServiceAgent : AbstractServiceAgent
     {
         // we load the balance for a day-1 so we get the
         // final quantity/price for the beginning of the requested date
-        object balanceId = GetInventoryBalanceId(inventoryId, date.AddDays(-1));
+        object balanceId = GetInventoryBalanceId(
+            inventoryId: inventoryId,
+            date: date.AddDays(value: -1)
+        );
         if (balanceId == null)
         {
             return new object[] { (decimal)0, (decimal)0, (decimal)0 };
         }
         DataSet balance = core.DataService.Instance.LoadData(
-            new Guid("d8df51c1-5596-446e-b3e7-68b3f2f54a1f"),
-            new Guid("a36bef1a-1a8f-45cd-9085-df9e7ac0b6b6"),
-            Guid.Empty,
-            Guid.Empty,
-            null,
-            "InventoryBalance_parId",
-            balanceId
+            dataStructureId: new Guid(g: "d8df51c1-5596-446e-b3e7-68b3f2f54a1f"),
+            methodId: new Guid(g: "a36bef1a-1a8f-45cd-9085-df9e7ac0b6b6"),
+            defaultSetId: Guid.Empty,
+            sortSetId: Guid.Empty,
+            transactionId: null,
+            paramName1: "InventoryBalance_parId",
+            paramValue1: balanceId
         );
-        DataRow row = balance.Tables[0].Rows[0];
+        DataRow row = balance.Tables[index: 0].Rows[index: 0];
 
         return new object[]
         {
-            row["QuantityBalance"],
-            row["PriceLocalAverage"],
-            row["PriceLocalTotal"],
+            row[columnName: "QuantityBalance"],
+            row[columnName: "PriceLocalAverage"],
+            row[columnName: "PriceLocalTotal"],
         };
     }
 
@@ -381,19 +418,18 @@ public class WarehouseServiceAgent : AbstractServiceAgent
         PriceRecalculationData.InventoryBalanceRow[] balances =
             (PriceRecalculationData.InventoryBalanceRow[])
                 data.InventoryBalance.Select(
-                    "refInventoryId='"
+                    filterExpression: "refInventoryId='"
                         + inventoryId.ToString()
                         + "' and Date = "
-                        + DatasetTools.DateExpression(date),
-                    "Date DESC"
+                        + DatasetTools.DateExpression(dateValue: date),
+                    sort: "Date DESC"
                 );
         if (balances.Length == 0)
         {
             throw new Exception(
-                ResourceUtils.GetString(
-                    "ErrorBalanceNotFound",
-                    inventoryId.ToString(),
-                    date.ToString()
+                message: ResourceUtils.GetString(
+                    key: "ErrorBalanceNotFound",
+                    args: new object[] { inventoryId.ToString(), date.ToString() }
                 )
             );
         }
@@ -401,10 +437,9 @@ public class WarehouseServiceAgent : AbstractServiceAgent
         if (balances.Length > 1)
         {
             throw new Exception(
-                ResourceUtils.GetString(
-                    "ErrorMultipleBalances",
-                    inventoryId.ToString(),
-                    date.ToString()
+                message: ResourceUtils.GetString(
+                    key: "ErrorMultipleBalances",
+                    args: new object[] { inventoryId.ToString(), date.ToString() }
                 )
             );
         }
@@ -417,41 +452,43 @@ public class WarehouseServiceAgent : AbstractServiceAgent
     private static Guid GetInventoryId(Guid warehouseId, Guid productId)
     {
         IDataLookupService ls =
-            ServiceManager.Services.GetService(typeof(IDataLookupService)) as IDataLookupService;
-        Hashtable pms = new Hashtable(2);
-        pms.Add("Inventory_parWarehouseId", warehouseId);
-        pms.Add("Inventory_parProductId", productId);
+            ServiceManager.Services.GetService(serviceType: typeof(IDataLookupService))
+            as IDataLookupService;
+        Hashtable pms = new Hashtable(capacity: 2);
+        pms.Add(key: "Inventory_parWarehouseId", value: warehouseId);
+        pms.Add(key: "Inventory_parProductId", value: productId);
 
         return (Guid)
             ls.GetDisplayText(
-                new Guid("b198e1b2-be96-42ed-8602-43e19d443685"),
-                pms,
-                false,
-                false,
-                null
+                lookupId: new Guid(g: "b198e1b2-be96-42ed-8602-43e19d443685"),
+                lookupValue: pms,
+                useCache: false,
+                returnMessageIfNull: false,
+                transactionId: null
             );
     }
 
     private static object GetInventoryBalanceId(Guid inventoryId, DateTime date)
     {
         IDataLookupService ls =
-            ServiceManager.Services.GetService(typeof(IDataLookupService)) as IDataLookupService;
-        Hashtable pms = new Hashtable(2);
-        pms.Add("InventoryBalance_parDate", date);
-        pms.Add("InventoryBalance_parInventoryId", inventoryId);
+            ServiceManager.Services.GetService(serviceType: typeof(IDataLookupService))
+            as IDataLookupService;
+        Hashtable pms = new Hashtable(capacity: 2);
+        pms.Add(key: "InventoryBalance_parDate", value: date);
+        pms.Add(key: "InventoryBalance_parInventoryId", value: inventoryId);
 
         return ls.GetDisplayText(
-            new Guid("11ba7945-5e11-4bc5-8424-d1d7600439fb"),
-            pms,
-            false,
-            false,
-            null
+            lookupId: new Guid(g: "11ba7945-5e11-4bc5-8424-d1d7600439fb"),
+            lookupValue: pms,
+            useCache: false,
+            returnMessageIfNull: false,
+            transactionId: null
         );
     }
 
     private static bool IsWarehouseWeightedAverage(PriceRecalculationData data, Guid warehouseId)
     {
-        PriceRecalculationData.WarehouseRow warehouse = data.Warehouse.FindById(warehouseId);
+        PriceRecalculationData.WarehouseRow warehouse = data.Warehouse.FindById(Id: warehouseId);
         return warehouse.refWarehousePricingMethodId == _weightedAveragePricingMethodId;
     }
     #endregion
@@ -469,16 +506,18 @@ public class WarehouseServiceAgent : AbstractServiceAgent
             case "RecalculatePrices":
             {
                 // Check input parameters
-                if (!(this.Parameters["InventoryOperations"] is IDataDocument))
+                if (!(this.Parameters[key: "InventoryOperations"] is IDataDocument))
                 {
                     throw new InvalidCastException(
-                        ResourceUtils.GetString("ErrorNotXmlDataDocument")
+                        message: ResourceUtils.GetString(key: "ErrorNotXmlDataDocument")
                     );
                 }
 
                 PriceRecalculationData sourceData = new PriceRecalculationData();
-                sourceData.Merge((this.Parameters["InventoryOperations"] as IDataDocument).DataSet);
-                _result = this.RecalculateWeightedAverage(sourceData);
+                sourceData.Merge(
+                    dataSet: (this.Parameters[key: "InventoryOperations"] as IDataDocument).DataSet
+                );
+                _result = this.RecalculateWeightedAverage(data: sourceData);
                 break;
             }
         }

@@ -28,20 +28,20 @@ using Origam.DA.Common;
 
 namespace Origam.Schema.MenuModel;
 
-[SchemaItemDescription("Submenu", "menu_folder.png")]
-[HelpTopic("Submenu")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Submenu", iconName: "menu_folder.png")]
+[HelpTopic(topic: "Submenu")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class Submenu : AbstractMenuItem
 {
     public Submenu() { }
 
     public Submenu(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(schemaExtensionId: schemaExtensionId) { }
 
     public Submenu(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public override string Roles
     {
         get
@@ -56,12 +56,12 @@ public class Submenu : AbstractMenuItem
                     {
                         return "*";
                     }
-                    var childRoles = menuItem.Roles.Split(";".ToCharArray());
+                    var childRoles = menuItem.Roles.Split(separator: ";".ToCharArray());
                     foreach (var role in childRoles)
                     {
-                        if (!roles.Contains(role))
+                        if (!roles.Contains(item: role))
                         {
-                            roles.Add(role);
+                            roles.Add(item: role);
                         }
                     }
                 }
@@ -71,16 +71,16 @@ public class Submenu : AbstractMenuItem
             {
                 if (stringBuilder.Length > 0)
                 {
-                    stringBuilder.Append(";");
+                    stringBuilder.Append(value: ";");
                 }
-                stringBuilder.Append(role);
+                stringBuilder.Append(value: role);
             }
             return stringBuilder.ToString();
         }
         set => base.Roles = value;
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public override string Features
     {
         get
@@ -95,12 +95,12 @@ public class Submenu : AbstractMenuItem
                     {
                         return "";
                     }
-                    var childFeatures = menuItem.Features.Split(";".ToCharArray());
+                    var childFeatures = menuItem.Features.Split(separator: ";".ToCharArray());
                     foreach (var feature in childFeatures)
                     {
-                        if (!features.Contains(feature))
+                        if (!features.Contains(item: feature))
                         {
-                            features.Add(feature);
+                            features.Add(item: feature);
                         }
                     }
                 }
@@ -110,21 +110,21 @@ public class Submenu : AbstractMenuItem
             {
                 if (stringBuilder.Length > 0)
                 {
-                    stringBuilder.Append(";");
+                    stringBuilder.Append(value: ";");
                 }
 
-                stringBuilder.Append(feature);
+                stringBuilder.Append(value: feature);
             }
             return stringBuilder.ToString();
         }
         set => base.Features = value;
     }
 
-    [DefaultValue(false)]
-    [XmlAttribute("isHidden")]
+    [DefaultValue(value: false)]
+    [XmlAttribute(attributeName: "isHidden")]
     public bool IsHidden { get; set; }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public new bool OpenExclusively
     {
         get => base.OpenExclusively;
@@ -174,7 +174,11 @@ public class Submenu : AbstractMenuItem
         {
             itemName = "<DynamicMenu_name>";
         }
-        return base.NewItem<T>(schemaExtensionId, group, itemName);
+        return base.NewItem<T>(
+            schemaExtensionId: schemaExtensionId,
+            group: group,
+            itemName: itemName
+        );
     }
 
     public override int CompareTo(object obj)
@@ -182,7 +186,7 @@ public class Submenu : AbstractMenuItem
         var abstractMenuItem = obj as AbstractMenuItem;
         if (obj is Submenu)
         {
-            return DisplayName.CompareTo(abstractMenuItem.DisplayName);
+            return DisplayName.CompareTo(strB: abstractMenuItem.DisplayName);
         }
         if (abstractMenuItem != null)
         {

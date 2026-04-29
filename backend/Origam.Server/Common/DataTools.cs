@@ -31,7 +31,14 @@ public static class DataTools
 {
     public static IDictionary<string, object> DatasetToDictionary(DataSet data)
     {
-        return DatasetToDictionary(data, null, 0, null, null, null);
+        return DatasetToDictionary(
+            data: data,
+            columns: null,
+            firstPageRecords: 0,
+            firstRecordId: null,
+            dataListEntity: null,
+            ss: null
+        );
     }
 
     public static IDictionary<string, object> DatasetToDictionary(
@@ -49,7 +56,7 @@ public static class DataTools
         }
 
         IDictionary<string, object> resultDataset = new Dictionary<string, object>(
-            data.Tables.Count
+            capacity: data.Tables.Count
         );
         foreach (DataTable t in data.Tables)
         {
@@ -59,29 +66,36 @@ public static class DataTools
                 if (t.TableName == dataListEntity)
                 {
                     resultDataset.Add(
-                        t.TableName,
-                        DatatableToDictionary(
-                            t,
-                            columns,
-                            firstPageRecords,
-                            firstRecordId,
-                            false,
-                            ss
+                        key: t.TableName,
+                        value: DatatableToDictionary(
+                            t: t,
+                            columns: columns,
+                            initialPageRecords: firstPageRecords,
+                            initialRecordId: firstRecordId,
+                            includeColumnNames: false,
+                            ss: ss
                         )
                     );
                 }
                 else
                 {
                     Hashtable emptyTable = new Hashtable();
-                    emptyTable.Add("data", new ArrayList());
-                    resultDataset.Add(t.TableName, emptyTable);
+                    emptyTable.Add(key: "data", value: new ArrayList());
+                    resultDataset.Add(key: t.TableName, value: emptyTable);
                 }
             }
             else
             {
                 resultDataset.Add(
-                    t.TableName,
-                    DatatableToDictionary(t, columns, firstPageRecords, recordId, false, ss)
+                    key: t.TableName,
+                    value: DatatableToDictionary(
+                        t: t,
+                        columns: columns,
+                        initialPageRecords: firstPageRecords,
+                        initialRecordId: recordId,
+                        includeColumnNames: false,
+                        ss: ss
+                    )
                 );
             }
         }
@@ -93,7 +107,14 @@ public static class DataTools
         bool includeColumnNames
     )
     {
-        return DatatableToDictionary(t, null, 0, null, includeColumnNames, null);
+        return DatatableToDictionary(
+            t: t,
+            columns: null,
+            initialPageRecords: 0,
+            initialRecordId: null,
+            includeColumnNames: includeColumnNames,
+            ss: null
+        );
     }
 
     public static IDictionary<string, List<object>> DatatableToDictionary(
@@ -106,8 +127,8 @@ public static class DataTools
     )
     {
         bool primaryKeysOnly = (columns != null);
-        var resultTable = new Dictionary<string, List<object>>(2);
-        string[] allColumnNames = SessionStore.GetColumnNames(t);
+        var resultTable = new Dictionary<string, List<object>>(capacity: 2);
+        string[] allColumnNames = SessionStore.GetColumnNames(table: t);
         bool primaryKeysOnlyFinal = primaryKeysOnly;
         if (primaryKeysOnly && t.Rows.Count <= initialPageRecords)
         {
@@ -115,7 +136,10 @@ public static class DataTools
         }
         if (includeColumnNames)
         {
-            resultTable.Add("columnNames", new List<object>(allColumnNames));
+            resultTable.Add(
+                key: "columnNames",
+                value: new List<object>(collection: allColumnNames)
+            );
         }
         if (primaryKeysOnly && !primaryKeysOnlyFinal && ss != null)
         {
@@ -124,9 +148,9 @@ public static class DataTools
             // - no delayed loading
             for (int i = 0; i < t.Rows.Count; i++)
             {
-                DataRow r = t.Rows[i];
-                object rowId = DatasetTools.PrimaryKey(r)[0];
-                ss.LazyLoadListRowData(rowId, r);
+                DataRow r = t.Rows[index: i];
+                object rowId = DatasetTools.PrimaryKey(row: r)[0];
+                ss.LazyLoadListRowData(rowId: rowId, row: r);
             }
         }
         string[] columnNamesFinal;
@@ -139,20 +163,28 @@ public static class DataTools
             {
                 columnNamesFinal[i] = t.PrimaryKey[i].ColumnName;
             }
-            columns.CopyTo(columnNamesFinal, t.PrimaryKey.Length);
-            resultTable.Add("columnNames", new List<object>(columnNamesFinal));
+            columns.CopyTo(array: columnNamesFinal, arrayIndex: t.PrimaryKey.Length);
+            resultTable.Add(
+                key: "columnNames",
+                value: new List<object>(collection: columnNamesFinal)
+            );
         }
         else
         {
             columnNamesFinal = allColumnNames;
         }
-        List<object> data = DataTableToList(t, columnNamesFinal);
-        resultTable.Add("data", data);
+        List<object> data = DataTableToList(t: t, columnNames: columnNamesFinal);
+        resultTable.Add(key: "data", value: data);
         if (primaryKeysOnlyFinal)
         {
             resultTable.Add(
-                "initialPage",
-                DataTableToList(t, initialPageRecords, initialRecordId, ss)
+                key: "initialPage",
+                value: DataTableToList(
+                    t: t,
+                    pageSize: initialPageRecords,
+                    startRecordId: initialRecordId,
+                    ss: ss
+                )
             );
         }
         return resultTable;
@@ -160,12 +192,12 @@ public static class DataTools
 
     public static List<object> DataTableToList(DataTable t, string[] columnNames)
     {
-        var data = new List<object>(t.Rows.Count);
+        var data = new List<object>(capacity: t.Rows.Count);
         foreach (DataRow r in t.Rows)
         {
             if (r.RowState != DataRowState.Deleted && r.RowState != DataRowState.Detached)
             {
-                data.Add(SessionStore.GetRowData(r, columnNames));
+                data.Add(item: SessionStore.GetRowData(row: r, columns: columnNames));
             }
         }
         return data;
@@ -178,20 +210,20 @@ public static class DataTools
         SessionStore ss
     )
     {
-        var data = new List<object>(pageSize);
-        string[] columnNames = SessionStore.GetColumnNames(t);
+        var data = new List<object>(capacity: pageSize);
+        string[] columnNames = SessionStore.GetColumnNames(table: t);
         DataRow startRow = null;
         int startRowIndex = 0;
         if (t.Rows.Count <= pageSize)
         {
             throw new Exception(
-                "Total number of rows is less than the page size. Paged data should not be used for so small number of records."
+                message: "Total number of rows is less than the page size. Paged data should not be used for so small number of records."
             );
         }
         if (startRecordId != null)
         {
-            startRow = t.Rows.Find(startRecordId);
-            startRowIndex = t.Rows.IndexOf(startRow);
+            startRow = t.Rows.Find(key: startRecordId);
+            startRowIndex = t.Rows.IndexOf(row: startRow);
         }
         // if there are not enough records till the end of table, we get some
         // records BEFORE the startRecordId so we always get as many records
@@ -202,12 +234,12 @@ public static class DataTools
         }
         for (int i = startRowIndex; i < startRowIndex + pageSize; i++)
         {
-            DataRow r = t.Rows[i];
-            object rowId = DatasetTools.PrimaryKey(r)[0];
-            ss.LazyLoadListRowData(rowId, r);
+            DataRow r = t.Rows[index: i];
+            object rowId = DatasetTools.PrimaryKey(row: r)[0];
+            ss.LazyLoadListRowData(rowId: rowId, row: r);
             if (r.RowState != DataRowState.Deleted && r.RowState != DataRowState.Detached)
             {
-                data.Add(SessionStore.GetRowData(r, columnNames));
+                data.Add(item: SessionStore.GetRowData(row: r, columns: columnNames));
             }
         }
         return data;

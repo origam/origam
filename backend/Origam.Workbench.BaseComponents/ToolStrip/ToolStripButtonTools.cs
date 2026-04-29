@@ -30,7 +30,7 @@ namespace Origam.Gui.UI;
 internal static class ToolStripButtonTools
 {
     private const int ImageTextGap = 0;
-    public static readonly Size BUTTON_SIZE = new Size(24, 95);
+    public static readonly Size BUTTON_SIZE = new Size(width: 24, height: 95);
     private static readonly int defaultImageHeight = 24;
 
     public static void InitBigButton(ToolStripItem actionButton)
@@ -66,14 +66,14 @@ internal static class ToolStripButtonTools
         if (sholudPaintText)
         {
             renderer.DrawItemText(
-                new ToolStripItemTextRenderEventArgs(
-                    e.Graphics,
-                    actionButton,
-                    actionButton.Text,
-                    GetTextRectangle(actionButton),
-                    actionButton.ForeColor,
-                    actionButton.Font,
-                    TextFormatFlags.HorizontalCenter
+                e: new ToolStripItemTextRenderEventArgs(
+                    g: e.Graphics,
+                    item: actionButton,
+                    text: actionButton.Text,
+                    textRectangle: GetTextRectangle(actionButton: actionButton),
+                    textColor: actionButton.ForeColor,
+                    textFont: actionButton.Font,
+                    format: TextFormatFlags.HorizontalCenter
                 )
             );
         }
@@ -87,7 +87,7 @@ internal static class ToolStripButtonTools
         }
 
         var renderer = actionButton.Owner.Renderer;
-        actionButton.Image = GetImage(actionButton);
+        actionButton.Image = GetImage(actionButton: actionButton);
 
         bool shouldPaintImage =
             (actionButton.DisplayStyle & ToolStripItemDisplayStyle.Image)
@@ -96,10 +96,10 @@ internal static class ToolStripButtonTools
         if (shouldPaintImage)
         {
             renderer.DrawItemImage(
-                new ToolStripItemImageRenderEventArgs(
-                    e.Graphics,
-                    actionButton,
-                    GetImageRectangle(actionButton)
+                e: new ToolStripItemImageRenderEventArgs(
+                    g: e.Graphics,
+                    item: actionButton,
+                    imageRectangle: GetImageRectangle(actionButton: actionButton)
                 )
             );
         }
@@ -112,19 +112,19 @@ internal static class ToolStripButtonTools
 
     public static Rectangle GetImageRectangle(ToolStripItem actionButton)
     {
-        Image image = GetImage(actionButton);
+        Image image = GetImage(actionButton: actionButton);
         var xCoord = (actionButton.Width - image.Size.Width) / 2;
         var yCoord = actionButton.Margin.Top + ((defaultImageHeight - image.Height) / 2);
-        return new Rectangle(new Point(xCoord, yCoord), image.Size);
+        return new Rectangle(location: new Point(x: xCoord, y: yCoord), size: image.Size);
     }
 
     private static Rectangle GetTextRectangle(this ToolStripItem actionButton)
     {
-        var textHeight = actionButton.Text.Height(actionButton.Font);
-        var textWidth = actionButton.Text.Width(actionButton.Font);
+        var textHeight = actionButton.Text.Height(font: actionButton.Font);
+        var textWidth = actionButton.Text.Width(font: actionButton.Font);
 
         var yCoord = actionButton.Margin.Top + ImageTextGap + textHeight;
         var xCoord = (actionButton.Width - textWidth) / 2;
-        return new Rectangle(xCoord, yCoord, textWidth, textHeight);
+        return new Rectangle(x: xCoord, y: yCoord, width: textWidth, height: textHeight);
     }
 }

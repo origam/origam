@@ -43,11 +43,11 @@ class MailService : IMailService
     {
         this.languageConfig = languageConfig;
         string baseUrl =
-            configuration[WebHostDefaults.ServerUrlsKey]
-                ?.Replace(";", ",")
-                ?.Split(",")
-                ?.FirstOrDefault(url => url.StartsWith("https"))
-            ?? throw new ArgumentException("Could not find server's https url");
+            configuration[key: WebHostDefaults.ServerUrlsKey]
+                ?.Replace(oldValue: ";", newValue: ",")
+                ?.Split(separator: ",")
+                ?.FirstOrDefault(predicate: url => url.StartsWith(value: "https"))
+            ?? throw new ArgumentException(message: "Could not find server's https url");
         mailSender = new AccountMailSender(
             portalBaseUrl: baseUrl,
             registerNewUserFilename: userConfig.Value.UserRegistrationMailBodyFileName,
@@ -67,10 +67,10 @@ class MailService : IMailService
     private string GetDefaultResetPasswordSubject()
     {
         return languageConfig
-            .CultureItems.Where(cultname =>
-                cultname.CultureName.Equals(Thread.CurrentThread.CurrentUICulture.Name)
+            .CultureItems.Where(predicate: cultname =>
+                cultname.CultureName.Equals(value: Thread.CurrentThread.CurrentUICulture.Name)
             )
-            .Select(cultname =>
+            .Select(selector: cultname =>
             {
                 return cultname.ResetPasswordMailSubject;
             })
@@ -80,10 +80,10 @@ class MailService : IMailService
     private string GetDefaultResetPasswordFileName()
     {
         return languageConfig
-            .CultureItems.Where(cultname =>
-                cultname.CultureName.Equals(Thread.CurrentThread.CurrentUICulture.Name)
+            .CultureItems.Where(predicate: cultname =>
+                cultname.CultureName.Equals(value: Thread.CurrentThread.CurrentUICulture.Name)
             )
-            .Select(cultname =>
+            .Select(selector: cultname =>
             {
                 return cultname.ResetPasswordMailBodyFileName;
             })

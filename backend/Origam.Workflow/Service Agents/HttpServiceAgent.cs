@@ -52,20 +52,22 @@ public class HttpServiceAgent : AbstractServiceAgent
             case "TrySendRequest":
             {
                 HttpResult httpResponse = HttpTools.Instance.SendRequest(
-                    new Request(
-                        url: Parameters.Get<string>("Url"),
-                        method: Parameters.Get<string>("Method"),
-                        content: GetContent(Parameters["Content"]),
-                        contentType: Parameters.TryGet<string>("ContentType"),
-                        headers: Parameters["Headers"] as Hashtable,
-                        timeout: Parameters.TryGet<int?>("Timeout"),
+                    request: new Request(
+                        url: Parameters.Get<string>(key: "Url"),
+                        method: Parameters.Get<string>(key: "Method"),
+                        content: GetContent(obj: Parameters[key: "Content"]),
+                        contentType: Parameters.TryGet<string>(key: "ContentType"),
+                        headers: Parameters[key: "Headers"] as Hashtable,
+                        timeout: Parameters.TryGet<int?>(key: "Timeout"),
                         throwExceptionOnError: MethodName == "SendRequest"
                     )
                 );
-                XmlContainer responseMetadata = Parameters.TryGet<XmlContainer>("ResponseMetadata");
+                XmlContainer responseMetadata = Parameters.TryGet<XmlContainer>(
+                    key: "ResponseMetadata"
+                );
                 if (responseMetadata != null)
                 {
-                    AddMetaData(responseMetadata, httpResponse);
+                    AddMetaData(responseMetadata: responseMetadata, httpResponse: httpResponse);
                 }
                 _result = httpResponse.Content;
                 break;
@@ -73,9 +75,9 @@ public class HttpServiceAgent : AbstractServiceAgent
             default:
             {
                 throw new ArgumentOutOfRangeException(
-                    "MethodName",
-                    MethodName,
-                    ResourceUtils.GetString("InvalidMethodName")
+                    paramName: "MethodName",
+                    actualValue: MethodName,
+                    message: ResourceUtils.GetString(key: "InvalidMethodName")
                 );
             }
         }
@@ -86,41 +88,41 @@ public class HttpServiceAgent : AbstractServiceAgent
         var document = responseMetadata.Xml;
         if (httpResponse.Exception != null)
         {
-            XmlElement exceptionElement = document.CreateElement("Exception");
-            document.AppendChild(exceptionElement);
+            XmlElement exceptionElement = document.CreateElement(name: "Exception");
+            document.AppendChild(newChild: exceptionElement);
 
-            XmlElement typeElement = document.CreateElement("Type");
+            XmlElement typeElement = document.CreateElement(name: "Type");
             typeElement.InnerText = httpResponse.Exception.GetType().FullName;
-            exceptionElement.AppendChild(typeElement);
+            exceptionElement.AppendChild(newChild: typeElement);
 
-            XmlElement messageElement = document.CreateElement("Message");
+            XmlElement messageElement = document.CreateElement(name: "Message");
             messageElement.InnerText = httpResponse.Exception.Message;
-            exceptionElement.AppendChild(messageElement);
+            exceptionElement.AppendChild(newChild: messageElement);
 
-            XmlElement stackTraceElement = document.CreateElement("StackTrace");
+            XmlElement stackTraceElement = document.CreateElement(name: "StackTrace");
             stackTraceElement.InnerText = httpResponse.Exception.StackTrace;
-            exceptionElement.AppendChild(stackTraceElement);
+            exceptionElement.AppendChild(newChild: stackTraceElement);
         }
         else
         {
-            XmlElement httpResponseElement = document.CreateElement("HttpResponse");
-            document.AppendChild(httpResponseElement);
+            XmlElement httpResponseElement = document.CreateElement(name: "HttpResponse");
+            document.AppendChild(newChild: httpResponseElement);
 
-            XmlElement statusCodeElement = document.CreateElement("StatusCode");
+            XmlElement statusCodeElement = document.CreateElement(name: "StatusCode");
             statusCodeElement.InnerText = httpResponse.StatusCode.ToString();
-            httpResponseElement.AppendChild(statusCodeElement);
+            httpResponseElement.AppendChild(newChild: statusCodeElement);
 
-            XmlElement statusDescriptionElement = document.CreateElement("StatusDescription");
+            XmlElement statusDescriptionElement = document.CreateElement(name: "StatusDescription");
             statusDescriptionElement.InnerText = httpResponse.StatusDescription;
-            httpResponseElement.AppendChild(statusDescriptionElement);
+            httpResponseElement.AppendChild(newChild: statusDescriptionElement);
 
-            XmlElement headersElement = document.CreateElement("Headers");
-            httpResponseElement.AppendChild(headersElement);
+            XmlElement headersElement = document.CreateElement(name: "Headers");
+            httpResponseElement.AppendChild(newChild: headersElement);
             foreach (string name in httpResponse.Headers.Keys)
             {
-                XmlElement headerElement = document.CreateElement(name);
-                headerElement.InnerText = httpResponse.Headers[name];
-                headersElement.AppendChild(headerElement);
+                XmlElement headerElement = document.CreateElement(name: name);
+                headerElement.InnerText = httpResponse.Headers[key: name];
+                headersElement.AppendChild(newChild: headerElement);
             }
         }
     }
@@ -131,7 +133,7 @@ public class HttpServiceAgent : AbstractServiceAgent
         {
             return xmlContainer.Xml.OuterXml;
         }
-        return XmlTools.ConvertToString(obj);
+        return XmlTools.ConvertToString(val: obj);
     }
     #endregion
 }

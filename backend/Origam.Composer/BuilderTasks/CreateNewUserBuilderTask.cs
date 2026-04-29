@@ -35,23 +35,29 @@ public class CreateNewUserBuilderTask : AbstractDatabaseBuilderTask, ICreateNewU
     {
         var adaptivePassword = new AdaptivePasswordHasher();
 
-        DataService(project.DatabaseType).DbUser = project.DatabaseInternalUserName;
-        DataService(project.DatabaseType).ConnectionString = BuildConnectionStringArchitect(
-            project: project
-        );
+        DataService(databaseType: project.DatabaseType).DbUser = project.DatabaseInternalUserName;
+        DataService(databaseType: project.DatabaseType).ConnectionString =
+            BuildConnectionStringArchitect(project: project);
 
         var parameters = new QueryParameterCollection
         {
-            new QueryParameter("Id", Guid.NewGuid().ToString()),
-            new QueryParameter("UserName", project.WebAdminUsername),
-            new QueryParameter("Password", adaptivePassword.HashPassword(project.WebAdminPassword)),
-            new QueryParameter("FirstName", project.WebAdminUsername),
-            new QueryParameter("Name", project.WebAdminUsername),
-            new QueryParameter("Email", project.WebAdminEmail),
-            new QueryParameter("RoleId", Common.Constants.OrigamRoleSuperUserId),
-            new QueryParameter("RequestEmailConfirmation", "false"),
+            new QueryParameter(_parameterName: "Id", value: Guid.NewGuid().ToString()),
+            new QueryParameter(_parameterName: "UserName", value: project.WebAdminUsername),
+            new QueryParameter(
+                _parameterName: "Password",
+                value: adaptivePassword.HashPassword(password: project.WebAdminPassword)
+            ),
+            new QueryParameter(_parameterName: "FirstName", value: project.WebAdminUsername),
+            new QueryParameter(_parameterName: "Name", value: project.WebAdminUsername),
+            new QueryParameter(_parameterName: "Email", value: project.WebAdminEmail),
+            new QueryParameter(
+                _parameterName: "RoleId",
+                value: Common.Constants.OrigamRoleSuperUserId
+            ),
+            new QueryParameter(_parameterName: "RequestEmailConfirmation", value: "false"),
         };
-        DataService(project.DatabaseType).CreateFirstNewWebUser(parameters: parameters);
+        DataService(databaseType: project.DatabaseType)
+            .CreateFirstNewWebUser(parameters: parameters);
     }
 
     public override void Rollback(Project project) { }
@@ -60,7 +66,7 @@ public class CreateNewUserBuilderTask : AbstractDatabaseBuilderTask, ICreateNewU
     {
         if (project.DatabaseType == DatabaseType.MsSql)
         {
-            return DataService(project.DatabaseType)
+            return DataService(databaseType: project.DatabaseType)
                 .BuildConnectionString(
                     serverName: project.DatabaseHost,
                     port: project.DatabasePort,
@@ -74,7 +80,7 @@ public class CreateNewUserBuilderTask : AbstractDatabaseBuilderTask, ICreateNewU
 
         if (project.DatabaseType == DatabaseType.PgSql)
         {
-            return DataService(project.DatabaseType)
+            return DataService(databaseType: project.DatabaseType)
                 .BuildConnectionString(
                     serverName: project.DatabaseHost,
                     port: project.DatabasePort,

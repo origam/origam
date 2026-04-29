@@ -60,61 +60,64 @@ public class ExcelService : IReportService
         if (format != DataReportExportFormatType.MSExcel.ToString())
         {
             throw new ArgumentOutOfRangeException(
-                nameof(format),
-                format,
-                Properties.Resources.FormatNotSupported
+                paramName: nameof(format),
+                actualValue: format,
+                message: Properties.Resources.FormatNotSupported
             );
         }
-        var report = ReportHelper.GetReportElement<AbstractDataReport>(reportId);
+        var report = ReportHelper.GetReportElement<AbstractDataReport>(reportId: reportId);
         using var langSwitcher = new LanguageSwitcher(
-            langIetf: ReportHelper.ResolveLanguage(data, report)
+            langIetf: ReportHelper.ResolveLanguage(doc: data, reportElement: report)
         );
-        ReportHelper.PopulateDefaultValues(report, parameters);
-        ReportHelper.ComputeXsltValueParameters(report, parameters);
+        ReportHelper.PopulateDefaultValues(report: report, parameters: parameters);
+        ReportHelper.ComputeXsltValueParameters(report: report, parameters: parameters);
         OrigamSpreadsheet spreadsheetData = GetSpreadsheetData(
-            report,
-            data,
-            parameters,
-            dbTransaction
+            report: report,
+            data: data,
+            parameters: parameters,
+            dbTransaction: dbTransaction
         );
         if (spreadsheetData.Workbook.Rows.Count != 1)
         {
-            throw new Exception("Source data expect to contain a single Workbook.");
+            throw new Exception(message: "Source data expect to contain a single Workbook.");
         }
-        var sourceWorkbook = spreadsheetData.Workbook.Rows[0] as OrigamSpreadsheet.WorkbookRow;
+        var sourceWorkbook =
+            spreadsheetData.Workbook.Rows[index: 0] as OrigamSpreadsheet.WorkbookRow;
         OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
         var reportFileInfo = new FileInfo(
-            Path.Combine(
-                settings.ReportsFolder(),
-                ReportHelper.ExpandCurlyBracketPlaceholdersWithParameters(
-                    report.ReportFileName,
-                    parameters
+            fileName: Path.Combine(
+                path1: settings.ReportsFolder(),
+                path2: ReportHelper.ExpandCurlyBracketPlaceholdersWithParameters(
+                    input: report.ReportFileName,
+                    parameters: parameters
                 )
             )
         );
-        if (!IOTools.IsSubPathOf(reportFileInfo.FullName, settings.ReportsFolder()))
+        if (!IOTools.IsSubPathOf(path: reportFileInfo.FullName, basePath: settings.ReportsFolder()))
         {
-            throw new Exception(Strings.PathNotOnReportPath);
+            throw new Exception(message: Strings.PathNotOnReportPath);
         }
         if (!reportFileInfo.Exists)
         {
-            throw new Exception($"Could not open {report.ReportFileName}");
+            throw new Exception(message: $"Could not open {report.ReportFileName}");
         }
-        Stream inputStream = reportFileInfo.Open(FileMode.Open);
+        Stream inputStream = reportFileInfo.Open(mode: FileMode.Open);
         IWorkbook workbook = ExcelTools.GetWorkbook(
-            ExcelTools.StringToExcelFormat(reportFileInfo.Extension.Replace(".", "")),
-            inputStream
+            excelFormat: ExcelTools.StringToExcelFormat(
+                input: reportFileInfo.Extension.Replace(oldValue: ".", newValue: "")
+            ),
+            stream: inputStream
         );
         if (sourceWorkbook != null)
         {
             foreach (OrigamSpreadsheet.SheetRow sourceSheet in sourceWorkbook.GetSheetRows())
             {
-                ProcessSheet(workbook, sourceSheet);
+                ProcessSheet(workbook: workbook, sourceSheet: sourceSheet);
             }
-            SetWorkbookProperties(sourceWorkbook, workbook);
+            SetWorkbookProperties(sourceWorkbook: sourceWorkbook, workbook: workbook);
         }
         var outputStream = new MemoryStream();
-        workbook.Write(outputStream);
+        workbook.Write(stream: outputStream);
         return outputStream.ToArray();
     }
 
@@ -125,7 +128,7 @@ public class ExcelService : IReportService
     {
         if (!sourceWorkbook.IsActiveSheetIndexNull())
         {
-            workbook.SetActiveSheet(sourceWorkbook.ActiveSheetIndex);
+            workbook.SetActiveSheet(sheetIndex: sourceWorkbook.ActiveSheetIndex);
         }
     }
 
@@ -133,11 +136,12 @@ public class ExcelService : IReportService
     {
         // sheet does not exist, we create it
         ISheet sheet =
-            workbook.GetSheet(sourceSheet.SheetName) ?? workbook.CreateSheet(sourceSheet.SheetName);
-        SetSheetProperties(sourceSheet, sheet);
+            workbook.GetSheet(name: sourceSheet.SheetName)
+            ?? workbook.CreateSheet(sheetname: sourceSheet.SheetName);
+        SetSheetProperties(sourceSheet: sourceSheet, sheet: sheet);
         foreach (OrigamSpreadsheet.RowRow sourceRow in sourceSheet.GetRowRows())
         {
-            ProcessRow(sheet, sourceRow);
+            ProcessRow(sheet: sheet, sourceRow: sourceRow);
         }
     }
 
@@ -145,7 +149,7 @@ public class ExcelService : IReportService
     {
         if (!sourceSheet.IsTabColorIndexNull())
         {
-            sheet.TabColorIndex = Convert.ToInt16(sourceSheet.TabColorIndex);
+            sheet.TabColorIndex = Convert.ToInt16(value: sourceSheet.TabColorIndex);
         }
         if (!sourceSheet.IsDefaultColumnWidthNull())
         {
@@ -153,42 +157,47 @@ public class ExcelService : IReportService
         }
         if (!sourceSheet.IsDefaultRowHeightNull())
         {
-            sheet.DefaultRowHeight = Convert.ToInt16(sourceSheet.DefaultRowHeight);
+            sheet.DefaultRowHeight = Convert.ToInt16(value: sourceSheet.DefaultRowHeight);
         }
         if (!sourceSheet.IsHiddenNull())
         {
             sheet.Workbook.SetSheetHidden(
-                sourceSheet.Index,
-                sourceSheet.Hidden ? SheetVisibility.Hidden : SheetVisibility.Visible
+                sheetIx: sourceSheet.Index,
+                hidden: sourceSheet.Hidden ? SheetVisibility.Hidden : SheetVisibility.Visible
             );
         }
         if (!sourceSheet.IsFreezeRowIndexNull() && !sourceSheet.IsFreezeColumnIndexNull())
         {
-            sheet.CreateFreezePane(sourceSheet.FreezeColumnIndex, sourceSheet.FreezeRowIndex);
+            sheet.CreateFreezePane(
+                colSplit: sourceSheet.FreezeColumnIndex,
+                rowSplit: sourceSheet.FreezeRowIndex
+            );
         }
         else if (!sourceSheet.IsFreezeColumnIndexNull())
         {
-            sheet.CreateFreezePane(sourceSheet.FreezeColumnIndex, 0);
+            sheet.CreateFreezePane(colSplit: sourceSheet.FreezeColumnIndex, rowSplit: 0);
         }
         else if (!sourceSheet.IsFreezeRowIndexNull())
         {
-            sheet.CreateFreezePane(0, sourceSheet.FreezeRowIndex);
+            sheet.CreateFreezePane(colSplit: 0, rowSplit: sourceSheet.FreezeRowIndex);
         }
     }
 
     private static void ProcessRow(ISheet sheet, OrigamSpreadsheet.RowRow sourceRow)
     {
-        IRow row = sheet.GetRow(sourceRow.Index) ?? sheet.CreateRow(sourceRow.Index);
+        IRow row =
+            sheet.GetRow(rownum: sourceRow.Index) ?? sheet.CreateRow(rownum: sourceRow.Index);
         foreach (OrigamSpreadsheet.CellRow sourceCell in sourceRow.GetCellRows())
         {
-            ProcessCell(row, sourceCell);
+            ProcessCell(row: row, sourceCell: sourceCell);
         }
     }
 
     private static void ProcessCell(IRow row, OrigamSpreadsheet.CellRow sourceCell)
     {
-        ICell cell = row.GetCell(sourceCell.Index) ?? row.CreateCell(sourceCell.Index);
-        SetCellProperties(sourceCell, cell);
+        ICell cell =
+            row.GetCell(cellnum: sourceCell.Index) ?? row.CreateCell(column: sourceCell.Index);
+        SetCellProperties(sourceCell: sourceCell, cell: cell);
     }
 
     private static void SetCellProperties(OrigamSpreadsheet.CellRow sourceCell, ICell cell)
@@ -198,56 +207,59 @@ public class ExcelService : IReportService
         {
             value = sourceCell.Value;
         }
-        var newType = (CellType)Enum.ToObject(typeof(CellType), sourceCell.Type);
+        var newType = (CellType)Enum.ToObject(enumType: typeof(CellType), value: sourceCell.Type);
         try
         {
             switch (newType)
             {
                 case CellType.NUMERIC:
                 {
-                    cell.SetCellType(NPOI.SS.UserModel.CellType.Numeric);
-                    cell.SetCellValue(XmlConvert.ToDouble(value));
+                    cell.SetCellType(cellType: NPOI.SS.UserModel.CellType.Numeric);
+                    cell.SetCellValue(value: XmlConvert.ToDouble(s: value));
                     break;
                 }
                 case CellType.FORMULA:
                 {
-                    cell.SetCellType(NPOI.SS.UserModel.CellType.Formula);
-                    cell.SetCellFormula(value);
+                    cell.SetCellType(cellType: NPOI.SS.UserModel.CellType.Formula);
+                    cell.SetCellFormula(formula: value);
                     break;
                 }
                 case CellType.Unknown:
                 {
-                    cell.SetCellType(NPOI.SS.UserModel.CellType.Unknown);
-                    cell.SetCellValue(value);
+                    cell.SetCellType(cellType: NPOI.SS.UserModel.CellType.Unknown);
+                    cell.SetCellValue(value: value);
                     break;
                 }
                 case CellType.STRING:
                 {
-                    cell.SetCellType(NPOI.SS.UserModel.CellType.String);
-                    cell.SetCellValue(value);
+                    cell.SetCellType(cellType: NPOI.SS.UserModel.CellType.String);
+                    cell.SetCellValue(value: value);
                     break;
                 }
                 case CellType.BLANK:
                 {
-                    cell.SetCellType(NPOI.SS.UserModel.CellType.Blank);
+                    cell.SetCellType(cellType: NPOI.SS.UserModel.CellType.Blank);
                     break;
                 }
                 case CellType.BOOLEAN:
                 {
-                    cell.SetCellType(NPOI.SS.UserModel.CellType.Boolean);
-                    cell.SetCellValue(XmlConvert.ToBoolean(value));
+                    cell.SetCellType(cellType: NPOI.SS.UserModel.CellType.Boolean);
+                    cell.SetCellValue(value: XmlConvert.ToBoolean(s: value));
                     break;
                 }
                 case CellType.ERROR:
                 {
-                    cell.SetCellType(NPOI.SS.UserModel.CellType.Error);
-                    cell.SetCellErrorValue(XmlConvert.ToByte(value));
+                    cell.SetCellType(cellType: NPOI.SS.UserModel.CellType.Error);
+                    cell.SetCellErrorValue(value: XmlConvert.ToByte(s: value));
                     break;
                 }
                 case CellType.DATE:
                 {
                     cell.SetCellValue(
-                        XmlConvert.ToDateTime(value, XmlDateTimeSerializationMode.Local)
+                        value: XmlConvert.ToDateTime(
+                            s: value,
+                            dateTimeOption: XmlDateTimeSerializationMode.Local
+                        )
                     );
                     break;
                 }
@@ -260,8 +272,8 @@ public class ExcelService : IReportService
         catch (NullReferenceException ex)
         {
             throw new ArgumentException(
-                $"Value \"${value}\", from sheet ${cell.Sheet.SheetName}, row index: ${cell.RowIndex}, column index: ${cell.ColumnIndex} could not be converted to ${newType}",
-                ex
+                message: $"Value \"${value}\", from sheet ${cell.Sheet.SheetName}, row index: ${cell.RowIndex}, column index: ${cell.ColumnIndex} could not be converted to ${newType}",
+                innerException: ex
             );
         }
     }
@@ -274,10 +286,10 @@ public class ExcelService : IReportService
     )
     {
         IDataDocument xmlDataDoc = ReportHelper.LoadOrUseReportData(
-            report,
-            data,
-            parameters,
-            dbTransaction
+            report: report,
+            data: data,
+            parameters: parameters,
+            dbTransaction: dbTransaction
         );
         // optional xslt transformation
         OrigamSpreadsheet spreadsheetData;
@@ -285,16 +297,18 @@ public class ExcelService : IReportService
         {
             var persistence = ServiceManager.Services.GetService<IPersistenceService>();
             var outputDataStructure = persistence.SchemaProvider.RetrieveInstance<DataStructure>(
-                new Guid("c131aa04-6310-455d-a7cd-4e19dd012241")
+                instanceId: new Guid(g: "c131aa04-6310-455d-a7cd-4e19dd012241")
             );
-            IXsltEngine transformer = new CompiledXsltEngine(persistence.SchemaProvider);
+            IXsltEngine transformer = new CompiledXsltEngine(
+                persistence: persistence.SchemaProvider
+            );
             IDataDocument resultDoc =
                 transformer.Transform(
-                    xmlDataDoc,
-                    report.TransformationId,
-                    parameters,
+                    data: xmlDataDoc,
+                    transformationId: report.TransformationId,
+                    parameters: parameters,
                     transactionId: null,
-                    outputDataStructure,
+                    outputStructure: outputDataStructure,
                     validateOnly: false
                 ) as IDataDocument;
             spreadsheetData = resultDoc?.DataSet as OrigamSpreadsheet;
@@ -304,7 +318,7 @@ public class ExcelService : IReportService
             if (xmlDataDoc.DataSet is not OrigamSpreadsheet dataSet)
             {
                 throw new InvalidCastException(
-                    "Data source for ExcelReport must be OrigamSpreadsheet."
+                    message: "Data source for ExcelReport must be OrigamSpreadsheet."
                 );
             }
             spreadsheetData = dataSet;

@@ -37,7 +37,14 @@ public abstract class TextBoxFilterPart : FilterPart
         string label,
         FormGenerator formGenerator
     )
-        : base(filteredControl, dataType, dataMember, gridColumnName, label, formGenerator) { }
+        : base(
+            filteredControl: filteredControl,
+            dataType: dataType,
+            dataMember: dataMember,
+            gridColumnName: gridColumnName,
+            label: label,
+            formGenerator: formGenerator
+        ) { }
     #endregion
     #region Properties
     private AsTextBox TextBox
@@ -68,10 +75,10 @@ public abstract class TextBoxFilterPart : FilterPart
         }
         UnsubscribeEvents();
         this.FilterControls.Clear();
-        SetControlProperties(this.TextBox, this.FilterTextBox);
-        SetControlProperties(this.TextBox, this.FilterTextBox2);
-        this.FilterControls.Add(this.FilterTextBox);
-        this.FilterControls.Add(this.FilterTextBox2);
+        SetControlProperties(template: this.TextBox, target: this.FilterTextBox);
+        SetControlProperties(template: this.TextBox, target: this.FilterTextBox2);
+        this.FilterControls.Add(item: this.FilterTextBox);
+        this.FilterControls.Add(item: this.FilterTextBox2);
         this.FilterTextBox.Tag = (
             this.Operator != FilterOperator.IsNull & this.Operator != FilterOperator.NotIsNull
         );
@@ -110,7 +117,7 @@ public abstract class TextBoxFilterPart : FilterPart
                 this.FilteredControl.Dispose();
             }
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
     #endregion
     #region EventHandlers

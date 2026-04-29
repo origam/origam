@@ -37,7 +37,9 @@ public class CloseWindow : AbstractMenuCommand
 
     public override void Run()
     {
-        WorkbenchSingleton.Workbench.CloseContent(WorkbenchSingleton.Workbench.ActiveDocument);
+        WorkbenchSingleton.Workbench.CloseContent(
+            content: WorkbenchSingleton.Workbench.ActiveDocument
+        );
     }
 }
 
@@ -71,6 +73,8 @@ public class CloseAllButThis : AbstractMenuCommand
 
     public override void Run()
     {
-        WorkbenchSingleton.Workbench.CloseAllViews(WorkbenchSingleton.Workbench.ActiveDocument);
+        WorkbenchSingleton.Workbench.CloseAllViews(
+            except: WorkbenchSingleton.Workbench.ActiveDocument
+        );
     }
 }

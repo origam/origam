@@ -29,7 +29,7 @@ public class ConnectionStringService : IConnectionStringService
 {
     public string GetConnectionString(Project project)
     {
-        string dbHost = GetDbHost(project);
+        string dbHost = GetDbHost(project: project);
 
         if (project.DatabaseType == DatabaseType.MsSql)
         {
@@ -53,15 +53,15 @@ public class ConnectionStringService : IConnectionStringService
                 + $"Search Path={project.DatabaseName},public";
         }
 
-        throw new NotSupportedException("Unsupported database type.");
+        throw new NotSupportedException(message: "Unsupported database type.");
     }
 
     private string GetDbHost(Project project)
     {
         if (
-            project.DatabaseHost.Equals("localhost")
-            || project.DatabaseHost.Equals(".")
-            || project.DatabaseHost.Equals("127.0.0.1")
+            project.DatabaseHost.Equals(value: "localhost")
+            || project.DatabaseHost.Equals(value: ".")
+            || project.DatabaseHost.Equals(value: "127.0.0.1")
         )
         {
             return "host.docker.internal";

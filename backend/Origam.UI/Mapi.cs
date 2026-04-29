@@ -40,10 +40,17 @@ public class Mapi
     public bool Logon(IntPtr hwnd)
     {
         winhandle = hwnd;
-        error = MAPILogon(hwnd, null, null, 0, 0, ref session);
+        error = MAPILogon(hwnd: hwnd, prf: null, pw: null, flg: 0, rsv: 0, sess: ref session);
         if (error != 0)
         {
-            error = MAPILogon(hwnd, null, null, MapiLogonUI, 0, ref session);
+            error = MAPILogon(
+                hwnd: hwnd,
+                prf: null,
+                pw: null,
+                flg: MapiLogonUI,
+                rsv: 0,
+                sess: ref session
+            );
         }
 
         return error == 0;
@@ -62,12 +69,12 @@ public class Mapi
     {
         if (session != IntPtr.Zero)
         {
-            error = MAPILogoff(session, winhandle, 0, 0);
+            error = MAPILogoff(sess: session, hwnd: winhandle, flg: 0, rsv: 0);
             session = IntPtr.Zero;
         }
     }
 
-    [DllImport("MAPI32.DLL", CharSet = CharSet.Ansi)]
+    [DllImport(dllName: "MAPI32.DLL", CharSet = CharSet.Ansi)]
     private static extern int MAPILogon(
         IntPtr hwnd,
         string prf,
@@ -77,7 +84,7 @@ public class Mapi
         ref IntPtr sess
     );
 
-    [DllImport("MAPI32.DLL")]
+    [DllImport(dllName: "MAPI32.DLL")]
     private static extern int MAPILogoff(IntPtr sess, IntPtr hwnd, int flg, int rsv);
 
     private const int MapiLogonUI = 0x00000001;
@@ -97,9 +104,9 @@ public class Mapi
         lastMsg.noteText = txt;
         // set pointers
         lastMsg.originator = AllocOrigin();
-        lastMsg.recips = AllocRecips(out lastMsg.recipCount);
-        lastMsg.files = AllocAttachs(out lastMsg.fileCount);
-        error = MAPISendMail(session, winhandle, lastMsg, 0, 0);
+        lastMsg.recips = AllocRecips(recipCount: out lastMsg.recipCount);
+        lastMsg.files = AllocAttachs(fileCount: out lastMsg.fileCount);
+        error = MAPISendMail(sess: session, hwnd: winhandle, message: lastMsg, flg: 0, rsv: 0);
         Dealloc();
         Reset();
         return error == 0;
@@ -119,7 +126,7 @@ public class Mapi
 
         dest.name = name;
         dest.address = addr;
-        recpts.Add(dest);
+        recpts.Add(item: dest);
     }
 
     public void SetSender(string sname, string saddr)
@@ -130,16 +137,16 @@ public class Mapi
 
     public void Attach(string filepath)
     {
-        attachs.Add(filepath);
+        attachs.Add(item: filepath);
     }
 
     private IntPtr AllocOrigin()
     {
         origin.recipClass = MapiORIG;
         Type rtype = typeof(MapiRecipDesc);
-        int rsize = Marshal.SizeOf(rtype);
-        IntPtr ptro = Marshal.AllocHGlobal(rsize);
-        Marshal.StructureToPtr(origin, ptro, false);
+        int rsize = Marshal.SizeOf(t: rtype);
+        IntPtr ptro = Marshal.AllocHGlobal(cb: rsize);
+        Marshal.StructureToPtr(structure: origin, ptr: ptro, fDeleteOld: false);
         return ptro;
     }
 
@@ -152,12 +159,16 @@ public class Mapi
         }
 
         Type rtype = typeof(MapiRecipDesc);
-        int rsize = Marshal.SizeOf(rtype);
-        IntPtr ptrr = Marshal.AllocHGlobal(recpts.Count * rsize);
+        int rsize = Marshal.SizeOf(t: rtype);
+        IntPtr ptrr = Marshal.AllocHGlobal(cb: recpts.Count * rsize);
         int runptr = (int)ptrr;
         for (int i = 0; i < recpts.Count; i++)
         {
-            Marshal.StructureToPtr(recpts[i] as MapiRecipDesc, (IntPtr)runptr, false);
+            Marshal.StructureToPtr(
+                structure: recpts[index: i] as MapiRecipDesc,
+                ptr: (IntPtr)runptr,
+                fDeleteOld: false
+            );
             runptr += rsize;
         }
         recipCount = recpts.Count;
@@ -178,17 +189,17 @@ public class Mapi
         }
 
         Type atype = typeof(MapiFileDesc);
-        int asize = Marshal.SizeOf(atype);
-        IntPtr ptra = Marshal.AllocHGlobal(attachs.Count * asize);
+        int asize = Marshal.SizeOf(t: atype);
+        IntPtr ptra = Marshal.AllocHGlobal(cb: attachs.Count * asize);
         MapiFileDesc mfd = new MapiFileDesc();
         mfd.position = -1;
         int runptr = (int)ptra;
         for (int i = 0; i < attachs.Count; i++)
         {
-            string path = attachs[i] as string;
-            mfd.name = Path.GetFileName(path);
+            string path = attachs[index: i] as string;
+            mfd.name = Path.GetFileName(path: path);
             mfd.path = path;
-            Marshal.StructureToPtr(mfd, (IntPtr)runptr, false);
+            Marshal.StructureToPtr(structure: mfd, ptr: (IntPtr)runptr, fDeleteOld: false);
             runptr += asize;
         }
         fileCount = attachs.Count;
@@ -198,33 +209,33 @@ public class Mapi
     private void Dealloc()
     {
         Type rtype = typeof(MapiRecipDesc);
-        int rsize = Marshal.SizeOf(rtype);
+        int rsize = Marshal.SizeOf(t: rtype);
         if (lastMsg.originator != IntPtr.Zero)
         {
-            Marshal.DestroyStructure(lastMsg.originator, rtype);
-            Marshal.FreeHGlobal(lastMsg.originator);
+            Marshal.DestroyStructure(ptr: lastMsg.originator, structuretype: rtype);
+            Marshal.FreeHGlobal(hglobal: lastMsg.originator);
         }
         if (lastMsg.recips != IntPtr.Zero)
         {
             int runptr = (int)lastMsg.recips;
             for (int i = 0; i < lastMsg.recipCount; i++)
             {
-                Marshal.DestroyStructure((IntPtr)runptr, rtype);
+                Marshal.DestroyStructure(ptr: (IntPtr)runptr, structuretype: rtype);
                 runptr += rsize;
             }
-            Marshal.FreeHGlobal(lastMsg.recips);
+            Marshal.FreeHGlobal(hglobal: lastMsg.recips);
         }
         if (lastMsg.files != IntPtr.Zero)
         {
             Type ftype = typeof(MapiFileDesc);
-            int fsize = Marshal.SizeOf(ftype);
+            int fsize = Marshal.SizeOf(t: ftype);
             int runptr = (int)lastMsg.files;
             for (int i = 0; i < lastMsg.fileCount; i++)
             {
-                Marshal.DestroyStructure((IntPtr)runptr, ftype);
+                Marshal.DestroyStructure(ptr: (IntPtr)runptr, structuretype: ftype);
                 runptr += fsize;
             }
-            Marshal.FreeHGlobal(lastMsg.files);
+            Marshal.FreeHGlobal(hglobal: lastMsg.files);
         }
     }
 
@@ -233,7 +244,7 @@ public class Mapi
     private const int MapiCC = 2;
     private const int MapiBCC = 3;
 
-    [DllImport("MAPI32.DLL")]
+    [DllImport(dllName: "MAPI32.DLL")]
     private static extern int MAPISendMail(
         IntPtr sess,
         IntPtr hwnd,
@@ -250,7 +261,15 @@ public class Mapi
     // ----------------------------------------------------------- FINDING ---------
     public bool Next(ref MailEnvelop env)
     {
-        error = MAPIFindNext(session, winhandle, null, findseed, MapiLongMsgID, 0, lastMsgID);
+        error = MAPIFindNext(
+            sess: session,
+            hwnd: winhandle,
+            typ: null,
+            seed: findseed,
+            flg: MapiLongMsgID,
+            rsv: 0,
+            id: lastMsgID
+        );
         if (error != 0)
         {
             return false;
@@ -259,12 +278,12 @@ public class Mapi
         findseed = lastMsgID.ToString();
         IntPtr ptrmsg = IntPtr.Zero;
         error = MAPIReadMail(
-            session,
-            winhandle,
-            findseed,
-            MapiEnvOnly | MapiPeek | MapiSuprAttach,
-            0,
-            ref ptrmsg
+            sess: session,
+            hwnd: winhandle,
+            id: findseed,
+            flg: MapiEnvOnly | MapiPeek | MapiSuprAttach,
+            rsv: 0,
+            ptrmsg: ref ptrmsg
         );
         if ((error != 0) || (ptrmsg == IntPtr.Zero))
         {
@@ -272,28 +291,28 @@ public class Mapi
         }
 
         lastMsg = new MapiMessage();
-        Marshal.PtrToStructure(ptrmsg, lastMsg);
+        Marshal.PtrToStructure(ptr: ptrmsg, structure: lastMsg);
         MapiRecipDesc orig = new MapiRecipDesc();
         if (lastMsg.originator != IntPtr.Zero)
         {
-            Marshal.PtrToStructure(lastMsg.originator, orig);
+            Marshal.PtrToStructure(ptr: lastMsg.originator, structure: orig);
         }
 
         env.id = findseed;
         env.date = DateTime.ParseExact(
-            lastMsg.dateReceived,
-            "yyyy/MM/dd HH:mm",
-            DateTimeFormatInfo.InvariantInfo
+            s: lastMsg.dateReceived,
+            format: "yyyy/MM/dd HH:mm",
+            provider: DateTimeFormatInfo.InvariantInfo
         );
         env.subject = lastMsg.subject;
         env.from = orig.name;
         env.unread = (lastMsg.flags & MapiUnread) != 0;
         env.atts = lastMsg.fileCount;
-        error = MAPIFreeBuffer(ptrmsg);
+        error = MAPIFreeBuffer(ptr: ptrmsg);
         return error == 0;
     }
 
-    [DllImport("MAPI32.DLL", CharSet = CharSet.Ansi)]
+    [DllImport(dllName: "MAPI32.DLL", CharSet = CharSet.Ansi)]
     private static extern int MAPIFindNext(
         IntPtr sess,
         IntPtr hwnd,
@@ -307,7 +326,7 @@ public class Mapi
     private const int MapiUnreadOnly = 0x00000020;
     private const int MapiGuaranteeFiFo = 0x00000100;
     private const int MapiLongMsgID = 0x00004000;
-    private StringBuilder lastMsgID = new StringBuilder(600);
+    private StringBuilder lastMsgID = new StringBuilder(capacity: 600);
     private string findseed = null;
     #endregion
     #region READING
@@ -316,47 +335,61 @@ public class Mapi
     {
         aat = null;
         IntPtr ptrmsg = IntPtr.Zero;
-        error = MAPIReadMail(session, winhandle, id, MapiPeek | MapiSuprAttach, 0, ref ptrmsg);
+        error = MAPIReadMail(
+            sess: session,
+            hwnd: winhandle,
+            id: id,
+            flg: MapiPeek | MapiSuprAttach,
+            rsv: 0,
+            ptrmsg: ref ptrmsg
+        );
         if ((error != 0) || (ptrmsg == IntPtr.Zero))
         {
             return null;
         }
 
         lastMsg = new MapiMessage();
-        Marshal.PtrToStructure(ptrmsg, lastMsg);
+        Marshal.PtrToStructure(ptr: ptrmsg, structure: lastMsg);
         if ((lastMsg.fileCount > 0) && (lastMsg.fileCount < 100) && (lastMsg.files != IntPtr.Zero))
         {
-            GetAttachNames(out aat);
+            GetAttachNames(aat: out aat);
         }
 
-        MAPIFreeBuffer(ptrmsg);
+        MAPIFreeBuffer(ptr: ptrmsg);
         return lastMsg.noteText;
     }
 
     public bool Delete(string id)
     {
-        error = MAPIDeleteMail(session, winhandle, id, 0, 0);
+        error = MAPIDeleteMail(sess: session, hwnd: winhandle, id: id, flg: 0, rsv: 0);
         return error == 0;
     }
 
     public bool SaveAttachm(string id, string name, string savepath)
     {
         IntPtr ptrmsg = IntPtr.Zero;
-        error = MAPIReadMail(session, winhandle, id, MapiPeek, 0, ref ptrmsg);
+        error = MAPIReadMail(
+            sess: session,
+            hwnd: winhandle,
+            id: id,
+            flg: MapiPeek,
+            rsv: 0,
+            ptrmsg: ref ptrmsg
+        );
         if ((error != 0) || (ptrmsg == IntPtr.Zero))
         {
             return false;
         }
 
         lastMsg = new MapiMessage();
-        Marshal.PtrToStructure(ptrmsg, lastMsg);
+        Marshal.PtrToStructure(ptr: ptrmsg, structure: lastMsg);
         bool f = false;
         if ((lastMsg.fileCount > 0) && (lastMsg.fileCount < 100) && (lastMsg.files != IntPtr.Zero))
         {
-            f = SaveAttachByName(name, savepath);
+            f = SaveAttachByName(name: name, savepath: savepath);
         }
 
-        MAPIFreeBuffer(ptrmsg);
+        MAPIFreeBuffer(ptr: ptrmsg);
         return f;
     }
 
@@ -364,12 +397,12 @@ public class Mapi
     {
         aat = new MailAttach[lastMsg.fileCount];
         Type fdtype = typeof(MapiFileDesc);
-        int fdsize = Marshal.SizeOf(fdtype);
+        int fdsize = Marshal.SizeOf(t: fdtype);
         MapiFileDesc fdtmp = new MapiFileDesc();
         int runptr = (int)lastMsg.files;
         for (int i = 0; i < lastMsg.fileCount; i++)
         {
-            Marshal.PtrToStructure((IntPtr)runptr, fdtmp);
+            Marshal.PtrToStructure(ptr: (IntPtr)runptr, structure: fdtmp);
             runptr += fdsize;
             aat[i] = new MailAttach();
             if (fdtmp.flags == 0)
@@ -385,12 +418,12 @@ public class Mapi
     {
         bool f = true;
         Type fdtype = typeof(MapiFileDesc);
-        int fdsize = Marshal.SizeOf(fdtype);
+        int fdsize = Marshal.SizeOf(t: fdtype);
         MapiFileDesc fdtmp = new MapiFileDesc();
         int runptr = (int)lastMsg.files;
         for (int i = 0; i < lastMsg.fileCount; i++)
         {
-            Marshal.PtrToStructure((IntPtr)runptr, fdtmp);
+            Marshal.PtrToStructure(ptr: (IntPtr)runptr, structure: fdtmp);
             runptr += fdsize;
             if (fdtmp.flags != 0)
             {
@@ -406,12 +439,12 @@ public class Mapi
             {
                 if (name == fdtmp.name)
                 {
-                    if (File.Exists(savepath))
+                    if (File.Exists(path: savepath))
                     {
-                        File.Delete(savepath);
+                        File.Delete(path: savepath);
                     }
 
-                    File.Move(fdtmp.path, savepath);
+                    File.Move(sourceFileName: fdtmp.path, destFileName: savepath);
                 }
             }
             catch (Exception)
@@ -421,14 +454,14 @@ public class Mapi
             }
             try
             {
-                File.Delete(fdtmp.path);
+                File.Delete(path: fdtmp.path);
             }
             catch (Exception) { }
         }
         return f;
     }
 
-    [DllImport("MAPI32.DLL", CharSet = CharSet.Ansi)]
+    [DllImport(dllName: "MAPI32.DLL", CharSet = CharSet.Ansi)]
     private static extern int MAPIReadMail(
         IntPtr sess,
         IntPtr hwnd,
@@ -438,10 +471,10 @@ public class Mapi
         ref IntPtr ptrmsg
     );
 
-    [DllImport("MAPI32.DLL")]
+    [DllImport(dllName: "MAPI32.DLL")]
     private static extern int MAPIFreeBuffer(IntPtr ptr);
 
-    [DllImport("MAPI32.DLL", CharSet = CharSet.Ansi)]
+    [DllImport(dllName: "MAPI32.DLL", CharSet = CharSet.Ansi)]
     private static extern int MAPIDeleteMail(IntPtr sess, IntPtr hwnd, string id, int flg, int rsv);
 
     private const int MapiPeek = 0x00000080;
@@ -461,17 +494,17 @@ public class Mapi
         int newrec = 0;
         IntPtr ptrnew = IntPtr.Zero;
         error = MAPIAddress(
-            session,
-            winhandle,
-            null,
-            1,
-            label,
-            0,
-            IntPtr.Zero,
-            0,
-            0,
-            ref newrec,
-            ref ptrnew
+            sess: session,
+            hwnd: winhandle,
+            caption: null,
+            editfld: 1,
+            labels: label,
+            recipcount: 0,
+            ptrrecips: IntPtr.Zero,
+            flg: 0,
+            rsv: 0,
+            newrec: ref newrec,
+            ptrnew: ref ptrnew
         );
         if ((error != 0) || (newrec < 1) || (ptrnew == IntPtr.Zero))
         {
@@ -479,14 +512,14 @@ public class Mapi
         }
 
         MapiRecipDesc recip = new MapiRecipDesc();
-        Marshal.PtrToStructure(ptrnew, recip);
+        Marshal.PtrToStructure(ptr: ptrnew, structure: recip);
         name = recip.name;
         addr = recip.address;
-        MAPIFreeBuffer(ptrnew);
+        MAPIFreeBuffer(ptr: ptrnew);
         return true;
     }
 
-    [DllImport("MAPI32.DLL", CharSet = CharSet.Ansi)]
+    [DllImport(dllName: "MAPI32.DLL", CharSet = CharSet.Ansi)]
     private static extern int MAPIAddress(
         IntPtr sess,
         IntPtr hwnd,
@@ -548,7 +581,7 @@ public class Mapi
 }
 
 // ********************************************* MAPI STRUCTURES *********************************************
-[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+[StructLayout(layoutKind: LayoutKind.Sequential, CharSet = CharSet.Ansi)]
 public class MapiMessage
 {
     public int reserved;
@@ -565,7 +598,7 @@ public class MapiMessage
     public IntPtr files; // MapiFileDesc*  [n]
 }
 
-[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+[StructLayout(layoutKind: LayoutKind.Sequential, CharSet = CharSet.Ansi)]
 public class MapiRecipDesc
 {
     public int reserved;
@@ -576,7 +609,7 @@ public class MapiRecipDesc
     public IntPtr entryID; // void*
 }
 
-[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+[StructLayout(layoutKind: LayoutKind.Sequential, CharSet = CharSet.Ansi)]
 public class MapiFileDesc
 {
     public int reserved;

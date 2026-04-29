@@ -27,53 +27,57 @@ namespace Origam.Architect.Server.Controls;
 
 public class TabPage : IControl
 {
-    [Localizable(true)]
-    [Browsable(true)]
+    [Localizable(isLocalizable: true)]
+    [Browsable(browsable: true)]
     public string Text { get; set; }
 
-    [Category("Layout")]
-    [Browsable(false)]
+    [Category(category: "Layout")]
+    [Browsable(browsable: false)]
     public int Top { get; set; }
 
-    [Category("Layout")]
-    [Browsable(false)]
+    [Category(category: "Layout")]
+    [Browsable(browsable: false)]
     public int Left { get; set; }
 
-    [Category("Layout")]
-    [Browsable(false)]
+    [Category(category: "Layout")]
+    [Browsable(browsable: false)]
     public int Height { get; set; } = 200;
 
-    [Category("Layout")]
-    [Browsable(false)]
+    [Category(category: "Layout")]
+    [Browsable(browsable: false)]
     public int Width { get; set; } = 200;
 
     public void Initialize(ControlSetItem controlSetItem)
     {
-        var tabPageNumberRegex = new Regex(@"TabPage(\d*)");
+        var tabPageNumberRegex = new Regex(pattern: @"TabPage(\d*)");
         var tabs = controlSetItem.ParentItem.ChildItems.OfType<ControlSetItem>().ToList();
-        var labelTexts = tabs.Select(tab => tab.GetPropertyOrNull("Text")?.Value)
-            .Where(labelText => labelText != null);
+        var labelTexts = tabs.Select(selector: tab =>
+                tab.GetPropertyOrNull(propertyName: "Text")?.Value
+            )
+            .Where(predicate: labelText => labelText != null);
 
         int maxTabPageNumber = labelTexts
-            .Where(labelText => labelText.StartsWith("TabPage"))
-            .Select(labelText =>
+            .Where(predicate: labelText => labelText.StartsWith(value: "TabPage"))
+            .Select(selector: labelText =>
             {
-                var match = tabPageNumberRegex.Match(labelText);
-                return match.Groups[1].Value == "" ? 0 : int.Parse(match.Groups[1].Value);
+                var match = tabPageNumberRegex.Match(input: labelText);
+                return match.Groups[groupnum: 1].Value == ""
+                    ? 0
+                    : int.Parse(s: match.Groups[groupnum: 1].Value);
             })
-            .DefaultIfEmpty(0)
+            .DefaultIfEmpty(defaultValue: 0)
             .Max();
 
         Text = $"TabPage{maxTabPageNumber + 1}";
-        string height = tabs.First().GetPropertyOrNull("Height")?.Value;
-        if (!string.IsNullOrEmpty(height))
+        string height = tabs.First().GetPropertyOrNull(propertyName: "Height")?.Value;
+        if (!string.IsNullOrEmpty(value: height))
         {
-            Height = int.Parse(height);
+            Height = int.Parse(s: height);
         }
-        string width = tabs.First().GetPropertyOrNull("Width")?.Value;
-        if (!string.IsNullOrEmpty(width))
+        string width = tabs.First().GetPropertyOrNull(propertyName: "Width")?.Value;
+        if (!string.IsNullOrEmpty(value: width))
         {
-            Width = int.Parse(width);
+            Width = int.Parse(s: width);
         }
     }
 }

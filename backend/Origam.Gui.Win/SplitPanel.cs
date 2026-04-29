@@ -71,7 +71,7 @@ public class SplitPanel : System.Windows.Forms.Panel, IOrigamMetadataConsumer, I
                 components.Dispose();
             }
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
 
     protected override void OnControlAdded(ControlEventArgs e)
@@ -86,7 +86,7 @@ public class SplitPanel : System.Windows.Forms.Panel, IOrigamMetadataConsumer, I
         //			}
         //			else
         //			{
-        base.OnControlAdded(e);
+        base.OnControlAdded(e: e);
         //			}
         e.Control.TabIndexChanged += new EventHandler(Control_TabIndexChanged);
         RefreshDocking();
@@ -94,13 +94,13 @@ public class SplitPanel : System.Windows.Forms.Panel, IOrigamMetadataConsumer, I
 
     protected override void OnControlRemoved(ControlEventArgs e)
     {
-        if (this.Controls.Contains(_splitter))
+        if (this.Controls.Contains(control: _splitter))
         {
-            this.Controls.Remove(_splitter);
+            this.Controls.Remove(value: _splitter);
         }
         e.Control.TabIndexChanged -= new EventHandler(Control_TabIndexChanged);
         RefreshDocking();
-        base.OnControlRemoved(e);
+        base.OnControlRemoved(e: e);
     }
     #endregion
     #region Event Handlers
@@ -120,8 +120,8 @@ public class SplitPanel : System.Windows.Forms.Panel, IOrigamMetadataConsumer, I
         {
             UserProfile profile = SecurityManager.CurrentUserProfile();
             OrigamPanelColumnConfig config = OrigamPanelColumnConfigDA.LoadUserConfig(
-                this.OrigamMetadata.Id,
-                profile.Id
+                panelId: this.OrigamMetadata.Id,
+                profileId: profile.Id
             );
             OrigamPanelColumnConfig.PanelColumnConfigRow configRow;
             if (config.PanelColumnConfig.Rows.Count == 0)
@@ -134,12 +134,12 @@ public class SplitPanel : System.Windows.Forms.Panel, IOrigamMetadataConsumer, I
                 configRow.RecordCreated = DateTime.Now;
                 configRow.RecordCreatedBy = profile.Id;
                 configRow.ColumnWidth = 0;
-                config.PanelColumnConfig.AddPanelColumnConfigRow(configRow);
+                config.PanelColumnConfig.AddPanelColumnConfigRow(row: configRow);
             }
             else
             {
                 configRow =
-                    config.PanelColumnConfig.Rows[0]
+                    config.PanelColumnConfig.Rows[index: 0]
                     as OrigamPanelColumnConfig.PanelColumnConfigRow;
                 configRow.RecordUpdated = DateTime.Now;
                 configRow.RecordUpdatedBy = profile.Id;
@@ -147,7 +147,7 @@ public class SplitPanel : System.Windows.Forms.Panel, IOrigamMetadataConsumer, I
 
             configRow.ColumnWidth = _splitter.SplitPosition;
             // store the new width
-            OrigamPanelColumnConfigDA.PersistColumnConfig(config);
+            OrigamPanelColumnConfigDA.PersistColumnConfig(config: config);
             _splitterSizeChangedByUser = true;
         }
         catch { }
@@ -221,7 +221,7 @@ public class SplitPanel : System.Windows.Forms.Panel, IOrigamMetadataConsumer, I
         Control control2 = null;
         foreach (Control control in this.Controls)
         {
-            if (!control.Equals(_splitter))
+            if (!control.Equals(obj: _splitter))
             {
                 control.Dock = DockStyle.None;
                 switch (control.TabIndex)
@@ -243,10 +243,10 @@ public class SplitPanel : System.Windows.Forms.Panel, IOrigamMetadataConsumer, I
 
         if (control2 != null & control1 != null)
         {
-            if (!this.Controls.Contains(_splitter))
+            if (!this.Controls.Contains(control: _splitter))
             {
                 _addingSplitter = true;
-                this.Controls.Add(_splitter);
+                this.Controls.Add(value: _splitter);
                 _addingSplitter = false;
             }
             switch (this.Orientation)
@@ -288,16 +288,16 @@ public class SplitPanel : System.Windows.Forms.Panel, IOrigamMetadataConsumer, I
         {
             UserProfile profile = SecurityManager.CurrentUserProfile();
             OrigamPanelColumnConfig userConfig = OrigamPanelColumnConfigDA.LoadUserConfig(
-                this.OrigamMetadata.Id,
-                profile.Id
+                panelId: this.OrigamMetadata.Id,
+                profileId: profile.Id
             );
             if (userConfig.PanelColumnConfig.Rows.Count > 0)
             {
                 int storedSplitterPosition = (
-                    userConfig.PanelColumnConfig.Rows[0]
+                    userConfig.PanelColumnConfig.Rows[index: 0]
                     as OrigamPanelColumnConfig.PanelColumnConfigRow
                 ).ColumnWidth;
-                int? position = StoredPositionToPixels(storedSplitterPosition);
+                int? position = StoredPositionToPixels(storedValue: storedSplitterPosition);
                 if (position != null)
                 {
                     _splitter.SplitPosition = storedSplitterPosition;
@@ -313,8 +313,8 @@ public class SplitPanel : System.Windows.Forms.Panel, IOrigamMetadataConsumer, I
         bool isScreenSizePositionRatio = storedValue > 1000; // this will work up to 8k
         if (isScreenSizePositionRatio)
         {
-            var height = storedValue * Screen.FromControl(this).Bounds.Height / 1000_000;
-            return Convert.ToInt32(height);
+            var height = storedValue * Screen.FromControl(control: this).Bounds.Height / 1000_000;
+            return Convert.ToInt32(value: height);
         }
 
         return null;

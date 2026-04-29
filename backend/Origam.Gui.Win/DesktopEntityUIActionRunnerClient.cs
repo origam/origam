@@ -55,57 +55,59 @@ public class DesktopEntityUIActionRunnerClient : IEntityUIActionRunnerClient
         Hashtable inputParameters
     )
     {
-        string dataTableName = entity.Split(".".ToCharArray()).Last();
+        string dataTableName = entity.Split(separator: ".".ToCharArray()).Last();
         var processData = new ExecuteActionProcessData();
         processData.SessionFormIdentifier = sessionFormIdentifier;
         processData.RequestingGrid = requestingGrid;
         processData.ActionId = actionId;
         processData.Entity = dataTableName;
         processData.SelectedIds = selectedIds;
-        processData.Type = (PanelActionType)Enum.Parse(typeof(PanelActionType), actionType);
-        processData.DataTable = dataSource.Tables[dataTableName];
+        processData.Type = (PanelActionType)
+            Enum.Parse(enumType: typeof(PanelActionType), value: actionType);
+        processData.DataTable = dataSource.Tables[name: dataTableName];
         IList<DataRow> rows = new List<DataRow>();
         foreach (string id in selectedIds)
         {
             DataRow row = null;
-            if ((dataSource != null) && dataSource.Tables.Contains(dataTableName))
+            if ((dataSource != null) && dataSource.Tables.Contains(name: dataTableName))
             {
-                row = dataSource.Tables[dataTableName].Rows.Find(id);
+                row = dataSource.Tables[name: dataTableName].Rows.Find(key: id);
             }
             if (row == null)
             {
                 throw new ArgumentOutOfRangeException(
-                    "id",
-                    id,
-                    ResourceUtils.GetString("ErrorRecordNotFound")
+                    paramName: "id",
+                    actualValue: id,
+                    message: ResourceUtils.GetString(key: "ErrorRecordNotFound")
                 );
             }
-            rows.Add(row);
+            rows.Add(item: row);
         }
         processData.SelectedRows = rows;
         processData.ParameterService =
-            ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
+            ServiceManager.Services.GetService(serviceType: typeof(IParameterService))
+            as IParameterService;
         if (
             (processData.Type != PanelActionType.QueueAction)
             && (processData.Type != PanelActionType.SelectionDialogAction)
         )
         {
             // get action
-            processData.Action = UIActionTools.GetAction(actionId);
+            processData.Action = UIActionTools.GetAction(action: actionId);
             // retrieve parameter mappings
             List<string> originalDataParameters = UIActionTools.GetOriginalParameters(
-                processData.Action
+                action: processData.Action
             );
             processData.Parameters = DatasetTools.RetrieveParameters(
-                parameterMappings,
-                processData.SelectedRows,
-                originalDataParameters,
-                processData.DataTable.DataSet
+                parameterMappings: parameterMappings,
+                rows: processData.SelectedRows,
+                originalDataParameters: originalDataParameters,
+                fullData: processData.DataTable.DataSet
             );
             // add input parameters
             foreach (DictionaryEntry inputParameter in inputParameters)
             {
-                processData.Parameters.Add(inputParameter.Key, inputParameter.Value);
+                processData.Parameters.Add(key: inputParameter.Key, value: inputParameter.Value);
             }
         }
         return processData;
@@ -142,12 +144,20 @@ public class DesktopEntityUIActionRunnerClient : IEntityUIActionRunnerClient
             {
                 generator.FormRuleEngine.PauseRuleProcessing();
                 targetData.AcceptChanges();
-                DatasetTools.Clear(targetData);
+                DatasetTools.Clear(data: targetData);
             }
-            deletedRowsParents = DatasetTools.GetDeletedRows(sourceData, targetData);
-            MergeParams mergeParams = new MergeParams(processData.Profile.Id);
+            deletedRowsParents = DatasetTools.GetDeletedRows(
+                sourceData: sourceData,
+                targetData: targetData
+            );
+            MergeParams mergeParams = new MergeParams(ProfileId: processData.Profile.Id);
             mergeParams.TrueDelete = action.MergeType == ServiceOutputMethod.FullMerge;
-            DatasetTools.MergeDataSet(targetData, sourceData, changeList, mergeParams);
+            DatasetTools.MergeDataSet(
+                inout_dsTarget: targetData,
+                in_dsSource: sourceData,
+                changeList: changeList,
+                mergeParams: mergeParams
+            );
             // process rules (but not after clean merge, there we expect processed data
             // we process the rules after merge so all data were merged before we start firing any
             // events... If we would process rules WHILE merging, there would be a race condition - e.g.
@@ -156,10 +166,14 @@ public class DesktopEntityUIActionRunnerClient : IEntityUIActionRunnerClient
             // value when being merged, thus, resulting in a not-rule-processed data.
             if (
                 !action.CleanDataBeforeMerge
-                && DatasetTools.HasDataSetRules(targetData, generator.RuleSet)
+                && DatasetTools.HasDataSetRules(dataSet: targetData, ruleSet: generator.RuleSet)
             )
             {
-                ProcessRulesForWorkflowResults(changeList, targetData, deletedRowsParents);
+                ProcessRulesForWorkflowResults(
+                    changeList: changeList,
+                    targetData: targetData,
+                    deletedRowsParents: deletedRowsParents
+                );
             }
         }
         finally
@@ -181,21 +195,21 @@ public class DesktopEntityUIActionRunnerClient : IEntityUIActionRunnerClient
     {
         // is rule handler right way, is conversion to xml data correct?
         DatasetRuleHandler ruleHandler = new DatasetRuleHandler();
-        IDataDocument xmlData = DataDocumentFactory.New(targetData);
+        IDataDocument xmlData = DataDocumentFactory.New(dataSet: targetData);
         foreach (var entry in changeList)
         {
             string tableName = entry.Key;
             foreach (var rowEntry in entry.Value)
             {
-                DataRow row = targetData.Tables[tableName].Rows.Find(rowEntry.Key);
+                DataRow row = targetData.Tables[name: tableName].Rows.Find(key: rowEntry.Key);
                 DataRowState changeType = rowEntry.Value.State;
                 if (changeType == DataRowState.Added)
                 {
                     ruleHandler.OnRowChanged(
-                        new DataRowChangeEventArgs(row, DataRowAction.Add),
-                        xmlData,
-                        generator.RuleSet,
-                        generator.FormRuleEngine
+                        e: new DataRowChangeEventArgs(row: row, action: DataRowAction.Add),
+                        data: xmlData,
+                        ruleSet: generator.RuleSet,
+                        ruleEngine: generator.FormRuleEngine
                     );
                 }
                 switch (changeType)
@@ -203,10 +217,10 @@ public class DesktopEntityUIActionRunnerClient : IEntityUIActionRunnerClient
                     case DataRowState.Added:
                     {
                         ruleHandler.OnRowCopied(
-                            row,
-                            xmlData,
-                            generator.RuleSet,
-                            generator.FormRuleEngine
+                            row: row,
+                            data: xmlData,
+                            ruleSet: generator.RuleSet,
+                            ruleEngine: generator.FormRuleEngine
                         );
                         break;
                     }
@@ -220,12 +234,16 @@ public class DesktopEntityUIActionRunnerClient : IEntityUIActionRunnerClient
                             foreach (DictionaryEntry changedColumnEntry in changedColumns)
                             {
                                 DataColumn changedColumn = (DataColumn)changedColumnEntry.Value;
-                                object newValue = row[changedColumn];
+                                object newValue = row[column: changedColumn];
                                 ruleHandler.OnColumnChanged(
-                                    new DataColumnChangeEventArgs(row, changedColumn, newValue),
-                                    xmlData,
-                                    generator.RuleSet,
-                                    generator.FormRuleEngine
+                                    e: new DataColumnChangeEventArgs(
+                                        row: row,
+                                        column: changedColumn,
+                                        value: newValue
+                                    ),
+                                    data: xmlData,
+                                    ruleSet: generator.RuleSet,
+                                    ruleEngine: generator.FormRuleEngine
                                 );
                             }
                         }
@@ -240,7 +258,9 @@ public class DesktopEntityUIActionRunnerClient : IEntityUIActionRunnerClient
                     }
                     default:
                     {
-                        throw new Exception(ResourceUtils.GetString("ErrorUnknownRowChangeState"));
+                        throw new Exception(
+                            message: ResourceUtils.GetString(key: "ErrorUnknownRowChangeState")
+                        );
                     }
                 }
             }
@@ -248,11 +268,11 @@ public class DesktopEntityUIActionRunnerClient : IEntityUIActionRunnerClient
         foreach (var deletedItem in deletedRowsParents)
         {
             ruleHandler.OnRowDeleted(
-                deletedItem.Value.ToArray(),
-                deletedItem.Key,
-                xmlData,
-                generator.RuleSet,
-                generator.FormRuleEngine
+                parentRows: deletedItem.Value.ToArray(),
+                deletedRow: deletedItem.Key,
+                data: xmlData,
+                ruleSet: generator.RuleSet,
+                ruleEngine: generator.FormRuleEngine
             );
         }
     }

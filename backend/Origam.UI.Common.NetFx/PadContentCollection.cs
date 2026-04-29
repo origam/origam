@@ -50,7 +50,7 @@ public class PadContentCollection : CollectionBase
     /// </param>
     public PadContentCollection(PadContentCollection value)
     {
-        this.AddRange(value);
+        this.AddRange(value: value);
     }
 
     /// <summary>
@@ -63,7 +63,7 @@ public class PadContentCollection : CollectionBase
     /// </param>
     public PadContentCollection(IPadContent[] value)
     {
-        this.AddRange(value);
+        this.AddRange(value: value);
     }
 
     /// <summary>
@@ -76,8 +76,8 @@ public class PadContentCollection : CollectionBase
     /// <exception cref='System.ArgumentOutOfRangeException'><paramref name='index'/> is outside the valid range of indexes for the collection.</exception>
     public IPadContent this[int index]
     {
-        get { return ((IPadContent)(List[index])); }
-        set { List[index] = value; }
+        get { return ((IPadContent)(List[index: index])); }
+        set { List[index: index] = value; }
     }
 
     public IPadContent this[string typeName]
@@ -106,7 +106,7 @@ public class PadContentCollection : CollectionBase
     /// <seealso cref='.PadContentCollection.AddRange'/>
     public int Add(IPadContent value)
     {
-        return List.Add(value);
+        return List.Add(value: value);
     }
 
     /// <summary>
@@ -123,7 +123,7 @@ public class PadContentCollection : CollectionBase
     {
         for (int i = 0; (i < value.Length); i = (i + 1))
         {
-            this.Add(value[i]);
+            this.Add(value: value[i]);
         }
     }
 
@@ -143,7 +143,7 @@ public class PadContentCollection : CollectionBase
     {
         for (int i = 0; (i < value.Count); i = (i + 1))
         {
-            this.Add(value[i]);
+            this.Add(value: value[index: i]);
         }
     }
 
@@ -159,7 +159,7 @@ public class PadContentCollection : CollectionBase
     /// <seealso cref='.PadContentCollection.IndexOf'/>
     public bool Contains(IPadContent value)
     {
-        return List.Contains(value);
+        return List.Contains(value: value);
     }
 
     /// <summary>
@@ -177,7 +177,7 @@ public class PadContentCollection : CollectionBase
     /// <seealso cref='System.Array'/>
     public void CopyTo(IPadContent[] array, int index)
     {
-        List.CopyTo(array, index);
+        List.CopyTo(array: array, index: index);
     }
 
     /// <summary>
@@ -192,7 +192,7 @@ public class PadContentCollection : CollectionBase
     /// <seealso cref='.PadContentCollection.Contains'/>
     public int IndexOf(IPadContent value)
     {
-        return List.IndexOf(value);
+        return List.IndexOf(value: value);
     }
 
     /// <summary>
@@ -204,7 +204,7 @@ public class PadContentCollection : CollectionBase
     /// <seealso cref='.PadContentCollection.Add'/>
     public void Insert(int index, IPadContent value)
     {
-        List.Insert(index, value);
+        List.Insert(index: index, value: value);
     }
 
     /// <summary>
@@ -215,7 +215,7 @@ public class PadContentCollection : CollectionBase
     /// <seealso cref='System.Collections.IEnumerator'/>
     public new IPadContentEnumerator GetEnumerator()
     {
-        return new IPadContentEnumerator(this);
+        return new IPadContentEnumerator(mappings: this);
     }
 
     /// <summary>
@@ -232,7 +232,7 @@ public class PadContentCollection : CollectionBase
             System.Windows.Forms.Form form = value as System.Windows.Forms.Form;
             form.Close();
         }
-        List.Remove(value);
+        List.Remove(value: value);
     }
 
     public class IPadContentEnumerator : object, IEnumerator

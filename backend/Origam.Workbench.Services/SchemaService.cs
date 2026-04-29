@@ -78,7 +78,7 @@ public class SchemaService : AbstractService, ISchemaService
         {
             IPersistenceService persistence =
                 ServiceManager.Services.GetService<IPersistenceService>();
-            return persistence.SchemaProvider.RetrieveList<Package>(null);
+            return persistence.SchemaProvider.RetrieveList<Package>(filter: null);
         }
     }
     public List<Package> AllPackages
@@ -87,7 +87,7 @@ public class SchemaService : AbstractService, ISchemaService
         {
             IPersistenceService persistence =
                 ServiceManager.Services.GetService<IPersistenceService>();
-            return persistence.SchemaListProvider.RetrieveList<Package>(null);
+            return persistence.SchemaListProvider.RetrieveList<Package>(filter: null);
         }
     }
     protected Guid _activeSchemaExtensionId;
@@ -145,7 +145,7 @@ public class SchemaService : AbstractService, ISchemaService
     {
         if (item is ISchemaItem || item is SchemaItemGroup)
         {
-            return IsItemFromExtension(item);
+            return IsItemFromExtension(item: item);
         }
         if (item is Package)
         {
@@ -159,7 +159,7 @@ public class SchemaService : AbstractService, ISchemaService
     {
         if (item is ISchemaItem)
         {
-            if (!IsItemFromExtension(item))
+            if (!IsItemFromExtension(item: item))
             {
                 return false;
             }
@@ -177,16 +177,17 @@ public class SchemaService : AbstractService, ISchemaService
 
     public virtual bool UnloadSchema()
     {
-        CancelEventArgs e = new CancelEventArgs(false);
+        CancelEventArgs e = new CancelEventArgs(cancel: false);
         _isSchemaLoaded = false;
-        OnSchemaUnloading(e);
+        OnSchemaUnloading(e: e);
         if (e.Cancel)
         {
             _isSchemaLoaded = true;
             return false;
         }
         IPersistenceService persistence =
-            ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+            ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+            as IPersistenceService;
         if (persistence != null)
         {
             persistence.SchemaProvider.InstancePersisted -= SchemaProvider_InstancePersisted;
@@ -210,30 +211,34 @@ public class SchemaService : AbstractService, ISchemaService
         }
 
         IPersistenceService persistence =
-            ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+            ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+            as IPersistenceService;
         persistence.SchemaProvider.InstancePersisted += SchemaProvider_InstancePersisted;
         PropertyToNamespaceMapping.Init();
-        Package extension = persistence.LoadSchema(schemaExtensionId);
+        Package extension = persistence.LoadSchema(schemaExtensionId: schemaExtensionId);
 
-        _activeSchemaExtensionId = (Guid)extension.PrimaryKey["Id"];
+        _activeSchemaExtensionId = (Guid)extension.PrimaryKey[key: "Id"];
         _activeExtension =
-            persistence.SchemaProvider.RetrieveInstance(typeof(Package), extension.PrimaryKey)
-            as Package;
-        OnSchemaLoaded(isInteractive);
+            persistence.SchemaProvider.RetrieveInstance(
+                type: typeof(Package),
+                primaryKey: extension.PrimaryKey
+            ) as Package;
+        OnSchemaLoaded(isInteractive: isInteractive);
         return true;
     }
 
     public void AddProvider(AbstractSchemaItemProvider provider)
     {
-        _providers.Add(provider.GetType(), provider);
+        _providers.Add(key: provider.GetType(), value: provider);
         provider.PersistenceProvider = (
-            ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService
+            ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+            as IPersistenceService
         ).SchemaProvider;
         foreach (Package package in LoadedPackages)
         {
-            package.AddProvider(provider);
+            package.AddProvider(provider: provider);
         }
-        OnProviderAdded(new SchemaServiceEventArgs(provider));
+        OnProviderAdded(e: new SchemaServiceEventArgs(provider: provider));
     }
 
     public void ClearProviderCaches()
@@ -250,18 +255,18 @@ public class SchemaService : AbstractService, ISchemaService
         provider.ClearCache();
 #endif
         provider.PersistenceProvider = null;
-        _providers.Remove(provider.GetType());
+        _providers.Remove(key: provider.GetType());
         foreach (Package package in this.LoadedPackages)
         {
             foreach (IBrowserNode group in package.ChildNodes())
             {
-                if (group.ChildNodes().Contains(provider))
+                if (group.ChildNodes().Contains(value: provider))
                 {
-                    group.ChildNodes().Remove(provider);
+                    group.ChildNodes().Remove(value: provider);
                 }
             }
         }
-        OnProvidedRemoved(new SchemaServiceEventArgs(provider));
+        OnProvidedRemoved(e: new SchemaServiceEventArgs(provider: provider));
     }
 
     public void RemoveAllProviders()
@@ -269,7 +274,7 @@ public class SchemaService : AbstractService, ISchemaService
         var keys = _providers.Keys.ToList();
         foreach (Type key in keys)
         {
-            RemoveProvider(_providers[key]);
+            RemoveProvider(provider: _providers[key: key]);
         }
     }
 
@@ -296,7 +301,7 @@ public class SchemaService : AbstractService, ISchemaService
             {
                 foreach (Type interf in entry.Value.GetType().GetInterfaces())
                 {
-                    if (type.Equals(interf))
+                    if (type.Equals(o: interf))
                     {
                         return entry.Value;
                     }
@@ -305,14 +310,14 @@ public class SchemaService : AbstractService, ISchemaService
         }
         else
         {
-            _providers.TryGetValue(type, out var provider);
+            _providers.TryGetValue(key: type, value: out var provider);
             return provider;
         }
         return null;
     }
 
     public T GetProvider<T>()
-        where T : ISchemaItemProvider => (T)GetProvider(typeof(T));
+        where T : ISchemaItemProvider => (T)GetProvider(type: typeof(T));
 
     public ISchemaItemProvider GetProvider(string type)
     {
@@ -320,7 +325,7 @@ public class SchemaService : AbstractService, ISchemaService
         {
             if (t.FullName == type)
             {
-                return _providers[t];
+                return _providers[key: t];
             }
         }
         return null;
@@ -350,7 +355,7 @@ public class SchemaService : AbstractService, ISchemaService
     {
         if (ProviderAdded != null)
         {
-            ProviderAdded(this, e);
+            ProviderAdded(sender: this, e: e);
         }
     }
 
@@ -358,7 +363,7 @@ public class SchemaService : AbstractService, ISchemaService
     {
         if (ProviderRemoved != null)
         {
-            ProviderRemoved(this, e);
+            ProviderRemoved(sender: this, e: e);
         }
     }
 
@@ -366,7 +371,7 @@ public class SchemaService : AbstractService, ISchemaService
     {
         if (ActiveNodeChanged != null)
         {
-            ActiveNodeChanged(this, e);
+            ActiveNodeChanged(sender: this, e: e);
         }
     }
 
@@ -375,7 +380,7 @@ public class SchemaService : AbstractService, ISchemaService
         _isSchemaLoaded = true;
         if (SchemaLoaded != null)
         {
-            SchemaLoaded(this, isInteractive);
+            SchemaLoaded(sender: this, e: isInteractive);
         }
     }
 
@@ -383,7 +388,7 @@ public class SchemaService : AbstractService, ISchemaService
     {
         if (SchemaUnloading != null)
         {
-            SchemaUnloading(this, e);
+            SchemaUnloading(sender: this, e: e);
         }
     }
 
@@ -391,7 +396,7 @@ public class SchemaService : AbstractService, ISchemaService
     {
         if (SchemaUnloaded != null)
         {
-            SchemaUnloaded(this, EventArgs.Empty);
+            SchemaUnloaded(sender: this, e: EventArgs.Empty);
         }
     }
 
@@ -399,7 +404,7 @@ public class SchemaService : AbstractService, ISchemaService
     {
         if (SchemaChanged != null)
         {
-            SchemaChanged(sender, e);
+            SchemaChanged(sender: sender, e: e);
         }
     }
     #endregion
@@ -409,7 +414,7 @@ public class SchemaService : AbstractService, ISchemaService
         IPersistent persistedObject
     )
     {
-        OnSchemaChanged(persistedObject, EventArgs.Empty);
+        OnSchemaChanged(sender: persistedObject, e: EventArgs.Empty);
     }
     #endregion
 }

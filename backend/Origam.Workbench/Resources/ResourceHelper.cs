@@ -32,8 +32,8 @@ internal class ResourceHelper
     static ResourceHelper()
     {
         m_resourceManager = new ResourceManager(
-            "Origam.Workbench.Strings",
-            typeof(SchemaBrowser).Assembly
+            baseName: "Origam.Workbench.Strings",
+            assembly: typeof(SchemaBrowser).Assembly
         );
     }
 
@@ -41,11 +41,11 @@ internal class ResourceHelper
     {
         Assembly assembly = typeof(ResourceHelper).Assembly;
         string fullNamePrefix = "Origam.Workbench.Resources.";
-        return new Bitmap(assembly.GetManifestResourceStream(fullNamePrefix + name));
+        return new Bitmap(stream: assembly.GetManifestResourceStream(name: fullNamePrefix + name));
     }
 
     public static string GetString(string name)
     {
-        return m_resourceManager.GetString(name);
+        return m_resourceManager.GetString(name: name);
     }
 }

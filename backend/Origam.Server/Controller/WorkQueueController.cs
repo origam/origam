@@ -37,11 +37,11 @@ namespace Origam.Server.Controller;
 public class WorkQueueController : ControllerBase
 {
     private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
-        System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
+        type: System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
     );
 
     [HttpPost]
-    [Route("workQueue/{workQueueCode}/{commandText}")]
+    [Route(template: "workQueue/{workQueueCode}/{commandText}")]
     public IActionResult CreateSessionAsync(
         string workQueueCode,
         string commandText,
@@ -50,45 +50,49 @@ public class WorkQueueController : ControllerBase
     {
         if (log.IsDebugEnabled)
         {
-            log.Debug("Processing: " + HttpContext.Request.GetDisplayUrl());
+            log.Debug(message: "Processing: " + HttpContext.Request.GetDisplayUrl());
         }
         HttpContext.Response.ContentType = "application/json";
         try
         {
             IWorkQueueService workQueueService =
                 ServiceManager.Services.GetService<IWorkQueueService>();
-            workQueueService.HandleAction(workQueueCode, commandText, workQueueEntryId);
+            workQueueService.HandleAction(
+                workQueueCode: workQueueCode,
+                commandText: commandText,
+                queueEntryId: workQueueEntryId
+            );
             return Ok();
         }
         catch (Exception ex)
         {
             if (log.IsErrorEnabled)
             {
-                log.Error(ex.Message, ex);
+                log.Error(message: ex.Message, exception: ex);
             }
             string output;
             if (ex is RuleException ruleException)
             {
                 output = String.Format(
-                    "{{\"Message\" : {0}, \"RuleResult\" : {1}}}",
-                    JsonConvert.SerializeObject(ruleException.Message),
-                    JsonConvert.SerializeObject(ruleException.RuleResult)
+                    format: "{{\"Message\" : {0}, \"RuleResult\" : {1}}}",
+                    arg0: JsonConvert.SerializeObject(value: ruleException.Message),
+                    arg1: JsonConvert.SerializeObject(value: ruleException.RuleResult)
                 );
             }
             else if (ex is ArgumentOutOfRangeException argumentException)
             {
                 output = String.Format(
-                    "{{\"Message\" : {0}, \"ParamName\" : {1}, \"ActualValue\" : {2}}}",
-                    JsonConvert.SerializeObject(argumentException.Message),
-                    JsonConvert.SerializeObject(argumentException.ParamName),
-                    JsonConvert.SerializeObject(argumentException.ActualValue)
+                    format: "{{\"Message\" : {0}, \"ParamName\" : {1}, \"ActualValue\" : {2}}}",
+                    arg0: JsonConvert.SerializeObject(value: argumentException.Message),
+                    arg1: JsonConvert.SerializeObject(value: argumentException.ParamName),
+                    arg2: JsonConvert.SerializeObject(value: argumentException.ActualValue)
                 );
             }
             else
             {
-                output = JsonConvert.SerializeObject(ex);
+                output = JsonConvert.SerializeObject(value: ex);
             }
-            return BadRequest(output);
+            return BadRequest(error: output);
         }
     }
 }

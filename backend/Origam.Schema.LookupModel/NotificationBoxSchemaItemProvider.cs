@@ -50,9 +50,9 @@ public class NotificationBoxSchemaItemProvider : AbstractSchemaItemProvider
     public override T NewItem<T>(Guid schemaExtensionId, SchemaItemGroup group)
     {
         return base.NewItem<T>(
-            schemaExtensionId,
-            group,
-            typeof(T) == typeof(NotificationBox) ? "NewNotificationBox" : null
+            schemaExtensionId: schemaExtensionId,
+            group: group,
+            itemName: typeof(T) == typeof(NotificationBox) ? "NewNotificationBox" : null
         );
     }
     #endregion

@@ -56,7 +56,7 @@ public class WorkflowWatchPad : AbstractPadContent
                 components.Dispose();
             }
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
 
     #region Windows Form Designer generated code
@@ -156,7 +156,7 @@ public class WorkflowWatchPad : AbstractPadContent
     {
         if (e.Button == btnRefresh)
         {
-            RenderTree(WorkflowHost.DefaultHost);
+            RenderTree(host: WorkflowHost.DefaultHost);
         }
     }
 
@@ -166,13 +166,13 @@ public class WorkflowWatchPad : AbstractPadContent
         try
         {
             tvwWorkflows.Nodes.Clear();
-            TreeNode hostNode = RenderHostNode(host);
-            tvwWorkflows.Nodes.Add(hostNode);
+            TreeNode hostNode = RenderHostNode(host: host);
+            tvwWorkflows.Nodes.Add(node: hostNode);
             foreach (WorkflowEngine engine in host.RunningWorkflows)
             {
                 if (engine.CallingWorkflow == null)
                 {
-                    hostNode.Nodes.Add(RenderWorkflowEngineNode(engine));
+                    hostNode.Nodes.Add(node: RenderWorkflowEngineNode(engine: engine));
                 }
             }
         }
@@ -185,33 +185,35 @@ public class WorkflowWatchPad : AbstractPadContent
 
     private TreeNode RenderHostNode(WorkflowHost host)
     {
-        return new TreeNode("DefaultHost");
+        return new TreeNode(text: "DefaultHost");
     }
 
     private TreeNode RenderWorkflowEngineNode(WorkflowEngine engine)
     {
         TreeNode result = new TreeNode(
-            engine.WorkflowBlock.Name + "(" + engine.WorkflowInstanceId + ")"
+            text: engine.WorkflowBlock.Name + "(" + engine.WorkflowInstanceId + ")"
         );
-        TreeNode childWorkflows = new TreeNode("Child Workflows");
+        TreeNode childWorkflows = new TreeNode(text: "Child Workflows");
         foreach (WorkflowEngine childEngine in engine.Host.RunningWorkflows)
         {
             if (childEngine.CallingWorkflow == engine)
             {
-                childWorkflows.Nodes.Add(RenderWorkflowEngineNode(childEngine));
+                childWorkflows.Nodes.Add(node: RenderWorkflowEngineNode(engine: childEngine));
             }
         }
         if (childWorkflows.Nodes.Count > 0)
         {
-            result.Nodes.Add(childWorkflows);
+            result.Nodes.Add(node: childWorkflows);
         }
-        TreeNode tasks = new TreeNode("Tasks");
+        TreeNode tasks = new TreeNode(text: "Tasks");
         foreach (var entry in engine.TaskResults)
         {
-            IWorkflowStep step = engine.Step(entry.Key);
-            tasks.Nodes.Add(RenderWorkflowTask(engine, step, entry.Value));
+            IWorkflowStep step = engine.Step(key: entry.Key);
+            tasks.Nodes.Add(
+                node: RenderWorkflowTask(engine: engine, step: step, status: entry.Value)
+            );
         }
-        result.Nodes.Add(tasks);
+        result.Nodes.Add(node: tasks);
         return result;
     }
 
@@ -227,7 +229,7 @@ public class WorkflowWatchPad : AbstractPadContent
             iteration = engine.IterationNumber.ToString() + "/" + engine.IterationTotal.ToString();
         }
         TreeNode result = new TreeNode(
-            step.Name + " " + iteration + " (" + status.ToString() + ")"
+            text: step.Name + " " + iteration + " (" + status.ToString() + ")"
         );
         return result;
     }

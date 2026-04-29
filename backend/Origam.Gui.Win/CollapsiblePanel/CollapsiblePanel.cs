@@ -34,7 +34,8 @@ namespace Origam.Gui.Win;
 public class CollapsiblePanel : TabPage
 {
     private IPersistenceService _persistence =
-        ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+        ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+        as IPersistenceService;
     private int _indentLevel = 0;
     private bool _isHeightFixed = false;
     private bool _isOpen = false;
@@ -59,24 +60,24 @@ public class CollapsiblePanel : TabPage
     }
     private Guid _styleId;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public Guid StyleId
     {
         get { return _styleId; }
         set { _styleId = value; }
     }
 
-    [TypeConverter(typeof(StylesConverter))]
+    [TypeConverter(type: typeof(StylesConverter))]
     public UIStyle Style
     {
         get
         {
             return (UIStyle)
                 _persistence.SchemaProvider.RetrieveInstance(
-                    typeof(UIStyle),
-                    new ModelElementKey(this.StyleId)
+                    type: typeof(UIStyle),
+                    primaryKey: new ModelElementKey(id: this.StyleId)
                 );
         }
-        set { this.StyleId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]); }
+        set { this.StyleId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]); }
     }
 }

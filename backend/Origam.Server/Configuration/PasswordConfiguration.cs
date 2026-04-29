@@ -35,12 +35,15 @@ public class PasswordConfiguration
 
     public PasswordConfiguration(IConfiguration configuration)
     {
-        IConfigurationSection passwordSection = configuration.GetSection("PasswordConfig");
+        IConfigurationSection passwordSection = configuration.GetSection(key: "PasswordConfig");
 
-        RequireDigit = passwordSection.GetValue("RequireDigit", true);
-        RequiredLength = passwordSection.GetValue("RequiredLength", 10);
-        RequireNonAlphanumeric = passwordSection.GetValue("RequireNonAlphanumeric", true);
-        RequireUppercase = passwordSection.GetValue("RequireUppercase", true);
-        RequireLowercase = passwordSection.GetValue("RequireLowercase", true);
+        RequireDigit = passwordSection.GetValue(key: "RequireDigit", defaultValue: true);
+        RequiredLength = passwordSection.GetValue(key: "RequiredLength", defaultValue: 10);
+        RequireNonAlphanumeric = passwordSection.GetValue(
+            key: "RequireNonAlphanumeric",
+            defaultValue: true
+        );
+        RequireUppercase = passwordSection.GetValue(key: "RequireUppercase", defaultValue: true);
+        RequireLowercase = passwordSection.GetValue(key: "RequireLowercase", defaultValue: true);
     }
 }

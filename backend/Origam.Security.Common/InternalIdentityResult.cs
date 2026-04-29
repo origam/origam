@@ -27,15 +27,16 @@ public class InternalIdentityResult
 {
     public bool Succeeded { get; }
     public IEnumerable<string> Errors { get; }
-    public static InternalIdentityResult Success { get; } = new InternalIdentityResult(true);
+    public static InternalIdentityResult Success { get; } =
+        new InternalIdentityResult(success: true);
 
     public static InternalIdentityResult Failed(params string[] errors)
     {
-        return new InternalIdentityResult(errors);
+        return new InternalIdentityResult(errors: errors);
     }
 
     public InternalIdentityResult(params string[] errors)
-        : this((IEnumerable<string>)errors) { }
+        : this(errors: (IEnumerable<string>)errors) { }
 
     public InternalIdentityResult(IEnumerable<string> errors)
     {

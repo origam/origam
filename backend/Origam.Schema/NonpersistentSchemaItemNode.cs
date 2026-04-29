@@ -44,7 +44,9 @@ public class NonpersistentSchemaItemNode : IBrowserNode2, ISchemaItemFactory
 
     public void Delete()
     {
-        throw new InvalidOperationException(ResourceUtils.GetString("ErrorDeleteIndividual"));
+        throw new InvalidOperationException(
+            message: ResourceUtils.GetString(key: "ErrorDeleteIndividual")
+        );
     }
 
     public bool Hide
@@ -82,7 +84,7 @@ public class NonpersistentSchemaItemNode : IBrowserNode2, ISchemaItemFactory
                 // All ancestors
                 foreach (IBrowserNode node in parent.AllAncestors)
                 {
-                    result.Add(node);
+                    result.Add(value: node);
                 }
             }
         }
@@ -96,10 +98,11 @@ public class NonpersistentSchemaItemNode : IBrowserNode2, ISchemaItemFactory
                 {
                     if (parent.UseFolders)
                     {
-                        var description = SchemaItemDescription(item.GetType()) ?? item.ItemType;
+                        var description =
+                            SchemaItemDescription(type: item.GetType()) ?? item.ItemType;
                         if (NodeText == description)
                         {
-                            result.Add(item);
+                            result.Add(value: item);
                         }
                     }
                 }
@@ -125,13 +128,16 @@ public class NonpersistentSchemaItemNode : IBrowserNode2, ISchemaItemFactory
         T newItem;
         if (ParentNode is ISchemaItemFactory)
         {
-            newItem = (ParentNode as ISchemaItemFactory).NewItem<T>(schemaExtensionId, group);
+            newItem = (ParentNode as ISchemaItemFactory).NewItem<T>(
+                schemaExtensionId: schemaExtensionId,
+                group: group
+            );
         }
         else
         {
-            throw new Exception(ResourceUtils.GetString("ErrorUnknownParent"));
+            throw new Exception(message: ResourceUtils.GetString(key: "ErrorUnknownParent"));
         }
-        ItemCreated?.Invoke(newItem);
+        ItemCreated?.Invoke(obj: newItem);
         return newItem;
     }
 
@@ -152,10 +158,10 @@ public class NonpersistentSchemaItemNode : IBrowserNode2, ISchemaItemFactory
             var types = new List<Type>();
             foreach (var type in parent.NewItemTypes)
             {
-                var description = SchemaItemDescription(type);
+                var description = SchemaItemDescription(type: type);
                 if (description == NodeText)
                 {
-                    types.Add(type);
+                    types.Add(item: type);
                 }
             }
             return types.ToArray();
@@ -190,7 +196,7 @@ public class NonpersistentSchemaItemNode : IBrowserNode2, ISchemaItemFactory
         }
         if (obj is NonpersistentSchemaItemNode nonpersistentSchemaItemNode)
         {
-            return NodeText.CompareTo(nonpersistentSchemaItemNode.NodeText);
+            return NodeText.CompareTo(strB: nonpersistentSchemaItemNode.NodeText);
         }
         throw new InvalidCastException();
     }

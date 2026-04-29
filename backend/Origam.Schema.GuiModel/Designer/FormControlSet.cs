@@ -30,10 +30,10 @@ namespace Origam.Schema.GuiModel;
 /// <summary>
 /// Summary description for FormControlSet.
 /// </summary>
-[SchemaItemDescription("Screen", "icon_screen.png")]
-[HelpTopic("Screens")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Screen", iconName: "icon_screen.png")]
+[HelpTopic(topic: "Screens")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class FormControlSet : AbstractControlSet
 {
     public const string CategoryConst = "FormControlSet";
@@ -42,14 +42,14 @@ public class FormControlSet : AbstractControlSet
         : base() { }
 
     public FormControlSet(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(schemaExtensionId: schemaExtensionId) { }
 
     public FormControlSet(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     //refDataSource means for PanelCOntolSet reference on DataEntity object
     // (for FormControlSet refDataSource means reference on DataStructure object
-    [XmlReference("dataStructure", "DataSourceId")]
+    [XmlReference(attributeName: "dataStructure", idField: "DataSourceId")]
     public DataStructure DataStructure
     {
         get
@@ -57,9 +57,12 @@ public class FormControlSet : AbstractControlSet
             ModelElementKey key = new ModelElementKey();
             key.Id = this.DataSourceId;
             return (DataStructure)
-                this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
+                this.PersistenceProvider.RetrieveInstance(
+                    type: typeof(ISchemaItem),
+                    primaryKey: key
+                );
         }
-        set { this.DataSourceId = (Guid)value.PrimaryKey["Id"]; }
+        set { this.DataSourceId = (Guid)value.PrimaryKey[key: "Id"]; }
     }
     #region Overriden ISchemaItem Members
     public override string ItemType
@@ -79,8 +82,8 @@ public class FormControlSet : AbstractControlSet
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(this.DataStructure);
-        base.GetExtraDependencies(dependencies);
+        dependencies.Add(item: this.DataStructure);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
     #endregion
 }

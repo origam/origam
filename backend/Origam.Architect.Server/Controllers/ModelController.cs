@@ -31,7 +31,7 @@ using Origam.Workbench.Services;
 namespace Origam.Architect.Server.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route(template: "[controller]")]
 public class ModelController(
     SchemaService schemaService,
     IPersistenceService persistenceService,
@@ -40,7 +40,7 @@ public class ModelController(
 {
     private readonly IPersistenceProvider persistenceProvider = persistenceService.SchemaProvider;
 
-    [HttpGet("GetTopNodes")]
+    [HttpGet(template: "GetTopNodes")]
     public ActionResult<List<TreeNode>> GetTopNodes()
     {
         if (schemaService.ActiveExtension == null)
@@ -51,7 +51,7 @@ public class ModelController(
         return schemaService
             .ActiveExtension.ChildNodes()
             .Cast<SchemaItemProviderGroup>()
-            .Select(x => new TreeNode
+            .Select(selector: x => new TreeNode
             {
                 OrigamId = x.NodeId,
                 Id = x.NodeId + x.NodeText,
@@ -59,49 +59,58 @@ public class ModelController(
                 HasChildNodes = x.HasChildNodes,
                 Children = x.ChildNodes()
                     .Cast<ISchemaItemProvider>()
-                    .OrderBy(child => child.NodeText, StringComparer.OrdinalIgnoreCase)
-                    .Select(treeNodeFactory.Create)
+                    .OrderBy(
+                        keySelector: child => child.NodeText,
+                        comparer: StringComparer.OrdinalIgnoreCase
+                    )
+                    .Select(selector: treeNodeFactory.Create)
                     .ToList(),
             })
             .ToList();
     }
 
-    [HttpGet("GetChildren")]
+    [HttpGet(template: "GetChildren")]
     public ActionResult<List<TreeNode>> GetChildren(
         [FromQuery] string id,
         [FromQuery] bool isNonPersistentItem,
         [FromQuery] string nodeText
     )
     {
-        if (string.IsNullOrWhiteSpace(id))
+        if (string.IsNullOrWhiteSpace(value: id))
         {
-            return BadRequest("Id cannot be empty");
+            return BadRequest(error: "Id cannot be empty");
         }
 
         if (schemaService.ActiveExtension == null)
         {
-            return BadRequest("No schema extension is active");
+            return BadRequest(error: "No schema extension is active");
         }
 
-        if (Guid.TryParse(id, out var guidId))
+        if (Guid.TryParse(input: id, result: out var guidId))
         {
-            var childNodes = GetChildren(guidId, isNonPersistentItem, nodeText);
-            return Ok(childNodes);
+            var childNodes = GetChildren(
+                id: guidId,
+                isNonPersistentItem: isNonPersistentItem,
+                nodeText: nodeText
+            );
+            return Ok(value: childNodes);
         }
 
-        ISchemaItemProvider provider = GetRootProviderById(id);
+        ISchemaItemProvider provider = GetRootProviderById(id: id);
         if (provider == null)
         {
             return NotFound();
         }
 
-        List<TreeNode> nodes = GetProviderTopChildren(provider);
-        return Ok(nodes);
+        List<TreeNode> nodes = GetProviderTopChildren(provider: provider);
+        return Ok(value: nodes);
     }
 
     private List<TreeNode> GetChildren(Guid id, bool isNonPersistentItem, string nodeText)
     {
-        IBrowserNode2 provider = persistenceProvider.RetrieveInstance<IBrowserNode2>(id);
+        IBrowserNode2 provider = persistenceProvider.RetrieveInstance<IBrowserNode2>(
+            instanceId: id
+        );
         if (isNonPersistentItem)
         {
             provider = new NonpersistentSchemaItemNode
@@ -114,23 +123,23 @@ public class ModelController(
         return provider
             .ChildNodes()
             .Cast<IBrowserNode2>()
-            .OrderBy(x => x.NodeText)
-            .Where(x => x is not ISchemaItem item || item.IsPersisted)
-            .Select(treeNodeFactory.Create)
+            .OrderBy(keySelector: x => x.NodeText)
+            .Where(predicate: x => x is not ISchemaItem item || item.IsPersisted)
+            .Select(selector: treeNodeFactory.Create)
             .ToList();
     }
 
     private List<TreeNode> GetProviderTopChildren(ISchemaItemProvider provider)
     {
         List<TreeNode> nodes = provider
-            .ChildGroups.Where(x => x.ParentGroup == null)
-            .OrderBy(x => x.NodeText)
-            .Select(treeNodeFactory.Create)
+            .ChildGroups.Where(predicate: x => x.ParentGroup == null)
+            .OrderBy(keySelector: x => x.NodeText)
+            .Select(selector: treeNodeFactory.Create)
             .Concat(
-                provider
-                    .ChildItems.Where(x => x.Group == null)
-                    .OrderBy(x => x.NodeText)
-                    .Select(treeNodeFactory.Create)
+                second: provider
+                    .ChildItems.Where(predicate: x => x.Group == null)
+                    .OrderBy(keySelector: x => x.NodeText)
+                    .Select(selector: treeNodeFactory.Create)
             )
             .ToList();
         return nodes;
@@ -141,18 +150,20 @@ public class ModelController(
         ISchemaItemProvider provider = schemaService
             .ActiveExtension.ChildNodes()
             .Cast<SchemaItemProviderGroup>()
-            .SelectMany(x => x.ChildNodes().Cast<ISchemaItemProvider>())
-            .FirstOrDefault(x => x.NodeId == id);
+            .SelectMany(selector: x => x.ChildNodes().Cast<ISchemaItemProvider>())
+            .FirstOrDefault(predicate: x => x.NodeId == id);
         return provider;
     }
 
-    [HttpPost("DeleteSchemaItem")]
+    [HttpPost(template: "DeleteSchemaItem")]
     public IActionResult DeleteSchemaItem([Required] [FromBody] DeleteModel input)
     {
         ISchemaItem instance = null;
         foreach (ISchemaItemProvider provider in schemaService.Providers)
         {
-            instance = provider.ChildItemsRecursive.FirstOrDefault(x => x.Id == input.SchemaItemId);
+            instance = provider.ChildItemsRecursive.FirstOrDefault(predicate: x =>
+                x.Id == input.SchemaItemId
+            );
             if (instance != null)
             {
                 break;
@@ -172,7 +183,7 @@ public class ModelController(
         catch (InvalidOperationException ex)
         {
             persistenceProvider.EndTransactionDontSave();
-            return StatusCode(400, ex.Message);
+            return StatusCode(statusCode: 400, value: ex.Message);
         }
 
         persistenceProvider.EndTransaction();
@@ -181,31 +192,33 @@ public class ModelController(
 
     // Inspired by class Origam.Workbench.Commands.SchemaItemEditorsMenuBuilder,
     // method public AsMenuCommand[] BuildSubmenu(object owner)
-    [HttpGet("GetMenuItems")]
+    [HttpGet(template: "GetMenuItems")]
     public IEnumerable<MenuItemInfo> GetMenuItems(
         [FromQuery] string id,
         [FromQuery] bool isNonPersistentItem,
         [FromQuery] string nodeText
     )
     {
-        if (!Guid.TryParse(id, out Guid schemaItemId))
+        if (!Guid.TryParse(input: id, result: out Guid schemaItemId))
         {
-            ISchemaItemProvider provider = GetRootProviderById(id);
+            ISchemaItemProvider provider = GetRootProviderById(id: id);
             if (provider == null)
             {
                 return new List<MenuItemInfo>();
             }
 
-            return provider.NewItemTypes.Select(GetMenuInfo);
+            return provider.NewItemTypes.Select(selector: GetMenuInfo);
         }
 
-        IBrowserNode2 instance = persistenceProvider.RetrieveInstance<IBrowserNode2>(schemaItemId);
+        IBrowserNode2 instance = persistenceProvider.RetrieveInstance<IBrowserNode2>(
+            instanceId: schemaItemId
+        );
 
         ISchemaItemFactory factory = isNonPersistentItem
             ? new NonpersistentSchemaItemNode { NodeText = nodeText, ParentNode = instance }
             : (ISchemaItemFactory)instance;
 
-        return factory.NewItemTypes.Select(GetMenuInfo);
+        return factory.NewItemTypes.Select(selector: GetMenuInfo);
     }
 
     private MenuItemInfo GetMenuInfo(Type type)

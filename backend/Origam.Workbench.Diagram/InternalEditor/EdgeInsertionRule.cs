@@ -44,18 +44,18 @@ class EdgeInsertionRule : IDisposable
     {
         if (viewerToImposeOn.LayoutEditor.InsertingEdge)
         {
-            var targetNode = GetNodeUnderMouse(viewerToImposeOn, args);
-            var insertForbidden = !predicate(nodeWhenMouseDown, targetNode);
+            var targetNode = GetNodeUnderMouse(gViewer: viewerToImposeOn, args: args);
+            var insertForbidden = !predicate(arg1: nodeWhenMouseDown, arg2: targetNode);
             if (insertForbidden)
             {
-                CancelEdgeInsertion(viewerToImposeOn);
+                CancelEdgeInsertion(gViewer: viewerToImposeOn);
             }
         }
     }
 
     private void OnMouseDown(object sender, MouseEventArgs args)
     {
-        nodeWhenMouseDown = GetNodeUnderMouse(viewerToImposeOn, args);
+        nodeWhenMouseDown = GetNodeUnderMouse(gViewer: viewerToImposeOn, args: args);
     }
 
     private static void CancelEdgeInsertion(GViewer gViewer)
@@ -68,8 +68,8 @@ class EdgeInsertionRule : IDisposable
 
     private static Node GetNodeUnderMouse(GViewer gViewer, MouseEventArgs args)
     {
-        var point = new System.Drawing.Point(args.X, args.Y);
-        return (gViewer.GetObjectAt(point) as DNode)?.Node;
+        var point = new System.Drawing.Point(x: args.X, y: args.Y);
+        return (gViewer.GetObjectAt(point: point) as DNode)?.Node;
     }
 
     public void Dispose()

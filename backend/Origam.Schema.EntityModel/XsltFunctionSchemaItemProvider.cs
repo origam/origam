@@ -31,7 +31,7 @@ public class XsltFunctionSchemaItemProvider
 
     public XsltFunctionSchemaItemProvider()
     {
-        ChildItemTypes.Add(typeof(XsltFunctionCollection));
+        ChildItemTypes.Add(item: typeof(XsltFunctionCollection));
     }
 
     #region ISchemaItemProvider Members

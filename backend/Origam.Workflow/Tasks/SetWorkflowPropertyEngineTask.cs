@@ -41,29 +41,29 @@ public class SetWorkflowPropertyEngineTask : AbstractWorkflowEngineTask
     {
         SetWorkflowPropertyTask setProperty = this.Step as SetWorkflowPropertyTask;
         IXmlContainer data = this.Engine.RuleEngine.GetXmlDocumentFromData(
-            setProperty.ContextStore
+            inputData: setProperty.ContextStore
         );
         if (setProperty.Transformation != null)
         {
             IPersistenceService persistence =
-                ServiceManager.Services.GetService(typeof(IPersistenceService))
+                ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
                 as IPersistenceService;
-            IXsltEngine transform = new CompiledXsltEngine(persistence.SchemaProvider);
+            IXsltEngine transform = new CompiledXsltEngine(persistence: persistence.SchemaProvider);
             data = transform.Transform(
-                data,
-                setProperty.TransformationId,
-                new Hashtable(),
-                Engine.TransactionId,
-                null,
-                false
+                data: data,
+                transformationId: setProperty.TransformationId,
+                parameters: new Hashtable(),
+                transactionId: Engine.TransactionId,
+                outputStructure: null,
+                validateOnly: false
             );
         }
         string propertyValue = (string)
             this.Engine.RuleEngine.EvaluateContext(
-                setProperty.XPath,
-                data,
-                OrigamDataType.String,
-                null
+                xpath: setProperty.XPath,
+                context: data,
+                dataType: OrigamDataType.String,
+                targetStructure: null
             );
         string delimiter = (
             setProperty.Delimiter == @"\n" ? Environment.NewLine : setProperty.Delimiter
@@ -122,9 +122,9 @@ public class SetWorkflowPropertyEngineTask : AbstractWorkflowEngineTask
             default:
             {
                 throw new ArgumentOutOfRangeException(
-                    "WorkflowProperty",
-                    setProperty.WorkflowProperty,
-                    ResourceUtils.GetString("ErrorUnknownWorkflow")
+                    paramName: "WorkflowProperty",
+                    actualValue: setProperty.WorkflowProperty,
+                    message: ResourceUtils.GetString(key: "ErrorUnknownWorkflow")
                 );
             }
         }

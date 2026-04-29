@@ -30,18 +30,18 @@ public class QueueProcessor
 {
     private static readonly log4net.ILog log 
         = log4net.LogManager
-            .GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+            .GetLogger(type: System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
     
     private readonly TaskRunner taskRunner;
     public QueueProcessor(string queueRefCode, int parallelism, int forceWait_ms)
     {
         OrigamEngine.OrigamEngine.ConnectRuntime();
         var workQueueService = ServiceManager.Services
-            .GetService(typeof(WorkQueueService)) as WorkQueueService;
+            .GetService(serviceType: typeof(WorkQueueService)) as WorkQueueService;
         taskRunner = workQueueService.GetAutoProcessorForQueue(
-            queueRefCode,
-            parallelism,
-            forceWait_ms
+            queueRefCode: queueRefCode,
+            parallelism: parallelism,
+            forceWaitMs: forceWait_ms
         );
     }
     public void Cancel()
@@ -49,7 +49,7 @@ public class QueueProcessor
         taskRunner.Cancel();
         while (true)
         {
-            Thread.Sleep(200);
+            Thread.Sleep(millisecondsTimeout: 200);
             if (taskRunner.AllTasksFinished()) break;
         }
         taskRunner.CleanUp();
@@ -58,6 +58,6 @@ public class QueueProcessor
     {
         taskRunner.Run();
         taskRunner.Wait();
-        log.Info("DONE");
+        log.Info(message: "DONE");
     }
 }

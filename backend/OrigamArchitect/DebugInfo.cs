@@ -43,8 +43,8 @@ public class DebugInfo : IDebugInfoProvider
 {
     private IDeploymentService _deployment = null;
     private readonly ResourceTools resourceTools = new ResourceTools(
-        ServiceManager.Services.GetService<IBusinessServicesService>(),
-        SecurityManager.CurrentUserProfile
+        businessService: ServiceManager.Services.GetService<IBusinessServicesService>(),
+        userProfileGetter: SecurityManager.CurrentUserProfile
     );
 
     public DebugInfo() { }
@@ -55,105 +55,129 @@ public class DebugInfo : IDebugInfoProvider
         try
         {
             _deployment =
-                ServiceManager.Services.GetService(typeof(IDeploymentService))
+                ServiceManager.Services.GetService(serviceType: typeof(IDeploymentService))
                 as IDeploymentService;
         }
         catch { }
         SchemaService schema =
-            ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
+            ServiceManager.Services.GetService(serviceType: typeof(SchemaService)) as SchemaService;
         StringBuilder result = new StringBuilder();
         // identity info
-        AddSection("ORIGAM System Information", result);
-        AddInfo("Local Time", DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffffffzzz"), result);
-        AddInfo("XSLT Date", MyXmlDateTime(DateTime.Now), result);
+        AddSection(text: "ORIGAM System Information", builder: result);
+        AddInfo(
+            category: "Local Time",
+            data: DateTime.Now.ToString(format: "yyyy-MM-ddTHH:mm:ss.fffffffzzz"),
+            builder: result
+        );
+        AddInfo(category: "XSLT Date", data: MyXmlDateTime(date: DateTime.Now), builder: result);
         // model info
-        AddHeader("Model Repository Information", result);
-        AddInfo("Model Format Version", VersionProvider.CurrentModelMetaVersion, result);
+        AddHeader(text: "Model Repository Information", builder: result);
+        AddInfo(
+            category: "Model Format Version",
+            data: VersionProvider.CurrentModelMetaVersion,
+            builder: result
+        );
         IPersistenceService persistence =
-            ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+            ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+            as IPersistenceService;
 
         if (persistence == null)
         {
-            AddLine("Not logged in to the model repository.", result);
+            AddLine(text: "Not logged in to the model repository.", builder: result);
         }
-        AddHeader("Loaded Packages (Model Version/Deployed Version)", result);
+        AddHeader(text: "Loaded Packages (Model Version/Deployed Version)", builder: result);
         if (!schema.IsSchemaLoaded)
         {
-            AddLine("Model not loaded.", result);
+            AddLine(text: "Model not loaded.", builder: result);
         }
         else
         {
             try
             {
                 IList<Package> packages = schema.ActiveExtension.IncludedPackages;
-                packages.Add(schema.ActiveExtension);
+                packages.Add(item: schema.ActiveExtension);
                 foreach (Package package in packages)
                 {
-                    _deployment.CanUpdate(package);
+                    _deployment.CanUpdate(extension: package);
                     AddInfo(
-                        package.Name,
-                        package.VersionString + "/" + _deployment.CurrentDeployedVersion(package),
-                        result
+                        category: package.Name,
+                        data: package.VersionString
+                            + "/"
+                            + _deployment.CurrentDeployedVersion(extension: package),
+                        builder: result
                     );
                 }
             }
             catch
             {
-                AddLine("Package references have been changed. Reload the model first.", result);
+                AddLine(
+                    text: "Package references have been changed. Reload the model first.",
+                    builder: result
+                );
             }
         }
-        AddHeader("Activated Features", result);
+        AddHeader(text: "Activated Features", builder: result);
         if (!schema.IsSchemaLoaded)
         {
-            AddLine("Model not loaded.", result);
+            AddLine(text: "Model not loaded.", builder: result);
         }
         else
         {
             IParameterService param =
-                ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
+                ServiceManager.Services.GetService(serviceType: typeof(IParameterService))
+                as IParameterService;
             param.RefreshParameters();
             FeatureSchemaItemProvider p =
-                schema.GetProvider(typeof(FeatureSchemaItemProvider)) as FeatureSchemaItemProvider;
+                schema.GetProvider(type: typeof(FeatureSchemaItemProvider))
+                as FeatureSchemaItemProvider;
             var features = p.ChildItems.ToList();
             features.Sort();
             foreach (Feature f in features)
             {
-                if (param.IsFeatureOn(f.Name))
+                if (param.IsFeatureOn(featureCode: f.Name))
                 {
-                    AddLine(f.Name, result);
+                    AddLine(text: f.Name, builder: result);
                 }
             }
         }
         // computer name, time
-        AddHeader("Computer Information", result);
-        AddInfo("Current Directory", Environment.CurrentDirectory, result);
-        AddInfo("Machine Name", Environment.MachineName, result);
-        AddInfo("OS Version", Environment.OSVersion, result);
-        AddInfo("Product Version", Application.ProductVersion, result);
-        AddInfo("CLR Version", Environment.Version, result);
+        AddHeader(text: "Computer Information", builder: result);
+        AddInfo(category: "Current Directory", data: Environment.CurrentDirectory, builder: result);
+        AddInfo(category: "Machine Name", data: Environment.MachineName, builder: result);
+        AddInfo(category: "OS Version", data: Environment.OSVersion, builder: result);
+        AddInfo(category: "Product Version", data: Application.ProductVersion, builder: result);
+        AddInfo(category: "CLR Version", data: Environment.Version, builder: result);
         try
         {
-            Assembly asm = Assembly.GetAssembly(typeof(System.Data.DataSet));
+            Assembly asm = Assembly.GetAssembly(type: typeof(System.Data.DataSet));
 
             System.Diagnostics.FileVersionInfo fvi =
-                System.Diagnostics.FileVersionInfo.GetVersionInfo(asm.Location);
+                System.Diagnostics.FileVersionInfo.GetVersionInfo(fileName: asm.Location);
             string version = fvi.FileVersion;
-            AddInfo("System.data.dll Version", version, result);
+            AddInfo(category: "System.data.dll Version", data: version, builder: result);
         }
         catch { }
-        AddInfo("Current Culture", Application.CurrentCulture.EnglishName, result);
-        AddInfo("Current Input Language", Application.CurrentInputLanguage.LayoutName, result);
-        AddInfo("Memory Working Set", Environment.WorkingSet, result);
-        AddInfo("System Directory", Environment.SystemDirectory, result);
+        AddInfo(
+            category: "Current Culture",
+            data: Application.CurrentCulture.EnglishName,
+            builder: result
+        );
+        AddInfo(
+            category: "Current Input Language",
+            data: Application.CurrentInputLanguage.LayoutName,
+            builder: result
+        );
+        AddInfo(category: "Memory Working Set", data: Environment.WorkingSet, builder: result);
+        AddInfo(category: "System Directory", data: Environment.SystemDirectory, builder: result);
         try
         {
-            AddInfo("Executable Path", Application.ExecutablePath, result);
+            AddInfo(category: "Executable Path", data: Application.ExecutablePath, builder: result);
             AddInfo(
-                "Application Data Path",
-                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                result
+                category: "Application Data Path",
+                data: Environment.GetFolderPath(folder: Environment.SpecialFolder.ApplicationData),
+                builder: result
             );
-            AddInfo("Startup Path", Application.StartupPath, result);
+            AddInfo(category: "Startup Path", data: Application.StartupPath, builder: result);
         }
         catch { }
 
@@ -161,28 +185,40 @@ public class DebugInfo : IDebugInfoProvider
         {
             if (IsRemoteSession())
             {
-                AddHeader("Terminal Server Information", result);
-                AddInfo("Client Computer Name", GetTSClientName(WTS_CURRENT_SESSION), result);
-                AddInfo("Client Computer Address", GetTSClientAddress(WTS_CURRENT_SESSION), result);
-                AddLine(GetTSClientDisplay(WTS_CURRENT_SESSION), result);
+                AddHeader(text: "Terminal Server Information", builder: result);
+                AddInfo(
+                    category: "Client Computer Name",
+                    data: GetTSClientName(sessionID: WTS_CURRENT_SESSION),
+                    builder: result
+                );
+                AddInfo(
+                    category: "Client Computer Address",
+                    data: GetTSClientAddress(sessionID: WTS_CURRENT_SESSION),
+                    builder: result
+                );
+                AddLine(text: GetTSClientDisplay(sessionID: WTS_CURRENT_SESSION), builder: result);
             }
         }
         catch (Exception ex)
         {
             result.AppendFormat(
-                "The following exception occured while getting terminal session information: {0}{1}{2}",
-                Environment.NewLine,
-                ex.Message,
-                Environment.NewLine
+                format: "The following exception occured while getting terminal session information: {0}{1}{2}",
+                arg0: Environment.NewLine,
+                arg1: ex.Message,
+                arg2: Environment.NewLine
             );
         }
         // profile info
-        AddHeader("Authentication Information", result);
-        AddInfo("Identity Name", SecurityManager.CurrentPrincipal.Identity.Name, result);
+        AddHeader(text: "Authentication Information", builder: result);
         AddInfo(
-            "Identity Authentication Type",
-            SecurityManager.CurrentPrincipal.Identity.AuthenticationType,
-            result
+            category: "Identity Name",
+            data: SecurityManager.CurrentPrincipal.Identity.Name,
+            builder: result
+        );
+        AddInfo(
+            category: "Identity Authentication Type",
+            data: SecurityManager.CurrentPrincipal.Identity.AuthenticationType,
+            builder: result
         );
 
         IOrigamProfileProvider profileProvider = null;
@@ -193,109 +229,133 @@ public class DebugInfo : IDebugInfoProvider
         }
         catch (Exception ex)
         {
-            AddInfo("Profile Provider", "Error loading profile provider. " + ex.Message, result);
+            AddInfo(
+                category: "Profile Provider",
+                data: "Error loading profile provider. " + ex.Message,
+                builder: result
+            );
         }
         if (profileProvider == null)
         {
-            AddInfo("Profile Provider", "None", result);
+            AddInfo(category: "Profile Provider", data: "None", builder: result);
         }
         else
         {
-            AddInfo("Profile Provider", profileProvider.GetType().ToString(), result);
+            AddInfo(
+                category: "Profile Provider",
+                data: profileProvider.GetType().ToString(),
+                builder: result
+            );
             try
             {
                 UserProfile profile = SecurityManager.CurrentUserProfile();
-                AddInfo("Profile Id", profile.Id, result);
-                AddInfo("Profile Name", profile.FullName, result);
-                AddInfo("Profile Email", profile.Email, result);
-                AddInfo("Profile Resource Id", profile.ResourceId, result);
-                AddInfo("Profile Business Unit Id", profile.BusinessUnitId, result);
-                AddInfo("Profile Organization Id", profile.OrganizationId, result);
+                AddInfo(category: "Profile Id", data: profile.Id, builder: result);
+                AddInfo(category: "Profile Name", data: profile.FullName, builder: result);
+                AddInfo(category: "Profile Email", data: profile.Email, builder: result);
+                AddInfo(category: "Profile Resource Id", data: profile.ResourceId, builder: result);
+                AddInfo(
+                    category: "Profile Business Unit Id",
+                    data: profile.BusinessUnitId,
+                    builder: result
+                );
+                AddInfo(
+                    category: "Profile Organization Id",
+                    data: profile.OrganizationId,
+                    builder: result
+                );
             }
             catch (Exception ex)
             {
                 result.AppendFormat(
-                    "The following exception occured while loading current user's profile: {0}{1}{2}",
-                    Environment.NewLine,
-                    ex.Message,
-                    Environment.NewLine
+                    format: "The following exception occured while loading current user's profile: {0}{1}{2}",
+                    arg0: Environment.NewLine,
+                    arg1: ex.Message,
+                    arg2: Environment.NewLine
                 );
             }
         }
         // role info
-        AddHeader("Role Information", result);
+        AddHeader(text: "Role Information", builder: result);
         try
         {
             IOrigamAuthorizationProvider authorizationProvider =
                 SecurityManager.GetAuthorizationProvider();
             if (authorizationProvider == null)
             {
-                AddInfo("Authorization Provider", "None", result);
+                AddInfo(category: "Authorization Provider", data: "None", builder: result);
             }
             else
             {
                 AddInfo(
-                    "Authorization Provider",
-                    authorizationProvider.GetType().ToString(),
-                    result
+                    category: "Authorization Provider",
+                    data: authorizationProvider.GetType().ToString(),
+                    builder: result
                 );
             }
         }
         catch (Exception ex)
         {
             result.AppendFormat(
-                "The following exception occured while loading Authorization:  {0}{1}{2}",
-                Environment.NewLine,
-                ex.Message,
-                Environment.NewLine
+                format: "The following exception occured while loading Authorization:  {0}{1}{2}",
+                arg0: Environment.NewLine,
+                arg1: ex.Message,
+                arg2: Environment.NewLine
             );
         }
 
         // resource info (from rule engine)
-        AddHeader("Resource Management Information", result);
+        AddHeader(text: "Resource Management Information", builder: result);
         try
         {
-            AddInfo("Active Resource Id", resourceTools.ResourceIdByActiveProfile(), result);
+            AddInfo(
+                category: "Active Resource Id",
+                data: resourceTools.ResourceIdByActiveProfile(),
+                builder: result
+            );
         }
         catch (Exception ex)
         {
-            AddLine("Could not get resource information. The following error occured:", result);
-            AddLine(ex.Message, result);
+            AddLine(
+                text: "Could not get resource information. The following error occured:",
+                builder: result
+            );
+            AddLine(text: ex.Message, builder: result);
         }
         // service info (connection strings, remote time, errors...)
-        AddLine("", result);
-        AddSection("Service Information", result);
+        AddLine(text: "", builder: result);
+        AddSection(text: "Service Information", builder: result);
         ServiceSchemaItemProvider services =
-            schema.GetProvider(typeof(ServiceSchemaItemProvider)) as ServiceSchemaItemProvider;
+            schema.GetProvider(type: typeof(ServiceSchemaItemProvider))
+            as ServiceSchemaItemProvider;
 
         if (services == null)
         {
-            AddLine("Model is not loaded. Services are not available.", result);
+            AddLine(text: "Model is not loaded. Services are not available.", builder: result);
         }
         else
         {
             IBusinessServicesService serviceProvider =
-                ServiceManager.Services.GetService(typeof(IBusinessServicesService))
+                ServiceManager.Services.GetService(serviceType: typeof(IBusinessServicesService))
                 as IBusinessServicesService;
             foreach (Schema.WorkflowModel.Service service in services.ChildItems)
             {
-                AddHeader(service.Name, result);
+                AddHeader(text: service.Name, builder: result);
                 try
                 {
                     IServiceAgent agent = serviceProvider.GetAgent(
-                        service.Name,
-                        RuleEngine.Create(null, null),
-                        null
+                        serviceType: service.Name,
+                        ruleEngine: RuleEngine.Create(contextStores: null, transactionId: null),
+                        workflowEngine: null
                     );
-                    AddLine(agent.Info, result);
+                    AddLine(text: agent.Info, builder: result);
                 }
                 catch (Exception ex)
                 {
                     AddLine(
-                        "The following error occured while fetching service information:",
-                        result
+                        text: "The following error occured while fetching service information:",
+                        builder: result
                     );
-                    AddLine(ex.Message, result);
+                    AddLine(text: ex.Message, builder: result);
                 }
             }
         }
@@ -343,11 +403,11 @@ public class DebugInfo : IDebugInfoProvider
         WTSClientProtocolType,
     };
 
-    [DllImport("user32.dll", EntryPoint = ("GetSystemMetrics"))]
+    [DllImport(dllName: "user32.dll", EntryPoint = ("GetSystemMetrics"))]
     public static extern bool GetSystemMetrics(int nIndex);
 
     [DllImport(
-        "wtsapi32.dll",
+        dllName: "wtsapi32.dll",
         EntryPoint = "WTSQuerySessionInformation",
         CallingConvention = CallingConvention.Cdecl
     )]
@@ -360,7 +420,7 @@ public class DebugInfo : IDebugInfoProvider
     );
 
     [DllImport(
-        "wtsapi32.dll",
+        dllName: "wtsapi32.dll",
         EntryPoint = "WTSFreeMemory",
         CallingConvention = CallingConvention.Cdecl
     )]
@@ -368,7 +428,7 @@ public class DebugInfo : IDebugInfoProvider
 
     private bool IsRemoteSession()
     {
-        return GetSystemMetrics(SM_REMOTESESSION);
+        return GetSystemMetrics(nIndex: SM_REMOTESESSION);
     }
 
     private string GetTSClientProtocolType(int sessionID)
@@ -379,15 +439,15 @@ public class DebugInfo : IDebugInfoProvider
         string protocoleType = "";
         if (
             WTSQuerySessionInformation(
-                System.IntPtr.Zero,
-                sessionID,
-                WTSInfoClass.WTSClientProtocolType,
-                out ppBuffer,
-                out pBytesReturned
+                hServer: System.IntPtr.Zero,
+                sessionId: sessionID,
+                wtsInfoClass: WTSInfoClass.WTSClientProtocolType,
+                ppBuffer: out ppBuffer,
+                pBytesReturned: out pBytesReturned
             )
         )
         {
-            protocoleID = Marshal.ReadInt32(ppBuffer);
+            protocoleID = Marshal.ReadInt32(ptr: ppBuffer);
             switch (protocoleID)
             {
                 case WTS_PROTOCOL_TYPE_CONSOLE:
@@ -414,7 +474,7 @@ public class DebugInfo : IDebugInfoProvider
                 }
             }
         }
-        WTSFreeMemory(ppBuffer);
+        WTSFreeMemory(ppBuffer: ppBuffer);
         return protocoleType;
     }
 
@@ -425,17 +485,17 @@ public class DebugInfo : IDebugInfoProvider
         string productID = "";
         if (
             WTSQuerySessionInformation(
-                System.IntPtr.Zero,
-                sessionID,
-                WTSInfoClass.WTSClientProductId,
-                out ppBuffer,
-                out pBytesReturned
+                hServer: System.IntPtr.Zero,
+                sessionId: sessionID,
+                wtsInfoClass: WTSInfoClass.WTSClientProductId,
+                ppBuffer: out ppBuffer,
+                pBytesReturned: out pBytesReturned
             )
         )
         {
-            productID = Marshal.PtrToStringAnsi(ppBuffer);
+            productID = Marshal.PtrToStringAnsi(ptr: ppBuffer);
         }
-        WTSFreeMemory(ppBuffer);
+        WTSFreeMemory(ppBuffer: ppBuffer);
         return productID;
     }
 
@@ -447,18 +507,18 @@ public class DebugInfo : IDebugInfoProvider
         string clientName = "";
         if (
             WTSQuerySessionInformation(
-                System.IntPtr.Zero,
-                sessionID,
-                WTSInfoClass.WTSClientName,
-                out ppBuffer,
-                out pBytesReturned
+                hServer: System.IntPtr.Zero,
+                sessionId: sessionID,
+                wtsInfoClass: WTSInfoClass.WTSClientName,
+                ppBuffer: out ppBuffer,
+                pBytesReturned: out pBytesReturned
             )
         )
         {
             adrBuffer = (int)ppBuffer;
-            clientName = Marshal.PtrToStringAnsi((System.IntPtr)adrBuffer);
+            clientName = Marshal.PtrToStringAnsi(ptr: (System.IntPtr)adrBuffer);
         }
-        WTSFreeMemory(ppBuffer);
+        WTSFreeMemory(ppBuffer: ppBuffer);
         return clientName;
     }
 
@@ -473,28 +533,29 @@ public class DebugInfo : IDebugInfoProvider
         Type dataType = typeof(WTS_CLIENT_DISPLAY);
         if (
             WTSQuerySessionInformation(
-                System.IntPtr.Zero,
-                sessionID,
-                WTSInfoClass.WTSClientDisplay,
-                out ppBuffer,
-                out pBytesReturned
+                hServer: System.IntPtr.Zero,
+                sessionId: sessionID,
+                wtsInfoClass: WTSInfoClass.WTSClientDisplay,
+                ppBuffer: out ppBuffer,
+                pBytesReturned: out pBytesReturned
             )
         )
         {
-            clientDisplay = (WTS_CLIENT_DISPLAY)Marshal.PtrToStructure(ppBuffer, dataType);
+            clientDisplay = (WTS_CLIENT_DISPLAY)
+                Marshal.PtrToStructure(ptr: ppBuffer, structureType: dataType);
             sDisplay.Append(
-                "Display Horizontal: "
+                value: "Display Horizontal: "
                     + (clientDisplay.HorizontalResolution).ToString()
                     + Environment.NewLine
             );
             sDisplay.Append(
-                "Display Vertical: "
+                value: "Display Vertical: "
                     + (clientDisplay.VerticalResolution).ToString()
                     + Environment.NewLine
             );
-            sDisplay.Append("Display Color Depth: " + (clientDisplay.ColorDepth).ToString());
+            sDisplay.Append(value: "Display Color Depth: " + (clientDisplay.ColorDepth).ToString());
         }
-        WTSFreeMemory(ppBuffer);
+        WTSFreeMemory(ppBuffer: ppBuffer);
         return sDisplay.ToString();
     }
 
@@ -508,11 +569,11 @@ public class DebugInfo : IDebugInfoProvider
 
         if (
             WTSQuerySessionInformation(
-                System.IntPtr.Zero,
-                sessionID,
-                WTSInfoClass.WTSClientAddress,
-                out ppBuffer,
-                out pBytesReturned
+                hServer: System.IntPtr.Zero,
+                sessionId: sessionID,
+                wtsInfoClass: WTSInfoClass.WTSClientAddress,
+                ppBuffer: out ppBuffer,
+                pBytesReturned: out pBytesReturned
             )
         )
         {
@@ -523,11 +584,11 @@ public class DebugInfo : IDebugInfoProvider
             int run = (int)ppBuffer; // pointeur sur les donn�es
             Type t = typeof(Byte);
             Type t1 = typeof(uint);
-            int uintSize = Marshal.SizeOf(t1);
-            int byteSize = Marshal.SizeOf(t);
+            int uintSize = Marshal.SizeOf(t: t1);
+            int byteSize = Marshal.SizeOf(t: t);
 
             //-- Lecture du type d'@
-            wtsAdr.AddressFamily = (uint)Marshal.ReadInt32((System.IntPtr)run);
+            wtsAdr.AddressFamily = (uint)Marshal.ReadInt32(ptr: (System.IntPtr)run);
 
             //run+=uintSize;
             //run+=dataSize;
@@ -544,48 +605,52 @@ public class DebugInfo : IDebugInfoProvider
             }*/
             for (int i = 0; i < pBytesReturned - 1; i++)
             {
-                wtsAdr.Address[i] = Marshal.ReadByte((System.IntPtr)run);
+                wtsAdr.Address[i] = Marshal.ReadByte(ptr: (System.IntPtr)run);
                 run += byteSize;
                 // TO GET and to SEE ALL the DATA
                 //builder.Append(wtsAdr.Address[i].ToString()+"-");
             }
             //builder.Append("-");
-            builder.Append((wtsAdr.Address[4 + 2]).ToString());
-            builder.Append(".");
-            builder.Append((wtsAdr.Address[4 + 3]).ToString());
-            builder.Append(".");
-            builder.Append((wtsAdr.Address[4 + 4]).ToString());
-            builder.Append(".");
-            builder.Append((wtsAdr.Address[4 + 5]).ToString());
+            builder.Append(value: (wtsAdr.Address[4 + 2]).ToString());
+            builder.Append(value: ".");
+            builder.Append(value: (wtsAdr.Address[4 + 3]).ToString());
+            builder.Append(value: ".");
+            builder.Append(value: (wtsAdr.Address[4 + 4]).ToString());
+            builder.Append(value: ".");
+            builder.Append(value: (wtsAdr.Address[4 + 5]).ToString());
             // L'offset de 4 est du au fait que le type uint fait 4 Bytes et
             // le type de connexion est pris dans l'ensemble des donn�es
         }
-        WTSFreeMemory(ppBuffer);
+        WTSFreeMemory(ppBuffer: ppBuffer);
         return builder.ToString();
     }
 
     void AddSection(string text, StringBuilder builder)
     {
-        builder.Append("===============================================" + Environment.NewLine);
-        builder.AppendFormat("====== {0}{1}", text, Environment.NewLine);
-        builder.Append("===============================================" + Environment.NewLine);
+        builder.Append(
+            value: "===============================================" + Environment.NewLine
+        );
+        builder.AppendFormat(format: "====== {0}{1}", arg0: text, arg1: Environment.NewLine);
+        builder.Append(
+            value: "===============================================" + Environment.NewLine
+        );
     }
 
     void AddHeader(string text, StringBuilder builder)
     {
-        builder.Append(Environment.NewLine);
-        builder.Append(text);
+        builder.Append(value: Environment.NewLine);
+        builder.Append(value: text);
         builder.AppendFormat(
-            "{0}{1}{2}",
-            Environment.NewLine,
-            "===============================================",
-            Environment.NewLine
+            format: "{0}{1}{2}",
+            arg0: Environment.NewLine,
+            arg1: "===============================================",
+            arg2: Environment.NewLine
         );
     }
 
     void AddLine(string text, StringBuilder builder)
     {
-        builder.AppendFormat("{0}{1}", text, Environment.NewLine);
+        builder.AppendFormat(format: "{0}{1}", arg0: text, arg1: Environment.NewLine);
     }
 
     void AddInfo(string category, object data, StringBuilder builder)
@@ -599,36 +664,41 @@ public class DebugInfo : IDebugInfoProvider
         {
             text = data.ToString();
         }
-        builder.AppendFormat("{0}: {1}{2}", category, text, Environment.NewLine);
+        builder.AppendFormat(
+            format: "{0}: {1}{2}",
+            arg0: category,
+            arg1: text,
+            arg2: Environment.NewLine
+        );
     }
 
     private string[] GetWindowsIdentityRoles(WindowsIdentity identity)
     {
         object result = typeof(WindowsIdentity).InvokeMember(
-            "_GetRoles",
-            BindingFlags.Static | BindingFlags.InvokeMethod | BindingFlags.NonPublic,
-            null,
-            identity,
-            new object[] { identity.Token },
-            null
+            name: "_GetRoles",
+            invokeAttr: BindingFlags.Static | BindingFlags.InvokeMethod | BindingFlags.NonPublic,
+            binder: null,
+            target: identity,
+            args: new object[] { identity.Token },
+            culture: null
         );
         return (string[])result;
     }
 
     private string MyXmlDateTime(DateTime date)
     {
-        TimeSpan offset = TimeZone.CurrentTimeZone.GetUtcOffset(date);
-        int daylight = TimeZone.CurrentTimeZone.GetDaylightChanges(date.Year).Delta.Hours;
+        TimeSpan offset = TimeZone.CurrentTimeZone.GetUtcOffset(time: date);
+        int daylight = TimeZone.CurrentTimeZone.GetDaylightChanges(year: date.Year).Delta.Hours;
         int hours = offset.Duration().Hours;
         int finalHours = hours; // + daylight;
         string sign = finalHours >= 0 ? "+" : "-";
         string result =
-            date.ToString("yyyy-MM-dd")
+            date.ToString(format: "yyyy-MM-dd")
             + "T00:00:00.0000000"
             + sign
-            + finalHours.ToString("00")
+            + finalHours.ToString(format: "00")
             + ":"
-            + offset.Minutes.ToString("00");
+            + offset.Minutes.ToString(format: "00");
         return result;
     }
     #endregion

@@ -29,7 +29,7 @@ using Origam.Workbench.Services;
 namespace Origam.Architect.Server.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route(template: "[controller]")]
 public class DeploymentScriptsGeneratorController(
     SchemaService schemaService,
     ISchemaDbCompareResultsService schemaDbCompareResultsService,
@@ -37,19 +37,19 @@ public class DeploymentScriptsGeneratorController(
     IAddToModelService addToModelService
 ) : ControllerBase
 {
-    [HttpGet("List")]
+    [HttpGet(template: "List")]
     public IActionResult List([FromQuery] string platform)
     {
         ContextGuardAndResolver();
 
         ListResponseModel response = schemaDbCompareResultsService.PrepareListResponseModel(
-            platform
+            platform: platform
         );
 
-        return Ok(response);
+        return Ok(value: response);
     }
 
-    [HttpPost("AddToDeployment")]
+    [HttpPost(template: "AddToDeployment")]
     public IActionResult AddToDeployment(
         [Required] [FromBody] AddToDeploymentRequestModel requestModel
     )
@@ -57,20 +57,23 @@ public class DeploymentScriptsGeneratorController(
         ContextGuardAndResolver();
 
         addToDeploymentService.Process(
-            requestModel.Platform,
-            requestModel.DeploymentVersionId,
-            requestModel.SchemaItemIds
+            platform: requestModel.Platform,
+            deploymentVersionId: requestModel.DeploymentVersionId,
+            schemaItemIdList: requestModel.SchemaItemIds
         );
 
         return Ok();
     }
 
-    [HttpPost("AddToModel")]
+    [HttpPost(template: "AddToModel")]
     public IActionResult AddToModel([Required] [FromBody] AddToModelRequestModel requestModel)
     {
         ContextGuardAndResolver();
 
-        addToModelService.Process(requestModel.Platform, requestModel.SchemaItemNames);
+        addToModelService.Process(
+            platform: requestModel.Platform,
+            schemaItemNames: requestModel.SchemaItemNames
+        );
 
         return Ok();
     }
@@ -80,7 +83,7 @@ public class DeploymentScriptsGeneratorController(
         if (schemaService.ActiveExtension == null || schemaService.ActiveExtension.Id == Guid.Empty)
         {
             throw new InvalidOperationException(
-                "Active extension (package) is not set (activeExtensionId missing)."
+                message: "Active extension (package) is not set (activeExtensionId missing)."
             );
         }
 

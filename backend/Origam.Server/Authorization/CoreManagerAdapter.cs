@@ -35,7 +35,7 @@ public class CoreManagerAdapter : IManager
 {
     private readonly CoreUserManager<IOrigamUser> coreUserManager;
     private readonly IMailService mailService;
-    protected static readonly ILog log = LogManager.GetLogger(typeof(CoreManagerAdapter));
+    protected static readonly ILog log = LogManager.GetLogger(type: typeof(CoreManagerAdapter));
     private readonly IStringLocalizer<SharedResources> localizer;
 
     public CoreManagerAdapter(
@@ -51,15 +51,15 @@ public class CoreManagerAdapter : IManager
 
     public async Task<IOrigamUser> FindByNameAsync(string name, string transaction = null)
     {
-        return await coreUserManager.FindByNameAsync(name, transaction);
+        return await coreUserManager.FindByNameAsync(name: name, transactionId: transaction);
     }
 
     private async Task<IOrigamUser> FindByIdAsync(string userId)
     {
-        var user = await coreUserManager.FindByIdAsync(userId);
+        var user = await coreUserManager.FindByIdAsync(userId: userId);
         if (log.IsDebugEnabled)
         {
-            log.DebugFormat("User not found...");
+            log.DebugFormat(format: "User not found...");
         }
         return user;
     }
@@ -71,78 +71,89 @@ public class CoreManagerAdapter : IManager
         string answer
     )
     {
-        return Task.FromResult(false);
+        return Task.FromResult(result: false);
     }
 
     public async Task<bool> IsLockedOutAsync(string userId)
     {
-        var user = await FindByIdAsync(userId);
+        var user = await FindByIdAsync(userId: userId);
         if (user == null)
         {
             return false;
         }
-        return await coreUserManager.IsLockedOutAsync(user);
+        return await coreUserManager.IsLockedOutAsync(user: user);
     }
 
     public async Task<bool> GetTwoFactorEnabledAsync(string userId)
     {
-        var user = await FindByIdAsync(userId);
+        var user = await FindByIdAsync(userId: userId);
         if (user == null)
         {
             return false;
         }
-        return await coreUserManager.GetTwoFactorEnabledAsync(user);
+        return await coreUserManager.GetTwoFactorEnabledAsync(user: user);
     }
 
     public async Task<bool> SetTwoFactorEnabledAsync(string userId, bool enabled)
     {
-        var user = await FindByIdAsync(userId);
+        var user = await FindByIdAsync(userId: userId);
         if (user == null)
         {
             return false;
         }
-        return (await coreUserManager.SetTwoFactorEnabledAsync(user, enabled)).Succeeded;
+        return (
+            await coreUserManager.SetTwoFactorEnabledAsync(user: user, enabled: enabled)
+        ).Succeeded;
     }
 
     public async Task<bool> IsEmailConfirmedAsync(string userId)
     {
-        var user = await FindByIdAsync(userId);
+        var user = await FindByIdAsync(userId: userId);
         if (user == null)
         {
             return false;
         }
-        return await coreUserManager.IsEmailConfirmedAsync(user);
+        return await coreUserManager.IsEmailConfirmedAsync(user: user);
     }
 
     public async Task<bool> UnlockUserAsync(string userName)
     {
-        var user = await FindByNameAsync(userName);
+        var user = await FindByNameAsync(name: userName);
         if (user == null)
         {
             return false;
         }
-        Task<IdentityResult> unlockTask = coreUserManager.SetLockoutEndDateAsync(user, null);
+        Task<IdentityResult> unlockTask = coreUserManager.SetLockoutEndDateAsync(
+            user: user,
+            lockoutEnd: null
+        );
         bool success = (await unlockTask).Succeeded;
         if (success)
         {
-            mailService.SendUserUnlockedMessage(user);
+            mailService.SendUserUnlockedMessage(user: user);
         }
         return success;
     }
 
     public async Task<InternalIdentityResult> ConfirmEmailAsync(string userId)
     {
-        var user = await FindByIdAsync(userId);
-        string token = await coreUserManager.GenerateEmailConfirmationTokenAsync(user);
-        IdentityResult coreIdentityResult = await coreUserManager.ConfirmEmailAsync(user, token);
-        return ToInternalIdentityResult(coreIdentityResult);
+        var user = await FindByIdAsync(userId: userId);
+        string token = await coreUserManager.GenerateEmailConfirmationTokenAsync(user: user);
+        IdentityResult coreIdentityResult = await coreUserManager.ConfirmEmailAsync(
+            user: user,
+            token: token
+        );
+        return ToInternalIdentityResult(result: coreIdentityResult);
     }
 
     public async Task<InternalIdentityResult> ConfirmEmailAsync(string userId, string token)
     {
-        var user = await FindByIdAsync(userId);
-        IdentityResult coreIdentityResult = await coreUserManager.ConfirmEmailAsync(user, token);
-        return ToInternalIdentityResult(coreIdentityResult);
+        var user = await FindByIdAsync(userId: userId);
+        IdentityResult coreIdentityResult = await coreUserManager.ConfirmEmailAsync(
+            user: user,
+            token: token
+        );
+        return ToInternalIdentityResult(result: coreIdentityResult);
     }
 
     public async Task<InternalIdentityResult> ChangePasswordAsync(
@@ -151,13 +162,13 @@ public class CoreManagerAdapter : IManager
         string newPassword
     )
     {
-        var user = await FindByIdAsync(userId);
+        var user = await FindByIdAsync(userId: userId);
         IdentityResult coreIdentityResult = await coreUserManager.ChangePasswordAsync(
-            user,
-            currentPassword,
-            newPassword
+            user: user,
+            currentPassword: currentPassword,
+            newPassword: newPassword
         );
-        return ToInternalIdentityResult(coreIdentityResult);
+        return ToInternalIdentityResult(result: coreIdentityResult);
     }
 
     public async Task<InternalIdentityResult> ResetPasswordFromUsernameAsync(
@@ -166,60 +177,60 @@ public class CoreManagerAdapter : IManager
         string newPassword
     )
     {
-        var user = await FindByNameAsync(userName);
+        var user = await FindByNameAsync(name: userName);
         IdentityResult coreIdentityResult = await coreUserManager.ResetPasswordAsync(
-            user,
-            token,
-            newPassword
+            user: user,
+            token: token,
+            newPassword: newPassword
         );
-        return ToInternalIdentityResult(coreIdentityResult);
+        return ToInternalIdentityResult(result: coreIdentityResult);
     }
 
     public async Task<InternalIdentityResult> DeleteAsync(IOrigamUser user)
     {
-        IdentityResult coreIdentityResult = await coreUserManager.DeleteAsync(user);
-        return ToInternalIdentityResult(coreIdentityResult);
+        IdentityResult coreIdentityResult = await coreUserManager.DeleteAsync(user: user);
+        return ToInternalIdentityResult(result: coreIdentityResult);
     }
 
     public async Task<InternalIdentityResult> UpdateAsync(IOrigamUser user)
     {
-        IdentityResult coreIdentityResult = await coreUserManager.UpdateAsync(user);
-        return ToInternalIdentityResult(coreIdentityResult);
+        IdentityResult coreIdentityResult = await coreUserManager.UpdateAsync(user: user);
+        return ToInternalIdentityResult(result: coreIdentityResult);
     }
 
     public async void SendNewUserToken(string userName)
     {
-        IOrigamUser user = await FindByIdAsync(userName);
-        string token = await coreUserManager.GenerateEmailConfirmationTokenAsync(user);
-        mailService.SendNewUserToken(user, token);
+        IOrigamUser user = await FindByIdAsync(userId: userName);
+        string token = await coreUserManager.GenerateEmailConfirmationTokenAsync(user: user);
+        mailService.SendNewUserToken(user: user, token: token);
     }
 
     public Task<InternalIdentityResult> CreateAsync(IOrigamUser user, string password)
     {
-        Task<IdentityResult> task = coreUserManager.CreateAsync(user, password);
+        Task<IdentityResult> task = coreUserManager.CreateAsync(user: user, password: password);
         IdentityResult identity = task.Result;
         List<string> errors = identity
-            .Errors.Select(error =>
+            .Errors.Select(selector: error =>
             {
                 return error.Description;
             })
             .ToList();
         if (errors.Count > 0)
         {
-            return Task.FromResult(new InternalIdentityResult(errors));
+            return Task.FromResult(result: new InternalIdentityResult(errors: errors));
         }
-        return Task.FromResult(InternalIdentityResult.Success);
+        return Task.FromResult(result: InternalIdentityResult.Success);
     }
 
     public async Task<string> GenerateEmailConfirmationTokenAsync(string userId)
     {
-        var user = await FindByIdAsync(userId);
-        return await coreUserManager.GenerateEmailConfirmationTokenAsync(user);
+        var user = await FindByIdAsync(userId: userId);
+        return await coreUserManager.GenerateEmailConfirmationTokenAsync(user: user);
     }
 
     public async Task<TokenResult> GetPasswordResetTokenFromEmailAsync(string email)
     {
-        IOrigamUser user = await coreUserManager.FindByEmailAsync(email);
+        IOrigamUser user = await coreUserManager.FindByEmailAsync(email: email);
 
         if (user == null)
         {
@@ -227,11 +238,11 @@ public class CoreManagerAdapter : IManager
             {
                 Token = "",
                 UserName = "",
-                ErrorMessage = localizer["EmailInvalid"],
+                ErrorMessage = localizer[name: "EmailInvalid"],
                 TokenValidityHours = 0,
             };
         }
-        string token = await GeneratePasswordResetTokenAsync(user.BusinessPartnerId);
+        string token = await GeneratePasswordResetTokenAsync(userId: user.BusinessPartnerId);
 
         return new TokenResult
         {
@@ -244,25 +255,25 @@ public class CoreManagerAdapter : IManager
 
     public async Task<string> GeneratePasswordResetTokenAsync(string userId)
     {
-        var user = await FindByIdAsync(userId);
-        return await coreUserManager.GeneratePasswordResetTokenAsync(user);
+        var user = await FindByIdAsync(userId: userId);
+        return await coreUserManager.GeneratePasswordResetTokenAsync(user: user);
     }
 
     public Task<XmlDocument> GetPasswordAttributesAsync()
     {
-        return Task.FromResult(new XmlDocument());
+        return Task.FromResult(result: new XmlDocument());
     }
 
     private static InternalIdentityResult ToInternalIdentityResult(IdentityResult result)
     {
-        string[] errors = result.Errors.Select(error => error.Description).ToArray();
+        string[] errors = result.Errors.Select(selector: error => error.Description).ToArray();
         return result.Succeeded
             ? InternalIdentityResult.Success
-            : InternalIdentityResult.Failed(errors);
+            : InternalIdentityResult.Failed(errors: errors);
     }
 
     public IOrigamUser CreateUserObject(string userName)
     {
-        return new User(userName);
+        return new User(userName: userName);
     }
 }

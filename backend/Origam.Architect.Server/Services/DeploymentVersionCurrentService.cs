@@ -32,10 +32,12 @@ public class DeploymentVersionCurrentService(
 {
     public void SetVersionCurrent(DeploymentVersion deploymentVersion)
     {
-        var isDirtyEditorExists = editorService.GetOpenEditors().Any(x => x.IsDirty);
+        var isDirtyEditorExists = editorService.GetOpenEditors().Any(predicate: x => x.IsDirty);
         if (isDirtyEditorExists)
         {
-            throw new Exception(Strings.DeploymentScripts_ModelNotSavedBeforeVersionChange);
+            throw new Exception(
+                message: Strings.DeploymentScripts_ModelNotSavedBeforeVersionChange
+            );
         }
 
         SecurityManager.SetServerIdentity();

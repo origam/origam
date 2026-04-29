@@ -27,10 +27,14 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.GuiModel;
 
-[SchemaItemDescription("Vertical Axis", "Vertical Axes", "icon_vertical-axis.png")]
-[HelpTopic("Vertical+Axis")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(
+    name: "Vertical Axis",
+    folderName: "Vertical Axes",
+    iconName: "icon_vertical-axis.png"
+)]
+[HelpTopic(topic: "Vertical+Axis")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class CartesianChartVerticalAxis : AbstractSchemaItem
 {
     public const string CategoryConst = "CartesianChartVerticalAxis";
@@ -42,13 +46,13 @@ public class CartesianChartVerticalAxis : AbstractSchemaItem
     }
 
     public CartesianChartVerticalAxis(Guid schemaExtensionId)
-        : base(schemaExtensionId)
+        : base(extensionId: schemaExtensionId)
     {
         Init();
     }
 
     public CartesianChartVerticalAxis(Key primaryKey)
-        : base(primaryKey)
+        : base(primaryKey: primaryKey)
     {
         Init();
     }
@@ -58,9 +62,9 @@ public class CartesianChartVerticalAxis : AbstractSchemaItem
     #region Properties
     private string _caption = "";
 
-    [Category("Axis")]
-    [Localizable(true)]
-    [XmlAttribute("label")]
+    [Category(category: "Axis")]
+    [Localizable(isLocalizable: true)]
+    [XmlAttribute(attributeName: "label")]
     public string Caption
     {
         get { return _caption; }
@@ -68,8 +72,8 @@ public class CartesianChartVerticalAxis : AbstractSchemaItem
     }
     private int _min = 0;
 
-    [Category("Limits"), DefaultValue(0)]
-    [XmlAttribute("minimum")]
+    [Category(category: "Limits"), DefaultValue(value: 0)]
+    [XmlAttribute(attributeName: "minimum")]
     public int Min
     {
         get { return _min; }
@@ -77,8 +81,8 @@ public class CartesianChartVerticalAxis : AbstractSchemaItem
     }
     private int _max = 0;
 
-    [Category("Limits"), DefaultValue(0)]
-    [XmlAttribute("maximum")]
+    [Category(category: "Limits"), DefaultValue(value: 0)]
+    [XmlAttribute(attributeName: "maximum")]
     public int Max
     {
         get { return _max; }
@@ -86,8 +90,8 @@ public class CartesianChartVerticalAxis : AbstractSchemaItem
     }
     private bool _applyMin = false;
 
-    [Category("Limits"), DefaultValue(false)]
-    [XmlAttribute("applyMinimumLimit")]
+    [Category(category: "Limits"), DefaultValue(value: false)]
+    [XmlAttribute(attributeName: "applyMinimumLimit")]
     public bool ApplyMinLimit
     {
         get { return _applyMin; }
@@ -95,8 +99,8 @@ public class CartesianChartVerticalAxis : AbstractSchemaItem
     }
     private bool _applyMax = false;
 
-    [Category("Limits"), DefaultValue(false)]
-    [XmlAttribute("applyMaximumLimit")]
+    [Category(category: "Limits"), DefaultValue(value: false)]
+    [XmlAttribute(attributeName: "applyMaximumLimit")]
     public bool ApplyMaxLimit
     {
         get { return _applyMax; }

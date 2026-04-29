@@ -52,8 +52,8 @@ public enum CredentialValueType
 /// <summary>
 /// Summary description for EntitySecurityRule.
 /// </summary>
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public abstract class AbstractEntitySecurityRule : AbstractSchemaItem, IComparable
 {
     public const string CategoryConst = "EntitySecurityRule";
@@ -62,10 +62,10 @@ public abstract class AbstractEntitySecurityRule : AbstractSchemaItem, IComparab
         : base() { }
 
     public AbstractEntitySecurityRule(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public AbstractEntitySecurityRule(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Overriden AbstractDataEntityColumn Members
 
@@ -81,14 +81,14 @@ public abstract class AbstractEntitySecurityRule : AbstractSchemaItem, IComparab
     {
         if (this.Rule != null)
         {
-            base.GetParameterReferences(Rule, list);
+            base.GetParameterReferences(parentItem: Rule, list: list);
         }
     }
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(this.Rule);
-        base.GetExtraDependencies(dependencies);
+        dependencies.Add(item: this.Rule);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override void UpdateReferences()
@@ -97,7 +97,7 @@ public abstract class AbstractEntitySecurityRule : AbstractSchemaItem, IComparab
         {
             if (item.OldPrimaryKey != null && this.Rule != null)
             {
-                if (item.OldPrimaryKey.Equals(this.Rule.PrimaryKey))
+                if (item.OldPrimaryKey.Equals(obj: this.Rule.PrimaryKey))
                 {
                     this.Rule = item as IEntityRule;
                     break;
@@ -114,7 +114,7 @@ public abstract class AbstractEntitySecurityRule : AbstractSchemaItem, IComparab
 
     public override bool CanMove(Origam.UI.IBrowserNode2 newNode)
     {
-        return (this.ParentItem.GetType()).Equals(newNode.GetType());
+        return (this.ParentItem.GetType()).Equals(o: newNode.GetType());
     }
     #endregion
     #region Functions
@@ -131,7 +131,7 @@ public abstract class AbstractEntitySecurityRule : AbstractSchemaItem, IComparab
         }
         if (this.Roles != null)
         {
-            name += "_" + this.Roles.Replace(";", "_");
+            name += "_" + this.Roles.Replace(oldValue: ";", newValue: "_");
         }
 
         this.Name = name;
@@ -147,9 +147,9 @@ public abstract class AbstractEntitySecurityRule : AbstractSchemaItem, IComparab
 
     private string _roles = "";
 
-    [Category("Security"), RefreshProperties(RefreshProperties.Repaint)]
+    [Category(category: "Security"), RefreshProperties(refresh: RefreshProperties.Repaint)]
     [StringNotEmptyModelElementRule()]
-    [XmlAttribute("roles")]
+    [XmlAttribute(attributeName: "roles")]
     public string Roles
     {
         get { return _roles; }
@@ -161,9 +161,9 @@ public abstract class AbstractEntitySecurityRule : AbstractSchemaItem, IComparab
     }
     private PermissionType _permissionType;
 
-    [Category("Security"), RefreshProperties(RefreshProperties.Repaint)]
+    [Category(category: "Security"), RefreshProperties(refresh: RefreshProperties.Repaint)]
     [NotNullModelElementRule()]
-    [XmlAttribute("type")]
+    [XmlAttribute(attributeName: "type")]
     public PermissionType Type
     {
         get { return _permissionType; }
@@ -175,9 +175,13 @@ public abstract class AbstractEntitySecurityRule : AbstractSchemaItem, IComparab
     }
     private int _level = 100;
 
-    [Category("Security"), DefaultValue(100), RefreshProperties(RefreshProperties.Repaint)]
+    [
+        Category(category: "Security"),
+        DefaultValue(value: 100),
+        RefreshProperties(refresh: RefreshProperties.Repaint)
+    ]
     [NotNullModelElementRule()]
-    [XmlAttribute("level")]
+    [XmlAttribute(attributeName: "level")]
     public int Level
     {
         get { return _level; }
@@ -190,12 +194,12 @@ public abstract class AbstractEntitySecurityRule : AbstractSchemaItem, IComparab
     private CredentialValueType _valueType = CredentialValueType.SavedValue;
 
     [
-        Category("Security"),
-        DefaultValue(CredentialValueType.SavedValue),
-        RefreshProperties(RefreshProperties.Repaint)
+        Category(category: "Security"),
+        DefaultValue(value: CredentialValueType.SavedValue),
+        RefreshProperties(refresh: RefreshProperties.Repaint)
     ]
     [NotNullModelElementRule()]
-    [XmlAttribute("valueType")]
+    [XmlAttribute(attributeName: "valueType")]
     public CredentialValueType ValueType
     {
         get { return _valueType; }
@@ -208,23 +212,23 @@ public abstract class AbstractEntitySecurityRule : AbstractSchemaItem, IComparab
 
     public Guid RuleId;
 
-    [TypeConverter(typeof(EntityRuleConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [Category("Security")]
-    [XmlReference("rule", "RuleId")]
+    [TypeConverter(type: typeof(EntityRuleConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [Category(category: "Security")]
+    [XmlReference(attributeName: "rule", idField: "RuleId")]
     public virtual IEntityRule Rule
     {
         get
         {
             return (IEntityRule)
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(this.RuleId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: this.RuleId)
                 );
         }
         set
         {
-            this.RuleId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
+            this.RuleId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]);
 
             UpdateName();
         }
@@ -237,17 +241,17 @@ public abstract class AbstractEntitySecurityRule : AbstractSchemaItem, IComparab
         if (compared != null)
         {
             // sort first by ValueType
-            int tempResult = this.ValueType.CompareTo(compared.ValueType);
+            int tempResult = this.ValueType.CompareTo(target: compared.ValueType);
             if (tempResult == 0) // same
             {
                 // then by level
-                return this.Level.CompareTo(compared.Level);
+                return this.Level.CompareTo(value: compared.Level);
             }
 
             return 0 - tempResult; // we reverse because actualValue is more important than savedValue
         }
 
-        return base.CompareTo(obj);
+        return base.CompareTo(obj: obj);
     }
     #endregion
 }

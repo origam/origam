@@ -36,18 +36,18 @@ public class InitFileModelBuilderTask : AbstractDatabaseBuilderTask, IInitFileMo
     {
         var settings = new OrigamSettings
         {
-            DataConnectionString = BuildConnectionStringArchitect(project),
+            DataConnectionString = BuildConnectionStringArchitect(project: project),
             ModelSourceControlLocation = project.ModelFolder,
             DataDataService = project.GetDataDataService,
         };
-        ConfigurationManager.SetActiveConfiguration(settings);
+        ConfigurationManager.SetActiveConfiguration(configuration: settings);
 
         OrigamEngine.OrigamEngine.InitializeRuntimeServices();
         SchemaService = ServiceManager.Services.GetService<SchemaService>();
         SchemaService.SchemaLoaded += EventHandler_SchemaLoaded!;
 
         SchemaService.LoadSchema(
-            schemaExtensionId: new Guid(project.BasePackageId),
+            schemaExtensionId: new Guid(g: project.BasePackageId),
             isInteractive: true
         );
     }
@@ -60,7 +60,7 @@ public class InitFileModelBuilderTask : AbstractDatabaseBuilderTask, IInitFileMo
 
     private void EventHandler_SchemaLoaded(object sender, bool isInteractive)
     {
-        OrigamEngine.OrigamEngine.InitializeSchemaItemProviders(SchemaService);
+        OrigamEngine.OrigamEngine.InitializeSchemaItemProviders(service: SchemaService);
         var deployment = ServiceManager.Services.GetService<IDeploymentService>();
         var parameterService = ServiceManager.Services.GetService<IParameterService>();
 
@@ -77,7 +77,7 @@ public class InitFileModelBuilderTask : AbstractDatabaseBuilderTask, IInitFileMo
     {
         if (project.DatabaseType == DatabaseType.MsSql)
         {
-            return DataService(project.DatabaseType)
+            return DataService(databaseType: project.DatabaseType)
                 .BuildConnectionString(
                     serverName: project.DatabaseHost,
                     port: project.DatabasePort,
@@ -91,7 +91,7 @@ public class InitFileModelBuilderTask : AbstractDatabaseBuilderTask, IInitFileMo
 
         if (project.DatabaseType == DatabaseType.PgSql)
         {
-            return DataService(project.DatabaseType)
+            return DataService(databaseType: project.DatabaseType)
                 .BuildConnectionString(
                     serverName: project.DatabaseHost,
                     port: project.DatabasePort,

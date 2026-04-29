@@ -40,29 +40,29 @@ public enum DatabaseMappingObjectType
 /// <summary>
 /// Maps physical table to an entity.
 /// </summary>
-[SchemaItemDescription("Database Entity", "icon_database-entity.png")]
-[HelpTopic("Entities")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Database Entity", iconName: "icon_database-entity.png")]
+[HelpTopic(topic: "Entities")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class TableMappingItem : AbstractDataEntity
 {
     public TableMappingItem() { }
 
     public TableMappingItem(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(schemaExtensionId: schemaExtensionId) { }
 
     public TableMappingItem(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Properties
     private string _sourceTableName;
 
     [IndexNameLengthLimit]
-    [Category("(Schema Item)")]
+    [Category(category: "(Schema Item)")]
     [StringNotEmptyModelElementRule]
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [XmlAttribute("name")]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [XmlAttribute(attributeName: "name")]
     [Description(
-        "Name of the model element. The name is mainly used for giving the model elements a human readable name. In some cases the name is an identificator of the model element (e.g. for defining XML structures or for requesting constants from XSLT tranformations)."
+        description: "Name of the model element. The name is mainly used for giving the model elements a human readable name. In some cases the name is an identificator of the model element (e.g. for defining XML structures or for requesting constants from XSLT tranformations)."
     )]
     public override string Name
     {
@@ -71,12 +71,12 @@ public class TableMappingItem : AbstractDataEntity
     }
 
     [LengthLimit]
-    [Category("Mapping")]
+    [Category(category: "Mapping")]
     [StringNotEmptyModelElementRule()]
     [Description(
-        "Name of the database table name. When loading data from a database for this entity, this name will be used as the table name."
+        description: "Name of the database table name. When loading data from a database for this entity, this name will be used as the table name."
     )]
-    [XmlAttribute("mappedObjectName")]
+    [XmlAttribute(attributeName: "mappedObjectName")]
     public string MappedObjectName
     {
         get { return _sourceTableName; }
@@ -84,11 +84,11 @@ public class TableMappingItem : AbstractDataEntity
     }
     private DatabaseMappingObjectType _databaseObjectType = DatabaseMappingObjectType.Table;
 
-    [Category("Mapping"), DefaultValue(DatabaseMappingObjectType.Table)]
+    [Category(category: "Mapping"), DefaultValue(value: DatabaseMappingObjectType.Table)]
     [Description(
-        "Type of the database object - View or Table. For views the deployment scripts will not be generated."
+        description: "Type of the database object - View or Table. For views the deployment scripts will not be generated."
     )]
-    [XmlAttribute("databaseObjectType")]
+    [XmlAttribute(attributeName: "databaseObjectType")]
     public DatabaseMappingObjectType DatabaseObjectType
     {
         get { return _databaseObjectType; }
@@ -96,11 +96,11 @@ public class TableMappingItem : AbstractDataEntity
     }
     private bool _generateDeploymentScript = true;
 
-    [Category("Mapping"), DefaultValue(true)]
+    [Category(category: "Mapping"), DefaultValue(value: true)]
     [Description(
-        "Indicates if deployment scripts will be generated for this entity. If set to false, this entity will be skipped from the deployment scripts generator. This is useful e.g. if creating a duplicate entity (from the same table as another one)."
+        description: "Indicates if deployment scripts will be generated for this entity. If set to false, this entity will be skipped from the deployment scripts generator. This is useful e.g. if creating a duplicate entity (from the same table as another one)."
     )]
-    [XmlAttribute("generateDeploymentScript")]
+    [XmlAttribute(attributeName: "generateDeploymentScript")]
     public bool GenerateDeploymentScript
     {
         get { return _generateDeploymentScript; }
@@ -109,8 +109,8 @@ public class TableMappingItem : AbstractDataEntity
 
     public Guid LocalizationRelationId = Guid.Empty;
 
-    [TypeConverter(typeof(EntityRelationConverter))]
-    [XmlReference("localizationRelation", "LocalizationRelationId")]
+    [TypeConverter(type: typeof(EntityRelationConverter))]
+    [XmlReference(attributeName: "localizationRelation", idField: "LocalizationRelationId")]
     //[RefreshProperties(RefreshProperties.Repaint)]
     public EntityRelationItem LocalizationRelation
     {
@@ -118,14 +118,14 @@ public class TableMappingItem : AbstractDataEntity
         {
             return (EntityRelationItem)
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(EntityRelationItem),
-                    new ModelElementKey(this.LocalizationRelationId)
+                    type: typeof(EntityRelationItem),
+                    primaryKey: new ModelElementKey(id: this.LocalizationRelationId)
                 );
         }
         set
         {
             this.LocalizationRelationId =
-                (value == null) ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+                (value == null) ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"];
         }
     }
     #endregion
@@ -159,7 +159,7 @@ public class TableMappingItem : AbstractDataEntity
         }
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public override List<IDataEntityColumn> EntityPrimaryKey
     {
         get
@@ -169,7 +169,7 @@ public class TableMappingItem : AbstractDataEntity
             {
                 if (column.IsPrimaryKey && column is FieldMappingItem)
                 {
-                    list.Add(column);
+                    list.Add(item: column);
                 }
             }
             return list;
@@ -185,17 +185,20 @@ public class TableMappingItem : AbstractDataEntity
     {
         if (type == typeof(DetachedEntity))
         {
-            var methodInfo = typeof(Function).GetMethod("ConvertTo", BindingFlags.NonPublic);
-            var genericMethodInfo = methodInfo.MakeGenericMethod(type);
-            return (ISchemaItem)genericMethodInfo.Invoke(this, null);
+            var methodInfo = typeof(Function).GetMethod(
+                name: "ConvertTo",
+                bindingAttr: BindingFlags.NonPublic
+            );
+            var genericMethodInfo = methodInfo.MakeGenericMethod(typeArguments: type);
+            return (ISchemaItem)genericMethodInfo.Invoke(obj: this, parameters: null);
         }
-        return base.ConvertTo(type);
+        return base.ConvertTo(type: type);
     }
 
     protected override ISchemaItem ConvertTo<T>()
     {
-        var converted = RootProvider.NewItem<T>(SchemaExtensionId, Group);
-        converted.PrimaryKey["Id"] = this.PrimaryKey["Id"];
+        var converted = RootProvider.NewItem<T>(schemaExtensionId: SchemaExtensionId, group: Group);
+        converted.PrimaryKey[key: "Id"] = this.PrimaryKey[key: "Id"];
         converted.Name = this.Name;
         converted.IsAbstract = this.IsAbstract;
         // we have to delete first (also from the cache)
@@ -214,9 +217,9 @@ public class TableMappingItem : AbstractDataEntity
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(this.LocalizationRelation);
+        dependencies.Add(item: this.LocalizationRelation);
 
-        base.GetExtraDependencies(dependencies);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override void UpdateReferences()
@@ -225,7 +228,7 @@ public class TableMappingItem : AbstractDataEntity
         {
             if (item.OldPrimaryKey != null && this.LocalizationRelation != null)
             {
-                if (item.OldPrimaryKey.Equals(this.LocalizationRelation.PrimaryKey))
+                if (item.OldPrimaryKey.Equals(obj: this.LocalizationRelation.PrimaryKey))
                 {
                     this.LocalizationRelation = item as EntityRelationItem;
                     break;

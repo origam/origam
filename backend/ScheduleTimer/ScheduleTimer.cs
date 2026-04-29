@@ -47,7 +47,12 @@ public class ScheduleTimerBase
     /// method.  Any unbound object parameters will get this Job object passed in.</param>
     public void AddJob(IScheduledItem Schedule, Delegate f, params object[] Params)
     {
-        _Jobs.Add(new TimerJob(Schedule, new DelegateMethodCall(f, Params)));
+        _Jobs.Add(
+            Event: new TimerJob(
+                schedule: Schedule,
+                method: new DelegateMethodCall(f: f, Params: Params)
+            )
+        );
     }
 
     /// <summary>
@@ -59,9 +64,12 @@ public class ScheduleTimerBase
     /// method.  Any unbound object parameters will get this Job object passed in.</param>
     public void AddAsyncJob(IScheduledItem Schedule, Delegate f, params object[] Params)
     {
-        TimerJob Event = new TimerJob(Schedule, new DelegateMethodCall(f, Params));
+        TimerJob Event = new TimerJob(
+            schedule: Schedule,
+            method: new DelegateMethodCall(f: f, Params: Params)
+        );
         Event.SyncronizedEvent = false;
-        _Jobs.Add(Event);
+        _Jobs.Add(Event: Event);
     }
 
     /// <summary>
@@ -70,7 +78,7 @@ public class ScheduleTimerBase
     /// <param name="Event"></param>
     public void AddJob(TimerJob Event)
     {
-        _Jobs.Add(Event);
+        _Jobs.Add(Event: Event);
     }
 
     /// <summary>
@@ -87,7 +95,7 @@ public class ScheduleTimerBase
     public void Start()
     {
         _StopFlag = false;
-        QueueNextTime(EventStorage.ReadLastTime());
+        QueueNextTime(thisTime: EventStorage.ReadLastTime());
     }
 
     /// <summary>
@@ -109,7 +117,7 @@ public class ScheduleTimerBase
     /// <summary>
     /// This is here to enhance accuracy.  Even if nothing is scheduled the timer sleeps for a maximum of 1 minute.
     /// </summary>
-    private static TimeSpan MAX_INTERVAL = new TimeSpan(0, 1, 0);
+    private static TimeSpan MAX_INTERVAL = new TimeSpan(hours: 0, minutes: 1, seconds: 0);
     private DateTime _LastTime;
     private Timer _Timer;
     private TimerJobList _Jobs;
@@ -117,7 +125,7 @@ public class ScheduleTimerBase
 
     private double NextInterval(DateTime thisTime)
     {
-        TimeSpan interval = _Jobs.NextRunTime(thisTime) - thisTime;
+        TimeSpan interval = _Jobs.NextRunTime(time: thisTime) - thisTime;
         if (interval > MAX_INTERVAL)
         {
             interval = MAX_INTERVAL;
@@ -128,10 +136,10 @@ public class ScheduleTimerBase
 
     private void QueueNextTime(DateTime thisTime)
     {
-        _Timer.Interval = NextInterval(thisTime);
-        System.Diagnostics.Debug.WriteLine(_Timer.Interval);
+        _Timer.Interval = NextInterval(thisTime: thisTime);
+        System.Diagnostics.Debug.WriteLine(value: _Timer.Interval);
         _LastTime = thisTime;
-        EventStorage.RecordLastTime(thisTime);
+        EventStorage.RecordLastTime(Time: thisTime);
         _Timer.Start();
     }
 
@@ -149,23 +157,23 @@ public class ScheduleTimerBase
             {
                 try
                 {
-                    Event.Execute(this, _LastTime, e.SignalTime, Error);
+                    Event.Execute(sender: this, Begin: _LastTime, End: e.SignalTime, Error: Error);
                 }
                 catch (Exception ex)
                 {
-                    OnError(DateTime.Now, Event, ex);
+                    OnError(eventTime: DateTime.Now, job: Event, e: ex);
                 }
             }
         }
         catch (Exception ex)
         {
-            OnError(DateTime.Now, null, ex);
+            OnError(eventTime: DateTime.Now, job: null, e: ex);
         }
         finally
         {
             if (_StopFlag == false)
             {
-                QueueNextTime(e.SignalTime);
+                QueueNextTime(thisTime: e.SignalTime);
             }
         }
     }
@@ -179,7 +187,7 @@ public class ScheduleTimerBase
 
         try
         {
-            Error(this, new ExceptionEventArgs(eventTime, e));
+            Error(sender: this, Args: new ExceptionEventArgs(eventTime: eventTime, e: e));
         }
         catch (Exception) { }
     }
@@ -196,10 +204,13 @@ public class ScheduleTimer : ScheduleTimerBase
     {
         if (Elapsed == null)
         {
-            throw new ArgumentNullException("Elapsed", "member variable is null.");
+            throw new ArgumentNullException(
+                paramName: "Elapsed",
+                message: "member variable is null."
+            );
         }
 
-        AddJob(new TimerJob(Schedule, new DelegateMethodCall(Elapsed)));
+        AddJob(Event: new TimerJob(schedule: Schedule, method: new DelegateMethodCall(f: Elapsed)));
     }
 
     /// <summary>

@@ -62,10 +62,10 @@ public class AsDataViewColumn : DataGridTextBoxColumn
         // called before AsDateBox has a chance to update it's state.
         // This handler is called after the update is complete so that
         // the Commit method can update the dataSource with the new data.
-        if (GetColumnValueAtRow(dataSource, rowNum) != AsDateBox.DateValue)
+        if (GetColumnValueAtRow(source: dataSource, rowNum: rowNum) != AsDateBox.DateValue)
         {
             _isEditing = true;
-            Commit(dataSource, rowNum);
+            Commit(dataSource: dataSource, rowNum: rowNum);
         }
     }
 
@@ -93,7 +93,7 @@ public class AsDataViewColumn : DataGridTextBoxColumn
                 AsDateBox = null;
             }
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
         _isDisposed = true;
     }
 
@@ -107,7 +107,7 @@ public class AsDataViewColumn : DataGridTextBoxColumn
         _isEditing = false;
         AsDateBox.dateValueChanged -= new EventHandler(AsDateBox_dateValueChanged);
         Invalidate();
-        base.Abort(rowNum);
+        base.Abort(rowNum: rowNum);
     }
 
     protected override void Edit(
@@ -127,9 +127,9 @@ public class AsDataViewColumn : DataGridTextBoxColumn
             if (ruleEngine != null)
             {
                 AsDateBox.ReadOnly = !ruleEngine.EvaluateRowLevelSecurityState(
-                    (source.Current as DataRowView).Row,
-                    this.MappingName,
-                    Schema.EntityModel.CredentialType.Update
+                    row: (source.Current as DataRowView).Row,
+                    field: this.MappingName,
+                    type: Schema.EntityModel.CredentialType.Update
                 );
             }
         }
@@ -139,16 +139,26 @@ public class AsDataViewColumn : DataGridTextBoxColumn
         }
         if (cellIsVisible)
         {
-            base.Edit(source, rowNum, bounds, readOnly, instantText, cellIsVisible);
+            base.Edit(
+                source: source,
+                rowNum: rowNum,
+                bounds: bounds,
+                readOnly: readOnly,
+                displayText: instantText,
+                cellIsVisible: cellIsVisible
+            );
             this.AsDateBox.Enabled = true;
 
             AsDateBox.Parent = this.TextBox.Parent;
             AsDateBox.Location = bounds.Location;
             //AsDateBox.Location = this.TextBox.Location;
-            AsDateBox.Size = new Size(this.TextBox.Size.Width, AsDateBox.Size.Height);
+            AsDateBox.Size = new Size(
+                width: this.TextBox.Size.Width,
+                height: AsDateBox.Size.Height
+            );
             try
             {
-                object val = this.GetColumnValueAtRow(source, rowNum);
+                object val = this.GetColumnValueAtRow(source: source, rowNum: rowNum);
                 AsDateBox.DateValue = val;
                 //AsDateBox.DateValue =  Convert.ToDateTime(this.TextBox.Text);
             }
@@ -188,19 +198,22 @@ public class AsDataViewColumn : DataGridTextBoxColumn
         {
             try
             {
-                SetColumnValueAtRow(dataSource, rowNum, AsDateBox.DateValue);
+                SetColumnValueAtRow(source: dataSource, rowNum: rowNum, value: AsDateBox.DateValue);
                 // force form items to reread data values to prevent loss of data
-                DataBindingTools.UpdateBindedFormComponent(dataSource.Bindings, MappingName);
+                DataBindingTools.UpdateBindedFormComponent(
+                    bindings: dataSource.Bindings,
+                    mappingName: MappingName
+                );
             }
             catch (Exception)
             {
-                Abort(rowNum);
+                Abort(rowNum: rowNum);
                 return false;
             }
         }
         else
         {
-            Abort(rowNum);
+            Abort(rowNum: rowNum);
         }
 
         _isEditing = false;
@@ -229,7 +242,7 @@ public class AsDataViewColumn : DataGridTextBoxColumn
     {
         if (_isEditing)
         {
-            base.SetColumnValueAtRow(source, rowNum, value);
+            base.SetColumnValueAtRow(source: source, rowNum: rowNum, value: value);
         }
     }
 
@@ -245,25 +258,37 @@ public class AsDataViewColumn : DataGridTextBoxColumn
     {
         Brush myBackBrush = backBrush;
         Brush myForeBrush = foreBrush;
-        EntityFormatting formatting = DataGridColumnStyleHelper.Formatting(this, source, rowNum);
+        EntityFormatting formatting = DataGridColumnStyleHelper.Formatting(
+            columnStyle: this,
+            source: source,
+            rowNum: rowNum
+        );
         if (formatting != null)
         {
             if (!formatting.UseDefaultBackColor)
             {
-                myBackBrush = new SolidBrush(formatting.BackColor);
+                myBackBrush = new SolidBrush(color: formatting.BackColor);
             }
 
             if (!formatting.UseDefaultForeColor)
             {
-                myForeBrush = new SolidBrush(formatting.ForeColor);
+                myForeBrush = new SolidBrush(color: formatting.ForeColor);
             }
         }
-        base.Paint(g, bounds, source, rowNum, myBackBrush, myForeBrush, alignToRight);
+        base.Paint(
+            g: g,
+            bounds: bounds,
+            source: source,
+            rowNum: rowNum,
+            backBrush: myBackBrush,
+            foreBrush: myForeBrush,
+            alignToRight: alignToRight
+        );
     }
 
     private void AsDateBox_dateValueChanged(object sender, EventArgs e)
     {
         _isEditing = true;
-        base.ColumnStartedEditing((Control)sender);
+        base.ColumnStartedEditing(editingControl: (Control)sender);
     }
 }

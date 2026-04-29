@@ -30,8 +30,8 @@ using Origam.Schema.EntityModel.Interfaces;
 
 namespace Origam.Schema.GuiModel;
 
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public abstract class AbstractPage : AbstractSchemaItem, IAuthorizationContextContainer
 {
     public const string CategoryConst = "Page";
@@ -43,13 +43,13 @@ public abstract class AbstractPage : AbstractSchemaItem, IAuthorizationContextCo
     }
 
     public AbstractPage(Guid schemaExtensionId)
-        : base(schemaExtensionId)
+        : base(extensionId: schemaExtensionId)
     {
         Init();
     }
 
     public AbstractPage(Key primaryKey)
-        : base(primaryKey)
+        : base(primaryKey: primaryKey)
     {
         Init();
     }
@@ -58,10 +58,10 @@ public abstract class AbstractPage : AbstractSchemaItem, IAuthorizationContextCo
     {
         if (this.InputValidationRule != null)
         {
-            dependencies.Add(this.InputValidationRule);
+            dependencies.Add(item: this.InputValidationRule);
         }
 
-        base.GetExtraDependencies(dependencies);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     private void Init() { }
@@ -69,9 +69,9 @@ public abstract class AbstractPage : AbstractSchemaItem, IAuthorizationContextCo
     #region Properties
     private string _url = "";
 
-    [Category("Page")]
+    [Category(category: "Page")]
     [StringNotEmptyModelElementRule()]
-    [XmlAttribute("url")]
+    [XmlAttribute(attributeName: "url")]
     public string Url
     {
         get { return _url; }
@@ -79,9 +79,9 @@ public abstract class AbstractPage : AbstractSchemaItem, IAuthorizationContextCo
     }
     private string _roles;
 
-    [Category("Security")]
+    [Category(category: "Security")]
     [NotNullModelElementRule()]
-    [XmlAttribute("roles")]
+    [XmlAttribute(attributeName: "roles")]
     public string Roles
     {
         get { return _roles; }
@@ -89,30 +89,31 @@ public abstract class AbstractPage : AbstractSchemaItem, IAuthorizationContextCo
     }
     public Guid InputValidationRuleId;
 
-    [Category("InputValidation")]
+    [Category(category: "InputValidation")]
     [Description(
-        "Validate input parameters. Can validate input parameters before any further action is taken."
+        description: "Validate input parameters. Can validate input parameters before any further action is taken."
     )]
-    [TypeConverter(typeof(EndRuleConverter))]
-    [XmlReference("inputValidationRule", "InputValidationRuleId")]
+    [TypeConverter(type: typeof(EndRuleConverter))]
+    [XmlReference(attributeName: "inputValidationRule", idField: "InputValidationRuleId")]
     public IEndRule InputValidationRule
     {
         get
         {
             return (IEndRule)
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(this.InputValidationRuleId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: this.InputValidationRuleId)
                 );
         }
         set
         {
-            this.InputValidationRuleId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+            this.InputValidationRuleId =
+                value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"];
         }
     }
     private string _features;
 
-    [XmlAttribute("features")]
+    [XmlAttribute(attributeName: "features")]
     public string Features
     {
         get { return _features; }
@@ -124,32 +125,33 @@ public abstract class AbstractPage : AbstractSchemaItem, IAuthorizationContextCo
     }
     public Guid CacheMaxAgeDataConstantId;
 
-    [Category("Caching")]
+    [Category(category: "Caching")]
     [Description(
-        "Sets the number of seconds by which the result should be cached in the user's browser. If not specified the content will not get cached."
+        description: "Sets the number of seconds by which the result should be cached in the user's browser. If not specified the content will not get cached."
     )]
-    [TypeConverter(typeof(DataConstantConverter))]
-    [XmlReference("cacheMaxAge", "CacheMaxAgeDataConstantId")]
+    [TypeConverter(type: typeof(DataConstantConverter))]
+    [XmlReference(attributeName: "cacheMaxAge", idField: "CacheMaxAgeDataConstantId")]
     public DataConstant CacheMaxAge
     {
         get
         {
             return (DataConstant)
                 PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(CacheMaxAgeDataConstantId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: CacheMaxAgeDataConstantId)
                 );
         }
         set
         {
-            CacheMaxAgeDataConstantId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+            CacheMaxAgeDataConstantId =
+                value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"];
         }
     }
     private string _mimeType;
 
-    [Category("Page")]
+    [Category(category: "Page")]
     [StringNotEmptyModelElementRule()]
-    [XmlAttribute("mimeType")]
+    [XmlAttribute(attributeName: "mimeType")]
     public string MimeType
     {
         get { return _mimeType; }
@@ -157,8 +159,8 @@ public abstract class AbstractPage : AbstractSchemaItem, IAuthorizationContextCo
     }
     private bool _allowPUT;
 
-    [Category("Updating")]
-    [XmlAttribute("allowPut")]
+    [Category(category: "Updating")]
+    [XmlAttribute(attributeName: "allowPut")]
     public bool AllowPUT
     {
         get { return _allowPUT; }
@@ -166,8 +168,8 @@ public abstract class AbstractPage : AbstractSchemaItem, IAuthorizationContextCo
     }
     private bool _allowDELETE;
 
-    [Category("Updating")]
-    [XmlAttribute("allowDelete")]
+    [Category(category: "Updating")]
+    [XmlAttribute(attributeName: "allowDelete")]
     public bool AllowDELETE
     {
         get { return _allowDELETE; }
@@ -175,7 +177,7 @@ public abstract class AbstractPage : AbstractSchemaItem, IAuthorizationContextCo
     }
     #endregion
     #region IAuthorizationContextContainer
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public string AuthorizationContext
     {
         get { return this.Roles; }

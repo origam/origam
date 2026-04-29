@@ -39,12 +39,12 @@ namespace Origam.workflow.mail;
 class WorkQueueImapLoaderAdapter : WorkQueueLoaderAdapter
 {
     private static readonly Regex InvalidXmlCharacterRegex = new(
-        @"[^\u0009\u000A\u000D\u0020-\uD7FF\uE000-\uFFFD\uD800-\uDBFF\uDC00-\uDFFF]",
-        RegexOptions.Compiled
+        pattern: @"[^\u0009\u000A\u000D\u0020-\uD7FF\uE000-\uFFFD\uD800-\uDBFF\uDC00-\uDFFF]",
+        options: RegexOptions.Compiled
     );
 
     private static readonly ILog log = LogManager.GetLogger(
-        System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType
+        type: System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType
     );
 
     private ImapClient client;
@@ -69,10 +69,10 @@ class WorkQueueImapLoaderAdapter : WorkQueueLoaderAdapter
         string url = "";
         int port = 143;
         bool ssl = false;
-        string[] cnParts = connection.Split(";".ToCharArray());
+        string[] cnParts = connection.Split(separator: ";".ToCharArray());
         foreach (string part in cnParts)
         {
-            string[] pair = part.Split("=".ToCharArray());
+            string[] pair = part.Split(separator: "=".ToCharArray());
             if (pair.Length == 2)
             {
                 switch (pair[0])
@@ -84,12 +84,12 @@ class WorkQueueImapLoaderAdapter : WorkQueueLoaderAdapter
                     }
                     case "port":
                     {
-                        port = int.Parse(pair[1]);
+                        port = int.Parse(s: pair[1]);
                         break;
                     }
                     case "ssl":
                     {
-                        ssl = bool.Parse(pair[1]);
+                        ssl = bool.Parse(value: pair[1]);
                         break;
                     }
                     case "dropbox":
@@ -99,7 +99,7 @@ class WorkQueueImapLoaderAdapter : WorkQueueLoaderAdapter
                     }
                     case "attachHtml":
                     {
-                        attachHtml = bool.Parse(pair[1]);
+                        attachHtml = bool.Parse(value: pair[1]);
                         break;
                     }
                     case "badmail":
@@ -109,18 +109,18 @@ class WorkQueueImapLoaderAdapter : WorkQueueLoaderAdapter
                     }
                     case "sanitize":
                     {
-                        sanitize = bool.Parse(pair[1]);
+                        sanitize = bool.Parse(value: pair[1]);
                         break;
                     }
                 }
             }
         }
         client = new ImapClient();
-        client.Connect(url, port, ssl);
-        client.Authenticate(userName, password);
+        client.Connect(host: url, port: port, useSsl: ssl);
+        client.Authenticate(userName: userName, password: password);
         client.Inbox.GetSubfolders();
         inbox = client.Inbox;
-        inbox.Open(FolderAccess.ReadWrite);
+        inbox.Open(access: FolderAccess.ReadWrite);
         totalMessages = inbox.Count;
     }
 
@@ -147,79 +147,89 @@ class WorkQueueImapLoaderAdapter : WorkQueueLoaderAdapter
         mailRow.DateSent = DateTime.Now;
         mailRow.Recipient = "";
         mailRow.Sender = "";
-        mailData.Mail.AddMailRow(mailRow);
-        var adapterResult = new WorkQueueAdapterResult(DataDocumentFactory.New(mailData));
+        mailData.Mail.AddMailRow(row: mailRow);
+        var adapterResult = new WorkQueueAdapterResult(
+            document: DataDocumentFactory.New(dataSet: mailData)
+        );
         string finalFolder = dropbox;
-        MimeMessage lastMessage = inbox.GetMessage(inbox.Count - 1);
+        MimeMessage lastMessage = inbox.GetMessage(index: inbox.Count - 1);
         try
         {
             mailRow.Sender = lastMessage.From.First().ToString();
             mailRow.Recipient = lastMessage
-                .To.Select(x => x.ToString())
-                .Aggregate((x, y) => x + ";" + y);
-            mailRow.Subject = GetSubject(lastMessage, mailData);
+                .To.Select(selector: x => x.ToString())
+                .Aggregate(func: (x, y) => x + ";" + y);
+            mailRow.Subject = GetSubject(lastMessage: lastMessage, mailData: mailData);
             mailRow.DateSent = lastMessage.Date.DateTime;
             mailRow.DateReceived = lastMessage.Date.DateTime;
-            mailRow.MessageBody = GetMessageBody(lastMessage);
-            if (!IsMessageBodyValidForXml(mailRow.MessageBody))
+            mailRow.MessageBody = GetMessageBody(lastMessage: lastMessage);
+            if (!IsMessageBodyValidForXml(body: mailRow.MessageBody))
             {
                 if (log.IsDebugEnabled)
                 {
-                    log.Debug($"Invalid characters in the mail body:\n\n{mailRow.MessageBody}");
+                    log.Debug(
+                        message: $"Invalid characters in the mail body:\n\n{mailRow.MessageBody}"
+                    );
                 }
                 if (sanitize)
                 {
-                    mailRow.MessageBody = RemoveInvalidXmlCharacters(mailRow.MessageBody);
+                    mailRow.MessageBody = RemoveInvalidXmlCharacters(input: mailRow.MessageBody);
                 }
                 else
                 {
                     throw new Exception(
-                        "Message body contains invalid characters preventing XML serialization"
+                        message: "Message body contains invalid characters preventing XML serialization"
                     );
                 }
             }
-            byte[] htmlAttachment = GetHtmlAttachment(lastMessage);
+            byte[] htmlAttachment = GetHtmlAttachment(lastMessage: lastMessage);
             adapterResult.State = lastMessage.References.LastOrDefault();
-            List<WorkQueueAttachment> attachments = GetAttachments(lastMessage, htmlAttachment);
+            List<WorkQueueAttachment> attachments = GetAttachments(
+                lastMessage: lastMessage,
+                htmlAttachment: htmlAttachment
+            );
             adapterResult.Attachments = new WorkQueueAttachment[attachments.Count];
-            attachments.CopyTo(adapterResult.Attachments);
+            attachments.CopyTo(array: adapterResult.Attachments);
         }
         catch (Exception ex)
         {
             mailRow.MessageBody = ex.Message;
             finalFolder = badMail;
         }
-        UniqueId lastMessageId = inbox.Fetch(0, -1, MessageSummaryItems.UniqueId).Last().UniqueId;
-        FlagAsSeen(lastMessageId);
+        UniqueId lastMessageId = inbox
+            .Fetch(min: 0, max: -1, items: MessageSummaryItems.UniqueId)
+            .Last()
+            .UniqueId;
+        FlagAsSeen(messageId: lastMessageId);
         IMailFolder finalMailFolder =
-            FindFolder(finalFolder)
-            ?? throw new Exception($"Could not find folder called \"{finalFolder}\"");
-        inbox.MoveTo(lastMessageId, finalMailFolder);
+            FindFolder(name: finalFolder)
+            ?? throw new Exception(message: $"Could not find folder called \"{finalFolder}\"");
+        inbox.MoveTo(uid: lastMessageId, destination: finalMailFolder);
         lastMessageIndex++;
         return adapterResult;
     }
 
     private static bool IsMessageBodyValidForXml(string body)
     {
-        if (string.IsNullOrEmpty(body))
+        if (string.IsNullOrEmpty(value: body))
         {
             return true;
         }
-        return !InvalidXmlCharacterRegex.IsMatch(body);
+        return !InvalidXmlCharacterRegex.IsMatch(input: body);
     }
 
     private static string GetMessageBody(MimeMessage lastMessage)
     {
-        if (!string.IsNullOrEmpty(lastMessage.TextBody))
+        if (!string.IsNullOrEmpty(value: lastMessage.TextBody))
         {
             return lastMessage.TextBody;
         }
-        if (!string.IsNullOrEmpty(lastMessage.HtmlBody))
+        if (!string.IsNullOrEmpty(value: lastMessage.HtmlBody))
         {
             string html = lastMessage.HtmlBody;
-            if (string.IsNullOrEmpty(lastMessage.TextBody)) // only if we do not have a text yet
+            if (string.IsNullOrEmpty(value: lastMessage.TextBody)) // only if we do not have a text yet
             {
-                return AbstractMailService.HtmlToText(html);
+                return AbstractMailService.HtmlToText(source: html);
             }
         }
         return null;
@@ -227,9 +237,9 @@ class WorkQueueImapLoaderAdapter : WorkQueueLoaderAdapter
 
     private byte[] GetHtmlAttachment(MimeMessage lastMessage)
     {
-        if (!string.IsNullOrEmpty(lastMessage.HtmlBody) && attachHtml)
+        if (!string.IsNullOrEmpty(value: lastMessage.HtmlBody) && attachHtml)
         {
-            return new UTF8Encoding().GetBytes(lastMessage.HtmlBody);
+            return new UTF8Encoding().GetBytes(s: lastMessage.HtmlBody);
         }
         return null;
     }
@@ -246,7 +256,7 @@ class WorkQueueImapLoaderAdapter : WorkQueueLoaderAdapter
     private static string GetSubject(MimeMessage lastMessage, MailData mailData)
     {
         return lastMessage.Subject.Length > mailData.Mail.SubjectColumn.MaxLength
-            ? $"{lastMessage.Subject.Substring(0, mailData.Mail.SubjectColumn.MaxLength - 4)} ..."
+            ? $"{lastMessage.Subject.Substring(startIndex: 0, length: mailData.Mail.SubjectColumn.MaxLength - 4)} ..."
             : lastMessage.Subject;
     }
 
@@ -260,20 +270,24 @@ class WorkQueueImapLoaderAdapter : WorkQueueLoaderAdapter
             if (fileName == null)
             {
                 fileName = "noname" + nonameCount++;
-                string extension = GetDefaultExtension(attachment.ContentType.MediaType);
+                string extension = GetDefaultExtension(mimeType: attachment.ContentType.MediaType);
                 if (extension != "")
                 {
                     fileName += extension;
                 }
             }
             attachments.Add(
-                new WorkQueueAttachment { Data = GetAttachmentData(attachment), Name = fileName }
+                item: new WorkQueueAttachment
+                {
+                    Data = GetAttachmentData(attachment: attachment),
+                    Name = fileName,
+                }
             );
         }
         if (htmlAttachment != null)
         {
             attachments.Add(
-                new WorkQueueAttachment { Data = htmlAttachment, Name = "original.html" }
+                item: new WorkQueueAttachment { Data = htmlAttachment, Name = "original.html" }
             );
         }
         return attachments;
@@ -282,19 +296,21 @@ class WorkQueueImapLoaderAdapter : WorkQueueLoaderAdapter
     private void DeleteAllMessages()
     {
         List<UniqueId> messageIds = inbox
-            .Fetch(0, -1, MessageSummaryItems.UniqueId)
-            .Select(x => x.UniqueId)
+            .Fetch(min: 0, max: -1, items: MessageSummaryItems.UniqueId)
+            .Select(selector: x => x.UniqueId)
             .ToList();
         if (messageIds.Count > 0)
         {
-            inbox.AddFlags(messageIds, MessageFlags.Deleted, silent: true);
+            inbox.AddFlags(uids: messageIds, flags: MessageFlags.Deleted, silent: true);
         }
     }
 
     IMailFolder FindFolder(string name)
     {
-        IMailFolder topLevelFolder = client.GetFolder(client.PersonalNamespaces[0]);
-        return FindSubFolder(topLevelFolder, name);
+        IMailFolder topLevelFolder = client.GetFolder(
+            @namespace: client.PersonalNamespaces[index: 0]
+        );
+        return FindSubFolder(toplevel: topLevelFolder, name: name);
     }
 
     IMailFolder FindSubFolder(IMailFolder toplevel, string name)
@@ -309,7 +325,7 @@ class WorkQueueImapLoaderAdapter : WorkQueueLoaderAdapter
         }
         foreach (IMailFolder subfolder in subfolders)
         {
-            var folder = FindSubFolder(subfolder, name);
+            var folder = FindSubFolder(toplevel: subfolder, name: name);
             if (folder != null)
             {
                 return folder;
@@ -323,25 +339,25 @@ class WorkQueueImapLoaderAdapter : WorkQueueLoaderAdapter
         using var stream = new MemoryStream();
         if (attachment is MessagePart messagePart)
         {
-            messagePart.Message.WriteTo(stream);
+            messagePart.Message.WriteTo(stream: stream);
         }
         else
         {
             var part = (MimePart)attachment;
-            part.Content.DecodeTo(stream);
+            part.Content.DecodeTo(stream: stream);
         }
         return stream.ToArray();
     }
 
     private static string GetDefaultExtension(string mimeType)
     {
-        string value = MimeTypeMap.GetExtension(mimeType);
+        string value = MimeTypeMap.GetExtension(mimeType: mimeType);
         string result = value ?? string.Empty;
         return result;
     }
 
     private static string RemoveInvalidXmlCharacters(string input)
     {
-        return InvalidXmlCharacterRegex.Replace(input, string.Empty);
+        return InvalidXmlCharacterRegex.Replace(input: input, replacement: string.Empty);
     }
 }

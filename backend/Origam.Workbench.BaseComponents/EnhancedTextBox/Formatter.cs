@@ -47,7 +47,7 @@ internal abstract class Formatter : IFormatter
     {
         this.textBox = textBox;
         this.customFormat = customFormat;
-        this.errorReporter = new ErrorReporter(textBox);
+        this.errorReporter = new ErrorReporter(control: textBox);
     }
 
     protected static CultureInfo Culture => CultureInfo.CurrentCulture;
@@ -55,16 +55,16 @@ internal abstract class Formatter : IFormatter
     {
         get
         {
-            var separator = Culture.NumberFormat.NumberGroupSeparator[0];
+            var separator = Culture.NumberFormat.NumberGroupSeparator[index: 0];
             return separator == (char)160 ? ' ' : separator;
         }
     }
 
     public void OnKeyPress(object sender, KeyPressEventArgs e)
     {
-        if (!IsValidChar(e.KeyChar))
+        if (!IsValidChar(input: e.KeyChar))
         {
-            NotifyInputError($"\"{e.KeyChar}\" is not a valid character here.");
+            NotifyInputError(message: $"\"{e.KeyChar}\" is not a valid character here.");
             e.Handled = true;
         }
     }
@@ -73,7 +73,7 @@ internal abstract class Formatter : IFormatter
 
     protected void NotifyInputError(string message)
     {
-        errorReporter.NotifyInputError(message);
+        errorReporter.NotifyInputError(message: message);
     }
 
     public abstract void OnLeave(object sender, EventArgs e);

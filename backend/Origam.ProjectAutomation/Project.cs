@@ -34,7 +34,10 @@ public class Project : IConnectionStringData
 
     public static string CreatePassword()
     {
-        return Guid.NewGuid().ToString().Replace("-", "").Substring(1, 9);
+        return Guid.NewGuid()
+            .ToString()
+            .Replace(oldValue: "-", newValue: "")
+            .Substring(startIndex: 1, length: 9);
     }
 
     public string GetDataDataService
@@ -45,7 +48,7 @@ public class Project : IConnectionStringData
             {
                 DatabaseType.MsSql => "Origam.DA.Service.MsSqlDataService, Origam.DA.Service",
                 DatabaseType.PgSql => "Origam.DA.Service.PgSqlDataService, Origam.DA.Service",
-                _ => throw new ArgumentOutOfRangeException("DatabaseType"),
+                _ => throw new ArgumentOutOfRangeException(paramName: "DatabaseType"),
             };
         }
     }

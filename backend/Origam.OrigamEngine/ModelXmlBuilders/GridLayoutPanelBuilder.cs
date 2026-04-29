@@ -30,7 +30,11 @@ public class GridLayoutPanelBuilder
 {
     public static void Build(XmlElement parentNode)
     {
-        parentNode.SetAttribute("type", "http://www.w3.org/2001/XMLSchema-instance", "UIElement");
-        parentNode.SetAttribute("Type", "GridLayoutPanel");
+        parentNode.SetAttribute(
+            localName: "type",
+            namespaceURI: "http://www.w3.org/2001/XMLSchema-instance",
+            value: "UIElement"
+        );
+        parentNode.SetAttribute(name: "Type", value: "GridLayoutPanel");
     }
 }

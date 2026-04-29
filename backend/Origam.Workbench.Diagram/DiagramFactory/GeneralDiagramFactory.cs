@@ -31,26 +31,26 @@ class GeneralDiagramFactory : IDiagramFactory<ISchemaItem, Graph>
     public Graph Draw(ISchemaItem item)
     {
         graph = new Graph();
-        DrawUniShape(item, null);
+        DrawUniShape(schemaItem: item, parentShape: null);
         return graph;
     }
 
     private void DrawUniShape(ISchemaItem schemaItem, Node parentShape)
     {
-        Node shape = this.AddNode(schemaItem.Id.ToString(), schemaItem.Name);
+        Node shape = this.AddNode(id: schemaItem.Id.ToString(), label: schemaItem.Name);
         if (parentShape != null)
         {
-            this.graph.AddEdge(shape.Id, parentShape.Id);
+            this.graph.AddEdge(source: shape.Id, target: parentShape.Id);
         }
         foreach (ISchemaItem child in schemaItem.ChildItems)
         {
-            DrawUniShape(child, shape);
+            DrawUniShape(schemaItem: child, parentShape: shape);
         }
     }
 
     private Node AddNode(string id, string label)
     {
-        Node shape = graph.AddNode(id);
+        Node shape = graph.AddNode(nodeId: id);
         shape.LabelText = label;
         return shape;
     }

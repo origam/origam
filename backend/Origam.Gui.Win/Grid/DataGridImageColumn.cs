@@ -52,7 +52,7 @@ public class DataGridImageColumn : DataGridColumnStyle
 
     protected override Size GetPreferredSize(Graphics g, object value)
     {
-        return new Size(_width, _height);
+        return new Size(width: _width, height: _height);
     }
 
     protected override void Paint(
@@ -63,40 +63,46 @@ public class DataGridImageColumn : DataGridColumnStyle
         bool alignToRight
     )
     {
-        this.Paint(g, bounds, source, rowNum);
+        this.Paint(g: g, bounds: bounds, source: source, rowNum: rowNum);
     }
 
     protected override void Paint(Graphics g, Rectangle bounds, CurrencyManager source, int rowNum)
     {
-        object imageData = this.GetColumnValueAtRow(source, rowNum);
+        object imageData = this.GetColumnValueAtRow(source: source, rowNum: rowNum);
         try
         {
             if (imageData is byte[])
             {
                 byte[] byteArray = (byte[])imageData;
-                MemoryStream ms = new MemoryStream(byteArray);
-                using (Image i = Image.FromStream(ms))
+                MemoryStream ms = new MemoryStream(buffer: byteArray);
+                using (Image i = Image.FromStream(stream: ms))
                 {
-                    using (Bitmap bm = new Bitmap(bounds.Width, bounds.Height))
+                    using (Bitmap bm = new Bitmap(width: bounds.Width, height: bounds.Height))
                     {
-                        using (Graphics bmgr = Graphics.FromImage(bm))
+                        using (Graphics bmgr = Graphics.FromImage(image: bm))
                         {
-                            bmgr.Clear(Color.White);
-                            bmgr.DrawImage(i, 0, 0, i.Width, i.Height);
+                            bmgr.Clear(color: Color.White);
+                            bmgr.DrawImage(image: i, x: 0, y: 0, width: i.Width, height: i.Height);
                         }
-                        g.DrawImageUnscaled(bm, bounds);
+                        g.DrawImageUnscaled(image: bm, rect: bounds);
                     }
                 }
                 ms.Close();
             }
             else
             {
-                g.FillRectangle(new SolidBrush(this.DataGridTableStyle.BackColor), bounds);
+                g.FillRectangle(
+                    brush: new SolidBrush(color: this.DataGridTableStyle.BackColor),
+                    rect: bounds
+                );
             }
         }
         catch
         {
-            g.FillRectangle(new SolidBrush(this.DataGridTableStyle.BackColor), bounds);
+            g.FillRectangle(
+                brush: new SolidBrush(color: this.DataGridTableStyle.BackColor),
+                rect: bounds
+            );
         }
     }
 

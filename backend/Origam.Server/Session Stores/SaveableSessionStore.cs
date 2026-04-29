@@ -48,7 +48,7 @@ public abstract class SaveableSessionStore : SessionStore
         string name,
         Analytics analytics
     )
-        : base(service, request, name, analytics) { }
+        : base(service: service, request: request, name: name, analytics: analytics) { }
 
     private Guid _dataStructureId;
     public Guid DataStructureId
@@ -63,16 +63,16 @@ public abstract class SaveableSessionStore : SessionStore
             if (_dataStructureId != Guid.Empty)
             {
                 IPersistenceService ps =
-                    ServiceManager.Services.GetService(typeof(IPersistenceService))
+                    ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
                     as IPersistenceService;
                 DataStructure ds =
                     ps.SchemaProvider.RetrieveInstance(
-                        typeof(DataStructure),
-                        new ModelElementKey(this.DataStructureId)
+                        type: typeof(DataStructure),
+                        primaryKey: new ModelElementKey(id: this.DataStructureId)
                     ) as DataStructure;
                 foreach (DataStructureEntity entity in ds.Entities)
                 {
-                    this.DirtyEnabledEntities.Add(entity.Name);
+                    this.DirtyEnabledEntities.Add(item: entity.Name);
                 }
             }
         }
@@ -80,12 +80,12 @@ public abstract class SaveableSessionStore : SessionStore
 
     public DataStructure DataStructure()
     {
-        return DataStructure(DataStructureId);
+        return DataStructure(id: DataStructureId);
     }
 
     internal DataSet InitializeFullStructure(DataStructureDefaultSet defaultSet)
     {
-        return datasetbuilder.InitializeFullStructure(DataStructureId, defaultSet); // new DatasetGenerator(true).CreateDataSet(DataStructure(), true, _menuItem.DefaultSet);
+        return datasetbuilder.InitializeFullStructure(id: DataStructureId, defaultSet: defaultSet); // new DatasetGenerator(true).CreateDataSet(DataStructure(), true, _menuItem.DefaultSet);
     }
 
     internal DataSetBuilder GetDataSetBuilder()
@@ -95,7 +95,7 @@ public abstract class SaveableSessionStore : SessionStore
 
     public DataStructure DataStructure(Guid id)
     {
-        return datasetbuilder.DataStructure(id);
+        return datasetbuilder.DataStructure(id: id);
     }
 
     private DataStructureTemplate _template;
@@ -109,7 +109,7 @@ public abstract class SaveableSessionStore : SessionStore
     {
         if (Data.HasErrors)
         {
-            throw new OrigamValidationException(Resources.ErrorInForm);
+            throw new OrigamValidationException(message: Resources.ErrorInForm);
         }
         var listOfChanges = new List<ChangeInfo>();
         IList<DataRow> changedRows = new List<DataRow>();
@@ -120,10 +120,10 @@ public abstract class SaveableSessionStore : SessionStore
             {
                 if ((r.RowState == DataRowState.Modified) || (r.RowState == DataRowState.Added))
                 {
-                    changedRows.Add(r);
-                    if (!changedKeys.ContainsKey(DatasetTools.PrimaryKey(r)[0]))
+                    changedRows.Add(item: r);
+                    if (!changedKeys.ContainsKey(key: DatasetTools.PrimaryKey(row: r)[0]))
                     {
-                        changedKeys.Add(DatasetTools.PrimaryKey(r)[0], null);
+                        changedKeys.Add(key: DatasetTools.PrimaryKey(row: r)[0], value: null);
                     }
                 }
             }
@@ -132,49 +132,59 @@ public abstract class SaveableSessionStore : SessionStore
         try
         {
             CoreServices.DataService.Instance.StoreData(
-                DataStructureId,
-                Data,
-                RefreshAfterSaveType == SaveRefreshType.RefreshChangedRecords,
-                TransationId
+                dataStructureId: DataStructureId,
+                data: Data,
+                loadActualValuesAfterUpdate: RefreshAfterSaveType
+                    == SaveRefreshType.RefreshChangedRecords,
+                transactionId: TransationId
             );
         }
         catch (DBConcurrencyException ex)
         {
-            throw new RuleException(ex.Message);
+            throw new RuleException(message: ex.Message);
         }
         if (RefreshAfterSaveType == SaveRefreshType.RefreshChangedRecords)
         {
             foreach (DataRow r in changedRows)
             {
                 listOfChanges.AddRange(
-                    GetChangesByRow(null, r, 0, changedKeys, true, false, false, false)
+                    collection: GetChangesByRow(
+                        requestingGrid: null,
+                        row: r,
+                        operation: 0,
+                        ignoreKeys: changedKeys,
+                        includeRowStates: true,
+                        hasErrors: false,
+                        hasChanges: false,
+                        fromTemplate: false
+                    )
                 );
                 // if there is a list, we update the list, so it has the actual changed data
-                if ((DataList != null) && DataList.Tables.Contains(r.Table.TableName))
+                if ((DataList != null) && DataList.Tables.Contains(name: r.Table.TableName))
                 {
-                    UpdateListRow(r);
+                    UpdateListRow(r: r);
                 }
             }
         }
         // add SAVED info, so the form looses its * sign
-        listOfChanges.Add(ChangeInfo.SavedChangeInfo());
+        listOfChanges.Add(item: ChangeInfo.SavedChangeInfo());
         switch (RefreshAfterSaveType)
         {
             case SaveRefreshType.RefreshCompleteForm:
             {
-                listOfChanges.Add(ChangeInfo.RefreshFormChangeInfo());
+                listOfChanges.Add(item: ChangeInfo.RefreshFormChangeInfo());
                 break;
             }
 
             case SaveRefreshType.ReloadActualRecord:
             {
-                listOfChanges.Add(ChangeInfo.ReloadCurrentRecordChangeInfo());
+                listOfChanges.Add(item: ChangeInfo.ReloadCurrentRecordChangeInfo());
                 break;
             }
         }
         if (RefreshPortalAfterSave)
         {
-            listOfChanges.Add(ChangeInfo.RefreshPortalInfo());
+            listOfChanges.Add(item: ChangeInfo.RefreshPortalInfo());
         }
         return listOfChanges;
     }
@@ -186,45 +196,50 @@ public abstract class SaveableSessionStore : SessionStore
         string requestingGrid
     )
     {
-        if (this.Template == null || !this.Template.Entity.Name.Equals(entity))
+        if (this.Template == null || !this.Template.Entity.Name.Equals(value: entity))
         {
-            return base.CreateObject(entity, values, parameters, requestingGrid);
+            return base.CreateObject(
+                entity: entity,
+                values: values,
+                parameters: parameters,
+                requestingGrid: requestingGrid
+            );
         }
-        DataTable table = GetDataTable(entity, this.Data);
+        DataTable table = GetDataTable(entity: entity, data: this.Data);
         object[] key;
         if (parameters.Count == 0)
         {
             key = TemplateTools.AddTemplateRecord(
-                null,
-                this.Template,
-                entity,
-                this.DataStructureId,
-                this.Data
+                parentRow: null,
+                template: this.Template,
+                dataMember: entity,
+                dataStructureId: this.DataStructureId,
+                formData: this.Data
             );
         }
         else
         {
             object[] keys = new object[parameters.Count];
-            parameters.Values.CopyTo(keys, 0);
-            DataRelation relation = table.ParentRelations[0];
-            DataRow parentRow = relation.ParentTable.Rows.Find(keys);
+            parameters.Values.CopyTo(array: keys, arrayIndex: 0);
+            DataRelation relation = table.ParentRelations[index: 0];
+            DataRow parentRow = relation.ParentTable.Rows.Find(keys: keys);
             key = TemplateTools.AddTemplateRecord(
-                parentRow,
-                this.Template,
-                entity,
-                this.DataStructureId,
-                this.Data
+                parentRow: parentRow,
+                template: this.Template,
+                dataMember: entity,
+                dataStructureId: this.DataStructureId,
+                formData: this.Data
             );
         }
-        DataRow newRow = table.Rows.Find(key);
-        NewRowToDataList(newRow);
+        DataRow newRow = table.Rows.Find(keys: key);
+        NewRowToDataList(newRow: newRow);
         List<ChangeInfo> listOfChanges = GetChangesByRow(
-            requestingGrid,
-            newRow,
-            Operation.Create,
-            this.Data.HasErrors,
-            this.Data.HasChanges(),
-            true
+            requestingGrid: requestingGrid,
+            row: newRow,
+            operation: Operation.Create,
+            hasErrors: this.Data.HasErrors,
+            hasChanges: this.Data.HasChanges(),
+            fromTemplate: true
         );
 
         return listOfChanges;
@@ -239,7 +254,13 @@ public abstract class SaveableSessionStore : SessionStore
     {
         lock (_lock)
         {
-            return UpdateObjectWithDependenies(entity, id, property, newValue, true);
+            return UpdateObjectWithDependenies(
+                entity: entity,
+                id: id,
+                property: property,
+                newValue: newValue,
+                isTopLevel: true
+            );
         }
     }
 
@@ -252,35 +273,39 @@ public abstract class SaveableSessionStore : SessionStore
     )
     {
         InitializeFieldDependencies();
-        DataTable table = GetDataTable(entity, this.Data);
-        Guid dsEntityId = (Guid)table.ExtendedProperties["Id"];
-        Guid fieldId = (Guid)table.Columns[property].ExtendedProperties["Id"];
-        if (_entityFieldDependencies.ContainsKey(dsEntityId))
+        DataTable table = GetDataTable(entity: entity, data: this.Data);
+        Guid dsEntityId = (Guid)table.ExtendedProperties[key: "Id"];
+        Guid fieldId = (Guid)table.Columns[name: property].ExtendedProperties[key: "Id"];
+        if (_entityFieldDependencies.ContainsKey(key: dsEntityId))
         {
-            if (_entityFieldDependencies[dsEntityId].ContainsKey(fieldId))
+            if (_entityFieldDependencies[key: dsEntityId].ContainsKey(key: fieldId))
             {
-                foreach (Guid dependentColumnId in _entityFieldDependencies[dsEntityId][fieldId])
+                foreach (
+                    Guid dependentColumnId in _entityFieldDependencies[key: dsEntityId][
+                        key: fieldId
+                    ]
+                )
                 {
-                    string dependentColumnName = ColumnNameById(table, dependentColumnId);
+                    string dependentColumnName = ColumnNameById(
+                        table: table,
+                        columnId: dependentColumnId
+                    );
                     try
                     {
                         this.UpdateObjectWithDependenies(
-                            entity,
-                            id,
-                            dependentColumnName,
-                            null,
-                            false
+                            entity: entity,
+                            id: id,
+                            property: dependentColumnName,
+                            newValue: null,
+                            isTopLevel: false
                         );
                     }
                     catch (NullReferenceException e)
                     {
                         throw new NullReferenceException(
-                            String.Format(
-                                Resources.ErrorDependentColumnNotFound,
-                                dependentColumnName,
-                                property,
-                                entity,
-                                e.Message
+                            message: String.Format(
+                                format: Resources.ErrorDependentColumnNotFound,
+                                args: [dependentColumnName, property, entity, e.Message]
                             )
                         );
                     }
@@ -291,9 +316,19 @@ public abstract class SaveableSessionStore : SessionStore
         // (last) update
         if (isTopLevel)
         {
-            return base.UpdateObject(entity, id, property, newValue);
+            return base.UpdateObject(
+                entity: entity,
+                id: id,
+                property: property,
+                newValue: newValue
+            );
         }
-        base.UpdateObjectsWithoutGetChanges(entity, id, property, newValue);
+        base.UpdateObjectsWithoutGetChanges(
+            entity: entity,
+            id: id,
+            property: property,
+            newValue: newValue
+        );
 
         return new List<ChangeInfo>();
     }
@@ -302,15 +337,15 @@ public abstract class SaveableSessionStore : SessionStore
     {
         foreach (DataColumn col in table.Columns)
         {
-            if ((Guid)col.ExtendedProperties["Id"] == columnId)
+            if ((Guid)col.ExtendedProperties[key: "Id"] == columnId)
             {
                 return col.ColumnName;
             }
         }
         throw new ArgumentOutOfRangeException(
-            "columnId",
-            columnId,
-            "Column not found in entity " + table.TableName
+            paramName: "columnId",
+            actualValue: columnId,
+            message: "Column not found in entity " + table.TableName
         );
     }
 
@@ -341,34 +376,34 @@ public abstract class SaveableSessionStore : SessionStore
             // get entity definition
             DataStructureEntity modelEntity =
                 ps.SchemaProvider.RetrieveInstance(
-                    typeof(DataStructureEntity),
-                    new ModelElementKey((Guid)table.ExtendedProperties["Id"])
+                    type: typeof(DataStructureEntity),
+                    primaryKey: new ModelElementKey(id: (Guid)table.ExtendedProperties[key: "Id"])
                 ) as DataStructureEntity;
             Dictionary<Guid, IList<Guid>> entityDependency = new Dictionary<Guid, IList<Guid>>();
-            _entityFieldDependencies.Add(modelEntity.Id, entityDependency);
+            _entityFieldDependencies.Add(key: modelEntity.Id, value: entityDependency);
             // browse all the entity fields
             foreach (DataStructureColumn column in modelEntity.Columns)
             {
                 // read the dependencies
                 foreach (
                     var dep in column.Field.ChildItemsByType<EntityFieldDependency>(
-                        EntityFieldDependency.CategoryConst
+                        itemType: EntityFieldDependency.CategoryConst
                     )
                 )
                 {
                     IList<Guid> fieldDependencies;
-                    Guid fieldId = (Guid)dep.Field.PrimaryKey["Id"];
-                    if (entityDependency.ContainsKey(fieldId))
+                    Guid fieldId = (Guid)dep.Field.PrimaryKey[key: "Id"];
+                    if (entityDependency.ContainsKey(key: fieldId))
                     {
-                        fieldDependencies = entityDependency[fieldId];
+                        fieldDependencies = entityDependency[key: fieldId];
                     }
                     else
                     {
                         fieldDependencies = new List<Guid>();
-                        entityDependency.Add(fieldId, fieldDependencies);
+                        entityDependency.Add(key: fieldId, value: fieldDependencies);
                     }
                     // add the dependency
-                    fieldDependencies.Add((Guid)column.Field.PrimaryKey["Id"]);
+                    fieldDependencies.Add(item: (Guid)column.Field.PrimaryKey[key: "Id"]);
                 }
             }
         }

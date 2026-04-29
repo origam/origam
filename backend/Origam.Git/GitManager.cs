@@ -40,12 +40,12 @@ public class GitManager
 
     public GitManager(string path)
     {
-        repositoryPath = Repository.Discover(path);
+        repositoryPath = Repository.Discover(startingPath: path);
         if (repositoryPath == null)
         {
-            throw new Exception("Not a valid git directory " + path);
+            throw new Exception(message: "Not a valid git directory " + path);
         }
-        Repo = new Repository(repositoryPath);
+        Repo = new Repository(path: repositoryPath);
         InitValues();
     }
 
@@ -68,7 +68,7 @@ public class GitManager
             Password = repositoryPassword,
         };
         co.FetchOptions.CredentialsProvider = (_url, _user, _cred) => ca;
-        Repository.Clone(gitRepositoryLink, modelFolder, co);
+        Repository.Clone(sourceUrl: gitRepositoryLink, workdirPath: modelFolder, options: co);
     }
 
     public bool IsValidUrl(string url, string gitUsername, string gitPassword)
@@ -84,7 +84,10 @@ public class GitManager
                         Password = gitPassword,
                     },
             };
-            Repository.ListRemoteReferences(url, pushOptions.CredentialsProvider);
+            Repository.ListRemoteReferences(
+                url: url,
+                credentialsProvider: pushOptions.CredentialsProvider
+            );
             return true;
         }
         catch
@@ -95,19 +98,19 @@ public class GitManager
 
     public static bool IsValid(string modelSourceControlLocation)
     {
-        return Repository.Discover(modelSourceControlLocation) != null;
+        return Repository.Discover(startingPath: modelSourceControlLocation) != null;
     }
 
     public static string GetRepositoryPath(string modelSourceControlLocation)
     {
-        return Repository.Discover(modelSourceControlLocation);
+        return Repository.Discover(startingPath: modelSourceControlLocation);
     }
 
     public static void PersistPath(List<string> files)
     {
         foreach (string path in files)
         {
-            gitPersistObjectsCache.Remove(path);
+            gitPersistObjectsCache.Remove(key: path);
         }
     }
 
@@ -118,34 +121,34 @@ public class GitManager
 
     public static void RemoveRepository(string sourcesFolder)
     {
-        string path = Path.Combine(sourcesFolder, ".git");
-        DeleteDirectory(path);
+        string path = Path.Combine(path1: sourcesFolder, path2: ".git");
+        DeleteDirectory(directoryPath: path);
     }
 
     private void InitValues()
     {
         pathOfgitConfig = Path.Combine(
-            Environment.GetEnvironmentVariable("HOMEDRIVE")
-                + FixSlash(Environment.GetEnvironmentVariable("HOMEPATH")),
-            ".gitconfig"
+            path1: Environment.GetEnvironmentVariable(variable: "HOMEDRIVE")
+                + FixSlash(file: Environment.GetEnvironmentVariable(variable: "HOMEPATH")),
+            path2: ".gitconfig"
         );
     }
 
     public static void CreateRepository(string modelSourceControlLocation)
     {
-        Repository.Init(modelSourceControlLocation);
+        Repository.Init(path: modelSourceControlLocation);
     }
 
     public void Init(string gitusername, string gitemail)
     {
         List<string> rules = new List<string> { "/index.bin", "scripts/" };
-        Repo.Ignore.AddTemporaryRules(rules);
-        Commands.Stage(Repo, "*");
-        Signature author = new Signature(gitusername, gitemail, DateTime.Now);
+        Repo.Ignore.AddTemporaryRules(rules: rules);
+        Commands.Stage(repository: Repo, path: "*");
+        Signature author = new Signature(name: gitusername, email: gitemail, when: DateTime.Now);
         Signature committer = author;
 
-        Repo.Commit("Initial commit", author, committer);
-        CreateGitConfig(gitusername, gitemail);
+        Repo.Commit(message: "Initial commit", author: author, committer: committer);
+        CreateGitConfig(gitusername: gitusername, gitemail: gitemail);
     }
 
     private void CreateGitConfig(string gitusername, string gitemail)
@@ -160,7 +163,7 @@ public class GitManager
                 "[credential]",
                 "     helper = manager",
             };
-            File.WriteAllLines(pathOfgitConfig, lines);
+            File.WriteAllLines(path: pathOfgitConfig, contents: lines);
         }
     }
 
@@ -170,31 +173,31 @@ public class GitManager
     }
 
     public bool HasChanges(string filePath) =>
-        Repo.RetrieveStatus(filePath) != FileStatus.Unaltered;
+        Repo.RetrieveStatus(filePath: filePath) != FileStatus.Unaltered;
 
     private string FixSlash(string file)
     {
-        return file == null ? "" : file.Replace("\\", "/");
+        return file == null ? "" : file.Replace(oldValue: "\\", newValue: "/");
     }
 
     public string GetModifiedChanges()
     {
-        return Repo.Diff.Compare<Patch>(new List<string>() { CompareFile });
+        return Repo.Diff.Compare<Patch>(paths: new List<string>() { CompareFile });
     }
 
     public string getCompareFileName()
     {
-        return CompareFile.Split('/').LastOrDefault();
+        return CompareFile.Split(separator: '/').LastOrDefault();
     }
 
     public void SetFile(string file)
     {
-        CompareFile = FixSlash(file);
+        CompareFile = FixSlash(file: file);
     }
 
     public bool IsGitConfig()
     {
-        return File.Exists(pathOfgitConfig);
+        return File.Exists(path: pathOfgitConfig);
     }
 
     public string[] GitConfig()
@@ -202,17 +205,17 @@ public class GitManager
         string[] output = new string[2];
         if (IsGitConfig())
         {
-            string gitFiletext = File.ReadAllText(pathOfgitConfig);
-            Regex rname = new Regex(patname, RegexOptions.IgnoreCase);
-            Regex remail = new Regex(patemail, RegexOptions.IgnoreCase);
-            Match memail = remail.Match(gitFiletext);
-            Match mname = rname.Match(gitFiletext);
+            string gitFiletext = File.ReadAllText(path: pathOfgitConfig);
+            Regex rname = new Regex(pattern: patname, options: RegexOptions.IgnoreCase);
+            Regex remail = new Regex(pattern: patemail, options: RegexOptions.IgnoreCase);
+            Match memail = remail.Match(input: gitFiletext);
+            Match mname = rname.Match(input: gitFiletext);
             if (mname.Success)
             {
-                output[0] = mname.Groups[1].Value;
+                output[0] = mname.Groups[groupnum: 1].Value;
                 if (memail.Success)
                 {
-                    output[1] = memail.Groups[1].Value;
+                    output[1] = memail.Groups[groupnum: 1].Value;
                     return output;
                 }
             }
@@ -222,28 +225,32 @@ public class GitManager
 
     public static void DeleteDirectory(string directoryPath)
     {
-        if (!Directory.Exists(directoryPath))
+        if (!Directory.Exists(path: directoryPath))
         {
             return;
         }
-        var files = Directory.GetFiles(directoryPath);
-        var directories = Directory.GetDirectories(directoryPath);
+        var files = Directory.GetFiles(path: directoryPath);
+        var directories = Directory.GetDirectories(path: directoryPath);
         foreach (var file in files)
         {
             // delete/clear hidden attribute
-            File.SetAttributes(file, File.GetAttributes(file) & ~FileAttributes.Hidden);
+            File.SetAttributes(
+                path: file,
+                fileAttributes: File.GetAttributes(path: file) & ~FileAttributes.Hidden
+            );
             // delete/clear archive and read only attributes
             File.SetAttributes(
-                file,
-                File.GetAttributes(file) & ~(FileAttributes.Archive | FileAttributes.ReadOnly)
+                path: file,
+                fileAttributes: File.GetAttributes(path: file)
+                    & ~(FileAttributes.Archive | FileAttributes.ReadOnly)
             );
-            File.Delete(file);
+            File.Delete(path: file);
         }
         foreach (var dir in directories)
         {
-            DeleteDirectory(dir);
+            DeleteDirectory(directoryPath: dir);
         }
-        File.SetAttributes(directoryPath, FileAttributes.Normal);
-        Directory.Delete(directoryPath, false);
+        File.SetAttributes(path: directoryPath, fileAttributes: FileAttributes.Normal);
+        Directory.Delete(path: directoryPath, recursive: false);
     }
 }

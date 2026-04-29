@@ -24,8 +24,8 @@ using Origam.DA.Common;
 
 namespace Origam.Schema.GuiModel;
 
-[SchemaItemDescription("Currency Widget", "icon_currency-widget.png")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Currency Widget", iconName: "icon_currency-widget.png")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class CurrencyDashboardWidget : AbstractSimpleDashboardWidget
 {
     public CurrencyDashboardWidget()
@@ -35,13 +35,13 @@ public class CurrencyDashboardWidget : AbstractSimpleDashboardWidget
     }
 
     public CurrencyDashboardWidget(Guid schemaExtensionId)
-        : base(schemaExtensionId)
+        : base(schemaExtensionId: schemaExtensionId)
     {
         Init();
     }
 
     public CurrencyDashboardWidget(Key primaryKey)
-        : base(primaryKey)
+        : base(primaryKey: primaryKey)
     {
         Init();
     }

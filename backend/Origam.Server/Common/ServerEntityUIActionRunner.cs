@@ -47,7 +47,7 @@ public class ServerEntityUIActionRunner : EntityUIActionRunner
         IBasicUIService basicUIService,
         IReportManager reportManager
     )
-        : base(actionRunnerClient)
+        : base(actionRunnerClient: actionRunnerClient)
     {
         this.uiManager = uiManager;
         this.sessionManager = sessionManager;
@@ -61,37 +61,37 @@ public class ServerEntityUIActionRunner : EntityUIActionRunner
         {
             case PanelActionType.QueueAction:
             {
-                ExecuteQueueAction(processData);
+                ExecuteQueueAction(processData: processData);
                 break;
             }
 
             case PanelActionType.Report:
             {
-                ExecuteReportAction(processData);
+                ExecuteReportAction(processData: processData);
                 break;
             }
 
             case PanelActionType.Workflow:
             {
-                ExecuteWorkflowAction(processData);
+                ExecuteWorkflowAction(processData: processData);
                 break;
             }
 
             case PanelActionType.ChangeUI:
             {
-                ExecuteChangeUIAction(processData);
+                ExecuteChangeUIAction(processData: processData);
                 break;
             }
 
             case PanelActionType.OpenForm:
             {
-                ExecuteOpenFormAction(processData);
+                ExecuteOpenFormAction(processData: processData);
                 break;
             }
 
             case PanelActionType.SelectionDialogAction:
             {
-                ExecuteSelectionDialogAction(processData);
+                ExecuteSelectionDialogAction(processData: processData);
                 break;
             }
 
@@ -106,55 +106,57 @@ public class ServerEntityUIActionRunner : EntityUIActionRunner
     {
         if (count == 0)
         {
-            throw new RuleException(Resources.ErrorNoRecordsSelectedForAction);
+            throw new RuleException(message: Resources.ErrorNoRecordsSelectedForAction);
         }
     }
 
     private void ExecuteQueueAction(ExecuteActionProcessData processData)
     {
         WorkQueueSessionStore wqss =
-            sessionManager.GetSession(processData) as WorkQueueSessionStore;
+            sessionManager.GetSession(processData: processData) as WorkQueueSessionStore;
         IWorkQueueService wqs =
-            ServiceManager.Services.GetService(typeof(IWorkQueueService)) as IWorkQueueService;
+            ServiceManager.Services.GetService(serviceType: typeof(IWorkQueueService))
+            as IWorkQueueService;
         if (processData.SelectedRows.Count == 0 && processData.SelectedIds.Count > 0)
         {
-            throw new Exception("Rows for the selected Ids were not loaded");
+            throw new Exception(message: "Rows for the selected Ids were not loaded");
         }
         DataSet copy = processData.DataTable.DataSet.Clone();
         foreach (DataRow selectedRow in processData.SelectedRows)
         {
-            copy.Tables[processData.DataTable.TableName].LoadDataRow(selectedRow.ItemArray, true);
+            copy.Tables[name: processData.DataTable.TableName]
+                .LoadDataRow(values: selectedRow.ItemArray, fAcceptChanges: true);
         }
-        DataTable selectedRows = copy.Tables[processData.DataTable.TableName];
+        DataTable selectedRows = copy.Tables[name: processData.DataTable.TableName];
         DataSet command = DataService.Instance.LoadData(
-            new Guid("1d33b667-ca76-4aaa-a47d-0e404ed6f8a6"),
-            new Guid("6eefc3cf-6b6e-4d40-81f7-5c37a81e8a01"),
-            Guid.Empty,
-            Guid.Empty,
-            null,
-            "WorkQueueCommand_parId",
-            processData.ActionId
+            dataStructureId: new Guid(g: "1d33b667-ca76-4aaa-a47d-0e404ed6f8a6"),
+            methodId: new Guid(g: "6eefc3cf-6b6e-4d40-81f7-5c37a81e8a01"),
+            defaultSetId: Guid.Empty,
+            sortSetId: Guid.Empty,
+            transactionId: null,
+            paramName1: "WorkQueueCommand_parId",
+            paramValue1: processData.ActionId
         );
-        if (command.Tables["WorkQueueCommand"].Rows.Count == 0)
+        if (command.Tables[name: "WorkQueueCommand"].Rows.Count == 0)
         {
-            throw new Exception(Resources.ErrorWorkQueueCommandNotFound);
+            throw new Exception(message: Resources.ErrorWorkQueueCommandNotFound);
         }
-        DataRow cmdRow = command.Tables["WorkQueueCommand"].Rows[0];
+        DataRow cmdRow = command.Tables[name: "WorkQueueCommand"].Rows[index: 0];
         // work queue command
         if (
-            (Guid)cmdRow["refWorkQueueCommandTypeId"]
+            (Guid)cmdRow[columnName: "refWorkQueueCommandTypeId"]
             == (Guid)
                 processData.ParameterService.GetParameterValue(
-                    "WorkQueueCommandType_WorkQueueClassCommand"
+                    parameterName: "WorkQueueCommandType_WorkQueueClassCommand"
                 )
         )
         {
             if (processData.Action == null || processData.Action.Mode != PanelActionMode.Always)
             {
-                CheckSelectedRowsCountPositive(processData.SelectedIds.Count);
+                CheckSelectedRowsCountPositive(count: processData.SelectedIds.Count);
             }
             WorkQueueWorkflowCommand cmd = wqss.WorkQueueClass.GetCommand(
-                (string)cmdRow["Command"]
+                name: (string)cmdRow[columnName: "Command"]
             );
             // We handle the UI actions, work queue service will handle all the other background actions
             if (cmd.ActionType == PanelActionType.OpenForm)
@@ -166,78 +168,90 @@ public class ServerEntityUIActionRunner : EntityUIActionRunner
                     {
                         case WorkQueueCommandParameterMappingType.QueueEntries:
                         {
-                            val = DataDocumentFactory.New(selectedRows.DataSet);
+                            val = DataDocumentFactory.New(dataSet: selectedRows.DataSet);
                             break;
                         }
 
                         case WorkQueueCommandParameterMappingType.Parameter1:
                         {
-                            val = cmdRow.IsNull("Param1") ? null : cmdRow["Param1"];
+                            val = cmdRow.IsNull(columnName: "Param1")
+                                ? null
+                                : cmdRow[columnName: "Param1"];
                             break;
                         }
 
                         case WorkQueueCommandParameterMappingType.Parameter2:
                         {
-                            val = cmdRow.IsNull("Param2") ? null : cmdRow["Param2"];
+                            val = cmdRow.IsNull(columnName: "Param2")
+                                ? null
+                                : cmdRow[columnName: "Param2"];
                             break;
                         }
 
                         default:
                         {
                             throw new ArgumentOutOfRangeException(
-                                "Value",
-                                pm.Value,
-                                Resources.ErrorUnknownWorkQueueCommandValueType
+                                paramName: "Value",
+                                actualValue: pm.Value,
+                                message: Resources.ErrorUnknownWorkQueueCommandValueType
                             );
                         }
                     }
-                    processData.Parameters.Add(pm.Name, val);
+                    processData.Parameters.Add(key: pm.Name, value: val);
                 }
                 // resend the execute - now with the actual action and with queue-command parameters
                 ExecuteAction(
-                    processData.SessionFormIdentifier,
-                    processData.RequestingGrid,
-                    processData.Entity,
-                    cmd.ActionType.ToString(),
-                    cmd.Id.ToString(),
-                    new Hashtable(),
-                    processData.SelectedIds,
-                    processData.Parameters
+                    sessionFormIdentifier: processData.SessionFormIdentifier,
+                    requestingGrid: processData.RequestingGrid,
+                    entity: processData.Entity,
+                    actionType: cmd.ActionType.ToString(),
+                    actionId: cmd.Id.ToString(),
+                    parameterMappings: new Hashtable(),
+                    selectedIds: processData.SelectedIds,
+                    inputParameters: processData.Parameters
                 );
                 return;
             }
         }
         // otherwise we ask the work queue service to process the command
         wqs.HandleAction(
-            new Guid(wqss.Request.ObjectId),
-            wqss.WorkQueueClass.Name,
-            selectedRows,
-            (Guid)cmdRow["refWorkQueueCommandTypeId"],
-            cmdRow.IsNull("Command") ? null : (string)cmdRow["Command"],
-            cmdRow.IsNull("Param1") ? null : (string)cmdRow["Param1"],
-            cmdRow.IsNull("Param2") ? null : (string)cmdRow["Param2"],
-            cmdRow.IsNull("refErrorWorkQueueId") ? null : cmdRow["refErrorWorkQueueId"]
+            queueId: new Guid(g: wqss.Request.ObjectId),
+            workQueueClassIdentifier: wqss.WorkQueueClass.Name,
+            selectedRows: selectedRows,
+            commandType: (Guid)cmdRow[columnName: "refWorkQueueCommandTypeId"],
+            command: cmdRow.IsNull(columnName: "Command")
+                ? null
+                : (string)cmdRow[columnName: "Command"],
+            param1: cmdRow.IsNull(columnName: "Param1")
+                ? null
+                : (string)cmdRow[columnName: "Param1"],
+            param2: cmdRow.IsNull(columnName: "Param2")
+                ? null
+                : (string)cmdRow[columnName: "Param2"],
+            errorQueueId: cmdRow.IsNull(columnName: "refErrorWorkQueueId")
+                ? null
+                : cmdRow[columnName: "refErrorWorkQueueId"]
         );
-        resultList.Add(new PanelActionResult(ActionResultType.RefreshData));
+        resultList.Add(item: new PanelActionResult(type: ActionResultType.RefreshData));
     }
 
     private void ExecuteReportAction(ExecuteActionProcessData processData)
     {
         if (processData.Action == null || processData.Action.Mode != PanelActionMode.Always)
         {
-            CheckSelectedRowsCountPositive(processData.SelectedIds.Count);
+            CheckSelectedRowsCountPositive(count: processData.SelectedIds.Count);
             if (processData.SelectedIds.Count > 1)
             {
-                throw new Exception(Resources.ErrorChangeUIMultipleRecords);
+                throw new Exception(message: Resources.ErrorChangeUIMultipleRecords);
             }
         }
         var reportAction = processData.Action as EntityReportAction;
-        var result = new PanelActionResult(ActionResultType.OpenUrl)
+        var result = new PanelActionResult(type: ActionResultType.OpenUrl)
         {
             Url = reportManager.GetReportStandalone(
-                reportAction.ReportId.ToString(),
-                processData.Parameters,
-                reportAction.ExportFormatType
+                reportId: reportAction.ReportId.ToString(),
+                parameters: processData.Parameters,
+                dataReportExportFormatType: reportAction.ExportFormatType
             ),
         };
         switch (reportAction.Report)
@@ -260,34 +274,34 @@ public class ServerEntityUIActionRunner : EntityUIActionRunner
             result.RefreshOnReturnSessionId = processData.SessionFormIdentifier;
             result.RefreshOnReturnType = processData.Action.RefreshAfterReturn.ToString();
         }
-        resultList.Add(result);
+        resultList.Add(item: result);
     }
 
     private async void ExecuteChangeUIAction(ExecuteActionProcessData processData)
     {
         if (processData.Action == null || processData.Action.Mode != PanelActionMode.Always)
         {
-            CheckSelectedRowsCountPositive(processData.SelectedIds.Count);
+            CheckSelectedRowsCountPositive(count: processData.SelectedIds.Count);
             if (processData.SelectedIds.Count > 1)
             {
-                throw new Exception(Resources.ErrorChangeUIMultipleRecords);
+                throw new Exception(message: Resources.ErrorChangeUIMultipleRecords);
             }
         }
-        PanelActionResult result = new PanelActionResult(ActionResultType.ChangeUI);
+        PanelActionResult result = new PanelActionResult(type: ActionResultType.ChangeUI);
         UIRequest uir = RequestTools.GetActionRequest(
-            processData.Parameters,
-            processData.SelectedIds,
-            processData.Action
+            parameters: processData.Parameters,
+            selectedItems: processData.SelectedIds,
+            action: processData.Action
         );
         uir.FormSessionId = processData.SessionFormIdentifier;
         uir.RegisterSession = false;
         result.UIResult = uiManager.InitUI(
             request: uir,
             addChildSession: true,
-            parentSession: sessionManager.GetSession(processData),
+            parentSession: sessionManager.GetSession(processData: processData),
             basicUIService: basicUIService
         );
-        resultList.Add(result);
+        resultList.Add(item: result);
         await System.Threading.Tasks.Task.CompletedTask; //CS1998
     }
 
@@ -295,22 +309,22 @@ public class ServerEntityUIActionRunner : EntityUIActionRunner
     {
         if (processData.Action == null || processData.Action.Mode != PanelActionMode.Always)
         {
-            CheckSelectedRowsCountPositive(processData.SelectedIds.Count);
+            CheckSelectedRowsCountPositive(count: processData.SelectedIds.Count);
         }
-        PanelActionResult result = new PanelActionResult(ActionResultType.OpenForm);
+        PanelActionResult result = new PanelActionResult(type: ActionResultType.OpenForm);
         UIRequest uir = RequestTools.GetActionRequest(
-            processData.Parameters,
-            processData.SelectedIds,
-            processData.Action
+            parameters: processData.Parameters,
+            selectedItems: processData.SelectedIds,
+            action: processData.Action
         );
         // Stack can't handle resending DataDocumentFx,
         // it needs to be converted to XmlDocument
         // and then converted back to DataDocumentFx
         foreach (object key in uir.Parameters.Keys.CastToList<object>())
         {
-            if (uir.Parameters[key] is IXmlContainer)
+            if (uir.Parameters[key: key] is IXmlContainer)
             {
-                uir.Parameters[key] = ((IXmlContainer)uir.Parameters[key]).Xml;
+                uir.Parameters[key: key] = ((IXmlContainer)uir.Parameters[key: key]).Xml;
             }
         }
         if (processData.Action.RefreshAfterReturn == ReturnRefreshType.MergeModalDialogChanges)
@@ -324,22 +338,22 @@ public class ServerEntityUIActionRunner : EntityUIActionRunner
             result.RefreshOnReturnSessionId = processData.SessionFormIdentifier;
             result.RefreshOnReturnType = processData.Action.RefreshAfterReturn.ToString();
         }
-        resultList.Add(result);
+        resultList.Add(item: result);
         var entityWorkflowAction = processData.Action as EntityWorkflowAction;
         if (
             entityWorkflowAction != null
             && entityWorkflowAction.CloseType != ModalDialogCloseType.None
         )
         {
-            resultList.Add(new PanelActionResult(ActionResultType.DestroyForm));
+            resultList.Add(item: new PanelActionResult(type: ActionResultType.DestroyForm));
         }
         else if (entityWorkflowAction == null && processData.IsModalDialog)
         {
-            resultList.Add(new PanelActionResult(ActionResultType.DestroyForm));
+            resultList.Add(item: new PanelActionResult(type: ActionResultType.DestroyForm));
         }
         if (entityWorkflowAction != null)
         {
-            AppendScriptCalls(entityWorkflowAction, processData);
+            AppendScriptCalls(entityWorkflowAction: entityWorkflowAction, processData: processData);
         }
     }
 
@@ -347,9 +361,13 @@ public class ServerEntityUIActionRunner : EntityUIActionRunner
     {
         if (processData.Action == null || processData.Action.Mode != PanelActionMode.Always)
         {
-            CheckSelectedRowsCountPositive(processData.SelectedIds.Count);
+            CheckSelectedRowsCountPositive(count: processData.SelectedIds.Count);
         }
-        resultList.Add(sessionManager.GetSession(processData).ExecuteAction(processData.ActionId));
+        resultList.Add(
+            item: sessionManager
+                .GetSession(processData: processData)
+                .ExecuteAction(actionId: processData.ActionId)
+        );
     }
 
     protected override void SetTransactionId(
@@ -357,11 +375,11 @@ public class ServerEntityUIActionRunner : EntityUIActionRunner
         string transactionId
     )
     {
-        sessionManager.GetSession(processData).TransationId = transactionId;
+        sessionManager.GetSession(processData: processData).TransationId = transactionId;
     }
 
     protected override ActionResult MakeActionResult(ActionResultType type)
     {
-        return new PanelActionResult(type);
+        return new PanelActionResult(type: type);
     }
 }

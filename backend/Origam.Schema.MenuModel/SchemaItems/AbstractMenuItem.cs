@@ -32,8 +32,8 @@ namespace Origam.Schema.MenuModel;
 /// <summary>
 /// Summary description for AbstractMenuItem.
 /// </summary>
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.2")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.2")]
 public abstract class AbstractMenuItem : AbstractSchemaItem, IAuthorizationContextContainer
 {
     public const string CategoryConst = "MenuItem";
@@ -42,10 +42,10 @@ public abstract class AbstractMenuItem : AbstractSchemaItem, IAuthorizationConte
         : base() { }
 
     public AbstractMenuItem(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public AbstractMenuItem(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Overriden ISchemaItem Members
 
@@ -65,70 +65,72 @@ public abstract class AbstractMenuItem : AbstractSchemaItem, IAuthorizationConte
     public override bool CanMove(Origam.UI.IBrowserNode2 newNode) =>
         newNode is Submenu | newNode is Menu;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public override bool UseFolders => false;
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
         if (this.MenuIcon != null)
         {
-            dependencies.Add(this.MenuIcon);
+            dependencies.Add(item: this.MenuIcon);
         }
 
-        base.GetExtraDependencies(dependencies);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
     #endregion
     #region Properties
-    [Category("Security")]
-    [XmlAttribute("roles")]
+    [Category(category: "Security")]
+    [XmlAttribute(attributeName: "roles")]
     [NotNullModelElementRule()]
     public virtual string Roles { get; set; }
 
-    [Category("Menu Item")]
-    [XmlAttribute("features")]
+    [Category(category: "Menu Item")]
+    [XmlAttribute(attributeName: "features")]
     public virtual string Features { get; set; }
 
-    [DefaultValue(false)]
+    [DefaultValue(value: false)]
     [Description(
-        "When set to true it will be possible to execute this menu item only when other screens are closed."
+        description: "When set to true it will be possible to execute this menu item only when other screens are closed."
     )]
-    [XmlAttribute("openExclusively")]
+    [XmlAttribute(attributeName: "openExclusively")]
     public bool OpenExclusively { get; set; } = false;
 
-    [DefaultValue(false)]
-    [Description("When set to true it will always open a new tab.")]
-    [XmlAttribute("alwaysOpenNew")]
+    [DefaultValue(value: false)]
+    [Description(description: "When set to true it will always open a new tab.")]
+    [XmlAttribute(attributeName: "alwaysOpenNew")]
     public bool AlwaysOpenNew { get; set; } = false;
 
-    [Category("Menu Item")]
-    [Localizable(true)]
+    [Category(category: "Menu Item")]
+    [Localizable(isLocalizable: true)]
     [NotNullModelElementRule()]
-    [XmlAttribute("displayName")]
+    [XmlAttribute(attributeName: "displayName")]
     public string DisplayName { get; set; }
 
     public Guid GraphicsId;
 
-    [Category("Menu Item")]
-    [TypeConverter(typeof(GuiModel.GraphicsConverter))]
-    [XmlReference("menuIcon", "GraphicsId")]
+    [Category(category: "Menu Item")]
+    [TypeConverter(type: typeof(GuiModel.GraphicsConverter))]
+    [XmlReference(attributeName: "menuIcon", idField: "GraphicsId")]
     public GuiModel.Graphics MenuIcon
     {
         get =>
             (GuiModel.Graphics)
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(this.GraphicsId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: this.GraphicsId)
                 );
-        set { this.GraphicsId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]); }
+        set { this.GraphicsId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]); }
     }
     private int order = 100;
 
-    [DefaultValue(100)]
-    [Category("Menu Item")]
-    [Localizable(false)]
+    [DefaultValue(value: 100)]
+    [Category(category: "Menu Item")]
+    [Localizable(isLocalizable: false)]
     [NotNullModelElementRule]
-    [Description("Primary attribute to use in sorting of menu items, secondary is Name.")]
-    [XmlAttribute("order")]
+    [Description(
+        description: "Primary attribute to use in sorting of menu items, secondary is Name."
+    )]
+    [XmlAttribute(attributeName: "order")]
     public int Order
     {
         get => order;
@@ -149,7 +151,7 @@ public abstract class AbstractMenuItem : AbstractSchemaItem, IAuthorizationConte
     }
     #endregion
     #region IAuthorizationContextContainer Members
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public string AuthorizationContext => this.Roles;
     #endregion
     public override int CompareTo(object obj)
@@ -161,10 +163,12 @@ public abstract class AbstractMenuItem : AbstractSchemaItem, IAuthorizationConte
         }
         if (item != null)
         {
-            var orderComparison = Order.CompareTo(item.Order);
-            return orderComparison == 0 ? DisplayName.CompareTo(item.DisplayName) : orderComparison;
+            var orderComparison = Order.CompareTo(value: item.Order);
+            return orderComparison == 0
+                ? DisplayName.CompareTo(strB: item.DisplayName)
+                : orderComparison;
         }
-        return base.CompareTo(obj);
+        return base.CompareTo(obj: obj);
     }
 
     public class MenuItemComparer : IComparer<ISchemaItem>
@@ -173,10 +177,12 @@ public abstract class AbstractMenuItem : AbstractSchemaItem, IAuthorizationConte
         public int Compare(ISchemaItem x, ISchemaItem y)
         {
             var orderComparison = (x as AbstractMenuItem).Order.CompareTo(
-                (y as AbstractMenuItem).Order
+                value: (y as AbstractMenuItem).Order
             );
             return orderComparison == 0
-                ? (x as AbstractMenuItem).DisplayName.CompareTo((y as AbstractMenuItem).DisplayName)
+                ? (x as AbstractMenuItem).DisplayName.CompareTo(
+                    strB: (y as AbstractMenuItem).DisplayName
+                )
                 : orderComparison;
         }
         #endregion

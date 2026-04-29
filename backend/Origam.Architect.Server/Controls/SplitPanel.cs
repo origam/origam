@@ -27,23 +27,23 @@ namespace Origam.Architect.Server.Controls;
 
 public class SplitPanel : IControl
 {
-    [Category("Behavior")]
+    [Category(category: "Behavior")]
     public int TabIndex { get; set; }
 
-    [Category("Layout")]
-    [Browsable(false)]
+    [Category(category: "Layout")]
+    [Browsable(browsable: false)]
     public int Top { get; set; }
 
-    [Category("Layout")]
-    [Browsable(false)]
+    [Category(category: "Layout")]
+    [Browsable(browsable: false)]
     public int Left { get; set; }
 
-    [Category("Layout")]
-    [Browsable(false)]
+    [Category(category: "Layout")]
+    [Browsable(browsable: false)]
     public int Height { get; set; } = 200;
 
-    [Category("Layout")]
-    [Browsable(false)]
+    [Category(category: "Layout")]
+    [Browsable(browsable: false)]
     public int Width { get; set; } = 200;
 
     public bool FixedSize { get; set; }

@@ -28,7 +28,7 @@ namespace Origam.Gui.Win;
 public class DesktopEntityUIActionRunner : EntityUIActionRunner
 {
     public DesktopEntityUIActionRunner(IEntityUIActionRunnerClient actionRunnerClient)
-        : base(actionRunnerClient) { }
+        : base(actionRunnerClient: actionRunnerClient) { }
 
     protected override void ExecuteOpenFormAction(ExecuteActionProcessData processData)
     {
@@ -56,11 +56,11 @@ public class DesktopEntityUIActionRunner : EntityUIActionRunner
             default:
             {
                 throw new NotImplementedException(
-                    $"Cannot execule action type {processData.Action.GetType()}"
+                    message: $"Cannot execule action type {processData.Action.GetType()}"
                 );
             }
         }
-        WorkbenchSingleton.Workbench.OpenForm(menuItem, processData.Parameters);
+        WorkbenchSingleton.Workbench.OpenForm(owner: menuItem, parameters: processData.Parameters);
     }
 
     protected override void SetTransactionId(

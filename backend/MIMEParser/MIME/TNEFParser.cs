@@ -92,7 +92,7 @@ public class TNEFParser
         {
             try
             {
-                if (value.EndsWith("\\"))
+                if (value.EndsWith(value: "\\"))
                 {
                     _basePath = value;
                 }
@@ -133,31 +133,31 @@ public class TNEFParser
     private int geti32()
     {
         byte[] buf = new byte[4];
-        if (StreamReadBytes(buf, 4) != 1)
+        if (StreamReadBytes(buffer: buf, size: 4) != 1)
         {
-            Utility.LogError("geti32():unexpected end of input\n");
+            Utility.LogError(strText: "geti32():unexpected end of input\n");
             return 1;
         }
-        return GETINT32(buf);
+        return GETINT32(p: buf);
     }
 
     private int geti16()
     {
         byte[] buf = new byte[2];
-        if (StreamReadBytes(buf, 2) != 1)
+        if (StreamReadBytes(buffer: buf, size: 2) != 1)
         {
-            Utility.LogError("geti16():unexpected end of input\n");
+            Utility.LogError(strText: "geti16():unexpected end of input\n");
             return 1;
         }
-        return GETINT16(buf);
+        return GETINT16(p: buf);
     }
 
     private int geti8()
     {
         byte[] buf = new byte[1];
-        if (StreamReadBytes(buf, 1) != 1)
+        if (StreamReadBytes(buffer: buf, size: 1) != 1)
         {
-            Utility.LogError("geti8():unexpected end of input\n");
+            Utility.LogError(strText: "geti8():unexpected end of input\n");
             return 1;
         }
         return (int)buf[0];
@@ -169,7 +169,7 @@ public class TNEFParser
         {
             if (fsTNEF.Position + size <= _fileLength)
             {
-                fsTNEF.Read(buffer, 0, size);
+                fsTNEF.Read(buffer: buffer, offset: 0, count: size);
                 return 1;
             }
 
@@ -177,7 +177,7 @@ public class TNEFParser
         }
         catch (Exception e)
         {
-            Utility.LogError("StreamReadBytes():" + e.Message);
+            Utility.LogError(strText: "StreamReadBytes():" + e.Message);
             return 0;
         }
     }
@@ -190,7 +190,7 @@ public class TNEFParser
         }
         catch (Exception e)
         {
-            Utility.LogError("CloseTNEFStream():" + e.Message);
+            Utility.LogError(strText: "CloseTNEFStream():" + e.Message);
         }
     }
 
@@ -205,15 +205,15 @@ public class TNEFParser
         TNEFFile = strFile;
         try
         {
-            fsTNEF = new FileStream(strFile, FileMode.Open, FileAccess.Read);
-            FileInfo fi = new FileInfo(strFile);
+            fsTNEF = new FileStream(path: strFile, mode: FileMode.Open, access: FileAccess.Read);
+            FileInfo fi = new FileInfo(fileName: strFile);
             _fileLength = fi.Length;
             fi = null;
             return true;
         }
         catch (Exception e)
         {
-            Utility.LogError("OpenTNEFStream(File):" + e.Message);
+            Utility.LogError(strText: "OpenTNEFStream(File):" + e.Message);
             return false;
         }
     }
@@ -228,13 +228,13 @@ public class TNEFParser
         //Utility.LogFilePath=LogFilePath;
         try
         {
-            fsTNEF = new MemoryStream(bytContents);
+            fsTNEF = new MemoryStream(buffer: bytContents);
             _fileLength = bytContents.Length;
             return true;
         }
         catch (Exception e)
         {
-            Utility.LogError("OpenTNEFStream(Bytes):" + e.Message);
+            Utility.LogError(strText: "OpenTNEFStream(Bytes):" + e.Message);
             return false;
         }
     }
@@ -252,15 +252,15 @@ public class TNEFParser
         {
             for (lpos = 0; ; lpos++)
             {
-                if (fsTNEF.Seek(lpos, SeekOrigin.Begin) == -1)
+                if (fsTNEF.Seek(offset: lpos, origin: SeekOrigin.Begin) == -1)
                 {
-                    PrintResult("No signature found\n");
+                    PrintResult(strResult: "No signature found\n");
                     return false;
                 }
                 d = geti32();
                 if (d == TNEF_SIGNATURE)
                 {
-                    PrintResult("Signature found at {0}\n", lpos);
+                    PrintResult(strResult: "Signature found at {0}\n", strContent: lpos);
                     break;
                 }
             }
@@ -268,7 +268,7 @@ public class TNEFParser
         }
         catch (Exception e)
         {
-            Utility.LogError("FindSignature():" + e.Message);
+            Utility.LogError(strText: "FindSignature():" + e.Message);
             ret = false;
         }
         fsTNEF.Position = lpos;
@@ -286,72 +286,75 @@ public class TNEFParser
         {
             case _BYTE:
             {
-                PrintResult("Attribute {0} =", d & 0xffff);
+                PrintResult(strResult: "Attribute {0} =", strContent: d & 0xffff);
                 for (i = 0; i < len; i += 1)
                 {
                     v = geti8();
                     if (i < 10)
                     {
-                        PrintResult(" {0}", v);
+                        PrintResult(strResult: " {0}", strContent: v);
                     }
                     else if (i == 10)
                     {
-                        PrintResult("...");
+                        PrintResult(strResult: "...");
                     }
                 }
-                PrintResult("\n");
+                PrintResult(strResult: "\n");
                 break;
             }
 
             case _WORD:
             {
-                PrintResult("Attribute {0} =", d & 0xffff);
+                PrintResult(strResult: "Attribute {0} =", strContent: d & 0xffff);
                 for (i = 0; i < len; i += 2)
                 {
                     v = geti16();
                     if (i < 6)
                     {
-                        PrintResult(" {0}", v);
+                        PrintResult(strResult: " {0}", strContent: v);
                     }
                     else if (i == 6)
                     {
-                        PrintResult("...");
+                        PrintResult(strResult: "...");
                     }
                 }
-                PrintResult("\n");
+                PrintResult(strResult: "\n");
                 break;
             }
 
             case _DWORD:
             {
-                PrintResult("Attribute {0} =", d & 0xffff);
+                PrintResult(strResult: "Attribute {0} =", strContent: d & 0xffff);
                 for (i = 0; i < len; i += 4)
                 {
                     v = geti32();
                     if (i < 4)
                     {
-                        PrintResult(" {0}", v);
+                        PrintResult(strResult: " {0}", strContent: v);
                     }
                     else if (i == 4)
                     {
-                        PrintResult("...");
+                        PrintResult(strResult: "...");
                     }
                 }
-                PrintResult("\n");
+                PrintResult(strResult: "\n");
                 break;
             }
 
             case _string:
             {
-                StreamReadBytes(buf, len);
-                PrintResult("Attribute {0} = {1}\n", d & 0xffff, Encoding.Default.GetString(buf));
+                StreamReadBytes(buffer: buf, size: len);
+                PrintResult(
+                    strResult: "Attribute {0} = {1}\n",
+                    strContent: new object[] { d & 0xffff, Encoding.Default.GetString(bytes: buf) }
+                );
                 break;
             }
 
             default:
             {
-                StreamReadBytes(buf, len);
-                PrintResult("Attribute {0}\n", d);
+                StreamReadBytes(buffer: buf, size: len);
+                PrintResult(strResult: "Attribute {0}\n", strContent: d);
                 break;
             }
         }
@@ -362,7 +365,7 @@ public class TNEFParser
     {
         int d;
         d = geti32();
-        decode_attribute(d);
+        decode_attribute(d: d);
     }
 
     private void decode_attachment()
@@ -379,11 +382,15 @@ public class TNEFParser
             case ASUBJECT:
             {
                 len = geti32();
-                StreamReadBytes(buf, len);
+                StreamReadBytes(buffer: buf, size: len);
                 byte[] _subjectBuffer = new byte[len - 1];
-                Array.Copy(buf, _subjectBuffer, (long)len - 1);
-                strSubject = Encoding.Default.GetString(_subjectBuffer);
-                PrintResult("Found subject: {0}", strSubject);
+                Array.Copy(
+                    sourceArray: buf,
+                    destinationArray: _subjectBuffer,
+                    length: (long)len - 1
+                );
+                strSubject = Encoding.Default.GetString(bytes: _subjectBuffer);
+                PrintResult(strResult: "Found subject: {0}", strContent: strSubject);
                 geti16(); /* checksum */
                 break;
             }
@@ -391,28 +398,35 @@ public class TNEFParser
             case AFILENAME:
             {
                 len = geti32();
-                StreamReadBytes(buf, len);
+                StreamReadBytes(buffer: buf, size: len);
                 //PrintResult("File-Name: {0}\n", buf);
                 byte[] _fileNameBuffer = new byte[len - 1];
-                Array.Copy(buf, _fileNameBuffer, (long)len - 1);
+                Array.Copy(
+                    sourceArray: buf,
+                    destinationArray: _fileNameBuffer,
+                    length: (long)len - 1
+                );
                 if (_fileNameBuffer == null)
                 {
-                    _fileNameBuffer = Encoding.Default.GetBytes("tnef.dat");
+                    _fileNameBuffer = Encoding.Default.GetBytes(s: "tnef.dat");
                 }
 
-                string strFileName = Encoding.Default.GetString(_fileNameBuffer);
-                PrintResult("{0}: WRITING {1}\n", BasePath, strFileName);
+                string strFileName = Encoding.Default.GetString(bytes: _fileNameBuffer);
+                PrintResult(
+                    strResult: "{0}: WRITING {1}\n",
+                    strContent: new object[] { BasePath, strFileName }
+                );
                 //new attachment found because attachment data goes before attachment name
                 _attachment.FileName = strFileName;
                 _attachment.Subject = strSubject;
-                _attachments.Add(_attachment.FileName, _attachment);
+                _attachments.Add(key: _attachment.FileName, value: _attachment);
                 geti16(); /* checksum */
                 break;
             }
             case ATTACHDATA:
             {
                 len = geti32();
-                PrintResult("ATTACH-DATA: {0} bytes\n", len);
+                PrintResult(strResult: "ATTACH-DATA: {0} bytes\n", strContent: len);
                 _attachment = new TNEFAttachment();
                 _attachment.FileContent = new byte[len];
                 _attachment.FileLength = len;
@@ -424,8 +438,14 @@ public class TNEFParser
                         chunk = buf.Length;
                     }
 
-                    StreamReadBytes(buf, chunk);
-                    Array.Copy(buf, 0, _attachment.FileContent, i, chunk);
+                    StreamReadBytes(buffer: buf, size: chunk);
+                    Array.Copy(
+                        sourceArray: buf,
+                        sourceIndex: 0,
+                        destinationArray: _attachment.FileContent,
+                        destinationIndex: i,
+                        length: chunk
+                    );
                     i += chunk;
                 }
                 geti16(); /* checksum */
@@ -435,7 +455,7 @@ public class TNEFParser
 
             default:
             {
-                decode_attribute(d);
+                decode_attribute(d: d);
                 break;
             }
         }
@@ -460,7 +480,7 @@ public class TNEFParser
         IDictionaryEnumerator ideAttachments = _attachments.GetEnumerator();
         while (ideAttachments.MoveNext())
         {
-            blnRet = SaveAttachment((TNEFAttachment)ideAttachments.Value);
+            blnRet = SaveAttachment(attachment: (TNEFAttachment)ideAttachments.Value);
         }
         return blnRet;
     }
@@ -475,19 +495,27 @@ public class TNEFParser
         try
         {
             string strOutFile = BasePath + attachment.FileName;
-            if (File.Exists(strOutFile))
+            if (File.Exists(path: strOutFile))
             {
-                File.Delete(strOutFile);
+                File.Delete(path: strOutFile);
             }
 
-            FileStream fsData = new FileStream(strOutFile, FileMode.CreateNew, FileAccess.Write);
-            fsData.Write(attachment.FileContent, 0, (int)attachment.FileLength);
+            FileStream fsData = new FileStream(
+                path: strOutFile,
+                mode: FileMode.CreateNew,
+                access: FileAccess.Write
+            );
+            fsData.Write(
+                array: attachment.FileContent,
+                offset: 0,
+                count: (int)attachment.FileLength
+            );
             fsData.Close();
             return true;
         }
         catch (Exception e)
         {
-            Utility.LogError("SaveAttachment():" + e.Message);
+            Utility.LogError(strText: "SaveAttachment():" + e.Message);
             return false;
         }
     }
@@ -509,16 +537,16 @@ public class TNEFParser
                 {
                     if (d != TNEF_SIGNATURE)
                     {
-                        PrintResult("Seems not to be a TNEF file\n");
+                        PrintResult(strResult: "Seems not to be a TNEF file\n");
                         return false;
                     }
                 }
             }
             d = geti16();
-            PrintResult("TNEF Key is: {0}\n", d);
+            PrintResult(strResult: "TNEF Key is: {0}\n", strContent: d);
             for (; ; )
             {
-                if (StreamReadBytes(buf, 1) == 0)
+                if (StreamReadBytes(buffer: buf, size: 1) == 0)
                 {
                     break;
                 }
@@ -528,21 +556,24 @@ public class TNEFParser
                 {
                     case LVL_MESSAGE:
                     {
-                        PrintResult("{0}: Decoding Message Attributes\n", fsTNEF.Position);
+                        PrintResult(
+                            strResult: "{0}: Decoding Message Attributes\n",
+                            strContent: fsTNEF.Position
+                        );
                         decode_message();
                         break;
                     }
 
                     case LVL_ATTACHMENT:
                     {
-                        PrintResult("Decoding Attachment\n");
+                        PrintResult(strResult: "Decoding Attachment\n");
                         decode_attachment();
                         break;
                     }
 
                     default:
                     {
-                        PrintResult("Coding Error in TNEF file\n");
+                        PrintResult(strResult: "Coding Error in TNEF file\n");
                         return false;
                     }
                 }
@@ -555,10 +586,10 @@ public class TNEFParser
 
     private void PrintResult(string strResult, params object[] strContent)
     {
-        string strRet = string.Format(strResult, strContent);
+        string strRet = string.Format(format: strResult, args: strContent);
         if (Verbose)
         {
-            Utility.LogError(strRet);
+            Utility.LogError(strText: strRet);
         }
     }
 
@@ -576,7 +607,7 @@ public class TNEFParser
     /// <param name="strFile">MS-TNEF file</param>
     public TNEFParser(string strFile)
     {
-        OpenTNEFStream(strFile);
+        OpenTNEFStream(strFile: strFile);
     }
 
     /// <summary>
@@ -585,6 +616,6 @@ public class TNEFParser
     /// <param name="bytContents">MS-TNEF bytes</param>
     public TNEFParser(byte[] bytContents)
     {
-        OpenTNEFStream(bytContents);
+        OpenTNEFStream(bytContents: bytContents);
     }
 }

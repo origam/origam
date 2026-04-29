@@ -38,15 +38,19 @@ public class CrystalReportHelper
 {
     private IServiceAgent _dataServiceAgent;
     private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
-        System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
+        type: System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
     );
 
     public CrystalReportHelper()
     {
         IBusinessServicesService services =
-            ServiceManager.Services.GetService(typeof(IBusinessServicesService))
+            ServiceManager.Services.GetService(serviceType: typeof(IBusinessServicesService))
             as IBusinessServicesService;
-        _dataServiceAgent = services.GetAgent("DataService", null, null);
+        _dataServiceAgent = services.GetAgent(
+            serviceType: "DataService",
+            ruleEngine: null,
+            workflowEngine: null
+        );
     }
 
     #region Public Functions
@@ -57,24 +61,29 @@ public class CrystalReportHelper
             parameters = new Hashtable();
         }
         // get report model element
-        var report = ReportHelper.GetReportElement<CrystalReport>(reportId);
-        ReportHelper.PopulateDefaultValues(report, parameters);
-        ReportHelper.ComputeXsltValueParameters(report, parameters);
+        var report = ReportHelper.GetReportElement<CrystalReport>(reportId: reportId);
+        ReportHelper.PopulateDefaultValues(report: report, parameters: parameters);
+        ReportHelper.ComputeXsltValueParameters(report: report, parameters: parameters);
         // load data
         DataSet data = null;
         if (report.DataStructure != null)
         {
             data = LoadData(
-                report.DataStructureId,
-                report.DataStructureMethodId,
-                report.DataStructureSortSetId,
-                parameters,
-                transactionId
+                dataStructureId: report.DataStructureId,
+                methodId: report.DataStructureMethodId,
+                sortSetId: report.DataStructureSortSetId,
+                parameters: parameters,
+                transactionId: transactionId
             );
         }
-        TraceReportData(data, report.Name);
+        TraceReportData(data: data, reportName: report.Name);
         // get report
-        return CreateReport(report.ReportFileName, data, parameters, report);
+        return CreateReport(
+            fileName: report.ReportFileName,
+            data: data,
+            parameters: parameters,
+            reportElement: report
+        );
     }
 
     private void TraceReportData(DataSet data, string reportName)
@@ -85,16 +94,22 @@ public class CrystalReportHelper
             if (data != null)
             {
                 data.WriteXml(
-                    System.IO.Path.Combine(settings.ReportsFolder(), reportName + ".xml"),
-                    XmlWriteMode.WriteSchema
+                    fileName: System.IO.Path.Combine(
+                        path1: settings.ReportsFolder(),
+                        path2: reportName + ".xml"
+                    ),
+                    mode: XmlWriteMode.WriteSchema
                 );
             }
         }
         catch (Exception e)
         {
             ReportHelper.LogError(
-                System.Reflection.MethodBase.GetCurrentMethod().DeclaringType,
-                string.Format("Can't write Crystal Report debug info: {0}", e.Message)
+                type: System.Reflection.MethodBase.GetCurrentMethod().DeclaringType,
+                message: string.Format(
+                    format: "Can't write Crystal Report debug info: {0}",
+                    arg0: e.Message
+                )
             );
         }
     }
@@ -106,21 +121,31 @@ public class CrystalReportHelper
             parameters = new Hashtable();
         }
         // get report model element
-        var report = ReportHelper.GetReportElement<CrystalReport>(reportId);
-        TraceReportData(data, report.Name);
-        ReportHelper.PopulateDefaultValues(report, parameters);
-        ReportHelper.ComputeXsltValueParameters(report, parameters);
+        var report = ReportHelper.GetReportElement<CrystalReport>(reportId: reportId);
+        TraceReportData(data: data, reportName: report.Name);
+        ReportHelper.PopulateDefaultValues(report: report, parameters: parameters);
+        ReportHelper.ComputeXsltValueParameters(report: report, parameters: parameters);
         // get report
         string reportFileName = ReportHelper.ExpandCurlyBracketPlaceholdersWithParameters(
-            report.ReportFileName,
-            parameters
+            input: report.ReportFileName,
+            parameters: parameters
         );
-        return CreateReport(reportFileName, data, parameters, report);
+        return CreateReport(
+            fileName: reportFileName,
+            data: data,
+            parameters: parameters,
+            reportElement: report
+        );
     }
 
     public ReportDocument CreateReport(string fileName, DataSet data)
     {
-        return this.CreateReport(fileName, data, new Hashtable(), null);
+        return this.CreateReport(
+            fileName: fileName,
+            data: data,
+            parameters: new Hashtable(),
+            reportElement: null
+        );
     }
     #endregion
 
@@ -133,12 +158,12 @@ public class CrystalReportHelper
     {
         if (log.IsInfoEnabled)
         {
-            WriteInfoLog(reportElement, "Generating report started");
+            WriteInfoLog(reportElement: reportElement, message: "Generating report started");
         }
         if (parameters == null)
         {
             throw new NullReferenceException(
-                ResourceUtils.GetString("CreateReport: Parameters cannot be null.")
+                message: ResourceUtils.GetString(key: "CreateReport: Parameters cannot be null.")
             );
         }
 
@@ -150,27 +175,33 @@ public class CrystalReportHelper
         }
         catch (Exception ex)
         {
-            log.LogOrigamError("Error occured while initializing Crystal Report " + path, ex);
+            log.LogOrigamError(
+                message: "Error occured while initializing Crystal Report " + path,
+                ex: ex
+            );
         }
         try
         {
             OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
-            path = System.IO.Path.Combine(settings.ReportsFolder(), fileName);
-            if (!IOTools.IsSubPathOf(path, settings.ReportsFolder()))
+            path = System.IO.Path.Combine(path1: settings.ReportsFolder(), path2: fileName);
+            if (!IOTools.IsSubPathOf(path: path, basePath: settings.ReportsFolder()))
             {
-                throw new Exception(Strings.PathNotOnReportPath);
+                throw new Exception(message: Strings.PathNotOnReportPath);
             }
-            result.Load(path, CrystalDecisions.Shared.OpenReportMethod.OpenReportByTempCopy);
+            result.Load(
+                filename: path,
+                openMethod: CrystalDecisions.Shared.OpenReportMethod.OpenReportByTempCopy
+            );
         }
         catch (Exception ex)
         {
-            log.Fatal("Failed loading Crystal Report " + path, ex);
+            log.Fatal(message: "Failed loading Crystal Report " + path, exception: ex);
             throw new Exception(
-                ResourceUtils.GetString(
-                    "FailedToLoadReport",
-                    path + Environment.NewLine + ex.Message + Environment.NewLine
+                message: ResourceUtils.GetString(
+                    key: "FailedToLoadReport",
+                    args: path + Environment.NewLine + ex.Message + Environment.NewLine
                 ),
-                ex
+                innerException: ex
             );
         }
 
@@ -180,44 +211,55 @@ public class CrystalReportHelper
             {
                 OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
                 Hashtable cn = OrigamSettings.ParseConnectionString(
-                    settings.ReportConnectionString
+                    connectionString: settings.ReportConnectionString
                 );
-                SetLogonInfo(result, cn);
+                SetLogonInfo(report: result, connection: cn);
                 foreach (ReportDocument subreport in result.Subreports)
                 {
-                    SetLogonInfo(subreport, cn);
+                    SetLogonInfo(report: subreport, connection: cn);
                 }
             }
             else
             {
                 // we set the data source to the main report
-                result.SetDataSource(data);
+                result.SetDataSource(dataSet: data);
                 // we set the same data source to all subreports
                 foreach (ReportDocument subreport in result.Subreports)
                 {
                     if (subreport.DataSourceConnections.Count > 0)
                     {
-                        subreport.SetDataSource(data);
+                        subreport.SetDataSource(dataSet: data);
                     }
                     //subreport.Refresh();
                 }
             }
             // set report's parameters
-            SetReportParameters(parameters, result, reportElement);
+            SetReportParameters(
+                parameters: parameters,
+                report: result,
+                reportElement: reportElement
+            );
             result.Refresh();
             // once again
-            SetReportParameters(parameters, result, reportElement);
+            SetReportParameters(
+                parameters: parameters,
+                report: result,
+                reportElement: reportElement
+            );
         }
         catch (Exception ex)
         {
             throw new Exception(
-                ResourceUtils.GetString("CouldNotActivate", Environment.NewLine, ex.Message),
-                ex
+                message: ResourceUtils.GetString(
+                    key: "CouldNotActivate",
+                    args: new object[] { Environment.NewLine, ex.Message }
+                ),
+                innerException: ex
             );
         }
         if (log.IsInfoEnabled)
         {
-            WriteInfoLog(reportElement, "Generating report finished");
+            WriteInfoLog(reportElement: reportElement, message: "Generating report finished");
         }
         return result;
     }
@@ -225,15 +267,15 @@ public class CrystalReportHelper
     private void WriteInfoLog(CrystalReport reportElement, string message)
     {
         LoggingEvent loggingEvent = new LoggingEvent(
-            this.GetType(),
-            log.Logger.Repository,
-            log.Logger.Name,
-            Level.Info,
-            string.Format("{0}: {1}", message, reportElement.Name),
-            null
+            callerStackBoundaryDeclaringType: this.GetType(),
+            repository: log.Logger.Repository,
+            loggerName: log.Logger.Name,
+            level: Level.Info,
+            message: string.Format(format: "{0}: {1}", arg0: message, arg1: reportElement.Name),
+            exception: null
         );
-        loggingEvent.Properties["Caption"] = reportElement.Caption;
-        log.Logger.Log(loggingEvent);
+        loggingEvent.Properties[key: "Caption"] = reportElement.Caption;
+        log.Logger.Log(logEvent: loggingEvent);
     }
 
     private void SetLogonInfo(ReportDocument report, Hashtable connection)
@@ -241,34 +283,40 @@ public class CrystalReportHelper
         foreach (CrystalDecisions.CrystalReports.Engine.Table table in report.Database.Tables)
         {
             CrystalDecisions.Shared.TableLogOnInfo logon = table.LogOnInfo;
-            if (connection["DatabaseName"] != null)
+            if (connection[key: "DatabaseName"] != null)
             {
-                logon.ConnectionInfo.DatabaseName = Convert.ToString(connection["DatabaseName"]);
-            }
-
-            if (connection["IntegratedSecurity"] != null)
-            {
-                logon.ConnectionInfo.IntegratedSecurity = Convert.ToBoolean(
-                    connection["IntegratedSecurity"]
+                logon.ConnectionInfo.DatabaseName = Convert.ToString(
+                    value: connection[key: "DatabaseName"]
                 );
             }
 
-            if (connection["ServerName"] != null)
+            if (connection[key: "IntegratedSecurity"] != null)
             {
-                logon.ConnectionInfo.ServerName = Convert.ToString(connection["ServerName"]);
+                logon.ConnectionInfo.IntegratedSecurity = Convert.ToBoolean(
+                    value: connection[key: "IntegratedSecurity"]
+                );
             }
 
-            if (connection["UserID"] != null)
+            if (connection[key: "ServerName"] != null)
             {
-                logon.ConnectionInfo.UserID = Convert.ToString(connection["UserID"]);
+                logon.ConnectionInfo.ServerName = Convert.ToString(
+                    value: connection[key: "ServerName"]
+                );
             }
 
-            if (connection["Password"] != null)
+            if (connection[key: "UserID"] != null)
             {
-                logon.ConnectionInfo.Password = Convert.ToString(connection["Password"]);
+                logon.ConnectionInfo.UserID = Convert.ToString(value: connection[key: "UserID"]);
             }
 
-            table.ApplyLogOnInfo(logon);
+            if (connection[key: "Password"] != null)
+            {
+                logon.ConnectionInfo.Password = Convert.ToString(
+                    value: connection[key: "Password"]
+                );
+            }
+
+            table.ApplyLogOnInfo(logonInfo: logon);
         }
     }
 
@@ -292,7 +340,7 @@ public class CrystalReportHelper
                             val = entry.Value.ToString();
                         }
 
-                        report.SetParameterValue(paramDef.Name, val);
+                        report.SetParameterValue(name: paramDef.Name, val: val);
                     }
                 }
             }
@@ -308,23 +356,25 @@ public class CrystalReportHelper
     )
     {
         DataStructureQuery query = new DataStructureQuery(
-            dataStructureId,
-            methodId,
-            Guid.Empty,
-            sortSetId
+            dataStructureId: dataStructureId,
+            methodId: methodId,
+            defaultSetId: Guid.Empty,
+            sortSetId: sortSetId
         );
         foreach (DictionaryEntry entry in parameters)
         {
-            query.Parameters.Add(new QueryParameter((string)entry.Key, entry.Value));
+            query.Parameters.Add(
+                value: new QueryParameter(_parameterName: (string)entry.Key, value: entry.Value)
+            );
         }
-        return LoadData(query, transactionId);
+        return LoadData(query: query, transactionId: transactionId);
     }
 
     private DataSet LoadData(DataStructureQuery query, string transactionId)
     {
         _dataServiceAgent.MethodName = "LoadDataByQuery";
         _dataServiceAgent.Parameters.Clear();
-        _dataServiceAgent.Parameters.Add("Query", query);
+        _dataServiceAgent.Parameters.Add(key: "Query", value: query);
         _dataServiceAgent.TransactionId = transactionId;
         _dataServiceAgent.Run();
         DataSet reportData = _dataServiceAgent.Result as DataSet;

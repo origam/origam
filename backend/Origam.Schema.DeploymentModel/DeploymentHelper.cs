@@ -36,7 +36,10 @@ public class DeploymentHelper
     )
     {
         var activePackage = ServiceManager.Services.GetService<ISchemaService>().ActiveExtension;
-        var deploymentVersion = group.NewItem<DeploymentVersion>(activePackage.Id, null);
+        var deploymentVersion = group.NewItem<DeploymentVersion>(
+            schemaExtensionId: activePackage.Id,
+            group: null
+        );
         deploymentVersion.Name = name;
         deploymentVersion.VersionString = version;
         deploymentVersion.Persist();
@@ -53,15 +56,15 @@ public class DeploymentHelper
         var serviceSchemaItemProvider = schemaService.GetProvider<ServiceSchemaItemProvider>();
         var dataService =
             serviceSchemaItemProvider.GetChildByName(
-                "DataService",
-                Origam.Schema.WorkflowModel.Service.CategoryConst
+                name: "DataService",
+                itemType: Origam.Schema.WorkflowModel.Service.CategoryConst
             ) as Origam.Schema.WorkflowModel.Service;
         var deploymentSchemaItemProvider =
             schemaService.GetProvider<DeploymentSchemaItemProvider>();
         var currentVersion = deploymentSchemaItemProvider.CurrentVersion();
         var newActivity = currentVersion.NewItem<ServiceCommandUpdateScriptActivity>(
-            schemaService.ActiveSchemaExtensionId,
-            null
+            schemaExtensionId: schemaService.ActiveSchemaExtensionId,
+            group: null
         );
         newActivity.Name += name;
         newActivity.DatabaseType = platformName;
@@ -76,11 +79,11 @@ public class DeploymentHelper
         AbstractSqlDataService abstractSqlData
     )
     {
-        var script = abstractSqlData.CreateSystemRole(roleName);
+        var script = abstractSqlData.CreateSystemRole(roleName: roleName);
         var activity = CreateDatabaseScript(
-            $"AddRole_{roleName}",
-            script,
-            abstractSqlData.PlatformName
+            name: $"AddRole_{roleName}",
+            script: script,
+            platformName: abstractSqlData.PlatformName
         );
         return activity;
     }

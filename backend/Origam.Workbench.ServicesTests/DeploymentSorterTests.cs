@@ -32,9 +32,9 @@ namespace Origam.WorkbenchTests;
 [TestFixture]
 public class DeploymentSorterTests
 {
-    private readonly Guid package1Id = new Guid("10000000-2867-4B99-8824-071FA8749EAD");
-    private readonly Guid package2Id = new Guid("20000000-6519-4393-B5D0-87931F9FD609");
-    private readonly Guid package3Id = new Guid("30000000-BFCC-45DB-940E-DE685AE821EF");
+    private readonly Guid package1Id = new Guid(g: "10000000-2867-4B99-8824-071FA8749EAD");
+    private readonly Guid package2Id = new Guid(g: "20000000-6519-4393-B5D0-87931F9FD609");
+    private readonly Guid package3Id = new Guid(g: "30000000-BFCC-45DB-940E-DE685AE821EF");
 
     [Test]
     public void ShouldOrderTwoUnrelatedPackagesByDependencies()
@@ -46,34 +46,37 @@ public class DeploymentSorterTests
         //   |    1.2
         //  1.1
         var deployment1 = new MockDeploymentVersion(
-            new PackageVersion("1.0"),
-            new List<DeploymentDependency>(),
-            package1Id
+            version: new PackageVersion(completeVersionString: "1.0"),
+            deploymentDependencies: new List<DeploymentDependency>(),
+            schemaExtensionId: package1Id
         );
 
         var deployment2 = new MockDeploymentVersion(
-            new PackageVersion("1.0"),
-            new List<DeploymentDependency>
+            version: new PackageVersion(completeVersionString: "1.0"),
+            deploymentDependencies: new List<DeploymentDependency>
             {
-                new DeploymentDependency(package1Id, new PackageVersion("1.0")),
+                new DeploymentDependency(
+                    packageId: package1Id,
+                    packageVersion: new PackageVersion(completeVersionString: "1.0")
+                ),
             },
-            package2Id
+            schemaExtensionId: package2Id
         );
 
         var deployment3 = new MockDeploymentVersion(
-            new PackageVersion("1.1"),
-            new List<DeploymentDependency> { },
-            package2Id
+            version: new PackageVersion(completeVersionString: "1.1"),
+            deploymentDependencies: new List<DeploymentDependency> { },
+            schemaExtensionId: package2Id
         );
         var deployment4 = new MockDeploymentVersion(
-            new PackageVersion("1.2"),
-            new List<DeploymentDependency> { },
-            package2Id
+            version: new PackageVersion(completeVersionString: "1.2"),
+            deploymentDependencies: new List<DeploymentDependency> { },
+            schemaExtensionId: package2Id
         );
         var deployment5 = new MockDeploymentVersion(
-            new PackageVersion("1.1"),
-            new List<DeploymentDependency> { },
-            package1Id
+            version: new PackageVersion(completeVersionString: "1.1"),
+            deploymentDependencies: new List<DeploymentDependency> { },
+            schemaExtensionId: package1Id
         );
         var unsortedDeployments = new List<IDeploymentVersion>
         {
@@ -90,15 +93,30 @@ public class DeploymentSorterTests
             sortingFailedCalledTimes++;
         };
         List<IDeploymentVersion> sortedDeployments = deploymentSorter.SortToRespectDependencies(
-            unsortedDeployments
+            deplVersionsToSort: unsortedDeployments
         );
 
-        Assert.That(sortingFailedCalledTimes, Is.EqualTo(0));
-        Assert.That(sortedDeployments[0], Is.EqualTo(deployment1));
-        Assert.That(sortedDeployments[1], Is.EqualTo(deployment2));
-        Assert.That(sortedDeployments[2], Is.EqualTo(deployment3));
-        Assert.That(sortedDeployments[3], Is.EqualTo(deployment4));
-        Assert.That(sortedDeployments[4], Is.EqualTo(deployment5));
+        Assert.That(actual: sortingFailedCalledTimes, expression: Is.EqualTo(expected: 0));
+        Assert.That(
+            actual: sortedDeployments[index: 0],
+            expression: Is.EqualTo(expected: deployment1)
+        );
+        Assert.That(
+            actual: sortedDeployments[index: 1],
+            expression: Is.EqualTo(expected: deployment2)
+        );
+        Assert.That(
+            actual: sortedDeployments[index: 2],
+            expression: Is.EqualTo(expected: deployment3)
+        );
+        Assert.That(
+            actual: sortedDeployments[index: 3],
+            expression: Is.EqualTo(expected: deployment4)
+        );
+        Assert.That(
+            actual: sortedDeployments[index: 4],
+            expression: Is.EqualTo(expected: deployment5)
+        );
     }
 
     [Test]
@@ -110,35 +128,46 @@ public class DeploymentSorterTests
         //   |   1.1
         //  1.1-->
         var deployment1 = new MockDeploymentVersion(
-            new PackageVersion("1.0"),
-            new List<DeploymentDependency>(),
-            package1Id
+            version: new PackageVersion(completeVersionString: "1.0"),
+            deploymentDependencies: new List<DeploymentDependency>(),
+            schemaExtensionId: package1Id
         );
 
         var deployment2 = new MockDeploymentVersion(
-            new PackageVersion("1.0"),
-            new List<DeploymentDependency>
+            version: new PackageVersion(completeVersionString: "1.0"),
+            deploymentDependencies: new List<DeploymentDependency>
             {
-                new DeploymentDependency(package1Id, new PackageVersion("1.0")),
+                new DeploymentDependency(
+                    packageId: package1Id,
+                    packageVersion: new PackageVersion(completeVersionString: "1.0")
+                ),
             },
-            package2Id
+            schemaExtensionId: package2Id
         );
 
         var deployment3 = new MockDeploymentVersion(
-            new PackageVersion("1.1"),
-            new List<DeploymentDependency> { },
-            package2Id
+            version: new PackageVersion(completeVersionString: "1.1"),
+            deploymentDependencies: new List<DeploymentDependency> { },
+            schemaExtensionId: package2Id
         );
 
         var deployment4 = new MockDeploymentVersion(
-            new PackageVersion("1.1"),
-            new List<DeploymentDependency>
+            version: new PackageVersion(completeVersionString: "1.1"),
+            deploymentDependencies: new List<DeploymentDependency>
             {
-                new DeploymentDependency(package2Id, new PackageVersion("1.1")),
+                new DeploymentDependency(
+                    packageId: package2Id,
+                    packageVersion: new PackageVersion(completeVersionString: "1.1")
+                ),
             },
-            package1Id
+            schemaExtensionId: package1Id
         );
-        CheckTheOrderIsCorrect(deployment1, deployment2, deployment3, deployment4);
+        CheckTheOrderIsCorrect(
+            deployment1: deployment1,
+            deployment2: deployment2,
+            deployment3: deployment3,
+            deployment4: deployment4
+        );
     }
 
     [Test]
@@ -150,35 +179,46 @@ public class DeploymentSorterTests
         //   |        1.0
         //  1.1
         var deployment1 = new MockDeploymentVersion(
-            new PackageVersion("1.0"),
-            new List<DeploymentDependency>(),
-            package1Id
+            version: new PackageVersion(completeVersionString: "1.0"),
+            deploymentDependencies: new List<DeploymentDependency>(),
+            schemaExtensionId: package1Id
         );
 
         var deployment2 = new MockDeploymentVersion(
-            new PackageVersion("1.0"),
-            new List<DeploymentDependency>
+            version: new PackageVersion(completeVersionString: "1.0"),
+            deploymentDependencies: new List<DeploymentDependency>
             {
-                new DeploymentDependency(package1Id, new PackageVersion("1.0")),
+                new DeploymentDependency(
+                    packageId: package1Id,
+                    packageVersion: new PackageVersion(completeVersionString: "1.0")
+                ),
             },
-            package2Id
+            schemaExtensionId: package2Id
         );
 
         var deployment3 = new MockDeploymentVersion(
-            new PackageVersion("1.0"),
-            new List<DeploymentDependency>
+            version: new PackageVersion(completeVersionString: "1.0"),
+            deploymentDependencies: new List<DeploymentDependency>
             {
-                new DeploymentDependency(package2Id, new PackageVersion("1.0")),
+                new DeploymentDependency(
+                    packageId: package2Id,
+                    packageVersion: new PackageVersion(completeVersionString: "1.0")
+                ),
             },
-            package3Id
+            schemaExtensionId: package3Id
         );
 
         var deployment4 = new MockDeploymentVersion(
-            new PackageVersion("1.1"),
-            new List<DeploymentDependency> { },
-            package1Id
+            version: new PackageVersion(completeVersionString: "1.1"),
+            deploymentDependencies: new List<DeploymentDependency> { },
+            schemaExtensionId: package1Id
         );
-        CheckTheOrderIsCorrect(deployment1, deployment2, deployment3, deployment4);
+        CheckTheOrderIsCorrect(
+            deployment1: deployment1,
+            deployment2: deployment2,
+            deployment3: deployment3,
+            deployment4: deployment4
+        );
     }
 
     [Test]
@@ -190,40 +230,60 @@ public class DeploymentSorterTests
         //   |------->1.0
         //  1.1
         var deployment1 = new MockDeploymentVersion(
-            new PackageVersion("1.0"),
-            new List<DeploymentDependency>(),
-            package1Id
+            version: new PackageVersion(completeVersionString: "1.0"),
+            deploymentDependencies: new List<DeploymentDependency>(),
+            schemaExtensionId: package1Id
         );
 
         var deployment2 = new MockDeploymentVersion(
-            new PackageVersion("1.0"),
-            new List<DeploymentDependency>
+            version: new PackageVersion(completeVersionString: "1.0"),
+            deploymentDependencies: new List<DeploymentDependency>
             {
-                new DeploymentDependency(package1Id, new PackageVersion("1.0")),
+                new DeploymentDependency(
+                    packageId: package1Id,
+                    packageVersion: new PackageVersion(completeVersionString: "1.0")
+                ),
             },
-            package2Id
+            schemaExtensionId: package2Id
         );
 
         var deployment3 = new MockDeploymentVersion(
-            new PackageVersion("1.0"),
-            new List<DeploymentDependency>
+            version: new PackageVersion(completeVersionString: "1.0"),
+            deploymentDependencies: new List<DeploymentDependency>
             {
-                new DeploymentDependency(package2Id, new PackageVersion("1.0")),
-                new DeploymentDependency(package1Id, new PackageVersion("1.0")),
+                new DeploymentDependency(
+                    packageId: package2Id,
+                    packageVersion: new PackageVersion(completeVersionString: "1.0")
+                ),
+                new DeploymentDependency(
+                    packageId: package1Id,
+                    packageVersion: new PackageVersion(completeVersionString: "1.0")
+                ),
             },
-            package3Id
+            schemaExtensionId: package3Id
         );
 
         var deployment4 = new MockDeploymentVersion(
-            new PackageVersion("1.1"),
-            new List<DeploymentDependency>
+            version: new PackageVersion(completeVersionString: "1.1"),
+            deploymentDependencies: new List<DeploymentDependency>
             {
-                new DeploymentDependency(package3Id, new PackageVersion("1.0")),
-                new DeploymentDependency(package2Id, new PackageVersion("1.0")),
+                new DeploymentDependency(
+                    packageId: package3Id,
+                    packageVersion: new PackageVersion(completeVersionString: "1.0")
+                ),
+                new DeploymentDependency(
+                    packageId: package2Id,
+                    packageVersion: new PackageVersion(completeVersionString: "1.0")
+                ),
             },
-            package1Id
+            schemaExtensionId: package1Id
         );
-        CheckTheOrderIsCorrect(deployment1, deployment2, deployment3, deployment4);
+        CheckTheOrderIsCorrect(
+            deployment1: deployment1,
+            deployment2: deployment2,
+            deployment3: deployment3,
+            deployment4: deployment4
+        );
     }
 
     [Test]
@@ -240,41 +300,50 @@ public class DeploymentSorterTests
         //  not be able to run because they depend on P1 1.0
 
         var deployment1 = new MockDeploymentVersion(
-            new PackageVersion("1.0"),
-            new List<DeploymentDependency>(),
-            package1Id
+            version: new PackageVersion(completeVersionString: "1.0"),
+            deploymentDependencies: new List<DeploymentDependency>(),
+            schemaExtensionId: package1Id
         );
         var deployment2 = new MockDeploymentVersion(
-            new PackageVersion("1.1"),
-            new List<DeploymentDependency>(),
-            package1Id
+            version: new PackageVersion(completeVersionString: "1.1"),
+            deploymentDependencies: new List<DeploymentDependency>(),
+            schemaExtensionId: package1Id
         );
         var deployment3 = new MockDeploymentVersion(
-            new PackageVersion("1.0"),
-            new List<DeploymentDependency>
+            version: new PackageVersion(completeVersionString: "1.0"),
+            deploymentDependencies: new List<DeploymentDependency>
             {
-                new DeploymentDependency(package1Id, new PackageVersion("1.0")),
+                new DeploymentDependency(
+                    packageId: package1Id,
+                    packageVersion: new PackageVersion(completeVersionString: "1.0")
+                ),
             },
-            package2Id
+            schemaExtensionId: package2Id
         );
         var deployment4 = new MockDeploymentVersion(
-            new PackageVersion("1.1"),
-            new List<DeploymentDependency>(),
-            package2Id
+            version: new PackageVersion(completeVersionString: "1.1"),
+            deploymentDependencies: new List<DeploymentDependency>(),
+            schemaExtensionId: package2Id
         );
         var deployment5 = new MockDeploymentVersion(
-            new PackageVersion("1.0"),
-            new List<DeploymentDependency>(),
-            package3Id
+            version: new PackageVersion(completeVersionString: "1.0"),
+            deploymentDependencies: new List<DeploymentDependency>(),
+            schemaExtensionId: package3Id
         );
         var deployment6 = new MockDeploymentVersion(
-            new PackageVersion("1.1"),
-            new List<DeploymentDependency>
+            version: new PackageVersion(completeVersionString: "1.1"),
+            deploymentDependencies: new List<DeploymentDependency>
             {
-                new DeploymentDependency(package1Id, new PackageVersion("1.0")),
-                new DeploymentDependency(package2Id, new PackageVersion("1.1")),
+                new DeploymentDependency(
+                    packageId: package1Id,
+                    packageVersion: new PackageVersion(completeVersionString: "1.0")
+                ),
+                new DeploymentDependency(
+                    packageId: package2Id,
+                    packageVersion: new PackageVersion(completeVersionString: "1.1")
+                ),
             },
-            package3Id
+            schemaExtensionId: package3Id
         );
 
         var unsortedDeployments = new List<IDeploymentVersion>
@@ -294,11 +363,14 @@ public class DeploymentSorterTests
             sortingFailedCalledTimes++;
         };
         List<IDeploymentVersion> sortedDeployments = deploymentSorter.SortToRespectDependencies(
-            unsortedDeployments
+            deplVersionsToSort: unsortedDeployments
         );
 
-        Assert.That(sortingFailedCalledTimes, Is.EqualTo(0));
-        Assert.That(sortedDeployments.Last(), Is.EqualTo(deployment2));
+        Assert.That(actual: sortingFailedCalledTimes, expression: Is.EqualTo(expected: 0));
+        Assert.That(
+            actual: sortedDeployments.Last(),
+            expression: Is.EqualTo(expected: deployment2)
+        );
     }
 
     [Test]
@@ -318,41 +390,50 @@ public class DeploymentSorterTests
         // => Deployment dead lock
 
         var deployment1 = new MockDeploymentVersion(
-            new PackageVersion("1.0"),
-            new List<DeploymentDependency>(),
-            package1Id
+            version: new PackageVersion(completeVersionString: "1.0"),
+            deploymentDependencies: new List<DeploymentDependency>(),
+            schemaExtensionId: package1Id
         );
         var deployment2 = new MockDeploymentVersion(
-            new PackageVersion("1.1"),
-            new List<DeploymentDependency>(),
-            package1Id
+            version: new PackageVersion(completeVersionString: "1.1"),
+            deploymentDependencies: new List<DeploymentDependency>(),
+            schemaExtensionId: package1Id
         );
         var deployment3 = new MockDeploymentVersion(
-            new PackageVersion("1.0"),
-            new List<DeploymentDependency>(),
-            package2Id
+            version: new PackageVersion(completeVersionString: "1.0"),
+            deploymentDependencies: new List<DeploymentDependency>(),
+            schemaExtensionId: package2Id
         );
         var deployment4 = new MockDeploymentVersion(
-            new PackageVersion("1.1"),
-            new List<DeploymentDependency>
+            version: new PackageVersion(completeVersionString: "1.1"),
+            deploymentDependencies: new List<DeploymentDependency>
             {
-                new DeploymentDependency(package1Id, new PackageVersion("1.0")),
+                new DeploymentDependency(
+                    packageId: package1Id,
+                    packageVersion: new PackageVersion(completeVersionString: "1.0")
+                ),
             },
-            package2Id
+            schemaExtensionId: package2Id
         );
         var deployment5 = new MockDeploymentVersion(
-            new PackageVersion("1.0"),
-            new List<DeploymentDependency>(),
-            package3Id
+            version: new PackageVersion(completeVersionString: "1.0"),
+            deploymentDependencies: new List<DeploymentDependency>(),
+            schemaExtensionId: package3Id
         );
         var deployment6 = new MockDeploymentVersion(
-            new PackageVersion("1.1"),
-            new List<DeploymentDependency>
+            version: new PackageVersion(completeVersionString: "1.1"),
+            deploymentDependencies: new List<DeploymentDependency>
             {
-                new DeploymentDependency(package1Id, new PackageVersion("1.1")),
-                new DeploymentDependency(package2Id, new PackageVersion("1.0")),
+                new DeploymentDependency(
+                    packageId: package1Id,
+                    packageVersion: new PackageVersion(completeVersionString: "1.1")
+                ),
+                new DeploymentDependency(
+                    packageId: package2Id,
+                    packageVersion: new PackageVersion(completeVersionString: "1.0")
+                ),
             },
-            package3Id
+            schemaExtensionId: package3Id
         );
 
         var unsortedDeployments = new List<IDeploymentVersion>
@@ -371,11 +452,11 @@ public class DeploymentSorterTests
             sortingFailedCalledTimes++;
         };
         List<IDeploymentVersion> sortedDeployments = deploymentSorter.SortToRespectDependencies(
-            unsortedDeployments
+            deplVersionsToSort: unsortedDeployments
         );
 
-        Assert.That(sortingFailedCalledTimes, Is.EqualTo(1));
-        Assert.That(sortedDeployments, Has.Count.EqualTo(0));
+        Assert.That(actual: sortingFailedCalledTimes, expression: Is.EqualTo(expected: 1));
+        Assert.That(actual: sortedDeployments, expression: Has.Count.EqualTo(expected: 0));
     }
 
     [Test]
@@ -391,60 +472,75 @@ public class DeploymentSorterTests
         // P1 and P2 depend on each other, P3 depends on p2 1.1 only
 
         var deployment1 = new MockDeploymentVersion(
-            new PackageVersion("1.0"),
-            new List<DeploymentDependency>(),
-            package1Id
+            version: new PackageVersion(completeVersionString: "1.0"),
+            deploymentDependencies: new List<DeploymentDependency>(),
+            schemaExtensionId: package1Id
         );
 
         var deployment2 = new MockDeploymentVersion(
-            new PackageVersion("1.1"),
-            new List<DeploymentDependency> { },
-            package1Id
+            version: new PackageVersion(completeVersionString: "1.1"),
+            deploymentDependencies: new List<DeploymentDependency> { },
+            schemaExtensionId: package1Id
         );
 
         var deployment3 = new MockDeploymentVersion(
-            new PackageVersion("1.0"),
-            new List<DeploymentDependency>
+            version: new PackageVersion(completeVersionString: "1.0"),
+            deploymentDependencies: new List<DeploymentDependency>
             {
-                new DeploymentDependency(package1Id, new PackageVersion("1.1")),
+                new DeploymentDependency(
+                    packageId: package1Id,
+                    packageVersion: new PackageVersion(completeVersionString: "1.1")
+                ),
             },
-            package2Id
+            schemaExtensionId: package2Id
         );
 
         var deployment4 = new MockDeploymentVersion(
-            new PackageVersion("1.1"),
-            new List<DeploymentDependency>
+            version: new PackageVersion(completeVersionString: "1.1"),
+            deploymentDependencies: new List<DeploymentDependency>
             {
-                new DeploymentDependency(package1Id, new PackageVersion("1.1")),
+                new DeploymentDependency(
+                    packageId: package1Id,
+                    packageVersion: new PackageVersion(completeVersionString: "1.1")
+                ),
             },
-            package2Id
+            schemaExtensionId: package2Id
         );
 
         var deployment5 = new MockDeploymentVersion(
-            new PackageVersion("1.2"),
-            new List<DeploymentDependency>
+            version: new PackageVersion(completeVersionString: "1.2"),
+            deploymentDependencies: new List<DeploymentDependency>
             {
-                new DeploymentDependency(package2Id, new PackageVersion("1.1")),
+                new DeploymentDependency(
+                    packageId: package2Id,
+                    packageVersion: new PackageVersion(completeVersionString: "1.1")
+                ),
             },
-            package1Id
+            schemaExtensionId: package1Id
         );
 
         var deployment6 = new MockDeploymentVersion(
-            new PackageVersion("1.0"),
-            new List<DeploymentDependency>
+            version: new PackageVersion(completeVersionString: "1.0"),
+            deploymentDependencies: new List<DeploymentDependency>
             {
-                new DeploymentDependency(package2Id, new PackageVersion("1.1")),
+                new DeploymentDependency(
+                    packageId: package2Id,
+                    packageVersion: new PackageVersion(completeVersionString: "1.1")
+                ),
             },
-            package3Id
+            schemaExtensionId: package3Id
         );
 
         var deployment7 = new MockDeploymentVersion(
-            new PackageVersion("1.0"),
-            new List<DeploymentDependency>
+            version: new PackageVersion(completeVersionString: "1.0"),
+            deploymentDependencies: new List<DeploymentDependency>
             {
-                new DeploymentDependency(package1Id, new PackageVersion("1.2")),
+                new DeploymentDependency(
+                    packageId: package1Id,
+                    packageVersion: new PackageVersion(completeVersionString: "1.2")
+                ),
             },
-            package3Id
+            schemaExtensionId: package3Id
         );
 
         var unsortedDeployments = new List<IDeploymentVersion>
@@ -464,21 +560,38 @@ public class DeploymentSorterTests
             sortingFailedCalledTimes++;
         };
         List<IDeploymentVersion> sortedDeployments = deploymentSorter.SortToRespectDependencies(
-            unsortedDeployments
+            deplVersionsToSort: unsortedDeployments
         );
 
-        Assert.That(sortingFailedCalledTimes, Is.EqualTo(0));
-        Assert.That(sortedDeployments[0], Is.EqualTo(deployment1));
-        Assert.That(sortedDeployments[1], Is.EqualTo(deployment2));
-        Assert.That(sortedDeployments[2], Is.EqualTo(deployment3));
-        Assert.That(sortedDeployments[3], Is.EqualTo(deployment4));
+        Assert.That(actual: sortingFailedCalledTimes, expression: Is.EqualTo(expected: 0));
         Assert.That(
-            sortedDeployments[4].Equals(deployment5) || sortedDeployments[4].Equals(deployment6)
+            actual: sortedDeployments[index: 0],
+            expression: Is.EqualTo(expected: deployment1)
         );
         Assert.That(
-            sortedDeployments[5].Equals(deployment5) || sortedDeployments[5].Equals(deployment6)
+            actual: sortedDeployments[index: 1],
+            expression: Is.EqualTo(expected: deployment2)
         );
-        Assert.That(sortedDeployments[6], Is.EqualTo(deployment7));
+        Assert.That(
+            actual: sortedDeployments[index: 2],
+            expression: Is.EqualTo(expected: deployment3)
+        );
+        Assert.That(
+            actual: sortedDeployments[index: 3],
+            expression: Is.EqualTo(expected: deployment4)
+        );
+        Assert.That(
+            condition: sortedDeployments[index: 4].Equals(obj: deployment5)
+                || sortedDeployments[index: 4].Equals(obj: deployment6)
+        );
+        Assert.That(
+            condition: sortedDeployments[index: 5].Equals(obj: deployment5)
+                || sortedDeployments[index: 5].Equals(obj: deployment6)
+        );
+        Assert.That(
+            actual: sortedDeployments[index: 6],
+            expression: Is.EqualTo(expected: deployment7)
+        );
     }
 
     private static void CheckTheOrderIsCorrect(
@@ -502,14 +615,26 @@ public class DeploymentSorterTests
             sortingFailedCalledTimes++;
         };
         List<IDeploymentVersion> sortedDeployments = deploymentSorter.SortToRespectDependencies(
-            unsortedDeployments
+            deplVersionsToSort: unsortedDeployments
         );
 
-        Assert.That(sortingFailedCalledTimes, Is.EqualTo(0));
-        Assert.That(sortedDeployments[0], Is.EqualTo(deployment1));
-        Assert.That(sortedDeployments[1], Is.EqualTo(deployment2));
-        Assert.That(sortedDeployments[2], Is.EqualTo(deployment3));
-        Assert.That(sortedDeployments[3], Is.EqualTo(deployment4));
+        Assert.That(actual: sortingFailedCalledTimes, expression: Is.EqualTo(expected: 0));
+        Assert.That(
+            actual: sortedDeployments[index: 0],
+            expression: Is.EqualTo(expected: deployment1)
+        );
+        Assert.That(
+            actual: sortedDeployments[index: 1],
+            expression: Is.EqualTo(expected: deployment2)
+        );
+        Assert.That(
+            actual: sortedDeployments[index: 2],
+            expression: Is.EqualTo(expected: deployment3)
+        );
+        Assert.That(
+            actual: sortedDeployments[index: 3],
+            expression: Is.EqualTo(expected: deployment4)
+        );
     }
 }
 
@@ -536,7 +661,7 @@ class MockDeploymentVersion : IDeploymentVersion
     {
         if (obj is IDeploymentVersion otherDeployment)
         {
-            return Version.CompareTo(otherDeployment.Version);
+            return Version.CompareTo(other: otherDeployment.Version);
         }
 
         return -1;

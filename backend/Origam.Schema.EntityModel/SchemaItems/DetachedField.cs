@@ -29,53 +29,57 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.EntityModel;
 
-[SchemaItemDescription("Virtual Field", "Fields", "icon_virtual-field.png")]
-[HelpTopic("Virtual+Field")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(
+    name: "Virtual Field",
+    folderName: "Fields",
+    iconName: "icon_virtual-field.png"
+)]
+[HelpTopic(topic: "Virtual+Field")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class DetachedField : AbstractDataEntityColumn, IRelationReference
 {
     public DetachedField() { }
 
     public DetachedField(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(schemaExtensionId: schemaExtensionId) { }
 
     public DetachedField(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Properties
     public Guid ArrayRelationId;
 
     [NoDuplicateNamesInParentRule]
-    [Category("(Schema Item)")]
+    [Category(category: "(Schema Item)")]
     [StringNotEmptyModelElementRule]
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [XmlAttribute("name")]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [XmlAttribute(attributeName: "name")]
     public override string Name
     {
         get => base.Name;
         set => base.Name = value;
     }
 
-    [Category("Array")]
-    [TypeConverter(typeof(EntityRelationConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [XmlReference("arrayRelation", "ArrayRelationId")]
+    [Category(category: "Array")]
+    [TypeConverter(type: typeof(EntityRelationConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [XmlReference(attributeName: "arrayRelation", idField: "ArrayRelationId")]
     public IAssociation ArrayRelation
     {
         get =>
             (ISchemaItem)
                 PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(ArrayRelationId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: ArrayRelationId)
                 ) as IAssociation;
         set
         {
-            ArrayRelationId = (value == null) ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+            ArrayRelationId = (value == null) ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"];
             ArrayValueField = null;
         }
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     // only for IReference needs, for public access we have ArrayRelation
     public IAssociation Relation
     {
@@ -88,21 +92,21 @@ public class DetachedField : AbstractDataEntityColumn, IRelationReference
     }
     public Guid ArrayValueFieldId;
 
-    [Category("Array")]
-    [TypeConverter(typeof(EntityRelationColumnsConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [XmlReference("arrayValueField", "ArrayValueFieldId")]
+    [Category(category: "Array")]
+    [TypeConverter(type: typeof(EntityRelationColumnsConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [XmlReference(attributeName: "arrayValueField", idField: "ArrayValueFieldId")]
     public IDataEntityColumn ArrayValueField
     {
         get =>
             (ISchemaItem)
                 PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(ArrayValueFieldId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: ArrayValueFieldId)
                 ) as IDataEntityColumn;
         set
         {
-            ArrayValueFieldId = (value == null) ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+            ArrayValueFieldId = (value == null) ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"];
             if (value == null)
             {
                 return;
@@ -126,13 +130,13 @@ public class DetachedField : AbstractDataEntityColumn, IRelationReference
     {
         if (ArrayRelation != null)
         {
-            dependencies.Add(ArrayRelation);
+            dependencies.Add(item: ArrayRelation);
         }
         if (ArrayValueField != null)
         {
-            dependencies.Add(ArrayValueField);
+            dependencies.Add(item: ArrayValueField);
         }
-        base.GetExtraDependencies(dependencies);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override void UpdateReferences()
@@ -141,7 +145,7 @@ public class DetachedField : AbstractDataEntityColumn, IRelationReference
         {
             foreach (ISchemaItem item in RootItem.ChildItemsRecursive)
             {
-                if (item.OldPrimaryKey?.Equals(ArrayRelation.PrimaryKey) == true)
+                if (item.OldPrimaryKey?.Equals(obj: ArrayRelation.PrimaryKey) == true)
                 {
                     // store the old field because setting an entity will reset the field
                     var oldField = ArrayValueField;
@@ -162,10 +166,10 @@ public class DetachedField : AbstractDataEntityColumn, IRelationReference
 
     protected override ISchemaItem ConvertTo<T>()
     {
-        var converted = ParentItem.NewItem<T>(SchemaExtensionId, Group);
+        var converted = ParentItem.NewItem<T>(schemaExtensionId: SchemaExtensionId, group: Group);
         if (converted is AbstractDataEntityColumn abstractDataEntityColumn)
         {
-            CopyFieldMembers(this, abstractDataEntityColumn);
+            CopyFieldMembers(source: this, destination: abstractDataEntityColumn);
         }
         if (converted is FieldMappingItem fieldMappingItem)
         {
@@ -176,7 +180,7 @@ public class DetachedField : AbstractDataEntityColumn, IRelationReference
             return base.ConvertTo<T>();
         }
         // does the common conversion tasks and persists both this and converted objects
-        FinishConversion(this, converted);
+        FinishConversion(source: this, converted: converted);
         return converted;
     }
     #endregion

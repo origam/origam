@@ -35,12 +35,12 @@ public class DecodeQueryParameterAttribute : ActionFilterAttribute
 
     public override void OnActionExecuting(ActionExecutingContext context)
     {
-        if (!context.ActionArguments.ContainsKey(parameterName))
+        if (!context.ActionArguments.ContainsKey(key: parameterName))
         {
             return;
         }
-        string param = context.ActionArguments[parameterName] as string;
-        context.ActionArguments[parameterName] = WebUtility.UrlDecode(param);
-        base.OnActionExecuting(context);
+        string param = context.ActionArguments[key: parameterName] as string;
+        context.ActionArguments[key: parameterName] = WebUtility.UrlDecode(encodedValue: param);
+        base.OnActionExecuting(context: context);
     }
 }

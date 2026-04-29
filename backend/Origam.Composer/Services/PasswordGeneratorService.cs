@@ -30,16 +30,16 @@ public class PasswordGeneratorService : IPasswordGeneratorService
     public string Generate(int length)
     {
         const string validChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-";
-        var result = new StringBuilder(length);
+        var result = new StringBuilder(capacity: length);
         using (var rng = RandomNumberGenerator.Create())
         {
             var uintBuffer = new byte[sizeof(uint)];
 
             while (result.Length < length)
             {
-                rng.GetBytes(uintBuffer);
-                var num = BitConverter.ToUInt32(uintBuffer, 0);
-                result.Append(validChars[(int)(num % (uint)validChars.Length)]);
+                rng.GetBytes(data: uintBuffer);
+                var num = BitConverter.ToUInt32(value: uintBuffer, startIndex: 0);
+                result.Append(value: validChars[index: (int)(num % (uint)validChars.Length)]);
             }
         }
 

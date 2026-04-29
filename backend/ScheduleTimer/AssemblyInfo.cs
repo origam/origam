@@ -20,7 +20,7 @@ using System.Reflection;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 //
-[assembly: AssemblyCopyright("Andrew Brummer 2004")]
+[assembly: AssemblyCopyright(copyright: "Andrew Brummer 2004")]
 
 //
 // Version information for an assembly consists of the following four values:
@@ -58,6 +58,6 @@ using System.Reflection;
 //   (*) Delay Signing is an advanced option - see the Microsoft .NET Framework
 //       documentation for more information on this.
 //
-[assembly: AssemblyDelaySign(false)]
+[assembly: AssemblyDelaySign(delaySign: false)]
 //[assembly: AssemblyKeyFile("..\\..\\..\\AssemblySigning\\origamKey.snk")]
-[assembly: AssemblyKeyName("")]
+[assembly: AssemblyKeyName(keyName: "")]

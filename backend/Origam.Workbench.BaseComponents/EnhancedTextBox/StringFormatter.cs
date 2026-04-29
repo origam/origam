@@ -27,7 +27,7 @@ namespace Origam.Gui.UI;
 internal class StringFormatter : Formatter
 {
     public StringFormatter(TextBox textBox)
-        : base(textBox, "") { }
+        : base(textBox: textBox, customFormat: "") { }
 
     public override void OnLeave(object sender, EventArgs e) { }
 

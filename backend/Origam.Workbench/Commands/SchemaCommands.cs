@@ -56,14 +56,17 @@ public class AddNewSchemaItem : AbstractMenuCommand
     string _name = null;
     ISchemaItemFactory _parentElement = null;
     WorkbenchSchemaService _schema =
-        ServiceManager.Services.GetService(typeof(WorkbenchSchemaService))
+        ServiceManager.Services.GetService(serviceType: typeof(WorkbenchSchemaService))
         as WorkbenchSchemaService;
     public override bool IsEnabled
     {
         get { return _parentElement != null; }
         set
         {
-            throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
+            throw new ArgumentException(
+                message: ResourceUtils.GetString(key: "ErrorSetProperty"),
+                paramName: "IsEnabled"
+            );
         }
     }
     public ISchemaItemFactory ParentElement
@@ -80,11 +83,13 @@ public class AddNewSchemaItem : AbstractMenuCommand
 
     public override void Run()
     {
-        var newItemMethodInfo = typeof(ISchemaItemFactory).GetMethod("NewItem");
-        var newItemGenericMethodInfo = newItemMethodInfo.MakeGenericMethod(Owner as Type);
+        var newItemMethodInfo = typeof(ISchemaItemFactory).GetMethod(name: "NewItem");
+        var newItemGenericMethodInfo = newItemMethodInfo.MakeGenericMethod(
+            typeArguments: Owner as Type
+        );
         var item = newItemGenericMethodInfo.Invoke(
-            ParentElement,
-            new object[] { _schema.ActiveSchemaExtensionId, null }
+            obj: ParentElement,
+            parameters: new object[] { _schema.ActiveSchemaExtensionId, null }
         );
         var abstractSchemaItem = (ISchemaItem)item;
         if (_name != null)
@@ -96,11 +101,11 @@ public class AddNewSchemaItem : AbstractMenuCommand
         {
             abstractSchemaItem.IsAbstract = true;
         }
-        EditSchemaItem cmd = new EditSchemaItem(ShowDialog);
+        EditSchemaItem cmd = new EditSchemaItem(showDialog: ShowDialog);
         cmd.Owner = item;
         _schema.LastAddedNodeParent = ParentElement;
         _schema.LastAddedType = this.Owner as Type;
-        ItemCreated?.Invoke(this, abstractSchemaItem);
+        ItemCreated?.Invoke(sender: this, e: abstractSchemaItem);
         cmd.Run();
     }
 
@@ -116,23 +121,28 @@ public class AddNewSchemaItem : AbstractMenuCommand
 public class AddRepeatingSchemaItem : AbstractMenuCommand
 {
     SchemaService _schema =
-        ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
+        ServiceManager.Services.GetService(serviceType: typeof(SchemaService)) as SchemaService;
     public override bool IsEnabled
     {
         get { return _schema.LastAddedNodeParent != null; }
         set
         {
-            throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
+            throw new ArgumentException(
+                message: ResourceUtils.GetString(key: "ErrorSetProperty"),
+                paramName: "IsEnabled"
+            );
         }
     }
 
     public override void Run()
     {
-        var newItemMethodInfo = typeof(ISchemaItemFactory).GetMethod("NewItem");
-        var newItemGenericMethodInfo = newItemMethodInfo.MakeGenericMethod(_schema.LastAddedType);
+        var newItemMethodInfo = typeof(ISchemaItemFactory).GetMethod(name: "NewItem");
+        var newItemGenericMethodInfo = newItemMethodInfo.MakeGenericMethod(
+            typeArguments: _schema.LastAddedType
+        );
         var item = newItemGenericMethodInfo.Invoke(
-            _schema.LastAddedNodeParent,
-            new object[] { _schema.ActiveSchemaExtensionId, null }
+            obj: _schema.LastAddedNodeParent,
+            parameters: new object[] { _schema.ActiveSchemaExtensionId, null }
         );
         var abstractSchemaItem = (ISchemaItem)item;
         // set abstract, if parent is abstract
@@ -157,21 +167,24 @@ public class AddRepeatingSchemaItem : AbstractMenuCommand
 public class ConvertSchemaItem : AbstractMenuCommand
 {
     WorkbenchSchemaService _schema =
-        ServiceManager.Services.GetService(typeof(WorkbenchSchemaService))
+        ServiceManager.Services.GetService(serviceType: typeof(WorkbenchSchemaService))
         as WorkbenchSchemaService;
     public override bool IsEnabled
     {
         get { return _schema.ActiveNode is ISchemaItemConvertible; }
         set
         {
-            throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
+            throw new ArgumentException(
+                message: ResourceUtils.GetString(key: "ErrorSetProperty"),
+                paramName: "IsEnabled"
+            );
         }
     }
 
     public override void Run()
     {
         ISchemaItemConvertible activeItem = _schema.ActiveNode as ISchemaItemConvertible;
-        ISchemaItem converted = activeItem.ConvertTo(this.Owner as Type);
+        ISchemaItem converted = activeItem.ConvertTo(type: this.Owner as Type);
         //_schema.UpdateBrowser();
         EditSchemaItem cmd = new EditSchemaItem();
         cmd.Owner = converted;
@@ -191,7 +204,7 @@ public class ConvertSchemaItem : AbstractMenuCommand
 public class AddNewGroup : AbstractMenuCommand
 {
     WorkbenchSchemaService _schema =
-        ServiceManager.Services.GetService(typeof(WorkbenchSchemaService))
+        ServiceManager.Services.GetService(serviceType: typeof(WorkbenchSchemaService))
         as WorkbenchSchemaService;
     public override bool IsEnabled
     {
@@ -202,14 +215,17 @@ public class AddNewGroup : AbstractMenuCommand
         }
         set
         {
-            throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
+            throw new ArgumentException(
+                message: ResourceUtils.GetString(key: "ErrorSetProperty"),
+                paramName: "IsEnabled"
+            );
         }
     }
 
     public override void Run()
     {
         SchemaItemGroup item = (_schema.ActiveNode as ISchemaItemFactory).NewGroup(
-            _schema.ActiveSchemaExtensionId
+            schemaExtensionId: _schema.ActiveSchemaExtensionId
         );
         _schema.SchemaBrowser.EbrSchemaBrowser.RefreshActiveNode();
     }
@@ -227,10 +243,11 @@ public class AddNewGroup : AbstractMenuCommand
 public class EditDiagramActiveSchemaItem : AbstractCommand
 {
     WorkbenchSchemaService _schema =
-        ServiceManager.Services.GetService(typeof(WorkbenchSchemaService))
+        ServiceManager.Services.GetService(serviceType: typeof(WorkbenchSchemaService))
         as WorkbenchSchemaService;
     IPersistenceService _persistence =
-        ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+        ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+        as IPersistenceService;
 
     public override void Run()
     {
@@ -247,9 +264,9 @@ public class EditDiagramActiveSchemaItem : AbstractCommand
                 return;
             }
         }
-        Assembly a = Assembly.Load("Origam.Workbench.Diagram");
+        Assembly a = Assembly.Load(assemblyString: "Origam.Workbench.Diagram");
         IViewContent editor =
-            a.CreateInstance("Origam.Workbench.Editors.DiagramEditor") as IViewContent;
+            a.CreateInstance(typeName: "Origam.Workbench.Editors.DiagramEditor") as IViewContent;
         // Set editor to dirty, if object has not been persisted, yet (new item)
         if (!item.IsPersisted)
         {
@@ -259,16 +276,19 @@ public class EditDiagramActiveSchemaItem : AbstractCommand
         {
             // Get a copy of the item to edit (no cache usage => we get a fresh copy)
             ISchemaItem freshItem =
-                _persistence.SchemaProvider.RetrieveInstance(item.GetType(), item.PrimaryKey, false)
-                as ISchemaItem;
+                _persistence.SchemaProvider.RetrieveInstance(
+                    type: item.GetType(),
+                    primaryKey: item.PrimaryKey,
+                    useCache: false
+                ) as ISchemaItem;
             freshItem.ParentItem = item.ParentItem;
             item = freshItem;
         }
         System.Windows.Forms.Cursor.Current = System.Windows.Forms.Cursors.WaitCursor;
-        editor.LoadObject(item);
+        editor.LoadObject(objectToLoad: item);
         editor.TitleName = item.Name;
         editor.DisplayedItemId = item.Id;
-        WorkbenchSingleton.Workbench.ShowView(editor);
+        WorkbenchSingleton.Workbench.ShowView(content: editor);
         System.Windows.Forms.Cursor.Current = System.Windows.Forms.Cursors.Default;
     }
 }
@@ -279,7 +299,7 @@ public class EditDiagramActiveSchemaItem : AbstractCommand
 public class EditActiveSchemaItem : AbstractMenuCommand
 {
     WorkbenchSchemaService _schema =
-        ServiceManager.Services.GetService(typeof(WorkbenchSchemaService))
+        ServiceManager.Services.GetService(serviceType: typeof(WorkbenchSchemaService))
         as WorkbenchSchemaService;
     public override bool IsEnabled
     {
@@ -287,14 +307,17 @@ public class EditActiveSchemaItem : AbstractMenuCommand
         {
             if (_schema.IsSchemaLoaded)
             {
-                return _schema.CanEditItem(_schema.ActiveNode);
+                return _schema.CanEditItem(item: _schema.ActiveNode);
             }
 
             return false;
         }
         set
         {
-            throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
+            throw new ArgumentException(
+                message: ResourceUtils.GetString(key: "ErrorSetProperty"),
+                paramName: "IsEnabled"
+            );
         }
     }
 
@@ -315,14 +338,17 @@ public class EditActiveSchemaItem : AbstractMenuCommand
 public class ExpandAllActiveSchemaItem : AbstractMenuCommand
 {
     WorkbenchSchemaService _schema =
-        ServiceManager.Services.GetService(typeof(WorkbenchSchemaService))
+        ServiceManager.Services.GetService(serviceType: typeof(WorkbenchSchemaService))
         as WorkbenchSchemaService;
     public override bool IsEnabled
     {
         get { return _schema.ActiveNode is ISchemaItem; }
         set
         {
-            throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
+            throw new ArgumentException(
+                message: ResourceUtils.GetString(key: "ErrorSetProperty"),
+                paramName: "IsEnabled"
+            );
         }
     }
 
@@ -331,7 +357,7 @@ public class ExpandAllActiveSchemaItem : AbstractMenuCommand
         if (_schema.ActiveNode.HasChildNodes)
         {
             ExpressionBrowser schemaBrowser = _schema.SchemaBrowser.EbrSchemaBrowser;
-            schemaBrowser.ExpandAllChildNodes(_schema.ActiveNode);
+            schemaBrowser.ExpandAllChildNodes(browserNode: _schema.ActiveNode);
         }
     }
 
@@ -357,9 +383,10 @@ public class EditSchemaItem : AbstractCommand
     public bool ShowDialog { get; set; }
     public bool ShowDiagramEditorAfterSave { get; set; }
     IPersistenceService _persistence =
-        ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+        ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+        as IPersistenceService;
     WorkbenchSchemaService _schemaService =
-        ServiceManager.Services.GetService(typeof(WorkbenchSchemaService))
+        ServiceManager.Services.GetService(serviceType: typeof(WorkbenchSchemaService))
         as WorkbenchSchemaService;
 
     //		private IParameterService _parameterService = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
@@ -383,9 +410,9 @@ public class EditSchemaItem : AbstractCommand
         else
         {
             throw new ArgumentOutOfRangeException(
-                "Owner",
-                this.Owner,
-                ResourceUtils.GetString("ErrorEditObject")
+                paramName: "Owner",
+                actualValue: this.Owner,
+                message: ResourceUtils.GetString(key: "ErrorEditObject")
             );
         }
         string itemType = item.GetType().ToString();
@@ -399,11 +426,12 @@ public class EditSchemaItem : AbstractCommand
             || itemType == "Origam.Schema.GuiModel.ControlSetItem"
         )
         {
-            System.Reflection.Assembly a = Assembly.Load("Origam.Gui.Designer");
-            editor = a.CreateInstance("Origam.Gui.Designer.ControlSetEditor") as IViewContent;
+            System.Reflection.Assembly a = Assembly.Load(assemblyString: "Origam.Gui.Designer");
+            editor =
+                a.CreateInstance(typeName: "Origam.Gui.Designer.ControlSetEditor") as IViewContent;
             if (editor == null)
             {
-                throw new Exception(ResourceUtils.GetString("ErrorLoadEditorFailed"));
+                throw new Exception(message: ResourceUtils.GetString(key: "ErrorLoadEditorFailed"));
             }
         }
         else if (
@@ -413,36 +441,44 @@ public class EditSchemaItem : AbstractCommand
             || itemType == "Origam.Schema.RuleModel.ComplexDataRule"
         )
         {
-            System.Reflection.Assembly a = Assembly.Load("Origam.Workbench");
-            editor = a.CreateInstance("Origam.Workbench.Editors.XslEditor") as IViewContent;
+            System.Reflection.Assembly a = Assembly.Load(assemblyString: "Origam.Workbench");
+            editor =
+                a.CreateInstance(typeName: "Origam.Workbench.Editors.XslEditor") as IViewContent;
             if (editor == null)
             {
-                throw new Exception(ResourceUtils.GetString("ErrorLoadEditorFailed"));
+                throw new Exception(message: ResourceUtils.GetString(key: "ErrorLoadEditorFailed"));
             }
         }
         else if (itemType == "Origam.Schema.EntityModel.XsdDataStructure")
         {
-            System.Reflection.Assembly a = Assembly.Load("Origam.Schema.EntityModel.UI");
-            editor = a.CreateInstance("Origam.Schema.EntityModel.UI.XsdEditor") as IViewContent;
+            System.Reflection.Assembly a = Assembly.Load(
+                assemblyString: "Origam.Schema.EntityModel.UI"
+            );
+            editor =
+                a.CreateInstance(typeName: "Origam.Schema.EntityModel.UI.XsdEditor")
+                as IViewContent;
             if (editor == null)
             {
-                throw new Exception(ResourceUtils.GetString("ErrorLoadEditorFailed"));
+                throw new Exception(message: ResourceUtils.GetString(key: "ErrorLoadEditorFailed"));
             }
         }
         else if (itemType == "Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity")
         {
-            System.Reflection.Assembly a = Assembly.Load("Origam.Schema.DeploymentModel.UI");
+            System.Reflection.Assembly a = Assembly.Load(
+                assemblyString: "Origam.Schema.DeploymentModel.UI"
+            );
             editor =
-                a.CreateInstance("Origam.Schema.DeploymentModel.ServiceScriptCommandEditor")
-                as IViewContent;
+                a.CreateInstance(
+                    typeName: "Origam.Schema.DeploymentModel.ServiceScriptCommandEditor"
+                ) as IViewContent;
             if (editor == null)
             {
-                throw new Exception(ResourceUtils.GetString("ErrorLoadEditorFailed"));
+                throw new Exception(message: ResourceUtils.GetString(key: "ErrorLoadEditorFailed"));
             }
         }
         else if (item is EntityUIAction)
         {
-            editor = new UiActionEditor(ShowDialog);
+            editor = new UiActionEditor(closeOnLinkClick: ShowDialog);
         }
         else if (itemType == "Origam.Schema.WorkflowModel.Workflow" && !ShowDialog)
         {
@@ -454,13 +490,13 @@ public class EditSchemaItem : AbstractCommand
                 return;
             }
             this.ShowDialog = true;
-            editor = new PropertyGridEditor(ShowDialog);
+            editor = new PropertyGridEditor(closeOnLinkClick: ShowDialog);
 
             this.ShowDiagramEditorAfterSave = true;
         }
         else
         {
-            editor = new PropertyGridEditor(ShowDialog);
+            editor = new PropertyGridEditor(closeOnLinkClick: ShowDialog);
         }
         // Set editor to dirty, if object has not been persisted, yet (new item)
         if (!item.IsPersisted)
@@ -473,11 +509,11 @@ public class EditSchemaItem : AbstractCommand
             item = item.GetFreshItem();
         }
         System.Windows.Forms.Cursor.Current = System.Windows.Forms.Cursors.WaitCursor;
-        if (!_schemaService.CanEditItem(item))
+        if (!_schemaService.CanEditItem(item: item))
         {
             editor.IsReadOnly = true;
         }
-        editor.LoadObject(item);
+        editor.LoadObject(objectToLoad: item);
         editor.DisplayedItemId = item.Id;
         if (item is ISchemaItem)
         {
@@ -485,10 +521,12 @@ public class EditSchemaItem : AbstractCommand
             if ((item as ISchemaItem).NodeImage == null)
             {
                 (editor as Form).Icon = System.Drawing.Icon.FromHandle(
-                    (
+                    handle: (
                         (System.Drawing.Bitmap)
                             _schemaService.SchemaBrowser.ImageList.Images[
-                                _schemaService.SchemaBrowser.ImageIndex((item as ISchemaItem).Icon)
+                                index: _schemaService.SchemaBrowser.ImageIndex(
+                                    icon: (item as ISchemaItem).Icon
+                                )
                             ]
                     ).GetHicon()
                 );
@@ -496,7 +534,7 @@ public class EditSchemaItem : AbstractCommand
             else
             {
                 (editor as Form).Icon = System.Drawing.Icon.FromHandle(
-                    (item as ISchemaItem).NodeImage.ToBitmap().GetHicon()
+                    handle: (item as ISchemaItem).NodeImage.ToBitmap().GetHicon()
                 );
             }
         }
@@ -506,7 +544,9 @@ public class EditSchemaItem : AbstractCommand
         }
         if (ShowDialog)
         {
-            var result = (editor as Form).ShowDialog(WorkbenchSingleton.Workbench as IWin32Window);
+            var result = (editor as Form).ShowDialog(
+                owner: WorkbenchSingleton.Workbench as IWin32Window
+            );
             if (result == DialogResult.OK && ShowDiagramEditorAfterSave)
             {
                 this.ShowDialog = false;
@@ -516,7 +556,7 @@ public class EditSchemaItem : AbstractCommand
         }
         else
         {
-            WorkbenchSingleton.Workbench.ShowView(editor);
+            WorkbenchSingleton.Workbench.ShowView(content: editor);
         }
         System.Windows.Forms.Cursor.Current = System.Windows.Forms.Cursors.Default;
     }
@@ -528,7 +568,7 @@ public class EditSchemaItem : AbstractCommand
 public class DeleteActiveNode : AbstractMenuCommand
 {
     WorkbenchSchemaService _schema =
-        ServiceManager.Services.GetService(typeof(WorkbenchSchemaService))
+        ServiceManager.Services.GetService(serviceType: typeof(WorkbenchSchemaService))
         as WorkbenchSchemaService;
     public event EventHandler BeforeDelete;
     public event EventHandler AfterDelete;
@@ -538,7 +578,7 @@ public class DeleteActiveNode : AbstractMenuCommand
         {
             if (_schema.IsSchemaLoaded && _schema.ActiveNode != null)
             {
-                if (!(_schema.CanDeleteItem(_schema.ActiveNode)))
+                if (!(_schema.CanDeleteItem(item: _schema.ActiveNode)))
                 {
                     return false;
                 }
@@ -549,7 +589,10 @@ public class DeleteActiveNode : AbstractMenuCommand
         }
         set
         {
-            throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
+            throw new ArgumentException(
+                message: ResourceUtils.GetString(key: "ErrorSetProperty"),
+                paramName: "IsEnabled"
+            );
         }
     }
 
@@ -569,15 +612,18 @@ public class DeleteActiveNode : AbstractMenuCommand
         )
         {
             throw new InvalidOperationException(
-                ResourceUtils.GetString("ErrorDeleteItemNotActiveExtension")
+                message: ResourceUtils.GetString(key: "ErrorDeleteItemNotActiveExtension")
             );
         }
         if (
             MessageBox.Show(
-                ResourceUtils.GetString("DoYouWishDelete", _schema.ActiveNode.NodeText),
-                ResourceUtils.GetString("DeleteTile"),
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Warning
+                text: ResourceUtils.GetString(
+                    key: "DoYouWishDelete",
+                    args: _schema.ActiveNode.NodeText
+                ),
+                caption: ResourceUtils.GetString(key: "DeleteTile"),
+                buttons: MessageBoxButtons.YesNo,
+                icon: MessageBoxIcon.Warning
             ) == DialogResult.Yes
         )
         {
@@ -596,12 +642,12 @@ public class DeleteActiveNode : AbstractMenuCommand
                 .Services.GetService<IPersistenceService>()
                 .SchemaProvider;
             // then delete from the model
-            BeforeDelete?.Invoke(this, EventArgs.Empty);
+            BeforeDelete?.Invoke(sender: this, e: EventArgs.Empty);
             try
             {
                 persistenceProvider.BeginTransaction();
                 _schema.ActiveNode.Delete();
-                AfterDelete?.Invoke(this, EventArgs.Empty);
+                AfterDelete?.Invoke(sender: this, e: EventArgs.Empty);
             }
             catch
             {
@@ -622,7 +668,7 @@ public class DeleteActiveNode : AbstractMenuCommand
 public class MoveToAnotherPackage : AbstractMenuCommand
 {
     WorkbenchSchemaService _schema =
-        ServiceManager.Services.GetService(typeof(WorkbenchSchemaService))
+        ServiceManager.Services.GetService(serviceType: typeof(WorkbenchSchemaService))
         as WorkbenchSchemaService;
     public override bool IsEnabled
     {
@@ -641,14 +687,17 @@ public class MoveToAnotherPackage : AbstractMenuCommand
         }
         set
         {
-            throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
+            throw new ArgumentException(
+                message: ResourceUtils.GetString(key: "ErrorSetProperty"),
+                paramName: "IsEnabled"
+            );
         }
     }
 
     public override void Run()
     {
         var selectForm = new MoveToPackageForm();
-        selectForm.ShowDialog(WorkbenchSingleton.Workbench as IWin32Window);
+        selectForm.ShowDialog(owner: WorkbenchSingleton.Workbench as IWin32Window);
     }
 
     public override void Dispose()
@@ -663,23 +712,26 @@ public class MoveToAnotherPackage : AbstractMenuCommand
 public class ShowDocumentation : AbstractMenuCommand
 {
     WorkbenchSchemaService _schema =
-        ServiceManager.Services.GetService(typeof(WorkbenchSchemaService))
+        ServiceManager.Services.GetService(serviceType: typeof(WorkbenchSchemaService))
         as WorkbenchSchemaService;
     public override bool IsEnabled
     {
         get { return _schema.ActiveSchemaItem != null; }
         set
         {
-            throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
+            throw new ArgumentException(
+                message: ResourceUtils.GetString(key: "ErrorSetProperty"),
+                paramName: "IsEnabled"
+            );
         }
     }
 
     public override void Run()
     {
         Pads.DocumentationPad pad =
-            WorkbenchSingleton.Workbench.GetPad(typeof(Pads.DocumentationPad))
+            WorkbenchSingleton.Workbench.GetPad(type: typeof(Pads.DocumentationPad))
             as Pads.DocumentationPad;
-        pad.ShowDocumentation(_schema.ActiveSchemaItem.Id);
+        pad.ShowDocumentation(schemaItemId: _schema.ActiveSchemaItem.Id);
     }
 
     public override void Dispose()
@@ -695,28 +747,31 @@ public class ShowDocumentation : AbstractMenuCommand
 public class ShowDependencies : AbstractMenuCommand
 {
     WorkbenchSchemaService _schema =
-        ServiceManager.Services.GetService(typeof(WorkbenchSchemaService))
+        ServiceManager.Services.GetService(serviceType: typeof(WorkbenchSchemaService))
         as WorkbenchSchemaService;
     public override bool IsEnabled
     {
         get { return _schema.ActiveSchemaItem != null; }
         set
         {
-            throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
+            throw new ArgumentException(
+                message: ResourceUtils.GetString(key: "ErrorSetProperty"),
+                paramName: "IsEnabled"
+            );
         }
     }
 
     public override void Run()
     {
         Pads.FindSchemaItemResultsPad pad =
-            WorkbenchSingleton.Workbench.GetPad(typeof(Pads.FindSchemaItemResultsPad))
+            WorkbenchSingleton.Workbench.GetPad(type: typeof(Pads.FindSchemaItemResultsPad))
             as Pads.FindSchemaItemResultsPad;
         var dependencies = _schema
-            .ActiveSchemaItem.GetDependencies(false)
+            .ActiveSchemaItem.GetDependencies(ignoreErrors: false)
             .Cast<ISchemaItem>()
-            .Where(x => x != null)
+            .Where(predicate: x => x != null)
             .ToArray();
-        pad.DisplayResults(dependencies);
+        pad.DisplayResults(results: dependencies);
         ViewFindSchemaItemResultsPad cmd = new ViewFindSchemaItemResultsPad();
         cmd.Run();
         cmd.Dispose();
@@ -735,26 +790,29 @@ public class ShowDependencies : AbstractMenuCommand
 public class ShowUsage : AbstractMenuCommand
 {
     WorkbenchSchemaService _schema =
-        ServiceManager.Services.GetService(typeof(WorkbenchSchemaService))
+        ServiceManager.Services.GetService(serviceType: typeof(WorkbenchSchemaService))
         as WorkbenchSchemaService;
     public override bool IsEnabled
     {
         get { return _schema.ActiveSchemaItem != null; }
         set
         {
-            throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
+            throw new ArgumentException(
+                message: ResourceUtils.GetString(key: "ErrorSetProperty"),
+                paramName: "IsEnabled"
+            );
         }
     }
 
     public override void Run()
     {
         Pads.FindSchemaItemResultsPad pad =
-            WorkbenchSingleton.Workbench.GetPad(typeof(Pads.FindSchemaItemResultsPad))
+            WorkbenchSingleton.Workbench.GetPad(type: typeof(Pads.FindSchemaItemResultsPad))
             as Pads.FindSchemaItemResultsPad;
         var referenceList = _schema.ActiveSchemaItem.GetUsage();
         if (referenceList != null)
         {
-            pad.DisplayResults(referenceList.ToArray());
+            pad.DisplayResults(results: referenceList.ToArray());
         }
         ViewFindSchemaItemResultsPad cmd = new ViewFindSchemaItemResultsPad();
         cmd.Run();
@@ -774,14 +832,17 @@ public class ShowUsage : AbstractMenuCommand
 public class ShowExplorerXml : AbstractMenuCommand
 {
     WorkbenchSchemaService _schema =
-        ServiceManager.Services.GetService(typeof(WorkbenchSchemaService))
+        ServiceManager.Services.GetService(serviceType: typeof(WorkbenchSchemaService))
         as WorkbenchSchemaService;
     public override bool IsEnabled
     {
         get { return _schema.ActiveSchemaItem != null; }
         set
         {
-            throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
+            throw new ArgumentException(
+                message: ResourceUtils.GetString(key: "ErrorSetProperty"),
+                paramName: "IsEnabled"
+            );
         }
     }
 
@@ -791,12 +852,12 @@ public class ShowExplorerXml : AbstractMenuCommand
         foreach (string file in _schema.ActiveSchemaItem.Files)
         {
             string filePath = Path.Combine(
-                settings.ModelSourceControlLocation.Replace("/", "\\"),
-                file
+                path1: settings.ModelSourceControlLocation.Replace(oldValue: "/", newValue: "\\"),
+                path2: file
             );
-            if (File.Exists(filePath))
+            if (File.Exists(path: filePath))
             {
-                Process.Start("explorer.exe", "/select," + filePath);
+                Process.Start(fileName: "explorer.exe", arguments: "/select," + filePath);
             }
             break;
         }
@@ -815,14 +876,17 @@ public class ShowExplorerXml : AbstractMenuCommand
 public class ShowConsoleXml : AbstractMenuCommand
 {
     WorkbenchSchemaService _schema =
-        ServiceManager.Services.GetService(typeof(WorkbenchSchemaService))
+        ServiceManager.Services.GetService(serviceType: typeof(WorkbenchSchemaService))
         as WorkbenchSchemaService;
     public override bool IsEnabled
     {
         get { return _schema.ActiveSchemaItem != null; }
         set
         {
-            throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
+            throw new ArgumentException(
+                message: ResourceUtils.GetString(key: "ErrorSetProperty"),
+                paramName: "IsEnabled"
+            );
         }
     }
 
@@ -831,8 +895,8 @@ public class ShowConsoleXml : AbstractMenuCommand
         OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
         foreach (string file in _schema.ActiveSchemaItem.Files)
         {
-            string filePath = Path.Combine(settings.ModelSourceControlLocation, file);
-            if (File.Exists(filePath))
+            string filePath = Path.Combine(path1: settings.ModelSourceControlLocation, path2: file);
+            if (File.Exists(path: filePath))
             {
                 XmlWriterSettings xmlWriterSettings = new XmlWriterSettings
                 {
@@ -842,18 +906,20 @@ public class ShowConsoleXml : AbstractMenuCommand
                 XmlDocument xml = new XmlDocument();
                 XmlViewer viewer = new XmlViewer
                 {
-                    Text = file.Replace("\\", "/").Split('/').LastOrDefault(),
+                    Text = file.Replace(oldValue: "\\", newValue: "/")
+                        .Split(separator: '/')
+                        .LastOrDefault(),
                 };
                 try
                 {
-                    xml.Load(filePath);
-                    viewer.Content = xml.ToBeautifulString(xmlWriterSettings);
+                    xml.Load(filename: filePath);
+                    viewer.Content = xml.ToBeautifulString(xmlWriterSettings: xmlWriterSettings);
                 }
                 catch
                 {
-                    viewer.Content = new StreamReader(filePath).ReadToEnd();
+                    viewer.Content = new StreamReader(path: filePath).ReadToEnd();
                 }
-                WorkbenchSingleton.Workbench.ShowView(viewer);
+                WorkbenchSingleton.Workbench.ShowView(content: viewer);
             }
         }
     }
@@ -871,7 +937,7 @@ public class ShowConsoleXml : AbstractMenuCommand
 public class ShowFileDiffXml : AbstractMenuCommand
 {
     WorkbenchSchemaService _schema =
-        ServiceManager.Services.GetService(typeof(WorkbenchSchemaService))
+        ServiceManager.Services.GetService(serviceType: typeof(WorkbenchSchemaService))
         as WorkbenchSchemaService;
 
     public override bool IsEnabled
@@ -879,7 +945,10 @@ public class ShowFileDiffXml : AbstractMenuCommand
         get { return _schema.ActiveSchemaItem != null; }
         set
         {
-            throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
+            throw new ArgumentException(
+                message: ResourceUtils.GetString(key: "ErrorSetProperty"),
+                paramName: "IsEnabled"
+            );
         }
     }
 
@@ -887,36 +956,43 @@ public class ShowFileDiffXml : AbstractMenuCommand
     {
         OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
         string activefile = Path.Combine(
-            settings.ModelSourceControlLocation,
-            _schema.ActiveSchemaItem.RootItem.RelativeFilePath
+            path1: settings.ModelSourceControlLocation,
+            path2: _schema.ActiveSchemaItem.RootItem.RelativeFilePath
         );
         var provider = (FilePersistenceProvider)_schema.ActiveSchemaItem.PersistenceProvider;
         bool hasChange = false;
         if (provider != null)
         {
-            GitManager gitManager = new GitManager(settings.ModelSourceControlLocation);
+            GitManager gitManager = new GitManager(path: settings.ModelSourceControlLocation);
             foreach (string file in _schema.ActiveSchemaItem.Files)
             {
-                string fileName = Path.Combine(settings.ModelSourceControlLocation, file);
-                if (File.Exists(fileName))
+                string fileName = Path.Combine(
+                    path1: settings.ModelSourceControlLocation,
+                    path2: file
+                );
+                if (File.Exists(path: fileName))
                 {
-                    gitManager.SetFile(fileName);
+                    gitManager.SetFile(file: fileName);
                     Commit lastCommit = gitManager.GetLastCommit();
                     string text = gitManager.GetModifiedChanges();
-                    if (!string.IsNullOrEmpty(text))
+                    if (!string.IsNullOrEmpty(value: text))
                     {
                         GitDiferenceView gitDiferenceView = new GitDiferenceView
                         {
                             Text = gitManager.getCompareFileName(),
                         };
                         text = Regex.Replace(
-                            text,
-                            @"^.*\ No newline at end of file.*\n",
-                            "",
-                            RegexOptions.Multiline
+                            input: text,
+                            pattern: @"^.*\ No newline at end of file.*\n",
+                            replacement: "",
+                            options: RegexOptions.Multiline
                         );
-                        gitDiferenceView.ShowDiff(fileName + " " + lastCommit.Sha, fileName, text);
-                        WorkbenchSingleton.Workbench.ShowView(gitDiferenceView);
+                        gitDiferenceView.ShowDiff(
+                            oldfile: fileName + " " + lastCommit.Sha,
+                            newfile: fileName,
+                            text: text
+                        );
+                        WorkbenchSingleton.Workbench.ShowView(content: gitDiferenceView);
                         hasChange = true;
                     }
                 }
@@ -925,10 +1001,10 @@ public class ShowFileDiffXml : AbstractMenuCommand
         if (!hasChange)
         {
             MessageBox.Show(
-                "Found no changes in " + activefile,
-                "Git Diff",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information
+                text: "Found no changes in " + activefile,
+                caption: "Git Diff",
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Information
             );
         }
     }

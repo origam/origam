@@ -33,19 +33,23 @@ namespace Origam.Schema.MenuModel;
 /// <summary>
 /// Summary description for EntitySecurityRule.
 /// </summary>
-[SchemaItemDescription("Report Action", "UI Actions", "icon_report-action.png")]
-[HelpTopic("Report+Action")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(
+    name: "Report Action",
+    folderName: "UI Actions",
+    iconName: "icon_report-action.png"
+)]
+[HelpTopic(topic: "Report+Action")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class EntityReportAction : EntityUIAction
 {
     public EntityReportAction()
         : base() { }
 
     public EntityReportAction(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(schemaExtensionId: schemaExtensionId) { }
 
     public EntityReportAction(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Overriden AbstractDataEntityColumn Members
 
@@ -56,8 +60,8 @@ public class EntityReportAction : EntityUIAction
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(this.Report);
-        base.GetExtraDependencies(dependencies);
+        dependencies.Add(item: this.Report);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override IList<string> NewTypeNames
@@ -67,10 +71,19 @@ public class EntityReportAction : EntityUIAction
             try
             {
                 IBusinessServicesService agents =
-                    ServiceManager.Services.GetService(typeof(IBusinessServicesService))
-                    as IBusinessServicesService;
-                IServiceAgent agent = agents.GetAgent("DataService", null, null);
-                return agent.ExpectedParameterNames(this.Report, "LoadData", "Parameters");
+                    ServiceManager.Services.GetService(
+                        serviceType: typeof(IBusinessServicesService)
+                    ) as IBusinessServicesService;
+                IServiceAgent agent = agents.GetAgent(
+                    serviceType: "DataService",
+                    ruleEngine: null,
+                    workflowEngine: null
+                );
+                return agent.ExpectedParameterNames(
+                    item: this.Report,
+                    method: "LoadData",
+                    parameter: "Parameters"
+                );
             }
             catch
             {
@@ -80,7 +93,7 @@ public class EntityReportAction : EntityUIAction
     }
     #endregion
     #region Properties
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public override PanelActionType ActionType
     {
         get { return PanelActionType.Report; }
@@ -88,9 +101,9 @@ public class EntityReportAction : EntityUIAction
     }
     public Guid ReportId;
 
-    [Category("References")]
-    [TypeConverter(typeof(ReportConverter))]
-    [XmlReference("report", "ReportId")]
+    [Category(category: "References")]
+    [TypeConverter(type: typeof(ReportConverter))]
+    [XmlReference(attributeName: "report", idField: "ReportId")]
     [NotNullModelElementRule]
     public AbstractReport Report
     {
@@ -98,17 +111,17 @@ public class EntityReportAction : EntityUIAction
         {
             return (AbstractReport)
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(this.ReportId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: this.ReportId)
                 );
         }
-        set { this.ReportId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]); }
+        set { this.ReportId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]); }
     }
     private DataReportExportFormatType _exportFormatType;
 
-    [Category("Data Report")]
-    [Description("Export Format Type")]
-    [XmlAttribute("exportFormatType")]
+    [Category(category: "Data Report")]
+    [Description(description: "Export Format Type")]
+    [XmlAttribute(attributeName: "exportFormatType")]
     public DataReportExportFormatType ExportFormatType
     {
         get { return _exportFormatType; }

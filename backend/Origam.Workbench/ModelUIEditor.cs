@@ -46,17 +46,17 @@ public class ModelUIEditor : UITypeEditor
         if (provider != null)
         {
             editorService =
-                provider.GetService(typeof(IWindowsFormsEditorService))
+                provider.GetService(serviceType: typeof(IWindowsFormsEditorService))
                 as IWindowsFormsEditorService;
         }
         if (editorService != null)
         {
             PropertyGridModelDropdown selectionControl = new PropertyGridModelDropdown(
-                (ISchemaItem)value,
-                editorService,
-                context
+                value: (ISchemaItem)value,
+                service: editorService,
+                context: context
             );
-            editorService.DropDownControl(selectionControl);
+            editorService.DropDownControl(control: selectionControl);
             if (selectionControl.SelectedValue == null)
             {
                 return null;
@@ -70,9 +70,9 @@ public class ModelUIEditor : UITypeEditor
             {
                 TypeConverter converter = context.PropertyDescriptor.Converter;
                 value = converter.ConvertFrom(
-                    context,
-                    CultureInfo.CurrentUICulture,
-                    selectionControl.SelectedValue
+                    context: context,
+                    culture: CultureInfo.CurrentUICulture,
+                    value: selectionControl.SelectedValue
                 );
             }
         }
@@ -94,27 +94,45 @@ public class ModelUIEditor : UITypeEditor
         ISchemaItem schemaItem = e.Value as ISchemaItem;
         if (schemaItem == null)
         {
-            System.Diagnostics.Debug.WriteLine("Default paint");
-            e.Graphics.ExcludeClip(e.Bounds);
-            base.PaintValue(e);
+            System.Diagnostics.Debug.WriteLine(message: "Default paint");
+            e.Graphics.ExcludeClip(rect: e.Bounds);
+            base.PaintValue(e: e);
         }
         else
         {
-            System.Diagnostics.Debug.WriteLine("Overriden paint");
+            System.Diagnostics.Debug.WriteLine(message: "Overriden paint");
             var schemaBrowser =
-                WorkbenchSingleton.Workbench.GetPad(typeof(IBrowserPad)) as IBrowserPad;
+                WorkbenchSingleton.Workbench.GetPad(type: typeof(IBrowserPad)) as IBrowserPad;
             var imageList = schemaBrowser.ImageList;
-            int icon = schemaBrowser.ImageIndex(schemaItem.Icon);
-            e.Graphics.ExcludeClip(new Rectangle(e.Bounds.X, e.Bounds.Y, e.Bounds.Width, 1));
-            e.Graphics.ExcludeClip(new Rectangle(e.Bounds.X, e.Bounds.Y, 1, e.Bounds.Height));
-            e.Graphics.ExcludeClip(new Rectangle(e.Bounds.Width, e.Bounds.Y, 1, e.Bounds.Height));
-            e.Graphics.ExcludeClip(new Rectangle(e.Bounds.X, e.Bounds.Height, e.Bounds.Width, 1));
+            int icon = schemaBrowser.ImageIndex(icon: schemaItem.Icon);
+            e.Graphics.ExcludeClip(
+                rect: new Rectangle(x: e.Bounds.X, y: e.Bounds.Y, width: e.Bounds.Width, height: 1)
+            );
+            e.Graphics.ExcludeClip(
+                rect: new Rectangle(x: e.Bounds.X, y: e.Bounds.Y, width: 1, height: e.Bounds.Height)
+            );
+            e.Graphics.ExcludeClip(
+                rect: new Rectangle(
+                    x: e.Bounds.Width,
+                    y: e.Bounds.Y,
+                    width: 1,
+                    height: e.Bounds.Height
+                )
+            );
+            e.Graphics.ExcludeClip(
+                rect: new Rectangle(
+                    x: e.Bounds.X,
+                    y: e.Bounds.Height,
+                    width: e.Bounds.Width,
+                    height: 1
+                )
+            );
             e.Graphics.DrawImage(
-                imageList.Images[icon],
-                e.Bounds.X + 6,
-                e.Bounds.Y,
-                e.Bounds.Height,
-                e.Bounds.Height
+                image: imageList.Images[index: icon],
+                x: e.Bounds.X + 6,
+                y: e.Bounds.Y,
+                width: e.Bounds.Height,
+                height: e.Bounds.Height
             );
         }
     }

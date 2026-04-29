@@ -32,39 +32,39 @@ namespace Origam.Schema;
 /// <summary>
 /// Summary description for Schema.
 /// </summary>
-[XmlPackageRoot("package")]
-[ClassMetaVersion("6.1.0")]
+[XmlPackageRoot(category: "package")]
+[ClassMetaVersion(versionStr: "6.1.0")]
 public class Package : AbstractPersistent, IBrowserNode2, IComparable, IFilePersistent
 {
     SchemaItemProviderGroup _commonModelGroup = new SchemaItemProviderGroup(
-        "COMMON",
-        "Common",
-        "icon_01_common.png",
-        0
+        id: "COMMON",
+        text: "Common",
+        icon: "icon_01_common.png",
+        order: 0
     );
     SchemaItemProviderGroup _dataModelGroup = new SchemaItemProviderGroup(
-        "DATA",
-        "Data",
-        "icon_05_data.png",
-        1
+        id: "DATA",
+        text: "Data",
+        icon: "icon_05_data.png",
+        order: 1
     );
     SchemaItemProviderGroup _userInterfaceModelGroup = new SchemaItemProviderGroup(
-        "UI",
-        "User Interface",
-        "icon_13_user-interface.png",
-        2
+        id: "UI",
+        text: "User Interface",
+        icon: "icon_13_user-interface.png",
+        order: 2
     );
     SchemaItemProviderGroup _businessLogicModelGroup = new SchemaItemProviderGroup(
-        "BL",
-        "Business Logic",
-        "icon_26_business-logic.png",
-        3
+        id: "BL",
+        text: "Business Logic",
+        icon: "icon_26_business-logic.png",
+        order: 3
     );
     SchemaItemProviderGroup _apiModelGroup = new SchemaItemProviderGroup(
-        "API",
-        "API",
-        "icon_35_API.png",
-        4
+        id: "API",
+        text: "API",
+        icon: "icon_35_API.png",
+        order: 4
     );
 
     public Package()
@@ -73,13 +73,13 @@ public class Package : AbstractPersistent, IBrowserNode2, IComparable, IFilePers
     }
 
     public Package(Key primaryKey)
-        : base(primaryKey, new ModelElementKey().KeyArray)
+        : base(primaryKey: primaryKey, correctKeys: new ModelElementKey().KeyArray)
     {
-        this._childNodes.Add(_commonModelGroup);
-        this._childNodes.Add(_dataModelGroup);
-        this._childNodes.Add(_userInterfaceModelGroup);
-        this._childNodes.Add(_businessLogicModelGroup);
-        this._childNodes.Add(_apiModelGroup);
+        this._childNodes.Add(value: _commonModelGroup);
+        this._childNodes.Add(value: _dataModelGroup);
+        this._childNodes.Add(value: _userInterfaceModelGroup);
+        this._childNodes.Add(value: _businessLogicModelGroup);
+        this._childNodes.Add(value: _apiModelGroup);
     }
 
     public override void Persist()
@@ -106,7 +106,7 @@ public class Package : AbstractPersistent, IBrowserNode2, IComparable, IFilePers
         }
         else
         {
-            PersistenceProvider.RunInTransaction(persistsAction);
+            PersistenceProvider.RunInTransaction(action: persistsAction);
         }
     }
 
@@ -127,14 +127,14 @@ public class Package : AbstractPersistent, IBrowserNode2, IComparable, IFilePers
         }
     }
     public string OldName { get; private set; } = "";
-    public bool WasRenamed => !string.IsNullOrEmpty(OldName) && OldName != Name;
+    public bool WasRenamed => !string.IsNullOrEmpty(value: OldName) && OldName != Name;
 
     /// <summary>
     /// Gets or sets the version of this schema extension.
     /// </summary>
     [XmlAttribute(AttributeName = "version")]
     public string VersionString { get; set; } = "";
-    public PackageVersion Version => new PackageVersion(VersionString);
+    public PackageVersion Version => new PackageVersion(completeVersionString: VersionString);
 
     [XmlAttribute(AttributeName = "copyright")]
     public string Copyright { get; set; } = "";
@@ -146,7 +146,7 @@ public class Package : AbstractPersistent, IBrowserNode2, IComparable, IFilePers
         get
         {
             List<Package> result = new List<Package>();
-            SortPackages(this, result);
+            SortPackages(package: this, packages: result);
             return result;
         }
     }
@@ -155,20 +155,23 @@ public class Package : AbstractPersistent, IBrowserNode2, IComparable, IFilePers
     {
         foreach (PackageReference reference in package.References)
         {
-            if (!packages.Contains(reference.ReferencedPackage))
+            if (!packages.Contains(item: reference.ReferencedPackage))
             {
-                SortPackages(reference.ReferencedPackage, packages);
-                packages.Add(reference.ReferencedPackage);
+                SortPackages(package: reference.ReferencedPackage, packages: packages);
+                packages.Add(item: reference.ReferencedPackage);
             }
         }
     }
     #endregion
     #region IBrowserNode2 Members
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public bool Hide
     {
         get => !this.IsPersisted;
-        set => throw new InvalidOperationException(ResourceUtils.GetString("ErrorSetHide"));
+        set =>
+            throw new InvalidOperationException(
+                message: ResourceUtils.GetString(key: "ErrorSetHide")
+            );
     }
 
     public bool CanDelete => false;
@@ -180,18 +183,21 @@ public class Package : AbstractPersistent, IBrowserNode2, IComparable, IFilePers
 
     public bool CanMove(IBrowserNode2 newNode) => false;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public IBrowserNode2 ParentNode
     {
         get => null;
-        set => throw new InvalidOperationException(ResourceUtils.GetString("ErrorMoveExtension"));
+        set =>
+            throw new InvalidOperationException(
+                message: ResourceUtils.GetString(key: "ErrorMoveExtension")
+            );
     }
     public byte[] NodeImage => null;
 
-    [Browsable(false)]
-    public string NodeId => this.PrimaryKey["Id"].ToString();
+    [Browsable(browsable: false)]
+    public string NodeId => this.PrimaryKey[key: "Id"].ToString();
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public virtual string FontStyle => "Regular";
     #endregion
     #region IBrowserNode Members
@@ -199,10 +205,10 @@ public class Package : AbstractPersistent, IBrowserNode2, IComparable, IFilePers
     public bool CanRename => false;
     public List<PackageReference> References =>
         PersistenceProvider.RetrieveListByParent<PackageReference>(
-            this.PrimaryKey,
-            "SchemaExtension",
-            "PackageReference",
-            this.UseObjectCache
+            primaryKey: this.PrimaryKey,
+            parentTableName: "SchemaExtension",
+            childTableName: "PackageReference",
+            useCache: this.UseObjectCache
         );
     BrowserNodeCollection _childNodes = new BrowserNodeCollection();
 
@@ -225,9 +231,13 @@ public class Package : AbstractPersistent, IBrowserNode2, IComparable, IFilePers
         }
         if (group == null)
         {
-            throw new ArgumentOutOfRangeException("group", provider.Group, "unknown model group");
+            throw new ArgumentOutOfRangeException(
+                paramName: "group",
+                actualValue: provider.Group,
+                message: "unknown model group"
+            );
         }
-        group.ChildNodes().Add(provider);
+        group.ChildNodes().Add(value: provider);
     }
 
     public string NodeText
@@ -238,7 +248,7 @@ public class Package : AbstractPersistent, IBrowserNode2, IComparable, IFilePers
     public string NodeToolTipText => null;
     public string Icon => "09_packages-1.ico";
     public string RelativeFilePath =>
-        System.IO.Path.Combine(Name, PersistenceFiles.PackageFileName);
+        System.IO.Path.Combine(path1: Name, path2: PersistenceFiles.PackageFileName);
     public Guid FileParentId
     {
         get => Guid.Empty;
@@ -254,7 +264,7 @@ public class Package : AbstractPersistent, IBrowserNode2, IComparable, IFilePers
         IBrowserNode bn = obj as IBrowserNode;
         if (bn != null)
         {
-            return this.NodeText.CompareTo(bn.NodeText);
+            return this.NodeText.CompareTo(strB: bn.NodeText);
         }
 
         throw new InvalidCastException();

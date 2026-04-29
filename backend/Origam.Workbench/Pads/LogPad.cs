@@ -33,9 +33,9 @@ public class LogPad : OutputPad
         : base()
     {
         // Instantiate the writer
-        TextWriter _writer = new LogPadStreamWriter(this);
+        TextWriter _writer = new LogPadStreamWriter(output: this);
         // Redirect the out Console stream
-        Console.SetOut(_writer);
+        Console.SetOut(newOut: _writer);
         this.TabText = "Log";
         this.Text = "Log";
     }
@@ -43,15 +43,15 @@ public class LogPad : OutputPad
     private void InitializeComponent()
     {
         System.ComponentModel.ComponentResourceManager resources =
-            new System.ComponentModel.ComponentResourceManager(typeof(LogPad));
+            new System.ComponentModel.ComponentResourceManager(t: typeof(LogPad));
         this.SuspendLayout();
         //
         // LogPad
         //
-        this.ClientSize = new System.Drawing.Size(352, 271);
-        this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+        this.ClientSize = new System.Drawing.Size(width: 352, height: 271);
+        this.Icon = ((System.Drawing.Icon)(resources.GetObject(name: "$this.Icon")));
         this.Name = "LogPad";
-        this.ResumeLayout(false);
+        this.ResumeLayout(performLayout: false);
         this.PerformLayout();
     }
 }

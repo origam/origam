@@ -50,10 +50,10 @@ public class WorkQueueWebLoader : WorkQueueLoaderAdapter
         string transactionId
     )
     {
-        string[] cnParts = connection.Split(";".ToCharArray());
+        string[] cnParts = connection.Split(separator: ";".ToCharArray());
         foreach (string part in cnParts)
         {
-            string[] pair = part.Split("=".ToCharArray(), 2);
+            string[] pair = part.Split(separator: "=".ToCharArray(), count: 2);
             if (pair.Length == 2)
             {
                 switch (pair[0])
@@ -73,9 +73,9 @@ public class WorkQueueWebLoader : WorkQueueLoaderAdapter
                     default:
                     {
                         throw new ArgumentOutOfRangeException(
-                            "connectionParameterName",
-                            pair[0],
-                            ResourceUtils.GetString("ErrorInvalidConnectionString")
+                            paramName: "connectionParameterName",
+                            actualValue: pair[0],
+                            message: ResourceUtils.GetString(key: "ErrorInvalidConnectionString")
                         );
                     }
                 }
@@ -85,7 +85,7 @@ public class WorkQueueWebLoader : WorkQueueLoaderAdapter
         _password = password;
         if (_url == null || _url == string.Empty)
         {
-            throw new Exception("url parameter not specified in the connection string.");
+            throw new Exception(message: "url parameter not specified in the connection string.");
         }
     }
 
@@ -98,14 +98,14 @@ public class WorkQueueWebLoader : WorkQueueLoaderAdapter
             return null;
         }
         _executed = true;
-        if (!String.IsNullOrEmpty(_userName))
+        if (!String.IsNullOrEmpty(value: _userName))
         {
             _authentication = "Basic";
         }
-        string url = _url.Replace("{lastState}", lastState);
+        string url = _url.Replace(oldValue: "{lastState}", newValue: lastState);
         using (
             WebResponse response = HttpTools.Instance.GetResponse(
-                new Request(
+                request: new Request(
                     url: url,
                     method: null,
                     authenticationType: _authentication,
@@ -119,7 +119,7 @@ public class WorkQueueWebLoader : WorkQueueLoaderAdapter
             Stream responseStream = response.GetResponseStream();
             WorkQueueFileLoader.FileType mode;
             if (
-                response.ContentType.ToLower().StartsWith("text/")
+                response.ContentType.ToLower().StartsWith(value: "text/")
                 || response.ContentType.ToLower() == "application/json"
                 || response.ContentType.ToLower() == "application/xml"
             )
@@ -131,18 +131,18 @@ public class WorkQueueWebLoader : WorkQueueLoaderAdapter
                 mode = WorkQueueFileLoader.FileType.BINARY;
             }
             DataSet dataset = WorkQueueFileLoader.GetFileFromStream(
-                responseStream,
-                mode,
-                response.ResponseUri.AbsoluteUri,
-                response.ResponseUri.AbsoluteUri,
-                HttpTools.Instance.EncodingFromResponse(httpResponse).WebName
+                stream: responseStream,
+                mode: mode,
+                filename: response.ResponseUri.AbsoluteUri,
+                title: response.ResponseUri.AbsoluteUri,
+                encoding: HttpTools.Instance.EncodingFromResponse(response: httpResponse).WebName
             );
             WorkQueueAdapterResult result = new WorkQueueAdapterResult(
-                DataDocumentFactory.New(dataset)
+                document: DataDocumentFactory.New(dataSet: dataset)
             );
-            if (!String.IsNullOrEmpty(_stateXPath))
+            if (!String.IsNullOrEmpty(value: _stateXPath))
             {
-                result.State = GetNewStateViaXPath(dataset, lastState);
+                result.State = GetNewStateViaXPath(dataset: dataset, lastState: lastState);
             }
             return result;
         }
@@ -151,11 +151,13 @@ public class WorkQueueWebLoader : WorkQueueLoaderAdapter
     private string GetNewStateViaXPath(DataSet dataset, string lastState)
     {
         XPathDocument xPathDocument = new XPathDocument(
-            new StringReader(dataset.Tables["File"].Rows[0]["Data"].ToString())
+            textReader: new StringReader(
+                s: dataset.Tables[name: "File"].Rows[index: 0][columnName: "Data"].ToString()
+            )
         );
         XPathNavigator xPathNavigator = xPathDocument.CreateNavigator();
-        string newState = xPathNavigator.Evaluate(_stateXPath)?.ToString();
-        if (int.TryParse(newState, out int number))
+        string newState = xPathNavigator.Evaluate(xpath: _stateXPath)?.ToString();
+        if (int.TryParse(s: newState, result: out int number))
         {
             return newState;
         }

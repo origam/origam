@@ -28,16 +28,16 @@ namespace Origam.Schema.GuiModel;
 /// <summary>
 /// Summary description for PrintItReport.
 /// </summary>
-[SchemaItemDescription("PrintIt Report", "icon_printit-report.png")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "PrintIt Report", iconName: "icon_printit-report.png")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class PrintItReport : AbstractDataReport, IDataStructureReference
 {
     public PrintItReport()
         : base() { }
 
     public PrintItReport(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(schemaExtensionId: schemaExtensionId) { }
 
     public PrintItReport(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 }

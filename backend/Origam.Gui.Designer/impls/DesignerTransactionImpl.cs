@@ -22,18 +22,18 @@ internal class DesignerTransactionImpl : DesignerTransaction
     private DesignerHostImpl host;
 
     public DesignerTransactionImpl(DesignerHostImpl host, string description)
-        : base(description)
+        : base(description: description)
     {
         this.host = host;
         // The host keeps a string stack of the transaction descriptions.
-        host.TransactionDescriptions.Push(description);
+        host.TransactionDescriptions.Push(obj: description);
         // If this is first transaction to be opened, have the host raise
         // opening/opened events.
         //
         if (host.TransactionCount++ == 0)
         {
-            host.OnTransactionOpening(EventArgs.Empty);
-            host.OnTransactionOpened(EventArgs.Empty);
+            host.OnTransactionOpening(e: EventArgs.Empty);
+            host.OnTransactionOpened(e: EventArgs.Empty);
         }
     }
 
@@ -42,8 +42,8 @@ internal class DesignerTransactionImpl : DesignerTransaction
         if (host != null)
         {
             Debug.Assert(
-                host.TransactionDescriptions != null,
-                "End batch operation with no desription?!?"
+                condition: host.TransactionDescriptions != null,
+                message: "End batch operation with no desription?!?"
             );
             string s = (string)host.TransactionDescriptions.Pop();
             // If this is the last transaction to be closed, have the host raise
@@ -52,11 +52,11 @@ internal class DesignerTransactionImpl : DesignerTransaction
             if (--host.TransactionCount == 0)
             {
                 DesignerTransactionCloseEventArgs dtc = new DesignerTransactionCloseEventArgs(
-                    false,
-                    false
+                    commit: false,
+                    lastTransaction: false
                 );
-                host.OnTransactionClosing(dtc);
-                host.OnTransactionClosed(dtc);
+                host.OnTransactionClosing(e: dtc);
+                host.OnTransactionClosed(e: dtc);
             }
             host = null;
         }
@@ -67,8 +67,8 @@ internal class DesignerTransactionImpl : DesignerTransaction
         if (host != null)
         {
             Debug.Assert(
-                host.TransactionDescriptions != null,
-                "End batch operation with no desription?!?"
+                condition: host.TransactionDescriptions != null,
+                message: "End batch operation with no desription?!?"
             );
             string s = (string)host.TransactionDescriptions.Pop();
             // If this is the last transaction to be closed, have the host raise
@@ -77,11 +77,11 @@ internal class DesignerTransactionImpl : DesignerTransaction
             if (--host.TransactionCount == 0)
             {
                 DesignerTransactionCloseEventArgs dtc = new DesignerTransactionCloseEventArgs(
-                    true,
-                    true
+                    commit: true,
+                    lastTransaction: true
                 );
-                host.OnTransactionClosing(dtc);
-                host.OnTransactionClosed(dtc);
+                host.OnTransactionClosing(e: dtc);
+                host.OnTransactionClosed(e: dtc);
             }
             host = null;
         }

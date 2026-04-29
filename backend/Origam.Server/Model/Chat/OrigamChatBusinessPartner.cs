@@ -46,34 +46,40 @@ namespace Origam.Server.Model.Chat
         )
         {
             List<OrigamChatBusinessPartner> mentions = new List<OrigamChatBusinessPartner>();
-            foreach (DataRow row in datasetUsersForInvite.Tables["BusinessPartner"].Rows)
+            foreach (DataRow row in datasetUsersForInvite.Tables[name: "BusinessPartner"].Rows)
             {
-                Guid ChatUser = row.Field<Guid>("Id");
+                Guid ChatUser = row.Field<Guid>(columnName: "Id");
                 if (usersNotExistsInRoom)
                 {
                     if (
                         participants == null
-                        || !participants.Where(participant => participant.Id == ChatUser).Any()
+                        || !participants
+                            .Where(predicate: participant => participant.Id == ChatUser)
+                            .Any()
                     )
                     {
                         mentions.Add(
-                            new OrigamChatBusinessPartner(
-                                row.Field<Guid>("Id"),
-                                row.Field<string>("FirstNameAndName"),
-                                row.Field<Guid>("Id").ToString()
+                            item: new OrigamChatBusinessPartner(
+                                guid: row.Field<Guid>(columnName: "Id"),
+                                name: row.Field<string>(columnName: "FirstNameAndName"),
+                                avatarurl: row.Field<Guid>(columnName: "Id").ToString()
                             )
                         );
                     }
                 }
                 else
                 {
-                    if (participants.Where(participant => participant.Id == ChatUser).Any())
+                    if (
+                        participants
+                            .Where(predicate: participant => participant.Id == ChatUser)
+                            .Any()
+                    )
                     {
                         mentions.Add(
-                            new OrigamChatBusinessPartner(
-                                row.Field<Guid>("Id"),
-                                row.Field<string>("FirstNameAndName"),
-                                row.Field<Guid>("Id").ToString()
+                            item: new OrigamChatBusinessPartner(
+                                guid: row.Field<Guid>(columnName: "Id"),
+                                name: row.Field<string>(columnName: "FirstNameAndName"),
+                                avatarurl: row.Field<Guid>(columnName: "Id").ToString()
                             )
                         );
                     }

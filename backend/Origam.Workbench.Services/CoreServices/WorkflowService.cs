@@ -39,18 +39,18 @@ public class WorkflowService
     )
     {
         IServiceAgent workflowServiceAgent = (
-            ServiceManager.Services.GetService(typeof(IBusinessServicesService))
+            ServiceManager.Services.GetService(serviceType: typeof(IBusinessServicesService))
             as IBusinessServicesService
-        ).GetAgent("WorkflowService", null, null);
-        Hashtable ht = new Hashtable(parameters.Count);
+        ).GetAgent(serviceType: "WorkflowService", ruleEngine: null, workflowEngine: null);
+        Hashtable ht = new Hashtable(capacity: parameters.Count);
         foreach (QueryParameter param in parameters)
         {
-            ht.Add(param.Name, param.Value);
+            ht.Add(key: param.Name, value: param.Value);
         }
         workflowServiceAgent.MethodName = "ExecuteWorkflow";
         workflowServiceAgent.Parameters.Clear();
-        workflowServiceAgent.Parameters.Add("Workflow", workflowId);
-        workflowServiceAgent.Parameters.Add("Parameters", ht);
+        workflowServiceAgent.Parameters.Add(key: "Workflow", value: workflowId);
+        workflowServiceAgent.Parameters.Add(key: "Parameters", value: ht);
         workflowServiceAgent.TransactionId = transactionId;
         workflowServiceAgent.TraceWorkflowId = Guid.NewGuid();
         workflowServiceAgent.Run();
@@ -59,6 +59,10 @@ public class WorkflowService
 
     public static object ExecuteWorkflow(Guid workflowId)
     {
-        return ExecuteWorkflow(workflowId, new QueryParameterCollection(), null);
+        return ExecuteWorkflow(
+            workflowId: workflowId,
+            parameters: new QueryParameterCollection(),
+            transactionId: null
+        );
     }
 }

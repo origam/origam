@@ -21,8 +21,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Reflection;
 
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
+[assembly: AssemblyTrademark(trademark: "")]
+[assembly: AssemblyCulture(culture: "")]
 
 //
 // In order to sign your assembly you must specify a key to use. Refer to the
@@ -49,6 +49,6 @@ using System.Reflection;
 //   (*) Delay Signing is an advanced option - see the Microsoft .NET Framework
 //       documentation for more information on this.
 //
-[assembly: AssemblyDelaySign(false)]
+[assembly: AssemblyDelaySign(delaySign: false)]
 //[assembly: AssemblyKeyFile("..\\..\\..\\AssemblySigning\\origamKey.snk")]
-[assembly: AssemblyKeyName("")]
+[assembly: AssemblyKeyName(keyName: "")]

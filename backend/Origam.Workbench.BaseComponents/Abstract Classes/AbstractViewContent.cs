@@ -52,7 +52,7 @@ public class AbstractViewContent : AbstractBaseViewContent, IViewContent
         set
         {
             _titleName = value;
-            OnTitleNameChanged(EventArgs.Empty);
+            OnTitleNameChanged(e: EventArgs.Empty);
         }
     }
 
@@ -63,7 +63,7 @@ public class AbstractViewContent : AbstractBaseViewContent, IViewContent
         set
         {
             _statusText = value;
-            OnStatusTextChanged(EventArgs.Empty);
+            OnStatusTextChanged(e: EventArgs.Empty);
         }
     }
     public event EventHandler StatusTextChanged;
@@ -72,7 +72,7 @@ public class AbstractViewContent : AbstractBaseViewContent, IViewContent
     {
         if (StatusTextChanged != null)
         {
-            StatusTextChanged(this, e);
+            StatusTextChanged(sender: this, e: e);
         }
     }
 
@@ -82,7 +82,7 @@ public class AbstractViewContent : AbstractBaseViewContent, IViewContent
         set
         {
             displayedItemId = value;
-            OnFileNameChanged(EventArgs.Empty);
+            OnFileNameChanged(e: EventArgs.Empty);
         }
     }
     public virtual string HelpTopic
@@ -107,7 +107,7 @@ public class AbstractViewContent : AbstractBaseViewContent, IViewContent
     public AbstractViewContent(string titleName, string fileName)
     {
         _titleName = titleName;
-        displayedItemId = Guid.Parse(fileName);
+        displayedItemId = Guid.Parse(input: fileName);
     }
 
     public bool IsUntitled
@@ -128,7 +128,7 @@ public class AbstractViewContent : AbstractBaseViewContent, IViewContent
             if (_isDirty != value)
             {
                 _isDirty = value;
-                OnDirtyChanged(EventArgs.Empty);
+                OnDirtyChanged(e: EventArgs.Empty);
             }
         }
     }
@@ -168,16 +168,16 @@ public class AbstractViewContent : AbstractBaseViewContent, IViewContent
 
     public void LoadObject(object objectToLoad)
     {
-        ViewSpecificLoad(objectToLoad);
+        ViewSpecificLoad(objectToLoad: objectToLoad);
         LoadedObject = objectToLoad;
     }
 
     protected virtual void OnDirtyChanged(EventArgs e)
     {
-        OnTitleNameChanged(new EventArgs());
+        OnTitleNameChanged(e: new EventArgs());
         if (DirtyChanged != null)
         {
-            DirtyChanged(this, e);
+            DirtyChanged(sender: this, e: e);
         }
     }
 
@@ -187,7 +187,7 @@ public class AbstractViewContent : AbstractBaseViewContent, IViewContent
         //this.TabText = this.TitleName;
         if (TitleNameChanged != null)
         {
-            TitleNameChanged(this, e);
+            TitleNameChanged(sender: this, e: e);
         }
     }
 
@@ -195,7 +195,7 @@ public class AbstractViewContent : AbstractBaseViewContent, IViewContent
     {
         if (FileNameChanged != null)
         {
-            FileNameChanged(this, e);
+            FileNameChanged(sender: this, e: e);
         }
     }
 
@@ -203,7 +203,7 @@ public class AbstractViewContent : AbstractBaseViewContent, IViewContent
     {
         if (Saving != null)
         {
-            Saving(this, e);
+            Saving(sender: this, e: e);
         }
     }
 
@@ -212,8 +212,8 @@ public class AbstractViewContent : AbstractBaseViewContent, IViewContent
         //
         // AbstractViewContent
         //
-        this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-        this.ClientSize = new System.Drawing.Size(292, 273);
+        this.AutoScaleBaseSize = new System.Drawing.Size(width: 5, height: 13);
+        this.ClientSize = new System.Drawing.Size(width: 292, height: 273);
         this.DockAreas = DockAreas.Document;
         this.Name = "AbstractViewContent";
     }
@@ -222,7 +222,7 @@ public class AbstractViewContent : AbstractBaseViewContent, IViewContent
     {
         if (Saved != null)
         {
-            Saved(this, e);
+            Saved(sender: this, e: e);
         }
     }
 

@@ -33,65 +33,73 @@ public class OrigamGeoContainer
 {
     public static string PolygonFromJstk(string jstkPolygon)
     {
-        if (string.IsNullOrWhiteSpace(jstkPolygon))
+        if (string.IsNullOrWhiteSpace(value: jstkPolygon))
         {
             return "";
         }
         var emptyRegex = new Regex(
-            @"POLYGON\s+EMPTY",
-            RegexOptions.Compiled | RegexOptions.IgnoreCase
+            pattern: @"POLYGON\s+EMPTY",
+            options: RegexOptions.Compiled | RegexOptions.IgnoreCase
         );
-        if (emptyRegex.Match(jstkPolygon).Success)
+        if (emptyRegex.Match(input: jstkPolygon).Success)
         {
             return jstkPolygon;
         }
-        var numberRegex = new Regex(@"-?\d+\.?\d+", RegexOptions.Compiled);
-        var matches = numberRegex.Matches(jstkPolygon);
+        var numberRegex = new Regex(pattern: @"-?\d+\.?\d+", options: RegexOptions.Compiled);
+        var matches = numberRegex.Matches(input: jstkPolygon);
         if (matches.Count == 0 || matches.Count % 2 != 0)
         {
             return "";
         }
-        var converted = new List<string>(matches.Count);
+        var converted = new List<string>(capacity: matches.Count);
         for (int i = 0; i < matches.Count; i += 2)
         {
-            var xString = matches[i].Value;
-            var yString = matches[i + 1].Value;
+            var xString = matches[i: i].Value;
+            var yString = matches[i: i + 1].Value;
             if (
                 !double.TryParse(
-                    xString,
-                    NumberStyles.Float,
-                    CultureInfo.InvariantCulture,
-                    out double x
+                    s: xString,
+                    style: NumberStyles.Float,
+                    provider: CultureInfo.InvariantCulture,
+                    result: out double x
                 )
                 || !double.TryParse(
-                    yString,
-                    NumberStyles.Float,
-                    CultureInfo.InvariantCulture,
-                    out double y
+                    s: yString,
+                    style: NumberStyles.Float,
+                    provider: CultureInfo.InvariantCulture,
+                    result: out double y
                 )
             )
             {
                 return "";
             }
-            Coordinates wgs = CoordinateConverter.JtskToWgs(x, y);
-            converted.Add(XmlConvert.ToString(wgs.Longitude));
-            converted.Add(XmlConvert.ToString(wgs.Latitude));
+            Coordinates wgs = CoordinateConverter.JtskToWgs(x: x, y: y);
+            converted.Add(item: XmlConvert.ToString(value: wgs.Longitude));
+            converted.Add(item: XmlConvert.ToString(value: wgs.Latitude));
         }
         var stringBuilder = new StringBuilder();
         int lastIndex = 0;
         for (int i = 0; i < matches.Count; i++)
         {
-            var match = matches[i];
-            stringBuilder.Append(jstkPolygon, lastIndex, match.Index - lastIndex);
-            stringBuilder.Append(converted[i]);
+            var match = matches[i: i];
+            stringBuilder.Append(
+                value: jstkPolygon,
+                startIndex: lastIndex,
+                count: match.Index - lastIndex
+            );
+            stringBuilder.Append(value: converted[index: i]);
             lastIndex = match.Index + match.Length;
         }
-        stringBuilder.Append(jstkPolygon, lastIndex, jstkPolygon.Length - lastIndex);
+        stringBuilder.Append(
+            value: jstkPolygon,
+            startIndex: lastIndex,
+            count: jstkPolygon.Length - lastIndex
+        );
         return stringBuilder.ToString();
     }
 
     public static string PointFromJtsk(double x, double y)
     {
-        return LegacyXsltFunctionContainer.PointFromJtsk(x, y);
+        return LegacyXsltFunctionContainer.PointFromJtsk(x: x, y: y);
     }
 }

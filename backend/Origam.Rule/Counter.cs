@@ -46,7 +46,11 @@ public class Counter : ICounter
 
     public Counter(IBusinessServicesService businessService)
     {
-        _dataServiceAgent = businessService.GetAgent("DataService", null, null);
+        _dataServiceAgent = businessService.GetAgent(
+            serviceType: "DataService",
+            ruleEngine: null,
+            workflowEngine: null
+        );
     }
 
     public string GetNewCounter(string counterCode, DateTime date, string transactionId)
@@ -59,14 +63,33 @@ public class Counter : ICounter
             bool error = false;
             try
             {
-                _query = new DataStructureQuery(new Guid(QUERY), new Guid(FILTER));
-                _query.Parameters.Add(new QueryParameter("Counter_parReferenceCode", counterCode));
-                row = ReadRow(_query, counterCode, date, transactionId);
+                _query = new DataStructureQuery(
+                    dataStructureId: new Guid(g: QUERY),
+                    methodId: new Guid(g: FILTER)
+                );
+                _query.Parameters.Add(
+                    value: new QueryParameter(
+                        _parameterName: "Counter_parReferenceCode",
+                        value: counterCode
+                    )
+                );
+                row = ReadRow(
+                    query: _query,
+                    counterCode: counterCode,
+                    date: date,
+                    transactionId: transactionId
+                );
                 // increment the counter
                 counter = row.CurrentPosition;
                 counter += row.Increment;
                 // save the counter state back to the database
-                Update(_query, row, counter, date, transactionId);
+                Update(
+                    query: _query,
+                    row: row,
+                    counter: counter,
+                    date: date,
+                    transactionId: transactionId
+                );
             }
             catch (DBConcurrencyException)
             {
@@ -75,7 +98,7 @@ public class Counter : ICounter
                 {
                     throw;
                 }
-                System.Threading.Thread.Sleep(RETRY_INTERVAL);
+                System.Threading.Thread.Sleep(millisecondsTimeout: RETRY_INTERVAL);
             }
             if (!error)
             {
@@ -106,22 +129,22 @@ public class Counter : ICounter
     {
         _dataServiceAgent.MethodName = "LoadDataByQuery";
         _dataServiceAgent.Parameters.Clear();
-        _dataServiceAgent.Parameters.Add("Query", query);
+        _dataServiceAgent.Parameters.Add(key: "Query", value: query);
         _dataServiceAgent.TransactionId = transactionId;
         _dataServiceAgent.Run();
         DataSet result = _dataServiceAgent.Result as DataSet;
         _data.Clear();
-        _data.Merge(result);
+        _data.Merge(dataSet: result);
         if (_data == null || _data.Counter.Rows.Count < 1)
         {
             throw new ArgumentOutOfRangeException(
-                "counterCode",
-                counterCode,
-                ResourceUtils.GetString("ErrorNoSequence")
+                paramName: "counterCode",
+                actualValue: counterCode,
+                message: ResourceUtils.GetString(key: "ErrorNoSequence")
             );
         }
 
-        if (_data.Counter[0].ManageValidityByDate)
+        if (_data.Counter[index: 0].ManageValidityByDate)
         {
             foreach (CounterDataset.CounterDetailRow row in _data.CounterDetail)
             {
@@ -135,17 +158,20 @@ public class Counter : ICounter
                 }
             }
             throw new Exception(
-                ResourceUtils.GetString("ErrorNoSequenceForDate", date, counterCode)
+                message: ResourceUtils.GetString(
+                    key: "ErrorNoSequenceForDate",
+                    args: [date, counterCode]
+                )
             );
         }
 
-        CounterDataset.CounterDetailRow[] rows = _data.Counter[0].GetCounterDetailRows();
+        CounterDataset.CounterDetailRow[] rows = _data.Counter[index: 0].GetCounterDetailRows();
         if (rows.Length == 0)
         {
             throw new ArgumentOutOfRangeException(
-                "counterCode",
-                counterCode,
-                "Èíselná øada existuje, ale nemá definován rozsah."
+                paramName: "counterCode",
+                actualValue: counterCode,
+                message: "Èíselná øada existuje, ale nemá definován rozsah."
             );
         }
         return rows[0];
@@ -160,14 +186,17 @@ public class Counter : ICounter
     )
     {
         string name = (
-            row.GetParentRow(row.Table.ParentRelations[0]) as CounterDataset.CounterRow
+            row.GetParentRow(relation: row.Table.ParentRelations[index: 0])
+            as CounterDataset.CounterRow
         ).ReferenceCode;
         if (!row.IsCounterToNull())
         {
             int maximum = (int)row.CounterTo;
             if (maximum <= counter)
             {
-                throw new ArgumentException(ResourceUtils.GetString("ErrorSequenceMax", name));
+                throw new ArgumentException(
+                    message: ResourceUtils.GetString(key: "ErrorSequenceMax", args: name)
+                );
             }
         }
         row.BeginEdit();
@@ -176,8 +205,8 @@ public class Counter : ICounter
 
         _dataServiceAgent.MethodName = "StoreDataByQuery";
         _dataServiceAgent.Parameters.Clear();
-        _dataServiceAgent.Parameters.Add("Query", query);
-        _dataServiceAgent.Parameters.Add("Data", _data);
+        _dataServiceAgent.Parameters.Add(key: "Query", value: query);
+        _dataServiceAgent.Parameters.Add(key: "Data", value: _data);
         _dataServiceAgent.TransactionId = transactionId;
         _dataServiceAgent.Run();
     }

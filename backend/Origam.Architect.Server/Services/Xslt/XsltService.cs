@@ -43,21 +43,21 @@ public class XsltService(
 
     public ValidationResult Validate(TransformationInput input)
     {
-        string xsl = GetXsl(input.SchemaItemId);
-        return ValidateXslt(xsl, input);
+        string xsl = GetXsl(schemaItemId: input.SchemaItemId);
+        return ValidateXslt(xsl: xsl, input: input);
     }
 
     public TransformationResult Transform(TransformationInput input)
     {
-        string xsl = GetXsl(input.SchemaItemId);
+        string xsl = GetXsl(schemaItemId: input.SchemaItemId);
         var result = new TransformationResult();
         return Transform(input: input, xslt: xsl, validateOnly: true, result: result);
     }
 
     public ParametersResult GetParameters(Guid schemaItemId)
     {
-        string xsl = GetXsl(schemaItemId);
-        return GetParameterList(xsl);
+        string xsl = GetXsl(schemaItemId: schemaItemId);
+        return GetParameterList(xsl: xsl);
     }
 
     public IEnumerable<ShemaItemInfo> GetSettings()
@@ -67,17 +67,17 @@ public class XsltService(
             schema.GetProvider<DataStructureSchemaItemProvider>();
 
         return structures
-            .ChildItems.Select(item => new ShemaItemInfo
+            .ChildItems.Select(selector: item => new ShemaItemInfo
             {
                 Name = item.Name,
                 SchemaItemId = item.Id,
             })
-            .OrderBy(x => x.Name);
+            .OrderBy(keySelector: x => x.Name);
     }
 
     private string GetXsl(Guid schemaItemId)
     {
-        EditorData editorData = editorService.OpenDefaultEditor(schemaItemId);
+        EditorData editorData = editorService.OpenDefaultEditor(schemaItemId: schemaItemId);
         ISchemaItem item = editorData.Item;
         if (item is XslTransformation transformation)
         {
@@ -87,14 +87,14 @@ public class XsltService(
         {
             return xslRule.Xsl;
         }
-        throw new Exception("Not a XslTransformation or XslRule");
+        throw new Exception(message: "Not a XslTransformation or XslRule");
     }
 
     private ValidationResult ValidateXslt(string xsl, TransformationInput input)
     {
         var result = new ValidationResult();
         if (
-            LoadXslt(xsl, result) == null
+            LoadXslt(xslt: xsl, result: result) == null
             || Transform(input: input, xslt: xsl, validateOnly: true, result: result) == null
         )
         {
@@ -102,7 +102,7 @@ public class XsltService(
             return result;
         }
 
-        result.AddToOutput(Strings.XsltValidationSuccess);
+        result.AddToOutput(text: Strings.XsltValidationSuccess);
         result.Text = Strings.XsltValidationSuccess;
         return result;
     }
@@ -112,12 +112,12 @@ public class XsltService(
         try
         {
             XmlDocument doc = new XmlDocument();
-            doc.LoadXml(xslt);
+            doc.LoadXml(xml: xslt);
             return doc;
         }
         catch (Exception ex)
         {
-            result.AddToOutput(ex.Message);
+            result.AddToOutput(text: ex.Message);
             return null;
         }
     }
@@ -129,26 +129,26 @@ public class XsltService(
         TransformationResult result
     )
     {
-        result.AddToOutput("");
+        result.AddToOutput(text: "");
         string transactionId = Guid.NewGuid().ToString();
         try
         {
             IServiceAgent transformer = businessServicesService.GetAgent(
-                "DataTransformationService",
-                RuleEngine.Create(new Hashtable(), null),
-                null
+                serviceType: "DataTransformationService",
+                ruleEngine: RuleEngine.Create(contextStores: new Hashtable(), transactionId: null),
+                workflowEngine: null
             );
 
-            var doc = new XmlContainer(input.InputXml);
+            var doc = new XmlContainer(xmlString: input.InputXml);
             transformer.MethodName = "TransformText";
-            transformer.Parameters.Add("XslScript", xslt);
-            transformer.Parameters.Add("Data", doc);
-            transformer.Parameters.Add("ValidateOnly", validateOnly);
+            transformer.Parameters.Add(key: "XslScript", value: xslt);
+            transformer.Parameters.Add(key: "Data", value: doc);
+            transformer.Parameters.Add(key: "ValidateOnly", value: validateOnly);
             transformer.TransactionId = transactionId;
             transformer.OutputStructure = input.TargetDataStructureId.IsDefault()
                 ? null
                 : persistenceService.SchemaListProvider.RetrieveInstance<DataStructure>(
-                    input.TargetDataStructureId
+                    instanceId: input.TargetDataStructureId
                 );
 
             // resolve transformation input parameters and try to put an empty xml document to each just
@@ -156,9 +156,9 @@ public class XsltService(
             Hashtable parameterValues = new Hashtable();
             foreach (var parameter in input.Parameters)
             {
-                parameterValues.Add(parameter.Name, parameter.Value);
+                parameterValues.Add(key: parameter.Name, value: parameter.Value);
             }
-            transformer.Parameters.Add("Parameters", parameterValues);
+            transformer.Parameters.Add(key: "Parameters", value: parameterValues);
             transformer.Run();
             IXmlContainer container = transformer.Result as IXmlContainer;
             if (container == null)
@@ -169,28 +169,28 @@ public class XsltService(
             DataStructureRuleSet ruleSet = input.RuleSetId.IsDefault()
                 ? null
                 : persistenceService.SchemaListProvider.RetrieveInstance<DataStructureRuleSet>(
-                    input.RuleSetId
+                    instanceId: input.RuleSetId
                 );
             if (container is IDataDocument dataDoc)
             {
                 if (dataDoc.DataSet.HasErrors == false && ruleSet != null)
                 {
-                    RuleEngine re = RuleEngine.Create(null, null);
-                    re.ProcessRules(dataDoc, ruleSet, null);
+                    RuleEngine re = RuleEngine.Create(contextStores: null, transactionId: null);
+                    re.ProcessRules(data: dataDoc, ruleSet: ruleSet, contextRow: null);
                 }
             }
 
-            result.Xml = GetFormattedXml(container.Xml);
+            result.Xml = GetFormattedXml(node: container.Xml);
             return result;
         }
         catch (Exception ex)
         {
-            ErrorMessage(ex, result);
+            ErrorMessage(ex: ex, result: result);
             return result;
         }
         finally
         {
-            ResourceMonitor.Rollback(transactionId);
+            ResourceMonitor.Rollback(transactionId: transactionId);
         }
     }
 
@@ -203,11 +203,11 @@ public class XsltService(
 
         string resultText = "";
         StringWriter swriter = new StringWriter();
-        XmlTextWriter xwriter = new XmlTextWriter(swriter);
+        XmlTextWriter xwriter = new XmlTextWriter(w: swriter);
         try
         {
             xwriter.Formatting = Formatting.Indented;
-            node.WriteTo(xwriter);
+            node.WriteTo(w: xwriter);
             resultText = swriter.ToString();
         }
         finally
@@ -220,17 +220,21 @@ public class XsltService(
 
     private ParametersResult GetParameterList(string xsl)
     {
-        var result = new ParametersResult(ParameterTypes);
-        XmlDocument xsltDoc = LoadXslt(xsl, result);
+        var result = new ParametersResult(parameterTypes: ParameterTypes);
+        XmlDocument xsltDoc = LoadXslt(xslt: xsl, result: result);
         if (xsltDoc == null)
         {
             return result;
         }
 
-        IDictionary<string, string> aliasToNameSpace = GetNamespaceDictionary(xsltDoc);
-        IList<XmlElement> newParamNodes = XmlTools.ResolveTransformationParameterElements(xsltDoc);
+        IDictionary<string, string> aliasToNameSpace = GetNamespaceDictionary(xsltDoc: xsltDoc);
+        IList<XmlElement> newParamNodes = XmlTools.ResolveTransformationParameterElements(
+            doc: xsltDoc
+        );
         result.Parameters = newParamNodes
-            .Select(x => NodeToParamData(x, aliasToNameSpace))
+            .Select(selector: x =>
+                NodeToParamData(parameterNode: x, aliasToNameSpace: aliasToNameSpace)
+            )
             .ToList();
 
         return result;
@@ -238,10 +242,10 @@ public class XsltService(
 
     private IDictionary<string, string> GetNamespaceDictionary(XmlDocument xsltDoc)
     {
-        XPathDocument x = new XPathDocument(new StringReader(xsltDoc.InnerXml));
+        XPathDocument x = new XPathDocument(textReader: new StringReader(s: xsltDoc.InnerXml));
         XPathNavigator navigator = x.CreateNavigator();
-        navigator.MoveToFollowing(XPathNodeType.Element);
-        return navigator.GetNamespacesInScope(XmlNamespaceScope.All).Invert();
+        navigator.MoveToFollowing(type: XPathNodeType.Element);
+        return navigator.GetNamespacesInScope(scope: XmlNamespaceScope.All).Invert();
     }
 
     private ParameterData NodeToParamData(
@@ -249,45 +253,51 @@ public class XsltService(
         IDictionary<string, string> aliasToNameSpace
     )
     {
-        string name = parameterNode.Attributes["name"].Value;
+        string name = parameterNode.Attributes[name: "name"].Value;
         try
         {
-            string asPrefix = aliasToNameSpace[XmlTools.AsNameSpace];
+            string asPrefix = aliasToNameSpace[key: XmlTools.AsNameSpace];
             string typeAttribute = $"{asPrefix}:DataType";
-            string type = parameterNode.Attributes[typeAttribute]?.Value;
-            return new ParameterData(name, type);
+            string type = parameterNode.Attributes[name: typeAttribute]?.Value;
+            return new ParameterData(name: name, type: type);
         }
         catch (KeyNotFoundException)
         {
-            return new ParameterData(name, null);
+            return new ParameterData(name: name, type: null);
         }
     }
 
     private void ErrorMessage(Exception ex, IResult result)
     {
-        result.AddToOutput(ex.Message);
-        result.AddToOutput(Environment.NewLine);
+        result.AddToOutput(text: ex.Message);
+        result.AddToOutput(text: Environment.NewLine);
         if (ex.InnerException != null)
         {
-            ErrorMessage(ex.InnerException, result);
+            ErrorMessage(ex: ex.InnerException, result: result);
         }
     }
 
     private static List<string> GetParameterTypes()
     {
-        return Enum.GetValues(typeof(OrigamDataType))
+        return Enum.GetValues(enumType: typeof(OrigamDataType))
             .Cast<object>()
-            .Select(x => x.ToString())
+            .Select(selector: x => x.ToString())
             .ToList();
     }
 
     public IEnumerable<ShemaItemInfo> GetRuleSets(Guid dataStructureId)
     {
         DataStructure structure =
-            persistenceService.SchemaListProvider.RetrieveInstance<DataStructure>(dataStructureId);
+            persistenceService.SchemaListProvider.RetrieveInstance<DataStructure>(
+                instanceId: dataStructureId
+            );
         return structure
-            .ChildItemsByType<DataStructureRuleSet>(DataStructureRuleSet.CategoryConst)
-            .Select(rule => new ShemaItemInfo { Name = rule.Name, SchemaItemId = rule.Id })
-            .OrderBy(x => x.Name);
+            .ChildItemsByType<DataStructureRuleSet>(itemType: DataStructureRuleSet.CategoryConst)
+            .Select(selector: rule => new ShemaItemInfo
+            {
+                Name = rule.Name,
+                SchemaItemId = rule.Id,
+            })
+            .OrderBy(keySelector: x => x.Name);
     }
 }

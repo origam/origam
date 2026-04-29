@@ -39,11 +39,17 @@ public class CreateWorkQueueClassFromEntityCommand : AbstractMenuCommand
 {
     ScreenWizardForm wizardForm;
     SchemaBrowser _schemaBrowser =
-        WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+        WorkbenchSingleton.Workbench.GetPad(type: typeof(SchemaBrowser)) as SchemaBrowser;
     public override bool IsEnabled
     {
         get { return Owner is IDataEntity; }
-        set { throw new ArgumentException("Cannot set this property", "IsEnabled"); }
+        set
+        {
+            throw new ArgumentException(
+                message: "Cannot set this property",
+                paramName: "IsEnabled"
+            );
+        }
     }
 
     public override void Run()
@@ -51,20 +57,23 @@ public class CreateWorkQueueClassFromEntityCommand : AbstractMenuCommand
         var list = new List<ListViewItem>();
         WorkQueueClass workQueue = new WorkQueueClass();
         list.Add(
-            new ListViewItem(workQueue.GetType().SchemaItemDescription().Name, workQueue.Icon)
+            item: new ListViewItem(
+                text: workQueue.GetType().SchemaItemDescription().Name,
+                imageKey: workQueue.Icon
+            )
         );
         Stack stackPage = new Stack();
-        stackPage.Push(PagesList.Finish);
-        stackPage.Push(PagesList.SummaryPage);
-        stackPage.Push(PagesList.ScreenForm);
-        stackPage.Push(PagesList.StartPage);
+        stackPage.Push(obj: PagesList.Finish);
+        stackPage.Push(obj: PagesList.SummaryPage);
+        stackPage.Push(obj: PagesList.ScreenForm);
+        stackPage.Push(obj: PagesList.StartPage);
         wizardForm = new ScreenWizardForm
         {
             ItemTypeList = list,
-            Title = ResourceUtils.GetString("CreateWorkQueueClassFromEntityWizardTitle"),
+            Title = ResourceUtils.GetString(key: "CreateWorkQueueClassFromEntityWizardTitle"),
             PageTitle = "",
             Description = ResourceUtils.GetString(
-                "CreateWorkQueueClassFromEntityWizardDescription"
+                key: "CreateWorkQueueClassFromEntityWizardDescription"
             ),
             Pages = stackPage,
             Entity = Owner as IDataEntity,
@@ -75,7 +84,7 @@ public class CreateWorkQueueClassFromEntityCommand : AbstractMenuCommand
             ImageList = _schemaBrowser.EbrSchemaBrowser.imgList,
             Command = this,
         };
-        Wizard wiz = new Wizard(wizardForm);
+        Wizard wiz = new Wizard(objectForm: wizardForm);
         if (wiz.ShowDialog() != DialogResult.OK)
         {
             GeneratedModelElements.Clear();
@@ -85,28 +94,31 @@ public class CreateWorkQueueClassFromEntityCommand : AbstractMenuCommand
     public override void Execute()
     {
         WorkQueueClass result = WorkflowHelper.CreateWorkQueueClass(
-            wizardForm.Entity,
-            wizardForm.SelectedFields,
-            GeneratedModelElements
+            entity: wizardForm.Entity,
+            fields: wizardForm.SelectedFields,
+            generatedElements: GeneratedModelElements
         );
     }
 
     public override int GetImageIndex(string icon)
     {
-        return _schemaBrowser.ImageIndex(icon);
+        return _schemaBrowser.ImageIndex(icon: icon);
     }
 
     public override void SetSummaryText(object summary)
     {
         RichTextBox richTextBoxSummary = (RichTextBox)summary;
         richTextBoxSummary.Text =
-            ResourceUtils.GetString("CreateWorkQueueClassFromEntityWizardDescription")
+            ResourceUtils.GetString(key: "CreateWorkQueueClassFromEntityWizardDescription")
             + " with this parameters:";
-        richTextBoxSummary.AppendText(Environment.NewLine);
-        richTextBoxSummary.AppendText(Environment.NewLine);
-        richTextBoxSummary.AppendText("Worqueue Entity : \t");
-        richTextBoxSummary.AppendText(wizardForm.Entity.Name);
-        richTextBoxSummary.AppendText(Environment.NewLine);
-        ShowListItems(richTextBoxSummary, wizardForm.SelectedFieldNames);
+        richTextBoxSummary.AppendText(text: Environment.NewLine);
+        richTextBoxSummary.AppendText(text: Environment.NewLine);
+        richTextBoxSummary.AppendText(text: "Worqueue Entity : \t");
+        richTextBoxSummary.AppendText(text: wizardForm.Entity.Name);
+        richTextBoxSummary.AppendText(text: Environment.NewLine);
+        ShowListItems(
+            richTextBoxSummary: richTextBoxSummary,
+            selectedFieldNames: wizardForm.SelectedFieldNames
+        );
     }
 }

@@ -57,12 +57,15 @@ public class OrigamErrorHandlingMiddleware(
 
         try
         {
-            await next(context);
+            await next(context: context);
         }
         catch (SessionExpiredException ex)
         {
             context.Response.StatusCode = StatusCodes.Status404NotFound;
-            await WriteJsonAsync(context, GetReturnObject(ex, ex.Message));
+            await WriteJsonAsync(
+                context: context,
+                payload: GetReturnObject(ex: ex, defaultMessage: ex.Message)
+            );
         }
         catch (RowNotFoundException ex)
         {
@@ -72,24 +75,24 @@ public class OrigamErrorHandlingMiddleware(
                 exception = env.IsDevelopment() ? ex : null,
             };
             context.Response.StatusCode = StatusCodes.Status404NotFound;
-            await WriteJsonAsync(context, returnObject);
+            await WriteJsonAsync(context: context, payload: returnObject);
         }
         catch (DBConcurrencyException ex)
         {
-            logger.LogError(ex, ex.Message);
+            logger.LogError(exception: ex, message: ex.Message);
             context.Response.StatusCode = StatusCodes.Status409Conflict;
-            await WriteJsonAsync(context, GetReturnObject(ex));
+            await WriteJsonAsync(context: context, payload: GetReturnObject(ex: ex));
         }
         catch (ServerObjectDisposedException ex)
         {
             // Suggests to the client that this error could be ignored
             context.Response.StatusCode = 474;
-            await WriteJsonAsync(context, GetReturnObject(ex));
+            await WriteJsonAsync(context: context, payload: GetReturnObject(ex: ex));
         }
         catch (Exception ex)
         {
             // Let MVC handle Account UI errors => redirect to /Error (generic error page)
-            if (context.Request.Path.StartsWithSegments("/Account"))
+            if (context.Request.Path.StartsWithSegments(other: "/Account"))
             {
                 throw;
             }
@@ -99,26 +102,32 @@ public class OrigamErrorHandlingMiddleware(
                 case OrigamDataException or OrigamSecurityException:
                 {
                     context.Response.StatusCode = StatusCodes.Status400BadRequest;
-                    await WriteJsonAsync(context, GetReturnObject(ex));
+                    await WriteJsonAsync(context: context, payload: GetReturnObject(ex: ex));
                     break;
                 }
                 case OrigamValidationException:
                 {
                     context.Response.StatusCode = StatusCodes.Status400BadRequest;
-                    await WriteJsonAsync(context, GetReturnObject(ex, ex.Message));
+                    await WriteJsonAsync(
+                        context: context,
+                        payload: GetReturnObject(ex: ex, defaultMessage: ex.Message)
+                    );
                     break;
                 }
                 case IUserException:
                 {
                     context.Response.StatusCode = 420;
-                    await WriteJsonAsync(context, GetReturnObject(ex, ex.Message));
+                    await WriteJsonAsync(
+                        context: context,
+                        payload: GetReturnObject(ex: ex, defaultMessage: ex.Message)
+                    );
                     break;
                 }
                 default:
                 {
-                    logger.LogOrigamError(ex, ex.Message);
+                    logger.LogOrigamError(ex: ex, message: ex.Message);
                     context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-                    await WriteJsonAsync(context, GetReturnObject(ex));
+                    await WriteJsonAsync(context: context, payload: GetReturnObject(ex: ex));
                     break;
                 }
             }
@@ -128,7 +137,7 @@ public class OrigamErrorHandlingMiddleware(
     private static async Task WriteJsonAsync(HttpContext context, object payload)
     {
         context.Response.ContentType = "application/json";
-        var json = System.Text.Json.JsonSerializer.Serialize(payload);
-        await context.Response.WriteAsync(json);
+        var json = System.Text.Json.JsonSerializer.Serialize(value: payload);
+        await context.Response.WriteAsync(text: json);
     }
 }

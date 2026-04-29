@@ -29,14 +29,16 @@ public class LookupServerSideElementRuleAttribute : AbstractModelElementRuleAttr
 {
     public override Exception CheckRule(object instance)
     {
-        return new NotSupportedException(ResourceUtils.GetString("MemberNameRequired"));
+        return new NotSupportedException(
+            message: ResourceUtils.GetString(key: "MemberNameRequired")
+        );
     }
 
     public override Exception CheckRule(object instance, string memberName)
     {
         if (memberName == String.Empty | memberName == null)
         {
-            CheckRule(instance);
+            CheckRule(instance: instance);
         }
 
         var iDataLookup = ((ILookupReference)instance).Lookup;
@@ -44,6 +46,6 @@ public class LookupServerSideElementRuleAttribute : AbstractModelElementRuleAttr
         {
             return null;
         }
-        return new DataException("Lookup has to have property isFilteredServerSide on true.");
+        return new DataException(s: "Lookup has to have property isFilteredServerSide on true.");
     }
 }

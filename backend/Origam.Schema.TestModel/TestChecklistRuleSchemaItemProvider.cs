@@ -50,9 +50,9 @@ public class TestChecklistRuleSchemaItemProvider : AbstractSchemaItemProvider
     public override T NewItem<T>(Guid schemaExtensionId, SchemaItemGroup group)
     {
         return base.NewItem<T>(
-            schemaExtensionId,
-            group,
-            typeof(T) == typeof(TestChecklistRule) ? "NewTestChecklistRule" : null
+            schemaExtensionId: schemaExtensionId,
+            group: group,
+            itemName: typeof(T) == typeof(TestChecklistRule) ? "NewTestChecklistRule" : null
         );
     }
     #endregion

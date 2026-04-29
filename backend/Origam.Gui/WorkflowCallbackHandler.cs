@@ -50,7 +50,7 @@ public class WorkflowCallbackHandler
 {
     private Guid _workflowInstanceId;
     private WorkflowHost _host;
-    private ManualResetEvent _manualEvent = new ManualResetEvent(false);
+    private ManualResetEvent _manualEvent = new ManualResetEvent(initialState: false);
     private WorkflowHostEventArgs _result;
 
     public WorkflowCallbackHandler(WorkflowHost host, Guid workflowInstanceId)
@@ -92,7 +92,9 @@ public class WorkflowCallbackHandler
             if (e.Popup)
             {
 #if DEBUG
-                System.Diagnostics.Debug.WriteLine("WorkflowMessage - Popup: " + e.Message);
+                System.Diagnostics.Debug.WriteLine(
+                    message: "WorkflowMessage - Popup: " + e.Message
+                );
 #endif
                 this.Host.WorkflowMessage -= new WorkflowHostMessageEvent(Host_WorkflowMessage);
                 _result = e;
@@ -101,7 +103,9 @@ public class WorkflowCallbackHandler
             else
             {
 #if DEBUG
-                System.Diagnostics.Debug.WriteLine("WorkflowMessage - No popup: " + e.Message);
+                System.Diagnostics.Debug.WriteLine(
+                    message: "WorkflowMessage - No popup: " + e.Message
+                );
 #endif
             }
         }
@@ -114,7 +118,7 @@ public class WorkflowCallbackHandler
             if (e.Engine.CallingWorkflow == null)
             {
 #if DEBUG
-                System.Diagnostics.Debug.WriteLine("WorkflowFinished");
+                System.Diagnostics.Debug.WriteLine(message: "WorkflowFinished");
 #endif
                 this.Host.WorkflowFinished -= new WorkflowHostEvent(Host_WorkflowFinished);
                 _result = e;
@@ -128,7 +132,7 @@ public class WorkflowCallbackHandler
         if (e.Engine.WorkflowInstanceId == this.WorkflowInstanceId)
         {
 #if DEBUG
-            System.Diagnostics.Debug.WriteLine("FormRequested");
+            System.Diagnostics.Debug.WriteLine(message: "FormRequested");
 #endif
             this.Host.FormRequested -= new WorkflowHostFormEvent(Host_FormRequested);
             _result = e;

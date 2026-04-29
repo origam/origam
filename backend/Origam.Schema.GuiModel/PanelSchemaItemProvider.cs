@@ -51,9 +51,9 @@ public class PanelSchemaItemProvider : AbstractSchemaItemProvider
     public override T NewItem<T>(Guid schemaExtensionId, SchemaItemGroup group)
     {
         return base.NewItem<T>(
-            schemaExtensionId,
-            group,
-            typeof(T) == typeof(PanelControlSet) ? "NewPanel" : null
+            schemaExtensionId: schemaExtensionId,
+            group: group,
+            itemName: typeof(T) == typeof(PanelControlSet) ? "NewPanel" : null
         );
     }
     #endregion

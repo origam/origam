@@ -33,14 +33,14 @@ namespace Origam.Schema.EntityModel;
 /// Summary description for EntitySecurityFilterReference.
 /// </summary>
 [SchemaItemDescription(
-    "Row Level Security Filter",
-    "Row Level Security",
-    "icon_row-level-security-filter.png"
+    name: "Row Level Security Filter",
+    folderName: "Row Level Security",
+    iconName: "icon_row-level-security-filter.png"
 )]
-[HelpTopic("Row+Level+Security+Filters")]
-[XmlModelRoot(CategoryConst)]
-[DefaultProperty("Filter")]
-[ClassMetaVersion("6.0.0")]
+[HelpTopic(topic: "Row+Level+Security+Filters")]
+[XmlModelRoot(category: CategoryConst)]
+[DefaultProperty(name: "Filter")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class EntitySecurityFilterReference : AbstractSchemaItem
 {
     public const string CategoryConst = "EntitySecurityFilterReference";
@@ -49,10 +49,10 @@ public class EntitySecurityFilterReference : AbstractSchemaItem
         : base() { }
 
     public EntitySecurityFilterReference(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public EntitySecurityFilterReference(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Overriden AbstractDataEntityColumn Members
 
@@ -68,14 +68,14 @@ public class EntitySecurityFilterReference : AbstractSchemaItem
     {
         if (this.Filter != null)
         {
-            base.GetParameterReferences(Filter, list);
+            base.GetParameterReferences(parentItem: Filter, list: list);
         }
     }
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(this.Filter);
-        base.GetExtraDependencies(dependencies);
+        dependencies.Add(item: this.Filter);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override void UpdateReferences()
@@ -84,7 +84,7 @@ public class EntitySecurityFilterReference : AbstractSchemaItem
         {
             if (item.OldPrimaryKey != null)
             {
-                if (item.OldPrimaryKey.Equals(this.Filter.PrimaryKey))
+                if (item.OldPrimaryKey.Equals(obj: this.Filter.PrimaryKey))
                 {
                     this.Filter = item as EntityFilter;
                     break;
@@ -102,8 +102,8 @@ public class EntitySecurityFilterReference : AbstractSchemaItem
     #region Properties
     private string _roles;
 
-    [Category("Security")]
-    [XmlAttribute("roles")]
+    [Category(category: "Security")]
+    [XmlAttribute(attributeName: "roles")]
     public string Roles
     {
         get { return _roles; }
@@ -112,19 +112,19 @@ public class EntitySecurityFilterReference : AbstractSchemaItem
 
     public Guid FilterId;
 
-    [TypeConverter(typeof(EntityFilterConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
+    [TypeConverter(type: typeof(EntityFilterConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
     [NotNullModelElementRuleAttribute()]
-    [Category("Security")]
-    [XmlReference("filter", "FilterId")]
+    [Category(category: "Security")]
+    [XmlReference(attributeName: "filter", idField: "FilterId")]
     public EntityFilter Filter
     {
         get
         {
             return (EntityFilter)
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(this.FilterId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: this.FilterId)
                 );
         }
         set
@@ -136,7 +136,7 @@ public class EntitySecurityFilterReference : AbstractSchemaItem
             }
             else
             {
-                this.FilterId = (Guid)value.PrimaryKey["Id"];
+                this.FilterId = (Guid)value.PrimaryKey[key: "Id"];
                 this.Name = this.Filter.Name;
             }
         }

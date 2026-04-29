@@ -32,11 +32,17 @@ public class ServerCoreEntityUIActionRunner : ServerEntityUIActionRunner
         IBasicUIService basicUIService,
         IReportManager reportManager
     )
-        : base(actionRunnerClient, uiManager, sessionManager, basicUIService, reportManager) { }
+        : base(
+            actionRunnerClient: actionRunnerClient,
+            uiManager: uiManager,
+            sessionManager: sessionManager,
+            basicUIService: basicUIService,
+            reportManager: reportManager
+        ) { }
 
     protected override void ExecuteSelectionDialogAction(ExecuteActionProcessData processData)
     {
-        base.ExecuteSelectionDialogAction(processData);
-        resultList.Add(new PanelActionResult(ActionResultType.DestroyForm));
+        base.ExecuteSelectionDialogAction(processData: processData);
+        resultList.Add(item: new PanelActionResult(type: ActionResultType.DestroyForm));
     }
 }

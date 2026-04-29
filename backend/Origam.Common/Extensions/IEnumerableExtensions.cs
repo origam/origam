@@ -36,12 +36,12 @@ public static class IEnumerableExtensions
     {
         if (source == null)
         {
-            throw new ArgumentNullException(nameof(source));
+            throw new ArgumentNullException(paramName: nameof(source));
         }
 
         if (action == null)
         {
-            throw new ArgumentNullException(nameof(action));
+            throw new ArgumentNullException(paramName: nameof(action));
         }
 
         return Iterator();
@@ -49,7 +49,7 @@ public static class IEnumerableExtensions
         {
             foreach (var item in source)
             {
-                action(item);
+                action(obj: item);
                 yield return item;
             }
         }

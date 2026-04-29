@@ -40,7 +40,7 @@ public class DataGridFilterFactory : IDisposable
 
     private IServiceAgent _dataServiceAgent;
     private ISchemaService _schema =
-        ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
+        ServiceManager.Services.GetService(serviceType: typeof(ISchemaService)) as ISchemaService;
     private FilterPanel pnlFilter = null;
     private FormGenerator formGenerator = null;
     private string panelDataMember = "";
@@ -56,9 +56,9 @@ public class DataGridFilterFactory : IDisposable
     )
     {
         _dataServiceAgent = (
-            ServiceManager.Services.GetService(typeof(IBusinessServicesService))
+            ServiceManager.Services.GetService(serviceType: typeof(IBusinessServicesService))
             as IBusinessServicesService
-        ).GetAgent("DataService", null, null);
+        ).GetAgent(serviceType: "DataService", ruleEngine: null, workflowEngine: null);
 
         this.pnlFilter = panel;
         this.pnlFilter.QueryChanged += new DataViewQueryChanged(pnlFilter_QueryChanged);
@@ -83,7 +83,7 @@ public class DataGridFilterFactory : IDisposable
 
             if (DataViewQueryChanged != null)
             {
-                DataViewQueryChanged(this, this.query);
+                DataViewQueryChanged(sender: this, query: this.query);
             }
             if (form != null)
             {
@@ -97,7 +97,7 @@ public class DataGridFilterFactory : IDisposable
         get { return _currentStoredFilter; }
         set
         {
-            ApplyFilter(value);
+            ApplyFilter(filter: value);
             _currentStoredFilter = value;
         }
     }
@@ -143,25 +143,27 @@ public class DataGridFilterFactory : IDisposable
         {
             if (dropDown.ParameterMappings.Count > 0)
             {
-                string lookUpColumnName = DatasetTools.SortColumnName(column.ColumnName);
+                string lookUpColumnName = DatasetTools.SortColumnName(
+                    originalColumnName: column.ColumnName
+                );
                 part = new StringFilterPart(
-                    tb,
-                    typeof(string),
-                    lookUpColumnName,
-                    column.ColumnName,
-                    caption,
-                    formGenerator
+                    filteredControl: tb,
+                    dataType: typeof(string),
+                    dataMember: lookUpColumnName,
+                    gridColumnName: column.ColumnName,
+                    label: caption,
+                    formGenerator: formGenerator
                 );
             }
             else
             {
                 part = new DropDownFilterPart(
-                    dropDown,
-                    column.DataType,
-                    column.ColumnName,
-                    column.ColumnName,
-                    caption,
-                    formGenerator
+                    filteredControl: dropDown,
+                    dataType: column.DataType,
+                    dataMember: column.ColumnName,
+                    gridColumnName: column.ColumnName,
+                    label: caption,
+                    formGenerator: formGenerator
                 );
             }
         }
@@ -170,12 +172,12 @@ public class DataGridFilterFactory : IDisposable
             if (column.DataType == typeof(string))
             {
                 part = new StringFilterPart(
-                    textBox,
-                    column.DataType,
-                    column.ColumnName,
-                    column.ColumnName,
-                    caption,
-                    formGenerator
+                    filteredControl: textBox,
+                    dataType: column.DataType,
+                    dataMember: column.ColumnName,
+                    gridColumnName: column.ColumnName,
+                    label: caption,
+                    formGenerator: formGenerator
                 );
             }
             else if (
@@ -186,68 +188,68 @@ public class DataGridFilterFactory : IDisposable
             )
             {
                 part = new NumberFilterPart(
-                    textBox,
-                    column.DataType,
-                    column.ColumnName,
-                    column.ColumnName,
-                    caption,
-                    formGenerator
+                    filteredControl: textBox,
+                    dataType: column.DataType,
+                    dataMember: column.ColumnName,
+                    gridColumnName: column.ColumnName,
+                    label: caption,
+                    formGenerator: formGenerator
                 );
             }
         }
         else if (control is AsDateBox)
         {
             part = new DateFilterPart(
-                control as AsDateBox,
-                column.DataType,
-                column.ColumnName,
-                column.ColumnName,
-                caption,
-                formGenerator
+                filteredControl: control as AsDateBox,
+                dataType: column.DataType,
+                dataMember: column.ColumnName,
+                gridColumnName: column.ColumnName,
+                label: caption,
+                formGenerator: formGenerator
             );
         }
         else if (control is BlobControl)
         {
             part = new StringFilterPart(
-                tb,
-                typeof(string),
-                column.ColumnName,
-                column.ColumnName,
-                caption,
-                formGenerator
+                filteredControl: tb,
+                dataType: typeof(string),
+                dataMember: column.ColumnName,
+                gridColumnName: column.ColumnName,
+                label: caption,
+                formGenerator: formGenerator
             );
         }
         else if (control is AsCheckBox)
         {
             part = new BoolFilterPart(
-                control as AsCheckBox,
-                column.DataType,
-                column.ColumnName,
-                column.ColumnName,
-                caption,
-                formGenerator
+                filteredControl: control as AsCheckBox,
+                dataType: column.DataType,
+                dataMember: column.ColumnName,
+                gridColumnName: column.ColumnName,
+                label: caption,
+                formGenerator: formGenerator
             );
         }
         else
         {
             part = new DummyFilterPart(
-                control,
-                column.DataType,
-                column.ColumnName,
-                column.ColumnName,
-                caption,
-                formGenerator
+                filteredControl: control,
+                dataType: column.DataType,
+                dataMember: column.ColumnName,
+                gridColumnName: column.ColumnName,
+                label: caption,
+                formGenerator: formGenerator
             );
         }
         if (part != null)
         {
-            pnlFilter.AddFilterPart(part);
+            pnlFilter.AddFilterPart(part: part);
         }
     }
 
     public void PlotControls(DataGridTableStyle style, int offset)
     {
-        this.pnlFilter.SizeControls(style, offset);
+        this.pnlFilter.SizeControls(tableStyle: style, offset: offset);
     }
 
     //		private void ControlValueChanged(object sender, EventArgs e)
@@ -266,7 +268,7 @@ public class DataGridFilterFactory : IDisposable
         {
             if (_storedFilters == null)
             {
-                _storedFilters = OrigamPanelFilterDA.LoadFilters(_panelId);
+                _storedFilters = OrigamPanelFilterDA.LoadFilters(panelId: _panelId);
             }
             return _storedFilters;
         }
@@ -274,17 +276,17 @@ public class DataGridFilterFactory : IDisposable
 
     public void PersistFilters()
     {
-        PersistFilter(_storedFilters);
+        PersistFilter(filter: _storedFilters);
     }
 
     public void PersistFilter(OrigamPanelFilter filter)
     {
-        OrigamPanelFilterDA.PersistFilter(filter);
+        OrigamPanelFilterDA.PersistFilter(filter: filter);
     }
 
     public OrigamPanelFilter LoadFilter(Guid id)
     {
-        return OrigamPanelFilterDA.LoadFilter(id);
+        return OrigamPanelFilterDA.LoadFilter(id: id);
     }
 
     public void DeleteFilter(OrigamPanelFilter.PanelFilterRow filter)
@@ -300,7 +302,13 @@ public class DataGridFilterFactory : IDisposable
         OrigamPanelFilter.PanelFilterRow filter = _storedFilters.PanelFilter.NewPanelFilterRow();
         filter.Id = Guid.NewGuid();
 
-        GetFilterFromCurrent(filter, name, global, false, _panelId);
+        GetFilterFromCurrent(
+            filter: filter,
+            name: name,
+            global: global,
+            isDefault: false,
+            panelId: _panelId
+        );
 
         PersistFilters();
         _currentStoredFilter = filter;
@@ -343,14 +351,18 @@ public class DataGridFilterFactory : IDisposable
 
         if (filter.RowState == DataRowState.Detached)
         {
-            (filter.Table.DataSet as OrigamPanelFilter).PanelFilter.AddPanelFilterRow(filter);
+            (filter.Table.DataSet as OrigamPanelFilter).PanelFilter.AddPanelFilterRow(row: filter);
         }
         // delete current filter, if exists
         foreach (DataRow row in filter.GetPanelFilterDetailRows())
         {
             row.Delete();
         }
-        AddFilterDetails(filter.Table.DataSet as OrigamPanelFilter, filter, profile.Id);
+        AddFilterDetails(
+            filterDS: filter.Table.DataSet as OrigamPanelFilter,
+            filter: filter,
+            profileId: profile.Id
+        );
     }
 
     public void AddFilterDetails(
@@ -359,17 +371,23 @@ public class DataGridFilterFactory : IDisposable
         Guid profileId
     )
     {
-        pnlFilter.AddFilterDetails(filterDS, filter, profileId);
+        pnlFilter.AddFilterDetails(filterDS: filterDS, filter: filter, profileId: profileId);
     }
 
     public void ApplyFilter(OrigamPanelFilter.PanelFilterRow filter)
     {
-        pnlFilter.ApplyFilter(filter);
+        pnlFilter.ApplyFilter(filter: filter);
     }
 
     public void FocusFilterPanel()
     {
-        this.pnlFilter.SelectNextControl(this.pnlFilter, true, true, true, true);
+        this.pnlFilter.SelectNextControl(
+            ctl: this.pnlFilter,
+            forward: true,
+            tabStopOnly: true,
+            nested: true,
+            wrap: true
+        );
     }
 
     #region MakeQueryString

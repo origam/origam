@@ -35,12 +35,12 @@ public class Program
     public static void Main(string[] args)
     {
         var options = new Log4NetProviderOptions { Watch = true };
-        log4NetProvider = new Log4NetProvider(options);
+        log4NetProvider = new Log4NetProvider(options: options);
         ILogger startupLogger = log4NetProvider.CreateLogger();
 
         try
         {
-            var host = CreateWebHostBuilder(args).Build();
+            var host = CreateWebHostBuilder(args: args).Build();
             using (var scope = host.Services.CreateScope())
             {
                 var provider = scope.ServiceProvider;
@@ -49,11 +49,11 @@ public class Program
                 var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
 
                 OrigamUtils.ConnectOrigamRuntime(
-                    loggerFactory,
-                    startUpConfiguration.ReloadModelWhenFilesChangesDetected
+                    loggerFactory: loggerFactory,
+                    reloadModelWhenFilesChangesDetected: startUpConfiguration.ReloadModelWhenFilesChangesDetected
                 );
                 OpenIddictConfigManager
-                    .CreateOrUpdateAsync(provider, identityServerConfig)
+                    .CreateOrUpdateAsync(serviceProvider: provider, config: identityServerConfig)
                     .GetAwaiter()
                     .GetResult();
             }
@@ -62,20 +62,20 @@ public class Program
         }
         catch (Exception e)
         {
-            startupLogger.LogCritical($"{e.Message}\n{e.StackTrace}");
+            startupLogger.LogCritical(message: $"{e.Message}\n{e.StackTrace}");
             throw;
         }
     }
 
     public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
         WebHost
-            .CreateDefaultBuilder(args)
+            .CreateDefaultBuilder(args: args)
             .UseStartup<Startup>()
             .ConfigureLogging(
-                (hostingContext, logging) =>
+                configureLogging: (hostingContext, logging) =>
                 {
-                    logging.Services.AddSingleton(log4NetProvider);
-                    logging.SetMinimumLevel(LogLevel.Trace);
+                    logging.Services.AddSingleton(implementationInstance: log4NetProvider);
+                    logging.SetMinimumLevel(level: LogLevel.Trace);
                     logging.AddConsole();
                     logging.AddDebug();
                 }

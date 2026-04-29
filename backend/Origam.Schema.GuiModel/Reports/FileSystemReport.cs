@@ -26,26 +26,26 @@ using Origam.DA.Common;
 
 namespace Origam.Schema.GuiModel;
 
-[SchemaItemDescription("File System Report", "icon_file-system-report.png")]
-[HelpTopic("File+System+Report")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "File System Report", iconName: "icon_file-system-report.png")]
+[HelpTopic(topic: "File+System+Report")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class FileSystemReport : AbstractReport
 {
     public FileSystemReport()
         : base() { }
 
     public FileSystemReport(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(schemaExtensionId: schemaExtensionId) { }
 
     public FileSystemReport(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     private string _reportPath;
 
     [Description(
-        "Absolute path to the report. It can contain placeholders inside curly brackets which denote parameters."
+        description: "Absolute path to the report. It can contain placeholders inside curly brackets which denote parameters."
     )]
-    [XmlAttribute("reportPath")]
+    [XmlAttribute(attributeName: "reportPath")]
     public string ReportPath
     {
         get { return _reportPath; }

@@ -24,9 +24,9 @@ using Origam.DA.Common;
 
 namespace Origam.Schema.GuiModel;
 
-[SchemaItemDescription("Cartesian Chart", "icon_cartesian-chart.png")]
-[HelpTopic("Cartesian+Charts")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Cartesian Chart", iconName: "icon_cartesian-chart.png")]
+[HelpTopic(topic: "Cartesian+Charts")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class CartesianChart : AbstractChart
 {
     public CartesianChart()
@@ -36,22 +36,22 @@ public class CartesianChart : AbstractChart
     }
 
     public CartesianChart(Guid schemaExtensionId)
-        : base(schemaExtensionId)
+        : base(schemaExtensionId: schemaExtensionId)
     {
         Init();
     }
 
     public CartesianChart(Key primaryKey)
-        : base(primaryKey)
+        : base(primaryKey: primaryKey)
     {
         Init();
     }
 
     private void Init()
     {
-        this.ChildItemTypes.Add(typeof(CartesianChartVerticalAxis));
-        this.ChildItemTypes.Add(typeof(CartesianChartHorizontalAxis));
-        this.ChildItemTypes.Add(typeof(ColumnSeries));
-        this.ChildItemTypes.Add(typeof(LineSeries));
+        this.ChildItemTypes.Add(item: typeof(CartesianChartVerticalAxis));
+        this.ChildItemTypes.Add(item: typeof(CartesianChartHorizontalAxis));
+        this.ChildItemTypes.Add(item: typeof(ColumnSeries));
+        this.ChildItemTypes.Add(item: typeof(LineSeries));
     }
 }

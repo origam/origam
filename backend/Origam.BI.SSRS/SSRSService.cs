@@ -44,7 +44,7 @@ public class SSRSService : IReportService
 
     // ReSharper disable once InconsistentNaming
     private static readonly ILog log = LogManager.GetLogger(
-        MethodBase.GetCurrentMethod().DeclaringType
+        type: MethodBase.GetCurrentMethod().DeclaringType
     );
 
     public object GetReport(
@@ -59,28 +59,34 @@ public class SSRSService : IReportService
         if (
             !(
                 persistenceService.SchemaProvider.RetrieveInstance(
-                    typeof(AbstractReport),
-                    new ModelElementKey(reportId)
+                    type: typeof(AbstractReport),
+                    primaryKey: new ModelElementKey(id: reportId)
                 )
                 is SSRSReport report
             )
         )
         {
             throw new ArgumentOutOfRangeException(
-                "reportId",
-                reportId,
-                Strings.DefinitionNotInModel
+                paramName: "reportId",
+                actualValue: reportId,
+                message: Strings.DefinitionNotInModel
             );
         }
         if (parameters == null)
         {
             parameters = new Hashtable();
         }
-        ReportHelper.PopulateDefaultValues(report, parameters);
-        ReportHelper.ComputeXsltValueParameters(report, parameters, traceTaskInfo);
+        ReportHelper.PopulateDefaultValues(report: report, parameters: parameters);
+        ReportHelper.ComputeXsltValueParameters(
+            report: report,
+            parameters: parameters,
+            traceTaskInfo: traceTaskInfo
+        );
         var settings = ConfigurationManager.GetActiveConfiguration();
-        var serviceTimeout = TimeSpan.FromMilliseconds(settings.SQLReportServiceTimeout);
-        var binding = new BasicHttpBinding(BasicHttpSecurityMode.TransportCredentialOnly)
+        var serviceTimeout = TimeSpan.FromMilliseconds(value: settings.SQLReportServiceTimeout);
+        var binding = new BasicHttpBinding(
+            securityMode: BasicHttpSecurityMode.TransportCredentialOnly
+        )
         {
             OpenTimeout = serviceTimeout,
             SendTimeout = serviceTimeout,
@@ -90,13 +96,16 @@ public class SSRSService : IReportService
         };
         if (log.IsDebugEnabled)
         {
-            log.DebugFormat("SSRSService Timeout: {0}", settings.SQLReportServiceTimeout);
+            log.DebugFormat(
+                format: "SSRSService Timeout: {0}",
+                arg0: settings.SQLReportServiceTimeout
+            );
         }
         var serviceClient = new ReportExecutionServiceSoapClient(
-            binding,
-            new EndpointAddress(settings.SQLReportServiceUrl)
+            binding: binding,
+            remoteAddress: new EndpointAddress(uri: settings.SQLReportServiceUrl)
         );
-        if (string.IsNullOrEmpty(settings.SQLReportServiceAccount))
+        if (string.IsNullOrEmpty(value: settings.SQLReportServiceAccount))
         {
             serviceClient.ClientCredentials.Windows.ClientCredential =
                 CredentialCache.DefaultNetworkCredentials;
@@ -105,21 +114,21 @@ public class SSRSService : IReportService
         {
             binding.Security.Transport.ClientCredentialType = HttpClientCredentialType.Ntlm;
             serviceClient.ClientCredentials.Windows.ClientCredential = new NetworkCredential(
-                settings.SQLReportServiceAccount,
-                settings.SQLReportServicePassword
+                userName: settings.SQLReportServiceAccount,
+                password: settings.SQLReportServicePassword
             );
         }
-        serviceClient.Endpoint.EndpointBehaviors.Add(new ReportingServicesEndpointBehavior());
+        serviceClient.Endpoint.EndpointBehaviors.Add(item: new ReportingServicesEndpointBehavior());
         var reportPath = ReportHelper.ExpandCurlyBracketPlaceholdersWithParameters(
-            report.ReportPath,
-            parameters
+            input: report.ReportPath,
+            parameters: parameters
         );
         var executionHeader = new ExecutionHeader();
         // TrustedUserHeader is used when connecting via https
         // so for we don't have such instance, so we ignore it
         var loadReportResponse = serviceClient
-            .LoadReportAsync(null, reportPath, null)
-            .ConfigureAwait(false)
+            .LoadReportAsync(TrustedUserHeader: null, Report: reportPath, HistoryID: null)
+            .ConfigureAwait(continueOnCapturedContext: false)
             .GetAwaiter()
             .GetResult();
         if (loadReportResponse.ExecutionHeader != null)
@@ -135,32 +144,32 @@ public class SSRSService : IReportService
                 var parameterValue = new ParameterValue
                 {
                     Name = key,
-                    Value = parameters[key].ToString(),
+                    Value = parameters[key: key].ToString(),
                 };
                 reportParameters[index] = parameterValue;
                 index++;
             }
             serviceClient
                 .SetExecutionParametersAsync(
-                    executionHeader,
-                    null,
-                    reportParameters,
-                    Thread.CurrentThread.CurrentCulture.IetfLanguageTag
+                    ExecutionHeader: executionHeader,
+                    TrustedUserHeader: null,
+                    Parameters: reportParameters,
+                    ParameterLanguage: Thread.CurrentThread.CurrentCulture.IetfLanguageTag
                 )
-                .ConfigureAwait(false)
+                .ConfigureAwait(continueOnCapturedContext: false)
                 .GetAwaiter()
                 .GetResult();
         }
         return serviceClient
             .RenderAsync(
-                new RenderRequest(
-                    executionHeader,
-                    null,
-                    format,
-                    "<DeviceInfo><Toolbar>False</Toolbar></DeviceInfo>"
+                request: new RenderRequest(
+                    ExecutionHeader: executionHeader,
+                    TrustedUserHeader: null,
+                    Format: format,
+                    DeviceInfo: "<DeviceInfo><Toolbar>False</Toolbar></DeviceInfo>"
                 )
             )
-            .ConfigureAwait(false)
+            .ConfigureAwait(continueOnCapturedContext: false)
             .GetAwaiter()
             .GetResult()
             .Result;
@@ -203,7 +212,7 @@ internal class ReportingServicesEndpointBehavior : IEndpointBehavior
 
     public void ApplyClientBehavior(ServiceEndpoint endpoint, ClientRuntime clientRuntime)
     {
-        clientRuntime.ClientMessageInspectors.Add(new ReportingServicesExecutionInspector());
+        clientRuntime.ClientMessageInspectors.Add(item: new ReportingServicesExecutionInspector());
     }
 
     public void ApplyDispatchBehavior(
@@ -221,17 +230,17 @@ internal class ReportingServicesExecutionInspector : IClientMessageInspector
     public void AfterReceiveReply(ref Message reply, object correlationState)
     {
         var index = reply.Headers.FindHeader(
-            "ExecutionHeader",
-            "http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices"
+            name: "ExecutionHeader",
+            ns: "http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices"
         );
         if ((index >= 0) && (headers == null))
         {
-            headers = new MessageHeaders(MessageVersion.Soap11);
+            headers = new MessageHeaders(version: MessageVersion.Soap11);
             headers.CopyHeaderFrom(
-                reply,
-                reply.Headers.FindHeader(
-                    "ExecutionHeader",
-                    "http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices"
+                message: reply,
+                headerIndex: reply.Headers.FindHeader(
+                    name: "ExecutionHeader",
+                    ns: "http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices"
                 )
             );
         }
@@ -241,7 +250,7 @@ internal class ReportingServicesExecutionInspector : IClientMessageInspector
     {
         if (headers != null)
         {
-            request.Headers.CopyHeadersFrom(headers);
+            request.Headers.CopyHeadersFrom(collection: headers);
         }
         //https://msdn.microsoft.com/en-us/library/system.servicemodel.dispatcher.iclientmessageinspector.beforesendrequest(v=vs.110).aspx#Anchor_0
         return Guid.NewGuid();

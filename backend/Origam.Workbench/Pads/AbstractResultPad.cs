@@ -32,16 +32,16 @@ public class AbstractResultPad : AbstractPadContent
     {
         Guid SchemaExtensionIdItem = SchemaExtensionId;
         TreeNode treenode = (
-            WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser
+            WorkbenchSingleton.Workbench.GetPad(type: typeof(SchemaBrowser)) as SchemaBrowser
         ).EbrSchemaBrowser.GetFirstNode();
         if (treenode != null)
         {
-            if (!((Package)treenode.Tag).Id.Equals(SchemaExtensionIdItem))
+            if (!((Package)treenode.Tag).Id.Equals(g: SchemaExtensionIdItem))
             {
                 DialogResult dialogResult = MessageBox.Show(
-                    "Do you want to change the Package?",
-                    "Package change",
-                    MessageBoxButtons.YesNo
+                    text: "Do you want to change the Package?",
+                    caption: "Package change",
+                    buttons: MessageBoxButtons.YesNo
                 );
                 if (dialogResult == DialogResult.No)
                 {
@@ -53,25 +53,25 @@ public class AbstractResultPad : AbstractPadContent
                 return true;
             }
         }
-        LoadSchema(treenode, SchemaExtensionIdItem);
+        LoadSchema(treenode: treenode, SchemaExtensionIdItem: SchemaExtensionIdItem);
         return true;
     }
 
     private void LoadSchema(TreeNode treenode, Guid SchemaExtensionIdItem)
     {
         SchemaService schema =
-            ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
+            ServiceManager.Services.GetService(serviceType: typeof(SchemaService)) as SchemaService;
         if (treenode != null)
         {
             schema.UnloadSchema();
         }
-        if (treenode == null || !((Package)treenode.Tag).Id.Equals(SchemaExtensionIdItem))
+        if (treenode == null || !((Package)treenode.Tag).Id.Equals(g: SchemaExtensionIdItem))
         {
             foreach (Package sch in schema.AllPackages)
             {
-                if (sch.Id.Equals(SchemaExtensionIdItem))
+                if (sch.Id.Equals(g: SchemaExtensionIdItem))
                 {
-                    schema.LoadSchema(sch.Id);
+                    schema.LoadSchema(schemaExtensionId: sch.Id);
                     ViewSchemaBrowserPad cmd = new ViewSchemaBrowserPad();
                     cmd.Run();
                 }

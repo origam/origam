@@ -48,7 +48,7 @@ public class TimerJob
             return DateTime.MaxValue;
         }
 
-        return Schedule.NextRunTime(time, IncludeStartTime);
+        return Schedule.NextRunTime(time: time, IncludeStartTime: IncludeStartTime);
     }
 
     public void Execute(object sender, DateTime Begin, DateTime End, ExceptionEventHandler Error)
@@ -60,11 +60,11 @@ public class TimerJob
 
         var EventList = new List<DateTime>();
         //			Schedule.AddEventsInInterval(Begin, End, EventList);
-        Schedule.AddEventsInInterval(LastTime, End, EventList);
+        Schedule.AddEventsInInterval(Begin: LastTime, End: End, List: EventList);
         if (Filter != null)
         {
             //				Filter.FilterResultsInInterval(Begin, End, EventList);
-            Filter.FilterResultsInInterval(LastTime, End, EventList);
+            Filter.FilterResultsInInterval(Start: LastTime, End: End, List: EventList);
         }
         foreach (DateTime EventTime in EventList)
         {
@@ -72,16 +72,22 @@ public class TimerJob
             {
                 if (SyncronizedEvent)
                 {
-                    _ExecuteHandler(sender, EventTime, Error);
+                    _ExecuteHandler(sender: sender, EventTime: EventTime, Error: Error);
                 }
                 else
                 {
-                    _ExecuteHandler.BeginInvoke(sender, EventTime, Error, null, null);
+                    _ExecuteHandler.BeginInvoke(
+                        sender: sender,
+                        EventTime: EventTime,
+                        Error: Error,
+                        callback: null,
+                        @object: null
+                    );
                 }
             }
             finally
             {
-                this.LastTime = EventTime.AddMilliseconds(1);
+                this.LastTime = EventTime.AddMilliseconds(value: 1);
             }
         }
     }
@@ -90,8 +96,8 @@ public class TimerJob
     {
         try
         {
-            TimerParameterSetter Setter = new TimerParameterSetter(EventTime, sender);
-            Method.Execute(Setter);
+            TimerParameterSetter Setter = new TimerParameterSetter(time: EventTime, sender: sender);
+            Method.Execute(Params: Setter);
         }
         catch (Exception ex)
         {
@@ -99,7 +105,7 @@ public class TimerJob
             {
                 try
                 {
-                    Error(this, new ExceptionEventArgs(EventTime, ex));
+                    Error(sender: this, Args: new ExceptionEventArgs(eventTime: EventTime, e: ex));
                 }
                 catch { }
             }
@@ -128,7 +134,7 @@ public class TimerJobList
     {
         lock (_List)
         {
-            _List.Add(Event);
+            _List.Add(item: Event);
         }
     }
 
@@ -144,7 +150,7 @@ public class TimerJobList
     {
         lock (_List)
         {
-            _List.Remove(job);
+            _List.Remove(item: job);
         }
     }
 
@@ -169,10 +175,10 @@ public class TimerJobList
                     break;
                 }
 
-                job = _List[i] as TimerJob;
+                job = _List[index: i] as TimerJob;
                 if (job == null)
                 {
-                    _List.RemoveAt(i);
+                    _List.RemoveAt(index: i);
                     continue;
                 }
             }
@@ -181,20 +187,20 @@ public class TimerJobList
                 ++i;
                 continue;
             }
-            DateTime Proposed = job.NextRunTime(time, true);
+            DateTime Proposed = job.NextRunTime(time: time, IncludeStartTime: true);
             if (Proposed == DateTime.MaxValue)
             {
                 lock (_List)
                 {
-                    _List.Remove(job);
+                    _List.Remove(item: job);
                     continue;
                 }
             }
-            System.Diagnostics.Debug.WriteLine("Proposed Next Job: " + Proposed);
+            System.Diagnostics.Debug.WriteLine(message: "Proposed Next Job: " + Proposed);
             next = (Proposed < next) ? Proposed : next;
             ++i;
         }
-        System.Diagnostics.Debug.WriteLine("Next Job: " + next);
+        System.Diagnostics.Debug.WriteLine(message: "Next Job: " + next);
         return next;
     }
 
@@ -248,13 +254,13 @@ public class TimerParameterSetter : IParameterSetter
 
             case "scheduledeventargs":
             {
-                parameter = new ScheduledEventArgs(_time);
+                parameter = new ScheduledEventArgs(eventTime: _time);
                 return true;
             }
 
             case "eventargs":
             {
-                parameter = new ScheduledEventArgs(_time);
+                parameter = new ScheduledEventArgs(eventTime: _time);
                 return true;
             }
         }

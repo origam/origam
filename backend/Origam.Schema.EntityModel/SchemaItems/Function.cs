@@ -33,10 +33,10 @@ public enum OrigamFunctionType
     Database = 1,
 }
 
-[SchemaItemDescription("Function", "icon_10_functions.png")]
-[HelpTopic("Functions")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Function", iconName: "icon_10_functions.png")]
+[HelpTopic(topic: "Functions")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class Function : AbstractSchemaItem
 {
     public const string CategoryConst = "Function";
@@ -44,16 +44,16 @@ public class Function : AbstractSchemaItem
     public Function() { }
 
     public Function(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public Function(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Overriden AbstractDataEntityColumn Members
 
     public override string ItemType => CategoryConst;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public override bool UseFolders => false;
     public override string Icon
     {
@@ -74,22 +74,22 @@ public class Function : AbstractSchemaItem
     }
     #endregion
     #region ISchemaItemFactory Members
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public override Type[] NewItemTypes => new[] { typeof(FunctionParameter) };
 
     public override T NewItem<T>(Guid schemaExtensionId, SchemaItemGroup group)
     {
         return base.NewItem<T>(
-            schemaExtensionId,
-            group,
-            typeof(T) == typeof(FunctionParameter) ? "NewFunctionParameter" : null
+            schemaExtensionId: schemaExtensionId,
+            group: group,
+            itemName: typeof(T) == typeof(FunctionParameter) ? "NewFunctionParameter" : null
         );
     }
     #endregion
     #region Properties
     private OrigamDataType _dataType;
 
-    [XmlAttribute("dataType")]
+    [XmlAttribute(attributeName: "dataType")]
     public OrigamDataType DataType
     {
         get => _dataType;
@@ -97,7 +97,7 @@ public class Function : AbstractSchemaItem
     }
     private OrigamFunctionType _functionType;
 
-    [XmlAttribute("type")]
+    [XmlAttribute(attributeName: "type")]
     public OrigamFunctionType FunctionType
     {
         get => _functionType;

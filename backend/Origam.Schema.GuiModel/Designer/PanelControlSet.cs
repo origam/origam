@@ -32,40 +32,45 @@ namespace Origam.Schema.GuiModel;
 /// <summary>
 /// Summary description for PanelControlSet.
 /// </summary>
-[SchemaItemDescription("Screen Section", "icon_screen-section.png")]
-[System.Drawing.ToolboxBitmap(typeof(PanelControlSet))]
-[HelpTopic("Screen+Sections")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Screen Section", iconName: "icon_screen-section.png")]
+[System.Drawing.ToolboxBitmap(t: typeof(PanelControlSet))]
+[HelpTopic(topic: "Screen+Sections")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class PanelControlSet : AbstractControlSet
 {
     private static ISchemaService _schema =
-        ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
+        ServiceManager.Services.GetService(serviceType: typeof(ISchemaService)) as ISchemaService;
     private UserControlSchemaItemProvider _controls =
-        _schema.GetProvider(typeof(UserControlSchemaItemProvider)) as UserControlSchemaItemProvider;
+        _schema.GetProvider(type: typeof(UserControlSchemaItemProvider))
+        as UserControlSchemaItemProvider;
     public const string CategoryConst = "PanelControlSet";
 
     public PanelControlSet()
         : base() { }
 
     public PanelControlSet(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(schemaExtensionId: schemaExtensionId) { }
 
     public PanelControlSet(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     //refDataSource means for PanelCOntolSet reference on DataEntity object
     // (for FormControlSet refDataSource means reference on DataStructure object
-    [XmlReference("entity", "DataSourceId")]
+    [XmlReference(attributeName: "entity", idField: "DataSourceId")]
     public IDataEntity DataEntity
     {
         get
         {
             ModelElementKey key = new ModelElementKey();
             key.Id = this.DataSourceId;
-            return (IDataEntity)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
+            return (IDataEntity)
+                this.PersistenceProvider.RetrieveInstance(
+                    type: typeof(ISchemaItem),
+                    primaryKey: key
+                );
         }
-        set { this.DataSourceId = (Guid)value.PrimaryKey["Id"]; }
+        set { this.DataSourceId = (Guid)value.PrimaryKey[key: "Id"]; }
     }
     public ControlItem PanelControl
     {
@@ -75,7 +80,7 @@ public class PanelControlSet : AbstractControlSet
             {
                 if (
                     item.PanelControlSet != null
-                    && item.PanelControlSet.PrimaryKey.Equals(this.PrimaryKey)
+                    && item.PanelControlSet.PrimaryKey.Equals(obj: this.PrimaryKey)
                     && item.IsComplexType
                     && (!item.IsDeleted)
                 )
@@ -125,9 +130,9 @@ public class PanelControlSet : AbstractControlSet
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(this.DataEntity);
+        dependencies.Add(item: this.DataEntity);
 
-        base.GetExtraDependencies(dependencies);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
     #endregion
 }

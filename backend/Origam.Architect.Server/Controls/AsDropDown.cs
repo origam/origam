@@ -29,16 +29,16 @@ public class AsDropDown : LabeledEditor
 {
     public bool HideOnForm { get; set; }
 
-    [Category("(ORIGAM)")]
+    [Category(category: "(ORIGAM)")]
     public string Caption { get; set; }
 
-    [ReferenceProperty("DataLookup")]
-    [TypeConverter(typeof(DataLookupConverter))]
+    [ReferenceProperty(name: "DataLookup")]
+    [TypeConverter(type: typeof(DataLookupConverter))]
     public Guid LookupId { get; set; }
 
     public bool ShowUniqueValues { get; set; }
 
-    [Category("(ORIGAM)")]
+    [Category(category: "(ORIGAM)")]
     public string GridColumnCaption { get; set; }
 
     public bool ReadOnly { get; set; }

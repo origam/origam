@@ -25,8 +25,8 @@ public class DiffSectionViewModel
     private List<DiffLineViewModel> MergeSideDiffs()
     {
         var allLines = LeftDiff.ToList();
-        var adds = RightDiff.Where(x => x.Style == DiffContext.Added);
-        allLines.AddRange(adds);
-        return allLines.OrderBy(x => x.PositionInSection).ToList();
+        var adds = RightDiff.Where(predicate: x => x.Style == DiffContext.Added);
+        allLines.AddRange(collection: adds);
+        return allLines.OrderBy(keySelector: x => x.PositionInSection).ToList();
     }
 }

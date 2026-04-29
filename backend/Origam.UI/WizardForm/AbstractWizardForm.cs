@@ -41,7 +41,7 @@ public class AbstractWizardForm : IWizardForm
 
     public bool IsExistsNameInDataStructure(string name)
     {
-        return StructureList.Contains(name);
+        return StructureList.Contains(item: name);
     }
 
     public void ListView(ListView listView)
@@ -50,8 +50,8 @@ public class AbstractWizardForm : IWizardForm
         {
             foreach (ListViewItem item in ItemTypeList)
             {
-                item.ImageIndex = ImageList.ImageIndex(item.ImageKey);
-                listView.Items.Add(item);
+                item.ImageIndex = ImageList.ImageIndex(icon: item.ImageKey);
+                listView.Items.Add(value: item);
             }
         }
     }

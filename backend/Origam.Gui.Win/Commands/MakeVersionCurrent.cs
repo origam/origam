@@ -45,7 +45,7 @@ public class MakeVersionCurrent : AbstractCommand
             throw;
         }
         schemaService.ActiveExtension.Persist();
-        schemaService.SchemaBrowser.EbrSchemaBrowser.RefreshItem(version.RootProvider);
-        schemaService.SchemaBrowser.EbrSchemaBrowser.SelectItem(version);
+        schemaService.SchemaBrowser.EbrSchemaBrowser.RefreshItem(node: version.RootProvider);
+        schemaService.SchemaBrowser.EbrSchemaBrowser.SelectItem(item: version);
     }
 }

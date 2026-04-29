@@ -49,15 +49,15 @@ public static class XmlExtensions
 
         public static new XmlWriter Create(Stream stream, XmlWriterSettings settings)
         {
-            var writer = XmlWriter.Create(stream, settings);
-            return new XmlnsIndentedWriter(stream, writer);
+            var writer = XmlWriter.Create(output: stream, settings: settings);
+            return new XmlnsIndentedWriter(output: stream, baseWriter: writer);
         }
 
         private void WriteRawText(string text)
         {
             baseWriter.Flush();
-            var buffer = baseWriter.Settings.Encoding.GetBytes(text);
-            stream.Write(buffer, 0, buffer.Length);
+            var buffer = baseWriter.Settings.Encoding.GetBytes(s: text);
+            stream.Write(buffer: buffer, offset: 0, count: buffer.Length);
         }
 
         #region XmlWriter implementation
@@ -70,44 +70,46 @@ public static class XmlExtensions
 
         public override string LookupPrefix(string ns)
         {
-            return baseWriter.LookupPrefix(ns);
+            return baseWriter.LookupPrefix(ns: ns);
         }
 
         public override void WriteBase64(byte[] buffer, int index, int count)
         {
-            baseWriter.WriteBase64(buffer, index, count);
+            baseWriter.WriteBase64(buffer: buffer, index: index, count: count);
         }
 
         public override void WriteCData(string text)
         {
-            baseWriter.WriteCData(text);
+            baseWriter.WriteCData(text: text);
         }
 
         public override void WriteCharEntity(char ch)
         {
-            baseWriter.WriteCharEntity(ch);
+            baseWriter.WriteCharEntity(ch: ch);
         }
 
         public override void WriteChars(char[] buffer, int index, int count)
         {
-            baseWriter.WriteChars(buffer, index, count);
+            baseWriter.WriteChars(buffer: buffer, index: index, count: count);
         }
 
         public override void WriteComment(string text)
         {
-            baseWriter.WriteComment(text);
+            baseWriter.WriteComment(text: text);
         }
 
         public override void WriteDocType(string name, string pubid, string sysid, string subset)
         {
-            baseWriter.WriteDocType(name, pubid, sysid, subset);
+            baseWriter.WriteDocType(name: name, pubid: pubid, sysid: sysid, subset: subset);
         }
 
         public override void WriteEndAttribute()
         {
             if (indentLevel >= 0)
             {
-                WriteRawText(baseWriter.Settings.NewLineChars + new string(' ', indentLevel));
+                WriteRawText(
+                    text: baseWriter.Settings.NewLineChars + new string(c: ' ', count: indentLevel)
+                );
             }
             baseWriter.WriteEndAttribute();
         }
@@ -124,7 +126,7 @@ public static class XmlExtensions
 
         public override void WriteEntityRef(string name)
         {
-            baseWriter.WriteEntityRef(name);
+            baseWriter.WriteEntityRef(name: name);
         }
 
         public override void WriteFullEndElement()
@@ -134,22 +136,22 @@ public static class XmlExtensions
 
         public override void WriteProcessingInstruction(string name, string text)
         {
-            baseWriter.WriteProcessingInstruction(name, text);
+            baseWriter.WriteProcessingInstruction(name: name, text: text);
         }
 
         public override void WriteRaw(char[] buffer, int index, int count)
         {
-            baseWriter.WriteRaw(buffer, index, count);
+            baseWriter.WriteRaw(buffer: buffer, index: index, count: count);
         }
 
         public override void WriteRaw(string data)
         {
-            baseWriter.WriteRaw(data);
+            baseWriter.WriteRaw(data: data);
         }
 
         public override void WriteStartAttribute(string prefix, string localName, string ns)
         {
-            baseWriter.WriteStartAttribute(prefix, localName, ns);
+            baseWriter.WriteStartAttribute(prefix: prefix, localName: localName, ns: ns);
         }
 
         public override void WriteStartDocument()
@@ -159,7 +161,7 @@ public static class XmlExtensions
 
         public override void WriteStartDocument(bool standalone)
         {
-            baseWriter.WriteStartDocument(standalone);
+            baseWriter.WriteStartDocument(standalone: standalone);
         }
 
         public override void WriteStartElement(string prefix, string localName, string ns)
@@ -179,22 +181,22 @@ public static class XmlExtensions
                     indentLevel = -1;
                 }
             }
-            baseWriter.WriteStartElement(prefix, localName, ns);
+            baseWriter.WriteStartElement(prefix: prefix, localName: localName, ns: ns);
         }
 
         public override void WriteString(string text)
         {
-            baseWriter.WriteString(text);
+            baseWriter.WriteString(text: text);
         }
 
         public override void WriteSurrogateCharEntity(char lowChar, char highChar)
         {
-            baseWriter.WriteSurrogateCharEntity(lowChar, highChar);
+            baseWriter.WriteSurrogateCharEntity(lowChar: lowChar, highChar: highChar);
         }
 
         public override void WriteWhitespace(string ws)
         {
-            baseWriter.WriteWhitespace(ws);
+            baseWriter.WriteWhitespace(ws: ws);
         }
         #endregion
     }
@@ -205,7 +207,7 @@ public static class XmlExtensions
         {
             var xmlNode = (XmlNode)node;
             yield return xmlNode;
-            foreach (var childNode in GetAllNodes(xmlNode))
+            foreach (var childNode in GetAllNodes(topNode: xmlNode))
             {
                 yield return childNode;
             }
@@ -230,14 +232,14 @@ public static class XmlExtensions
     )
     {
         var memoryStream = new MemoryStream();
-        var writer = XmlnsIndentedWriter.Create(memoryStream, xmlWriterSettings);
+        var writer = XmlnsIndentedWriter.Create(stream: memoryStream, settings: xmlWriterSettings);
         try
         {
-            document.WriteContentTo(writer);
+            document.WriteContentTo(xw: writer);
             writer.Flush();
             memoryStream.Flush();
             memoryStream.Position = 0;
-            var streamReader = new StreamReader(memoryStream);
+            var streamReader = new StreamReader(stream: memoryStream);
             return streamReader.ReadToEnd();
         }
         finally
@@ -252,14 +254,14 @@ public static class XmlExtensions
     )
     {
         MemoryStream mStream = new MemoryStream();
-        XmlWriter writer = XmlWriter.Create(mStream, xmlWriterSettings);
+        XmlWriter writer = XmlWriter.Create(output: mStream, settings: xmlWriterSettings);
         try
         {
-            document.Save(writer);
+            document.Save(writer: writer);
             writer.Flush();
             mStream.Flush();
             mStream.Position = 0;
-            StreamReader sReader = new StreamReader(mStream);
+            StreamReader sReader = new StreamReader(stream: mStream);
             return sReader.ReadToEnd();
         }
         finally
@@ -279,44 +281,50 @@ public static class XmlExtensions
         // The Replace is necessary because extra new lines were added after
         // each attribute in the first node (the one with the namespaces).
         // This seems to only happen in .net8.0 not .net4.7.1
-        return ToBeautifulString(document, xmlWriterSettings).Replace("\r\n \r\n ", "\r\n ");
+        return ToBeautifulString(document: document, xmlWriterSettings: xmlWriterSettings)
+            .Replace(oldValue: "\r\n \r\n ", newValue: "\r\n ");
     }
 
     public static string ToBeautifulString(this XDocument document)
     {
         var xmlWriterSettings = new XmlWriterSettings { Indent = true, NewLineOnAttributes = true };
-        return ToBeautifulString(document, xmlWriterSettings);
+        return ToBeautifulString(document: document, xmlWriterSettings: xmlWriterSettings);
     }
 
     public static XmlDocument RemoveAllEmptyAttributesAndNodes(this XmlDocument doc)
     {
 #if NETSTANDARD
-        foreach (XmlAttribute att in doc.SelectNodes("descendant::*/@*[not(normalize-space(.))]"))
+        foreach (
+            XmlAttribute att in doc.SelectNodes(xpath: "descendant::*/@*[not(normalize-space(.))]")
+        )
         {
-            att.OwnerElement.RemoveAttributeNode(att);
+            att.OwnerElement.RemoveAttributeNode(oldAttr: att);
         }
-        if (string.IsNullOrEmpty(doc.OuterXml))
+        if (string.IsNullOrEmpty(value: doc.OuterXml))
         {
             return doc;
         }
-        var elements = XDocument.Parse(doc.OuterXml);
-        elements.Descendants().Where(e => e.IsEmpty || string.IsNullOrWhiteSpace(e.Value)).Remove();
+        var elements = XDocument.Parse(text: doc.OuterXml);
+        elements
+            .Descendants()
+            .Where(predicate: e => e.IsEmpty || string.IsNullOrWhiteSpace(value: e.Value))
+            .Remove();
 #endif
         return doc;
     }
 
     public static XDocument ToXDocument(this XmlDocument xmlDocument)
     {
-        using (var nodeReader = new XmlNodeReader(xmlDocument))
+        using (var nodeReader = new XmlNodeReader(node: xmlDocument))
         {
             nodeReader.MoveToContent();
-            return XDocument.Load(nodeReader);
+            return XDocument.Load(reader: nodeReader);
         }
     }
 
     public static bool AttributeIsFalseOrMissing(this XmlElement element, string attributeName)
     {
-        var value = element.GetAttribute(attributeName);
-        return value == "false" || string.IsNullOrEmpty(value);
+        var value = element.GetAttribute(name: attributeName);
+        return value == "false" || string.IsNullOrEmpty(value: value);
     }
 }

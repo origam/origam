@@ -33,37 +33,37 @@ class WholeNumberFormattrer : Formatter
         string customFormat,
         Func<string, object> textParseFunc
     )
-        : base(textBox, customFormat)
+        : base(textBox: textBox, customFormat: customFormat)
     {
-        numberParser = new NumberParser(textParseFunc, errorReporter);
+        numberParser = new NumberParser(textParseFunc: textParseFunc, errorReporter: errorReporter);
     }
 
     private string Format =>
-        string.IsNullOrEmpty(customFormat) ? "###,###,###,###,###" : customFormat;
+        string.IsNullOrEmpty(value: customFormat) ? "###,###,###,###,###" : customFormat;
 
     public override void OnLeave(object sender, EventArgs e)
     {
-        if (string.IsNullOrEmpty(Text))
+        if (string.IsNullOrEmpty(value: Text))
         {
             return;
         }
 
-        var value = numberParser.Parse(Text);
-        Text = string.Format(Culture, "{0:" + Format + "}", value);
+        var value = numberParser.Parse(text: Text);
+        Text = string.Format(provider: Culture, format: "{0:" + Format + "}", arg0: value);
     }
 
     public override object GetValue()
     {
-        return numberParser.Parse(Text);
+        return numberParser.Parse(text: Text);
     }
 
     protected override bool IsValidChar(char input)
     {
-        if (base.IsValidChar(input))
+        if (base.IsValidChar(input: input))
         {
             return true;
         }
 
-        return char.IsDigit(input) || input == ThousandsSeparator || input == Minus;
+        return char.IsDigit(c: input) || input == ThousandsSeparator || input == Minus;
     }
 }

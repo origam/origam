@@ -36,28 +36,35 @@ public class FileModelImportBuilder : AbstractBuilder
     {
         sourcesFolder = project.SourcesFolder;
         CreateSourceFolder();
-        UnzipDefaultModel(project);
-        CreateCustomAssetsFolder(project.SourcesFolder);
+        UnzipDefaultModel(project: project);
+        CreateCustomAssetsFolder(sourcesFolder: project.SourcesFolder);
     }
 
     private void UnzipDefaultModel(Project project)
     {
-        ZipFile.ExtractToDirectory(project.DefaultModelPath, sourcesFolder);
+        ZipFile.ExtractToDirectory(
+            sourceArchiveFileName: project.DefaultModelPath,
+            destinationDirectoryName: sourcesFolder
+        );
     }
 
     private void CreateSourceFolder()
     {
-        DirectoryInfo dir = new DirectoryInfo(sourcesFolder);
+        DirectoryInfo dir = new DirectoryInfo(path: sourcesFolder);
         if (dir.Exists && dir.EnumerateFileSystemInfos().Any())
         {
-            throw new Exception($"Sources folder {sourcesFolder} already exists and is not empty.");
+            throw new Exception(
+                message: $"Sources folder {sourcesFolder} already exists and is not empty."
+            );
         }
         dir.Create();
     }
 
     private void CreateCustomAssetsFolder(string sourcesFolder)
     {
-        DirectoryInfo dir = new DirectoryInfo(Path.Combine(sourcesFolder, "customAssets"));
+        DirectoryInfo dir = new DirectoryInfo(
+            path: Path.Combine(path1: sourcesFolder, path2: "customAssets")
+        );
         if (!dir.Exists)
         {
             dir.Create();
@@ -66,9 +73,9 @@ public class FileModelImportBuilder : AbstractBuilder
 
     public override void Rollback()
     {
-        if (Directory.Exists(sourcesFolder))
+        if (Directory.Exists(path: sourcesFolder))
         {
-            GitManager.DeleteDirectory(sourcesFolder);
+            GitManager.DeleteDirectory(directoryPath: sourcesFolder);
         }
     }
 }

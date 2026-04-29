@@ -39,18 +39,29 @@ public class DataBindingTools
                 return null;
             }
 
-            if (grid.BindingContext[grid.DataSource, grid.DataMember] == null)
+            if (
+                grid.BindingContext[dataSource: grid.DataSource, dataMember: grid.DataMember]
+                == null
+            )
             {
                 return null;
             }
 
-            if (grid.BindingContext[grid.DataSource, grid.DataMember].Position < 0)
+            if (
+                grid.BindingContext[
+                    dataSource: grid.DataSource,
+                    dataMember: grid.DataMember
+                ].Position < 0
+            )
             {
                 return null;
             }
 
             return (
-                grid.BindingContext[grid.DataSource, grid.DataMember].Current as DataRowView
+                grid.BindingContext[
+                    dataSource: grid.DataSource,
+                    dataMember: grid.DataMember
+                ].Current as DataRowView
             ).Row;
         }
 
@@ -61,22 +72,24 @@ public class DataBindingTools
             //return ((DataRowView)(panel.BindingContext[panel.DataSource, panel.DataMember] as CurrencyManager).Current).Row;
         }
 
-        if (control.DataBindings[property] == null)
+        if (control.DataBindings[propertyName: property] == null)
         {
             return null;
         }
 
-        if (control.DataBindings[property].BindingManagerBase == null)
+        if (control.DataBindings[propertyName: property].BindingManagerBase == null)
         {
             return null;
         }
 
-        if (control.DataBindings[property].BindingManagerBase.Position < 0)
+        if (control.DataBindings[propertyName: property].BindingManagerBase.Position < 0)
         {
             return null;
         }
 
-        return ((DataRowView)control.DataBindings[property].BindingManagerBase.Current).Row;
+        return (
+            (DataRowView)control.DataBindings[propertyName: property].BindingManagerBase.Current
+        ).Row;
     }
 
     public static void UpdateBindedFormComponent(BindingsCollection bindings, string mappingName)

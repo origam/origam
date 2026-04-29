@@ -31,14 +31,16 @@ public class RelationTypeParentModelElementRuleAttribute : AbstractModelElementR
 
     public override Exception CheckRule(object instance)
     {
-        return new NotSupportedException(ResourceUtils.GetString("MemberNameRequired"));
+        return new NotSupportedException(
+            message: ResourceUtils.GetString(key: "MemberNameRequired")
+        );
     }
 
     public override Exception CheckRule(object instance, string memberName)
     {
         if (memberName == String.Empty | memberName == null)
         {
-            CheckRule(instance);
+            CheckRule(instance: instance);
         }
 
         var dataStructureColumn = (DataStructureColumn)instance;
@@ -52,7 +54,7 @@ public class RelationTypeParentModelElementRuleAttribute : AbstractModelElementR
             )
             {
                 return new DataException(
-                    "Parent entity have set RelationType LeftJoin or InnerJoin."
+                    s: "Parent entity have set RelationType LeftJoin or InnerJoin."
                 );
             }
         }

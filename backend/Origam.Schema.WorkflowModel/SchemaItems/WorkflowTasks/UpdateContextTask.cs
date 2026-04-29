@@ -30,21 +30,21 @@ using Origam.Schema.EntityModel;
 namespace Origam.Schema.WorkflowModel;
 
 [SchemaItemDescription(
-    "(Task) Update context by Xpath",
-    "Tasks",
-    "task-update-context-by-xpath.png"
+    name: "(Task) Update context by Xpath",
+    folderName: "Tasks",
+    iconName: "task-update-context-by-xpath.png"
 )]
-[HelpTopic("Update+Context+Task")]
-[ClassMetaVersion("6.0.0")]
+[HelpTopic(topic: "Update+Context+Task")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class UpdateContextTask : AbstractWorkflowStep
 {
     public UpdateContextTask() { }
 
     public UpdateContextTask(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(schemaExtensionId: schemaExtensionId) { }
 
     public UpdateContextTask(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Overriden ISchemaItem Members
 
@@ -52,22 +52,26 @@ public class UpdateContextTask : AbstractWorkflowStep
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        XsltDependencyHelper.GetDependencies(this, dependencies, ValueXPath);
-        dependencies.Add(OutputContextStore);
-        dependencies.Add(XPathContextStore);
-        dependencies.Add(Entity);
-        base.GetExtraDependencies(dependencies);
+        XsltDependencyHelper.GetDependencies(
+            item: this,
+            dependencies: dependencies,
+            text: ValueXPath
+        );
+        dependencies.Add(item: OutputContextStore);
+        dependencies.Add(item: XPathContextStore);
+        dependencies.Add(item: Entity);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override void UpdateReferences()
     {
         foreach (ISchemaItem item in RootItem.ChildItemsRecursive)
         {
-            if (item.OldPrimaryKey?.Equals(OutputContextStore.PrimaryKey) == true)
+            if (item.OldPrimaryKey?.Equals(obj: OutputContextStore.PrimaryKey) == true)
             {
                 OutputContextStore = item as IContextStore;
             }
-            if (item.OldPrimaryKey?.Equals(XPathContextStore.PrimaryKey) == true)
+            if (item.OldPrimaryKey?.Equals(obj: XPathContextStore.PrimaryKey) == true)
             {
                 XPathContextStore = item as IContextStore;
             }
@@ -81,30 +85,35 @@ public class UpdateContextTask : AbstractWorkflowStep
     public override T NewItem<T>(Guid schemaExtensionId, SchemaItemGroup group)
     {
         return base.NewItem<T>(
-            schemaExtensionId,
-            group,
-            typeof(T) == typeof(WorkflowTaskDependency) ? "NewWorkflowTaskDependency" : null
+            schemaExtensionId: schemaExtensionId,
+            group: group,
+            itemName: typeof(T) == typeof(WorkflowTaskDependency)
+                ? "NewWorkflowTaskDependency"
+                : null
         );
     }
     #endregion
     #region Properties
     public Guid DataStructureEntityId;
 
-    [TypeConverter(typeof(ContextStoreEntityConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [Category("Output")]
+    [TypeConverter(type: typeof(ContextStoreEntityConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [Category(category: "Output")]
     [Description(
-        "A data structure entity within `OutputContextStore' which is to be updated. `Entity' is only applicable if an `OutputContextStore'"
+        description: "A data structure entity within `OutputContextStore' which is to be updated. `Entity' is only applicable if an `OutputContextStore'"
             + " is a data structure context store."
     )]
-    [XmlReference("entity", "DataStructureEntityId")]
+    [XmlReference(attributeName: "entity", idField: "DataStructureEntityId")]
     public DataStructureEntity Entity
     {
         get
         {
             var key = new ModelElementKey { Id = DataStructureEntityId };
             return (DataStructureEntity)
-                PersistenceProvider.RetrieveInstance(typeof(DataStructureEntity), key);
+                PersistenceProvider.RetrieveInstance(
+                    type: typeof(DataStructureEntity),
+                    primaryKey: key
+                );
         }
         set
         {
@@ -114,37 +123,38 @@ public class UpdateContextTask : AbstractWorkflowStep
             }
             else
             {
-                DataStructureEntityId = (Guid)value.PrimaryKey["Id"];
+                DataStructureEntityId = (Guid)value.PrimaryKey[key: "Id"];
             }
         }
     }
 
     [UpdateContextTaskValidModelElementRuleAttribute()]
-    [Category("Output"), RefreshProperties(RefreshProperties.Repaint)]
+    [Category(category: "Output"), RefreshProperties(refresh: RefreshProperties.Repaint)]
     [Description(
-        "A Name of a field (column) within `Entity' within an `OutputContextStore' which is to be updated for all rows of `Entity'"
+        description: "A Name of a field (column) within `Entity' within an `OutputContextStore' which is to be updated for all rows of `Entity'"
             + " with a return value of `ValueXPath'. `FieldName' is applicable only if an OutputContextStore is a data struture context store."
     )]
-    [XmlAttribute("fieldName")]
+    [XmlAttribute(attributeName: "fieldName")]
     public string FieldName { get; set; }
 
     public Guid OutputContextStoreId;
 
-    [TypeConverter(typeof(ContextStoreConverter))]
+    [TypeConverter(type: typeof(ContextStoreConverter))]
     [Description(
-        "Context store to be updated. In case of simple scalar context the value of context is updated with a result value of `ValueXPath'."
+        description: "Context store to be updated. In case of simple scalar context the value of context is updated with a result value of `ValueXPath'."
             + " In case of data structure context store `FieldName' is updated for all columns of `Entity'."
     )]
-    [Category("Output")]
+    [Category(category: "Output")]
     [NotNullModelElementRuleAttribute()]
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [XmlReference("outputContextStore", "OutputContextStoreId")]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [XmlReference(attributeName: "outputContextStore", idField: "OutputContextStoreId")]
     public IContextStore OutputContextStore
     {
         get
         {
             var key = new ModelElementKey { Id = OutputContextStoreId };
-            return (IContextStore)PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
+            return (IContextStore)
+                PersistenceProvider.RetrieveInstance(type: typeof(ISchemaItem), primaryKey: key);
         }
         set
         {
@@ -154,7 +164,7 @@ public class UpdateContextTask : AbstractWorkflowStep
             }
             else
             {
-                OutputContextStoreId = (Guid)value.PrimaryKey["Id"];
+                OutputContextStoreId = (Guid)value.PrimaryKey[key: "Id"];
             }
             // clear entity and field properties only if copying
             // of whole workflow is not in progress (caller is UpdateReferences())
@@ -166,17 +176,18 @@ public class UpdateContextTask : AbstractWorkflowStep
     }
     public Guid XPathContextStoreId;
 
-    [TypeConverter(typeof(ContextStoreConverter))]
-    [Category("Input")]
-    [Description("Contextstore to perform a ValueXPath expression on.")]
+    [TypeConverter(type: typeof(ContextStoreConverter))]
+    [Category(category: "Input")]
+    [Description(description: "Contextstore to perform a ValueXPath expression on.")]
     [NotNullModelElementRuleAttribute()]
-    [XmlReference("xPathContextStore", "XPathContextStoreId")]
+    [XmlReference(attributeName: "xPathContextStore", idField: "XPathContextStoreId")]
     public IContextStore XPathContextStore
     {
         get
         {
             var key = new ModelElementKey { Id = XPathContextStoreId };
-            return (IContextStore)PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
+            return (IContextStore)
+                PersistenceProvider.RetrieveInstance(type: typeof(ISchemaItem), primaryKey: key);
         }
         set
         {
@@ -186,17 +197,17 @@ public class UpdateContextTask : AbstractWorkflowStep
             }
             else
             {
-                XPathContextStoreId = (Guid)value.PrimaryKey["Id"];
+                XPathContextStoreId = (Guid)value.PrimaryKey[key: "Id"];
             }
         }
     }
 
-    [Category("Input")]
+    [Category(category: "Input")]
     [Description(
-        "Result of this XPath is a value which is to be used fo updating a OutputContextStore."
+        description: "Result of this XPath is a value which is to be used fo updating a OutputContextStore."
     )]
     [StringNotEmptyModelElementRule()]
-    [XmlAttribute("valueXPath")]
+    [XmlAttribute(attributeName: "valueXPath")]
     public string ValueXPath { get; set; }
     #endregion
     #region Private Methods
@@ -215,7 +226,7 @@ public class UpdateContextTask : AbstractWorkflowStep
         }
         foreach (
             DataStructureColumn dataStructureColumn in Entity.ChildItemsByType<DataStructureColumn>(
-                DataStructureColumn.CategoryConst
+                itemType: DataStructureColumn.CategoryConst
             )
         )
         {

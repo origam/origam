@@ -32,26 +32,30 @@ namespace Origam.Schema.WorkflowModel;
 /// <summary>
 /// Summary description for ForeachWorkflowBlock.
 /// </summary>
-[SchemaItemDescription("(Block) Loop", "Tasks", "block-loop-1.png")]
-[HelpTopic("Loop+Block")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "(Block) Loop", folderName: "Tasks", iconName: "block-loop-1.png")]
+[HelpTopic(topic: "Loop+Block")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class LoopWorkflowBlock : AbstractWorkflowBlock
 {
     public LoopWorkflowBlock()
         : base() { }
 
     public LoopWorkflowBlock(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(schemaExtensionId: schemaExtensionId) { }
 
     public LoopWorkflowBlock(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Overriden ISchemaItem Members
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        XsltDependencyHelper.GetDependencies(this, dependencies, this.LoopConditionXPath);
-        dependencies.Add(this.LoopConditionContextStore);
-        base.GetExtraDependencies(dependencies);
+        XsltDependencyHelper.GetDependencies(
+            item: this,
+            dependencies: dependencies,
+            text: this.LoopConditionXPath
+        );
+        dependencies.Add(item: this.LoopConditionContextStore);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override void UpdateReferences()
@@ -60,7 +64,7 @@ public class LoopWorkflowBlock : AbstractWorkflowBlock
         {
             if (item.OldPrimaryKey != null)
             {
-                if (item.OldPrimaryKey.Equals(this.LoopConditionContextStore.PrimaryKey))
+                if (item.OldPrimaryKey.Equals(obj: this.LoopConditionContextStore.PrimaryKey))
                 {
                     this.LoopConditionContextStore = item as IContextStore;
                     break;
@@ -73,9 +77,9 @@ public class LoopWorkflowBlock : AbstractWorkflowBlock
     #region Properties
     public Guid ContextStoreId;
 
-    [TypeConverter(typeof(ContextStoreConverter))]
+    [TypeConverter(type: typeof(ContextStoreConverter))]
     [NotNullModelElementRule()]
-    [XmlReference("loopConditionContextStore", "ContextStoreId")]
+    [XmlReference(attributeName: "loopConditionContextStore", idField: "ContextStoreId")]
     public IContextStore LoopConditionContextStore
     {
         get
@@ -83,7 +87,10 @@ public class LoopWorkflowBlock : AbstractWorkflowBlock
             ModelElementKey key = new ModelElementKey();
             key.Id = this.ContextStoreId;
             return (IContextStore)
-                this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
+                this.PersistenceProvider.RetrieveInstance(
+                    type: typeof(ISchemaItem),
+                    primaryKey: key
+                );
         }
         set
         {
@@ -93,14 +100,14 @@ public class LoopWorkflowBlock : AbstractWorkflowBlock
             }
             else
             {
-                this.ContextStoreId = (Guid)value.PrimaryKey["Id"];
+                this.ContextStoreId = (Guid)value.PrimaryKey[key: "Id"];
             }
         }
     }
     string _xpath;
 
     [StringNotEmptyModelElementRule()]
-    [XmlAttribute("loopConditionXPath")]
+    [XmlAttribute(attributeName: "loopConditionXPath")]
     public string LoopConditionXPath
     {
         get { return _xpath; }

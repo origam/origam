@@ -42,8 +42,8 @@ public class XmlFormattingStrategy
             {
                 StringBuilder stringBuilder = new StringBuilder();
                 int offset = Math.Min(
-                    editor.TextArea.Caret.Offset - 2,
-                    editor.Document.TextLength - 1
+                    val1: editor.TextArea.Caret.Offset - 2,
+                    val2: editor.Document.TextLength - 1
                 );
                 while (true)
                 {
@@ -51,20 +51,26 @@ public class XmlFormattingStrategy
                     {
                         break;
                     }
-                    char ch = editor.Document.GetCharAt(offset);
+                    char ch = editor.Document.GetCharAt(offset: offset);
                     if (ch == '<')
                     {
                         string reversedTag = stringBuilder.ToString().Trim();
                         if (
-                            !reversedTag.StartsWith("/", StringComparison.Ordinal)
-                            && !reversedTag.EndsWith("/", StringComparison.Ordinal)
+                            !reversedTag.StartsWith(
+                                value: "/",
+                                comparisonType: StringComparison.Ordinal
+                            )
+                            && !reversedTag.EndsWith(
+                                value: "/",
+                                comparisonType: StringComparison.Ordinal
+                            )
                         )
                         {
                             bool validXml = true;
                             try
                             {
                                 XmlDocument doc = new XmlDocument();
-                                doc.LoadXml(editor.Document.Text);
+                                doc.LoadXml(xml: editor.Document.Text);
                             }
                             catch (XmlException)
                             {
@@ -76,23 +82,29 @@ public class XmlFormattingStrategy
                                 StringBuilder tag = new StringBuilder();
                                 for (
                                     int i = reversedTag.Length - 1;
-                                    i >= 0 && !Char.IsWhiteSpace(reversedTag[i]);
+                                    i >= 0 && !Char.IsWhiteSpace(c: reversedTag[index: i]);
                                     --i
                                 )
                                 {
-                                    tag.Append(reversedTag[i]);
+                                    tag.Append(value: reversedTag[index: i]);
                                 }
                                 string tagString = tag.ToString();
                                 if (
                                     tagString.Length > 0
-                                    && !tagString.StartsWith("!", StringComparison.Ordinal)
-                                    && !tagString.StartsWith("?", StringComparison.Ordinal)
+                                    && !tagString.StartsWith(
+                                        value: "!",
+                                        comparisonType: StringComparison.Ordinal
+                                    )
+                                    && !tagString.StartsWith(
+                                        value: "?",
+                                        comparisonType: StringComparison.Ordinal
+                                    )
                                 )
                                 {
                                     int caretOffset = editor.TextArea.Caret.Offset;
                                     editor.Document.Insert(
-                                        editor.TextArea.Caret.Offset,
-                                        "</" + tagString + ">"
+                                        offset: editor.TextArea.Caret.Offset,
+                                        text: "</" + tagString + ">"
                                     );
                                     editor.TextArea.Caret.Offset = caretOffset;
                                 }
@@ -100,18 +112,21 @@ public class XmlFormattingStrategy
                         }
                         break;
                     }
-                    stringBuilder.Append(ch);
+                    stringBuilder.Append(value: ch);
                     --offset;
                 }
             }
         }
         catch (Exception e)
         { // Insanity check
-            Debug.Assert(false, e.ToString());
+            Debug.Assert(condition: false, message: e.ToString());
         }
         if (charTyped == '\n')
         {
-            IndentLine(editor, editor.Document.GetLineByNumber(editor.TextArea.Caret.Line));
+            IndentLine(
+                editor: editor,
+                line: editor.Document.GetLineByNumber(number: editor.TextArea.Caret.Line)
+            );
         }
         //editor.Document.EndUndoableAction();
     }
@@ -121,7 +136,7 @@ public class XmlFormattingStrategy
         //editor.Document.StartUndoableAction();
         try
         {
-            TryIndent(editor, line.LineNumber, line.LineNumber);
+            TryIndent(editor: editor, begin: line.LineNumber, end: line.LineNumber);
         }
         catch (XmlException)
         {
@@ -141,7 +156,7 @@ public class XmlFormattingStrategy
         //editor.Document.StartUndoableAction();
         try
         {
-            TryIndent(editor, begin, end);
+            TryIndent(editor: editor, begin: begin, end: end);
         }
         catch (XmlException)
         {
@@ -155,7 +170,7 @@ public class XmlFormattingStrategy
 
     public void SurroundSelectionWithComment(TextEditor editor)
     {
-        SurroundSelectionWithBlockComment(editor, "<!--", "-->");
+        SurroundSelectionWithBlockComment(editor: editor, blockStart: "<!--", blockEnd: "-->");
     }
 
     static void TryIndent(TextEditor editor, int begin, int end)
@@ -167,9 +182,9 @@ public class XmlFormattingStrategy
         int nextLine = begin; // in #dev coordinates
         bool wasEmptyElement = false;
         XmlNodeType lastType = XmlNodeType.XmlDeclaration;
-        using (StringReader stringReader = new StringReader(document.Text))
+        using (StringReader stringReader = new StringReader(s: document.Text))
         {
-            XmlTextReader r = new XmlTextReader(stringReader);
+            XmlTextReader r = new XmlTextReader(input: stringReader);
             r.XmlResolver = null; // prevent XmlTextReader from loading external DTDs
             while (r.Read())
             {
@@ -209,8 +224,8 @@ public class XmlFormattingStrategy
                         continue;
                     }
                     // set indentation of 'nextLine'
-                    IDocumentLine line = document.GetLineByNumber(nextLine);
-                    string lineText = document.GetText(line);
+                    IDocumentLine line = document.GetLineByNumber(lineNumber: nextLine);
+                    string lineText = document.GetText(segment: line);
                     string newText;
                     // special case: opening tag has closing bracket on extra line: remove one indentation level
                     if (lineText.Trim() == ">")
@@ -222,7 +237,7 @@ public class XmlFormattingStrategy
                         newText = currentIndentation + lineText.Trim();
                     }
 
-                    document.SmartReplaceLine(line, newText);
+                    document.SmartReplaceLine(line: line, newLineText: newText);
                     nextLine++;
                 }
                 if (r.LineNumber > end)
@@ -234,18 +249,19 @@ public class XmlFormattingStrategy
                 string attribIndent = null;
                 if (r.NodeType == XmlNodeType.Element)
                 {
-                    tagStack.Push(currentIndentation);
+                    tagStack.Push(item: currentIndentation);
                     if (r.LineNumber < begin)
                     {
                         currentIndentation = DocumentUtilities.GetIndentation(
-                            editor.Document,
-                            r.LineNumber
+                            document: editor.Document,
+                            line: r.LineNumber
                         );
                     }
 
                     if (r.Name.Length < 16)
                     {
-                        attribIndent = currentIndentation + new string(' ', 2 + r.Name.Length);
+                        attribIndent =
+                            currentIndentation + new string(c: ' ', count: 2 + r.Name.Length);
                     }
                     else
                     {
@@ -258,13 +274,13 @@ public class XmlFormattingStrategy
                 if (r.NodeType == XmlNodeType.Element && r.HasAttributes)
                 {
                     int startLine = r.LineNumber;
-                    r.MoveToAttribute(0); // move to first attribute
+                    r.MoveToAttribute(i: 0); // move to first attribute
                     if (r.LineNumber != startLine)
                     {
                         attribIndent = currentIndentation; // change to tab-indentation
                     }
 
-                    r.MoveToAttribute(r.AttributeCount - 1);
+                    r.MoveToAttribute(i: r.AttributeCount - 1);
                     while (r.LineNumber >= nextLine)
                     {
                         if (nextLine > end)
@@ -272,9 +288,9 @@ public class XmlFormattingStrategy
                             break;
                         }
                         // set indentation of 'nextLine'
-                        IDocumentLine line = document.GetLineByNumber(nextLine);
-                        string newText = attribIndent + document.GetText(line).Trim();
-                        document.SmartReplaceLine(line, newText);
+                        IDocumentLine line = document.GetLineByNumber(lineNumber: nextLine);
+                        string newText = attribIndent + document.GetText(segment: line).Trim();
+                        document.SmartReplaceLine(line: line, newLineText: newText);
                         nextLine++;
                     }
                 }
@@ -299,24 +315,38 @@ public class XmlFormattingStrategy
             int endOffset = editor.SelectionStart + editor.SelectionLength;
             if (editor.SelectionLength == 0)
             {
-                IDocumentLine line = editor.Document.GetLineByOffset(editor.SelectionStart);
+                IDocumentLine line = editor.Document.GetLineByOffset(offset: editor.SelectionStart);
                 startOffset = line.Offset;
                 endOffset = line.Offset + line.Length;
             }
-            BlockCommentRegion region = FindSelectedCommentRegion(editor, blockStart, blockEnd);
+            BlockCommentRegion region = FindSelectedCommentRegion(
+                editor: editor,
+                commentStart: blockStart,
+                commentEnd: blockEnd
+            );
             if (region != null)
             {
                 do
                 {
-                    editor.Document.Remove(region.EndOffset, region.CommentEnd.Length);
-                    editor.Document.Remove(region.StartOffset, region.CommentStart.Length);
+                    editor.Document.Remove(
+                        offset: region.EndOffset,
+                        length: region.CommentEnd.Length
+                    );
+                    editor.Document.Remove(
+                        offset: region.StartOffset,
+                        length: region.CommentStart.Length
+                    );
                     int selectionStart = region.EndOffset;
                     int selectionLength =
                         editor.SelectionLength - (region.EndOffset - editor.SelectionStart);
                     if (selectionLength > 0)
                     {
-                        editor.Select(region.EndOffset, selectionLength);
-                        region = FindSelectedCommentRegion(editor, blockStart, blockEnd);
+                        editor.Select(start: region.EndOffset, length: selectionLength);
+                        region = FindSelectedCommentRegion(
+                            editor: editor,
+                            commentStart: blockStart,
+                            commentEnd: blockEnd
+                        );
                     }
                     else
                     {
@@ -326,8 +356,8 @@ public class XmlFormattingStrategy
             }
             else
             {
-                editor.Document.Insert(endOffset, blockEnd);
-                editor.Document.Insert(startOffset, blockStart);
+                editor.Document.Insert(offset: endOffset, text: blockEnd);
+                editor.Document.Insert(offset: startOffset, text: blockStart);
             }
         }
         finally
@@ -350,7 +380,7 @@ public class XmlFormattingStrategy
         // Find start of comment in selected text.
         int commentEndOffset = -1;
         string selectedText = editor.SelectedText;
-        int commentStartOffset = selectedText.IndexOf(commentStart);
+        int commentStartOffset = selectedText.IndexOf(value: commentStart);
         if (commentStartOffset >= 0)
         {
             commentStartOffset += editor.SelectionStart;
@@ -359,13 +389,13 @@ public class XmlFormattingStrategy
         if (commentStartOffset >= 0)
         {
             commentEndOffset = selectedText.IndexOf(
-                commentEnd,
-                commentStartOffset + commentStart.Length - editor.SelectionStart
+                value: commentEnd,
+                startIndex: commentStartOffset + commentStart.Length - editor.SelectionStart
             );
         }
         // Try to search end of comment in whole selection
         bool startAfterEnd = false;
-        int commentEndOffsetWholeText = selectedText.IndexOf(commentEnd);
+        int commentEndOffsetWholeText = selectedText.IndexOf(value: commentEnd);
         if (
             (commentEndOffsetWholeText >= 0)
             && (commentEndOffsetWholeText < (commentStartOffset - editor.SelectionStart))
@@ -390,22 +420,25 @@ public class XmlFormattingStrategy
             {
                 offset = document.TextLength;
             }
-            string text = document.GetText(0, offset);
+            string text = document.GetText(offset: 0, length: offset);
             if (startAfterEnd)
             {
-                commentStartOffset = text.LastIndexOf(commentStart, editor.SelectionStart);
+                commentStartOffset = text.LastIndexOf(
+                    value: commentStart,
+                    startIndex: editor.SelectionStart
+                );
             }
             else
             {
-                commentStartOffset = text.LastIndexOf(commentStart);
+                commentStartOffset = text.LastIndexOf(value: commentStart);
             }
             if (commentStartOffset >= 0)
             {
                 // Find end of comment before comment start.
                 commentEndBeforeStartOffset = text.IndexOf(
-                    commentEnd,
-                    commentStartOffset,
-                    editor.SelectionStart - commentStartOffset
+                    value: commentEnd,
+                    startIndex: commentStartOffset,
+                    count: editor.SelectionStart - commentStartOffset
                 );
                 if (commentEndBeforeStartOffset > commentStartOffset)
                 {
@@ -422,8 +455,8 @@ public class XmlFormattingStrategy
             {
                 offset = editor.SelectionStart;
             }
-            string text = document.GetText(offset, document.TextLength - offset);
-            commentEndOffset = text.IndexOf(commentEnd);
+            string text = document.GetText(offset: offset, length: document.TextLength - offset);
+            commentEndOffset = text.IndexOf(value: commentEnd);
             if (commentEndOffset >= 0)
             {
                 commentEndOffset += offset;
@@ -432,10 +465,10 @@ public class XmlFormattingStrategy
         if (commentStartOffset != -1 && commentEndOffset != -1)
         {
             return new BlockCommentRegion(
-                commentStart,
-                commentEnd,
-                commentStartOffset,
-                commentEndOffset
+                commentStart: commentStart,
+                commentEnd: commentEnd,
+                startOffset: commentStartOffset,
+                endOffset: commentEndOffset
             );
         }
         return null;

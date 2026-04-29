@@ -25,9 +25,13 @@ using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.GuiModel;
 
-[SchemaItemDescription("Style Property", "Style Properties", "icon_style-property.png")]
-[HelpTopic("Styles")]
-[XmlModelRoot(CategoryConst)]
+[SchemaItemDescription(
+    name: "Style Property",
+    folderName: "Style Properties",
+    iconName: "icon_style-property.png"
+)]
+[HelpTopic(topic: "Styles")]
+[XmlModelRoot(category: CategoryConst)]
 public class ControlStyleProperty : AbstractSchemaItem
 {
     public const string CategoryConst = "ControlStyleProperty";
@@ -36,10 +40,10 @@ public class ControlStyleProperty : AbstractSchemaItem
         : base() { }
 
     public ControlStyleProperty(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public ControlStyleProperty(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Overriden ISchemaItem Members
     public override string ItemType

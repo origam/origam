@@ -47,14 +47,18 @@ public class DeploymentSorter
         {
             int remainingDeploymentsBefore = remainingDeployments.Count;
             remainingDeployments
-                .Where(x => !HasActiveDependencies(x) && FindPrerequisiteConflicts(x).Count == 0)
-                .OrderBy(deployment => deployment)
+                .Where(predicate: x =>
+                    !HasActiveDependencies(deployment: x)
+                    && FindPrerequisiteConflicts(deployment: x).Count == 0
+                )
+                .OrderBy(keySelector: deployment => deployment)
                 .ToList()
-                .ForEach(ProcessDependent);
+                .ForEach(action: ProcessDependent);
             int remainingDeploymentsAfter = remainingDeployments.Count;
             if (
                 remainingDeployments.Count > 0
-                && remainingDeployments.Count(x => !HasActiveDependencies(x)) == 0
+                && remainingDeployments.Count(predicate: x => !HasActiveDependencies(deployment: x))
+                    == 0
             )
             {
                 HandleInfiniteLoopError();
@@ -68,7 +72,7 @@ public class DeploymentSorter
         }
         if (inputSize != sortedDeployments.Count)
         {
-            throw new Exception(Strings.ErrorDeploymentSorterInputOutputCountMismatch);
+            throw new Exception(message: Strings.ErrorDeploymentSorterInputOutputCountMismatch);
         }
         return sortedDeployments;
     }
@@ -76,33 +80,37 @@ public class DeploymentSorter
     private void HandleDeploymentDeadlock()
     {
         string sortedDeploymentsStr = string.Join(
-            "\r\n",
-            sortedDeployments.Select(x => $"{x.PackageName} {x.Version}")
+            separator: "\r\n",
+            values: sortedDeployments.Select(selector: x => $"{x.PackageName} {x.Version}")
         );
         var deadlockedDeployments = remainingDeployments
-            .GroupBy(x => x.SchemaExtensionId)
-            .Select(group => group.OrderBy(deploymentVersion => deploymentVersion.Version).First());
-        var nextStepCandidates = deadlockedDeployments.Select(x =>
+            .GroupBy(keySelector: x => x.SchemaExtensionId)
+            .Select(selector: group =>
+                group.OrderBy(keySelector: deploymentVersion => deploymentVersion.Version).First()
+            );
+        var nextStepCandidates = deadlockedDeployments.Select(selector: x =>
             string.Format(
-                Strings.DeploymentDeadlockCandidateFormat,
-                x.PackageName,
-                x.Version,
-                string.Join("\r\n\t\t", GetDependencyList(x))
+                format: Strings.DeploymentDeadlockCandidateFormat,
+                arg0: x.PackageName,
+                arg1: x.Version,
+                arg2: string.Join(separator: "\r\n\t\t", values: GetDependencyList(deployment: x))
             )
         );
         var prerequisiteConflicts = remainingDeployments
-            .SelectMany(FindPrerequisiteConflicts)
-            .Where(blocker => blocker != null)
+            .SelectMany(selector: FindPrerequisiteConflicts)
+            .Where(predicate: blocker => blocker != null)
             .Distinct()
-            .Where(blocker => !HasActiveDependencies(blocker.ConflictingDependency))
-            .Select(blocker =>
+            .Where(predicate: blocker =>
+                !HasActiveDependencies(deployment: blocker.ConflictingDependency)
+            )
+            .Select(selector: blocker =>
                 string.Format(
-                    Strings.DeploymentDeadlockBlockerFormat,
-                    blocker.PackageName,
-                    blocker.Version,
-                    string.Join(
-                        "\r\n\t\t",
-                        blocker.DeployedDependency.PackageName
+                    format: Strings.DeploymentDeadlockBlockerFormat,
+                    arg0: blocker.PackageName,
+                    arg1: blocker.Version,
+                    arg2: string.Join(
+                        separator: "\r\n\t\t",
+                        value: blocker.DeployedDependency.PackageName
                             + " "
                             + blocker.DeployedDependency.Version
                     )
@@ -111,44 +119,52 @@ public class DeploymentSorter
             .ToList();
 
         string message = string.Format(
-            Strings.DeploymentDeadlockHeader,
-            sortedDeploymentsStr,
-            string.Join("\r\n", nextStepCandidates)
+            format: Strings.DeploymentDeadlockHeader,
+            arg0: sortedDeploymentsStr,
+            arg1: string.Join(separator: "\r\n", values: nextStepCandidates)
         );
 
         if (prerequisiteConflicts.Count > 0)
         {
             message += string.Format(
-                Strings.DeploymentDeadlockPrereqConflicts,
-                string.Join("\r\n", prerequisiteConflicts)
+                format: Strings.DeploymentDeadlockPrereqConflicts,
+                arg0: string.Join(separator: "\r\n", values: prerequisiteConflicts)
             );
         }
 
         message += "\r\n";
         message += Strings.DeploymentDeadlockHint;
 
-        SortingFailed?.Invoke(this, message);
+        SortingFailed?.Invoke(sender: this, e: message);
     }
 
     private IEnumerable<string> GetDependencyList(IDeploymentVersion deployment)
     {
         Dictionary<Guid, string> packageNameDictionary = allDeployments
-            .GroupBy(x => x.SchemaExtensionId)
-            .ToDictionary(group => group.Key, group => group.First().PackageName);
+            .GroupBy(keySelector: x => x.SchemaExtensionId)
+            .ToDictionary(
+                keySelector: group => group.Key,
+                elementSelector: group => group.First().PackageName
+            );
         var packageVersions = deployment
-            .DeploymentDependencies.Select(dependency =>
+            .DeploymentDependencies.Select(selector: dependency =>
             {
-                packageNameDictionary.TryGetValue(dependency.PackageId, out string packageName);
+                packageNameDictionary.TryGetValue(
+                    key: dependency.PackageId,
+                    value: out string packageName
+                );
                 return $"{packageName ?? dependency.PackageId.ToString()} {dependency.PackageVersion}";
             })
             .ToList();
-        var previousDeployment = sortedDeployments.LastOrDefault(x =>
+        var previousDeployment = sortedDeployments.LastOrDefault(predicate: x =>
             x.SchemaExtensionId == deployment.SchemaExtensionId
         );
 
         if (previousDeployment != null)
         {
-            packageVersions.Add($"{previousDeployment.PackageName} {previousDeployment.Version}");
+            packageVersions.Add(
+                item: $"{previousDeployment.PackageName} {previousDeployment.Version}"
+            );
         }
         return packageVersions;
     }
@@ -157,50 +173,60 @@ public class DeploymentSorter
     {
         foreach (var deploymentVersion in remainingDeployments)
         {
-            var dependsOnItSelf = deploymentVersion.DeploymentDependencies.Any(dependency =>
-                dependency.PackageId == deploymentVersion.SchemaExtensionId
-                && dependency.PackageVersion == deploymentVersion.Version
+            var dependsOnItSelf = deploymentVersion.DeploymentDependencies.Any(
+                predicate: dependency =>
+                    dependency.PackageId == deploymentVersion.SchemaExtensionId
+                    && dependency.PackageVersion == deploymentVersion.Version
             );
             if (dependsOnItSelf)
             {
                 throw new Exception(
-                    string.Format(
-                        Strings.ErrorDeploymentDependsOnItself,
-                        deploymentVersion.Version,
-                        deploymentVersion.PackageName
+                    message: string.Format(
+                        format: Strings.ErrorDeploymentDependsOnItself,
+                        arg0: deploymentVersion.Version,
+                        arg1: deploymentVersion.PackageName
                     )
                 );
             }
         }
-        SortingFailed?.Invoke(this, Strings.ErrorInfiniteLoopNoDependencies);
+        SortingFailed?.Invoke(sender: this, e: Strings.ErrorInfiniteLoopNoDependencies);
     }
 
     private void ProcessDependent(IDeploymentVersion deployment)
     {
-        MoveToSorted(deployment);
-        GetDependentDeployments(deployment)
-            .Where(x => !HasActiveDependencies(x) && FindPrerequisiteConflicts(x).Count == 0)
-            .OrderBy(x => x, new OtherPackagesFirst(current.SchemaExtensionId))
-            .ForEach(ProcessDependent);
+        MoveToSorted(deployment: deployment);
+        GetDependentDeployments(deployment: deployment)
+            .Where(predicate: x =>
+                !HasActiveDependencies(deployment: x)
+                && FindPrerequisiteConflicts(deployment: x).Count == 0
+            )
+            .OrderBy(
+                keySelector: x => x,
+                comparer: new OtherPackagesFirst(thisPackageId: current.SchemaExtensionId)
+            )
+            .ForEach(action: ProcessDependent);
     }
 
     private void MoveToSorted(IDeploymentVersion deployment)
     {
-        if (sortedDeployments.Contains(deployment))
+        if (sortedDeployments.Contains(item: deployment))
         {
             return;
         }
 
         current = deployment;
-        sortedDeployments.Add(deployment);
-        remainingDeployments.Remove(deployment);
+        sortedDeployments.Add(item: deployment);
+        remainingDeployments.Remove(item: deployment);
     }
 
     private List<IDeploymentVersion> GetDependentDeployments(IDeploymentVersion deployment)
     {
         return remainingDeployments
-            .Where(remainingDepl =>
-                IsAmongDependencies(GetAllDependencies(remainingDepl), deployment)
+            .Where(predicate: remainingDepl =>
+                IsAmongDependencies(
+                    dependencies: GetAllDependencies(deployment: remainingDepl),
+                    deployment: deployment
+                )
             )
             .ToList();
     }
@@ -210,7 +236,7 @@ public class DeploymentSorter
         IDeploymentVersion deployment
     )
     {
-        return dependencies.Any(dependency =>
+        return dependencies.Any(predicate: dependency =>
             dependency.PackageId == deployment.SchemaExtensionId
             && dependency.PackageVersion == deployment.Version
         );
@@ -218,12 +244,12 @@ public class DeploymentSorter
 
     private bool HasActiveDependencies(IDeploymentVersion deployment)
     {
-        return GetAllDependencies(deployment).Any(IsInRemainingDeployments);
+        return GetAllDependencies(deployment: deployment).Any(predicate: IsInRemainingDeployments);
     }
 
     private List<PrerequisiteConflict> FindPrerequisiteConflicts(IDeploymentVersion deployment)
     {
-        var previousDeployment = sortedDeployments.LastOrDefault(x =>
+        var previousDeployment = sortedDeployments.LastOrDefault(predicate: x =>
             x.SchemaExtensionId == deployment.SchemaExtensionId
         );
         if (previousDeployment == null)
@@ -231,13 +257,18 @@ public class DeploymentSorter
             return [];
         }
         IEnumerable<IDeploymentVersion> haveToRunBefore = remainingDeployments
-            .Where(x => x != deployment)
-            .Where(x => IsAmongDependencies(x.DeploymentDependencies, previousDeployment));
+            .Where(predicate: x => x != deployment)
+            .Where(predicate: x =>
+                IsAmongDependencies(
+                    dependencies: x.DeploymentDependencies,
+                    deployment: previousDeployment
+                )
+            );
         return haveToRunBefore
-            .Select(blockingDeployment => new PrerequisiteConflict(
-                blockingDeployment,
-                previousDeployment,
-                deployment
+            .Select(selector: blockingDeployment => new PrerequisiteConflict(
+                Deployment: blockingDeployment,
+                DeployedDependency: previousDeployment,
+                ConflictingDependency: deployment
             ))
             .ToList();
     }
@@ -273,30 +304,33 @@ public class DeploymentSorter
             {
                 return false;
             }
-            if (ReferenceEquals(this, other))
+            if (ReferenceEquals(objA: this, objB: other))
             {
                 return true;
             }
-            return Equals(PackageName, other.PackageName)
-                && Equals(Version, other.Version)
-                && Equals(dependencyVersion, other.dependencyVersion)
-                && Equals(DeployedDependency.PackageName, other.DeployedDependency.PackageName);
+            return Equals(objA: PackageName, objB: other.PackageName)
+                && Equals(objA: Version, objB: other.Version)
+                && Equals(objA: dependencyVersion, objB: other.dependencyVersion)
+                && Equals(
+                    objA: DeployedDependency.PackageName,
+                    objB: other.DeployedDependency.PackageName
+                );
         }
 
         public override int GetHashCode()
         {
             return HashCode.Combine(
-                PackageName,
-                Version,
-                dependencyVersion,
-                DeployedDependency.PackageName
+                value1: PackageName,
+                value2: Version,
+                value3: dependencyVersion,
+                value4: DeployedDependency.PackageName
             );
         }
     }
 
     private IEnumerable<DeploymentDependency> GetAllDependencies(IDeploymentVersion deployment)
     {
-        bool alreadyDependsOnPreviousVersion = deployment.DeploymentDependencies.Any(x =>
+        bool alreadyDependsOnPreviousVersion = deployment.DeploymentDependencies.Any(predicate: x =>
             x.PackageId == deployment.SchemaExtensionId
         );
         if (alreadyDependsOnPreviousVersion)
@@ -304,10 +338,10 @@ public class DeploymentSorter
             return deployment.DeploymentDependencies;
         }
         var dependencies = deployment.DeploymentDependencies.ToList();
-        var mayBePreviousVersionDependency = GetDependencyOnPreviousVersion(deployment);
+        var mayBePreviousVersionDependency = GetDependencyOnPreviousVersion(deployment: deployment);
         if (mayBePreviousVersionDependency.HasValue)
         {
-            dependencies.Add(mayBePreviousVersionDependency.Value);
+            dependencies.Add(item: mayBePreviousVersionDependency.Value);
         }
         return dependencies;
     }
@@ -317,17 +351,20 @@ public class DeploymentSorter
     )
     {
         return allDeployments
-            .Where(x => x.SchemaExtensionId == deployment.SchemaExtensionId)
-            .Where(x => x.Version < deployment.Version)
-            .OrderByDescending(x => x.Version)
-            .Take(1)
-            .Select(x => new DeploymentDependency(deployment.SchemaExtensionId, x.Version))
+            .Where(predicate: x => x.SchemaExtensionId == deployment.SchemaExtensionId)
+            .Where(predicate: x => x.Version < deployment.Version)
+            .OrderByDescending(keySelector: x => x.Version)
+            .Take(count: 1)
+            .Select(selector: x => new DeploymentDependency(
+                packageId: deployment.SchemaExtensionId,
+                packageVersion: x.Version
+            ))
             .FirstOrDefault();
     }
 
     private bool IsInRemainingDeployments(DeploymentDependency dependency)
     {
-        return remainingDeployments.Any(deployment =>
+        return remainingDeployments.Any(predicate: deployment =>
             deployment.Version == dependency.PackageVersion
             && deployment.SchemaExtensionId == dependency.PackageId
         );

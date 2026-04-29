@@ -35,10 +35,14 @@ public enum SystemFunction
 /// <summary>
 /// Summary description for SystemFunctionCall.
 /// </summary>
-[SchemaItemDescription("System Function Call", "Parameters", "icon_system-function-call-ui.png")]
-[HelpTopic("System+Function+Call")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(
+    name: "System Function Call",
+    folderName: "Parameters",
+    iconName: "icon_system-function-call-ui.png"
+)]
+[HelpTopic(topic: "System+Function+Call")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class SystemFunctionCall : AbstractSchemaItem
 {
     public const string CategoryConst = "SystemFunctionCall";
@@ -47,10 +51,10 @@ public class SystemFunctionCall : AbstractSchemaItem
         : base() { }
 
     public SystemFunctionCall(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public SystemFunctionCall(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Overriden ISchemaItem Members
 
@@ -62,7 +66,7 @@ public class SystemFunctionCall : AbstractSchemaItem
     #region Properties
     private SystemFunction _function;
 
-    [XmlAttribute("function")]
+    [XmlAttribute(attributeName: "function")]
     public SystemFunction Function
     {
         get { return _function; }

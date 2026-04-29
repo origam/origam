@@ -37,10 +37,15 @@ public class TagInputBuilder
         DataTable table
     )
     {
-        propertyElement.SetAttribute("Entity", "Array");
-        propertyElement.SetAttribute("Column", "TagInput");
+        propertyElement.SetAttribute(name: "Entity", value: "Array");
+        propertyElement.SetAttribute(name: "Column", value: "TagInput");
 
-        ComboBoxBuilder.BuildCommonDropdown(propertyElement, lookupId, bindingMember, table);
+        ComboBoxBuilder.BuildCommonDropdown(
+            propertyElement: propertyElement,
+            lookupId: lookupId,
+            bindingMember: bindingMember,
+            table: table
+        );
     }
 
     public static void BuildChecklist(
@@ -51,10 +56,15 @@ public class TagInputBuilder
         DataTable table
     )
     {
-        propertyElement.SetAttribute("Entity", "Array");
-        propertyElement.SetAttribute("Column", "Checklist");
-        propertyElement.SetAttribute("ColumnWidth", columnWidth.ToString());
+        propertyElement.SetAttribute(name: "Entity", value: "Array");
+        propertyElement.SetAttribute(name: "Column", value: "Checklist");
+        propertyElement.SetAttribute(name: "ColumnWidth", value: columnWidth.ToString());
 
-        ComboBoxBuilder.BuildCommonDropdown(propertyElement, lookupId, bindingMember, table);
+        ComboBoxBuilder.BuildCommonDropdown(
+            propertyElement: propertyElement,
+            lookupId: lookupId,
+            bindingMember: bindingMember,
+            table: table
+        );
     }
 }

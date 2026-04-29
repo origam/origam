@@ -47,11 +47,11 @@ public partial class ModelUpgradeForm : Form
                         $"Files processed: {info.FilesDone} / {info.TotalFiles}";
                 }
             }
-            this.RunWithInvoke(ProgressAction);
+            this.RunWithInvoke(action: ProgressAction);
         };
         metaModelUpgradeService.UpgradeFinished += (sender, args) =>
         {
-            this.RunWithInvoke(Close);
+            this.RunWithInvoke(action: Close);
         };
         InitializeComponent();
     }
@@ -59,6 +59,6 @@ public partial class ModelUpgradeForm : Form
     private void cancelButton_Click(object sender, EventArgs e)
     {
         metaModelUpgradeService.Cancel();
-        this.RunWithInvoke(() => currentFileLabel.Text = "Canceling...");
+        this.RunWithInvoke(func: () => currentFileLabel.Text = "Canceling...");
     }
 }

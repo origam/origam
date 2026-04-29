@@ -43,8 +43,8 @@ internal static class Crypto
     private const int SALT_SIZE = 128 / 8; // 128 bits
 
     [SuppressMessage(
-        "Microsoft.Naming",
-        "CA1720:IdentifiersShouldNotContainTypeNames",
+        category: "Microsoft.Naming",
+        checkId: "CA1720:IdentifiersShouldNotContainTypeNames",
         MessageId = "byte",
         Justification = "It really is a byte length"
     )]
@@ -53,43 +53,43 @@ internal static class Crypto
         byte[] buf = new byte[byteLength];
         using (var rng = new RNGCryptoServiceProvider())
         {
-            rng.GetBytes(buf);
+            rng.GetBytes(data: buf);
         }
         return buf;
     }
 
     [SuppressMessage(
-        "Microsoft.Naming",
-        "CA1720:IdentifiersShouldNotContainTypeNames",
+        category: "Microsoft.Naming",
+        checkId: "CA1720:IdentifiersShouldNotContainTypeNames",
         MessageId = "byte",
         Justification = "It really is a byte length"
     )]
     public static string GenerateSalt(int byteLength = SALT_SIZE)
     {
-        return Convert.ToBase64String(GenerateSaltInternal(byteLength));
+        return Convert.ToBase64String(inArray: GenerateSaltInternal(byteLength: byteLength));
     }
 
     public static string Hash(string input, string algorithm = "sha256")
     {
         if (input == null)
         {
-            throw new ArgumentNullException("input");
+            throw new ArgumentNullException(paramName: "input");
         }
-        return Hash(Encoding.UTF8.GetBytes(input), algorithm);
+        return Hash(input: Encoding.UTF8.GetBytes(s: input), algorithm: algorithm);
     }
 
     public static string Hash(byte[] input, string algorithm = "sha256")
     {
         if (input == null)
         {
-            throw new ArgumentNullException("input");
+            throw new ArgumentNullException(paramName: "input");
         }
-        using (HashAlgorithm alg = HashAlgorithm.Create(algorithm))
+        using (HashAlgorithm alg = HashAlgorithm.Create(hashName: algorithm))
         {
             if (alg != null)
             {
-                byte[] hashData = alg.ComputeHash(input);
-                return BinaryToHex(hashData);
+                byte[] hashData = alg.ComputeHash(buffer: input);
+                return BinaryToHex(data: hashData);
             }
 
             throw new InvalidOperationException();
@@ -97,25 +97,25 @@ internal static class Crypto
     }
 
     [SuppressMessage(
-        "Microsoft.Naming",
-        "CA1709:IdentifiersShouldBeCasedCorrectly",
+        category: "Microsoft.Naming",
+        checkId: "CA1709:IdentifiersShouldBeCasedCorrectly",
         MessageId = "SHA",
         Justification = "Consistent with the Framework, which uses SHA"
     )]
     public static string SHA1(string input)
     {
-        return Hash(input, "sha1");
+        return Hash(input: input, algorithm: "sha1");
     }
 
     [SuppressMessage(
-        "Microsoft.Naming",
-        "CA1709:IdentifiersShouldBeCasedCorrectly",
+        category: "Microsoft.Naming",
+        checkId: "CA1709:IdentifiersShouldBeCasedCorrectly",
         MessageId = "SHA",
         Justification = "Consistent with the Framework, which uses SHA"
     )]
     public static string SHA256(string input)
     {
-        return Hash(input, "sha256");
+        return Hash(input: input, algorithm: "sha256");
     }
 
     /* =======================
@@ -131,20 +131,32 @@ internal static class Crypto
     {
         if (password == null)
         {
-            throw new ArgumentNullException("password");
+            throw new ArgumentNullException(paramName: "password");
         }
         // Produce a version 0 (see comment above) password hash.
         byte[] salt;
         byte[] subkey;
-        using (var deriveBytes = new Rfc2898DeriveBytes(password, SALT_SIZE, iterationCount))
+        using (
+            var deriveBytes = new Rfc2898DeriveBytes(
+                password: password,
+                saltSize: SALT_SIZE,
+                iterations: iterationCount
+            )
+        )
         {
             salt = deriveBytes.Salt;
-            subkey = deriveBytes.GetBytes(PBKDF2_SUBKEY_LENGTH);
+            subkey = deriveBytes.GetBytes(cb: PBKDF2_SUBKEY_LENGTH);
         }
         byte[] outputBytes = new byte[1 + SALT_SIZE + PBKDF2_SUBKEY_LENGTH];
-        Buffer.BlockCopy(salt, 0, outputBytes, 1, SALT_SIZE);
-        Buffer.BlockCopy(subkey, 0, outputBytes, 1 + SALT_SIZE, PBKDF2_SUBKEY_LENGTH);
-        return Convert.ToBase64String(outputBytes);
+        Buffer.BlockCopy(src: salt, srcOffset: 0, dst: outputBytes, dstOffset: 1, count: SALT_SIZE);
+        Buffer.BlockCopy(
+            src: subkey,
+            srcOffset: 0,
+            dst: outputBytes,
+            dstOffset: 1 + SALT_SIZE,
+            count: PBKDF2_SUBKEY_LENGTH
+        );
+        return Convert.ToBase64String(inArray: outputBytes);
     }
 
     // hashedPassword must be of the format of HashWithPassword (salt + Hash(salt+input)
@@ -156,13 +168,13 @@ internal static class Crypto
     {
         if (hashedPassword == null)
         {
-            throw new ArgumentNullException("hashedPassword");
+            throw new ArgumentNullException(paramName: "hashedPassword");
         }
         if (password == null)
         {
-            throw new ArgumentNullException("password");
+            throw new ArgumentNullException(paramName: "password");
         }
-        byte[] hashedPasswordBytes = Convert.FromBase64String(hashedPassword);
+        byte[] hashedPasswordBytes = Convert.FromBase64String(s: hashedPassword);
         // Verify a version 0 (see comment above) password hash.
         if (
             (hashedPasswordBytes.Length != (1 + SALT_SIZE + PBKDF2_SUBKEY_LENGTH))
@@ -173,15 +185,33 @@ internal static class Crypto
             return false;
         }
         byte[] salt = new byte[SALT_SIZE];
-        Buffer.BlockCopy(hashedPasswordBytes, 1, salt, 0, SALT_SIZE);
+        Buffer.BlockCopy(
+            src: hashedPasswordBytes,
+            srcOffset: 1,
+            dst: salt,
+            dstOffset: 0,
+            count: SALT_SIZE
+        );
         byte[] storedSubkey = new byte[PBKDF2_SUBKEY_LENGTH];
-        Buffer.BlockCopy(hashedPasswordBytes, 1 + SALT_SIZE, storedSubkey, 0, PBKDF2_SUBKEY_LENGTH);
+        Buffer.BlockCopy(
+            src: hashedPasswordBytes,
+            srcOffset: 1 + SALT_SIZE,
+            dst: storedSubkey,
+            dstOffset: 0,
+            count: PBKDF2_SUBKEY_LENGTH
+        );
         byte[] generatedSubkey;
-        using (var deriveBytes = new Rfc2898DeriveBytes(password, salt, iterationCount))
+        using (
+            var deriveBytes = new Rfc2898DeriveBytes(
+                password: password,
+                salt: salt,
+                iterations: iterationCount
+            )
+        )
         {
-            generatedSubkey = deriveBytes.GetBytes(PBKDF2_SUBKEY_LENGTH);
+            generatedSubkey = deriveBytes.GetBytes(cb: PBKDF2_SUBKEY_LENGTH);
         }
-        return ByteArraysEqual(storedSubkey, generatedSubkey);
+        return ByteArraysEqual(a: storedSubkey, b: generatedSubkey);
     }
 
     internal static string BinaryToHex(byte[] data)
@@ -194,15 +224,15 @@ internal static class Crypto
             hexChar = ((byte)(data[iter] & 0xF));
             hex[(iter * 2) + 1] = (char)(hexChar > 9 ? hexChar + 0x37 : hexChar + 0x30);
         }
-        return new string(hex);
+        return new string(value: hex);
     }
 
     // Compares two byte arrays for equality.
     // The method is specifically written so that the loop is not optimized.
-    [MethodImpl(MethodImplOptions.NoOptimization)]
+    [MethodImpl(methodImplOptions: MethodImplOptions.NoOptimization)]
     private static bool ByteArraysEqual(byte[] a, byte[] b)
     {
-        if (ReferenceEquals(a, b))
+        if (ReferenceEquals(objA: a, objB: b))
         {
             return true;
         }

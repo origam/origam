@@ -29,7 +29,7 @@ namespace Origam;
 public class OrigamSettingsReader
 {
     private static string DefaultPathToOrigamSettings =>
-        Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "OrigamSettings.config");
+        Path.Combine(path1: AppDomain.CurrentDomain.BaseDirectory, path2: "OrigamSettings.config");
     private readonly string pathToOrigamSettings;
 
     public OrigamSettingsReader(string pathToOrigamSettings = null)
@@ -47,14 +47,15 @@ public class OrigamSettingsReader
             {
                 return new OrigamSettingsCollection();
             }
-            reader = new XmlNodeReader(arrayOfOrigamSettingsNode);
-            XmlSerializer deserializer = new XmlSerializer(typeof(OrigamSettings[]));
-            OrigamSettings[] settings = (OrigamSettings[])deserializer.Deserialize(reader);
-            return new OrigamSettingsCollection(settings);
+            reader = new XmlNodeReader(node: arrayOfOrigamSettingsNode);
+            XmlSerializer deserializer = new XmlSerializer(type: typeof(OrigamSettings[]));
+            OrigamSettings[] settings = (OrigamSettings[])
+                deserializer.Deserialize(xmlReader: reader);
+            return new OrigamSettingsCollection(value: settings);
         }
         catch (Exception ex)
         {
-            throw new OrigamSettingsException(ex.Message, ex);
+            throw new OrigamSettingsException(message: ex.Message, innerException: ex);
         }
         finally
         {
@@ -64,17 +65,21 @@ public class OrigamSettingsReader
 
     private XmlNode GetSettingsNode()
     {
-        return GetNodeByPath("OrigamSettings/xmlSerializerSection/ArrayOfOrigamSettings");
+        return GetNodeByPath(
+            pathToNode: "OrigamSettings/xmlSerializerSection/ArrayOfOrigamSettings"
+        );
     }
 
     private XmlNode GetNodeByPath(string pathToNode)
     {
         XmlDocument document = new XmlDocument();
-        document.Load(pathToOrigamSettings);
-        var arrayOfOrigamSettingsNode = document.SelectSingleNode(pathToNode);
+        document.Load(filename: pathToOrigamSettings);
+        var arrayOfOrigamSettingsNode = document.SelectSingleNode(xpath: pathToNode);
         if (arrayOfOrigamSettingsNode == null)
         {
-            throw new OrigamSettingsException(string.Format(Strings.PathNotFound, pathToNode));
+            throw new OrigamSettingsException(
+                message: string.Format(format: Strings.PathNotFound, arg0: pathToNode)
+            );
         }
         return arrayOfOrigamSettingsNode;
     }
@@ -82,21 +87,28 @@ public class OrigamSettingsReader
     public static XmlDocument CreateEmptyDocument()
     {
         XmlDocument doc = new XmlDocument();
-        XmlDeclaration xmlDeclaration = doc.CreateXmlDeclaration("1.0", "UTF-8", null);
-        doc.AppendChild(xmlDeclaration);
+        XmlDeclaration xmlDeclaration = doc.CreateXmlDeclaration(
+            version: "1.0",
+            encoding: "UTF-8",
+            standalone: null
+        );
+        doc.AppendChild(newChild: xmlDeclaration);
 
-        XmlElement orSettings = doc.CreateElement("OrigamSettings");
-        XmlElement serialization = doc.CreateElement("xmlSerializerSection");
-        XmlAttribute typeAttr = doc.CreateAttribute("type");
+        XmlElement orSettings = doc.CreateElement(name: "OrigamSettings");
+        XmlElement serialization = doc.CreateElement(name: "xmlSerializerSection");
+        XmlAttribute typeAttr = doc.CreateAttribute(name: "type");
         typeAttr.Value =
             "Origam.OrigamSettingsCollection, Origam, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null";
-        serialization.Attributes.Append(typeAttr);
-        XmlElement settingsArray = doc.CreateElement("ArrayOfOrigamSettings");
-        settingsArray.SetAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
-        settingsArray.SetAttribute("xmlns:xsd", "http://www.w3.org/2001/XMLSchema");
-        orSettings.AppendChild(serialization);
-        serialization.AppendChild(settingsArray);
-        doc.AppendChild(orSettings);
+        serialization.Attributes.Append(node: typeAttr);
+        XmlElement settingsArray = doc.CreateElement(name: "ArrayOfOrigamSettings");
+        settingsArray.SetAttribute(
+            name: "xmlns:xsi",
+            value: "http://www.w3.org/2001/XMLSchema-instance"
+        );
+        settingsArray.SetAttribute(name: "xmlns:xsd", value: "http://www.w3.org/2001/XMLSchema");
+        orSettings.AppendChild(newChild: serialization);
+        serialization.AppendChild(newChild: settingsArray);
+        doc.AppendChild(newChild: orSettings);
         return doc;
     }
 
@@ -104,17 +116,17 @@ public class OrigamSettingsReader
     {
         XmlDocument document = CreateEmptyDocument();
         XmlNode xmlSerializerNode = document.SelectSingleNode(
-            "OrigamSettings/xmlSerializerSection"
+            xpath: "OrigamSettings/xmlSerializerSection"
         );
         var xmlDocument = new XmlDocument();
         var nav = xmlDocument.CreateNavigator();
         using (var writer = nav.AppendChild())
         {
-            var ser = new XmlSerializer(typeof(OrigamSettings[]));
-            ser.Serialize(writer, configuration.ToArray());
+            var ser = new XmlSerializer(type: typeof(OrigamSettings[]));
+            ser.Serialize(xmlWriter: writer, o: configuration.ToArray());
         }
         xmlSerializerNode.InnerXml = xmlDocument.InnerXml;
-        document.Save(pathToOrigamSettings);
+        document.Save(filename: pathToOrigamSettings);
     }
 
     public string GetDefaultPathToOrigamSettings()

@@ -35,12 +35,12 @@ namespace Origam.Schema.MenuModel;
 /// Summary description for EntitySecurityRule.
 /// </summary>
 [SchemaItemDescription(
-    "Sequential Workflow Action",
-    "UI Actions",
-    "icon_sequential-workflow-action.png"
+    name: "Sequential Workflow Action",
+    folderName: "UI Actions",
+    iconName: "icon_sequential-workflow-action.png"
 )]
-[HelpTopic("Sequential+Workflow+Action")]
-[ClassMetaVersion("6.0.0")]
+[HelpTopic(topic: "Sequential+Workflow+Action")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class EntityWorkflowAction : EntityUIAction
 {
     public EntityWorkflowAction()
@@ -50,28 +50,28 @@ public class EntityWorkflowAction : EntityUIAction
     }
 
     public EntityWorkflowAction(Guid schemaExtensionId)
-        : base(schemaExtensionId)
+        : base(schemaExtensionId: schemaExtensionId)
     {
         Init();
     }
 
     public EntityWorkflowAction(Key primaryKey)
-        : base(primaryKey)
+        : base(primaryKey: primaryKey)
     {
         Init();
     }
 
     private void Init()
     {
-        ChildItemTypes.Add(typeof(EntityWorkflowActionScriptCall));
+        ChildItemTypes.Add(item: typeof(EntityWorkflowActionScriptCall));
     }
 
     #region Overriden AbstractDataEntityColumn Members
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(this.Workflow);
-        base.GetExtraDependencies(dependencies);
+        dependencies.Add(item: this.Workflow);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override IList<string> NewTypeNames
@@ -81,10 +81,19 @@ public class EntityWorkflowAction : EntityUIAction
             try
             {
                 IBusinessServicesService agents =
-                    ServiceManager.Services.GetService(typeof(IBusinessServicesService))
-                    as IBusinessServicesService;
-                IServiceAgent agent = agents.GetAgent("WorkflowService", null, null);
-                return agent.ExpectedParameterNames(Workflow, "ExecuteWorkflow", "Parameters");
+                    ServiceManager.Services.GetService(
+                        serviceType: typeof(IBusinessServicesService)
+                    ) as IBusinessServicesService;
+                IServiceAgent agent = agents.GetAgent(
+                    serviceType: "WorkflowService",
+                    ruleEngine: null,
+                    workflowEngine: null
+                );
+                return agent.ExpectedParameterNames(
+                    item: Workflow,
+                    method: "ExecuteWorkflow",
+                    parameter: "Parameters"
+                );
             }
             catch
             {
@@ -96,8 +105,8 @@ public class EntityWorkflowAction : EntityUIAction
     #region Properties
     private ServiceOutputMethod _mergeType = ServiceOutputMethod.AppendMergeExisting;
 
-    [DefaultValue(ServiceOutputMethod.AppendMergeExisting)]
-    [XmlAttribute("mergeType")]
+    [DefaultValue(value: ServiceOutputMethod.AppendMergeExisting)]
+    [XmlAttribute(attributeName: "mergeType")]
     public ServiceOutputMethod MergeType
     {
         get { return _mergeType; }
@@ -105,8 +114,8 @@ public class EntityWorkflowAction : EntityUIAction
     }
     private bool _saveAfterWorkflow = false;
 
-    [DefaultValue(false)]
-    [XmlAttribute("saveAfterWorkflow")]
+    [DefaultValue(value: false)]
+    [XmlAttribute(attributeName: "saveAfterWorkflow")]
     public bool SaveAfterWorkflow
     {
         get { return _saveAfterWorkflow; }
@@ -114,8 +123,8 @@ public class EntityWorkflowAction : EntityUIAction
     }
     private bool _requestSaveBeforeWorkflow = false;
 
-    [DefaultValue(false)]
-    [XmlAttribute("requestSaveBeforeWorkflow")]
+    [DefaultValue(value: false)]
+    [XmlAttribute(attributeName: "requestSaveBeforeWorkflow")]
     public bool RequestSaveBeforeWorkflow
     {
         get { return _requestSaveBeforeWorkflow; }
@@ -123,8 +132,8 @@ public class EntityWorkflowAction : EntityUIAction
     }
     private bool _commitChangesAfterMerge = false;
 
-    [DefaultValue(false)]
-    [XmlAttribute("commitChangesAfterMerge")]
+    [DefaultValue(value: false)]
+    [XmlAttribute(attributeName: "commitChangesAfterMerge")]
     public bool CommitChangesAfterMerge
     {
         get { return _commitChangesAfterMerge; }
@@ -132,8 +141,8 @@ public class EntityWorkflowAction : EntityUIAction
     }
     private bool _cleanDataBeforeMerge = false;
 
-    [DefaultValue(false)]
-    [XmlAttribute("cleanDataBeforeMerge")]
+    [DefaultValue(value: false)]
+    [XmlAttribute(attributeName: "cleanDataBeforeMerge")]
     public bool CleanDataBeforeMerge
     {
         get { return _cleanDataBeforeMerge; }
@@ -141,9 +150,11 @@ public class EntityWorkflowAction : EntityUIAction
     }
     private bool _refreshPortalAfterFinish = false;
 
-    [DefaultValue(false)]
-    [Description("If true, the client will refresh its menu after finishing the action.")]
-    [XmlAttribute("refreshPortalAfterFinish")]
+    [DefaultValue(value: false)]
+    [Description(
+        description: "If true, the client will refresh its menu after finishing the action."
+    )]
+    [XmlAttribute(attributeName: "refreshPortalAfterFinish")]
     public bool RefreshPortalAfterFinish
     {
         get { return _refreshPortalAfterFinish; }
@@ -151,8 +162,8 @@ public class EntityWorkflowAction : EntityUIAction
     }
     private ModalDialogCloseType _closeType = ModalDialogCloseType.None;
 
-    [DefaultValue(ModalDialogCloseType.None)]
-    [XmlAttribute("closeType")]
+    [DefaultValue(value: ModalDialogCloseType.None)]
+    [XmlAttribute(attributeName: "closeType")]
     public ModalDialogCloseType CloseType
     {
         get { return _closeType; }
@@ -160,8 +171,8 @@ public class EntityWorkflowAction : EntityUIAction
     }
     private SaveRefreshType _refreshAfterWorkflow = SaveRefreshType.RefreshChangedRecords;
 
-    [DefaultValue(SaveRefreshType.RefreshChangedRecords)]
-    [XmlAttribute("refreshAfterWorkflow")]
+    [DefaultValue(value: SaveRefreshType.RefreshChangedRecords)]
+    [XmlAttribute(attributeName: "refreshAfterWorkflow")]
     public SaveRefreshType RefreshAfterWorkflow
     {
         get { return _refreshAfterWorkflow; }
@@ -169,21 +180,21 @@ public class EntityWorkflowAction : EntityUIAction
     }
     public Guid WorkflowId;
 
-    [Category("References")]
-    [TypeConverter(typeof(WorkflowConverter))]
+    [Category(category: "References")]
+    [TypeConverter(type: typeof(WorkflowConverter))]
     [NotNullModelElementRule()]
-    [XmlReference("workflow", "WorkflowId")]
+    [XmlReference(attributeName: "workflow", idField: "WorkflowId")]
     public IWorkflow Workflow
     {
         get
         {
             return (IWorkflow)
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(this.WorkflowId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: this.WorkflowId)
                 );
         }
-        set { this.WorkflowId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]); }
+        set { this.WorkflowId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]); }
     }
     #endregion
 }

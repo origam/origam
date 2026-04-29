@@ -22,8 +22,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 namespace Origam.Server
 {
     [System.CodeDom.Compiler.GeneratedCodeAttribute(
-        "Microsoft.Tools.ServiceModel.Svcutil",
-        "2.0.2"
+        tool: "Microsoft.Tools.ServiceModel.Svcutil",
+        version: "2.0.2"
     )]
     [System.ServiceModel.ServiceContractAttribute(
         Namespace = "http://asapenginewebapi.advantages.cz/",

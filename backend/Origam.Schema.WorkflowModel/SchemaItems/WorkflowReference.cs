@@ -31,11 +31,14 @@ namespace Origam.Schema.WorkflowModel;
 /// <summary>
 /// Summary description for RuleReference.
 /// </summary>
-[SchemaItemDescription("Sequential Workflow Reference", "icon_sequential-workflow-reference.png")]
-[HelpTopic("Sequential+Workflow+Reference")]
-[DefaultProperty("Workflow")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(
+    name: "Sequential Workflow Reference",
+    iconName: "icon_sequential-workflow-reference.png"
+)]
+[HelpTopic(topic: "Sequential+Workflow+Reference")]
+[DefaultProperty(name: "Workflow")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class WorkflowReference : AbstractSchemaItem
 {
     public const string CategoryConst = "WorkflowReference";
@@ -44,10 +47,10 @@ public class WorkflowReference : AbstractSchemaItem
         : base() { }
 
     public WorkflowReference(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public WorkflowReference(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Overriden AbstractDataEntityColumn Members
 
@@ -60,14 +63,14 @@ public class WorkflowReference : AbstractSchemaItem
     {
         if (this.Workflow != null)
         {
-            base.GetParameterReferences(Workflow, list);
+            base.GetParameterReferences(parentItem: Workflow, list: list);
         }
     }
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(this.Workflow);
-        base.GetExtraDependencies(dependencies);
+        dependencies.Add(item: this.Workflow);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override ISchemaItemCollection ChildItems => SchemaItemCollection.Create();
@@ -75,19 +78,19 @@ public class WorkflowReference : AbstractSchemaItem
     #region Properties
     public Guid WorkflowId;
 
-    [Category("Reference")]
-    [TypeConverter(typeof(WorkflowConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [XmlReference("workflow", "WorkflowId")]
+    [Category(category: "Reference")]
+    [TypeConverter(type: typeof(WorkflowConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [XmlReference(attributeName: "workflow", idField: "WorkflowId")]
     public Workflow Workflow
     {
         get =>
             (ISchemaItem)
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(this.WorkflowId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: this.WorkflowId)
                 ) as Workflow;
-        set => this.WorkflowId = (Guid)value.PrimaryKey["Id"];
+        set => this.WorkflowId = (Guid)value.PrimaryKey[key: "Id"];
     }
     #endregion
 }

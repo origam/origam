@@ -26,14 +26,14 @@ using System.Reflection;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 //
-[assembly: AssemblyTitle("")]
-[assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("")]
-[assembly: AssemblyCopyright("")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
+[assembly: AssemblyTitle(title: "")]
+[assembly: AssemblyDescription(description: "")]
+[assembly: AssemblyConfiguration(configuration: "")]
+[assembly: AssemblyCompany(company: "")]
+[assembly: AssemblyProduct(product: "")]
+[assembly: AssemblyCopyright(copyright: "")]
+[assembly: AssemblyTrademark(trademark: "")]
+[assembly: AssemblyCulture(culture: "")]
 
 //
 // Version information for an assembly consists of the following four values:
@@ -46,8 +46,8 @@ using System.Reflection;
 // You can specify all the values or you can default the Revision and Build Numbers
 // by using the '*' as shown below:
 
-[assembly: AssemblyVersion("0.0.0.0")]
-[assembly: AssemblyFileVersion("0.0.0.0")]
+[assembly: AssemblyVersion(version: "0.0.0.0")]
+[assembly: AssemblyFileVersion(version: "0.0.0.0")]
 
 //
 // In order to sign your assembly you must specify a key to use. Refer to the
@@ -74,6 +74,6 @@ using System.Reflection;
 //   (*) Delay Signing is an advanced option - see the Microsoft .NET Framework
 //       documentation for more information on this.
 //
-[assembly: AssemblyDelaySign(false)]
-[assembly: AssemblyKeyFile("")]
-[assembly: AssemblyKeyName("")]
+[assembly: AssemblyDelaySign(delaySign: false)]
+[assembly: AssemblyKeyFile(keyFile: "")]
+[assembly: AssemblyKeyName(keyName: "")]

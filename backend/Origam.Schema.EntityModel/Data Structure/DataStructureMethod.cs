@@ -27,7 +27,7 @@ namespace Origam.Schema.EntityModel;
 /// <summary>
 /// Summary description for DataQuery.
 /// </summary>
-[XmlModelRoot(CategoryConst)]
+[XmlModelRoot(category: CategoryConst)]
 public abstract class DataStructureMethod : AbstractSchemaItem
 {
     public const string CategoryConst = "DataStructureFilterSet";
@@ -36,10 +36,10 @@ public abstract class DataStructureMethod : AbstractSchemaItem
         : base() { }
 
     public DataStructureMethod(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public DataStructureMethod(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Overriden AbstractDataEntityColumn Members
 
@@ -54,7 +54,7 @@ public abstract class DataStructureMethod : AbstractSchemaItem
 
     public override bool CanMove(Origam.UI.IBrowserNode2 newNode)
     {
-        return (newNode as ISchemaItem).PrimaryKey.Equals(this.ParentItem.PrimaryKey);
+        return (newNode as ISchemaItem).PrimaryKey.Equals(obj: this.ParentItem.PrimaryKey);
     }
     #endregion
 }

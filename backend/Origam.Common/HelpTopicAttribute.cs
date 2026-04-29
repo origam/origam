@@ -26,7 +26,7 @@ namespace Origam;
 /// <summary>
 /// Use this attribute on all classes that require help for the users.
 /// </summary>
-[AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
+[AttributeUsage(validOn: AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
 public sealed class HelpTopicAttribute : Attribute
 {
     private string _topic;

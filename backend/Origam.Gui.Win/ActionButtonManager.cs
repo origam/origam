@@ -52,9 +52,9 @@ public class ActionButtonManager : IDisposable
             actionButtons = value;
             dafaultButton = (ToolStripItem)
                 actionButtons
-                    .Where(item => item is IActionContainer)
+                    .Where(predicate: item => item is IActionContainer)
                     .Cast<IActionContainer>()
-                    .FirstOrDefault(container => container.GetAction().IsDefault);
+                    .FirstOrDefault(predicate: container => container.GetAction().IsDefault);
         }
     }
 
@@ -92,11 +92,11 @@ public class ActionButtonManager : IDisposable
         }
 
         var disabledActionIds = GetDisabledActionIds();
-        UpdateToolStripItemVisibility(disabledActionIds);
+        UpdateToolStripItemVisibility(disabledActionIds: disabledActionIds);
         var toolStrip = toolStripGetter.Invoke();
         bool toolStripShouldBeShown = toolStrip
             .Items.Cast<ToolStripItem>()
-            .Any(item => item.Enabled);
+            .Any(predicate: item => item.Enabled);
         toolStrip.Enabled = toolStripShouldBeShown;
         toolStrip.Visible = toolStripShouldBeShown;
     }
@@ -112,7 +112,9 @@ public class ActionButtonManager : IDisposable
         {
             if (actionButton is ToolStripActionDropDownButton dropDownbutton)
             {
-                dropDownbutton.ToolStripMenuItems.ForEach(item => item.Click += actionButton_Click);
+                dropDownbutton.ToolStripMenuItems.ForEach(action: item =>
+                    item.Click += actionButton_Click
+                );
             }
             else
             {
@@ -132,7 +134,9 @@ public class ActionButtonManager : IDisposable
         {
             if (actionButton is ToolStripActionDropDownButton dropDownbutton)
             {
-                dropDownbutton.ToolStripMenuItems.ForEach(item => item.Click -= actionButton_Click);
+                dropDownbutton.ToolStripMenuItems.ForEach(action: item =>
+                    item.Click -= actionButton_Click
+                );
             }
             else
             {
@@ -159,23 +163,38 @@ public class ActionButtonManager : IDisposable
         bool noDataToDisplay = currencyManager.Position == -1;
         if (noDataToDisplay)
         {
-            return ruleEngine.GetDisabledActions(null, null, entityId, formIdGetter()).ToList();
+            return ruleEngine
+                .GetDisabledActions(
+                    originalData: null,
+                    actualData: null,
+                    entityId: entityId,
+                    formId: formIdGetter()
+                )
+                .ToList();
         }
         DataRow row = (currencyManager.Current as DataRowView).Row;
-        if (!DatasetTools.HasRowValidParent(row))
+        if (!DatasetTools.HasRowValidParent(row: row))
         {
             return new List<string>();
         }
 
-        XmlContainer originalData = DatasetTools.GetRowXml(row, DataRowVersion.Original);
+        XmlContainer originalData = DatasetTools.GetRowXml(
+            row: row,
+            version: DataRowVersion.Original
+        );
         XmlContainer actualData = DatasetTools.GetRowXml(
-            row,
-            row.HasVersion(DataRowVersion.Proposed)
+            row: row,
+            version: row.HasVersion(version: DataRowVersion.Proposed)
                 ? DataRowVersion.Proposed
                 : DataRowVersion.Default
         );
         return ruleEngine
-            .GetDisabledActions(originalData, actualData, entityId, formIdGetter())
+            .GetDisabledActions(
+                originalData: originalData,
+                actualData: actualData,
+                entityId: entityId,
+                formId: formIdGetter()
+            )
             .ToList();
     }
 
@@ -185,16 +204,18 @@ public class ActionButtonManager : IDisposable
         {
             if (actionButton is ToolStripActionDropDownButton dropDownbutton)
             {
-                dropDownbutton.ToolStripMenuItems.ForEach(item =>
-                    UpdateEnabledState(disabledActionIds, item)
+                dropDownbutton.ToolStripMenuItems.ForEach(action: item =>
+                    UpdateEnabledState(disabledActionIds: disabledActionIds, actionItem: item)
                 );
-                var showDropDown = dropDownbutton.ToolStripMenuItems.Any(item => item.Enabled);
+                var showDropDown = dropDownbutton.ToolStripMenuItems.Any(predicate: item =>
+                    item.Enabled
+                );
                 dropDownbutton.Visible = showDropDown;
                 dropDownbutton.Enabled = showDropDown;
             }
             else
             {
-                UpdateEnabledState(disabledActionIds, actionButton);
+                UpdateEnabledState(disabledActionIds: disabledActionIds, actionItem: actionButton);
             }
         }
     }
@@ -205,7 +226,7 @@ public class ActionButtonManager : IDisposable
     )
     {
         var showButton = !disabledActionIds.Contains(
-            ((IActionContainer)actionItem).GetAction().Id.ToString()
+            item: ((IActionContainer)actionItem).GetAction().Id.ToString()
         );
         actionItem.Enabled = showButton;
         actionItem.Visible = showButton;
@@ -215,10 +236,12 @@ public class ActionButtonManager : IDisposable
     {
         var actionButton = sender as IActionContainer;
         var desktopEntityUiActionRunnerClient = new DesktopEntityUIActionRunnerClient(
-            formGeneratorGetter.Invoke(),
-            dataSourceGetter.Invoke()
+            generator: formGeneratorGetter.Invoke(),
+            dataSource: dataSourceGetter.Invoke()
         );
-        var actionRunner = new DesktopEntityUIActionRunner(desktopEntityUiActionRunnerClient);
+        var actionRunner = new DesktopEntityUIActionRunner(
+            actionRunnerClient: desktopEntityUiActionRunnerClient
+        );
         // parameter mappings and input parameters are used only in Origam Online
         actionRunner.ExecuteAction(
             sessionFormIdentifier: null,
@@ -241,7 +264,9 @@ public class ActionButtonManager : IDisposable
             && (dataRowView.Row.Table.PrimaryKey.Length > 0)
         )
         {
-            selectedItems.Add(dataRowView.Row[dataRowView.Row.Table.PrimaryKey[0]].ToString());
+            selectedItems.Add(
+                item: dataRowView.Row[column: dataRowView.Row.Table.PrimaryKey[0]].ToString()
+            );
         }
         return selectedItems;
     }

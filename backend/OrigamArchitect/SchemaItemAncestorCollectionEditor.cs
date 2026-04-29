@@ -30,16 +30,16 @@ namespace Origam.Schema;
 public class SchemaItemAncestorCollectionEditor : System.ComponentModel.Design.CollectionEditor
 {
     public SchemaItemAncestorCollectionEditor(Type type)
-        : base(type) { }
+        : base(type: type) { }
 
     protected override object CreateInstance(Type itemType)
     {
         if (itemType != typeof(SchemaItemAncestor))
         {
             throw new ArgumentOutOfRangeException(
-                "itemType",
-                itemType,
-                ResourceUtils.GetString("ErrorSchemaItemAncestorOnly")
+                paramName: "itemType",
+                actualValue: itemType,
+                message: ResourceUtils.GetString(key: "ErrorSchemaItemAncestorOnly")
             );
         }
 
@@ -56,15 +56,17 @@ public class SchemaItemAncestorCollectionEditor : System.ComponentModel.Design.C
         if (!(instance is SchemaItemAncestor))
         {
             throw new ArgumentOutOfRangeException(
-                "instance",
-                instance,
-                ResourceUtils.GetString("ErrorSchemaItemAncestorOnly")
+                paramName: "instance",
+                actualValue: instance,
+                message: ResourceUtils.GetString(key: "ErrorSchemaItemAncestorOnly")
             );
         }
 
         if (!(instance as SchemaItemAncestor).IsPersisted)
         {
-            throw new Exception(ResourceUtils.GetString("ErrorSchemaItemAncestorPersistOnly"));
+            throw new Exception(
+                message: ResourceUtils.GetString(key: "ErrorSchemaItemAncestorPersistOnly")
+            );
         }
         (instance as SchemaItemAncestor).IsDeleted = true;
         (instance as SchemaItemAncestor).Persist();
@@ -95,15 +97,17 @@ public class SchemaItemAncestorCollectionEditor : System.ComponentModel.Design.C
         object value
     )
     {
-        IDesignerHost des = provider.GetService(typeof(IDesignerHost)) as IDesignerHost;
+        IDesignerHost des =
+            provider.GetService(serviceType: typeof(IDesignerHost)) as IDesignerHost;
         object win =
-            provider.GetService(typeof(System.Windows.Forms.Design.IWindowsFormsEditorService))
-            as System.Windows.Forms.Design.IWindowsFormsEditorService;
+            provider.GetService(
+                serviceType: typeof(System.Windows.Forms.Design.IWindowsFormsEditorService)
+            ) as System.Windows.Forms.Design.IWindowsFormsEditorService;
         System.Windows.Forms.PropertyGrid grid =
-            win.GetType().GetProperty("Parent").GetValue(win, null)
+            win.GetType().GetProperty(name: "Parent").GetValue(obj: win, index: null)
             as System.Windows.Forms.PropertyGrid;
         Origam.UI.IViewContent form = grid.Parent as Origam.UI.IViewContent;
         form.IsDirty = true;
-        return base.EditValue(context, provider, value);
+        return base.EditValue(context: context, provider: provider, value: value);
     }
 }

@@ -37,7 +37,7 @@ namespace Origam.Workflow.Tasks;
 public class ForEachBlockEngineTask : BlockEngineTask
 {
     private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
-        System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
+        type: System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
     );
     XPathNodeIterator _iter;
     WorkflowEngine _call;
@@ -54,7 +54,7 @@ public class ForEachBlockEngineTask : BlockEngineTask
         }
         catch (Exception ex)
         {
-            OnFinished(new WorkflowEngineTaskEventArgs(ex));
+            OnFinished(e: new WorkflowEngineTaskEventArgs(exception: ex));
         }
     }
 
@@ -68,20 +68,26 @@ public class ForEachBlockEngineTask : BlockEngineTask
     {
         if (log.IsInfoEnabled)
         {
-            log.Info("ForEach Block started.");
+            log.Info(message: "ForEach Block started.");
         }
         ForeachWorkflowBlock block = this.Step as ForeachWorkflowBlock;
-        _call = this.Engine.GetSubEngine(block, Engine.TransactionBehavior);
-        IXmlContainer xmlContainer = GetSourceContextXmlContainer(block);
+        _call = this.Engine.GetSubEngine(
+            block: block,
+            transactionBehavior: Engine.TransactionBehavior
+        );
+        IXmlContainer xmlContainer = GetSourceContextXmlContainer(block: block);
         XPathNavigator navigator = xmlContainer.Xml.CreateNavigator();
-        OrigamXsltContext ctx = OrigamXsltContext.Create(new NameTable(), Engine.TransactionId);
-        XPathExpression expr = navigator.Compile(block.IteratorXPath);
-        expr.SetContext(ctx);
+        OrigamXsltContext ctx = OrigamXsltContext.Create(
+            nameTable: new NameTable(),
+            transactionId: Engine.TransactionId
+        );
+        XPathExpression expr = navigator.Compile(xpath: block.IteratorXPath);
+        expr.SetContext(nsManager: ctx);
         // code might fail and this handler doesn't get cleared
         // and will interfer with other workflow invocations
         this.Engine.Host.WorkflowFinished += Host_WorkflowFinished;
         this.Engine.Host.WorkflowMessage += Host_WorkflowMessage;
-        _iter = navigator.Select(expr);
+        _iter = navigator.Select(expr: expr);
         ResumeIteration();
     }
 
@@ -95,16 +101,18 @@ public class ForEachBlockEngineTask : BlockEngineTask
             {
                 // reinitialize _iter to updated context store and wind up
                 // to current position
-                IXmlContainer updatedSourceContextStore = GetSourceContextXmlContainer(block);
+                IXmlContainer updatedSourceContextStore = GetSourceContextXmlContainer(
+                    block: block
+                );
                 XPathNavigator navigator = updatedSourceContextStore.Xml.CreateNavigator();
                 OrigamXsltContext ctx = OrigamXsltContext.Create(
-                    new NameTable(),
-                    Engine.TransactionId
+                    nameTable: new NameTable(),
+                    transactionId: Engine.TransactionId
                 );
-                XPathExpression expr = navigator.Compile(block.IteratorXPath);
-                expr.SetContext(ctx);
-                _iter = navigator.Select(expr);
-                if (!WindUpTo(currentPosition))
+                XPathExpression expr = navigator.Compile(xpath: block.IteratorXPath);
+                expr.SetContext(nsManager: ctx);
+                _iter = navigator.Select(expr: expr);
+                if (!WindUpTo(currentPosition: currentPosition))
                 {
                     break;
                 }
@@ -125,7 +133,7 @@ public class ForEachBlockEngineTask : BlockEngineTask
 
             if (log.IsInfoEnabled)
             {
-                log.Info("Starting iteration no. " + _iter.CurrentPosition);
+                log.Info(message: "Starting iteration no. " + _iter.CurrentPosition);
             }
             // Set workflow
             _call.ParentContexts.Clear();
@@ -133,10 +141,10 @@ public class ForEachBlockEngineTask : BlockEngineTask
             // Fill input context stores
             foreach (Key key in this.Engine.RuleEngine.ContextStoreKeys)
             {
-                object context = this.Engine.RuleEngine.GetContext(key);
-                if (key.Equals(block.SourceContextStore.PrimaryKey))
+                object context = this.Engine.RuleEngine.GetContext(key: key);
+                if (key.Equals(obj: block.SourceContextStore.PrimaryKey))
                 {
-                    XmlDocument document = XmlTools.GetXmlSlice(_iter); // ((IHasXmlNode)iter.Current).GetNode();
+                    XmlDocument document = XmlTools.GetXmlSlice(iter: _iter); // ((IHasXmlNode)iter.Current).GetNode();
                     IDataDocument dataDocument = context as IDataDocument;
                     IXmlContainer xmlDocument = context as IXmlContainer;
                     if (dataDocument != null)
@@ -144,23 +152,32 @@ public class ForEachBlockEngineTask : BlockEngineTask
                         // we clone the dataset (no data, just the structure)
                         DataSet dataset = dataDocument.DataSet.Clone();
                         // we load the iteration data into the dataset
-                        dataset.ReadXml(new XmlNodeReader(document), XmlReadMode.IgnoreSchema);
+                        dataset.ReadXml(
+                            reader: new XmlNodeReader(node: document),
+                            mode: XmlReadMode.IgnoreSchema
+                        );
                         // we add the context into the called engine
-                        _call.ParentContexts.Add(key, DataDocumentFactory.New(dataset));
+                        _call.ParentContexts.Add(
+                            key: key,
+                            value: DataDocumentFactory.New(dataSet: dataset)
+                        );
                     }
                     else if (xmlDocument != null)
                     {
-                        _call.ParentContexts.Add(key, new XmlContainer(document));
+                        _call.ParentContexts.Add(
+                            key: key,
+                            value: new XmlContainer(xmlDocument: document)
+                        );
                     }
                 }
                 else
                 {
                     // all other contexts
                     // pass context directly
-                    _call.ParentContexts.Add(key, context);
+                    _call.ParentContexts.Add(key: key, value: context);
                 }
             }
-            Engine.Host.ExecuteWorkflow(_call);
+            Engine.Host.ExecuteWorkflow(engine: _call);
         }
     }
 
@@ -180,13 +197,14 @@ public class ForEachBlockEngineTask : BlockEngineTask
     private IXmlContainer GetSourceContextXmlContainer(ForeachWorkflowBlock block)
     {
         IXmlContainer xmlContainer =
-            this.Engine.RuleEngine.GetContext(block.SourceContextStore) as IXmlContainer;
+            this.Engine.RuleEngine.GetContext(contextStore: block.SourceContextStore)
+            as IXmlContainer;
         if (xmlContainer == null)
         {
             throw new ArgumentOutOfRangeException(
-                "SourceContextStore",
-                block.SourceContextStore,
-                ResourceUtils.GetString("ErrorSourceContextNotXmlDocument")
+                paramName: "SourceContextStore",
+                actualValue: block.SourceContextStore,
+                message: ResourceUtils.GetString(key: "ErrorSourceContextNotXmlDocument")
             );
         }
         return xmlContainer;
@@ -198,7 +216,7 @@ public class ForEachBlockEngineTask : BlockEngineTask
         if (this.Engine != null) // only if we have not finished already e.g. with an exception
         {
             UnsubscribeEvents();
-            OnFinished(new WorkflowEngineTaskEventArgs());
+            OnFinished(e: new WorkflowEngineTaskEventArgs());
         }
     }
 
@@ -210,12 +228,12 @@ public class ForEachBlockEngineTask : BlockEngineTask
         }
 
         ForeachWorkflowBlock block = this.Step as ForeachWorkflowBlock;
-        if (e.Engine.WorkflowUniqueId.Equals(_call.WorkflowUniqueId))
+        if (e.Engine.WorkflowUniqueId.Equals(g: _call.WorkflowUniqueId))
         {
             if (e.Exception != null)
             {
                 UnsubscribeEvents();
-                OnFinished(new WorkflowEngineTaskEventArgs(e.Exception));
+                OnFinished(e: new WorkflowEngineTaskEventArgs(exception: e.Exception));
                 return;
             }
             if (!block.IgnoreSourceContextChanges)
@@ -223,15 +241,17 @@ public class ForEachBlockEngineTask : BlockEngineTask
                 // Merge data back after success
                 foreach (DictionaryEntry entry in _call.ParentContexts)
                 {
-                    if (entry.Key.Equals(block.SourceContextStore.PrimaryKey))
+                    if (entry.Key.Equals(obj: block.SourceContextStore.PrimaryKey))
                     {
-                        bool fullMerge = (!entry.Key.Equals(block.SourceContextStore.PrimaryKey));
+                        bool fullMerge = (
+                            !entry.Key.Equals(obj: block.SourceContextStore.PrimaryKey)
+                        );
                         sourceContextChanged = Engine.MergeContext(
-                            (Key)entry.Key,
-                            _call.RuleEngine.GetContext(entry.Key as Key),
-                            block,
-                            this.Engine.ContextStoreName((Key)entry.Key),
-                            (
+                            resultContextKey: (Key)entry.Key,
+                            inputContext: _call.RuleEngine.GetContext(key: entry.Key as Key),
+                            step: block,
+                            contextName: this.Engine.ContextStoreName(key: (Key)entry.Key),
+                            method: (
                                 fullMerge
                                     ? ServiceOutputMethod.FullMerge
                                     : ServiceOutputMethod.AppendMergeExisting
@@ -243,19 +263,19 @@ public class ForEachBlockEngineTask : BlockEngineTask
             }
             if (log.IsInfoEnabled)
             {
-                log.Info("Finishing iteration no. " + _iter.CurrentPosition);
+                log.Info(message: "Finishing iteration no. " + _iter.CurrentPosition);
             }
         }
     }
 
     private void Host_WorkflowMessage(object sender, WorkflowHostMessageEventArgs e)
     {
-        if (e.Engine.WorkflowUniqueId.Equals(_call.WorkflowUniqueId))
+        if (e.Engine.WorkflowUniqueId.Equals(g: _call.WorkflowUniqueId))
         {
             if (e.Exception != null)
             {
                 UnsubscribeEvents();
-                OnFinished(new WorkflowEngineTaskEventArgs(e.Exception));
+                OnFinished(e: new WorkflowEngineTaskEventArgs(exception: e.Exception));
             }
         }
     }

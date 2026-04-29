@@ -51,7 +51,7 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
     private System.Windows.Forms.ComboBox cboFilter;
     private System.ComponentModel.IContainer components;
     private delegate void TreeViewDelegate(TreeNode nod);
-    private TreeNode mNodSpecial = new TreeNode("_Special");
+    private TreeNode mNodSpecial = new TreeNode(text: "_Special");
     private Rectangle dragBoxFromMouseDown;
     private IDocumentationService _documentationService;
     private SchemaService _schemaService;
@@ -70,15 +70,16 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
     {
         // This call is required by the Windows.Forms Form Designer.
         InitializeComponent();
-        _boldFont = new Font(tvwExpressionBrowser.Font, FontStyle.Bold);
+        _boldFont = new Font(prototype: tvwExpressionBrowser.Font, newStyle: FontStyle.Bold);
         // handle the exception because of the WinForms Designer
         try
         {
             _documentationService =
-                ServiceManager.Services.GetService(typeof(IDocumentationService))
+                ServiceManager.Services.GetService(serviceType: typeof(IDocumentationService))
                 as IDocumentationService;
             _schemaService =
-                ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
+                ServiceManager.Services.GetService(serviceType: typeof(SchemaService))
+                as SchemaService;
         }
         catch { }
     }
@@ -97,7 +98,7 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
 
     public TreeNode GetFirstNode()
     {
-        return tvwExpressionBrowser.Nodes.Count > 0 ? tvwExpressionBrowser.Nodes[0] : null;
+        return tvwExpressionBrowser.Nodes.Count > 0 ? tvwExpressionBrowser.Nodes[index: 0] : null;
     }
 
     public void ReloadTreeAndRestoreExpansionState()
@@ -110,7 +111,7 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
         tvwExpressionBrowser.StoreExpansionState();
         RemoveAllNodes();
         _schemaService.ClearProviderCaches();
-        AddRootNode(_schemaService.ActiveExtension);
+        AddRootNode(node: _schemaService.ActiveExtension);
         tvwExpressionBrowser.RestoreExpansionState();
     }
 
@@ -123,7 +124,7 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
         {
             components?.Dispose();
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
         _disposed = true;
     }
 
@@ -597,13 +598,13 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
     protected virtual void OnExpressionSelected(System.EventArgs e)
     {
         //Invokes the delegates.
-        ExpressionSelected?.Invoke(this, e);
+        ExpressionSelected?.Invoke(sender: this, e: e);
     }
 
     protected virtual void OnNodeClick(System.EventArgs e)
     {
         //Invokes the delegates.
-        NodeClick?.Invoke(this, e);
+        NodeClick?.Invoke(sender: this, e: e);
     }
 
     private bool _inNodeDoubleClick = false;
@@ -621,15 +622,15 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
             try
             {
                 //Invokes the delegates.
-                NodeDoubleClick(this, e);
+                NodeDoubleClick(sender: this, e: e);
             }
             catch (Exception ex)
             {
                 AsMessageBox.ShowError(
-                    this.FindForm(),
-                    ex.Message,
-                    ResourceUtils.GetString("ErrorArchitectCommand"),
-                    ex
+                    owner: this.FindForm(),
+                    text: ex.Message,
+                    caption: ResourceUtils.GetString(key: "ErrorArchitectCommand"),
+                    exception: ex
                 );
             }
             finally
@@ -644,7 +645,7 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
         if (NodeUnderMouseChanged != null)
         {
             //Invokes the delegates.
-            NodeUnderMouseChanged(this, e);
+            NodeUnderMouseChanged(sender: this, e: e);
         }
     }
 
@@ -656,7 +657,7 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
             {
                 if (tvwExpressionBrowser.SelectedNode.Tag is IBrowserNode)
                 {
-                    OnNodeDoubleClick(new EventArgs());
+                    OnNodeDoubleClick(e: new EventArgs());
                 }
             }
         }
@@ -718,19 +719,22 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
         try
         {
             _loadingTree = true;
-            LoadTreeRecursive(parentNode);
+            LoadTreeRecursive(parentNode: parentNode);
         }
         catch (Exception ex)
         {
             AsMessageBox.ShowError(
-                this.FindForm(),
-                ResourceUtils.GetString(
-                    "ErrorWhenReadChildNodes",
-                    parentNode.FullPath,
-                    Environment.NewLine + Environment.NewLine + ex.Message
+                owner: this.FindForm(),
+                text: ResourceUtils.GetString(
+                    key: "ErrorWhenReadChildNodes",
+                    args: new object[]
+                    {
+                        parentNode.FullPath,
+                        Environment.NewLine + Environment.NewLine + ex.Message,
+                    }
                 ),
-                ResourceUtils.GetString("ErrorTitle"),
-                ex
+                caption: ResourceUtils.GetString(key: "ErrorTitle"),
+                exception: ex
             );
         }
         finally
@@ -743,8 +747,8 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
     {
         if (QueryFilterNode != null)
         {
-            ExpressionBrowserEventArgs e = new ExpressionBrowserEventArgs(node);
-            QueryFilterNode(this, e);
+            ExpressionBrowserEventArgs e = new ExpressionBrowserEventArgs(queriedObject: node);
+            QueryFilterNode(sender: this, e: e);
 
             return e.Filter;
         }
@@ -763,13 +767,13 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
             // remove any child nodes, we will refresh them anyway
             parentNode.Nodes.Clear();
             IBrowserNode bnode = parentNode.Tag as IBrowserNode;
-            if (bnode != null && HasChildNodes(bnode))
+            if (bnode != null && HasChildNodes(node: bnode))
             {
-                var childNodes = new ArrayList(bnode.ChildNodes());
-                Sort(childNodes);
+                var childNodes = new ArrayList(c: bnode.ChildNodes());
+                Sort(childNodes: childNodes);
                 foreach (IBrowserNode2 child in childNodes)
                 {
-                    bool filtered = Filter(child);
+                    bool filtered = Filter(node: child);
 
                     if (!filtered)
                     {
@@ -783,8 +787,8 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
                                     SecurityManager.GetAuthorizationProvider();
                                 if (
                                     !authorizationProvider.Authorize(
-                                        SecurityManager.CurrentPrincipal,
-                                        (
+                                        principal: SecurityManager.CurrentPrincipal,
+                                        context: (
                                             child as IAuthorizationContextContainer
                                         ).AuthorizationContext
                                     )
@@ -796,14 +800,14 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
                         }
                         if (isAuthorized & !child.Hide)
                         {
-                            TreeNode tnode = RenderBrowserNode(child);
+                            TreeNode tnode = RenderBrowserNode(bnode: child);
                             //add dummy child node, because our node has some children
-                            if (HasChildNodes(child))
+                            if (HasChildNodes(node: child))
                             {
-                                tnode.Nodes.Add(new DummyNode());
+                                tnode.Nodes.Add(node: new DummyNode());
                             }
-                            parentNode.Nodes.Add(tnode);
-                            RecolorNode(tnode);
+                            parentNode.Nodes.Add(node: tnode);
+                            RecolorNode(node: tnode);
                         }
                     }
                 }
@@ -819,14 +823,17 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
     {
         if (childNodes.Count > 0)
         {
-            object[] attributes = childNodes[0]
+            object[] attributes = childNodes[index: 0]
                 .GetType()
-                .GetCustomAttributes(typeof(ExpressionBrowserTreeSortAtribute), true);
+                .GetCustomAttributes(
+                    attributeType: typeof(ExpressionBrowserTreeSortAtribute),
+                    inherit: true
+                );
             if (attributes != null && attributes.Length > 0)
             {
                 ExpressionBrowserTreeSortAtribute treeSortAtribute =
                     attributes[0] as ExpressionBrowserTreeSortAtribute;
-                childNodes.Sort(treeSortAtribute.GetComparator());
+                childNodes.Sort(comparer: treeSortAtribute.GetComparator());
             }
             else
             {
@@ -843,9 +850,9 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
     )
     {
         TreeView tree = sender as TreeView;
-        if (tree.GetNodeAt(e.X, e.Y) != null)
+        if (tree.GetNodeAt(x: e.X, y: e.Y) != null)
         {
-            tree.SelectedNode = tree.GetNodeAt(e.X, e.Y);
+            tree.SelectedNode = tree.GetNodeAt(x: e.X, y: e.Y);
         }
         // Starts a drag-and-drop operation with that item.
         if (e.Button == MouseButtons.Left)
@@ -854,8 +861,8 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
             // Create a rectangle using the DragSize, with the mouse position being
             // at the center of the rectangle.
             dragBoxFromMouseDown = new Rectangle(
-                new Point(e.X - (dragSize.Width / 2), e.Y - (dragSize.Height / 2)),
-                dragSize
+                location: new Point(x: e.X - (dragSize.Width / 2), y: e.Y - (dragSize.Height / 2)),
+                size: dragSize
             );
         }
         else
@@ -870,7 +877,7 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
         System.Windows.Forms.TreeViewCancelEventArgs e
     )
     {
-        LoadTree(e.Node);
+        LoadTree(parentNode: e.Node);
     }
 
     private void tvwExpressionBrowser_AfterCollapse(
@@ -881,7 +888,7 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
         if (e.Node != mNodSpecial)
         {
             e.Node.Nodes.Clear();
-            e.Node.Nodes.Add(new DummyNode());
+            e.Node.Nodes.Add(node: new DummyNode());
         }
     }
 
@@ -900,7 +907,7 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
             e.CancelEdit = true;
             return;
         }
-        if (bn is SchemaItemGroup group && !group.CanRenameTo(e.Label))
+        if (bn is SchemaItemGroup group && !group.CanRenameTo(nameCandidate: e.Label))
         {
             e.CancelEdit = true;
             return;
@@ -913,7 +920,7 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
         bn.NodeText = e.Label;
         persistenceProvider.EndTransaction();
         _refreshPaused = false;
-        RefreshNode(e.Node);
+        RefreshNode(treeNode: e.Node);
     }
 
     private void tvwExpressionBrowser_BeforeLabelEdit(
@@ -926,7 +933,10 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
             !(
                 bnode != null
                 && bnode.CanRename
-                && (_schemaService.IsItemFromExtension(bnode) & this.DisableOtherExtensionNodes)
+                && (
+                    _schemaService.IsItemFromExtension(item: bnode)
+                    & this.DisableOtherExtensionNodes
+                )
             )
         )
         {
@@ -936,10 +946,14 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
 
     private TreeNode RenderBrowserNode(IBrowserNode2 bnode)
     {
-        int imageIndex = ImageIndex(bnode);
-        TreeNode tnode = new TreeNode(bnode.NodeText, imageIndex, imageIndex);
+        int imageIndex = ImageIndex(bnode: bnode);
+        TreeNode tnode = new TreeNode(
+            text: bnode.NodeText,
+            imageIndex: imageIndex,
+            selectedImageIndex: imageIndex
+        );
         tnode.Tag = bnode;
-        tnode.NodeFont = GetFont(bnode);
+        tnode.NodeFont = GetFont(bnode: bnode);
         return tnode;
     }
 
@@ -950,7 +964,7 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
             return _boldFont;
         }
 
-        return new Font(tvwExpressionBrowser.Font, bnode.FontStyle.ToFont());
+        return new Font(prototype: tvwExpressionBrowser.Font, newStyle: bnode.FontStyle.ToFont());
     }
 
     private void RecolorNode(TreeNode node)
@@ -1027,27 +1041,27 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
             return false;
         }
         string ParentFile = item.Files.First();
-        if (GitManager.GetCache().TryGetValue(ParentFile, out bool status))
+        if (GitManager.GetCache().TryGetValue(key: ParentFile, value: out bool status))
         {
             return status;
         }
-        if (GitManager.IsValid(_sourcePath))
+        if (GitManager.IsValid(modelSourceControlLocation: _sourcePath))
         {
-            GitManager gitManager = new GitManager(_sourcePath);
+            GitManager gitManager = new GitManager(path: _sourcePath);
             foreach (string file in item.Files)
             {
-                string path = Path.Combine(_sourcePath, file);
-                if (File.Exists(path))
+                string path = Path.Combine(path1: _sourcePath, path2: file);
+                if (File.Exists(path: path))
                 {
-                    if (gitManager.HasChanges(path))
+                    if (gitManager.HasChanges(filePath: path))
                     {
-                        GitManager.GetCache()[ParentFile] = true;
+                        GitManager.GetCache()[key: ParentFile] = true;
                         return true;
                     }
                 }
             }
         }
-        GitManager.GetCache()[ParentFile] = false;
+        GitManager.GetCache()[key: ParentFile] = false;
         return false;
     }
 
@@ -1055,11 +1069,11 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
     {
         if (node.Tag is IPersistent persistent && persistent.Files.First() == file)
         {
-            RecolorNode(node);
+            RecolorNode(node: node);
         }
         foreach (TreeNode child in node.Nodes)
         {
-            RecolorNodesByFile(child, file);
+            RecolorNodesByFile(node: child, file: file);
         }
     }
 
@@ -1069,22 +1083,22 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
         if (bnode is IBrowserNode2 && (bnode as IBrowserNode2).NodeImage != null)
         {
             Image nodeImage = (bnode as IBrowserNode2).NodeImage.ToBitmap();
-            if (_customImages.Contains(bnode))
+            if (_customImages.Contains(key: bnode))
             {
-                imgList.Images[(int)_customImages[bnode]] = nodeImage;
-                imageIndex = (int)_customImages[bnode];
+                imgList.Images[index: (int)_customImages[key: bnode]] = nodeImage;
+                imageIndex = (int)_customImages[key: bnode];
             }
             if (imageIndex == -1)
             {
-                imageIndex = imgList.Images.Add(nodeImage, Color.Magenta);
-                _customImages.Add(bnode, imageIndex);
+                imageIndex = imgList.Images.Add(value: nodeImage, transparentColor: Color.Magenta);
+                _customImages.Add(key: bnode, value: imageIndex);
             }
         }
         else
         {
-            if (!int.TryParse(bnode.Icon, out imageIndex))
+            if (!int.TryParse(s: bnode.Icon, result: out imageIndex))
             {
-                imageIndex = imgList.Images.IndexOfKey(bnode.Icon);
+                imageIndex = imgList.Images.IndexOfKey(key: bnode.Icon);
             }
         }
         return imageIndex;
@@ -1094,34 +1108,39 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
     {
         OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
         _sourcePath = settings.ModelSourceControlLocation;
-        string gitPath = GitManager.GetRepositoryPath(settings.ModelSourceControlLocation);
+        string gitPath = GitManager.GetRepositoryPath(
+            modelSourceControlLocation: settings.ModelSourceControlLocation
+        );
         if (gitPath != null)
         {
             fileWatcher.Path = gitPath;
             fileWatcher.EnableRaisingEvents = true;
             _supportsGit = true;
         }
-        TreeNode tnode = RenderBrowserNode(node);
-        RecolorNode(tnode);
+        TreeNode tnode = RenderBrowserNode(bnode: node);
+        RecolorNode(node: tnode);
         try
         {
-            if (HasChildNodes(node))
+            if (HasChildNodes(node: node))
             {
-                tnode.Nodes.Add(new DummyNode());
+                tnode.Nodes.Add(node: new DummyNode());
             }
-            this.tvwExpressionBrowser.Nodes.Add(tnode);
+            this.tvwExpressionBrowser.Nodes.Add(node: tnode);
         }
         catch (Exception ex)
         {
             AsMessageBox.ShowError(
-                this.FindForm(),
-                ResourceUtils.GetString(
-                    "ErrorWhenAddRoot",
-                    node.NodeText,
-                    Environment.NewLine + Environment.NewLine + ex.Message
+                owner: this.FindForm(),
+                text: ResourceUtils.GetString(
+                    key: "ErrorWhenAddRoot",
+                    args: new object[]
+                    {
+                        node.NodeText,
+                        Environment.NewLine + Environment.NewLine + ex.Message,
+                    }
                 ),
-                ResourceUtils.GetString("ErrorTitle"),
-                ex
+                caption: ResourceUtils.GetString(key: "ErrorTitle"),
+                exception: ex
             );
         }
         tnode.Expand();
@@ -1141,7 +1160,7 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
         TreeNode foundNode = null;
         foreach (TreeNode node in tvwExpressionBrowser.Nodes)
         {
-            foundNode = LookUpNode(node, browserNode);
+            foundNode = LookUpNode(parentNode: node, browserNode: browserNode);
             if (foundNode != null)
             {
                 foundNode.Remove();
@@ -1154,7 +1173,7 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
         tvwExpressionBrowser.BeginUpdate();
         foreach (TreeNode node in tvwExpressionBrowser.Nodes)
         {
-            LoadTree(node);
+            LoadTree(parentNode: node);
         }
         tvwExpressionBrowser.EndUpdate();
     }
@@ -1162,7 +1181,7 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
     public void Redraw()
     {
         tvwExpressionBrowser.BeginUpdate();
-        RecolorNodes(tvwExpressionBrowser.Nodes);
+        RecolorNodes(nodes: tvwExpressionBrowser.Nodes);
         tvwExpressionBrowser.EndUpdate();
     }
 
@@ -1170,8 +1189,8 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
     {
         foreach (TreeNode node in nodes)
         {
-            RecolorNode(node);
-            RecolorNodes(node.Nodes);
+            RecolorNode(node: node);
+            RecolorNodes(nodes: node.Nodes);
         }
     }
 
@@ -1179,7 +1198,7 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
     {
         if (this.tvwExpressionBrowser.SelectedNode != null)
         {
-            RefreshNode(tvwExpressionBrowser.SelectedNode);
+            RefreshNode(treeNode: tvwExpressionBrowser.SelectedNode);
         }
     }
 
@@ -1191,7 +1210,7 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
         }
         foreach (IBrowserNode child in node.ChildNodes())
         {
-            if (!Filter(child))
+            if (!Filter(node: child))
             {
                 return true;
             }
@@ -1211,12 +1230,15 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
         if (node != null)
         {
             treeNode.Text = node.NodeText;
-            treeNode.ImageIndex = ImageIndex(node);
+            treeNode.ImageIndex = ImageIndex(bnode: node);
             treeNode.SelectedImageIndex = treeNode.ImageIndex;
-            treeNode.NodeFont = GetFont(node);
+            treeNode.NodeFont = GetFont(bnode: node);
             if (node is IPersistent persistent && persistent.Files.Count > 0)
             {
-                RecolorNodesByFile(tvwExpressionBrowser.RootNode, persistent.Files.First());
+                RecolorNodesByFile(
+                    node: tvwExpressionBrowser.RootNode,
+                    file: persistent.Files.First()
+                );
             }
         }
         // after the node refresh is requested (because it was updated)
@@ -1236,7 +1258,7 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
             }
             parent = parent.Parent;
         }
-        LoadTree(treeNode);
+        LoadTree(parentNode: treeNode);
     }
 
     private TreeNode LookUpNode(TreeNode parentNode, IBrowserNode browserNode)
@@ -1258,7 +1280,7 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
                 parentNode.Tag is DA.ObjectPersistence.IPersistent
                 && browserNode is DA.ObjectPersistence.IPersistent
                 && (parentNode.Tag as DA.ObjectPersistence.IPersistent).PrimaryKey.Equals(
-                    (browserNode as DA.ObjectPersistence.IPersistent).PrimaryKey
+                    obj: (browserNode as DA.ObjectPersistence.IPersistent).PrimaryKey
                 )
             )
             {
@@ -1280,7 +1302,7 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
                 node.Tag is DA.ObjectPersistence.IPersistent
                 && browserNode is DA.ObjectPersistence.IPersistent
                 && (node.Tag as DA.ObjectPersistence.IPersistent).PrimaryKey.Equals(
-                    (browserNode as DA.ObjectPersistence.IPersistent).PrimaryKey
+                    obj: (browserNode as DA.ObjectPersistence.IPersistent).PrimaryKey
                 )
             )
             {
@@ -1290,7 +1312,7 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
             TreeNode foundNode = null;
             if (node.Nodes.Count > 0)
             {
-                foundNode = LookUpNode(node, browserNode);
+                foundNode = LookUpNode(parentNode: node, browserNode: browserNode);
             }
             // we found it in child nodes
             if (foundNode != null)
@@ -1304,12 +1326,12 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
 
     private void tvwExpressionBrowser_Click(object sender, System.EventArgs e)
     {
-        OnNodeClick(new EventArgs());
+        OnNodeClick(e: new EventArgs());
     }
 
     private void SchemaItem_Deleted(object sender, EventArgs e)
     {
-        RemoveBrowserNode(sender as IBrowserNode2);
+        RemoveBrowserNode(browserNode: sender as IBrowserNode2);
     }
 
     private void tvwExpressionBrowser_DragDrop(object sender, System.Windows.Forms.DragEventArgs e)
@@ -1321,7 +1343,7 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
 
         bool success = false;
         bool renameCopy = true;
-        TreeNode node = e.Data.GetData(typeof(TreeNode)) as TreeNode;
+        TreeNode node = e.Data.GetData(format: typeof(TreeNode)) as TreeNode;
         // if it was anything ELSE than TreeNode, we exit
         if (node == null)
         {
@@ -1329,8 +1351,9 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
         }
 
         TreeNode dropNode =
-            (sender as TreeView).GetNodeAt((sender as TreeView).PointToClient(new Point(e.X, e.Y)))
-            as TreeNode;
+            (sender as TreeView).GetNodeAt(
+                pt: (sender as TreeView).PointToClient(p: new Point(x: e.X, y: e.Y))
+            ) as TreeNode;
         ISchemaItem item;
         ISchemaItem originalItem = (node.Tag as ISchemaItem); //.GetFreshItem() as ISchemaItem;
 
@@ -1368,7 +1391,7 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
         else
         {
             ISchemaItem dropElement = dropNode.Tag as ISchemaItem;
-            if (item.CanMove(dropElement))
+            if (item.CanMove(newNode: dropElement))
             {
                 if (item != dropElement) // cannot move to itself
                 {
@@ -1390,10 +1413,10 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
         {
             if (e.Effect == DragDropEffects.Copy)
             {
-                item.SetExtensionRecursive(_schemaService.ActiveExtension);
+                item.SetExtensionRecursive(extension: _schemaService.ActiveExtension);
                 if (renameCopy)
                 {
-                    item.Name = GetItemText(item);
+                    item.Name = GetItemText(item: item);
                 }
             }
             else
@@ -1403,9 +1426,9 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
                     node.Remove();
                 }
 
-                MoveItemFile(item);
+                MoveItemFile(item: item);
             }
-            LoadTree(dropNode);
+            LoadTree(parentNode: dropNode);
             if (e.Effect == DragDropEffects.Copy)
             {
                 Origam.Workbench.Commands.EditSchemaItem edit =
@@ -1419,15 +1442,16 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
     private string GetItemText(ISchemaItem item)
     {
         IPersistenceService persistence =
-            ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+            ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+            as IPersistenceService;
         string text = item.Name;
         ISchemaItem[] results = null;
         do
         {
-            text = ResourceUtils.GetString("CopyOf", text);
+            text = ResourceUtils.GetString(key: "CopyOf", args: text);
             results = persistence
-                .SchemaProvider.FullTextSearch<ISchemaItem>(text)
-                .Where(searchitem => searchitem.GetType() == item.GetType())
+                .SchemaProvider.FullTextSearch<ISchemaItem>(text: text)
+                .Where(predicate: searchitem => searchitem.GetType() == item.GetType())
                 .ToArray();
         } while (results.LongLength != 0);
         return text;
@@ -1436,7 +1460,8 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
     private static void MoveItemFile(ISchemaItem item)
     {
         IPersistenceService persistence =
-            ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+            ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+            as IPersistenceService;
         persistence.SchemaProvider.BeginTransaction();
         item.Persist();
         persistence.SchemaProvider.EndTransaction();
@@ -1445,7 +1470,7 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
     private void tvwExpressionBrowser_DragOver(object sender, System.Windows.Forms.DragEventArgs e)
     {
         TreeNode nodeUnderMouse = tvwExpressionBrowser.GetNodeAt(
-            tvwExpressionBrowser.PointToClient(new Point(e.X, e.Y))
+            pt: tvwExpressionBrowser.PointToClient(p: new Point(x: e.X, y: e.Y))
         );
         if (nodeUnderMouse != null)
         {
@@ -1464,7 +1489,7 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
                 nodeUnderMouse.NextVisibleNode.EnsureVisible();
             }
         }
-        TreeNode node = e.Data.GetData(typeof(TreeNode)) as TreeNode;
+        TreeNode node = e.Data.GetData(format: typeof(TreeNode)) as TreeNode;
         if (!AllowEdit)
         {
             return;
@@ -1481,7 +1506,7 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
         // if the node is not from the current extension, we cannot move it, so we exit
         if (!isCopy)
         {
-            if (!_schemaService.CanEditItem(node.Tag))
+            if (!_schemaService.CanEditItem(item: node.Tag))
             {
                 return;
             }
@@ -1492,7 +1517,7 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
             ISchemaItem item = node.Tag as ISchemaItem;
             TreeNode dropNode =
                 (sender as TreeView).GetNodeAt(
-                    (sender as TreeView).PointToClient(new Point(e.X, e.Y))
+                    pt: (sender as TreeView).PointToClient(p: new Point(x: e.X, y: e.Y))
                 ) as TreeNode;
 
             if (dropNode.Tag == item.RootProvider)
@@ -1515,7 +1540,7 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
             }
             else
             {
-                if (item.CanMove(dropNode.Tag as IBrowserNode2))
+                if (item.CanMove(newNode: dropNode.Tag as IBrowserNode2))
                 {
                     e.Effect = isCopy ? DragDropEffects.Copy : DragDropEffects.Move;
                     return;
@@ -1531,7 +1556,7 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
         System.Windows.Forms.MouseEventArgs e
     )
     {
-        TreeNode nodeUnderMouse = tvwExpressionBrowser.GetNodeAt(e.X, e.Y);
+        TreeNode nodeUnderMouse = tvwExpressionBrowser.GetNodeAt(x: e.X, y: e.Y);
         if (!AllowEdit)
         {
             return;
@@ -1540,7 +1565,7 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
         if (NodeUnderMouse != nodeUnderMouse)
         {
             NodeUnderMouse = nodeUnderMouse;
-            OnNodeUnderMouseChanged(EventArgs.Empty);
+            OnNodeUnderMouseChanged(e: EventArgs.Empty);
         }
         if ((sender as TreeView).SelectedNode == null)
         {
@@ -1550,11 +1575,14 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
         if ((e.Button & MouseButtons.Left) == MouseButtons.Left)
         {
             // If the mouse moves outside the rectangle, start the drag.
-            if (dragBoxFromMouseDown != Rectangle.Empty && !dragBoxFromMouseDown.Contains(e.X, e.Y))
+            if (
+                dragBoxFromMouseDown != Rectangle.Empty
+                && !dragBoxFromMouseDown.Contains(x: e.X, y: e.Y)
+            )
             {
                 (sender as TreeView).DoDragDrop(
-                    (sender as TreeView).SelectedNode,
-                    DragDropEffects.Move | DragDropEffects.Copy
+                    data: (sender as TreeView).SelectedNode,
+                    allowedEffects: DragDropEffects.Move | DragDropEffects.Copy
                 );
             }
         }
@@ -1568,20 +1596,20 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
         }
 
         IBrowserNode node = sender as IBrowserNode;
-        TreeNode tnode = LookUpNode(null, node);
+        TreeNode tnode = LookUpNode(parentNode: null, browserNode: node);
         if (tnode == null)
         {
             return;
         }
 
-        RefreshNode(tnode);
+        RefreshNode(treeNode: tnode);
     }
 
     private void tvwExpressionBrowser_KeyPress(object sender, KeyPressEventArgs e)
     {
         if (e.KeyChar == (char)Keys.Enter)
         {
-            tvwExpressionBrowser_DoubleClick(sender, EventArgs.Empty);
+            tvwExpressionBrowser_DoubleClick(sender: sender, e: EventArgs.Empty);
             e.Handled = true;
         }
     }
@@ -1595,13 +1623,13 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
     {
         if (!_loadingTree)
         {
-            OnNodeClick(EventArgs.Empty);
+            OnNodeClick(e: EventArgs.Empty);
         }
     }
 
     public void SetToolTip(string text)
     {
-        toolTip1.SetToolTip(tvwExpressionBrowser, text);
+        toolTip1.SetToolTip(control: tvwExpressionBrowser, caption: text);
     }
 
     public void SelectItem(ISchemaItem item)
@@ -1610,24 +1638,24 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
         ISchemaItem parentItem = item;
         while (parentItem != null)
         {
-            items.Add(parentItem);
+            items.Add(item: parentItem);
             parentItem = parentItem.ParentItem;
         }
-        SchemaItemGroup parentGroup = (items[items.Count - 1] as ISchemaItem).Group;
+        SchemaItemGroup parentGroup = (items[index: items.Count - 1] as ISchemaItem).Group;
         while (parentGroup != null)
         {
-            items.Add(parentGroup);
+            items.Add(item: parentGroup);
             parentGroup = parentGroup.ParentGroup;
         }
         TreeNode foundNode = null;
 
         if (tvwExpressionBrowser.Nodes.Count == 1)
         {
-            if (!tvwExpressionBrowser.Nodes[0].IsExpanded)
+            if (!tvwExpressionBrowser.Nodes[index: 0].IsExpanded)
             {
-                tvwExpressionBrowser.Nodes[0].Expand();
+                tvwExpressionBrowser.Nodes[index: 0].Expand();
             }
-            foreach (TreeNode modelGroupNode in tvwExpressionBrowser.Nodes[0].Nodes)
+            foreach (TreeNode modelGroupNode in tvwExpressionBrowser.Nodes[index: 0].Nodes)
             {
                 foreach (IBrowserNode provider in (modelGroupNode.Tag as IBrowserNode).ChildNodes())
                 {
@@ -1636,7 +1664,7 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
                         if (firstChild is IPersistent)
                         {
                             Key key = (firstChild as IPersistent).PrimaryKey;
-                            if (key.Equals(items[items.Count - 1].PrimaryKey))
+                            if (key.Equals(obj: items[index: items.Count - 1].PrimaryKey))
                             {
                                 modelGroupNode.Expand();
                                 foreach (TreeNode providerNode in modelGroupNode.Nodes)
@@ -1647,7 +1675,7 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
                                         break;
                                     }
                                 }
-                                foundNode = LookUpNode(null, firstChild);
+                                foundNode = LookUpNode(parentNode: null, browserNode: firstChild);
                                 break;
                             }
                         }
@@ -1667,7 +1695,10 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
         for (int i = items.Count - 2; i >= 0; i--)
         {
             foundNode.Expand();
-            TreeNode node = LookUpNode(foundNode, items[i] as IBrowserNode);
+            TreeNode node = LookUpNode(
+                parentNode: foundNode,
+                browserNode: items[index: i] as IBrowserNode
+            );
 
             // node not found, we try to find it in its subitems
             if (node == null)
@@ -1675,7 +1706,7 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
                 foreach (TreeNode ch in foundNode.Nodes)
                 {
                     ch.Expand();
-                    node = LookUpNode(ch, items[i] as IBrowserNode);
+                    node = LookUpNode(parentNode: ch, browserNode: items[index: i] as IBrowserNode);
                     if (node != null)
                     {
                         break;
@@ -1709,7 +1740,7 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
         try
         {
             bool expandNode = false;
-            tnode = LookUpNode(null, node);
+            tnode = LookUpNode(parentNode: null, browserNode: node);
             if (
                 node is DA.ObjectPersistence.IPersistent
                 && (node as DA.ObjectPersistence.IPersistent).IsDeleted
@@ -1736,7 +1767,7 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
                     {
                         parent = item.RootProvider;
                     }
-                    tnode = LookUpNode(null, parent);
+                    tnode = LookUpNode(parentNode: null, browserNode: parent);
                 }
                 if (tnode == null)
                 {
@@ -1751,7 +1782,7 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
                 tnode.Tag = node;
             }
             tvwExpressionBrowser.BeginUpdate();
-            RefreshNode(tnode);
+            RefreshNode(treeNode: tnode);
             if (expandNode)
             {
                 tnode.Expand();
@@ -1765,7 +1796,7 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
                         break;
                     }
                 }
-                tnode = LookUpNode(null, node);
+                tnode = LookUpNode(parentNode: null, browserNode: node);
             }
         }
         finally

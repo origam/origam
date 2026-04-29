@@ -43,10 +43,10 @@ public static class ReportService
             .GetAgent(serviceType: "ReportService", ruleEngine: null, workflowEngine: null);
         reportServiceAgent.MethodName = "GetReport";
         reportServiceAgent.Parameters.Clear();
-        reportServiceAgent.Parameters.Add("Report", reportId);
-        reportServiceAgent.Parameters.Add("Data", data);
-        reportServiceAgent.Parameters.Add("Format", format);
-        reportServiceAgent.Parameters.Add("Parameters", parameters);
+        reportServiceAgent.Parameters.Add(key: "Report", value: reportId);
+        reportServiceAgent.Parameters.Add(key: "Data", value: data);
+        reportServiceAgent.Parameters.Add(key: "Format", value: format);
+        reportServiceAgent.Parameters.Add(key: "Parameters", value: parameters);
         reportServiceAgent.TransactionId = transactionId;
         reportServiceAgent.Run();
         return (byte[])reportServiceAgent.Result;

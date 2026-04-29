@@ -46,14 +46,17 @@ namespace Origam.Server.Model.Chat
         )
         {
             List<OrigamChatParticipant> messages = new List<OrigamChatParticipant>();
-            foreach (DataRow row in datasetParticipants.Tables["BusinessPartner"].Rows)
+            foreach (DataRow row in datasetParticipants.Tables[name: "BusinessPartner"].Rows)
             {
                 messages.Add(
-                    new OrigamChatParticipant(
-                        row.Field<Guid>("Id"),
-                        row.Field<string>("Username"),
-                        row.Field<Guid>("Id").ToString(),
-                        GetStatus(row.Field<string>("Username"), onlineUsers)
+                    item: new OrigamChatParticipant(
+                        id: row.Field<Guid>(columnName: "Id"),
+                        username: row.Field<string>(columnName: "Username"),
+                        avatarUrl: row.Field<Guid>(columnName: "Id").ToString(),
+                        status: GetStatus(
+                            userName: row.Field<string>(columnName: "Username"),
+                            onlineUsers: onlineUsers
+                        )
                     )
                 );
             }
@@ -62,11 +65,11 @@ namespace Origam.Server.Model.Chat
 
         private static string GetStatus(string userName, DataSet onlineUsers)
         {
-            if (!string.IsNullOrEmpty(userName))
+            if (!string.IsNullOrEmpty(value: userName))
             {
-                foreach (DataRow row in onlineUsers.Tables[0].Rows)
+                foreach (DataRow row in onlineUsers.Tables[index: 0].Rows)
                 {
-                    if (userName.Equals(row.Field<string>("UserName")))
+                    if (userName.Equals(value: row.Field<string>(columnName: "UserName")))
                     {
                         return "online";
                     }

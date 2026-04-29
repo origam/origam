@@ -46,21 +46,25 @@ public class CoreHttpTools : IHttpTools
         string overrideContentType
     )
     {
-        response.ContentType = overrideContentType ?? HttpTools.Instance.GetMimeType(fileName);
-        string disposition = GetFileDisposition(request.UserAgent, fileName);
+        response.ContentType =
+            overrideContentType ?? HttpTools.Instance.GetMimeType(fileName: fileName);
+        string disposition = GetFileDisposition(userAgent: request.UserAgent, fileName: fileName);
         if (!isPreview)
         {
             disposition = "attachment; " + disposition;
         }
-        response.AppendHeader("content-length", file == null ? "0" : file.Length.ToString());
-        response.AppendHeader("content-disposition", disposition);
-        response.OutputStreamWrite(file, 0, file.Length);
+        response.AppendHeader(
+            contentDisposition: "content-length",
+            disposition: file == null ? "0" : file.Length.ToString()
+        );
+        response.AppendHeader(contentDisposition: "content-disposition", disposition: disposition);
+        response.OutputStreamWrite(buffer: file, offset: 0, count: file.Length);
     }
 
     public string GetFileDisposition(string userAgent, string fileName)
     {
-        fileName = fileName.Replace(",", "");
-        var encodedFileName = Uri.EscapeDataString(fileName);
+        fileName = fileName.Replace(oldValue: ",", newValue: "");
+        var encodedFileName = Uri.EscapeDataString(stringToEscape: fileName);
         return $"filename=\"{encodedFileName}\"";
     }
 }

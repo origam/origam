@@ -64,36 +64,36 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
     {
         (gViewer as IViewer).MouseDown += OnMouseDown;
         schemaService = ServiceManager.Services.GetService<WorkbenchSchemaService>();
-        taskRunner = new DependencyTaskRunner(persistenceProvider);
+        taskRunner = new DependencyTaskRunner(persistenceProvider: persistenceProvider);
         gViewer.EdgeAdded += OnEdgeAdded;
         gViewer.EdgeRemoved += OnEdgeRemoved;
         edgeInsertionRule = new EdgeInsertionRule(
             viewerToImposeOn: gViewer,
             predicate: (sourceNode, targetNode) =>
             {
-                if (IdTranslator.ToSchemaId(sourceNode) == Guid.Empty)
+                if (IdTranslator.ToSchemaId(node: sourceNode) == Guid.Empty)
                 {
                     return false;
                 }
 
-                if (IdTranslator.ToSchemaId(targetNode) == Guid.Empty)
+                if (IdTranslator.ToSchemaId(node: targetNode) == Guid.Empty)
                 {
                     return false;
                 }
 
-                if (RetrieveItem(sourceNode) is ContextStore)
+                if (RetrieveItem(node: sourceNode) is ContextStore)
                 {
                     return false;
                 }
 
-                if (RetrieveItem(targetNode) is ContextStore)
+                if (RetrieveItem(node: targetNode) is ContextStore)
                 {
                     return false;
                 }
 
-                var sourcesParent = gViewer.Graph.FindParentSubGraph(sourceNode);
-                var targetsParent = gViewer.Graph.FindParentSubGraph(targetNode);
-                return Equals(sourcesParent, targetsParent);
+                var sourcesParent = gViewer.Graph.FindParentSubGraph(node: sourceNode);
+                var targetsParent = gViewer.Graph.FindParentSubGraph(node: targetNode);
+                return Equals(objA: sourcesParent, objB: targetsParent);
             }
         );
         gViewer.DoubleClick += GViewerOnDoubleClick;
@@ -109,7 +109,7 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
         persistenceProvider.InstancePersisted += OnInstancePersisted;
 
         dependencyPainter = new ContextStoreDependencyPainter(
-            gViewer,
+            gViewer: gViewer,
             graphParentItemGetter: () => (ISchemaItem)UpToDateGraphParent
         );
 
@@ -118,9 +118,15 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
 
     public void ReDrawAndKeepFocus()
     {
-        var selectedNodeTracker = new NodePositionTracker(gViewer, nodeSelector.Selected?.Id);
-        Subgraph parentSubGraph = Graph.FindParentSubGraph(nodeSelector.Selected);
-        var parentNodeTracker = new NodePositionTracker(gViewer, parentSubGraph?.Id);
+        var selectedNodeTracker = new NodePositionTracker(
+            gViewer: gViewer,
+            nodeId: nodeSelector.Selected?.Id
+        );
+        Subgraph parentSubGraph = Graph.FindParentSubGraph(node: nodeSelector.Selected);
+        var parentNodeTracker = new NodePositionTracker(
+            gViewer: gViewer,
+            nodeId: parentSubGraph?.Id
+        );
 
         ReDraw();
         ReSelectNode();
@@ -132,7 +138,7 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
 
     private void ReSelectNode()
     {
-        Node nodeToSelect = Graph.FindNodeOrSubgraph(nodeSelector.Selected?.Id);
+        Node nodeToSelect = Graph.FindNodeOrSubgraph(id: nodeSelector.Selected?.Id);
         if (
             nodeToSelect == null
             && nodeSelector.SelectedNodeId != Guid.Empty
@@ -150,8 +156,11 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
         List<string> nodesToExpand = expandSelected
             ? new List<string> { nodeSelector.Selected?.Id }
             : new List<string>();
-        nodesToExpand.AddRange(dependencyPainter.GetNodesToExpand());
-        gViewer.Graph = factory.Draw(UpToDateGraphParent, nodesToExpand);
+        nodesToExpand.AddRange(collection: dependencyPainter.GetNodesToExpand());
+        gViewer.Graph = factory.Draw(
+            graphParent: UpToDateGraphParent,
+            expandedSubgraphNodeIds: nodesToExpand
+        );
         dependencyPainter.Draw();
         if (dependencyPainter.DidDrawSomeEdges)
         {
@@ -167,7 +176,7 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
         {
             schemaItemId = node is IWorkflowSubgraph wfSubgraph
                 ? wfSubgraph.WorkflowItemId
-                : IdTranslator.NodeToSchema(node.Id);
+                : IdTranslator.NodeToSchema(nodeId: node.Id);
             if (schemaItemId == Guid.Empty)
             {
                 return;
@@ -183,12 +192,12 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
 
             schemaItemId = id.Value;
         }
-        ShowEditor(schemaItemId);
+        ShowEditor(schemaItemId: schemaItemId);
     }
 
     private void ShowEditor(Guid schemaItemId)
     {
-        ISchemaItem clickedItem = RetrieveItem(schemaItemId);
+        ISchemaItem clickedItem = RetrieveItem(id: schemaItemId);
         if (clickedItem != null)
         {
             EditSchemaItem cmd = new EditSchemaItem { ShowDialog = true, Owner = clickedItem };
@@ -202,7 +211,7 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
         {
             if (edge.UserData is WorkflowTaskDependency dependencyItem)
             {
-                schemaService.SelectItem(dependencyItem);
+                schemaService.SelectItem(schemaItem: dependencyItem);
             }
         }
     }
@@ -210,34 +219,34 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
     private void OnEdgeRemoved(object sender, EventArgs e)
     {
         Edge edge = (Edge)sender;
-        if (IsContextStoreDependencyArrow(edge) || !ConnectsSchemaItems(edge))
+        if (IsContextStoreDependencyArrow(edge: edge) || !ConnectsSchemaItems(edge: edge))
         {
             return;
         }
-        DeleteDependency(edge);
+        DeleteDependency(edge: edge);
     }
 
     private bool IsContextStoreDependencyArrow(Edge edge)
     {
-        return Graph.AllContextStoreSubgraphs.Any(contextStoreSubgraph =>
-            contextStoreSubgraph.Nodes.Contains(edge.SourceNode)
-            || contextStoreSubgraph.Nodes.Contains(edge.TargetNode)
+        return Graph.AllContextStoreSubgraphs.Any(predicate: contextStoreSubgraph =>
+            contextStoreSubgraph.Nodes.Contains(value: edge.SourceNode)
+            || contextStoreSubgraph.Nodes.Contains(value: edge.TargetNode)
         );
     }
 
     private bool ConnectsSchemaItems(Edge edge)
     {
-        return IdTranslator.NodeToSchema(edge.Source) != Guid.Empty
-            && IdTranslator.NodeToSchema(edge.Target) != Guid.Empty;
+        return IdTranslator.NodeToSchema(nodeId: edge.Source) != Guid.Empty
+            && IdTranslator.NodeToSchema(nodeId: edge.Target) != Guid.Empty;
     }
 
     private void DeleteDependency(Edge edge)
     {
-        ISchemaItem dependentItem = RetrieveItem(edge.Target);
-        Guid sourceId = IdTranslator.NodeToSchema(edge.Source);
+        ISchemaItem dependentItem = RetrieveItem(strId: edge.Target);
+        Guid sourceId = IdTranslator.NodeToSchema(nodeId: edge.Source);
         var workflowTaskDependency = dependentItem
             .ChildItems.OfType<WorkflowTaskDependency>()
-            .First(x => x.WorkflowTaskId == sourceId);
+            .First(predicate: x => x.WorkflowTaskId == sourceId);
         workflowTaskDependency.IsDeleted = true;
         workflowTaskDependency.Persist();
     }
@@ -245,18 +254,18 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
     private void OnEdgeAdded(object sender, EventArgs e)
     {
         Edge edge = (Edge)sender;
-        if (IsContextStoreDependencyArrow(edge) || !ConnectsSchemaItems(edge))
+        if (IsContextStoreDependencyArrow(edge: edge) || !ConnectsSchemaItems(edge: edge))
         {
             return;
         }
-        var workflowTaskDependency = AddDependency(edge.Source, edge.Target);
+        var workflowTaskDependency = AddDependency(source: edge.Source, target: edge.Target);
         edge.UserData = workflowTaskDependency;
     }
 
     private WorkflowTaskDependency AddDependency(string source, string target)
     {
-        var independentItem = RetrieveItem(source) as IWorkflowStep;
-        ISchemaItem dependentItem = RetrieveItem(target);
+        var independentItem = RetrieveItem(strId: source) as IWorkflowStep;
+        ISchemaItem dependentItem = RetrieveItem(strId: target);
         var workflowTaskDependency = new WorkflowTaskDependency
         {
             SchemaExtensionId = dependentItem.SchemaExtensionId,
@@ -274,17 +283,17 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
         {
             Guid schemaItemId = node is IWorkflowSubgraph workflowSubgraph
                 ? workflowSubgraph.WorkflowItemId
-                : IdTranslator.ToSchemaId(node);
+                : IdTranslator.ToSchemaId(node: node);
             if (schemaItemId == Guid.Empty)
             {
                 return false;
             }
 
-            var schemaItem = RetrieveItem(schemaItemId);
+            var schemaItem = RetrieveItem(id: schemaItemId);
             if (schemaItem != null)
             {
-                schemaService.SelectItem(schemaItem);
-                Guid activeNodeId = Guid.Parse(schemaService.ActiveNode.NodeId);
+                schemaService.SelectItem(schemaItem: schemaItem);
+                Guid activeNodeId = Guid.Parse(input: schemaService.ActiveNode.NodeId);
                 return schemaItemId == activeNodeId;
             }
         }
@@ -299,13 +308,14 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
         }
 
         bool childPersisted =
-            UpToDateGraphParent?.ChildrenRecursive.Any(x => x.Id == persistedSchemaItem.Id)
-            ?? false;
+            UpToDateGraphParent?.ChildrenRecursive.Any(predicate: x =>
+                x.Id == persistedSchemaItem.Id
+            ) ?? false;
 
         if (childPersisted)
         {
-            UpdateNodeOf(persistedSchemaItem);
-            taskRunner.UpdateDependencies(persistedSchemaItem);
+            UpdateNodeOf(persistedSchemaItem: persistedSchemaItem);
+            taskRunner.UpdateDependencies(persistedSchemaItem: persistedSchemaItem);
             return;
         }
 
@@ -313,11 +323,11 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
         {
             if (persistedSchemaItem is WorkflowTaskDependency taskDependency)
             {
-                RemoveEdge(taskDependency.WorkflowTaskId);
+                RemoveEdge(sourceId: taskDependency.WorkflowTaskId);
             }
             else
             {
-                RemoveNode(persistedSchemaItem.Id);
+                RemoveNode(schemaItemId: persistedSchemaItem.Id);
             }
         }
     }
@@ -325,11 +335,11 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
     private void UpdateNodeOf(ISchemaItem persistedSchemaItem)
     {
         Node node = gViewer.Graph.FindNodeOrSubgraph(
-            IdTranslator.SchemaToFirstNode(persistedSchemaItem.Id)
+            id: IdTranslator.SchemaToFirstNode(schemaItemId: persistedSchemaItem.Id)
         );
         if (node == null)
         {
-            TrySelectParentStep(persistedSchemaItem);
+            TrySelectParentStep(persistedSchemaItem: persistedSchemaItem);
             ReDrawAndKeepFocus();
         }
         else
@@ -350,24 +360,26 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
             }
 
             Node stepNode = gViewer.Graph.FindNodeOrSubgraph(
-                IdTranslator.SchemaToFirstNode(parentStep.Id)
+                id: IdTranslator.SchemaToFirstNode(schemaItemId: parentStep.Id)
             );
             nodeSelector.Selected = stepNode;
         }
     }
 
     private IWorkflowBlock UpToDateGraphParent =>
-        persistenceProvider.RetrieveInstance(typeof(ISchemaItem), new Key(graphParentId))
-        as IWorkflowBlock;
+        persistenceProvider.RetrieveInstance(
+            type: typeof(ISchemaItem),
+            primaryKey: new Key(id: graphParentId)
+        ) as IWorkflowBlock;
 
     private void RemoveEdge(Guid sourceId)
     {
         bool edgeWasRemovedOutsideDiagram = gViewer
             .Graph.RootSubgraph.GetAllNodes()
-            .SelectMany(node => node.Edges.Select(edge => edge.Source))
-            .Select(IdTranslator.NodeToSchema)
-            .Where(id => id != Guid.Empty)
-            .Any(targetNodeId => targetNodeId == sourceId);
+            .SelectMany(selector: node => node.Edges.Select(selector: edge => edge.Source))
+            .Select(selector: IdTranslator.NodeToSchema)
+            .Where(predicate: id => id != Guid.Empty)
+            .Any(predicate: targetNodeId => targetNodeId == sourceId);
         if (edgeWasRemovedOutsideDiagram)
         {
             ReDrawAndKeepFocus();
@@ -381,25 +393,27 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
         {
             nodeSelector.Selected = null;
         }
-        Node node = gViewer.Graph.FindNodeOrSubgraph(IdTranslator.SchemaToFirstNode(schemaItemId));
+        Node node = gViewer.Graph.FindNodeOrSubgraph(
+            id: IdTranslator.SchemaToFirstNode(schemaItemId: schemaItemId)
+        );
         if (node == null)
         {
             return;
         }
 
-        Subgraph parentSubgraph = gViewer.Graph.FindParentSubGraph(node);
+        Subgraph parentSubgraph = gViewer.Graph.FindParentSubGraph(node: node);
         if (deletedNodeWasSelected)
         {
             nodeSelector.Selected = parentSubgraph;
         }
-        gViewer.Graph.RemoveNodeEverywhere(node);
-        IViewerNode viewerNode = gViewer.FindViewerNode(node);
+        gViewer.Graph.RemoveNodeEverywhere(node: node);
+        IViewerNode viewerNode = gViewer.FindViewerNode(node: node);
         if (viewerNode == null)
         {
             return;
         }
 
-        gViewer.RemoveNode(viewerNode, true);
+        gViewer.RemoveNode(node: viewerNode, registerForUndo: true);
         bool deletedNodeItem = !(node is Subgraph);
         bool deletedLastNode = !parentSubgraph.Nodes.Any();
         if (deletedLastNode || deletedNodeItem)
@@ -416,42 +430,52 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
             return;
         }
 
-        HandleSelectAndRedraw(e);
+        HandleSelectAndRedraw(eventArgs: e);
         TrySelectActiveNodeInModelView();
         TrySelectActiveEdgeInModelView();
         if (e.RightButtonIsPressed && !e.Handled)
         {
-            mouseRightButtonDownPoint = new System.Drawing.Point(e.X, e.Y);
+            mouseRightButtonDownPoint = new System.Drawing.Point(x: e.X, y: e.Y);
             ContextMenuStrip cm = BuildContextMenu();
-            cm.Show(parentForm, mouseRightButtonDownPoint);
+            cm.Show(control: parentForm, position: mouseRightButtonDownPoint);
         }
         gViewer.ResumeLayout();
     }
 
     private void HandleSelectAndRedraw(MsaglMouseEventArgs eventArgs)
     {
-        gViewer.Hit(new MouseEventArgs(MouseButtons.None, 0, eventArgs.X, eventArgs.Y, 0));
+        gViewer.Hit(
+            args: new MouseEventArgs(
+                button: MouseButtons.None,
+                clicks: 0,
+                x: eventArgs.X,
+                y: eventArgs.Y,
+                delta: 0
+            )
+        );
         if (gViewer.SelectedObject is Node node)
         {
-            if (Equals(nodeSelector.Selected, node))
+            if (Equals(objA: nodeSelector.Selected, objB: node))
             {
                 if (nodeSelector.MarkedForExpansion == false && eventArgs.LeftButtonIsPressed)
                 {
                     nodeSelector.MarkedForExpansion = true;
-                    RedrawAndSelect(node);
+                    RedrawAndSelect(node: node);
                 }
                 return;
             }
 
             nodeSelector.MarkedForExpansion = eventArgs.LeftButtonIsPressed;
-            if (Graph.AreRelatives(nodeSelector.Selected, node) && !(node is Subgraph))
+            if (
+                Graph.AreRelatives(node1: nodeSelector.Selected, node2: node) && !(node is Subgraph)
+            )
             {
                 nodeSelector.Selected = node;
                 gViewer.Invalidate();
                 return;
             }
 
-            RedrawAndSelect(node);
+            RedrawAndSelect(node: node);
         }
     }
 
@@ -463,20 +487,24 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
 
     private ISchemaItem RetrieveItem(Node node)
     {
-        return RetrieveItem(IdTranslator.ToSchemaId(node));
+        return RetrieveItem(id: IdTranslator.ToSchemaId(node: node));
     }
 
     private ISchemaItem RetrieveItem(Guid id)
     {
-        return persistenceProvider.RetrieveInstance(typeof(ISchemaItem), new Key(id))
-            as ISchemaItem;
+        return persistenceProvider.RetrieveInstance(
+                type: typeof(ISchemaItem),
+                primaryKey: new Key(id: id)
+            ) as ISchemaItem;
     }
 
     private ISchemaItem RetrieveItem(string strId)
     {
-        Guid id = IdTranslator.NodeToSchema(strId);
-        return persistenceProvider.RetrieveInstance(typeof(ISchemaItem), new Key(id))
-            as ISchemaItem;
+        Guid id = IdTranslator.NodeToSchema(nodeId: strId);
+        return persistenceProvider.RetrieveInstance(
+                type: typeof(ISchemaItem),
+                primaryKey: new Key(id: id)
+            ) as ISchemaItem;
     }
 
     public void Dispose()

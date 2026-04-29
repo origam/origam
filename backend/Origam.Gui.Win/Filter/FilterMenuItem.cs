@@ -30,7 +30,7 @@ namespace Origam.Gui.Win;
 public class FilterMenuItem : MenuItem
 {
     public FilterMenuItem(string name)
-        : base(name) { }
+        : base(text: name) { }
 
     private OrigamPanelFilter.PanelFilterRow _filter;
     public OrigamPanelFilter.PanelFilterRow Filter
@@ -43,10 +43,10 @@ public class FilterMenuItem : MenuItem
 public class TemplateMenuItem : MenuItem
 {
     public TemplateMenuItem(string name)
-        : base(name) { }
+        : base(text: name) { }
 
     public TemplateMenuItem(string name, DataStructureTemplate template)
-        : base(name)
+        : base(text: name)
     {
         this.Template = template;
     }

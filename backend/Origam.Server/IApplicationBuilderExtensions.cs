@@ -40,7 +40,7 @@ public static class IApplicationBuilderExtensions
     public static void UseCustomSpa(this IApplicationBuilder app, string pathToClientApp)
     {
         app.Use(
-            (context, next) =>
+            middleware: (context, next) =>
             {
                 if (context.GetEndpoint() != null)
                 {
@@ -49,8 +49,8 @@ public static class IApplicationBuilderExtensions
                 // If it's a GET to a non-file path, serve index.html (classic SPA fallback)
                 if (
                     context.Request.Method == "GET"
-                    && !Path.HasExtension(context.Request.Path.Value)
-                    && !context.Request.Path.Value.StartsWith("/assets")
+                    && !Path.HasExtension(path: context.Request.Path.Value)
+                    && !context.Request.Path.Value.StartsWith(value: "/assets")
                 )
                 {
                     context.Request.Path = "/index.html";
@@ -59,7 +59,10 @@ public static class IApplicationBuilderExtensions
             }
         );
         app.UseStaticFiles(
-            new StaticFileOptions { FileProvider = new PhysicalFileProvider(pathToClientApp) }
+            options: new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(root: pathToClientApp),
+            }
         );
     }
 
@@ -71,12 +74,16 @@ public static class IApplicationBuilderExtensions
     {
         foreach (var controllerDllName in startUpConfiguration.ExtensionDlls)
         {
-            var customControllerAssembly = Assembly.LoadFrom(controllerDllName);
+            var customControllerAssembly = Assembly.LoadFrom(assemblyFile: controllerDllName);
             customControllerAssembly
                 .GetTypes()
-                .Where(type => typeof(IWebApplicationExtender).IsAssignableFrom(type))
-                .Select(type => (IWebApplicationExtender)Activator.CreateInstance(type))
-                .ForEach(extender => extender.Extend(app, configuration));
+                .Where(predicate: type => typeof(IWebApplicationExtender).IsAssignableFrom(c: type))
+                .Select(selector: type =>
+                    (IWebApplicationExtender)Activator.CreateInstance(type: type)
+                )
+                .ForEach(action: extender =>
+                    extender.Extend(app: app, configuration: configuration)
+                );
         }
     }
 
@@ -87,10 +94,11 @@ public static class IApplicationBuilderExtensions
     )
     {
         app.MapWhen(
-            context => IsPublicUserApiRoute(startUpConfiguration, context),
-            publicBranch =>
+            predicate: context =>
+                IsPublicUserApiRoute(startUpConfiguration: startUpConfiguration, context: context),
+            configuration: publicBranch =>
             {
-                publicBranch.UseUserApiAuthentication(openIddictConfig);
+                publicBranch.UseUserApiAuthentication(openIddictConfig: openIddictConfig);
 
                 if (startUpConfiguration.EnableMiniProfiler)
                 {
@@ -100,12 +108,16 @@ public static class IApplicationBuilderExtensions
             }
         );
         app.MapWhen(
-            context => IsRestrictedUserApiRoute(startUpConfiguration, context),
-            privateBranch =>
+            predicate: context =>
+                IsRestrictedUserApiRoute(
+                    startUpConfiguration: startUpConfiguration,
+                    context: context
+                ),
+            configuration: privateBranch =>
             {
-                privateBranch.UseUserApiAuthentication(openIddictConfig);
+                privateBranch.UseUserApiAuthentication(openIddictConfig: openIddictConfig);
                 privateBranch.Use(
-                    async (context, next) =>
+                    middleware: async (context, next) =>
                     {
                         // Authentication middleware doesn't short-circuit the request itself
                         // we must do that here.
@@ -145,15 +157,15 @@ public static class IApplicationBuilderExtensions
     public static void UseWorkQueueApi(this IApplicationBuilder app)
     {
         app.MapWhen(
-            context => context.Request.Path.ToString().StartsWith("/workQueue"),
-            apiBranch =>
+            predicate: context => context.Request.Path.ToString().StartsWith(value: "/workQueue"),
+            configuration: apiBranch =>
             {
                 apiBranch.UseMiddleware<UserApiTokenAuthenticationMiddleware>();
                 apiBranch.UseRouting();
                 apiBranch.UseAuthentication();
                 apiBranch.UseAuthorization();
 
-                apiBranch.UseEndpoints(endpoints =>
+                apiBranch.UseEndpoints(configure: endpoints =>
                 {
                     endpoints.MapControllerRoute(
                         name: "workQueue",
@@ -169,8 +181,8 @@ public static class IApplicationBuilderExtensions
         HttpContext context
     )
     {
-        return startUpConfiguration.UserApiRestrictedRoutes.Any(route =>
-            context.Request.Path.ToString().StartsWith(route)
+        return startUpConfiguration.UserApiRestrictedRoutes.Any(predicate: route =>
+            context.Request.Path.ToString().StartsWith(value: route)
         );
     }
 
@@ -179,8 +191,8 @@ public static class IApplicationBuilderExtensions
         HttpContext context
     )
     {
-        return startUpConfiguration.UserApiPublicRoutes.Any(route =>
-            context.Request.Path.ToString().StartsWith(route)
+        return startUpConfiguration.UserApiPublicRoutes.Any(predicate: route =>
+            context.Request.Path.ToString().StartsWith(value: route)
         );
     }
 
@@ -191,11 +203,11 @@ public static class IApplicationBuilderExtensions
     )
     {
         app.MapWhen(
-            IsSoapApiRoute,
-            apiBranch =>
+            predicate: IsSoapApiRoute,
+            configuration: apiBranch =>
             {
                 apiBranch.Use(
-                    async (context, next) =>
+                    middleware: async (context, next) =>
                     {
                         // Authentication middleware doesn't short-circuit the request itself
                         // we must do that here.
@@ -212,14 +224,14 @@ public static class IApplicationBuilderExtensions
                     apiBranch.UseMiddleware<ReturnOldDotNetAssemblyReferencesInSoapMiddleware>();
                 }
                 apiBranch.UseSoapEndpoint<DataServiceSoap>(
-                    "/soap/DataService",
-                    new SoapEncoderOptions(),
-                    SoapSerializer.XmlSerializer
+                    path: "/soap/DataService",
+                    encoder: new SoapEncoderOptions(),
+                    serializer: SoapSerializer.XmlSerializer
                 );
                 apiBranch.UseSoapEndpoint<WorkflowServiceSoap>(
-                    "/soap/WorkflowService",
-                    new SoapEncoderOptions(),
-                    SoapSerializer.XmlSerializer
+                    path: "/soap/WorkflowService",
+                    encoder: new SoapEncoderOptions(),
+                    serializer: SoapSerializer.XmlSerializer
                 );
             }
         );
@@ -227,6 +239,6 @@ public static class IApplicationBuilderExtensions
 
     private static bool IsSoapApiRoute(HttpContext context)
     {
-        return context.Request.Path.ToString().StartsWith("/soap");
+        return context.Request.Path.ToString().StartsWith(value: "/soap");
     }
 }
