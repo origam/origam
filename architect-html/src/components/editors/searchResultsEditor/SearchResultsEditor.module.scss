@@ -84,21 +84,38 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   }
 }
 
-.mono {
-  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-  font-size: 14px;
-}
-
-.openButton {
-  font-size: 14px;
-  padding: 0.2rem 0.5rem;
-  border: 1px solid var(--background4);
-  border-radius: 3px;
-  background-color: var(--background1);
+.orphanedRow {
+  border-bottom: 1px solid var(--background3);
   cursor: pointer;
+  background-color: rgba(229, 62, 62, 0.12);
 
   &:hover {
-    background-color: var(--background3);
+    background-color: rgba(229, 62, 62, 0.2);
+  }
+
+  td {
+    padding: 0.25rem 0.5rem;
+    color: var(--background7);
+  }
+}
+
+.statusColumn {
+  width: 1%;
+  white-space: nowrap;
+}
+
+.statusCell {
+  width: 1%;
+  white-space: nowrap;
+}
+
+.orphanedMarker {
+  display: inline-flex;
+  align-items: center;
+  color: #c53030;
+
+  svg {
+    flex-shrink: 0;
   }
 }
 

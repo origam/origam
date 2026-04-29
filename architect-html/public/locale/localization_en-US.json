@@ -61,6 +61,7 @@
   "editor_search_results_empty": "No results found.",
   "editor_search_results_references_title": "References of: {0}",
   "editor_search_results_dependencies_title": "Dependencies of: {0}",
+  "editor_search_results_orphaned_note": "Orphaned reference — parent chain is broken",
   "blob_control_label": "Load",
   "check_list_option_A": "Option A",
   "check_list_option_B": "Option B",
