@@ -21,19 +21,24 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 #endregion
 
+using Origam.Architect.Server.Exceptions;
 using Origam.Architect.Server.Models.Requests;
 using Origam.Schema;
 using Origam.Workbench.Services;
 
 namespace Origam.Architect.Server.Services;
 
-public class SearchService(IPersistenceService persistenceService, SchemaService schemaService)
+public class SearchService(
+    IPersistenceService persistenceService,
+    SchemaService schemaService,
+    ILogger<SearchService> logger
+)
 {
     public IEnumerable<SearchResult> SearchByText(string text)
     {
         List<Guid> referencePackages = GetReferencePackages();
         var results = persistenceService.SchemaProvider.FullTextSearch<ISchemaItem>(text);
-        return results.Select(result => GetResult(result, referencePackages));
+        return results.Where(x => x != null).Select(result => GetResult(result, referencePackages));
     }
 
     public IEnumerable<SearchResult> FindReferences(Guid schemaItemId)
@@ -70,53 +75,91 @@ public class SearchService(IPersistenceService persistenceService, SchemaService
 
     private SearchResult GetResult(ISchemaItem item, List<Guid> referencePackages)
     {
-        if (item == null)
+        try
         {
-            return new SearchResult();
+            ISchemaItem root = GetRoot(item);
+            return new SearchResult
+            {
+                SchemaId = item.Id,
+                Type = item.ModelDescription() ?? item.ItemType,
+                RootType = root.ModelDescription() ?? root.ItemType,
+                FoundIn = item.Path,
+                Folder = root.Group?.Path ?? "",
+                Package = item.PackageName,
+                PackageReference = referencePackages.Contains(item.SchemaExtensionId),
+                ParentNodeIds = GetParentNodeIds(item, root),
+                IsOrphaned = false,
+            };
         }
-        string name = item.ModelDescription() ?? item.ItemType;
-        string rootName = item.RootItem.ModelDescription() ?? item.RootItem.ItemType;
-        var searchResult = new SearchResult
+        catch (OrphanedSchemaReferenceException ex)
         {
-            FoundIn = item.Path,
-            RootType = rootName,
-            Type = name,
-            SchemaId = item.Id,
-            Folder = item.RootItem.Group == null ? "" : item.RootItem.Group.Path,
-            Package = item.PackageName,
-            PackageReference = referencePackages.Contains(item.SchemaExtensionId),
-            ParentNodeIds = GetParentNodeIds(item),
-        };
-        return searchResult;
+            if (logger.IsEnabled(LogLevel.Warning))
+            {
+                logger.LogWarning(
+                    ex,
+                    $"Orphaned reference while building search result for schema item {item.Id}"
+                );
+            }
+            return new SearchResult
+            {
+                SchemaId = item.Id,
+                Type = item.ModelDescription() ?? item.ItemType,
+                FoundIn = item.Name ?? item.Id.ToString(),
+                IsOrphaned = true,
+            };
+        }
     }
 
-    private static List<string> GetParentNodeIds(ISchemaItem item)
+    private static ISchemaItem GetRoot(ISchemaItem item)
     {
-        if (item?.RootItem?.RootProvider is not AbstractSchemaItemProvider provider)
+        try
         {
-            return [];
+            ISchemaItem root = item;
+            for (ISchemaItem parent = item.ParentItem; parent != null; parent = parent.ParentItem)
+            {
+                root = parent;
+            }
+            return root;
         }
-
-        var ids = new List<string>();
-
-        AddFolderNameIfAny(ids, item);
-
-        for (var parent = item.ParentItem; parent != null; parent = parent.ParentItem)
+        catch (Exception ex)
         {
-            ids.Add(parent.Id.ToString());
-            AddFolderNameIfAny(ids, parent);
+            throw new OrphanedSchemaReferenceException(item.Id, ex);
         }
+    }
 
-        for (var group = item.RootItem.Group; group != null; group = group.ParentGroup)
+    private static List<string> GetParentNodeIds(ISchemaItem item, ISchemaItem root)
+    {
+        try
         {
-            ids.Add(group.Id.ToString());
+            if (root.RootProvider is not AbstractSchemaItemProvider provider)
+            {
+                return [];
+            }
+
+            var ids = new List<string>();
+            AddFolderNameIfAny(ids, item);
+
+            for (ISchemaItem parent = item.ParentItem; parent != null; parent = parent.ParentItem)
+            {
+                ids.Add(parent.Id.ToString());
+                AddFolderNameIfAny(ids, parent);
+            }
+
+            for (SchemaItemGroup group = root.Group; group != null; group = group.ParentGroup)
+            {
+                ids.Add(group.Id.ToString());
+            }
+
+            ids.Add(provider.NodeId);
+            ids.Add(provider.Group);
+            ids.Reverse();
+
+            return ids;
         }
-
-        ids.Add(provider.NodeId);
-        ids.Add(provider.Group);
-
-        ids.Reverse();
-        return ids;
+        catch (Exception ex)
+        {
+            throw new OrphanedSchemaReferenceException(item.Id, ex);
+        }
 
         static void AddFolderNameIfAny(List<string> target, ISchemaItem schemaItem)
         {

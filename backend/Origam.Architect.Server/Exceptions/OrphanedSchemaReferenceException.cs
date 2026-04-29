@@ -1,6 +1,7 @@
-﻿#region license
+#region license
+
 /*
-Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+Copyright 2005 - 2026 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -17,19 +18,18 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
+
 #endregion
 
-namespace Origam.Architect.Server.Models.Requests;
+namespace Origam.Architect.Server.Exceptions;
 
-public class SearchResult
+public class OrphanedSchemaReferenceException : Exception
 {
-    public string FoundIn { get; set; }
-    public string RootType { get; set; }
-    public string Type { get; set; }
-    public string Folder { get; set; }
-    public string Package { get; set; }
-    public bool PackageReference { get; set; }
-    public Guid SchemaId { get; set; }
-    public List<string> ParentNodeIds { get; set; }
-    public bool IsOrphaned { get; set; }
+    public Guid ItemId { get; }
+
+    public OrphanedSchemaReferenceException(Guid itemId, Exception inner)
+        : base($"Schema item {itemId} has a broken parent chain", inner)
+    {
+        ItemId = itemId;
+    }
 }

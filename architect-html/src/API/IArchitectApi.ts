@@ -177,6 +177,7 @@ export interface ISearchResult {
   packageReference: boolean;
   schemaId: string;
   parentNodeIds: string[];
+  isOrphaned: boolean;
 }
 
 export interface ISearchResultsEditorData {
