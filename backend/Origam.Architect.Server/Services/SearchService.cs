@@ -38,7 +38,11 @@ public class SearchService(
     {
         List<Guid> referencePackages = GetReferencePackages();
         var results = persistenceService.SchemaProvider.FullTextSearch<ISchemaItem>(text: text);
-        return results.Where(predicate: x => x != null).Select(selector: result => GetResult(item: result, referencePackages: referencePackages));
+        return results
+            .Where(predicate: x => x != null)
+            .Select(selector: result =>
+                GetResult(item: result, referencePackages: referencePackages)
+            );
     }
 
     public IEnumerable<SearchResult> FindReferences(Guid schemaItemId)
