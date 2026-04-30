@@ -50,6 +50,7 @@ import { SearchResultsEditorState } from '@editors/searchResultsEditor/SearchRes
 import { XsltEditorState } from '@editors/gridEditor/XsltEditorState.ts';
 import XsltEditor from '@editors/xsltEditor/XsltEditor';
 import { FlowHandlerInput } from '@errors/runInFlowWithHandler';
+import { UIState } from '@stores/UiState';
 import { CancellablePromise } from 'mobx/dist/api/flow';
 
 export function getEditorContainer(args: {
@@ -58,9 +59,10 @@ export function getEditorContainer(args: {
   propertiesState: PropertiesState;
   architectApi: IArchitectApi;
   modelTreeState: ModelTreeState;
+  uiState: UIState;
   runGeneratorHandled: (args: FlowHandlerInput) => CancellablePromise<any>;
 }) {
-  const { editorType, editorData, propertiesState, architectApi, modelTreeState } = args;
+  const { editorType, editorData, propertiesState, architectApi, modelTreeState, uiState } = args;
   const { node, data, isDirty } = editorData;
 
   if (editorType === 'DeploymentScriptsGeneratorEditor') {
@@ -76,6 +78,7 @@ export function getEditorContainer(args: {
       currentDeploymentVersionId,
       architectApi,
       modelTreeState,
+      uiState,
     );
 
     return new EditorContainer(

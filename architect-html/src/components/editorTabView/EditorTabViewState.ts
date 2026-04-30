@@ -49,13 +49,17 @@ export class EditorTabViewState {
     this.runGeneratorHandled = runInFlowWithHandler(rootStore.errorDialogController);
   }
 
-  *initializeOpenEditors(): Generator<Promise<IApiEditorData[]>, void, IApiEditorData[]> {
+  *initializeOpenEditors(): Generator<Promise<unknown>, void, any> {
     const openEditorsData = (yield this.architectApi.getOpenEditors()) as IApiEditorData[];
     this.editorsContainers = openEditorsData.map(data => this.toEditor(data)) as EditorContainer[];
     if (this.editorsContainers.length > 0) {
       this.setActiveEditor(
         this.editorsContainers[this.editorsContainers.length - 1].state.editorId,
       );
+    }
+
+    if (this.rootStore.uiState.getDsGeneratorState().isOpen) {
+      yield* this.openDeploymentScriptsGeneratorEditor()();
     }
   }
 
@@ -69,6 +73,7 @@ export class EditorTabViewState {
       propertiesState: this.rootStore.propertiesState,
       architectApi: this.architectApi,
       modelTreeState: this.rootStore.modelTreeState,
+      uiState: this.rootStore.uiState,
       runGeneratorHandled: this.runGeneratorHandled,
     });
   }
@@ -119,6 +124,7 @@ export class EditorTabViewState {
 
       const editorData = new EditorData(tempEditorData, null);
       this.openEditor(editorData, 'DeploymentScriptsGeneratorEditor');
+      this.rootStore.uiState.setDsGeneratorState({ isOpen: true });
     }.bind(this);
   }
 
@@ -171,6 +177,7 @@ export class EditorTabViewState {
       propertiesState: this.rootStore.propertiesState,
       architectApi: this.architectApi,
       modelTreeState: this.rootStore.modelTreeState,
+      uiState: this.rootStore.uiState,
       runGeneratorHandled: this.runGeneratorHandled,
     });
     if (!editor) {
@@ -210,11 +217,18 @@ export class EditorTabViewState {
         }
       }
 
+      const closingEditor = this.editorsContainers.find(
+        (editor: EditorContainer) => editor.state.editorId === editorId,
+      );
+      closingEditor?.state.dispose?.();
+
       this.editorsContainers = this.editorsContainers.filter(
         (editor: EditorContainer) => editor.state.editorId !== editorId,
       );
 
-      if (editorId !== DeploymentScriptsGeneratorEditorId && editorId !== SearchEditorId) {
+      if (editorId === DeploymentScriptsGeneratorEditorId) {
+        this.rootStore.uiState.setDsGeneratorState({ isOpen: false });
+      } else if (editorId !== SearchEditorId) {
         yield this.architectApi.closeEditor(editorId);
       }
 

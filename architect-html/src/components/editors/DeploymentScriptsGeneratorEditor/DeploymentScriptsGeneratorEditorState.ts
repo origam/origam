@@ -20,7 +20,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { IEditorState } from '@/components/editorTabView/IEditorState';
 import { ModelTreeState } from '@/components/modelTree/ModelTreeState';
 import { IArchitectApi, IDatabaseResult, IDeploymentVersion } from '@api/IArchitectApi';
-import { computed, flow, observable } from 'mobx';
+import { UIState } from '@stores/UiState';
+import { computed, flow, observable, reaction } from 'mobx';
+
+export const DEFAULT_RESULT_FILTER = 'MissingInDatabase';
 
 export default class DeploymentScriptsGeneratorEditorState implements IEditorState {
   @observable accessor results: IDatabaseResult[];
@@ -29,10 +32,12 @@ export default class DeploymentScriptsGeneratorEditorState implements IEditorSta
   @observable accessor selectedItems: Set<string> = new Set();
   @observable accessor possibleDeploymentVersions: IDeploymentVersion[];
   @observable accessor currentDeploymentVersionId: string | null;
-  @observable accessor resultFilter: string = 'MissingInDatabase';
+  @observable accessor resultFilter: string = DEFAULT_RESULT_FILTER;
   @observable accessor selectedDeploymentVersionId: string | null = null;
   @observable accessor selectedPlatform: string | null = null;
   @observable accessor isPreviewOpen = false;
+
+  private reactionDisposer: () => void;
 
   label = 'Deployment Scripts Generator';
 
@@ -59,6 +64,7 @@ export default class DeploymentScriptsGeneratorEditorState implements IEditorSta
     currentDeploymentVersionId: string | null,
     protected architectApi: IArchitectApi,
     protected modelTreeState: ModelTreeState,
+    protected uiState: UIState,
   ) {
     this.results = results ?? [];
     this.possibleDeploymentVersions = possibleDeploymentVersions ?? [];
@@ -67,6 +73,33 @@ export default class DeploymentScriptsGeneratorEditorState implements IEditorSta
     if (this.uniquePlatforms.length > 0) {
       this.selectedPlatform = this.uniquePlatforms[0];
     }
+
+    const persisted = uiState.getDsGeneratorState();
+    if (persisted.selectedPlatform && this.uniquePlatforms.includes(persisted.selectedPlatform)) {
+      this.selectedPlatform = persisted.selectedPlatform;
+    }
+    if (persisted.resultFilter && this.uniqueResultTypes.includes(persisted.resultFilter)) {
+      this.resultFilter = persisted.resultFilter;
+    }
+    if (
+      persisted.selectedDeploymentVersionId &&
+      this.possibleDeploymentVersions.some(v => v.id === persisted.selectedDeploymentVersionId)
+    ) {
+      this.selectedDeploymentVersionId = persisted.selectedDeploymentVersionId;
+    }
+
+    this.reactionDisposer = reaction(
+      () => ({
+        selectedPlatform: this.selectedPlatform,
+        resultFilter: this.resultFilter,
+        selectedDeploymentVersionId: this.selectedDeploymentVersionId,
+      }),
+      data => uiState.setDsGeneratorState(data),
+    );
+  }
+
+  dispose() {
+    this.reactionDisposer();
   }
 
   save(): Generator<Promise<any>, void, any> {
