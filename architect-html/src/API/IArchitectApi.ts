@@ -231,7 +231,7 @@ export interface IModelChange {
 export interface IPropertyChange {
   name: string;
   controlPropertyId: string | null;
-  value: string;
+  value: string | null;
 }
 
 export interface ISectionEditorModel {
