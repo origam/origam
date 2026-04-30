@@ -70,8 +70,8 @@ public sealed class ParameterNamingAnalyzer : DiagnosticAnalyzer
             return;
         }
 
-        var parameterCount = methodSymbol.Parameters.Length;
-        if (parameterCount <= 1)
+        var argumentCount = argumentList.Arguments.Count;
+        if (argumentCount <= 1)
         {
             return;
         }

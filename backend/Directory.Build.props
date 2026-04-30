@@ -41,6 +41,10 @@
                                   PrivateAssets="all" IncludeAssets="build;analyzers;buildtransitive"/>
                 <EditorConfigFiles Include="$(MSBuildThisFileDirectory)origam.globalconfig"
                                    Condition="'$(DisableMeziantouAnalyzer)' != 'true'"/>
+                <ProjectReference Include="$(MSBuildThisFileDirectory)Origam.Analyzers\Origam.Analyzers.csproj"
+                                  OutputItemType="Analyzer"
+                                  ReferenceOutputAssembly="false"
+                                  Condition="'$(MSBuildProjectName)' != 'Origam.Analyzers'"/>
             </ItemGroup>
 
             <PropertyGroup Condition="'$(Configuration)' == 'Release Server' or '$(Configuration)' == 'Release Architect Server' or '$(Configuration)' == 'Release Architect'">
