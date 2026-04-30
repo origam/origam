@@ -120,7 +120,12 @@ public class DateCompleterConfig
     public static DateCompleterConfig Create(IConfigurationSection parentSection)
     {
         var section = parentSection.GetSection("DateCompleterConfig");
-        bool parseSuccess = Enum.TryParse<DateSequence>(section?["DateSequence"], out var sequence);
+
+        bool parseSuccess = Enum.TryParse<DateSequence>(
+            value: section?["DateSequence"],
+            result: out var sequence
+        );
+
         if (!parseSuccess)
         {
             sequence = Configuration.DateSequence.DayMonthYear;
