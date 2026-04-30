@@ -303,7 +303,7 @@ export enum OrigamDataType {
 
 export interface IPropertyUpdate {
   propertyName: string;
-  value: any;
+  value: PropertyValue;
   errors: string[];
   dropDownValues: IDropDownValue[];
 }
@@ -355,6 +355,8 @@ export interface IPackage {
 
 export type PropertyType = 'boolean' | 'enum' | 'string' | 'integer' | 'float' | 'looukup';
 
+export type PropertyValue = boolean | number | string | string[] | null;
+
 export interface IDeploymentScriptsGeneratorEditorData {
   possibleDeploymentVersions: IDeploymentVersion[];
   currentDeploymentVersionId: string | null;
@@ -370,7 +372,7 @@ export interface IApiEditorProperty {
   name: string;
   controlPropertyId: string | null;
   type: PropertyType;
-  value: any;
+  value: PropertyValue;
   dropDownValues: IDropDownValue[];
   category: string | null;
   description: string;
