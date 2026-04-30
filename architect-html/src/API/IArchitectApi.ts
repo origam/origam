@@ -303,6 +303,7 @@ export enum OrigamDataType {
 
 export interface IPropertyUpdate {
   propertyName: string;
+  value: any;
   errors: string[];
   dropDownValues: IDropDownValue[];
 }

@@ -73,6 +73,7 @@ export class EditorProperty implements IApiEditorProperty {
     }
     this.errors = propertyUpdate.errors ?? [];
     this.dropDownValues = propertyUpdate.dropDownValues;
+    this.value = propertyUpdate.value;
     if (
       this.type === 'looukup' &&
       this._value != null &&
