@@ -48,10 +48,14 @@ const SinglePropertyEditor = observer(
 
     const renderControl = (property: EditorProperty) => {
       if (property.type === 'enum' || property.type === 'looukup') {
+        const selectedValue =
+          property.type === 'enum'
+            ? (property.dropDownValues.find(x => x.name === property.value)?.value ?? '')
+            : (property.value ?? '');
         return (
           <div className={S.selectWrapper}>
             <select
-              value={property.value ?? ''}
+              value={selectedValue}
               onChange={e => onValueChange(property, e.target.value)}
             >
               {property.dropDownValues.map(x => (
@@ -82,11 +86,6 @@ const SinglePropertyEditor = observer(
       if (property.type === 'integer' || property.type === 'float') {
         return (
           <div className={S.inputWithCopyButton}>
-            <NumericPropertyInput
-              property={property}
-              type={property.type}
-              onChange={value => onValueChange(property, value)}
-            />
             <button
               type="button"
               className={S.copyButton}
@@ -95,6 +94,11 @@ const SinglePropertyEditor = observer(
             >
               <VscCopy />
             </button>
+            <NumericPropertyInput
+              property={property}
+              type={property.type}
+              onChange={value => onValueChange(property, value)}
+            />
           </div>
         );
       }
