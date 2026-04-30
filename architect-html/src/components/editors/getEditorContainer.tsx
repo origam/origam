@@ -23,7 +23,7 @@ import {
   EditorType,
   IApiEditorProperty,
   IArchitectApi,
-  IDeploymentScriptsGeneratorEditorData,
+  IDeploymentScriptsGeneratorModuleData,
   ISearchResultsEditorData,
   IScreenEditorData,
   ISectionEditorData,
@@ -32,8 +32,8 @@ import { EditorData } from '@components/modelTree/EditorData';
 import { ModelTreeState } from '@components/modelTree/ModelTreeState';
 import { PropertiesState } from '@components/properties/PropertiesState';
 import DeploymentScriptsEditor from '@editors/DeploymentScriptsEditor/DeploymentScriptsEditor';
-import DeploymentScriptsGeneratorEditor from '@editors/DeploymentScriptsGeneratorEditor/DeploymentScriptsGeneratorEditor';
-import DeploymentScriptsGeneratorEditorState from '@editors/DeploymentScriptsGeneratorEditor/DeploymentScriptsGeneratorEditorState';
+import DeploymentScriptsGeneratorModule from '@editors/DeploymentScriptsGeneratorModule/DeploymentScriptsGeneratorModule';
+import DeploymentScriptsGeneratorModuleState from '@editors/DeploymentScriptsGeneratorModule/DeploymentScriptsGeneratorModuleState';
 import ScreenEditor from '@editors/designerEditor/screenEditor/ScreenEditor';
 import { ScreenEditorState } from '@editors/designerEditor/screenEditor/ScreenEditorState';
 import { ScreenToolboxState } from '@editors/designerEditor/screenEditor/ScreenToolboxState';
@@ -65,13 +65,13 @@ export function getEditorContainer(args: {
   const { editorType, editorData, propertiesState, architectApi, modelTreeState, uiState } = args;
   const { node, data, isDirty } = editorData;
 
-  if (editorType === 'DeploymentScriptsGeneratorEditor') {
-    const editorDataTyped = data as IDeploymentScriptsGeneratorEditorData;
+  if (editorType === 'DeploymentScriptsGeneratorModule') {
+    const editorDataTyped = data as IDeploymentScriptsGeneratorModuleData;
     const results = editorDataTyped.results ?? [];
     const possibleDeploymentVersions = editorDataTyped.possibleDeploymentVersions ?? [];
     const currentDeploymentVersionId = editorDataTyped.currentDeploymentVersionId ?? null;
 
-    const editorState = new DeploymentScriptsGeneratorEditorState(
+    const editorState = new DeploymentScriptsGeneratorModuleState(
       editorData.editorId,
       results,
       possibleDeploymentVersions,
@@ -83,7 +83,7 @@ export function getEditorContainer(args: {
 
     return new EditorContainer(
       editorState,
-      <DeploymentScriptsGeneratorEditor editorState={editorState} />,
+      <DeploymentScriptsGeneratorModule editorState={editorState} />,
     );
   }
 

@@ -25,7 +25,7 @@ import { computed, flow, observable, reaction } from 'mobx';
 
 export const DEFAULT_RESULT_FILTER = 'MissingInDatabase';
 
-export default class DeploymentScriptsGeneratorEditorState implements IEditorState {
+export default class DeploymentScriptsGeneratorModuleState implements IEditorState {
   @observable accessor results: IDatabaseResult[];
   @observable accessor isSaving = false;
   @observable accessor isActive = false;
@@ -158,7 +158,7 @@ export default class DeploymentScriptsGeneratorEditorState implements IEditorSta
     );
   }
 
-  addToDeployment = flow(function* (this: DeploymentScriptsGeneratorEditorState) {
+  addToDeployment = flow(function* (this: DeploymentScriptsGeneratorModuleState) {
     if (!this.selectedPlatform || !this.selectedDeploymentVersionId) {
       return;
     }
@@ -195,7 +195,7 @@ export default class DeploymentScriptsGeneratorEditorState implements IEditorSta
     return selectedResults.every(r => r.resultType === 'MissingInSchema');
   }
 
-  addToModel = flow(function* (this: DeploymentScriptsGeneratorEditorState) {
+  addToModel = flow(function* (this: DeploymentScriptsGeneratorModuleState) {
     if (!this.selectedPlatform) {
       return;
     }
@@ -213,7 +213,7 @@ export default class DeploymentScriptsGeneratorEditorState implements IEditorSta
     yield* this.modelTreeState.loadPackageNodes();
   });
 
-  reload = flow(function* (this: DeploymentScriptsGeneratorEditorState) {
+  reload = flow(function* (this: DeploymentScriptsGeneratorModuleState) {
     const response = yield this.architectApi.fetchDeploymentScriptsList(this.selectedPlatform);
 
     this.results = response.results;

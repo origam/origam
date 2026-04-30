@@ -23,12 +23,12 @@ import { TabView } from '@/components/tabView/TabView';
 import { TabViewState } from '@/components/tabView/TabViewState';
 import { T } from '@/main';
 import { ModalWindow } from '@dialogs/ModalWindow';
-import S from '@editors/DeploymentScriptsGeneratorEditor/DeploymentScriptsGeneratorEditor.module.scss';
-import DeploymentScriptsGeneratorEditorState from '@editors/DeploymentScriptsGeneratorEditor/DeploymentScriptsGeneratorEditorState';
+import S from '@editors/DeploymentScriptsGeneratorModule/DeploymentScriptsGeneratorModule.module.scss';
+import DeploymentScriptsGeneratorModuleState from '@editors/DeploymentScriptsGeneratorModule/DeploymentScriptsGeneratorModuleState';
 import { observer } from 'mobx-react-lite';
 
-const DeploymentScriptsGeneratorEditor = observer(
-  ({ editorState }: { editorState: DeploymentScriptsGeneratorEditorState }) => {
+const DeploymentScriptsGeneratorModule = observer(
+  ({ editorState }: { editorState: DeploymentScriptsGeneratorModuleState }) => {
     return (
       <div className={S.root}>
         <TabView
@@ -278,4 +278,4 @@ const DeploymentScriptsGeneratorEditor = observer(
   },
 );
 
-export default DeploymentScriptsGeneratorEditor;
+export default DeploymentScriptsGeneratorModule;

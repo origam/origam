@@ -30,7 +30,7 @@ const DeploymentScriptsGeneratorButtonHOC = observer(() => {
   const packagesState = rootStore.packagesState;
 
   const handleOnClick = () => {
-    run({ generator: rootStore.editorTabViewState.openDeploymentScriptsGeneratorEditor() });
+    run({ generator: rootStore.editorTabViewState.openDeploymentScriptsGeneratorModule() });
   };
 
   if (!packagesState.activePackageId) {

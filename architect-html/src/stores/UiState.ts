@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { DEFAULT_RESULT_FILTER } from '@editors/DeploymentScriptsGeneratorEditor/DeploymentScriptsGeneratorEditorState';
+import { DEFAULT_RESULT_FILTER } from '@editors/DeploymentScriptsGeneratorModule/DeploymentScriptsGeneratorModuleState';
 import { action, observable } from 'mobx';
 
 enum EStorageKeys {

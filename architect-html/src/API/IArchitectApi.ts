@@ -316,7 +316,7 @@ export interface IMenuItemInfo {
 }
 
 export type EditorSubType =
-  | 'DeploymentScriptsGeneratorEditor'
+  | 'DeploymentScriptsGeneratorModule'
   | 'DeploymentScriptsEditor'
   | 'GridEditor'
   | 'XsltEditor'
@@ -357,7 +357,7 @@ export type PropertyType = 'boolean' | 'enum' | 'string' | 'integer' | 'float' |
 
 export type PropertyValue = boolean | number | string | string[] | null;
 
-export interface IDeploymentScriptsGeneratorEditorData {
+export interface IDeploymentScriptsGeneratorModuleData {
   possibleDeploymentVersions: IDeploymentVersion[];
   currentDeploymentVersionId: string | null;
   results: IDatabaseResult[];
@@ -395,7 +395,7 @@ export interface IApiEditorData {
     | ISectionEditorData
     | IScreenEditorData
     | DocumentationEditorData
-    | IDeploymentScriptsGeneratorEditorData
+    | IDeploymentScriptsGeneratorModuleData
     | ISearchResultsEditorData;
   isDirty: boolean;
 }

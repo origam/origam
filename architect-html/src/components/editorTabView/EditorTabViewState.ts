@@ -37,7 +37,7 @@ import { observable } from 'mobx';
 import { CancellablePromise } from 'mobx/dist/api/flow';
 
 const SearchEditorId = 'SearchResultsEditor-Id';
-const DeploymentScriptsGeneratorEditorId = 'DeploymentScriptsGeneratorEditor-Id';
+const DeploymentScriptsGeneratorModuleId = 'DeploymentScriptsGeneratorModule-Id';
 
 export class EditorTabViewState {
   @observable accessor editorsContainers: EditorContainer[] = [];
@@ -59,7 +59,7 @@ export class EditorTabViewState {
     }
 
     if (this.rootStore.uiState.getDsGeneratorState().isOpen) {
-      yield* this.openDeploymentScriptsGeneratorEditor()();
+      yield* this.openDeploymentScriptsGeneratorModule()();
     }
   }
 
@@ -98,22 +98,22 @@ export class EditorTabViewState {
     }.bind(this);
   }
 
-  openDeploymentScriptsGeneratorEditor() {
+  openDeploymentScriptsGeneratorModule() {
     return function* (
       this: EditorTabViewState,
     ): Generator<Promise<IDatabaseResultResponse>, void, IDatabaseResultResponse> {
       const response = yield this.architectApi.fetchDeploymentScriptsList(null);
 
       const tempEditorData: IApiEditorData = {
-        editorId: DeploymentScriptsGeneratorEditorId,
-        editorType: 'DeploymentScriptsGeneratorEditor' as EditorType,
+        editorId: DeploymentScriptsGeneratorModuleId,
+        editorType: 'DeploymentScriptsGeneratorModule' as EditorType,
         parentNodeId: undefined,
         isDirty: false,
         node: {
           id: '',
           origamId: '',
           nodeText: '',
-          editorType: 'DeploymentScriptsGeneratorEditor',
+          editorType: 'DeploymentScriptsGeneratorModule',
         },
         data: {
           possibleDeploymentVersions: response.deploymentVersions,
@@ -123,7 +123,7 @@ export class EditorTabViewState {
       };
 
       const editorData = new EditorData(tempEditorData, null);
-      this.openEditor(editorData, 'DeploymentScriptsGeneratorEditor');
+      this.openEditor(editorData, 'DeploymentScriptsGeneratorModule');
       this.rootStore.uiState.setDsGeneratorState({ isOpen: true });
     }.bind(this);
   }
@@ -226,7 +226,7 @@ export class EditorTabViewState {
         (editor: EditorContainer) => editor.state.editorId !== editorId,
       );
 
-      if (editorId === DeploymentScriptsGeneratorEditorId) {
+      if (editorId === DeploymentScriptsGeneratorModuleId) {
         this.rootStore.uiState.setDsGeneratorState({ isOpen: false });
       } else if (editorId !== SearchEditorId) {
         yield this.architectApi.closeEditor(editorId);
