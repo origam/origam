@@ -39,6 +39,8 @@
 		<PackageReference Include="Meziantou.Analyzer" Version="2.0.221"
                                   Condition="'$(DisableMeziantouAnalyzer)' != 'true'"
                                   PrivateAssets="all" IncludeAssets="build;analyzers;buildtransitive"/>
+                <EditorConfigFiles Include="$(MSBuildThisFileDirectory)origam.globalconfig"
+                                   Condition="'$(DisableMeziantouAnalyzer)' != 'true'"/>
             </ItemGroup>
 
             <PropertyGroup Condition="'$(Configuration)' == 'Release Server' or '$(Configuration)' == 'Release Architect Server' or '$(Configuration)' == 'Release Architect'">

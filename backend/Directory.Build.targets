@@ -1,0 +1,15 @@
+<Project>
+  <!--
+    For legacy non-SDK csproj files (those that contain TargetFrameworkVersion),
+    Directory.Build.props sets DisableMeziantouAnalyzer=true and skips the
+    Meziantou.Analyzer PackageReference. 
+  -->
+  <Target Name="OrigamRemoveMeziantouFromDisabledProjects"
+          BeforeTargets="CoreCompile"
+          Condition="'$(DisableMeziantouAnalyzer)' == 'true'">
+    <ItemGroup>
+      <Analyzer Remove="@(Analyzer)"
+                Condition="$([System.String]::Copy('%(Analyzer.Identity)').Contains('Meziantou.Analyzer'))" />
+    </ItemGroup>
+  </Target>
+</Project>
