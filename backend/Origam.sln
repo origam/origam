@@ -187,6 +187,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Origam.Server.Common", "Ori
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Composer", "Origam.Composer\Origam.Composer.csproj", "{DDD973C7-87B8-4D58-91CA-3A0481429128}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Analyzers", "Origam.Analyzers\Origam.Analyzers.csproj", "{9A88185F-8AAE-4A82-913A-94C8D0C73C79}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug Architect Server|Any CPU = Debug Architect Server|Any CPU
