@@ -20,9 +20,12 @@ is_global = true
 global_level = 100
 
 # MA0003: Add parameter name to improve readability
-dotnet_diagnostic.MA0003.severity = error
+dotnet_diagnostic.MA0003.severity = none
 # Default is "Null | Boolean" — also flag string and numeric literals.
 MA0003.expression_kinds = Null, Boolean, Numeric, String
+
+# ORIGAM002: Add parameter name to improve readability
+dotnet_diagnostic.ORIGAM002.severity = error
 
 # RCS1205: Order named arguments according to the order of parameters
 dotnet_diagnostic.RCS1205.severity = error

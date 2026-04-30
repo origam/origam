@@ -28,7 +28,7 @@ public class OrphanedSchemaReferenceException : Exception
     public Guid ItemId { get; }
 
     public OrphanedSchemaReferenceException(Guid itemId, Exception inner)
-        : base($"Schema item {itemId} has a broken parent chain", inner)
+        : base(message: $"Schema item {itemId} has a broken parent chain", innerException: inner)
     {
         ItemId = itemId;
     }
