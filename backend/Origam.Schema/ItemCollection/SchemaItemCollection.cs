@@ -45,7 +45,11 @@ public static class SchemaItemCollection
 #if ORIGAM_CLIENT
         return new ServerSchemaItemCollection(parentSchemaItem: parentItem);
 #else
-        return new ArchitectISchemaItemCollection(persistence, provider, parentItem);
+        return new ArchitectISchemaItemCollection(
+            persistence: persistence,
+            rootProvider: provider,
+            parentItem: parentItem
+        );
 #endif
     }
 }
