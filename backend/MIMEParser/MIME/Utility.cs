@@ -80,11 +80,11 @@ public class Utility
             {
                 strFile = strFile.ToLower();
                 if (
-                    strFile.EndsWith(value: ".jpg")
-                    || strFile.EndsWith(value: ".bmp")
-                    || strFile.EndsWith(value: ".ico")
-                    || strFile.EndsWith(value: ".gif")
-                    || strFile.EndsWith(value: ".png")
+                    strFile.EndsWith(".jpg")
+                    || strFile.EndsWith(".bmp")
+                    || strFile.EndsWith(".ico")
+                    || strFile.EndsWith(".gif")
+                    || strFile.EndsWith(".png")
                 )
                 {
                     return true;
