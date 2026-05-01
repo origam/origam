@@ -1,4 +1,4 @@
-**Important note: This utility is not intended as a standalone solution, but it is part of a Docker Compose script used to create and run containers for a new Origam project using HTML Architect. As part of this, the section that initializes Git has been removed.**
+**Important note: This utility is not intended as a standalone solution, but it is part of a Docker Compose script used to create and run containers for a new Origam project using HTML Architect.**
 
 # Origam.Composer
 This tool downloads the model, initializes a database (MS SQL/Postgres), and generates bash/cmd scripts for the ORIGAM project.
