@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { IApiEditorProperty } from '@api/IArchitectApi';
+import { IApiEditorProperty, PropertyValue } from '@api/IArchitectApi';
 import { IComponentData } from '@editors/designerEditor/common/ComponentType';
 import { Component } from '@editors/designerEditor/common/designerComponents/Component';
 import S from '@editors/designerEditor/common/designerComponents/Components.module.scss';
@@ -167,7 +167,7 @@ class OrientationProperty extends EditorProperty {
     return super.value;
   }
 
-  set value(value: any) {
+  set value(value: PropertyValue) {
     super.value = value;
     this.splitPanel.update();
   }

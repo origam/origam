@@ -24,12 +24,13 @@ import {
   IPropertyChange,
   IPropertyUpdate,
   PropertyType,
+  PropertyValue,
 } from '@api/IArchitectApi';
 
 export class EditorProperty implements IApiEditorProperty {
   name: string;
   type: PropertyType;
-  @observable protected accessor _value: any;
+  @observable protected accessor _value: PropertyValue;
   @observable.shallow accessor dropDownValues: IDropDownValue[];
   category: string | null;
   description: string;
@@ -37,11 +38,11 @@ export class EditorProperty implements IApiEditorProperty {
   readOnly: boolean;
   @observable accessor errors: string[];
 
-  get value(): any {
+  get value(): PropertyValue {
     return this._value;
   }
 
-  set value(value: any) {
+  set value(value: PropertyValue) {
     if (this.type === 'looukup' && value === '') {
       this._value = null;
     } else {
@@ -73,6 +74,7 @@ export class EditorProperty implements IApiEditorProperty {
     }
     this.errors = propertyUpdate.errors ?? [];
     this.dropDownValues = propertyUpdate.dropDownValues;
+    this.value = propertyUpdate.value;
     if (
       this.type === 'looukup' &&
       this._value != null &&
