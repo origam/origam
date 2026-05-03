@@ -26,6 +26,7 @@ import { ModalWindow } from '@dialogs/ModalWindow';
 import S from '@editors/DeploymentScriptsGeneratorModule/DeploymentScriptsGeneratorModule.module.scss';
 import DeploymentScriptsGeneratorModuleState from '@editors/DeploymentScriptsGeneratorModule/DeploymentScriptsGeneratorModuleState';
 import { observer } from 'mobx-react-lite';
+import { VscRefresh } from 'react-icons/vsc';
 
 const DeploymentScriptsGeneratorModule = observer(
   ({ editorState }: { editorState: DeploymentScriptsGeneratorModuleState }) => {
@@ -47,6 +48,12 @@ const DeploymentScriptsGeneratorModule = observer(
                     )}
                     buttons={
                       <>
+                        <Button
+                          title={<VscRefresh />}
+                          type="secondary"
+                          onClick={() => editorState.reload()}
+                        />
+
                         {editorState.resultFilter === 'MissingInSchema' && (
                           <>
                             <div className={S.deploymentControls}>
