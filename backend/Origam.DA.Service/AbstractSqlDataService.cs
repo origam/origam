@@ -2256,7 +2256,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
             var result = new SchemaDbCompareResult
             {
                 ResultType = DbCompareResultType.MissingInDatabase,
-                ItemName = ConstraintName(table, constraint),
+                ItemName = AbstractSqlCommandGenerator.ForeignKeyConstraintName(table, constraint),
                 SchemaItem = table,
                 SchemaItemType = typeof(DataEntityConstraint),
                 Script = (
@@ -2311,13 +2311,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
                 var result = new SchemaDbCompareResult
                 {
                     ResultType = DbCompareResultType.ExistingButDifferent,
-                    ItemName =
-                        "FK_"
-                        + table.MappedObjectName
-                        + "_"
-                        + (constraint.Fields[0] as FieldMappingItem).MappedColumnName
-                        + "_"
-                        + (constraint.ForeignEntity as TableMappingItem).MappedObjectName,
+                    ItemName = AbstractSqlCommandGenerator.ForeignKeyConstraintName(table, constraint),
                     SchemaItem = table,
                     SchemaItemType = typeof(DataEntityConstraint),
                 };
@@ -2645,7 +2639,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
                     result = new SchemaDbCompareResult
                     {
                         ResultType = DbCompareResultType.MissingInDatabase,
-                        ItemName = ConstraintName(table, foreignKeyConstraint),
+                        ItemName = AbstractSqlCommandGenerator.ForeignKeyConstraintName(table, foreignKeyConstraint),
                         SchemaItem = column,
                         SchemaItemType = typeof(DataEntityConstraint),
                         Script = (
@@ -2697,17 +2691,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
         return schemaTables;
     }
 
-    private static string ConstraintName(TableMappingItem table, DataEntityConstraint constraint)
-    {
-        return "FK_"
-            + table.MappedObjectName
-            + "_"
-            + ((FieldMappingItem)constraint.Fields[0]).MappedColumnName
-            + "_"
-            + ((TableMappingItem)constraint.ForeignEntity).MappedObjectName;
-    }
-
-    private void DoCompare(
+private void DoCompare(
         List<SchemaDbCompareResult> results,
         Hashtable dbList,
         Hashtable schemaList,

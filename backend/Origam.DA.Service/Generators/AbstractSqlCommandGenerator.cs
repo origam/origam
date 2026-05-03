@@ -725,6 +725,33 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
 
     public string ParameterDeclarationChar => sqlRenderer.ParameterDeclarationChar;
 
+    internal static string SanitizeIdentifier(string raw)
+    {
+        if (string.IsNullOrEmpty(raw)) return raw;
+        var sb = new StringBuilder(raw.Length);
+        foreach (var c in raw)
+        {
+            if (char.IsLetterOrDigit(c) || c == '_')
+                sb.Append(c);
+            else
+                sb.Append('_');
+        }
+        return sb.ToString();
+    }
+
+    internal static string ForeignKeyConstraintName(
+        TableMappingItem table,
+        DataEntityConstraint constraint
+    )
+    {
+        return "FK_"
+            + SanitizeIdentifier(table.MappedObjectName)
+            + "_"
+            + SanitizeIdentifier(((FieldMappingItem)constraint.Fields[0]).MappedColumnName)
+            + "_"
+            + SanitizeIdentifier(((TableMappingItem)constraint.ForeignEntity).MappedObjectName);
+    }
+
     public string ForeignKeyConstraintDdl(TableMappingItem table, DataEntityConstraint constraint)
     {
         StringBuilder ddl = new StringBuilder();
@@ -740,12 +767,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                 "CONSTRAINT {1}",
                 sqlRenderer.NameLeftBracket + table.MappedObjectName + sqlRenderer.NameRightBracket,
                 sqlRenderer.NameLeftBracket
-                    + "FK_"
-                    + table.MappedObjectName
-                    + "_"
-                    + (constraint.Fields[0] as FieldMappingItem).MappedColumnName
-                    + "_"
-                    + pkTableName
+                    + ForeignKeyConstraintName(table, constraint)
                     + sqlRenderer.NameRightBracket
             );
 
@@ -806,9 +828,9 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         {
             string constraintName =
                 "DF_"
-                + (field.ParentItem as TableMappingItem).MappedObjectName
+                + SanitizeIdentifier((field.ParentItem as TableMappingItem).MappedObjectName)
                 + "_"
-                + field.MappedColumnName;
+                + SanitizeIdentifier(field.MappedColumnName);
             ddl.AppendFormat(
                 " CONSTRAINT {0} DEFAULT {1};",
                 sqlRenderer.NameLeftBracket + constraintName + sqlRenderer.NameRightBracket,
