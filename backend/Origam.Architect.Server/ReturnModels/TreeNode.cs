@@ -48,11 +48,16 @@ public class TreeNodeFactory
 {
     public TreeNode Create(IBrowserNode2 node)
     {
+        string nodeText = node.NodeText;
+        if (node is Schema.DeploymentModel.ServiceCommandUpdateScriptActivity script)
+        {
+            nodeText = $"{node.NodeText} ({script.DatabaseType})";
+        }
         return new TreeNode
         {
             OrigamId = node.NodeId,
             Id = TreeNode.ToTreeNodeId(node),
-            NodeText = node.NodeText,
+            NodeText = nodeText,
             IsNonPersistentItem = node is NonpersistentSchemaItemNode,
             HasChildNodes = node.HasChildNodes,
             DefaultEditor = GetEditorType(node),
