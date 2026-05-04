@@ -98,11 +98,13 @@ export class UIState {
       const parsedState = JSON.parse(serializedState);
 
       if (Array.isArray(def)) {
-        return (Array.isArray(parsedState) ? parsedState : fallback()) as (typeof STORAGE_DEFAULTS)[K];
+        return (
+          Array.isArray(parsedState) ? parsedState : fallback()
+        ) as (typeof STORAGE_DEFAULTS)[K];
       }
-      return (typeof parsedState === 'object' && parsedState !== null
-        ? parsedState
-        : fallback()) as (typeof STORAGE_DEFAULTS)[K];
+      return (
+        typeof parsedState === 'object' && parsedState !== null ? parsedState : fallback()
+      ) as (typeof STORAGE_DEFAULTS)[K];
     } catch (err) {
       console.error('Error loading state from local storage:', err);
       return fallback();
