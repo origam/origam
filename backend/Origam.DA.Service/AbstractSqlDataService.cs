@@ -2313,7 +2313,10 @@ public abstract class AbstractSqlDataService : AbstractDataService
                 var result = new SchemaDbCompareResult
                 {
                     ResultType = DbCompareResultType.ExistingButDifferent,
-                    ItemName = AbstractSqlCommandGenerator.ForeignKeyConstraintName(table, constraint),
+                    ItemName = AbstractSqlCommandGenerator.ForeignKeyConstraintName(
+                        table,
+                        constraint
+                    ),
                     SchemaItem = table,
                     SchemaItemType = typeof(DataEntityConstraint),
                 };
@@ -2641,7 +2644,10 @@ public abstract class AbstractSqlDataService : AbstractDataService
                     result = new SchemaDbCompareResult
                     {
                         ResultType = DbCompareResultType.MissingInDatabase,
-                        ItemName = AbstractSqlCommandGenerator.ForeignKeyConstraintName(table, foreignKeyConstraint),
+                        ItemName = AbstractSqlCommandGenerator.ForeignKeyConstraintName(
+                            table,
+                            foreignKeyConstraint
+                        ),
                         SchemaItem = column,
                         SchemaItemType = typeof(DataEntityConstraint),
                         Script = (

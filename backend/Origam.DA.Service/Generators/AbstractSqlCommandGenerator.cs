@@ -727,14 +727,21 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
 
     internal static string SanitizeIdentifier(string raw)
     {
-        if (string.IsNullOrEmpty(raw)) return raw;
+        if (string.IsNullOrEmpty(raw))
+        {
+            return raw;
+        }
         var sb = new StringBuilder(raw.Length);
         foreach (var c in raw)
         {
             if (char.IsLetterOrDigit(c) || c == '_')
+            {
                 sb.Append(c);
+            }
             else
+            {
                 sb.Append('_');
+            }
         }
         return sb.ToString();
     }
