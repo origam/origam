@@ -26,7 +26,7 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.GuiModel;
 
-[SchemaItemDescription("Panel Widget", "icon_panel-widget.png")]
+[SchemaItemDescription(name: "Panel Widget", iconName: "icon_panel-widget.png")]
 public class PanelDashboardWidget : AbstractDataDashboardWidget
 {
     public PanelDashboardWidget()
@@ -36,13 +36,13 @@ public class PanelDashboardWidget : AbstractDataDashboardWidget
     }
 
     public PanelDashboardWidget(Guid schemaExtensionId)
-        : base(schemaExtensionId)
+        : base(schemaExtensionId: schemaExtensionId)
     {
         Init();
     }
 
     public PanelDashboardWidget(Key primaryKey)
-        : base(primaryKey)
+        : base(primaryKey: primaryKey)
     {
         Init();
     }
@@ -51,27 +51,27 @@ public class PanelDashboardWidget : AbstractDataDashboardWidget
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(this.Panel);
-        base.GetExtraDependencies(dependencies);
+        dependencies.Add(item: this.Panel);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     #region Properties
     public Guid PanelId;
 
-    [Category("UI")]
-    [TypeConverter(typeof(PanelControlSetConverter))]
-    [XmlReference("screenSection", "PanelId")]
+    [Category(category: "UI")]
+    [TypeConverter(type: typeof(PanelControlSetConverter))]
+    [XmlReference(attributeName: "screenSection", idField: "PanelId")]
     public PanelControlSet Panel
     {
         get
         {
             return (PanelControlSet)
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(this.PanelId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: this.PanelId)
                 );
         }
-        set { this.PanelId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]; }
+        set { this.PanelId = value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]; }
     }
     #endregion
 }

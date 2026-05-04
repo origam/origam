@@ -68,7 +68,7 @@ public class ConfigurationSelector : System.Windows.Forms.Form
                 components.Dispose();
             }
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
 
     #region Windows Form Designer generated code
@@ -192,11 +192,11 @@ public class ConfigurationSelector : System.Windows.Forms.Form
         if (lvwConfigurations.SelectedItems.Count != 1)
         {
             MessageBox.Show(
-                this,
-                "Please select a configuration.",
-                "Configuration Selection",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Stop
+                owner: this,
+                text: "Please select a configuration.",
+                caption: "Configuration Selection",
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Stop
             );
         }
         else
@@ -217,7 +217,7 @@ public class ConfigurationSelector : System.Windows.Forms.Form
 
     private void lvwConfigurations_DoubleClick(object sender, System.EventArgs e)
     {
-        btnOK_Click(this, EventArgs.Empty);
+        btnOK_Click(sender: this, e: EventArgs.Empty);
     }
 
     public OrigamSettingsCollection Configurations
@@ -231,9 +231,9 @@ public class ConfigurationSelector : System.Windows.Forms.Form
             {
                 foreach (OrigamSettings setting in _configurations)
                 {
-                    ListViewItem item = new ListViewItem(setting.Name);
+                    ListViewItem item = new ListViewItem(text: setting.Name);
                     item.Tag = setting;
-                    lvwConfigurations.Items.Add(item);
+                    lvwConfigurations.Items.Add(value: item);
                 }
             }
         }
@@ -244,7 +244,7 @@ public class ConfigurationSelector : System.Windows.Forms.Form
         {
             if (lvwConfigurations.SelectedItems.Count == 1)
             {
-                return lvwConfigurations.SelectedItems[0].Tag as OrigamSettings;
+                return lvwConfigurations.SelectedItems[index: 0].Tag as OrigamSettings;
             }
 
             return null;

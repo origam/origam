@@ -39,7 +39,14 @@ public class BoolFilterPart : FilterPart
         string label,
         FormGenerator formGenerator
     )
-        : base(filteredControl, dataType, dataMember, gridColumnName, label, formGenerator)
+        : base(
+            filteredControl: filteredControl,
+            dataType: dataType,
+            dataMember: dataMember,
+            gridColumnName: gridColumnName,
+            label: label,
+            formGenerator: formGenerator
+        )
     {
         this.FilterCheckBox.CaptionPosition = CaptionPosition.None;
     }
@@ -75,7 +82,7 @@ public class BoolFilterPart : FilterPart
         this.FilterCheckBox.ThreeState = true;
         this.FilterCheckBox.CheckState = CheckState.Indeterminate;
         this.FilterCheckBox.Tag = true;
-        this.FilterControls.Add(this.FilterCheckBox);
+        this.FilterControls.Add(item: this.FilterCheckBox);
         SubscribeEvents();
     }
 
@@ -94,7 +101,7 @@ public class BoolFilterPart : FilterPart
                 _filterCheckBox = null;
             }
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
     #endregion
     #region EventHandlers

@@ -35,8 +35,8 @@ namespace Origam.Schema.WorkflowModel;
 /// <summary>
 /// Summary description for AbstractWorkflowStep.
 /// </summary>
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.2")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.2")]
 public abstract class AbstractWorkflowStep : AbstractSchemaItem, IWorkflowStep
 {
     public const string CategoryConst = "WorkflowTask";
@@ -48,20 +48,20 @@ public abstract class AbstractWorkflowStep : AbstractSchemaItem, IWorkflowStep
     }
 
     public AbstractWorkflowStep(Guid schemaExtensionId)
-        : base(schemaExtensionId)
+        : base(extensionId: schemaExtensionId)
     {
         Init();
     }
 
     public AbstractWorkflowStep(Key primaryKey)
-        : base(primaryKey)
+        : base(primaryKey: primaryKey)
     {
         Init();
     }
 
     private void Init()
     {
-        this.ChildItemTypes.Add(typeof(WorkflowTaskDependency));
+        this.ChildItemTypes.Add(item: typeof(WorkflowTaskDependency));
     }
 
     #region Overriden ISchemaItem Members
@@ -70,7 +70,7 @@ public abstract class AbstractWorkflowStep : AbstractSchemaItem, IWorkflowStep
         get { return CategoryConst; }
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public override bool CanMove(UI.IBrowserNode2 destinationNode)
     {
         if (
@@ -90,25 +90,25 @@ public abstract class AbstractWorkflowStep : AbstractSchemaItem, IWorkflowStep
     {
         if (this.StartConditionRule != null)
         {
-            dependencies.Add(this.StartConditionRule);
+            dependencies.Add(item: this.StartConditionRule);
         }
 
         if (this.StartConditionRuleContextStore != null)
         {
-            dependencies.Add(this.StartConditionRuleContextStore);
+            dependencies.Add(item: this.StartConditionRuleContextStore);
         }
 
         if (this.ValidationRule != null)
         {
-            dependencies.Add(this.ValidationRule);
+            dependencies.Add(item: this.ValidationRule);
         }
 
         if (this.ValidationRuleContextStore != null)
         {
-            dependencies.Add(this.ValidationRuleContextStore);
+            dependencies.Add(item: this.ValidationRuleContextStore);
         }
 
-        base.GetExtraDependencies(dependencies);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override void UpdateReferences()
@@ -119,14 +119,16 @@ public abstract class AbstractWorkflowStep : AbstractSchemaItem, IWorkflowStep
             {
                 if (
                     this.StartConditionRuleContextStore != null
-                    && item.OldPrimaryKey.Equals(this.StartConditionRuleContextStore.PrimaryKey)
+                    && item.OldPrimaryKey.Equals(
+                        obj: this.StartConditionRuleContextStore.PrimaryKey
+                    )
                 )
                 {
                     this.StartConditionRuleContextStore = item as IContextStore;
                 }
                 if (
                     this.ValidationRuleContextStore != null
-                    && item.OldPrimaryKey.Equals(this.ValidationRuleContextStore.PrimaryKey)
+                    && item.OldPrimaryKey.Equals(obj: this.ValidationRuleContextStore.PrimaryKey)
                 )
                 {
                     this.ValidationRuleContextStore = item as IContextStore;
@@ -137,23 +139,23 @@ public abstract class AbstractWorkflowStep : AbstractSchemaItem, IWorkflowStep
     }
     #endregion
     #region IWorkflowStep Members
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public List<WorkflowTaskDependency> Dependencies =>
-        ChildItemsByType<WorkflowTaskDependency>(WorkflowTaskDependency.CategoryConst);
+        ChildItemsByType<WorkflowTaskDependency>(itemType: WorkflowTaskDependency.CategoryConst);
 
-    [Category("Error Handling")]
-    [XmlAttribute("onFailure")]
+    [Category(category: "Error Handling")]
+    [XmlAttribute(attributeName: "onFailure")]
     [Description(
-        $"Exception thrown in this step will cause the parent workflow to fail when set to {nameof(StepFailureMode.WorkflowFails)}. The exception will be ignored when set to {nameof(StepFailureMode.Suppress)}."
+        description: $"Exception thrown in this step will cause the parent workflow to fail when set to {nameof(StepFailureMode.WorkflowFails)}. The exception will be ignored when set to {nameof(StepFailureMode.Suppress)}."
     )]
     public StepFailureMode OnFailure { set; get; }
 
-    [DefaultValue(Trace.InheritFromParent)]
-    [Category("Tracing"), RefreshProperties(RefreshProperties.Repaint)]
-    [RuntimeConfigurable("traceLevel")]
+    [DefaultValue(value: Trace.InheritFromParent)]
+    [Category(category: "Tracing"), RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [RuntimeConfigurable(name: "traceLevel")]
     public Trace TraceLevel { get; set; } = Trace.InheritFromParent;
 
-    [Category("Tracing")]
+    [Category(category: "Tracing")]
     public Trace Trace =>
         TraceLevel == Trace.InheritFromParent ? GetValueOfFirstNonInheritParent() : TraceLevel;
 
@@ -174,17 +176,21 @@ public abstract class AbstractWorkflowStep : AbstractSchemaItem, IWorkflowStep
 
     public Guid StartRuleId;
 
-    [Category("Rules")]
-    [TypeConverter(typeof(StartRuleConverter))]
-    [NotNullModelElementRule("StartConditionRuleContextStore")]
-    [XmlReference("startConditionRule", "StartRuleId")]
+    [Category(category: "Rules")]
+    [TypeConverter(type: typeof(StartRuleConverter))]
+    [NotNullModelElementRule(conditionField: "StartConditionRuleContextStore")]
+    [XmlReference(attributeName: "startConditionRule", idField: "StartRuleId")]
     public StartRule StartConditionRule
     {
         get
         {
             ModelElementKey key = new ModelElementKey();
             key.Id = this.StartRuleId;
-            return (StartRule)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
+            return (StartRule)
+                this.PersistenceProvider.RetrieveInstance(
+                    type: typeof(ISchemaItem),
+                    primaryKey: key
+                );
         }
         set
         {
@@ -194,17 +200,20 @@ public abstract class AbstractWorkflowStep : AbstractSchemaItem, IWorkflowStep
             }
             else
             {
-                this.StartRuleId = (Guid)value.PrimaryKey["Id"];
+                this.StartRuleId = (Guid)value.PrimaryKey[key: "Id"];
             }
         }
     }
 
     public Guid StartRuleContextStoreId;
 
-    [Category("Rules")]
-    [TypeConverter(typeof(ContextStoreConverter))]
-    [NotNullModelElementRule("StartConditionRule")]
-    [XmlReference("startConditionRuleContextStore", "StartRuleContextStoreId")]
+    [Category(category: "Rules")]
+    [TypeConverter(type: typeof(ContextStoreConverter))]
+    [NotNullModelElementRule(conditionField: "StartConditionRule")]
+    [XmlReference(
+        attributeName: "startConditionRuleContextStore",
+        idField: "StartRuleContextStoreId"
+    )]
     public IContextStore StartConditionRuleContextStore
     {
         get
@@ -212,7 +221,10 @@ public abstract class AbstractWorkflowStep : AbstractSchemaItem, IWorkflowStep
             ModelElementKey key = new ModelElementKey();
             key.Id = this.StartRuleContextStoreId;
             return (IContextStore)
-                this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
+                this.PersistenceProvider.RetrieveInstance(
+                    type: typeof(ISchemaItem),
+                    primaryKey: key
+                );
         }
         set
         {
@@ -222,24 +234,28 @@ public abstract class AbstractWorkflowStep : AbstractSchemaItem, IWorkflowStep
             }
             else
             {
-                this.StartRuleContextStoreId = (Guid)value.PrimaryKey["Id"];
+                this.StartRuleContextStoreId = (Guid)value.PrimaryKey[key: "Id"];
             }
         }
     }
 
     public Guid ValidationRuleId;
 
-    [Category("Rules")]
-    [TypeConverter(typeof(EndRuleConverter))]
-    [NotNullModelElementRule("ValidationRuleContextStore")]
-    [XmlReference("validationRule", "ValidationRuleId")]
+    [Category(category: "Rules")]
+    [TypeConverter(type: typeof(EndRuleConverter))]
+    [NotNullModelElementRule(conditionField: "ValidationRuleContextStore")]
+    [XmlReference(attributeName: "validationRule", idField: "ValidationRuleId")]
     public IEndRule ValidationRule
     {
         get
         {
             ModelElementKey key = new ModelElementKey();
             key.Id = this.ValidationRuleId;
-            return (IEndRule)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
+            return (IEndRule)
+                this.PersistenceProvider.RetrieveInstance(
+                    type: typeof(ISchemaItem),
+                    primaryKey: key
+                );
         }
         set
         {
@@ -249,17 +265,20 @@ public abstract class AbstractWorkflowStep : AbstractSchemaItem, IWorkflowStep
             }
             else
             {
-                this.ValidationRuleId = (Guid)value.PrimaryKey["Id"];
+                this.ValidationRuleId = (Guid)value.PrimaryKey[key: "Id"];
             }
         }
     }
 
     public Guid ValidationRuleContextStoreId;
 
-    [Category("Rules")]
-    [TypeConverter(typeof(ContextStoreConverter))]
-    [NotNullModelElementRule("ValidationRule")]
-    [XmlReference("validationRuleContextStore", "ValidationRuleContextStoreId")]
+    [Category(category: "Rules")]
+    [TypeConverter(type: typeof(ContextStoreConverter))]
+    [NotNullModelElementRule(conditionField: "ValidationRule")]
+    [XmlReference(
+        attributeName: "validationRuleContextStore",
+        idField: "ValidationRuleContextStoreId"
+    )]
     public IContextStore ValidationRuleContextStore
     {
         get
@@ -267,7 +286,10 @@ public abstract class AbstractWorkflowStep : AbstractSchemaItem, IWorkflowStep
             ModelElementKey key = new ModelElementKey();
             key.Id = this.ValidationRuleContextStoreId;
             return (IContextStore)
-                this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
+                this.PersistenceProvider.RetrieveInstance(
+                    type: typeof(ISchemaItem),
+                    primaryKey: key
+                );
         }
         set
         {
@@ -277,17 +299,17 @@ public abstract class AbstractWorkflowStep : AbstractSchemaItem, IWorkflowStep
             }
             else
             {
-                this.ValidationRuleContextStoreId = (Guid)value.PrimaryKey["Id"];
+                this.ValidationRuleContextStoreId = (Guid)value.PrimaryKey[key: "Id"];
             }
         }
     }
 
-    [Category("Rules")]
-    [XmlAttribute("roles")]
+    [Category(category: "Rules")]
+    [XmlAttribute(attributeName: "roles")]
     public string Roles { get; set; } = "*";
 
-    [Category("Rules")]
-    [XmlAttribute("features")]
+    [Category(category: "Rules")]
+    [XmlAttribute(attributeName: "features")]
     public string Features { get; set; }
     #endregion
 }

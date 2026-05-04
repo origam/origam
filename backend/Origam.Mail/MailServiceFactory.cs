@@ -48,13 +48,13 @@ public class MailServiceFactory
     {
 #if NETSTANDARD
         var configuration = DIServiceProvider.GetService<IConfiguration>();
-        var mailConfig = configuration.GetSection("MailConfig");
-        string username = mailConfig["UserName"];
-        bool useSsl = mailConfig.GetBoolOrThrow("UseSsl");
-        string password = mailConfig["Password"];
-        string server = mailConfig["Server"];
-        int port = mailConfig.GetIntOrThrow("Port");
-        string pickupDirectoryLocation = mailConfig["PickupDirectoryLocation"];
+        var mailConfig = configuration.GetSection(key: "MailConfig");
+        string username = mailConfig[key: "UserName"];
+        bool useSsl = mailConfig.GetBoolOrThrow(key: "UseSsl");
+        string password = mailConfig[key: "Password"];
+        string server = mailConfig[key: "Server"];
+        int port = mailConfig.GetIntOrThrow(key: "Port");
+        string pickupDirectoryLocation = mailConfig[key: "PickupDirectoryLocation"];
         return new NetStandardMailService(
             server: server,
             port: port,

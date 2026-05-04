@@ -28,7 +28,7 @@ public class XmlNamespaceCollection : Collection<XmlNamespace>
 
     public XmlNamespace[] ToArray()
     {
-        List<XmlNamespace> namespaces = new List<XmlNamespace>(this);
+        List<XmlNamespace> namespaces = new List<XmlNamespace>(collection: this);
         return namespaces.ToArray();
     }
 

@@ -35,84 +35,99 @@ public class GitService : IGitService
     public GitService()
     {
         GitConfigPath = Path.Combine(
-            Environment.GetEnvironmentVariable("HOMEDRIVE")
-                + FixSlash(file: Environment.GetEnvironmentVariable("HOMEPATH")),
-            ".gitconfig"
+            path1: Environment.GetEnvironmentVariable(variable: "HOMEDRIVE")
+                + FixSlash(file: Environment.GetEnvironmentVariable(variable: "HOMEPATH")),
+            path2: ".gitconfig"
         );
     }
 
     public void CreateRepository(string path)
     {
-        if (string.IsNullOrWhiteSpace(path))
+        if (string.IsNullOrWhiteSpace(value: path))
         {
-            throw new ArgumentException(Strings.Cannot_be_null_or_empty, nameof(path));
+            throw new ArgumentException(
+                message: Strings.Cannot_be_null_or_empty,
+                paramName: nameof(path)
+            );
         }
-        if (!Directory.Exists(path))
+        if (!Directory.Exists(path: path))
         {
-            Directory.CreateDirectory(path);
+            Directory.CreateDirectory(path: path);
         }
-        if (Repository.IsValid(path))
+        if (Repository.IsValid(path: path))
         {
             throw new InvalidOperationException(
-                string.Format(Strings.Repository_already_exists, path)
+                message: string.Format(format: Strings.Repository_already_exists, arg0: path)
             );
         }
 
         Repo?.Dispose();
-        Repo = new Repository(Repository.Init(path));
-        AnsiConsole.MarkupLine(string.Format(Strings.Repository_created, path));
+        Repo = new Repository(path: Repository.Init(path: path));
+        AnsiConsole.MarkupLine(
+            value: string.Format(format: Strings.Repository_created, arg0: path)
+        );
     }
 
     public void InitCommit(string username, string userEmail)
     {
         if (Repo == null)
         {
-            throw new InvalidOperationException(Strings.Repository_not_initialized);
+            throw new InvalidOperationException(message: Strings.Repository_not_initialized);
         }
-        if (string.IsNullOrWhiteSpace(username))
+        if (string.IsNullOrWhiteSpace(value: username))
         {
-            throw new ArgumentException(Strings.Cannot_be_null_or_empty, nameof(username));
+            throw new ArgumentException(
+                message: Strings.Cannot_be_null_or_empty,
+                paramName: nameof(username)
+            );
         }
-        if (string.IsNullOrWhiteSpace(userEmail))
+        if (string.IsNullOrWhiteSpace(value: userEmail))
         {
-            throw new ArgumentException(Strings.Cannot_be_null_or_empty, nameof(userEmail));
+            throw new ArgumentException(
+                message: Strings.Cannot_be_null_or_empty,
+                paramName: nameof(userEmail)
+            );
         }
 
-        Repo.Ignore.AddTemporaryRules(IgnoreRules);
+        Repo.Ignore.AddTemporaryRules(rules: IgnoreRules);
 
-        LibGit2Sharp.Commands.Stage(Repo, "*");
+        LibGit2Sharp.Commands.Stage(repository: Repo, path: "*");
 
-        var signature = new Signature(username, userEmail, DateTime.Now);
-        Repo.Commit(Strings.Initial_commit, signature, signature);
-        AnsiConsole.MarkupLine(string.Format(Strings.Init_commit_message, DateTime.Now));
+        var signature = new Signature(name: username, email: userEmail, when: DateTime.Now);
+        Repo.Commit(message: Strings.Initial_commit, author: signature, committer: signature);
+        AnsiConsole.MarkupLine(
+            value: string.Format(format: Strings.Init_commit_message, arg0: DateTime.Now)
+        );
 
         Configuration config = Repo.Config;
-        config.Set("user.name", username);
-        config.Set("user.email", userEmail);
-        AnsiConsole.MarkupLine(string.Format(Strings.Git_config_set, username, userEmail));
+        config.Set(key: "user.name", value: username);
+        config.Set(key: "user.email", value: userEmail);
+        AnsiConsole.MarkupLine(
+            value: string.Format(format: Strings.Git_config_set, arg0: username, arg1: userEmail)
+        );
     }
 
     public string[] FetchGitUserFromGlobalConfig()
     {
-        if (!File.Exists(GitConfigPath))
+        if (!File.Exists(path: GitConfigPath))
         {
             return null;
         }
 
         var output = new string[2];
-        string gitFileText = File.ReadAllText(GitConfigPath);
-        var nameRegex = new Regex(@"name\s*=\s*(.*)", RegexOptions.IgnoreCase);
-        var emailRegex = new Regex(@"email\s*=\s*(.*)", RegexOptions.IgnoreCase);
+        string gitFileText = File.ReadAllText(path: GitConfigPath);
+        var nameRegex = new Regex(pattern: @"name\s*=\s*(.*)", options: RegexOptions.IgnoreCase);
+        var emailRegex = new Regex(pattern: @"email\s*=\s*(.*)", options: RegexOptions.IgnoreCase);
 
-        Match nameMatch = nameRegex.Match(gitFileText);
-        Match emailMatch = emailRegex.Match(gitFileText);
+        Match nameMatch = nameRegex.Match(input: gitFileText);
+        Match emailMatch = emailRegex.Match(input: gitFileText);
 
         if (nameMatch.Success)
         {
-            output[0] = nameMatch.Groups[1].Value;
+            output[0] = nameMatch.Groups[groupnum: 1].Value;
             if (emailMatch.Success)
             {
-                output[1] = emailMatch.Groups[1].Value;
+                output[1] = emailMatch.Groups[groupnum: 1].Value;
                 return output;
             }
         }
@@ -121,6 +136,6 @@ public class GitService : IGitService
 
     private string FixSlash(string file)
     {
-        return file == null ? "" : file.Replace("\\", "/");
+        return file == null ? "" : file.Replace(oldValue: "\\", newValue: "/");
     }
 }

@@ -45,33 +45,37 @@ public class ReturnOldDotNetAssemblyReferencesInSoapMiddleware
         using (var responseBody = new MemoryStream())
         {
             context.Response.Body = responseBody;
-            await next(context);
-            using (var responseStream = await FixAssemblyReferencesInResponse(context.Response))
+            await next(context: context);
+            using (
+                var responseStream = await FixAssemblyReferencesInResponse(
+                    response: context.Response
+                )
+            )
             {
                 context.Response.Headers.ContentLength = null;
-                await responseStream.CopyToAsync(originalBodyStream);
+                await responseStream.CopyToAsync(destination: originalBodyStream);
             }
         }
     }
 
     private async Task<MemoryStream> FixAssemblyReferencesInResponse(HttpResponse response)
     {
-        response.Body.Seek(0, SeekOrigin.Begin);
-        using (var streamReader = new StreamReader(response.Body))
+        response.Body.Seek(offset: 0, origin: SeekOrigin.Begin);
+        using (var streamReader = new StreamReader(stream: response.Body))
         {
             var responseContent = await streamReader.ReadToEndAsync();
             var regex = new Regex(
-                @"System.Private.CoreLib, Version=([\d\.]+), Culture=neutral, PublicKeyToken=([a-z0-9]+)"
+                pattern: @"System.Private.CoreLib, Version=([\d\.]+), Culture=neutral, PublicKeyToken=([a-z0-9]+)"
             );
-            Match match = regex.Match(responseContent);
-            var coreLibVersion = match.Groups[1].Value;
-            var coreLibKey = match.Groups[2].Value;
+            Match match = regex.Match(input: responseContent);
+            var coreLibVersion = match.Groups[groupnum: 1].Value;
+            var coreLibKey = match.Groups[groupnum: 2].Value;
             responseContent = responseContent.Replace(
-                $"System.Private.CoreLib, Version={coreLibVersion}, Culture=neutral, PublicKeyToken={coreLibKey}",
-                "mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+                oldValue: $"System.Private.CoreLib, Version={coreLibVersion}, Culture=neutral, PublicKeyToken={coreLibKey}",
+                newValue: "mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
             );
-            var responseData = Encoding.UTF8.GetBytes(responseContent);
-            return new MemoryStream(responseData);
+            var responseData = Encoding.UTF8.GetBytes(s: responseContent);
+            return new MemoryStream(buffer: responseData);
         }
     }
 }

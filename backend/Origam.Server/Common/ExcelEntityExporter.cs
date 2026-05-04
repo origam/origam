@@ -43,14 +43,18 @@ public class ExcelEntityExporter
     private static readonly int characterCellLimit = 32767;
     private ICellStyle dateCellStyle;
     readonly IDataLookupService lookupService =
-        ServiceManager.Services.GetService(typeof(IDataLookupService)) as IDataLookupService;
+        ServiceManager.Services.GetService(serviceType: typeof(IDataLookupService))
+        as IDataLookupService;
     private readonly IDictionary<string, IDictionary<object, object>> lookupCache =
         new Dictionary<string, IDictionary<object, object>>();
     readonly OrigamSettings settings =
         ConfigurationManager.GetActiveConfiguration() as OrigamSettings;
     readonly bool isExportUnlimited = SecurityManager
         .GetAuthorizationProvider()
-        .Authorize(SecurityManager.CurrentPrincipal, "SYS_ExcelExport_Unlimited");
+        .Authorize(
+            principal: SecurityManager.CurrentPrincipal,
+            context: "SYS_ExcelExport_Unlimited"
+        );
     public ExcelFormat ExportFormat =>
         settings.GUIExcelExportFormat == "XLSX" ? ExcelFormat.XLSX : ExcelFormat.XLS;
 
@@ -61,9 +65,9 @@ public class ExcelEntityExporter
     )
     {
         IWorkbook workbook = CreateWorkbook();
-        SetupDateCellStyle(workbook);
-        ISheet sheet = workbook.CreateSheet("Data");
-        SetupSheetHeader(sheet, info);
+        SetupDateCellStyle(workbook: workbook);
+        ISheet sheet = workbook.CreateSheet(sheetname: "Data");
+        SetupSheetHeader(sheet: sheet, info: info);
 
         int rowIndex = 0;
         foreach (var row in rows)
@@ -74,15 +78,25 @@ public class ExcelEntityExporter
                 && (rowIndex > settings.ExportRecordsLimit)
             )
             {
-                FillExportLimitExceeded(workbook, sheet, rowIndex);
+                FillExportLimitExceeded(workbook: workbook, sheet: sheet, rowNumber: rowIndex);
                 break;
             }
             rowIndex++;
-            AddRowToSheet(info, workbook, sheet, rowIndex, columns, row.ToList());
+            AddRowToSheet(
+                info: info,
+                workbook: workbook,
+                sheet: sheet,
+                rowNumber: rowIndex,
+                columns: columns,
+                row: row.ToList()
+            );
         }
-        if (FeatureTools.IsFeatureOn(OrigamEvent.ExportToExcel.FeatureCode))
+        if (FeatureTools.IsFeatureOn(featureCode: OrigamEvent.ExportToExcel.FeatureCode))
         {
-            OrigamEventTools.RecordExportToExcel(info, rowIndex + 1);
+            OrigamEventTools.RecordExportToExcel(
+                entityExportInfo: info,
+                numberOfRows: rowIndex + 1
+            );
         }
         return workbook;
     }
@@ -90,9 +104,9 @@ public class ExcelEntityExporter
     public IWorkbook FillWorkBook(EntityExportInfo info)
     {
         IWorkbook workbook = CreateWorkbook();
-        SetupDateCellStyle(workbook);
-        ISheet sheet = workbook.CreateSheet("Data");
-        SetupSheetHeader(sheet, info);
+        SetupDateCellStyle(workbook: workbook);
+        ISheet sheet = workbook.CreateSheet(sheetname: "Data");
+        SetupSheetHeader(sheet: sheet, info: info);
         bool isPkGuid = info.Table.PrimaryKey[0].DataType == typeof(Guid);
         int rowNumber = 1;
         for (; rowNumber <= info.RowIds.Count; rowNumber++)
@@ -103,18 +117,27 @@ public class ExcelEntityExporter
                 && (rowNumber > settings.ExportRecordsLimit)
             )
             {
-                FillExportLimitExceeded(workbook, sheet, rowNumber);
+                FillExportLimitExceeded(workbook: workbook, sheet: sheet, rowNumber: rowNumber);
                 break;
             }
-            DataRow row = GetDataRow(info, rowNumber, isPkGuid);
+            DataRow row = GetDataRow(info: info, rowNumber: rowNumber, isPkGuid: isPkGuid);
             if (row != null)
             {
-                AddRowToSheet(info, workbook, sheet, rowNumber, row);
+                AddRowToSheet(
+                    info: info,
+                    workbook: workbook,
+                    sheet: sheet,
+                    rowNumber: rowNumber,
+                    row: row
+                );
             }
         }
-        if (FeatureTools.IsFeatureOn(OrigamEvent.ExportToExcel.FeatureCode))
+        if (FeatureTools.IsFeatureOn(featureCode: OrigamEvent.ExportToExcel.FeatureCode))
         {
-            OrigamEventTools.RecordExportToExcel(info, rowNumber - 1);
+            OrigamEventTools.RecordExportToExcel(
+                entityExportInfo: info,
+                numberOfRows: rowNumber - 1
+            );
         }
         return workbook;
     }
@@ -141,13 +164,20 @@ public class ExcelEntityExporter
         if (ExportFormat == ExcelFormat.XLS && rowNumber >= 65536)
         {
             throw new Exception(
-                "Cannot export more than 65536 lines into a .xls file. Try changing output format to .xlsx"
+                message: "Cannot export more than 65536 lines into a .xls file. Try changing output format to .xlsx"
             );
         }
-        IRow excelRow = sheet.CreateRow(rowNumber);
+        IRow excelRow = sheet.CreateRow(rownum: rowNumber);
         for (int i = 0; i < info.Fields.Count; i++)
         {
-            AddCellToRow(info, workbook, excelRow, i, columns, row);
+            AddCellToRow(
+                info: info,
+                workbook: workbook,
+                excelRow: excelRow,
+                columnIndex: i,
+                columns: columns,
+                row: row
+            );
         }
     }
 
@@ -160,28 +190,30 @@ public class ExcelEntityExporter
         List<object> row
     )
     {
-        EntityExportField field = info.Fields[columnIndex];
-        ICell cell = excelRow.CreateCell(columnIndex);
-        object val = GetValue(field, columns, row);
-        SetCellValue(workbook, val, cell);
+        EntityExportField field = info.Fields[index: columnIndex];
+        ICell cell = excelRow.CreateCell(column: columnIndex);
+        object val = GetValue(field: field, columns: columns, row: row);
+        SetCellValue(workbook: workbook, val: val, cell: cell);
     }
 
     private object GetValue(EntityExportField field, List<string> columns, List<object> row)
     {
-        int index = columns.FindIndex(column => column == field.FieldName);
-        object val = row[index];
+        int index = columns.FindIndex(match: column => column == field.FieldName);
+        object val = row[index: index];
         //object val = row.First(pair => pair.Key == field.FieldName).Value;
         if (val == null)
         {
             return null;
         }
-        if (!string.IsNullOrEmpty(field.LookupId))
+        if (!string.IsNullOrEmpty(value: field.LookupId))
         {
             if (val is string[] valArray)
             {
-                return valArray.Select(value => GetLookupValue(value, field.LookupId)).ToArray();
+                return valArray
+                    .Select(selector: value => GetLookupValue(key: value, lookupId: field.LookupId))
+                    .ToArray();
             }
-            return GetLookupValue(val, field.LookupId);
+            return GetLookupValue(key: val, lookupId: field.LookupId);
         }
         return val;
     }
@@ -194,10 +226,16 @@ public class ExcelEntityExporter
         DataRow row
     )
     {
-        IRow excelRow = sheet.CreateRow(rowNumber);
+        IRow excelRow = sheet.CreateRow(rownum: rowNumber);
         for (int i = 0; i < info.Fields.Count; i++)
         {
-            AddCellToRow(info, workbook, excelRow, i, row);
+            AddCellToRow(
+                info: info,
+                workbook: workbook,
+                excelRow: excelRow,
+                columnIndex: i,
+                row: row
+            );
         }
     }
 
@@ -209,18 +247,18 @@ public class ExcelEntityExporter
         DataRow row
     )
     {
-        EntityExportField field = info.Fields[columnIndex];
-        ICell cell = excelRow.CreateCell(columnIndex);
+        EntityExportField field = info.Fields[index: columnIndex];
+        ICell cell = excelRow.CreateCell(column: columnIndex);
         object val;
-        if (SessionStore.IsColumnArray(info.Table.Columns[field.FieldName]))
+        if (SessionStore.IsColumnArray(dataColumn: info.Table.Columns[name: field.FieldName]))
         {
-            val = GetArrayColumnValue(info, field, row);
+            val = GetArrayColumnValue(info: info, field: field, row: row);
         }
         else
         {
-            val = GetNonArrayColumnValue(field, row);
+            val = GetNonArrayColumnValue(field: field, row: row);
         }
-        SetCellValue(workbook, val, cell);
+        SetCellValue(workbook: workbook, val: val, cell: cell);
     }
 
     private object GetNonArrayColumnValue(EntityExportField field, DataRow row)
@@ -228,49 +266,53 @@ public class ExcelEntityExporter
         // normal (non-array) column
         if ((field.LookupId != null) && (field.LookupId != ""))
         {
-            return GetLookupValue(row[field.FieldName], field.LookupId);
+            return GetLookupValue(key: row[columnName: field.FieldName], lookupId: field.LookupId);
         }
 
         if (field.PolymorphRules != null)
         {
-            var controlFieldValue = row[field.PolymorphRules.ControlField];
+            var controlFieldValue = row[columnName: field.PolymorphRules.ControlField];
             if (
                 (controlFieldValue == null)
-                || !field.PolymorphRules.Rules.Contains(controlFieldValue.ToString())
+                || !field.PolymorphRules.Rules.Contains(key: controlFieldValue.ToString())
             )
             {
                 return null;
             }
 
-            return row[field.PolymorphRules.Rules[controlFieldValue.ToString()].ToString()];
+            return row[
+                columnName: field.PolymorphRules.Rules[key: controlFieldValue.ToString()].ToString()
+            ];
         }
 
-        return row[field.FieldName];
+        return row[columnName: field.FieldName];
     }
 
     private object GetArrayColumnValue(EntityExportInfo info, EntityExportField field, DataRow row)
     {
         // returns list of array elements
         List<object> arrayElements = SessionStore.GetRowColumnArrayValue(
-            row,
-            info.Table.Columns[field.FieldName]
+            row: row,
+            dataColumn: info.Table.Columns[name: field.FieldName]
         );
         // try to use default lookup
         if ((field.LookupId == null) || (field.LookupId == ""))
         {
             field.LookupId = info
-                .Table.Columns[field.FieldName]
-                .ExtendedProperties[Const.DefaultLookupIdAttribute]
+                .Table.Columns[name: field.FieldName]
+                .ExtendedProperties[key: Const.DefaultLookupIdAttribute]
                 .ToString();
         }
         if ((field.LookupId != null) && (field.LookupId != ""))
         {
             // lookup array elements
-            var lookupedArrayElements = new List<object>(arrayElements.Count);
+            var lookupedArrayElements = new List<object>(capacity: arrayElements.Count);
             foreach (object arrayElement in arrayElements)
             {
                 // get lookup value
-                lookupedArrayElements.Add(GetLookupValue(arrayElement, field.LookupId));
+                lookupedArrayElements.Add(
+                    item: GetLookupValue(key: arrayElement, lookupId: field.LookupId)
+                );
             }
             // store lookuped array elements
             return lookupedArrayElements;
@@ -281,58 +323,64 @@ public class ExcelEntityExporter
 
     private void FillExportLimitExceeded(IWorkbook workbook, ISheet sheet, int rowNumber)
     {
-        IRow excelRow = sheet.CreateRow(rowNumber);
-        ICell cell = excelRow.CreateCell(0);
-        SetCellValue(workbook, Resources.ExportLimitExceeded, cell);
+        IRow excelRow = sheet.CreateRow(rownum: rowNumber);
+        ICell cell = excelRow.CreateCell(column: 0);
+        SetCellValue(workbook: workbook, val: Resources.ExportLimitExceeded, cell: cell);
     }
 
     private void SetupSheetHeader(ISheet sheet, EntityExportInfo info)
     {
-        IRow headerRow = sheet.CreateRow(0);
+        IRow headerRow = sheet.CreateRow(rownum: 0);
         for (int i = 0; i < info.Fields.Count; i++)
         {
-            EntityExportField field = info.Fields[i];
-            headerRow.CreateCell(i).SetCellValue(field.Caption);
+            EntityExportField field = info.Fields[index: i];
+            headerRow.CreateCell(column: i).SetCellValue(value: field.Caption);
         }
     }
 
     private void SetupDateCellStyle(IWorkbook workbook)
     {
         dateCellStyle = workbook.CreateCellStyle();
-        dateCellStyle.DataFormat = workbook.CreateDataFormat().GetFormat("m/d/yy h:mm");
+        dateCellStyle.DataFormat = workbook.CreateDataFormat().GetFormat(format: "m/d/yy h:mm");
     }
 
     private DataRow GetDataRow(EntityExportInfo info, int rowNumber, bool isPkGuid)
     {
-        object pk = info.RowIds[rowNumber - 1];
+        object pk = info.RowIds[index: rowNumber - 1];
         if (isPkGuid && (pk is string))
         {
-            pk = new Guid((string)pk);
+            pk = new Guid(g: (string)pk);
         }
-        DataRow row = info.Table.Rows.Find(pk);
+        DataRow row = info.Table.Rows.Find(key: pk);
         // make sure lazy loaded list gets filled
-        if (info.Store.IsLazyLoadedRow(row))
+        if (info.Store.IsLazyLoadedRow(row: row))
         {
-            info.Store.LazyLoadListRowData(pk, row);
+            info.Store.LazyLoadListRowData(rowId: pk, row: row);
         }
         return row;
     }
 
     private Object GetLookupValue(object key, string lookupId)
     {
-        if (!lookupCache.ContainsKey(lookupId))
+        if (!lookupCache.ContainsKey(key: lookupId))
         {
-            lookupCache.Add(lookupId, new Dictionary<object, object>());
+            lookupCache.Add(key: lookupId, value: new Dictionary<object, object>());
         }
-        IDictionary<object, object> cache = lookupCache[lookupId];
-        if (!cache.ContainsKey(key))
+        IDictionary<object, object> cache = lookupCache[key: lookupId];
+        if (!cache.ContainsKey(key: key))
         {
             cache.Add(
-                key,
-                lookupService.GetDisplayText(new Guid(lookupId), key, false, false, null)
+                key: key,
+                value: lookupService.GetDisplayText(
+                    lookupId: new Guid(g: lookupId),
+                    lookupValue: key,
+                    useCache: false,
+                    returnMessageIfNull: false,
+                    transactionId: null
+                )
             );
         }
-        return cache[key];
+        return cache[key: key];
     }
 
     private void SetCellValue(IWorkbook workbook, object val, ICell cell)
@@ -347,18 +395,18 @@ public class ExcelEntityExporter
                 // add array item to stream
                 if (sb.Length > 0)
                 {
-                    sb.Append(delimiter);
+                    sb.Append(value: delimiter);
                 }
 
                 string inc = arrayItem.ToString();
                 // escape quote chars
-                sb.Append(inc.Replace(delimiter, escapeDelimiter));
+                sb.Append(value: inc.Replace(oldValue: delimiter, newValue: escapeDelimiter));
             }
-            cell.SetCellValue(sb.ToString());
+            cell.SetCellValue(value: sb.ToString());
         }
         else
         {
-            SetScalarCellValue(workbook, val, cell);
+            SetScalarCellValue(workbook: workbook, val: val, cell: cell);
         }
     }
 
@@ -370,26 +418,26 @@ public class ExcelEntityExporter
         }
         if (val is DateTime)
         {
-            cell.SetCellValue((DateTime)val);
+            cell.SetCellValue(value: (DateTime)val);
             cell.CellStyle = dateCellStyle;
         }
         else if ((val is int) || (val is double) || (val is float) || (val is decimal))
         {
-            cell.SetCellValue(Convert.ToDouble(val));
+            cell.SetCellValue(value: Convert.ToDouble(value: val));
         }
         else
         {
             string fieldValue = val.ToString();
-            if (fieldValue.Contains("\r"))
+            if (fieldValue.Contains(value: "\r"))
             {
-                fieldValue = fieldValue.Replace("\n", "");
-                fieldValue = fieldValue.Replace("\r", Environment.NewLine);
-                fieldValue = fieldValue.Replace("\t", " ");
-                cell.SetCellValue(fieldValue.Truncate(characterCellLimit));
+                fieldValue = fieldValue.Replace(oldValue: "\n", newValue: "");
+                fieldValue = fieldValue.Replace(oldValue: "\r", newValue: Environment.NewLine);
+                fieldValue = fieldValue.Replace(oldValue: "\t", newValue: " ");
+                cell.SetCellValue(value: fieldValue.Truncate(maxLength: characterCellLimit));
             }
             else
             {
-                cell.SetCellValue(fieldValue.Truncate(characterCellLimit));
+                cell.SetCellValue(value: fieldValue.Truncate(maxLength: characterCellLimit));
             }
         }
     }

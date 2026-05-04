@@ -44,24 +44,25 @@ public static class TranslationBuilder
         Guid packageId
     )
     {
-        XmlTextWriter xtw = new XmlTextWriter(stream, System.Text.Encoding.UTF8);
+        XmlTextWriter xtw = new XmlTextWriter(w: stream, encoding: System.Text.Encoding.UTF8);
         xtw.Formatting = Formatting.Indented;
-        xtw.WriteStartDocument(true);
-        xtw.WriteStartElement("OrigamLocalization");
+        xtw.WriteStartDocument(standalone: true);
+        xtw.WriteStartElement(localName: "OrigamLocalization");
         IPersistenceService persistence =
-            ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+            ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+            as IPersistenceService;
         IDocumentationService docSvc =
-            ServiceManager.Services.GetService(typeof(IDocumentationService))
+            ServiceManager.Services.GetService(serviceType: typeof(IDocumentationService))
             as IDocumentationService;
         List<ISchemaItem> list = persistence.SchemaProvider.RetrieveListByPackage<ISchemaItem>(
-            packageId
+            packageId: packageId
         );
         foreach (ISchemaItem item in list)
         {
             List<MemberAttributeInfo> memberList = Reflector.FindMembers(
-                item.GetType(),
-                typeof(LocalizableAttribute),
-                new Type[] { }
+                type: item.GetType(),
+                primaryAttribute: typeof(LocalizableAttribute),
+                secondaryAttributes: new Type[] { }
             );
             Hashtable values = new Hashtable();
             IQueryLocalizable ql = item as IQueryLocalizable;
@@ -70,69 +71,78 @@ public static class TranslationBuilder
                 bool isLocalizable = true;
                 if (ql != null)
                 {
-                    isLocalizable = ql.IsLocalizable(mai.MemberInfo.Name);
+                    isLocalizable = ql.IsLocalizable(member: mai.MemberInfo.Name);
                 }
                 if (isLocalizable)
                 {
-                    object translatableValue = Reflector.GetValue(mai.MemberInfo, item);
+                    object translatableValue = Reflector.GetValue(
+                        memberInfo: mai.MemberInfo,
+                        instance: item
+                    );
                     if (translatableValue != null && translatableValue.ToString() != "")
                     {
-                        values.Add(mai.MemberInfo.Name, translatableValue);
+                        values.Add(key: mai.MemberInfo.Name, value: translatableValue);
                     }
                 }
             }
-            DocumentationComplete docData = docSvc.LoadDocumentation(item.Id);
+            DocumentationComplete docData = docSvc.LoadDocumentation(schemaItemId: item.Id);
             if (values.Count > 0 || docData.Documentation.Count > 0)
             {
-                xtw.WriteStartElement("Element");
-                xtw.WriteAttributeString("Id", item.Id.ToString());
-                xtw.WriteAttributeString("Path", item.Path);
+                xtw.WriteStartElement(localName: "Element");
+                xtw.WriteAttributeString(localName: "Id", value: item.Id.ToString());
+                xtw.WriteAttributeString(localName: "Path", value: item.Path);
                 foreach (DictionaryEntry entry in values)
                 {
-                    xtw.WriteStartElement((string)entry.Key);
-                    xtw.WriteAttributeString("OriginalText", entry.Value.ToString());
+                    xtw.WriteStartElement(localName: (string)entry.Key);
+                    xtw.WriteAttributeString(
+                        localName: "OriginalText",
+                        value: entry.Value.ToString()
+                    );
                     string translation;
                     if (currentTranslations != null)
                     {
                         translation = currentTranslations.GetLocalizedString(
-                            item.Id,
-                            (string)entry.Key,
-                            entry.Value.ToString(),
-                            locale
+                            elementId: item.Id,
+                            memberName: (string)entry.Key,
+                            defaultString: entry.Value.ToString(),
+                            locale: locale
                         );
                     }
                     else
                     {
                         translation = entry.Value.ToString();
                     }
-                    xtw.WriteString(translation);
+                    xtw.WriteString(text: translation);
                     xtw.WriteEndElement();
                 }
                 string[] categoriesToInclude = GetDocumentationCategoriesToInclude();
                 foreach (DocumentationComplete.DocumentationRow docRow in docData.Documentation)
                 {
-                    if (!categoriesToInclude.Contains(docRow.Category))
+                    if (!categoriesToInclude.Contains(value: docRow.Category))
                     {
                         continue;
                     }
-                    xtw.WriteStartElement("Documentation");
-                    xtw.WriteAttributeString("Category", docRow.Category);
-                    xtw.WriteAttributeString("OriginalText", docRow.Data.ToString());
+                    xtw.WriteStartElement(localName: "Documentation");
+                    xtw.WriteAttributeString(localName: "Category", value: docRow.Category);
+                    xtw.WriteAttributeString(
+                        localName: "OriginalText",
+                        value: docRow.Data.ToString()
+                    );
                     string translation;
                     if (currentTranslations != null)
                     {
                         translation = currentTranslations.GetLocalizedString(
-                            item.Id,
-                            "Documentation " + docRow.Category,
-                            docRow.Data.ToString(),
-                            locale
+                            elementId: item.Id,
+                            memberName: "Documentation " + docRow.Category,
+                            defaultString: docRow.Data.ToString(),
+                            locale: locale
                         );
                     }
                     else
                     {
                         translation = docRow.Data.ToString();
                     }
-                    xtw.WriteString(translation);
+                    xtw.WriteString(text: translation);
                     xtw.WriteEndElement();
                 }
                 xtw.WriteEndElement();
@@ -151,9 +161,9 @@ public static class TranslationBuilder
             return new string[0];
         }
         return settings
-            .LocalizationIncludedDocumentationElements.Split(',')
-            .Select(x => x.Trim())
-            .Where(x => x != "")
+            .LocalizationIncludedDocumentationElements.Split(separator: ',')
+            .Select(selector: x => x.Trim())
+            .Where(predicate: x => x != "")
             .ToArray();
     }
 }

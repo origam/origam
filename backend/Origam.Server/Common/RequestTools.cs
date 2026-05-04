@@ -36,7 +36,7 @@ internal static class RequestTools
         EntityUIAction action
     )
     {
-        UIRequest uir = GetActionRequestBase(parameters, action.Caption);
+        UIRequest uir = GetActionRequestBase(parameters: parameters, caption: action.Caption);
         Graphics menuIcon = null;
 
         EntityWorkflowAction ewa = action as EntityWorkflowAction;
@@ -45,15 +45,27 @@ internal static class RequestTools
         WorkQueueWorkflowCommand wqwc = action as WorkQueueWorkflowCommand;
         if (wqwc != null)
         {
-            uir = GetWorkflowActionRequest(parameters, wqwc.WorkflowId, action.Caption);
+            uir = GetWorkflowActionRequest(
+                parameters: parameters,
+                workflowId: wqwc.WorkflowId,
+                caption: action.Caption
+            );
         }
         else if (ewa != null)
         {
-            uir = GetWorkflowActionRequest(parameters, ewa.WorkflowId, action.Caption);
+            uir = GetWorkflowActionRequest(
+                parameters: parameters,
+                workflowId: ewa.WorkflowId,
+                caption: action.Caption
+            );
         }
         else if (era != null)
         {
-            uir = GetReportActionRequest(parameters, era.ReportId, action.Caption);
+            uir = GetReportActionRequest(
+                parameters: parameters,
+                reportId: era.ReportId,
+                caption: action.Caption
+            );
         }
         else if (ema != null)
         {
@@ -69,7 +81,7 @@ internal static class RequestTools
                 uir.DataRequested = !frmi.IsLazyLoaded;
                 if (selectedItems.Count > 1)
                 {
-                    throw new Exception(Resources.ErrorOpenFormMultipleRecords);
+                    throw new Exception(message: Resources.ErrorOpenFormMultipleRecords);
                 }
                 if (frmi.SelectionDialogPanel == null)
                 {
@@ -90,7 +102,7 @@ internal static class RequestTools
             {
                 if (selectedItems.Count > 1)
                 {
-                    throw new Exception(Resources.ErrorReportOpenFormMultipleRecords);
+                    throw new Exception(message: Resources.ErrorReportOpenFormMultipleRecords);
                 }
                 if (rrmi.SelectionDialogPanel == null)
                 {
@@ -105,17 +117,21 @@ internal static class RequestTools
                 {
                     int height;
                     int width;
-                    MenuXmlBuilder.GetSelectionDialogSize(dialogPanel, out width, out height);
+                    MenuXmlBuilder.GetSelectionDialogSize(
+                        panel: dialogPanel,
+                        width: out width,
+                        height: out height
+                    );
                     uir.DialogHeight = height;
                     uir.DialogWidth = width;
                 }
             }
             else
             {
-                throw new Exception(Resources.ErrorUnsupportedMenuItemType);
+                throw new Exception(message: Resources.ErrorUnsupportedMenuItemType);
             }
         }
-        uir.Icon = MenuXmlBuilder.ResolveMenuIcon(uir.Type.ToString(), menuIcon);
+        uir.Icon = MenuXmlBuilder.ResolveMenuIcon(type: uir.Type.ToString(), menuIcon: menuIcon);
         return uir;
     }
 
@@ -136,7 +152,7 @@ internal static class RequestTools
         string caption
     )
     {
-        UIRequest uir = GetActionRequestBase(parameters, caption);
+        UIRequest uir = GetActionRequestBase(parameters: parameters, caption: caption);
         uir.Type = UIRequestType.WorkflowReferenceMenuItem;
         uir.ObjectId = workflowId.ToString();
         return uir;
@@ -148,7 +164,7 @@ internal static class RequestTools
         string caption
     )
     {
-        UIRequest uir = GetActionRequestBase(parameters, caption);
+        UIRequest uir = GetActionRequestBase(parameters: parameters, caption: caption);
         uir.Type = UIRequestType.ReportReferenceMenuItem;
         uir.ObjectId = reportId.ToString();
         return uir;

@@ -35,7 +35,7 @@ public abstract class AbstractBuilder : IProjectBuilder
             _state = value;
             if (StateChanged != null)
             {
-                StateChanged(this, EventArgs.Empty);
+                StateChanged(sender: this, e: EventArgs.Empty);
             }
         }
     }

@@ -24,13 +24,13 @@ using System.ComponentModel.DataAnnotations;
 namespace Origam.Server.Attributes;
 
 [AttributeUsage(
-    AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter,
+    validOn: AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter,
     AllowMultiple = false
 )]
 public class RequiredNonDefaultAttribute : ValidationAttribute
 {
     public RequiredNonDefaultAttribute()
-        : base("The {0} field requires a non-default value.") { }
+        : base(errorMessage: "The {0} field requires a non-default value.") { }
 
     public override bool IsValid(object value)
     {
@@ -40,6 +40,11 @@ public class RequiredNonDefaultAttribute : ValidationAttribute
         }
 
         var type = value.GetType();
-        return !Equals(value, Activator.CreateInstance(Nullable.GetUnderlyingType(type) ?? type));
+        return !Equals(
+            objA: value,
+            objB: Activator.CreateInstance(
+                type: Nullable.GetUnderlyingType(nullableType: type) ?? type
+            )
+        );
     }
 }

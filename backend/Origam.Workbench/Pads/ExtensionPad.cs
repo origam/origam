@@ -34,7 +34,7 @@ namespace Origam.Workbench.Pads;
 public class ExtensionPad : AbstractPadContent
 {
     private WorkbenchSchemaService _schema =
-        ServiceManager.Services.GetService(typeof(WorkbenchSchemaService))
+        ServiceManager.Services.GetService(serviceType: typeof(WorkbenchSchemaService))
         as WorkbenchSchemaService;
 
     //		public Origam.Workbench.ExpressionBrowser ebrSchemaBrowser;
@@ -68,7 +68,7 @@ public class ExtensionPad : AbstractPadContent
                 components.Dispose();
             }
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
 
     #region Windows Form Designer generated code
@@ -213,28 +213,28 @@ public class ExtensionPad : AbstractPadContent
             Key selectedId = null;
             if (lvwPackages.SelectedItems.Count > 0)
             {
-                selectedId = (lvwPackages.SelectedItems[0].Tag as Package).PrimaryKey;
+                selectedId = (lvwPackages.SelectedItems[index: 0].Tag as Package).PrimaryKey;
             }
             lvwPackages.Items.Clear();
             IPersistenceService persistenceService =
-                ServiceManager.Services.GetService(typeof(IPersistenceService))
+                ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
                 as IPersistenceService;
             List<Package> packageList = persistenceService.SchemaListProvider.RetrieveList<Package>(
-                null
+                filter: null
             );
             foreach (Package extension in packageList)
             {
-                ListViewItem item = lvwPackages.Items.Add(extension.Name, 3);
-                item.SubItems.Add(extension.Version);
+                ListViewItem item = lvwPackages.Items.Add(text: extension.Name, imageIndex: 3);
+                item.SubItems.Add(text: extension.Version);
                 item.Tag = extension;
-                if (selectedId != null && selectedId.Equals(extension.PrimaryKey))
+                if (selectedId != null && selectedId.Equals(obj: extension.PrimaryKey))
                 {
                     item.Selected = true;
                 }
             }
             if (lvwPackages.SelectedItems.Count > 0)
             {
-                lvwPackages.SelectedItems[0].EnsureVisible();
+                lvwPackages.SelectedItems[index: 0].EnsureVisible();
             }
         }
         finally
@@ -252,7 +252,7 @@ public class ExtensionPad : AbstractPadContent
             if (item.Tag is Package package && package.Id == updatedPackage.Id)
             {
                 item.Tag = updatedPackage;
-                item.SubItems[1].Text = updatedPackage.VersionString;
+                item.SubItems[index: 1].Text = updatedPackage.VersionString;
                 return;
             }
         }
@@ -271,7 +271,7 @@ public class ExtensionPad : AbstractPadContent
         {
             if (lvwPackages.SelectedItems.Count == 1)
             {
-                return lvwPackages.SelectedItems[0].Tag as Package;
+                return lvwPackages.SelectedItems[index: 0].Tag as Package;
             }
 
             return null;
@@ -283,7 +283,7 @@ public class ExtensionPad : AbstractPadContent
             {
                 foreach (ListViewItem item in lvwPackages.Items)
                 {
-                    if ((item.Tag as Package).PrimaryKey.Equals(value.PrimaryKey))
+                    if ((item.Tag as Package).PrimaryKey.Equals(obj: value.PrimaryKey))
                     {
                         item.Selected = true;
                     }
@@ -305,9 +305,9 @@ public class ExtensionPad : AbstractPadContent
                 string packageName = addPackageDialog.PackageName;
                 Guid packageId = Guid.NewGuid();
                 PackageHelper.CreatePackage(
-                    packageName,
-                    packageId,
-                    new Guid("147FA70D-6519-4393-B5D0-87931F9FD609")
+                    packageName: packageName,
+                    packageId: packageId,
+                    referencePackageId: new Guid(g: "147FA70D-6519-4393-B5D0-87931F9FD609")
                 );
                 LoadPackages();
                 _schema.SchemaBrowser.EbrSchemaBrowser.RefreshAllNodes();
@@ -319,28 +319,33 @@ public class ExtensionPad : AbstractPadContent
         {
             if (SelectedExtension == null)
             {
-                AsMessageBox.ShowError(this, "Select a package to delete.", "Remove Package", null);
+                AsMessageBox.ShowError(
+                    owner: this,
+                    text: "Select a package to delete.",
+                    caption: "Remove Package",
+                    exception: null
+                );
             }
             else
             {
                 if (
                     MessageBox.Show(
-                        this,
-                        "Do you really want to remove the package '"
+                        owner: this,
+                        text: "Do you really want to remove the package '"
                             + SelectedExtension.Name
                             + "'?",
-                        "Remove Package",
-                        MessageBoxButtons.YesNo,
-                        MessageBoxIcon.Question,
-                        MessageBoxDefaultButton.Button2
+                        caption: "Remove Package",
+                        buttons: MessageBoxButtons.YesNo,
+                        icon: MessageBoxIcon.Question,
+                        defaultButton: MessageBoxDefaultButton.Button2
                     ) == DialogResult.Yes
                 )
                 {
                     IPersistenceService persistenceService =
-                        ServiceManager.Services.GetService(typeof(IPersistenceService))
+                        ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
                         as IPersistenceService;
                     persistenceService.SchemaProvider.DeletePackage(
-                        (Guid)SelectedExtension.PrimaryKey["Id"]
+                        packageId: (Guid)SelectedExtension.PrimaryKey[key: "Id"]
                     );
                     LoadPackages();
                 }
@@ -361,10 +366,13 @@ public class ExtensionPad : AbstractPadContent
         catch (Exception ex)
         {
             Origam.UI.AsMessageBox.ShowError(
-                this.FindForm(),
-                ex.Message,
-                ResourceUtils.GetString("ErrorWhenLoadPackage", this.SelectedExtension.Name),
-                ex
+                owner: this.FindForm(),
+                text: ex.Message,
+                caption: ResourceUtils.GetString(
+                    key: "ErrorWhenLoadPackage",
+                    args: this.SelectedExtension.Name
+                ),
+                exception: ex
             );
         }
     }

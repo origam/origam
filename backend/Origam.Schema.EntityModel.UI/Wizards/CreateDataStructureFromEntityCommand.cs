@@ -37,7 +37,7 @@ namespace Origam.Schema.EntityModel.UI.Wizards;
 public class CreateDataStructureFromEntityCommand : AbstractMenuCommand
 {
     SchemaBrowser _schemaBrowser =
-        WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+        WorkbenchSingleton.Workbench.GetPad(type: typeof(SchemaBrowser)) as SchemaBrowser;
     StructureForm structureForm;
 
     public override bool IsEnabled
@@ -45,29 +45,39 @@ public class CreateDataStructureFromEntityCommand : AbstractMenuCommand
         get { return Owner is IDataEntity; }
         set
         {
-            throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
+            throw new ArgumentException(
+                message: ResourceUtils.GetString(key: "ErrorSetProperty"),
+                paramName: "IsEnabled"
+            );
         }
     }
 
     public override void Run()
     {
-        List<string> listdsName = GetListDatastructure(DataStructure.CategoryConst);
+        List<string> listdsName = GetListDatastructure(itemTypeConst: DataStructure.CategoryConst);
         IDataEntity entity = Owner as IDataEntity;
         var list = new List<ListViewItem>();
         DataStructure dd = new DataStructure();
-        list.Add(new ListViewItem(dd.GetType().SchemaItemDescription().Name, dd.Icon));
+        list.Add(
+            item: new ListViewItem(
+                text: dd.GetType().SchemaItemDescription().Name,
+                imageKey: dd.Icon
+            )
+        );
         Stack stackPage = new Stack();
-        stackPage.Push(PagesList.Finish);
-        stackPage.Push(PagesList.SummaryPage);
-        if (listdsName.Any(name => name == entity.Name))
+        stackPage.Push(obj: PagesList.Finish);
+        stackPage.Push(obj: PagesList.SummaryPage);
+        if (listdsName.Any(predicate: name => name == entity.Name))
         {
-            stackPage.Push(PagesList.StructureNamePage);
+            stackPage.Push(obj: PagesList.StructureNamePage);
         }
-        stackPage.Push(PagesList.StartPage);
+        stackPage.Push(obj: PagesList.StartPage);
         structureForm = new StructureForm
         {
-            Title = ResourceUtils.GetString("CreateDataStructureFromEntityWizardTitle"),
-            Description = ResourceUtils.GetString("CreateDataStructureFromEntityWizardDescription"),
+            Title = ResourceUtils.GetString(key: "CreateDataStructureFromEntityWizardTitle"),
+            Description = ResourceUtils.GetString(
+                key: "CreateDataStructureFromEntityWizardDescription"
+            ),
             ItemTypeList = list,
             Pages = stackPage,
             StructureList = listdsName,
@@ -75,7 +85,7 @@ public class CreateDataStructureFromEntityCommand : AbstractMenuCommand
             ImageList = _schemaBrowser.EbrSchemaBrowser.imgList,
             Command = this,
         };
-        Wizard wizardscreen = new Wizard(structureForm);
+        Wizard wizardscreen = new Wizard(objectForm: structureForm);
         if (wizardscreen.ShowDialog() != DialogResult.OK)
         {
             GeneratedModelElements.Clear();
@@ -85,26 +95,29 @@ public class CreateDataStructureFromEntityCommand : AbstractMenuCommand
     public override void Execute()
     {
         DataStructure ds = EntityHelper.CreateDataStructure(
-            Owner as IDataEntity,
-            structureForm.NameOfEntity,
-            true
+            entity: Owner as IDataEntity,
+            name: structureForm.NameOfEntity,
+            persist: true
         );
-        GeneratedModelElements.Add(ds);
+        GeneratedModelElements.Add(item: ds);
     }
 
     public override int GetImageIndex(string icon)
     {
-        return _schemaBrowser.ImageIndex(icon);
+        return _schemaBrowser.ImageIndex(icon: icon);
     }
 
     public override void SetSummaryText(object summary)
     {
         RichTextBox richTextBoxSummary = (RichTextBox)summary;
         richTextBoxSummary.Text = "";
-        richTextBoxSummary.AppendText("");
-        richTextBoxSummary.AppendText("Create Data Structure: ");
-        richTextBoxSummary.SelectionFont = new Font(richTextBoxSummary.Font, FontStyle.Bold);
-        richTextBoxSummary.AppendText(structureForm.NameOfEntity);
-        richTextBoxSummary.AppendText("");
+        richTextBoxSummary.AppendText(text: "");
+        richTextBoxSummary.AppendText(text: "Create Data Structure: ");
+        richTextBoxSummary.SelectionFont = new Font(
+            prototype: richTextBoxSummary.Font,
+            newStyle: FontStyle.Bold
+        );
+        richTextBoxSummary.AppendText(text: structureForm.NameOfEntity);
+        richTextBoxSummary.AppendText(text: "");
     }
 }

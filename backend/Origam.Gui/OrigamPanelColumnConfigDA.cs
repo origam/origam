@@ -44,7 +44,11 @@ public class OrigamPanelColumnConfigDA
             // store column width to the database
             UserProfile profile = SecurityManager.CurrentUserProfile();
             // see if this column already has a config
-            OrigamPanelColumnConfig config = LoadColumnConfig(columnName, profile.Id, panelId);
+            OrigamPanelColumnConfig config = LoadColumnConfig(
+                columnName: columnName,
+                profileId: profile.Id,
+                panelId: panelId
+            );
             OrigamPanelColumnConfig.PanelColumnConfigRow configRow;
             if (config.PanelColumnConfig.Rows.Count == 0)
             {
@@ -56,12 +60,12 @@ public class OrigamPanelColumnConfigDA
                 configRow.RecordCreated = DateTime.Now;
                 configRow.RecordCreatedBy = profile.Id;
                 configRow.ColumnWidth = 0;
-                config.PanelColumnConfig.AddPanelColumnConfigRow(configRow);
+                config.PanelColumnConfig.AddPanelColumnConfigRow(row: configRow);
             }
             else
             {
                 configRow =
-                    config.PanelColumnConfig.Rows[0]
+                    config.PanelColumnConfig.Rows[index: 0]
                     as OrigamPanelColumnConfig.PanelColumnConfigRow;
                 configRow.RecordUpdated = DateTime.Now;
                 configRow.RecordUpdatedBy = profile.Id;
@@ -71,7 +75,7 @@ public class OrigamPanelColumnConfigDA
             configRow.IsHidden = hidden;
             configRow.Position = position;
             // store the new width
-            PersistColumnConfig(config);
+            PersistColumnConfig(config: config);
         }
         catch
         {
@@ -82,17 +86,17 @@ public class OrigamPanelColumnConfigDA
     public static void PersistColumnConfig(OrigamPanelColumnConfig config)
     {
         IServiceAgent dataServiceAgent = (
-            ServiceManager.Services.GetService(typeof(IBusinessServicesService))
+            ServiceManager.Services.GetService(serviceType: typeof(IBusinessServicesService))
             as IBusinessServicesService
-        ).GetAgent("DataService", null, null);
+        ).GetAgent(serviceType: "DataService", ruleEngine: null, workflowEngine: null);
         // persist filters to the database
         DataStructureQuery query = new DataStructureQuery(
-            new Guid("e3966697-e2d6-4538-b7e7-30973ae1af54")
+            dataStructureId: new Guid(g: "e3966697-e2d6-4538-b7e7-30973ae1af54")
         );
         dataServiceAgent.MethodName = "StoreDataByQuery";
         dataServiceAgent.Parameters.Clear();
-        dataServiceAgent.Parameters.Add("Query", query);
-        dataServiceAgent.Parameters.Add("Data", config);
+        dataServiceAgent.Parameters.Add(key: "Query", value: query);
+        dataServiceAgent.Parameters.Add(key: "Data", value: config);
         dataServiceAgent.Run();
     }
 
@@ -103,47 +107,72 @@ public class OrigamPanelColumnConfigDA
     )
     {
         IServiceAgent dataServiceAgent = (
-            ServiceManager.Services.GetService(typeof(IBusinessServicesService))
+            ServiceManager.Services.GetService(serviceType: typeof(IBusinessServicesService))
             as IBusinessServicesService
-        ).GetAgent("DataService", null, null);
+        ).GetAgent(serviceType: "DataService", ruleEngine: null, workflowEngine: null);
         OrigamPanelColumnConfig result = new OrigamPanelColumnConfig();
         // retrieve filters for the current panel from the database
         DataStructureQuery query = new DataStructureQuery(
-            new Guid("e3966697-e2d6-4538-b7e7-30973ae1af54"),
-            new Guid("c621a8e7-a13a-414d-9db8-192698916ed7")
+            dataStructureId: new Guid(g: "e3966697-e2d6-4538-b7e7-30973ae1af54"),
+            methodId: new Guid(g: "c621a8e7-a13a-414d-9db8-192698916ed7")
         );
-        query.Parameters.Add(new QueryParameter("PanelColumnConfig_parPanelId", panelId));
-        query.Parameters.Add(new QueryParameter("PanelColumnConfig_parProfileId", profileId));
-        query.Parameters.Add(new QueryParameter("PanelColumnConfig_parColumnName", columnName));
+        query.Parameters.Add(
+            value: new QueryParameter(
+                _parameterName: "PanelColumnConfig_parPanelId",
+                value: panelId
+            )
+        );
+        query.Parameters.Add(
+            value: new QueryParameter(
+                _parameterName: "PanelColumnConfig_parProfileId",
+                value: profileId
+            )
+        );
+        query.Parameters.Add(
+            value: new QueryParameter(
+                _parameterName: "PanelColumnConfig_parColumnName",
+                value: columnName
+            )
+        );
         dataServiceAgent.MethodName = "LoadDataByQuery";
         dataServiceAgent.Parameters.Clear();
-        dataServiceAgent.Parameters.Add("Query", query);
+        dataServiceAgent.Parameters.Add(key: "Query", value: query);
         dataServiceAgent.Run();
-        result.Merge(dataServiceAgent.Result as DataSet);
+        result.Merge(dataSet: dataServiceAgent.Result as DataSet);
         return result;
     }
 
     public static OrigamPanelColumnConfig LoadUserConfig(Guid panelId, Guid profileId)
     {
         IServiceAgent dataServiceAgent = (
-            ServiceManager.Services.GetService(typeof(IBusinessServicesService))
+            ServiceManager.Services.GetService(serviceType: typeof(IBusinessServicesService))
             as IBusinessServicesService
-        ).GetAgent("DataService", null, null);
+        ).GetAgent(serviceType: "DataService", ruleEngine: null, workflowEngine: null);
         OrigamPanelColumnConfig result = new OrigamPanelColumnConfig();
         try
         {
             // retrieve filters for the current panel from the database
             DataStructureQuery query = new DataStructureQuery(
-                new Guid("e3966697-e2d6-4538-b7e7-30973ae1af54"),
-                new Guid("97b0ab43-e17a-45ab-b2a6-49f0944d604c")
+                dataStructureId: new Guid(g: "e3966697-e2d6-4538-b7e7-30973ae1af54"),
+                methodId: new Guid(g: "97b0ab43-e17a-45ab-b2a6-49f0944d604c")
             );
-            query.Parameters.Add(new QueryParameter("PanelColumnConfig_parPanelId", panelId));
-            query.Parameters.Add(new QueryParameter("PanelColumnConfig_parProfileId", profileId));
+            query.Parameters.Add(
+                value: new QueryParameter(
+                    _parameterName: "PanelColumnConfig_parPanelId",
+                    value: panelId
+                )
+            );
+            query.Parameters.Add(
+                value: new QueryParameter(
+                    _parameterName: "PanelColumnConfig_parProfileId",
+                    value: profileId
+                )
+            );
             dataServiceAgent.MethodName = "LoadDataByQuery";
             dataServiceAgent.Parameters.Clear();
-            dataServiceAgent.Parameters.Add("Query", query);
+            dataServiceAgent.Parameters.Add(key: "Query", value: query);
             dataServiceAgent.Run();
-            result.Merge(dataServiceAgent.Result as DataSet);
+            result.Merge(dataSet: dataServiceAgent.Result as DataSet);
         }
         catch { }
         return result;

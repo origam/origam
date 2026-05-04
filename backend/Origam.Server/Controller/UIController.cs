@@ -42,33 +42,33 @@ public class UIController : AbstractController
         SessionObjects sessionObjects,
         IWebHostEnvironment environment
     )
-        : base(log, sessionObjects, environment)
+        : base(log: log, sessionObjects: sessionObjects, environment: environment)
     {
         persistenceService = ServiceManager.Services.GetService<IPersistenceService>();
     }
 
-    [HttpGet("[action]")]
+    [HttpGet(template: "[action]")]
     public IActionResult GetMenu()
     {
         var claimsPrincipal = User;
-        return Ok(MenuXmlBuilder.GetMenu());
+        return Ok(value: MenuXmlBuilder.GetMenu());
     }
 
-    [HttpGet("[action]")]
+    [HttpGet(template: "[action]")]
     public IActionResult GetUI([FromQuery] [Required] Guid id)
     {
         FormReferenceMenuItem menuItem =
             persistenceService.SchemaProvider.RetrieveInstance(
-                typeof(FormReferenceMenuItem),
-                new ModelElementKey(id)
+                type: typeof(FormReferenceMenuItem),
+                primaryKey: new ModelElementKey(id: id)
             ) as FormReferenceMenuItem;
         if (menuItem == null)
         {
-            return BadRequest("Menu with that Id does not exist");
+            return BadRequest(error: "Menu with that Id does not exist");
         }
 
-        XmlOutput xmlOutput = FormXmlBuilder.GetXml(id);
-        MenuLookupIndex.AddIfNotPresent(id, xmlOutput.ContainedLookups);
-        return Ok(xmlOutput.Document.OuterXml);
+        XmlOutput xmlOutput = FormXmlBuilder.GetXml(menuId: id);
+        MenuLookupIndex.AddIfNotPresent(menuId: id, containedLookups: xmlOutput.ContainedLookups);
+        return Ok(value: xmlOutput.Document.OuterXml);
     }
 }

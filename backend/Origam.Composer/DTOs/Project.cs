@@ -50,7 +50,7 @@ public class Project
             {
                 DatabaseType.MsSql => "Origam.DA.Service.MsSqlDataService, Origam.DA.Service",
                 DatabaseType.PgSql => "Origam.DA.Service.PgSqlDataService, Origam.DA.Service",
-                _ => throw new ArgumentOutOfRangeException(nameof(DatabaseType)),
+                _ => throw new ArgumentOutOfRangeException(paramName: nameof(DatabaseType)),
             };
         }
     }

@@ -39,13 +39,17 @@ public class AsTabControl : System.Windows.Forms.TabControl
     #region "    Variables "
     private TabControlDisplayManager _DisplayManager = TabControlDisplayManager.Framework;
     private IPersistenceService _persistence =
-        ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+        ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+        as IPersistenceService;
     #endregion
 
     #region "    Properties "
     [
-        System.ComponentModel.DefaultValue(typeof(TabControlDisplayManager), "Framework"),
-        System.ComponentModel.Category("Appearance")
+        System.ComponentModel.DefaultValue(
+            type: typeof(TabControlDisplayManager),
+            value: "Framework"
+        ),
+        System.ComponentModel.Category(category: "Appearance")
     ]
     public TabControlDisplayManager DisplayManager
     {
@@ -53,17 +57,17 @@ public class AsTabControl : System.Windows.Forms.TabControl
         set
         {
             _DisplayManager = value;
-            if (this._DisplayManager.Equals(TabControlDisplayManager.Framework))
+            if (this._DisplayManager.Equals(obj: TabControlDisplayManager.Framework))
             {
-                this.SetStyle(ControlStyles.UserPaint, true);
-                this.ItemSize = new Size(0, 15);
-                this.Padding = new Point(9, 0);
+                this.SetStyle(flag: ControlStyles.UserPaint, value: true);
+                this.ItemSize = new Size(width: 0, height: 15);
+                this.Padding = new Point(x: 9, y: 0);
             }
             else
             {
-                this.ItemSize = new Size(0, 0);
-                this.Padding = new Point(6, 3);
-                this.SetStyle(ControlStyles.UserPaint, false);
+                this.ItemSize = new Size(width: 0, height: 0);
+                this.Padding = new Point(x: 6, y: 3);
+                this.SetStyle(flag: ControlStyles.UserPaint, value: false);
             }
         }
     }
@@ -73,15 +77,15 @@ public class AsTabControl : System.Windows.Forms.TabControl
     public AsTabControl()
         : base()
     {
-        if (this._DisplayManager.Equals(TabControlDisplayManager.Framework))
+        if (this._DisplayManager.Equals(obj: TabControlDisplayManager.Framework))
         {
-            this.SetStyle(ControlStyles.UserPaint, true);
-            this.ItemSize = new Size(0, 15);
-            this.Padding = new Point(9, 0);
+            this.SetStyle(flag: ControlStyles.UserPaint, value: true);
+            this.ItemSize = new Size(width: 0, height: 15);
+            this.Padding = new Point(x: 9, y: 0);
         }
-        this.SetStyle(ControlStyles.SupportsTransparentBackColor, true);
-        this.SetStyle(ControlStyles.DoubleBuffer, true);
-        this.SetStyle(ControlStyles.ResizeRedraw, true);
+        this.SetStyle(flag: ControlStyles.SupportsTransparentBackColor, value: true);
+        this.SetStyle(flag: ControlStyles.DoubleBuffer, value: true);
+        this.SetStyle(flag: ControlStyles.ResizeRedraw, value: true);
         this.ResizeRedraw = true;
     }
     #endregion
@@ -91,38 +95,68 @@ public class AsTabControl : System.Windows.Forms.TabControl
     {
         System.Drawing.Drawing2D.GraphicsPath path = new System.Drawing.Drawing2D.GraphicsPath();
         path.Reset();
-        Rectangle rect = this.GetTabRect(index);
+        Rectangle rect = this.GetTabRect(index: index);
         if (index == 0)
         {
-            path.AddLine(rect.Left + 1, rect.Bottom + 1, rect.Left + rect.Height, rect.Top + 2);
-            path.AddLine(rect.Left + rect.Height + 4, rect.Top, rect.Right - 3, rect.Top);
-            path.AddLine(rect.Right - 1, rect.Top + 2, rect.Right - 1, rect.Bottom + 1);
+            path.AddLine(
+                x1: rect.Left + 1,
+                y1: rect.Bottom + 1,
+                x2: rect.Left + rect.Height,
+                y2: rect.Top + 2
+            );
+            path.AddLine(
+                x1: rect.Left + rect.Height + 4,
+                y1: rect.Top,
+                x2: rect.Right - 3,
+                y2: rect.Top
+            );
+            path.AddLine(
+                x1: rect.Right - 1,
+                y1: rect.Top + 2,
+                x2: rect.Right - 1,
+                y2: rect.Bottom + 1
+            );
         }
         else
         {
             if (index == this.SelectedIndex)
             {
                 path.AddLine(
-                    rect.Left + 5 - rect.Height,
-                    rect.Bottom + 1,
-                    rect.Left + 4,
-                    rect.Top + 2
+                    x1: rect.Left + 5 - rect.Height,
+                    y1: rect.Bottom + 1,
+                    x2: rect.Left + 4,
+                    y2: rect.Top + 2
                 );
-                path.AddLine(rect.Left + 8, rect.Top, rect.Right - 3, rect.Top);
-                path.AddLine(rect.Right - 1, rect.Top + 2, rect.Right - 1, rect.Bottom + 1);
+                path.AddLine(x1: rect.Left + 8, y1: rect.Top, x2: rect.Right - 3, y2: rect.Top);
                 path.AddLine(
-                    rect.Right - 1,
-                    rect.Bottom + 1,
-                    rect.Left + 5 - rect.Height,
-                    rect.Bottom + 1
+                    x1: rect.Right - 1,
+                    y1: rect.Top + 2,
+                    x2: rect.Right - 1,
+                    y2: rect.Bottom + 1
+                );
+                path.AddLine(
+                    x1: rect.Right - 1,
+                    y1: rect.Bottom + 1,
+                    x2: rect.Left + 5 - rect.Height,
+                    y2: rect.Bottom + 1
                 );
             }
             else
             {
-                path.AddLine(rect.Left, rect.Top + 6, rect.Left + 4, rect.Top + 2);
-                path.AddLine(rect.Left + 8, rect.Top, rect.Right - 3, rect.Top);
-                path.AddLine(rect.Right - 1, rect.Top + 2, rect.Right - 1, rect.Bottom + 1);
-                path.AddLine(rect.Right - 1, rect.Bottom + 1, rect.Left, rect.Bottom + 1);
+                path.AddLine(x1: rect.Left, y1: rect.Top + 6, x2: rect.Left + 4, y2: rect.Top + 2);
+                path.AddLine(x1: rect.Left + 8, y1: rect.Top, x2: rect.Right - 3, y2: rect.Top);
+                path.AddLine(
+                    x1: rect.Right - 1,
+                    y1: rect.Top + 2,
+                    x2: rect.Right - 1,
+                    y2: rect.Bottom + 1
+                );
+                path.AddLine(
+                    x1: rect.Right - 1,
+                    y1: rect.Bottom + 1,
+                    x2: rect.Left,
+                    y2: rect.Bottom + 1
+                );
             }
         }
         return path;
@@ -132,16 +166,26 @@ public class AsTabControl : System.Windows.Forms.TabControl
     {
         System.Drawing.Drawing2D.GraphicsPath path = new System.Drawing.Drawing2D.GraphicsPath();
         path.Reset();
-        Rectangle rect = this.GetTabRect(index);
+        Rectangle rect = this.GetTabRect(index: index);
         if (index == 0)
         {
-            path.AddLine(rect.Left + rect.Height + 4, rect.Top + 1, rect.Right - 3, rect.Top + 1);
-            path.AddLine(rect.Left + rect.Height + 3, rect.Top + 2, rect.Right - 1, rect.Top + 2);
+            path.AddLine(
+                x1: rect.Left + rect.Height + 4,
+                y1: rect.Top + 1,
+                x2: rect.Right - 3,
+                y2: rect.Top + 1
+            );
+            path.AddLine(
+                x1: rect.Left + rect.Height + 3,
+                y1: rect.Top + 2,
+                x2: rect.Right - 1,
+                y2: rect.Top + 2
+            );
         }
         else
         {
-            path.AddLine(rect.Left + 8, rect.Top + 1, rect.Right - 3, rect.Top + 1);
-            path.AddLine(rect.Left + 7, rect.Top + 2, rect.Right - 1, rect.Top + 2);
+            path.AddLine(x1: rect.Left + 8, y1: rect.Top + 1, x2: rect.Right - 3, y2: rect.Top + 1);
+            path.AddLine(x1: rect.Left + 7, y1: rect.Top + 2, x2: rect.Right - 1, y2: rect.Top + 2);
         }
         return path;
     }
@@ -149,30 +193,30 @@ public class AsTabControl : System.Windows.Forms.TabControl
     protected override void OnPaint(System.Windows.Forms.PaintEventArgs e)
     {
         //   Paint the Background
-        this.PaintTransparentBackground(e.Graphics, this.ClientRectangle);
+        this.PaintTransparentBackground(g: e.Graphics, clipRect: this.ClientRectangle);
         //   Paint all the tabs
         if (this.TabCount > 0)
         {
             for (int index = 0; index <= this.TabCount - 1; index++)
             {
-                this.PaintTab(e, index);
+                this.PaintTab(e: e, index: index);
             }
         }
         //   paint a border round the pagebox
         //   We can't make the border disappear so have to do it like this.
         if (this.TabCount > 0)
         {
-            Rectangle borderRect = this.TabPages[0].Bounds;
+            Rectangle borderRect = this.TabPages[index: 0].Bounds;
             if (this.SelectedTab != null)
             {
                 borderRect = this.SelectedTab.Bounds;
             }
-            borderRect.Inflate(1, 1);
+            borderRect.Inflate(width: 1, height: 1);
             ControlPaint.DrawBorder(
-                e.Graphics,
-                borderRect,
-                ThemedColors.ToolBorder,
-                ButtonBorderStyle.Solid
+                graphics: e.Graphics,
+                bounds: borderRect,
+                color: ThemedColors.ToolBorder,
+                style: ButtonBorderStyle.Solid
             );
         }
         //   repaint the bit where the selected tab is
@@ -184,28 +228,28 @@ public class AsTabControl : System.Windows.Forms.TabControl
             }
             case 0:
             {
-                Rectangle selrect = this.GetTabRect(this.SelectedIndex);
+                Rectangle selrect = this.GetTabRect(index: this.SelectedIndex);
                 int selrectRight = selrect.Right;
                 e.Graphics.DrawLine(
-                    new Pen(OrigamColorScheme.TabActiveEndColor),
-                    selrect.Left + 2,
-                    selrect.Bottom + 1,
-                    selrectRight - 2,
-                    selrect.Bottom + 1
+                    pen: new Pen(color: OrigamColorScheme.TabActiveEndColor),
+                    x1: selrect.Left + 2,
+                    y1: selrect.Bottom + 1,
+                    x2: selrectRight - 2,
+                    y2: selrect.Bottom + 1
                 );
                 break;
             }
 
             default:
             {
-                Rectangle selrect = this.GetTabRect(this.SelectedIndex);
+                Rectangle selrect = this.GetTabRect(index: this.SelectedIndex);
                 int selrectRight = selrect.Right;
                 e.Graphics.DrawLine(
-                    new Pen(OrigamColorScheme.TabActiveEndColor),
-                    selrect.Left + 6 - selrect.Height,
-                    selrect.Bottom + 1,
-                    selrectRight - 2,
-                    selrect.Bottom + 1
+                    pen: new Pen(color: OrigamColorScheme.TabActiveEndColor),
+                    x1: selrect.Left + 6 - selrect.Height,
+                    y1: selrect.Bottom + 1,
+                    x2: selrectRight - 2,
+                    y2: selrect.Bottom + 1
                 );
                 break;
             }
@@ -218,17 +262,17 @@ public class AsTabControl : System.Windows.Forms.TabControl
         {
             System.Drawing.Drawing2D.LinearGradientBrush backBrush =
                 new System.Drawing.Drawing2D.LinearGradientBrush(
-                    this.Bounds,
-                    SystemColors.ControlLightLight,
-                    SystemColors.ControlLight,
-                    LinearGradientMode.Vertical
+                    rect: this.Bounds,
+                    color1: SystemColors.ControlLightLight,
+                    color2: SystemColors.ControlLight,
+                    linearGradientMode: LinearGradientMode.Vertical
                 );
-            pevent.Graphics.FillRectangle(backBrush, this.Bounds);
+            pevent.Graphics.FillRectangle(brush: backBrush, rect: this.Bounds);
             backBrush.Dispose();
         }
         else
         {
-            this.PaintTransparentBackground(pevent.Graphics, this.ClientRectangle);
+            this.PaintTransparentBackground(g: pevent.Graphics, clipRect: this.ClientRectangle);
         }
     }
 
@@ -236,43 +280,43 @@ public class AsTabControl : System.Windows.Forms.TabControl
     {
         if ((this.Parent != null))
         {
-            clipRect.Offset(this.Location);
-            PaintEventArgs e = new PaintEventArgs(g, clipRect);
+            clipRect.Offset(pos: this.Location);
+            PaintEventArgs e = new PaintEventArgs(graphics: g, clipRect: clipRect);
             GraphicsState state = g.Save();
             g.SmoothingMode = SmoothingMode.HighSpeed;
             try
             {
-                g.TranslateTransform((float)-this.Location.X, (float)-this.Location.Y);
-                this.InvokePaintBackground(this.Parent, e);
-                this.InvokePaint(this.Parent, e);
+                g.TranslateTransform(dx: (float)-this.Location.X, dy: (float)-this.Location.Y);
+                this.InvokePaintBackground(c: this.Parent, e: e);
+                this.InvokePaint(c: this.Parent, e: e);
             }
             finally
             {
-                g.Restore(state);
-                clipRect.Offset(-this.Location.X, -this.Location.Y);
+                g.Restore(gstate: state);
+                clipRect.Offset(x: -this.Location.X, y: -this.Location.Y);
             }
         }
         else
         {
             System.Drawing.Drawing2D.LinearGradientBrush backBrush =
                 new System.Drawing.Drawing2D.LinearGradientBrush(
-                    this.Bounds,
-                    SystemColors.ControlLightLight,
-                    SystemColors.ControlLight,
-                    LinearGradientMode.Vertical
+                    rect: this.Bounds,
+                    color1: SystemColors.ControlLightLight,
+                    color2: SystemColors.ControlLight,
+                    linearGradientMode: LinearGradientMode.Vertical
                 );
-            g.FillRectangle(backBrush, this.Bounds);
+            g.FillRectangle(brush: backBrush, rect: this.Bounds);
             backBrush.Dispose();
         }
     }
 
     private void PaintTab(System.Windows.Forms.PaintEventArgs e, int index)
     {
-        System.Drawing.Drawing2D.GraphicsPath path = this.GetPath(index);
-        this.PaintTabBackground(e.Graphics, index, path);
-        this.PaintTabBorder(e.Graphics, index, path);
-        this.PaintTabText(e.Graphics, index);
-        this.PaintTabImage(e.Graphics, index);
+        System.Drawing.Drawing2D.GraphicsPath path = this.GetPath(index: index);
+        this.PaintTabBackground(graph: e.Graphics, index: index, path: path);
+        this.PaintTabBorder(graph: e.Graphics, index: index, path: path);
+        this.PaintTabText(graph: e.Graphics, index: index);
+        this.PaintTabImage(graph: e.Graphics, index: index);
     }
 
     private void PaintTabBackground(
@@ -281,29 +325,29 @@ public class AsTabControl : System.Windows.Forms.TabControl
         System.Drawing.Drawing2D.GraphicsPath path
     )
     {
-        Rectangle rect = this.GetTabRect(index);
+        Rectangle rect = this.GetTabRect(index: index);
         if (rect.Height > 1 && rect.Width > 1)
         {
             System.Drawing.Brush buttonBrush;
             if (index == this.SelectedIndex)
             {
                 buttonBrush = new System.Drawing.Drawing2D.LinearGradientBrush(
-                    rect,
-                    OrigamColorScheme.TabActiveStartColor,
-                    OrigamColorScheme.TabActiveEndColor,
-                    LinearGradientMode.Vertical
+                    rect: rect,
+                    color1: OrigamColorScheme.TabActiveStartColor,
+                    color2: OrigamColorScheme.TabActiveEndColor,
+                    linearGradientMode: LinearGradientMode.Vertical
                 );
             }
             else
             {
                 buttonBrush = new System.Drawing.Drawing2D.LinearGradientBrush(
-                    rect,
-                    OrigamColorScheme.TabInactiveStartColor,
-                    OrigamColorScheme.TabInactiveEndColor,
-                    LinearGradientMode.Vertical
+                    rect: rect,
+                    color1: OrigamColorScheme.TabInactiveStartColor,
+                    color2: OrigamColorScheme.TabInactiveEndColor,
+                    linearGradientMode: LinearGradientMode.Vertical
                 );
             }
-            graph.FillPath(buttonBrush, path);
+            graph.FillPath(brush: buttonBrush, path: path);
             buttonBrush.Dispose();
             //				if(index == this.SelectedIndex)
             //				{
@@ -321,21 +365,21 @@ public class AsTabControl : System.Windows.Forms.TabControl
         System.Drawing.Drawing2D.GraphicsPath path
     )
     {
-        Pen borderPen = new Pen(SystemColors.ControlDark);
+        Pen borderPen = new Pen(color: SystemColors.ControlDark);
         if (index == this.SelectedIndex)
         {
-            borderPen = new Pen(ThemedColors.ToolBorder);
+            borderPen = new Pen(color: ThemedColors.ToolBorder);
         }
-        graph.DrawPath(borderPen, path);
+        graph.DrawPath(pen: borderPen, path: path);
         borderPen.Dispose();
     }
 
     private void PaintTabImage(System.Drawing.Graphics graph, int index)
     {
         Image tabImage = null;
-        if (this.TabPages[index].ImageIndex > -1 && this.ImageList != null)
+        if (this.TabPages[index: index].ImageIndex > -1 && this.ImageList != null)
         {
-            tabImage = this.ImageList.Images[this.TabPages[index].ImageIndex];
+            tabImage = this.ImageList.Images[index: this.TabPages[index: index].ImageIndex];
         }
         //			else if (this.TabPages[index].ImageKey.Trim().Length > 0 && this.ImageList != null)
         //			{
@@ -343,62 +387,73 @@ public class AsTabControl : System.Windows.Forms.TabControl
         //			}
         if (tabImage != null)
         {
-            Rectangle rect = this.GetTabRect(index);
+            Rectangle rect = this.GetTabRect(index: index);
             graph.DrawImage(
-                tabImage,
-                rect.Right - rect.Height - 4,
-                4,
-                rect.Height - 2,
-                rect.Height - 2
+                image: tabImage,
+                x: rect.Right - rect.Height - 4,
+                y: 4,
+                width: rect.Height - 2,
+                height: rect.Height - 2
             );
         }
     }
 
     private void PaintTabText(System.Drawing.Graphics graph, int index)
     {
-        Rectangle rect = this.GetTabRect(index);
-        Rectangle rect2 = new Rectangle(rect.Left + 8, rect.Top + 1, rect.Width - 6, rect.Height);
+        Rectangle rect = this.GetTabRect(index: index);
+        Rectangle rect2 = new Rectangle(
+            x: rect.Left + 8,
+            y: rect.Top + 1,
+            width: rect.Width - 6,
+            height: rect.Height
+        );
         if (index == 0)
         {
             rect2 = new Rectangle(
-                rect.Left + rect.Height,
-                rect.Top + 1,
-                rect.Width - rect.Height,
-                rect.Height
+                x: rect.Left + rect.Height,
+                y: rect.Top + 1,
+                width: rect.Width - rect.Height,
+                height: rect.Height
             );
         }
 
-        string tabtext = this.TabPages[index].Text;
+        string tabtext = this.TabPages[index: index].Text;
         System.Drawing.StringFormat format = new System.Drawing.StringFormat();
         format.Alignment = StringAlignment.Near;
         format.LineAlignment = StringAlignment.Center;
         format.Trimming = StringTrimming.EllipsisCharacter;
         Brush forebrush = null;
-        if (this.TabPages[index].Enabled == false)
+        if (this.TabPages[index: index].Enabled == false)
         {
             forebrush = SystemBrushes.ControlDark;
         }
         else
         {
-            forebrush = new SolidBrush(OrigamColorScheme.TabInactiveForeColor);
+            forebrush = new SolidBrush(color: OrigamColorScheme.TabInactiveForeColor);
         }
         Font tabFont = this.Font;
         if (index == this.SelectedIndex)
         {
-            tabFont = new Font(this.Font, FontStyle.Bold);
+            tabFont = new Font(prototype: this.Font, newStyle: FontStyle.Bold);
             if (index == 0)
             {
                 rect2 = new Rectangle(
-                    rect.Left + rect.Height,
-                    rect.Top + 1,
-                    rect.Width - rect.Height + 5,
-                    rect.Height
+                    x: rect.Left + rect.Height,
+                    y: rect.Top + 1,
+                    width: rect.Width - rect.Height + 5,
+                    height: rect.Height
                 );
             }
             // p�id�l�no
-            forebrush = new SolidBrush(OrigamColorScheme.TabActiveForeColor);
+            forebrush = new SolidBrush(color: OrigamColorScheme.TabActiveForeColor);
         }
-        graph.DrawString(tabtext, tabFont, forebrush, rect2, format);
+        graph.DrawString(
+            s: tabtext,
+            font: tabFont,
+            brush: forebrush,
+            layoutRectangle: rect2,
+            format: format
+        );
     }
     #endregion
     public enum TabControlDisplayManager : int
@@ -421,7 +476,13 @@ public class AsTabControl : System.Windows.Forms.TabControl
                 {
                     this.SelectedIndex = 0;
                 }
-                this.SelectedTab.SelectNextControl(this.SelectedTab, true, true, true, true);
+                this.SelectedTab.SelectNextControl(
+                    ctl: this.SelectedTab,
+                    forward: true,
+                    tabStopOnly: true,
+                    nested: true,
+                    wrap: true
+                );
                 return true;
             }
             if (keyData == (Keys.Tab | Keys.Control | Keys.Shift))
@@ -434,18 +495,24 @@ public class AsTabControl : System.Windows.Forms.TabControl
                 {
                     this.SelectedIndex = this.TabCount - 1;
                 }
-                this.SelectedTab.SelectNextControl(this.SelectedTab, true, true, true, true);
+                this.SelectedTab.SelectNextControl(
+                    ctl: this.SelectedTab,
+                    forward: true,
+                    tabStopOnly: true,
+                    nested: true,
+                    wrap: true
+                );
                 return true;
             }
         }
-        return base.ProcessCmdKey(ref msg, keyData);
+        return base.ProcessCmdKey(msg: ref msg, keyData: keyData);
     }
 
     protected override void OnSelectedIndexChanged(EventArgs e)
     {
         try
         {
-            base.OnSelectedIndexChanged(e);
+            base.OnSelectedIndexChanged(e: e);
         }
         catch { }
         Invalidate();
@@ -453,25 +520,25 @@ public class AsTabControl : System.Windows.Forms.TabControl
 
     private Guid _styleId;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public Guid StyleId
     {
         get { return _styleId; }
         set { _styleId = value; }
     }
 
-    [TypeConverter(typeof(StylesConverter))]
+    [TypeConverter(type: typeof(StylesConverter))]
     public UIStyle Style
     {
         get
         {
             return (UIStyle)
                 _persistence.SchemaProvider.RetrieveInstance(
-                    typeof(UIStyle),
-                    new ModelElementKey(this.StyleId)
+                    type: typeof(UIStyle),
+                    primaryKey: new ModelElementKey(id: this.StyleId)
                 );
         }
-        set { this.StyleId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]); }
+        set { this.StyleId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]); }
     }
 }
 
@@ -506,10 +573,10 @@ public class ThemedColors
         Color[] colorArray1;
         colorArray1 = new Color[]
         {
-            Color.FromArgb(127, 157, 185),
-            Color.FromArgb(164, 185, 127),
-            Color.FromArgb(165, 172, 178),
-            Color.FromArgb(132, 130, 132),
+            Color.FromArgb(red: 127, green: 157, blue: 185),
+            Color.FromArgb(red: 164, green: 185, blue: 127),
+            Color.FromArgb(red: 165, green: 172, blue: 178),
+            Color.FromArgb(red: 132, green: 130, blue: 132),
         };
         ThemedColors._toolBorder = colorArray1;
     }

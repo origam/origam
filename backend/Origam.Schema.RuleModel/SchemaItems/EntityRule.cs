@@ -27,21 +27,21 @@ using Origam.Schema.EntityModel;
 
 namespace Origam.Schema.RuleModel;
 
-[SchemaItemDescription("Entity Rule", "entity-rule.png")]
-[HelpTopic("Entity+Rule")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Entity Rule", iconName: "entity-rule.png")]
+[HelpTopic(topic: "Entity+Rule")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class EntityRule : XPathRule, IEntityRule
 {
     public EntityRule()
         : base() { }
 
     public EntityRule(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(schemaExtensionId: schemaExtensionId) { }
 
     public EntityRule(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
-    [XmlAttribute("isPathRelative")]
-    [Browsable(false)]
+    [XmlAttribute(attributeName: "isPathRelative")]
+    [Browsable(browsable: false)]
     public override bool IsPathRelative { get; set; } = false;
 }

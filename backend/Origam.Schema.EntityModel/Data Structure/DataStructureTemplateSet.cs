@@ -27,10 +27,14 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.EntityModel;
 
-[SchemaItemDescription("Template Set", "Template Sets", "icon_template-set.png")]
-[HelpTopic("Template+Sets")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(
+    name: "Template Set",
+    folderName: "Template Sets",
+    iconName: "icon_template-set.png"
+)]
+[HelpTopic(topic: "Template+Sets")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class DataStructureTemplateSet : AbstractSchemaItem
 {
     public const string CategoryConst = "DataStructureTemplateSet";
@@ -38,15 +42,15 @@ public class DataStructureTemplateSet : AbstractSchemaItem
     public DataStructureTemplateSet() { }
 
     public DataStructureTemplateSet(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     public DataStructureTemplateSet(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     #region Properties
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public List<DataStructureTemplate> Templates =>
-        ChildItemsByType<DataStructureTemplate>(DataStructureTemplate.CategoryConst);
+        ChildItemsByType<DataStructureTemplate>(itemType: DataStructureTemplate.CategoryConst);
     #endregion
     #region Public Methods
     public List<DataStructureTemplate> TemplatesByDataMember(string dataMember)
@@ -56,7 +60,7 @@ public class DataStructureTemplateSet : AbstractSchemaItem
         {
             if (template.Entity.Name == dataMember)
             {
-                result.Add(template);
+                result.Add(item: template);
             }
         }
         return result;
@@ -73,9 +77,9 @@ public class DataStructureTemplateSet : AbstractSchemaItem
     public override T NewItem<T>(Guid schemaExtensionId, SchemaItemGroup group)
     {
         return base.NewItem<T>(
-            schemaExtensionId,
-            group,
-            typeof(T) == typeof(DataStructureTransformationTemplate)
+            schemaExtensionId: schemaExtensionId,
+            group: group,
+            itemName: typeof(T) == typeof(DataStructureTransformationTemplate)
                 ? "NewTransformationTemplate"
                 : null
         );

@@ -31,7 +31,7 @@ namespace Origam.Workflow.Tasks;
 public class LoopBlockEngineTask : BlockEngineTask
 {
     private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
-        System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
+        type: System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
     );
     WorkflowEngine _call;
 
@@ -48,7 +48,7 @@ public class LoopBlockEngineTask : BlockEngineTask
         catch (Exception ex)
         {
             exception = ex;
-            OnFinished(new WorkflowEngineTaskEventArgs(exception));
+            OnFinished(e: new WorkflowEngineTaskEventArgs(exception: exception));
         }
     }
 
@@ -56,7 +56,7 @@ public class LoopBlockEngineTask : BlockEngineTask
     {
         if (log.IsInfoEnabled)
         {
-            log.Info("Loop Block started.");
+            log.Info(message: "Loop Block started.");
         }
         this.Engine.Host.WorkflowFinished += new WorkflowHostEvent(Host_WorkflowFinished);
         this.Engine.Host.WorkflowMessage += new WorkflowHostMessageEvent(Host_WorkflowMessage);
@@ -67,7 +67,10 @@ public class LoopBlockEngineTask : BlockEngineTask
     {
         int i = 0;
         LoopWorkflowBlock block = this.Step as LoopWorkflowBlock;
-        _call = this.Engine.GetSubEngine(block, Engine.TransactionBehavior);
+        _call = this.Engine.GetSubEngine(
+            block: block,
+            transactionBehavior: Engine.TransactionBehavior
+        );
         do
         {
             i++;
@@ -79,30 +82,33 @@ public class LoopBlockEngineTask : BlockEngineTask
 
             if (log.IsInfoEnabled)
             {
-                log.Info("Starting loop iteration no. " + i.ToString());
+                log.Info(message: "Starting loop iteration no. " + i.ToString());
             }
             // Set workflow
             _call.ParentContexts.Clear();
             // Fill input context stores
             foreach (Key key in this.Engine.RuleEngine.ContextStoreKeys)
             {
-                _call.ParentContexts.Add(key, this.Engine.RuleEngine.GetContext(key));
+                _call.ParentContexts.Add(
+                    key: key,
+                    value: this.Engine.RuleEngine.GetContext(key: key)
+                );
             }
-            Engine.Host.ExecuteWorkflow(_call);
+            Engine.Host.ExecuteWorkflow(engine: _call);
         } while (
             (bool)
                 this.Engine.RuleEngine.EvaluateContext(
-                    block.LoopConditionXPath,
-                    block.LoopConditionContextStore,
-                    OrigamDataType.Boolean,
-                    null
+                    xpath: block.LoopConditionXPath,
+                    context: block.LoopConditionContextStore,
+                    dataType: OrigamDataType.Boolean,
+                    targetStructure: null
                 )
         );
         // there is no other iteration, we finish
         if (this.Engine != null) // only if we have not finished already e.g. with an exception
         {
             UnsubscribeEvents();
-            OnFinished(new WorkflowEngineTaskEventArgs());
+            OnFinished(e: new WorkflowEngineTaskEventArgs());
         }
     }
 
@@ -114,29 +120,29 @@ public class LoopBlockEngineTask : BlockEngineTask
         }
 
         LoopWorkflowBlock block = this.Step as LoopWorkflowBlock;
-        if (e.Engine.WorkflowUniqueId.Equals(_call.WorkflowUniqueId))
+        if (e.Engine.WorkflowUniqueId.Equals(g: _call.WorkflowUniqueId))
         {
             if (e.Exception != null)
             {
                 UnsubscribeEvents();
-                OnFinished(new WorkflowEngineTaskEventArgs(e.Exception));
+                OnFinished(e: new WorkflowEngineTaskEventArgs(exception: e.Exception));
                 return;
             }
             if (log.IsInfoEnabled)
             {
-                log.Info("Finishing loop iteration.");
+                log.Info(message: "Finishing loop iteration.");
             }
         }
     }
 
     private void Host_WorkflowMessage(object sender, WorkflowHostMessageEventArgs e)
     {
-        if (e.Engine.WorkflowUniqueId.Equals(_call.WorkflowUniqueId))
+        if (e.Engine.WorkflowUniqueId.Equals(g: _call.WorkflowUniqueId))
         {
             if (e.Exception != null)
             {
                 UnsubscribeEvents();
-                OnFinished(new WorkflowEngineTaskEventArgs(e.Exception));
+                OnFinished(e: new WorkflowEngineTaskEventArgs(exception: e.Exception));
             }
         }
     }

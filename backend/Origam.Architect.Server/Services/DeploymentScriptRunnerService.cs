@@ -36,56 +36,72 @@ public class DeploymentScriptRunnerService(ILogger<DeploymentScriptRunnerService
 
         try
         {
-            logger.LogInformation("Executing deployment script: {ScriptName}", script.Name);
-            ExecuteActivity(script, transactionId);
-            ResourceMonitor.Commit(transactionId);
             logger.LogInformation(
-                "Deployment script executed successfully: {ScriptName}",
-                script.Name
+                message: "Executing deployment script: {ScriptName}",
+                args: script.Name
+            );
+            ExecuteActivity(activity: script, transactionId: transactionId);
+            ResourceMonitor.Commit(transactionId: transactionId);
+            logger.LogInformation(
+                message: "Deployment script executed successfully: {ScriptName}",
+                args: script.Name
             );
         }
         catch (Exception ex)
         {
-            ResourceMonitor.Rollback(transactionId);
-            logger.LogError(ex, "Error executing deployment script: {ScriptName}", script.Name);
-            throw new Exception($"Error executing deployment script '{script.Name}'", ex);
+            ResourceMonitor.Rollback(transactionId: transactionId);
+            logger.LogError(
+                exception: ex,
+                message: "Error executing deployment script: {ScriptName}",
+                args: script.Name
+            );
+            throw new Exception(
+                message: $"Error executing deployment script '{script.Name}'",
+                innerException: ex
+            );
         }
     }
 
     private void ExecuteActivity(AbstractUpdateScriptActivity activity, string transactionId)
     {
-        if (logger.IsEnabled(LogLevel.Information))
+        if (logger.IsEnabled(logLevel: LogLevel.Information))
         {
-            logger.LogInformation("Executing deployment activity: {ActivityName}", activity.Name);
+            logger.LogInformation(
+                message: "Executing deployment activity: {ActivityName}",
+                args: activity.Name
+            );
         }
 
         try
         {
             if (activity is ServiceCommandUpdateScriptActivity serviceActivity)
             {
-                ExecuteServiceCommandActivity(serviceActivity, transactionId);
+                ExecuteServiceCommandActivity(
+                    activity: serviceActivity,
+                    transactionId: transactionId
+                );
             }
             else if (activity is FileRestoreUpdateScriptActivity fileActivity)
             {
-                ExecuteFileRestoreActivity(fileActivity);
+                ExecuteFileRestoreActivity(activity: fileActivity);
             }
             else
             {
                 throw new ArgumentOutOfRangeException(
-                    nameof(activity),
-                    activity,
-                    Strings.DeploymentScript_UnsupportedDeploymentActivityType
+                    paramName: nameof(activity),
+                    actualValue: activity,
+                    message: Strings.DeploymentScript_UnsupportedDeploymentActivityType
                 );
             }
         }
         catch (Exception ex)
         {
-            if (logger.IsEnabled(LogLevel.Critical))
+            if (logger.IsEnabled(logLevel: LogLevel.Critical))
             {
                 logger.LogCritical(
-                    ex,
-                    "Error occurred while running deployment activity {ActivityPath}",
-                    activity.Path
+                    exception: ex,
+                    message: "Error occurred while running deployment activity {ActivityPath}",
+                    args: activity.Path
                 );
             }
             throw;
@@ -100,10 +116,14 @@ public class DeploymentScriptRunnerService(ILogger<DeploymentScriptRunnerService
         var service = ServiceManager.Services.GetService<IBusinessServicesService>();
         if (service == null)
         {
-            throw new InvalidOperationException("Business services service not available");
+            throw new InvalidOperationException(message: "Business services service not available");
         }
 
-        IServiceAgent agent = service.GetAgent(activity.Service.Name, null, null);
+        IServiceAgent agent = service.GetAgent(
+            serviceType: activity.Service.Name,
+            ruleEngine: null,
+            workflowEngine: null
+        );
         var result = "";
 
         if (
@@ -112,25 +132,36 @@ public class DeploymentScriptRunnerService(ILogger<DeploymentScriptRunnerService
         )
         {
             OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
-            settings.DeployPlatforms?.ForEach(platform =>
+            settings.DeployPlatforms?.ForEach(action: platform =>
             {
                 var databaseType = (DatabaseType)
-                    Enum.Parse(typeof(DatabaseType), platform.GetParseEnum(platform.DataService));
+                    Enum.Parse(
+                        enumType: typeof(DatabaseType),
+                        value: platform.GetParseEnum(dataDataService: platform.DataService)
+                    );
                 if (databaseType == (DatabaseType)activity.DatabaseType)
                 {
-                    agent.SetDataService(DataServiceFactory.GetDataService(platform));
-                    result = agent.ExecuteUpdate(activity.CommandText, transactionId);
+                    agent.SetDataService(
+                        dataService: DataServiceFactory.GetDataService(deployPlatform: platform)
+                    );
+                    result = agent.ExecuteUpdate(
+                        command: activity.CommandText,
+                        transactionId: transactionId
+                    );
                 }
             });
         }
         else
         {
-            result = agent.ExecuteUpdate(activity.CommandText, transactionId);
+            result = agent.ExecuteUpdate(
+                command: activity.CommandText,
+                transactionId: transactionId
+            );
         }
 
-        if (logger.IsEnabled(LogLevel.Information))
+        if (logger.IsEnabled(logLevel: LogLevel.Information))
         {
-            logger.LogInformation(result);
+            logger.LogInformation(message: result);
         }
     }
 

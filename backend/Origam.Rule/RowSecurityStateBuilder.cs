@@ -31,7 +31,7 @@ namespace Origam.Rule;
 public class RowSecurityStateBuilder
 {
     private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
-        System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
+        type: System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
     );
     public RowSecurityState Result { get; private set; }
     private DataRow row;
@@ -50,7 +50,7 @@ public class RowSecurityStateBuilder
         Guid formId
     )
     {
-        var builder = new RowSecurityStateBuilder(row, ruleEngine);
+        var builder = new RowSecurityStateBuilder(row: row, ruleEngine: ruleEngine);
         if (!builder.isBuildable)
         {
             return null;
@@ -58,8 +58,8 @@ public class RowSecurityStateBuilder
         return builder
             .AddMainEntityRowStateAndFormatting()
             .AddMainEntityFieldStates()
-            .AddRelations(profileId)
-            .AddDisabledActions(formId)
+            .AddRelations(profileId: profileId)
+            .AddDisabledActions(formId: formId)
             .Result;
     }
 
@@ -68,7 +68,7 @@ public class RowSecurityStateBuilder
         DataRow row
     )
     {
-        var builder = new RowSecurityStateBuilder(row, ruleEngine);
+        var builder = new RowSecurityStateBuilder(row: row, ruleEngine: ruleEngine);
         if (!builder.isBuildable)
         {
             return null;
@@ -81,7 +81,7 @@ public class RowSecurityStateBuilder
         DataRow row
     )
     {
-        var builder = new RowSecurityStateBuilder(row, ruleEngine);
+        var builder = new RowSecurityStateBuilder(row: row, ruleEngine: ruleEngine);
         if (!builder.isBuildable)
         {
             return null;
@@ -92,8 +92,8 @@ public class RowSecurityStateBuilder
     private RowSecurityStateBuilder(DataRow row, RuleEngine ruleEngine)
     {
         if (
-            !DatasetTools.HasRowValidParent(row)
-            || row.Table.ExtendedProperties.Contains("EntityId")
+            !DatasetTools.HasRowValidParent(row: row)
+            || row.Table.ExtendedProperties.Contains(key: "EntityId")
         )
         {
             isBuildable = false;
@@ -101,12 +101,12 @@ public class RowSecurityStateBuilder
         this.ruleEngine = ruleEngine;
         this.row = row;
         // get extra info from row
-        entityId = (Guid)row.Table.ExtendedProperties["EntityId"];
+        entityId = (Guid)row.Table.ExtendedProperties[key: "EntityId"];
         isNew = row.RowState == DataRowState.Added || row.RowState == DataRowState.Detached;
-        originalData = DatasetTools.GetRowXml(row, DataRowVersion.Original);
+        originalData = DatasetTools.GetRowXml(row: row, version: DataRowVersion.Original);
         actualData = DatasetTools.GetRowXml(
-            row,
-            row.HasVersion(DataRowVersion.Proposed)
+            row: row,
+            version: row.HasVersion(version: DataRowVersion.Proposed)
                 ? DataRowVersion.Proposed
                 : DataRowVersion.Default
         );
@@ -120,31 +120,36 @@ public class RowSecurityStateBuilder
         {
             return this;
         }
-        EntityFormatting formatting = ruleEngine.Formatting(actualData, entityId, Guid.Empty, null);
+        EntityFormatting formatting = ruleEngine.Formatting(
+            data: actualData,
+            entityId: entityId,
+            fieldId: Guid.Empty,
+            contextPosition: null
+        );
         Result = new RowSecurityState
         {
-            Id = DatasetTools.PrimaryKey(row)[0],
+            Id = DatasetTools.PrimaryKey(row: row)[0],
             BackgroundColor = formatting.BackColor.ToArgb(),
             ForegroundColor = formatting.ForeColor.ToArgb(),
             AllowDelete = ruleEngine.EvaluateRowLevelSecurityState(
-                originalData,
-                actualData,
-                null,
-                CredentialType.Delete,
-                entityId,
-                Guid.Empty,
-                isNew,
-                ruleEvaluationCache
+                originalData: originalData,
+                actualData: actualData,
+                field: null,
+                type: CredentialType.Delete,
+                entityId: entityId,
+                fieldId: Guid.Empty,
+                isNewRow: isNew,
+                ruleEvaluationCache: ruleEvaluationCache
             ),
             AllowCreate = ruleEngine.EvaluateRowLevelSecurityState(
-                originalData,
-                actualData,
-                null,
-                CredentialType.Create,
-                entityId,
-                Guid.Empty,
-                isNew,
-                ruleEvaluationCache
+                originalData: originalData,
+                actualData: actualData,
+                field: null,
+                type: CredentialType.Create,
+                entityId: entityId,
+                fieldId: Guid.Empty,
+                isNewRow: isNew,
+                ruleEvaluationCache: ruleEvaluationCache
             ),
         };
         return this;
@@ -158,44 +163,49 @@ public class RowSecurityStateBuilder
         }
         foreach (DataColumn col in row.Table.Columns)
         {
-            if (col.ExtendedProperties.Contains("Id"))
+            if (col.ExtendedProperties.Contains(key: "Id"))
             {
-                Guid fieldId = (Guid)col.ExtendedProperties["Id"];
+                Guid fieldId = (Guid)col.ExtendedProperties[key: "Id"];
                 bool allowUpdate = ruleEngine.EvaluateRowLevelSecurityState(
-                    originalData,
-                    actualData,
-                    col.ColumnName,
-                    CredentialType.Update,
-                    entityId,
-                    fieldId,
-                    isNew,
-                    ruleEvaluationCache
+                    originalData: originalData,
+                    actualData: actualData,
+                    field: col.ColumnName,
+                    type: CredentialType.Update,
+                    entityId: entityId,
+                    fieldId: fieldId,
+                    isNewRow: isNew,
+                    ruleEvaluationCache: ruleEvaluationCache
                 );
                 bool allowRead = ruleEngine.EvaluateRowLevelSecurityState(
-                    originalData,
-                    actualData,
-                    col.ColumnName,
-                    CredentialType.Read,
-                    entityId,
-                    fieldId,
-                    isNew,
-                    ruleEvaluationCache
+                    originalData: originalData,
+                    actualData: actualData,
+                    field: col.ColumnName,
+                    type: CredentialType.Read,
+                    entityId: entityId,
+                    fieldId: fieldId,
+                    isNewRow: isNew,
+                    ruleEvaluationCache: ruleEvaluationCache
                 );
                 EntityFormatting fieldFormatting = ruleEngine.Formatting(
-                    actualData,
-                    entityId,
-                    fieldId,
-                    null
+                    data: actualData,
+                    entityId: entityId,
+                    fieldId: fieldId,
+                    contextPosition: null
                 );
-                string dynamicLabel = ruleEngine.DynamicLabel(actualData, entityId, fieldId, null);
+                string dynamicLabel = ruleEngine.DynamicLabel(
+                    data: actualData,
+                    entityId: entityId,
+                    fieldId: fieldId,
+                    contextPosition: null
+                );
                 Result.Columns.Add(
-                    new FieldSecurityState(
-                        col.ColumnName,
-                        allowUpdate,
-                        allowRead,
-                        dynamicLabel,
-                        fieldFormatting.BackColor.ToArgb(),
-                        fieldFormatting.ForeColor.ToArgb()
+                    item: new FieldSecurityState(
+                        name: col.ColumnName,
+                        allowUpdate: allowUpdate,
+                        allowRead: allowRead,
+                        dynamicLabel: dynamicLabel,
+                        backgroundColor: fieldFormatting.BackColor.ToArgb(),
+                        foregroundColor: fieldFormatting.ForeColor.ToArgb()
                     )
                 );
             }
@@ -211,10 +221,10 @@ public class RowSecurityStateBuilder
         }
         foreach (DataRelation rel in row.Table.ChildRelations)
         {
-            Guid childEntityId = (Guid)rel.ChildTable.ExtendedProperties["EntityId"];
+            Guid childEntityId = (Guid)rel.ChildTable.ExtendedProperties[key: "EntityId"];
             bool isDummyRow = false;
             DataRow childRow = null;
-            DataRow[] childRows = row.GetChildRows(rel);
+            DataRow[] childRows = row.GetChildRows(relation: rel);
             try
             {
                 if (childRows.Length > 0)
@@ -224,7 +234,12 @@ public class RowSecurityStateBuilder
                 else
                 {
                     isDummyRow = true;
-                    childRow = DatasetTools.CreateRow(row, rel.ChildTable, rel, profileId);
+                    childRow = DatasetTools.CreateRow(
+                        parentRow: row,
+                        newRowTable: rel.ChildTable,
+                        relation: rel,
+                        profileId: profileId
+                    );
                     // go through each column and lookup any looked-up
                     // column values
                     foreach (DataColumn childCol in childRow.Table.Columns)
@@ -236,34 +251,41 @@ public class RowSecurityStateBuilder
                         )
                         {
 #endif
-                            ruleEngine.ProcessRulesLookupFields(childRow, childCol.ColumnName);
+                            ruleEngine.ProcessRulesLookupFields(
+                                row: childRow,
+                                columnName: childCol.ColumnName
+                            );
 #if !ORIGAM_SERVER
                         }
 #endif
                     }
                 }
                 XmlContainer originalChildData = DatasetTools.GetRowXml(
-                    childRow,
-                    DataRowVersion.Original
+                    row: childRow,
+                    version: DataRowVersion.Original
                 );
                 XmlContainer actualChildData = DatasetTools.GetRowXml(
-                    childRow,
-                    childRow.HasVersion(DataRowVersion.Proposed)
+                    row: childRow,
+                    version: childRow.HasVersion(version: DataRowVersion.Proposed)
                         ? DataRowVersion.Proposed
                         : DataRowVersion.Default
                 );
                 bool allowRelationCreate = ruleEngine.EvaluateRowLevelSecurityState(
-                    originalChildData,
-                    actualChildData,
-                    null,
-                    CredentialType.Create,
-                    childEntityId,
-                    Guid.Empty,
-                    row.RowState == DataRowState.Added || row.RowState == DataRowState.Detached,
-                    ruleEvaluationCache
+                    originalData: originalChildData,
+                    actualData: actualChildData,
+                    field: null,
+                    type: CredentialType.Create,
+                    entityId: childEntityId,
+                    fieldId: Guid.Empty,
+                    isNewRow: row.RowState == DataRowState.Added
+                        || row.RowState == DataRowState.Detached,
+                    ruleEvaluationCache: ruleEvaluationCache
                 );
                 Result.Relations.Add(
-                    new RelationSecurityState(rel.ChildTable.TableName, allowRelationCreate)
+                    item: new RelationSecurityState(
+                        name: rel.ChildTable.TableName,
+                        allowCreate: allowRelationCreate
+                    )
                 );
             }
             catch (Exception ex)
@@ -271,13 +293,13 @@ public class RowSecurityStateBuilder
                 if (log.IsErrorEnabled)
                 {
                     log.LogOrigamError(
-                        string.Format(
-                            "Failed evaluating security rule for "
+                        message: string.Format(
+                            format: "Failed evaluating security rule for "
                                 + "child relation {0} for entity {1}",
-                            rel?.RelationName,
-                            entityId
+                            arg0: rel?.RelationName,
+                            arg1: entityId
                         ),
-                        ex
+                        ex: ex
                     );
                 }
                 throw;
@@ -300,10 +322,10 @@ public class RowSecurityStateBuilder
             return this;
         }
         Result.DisabledActions = ruleEngine.GetDisabledActions(
-            originalData,
-            actualData,
-            entityId,
-            formId
+            originalData: originalData,
+            actualData: actualData,
+            entityId: entityId,
+            formId: formId
         );
         return this;
     }

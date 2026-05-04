@@ -37,14 +37,14 @@ public class AsMessageBox
     )
     {
         ASMessageBoxForm frm = new ASMessageBoxForm(
-            text,
-            caption,
-            MessageBoxButtons.OK,
-            MessageBoxIcon.Error,
-            exception,
-            _debugInfoProvider
+            text: text,
+            caption: caption,
+            buttons: MessageBoxButtons.OK,
+            icon: MessageBoxIcon.Error,
+            exception: exception,
+            debugInfoProvider: _debugInfoProvider
         );
-        frm.ShowDialog(owner);
+        frm.ShowDialog(owner: owner);
     }
 
     private static IDebugInfoProvider _debugInfoProvider = null;

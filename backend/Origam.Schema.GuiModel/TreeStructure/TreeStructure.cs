@@ -29,10 +29,14 @@ namespace Origam.Schema.GuiModel;
 /// <summary>
 /// Summary description for EntityFilter.
 /// </summary>
-[SchemaItemDescription("Tree Structure", "Tree Structures", "icon_tree-structures.png")]
-[HelpTopic("Tree+Structures")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(
+    name: "Tree Structure",
+    folderName: "Tree Structures",
+    iconName: "icon_tree-structures.png"
+)]
+[HelpTopic(topic: "Tree+Structures")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class TreeStructure : AbstractSchemaItem, ISchemaItemFactory
 {
     public const string CategoryConst = "TreeStructure";
@@ -44,20 +48,20 @@ public class TreeStructure : AbstractSchemaItem, ISchemaItemFactory
     }
 
     public TreeStructure(Guid schemaExtensionId)
-        : base(schemaExtensionId)
+        : base(extensionId: schemaExtensionId)
     {
         Init();
     }
 
     public TreeStructure(Key primaryKey)
-        : base(primaryKey)
+        : base(primaryKey: primaryKey)
     {
         Init();
     }
 
     private void Init()
     {
-        this.ChildItemTypes.Add(typeof(TreeStructureNode));
+        this.ChildItemTypes.Add(item: typeof(TreeStructureNode));
     }
 
     #region Overriden ISchemaItem Members
@@ -74,7 +78,7 @@ public class TreeStructure : AbstractSchemaItem, ISchemaItemFactory
     public string _rootNodeLabel;
 
     [NotNullModelElementRule()]
-    [XmlAttribute("rootNodeLabel")]
+    [XmlAttribute(attributeName: "rootNodeLabel")]
     public string RootNodeLabel
     {
         get { return _rootNodeLabel; }

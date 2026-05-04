@@ -30,8 +30,8 @@ using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.GuiModel;
 
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class PropertyValueItem : AbstractPropertyValueItem
 {
     public const string CategoryConst = "PropertyValueItem";
@@ -40,16 +40,16 @@ public class PropertyValueItem : AbstractPropertyValueItem
         : base() { }
 
     public PropertyValueItem(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(schemaExtensionId: schemaExtensionId) { }
 
     public PropertyValueItem(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     string _xmlPersistedValue;
 
-    [XmlAttribute("value")]
-    [Localizable(true)]
-    [Browsable(false)]
+    [XmlAttribute(attributeName: "value")]
+    [Localizable(isLocalizable: true)]
+    [Browsable(browsable: false)]
     public string Value
     {
         get
@@ -62,11 +62,11 @@ public class PropertyValueItem : AbstractPropertyValueItem
             {
                 case ControlPropertyValueType.Integer:
                 {
-                    return XmlConvert.ToString(IntValue);
+                    return XmlConvert.ToString(value: IntValue);
                 }
                 case ControlPropertyValueType.Boolean:
                 {
-                    return XmlConvert.ToString(BoolValue);
+                    return XmlConvert.ToString(value: BoolValue);
                 }
                 case ControlPropertyValueType.Xml:
                 case ControlPropertyValueType.String:
@@ -75,11 +75,11 @@ public class PropertyValueItem : AbstractPropertyValueItem
                 }
                 case ControlPropertyValueType.UniqueIdentifier:
                 {
-                    return XmlConvert.ToString(GuidValue);
+                    return XmlConvert.ToString(value: GuidValue);
                 }
                 default:
                 {
-                    throw new ArgumentOutOfRangeException("PropertyType");
+                    throw new ArgumentOutOfRangeException(paramName: "PropertyType");
                 }
             }
         }
@@ -119,7 +119,7 @@ public class PropertyValueItem : AbstractPropertyValueItem
                 }
                 default:
                 {
-                    throw new ArgumentOutOfRangeException("PropertyType");
+                    throw new ArgumentOutOfRangeException(paramName: "PropertyType");
                 }
             }
         }
@@ -146,13 +146,13 @@ public class PropertyValueItem : AbstractPropertyValueItem
             {
                 case ControlPropertyValueType.Integer:
                 {
-                    IntValue = XmlConvert.ToInt32(_xmlPersistedValue);
+                    IntValue = XmlConvert.ToInt32(s: _xmlPersistedValue);
                     break;
                 }
 
                 case ControlPropertyValueType.Boolean:
                 {
-                    BoolValue = XmlConvert.ToBoolean(_xmlPersistedValue);
+                    BoolValue = XmlConvert.ToBoolean(s: _xmlPersistedValue);
                     break;
                 }
 
@@ -165,13 +165,13 @@ public class PropertyValueItem : AbstractPropertyValueItem
 
                 case ControlPropertyValueType.UniqueIdentifier:
                 {
-                    GuidValue = XmlConvert.ToGuid(_xmlPersistedValue);
+                    GuidValue = XmlConvert.ToGuid(s: _xmlPersistedValue);
                     break;
                 }
 
                 default:
                 {
-                    throw new ArgumentOutOfRangeException("PropertyType");
+                    throw new ArgumentOutOfRangeException(paramName: "PropertyType");
                 }
             }
         }
@@ -248,22 +248,22 @@ public class PropertyValueItem : AbstractPropertyValueItem
     }
 }
 
-[ClassMetaVersion("6.0.0")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public abstract class AbstractPropertyValueItem : AbstractSchemaItem, IQueryLocalizable
 {
     public AbstractPropertyValueItem()
         : base() { }
 
     public AbstractPropertyValueItem(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public AbstractPropertyValueItem(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Properties
     private Guid _controlPropertyId;
 
-    [XmlAttribute("propertyId")]
+    [XmlAttribute(attributeName: "propertyId")]
     public Guid ControlPropertyId
     {
         get { return _controlPropertyId; }
@@ -284,17 +284,17 @@ public abstract class AbstractPropertyValueItem : AbstractSchemaItem, IQueryLoca
                 key.Id = this.ControlPropertyId;
                 _property = (ControlPropertyItem)
                     this.PersistenceProvider.RetrieveInstance(
-                        typeof(ControlPropertyItem),
-                        key,
-                        true,
-                        false
+                        type: typeof(ControlPropertyItem),
+                        primaryKey: key,
+                        useCache: true,
+                        throwNotFoundException: false
                     );
             }
             return _property;
         }
         set
         {
-            this.ControlPropertyId = (Guid)value.PrimaryKey["Id"];
+            this.ControlPropertyId = (Guid)value.PrimaryKey[key: "Id"];
             _property = value;
         }
     }
@@ -310,8 +310,8 @@ public abstract class AbstractPropertyValueItem : AbstractSchemaItem, IQueryLoca
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(this.ControlPropertyItem);
-        base.GetExtraDependencies(dependencies);
+        dependencies.Add(item: this.ControlPropertyItem);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override ISchemaItemCollection ChildItems

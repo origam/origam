@@ -27,21 +27,21 @@ public class FileSystemXsltFunctionContainer
 {
     public bool FileExists(string path)
     {
-        return File.Exists(path);
+        return File.Exists(path: path);
     }
 
     public string CombinePath(string path1, string path2)
     {
-        return Path.Combine(path1, path2);
+        return Path.Combine(path1: path1, path2: path2);
     }
 
     public string CombinePath(string path1, string path2, string path3)
     {
-        return Path.Combine(path1, path2, path3);
+        return Path.Combine(path1: path1, path2: path2, path3: path3);
     }
 
     public string CombinePath(string path1, string path2, string path3, string path4)
     {
-        return Path.Combine(path1, path2, path3, path4);
+        return Path.Combine(path1: path1, path2: path2, path3: path3, path4: path4);
     }
 }

@@ -48,7 +48,7 @@ public class DataGridComboBoxColumn : DataGridTextBoxColumn
     private void ComboStartEditing(object sender, EventArgs e)
     {
         _isEditing = true;
-        base.ColumnStartedEditing((Control)sender);
+        base.ColumnStartedEditing(editingControl: (Control)sender);
     }
 
     protected override void Edit(
@@ -64,11 +64,21 @@ public class DataGridComboBoxColumn : DataGridTextBoxColumn
         {
             this.ColumnComboBox.Enabled = true;
             ColumnComboBox.SelectedValueChanged += new EventHandler(ComboStartEditing);
-            base.Edit(source, rowNum, bounds, readOnly, instantText, cellIsVisible);
+            base.Edit(
+                source: source,
+                rowNum: rowNum,
+                bounds: bounds,
+                readOnly: readOnly,
+                displayText: instantText,
+                cellIsVisible: cellIsVisible
+            );
             ColumnComboBox.Parent = this.TextBox.Parent;
             ColumnComboBox.Location = this.TextBox.Location;
-            ColumnComboBox.Size = new Size(this.TextBox.Size.Width, ColumnComboBox.Size.Height);
-            ColumnComboBox.SelectedIndex = ColumnComboBox.FindStringExact(this.TextBox.Text);
+            ColumnComboBox.Size = new Size(
+                width: this.TextBox.Size.Width,
+                height: ColumnComboBox.Size.Height
+            );
+            ColumnComboBox.SelectedIndex = ColumnComboBox.FindStringExact(s: this.TextBox.Text);
             ColumnComboBox.Text = this.TextBox.Text;
             this.TextBox.Visible = false;
             ColumnComboBox.Visible = true;
@@ -90,17 +100,17 @@ public class DataGridComboBoxColumn : DataGridTextBoxColumn
         {
             try
             {
-                SetColumnValueAtRow(dataSource, rowNum, ColumnComboBox.Text);
+                SetColumnValueAtRow(source: dataSource, rowNum: rowNum, value: ColumnComboBox.Text);
             }
             catch (Exception)
             {
-                Abort(rowNum);
+                Abort(rowNum: rowNum);
                 return false;
             }
         }
         else
         {
-            Abort(rowNum);
+            Abort(rowNum: rowNum);
         }
         _isEditing = false;
         this.ColumnComboBox.Hide();
@@ -125,7 +135,7 @@ public class DataGridComboBoxColumn : DataGridTextBoxColumn
         _isEditing = false;
         ColumnComboBox.SelectedValueChanged -= new EventHandler(ComboStartEditing);
         Invalidate();
-        base.Abort(rowNum);
+        base.Abort(rowNum: rowNum);
     }
 
     protected override object GetColumnValueAtRow(
@@ -133,7 +143,7 @@ public class DataGridComboBoxColumn : DataGridTextBoxColumn
         int rowNum
     )
     {
-        object s = base.GetColumnValueAtRow(source, rowNum);
+        object s = base.GetColumnValueAtRow(source: source, rowNum: rowNum);
         DataView dv = (DataView)this.ColumnComboBox.DataSource;
         int rowCount = dv.Count;
         int i = 0;
@@ -141,7 +151,7 @@ public class DataGridComboBoxColumn : DataGridTextBoxColumn
         //& use binary search instead of this linear one
         while (i < rowCount)
         {
-            if (s.Equals(dv[i][this.ColumnComboBox.ValueMember]))
+            if (s.Equals(obj: dv[recordIndex: i][property: this.ColumnComboBox.ValueMember]))
             {
                 break;
             }
@@ -151,7 +161,7 @@ public class DataGridComboBoxColumn : DataGridTextBoxColumn
 
         if (i < rowCount)
         {
-            return dv[i][this.ColumnComboBox.DisplayMember];
+            return dv[recordIndex: i][property: this.ColumnComboBox.DisplayMember];
         }
 
         return DBNull.Value;
@@ -173,7 +183,7 @@ public class DataGridComboBoxColumn : DataGridTextBoxColumn
             //& use binary search instead of this linear one
             while (i < rowCount)
             {
-                if (s.Equals(dv[i][this.ColumnComboBox.DisplayMember]))
+                if (s.Equals(obj: dv[recordIndex: i][property: this.ColumnComboBox.DisplayMember]))
                 {
                     break;
                 }
@@ -182,14 +192,14 @@ public class DataGridComboBoxColumn : DataGridTextBoxColumn
             }
             if (i < rowCount)
             {
-                s = dv[i][this.ColumnComboBox.ValueMember];
+                s = dv[recordIndex: i][property: this.ColumnComboBox.ValueMember];
             }
             else
             {
                 s = DBNull.Value;
             }
 
-            base.SetColumnValueAtRow(source, rowNum, s);
+            base.SetColumnValueAtRow(source: source, rowNum: rowNum, value: s);
         }
     }
 
@@ -204,7 +214,7 @@ public class DataGridComboBoxColumn : DataGridTextBoxColumn
                 this.ColumnComboBox = null;
             }
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
 }
 
@@ -236,6 +246,6 @@ public class NoKeyUpCombo : ComboBox
                 return false;
             }
         }
-        return base.ProcessKeyMessage(ref m);
+        return base.ProcessKeyMessage(m: ref m);
     }
 }

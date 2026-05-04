@@ -65,12 +65,12 @@ namespace Origam.Server.Model.Chat
         )
         {
             List<OrigamChatMessage> messages = new List<OrigamChatMessage>();
-            foreach (DataRow row in MessagesDataSet.Tables["OrigamChatMessage"].Rows)
+            foreach (DataRow row in MessagesDataSet.Tables[name: "OrigamChatMessage"].Rows)
             {
-                Guid userId = row.Field<Guid>("RecordCreatedBy");
+                Guid userId = row.Field<Guid>(columnName: "RecordCreatedBy");
                 var username = allusers
-                    .Where(mention => mention.id.Equals(userId))
-                    .Select(mention =>
+                    .Where(predicate: mention => mention.id.Equals(g: userId))
+                    .Select(selector: mention =>
                     {
                         return mention.name;
                     })
@@ -78,24 +78,29 @@ namespace Origam.Server.Model.Chat
                 List<Guid> listmention = new List<Guid>();
                 foreach (
                     DataRow rowBpartner in MessagesDataSet
-                        .Tables["OrigamChatMessageBusinessPartner"]
+                        .Tables[name: "OrigamChatMessageBusinessPartner"]
                         .Rows
                 )
                 {
-                    if (rowBpartner.Field<Guid>("refOrigamChatMessageId") == row.Field<Guid>("Id"))
+                    if (
+                        rowBpartner.Field<Guid>(columnName: "refOrigamChatMessageId")
+                        == row.Field<Guid>(columnName: "Id")
+                    )
                     {
-                        listmention.Add(rowBpartner.Field<Guid>("refBusinessPartnerId"));
+                        listmention.Add(
+                            item: rowBpartner.Field<Guid>(columnName: "refBusinessPartnerId")
+                        );
                     }
                 }
                 messages.Add(
-                    new OrigamChatMessage(
-                        row.Field<Guid>("Id"),
-                        userId,
-                        username,
-                        userId.ToString(),
-                        row.Field<DateTime>("RecordCreated"),
-                        row.Field<string>("TextMessage"),
-                        listmention
+                    item: new OrigamChatMessage(
+                        id: row.Field<Guid>(columnName: "Id"),
+                        authorId: userId,
+                        authorName: username,
+                        authorAvatarUrl: userId.ToString(),
+                        dateCreated: row.Field<DateTime>(columnName: "RecordCreated"),
+                        TextMessages: row.Field<string>(columnName: "TextMessage"),
+                        mentions: listmention
                     )
                 );
             }

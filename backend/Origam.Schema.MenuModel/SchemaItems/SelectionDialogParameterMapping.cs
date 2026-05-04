@@ -31,10 +31,10 @@ namespace Origam.Schema.MenuModel;
 /// <summary>
 /// Summary description for Menu.
 /// </summary>
-[SchemaItemDescription("Parameter Mapping", "Parameter Mappings", 3)]
-[HelpTopic("Menu+Parameter+Mapping")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Parameter Mapping", folderName: "Parameter Mappings", icon: 3)]
+[HelpTopic(topic: "Menu+Parameter+Mapping")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class SelectionDialogParameterMapping : AbstractSchemaItem
 {
     public const string CategoryConst = "SelectionDialogParameterMapping";
@@ -43,10 +43,10 @@ public class SelectionDialogParameterMapping : AbstractSchemaItem
         : base() { }
 
     public SelectionDialogParameterMapping(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public SelectionDialogParameterMapping(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Overriden ISchemaItem Members
 
@@ -56,7 +56,7 @@ public class SelectionDialogParameterMapping : AbstractSchemaItem
         get { return CategoryConst; }
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public override bool UseFolders
     {
         get { return false; }
@@ -69,19 +69,19 @@ public class SelectionDialogParameterMapping : AbstractSchemaItem
     #region Properties
     public Guid EntityFieldId;
 
-    [TypeConverter(typeof(MenuSelectionDialogFieldConverter))]
-    [XmlReference("selectionDialogField", "EntityFieldId")]
+    [TypeConverter(type: typeof(MenuSelectionDialogFieldConverter))]
+    [XmlReference(attributeName: "selectionDialogField", idField: "EntityFieldId")]
     public IDataEntityColumn SelectionDialogField
     {
         get
         {
             return (IDataEntityColumn)
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(this.EntityFieldId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: this.EntityFieldId)
                 );
         }
-        set { this.EntityFieldId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]; }
+        set { this.EntityFieldId = value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]; }
     }
     #endregion
 }

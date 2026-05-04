@@ -26,16 +26,20 @@ namespace Origam.TestCommon;
 
 public abstract class AbstractFileTestClass
 {
-    protected DirectoryInfo ProjectDir => new DirectoryInfo(TestContext.TestDirectory);
+    protected DirectoryInfo ProjectDir => new DirectoryInfo(path: TestContext.TestDirectory);
     protected virtual string DirName => "";
     protected abstract TestContext TestContext { get; }
     protected DirectoryInfo TestFilesDir
     {
         get
         {
-            string path = Path.Combine(ProjectDir.FullName, DirName, "TestFiles");
-            Directory.CreateDirectory(path);
-            return new DirectoryInfo(path);
+            string path = Path.Combine(
+                path1: ProjectDir.FullName,
+                path2: DirName,
+                path3: "TestFiles"
+            );
+            Directory.CreateDirectory(path: path);
+            return new DirectoryInfo(path: path);
         }
     }
     protected DirectoryInfo TestProjectDir
@@ -44,14 +48,14 @@ public abstract class AbstractFileTestClass
         {
             string relativeToFilesDir = DirName + @"\TestProject";
 
-            string path = Path.Combine(ProjectDir.FullName, relativeToFilesDir);
-            Directory.CreateDirectory(path);
-            return new DirectoryInfo(path);
+            string path = Path.Combine(path1: ProjectDir.FullName, path2: relativeToFilesDir);
+            Directory.CreateDirectory(path: path);
+            return new DirectoryInfo(path: path);
         }
     }
 
     protected void ClearTestDir()
     {
-        Directory.Delete(TestFilesDir.FullName, true);
+        Directory.Delete(path: TestFilesDir.FullName, recursive: true);
     }
 }

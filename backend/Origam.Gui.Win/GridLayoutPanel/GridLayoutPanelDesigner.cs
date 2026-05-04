@@ -48,13 +48,13 @@ namespace Origam.Gui.Win
             if (disposing)
             {
                 ISelectionService service = (ISelectionService)
-                    this.GetService(typeof(ISelectionService));
+                    this.GetService(serviceType: typeof(ISelectionService));
                 if (service != null)
                 {
                     service.SelectionChanged -= new EventHandler(this.OnSelectionChanged);
                 }
                 IComponentChangeService service2 = (IComponentChangeService)
-                    this.GetService(typeof(IComponentChangeService));
+                    this.GetService(serviceType: typeof(IComponentChangeService));
                 if (service2 != null)
                 {
                     service2.ComponentChanging -= new ComponentChangingEventHandler(
@@ -65,7 +65,7 @@ namespace Origam.Gui.Win
                     );
                 }
             }
-            base.Dispose(disposing);
+            base.Dispose(disposing: disposing);
         }
 
         private enum TabControlHitTest
@@ -91,7 +91,7 @@ namespace Origam.Gui.Win
                 if (m_SelectionService == null)
                 {
                     m_SelectionService = (ISelectionService)(
-                        this.GetService(typeof(ISelectionService))
+                        this.GetService(serviceType: typeof(ISelectionService))
                     );
                 }
 
@@ -105,7 +105,7 @@ namespace Origam.Gui.Win
             {
                 TCHITTESTINFO hti = new TCHITTESTINFO();
 
-                hti.pt = this.Control.PointToClient(point);
+                hti.pt = this.Control.PointToClient(p: point);
                 hti.flags = 0;
 
                 System.Windows.Forms.Message m = new System.Windows.Forms.Message();
@@ -113,13 +113,17 @@ namespace Origam.Gui.Win
                 m.Msg = TCM_HITTEST;
 
                 IntPtr lparam = System.Runtime.InteropServices.Marshal.AllocHGlobal(
-                    System.Runtime.InteropServices.Marshal.SizeOf(hti)
+                    cb: System.Runtime.InteropServices.Marshal.SizeOf(structure: hti)
                 );
-                System.Runtime.InteropServices.Marshal.StructureToPtr(hti, lparam, false);
+                System.Runtime.InteropServices.Marshal.StructureToPtr(
+                    structure: hti,
+                    ptr: lparam,
+                    fDeleteOld: false
+                );
                 m.LParam = lparam;
 
-                base.WndProc(ref m);
-                System.Runtime.InteropServices.Marshal.FreeHGlobal(lparam);
+                base.WndProc(m: ref m);
+                System.Runtime.InteropServices.Marshal.FreeHGlobal(hglobal: lparam);
 
                 if (m.Result.ToInt32() != -1)
                 {
@@ -154,15 +158,15 @@ namespace Origam.Gui.Win
 
         public override void Initialize(IComponent component)
         {
-            base.Initialize(component);
+            base.Initialize(component: component);
             ISelectionService service = (ISelectionService)
-                this.GetService(typeof(ISelectionService));
+                this.GetService(serviceType: typeof(ISelectionService));
             if (service != null)
             {
                 service.SelectionChanged += new EventHandler(this.OnSelectionChanged);
             }
             IComponentChangeService service2 = (IComponentChangeService)
-                this.GetService(typeof(IComponentChangeService));
+                this.GetService(serviceType: typeof(IComponentChangeService));
             if (service2 != null)
             {
                 service2.ComponentChanging += new ComponentChangingEventHandler(
@@ -181,8 +185,11 @@ namespace Origam.Gui.Win
         private void OnAdd(object sender, EventArgs eevent)
         {
             TabControl component = (TabControl)base.Component;
-            MemberDescriptor member = TypeDescriptor.GetProperties(base.Component)["Controls"];
-            IDesignerHost service = (IDesignerHost)this.GetService(typeof(IDesignerHost));
+            MemberDescriptor member = TypeDescriptor.GetProperties(component: base.Component)[
+                name: "Controls"
+            ];
+            IDesignerHost service = (IDesignerHost)
+                this.GetService(serviceType: typeof(IDesignerHost));
             if (service != null)
             {
                 DesignerTransaction transaction = null;
@@ -191,9 +198,9 @@ namespace Origam.Gui.Win
                     try
                     {
                         transaction = service.CreateTransaction(
-                            "OnAddGridLayoutPanelItem: " + base.Component.Site.Name
+                            description: "OnAddGridLayoutPanelItem: " + base.Component.Site.Name
                         );
-                        base.RaiseComponentChanging(member);
+                        base.RaiseComponentChanging(member: member);
                     }
                     catch (CheckoutException exception)
                     {
@@ -205,19 +212,21 @@ namespace Origam.Gui.Win
                     }
 
                     GridLayoutPanelItem page = (GridLayoutPanelItem)
-                        service.CreateComponent(typeof(GridLayoutPanelItem));
+                        service.CreateComponent(componentClass: typeof(GridLayoutPanelItem));
                     string str = null;
-                    PropertyDescriptor descriptor2 = TypeDescriptor.GetProperties(page)["Name"];
+                    PropertyDescriptor descriptor2 = TypeDescriptor.GetProperties(component: page)[
+                        name: "Name"
+                    ];
                     if ((descriptor2 != null) && (descriptor2.PropertyType == typeof(string)))
                     {
-                        str = (string)descriptor2.GetValue(page);
+                        str = (string)descriptor2.GetValue(component: page);
                     }
                     if (str != null)
                     {
                         page.Text = str;
                     }
-                    component.Controls.Add(page);
-                    base.RaiseComponentChanged(member, null, null);
+                    component.Controls.Add(value: page);
+                    base.RaiseComponentChanged(member: member, oldValue: null, newValue: null);
                 }
                 finally
                 {
@@ -236,10 +245,10 @@ namespace Origam.Gui.Win
                 && (e.Member.Name == "TabPages")
             )
             {
-                PropertyDescriptor member = TypeDescriptor.GetProperties(base.Component)[
-                    "Controls"
+                PropertyDescriptor member = TypeDescriptor.GetProperties(component: base.Component)[
+                    name: "Controls"
                 ];
-                base.RaiseComponentChanging(member);
+                base.RaiseComponentChanging(member: member);
             }
             this.CheckVerbStatus();
         }
@@ -251,17 +260,17 @@ namespace Origam.Gui.Win
                 && (e.Member.Name == "TabPages")
             )
             {
-                PropertyDescriptor member = TypeDescriptor.GetProperties(base.Component)[
-                    "Controls"
+                PropertyDescriptor member = TypeDescriptor.GetProperties(component: base.Component)[
+                    name: "Controls"
                 ];
-                base.RaiseComponentChanging(member);
+                base.RaiseComponentChanging(member: member);
             }
         }
 
         private void OnGotFocus(object sender, EventArgs e)
         {
             EventHandlerService service = (EventHandlerService)
-                this.GetService(typeof(EventHandlerService));
+                this.GetService(serviceType: typeof(EventHandlerService));
             if (service != null)
             {
                 Control focusWindow = service.FocusWindow;
@@ -277,7 +286,7 @@ namespace Origam.Gui.Win
             try
             {
                 this.disableDrawGrid = true;
-                base.OnPaintAdornments(pe);
+                base.OnPaintAdornments(pe: pe);
             }
             finally
             {
@@ -290,9 +299,12 @@ namespace Origam.Gui.Win
             TabControl component = (TabControl)base.Component;
             if ((component != null) && (component.TabPages.Count != 0))
             {
-                MemberDescriptor member = TypeDescriptor.GetProperties(base.Component)["Controls"];
+                MemberDescriptor member = TypeDescriptor.GetProperties(component: base.Component)[
+                    name: "Controls"
+                ];
                 TabPage selectedTab = component.SelectedTab;
-                IDesignerHost service = (IDesignerHost)this.GetService(typeof(IDesignerHost));
+                IDesignerHost service = (IDesignerHost)
+                    this.GetService(serviceType: typeof(IDesignerHost));
                 if (service != null)
                 {
                     DesignerTransaction transaction = null;
@@ -301,12 +313,12 @@ namespace Origam.Gui.Win
                         try
                         {
                             transaction = service.CreateTransaction(
-                                "GridLayoutPanelRemoveItem: "
+                                description: "GridLayoutPanelRemoveItem: "
                                     + selectedTab.Site.Name
                                     + ", "
                                     + base.Component.Site.Name
                             );
-                            base.RaiseComponentChanging(member);
+                            base.RaiseComponentChanging(member: member);
                         }
                         catch (CheckoutException exception)
                         {
@@ -316,8 +328,8 @@ namespace Origam.Gui.Win
                             }
                             return;
                         }
-                        service.DestroyComponent(selectedTab);
-                        base.RaiseComponentChanged(member, null, null);
+                        service.DestroyComponent(component: selectedTab);
+                        base.RaiseComponentChanged(member: member, oldValue: null, newValue: null);
                     }
                     finally
                     {
@@ -333,14 +345,14 @@ namespace Origam.Gui.Win
         private void OnSelectionChanged(object sender, EventArgs e)
         {
             ISelectionService service = (ISelectionService)
-                this.GetService(typeof(ISelectionService));
+                this.GetService(serviceType: typeof(ISelectionService));
             if (service != null)
             {
                 ICollection selectedComponents = service.GetSelectedComponents();
                 TabControl component = (TabControl)base.Component;
                 foreach (object obj2 in selectedComponents)
                 {
-                    TabPage tabPageOfComponent = GetTabPageOfComponent(obj2);
+                    TabPage tabPageOfComponent = GetTabPageOfComponent(comp: obj2);
                     if ((tabPageOfComponent != null) && (tabPageOfComponent.Parent == component))
                     {
                         component.SelectedTab = tabPageOfComponent;
@@ -353,7 +365,7 @@ namespace Origam.Gui.Win
         private void OnTabSelectedIndexChanged(object sender, EventArgs e)
         {
             ISelectionService service = (ISelectionService)
-                this.GetService(typeof(ISelectionService));
+                this.GetService(serviceType: typeof(ISelectionService));
             if (service != null)
             {
                 ICollection selectedComponents = service.GetSelectedComponents();
@@ -361,7 +373,7 @@ namespace Origam.Gui.Win
                 bool flag = false;
                 foreach (object obj2 in selectedComponents)
                 {
-                    TabPage tabPageOfComponent = GetTabPageOfComponent(obj2);
+                    TabPage tabPageOfComponent = GetTabPageOfComponent(comp: obj2);
                     if (
                         ((tabPageOfComponent != null) && (tabPageOfComponent.Parent == component))
                         && (tabPageOfComponent == component.SelectedTab)
@@ -373,26 +385,26 @@ namespace Origam.Gui.Win
                 }
                 if (!flag)
                 {
-                    service.SetSelectedComponents(new object[] { base.Component });
+                    service.SetSelectedComponents(components: new object[] { base.Component });
                 }
             }
         }
 
         protected override void PreFilterProperties(IDictionary properties)
         {
-            base.PreFilterProperties(properties);
+            base.PreFilterProperties(properties: properties);
             string[] strArray = new string[] { "SelectedIndex" };
             Attribute[] attributes = new Attribute[0];
             for (int i = 0; i < strArray.Length; i++)
             {
                 PropertyDescriptor oldPropertyDescriptor = (PropertyDescriptor)
-                    properties[strArray[i]];
+                    properties[key: strArray[i]];
                 if (oldPropertyDescriptor != null)
                 {
-                    properties[strArray[i]] = TypeDescriptor.CreateProperty(
-                        typeof(GridLayoutPanelDesigner),
-                        oldPropertyDescriptor,
-                        attributes
+                    properties[key: strArray[i]] = TypeDescriptor.CreateProperty(
+                        componentType: typeof(GridLayoutPanelDesigner),
+                        oldPropertyDescriptor: oldPropertyDescriptor,
+                        attributes: attributes
                     );
                 }
             }
@@ -402,7 +414,7 @@ namespace Origam.Gui.Win
         {
             if (m.Msg == 0x84)
             {
-                base.WndProc(ref m);
+                base.WndProc(m: ref m);
                 if (((int)m.Result) == -1)
                 {
                     m.Result = (IntPtr)1;
@@ -410,7 +422,7 @@ namespace Origam.Gui.Win
             }
             else
             {
-                base.WndProc(ref m);
+                base.WndProc(m: ref m);
             }
         }
 
@@ -439,10 +451,15 @@ namespace Origam.Gui.Win
             {
                 if (this.verbs == null)
                 {
-                    this.removeVerb = new DesignerVerb("Remove", new EventHandler(this.OnRemove));
+                    this.removeVerb = new DesignerVerb(
+                        text: "Remove",
+                        handler: new EventHandler(this.OnRemove)
+                    );
                     this.verbs = new DesignerVerbCollection();
-                    this.verbs.Add(new DesignerVerb("Add", new EventHandler(this.OnAdd)));
-                    this.verbs.Add(this.removeVerb);
+                    this.verbs.Add(
+                        value: new DesignerVerb(text: "Add", handler: new EventHandler(this.OnAdd))
+                    );
+                    this.verbs.Add(value: this.removeVerb);
                 }
                 this.removeVerb.Enabled = this.Control.Controls.Count > 0;
                 return this.verbs;

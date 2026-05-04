@@ -80,13 +80,13 @@ public class DataGridBlobColumn : DataGridTextBoxColumn
     private void _dropDown_LookupValueChangingByUser(object sender, EventArgs e)
     {
         _isEditing = true;
-        this.ColumnStartedEditing(sender as Control);
+        this.ColumnStartedEditing(editingControl: sender as Control);
     }
     #endregion
     #region Column Overrides
     protected override void SetColumnValueAtRow(CurrencyManager source, int rowNum, object value)
     {
-        base.SetColumnValueAtRow(source, rowNum, value);
+        base.SetColumnValueAtRow(source: source, rowNum: rowNum, value: value);
     }
 
     protected override void Abort(int rowNum)
@@ -98,7 +98,7 @@ public class DataGridBlobColumn : DataGridTextBoxColumn
             return;
         }
 
-        base.Abort(rowNum);
+        base.Abort(rowNum: rowNum);
     }
 
     protected override void Edit(
@@ -118,9 +118,9 @@ public class DataGridBlobColumn : DataGridTextBoxColumn
                 if (_ruleEngine != null)
                 {
                     _blobControl.ReadOnly = !_ruleEngine.EvaluateRowLevelSecurityState(
-                        (source.Current as DataRowView).Row,
-                        this.MappingName,
-                        Schema.EntityModel.CredentialType.Update
+                        row: (source.Current as DataRowView).Row,
+                        field: this.MappingName,
+                        type: Schema.EntityModel.CredentialType.Update
                     );
                 }
             }
@@ -129,15 +129,16 @@ public class DataGridBlobColumn : DataGridTextBoxColumn
                 _blobControl.ReadOnly = true;
             }
             _blobControl.Location = bounds.Location;
-            _blobControl.Size = new Size(bounds.Width, _blobControl.Height);
-            _blobControl.FileName = base.GetColumnValueAtRow(source, rowNum).ToString();
+            _blobControl.Size = new Size(width: bounds.Width, height: _blobControl.Height);
+            _blobControl.FileName = base.GetColumnValueAtRow(source: source, rowNum: rowNum)
+                .ToString();
             _blobControl.Visible = true;
             _blobControl.Enabled = true;
             _blobControl.BringToFront();
             _blobControl.Focus();
             if (_blobControl.Visible)
             {
-                DataGridTableStyle.DataGrid.Invalidate(bounds);
+                DataGridTableStyle.DataGrid.Invalidate(rc: bounds);
             }
             _blobControl.ValueChangingByUser += new EventHandler(
                 _dropDown_LookupValueChangingByUser
@@ -163,19 +164,26 @@ public class DataGridBlobColumn : DataGridTextBoxColumn
         {
             try
             {
-                SetColumnValueAtRow(dataSource, rowNum, _blobControl.FileName);
+                SetColumnValueAtRow(
+                    source: dataSource,
+                    rowNum: rowNum,
+                    value: _blobControl.FileName
+                );
                 // force form items to reread data values to prevent loss of data
-                DataBindingTools.UpdateBindedFormComponent(dataSource.Bindings, MappingName);
+                DataBindingTools.UpdateBindedFormComponent(
+                    bindings: dataSource.Bindings,
+                    mappingName: MappingName
+                );
             }
             catch (Exception)
             {
-                Abort(rowNum);
+                Abort(rowNum: rowNum);
                 return false;
             }
         }
         else
         {
-            Abort(rowNum);
+            Abort(rowNum: rowNum);
         }
         _isEditing = false;
         //_dropDown.Hide();
@@ -200,16 +208,16 @@ public class DataGridBlobColumn : DataGridTextBoxColumn
         //base.SetDataGridInColumn(value);
         if (_blobControl.Parent != null)
         {
-            if (_blobControl.Parent.Equals(value))
+            if (_blobControl.Parent.Equals(obj: value))
             {
                 return;
             }
 
-            _blobControl.Parent.Controls.Remove(_blobControl);
+            _blobControl.Parent.Controls.Remove(value: _blobControl);
         }
         if (value != null)
         {
-            value.Controls.Add(_blobControl);
+            value.Controls.Add(value: _blobControl);
         }
     }
     #endregion
@@ -224,25 +232,29 @@ public class DataGridBlobColumn : DataGridTextBoxColumn
     )
     {
         Brush myBackBrush = backBrush;
-        Brush myForeBrush = new SolidBrush(OrigamColorScheme.LinkColor);
-        EntityFormatting formatting = DataGridColumnStyleHelper.Formatting(this, source, rowNum);
+        Brush myForeBrush = new SolidBrush(color: OrigamColorScheme.LinkColor);
+        EntityFormatting formatting = DataGridColumnStyleHelper.Formatting(
+            columnStyle: this,
+            source: source,
+            rowNum: rowNum
+        );
         if (formatting != null)
         {
             if (!formatting.UseDefaultBackColor)
             {
-                myBackBrush = new SolidBrush(formatting.BackColor);
+                myBackBrush = new SolidBrush(color: formatting.BackColor);
             }
 
             if (!formatting.UseDefaultForeColor)
             {
-                myForeBrush = new SolidBrush(formatting.ForeColor);
+                myForeBrush = new SolidBrush(color: formatting.ForeColor);
             }
         }
-        string text = this.GetColumnValueAtRow(source, rowNum).ToString();
+        string text = this.GetColumnValueAtRow(source: source, rowNum: rowNum).ToString();
         Font font = new Font(
-            this.DataGridTableStyle.DataGrid.Font.FontFamily,
-            this.DataGridTableStyle.DataGrid.Font.Size,
-            FontStyle.Underline
+            family: this.DataGridTableStyle.DataGrid.Font.FontFamily,
+            emSize: this.DataGridTableStyle.DataGrid.Font.Size,
+            style: FontStyle.Underline
         );
         Rectangle rectangle1 = bounds;
         StringFormat format1 = new StringFormat();
@@ -259,10 +271,16 @@ public class DataGridBlobColumn : DataGridTextBoxColumn
                         : StringAlignment.Far
                 );
         format1.FormatFlags |= StringFormatFlags.NoWrap;
-        g.FillRectangle(myBackBrush, rectangle1);
-        rectangle1.Offset(0, 2);
+        g.FillRectangle(brush: myBackBrush, rect: rectangle1);
+        rectangle1.Offset(x: 0, y: 2);
         rectangle1.Height -= 2;
-        g.DrawString(text, font, myForeBrush, (RectangleF)rectangle1, format1);
+        g.DrawString(
+            s: text,
+            font: font,
+            brush: myForeBrush,
+            layoutRectangle: (RectangleF)rectangle1,
+            format: format1
+        );
         format1.Dispose();
     }
 
@@ -272,7 +290,7 @@ public class DataGridBlobColumn : DataGridTextBoxColumn
         {
             _ruleEngine = null;
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
 
     private void TextBox_VisibleChanged(object sender, EventArgs e)

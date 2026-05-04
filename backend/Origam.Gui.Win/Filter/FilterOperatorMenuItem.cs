@@ -32,7 +32,7 @@ public class FilterOperatorMenuItem : MenuItem
     private FilterOperator _operator;
 
     public FilterOperatorMenuItem(string text, EventHandler eventHandler, FilterOperator oper)
-        : base(text, eventHandler)
+        : base(text: text, onClick: eventHandler)
     {
         this.Operator = oper;
     }

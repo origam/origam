@@ -29,7 +29,7 @@ namespace Origam.Schema.TestModel;
 public class TestChecklistRuleConverter : System.ComponentModel.TypeConverter
 {
     static ISchemaService _schema =
-        ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
+        ServiceManager.Services.GetService(serviceType: typeof(ISchemaService)) as ISchemaService;
 
     public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
     {
@@ -49,15 +49,15 @@ public class TestChecklistRuleConverter : System.ComponentModel.TypeConverter
     )
     {
         TestChecklistRuleSchemaItemProvider rules =
-            _schema.GetProvider(typeof(TestChecklistRuleSchemaItemProvider))
+            _schema.GetProvider(type: typeof(TestChecklistRuleSchemaItemProvider))
             as TestChecklistRuleSchemaItemProvider;
-        var osArray = new List<ISchemaItem>(rules.ChildItems.Count);
+        var osArray = new List<ISchemaItem>(capacity: rules.ChildItems.Count);
         foreach (ISchemaItem os in rules.ChildItems)
         {
-            osArray.Add(os);
+            osArray.Add(item: os);
         }
         osArray.Sort();
-        return new StandardValuesCollection(osArray);
+        return new StandardValuesCollection(values: osArray);
     }
 
     public override bool CanConvertFrom(
@@ -70,7 +70,7 @@ public class TestChecklistRuleConverter : System.ComponentModel.TypeConverter
             return true;
         }
 
-        return base.CanConvertFrom(context, sourceType);
+        return base.CanConvertFrom(context: context, sourceType: sourceType);
     }
 
     public override object ConvertFrom(
@@ -82,7 +82,7 @@ public class TestChecklistRuleConverter : System.ComponentModel.TypeConverter
         if (value.GetType() == typeof(string))
         {
             TestChecklistRuleSchemaItemProvider rules =
-                _schema.GetProvider(typeof(TestChecklistRuleSchemaItemProvider))
+                _schema.GetProvider(type: typeof(TestChecklistRuleSchemaItemProvider))
                 as TestChecklistRuleSchemaItemProvider;
             foreach (ISchemaItem item in rules.ChildItems)
             {
@@ -94,6 +94,6 @@ public class TestChecklistRuleConverter : System.ComponentModel.TypeConverter
             return null;
         }
 
-        return base.ConvertFrom(context, culture, value);
+        return base.ConvertFrom(context: context, culture: culture, value: value);
     }
 }

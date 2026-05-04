@@ -33,7 +33,7 @@ class CorePasswordHasher : IPasswordHasher<IOrigamUser>
 
     public string HashPassword(IOrigamUser user, string password)
     {
-        return internalHasher.HashPassword(password);
+        return internalHasher.HashPassword(password: password);
     }
 
     public PasswordVerificationResult VerifyHashedPassword(
@@ -43,10 +43,10 @@ class CorePasswordHasher : IPasswordHasher<IOrigamUser>
     )
     {
         VerificationResult verificationResult = internalHasher.VerifyHashedPassword(
-            hashedPassword,
-            providedPassword
+            hashedPassword: hashedPassword,
+            providedPassword: providedPassword
         );
-        return ToAspNetCoreResult(verificationResult);
+        return ToAspNetCoreResult(result: verificationResult);
     }
 
     private static PasswordVerificationResult ToAspNetCoreResult(VerificationResult result)

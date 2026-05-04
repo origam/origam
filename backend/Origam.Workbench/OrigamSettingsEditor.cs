@@ -32,7 +32,7 @@ namespace Origam.Workbench;
 public class OrigamSettingsEditor : AbstractViewContent
 {
     Pads.PropertyPad _propertyPad =
-        WorkbenchSingleton.Workbench.GetPad(typeof(Pads.PropertyPad)) as Pads.PropertyPad;
+        WorkbenchSingleton.Workbench.GetPad(type: typeof(Pads.PropertyPad)) as Pads.PropertyPad;
 
     private System.Windows.Forms.ColumnHeader colName;
     private System.Windows.Forms.ColumnHeader colModelConnection;
@@ -53,10 +53,12 @@ public class OrigamSettingsEditor : AbstractViewContent
         InitializeComponent();
         StatusText =
             $"Origam Settings loaded from: {ConfigurationManager.UserProfileOrigamSettings}";
-        this.Icon = Icon.FromHandle(new Bitmap(Images.ConnectionConfiguration).GetHicon());
+        this.Icon = Icon.FromHandle(
+            handle: new Bitmap(original: Images.ConnectionConfiguration).GetHicon()
+        );
         if (_propertyPad == null)
         {
-            throw new Exception(ResourceUtils.GetString("ErrorEditConfigurations"));
+            throw new Exception(message: ResourceUtils.GetString(key: "ErrorEditConfigurations"));
         }
         _propertyPad.PropertyGrid.PropertyValueChanged += new PropertyValueChangedEventHandler(
             PropertyGrid_PropertyValueChanged
@@ -76,7 +78,7 @@ public class OrigamSettingsEditor : AbstractViewContent
                 components.Dispose();
             }
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
 
     #region Windows Form Designer generated code
@@ -206,7 +208,7 @@ public class OrigamSettingsEditor : AbstractViewContent
         {
             ListViewItem item = NewItem();
             item.Tag = setting;
-            lvwConfigurations.Items.Add(item);
+            lvwConfigurations.Items.Add(value: item);
         }
         RefreshList();
     }
@@ -217,14 +219,14 @@ public class OrigamSettingsEditor : AbstractViewContent
         foreach (ListViewItem item in lvwConfigurations.Items)
         {
             OrigamSettings setting = item.Tag as OrigamSettings;
-            settings.Add(setting);
+            settings.Add(value: setting);
         }
-        ConfigurationManager.WriteConfiguration(settings);
+        ConfigurationManager.WriteConfiguration(configuration: settings);
     }
 
     private ListViewItem NewItem()
     {
-        return new ListViewItem(new string[3]);
+        return new ListViewItem(items: new string[3]);
     }
 
     private void propertyGrid1_PropertyValueChanged(
@@ -243,10 +245,10 @@ public class OrigamSettingsEditor : AbstractViewContent
         if (IsDirty)
         {
             DialogResult result = MessageBox.Show(
-                ResourceUtils.GetString("DoYouWantSave", this.TitleName),
-                ResourceUtils.GetString("SaveTitle"),
-                MessageBoxButtons.YesNoCancel,
-                MessageBoxIcon.Question
+                text: ResourceUtils.GetString(key: "DoYouWantSave", args: this.TitleName),
+                caption: ResourceUtils.GetString(key: "SaveTitle"),
+                buttons: MessageBoxButtons.YesNoCancel,
+                icon: MessageBoxIcon.Question
             );
 
             switch (result)
@@ -299,9 +301,9 @@ public class OrigamSettingsEditor : AbstractViewContent
         foreach (ListViewItem item in lvwConfigurations.Items)
         {
             OrigamSettings origamSettings = item.Tag as OrigamSettings;
-            item.SubItems[0].Text = origamSettings.Name;
-            item.SubItems[1].Text = origamSettings.ModelSourceControlLocation;
-            item.SubItems[2].Text = origamSettings.DataConnectionString;
+            item.SubItems[index: 0].Text = origamSettings.Name;
+            item.SubItems[index: 1].Text = origamSettings.ModelSourceControlLocation;
+            item.SubItems[index: 2].Text = origamSettings.DataConnectionString;
         }
     }
 
@@ -319,8 +321,8 @@ public class OrigamSettingsEditor : AbstractViewContent
         if (e.Button == btnAdd)
         {
             ListViewItem newItem = NewItem();
-            newItem.Tag = new OrigamSettings("New Configuration");
-            lvwConfigurations.Items.Add(newItem);
+            newItem.Tag = new OrigamSettings(name: "New Configuration");
+            lvwConfigurations.Items.Add(value: newItem);
             RefreshList();
         }
         if (e.Button == btnDelete)
@@ -331,10 +333,10 @@ public class OrigamSettingsEditor : AbstractViewContent
             }
 
             ListViewItem[] items = new ListViewItem[lvwConfigurations.SelectedItems.Count];
-            lvwConfigurations.SelectedItems.CopyTo(items, 0);
+            lvwConfigurations.SelectedItems.CopyTo(dest: items, index: 0);
             foreach (ListViewItem item in items)
             {
-                lvwConfigurations.Items.Remove(item);
+                lvwConfigurations.Items.Remove(item: item);
             }
             _propertyPad.PropertyGrid.SelectedObjects = null;
         }
@@ -350,9 +352,9 @@ public class OrigamSettingsEditor : AbstractViewContent
             {
                 ListViewItem newItem = NewItem();
                 OrigamSettings settings = (item.Tag as OrigamSettings).Clone() as OrigamSettings;
-                settings.Name = ResourceUtils.GetString("CopyOf", settings.Name);
+                settings.Name = ResourceUtils.GetString(key: "CopyOf", args: settings.Name);
                 newItem.Tag = settings;
-                lvwConfigurations.Items.Add(newItem);
+                lvwConfigurations.Items.Add(value: newItem);
             }
             RefreshList();
         }

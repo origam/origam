@@ -27,7 +27,7 @@ namespace Origam.Utils.Sql;
 
 class PgSqlRunner : SqlRunner
 {
-    public PgSqlRunner(ILog log) : base(log) { }
+    public PgSqlRunner(ILog log) : base(log: log) { }
 
     protected override string BuildRootVersionSql()
     {
@@ -37,7 +37,7 @@ class PgSqlRunner : SqlRunner
 
     protected override string BuildProcedureCall(string procedureName)
     {
-        string name = !procedureName.StartsWith("\"") && !procedureName.EndsWith("\"")
+        string name = !procedureName.StartsWith(value: "\"") && !procedureName.EndsWith(value: "\"")
             ? $"\"{procedureName}\""
             : procedureName;
         return $"CALL {name}();";
@@ -45,10 +45,10 @@ class PgSqlRunner : SqlRunner
 
     protected override void ExecuteSqlCommand(string connectionString, string sqlCommand)
     {
-        using var connection = new NpgsqlConnection(connectionString);
-        using var command = new NpgsqlCommand(sqlCommand, connection);
+        using var connection = new NpgsqlConnection(connectionString: connectionString);
+        using var command = new NpgsqlCommand(cmdText: sqlCommand, connection: connection);
         connection.Open();
         var result = command.ExecuteScalar();
-        Console.Write(result?.ToString());
+        Console.Write(value: result?.ToString());
     }
 }

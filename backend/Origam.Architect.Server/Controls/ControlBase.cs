@@ -27,27 +27,27 @@ namespace Origam.Architect.Server.Controls;
 
 public abstract class ControlBase : IControl
 {
-    [ReferenceProperty("StyleId")]
-    [TypeConverter(typeof(StylesConverter))]
+    [ReferenceProperty(name: "StyleId")]
+    [TypeConverter(type: typeof(StylesConverter))]
     public Guid StyleId { get; set; }
 
-    [Category("Layout")]
-    [Browsable(false)]
+    [Category(category: "Layout")]
+    [Browsable(browsable: false)]
     public int Top { get; set; }
 
-    [Category("Layout")]
-    [Browsable(false)]
+    [Category(category: "Layout")]
+    [Browsable(browsable: false)]
     public int Left { get; set; }
 
-    [Category("Layout")]
-    [Browsable(false)]
+    [Category(category: "Layout")]
+    [Browsable(browsable: false)]
     public int Height { get; set; } = 200;
 
-    [Category("Layout")]
-    [Browsable(false)]
+    [Category(category: "Layout")]
+    [Browsable(browsable: false)]
     public int Width { get; set; } = 200;
 
-    [Category("Behavior")]
+    [Category(category: "Behavior")]
     public int TabIndex { get; set; }
 
     public virtual void Initialize(ControlSetItem controlSetItem) { }

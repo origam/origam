@@ -29,24 +29,28 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.GuiModel;
 
-[SchemaItemDescription("Screen Condition", "Screen Condition", "icon_parameter-mapping.png")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(
+    name: "Screen Condition",
+    folderName: "Screen Condition",
+    iconName: "icon_parameter-mapping.png"
+)]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class ScreenCondition : AbstractSchemaItem
 {
     public const string CategoryConst = "ScreenCondition";
     public override string ItemType => CategoryConst;
     public Guid ScreenId;
 
-    [TypeConverter(typeof(FormControlSetConverter))]
-    [XmlReference("screen", "ScreenId")]
+    [TypeConverter(type: typeof(FormControlSetConverter))]
+    [XmlReference(attributeName: "screen", idField: "ScreenId")]
     public FormControlSet Screen
     {
         get =>
             (FormControlSet)
                 PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(ScreenId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: ScreenId)
                 );
         set
         {
@@ -55,8 +59,8 @@ public class ScreenCondition : AbstractSchemaItem
             {
                 var formControl = (FormControlSet)
                     PersistenceProvider.RetrieveInstance(
-                        typeof(ISchemaItem),
-                        new ModelElementKey(ScreenId)
+                        type: typeof(ISchemaItem),
+                        primaryKey: new ModelElementKey(id: ScreenId)
                     );
                 Name = formControl.Name;
             }
@@ -64,15 +68,15 @@ public class ScreenCondition : AbstractSchemaItem
     }
 
     public ScreenCondition(Guid extensionId)
-        : base(extensionId) { }
+        : base(extensionId: extensionId) { }
 
     public ScreenCondition(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     public ScreenCondition() { }
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(Screen);
+        dependencies.Add(item: Screen);
     }
 }

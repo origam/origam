@@ -36,7 +36,7 @@ class CreateRoleCommand : AbstractMenuCommand
 {
     RoleForm roleForm;
     SchemaBrowser _schemaBrowser =
-        WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+        WorkbenchSingleton.Workbench.GetPad(type: typeof(SchemaBrowser)) as SchemaBrowser;
     public override bool IsEnabled
     {
         get
@@ -47,7 +47,13 @@ class CreateRoleCommand : AbstractMenuCommand
                 && obj.AuthorizationContext != null
                 && obj.AuthorizationContext != "*";
         }
-        set { throw new ArgumentException("Cannot set this property", "IsEnabled"); }
+        set
+        {
+            throw new ArgumentException(
+                message: "Cannot set this property",
+                paramName: "IsEnabled"
+            );
+        }
     }
 
     public override void Run()
@@ -55,15 +61,22 @@ class CreateRoleCommand : AbstractMenuCommand
         ServiceCommandUpdateScriptActivity scriptActivity =
             new ServiceCommandUpdateScriptActivity();
         var list = new List<ListViewItem>();
-        list.Add(new ListViewItem(scriptActivity.ModelDescription(), scriptActivity.Icon));
+        list.Add(
+            item: new ListViewItem(
+                text: scriptActivity.ModelDescription(),
+                imageKey: scriptActivity.Icon
+            )
+        );
         Stack stackPage = new Stack();
-        stackPage.Push(PagesList.Finish);
-        stackPage.Push(PagesList.SummaryPage);
-        stackPage.Push(PagesList.StartPage);
+        stackPage.Push(obj: PagesList.Finish);
+        stackPage.Push(obj: PagesList.SummaryPage);
+        stackPage.Push(obj: PagesList.StartPage);
         roleForm = new RoleForm()
         {
-            Title = ResourceUtils.GetString("CreateDataStructureFromEntityWizardTitle"),
-            Description = ResourceUtils.GetString("CreateDataStructureFromEntityWizardDescription"),
+            Title = ResourceUtils.GetString(key: "CreateDataStructureFromEntityWizardTitle"),
+            Description = ResourceUtils.GetString(
+                key: "CreateDataStructureFromEntityWizardDescription"
+            ),
             ItemTypeList = list,
             Pages = stackPage,
             ImageList = _schemaBrowser.EbrSchemaBrowser.imgList,
@@ -71,7 +84,7 @@ class CreateRoleCommand : AbstractMenuCommand
             Roles = ((AbstractMenuItem)Owner).Roles,
             NameOfMenu = ((AbstractMenuItem)Owner).DisplayName,
         };
-        Wizard wizardscreen = new Wizard(roleForm);
+        Wizard wizardscreen = new Wizard(objectForm: roleForm);
         if (wizardscreen.ShowDialog() != DialogResult.OK)
         {
             GeneratedModelElements.Clear();
@@ -81,26 +94,35 @@ class CreateRoleCommand : AbstractMenuCommand
     public override void Execute()
     {
         IAuthorizationContextContainer obj = Owner as IAuthorizationContextContainer;
-        ServiceCommandUpdateScriptActivity activity = CreateRole(obj.AuthorizationContext);
-        GeneratedModelElements.Add(activity);
+        ServiceCommandUpdateScriptActivity activity = CreateRole(role: obj.AuthorizationContext);
+        GeneratedModelElements.Add(item: activity);
     }
 
     public override int GetImageIndex(string icon)
     {
-        return _schemaBrowser.ImageIndex(icon);
+        return _schemaBrowser.ImageIndex(icon: icon);
     }
 
     public override void SetSummaryText(object summary)
     {
         RichTextBox richTextBoxSummary = (RichTextBox)summary;
         richTextBoxSummary.Text = "This Wizard will create a Role with these parameters:";
-        richTextBoxSummary.AppendText("");
-        richTextBoxSummary.AppendText("Create Role ");
-        richTextBoxSummary.SelectionFont = new Font(richTextBoxSummary.Font, FontStyle.Bold);
-        richTextBoxSummary.AppendText(roleForm.Roles);
-        richTextBoxSummary.SelectionFont = new Font(richTextBoxSummary.Font, FontStyle.Regular);
-        richTextBoxSummary.AppendText(" for ");
-        richTextBoxSummary.SelectionFont = new Font(richTextBoxSummary.Font, FontStyle.Italic);
-        richTextBoxSummary.AppendText(roleForm.NameOfMenu);
+        richTextBoxSummary.AppendText(text: "");
+        richTextBoxSummary.AppendText(text: "Create Role ");
+        richTextBoxSummary.SelectionFont = new Font(
+            prototype: richTextBoxSummary.Font,
+            newStyle: FontStyle.Bold
+        );
+        richTextBoxSummary.AppendText(text: roleForm.Roles);
+        richTextBoxSummary.SelectionFont = new Font(
+            prototype: richTextBoxSummary.Font,
+            newStyle: FontStyle.Regular
+        );
+        richTextBoxSummary.AppendText(text: " for ");
+        richTextBoxSummary.SelectionFont = new Font(
+            prototype: richTextBoxSummary.Font,
+            newStyle: FontStyle.Italic
+        );
+        richTextBoxSummary.AppendText(text: roleForm.NameOfMenu);
     }
 }

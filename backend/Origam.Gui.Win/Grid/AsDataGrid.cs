@@ -38,7 +38,7 @@ public class AsDataGrid : DataGrid
     public AsDataGrid()
     {
         tooltip = FormGenerator.InitializeTooltip();
-        clickTracker = new ClickTracker(this);
+        clickTracker = new ClickTracker(grid: this);
         clickTracker.SplitDoubleClikDetected += OnGridEditorDoubleClick;
     }
 
@@ -46,32 +46,32 @@ public class AsDataGrid : DataGrid
 
     public void WatchClicksToRaiseEditorDoubleClicked(IAsGridEditor gridEditor)
     {
-        clickTracker.AddControl(gridEditor);
+        clickTracker.AddControl(gridEditor: gridEditor);
         gridEditor.EditorDoubleClick += OnGridEditorDoubleClick;
     }
 
     private void OnGridEditorDoubleClick(object sender, EventArgs args)
     {
-        EditorDoubleClicked?.Invoke(null, EventArgs.Empty);
+        EditorDoubleClicked?.Invoke(sender: null, e: EventArgs.Empty);
     }
 
     protected override void OnMouseHover(EventArgs e)
     {
-        HitTestInfo info = HitTest(this.PointToClient(Cursor.Position));
+        HitTestInfo info = HitTest(position: this.PointToClient(p: Cursor.Position));
         if (info.Column != -1)
         {
             AsForm form = this.FindForm() as AsForm;
-            DataGridColumnStyle style = TableStyles[0].GridColumnStyles[info.Column];
+            DataGridColumnStyle style = TableStyles[index: 0].GridColumnStyles[index: info.Column];
             tooltip.ToolTipTitle = style.HeaderText;
-            tooltip.Hide(this);
-            tooltip.Show(form.FormGenerator.GetTooltip(style), this);
+            tooltip.Hide(win: this);
+            tooltip.Show(text: form.FormGenerator.GetTooltip(style: style), window: this);
         }
-        base.OnMouseHover(e);
+        base.OnMouseHover(e: e);
     }
 
     public void InvokeClick()
     {
-        OnClick(EventArgs.Empty);
+        OnClick(e: EventArgs.Empty);
     }
 
     public bool EnhancedFocusControl = true;
@@ -90,27 +90,27 @@ public class AsDataGrid : DataGrid
             }
             this.HorizScrollBar.Value = value;
             this.GridHScrolled(
-                this.HorizScrollBar,
-                new ScrollEventArgs(ScrollEventType.ThumbPosition, value)
+                sender: this.HorizScrollBar,
+                se: new ScrollEventArgs(type: ScrollEventType.ThumbPosition, newValue: value)
             );
         }
     }
 
     public void InvokeOnEnter()
     {
-        this.OnEnter(EventArgs.Empty);
+        this.OnEnter(e: EventArgs.Empty);
     }
 
     protected override bool ProcessDialogKey(Keys keyData)
     {
         try
         {
-            if (FilterKeyData(keyData))
+            if (FilterKeyData(keyData: keyData))
             {
                 return false;
             }
 
-            return base.ProcessDialogKey(keyData);
+            return base.ProcessDialogKey(keyData: keyData);
         }
         catch
         {
@@ -120,25 +120,25 @@ public class AsDataGrid : DataGrid
 
     protected override void OnKeyDown(KeyEventArgs e)
     {
-        if (FilterKeyData(e.KeyData))
+        if (FilterKeyData(keyData: e.KeyData))
         {
             return;
         }
 
-        base.OnKeyDown(e);
+        base.OnKeyDown(ke: e);
     }
 
     protected override bool ProcessKeyPreview(ref Message m)
     {
         if (m.Msg == 0x100)
         {
-            KeyEventArgs ke = new KeyEventArgs(((Keys)((int)m.WParam)) | ModifierKeys);
-            if (FilterKeyData(ke.KeyData))
+            KeyEventArgs ke = new KeyEventArgs(keyData: ((Keys)((int)m.WParam)) | ModifierKeys);
+            if (FilterKeyData(keyData: ke.KeyData))
             {
                 return false;
             }
         }
-        return base.ProcessKeyPreview(ref m);
+        return base.ProcessKeyPreview(m: ref m);
     }
 
     private bool FilterKeyData(Keys keyData)
@@ -162,7 +162,7 @@ public class AsDataGrid : DataGrid
                 Control parentControl = this;
                 while (parentControl != null)
                 {
-                    if (parentControl.Equals(activeControl))
+                    if (parentControl.Equals(obj: activeControl))
                     {
                         found = true;
                         break;
@@ -195,7 +195,7 @@ public class AsDataGrid : DataGrid
 
                 try
                 {
-                    base.OnEnter(e);
+                    base.OnEnter(e: e);
                 }
                 finally
                 {
@@ -208,22 +208,22 @@ public class AsDataGrid : DataGrid
 
     protected override void OnLayout(LayoutEventArgs levent)
     {
-        base.OnLayout(levent);
+        base.OnLayout(levent: levent);
         if (!disposed & levent.AffectedControl == null & IgnoreLayoutEvent == false)
         {
-            this.OnEnter(EventArgs.Empty);
+            this.OnEnter(e: EventArgs.Empty);
         }
     }
 
     protected override void OnMouseDown(MouseEventArgs e)
     {
-        HitTestInfo info = this.HitTest(e.X, e.Y);
-        base.OnMouseDown(e);
+        HitTestInfo info = this.HitTest(x: e.X, y: e.Y);
+        base.OnMouseDown(e: e);
         // Workaround: Sometimes the grid does not navigate to the right
         // column. In that case we just retry.
         if (this.CurrentCell.RowNumber != info.Row || this.CurrentCell.ColumnNumber != info.Column)
         {
-            this.CurrentCell = new DataGridCell(info.Row, info.Column);
+            this.CurrentCell = new DataGridCell(r: info.Row, c: info.Column);
         }
         if (
             e.Clicks > 1
@@ -232,14 +232,14 @@ public class AsDataGrid : DataGrid
             && this.TableStyles.Count == 1
         )
         {
-            this.TableStyles[0].GridColumnStyles[info.Column].Width += 1;
+            this.TableStyles[index: 0].GridColumnStyles[index: info.Column].Width += 1;
         }
     }
 
     protected override void OnMouseMove(MouseEventArgs e)
     {
-        base.OnMouseMove(e);
-        AfterMouseMove?.Invoke(this, e);
+        base.OnMouseMove(e: e);
+        AfterMouseMove?.Invoke(sender: this, e: e);
     }
 
     protected override void Dispose(bool disposing)
@@ -249,13 +249,13 @@ public class AsDataGrid : DataGrid
             this.DataSource = null;
             this.tooltip.Dispose();
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
         disposed = true;
     }
 
     protected override void OnEnabledChanged(EventArgs e)
     {
-        base.OnEnabledChanged(e);
+        base.OnEnabledChanged(e: e);
         if (this.Enabled)
         {
             this.HorizScrollBar.Enabled = true; // Index zero is the horizontal scrollbar
@@ -267,7 +267,7 @@ public class AsDataGrid : DataGrid
 
     public void OnControlMouseWheel(MouseEventArgs e)
     {
-        OnMouseWheel(e);
+        OnMouseWheel(e: e);
     }
 }
 
@@ -296,7 +296,7 @@ internal class ClickTracker
         long timeFromLastGridClick_ms = (DateTime.UtcNow.Ticks - lastGridClick) / 10000;
         if (timeFromLastGridClick_ms < SystemInformation.DoubleClickTime)
         {
-            SplitDoubleClikDetected?.Invoke(null, EventArgs.Empty);
+            SplitDoubleClikDetected?.Invoke(sender: null, e: EventArgs.Empty);
         }
     }
 }

@@ -44,38 +44,48 @@ class ReportPageRequestHandler : AbstractPageRequestHandler
         AbstractReport report = reportPage.Report as AbstractReport;
         Hashtable hashParams = new Hashtable();
         Hashtable transformParams = new Hashtable();
-        Hashtable preprocessorParams = GetPreprocessorParameters(request);
+        Hashtable preprocessorParams = GetPreprocessorParameters(request: request);
         // convert parameters to QueryParameterCollection for data service and hashtable for transformation service
         foreach (KeyValuePair<string, object> p in parameters)
         {
-            hashParams.Add(p.Key, p.Value);
-            transformParams.Add(p.Key, p.Value);
+            hashParams.Add(key: p.Key, value: p.Value);
+            transformParams.Add(key: p.Key, value: p.Value);
         }
         // copy also the preprocessor parameters to the transformation parameters
         foreach (DictionaryEntry rp in preprocessorParams)
         {
-            transformParams.Add(rp.Key, rp.Value);
+            transformParams.Add(key: rp.Key, value: rp.Value);
         }
-        RuleEngine ruleEngine = RuleEngine.Create(null, null);
-        Validate(null, transformParams, ruleEngine, reportPage.InputValidationRule);
+        RuleEngine ruleEngine = RuleEngine.Create(contextStores: null, transactionId: null);
+        Validate(
+            data: null,
+            transformParams: transformParams,
+            ruleEngine: ruleEngine,
+            validation: reportPage.InputValidationRule
+        );
         // get report
         if (report is FileSystemReport reportstream)
         {
-            StreamFileToOutput(reportstream, page.MimeType, response, hashParams);
+            StreamFileToOutput(
+                reportstream: reportstream,
+                mimeType: page.MimeType,
+                response: response,
+                hashParams: hashParams
+            );
         }
         else
         {
             byte[] result = CoreServices.ReportService.GetReport(
-                report.Id,
-                null,
-                reportPage.ExportFormatType.GetString(),
-                hashParams,
-                null
+                reportId: report.Id,
+                data: null,
+                format: reportPage.ExportFormatType.GetString(),
+                parameters: hashParams,
+                transactionId: null
             );
             // set proper content type
             response.ContentType = "application/pdf";
             // write to response.OutputStream
-            response.OutputStreamWrite(result, 0, result.Length);
+            response.OutputStreamWrite(buffer: result, offset: 0, count: result.Length);
         }
     }
 
@@ -87,35 +97,43 @@ class ReportPageRequestHandler : AbstractPageRequestHandler
     )
     {
         response.ContentType = mimeType;
-        ReportHelper.PopulateDefaultValues(reportstream, hashParams);
+        ReportHelper.PopulateDefaultValues(report: reportstream, parameters: hashParams);
         string reportPath = ReportHelper.BuildFileSystemReportFilePath(
-            reportstream.ReportPath,
-            hashParams
+            filePath: reportstream.ReportPath,
+            parameters: hashParams
         );
         try
         {
-            if (ValidateFileName(reportstream.ReportPath, reportPath, hashParams))
+            if (
+                ValidateFileName(
+                    reportPath: reportstream.ReportPath,
+                    fullpath: reportPath,
+                    hashParams: hashParams
+                )
+            )
             {
-                using (StreamReader sr = File.OpenText(reportPath))
+                using (StreamReader sr = File.OpenText(path: reportPath))
                 {
                     string s = "";
                     while ((s = sr.ReadLine()) != null)
                     {
-                        response.WriteToOutput(textwriter => textwriter.WriteLine(s));
+                        response.WriteToOutput(writeAction: textwriter =>
+                            textwriter.WriteLine(value: s)
+                        );
                     }
                 }
             }
             else
             {
-                response.WriteToOutput(textwriter =>
-                    textwriter.WriteLine(Resources.BlobFileNotAvailable)
+                response.WriteToOutput(writeAction: textwriter =>
+                    textwriter.WriteLine(value: Resources.BlobFileNotAvailable)
                 );
             }
         }
         catch (Exception)
         {
-            response.WriteToOutput(textwriter =>
-                textwriter.WriteLine(Resources.BlobFileNotAvailable)
+            response.WriteToOutput(writeAction: textwriter =>
+                textwriter.WriteLine(value: Resources.BlobFileNotAvailable)
             );
         }
     }
@@ -123,34 +141,44 @@ class ReportPageRequestHandler : AbstractPageRequestHandler
     private bool ValidateFileName(string reportPath, string fullpath, Hashtable hashParams)
     {
         //determine working directory
-        string workingDirectory = GetWorkingDirectory(reportPath, hashParams);
-        string directoryOfFile = Path.GetDirectoryName(fullpath).ReplaceInvalidFileCharacters("");
+        string workingDirectory = GetWorkingDirectory(
+            reportPath: reportPath,
+            hashParams: hashParams
+        );
+        string directoryOfFile = Path.GetDirectoryName(path: fullpath)
+            .ReplaceInvalidFileCharacters(replaceWith: "");
         return workingDirectory != null && workingDirectory == directoryOfFile;
     }
 
     private string GetWorkingDirectory(string reportPath, Hashtable hashParams)
     {
-        int firstbracket = reportPath.IndexOf("{");
+        int firstbracket = reportPath.IndexOf(value: "{");
         if (firstbracket == -1)
         {
-            if (Directory.Exists(Path.GetDirectoryName(reportPath)))
+            if (Directory.Exists(path: Path.GetDirectoryName(path: reportPath)))
             {
-                return Path.GetDirectoryName(reportPath).ReplaceInvalidFileCharacters("");
+                return Path.GetDirectoryName(path: reportPath)
+                    .ReplaceInvalidFileCharacters(replaceWith: "");
             }
         }
         if (firstbracket == 0)
         {
-            int secondBracket = reportPath.IndexOf("}");
-            string paramDefaultdirectory = reportPath.Substring(1, secondBracket - 1);
-            if (hashParams.ContainsKey(paramDefaultdirectory))
+            int secondBracket = reportPath.IndexOf(value: "}");
+            string paramDefaultdirectory = reportPath.Substring(
+                startIndex: 1,
+                length: secondBracket - 1
+            );
+            if (hashParams.ContainsKey(key: paramDefaultdirectory))
             {
-                string dir = (string)hashParams[paramDefaultdirectory];
-                return dir.ReplaceInvalidFileCharacters("");
+                string dir = (string)hashParams[key: paramDefaultdirectory];
+                return dir.ReplaceInvalidFileCharacters(replaceWith: "");
             }
         }
         if (firstbracket > 0)
         {
-            return reportPath.Substring(0, firstbracket).ReplaceInvalidFileCharacters("");
+            return reportPath
+                .Substring(startIndex: 0, length: firstbracket)
+                .ReplaceInvalidFileCharacters(replaceWith: "");
         }
         return null;
     }

@@ -38,24 +38,32 @@ public class CompiledXsltEngine : MicrosoftXsltEngine
     public CompiledXsltEngine() { }
 
     public CompiledXsltEngine(IEnumerable<XsltFunctionsDefinition> functionsDefinitions)
-        : base(functionsDefinitions) { }
+        : base(functionsDefinitions: functionsDefinitions) { }
 
     public CompiledXsltEngine(IPersistenceProvider persistence)
-        : base(persistence) { }
+        : base(persistence: persistence) { }
     #endregion
     internal override object GetTransform(IXmlContainer xslt)
     {
         XslCompiledTransform engine = new XslCompiledTransform();
-        engine.Load(new XmlNodeReader(xslt.Xml), new XsltSettings(), new ModelXmlResolver());
+        engine.Load(
+            stylesheet: new XmlNodeReader(node: xslt.Xml),
+            settings: new XsltSettings(),
+            stylesheetResolver: new ModelXmlResolver()
+        );
         return engine;
     }
 
     internal override object GetTransform(string xsl)
     {
         XslCompiledTransform engine = new XslCompiledTransform();
-        StringReader xslReader = new StringReader(xsl);
-        XPathDocument xslDoc = new XPathDocument(xslReader);
-        engine.Load(xslDoc, new XsltSettings(), new ModelXmlResolver());
+        StringReader xslReader = new StringReader(s: xsl);
+        XPathDocument xslDoc = new XPathDocument(textReader: xslReader);
+        engine.Load(
+            stylesheet: xslDoc,
+            settings: new XsltSettings(),
+            stylesheetResolver: new ModelXmlResolver()
+        );
         return engine;
     }
 
@@ -68,11 +76,11 @@ public class CompiledXsltEngine : MicrosoftXsltEngine
     {
         XslCompiledTransform xslt = engine as XslCompiledTransform;
         MemoryStream stream = new MemoryStream();
-        xslt.Transform(sourceXpathDoc, xslArg, stream);
+        xslt.Transform(input: sourceXpathDoc, arguments: xslArg, results: stream);
         stream.Position = 0;
-        using (XmlReader reader = XmlReader.Create(stream))
+        using (XmlReader reader = XmlReader.Create(input: stream))
         {
-            resultDoc.Load(reader);
+            resultDoc.Load(xmlReader: reader);
         }
     }
 
@@ -84,7 +92,7 @@ public class CompiledXsltEngine : MicrosoftXsltEngine
     )
     {
         XslCompiledTransform xslt = engine as XslCompiledTransform;
-        xslt.Transform(sourceXpathDoc, xslArg, xwr);
+        xslt.Transform(input: sourceXpathDoc, arguments: xslArg, results: xwr);
     }
 
     public override void Transform(
@@ -95,7 +103,7 @@ public class CompiledXsltEngine : MicrosoftXsltEngine
     )
     {
         XslCompiledTransform xslt = engine as XslCompiledTransform;
-        xslt.Transform(input, xslArg, output);
+        xslt.Transform(input: input, arguments: xslArg, results: output);
     }
 
     #region Transformation Cache
@@ -103,17 +111,17 @@ public class CompiledXsltEngine : MicrosoftXsltEngine
 
     protected override bool IsTransformationCached(Guid transformationId)
     {
-        return _transformationCache.ContainsKey(transformationId);
+        return _transformationCache.ContainsKey(key: transformationId);
     }
 
     protected override object GetCachedTransformation(Guid tranformationId)
     {
-        return _transformationCache[tranformationId];
+        return _transformationCache[key: tranformationId];
     }
 
     protected override void PutTransformationToCache(Guid transformationId, object transformation)
     {
-        _transformationCache[transformationId] = transformation;
+        _transformationCache[key: transformationId] = transformation;
     }
     #endregion
 }

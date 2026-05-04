@@ -28,7 +28,7 @@ public class SearchSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemF
 {
     public SearchSchemaItemProvider()
     {
-        this.ChildItemTypes.Add(typeof(SearchDataSource));
+        this.ChildItemTypes.Add(item: typeof(SearchDataSource));
     }
 
     #region ISchemaItemProvider Members

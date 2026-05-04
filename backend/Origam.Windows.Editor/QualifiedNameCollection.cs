@@ -29,12 +29,12 @@ public class QualifiedNameCollection : Collection<QualifiedName>
 
     public QualifiedNameCollection(QualifiedNameCollection names)
     {
-        AddRange(names);
+        AddRange(names: names);
     }
 
     public QualifiedNameCollection(QualifiedName[] names)
     {
-        AddRange(names);
+        AddRange(names: names);
     }
 
     public bool HasItems
@@ -53,9 +53,9 @@ public class QualifiedNameCollection : Collection<QualifiedName>
         {
             if (i > 0)
             {
-                text.Append(" > ");
+                text.Append(value: " > ");
             }
-            text.Append(this[i].ToString());
+            text.Append(value: this[index: i].ToString());
         }
         return text.ToString();
     }
@@ -64,7 +64,7 @@ public class QualifiedNameCollection : Collection<QualifiedName>
     {
         for (int i = 0; i < names.Length; i++)
         {
-            Add(names[i]);
+            Add(item: names[i]);
         }
     }
 
@@ -72,7 +72,7 @@ public class QualifiedNameCollection : Collection<QualifiedName>
     {
         for (int i = 0; i < names.Count; i++)
         {
-            Add(names[i]);
+            Add(item: names[index: i]);
         }
     }
 
@@ -80,7 +80,7 @@ public class QualifiedNameCollection : Collection<QualifiedName>
     {
         if (HasItems)
         {
-            RemoveAt(Count - 1);
+            RemoveAt(index: Count - 1);
         }
     }
 
@@ -88,7 +88,7 @@ public class QualifiedNameCollection : Collection<QualifiedName>
     {
         if (HasItems)
         {
-            RemoveFirst(1);
+            RemoveFirst(howMany: 1);
         }
     }
 
@@ -100,7 +100,7 @@ public class QualifiedNameCollection : Collection<QualifiedName>
         }
         while (howMany > 0)
         {
-            RemoveAt(0);
+            RemoveAt(index: 0);
             --howMany;
         }
     }
@@ -109,7 +109,7 @@ public class QualifiedNameCollection : Collection<QualifiedName>
     {
         if (HasItems)
         {
-            QualifiedName name = this[Count - 1];
+            QualifiedName name = this[index: Count - 1];
             return name.Prefix;
         }
         return String.Empty;
@@ -131,7 +131,7 @@ public class QualifiedNameCollection : Collection<QualifiedName>
     {
         if (HasItems)
         {
-            return this[Count - 1];
+            return this[index: Count - 1];
         }
         return null;
     }
@@ -150,9 +150,9 @@ public class QualifiedNameCollection : Collection<QualifiedName>
             {
                 for (int i = 0; i < Count; ++i)
                 {
-                    QualifiedName lhsName = this[i];
-                    QualifiedName rhsName = rhs[i];
-                    if (!lhsName.Equals(rhsName))
+                    QualifiedName lhsName = this[index: i];
+                    QualifiedName rhsName = rhs[index: i];
+                    if (!lhsName.Equals(obj: rhsName))
                     {
                         return false;
                     }
@@ -167,7 +167,7 @@ public class QualifiedNameCollection : Collection<QualifiedName>
     {
         if (HasItems)
         {
-            return this[0].Namespace;
+            return this[index: 0].Namespace;
         }
         return String.Empty;
     }

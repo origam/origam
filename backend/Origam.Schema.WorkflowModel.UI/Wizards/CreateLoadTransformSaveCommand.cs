@@ -34,26 +34,43 @@ public class CreateLoadTransformSaveCommand : AbstractMenuCommand
         get { return Owner is ContextStore; }
         set
         {
-            throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
+            throw new ArgumentException(
+                message: ResourceUtils.GetString(key: "ErrorSetProperty"),
+                paramName: "IsEnabled"
+            );
         }
     }
 
     public override void Run()
     {
         ContextStore context = Owner as ContextStore;
-        ServiceMethodCallTask task1 = WorkflowHelper.CreateDataServiceLoadDataTask(context, true);
+        ServiceMethodCallTask task1 = WorkflowHelper.CreateDataServiceLoadDataTask(
+            contextStore: context,
+            persist: true
+        );
         task1.Name = "01_" + task1.Name;
         task1.Persist();
         ServiceMethodCallTask task2 = WorkflowHelper.CreateDataTransformationServiceTransformTask(
-            context,
-            true
+            contextStore: context,
+            persist: true
         );
         task2.Name = "02_" + task2.Name;
         task2.Persist();
-        ServiceMethodCallTask task3 = WorkflowHelper.CreateDataServiceStoreDataTask(context, true);
+        ServiceMethodCallTask task3 = WorkflowHelper.CreateDataServiceStoreDataTask(
+            contextStore: context,
+            persist: true
+        );
         task3.Name = "03_" + task3.Name;
         task3.Persist();
-        WorkflowTaskDependency dep1 = WorkflowHelper.CreateTaskDependency(task2, task1, true);
-        WorkflowTaskDependency dep2 = WorkflowHelper.CreateTaskDependency(task3, task2, true);
+        WorkflowTaskDependency dep1 = WorkflowHelper.CreateTaskDependency(
+            step: task2,
+            dependencyStep: task1,
+            persist: true
+        );
+        WorkflowTaskDependency dep2 = WorkflowHelper.CreateTaskDependency(
+            step: task3,
+            dependencyStep: task2,
+            persist: true
+        );
     }
 }

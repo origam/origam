@@ -37,20 +37,22 @@ public class ResourceOwnerPasswordAuthenticationProviderConfig
 
     public ResourceOwnerPasswordAuthenticationProviderConfig(IConfiguration configuration)
     {
-        var section = configuration.GetSection("ResourceOwnerPasswordAuthenticationProviderConfig");
+        var section = configuration.GetSection(
+            key: "ResourceOwnerPasswordAuthenticationProviderConfig"
+        );
         if (!section.Exists())
         {
             return;
         }
         UrlsToBeAuthenticated = section
-            .GetSectionOrThrow("UrlsToBeAuthenticated")
+            .GetSectionOrThrow(key: "UrlsToBeAuthenticated")
             .GetChildren()
-            .Select(x => x.Value)
+            .Select(selector: x => x.Value)
             .ToList();
-        AuthServerUrl = section.GetStringOrThrow("AuthServerUrl");
-        ClientId = section.GetStringOrThrow("ClientId");
-        ClientSecret = section.GetStringOrThrow("ClientSecret");
-        UserName = section.GetStringOrThrow("UserName");
-        Password = section.GetStringOrThrow("Password");
+        AuthServerUrl = section.GetStringOrThrow(key: "AuthServerUrl");
+        ClientId = section.GetStringOrThrow(key: "ClientId");
+        ClientSecret = section.GetStringOrThrow(key: "ClientSecret");
+        UserName = section.GetStringOrThrow(key: "UserName");
+        Password = section.GetStringOrThrow(key: "Password");
     }
 }

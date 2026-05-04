@@ -33,13 +33,13 @@ public class Versions
     private static readonly ConcurrentDictionary<string, Versions> instances =
         new ConcurrentDictionary<string, Versions>();
     public static Version Last { get; } =
-        new Version(Int32.MaxValue, Int32.MaxValue, Int32.MaxValue);
+        new Version(major: Int32.MaxValue, minor: Int32.MaxValue, build: Int32.MaxValue);
     public IEnumerable<string> TypeNames => versionDict.Keys;
     public bool IsDead => versionDict.Count == 1 && versionDict.First().Value == Last;
 
     public static Versions GetCurrentClassVersions(string fullTypeName)
     {
-        return instances.GetOrAdd(fullTypeName, MakeCurrentClassVersions);
+        return instances.GetOrAdd(key: fullTypeName, valueFactory: MakeCurrentClassVersions);
     }
 
     private static Versions MakeCurrentClassVersions(string fullTypeName)
@@ -48,21 +48,24 @@ public class Versions
         {
             return new Versions();
         }
-        Type type = Reflector.GetTypeByName(fullTypeName);
+        Type type = Reflector.GetTypeByName(typeName: fullTypeName);
         if (type == null)
         {
-            return new Versions(fullTypeName, Last);
+            return new Versions(fullTypeName: fullTypeName, version: Last);
         }
-        Version classVersion = GetCurrentClassVersion(type);
-        Versions versions = new Versions(fullTypeName, classVersion);
+        Version classVersion = GetCurrentClassVersion(type: type);
+        Versions versions = new Versions(fullTypeName: fullTypeName, version: classVersion);
         foreach (var baseType in type.GetAllBaseTypes())
         {
             if (
-                baseType.GetCustomAttribute(typeof(ClassMetaVersionAttribute), false)
+                baseType.GetCustomAttribute(
+                    attributeType: typeof(ClassMetaVersionAttribute),
+                    inherit: false
+                )
                 is ClassMetaVersionAttribute versionAttribute
             )
             {
-                versions.versionDict.Add(baseType.FullName, versionAttribute.Value);
+                versions.versionDict.Add(key: baseType.FullName, value: versionAttribute.Value);
             }
         }
         return versions;
@@ -70,20 +73,22 @@ public class Versions
 
     public static Version TryGetCurrentClassVersion(string fullTypeName)
     {
-        Type type = Reflector.GetTypeByName(fullTypeName);
+        Type type = Reflector.GetTypeByName(typeName: fullTypeName);
         var attribute =
-            type.GetCustomAttribute(typeof(ClassMetaVersionAttribute)) as ClassMetaVersionAttribute;
+            type.GetCustomAttribute(attributeType: typeof(ClassMetaVersionAttribute))
+            as ClassMetaVersionAttribute;
         return attribute?.Value;
     }
 
     public static Version GetCurrentClassVersion(Type type)
     {
         var attribute =
-            type.GetCustomAttribute(typeof(ClassMetaVersionAttribute)) as ClassMetaVersionAttribute;
+            type.GetCustomAttribute(attributeType: typeof(ClassMetaVersionAttribute))
+            as ClassMetaVersionAttribute;
         if (attribute == null)
         {
             throw new Exception(
-                $"Cannot get meta version of class {type.FullName} because it does not have {nameof(ClassMetaVersionAttribute)} on it"
+                message: $"Cannot get meta version of class {type.FullName} because it does not have {nameof(ClassMetaVersionAttribute)} on it"
             );
         }
         return attribute.Value;
@@ -93,30 +98,30 @@ public class Versions
 
     private Versions(string fullTypeName, Version version)
     {
-        versionDict.Add(fullTypeName, version);
+        versionDict.Add(key: fullTypeName, value: version);
     }
 
-    public Version this[string fullTypeName] => versionDict[fullTypeName];
+    public Version this[string fullTypeName] => versionDict[key: fullTypeName];
 
     public Versions(IEnumerable<OrigamNameSpace> origamNameSpaces)
     {
         foreach (var origamNameSpace in origamNameSpaces)
         {
-            versionDict[origamNameSpace.FullTypeName] = origamNameSpace.Version;
+            versionDict[key: origamNameSpace.FullTypeName] = origamNameSpace.Version;
         }
     }
 
     public Versions(Versions other, IEnumerable<string> deadClasses)
     {
-        versionDict.AddOrReplaceRange(other.versionDict);
+        versionDict.AddOrReplaceRange(otherDict: other.versionDict);
         foreach (string deadClassName in deadClasses)
         {
-            if (!versionDict.ContainsKey(deadClassName))
+            if (!versionDict.ContainsKey(key: deadClassName))
             {
-                versionDict.Add(deadClassName, Last);
+                versionDict.Add(key: deadClassName, value: Last);
             }
         }
     }
 
-    public bool Contains(string className) => versionDict.ContainsKey(className);
+    public bool Contains(string className) => versionDict.ContainsKey(key: className);
 }

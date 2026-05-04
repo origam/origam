@@ -56,25 +56,25 @@ public static class AsPanelPropertyBuilder
     )
     {
         return CreateProperty(
-            "Property",
-            propertiesElement,
-            propertyNamesElement,
-            modelId,
-            bindingMember,
-            caption,
-            gridCaption,
-            table,
-            readOnly,
-            left,
-            top,
-            width,
-            height,
-            captionLength,
-            captionPosition,
-            gridColumnWidth,
-            style,
-            tabIndex,
-            fieldType
+            category: "Property",
+            propertiesElement: propertiesElement,
+            propertyNamesElement: propertyNamesElement,
+            modelId: modelId,
+            bindingMember: bindingMember,
+            caption: caption,
+            gridCaption: gridCaption,
+            table: table,
+            readOnly: readOnly,
+            left: left,
+            top: top,
+            width: width,
+            height: height,
+            captionLength: captionLength,
+            captionPosition: captionPosition,
+            gridColumnWidth: gridColumnWidth,
+            style: style,
+            tabIndex: tabIndex,
+            fieldType: fieldType
         );
     }
 
@@ -105,74 +105,77 @@ public static class AsPanelPropertyBuilder
             .SchemaProvider;
 
         IDocumentationService documentationSvc =
-            ServiceManager.Services.GetService(typeof(IDocumentationService))
+            ServiceManager.Services.GetService(serviceType: typeof(IDocumentationService))
             as IDocumentationService;
-        XmlElement propertyElement = propertiesElement.OwnerDocument.CreateElement(category);
-        propertiesElement.AppendChild(propertyElement);
+        XmlElement propertyElement = propertiesElement.OwnerDocument.CreateElement(name: category);
+        propertiesElement.AppendChild(newChild: propertyElement);
         if (propertyNamesElement != null)
         {
             XmlElement propertyNameElement = propertyNamesElement.OwnerDocument.CreateElement(
-                "string"
+                name: "string"
             );
-            propertyNamesElement.AppendChild(propertyNameElement);
+            propertyNamesElement.AppendChild(newChild: propertyNameElement);
             propertyNameElement.InnerText = bindingMember;
         }
-        if (string.IsNullOrEmpty(caption))
+        if (string.IsNullOrEmpty(value: caption))
         {
-            caption = table.Columns[bindingMember].Caption;
+            caption = table.Columns[name: bindingMember].Caption;
         }
 
-        Guid id = (Guid)table.Columns[bindingMember].ExtendedProperties["Id"];
+        Guid id = (Guid)table.Columns[name: bindingMember].ExtendedProperties[key: "Id"];
         string propertyDocumentation = documentationSvc
-            .GetDocumentation(id, DocumentationType.USER_LONG_HELP)
-            ?.Replace("'", "\'")
-            .Replace("\"", "\\\"")
-            .Replace("\r\n", "\\r\\n")
-            .Replace("\t", "\\t");
+            .GetDocumentation(schemaItemId: id, docType: DocumentationType.USER_LONG_HELP)
+            ?.Replace(oldValue: "'", newValue: "\'")
+            .Replace(oldValue: "\"", newValue: "\\\"")
+            .Replace(oldValue: "\r\n", newValue: "\\r\\n")
+            .Replace(oldValue: "\t", newValue: "\\t");
         if (propertyDocumentation != "" & propertyDocumentation != null)
         {
-            XmlElement propertyDoc = propertyElement.OwnerDocument.CreateElement("ToolTip");
-            propertyElement.AppendChild(propertyDoc);
+            XmlElement propertyDoc = propertyElement.OwnerDocument.CreateElement(name: "ToolTip");
+            propertyElement.AppendChild(newChild: propertyDoc);
             propertyDoc.InnerText = propertyDocumentation;
         }
-        propertyElement.SetAttribute("Id", bindingMember);
-        propertyElement.SetAttribute("ModelInstanceId", modelId.ToString());
-        propertyElement.SetAttribute("Name", caption);
-        if (!string.IsNullOrEmpty(gridCaption))
+        propertyElement.SetAttribute(name: "Id", value: bindingMember);
+        propertyElement.SetAttribute(name: "ModelInstanceId", value: modelId.ToString());
+        propertyElement.SetAttribute(name: "Name", value: caption);
+        if (!string.IsNullOrEmpty(value: gridCaption))
         {
-            propertyElement.SetAttribute("GridColumnCaption", gridCaption);
+            propertyElement.SetAttribute(name: "GridColumnCaption", value: gridCaption);
         }
 
-        propertyElement.SetAttribute("ReadOnly", XmlConvert.ToString(readOnly));
-        propertyElement.SetAttribute("X", XmlConvert.ToString(left));
-        propertyElement.SetAttribute("Y", XmlConvert.ToString(top));
-        propertyElement.SetAttribute("Width", XmlConvert.ToString(width));
-        if (!string.IsNullOrEmpty(gridColumnWidth))
+        propertyElement.SetAttribute(name: "ReadOnly", value: XmlConvert.ToString(value: readOnly));
+        propertyElement.SetAttribute(name: "X", value: XmlConvert.ToString(value: left));
+        propertyElement.SetAttribute(name: "Y", value: XmlConvert.ToString(value: top));
+        propertyElement.SetAttribute(name: "Width", value: XmlConvert.ToString(value: width));
+        if (!string.IsNullOrEmpty(value: gridColumnWidth))
         {
-            propertyElement.SetAttribute("GridColumnWidth", gridColumnWidth);
+            propertyElement.SetAttribute(name: "GridColumnWidth", value: gridColumnWidth);
         }
 
-        propertyElement.SetAttribute("Height", XmlConvert.ToString(height));
-        propertyElement.SetAttribute("CaptionLength", XmlConvert.ToString(captionLength));
-        propertyElement.SetAttribute("CaptionPosition", captionPosition);
-        if (!string.IsNullOrWhiteSpace(tabIndex))
+        propertyElement.SetAttribute(name: "Height", value: XmlConvert.ToString(value: height));
+        propertyElement.SetAttribute(
+            name: "CaptionLength",
+            value: XmlConvert.ToString(value: captionLength)
+        );
+        propertyElement.SetAttribute(name: "CaptionPosition", value: captionPosition);
+        if (!string.IsNullOrWhiteSpace(value: tabIndex))
         {
-            propertyElement.SetAttribute("TabIndex", tabIndex);
+            propertyElement.SetAttribute(name: "TabIndex", value: tabIndex);
         }
         if (style != null)
         {
-            propertyElement.SetAttribute("Style", style.StyleDefinition());
+            propertyElement.SetAttribute(name: "Style", value: style.StyleDefinition());
         }
-        if (persistenceProvider.IsOfType<AggregatedColumn>(id))
+        if (persistenceProvider.IsOfType<AggregatedColumn>(id: id))
         {
-            propertyElement.SetAttribute("Aggregated", "true");
+            propertyElement.SetAttribute(name: "Aggregated", value: "true");
         }
 
-        if (persistenceProvider.IsOfType<LookupField>(id))
+        if (persistenceProvider.IsOfType<LookupField>(id: id))
         {
-            propertyElement.SetAttribute("IsLookupColumn", "true");
+            propertyElement.SetAttribute(name: "IsLookupColumn", value: "true");
         }
-        propertyElement.SetAttribute("FieldType", fieldType);
+        propertyElement.SetAttribute(name: "FieldType", value: fieldType);
         return propertyElement;
     }
 }

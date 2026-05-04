@@ -36,7 +36,7 @@ public partial class SqlEditor : UserControl
     public SqlEditor()
     {
         InitializeComponent();
-        editor.FontFamily = new System.Windows.Media.FontFamily("Courier New");
+        editor.FontFamily = new System.Windows.Media.FontFamily(familyName: "Courier New");
         editor.FontSize = 12;
         TextEditorOptions options = new TextEditorOptions();
         options.ConvertTabsToSpaces = false;
@@ -48,33 +48,35 @@ public partial class SqlEditor : UserControl
         options.ColumnRulerPosition = 80;
         editor.Options = options;
         editor.ShowLineNumbers = true;
-        SearchPanel.Install(editor);
+        SearchPanel.Install(editor: editor);
         this.editor.TextArea.IndentationStrategy =
             new ICSharpCode.AvalonEdit.Indentation.DefaultIndentationStrategy();
         editor.TextArea.Document.TextChanged += Document_TextChanged;
         using (
             var stream = Assembly
                 .GetExecutingAssembly()
-                .GetManifestResourceStream("Origam.Windows.Editor.SQL.xshd")
+                .GetManifestResourceStream(name: "Origam.Windows.Editor.SQL.xshd")
         )
         {
-            using (var reader = new System.Xml.XmlTextReader(stream))
+            using (var reader = new System.Xml.XmlTextReader(input: stream))
             {
                 editor.SyntaxHighlighting = HighlightingLoader.Load(
-                    reader,
-                    HighlightingManager.Instance
+                    reader: reader,
+                    resolver: HighlightingManager.Instance
                 );
             }
         }
         var referenceBrush = new SimpleHighlightingBrush(
-            System.Windows.Media.Color.FromRgb(4, 139, 168)
+            color: System.Windows.Media.Color.FromRgb(r: 4, g: 139, b: 168)
         );
         var keywordBrush = new SimpleHighlightingBrush(
-            System.Windows.Media.Color.FromRgb(18, 53, 182)
+            color: System.Windows.Media.Color.FromRgb(r: 18, g: 53, b: 182)
         );
-        var docBrush = new SimpleHighlightingBrush(System.Windows.Media.Color.FromRgb(0, 154, 41));
+        var docBrush = new SimpleHighlightingBrush(
+            color: System.Windows.Media.Color.FromRgb(r: 0, g: 154, b: 41)
+        );
         var variableBrush = new SimpleHighlightingBrush(
-            System.Windows.Media.Color.FromRgb(255, 73, 61)
+            color: System.Windows.Media.Color.FromRgb(r: 255, g: 73, b: 61)
         );
         foreach (var color in editor.SyntaxHighlighting.NamedHighlightingColors)
         {
@@ -118,13 +120,13 @@ public partial class SqlEditor : UserControl
     {
         if (ContentChanged != null)
         {
-            ContentChanged(this, e);
+            ContentChanged(sender: this, e: e);
         }
     }
 
     private void Document_TextChanged(object sender, System.EventArgs e)
     {
-        OnContentChanged(EventArgs.Empty);
+        OnContentChanged(e: EventArgs.Empty);
     }
 
     public new string Text
@@ -149,10 +151,10 @@ public partial class SqlEditor : UserControl
             FindReplaceForm frm = new FindReplaceForm();
             frm.Editor = editor;
             frm.Left = this.Width - frm.Width;
-            frm.Top = this.PointToScreen(new System.Drawing.Point(0, 0)).Y;
-            frm.Show(this.FindForm());
+            frm.Top = this.PointToScreen(p: new System.Drawing.Point(x: 0, y: 0)).Y;
+            frm.Show(owner: this.FindForm());
             return true;
         }
-        return base.ProcessCmdKey(ref msg, keyData);
+        return base.ProcessCmdKey(msg: ref msg, keyData: keyData);
     }
 }

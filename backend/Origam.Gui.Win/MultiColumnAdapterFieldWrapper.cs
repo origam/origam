@@ -30,7 +30,7 @@ public class MultiColumnAdapterFieldWrapper : System.Windows.Forms.Panel, IAsCon
 {
     private string _controlMember;
 
-    [Category("Multi Column Adapter Field")]
+    [Category(category: "Multi Column Adapter Field")]
     public string ControlMember
     {
         get { return _controlMember; }

@@ -50,7 +50,7 @@ public class QueryParameterCollection : CollectionBase
     /// </param>
     public QueryParameterCollection(QueryParameterCollection value)
     {
-        this.AddRange(value);
+        this.AddRange(value: value);
     }
 
     /// <summary>
@@ -63,7 +63,7 @@ public class QueryParameterCollection : CollectionBase
     /// </param>
     public QueryParameterCollection(QueryParameter[] value)
     {
-        this.AddRange(value);
+        this.AddRange(value: value);
     }
 
     /// <summary>
@@ -76,8 +76,8 @@ public class QueryParameterCollection : CollectionBase
     /// <exception cref='System.ArgumentOutOfRangeException'><paramref name='index'/> is outside the valid range of indexes for the collection.</exception>
     public QueryParameter this[int index]
     {
-        get { return ((QueryParameter)(List[index])); }
-        set { List[index] = value; }
+        get { return ((QueryParameter)(List[index: index])); }
+        set { List[index: index] = value; }
     }
 
     /// <summary>
@@ -91,7 +91,7 @@ public class QueryParameterCollection : CollectionBase
     /// <seealso cref='Origam.DA.QueryParameterCollection.AddRange'/>
     public int Add(QueryParameter value)
     {
-        return List.Add(value);
+        return List.Add(value: value);
     }
 
     /// <summary>
@@ -108,7 +108,7 @@ public class QueryParameterCollection : CollectionBase
     {
         for (int i = 0; (i < value.Length); i = (i + 1))
         {
-            this.Add(value[i]);
+            this.Add(value: value[i]);
         }
     }
 
@@ -128,7 +128,7 @@ public class QueryParameterCollection : CollectionBase
     {
         for (int i = 0; (i < value.Count); i = (i + 1))
         {
-            this.Add(value[i]);
+            this.Add(value: value[index: i]);
         }
     }
 
@@ -144,7 +144,7 @@ public class QueryParameterCollection : CollectionBase
     /// <seealso cref='Origam.DA.QueryParameterCollection.IndexOf'/>
     public bool Contains(QueryParameter value)
     {
-        return List.Contains(value);
+        return List.Contains(value: value);
     }
 
     /// <summary>
@@ -162,7 +162,7 @@ public class QueryParameterCollection : CollectionBase
     /// <seealso cref='System.Array'/>
     public void CopyTo(QueryParameter[] array, int index)
     {
-        List.CopyTo(array, index);
+        List.CopyTo(array: array, index: index);
     }
 
     /// <summary>
@@ -177,7 +177,7 @@ public class QueryParameterCollection : CollectionBase
     /// <seealso cref='Origam.DA.QueryParameterCollection.Contains'/>
     public int IndexOf(QueryParameter value)
     {
-        return List.IndexOf(value);
+        return List.IndexOf(value: value);
     }
 
     /// <summary>
@@ -189,7 +189,7 @@ public class QueryParameterCollection : CollectionBase
     /// <seealso cref='Origam.DA.QueryParameterCollection.Add'/>
     public void Insert(int index, QueryParameter value)
     {
-        List.Insert(index, value);
+        List.Insert(index: index, value: value);
     }
 
     /// <summary>
@@ -200,7 +200,7 @@ public class QueryParameterCollection : CollectionBase
     /// <seealso cref='System.Collections.IEnumerator'/>
     public new QueryParameterEnumerator GetEnumerator()
     {
-        return new QueryParameterEnumerator(this);
+        return new QueryParameterEnumerator(mappings: this);
     }
 
     /// <summary>
@@ -212,7 +212,7 @@ public class QueryParameterCollection : CollectionBase
     /// <exception cref='System.ArgumentException'><paramref name='value'/> is not found in the Collection. </exception>
     public void Remove(QueryParameter value)
     {
-        List.Remove(value);
+        List.Remove(value: value);
     }
 
     protected override void OnSet(int index, object oldValue, object newValue)
@@ -234,7 +234,7 @@ public class QueryParameterCollection : CollectionBase
         Hashtable result = new Hashtable();
         foreach (QueryParameter qp in this)
         {
-            result.Add(qp.Name, qp.Value);
+            result.Add(key: qp.Name, value: qp.Value);
         }
         return result;
     }

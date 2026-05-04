@@ -44,7 +44,7 @@ public class GeneralDiagramEditor<T> : IDiagramEditor
     )
     {
         this.persistenceProvider = persistenceProvider;
-        gViewer.Graph = factory.Draw(schemaItem);
+        gViewer.Graph = factory.Draw(graphParent: schemaItem);
         gViewer.EdgeInsertButtonVisible = false;
         gViewer.DoubleClick += GViewerOnDoubleClick;
     }
@@ -54,14 +54,17 @@ public class GeneralDiagramEditor<T> : IDiagramEditor
         GViewer viewer = sender as GViewer;
         if (viewer.SelectedObject is DrawingNode node)
         {
-            Guid schemaId = IdTranslator.ToSchemaId(node);
+            Guid schemaId = IdTranslator.ToSchemaId(node: node);
             if (schemaId == Guid.Empty)
             {
                 return;
             }
 
             ISchemaItem clickedItem = (ISchemaItem)
-                persistenceProvider.RetrieveInstance(typeof(ISchemaItem), new Key(schemaId));
+                persistenceProvider.RetrieveInstance(
+                    type: typeof(ISchemaItem),
+                    primaryKey: new Key(id: schemaId)
+                );
             if (clickedItem != null)
             {
                 EditSchemaItem cmd = new EditSchemaItem { ShowDialog = true, Owner = clickedItem };

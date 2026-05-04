@@ -118,211 +118,211 @@ public class OrigamSettings : ICloneable
         return this.Name;
     }
 
-    [Category("Server Connection")]
+    [Category(category: "Server Connection")]
     public string ServerLogUrl { get; set; }
 
-    [Category("Server Connection")]
+    [Category(category: "Server Connection")]
     public string ServerUrl { get; set; }
 
-    [Category("Model Connection")]
+    [Category(category: "Model Connection")]
     public string SchemaConnectionString { get; set; } =
         "Server=?;database=?;Integrated Security=SSPI;";
 
-    [Category("Model Connection")]
+    [Category(category: "Model Connection")]
     public string ModelSourceControlLocation { get; set; } = "";
 
-    [Category("Data Connection")]
+    [Category(category: "Data Connection")]
     public string DataConnectionString { get; set; } =
         "Server=?;database=?;Integrated Security=SSPI;";
 
-    [Category("Model Connection")]
-    [Browsable(false)]
+    [Category(category: "Model Connection")]
+    [Browsable(browsable: false)]
     public string SchemaDataService { get; set; } =
         "Origam.DA.Service.MsSqlDataService, Origam.DA.Service";
 
-    [Category("Data Connection")]
+    [Category(category: "Data Connection")]
     public string DataDataService { get; set; } =
         "Origam.DA.Service.MsSqlDataService, Origam.DA.Service";
 
-    [Category("Security")]
+    [Category(category: "Security")]
     public string SecurityDomain { get; set; } = "";
 
-    [Category("Reports")]
-    [DefaultValue("Reports")]
+    [Category(category: "Reports")]
+    [DefaultValue(value: "Reports")]
     public string ReportDefinitionsPath { get; set; } = "Reports";
 
-    [Category("Reports")]
+    [Category(category: "Reports")]
     public string ReportConnectionString { get; set; } = "";
 
-    [Category("Reports")]
+    [Category(category: "Reports")]
     public string PrintItServiceUrl { get; set; } = "";
 
-    [Category("Reports")]
+    [Category(category: "Reports")]
     public string SQLReportServiceUrl { get; set; } = "";
 
-    [Category("Reports")]
+    [Category(category: "Reports")]
     public string SQLReportServiceAccount { get; set; } = "";
 
-    [Category("Reports")]
+    [Category(category: "Reports")]
     public string SQLReportServicePassword { get; set; } = "";
 
-    [Category("Reports")]
+    [Category(category: "Reports")]
     public int SQLReportServiceTimeout { get; set; } = 60000;
 
-    [Category("Reports")]
+    [Category(category: "Reports")]
     [Description(
-        "Format of exported Excel files from GUI. Accepted values are XLS and XLSX. Default value is XLS."
+        description: "Format of exported Excel files from GUI. Accepted values are XLS and XLSX. Default value is XLS."
     )]
     public string GUIExcelExportFormat { get; set; } = "XLS";
 
-    [Category("Client Configuration")]
+    [Category(category: "Client Configuration")]
     public Guid DefaultSchemaExtensionId { get; set; } = Guid.Empty;
 
-    [Category("Client Configuration")]
+    [Category(category: "Client Configuration")]
     public Guid ExtraSchemaExtensionId { get; set; } = Guid.Empty;
 
-    [Category("Client Configuration")]
+    [Category(category: "Client Configuration")]
     public string TitleText { get; set; } = "ORIGAM APPLICATION";
 
-    [Category("Client Configuration")]
+    [Category(category: "Client Configuration")]
     public string Slogan { get; set; } = "";
 
-    [Category("(Configuration)")]
+    [Category(category: "(Configuration)")]
     public string Name { get; set; } = "New Configuration";
     private string _localization = "";
 
-    [Category("Localization")]
+    [Category(category: "Localization")]
     public string LocalizationFolder
     {
         get { return _localization; }
         set { _localization = value?.Trim(); }
     }
 
-    [Category("Localization")]
+    [Category(category: "Localization")]
     [Description(
-        "Comma separated names of documentation categories to be include in the generated localization files e.g. USER_SHORT_HELP,USER_LONG_HELP"
+        description: "Comma separated names of documentation categories to be include in the generated localization files e.g. USER_SHORT_HELP,USER_LONG_HELP"
     )]
     public string LocalizationIncludedDocumentationElements { get; set; } = "";
 
-    [Category("Localization")]
+    [Category(category: "Localization")]
     [Description(
-        "List of languages that will be used when generating translation files in Architect. Comma separated e.g. en-US,de-DE."
+        description: "List of languages that will be used when generating translation files in Architect. Comma separated e.g. en-US,de-DE."
     )]
     public string TranslationBuilderLanguages { get; set; } = "";
 
-    [Category("(Configuration)")]
+    [Category(category: "(Configuration)")]
     public string HelpUrl { get; set; } = "http://origam.com/doc";
 
-    [Category("Data Connection"), DefaultValue(60)]
+    [Category(category: "Data Connection"), DefaultValue(value: 60)]
     public int DataServiceSelectTimeout { get; set; } = 60;
 
-    [Category("Data Connection"), DefaultValue(0)]
+    [Category(category: "Data Connection"), DefaultValue(value: 0)]
     public int DataUpdateBatchSize { get; set; } = 0;
 
-    [Category("Model Connection"), DefaultValue(5000)]
+    [Category(category: "Model Connection"), DefaultValue(value: 5000)]
     public int ModelUpdateBatchSize { get; set; } = 5000;
 
-    [Category("Data Connection"), DefaultValue(0)]
+    [Category(category: "Data Connection"), DefaultValue(value: 0)]
     public int DataBulkInsertThreshold { get; set; } = 0;
 
-    [Category("Model Connection"), DefaultValue(100)]
+    [Category(category: "Model Connection"), DefaultValue(value: 100)]
     public int ModelBulkInsertThreshold { get; set; } = 100;
 
-    [Category("Model Connection")]
+    [Category(category: "Model Connection")]
     public string AuthorizationProvider { get; set; } =
         "Origam.Security.OrigamDatabaseAuthorizationProvider, Origam.Security";
 
-    [Category("Model Connection")]
+    [Category(category: "Model Connection")]
     public string ProfileProvider { get; set; } =
         "Origam.Security.OrigamProfileProvider, Origam.Security";
 
-    [Category("Model Connection")]
+    [Category(category: "Model Connection")]
     public string PathToRuntimeModelConfig { get; set; }
 
-    [Category("Data Connection"), DefaultValue(2000)]
+    [Category(category: "Data Connection"), DefaultValue(value: 2000)]
     public int DataServiceExecuteProcedureTimeout { get; set; } = 2000;
 
-    [Category("Data Connection"), DefaultValue(false)]
+    [Category(category: "Data Connection"), DefaultValue(value: false)]
     public bool UseProgressiveCaching { get; set; } = false;
 
-    [Category("User Interface"), DefaultValue(true)]
+    [Category(category: "User Interface"), DefaultValue(value: true)]
     public bool CheckAttachmentsOnRecordSelection { get; set; } = true;
 
-    [Category("User Interface"), DefaultValue(false)]
+    [Category(category: "User Interface"), DefaultValue(value: false)]
     public bool DisableAttachments { get; set; } = false;
 
-    [Category("User Interface"), DefaultValue(true)]
+    [Category(category: "User Interface"), DefaultValue(value: true)]
     public bool ShowEditorMenusInAppToolStrip { get; set; } = true;
 
-    [Category("User Interface"), DefaultValue(0)]
+    [Category(category: "User Interface"), DefaultValue(value: 0)]
     public int MaxOpenTabs { get; set; } = 0;
 
-    [Category("User Interface"), DefaultValue(false)]
+    [Category(category: "User Interface"), DefaultValue(value: false)]
     public bool ActivateReadOnlyRoles { get; set; } = false;
 
-    [Category("Work Queue"), DefaultValue(60)]
+    [Category(category: "Work Queue"), DefaultValue(value: 60)]
     public int WorkQueueListRefreshPeriod { get; set; } = 60;
 
-    [Category("Work Queue"), DefaultValue(false)]
+    [Category(category: "Work Queue"), DefaultValue(value: false)]
     public bool LoadExternalWorkQueues { get; set; } = false;
 
-    [Category("Work Queue"), DefaultValue(60)]
+    [Category(category: "Work Queue"), DefaultValue(value: 60)]
     public int ExternalWorkQueueCheckPeriod { get; set; } = 60;
 
-    [Category("Work Queue"), DefaultValue(false)]
+    [Category(category: "Work Queue"), DefaultValue(value: false)]
     public bool AutoProcessWorkQueues { get; set; } = false;
 
-    [Category("Work Queue"), DefaultValue(WorkQueueProcessingMode.Linear)]
+    [Category(category: "Work Queue"), DefaultValue(value: WorkQueueProcessingMode.Linear)]
     public WorkQueueProcessingMode WorkQueueProcessingMode { get; set; } =
         WorkQueueProcessingMode.Linear;
 
-    [Category("Work Queue"), DefaultValue(3)]
+    [Category(category: "Work Queue"), DefaultValue(value: 3)]
     public int RoundRobinBatchSize { get; set; } = 3;
 
-    [Category("Services"), DefaultValue(-1)]
+    [Category(category: "Services"), DefaultValue(value: -1)]
     public int ExportRecordsLimit { get; set; } = -1;
 
-    [Category("Services"), DefaultValue(false)]
+    [Category(category: "Services"), DefaultValue(value: false)]
     public bool ExecuteUpgradeScriptsOnStart { get; set; } = false;
 
-    [Category("Services"), DefaultValue(true)]
+    [Category(category: "Services"), DefaultValue(value: true)]
     public bool TraceEnabled { get; set; } = true;
 
-    [Category("Scheduler")]
+    [Category(category: "Scheduler")]
     [Description(
-        "When set it defines on which folders current scheduler instance will process schedules."
+        description: "When set it defines on which folders current scheduler instance will process schedules."
     )]
     public string SchedulerFilter { get; set; }
 
-    [Category("Model Connection")]
+    [Category(category: "Model Connection")]
     public string ModelProvider { get; set; } =
         "Origam.OrigamEngine.FilePersistenceBuilder, Origam.OrigamEngine";
 
-    [Category("Services"), DefaultValue("")]
+    [Category(category: "Services"), DefaultValue(value: "")]
     public string GsPath { get; set; }
     public Platform[] DeployPlatforms { get; set; }
 
-    [Category("Model Connection")]
+    [Category(category: "Model Connection")]
     public bool CheckFileHashesAfterModelLoad { get; set; } = true;
 
-    [Category("SMS Service")]
+    [Category(category: "SMS Service")]
     public string SmsService { get; set; }
 
     public string ReportsFolder()
     {
-        return System.IO.Path.Combine(BaseFolder, this.ReportDefinitionsPath);
+        return System.IO.Path.Combine(path1: BaseFolder, path2: this.ReportDefinitionsPath);
     }
 
     public static Hashtable ParseConnectionString(string connectionString)
     {
         Hashtable result = new Hashtable();
-        string[] elements = connectionString.Split(";".ToCharArray());
+        string[] elements = connectionString.Split(separator: ";".ToCharArray());
         foreach (string element in elements)
         {
-            if (element.IndexOf("=") > 0)
+            if (element.IndexOf(value: "=") > 0)
             {
-                string[] pair = element.Split("=".ToCharArray());
-                result.Add(pair[0], pair[1]);
+                string[] pair = element.Split(separator: "=".ToCharArray());
+                result.Add(key: pair[0], value: pair[1]);
             }
         }
         return result;
@@ -332,40 +332,40 @@ public class OrigamSettings : ICloneable
     public object Clone()
     {
         return new OrigamSettings(
-            this.Name,
-            this.SchemaConnectionString,
-            this.DataConnectionString,
-            this.SchemaDataService,
-            this.DataDataService,
-            this.SecurityDomain,
-            this.DefaultSchemaExtensionId,
-            this.ExtraSchemaExtensionId,
-            this.TitleText,
-            this.DataServiceSelectTimeout,
-            this.DataServiceExecuteProcedureTimeout,
-            this.UseProgressiveCaching,
-            this.CheckAttachmentsOnRecordSelection,
-            this.WorkQueueListRefreshPeriod,
-            this.LoadExternalWorkQueues,
-            this.ExternalWorkQueueCheckPeriod,
-            this.WorkQueueProcessingMode,
-            this.RoundRobinBatchSize,
-            this.Slogan,
-            this.LocalizationFolder,
-            this.LocalizationIncludedDocumentationElements,
-            this.ExecuteUpgradeScriptsOnStart,
-            this.ExportRecordsLimit,
-            this.HelpUrl,
-            this.DisableAttachments,
-            this.MaxOpenTabs,
-            this.ActivateReadOnlyRoles,
-            this.SchedulerFilter,
-            this.ServerLogUrl,
-            this.TraceEnabled,
-            this.AuthorizationProvider,
-            this.ProfileProvider,
-            this.PathToRuntimeModelConfig,
-            this.SmsService
+            name: this.Name,
+            schemaConnectionString: this.SchemaConnectionString,
+            dataConnectionString: this.DataConnectionString,
+            schemaDataService: this.SchemaDataService,
+            dataDataService: this.DataDataService,
+            securityDomain: this.SecurityDomain,
+            defaultSchemaExtensionId: this.DefaultSchemaExtensionId,
+            extraSchemaExtensionId: this.ExtraSchemaExtensionId,
+            titleText: this.TitleText,
+            dataServiceSelectTimeout: this.DataServiceSelectTimeout,
+            dataServiceExecuteProcedureTimeout: this.DataServiceExecuteProcedureTimeout,
+            useProgressiveCaching: this.UseProgressiveCaching,
+            checkAttachmentsOnRecordSelection: this.CheckAttachmentsOnRecordSelection,
+            workQueueListRefreshPeriod: this.WorkQueueListRefreshPeriod,
+            loadExternalWorkQueues: this.LoadExternalWorkQueues,
+            externalWorkQueueCheckPeriod: this.ExternalWorkQueueCheckPeriod,
+            workQueueProcessingMode: this.WorkQueueProcessingMode,
+            roundRobinBatchSize: this.RoundRobinBatchSize,
+            slogan: this.Slogan,
+            localizationFolder: this.LocalizationFolder,
+            localizationIncludedDocumentationElements: this.LocalizationIncludedDocumentationElements,
+            executeUpgradeScriptsOnStart: this.ExecuteUpgradeScriptsOnStart,
+            exportRecordsLimit: this.ExportRecordsLimit,
+            helpUrl: this.HelpUrl,
+            disableAttachments: this.DisableAttachments,
+            maxOpenTabs: this.MaxOpenTabs,
+            activateReadOnlyRoles: this.ActivateReadOnlyRoles,
+            schedulerFilter: this.SchedulerFilter,
+            serverLogUrl: this.ServerLogUrl,
+            traceEnabled: this.TraceEnabled,
+            authorizationProvider: this.AuthorizationProvider,
+            profileProvider: this.ProfileProvider,
+            pathToRuntimeModelConfig: this.PathToRuntimeModelConfig,
+            pathToSmsHandler: this.SmsService
         );
     }
 
@@ -373,8 +373,8 @@ public class OrigamSettings : ICloneable
     {
         Platform[] platforms = DeployPlatforms ?? new Platform[0];
         Platform platform = new Platform { IsPrimary = true, DataService = DataDataService };
-        platform.Name = platform.GetParseEnum(DataDataService);
-        Array.Resize(ref platforms, platforms.Length + 1);
+        platform.Name = platform.GetParseEnum(dataDataService: DataDataService);
+        Array.Resize(array: ref platforms, newSize: platforms.Length + 1);
         platforms[platforms.Length - 1] = platform;
         return platforms;
     }
@@ -419,11 +419,11 @@ public class Platform
     public string GetParseEnum(string dataDataService)
     {
         return dataDataService
-            .Split(",".ToCharArray())[0]
+            .Split(separator: ",".ToCharArray())[0]
             .Trim()
-            .Split("\\.".ToCharArray())[3]
+            .Split(separator: "\\.".ToCharArray())[3]
             .Trim()
-            .Replace("DataService", "");
+            .Replace(oldValue: "DataService", newValue: "");
     }
 }
 

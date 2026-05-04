@@ -30,11 +30,15 @@ namespace Origam.Schema.EntityModel;
 /// <summary>
 /// Summary description for EntityFilter.
 /// </summary>
-[SchemaItemDescription("Dependency", "Dependencies", "icon_dependency.png")]
-[HelpTopic("Field+Dependencies")]
-[XmlModelRoot(CategoryConst)]
-[DefaultProperty("Field")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(
+    name: "Dependency",
+    folderName: "Dependencies",
+    iconName: "icon_dependency.png"
+)]
+[HelpTopic(topic: "Field+Dependencies")]
+[XmlModelRoot(category: CategoryConst)]
+[DefaultProperty(name: "Field")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class EntityFieldDependency : AbstractSchemaItem, ISchemaItemFactory
 {
     public const string CategoryConst = "EntityFieldDependency";
@@ -43,10 +47,10 @@ public class EntityFieldDependency : AbstractSchemaItem, ISchemaItemFactory
         : base() { }
 
     public EntityFieldDependency(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public EntityFieldDependency(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Overriden ISchemaItem Members
     public override bool CanMove(Origam.UI.IBrowserNode2 newNode)
@@ -65,30 +69,33 @@ public class EntityFieldDependency : AbstractSchemaItem, ISchemaItemFactory
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(this.Field);
-        base.GetExtraDependencies(dependencies);
+        dependencies.Add(item: this.Field);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
     #endregion
     #region Properties
     public Guid FieldId;
 
-    [Category("Reference")]
-    [TypeConverter(typeof(EntityColumnReferenceConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
+    [Category(category: "Reference")]
+    [TypeConverter(type: typeof(EntityColumnReferenceConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
     [NotNullModelElementRule()]
-    [XmlReference("field", "FieldId")]
+    [XmlReference(attributeName: "field", idField: "FieldId")]
     public IDataEntityColumn Field
     {
         get
         {
             ModelElementKey key = new ModelElementKey();
             key.Id = this.FieldId;
-            return (ISchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key)
-                as IDataEntityColumn;
+            return (ISchemaItem)
+                    this.PersistenceProvider.RetrieveInstance(
+                        type: typeof(ISchemaItem),
+                        primaryKey: key
+                    ) as IDataEntityColumn;
         }
         set
         {
-            this.FieldId = (Guid)value.PrimaryKey["Id"];
+            this.FieldId = (Guid)value.PrimaryKey[key: "Id"];
             this.Name = this.Field.Name;
         }
     }

@@ -43,13 +43,13 @@ public class SectionLevelPlugin
     private object dataSource;
 
     [
-        DefaultValue((string)null),
+        DefaultValue(value: (string)null),
         TypeConverter(
-            "System.Windows.Forms.Design.DataSourceConverter, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
+            typeName: "System.Windows.Forms.Design.DataSourceConverter, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
         ),
-        RefreshProperties(RefreshProperties.Repaint),
-        Category("Data"),
-        Description("Data source of the tree.")
+        RefreshProperties(refresh: RefreshProperties.Repaint),
+        Category(category: "Data"),
+        Description(description: "Data source of the tree.")
     ]
     public object DataSource
     {
@@ -64,14 +64,14 @@ public class SectionLevelPlugin
     }
 
     [
-        DefaultValue(""),
+        DefaultValue(value: ""),
         Editor(
-            "System.Windows.Forms.Design.DataMemberListEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
-            typeof(UITypeEditor)
+            typeName: "System.Windows.Forms.Design.DataMemberListEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+            baseType: typeof(UITypeEditor)
         ),
-        RefreshProperties(RefreshProperties.Repaint),
-        Category("Data"),
-        Description("Data member of the tree.")
+        RefreshProperties(refresh: RefreshProperties.Repaint),
+        Category(category: "Data"),
+        Description(description: "Data member of the tree.")
     ]
     [NotNullModelElementRule]
     public string DataMember
@@ -87,10 +87,10 @@ public class SectionLevelPlugin
     }
 
     [
-        DefaultValue(false),
-        Category("Data"),
+        DefaultValue(value: false),
+        Category(category: "Data"),
         Description(
-            "Must be set for exactly one plugin per screen to true if there is no master grid present."
+            description: "Must be set for exactly one plugin per screen to true if there is no master grid present."
         )
     ]
     public bool AllowNavigation { get; set; } = true;

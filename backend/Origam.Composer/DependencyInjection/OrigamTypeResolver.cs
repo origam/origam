@@ -27,6 +27,6 @@ public class OrigamTypeResolver(IServiceProvider provider) : ITypeResolver
 {
     public object Resolve(Type type)
     {
-        return type == null ? null : provider.GetService(type);
+        return type == null ? null : provider.GetService(serviceType: type);
     }
 }

@@ -50,11 +50,11 @@ public class UserApiProcessor
     private readonly IWebHostEnvironment environment;
 
     private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
-        System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
+        type: System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
     );
-    private Lazy<UrlApiPageCache> urlApiPageCache = new Lazy<UrlApiPageCache>(() =>
+    private Lazy<UrlApiPageCache> urlApiPageCache = new Lazy<UrlApiPageCache>(valueFactory: () =>
         new UrlApiPageCache(
-            (
+            _pageProvider: (
                 ServiceManager.Services.GetService<SchemaService>()
             ).GetProvider<PagesSchemaItemProvider>()
         )
@@ -71,11 +71,11 @@ public class UserApiProcessor
 
     public void Process(IHttpContextWrapper context)
     {
-        if (context.Request.AppRelativeCurrentExecutionFilePath.StartsWith("~/assets/"))
+        if (context.Request.AppRelativeCurrentExecutionFilePath.StartsWith(value: "~/assets/"))
         {
             return;
         }
-        string mimeType = context.Request.ContentType?.Split(";".ToCharArray())[0];
+        string mimeType = context.Request.ContentType?.Split(separator: ";".ToCharArray())[0];
         if (mimeType == "application/x-amf")
         {
             return;
@@ -83,14 +83,17 @@ public class UserApiProcessor
         string resultContentType = "text/plain";
         if (Analytics.Instance.IsAnalyticsEnabled)
         {
-            RequestAnalytics(context, mimeType);
+            RequestAnalytics(context: context, mimeType: mimeType);
         }
         try
         {
-            var (code, page) = ResolvePage(context, out var urlParameters);
+            var (code, page) = ResolvePage(
+                context: context,
+                outUrlParameters: out var urlParameters
+            );
             if (code == 404)
             {
-                Handle404(context);
+                Handle404(context: context);
                 return;
             }
             if (code != 200)
@@ -100,14 +103,14 @@ public class UserApiProcessor
                 context.Response.Clear();
                 if (code == 500)
                 {
-                    context.Response.Write("Multiple routes.");
+                    context.Response.Write(message: "Multiple routes.");
                 }
                 context.Response.End();
                 return;
             }
             if (Analytics.Instance.IsAnalyticsEnabled)
             {
-                PageAnalytics(page, urlParameters);
+                PageAnalytics(page: page, urlParameters: urlParameters);
             }
             if (page.MimeType != "?")
             {
@@ -122,25 +125,30 @@ public class UserApiProcessor
             }
             if (page.CacheMaxAge == null)
             {
-                context.Response.CacheSetMaxAge(new TimeSpan(0));
+                context.Response.CacheSetMaxAge(timeSpan: new TimeSpan(ticks: 0));
             }
             else
             {
                 IParameterService parameterService =
                     ServiceManager.Services.GetService<IParameterService>();
                 double maxAge = Convert.ToDouble(
-                    parameterService.GetParameterValue(page.CacheMaxAgeDataConstantId)
+                    value: parameterService.GetParameterValue(id: page.CacheMaxAgeDataConstantId)
                 );
-                context.Response.CacheSetMaxAge(TimeSpan.FromSeconds(maxAge));
+                context.Response.CacheSetMaxAge(timeSpan: TimeSpan.FromSeconds(value: maxAge));
             }
             Dictionary<string, object> mappedParameters = MapParameters(
-                context,
-                urlParameters,
-                page,
-                mimeType
+                context: context,
+                urlParameters: urlParameters,
+                page: page,
+                requestMimeType: mimeType
             );
-            IPageRequestHandler handler = HandlePage(page);
-            handler.Execute(page, mappedParameters, context.Request, context.Response);
+            IPageRequestHandler handler = HandlePage(page: page);
+            handler.Execute(
+                page: page,
+                parameters: mappedParameters,
+                request: context.Request,
+                response: context.Response
+            );
             context.Response.End();
         }
         catch (ThreadAbortException) { }
@@ -149,22 +157,22 @@ public class UserApiProcessor
             if (log.IsErrorEnabled)
             {
                 log.LogOrigamError(
-                    $@"Error occured ({ex.GetType()}) for request: 
+                    message: $@"Error occured ({ex.GetType()}) for request: 
                     {context.Request?.AbsoluteUri}: {ex.Message}",
-                    ex
+                    ex: ex
                 );
             }
             if (log.IsDebugEnabled)
             {
-                log.DebugFormat("Result Content Type: {0}", resultContentType);
+                log.DebugFormat(format: "Result Content Type: {0}", arg0: resultContentType);
             }
 
             context.Response.Clear();
-            context.Response.StatusCode = GetStatusCode(ex);
+            context.Response.StatusCode = GetStatusCode(ex: ex);
             context.Response.ContentType = "application/json";
             context.Response.TrySkipIisCustomErrors = true;
-            string message = GetErrorObject(ex);
-            context.Response.Write(message);
+            string message = GetErrorObject(ex: ex);
+            context.Response.Write(message: message);
             context.Response.End();
         }
     }
@@ -174,15 +182,15 @@ public class UserApiProcessor
         if (ex is RuleException ruleEx)
         {
             return $@"{{""Message"" : 
-                    {JsonConvert.SerializeObject(ruleEx.Message)}, 
+                    {JsonConvert.SerializeObject(value: ruleEx.Message)}, 
                     ""RuleResult"" : 
-                    {JsonConvert.SerializeObject(ruleEx.RuleResult)}}}";
+                    {JsonConvert.SerializeObject(value: ruleEx.RuleResult)}}}";
         }
         if (environment.IsProduction())
         {
             return "There was an error, check log for details";
         }
-        return JsonConvert.SerializeObject(ex);
+        return JsonConvert.SerializeObject(value: ex);
     }
 
     private int GetStatusCode(Exception ex)
@@ -192,7 +200,7 @@ public class UserApiProcessor
             var dataList = ruleException.RuleResult.OfType<RuleExceptionData>().ToList();
             if (dataList.Count == 1)
             {
-                return dataList[0].HttpStatusCode;
+                return dataList[index: 0].HttpStatusCode;
             }
         }
         return 500;
@@ -205,31 +213,55 @@ public class UserApiProcessor
 
     private static void PageAnalytics(AbstractPage page, Dictionary<string, string> urlParameters)
     {
-        Analytics.Instance.SetProperty("OrigamPageId", page.Id);
-        Analytics.Instance.SetProperty("OrigamPageName", page.Name);
+        Analytics.Instance.SetProperty(propertyName: "OrigamPageId", value: page.Id);
+        Analytics.Instance.SetProperty(propertyName: "OrigamPageName", value: page.Name);
         foreach (KeyValuePair<string, string> pair in urlParameters)
         {
-            Analytics.Instance.SetProperty("Parameter_" + pair.Key, pair.Value);
+            Analytics.Instance.SetProperty(
+                propertyName: "Parameter_" + pair.Key,
+                value: pair.Value
+            );
         }
-        Analytics.Instance.Log("PAGE_ACCESS");
+        Analytics.Instance.Log(message: "PAGE_ACCESS");
     }
 
     private static void RequestAnalytics(IHttpContextWrapper context, string mimeType)
     {
-        Analytics.Instance.SetProperty("ContentType", mimeType);
-        Analytics.Instance.SetProperty("HttpMethod", context.Request.HttpMethod);
-        Analytics.Instance.SetProperty("RawUrl", context.Request.RawUrl);
-        Analytics.Instance.SetProperty("Url", context.Request.Url);
-        Analytics.Instance.SetProperty("UrlReferrer", context.Request.UrlReferrer);
-        Analytics.Instance.SetProperty("UserAgent", context.Request.UserAgent);
-        Analytics.Instance.SetProperty("BrowserName", context.Request.Browser);
-        Analytics.Instance.SetProperty("BrowserVersion", context.Request.BrowserVersion);
-        Analytics.Instance.SetProperty("UserHostAddress", context.Request.UserHostAddress);
-        Analytics.Instance.SetProperty("UserHostName", context.Request.UserHostName);
-        Analytics.Instance.SetProperty("UserLanguages", context.Request.UserLanguages);
+        Analytics.Instance.SetProperty(propertyName: "ContentType", value: mimeType);
+        Analytics.Instance.SetProperty(
+            propertyName: "HttpMethod",
+            value: context.Request.HttpMethod
+        );
+        Analytics.Instance.SetProperty(propertyName: "RawUrl", value: context.Request.RawUrl);
+        Analytics.Instance.SetProperty(propertyName: "Url", value: context.Request.Url);
+        Analytics.Instance.SetProperty(
+            propertyName: "UrlReferrer",
+            value: context.Request.UrlReferrer
+        );
+        Analytics.Instance.SetProperty(propertyName: "UserAgent", value: context.Request.UserAgent);
+        Analytics.Instance.SetProperty(propertyName: "BrowserName", value: context.Request.Browser);
+        Analytics.Instance.SetProperty(
+            propertyName: "BrowserVersion",
+            value: context.Request.BrowserVersion
+        );
+        Analytics.Instance.SetProperty(
+            propertyName: "UserHostAddress",
+            value: context.Request.UserHostAddress
+        );
+        Analytics.Instance.SetProperty(
+            propertyName: "UserHostName",
+            value: context.Request.UserHostName
+        );
+        Analytics.Instance.SetProperty(
+            propertyName: "UserLanguages",
+            value: context.Request.UserLanguages
+        );
         foreach (var key in context.Request.Params.Keys)
         {
-            Analytics.Instance.SetProperty("Parameter_" + key, context.Request.Params[key]);
+            Analytics.Instance.SetProperty(
+                propertyName: "Parameter_" + key,
+                value: context.Request.Params[key: key]
+            );
         }
     }
 
@@ -252,7 +284,7 @@ public class UserApiProcessor
 
             case FileDownloadPage _:
             {
-                handler = new FileDownloadPageRequestHandler(httpTools);
+                handler = new FileDownloadPageRequestHandler(httpTools: httpTools);
                 break;
             }
 
@@ -265,9 +297,9 @@ public class UserApiProcessor
             default:
             {
                 throw new ArgumentOutOfRangeException(
-                    nameof(page),
-                    page,
-                    Resources.ErrorUnknownPageType
+                    paramName: nameof(page),
+                    actualValue: page,
+                    message: Resources.ErrorUnknownPageType
                 );
             }
         }
@@ -282,7 +314,8 @@ public class UserApiProcessor
     )
     {
         IParameterService parameterService =
-            ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
+            ServiceManager.Services.GetService(serviceType: typeof(IParameterService))
+            as IParameterService;
         Dictionary<string, object> mappedParameters = new Dictionary<string, object>();
         // add url and content parts mapped to parameters
         // firstly process normal parameters and then after that process
@@ -292,7 +325,7 @@ public class UserApiProcessor
         List<PageParameterMapping> contentParameters = new List<PageParameterMapping>();
         foreach (
             var ppm in page.ChildItemsByType<PageParameterMapping>(
-                PageParameterMapping.CategoryConst
+                itemType: PageParameterMapping.CategoryConst
             )
         )
         {
@@ -300,38 +333,49 @@ public class UserApiProcessor
             if (fileMapping != null)
             {
                 // files
-                MapFileToParameter(context, mappedParameters, ppm, fileMapping);
+                MapFileToParameter(
+                    context: context,
+                    mappedParameters: mappedParameters,
+                    ppm: ppm,
+                    fileMapping: fileMapping
+                );
             }
             else if (ppm.MappedParameter == null || ppm.MappedParameter == "")
             {
-                contentParameters.Add(ppm);
+                contentParameters.Add(item: ppm);
             }
             else
             {
                 MapOtherParameters(
-                    context,
-                    urlParameters,
-                    parameterService,
-                    mappedParameters,
-                    ppm,
-                    requestMimeType
+                    context: context,
+                    urlParameters: urlParameters,
+                    parameterService: parameterService,
+                    mappedParameters: mappedParameters,
+                    ppm: ppm,
+                    requestMimeType: requestMimeType
                 );
             }
         }
         // now process content parameters
         foreach (PageParameterMapping ppm in contentParameters)
         {
-            MapContentToParameter(context, page, requestMimeType, mappedParameters, ppm);
+            MapContentToParameter(
+                context: context,
+                page: page,
+                requestMimeType: requestMimeType,
+                mappedParameters: mappedParameters,
+                ppm: ppm
+            );
         }
-        string pageSize = context.Request.Params["_pageSize"];
-        string pageNumber = context.Request.Params["_pageNumber"];
+        string pageSize = context.Request.Params[key: "_pageSize"];
+        string pageNumber = context.Request.Params[key: "_pageNumber"];
         if (pageSize != null)
         {
-            mappedParameters.Add("_pageSize", pageSize);
+            mappedParameters.Add(key: "_pageSize", value: pageSize);
         }
         if (pageNumber != null)
         {
-            mappedParameters.Add("_pageNumber", pageNumber);
+            mappedParameters.Add(key: "_pageNumber", value: pageNumber);
         }
         return mappedParameters;
     }
@@ -347,26 +391,30 @@ public class UserApiProcessor
     {
         string paramValue = null;
         // URL parameter
-        if (urlParameters.ContainsKey(ppm.MappedParameter))
+        if (urlParameters.ContainsKey(key: ppm.MappedParameter))
         {
-            paramValue = urlParameters[ppm.MappedParameter];
+            paramValue = urlParameters[key: ppm.MappedParameter];
             if (log.IsDebugEnabled)
             {
-                log.DebugFormat("Mapping URL parameter {0}, value: {1}.", ppm.Name, paramValue);
+                log.DebugFormat(
+                    format: "Mapping URL parameter {0}, value: {1}.",
+                    arg0: ppm.Name,
+                    arg1: paramValue
+                );
             }
         }
         else
         // POST parameters
         {
-            paramValue = context.Request.Params[ppm.MappedParameter];
+            paramValue = context.Request.Params[key: ppm.MappedParameter];
             if (paramValue != null)
             {
                 if (log.IsDebugEnabled)
                 {
                     log.DebugFormat(
-                        "Mapping POST parameter {0}, value: {1}.",
-                        ppm.Name,
-                        paramValue
+                        format: "Mapping POST parameter {0}, value: {1}.",
+                        arg0: ppm.Name,
+                        arg1: paramValue
                     );
                 }
             }
@@ -376,8 +424,8 @@ public class UserApiProcessor
         {
             paramValue = (string)
                 parameterService.GetParameterValue(
-                    ppm.DataConstantId,
-                    Origam.Schema.OrigamDataType.String
+                    id: ppm.DataConstantId,
+                    targetType: Origam.Schema.OrigamDataType.String
                 );
         }
         if (paramValue != null && ppm.IsList)
@@ -389,17 +437,17 @@ public class UserApiProcessor
             {
                 separator = (string)
                     parameterService.GetParameterValue(
-                        ppm.SeparatorDataConstantId,
-                        Origam.Schema.OrigamDataType.String
+                        id: ppm.SeparatorDataConstantId,
+                        targetType: Origam.Schema.OrigamDataType.String
                     );
             }
-            list.AddRange(paramValue.Split(separator.ToCharArray()));
-            mappedParameters.Add(ppm.Name, list);
+            list.AddRange(collection: paramValue.Split(separator: separator.ToCharArray()));
+            mappedParameters.Add(key: ppm.Name, value: list);
         }
         else if (paramValue != null)
         {
             // simple data types
-            mappedParameters.Add(ppm.Name, paramValue);
+            mappedParameters.Add(key: ppm.Name, value: paramValue);
         }
         string systemParameterValue = null;
         switch (ppm.MappedParameter)
@@ -466,13 +514,16 @@ public class UserApiProcessor
 
             case "Server_UserLanguages":
             {
-                systemParameterValue = string.Join(",", context.Request.UserLanguages);
+                systemParameterValue = string.Join(
+                    separator: ",",
+                    values: context.Request.UserLanguages
+                );
                 break;
             }
         }
         if (systemParameterValue != null)
         {
-            mappedParameters.Add(ppm.Name, systemParameterValue);
+            mappedParameters.Add(key: ppm.Name, value: systemParameterValue);
         }
     }
 
@@ -483,53 +534,53 @@ public class UserApiProcessor
         PageParameterFileMapping fileMapping
     )
     {
-        PostedFile file = context.Request.FilesGet(ppm.MappedParameter);
+        PostedFile file = context.Request.FilesGet(name: ppm.MappedParameter);
         if (file != null)
         {
             if (log.IsDebugEnabled)
             {
                 log.DebugFormat(
-                    "Mapping File Parameter {0}, FileInfo: {1}",
-                    fileMapping.Name,
-                    fileMapping.FileInfoType
+                    format: "Mapping File Parameter {0}, FileInfo: {1}",
+                    arg0: fileMapping.Name,
+                    arg1: fileMapping.FileInfoType
                 );
             }
             switch (fileMapping.FileInfoType)
             {
                 case PageParameterFileInfo.ContentType:
                 {
-                    mappedParameters.Add(ppm.Name, file.ContentType);
+                    mappedParameters.Add(key: ppm.Name, value: file.ContentType);
                     break;
                 }
 
                 case PageParameterFileInfo.FileContent:
                 {
-                    byte[] fileBytes = GetFileBytes(fileMapping, file);
+                    byte[] fileBytes = GetFileBytes(fileMapping: fileMapping, file: file);
                     if (fileBytes != null)
                     {
-                        mappedParameters.Add(ppm.Name, fileBytes);
+                        mappedParameters.Add(key: ppm.Name, value: fileBytes);
                     }
                     break;
                 }
 
                 case PageParameterFileInfo.FileName:
                 {
-                    mappedParameters.Add(ppm.Name, file.FileName);
+                    mappedParameters.Add(key: ppm.Name, value: file.FileName);
                     break;
                 }
 
                 case PageParameterFileInfo.FileSize:
                 {
-                    mappedParameters.Add(ppm.Name, file.ContentLength);
+                    mappedParameters.Add(key: ppm.Name, value: file.ContentLength);
                     break;
                 }
 
                 default:
                 {
                     throw new ArgumentOutOfRangeException(
-                        "FileInfoType",
-                        fileMapping.FileInfoType,
-                        "Unknown Type"
+                        paramName: "FileInfoType",
+                        actualValue: fileMapping.FileInfoType,
+                        message: "Unknown Type"
                     );
                 }
             }
@@ -547,14 +598,14 @@ public class UserApiProcessor
         if (log.IsDebugEnabled)
         {
             log.DebugFormat(
-                "Mapping parameter {0}, Request content type: {1}",
-                ppm.Name,
-                requestMimeType
+                format: "Mapping parameter {0}, Request content type: {1}",
+                arg0: ppm.Name,
+                arg1: requestMimeType
             );
         }
         System.IO.StreamReader reader = new System.IO.StreamReader(
-            context.Request.InputStream,
-            context.Request.ContentEncoding
+            stream: context.Request.InputStream,
+            encoding: context.Request.ContentEncoding
         );
         IXmlContainer doc = new XmlContainer();
         DataSet data = null;
@@ -572,11 +623,11 @@ public class UserApiProcessor
         )
         {
             GetEmptyData(
-                ref doc,
-                ref data,
-                dataPage.DataStructure,
-                mappedParameters,
-                dataPage.DefaultSet
+                doc: ref doc,
+                data: ref data,
+                ds: dataPage.DataStructure,
+                mappedParameters: mappedParameters,
+                defaultSet: dataPage.DefaultSet
             );
             if (dataPage.DisableConstraintForInputValidation)
             {
@@ -586,23 +637,30 @@ public class UserApiProcessor
         else if (workflow != null)
         {
             ContextStore ctx =
-                workflow.GetChildByName(ppm.Name, ContextStore.CategoryConst) as ContextStore;
+                workflow.GetChildByName(name: ppm.Name, itemType: ContextStore.CategoryConst)
+                as ContextStore;
             if (ctx == null)
             {
                 throw new ArgumentException(
-                    String.Format(
-                        "Couldn't find a context store with "
+                    message: String.Format(
+                        format: "Couldn't find a context store with "
                             + "the name `{0}' in a workflow `{1}' ({2})'.",
-                        ppm.Name,
-                        workflow.Path,
-                        workflow.Id
+                        arg0: ppm.Name,
+                        arg1: workflow.Path,
+                        arg2: workflow.Id
                     )
                 );
             }
             DataStructure ds = ctx.Structure as DataStructure;
             if (ds != null)
             {
-                GetEmptyData(ref doc, ref data, ds, mappedParameters, ctx.DefaultSet);
+                GetEmptyData(
+                    doc: ref doc,
+                    data: ref data,
+                    ds: ds,
+                    mappedParameters: mappedParameters,
+                    defaultSet: ctx.DefaultSet
+                );
                 if (
                     ctx.DisableConstraints
                     || (wfPage != null && wfPage.DisableConstraintForInputValidation)
@@ -621,7 +679,7 @@ public class UserApiProcessor
                 {
                     case "text/xml":
                     {
-                        doc.Xml.Load(reader);
+                        doc.Xml.Load(txtReader: reader);
                         break;
                     }
 
@@ -632,35 +690,43 @@ public class UserApiProcessor
                         // DataSet ds = JsonConvert.DeserializeObject<DataSet>(body);
                         XmlDocument xd = new XmlDocument();
                         // deserialize from JSON to XML
-                        if (string.IsNullOrEmpty(ppm.DatastructureEntityName))
+                        if (string.IsNullOrEmpty(value: ppm.DatastructureEntityName))
                         {
-                            xd = (XmlDocument)JsonConvert.DeserializeXmlNode(body, "ROOT");
+                            xd = (XmlDocument)
+                                JsonConvert.DeserializeXmlNode(
+                                    value: body,
+                                    deserializeRootElementName: "ROOT"
+                                );
                         }
                         else
                         {
                             xd = (XmlDocument)
                                 JsonConvert.DeserializeXmlNode(
-                                    "{\"" + ppm.DatastructureEntityName + "\" :" + body + "}",
-                                    "ROOT"
+                                    value: "{\""
+                                        + ppm.DatastructureEntityName
+                                        + "\" :"
+                                        + body
+                                        + "}",
+                                    deserializeRootElementName: "ROOT"
                                 );
                         }
                         if (log.IsDebugEnabled)
                         {
-                            log.Debug("Intermediate JSON deserialized XML:");
-                            log.Debug(xd.OuterXml);
+                            log.Debug(message: "Intermediate JSON deserialized XML:");
+                            log.Debug(message: xd.OuterXml);
                         }
                         // remove any empty elements because empty guids and dates would
                         // result in errors and empty strings should always be converted
                         // to nulls anyway
-                        RemoveEmptyNodes(ref xd);
+                        RemoveEmptyNodes(doc: ref xd);
                         if (log.IsDebugEnabled)
                         {
-                            log.Debug("Deserialized XML after removing empty elements:");
-                            log.Debug(xd.OuterXml);
+                            log.Debug(message: "Deserialized XML after removing empty elements:");
+                            log.Debug(message: xd.OuterXml);
                         }
                         if (data == null)
                         {
-                            doc = new XmlContainer(xd);
+                            doc = new XmlContainer(xmlDocument: xd);
                         }
                         else
                         {
@@ -676,7 +742,10 @@ public class UserApiProcessor
                             }
                             // ignore-schema because the source might not contain some elements (nulls)
                             // and it would try to remove these columns from the target dataset
-                            data.ReadXml(new XmlNodeReader(xd), XmlReadMode.IgnoreSchema);
+                            data.ReadXml(
+                                reader: new XmlNodeReader(node: xd),
+                                mode: XmlReadMode.IgnoreSchema
+                            );
                         }
                         break;
                     }
@@ -684,9 +753,9 @@ public class UserApiProcessor
                     default:
                     {
                         throw new ArgumentOutOfRangeException(
-                            "ContentType",
-                            requestMimeType,
-                            "Unknown content type. Use text/xml or application/json."
+                            paramName: "ContentType",
+                            actualValue: requestMimeType,
+                            message: "Unknown content type. Use text/xml or application/json."
                         );
                     }
                 }
@@ -694,14 +763,14 @@ public class UserApiProcessor
             catch (ConstraintException)
             {
                 // make the exception far more verbose
-                throw new ConstraintException(DatasetTools.GetDatasetErrors(data));
+                throw new ConstraintException(s: DatasetTools.GetDatasetErrors(dataset: data));
             }
         }
-        mappedParameters.Add(ppm.Name, doc);
+        mappedParameters.Add(key: ppm.Name, value: doc);
         if (log.IsDebugEnabled)
         {
-            log.Debug("Result XML:");
-            log.Debug(doc.Xml.OuterXml);
+            log.Debug(message: "Result XML:");
+            log.Debug(message: doc.Xml.OuterXml);
         }
     }
 
@@ -712,7 +781,13 @@ public class UserApiProcessor
         Dictionary<string, object> mappedParameters
     )
     {
-        GetEmptyData(ref doc, ref data, ds, mappedParameters, null);
+        GetEmptyData(
+            doc: ref doc,
+            data: ref data,
+            ds: ds,
+            mappedParameters: mappedParameters,
+            defaultSet: null
+        );
     }
 
     private static void GetEmptyData(
@@ -723,28 +798,28 @@ public class UserApiProcessor
         DataStructureDefaultSet defaultSet
     )
     {
-        DatasetGenerator dsg = new DatasetGenerator(true);
-        data = dsg.CreateDataSet(ds, defaultSet);
-        DatasetGenerator.ApplyDynamicDefaults(data, mappedParameters);
-        doc = DataDocumentFactory.New(data);
+        DatasetGenerator dsg = new DatasetGenerator(userDefinedParameters: true);
+        data = dsg.CreateDataSet(ds: ds, defaultSet: defaultSet);
+        DatasetGenerator.ApplyDynamicDefaults(data: data, parameters: mappedParameters);
+        doc = DataDocumentFactory.New(dataSet: data);
         if (log.IsDebugEnabled)
         {
-            log.DebugFormat("Mapping content to data structure: {0}", ds.Path);
+            log.DebugFormat(format: "Mapping content to data structure: {0}", arg0: ds.Path);
         }
     }
 
     public static void RemoveEmptyNodes(ref XmlDocument doc)
     {
-        XmlNodeList nodes = doc.SelectNodes("//*");
+        XmlNodeList nodes = doc.SelectNodes(xpath: "//*");
         if (log.IsDebugEnabled)
         {
             foreach (XmlNode node in nodes)
             {
                 log.DebugFormat(
-                    "Node: {0} Value: {1} HasChildNodes: {2}",
-                    node.Name,
-                    node.Value == null ? "<null>" : node.Value,
-                    node.HasChildNodes
+                    format: "Node: {0} Value: {1} HasChildNodes: {2}",
+                    arg0: node.Name,
+                    arg1: node.Value == null ? "<null>" : node.Value,
+                    arg2: node.HasChildNodes
                 );
             }
         }
@@ -758,8 +833,8 @@ public class UserApiProcessor
                         !node.HasChildNodes
                         || (
                             node.ChildNodes.Count == 1
-                            && node.ChildNodes[0].Name == "#text"
-                            && node.ChildNodes[0].Value == ""
+                            && node.ChildNodes[i: 0].Name == "#text"
+                            && node.ChildNodes[i: 0].Value == ""
                         )
                     )
                     && (node.Value == null || node.InnerText == "")
@@ -769,9 +844,9 @@ public class UserApiProcessor
             {
                 if (log.IsDebugEnabled)
                 {
-                    log.DebugFormat("Removing empty node: {0}", node.Name);
+                    log.DebugFormat(format: "Removing empty node: {0}", arg0: node.Name);
                 }
-                node.ParentNode.RemoveChild(node);
+                node.ParentNode.RemoveChild(oldChild: node);
             }
         }
     }
@@ -783,7 +858,7 @@ public class UserApiProcessor
         {
             // get the original file
             using var memoryStream = new MemoryStream();
-            file.InputStream.CopyTo(memoryStream);
+            file.InputStream.CopyTo(destination: memoryStream);
             fileBytes = memoryStream.ToArray();
         }
         else
@@ -791,11 +866,11 @@ public class UserApiProcessor
             // get a thumbnail
             try
             {
-                using Image image = Image.Load(file.InputStream);
+                using Image image = Image.Load(stream: file.InputStream);
                 fileBytes = BlobUploadHandler.FixedSizeBytes(
-                    image,
-                    fileMapping.ThumbnailWidth,
-                    fileMapping.ThumbnailHeight
+                    image: image,
+                    width: fileMapping.ThumbnailWidth,
+                    height: fileMapping.ThumbnailHeight
                 );
             }
             catch
@@ -817,34 +892,40 @@ public class UserApiProcessor
         string path = context.Request.AppRelativeCurrentExecutionFilePath;
         if (log.IsDebugEnabled)
         {
-            log.DebugFormat("Resolving page {0}.", path);
+            log.DebugFormat(format: "Resolving page {0}.", arg0: path);
         }
         IOrigamAuthorizationProvider auth = SecurityManager.GetAuthorizationProvider();
         SchemaService schemaService = ServiceManager.Services.GetService<SchemaService>();
         PagesSchemaItemProvider pages = schemaService.GetProvider<PagesSchemaItemProvider>();
-        string[] requestPath = path.Split(new string[] { "/" }, StringSplitOptions.None);
+        string[] requestPath = path.Split(
+            separator: new string[] { "/" },
+            options: StringSplitOptions.None
+        );
         List<AbstractPage> validPagesByVerbAndPath = new List<AbstractPage>();
         // try to find parameterless page first, remove the preceding ~/ from the path
         AbstractPage parameterlessResultPage = urlApiPageCache.Value.GetParameterlessPage(
-            String.Join("/", requestPath.Skip(1))
+            incommingPath: String.Join(separator: "/", values: requestPath.Skip(count: 1))
         );
         if (parameterlessResultPage != null)
         {
-            if (IsPageValidByVerb(parameterlessResultPage, context))
+            if (IsPageValidByVerb(page: parameterlessResultPage, context: context))
             {
-                return ValidatePageSecurity(auth, parameterlessResultPage);
+                return ValidatePageSecurity(auth: auth, page: parameterlessResultPage);
             }
         }
         // try other parameterized endpoints with the old approach
         foreach (AbstractPage page in urlApiPageCache.Value.GetParameterPages())
         {
             currentUrlParams.Clear();
-            if (!IsPageValidByVerb(page, context))
+            if (!IsPageValidByVerb(page: page, context: context))
             {
                 continue;
             }
             bool invalidRequest = false;
-            string[] pagePath = page.Url.Split(new string[] { "/" }, StringSplitOptions.None);
+            string[] pagePath = page.Url.Split(
+                separator: new string[] { "/" },
+                options: StringSplitOptions.None
+            );
             if ((requestPath.Length - 1) != pagePath.Length)
             {
                 continue;
@@ -853,37 +934,43 @@ public class UserApiProcessor
             {
                 string pathPart = pagePath[i];
                 // parameter
-                if (pathPart.StartsWith("{"))
+                if (pathPart.StartsWith(value: "{"))
                 {
                     if (requestPath.Length <= i + 1)
                     {
                         continue;
                     }
-                    string paramValue = HttpUtility.UrlDecode(requestPath[i + 1]);
-                    if (paramValue.EndsWith(".aspx") && (i == (requestPath.Length - 2)))
+                    string paramValue = HttpUtility.UrlDecode(str: requestPath[i + 1]);
+                    if (paramValue.EndsWith(value: ".aspx") && (i == (requestPath.Length - 2)))
                     {
                         // remove .aspx from the end of the string
-                        paramValue = paramValue.Substring(0, paramValue.Length - 5);
+                        paramValue = paramValue.Substring(
+                            startIndex: 0,
+                            length: paramValue.Length - 5
+                        );
                     }
                     string paramName;
-                    if (pathPart.EndsWith(".aspx"))
+                    if (pathPart.EndsWith(value: ".aspx"))
                     {
-                        paramName = pathPart.Substring(1, pathPart.Length - 7);
+                        paramName = pathPart.Substring(startIndex: 1, length: pathPart.Length - 7);
                     }
                     else
                     {
-                        paramName = pathPart.Substring(1, pathPart.Length - 2);
+                        paramName = pathPart.Substring(startIndex: 1, length: pathPart.Length - 2);
                     }
-                    currentUrlParams.Add(paramName, paramValue);
+                    currentUrlParams.Add(key: paramName, value: paramValue);
                 }
                 // path
                 else
                 {
                     string paramValue = requestPath[i + 1];
-                    if (paramValue.EndsWith(".aspx") && (i == (requestPath.Length - 2)))
+                    if (paramValue.EndsWith(value: ".aspx") && (i == (requestPath.Length - 2)))
                     {
                         // remove .aspx from the end of the string
-                        paramValue = paramValue.Substring(0, paramValue.Length - 5);
+                        paramValue = paramValue.Substring(
+                            startIndex: 0,
+                            length: paramValue.Length - 5
+                        );
                     }
                     if (pathPart != paramValue)
                     {
@@ -895,8 +982,8 @@ public class UserApiProcessor
             }
             if (!invalidRequest)
             {
-                validPagesByVerbAndPath.Add(page);
-                outUrlParameters = new Dictionary<string, string>(currentUrlParams);
+                validPagesByVerbAndPath.Add(item: page);
+                outUrlParameters = new Dictionary<string, string>(dictionary: currentUrlParams);
             }
         }
         switch (validPagesByVerbAndPath.Count)
@@ -907,16 +994,16 @@ public class UserApiProcessor
             }
             case 1:
             {
-                return ValidatePageSecurity(auth, validPagesByVerbAndPath[0]);
+                return ValidatePageSecurity(auth: auth, page: validPagesByVerbAndPath[index: 0]);
             }
             default:
             {
                 log.ErrorFormat(
-                    "Multiple routes detected '{0}' for request '{1}'",
-                    validPagesByVerbAndPath
-                        .Select(x => x.Id.ToString() + ":" + x.Url)
-                        .Aggregate((res, i) => res + "," + i),
-                    path
+                    format: "Multiple routes detected '{0}' for request '{1}'",
+                    arg0: validPagesByVerbAndPath
+                        .Select(selector: x => x.Id.ToString() + ":" + x.Url)
+                        .Aggregate(func: (res, i) => res + "," + i),
+                    arg1: path
                 );
                 return (500, null);
             }
@@ -953,7 +1040,7 @@ public class UserApiProcessor
     {
         try
         {
-            return auth.Authorize(SecurityManager.CurrentPrincipal, page.Roles)
+            return auth.Authorize(principal: SecurityManager.CurrentPrincipal, context: page.Roles)
                 ? (200, page)
                 : (403, null);
         }
@@ -1035,7 +1122,7 @@ public class Parameters
     {
         get
         {
-            paramsDictionary.TryGetValue(key, out string value);
+            paramsDictionary.TryGetValue(key: key, value: out string value);
             return value;
         }
     }

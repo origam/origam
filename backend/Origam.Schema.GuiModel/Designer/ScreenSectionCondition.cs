@@ -28,27 +28,27 @@ using Origam.DA.ObjectPersistence;
 namespace Origam.Schema.GuiModel;
 
 [SchemaItemDescription(
-    "Screen Section Condition",
-    "Screen Section Condition",
-    "icon_parameter-mapping.png"
+    name: "Screen Section Condition",
+    folderName: "Screen Section Condition",
+    iconName: "icon_parameter-mapping.png"
 )]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class ScreenSectionCondition : AbstractSchemaItem
 {
     public const string CategoryConst = "ScreenSectionCondition";
     public override string ItemType => CategoryConst;
     public Guid ScreenSectionId;
 
-    [TypeConverter(typeof(PanelControlSetConverter))]
-    [XmlReference("screenSection", "ScreenSectionId")]
+    [TypeConverter(type: typeof(PanelControlSetConverter))]
+    [XmlReference(attributeName: "screenSection", idField: "ScreenSectionId")]
     public PanelControlSet ScreenSection
     {
         get =>
             (PanelControlSet)
                 PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(ScreenSectionId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: ScreenSectionId)
                 );
         set
         {
@@ -57,8 +57,8 @@ public class ScreenSectionCondition : AbstractSchemaItem
             {
                 var panelControl = (PanelControlSet)
                     PersistenceProvider.RetrieveInstance(
-                        typeof(ISchemaItem),
-                        new ModelElementKey(ScreenSectionId)
+                        type: typeof(ISchemaItem),
+                        primaryKey: new ModelElementKey(id: ScreenSectionId)
                     );
                 Name = panelControl.Name;
             }
@@ -66,15 +66,15 @@ public class ScreenSectionCondition : AbstractSchemaItem
     }
 
     public ScreenSectionCondition(Guid extensionId)
-        : base(extensionId) { }
+        : base(extensionId: extensionId) { }
 
     public ScreenSectionCondition(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     public ScreenSectionCondition() { }
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(ScreenSection);
+        dependencies.Add(item: ScreenSection);
     }
 }

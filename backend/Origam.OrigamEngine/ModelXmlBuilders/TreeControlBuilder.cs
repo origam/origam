@@ -40,23 +40,36 @@ public class TreeControlBuilder
         bool isIndependent
     )
     {
-        parentNode.SetAttribute("type", "http://www.w3.org/2001/XMLSchema-instance", "UIElement");
-        parentNode.SetAttribute("Type", "TreePanel");
-        parentNode.SetAttribute("Entity", table.TableName);
-        parentNode.SetAttribute("IdProperty", renderData.IdColumn);
-        parentNode.SetAttribute("ParentIdProperty", renderData.ParentIdColumn);
-        parentNode.SetAttribute("NameProperty", renderData.NameColumn);
-        parentNode.SetAttribute("DataMember", renderData.DataMember);
+        parentNode.SetAttribute(
+            localName: "type",
+            namespaceURI: "http://www.w3.org/2001/XMLSchema-instance",
+            value: "UIElement"
+        );
+        parentNode.SetAttribute(name: "Type", value: "TreePanel");
+        parentNode.SetAttribute(name: "Entity", value: table.TableName);
+        parentNode.SetAttribute(name: "IdProperty", value: renderData.IdColumn);
+        parentNode.SetAttribute(name: "ParentIdProperty", value: renderData.ParentIdColumn);
+        parentNode.SetAttribute(name: "NameProperty", value: renderData.NameColumn);
+        parentNode.SetAttribute(name: "DataMember", value: renderData.DataMember);
         //			parentNode.SetAttribute("Width", XmlConvert.ToString(width));
         //			parentNode.SetAttribute("Height", XmlConvert.ToString(height));
-        FormXmlBuilder.AddDataSource(dataSources, table, controlId, isIndependent);
+        FormXmlBuilder.AddDataSource(
+            dataSources: dataSources,
+            table: table,
+            controlId: controlId,
+            isIndependent: isIndependent
+        );
     }
 
     public static void Build2(XmlElement parentNode, string formParameterName, Guid treeId)
     {
-        parentNode.SetAttribute("type", "http://www.w3.org/2001/XMLSchema-instance", "UIElement");
-        parentNode.SetAttribute("Type", "TreePanelEx");
-        parentNode.SetAttribute("TreeId", treeId.ToString());
-        parentNode.SetAttribute("FormParameterName", formParameterName);
+        parentNode.SetAttribute(
+            localName: "type",
+            namespaceURI: "http://www.w3.org/2001/XMLSchema-instance",
+            value: "UIElement"
+        );
+        parentNode.SetAttribute(name: "Type", value: "TreePanelEx");
+        parentNode.SetAttribute(name: "TreeId", value: treeId.ToString());
+        parentNode.SetAttribute(name: "FormParameterName", value: formParameterName);
     }
 }

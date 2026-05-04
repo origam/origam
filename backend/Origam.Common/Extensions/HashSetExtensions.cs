@@ -27,10 +27,10 @@ public static class HashSetExtensions
 {
     public static void AddOrReplace<T>(this HashSet<T> hashSet, T item)
     {
-        if (hashSet.Contains(item))
+        if (hashSet.Contains(item: item))
         {
-            hashSet.Remove(item);
+            hashSet.Remove(item: item);
         }
-        hashSet.Add(item);
+        hashSet.Add(item: item);
     }
 }

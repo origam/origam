@@ -34,13 +34,13 @@ public class Ordering
 
     public Ordering(string columnName, string direction, int sortOrder)
     {
-        if (string.IsNullOrWhiteSpace(direction))
+        if (string.IsNullOrWhiteSpace(value: direction))
         {
-            throw new ArgumentException(nameof(direction) + " cannot be empty");
+            throw new ArgumentException(message: nameof(direction) + " cannot be empty");
         }
-        if (string.IsNullOrWhiteSpace(columnName))
+        if (string.IsNullOrWhiteSpace(value: columnName))
         {
-            throw new ArgumentException(nameof(columnName) + " cannot be empty");
+            throw new ArgumentException(message: nameof(columnName) + " cannot be empty");
         }
         ColumnName = columnName;
         Direction = direction;
@@ -48,7 +48,7 @@ public class Ordering
     }
 
     public Ordering(string columnName, string direction, Guid lookupId, int sortOrder)
-        : this(columnName, direction, sortOrder)
+        : this(columnName: columnName, direction: direction, sortOrder: sortOrder)
     {
         ColumnName = columnName;
         Direction = direction;

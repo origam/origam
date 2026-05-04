@@ -32,14 +32,16 @@ public class AcceptContextStoreChangesEngineTask : AbstractWorkflowEngineTask
         var acceptContextStoreChangesTask = Step as AcceptContextStoreChangesTask;
         if (
             !(
-                Engine.RuleEngine.GetContext(acceptContextStoreChangesTask.ContextStore)
+                Engine.RuleEngine.GetContext(
+                    contextStore: acceptContextStoreChangesTask.ContextStore
+                )
                 is IDataDocument dataDocument
             )
         )
         {
             throw new ArgumentException(
-                @"Context store doesn't implement IDataDocument interface.",
-                $"ContextStore:{acceptContextStoreChangesTask.ContextStore.Name}"
+                message: @"Context store doesn't implement IDataDocument interface.",
+                paramName: $"ContextStore:{acceptContextStoreChangesTask.ContextStore.Name}"
             );
         }
         dataDocument.DataSet.AcceptChanges();

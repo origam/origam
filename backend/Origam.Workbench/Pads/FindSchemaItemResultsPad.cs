@@ -48,7 +48,7 @@ public class FindSchemaItemResultsPad : AbstractResultPad
         // This call is required by the Windows Form Designer.
         InitializeComponent();
         _schemaBrowser =
-            WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+            WorkbenchSingleton.Workbench.GetPad(type: typeof(SchemaBrowser)) as SchemaBrowser;
         lvwResults.SmallImageList = _schemaBrowser.EbrSchemaBrowser.imgList;
         lvwResults.ColumnClick += OnColumnClick;
     }
@@ -68,8 +68,8 @@ public class FindSchemaItemResultsPad : AbstractResultPad
                     : SortOrder.Ascending;
         }
         this.lvwResults.ListViewItemSorter = new ListViewItemComparer(
-            eventArgs.Column,
-            lvwResults.Sorting
+            column: eventArgs.Column,
+            order: lvwResults.Sorting
         );
         lvwResults.Sort();
     }
@@ -87,7 +87,7 @@ public class FindSchemaItemResultsPad : AbstractResultPad
             }
             _schemaBrowser = null;
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
 
     #region Designer generated code
@@ -231,18 +231,18 @@ public class FindSchemaItemResultsPad : AbstractResultPad
         {
             List<Guid> referencePackages = new List<Guid>();
             TreeNode treenode = (
-                WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser
+                WorkbenchSingleton.Workbench.GetPad(type: typeof(SchemaBrowser)) as SchemaBrowser
             ).EbrSchemaBrowser.GetFirstNode();
             if (treenode != null)
             {
                 var itm = (Package)treenode.Tag;
                 referencePackages = itm
-                    .IncludedPackages.Select(x =>
+                    .IncludedPackages.Select(selector: x =>
                     {
                         return x.Id;
                     })
                     .ToList();
-                referencePackages.Add(itm.Id);
+                referencePackages.Add(item: itm.Id);
                 //if (!((SchemaExtension)treenode.Tag).Id.Equals(SchemaExtensionIdItem))
             }
 
@@ -250,10 +250,10 @@ public class FindSchemaItemResultsPad : AbstractResultPad
             for (int i = 0; i < results.LongLength; i++)
             {
                 var item = results[i];
-                resultListItems[i] = GetResult(item, referencePackages);
-                _results.Add(item);
+                resultListItems[i] = GetResult(item: item, referencePackages: referencePackages);
+                _results.Add(item: item);
             }
-            lvwResults.Items.AddRange(resultListItems);
+            lvwResults.Items.AddRange(items: resultListItems);
             ViewFindSchemaItemResultsPad cmd = new ViewFindSchemaItemResultsPad();
             cmd.Run();
         }
@@ -272,7 +272,7 @@ public class FindSchemaItemResultsPad : AbstractResultPad
             return null;
         }
         string name = item.ModelDescription();
-        item.PersistenceProvider.RestrictToLoadedPackage(false);
+        item.PersistenceProvider.RestrictToLoadedPackage(b: false);
         string rootName = item.RootItem.ModelDescription();
         if (name == null)
         {
@@ -285,19 +285,19 @@ public class FindSchemaItemResultsPad : AbstractResultPad
         }
 
         ListViewItem newItem = new ListViewItem(
-            new string[]
+            items: new string[]
             {
                 item.Path,
                 rootName,
                 name,
                 item.RootItem.Group == null ? "" : item.RootItem.Group.Path,
                 item.PackageName,
-                referencePackages.Contains(item.SchemaExtensionId) ? "Yes" : "No",
+                referencePackages.Contains(item: item.SchemaExtensionId) ? "Yes" : "No",
             }
         );
         newItem.Tag = item;
-        newItem.ImageIndex = _schemaBrowser.ImageIndex(item.RootItem.Icon);
-        item.PersistenceProvider.RestrictToLoadedPackage(true);
+        newItem.ImageIndex = _schemaBrowser.ImageIndex(icon: item.RootItem.Icon);
+        item.PersistenceProvider.RestrictToLoadedPackage(b: true);
         return newItem;
     }
     #endregion
@@ -307,19 +307,19 @@ public class FindSchemaItemResultsPad : AbstractResultPad
         {
             try
             {
-                ISchemaItem schemaItem = lvwResults.SelectedItems[0].Tag as ISchemaItem;
-                OpenParentPackage(schemaItem.SchemaExtensionId);
-                _schemaBrowser.EbrSchemaBrowser.SelectItem(schemaItem);
+                ISchemaItem schemaItem = lvwResults.SelectedItems[index: 0].Tag as ISchemaItem;
+                OpenParentPackage(SchemaExtensionId: schemaItem.SchemaExtensionId);
+                _schemaBrowser.EbrSchemaBrowser.SelectItem(item: schemaItem);
                 ViewSchemaBrowserPad cmd = new ViewSchemaBrowserPad();
                 cmd.Run();
             }
             catch (Exception ex)
             {
                 Origam.UI.AsMessageBox.ShowError(
-                    this,
-                    ex.Message,
-                    ResourceUtils.GetString("ErrorTitle"),
-                    ex
+                    owner: this,
+                    text: ex.Message,
+                    caption: ResourceUtils.GetString(key: "ErrorTitle"),
+                    exception: ex
                 );
             }
         }
@@ -359,8 +359,8 @@ internal class ListViewItemComparer : IComparer
     {
         int returnVal = -1;
         returnVal = String.Compare(
-            ((ListViewItem)x).SubItems[col].Text,
-            ((ListViewItem)y).SubItems[col].Text
+            strA: ((ListViewItem)x).SubItems[index: col].Text,
+            strB: ((ListViewItem)y).SubItems[index: col].Text
         );
         if (order == SortOrder.Descending)
         {

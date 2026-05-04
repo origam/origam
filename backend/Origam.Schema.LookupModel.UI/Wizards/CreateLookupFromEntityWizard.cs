@@ -69,7 +69,7 @@ public class CreateLookupFromEntityWizard : System.Windows.Forms.Form
                 components.Dispose();
             }
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
 
     #region Windows Form Designer generated code
@@ -219,10 +219,10 @@ public class CreateLookupFromEntityWizard : System.Windows.Forms.Form
         )
         {
             MessageBox.Show(
-                ResourceUtils.GetString("EnterAllInfo"),
-                ResourceUtils.GetString("LookupWiz"),
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Asterisk
+                text: ResourceUtils.GetString(key: "EnterAllInfo"),
+                caption: ResourceUtils.GetString(key: "LookupWiz"),
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Asterisk
             );
             return;
         }
@@ -283,10 +283,14 @@ public class CreateLookupFromEntityWizard : System.Windows.Forms.Form
 
         txtName.Text = this.Entity.Name;
         EntityFilter idFilter = null;
-        foreach (var filter in Entity.ChildItemsByType<EntityFilter>(EntityFilter.CategoryConst))
+        foreach (
+            var filter in Entity.ChildItemsByType<EntityFilter>(
+                itemType: EntityFilter.CategoryConst
+            )
+        )
         {
-            cboListFilter.Items.Add(filter);
-            cboIdFilter.Items.Add(filter);
+            cboListFilter.Items.Add(item: filter);
+            cboIdFilter.Items.Add(item: filter);
             if (filter.Name == "GetId")
             {
                 idFilter = filter;
@@ -299,7 +303,7 @@ public class CreateLookupFromEntityWizard : System.Windows.Forms.Form
 
         foreach (IDataEntityColumn column in this.Entity.EntityColumns)
         {
-            if (string.IsNullOrEmpty(column.ToString()))
+            if (string.IsNullOrEmpty(value: column.ToString()))
             {
                 continue;
             }
@@ -314,12 +318,14 @@ public class CreateLookupFromEntityWizard : System.Windows.Forms.Form
                 _idColumn = column;
             }
 
-            cboDisplayField.Items.Add(column);
+            cboDisplayField.Items.Add(item: column);
         }
         cboDisplayField.SelectedItem = nameColumn;
         if (_idColumn == null)
         {
-            throw new Exception("Entity has no primary key defined. Cannot create lookup.");
+            throw new Exception(
+                message: "Entity has no primary key defined. Cannot create lookup."
+            );
         }
     }
     #endregion

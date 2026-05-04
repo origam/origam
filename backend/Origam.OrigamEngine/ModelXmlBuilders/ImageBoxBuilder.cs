@@ -30,8 +30,8 @@ public class ImageBoxBuilder
 {
     public static void Build(XmlElement propertyElement, string sourceType)
     {
-        propertyElement.SetAttribute("Entity", "Image");
-        propertyElement.SetAttribute("Column", "Image");
-        propertyElement.SetAttribute("SourceType", sourceType);
+        propertyElement.SetAttribute(name: "Entity", value: "Image");
+        propertyElement.SetAttribute(name: "Column", value: "Image");
+        propertyElement.SetAttribute(name: "SourceType", value: sourceType);
     }
 }

@@ -25,17 +25,17 @@ using Schedule;
 
 namespace Origam.Schema.WorkflowModel;
 
-[SchemaItemDescription("Schedule Group", "schedule-group.png")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Schedule Group", iconName: "schedule-group.png")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class ScheduleGroup : AbstractScheduleTime
 {
     public ScheduleGroup() { }
 
     public ScheduleGroup(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(schemaExtensionId: schemaExtensionId) { }
 
     public ScheduleGroup(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Overriden Members
     public override bool UseFolders => false;
@@ -45,7 +45,7 @@ public class ScheduleGroup : AbstractScheduleTime
         var eventQueue = new EventQueue();
         foreach (AbstractScheduleTime abstractScheduleTime in ChildItems)
         {
-            eventQueue.Add(abstractScheduleTime.GetScheduledTime());
+            eventQueue.Add(time: abstractScheduleTime.GetScheduledTime());
         }
         return eventQueue;
     }
@@ -65,7 +65,11 @@ public class ScheduleGroup : AbstractScheduleTime
         {
             itemName = "NewScheduleGroup";
         }
-        return base.NewItem<T>(schemaExtensionId, group, itemName);
+        return base.NewItem<T>(
+            schemaExtensionId: schemaExtensionId,
+            group: group,
+            itemName: itemName
+        );
     }
     #endregion
 }

@@ -41,8 +41,8 @@ namespace Origam.BI.CrystalReports;
 /// Summary description for AsReportPanel.
 /// </summary>
 ///
-[System.ComponentModel.Designer(typeof(ControlDesigner))]
-[ToolboxBitmap(typeof(AsReportPanel))]
+[System.ComponentModel.Designer(designerType: typeof(ControlDesigner))]
+[ToolboxBitmap(t: typeof(AsReportPanel))]
 public class AsReportPanel
     : System.Windows.Forms.UserControl,
         IAsDataConsumer,
@@ -61,7 +61,7 @@ public class AsReportPanel
         // This call is required by the Windows.Forms Form Designer.
         InitializeComponent();
 
-        SetButtons(this._buttonsOnly);
+        SetButtons(small: this._buttonsOnly);
         pnlToolbar.StartColor = OrigamColorScheme.TitleInactiveStartColor;
         pnlToolbar.EndColor = OrigamColorScheme.TitleInactiveEndColor;
         pnlToolbar.ForeColor = OrigamColorScheme.TitleInactiveForeColor;
@@ -97,7 +97,7 @@ public class AsReportPanel
                 components.Dispose();
             }
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
 
     #region Component Designer generated code
@@ -211,15 +211,15 @@ public class AsReportPanel
     #region Properties
     private bool _buttonsOnly = false;
 
-    [Browsable(true)]
-    [RefreshProperties(RefreshProperties.Repaint)]
+    [Browsable(browsable: true)]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
     public bool ButtonsOnly
     {
         get { return _buttonsOnly; }
         set
         {
             _buttonsOnly = value;
-            SetButtons(value);
+            SetButtons(small: value);
         }
     }
     private string _progressText = "";
@@ -319,13 +319,13 @@ public class AsReportPanel
 
         foreach (
             var mapInfo in controlItem.ChildItemsByType<ColumnParameterMapping>(
-                ColumnParameterMapping.CategoryConst
+                itemType: ColumnParameterMapping.CategoryConst
             )
         )
         {
             if (!mapInfo.IsDeleted) // skip any deleted mapping infos
             {
-                ParameterMappings.Add(mapInfo);
+                ParameterMappings.Add(value: mapInfo);
             }
         }
         _fillingParameterCache = false;
@@ -334,25 +334,25 @@ public class AsReportPanel
     private object _dataSource;
     private string _dataMember;
 
-    [Category("Data")]
-    [RefreshProperties(RefreshProperties.Repaint)]
+    [Category(category: "Data")]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
     [TypeConverter(
-        "System.Windows.Forms.Design.DataSourceConverter, System.Design, Version=1.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
+        typeName: "System.Windows.Forms.Design.DataSourceConverter, System.Design, Version=1.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
     )]
     public object DataSource
     {
         get { return _dataSource; }
         set
         {
-            _dataSource = ConvertInputData(value);
-            SetDataBinding(_dataSource, _dataMember);
+            _dataSource = ConvertInputData(data: value);
+            SetDataBinding(dataSource: _dataSource, dataMember: _dataMember);
         }
     }
 
-    [Category("Data")]
+    [Category(category: "Data")]
     [Editor(
-        "System.Windows.Forms.Design.DataMemberListEditor, System.Design, Version=1.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
-        typeof(System.Drawing.Design.UITypeEditor)
+        typeName: "System.Windows.Forms.Design.DataMemberListEditor, System.Design, Version=1.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+        baseType: typeof(System.Drawing.Design.UITypeEditor)
     )]
     public string DataMember
     {
@@ -361,7 +361,7 @@ public class AsReportPanel
     }
     private Guid _reportId;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public Guid ReportId
     {
         get { return _reportId; }
@@ -372,8 +372,8 @@ public class AsReportPanel
         }
     }
 
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [TypeConverter(typeof(ReportConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [TypeConverter(type: typeof(ReportConverter))]
     public CrystalReport CrystalReport
     {
         get
@@ -385,8 +385,8 @@ public class AsReportPanel
 
             return (CrystalReport)
                 this._origamMetadata.PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(this.ReportId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: this.ReportId)
                 );
         }
         set
@@ -400,11 +400,11 @@ public class AsReportPanel
             {
                 //if newly added Crystal Report are the same as actually asigned,
                 //no reaction provided
-                if (this.ReportId == (Guid)value.PrimaryKey["Id"])
+                if (this.ReportId == (Guid)value.PrimaryKey[key: "Id"])
                 {
                     return;
                 }
-                this.ReportId = (Guid)value.PrimaryKey["Id"];
+                this.ReportId = (Guid)value.PrimaryKey[key: "Id"];
                 //ClearMappingItemsOnly();
                 CreateMappingItemsCollection();
             }
@@ -443,7 +443,9 @@ public class AsReportPanel
             }
 
             var col = _origamMetadata
-                .ChildItemsByType<ColumnParameterMapping>(ColumnParameterMapping.CategoryConst)
+                .ChildItemsByType<ColumnParameterMapping>(
+                    itemType: ColumnParameterMapping.CategoryConst
+                )
                 .ToList();
             foreach (ColumnParameterMapping mapping in col)
             {
@@ -452,7 +454,7 @@ public class AsReportPanel
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine("AsReportPanel:ERROR=>" + ex.ToString());
+            System.Diagnostics.Debug.WriteLine(message: "AsReportPanel:ERROR=>" + ex.ToString());
         }
     }
 
@@ -466,11 +468,11 @@ public class AsReportPanel
         foreach (var entry in this.CrystalReport.ParameterReferences)
         {
             string parameterName = entry.Key;
-            if (this._origamMetadata.GetChildByName(parameterName) == null)
+            if (this._origamMetadata.GetChildByName(name: parameterName) == null)
             {
                 ColumnParameterMapping mapping = _origamMetadata.NewItem<ColumnParameterMapping>(
-                    _origamMetadata.SchemaExtensionId,
-                    null
+                    schemaExtensionId: _origamMetadata.SchemaExtensionId,
+                    group: null
                 );
                 mapping.Name = parameterName;
             }
@@ -478,15 +480,15 @@ public class AsReportPanel
         // create any missing report's own parameters
         foreach (
             var param in CrystalReport.ChildItemsByType<SchemaItemParameter>(
-                SchemaItemParameter.CategoryConst
+                itemType: SchemaItemParameter.CategoryConst
             )
         )
         {
-            if (this._origamMetadata.GetChildByName(param.Name) == null)
+            if (this._origamMetadata.GetChildByName(name: param.Name) == null)
             {
                 ColumnParameterMapping mapping = _origamMetadata.NewItem<ColumnParameterMapping>(
-                    _origamMetadata.SchemaExtensionId,
-                    null
+                    schemaExtensionId: _origamMetadata.SchemaExtensionId,
+                    group: null
                 );
                 mapping.Name = param.Name;
             }
@@ -495,16 +497,16 @@ public class AsReportPanel
         // delete all parameter mappings from the report, if they do not exist in the data structure anymore
         foreach (
             var mapping in _origamMetadata.ChildItemsByType<ColumnParameterMapping>(
-                ColumnParameterMapping.CategoryConst
+                itemType: ColumnParameterMapping.CategoryConst
             )
         )
         {
             if (
-                !this.CrystalReport.ParameterReferences.ContainsKey(mapping.Name)
-                & this.CrystalReport.GetChildByName(mapping.Name) == null
+                !this.CrystalReport.ParameterReferences.ContainsKey(key: mapping.Name)
+                & this.CrystalReport.GetChildByName(name: mapping.Name) == null
             )
             {
-                toDelete.Add(mapping);
+                toDelete.Add(item: mapping);
             }
         }
         foreach (ISchemaItem mapping in toDelete)
@@ -512,7 +514,7 @@ public class AsReportPanel
             mapping.IsDeleted = true;
         }
         //Refill Parameter collection (and dictionary)
-        FillParameterCache(this._origamMetadata as ControlSetItem);
+        FillParameterCache(controlItem: this._origamMetadata as ControlSetItem);
     }
     #endregion
     #region Methods
@@ -545,7 +547,7 @@ public class AsReportPanel
     {
         if (null != _dataSource && null != BindingContext)
         {
-            return BindingContext[_dataSource, _dataMember];
+            return BindingContext[dataSource: _dataSource, dataMember: _dataMember];
         }
 
         return null;
@@ -574,7 +576,9 @@ public class AsReportPanel
         if (cm == null)
         {
             throw new NullReferenceException(
-                Origam.BI.CrystalReports.ResourceUtils.GetString("ErrorInvalidReportSource")
+                message: Origam.BI.CrystalReports.ResourceUtils.GetString(
+                    key: "ErrorInvalidReportSource"
+                )
             );
         }
 
@@ -595,16 +599,18 @@ public class AsReportPanel
         {
             if (colMap.ColumnName != "" && colMap.ColumnName != null) // maybe the parameter was not bound, we let report service to try the default value
             {
-                if (drv.Row.Table.Columns.Contains(colMap.ColumnName))
+                if (drv.Row.Table.Columns.Contains(name: colMap.ColumnName))
                 {
-                    result.Add(colMap.Name, drv.Row[colMap.ColumnName]);
+                    result.Add(key: colMap.Name, value: drv.Row[columnName: colMap.ColumnName]);
                 }
                 else
                 {
                     throw new ArgumentOutOfRangeException(
-                        "ColumnName",
-                        colMap.ColumnName,
-                        Origam.BI.CrystalReports.ResourceUtils.GetString("ErrorBindParam")
+                        paramName: "ColumnName",
+                        actualValue: colMap.ColumnName,
+                        message: Origam.BI.CrystalReports.ResourceUtils.GetString(
+                            key: "ErrorBindParam"
+                        )
                     );
                 }
             }
@@ -625,19 +631,19 @@ public class AsReportPanel
             ReportViewer frm = new ReportViewer();
 
             frm.TitleName = this.CrystalReport.Caption;
-            frm.ReportSource = CreateReport(this.CrystalReport);
-            Origam.Workbench.WorkbenchSingleton.Workbench.ShowView(frm);
+            frm.ReportSource = CreateReport(report: this.CrystalReport);
+            Origam.Workbench.WorkbenchSingleton.Workbench.ShowView(content: frm);
         }
         catch (Exception ex)
         {
             Origam.UI.AsMessageBox.ShowError(
-                this.FindForm(),
-                ex.Message,
-                Origam.BI.CrystalReports.ResourceUtils.GetString(
-                    "ErrorReportShow",
-                    this.CrystalReport.Name
+                owner: this.FindForm(),
+                text: ex.Message,
+                caption: Origam.BI.CrystalReports.ResourceUtils.GetString(
+                    key: "ErrorReportShow",
+                    args: this.CrystalReport.Name
                 ),
-                ex
+                exception: ex
             );
         }
         finally
@@ -653,31 +659,37 @@ public class AsReportPanel
             && !(_bindMan != null && _bindMan.Count > 0 && _bindMan.Position >= 0)
         )
         {
-            SetButtons(this._buttonsOnly);
+            SetButtons(small: this._buttonsOnly);
             throw new InvalidOperationException(
-                Origam.BI.CrystalReports.ResourceUtils.GetString("ErrorReportNoRecord0")
+                message: Origam.BI.CrystalReports.ResourceUtils.GetString(
+                    key: "ErrorReportNoRecord0"
+                )
                     + Environment.NewLine
                     + Environment.NewLine
-                    + Origam.BI.CrystalReports.ResourceUtils.GetString("ErrorReportNoRecord1")
+                    + Origam.BI.CrystalReports.ResourceUtils.GetString(key: "ErrorReportNoRecord1")
                     + Environment.NewLine
-                    + Origam.BI.CrystalReports.ResourceUtils.GetString("ErrorReportNoRecord2")
+                    + Origam.BI.CrystalReports.ResourceUtils.GetString(key: "ErrorReportNoRecord2")
                     + Environment.NewLine
-                    + Origam.BI.CrystalReports.ResourceUtils.GetString("ErrorReportNoRecord3")
+                    + Origam.BI.CrystalReports.ResourceUtils.GetString(key: "ErrorReportNoRecord3")
                     + Environment.NewLine
-                    + Origam.BI.CrystalReports.ResourceUtils.GetString("ErrorReportNoRecord4")
+                    + Origam.BI.CrystalReports.ResourceUtils.GetString(key: "ErrorReportNoRecord4")
             );
         }
 
         CrystalReportHelper helper = new CrystalReportHelper();
-        Hashtable parameters = GetParameters(_bindMan as CurrencyManager);
-        return helper.CreateReport(report.Id, parameters, null);
+        Hashtable parameters = GetParameters(cm: _bindMan as CurrencyManager);
+        return helper.CreateReport(
+            reportId: report.Id,
+            parameters: parameters,
+            transactionId: null
+        );
     }
 
     private void btnRefresh_Click(object sender, System.EventArgs e)
     {
         if (this.btnInitialRefresh.Visible)
         {
-            btnInitialRefresh_Click(this, EventArgs.Empty);
+            btnInitialRefresh_Click(sender: this, e: EventArgs.Empty);
         }
         else
         {
@@ -690,13 +702,15 @@ public class AsReportPanel
         if (this.CrystalReport == null)
         {
             Origam.UI.AsMessageBox.ShowError(
-                this.FindForm(),
-                Origam.BI.CrystalReports.ResourceUtils.GetString("ErrorReportPanelDefinition"),
-                Origam.BI.CrystalReports.ResourceUtils.GetString(
-                    "ReportShowTitle",
-                    this.FindForm().Text
+                owner: this.FindForm(),
+                text: Origam.BI.CrystalReports.ResourceUtils.GetString(
+                    key: "ErrorReportPanelDefinition"
                 ),
-                null
+                caption: Origam.BI.CrystalReports.ResourceUtils.GetString(
+                    key: "ReportShowTitle",
+                    args: this.FindForm().Text
+                ),
+                exception: null
             );
             return;
         }
@@ -708,24 +722,24 @@ public class AsReportPanel
             Application.DoEvents();
             this.ShowProgress();
             ClearReportSource();
-            object reportSource = CreateReport(this.CrystalReport);
-            crViewer.Location = new Point(0, 0);
+            object reportSource = CreateReport(report: this.CrystalReport);
+            crViewer.Location = new Point(x: 0, y: 0);
             crViewer.Size = this.Size;
             crViewer.Show();
             this.crViewer.ReportSource = reportSource;
-            this.crViewer.Zoom(1);
+            this.crViewer.Zoom(ZoomLevel: 1);
             this.crViewer.Focus();
         }
         catch (Exception ex)
         {
             Origam.UI.AsMessageBox.ShowError(
-                this.FindForm(),
-                ex.Message,
-                Origam.BI.CrystalReports.ResourceUtils.GetString(
-                    "ErrorReportRefresh",
-                    this.CrystalReport.Name
+                owner: this.FindForm(),
+                text: ex.Message,
+                caption: Origam.BI.CrystalReports.ResourceUtils.GetString(
+                    key: "ErrorReportRefresh",
+                    args: this.CrystalReport.Name
                 ),
-                ex
+                exception: ex
             );
         }
         finally
@@ -739,7 +753,7 @@ public class AsReportPanel
     private ColumnParameterMappingCollection _parameterMappingCollection =
         new ColumnParameterMappingCollection();
 
-    [TypeConverter(typeof(ColumnParameterMappingCollectionConverter))]
+    [TypeConverter(type: typeof(ColumnParameterMappingCollectionConverter))]
     public ColumnParameterMappingCollection ParameterMappings
     {
         get
@@ -796,18 +810,18 @@ public class AsReportPanel
         {
             _origamMetadata = value;
             _itemsLoaded = true;
-            FillParameterCache(_origamMetadata as ControlSetItem);
+            FillParameterCache(controlItem: _origamMetadata as ControlSetItem);
             SetReportText();
         }
     }
     #endregion
     protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
     {
-        if (pnlToolbar.ProcessCommand(ref msg, keyData))
+        if (pnlToolbar.ProcessCommand(msg: ref msg, keyData: keyData))
         {
             return true;
         }
-        return base.ProcessCmdKey(ref msg, keyData);
+        return base.ProcessCmdKey(msg: ref msg, keyData: keyData);
     }
 
     private void btnInitialRefresh_Click(object sender, System.EventArgs e)
@@ -818,24 +832,24 @@ public class AsReportPanel
     private void AsReportPanel_SizeChanged(object sender, System.EventArgs e)
     {
         btnInitialRefresh.SetBounds(
-            (this.Width / 2) - (btnInitialRefresh.Width / 2),
-            (this.Height / 2) - (btnInitialRefresh.Height / 2),
-            btnInitialRefresh.Width,
-            btnInitialRefresh.Height,
-            BoundsSpecified.Location
+            x: (this.Width / 2) - (btnInitialRefresh.Width / 2),
+            y: (this.Height / 2) - (btnInitialRefresh.Height / 2),
+            width: btnInitialRefresh.Width,
+            height: btnInitialRefresh.Height,
+            specified: BoundsSpecified.Location
         );
     }
 
     private void _bindMan_PositionChanged(object sender, EventArgs e)
     {
         ClearReportSource();
-        SetButtons(this._buttonsOnly);
+        SetButtons(small: this._buttonsOnly);
     }
 
     private void _bindMan_CurrentChanged(object sender, EventArgs e)
     {
         ClearReportSource();
-        SetButtons(this._buttonsOnly);
+        SetButtons(small: this._buttonsOnly);
     }
 
     MRG.Controls.UI.LoadingCircle circ = new MRG.Controls.UI.LoadingCircle();
@@ -892,7 +906,7 @@ public class AsReportPanel
             rs.Dispose();
             if (f != null)
             {
-                f.ResumeLayout(false);
+                f.ResumeLayout(performLayout: false);
             }
         }
     }
@@ -904,19 +918,21 @@ public class AsReportPanel
             System.Drawing.Graphics g = e.Graphics;
             string text = this.ProgressText;
             System.Drawing.Font font = new System.Drawing.Font(
-                this.Font.FontFamily,
-                10,
-                System.Drawing.FontStyle.Bold
+                family: this.Font.FontFamily,
+                emSize: 10,
+                style: System.Drawing.FontStyle.Bold
             );
-            float stringWidth = g.MeasureString(text, font).Width;
-            float stringHeight = g.MeasureString(text, font).Height;
-            g.Clear(this.BackColor);
+            float stringWidth = g.MeasureString(text: text, font: font).Width;
+            float stringHeight = g.MeasureString(text: text, font: font).Height;
+            g.Clear(color: this.BackColor);
             g.DrawString(
-                text,
-                font,
-                new System.Drawing.SolidBrush(OrigamColorScheme.FormLoadingStatusColor),
-                (this.Width / 2) - (stringWidth / 2),
-                (this.Height / 3) + 64
+                s: text,
+                font: font,
+                brush: new System.Drawing.SolidBrush(
+                    color: OrigamColorScheme.FormLoadingStatusColor
+                ),
+                x: (this.Width / 2) - (stringWidth / 2),
+                y: (this.Height / 3) + 64
             );
         }
         catch { }

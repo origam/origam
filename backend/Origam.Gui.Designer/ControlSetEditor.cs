@@ -53,7 +53,7 @@ namespace Origam.Gui.Designer;
 public class ControlSetEditor : AbstractEditor
 {
     private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
-        MethodBase.GetCurrentMethod().DeclaringType
+        type: MethodBase.GetCurrentMethod().DeclaringType
     );
 
     private System.Windows.Forms.PropertyGrid _propertyGrid;
@@ -67,9 +67,10 @@ public class ControlSetEditor : AbstractEditor
     private ControlItem _panelControlItemRef = null;
     private bool ReflectChanges = false;
     private ISchemaService _schema =
-        ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
+        ServiceManager.Services.GetService(serviceType: typeof(ISchemaService)) as ISchemaService;
     IDocumentationService _documentation =
-        ServiceManager.Services.GetService(typeof(IDocumentationService)) as IDocumentationService;
+        ServiceManager.Services.GetService(serviceType: typeof(IDocumentationService))
+        as IDocumentationService;
     private UserControlSchemaItemProvider _controls;
     private DataStructureSchemaItemProvider _dsProvider;
     private EntityModelSchemaItemProvider _deProvider;
@@ -111,19 +112,19 @@ public class ControlSetEditor : AbstractEditor
         //
         InitializeComponent();
         _controls =
-            _schema.GetProvider(typeof(UserControlSchemaItemProvider))
+            _schema.GetProvider(type: typeof(UserControlSchemaItemProvider))
             as UserControlSchemaItemProvider;
         _dsProvider =
-            _schema.GetProvider(typeof(DataStructureSchemaItemProvider))
+            _schema.GetProvider(type: typeof(DataStructureSchemaItemProvider))
             as DataStructureSchemaItemProvider;
         _deProvider =
-            _schema.GetProvider(typeof(EntityModelSchemaItemProvider))
+            _schema.GetProvider(type: typeof(EntityModelSchemaItemProvider))
             as EntityModelSchemaItemProvider;
         //Intitializing host designer
         _serviceContainer = new ServiceContainer();
-        _serviceContainer.AddService(typeof(ToolboxPane), _toolbox);
+        _serviceContainer.AddService(serviceType: typeof(ToolboxPane), serviceInstance: _toolbox);
         // create host
-        _host = new DesignerHostImpl(_serviceContainer);
+        _host = new DesignerHostImpl(parentProvider: _serviceContainer);
         _host.ParentControl = this;
         _toolbox.Host = _host;
         //add hook the designers events
@@ -134,7 +135,7 @@ public class ControlSetEditor : AbstractEditor
 
         this.ContentLoaded += new EventHandler(ControlSetEditor_ContentLoaded);
         propertyPad =
-            WorkbenchSingleton.Workbench.GetPad(typeof(Origam.UI.IPropertyPad))
+            WorkbenchSingleton.Workbench.GetPad(type: typeof(Origam.UI.IPropertyPad))
             as Origam.UI.IPropertyPad;
 
         _propertyGrid = propertyPad.PropertyGrid;
@@ -161,7 +162,7 @@ public class ControlSetEditor : AbstractEditor
                 _host.ComponentAdded -= new ComponentEventHandler(Host_componentAdded);
                 this.ContentLoaded -= new EventHandler(ControlSetEditor_ContentLoaded);
                 ISelectionService selectionService =
-                    _host.GetService(typeof(ISelectionService)) as ISelectionService;
+                    _host.GetService(serviceType: typeof(ISelectionService)) as ISelectionService;
                 selectionService.SelectionChanged -= new EventHandler(
                     selectionService_SelectionChanged
                 );
@@ -190,7 +191,7 @@ public class ControlSetEditor : AbstractEditor
                     components.Dispose();
                 }
             }
-            base.Dispose(disposing);
+            base.Dispose(disposing: disposing);
         }
         finally
         {
@@ -480,15 +481,15 @@ public class ControlSetEditor : AbstractEditor
             if (ControlSet.OldPrimaryKey != null)
             {
                 List<ISchemaItem> items = ControlSet.ChildItemsRecursive;
-                items.Add(ControlSet);
-                _documentation.CloneDocumentation(items);
+                items.Add(item: ControlSet);
+                _documentation.CloneDocumentation(clonedSchemaItems: items);
             }
             ControlSet.OldPrimaryKey = null;
             if (saveControl && IsPanel && _panelControlItemRef != null)
             {
                 ControlItem newControl = _controls.NewItem<ControlItem>(
-                    _schema.ActiveSchemaExtensionId,
-                    null
+                    schemaExtensionId: _schema.ActiveSchemaExtensionId,
+                    group: null
                 );
                 newControl.Name = ControlSet.Name;
                 newControl.IsComplexType = true;
@@ -513,7 +514,7 @@ public class ControlSetEditor : AbstractEditor
             //but only in case of PanelControlSet
             if (IsPanel)
             {
-                ControlItem cn = FindControlItemByPanelRef(this.Panel);
+                ControlItem cn = FindControlItemByPanelRef(panel: this.Panel);
                 if (cn != null)
                 {
                     cn.Name = this.ControlSet.Name;
@@ -532,14 +533,14 @@ public class ControlSetEditor : AbstractEditor
     private Control LoadControl(ControlSetItem cntrlSet)
     {
         //create control
-        Control cntrl = CreateInstance(cntrlSet);
+        Control cntrl = CreateInstance(cntrlSet: cntrlSet);
 
         cntrl.DataBindings.CollectionChanged += new CollectionChangeEventHandler(
             DataBindings_CollectionChanged
         );
         //adding child controls
         var sortedChildControls = cntrlSet
-            .ChildItemsByType<ControlSetItem>("ControlSetItem")
+            .ChildItemsByType<ControlSetItem>(itemType: "ControlSetItem")
             .ToList();
         sortedChildControls.Sort();
         var invalidControls = new List<ControlSetItem>();
@@ -547,15 +548,17 @@ public class ControlSetEditor : AbstractEditor
         {
             try
             {
-                Control c = LoadControl(childItem);
-                cntrl.Controls.Add(c);
+                Control c = LoadControl(cntrlSet: childItem);
+                cntrl.Controls.Add(value: c);
             }
             catch (Exception ex)
             {
-                invalidControls.Add(childItem);
+                invalidControls.Add(item: childItem);
                 throw new Exception(
-                    "Error occured while generating form. ControlSet: '" + cntrlSet.Path + "'.",
-                    ex
+                    message: "Error occured while generating form. ControlSet: '"
+                        + cntrlSet.Path
+                        + "'.",
+                    innerException: ex
                 );
             }
         }
@@ -579,20 +582,22 @@ public class ControlSetEditor : AbstractEditor
         )
         {
             throw new ArgumentException(
-                "Parameter is null or inner parameters are null",
-                "cntrlSet"
+                message: "Parameter is null or inner parameters are null",
+                paramName: "cntrlSet"
             );
         }
 
         Type type;
 #pragma warning disable CS0618 // Type or member is obsolete
-        Assembly asm = Assembly.LoadWithPartialName(cntrlSet.ControlItem.ControlNamespace);
+        Assembly asm = Assembly.LoadWithPartialName(
+            partialName: cntrlSet.ControlItem.ControlNamespace
+        );
 #pragma warning restore CS0618 // Type or member is obsolete
-        type = asm.GetType(cntrlSet.ControlItem.ControlType);
+        type = asm.GetType(name: cntrlSet.ControlItem.ControlType);
         if (type == null)
         {
             throw new NullReferenceException(
-                "Unsupported type:" + cntrlSet.ControlItem.ControlType
+                message: "Unsupported type:" + cntrlSet.ControlItem.ControlType
             );
         }
 
@@ -602,18 +607,22 @@ public class ControlSetEditor : AbstractEditor
             _host.IsComplexControl = true;
         }
 
-        result = _host.CreateComponent(type, cntrlSet.ControlItem, null);
+        result = _host.CreateComponent(
+            componentClass: type,
+            controlItem: cntrlSet.ControlItem,
+            name: null
+        );
         if (result == null || (!(result is Control)))
         {
-            throw new NullReferenceException("Unsupported type: " + type.ToString());
+            throw new NullReferenceException(message: "Unsupported type: " + type.ToString());
         }
 
         //very important for editing (we store in TAG all metadata (just in design time)
         (result as Control).Tag = cntrlSet;
-        ControlProperties(result as Control, false);
-        ControlProperties(result as Control, false);
-        UpdateSpecificControlProperties(result, cntrlSet);
-        LoadControlBindings(result as Control);
+        ControlProperties(cntrl: result as Control, save: false);
+        ControlProperties(cntrl: result as Control, save: false);
+        UpdateSpecificControlProperties(control: result, metadata: cntrlSet);
+        LoadControlBindings(cntrl: result as Control);
 
         return (result as Control);
     }
@@ -625,7 +634,7 @@ public class ControlSetEditor : AbstractEditor
             (control as IOrigamMetadataConsumer).OrigamMetadata = metadata;
         }
 
-        UpdateDataSource(control);
+        UpdateDataSource(control: control);
     }
 
     private void UpdateDataSource(object control)
@@ -638,7 +647,7 @@ public class ControlSetEditor : AbstractEditor
         AsPanel panel = control as AsPanel;
         if (
             panel != null
-            && string.IsNullOrEmpty(panel.DataMember)
+            && string.IsNullOrEmpty(value: panel.DataMember)
             && _dataSourceMode == eDataSource.DataStructure
         )
         {
@@ -648,18 +657,18 @@ public class ControlSetEditor : AbstractEditor
                     .ControlItem
                     .PanelControlSet
                     .DataSourceId;
-                if (entityId.Equals(table.ExtendedProperties["EntityId"]))
+                if (entityId.Equals(o: table.ExtendedProperties[key: "EntityId"]))
                 {
                     DataTable parentTable = table;
                     string dataMember = table.TableName;
                     while (parentTable.ParentRelations.Count == 1)
                     {
-                        parentTable = parentTable.ParentRelations[0].ParentTable;
+                        parentTable = parentTable.ParentRelations[index: 0].ParentTable;
                         dataMember = parentTable.TableName + "." + dataMember;
                     }
                     panel.DataMember = dataMember;
                     IsDirty = true;
-                    ControlProperties(control as Control, true);
+                    ControlProperties(cntrl: control as Control, save: true);
                     break;
                 }
             }
@@ -672,17 +681,17 @@ public class ControlSetEditor : AbstractEditor
         if (_form == null)
         {
             throw new NullReferenceException(
-                "Component wasnt proprerly generated and will be null"
+                message: "Component wasnt proprerly generated and will be null"
             );
         }
-        IRootDesigner rootDesigner = (IRootDesigner)_host.GetDesigner(_form);
-        _designView = (Control)rootDesigner.GetView(ViewTechnology.Default);
+        IRootDesigner rootDesigner = (IRootDesigner)_host.GetDesigner(component: _form);
+        _designView = (Control)rootDesigner.GetView(technology: ViewTechnology.Default);
         _designView.Dock = DockStyle.Fill;
-        designSurfacePanel.Controls.Add(_designView);
+        designSurfacePanel.Controls.Add(value: _designView);
         // we need to subscribe to selection changed events so
         // that we can update our properties grid
         ISelectionService selectionService =
-            _host.GetService(typeof(ISelectionService)) as ISelectionService;
+            _host.GetService(serviceType: typeof(ISelectionService)) as ISelectionService;
         selectionService.SelectionChanged += new EventHandler(selectionService_SelectionChanged);
         if (cmbDataSources.SelectedItem != null)
         {
@@ -696,7 +705,7 @@ public class ControlSetEditor : AbstractEditor
 
     private void AddDataset()
     {
-        _host.Add(_origamData, origamDataSetName);
+        _host.Add(component: _origamData, name: origamDataSetName);
         // hide component tray
         foreach (IExtenderProvider provider in this._host.GetExtenderProviders())
         {
@@ -711,7 +720,7 @@ public class ControlSetEditor : AbstractEditor
 
     private void AddBaseServices()
     {
-        _toolbox.LoadToolbox(LoadToolbox());
+        _toolbox.LoadToolbox(tools: LoadToolbox());
     }
 
     /// <summary>
@@ -727,20 +736,20 @@ public class ControlSetEditor : AbstractEditor
             var properties = new List<PropertyInfo>();
             foreach (
                 var propItem in cntrSetItem.ControlItem.ChildItemsByType<ControlPropertyItem>(
-                    ControlPropertyItem.CategoryConst
+                    itemType: ControlPropertyItem.CategoryConst
                 )
             )
             {
                 //addinng default properties to control set item
                 Type t = cntrl.GetType();
-                PropertyInfo property = t.GetProperty(propItem.Name);
-                properties.Add(property);
+                PropertyInfo property = t.GetProperty(name: propItem.Name);
+                properties.Add(item: property);
                 if (property == null)
                 {
                     throw new ArgumentOutOfRangeException(
-                        "Name",
-                        propItem.Name,
-                        "Property '"
+                        paramName: "Name",
+                        actualValue: propItem.Name,
+                        message: "Property '"
                             + propItem.Name
                             + "' not found in the control '"
                             + t.ToString()
@@ -749,34 +758,51 @@ public class ControlSetEditor : AbstractEditor
                 }
 
                 PropertyValueItem propValItem =
-                    FindPropertyValueItem(cntrSetItem, propItem, false) as PropertyValueItem;
+                    FindPropertyValueItem(
+                        controlSetItem: cntrSetItem,
+                        propertyToFind: propItem,
+                        bind: false
+                    ) as PropertyValueItem;
                 if (propValItem != null)
                 {
                     if (save) //Setting properties
                     {
                         propValItem.ControlPropertyItem = propItem as ControlPropertyItem;
                         propValItem.Name = property.Name;
-                        FormGenerator.SavePropertyValue(cntrl, property, propValItem);
+                        FormGenerator.SavePropertyValue(
+                            control: cntrl,
+                            property: property,
+                            propertyValueItem: propValItem
+                        );
                     }
                     else //loading properites
                     {
-                        FormGenerator.LoadPropertyValue(cntrl, property, propValItem);
+                        FormGenerator.LoadPropertyValue(
+                            control: cntrl,
+                            property: property,
+                            propertyValueItem: propValItem
+                        );
                     }
                 }
             }
 #if DEBUG
             string architectExePath = Assembly.GetExecutingAssembly().Location;
-            string architectBinDir = Path.GetDirectoryName(architectExePath)!;
-            string backendDir = Path.GetFullPath(Path.Combine(architectBinDir, "..", "..", ".."));
-            string path = Path.Combine(
-                backendDir,
-                "Origam.Architect.Server\\Controls",
-                cntrl.GetType().Name + ".cs"
+            string architectBinDir = Path.GetDirectoryName(path: architectExePath)!;
+            string backendDir = Path.GetFullPath(
+                path: Path.Combine(path1: architectBinDir, path2: "..", path3: "..", path4: "..")
             );
-            if (!File.Exists(path))
+            string path = Path.Combine(
+                path1: backendDir,
+                path2: "Origam.Architect.Server\\Controls",
+                path3: cntrl.GetType().Name + ".cs"
+            );
+            if (!File.Exists(path: path))
             {
-                string newClass = ClassGenerator.GenerateClass(cntrl.GetType().Name, properties);
-                File.WriteAllText(path, newClass);
+                string newClass = ClassGenerator.GenerateClass(
+                    className: cntrl.GetType().Name,
+                    properties: properties
+                );
+                File.WriteAllText(path: path, contents: newClass);
             }
 #endif
         }
@@ -793,7 +819,7 @@ public class ControlSetEditor : AbstractEditor
 
         foreach (
             var bindItem in cntrSetItem.ChildItemsByType<PropertyBindingInfo>(
-                PropertyBindingInfo.CategoryConst
+                itemType: PropertyBindingInfo.CategoryConst
             )
         )
         {
@@ -802,17 +828,17 @@ public class ControlSetEditor : AbstractEditor
                 if (this._dataSourceMode == eDataSource.DataEntity)
                 {
                     cntrl.DataBindings.Add(
-                        bindItem.ControlPropertyItem.Name,
-                        _origamData,
-                        _origamData.Tables[0].TableName + "." + bindItem.Value
+                        propertyName: bindItem.ControlPropertyItem.Name,
+                        dataSource: _origamData,
+                        dataMember: _origamData.Tables[index: 0].TableName + "." + bindItem.Value
                     );
                 }
                 else
                 {
                     cntrl.DataBindings.Add(
-                        bindItem.ControlPropertyItem.Name,
-                        _origamData,
-                        bindItem.DesignDataSetPath
+                        propertyName: bindItem.ControlPropertyItem.Name,
+                        dataSource: _origamData,
+                        dataMember: bindItem.DesignDataSetPath
                     );
                 }
             }
@@ -845,12 +871,12 @@ public class ControlSetEditor : AbstractEditor
         }
 
         ControlSetItem cntrSetItem = cntrl.Tag as ControlSetItem;
-        propItem = FindPropertyItem(cntrl, bind.PropertyName);
+        propItem = FindPropertyItem(cntrl: cntrl, propertyName: bind.PropertyName);
 
         if (propItem == null)
         {
             throw new NullReferenceException(
-                "Property "
+                message: "Property "
                     + bind.PropertyName
                     + " definition (control: "
                     + cntrl.Name
@@ -859,7 +885,8 @@ public class ControlSetEditor : AbstractEditor
         }
 
         PropertyBindingInfo propertyBind =
-            FindPropertyValueItem(cntrSetItem, propItem, true) as PropertyBindingInfo;
+            FindPropertyValueItem(controlSetItem: cntrSetItem, propertyToFind: propItem, bind: true)
+            as PropertyBindingInfo;
 
         if (action == CollectionChangeAction.Remove)
         {
@@ -870,7 +897,7 @@ public class ControlSetEditor : AbstractEditor
         if (propertyBind == null)
         {
             throw new NullReferenceException(
-                "Property binding value ("
+                message: "Property binding value ("
                     + bind.PropertyName
                     + ") definition (control: "
                     + cntrl.Name
@@ -894,7 +921,7 @@ public class ControlSetEditor : AbstractEditor
         ControlSetItem cntrSetItem = cntrl.Tag as ControlSetItem;
         foreach (
             var propItem in cntrSetItem.ControlItem.ChildItemsByType<ControlPropertyItem>(
-                ControlPropertyItem.CategoryConst
+                itemType: ControlPropertyItem.CategoryConst
             )
         )
         {
@@ -915,9 +942,13 @@ public class ControlSetEditor : AbstractEditor
         AbstractPropertyValueItem result = null;
         var strType = //name of property type (property value or binding info)
         bind ? PropertyBindingInfo.CategoryConst : PropertyValueItem.CategoryConst;
-        foreach (var item in controlSetItem.ChildItemsByType<AbstractPropertyValueItem>(strType))
+        foreach (
+            var item in controlSetItem.ChildItemsByType<AbstractPropertyValueItem>(
+                itemType: strType
+            )
+        )
         {
-            if (Equals(item.ControlPropertyItem?.PrimaryKey, propertyToFind.PrimaryKey))
+            if (Equals(objA: item.ControlPropertyItem?.PrimaryKey, objB: propertyToFind.PrimaryKey))
             {
                 result = item;
                 break;
@@ -930,15 +961,15 @@ public class ControlSetEditor : AbstractEditor
             if (bind)
             {
                 result = controlSetItem.NewItem<PropertyBindingInfo>(
-                    _schema.ActiveSchemaExtensionId,
-                    null
+                    schemaExtensionId: _schema.ActiveSchemaExtensionId,
+                    group: null
                 );
             }
             else
             {
                 result = controlSetItem.NewItem<PropertyValueItem>(
-                    _schema.ActiveSchemaExtensionId,
-                    null
+                    schemaExtensionId: _schema.ActiveSchemaExtensionId,
+                    group: null
                 );
             }
             result.ControlPropertyItem = propertyToFind;
@@ -956,7 +987,7 @@ public class ControlSetEditor : AbstractEditor
             //For Form Document we load second category with Panels
             Category catPanels = new Category();
             catPanels.DisplayName = "Screen Sections";
-            catPanels.FDToolboxItem = LoadTools(_controls, KindOfTool.Panels);
+            catPanels.FDToolboxItem = LoadTools(controls: _controls, kind: KindOfTool.Panels);
             cats[0] = catPanels;
         }
         else if (this.IsPanel && this.Panel.DataEntity != null)
@@ -966,19 +997,21 @@ public class ControlSetEditor : AbstractEditor
             panelCat2.DisplayName = dataEntity.Name;
             FDToolboxItem[] fieldTools = new FDToolboxItem[
                 dataEntity
-                    .ChildItemsByType<IDataEntityColumn>(AbstractDataEntityColumn.CategoryConst)
+                    .ChildItemsByType<IDataEntityColumn>(
+                        itemType: AbstractDataEntityColumn.CategoryConst
+                    )
                     .Count
             ];
             int i = 0;
             FDToolboxItem fd_item;
             var fields = dataEntity.ChildItemsByType<IDataEntityColumn>(
-                AbstractDataEntityColumn.CategoryConst
+                itemType: AbstractDataEntityColumn.CategoryConst
             );
             fields.Sort();
             foreach (IDataEntityColumn column in fields)
             {
                 fd_item = new FDToolboxItem();
-                fd_item.Type = ToolBoxConverter.Convert(column);
+                fd_item.Type = ToolBoxConverter.Convert(field: column);
                 fd_item.Name = column.Name;
                 fd_item.IsComplexType = false;
                 fd_item.PanelSetItem = null;
@@ -994,7 +1027,7 @@ public class ControlSetEditor : AbstractEditor
         // Load general widgets
         Category basicControls = new Category();
         basicControls.DisplayName = "Widgets";
-        basicControls.FDToolboxItem = LoadTools(_controls, KindOfTool.Basic);
+        basicControls.FDToolboxItem = LoadTools(controls: _controls, kind: KindOfTool.Basic);
         cats[1] = basicControls;
 
         tools.FDToolboxCategories = cats;
@@ -1019,7 +1052,7 @@ public class ControlSetEditor : AbstractEditor
         controlList.Sort();
         foreach (ControlItem item in controlList)
         {
-            if (CheckControlItemForToolbox(item))
+            if (CheckControlItemForToolbox(control: item))
             {
                 //Basic controls
                 if (kind == KindOfTool.Basic && (!item.IsComplexType))
@@ -1069,7 +1102,7 @@ public class ControlSetEditor : AbstractEditor
                         if (item.PanelControlSet == null)
                         {
                             throw new Exception(
-                                $"Item {item.Name}, Id: {item.Id} cannot be displayed because its control set is null. Please make sure the item is valid."
+                                message: $"Item {item.Name}, Id: {item.Id} cannot be displayed because its control set is null. Please make sure the item is valid."
                             );
                         }
                         fd_item.Name = item.PanelControlSet.Name;
@@ -1082,7 +1115,7 @@ public class ControlSetEditor : AbstractEditor
             }
         }
         FDToolboxItem[] result = new FDToolboxItem[i];
-        Array.Copy(tool, result, i);
+        Array.Copy(sourceArray: tool, destinationArray: result, length: i);
         return result;
     }
 
@@ -1107,7 +1140,7 @@ public class ControlSetEditor : AbstractEditor
         if (_controls == null)
         {
             _controls =
-                _schema.GetProvider(typeof(UserControlSchemaItemProvider))
+                _schema.GetProvider(type: typeof(UserControlSchemaItemProvider))
                 as UserControlSchemaItemProvider;
         }
 
@@ -1118,7 +1151,8 @@ public class ControlSetEditor : AbstractEditor
             {
                 PanelControlSet compare = tbi.PanelControlSet;
                 if (
-                    item.IsComplexType && item.PanelControlSet.PrimaryKey.Equals(compare.PrimaryKey)
+                    item.IsComplexType
+                    && item.PanelControlSet.PrimaryKey.Equals(obj: compare.PrimaryKey)
                 )
                 {
                     con = item;
@@ -1128,7 +1162,7 @@ public class ControlSetEditor : AbstractEditor
             else
             {
                 ControlItem dynamicTypeControlItem = DynamicTypeFactory.GetAssociatedControlItem(
-                    type
+                    maybeDynamicType: type
                 );
                 if (dynamicTypeControlItem != null)
                 {
@@ -1151,27 +1185,27 @@ public class ControlSetEditor : AbstractEditor
 
     protected override object GetService(Type service)
     {
-        if (_serviceContainer != null && _serviceContainer.GetService(service) != null)
+        if (_serviceContainer != null && _serviceContainer.GetService(serviceType: service) != null)
         {
-            return _serviceContainer.GetService(service);
+            return _serviceContainer.GetService(serviceType: service);
         }
         if (_host == null)
         {
             return null;
         }
 
-        return _host.GetService(service);
+        return _host.GetService(serviceType: service);
     }
 
     private IMenuCommandService MenuService()
     {
-        return GetService(typeof(IMenuCommandService)) as IMenuCommandService;
+        return GetService(service: typeof(IMenuCommandService)) as IMenuCommandService;
     }
 
     private void selectionService_SelectionChanged(object sender, EventArgs e)
     {
         ISelectionService selectionService =
-            _host.GetService(typeof(ISelectionService)) as ISelectionService;
+            _host.GetService(serviceType: typeof(ISelectionService)) as ISelectionService;
         if (_propertyGrid != null && selectionService != null)
         {
             ICollection selection = selectionService.GetSelectedComponents();
@@ -1188,12 +1222,16 @@ public class ControlSetEditor : AbstractEditor
             // into an array and then set the selectedObjects property
             _selectedComponents = new Object[selection.Count];
 
-            selection.CopyTo(_selectedComponents, 0);
+            selection.CopyTo(array: _selectedComponents, index: 0);
             bool rightButton = ((Control.MouseButtons & MouseButtons.Right) == MouseButtons.Right);
             if (rightButton)
             {
                 this.MenuService()
-                    .ShowContextMenu(null, Control.MousePosition.X, Control.MousePosition.Y);
+                    .ShowContextMenu(
+                        menuID: null,
+                        x: Control.MousePosition.X,
+                        y: Control.MousePosition.Y
+                    );
             }
 #if SPECIAL_GRID
             Control selectedObject = null;
@@ -1296,7 +1334,7 @@ public class ControlSetEditor : AbstractEditor
         {
             foreach (ISchemaItem item in cmbDataSources.Items)
             {
-                if (schItem.PrimaryKey.Equals(item.PrimaryKey))
+                if (schItem.PrimaryKey.Equals(obj: item.PrimaryKey))
                 {
                     _initializingCombos = true;
                     cmbDataSources.SelectedItem = item;
@@ -1313,12 +1351,12 @@ public class ControlSetEditor : AbstractEditor
         if (_form == null)
         {
             ToolboxPane.DragAndDropControl = null;
-            _form = this.LoadControl(_rootControl);
+            _form = this.LoadControl(cntrlSet: _rootControl);
         }
         if (_isEditingMainVersion)
         {
             txtName.Text = this.ControlSet.Name;
-            txtId.Text = this.ControlSet.PrimaryKey["Id"].ToString();
+            txtId.Text = this.ControlSet.PrimaryKey[key: "Id"].ToString();
             txtRoles.Hide();
             lblRoles.Hide();
             txtFeatures.Hide();
@@ -1329,18 +1367,18 @@ public class ControlSetEditor : AbstractEditor
         else
         {
             txtName.Text = _rootControl.Name;
-            txtId.Text = _rootControl.PrimaryKey["Id"].ToString();
+            txtId.Text = _rootControl.PrimaryKey[key: "Id"].ToString();
             txtRoles.Text = _rootControl.Roles;
             txtFeatures.Text = _rootControl.Features;
             txtLevel.Text = _rootControl.Level.ToString();
         }
         txtPackage.Text = _rootControl.PackageName;
-        _form.Location = new Point(15, 15);
+        _form.Location = new Point(x: 15, y: 15);
         _form.Enabled = (!this.IsReadOnly);
         //init editor
         InitDesignerServices();
         ReflectChanges = true;
-        ControlProperties(_form, true);
+        ControlProperties(cntrl: _form, save: true);
     }
 
     #region Overrides
@@ -1356,19 +1394,19 @@ public class ControlSetEditor : AbstractEditor
         {
             foreach (ISchemaItem item in _dsProvider.ChildItems)
             {
-                cmbDataSources.Items.Add(item);
+                cmbDataSources.Items.Add(item: item);
             }
         }
         else if (type == eDataSource.DataEntity)
         {
             foreach (ISchemaItem item in _deProvider.ChildItems)
             {
-                cmbDataSources.Items.Add(item);
+                cmbDataSources.Items.Add(item: item);
             }
         }
         else
         {
-            throw new ArgumentException("Wrong type");
+            throw new ArgumentException(message: "Wrong type");
         }
         if (cmbDataSources.Items.Count < 1)
         {
@@ -1382,7 +1420,7 @@ public class ControlSetEditor : AbstractEditor
     {
         if (cmbDataSources.SelectedItem == null)
         {
-            throw new NullReferenceException("No Datasource selected can't save");
+            throw new NullReferenceException(message: "No Datasource selected can't save");
         }
 
         if (_isEditingMainVersion)
@@ -1393,7 +1431,7 @@ public class ControlSetEditor : AbstractEditor
         {
             _rootControl.Roles = txtRoles.Text;
             _rootControl.Features = txtFeatures.Text;
-            _rootControl.Level = int.Parse(txtLevel.Text);
+            _rootControl.Level = int.Parse(s: txtLevel.Text);
             base.SaveObject();
         }
     }
@@ -1409,7 +1447,7 @@ public class ControlSetEditor : AbstractEditor
         {
             if (
                 item.PanelControlSet != null
-                && item.PanelControlSet.PrimaryKey.Equals(panel.PrimaryKey)
+                && item.PanelControlSet.PrimaryKey.Equals(obj: panel.PrimaryKey)
             )
             {
                 return item;
@@ -1453,23 +1491,26 @@ public class ControlSetEditor : AbstractEditor
         }
         if (
             IsReadOnly
-            && !Equals(evtArgs.OldValue, evtArgs.NewValue)
+            && !Equals(objA: evtArgs.OldValue, objB: evtArgs.NewValue)
             && evtArgs.Member.Category == "Layout"
         ) // changes to non Layout properties are handled by the propertyPad
         {
             Type type = evtArgs.Component.GetType();
-            PropertyInfo propertyInfo = type.GetProperty(evtArgs.Member.Name);
-            propertyInfo.SetValue(evtArgs.Component, evtArgs.OldValue);
+            PropertyInfo propertyInfo = type.GetProperty(name: evtArgs.Member.Name);
+            propertyInfo.SetValue(obj: evtArgs.Component, value: evtArgs.OldValue);
             MessageBox.Show(
-                this,
-                Origam.Workbench.ResourceUtils.GetString("ErrorElementReadOnly"),
-                Origam.Workbench.ResourceUtils.GetString("ErrorTitle"),
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error
+                owner: this,
+                text: Origam.Workbench.ResourceUtils.GetString(key: "ErrorElementReadOnly"),
+                caption: Origam.Workbench.ResourceUtils.GetString(key: "ErrorTitle"),
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Error
             );
             return;
         }
-        Host_componentAdded(sender, new ComponentEventArgs(evtArgs.Component as IComponent));
+        Host_componentAdded(
+            sender: sender,
+            evtArgs: new ComponentEventArgs(component: evtArgs.Component as IComponent)
+        );
     }
 
     private void Host_componentAdded(object sender, ComponentEventArgs evtArgs)
@@ -1487,8 +1528,15 @@ public class ControlSetEditor : AbstractEditor
             if (!(control.Tag is ControlSetItem))
             {
                 //control is new in designer we create in their tag new ControlSet Item
-                CreateNewControlSetItem(control, evtArgs.Component.Site.Name, null);
-                UpdateSpecificControlProperties(control, control.Tag as ISchemaItem);
+                CreateNewControlSetItem(
+                    control: control,
+                    name: evtArgs.Component.Site.Name,
+                    parent: null
+                );
+                UpdateSpecificControlProperties(
+                    control: control,
+                    metadata: control.Tag as ISchemaItem
+                );
                 // set the newly added TabControl as selected because it adds 2 TabPages immediately
                 // after it is constructed and the selected component is the only way how to assign a parent
                 if (control is TabControl)
@@ -1508,22 +1556,22 @@ public class ControlSetEditor : AbstractEditor
                         return;
                     }
 
-                    if (!parentItem.PrimaryKey.Equals(cntrSet.ParentItem.PrimaryKey))
+                    if (!parentItem.PrimaryKey.Equals(obj: cntrSet.ParentItem.PrimaryKey))
                     {
-                        cntrSet.ParentItem.ChildItems.Remove(cntrSet);
-                        parentItem.ChildItems.Add(cntrSet);
+                        cntrSet.ParentItem.ChildItems.Remove(item: cntrSet);
+                        parentItem.ChildItems.Add(item: cntrSet);
                     }
                 }
             }
             // set control properties
-            ControlProperties(control, true);
+            ControlProperties(cntrl: control, save: true);
         }
     }
 
     private void CreateNewControlSetItem(Control control, string name, ControlSetItem parent)
     {
         ControlSetItem creator = null;
-        ControlItem refControl = GetControlbyType(control.GetType());
+        ControlItem refControl = GetControlbyType(type: control.GetType());
         if (refControl != null)
         {
             Control controlContainer = null;
@@ -1554,7 +1602,10 @@ public class ControlSetEditor : AbstractEditor
             }
 
             ControlSetItem newItem;
-            newItem = creator.NewItem<ControlSetItem>(_schema.ActiveSchemaExtensionId, null);
+            newItem = creator.NewItem<ControlSetItem>(
+                schemaExtensionId: _schema.ActiveSchemaExtensionId,
+                group: null
+            );
             newItem.ControlItem = refControl;
             newItem.Name = name;
             control.Name = name;
@@ -1566,7 +1617,7 @@ public class ControlSetEditor : AbstractEditor
             //When creating control save all bindings which was created by host designer
             foreach (Binding bind in control.DataBindings)
             {
-                SaveControlBindings(bind, CollectionChangeAction.Add);
+                SaveControlBindings(bind: bind, action: CollectionChangeAction.Add);
             }
         }
     }
@@ -1580,7 +1631,7 @@ public class ControlSetEditor : AbstractEditor
         this.IsDirty = true;
         if (ReflectChanges)
         {
-            SaveControlBindings((e.Element as Binding), e.Action);
+            SaveControlBindings(bind: (e.Element as Binding), action: e.Action);
         }
     }
 
@@ -1613,41 +1664,43 @@ public class ControlSetEditor : AbstractEditor
             foreach (Binding bind in ctrl.DataBindings)
             {
                 System.Diagnostics.Debug.WriteLine(
-                    "***************************************************************************"
-                );
-                System.Diagnostics.Debug.WriteLine("ControlName:       " + bind.Control.Name);
-                System.Diagnostics.Debug.WriteLine(
-                    "ControlType:       " + bind.Control.GetType().ToString()
+                    message: "***************************************************************************"
                 );
                 System.Diagnostics.Debug.WriteLine(
-                    "Property:          " + bind.PropertyName.ToString()
+                    message: "ControlName:       " + bind.Control.Name
                 );
                 System.Diagnostics.Debug.WriteLine(
-                    "BindingMemberInfo: " + bind.BindingMemberInfo.ToString()
+                    message: "ControlType:       " + bind.Control.GetType().ToString()
                 );
                 System.Diagnostics.Debug.WriteLine(
-                    "Field:             " + bind.BindingMemberInfo.BindingField.ToString()
+                    message: "Property:          " + bind.PropertyName.ToString()
                 );
                 System.Diagnostics.Debug.WriteLine(
-                    "BindingPath:       " + bind.BindingMemberInfo.BindingPath.ToString()
+                    message: "BindingMemberInfo: " + bind.BindingMemberInfo.ToString()
                 );
                 System.Diagnostics.Debug.WriteLine(
-                    "Member:            " + bind.BindingMemberInfo.BindingMember.ToString()
+                    message: "Field:             " + bind.BindingMemberInfo.BindingField.ToString()
                 );
                 System.Diagnostics.Debug.WriteLine(
-                    "***************************************************************************"
+                    message: "BindingPath:       " + bind.BindingMemberInfo.BindingPath.ToString()
+                );
+                System.Diagnostics.Debug.WriteLine(
+                    message: "Member:            " + bind.BindingMemberInfo.BindingMember.ToString()
+                );
+                System.Diagnostics.Debug.WriteLine(
+                    message: "***************************************************************************"
                 );
             }
             if (ctrl.Controls.Count > 0)
             {
-                DebugBindings(ctrl);
+                DebugBindings(formik: ctrl);
             }
         }
     }
 
     private void menuItem6_Click(object sender, System.EventArgs e)
     {
-        DebugBindings(_form);
+        DebugBindings(formik: _form);
     }
     #endregion
     private void ControlSetEditor_Load(object sender, System.EventArgs e) { }
@@ -1662,7 +1715,9 @@ public class ControlSetEditor : AbstractEditor
         if (_dataSourceMode == eDataSource.DataEntity)
         {
             IDataEntity de = (sender as ComboBox).SelectedItem as IDataEntity;
-            _origamData = new DatasetGenerator(false).CreateDataSet(de);
+            _origamData = new DatasetGenerator(userDefinedParameters: false).CreateDataSet(
+                entity: de
+            );
             if (!_initializingCombos)
             {
                 this.Panel.DataEntity = de;
@@ -1680,7 +1735,9 @@ public class ControlSetEditor : AbstractEditor
             DataStructure ds = (sender as ComboBox).SelectedItem as DataStructure;
             try
             {
-                _origamData = new DatasetGenerator(false).CreateDataSet(ds);
+                _origamData = new DatasetGenerator(userDefinedParameters: false).CreateDataSet(
+                    ds: ds
+                );
             }
             catch
             {
@@ -1694,9 +1751,9 @@ public class ControlSetEditor : AbstractEditor
         }
         if (_host != null && ReflectChanges)
         {
-            if (_host.Components[origamDataSetName] != null)
+            if (_host.Components[name: origamDataSetName] != null)
             {
-                _host.DestroyComponent(_host.Components[origamDataSetName]);
+                _host.DestroyComponent(component: _host.Components[name: origamDataSetName]);
             }
 
             AddDataset();
@@ -1712,7 +1769,7 @@ public class ControlSetEditor : AbstractEditor
         }
         foreach (IComponent childControl in _host.Container.Components)
         {
-            UpdateDataSource(childControl);
+            UpdateDataSource(control: childControl);
         }
     }
 
@@ -1767,29 +1824,29 @@ public class ControlSetEditor : AbstractEditor
             return;
         }
         IMenuCommandService menuCommandService =
-            GetService(typeof(IMenuCommandService)) as IMenuCommandService;
+            GetService(service: typeof(IMenuCommandService)) as IMenuCommandService;
 
         if (IsDesignerHostFocused)
         {
             if (e.KeyCode == Keys.Delete)
             {
-                menuCommandService.GlobalInvoke(StandardCommands.Delete);
+                menuCommandService.GlobalInvoke(commandID: StandardCommands.Delete);
             }
             if (e.Control && e.KeyCode == Keys.C)
             {
-                menuCommandService.GlobalInvoke(StandardCommands.Copy);
+                menuCommandService.GlobalInvoke(commandID: StandardCommands.Copy);
             }
             if (e.Control && e.Shift && e.KeyCode == Keys.T)
             {
-                menuCommandService.GlobalInvoke(StandardCommands.TabOrder);
+                menuCommandService.GlobalInvoke(commandID: StandardCommands.TabOrder);
             }
             if (e.Control && e.KeyCode == Keys.X)
             {
-                menuCommandService.GlobalInvoke(StandardCommands.Cut);
+                menuCommandService.GlobalInvoke(commandID: StandardCommands.Cut);
             }
             if (e.Control && e.KeyCode == Keys.V)
             {
-                menuCommandService.GlobalInvoke(StandardCommands.Paste);
+                menuCommandService.GlobalInvoke(commandID: StandardCommands.Paste);
             }
         }
     }
@@ -1805,7 +1862,7 @@ public class ControlSetEditor : AbstractEditor
             _rootControl = ModelContent as ControlSetItem;
             _rootControl.IsAlternative = true;
             type = ResolveType();
-            SetControlItemRef(type);
+            SetControlItemRef(type: type);
             if (_rootControl.ChildItems.Count == 0)
             {
                 // doesn't have any children so we create new panel as a copy of the main one
@@ -1813,8 +1870,8 @@ public class ControlSetEditor : AbstractEditor
                 foreach (ISchemaItem child in defaultItem.ChildItems)
                 {
                     ISchemaItem copy = child.Clone() as ISchemaItem;
-                    copy.SetExtensionRecursive(_schema.ActiveExtension);
-                    _rootControl.ChildItems.Add(copy);
+                    copy.SetExtensionRecursive(extension: _schema.ActiveExtension);
+                    _rootControl.ChildItems.Add(item: copy);
                 }
             }
             InitNewItemEditor();
@@ -1827,18 +1884,18 @@ public class ControlSetEditor : AbstractEditor
             {
                 // doesn't have any children so we create new panel
                 _rootControl = controlSet.NewItem<ControlSetItem>(
-                    _schema.ActiveSchemaExtensionId,
-                    null
+                    schemaExtensionId: _schema.ActiveSchemaExtensionId,
+                    group: null
                 );
                 type = ResolveType();
-                SetControlItemRef(type);
+                SetControlItemRef(type: type);
                 InitNewItemEditor();
             }
             else
             {
                 _rootControl = controlSet.MainItem;
                 type = ResolveType();
-                SetControlItemRef(type);
+                SetControlItemRef(type: type);
             }
         }
         if (this.IsReadOnly)
@@ -1851,25 +1908,25 @@ public class ControlSetEditor : AbstractEditor
         {
             _dataSourceMode = eDataSource.DataStructure;
             //Loads all aviable DataStructures into editor
-            LoadComboDataSources(_dataSourceMode);
+            LoadComboDataSources(type: _dataSourceMode);
             InitEditor();
         }
         else if (IsPanel)
         {
             _dataSourceMode = eDataSource.DataEntity;
-            LoadComboDataSources(_dataSourceMode);
+            LoadComboDataSources(type: _dataSourceMode);
             InitEditor();
         }
         else
         {
             throw new ArgumentException(
-                "Unsupported Type to Edit(" + ModelContent.GetType().ToString() + ")",
-                "Content"
+                message: "Unsupported Type to Edit(" + ModelContent.GetType().ToString() + ")",
+                paramName: "Content"
             );
         }
         this.GetAllControls()
             .OfType<ICanCangeOnPaint>()
-            .ForEach(variableControl =>
+            .ForEach(action: variableControl =>
             {
                 variableControl.ModificationStarts += (o, args) => ReflectChanges = false;
                 variableControl.ModificationEnds += (o, args) => ReflectChanges = true;
@@ -1881,7 +1938,7 @@ public class ControlSetEditor : AbstractEditor
         _rootControl.ControlItem = _panelControlItemRef;
         if (_rootControl.ChildItems.Count == 0)
         {
-            _form = this.CreateInstance(_rootControl);
+            _form = this.CreateInstance(cntrlSet: _rootControl);
             _form.Text = "Design Surface";
             _form.Tag = _rootControl;
             _form.Height = 600;
@@ -1892,11 +1949,11 @@ public class ControlSetEditor : AbstractEditor
 
     private void SetControlItemRef(Type type)
     {
-        _panelControlItemRef = GetControlbyType(type);
+        _panelControlItemRef = GetControlbyType(type: type);
         if (_panelControlItemRef == null)
         {
             throw new NullReferenceException(
-                "Type " + type + " has no reference in Meta model database"
+                message: "Type " + type + " has no reference in Meta model database"
             );
         }
     }
@@ -1915,8 +1972,8 @@ public class ControlSetEditor : AbstractEditor
         else
         {
             throw new ArgumentException(
-                "Unsupported Type to Edit(" + ModelContent.GetType().ToString() + ")",
-                "Content"
+                message: "Unsupported Type to Edit(" + ModelContent.GetType().ToString() + ")",
+                paramName: "Content"
             );
         }
         return type;
@@ -1938,8 +1995,14 @@ public class ControlSetEditor : AbstractEditor
         }
         catch (Exception ex)
         {
-            log.LogOrigamError(ex);
-            MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            log.LogOrigamError(ex: ex);
+            MessageBox.Show(
+                owner: this,
+                text: ex.Message,
+                caption: "Error",
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Error
+            );
         }
     }
 

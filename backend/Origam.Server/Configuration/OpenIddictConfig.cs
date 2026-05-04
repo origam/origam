@@ -63,35 +63,44 @@ public class OpenIddictConfig
 
     public OpenIddictConfig(IConfiguration configuration)
     {
-        var openIddictSection = configuration.GetSectionOrThrow("OpenIddictConfig");
-        CookieSlidingExpiration = openIddictSection.GetValue("CookieSlidingExpiration", true);
-        PrivateApiAuthentication = openIddictSection.GetValue(
-            "PrivateApiAuthentication",
-            AuthenticationMethod.Cookie
+        var openIddictSection = configuration.GetSectionOrThrow(key: "OpenIddictConfig");
+        CookieSlidingExpiration = openIddictSection.GetValue(
+            key: "CookieSlidingExpiration",
+            defaultValue: true
         );
-        CookieExpirationMinutes = openIddictSection.GetValue("CookieExpirationMinutes", 60);
-        GoogleLogin = ConfigureGoogleLogin(openIddictSection);
-        MicrosoftLogin = ConfigureMicrosoftLogin(openIddictSection);
-        AzureAdLogin = ConfigureAzureAdLogin(openIddictSection);
-        var clientSection = openIddictSection.GetSectionOrThrow("ClientApplicationTemplates");
+        PrivateApiAuthentication = openIddictSection.GetValue(
+            key: "PrivateApiAuthentication",
+            defaultValue: AuthenticationMethod.Cookie
+        );
+        CookieExpirationMinutes = openIddictSection.GetValue(
+            key: "CookieExpirationMinutes",
+            defaultValue: 60
+        );
+        GoogleLogin = ConfigureGoogleLogin(identityServerSection: openIddictSection);
+        MicrosoftLogin = ConfigureMicrosoftLogin(identityServerSection: openIddictSection);
+        AzureAdLogin = ConfigureAzureAdLogin(identityServerSection: openIddictSection);
+        var clientSection = openIddictSection.GetSectionOrThrow(key: "ClientApplicationTemplates");
         ClientApplicationTemplates = new ClientApplicationTemplates
         {
-            WebClient = ConfigureWebClient(clientSection),
-            MobileClient = ConfigureMobileClient(clientSection),
-            ServerClient = ConfigureServerClient(clientSection),
+            WebClient = ConfigureWebClient(identityServerSection: clientSection),
+            MobileClient = ConfigureMobileClient(identityServerSection: clientSection),
+            ServerClient = ConfigureServerClient(identityServerSection: clientSection),
         };
-        AuthenticationPostProcessor = openIddictSection.GetValue("AuthenticationPostProcessor", "");
-        AccessTokenIssuer = openIddictSection.GetValue("AccessTokenIssuer", "");
+        AuthenticationPostProcessor = openIddictSection.GetValue(
+            key: "AuthenticationPostProcessor",
+            defaultValue: ""
+        );
+        AccessTokenIssuer = openIddictSection.GetValue(key: "AccessTokenIssuer", defaultValue: "");
     }
 
     private ServerClient ConfigureServerClient(IConfigurationSection identityServerSection)
     {
-        var serverClientSection = identityServerSection.GetSection("ServerClient");
+        var serverClientSection = identityServerSection.GetSection(key: "ServerClient");
         if (serverClientSection.Exists())
         {
             return new ServerClient
             {
-                ClientSecret = serverClientSection.GetStringOrThrow("ClientSecret"),
+                ClientSecret = serverClientSection.GetStringOrThrow(key: "ClientSecret"),
             };
         }
         return null;
@@ -99,16 +108,16 @@ public class OpenIddictConfig
 
     private MobileClient ConfigureMobileClient(IConfigurationSection identityServerSection)
     {
-        var mobileClientSection = identityServerSection.GetSection("MobileClient");
+        var mobileClientSection = identityServerSection.GetSection(key: "MobileClient");
         if (mobileClientSection.GetChildren().Any())
         {
             return new MobileClient
             {
                 PostLogoutRedirectUris = mobileClientSection
-                    .GetSectionOrThrow("PostLogoutRedirectUris")
+                    .GetSectionOrThrow(key: "PostLogoutRedirectUris")
                     .GetStringArrayOrThrow(),
                 RedirectUris = mobileClientSection
-                    .GetSectionOrThrow("RedirectUris")
+                    .GetSectionOrThrow(key: "RedirectUris")
                     .GetStringArrayOrThrow(),
             };
         }
@@ -117,21 +126,21 @@ public class OpenIddictConfig
 
     private WebClient ConfigureWebClient(IConfigurationSection identityServerSection)
     {
-        var webClientSection = identityServerSection.GetSection("WebClient");
+        var webClientSection = identityServerSection.GetSection(key: "WebClient");
         if (webClientSection.GetChildren().Any())
         {
             return new WebClient
             {
                 PostLogoutRedirectUris = webClientSection
-                    .GetSectionOrThrow("PostLogoutRedirectUris")
+                    .GetSectionOrThrow(key: "PostLogoutRedirectUris")
                     .GetStringArrayOrThrow(),
                 RedirectUris = webClientSection
-                    .GetSectionOrThrow("RedirectUris")
+                    .GetSectionOrThrow(key: "RedirectUris")
                     .GetStringArrayOrThrow()
-                    .Select(x => x.Replace("#", ""))
+                    .Select(selector: x => x.Replace(oldValue: "#", newValue: ""))
                     .ToArray(),
                 AllowedCorsOrigins =
-                    webClientSection.GetSection("AllowedCorsOrigins")?.Get<string[]>() ?? [],
+                    webClientSection.GetSection(key: "AllowedCorsOrigins")?.Get<string[]>() ?? [],
             };
         }
         return null;
@@ -139,13 +148,13 @@ public class OpenIddictConfig
 
     private GoogleLogin ConfigureGoogleLogin(IConfigurationSection identityServerSection)
     {
-        var googleLoginSection = identityServerSection.GetSection("GoogleLogin");
+        var googleLoginSection = identityServerSection.GetSection(key: "GoogleLogin");
         if (googleLoginSection.GetChildren().Any())
         {
-            return new GoogleLogin(googleLoginSection)
+            return new GoogleLogin(configurationSection: googleLoginSection)
             {
-                ClientId = googleLoginSection.GetStringOrThrow("ClientId"),
-                ClientSecret = googleLoginSection.GetStringOrThrow("ClientSecret"),
+                ClientId = googleLoginSection.GetStringOrThrow(key: "ClientId"),
+                ClientSecret = googleLoginSection.GetStringOrThrow(key: "ClientSecret"),
             };
         }
         return null;
@@ -153,13 +162,13 @@ public class OpenIddictConfig
 
     private MicrosoftLogin ConfigureMicrosoftLogin(IConfigurationSection identityServerSection)
     {
-        var microsoftLoginSection = identityServerSection.GetSection("MicrosoftLogin");
+        var microsoftLoginSection = identityServerSection.GetSection(key: "MicrosoftLogin");
         if (microsoftLoginSection.GetChildren().Any())
         {
-            return new MicrosoftLogin(microsoftLoginSection)
+            return new MicrosoftLogin(configurationSection: microsoftLoginSection)
             {
-                ClientId = microsoftLoginSection.GetStringOrThrow("ClientId"),
-                ClientSecret = microsoftLoginSection.GetStringOrThrow("ClientSecret"),
+                ClientId = microsoftLoginSection.GetStringOrThrow(key: "ClientId"),
+                ClientSecret = microsoftLoginSection.GetStringOrThrow(key: "ClientSecret"),
             };
         }
         return null;
@@ -167,13 +176,13 @@ public class OpenIddictConfig
 
     private AzureAdLogin ConfigureAzureAdLogin(IConfigurationSection identityServerSection)
     {
-        var azureAdLoginSection = identityServerSection.GetSection("AzureAdLogin");
+        var azureAdLoginSection = identityServerSection.GetSection(key: "AzureAdLogin");
         if (azureAdLoginSection.GetChildren().Any())
         {
-            return new AzureAdLogin(azureAdLoginSection)
+            return new AzureAdLogin(configurationSection: azureAdLoginSection)
             {
-                ClientId = azureAdLoginSection.GetStringOrThrow("ClientId"),
-                TenantId = azureAdLoginSection.GetStringOrThrow("TenantId"),
+                ClientId = azureAdLoginSection.GetStringOrThrow(key: "ClientId"),
+                TenantId = azureAdLoginSection.GetStringOrThrow(key: "TenantId"),
             };
         }
         return null;
@@ -204,8 +213,8 @@ public class OpenIddictConfig
             default:
             {
                 throw new ArgumentOutOfRangeException(
-                    nameof(authenticationScheme),
-                    $@"Invalid authentication scheme {authenticationScheme}"
+                    paramName: nameof(authenticationScheme),
+                    message: $@"Invalid authentication scheme {authenticationScheme}"
                 );
             }
         }
@@ -238,10 +247,10 @@ public abstract class ExternalCallbackProcessingInfo
     protected ExternalCallbackProcessingInfo(IConfigurationSection configurationSection)
     {
         AuthenticationType = configurationSection.GetValue(
-            "AuthenticationType",
-            AuthenticationType.Email
+            key: "AuthenticationType",
+            defaultValue: AuthenticationType.Email
         );
-        ClaimType = configurationSection.GetValue("ClaimType", ClaimTypes.Email);
+        ClaimType = configurationSection.GetValue(key: "ClaimType", defaultValue: ClaimTypes.Email);
     }
 
     protected ExternalCallbackProcessingInfo() { }
@@ -253,7 +262,7 @@ public class GoogleLogin : ExternalCallbackProcessingInfo
     public string ClientSecret { get; set; }
 
     public GoogleLogin(IConfigurationSection configurationSection)
-        : base(configurationSection) { }
+        : base(configurationSection: configurationSection) { }
 }
 
 public class MicrosoftLogin : ExternalCallbackProcessingInfo
@@ -262,7 +271,7 @@ public class MicrosoftLogin : ExternalCallbackProcessingInfo
     public string ClientSecret { get; set; }
 
     public MicrosoftLogin(IConfigurationSection configurationSection)
-        : base(configurationSection) { }
+        : base(configurationSection: configurationSection) { }
 }
 
 public class AzureAdLogin : ExternalCallbackProcessingInfo
@@ -271,13 +280,13 @@ public class AzureAdLogin : ExternalCallbackProcessingInfo
     public string TenantId { get; set; }
 
     public AzureAdLogin(IConfigurationSection configurationSection)
-        : base(configurationSection) { }
+        : base(configurationSection: configurationSection) { }
 }
 
 public class WindowsLogin : ExternalCallbackProcessingInfo
 {
     public WindowsLogin(IConfigurationSection configurationSection)
-        : base(configurationSection) { }
+        : base(configurationSection: configurationSection) { }
 
     public WindowsLogin()
     {

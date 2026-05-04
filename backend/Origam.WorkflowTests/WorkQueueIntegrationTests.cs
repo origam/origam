@@ -33,7 +33,7 @@ public class WorkQueueIntegrationTests
 {
     public WorkQueueIntegrationTests()
     {
-        XmlConfigurator.Configure(new FileInfo("log4net.config"));
+        XmlConfigurator.Configure(configFile: new FileInfo(fileName: "log4net.config"));
     }
 
     [OneTimeSetUp]
@@ -46,16 +46,16 @@ public class WorkQueueIntegrationTests
     public void TearDown()
     {
         SqlManager sqlManager = SqlManagerFactory.Create(
-            DataService.Instance,
-            DataServiceFactory.GetDataService()
+            coreDataService: DataService.Instance,
+            dataService: DataServiceFactory.GetDataService()
         );
         sqlManager.DeleteWorkQueueEntries();
-        Console.WriteLine("\nRunning DisconnectRuntime.");
+        Console.WriteLine(value: "\nRunning DisconnectRuntime.");
         OrigamEngine.OrigamEngine.DisconnectRuntime();
     }
 
-    [TestCase("LinearWorkQueueProcessor")]
-    [TestCase("RoundRobinWorkQueueProcessor")]
+    [TestCase(arg: "LinearWorkQueueProcessor")]
+    [TestCase(arg: "RoundRobinWorkQueueProcessor")]
     public void ShouldTestAllWorkQueueEntriesAreProcessed(string configName)
     {
         // ConnectRuntime should start a timer which will cause the work queues
@@ -65,12 +65,12 @@ public class WorkQueueIntegrationTests
             customServiceFactory: new TestRuntimeServiceFactory()
         );
         SqlManager sqlManager = SqlManagerFactory.Create(
-            DataService.Instance,
-            DataServiceFactory.GetDataService()
+            coreDataService: DataService.Instance,
+            dataService: DataServiceFactory.GetDataService()
         );
         List<Guid> createdWorkQueueEntryIds = sqlManager.InsertWorkQueueEntries();
 
-        Thread.Sleep(1000);
+        Thread.Sleep(millisecondsTimeout: 1000);
         sqlManager.WaitTillWorkQueueEntryTableIsEmptyOrThrow();
 
         // MonitoredMsSqlDataService/MonitoredPgSqlDataService must be set in "DataDataService" element
@@ -78,11 +78,14 @@ public class WorkQueueIntegrationTests
         var dataService = (ITraceService)DataServiceFactory.GetDataService();
         var deletedWorkQueueEntryIds = dataService
             .Operations.OfType<DeleteWorkQueueEntryOperation>()
-            .Select(x => x.RowId)
+            .Select(selector: x => x.RowId)
             .Reverse()
             .ToList();
 
-        CollectionAssert.AreEquivalent(createdWorkQueueEntryIds, deletedWorkQueueEntryIds);
+        CollectionAssert.AreEquivalent(
+            expected: createdWorkQueueEntryIds,
+            actual: deletedWorkQueueEntryIds
+        );
     }
 
     [Test]
@@ -96,13 +99,13 @@ public class WorkQueueIntegrationTests
         );
 
         SqlManager sqlManager = SqlManagerFactory.Create(
-            DataService.Instance,
-            DataServiceFactory.GetDataService()
+            coreDataService: DataService.Instance,
+            dataService: DataServiceFactory.GetDataService()
         );
         // Insert 19 entries into TestWorkQueue1, TestWorkQueue2 and TestWorkQueue3
         List<Guid> createdWorkQueueEntryIds = sqlManager.InsertWorkQueueEntries();
 
-        Thread.Sleep(1000);
+        Thread.Sleep(millisecondsTimeout: 1000);
         sqlManager.WaitTillWorkQueueEntryTableIsEmptyOrThrow();
 
         // MonitoredMsSqlDataService/MonitoredPgSqlDataService must be set in "DataDataService" element
@@ -111,9 +114,15 @@ public class WorkQueueIntegrationTests
         var deleteOperations = dataService
             .Operations.OfType<DeleteWorkQueueEntryOperation>()
             .ToList();
-        var deletedWorkQueueEntryIds = deleteOperations.Select(x => x.RowId).Reverse().ToList();
+        var deletedWorkQueueEntryIds = deleteOperations
+            .Select(selector: x => x.RowId)
+            .Reverse()
+            .ToList();
 
-        CollectionAssert.AreEquivalent(createdWorkQueueEntryIds, deletedWorkQueueEntryIds);
+        CollectionAssert.AreEquivalent(
+            expected: createdWorkQueueEntryIds,
+            actual: deletedWorkQueueEntryIds
+        );
 
         int batchSize = ConfigurationManager.GetActiveConfiguration().RoundRobinBatchSize;
 
@@ -122,12 +131,15 @@ public class WorkQueueIntegrationTests
         for (int i = 0; i < numberOfGroupsWhereWeExpectEntriesFromASingleQueue; i++)
         {
             var numberOfWorkQueuesInTheBatchCall = deleteOperations
-                .Skip(batchSize * i)
-                .Take(batchSize)
-                .Select(operation => operation.Parameters["refWorkQueueId"])
+                .Skip(count: batchSize * i)
+                .Take(count: batchSize)
+                .Select(selector: operation => operation.Parameters[key: "refWorkQueueId"])
                 .Distinct()
                 .Count();
-            Assert.That(numberOfWorkQueuesInTheBatchCall, Is.EqualTo(1));
+            Assert.That(
+                actual: numberOfWorkQueuesInTheBatchCall,
+                expression: Is.EqualTo(expected: 1)
+            );
         }
     }
 
@@ -144,8 +156,8 @@ public class WorkQueueIntegrationTests
             customServiceFactory: new TestRuntimeServiceFactory()
         );
         SqlManager sqlManager = SqlManagerFactory.Create(
-            DataService.Instance,
-            DataServiceFactory.GetDataService()
+            coreDataService: DataService.Instance,
+            dataService: DataServiceFactory.GetDataService()
         );
         try
         {
@@ -155,7 +167,7 @@ public class WorkQueueIntegrationTests
             );
             List<Guid> createdWorkQueueEntryIds = sqlManager.InsertFourEntriesToTestQueue3();
 
-            Thread.Sleep(1000);
+            Thread.Sleep(millisecondsTimeout: 1000);
             sqlManager.WaitTillWorkQueueEntryTableIsEmptyOrThrow();
 
             // MonitoredMsSqlDataService/MonitoredPgSqlDataService must be set in "DataDataService" element
@@ -163,29 +175,39 @@ public class WorkQueueIntegrationTests
             var dataService = (ITraceService)DataServiceFactory.GetDataService();
             var deleteOperations = dataService
                 .Operations.OfType<DeleteWorkQueueEntryOperation>()
-                .OrderBy(operation => operation.ExecutedAt)
+                .OrderBy(keySelector: operation => operation.ExecutedAt)
                 .ToList();
 
             var firstIntervalOperations = deleteOperations
-                .Take(throttlingItemsPerInterval)
+                .Take(count: throttlingItemsPerInterval)
                 .ToList();
             var firstOperationInFirstInterval = firstIntervalOperations.First();
 
             var firstOperationInSecondInterval = deleteOperations
-                .Skip(throttlingItemsPerInterval)
+                .Skip(count: throttlingItemsPerInterval)
                 .First();
             DateTime expectedSecondIntervalStart =
-                firstOperationInFirstInterval.ExecutedAt.AddSeconds(throttlingIntervalSeconds);
+                firstOperationInFirstInterval.ExecutedAt.AddSeconds(
+                    value: throttlingIntervalSeconds
+                );
 
-            Assert.That(firstOperationInSecondInterval.ExecutedAt > expectedSecondIntervalStart);
+            Assert.That(
+                condition: firstOperationInSecondInterval.ExecutedAt > expectedSecondIntervalStart
+            );
             foreach (var operation in firstIntervalOperations)
             {
-                Assert.That(operation.ExecutedAt < expectedSecondIntervalStart);
+                Assert.That(condition: operation.ExecutedAt < expectedSecondIntervalStart);
             }
 
-            var deletedWorkQueueEntryIds = deleteOperations.Select(x => x.RowId).Reverse().ToList();
+            var deletedWorkQueueEntryIds = deleteOperations
+                .Select(selector: x => x.RowId)
+                .Reverse()
+                .ToList();
 
-            CollectionAssert.AreEquivalent(createdWorkQueueEntryIds, deletedWorkQueueEntryIds);
+            CollectionAssert.AreEquivalent(
+                expected: createdWorkQueueEntryIds,
+                actual: deletedWorkQueueEntryIds
+            );
         }
         finally
         {
@@ -203,8 +225,8 @@ public class WorkQueueIntegrationTests
             customServiceFactory: new TestRuntimeServiceFactory()
         );
         SqlManager sqlManager = SqlManagerFactory.Create(
-            DataService.Instance,
-            DataServiceFactory.GetDataService()
+            coreDataService: DataService.Instance,
+            dataService: DataServiceFactory.GetDataService()
         );
         int maxRetries = 3;
         sqlManager.SetupQueue(
@@ -218,15 +240,15 @@ public class WorkQueueIntegrationTests
         int attempts = 0;
         for (int i = 0; i < 10; i++)
         {
-            Thread.Sleep(500);
+            Thread.Sleep(millisecondsTimeout: 500);
             attempts = sqlManager.GetFailingQueueEntryAttempts();
             if (attempts + 1 == maxRetries)
             {
-                Thread.Sleep(1000);
+                Thread.Sleep(millisecondsTimeout: 1000);
                 if (attempts + 1 != maxRetries)
                 {
                     Assert.Fail(
-                        $"The failing queue entry was not retried "
+                        message: $"The failing queue entry was not retried "
                             + $"expected number of times ({maxRetries}). "
                             + $"Number of attempts is {attempts}"
                     );
@@ -235,7 +257,7 @@ public class WorkQueueIntegrationTests
             }
         }
         Assert.Fail(
-            $"The failing queue entry was not retried expected"
+            message: $"The failing queue entry was not retried expected"
                 + $" number of times ({maxRetries}). Number of attempts is {attempts}"
         );
     }
@@ -250,8 +272,8 @@ public class WorkQueueIntegrationTests
             customServiceFactory: new TestRuntimeServiceFactory()
         );
         SqlManager sqlManager = SqlManagerFactory.Create(
-            DataService.Instance,
-            DataServiceFactory.GetDataService()
+            coreDataService: DataService.Instance,
+            dataService: DataServiceFactory.GetDataService()
         );
         sqlManager.SetupQueue(
             queueId: SqlManager.FailingQueue,
@@ -261,9 +283,9 @@ public class WorkQueueIntegrationTests
             errorQueueId: null
         );
         sqlManager.InsertOneEntryIntoFailingQueue();
-        Thread.Sleep(3000);
+        Thread.Sleep(millisecondsTimeout: 3000);
         int attempts = sqlManager.GetFailingQueueEntryAttempts();
-        Assert.That(attempts, Is.EqualTo(1));
+        Assert.That(actual: attempts, expression: Is.EqualTo(expected: 1));
     }
 
     [Test]
@@ -276,8 +298,8 @@ public class WorkQueueIntegrationTests
             customServiceFactory: new TestRuntimeServiceFactory()
         );
         SqlManager sqlManager = SqlManagerFactory.Create(
-            DataService.Instance,
-            DataServiceFactory.GetDataService()
+            coreDataService: DataService.Instance,
+            dataService: DataServiceFactory.GetDataService()
         );
         try
         {
@@ -299,21 +321,32 @@ public class WorkQueueIntegrationTests
                 errorQueueId: SqlManager.ErrorQueue
             );
             sqlManager.InsertOneEntryIntoFailingQueue();
-            Thread.Sleep(15_000);
+            Thread.Sleep(millisecondsTimeout: 15_000);
 
-            int entriesInFailingQueue = sqlManager.GetEntryCount(SqlManager.FailingQueue);
-            int entriesInRetryQueue = sqlManager.GetEntryCount(SqlManager.RetryQueue);
-            int entriesInErrorQueue = sqlManager.GetEntryCount(SqlManager.ErrorQueue);
-            Assert.That(entriesInFailingQueue, Is.EqualTo(0));
-            Assert.That(entriesInRetryQueue, Is.EqualTo(0));
-            Assert.That(entriesInErrorQueue, Is.EqualTo(1));
+            int entriesInFailingQueue = sqlManager.GetEntryCount(
+                workQueueId: SqlManager.FailingQueue
+            );
+            int entriesInRetryQueue = sqlManager.GetEntryCount(workQueueId: SqlManager.RetryQueue);
+            int entriesInErrorQueue = sqlManager.GetEntryCount(workQueueId: SqlManager.ErrorQueue);
+            Assert.That(actual: entriesInFailingQueue, expression: Is.EqualTo(expected: 0));
+            Assert.That(actual: entriesInRetryQueue, expression: Is.EqualTo(expected: 0));
+            Assert.That(actual: entriesInErrorQueue, expression: Is.EqualTo(expected: 1));
 
             Dictionary<Guid, int> attempts = sqlManager.GetAttemptCountsInQueues(
-                SqlManager.FailingEntryId
+                entryId: SqlManager.FailingEntryId
             );
-            Assert.That(attempts[SqlManager.FailingQueue], Is.EqualTo(expectedAttempts));
-            Assert.That(attempts[SqlManager.RetryQueue], Is.EqualTo(expectedAttempts));
-            Assert.That(attempts[SqlManager.ErrorQueue], Is.EqualTo(0));
+            Assert.That(
+                actual: attempts[key: SqlManager.FailingQueue],
+                expression: Is.EqualTo(expected: expectedAttempts)
+            );
+            Assert.That(
+                actual: attempts[key: SqlManager.RetryQueue],
+                expression: Is.EqualTo(expected: expectedAttempts)
+            );
+            Assert.That(
+                actual: attempts[key: SqlManager.ErrorQueue],
+                expression: Is.EqualTo(expected: 0)
+            );
         }
         finally
         {

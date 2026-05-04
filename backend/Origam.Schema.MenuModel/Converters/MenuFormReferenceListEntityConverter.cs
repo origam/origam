@@ -47,17 +47,17 @@ public class MenuFormReferenceListEntityConverter : TypeConverter
         FormReferenceMenuItem currentItem = context.Instance as FormReferenceMenuItem;
         if (currentItem.ListDataStructure == null)
         {
-            return new StandardValuesCollection(new List<DataStructureEntity>());
+            return new StandardValuesCollection(values: new List<DataStructureEntity>());
         }
 
         List<DataStructureEntity> entities = currentItem.ListDataStructure.Entities;
-        var entityArray = new List<DataStructureEntity>(entities.Count);
+        var entityArray = new List<DataStructureEntity>(capacity: entities.Count);
         foreach (DataStructureEntity entity in entities)
         {
-            entityArray.Add(entity);
+            entityArray.Add(item: entity);
         }
         entityArray.Sort();
-        return new StandardValuesCollection(entityArray);
+        return new StandardValuesCollection(values: entityArray);
     }
 
     public override bool CanConvertFrom(
@@ -70,7 +70,7 @@ public class MenuFormReferenceListEntityConverter : TypeConverter
             return true;
         }
 
-        return base.CanConvertFrom(context, sourceType);
+        return base.CanConvertFrom(context: context, sourceType: sourceType);
     }
 
     public override object ConvertFrom(
@@ -98,6 +98,6 @@ public class MenuFormReferenceListEntityConverter : TypeConverter
             return null;
         }
 
-        return base.ConvertFrom(context, culture, value);
+        return base.ConvertFrom(context: context, culture: culture, value: value);
     }
 }

@@ -37,11 +37,11 @@ public class FatalErrorMiddleware
 
     public async Task Invoke(HttpContext context)
     {
-        if (!string.IsNullOrWhiteSpace(ErrorMessage))
+        if (!string.IsNullOrWhiteSpace(value: ErrorMessage))
         {
-            throw new Exception(ErrorMessage);
+            throw new Exception(message: ErrorMessage);
         }
 
-        await next(context);
+        await next(context: context);
     }
 }

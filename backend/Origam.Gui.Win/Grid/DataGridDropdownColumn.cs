@@ -58,7 +58,11 @@ public class DataGridDropdownColumn : DataGridTextBoxColumn
         _ruleEngine = ruleEngine;
         ServiceManager
             .Services.GetService<IControlsLookUpService>()
-            .AddLookupControl(_dropDown, dropDown.FindForm(), true);
+            .AddLookupControl(
+                lookupControl: _dropDown,
+                form: dropDown.FindForm(),
+                showEditCommand: true
+            );
         this.TextBox.VisibleChanged += new EventHandler(TextBox_VisibleChanged);
     }
 
@@ -81,18 +85,18 @@ public class DataGridDropdownColumn : DataGridTextBoxColumn
     private void _dropDown_LookupValueChangingByUser(object sender, EventArgs e)
     {
         _isEditing = true;
-        this.ColumnStartedEditing(sender as Control);
+        this.ColumnStartedEditing(editingControl: sender as Control);
     }
 
     private void Table_ColumnChanging(object sender, DataColumnChangeEventArgs e)
     {
         OrigamDataRow row = e.Row as OrigamDataRow;
-        if (!row.IsColumnWithValidChange(e.Column))
+        if (!row.IsColumnWithValidChange(dataColumn: e.Column))
         {
             return;
         }
 
-        if (!row.Equals(this.DropDown.CurrentRow))
+        if (!row.Equals(obj: this.DropDown.CurrentRow))
         {
             return;
         }
@@ -109,16 +113,22 @@ public class DataGridDropdownColumn : DataGridTextBoxColumn
             {
                 // we have to call base.GetColumn... because we need to get the original value in the table, not the looked up text
                 object currentValue = base.GetColumnValueAtRow(
-                    grid.BindingContext[grid.DataSource, grid.DataMember] as CurrencyManager,
-                    grid.CurrentRowIndex
+                    source: grid.BindingContext[
+                        dataSource: grid.DataSource,
+                        dataMember: grid.DataMember
+                    ] as CurrencyManager,
+                    rowNum: grid.CurrentRowIndex
                 );
                 // column on which we are dependent has changed, so we clear
                 if (currentValue != DBNull.Value) // if not cleared already
                 {
                     SetColumnValueAtRow(
-                        grid.BindingContext[grid.DataSource, grid.DataMember] as CurrencyManager,
-                        grid.CurrentRowIndex,
-                        DBNull.Value
+                        source: grid.BindingContext[
+                            dataSource: grid.DataSource,
+                            dataMember: grid.DataMember
+                        ] as CurrencyManager,
+                        rowNum: grid.CurrentRowIndex,
+                        value: DBNull.Value
                     );
                 }
                 return;
@@ -129,7 +139,7 @@ public class DataGridDropdownColumn : DataGridTextBoxColumn
     #region Column Overrides
     protected override void SetColumnValueAtRow(CurrencyManager source, int rowNum, object value)
     {
-        base.SetColumnValueAtRow(source, rowNum, value);
+        base.SetColumnValueAtRow(source: source, rowNum: rowNum, value: value);
     }
 
     protected override void Abort(int rowNum)
@@ -143,7 +153,7 @@ public class DataGridDropdownColumn : DataGridTextBoxColumn
             return;
         }
 
-        base.Abort(rowNum);
+        base.Abort(rowNum: rowNum);
     }
 
     protected override void Edit(
@@ -163,9 +173,9 @@ public class DataGridDropdownColumn : DataGridTextBoxColumn
                 if (_ruleEngine != null)
                 {
                     _dropDown.ReadOnly = !_ruleEngine.EvaluateRowLevelSecurityState(
-                        (source.Current as DataRowView).Row,
-                        this.MappingName,
-                        Schema.EntityModel.CredentialType.Update
+                        row: (source.Current as DataRowView).Row,
+                        field: this.MappingName,
+                        type: Schema.EntityModel.CredentialType.Update
                     );
                 }
             }
@@ -174,15 +184,15 @@ public class DataGridDropdownColumn : DataGridTextBoxColumn
                 _dropDown.ReadOnly = true;
             }
             _dropDown.Location = bounds.Location;
-            _dropDown.Size = new Size(bounds.Width, _dropDown.Height);
-            _dropDown.LookupValue = base.GetColumnValueAtRow(source, rowNum);
+            _dropDown.Size = new Size(width: bounds.Width, height: _dropDown.Height);
+            _dropDown.LookupValue = base.GetColumnValueAtRow(source: source, rowNum: rowNum);
             _dropDown.Visible = true;
             _dropDown.Enabled = true;
             _dropDown.BringToFront();
             _dropDown.Focus();
             if (_dropDown.Visible)
             {
-                DataGridTableStyle.DataGrid.Invalidate(bounds);
+                DataGridTableStyle.DataGrid.Invalidate(rc: bounds);
             }
             _dropDown.LookupValueChangingByUser += new EventHandler(
                 _dropDown_LookupValueChangingByUser
@@ -198,10 +208,15 @@ public class DataGridDropdownColumn : DataGridTextBoxColumn
 
     protected override object GetColumnValueAtRow(CurrencyManager source, int rowNum)
     {
-        object val = base.GetColumnValueAtRow(source, rowNum);
+        object val = base.GetColumnValueAtRow(source: source, rowNum: rowNum);
         IDataLookupService lookupManager =
-            ServiceManager.Services.GetService(typeof(IDataLookupService)) as IDataLookupService;
-        return lookupManager.GetDisplayText(_dropDown.LookupId, val, null);
+            ServiceManager.Services.GetService(serviceType: typeof(IDataLookupService))
+            as IDataLookupService;
+        return lookupManager.GetDisplayText(
+            lookupId: _dropDown.LookupId,
+            lookupValue: val,
+            transactionId: null
+        );
     }
 
     protected override bool Commit(CurrencyManager dataSource, int rowNum)
@@ -218,19 +233,26 @@ public class DataGridDropdownColumn : DataGridTextBoxColumn
         {
             try
             {
-                SetColumnValueAtRow(dataSource, rowNum, _dropDown.LookupValue);
+                SetColumnValueAtRow(
+                    source: dataSource,
+                    rowNum: rowNum,
+                    value: _dropDown.LookupValue
+                );
                 // force form items to reread data values to prevent loss of data
-                DataBindingTools.UpdateBindedFormComponent(dataSource.Bindings, MappingName);
+                DataBindingTools.UpdateBindedFormComponent(
+                    bindings: dataSource.Bindings,
+                    mappingName: MappingName
+                );
             }
             catch (Exception)
             {
-                Abort(rowNum);
+                Abort(rowNum: rowNum);
                 return false;
             }
         }
         else
         {
-            Abort(rowNum);
+            Abort(rowNum: rowNum);
         }
         _isEditing = false;
         //_dropDown.Hide();
@@ -255,16 +277,16 @@ public class DataGridDropdownColumn : DataGridTextBoxColumn
         //base.SetDataGridInColumn(value);
         if (_dropDown.Parent != null)
         {
-            if (_dropDown.Parent.Equals(value))
+            if (_dropDown.Parent.Equals(obj: value))
             {
                 return;
             }
 
-            _dropDown.Parent.Controls.Remove(_dropDown);
+            _dropDown.Parent.Controls.Remove(value: _dropDown);
         }
         if (value != null)
         {
-            value.Controls.Add(_dropDown);
+            value.Controls.Add(value: _dropDown);
             if (value.BindingContext == null)
             {
                 value.BindingContextChanged += new EventHandler(grid_BindingContextChanged);
@@ -304,7 +326,8 @@ public class DataGridDropdownColumn : DataGridTextBoxColumn
         }
 
         CurrencyManager cm =
-            grid.BindingContext[grid.DataSource, grid.DataMember] as CurrencyManager;
+            grid.BindingContext[dataSource: grid.DataSource, dataMember: grid.DataMember]
+            as CurrencyManager;
         if (_handledTable != null)
         {
             _handledTable.ColumnChanging -= new DataColumnChangeEventHandler(Table_ColumnChanging);
@@ -326,29 +349,33 @@ public class DataGridDropdownColumn : DataGridTextBoxColumn
         Brush myBackBrush = backBrush;
         Brush myForeBrush = (
             DropDown.LookupCanEditSourceRecord
-                ? new SolidBrush(OrigamColorScheme.LinkColor)
+                ? new SolidBrush(color: OrigamColorScheme.LinkColor)
                 : foreBrush
         );
-        EntityFormatting formatting = DataGridColumnStyleHelper.Formatting(this, source, rowNum);
+        EntityFormatting formatting = DataGridColumnStyleHelper.Formatting(
+            columnStyle: this,
+            source: source,
+            rowNum: rowNum
+        );
         if (formatting != null)
         {
             if (!formatting.UseDefaultBackColor)
             {
-                myBackBrush = new SolidBrush(formatting.BackColor);
+                myBackBrush = new SolidBrush(color: formatting.BackColor);
             }
 
             if (!formatting.UseDefaultForeColor)
             {
-                myForeBrush = new SolidBrush(formatting.ForeColor);
+                myForeBrush = new SolidBrush(color: formatting.ForeColor);
             }
         }
         if (DropDown.LookupCanEditSourceRecord)
         {
-            string text = this.GetColumnValueAtRow(source, rowNum).ToString();
+            string text = this.GetColumnValueAtRow(source: source, rowNum: rowNum).ToString();
             Font font = new Font(
-                this.DataGridTableStyle.DataGrid.Font.FontFamily,
-                this.DataGridTableStyle.DataGrid.Font.Size,
-                FontStyle.Underline
+                family: this.DataGridTableStyle.DataGrid.Font.FontFamily,
+                emSize: this.DataGridTableStyle.DataGrid.Font.Size,
+                style: FontStyle.Underline
             );
             Rectangle rectangle1 = bounds;
             StringFormat format1 = new StringFormat();
@@ -365,15 +392,29 @@ public class DataGridDropdownColumn : DataGridTextBoxColumn
                             : StringAlignment.Far
                     );
             format1.FormatFlags |= StringFormatFlags.NoWrap;
-            g.FillRectangle(myBackBrush, rectangle1);
-            rectangle1.Offset(0, 2);
+            g.FillRectangle(brush: myBackBrush, rect: rectangle1);
+            rectangle1.Offset(x: 0, y: 2);
             rectangle1.Height -= 2;
-            g.DrawString(text, font, myForeBrush, (RectangleF)rectangle1, format1);
+            g.DrawString(
+                s: text,
+                font: font,
+                brush: myForeBrush,
+                layoutRectangle: (RectangleF)rectangle1,
+                format: format1
+            );
             format1.Dispose();
         }
         else
         {
-            base.Paint(g, bounds, source, rowNum, myBackBrush, myForeBrush, alignToRight);
+            base.Paint(
+                g: g,
+                bounds: bounds,
+                source: source,
+                rowNum: rowNum,
+                backBrush: myBackBrush,
+                foreBrush: myForeBrush,
+                alignToRight: alignToRight
+            );
         }
     }
 
@@ -383,7 +424,7 @@ public class DataGridDropdownColumn : DataGridTextBoxColumn
         {
             ServiceManager
                 .Services.GetService<IControlsLookUpService>()
-                .RemoveLookupControl(_dropDown);
+                .RemoveLookupControl(lookupControl: _dropDown);
             _ruleEngine = null;
             if (_handledTable != null)
             {
@@ -393,7 +434,7 @@ public class DataGridDropdownColumn : DataGridTextBoxColumn
                 _handledTable = null;
             }
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
 
     private void TextBox_VisibleChanged(object sender, EventArgs e)

@@ -39,7 +39,8 @@ public class BaseCaptionControl : System.Windows.Forms.UserControl, IAsCaptionCo
     /// Required designer variable.
     /// </summary>
     private IPersistenceService _persistence =
-        ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+        ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+        as IPersistenceService;
     private System.ComponentModel.Container components = null;
     Label _captionLabel = new Label();
 
@@ -59,11 +60,11 @@ public class BaseCaptionControl : System.Windows.Forms.UserControl, IAsCaptionCo
         {
             if (
                 this.Parent != null
-                && this.Parent.Controls.Contains(_captionLabel)
+                && this.Parent.Controls.Contains(control: _captionLabel)
                 && _captionLabel.IsDisposed == false
             )
             {
-                this.Parent.Controls.Remove(_captionLabel);
+                this.Parent.Controls.Remove(value: _captionLabel);
             }
             _captionLabel = null;
             if (components != null)
@@ -71,14 +72,14 @@ public class BaseCaptionControl : System.Windows.Forms.UserControl, IAsCaptionCo
                 components.Dispose();
             }
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
 
     protected override void InitLayout()
     {
         base.InitLayout();
         PaintCaption();
-        this.Parent.Controls.Add(_captionLabel);
+        this.Parent.Controls.Add(value: _captionLabel);
 
         ResetCaption();
         this.DataBindings.CollectionChanged += new CollectionChangeEventHandler(
@@ -88,13 +89,13 @@ public class BaseCaptionControl : System.Windows.Forms.UserControl, IAsCaptionCo
 
     protected override void OnMove(EventArgs e)
     {
-        base.OnMove(e);
+        base.OnMove(e: e);
         PaintCaption();
     }
 
     public void OnControlMouseWheel(MouseEventArgs e)
     {
-        base.OnMouseWheel(e);
+        base.OnMouseWheel(e: e);
     }
 
     private bool _hideOnForm = false;
@@ -117,9 +118,9 @@ public class BaseCaptionControl : System.Windows.Forms.UserControl, IAsCaptionCo
     #region IAsCaptionControl Members
     int _gridColumnWidth;
 
-    [Category("(ORIGAM)")]
-    [DefaultValue(100)]
-    [Description(CaptionDoc.GridColumnWidthDescription)]
+    [Category(category: "(ORIGAM)")]
+    [DefaultValue(value: 100)]
+    [Description(description: CaptionDoc.GridColumnWidthDescription)]
     public int GridColumnWidth
     {
         get { return _gridColumnWidth; }
@@ -127,7 +128,7 @@ public class BaseCaptionControl : System.Windows.Forms.UserControl, IAsCaptionCo
     }
     string _gridColumnCaption = "";
 
-    [Category("(ORIGAM)")]
+    [Category(category: "(ORIGAM)")]
     public string GridColumnCaption
     {
         get { return _gridColumnCaption; }
@@ -135,7 +136,7 @@ public class BaseCaptionControl : System.Windows.Forms.UserControl, IAsCaptionCo
     }
     string _caption = "";
 
-    [Category("(ORIGAM)")]
+    [Category(category: "(ORIGAM)")]
     public string Caption
     {
         get { return _caption; }
@@ -148,7 +149,7 @@ public class BaseCaptionControl : System.Windows.Forms.UserControl, IAsCaptionCo
     }
     CaptionPosition _captionPosition = CaptionPosition.Left;
 
-    [Category("(ORIGAM)")]
+    [Category(category: "(ORIGAM)")]
     public CaptionPosition CaptionPosition
     {
         get { return _captionPosition; }
@@ -160,7 +161,7 @@ public class BaseCaptionControl : System.Windows.Forms.UserControl, IAsCaptionCo
     }
     private int _captionLength = 100;
 
-    [Category("(ORIGAM)")]
+    [Category(category: "(ORIGAM)")]
     public int CaptionLength
     {
         get { return _captionLength; }
@@ -172,25 +173,25 @@ public class BaseCaptionControl : System.Windows.Forms.UserControl, IAsCaptionCo
     }
     private Guid _styleId;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public Guid StyleId
     {
         get { return _styleId; }
         set { _styleId = value; }
     }
 
-    [TypeConverter(typeof(StylesConverter))]
+    [TypeConverter(type: typeof(StylesConverter))]
     public UIStyle Style
     {
         get
         {
             return (UIStyle)
                 _persistence.SchemaProvider.RetrieveInstance(
-                    typeof(UIStyle),
-                    new ModelElementKey(this.StyleId)
+                    type: typeof(UIStyle),
+                    primaryKey: new ModelElementKey(id: this.StyleId)
                 );
         }
-        set { this.StyleId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]); }
+        set { this.StyleId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]); }
     }
     #endregion
     #region private methods
@@ -265,7 +266,9 @@ public class BaseCaptionControl : System.Windows.Forms.UserControl, IAsCaptionCo
                         {
                             try
                             {
-                                this._captionLabel.Text = ColumnCaption((e.Element as Binding));
+                                this._captionLabel.Text = ColumnCaption(
+                                    binding: (e.Element as Binding)
+                                );
                             }
                             catch
                             {
@@ -288,7 +291,7 @@ public class BaseCaptionControl : System.Windows.Forms.UserControl, IAsCaptionCo
                 {
                     try
                     {
-                        this._captionLabel.Text = ColumnCaption(binding);
+                        this._captionLabel.Text = ColumnCaption(binding: binding);
                     }
                     catch
                     {
@@ -304,13 +307,13 @@ public class BaseCaptionControl : System.Windows.Forms.UserControl, IAsCaptionCo
         // In case that dataMember is a path through relations, we find the last table
         // so we can take a caption out of it
         string tableName = "";
-        if (dataMember.IndexOf(".") > 0)
+        if (dataMember.IndexOf(value: ".") > 0)
         {
-            string[] path = dataMember.Split(".".ToCharArray());
-            DataTable table = ds.Tables[path[0]];
+            string[] path = dataMember.Split(separator: ".".ToCharArray());
+            DataTable table = ds.Tables[name: path[0]];
             for (int i = 1; i < path.Length - 1; i++)
             {
-                table = table.ChildRelations[path[i]].ChildTable;
+                table = table.ChildRelations[name: path[i]].ChildTable;
             }
             if (table != null)
             {
@@ -332,14 +335,14 @@ public class BaseCaptionControl : System.Windows.Forms.UserControl, IAsCaptionCo
             DataSet dataset = binding.DataSource as DataSet;
             // Get Table
             DataTable table = dataset.Tables[
-                TableName(dataset, binding.BindingMemberInfo.BindingMember)
+                name: TableName(ds: dataset, dataMember: binding.BindingMemberInfo.BindingMember)
             ];
 
             if (table != null)
             {
-                if (table.Columns.Contains(binding.BindingMemberInfo.BindingField))
+                if (table.Columns.Contains(name: binding.BindingMemberInfo.BindingField))
                 {
-                    return table.Columns[binding.BindingMemberInfo.BindingField].Caption;
+                    return table.Columns[name: binding.BindingMemberInfo.BindingField].Caption;
                 }
             }
         }

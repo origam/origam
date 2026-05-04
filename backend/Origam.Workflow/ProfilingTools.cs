@@ -33,7 +33,7 @@ public class WorkflowProfiling { }
 public static class ProfilingTools
 {
     private static readonly ILog workflowProfilingLog = LogManager.GetLogger(
-        typeof(WorkflowProfiling)
+        type: typeof(WorkflowProfiling)
     );
 
     public static void LogDuration(
@@ -47,8 +47,13 @@ public static class ProfilingTools
             return;
         }
 
-        (string id, string path) = GetIdAndPath(task, logEntryType);
-        LogDuration(logEntryType, path, id, stoppedStopwatch);
+        (string id, string path) = GetIdAndPath(task: task, logEntryType: logEntryType);
+        LogDuration(
+            logEntryType: logEntryType,
+            path: path,
+            id: id,
+            stoppedStopwatch: stoppedStopwatch
+        );
     }
 
     public static void LogDuration(
@@ -60,19 +65,22 @@ public static class ProfilingTools
     {
         string typeWithDoubleColon = $"{logEntryType}:";
         workflowProfilingLog.Debug(
-            string.Format(
-                "{0,-18}{1,-80} Id: {2}  Duration: {3,7:0.0} ms",
-                typeWithDoubleColon,
-                path,
-                id,
-                stoppedStopwatch.Elapsed.TotalMilliseconds
+            message: string.Format(
+                format: "{0,-18}{1,-80} Id: {2}  Duration: {3,7:0.0} ms",
+                args: new object[]
+                {
+                    typeWithDoubleColon,
+                    path,
+                    id,
+                    stoppedStopwatch.Elapsed.TotalMilliseconds,
+                }
             )
         );
     }
 
     public static void LogWorkFlowEnd()
     {
-        workflowProfilingLog.Debug(" ");
+        workflowProfilingLog.Debug(message: " ");
     }
 
     public static void ExecuteAndLogDuration(
@@ -88,7 +96,13 @@ public static class ProfilingTools
             action();
             return false;
         }
-        ExecuteAndLogDuration(FuncToExecute, logEntryType, path, id, logOnlyIf);
+        ExecuteAndLogDuration(
+            funcToExecute: FuncToExecute,
+            logEntryType: logEntryType,
+            path: path,
+            id: id,
+            logOnlyIf: logOnlyIf
+        );
     }
 
     public static void ExecuteAndLogDuration(
@@ -98,8 +112,14 @@ public static class ProfilingTools
         Func<bool> logOnlyIf = null
     )
     {
-        (string id, string path) = GetIdAndPath(task, logEntryType);
-        ExecuteAndLogDuration(action, logEntryType, path, id, logOnlyIf);
+        (string id, string path) = GetIdAndPath(task: task, logEntryType: logEntryType);
+        ExecuteAndLogDuration(
+            action: action,
+            logEntryType: logEntryType,
+            path: path,
+            id: id,
+            logOnlyIf: logOnlyIf
+        );
     }
 
     public static bool ExecuteAndLogDuration(
@@ -117,7 +137,7 @@ public static class ProfilingTools
             stopwatch.Start();
             result = funcToExecute();
             stopwatch.Stop();
-            if (ShouldLog(logOnlyIf))
+            if (ShouldLog(logOnlyIf: logOnlyIf))
             {
                 LogDuration(
                     logEntryType: logEntryType,
@@ -138,16 +158,16 @@ public static class ProfilingTools
 
     public static void ClearThreadLoggingContext()
     {
-        ThreadContext.Properties["currentTaskPath"] = null;
-        ThreadContext.Properties["currentTaskId"] = null;
-        ThreadContext.Properties["ServiceMethodName"] = null;
+        ThreadContext.Properties[key: "currentTaskPath"] = null;
+        ThreadContext.Properties[key: "currentTaskId"] = null;
+        ThreadContext.Properties[key: "ServiceMethodName"] = null;
     }
 
     public static void SetCurrentTaskToThreadLoggingContext(ServiceMethodCallTask task)
     {
-        ThreadContext.Properties["currentTaskPath"] = task.Path;
-        ThreadContext.Properties["currentTaskId"] = task.NodeId;
-        ThreadContext.Properties["ServiceMethodName"] = task.ServiceMethod.Name;
+        ThreadContext.Properties[key: "currentTaskPath"] = task.Path;
+        ThreadContext.Properties[key: "currentTaskId"] = task.NodeId;
+        ThreadContext.Properties[key: "ServiceMethodName"] = task.ServiceMethod.Name;
     }
 
     private static (string id, string path) GetIdAndPath(IWorkflowStep task, string logEntryType)
@@ -181,8 +201,8 @@ public class OperationTimer
     {
         Stopwatch stopwatch = new Stopwatch();
         stopwatch.Start();
-        var operationData = new OperationData(stopwatch);
-        runningOperations.Add(hash, operationData);
+        var operationData = new OperationData(stopwatch: stopwatch);
+        runningOperations.Add(key: hash, value: operationData);
     }
 
     public void Start(
@@ -198,37 +218,42 @@ public class OperationTimer
             stopwatch = new Stopwatch();
             stopwatch.Start();
         }
-        var operationData = new OperationData(logEntryType, path, id, stopwatch);
-        runningOperations.Add(hash, operationData);
+        var operationData = new OperationData(
+            logEntryType: logEntryType,
+            path: path,
+            id: id,
+            stopwatch: stopwatch
+        );
+        runningOperations.Add(key: hash, value: operationData);
     }
 
     public Stopwatch Stop(int hash)
     {
-        if (!runningOperations.ContainsKey(hash))
+        if (!runningOperations.ContainsKey(key: hash))
         {
             return new Stopwatch();
         }
 
-        Stopwatch stopwatch = runningOperations[hash].Stopwatch;
+        Stopwatch stopwatch = runningOperations[key: hash].Stopwatch;
         stopwatch.Stop();
-        runningOperations.Remove(hash);
+        runningOperations.Remove(key: hash);
         return stopwatch;
     }
 
     public void StopAndLog(int hash)
     {
-        if (!runningOperations.ContainsKey(hash))
+        if (!runningOperations.ContainsKey(key: hash))
         {
             return;
         }
 
         ProfilingTools.LogDuration(
-            logEntryType: runningOperations[hash].LogEntryType,
-            path: runningOperations[hash].Path,
-            id: runningOperations[hash].Id,
-            stoppedStopwatch: runningOperations[hash].Stopwatch
+            logEntryType: runningOperations[key: hash].LogEntryType,
+            path: runningOperations[key: hash].Path,
+            id: runningOperations[key: hash].Id,
+            stoppedStopwatch: runningOperations[key: hash].Stopwatch
         );
-        runningOperations.Remove(hash);
+        runningOperations.Remove(key: hash);
     }
 
     private class OperationData

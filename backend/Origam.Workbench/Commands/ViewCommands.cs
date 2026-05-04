@@ -38,10 +38,10 @@ public class ViewAttachmentPad : AbstractMenuCommand
     public override void Run()
     {
         AttachmentPad pad =
-            WorkbenchSingleton.Workbench.GetPad(typeof(AttachmentPad)) as AttachmentPad;
+            WorkbenchSingleton.Workbench.GetPad(type: typeof(AttachmentPad)) as AttachmentPad;
         if (pad != null)
         {
-            WorkbenchSingleton.Workbench.ShowPad(pad);
+            WorkbenchSingleton.Workbench.ShowPad(content: pad);
         }
     }
 }
@@ -59,10 +59,11 @@ public class ViewAuditLogPad : AbstractMenuCommand
 
     public override void Run()
     {
-        AuditLogPad pad = WorkbenchSingleton.Workbench.GetPad(typeof(AuditLogPad)) as AuditLogPad;
+        AuditLogPad pad =
+            WorkbenchSingleton.Workbench.GetPad(type: typeof(AuditLogPad)) as AuditLogPad;
         if (pad != null)
         {
-            WorkbenchSingleton.Workbench.ShowPad(pad);
+            WorkbenchSingleton.Workbench.ShowPad(content: pad);
         }
     }
 }
@@ -80,10 +81,11 @@ public class ViewPropertyPad : AbstractMenuCommand
 
     public override void Run()
     {
-        PropertyPad pad = WorkbenchSingleton.Workbench.GetPad(typeof(PropertyPad)) as PropertyPad;
+        PropertyPad pad =
+            WorkbenchSingleton.Workbench.GetPad(type: typeof(PropertyPad)) as PropertyPad;
         if (pad != null)
         {
-            WorkbenchSingleton.Workbench.ShowPad(pad);
+            WorkbenchSingleton.Workbench.ShowPad(content: pad);
         }
     }
 }
@@ -102,10 +104,10 @@ public class ViewDocumentationPad : AbstractMenuCommand
     public override void Run()
     {
         DocumentationPad pad =
-            WorkbenchSingleton.Workbench.GetPad(typeof(DocumentationPad)) as DocumentationPad;
+            WorkbenchSingleton.Workbench.GetPad(type: typeof(DocumentationPad)) as DocumentationPad;
         if (pad != null)
         {
-            WorkbenchSingleton.Workbench.ShowPad(pad);
+            WorkbenchSingleton.Workbench.ShowPad(content: pad);
         }
     }
 }
@@ -124,10 +126,10 @@ public class ViewExtensionPad : AbstractMenuCommand
     public override void Run()
     {
         ExtensionPad pad =
-            WorkbenchSingleton.Workbench.GetPad(typeof(ExtensionPad)) as ExtensionPad;
+            WorkbenchSingleton.Workbench.GetPad(type: typeof(ExtensionPad)) as ExtensionPad;
         if (pad != null)
         {
-            WorkbenchSingleton.Workbench.ShowPad(pad);
+            WorkbenchSingleton.Workbench.ShowPad(content: pad);
         }
     }
 }
@@ -146,10 +148,10 @@ public class ViewSchemaBrowserPad : AbstractMenuCommand
     public override void Run()
     {
         SchemaBrowser pad =
-            WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+            WorkbenchSingleton.Workbench.GetPad(type: typeof(SchemaBrowser)) as SchemaBrowser;
         if (pad != null)
         {
-            WorkbenchSingleton.Workbench.ShowPad(pad);
+            WorkbenchSingleton.Workbench.ShowPad(content: pad);
         }
     }
 }
@@ -167,10 +169,10 @@ public class ViewOutputPad : AbstractMenuCommand
 
     public override void Run()
     {
-        OutputPad pad = WorkbenchSingleton.Workbench.GetPad(typeof(OutputPad)) as OutputPad;
+        OutputPad pad = WorkbenchSingleton.Workbench.GetPad(type: typeof(OutputPad)) as OutputPad;
         if (pad != null)
         {
-            WorkbenchSingleton.Workbench.ShowPad(pad);
+            WorkbenchSingleton.Workbench.ShowPad(content: pad);
         }
     }
 }
@@ -188,10 +190,10 @@ public class ViewLogPad : AbstractMenuCommand
 
     public override void Run()
     {
-        LogPad pad = WorkbenchSingleton.Workbench.GetPad(typeof(LogPad)) as LogPad;
+        LogPad pad = WorkbenchSingleton.Workbench.GetPad(type: typeof(LogPad)) as LogPad;
         if (pad != null)
         {
-            WorkbenchSingleton.Workbench.ShowPad(pad);
+            WorkbenchSingleton.Workbench.ShowPad(content: pad);
         }
     }
 }
@@ -210,10 +212,10 @@ public class ViewServerLogPad : AbstractMenuCommand
     public override void Run()
     {
         ServerLogPad pad =
-            WorkbenchSingleton.Workbench.GetPad(typeof(ServerLogPad)) as ServerLogPad;
+            WorkbenchSingleton.Workbench.GetPad(type: typeof(ServerLogPad)) as ServerLogPad;
         if (pad != null)
         {
-            WorkbenchSingleton.Workbench.ShowPad(pad);
+            WorkbenchSingleton.Workbench.ShowPad(content: pad);
         }
     }
 }
@@ -232,11 +234,11 @@ public class ViewFindSchemaItemResultsPad : AbstractMenuCommand
     public override void Run()
     {
         FindSchemaItemResultsPad pad =
-            WorkbenchSingleton.Workbench.GetPad(typeof(FindSchemaItemResultsPad))
+            WorkbenchSingleton.Workbench.GetPad(type: typeof(FindSchemaItemResultsPad))
             as FindSchemaItemResultsPad;
         if (pad != null)
         {
-            WorkbenchSingleton.Workbench.ShowPad(pad);
+            WorkbenchSingleton.Workbench.ShowPad(content: pad);
         }
     }
 }
@@ -255,10 +257,10 @@ public class ViewFindRuleResultsPad : AbstractMenuCommand
     public override void Run()
     {
         FindRulesPad pad =
-            WorkbenchSingleton.Workbench.GetPad(typeof(FindRulesPad)) as FindRulesPad;
+            WorkbenchSingleton.Workbench.GetPad(type: typeof(FindRulesPad)) as FindRulesPad;
         if (pad != null)
         {
-            WorkbenchSingleton.Workbench.ShowPad(pad);
+            WorkbenchSingleton.Workbench.ShowPad(content: pad);
         }
     }
 }

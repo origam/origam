@@ -17,22 +17,24 @@ public partial class GitDiferenceView : DockContent, IViewContent
         oldFileLabel.Text = gitDiff.OldFile.FullName;
         newFileLabel.Text = gitDiff.NewFile.FullName;
 
-        DiffModelInfo diffInfo = new DiffParser(gitDiff.Text).ParseToLines(maxLinesToReturn: 1000);
+        DiffModelInfo diffInfo = new DiffParser(gitDiff: gitDiff.Text).ParseToLines(
+            maxLinesToReturn: 1000
+        );
         noteLabel.Text = gitDiff.IsEmpty
             ? "No diferences found."
             : $"Showing {diffInfo.LinesReturned} of {diffInfo.LinesTotal} lines.";
-        singleColumnDiff1.Show(diffInfo);
+        singleColumnDiff1.Show(diffInfo: diffInfo);
     }
 
     public void ShowDiff(string oldfile, string newfile, string text)
     {
         oldFileLabel.Text = oldfile;
         newFileLabel.Text = newfile;
-        DiffModelInfo diffInfo = new DiffParser(text).ParseToLines(maxLinesToReturn: 1000);
-        noteLabel.Text = string.IsNullOrEmpty(text)
+        DiffModelInfo diffInfo = new DiffParser(gitDiff: text).ParseToLines(maxLinesToReturn: 1000);
+        noteLabel.Text = string.IsNullOrEmpty(value: text)
             ? "No diferences found."
             : $"Showing {diffInfo.LinesReturned} of {diffInfo.LinesTotal} lines.";
-        singleColumnDiff1.Show(diffInfo);
+        singleColumnDiff1.Show(diffInfo: diffInfo);
     }
 
     public IWorkbenchWindow WorkbenchWindow { get; set; }

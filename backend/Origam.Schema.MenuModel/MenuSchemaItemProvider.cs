@@ -30,15 +30,15 @@ public class MenuSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFac
 {
     public MenuSchemaItemProvider()
     {
-        ChildItemTypes.Add(typeof(Menu));
-        ChildItemTypes.Add(typeof(ContextMenu));
+        ChildItemTypes.Add(item: typeof(Menu));
+        ChildItemTypes.Add(item: typeof(ContextMenu));
     }
 
     /// <summary>
     /// Returns the first child Menu, skipping all the ContextMenu types.
     /// </summary>
     public Menu MainMenu =>
-        ChildItemsByType<ISchemaItem>(Menu.CategoryConst).OfType<Menu>().FirstOrDefault();
+        ChildItemsByType<ISchemaItem>(itemType: Menu.CategoryConst).OfType<Menu>().FirstOrDefault();
     #region ISchemaItemProvider Members
     public override string RootItemType
     {

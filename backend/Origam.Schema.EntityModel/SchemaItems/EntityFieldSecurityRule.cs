@@ -31,29 +31,33 @@ namespace Origam.Schema.EntityModel;
 /// Summary description for FieldSecurityRule.
 /// </summary>
 [SchemaItemDescription(
-    "Row Level Security Rule",
-    "Row Level Security",
-    "icon_row-level-security-rule.png"
+    name: "Row Level Security Rule",
+    folderName: "Row Level Security",
+    iconName: "icon_row-level-security-rule.png"
 )]
-[HelpTopic("Row+Level+Security+Rules")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[HelpTopic(topic: "Row+Level+Security+Rules")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class EntityFieldSecurityRule : AbstractEntitySecurityRule
 {
     public EntityFieldSecurityRule()
         : base() { }
 
     public EntityFieldSecurityRule(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(schemaExtensionId: schemaExtensionId) { }
 
     public EntityFieldSecurityRule(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Properties
     private bool _read = true;
 
-    [Category("Credentials"), DefaultValue(false), RefreshProperties(RefreshProperties.Repaint)]
-    [XmlAttribute("readCredential")]
+    [
+        Category(category: "Credentials"),
+        DefaultValue(value: false),
+        RefreshProperties(refresh: RefreshProperties.Repaint)
+    ]
+    [XmlAttribute(attributeName: "readCredential")]
     public bool ReadCredential
     {
         get { return _read; }
@@ -65,8 +69,12 @@ public class EntityFieldSecurityRule : AbstractEntitySecurityRule
     }
     private bool _update = true;
 
-    [Category("Credentials"), DefaultValue(false), RefreshProperties(RefreshProperties.Repaint)]
-    [XmlAttribute("updateCredential")]
+    [
+        Category(category: "Credentials"),
+        DefaultValue(value: false),
+        RefreshProperties(refresh: RefreshProperties.Repaint)
+    ]
+    [XmlAttribute(attributeName: "updateCredential")]
     public bool UpdateCredential
     {
         get { return _update; }

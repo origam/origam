@@ -51,9 +51,9 @@ public class DataConstantSchemaItemProvider : AbstractSchemaItemProvider
     public override T NewItem<T>(Guid schemaExtensionId, SchemaItemGroup group)
     {
         return base.NewItem<T>(
-            schemaExtensionId,
-            group,
-            typeof(T) == typeof(DataConstant) ? "NewDataConstant" : null
+            schemaExtensionId: schemaExtensionId,
+            group: group,
+            itemName: typeof(T) == typeof(DataConstant) ? "NewDataConstant" : null
         );
     }
     #endregion

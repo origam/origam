@@ -30,7 +30,7 @@ public static class ToolTipTools
 {
     public static HelpTooltip NextTooltip()
     {
-        return NextTooltip(Guid.Empty.ToString());
+        return NextTooltip(formId: Guid.Empty.ToString());
     }
 
     public static HelpTooltip NextTooltip(string formId)
@@ -38,26 +38,31 @@ public static class ToolTipTools
         UserProfile profile = SecurityTools.CurrentUserProfile();
         // get list of all unused tooltips
         DataSet list = CoreServices.DataService.Instance.LoadData(
-            new Guid("80529593-5e54-4d16-b7a8-be400aaaa41b"),
-            new Guid("4b9c5b97-f81f-4859-b2ac-3067da68e47a"),
-            Guid.Empty,
-            new Guid("e2446ba7-ae8f-4b87-a728-f461b093614f"),
-            null,
-            "OrigamTooltipHelpUsage_parBusinessPartnerId",
-            profile.Id,
-            "OrigamTooltipHelp_parFormId",
-            formId
+            dataStructureId: new Guid(g: "80529593-5e54-4d16-b7a8-be400aaaa41b"),
+            methodId: new Guid(g: "4b9c5b97-f81f-4859-b2ac-3067da68e47a"),
+            defaultSetId: Guid.Empty,
+            sortSetId: new Guid(g: "e2446ba7-ae8f-4b87-a728-f461b093614f"),
+            transactionId: null,
+            paramName1: "OrigamTooltipHelpUsage_parBusinessPartnerId",
+            paramValue1: profile.Id,
+            paramName2: "OrigamTooltipHelp_parFormId",
+            paramValue2: formId
         );
         IOrigamAuthorizationProvider auth = SecurityManager.GetAuthorizationProvider();
         Guid tooltipId = Guid.Empty;
         // check first possible tooltip available by role
-        foreach (DataRow listRow in list.Tables[0].Rows)
+        foreach (DataRow listRow in list.Tables[index: 0].Rows)
         {
-            if (!listRow.IsNull("Roles"))
+            if (!listRow.IsNull(columnName: "Roles"))
             {
-                if (auth.Authorize(SecurityManager.CurrentPrincipal, (string)listRow["Roles"]))
+                if (
+                    auth.Authorize(
+                        principal: SecurityManager.CurrentPrincipal,
+                        context: (string)listRow[columnName: "Roles"]
+                    )
+                )
                 {
-                    tooltipId = (Guid)listRow["Id"];
+                    tooltipId = (Guid)listRow[columnName: "Id"];
                     break;
                 }
             }
@@ -68,30 +73,33 @@ public static class ToolTipTools
         }
 
         DataSet data = CoreServices.DataService.Instance.LoadData(
-            new Guid("e341c510-d6c4-4bf5-b59a-a349e8984162"),
-            new Guid("7eaf8cd8-e6a5-418d-b4e3-c7549e8080b4"),
-            Guid.Empty,
-            Guid.Empty,
-            null,
-            "OrigamTooltipHelp_parId",
-            tooltipId
+            dataStructureId: new Guid(g: "e341c510-d6c4-4bf5-b59a-a349e8984162"),
+            methodId: new Guid(g: "7eaf8cd8-e6a5-418d-b4e3-c7549e8080b4"),
+            defaultSetId: Guid.Empty,
+            sortSetId: Guid.Empty,
+            transactionId: null,
+            paramName1: "OrigamTooltipHelp_parId",
+            paramValue1: tooltipId
         );
-        DataRow row = data.Tables[0].Rows[0];
+        DataRow row = data.Tables[index: 0].Rows[index: 0];
         HelpTooltip tt = new HelpTooltip();
         tt.Id = tooltipId.ToString();
-        tt.Context = (string)row["Context"];
-        if (!row.IsNull("ObjectId"))
+        tt.Context = (string)row[columnName: "Context"];
+        if (!row.IsNull(columnName: "ObjectId"))
         {
-            tt.ObjectId = row["ObjectId"].ToString();
+            tt.ObjectId = row[columnName: "ObjectId"].ToString();
         }
-        tt.SubContext = (string)row["SubContext"];
-        tt.RelatedComponent = (string)row["RelatedComponent"];
-        tt.Text = ((string)row["Text"]).Replace("COLOR=\"#000000\"", "");
-        if (!row.IsNull("DestroyParameter"))
+        tt.SubContext = (string)row[columnName: "SubContext"];
+        tt.RelatedComponent = (string)row[columnName: "RelatedComponent"];
+        tt.Text = ((string)row[columnName: "Text"]).Replace(
+            oldValue: "COLOR=\"#000000\"",
+            newValue: ""
+        );
+        if (!row.IsNull(columnName: "DestroyParameter"))
         {
-            tt.DestroyParameter = (string)row["DestroyParameter"];
+            tt.DestroyParameter = (string)row[columnName: "DestroyParameter"];
         }
-        switch (row["refOrigamTooltipHelpPositionId"].ToString())
+        switch (row[columnName: "refOrigamTooltipHelpPositionId"].ToString())
         {
             case "41fa1c4f-9a12-4402-aa21-a921b0ceb52e": // left
             {
@@ -117,7 +125,7 @@ public static class ToolTipTools
                 break;
             }
         }
-        switch (row["refOrigamTooltipHelpDestroyEventId"].ToString())
+        switch (row[columnName: "refOrigamTooltipHelpDestroyEventId"].ToString())
         {
             case "59d08fb8-5f49-4a44-b9d9-0ef79aca413a": // click
             {

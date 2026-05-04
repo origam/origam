@@ -31,7 +31,7 @@ namespace Origam;
 public class Request
 {
     private static readonly int emptyHashTableHash =
-        EqualityComparer<Hashtable>.Default.GetHashCode(new Hashtable());
+        EqualityComparer<Hashtable>.Default.GetHashCode(obj: new Hashtable());
 
     public string Url { get; }
     public string Method { get; }
@@ -74,10 +74,10 @@ public class Request
         Cookies = cookies;
         IgnoreHttpsErrors = ignoreHttpsErrors;
         (AuthenticationType, UserName, Password) = ParseAuthentication(
-            url,
-            authenticationType,
-            userName,
-            password
+            url: url,
+            authenticationType: authenticationType,
+            userName: userName,
+            password: password
         );
     }
 
@@ -89,26 +89,26 @@ public class Request
     )
     {
         if (
-            string.IsNullOrEmpty(authenticationType)
-            && string.IsNullOrEmpty(password)
-            && string.IsNullOrEmpty(userName)
+            string.IsNullOrEmpty(value: authenticationType)
+            && string.IsNullOrEmpty(value: password)
+            && string.IsNullOrEmpty(value: userName)
         )
         {
-            var myUrl = new Uri(url);
+            var myUrl = new Uri(uriString: url);
             // try to parse user credentials and if present:
             // use it as a http basic authorization
             string credentials = myUrl.UserInfo;
-            if (!credentials.Contains(":"))
+            if (!credentials.Contains(value: ":"))
             {
                 return (authenticationType, userName, password);
             }
-            string[] credentialsSplit = credentials.Split(':');
+            string[] credentialsSplit = credentials.Split(separator: ':');
             if (credentialsSplit.Length == 2)
             {
                 return (
                     "Basic",
-                    Uri.UnescapeDataString(credentialsSplit[0]),
-                    Uri.UnescapeDataString(credentialsSplit[1])
+                    Uri.UnescapeDataString(stringToUnescape: credentialsSplit[0]),
+                    Uri.UnescapeDataString(stringToUnescape: credentialsSplit[1])
                 );
             }
         }
@@ -123,7 +123,7 @@ public class Request
             && Content == request.Content
             && ContentType == request.ContentType
             && (
-                EqualityComparer<Hashtable>.Default.Equals(Headers, request.Headers)
+                EqualityComparer<Hashtable>.Default.Equals(x: Headers, y: request.Headers)
                 || (
                     (Headers != null && Headers.Count == 0)
                     && (request.Headers != null && request.Headers.Count == 0)
@@ -132,7 +132,7 @@ public class Request
             && ReturnAsStream == request.ReturnAsStream
             && Timeout == request.Timeout
             && ThrowExceptionOnError == request.ThrowExceptionOnError
-            && EqualityComparer<CookieCollection>.Default.Equals(Cookies, request.Cookies)
+            && EqualityComparer<CookieCollection>.Default.Equals(x: Cookies, y: request.Cookies)
             && IgnoreHttpsErrors == request.IgnoreHttpsErrors
             && Password == request.Password
             && UserName == request.UserName
@@ -142,32 +142,36 @@ public class Request
     public override int GetHashCode()
     {
         int hashCode = 612240280;
-        hashCode = (hashCode * -1521134295) + EqualityComparer<string>.Default.GetHashCode(Url);
-        hashCode = (hashCode * -1521134295) + EqualityComparer<string>.Default.GetHashCode(Method);
-        hashCode = (hashCode * -1521134295) + EqualityComparer<string>.Default.GetHashCode(Content);
         hashCode =
-            (hashCode * -1521134295) + EqualityComparer<string>.Default.GetHashCode(ContentType);
+            (hashCode * -1521134295) + EqualityComparer<string>.Default.GetHashCode(obj: Url);
+        hashCode =
+            (hashCode * -1521134295) + EqualityComparer<string>.Default.GetHashCode(obj: Method);
+        hashCode =
+            (hashCode * -1521134295) + EqualityComparer<string>.Default.GetHashCode(obj: Content);
+        hashCode =
+            (hashCode * -1521134295)
+            + EqualityComparer<string>.Default.GetHashCode(obj: ContentType);
         hashCode =
             (hashCode * -1521134295)
             + (
                 Headers is { Count: 0 }
                     ? emptyHashTableHash
-                    : EqualityComparer<Hashtable>.Default.GetHashCode(Headers)
+                    : EqualityComparer<Hashtable>.Default.GetHashCode(obj: Headers)
             );
         hashCode = (hashCode * -1521134295) + ReturnAsStream.GetHashCode();
         hashCode = (hashCode * -1521134295) + Timeout.GetHashCode();
         hashCode = (hashCode * -1521134295) + ThrowExceptionOnError.GetHashCode();
         hashCode =
             (hashCode * -1521134295)
-            + EqualityComparer<CookieCollection>.Default.GetHashCode(Cookies);
+            + EqualityComparer<CookieCollection>.Default.GetHashCode(obj: Cookies);
         hashCode = (hashCode * -1521134295) + IgnoreHttpsErrors.GetHashCode();
         hashCode =
-            (hashCode * -1521134295) + EqualityComparer<string>.Default.GetHashCode(Password);
+            (hashCode * -1521134295) + EqualityComparer<string>.Default.GetHashCode(obj: Password);
         hashCode =
-            (hashCode * -1521134295) + EqualityComparer<string>.Default.GetHashCode(UserName);
+            (hashCode * -1521134295) + EqualityComparer<string>.Default.GetHashCode(obj: UserName);
         hashCode =
             (hashCode * -1521134295)
-            + EqualityComparer<string>.Default.GetHashCode(AuthenticationType);
+            + EqualityComparer<string>.Default.GetHashCode(obj: AuthenticationType);
         return hashCode;
     }
 }

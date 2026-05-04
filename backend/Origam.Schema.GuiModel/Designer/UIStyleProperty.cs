@@ -31,10 +31,10 @@ namespace Origam.Schema.GuiModel;
 /// <summary>
 /// Summary description for Graphics.
 /// </summary>
-[SchemaItemDescription("Style Property", "icon_style-property.png")]
-[HelpTopic("Styles")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Style Property", iconName: "icon_style-property.png")]
+[HelpTopic(topic: "Styles")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class UIStyleProperty : AbstractSchemaItem
 {
     public const string CategoryConst = "StyleProperty";
@@ -46,13 +46,13 @@ public class UIStyleProperty : AbstractSchemaItem
     }
 
     public UIStyleProperty(Guid schemaExtensionId)
-        : base(schemaExtensionId)
+        : base(extensionId: schemaExtensionId)
     {
         Init();
     }
 
     public UIStyleProperty(Key primaryKey)
-        : base(primaryKey)
+        : base(primaryKey: primaryKey)
     {
         Init();
     }
@@ -62,31 +62,31 @@ public class UIStyleProperty : AbstractSchemaItem
     #region Properties
     public Guid ControlStylePropertyId;
 
-    [TypeConverter(typeof(ControlStylePropertyConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
+    [TypeConverter(type: typeof(ControlStylePropertyConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
     [NotNullModelElementRule()]
-    [XmlReference("property", "ControlStylePropertyId")]
+    [XmlReference(attributeName: "property", idField: "ControlStylePropertyId")]
     public ControlStyleProperty Property
     {
         get
         {
             return (ControlStyleProperty)
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(ControlStyleProperty),
-                    new ModelElementKey(this.ControlStylePropertyId)
+                    type: typeof(ControlStyleProperty),
+                    primaryKey: new ModelElementKey(id: this.ControlStylePropertyId)
                 );
         }
         set
         {
-            this.ControlStylePropertyId = (Guid)value.PrimaryKey["Id"];
+            this.ControlStylePropertyId = (Guid)value.PrimaryKey[key: "Id"];
             UpdateName();
         }
     }
     private string _value;
 
-    [RefreshProperties(RefreshProperties.Repaint)]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
     [NotNullModelElementRule()]
-    [XmlAttribute("value")]
+    [XmlAttribute(attributeName: "value")]
     public string Value
     {
         get
@@ -110,9 +110,9 @@ public class UIStyleProperty : AbstractSchemaItem
     {
         if (this.Property != null)
         {
-            dependencies.Add(this.Property);
+            dependencies.Add(item: this.Property);
         }
-        base.GetExtraDependencies(dependencies);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override string ItemType

@@ -26,27 +26,29 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.EntityModel;
 
-[AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
+[AttributeUsage(validOn: AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
 public class NoDuplicateNamesInDataConstantRuleAtribute : AbstractModelElementRuleAttribute
 {
     public NoDuplicateNamesInDataConstantRuleAtribute() { }
 
     public override Exception CheckRule(object instance)
     {
-        return new NotSupportedException(ResourceUtils.GetString("MemberNameRequired"));
+        return new NotSupportedException(
+            message: ResourceUtils.GetString(key: "MemberNameRequired")
+        );
     }
 
     public override Exception CheckRule(object instance, string memberName)
     {
-        if (string.IsNullOrEmpty(memberName))
+        if (string.IsNullOrEmpty(value: memberName))
         {
-            CheckRule(instance);
+            CheckRule(instance: instance);
         }
 
         if (memberName != "Name")
         {
             throw new Exception(
-                nameof(NoDuplicateNamesInDataConstantRuleAtribute)
+                message: nameof(NoDuplicateNamesInDataConstantRuleAtribute)
                     + " can be only applied to Name properties"
             );
         }
@@ -57,14 +59,19 @@ public class NoDuplicateNamesInDataConstantRuleAtribute : AbstractModelElementRu
         }
 
         if (dataconstant.RootProvider == null) { }
-        string instanceName = (string)Reflector.GetValue(instance.GetType(), instance, memberName);
+        string instanceName = (string)
+            Reflector.GetValue(
+                type: instance.GetType(),
+                instance: instance,
+                memberName: memberName
+            );
         var itemWithDuplicateName = dataconstant
-            .RootProvider.ChildItems.Where(item => item is DataConstant)
-            .Where(item => item.Name == instanceName)
-            .FirstOrDefault(item => item.Id != dataconstant.Id);
+            .RootProvider.ChildItems.Where(predicate: item => item is DataConstant)
+            .Where(predicate: item => item.Name == instanceName)
+            .FirstOrDefault(predicate: item => item.Id != dataconstant.Id);
         if (itemWithDuplicateName != null)
         {
-            return new DataException(dataconstant.Name + " contains duplicate  names ");
+            return new DataException(s: dataconstant.Name + " contains duplicate  names ");
         }
         return null;
     }

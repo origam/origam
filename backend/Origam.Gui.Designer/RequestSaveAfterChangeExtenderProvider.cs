@@ -25,12 +25,12 @@ using Origam.Schema.GuiModel;
 
 namespace Origam.Gui.Designer;
 
-[ProvideProperty("RequestSaveAfterChange", typeof(Control))]
+[ProvideProperty(propertyName: "RequestSaveAfterChange", receiverType: typeof(Control))]
 public class RequestSaveAfterChangeExtenderProvider : IExtenderProvider
 {
-    [Category("Behavior")]
+    [Category(category: "Behavior")]
     [Description(
-        "If set to true, client will attempt to send save request after each change, if there are no errors."
+        description: "If set to true, client will attempt to send save request after each change, if there are no errors."
     )]
     [ExtenderProvidedProperty()]
     public bool GetRequestSaveAfterChange(Control acontrol)

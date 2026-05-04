@@ -28,33 +28,37 @@ public class FileTools
     public static void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs)
     {
         // Get the subdirectories for the specified directory.
-        DirectoryInfo dir = new DirectoryInfo(sourceDirName);
+        DirectoryInfo dir = new DirectoryInfo(path: sourceDirName);
         DirectoryInfo[] dirs = dir.GetDirectories();
         if (!dir.Exists)
         {
             throw new DirectoryNotFoundException(
-                "Source directory does not exist or could not be found: " + sourceDirName
+                message: "Source directory does not exist or could not be found: " + sourceDirName
             );
         }
         // If the destination directory doesn't exist, create it.
-        if (!Directory.Exists(destDirName))
+        if (!Directory.Exists(path: destDirName))
         {
-            Directory.CreateDirectory(destDirName);
+            Directory.CreateDirectory(path: destDirName);
         }
         // Get the files in the directory and copy them to the new location.
         FileInfo[] files = dir.GetFiles();
         foreach (FileInfo file in files)
         {
-            string temppath = Path.Combine(destDirName, file.Name);
-            file.CopyTo(temppath, false);
+            string temppath = Path.Combine(path1: destDirName, path2: file.Name);
+            file.CopyTo(destFileName: temppath, overwrite: false);
         }
         // If copying subdirectories, copy them and their contents to new location.
         if (copySubDirs)
         {
             foreach (DirectoryInfo subdir in dirs)
             {
-                string temppath = Path.Combine(destDirName, subdir.Name);
-                DirectoryCopy(subdir.FullName, temppath, copySubDirs);
+                string temppath = Path.Combine(path1: destDirName, path2: subdir.Name);
+                DirectoryCopy(
+                    sourceDirName: subdir.FullName,
+                    destDirName: temppath,
+                    copySubDirs: copySubDirs
+                );
             }
         }
     }

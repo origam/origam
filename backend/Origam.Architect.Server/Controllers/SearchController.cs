@@ -27,24 +27,24 @@ using Origam.Architect.Server.Services;
 namespace Origam.Architect.Server.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route(template: "[controller]")]
 public class SearchController(SearchService searchService) : ControllerBase
 {
-    [HttpGet("Text")]
+    [HttpGet(template: "Text")]
     public ActionResult Text([FromQuery] string text)
     {
-        return Ok(searchService.SearchByText(text));
+        return Ok(value: searchService.SearchByText(text: text));
     }
 
-    [HttpGet("References")]
+    [HttpGet(template: "References")]
     public ActionResult References([FromQuery] Guid schemaItemId)
     {
-        return Ok(searchService.FindReferences(schemaItemId));
+        return Ok(value: searchService.FindReferences(schemaItemId: schemaItemId));
     }
 
-    [HttpGet("Dependencies")]
+    [HttpGet(template: "Dependencies")]
     public ActionResult Dependencies([FromQuery] Guid schemaItemId)
     {
-        return Ok(searchService.FindDependencies(schemaItemId));
+        return Ok(value: searchService.FindDependencies(schemaItemId: schemaItemId));
     }
 }

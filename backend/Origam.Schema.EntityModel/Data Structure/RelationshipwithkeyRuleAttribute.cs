@@ -31,25 +31,27 @@ public class RelationshipWithKeyRuleAttribute : AbstractModelElementRuleAttribut
 
     public override Exception CheckRule(object instance)
     {
-        return new NotSupportedException(ResourceUtils.GetString("MemberNameRequired"));
+        return new NotSupportedException(
+            message: ResourceUtils.GetString(key: "MemberNameRequired")
+        );
     }
 
     public override Exception CheckRule(object instance, string memberName)
     {
         if (memberName == String.Empty | memberName == null)
         {
-            CheckRule(instance);
+            CheckRule(instance: instance);
         }
 
         var dataStructure = (DataStructureEntity)instance;
         if (dataStructure.Entity != null && dataStructure.Entity is IAssociation)
         {
             var schemaItems = dataStructure.Entity.ChildItemsByType<EntityRelationColumnPairItem>(
-                EntityRelationColumnPairItem.CategoryConst
+                itemType: EntityRelationColumnPairItem.CategoryConst
             );
             if (schemaItems.Count == 0)
             {
-                return new DataException("Relationship has no key");
+                return new DataException(s: "Relationship has no key");
             }
         }
         return null;

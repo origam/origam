@@ -38,9 +38,9 @@ namespace Origam.Schema.GuiModel;
 /// 6.1.0 - Moved ScreenCondition and SectionCondition to child elements
 /// 6.2.0 - Added ActionButtonPlacement.PanelMenu
 /// </summary>
-[SchemaItemDescription("UI Action", "UI Actions", 5)]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.2.0")]
+[SchemaItemDescription(name: "UI Action", folderName: "UI Actions", icon: 5)]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.2.0")]
 public abstract class EntityUIAction : AbstractSchemaItem
 {
     public const string CategoryConst = "EntityUIAction";
@@ -52,22 +52,22 @@ public abstract class EntityUIAction : AbstractSchemaItem
     }
 
     public EntityUIAction(Guid schemaExtensionId)
-        : base(schemaExtensionId)
+        : base(extensionId: schemaExtensionId)
     {
         Init();
     }
 
     public EntityUIAction(Key primaryKey)
-        : base(primaryKey)
+        : base(primaryKey: primaryKey)
     {
         Init();
     }
 
     private void Init()
     {
-        ChildItemTypes.Add(typeof(EntityUIActionParameterMapping));
-        ChildItemTypes.Add(typeof(ScreenCondition));
-        ChildItemTypes.Add(typeof(ScreenSectionCondition));
+        ChildItemTypes.Add(item: typeof(EntityUIActionParameterMapping));
+        ChildItemTypes.Add(item: typeof(ScreenCondition));
+        ChildItemTypes.Add(item: typeof(ScreenSectionCondition));
     }
 
     #region Overriden ISchemaItem members
@@ -82,11 +82,11 @@ public abstract class EntityUIAction : AbstractSchemaItem
         get
         {
             var mappingDictionary = ChildItemsByType<EntityUIActionParameterMapping>(
-                    "EntityUIActionParameterMapping"
+                    itemType: "EntityUIActionParameterMapping"
                 )
-                .ToDictionary(e => e.Name, e => e.Field);
+                .ToDictionary(keySelector: e => e.Name, elementSelector: e => e.Field);
 
-            return new Hashtable(mappingDictionary);
+            return new Hashtable(d: mappingDictionary);
         }
     }
 
@@ -94,143 +94,148 @@ public abstract class EntityUIAction : AbstractSchemaItem
     {
         if (this.Rule != null)
         {
-            dependencies.Add(this.Rule);
+            dependencies.Add(item: this.Rule);
         }
         if (this.ButtonIcon != null)
         {
-            dependencies.Add(this.ButtonIcon);
+            dependencies.Add(item: this.ButtonIcon);
         }
         if (this.ConfirmationMessage != null)
         {
-            dependencies.Add(this.ConfirmationMessage);
+            dependencies.Add(item: this.ConfirmationMessage);
         }
         if (this.ConfirmationRule != null)
         {
-            dependencies.Add(this.ConfirmationRule);
+            dependencies.Add(item: this.ConfirmationRule);
         }
         if (this.KeyboardShortcut != null)
         {
-            dependencies.Add(this.KeyboardShortcut);
+            dependencies.Add(item: this.KeyboardShortcut);
         }
-        base.GetExtraDependencies(dependencies);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override bool CanMove(Origam.UI.IBrowserNode2 newNode) =>
         newNode is AbstractDataEntity || newNode is EntityDropdownAction;
     #endregion
     #region Properties
-    [Category("Condition"), RefreshProperties(RefreshProperties.Repaint)]
+    [Category(category: "Condition"), RefreshProperties(refresh: RefreshProperties.Repaint)]
     [StringNotEmptyModelElementRule()]
-    [XmlAttribute("roles")]
+    [XmlAttribute(attributeName: "roles")]
     public string Roles { get; set; } = "";
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public IEnumerable<Guid> ScreenIds =>
-        ChildItems.OfType<ScreenCondition>().Select(reference => reference.ScreenId);
+        ChildItems.OfType<ScreenCondition>().Select(selector: reference => reference.ScreenId);
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public IEnumerable<Guid> ScreenSectionIds =>
-        ChildItems.OfType<ScreenSectionCondition>().Select(reference => reference.ScreenSectionId);
+        ChildItems
+            .OfType<ScreenSectionCondition>()
+            .Select(selector: reference => reference.ScreenSectionId);
 
     [StringNotEmptyModelElementRule()]
-    [Localizable(true)]
-    [XmlAttribute("label")]
+    [Localizable(isLocalizable: true)]
+    [XmlAttribute(attributeName: "label")]
     public string Caption { get; set; } = "";
 
-    [Category("Condition")]
-    [XmlAttribute("features")]
+    [Category(category: "Condition")]
+    [XmlAttribute(attributeName: "features")]
     public string Features { get; set; }
 
-    [XmlAttribute("order")]
+    [XmlAttribute(attributeName: "order")]
     public int Order { get; set; } = 10;
 
-    [XmlAttribute("actionType")]
+    [XmlAttribute(attributeName: "actionType")]
     public virtual PanelActionType ActionType { get; set; } = PanelActionType.OpenForm;
 
-    [XmlAttribute("mode")]
+    [XmlAttribute(attributeName: "mode")]
     public PanelActionMode Mode { get; set; } = PanelActionMode.ActiveRecord;
 
-    [Category("Condition")]
-    [DefaultValue(CredentialValueType.SavedValue), RefreshProperties(RefreshProperties.Repaint)]
-    [XmlAttribute("valueType")]
+    [Category(category: "Condition")]
+    [
+        DefaultValue(value: CredentialValueType.SavedValue),
+        RefreshProperties(refresh: RefreshProperties.Repaint)
+    ]
+    [XmlAttribute(attributeName: "valueType")]
     public CredentialValueType ValueType { get; set; } = CredentialValueType.SavedValue;
 
-    [DefaultValue(ActionButtonPlacement.Toolbar)]
-    [XmlAttribute("placement")]
+    [DefaultValue(value: ActionButtonPlacement.Toolbar)]
+    [XmlAttribute(attributeName: "placement")]
     public ActionButtonPlacement Placement { get; set; } = ActionButtonPlacement.Toolbar;
 
-    [DefaultValue(ReturnRefreshType.None)]
-    [XmlAttribute("refreshAfterReturn")]
+    [DefaultValue(value: ReturnRefreshType.None)]
+    [XmlAttribute(attributeName: "refreshAfterReturn")]
     public ReturnRefreshType RefreshAfterReturn { get; set; } = ReturnRefreshType.None;
 
-    [DefaultValue(0)]
-    [XmlAttribute("modalDialogWidth")]
+    [DefaultValue(value: 0)]
+    [XmlAttribute(attributeName: "modalDialogWidth")]
     public int ModalDialogWidth { get; set; } = 0;
 
-    [DefaultValue(0)]
-    [XmlAttribute("modalDialogHeight")]
+    [DefaultValue(value: 0)]
+    [XmlAttribute(attributeName: "modalDialogHeight")]
     public int ModalDialogHeight { get; set; } = 0;
     public Guid GraphicsId;
 
-    [TypeConverter(typeof(GuiModel.GraphicsConverter))]
-    [XmlReference("buttonIcon", "GraphicsId")]
+    [TypeConverter(type: typeof(GuiModel.GraphicsConverter))]
+    [XmlReference(attributeName: "buttonIcon", idField: "GraphicsId")]
     public GuiModel.Graphics ButtonIcon
     {
         get =>
             (GuiModel.Graphics)
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(this.GraphicsId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: this.GraphicsId)
                 );
         set => this.GraphicsId = value?.Id ?? Guid.Empty;
     }
     public Guid RuleId;
 
-    [Category("Condition")]
-    [TypeConverter(typeof(EntityRuleConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [XmlReference("rule", "RuleId")]
+    [Category(category: "Condition")]
+    [TypeConverter(type: typeof(EntityRuleConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [XmlReference(attributeName: "rule", idField: "RuleId")]
     public IEntityRule Rule
     {
         get =>
             (IEntityRule)
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(this.RuleId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: this.RuleId)
                 );
         set => this.RuleId = value?.Id ?? Guid.Empty;
     }
     public Guid KeyboardShortcutId;
 
-    [Category("Keyboard")]
-    [TypeConverter(typeof(KeyboardShortcutsConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [XmlReference("keyboardShortcut", "KeyboardShortcutId")]
+    [Category(category: "Keyboard")]
+    [TypeConverter(type: typeof(KeyboardShortcutsConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [XmlReference(attributeName: "keyboardShortcut", idField: "KeyboardShortcutId")]
     public KeyboardShortcut KeyboardShortcut
     {
         get =>
             (KeyboardShortcut)
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(this.KeyboardShortcutId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: this.KeyboardShortcutId)
                 );
         set => this.KeyboardShortcutId = value?.Id ?? Guid.Empty;
     }
 
-    [Category("Keyboard")]
-    [XmlAttribute("scannerInputParameter")]
+    [Category(category: "Keyboard")]
+    [XmlAttribute(attributeName: "scannerInputParameter")]
     public string ScannerInputParameter { get; set; }
 
-    [Category("Keyboard")]
-    [XmlAttribute("scannerTerminator")]
+    [Category(category: "Keyboard")]
+    [XmlAttribute(attributeName: "scannerTerminator")]
     public string ScannerTerminator { get; set; }
 
-    [DefaultValue(false)]
-    [XmlAttribute("default")]
+    [DefaultValue(value: false)]
+    [XmlAttribute(attributeName: "default")]
     public bool IsDefault { get; set; } = false;
 
-    [DefaultValue(false)]
-    [XmlAttribute("modal")]
+    [DefaultValue(value: false)]
+    [XmlAttribute(attributeName: "modal")]
     public bool IsModalDialog { get; set; } = false;
     public override byte[] NodeImage
     {
@@ -245,34 +250,34 @@ public abstract class EntityUIAction : AbstractSchemaItem
     }
     public Guid ConfirmationMessageId;
 
-    [Category("References")]
-    [TypeConverter(typeof(StringItemConverter))]
-    [XmlReference("confirmationMessage", "ConfirmationMessageId")]
+    [Category(category: "References")]
+    [TypeConverter(type: typeof(StringItemConverter))]
+    [XmlReference(attributeName: "confirmationMessage", idField: "ConfirmationMessageId")]
     public StringItem ConfirmationMessage
     {
         get =>
             (StringItem)
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(this.ConfirmationMessageId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: this.ConfirmationMessageId)
                 );
         set => this.ConfirmationMessageId = value?.Id ?? Guid.Empty;
     }
     public Guid ConfirmationRuleId;
 
-    [Category("References")]
-    [TypeConverter(typeof(EndRuleConverter))]
-    [XmlReference("confirmationRule", "ConfirmationRuleId")]
+    [Category(category: "References")]
+    [TypeConverter(type: typeof(EndRuleConverter))]
+    [XmlReference(attributeName: "confirmationRule", idField: "ConfirmationRuleId")]
     [Description(
-        "Validation rule, that is executed before the action is invoked. Input xml root element is rows and records are represented by row elements."
+        description: "Validation rule, that is executed before the action is invoked. Input xml root element is rows and records are represented by row elements."
     )]
     public IEndRule ConfirmationRule
     {
         get =>
             (IEndRule)
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(this.ConfirmationRuleId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: this.ConfirmationRuleId)
                 );
         set => this.ConfirmationRuleId = value?.Id ?? Guid.Empty;
     }
@@ -282,10 +287,10 @@ public abstract class EntityUIAction : AbstractSchemaItem
     {
         if (obj is EntityUIAction compared)
         {
-            return this.Name.CompareTo(compared.Name);
+            return this.Name.CompareTo(strB: compared.Name);
         }
 
-        return base.CompareTo(obj);
+        return base.CompareTo(obj: obj);
     }
     #endregion
 }
@@ -293,5 +298,5 @@ public abstract class EntityUIAction : AbstractSchemaItem
 public class EntityUIActionOrderComparer : IComparer<ISchemaItem>
 {
     public int Compare(ISchemaItem x, ISchemaItem y) =>
-        (x as EntityUIAction).Order.CompareTo((y as EntityUIAction).Order);
+        (x as EntityUIAction).Order.CompareTo(value: (y as EntityUIAction).Order);
 }

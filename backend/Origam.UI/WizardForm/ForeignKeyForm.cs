@@ -59,18 +59,18 @@ public class ForeignKeyForm : AbstractWizardForm
                 cboLookup.BeginUpdate();
                 foreach (IDataEntity entity in this.MasterEntity.RootProvider.ChildItems)
                 {
-                    cboEntity.Items.Add(entity);
+                    cboEntity.Items.Add(item: entity);
                 }
                 Workbench.Services.SchemaService schema =
                     Workbench.Services.ServiceManager.Services.GetService(
-                        typeof(Workbench.Services.SchemaService)
+                        serviceType: typeof(Workbench.Services.SchemaService)
                     ) as Workbench.Services.SchemaService;
                 IDataLookupSchemaItemProvider lookups =
-                    schema.GetProvider(typeof(IDataLookupSchemaItemProvider))
+                    schema.GetProvider(type: typeof(IDataLookupSchemaItemProvider))
                     as IDataLookupSchemaItemProvider;
                 foreach (object lookup in lookups.ChildItems)
                 {
-                    cboLookup.Items.Add(lookup);
+                    cboLookup.Items.Add(item: lookup);
                 }
             }
             finally

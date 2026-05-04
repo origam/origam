@@ -35,7 +35,13 @@ public class ShowSqlConsole : AbstractMenuCommand
     public override bool IsEnabled
     {
         get { return WorkbenchSingleton.Workbench.IsConnected; }
-        set { throw new ArgumentException("Cannot set this property", "IsEnabled"); }
+        set
+        {
+            throw new ArgumentException(
+                message: "Cannot set this property",
+                paramName: "IsEnabled"
+            );
+        }
     }
 
     public override void Run()
@@ -43,14 +49,16 @@ public class ShowSqlConsole : AbstractMenuCommand
         SqlConsoleParameters parameters = Owner as SqlConsoleParameters;
         if (parameters == null)
         {
-            throw new ArgumentOutOfRangeException("SqlConsoleParameters input expected.");
+            throw new ArgumentOutOfRangeException(
+                paramName: "SqlConsoleParameters input expected."
+            );
         }
-        SqlViewer viewer = new SqlViewer(parameters.Platform);
+        SqlViewer viewer = new SqlViewer(platform: parameters.Platform);
         if (parameters.Platform != null)
         {
             viewer.Text += " [" + parameters.Platform.Name + "]";
         }
-        viewer.LoadObject(parameters.Command);
-        WorkbenchSingleton.Workbench.ShowView(viewer);
+        viewer.LoadObject(objectToLoad: parameters.Command);
+        WorkbenchSingleton.Workbench.ShowView(content: viewer);
     }
 }

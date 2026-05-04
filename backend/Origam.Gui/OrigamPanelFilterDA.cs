@@ -34,60 +34,66 @@ public class OrigamPanelFilterDA
     public static OrigamPanelFilter LoadFilters(Guid panelId)
     {
         IServiceAgent dataServiceAgent = (
-            ServiceManager.Services.GetService(typeof(IBusinessServicesService))
+            ServiceManager.Services.GetService(serviceType: typeof(IBusinessServicesService))
             as IBusinessServicesService
-        ).GetAgent("DataService", null, null);
+        ).GetAgent(serviceType: "DataService", ruleEngine: null, workflowEngine: null);
         UserProfile profile = SecurityManager.CurrentUserProfile();
         // retrieve filters for the current panel from the database
         DataStructureQuery query = new DataStructureQuery(
-            new Guid("210dc168-891d-4597-a6c0-cc19fee45b4b"),
-            new Guid("847ed860-8f9a-4cc4-bc1c-ba18fb183d13")
+            dataStructureId: new Guid(g: "210dc168-891d-4597-a6c0-cc19fee45b4b"),
+            methodId: new Guid(g: "847ed860-8f9a-4cc4-bc1c-ba18fb183d13")
         );
-        query.Parameters.Add(new QueryParameter("PanelFilter_parPanelId", panelId));
-        query.Parameters.Add(new QueryParameter("PanelFilter_parProfileId", profile.Id));
+        query.Parameters.Add(
+            value: new QueryParameter(_parameterName: "PanelFilter_parPanelId", value: panelId)
+        );
+        query.Parameters.Add(
+            value: new QueryParameter(_parameterName: "PanelFilter_parProfileId", value: profile.Id)
+        );
         dataServiceAgent.MethodName = "LoadDataByQuery";
         dataServiceAgent.Parameters.Clear();
-        dataServiceAgent.Parameters.Add("Query", query);
+        dataServiceAgent.Parameters.Add(key: "Query", value: query);
         dataServiceAgent.Run();
         OrigamPanelFilter storedFilters = new OrigamPanelFilter();
-        storedFilters.Merge(dataServiceAgent.Result as DataSet);
+        storedFilters.Merge(dataSet: dataServiceAgent.Result as DataSet);
         return storedFilters;
     }
 
     public static void PersistFilter(OrigamPanelFilter filter)
     {
         IServiceAgent dataServiceAgent = (
-            ServiceManager.Services.GetService(typeof(IBusinessServicesService))
+            ServiceManager.Services.GetService(serviceType: typeof(IBusinessServicesService))
             as IBusinessServicesService
-        ).GetAgent("DataService", null, null);
+        ).GetAgent(serviceType: "DataService", ruleEngine: null, workflowEngine: null);
         // persist filters to the database
         DataStructureQuery query = new DataStructureQuery(
-            new Guid("210dc168-891d-4597-a6c0-cc19fee45b4b")
+            dataStructureId: new Guid(g: "210dc168-891d-4597-a6c0-cc19fee45b4b")
         );
         dataServiceAgent.MethodName = "StoreDataByQuery";
         dataServiceAgent.Parameters.Clear();
-        dataServiceAgent.Parameters.Add("Query", query);
-        dataServiceAgent.Parameters.Add("Data", filter);
+        dataServiceAgent.Parameters.Add(key: "Query", value: query);
+        dataServiceAgent.Parameters.Add(key: "Data", value: filter);
         dataServiceAgent.Run();
     }
 
     public static OrigamPanelFilter LoadFilter(Guid id)
     {
         IServiceAgent dataServiceAgent = (
-            ServiceManager.Services.GetService(typeof(IBusinessServicesService))
+            ServiceManager.Services.GetService(serviceType: typeof(IBusinessServicesService))
             as IBusinessServicesService
-        ).GetAgent("DataService", null, null);
+        ).GetAgent(serviceType: "DataService", ruleEngine: null, workflowEngine: null);
         OrigamPanelFilter result = new OrigamPanelFilter();
         DataStructureQuery query = new DataStructureQuery(
-            new Guid("210dc168-891d-4597-a6c0-cc19fee45b4b"),
-            new Guid("30a60305-a260-4dd3-a2f3-830e7ab1d1ec")
+            dataStructureId: new Guid(g: "210dc168-891d-4597-a6c0-cc19fee45b4b"),
+            methodId: new Guid(g: "30a60305-a260-4dd3-a2f3-830e7ab1d1ec")
         );
-        query.Parameters.Add(new QueryParameter("PanelFilter_parId", id));
+        query.Parameters.Add(
+            value: new QueryParameter(_parameterName: "PanelFilter_parId", value: id)
+        );
         dataServiceAgent.MethodName = "LoadDataByQuery";
         dataServiceAgent.Parameters.Clear();
-        dataServiceAgent.Parameters.Add("Query", query);
+        dataServiceAgent.Parameters.Add(key: "Query", value: query);
         dataServiceAgent.Run();
-        result.Merge(dataServiceAgent.Result as DataSet);
+        result.Merge(dataSet: dataServiceAgent.Result as DataSet);
         return result;
     }
 
@@ -99,7 +105,7 @@ public class OrigamPanelFilterDA
     {
         if (type == typeof(bool))
         {
-            return StoredFilterValue(row, "BoolValue", valueNumber);
+            return StoredFilterValue(row: row, columnName: "BoolValue", valueNumber: valueNumber);
         }
 
         if (
@@ -109,26 +115,38 @@ public class OrigamPanelFilterDA
             | type == typeof(float)
         )
         {
-            return StoredFilterValue(row, "CurrencyValue", valueNumber);
+            return StoredFilterValue(
+                row: row,
+                columnName: "CurrencyValue",
+                valueNumber: valueNumber
+            );
         }
 
         if (type == typeof(Guid) || type == typeof(string))
         {
-            object result = StoredFilterValue(row, "GuidValue", valueNumber);
+            object result = StoredFilterValue(
+                row: row,
+                columnName: "GuidValue",
+                valueNumber: valueNumber
+            );
             // try string value if there is no guid
             if (result == null)
             {
-                result = StoredFilterValue(row, "StringValue", valueNumber);
+                result = StoredFilterValue(
+                    row: row,
+                    columnName: "StringValue",
+                    valueNumber: valueNumber
+                );
             }
             return result;
         }
 
         if (type == typeof(DateTime))
         {
-            return StoredFilterValue(row, "DateValue", valueNumber);
+            return StoredFilterValue(row: row, columnName: "DateValue", valueNumber: valueNumber);
         }
 
-        return StoredFilterValue(row, "StringValue", valueNumber);
+        return StoredFilterValue(row: row, columnName: "StringValue", valueNumber: valueNumber);
     }
 
     public static void AddPanelFilterDetailRow(
@@ -164,7 +182,7 @@ public class OrigamPanelFilterDA
         }
         else if (value1 is int | value1 is float | value1 is decimal | value1 is long)
         {
-            detail.CurrencyValue = Convert.ToDecimal(value1);
+            detail.CurrencyValue = Convert.ToDecimal(value: value1);
         }
         else if (value1 != null)
         {
@@ -185,13 +203,13 @@ public class OrigamPanelFilterDA
         }
         else if (value2 is int | value2 is float | value2 is decimal | value2 is long)
         {
-            detail.CurrencyValue2 = Convert.ToDecimal(value2);
+            detail.CurrencyValue2 = Convert.ToDecimal(value: value2);
         }
         else if (value2 != null)
         {
             detail.StringValue2 = value2.ToString();
         }
-        filterDS.PanelFilterDetail.Rows.Add(detail);
+        filterDS.PanelFilterDetail.Rows.Add(row: detail);
     }
 
     private static object StoredFilterValue(
@@ -201,11 +219,11 @@ public class OrigamPanelFilterDA
     )
     {
         string col = (valueNumber == 1 ? columnName : columnName + valueNumber.ToString());
-        if (row.IsNull(col))
+        if (row.IsNull(columnName: col))
         {
             return null;
         }
 
-        return row[col];
+        return row[columnName: col];
     }
 }

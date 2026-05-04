@@ -43,12 +43,21 @@ public class ByteArrayConverter
             return false;
         }
 
-        return SaveToDataSet(fullFileName, table.Rows[RowIndex], columnName);
+        return SaveToDataSet(
+            fullFileName: fullFileName,
+            dataRow: table.Rows[index: RowIndex],
+            columnName: columnName
+        );
     }
 
     public static bool SaveToDataSet(string fullFileName, DataRow dataRow, string columnName)
     {
-        return SaveToDataSet(fullFileName, dataRow, columnName, false);
+        return SaveToDataSet(
+            fullFileName: fullFileName,
+            dataRow: dataRow,
+            columnName: columnName,
+            compress: false
+        );
     }
 
     public static bool SaveToDataSet(
@@ -58,7 +67,10 @@ public class ByteArrayConverter
         bool compress
     )
     {
-        dataRow[columnName] = GetByteArrayFromFile(fullFileName, compress);
+        dataRow[columnName: columnName] = GetByteArrayFromFile(
+            filePath: fullFileName,
+            compress: compress
+        );
         return true;
     }
 
@@ -67,22 +79,29 @@ public class ByteArrayConverter
         FileStream fs = null;
         try
         {
-            fs = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+            fs = new FileStream(path: filePath, mode: FileMode.Open, access: FileAccess.Read);
             if (compress)
             {
-                return Zip(fs, Path.GetFileName(filePath), File.GetCreationTimeUtc(filePath));
+                return Zip(
+                    input: fs,
+                    fileName: Path.GetFileName(path: filePath),
+                    dateCreated: File.GetCreationTimeUtc(path: filePath)
+                );
             }
-            BinaryReader br = new BinaryReader(fs);
+            BinaryReader br = new BinaryReader(input: fs);
 
             try
             {
                 if (fs.Length > MaxByteFileLenghtToStore)
                 {
                     throw new Exception(
-                        ResourceUtils.GetString("FileTooBig", MaxByteFileLenghtToStore.ToString())
+                        message: ResourceUtils.GetString(
+                            key: "FileTooBig",
+                            args: MaxByteFileLenghtToStore.ToString()
+                        )
                     );
                 }
-                return br.ReadBytes((int)fs.Length);
+                return br.ReadBytes(count: (int)fs.Length);
             }
             finally
             {
@@ -92,11 +111,11 @@ public class ByteArrayConverter
         catch (Exception ex)
         {
             throw new Exception(
-                ResourceUtils.GetString(
-                    "ErrorWhileReading",
-                    filePath + Environment.NewLine + ex.Message
+                message: ResourceUtils.GetString(
+                    key: "ErrorWhileReading",
+                    args: filePath + Environment.NewLine + ex.Message
                 ),
-                ex
+                innerException: ex
             );
         }
         finally
@@ -115,36 +134,45 @@ public class ByteArrayConverter
         bool compressed
     )
     {
-        byte[] bytes = (byte[])dataRow[columnName];
+        byte[] bytes = (byte[])dataRow[columnName: columnName];
         if (bytes == null)
         {
             return;
         }
 
-        if (File.Exists(fullFileName))
+        if (File.Exists(path: fullFileName))
         {
-            File.Delete(fullFileName);
+            File.Delete(path: fullFileName);
         }
-        ByteArrayToFile(fullFileName, bytes, compressed);
+        ByteArrayToFile(fileName: fullFileName, bytes: bytes, compressed: compressed);
     }
 
     public static void ByteArrayToFile(string fileName, byte[] bytes, bool compressed)
     {
         if (compressed)
         {
-            Unzip(bytes, fileName);
+            Unzip(input: bytes, fileName: fileName);
         }
         else
         {
             try
             {
-                FileStream fs = new FileStream(fileName, FileMode.OpenOrCreate, FileAccess.Write);
-                StreamTools.Write(fs, bytes);
+                FileStream fs = new FileStream(
+                    path: fileName,
+                    mode: FileMode.OpenOrCreate,
+                    access: FileAccess.Write
+                );
+                StreamTools.Write(output: fs, bytes: bytes);
                 fs.Close();
             }
             catch (Exception ex)
             {
-                throw new Exception(ResourceUtils.GetString("ErrorWhileWriting", fileName, ex));
+                throw new Exception(
+                    message: ResourceUtils.GetString(
+                        key: "ErrorWhileWriting",
+                        args: new object[] { fileName, ex }
+                    )
+                );
             }
         }
     }
@@ -153,34 +181,37 @@ public class ByteArrayConverter
     {
         Crc32 crc = new Crc32();
         MemoryStream stream = new MemoryStream();
-        ZipOutputStream zipStream = new ZipOutputStream(stream);
-        zipStream.SetLevel(9);
-        BinaryReader br = new BinaryReader(stream);
+        ZipOutputStream zipStream = new ZipOutputStream(baseOutputStream: stream);
+        zipStream.SetLevel(level: 9);
+        BinaryReader br = new BinaryReader(input: stream);
         byte[] byteArray;
         try
         {
             byte[] buffer = new byte[input.Length];
-            input.Read(buffer, 0, buffer.Length);
-            ZipEntry entry = new ZipEntry(@fileName);
+            input.Read(buffer: buffer, offset: 0, count: buffer.Length);
+            ZipEntry entry = new ZipEntry(name: @fileName);
             entry.DateTime = dateCreated;
             entry.Comment = fileName;
             entry.ZipFileIndex = 1;
             entry.Size = input.Length;
             crc.Reset();
-            crc.Update(buffer);
+            crc.Update(buffer: buffer);
             entry.Crc = crc.Value;
-            zipStream.PutNextEntry(entry);
-            zipStream.Write(buffer, 0, buffer.Length);
+            zipStream.PutNextEntry(entry: entry);
+            zipStream.Write(buffer: buffer, offset: 0, count: buffer.Length);
             zipStream.Finish();
             if (stream.Length > MaxByteFileLenghtToStore)
             {
                 throw new Exception(
-                    ResourceUtils.GetString("FileTooBig", MaxByteFileLenghtToStore.ToString())
+                    message: ResourceUtils.GetString(
+                        key: "FileTooBig",
+                        args: MaxByteFileLenghtToStore.ToString()
+                    )
                 );
             }
 
             stream.Position = 0;
-            byteArray = br.ReadBytes((int)stream.Length);
+            byteArray = br.ReadBytes(count: (int)stream.Length);
         }
         finally
         {
@@ -196,18 +227,22 @@ public class ByteArrayConverter
 
     private static void Unzip(byte[] input, string fileName)
     {
-        MemoryStream ms = new MemoryStream(input);
-        ZipInputStream s = new ZipInputStream(ms);
+        MemoryStream ms = new MemoryStream(buffer: input);
+        ZipInputStream s = new ZipInputStream(baseInputStream: ms);
         ZipEntry entry = s.GetNextEntry();
-        FileStream file = new FileStream(fileName, FileMode.Create, FileAccess.Write);
+        FileStream file = new FileStream(
+            path: fileName,
+            mode: FileMode.Create,
+            access: FileAccess.Write
+        );
         try
         {
             int size;
             byte[] data = new byte[2048];
             do
             {
-                size = s.Read(data, 0, data.Length);
-                file.Write(data, 0, size);
+                size = s.Read(buffer: data, offset: 0, count: data.Length);
+                file.Write(array: data, offset: 0, count: size);
             } while (size > 0);
         }
         finally
@@ -227,6 +262,6 @@ public class ByteArrayConverter
                 ms.Close();
             }
         }
-        File.SetCreationTime(fileName, entry.DateTime);
+        File.SetCreationTime(path: fileName, creationTime: entry.DateTime);
     }
 }

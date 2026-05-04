@@ -59,7 +59,7 @@ public class DropDownTree : System.Windows.Forms.Form, ILookupDropDownPart
             }
             //this.DataSource = null;
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
 
     //		/// <summary>
@@ -206,10 +206,10 @@ public class DropDownTree : System.Windows.Forms.Form, ILookupDropDownPart
             _selectedValue = value;
             if (value != DBNull.Value)
             {
-                if (items_Identifiers.Contains(value))
+                if (items_Identifiers.Contains(key: value))
                 {
                     _selectingValue = true;
-                    tree.SelectedNode = items_Identifiers[value] as TreeNode;
+                    tree.SelectedNode = items_Identifiers[key: value] as TreeNode;
                     _selectingValue = false;
                 }
             }
@@ -284,10 +284,12 @@ public class DropDownTree : System.Windows.Forms.Form, ILookupDropDownPart
         for (int i = 0; i < this.DataSource.Count; i++)
         {
             unsortedNodes.Add(
-                new DataTreeViewNode(
-                    this.DataSource[i].Row[this.ValueMember],
-                    this.DataSource[i].Row[this.ParentMember],
-                    this.DataSource[i].Row[this.DisplayMember].ToString()
+                item: new DataTreeViewNode(
+                    id: this.DataSource[recordIndex: i].Row[columnName: this.ValueMember],
+                    parentId: this.DataSource[recordIndex: i].Row[columnName: this.ParentMember],
+                    text: this.DataSource[recordIndex: i]
+                        .Row[columnName: this.DisplayMember]
+                        .ToString()
                 )
             );
         }
@@ -298,9 +300,9 @@ public class DropDownTree : System.Windows.Forms.Form, ILookupDropDownPart
             startCount = unsortedNodes.Count;
             for (int i = unsortedNodes.Count - 1; i >= 0; i--)
             {
-                if (TryAddNode(unsortedNodes[i]))
+                if (TryAddNode(node: unsortedNodes[index: i]))
                 {
-                    unsortedNodes.RemoveAt(i);
+                    unsortedNodes.RemoveAt(index: i);
                 }
             }
             if (startCount == unsortedNodes.Count)
@@ -316,17 +318,18 @@ public class DropDownTree : System.Windows.Forms.Form, ILookupDropDownPart
     {
         if (node.ParentID == DBNull.Value)
         {
-            this.AddNode(this.tree.Nodes, node);
+            this.AddNode(nodes: this.tree.Nodes, node: node);
             return true;
         }
 
-        if (this.items_Identifiers.ContainsKey(node.ParentID))
+        if (this.items_Identifiers.ContainsKey(key: node.ParentID))
         {
-            DataTreeViewNode parentNode = this.items_Identifiers[node.ParentID] as DataTreeViewNode;
+            DataTreeViewNode parentNode =
+                this.items_Identifiers[key: node.ParentID] as DataTreeViewNode;
             if (parentNode != null)
             {
-                CheckRecursion(node, parentNode);
-                this.AddNode(parentNode.Nodes, node);
+                CheckRecursion(node: node, parentNode: parentNode);
+                this.AddNode(nodes: parentNode.Nodes, node: node);
                 return true;
             }
         }
@@ -335,17 +338,17 @@ public class DropDownTree : System.Windows.Forms.Form, ILookupDropDownPart
 
     private void CheckRecursion(DataTreeViewNode node, DataTreeViewNode parentNode)
     {
-        if (node.ID.Equals(parentNode.ID))
+        if (node.ID.Equals(obj: parentNode.ID))
         {
             throw new NotSupportedException(
-                "Stromové zobrazení: Není možné pøidat položku pod sebe sama."
+                message: "Stromové zobrazení: Není možné pøidat položku pod sebe sama."
             );
         }
         foreach (DataTreeViewNode child in node.Nodes)
         {
             if (child != null)
             {
-                CheckRecursion(node, child);
+                CheckRecursion(node: node, parentNode: child);
             }
         }
     }
@@ -357,10 +360,10 @@ public class DropDownTree : System.Windows.Forms.Form, ILookupDropDownPart
             return;
         }
 
-        if (!this.items_Identifiers.ContainsKey(node.ID))
+        if (!this.items_Identifiers.ContainsKey(key: node.ID))
         {
-            this.items_Identifiers.Add(node.ID, node);
-            nodes.Add(node);
+            this.items_Identifiers.Add(key: node.ID, value: node);
+            nodes.Add(node: node);
         }
     }
 

@@ -58,27 +58,30 @@ class RedirectWorkflowPageActionHandler : AbstractWorkflowPageActionHandler
     )
     {
         RedirectWorkflowPageAction redirectAction = action as RedirectWorkflowPageAction;
-        RuleEngine re = RuleEngine.Create(new Hashtable(), null);
-        IXmlContainer doc = re.GetXmlDocumentFromData(workflowResult);
+        RuleEngine re = RuleEngine.Create(contextStores: new Hashtable(), transactionId: null);
+        IXmlContainer doc = re.GetXmlDocumentFromData(inputData: workflowResult);
         XPathNavigator nav = doc.Xml.CreateNavigator();
-        string url = XpathEvaluator.Instance.Evaluate(nav, redirectAction.XPath);
+        string url = XpathEvaluator.Instance.Evaluate(nodeset: nav, xpath: redirectAction.XPath);
         Hashtable parameters = new Hashtable();
         foreach (
             var actionParameter in action.ChildItemsByType<WorkflowPageActionParameter>(
-                WorkflowPageActionParameter.CategoryConst
+                itemType: WorkflowPageActionParameter.CategoryConst
             )
         )
         {
-            string parameterResult = XpathEvaluator.Instance.Evaluate(nav, actionParameter.XPath);
-            parameters.Add(actionParameter.Name, parameterResult);
+            string parameterResult = XpathEvaluator.Instance.Evaluate(
+                nodeset: nav,
+                xpath: actionParameter.XPath
+            );
+            parameters.Add(key: actionParameter.Name, value: parameterResult);
         }
         string result = HttpTools.Instance.BuildUrl(
-            url,
-            parameters,
-            false,
-            "http",
-            redirectAction.IsUrlEscaped
+            url: url,
+            parameters: parameters,
+            forceExternal: false,
+            externalScheme: "http",
+            isUrlEscaped: redirectAction.IsUrlEscaped
         );
-        response.Redirect(result);
+        response.Redirect(requestUrlReferrerAbsolutePath: result);
     }
 }

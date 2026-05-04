@@ -28,16 +28,16 @@ public class DashboardWidgetsSchemaItemProvider : AbstractSchemaItemProvider, IS
 {
     public DashboardWidgetsSchemaItemProvider()
     {
-        this.ChildItemTypes.Add(typeof(PanelDashboardWidget));
-        this.ChildItemTypes.Add(typeof(ChartDashboardWidget));
-        this.ChildItemTypes.Add(typeof(DashboardWidgetFolder));
-        this.ChildItemTypes.Add(typeof(TextDashboardWidget));
-        this.ChildItemTypes.Add(typeof(DateDashboardWidget));
-        this.ChildItemTypes.Add(typeof(CurrencyDashboardWidget));
-        this.ChildItemTypes.Add(typeof(LookupDashboardWidget));
-        this.ChildItemTypes.Add(typeof(CheckBoxDashboardWidget));
-        this.ChildItemTypes.Add(typeof(HorizontalContainerDashboardWidget));
-        this.ChildItemTypes.Add(typeof(VerticalContainerDashboardWidget));
+        this.ChildItemTypes.Add(item: typeof(PanelDashboardWidget));
+        this.ChildItemTypes.Add(item: typeof(ChartDashboardWidget));
+        this.ChildItemTypes.Add(item: typeof(DashboardWidgetFolder));
+        this.ChildItemTypes.Add(item: typeof(TextDashboardWidget));
+        this.ChildItemTypes.Add(item: typeof(DateDashboardWidget));
+        this.ChildItemTypes.Add(item: typeof(CurrencyDashboardWidget));
+        this.ChildItemTypes.Add(item: typeof(LookupDashboardWidget));
+        this.ChildItemTypes.Add(item: typeof(CheckBoxDashboardWidget));
+        this.ChildItemTypes.Add(item: typeof(HorizontalContainerDashboardWidget));
+        this.ChildItemTypes.Add(item: typeof(VerticalContainerDashboardWidget));
     }
 
     #region ISchemaItemProvider Members

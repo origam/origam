@@ -43,7 +43,9 @@ public class ServerEntityUIActionRunnerClient : IEntityUIActionRunnerClient
     )
     {
         this.sessionManager = sessionManager;
-        this.sessionStore = sessionManager.GetSession(new Guid(sessionFormIdentifier));
+        this.sessionStore = sessionManager.GetSession(
+            sessionFormIdentifier: new Guid(g: sessionFormIdentifier)
+        );
     }
 
     public ServerEntityUIActionRunnerClient(
@@ -73,33 +75,37 @@ public class ServerEntityUIActionRunnerClient : IEntityUIActionRunnerClient
         processData.IsModalDialog = this.sessionStore.IsModalDialog;
         processData.Entity = entity;
         processData.SelectedIds = selectedIds;
-        processData.Type = (PanelActionType)Enum.Parse(typeof(PanelActionType), actionType);
-        SessionStore sessionStore = sessionManager.GetSession(new Guid(sessionFormIdentifier));
-        processData.DataTable = sessionStore.GetDataTable(entity, sessionStore.Data);
-        processData.SelectedRows = sessionStore.GetRows(entity, selectedIds);
+        processData.Type = (PanelActionType)
+            Enum.Parse(enumType: typeof(PanelActionType), value: actionType);
+        SessionStore sessionStore = sessionManager.GetSession(
+            sessionFormIdentifier: new Guid(g: sessionFormIdentifier)
+        );
+        processData.DataTable = sessionStore.GetDataTable(entity: entity, data: sessionStore.Data);
+        processData.SelectedRows = sessionStore.GetRows(entity: entity, ids: selectedIds);
         processData.ParameterService =
-            ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
+            ServiceManager.Services.GetService(serviceType: typeof(IParameterService))
+            as IParameterService;
         if (
             (processData.Type != PanelActionType.QueueAction)
             && (processData.Type != PanelActionType.SelectionDialogAction)
         )
         {
             // get action
-            processData.Action = UIActionTools.GetAction(actionId);
+            processData.Action = UIActionTools.GetAction(action: actionId);
             // retrieve parameter mappings
             List<string> originalDataParameters = UIActionTools.GetOriginalParameters(
-                processData.Action
+                action: processData.Action
             );
             processData.Parameters = DatasetTools.RetrieveParameters(
-                parameterMappings,
-                processData.SelectedRows,
-                originalDataParameters,
-                processData.DataTable.DataSet
+                parameterMappings: parameterMappings,
+                rows: processData.SelectedRows,
+                originalDataParameters: originalDataParameters,
+                fullData: processData.DataTable.DataSet
             );
             // add input parameters
             foreach (DictionaryEntry inputParameter in inputParameters)
             {
-                processData.Parameters.Add(inputParameter.Key, inputParameter.Value);
+                processData.Parameters.Add(key: inputParameter.Key, value: inputParameter.Value);
             }
         }
         return processData;
@@ -110,12 +116,13 @@ public class ServerEntityUIActionRunnerClient : IEntityUIActionRunnerClient
         if (processData.Action is EntityWorkflowAction ewa)
         {
             if (
-                ewa.RequestSaveBeforeWorkflow && sessionManager.GetSession(processData).HasChanges()
+                ewa.RequestSaveBeforeWorkflow
+                && sessionManager.GetSession(processData: processData).HasChanges()
             )
             {
-                throw new RuleException(Resources.ErrorFormNotSavedBeforeAction);
+                throw new RuleException(message: Resources.ErrorFormNotSavedBeforeAction);
             }
-            if (sessionManager.GetSession(processData).Data.HasErrors)
+            if (sessionManager.GetSession(processData: processData).Data.HasErrors)
             {
                 switch (ewa.CloseType)
                 {
@@ -133,14 +140,14 @@ public class ServerEntityUIActionRunnerClient : IEntityUIActionRunnerClient
                     case ModalDialogCloseType.CloseAndCommit:
                     // errors are reported
                     {
-                        throw new RuleException(Resources.ErrorInForm);
+                        throw new RuleException(message: Resources.ErrorInForm);
                     }
                     default:
                     {
                         throw new ArgumentOutOfRangeException(
-                            "CloseType",
-                            ewa.CloseType,
-                            $@"Invalid CloseType value {ewa.CloseType}"
+                            paramName: "CloseType",
+                            actualValue: ewa.CloseType,
+                            message: $@"Invalid CloseType value {ewa.CloseType}"
                         );
                     }
                 }
@@ -150,7 +157,7 @@ public class ServerEntityUIActionRunnerClient : IEntityUIActionRunnerClient
 
     public void SetModalDialogSize(List<object> resultList, ExecuteActionProcessData processData)
     {
-        PanelActionResult result = (PanelActionResult)resultList[0];
+        PanelActionResult result = (PanelActionResult)resultList[index: 0];
         if ((processData.Action != null) && (result.Request != null))
         {
             result.Request.IsModalDialog = processData.Action.IsModalDialog;
@@ -198,14 +205,22 @@ public class ServerEntityUIActionRunnerClient : IEntityUIActionRunnerClient
             if (entityWorkflowAction.CleanDataBeforeMerge)
             {
                 targetData.AcceptChanges();
-                DatasetTools.Clear(targetData);
-                changes.Add(ChangeInfo.CleanDataChangeInfo());
+                DatasetTools.Clear(data: targetData);
+                changes.Add(item: ChangeInfo.CleanDataChangeInfo());
             }
-            deletedRowsParents = DatasetTools.GetDeletedRows(sourceData, targetData);
-            MergeParams mergeParams = new MergeParams(profile.Id);
+            deletedRowsParents = DatasetTools.GetDeletedRows(
+                sourceData: sourceData,
+                targetData: targetData
+            );
+            MergeParams mergeParams = new MergeParams(ProfileId: profile.Id);
             mergeParams.TrueDelete =
                 entityWorkflowAction.MergeType == ServiceOutputMethod.FullMerge;
-            DatasetTools.MergeDataSet(targetData, sourceData, changeList, mergeParams);
+            DatasetTools.MergeDataSet(
+                inout_dsTarget: targetData,
+                in_dsSource: sourceData,
+                changeList: changeList,
+                mergeParams: mergeParams
+            );
             // process rules (but not after clean merge, there we expect processed data
             // we process the rules after merge so all data were merged before we start firing any
             // events... If we would process rules WHILE merging, there would be a race condition - e.g.
@@ -222,15 +237,20 @@ public class ServerEntityUIActionRunnerClient : IEntityUIActionRunnerClient
                         string tableName = entry.Key;
                         foreach (var rowEntry in entry.Value)
                         {
-                            DataRow row = targetData.Tables[tableName].Rows.Find(rowEntry.Key);
+                            DataRow row = targetData
+                                .Tables[name: tableName]
+                                .Rows.Find(key: rowEntry.Key);
                             DataRowState changeType = rowEntry.Value.State;
                             if (changeType == DataRowState.Added)
                             {
                                 sessionStore.RuleHandler.OnRowChanged(
-                                    new DataRowChangeEventArgs(row, DataRowAction.Add),
-                                    sessionStore.XmlData,
-                                    sessionStore.RuleSet,
-                                    sessionStore.RuleEngine
+                                    e: new DataRowChangeEventArgs(
+                                        row: row,
+                                        action: DataRowAction.Add
+                                    ),
+                                    data: sessionStore.XmlData,
+                                    ruleSet: sessionStore.RuleSet,
+                                    ruleEngine: sessionStore.RuleEngine
                                 );
                             }
                             switch (changeType)
@@ -238,10 +258,10 @@ public class ServerEntityUIActionRunnerClient : IEntityUIActionRunnerClient
                                 case DataRowState.Added:
                                 {
                                     sessionStore.RuleHandler.OnRowCopied(
-                                        row,
-                                        sessionStore.XmlData,
-                                        sessionStore.RuleSet,
-                                        sessionStore.RuleEngine
+                                        row: row,
+                                        data: sessionStore.XmlData,
+                                        ruleSet: sessionStore.RuleSet,
+                                        ruleEngine: sessionStore.RuleEngine
                                     );
                                     break;
                                 }
@@ -258,16 +278,16 @@ public class ServerEntityUIActionRunnerClient : IEntityUIActionRunnerClient
                                         {
                                             DataColumn changedColumn = (DataColumn)
                                                 changedColumnEntry.Value;
-                                            object newValue = row[changedColumn];
+                                            object newValue = row[column: changedColumn];
                                             sessionStore.RuleHandler.OnColumnChanged(
-                                                new DataColumnChangeEventArgs(
-                                                    row,
-                                                    changedColumn,
-                                                    newValue
+                                                e: new DataColumnChangeEventArgs(
+                                                    row: row,
+                                                    column: changedColumn,
+                                                    value: newValue
                                                 ),
-                                                sessionStore.XmlData,
-                                                sessionStore.RuleSet,
-                                                sessionStore.RuleEngine
+                                                data: sessionStore.XmlData,
+                                                ruleSet: sessionStore.RuleSet,
+                                                ruleEngine: sessionStore.RuleEngine
                                             );
                                         }
                                     }
@@ -282,7 +302,9 @@ public class ServerEntityUIActionRunnerClient : IEntityUIActionRunnerClient
                                 }
                                 default:
                                 {
-                                    throw new Exception(Resources.ErrorUnknownRowChangeState);
+                                    throw new Exception(
+                                        message: Resources.ErrorUnknownRowChangeState
+                                    );
                                 }
                             }
                         }
@@ -290,11 +312,11 @@ public class ServerEntityUIActionRunnerClient : IEntityUIActionRunnerClient
                     foreach (var deletedItem in deletedRowsParents)
                     {
                         sessionStore.RuleHandler.OnRowDeleted(
-                            deletedItem.Value.ToArray(),
-                            deletedItem.Key,
-                            sessionStore.XmlData,
-                            sessionStore.RuleSet,
-                            sessionStore.RuleEngine
+                            parentRows: deletedItem.Value.ToArray(),
+                            deletedRow: deletedItem.Key,
+                            data: sessionStore.XmlData,
+                            ruleSet: sessionStore.RuleSet,
+                            ruleEngine: sessionStore.RuleEngine
                         );
                     }
                 }
@@ -308,10 +330,10 @@ public class ServerEntityUIActionRunnerClient : IEntityUIActionRunnerClient
             if (sessionStore.DataList != null)
             {
                 DataRow rootRow = sessionStore.GetSessionRow(
-                    sessionStore.DataListEntity,
-                    sessionStore.CurrentRecordId
+                    entity: sessionStore.DataListEntity,
+                    id: sessionStore.CurrentRecordId
                 );
-                sessionStore.UpdateListRow(rootRow);
+                sessionStore.UpdateListRow(r: rootRow);
             }
             // read all changed keys to a table so getChangesRecursive skips all those that
             // have been directly changed and so will be processed anyway
@@ -321,7 +343,7 @@ public class ServerEntityUIActionRunnerClient : IEntityUIActionRunnerClient
                 foreach (var rowEntry in entry.Value)
                 {
                     // table name + row id
-                    ignoreKeys[entry.Key + rowEntry.Key] = null;
+                    ignoreKeys[key: entry.Key + rowEntry.Key] = null;
                 }
             }
             bool hasErrors = sessionStore.Data.HasErrors;
@@ -331,7 +353,7 @@ public class ServerEntityUIActionRunnerClient : IEntityUIActionRunnerClient
                 string tableName = entry.Key;
                 foreach (var rowEntry in entry.Value)
                 {
-                    DataRow row = targetData.Tables[tableName].Rows.Find(rowEntry.Key);
+                    DataRow row = targetData.Tables[name: tableName].Rows.Find(key: rowEntry.Key);
                     DataRowState changeType = rowEntry.Value.State;
                     if (entityWorkflowAction.CleanDataBeforeMerge)
                     {
@@ -342,7 +364,7 @@ public class ServerEntityUIActionRunnerClient : IEntityUIActionRunnerClient
                         case DataRowState.Added:
                         {
                             changes.AddRange(
-                                sessionStore.GetChanges(
+                                collection: sessionStore.GetChanges(
                                     entity: tableName,
                                     id: rowEntry.Key,
                                     operation: Operation.Create,
@@ -358,7 +380,7 @@ public class ServerEntityUIActionRunnerClient : IEntityUIActionRunnerClient
                         case DataRowState.Modified:
                         {
                             changes.AddRange(
-                                sessionStore.GetChanges(
+                                collection: sessionStore.GetChanges(
                                     entity: tableName,
                                     id: rowEntry.Key,
                                     operation: Operation.Update,
@@ -374,7 +396,7 @@ public class ServerEntityUIActionRunnerClient : IEntityUIActionRunnerClient
                         case DataRowState.Deleted:
                         {
                             changes.Add(
-                                new ChangeInfo
+                                item: new ChangeInfo
                                 {
                                     Entity = tableName,
                                     Operation = Operation.Delete,
@@ -386,7 +408,7 @@ public class ServerEntityUIActionRunnerClient : IEntityUIActionRunnerClient
 
                         default:
                         {
-                            throw new Exception(Resources.ErrorUnknownRowChangeState);
+                            throw new Exception(message: Resources.ErrorUnknownRowChangeState);
                         }
                     }
                 }
@@ -407,16 +429,16 @@ public class ServerEntityUIActionRunnerClient : IEntityUIActionRunnerClient
         int i = 0;
         while (changes.Count > i)
         {
-            if (changes[i].Operation == Operation.FormSaved)
+            if (changes[index: i].Operation == Operation.FormSaved)
             {
-                changes.RemoveAt(i);
+                changes.RemoveAt(index: i);
             }
             else
             {
                 i++;
             }
         }
-        changes.Add(ChangeInfo.SavedChangeInfo());
+        changes.Add(item: ChangeInfo.SavedChangeInfo());
     }
 
     public void PostProcessWorkflowAction(
@@ -428,33 +450,33 @@ public class ServerEntityUIActionRunnerClient : IEntityUIActionRunnerClient
         if (entityWorkflowAction.SaveAfterWorkflow)
         {
             var saveChanges =
-                sessionStore.ExecuteAction(SessionStore.ACTION_SAVE) as List<ChangeInfo>;
-            changes.AddRange(saveChanges);
+                sessionStore.ExecuteAction(actionId: SessionStore.ACTION_SAVE) as List<ChangeInfo>;
+            changes.AddRange(collection: saveChanges);
             // notify the form that the content has been saved, so it can hide the dirty sign (*)
-            AddSavedInfo(changes);
+            AddSavedInfo(changes: changes);
         }
         if (entityWorkflowAction.CommitChangesAfterMerge)
         {
             data.AcceptChanges();
-            AddSavedInfo(changes);
+            AddSavedInfo(changes: changes);
         }
         switch (entityWorkflowAction.RefreshAfterWorkflow)
         {
             case SaveRefreshType.RefreshCompleteForm:
             {
-                changes.Add(ChangeInfo.RefreshFormChangeInfo());
+                changes.Add(item: ChangeInfo.RefreshFormChangeInfo());
                 break;
             }
 
             case SaveRefreshType.ReloadActualRecord:
             {
-                changes.Add(ChangeInfo.ReloadCurrentRecordChangeInfo());
+                changes.Add(item: ChangeInfo.ReloadCurrentRecordChangeInfo());
                 break;
             }
         }
         if (entityWorkflowAction.RefreshPortalAfterFinish)
         {
-            changes.Add(ChangeInfo.RefreshPortalInfo());
+            changes.Add(item: ChangeInfo.RefreshPortalInfo());
         }
     }
 
@@ -468,12 +490,12 @@ public class ServerEntityUIActionRunnerClient : IEntityUIActionRunnerClient
             case ModalDialogCloseType.CloseAndCommit:
             case ModalDialogCloseType.CloseAndCommitWithErrors:
             {
-                sessionManager.GetSession(processData).IsModalDialogCommited = true;
+                sessionManager.GetSession(processData: processData).IsModalDialogCommited = true;
                 break;
             }
             case ModalDialogCloseType.CloseAndCancel:
             {
-                sessionManager.GetSession(processData).IsModalDialogCommited = false;
+                sessionManager.GetSession(processData: processData).IsModalDialogCommited = false;
                 break;
             }
         }

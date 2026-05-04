@@ -24,7 +24,10 @@ using System.Xml.Serialization;
 
 namespace Origam.Server;
 
-[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute(
+    tool: "Microsoft.Tools.ServiceModel.Svcutil",
+    version: "2.0.2"
+)]
 [System.ServiceModel.ServiceContractAttribute(
     Namespace = "http://asapenginewebapi.advantages.cz/",
     ConfigurationName = "DataServiceSoap"
@@ -36,7 +39,7 @@ public interface IDataServiceSoap
         ReplyAction = "*"
     )]
     [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults = true)]
-    [System.ServiceModel.ServiceKnownTypeAttribute(typeof(Parameter[]))]
+    [System.ServiceModel.ServiceKnownTypeAttribute(type: typeof(Parameter[]))]
     System.Threading.Tasks.Task<DataSet> LoadDataAsync(
         string dataStructureId,
         string filterId,
@@ -50,7 +53,7 @@ public interface IDataServiceSoap
         ReplyAction = "*"
     )]
     [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults = true)]
-    [System.ServiceModel.ServiceKnownTypeAttribute(typeof(Parameter[]))]
+    [System.ServiceModel.ServiceKnownTypeAttribute(type: typeof(Parameter[]))]
     System.Threading.Tasks.Task<DataSet> LoadData0Async(
         string dataStructureId,
         string filterId,
@@ -63,7 +66,7 @@ public interface IDataServiceSoap
         ReplyAction = "*"
     )]
     [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults = true)]
-    [System.ServiceModel.ServiceKnownTypeAttribute(typeof(Parameter[]))]
+    [System.ServiceModel.ServiceKnownTypeAttribute(type: typeof(Parameter[]))]
     System.Threading.Tasks.Task<DataSet> LoadData1Async(
         string dataStructureId,
         string filterId,
@@ -78,7 +81,7 @@ public interface IDataServiceSoap
         ReplyAction = "*"
     )]
     [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults = true)]
-    [System.ServiceModel.ServiceKnownTypeAttribute(typeof(Parameter[]))]
+    [System.ServiceModel.ServiceKnownTypeAttribute(type: typeof(Parameter[]))]
     System.Threading.Tasks.Task<DataSet> LoadData2Async(
         string dataStructureId,
         string filterId,
@@ -95,7 +98,7 @@ public interface IDataServiceSoap
         ReplyAction = "*"
     )]
     [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults = true)]
-    [System.ServiceModel.ServiceKnownTypeAttribute(typeof(Parameter[]))]
+    [System.ServiceModel.ServiceKnownTypeAttribute(type: typeof(Parameter[]))]
     System.Threading.Tasks.Task<DataSet> ExecuteProcedureAsync(
         string procedureName,
         Parameter[] parameters
@@ -106,7 +109,7 @@ public interface IDataServiceSoap
         ReplyAction = "*"
     )]
     [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults = true)]
-    [System.ServiceModel.ServiceKnownTypeAttribute(typeof(Parameter[]))]
+    [System.ServiceModel.ServiceKnownTypeAttribute(type: typeof(Parameter[]))]
     System.Threading.Tasks.Task<DataSet> StoreDataAsync(
         string dataStructureId,
         [XmlElement(ElementName = "data")] DataSet data,
@@ -118,7 +121,7 @@ public interface IDataServiceSoap
         ReplyAction = "*"
     )]
     [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults = true)]
-    [System.ServiceModel.ServiceKnownTypeAttribute(typeof(Parameter[]))]
+    [System.ServiceModel.ServiceKnownTypeAttribute(type: typeof(Parameter[]))]
     System.Threading.Tasks.Task<DataSet> StoreXmlAsync(
         string dataStructureId,
         System.Xml.XmlNode xml,

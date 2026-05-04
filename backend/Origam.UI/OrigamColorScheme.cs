@@ -32,41 +32,65 @@ public class OrigamColorScheme
 
 #if ORIGAM_CLIENT
     private static Color _windowBackgroundColor = Color.FloralWhite;
-    public static Color MdiBackColor = System.Drawing.Color.FromArgb(237, 231, 217);
+    public static Color MdiBackColor = System.Drawing.Color.FromArgb(
+        red: 237,
+        green: 231,
+        blue: 217
+    );
     public static Color MdiForeColor = Color.Black;
     public static Color PropertyGridHeaderColor = MdiBackColor;
     public static Color ToolbarBaseColor = _windowBackgroundColor;
-    public static Color ToolbarHighlightColor = Color.FromArgb(255, 171, 63);
+    public static Color ToolbarHighlightColor = Color.FromArgb(red: 255, green: 171, blue: 63);
     public static Color DocumentTabInactiveBackBegin = Color.White;
     public static Color DocumentTabInactiveBackEnd = Color.White;
-    public static Color DocumentTabInactiveEdge = Color.FromArgb(172, 168, 153);
-    public static Color TitleActiveStartColor = Color.FromArgb(255, 217, 170);
-    public static Color TitleActiveMiddleEndColor = Color.FromArgb(255, 187, 132);
-    public static Color TitleActiveMiddleStartColor = Color.FromArgb(255, 171, 63);
-    public static Color TitleActiveEndColor = Color.FromArgb(254, 225, 122);
+    public static Color DocumentTabInactiveEdge = Color.FromArgb(red: 172, green: 168, blue: 153);
+    public static Color TitleActiveStartColor = Color.FromArgb(red: 255, green: 217, blue: 170);
+    public static Color TitleActiveMiddleEndColor = Color.FromArgb(red: 255, green: 187, blue: 132);
+    public static Color TitleActiveMiddleStartColor = Color.FromArgb(
+        red: 255,
+        green: 171,
+        blue: 63
+    );
+    public static Color TitleActiveEndColor = Color.FromArgb(red: 254, green: 225, blue: 122);
     public static Color TitleInactiveStartColor = TitleActiveStartColor;
     public static Color TitleInactiveMiddleEndColor = TitleActiveStartColor;
     public static Color TitleInactiveMiddleStartColor = TitleActiveStartColor;
     public static Color TitleInactiveEndColor = Color.FloralWhite;
-    public static Color TitleActiveForeColor = Color.FromArgb(120, 54, 0);
+    public static Color TitleActiveForeColor = Color.FromArgb(red: 120, green: 54, blue: 0);
     public static Color TitleInactiveForeColor = TitleActiveForeColor;
     public static Color FormBackgroundColor = _windowBackgroundColor;
-    public static Color FormLoadingStatusColor = System.Drawing.Color.FromArgb(227, 170, 121); //Color.DarkKhaki;
+    public static Color FormLoadingStatusColor = System.Drawing.Color.FromArgb(
+        red: 227,
+        green: 170,
+        blue: 121
+    ); //Color.DarkKhaki;
     public static Color LinkColor = Color.Blue;
     public static Color GridAlternatingBackColor = Color.LightGoldenrodYellow;
     public static Color GridForeColor = Color.Black;
     public static Color GridLineColor = Color.PaleGoldenrod;
-    public static Color GridHeaderBackColor = Color.FromArgb(218, 136, 62);
+    public static Color GridHeaderBackColor = Color.FromArgb(red: 218, green: 136, blue: 62);
     public static Color GridHeaderForeColor = Color.White;
-    public static Color GridSelectionBackColor = Color.FromArgb(254, 225, 122);
+    public static Color GridSelectionBackColor = Color.FromArgb(red: 254, green: 225, blue: 122);
     public static Color GridSelectionForeColor = Color.Black;
     public static Color GroupBoxFontColor = Color.Black;
-    public static Color GroupBoxShadowColor = Color.FromArgb(193, 182, 137);
-    public static Color GroupBoxBorderTopColor = Color.FromArgb(232, 219, 162);
-    public static Color GroupBoxBorderBottomColor = Color.FromArgb(186, 174, 119);
-    public static Color GroupBoxBackgroundTopColor = Color.FromArgb(247, 233, 202);
-    public static Color GroupBoxBackgroundBottomColor = Color.FromArgb(229, 200, 128);
-    public static Color ButtonBackColor = System.Drawing.Color.FromArgb(227, 170, 121); //System.Drawing.Color.FromArgb(214, 203, 111);
+    public static Color GroupBoxShadowColor = Color.FromArgb(red: 193, green: 182, blue: 137);
+    public static Color GroupBoxBorderTopColor = Color.FromArgb(red: 232, green: 219, blue: 162);
+    public static Color GroupBoxBorderBottomColor = Color.FromArgb(red: 186, green: 174, blue: 119);
+    public static Color GroupBoxBackgroundTopColor = Color.FromArgb(
+        red: 247,
+        green: 233,
+        blue: 202
+    );
+    public static Color GroupBoxBackgroundBottomColor = Color.FromArgb(
+        red: 229,
+        green: 200,
+        blue: 128
+    );
+    public static Color ButtonBackColor = System.Drawing.Color.FromArgb(
+        red: 227,
+        green: 170,
+        blue: 121
+    ); //System.Drawing.Color.FromArgb(214, 203, 111);
     public static Color ButtonForeColor = Color.Black;
     public static Color SplitterBackColor = ButtonBackColor; //Color.FromArgb(193, 201, 140);
     public static Color TabActiveStartColor = TitleActiveStartColor;
@@ -141,5 +165,5 @@ public class OrigamColorScheme
     public static Color FilterOperatorActiveBackColor = GridHeaderBackColor;
     public static Color FilterOperatorActiveForeColor = System.Drawing.Color.White;
 #endif
-    public static Color DirtyColor = Color.FromArgb(241, 91, 71);
+    public static Color DirtyColor = Color.FromArgb(red: 241, green: 91, blue: 71);
 }

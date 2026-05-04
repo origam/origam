@@ -28,7 +28,7 @@ namespace Origam.Schema.EntityModel;
 /// Summary description for NotNullModelElementRuleAttribute.
 /// </summary>
 [AttributeUsage(
-    AttributeTargets.Property | AttributeTargets.Field,
+    validOn: AttributeTargets.Property | AttributeTargets.Field,
     AllowMultiple = false,
     Inherited = true
 )]
@@ -38,20 +38,22 @@ public class SelfJoinSameBaseRuleAttribute : AbstractModelElementRuleAttribute
 
     public override Exception CheckRule(object instance)
     {
-        return new NotSupportedException(ResourceUtils.GetString("MemberNameRequired"));
+        return new NotSupportedException(
+            message: ResourceUtils.GetString(key: "MemberNameRequired")
+        );
     }
 
     public override Exception CheckRule(object instance, string memberName)
     {
-        if (string.IsNullOrEmpty(memberName))
+        if (string.IsNullOrEmpty(value: memberName))
         {
-            CheckRule(instance);
+            CheckRule(instance: instance);
         }
 
         if (!(instance is EntityRelationItem relationItem))
         {
             throw new Exception(
-                nameof(SelfJoinSameBaseRuleAttribute)
+                message: nameof(SelfJoinSameBaseRuleAttribute)
                     + " can only be used in "
                     + nameof(EntityRelationItem)
             );
@@ -60,13 +62,15 @@ public class SelfJoinSameBaseRuleAttribute : AbstractModelElementRuleAttribute
             relationItem.BaseEntity != null
             && relationItem.RelatedEntity != null
             && relationItem.IsSelfJoin
-            && !relationItem.BaseEntity.PrimaryKey.Equals(relationItem.RelatedEntity.PrimaryKey)
+            && !relationItem.BaseEntity.PrimaryKey.Equals(
+                obj: relationItem.RelatedEntity.PrimaryKey
+            )
         )
         {
             return new ArgumentOutOfRangeException(
-                "IsSelfJoin",
-                relationItem.IsSelfJoin,
-                ResourceUtils.GetString("ErrorSelfJoinSameBase")
+                paramName: "IsSelfJoin",
+                actualValue: relationItem.IsSelfJoin,
+                message: ResourceUtils.GetString(key: "ErrorSelfJoinSameBase")
             );
         }
         return null;

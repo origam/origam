@@ -31,12 +31,12 @@ public class NewPackageBuilder : AbstractBuilder
     public override void Execute(Project project)
     {
         SchemaService schema =
-            ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
+            ServiceManager.Services.GetService(serviceType: typeof(SchemaService)) as SchemaService;
         schema.UnloadSchema();
         PackageHelper.CreatePackage(
-            project.Name,
-            new Guid(project.NewPackageId),
-            new Guid(project.BasePackageId)
+            packageName: project.Name,
+            packageId: new Guid(g: project.NewPackageId),
+            referencePackageId: new Guid(g: project.BasePackageId)
         );
         schema.UnloadSchema();
     }

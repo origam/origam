@@ -30,16 +30,16 @@ namespace Origam.Extensions;
 public static class TypeExtensions
 {
     private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
-        MethodBase.GetCurrentMethod().DeclaringType
+        type: MethodBase.GetCurrentMethod().DeclaringType
     );
 
     public static IEnumerable<Type> GetAllPublicSubTypes(this Type baseType)
     {
         return AppDomain
             .CurrentDomain.GetAssemblies()
-            .Where(assembly => !assembly.IsDynamic)
-            .SelectMany(GetExportedTypes)
-            .Where(baseType.IsAssignableFrom);
+            .Where(predicate: assembly => !assembly.IsDynamic)
+            .SelectMany(selector: GetExportedTypes)
+            .Where(predicate: baseType.IsAssignableFrom);
     }
 
     public static object GetValue(this MemberInfo memberInfo, object forObject)
@@ -48,11 +48,11 @@ public static class TypeExtensions
         {
             case MemberTypes.Field:
             {
-                return ((FieldInfo)memberInfo).GetValue(forObject);
+                return ((FieldInfo)memberInfo).GetValue(obj: forObject);
             }
             case MemberTypes.Property:
             {
-                return ((PropertyInfo)memberInfo).GetValue(forObject);
+                return ((PropertyInfo)memberInfo).GetValue(obj: forObject);
             }
             default:
             {
@@ -83,7 +83,9 @@ public static class TypeExtensions
         }
         catch (TypeLoadException ex)
         {
-            log.Warn("Could not load assembly: " + assembly.Location + ", reason: " + ex.Message);
+            log.Warn(
+                message: "Could not load assembly: " + assembly.Location + ", reason: " + ex.Message
+            );
             return new List<Type>();
         }
     }

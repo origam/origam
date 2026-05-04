@@ -49,7 +49,7 @@ public class FindRulesPad : AbstractResultPad
         // This call is required by the Windows Form Designer.
         InitializeComponent();
         _schemaBrowser =
-            WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+            WorkbenchSingleton.Workbench.GetPad(type: typeof(SchemaBrowser)) as SchemaBrowser;
         lvwResults.SmallImageList = _schemaBrowser.EbrSchemaBrowser.imgList;
         lvwResults.ColumnClick += OnColumnClick;
     }
@@ -69,8 +69,8 @@ public class FindRulesPad : AbstractResultPad
                     : SortOrder.Ascending;
         }
         this.lvwResults.ListViewItemSorter = new ListViewItemRulesComparer(
-            eventArgs.Column,
-            lvwResults.Sorting
+            column: eventArgs.Column,
+            order: lvwResults.Sorting
         );
         lvwResults.Sort();
     }
@@ -88,7 +88,7 @@ public class FindRulesPad : AbstractResultPad
             }
             _schemaBrowser = null;
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
 
     #region Designer generated code
@@ -232,7 +232,7 @@ public class FindRulesPad : AbstractResultPad
         {
             foreach (ISchemaItem item in results)
             {
-                AddResult(item);
+                AddResult(item: item);
             }
             ViewFindRuleResultsPad cmd = new ViewFindRuleResultsPad();
             cmd.Run();
@@ -249,7 +249,7 @@ public class FindRulesPad : AbstractResultPad
         {
             foreach (Dictionary<ISchemaItem, string> dict in results)
             {
-                AddResult(dict.First().Key, dict.First().Value);
+                AddResult(item: dict.First().Key, text: dict.First().Value);
             }
             ViewFindRuleResultsPad cmd = new ViewFindRuleResultsPad();
             cmd.Run();
@@ -260,7 +260,7 @@ public class FindRulesPad : AbstractResultPad
 
     private void AddResult(ISchemaItem item)
     {
-        AddResult(item, null);
+        AddResult(item: item, text: null);
     }
 
     private void AddResult(ISchemaItem item, string text)
@@ -281,9 +281,9 @@ public class FindRulesPad : AbstractResultPad
             rootName = item.RootItem.ItemType;
         }
 
-        string message = string.IsNullOrEmpty(text) ? "" : text;
+        string message = string.IsNullOrEmpty(value: text) ? "" : text;
         ListViewItem newItem = new ListViewItem(
-            new string[]
+            items: new string[]
             {
                 item.Path,
                 rootName,
@@ -293,10 +293,10 @@ public class FindRulesPad : AbstractResultPad
                 message,
             }
         );
-        newItem.Tag = new RuleResult(item);
-        newItem.ImageIndex = _schemaBrowser.ImageIndex(item.RootItem.Icon);
+        newItem.Tag = new RuleResult(item: item);
+        newItem.ImageIndex = _schemaBrowser.ImageIndex(icon: item.RootItem.Icon);
         newItem.ToolTipText = message;
-        lvwResults.Items.Add(newItem);
+        lvwResults.Items.Add(value: newItem);
     }
     #endregion
     private void ActivateItem()
@@ -305,18 +305,21 @@ public class FindRulesPad : AbstractResultPad
         {
             try
             {
-                RuleResult item = lvwResults.SelectedItems[0].Tag as RuleResult;
-                if (OpenParentPackage(item.SchemaExtensionId))
+                RuleResult item = lvwResults.SelectedItems[index: 0].Tag as RuleResult;
+                if (OpenParentPackage(SchemaExtensionId: item.SchemaExtensionId))
                 {
                     IPersistenceService persistenceService =
-                        ServiceManager.Services.GetService(typeof(IPersistenceService))
+                        ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
                         as IPersistenceService;
                     FilePersistenceProvider persprovider = (FilePersistenceProvider)
                         persistenceService.SchemaProvider;
                     ISchemaItem refreshitem =
-                        persprovider.RetrieveInstance(item.GetType(), item.PrimaryKey, true)
-                        as ISchemaItem;
-                    _schemaBrowser.EbrSchemaBrowser.SelectItem(refreshitem);
+                        persprovider.RetrieveInstance(
+                            type: item.GetType(),
+                            primaryKey: item.PrimaryKey,
+                            useCache: true
+                        ) as ISchemaItem;
+                    _schemaBrowser.EbrSchemaBrowser.SelectItem(item: refreshitem);
                     ViewSchemaBrowserPad cmd = new ViewSchemaBrowserPad();
                     cmd.Run();
                 }
@@ -324,10 +327,10 @@ public class FindRulesPad : AbstractResultPad
             catch (Exception ex)
             {
                 Origam.UI.AsMessageBox.ShowError(
-                    this,
-                    ex.Message,
-                    ResourceUtils.GetString("ErrorTitle"),
-                    ex
+                    owner: this,
+                    text: ex.Message,
+                    caption: ResourceUtils.GetString(key: "ErrorTitle"),
+                    exception: ex
                 );
             }
         }
@@ -367,8 +370,8 @@ internal class ListViewItemRulesComparer : IComparer
     {
         int returnVal = -1;
         returnVal = String.Compare(
-            ((ListViewItem)x).SubItems[col].Text,
-            ((ListViewItem)y).SubItems[col].Text
+            strA: ((ListViewItem)x).SubItems[index: col].Text,
+            strB: ((ListViewItem)y).SubItems[index: col].Text
         );
         if (order == SortOrder.Descending)
         {

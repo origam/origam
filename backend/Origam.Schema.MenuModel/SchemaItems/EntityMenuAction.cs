@@ -31,25 +31,29 @@ namespace Origam.Schema.MenuModel;
 /// <summary>
 /// Summary description for EntitySecurityRule.
 /// </summary>
-[SchemaItemDescription("Menu Action", "UI Actions", "icon_menu-action.png")]
-[HelpTopic("Menu+Action")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(
+    name: "Menu Action",
+    folderName: "UI Actions",
+    iconName: "icon_menu-action.png"
+)]
+[HelpTopic(topic: "Menu+Action")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class EntityMenuAction : EntityUIAction
 {
     public EntityMenuAction()
         : base() { }
 
     public EntityMenuAction(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(schemaExtensionId: schemaExtensionId) { }
 
     public EntityMenuAction(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Overriden AbstractDataEntityColumn Members
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(this.Menu);
-        base.GetExtraDependencies(dependencies);
+        dependencies.Add(item: this.Menu);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override IList<string> NewTypeNames
@@ -68,20 +72,20 @@ public class EntityMenuAction : EntityUIAction
     #region Properties
     public Guid MenuId;
 
-    [Category("References")]
-    [TypeConverter(typeof(MenuModel.MenuItemConverter))]
-    [XmlReference("menu", "MenuId")]
+    [Category(category: "References")]
+    [TypeConverter(type: typeof(MenuModel.MenuItemConverter))]
+    [XmlReference(attributeName: "menu", idField: "MenuId")]
     public MenuModel.AbstractMenuItem Menu
     {
         get
         {
             return (MenuModel.AbstractMenuItem)
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(this.MenuId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: this.MenuId)
                 );
         }
-        set { this.MenuId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]; }
+        set { this.MenuId = value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]; }
     }
     #endregion
 }

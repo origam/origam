@@ -36,14 +36,17 @@ namespace Origam.Schema.LookupModel.UI.Wizards;
 public class CreateLookupFromEntityCommand : AbstractMenuCommand
 {
     SchemaBrowser _schemaBrowser =
-        WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+        WorkbenchSingleton.Workbench.GetPad(type: typeof(SchemaBrowser)) as SchemaBrowser;
     LookupForm lookupForm;
     public override bool IsEnabled
     {
         get { return Owner is IDataEntity; }
         set
         {
-            throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
+            throw new ArgumentException(
+                message: ResourceUtils.GetString(key: "ErrorSetProperty"),
+                paramName: "IsEnabled"
+            );
         }
     }
 
@@ -53,29 +56,29 @@ public class CreateLookupFromEntityCommand : AbstractMenuCommand
         var dataStructure = new DataStructure();
         var list = new List<ListViewItem>
         {
-            new ListViewItem(dd.GetType().SchemaItemDescription().Name, dd.Icon),
+            new ListViewItem(text: dd.GetType().SchemaItemDescription().Name, imageKey: dd.Icon),
             new ListViewItem(
-                dataStructure.GetType().SchemaItemDescription().Name,
-                dataStructure.Icon
+                text: dataStructure.GetType().SchemaItemDescription().Name,
+                imageKey: dataStructure.Icon
             ),
         };
         Stack stackPage = new Stack();
-        stackPage.Push(PagesList.Finish);
-        stackPage.Push(PagesList.SummaryPage);
-        stackPage.Push(PagesList.LookupForm);
-        stackPage.Push(PagesList.StartPage);
+        stackPage.Push(obj: PagesList.Finish);
+        stackPage.Push(obj: PagesList.SummaryPage);
+        stackPage.Push(obj: PagesList.LookupForm);
+        stackPage.Push(obj: PagesList.StartPage);
         lookupForm = new LookupForm
         {
-            Title = ResourceUtils.GetString("CreateLookupWiz"),
+            Title = ResourceUtils.GetString(key: "CreateLookupWiz"),
             PageTitle = "",
-            Description = ResourceUtils.GetString("CreateLookupWizDescription"),
+            Description = ResourceUtils.GetString(key: "CreateLookupWizDescription"),
             Pages = stackPage,
             Entity = Owner as IDataEntity,
             ImageList = _schemaBrowser.EbrSchemaBrowser.imgList,
             ItemTypeList = list,
             Command = this,
         };
-        Wizard wiz = new Wizard(lookupForm);
+        Wizard wiz = new Wizard(objectForm: lookupForm);
         //CreateLookupFromEntityWizard wizz = new CreateLookupFromEntityWizard();
         //wiz.Entity = Owner as IDataEntity;
         if (wiz.ShowDialog() != DialogResult.OK)
@@ -87,52 +90,54 @@ public class CreateLookupFromEntityCommand : AbstractMenuCommand
     public override void Execute()
     {
         var result = LookupHelper.CreateDataServiceLookup(
-            lookupForm.LookupName,
-            lookupForm.Entity,
-            lookupForm.IdColumn,
-            lookupForm.NameColumn,
-            null,
-            lookupForm.IdFilter,
-            lookupForm.ListFilter,
-            null
+            name: lookupForm.LookupName,
+            fromEntity: lookupForm.Entity,
+            idField: lookupForm.IdColumn,
+            nameField: lookupForm.NameColumn,
+            codeField: null,
+            idFilter: lookupForm.IdFilter,
+            listFilter: lookupForm.ListFilter,
+            listDisplayMember: null
         );
         //var result = LookupHelper.CreateDataServiceLookup(
         //    wiz.LookupName, wiz.Entity, wiz.IdColumn, wiz.NameColumn,
         //    null, wiz.IdFilter, wiz.ListFilter, null);
-        GeneratedModelElements.Add(result.ListDataStructure);
-        GeneratedModelElements.Add(result);
+        GeneratedModelElements.Add(item: result.ListDataStructure);
+        GeneratedModelElements.Add(item: result);
     }
 
     public override int GetImageIndex(string icon)
     {
-        return _schemaBrowser.ImageIndex(icon);
+        return _schemaBrowser.ImageIndex(icon: icon);
     }
 
     public override void SetSummaryText(object summary)
     {
         RichTextBox richTextBoxSummary = (RichTextBox)summary;
         richTextBoxSummary.Text = "This Wizard will create a lookup with these parameters:";
-        richTextBoxSummary.AppendText(Environment.NewLine);
-        richTextBoxSummary.AppendText(Environment.NewLine);
-        richTextBoxSummary.AppendText("Name: \t\t");
-        richTextBoxSummary.AppendText(lookupForm.LookupName);
-        richTextBoxSummary.AppendText(Environment.NewLine);
-        richTextBoxSummary.AppendText("Display Field: \t");
-        richTextBoxSummary.AppendText(lookupForm.NameColumn.Name);
-        richTextBoxSummary.AppendText(Environment.NewLine);
-        richTextBoxSummary.AppendText("List Filter: \t");
+        richTextBoxSummary.AppendText(text: Environment.NewLine);
+        richTextBoxSummary.AppendText(text: Environment.NewLine);
+        richTextBoxSummary.AppendText(text: "Name: \t\t");
+        richTextBoxSummary.AppendText(text: lookupForm.LookupName);
+        richTextBoxSummary.AppendText(text: Environment.NewLine);
+        richTextBoxSummary.AppendText(text: "Display Field: \t");
+        richTextBoxSummary.AppendText(text: lookupForm.NameColumn.Name);
+        richTextBoxSummary.AppendText(text: Environment.NewLine);
+        richTextBoxSummary.AppendText(text: "List Filter: \t");
         richTextBoxSummary.AppendText(
-            lookupForm.ListFilter == null ? "none" : lookupForm.ListFilter.Name
+            text: lookupForm.ListFilter == null ? "none" : lookupForm.ListFilter.Name
         );
-        richTextBoxSummary.AppendText(Environment.NewLine);
-        richTextBoxSummary.AppendText("Id Filter: \t\t");
-        richTextBoxSummary.AppendText(lookupForm.IdFilter.Name);
-        richTextBoxSummary.AppendText(Environment.NewLine);
-        richTextBoxSummary.AppendText(Environment.NewLine);
-        richTextBoxSummary.AppendText("And this data structure:");
-        richTextBoxSummary.AppendText(Environment.NewLine);
-        richTextBoxSummary.AppendText(Environment.NewLine);
-        richTextBoxSummary.AppendText("Data structure: \t");
-        richTextBoxSummary.AppendText(LookupHelper.GetDataStructureName(lookupForm.LookupName));
+        richTextBoxSummary.AppendText(text: Environment.NewLine);
+        richTextBoxSummary.AppendText(text: "Id Filter: \t\t");
+        richTextBoxSummary.AppendText(text: lookupForm.IdFilter.Name);
+        richTextBoxSummary.AppendText(text: Environment.NewLine);
+        richTextBoxSummary.AppendText(text: Environment.NewLine);
+        richTextBoxSummary.AppendText(text: "And this data structure:");
+        richTextBoxSummary.AppendText(text: Environment.NewLine);
+        richTextBoxSummary.AppendText(text: Environment.NewLine);
+        richTextBoxSummary.AppendText(text: "Data structure: \t");
+        richTextBoxSummary.AppendText(
+            text: LookupHelper.GetDataStructureName(lookupName: lookupForm.LookupName)
+        );
     }
 }

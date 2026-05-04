@@ -31,7 +31,7 @@ namespace Origam.Gui.Designer;
 public class ModelToolboxItem : ToolboxItem
 {
     public ModelToolboxItem(Type type)
-        : base(type) { }
+        : base(toolType: type) { }
 
     public bool IsComplexType;
     public bool IsExternal;

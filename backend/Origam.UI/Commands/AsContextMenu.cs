@@ -40,20 +40,20 @@ public class AsContextMenu : ContextMenuStrip, IStatusUpdate
 
     public void AddSubItem(ToolStripItem subItem)
     {
-        subItems.Add(subItem);
+        subItems.Add(item: subItem);
         UpdateItemsToDisplay();
     }
 
     public void AddSubItems(IEnumerable<ToolStripItem> newItems)
     {
-        subItems.AddRange(newItems);
+        subItems.AddRange(collection: newItems);
         UpdateItemsToDisplay();
     }
 
     protected override void OnOpening(CancelEventArgs e)
     {
         UpdateItemsToDisplay();
-        base.OnOpening(new CancelEventArgs(false));
+        base.OnOpening(e: new CancelEventArgs(cancel: false));
     }
 
     #region IStatusUpdate Members

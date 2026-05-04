@@ -43,10 +43,10 @@ public enum StateMachineEventType
 /// <summary>
 /// Summary description for StateMachineState.
 /// </summary>
-[SchemaItemDescription("Event", "Events", "event-4.png")]
-[HelpTopic("Data+Events")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Event", folderName: "Events", iconName: "event-4.png")]
+[HelpTopic(topic: "Data+Events")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class StateMachineEvent : AbstractSchemaItem
 {
     public const string CategoryConst = "StateMachineEvent";
@@ -58,21 +58,21 @@ public class StateMachineEvent : AbstractSchemaItem
     }
 
     public StateMachineEvent(Guid schemaExtensionId)
-        : base(schemaExtensionId)
+        : base(extensionId: schemaExtensionId)
     {
         Init();
     }
 
     public StateMachineEvent(Key primaryKey)
-        : base(primaryKey)
+        : base(primaryKey: primaryKey)
     {
         Init();
     }
 
     private void Init()
     {
-        this.ChildItemTypes.Add(typeof(StateMachineEventParameterMapping));
-        this.ChildItemTypes.Add(typeof(StateMachineEventFieldDependency));
+        this.ChildItemTypes.Add(item: typeof(StateMachineEventParameterMapping));
+        this.ChildItemTypes.Add(item: typeof(StateMachineEventFieldDependency));
     }
 
     #region Overriden ISchemaItem Members
@@ -81,18 +81,18 @@ public class StateMachineEvent : AbstractSchemaItem
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(this.Action);
+        dependencies.Add(item: this.Action);
         if (this.OldState != null)
         {
-            dependencies.Add(this.OldState);
+            dependencies.Add(item: this.OldState);
         }
 
         if (this.NewState != null)
         {
-            dependencies.Add(this.NewState);
+            dependencies.Add(item: this.NewState);
         }
 
-        base.GetExtraDependencies(dependencies);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override void UpdateReferences()
@@ -101,12 +101,18 @@ public class StateMachineEvent : AbstractSchemaItem
         {
             if (item.OldPrimaryKey != null)
             {
-                if (this.NewState != null && item.OldPrimaryKey.Equals(this.NewState.PrimaryKey))
+                if (
+                    this.NewState != null
+                    && item.OldPrimaryKey.Equals(obj: this.NewState.PrimaryKey)
+                )
                 {
                     this.NewState = item as StateMachineState;
                     break;
                 }
-                if (this.OldState != null && item.OldPrimaryKey.Equals(this.OldState.PrimaryKey))
+                if (
+                    this.OldState != null
+                    && item.OldPrimaryKey.Equals(obj: this.OldState.PrimaryKey)
+                )
                 {
                     this.OldState = item as StateMachineState;
                     break;
@@ -117,72 +123,82 @@ public class StateMachineEvent : AbstractSchemaItem
     }
     #endregion
     #region Properties
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public List<StateMachineEventParameterMapping> ParameterMappings =>
         ChildItemsByType<StateMachineEventParameterMapping>(
-            StateMachineEventParameterMapping.CategoryConst
+            itemType: StateMachineEventParameterMapping.CategoryConst
         );
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public List<StateMachineEventFieldDependency> FieldDependencies =>
         ChildItemsByType<StateMachineEventFieldDependency>(
-            StateMachineEventFieldDependency.CategoryConst
+            itemType: StateMachineEventFieldDependency.CategoryConst
         );
 
-    [XmlAttribute("type")]
+    [XmlAttribute(attributeName: "type")]
     public StateMachineEventType Type { get; set; }
 
     public Guid ActionId;
 
-    [TypeConverter(typeof(WorkflowConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [XmlReference("action", "ActionId")]
+    [TypeConverter(type: typeof(WorkflowConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [XmlReference(attributeName: "action", idField: "ActionId")]
     public IWorkflow Action
     {
         get
         {
-            ModelElementKey key = new ModelElementKey(this.ActionId);
-            return (IWorkflow)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
+            ModelElementKey key = new ModelElementKey(id: this.ActionId);
+            return (IWorkflow)
+                this.PersistenceProvider.RetrieveInstance(
+                    type: typeof(ISchemaItem),
+                    primaryKey: key
+                );
         }
-        set => this.ActionId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+        set => this.ActionId = value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"];
     }
 
     public Guid OldStateId;
 
-    [TypeConverter(typeof(StateMachineStateConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [XmlReference("oldState", "OldStateId")]
+    [TypeConverter(type: typeof(StateMachineStateConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [XmlReference(attributeName: "oldState", idField: "OldStateId")]
     public StateMachineState OldState
     {
         get
         {
-            ModelElementKey key = new ModelElementKey(this.OldStateId);
+            ModelElementKey key = new ModelElementKey(id: this.OldStateId);
             return (StateMachineState)
-                this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
+                this.PersistenceProvider.RetrieveInstance(
+                    type: typeof(ISchemaItem),
+                    primaryKey: key
+                );
         }
-        set => this.OldStateId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+        set => this.OldStateId = value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"];
     }
 
     public Guid NewStateId;
 
-    [TypeConverter(typeof(StateMachineStateConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [XmlReference("newState", "NewStateId")]
+    [TypeConverter(type: typeof(StateMachineStateConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [XmlReference(attributeName: "newState", idField: "NewStateId")]
     public StateMachineState NewState
     {
         get
         {
-            ModelElementKey key = new ModelElementKey(this.NewStateId);
+            ModelElementKey key = new ModelElementKey(id: this.NewStateId);
             return (StateMachineState)
-                this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
+                this.PersistenceProvider.RetrieveInstance(
+                    type: typeof(ISchemaItem),
+                    primaryKey: key
+                );
         }
-        set => this.NewStateId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+        set => this.NewStateId = value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"];
     }
 
-    [XmlAttribute("roles")]
+    [XmlAttribute(attributeName: "roles")]
     public string Roles { get; set; } = "*";
 
-    [XmlAttribute("features")]
+    [XmlAttribute(attributeName: "features")]
     public string Features { get; set; }
     #endregion
     public override int CompareTo(object obj)
@@ -190,8 +206,8 @@ public class StateMachineEvent : AbstractSchemaItem
         StateMachineEvent compared = obj as StateMachineEvent;
         if (compared == null)
         {
-            return base.CompareTo(obj);
+            return base.CompareTo(obj: obj);
         }
-        return (this.Type.CompareTo(compared.Type));
+        return (this.Type.CompareTo(target: compared.Type));
     }
 }

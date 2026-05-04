@@ -26,7 +26,7 @@ using Origam.Schema.EntityModel;
 
 namespace Origam.Schema.GuiModel;
 
-[XmlModelRoot(CategoryConst)]
+[XmlModelRoot(category: CategoryConst)]
 public abstract class AbstractReport : AbstractSchemaItem
 {
     public const string CategoryConst = "Report";
@@ -34,16 +34,16 @@ public abstract class AbstractReport : AbstractSchemaItem
     public AbstractReport() { }
 
     public AbstractReport(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public AbstractReport(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Properties
     private string _caption = "";
 
-    [Category("User Interface")]
-    [Localizable(true)]
+    [Category(category: "User Interface")]
+    [Localizable(isLocalizable: true)]
     public string Caption
     {
         get => _caption;
@@ -66,9 +66,9 @@ public abstract class AbstractReport : AbstractSchemaItem
     public override T NewItem<T>(Guid schemaExtensionId, SchemaItemGroup group)
     {
         return base.NewItem<T>(
-            schemaExtensionId,
-            group,
-            typeof(T) == typeof(FunctionCallParameter) ? "NewParameter" : null
+            schemaExtensionId: schemaExtensionId,
+            group: group,
+            itemName: typeof(T) == typeof(FunctionCallParameter) ? "NewParameter" : null
         );
     }
     #endregion

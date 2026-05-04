@@ -31,7 +31,7 @@ using Origam.Workbench.Services;
 namespace Origam.Architect.Server.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route(template: "[controller]")]
 public class EditorController(
     PropertyEditorService propertyService,
     IPersistenceService persistenceService,
@@ -40,103 +40,113 @@ public class EditorController(
     EditorService editorService,
     DocumentationHelperService documentationHelper,
     ILogger<OrigamController> log
-) : OrigamController(log)
+) : OrigamController(log: log)
 {
-    [HttpPost("CreateNode")]
+    [HttpPost(template: "CreateNode")]
     public OpenEditorData CreateNode([Required] [FromBody] NewItemModel input)
     {
-        var editor = editorService.OpenEditorWithNewItem(input.NodeId, input.NewTypeName);
+        var editor = editorService.OpenEditorWithNewItem(
+            parentId: input.NodeId,
+            fullTypeName: input.NewTypeName
+        );
 
-        TreeNode treeNode = treeNodeFactory.Create(editor.Item);
+        TreeNode treeNode = treeNodeFactory.Create(node: editor.Item);
         return new OpenEditorData(
             editorId: editor.Id,
             node: treeNode,
-            data: GetData(treeNode, editor.Item),
+            data: GetData(treeNode: treeNode, item: editor.Item),
             isPersisted: false,
             parentNodeId: null,
             isDirty: true
         );
     }
 
-    [HttpGet("GetOpenEditors")]
+    [HttpGet(template: "GetOpenEditors")]
     public IActionResult GetOpenEditors()
     {
         var items = editorService
             .GetOpenEditors()
-            .Select(editor =>
+            .Select(selector: editor =>
             {
                 var item = editor.Item;
-                TreeNode treeNode = treeNodeFactory.Create(item);
+                TreeNode treeNode = treeNodeFactory.Create(node: item);
 
                 return editor.Id.Type switch
                 {
                     EditorType.Default => new OpenEditorData(
                         editorId: editor.Id,
                         node: treeNode,
-                        data: GetData(treeNode, item),
+                        data: GetData(treeNode: treeNode, item: item),
                         isPersisted: item.IsPersisted,
-                        parentNodeId: TreeNode.ToTreeNodeId(item.ParentItem),
+                        parentNodeId: TreeNode.ToTreeNodeId(node: item.ParentItem),
                         isDirty: editor.IsDirty
                     ),
                     EditorType.DocumentationEditor => new OpenEditorData(
                         editorId: editor.Id,
                         node: treeNode,
-                        data: documentationHelper.GetData(editor.DocumentationData, item.Name),
+                        data: documentationHelper.GetData(
+                            documentationComplete: editor.DocumentationData,
+                            label: item.Name
+                        ),
                         isPersisted: item.IsPersisted,
                         isDirty: editor.IsDirty
                     ),
-                    _ => throw new Exception("Unknown editor type: " + editor.Id.Type),
+                    _ => throw new Exception(message: "Unknown editor type: " + editor.Id.Type),
                 };
             })
             .ToList();
-        return Ok(items);
+        return Ok(value: items);
     }
 
-    [HttpPost("OpenEditor")]
+    [HttpPost(template: "OpenEditor")]
     public IActionResult OpenEditor([Required] [FromBody] OpenEditorModel input)
     {
-        EditorData editor = editorService.OpenDefaultEditor(input.SchemaItemId);
+        EditorData editor = editorService.OpenDefaultEditor(schemaItemId: input.SchemaItemId);
         ISchemaItem item = editor.Item;
-        TreeNode treeNode = treeNodeFactory.Create(item);
+        TreeNode treeNode = treeNodeFactory.Create(node: item);
 
         var openEditorData = new OpenEditorData(
             editorId: editor.Id,
             node: treeNode,
-            data: GetData(treeNode, item),
+            data: GetData(treeNode: treeNode, item: item),
             isPersisted: true
         );
-        return Ok(openEditorData);
+        return Ok(value: openEditorData);
     }
 
     private object GetData(TreeNode treeNode, ISchemaItem item)
     {
         object data = treeNode.DefaultEditor switch
         {
-            EditorSubType.GridEditor => propertyService.GetEditorProperties(item),
-            EditorSubType.DeploymentScriptsEditor => propertyService.GetEditorProperties(item),
-            EditorSubType.XsltEditor => propertyService.GetEditorProperties(item),
-            EditorSubType.ScreenSectionEditor => sectionService.GetSectionEditorData(item),
-            EditorSubType.ScreenEditor => sectionService.GetScreenEditorData(item),
+            EditorSubType.GridEditor => propertyService.GetEditorProperties(item: item),
+            EditorSubType.DeploymentScriptsEditor => propertyService.GetEditorProperties(
+                item: item
+            ),
+            EditorSubType.XsltEditor => propertyService.GetEditorProperties(item: item),
+            EditorSubType.ScreenSectionEditor => sectionService.GetSectionEditorData(
+                editedItem: item
+            ),
+            EditorSubType.ScreenEditor => sectionService.GetScreenEditorData(editedItem: item),
             _ => null,
         };
         return data;
     }
 
-    [HttpPost("CloseEditor")]
+    [HttpPost(template: "CloseEditor")]
     public IActionResult CloseEditor([Required] [FromBody] CloseEditorModel input)
     {
-        editorService.CloseEditor(input.GetTypedEditorId());
+        editorService.CloseEditor(editorId: input.GetTypedEditorId());
         return Ok();
     }
 
-    [HttpPost("PersistChanges")]
+    [HttpPost(template: "PersistChanges")]
     public IActionResult PersistChanges([FromBody] PersistModel input)
     {
-        EditorData editorData = editorService.OpenDefaultEditor(input.SchemaItemId);
+        EditorData editorData = editorService.OpenDefaultEditor(schemaItemId: input.SchemaItemId);
         ISchemaItem item = editorData.Item;
         if (item is AbstractControlSet controlSet && controlSet.DataSourceId == Guid.Empty)
         {
-            return BadRequest("No Datasource selected can't save");
+            return BadRequest(error: "No Datasource selected can't save");
         }
 
         try

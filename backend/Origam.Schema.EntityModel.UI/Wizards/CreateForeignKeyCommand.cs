@@ -36,7 +36,7 @@ namespace Origam.Schema.EntityModel.UI.Wizards;
 public class CreateForeignKeyCommand : AbstractMenuCommand
 {
     SchemaBrowser _schemaBrowser =
-        WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+        WorkbenchSingleton.Workbench.GetPad(type: typeof(SchemaBrowser)) as SchemaBrowser;
     ForeignKeyForm keyForm;
     FieldMappingItem fk;
     public override bool IsEnabled
@@ -44,7 +44,10 @@ public class CreateForeignKeyCommand : AbstractMenuCommand
         get { return Owner is IDataEntity; }
         set
         {
-            throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
+            throw new ArgumentException(
+                message: ResourceUtils.GetString(key: "ErrorSetProperty"),
+                paramName: "IsEnabled"
+            );
         }
     }
 
@@ -53,28 +56,33 @@ public class CreateForeignKeyCommand : AbstractMenuCommand
         IDataEntity entity = Owner as IDataEntity;
         var list = new List<ListViewItem>();
         FieldMappingItem fmItem = new FieldMappingItem();
-        list.Add(new ListViewItem(fmItem.GetType().SchemaItemDescription().Name, fmItem.Icon));
+        list.Add(
+            item: new ListViewItem(
+                text: fmItem.GetType().SchemaItemDescription().Name,
+                imageKey: fmItem.Icon
+            )
+        );
         Stack stackPage = new Stack();
-        stackPage.Push(PagesList.Finish);
-        stackPage.Push(PagesList.SummaryPage);
-        stackPage.Push(PagesList.ForeignForm);
-        stackPage.Push(PagesList.StartPage);
+        stackPage.Push(obj: PagesList.Finish);
+        stackPage.Push(obj: PagesList.SummaryPage);
+        stackPage.Push(obj: PagesList.ForeignForm);
+        stackPage.Push(obj: PagesList.StartPage);
         keyForm = new ForeignKeyForm
         {
             ItemTypeList = list,
-            Title = ResourceUtils.GetString("CreateForeignKeyWizardTitle"),
+            Title = ResourceUtils.GetString(key: "CreateForeignKeyWizardTitle"),
             PageTitle = "",
-            Description = ResourceUtils.GetString("CreateForeignKeyWizardDescription"),
+            Description = ResourceUtils.GetString(key: "CreateForeignKeyWizardDescription"),
             Pages = stackPage,
             ImageList = _schemaBrowser.EbrSchemaBrowser.imgList,
             Command = this,
-            SelectForeignEntity = ResourceUtils.GetString("SelectForeignEntity"),
-            ForeignKeyWiz = ResourceUtils.GetString("ForeignKeyWiz"),
-            SelectForeignField = ResourceUtils.GetString("SelectForeignField"),
-            EnterKeyName = ResourceUtils.GetString("EnterKeyName"),
+            SelectForeignEntity = ResourceUtils.GetString(key: "SelectForeignEntity"),
+            ForeignKeyWiz = ResourceUtils.GetString(key: "ForeignKeyWiz"),
+            SelectForeignField = ResourceUtils.GetString(key: "SelectForeignField"),
+            EnterKeyName = ResourceUtils.GetString(key: "EnterKeyName"),
             MasterEntity = entity,
         };
-        Wizard wiz = new Wizard(keyForm);
+        Wizard wiz = new Wizard(objectForm: keyForm);
         if (wiz.ShowDialog() == DialogResult.OK)
         {
             EditSchemaItem cmd = new EditSchemaItem();
@@ -90,49 +98,50 @@ public class CreateForeignKeyCommand : AbstractMenuCommand
     public override void Execute()
     {
         fk = EntityHelper.CreateForeignKey(
-            keyForm.ForeignKeyName,
-            keyForm.Caption,
-            keyForm.AllowNulls,
-            keyForm.MasterEntity,
-            keyForm.ForeignEntity,
-            keyForm.ForeignField,
-            keyForm.Lookup,
-            true
+            name: keyForm.ForeignKeyName,
+            caption: keyForm.Caption,
+            allowNulls: keyForm.AllowNulls,
+            masterEntity: keyForm.MasterEntity,
+            foreignEntity: keyForm.ForeignEntity,
+            foreignField: keyForm.ForeignField,
+            lookup: keyForm.Lookup,
+            persist: true
         );
-        GeneratedModelElements.Add(fk);
+        GeneratedModelElements.Add(item: fk);
     }
 
     public override int GetImageIndex(string icon)
     {
-        return _schemaBrowser.ImageIndex(icon);
+        return _schemaBrowser.ImageIndex(icon: icon);
     }
 
     public override void SetSummaryText(object summary)
     {
         RichTextBox richTextBoxSummary = (RichTextBox)summary;
         richTextBoxSummary.Text =
-            ResourceUtils.GetString("CreateForeignKeyWizardDescription") + " with this parameters:";
-        richTextBoxSummary.AppendText(Environment.NewLine);
-        richTextBoxSummary.AppendText(Environment.NewLine);
-        richTextBoxSummary.AppendText("Master Entity: \t");
-        richTextBoxSummary.AppendText(keyForm.MasterEntity.Name);
-        richTextBoxSummary.AppendText(Environment.NewLine);
-        richTextBoxSummary.AppendText("Foreign Entity: \t");
-        richTextBoxSummary.AppendText(keyForm.ForeignEntity.Name);
-        richTextBoxSummary.AppendText(Environment.NewLine);
-        richTextBoxSummary.AppendText("Foreign Field: \t");
-        richTextBoxSummary.AppendText(keyForm.ForeignField.Name);
-        richTextBoxSummary.AppendText(Environment.NewLine);
-        richTextBoxSummary.AppendText("Foreign Key: \t");
-        richTextBoxSummary.AppendText(keyForm.ForeignKeyName);
-        richTextBoxSummary.AppendText(Environment.NewLine);
-        richTextBoxSummary.AppendText("Lookup: \t\t");
-        richTextBoxSummary.AppendText(keyForm.Lookup == null ? "" : keyForm.Lookup.Name);
-        richTextBoxSummary.AppendText(Environment.NewLine);
-        richTextBoxSummary.AppendText("Caption : \t");
-        richTextBoxSummary.AppendText(keyForm.Caption);
-        richTextBoxSummary.AppendText(Environment.NewLine);
-        richTextBoxSummary.AppendText("Allow null : \t");
-        richTextBoxSummary.AppendText(keyForm.AllowNulls.ToString());
+            ResourceUtils.GetString(key: "CreateForeignKeyWizardDescription")
+            + " with this parameters:";
+        richTextBoxSummary.AppendText(text: Environment.NewLine);
+        richTextBoxSummary.AppendText(text: Environment.NewLine);
+        richTextBoxSummary.AppendText(text: "Master Entity: \t");
+        richTextBoxSummary.AppendText(text: keyForm.MasterEntity.Name);
+        richTextBoxSummary.AppendText(text: Environment.NewLine);
+        richTextBoxSummary.AppendText(text: "Foreign Entity: \t");
+        richTextBoxSummary.AppendText(text: keyForm.ForeignEntity.Name);
+        richTextBoxSummary.AppendText(text: Environment.NewLine);
+        richTextBoxSummary.AppendText(text: "Foreign Field: \t");
+        richTextBoxSummary.AppendText(text: keyForm.ForeignField.Name);
+        richTextBoxSummary.AppendText(text: Environment.NewLine);
+        richTextBoxSummary.AppendText(text: "Foreign Key: \t");
+        richTextBoxSummary.AppendText(text: keyForm.ForeignKeyName);
+        richTextBoxSummary.AppendText(text: Environment.NewLine);
+        richTextBoxSummary.AppendText(text: "Lookup: \t\t");
+        richTextBoxSummary.AppendText(text: keyForm.Lookup == null ? "" : keyForm.Lookup.Name);
+        richTextBoxSummary.AppendText(text: Environment.NewLine);
+        richTextBoxSummary.AppendText(text: "Caption : \t");
+        richTextBoxSummary.AppendText(text: keyForm.Caption);
+        richTextBoxSummary.AppendText(text: Environment.NewLine);
+        richTextBoxSummary.AppendText(text: "Allow null : \t");
+        richTextBoxSummary.AppendText(text: keyForm.AllowNulls.ToString());
     }
 }

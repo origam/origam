@@ -31,26 +31,26 @@ public class MenuLookupIndex
 
     public void AddIfNotPresent(Guid menuId, HashSet<Guid> containedLookups)
     {
-        if (menuToAllowedLookups.ContainsKey(menuId))
+        if (menuToAllowedLookups.ContainsKey(key: menuId))
         {
             return;
         }
 
-        menuToAllowedLookups.Add(menuId, containedLookups);
+        menuToAllowedLookups.Add(key: menuId, value: containedLookups);
     }
 
     public bool IsAllowed(Guid menuItemId, Guid lookupId)
     {
-        if (!menuToAllowedLookups.ContainsKey(menuItemId))
+        if (!menuToAllowedLookups.ContainsKey(key: menuItemId))
         {
             return false;
         }
 
-        return menuToAllowedLookups[menuItemId].Contains(lookupId);
+        return menuToAllowedLookups[key: menuItemId].Contains(item: lookupId);
     }
 
     public bool HasDataFor(Guid menuItemId)
     {
-        return menuToAllowedLookups.ContainsKey(menuItemId);
+        return menuToAllowedLookups.ContainsKey(key: menuItemId);
     }
 }

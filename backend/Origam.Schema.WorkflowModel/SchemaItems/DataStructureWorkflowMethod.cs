@@ -31,20 +31,24 @@ namespace Origam.Schema.WorkflowModel;
 /// <summary>
 /// Summary description for DataStructureWorkflowMethod.
 /// </summary>
-[SchemaItemDescription("Workflow Method", "Workflow Methods", "icon_workflow-method.png")]
-[HelpTopic("Data+Structure+Workflow+Method")]
-[DefaultProperty("LoadWorkflow")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(
+    name: "Workflow Method",
+    folderName: "Workflow Methods",
+    iconName: "icon_workflow-method.png"
+)]
+[HelpTopic(topic: "Data+Structure+Workflow+Method")]
+[DefaultProperty(name: "LoadWorkflow")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class DataStructureWorkflowMethod : DataStructureMethod
 {
     public DataStructureWorkflowMethod()
         : base() { }
 
     public DataStructureWorkflowMethod(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(schemaExtensionId: schemaExtensionId) { }
 
     public DataStructureWorkflowMethod(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     // with workflow method we consider all the workflows
     // as input parameters except context stores marked with `IsReturnValue'
@@ -54,18 +58,20 @@ public class DataStructureWorkflowMethod : DataStructureMethod
     )
     {
         foreach (
-            var context in LoadWorkflow.ChildItemsByType<ContextStore>(ContextStore.CategoryConst)
+            var context in LoadWorkflow.ChildItemsByType<ContextStore>(
+                itemType: ContextStore.CategoryConst
+            )
         )
         {
             if (context.IsReturnValue == false && context.isScalar())
             {
-                if (!list.ContainsKey(context.Name))
+                if (!list.ContainsKey(key: context.Name))
                 {
                     ParameterReference pr = new ParameterReference();
 
                     pr.PersistenceProvider = this.PersistenceProvider;
                     pr.Name = context.Name;
-                    list.Add(context.Name, pr);
+                    list.Add(key: context.Name, value: pr);
                 }
             }
         }
@@ -73,33 +79,33 @@ public class DataStructureWorkflowMethod : DataStructureMethod
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(this.LoadWorkflow);
-        base.GetExtraDependencies(dependencies);
+        dependencies.Add(item: this.LoadWorkflow);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     #region Properties
 
     public Guid LoadWorkflowId;
 
-    [Category("Reference")]
-    [TypeConverter(typeof(WorkflowConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
+    [Category(category: "Reference")]
+    [TypeConverter(type: typeof(WorkflowConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
     [Description(
-        "Select a workflow to load data into the structure. This schema item will Be extended later with `SaveWorkflow' and `SaveWorkflowInputContext' properties to be able to save the datastructure with a workflow."
+        description: "Select a workflow to load data into the structure. This schema item will Be extended later with `SaveWorkflow' and `SaveWorkflowInputContext' properties to be able to save the datastructure with a workflow."
     )]
     [NotNullModelElementRule()]
-    [XmlReference("loadWorkflow", "LoadWorkflowId")]
+    [XmlReference(attributeName: "loadWorkflow", idField: "LoadWorkflowId")]
     public Workflow LoadWorkflow
     {
         get
         {
             return (ISchemaItem)
                     this.PersistenceProvider.RetrieveInstance(
-                        typeof(ISchemaItem),
-                        new ModelElementKey(this.LoadWorkflowId)
+                        type: typeof(ISchemaItem),
+                        primaryKey: new ModelElementKey(id: this.LoadWorkflowId)
                     ) as Workflow;
         }
-        set { this.LoadWorkflowId = (Guid)value.PrimaryKey["Id"]; }
+        set { this.LoadWorkflowId = (Guid)value.PrimaryKey[key: "Id"]; }
     }
     #endregion
 }

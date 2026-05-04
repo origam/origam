@@ -30,8 +30,8 @@ public class StandardHttpContextWrapper : IHttpContextWrapper
     public StandardHttpContextWrapper(HttpContext context)
     {
         this.context = context;
-        Response = new StandardHttpResponseWrapper(context);
-        Request = new StandardHttpRequestWrapper(context);
+        Response = new StandardHttpResponseWrapper(httpContext: context);
+        Request = new StandardHttpRequestWrapper(httpContext: context);
     }
 
     public IResponseWrapper Response { get; }

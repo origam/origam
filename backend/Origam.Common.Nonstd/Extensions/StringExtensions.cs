@@ -28,6 +28,6 @@ public static class StringExtensions
 {
     public static FontStyle ToFont(this string str)
     {
-        return (FontStyle)Enum.Parse(typeof(FontStyle), str);
+        return (FontStyle)Enum.Parse(enumType: typeof(FontStyle), value: str);
     }
 }

@@ -33,8 +33,8 @@ namespace Origam.Schema;
 /// <summary>
 /// Summary description for AncestorItem.
 /// </summary>
-[XmlModelRoot("ancestor")]
-[ClassMetaVersion("6.0.0")]
+[XmlModelRoot(category: "ancestor")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class SchemaItemAncestor
     : AbstractPersistent,
         IBrowserNode2,
@@ -48,11 +48,11 @@ public class SchemaItemAncestor
     }
 
     public SchemaItemAncestor(Key primaryKey)
-        : base(primaryKey, new ModelElementKey().KeyArray) { }
+        : base(primaryKey: primaryKey, correctKeys: new ModelElementKey().KeyArray) { }
 
     private ISchemaItem _schemaItem;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public ISchemaItem SchemaItem
     {
         get { return _schemaItem; }
@@ -60,15 +60,15 @@ public class SchemaItemAncestor
     }
     private Guid _ancestorId;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public Guid AncestorId
     {
         get { return _ancestorId; }
         set { _ancestorId = value; }
     }
 
-    [TypeConverter(typeof(AncestorItemConverter))]
-    [XmlReference("ancestor", "AncestorId")]
+    [TypeConverter(type: typeof(AncestorItemConverter))]
+    [XmlReference(attributeName: "ancestor", idField: "AncestorId")]
     public ISchemaItem Ancestor
     {
         get
@@ -78,25 +78,33 @@ public class SchemaItemAncestor
             try
             {
                 return (ISchemaItem)
-                    this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
+                    this.PersistenceProvider.RetrieveInstance(
+                        type: typeof(ISchemaItem),
+                        primaryKey: key
+                    );
             }
             catch
             {
                 return null;
             }
         }
-        set { this.AncestorId = (Guid)value.PrimaryKey["Id"]; }
+        set { this.AncestorId = (Guid)value.PrimaryKey[key: "Id"]; }
     }
 
     #region IBrowserNode2 Members
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public bool Hide
     {
         get { return !this.IsPersisted; }
-        set { throw new InvalidOperationException(ResourceUtils.GetString("ErrorSetHide")); }
+        set
+        {
+            throw new InvalidOperationException(
+                message: ResourceUtils.GetString(key: "ErrorSetHide")
+            );
+        }
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public bool CanDelete
     {
         get { return false; }
@@ -105,7 +113,7 @@ public class SchemaItemAncestor
     public void Delete()
     {
         this.IsDeleted = true;
-        this.Ancestor.AllAncestors.Remove(this);
+        this.Ancestor.AllAncestors.Remove(value: this);
     }
 
     public bool CanMove(IBrowserNode2 newNode)
@@ -113,39 +121,44 @@ public class SchemaItemAncestor
         return false;
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public IBrowserNode2 ParentNode
     {
         get { return null; }
-        set { throw new InvalidOperationException(ResourceUtils.GetString("ErorrMoveAncestor")); }
+        set
+        {
+            throw new InvalidOperationException(
+                message: ResourceUtils.GetString(key: "ErorrMoveAncestor")
+            );
+        }
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public byte[] NodeImage
     {
         get { return null; }
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public string NodeId
     {
-        get { return this.PrimaryKey["Id"].ToString(); }
+        get { return this.PrimaryKey[key: "Id"].ToString(); }
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public virtual string FontStyle
     {
         get { return "Regular"; }
     }
     #endregion
     #region IBrowserNode Members
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public bool HasChildNodes
     {
         get { return this.ChildNodes().Count > 0; }
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public bool CanRename
     {
         get { return false; }
@@ -164,7 +177,7 @@ public class SchemaItemAncestor
             if (
                 item.DerivedFrom != null
                 && (
-                    item.DerivedFrom.PrimaryKey.Equals(this.Ancestor.PrimaryKey)
+                    item.DerivedFrom.PrimaryKey.Equals(obj: this.Ancestor.PrimaryKey)
                     & item.IsDeleted == false
                 )
             )
@@ -178,32 +191,37 @@ public class SchemaItemAncestor
                         description = item.ItemType;
                     }
 
-                    if (!folders.Contains(description))
+                    if (!folders.Contains(key: description))
                     {
                         NonpersistentSchemaItemNode folder = new NonpersistentSchemaItemNode();
                         folder.ParentNode = this;
                         folder.NodeText = description;
-                        col.Add(folder);
-                        folders.Add(description, folder);
+                        col.Add(value: folder);
+                        folders.Add(key: description, value: folder);
                     }
                 }
                 else
                 {
-                    col.Add(item);
+                    col.Add(value: item);
                 }
             }
         }
         return col;
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public string NodeText
     {
         get { return this.Ancestor.Name; }
-        set { throw new InvalidOperationException(ResourceUtils.GetString("ErrorRenameAncestor")); }
+        set
+        {
+            throw new InvalidOperationException(
+                message: ResourceUtils.GetString(key: "ErrorRenameAncestor")
+            );
+        }
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public string NodeToolTipText
     {
         get
@@ -213,7 +231,7 @@ public class SchemaItemAncestor
         }
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public string Icon
     {
         get { return "3"; }
@@ -234,8 +252,8 @@ public class SchemaItemAncestor
     public IDictionary<string, Guid> ParentFolderIds =>
         new Dictionary<string, Guid>
         {
-            { CategoryFactory.Create(typeof(Package)), SchemaItem.SchemaExtensionId },
-            { CategoryFactory.Create(typeof(SchemaItemGroup)), SchemaItem.GroupId },
+            { CategoryFactory.Create(type: typeof(Package)), SchemaItem.SchemaExtensionId },
+            { CategoryFactory.Create(type: typeof(SchemaItemGroup)), SchemaItem.GroupId },
         };
     public string Path
     {
@@ -275,7 +293,7 @@ public class SchemaItemAncestor
 
         if (anc != null)
         {
-            return this.NodeText.CompareTo(anc.NodeText);
+            return this.NodeText.CompareTo(strB: anc.NodeText);
         }
 
         throw new InvalidCastException();

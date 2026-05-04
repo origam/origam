@@ -34,8 +34,8 @@ public class WorkFlowGraph : Graph
         RootSubgraph
             .GetAllSubgraphs()
             .OfType<BlockSubGraph>()
-            .Select(x => x.ContextStoreSubgraph)
-            .Where(x => x != null);
+            .Select(selector: x => x.ContextStoreSubgraph)
+            .Where(predicate: x => x != null);
 
     public bool IsWorkFlowItemSubGraph(Node node)
     {

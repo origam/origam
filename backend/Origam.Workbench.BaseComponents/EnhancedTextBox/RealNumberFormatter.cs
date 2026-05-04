@@ -30,40 +30,40 @@ class RealNumberFormatter : Formatter
     private readonly NumberParser numberParser;
 
     public RealNumberFormatter(TextBox textBox, string format, Func<string, object> textParseFunc)
-        : base(textBox, format)
+        : base(textBox: textBox, customFormat: format)
     {
-        numberParser = new NumberParser(textParseFunc, errorReporter);
+        numberParser = new NumberParser(textParseFunc: textParseFunc, errorReporter: errorReporter);
     }
 
     private string Format =>
-        string.IsNullOrEmpty(customFormat) ? "###,###,###.######" : customFormat;
+        string.IsNullOrEmpty(value: customFormat) ? "###,###,###.######" : customFormat;
     private char DecimalSeparator =>
-        CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator[0];
+        CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator[index: 0];
 
     public override void OnLeave(object sender, EventArgs e)
     {
-        if (string.IsNullOrEmpty(Text))
+        if (string.IsNullOrEmpty(value: Text))
         {
             return;
         }
 
-        var value = numberParser.Parse(Text);
-        Text = string.Format(Culture, "{0:" + Format + "}", value);
+        var value = numberParser.Parse(text: Text);
+        Text = string.Format(provider: Culture, format: "{0:" + Format + "}", arg0: value);
     }
 
     public override object GetValue()
     {
-        return numberParser.Parse(Text);
+        return numberParser.Parse(text: Text);
     }
 
     protected override bool IsValidChar(char input)
     {
-        if (base.IsValidChar(input))
+        if (base.IsValidChar(input: input))
         {
             return true;
         }
 
-        return char.IsDigit(input)
+        return char.IsDigit(c: input)
             || input == Minus
             || input == ThousandsSeparator
             || input == DecimalSeparator;

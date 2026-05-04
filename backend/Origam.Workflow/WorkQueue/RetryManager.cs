@@ -48,42 +48,49 @@ public class RetryManager
         Guid retryType = queue.refWorkQueueRetryTypeId;
         int maxRetries = queue.MaxRetries;
         int retryIntervalSeconds = queue.RetryIntervalSeconds;
-        double exponentialRetryBase = decimal.ToDouble(queue.ExponentialRetryBase);
+        double exponentialRetryBase = decimal.ToDouble(d: queue.ExponentialRetryBase);
 
         var failureTime = getTimeNow();
-        queueEntryRow["ErrorText"] = failureTime + ": " + errorMessage;
-        queueEntryRow["LastAttemptTime"] = failureTime;
-        int attemptCount = GetAttemptCount(queueEntryRow);
+        queueEntryRow[columnName: "ErrorText"] = failureTime + ": " + errorMessage;
+        queueEntryRow[columnName: "LastAttemptTime"] = failureTime;
+        int attemptCount = GetAttemptCount(queueEntryRow: queueEntryRow);
         int newAttemptCount = attemptCount + 1; // = 1 after the first failure
         int retryNumber = newAttemptCount;
-        queueEntryRow["AttemptCount"] = newAttemptCount;
+        queueEntryRow[columnName: "AttemptCount"] = newAttemptCount;
 
-        if (Equals(retryType, WorkQueueRetryType.NoRetry) || retryNumber > maxRetries)
+        if (Equals(objA: retryType, objB: WorkQueueRetryType.NoRetry) || retryNumber > maxRetries)
         {
-            queueEntryRow["InRetry"] = false;
-            queueEntryRow["NextAttemptTime"] = DateTime.MaxValue;
+            queueEntryRow[columnName: "InRetry"] = false;
+            queueEntryRow[columnName: "NextAttemptTime"] = DateTime.MaxValue;
             return;
         }
-        if (Equals(retryType, WorkQueueRetryType.LinearRetry))
+        if (Equals(objA: retryType, objB: WorkQueueRetryType.LinearRetry))
         {
-            queueEntryRow["InRetry"] = true;
-            queueEntryRow["NextAttemptTime"] = failureTime.AddSeconds(retryIntervalSeconds);
+            queueEntryRow[columnName: "InRetry"] = true;
+            queueEntryRow[columnName: "NextAttemptTime"] = failureTime.AddSeconds(
+                value: retryIntervalSeconds
+            );
             return;
         }
-        if (Equals(retryType, WorkQueueRetryType.ExponentialRetry))
+        if (Equals(objA: retryType, objB: WorkQueueRetryType.ExponentialRetry))
         {
             int minInterval =
-                (int)Math.Pow(exponentialRetryBase, retryNumber - 1) * retryIntervalSeconds;
+                (int)Math.Pow(x: exponentialRetryBase, y: retryNumber - 1) * retryIntervalSeconds;
             int maxInterval =
-                (int)Math.Pow(exponentialRetryBase, retryNumber) * retryIntervalSeconds;
-            int waitTimeSeconds = RandomGenerator.Next(minInterval, maxInterval);
+                (int)Math.Pow(x: exponentialRetryBase, y: retryNumber) * retryIntervalSeconds;
+            int waitTimeSeconds = RandomGenerator.Next(
+                minValue: minInterval,
+                maxValue: maxInterval
+            );
 
-            queueEntryRow["InRetry"] = true;
-            queueEntryRow["NextAttemptTime"] = failureTime.AddSeconds(waitTimeSeconds);
+            queueEntryRow[columnName: "InRetry"] = true;
+            queueEntryRow[columnName: "NextAttemptTime"] = failureTime.AddSeconds(
+                value: waitTimeSeconds
+            );
             return;
         }
 
-        throw new NotImplementedException($"retryType: {retryType} not implemented");
+        throw new NotImplementedException(message: $"retryType: {retryType} not implemented");
     }
 
     public bool CanRunNow(
@@ -94,14 +101,14 @@ public class RetryManager
     {
         Guid retryType = queue.refWorkQueueRetryTypeId;
         int maxRetries = queue.MaxRetries;
-        int attemptCount = GetAttemptCount(queueEntryRow);
-        bool inRetry = (bool)queueEntryRow["InRetry"];
+        int attemptCount = GetAttemptCount(queueEntryRow: queueEntryRow);
+        bool inRetry = (bool)queueEntryRow[columnName: "InRetry"];
 
         if (
             !inRetry
             && !processErrors
-            && !queueEntryRow.IsNull("ErrorText")
-            && (string)queueEntryRow["ErrorText"] != ""
+            && !queueEntryRow.IsNull(columnName: "ErrorText")
+            && (string)queueEntryRow[columnName: "ErrorText"] != ""
         )
         {
             return false;
@@ -112,7 +119,7 @@ public class RetryManager
             return true;
         }
 
-        if (Equals(retryType, WorkQueueRetryType.NoRetry))
+        if (Equals(objA: retryType, objB: WorkQueueRetryType.NoRetry))
         {
             return false;
         }
@@ -122,28 +129,28 @@ public class RetryManager
             return false;
         }
 
-        if (queueEntryRow["NextAttemptTime"] == DBNull.Value)
+        if (queueEntryRow[columnName: "NextAttemptTime"] == DBNull.Value)
         {
             throw new Exception(
-                $"NextAttemptTime is not set on WorkQueueEntry {queueEntryRow["Id"]} while WorkQueueRetryType is not NoRetry and the AttemptCount is not null or 0"
+                message: $"NextAttemptTime is not set on WorkQueueEntry {queueEntryRow[columnName: "Id"]} while WorkQueueRetryType is not NoRetry and the AttemptCount is not null or 0"
             );
         }
 
-        return (DateTime)queueEntryRow["NextAttemptTime"] <= getTimeNow();
+        return (DateTime)queueEntryRow[columnName: "NextAttemptTime"] <= getTimeNow();
     }
 
     public void ResetEntry(DataRow queueEntryRow)
     {
-        queueEntryRow["AttemptCount"] = 0;
-        queueEntryRow["LastAttemptTime"] = DBNull.Value;
-        queueEntryRow["NextAttemptTime"] = DBNull.Value;
-        queueEntryRow["InRetry"] = false;
+        queueEntryRow[columnName: "AttemptCount"] = 0;
+        queueEntryRow[columnName: "LastAttemptTime"] = DBNull.Value;
+        queueEntryRow[columnName: "NextAttemptTime"] = DBNull.Value;
+        queueEntryRow[columnName: "InRetry"] = false;
     }
 
     private int GetAttemptCount(DataRow queueEntryRow)
     {
-        return queueEntryRow["AttemptCount"] == DBNull.Value
+        return queueEntryRow[columnName: "AttemptCount"] == DBNull.Value
             ? 0
-            : (int)queueEntryRow["AttemptCount"];
+            : (int)queueEntryRow[columnName: "AttemptCount"];
     }
 }

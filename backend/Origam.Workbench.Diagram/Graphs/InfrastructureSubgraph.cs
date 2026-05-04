@@ -29,7 +29,7 @@ public class InfrastructureSubgraph : Subgraph, IWorkflowSubgraph
     private readonly BlockSubGraph parent;
 
     public InfrastructureSubgraph(string id, BlockSubGraph parent)
-        : base(id)
+        : base(id: id)
     {
         this.parent = parent;
         LabelText = "";

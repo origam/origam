@@ -47,7 +47,7 @@ public class PropertyContainer<T> : IPropertyContainer
     public PropertyContainer(string containerName, IFilePersistent containingObject)
     {
         this.containerName = containerName;
-        id = (Guid)containingObject.PrimaryKey["Id"];
+        id = (Guid)containingObject.PrimaryKey[key: "Id"];
         persistenceProviderGetter = () => containingObject.PersistenceProvider;
         containingObjectType = containingObject.GetType();
     }
@@ -62,7 +62,12 @@ public class PropertyContainer<T> : IPropertyContainer
         if (value == null && !wasSetToNull)
         {
             value = (T)
-                persistenceProviderGetter().RetrieveValue(id, containingObjectType, containerName);
+                persistenceProviderGetter()
+                    .RetrieveValue(
+                        instanceId: id,
+                        parentType: containingObjectType,
+                        fieldName: containerName
+                    );
         }
         return value;
     }

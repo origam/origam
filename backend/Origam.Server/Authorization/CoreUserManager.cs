@@ -49,15 +49,15 @@ public class CoreUserManager<TUser> : UserManager<IOrigamUser>
         IStringLocalizer<SharedResources> localizer
     )
         : base(
-            store,
-            optionsAccessor,
-            passwordHasher,
-            userValidators,
-            passwordValidators,
-            keyNormalizer,
-            errors,
-            services,
-            logger
+            store: store,
+            optionsAccessor: optionsAccessor,
+            passwordHasher: passwordHasher,
+            userValidators: userValidators,
+            passwordValidators: passwordValidators,
+            keyNormalizer: keyNormalizer,
+            errors: errors,
+            services: services,
+            logger: logger
         )
     {
         this.localizer = localizer;
@@ -71,36 +71,40 @@ public class CoreUserManager<TUser> : UserManager<IOrigamUser>
 #pragma warning restore 1998
     {
         var origamUserDataSet = UserStore.GetOrigamUserDataSet(
-            UserStore.GET_ORIGAM_USER_BY_USER_NAME,
-            "OrigamUser_parUserName",
-            user.UserName,
-            user.TransactionId
+            methodId: UserStore.GET_ORIGAM_USER_BY_USER_NAME,
+            paramName: "OrigamUser_parUserName",
+            paramValue: user.UserName,
+            transactionId: user.TransactionId
         );
-        if (origamUserDataSet.Tables["OrigamUser"].Rows.Count == 0)
+        if (origamUserDataSet.Tables[name: "OrigamUser"].Rows.Count == 0)
         {
             return IdentityResult.Failed(
-                new IdentityError
+                errors: new IdentityError
                 {
                     Code = "Error",
-                    Description = localizer["ErrorUserNotFound"].ToString(),
+                    Description = localizer[name: "ErrorUserNotFound"].ToString(),
                 }
             );
         }
-        var origamUserRow = origamUserDataSet.Tables["OrigamUser"].Rows[0];
-        origamUserRow["EmailConfirmed"] = user.IsApproved;
-        origamUserRow["RecordUpdated"] = DateTime.Now;
-        origamUserRow["RecordUpdatedBy"] = SecurityManager.CurrentUserProfile().Id;
+        var origamUserRow = origamUserDataSet.Tables[name: "OrigamUser"].Rows[index: 0];
+        origamUserRow[columnName: "EmailConfirmed"] = user.IsApproved;
+        origamUserRow[columnName: "RecordUpdated"] = DateTime.Now;
+        origamUserRow[columnName: "RecordUpdatedBy"] = SecurityManager.CurrentUserProfile().Id;
         DataService.Instance.StoreData(
-            UserStore.ORIGAM_USER_DATA_STRUCTURE,
-            origamUserDataSet,
-            false,
-            user.TransactionId
+            dataStructureId: UserStore.ORIGAM_USER_DATA_STRUCTURE,
+            data: origamUserDataSet,
+            loadActualValuesAfterUpdate: false,
+            transactionId: user.TransactionId
         );
         return IdentityResult.Success;
     }
 
     public Task<IOrigamUser> FindByNameAsync(string name, string transactionId)
     {
-        return userStore.FindByNameAsync(name, transactionId, CancellationToken);
+        return userStore.FindByNameAsync(
+            normalizedUserName: name,
+            transactionId: transactionId,
+            cancellationToken: CancellationToken
+        );
     }
 }

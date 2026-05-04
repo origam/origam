@@ -35,8 +35,11 @@ public enum DeploymentFileLocation
 /// <summary>
 /// Summary description for FileRestoreUpdateScriptActivity.
 /// </summary>
-[SchemaItemDescription("File Restore Update Activity", "icon_file-restore-update-activity.png")]
-[HelpTopic("File+Restore+Update+Activity")]
+[SchemaItemDescription(
+    name: "File Restore Update Activity",
+    iconName: "icon_file-restore-update-activity.png"
+)]
+[HelpTopic(topic: "File+Restore+Update+Activity")]
 public class FileRestoreUpdateScriptActivity : AbstractUpdateScriptActivity
 {
     public FileRestoreUpdateScriptActivity()
@@ -46,13 +49,13 @@ public class FileRestoreUpdateScriptActivity : AbstractUpdateScriptActivity
     }
 
     public FileRestoreUpdateScriptActivity(Guid schemaExtensionId)
-        : base(schemaExtensionId)
+        : base(schemaExtensionId: schemaExtensionId)
     {
         InitializeProperyContainers();
     }
 
     public FileRestoreUpdateScriptActivity(Key primaryKey)
-        : base(primaryKey)
+        : base(primaryKey: primaryKey)
     {
         InitializeProperyContainers();
     }
@@ -68,17 +71,17 @@ public class FileRestoreUpdateScriptActivity : AbstractUpdateScriptActivity
     #region Properties
     private PropertyContainer<byte[]> content;
 
-    [Category("File Information")]
+    [Category(category: "File Information")]
     [XmlExternalFileReference(containerName: nameof(content), extension: ExternalFileExtension.Bin)]
     public Byte[] File
     {
         get => content.Get();
-        set => content.Set(value);
+        set => content.Set(value: value);
     }
     private string _manualLocation;
 
-    [Category("File Information")]
-    [XmlAttribute("fileName")]
+    [Category(category: "File Information")]
+    [XmlAttribute(attributeName: "fileName")]
     public string FileName
     {
         get { return _manualLocation; }
@@ -86,8 +89,8 @@ public class FileRestoreUpdateScriptActivity : AbstractUpdateScriptActivity
     }
     private DeploymentFileLocation _targetLocation = DeploymentFileLocation.ReportsFolder;
 
-    [Category("File Information")]
-    [XmlAttribute("targetLocation")]
+    [Category(category: "File Information")]
+    [XmlAttribute(attributeName: "targetLocation")]
     public DeploymentFileLocation TargetLocation
     {
         get { return _targetLocation; }

@@ -67,7 +67,7 @@ public class CreateForeignKeyWizard : System.Windows.Forms.Form
                 components.Dispose();
             }
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
 
     #region Windows Form Designer generated code
@@ -337,18 +337,18 @@ public class CreateForeignKeyWizard : System.Windows.Forms.Form
             cboLookup.BeginUpdate();
             foreach (IDataEntity entity in this.MasterEntity.RootProvider.ChildItems)
             {
-                cboEntity.Items.Add(entity);
+                cboEntity.Items.Add(item: entity);
             }
             Workbench.Services.SchemaService schema =
                 Workbench.Services.ServiceManager.Services.GetService(
-                    typeof(Workbench.Services.SchemaService)
+                    serviceType: typeof(Workbench.Services.SchemaService)
                 ) as Workbench.Services.SchemaService;
             IDataLookupSchemaItemProvider lookups =
-                schema.GetProvider(typeof(IDataLookupSchemaItemProvider))
+                schema.GetProvider(type: typeof(IDataLookupSchemaItemProvider))
                 as IDataLookupSchemaItemProvider;
             foreach (object lookup in lookups.ChildItems)
             {
-                cboLookup.Items.Add(lookup);
+                cboLookup.Items.Add(item: lookup);
             }
         }
         finally
@@ -363,30 +363,30 @@ public class CreateForeignKeyWizard : System.Windows.Forms.Form
         if (this.ForeignEntity == null)
         {
             MessageBox.Show(
-                ResourceUtils.GetString("SelectForeignEntity"),
-                ResourceUtils.GetString("ForeignKeyWiz"),
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Asterisk
+                text: ResourceUtils.GetString(key: "SelectForeignEntity"),
+                caption: ResourceUtils.GetString(key: "ForeignKeyWiz"),
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Asterisk
             );
             return;
         }
         if (this.ForeignField == null)
         {
             MessageBox.Show(
-                ResourceUtils.GetString("SelectForeignField"),
-                ResourceUtils.GetString("ForeignKeyWiz"),
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Asterisk
+                text: ResourceUtils.GetString(key: "SelectForeignField"),
+                caption: ResourceUtils.GetString(key: "ForeignKeyWiz"),
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Asterisk
             );
             return;
         }
         if (txtName.Text == "")
         {
             MessageBox.Show(
-                ResourceUtils.GetString("EnterKeyName"),
-                ResourceUtils.GetString("ForeignKeyWiz"),
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Asterisk
+                text: ResourceUtils.GetString(key: "EnterKeyName"),
+                caption: ResourceUtils.GetString(key: "ForeignKeyWiz"),
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Asterisk
             );
             return;
         }
@@ -417,7 +417,7 @@ public class CreateForeignKeyWizard : System.Windows.Forms.Form
             {
                 foreach (IDataEntityColumn column in this.ForeignEntity.EntityColumns)
                 {
-                    cboField.Items.Add(column);
+                    cboField.Items.Add(item: column);
                 }
             }
         }

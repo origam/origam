@@ -40,8 +40,8 @@ internal class SubgraphNodePainter : INodeItemPainter
     public SubgraphNodePainter(InternalPainter internalPainter)
     {
         painter = internalPainter;
-        nodePainter = new NodePainter(internalPainter);
-        nodeHeaderPainter = new NodeHeaderPainter(internalPainter);
+        nodePainter = new NodePainter(painter: internalPainter);
+        nodeHeaderPainter = new NodeHeaderPainter(painter: internalPainter);
         footerPainter = new FooterPainter();
     }
 
@@ -50,17 +50,17 @@ internal class SubgraphNodePainter : INodeItemPainter
         Subgraph subgraph = (Subgraph)node;
         if (!subgraph.Nodes.Any() && !subgraph.Subgraphs.Any())
         {
-            return nodePainter.GetBoundary(node);
+            return nodePainter.GetBoundary(node: node);
         }
 
         var clusterBoundary = ((Cluster)node.GeometryNode).RectangularBoundary;
-        var height = clusterBoundary.TopMargin + footerPainter.GetHeight(node);
-        var labelWidth = GetLabelWidth(node);
+        var height = clusterBoundary.TopMargin + footerPainter.GetHeight(node: node);
+        var labelWidth = GetLabelWidth(node: node);
         var width =
             clusterBoundary.MinWidth > labelWidth
                 ? clusterBoundary.MinWidth
                 : labelWidth + (painter.LabelSideMargin * 2);
-        return CurveFactory.CreateRectangle(width, height, new Point());
+        return CurveFactory.CreateRectangle(width: width, height: height, center: new Point());
     }
 
     public bool Draw(Node node, object graphicsObj)
@@ -68,26 +68,29 @@ internal class SubgraphNodePainter : INodeItemPainter
         Subgraph subgraph = (Subgraph)node;
         if (!subgraph.Nodes.Any())
         {
-            return nodePainter.Draw(node, graphicsObj);
+            return nodePainter.Draw(node: node, graphicsObj: graphicsObj);
         }
-        var borderSize = new Size((int)node.BoundingBox.Width, (int)node.BoundingBox.Height);
-        var borderCorner = new System.Drawing.Point(
-            (int)node.GeometryNode.Center.X - (borderSize.Width / 2),
-            (int)node.GeometryNode.Center.Y - (borderSize.Height / 2)
+        var borderSize = new Size(
+            width: (int)node.BoundingBox.Width,
+            height: (int)node.BoundingBox.Height
         );
-        Rectangle border = new Rectangle(borderCorner, borderSize);
+        var borderCorner = new System.Drawing.Point(
+            x: (int)node.GeometryNode.Center.X - (borderSize.Width / 2),
+            y: (int)node.GeometryNode.Center.Y - (borderSize.Height / 2)
+        );
+        Rectangle border = new Rectangle(location: borderCorner, size: borderSize);
         Rectangle headerBorder = new Rectangle(
-            borderCorner.X,
-            border.Bottom - painter.NodeHeaderHeight,
-            border.Width,
-            painter.NodeHeaderHeight
+            x: borderCorner.X,
+            y: border.Bottom - painter.NodeHeaderHeight,
+            width: border.Width,
+            height: painter.NodeHeaderHeight
         );
         Graphics editorGraphics = (Graphics)graphicsObj;
-        nodeHeaderPainter.Draw(node, editorGraphics, headerBorder);
+        nodeHeaderPainter.Draw(node: node, editorGraphics: editorGraphics, border: headerBorder);
         editorGraphics.DrawUpSideDown(
             drawAction: graphics =>
             {
-                graphics.DrawRectangle(painter.GetActiveBorderPen(node), border);
+                graphics.DrawRectangle(pen: painter.GetActiveBorderPen(node: node), rect: border);
             },
             yAxisCoordinate: (float)node.GeometryNode.Center.Y
         );
@@ -97,7 +100,7 @@ internal class SubgraphNodePainter : INodeItemPainter
 
     private float GetLabelWidth(Node node)
     {
-        SizeF stringSize = painter.MeasureString(node.LabelText);
+        SizeF stringSize = painter.MeasureString(nodeLabelText: node.LabelText);
         var labelWidth =
             stringSize.Width + painter.NodeHeaderHeight + painter.Margin + painter.TextSideMargin;
         return labelWidth;

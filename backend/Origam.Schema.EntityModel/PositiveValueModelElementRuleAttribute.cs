@@ -30,7 +30,7 @@ namespace Origam.DA.ObjectPersistence;
 /// Summary description for NotNullModelElementRuleAttribute.
 /// </summary>
 [AttributeUsage(
-    AttributeTargets.Property | AttributeTargets.Field,
+    validOn: AttributeTargets.Property | AttributeTargets.Field,
     AllowMultiple = false,
     Inherited = true
 )]
@@ -40,14 +40,16 @@ public class PositiveValueModelElementRuleAttribute : AbstractModelElementRuleAt
 
     public override Exception CheckRule(object instance)
     {
-        return new NotSupportedException(ResourceUtils.GetString("MemberNameRequired"));
+        return new NotSupportedException(
+            message: ResourceUtils.GetString(key: "MemberNameRequired")
+        );
     }
 
     public override Exception CheckRule(object instance, string memberName)
     {
         if (memberName == String.Empty | memberName == null)
         {
-            CheckRule(instance);
+            CheckRule(instance: instance);
         }
 
         var dataStructure = (IDataEntityColumn)instance;
@@ -55,10 +57,15 @@ public class PositiveValueModelElementRuleAttribute : AbstractModelElementRuleAt
 
         if (origamDataType is OrigamDataType.String)
         {
-            int value = (int)Reflector.GetValue(instance.GetType(), instance, memberName);
+            int value = (int)
+                Reflector.GetValue(
+                    type: instance.GetType(),
+                    instance: instance,
+                    memberName: memberName
+                );
             if (value == 0)
             {
-                return new DataException("The Number cannot be zero!");
+                return new DataException(s: "The Number cannot be zero!");
             }
         }
         return null;

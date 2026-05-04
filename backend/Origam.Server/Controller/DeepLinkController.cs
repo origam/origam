@@ -40,7 +40,7 @@ namespace Origam.Server.Controller;
 
 [Authorize(Policy = "InternalApi")]
 [ApiController]
-[Route("internalApi/[controller]")]
+[Route(template: "internalApi/[controller]")]
 public class DeepLinkController : AbstractController
 {
     private readonly ILogger<AbstractController> logger;
@@ -51,18 +51,18 @@ public class DeepLinkController : AbstractController
         ILogger<AbstractController> log,
         IWebHostEnvironment environment
     )
-        : base(log, sessionObjects, environment)
+        : base(log: log, sessionObjects: sessionObjects, environment: environment)
     {
         this.logger = log;
     }
 
-    [HttpGet("categories")]
+    [HttpGet(template: "categories")]
     public IActionResult GetCategoriesRequest()
     {
-        return Ok(GetCategories());
+        return Ok(value: GetCategories());
     }
 
-    [HttpGet("{categoryId}/objects")]
+    [HttpGet(template: "{categoryId}/objects")]
     public IActionResult GetObjectsRequest(
         string categoryId,
         [FromQuery] int limit,
@@ -70,29 +70,34 @@ public class DeepLinkController : AbstractController
         [FromQuery] string searchPhrase
     )
     {
-        return GetObjets(categoryId, limit, pageNumber, searchPhrase);
+        return GetObjets(
+            categoryId: categoryId,
+            limit: limit,
+            pageNumber: pageNumber,
+            searchPhrase: searchPhrase
+        );
     }
 
-    [HttpPost("{categoryId}/labels")]
+    [HttpPost(template: "{categoryId}/labels")]
     public IActionResult GetLookupLabelRequest(
         string categoryId,
         [FromBody] DeepLinkLabelInput label
     )
     {
-        return GetLookupLabel(categoryId, label.LabelIds);
+        return GetLookupLabel(categoryId: categoryId, labelIds: label.LabelIds);
     }
 
     private IActionResult GetLookupLabel(string categoryId, object[] labelIds)
     {
-        DeepLinkCategory category = GetCategory(categoryId);
+        DeepLinkCategory category = GetCategory(categoryId: categoryId);
         if (category == null)
         {
             return NotFound();
         }
-        if (TestRole(category.Roles))
+        if (TestRole(roles: category.Roles))
         {
-            var labelDictionary = GetLookupLabelsInternal(category, labelIds);
-            return Ok(labelDictionary);
+            var labelDictionary = GetLookupLabelsInternal(input: category, labelIds: labelIds);
+            return Ok(value: labelDictionary);
         }
         return Forbid();
     }
@@ -101,8 +106,10 @@ public class DeepLinkController : AbstractController
     {
         var deepLinkProvider = GetDeepLinkProvider();
         DeepLinkCategory category =
-            deepLinkProvider.GetChildByName(categoryId, DeepLinkCategory.CategoryConst)
-            as DeepLinkCategory;
+            deepLinkProvider.GetChildByName(
+                name: categoryId,
+                itemType: DeepLinkCategory.CategoryConst
+            ) as DeepLinkCategory;
         return category;
     }
 
@@ -113,43 +120,45 @@ public class DeepLinkController : AbstractController
     {
         IDataLookupService lookupService = ServiceManager.Services.GetService<IDataLookupService>();
         var labelDictionary = labelIds.ToDictionary(
-            id => id,
-            id =>
+            keySelector: id => id,
+            elementSelector: id =>
             {
                 object lookupResult = lookupService.GetDisplayText(
-                    input.LookupId,
-                    id,
-                    false,
-                    true,
-                    null
+                    lookupId: input.LookupId,
+                    lookupValue: id,
+                    useCache: false,
+                    returnMessageIfNull: true,
+                    transactionId: null
                 );
                 return lookupResult is decimal result
-                    ? result.ToString("0.#")
+                    ? result.ToString(format: "0.#")
                     : lookupResult.ToString();
             }
         );
         return labelDictionary;
     }
 
-    [HttpPost("[action]")]
+    [HttpPost(template: "[action]")]
     public IActionResult GetMenuId([FromBody] GetDeepLinkMenuInput input)
     {
-        return Ok(GetMenuId(deepLinkCategory: input.Category, referenceId: input.ReferenceId));
+        return Ok(
+            value: GetMenuId(deepLinkCategory: input.Category, referenceId: input.ReferenceId)
+        );
     }
 
     private string GetMenuId(string deepLinkCategory, object referenceId)
     {
-        DeepLinkCategory linkCategory = GetCategory(deepLinkCategory);
+        DeepLinkCategory linkCategory = GetCategory(categoryId: deepLinkCategory);
         if (linkCategory == null)
         {
-            throw new Exception($"deepLinkCategory: \"{deepLinkCategory}\" was not found");
+            throw new Exception(message: $"deepLinkCategory: \"{deepLinkCategory}\" was not found");
         }
         return (
             ServiceManager
                 .Services.GetService<IDataLookupService>()
-                .GetMenuBinding(linkCategory.LookupId, referenceId)
+                .GetMenuBinding(lookupId: linkCategory.LookupId, value: referenceId)
             ?? throw new Exception(
-                $"deepLinkCategory: \"{deepLinkCategory}\" or ReferenceId: \"{referenceId}\" was not found"
+                message: $"deepLinkCategory: \"{deepLinkCategory}\" or ReferenceId: \"{referenceId}\" was not found"
             )
         ).MenuId;
     }
@@ -161,11 +170,16 @@ public class DeepLinkController : AbstractController
         string searchPhrase
     )
     {
-        DeepLinkCategory category = GetCategory(categoryId);
+        DeepLinkCategory category = GetCategory(categoryId: categoryId);
         if (category != null)
         {
-            var lookupData = GetLookupData(category, limit, pageNumber, searchPhrase);
-            return lookupData.IsSuccess ? Ok(lookupData.Value) : lookupData.Error;
+            var lookupData = GetLookupData(
+                hashT: category,
+                limit: limit,
+                pageNumber: pageNumber,
+                searchPhrase: searchPhrase
+            );
+            return lookupData.IsSuccess ? Ok(value: lookupData.Value) : lookupData.Error;
         }
         return NotFound();
     }
@@ -189,18 +203,25 @@ public class DeepLinkController : AbstractController
             LookupId = hashT.LookupId,
             CurrentRow = null,
             ShowUniqueValues = false,
-            SearchText = (string.IsNullOrEmpty(searchPhrase) ? "" : searchPhrase),
+            SearchText = (string.IsNullOrEmpty(value: searchPhrase) ? "" : searchPhrase),
             PageSize = limit,
             PageNumber = pageNumber,
             ParameterMappings = null,
         };
-        var dataTable = lookupService.GetList(internalRequest);
-        return AreColumnNamesValid(hashT.Lookup.ListDisplayMember.Split(";"), dataTable)
+        var dataTable = lookupService.GetList(request: internalRequest);
+        return AreColumnNamesValid(
+            columnNames: hashT.Lookup.ListDisplayMember.Split(separator: ";"),
+            dataTable: dataTable
+        )
             ? Result.Success<IEnumerable<object[]>, IActionResult>(
-                GetRowData(internalRequest, dataTable, GetListColumn(hashT))
+                value: GetRowData(
+                    input: internalRequest,
+                    dataTable: dataTable,
+                    columnNames: GetListColumn(deepLinkCategory: hashT)
+                )
             )
             : Result.Failure<IEnumerable<object[]>, IActionResult>(
-                BadRequest("Some of the supplied column names are not in the table.")
+                error: BadRequest(error: "Some of the supplied column names are not in the table.")
             );
     }
 
@@ -210,7 +231,7 @@ public class DeepLinkController : AbstractController
             deepLinkCategory.Lookup.ListValueMember
             + ";"
             + deepLinkCategory.Lookup.ListDisplayMember;
-        return displayColumn.Split(";");
+        return displayColumn.Split(separator: ";");
     }
 
     private IEnumerable<object[]> GetRowData(
@@ -219,20 +240,20 @@ public class DeepLinkController : AbstractController
         string[] columnNames
     )
     {
-        var lookup = FindItem<DataServiceDataLookup>(input.LookupId).Value;
+        var lookup = FindItem<DataServiceDataLookup>(id: input.LookupId).Value;
         if (lookup.IsFilteredServerside)
         {
-            return dataTable.Rows.Cast<DataRow>().Select(row => row.ItemArray);
+            return dataTable.Rows.Cast<DataRow>().Select(selector: row => row.ItemArray);
         }
         logger.LogError(
-            string.Format(
-                "Lookup {0} has property IsFilteredServerSide set to false!",
-                input.LookupId
+            message: string.Format(
+                format: "Lookup {0} has property IsFilteredServerSide set to false!",
+                arg0: input.LookupId
             )
         );
         return (IEnumerable<object[]>)
             BadRequest(
-                "Invalid lookup configuration. Data could not be retrieved. See log for more details."
+                error: "Invalid lookup configuration. Data could not be retrieved. See log for more details."
             );
     }
 
@@ -240,9 +261,9 @@ public class DeepLinkController : AbstractController
     {
         var actualColumnNames = dataTable
             .Columns.Cast<DataColumn>()
-            .Select(x => x.ColumnName)
+            .Select(selector: x => x.ColumnName)
             .ToArray();
-        return columnNames.All(colName => actualColumnNames.Contains(colName));
+        return columnNames.All(predicate: colName => actualColumnNames.Contains(value: colName));
     }
 
     private List<DeepLinkCategoryResult> GetCategories()
@@ -252,15 +273,15 @@ public class DeepLinkController : AbstractController
         List<DeepLinkCategoryResult> deepLinkCategoryList = new List<DeepLinkCategoryResult>();
         foreach (DeepLinkCategory category in categories)
         {
-            if (TestRole(category.Roles))
+            if (TestRole(roles: category.Roles))
             {
                 var result = new DeepLinkCategoryResult
                 {
                     DeepLinkName = category.Name,
                     DeepLinkLabel = category.Label,
-                    ObjectComboboxMetadata = CreateComboBox(category),
+                    ObjectComboboxMetadata = CreateComboBox(category: category),
                 };
-                deepLinkCategoryList.Add(result);
+                deepLinkCategoryList.Add(item: result);
             }
         }
         return deepLinkCategoryList;
@@ -270,15 +291,21 @@ public class DeepLinkController : AbstractController
     {
         return SecurityManager
             .GetAuthorizationProvider()
-            .Authorize(SecurityManager.CurrentPrincipal, roles);
+            .Authorize(principal: SecurityManager.CurrentPrincipal, context: roles);
     }
 
     private string CreateComboBox(DeepLinkCategory category)
     {
         XmlDocument doc = new XmlDocument();
-        XmlElement controlElement = doc.CreateElement("control");
-        doc.AppendChild(controlElement);
-        ComboBoxBuilder.Build(controlElement, category.LookupId, false, null, null);
+        XmlElement controlElement = doc.CreateElement(name: "control");
+        doc.AppendChild(newChild: controlElement);
+        ComboBoxBuilder.Build(
+            propertyElement: controlElement,
+            lookupId: category.LookupId,
+            showUniqueValues: false,
+            bindingMember: null,
+            table: null
+        );
         return doc.InnerXml;
     }
 }

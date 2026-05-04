@@ -75,7 +75,7 @@ public class WorkflowHostFormEventArgs : WorkflowHostEventArgs
         IEndRule saveConfirmationRule,
         bool refreshPortalAfterSave
     )
-        : base(engine, null)
+        : base(workflowEngine: engine, exception: null)
     {
         _taskId = taskId;
         _data = data;

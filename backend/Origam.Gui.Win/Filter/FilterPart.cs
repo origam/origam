@@ -63,8 +63,8 @@ public abstract class FilterPart : IDisposable
     )
     {
         this.OperatorLabelControl.Font = new System.Drawing.Font(
-            _operatorLabelControl.Font,
-            System.Drawing.FontStyle.Italic
+            prototype: _operatorLabelControl.Font,
+            newStyle: System.Drawing.FontStyle.Italic
         );
         this.OperatorLabelControl.MouseEnter += new EventHandler(OperatorLabelControl_MouseEnter);
         this.OperatorLabelControl.MouseLeave += new EventHandler(OperatorLabelControl_MouseLeave);
@@ -80,11 +80,11 @@ public abstract class FilterPart : IDisposable
         foreach (FilterOperator op in this.AllowedOperators)
         {
             FilterOperatorMenuItem menu = new FilterOperatorMenuItem(
-                OperatorLabelText(op),
-                new EventHandler(operatorMenu_Click),
-                op
+                text: OperatorLabelText(oper: op),
+                eventHandler: new EventHandler(operatorMenu_Click),
+                oper: op
             );
-            _operatorContextMenu.MenuItems.Add(menu);
+            _operatorContextMenu.MenuItems.Add(item: menu);
         }
         CreateFilterControls();
     }
@@ -152,7 +152,7 @@ public abstract class FilterPart : IDisposable
         set
         {
             _operator = value;
-            _operatorLabelControl.Text = OperatorLabelText(_operator);
+            _operatorLabelControl.Text = OperatorLabelText(oper: _operator);
             this.CreateFilterControls();
             RefreshQuery();
         }
@@ -170,21 +170,21 @@ public abstract class FilterPart : IDisposable
     {
         string columnName1 = StoredFilterColumn1();
         string columnName2 = StoredFilterColumn2();
-        if (filterRow.IsNull(columnName1))
+        if (filterRow.IsNull(columnName: columnName1))
         {
             _value1 = DBNull.Value;
         }
         else
         {
-            _value1 = filterRow[columnName1];
+            _value1 = filterRow[columnName: columnName1];
         }
-        if (filterRow.IsNull(columnName2))
+        if (filterRow.IsNull(columnName: columnName2))
         {
             _value2 = DBNull.Value;
         }
         else
         {
-            _value2 = filterRow[columnName2];
+            _value2 = filterRow[columnName: columnName2];
         }
         _loadingValues = true;
         try
@@ -202,15 +202,21 @@ public abstract class FilterPart : IDisposable
     {
         if (query == null)
         {
-            _label.Font = new System.Drawing.Font(_label.Font, System.Drawing.FontStyle.Regular);
+            _label.Font = new System.Drawing.Font(
+                prototype: _label.Font,
+                newStyle: System.Drawing.FontStyle.Regular
+            );
         }
         else
         {
-            _label.Font = new System.Drawing.Font(_label.Font, System.Drawing.FontStyle.Bold);
+            _label.Font = new System.Drawing.Font(
+                prototype: _label.Font,
+                newStyle: System.Drawing.FontStyle.Bold
+            );
         }
         if (QueryChanged != null)
         {
-            this.QueryChanged(this, query);
+            this.QueryChanged(sender: this, query: query);
         }
     }
 
@@ -218,19 +224,19 @@ public abstract class FilterPart : IDisposable
     {
         if (ControlsChanged != null)
         {
-            this.ControlsChanged(this, EventArgs.Empty);
+            this.ControlsChanged(sender: this, e: EventArgs.Empty);
         }
     }
     #endregion
     #region Private Methods
     private string StoredFilterColumn1()
     {
-        return StoredFilterColumn(this.DataType, 1);
+        return StoredFilterColumn(type: this.DataType, position: 1);
     }
 
     private string StoredFilterColumn2()
     {
-        return StoredFilterColumn(this.DataType, 2);
+        return StoredFilterColumn(type: this.DataType, position: 2);
     }
 
     private static string StoredFilterColumn(Type type, int position)
@@ -256,9 +262,9 @@ public abstract class FilterPart : IDisposable
         }
 
         throw new ArgumentOutOfRangeException(
-            "type",
-            type,
-            "Unrecognized type. Cannot read stored filter."
+            paramName: "type",
+            actualValue: type,
+            message: "Unrecognized type. Cannot read stored filter."
         );
     }
 
@@ -270,21 +276,21 @@ public abstract class FilterPart : IDisposable
         }
 
         string field = "[" + this.DataMember + "]";
-        string v1 = QueryValue(this.Value1, this.Operator, this.DataType);
+        string v1 = QueryValue(value: this.Value1, oper: this.Operator, dataType: this.DataType);
         if (this.Operator == FilterOperator.IsNull | this.Operator == FilterOperator.NotIsNull)
         {
-            string op = QueryOperator(this.Operator);
+            string op = QueryOperator(oper: this.Operator);
             _query = field + " " + op;
             if (this.DataType == typeof(string))
             {
                 if (this.Operator == FilterOperator.IsNull)
                 {
-                    string op2 = QueryOperator(FilterOperator.Equals);
+                    string op2 = QueryOperator(oper: FilterOperator.Equals);
                     _query += " OR " + field + " " + op2 + " ''";
                 }
                 else
                 {
-                    string op2 = QueryOperator(FilterOperator.NotEquals);
+                    string op2 = QueryOperator(oper: FilterOperator.NotEquals);
                     _query += " AND " + field + " " + op2 + " ''";
                 }
             }
@@ -295,7 +301,11 @@ public abstract class FilterPart : IDisposable
         }
         else if (this.Operator == FilterOperator.Between)
         {
-            string v2 = QueryValue(this.Value2, this.Operator, this.DataType);
+            string v2 = QueryValue(
+                value: this.Value2,
+                oper: this.Operator,
+                dataType: this.DataType
+            );
             if (v2 == null)
             {
                 _query = null;
@@ -305,20 +315,24 @@ public abstract class FilterPart : IDisposable
                 _query =
                     field
                     + " "
-                    + QueryOperator(FilterOperator.GreaterOrEqualThan)
+                    + QueryOperator(oper: FilterOperator.GreaterOrEqualThan)
                     + " "
                     + v1
                     + " AND "
                     + field
                     + " "
-                    + QueryOperator(FilterOperator.LessOrEqualThan)
+                    + QueryOperator(oper: FilterOperator.LessOrEqualThan)
                     + " "
                     + v2;
             }
         }
         else if (this.Operator == FilterOperator.NotBetween)
         {
-            string v2 = QueryValue(this.Value2, this.Operator, this.DataType);
+            string v2 = QueryValue(
+                value: this.Value2,
+                oper: this.Operator,
+                dataType: this.DataType
+            );
             if (v2 == null)
             {
                 _query = null;
@@ -328,22 +342,22 @@ public abstract class FilterPart : IDisposable
                 _query =
                     field
                     + " "
-                    + QueryOperator(FilterOperator.LessThan)
+                    + QueryOperator(oper: FilterOperator.LessThan)
                     + " "
                     + v1
                     + " OR "
                     + field
                     + " "
-                    + QueryOperator(FilterOperator.GreaterThan)
+                    + QueryOperator(oper: FilterOperator.GreaterThan)
                     + " "
                     + v2;
             }
         }
         else
         {
-            _query = field + " " + QueryOperator(this.Operator) + " " + v1;
+            _query = field + " " + QueryOperator(oper: this.Operator) + " " + v1;
         }
-        OnQueryChanged(_query);
+        OnQueryChanged(query: _query);
     }
 
     private static string QueryValue(object value, FilterOperator oper, Type dataType)
@@ -357,11 +371,11 @@ public abstract class FilterPart : IDisposable
 
         if (value is DateTime)
         {
-            result = Origam.DA.DatasetTools.DateExpression(value);
+            result = Origam.DA.DatasetTools.DateExpression(dateValue: value);
         }
         else if (value is int | value is float | value is decimal | value is long)
         {
-            result = Origam.DA.DatasetTools.NumberExpression(value);
+            result = Origam.DA.DatasetTools.NumberExpression(numberValue: value);
         }
         else
         {
@@ -381,7 +395,7 @@ public abstract class FilterPart : IDisposable
         }
         if (dataType == typeof(string))
         {
-            result = Origam.DA.DatasetTools.TextExpression(result);
+            result = Origam.DA.DatasetTools.TextExpression(text: result);
         }
         else if (dataType == typeof(Guid))
         {
@@ -449,9 +463,9 @@ public abstract class FilterPart : IDisposable
             default:
             {
                 throw new ArgumentOutOfRangeException(
-                    "operator",
-                    oper,
-                    ResourceUtils.GetString("ErrorUnknownFilterOperator")
+                    paramName: "operator",
+                    actualValue: oper,
+                    message: ResourceUtils.GetString(key: "ErrorUnknownFilterOperator")
                 );
             }
         }
@@ -532,9 +546,9 @@ public abstract class FilterPart : IDisposable
             default:
             {
                 throw new ArgumentOutOfRangeException(
-                    "oper",
-                    oper,
-                    ResourceUtils.GetString("ErrorUnknownFilterOperatorLabel")
+                    paramName: "oper",
+                    actualValue: oper,
+                    message: ResourceUtils.GetString(key: "ErrorUnknownFilterOperatorLabel")
                 );
             }
         }
@@ -562,8 +576,8 @@ public abstract class FilterPart : IDisposable
     #region IDisposable Members
     public void Dispose()
     {
-        this.Dispose(true);
-        GC.SuppressFinalize(this);
+        this.Dispose(disposing: true);
+        GC.SuppressFinalize(obj: this);
     }
 
     protected virtual void Dispose(bool disposing)
@@ -590,17 +604,17 @@ public abstract class FilterPart : IDisposable
                 }
                 if (_label != null)
                 {
-                    ReleaseControl(_label);
+                    ReleaseControl(control: _label);
                     _label = null;
                 }
                 if (_operatorLabelControl != null)
                 {
-                    ReleaseControl(_operatorLabelControl);
+                    ReleaseControl(control: _operatorLabelControl);
                     _operatorLabelControl = null;
                 }
                 foreach (Control c in this.FilterControls)
                 {
-                    ReleaseControl(c);
+                    ReleaseControl(control: c);
                 }
                 this.FilterControls.Clear();
                 _filteredControl = null;
@@ -615,7 +629,7 @@ public abstract class FilterPart : IDisposable
         {
             if (control.Parent != null)
             {
-                control.Parent.Controls.Remove(control);
+                control.Parent.Controls.Remove(value: control);
                 control.Parent = null;
             }
             control.Dispose();
@@ -625,8 +639,8 @@ public abstract class FilterPart : IDisposable
     private void OperatorLabelControl_Click(object sender, EventArgs e)
     {
         _operatorContextMenu.Show(
-            this.OperatorLabelControl,
-            new System.Drawing.Point(0, this.OperatorLabelControl.Height)
+            control: this.OperatorLabelControl,
+            pos: new System.Drawing.Point(x: 0, y: this.OperatorLabelControl.Height)
         );
     }
 }

@@ -71,14 +71,14 @@ public class ToolboxPane : System.Windows.Forms.UserControl
         InitializeComponent();
         pointer = new ToolboxItem();
         pointer.DisplayName = "<Pointer>";
-        pointer.Bitmap = new Bitmap(16, 16);
+        pointer.Bitmap = new Bitmap(width: 16, height: 16);
 
         tabCommon.BackColor = OrigamColorScheme.ToolbarBaseColor;
         tabSpecial.BackColor = OrigamColorScheme.ToolbarBaseColor;
         listCommon.BackColor = OrigamColorScheme.ToolbarBaseColor;
         listSpecial.BackColor = OrigamColorScheme.ToolbarBaseColor;
 
-        ListBox list = this.tabControl.SelectedTab.Controls[0] as ListBox;
+        ListBox list = this.tabControl.SelectedTab.Controls[index: 0] as ListBox;
     }
 
     /// Clean up any resources being used.
@@ -91,7 +91,7 @@ public class ToolboxPane : System.Windows.Forms.UserControl
                 components.Dispose();
             }
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
 
     // Properties
@@ -114,13 +114,13 @@ public class ToolboxPane : System.Windows.Forms.UserControl
                 return null;
             }
 
-            ListBox list = this.tabControl.SelectedTab.Controls[0] as ListBox;
+            ListBox list = this.tabControl.SelectedTab.Controls[index: 0] as ListBox;
             if (list.Items.Count == 0)
             {
                 return null;
             }
 
-            return list.Items[selectedIndex] as ToolboxItem;
+            return list.Items[index: selectedIndex] as ToolboxItem;
         }
     }
 
@@ -140,9 +140,9 @@ public class ToolboxPane : System.Windows.Forms.UserControl
             string[] categories = new string[tabControl.TabPages.Count];
             for (int i = 0; i < tabControl.TabPages.Count; i++)
             {
-                categories[i] = tabControl.TabPages[i].Text;
+                categories[i] = tabControl.TabPages[index: i].Text;
             }
-            return new CategoryNameCollection(categories);
+            return new CategoryNameCollection(value: categories);
         }
     }
 
@@ -156,10 +156,10 @@ public class ToolboxPane : System.Windows.Forms.UserControl
         {
             if (tab.Text == category)
             {
-                ListBox list = tab.Controls[0] as ListBox;
+                ListBox list = tab.Controls[index: 0] as ListBox;
                 ToolboxItem[] tools = new ToolboxItem[list.Items.Count];
-                list.Items.CopyTo(tools, 0);
-                return new ToolboxItemCollection(tools);
+                list.Items.CopyTo(destination: tools, arrayIndex: 0);
+                return new ToolboxItemCollection(value: tools);
             }
         }
 
@@ -172,12 +172,12 @@ public class ToolboxPane : System.Windows.Forms.UserControl
         var toolsAL = new List<object>();
         foreach (TabPage tab in tabControl.TabPages)
         {
-            ListBox list = tab.Controls[0] as ListBox;
-            toolsAL.Add(list.Items);
+            ListBox list = tab.Controls[index: 0] as ListBox;
+            toolsAL.Add(item: list.Items);
         }
         ToolboxItem[] tools = new ToolboxItem[toolsAL.Count];
-        toolsAL.CopyTo(tools);
-        return new ToolboxItemCollection(tools);
+        toolsAL.CopyTo(array: tools);
+        return new ToolboxItemCollection(value: tools);
     }
 
     /// Resets the selection to the pointer. Note that this is the only method
@@ -189,14 +189,14 @@ public class ToolboxPane : System.Windows.Forms.UserControl
         {
             return;
         }
-        ListBox list = this.tabControl.SelectedTab.Controls[0] as ListBox;
+        ListBox list = this.tabControl.SelectedTab.Controls[index: 0] as ListBox;
         if (list.SelectedIndex > 0)
         {
-            list.Invalidate(list.GetItemRectangle(list.SelectedIndex));
+            list.Invalidate(rc: list.GetItemRectangle(index: list.SelectedIndex));
         }
         selectedIndex = 0;
         list.SelectedIndex = 0;
-        list.Invalidate(list.GetItemRectangle(selectedIndex));
+        list.Invalidate(rc: list.GetItemRectangle(index: selectedIndex));
     }
 
     #region Component Designer generated code
@@ -316,9 +316,9 @@ public class ToolboxPane : System.Windows.Forms.UserControl
     {
         foreach (TabPage tab in tabControl.TabPages)
         {
-            ListBox list = tab.Controls[0] as ListBox;
+            ListBox list = tab.Controls[index: 0] as ListBox;
             list.Items.Clear();
-            list.Items.Add(pointer);
+            list.Items.Add(item: pointer);
         }
 
         if (
@@ -330,7 +330,7 @@ public class ToolboxPane : System.Windows.Forms.UserControl
             int i = 0;
             foreach (Category cat in tools.FDToolboxCategories)
             {
-                LoadCategory(cat, i);
+                LoadCategory(cat: cat, tabPageNumber: i);
                 i++;
             }
         }
@@ -341,12 +341,12 @@ public class ToolboxPane : System.Windows.Forms.UserControl
         // if we have items in the category...
         if (cat != null && cat.FDToolboxItem != null && cat.FDToolboxItem.Length > 0)
         {
-            TabPage tab = tabControl.TabPages[tabPageNumber];
+            TabPage tab = tabControl.TabPages[index: tabPageNumber];
             tab.Text = cat.DisplayName;
-            ListBox listBox = tab.Controls[0] as ListBox;
+            ListBox listBox = tab.Controls[index: 0] as ListBox;
             foreach (FDToolboxItem item in cat.FDToolboxItem)
             {
-                LoadItem(item, listBox);
+                LoadItem(item: item, listBox: listBox);
             }
         }
     }
@@ -357,31 +357,32 @@ public class ToolboxPane : System.Windows.Forms.UserControl
         {
             return;
         }
-        if (string.IsNullOrWhiteSpace(item.Type) || item.Type.Trim() == ",")
+        if (string.IsNullOrWhiteSpace(value: item.Type) || item.Type.Trim() == ",")
         {
             throw new AggregateException(
-                string.Format(Workbench.Strings.CannotLoadItem, item.Name)
+                message: string.Format(format: Workbench.Strings.CannotLoadItem, arg0: item.Name)
             );
         }
         // load the type
-        string[] assemblyClass = item.Type.Split(new char[] { ',' });
+        string[] assemblyClass = item.Type.Split(separator: new char[] { ',' });
         if (assemblyClass[0].Trim() == "" || assemblyClass[1].Trim() == "")
         {
             throw new AggregateException(
-                string.Format(Workbench.Strings.CannotLoadItem, item.Name)
+                message: string.Format(format: Workbench.Strings.CannotLoadItem, arg0: item.Name)
             );
         }
         Type toolboxItemType = GetTypeFromLoadedAssembly(
             classname: assemblyClass[0],
             assembly: assemblyClass[1]
         );
-        ModelToolboxItem ti = new ModelToolboxItem(toolboxItemType);
+        ModelToolboxItem ti = new ModelToolboxItem(type: toolboxItemType);
         ToolboxBitmapAttribute tba =
-            TypeDescriptor.GetAttributes(toolboxItemType)[typeof(ToolboxBitmapAttribute)]
-            as ToolboxBitmapAttribute;
+            TypeDescriptor.GetAttributes(componentType: toolboxItemType)[
+                attributeType: typeof(ToolboxBitmapAttribute)
+            ] as ToolboxBitmapAttribute;
         if (tba != null)
         {
-            ti.Bitmap = (Bitmap)tba.GetImage(toolboxItemType);
+            ti.Bitmap = (Bitmap)tba.GetImage(type: toolboxItemType);
         }
 
         ti.ControlItem = item.ControlItem;
@@ -406,7 +407,7 @@ public class ToolboxPane : System.Windows.Forms.UserControl
             ti.FieldName = item.ColumnName;
         }
 
-        listBox.Items.Add(ti);
+        listBox.Items.Add(item: ti);
     }
 
     private Type GetTypeFromLoadedAssembly(string classname, string assembly)
@@ -415,15 +416,15 @@ public class ToolboxPane : System.Windows.Forms.UserControl
         // Assembly asm = Assembly.Load(classname + "," + assembly);
 
 #pragma warning disable CS0618 // Type or member is obsolete, Assembly.Load(classname + "," + assembly); does not work
-        Assembly asm = Assembly.LoadWithPartialName(assembly);
+        Assembly asm = Assembly.LoadWithPartialName(partialName: assembly);
 #pragma warning restore CS0618 // Type or member is obsolete
         if (asm != null)
         {
-            return asm.GetType(classname);
+            return asm.GetType(name: classname);
         }
 
         throw new Exception(
-            $"Could not load: {classname} from assembly: {assembly}. Check that the class name and assembly name are correct"
+            message: $"Could not load: {classname} from assembly: {assembly}. Check that the class name and assembly name are correct"
         );
     }
 
@@ -443,31 +444,36 @@ public class ToolboxPane : System.Windows.Forms.UserControl
             // If this tool is the currently selected tool, draw it with a highlight.
             if (selectedIndex == e.Index)
             {
-                backgroundBrush = new SolidBrush(OrigamColorScheme.GridSelectionBackColor);
-                foregroundBrush = new SolidBrush(OrigamColorScheme.GridSelectionForeColor);
+                backgroundBrush = new SolidBrush(color: OrigamColorScheme.GridSelectionBackColor);
+                foregroundBrush = new SolidBrush(color: OrigamColorScheme.GridSelectionForeColor);
             }
             else
             {
-                backgroundBrush = new SolidBrush(OrigamColorScheme.GridHeaderBackColor);
-                foregroundBrush = new SolidBrush(OrigamColorScheme.GridHeaderForeColor);
+                backgroundBrush = new SolidBrush(color: OrigamColorScheme.GridHeaderBackColor);
+                foregroundBrush = new SolidBrush(color: OrigamColorScheme.GridHeaderForeColor);
             }
 
-            e.Graphics.FillRectangle(backgroundBrush, e.Bounds);
-            ToolboxItem tbi = lbSender.Items[e.Index] as ToolboxItem;
+            e.Graphics.FillRectangle(brush: backgroundBrush, rect: e.Bounds);
+            ToolboxItem tbi = lbSender.Items[index: e.Index] as ToolboxItem;
             Rectangle BitmapBounds = new Rectangle(
-                e.Bounds.Location.X,
-                e.Bounds.Location.Y,
-                tbi.Bitmap.Width,
-                e.Bounds.Height
+                x: e.Bounds.Location.X,
+                y: e.Bounds.Location.Y,
+                width: tbi.Bitmap.Width,
+                height: e.Bounds.Height
             );
             Rectangle StringBounds = new Rectangle(
-                e.Bounds.Location.X + BitmapBounds.Width,
-                e.Bounds.Location.Y,
-                e.Bounds.Width - BitmapBounds.Width,
-                e.Bounds.Height
+                x: e.Bounds.Location.X + BitmapBounds.Width,
+                y: e.Bounds.Location.Y,
+                width: e.Bounds.Width - BitmapBounds.Width,
+                height: e.Bounds.Height
             );
-            e.Graphics.DrawImage(tbi.Bitmap, BitmapBounds);
-            e.Graphics.DrawString(tbi.DisplayName, lbSender.Font, foregroundBrush, StringBounds);
+            e.Graphics.DrawImage(image: tbi.Bitmap, rect: BitmapBounds);
+            e.Graphics.DrawString(
+                s: tbi.DisplayName,
+                font: lbSender.Font,
+                brush: foregroundBrush,
+                layoutRectangle: StringBounds
+            );
         }
         finally
         {
@@ -488,8 +494,10 @@ public class ToolboxPane : System.Windows.Forms.UserControl
     private void list_MeasureItem(object sender, System.Windows.Forms.MeasureItemEventArgs e)
     {
         ListBox lbSender = sender as ListBox;
-        ToolboxItem tbi = lbSender.Items[e.Index] as ToolboxItem;
-        Size textSize = e.Graphics.MeasureString(tbi.DisplayName, lbSender.Font).ToSize();
+        ToolboxItem tbi = lbSender.Items[index: e.Index] as ToolboxItem;
+        Size textSize = e
+            .Graphics.MeasureString(text: tbi.DisplayName, font: lbSender.Font)
+            .ToSize();
         e.ItemWidth = tbi.Bitmap.Width + textSize.Width;
         if (tbi.Bitmap.Height > textSize.Height)
         {
@@ -511,17 +519,17 @@ public class ToolboxPane : System.Windows.Forms.UserControl
         // First we grab the bounds of the old selected tool so that we can de-higlight it.
         //
         ListBox lbSender = sender as ListBox;
-        Rectangle lastSelectedBounds = lbSender.GetItemRectangle(selectedIndex);
+        Rectangle lastSelectedBounds = lbSender.GetItemRectangle(index: selectedIndex);
 
-        selectedIndex = lbSender.IndexFromPoint(e.X, e.Y); // change our selection
+        selectedIndex = lbSender.IndexFromPoint(x: e.X, y: e.Y); // change our selection
         lbSender.SelectedIndex = selectedIndex;
 
-        lbSender.Invalidate(lastSelectedBounds); // clear highlight from last selection
-        lbSender.Invalidate(lbSender.GetItemRectangle(selectedIndex)); // highlight new one
+        lbSender.Invalidate(rc: lastSelectedBounds); // clear highlight from last selection
+        lbSender.Invalidate(rc: lbSender.GetItemRectangle(index: selectedIndex)); // highlight new one
 
         if (selectedIndex != 0)
         {
-            ModelToolboxItem tbi = (ModelToolboxItem)lbSender.Items[selectedIndex];
+            ModelToolboxItem tbi = (ModelToolboxItem)lbSender.Items[index: selectedIndex];
 
             this.Host.IsComplexControl = tbi.IsComplexType;
 
@@ -537,9 +545,9 @@ public class ToolboxPane : System.Windows.Forms.UserControl
             // only assign FieldName when entity field list item is selected so then when the user
             // selects an item from the common widgets it gets data-bound to the field selected in the
             // field list
-            if (lbSender.Equals(listSpecial) && selectedIndex != 0)
+            if (lbSender.Equals(obj: listSpecial) && selectedIndex != 0)
             {
-                ModelToolboxItem fieldItem = (ModelToolboxItem)lbSender.Items[selectedIndex];
+                ModelToolboxItem fieldItem = (ModelToolboxItem)lbSender.Items[index: selectedIndex];
                 this.Host.IsFieldControl = fieldItem.IsFieldControl;
                 this.Host.FieldName = fieldItem.FieldName;
             }
@@ -552,10 +560,10 @@ public class ToolboxPane : System.Windows.Forms.UserControl
             //
             if (e.Clicks == 2)
             {
-                IToolboxUser tbu = host.GetDesigner(host.RootComponent) as IToolboxUser;
+                IToolboxUser tbu = host.GetDesigner(component: host.RootComponent) as IToolboxUser;
                 if (tbu != null)
                 {
-                    tbu.ToolPicked(tbi);
+                    tbu.ToolPicked(tool: tbi);
                 }
             }
             // Otherwise this is either a single click or a drag. Either way, we do the same
@@ -564,24 +572,25 @@ public class ToolboxPane : System.Windows.Forms.UserControl
             //
             else if (e.Clicks < 2)
             {
-                IToolboxService tbs = host.GetService(typeof(IToolboxService)) as IToolboxService;
+                IToolboxService tbs =
+                    host.GetService(serviceType: typeof(IToolboxService)) as IToolboxService;
 
                 // The IToolboxService serializes ToolboxItems by packaging them in DataObjects.
-                DataObject d = tbs.SerializeToolboxItem(tbi) as DataObject;
+                DataObject d = tbs.SerializeToolboxItem(toolboxItem: tbi) as DataObject;
                 try
                 {
                     DragAndDropControl = (
-                        d.GetData(d.GetFormats()[0]) as ModelToolboxItem
+                        d.GetData(format: d.GetFormats()[0]) as ModelToolboxItem
                     ).ControlItem;
-                    lbSender.DoDragDrop(d, DragDropEffects.Copy);
+                    lbSender.DoDragDrop(data: d, allowedEffects: DragDropEffects.Copy);
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show(
-                        ex.Message,
-                        "Error",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Error
+                        text: ex.Message,
+                        caption: "Error",
+                        buttons: MessageBoxButtons.OK,
+                        icon: MessageBoxIcon.Error
                     );
                 }
             }
@@ -610,7 +619,7 @@ public class ToolboxPane : System.Windows.Forms.UserControl
     private void list_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
     {
         ListBox lbSender = sender as ListBox;
-        Rectangle lastSelectedBounds = lbSender.GetItemRectangle(selectedIndex);
+        Rectangle lastSelectedBounds = lbSender.GetItemRectangle(index: selectedIndex);
         switch (e.KeyCode)
         {
             case Keys.Up:
@@ -619,8 +628,8 @@ public class ToolboxPane : System.Windows.Forms.UserControl
                 {
                     selectedIndex--; // change selection
                     lbSender.SelectedIndex = selectedIndex;
-                    lbSender.Invalidate(lastSelectedBounds); // clear old highlight
-                    lbSender.Invalidate(lbSender.GetItemRectangle(selectedIndex)); // add new one
+                    lbSender.Invalidate(rc: lastSelectedBounds); // clear old highlight
+                    lbSender.Invalidate(rc: lbSender.GetItemRectangle(index: selectedIndex)); // add new one
                 }
                 break;
             }
@@ -631,19 +640,19 @@ public class ToolboxPane : System.Windows.Forms.UserControl
                 {
                     selectedIndex++; // change selection
                     lbSender.SelectedIndex = selectedIndex;
-                    lbSender.Invalidate(lastSelectedBounds); // clear old highlight
-                    lbSender.Invalidate(lbSender.GetItemRectangle(selectedIndex)); // add new one
+                    lbSender.Invalidate(rc: lastSelectedBounds); // clear old highlight
+                    lbSender.Invalidate(rc: lbSender.GetItemRectangle(index: selectedIndex)); // add new one
                 }
                 break;
             }
 
             case Keys.Enter:
             {
-                IToolboxUser tbu = host.GetDesigner(host.RootComponent) as IToolboxUser;
+                IToolboxUser tbu = host.GetDesigner(component: host.RootComponent) as IToolboxUser;
                 if (tbu != null)
                 {
                     // Enter means place the tool with default location and default size.
-                    tbu.ToolPicked((ToolboxItem)(lbSender.Items[selectedIndex]));
+                    tbu.ToolPicked(tool: (ToolboxItem)(lbSender.Items[index: selectedIndex]));
                 }
                 break;
             }

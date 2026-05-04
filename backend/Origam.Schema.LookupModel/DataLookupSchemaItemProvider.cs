@@ -54,9 +54,9 @@ public class DataLookupSchemaItemProvider
     public override T NewItem<T>(Guid schemaExtensionId, SchemaItemGroup group)
     {
         return base.NewItem<T>(
-            schemaExtensionId,
-            group,
-            typeof(T) == typeof(DataServiceDataLookup) ? "NewDataServiceDataLookup" : null
+            schemaExtensionId: schemaExtensionId,
+            group: group,
+            itemName: typeof(T) == typeof(DataServiceDataLookup) ? "NewDataServiceDataLookup" : null
         );
     }
     #endregion

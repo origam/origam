@@ -27,9 +27,9 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.GuiModel;
 
-[SchemaItemDescription("SVG Chart", "icon_svg-chart.png")]
-[HelpTopic("SVG+Chart")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "SVG Chart", iconName: "icon_svg-chart.png")]
+[HelpTopic(topic: "SVG+Chart")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class SvgChart : AbstractChart
 {
     public SvgChart()
@@ -39,13 +39,13 @@ public class SvgChart : AbstractChart
     }
 
     public SvgChart(Guid schemaExtensionId)
-        : base(schemaExtensionId)
+        : base(schemaExtensionId: schemaExtensionId)
     {
         Init();
     }
 
     public SvgChart(Key primaryKey)
-        : base(primaryKey)
+        : base(primaryKey: primaryKey)
     {
         Init();
     }
@@ -55,9 +55,9 @@ public class SvgChart : AbstractChart
     #region Properties
     private string _svgFileName = "";
 
-    [Category("SVG Chart")]
+    [Category(category: "SVG Chart")]
     [StringNotEmptyModelElementRule()]
-    [XmlAttribute("svgFileName")]
+    [XmlAttribute(attributeName: "svgFileName")]
     public string SvgFileName
     {
         get { return _svgFileName; }
@@ -65,9 +65,9 @@ public class SvgChart : AbstractChart
     }
     private string _svgObjectField = "";
 
-    [Category("SVG Chart")]
+    [Category(category: "SVG Chart")]
     [StringNotEmptyModelElementRule()]
-    [XmlAttribute("svgObjectField")]
+    [XmlAttribute(attributeName: "svgObjectField")]
     public string SvgObjectField
     {
         get { return _svgObjectField; }
@@ -75,9 +75,9 @@ public class SvgChart : AbstractChart
     }
     private string _valueField = "";
 
-    [Category("SVG Chart")]
+    [Category(category: "SVG Chart")]
     [StringNotEmptyModelElementRule()]
-    [XmlAttribute("valueField")]
+    [XmlAttribute(attributeName: "valueField")]
     public string ValueField
     {
         get { return _valueField; }
@@ -85,9 +85,9 @@ public class SvgChart : AbstractChart
     }
     private string _titleField = "";
 
-    [Category("SVG Chart")]
+    [Category(category: "SVG Chart")]
     [StringNotEmptyModelElementRule()]
-    [XmlAttribute("titleField")]
+    [XmlAttribute(attributeName: "titleField")]
     public string TitleField
     {
         get { return _titleField; }
@@ -95,8 +95,8 @@ public class SvgChart : AbstractChart
     }
     private SvgChartType _type = SvgChartType.HeatMap;
 
-    [Category("SVG Chart"), DefaultValue(SvgChartType.HeatMap)]
-    [XmlAttribute("type")]
+    [Category(category: "SVG Chart"), DefaultValue(value: SvgChartType.HeatMap)]
+    [XmlAttribute(attributeName: "type")]
     public SvgChartType Type
     {
         get { return _type; }

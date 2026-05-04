@@ -27,7 +27,7 @@ namespace Origam.Schema.EntityModel;
 /// <summary>
 /// Summary description for AbstractDataStructure.
 /// </summary>
-[XmlModelRoot(CategoryConst)]
+[XmlModelRoot(category: CategoryConst)]
 // [ClassMetaVersion("6.0.0")]
 public abstract class AbstractDataStructure : AbstractSchemaItem, IDataStructure
 {
@@ -37,10 +37,10 @@ public abstract class AbstractDataStructure : AbstractSchemaItem, IDataStructure
         : base() { }
 
     public AbstractDataStructure(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public AbstractDataStructure(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Overriden ISchemaItem Members
 

@@ -66,7 +66,7 @@ public class WorkflowSessionStore : SaveableSessionStore
         string name,
         Analytics analytics
     )
-        : base(service, request, name, analytics)
+        : base(service: service, request: request, name: name, analytics: analytics)
     {
         this.WorkflowId = workflowId;
     }
@@ -80,28 +80,29 @@ public class WorkflowSessionStore : SaveableSessionStore
     public override void Init()
     {
         IPersistenceService ps =
-            ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+            ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+            as IPersistenceService;
         IWorkflow workflow =
             ps.SchemaProvider.RetrieveInstance(
-                typeof(ISchemaItem),
-                new ModelElementKey(this.WorkflowId)
+                type: typeof(ISchemaItem),
+                primaryKey: new ModelElementKey(id: this.WorkflowId)
             ) as IWorkflow;
         WorkflowEngine engine = WorkflowEngine.PrepareWorkflow(
-            workflow,
-            new Hashtable(this.Request.Parameters),
-            false,
-            this.Request.Caption
+            workflow: workflow,
+            parameters: new Hashtable(d: this.Request.Parameters),
+            isRepeatable: false,
+            titleName: this.Request.Caption
         );
         _host = new WorkflowHost();
         _host.SupportsUI = true;
         WorkflowCallbackHandler handler = new WorkflowCallbackHandler(
-            _host,
-            engine.WorkflowInstanceId
+            host: _host,
+            workflowInstanceId: engine.WorkflowInstanceId
         );
         handler.Subscribe();
-        _host.ExecuteWorkflow(engine);
+        _host.ExecuteWorkflow(engine: engine);
         handler.Event.WaitOne();
-        HandleWorkflow(handler);
+        HandleWorkflow(handler: handler);
     }
 
     public override object ExecuteActionInternal(string actionId)
@@ -143,9 +144,9 @@ public class WorkflowSessionStore : SaveableSessionStore
             default:
             {
                 throw new ArgumentOutOfRangeException(
-                    "actionId",
-                    actionId,
-                    Resources.ErrorContextUnknownAction
+                    paramName: "actionId",
+                    actualValue: actionId,
+                    message: Resources.ErrorContextUnknownAction
                 );
             }
         }
@@ -160,46 +161,49 @@ public class WorkflowSessionStore : SaveableSessionStore
     {
         XmlDocument formXml;
         formXml = Origam.OrigamEngine.ModelXmlBuilders.FormXmlBuilder.GetXml(
-            this.FormId,
-            this.Title,
-            true,
-            new Guid(this.Request.ObjectId),
-            this.FinishMessage,
-            (this.DataStructure == null ? Guid.Empty : this.DataStructure.Id),
-            false,
-            ""
+            formId: this.FormId,
+            name: this.Title,
+            isPreloaded: true,
+            menuId: new Guid(g: this.Request.ObjectId),
+            message: this.FinishMessage,
+            structureId: (this.DataStructure == null ? Guid.Empty : this.DataStructure.Id),
+            forceReadOnly: false,
+            confirmSelectionChangeEntity: ""
         );
-        XmlNodeList list = formXml.SelectNodes("/Window");
-        XmlElement windowElement = list[0] as XmlElement;
-        XmlElement uiRootElement = windowElement.SelectSingleNode("UIRoot") as XmlElement;
+        XmlNodeList list = formXml.SelectNodes(xpath: "/Window");
+        XmlElement windowElement = list[i: 0] as XmlElement;
+        XmlElement uiRootElement = windowElement.SelectSingleNode(xpath: "UIRoot") as XmlElement;
         if (this.RefreshMethod == null)
         {
-            windowElement.SetAttribute("SuppressRefresh", "true");
+            windowElement.SetAttribute(name: "SuppressRefresh", value: "true");
         }
         if (this.IsAutoNext)
         {
-            windowElement.SetAttribute("AutoWorkflowNext", "true");
+            windowElement.SetAttribute(name: "AutoWorkflowNext", value: "true");
         }
         if (!this.AllowSave)
         {
-            windowElement.SetAttribute("SuppressSave", "true");
+            windowElement.SetAttribute(name: "SuppressSave", value: "true");
             // we MUST not turn on this.SupressSave here because that would
             // automatically accept all changes in workflow screens, resulting
             // in data not being saved by the workflow
-            windowElement.SetAttribute("SuppressDirtyNotification", "true");
+            windowElement.SetAttribute(name: "SuppressDirtyNotification", value: "true");
         }
-        windowElement.SetAttribute("AskWorkflowClose", XmlConvert.ToString(this.AskWorkflowClose));
+        windowElement.SetAttribute(
+            name: "AskWorkflowClose",
+            value: XmlConvert.ToString(value: this.AskWorkflowClose)
+        );
         if (this.IsFinalForm)
         {
             if (this.Request.Parameters.Count > 0)
             {
-                uiRootElement.SetAttribute("showWorkflowRepeatButton", "false");
+                uiRootElement.SetAttribute(name: "showWorkflowRepeatButton", value: "false");
             }
         }
         else
         {
-            windowElement.SetAttribute("ShowWorkflowNextButton", "true");
-            windowElement.SetAttribute("ShowWorkflowCancelButton", "true");
+            windowElement.SetAttribute(name: "ShowWorkflowNextButton", value: "true");
+            windowElement.SetAttribute(name: "ShowWorkflowCancelButton", value: "true");
         }
         return formXml;
     }
@@ -210,7 +214,9 @@ public class WorkflowSessionStore : SaveableSessionStore
         QueryParameterCollection qparams = new QueryParameterCollection();
         foreach (DictionaryEntry entry in this.Parameters)
         {
-            qparams.Add(new QueryParameter((string)entry.Key, entry.Value));
+            qparams.Add(
+                value: new QueryParameter(_parameterName: (string)entry.Key, value: entry.Value)
+            );
         }
         Guid methodId = Guid.Empty;
         if (_refreshMethod != null)
@@ -225,12 +231,12 @@ public class WorkflowSessionStore : SaveableSessionStore
         }
 
         data = CoreServices.DataService.Instance.LoadData(
-            _dataStructure.Id,
-            methodId,
-            Guid.Empty,
-            sortSetId,
-            null,
-            qparams
+            dataStructureId: _dataStructure.Id,
+            methodId: methodId,
+            defaultSetId: Guid.Empty,
+            sortSetId: sortSetId,
+            transactionId: null,
+            parameters: qparams
         );
         return data;
     }
@@ -239,7 +245,7 @@ public class WorkflowSessionStore : SaveableSessionStore
     {
         if (this.TaskId != Guid.Empty)
         {
-            ExecuteAction(SessionStore.ACTION_ABORT);
+            ExecuteAction(actionId: SessionStore.ACTION_ABORT);
         }
         _host.Dispose();
         base.OnDispose();
@@ -346,9 +352,9 @@ public class WorkflowSessionStore : SaveableSessionStore
         WorkflowHostMessageEventArgs messageArgs = handler.Result as WorkflowHostMessageEventArgs;
         if (handler.Result.Exception != null)
         {
-            this.SetDataSource(null);
+            this.SetDataSource(dataSource: null);
             this.FormId = new Guid(
-                Origam.OrigamEngine.ModelXmlBuilders.FormXmlBuilder.WORKFLOW_FINISHED_FORMID
+                g: Origam.OrigamEngine.ModelXmlBuilders.FormXmlBuilder.WORKFLOW_FINISHED_FORMID
             );
             this.RuleSet = null;
             this.StepDescription = Resources.WorkflowErrorTitle;
@@ -372,17 +378,17 @@ public class WorkflowSessionStore : SaveableSessionStore
             if (ex != null)
             {
                 StringBuilder message = new StringBuilder();
-                message.Append("<HTML><BODY>");
-                message.Append("<FONT COLOR=\"#FF0000\" SIZE=\"16\"><DIV>");
-                message.Append(ex.Message);
-                message.Append("</DIV></FONT>");
-                message.Append("</HTML></BODY>");
+                message.Append(value: "<HTML><BODY>");
+                message.Append(value: "<FONT COLOR=\"#FF0000\" SIZE=\"16\"><DIV>");
+                message.Append(value: ex.Message);
+                message.Append(value: "</DIV></FONT>");
+                message.Append(value: "</HTML></BODY>");
                 this.FinishMessage = message.ToString();
             }
         }
         else if (formArgs != null)
         {
-            SetDataSource(formArgs.Data);
+            SetDataSource(dataSource: formArgs.Data);
             this.FormId = formArgs.Form.Id;
             this.RuleSet = formArgs.RuleSet;
             this.StepDescription = formArgs.Description;
@@ -406,17 +412,17 @@ public class WorkflowSessionStore : SaveableSessionStore
             this.ConfirmationRule = formArgs.SaveConfirmationRule;
             this.RefreshPortalAfterSave = formArgs.RefreshPortalAfterSave;
             this.Notifications.Clear();
-            if (!string.IsNullOrWhiteSpace(formArgs.Notification))
+            if (!string.IsNullOrWhiteSpace(value: formArgs.Notification))
             {
-                ParseNotifications(formArgs.Notification);
+                ParseNotifications(notifications: formArgs.Notification);
             }
         }
         else
         {
             // not form, no exception - workflow is finished
-            SetDataSource(null);
+            SetDataSource(dataSource: null);
             this.FormId = new Guid(
-                Origam.OrigamEngine.ModelXmlBuilders.FormXmlBuilder.WORKFLOW_FINISHED_FORMID
+                g: Origam.OrigamEngine.ModelXmlBuilders.FormXmlBuilder.WORKFLOW_FINISHED_FORMID
             );
             this.RuleSet = null;
             this.StepDescription = Resources.WorkflowFinishedTitle;
@@ -444,25 +450,25 @@ public class WorkflowSessionStore : SaveableSessionStore
 
     private void ParseNotifications(string notifications)
     {
-        foreach (string notification in notifications.Split("\n".ToCharArray()))
+        foreach (string notification in notifications.Split(separator: "\n".ToCharArray()))
         {
             FormNotification fn = new FormNotification();
-            if (notification.StartsWith("! "))
+            if (notification.StartsWith(value: "! "))
             {
                 fn.Icon = "warning";
-                fn.Text = notification.Substring(2);
+                fn.Text = notification.Substring(startIndex: 2);
             }
-            else if (notification.StartsWith("!! "))
+            else if (notification.StartsWith(value: "!! "))
             {
                 fn.Icon = "error";
-                fn.Text = notification.Substring(3);
+                fn.Text = notification.Substring(startIndex: 3);
             }
             else
             {
                 fn.Icon = "info";
                 fn.Text = notification;
             }
-            this.Notifications.Add(fn);
+            this.Notifications.Add(item: fn);
         }
     }
 
@@ -472,19 +478,25 @@ public class WorkflowSessionStore : SaveableSessionStore
         {
             if (log.IsDebugEnabled)
             {
-                log.Debug(Resources.ErrorInForm);
-                log.Debug(DebugClass.ListRowErrors(Data));
+                log.Debug(message: Resources.ErrorInForm);
+                log.Debug(message: DebugClass.ListRowErrors(dataSet: Data));
             }
-            throw new Exception(Resources.ErrorInForm);
+            throw new Exception(message: Resources.ErrorInForm);
         }
         // check end rule
         if (this.EndRule != null)
         {
             if (this.XmlData == null)
             {
-                throw new NullReferenceException("Workflow context does not contain valid data.");
+                throw new NullReferenceException(
+                    message: "Workflow context does not contain valid data."
+                );
             }
-            return this.RuleEngine.EvaluateEndRule(this.EndRule, this.XmlData, this.Parameters);
+            return this.RuleEngine.EvaluateEndRule(
+                rule: this.EndRule,
+                data: this.XmlData,
+                parameters: this.Parameters
+            );
         }
         return new RuleExceptionDataCollection();
     }
@@ -506,19 +518,19 @@ public class WorkflowSessionStore : SaveableSessionStore
             }
             if (isError)
             {
-                throw new RuleException(results);
+                throw new RuleException(result: results);
             }
         }
         WorkflowCallbackHandler handler = new WorkflowCallbackHandler(
-            this.Host,
-            this.WorkflowInstanceId
+            host: this.Host,
+            workflowInstanceId: this.WorkflowInstanceId
         );
         handler.Subscribe();
-        this.Host.FinishWorkflowForm(this.TaskId, this.XmlData);
+        this.Host.FinishWorkflowForm(taskId: this.TaskId, data: this.XmlData);
         handler.Event.WaitOne();
-        HandleWorkflow(handler);
+        HandleWorkflow(handler: handler);
         UIRequest request = GetRequest();
-        UIResult result = this.Service.InitUI(request);
+        UIResult result = this.Service.InitUI(request: request);
         result.WorkflowTaskId = this.TaskId.ToString();
         await System.Threading.Tasks.Task.CompletedTask; //CS1998
         return result;
@@ -528,11 +540,11 @@ public class WorkflowSessionStore : SaveableSessionStore
     {
         if (!this.IsFirstSaveDone)
         {
-            throw new UserOrigamException(Resources.ErrorCannotRefreshFormNotSaved);
+            throw new UserOrigamException(message: Resources.ErrorCannotRefreshFormNotSaved);
         }
 
         DataSet data = LoadData();
-        this.SetDataSource(data);
+        this.SetDataSource(dataSource: data);
         return data;
     }
 
@@ -540,25 +552,26 @@ public class WorkflowSessionStore : SaveableSessionStore
     {
         UserProfile profile = SecurityTools.CurrentUserProfile();
         IPersistenceService ps =
-            ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+            ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+            as IPersistenceService;
         AbstractMenuItem menuItem =
             ps.SchemaProvider.RetrieveInstance(
-                typeof(AbstractMenuItem),
-                new ModelElementKey(new Guid(this.Request.ObjectId))
+                type: typeof(AbstractMenuItem),
+                primaryKey: new ModelElementKey(id: new Guid(g: this.Request.ObjectId))
             ) as AbstractMenuItem;
         // abort workflow
         WorkflowCallbackHandler handler = new WorkflowCallbackHandler(
-            this.Host,
-            this.WorkflowInstanceId
+            host: this.Host,
+            workflowInstanceId: this.WorkflowInstanceId
         );
         handler.Subscribe();
         Host.AbortWorkflowForm(taskId: TaskId, isDirty: HasChanges());
         handler.Event.WaitOne();
-        HandleWorkflow(handler);
+        HandleWorkflow(handler: handler);
         await System.Threading.Tasks.Task.CompletedTask; //CS1998
         // call InitUI
         UIRequest request = GetRequest();
-        return Service.InitUI(request);
+        return Service.InitUI(request: request);
     }
 
     private UIRequest GetRequest()
@@ -566,14 +579,14 @@ public class WorkflowSessionStore : SaveableSessionStore
         bool die = (
             this.FormId
             == new Guid(
-                Origam.OrigamEngine.ModelXmlBuilders.FormXmlBuilder.WORKFLOW_FINISHED_FORMID
+                g: Origam.OrigamEngine.ModelXmlBuilders.FormXmlBuilder.WORKFLOW_FINISHED_FORMID
             )
         );
         SessionStore ss;
         if (die && this.ParentSession != null)
         {
             ss = this.ParentSession;
-            this.ParentSession.ChildSessions.Remove(this);
+            this.ParentSession.ChildSessions.Remove(item: this);
             this.ParentSession.ActiveSession = null;
             _disposeAfterAction = true;
         }

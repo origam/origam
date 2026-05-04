@@ -27,7 +27,7 @@ namespace Origam.DA.ObjectPersistence;
 /// Summary description for NotNullModelElementRuleAttribute.
 /// </summary>
 [AttributeUsage(
-    AttributeTargets.Property | AttributeTargets.Field,
+    validOn: AttributeTargets.Property | AttributeTargets.Field,
     AllowMultiple = false,
     Inherited = true
 )]
@@ -37,20 +37,28 @@ public class StringNotEmptyModelElementRuleAttribute : AbstractModelElementRuleA
 
     public override Exception CheckRule(object instance)
     {
-        return new NotSupportedException(ResourceUtils.GetString("MemberNameRequired"));
+        return new NotSupportedException(
+            message: ResourceUtils.GetString(key: "MemberNameRequired")
+        );
     }
 
     public override Exception CheckRule(object instance, string memberName)
     {
         if (memberName == String.Empty | memberName == null)
         {
-            CheckRule(instance);
+            CheckRule(instance: instance);
         }
 
-        object value = Reflector.GetValue(instance.GetType(), instance, memberName);
+        object value = Reflector.GetValue(
+            type: instance.GetType(),
+            instance: instance,
+            memberName: memberName
+        );
         if (value == null | (value as string) == string.Empty)
         {
-            return new NullReferenceException(ResourceUtils.GetString("CantBeEmpty", memberName));
+            return new NullReferenceException(
+                message: ResourceUtils.GetString(key: "CantBeEmpty", args: memberName)
+            );
         }
         return null;
     }

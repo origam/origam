@@ -41,7 +41,7 @@ public partial class XmlEditor : UserControl
     XmlFormattingStrategy _formattingStrategy = new XmlFormattingStrategy();
     XmlSchemaCompletionCollection _schemas = new XmlSchemaCompletionCollection();
     XmlCodeCompletionBinding _codeCompletion;
-    DataSet _data = new DataSet("ROOT");
+    DataSet _data = new DataSet(dataSetName: "ROOT");
     XmlFoldingStrategy _foldingStrategy;
     FoldingManager _foldingManager;
     public delegate void ChangedEventHandler(object sender, EventArgs e);
@@ -50,19 +50,19 @@ public partial class XmlEditor : UserControl
         set
         {
             editor.ShowLineNumbers = false;
-            editor.TextArea.LeftMargins.Add(value);
+            editor.TextArea.LeftMargins.Add(item: value);
         }
     }
     public IBackgroundRenderer BackgroundRenderer
     {
-        set => editor.TextArea.TextView.BackgroundRenderers.Add(value);
+        set => editor.TextArea.TextView.BackgroundRenderers.Add(item: value);
     }
 
     public XmlEditor()
     {
-        _codeCompletion = new XmlCodeCompletionBinding(_schemas);
+        _codeCompletion = new XmlCodeCompletionBinding(schemas: _schemas);
         InitializeComponent();
-        editor.FontFamily = new System.Windows.Media.FontFamily("Courier New");
+        editor.FontFamily = new System.Windows.Media.FontFamily(familyName: "Courier New");
         editor.FontSize = 16;
         TextEditorOptions options = new TextEditorOptions();
         options.ConvertTabsToSpaces = false;
@@ -74,27 +74,29 @@ public partial class XmlEditor : UserControl
         options.ColumnRulerPosition = 80;
         editor.Options = options;
         editor.ShowLineNumbers = true;
-        editor.SyntaxHighlighting = HighlightingManager.Instance.GetDefinition("XML");
+        editor.SyntaxHighlighting = HighlightingManager.Instance.GetDefinition(name: "XML");
         var valueBrush = new SimpleHighlightingBrush(
-            System.Windows.Media.Color.FromRgb(18, 53, 182)
+            color: System.Windows.Media.Color.FromRgb(r: 18, g: 53, b: 182)
         );
         var elementBrush = new SimpleHighlightingBrush(
-            System.Windows.Media.Color.FromRgb(
-                OrigamColorScheme.TabActiveStartColor.R,
-                OrigamColorScheme.TabActiveStartColor.G,
-                OrigamColorScheme.TabActiveStartColor.B
+            color: System.Windows.Media.Color.FromRgb(
+                r: OrigamColorScheme.TabActiveStartColor.R,
+                g: OrigamColorScheme.TabActiveStartColor.G,
+                b: OrigamColorScheme.TabActiveStartColor.B
             )
         );
         //            System.Windows.Media.Color.FromRgb(161, 19, 0));
         var attributeBrush = new SimpleHighlightingBrush(
-            System.Windows.Media.Color.FromRgb(255, 73, 61)
+            color: System.Windows.Media.Color.FromRgb(r: 255, g: 73, b: 61)
         );
-        var docBrush = new SimpleHighlightingBrush(System.Windows.Media.Color.FromRgb(0, 154, 41));
+        var docBrush = new SimpleHighlightingBrush(
+            color: System.Windows.Media.Color.FromRgb(r: 0, g: 154, b: 41)
+        );
         var declarationBrush = new SimpleHighlightingBrush(
-            System.Windows.Media.Color.FromRgb(100, 100, 100)
+            color: System.Windows.Media.Color.FromRgb(r: 100, g: 100, b: 100)
         );
         editor.TextArea.TextView.LinkTextForegroundBrush = new System.Windows.Media.SolidColorBrush(
-            System.Windows.Media.Color.FromRgb(161, 112, 0)
+            color: System.Windows.Media.Color.FromRgb(r: 161, g: 112, b: 0)
         );
         foreach (var color in editor.SyntaxHighlighting.NamedHighlightingColors)
         {
@@ -128,15 +130,15 @@ public partial class XmlEditor : UserControl
                 }
             }
         }
-        SearchPanel.Install(editor);
+        SearchPanel.Install(editor: editor);
 
-        _foldingManager = FoldingManager.Install(editor.TextArea);
+        _foldingManager = FoldingManager.Install(textArea: editor.TextArea);
         _foldingStrategy = new XmlFoldingStrategy();
         _foldingStrategy.ShowAttributesWhenFolded = true;
         this.editor.TextArea.IndentationStrategy =
             new ICSharpCode.AvalonEdit.Indentation.DefaultIndentationStrategy();
         this.editor.TextArea.TextEntered += TextArea_TextEntered;
-        AddInternalSchema("xslt.xsd");
+        AddInternalSchema(schemaName: "xslt.xsd");
         editor.TextArea.Document.TextChanged += Document_TextChanged;
     }
 
@@ -147,7 +149,7 @@ public partial class XmlEditor : UserControl
     {
         if (ContentChanged != null)
         {
-            ContentChanged(this, e);
+            ContentChanged(sender: this, e: e);
         }
     }
 
@@ -155,7 +157,7 @@ public partial class XmlEditor : UserControl
     {
         foldingTimer.Enabled = false;
         foldingTimer.Enabled = true;
-        OnContentChanged(EventArgs.Empty);
+        OnContentChanged(e: EventArgs.Empty);
     }
 
     public string ResultSchema
@@ -188,10 +190,10 @@ public partial class XmlEditor : UserControl
     {
         var assembly = Assembly.GetExecutingAssembly();
         var resourceName = "Origam.Windows.Editor." + schemaName;
-        using (Stream stream = assembly.GetManifestResourceStream(resourceName))
-        using (StreamReader reader = new StreamReader(stream))
+        using (Stream stream = assembly.GetManifestResourceStream(name: resourceName))
+        using (StreamReader reader = new StreamReader(stream: stream))
         {
-            _schemas.Add(new XmlSchemaCompletion(reader));
+            _schemas.Add(item: new XmlSchemaCompletion(reader: reader));
         }
     }
 
@@ -202,7 +204,7 @@ public partial class XmlEditor : UserControl
     {
         if (e.Text.Length > 0 && !e.Handled)
         {
-            char c = e.Text[0];
+            char c = e.Text[index: 0];
             // When entering a newline, AvalonEdit might use either "\r\n" or "\n", depending on
             // what was passed to TextArea.PerformTextInput. We'll normalize this to '\n'
             // so that formatting strategies don't have to handle both cases.
@@ -211,7 +213,7 @@ public partial class XmlEditor : UserControl
                 c = '\n';
             }
 
-            _formattingStrategy.FormatLine(this.editor, c);
+            _formattingStrategy.FormatLine(editor: this.editor, charTyped: c);
             if (c == '\n')
             {
                 // Immediately parse on enter.
@@ -223,7 +225,7 @@ public partial class XmlEditor : UserControl
             {
                 if (e.Text.Length == 1)
                 {
-                    _codeCompletion.HandleKeyPressed(editor, c);
+                    _codeCompletion.HandleKeyPressed(editor: editor, ch: c);
                 }
             }
         }
@@ -236,16 +238,16 @@ public partial class XmlEditor : UserControl
             FindReplaceForm frm = new FindReplaceForm();
             frm.Editor = editor;
             frm.Left = this.Width - frm.Width;
-            frm.Top = this.PointToScreen(new System.Drawing.Point(0, 0)).Y;
-            frm.Show(this.FindForm());
+            frm.Top = this.PointToScreen(p: new System.Drawing.Point(x: 0, y: 0)).Y;
+            frm.Show(owner: this.FindForm());
             return true;
         }
-        return base.ProcessCmdKey(ref msg, keyData);
+        return base.ProcessCmdKey(msg: ref msg, keyData: keyData);
     }
 
     private void foldingTimer_Tick(object sender, System.EventArgs e)
     {
-        _foldingStrategy.UpdateFoldings(_foldingManager, editor.Document);
+        _foldingStrategy.UpdateFoldings(manager: _foldingManager, document: editor.Document);
         foldingTimer.Enabled = false;
     }
 }

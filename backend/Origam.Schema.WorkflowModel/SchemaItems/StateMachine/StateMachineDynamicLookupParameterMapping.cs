@@ -33,10 +33,10 @@ namespace Origam.Schema.WorkflowModel;
 /// <summary>
 /// Summary description for ContextStoreLink.
 /// </summary>
-[SchemaItemDescription("Parameter Mapping", "Parameter Mappings", 17)]
-[HelpTopic("Dynamic+State+Workflow+Parameter")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Parameter Mapping", folderName: "Parameter Mappings", icon: 17)]
+[HelpTopic(topic: "Dynamic+State+Workflow+Parameter")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class StateMachineDynamicLookupParameterMapping : AbstractSchemaItem
 {
     public const string CategoryConst = "StateMachineDynamicLookupParameterMapping";
@@ -45,10 +45,10 @@ public class StateMachineDynamicLookupParameterMapping : AbstractSchemaItem
         : base() { }
 
     public StateMachineDynamicLookupParameterMapping(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public StateMachineDynamicLookupParameterMapping(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Overriden ISchemaItem Members
 
@@ -63,8 +63,8 @@ public class StateMachineDynamicLookupParameterMapping : AbstractSchemaItem
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(this.Field);
-        base.GetExtraDependencies(dependencies);
+        dependencies.Add(item: this.Field);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override ISchemaItemCollection ChildItems
@@ -75,7 +75,7 @@ public class StateMachineDynamicLookupParameterMapping : AbstractSchemaItem
     #region Properties
     WorkflowEntityParameterMappingType _type = WorkflowEntityParameterMappingType.Current;
 
-    [XmlAttribute("type")]
+    [XmlAttribute(attributeName: "type")]
     public WorkflowEntityParameterMappingType Type
     {
         get { return _type; }
@@ -83,17 +83,20 @@ public class StateMachineDynamicLookupParameterMapping : AbstractSchemaItem
     }
     public Guid FieldId;
 
-    [TypeConverter(typeof(StateMachineAllFieldConverter))]
-    [XmlReference("field", "FieldId")]
+    [TypeConverter(type: typeof(StateMachineAllFieldConverter))]
+    [XmlReference(attributeName: "field", idField: "FieldId")]
     public IDataEntityColumn Field
     {
         get
         {
-            ModelElementKey key = new ModelElementKey(this.FieldId);
+            ModelElementKey key = new ModelElementKey(id: this.FieldId);
             return (IDataEntityColumn)
-                this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
+                this.PersistenceProvider.RetrieveInstance(
+                    type: typeof(ISchemaItem),
+                    primaryKey: key
+                );
         }
-        set { this.FieldId = (Guid)value.PrimaryKey["Id"]; }
+        set { this.FieldId = (Guid)value.PrimaryKey[key: "Id"]; }
     }
     #endregion
 }

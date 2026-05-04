@@ -37,7 +37,7 @@ namespace Origam.BI.CrystalReports;
 public class CrystalReportHelper
 {
     private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
-        System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
+        type: System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
     );
 
     public CrystalReportHelper() { }
@@ -51,16 +51,22 @@ public class CrystalReportHelper
             if (data != null)
             {
                 data.WriteXml(
-                    System.IO.Path.Combine(settings.ReportsFolder(), reportName + ".xml"),
-                    XmlWriteMode.WriteSchema
+                    fileName: System.IO.Path.Combine(
+                        path1: settings.ReportsFolder(),
+                        path2: reportName + ".xml"
+                    ),
+                    mode: XmlWriteMode.WriteSchema
                 );
             }
         }
         catch (Exception e)
         {
             ReportHelper.LogError(
-                System.Reflection.MethodBase.GetCurrentMethod().DeclaringType,
-                string.Format("Can't write Crystal Report debug info: {0}", e.Message)
+                type: System.Reflection.MethodBase.GetCurrentMethod().DeclaringType,
+                message: string.Format(
+                    format: "Can't write Crystal Report debug info: {0}",
+                    arg0: e.Message
+                )
             );
         }
     }
@@ -68,27 +74,27 @@ public class CrystalReportHelper
     public byte[] CreateReport(Guid reportId, DataSet data, Hashtable parameters, string format)
     {
         // get report model element
-        var report = ReportHelper.GetReportElement<CrystalReport>(reportId);
-        parameters = PrepareParameters(data, parameters, report);
+        var report = ReportHelper.GetReportElement<CrystalReport>(reportId: reportId);
+        parameters = PrepareParameters(data: data, parameters: parameters, report: report);
         // get report
         string paramString = $"&format={format}";
         string reportFileName = ReportHelper.ExpandCurlyBracketPlaceholdersWithParameters(
-            report.ReportFileName,
-            parameters
+            input: report.ReportFileName,
+            parameters: parameters
         );
         object result = SendReportRequest(
-            "Report",
-            reportFileName,
-            data,
-            parameters,
-            report,
-            paramString
+            method: "Report",
+            fileName: reportFileName,
+            data: data,
+            parameters: parameters,
+            reportElement: report,
+            paramString: paramString
         );
         if (result is byte[] bytes)
         {
             return bytes;
         }
-        throw new Exception("Invalid data returned. Expected byte array.");
+        throw new Exception(message: "Invalid data returned. Expected byte array.");
     }
 
     public string PrepareReport(
@@ -99,29 +105,29 @@ public class CrystalReportHelper
     )
     {
         // get report model element
-        parameters = PrepareParameters(data, parameters, report);
+        parameters = PrepareParameters(data: data, parameters: parameters, report: report);
         // get report
         object result = SendReportRequest(
-            "Report/PrepareViewer",
-            report.ReportFileName,
-            data,
-            parameters,
-            report,
-            ""
+            method: "Report/PrepareViewer",
+            fileName: report.ReportFileName,
+            data: data,
+            parameters: parameters,
+            reportElement: report,
+            paramString: ""
         );
         if (result is Origam.Service.Core.XmlContainer xml)
         {
             var innerXml = xml.Xml.InnerXml;
             var settings = ConfigurationManager.GetActiveConfiguration();
             string baseUrl = ParseConnectionString(
-                settings.ReportConnectionString,
-                out int? timeout
+                connectionString: settings.ReportConnectionString,
+                timeout: out int? timeout
             );
-            string id = xml.Xml["ROOT"]["ViewerUrl"].InnerText;
+            string id = xml.Xml[name: "ROOT"][name: "ViewerUrl"].InnerText;
             string url = baseUrl + $"ViewReport.aspx?Id={id}";
             return url;
         }
-        throw new Exception("Invalid data returned. Expected byte array.");
+        throw new Exception(message: "Invalid data returned. Expected byte array.");
     }
 
     public void PrintReport(
@@ -133,11 +139,18 @@ public class CrystalReportHelper
     )
     {
         // get report model element
-        var report = ReportHelper.GetReportElement<CrystalReport>(reportId);
-        parameters = PrepareParameters(data, parameters, report);
+        var report = ReportHelper.GetReportElement<CrystalReport>(reportId: reportId);
+        parameters = PrepareParameters(data: data, parameters: parameters, report: report);
         // get report
         string paramString = $"&printerName={printerName}&copies={copies}";
-        SendReportRequest("Print", report.ReportFileName, data, parameters, report, paramString);
+        SendReportRequest(
+            method: "Print",
+            fileName: report.ReportFileName,
+            data: data,
+            parameters: parameters,
+            reportElement: report,
+            paramString: paramString
+        );
     }
 
     private Hashtable PrepareParameters(DataSet data, Hashtable parameters, CrystalReport report)
@@ -147,9 +160,9 @@ public class CrystalReportHelper
             parameters = new Hashtable();
         }
 
-        TraceReportData(data, report.Name);
-        ReportHelper.PopulateDefaultValues(report, parameters);
-        ReportHelper.ComputeXsltValueParameters(report, parameters);
+        TraceReportData(data: data, reportName: report.Name);
+        ReportHelper.PopulateDefaultValues(report: report, parameters: parameters);
+        ReportHelper.ComputeXsltValueParameters(report: report, parameters: parameters);
         return parameters;
     }
     #endregion
@@ -164,46 +177,59 @@ public class CrystalReportHelper
     {
         if (log.IsInfoEnabled)
         {
-            WriteInfoLog(reportElement, "Generating report started");
+            WriteInfoLog(reportElement: reportElement, message: "Generating report started");
         }
         if (parameters == null)
         {
             throw new NullReferenceException(
-                ResourceUtils.GetString("CreateReport: Parameters cannot be null.")
+                message: ResourceUtils.GetString(key: "CreateReport: Parameters cannot be null.")
             );
         }
 
         var settings = ConfigurationManager.GetActiveConfiguration();
-        string baseUrl = ParseConnectionString(settings.ReportConnectionString, out int? timeout);
+        string baseUrl = ParseConnectionString(
+            connectionString: settings.ReportConnectionString,
+            timeout: out int? timeout
+        );
         var request = new ReportRequest { Dataset = data };
         foreach (DictionaryEntry item in parameters)
         {
             request.Parameters.Add(
-                new Parameter { Key = item.Key.ToString(), Value = item.Value?.ToString() }
+                item: new Parameter { Key = item.Key.ToString(), Value = item.Value?.ToString() }
             );
         }
         var stringBuilder = new StringBuilder();
-        using (var stringWriter = new EncodingStringWriter(stringBuilder, Encoding.UTF8))
+        using (
+            var stringWriter = new EncodingStringWriter(
+                builder: stringBuilder,
+                encoding: Encoding.UTF8
+            )
+        )
         {
             using (
                 var xmlWriter = XmlWriter.Create(
-                    stringWriter,
-                    new XmlWriterSettings { Encoding = Encoding.UTF8 }
+                    output: stringWriter,
+                    settings: new XmlWriterSettings { Encoding = Encoding.UTF8 }
                 )
             )
             {
-                DataContractSerializer ser = new DataContractSerializer(typeof(ReportRequest));
-                ser.WriteObject(xmlWriter, request);
+                DataContractSerializer ser = new DataContractSerializer(
+                    type: typeof(ReportRequest)
+                );
+                ser.WriteObject(writer: xmlWriter, graph: request);
             }
         }
         var result = HttpTools
             .Instance.SendRequest(
-                new Request(
+                request: new Request(
                     url: baseUrl + $"api/{method}?report={fileName}{paramString}",
                     method: "POST",
                     content: stringBuilder
                         .ToString()
-                        .Replace(" xmlns:i=\"http://www.w3.org/2001/XMLSchema-instance\"", ""),
+                        .Replace(
+                            oldValue: " xmlns:i=\"http://www.w3.org/2001/XMLSchema-instance\"",
+                            newValue: ""
+                        ),
                     contentType: "application/xml",
                     timeout: timeout
                 )
@@ -211,7 +237,7 @@ public class CrystalReportHelper
             .Content;
         if (log.IsInfoEnabled)
         {
-            WriteInfoLog(reportElement, "Generating report finished");
+            WriteInfoLog(reportElement: reportElement, message: "Generating report finished");
         }
         return result;
     }
@@ -219,15 +245,15 @@ public class CrystalReportHelper
     private void WriteInfoLog(CrystalReport reportElement, string message)
     {
         LoggingEvent loggingEvent = new LoggingEvent(
-            this.GetType(),
-            log.Logger.Repository,
-            log.Logger.Name,
-            Level.Info,
-            string.Format("{0}: {1}", message, reportElement.Name),
-            null
+            callerStackBoundaryDeclaringType: this.GetType(),
+            repository: log.Logger.Repository,
+            loggerName: log.Logger.Name,
+            level: Level.Info,
+            message: string.Format(format: "{0}: {1}", arg0: message, arg1: reportElement.Name),
+            exception: null
         );
-        loggingEvent.Properties["Caption"] = reportElement.Caption;
-        log.Logger.Log(loggingEvent);
+        loggingEvent.Properties[key: "Caption"] = reportElement.Caption;
+        log.Logger.Log(logEvent: loggingEvent);
     }
 
     private static string ParseConnectionString(string connectionString, out int? timeout)
@@ -235,20 +261,20 @@ public class CrystalReportHelper
         string url = null;
         timeout = null;
         string[] parts = connectionString.Split(
-            ";".ToCharArray(),
-            StringSplitOptions.RemoveEmptyEntries
+            separator: ";".ToCharArray(),
+            options: StringSplitOptions.RemoveEmptyEntries
         );
         if (parts.Length == 0)
         {
-            throw new Exception("Crystal Reports connection string is empty.");
+            throw new Exception(message: "Crystal Reports connection string is empty.");
         }
         foreach (var item in parts)
         {
-            string[] pair = item.Split("=".ToCharArray());
+            string[] pair = item.Split(separator: "=".ToCharArray());
             if (pair.Length == 1)
             {
                 throw new Exception(
-                    "Error while parsing Crystal Reports "
+                    message: "Error while parsing Crystal Reports "
                         + "connection string. '=' expected in '"
                         + pair[0]
                         + "'"
@@ -266,14 +292,14 @@ public class CrystalReportHelper
                 case "timeout":
                 {
                     int timeoutInternal;
-                    if (int.TryParse(pair[1], out timeoutInternal))
+                    if (int.TryParse(s: pair[1], result: out timeoutInternal))
                     {
                         timeout = timeoutInternal;
                     }
                     else
                     {
                         throw new Exception(
-                            "Error occured while trying to "
+                            message: "Error occured while trying to "
                                 + "parse Crystal Reports connection string timeout"
                                 + " value '"
                                 + pair[1]
@@ -286,17 +312,18 @@ public class CrystalReportHelper
                 default:
                 {
                     throw new ArgumentOutOfRangeException(
-                        "Unknown Crystal"
+                        paramName: "Unknown Crystal"
                             + " Reports connection string identifier '"
                             + identifier
                             + "'"
                     );
                 }
             }
-            if (string.IsNullOrEmpty(url))
+            if (string.IsNullOrEmpty(value: url))
             {
                 throw new Exception(
-                    "Crystal Reports connection string " + "does not contain 'url' setting."
+                    message: "Crystal Reports connection string "
+                        + "does not contain 'url' setting."
                 );
             }
         }

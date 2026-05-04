@@ -24,8 +24,8 @@ using Origam.DA.Common;
 
 namespace Origam.Schema.GuiModel;
 
-[SchemaItemDescription("Text Widget", "icon_text-widget.png")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Text Widget", iconName: "icon_text-widget.png")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class TextDashboardWidget : AbstractSimpleDashboardWidget
 {
     public TextDashboardWidget()
@@ -35,13 +35,13 @@ public class TextDashboardWidget : AbstractSimpleDashboardWidget
     }
 
     public TextDashboardWidget(Guid schemaExtensionId)
-        : base(schemaExtensionId)
+        : base(schemaExtensionId: schemaExtensionId)
     {
         Init();
     }
 
     public TextDashboardWidget(Key primaryKey)
-        : base(primaryKey)
+        : base(primaryKey: primaryKey)
     {
         Init();
     }

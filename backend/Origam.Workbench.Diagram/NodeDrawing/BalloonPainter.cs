@@ -41,38 +41,42 @@ internal class BalloonPainter : INodeItemPainter
 
     public ICurve GetBoundary(Node node)
     {
-        return new Ellipse(balloonRadius, balloonRadius, new Point(0, 0));
+        return new Ellipse(
+            axisA: balloonRadius,
+            axisB: balloonRadius,
+            center: new Point(xCoordinate: 0, yCoordinate: 0)
+        );
     }
 
     public bool Draw(Node node, object graphicsObj)
     {
         Graphics editorGraphics = (Graphics)graphicsObj;
 
-        SizeF stringSize = editorGraphics.MeasureString(node.LabelText, painter.Font);
+        SizeF stringSize = editorGraphics.MeasureString(text: node.LabelText, font: painter.Font);
 
         var labelPoint = new PointF(
-            (float)node.GeometryNode.Center.X - (stringSize.Width / 2),
-            (float)node.GeometryNode.Center.Y - ((int)stringSize.Height / 2)
+            x: (float)node.GeometryNode.Center.X - (stringSize.Width / 2),
+            y: (float)node.GeometryNode.Center.Y - ((int)stringSize.Height / 2)
         );
         var boundingRectangle = new Rectangle(
-            (int)node.BoundingBox.LeftBottom.X,
-            (int)node.BoundingBox.LeftBottom.Y,
-            (int)node.BoundingBox.Size.Width,
-            (int)node.BoundingBox.Size.Height
+            x: (int)node.BoundingBox.LeftBottom.X,
+            y: (int)node.BoundingBox.LeftBottom.Y,
+            width: (int)node.BoundingBox.Size.Width,
+            height: (int)node.BoundingBox.Size.Height
         );
 
         editorGraphics.DrawUpSideDown(
             drawAction: graphics =>
             {
-                graphics.FillEllipse(balloonBrush, boundingRectangle);
+                graphics.FillEllipse(brush: balloonBrush, rect: boundingRectangle);
                 graphics.DrawString(
-                    node.LabelText,
-                    painter.Font,
-                    painter.WhiteBrush,
-                    labelPoint,
-                    painter.DrawFormat
+                    s: node.LabelText,
+                    font: painter.Font,
+                    brush: painter.WhiteBrush,
+                    point: labelPoint,
+                    format: painter.DrawFormat
                 );
-                graphics.DrawEllipse(painter.BlackPen, boundingRectangle);
+                graphics.DrawEllipse(pen: painter.BlackPen, rect: boundingRectangle);
             },
             yAxisCoordinate: (float)node.GeometryNode.Center.Y
         );

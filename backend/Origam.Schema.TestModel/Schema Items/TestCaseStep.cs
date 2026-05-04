@@ -37,8 +37,8 @@ public enum TestCaseStepType
 /// <summary>
 /// Summary description for TestCaseStep.
 /// </summary>
-[SchemaItemDescription("Step", "Steps", 24)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Step", folderName: "Steps", icon: 24)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class TestCaseStep : AbstractSchemaItem
 {
     public const string CategoryConst = "TestCaseStep";
@@ -47,10 +47,10 @@ public class TestCaseStep : AbstractSchemaItem
         : base() { }
 
     public TestCaseStep(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public TestCaseStep(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Overriden ISchemaItem Members
 
@@ -84,8 +84,8 @@ public class TestCaseStep : AbstractSchemaItem
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(this.ChecklistRule);
-        base.GetExtraDependencies(dependencies);
+        dependencies.Add(item: this.ChecklistRule);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override ISchemaItemCollection ChildItems
@@ -96,7 +96,7 @@ public class TestCaseStep : AbstractSchemaItem
     #region Properties
     private TestCaseStepType _stepType = TestCaseStepType.Step;
 
-    [Category("Test Step")]
+    [Category(category: "Test Step")]
     public TestCaseStepType StepType
     {
         get { return _stepType; }
@@ -105,18 +105,21 @@ public class TestCaseStep : AbstractSchemaItem
 
     public Guid ChecklistRuleId;
 
-    [Category("Test Step")]
-    [TypeConverter(typeof(TestChecklistRuleConverter))]
+    [Category(category: "Test Step")]
+    [TypeConverter(type: typeof(TestChecklistRuleConverter))]
     public TestChecklistRule ChecklistRule
     {
         get
         {
             ModelElementKey key = new ModelElementKey();
             key.Id = this.ChecklistRuleId;
-            return (ISchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key)
-                as TestChecklistRule;
+            return (ISchemaItem)
+                    this.PersistenceProvider.RetrieveInstance(
+                        type: typeof(ISchemaItem),
+                        primaryKey: key
+                    ) as TestChecklistRule;
         }
-        set { this.ChecklistRuleId = (Guid)value.PrimaryKey["Id"]; }
+        set { this.ChecklistRuleId = (Guid)value.PrimaryKey[key: "Id"]; }
     }
     #endregion
 }

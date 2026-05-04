@@ -37,7 +37,14 @@ public class DateFilterPart : FilterPart
         string label,
         FormGenerator formGenerator
     )
-        : base(filteredControl, dataType, dataMember, gridColumnName, label, formGenerator) { }
+        : base(
+            filteredControl: filteredControl,
+            dataType: dataType,
+            dataMember: dataMember,
+            gridColumnName: gridColumnName,
+            label: label,
+            formGenerator: formGenerator
+        ) { }
     #endregion
     #region Properties
     private AsDateBox DateBox
@@ -84,10 +91,10 @@ public class DateFilterPart : FilterPart
     {
         UnsubscribeEvents();
         this.FilterControls.Clear();
-        SetControlProperties(this.DateBox, this.FilterDateBox);
-        SetControlProperties(this.DateBox, this.FilterDateBox2);
-        this.FilterControls.Add(this.FilterDateBox);
-        this.FilterControls.Add(this.FilterDateBox2);
+        SetControlProperties(template: this.DateBox, target: this.FilterDateBox);
+        SetControlProperties(template: this.DateBox, target: this.FilterDateBox2);
+        this.FilterControls.Add(item: this.FilterDateBox);
+        this.FilterControls.Add(item: this.FilterDateBox2);
         this.FilterDateBox.Tag = (
             this.Operator != FilterOperator.IsNull & this.Operator != FilterOperator.NotIsNull
         );
@@ -121,7 +128,7 @@ public class DateFilterPart : FilterPart
                 _filterDateBox = null;
             }
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
     #endregion
     #region EventHandlers
@@ -137,7 +144,7 @@ public class DateFilterPart : FilterPart
             DateTime dt = (DateTime)this.FilterDateBox2.DateValue;
             if (dt.TimeOfDay.Ticks == 0)
             {
-                this.Value2 = dt.AddDays(1).AddSeconds(-1);
+                this.Value2 = dt.AddDays(value: 1).AddSeconds(value: -1);
             }
             else
             {

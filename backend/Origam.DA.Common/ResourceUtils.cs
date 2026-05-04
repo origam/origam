@@ -33,14 +33,14 @@ public class ResourceUtils
     {
         if (_rm == null)
         {
-            _rm = new ResourceManager(BASENAME, typeof(ResourceUtils).Assembly);
+            _rm = new ResourceManager(baseName: BASENAME, assembly: typeof(ResourceUtils).Assembly);
         }
-        return _rm.GetString(key, Thread.CurrentThread.CurrentCulture);
+        return _rm.GetString(name: key, culture: Thread.CurrentThread.CurrentCulture);
     }
 
     public static string GetString(string key, params object[] args)
     {
-        string rawString = GetString(key);
-        return string.Format(rawString, args);
+        string rawString = GetString(key: key);
+        return string.Format(format: rawString, args: args);
     }
 }

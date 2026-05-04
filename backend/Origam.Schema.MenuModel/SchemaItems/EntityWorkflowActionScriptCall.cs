@@ -29,10 +29,14 @@ using Origam.Schema.EntityModel;
 
 namespace Origam.Schema.MenuModel;
 
-[SchemaItemDescription("Client Script Invocation", "Scripts", "icon_client-script-invocation.png")]
-[HelpTopic("Client+Script")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(
+    name: "Client Script Invocation",
+    folderName: "Scripts",
+    iconName: "icon_client-script-invocation.png"
+)]
+[HelpTopic(topic: "Client+Script")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class EntityWorkflowActionScriptCall : AbstractSchemaItem
 {
     public const string CategoryConst = "EntityWorkflowActionScriptCall";
@@ -41,10 +45,10 @@ public class EntityWorkflowActionScriptCall : AbstractSchemaItem
         : base() { }
 
     public EntityWorkflowActionScriptCall(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public EntityWorkflowActionScriptCall(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     public override string ItemType
     {
@@ -52,9 +56,9 @@ public class EntityWorkflowActionScriptCall : AbstractSchemaItem
     }
     private string _roles = "";
 
-    [Category("Condition"), RefreshProperties(RefreshProperties.Repaint)]
+    [Category(category: "Condition"), RefreshProperties(refresh: RefreshProperties.Repaint)]
     [StringNotEmptyModelElementRule()]
-    [XmlAttribute("roles")]
+    [XmlAttribute(attributeName: "roles")]
     public string Roles
     {
         get { return _roles; }
@@ -62,8 +66,8 @@ public class EntityWorkflowActionScriptCall : AbstractSchemaItem
     }
     private string _features;
 
-    [Category("Condition")]
-    [XmlAttribute("features")]
+    [Category(category: "Condition")]
+    [XmlAttribute(attributeName: "features")]
     public string Features
     {
         get { return _features; }
@@ -71,26 +75,26 @@ public class EntityWorkflowActionScriptCall : AbstractSchemaItem
     }
     public Guid RuleId;
 
-    [Category("Condition")]
-    [TypeConverter(typeof(EntityRuleConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [XmlReference("rule", "RuleId")]
+    [Category(category: "Condition")]
+    [TypeConverter(type: typeof(EntityRuleConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [XmlReference(attributeName: "rule", idField: "RuleId")]
     public IEntityRule Rule
     {
         get
         {
             return (IEntityRule)
                 PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(RuleId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: RuleId)
                 );
         }
-        set { RuleId = (value == null) ? Guid.Empty : (Guid)value.PrimaryKey["Id"]; }
+        set { RuleId = (value == null) ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]; }
     }
     private int _order = 0;
 
-    [Category("Script")]
-    [XmlAttribute("order")]
+    [Category(category: "Script")]
+    [XmlAttribute(attributeName: "order")]
     public int Order
     {
         get { return _order; }
@@ -98,8 +102,8 @@ public class EntityWorkflowActionScriptCall : AbstractSchemaItem
     }
     private string _script;
 
-    [Category("Script")]
-    [XmlAttribute("script")]
+    [Category(category: "Script")]
+    [XmlAttribute(attributeName: "script")]
     public string Script
     {
         get { return _script; }
@@ -110,9 +114,9 @@ public class EntityWorkflowActionScriptCall : AbstractSchemaItem
     {
         if (Rule != null)
         {
-            dependencies.Add(Rule);
+            dependencies.Add(item: Rule);
         }
 
-        base.GetExtraDependencies(dependencies);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 }

@@ -26,66 +26,66 @@ namespace Origam.Architect.Server.Controls;
 
 public class BlobControl : ControlBase
 {
-    [Category("Data Members")]
+    [Category(category: "Data Members")]
     public string DateLastModifiedMember { get; set; }
 
-    [Category("(ORIGAM)")]
+    [Category(category: "(ORIGAM)")]
     public string GridColumnCaption { get; set; }
 
-    [Category("Data Members")]
+    [Category(category: "Data Members")]
     public string CompressionStateMember { get; set; }
 
-    [Category("Blob Settings")]
+    [Category(category: "Blob Settings")]
     public bool DisplayStorageTypeSelection { get; set; }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public Guid BlobLookupId { get; set; }
 
-    [Category("(ORIGAM)")]
+    [Category(category: "(ORIGAM)")]
     public int CaptionLength { get; set; }
 
-    [Category("Data Members")]
+    [Category(category: "Data Members")]
     public string OriginalPathMember { get; set; }
 
-    [Category("Data Members")]
+    [Category(category: "Data Members")]
     public string BlobMember { get; set; }
 
-    [Category("Data Members")]
+    [Category(category: "Data Members")]
     public string AuthorMember { get; set; }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public Guid StorageTypeDefaultConstantId { get; set; }
 
     public bool HideOnForm { get; set; }
 
-    [Category("Data Members")]
+    [Category(category: "Data Members")]
     public string RemarkMember { get; set; }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public Guid ThumbnailWidthConstantId { get; set; }
 
-    [Category("(ORIGAM)")]
+    [Category(category: "(ORIGAM)")]
     public string Caption { get; set; }
 
-    [Category("Data Members")]
+    [Category(category: "Data Members")]
     public string DateCreatedMember { get; set; }
 
-    [Category("Data Members")]
+    [Category(category: "Data Members")]
     public string ThumbnailMember { get; set; }
 
     public string FileName { get; set; }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public Guid ThumbnailHeightConstantId { get; set; }
 
-    [Category("(ORIGAM)")]
+    [Category(category: "(ORIGAM)")]
     public CaptionPosition CaptionPosition { get; set; }
 
     public bool ReadOnly { get; set; }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public Guid DefaultCompressionConstantId { get; set; }
 
-    [Category("Data Members")]
+    [Category(category: "Data Members")]
     public string FileSizeMember { get; set; }
 }

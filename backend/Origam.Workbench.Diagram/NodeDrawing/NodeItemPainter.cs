@@ -39,11 +39,11 @@ class NodeItemPainter : INodeItemPainter
     public ICurve GetBoundary(Node node)
     {
         INodeData nodeData = (INodeData)node.UserData;
-        var borderSize = painter.CalculateMinHeaderBorder(node);
+        var borderSize = painter.CalculateMinHeaderBorder(node: node);
         return CurveFactory.CreateRectangle(
-            borderSize.Width + nodeData.LeftMargin,
-            borderSize.Height,
-            new Point()
+            width: borderSize.Width + nodeData.LeftMargin,
+            height: borderSize.Height,
+            center: new Point()
         );
     }
 
@@ -53,45 +53,51 @@ class NodeItemPainter : INodeItemPainter
         Graphics editorGraphics = (Graphics)graphicsObj;
         var image = nodeData.PrimaryImage;
 
-        SizeF stringSize = editorGraphics.MeasureString(node.LabelText, painter.Font);
-        var borderSize = painter.CalculateMinHeaderBorder(node);
+        SizeF stringSize = editorGraphics.MeasureString(text: node.LabelText, font: painter.Font);
+        var borderSize = painter.CalculateMinHeaderBorder(node: node);
         var borderCorner = new System.Drawing.Point(
-            (int)node.GeometryNode.Center.X - (borderSize.Width / 2),
-            (int)node.GeometryNode.Center.Y - (borderSize.Height / 2)
+            x: (int)node.GeometryNode.Center.X - (borderSize.Width / 2),
+            y: (int)node.GeometryNode.Center.Y - (borderSize.Height / 2)
         );
-        Rectangle border = new Rectangle(borderCorner, borderSize);
+        Rectangle border = new Rectangle(location: borderCorner, size: borderSize);
         int labelOffsetDueToImageWidth = image == null ? 0 : painter.NodeHeaderHeight;
         var labelPoint = new PointF(
-            (float)node.GeometryNode.Center.X
+            x: (float)node.GeometryNode.Center.X
                 - ((float)border.Width / 2)
                 + labelOffsetDueToImageWidth
                 + nodeData.LeftMargin,
-            (float)node.GeometryNode.Center.Y - ((int)stringSize.Height / 2)
+            y: (float)node.GeometryNode.Center.Y - ((int)stringSize.Height / 2)
         );
         var imageHorizontalBorder = (painter.NodeHeaderHeight - image?.Width ?? 0) / 2;
         var imageVerticalBorder = (painter.NodeHeaderHeight - image?.Height ?? 0) / 2;
         var imagePoint = new PointF(
-            (float)(node.GeometryNode.Center.X - ((float)border.Width / 2) + imageHorizontalBorder)
-                + nodeData.LeftMargin,
-            (float)(node.GeometryNode.Center.Y - ((float)border.Height / 2) + imageVerticalBorder)
+            x: (float)(
+                node.GeometryNode.Center.X - ((float)border.Width / 2) + imageHorizontalBorder
+            ) + nodeData.LeftMargin,
+            y: (float)(
+                node.GeometryNode.Center.Y - ((float)border.Height / 2) + imageVerticalBorder
+            )
         );
         editorGraphics.DrawUpSideDown(
             drawAction: graphics =>
             {
                 graphics.DrawString(
-                    node.LabelText,
-                    painter.Font,
-                    painter.GetTextBrush(nodeData.IsFromActivePackage),
-                    labelPoint,
-                    painter.DrawFormat
+                    s: node.LabelText,
+                    font: painter.Font,
+                    brush: painter.GetTextBrush(isFromActivePackage: nodeData.IsFromActivePackage),
+                    point: labelPoint,
+                    format: painter.DrawFormat
                 );
                 if (image != null)
                 {
-                    graphics.DrawImage(image, imagePoint);
+                    graphics.DrawImage(image: image, point: imagePoint);
                 }
-                if (Equals(painter.NodeSelector.Selected, node))
+                if (Equals(objA: painter.NodeSelector.Selected, objB: node))
                 {
-                    graphics.DrawRectangle(painter.GetActiveBorderPen(node), border);
+                    graphics.DrawRectangle(
+                        pen: painter.GetActiveBorderPen(node: node),
+                        rect: border
+                    );
                 }
             },
             yAxisCoordinate: (float)node.GeometryNode.Center.Y

@@ -33,11 +33,12 @@ namespace Origam.Gui.Win;
 /// <summary>
 /// Summary description for AsCheckBox.
 /// </summary>
-[ToolboxBitmap(typeof(AsCheckBox))]
+[ToolboxBitmap(t: typeof(AsCheckBox))]
 public class AsCheckBox : CheckBox, IAsControl, IAsCaptionControl
 {
     private IPersistenceService _persistence =
-        ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+        ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+        as IPersistenceService;
     public event EventHandler valueChanged;
 
     public AsCheckBox()
@@ -109,7 +110,7 @@ public class AsCheckBox : CheckBox, IAsControl, IAsCaptionControl
         get => base.Text;
         set
         {
-            if (value != null && !value.StartsWith("AsCheckBox"))
+            if (value != null && !value.StartsWith(value: "AsCheckBox"))
             {
                 base.Text = value;
             }
@@ -117,9 +118,9 @@ public class AsCheckBox : CheckBox, IAsControl, IAsCaptionControl
     }
     int _gridColumnWidth;
 
-    [Category("(ORIGAM)")]
-    [DefaultValue(100)]
-    [Description(CaptionDoc.GridColumnWidthDescription)]
+    [Category(category: "(ORIGAM)")]
+    [DefaultValue(value: 100)]
+    [Description(description: CaptionDoc.GridColumnWidthDescription)]
     public int GridColumnWidth
     {
         get { return _gridColumnWidth; }
@@ -127,9 +128,9 @@ public class AsCheckBox : CheckBox, IAsControl, IAsCaptionControl
     }
     private bool _readOnly = false;
 
-    [Browsable(true)]
-    [Category("Behavior")]
-    [DefaultValue(false)]
+    [Browsable(browsable: true)]
+    [Category(category: "Behavior")]
+    [DefaultValue(value: false)]
     public bool ReadOnly
     {
         get { return _readOnly; }
@@ -189,25 +190,25 @@ public class AsCheckBox : CheckBox, IAsControl, IAsCaptionControl
     }
     private Guid _styleId;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public Guid StyleId
     {
         get { return _styleId; }
         set { _styleId = value; }
     }
 
-    [TypeConverter(typeof(StylesConverter))]
+    [TypeConverter(type: typeof(StylesConverter))]
     public UIStyle Style
     {
         get
         {
             return (UIStyle)
                 _persistence.SchemaProvider.RetrieveInstance(
-                    typeof(UIStyle),
-                    new ModelElementKey(this.StyleId)
+                    type: typeof(UIStyle),
+                    primaryKey: new ModelElementKey(id: this.StyleId)
                 );
         }
-        set { this.StyleId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]); }
+        set { this.StyleId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]); }
     }
     #endregion
     #region Events
@@ -215,9 +216,9 @@ public class AsCheckBox : CheckBox, IAsControl, IAsCaptionControl
     {
         if (valueChanged != null)
         {
-            valueChanged(this, e);
+            valueChanged(sender: this, e: e);
         }
-        this.OnValidating(new CancelEventArgs(false));
+        this.OnValidating(e: new CancelEventArgs(cancel: false));
     }
     #endregion
     #region Event Handlers
@@ -228,8 +229,8 @@ public class AsCheckBox : CheckBox, IAsControl, IAsCaptionControl
 
     private void AsCheckBox_Click(object sender, EventArgs e)
     {
-        OnValueChanged(EventArgs.Empty);
-        System.Diagnostics.Debug.WriteLine("Checked changed");
+        OnValueChanged(e: EventArgs.Empty);
+        System.Diagnostics.Debug.WriteLine(message: "Checked changed");
     }
 
     private void AsCheckBox_KeyPress(object sender, KeyPressEventArgs e)
@@ -263,7 +264,7 @@ public class AsCheckBox : CheckBox, IAsControl, IAsCaptionControl
                         {
                             try
                             {
-                                this.Text = ColumnCaption((e.Element as Binding));
+                                this.Text = ColumnCaption(binding: (e.Element as Binding));
                             }
                             catch
                             {
@@ -314,14 +315,14 @@ public class AsCheckBox : CheckBox, IAsControl, IAsCaptionControl
             DataSet dataset = binding.DataSource as DataSet;
             // Get Table
             DataTable table = dataset.Tables[
-                TableName(dataset, binding.BindingMemberInfo.BindingMember)
+                name: TableName(ds: dataset, dataMember: binding.BindingMemberInfo.BindingMember)
             ];
 
             if (table != null)
             {
-                if (table.Columns.Contains(binding.BindingMemberInfo.BindingField))
+                if (table.Columns.Contains(name: binding.BindingMemberInfo.BindingField))
                 {
-                    return table.Columns[binding.BindingMemberInfo.BindingField].Caption;
+                    return table.Columns[name: binding.BindingMemberInfo.BindingField].Caption;
                 }
             }
         }
@@ -333,13 +334,13 @@ public class AsCheckBox : CheckBox, IAsControl, IAsCaptionControl
         // In case that dataMember is a path through relations, we find the last table
         // so we can take a caption out of it
         string tableName = "";
-        if (dataMember.IndexOf(".") > 0)
+        if (dataMember.IndexOf(value: ".") > 0)
         {
-            string[] path = dataMember.Split(".".ToCharArray());
-            DataTable table = ds.Tables[path[0]];
+            string[] path = dataMember.Split(separator: ".".ToCharArray());
+            DataTable table = ds.Tables[name: path[0]];
             for (int i = 1; i < path.Length - 1; i++)
             {
-                table = table.ChildRelations[path[i]].ChildTable;
+                table = table.ChildRelations[name: path[i]].ChildTable;
             }
             if (table != null)
             {
@@ -364,7 +365,7 @@ public class AsCheckBox : CheckBox, IAsControl, IAsCaptionControl
                 {
                     try
                     {
-                        base.Text = ColumnCaption(binding);
+                        base.Text = ColumnCaption(binding: binding);
                     }
                     catch
                     {

@@ -63,11 +63,11 @@ public class DbNavigator : System.Windows.Forms.Panel
         if (ImgListStreamer == null)
         {
             System.Resources.ResourceManager resources = new System.Resources.ResourceManager(
-                typeof(DbNavigator)
+                resourceSource: typeof(DbNavigator)
             );
             ImgListStreamer = (
                 (System.Windows.Forms.ImageListStreamer)(
-                    resources.GetObject("_navigatorImageList.ImageStream")
+                    resources.GetObject(name: "_navigatorImageList.ImageStream")
                 )
             );
         }
@@ -78,7 +78,7 @@ public class DbNavigator : System.Windows.Forms.Panel
     {
         if (NewRecordAdded != null)
         {
-            NewRecordAdded(this, EventArgs.Empty);
+            NewRecordAdded(sender: this, e: EventArgs.Empty);
         }
     }
 
@@ -101,7 +101,7 @@ public class DbNavigator : System.Windows.Forms.Panel
                 components.Dispose();
             }
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
 
     #region Component Designer generated code
@@ -264,9 +264,9 @@ public class DbNavigator : System.Windows.Forms.Panel
     /// <value>true if the New button is visible. The default is true.</value>
     ///
     [
-        DefaultValue(true),
-        Category("Behavior"),
-        Description("Indicates whether New Button will be shown.")
+        DefaultValue(value: true),
+        Category(category: "Behavior"),
+        Description(description: "Indicates whether New Button will be shown.")
     ]
     public bool ShowNewButton
     {
@@ -274,7 +274,7 @@ public class DbNavigator : System.Windows.Forms.Panel
         {
             if (_addDeleteToolbar.Buttons.Count > 0)
             {
-                return _addDeleteToolbar.Buttons[0].Visible;
+                return _addDeleteToolbar.Buttons[index: 0].Visible;
             }
 
             return false;
@@ -283,7 +283,7 @@ public class DbNavigator : System.Windows.Forms.Panel
         {
             if (_addDeleteToolbar.Buttons.Count > 0)
             {
-                _addDeleteToolbar.Buttons[0].Visible = value;
+                _addDeleteToolbar.Buttons[index: 0].Visible = value;
             }
         }
     }
@@ -295,9 +295,9 @@ public class DbNavigator : System.Windows.Forms.Panel
     /// <value>true if the New button is visible. The default is true.</value>
     ///
     [
-        DefaultValue(true),
-        Category("Behavior"),
-        Description("Indicates whether New Button will be shown.")
+        DefaultValue(value: true),
+        Category(category: "Behavior"),
+        Description(description: "Indicates whether New Button will be shown.")
     ]
     public bool ShowDeleteButton
     {
@@ -305,7 +305,7 @@ public class DbNavigator : System.Windows.Forms.Panel
         {
             if (_addDeleteToolbar.Buttons.Count > 1)
             {
-                return _addDeleteToolbar.Buttons[1].Visible;
+                return _addDeleteToolbar.Buttons[index: 1].Visible;
             }
 
             return false;
@@ -314,7 +314,7 @@ public class DbNavigator : System.Windows.Forms.Panel
         {
             if (_addDeleteToolbar.Buttons.Count > 1)
             {
-                _addDeleteToolbar.Buttons[1].Visible = value;
+                _addDeleteToolbar.Buttons[index: 1].Visible = value;
             }
         }
     }
@@ -327,9 +327,9 @@ public class DbNavigator : System.Windows.Forms.Panel
     /// otherwise, false. The default is true.</value>
     ///
     [
-        DefaultValue(true),
-        Category("Behavior"),
-        Description("Indicates whether tool tips will be shown.")
+        DefaultValue(value: true),
+        Category(category: "Behavior"),
+        Description(description: "Indicates whether tool tips will be shown.")
     ]
     public bool ShowToolTips
     {
@@ -388,8 +388,11 @@ public class DbNavigator : System.Windows.Forms.Panel
         if (currentManager != null && currentManager.GetType().Name == "RelatedCurrencyManager")
         {
             string propertyName = "parentManager";
-            return Reflector.GetValue(currentManager.GetType(), currentManager, propertyName)
-                as CurrencyManager;
+            return Reflector.GetValue(
+                    type: currentManager.GetType(),
+                    instance: currentManager,
+                    memberName: propertyName
+                ) as CurrencyManager;
         }
 
         return null;
@@ -404,33 +407,38 @@ public class DbNavigator : System.Windows.Forms.Panel
             if (template == null)
             {
                 templatePosition = fg.AddTemplateRecord(
-                    parentRow,
-                    _dataMember,
-                    fg.MainFormDataStructureId,
-                    fg.DataSet
+                    parentRow: parentRow,
+                    dataMember: _dataMember,
+                    dataStructureId: fg.MainFormDataStructureId,
+                    formData: fg.DataSet
                 );
             }
             else
             {
                 templatePosition = TemplateTools.AddTemplateRecord(
-                    parentRow,
-                    template,
-                    _dataMember,
-                    fg.MainFormDataStructureId,
-                    fg.DataSet
+                    parentRow: parentRow,
+                    template: template,
+                    dataMember: _dataMember,
+                    dataStructureId: fg.MainFormDataStructureId,
+                    formData: fg.DataSet
                 );
             }
         }
         catch (Exception ex)
         {
-            AsMessageBox.ShowError(this.FindForm(), ex.Message, "Chyba pøi zpracování šablony", ex);
+            AsMessageBox.ShowError(
+                owner: this.FindForm(),
+                text: ex.Message,
+                caption: "Chyba pøi zpracování šablony",
+                exception: ex
+            );
             return false;
         }
         if (templatePosition == null)
         {
             return false;
         }
-        (this.Parent.Parent as AsPanel).SetPosition(templatePosition);
+        (this.Parent.Parent as AsPanel).SetPosition(primaryKey: templatePosition);
         OnNewRecordAdded();
         return true;
     }
@@ -453,7 +461,7 @@ public class DbNavigator : System.Windows.Forms.Panel
                 DataRowView parentRowView = this.ParentRowView;
                 DataRow parentRow = parentRowView == null ? null : parentRowView.Row;
                 // try to add a row by using a template
-                if (AddNewRow(null, parentRow))
+                if (AddNewRow(template: null, parentRow: parentRow))
                 {
                     return;
                 }
@@ -467,13 +475,13 @@ public class DbNavigator : System.Windows.Forms.Panel
                 catch (Exception ex)
                 {
                     Origam.UI.AsMessageBox.ShowError(
-                        this.FindForm(),
-                        ex.Message,
-                        ResourceUtils.GetString(
-                            "ErrorNewRow",
-                            (this.Parent.Parent as AsPanel).PanelTitle
+                        owner: this.FindForm(),
+                        text: ex.Message,
+                        caption: ResourceUtils.GetString(
+                            key: "ErrorNewRow",
+                            args: (this.Parent.Parent as AsPanel).PanelTitle
                         ),
-                        ex
+                        exception: ex
                     );
                 }
                 finally
@@ -490,7 +498,9 @@ public class DbNavigator : System.Windows.Forms.Panel
         get
         {
             BindingManagerBase bindMan = GetBindingManager();
-            CurrencyManager parentManager = this.ParentManager(bindMan as CurrencyManager);
+            CurrencyManager parentManager = this.ParentManager(
+                currentManager: bindMan as CurrencyManager
+            );
             if (parentManager != null)
             {
                 if (parentManager.Current is DataRowView)
@@ -514,11 +524,11 @@ public class DbNavigator : System.Windows.Forms.Panel
 
             if (
                 MessageBox.Show(
-                    this.FindForm(),
-                    ResourceHelper.GetString("Data.DeleteQuestionText"),
-                    ResourceHelper.GetString("Data.DeleteQuestionTitle"),
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Question
+                    owner: this.FindForm(),
+                    text: ResourceHelper.GetString(name: "Data.DeleteQuestionText"),
+                    caption: ResourceHelper.GetString(name: "Data.DeleteQuestionTitle"),
+                    buttons: MessageBoxButtons.YesNo,
+                    icon: MessageBoxIcon.Question
                 ) == DialogResult.Yes
             )
             {
@@ -526,7 +536,7 @@ public class DbNavigator : System.Windows.Forms.Panel
                 try
                 {
                     // .NET BUGFIX: Dataset does not refresh aggregated calculated columns on delete, we have to raise change event
-                    if (Origam.DA.DatasetTools.IsRowAggregated(row.Row))
+                    if (Origam.DA.DatasetTools.IsRowAggregated(row: row.Row))
                     {
                         row.BeginEdit();
                         foreach (DataColumn col in row.Row.Table.Columns)
@@ -541,10 +551,13 @@ public class DbNavigator : System.Windows.Forms.Panel
                                 )
                             )
                             {
-                                object zero = Convert.ChangeType(0, col.DataType);
-                                if (!row.Row[col].Equals(zero))
+                                object zero = Convert.ChangeType(
+                                    value: 0,
+                                    conversionType: col.DataType
+                                );
+                                if (!row.Row[column: col].Equals(obj: zero))
                                 {
-                                    row.Row[col] = 0;
+                                    row.Row[column: col] = 0;
                                 }
                             }
                         }
@@ -558,7 +571,10 @@ public class DbNavigator : System.Windows.Forms.Panel
                     foreach (DataRelation relation in row.Row.Table.ParentRelations)
                     {
                         parentRows.AddRange(
-                            row.Row.GetParentRows(relation, DataRowVersion.Default)
+                            collection: row.Row.GetParentRows(
+                                relation: relation,
+                                version: DataRowVersion.Default
+                            )
                         );
                     }
                     AsForm frm = this.FindForm() as AsForm;
@@ -575,14 +591,14 @@ public class DbNavigator : System.Windows.Forms.Panel
                     foreach (DataRow parentRow in parentRows)
                     {
                         DatasetTools.CheckRowErrorRecursive(
-                            DatasetTools.RootRow(parentRow),
-                            null,
-                            false
+                            row: DatasetTools.RootRow(childRow: parentRow),
+                            skipRow: null,
+                            includeChildErrorsInParent: false
                         );
                     }
                     (FindForm() as AsForm).FormGenerator.table_RowDeleted(
-                        parentRows.ToArray(),
-                        row.Row
+                        parentRows: parentRows.ToArray(),
+                        deletedRow: row.Row
                     );
                     //AsPanel panel = this.Parent.Parent as AsPanel;
                     //panel.BindGrid(true);
@@ -599,7 +615,8 @@ public class DbNavigator : System.Windows.Forms.Panel
     {
         if (null != _dataSource && null != BindingContext)
         {
-            return BindingContext[_dataSource, _dataMember] as CurrencyManager;
+            return BindingContext[dataSource: _dataSource, dataMember: _dataMember]
+                as CurrencyManager;
         }
 
         return null;
@@ -629,7 +646,7 @@ public class DbNavigator : System.Windows.Forms.Panel
         {
             parentRowView.EndEdit();
         }
-        panel.SetPosition(key);
+        panel.SetPosition(primaryKey: key);
         // after loosing focus, the grid could change number of rows (e.g. asking user if he wants to cancel the edit)
         // so we check the number of rows and exit if it has changed
         if (count != bindMan.Count)
@@ -694,13 +711,18 @@ public class DbNavigator : System.Windows.Forms.Panel
             return false;
         }
 
-        return (bool)Reflector.GetValue(typeof(CurrencyManager), cm, "IsBinding");
+        return (bool)
+            Reflector.GetValue(
+                type: typeof(CurrencyManager),
+                instance: cm,
+                memberName: "IsBinding"
+            );
     }
 
     public void UpdateControls()
     {
         CurrencyManager bindMan = GetBindingManager();
-        bool isBinding = IsManagerBinding(bindMan as CurrencyManager);
+        bool isBinding = IsManagerBinding(cm: bindMan as CurrencyManager);
         if (bindMan == null || bindMan.Position < 0 || isBinding == false)
         {
             _moveFirstButton.Enabled =
@@ -713,10 +735,10 @@ public class DbNavigator : System.Windows.Forms.Panel
 
             // enable new button only if parent's manager is not suspended
             bool enableNew = true;
-            CurrencyManager parentManager = this.ParentManager(bindMan);
+            CurrencyManager parentManager = this.ParentManager(currentManager: bindMan);
             if (parentManager != null)
             {
-                if (!IsManagerBinding(parentManager))
+                if (!IsManagerBinding(cm: parentManager))
                 {
                     // if parent binding is suspended, we will suppress new button
                     enableNew = false;
@@ -733,14 +755,18 @@ public class DbNavigator : System.Windows.Forms.Panel
             _moveNextButton.Enabled = _moveLastButton.Enabled =
                 bindMan.Position < bindMan.Count - 1;
             _deleteButton.Enabled = true;
-            _recordLabel.Text = string.Format(@"{0} / {1}", bindMan.Position + 1, bindMan.Count);
+            _recordLabel.Text = string.Format(
+                format: @"{0} / {1}",
+                arg0: bindMan.Position + 1,
+                arg1: bindMan.Count
+            );
             if (this.FindForm() is AsForm)
             {
                 FormGenerator fg = (this.FindForm() as AsForm).FormGenerator;
                 if (
                     fg != null
                     && fg.TemplateSet != null
-                    && fg.TemplateSet.TemplatesByDataMember(_dataMember).Count > 0
+                    && fg.TemplateSet.TemplatesByDataMember(dataMember: _dataMember).Count > 0
                 )
                 {
                     this._newButton.Style = System.Windows.Forms.ToolBarButtonStyle.DropDownButton;
@@ -766,15 +792,15 @@ public class DbNavigator : System.Windows.Forms.Panel
         }
         catch (Exception ex)
         {
-            string msg = ResourceUtils.GetString("UpdateValue", ex.Message);
+            string msg = ResourceUtils.GetString(key: "UpdateValue", args: ex.Message);
             if (
                 DialogResult.Yes
                 == MessageBox.Show(
-                    this.FindForm(),
-                    msg,
-                    ResourceUtils.GetString("ErrorSaveTitle"),
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Error
+                    owner: this.FindForm(),
+                    text: msg,
+                    caption: ResourceUtils.GetString(key: "ErrorSaveTitle"),
+                    buttons: MessageBoxButtons.YesNo,
+                    icon: MessageBoxIcon.Error
                 )
             )
             {
@@ -801,25 +827,28 @@ public class DbNavigator : System.Windows.Forms.Panel
         {
             foreach (
                 Schema.EntityModel.DataStructureTemplate template in fg.TemplateSet.TemplatesByDataMember(
-                    _dataMember
+                    dataMember: _dataMember
                 )
             )
             {
                 IDocumentationService documentation =
-                    ServiceManager.Services.GetService(typeof(IDocumentationService))
+                    ServiceManager.Services.GetService(serviceType: typeof(IDocumentationService))
                     as IDocumentationService;
                 string name = documentation.GetDocumentation(
-                    template.Id,
-                    DocumentationType.USER_SHORT_HELP
+                    schemaItemId: template.Id,
+                    docType: DocumentationType.USER_SHORT_HELP
                 );
                 if (name == "")
                 {
                     name = template.Name;
                 }
 
-                TemplateMenuItem templateMenuItem = new TemplateMenuItem(name, template);
+                TemplateMenuItem templateMenuItem = new TemplateMenuItem(
+                    name: name,
+                    template: template
+                );
                 templateMenuItem.Click += new EventHandler(templateMenuItem_Click);
-                templateMenu.MenuItems.Add(templateMenuItem);
+                templateMenu.MenuItems.Add(item: templateMenuItem);
             }
         }
     }
@@ -827,6 +856,6 @@ public class DbNavigator : System.Windows.Forms.Panel
     private void templateMenuItem_Click(object sender, EventArgs e)
     {
         DataRow parentRow = (this.ParentRowView == null ? null : this.ParentRowView.Row);
-        AddNewRow((sender as TemplateMenuItem).Template, parentRow);
+        AddNewRow(template: (sender as TemplateMenuItem).Template, parentRow: parentRow);
     }
 }

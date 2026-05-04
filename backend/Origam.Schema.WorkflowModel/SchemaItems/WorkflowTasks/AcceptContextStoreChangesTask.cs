@@ -26,29 +26,30 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.WorkflowModel;
 
-[SchemaItemDescription("(Task) Accept Context Store Changes", "Tasks", 16)]
-[HelpTopic("Accept+Context+Store+Changes")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "(Task) Accept Context Store Changes", folderName: "Tasks", icon: 16)]
+[HelpTopic(topic: "Accept+Context+Store+Changes")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class AcceptContextStoreChangesTask : AbstractWorkflowStep
 {
     public AcceptContextStoreChangesTask(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(schemaExtensionId: schemaExtensionId) { }
 
     public AcceptContextStoreChangesTask(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Properties
     public Guid ContextStoreId;
 
-    [TypeConverter(typeof(ContextStoreConverter))]
+    [TypeConverter(type: typeof(ContextStoreConverter))]
     [NotNullModelElementRule]
-    [XmlReference("contextStore", "ContextStoreId")]
+    [XmlReference(attributeName: "contextStore", idField: "ContextStoreId")]
     public IContextStore ContextStore
     {
         get
         {
             var key = new ModelElementKey { Id = this.ContextStoreId };
-            return (IContextStore)PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
+            return (IContextStore)
+                PersistenceProvider.RetrieveInstance(type: typeof(ISchemaItem), primaryKey: key);
         }
         set
         {
@@ -58,7 +59,7 @@ public class AcceptContextStoreChangesTask : AbstractWorkflowStep
             }
             else
             {
-                ContextStoreId = (Guid)value.PrimaryKey["Id"];
+                ContextStoreId = (Guid)value.PrimaryKey[key: "Id"];
             }
         }
     }

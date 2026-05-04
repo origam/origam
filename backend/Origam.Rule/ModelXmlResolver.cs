@@ -46,13 +46,14 @@ public class ModelXmlResolver : XmlResolver
         //			}
         //			else
         //			{
-        Guid g = new Guid(absoluteUri.Authority.ToString());
+        Guid g = new Guid(g: absoluteUri.Authority.ToString());
         IPersistenceService persistence =
-            ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+            ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+            as IPersistenceService;
         ISchemaItem item =
             persistence.SchemaProvider.RetrieveInstance(
-                typeof(XslTransformation),
-                new ModelElementKey(g)
+                type: typeof(XslTransformation),
+                primaryKey: new ModelElementKey(id: g)
             ) as ISchemaItem;
         string xsl;
         if (item is XslTransformation)
@@ -66,14 +67,14 @@ public class ModelXmlResolver : XmlResolver
         else
         {
             throw new ArgumentOutOfRangeException(
-                "absoluteUri",
-                absoluteUri,
-                ResourceUtils.GetString("ErrorNoXslReference")
+                paramName: "absoluteUri",
+                actualValue: absoluteUri,
+                message: ResourceUtils.GetString(key: "ErrorNoXslReference")
             );
         }
         MemoryStream ms = new MemoryStream();
-        StreamWriter sw = new StreamWriter(ms);
-        sw.Write(xsl);
+        StreamWriter sw = new StreamWriter(stream: ms);
+        sw.Write(value: xsl);
         sw.Flush();
         ms.Position = 0;
         return ms;
@@ -82,7 +83,7 @@ public class ModelXmlResolver : XmlResolver
 
     public override Uri ResolveUri(Uri baseUri, string relativeUri)
     {
-        return base.ResolveUri(baseUri, relativeUri);
+        return base.ResolveUri(baseUri: baseUri, relativeUri: relativeUri);
     }
 
     public override System.Net.ICredentials Credentials

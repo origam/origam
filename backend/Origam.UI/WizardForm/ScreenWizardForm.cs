@@ -46,7 +46,7 @@ public class ScreenWizardForm : AbstractWizardForm
 
             foreach (IDataEntityColumn column in this.Entity.EntityColumns)
             {
-                if (string.IsNullOrEmpty(column.ToString()))
+                if (string.IsNullOrEmpty(value: column.ToString()))
                 {
                     continue;
                 }
@@ -59,7 +59,7 @@ public class ScreenWizardForm : AbstractWizardForm
                     )
                 )
                 {
-                    _lstFields.Items.Add(column);
+                    _lstFields.Items.Add(item: column);
                 }
             }
         }
@@ -72,7 +72,7 @@ public class ScreenWizardForm : AbstractWizardForm
             Hashtable result = new Hashtable();
             foreach (IDataEntityColumn column in _lstFields.CheckedItems)
             {
-                result.Add(column.Name, null);
+                result.Add(key: column.Name, value: null);
             }
             return result;
         }

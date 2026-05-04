@@ -49,7 +49,7 @@ public class SchemaCompareEditor : AbstractViewContent
 {
     private List<SchemaDbCompareResult> _results = new();
     WorkbenchSchemaService _schema =
-        ServiceManager.Services.GetService(typeof(WorkbenchSchemaService))
+        ServiceManager.Services.GetService(serviceType: typeof(WorkbenchSchemaService))
         as WorkbenchSchemaService;
     private System.Windows.Forms.ColumnHeader colType;
     private System.Windows.Forms.ColumnHeader colName;
@@ -82,9 +82,11 @@ public class SchemaCompareEditor : AbstractViewContent
         // Required for Windows Form Designer support
         //
         InitializeComponent();
-        this.Icon = Icon.FromHandle(new Bitmap(Images.DeploymentScriptGenerator).GetHicon());
+        this.Icon = Icon.FromHandle(
+            handle: new Bitmap(original: Images.DeploymentScriptGenerator).GetHicon()
+        );
         cboFilter.Items.AddRange(
-            new object[] { "Missing in Database", "Missing in Model", "Different" }
+            items: new object[] { "Missing in Database", "Missing in Model", "Different" }
         );
         cboFilter.SelectedIndex = 0;
         lvwResults.SmallImageList = _schema.SchemaBrowser.ImageList;
@@ -93,18 +95,18 @@ public class SchemaCompareEditor : AbstractViewContent
         var deploymentVersions = _schema
             .GetProvider<DeploymentSchemaItemProvider>()
             .ChildItems.Cast<DeploymentVersion>()
-            .OrderBy(deploymentVersion => deploymentVersion.Version);
+            .OrderBy(keySelector: deploymentVersion => deploymentVersion.Version);
         foreach (DeploymentVersion version in deploymentVersions)
         {
             // only version from the current extension
-            if (version.Package.PrimaryKey.Equals(_schema.ActiveExtension.PrimaryKey))
+            if (version.Package.PrimaryKey.Equals(obj: _schema.ActiveExtension.PrimaryKey))
             {
                 if (version.IsCurrentVersion)
                 {
                     currentVersion = version;
                 }
 
-                cboDeploymentVersion.Items.Add(version);
+                cboDeploymentVersion.Items.Add(item: version);
             }
         }
         // select active version
@@ -115,16 +117,16 @@ public class SchemaCompareEditor : AbstractViewContent
         OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
         Platform[] platforms = settings.GetAllPlatforms();
         cboDatabaseType.Enabled = false;
-        platforms?.ForEach(platform =>
+        platforms?.ForEach(action: platform =>
         {
-            cboDatabaseType.Items.Add(platform);
+            cboDatabaseType.Items.Add(item: platform);
             cboDatabaseType.Enabled = true;
         });
         cboDatabaseType.SelectedIndex = cboDatabaseType.Items.Count - 1;
         contextMenu = new ContextMenuStrip();
-        ToolStripMenuItem item = new ToolStripMenuItem(strings.GoToDefinition_MenuItem);
+        ToolStripMenuItem item = new ToolStripMenuItem(text: strings.GoToDefinition_MenuItem);
         item.Click += new EventHandler(gotoDefinition_click);
-        contextMenu.Items.Add(item);
+        contextMenu.Items.Add(value: item);
         lvwResults.ContextMenuStrip = contextMenu;
         this.label3.BackColor = OrigamColorScheme.FormBackgroundColor;
         this.label4.BackColor = OrigamColorScheme.FormBackgroundColor;
@@ -149,7 +151,7 @@ public class SchemaCompareEditor : AbstractViewContent
                 components.Dispose();
             }
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
 
     #region Windows Form Designer generated code
@@ -413,14 +415,15 @@ public class SchemaCompareEditor : AbstractViewContent
     private void DisplayResults()
     {
         IPersistenceService persistence =
-            ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+            ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+            as IPersistenceService;
         AbstractSqlDataService da = (AbstractSqlDataService)DataServiceFactory.GetDataService();
         da.PersistenceProvider = persistence.SchemaProvider;
         Platform platform = (Platform)cboDatabaseType.SelectedItem;
         AbstractSqlDataService DaPlatform = (AbstractSqlDataService)
-            DataServiceFactory.GetDataService(platform);
+            DataServiceFactory.GetDataService(deployPlatform: platform);
         DaPlatform.PersistenceProvider = persistence.SchemaProvider;
-        _results = DaPlatform.CompareSchema(persistence.SchemaProvider);
+        _results = DaPlatform.CompareSchema(provider: persistence.SchemaProvider);
         foreach (var result in _results)
         {
             result.Platform = platform;
@@ -433,7 +436,7 @@ public class SchemaCompareEditor : AbstractViewContent
         var result = new List<SchemaDbCompareResult>();
         foreach (ListViewItem item in lvwResults.CheckedItems)
         {
-            result.Add((SchemaDbCompareResult)item.Tag);
+            result.Add(item: (SchemaDbCompareResult)item.Tag);
         }
         return result;
     }
@@ -450,12 +453,12 @@ public class SchemaCompareEditor : AbstractViewContent
             lvwResults.BeginUpdate();
             foreach (SchemaDbCompareResult result in _results)
             {
-                if (ShouldDisplayResult(result))
+                if (ShouldDisplayResult(result: result))
                 {
                     SchemaItemDescriptionAttribute desc =
                         result.SchemaItemType.SchemaItemDescription();
                     ListViewItem item = new ListViewItem(
-                        new string[]
+                        items: new string[]
                         {
                             desc == null ? result.SchemaItemType.Name : desc.Name,
                             result.ItemName,
@@ -467,14 +470,14 @@ public class SchemaCompareEditor : AbstractViewContent
                     object icon = result.SchemaItemType.SchemaItemIcon();
                     if (icon is string)
                     {
-                        imageIndex = lvwResults.SmallImageList.Images.IndexOfKey((string)icon);
+                        imageIndex = lvwResults.SmallImageList.Images.IndexOfKey(key: (string)icon);
                     }
                     else
                     {
                         imageIndex = (int)icon;
                     }
                     item.ImageIndex = imageIndex;
-                    lvwResults.Items.Add(item);
+                    lvwResults.Items.Add(value: item);
                 }
             }
         }
@@ -515,8 +518,9 @@ public class SchemaCompareEditor : AbstractViewContent
     #region Event Handlers
     private void lvwResults_ItemCheck(object sender, System.Windows.Forms.ItemCheckEventArgs e)
     {
-        SchemaDbCompareResult result = lvwResults.Items[e.Index].Tag as SchemaDbCompareResult;
-        if (string.IsNullOrEmpty(result.Script) && result.SchemaItem == null)
+        SchemaDbCompareResult result =
+            lvwResults.Items[index: e.Index].Tag as SchemaDbCompareResult;
+        if (string.IsNullOrEmpty(value: result.Script) && result.SchemaItem == null)
         {
             e.NewValue = CheckState.Unchecked;
         }
@@ -524,28 +528,28 @@ public class SchemaCompareEditor : AbstractViewContent
 
     private void btnScript_Click(object sender, System.EventArgs e)
     {
-        OutputPad _pad = WorkbenchSingleton.Workbench.GetPad(typeof(OutputPad)) as OutputPad;
+        OutputPad _pad = WorkbenchSingleton.Workbench.GetPad(type: typeof(OutputPad)) as OutputPad;
         StringBuilder script = new StringBuilder();
         foreach (SchemaDbCompareResult result in SelectedResults())
         {
-            if (!string.IsNullOrEmpty(result.Script))
+            if (!string.IsNullOrEmpty(value: result.Script))
             {
-                script.Append(result.Script);
-                script.Append(Environment.NewLine);
-                script.Append(Environment.NewLine);
+                script.Append(value: result.Script);
+                script.Append(value: Environment.NewLine);
+                script.Append(value: Environment.NewLine);
             }
         }
         foreach (SchemaDbCompareResult result in SelectedResults())
         {
-            if (!string.IsNullOrEmpty(result.Script2))
+            if (!string.IsNullOrEmpty(value: result.Script2))
             {
-                script.Append(result.Script2);
-                script.Append(Environment.NewLine);
-                script.Append(Environment.NewLine);
+                script.Append(value: result.Script2);
+                script.Append(value: Environment.NewLine);
+                script.Append(value: Environment.NewLine);
             }
         }
-        _pad.SetOutputText(script.ToString());
-        WorkbenchSingleton.Workbench.ShowPad(_pad);
+        _pad.SetOutputText(sText: script.ToString());
+        WorkbenchSingleton.Workbench.ShowPad(content: _pad);
     }
 
     private void cboFilter_SelectedIndexChanged(object sender, System.EventArgs e)
@@ -558,7 +562,9 @@ public class SchemaCompareEditor : AbstractViewContent
         IService dataService = null;
 
         foreach (
-            IService service in _schema.GetProvider(typeof(ServiceSchemaItemProvider)).ChildItems
+            IService service in _schema
+                .GetProvider(type: typeof(ServiceSchemaItemProvider))
+                .ChildItems
         )
         {
             if (service.Name == "DataService")
@@ -570,11 +576,11 @@ public class SchemaCompareEditor : AbstractViewContent
         if (cboDeploymentVersion.SelectedIndex < 0)
         {
             MessageBox.Show(
-                this,
-                strings.SelectDeploymentVersionMessage,
-                strings.SelectDeploymentTitle,
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Stop
+                owner: this,
+                text: strings.SelectDeploymentVersionMessage,
+                caption: strings.SelectDeploymentTitle,
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Stop
             );
             return;
         }
@@ -582,40 +588,44 @@ public class SchemaCompareEditor : AbstractViewContent
         var generatedActivities = new List<ISchemaItem>();
         foreach (SchemaDbCompareResult result in SelectedResults())
         {
-            if (!string.IsNullOrEmpty(result.Script))
+            if (!string.IsNullOrEmpty(value: result.Script))
             {
                 DatabaseType dbType = (DatabaseType)
                     Enum.Parse(
-                        typeof(DatabaseType),
-                        result.Platform.GetParseEnum(result.Platform.DataService).ToString()
+                        enumType: typeof(DatabaseType),
+                        value: result
+                            .Platform.GetParseEnum(dataDataService: result.Platform.DataService)
+                            .ToString()
                     );
                 generatedActivities.Add(
-                    AddActivity(
-                        result.SchemaItem.ModelDescription() + "_" + result.ItemName,
-                        result.Script,
-                        version,
-                        dataService,
-                        dbType
+                    item: AddActivity(
+                        name: result.SchemaItem.ModelDescription() + "_" + result.ItemName,
+                        command: result.Script,
+                        version: version,
+                        dataService: dataService,
+                        databaseType: dbType
                     )
                 );
             }
         }
         foreach (SchemaDbCompareResult result in SelectedResults())
         {
-            if (!string.IsNullOrEmpty(result.Script2))
+            if (!string.IsNullOrEmpty(value: result.Script2))
             {
                 DatabaseType dbType = (DatabaseType)
                     Enum.Parse(
-                        typeof(DatabaseType),
-                        result.Platform.GetParseEnum(result.Platform.DataService).ToString()
+                        enumType: typeof(DatabaseType),
+                        value: result
+                            .Platform.GetParseEnum(dataDataService: result.Platform.DataService)
+                            .ToString()
                     );
                 generatedActivities.Add(
-                    AddActivity(
-                        result.SchemaItem.ModelDescription() + "_" + result.ItemName,
-                        result.Script2,
-                        version,
-                        dataService,
-                        dbType
+                    item: AddActivity(
+                        name: result.SchemaItem.ModelDescription() + "_" + result.ItemName,
+                        command: result.Script2,
+                        version: version,
+                        dataService: dataService,
+                        databaseType: dbType
                     )
                 );
             }
@@ -624,18 +634,18 @@ public class SchemaCompareEditor : AbstractViewContent
         {
             if (
                 MessageBox.Show(
-                    this,
-                    strings.PutItemsToSearchResultQuestion,
-                    strings.SelectDeploymentTitle,
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Question
+                    owner: this,
+                    text: strings.PutItemsToSearchResultQuestion,
+                    caption: strings.SelectDeploymentTitle,
+                    buttons: MessageBoxButtons.YesNo,
+                    icon: MessageBoxIcon.Question
                 ) == DialogResult.Yes
             )
             {
                 FindSchemaItemResultsPad findResults =
-                    WorkbenchSingleton.Workbench.GetPad(typeof(FindSchemaItemResultsPad))
+                    WorkbenchSingleton.Workbench.GetPad(type: typeof(FindSchemaItemResultsPad))
                     as FindSchemaItemResultsPad;
-                findResults.DisplayResults(generatedActivities.ToArray());
+                findResults.DisplayResults(results: generatedActivities.ToArray());
             }
         }
         // deselect all items
@@ -654,10 +664,13 @@ public class SchemaCompareEditor : AbstractViewContent
     )
     {
         var activity = version.NewItem<ServiceCommandUpdateScriptActivity>(
-            _schema.ActiveSchemaExtensionId,
-            null
+            schemaExtensionId: _schema.ActiveSchemaExtensionId,
+            group: null
         );
-        activity.Name = activity.ActivityOrder.ToString("00000") + "_" + name.Replace(" ", "_");
+        activity.Name =
+            activity.ActivityOrder.ToString(format: "00000")
+            + "_"
+            + name.Replace(oldValue: " ", newValue: "_");
         activity.Service = dataService;
         activity.CommandText = command;
         activity.DatabaseType = databaseType;
@@ -667,7 +680,8 @@ public class SchemaCompareEditor : AbstractViewContent
     #endregion
     private void gotoDefinition_click(object sender, EventArgs e)
     {
-        SchemaDbCompareResult result = lvwResults.SelectedItems[0].Tag as SchemaDbCompareResult;
+        SchemaDbCompareResult result =
+            lvwResults.SelectedItems[index: 0].Tag as SchemaDbCompareResult;
         if (result != null)
         {
             ISchemaItem toSelect =
@@ -679,13 +693,19 @@ public class SchemaCompareEditor : AbstractViewContent
                 try
                 {
                     SchemaBrowser schemaBrowser =
-                        WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
-                    schemaBrowser.EbrSchemaBrowser.SelectItem(toSelect);
-                    WorkbenchSingleton.Workbench.ShowPad(schemaBrowser);
+                        WorkbenchSingleton.Workbench.GetPad(type: typeof(SchemaBrowser))
+                        as SchemaBrowser;
+                    schemaBrowser.EbrSchemaBrowser.SelectItem(item: toSelect);
+                    WorkbenchSingleton.Workbench.ShowPad(content: schemaBrowser);
                 }
                 catch (Exception ex)
                 {
-                    AsMessageBox.ShowError(this, ex.Message, strings.GenericError_Title, ex);
+                    AsMessageBox.ShowError(
+                        owner: this,
+                        text: ex.Message,
+                        caption: strings.GenericError_Title,
+                        exception: ex
+                    );
                 }
             }
         }
@@ -701,13 +721,13 @@ public class SchemaCompareEditor : AbstractViewContent
                 if (result.SchemaItem == null)
                 {
                     AsMessageBox.ShowError(
-                        this,
-                        string.Format(
-                            strings.ModelGenerationNotSupported_Message,
-                            result.SchemaItemType
+                        owner: this,
+                        text: string.Format(
+                            format: strings.ModelGenerationNotSupported_Message,
+                            arg0: result.SchemaItemType
                         ),
-                        strings.ModelGenerationTitle,
-                        null
+                        caption: strings.ModelGenerationTitle,
+                        exception: null
                     );
                     return;
                 }
@@ -721,18 +741,18 @@ public class SchemaCompareEditor : AbstractViewContent
                 var schemaItem = result.SchemaItem;
                 schemaItem.Group = _schema
                     .GetProvider<EntityModelSchemaItemProvider>()
-                    .GetGroup(_schema.ActiveExtension.Name);
-                schemaItem.RootProvider.ChildItems.Add(schemaItem);
+                    .GetGroup(name: _schema.ActiveExtension.Name);
+                schemaItem.RootProvider.ChildItems.Add(item: schemaItem);
                 schemaItem.Persist();
-                RemoveFromList(result);
+                RemoveFromList(result: result);
             }
         }
         MessageBox.Show(
-            this,
-            strings.ModelGeneratedMassage,
-            strings.ModelGenerationTitle,
-            MessageBoxButtons.OK,
-            MessageBoxIcon.Information
+            owner: this,
+            text: strings.ModelGeneratedMassage,
+            caption: strings.ModelGenerationTitle,
+            buttons: MessageBoxButtons.OK,
+            icon: MessageBoxIcon.Information
         );
     }
 
@@ -740,9 +760,9 @@ public class SchemaCompareEditor : AbstractViewContent
     {
         foreach (ListViewItem item in lvwResults.Items)
         {
-            if (result.Equals(item.Tag))
+            if (result.Equals(obj: item.Tag))
             {
-                lvwResults.Items.Remove(item);
+                lvwResults.Items.Remove(item: item);
             }
         }
     }

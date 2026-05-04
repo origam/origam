@@ -27,8 +27,8 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.GuiModel;
 
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public abstract class AbstractChart : AbstractSchemaItem
 {
     public const string CategoryConst = "Chart";
@@ -40,29 +40,29 @@ public abstract class AbstractChart : AbstractSchemaItem
     }
 
     public AbstractChart(Guid schemaExtensionId)
-        : base(schemaExtensionId)
+        : base(extensionId: schemaExtensionId)
     {
         Init();
     }
 
     public AbstractChart(Key primaryKey)
-        : base(primaryKey)
+        : base(primaryKey: primaryKey)
     {
         Init();
     }
 
     private void Init()
     {
-        this.ChildItemTypes.Add(typeof(ChartFormMapping));
+        this.ChildItemTypes.Add(item: typeof(ChartFormMapping));
     }
 
     #region Properties
     private string _caption = "";
 
-    [Category("User Interface")]
+    [Category(category: "User Interface")]
     [StringNotEmptyModelElementRule()]
-    [Localizable(true)]
-    [XmlAttribute("label")]
+    [Localizable(isLocalizable: true)]
+    [XmlAttribute(attributeName: "label")]
     public string Caption
     {
         get { return _caption; }

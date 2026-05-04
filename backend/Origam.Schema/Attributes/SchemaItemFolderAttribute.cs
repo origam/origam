@@ -26,7 +26,7 @@ namespace Origam.Schema;
 /// <summary>
 /// Use this attribute to specify a name and folder name of the schema item.
 /// </summary>
-[AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
+[AttributeUsage(validOn: AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
 public class SchemaItemDescriptionAttribute : Attribute
 {
     private string _name;
@@ -47,13 +47,13 @@ public class SchemaItemDescriptionAttribute : Attribute
     }
 
     public SchemaItemDescriptionAttribute(string name, string folderName, int icon)
-        : this(name, icon)
+        : this(name: name, icon: icon)
     {
         this._folderName = folderName;
     }
 
     public SchemaItemDescriptionAttribute(string name, string folderName, string iconName)
-        : this(name, iconName)
+        : this(name: name, iconName: iconName)
     {
         this._folderName = folderName;
     }
@@ -85,8 +85,8 @@ public static class Extensions
     public static SchemaItemDescriptionAttribute SchemaItemDescription(this Type type)
     {
         object[] attributes = type.GetCustomAttributes(
-            typeof(SchemaItemDescriptionAttribute),
-            true
+            attributeType: typeof(SchemaItemDescriptionAttribute),
+            inherit: true
         );
         if (attributes != null && attributes.Length > 0)
         {

@@ -51,10 +51,10 @@ public class Settings
     /// </summary>
     public Setting this[string key]
     {
-        get { return (Setting)settings[key]; }
+        get { return (Setting)settings[key: key]; }
         set
         {
-            settings[key] = value;
+            settings[key: key] = value;
             value.Name = key;
         }
     }
@@ -73,11 +73,11 @@ public class Settings
     /// <returns>The Setting object tied to the string</returns>
     public Setting GetSetting(string key, object defaultvalue)
     {
-        if (settings[key] == null)
+        if (settings[key: key] == null)
         {
-            settings[key] = new Setting(defaultvalue, null, null);
-            ((Setting)settings[key]).Name = key;
+            settings[key: key] = new Setting(val: defaultvalue, desc: null, category: null);
+            ((Setting)settings[key: key]).Name = key;
         }
-        return (Setting)settings[key];
+        return (Setting)settings[key: key];
     }
 }

@@ -66,7 +66,7 @@ public class PortalSessionStore
                         return item;
                     }
                 }
-                throw new System.Exception("Exclusive screen not found.");
+                throw new System.Exception(message: "Exclusive screen not found.");
             }
 
             return null;
@@ -76,23 +76,23 @@ public class PortalSessionStore
     public bool ShouldBeCleared()
     {
         DataSet data = CoreServices.DataService.Instance.LoadData(
-            new Guid("aa4c9df9-d6da-408e-a095-fd377ffcc319"),
-            new Guid("ece8b03a-f378-4026-b3b3-588cb58317b6"),
-            Guid.Empty,
-            Guid.Empty,
-            null,
-            "OrigamOnlineUser_par_UserName",
-            SecurityManager.CurrentPrincipal.Identity.Name
+            dataStructureId: new Guid(g: "aa4c9df9-d6da-408e-a095-fd377ffcc319"),
+            methodId: new Guid(g: "ece8b03a-f378-4026-b3b3-588cb58317b6"),
+            defaultSetId: Guid.Empty,
+            sortSetId: Guid.Empty,
+            transactionId: null,
+            paramName1: "OrigamOnlineUser_par_UserName",
+            paramValue1: SecurityManager.CurrentPrincipal.Identity.Name
         );
-        if (data.Tables[0].Rows.Count == 0)
+        if (data.Tables[index: 0].Rows.Count == 0)
         {
             return false;
         }
-        DataRow row = data.Tables[0].Rows[0];
+        DataRow row = data.Tables[index: 0].Rows[index: 0];
 
         return Nullable.Compare<DateTime>(
-                row["ClearSessionRequestTimestamp"] as DateTime?,
-                sessionStart
+                n1: row[columnName: "ClearSessionRequestTimestamp"] as DateTime?,
+                n2: sessionStart
             ) > 0;
     }
 

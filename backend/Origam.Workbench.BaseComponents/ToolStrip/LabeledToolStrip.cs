@@ -33,8 +33,8 @@ public class LabeledToolStrip : ToolStrip
 
     public LabeledToolStrip(IToolStripContainer owner)
     {
-        MinimumSize = new Size(0, ToolStripButtonTools.BUTTON_SIZE.Height);
-        foreColorBrush = new SolidBrush(ForeColor);
+        MinimumSize = new Size(width: 0, height: ToolStripButtonTools.BUTTON_SIZE.Height);
+        foreColorBrush = new SolidBrush(color: ForeColor);
         Renderer = new SideBorderOnlyStripRenderer();
         Visible = false;
         Owner = owner;
@@ -42,13 +42,13 @@ public class LabeledToolStrip : ToolStrip
 
     protected override void OnItemAdded(ToolStripItemEventArgs e)
     {
-        base.OnItemAdded(e);
+        base.OnItemAdded(e: e);
         Visible = true;
     }
 
     protected override void OnItemRemoved(ToolStripItemEventArgs e)
     {
-        base.OnItemRemoved(e);
+        base.OnItemRemoved(e: e);
         if (Items.Count == 0)
         {
             Visible = false;
@@ -57,11 +57,11 @@ public class LabeledToolStrip : ToolStrip
 
     protected override void OnPaint(PaintEventArgs e)
     {
-        base.OnPaint(e);
-        int textX = (Size.Width - Text.Width(Font)) / 2;
-        int textY = Size.Height - Text.Height(Font) - BottomTextMarin;
-        var LabelFont = new Font(Font.Name, 8, FontStyle.Bold);
-        e.Graphics.DrawString(Text, LabelFont, foreColorBrush, textX, textY);
+        base.OnPaint(e: e);
+        int textX = (Size.Width - Text.Width(font: Font)) / 2;
+        int textY = Size.Height - Text.Height(font: Font) - BottomTextMarin;
+        var LabelFont = new Font(familyName: Font.Name, emSize: 8, style: FontStyle.Bold);
+        e.Graphics.DrawString(s: Text, font: LabelFont, brush: foreColorBrush, x: textX, y: textY);
     }
 }
 
@@ -69,15 +69,15 @@ internal class SideBorderOnlyStripRenderer : ToolStripProfessionalRenderer
 {
     protected override void OnRenderToolStripBorder(ToolStripRenderEventArgs e)
     {
-        base.OnRenderToolStripBorder(e);
+        base.OnRenderToolStripBorder(e: e);
         var rectangle = new Rectangle(
-            e.AffectedBounds.Location.X - 5,
-            e.AffectedBounds.Location.Y - 5,
-            e.AffectedBounds.Width + 5,
-            e.AffectedBounds.Height + 10
+            x: e.AffectedBounds.Location.X - 5,
+            y: e.AffectedBounds.Location.Y - 5,
+            width: e.AffectedBounds.Width + 5,
+            height: e.AffectedBounds.Height + 10
         );
         ControlPaint.DrawBorder(
-            e.Graphics,
+            graphics: e.Graphics,
             bounds: rectangle,
             leftColor: SystemColors.ControlDarkDark,
             leftWidth: 2,

@@ -29,7 +29,7 @@ public class OrigamDataTable : DataTable
     public OrigamDataTable() { }
 
     public OrigamDataTable(string tableName)
-        : base(tableName) { }
+        : base(tableName: tableName) { }
 
     protected override Type GetRowType()
     {
@@ -38,7 +38,7 @@ public class OrigamDataTable : DataTable
 
     protected override DataRow NewRowFromBuilder(DataRowBuilder builder)
     {
-        return new OrigamDataRow(builder);
+        return new OrigamDataRow(builder: builder);
     }
 
     protected override void OnRowChanged(DataRowChangeEventArgs e)
@@ -51,10 +51,10 @@ public class OrigamDataTable : DataTable
         {
             return;
         }
-        base.OnRowChanged(e);
+        base.OnRowChanged(e: e);
         if (!IsLoading)
         {
-            base.OnRowChanged(e);
+            base.OnRowChanged(e: e);
         }
     }
 

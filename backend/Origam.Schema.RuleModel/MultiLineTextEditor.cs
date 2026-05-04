@@ -45,7 +45,7 @@ class MultiLineTextEditor : UITypeEditor
     )
     {
         _editorService = (IWindowsFormsEditorService)
-            provider.GetService(typeof(IWindowsFormsEditorService));
+            provider.GetService(serviceType: typeof(IWindowsFormsEditorService));
         TextBox textEditorBox = new TextBox();
         textEditorBox.Multiline = true;
         textEditorBox.AcceptsTab = true;
@@ -56,7 +56,7 @@ class MultiLineTextEditor : UITypeEditor
         textEditorBox.BorderStyle = BorderStyle.None;
         textEditorBox.AcceptsReturn = true;
         textEditorBox.Text = value as string;
-        _editorService.DropDownControl(textEditorBox);
+        _editorService.DropDownControl(control: textEditorBox);
         return textEditorBox.Text == (string)value ? value : textEditorBox.Text;
     }
 }

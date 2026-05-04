@@ -53,35 +53,38 @@ public class ExcelAgent : AbstractServiceAgent
     )
     {
         IWorkbook wb;
-        TextReaderOptions options = TextReaderOptions.Deserialize(optionsXml);
+        TextReaderOptions options = TextReaderOptions.Deserialize(doc: optionsXml);
         if (options == null)
         {
-            throw new Exception("Options not supplied.");
+            throw new Exception(message: "Options not supplied.");
         }
         if (file == null)
         {
-            wb = ExcelTools.LoadFile(fileName, excelFormat);
+            wb = ExcelTools.LoadFile(fileName: fileName, excelFormat: excelFormat);
         }
         else
         {
             // read from variable
-            MemoryStream stream = new MemoryStream(file);
+            MemoryStream stream = new MemoryStream(buffer: file);
             if (excelFormat == ExcelFormat.XLSX)
             {
-                wb = new XSSFWorkbook(stream);
+                wb = new XSSFWorkbook(fileStream: stream);
             }
             else
             {
-                wb = new HSSFWorkbook(stream);
+                wb = new HSSFWorkbook(s: stream);
             }
         }
-        ISheet[] sheets = ExcelTools.Sheets(sheetName, wb);
+        ISheet[] sheets = ExcelTools.Sheets(sheetName: sheetName, wb: wb);
         DataSet data = CreateEmptyOutputData();
-        DataTable table = data.Tables[entity];
+        DataTable table = data.Tables[name: entity];
         if (table == null)
         {
             throw new Exception(
-                "Entity '" + entity + "' not found in data structure " + this.OutputStructure.Name
+                message: "Entity '"
+                    + entity
+                    + "' not found in data structure "
+                    + this.OutputStructure.Name
             );
         }
         foreach (ISheet sheet in sheets)
@@ -89,23 +92,26 @@ public class ExcelAgent : AbstractServiceAgent
             if (sheet.PhysicalNumberOfRows > 0)
             {
                 // read header
-                IRow headerRow = sheet.GetRow(0);
-                Hashtable columns = new Hashtable(headerRow.PhysicalNumberOfCells);
+                IRow headerRow = sheet.GetRow(rownum: 0);
+                Hashtable columns = new Hashtable(capacity: headerRow.PhysicalNumberOfCells);
                 foreach (ICell cell in headerRow)
                 {
                     try
                     {
-                        DataColumn col = LookupColumnByCaption(table, cell.StringCellValue);
-                        columns[cell.ColumnIndex] = col;
+                        DataColumn col = LookupColumnByCaption(
+                            table: table,
+                            caption: cell.StringCellValue
+                        );
+                        columns[key: cell.ColumnIndex] = col;
                     }
                     catch (Exception ex)
                     {
                         throw new Exception(
-                            "Error occured while reading a header column "
+                            message: "Error occured while reading a header column "
                                 + (cell.ColumnIndex + 1).ToString()
                                 + ". Sheet: "
                                 + sheet.SheetName,
-                            ex
+                            innerException: ex
                         );
                     }
                 }
@@ -120,21 +126,26 @@ public class ExcelAgent : AbstractServiceAgent
                     {
                         DataRow row = table.NewRow();
                         // handle guid primary key
-                        DatasetTools.ApplyPrimaryKey(row);
+                        DatasetTools.ApplyPrimaryKey(row: row);
                         foreach (ICell cell in xlRow)
                         {
                             try
                             {
-                                DataColumn col = (DataColumn)columns[cell.ColumnIndex];
+                                DataColumn col = (DataColumn)columns[key: cell.ColumnIndex];
                                 if (col != null)
                                 {
-                                    ExcelTools.ReadValue(options, row, cell, col);
+                                    ExcelTools.ReadValue(
+                                        options: options,
+                                        row: row,
+                                        cell: cell,
+                                        col: col
+                                    );
                                 }
                             }
                             catch (Exception ex)
                             {
                                 throw new Exception(
-                                    "Error occured while reading row "
+                                    message: "Error occured while reading row "
                                         + (xlRow.RowNum + 1).ToString()
                                         + " column "
                                         + (cell.ColumnIndex + 1).ToString()
@@ -142,31 +153,31 @@ public class ExcelAgent : AbstractServiceAgent
                                         + sheet.SheetName
                                         + ". "
                                         + ex.Message,
-                                    ex
+                                    innerException: ex
                                 );
                             }
                         }
                         try
                         {
-                            table.Rows.Add(row);
+                            table.Rows.Add(row: row);
                         }
                         catch (Exception ex)
                         {
                             throw new Exception(
-                                "Error occured while reading row "
+                                message: "Error occured while reading row "
                                     + (xlRow.RowNum + 1).ToString()
                                     + " sheet: "
                                     + sheet.SheetName
                                     + ". "
                                     + ex.Message,
-                                ex
+                                innerException: ex
                             );
                         }
                     }
                 }
             }
         }
-        return DataDocumentFactory.New(data);
+        return DataDocumentFactory.New(dataSet: data);
     }
 
     private DataColumn LookupColumnByCaption(DataTable table, string caption)
@@ -190,44 +201,52 @@ public class ExcelAgent : AbstractServiceAgent
         XmlDocument optionsXml
     )
     {
-        TextReaderOptions options = TextReaderOptions.Deserialize(optionsXml);
+        TextReaderOptions options = TextReaderOptions.Deserialize(doc: optionsXml);
         IWorkbook wb;
-        FileInfo fi = new FileInfo(fileName);
-        wb = ExcelTools.OpenOrCreateWorkbook(fi, excelFormat);
-        ISheet sheet = ExcelTools.CreateOrEmptySheet(sheetName, wb);
-        DataTable table = data.DataSet.Tables[entity];
+        FileInfo fi = new FileInfo(fileName: fileName);
+        wb = ExcelTools.OpenOrCreateWorkbook(fi: fi, excelFormat: excelFormat);
+        ISheet sheet = ExcelTools.CreateOrEmptySheet(sheetName: sheetName, wb: wb);
+        DataTable table = data.DataSet.Tables[name: entity];
         // CREATE CELL STYLES
         // So they can be reused later. There is a limit of 4000 cell styles in Excel 2003 and earlier, so
         // we have to create only as many styles as neccessary.
         _dateCellStyle = wb.CreateCellStyle();
-        _dateCellStyle.DataFormat = wb.CreateDataFormat().GetFormat("m/d/yy h:mm");
+        _dateCellStyle.DataFormat = wb.CreateDataFormat().GetFormat(format: "m/d/yy h:mm");
         var columnNamesSorted = new List<string>();
         foreach (DataColumn col in table.Columns)
         {
-            columnNamesSorted.Add(col.ColumnName);
+            columnNamesSorted.Add(item: col.ColumnName);
         }
         columnNamesSorted.Sort();
         // header row
-        IRow headerRow = sheet.CreateRow(0);
+        IRow headerRow = sheet.CreateRow(rownum: 0);
         for (int i = 0; i < columnNamesSorted.Count; i++)
         {
-            DataColumn column = table.Columns[columnNamesSorted[i]];
-            headerRow.CreateCell(i).SetCellValue(column.Caption);
+            DataColumn column = table.Columns[name: columnNamesSorted[index: i]];
+            headerRow.CreateCell(column: i).SetCellValue(value: column.Caption);
         }
         // data rows
         for (int rowNumber = 0; rowNumber < table.Rows.Count; rowNumber++)
         {
-            IRow excelRow = sheet.CreateRow(rowNumber + 1);
-            DataRow row = table.Rows[rowNumber];
+            IRow excelRow = sheet.CreateRow(rownum: rowNumber + 1);
+            DataRow row = table.Rows[index: rowNumber];
             for (int i = 0; i < columnNamesSorted.Count; i++)
             {
-                DataColumn column = table.Columns[columnNamesSorted[i]];
-                TextReaderOptionsField fieldOptions = options.GetFieldOption(column.ColumnName);
-                object val = row[column];
-                ExcelTools.SetCellValue(excelRow, i, fieldOptions, val, _dateCellStyle);
+                DataColumn column = table.Columns[name: columnNamesSorted[index: i]];
+                TextReaderOptionsField fieldOptions = options.GetFieldOption(
+                    fieldName: column.ColumnName
+                );
+                object val = row[column: column];
+                ExcelTools.SetCellValue(
+                    excelRow: excelRow,
+                    i: i,
+                    fieldOptions: fieldOptions,
+                    val: val,
+                    dateCellStyle: _dateCellStyle
+                );
             }
         }
-        ExcelTools.SaveWorkbook(wb, fi);
+        ExcelTools.SaveWorkbook(wb: wb, fi: fi);
     }
 
     #region IServiceAgent Members
@@ -245,27 +264,34 @@ public class ExcelAgent : AbstractServiceAgent
             {
                 byte[] file = null;
                 // Check input parameters
-                if (this.Parameters.Contains("File") && this.Parameters["File"] is byte[])
+                if (this.Parameters.Contains(key: "File") && this.Parameters[key: "File"] is byte[])
                 {
-                    file = (byte[])this.Parameters["File"];
+                    file = (byte[])this.Parameters[key: "File"];
                 }
 
-                if (!(this.Parameters["Entity"] is string | this.Parameters["Entity"] == null))
+                if (
+                    !(
+                        this.Parameters[key: "Entity"] is string
+                        | this.Parameters[key: "Entity"] == null
+                    )
+                )
                 {
                     throw new InvalidCastException(
-                        ResourceUtils.GetString("ErrorViewNameNotString")
+                        message: ResourceUtils.GetString(key: "ErrorViewNameNotString")
                     );
                 }
 
                 _result = this.ReadSheet(
-                    this.Parameters["Format"] is String
-                        ? ExcelTools.StringToExcelFormat(this.Parameters["Format"] as String)
+                    excelFormat: this.Parameters[key: "Format"] is String
+                        ? ExcelTools.StringToExcelFormat(
+                            input: this.Parameters[key: "Format"] as String
+                        )
                         : ExcelFormat.XLS,
-                    this.Parameters["FileName"] as String,
-                    this.Parameters["SheetName"] as String,
-                    this.Parameters["Entity"] as String,
-                    this.Parameters["Options"] as XmlDocument,
-                    file
+                    fileName: this.Parameters[key: "FileName"] as String,
+                    sheetName: this.Parameters[key: "SheetName"] as String,
+                    entity: this.Parameters[key: "Entity"] as String,
+                    optionsXml: this.Parameters[key: "Options"] as XmlDocument,
+                    file: file
                 );
                 break;
             }
@@ -273,43 +299,55 @@ public class ExcelAgent : AbstractServiceAgent
             case "WriteSheet":
             {
                 // Check input parameters
-                if (!(this.Parameters["FileName"] is string))
+                if (!(this.Parameters[key: "FileName"] is string))
                 {
                     throw new InvalidCastException(
-                        ResourceUtils.GetString("ErrorListNameNotString")
+                        message: ResourceUtils.GetString(key: "ErrorListNameNotString")
                     );
                 }
 
                 if (
-                    !(this.Parameters["SheetName"] is string | this.Parameters["SheetName"] == null)
+                    !(
+                        this.Parameters[key: "SheetName"] is string
+                        | this.Parameters[key: "SheetName"] == null
+                    )
                 )
                 {
                     throw new InvalidCastException(
-                        ResourceUtils.GetString("ErrorViewNameNotString")
+                        message: ResourceUtils.GetString(key: "ErrorViewNameNotString")
                     );
                 }
 
-                if (!(this.Parameters["Entity"] is string | this.Parameters["Entity"] == null))
+                if (
+                    !(
+                        this.Parameters[key: "Entity"] is string
+                        | this.Parameters[key: "Entity"] == null
+                    )
+                )
                 {
                     throw new InvalidCastException(
-                        ResourceUtils.GetString("ErrorViewNameNotString")
+                        message: ResourceUtils.GetString(key: "ErrorViewNameNotString")
                     );
                 }
 
-                if (!(this.Parameters["Data"] is IDataDocument))
+                if (!(this.Parameters[key: "Data"] is IDataDocument))
                 {
-                    throw new InvalidCastException(ResourceUtils.GetString("ErrorDataNotXml"));
+                    throw new InvalidCastException(
+                        message: ResourceUtils.GetString(key: "ErrorDataNotXml")
+                    );
                 }
 
                 this.UpdateSheet(
-                    this.Parameters["Format"] is String
-                        ? ExcelTools.StringToExcelFormat(this.Parameters["Format"] as String)
+                    excelFormat: this.Parameters[key: "Format"] is String
+                        ? ExcelTools.StringToExcelFormat(
+                            input: this.Parameters[key: "Format"] as String
+                        )
                         : ExcelFormat.XLS,
-                    this.Parameters["FileName"] as String,
-                    this.Parameters["SheetName"] as String,
-                    this.Parameters["Entity"] as String,
-                    this.Parameters["Data"] as IDataDocument,
-                    this.Parameters["Options"] as XmlDocument
+                    fileName: this.Parameters[key: "FileName"] as String,
+                    sheetName: this.Parameters[key: "SheetName"] as String,
+                    entity: this.Parameters[key: "Entity"] as String,
+                    data: this.Parameters[key: "Data"] as IDataDocument,
+                    optionsXml: this.Parameters[key: "Options"] as XmlDocument
                 );
                 _result = null;
                 break;

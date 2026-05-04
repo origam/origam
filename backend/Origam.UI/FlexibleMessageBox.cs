@@ -140,12 +140,12 @@ public class FlexibleMessageBox
     public static DialogResult Show(string text)
     {
         return FlexibleMessageBoxForm.Show(
-            null,
-            text,
-            string.Empty,
-            MessageBoxButtons.OK,
-            MessageBoxIcon.None,
-            MessageBoxDefaultButton.Button1
+            owner: null,
+            text: text,
+            caption: string.Empty,
+            buttons: MessageBoxButtons.OK,
+            icon: MessageBoxIcon.None,
+            defaultButton: MessageBoxDefaultButton.Button1
         );
     }
 
@@ -158,12 +158,12 @@ public class FlexibleMessageBox
     public static DialogResult Show(IWin32Window owner, string text)
     {
         return FlexibleMessageBoxForm.Show(
-            owner,
-            text,
-            string.Empty,
-            MessageBoxButtons.OK,
-            MessageBoxIcon.None,
-            MessageBoxDefaultButton.Button1
+            owner: owner,
+            text: text,
+            caption: string.Empty,
+            buttons: MessageBoxButtons.OK,
+            icon: MessageBoxIcon.None,
+            defaultButton: MessageBoxDefaultButton.Button1
         );
     }
 
@@ -176,12 +176,12 @@ public class FlexibleMessageBox
     public static DialogResult Show(string text, string caption)
     {
         return FlexibleMessageBoxForm.Show(
-            null,
-            text,
-            caption,
-            MessageBoxButtons.OK,
-            MessageBoxIcon.None,
-            MessageBoxDefaultButton.Button1
+            owner: null,
+            text: text,
+            caption: caption,
+            buttons: MessageBoxButtons.OK,
+            icon: MessageBoxIcon.None,
+            defaultButton: MessageBoxDefaultButton.Button1
         );
     }
 
@@ -195,12 +195,12 @@ public class FlexibleMessageBox
     public static DialogResult Show(IWin32Window owner, string text, string caption)
     {
         return FlexibleMessageBoxForm.Show(
-            owner,
-            text,
-            caption,
-            MessageBoxButtons.OK,
-            MessageBoxIcon.None,
-            MessageBoxDefaultButton.Button1
+            owner: owner,
+            text: text,
+            caption: caption,
+            buttons: MessageBoxButtons.OK,
+            icon: MessageBoxIcon.None,
+            defaultButton: MessageBoxDefaultButton.Button1
         );
     }
 
@@ -214,12 +214,12 @@ public class FlexibleMessageBox
     public static DialogResult Show(string text, string caption, MessageBoxButtons buttons)
     {
         return FlexibleMessageBoxForm.Show(
-            null,
-            text,
-            caption,
-            buttons,
-            MessageBoxIcon.None,
-            MessageBoxDefaultButton.Button1
+            owner: null,
+            text: text,
+            caption: caption,
+            buttons: buttons,
+            icon: MessageBoxIcon.None,
+            defaultButton: MessageBoxDefaultButton.Button1
         );
     }
 
@@ -239,12 +239,12 @@ public class FlexibleMessageBox
     )
     {
         return FlexibleMessageBoxForm.Show(
-            owner,
-            text,
-            caption,
-            buttons,
-            MessageBoxIcon.None,
-            MessageBoxDefaultButton.Button1
+            owner: owner,
+            text: text,
+            caption: caption,
+            buttons: buttons,
+            icon: MessageBoxIcon.None,
+            defaultButton: MessageBoxDefaultButton.Button1
         );
     }
 
@@ -264,12 +264,12 @@ public class FlexibleMessageBox
     )
     {
         return FlexibleMessageBoxForm.Show(
-            null,
-            text,
-            caption,
-            buttons,
-            icon,
-            MessageBoxDefaultButton.Button1
+            owner: null,
+            text: text,
+            caption: caption,
+            buttons: buttons,
+            icon: icon,
+            defaultButton: MessageBoxDefaultButton.Button1
         );
     }
 
@@ -291,12 +291,12 @@ public class FlexibleMessageBox
     )
     {
         return FlexibleMessageBoxForm.Show(
-            owner,
-            text,
-            caption,
-            buttons,
-            icon,
-            MessageBoxDefaultButton.Button1
+            owner: owner,
+            text: text,
+            caption: caption,
+            buttons: buttons,
+            icon: icon,
+            defaultButton: MessageBoxDefaultButton.Button1
         );
     }
 
@@ -317,7 +317,14 @@ public class FlexibleMessageBox
         MessageBoxDefaultButton defaultButton
     )
     {
-        return FlexibleMessageBoxForm.Show(null, text, caption, buttons, icon, defaultButton);
+        return FlexibleMessageBoxForm.Show(
+            owner: null,
+            text: text,
+            caption: caption,
+            buttons: buttons,
+            icon: icon,
+            defaultButton: defaultButton
+        );
     }
 
     /// <summary>
@@ -339,7 +346,14 @@ public class FlexibleMessageBox
         MessageBoxDefaultButton defaultButton
     )
     {
-        return FlexibleMessageBoxForm.Show(owner, text, caption, buttons, icon, defaultButton);
+        return FlexibleMessageBoxForm.Show(
+            owner: owner,
+            text: text,
+            caption: caption,
+            buttons: buttons,
+            icon: icon,
+            defaultButton: defaultButton
+        );
     }
     #endregion
     #region Internal form class
@@ -365,7 +379,7 @@ public class FlexibleMessageBox
             {
                 components.Dispose();
             }
-            base.Dispose(disposing);
+            base.Dispose(disposing: disposing);
         }
 
         /// <summary>
@@ -378,7 +392,7 @@ public class FlexibleMessageBox
             this.button1 = new System.Windows.Forms.Button();
             this.richTextBoxMessage = new System.Windows.Forms.RichTextBox();
             this.FlexibleMessageBoxFormBindingSource = new System.Windows.Forms.BindingSource(
-                this.components
+                container: this.components
             );
             this.panel1 = new System.Windows.Forms.Panel();
             this.pictureBoxForIcon = new System.Windows.Forms.PictureBox();
@@ -403,10 +417,10 @@ public class FlexibleMessageBox
             );
             this.button1.AutoSize = true;
             this.button1.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.button1.Location = new System.Drawing.Point(11, 67);
-            this.button1.MinimumSize = new System.Drawing.Size(0, 24);
+            this.button1.Location = new System.Drawing.Point(x: 11, y: 67);
+            this.button1.MinimumSize = new System.Drawing.Size(width: 0, height: 24);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 24);
+            this.button1.Size = new System.Drawing.Size(width: 75, height: 24);
             this.button1.TabIndex = 2;
             this.button1.Text = "OK";
             this.button1.UseVisualStyleBackColor = true;
@@ -429,23 +443,27 @@ public class FlexibleMessageBox
             this.richTextBoxMessage.BackColor = System.Drawing.Color.White;
             this.richTextBoxMessage.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.richTextBoxMessage.DataBindings.Add(
-                new System.Windows.Forms.Binding(
-                    "Text",
-                    this.FlexibleMessageBoxFormBindingSource,
-                    "MessageText",
-                    true,
-                    System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged
+                binding: new System.Windows.Forms.Binding(
+                    propertyName: "Text",
+                    dataSource: this.FlexibleMessageBoxFormBindingSource,
+                    dataMember: "MessageText",
+                    formattingEnabled: true,
+                    dataSourceUpdateMode: System
+                        .Windows
+                        .Forms
+                        .DataSourceUpdateMode
+                        .OnPropertyChanged
                 )
             );
             this.richTextBoxMessage.Font = new System.Drawing.Font(
-                "Microsoft Sans Serif",
-                9F,
-                System.Drawing.FontStyle.Regular,
-                System.Drawing.GraphicsUnit.Point,
-                ((byte)(0))
+                familyName: "Microsoft Sans Serif",
+                emSize: 9F,
+                style: System.Drawing.FontStyle.Regular,
+                unit: System.Drawing.GraphicsUnit.Point,
+                gdiCharSet: ((byte)(0))
             );
-            this.richTextBoxMessage.Location = new System.Drawing.Point(50, 26);
-            this.richTextBoxMessage.Margin = new System.Windows.Forms.Padding(0);
+            this.richTextBoxMessage.Location = new System.Drawing.Point(x: 50, y: 26);
+            this.richTextBoxMessage.Margin = new System.Windows.Forms.Padding(all: 0);
             this.richTextBoxMessage.Name = "richTextBoxMessage";
             this.richTextBoxMessage.ReadOnly = true;
             this.richTextBoxMessage.ScrollBars = System
@@ -453,7 +471,7 @@ public class FlexibleMessageBox
                 .Forms
                 .RichTextBoxScrollBars
                 .Vertical;
-            this.richTextBoxMessage.Size = new System.Drawing.Size(200, 20);
+            this.richTextBoxMessage.Size = new System.Drawing.Size(width: 200, height: 20);
             this.richTextBoxMessage.TabIndex = 0;
             this.richTextBoxMessage.TabStop = false;
             this.richTextBoxMessage.Text = "<Message>";
@@ -476,19 +494,19 @@ public class FlexibleMessageBox
                 )
             );
             this.panel1.BackColor = System.Drawing.Color.White;
-            this.panel1.Controls.Add(this.pictureBoxForIcon);
-            this.panel1.Controls.Add(this.richTextBoxMessage);
-            this.panel1.Location = new System.Drawing.Point(-3, -4);
+            this.panel1.Controls.Add(value: this.pictureBoxForIcon);
+            this.panel1.Controls.Add(value: this.richTextBoxMessage);
+            this.panel1.Location = new System.Drawing.Point(x: -3, y: -4);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(268, 59);
+            this.panel1.Size = new System.Drawing.Size(width: 268, height: 59);
             this.panel1.TabIndex = 1;
             //
             // pictureBoxForIcon
             //
             this.pictureBoxForIcon.BackColor = System.Drawing.Color.Transparent;
-            this.pictureBoxForIcon.Location = new System.Drawing.Point(15, 19);
+            this.pictureBoxForIcon.Location = new System.Drawing.Point(x: 15, y: 19);
             this.pictureBoxForIcon.Name = "pictureBoxForIcon";
-            this.pictureBoxForIcon.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxForIcon.Size = new System.Drawing.Size(width: 32, height: 32);
             this.pictureBoxForIcon.TabIndex = 8;
             this.pictureBoxForIcon.TabStop = false;
             //
@@ -503,10 +521,10 @@ public class FlexibleMessageBox
                 )
             );
             this.button2.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.button2.Location = new System.Drawing.Point(92, 67);
-            this.button2.MinimumSize = new System.Drawing.Size(0, 24);
+            this.button2.Location = new System.Drawing.Point(x: 92, y: 67);
+            this.button2.MinimumSize = new System.Drawing.Size(width: 0, height: 24);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 24);
+            this.button2.Size = new System.Drawing.Size(width: 75, height: 24);
             this.button2.TabIndex = 3;
             this.button2.Text = "OK";
             this.button2.UseVisualStyleBackColor = true;
@@ -524,10 +542,10 @@ public class FlexibleMessageBox
             );
             this.button3.AutoSize = true;
             this.button3.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.button3.Location = new System.Drawing.Point(173, 67);
-            this.button3.MinimumSize = new System.Drawing.Size(0, 24);
+            this.button3.Location = new System.Drawing.Point(x: 173, y: 67);
+            this.button3.MinimumSize = new System.Drawing.Size(width: 0, height: 24);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 24);
+            this.button3.Size = new System.Drawing.Size(width: 75, height: 24);
             this.button3.TabIndex = 0;
             this.button3.Text = "OK";
             this.button3.UseVisualStyleBackColor = true;
@@ -535,24 +553,24 @@ public class FlexibleMessageBox
             //
             // FlexibleMessageBoxForm
             //
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(width: 6F, height: 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(260, 102);
-            this.Controls.Add(this.button3);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.panel1);
-            this.Controls.Add(this.button1);
+            this.ClientSize = new System.Drawing.Size(width: 260, height: 102);
+            this.Controls.Add(value: this.button3);
+            this.Controls.Add(value: this.button2);
+            this.Controls.Add(value: this.panel1);
+            this.Controls.Add(value: this.button1);
             this.DataBindings.Add(
-                new System.Windows.Forms.Binding(
-                    "Text",
-                    this.FlexibleMessageBoxFormBindingSource,
-                    "CaptionText",
-                    true
+                binding: new System.Windows.Forms.Binding(
+                    propertyName: "Text",
+                    dataSource: this.FlexibleMessageBoxFormBindingSource,
+                    dataMember: "CaptionText",
+                    formattingEnabled: true
                 )
             );
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(276, 140);
+            this.MinimumSize = new System.Drawing.Size(width: 276, height: 140);
             this.Name = "FlexibleMessageBoxForm";
             this.ShowIcon = false;
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
@@ -562,9 +580,9 @@ public class FlexibleMessageBox
             (
                 (System.ComponentModel.ISupportInitialize)(this.FlexibleMessageBoxFormBindingSource)
             ).EndInit();
-            this.panel1.ResumeLayout(false);
+            this.panel1.ResumeLayout(performLayout: false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxForIcon)).EndInit();
-            this.ResumeLayout(false);
+            this.ResumeLayout(performLayout: false);
             this.PerformLayout();
         }
 
@@ -659,8 +677,8 @@ public class FlexibleMessageBox
             InitializeComponent();
             //Try to evaluate the language. If this fails, the fallback language English will be used
             Enum.TryParse<TwoLetterISOLanguageID>(
-                CultureInfo.CurrentUICulture.TwoLetterISOLanguageName,
-                out this.languageID
+                value: CultureInfo.CurrentUICulture.TwoLetterISOLanguageName,
+                result: out this.languageID
             );
             this.KeyPreview = true;
             this.KeyUp += FlexibleMessageBoxForm_KeyUp;
@@ -674,12 +692,15 @@ public class FlexibleMessageBox
         /// <returns>The string rows as 1-dimensional array</returns>
         private static string[] GetStringRows(string message)
         {
-            if (string.IsNullOrEmpty(message))
+            if (string.IsNullOrEmpty(value: message))
             {
                 return null;
             }
 
-            var messageRows = message.Split(new char[] { '\n' }, StringSplitOptions.None);
+            var messageRows = message.Split(
+                separator: new char[] { '\n' },
+                options: StringSplitOptions.None
+            );
             return messageRows;
         }
 
@@ -691,7 +712,7 @@ public class FlexibleMessageBox
         /// <returns>The button text</returns>
         private string GetButtonText(ButtonID buttonID)
         {
-            var buttonTextArrayIndex = Convert.ToInt32(buttonID);
+            var buttonTextArrayIndex = Convert.ToInt32(value: buttonID);
             switch (this.languageID)
             {
                 case TwoLetterISOLanguageID.de:
@@ -752,7 +773,7 @@ public class FlexibleMessageBox
             //If no owner given: Center on current screen
             if (owner == null)
             {
-                var screen = Screen.FromPoint(Cursor.Position);
+                var screen = Screen.FromPoint(point: Cursor.Position);
                 flexibleMessageBoxForm.StartPosition = FormStartPosition.Manual;
                 flexibleMessageBoxForm.Left =
                     screen.Bounds.Left
@@ -780,30 +801,39 @@ public class FlexibleMessageBox
         {
             //First set the bounds for the maximum dialog size
             flexibleMessageBoxForm.MaximumSize = new Size(
-                Convert.ToInt32(
-                    SystemInformation.WorkingArea.Width
-                        * FlexibleMessageBoxForm.GetCorrectedWorkingAreaFactor(MAX_WIDTH_FACTOR)
+                width: Convert.ToInt32(
+                    value: SystemInformation.WorkingArea.Width
+                        * FlexibleMessageBoxForm.GetCorrectedWorkingAreaFactor(
+                            workingAreaFactor: MAX_WIDTH_FACTOR
+                        )
                 ),
-                Convert.ToInt32(
-                    SystemInformation.WorkingArea.Height
-                        * FlexibleMessageBoxForm.GetCorrectedWorkingAreaFactor(MAX_HEIGHT_FACTOR)
+                height: Convert.ToInt32(
+                    value: SystemInformation.WorkingArea.Height
+                        * FlexibleMessageBoxForm.GetCorrectedWorkingAreaFactor(
+                            workingAreaFactor: MAX_HEIGHT_FACTOR
+                        )
                 )
             );
             //Get rows. Exit if there are no rows to render...
-            var stringRows = GetStringRows(text);
+            var stringRows = GetStringRows(message: text);
             if (stringRows == null)
             {
                 return;
             }
             //Calculate whole text height
-            var textHeight = TextRenderer.MeasureText(text, FONT).Height;
+            var textHeight = TextRenderer.MeasureText(text: text, font: FONT).Height;
             //Calculate width for longest text line
             const int SCROLLBAR_WIDTH_OFFSET = 15;
-            var longestTextRowWidth = stringRows.Max(textForRow =>
-                TextRenderer.MeasureText(textForRow, FONT).Width
+            var longestTextRowWidth = stringRows.Max(selector: textForRow =>
+                TextRenderer.MeasureText(text: textForRow, font: FONT).Width
             );
-            var captionWidth = TextRenderer.MeasureText(caption, SystemFonts.CaptionFont).Width;
-            var textWidth = Math.Max(longestTextRowWidth + SCROLLBAR_WIDTH_OFFSET, captionWidth);
+            var captionWidth = TextRenderer
+                .MeasureText(text: caption, font: SystemFonts.CaptionFont)
+                .Width;
+            var textWidth = Math.Max(
+                val1: longestTextRowWidth + SCROLLBAR_WIDTH_OFFSET,
+                val2: captionWidth
+            );
             //Calculate margins
             var marginWidth =
                 flexibleMessageBoxForm.Width - flexibleMessageBoxForm.richTextBoxMessage.Width;
@@ -811,8 +841,8 @@ public class FlexibleMessageBox
                 flexibleMessageBoxForm.Height - flexibleMessageBoxForm.richTextBoxMessage.Height;
             //Set calculated dialog size (if the calculated values exceed the maximums, they were cut by windows forms automatically)
             flexibleMessageBoxForm.Size = new Size(
-                textWidth + marginWidth,
-                textHeight + marginHeight
+                width: textWidth + marginWidth,
+                height: textHeight + marginHeight
             );
         }
 
@@ -891,17 +921,17 @@ public class FlexibleMessageBox
                     flexibleMessageBoxForm.visibleButtonsCount = 3;
                     flexibleMessageBoxForm.button1.Visible = true;
                     flexibleMessageBoxForm.button1.Text = flexibleMessageBoxForm.GetButtonText(
-                        ButtonID.ABORT
+                        buttonID: ButtonID.ABORT
                     );
                     flexibleMessageBoxForm.button1.DialogResult = DialogResult.Abort;
                     flexibleMessageBoxForm.button2.Visible = true;
                     flexibleMessageBoxForm.button2.Text = flexibleMessageBoxForm.GetButtonText(
-                        ButtonID.RETRY
+                        buttonID: ButtonID.RETRY
                     );
                     flexibleMessageBoxForm.button2.DialogResult = DialogResult.Retry;
                     flexibleMessageBoxForm.button3.Visible = true;
                     flexibleMessageBoxForm.button3.Text = flexibleMessageBoxForm.GetButtonText(
-                        ButtonID.IGNORE
+                        buttonID: ButtonID.IGNORE
                     );
                     flexibleMessageBoxForm.button3.DialogResult = DialogResult.Ignore;
                     flexibleMessageBoxForm.ControlBox = false;
@@ -913,12 +943,12 @@ public class FlexibleMessageBox
                     flexibleMessageBoxForm.visibleButtonsCount = 2;
                     flexibleMessageBoxForm.button2.Visible = true;
                     flexibleMessageBoxForm.button2.Text = flexibleMessageBoxForm.GetButtonText(
-                        ButtonID.OK
+                        buttonID: ButtonID.OK
                     );
                     flexibleMessageBoxForm.button2.DialogResult = DialogResult.OK;
                     flexibleMessageBoxForm.button3.Visible = true;
                     flexibleMessageBoxForm.button3.Text = flexibleMessageBoxForm.GetButtonText(
-                        ButtonID.CANCEL
+                        buttonID: ButtonID.CANCEL
                     );
                     flexibleMessageBoxForm.button3.DialogResult = DialogResult.Cancel;
                     flexibleMessageBoxForm.CancelButton = flexibleMessageBoxForm.button3;
@@ -930,12 +960,12 @@ public class FlexibleMessageBox
                     flexibleMessageBoxForm.visibleButtonsCount = 2;
                     flexibleMessageBoxForm.button2.Visible = true;
                     flexibleMessageBoxForm.button2.Text = flexibleMessageBoxForm.GetButtonText(
-                        ButtonID.RETRY
+                        buttonID: ButtonID.RETRY
                     );
                     flexibleMessageBoxForm.button2.DialogResult = DialogResult.Retry;
                     flexibleMessageBoxForm.button3.Visible = true;
                     flexibleMessageBoxForm.button3.Text = flexibleMessageBoxForm.GetButtonText(
-                        ButtonID.CANCEL
+                        buttonID: ButtonID.CANCEL
                     );
                     flexibleMessageBoxForm.button3.DialogResult = DialogResult.Cancel;
                     flexibleMessageBoxForm.CancelButton = flexibleMessageBoxForm.button3;
@@ -947,12 +977,12 @@ public class FlexibleMessageBox
                     flexibleMessageBoxForm.visibleButtonsCount = 2;
                     flexibleMessageBoxForm.button2.Visible = true;
                     flexibleMessageBoxForm.button2.Text = flexibleMessageBoxForm.GetButtonText(
-                        ButtonID.YES
+                        buttonID: ButtonID.YES
                     );
                     flexibleMessageBoxForm.button2.DialogResult = DialogResult.Yes;
                     flexibleMessageBoxForm.button3.Visible = true;
                     flexibleMessageBoxForm.button3.Text = flexibleMessageBoxForm.GetButtonText(
-                        ButtonID.NO
+                        buttonID: ButtonID.NO
                     );
                     flexibleMessageBoxForm.button3.DialogResult = DialogResult.No;
                     flexibleMessageBoxForm.ControlBox = false;
@@ -964,17 +994,17 @@ public class FlexibleMessageBox
                     flexibleMessageBoxForm.visibleButtonsCount = 3;
                     flexibleMessageBoxForm.button1.Visible = true;
                     flexibleMessageBoxForm.button1.Text = flexibleMessageBoxForm.GetButtonText(
-                        ButtonID.YES
+                        buttonID: ButtonID.YES
                     );
                     flexibleMessageBoxForm.button1.DialogResult = DialogResult.Yes;
                     flexibleMessageBoxForm.button2.Visible = true;
                     flexibleMessageBoxForm.button2.Text = flexibleMessageBoxForm.GetButtonText(
-                        ButtonID.NO
+                        buttonID: ButtonID.NO
                     );
                     flexibleMessageBoxForm.button2.DialogResult = DialogResult.No;
                     flexibleMessageBoxForm.button3.Visible = true;
                     flexibleMessageBoxForm.button3.Text = flexibleMessageBoxForm.GetButtonText(
-                        ButtonID.CANCEL
+                        buttonID: ButtonID.CANCEL
                     );
                     flexibleMessageBoxForm.button3.DialogResult = DialogResult.Cancel;
                     flexibleMessageBoxForm.CancelButton = flexibleMessageBoxForm.button3;
@@ -987,7 +1017,7 @@ public class FlexibleMessageBox
                     flexibleMessageBoxForm.visibleButtonsCount = 1;
                     flexibleMessageBoxForm.button3.Visible = true;
                     flexibleMessageBoxForm.button3.Text = flexibleMessageBoxForm.GetButtonText(
-                        ButtonID.OK
+                        buttonID: ButtonID.OK
                     );
                     flexibleMessageBoxForm.button3.DialogResult = DialogResult.OK;
                     flexibleMessageBoxForm.CancelButton = flexibleMessageBoxForm.button3;
@@ -1060,7 +1090,7 @@ public class FlexibleMessageBox
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
-                Process.Start(e.LinkText);
+                Process.Start(fileName: e.LinkText);
             }
             catch (Exception)
             {
@@ -1108,11 +1138,11 @@ public class FlexibleMessageBox
                     + this.richTextBoxMessage.Text
                     + Environment.NewLine
                     + STANDARD_MESSAGEBOX_SEPARATOR_LINES
-                    + buttonsTextLine.Replace("&", string.Empty)
+                    + buttonsTextLine.Replace(oldValue: "&", newValue: string.Empty)
                     + Environment.NewLine
                     + STANDARD_MESSAGEBOX_SEPARATOR_LINES;
                 //Set text in clipboard
-                Clipboard.SetText(textForClipboard);
+                Clipboard.SetText(text: textForClipboard);
             }
         }
         #endregion
@@ -1156,18 +1186,26 @@ public class FlexibleMessageBox
             flexibleMessageBoxForm.FlexibleMessageBoxFormBindingSource.DataSource =
                 flexibleMessageBoxForm;
             //Set the buttons visibilities and texts. Also set a default button.
-            SetDialogButtons(flexibleMessageBoxForm, buttons, defaultButton);
+            SetDialogButtons(
+                flexibleMessageBoxForm: flexibleMessageBoxForm,
+                buttons: buttons,
+                defaultButton: defaultButton
+            );
             //Set the dialogs icon. When no icon is used: Correct placement and width of rich text box.
-            SetDialogIcon(flexibleMessageBoxForm, icon);
+            SetDialogIcon(flexibleMessageBoxForm: flexibleMessageBoxForm, icon: icon);
             //Set the font for all controls
             flexibleMessageBoxForm.Font = FONT;
             flexibleMessageBoxForm.richTextBoxMessage.Font = FONT;
             //Calculate the dialogs start size (Try to auto-size width to show longest text row). Also set the maximum dialog size.
-            SetDialogSizes(flexibleMessageBoxForm, text, caption);
+            SetDialogSizes(
+                flexibleMessageBoxForm: flexibleMessageBoxForm,
+                text: text,
+                caption: caption
+            );
             //Set the dialogs start position when given. Otherwise center the dialog on the current screen.
-            SetDialogStartPosition(flexibleMessageBoxForm, owner);
+            SetDialogStartPosition(flexibleMessageBoxForm: flexibleMessageBoxForm, owner: owner);
             //Show the dialog
-            return flexibleMessageBoxForm.ShowDialog(owner);
+            return flexibleMessageBoxForm.ShowDialog(owner: owner);
         }
         #endregion
     } //class FlexibleMessageBoxForm

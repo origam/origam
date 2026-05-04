@@ -51,8 +51,10 @@ public class ProjectBuilderService(
             {
                 activeTask = builder;
                 builder.State = BuilderTaskState.Running;
-                AnsiConsole.MarkupLine(string.Format(Strings.Executing_task, builder.Name));
-                builder.Execute(project);
+                AnsiConsole.MarkupLine(
+                    value: string.Format(format: Strings.Executing_task, arg0: builder.Name)
+                );
+                builder.Execute(project: project);
                 builder.State = BuilderTaskState.Finished;
             }
         }
@@ -64,7 +66,7 @@ public class ProjectBuilderService(
             }
             for (var i = Tasks.Count - 1; i >= 0; i--)
             {
-                RollbackTask(Tasks[i], project);
+                RollbackTask(builderTask: Tasks[index: i], project: project);
             }
             throw;
         }
@@ -72,14 +74,14 @@ public class ProjectBuilderService(
 
     public void PrepareTasks(Project project)
     {
-        Tasks.Add(printOrigamSettingsBuilderTask);
-        Tasks.Add(downloadFileModelBuilderTask);
-        Tasks.Add(createDatabaseBuilderTask);
-        Tasks.Add(applyDatabasePermissionsBuilderTask);
-        Tasks.Add(initFileModelBuilderTask);
-        Tasks.Add(createDatabaseStructureBuilderTask);
-        Tasks.Add(createNewPackageBuilderTask);
-        Tasks.Add(createNewUserBuilderTask);
+        Tasks.Add(item: printOrigamSettingsBuilderTask);
+        Tasks.Add(item: downloadFileModelBuilderTask);
+        Tasks.Add(item: createDatabaseBuilderTask);
+        Tasks.Add(item: applyDatabasePermissionsBuilderTask);
+        Tasks.Add(item: initFileModelBuilderTask);
+        Tasks.Add(item: createDatabaseStructureBuilderTask);
+        Tasks.Add(item: createNewPackageBuilderTask);
+        Tasks.Add(item: createNewUserBuilderTask);
     }
 
     public List<IBuilderTask> GetTasks()
@@ -94,7 +96,7 @@ public class ProjectBuilderService(
             if (builderTask.State == BuilderTaskState.Finished)
             {
                 builderTask.State = BuilderTaskState.RollingBack;
-                builderTask.Rollback(project);
+                builderTask.Rollback(project: project);
                 builderTask.State = BuilderTaskState.RolledBack;
             }
         }

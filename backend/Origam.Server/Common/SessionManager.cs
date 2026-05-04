@@ -41,7 +41,7 @@ public class SessionManager
     private readonly ConcurrentDictionary<Guid, BlobUploadRequest> blobUploadRequests;
     private readonly Analytics analytics;
     private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
-        System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
+        type: System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
     );
 
     public SessionManager(
@@ -65,69 +65,77 @@ public class SessionManager
 
     public void RemoveFormSession(Guid sessionFormIdentifier)
     {
-        if (!formSessions.TryRemove(sessionFormIdentifier, out _))
+        if (!formSessions.TryRemove(key: sessionFormIdentifier, value: out _))
         {
             log.Warn(
-                $"Form session with id: {sessionFormIdentifier} was not removed because it did not exist"
+                message: $"Form session with id: {sessionFormIdentifier} was not removed because it did not exist"
             );
         }
     }
 
     public void RemovePortalSession(Guid id)
     {
-        if (!portalSessions.TryRemove(id, out _))
+        if (!portalSessions.TryRemove(key: id, value: out _))
         {
-            log.Warn($"Portal session with id: {id} was not removed because it did not exist");
+            log.Warn(
+                message: $"Portal session with id: {id} was not removed because it did not exist"
+            );
         }
     }
 
     public void AddPortalSessionIfNotExist(Guid id, Func<Guid, PortalSessionStore> createSession)
     {
-        portalSessions.GetOrAdd(id, createSession);
+        portalSessions.GetOrAdd(key: id, valueFactory: createSession);
     }
 
     public PortalSessionStore GetPortalSession(Guid id)
     {
-        portalSessions.TryGetValue(id, out var value);
+        portalSessions.TryGetValue(key: id, value: out var value);
         return value;
     }
 
     public PortalSessionStore GetPortalSession()
     {
         Guid profileId = SecurityTools.CurrentUserProfile().Id;
-        return portalSessions.GetOrAdd(profileId, guid => throw new SessionExpiredException());
+        return portalSessions.GetOrAdd(
+            key: profileId,
+            valueFactory: guid => throw new SessionExpiredException()
+        );
     }
 
     public SessionStore GetSession(Guid sessionFormIdentifier)
     {
-        return GetSession(sessionFormIdentifier, false);
+        return GetSession(sessionFormIdentifier: sessionFormIdentifier, rootSession: false);
     }
 
     public SessionStore GetSession(ExecuteActionProcessData processData)
     {
-        return GetSession(new Guid(processData.SessionFormIdentifier));
+        return GetSession(sessionFormIdentifier: new Guid(g: processData.SessionFormIdentifier));
     }
 
     public bool SessionExists(Guid sessionFormIdentifier)
     {
-        return formSessions.TryGetValue(sessionFormIdentifier, out _);
+        return formSessions.TryGetValue(key: sessionFormIdentifier, value: out _);
     }
 
     public SessionStore GetSession(Guid sessionFormIdentifier, bool rootSession)
     {
         SecurityTools.CurrentUserProfile();
         SessionStore ss = formSessions.GetOrAdd(
-            sessionFormIdentifier,
-            guid => throw new SessionExpiredException()
+            key: sessionFormIdentifier,
+            valueFactory: guid => throw new SessionExpiredException()
         );
 
         if (ss == null)
         {
             throw new Exception(
-                string.Format(Resources.ErrorSessionNotFound, sessionFormIdentifier.ToString())
+                message: string.Format(
+                    format: Resources.ErrorSessionNotFound,
+                    arg0: sessionFormIdentifier.ToString()
+                )
             );
         }
-        ss.CacheExpiration.AddMinutes(5);
+        ss.CacheExpiration.AddMinutes(value: 5);
         // check for an active sub-session - return it
         if (!rootSession && ss.ActiveSession != null)
         {
@@ -139,22 +147,26 @@ public class SessionManager
     public void RegisterSession(SessionStore ss)
     {
         PortalSessionStore pss = GetPortalSession();
-        if (pss.IsExclusiveScreenOpen && !pss.ExclusiveSession.Equals(ss))
+        if (pss.IsExclusiveScreenOpen && !pss.ExclusiveSession.Equals(obj: ss))
         {
             throw new RuleException(
-                string.Format(
-                    Resources.ErrorCannotOpenScreenWhenExclusiveIsOpen,
-                    pss.ExclusiveSession.Title
+                message: string.Format(
+                    format: Resources.ErrorCannotOpenScreenWhenExclusiveIsOpen,
+                    arg0: pss.ExclusiveSession.Title
                 )
             );
         }
-        formSessions.AddOrUpdate(ss.Id, ss, (guid, store) => store);
+        formSessions.AddOrUpdate(
+            key: ss.Id,
+            addValue: ss,
+            updateValueFactory: (guid, store) => store
+        );
         if (!ss.Request.IsStandalone)
         {
-            if (!pss.FormSessions.Contains(ss))
+            if (!pss.FormSessions.Contains(item: ss))
             {
                 pss.IsExclusiveScreenOpen = ss.IsExclusive;
-                pss.FormSessions.Add(ss);
+                pss.FormSessions.Add(item: ss);
             }
         }
     }
@@ -164,14 +176,14 @@ public class SessionManager
         int dirtyScreens = 0;
         int runningWorkflows = 0;
         UserProfile profile = SecurityTools.CurrentUserProfile();
-        portalSessions.TryGetValue(profile.Id, out var portalSession);
+        portalSessions.TryGetValue(key: profile.Id, value: out var portalSession);
         if (portalSession == null)
         {
-            return new SessionStats(dirtyScreens, runningWorkflows);
+            return new SessionStats(dirtyScreens: dirtyScreens, runningWorkflows: runningWorkflows);
         }
         foreach (SessionStore mainSessionStore in portalSession.FormSessions)
         {
-            if (formSessions.ContainsKey(mainSessionStore.Id))
+            if (formSessions.ContainsKey(key: mainSessionStore.Id))
             {
                 SessionStore sessionStore = (
                     mainSessionStore.ActiveSession == null
@@ -198,36 +210,41 @@ public class SessionManager
                 }
             }
         }
-        return new SessionStats(dirtyScreens, runningWorkflows);
+        return new SessionStats(dirtyScreens: dirtyScreens, runningWorkflows: runningWorkflows);
     }
 
     public bool HasFormSession(Guid id)
     {
-        return formSessions.ContainsKey(id);
+        return formSessions.ContainsKey(key: id);
     }
 
     public SessionStore CreateSessionStore(UIRequest request, IBasicUIService basicUIService)
     {
-        if (request.FormSessionId != null && SessionExists(new Guid(request.FormSessionId)))
+        if (
+            request.FormSessionId != null
+            && SessionExists(sessionFormIdentifier: new Guid(g: request.FormSessionId))
+        )
         {
-            throw new Exception("Session already exists. Cannot create new session.");
+            throw new Exception(message: "Session already exists. Cannot create new session.");
         }
         SessionStore ss = null;
         IPersistenceService ps =
-            ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+            ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+            as IPersistenceService;
         AbstractMenuItem menuItem;
         UIRequestType type = request.Type;
         if (type == UIRequestType.FormReferenceMenuItem_WithSelection && request.IsSingleRecordEdit)
         {
             type = UIRequestType.FormReferenceMenuItem;
         }
-        if (request.ObjectId.Contains("|"))
+        if (request.ObjectId.Contains(value: "|"))
         {
-            string[] objectId = request.ObjectId.Split("|".ToCharArray());
-            string[] classPath = objectId[1].Split(",".ToCharArray());
+            string[] objectId = request.ObjectId.Split(separator: "|".ToCharArray());
+            string[] classPath = objectId[1].Split(separator: ",".ToCharArray());
             IDynamicSessionStoreProvider dynamicProvider =
-                Reflector.InvokeObject(classPath[0], classPath[1]) as IDynamicSessionStoreProvider;
-            ss = dynamicProvider.GetSessionStore(basicUIService, request);
+                Reflector.InvokeObject(classname: classPath[0], assembly: classPath[1])
+                as IDynamicSessionStoreProvider;
+            ss = dynamicProvider.GetSessionStore(service: basicUIService, request: request);
         }
         else
         {
@@ -237,20 +254,20 @@ public class SessionManager
                 {
                     menuItem =
                         ps.SchemaProvider.RetrieveInstance(
-                            typeof(AbstractMenuItem),
-                            new ModelElementKey(new Guid(request.ObjectId))
+                            type: typeof(AbstractMenuItem),
+                            primaryKey: new ModelElementKey(id: new Guid(g: request.ObjectId))
                         ) as AbstractMenuItem;
                     FormReferenceMenuItem formMenuItem = menuItem as FormReferenceMenuItem;
                     ss = new SelectionDialogSessionStore(
-                        basicUIService,
-                        request,
-                        formMenuItem.SelectionDialogPanel.DataSourceId,
-                        formMenuItem.SelectionPanelBeforeTransformationId,
-                        formMenuItem.SelectionPanelAfterTransformationId,
-                        formMenuItem.SelectionPanelId,
-                        menuItem.Name,
-                        formMenuItem.SelectionDialogEndRule,
-                        analytics
+                        service: basicUIService,
+                        request: request,
+                        dataSourceId: formMenuItem.SelectionDialogPanel.DataSourceId,
+                        beforeTransformationId: formMenuItem.SelectionPanelBeforeTransformationId,
+                        afterTransformationId: formMenuItem.SelectionPanelAfterTransformationId,
+                        panelId: formMenuItem.SelectionPanelId,
+                        name: menuItem.Name,
+                        endRule: formMenuItem.SelectionDialogEndRule,
+                        analytics: analytics
                     );
                     break;
                 }
@@ -259,21 +276,21 @@ public class SessionManager
                 {
                     menuItem =
                         ps.SchemaProvider.RetrieveInstance(
-                            typeof(AbstractMenuItem),
-                            new ModelElementKey(new Guid(request.ObjectId))
+                            type: typeof(AbstractMenuItem),
+                            primaryKey: new ModelElementKey(id: new Guid(g: request.ObjectId))
                         ) as AbstractMenuItem;
                     DataConstantReferenceMenuItem parMenuItem =
                         menuItem as DataConstantReferenceMenuItem;
                     // PARAM
                     ss = new ParameterSessionStore(
-                        basicUIService,
-                        request,
-                        parMenuItem.Constant,
-                        parMenuItem.FinalLookup,
-                        parMenuItem.DisplayName,
-                        parMenuItem.Name,
-                        parMenuItem.RefreshPortalAfterSave,
-                        analytics
+                        service: basicUIService,
+                        request: request,
+                        constant: parMenuItem.Constant,
+                        lookup: parMenuItem.FinalLookup,
+                        titleName: parMenuItem.DisplayName,
+                        name: parMenuItem.Name,
+                        refreshPortalAfterSave: parMenuItem.RefreshPortalAfterSave,
+                        analytics: analytics
                     );
                     break;
                 }
@@ -282,23 +299,23 @@ public class SessionManager
                 {
                     menuItem =
                         ps.SchemaProvider.RetrieveInstance(
-                            typeof(AbstractMenuItem),
-                            new ModelElementKey(new Guid(request.ObjectId))
+                            type: typeof(AbstractMenuItem),
+                            primaryKey: new ModelElementKey(id: new Guid(g: request.ObjectId))
                         ) as AbstractMenuItem;
                     // FORM
                     ss =
                         request.NewRecordInitialValues != null
                             ? new NewRecordSessionStore(
-                                basicUIService,
-                                request,
-                                menuItem.Name,
-                                analytics
+                                service: basicUIService,
+                                request: request,
+                                name: menuItem.Name,
+                                analytics: analytics
                             )
                             : new FormSessionStore(
-                                basicUIService,
-                                request,
-                                menuItem.Name,
-                                analytics
+                                service: basicUIService,
+                                request: request,
+                                name: menuItem.Name,
+                                analytics: analytics
                             );
                     break;
                 }
@@ -307,8 +324,8 @@ public class SessionManager
                 {
                     ISchemaItem item =
                         ps.SchemaProvider.RetrieveInstance(
-                            typeof(ISchemaItem),
-                            new ModelElementKey(new Guid(request.ObjectId))
+                            type: typeof(ISchemaItem),
+                            primaryKey: new ModelElementKey(id: new Guid(g: request.ObjectId))
                         ) as ISchemaItem;
                     WorkflowReferenceMenuItem wfMenuItem = item as WorkflowReferenceMenuItem;
                     IWorkflow wf = item as IWorkflow;
@@ -316,27 +333,30 @@ public class SessionManager
                     {
                         wf = wfMenuItem.Workflow;
                         // set default workflow menu item parameters (assigned constants to the menu item)
-                        RuleEngine ruleEngine = RuleEngine.Create(null, null);
+                        RuleEngine ruleEngine = RuleEngine.Create(
+                            contextStores: null,
+                            transactionId: null
+                        );
                         foreach (ISchemaItem parameter in wfMenuItem.ChildItems)
                         {
                             if (parameter != null)
                             {
-                                if (!request.Parameters.Contains(parameter.Name))
+                                if (!request.Parameters.Contains(key: parameter.Name))
                                 {
                                     request.Parameters.Add(
-                                        parameter.Name,
-                                        ruleEngine.Evaluate(parameter)
+                                        key: parameter.Name,
+                                        value: ruleEngine.Evaluate(item: parameter)
                                     );
                                 }
                             }
                         }
                     }
                     ss = new WorkflowSessionStore(
-                        basicUIService,
-                        request,
-                        (Guid)wf.PrimaryKey["Id"],
-                        item.Name,
-                        analytics
+                        service: basicUIService,
+                        request: request,
+                        workflowId: (Guid)wf.PrimaryKey[key: "Id"],
+                        name: item.Name,
+                        analytics: analytics
                     );
                     break;
                 }
@@ -349,20 +369,20 @@ public class SessionManager
                 {
                     menuItem =
                         ps.SchemaProvider.RetrieveInstance(
-                            typeof(AbstractMenuItem),
-                            new ModelElementKey(new Guid(request.ObjectId))
+                            type: typeof(AbstractMenuItem),
+                            primaryKey: new ModelElementKey(id: new Guid(g: request.ObjectId))
                         ) as AbstractMenuItem;
                     ReportReferenceMenuItem reportMenuItem = menuItem as ReportReferenceMenuItem;
                     ss = new SelectionDialogSessionStore(
-                        basicUIService,
-                        request,
-                        reportMenuItem.SelectionDialogPanel.DataSourceId,
-                        reportMenuItem.SelectionPanelBeforeTransformationId,
-                        reportMenuItem.SelectionPanelAfterTransformationId,
-                        reportMenuItem.SelectionPanelId,
-                        menuItem.Name,
-                        reportMenuItem.SelectionDialogEndRule,
-                        analytics
+                        service: basicUIService,
+                        request: request,
+                        dataSourceId: reportMenuItem.SelectionDialogPanel.DataSourceId,
+                        beforeTransformationId: reportMenuItem.SelectionPanelBeforeTransformationId,
+                        afterTransformationId: reportMenuItem.SelectionPanelAfterTransformationId,
+                        panelId: reportMenuItem.SelectionPanelId,
+                        name: menuItem.Name,
+                        endRule: reportMenuItem.SelectionDialogEndRule,
+                        analytics: analytics
                     );
                     break;
                 }
@@ -370,10 +390,10 @@ public class SessionManager
                 case UIRequestType.WorkQueue:
                 {
                     ss = new WorkQueueSessionStore(
-                        basicUIService,
-                        request,
-                        Resources.WorkQueueTitle + " " + request.Caption,
-                        analytics
+                        service: basicUIService,
+                        request: request,
+                        name: Resources.WorkQueueTitle + " " + request.Caption,
+                        analytics: analytics
                     );
                     break;
                 }
@@ -381,7 +401,7 @@ public class SessionManager
         }
         if (ss == null)
         {
-            throw new Exception(Resources.ErrorUnknownSessionType);
+            throw new Exception(message: Resources.ErrorUnknownSessionType);
         }
 
         return ss;
@@ -389,84 +409,88 @@ public class SessionManager
 
     public void AddReportRequest(Guid key, ReportRequest request)
     {
-        if (!reportRequests.TryAdd(key, request))
+        if (!reportRequests.TryAdd(key: key, value: request))
         {
             throw new ArgumentException(
-                $"Report request could not be added because another one with id {key} already exists"
+                message: $"Report request could not be added because another one with id {key} already exists"
             );
         }
     }
 
     public ReportRequest GetReportRequest(Guid key)
     {
-        reportRequests.TryGetValue(key, out var reportRequest);
+        reportRequests.TryGetValue(key: key, value: out var reportRequest);
         return reportRequest;
     }
 
     public void RemoveReportRequest(Guid key)
     {
-        if (!reportRequests.TryRemove(key, out _))
+        if (!reportRequests.TryRemove(key: key, value: out _))
         {
-            log.Warn($"Report request with id: {key} was not removed because it did not exist");
+            log.Warn(
+                message: $"Report request with id: {key} was not removed because it did not exist"
+            );
         }
     }
 
     public void RemoveExcelFileRequest(Guid key)
     {
-        if (!reportRequests.TryRemove(key, out _))
+        if (!reportRequests.TryRemove(key: key, value: out _))
         {
-            log.Warn($"Excel file request with id: {key} was not removed because it did not exist");
+            log.Warn(
+                message: $"Excel file request with id: {key} was not removed because it did not exist"
+            );
         }
     }
 
     public void AddBlobDownloadRequest(Guid key, BlobDownloadRequest request)
     {
-        if (!blobDownloadRequests.TryAdd(key, request))
+        if (!blobDownloadRequests.TryAdd(key: key, value: request))
         {
             throw new ArgumentException(
-                $"Blob download request could not be added because another session with id {key} already exists"
+                message: $"Blob download request could not be added because another session with id {key} already exists"
             );
         }
     }
 
     public BlobDownloadRequest GetBlobDownloadRequest(Guid key)
     {
-        blobDownloadRequests.TryGetValue(key, out var request);
+        blobDownloadRequests.TryGetValue(key: key, value: out var request);
         return request;
     }
 
     public void RemoveBlobDownloadRequest(Guid key)
     {
-        if (!blobDownloadRequests.TryRemove(key, out _))
+        if (!blobDownloadRequests.TryRemove(key: key, value: out _))
         {
             log.Warn(
-                $"Blob download request with id: {key} was not removed because it did not exist"
+                message: $"Blob download request with id: {key} was not removed because it did not exist"
             );
         }
     }
 
     public void AddBlobUploadRequest(Guid key, BlobUploadRequest request)
     {
-        if (!blobUploadRequests.TryAdd(key, request))
+        if (!blobUploadRequests.TryAdd(key: key, value: request))
         {
             throw new ArgumentException(
-                $"Blob upload request could not be added because another session with id {key} already exists"
+                message: $"Blob upload request could not be added because another session with id {key} already exists"
             );
         }
     }
 
     public BlobUploadRequest GetBlobUploadRequest(Guid key)
     {
-        blobUploadRequests.TryGetValue(key, out var request);
+        blobUploadRequests.TryGetValue(key: key, value: out var request);
         return request;
     }
 
     public void RemoveBlobUploadRequest(Guid key)
     {
-        if (!blobUploadRequests.TryRemove(key, out _))
+        if (!blobUploadRequests.TryRemove(key: key, value: out _))
         {
             log.Warn(
-                $"Blob upload request with id: {key} was not removed because it did not exist"
+                message: $"Blob upload request with id: {key} was not removed because it did not exist"
             );
         }
     }
@@ -477,7 +501,11 @@ public class SessionManager
         Func<Guid, PortalSessionStore, PortalSessionStore> updateSession
     )
     {
-        portalSessions.AddOrUpdate(id, addSession, updateSession);
+        portalSessions.AddOrUpdate(
+            key: id,
+            addValueFactory: addSession,
+            updateValueFactory: updateSession
+        );
     }
 }
 

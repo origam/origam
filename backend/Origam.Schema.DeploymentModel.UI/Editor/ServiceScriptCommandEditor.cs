@@ -75,7 +75,7 @@ public class ServiceScriptCommandEditor : AbstractEditor
                 components.Dispose();
             }
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
 
     #region Windows Form Designer generated code
@@ -280,9 +280,9 @@ public class ServiceScriptCommandEditor : AbstractEditor
             txtOrder.Text = activity.ActivityOrder.ToString();
             txtCommand.Text = activity.CommandText;
             LoadServices();
-            foreach (var item in Enum.GetValues(typeof(DatabaseType)))
+            foreach (var item in Enum.GetValues(enumType: typeof(DatabaseType)))
             {
-                cboPlatform.Items.Add(item);
+                cboPlatform.Items.Add(item: item);
                 if ((DatabaseType)item == activity.DatabaseType)
                 {
                     cboPlatform.SelectedItem = item;
@@ -317,7 +317,7 @@ public class ServiceScriptCommandEditor : AbstractEditor
         ServiceCommandUpdateScriptActivity activity =
             this.ModelContent as ServiceCommandUpdateScriptActivity;
         activity.Name = txtName.Text;
-        activity.ActivityOrder = Convert.ToInt32(txtOrder.Text);
+        activity.ActivityOrder = Convert.ToInt32(value: txtOrder.Text);
         activity.CommandText = txtCommand.Text;
 
         activity.Service = null;
@@ -335,7 +335,7 @@ public class ServiceScriptCommandEditor : AbstractEditor
 
         if (cboService.SelectedItem != null)
         {
-            currentItem = _converter.ConvertFrom(cboService.SelectedItem);
+            currentItem = _converter.ConvertFrom(value: cboService.SelectedItem);
         }
         try
         {
@@ -343,7 +343,7 @@ public class ServiceScriptCommandEditor : AbstractEditor
             cboService.Items.Clear();
             foreach (object o in _converter.GetStandardValues())
             {
-                cboService.Items.Add(o);
+                cboService.Items.Add(item: o);
             }
         }
         finally
@@ -353,7 +353,7 @@ public class ServiceScriptCommandEditor : AbstractEditor
         if (currentItem != null)
         {
             _isLoading = true;
-            cboService.SelectedItem = _converter.ConvertFrom(currentItem);
+            cboService.SelectedItem = _converter.ConvertFrom(value: currentItem);
             _isLoading = false;
         }
     }

@@ -54,25 +54,30 @@ class ContextStoreDiagramFactory : IDiagramFactory<IContextStore, Graph>
     public Graph Draw(IContextStore contextStore)
     {
         graph = new Graph();
-        nodeFactory = new NodeFactory(nodeSelector, gViewer, schemaService, graph);
+        nodeFactory = new NodeFactory(
+            nodeSelector: nodeSelector,
+            gViewer: gViewer,
+            schemaService: schemaService,
+            graph: graph
+        );
 
-        Node storeNode = nodeFactory.AddNode(contextStore);
+        Node storeNode = nodeFactory.AddNode(schemaItem: contextStore);
         List<IWorkflowStep> steps = persistenceProvider.RetrieveList<IWorkflowStep>();
 
         foreach (IWorkflowStep step in steps)
         {
             if (step is WorkflowTask task && task.OutputContextStoreId == contextStore.Id)
             {
-                Node taskNode = nodeFactory.AddNode(task);
-                graph.AddEdge(storeNode.Id, taskNode.Id);
+                Node taskNode = nodeFactory.AddNode(schemaItem: task);
+                graph.AddEdge(source: storeNode.Id, target: taskNode.Id);
             }
             else if (
                 step is UpdateContextTask updateTask
                 && updateTask.XPathContextStore.Id == contextStore.Id
             )
             {
-                Node taskNode = nodeFactory.AddNode(updateTask);
-                graph.AddEdge(taskNode.Id, storeNode.Id);
+                Node taskNode = nodeFactory.AddNode(schemaItem: updateTask);
+                graph.AddEdge(source: taskNode.Id, target: storeNode.Id);
             }
         }
         return graph;

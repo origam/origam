@@ -30,12 +30,12 @@ public class CheckBoxBuilder
 {
     public static void Build(XmlElement propertyElement, string text)
     {
-        propertyElement.SetAttribute("Entity", "Boolean");
-        propertyElement.SetAttribute("Column", "CheckBox");
+        propertyElement.SetAttribute(name: "Entity", value: "Boolean");
+        propertyElement.SetAttribute(name: "Column", value: "CheckBox");
         if (text != "" && text != null)
         {
-            propertyElement.SetAttribute("Name", text);
+            propertyElement.SetAttribute(name: "Name", value: text);
         }
-        propertyElement.SetAttribute("CaptionPosition", "Right");
+        propertyElement.SetAttribute(name: "CaptionPosition", value: "Right");
     }
 }

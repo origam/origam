@@ -39,22 +39,26 @@ public class Debug
 
     public static void UpdateCounter(string counterName, int offset)
     {
-        if (!Debug._counters.ContainsKey(counterName))
+        if (!Debug._counters.ContainsKey(key: counterName))
         {
-            Debug._counters.Add(counterName, 0);
+            Debug._counters.Add(key: counterName, value: 0);
         }
-        Debug._counters[counterName] = (int)Debug._counters[counterName] + offset;
+        Debug._counters[key: counterName] = (int)Debug._counters[key: counterName] + offset;
     }
 
     public static void PrintCounters()
     {
-        System.Diagnostics.Debug.WriteLine("******************* COUNTERS *****************");
+        System.Diagnostics.Debug.WriteLine(
+            message: "******************* COUNTERS *****************"
+        );
         foreach (DictionaryEntry entry in Debug._counters)
         {
             System.Diagnostics.Debug.WriteLine(
-                entry.Key.ToString() + ": " + entry.Value.ToString()
+                message: entry.Key.ToString() + ": " + entry.Value.ToString()
             );
         }
-        System.Diagnostics.Debug.WriteLine("***************** COUNTERS END ***************");
+        System.Diagnostics.Debug.WriteLine(
+            message: "***************** COUNTERS END ***************"
+        );
     }
 }

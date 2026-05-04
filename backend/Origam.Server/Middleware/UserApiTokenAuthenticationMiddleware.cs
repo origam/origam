@@ -44,8 +44,8 @@ public class UserApiTokenAuthenticationMiddleware
         IAuthenticationSchemeProvider schemes
     )
     {
-        _next = next ?? throw new ArgumentNullException(nameof(next));
-        Schemes = schemes ?? throw new ArgumentNullException(nameof(schemes));
+        _next = next ?? throw new ArgumentNullException(paramName: nameof(next));
+        Schemes = schemes ?? throw new ArgumentNullException(paramName: nameof(schemes));
     }
 
     public IAuthenticationSchemeProvider Schemes { get; set; }
@@ -53,7 +53,7 @@ public class UserApiTokenAuthenticationMiddleware
     public async Task Invoke(HttpContext context)
     {
         context.Features.Set<IAuthenticationFeature>(
-            new AuthenticationFeature
+            instance: new AuthenticationFeature
             {
                 OriginalPath = context.Request.Path,
                 OriginalPathBase = context.Request.PathBase,
@@ -65,7 +65,7 @@ public class UserApiTokenAuthenticationMiddleware
         foreach (var scheme in await Schemes.GetRequestHandlerSchemesAsync())
         {
             var handler =
-                await handlers.GetHandlerAsync(context, scheme.Name)
+                await handlers.GetHandlerAsync(context: context, authenticationScheme: scheme.Name)
                 as IAuthenticationRequestHandler;
             if (handler != null && await handler.HandleRequestAsync())
             {
@@ -74,7 +74,7 @@ public class UserApiTokenAuthenticationMiddleware
         }
 
         var result = await context.AuthenticateAsync(
-            OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme
+            scheme: OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme
         );
         if (result?.Principal != null)
         {
@@ -83,10 +83,10 @@ public class UserApiTokenAuthenticationMiddleware
 
         if (result?.Succeeded ?? false)
         {
-            var authFeatures = new OrigamAuthenticationFeatures(result);
-            context.Features.Set<IHttpAuthenticationFeature>(authFeatures);
-            context.Features.Set<IAuthenticateResultFeature>(authFeatures);
-            await _next(context);
+            var authFeatures = new OrigamAuthenticationFeatures(result: result);
+            context.Features.Set<IHttpAuthenticationFeature>(instance: authFeatures);
+            context.Features.Set<IAuthenticateResultFeature>(instance: authFeatures);
+            await _next(context: context);
         }
         else
         {

@@ -39,7 +39,7 @@ namespace Origam.Server.Controller;
 
 [Authorize(Policy = "InternalApi")]
 [ApiController]
-[Route("internalApi/[controller]")]
+[Route(template: "internalApi/[controller]")]
 public class ExcelExportController : AbstractController
 {
     private readonly IStringLocalizer<SharedResources> localizer;
@@ -50,34 +50,41 @@ public class ExcelExportController : AbstractController
         IStringLocalizer<SharedResources> localizer,
         IWebHostEnvironment environment
     )
-        : base(log, sessionObjects, environment)
+        : base(log: log, sessionObjects: sessionObjects, environment: environment)
     {
         this.localizer = localizer;
     }
 
-    [HttpPost("[action]")]
+    [HttpPost(template: "[action]")]
     public IActionResult GetFile([FromBody] [Required] ExcelExportInput input)
     {
         SessionStore sessionStore = sessionObjects.SessionManager.GetSession(
-            input.SessionFormIdentifier
+            sessionFormIdentifier: input.SessionFormIdentifier
         );
-        if (!sessionStore.RuleEngine.IsExportAllowed(sessionStore.GetEntityId(input.Entity)))
+        if (
+            !sessionStore.RuleEngine.IsExportAllowed(
+                entityId: sessionStore.GetEntityId(entity: input.Entity)
+            )
+        )
         {
-            return StatusCode(403, localizer["ExcelExportForbidden"].ToString());
+            return StatusCode(
+                statusCode: 403,
+                value: localizer[name: "ExcelExportForbidden"].ToString()
+            );
         }
-        bool isLazyLoaded = sessionStore.IsLazyLoadedEntity(input.Entity);
+        bool isLazyLoaded = sessionStore.IsLazyLoadedEntity(entity: input.Entity);
         switch (isLazyLoaded)
         {
             case true when input.LazyLoadedEntityInput == null:
             {
                 return BadRequest(
-                    $"Export from lazy loaded entities requires {nameof(input.LazyLoadedEntityInput)}"
+                    error: $"Export from lazy loaded entities requires {nameof(input.LazyLoadedEntityInput)}"
                 );
             }
             case false when input.RowIds == null || input.RowIds.Count == 0:
             {
                 return BadRequest(
-                    $"Export from non lazy loaded entities requires {nameof(input.RowIds)}"
+                    error: $"Export from non lazy loaded entities requires {nameof(input.RowIds)}"
                 );
             }
             default:
@@ -91,7 +98,7 @@ public class ExcelExportController : AbstractController
                     Store = sessionStore,
                     LazyLoadedEntityInput = input.LazyLoadedEntityInput,
                 };
-                return GetExcelFile(entityExportInfo);
+                return GetExcelFile(entityExportInfo: entityExportInfo);
             }
         }
     }
@@ -100,8 +107,8 @@ public class ExcelExportController : AbstractController
     {
         var excelEntityExporter = new ExcelEntityExporter();
         Result<IWorkbook, IActionResult> workbookResult = FillWorkbook(
-            entityExportInfo,
-            excelEntityExporter
+            entityExportInfo: entityExportInfo,
+            excelEntityExporter: excelEntityExporter
         );
         if (workbookResult.IsFailure)
         {
@@ -110,20 +117,26 @@ public class ExcelExportController : AbstractController
         if (excelEntityExporter.ExportFormat == ExcelFormat.XLS)
         {
             Response.ContentType = "application/vnd.ms-excel";
-            Response.Headers.Append("content-disposition", "attachment; filename=export.xls");
+            Response.Headers.Append(
+                key: "content-disposition",
+                value: "attachment; filename=export.xls"
+            );
         }
         else
         {
             Response.ContentType =
                 "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-            Response.Headers.Append("content-disposition", "attachment; filename=export.xlsx");
+            Response.Headers.Append(
+                key: "content-disposition",
+                value: "attachment; filename=export.xlsx"
+            );
         }
 #pragma warning disable 1998
         return new FileCallbackResult(
-            new MediaTypeHeaderValue(Response.ContentType),
-            async (outputStream, _) =>
+            contentType: new MediaTypeHeaderValue(mediaType: Response.ContentType),
+            callback: async (outputStream, _) =>
             {
-                workbookResult.Value.Write(outputStream);
+                workbookResult.Value.Write(stream: outputStream);
             }
         );
 #pragma warning restore 1998
@@ -150,8 +163,8 @@ public class ExcelExportController : AbstractController
             Rows = result.Value as IEnumerable<IEnumerable<object>>,
         };
         return result.IsSuccess
-            ? Result.Success<ReadResult, IActionResult>(readerResult)
-            : Result.Failure<ReadResult, IActionResult>(result.Error);
+            ? Result.Success<ReadResult, IActionResult>(value: readerResult)
+            : Result.Failure<ReadResult, IActionResult>(error: result.Error);
     }
 
     private Result<IWorkbook, IActionResult> FillWorkbook(
@@ -162,40 +175,52 @@ public class ExcelExportController : AbstractController
         if (entityExportInfo.Store is WorkQueueSessionStore workQueueSessionStore)
         {
             return WorkQueueGetRowsGetRowsQuery(
-                    entityExportInfo.LazyLoadedEntityInput,
-                    workQueueSessionStore
+                    input: entityExportInfo.LazyLoadedEntityInput,
+                    sessionStore: workQueueSessionStore
                 )
-                .Bind(dataStructureQuery => ReadRows(entityExportInfo, dataStructureQuery))
-                .Map(readResult =>
+                .Bind(func: dataStructureQuery =>
+                    ReadRows(
+                        entityExportInfo: entityExportInfo,
+                        dataStructureQuery: dataStructureQuery
+                    )
+                )
+                .Map(func: readResult =>
                     excelEntityExporter.FillWorkBook(
-                        entityExportInfo,
-                        readResult
+                        info: entityExportInfo,
+                        columns: readResult
                             .DataStructureQuery.GetAllQueryColumns()
-                            .Select(x => x.Name)
+                            .Select(selector: x => x.Name)
                             .ToList(),
-                        readResult.Rows
+                        rows: readResult.Rows
                     )
                 );
         }
-        bool isLazyLoaded = entityExportInfo.Store.IsLazyLoadedEntity(entityExportInfo.Entity);
+        bool isLazyLoaded = entityExportInfo.Store.IsLazyLoadedEntity(
+            entity: entityExportInfo.Entity
+        );
         if (isLazyLoaded)
         {
             ILazyRowLoadInput input = entityExportInfo.LazyLoadedEntityInput;
-            return EntityIdentificationToEntityData(input)
-                .Bind(entityData => GetRowsGetQuery(input, entityData))
-                .Bind(dataStructureQuery => ReadRows(entityExportInfo, dataStructureQuery))
-                .Map(readResult =>
+            return EntityIdentificationToEntityData(input: input)
+                .Bind(func: entityData => GetRowsGetQuery(input: input, entityData: entityData))
+                .Bind(func: dataStructureQuery =>
+                    ReadRows(
+                        entityExportInfo: entityExportInfo,
+                        dataStructureQuery: dataStructureQuery
+                    )
+                )
+                .Map(func: readResult =>
                     excelEntityExporter.FillWorkBook(
-                        entityExportInfo,
-                        readResult
+                        info: entityExportInfo,
+                        columns: readResult
                             .DataStructureQuery.GetAllQueryColumns()
-                            .Select(x => x.Name)
+                            .Select(selector: x => x.Name)
                             .ToList(),
-                        readResult.Rows
+                        rows: readResult.Rows
                     )
                 );
         }
-        IWorkbook workBook = excelEntityExporter.FillWorkBook(entityExportInfo);
-        return Result.Success<IWorkbook, IActionResult>(workBook);
+        IWorkbook workBook = excelEntityExporter.FillWorkBook(info: entityExportInfo);
+        return Result.Success<IWorkbook, IActionResult>(value: workBook);
     }
 }

@@ -44,8 +44,8 @@ public class RoundedRectangularGroupBox : BaseContainer
         get { return meColorScheme; }
         set
         {
-            ColorScheme oColorScheme = new ColorScheme(value);
-            oColorScheme.SetColorScheme(this);
+            ColorScheme oColorScheme = new ColorScheme(aoColorScheme: value);
+            oColorScheme.SetColorScheme(aCtrl: this);
             meColorScheme = value;
         }
     }
@@ -66,20 +66,20 @@ public class RoundedRectangularGroupBox : BaseContainer
         {
             // Creating rectangle to draw interior with more top width than other side of border
             oRcInterior = new Rectangle(
-                this.BorderRectangle.X + this.BorderWidth + 1,
-                this.BorderRectangle.Y + 12 + this.BorderWidth,
-                this.BorderRectangle.Width - (this.BorderWidth * 2),
-                this.BorderRectangle.Height - (12 + (this.BorderWidth * 2))
+                x: this.BorderRectangle.X + this.BorderWidth + 1,
+                y: this.BorderRectangle.Y + 12 + this.BorderWidth,
+                width: this.BorderRectangle.Width - (this.BorderWidth * 2),
+                height: this.BorderRectangle.Height - (12 + (this.BorderWidth * 2))
             );
         }
         else
         {
             // Creating rectangle to draw interior with all sides equall
             oRcInterior = new Rectangle(
-                this.BorderRectangle.X + this.BorderWidth + 1,
-                this.BorderRectangle.Y + this.BorderWidth + 1,
-                this.BorderRectangle.Width - (this.BorderWidth * 2),
-                this.BorderRectangle.Height - (this.BorderWidth * 2)
+                x: this.BorderRectangle.X + this.BorderWidth + 1,
+                y: this.BorderRectangle.Y + this.BorderWidth + 1,
+                width: this.BorderRectangle.Width - (this.BorderWidth * 2),
+                height: this.BorderRectangle.Height - (this.BorderWidth * 2)
             );
         }
         SolidBrush oSoildBrush;
@@ -88,14 +88,28 @@ public class RoundedRectangularGroupBox : BaseContainer
         for (int i = 1; i >= 0; i--)
         {
             // Define Shadow Brushes Dark to Light
-            oSoildBrush = new SolidBrush(Color.FromArgb(127 * (2 - i), this.ShadowColor));
-            Pen p = new Pen(oSoildBrush);
+            oSoildBrush = new SolidBrush(
+                color: Color.FromArgb(alpha: 127 * (2 - i), baseColor: this.ShadowColor)
+            );
+            Pen p = new Pen(brush: oSoildBrush);
 
             // Draws vertical line on Left side
-            aoGraphics.DrawLine(p, oRcInterior.X, oRcInterior.Y, oRcInterior.X, oRcInterior.Bottom);
+            aoGraphics.DrawLine(
+                pen: p,
+                x1: oRcInterior.X,
+                y1: oRcInterior.Y,
+                x2: oRcInterior.X,
+                y2: oRcInterior.Bottom
+            );
 
             // Draws horizontal lines on the top
-            aoGraphics.DrawLine(p, oRcInterior.X, oRcInterior.Y, oRcInterior.Right, oRcInterior.Y);
+            aoGraphics.DrawLine(
+                pen: p,
+                x1: oRcInterior.X,
+                y1: oRcInterior.Y,
+                x2: oRcInterior.Right,
+                y2: oRcInterior.Y
+            );
 
             // Increasing the X and Y postion of the rectangle
             oRcInterior.X += 1;
@@ -109,10 +123,10 @@ public class RoundedRectangularGroupBox : BaseContainer
         // Brush of LinearGradient type is created to draw gradient
         IGradientContainer oContainer = this;
         LinearGradientBrush oGradientBrush = new LinearGradientBrush(
-            oRcInterior,
-            oContainer.BackgroundTopColor,
-            oContainer.BackgroundBottomColor,
-            LinearGradientMode.Vertical
+            rect: oRcInterior,
+            color1: oContainer.BackgroundTopColor,
+            color2: oContainer.BackgroundBottomColor,
+            linearGradientMode: LinearGradientMode.Vertical
         );
         // Blend is used to define the blend of the gradient
         Blend oBlend = new Blend();
@@ -121,7 +135,7 @@ public class RoundedRectangularGroupBox : BaseContainer
         oGradientBrush.Blend = oBlend;
 
         // Fill the rectangle using Gradient Brush Created above
-        aoGraphics.FillRectangle(oGradientBrush, oRcInterior);
+        aoGraphics.FillRectangle(brush: oGradientBrush, rect: oRcInterior);
     }
     #endregion
 }

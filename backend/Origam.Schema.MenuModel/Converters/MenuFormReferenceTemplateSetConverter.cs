@@ -46,14 +46,14 @@ public class MenuFormReferenceTemplateSetConverter : TypeConverter
     {
         FormReferenceMenuItem currentItem = context.Instance as FormReferenceMenuItem;
         List<DataStructureTemplateSet> templateSets = currentItem.Screen.DataStructure.TemplateSets;
-        var array = new List<DataStructureTemplateSet>(templateSets.Count);
+        var array = new List<DataStructureTemplateSet>(capacity: templateSets.Count);
         foreach (DataStructureTemplateSet item in templateSets)
         {
-            array.Add(item);
+            array.Add(item: item);
         }
-        array.Add(null);
+        array.Add(item: null);
         array.Sort();
-        return new StandardValuesCollection(array);
+        return new StandardValuesCollection(values: array);
     }
 
     public override bool CanConvertFrom(
@@ -66,7 +66,7 @@ public class MenuFormReferenceTemplateSetConverter : TypeConverter
             return true;
         }
 
-        return base.CanConvertFrom(context, sourceType);
+        return base.CanConvertFrom(context: context, sourceType: sourceType);
     }
 
     public override object ConvertFrom(
@@ -92,6 +92,6 @@ public class MenuFormReferenceTemplateSetConverter : TypeConverter
             return null;
         }
 
-        return base.ConvertFrom(context, culture, value);
+        return base.ConvertFrom(context: context, culture: culture, value: value);
     }
 }

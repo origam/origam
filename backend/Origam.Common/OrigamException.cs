@@ -36,21 +36,21 @@ public class OrigamException : Exception
         : base() { }
 
     public OrigamException(string message)
-        : base(message) { }
+        : base(message: message) { }
 
     public OrigamException(string message, Exception innerException)
-        : base(message, innerException)
+        : base(message: message, innerException: innerException)
     {
         foreach (DictionaryEntry entry in innerException.Data)
         {
-            Data[entry.Key] = entry.Value;
+            Data[key: entry.Key] = entry.Value;
         }
     }
 
     public OrigamException(string message, string customStackTrace, Exception innerException)
-        : this(message, innerException)
+        : this(message: message, innerException: innerException)
     {
-        this.AppendStackTrace(customStackTrace);
+        this.AppendStackTrace(stacktrace: customStackTrace);
     }
 
     public void AppendStackTrace(string stacktrace)
@@ -60,13 +60,13 @@ public class OrigamException : Exception
             _appendStackTrace = new StringBuilder();
         }
 
-        _appendStackTrace.Append(Environment.NewLine);
-        _appendStackTrace.Append("--------------------------------------------");
-        _appendStackTrace.Append(Environment.NewLine);
-        _appendStackTrace.Append(stacktrace);
-        _appendStackTrace.Append(Environment.NewLine);
-        _appendStackTrace.Append("--------------------------------------------");
-        _appendStackTrace.Append(Environment.NewLine);
+        _appendStackTrace.Append(value: Environment.NewLine);
+        _appendStackTrace.Append(value: "--------------------------------------------");
+        _appendStackTrace.Append(value: Environment.NewLine);
+        _appendStackTrace.Append(value: stacktrace);
+        _appendStackTrace.Append(value: Environment.NewLine);
+        _appendStackTrace.Append(value: "--------------------------------------------");
+        _appendStackTrace.Append(value: Environment.NewLine);
     }
 
     public override string StackTrace
@@ -75,7 +75,7 @@ public class OrigamException : Exception
         {
             if (_appendStackTrace != null)
             {
-                _appendStackTrace.Append(base.StackTrace);
+                _appendStackTrace.Append(value: base.StackTrace);
                 return _appendStackTrace.ToString();
             }
 

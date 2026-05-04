@@ -34,14 +34,17 @@ public abstract class OrigamTransaction
     public virtual void Rollback(string savePointName)
     {
         throw new NotSupportedException(
-            ResourceUtils.GetString("PartialRollbackNotSupported", this.ToString())
+            message: ResourceUtils.GetString(
+                key: "PartialRollbackNotSupported",
+                args: this.ToString()
+            )
         );
     }
 
     public virtual void Save(string savePointName)
     {
         throw new NotSupportedException(
-            ResourceUtils.GetString("SavingNotSupported", this.ToString())
+            message: ResourceUtils.GetString(key: "SavingNotSupported", args: this.ToString())
         );
     }
 }

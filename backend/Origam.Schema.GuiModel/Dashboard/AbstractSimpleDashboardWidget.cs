@@ -33,13 +33,13 @@ public abstract class AbstractSimpleDashboardWidget : AbstractDashboardWidget
     }
 
     public AbstractSimpleDashboardWidget(Guid schemaExtensionId)
-        : base(schemaExtensionId)
+        : base(schemaExtensionId: schemaExtensionId)
     {
         Init();
     }
 
     public AbstractSimpleDashboardWidget(Key primaryKey)
-        : base(primaryKey)
+        : base(primaryKey: primaryKey)
     {
         Init();
     }
@@ -53,10 +53,10 @@ public abstract class AbstractSimpleDashboardWidget : AbstractDashboardWidget
         {
             var result = new ArrayList();
             result.Add(
-                new DashboardWidgetProperty(
-                    "Value",
-                    ResourceUtils.GetString("DashboardWidgetValueProperty"),
-                    this.DataType
+                value: new DashboardWidgetProperty(
+                    name: "Value",
+                    caption: ResourceUtils.GetString(key: "DashboardWidgetValueProperty"),
+                    dataType: this.DataType
                 )
             );
             return result;

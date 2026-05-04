@@ -39,28 +39,28 @@ public class DashboardPanelBuilder
     )
     {
         XmlDocument panelDoc = FormXmlBuilder.GetXmlFromPanel(
-            panelWidget.PanelId,
-            panelWidget.Caption,
-            menuId,
-            dashboardItemId,
-            false
+            panelId: panelWidget.PanelId,
+            name: panelWidget.Caption,
+            menuId: menuId,
+            instanceId: dashboardItemId,
+            forceHideNavigationPanel: false
         );
         // clone panel definition
-        itemChildren.InnerXml = panelDoc["Window"]
-            ["UIRoot"]
-            .OuterXml.Replace("UIRoot", "UIElement");
+        itemChildren.InnerXml = panelDoc[name: "Window"]
+            [name: "UIRoot"]
+            .OuterXml.Replace(oldValue: "UIRoot", newValue: "UIElement");
         XmlElement panelElement = itemChildren.FirstChild as XmlElement;
         // clone data source
         XmlElement originalDataSourceElement =
-            panelDoc["Window"]["DataSources"].FirstChild as XmlElement;
-        string dataSourceName = originalDataSourceElement.GetAttribute("Entity");
-        string dataSourceIdentifier = originalDataSourceElement.GetAttribute("Identifier");
+            panelDoc[name: "Window"][name: "DataSources"].FirstChild as XmlElement;
+        string dataSourceName = originalDataSourceElement.GetAttribute(name: "Entity");
+        string dataSourceIdentifier = originalDataSourceElement.GetAttribute(name: "Identifier");
         XmlElement newDataSourceElement = FormXmlBuilder.AddDataSourceElement(
-            dataSourcesElement,
-            dataSourceName,
-            dataSourceIdentifier,
-            null,
-            null
+            dataSourcesElement: dataSourcesElement,
+            entity: dataSourceName,
+            identifier: dataSourceIdentifier,
+            lookupCacheKey: null,
+            dataStructureEntityId: null
         );
         newDataSourceElement.InnerXml = originalDataSourceElement.InnerXml;
     }

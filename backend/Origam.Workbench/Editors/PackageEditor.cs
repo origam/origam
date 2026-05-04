@@ -37,9 +37,10 @@ public class PackageEditor : AbstractViewContent
 {
     private Package _package;
     private SchemaService _schema =
-        ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
+        ServiceManager.Services.GetService(serviceType: typeof(SchemaService)) as SchemaService;
     private IPersistenceService _persistence =
-        ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+        ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+        as IPersistenceService;
     private System.Windows.Forms.ToolStrip toolBar1;
     private System.Windows.Forms.ImageList imageList1;
     private System.Windows.Forms.TabControl tabControl1;
@@ -75,7 +76,9 @@ public class PackageEditor : AbstractViewContent
         // Required for Windows Form Designer support
         //
         InitializeComponent();
-        this.Icon = Icon.FromHandle(new Bitmap(Images.ExtensionBrowser).GetHicon());
+        this.Icon = Icon.FromHandle(
+            handle: new Bitmap(original: Images.ExtensionBrowser).GetHicon()
+        );
         this.tabInfo.BackColor = OrigamColorScheme.FormBackgroundColor;
         this.BackColor = OrigamColorScheme.FormBackgroundColor;
     }
@@ -94,7 +97,7 @@ public class PackageEditor : AbstractViewContent
             _schema = null;
             _persistence = null;
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
 
     #region Windows Form Designer generated code
@@ -490,9 +493,9 @@ public class PackageEditor : AbstractViewContent
         if (!(objectToLoad is Package))
         {
             throw new ArgumentOutOfRangeException(
-                "objectToLoad",
-                objectToLoad,
-                ResourceUtils.GetString("ErrorEditPackagesOnly")
+                paramName: "objectToLoad",
+                actualValue: objectToLoad,
+                message: ResourceUtils.GetString(key: "ErrorEditPackagesOnly")
             );
         }
 
@@ -501,7 +504,7 @@ public class PackageEditor : AbstractViewContent
         txtVersion.Text = _package.Version;
         txtCopyright.Text = _package.Copyright;
         txtDescription.Text = _package.Description;
-        txtId.Text = _package.PrimaryKey["Id"].ToString();
+        txtId.Text = _package.PrimaryKey[key: "Id"].ToString();
         LoadReferences();
 
         txtName.TextChanged += txtName_TextChanged;
@@ -562,10 +565,10 @@ public class PackageEditor : AbstractViewContent
     private static void RefreshPads()
     {
         SchemaBrowser modelBrowser =
-            WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+            WorkbenchSingleton.Workbench.GetPad(type: typeof(SchemaBrowser)) as SchemaBrowser;
         modelBrowser?.EbrSchemaBrowser.RefreshRootNodeText();
         ExtensionPad packageBrowser =
-            WorkbenchSingleton.Workbench.GetPad(typeof(ExtensionPad)) as ExtensionPad;
+            WorkbenchSingleton.Workbench.GetPad(type: typeof(ExtensionPad)) as ExtensionPad;
         packageBrowser?.LoadPackages();
     }
 
@@ -579,10 +582,12 @@ public class PackageEditor : AbstractViewContent
             {
                 Package referencedPackage =
                     _persistence.SchemaListProvider.RetrieveInstance(
-                        typeof(Package),
-                        new ModelElementKey(reference.ReferencedPackageId)
+                        type: typeof(Package),
+                        primaryKey: new ModelElementKey(id: reference.ReferencedPackageId)
                     ) as Package;
-                lvwReferences.Items.Add(RenderReference(reference, referencedPackage.Name));
+                lvwReferences.Items.Add(
+                    value: RenderReference(reference: reference, name: referencedPackage.Name)
+                );
             }
         }
         finally
@@ -593,7 +598,7 @@ public class PackageEditor : AbstractViewContent
 
     private ListViewItem RenderReference(PackageReference reference, string name)
     {
-        ListViewItem item = new ListViewItem(name, 2);
+        ListViewItem item = new ListViewItem(text: name, imageIndex: 2);
         item.Tag = reference;
         return item;
     }
@@ -604,14 +609,15 @@ public class PackageEditor : AbstractViewContent
         {
             if (lvwReferences.SelectedItems.Count == 1)
             {
-                PackageReference reference = lvwReferences.SelectedItems[0].Tag as PackageReference;
+                PackageReference reference =
+                    lvwReferences.SelectedItems[index: 0].Tag as PackageReference;
 
                 if (reference.IsPersisted)
                 {
                     try
                     {
                         return (
-                            lvwReferences.SelectedItems[0].Tag as PackageReference
+                            lvwReferences.SelectedItems[index: 0].Tag as PackageReference
                         ).ReferencedPackage;
                     }
                     catch
@@ -633,7 +639,7 @@ public class PackageEditor : AbstractViewContent
         Package referencedPackage = this.SelectedReferencedPackage;
         if (referencedPackage != null)
         {
-            ebrElements.AddRootNode(referencedPackage);
+            ebrElements.AddRootNode(node: referencedPackage);
         }
     }
 
@@ -652,7 +658,7 @@ public class PackageEditor : AbstractViewContent
                     if ((e.QueriedObject as ISchemaItem).ParentItem == null)
                     {
                         e.Filter = !(e.QueriedObject as ISchemaItem).Package.PrimaryKey.Equals(
-                            SelectedReferencedPackage.PrimaryKey
+                            obj: SelectedReferencedPackage.PrimaryKey
                         );
                     }
                     else
@@ -663,7 +669,7 @@ public class PackageEditor : AbstractViewContent
             }
             else if (e.QueriedObject is SchemaItemGroup)
             {
-                e.Filter = ShouldFilterGroup(e.QueriedObject as SchemaItemGroup);
+                e.Filter = ShouldFilterGroup(group: e.QueriedObject as SchemaItemGroup);
             }
             else if (e.QueriedObject is NonpersistentSchemaItemNode)
             {
@@ -678,20 +684,20 @@ public class PackageEditor : AbstractViewContent
 
     private bool ShouldFilterGroup(SchemaItemGroup group)
     {
-        if (group.Package.PrimaryKey.Equals(SelectedReferencedPackage.PrimaryKey))
+        if (group.Package.PrimaryKey.Equals(obj: SelectedReferencedPackage.PrimaryKey))
         {
             return false;
         }
 
         foreach (ISchemaItem child in group.ChildItems)
         {
-            if (child.Package.PrimaryKey.Equals(SelectedReferencedPackage.PrimaryKey))
+            if (child.Package.PrimaryKey.Equals(obj: SelectedReferencedPackage.PrimaryKey))
             {
                 return false;
             }
             foreach (SchemaItemGroup childGroup in group.ChildGroups)
             {
-                if (ShouldFilterGroup(childGroup) == false)
+                if (ShouldFilterGroup(group: childGroup) == false)
                 {
                     return false;
                 }
@@ -710,19 +716,19 @@ public class PackageEditor : AbstractViewContent
                 if (lvwReferences.SelectedItems.Count == 1)
                 {
                     PackageReference reference =
-                        lvwReferences.SelectedItems[0].Tag as PackageReference;
+                        lvwReferences.SelectedItems[index: 0].Tag as PackageReference;
                     if (
                         reference.IsPersisted == false
-                        || IsPackageReferenced(SelectedReferencedPackage) == false
+                        || IsPackageReferenced(package: SelectedReferencedPackage) == false
                     )
                     {
-                        lvwReferences.SelectedItems[0].Remove();
+                        lvwReferences.SelectedItems[index: 0].Remove();
                         this.IsDirty = true;
                     }
                     else
                     {
                         throw new InvalidOperationException(
-                            ResourceUtils.GetString("ErrorRemovePackageReference")
+                            message: ResourceUtils.GetString(key: "ErrorRemovePackageReference")
                         );
                     }
                 }
@@ -731,11 +737,11 @@ public class PackageEditor : AbstractViewContent
             {
                 foreach (Package package in _schema.AllPackages)
                 {
-                    bool found = package.PrimaryKey.Equals(_schema.ActiveExtension.PrimaryKey);
+                    bool found = package.PrimaryKey.Equals(obj: _schema.ActiveExtension.PrimaryKey);
                     foreach (ListViewItem li in lvwReferences.Items)
                     {
                         Guid loadedPackageId = (li.Tag as PackageReference).ReferencedPackageId;
-                        if (loadedPackageId.Equals(package.PrimaryKey["Id"]))
+                        if (loadedPackageId.Equals(o: package.PrimaryKey[key: "Id"]))
                         {
                             found = true;
                             break;
@@ -743,23 +749,26 @@ public class PackageEditor : AbstractViewContent
                     }
                     if (!found)
                     {
-                        AsMenuCommand item = new AsMenuCommand(package.Name);
-                        item.Image = imageList1.Images[2];
+                        AsMenuCommand item = new AsMenuCommand(label: package.Name);
+                        item.Image = imageList1.Images[index: 2];
                         item.Tag = package;
                         item.Click += new EventHandler(AddPackage_Click);
-                        mnuAddReference.Items.Add(item);
+                        mnuAddReference.Items.Add(value: item);
                     }
                 }
-                mnuAddReference.Show(toolBar1, new Point(toolBar1.Left, toolBar1.Bottom));
+                mnuAddReference.Show(
+                    control: toolBar1,
+                    position: new Point(x: toolBar1.Left, y: toolBar1.Bottom)
+                );
             }
         }
         catch (Exception ex)
         {
             Origam.UI.AsMessageBox.ShowError(
-                this,
-                ex.Message,
-                ResourceUtils.GetString("ErrorTitle"),
-                ex
+                owner: this,
+                text: ex.Message,
+                caption: ResourceUtils.GetString(key: "ErrorTitle"),
+                exception: ex
             );
         }
     }
@@ -773,20 +782,20 @@ public class PackageEditor : AbstractViewContent
 
         List<ISchemaItem> allCurrent =
             _package.PersistenceProvider.RetrieveListByPackage<ISchemaItem>(
-                _schema.ActiveExtension.Id
+                packageId: _schema.ActiveExtension.Id
             );
         List<ISchemaItem> allReferenced =
-            _package.PersistenceProvider.RetrieveListByPackage<ISchemaItem>(package.Id);
+            _package.PersistenceProvider.RetrieveListByPackage<ISchemaItem>(packageId: package.Id);
         foreach (ISchemaItem item in allCurrent)
         {
-            List<ISchemaItem> dep = item.GetDependencies(false);
+            List<ISchemaItem> dep = item.GetDependencies(ignoreErrors: false);
 
             foreach (ISchemaItem refItem in allReferenced)
             {
                 // check if parent item is not from the referenced package
                 if (
                     item.ParentItem != null
-                    && item.ParentItem.PrimaryKey.Equals(refItem.PrimaryKey)
+                    && item.ParentItem.PrimaryKey.Equals(obj: refItem.PrimaryKey)
                 )
                 {
                     return true;
@@ -794,7 +803,7 @@ public class PackageEditor : AbstractViewContent
                 // check if there is no reference to the referenced package
                 foreach (ISchemaItem depItem in dep)
                 {
-                    if (depItem != null && depItem.PrimaryKey.Equals(refItem.PrimaryKey))
+                    if (depItem != null && depItem.PrimaryKey.Equals(obj: refItem.PrimaryKey))
                     {
                         return true;
                     }
@@ -810,9 +819,9 @@ public class PackageEditor : AbstractViewContent
 
         foreach (PackageReference r in referencedPackage.References)
         {
-            if (r.ReferencedPackage.PrimaryKey.Equals(_package.PrimaryKey))
+            if (r.ReferencedPackage.PrimaryKey.Equals(obj: _package.PrimaryKey))
             {
-                MessageBox.Show(ResourceUtils.GetString("ErrorAddReference"));
+                MessageBox.Show(text: ResourceUtils.GetString(key: "ErrorAddReference"));
                 return;
             }
         }
@@ -821,7 +830,9 @@ public class PackageEditor : AbstractViewContent
         reference.Package = _package;
         reference.ReferencedPackage = referencedPackage;
         reference.PersistenceProvider = _package.PersistenceProvider;
-        lvwReferences.Items.Add(RenderReference(reference, referencedPackage.Name));
+        lvwReferences.Items.Add(
+            value: RenderReference(reference: reference, name: referencedPackage.Name)
+        );
         this.IsDirty = true;
     }
 

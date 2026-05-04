@@ -35,7 +35,7 @@ public class ServiceManager
 
     private static readonly ServiceManager defaultServiceManager = new();
     private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
-        System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
+        type: System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
     );
 
     /// <summary>
@@ -81,7 +81,7 @@ public class ServiceManager
         var copy = serviceList.ToList();
         foreach (IWorkbenchService service in copy)
         {
-            UnloadService(service);
+            UnloadService(service: service);
         }
     }
 
@@ -93,22 +93,22 @@ public class ServiceManager
         }
         if (log.IsInfoEnabled)
         {
-            log.Info("Unloading workbench service: " + service.GetType());
+            log.Info(message: "Unloading workbench service: " + service.GetType());
         }
 
         service.UnloadService();
-        serviceList.Remove(service);
+        serviceList.Remove(item: service);
         var hashTypes = new List<Type>();
         foreach (var entry in services)
         {
-            if (entry.Value.Equals(service))
+            if (entry.Value.Equals(obj: service))
             {
-                hashTypes.Add(entry.Key);
+                hashTypes.Add(item: entry.Key);
             }
         }
         foreach (Type hashType in hashTypes)
         {
-            services.Remove(hashType);
+            services.Remove(key: hashType);
         }
     }
 
@@ -116,18 +116,18 @@ public class ServiceManager
     {
         if (log.IsInfoEnabled)
         {
-            log.Info("Adding workbench service: " + service.GetType());
+            log.Info(message: "Adding workbench service: " + service.GetType());
         }
 
         service.InitializeService();
-        serviceList.Add(service);
+        serviceList.Add(item: service);
     }
 
     public void AddServices(IWorkbenchService[] services)
     {
         foreach (IWorkbenchService service in services)
         {
-            AddService(service);
+            AddService(service: service);
         }
     }
 
@@ -160,16 +160,16 @@ public class ServiceManager
     /// </remarks>
     public IWorkbenchService GetService(Type serviceType)
     {
-        if (services.TryGetValue(serviceType, out var s))
+        if (services.TryGetValue(key: serviceType, value: out var s))
         {
             return s;
         }
 
         foreach (IWorkbenchService service in serviceList)
         {
-            if (IsInstanceOfType(serviceType, service))
+            if (IsInstanceOfType(type: serviceType, service: service))
             {
-                services[serviceType] = service;
+                services[key: serviceType] = service;
                 return service;
             }
         }
@@ -177,5 +177,5 @@ public class ServiceManager
         return null;
     }
 
-    public T GetService<T>() => (T)GetService((typeof(T)));
+    public T GetService<T>() => (T)GetService(serviceType: (typeof(T)));
 }

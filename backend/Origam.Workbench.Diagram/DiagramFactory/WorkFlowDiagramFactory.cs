@@ -62,23 +62,28 @@ public class WorkFlowDiagramFactory : IDiagramFactory<IWorkflowBlock, WorkFlowGr
 
     public WorkFlowGraph Draw(IWorkflowBlock graphParent)
     {
-        return Draw(graphParent, new List<string>());
+        return Draw(graphParent: graphParent, expandedSubgraphNodeIds: new List<string>());
     }
 
     public WorkFlowGraph Draw(IWorkflowBlock graphParent, List<string> expandedSubgraphNodeIds)
     {
         this.expandedSubgraphNodeIds = expandedSubgraphNodeIds;
         graph = new WorkFlowGraph();
-        nodeFactory = new NodeFactory(nodeSelector, gViewer, schemaService, graph);
-        nodeFactory.AddSubgraph(graph.RootSubgraph, graphParent);
+        nodeFactory = new NodeFactory(
+            nodeSelector: nodeSelector,
+            gViewer: gViewer,
+            schemaService: schemaService,
+            graph: graph
+        );
+        nodeFactory.AddSubgraph(parentSbubgraph: graph.RootSubgraph, schemaItem: graphParent);
         graph.MainDrawingSubgraf.LayoutSettings = new SugiyamaLayoutSettings
         {
             PackingMethod = PackingMethod.Columns,
             PackingAspectRatio = 1000,
             SelfMarginsOverride = new Margins { Right = 0.1 },
         };
-        AddToSubgraph(graphParent, graph.MainDrawingSubgraf);
-        AddContextStores(graphParent, graph.TopSubgraph);
+        AddToSubgraph(workFlowBlock: graphParent, subgraph: graph.MainDrawingSubgraf);
+        AddContextStores(block: graphParent, blockSubGraph: graph.TopSubgraph);
         AddBalloons();
         return graph;
     }
@@ -89,20 +94,23 @@ public class WorkFlowDiagramFactory : IDiagramFactory<IWorkflowBlock, WorkFlowGr
         {
             if (childItem is ContextStore contextStore)
             {
-                Node node = nodeFactory.AddNode(contextStore);
-                blockSubGraph.AddContextStore(node);
+                Node node = nodeFactory.AddNode(schemaItem: contextStore);
+                blockSubGraph.AddContextStore(node: node);
             }
         }
     }
 
     private Subgraph AddSubgraphNode(IWorkflowStep step, Subgraph subGraph)
     {
-        Subgraph subgraphNode = nodeFactory.AddSubgraphNode(subGraph, step);
-        if (expandedSubgraphNodeIds.Contains(subgraphNode.Id))
+        Subgraph subgraphNode = nodeFactory.AddSubgraphNode(
+            parentSbubgraph: subGraph,
+            schemaItem: step
+        );
+        if (expandedSubgraphNodeIds.Contains(item: subgraphNode.Id))
         {
-            AddNodeItems(step, subgraphNode);
+            AddNodeItems(step: step, subgraphNode: subgraphNode);
         }
-        AddActionNodes(step, subgraphNode);
+        AddActionNodes(step: step, subgraphNode: subgraphNode);
         subgraphNode.LayoutSettings = new SugiyamaLayoutSettings
         {
             PackingMethod = PackingMethod.Columns,
@@ -122,38 +130,43 @@ public class WorkFlowDiagramFactory : IDiagramFactory<IWorkflowBlock, WorkFlowGr
 
         foreach (DataStructureEntity entity in formTask.Screen.DataStructure.Entities)
         {
-            var actions = GetActions(entity, formTask.ScreenId);
+            var actions = GetActions(entity: entity, screenId: formTask.ScreenId);
             if (actions.Length == 0)
             {
                 continue;
             }
 
-            var actionSubgraph = nodeFactory.AddActionSubgraph(subgraphNode, entity);
+            var actionSubgraph = nodeFactory.AddActionSubgraph(
+                parentSbubgraph: subgraphNode,
+                schemaItem: entity
+            );
             foreach (var action in actions)
             {
-                nodeFactory.AddActionNode(actionSubgraph, action);
+                nodeFactory.AddActionNode(actionSubgraph: actionSubgraph, action: action);
             }
         }
 
-        AddNodeItem(subgraphNode, new NodeItemLabel("", 5));
+        AddNodeItem(subGraph: subgraphNode, nodeData: new NodeItemLabel(text: "", leftMargin: 5));
     }
 
     private EntityUIAction[] GetActions(DataStructureEntity entity, Guid screenId)
     {
         var actions = entity
             .Entity.ChildItems.OfType<EntityUIAction>()
-            .Where(action => ShouldBeShownOnScreen(action, screenId))
+            .Where(predicate: action => ShouldBeShownOnScreen(action: action, screenId: screenId))
             .ToArray();
         var entityDropdownActions = actions.OfType<EntityDropdownAction>().ToArray();
         if (entityDropdownActions.Length > 0)
         {
             var actionsFromDropDowns = entityDropdownActions
-                .SelectMany(dropDown => dropDown.ChildItems)
+                .SelectMany(selector: dropDown => dropDown.ChildItems)
                 .Cast<EntityUIAction>();
             actions = actions
-                .Except(entityDropdownActions)
-                .Concat(actionsFromDropDowns)
-                .Where(action => ShouldBeShownOnScreen(action, screenId))
+                .Except(second: entityDropdownActions)
+                .Concat(second: actionsFromDropDowns)
+                .Where(predicate: action =>
+                    ShouldBeShownOnScreen(action: action, screenId: screenId)
+                )
                 .ToArray();
         }
         return actions;
@@ -161,43 +174,50 @@ public class WorkFlowDiagramFactory : IDiagramFactory<IWorkflowBlock, WorkFlowGr
 
     private bool ShouldBeShownOnScreen(EntityUIAction action, Guid screenId)
     {
-        return !action.ScreenIds.Any() || action.ScreenIds.Contains(screenId);
+        return !action.ScreenIds.Any() || action.ScreenIds.Contains(value: screenId);
     }
 
     private void AddNodeItems(IWorkflowStep step, Subgraph subgraphNode)
     {
-        step.ChildItems.Where(x => !(x is WorkflowTaskDependency))
-            .OrderByDescending(x => x.Name)
-            .ForEach(stepChild =>
+        step.ChildItems.Where(predicate: x => !(x is WorkflowTaskDependency))
+            .OrderByDescending(keySelector: x => x.Name)
+            .ForEach(action: stepChild =>
             {
                 stepChild
-                    .ChildItems.OrderByDescending(x => x.Name)
-                    .ForEach(innerChild =>
+                    .ChildItems.OrderByDescending(keySelector: x => x.Name)
+                    .ForEach(action: innerChild =>
                     {
-                        AddNodeItem(innerChild, subgraphNode, 30);
+                        AddNodeItem(item: innerChild, subGraph: subgraphNode, leftMargin: 30);
                     });
-                AddNodeItem(stepChild, subgraphNode, 15);
+                AddNodeItem(item: stepChild, subGraph: subgraphNode, leftMargin: 15);
             });
     }
 
     private void AddNodeItem(ISchemaItem item, Subgraph subGraph, int leftMargin)
     {
-        var nodeData = new NodeItemData(item, leftMargin, schemaService);
-        Node node = nodeFactory.AddNodeItem(nodeData);
-        subGraph.AddNode(node);
+        var nodeData = new NodeItemData(
+            schemaItem: item,
+            leftMargin: leftMargin,
+            schemaService: schemaService
+        );
+        Node node = nodeFactory.AddNodeItem(nodeData: nodeData);
+        subGraph.AddNode(node: node);
     }
 
     private void AddNodeItem(Subgraph subGraph, INodeData nodeData)
     {
-        Node node = nodeFactory.AddNodeItem(nodeData);
-        subGraph.AddNode(node);
+        Node node = nodeFactory.AddNodeItem(nodeData: nodeData);
+        subGraph.AddNode(node: node);
     }
 
     private Subgraph AddWorkflowDiagram(IWorkflowBlock workFlowBlock, Subgraph parentSubgraph)
     {
-        BlockSubGraph subgraph = nodeFactory.AddSubgraph(parentSubgraph, workFlowBlock);
-        AddContextStores(workFlowBlock, subgraph);
-        return AddToSubgraph(workFlowBlock, subgraph);
+        BlockSubGraph subgraph = nodeFactory.AddSubgraph(
+            parentSbubgraph: parentSubgraph,
+            schemaItem: workFlowBlock
+        );
+        AddContextStores(block: workFlowBlock, blockSubGraph: subgraph);
+        return AddToSubgraph(workFlowBlock: workFlowBlock, subgraph: subgraph);
     }
 
     private Subgraph AddToSubgraph(IWorkflowBlock workFlowBlock, Subgraph subgraph)
@@ -205,46 +225,46 @@ public class WorkFlowDiagramFactory : IDiagramFactory<IWorkflowBlock, WorkFlowGr
         IDictionary<Key, Node> nodes = new Dictionary<Key, Node>();
         foreach (
             IWorkflowStep step in workFlowBlock.ChildItemsByType<AbstractWorkflowStep>(
-                AbstractWorkflowStep.CategoryConst
+                itemType: AbstractWorkflowStep.CategoryConst
             )
         )
         {
             Node shape = step is IWorkflowBlock subBlock
-                ? AddWorkflowDiagram(subBlock, subgraph)
-                : AddSubgraphNode(step, subgraph);
-            nodes.Add(step.PrimaryKey, shape);
+                ? AddWorkflowDiagram(workFlowBlock: subBlock, parentSubgraph: subgraph)
+                : AddSubgraphNode(step: step, subGraph: subgraph);
+            nodes.Add(key: step.PrimaryKey, value: shape);
         }
         // add connections
         foreach (
             IWorkflowStep step in workFlowBlock.ChildItemsByType<AbstractWorkflowStep>(
-                AbstractWorkflowStep.CategoryConst
+                itemType: AbstractWorkflowStep.CategoryConst
             )
         )
         {
-            Node destinationShape = nodes[step.PrimaryKey];
+            Node destinationShape = nodes[key: step.PrimaryKey];
             if (destinationShape == null)
             {
                 throw new NullReferenceException(
-                    Strings.WorkFlowDiagramFactory_DestinationShape_not_found
+                    message: Strings.WorkFlowDiagramFactory_DestinationShape_not_found
                 );
             }
 
             int i = 0;
             foreach (
                 WorkflowTaskDependency dependency in step.ChildItemsByType<WorkflowTaskDependency>(
-                    WorkflowTaskDependency.CategoryConst
+                    itemType: WorkflowTaskDependency.CategoryConst
                 )
             )
             {
-                Node sourceShape = nodes[dependency.Task.PrimaryKey];
+                Node sourceShape = nodes[key: dependency.Task.PrimaryKey];
                 if (sourceShape == null)
                 {
                     throw new NullReferenceException(
-                        Strings.WorkFlowDiagramFactory_SourceShape_not_found
+                        message: Strings.WorkFlowDiagramFactory_SourceShape_not_found
                     );
                 }
 
-                Edge edge = graph.AddEdge(sourceShape.Id, destinationShape.Id);
+                Edge edge = graph.AddEdge(source: sourceShape.Id, target: destinationShape.Id);
                 edge.UserData = dependency;
                 i++;
             }
@@ -259,14 +279,14 @@ public class WorkFlowDiagramFactory : IDiagramFactory<IWorkflowBlock, WorkFlowGr
             if (!subgraph.InEdges.Any())
             {
                 Node startBalloon = nodeFactory.AddStarBalloon();
-                graph.MainDrawingSubgraf.AddNode(startBalloon);
-                graph.AddEdge(startBalloon.Id, subgraph.Id);
+                graph.MainDrawingSubgraf.AddNode(node: startBalloon);
+                graph.AddEdge(source: startBalloon.Id, target: subgraph.Id);
             }
             if (!subgraph.OutEdges.Any())
             {
                 Node endBalloon = nodeFactory.AddEndBalloon();
-                graph.MainDrawingSubgraf.AddNode(endBalloon);
-                graph.AddEdge(subgraph.Id, endBalloon.Id);
+                graph.MainDrawingSubgraf.AddNode(node: endBalloon);
+                graph.AddEdge(source: subgraph.Id, target: endBalloon.Id);
             }
         }
     }

@@ -40,7 +40,10 @@ public class RuleEngineService : IWorkbenchService, IRuleEngineService
     #region IRuleEngineService Members
     public string EvaluateExpression(string expression)
     {
-        return XpathEvaluator.Instance.Evaluate(new XmlDocument().CreateNavigator(), expression);
+        return XpathEvaluator.Instance.Evaluate(
+            nodeset: new XmlDocument().CreateNavigator(),
+            xpath: expression
+        );
     }
     #endregion
 }

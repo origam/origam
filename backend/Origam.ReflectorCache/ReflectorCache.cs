@@ -78,263 +78,265 @@ public class ReflectorCache : IReflectorCache
         {
             case "Origam.Schema.EntityModel.DataConstantReference":
             {
-                return new Origam.Schema.EntityModel.DataConstantReference(key);
+                return new Origam.Schema.EntityModel.DataConstantReference(primaryKey: key);
             }
             case "Origam.Schema.GuiModel.ControlItem":
             {
-                return new Origam.Schema.GuiModel.ControlItem(key);
+                return new Origam.Schema.GuiModel.ControlItem(primaryKey: key);
             }
             case "Origam.Schema.RuleModel.ComplexDataRule":
             {
-                return new Origam.Schema.RuleModel.ComplexDataRule(key);
+                return new Origam.Schema.RuleModel.ComplexDataRule(primaryKey: key);
             }
             case "Origam.Schema.RuleModel.EndRule":
             {
-                return new Origam.Schema.RuleModel.EndRule(key);
+                return new Origam.Schema.RuleModel.EndRule(primaryKey: key);
             }
             case "Origam.Schema.RuleModel.EntityRule":
             {
-                return new Origam.Schema.RuleModel.EntityRule(key);
+                return new Origam.Schema.RuleModel.EntityRule(primaryKey: key);
             }
             case "Origam.Schema.RuleModel.SimpleDataRule":
             {
-                return new Origam.Schema.RuleModel.SimpleDataRule(key);
+                return new Origam.Schema.RuleModel.SimpleDataRule(primaryKey: key);
             }
             case "Origam.Schema.RuleModel.StartRule":
             {
-                return new Origam.Schema.RuleModel.StartRule(key);
+                return new Origam.Schema.RuleModel.StartRule(primaryKey: key);
             }
             case "Origam.Schema.EntityModel.DataStructureFilterSetFilter":
             {
-                return new Origam.Schema.EntityModel.DataStructureFilterSetFilter(key);
+                return new Origam.Schema.EntityModel.DataStructureFilterSetFilter(primaryKey: key);
             }
             case "Origam.Schema.TestModel.TestCaseStep":
             {
-                return new Origam.Schema.TestModel.TestCaseStep(key);
+                return new Origam.Schema.TestModel.TestCaseStep(primaryKey: key);
             }
             case "Origam.Schema.WorkflowModel.SetWorkflowPropertyTask":
             {
-                return new Origam.Schema.WorkflowModel.SetWorkflowPropertyTask(key);
+                return new Origam.Schema.WorkflowModel.SetWorkflowPropertyTask(primaryKey: key);
             }
             case "Origam.Schema.WorkflowModel.UpdateContextTask":
             {
-                return new Origam.Schema.WorkflowModel.UpdateContextTask(key);
+                return new Origam.Schema.WorkflowModel.UpdateContextTask(primaryKey: key);
             }
             case "Origam.Schema.WorkflowModel.AcceptContextStoreChanges":
             {
-                return new Origam.Schema.WorkflowModel.AcceptContextStoreChangesTask(key);
+                return new Origam.Schema.WorkflowModel.AcceptContextStoreChangesTask(
+                    primaryKey: key
+                );
             }
             case "Origam.Schema.EntityModel.DataStructureReference":
             {
-                return new Origam.Schema.EntityModel.DataStructureReference(key);
+                return new Origam.Schema.EntityModel.DataStructureReference(primaryKey: key);
             }
             case "Origam.Schema.GuiModel.PropertyValueItem":
             {
-                return new Origam.Schema.GuiModel.PropertyValueItem(key);
+                return new Origam.Schema.GuiModel.PropertyValueItem(primaryKey: key);
             }
             case "Origam.Schema.EntityModel.TransformationReference":
             {
-                return new Origam.Schema.EntityModel.TransformationReference(key);
+                return new Origam.Schema.EntityModel.TransformationReference(primaryKey: key);
             }
             case "Origam.Schema.EntityModel.AggregatedColumn":
             {
-                return new Origam.Schema.EntityModel.AggregatedColumn(key);
+                return new Origam.Schema.EntityModel.AggregatedColumn(primaryKey: key);
             }
             case "Origam.Schema.WorkflowModel.ContextStoreLink":
             {
-                return new Origam.Schema.WorkflowModel.ContextStoreLink(key);
+                return new Origam.Schema.WorkflowModel.ContextStoreLink(primaryKey: key);
             }
             case "Origam.Schema.GuiModel.CrystalReport":
             {
-                return new Origam.Schema.GuiModel.CrystalReport(key);
+                return new Origam.Schema.GuiModel.CrystalReport(primaryKey: key);
             }
             case "Origam.Schema.WorkflowModel.WorkflowTaskDependency":
             {
-                return new Origam.Schema.WorkflowModel.WorkflowTaskDependency(key);
+                return new Origam.Schema.WorkflowModel.WorkflowTaskDependency(primaryKey: key);
             }
             case "Origam.Schema.WorkflowModel.UIFormTask":
             {
-                return new Origam.Schema.WorkflowModel.UIFormTask(key);
+                return new Origam.Schema.WorkflowModel.UIFormTask(primaryKey: key);
             }
             case "Origam.Schema.EntityModel.FunctionCall":
             {
-                return new Origam.Schema.EntityModel.FunctionCall(key);
+                return new Origam.Schema.EntityModel.FunctionCall(primaryKey: key);
             }
             case "Origam.Schema.GuiModel.ReportReference":
             {
-                return new Origam.Schema.GuiModel.ReportReference(key);
+                return new Origam.Schema.GuiModel.ReportReference(primaryKey: key);
             }
             case "Origam.Schema.EntityModel.EntityRelationFilter":
             {
-                return new Origam.Schema.EntityModel.EntityRelationFilter(key);
+                return new Origam.Schema.EntityModel.EntityRelationFilter(primaryKey: key);
             }
             case "Origam.Schema.WorkflowModel.TransactionWorkflowBlock":
             {
-                return new Origam.Schema.WorkflowModel.TransactionWorkflowBlock(key);
+                return new Origam.Schema.WorkflowModel.TransactionWorkflowBlock(primaryKey: key);
             }
             case "Origam.Schema.GuiModel.FormControlSet":
             {
-                return new Origam.Schema.GuiModel.FormControlSet(key);
+                return new Origam.Schema.GuiModel.FormControlSet(primaryKey: key);
             }
             case "Origam.Schema.WorkflowModel.ContextReference":
             {
-                return new Origam.Schema.WorkflowModel.ContextReference(key);
+                return new Origam.Schema.WorkflowModel.ContextReference(primaryKey: key);
             }
             case "Origam.Schema.SchemaItemAncestor":
             {
-                return new Origam.Schema.SchemaItemAncestor(key);
+                return new Origam.Schema.SchemaItemAncestor(primaryKey: key);
             }
             case "Origam.Schema.WorkflowModel.SystemFunctionCall":
             {
-                return new Origam.Schema.WorkflowModel.SystemFunctionCall(key);
+                return new Origam.Schema.WorkflowModel.SystemFunctionCall(primaryKey: key);
             }
             case "Origam.Schema.ParameterReference":
             {
-                return new Origam.Schema.ParameterReference(key);
+                return new Origam.Schema.ParameterReference(primaryKey: key);
             }
             case "Origam.Schema.EntityModel.EntityColumnReference":
             {
-                return new Origam.Schema.EntityModel.EntityColumnReference(key);
+                return new Origam.Schema.EntityModel.EntityColumnReference(primaryKey: key);
             }
             case "Origam.Schema.WorkflowModel.WorkflowCallTask":
             {
-                return new Origam.Schema.WorkflowModel.WorkflowCallTask(key);
+                return new Origam.Schema.WorkflowModel.WorkflowCallTask(primaryKey: key);
             }
             case "Origam.Schema.DeploymentModel.DeploymentVersion":
             {
-                return new Origam.Schema.DeploymentModel.DeploymentVersion(key);
+                return new Origam.Schema.DeploymentModel.DeploymentVersion(primaryKey: key);
             }
             case "Origam.Schema.EntityModel.TableMappingItem":
             {
-                return new Origam.Schema.EntityModel.TableMappingItem(key);
+                return new Origam.Schema.EntityModel.TableMappingItem(primaryKey: key);
             }
             case "Origam.Schema.MenuModel.FormReferenceMenuItem":
             {
-                return new Origam.Schema.MenuModel.FormReferenceMenuItem(key);
+                return new Origam.Schema.MenuModel.FormReferenceMenuItem(primaryKey: key);
             }
             case "Origam.Schema.EntityModel.DataStructureEntity":
             {
-                return new Origam.Schema.EntityModel.DataStructureEntity(key);
+                return new Origam.Schema.EntityModel.DataStructureEntity(primaryKey: key);
             }
             case "Origam.Schema.SchemaItemParameter":
             {
-                return new Origam.Schema.SchemaItemParameter(key);
+                return new Origam.Schema.SchemaItemParameter(primaryKey: key);
             }
             case "Origam.Schema.EntityModel.DataConstant":
             {
-                return new Origam.Schema.EntityModel.DataConstant(key);
+                return new Origam.Schema.EntityModel.DataConstant(primaryKey: key);
             }
             case "Origam.Schema.WorkflowModel.Workflow":
             {
-                return new Origam.Schema.WorkflowModel.Workflow(key);
+                return new Origam.Schema.WorkflowModel.Workflow(primaryKey: key);
             }
             case "Origam.Schema.TestModel.TestCase":
             {
-                return new Origam.Schema.TestModel.TestCase(key);
+                return new Origam.Schema.TestModel.TestCase(primaryKey: key);
             }
             case "Origam.Schema.WorkflowModel.ServiceMethodCallTask":
             {
-                return new Origam.Schema.WorkflowModel.ServiceMethodCallTask(key);
+                return new Origam.Schema.WorkflowModel.ServiceMethodCallTask(primaryKey: key);
             }
             case "Origam.Schema.EntityModel.DataEntityIndexField":
             {
-                return new Origam.Schema.EntityModel.DataEntityIndexField(key);
+                return new Origam.Schema.EntityModel.DataEntityIndexField(primaryKey: key);
             }
             case "Origam.Schema.GuiModel.PropertyBindingInfo":
             {
-                return new Origam.Schema.GuiModel.PropertyBindingInfo(key);
+                return new Origam.Schema.GuiModel.PropertyBindingInfo(primaryKey: key);
             }
             case "Origam.Schema.GuiModel.ControlPropertyItem":
             {
-                return new Origam.Schema.GuiModel.ControlPropertyItem(key);
+                return new Origam.Schema.GuiModel.ControlPropertyItem(primaryKey: key);
             }
             case "Origam.Schema.LookupModel.DataServiceDataLookup":
             {
-                return new Origam.Schema.LookupModel.DataServiceDataLookup(key);
+                return new Origam.Schema.LookupModel.DataServiceDataLookup(primaryKey: key);
             }
             case "Origam.Schema.WorkflowModel.ServiceMethodCallParameter":
             {
-                return new Origam.Schema.WorkflowModel.ServiceMethodCallParameter(key);
+                return new Origam.Schema.WorkflowModel.ServiceMethodCallParameter(primaryKey: key);
             }
             case "Origam.Schema.EntityModel.EntityFilterReference":
             {
-                return new Origam.Schema.EntityModel.EntityFilterReference(key);
+                return new Origam.Schema.EntityModel.EntityFilterReference(primaryKey: key);
             }
             case "Origam.Schema.Package":
             {
-                return new Origam.Schema.Package(key);
+                return new Origam.Schema.Package(primaryKey: key);
             }
             case "Origam.Schema.WorkflowModel.ForeachWorkflowBlock":
             {
-                return new Origam.Schema.WorkflowModel.ForeachWorkflowBlock(key);
+                return new Origam.Schema.WorkflowModel.ForeachWorkflowBlock(primaryKey: key);
             }
             case "Origam.Schema.WorkflowModel.ContextStore":
             {
-                return new Origam.Schema.WorkflowModel.ContextStore(key);
+                return new Origam.Schema.WorkflowModel.ContextStore(primaryKey: key);
             }
             case "Origam.Schema.EntityModel.FieldMappingItem":
             {
-                return new Origam.Schema.EntityModel.FieldMappingItem(key);
+                return new Origam.Schema.EntityModel.FieldMappingItem(primaryKey: key);
             }
             case "Origam.Schema.EntityModel.FunctionParameter":
             {
-                return new Origam.Schema.EntityModel.FunctionParameter(key);
+                return new Origam.Schema.EntityModel.FunctionParameter(primaryKey: key);
             }
             case "Origam.Schema.EntityModel.Function":
             {
-                return new Origam.Schema.EntityModel.Function(key);
+                return new Origam.Schema.EntityModel.Function(primaryKey: key);
             }
             case "Origam.Schema.SchemaItemGroup":
             {
-                return new Origam.Schema.SchemaItemGroup(key);
+                return new Origam.Schema.SchemaItemGroup(primaryKey: key);
             }
             case "Origam.Schema.GuiModel.PanelControlSet":
             {
-                return new Origam.Schema.GuiModel.PanelControlSet(key);
+                return new Origam.Schema.GuiModel.PanelControlSet(primaryKey: key);
             }
             case "Origam.Schema.EntityModel.XsdDataStructure":
             {
-                return new Origam.Schema.EntityModel.XsdDataStructure(key);
+                return new Origam.Schema.EntityModel.XsdDataStructure(primaryKey: key);
             }
             case "Origam.Schema.EntityModel.FunctionCallParameter":
             {
-                return new Origam.Schema.EntityModel.FunctionCallParameter(key);
+                return new Origam.Schema.EntityModel.FunctionCallParameter(primaryKey: key);
             }
             case "Origam.Schema.EntityModel.XslTransformation":
             {
-                return new Origam.Schema.EntityModel.XslTransformation(key);
+                return new Origam.Schema.EntityModel.XslTransformation(primaryKey: key);
             }
             case "Origam.Schema.MenuModel.WorkflowReferenceMenuItem":
             {
-                return new Origam.Schema.MenuModel.WorkflowReferenceMenuItem(key);
+                return new Origam.Schema.MenuModel.WorkflowReferenceMenuItem(primaryKey: key);
             }
             case "Origam.Schema.EntityModel.DataStructureColumn":
             {
-                return new Origam.Schema.EntityModel.DataStructureColumn(key);
+                return new Origam.Schema.EntityModel.DataStructureColumn(primaryKey: key);
             }
             case "Origam.Schema.EntityModel.EntityRelationItem":
             {
-                return new Origam.Schema.EntityModel.EntityRelationItem(key);
+                return new Origam.Schema.EntityModel.EntityRelationItem(primaryKey: key);
             }
             case "Origam.Schema.GuiModel.ControlSetItem":
             {
-                return new Origam.Schema.GuiModel.ControlSetItem(key);
+                return new Origam.Schema.GuiModel.ControlSetItem(primaryKey: key);
             }
             case "Origam.Schema.GuiModel.ColumnParameterMapping":
             {
-                return new Origam.Schema.GuiModel.ColumnParameterMapping(key);
+                return new Origam.Schema.GuiModel.ColumnParameterMapping(primaryKey: key);
             }
             case "Origam.Schema.WorkflowModel.ServiceMethod":
             {
-                return new Origam.Schema.WorkflowModel.ServiceMethod(key);
+                return new Origam.Schema.WorkflowModel.ServiceMethod(primaryKey: key);
             }
             case "Origam.Schema.EntityModel.EntityRelationColumnPairItem":
             {
-                return new Origam.Schema.EntityModel.EntityRelationColumnPairItem(key);
+                return new Origam.Schema.EntityModel.EntityRelationColumnPairItem(primaryKey: key);
             }
             case "Origam.Schema.MenuModel.Menu":
             {
-                return new Origam.Schema.MenuModel.Menu(key);
+                return new Origam.Schema.MenuModel.Menu(primaryKey: key);
             }
         }
         return null;
@@ -410,7 +412,7 @@ public class ReflectorCache : IReflectorCache
                 {
                     if (value is string)
                     {
-                        value = new Guid((string)value);
+                        value = new Guid(g: (string)value);
                     }
                     (
                         instance as Origam.Schema.GuiModel.AbstractPropertyValueItem
@@ -475,7 +477,7 @@ public class ReflectorCache : IReflectorCache
                 {
                     if (value is string)
                     {
-                        value = new Guid((string)value);
+                        value = new Guid(g: (string)value);
                     }
                     (instance as Origam.Schema.GuiModel.PropertyValueItem).GuidValue =
                         value == null ? Guid.Empty : (Guid)value;

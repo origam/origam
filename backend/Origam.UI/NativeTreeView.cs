@@ -33,7 +33,7 @@ namespace Origam.UI;
 /// </summary>
 public class NativeTreeView : System.Windows.Forms.TreeView
 {
-    [DllImport("uxtheme.dll", CharSet = CharSet.Unicode)]
+    [DllImport(dllName: "uxtheme.dll", CharSet = CharSet.Unicode)]
     private static extern int SetWindowTheme(
         IntPtr hWnd,
         string pszSubAppName,
@@ -64,7 +64,7 @@ public class NativeTreeView : System.Windows.Forms.TreeView
         if (!this.IsDisposed)
         {
             base.CreateHandle();
-            SetWindowTheme(this.Handle, "explorer", null);
+            SetWindowTheme(hWnd: this.Handle, pszSubAppName: "explorer", pszSubIdList: null);
         }
     }
 
@@ -80,22 +80,22 @@ public class NativeTreeView : System.Windows.Forms.TreeView
         RootNode?.Collapse();
     }
 
-    private IEnumerable<TreeNode> GetAllNodes() => GetAllNodes(Nodes);
+    private IEnumerable<TreeNode> GetAllNodes() => GetAllNodes(nodes: Nodes);
 
     public void RestoreExpansionState()
     {
         GetAllNodes()
-            .Where(node => expandedPaths.Contains(node.FullPath))
-            .ForEach(node => node.Expand());
+            .Where(predicate: node => expandedPaths.Contains(item: node.FullPath))
+            .ForEach(action: node => node.Expand());
     }
 
     public void StoreExpansionState()
     {
         expandedPaths.Clear();
         GetAllNodes()
-            .Where(node => node.IsExpanded)
-            .Select(node => node.FullPath)
-            .ForEach(treePath => expandedPaths.Add(treePath));
+            .Where(predicate: node => node.IsExpanded)
+            .Select(selector: node => node.FullPath)
+            .ForEach(action: treePath => expandedPaths.Add(item: treePath));
     }
 
     private IEnumerable<TreeNode> GetAllNodes(TreeNodeCollection nodes)
@@ -104,7 +104,7 @@ public class NativeTreeView : System.Windows.Forms.TreeView
         {
             TreeNode node = (TreeNode)nodeObj;
             yield return node;
-            foreach (TreeNode childNode in GetAllNodes(node.Nodes))
+            foreach (TreeNode childNode in GetAllNodes(nodes: node.Nodes))
             {
                 yield return childNode;
             }

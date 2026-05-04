@@ -30,7 +30,7 @@ public class DebugTimer : IDisposable
     private readonly Stopwatch watch;
     private readonly string message;
     private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
-        System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
+        type: System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
     );
 
     public DebugTimer(LogType logType = LogType.CONSOLE, string message = "Elapsed time:")
@@ -48,31 +48,31 @@ public class DebugTimer : IDisposable
         {
             case LogType.CONSOLE:
             {
-                Console.WriteLine($"{message} {watch.Elapsed} s");
+                Console.WriteLine(value: $"{message} {watch.Elapsed} s");
                 break;
             }
 
             case LogType.DEBUG:
             {
-                log.Debug($"{message} {watch.Elapsed} s");
+                log.Debug(message: $"{message} {watch.Elapsed} s");
                 break;
             }
 
             case LogType.ERROR:
             {
-                log.Error($"{message} {watch.Elapsed} s");
+                log.Error(message: $"{message} {watch.Elapsed} s");
                 break;
             }
 
             case LogType.INFO:
             {
-                log.Info($"{message} {watch.Elapsed} s");
+                log.Info(message: $"{message} {watch.Elapsed} s");
                 break;
             }
 
             case LogType.WARNING:
             {
-                log.Warn($"{message} {watch.Elapsed} s");
+                log.Warn(message: $"{message} {watch.Elapsed} s");
                 break;
             }
 

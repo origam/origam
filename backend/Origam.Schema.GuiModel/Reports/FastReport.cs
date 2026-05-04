@@ -28,17 +28,17 @@ namespace Origam.Schema.GuiModel;
 /// <summary>
 /// Summary description for CrystalReport.
 /// </summary>
-[SchemaItemDescription("Fast Report", 29)]
-[HelpTopic("Fast+Report")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Fast Report", icon: 29)]
+[HelpTopic(topic: "Fast+Report")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class FastReport : AbstractDataReport, IDataStructureReference
 {
     public FastReport()
         : base() { }
 
     public FastReport(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(schemaExtensionId: schemaExtensionId) { }
 
     public FastReport(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 }

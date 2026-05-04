@@ -49,7 +49,7 @@ public class ToolboxServiceImpl : System.Drawing.Design.IToolboxService
     {
         this.host = host;
         // Our MainForm adds our ToolboxPane to the host's services.
-        toolbox = host.GetService(typeof(ToolboxPane)) as ToolboxPane;
+        toolbox = host.GetService(serviceType: typeof(ToolboxPane)) as ToolboxPane;
     }
 
     #region Implementation of IToolboxService
@@ -83,7 +83,7 @@ public class ToolboxServiceImpl : System.Drawing.Design.IToolboxService
     )
     {
         ModelToolboxItem result = (ModelToolboxItem)
-            ((DataObject)serializedObject).GetData(typeof(ModelToolboxItem));
+            ((DataObject)serializedObject).GetData(format: typeof(ModelToolboxItem));
         return result;
     }
 
@@ -93,13 +93,13 @@ public class ToolboxServiceImpl : System.Drawing.Design.IToolboxService
         object serializedObject
     )
     {
-        return this.DeserializeToolboxItem(serializedObject, this.host);
+        return this.DeserializeToolboxItem(serializedObject: serializedObject, host: this.host);
     }
 
     /// We serialize a toolbox by packaging it in a DataObject. Simple!
     public object SerializeToolboxItem(ToolboxItem toolboxItem)
     {
-        return new DataObject(toolboxItem);
+        return new DataObject(data: toolboxItem);
     }
 
     /// Remove a ToolboxItem from the specified category in our toolbox.
@@ -185,13 +185,13 @@ public class ToolboxServiceImpl : System.Drawing.Design.IToolboxService
         System.ComponentModel.Design.IDesignerHost host
     )
     {
-        return toolbox.GetToolsFromCategory(category);
+        return toolbox.GetToolsFromCategory(category: category);
     }
 
     /// Get all of the tools.
     ToolboxItemCollection System.Drawing.Design.IToolboxService.GetToolboxItems(string category)
     {
-        return this.GetToolboxItems(category, this.host);
+        return this.GetToolboxItems(category: category, host: this.host);
     }
 
     /// Get all of the tools. We're always using our current host though.
@@ -230,7 +230,7 @@ public class ToolboxServiceImpl : System.Drawing.Design.IToolboxService
     /// Return the selected ToolboxItem in our toolbox.
     ToolboxItem System.Drawing.Design.IToolboxService.GetSelectedToolboxItem()
     {
-        return this.GetSelectedToolboxItem(this.host);
+        return this.GetSelectedToolboxItem(host: this.host);
     }
 
     /// Set the selected ToolboxItem in our toolbox.
@@ -281,7 +281,7 @@ public class ToolboxServiceImpl : System.Drawing.Design.IToolboxService
     )
     {
         // If we can deserialize it, it's a ToolboxItem.
-        if (this.DeserializeToolboxItem(serializedObject, host) != null)
+        if (this.DeserializeToolboxItem(serializedObject: serializedObject, host: host) != null)
         {
             return true;
         }
@@ -293,7 +293,7 @@ public class ToolboxServiceImpl : System.Drawing.Design.IToolboxService
     /// we can deserialize it in our standard-way, then it is indeed a ToolboxItem.
     bool System.Drawing.Design.IToolboxService.IsToolboxItem(object serializedObject)
     {
-        return IsToolboxItem(serializedObject, this.host);
+        return IsToolboxItem(serializedObject: serializedObject, host: this.host);
     }
 
     /// If your toolbox is categorized, then it's good for others to know

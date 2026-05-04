@@ -32,10 +32,10 @@ namespace Origam.Schema.EntityModel;
 /// <summary>
 /// Summary description for DataStructureFilterSetFilter.
 /// </summary>
-[SchemaItemDescription("Sort Field", "icon_sort-field.png")]
-[HelpTopic("Sort+Field")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Sort Field", iconName: "icon_sort-field.png")]
+[HelpTopic(topic: "Sort+Field")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class DataStructureSortSetItem : AbstractSchemaItem
 {
     public const string CategoryConst = "DataStructureSortSetItem";
@@ -44,19 +44,19 @@ public class DataStructureSortSetItem : AbstractSchemaItem
         : base() { }
 
     public DataStructureSortSetItem(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public DataStructureSortSetItem(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Properties
     public Guid DataStructureEntityId;
 
-    [TypeConverter(typeof(DataQueryEntityConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [Category("Sorting")]
+    [TypeConverter(type: typeof(DataQueryEntityConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [Category(category: "Sorting")]
     [NotNullModelElementRule()]
-    [XmlReference("entity", "DataStructureEntityId")]
+    [XmlReference(attributeName: "entity", idField: "DataStructureEntityId")]
     public DataStructureEntity Entity
     {
         get
@@ -64,7 +64,10 @@ public class DataStructureSortSetItem : AbstractSchemaItem
             ModelElementKey key = new ModelElementKey();
             key.Id = this.DataStructureEntityId;
             return (DataStructureEntity)
-                this.PersistenceProvider.RetrieveInstance(typeof(DataStructureEntity), key);
+                this.PersistenceProvider.RetrieveInstance(
+                    type: typeof(DataStructureEntity),
+                    primaryKey: key
+                );
         }
         set
         {
@@ -74,7 +77,7 @@ public class DataStructureSortSetItem : AbstractSchemaItem
             }
             else
             {
-                this.DataStructureEntityId = (Guid)value.PrimaryKey["Id"];
+                this.DataStructureEntityId = (Guid)value.PrimaryKey[key: "Id"];
             }
             UpdateName();
         }
@@ -82,9 +85,9 @@ public class DataStructureSortSetItem : AbstractSchemaItem
     private string _fieldName;
 
     [SortSetItemValidModelElementRuleAttribute()]
-    [TypeConverter(typeof(DataStructureColumnStringConverter))]
-    [Category("Sorting"), RefreshProperties(RefreshProperties.Repaint)]
-    [XmlAttribute("fieldName")]
+    [TypeConverter(type: typeof(DataStructureColumnStringConverter))]
+    [Category(category: "Sorting"), RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [XmlAttribute(attributeName: "fieldName")]
     public string FieldName
     {
         get { return _fieldName; }
@@ -96,8 +99,12 @@ public class DataStructureSortSetItem : AbstractSchemaItem
     }
     private int _sortOrder = 0;
 
-    [Category("Sorting"), DefaultValue(0), RefreshProperties(RefreshProperties.Repaint)]
-    [XmlAttribute("sortOrder")]
+    [
+        Category(category: "Sorting"),
+        DefaultValue(value: 0),
+        RefreshProperties(refresh: RefreshProperties.Repaint)
+    ]
+    [XmlAttribute(attributeName: "sortOrder")]
     public int SortOrder
     {
         get { return _sortOrder; }
@@ -106,8 +113,8 @@ public class DataStructureSortSetItem : AbstractSchemaItem
     private DataStructureColumnSortDirection _sortDirection =
         DataStructureColumnSortDirection.Ascending;
 
-    [Category("Sorting"), DefaultValue(DataStructureColumnSortDirection.Ascending)]
-    [XmlAttribute("sortDirection")]
+    [Category(category: "Sorting"), DefaultValue(value: DataStructureColumnSortDirection.Ascending)]
+    [XmlAttribute(attributeName: "sortDirection")]
     public DataStructureColumnSortDirection SortDirection
     {
         get { return _sortDirection; }
@@ -122,19 +129,19 @@ public class DataStructureSortSetItem : AbstractSchemaItem
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(this.Entity);
+        dependencies.Add(item: this.Entity);
         /* return a column used in a sort set */
         /* firstly look at columns defined on datastructure level */
         foreach (
             var dsColumn in Entity.ChildItemsByType<DataStructureColumn>(
-                DataStructureColumn.CategoryConst
+                itemType: DataStructureColumn.CategoryConst
             )
         )
         {
             if (FieldName == dsColumn.Name)
             {
                 // return data structure entity
-                dependencies.Add(dsColumn);
+                dependencies.Add(item: dsColumn);
             }
         }
         /* look at columns defined on entity level (AllFields = true) */
@@ -144,10 +151,10 @@ public class DataStructureSortSetItem : AbstractSchemaItem
             if (FieldName == dsColumn.Name)
             {
                 // data entity level - return data entity
-                dependencies.Add(dsColumn.Field);
+                dependencies.Add(item: dsColumn.Field);
             }
         }
-        base.GetExtraDependencies(dependencies);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override void UpdateReferences()
@@ -156,7 +163,7 @@ public class DataStructureSortSetItem : AbstractSchemaItem
         {
             if (item.OldPrimaryKey != null)
             {
-                if (item.OldPrimaryKey.Equals(this.Entity.PrimaryKey))
+                if (item.OldPrimaryKey.Equals(obj: this.Entity.PrimaryKey))
                 {
                     this.Entity = item as DataStructureEntity;
                     break;
@@ -185,9 +192,9 @@ public class DataStructureSortSetItem : AbstractSchemaItem
         DataStructureSortSetItem compareItem = obj as DataStructureSortSetItem;
         if (compareItem == null)
         {
-            return base.CompareTo(obj);
+            return base.CompareTo(obj: obj);
         }
-        return this.SortOrder.CompareTo(compareItem.SortOrder);
+        return this.SortOrder.CompareTo(value: compareItem.SortOrder);
     }
     #endregion
 }

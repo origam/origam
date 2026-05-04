@@ -27,7 +27,7 @@ using System.Resources;
 
 namespace Origam.Schema;
 
-[AttributeUsage(AttributeTargets.All)]
+[AttributeUsage(validOn: AttributeTargets.All)]
 public sealed class LocalizedDescriptionAttribute : DescriptionAttribute
 {
     private readonly string resourceKey;
@@ -35,10 +35,12 @@ public sealed class LocalizedDescriptionAttribute : DescriptionAttribute
     private bool isLocalized;
 
     public LocalizedDescriptionAttribute(string resourceKey, Type resourceType)
-        : base(resourceKey)
+        : base(description: resourceKey)
     {
-        this.resourceKey = resourceKey ?? throw new ArgumentNullException(nameof(resourceKey));
-        this.resourceType = resourceType ?? throw new ArgumentNullException(nameof(resourceType));
+        this.resourceKey =
+            resourceKey ?? throw new ArgumentNullException(paramName: nameof(resourceKey));
+        this.resourceType =
+            resourceType ?? throw new ArgumentNullException(paramName: nameof(resourceType));
     }
 
     public override string Description
@@ -58,22 +60,27 @@ public sealed class LocalizedDescriptionAttribute : DescriptionAttribute
     private string ResolveDescription()
     {
         var resourceProperty = resourceType.GetProperty(
-            resourceKey,
-            BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static
+            name: resourceKey,
+            bindingAttr: BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static
         );
         if (resourceProperty?.PropertyType == typeof(string))
         {
-            return resourceProperty.GetValue(null, null) as string ?? resourceKey;
+            return resourceProperty.GetValue(obj: null, index: null) as string ?? resourceKey;
         }
 
         var resourceManagerProperty = resourceType.GetProperty(
-            "ResourceManager",
-            BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static
+            name: "ResourceManager",
+            bindingAttr: BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static
         );
-        if (resourceManagerProperty?.GetValue(null, null) is ResourceManager resourceManager)
+        if (
+            resourceManagerProperty?.GetValue(obj: null, index: null)
+            is ResourceManager resourceManager
+        )
         {
-            return resourceManager.GetString(resourceKey, CultureInfo.CurrentUICulture)
-                ?? resourceKey;
+            return resourceManager.GetString(
+                    name: resourceKey,
+                    culture: CultureInfo.CurrentUICulture
+                ) ?? resourceKey;
         }
 
         return resourceKey;

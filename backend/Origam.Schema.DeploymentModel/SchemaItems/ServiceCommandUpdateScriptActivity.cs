@@ -34,11 +34,11 @@ namespace Origam.Schema.DeploymentModel;
 /// Summary description for ServiceCommandUpdateScriptActivity.
 /// </summary>
 [SchemaItemDescription(
-    "Service Command Update Activity",
-    "icon_service-command-update-activity.png"
+    name: "Service Command Update Activity",
+    iconName: "icon_service-command-update-activity.png"
 )]
-[HelpTopic("Service+Command+Update+Activity")]
-[ClassMetaVersion("6.0.0")]
+[HelpTopic(topic: "Service+Command+Update+Activity")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class ServiceCommandUpdateScriptActivity : AbstractUpdateScriptActivity
 {
     public ServiceCommandUpdateScriptActivity()
@@ -48,13 +48,13 @@ public class ServiceCommandUpdateScriptActivity : AbstractUpdateScriptActivity
     }
 
     public ServiceCommandUpdateScriptActivity(Guid schemaExtensionId)
-        : base(schemaExtensionId)
+        : base(schemaExtensionId: schemaExtensionId)
     {
         InitializeProperyContainers();
     }
 
     public ServiceCommandUpdateScriptActivity(Key primaryKey)
-        : base(primaryKey)
+        : base(primaryKey: primaryKey)
     {
         InitializeProperyContainers();
     }
@@ -69,26 +69,30 @@ public class ServiceCommandUpdateScriptActivity : AbstractUpdateScriptActivity
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(this.Service);
-        base.GetExtraDependencies(dependencies);
+        dependencies.Add(item: this.Service);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     #region Properties
-    [Category("Update Script Activity")]
-    [XmlAttribute("platform")]
+    [Category(category: "Update Script Activity")]
+    [XmlAttribute(attributeName: "platform")]
     public DatabaseType DatabaseType { get; set; }
     public Guid ServiceId;
 
-    [Category("Service Command Information")]
-    [TypeConverter(typeof(ServiceConverter))]
-    [XmlReference("service", "ServiceId")]
+    [Category(category: "Service Command Information")]
+    [TypeConverter(type: typeof(ServiceConverter))]
+    [XmlReference(attributeName: "service", idField: "ServiceId")]
     public IService Service
     {
         get
         {
             ModelElementKey key = new ModelElementKey();
             key.Id = this.ServiceId;
-            return (IService)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
+            return (IService)
+                this.PersistenceProvider.RetrieveInstance(
+                    type: typeof(ISchemaItem),
+                    primaryKey: key
+                );
         }
         set
         {
@@ -98,13 +102,13 @@ public class ServiceCommandUpdateScriptActivity : AbstractUpdateScriptActivity
             }
             else
             {
-                this.ServiceId = (Guid)value.PrimaryKey["Id"];
+                this.ServiceId = (Guid)value.PrimaryKey[key: "Id"];
             }
         }
     }
     private PropertyContainer<string> commandText;
 
-    [Category("Service Command Information")]
+    [Category(category: "Service Command Information")]
     [XmlExternalFileReference(
         containerName: nameof(commandText),
         extension: ExternalFileExtension.Txt
@@ -112,7 +116,7 @@ public class ServiceCommandUpdateScriptActivity : AbstractUpdateScriptActivity
     public string CommandText
     {
         get => commandText.Get();
-        set => commandText.Set(value);
+        set => commandText.Set(value: value);
     }
     #endregion
 }

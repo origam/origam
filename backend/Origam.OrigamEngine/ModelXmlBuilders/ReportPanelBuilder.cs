@@ -41,36 +41,44 @@ public class ReportPanelBuilder
     )
     {
         IPersistenceService persistence =
-            ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+            ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+            as IPersistenceService;
         AbstractReport report =
             persistence.SchemaProvider.RetrieveInstance(
-                typeof(AbstractReport),
-                new ModelElementKey(new Guid(renderData.ReportId))
+                type: typeof(AbstractReport),
+                primaryKey: new ModelElementKey(id: new Guid(g: renderData.ReportId))
             ) as AbstractReport;
-        parentNode.SetAttribute("X", XmlConvert.ToString(renderData.Left));
-        parentNode.SetAttribute("Y", XmlConvert.ToString(renderData.Top));
-        parentNode.SetAttribute("Width", XmlConvert.ToString(renderData.Width));
-        parentNode.SetAttribute("type", "http://www.w3.org/2001/XMLSchema-instance", "UIElement");
-        parentNode.SetAttribute("Type", "ReportButton");
-        parentNode.SetAttribute("Entity", table.TableName);
-        parentNode.SetAttribute("ReportId", renderData.ReportId);
-        parentNode.SetAttribute("Text", (report.Caption == null ? report.Name : report.Caption));
-        XmlElement reportParametersElement = parentNode.OwnerDocument.CreateElement(
-            "ReportParameters"
+        parentNode.SetAttribute(name: "X", value: XmlConvert.ToString(value: renderData.Left));
+        parentNode.SetAttribute(name: "Y", value: XmlConvert.ToString(value: renderData.Top));
+        parentNode.SetAttribute(name: "Width", value: XmlConvert.ToString(value: renderData.Width));
+        parentNode.SetAttribute(
+            localName: "type",
+            namespaceURI: "http://www.w3.org/2001/XMLSchema-instance",
+            value: "UIElement"
         );
-        parentNode.AppendChild(reportParametersElement);
+        parentNode.SetAttribute(name: "Type", value: "ReportButton");
+        parentNode.SetAttribute(name: "Entity", value: table.TableName);
+        parentNode.SetAttribute(name: "ReportId", value: renderData.ReportId);
+        parentNode.SetAttribute(
+            name: "Text",
+            value: (report.Caption == null ? report.Name : report.Caption)
+        );
+        XmlElement reportParametersElement = parentNode.OwnerDocument.CreateElement(
+            name: "ReportParameters"
+        );
+        parentNode.AppendChild(newChild: reportParametersElement);
         foreach (
             var mapping in control.ChildItemsByType<ColumnParameterMapping>(
-                ColumnParameterMapping.CategoryConst
+                itemType: ColumnParameterMapping.CategoryConst
             )
         )
         {
             XmlElement reportParamElement = parentNode.OwnerDocument.CreateElement(
-                "ReportParameterMapping"
+                name: "ReportParameterMapping"
             );
-            reportParametersElement.AppendChild(reportParamElement);
-            reportParamElement.SetAttribute("ParameterName", mapping.Name);
-            reportParamElement.SetAttribute("FieldName", mapping.ColumnName);
+            reportParametersElement.AppendChild(newChild: reportParamElement);
+            reportParamElement.SetAttribute(name: "ParameterName", value: mapping.Name);
+            reportParamElement.SetAttribute(name: "FieldName", value: mapping.ColumnName);
         }
     }
 }

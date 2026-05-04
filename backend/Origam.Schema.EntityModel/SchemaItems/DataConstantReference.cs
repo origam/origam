@@ -31,11 +31,15 @@ namespace Origam.Schema.EntityModel;
 /// <summary>
 /// Summary description for EntityColumnReference.
 /// </summary>
-[SchemaItemDescription("Data Constant Reference", "Parameters", "icon_data-constant-reference.png")]
-[HelpTopic("Data+Constant+Reference")]
-[XmlModelRoot(CategoryConst)]
-[DefaultProperty("DataConstant")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(
+    name: "Data Constant Reference",
+    folderName: "Parameters",
+    iconName: "icon_data-constant-reference.png"
+)]
+[HelpTopic(topic: "Data+Constant+Reference")]
+[XmlModelRoot(category: CategoryConst)]
+[DefaultProperty(name: "DataConstant")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class DataConstantReference : AbstractSchemaItem
 {
     public const string CategoryConst = "DataConstantReference";
@@ -44,10 +48,10 @@ public class DataConstantReference : AbstractSchemaItem
         : base() { }
 
     public DataConstantReference(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public DataConstantReference(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Overriden AbstractDataEntityColumn Members
 
@@ -63,14 +67,14 @@ public class DataConstantReference : AbstractSchemaItem
     {
         if (this.DataConstant != null)
         {
-            base.GetParameterReferences(DataConstant, list);
+            base.GetParameterReferences(parentItem: DataConstant, list: list);
         }
     }
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(this.DataConstant);
-        base.GetExtraDependencies(dependencies);
+        dependencies.Add(item: this.DataConstant);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override ISchemaItemCollection ChildItems
@@ -81,11 +85,11 @@ public class DataConstantReference : AbstractSchemaItem
     #region Properties
     public Guid DataConstantId;
 
-    [Category("Reference")]
-    [TypeConverter(typeof(DataConstantConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
+    [Category(category: "Reference")]
+    [TypeConverter(type: typeof(DataConstantConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
     [NotNullModelElementRule()]
-    [XmlReference("constant", "DataConstantId")]
+    [XmlReference(attributeName: "constant", idField: "DataConstantId")]
     public DataConstant DataConstant
     {
         get
@@ -94,20 +98,23 @@ public class DataConstantReference : AbstractSchemaItem
             {
                 return (ISchemaItem)
                         this.PersistenceProvider.RetrieveInstance(
-                            typeof(ISchemaItem),
-                            new ModelElementKey(this.DataConstantId)
+                            type: typeof(ISchemaItem),
+                            primaryKey: new ModelElementKey(id: this.DataConstantId)
                         ) as DataConstant;
             }
             catch
             {
                 throw new Exception(
-                    ResourceUtils.GetString("ErrorDataConstantNotFound", this.Name)
+                    message: ResourceUtils.GetString(
+                        key: "ErrorDataConstantNotFound",
+                        args: this.Name
+                    )
                 );
             }
         }
         set
         {
-            DataConstantId = (Guid)value.PrimaryKey["Id"];
+            DataConstantId = (Guid)value.PrimaryKey[key: "Id"];
             if (Name == null)
             {
                 Name = value.Name;

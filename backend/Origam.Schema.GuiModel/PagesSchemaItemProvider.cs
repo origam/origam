@@ -28,9 +28,9 @@ public class PagesSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFa
 {
     public PagesSchemaItemProvider()
     {
-        this.ChildItemTypes.Add(typeof(XsltDataPage));
-        this.ChildItemTypes.Add(typeof(FileDownloadPage));
-        this.ChildItemTypes.Add(typeof(ReportPage));
+        this.ChildItemTypes.Add(item: typeof(XsltDataPage));
+        this.ChildItemTypes.Add(item: typeof(FileDownloadPage));
+        this.ChildItemTypes.Add(item: typeof(ReportPage));
     }
 
     #region ISchemaItemProvider Members

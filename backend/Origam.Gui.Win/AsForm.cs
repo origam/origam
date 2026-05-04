@@ -61,7 +61,7 @@ public class AsForm
 
     public List<ToolStrip> GetToolStrips(int maxWidth = -1)
     {
-        return Panels.Select(x => x.ToolStrip).ToList();
+        return Panels.Select(selector: x => x.ToolStrip).ToList();
     }
 
     /// <summary>
@@ -75,20 +75,23 @@ public class AsForm
         {
             if (relation.ParentTable == row.Table) // we find all the child relations of our row's table
             {
-                if (relation.ChildTable.Columns.Contains(Const.ValuelistIdField)) // only if there exists Id column
+                if (relation.ChildTable.Columns.Contains(name: Const.ValuelistIdField)) // only if there exists Id column
                 {
                     Guid entityId = new Guid(
-                        relation.ChildTable.ExtendedProperties["EntityId"].ToString()
+                        g: relation.ChildTable.ExtendedProperties[key: "EntityId"].ToString()
                     );
-                    foreach (DataRow childRow in row.GetChildRows(relation))
+                    foreach (DataRow childRow in row.GetChildRows(relation: relation))
                     {
-                        Guid recordId = (Guid)childRow[Const.ValuelistIdField];
-                        RecordReference newRef = new RecordReference(entityId, recordId);
-                        if (!references.Contains(newRef.GetHashCode()))
+                        Guid recordId = (Guid)childRow[columnName: Const.ValuelistIdField];
+                        RecordReference newRef = new RecordReference(
+                            entityId: entityId,
+                            recordId: recordId
+                        );
+                        if (!references.Contains(key: newRef.GetHashCode()))
                         {
-                            references.Add(newRef.GetHashCode(), newRef);
+                            references.Add(key: newRef.GetHashCode(), value: newRef);
                         }
-                        RetrieveChildReferences(childRow, references); // recursion
+                        RetrieveChildReferences(row: childRow, references: references); // recursion
                     }
                 }
             }
@@ -107,14 +110,20 @@ public class AsForm
         if (panel.ShowAttachments)
         {
             MainEntityId = panel.EntityId;
-            SetMainRecordId(panel.RecordId);
+            SetMainRecordId(id: panel.RecordId);
             ChildRecordReferences.Clear();
-            if (panel.BindingContext[panel.DataSource, panel.DataMember].Position > -1)
+            if (
+                panel
+                    .BindingContext[dataSource: panel.DataSource, dataMember: panel.DataMember]
+                    .Position > -1
+            )
             {
                 DataRow row = (
-                    panel.BindingContext[panel.DataSource, panel.DataMember].Current as DataRowView
+                    panel
+                        .BindingContext[dataSource: panel.DataSource, dataMember: panel.DataMember]
+                        .Current as DataRowView
                 ).Row;
-                RetrieveChildReferences(row, ChildRecordReferences);
+                RetrieveChildReferences(row: row, references: ChildRecordReferences);
             }
             else
             {
@@ -135,10 +144,10 @@ public class AsForm
     private void OnRecordReferenceChanged()
     {
         RecordReferenceChanged?.Invoke(
-            this,
-            this.MainEntityId,
-            this.MainRecordId,
-            this.ChildRecordReferences
+            sender: this,
+            mainEntityId: this.MainEntityId,
+            mainRecordId: this.MainRecordId,
+            childReferences: this.ChildRecordReferences
         );
     }
 
@@ -159,7 +168,7 @@ public class AsForm
         {
             _currentHandledPanel.RecordIdChanged -= panel_RecordIdChanged;
             _currentHandledPanel = null;
-            panel_RecordIdChanged(sender, EventArgs.Empty);
+            panel_RecordIdChanged(sender: sender, e: EventArgs.Empty);
             return;
         }
         // we hide attachments for the currently handled panel
@@ -168,7 +177,7 @@ public class AsForm
             _currentHandledPanel.RecordIdChanged -= panel_RecordIdChanged;
             _currentHandledPanel.ShowAttachments = false;
         }
-        panel_RecordIdChanged(sender, EventArgs.Empty);
+        panel_RecordIdChanged(sender: sender, e: EventArgs.Empty);
         // and we set the currently handled panel to the new panel
         _currentHandledPanel = panel;
         // then we subscribe for changes in the new panel
@@ -178,7 +187,7 @@ public class AsForm
     public AsForm()
     {
         InitializeComponent();
-        SetStyle(ControlStyles.DoubleBuffer, true);
+        SetStyle(flag: ControlStyles.DoubleBuffer, value: true);
         this.BackColor = OrigamColorScheme.FormBackgroundColor;
         this.Paint += AsForm_Paint;
     }
@@ -196,7 +205,7 @@ public class AsForm
         get => toolStripContainer;
         set
         {
-            ToolStripsLoaded?.Invoke(null, EventArgs.Empty);
+            ToolStripsLoaded?.Invoke(sender: null, e: EventArgs.Empty);
             toolStripContainer = value;
         }
     }
@@ -222,10 +231,13 @@ public class AsForm
             if (!_bindingsInitialized && _extraControlBindings != "")
             {
                 System.Xml.Serialization.XmlSerializer xsr =
-                    new System.Xml.Serialization.XmlSerializer(typeof(ComponentBindingCollection));
+                    new System.Xml.Serialization.XmlSerializer(
+                        type: typeof(ComponentBindingCollection)
+                    );
                 _componentBindings =
-                    xsr.Deserialize(new System.IO.StringReader(_extraControlBindings))
-                    as ComponentBindingCollection;
+                    xsr.Deserialize(
+                        textReader: new System.IO.StringReader(s: _extraControlBindings)
+                    ) as ComponentBindingCollection;
             }
             _bindingsInitialized = true;
             return _componentBindings;
@@ -233,7 +245,7 @@ public class AsForm
     }
     private string _extraControlBindings = "";
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public string ExtraControlBindings
     {
         get
@@ -242,13 +254,16 @@ public class AsForm
             {
                 System.Text.StringBuilder sb = new System.Text.StringBuilder();
                 System.Xml.Serialization.XmlRootAttribute root =
-                    new System.Xml.Serialization.XmlRootAttribute("ComponentBindings");
+                    new System.Xml.Serialization.XmlRootAttribute(elementName: "ComponentBindings");
                 System.Xml.Serialization.XmlSerializer xsr =
                     new System.Xml.Serialization.XmlSerializer(
-                        typeof(ComponentBindingCollection),
-                        root
+                        type: typeof(ComponentBindingCollection),
+                        root: root
                     );
-                xsr.Serialize(new System.IO.StringWriter(sb), _componentBindings);
+                xsr.Serialize(
+                    textWriter: new System.IO.StringWriter(sb: sb),
+                    o: _componentBindings
+                );
 
                 return sb.ToString();
             }
@@ -332,7 +347,7 @@ public class AsForm
                 this.NameLabel.Text = value;
             }
 
-            OnTitleNameChanged(EventArgs.Empty);
+            OnTitleNameChanged(e: EventArgs.Empty);
         }
     }
     private string _statusText = "";
@@ -342,14 +357,14 @@ public class AsForm
         set
         {
             _statusText = value;
-            OnStatusTextChanged(EventArgs.Empty);
+            OnStatusTextChanged(e: EventArgs.Empty);
         }
     }
     public event EventHandler StatusTextChanged;
 
     void OnStatusTextChanged(EventArgs e)
     {
-        StatusTextChanged?.Invoke(this, e);
+        StatusTextChanged?.Invoke(sender: this, e: e);
     }
 
     public event EventHandler DirtyChanged;
@@ -358,7 +373,7 @@ public class AsForm
     public void SaveObject()
     {
         this.EndCurrentEdit();
-        if (HasErrors(true))
+        if (HasErrors(throwException: true))
         {
             return;
         }
@@ -373,11 +388,11 @@ public class AsForm
             if (throwException)
             {
                 throw new Exception(
-                    ResourceUtils.GetString(
-                        "ErrorsInForm",
-                        Environment.NewLine
+                    message: ResourceUtils.GetString(
+                        key: "ErrorsInForm",
+                        args: Environment.NewLine
                             + Environment.NewLine
-                            + DatasetTools.GetDatasetErrors(FormGenerator.DataSet)
+                            + DatasetTools.GetDatasetErrors(dataset: FormGenerator.DataSet)
                     )
                 );
             }
@@ -437,14 +452,14 @@ public class AsForm
             this.FormGenerator.DefaultTemplate = formRef.DefaultTemplate;
             this.FormGenerator.RuleSet = formRef.RuleSet;
 
-            _isReadOnly = FormTools.IsFormMenuReadOnly(formRef);
+            _isReadOnly = FormTools.IsFormMenuReadOnly(formRef: formRef);
         }
         else
         {
             throw new ArgumentOutOfRangeException(
-                "objectToLoad",
-                objectToLoad,
-                ResourceUtils.GetString("UknownObject")
+                paramName: "objectToLoad",
+                actualValue: objectToLoad,
+                message: ResourceUtils.GetString(key: "UknownObject")
             );
         }
         //this.FormGenerator.LoadForm(this, form, methodId, defaultSetId, listDataStructureId, listMethodId, listDataMember);
@@ -457,7 +472,7 @@ public class AsForm
         this.FormGenerator.AsyncListMethodId = listMethodId;
         this.FormGenerator.AsyncListDataMember = listDataMember;
         LoadFormAsync();
-        ToolStripsLoaded?.Invoke(null, EventArgs.Empty);
+        ToolStripsLoaded?.Invoke(sender: null, e: EventArgs.Empty);
     }
 
     private void LoadFormAsync()
@@ -473,7 +488,7 @@ public class AsForm
                 key[i] = val;
                 i++;
             }
-            SetPosition(key);
+            SetPosition(key: key);
         }
     }
 
@@ -511,7 +526,7 @@ public class AsForm
             if (!this.IsViewOnly)
             {
                 _isDirty = value;
-                OnDirtyChanged(EventArgs.Empty);
+                OnDirtyChanged(e: EventArgs.Empty);
             }
         }
     }
@@ -573,7 +588,7 @@ public class AsForm
     private void InitializeComponent()
     {
         this.components = new Container();
-        this.timer = new Timer(this.components);
+        this.timer = new Timer(container: this.components);
         //
         // timer
         //
@@ -582,10 +597,10 @@ public class AsForm
         //
         // AsForm
         //
-        this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+        this.AutoScaleBaseSize = new System.Drawing.Size(width: 5, height: 13);
         this.AutoScroll = true;
         this.BackColor = System.Drawing.Color.FloralWhite;
-        this.ClientSize = new System.Drawing.Size(320, 285);
+        this.ClientSize = new System.Drawing.Size(width: 320, height: 285);
         this.DockAreas = DockAreas.Document;
         this.Name = "AsForm";
         this.Closing += this.AsForm_Closing;
@@ -593,20 +608,20 @@ public class AsForm
 
     protected virtual void OnDirtyChanged(EventArgs e)
     {
-        OnTitleNameChanged(EventArgs.Empty);
-        DirtyChanged?.Invoke(this, e);
+        OnTitleNameChanged(e: EventArgs.Empty);
+        DirtyChanged?.Invoke(sender: this, e: e);
     }
 
     protected virtual void OnTitleNameChanged(EventArgs e)
     {
         this.Text = (IsDirty ? "*" : "") + this.TitleName;
         //this.TabText = this.TitleName;
-        TitleNameChanged?.Invoke(this, e);
+        TitleNameChanged?.Invoke(sender: this, e: e);
     }
 
     public string Test()
     {
-        Control focused = FindFocused(this);
+        Control focused = FindFocused(parent: this);
         if (focused == null)
         {
             return "No focused control found";
@@ -646,7 +661,7 @@ public class AsForm
         get
         {
             var list = new List<AsPanel>();
-            AddPanels(this, list);
+            AddPanels(parentControl: this, list: list);
             return list.ToArray();
         }
     }
@@ -657,10 +672,10 @@ public class AsForm
         {
             if (control is AsPanel panel)
             {
-                list.Add(panel);
+                list.Add(item: panel);
             }
 
-            AddPanels(control, list);
+            AddPanels(parentControl: control, list: list);
         }
     }
 
@@ -685,11 +700,11 @@ public class AsForm
 
         foreach (Control control in parent.Controls)
         {
-            Control focusedControl = FindFocused(control);
+            Control focusedControl = FindFocused(parent: control);
 
             if (focusedControl != null)
             {
-                return FindFocused(control);
+                return FindFocused(parent: control);
             }
         }
         return null;
@@ -699,15 +714,27 @@ public class AsForm
     {
         if (keyData == (Keys.F6 | Keys.Shift))
         {
-            this.SelectNextControl(this.ActiveControl, false, true, true, true);
+            this.SelectNextControl(
+                ctl: this.ActiveControl,
+                forward: false,
+                tabStopOnly: true,
+                nested: true,
+                wrap: true
+            );
             return true;
         }
         if (keyData == Keys.F6)
         {
-            bool result = this.SelectNextControl(this.ActiveControl, true, true, true, true);
+            bool result = this.SelectNextControl(
+                ctl: this.ActiveControl,
+                forward: true,
+                tabStopOnly: true,
+                nested: true,
+                wrap: true
+            );
             return true;
         }
-        return base.ProcessCmdKey(ref msg, keyData);
+        return base.ProcessCmdKey(msg: ref msg, keyData: keyData);
     }
 
     protected override void Dispose(bool disposing)
@@ -725,7 +752,7 @@ public class AsForm
                 this.FormGenerator = null;
             }
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
 
     private bool SaveData()
@@ -742,10 +769,10 @@ public class AsForm
         catch (Exception ex)
         {
             AsMessageBox.ShowError(
-                this,
-                ex.Message,
-                ResourceUtils.GetString("ErrorWhenSaving", this.TitleName),
-                ex
+                owner: this,
+                text: ex.Message,
+                caption: ResourceUtils.GetString(key: "ErrorWhenSaving", args: this.TitleName),
+                exception: ex
             );
             return false;
         }
@@ -753,15 +780,15 @@ public class AsForm
         {
             try
             {
-                HasErrors(true);
+                HasErrors(throwException: true);
             }
             catch (Exception ex)
             {
                 AsMessageBox.ShowError(
-                    this,
-                    ex.Message,
-                    ResourceUtils.GetString("ErrorWhenSaving", this.TitleName),
-                    ex
+                    owner: this,
+                    text: ex.Message,
+                    caption: ResourceUtils.GetString(key: "ErrorWhenSaving", args: this.TitleName),
+                    exception: ex
                 );
                 return false;
             }
@@ -771,11 +798,11 @@ public class AsForm
         if (IsDirty)
         {
             DialogResult result = MessageBox.Show(
-                this,
-                ResourceUtils.GetString("SaveChanges", this.TitleName),
-                ResourceUtils.GetString("SaveTitle"),
-                MessageBoxButtons.YesNoCancel,
-                MessageBoxIcon.Question
+                owner: this,
+                text: ResourceUtils.GetString(key: "SaveChanges", args: this.TitleName),
+                caption: ResourceUtils.GetString(key: "SaveTitle"),
+                buttons: MessageBoxButtons.YesNoCancel,
+                icon: MessageBoxIcon.Question
             );
 
             switch (result)
@@ -789,10 +816,13 @@ public class AsForm
                     catch (Exception ex)
                     {
                         AsMessageBox.ShowError(
-                            this,
-                            ex.Message,
-                            ResourceUtils.GetString("ErrorWhenSaving", this.TitleName),
-                            ex
+                            owner: this,
+                            text: ex.Message,
+                            caption: ResourceUtils.GetString(
+                                key: "ErrorWhenSaving",
+                                args: this.TitleName
+                            ),
+                            exception: ex
                         );
                         return false;
                     }
@@ -848,16 +878,21 @@ public class AsForm
             return false;
         }
 
-        return (bool)Reflector.GetValue(typeof(CurrencyManager), cm, "IsBinding");
+        return (bool)
+            Reflector.GetValue(
+                type: typeof(CurrencyManager),
+                instance: cm,
+                memberName: "IsBinding"
+            );
     }
 
     private void timer_Tick(object sender, EventArgs e)
     {
         if (this.AutoAddNewEntity != null)
         {
-            BindingManagerBase b = this.Controls[0].BindingContext[
-                this.FormGenerator.DataSet,
-                this.AutoAddNewEntity
+            BindingManagerBase b = this.Controls[index: 0].BindingContext[
+                dataSource: this.FormGenerator.DataSet,
+                dataMember: this.AutoAddNewEntity
             ];
             if (b.Count == 0)
             {
@@ -885,7 +920,7 @@ public class AsForm
         {
             if (child.Enabled)
             {
-                _disabledControls.Add(child);
+                _disabledControls.Add(item: child);
                 child.Enabled = false;
             }
         }
@@ -895,7 +930,9 @@ public class AsForm
     {
         if (_disabledControls == null)
         {
-            throw new InvalidOperationException(ResourceUtils.GetString("ErrorEndDisable"));
+            throw new InvalidOperationException(
+                message: ResourceUtils.GetString(key: "ErrorEndDisable")
+            );
         }
 
         foreach (Control control in _disabledControls)
@@ -911,9 +948,9 @@ public class AsForm
         // take the first root panel and try to set the position
         foreach (AsPanel panel in this.Panels)
         {
-            if (panel.DataMember.IndexOf(".") == -1)
+            if (panel.DataMember.IndexOf(value: ".") == -1)
             {
-                panel.SetPosition(key);
+                panel.SetPosition(primaryKey: key);
                 panel.FocusGridFirstColumn();
                 return true;
             }
@@ -930,19 +967,21 @@ public class AsForm
             System.Drawing.Graphics g = e.Graphics;
             string text = this.ProgressText;
             System.Drawing.Font font = new System.Drawing.Font(
-                this.Font.FontFamily,
-                10,
-                System.Drawing.FontStyle.Bold
+                family: this.Font.FontFamily,
+                emSize: 10,
+                style: System.Drawing.FontStyle.Bold
             );
-            float stringWidth = g.MeasureString(text, font).Width;
-            float stringHeight = g.MeasureString(text, font).Height;
-            g.Clear(this.BackColor);
+            float stringWidth = g.MeasureString(text: text, font: font).Width;
+            float stringHeight = g.MeasureString(text: text, font: font).Height;
+            g.Clear(color: this.BackColor);
             g.DrawString(
-                text,
-                font,
-                new System.Drawing.SolidBrush(OrigamColorScheme.FormLoadingStatusColor),
-                (this.Width / 2) - (stringWidth / 2),
-                (this.Height / 3) + 64
+                s: text,
+                font: font,
+                brush: new System.Drawing.SolidBrush(
+                    color: OrigamColorScheme.FormLoadingStatusColor
+                ),
+                x: (this.Width / 2) - (stringWidth / 2),
+                y: (this.Height / 3) + 64
             );
         }
         catch { }
@@ -950,6 +989,6 @@ public class AsForm
 
     protected void InvokeToolStripsRemoved()
     {
-        AllToolStripsRemoved(this, EventArgs.Empty);
+        AllToolStripsRemoved(sender: this, e: EventArgs.Empty);
     }
 }

@@ -37,9 +37,9 @@ public class SmsServiceAdapter : AbstractServiceAgent
             {
                 CreateSmsService()
                     .SendSms(
-                        Parameters.Get<string>("from"),
-                        Parameters.Get<string>("to"),
-                        Parameters.Get<string>("body")
+                        from: Parameters.Get<string>(key: "from"),
+                        to: Parameters.Get<string>(key: "to"),
+                        body: Parameters.Get<string>(key: "body")
                     );
                 break;
             }
@@ -47,9 +47,9 @@ public class SmsServiceAdapter : AbstractServiceAgent
             default:
             {
                 throw new ArgumentOutOfRangeException(
-                    "MethodName",
-                    MethodName,
-                    ResourceUtils.GetString("InvalidMethodName")
+                    paramName: "MethodName",
+                    actualValue: MethodName,
+                    message: ResourceUtils.GetString(key: "InvalidMethodName")
                 );
             }
         }
@@ -58,12 +58,17 @@ public class SmsServiceAdapter : AbstractServiceAgent
     private static ISmsService CreateSmsService()
     {
         var settings = ConfigurationManager.GetActiveConfiguration();
-        var assembly = settings.DataDataService.Split(",".ToCharArray())[0].Trim();
-        var classname = settings.DataDataService.Split(",".ToCharArray())[1].Trim();
-        if (!(Reflector.InvokeObject(classname, assembly) is ISmsService service))
+        var assembly = settings.DataDataService.Split(separator: ",".ToCharArray())[0].Trim();
+        var classname = settings.DataDataService.Split(separator: ",".ToCharArray())[1].Trim();
+        if (
+            !(
+                Reflector.InvokeObject(classname: classname, assembly: assembly)
+                is ISmsService service
+            )
+        )
         {
             throw new NullReferenceException(
-                $"Couldn't invoke object as {classname}, and {assembly}."
+                message: $"Couldn't invoke object as {classname}, and {assembly}."
             );
         }
         return service;

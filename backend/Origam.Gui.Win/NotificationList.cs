@@ -45,20 +45,20 @@ public class NotificationList : System.Windows.Forms.UserControl
         this.listView1.Items.Clear();
         if (text != null)
         {
-            string[] items = text.Split("\n".ToCharArray());
+            string[] items = text.Split(separator: "\n".ToCharArray());
             foreach (string item in items)
             {
-                if (item.Substring(0, 2) == "! ")
+                if (item.Substring(startIndex: 0, length: 2) == "! ")
                 {
-                    listView1.Items.Add(item.Substring(2), 1);
+                    listView1.Items.Add(text: item.Substring(startIndex: 2), imageIndex: 1);
                 }
-                else if (item.Substring(0, 3) == "!! ")
+                else if (item.Substring(startIndex: 0, length: 3) == "!! ")
                 {
-                    listView1.Items.Add(item.Substring(3), 2);
+                    listView1.Items.Add(text: item.Substring(startIndex: 3), imageIndex: 2);
                 }
                 else
                 {
-                    listView1.Items.Add(item, 0);
+                    listView1.Items.Add(text: item, imageIndex: 0);
                 }
             }
         }
@@ -76,7 +76,7 @@ public class NotificationList : System.Windows.Forms.UserControl
                 components.Dispose();
             }
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
 
     #region Component Designer generated code
@@ -134,7 +134,7 @@ public class NotificationList : System.Windows.Forms.UserControl
     #endregion
     private void NotificationList_SizeChanged(object sender, EventArgs e)
     {
-        this.listView1.Columns[0].Width =
+        this.listView1.Columns[index: 0].Width =
             this.Width
             - (this.VScroll ? System.Windows.Forms.SystemInformation.VerticalScrollBarWidth : 0);
     }

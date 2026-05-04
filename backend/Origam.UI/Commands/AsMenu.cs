@@ -33,7 +33,7 @@ public class AsMenu : ToolStripMenuItem, IStatusUpdate
     private readonly object caller;
 
     public AsMenu(object caller, string text)
-        : base(text)
+        : base(text: text)
     {
         this.caller = caller;
         this.Text = text;
@@ -45,7 +45,7 @@ public class AsMenu : ToolStripMenuItem, IStatusUpdate
     public void Clear()
     {
         ToolStripItem[] array = new ToolStripItem[this.SubItems.Count];
-        this.SubItems.CopyTo(array, 0);
+        this.SubItems.CopyTo(array: array, arrayIndex: 0);
         this.SubItems.Clear();
         this.DropDownItems.Clear();
         foreach (ToolStripItem item in array)

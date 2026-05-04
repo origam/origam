@@ -110,9 +110,9 @@ public class DataStructureQuery
     public List<ColumnData> GetAllQueryColumns()
     {
         var aggregationColData = (AggregatedColumns ?? new List<Aggregation>()).Select(
-            x => new ColumnData(x.SqlQueryColumnName)
+            selector: x => new ColumnData(name: x.SqlQueryColumnName)
         );
-        return ColumnsInfo.Columns.Concat(aggregationColData).ToList();
+        return ColumnsInfo.Columns.Concat(second: aggregationColData).ToList();
     }
 }
 
@@ -122,10 +122,10 @@ public class CustomFilters
     public string Filters
     {
         get => filters;
-        set => filters = string.IsNullOrWhiteSpace(value) ? "" : value;
+        set => filters = string.IsNullOrWhiteSpace(value: value) ? "" : value;
     }
     public Dictionary<string, Guid> FilterLookups { get; set; } = new Dictionary<string, Guid>();
-    public bool IsEmpty => string.IsNullOrWhiteSpace(Filters);
+    public bool IsEmpty => string.IsNullOrWhiteSpace(value: Filters);
     public bool HasLookups => FilterLookups != null && FilterLookups.Count > 0;
 }
 
@@ -141,8 +141,11 @@ public class CustomOrderings
             orderings == null
                 ? new Dictionary<string, Guid>()
                 : orderings
-                    .Where(ordering => ordering.LookupId != Guid.Empty)
-                    .ToDictionary(ordering => ordering.ColumnName, ordering => ordering.LookupId);
+                    .Where(predicate: ordering => ordering.LookupId != Guid.Empty)
+                    .ToDictionary(
+                        keySelector: ordering => ordering.ColumnName,
+                        elementSelector: ordering => ordering.LookupId
+                    );
     }
 
     public Dictionary<string, Guid> FilterLookups { get; } = new Dictionary<string, Guid>();

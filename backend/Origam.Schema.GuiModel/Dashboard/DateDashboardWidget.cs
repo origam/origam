@@ -24,8 +24,8 @@ using Origam.DA.Common;
 
 namespace Origam.Schema.GuiModel;
 
-[SchemaItemDescription("Date Widget", "icon_date-widget.png")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Date Widget", iconName: "icon_date-widget.png")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class DateDashboardWidget : AbstractSimpleDashboardWidget
 {
     public DateDashboardWidget()
@@ -35,13 +35,13 @@ public class DateDashboardWidget : AbstractSimpleDashboardWidget
     }
 
     public DateDashboardWidget(Guid schemaExtensionId)
-        : base(schemaExtensionId)
+        : base(schemaExtensionId: schemaExtensionId)
     {
         Init();
     }
 
     public DateDashboardWidget(Key primaryKey)
-        : base(primaryKey)
+        : base(primaryKey: primaryKey)
     {
         Init();
     }

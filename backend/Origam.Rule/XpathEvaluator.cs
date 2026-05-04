@@ -37,25 +37,36 @@ public class XpathEvaluator : IXpathEvaluator
     {
         if (nodeset is XPathNodeIterator)
         {
-            return Evaluate(nodeset as XPathNodeIterator, xpath);
+            return Evaluate(iterator: nodeset as XPathNodeIterator, xpath: xpath);
         }
 
         if (nodeset is XPathNavigator)
         {
-            return Evaluate(nodeset as XPathNavigator, xpath);
+            return Evaluate(navigator: nodeset as XPathNavigator, xpath: xpath);
         }
 
-        throw new ArgumentOutOfRangeException("nodeset", nodeset, "Invalid type.");
+        throw new ArgumentOutOfRangeException(
+            paramName: "nodeset",
+            actualValue: nodeset,
+            message: "Invalid type."
+        );
     }
 
     private string Evaluate(XPathNodeIterator iterator, string xpath)
     {
-        return (string)Evaluate(iterator.Current, xpath);
+        return (string)Evaluate(navigator: iterator.Current, xpath: xpath);
     }
 
     private string Evaluate(XPathNavigator navigator, string xpath)
     {
-        return (string)Evaluate(xpath, false, OrigamDataType.String, navigator, null, null);
+        return (string)Evaluate(
+            xpath: xpath,
+            isPathRelative: false,
+            returnDataType: OrigamDataType.String,
+            nav: navigator,
+            contextPosition: null,
+            transactionId: null
+        );
     }
 
     public object Evaluate(
@@ -68,19 +79,22 @@ public class XpathEvaluator : IXpathEvaluator
     )
     {
         XPathExpression expr;
-        expr = nav.Compile(xpath);
-        OrigamXsltContext ctx = OrigamXsltContext.Create(new NameTable(), transactionId);
-        expr.SetContext(ctx);
+        expr = nav.Compile(xpath: xpath);
+        OrigamXsltContext ctx = OrigamXsltContext.Create(
+            nameTable: new NameTable(),
+            transactionId: transactionId
+        );
+        expr.SetContext(nsManager: ctx);
 
         object result;
 
         if (isPathRelative & contextPosition != null)
         {
-            result = nav.Evaluate(expr, contextPosition);
+            result = nav.Evaluate(expr: expr, context: contextPosition);
         }
         else
         {
-            result = nav.Evaluate(expr);
+            result = nav.Evaluate(expr: expr);
         }
 
         if (result is XPathNodeIterator)
@@ -138,7 +152,9 @@ public class XpathEvaluator : IXpathEvaluator
                         return result;
                     }
 
-                    throw new Exception(ResourceUtils.GetString("ErrorConvertToBool"));
+                    throw new Exception(
+                        message: ResourceUtils.GetString(key: "ErrorConvertToBool")
+                    );
                 }
 
                 case OrigamDataType.UniqueIdentifier:
@@ -148,7 +164,7 @@ public class XpathEvaluator : IXpathEvaluator
                         return DBNull.Value;
                     }
 
-                    return new Guid(result.ToString());
+                    return new Guid(g: result.ToString());
                 }
 
                 case OrigamDataType.Date:
@@ -159,8 +175,8 @@ public class XpathEvaluator : IXpathEvaluator
                     }
 
                     return XmlConvert.ToDateTime(
-                        result.ToString(),
-                        XmlDateTimeSerializationMode.RoundtripKind
+                        s: result.ToString(),
+                        dateTimeOption: XmlDateTimeSerializationMode.RoundtripKind
                     );
                 }
 
@@ -171,7 +187,10 @@ public class XpathEvaluator : IXpathEvaluator
                         return DBNull.Value;
                     }
 
-                    return Convert.ToInt64(result, new System.Globalization.NumberFormatInfo());
+                    return Convert.ToInt64(
+                        value: result,
+                        provider: new System.Globalization.NumberFormatInfo()
+                    );
                 }
 
                 case OrigamDataType.Integer:
@@ -181,7 +200,10 @@ public class XpathEvaluator : IXpathEvaluator
                         return DBNull.Value;
                     }
 
-                    return Convert.ToInt32(result, new System.Globalization.NumberFormatInfo());
+                    return Convert.ToInt32(
+                        value: result,
+                        provider: new System.Globalization.NumberFormatInfo()
+                    );
                 }
 
                 case OrigamDataType.Float:
@@ -191,12 +213,18 @@ public class XpathEvaluator : IXpathEvaluator
                         return DBNull.Value;
                     }
 
-                    return Convert.ToDecimal(result, new System.Globalization.NumberFormatInfo());
+                    return Convert.ToDecimal(
+                        value: result,
+                        provider: new System.Globalization.NumberFormatInfo()
+                    );
                 }
 
                 case OrigamDataType.Currency:
                 {
-                    return Convert.ToDecimal(result, new System.Globalization.NumberFormatInfo());
+                    return Convert.ToDecimal(
+                        value: result,
+                        provider: new System.Globalization.NumberFormatInfo()
+                    );
                 }
 
                 case OrigamDataType.String:
@@ -206,25 +234,25 @@ public class XpathEvaluator : IXpathEvaluator
                         return DBNull.Value;
                     }
 
-                    return XmlTools.ConvertToString(result);
+                    return XmlTools.ConvertToString(val: result);
                 }
 
                 default:
                 {
-                    throw new Exception("Data type not supported by rule evaluation.");
+                    throw new Exception(message: "Data type not supported by rule evaluation.");
                 }
             }
         }
         catch (Exception ex)
         {
             throw new Exception(
-                ResourceUtils.GetString("ErrorConvertToType0")
+                message: ResourceUtils.GetString(key: "ErrorConvertToType0")
                     + Environment.NewLine
-                    + ResourceUtils.GetString("ErrorConvertToType1")
+                    + ResourceUtils.GetString(key: "ErrorConvertToType1")
                     + returnDataType.ToString()
                     + Environment.NewLine
-                    + ResourceUtils.GetString("ErrorConvertToType2", result.ToString()),
-                ex
+                    + ResourceUtils.GetString(key: "ErrorConvertToType2", args: result.ToString()),
+                innerException: ex
             );
         }
     }

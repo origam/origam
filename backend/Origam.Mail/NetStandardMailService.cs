@@ -34,7 +34,7 @@ namespace Origam.Mail;
 public class NetStandardMailService : AbstractMailService
 {
     private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
-        System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
+        type: System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
     );
 
     private readonly string username;
@@ -56,25 +56,28 @@ public class NetStandardMailService : AbstractMailService
     )
     {
         if (
-            !string.IsNullOrWhiteSpace(pickupDirectoryLocation)
-            && !string.IsNullOrWhiteSpace(server)
+            !string.IsNullOrWhiteSpace(value: pickupDirectoryLocation)
+            && !string.IsNullOrWhiteSpace(value: server)
         )
         {
             throw new ArgumentException(
-                "It is not possible to specify both server and pickup directory."
+                message: "It is not possible to specify both server and pickup directory."
             );
         }
-        if (string.IsNullOrWhiteSpace(pickupDirectoryLocation))
+        if (string.IsNullOrWhiteSpace(value: pickupDirectoryLocation))
         {
-            if (string.IsNullOrWhiteSpace(password) && !string.IsNullOrWhiteSpace(username))
+            if (
+                string.IsNullOrWhiteSpace(value: password)
+                && !string.IsNullOrWhiteSpace(value: username)
+            )
             {
                 throw new ArgumentException(
-                    nameof(password) + " cannot be empty if fromAddress is not empty"
+                    message: nameof(password) + " cannot be empty if fromAddress is not empty"
                 );
             }
-            if (string.IsNullOrWhiteSpace(server))
+            if (string.IsNullOrWhiteSpace(value: server))
             {
-                throw new ArgumentException(nameof(server) + " cannot be empty");
+                throw new ArgumentException(message: nameof(server) + " cannot be empty");
             }
         }
         this.username = username;
@@ -89,18 +92,18 @@ public class NetStandardMailService : AbstractMailService
     {
         //return Value positive number (include 0zero) indicates OK result, negative -1 means error
         int retVal = 0;
-        var smtpClient = BuildSmtpClient(server, port);
+        var smtpClient = BuildSmtpClient(server: server, port: port);
         //get root (Mails) element
         XmlElement root = mailDocument.Xml.DocumentElement;
         //configure xsd namespace
         XmlNamespaceManager nsmgr = new XmlNamespaceManager(
-            ((XPathNavigator)root.CreateNavigator()).NameTable
+            nameTable: ((XPathNavigator)root.CreateNavigator()).NameTable
         );
         //all tags have to begin with m: prefix
-        nsmgr.AddNamespace("m", "http://schema.advantages.cz/AsMail.xsd"); //default namespace
+        nsmgr.AddNamespace(prefix: "m", uri: "http://schema.advantages.cz/AsMail.xsd"); //default namespace
         //get Mail nodes
         XmlNodeList mailList;
-        mailList = root.SelectNodes("/m:Mails/m:Mail", nsmgr);
+        mailList = root.SelectNodes(xpath: "/m:Mails/m:Mail", nsmgr: nsmgr);
         //send one mail per Mail section
         foreach (XmlNode mailRoot in mailList)
         {
@@ -108,39 +111,47 @@ public class NetStandardMailService : AbstractMailService
 
             //put mail header info
             m.BodyEncoding = Encoding.UTF8;
-            m.Subject = GetValue(mailRoot, nsmgr, "m:Subject");
+            m.Subject = GetValue(mailRoot: mailRoot, nsmgr: nsmgr, where: "m:Subject");
             m.From = new MailAddress(
-                GetValue(mailRoot, nsmgr, "m:From/m:Address"),
-                GetValue(mailRoot, nsmgr, "m:From/m:Name")
+                address: GetValue(mailRoot: mailRoot, nsmgr: nsmgr, where: "m:From/m:Address"),
+                displayName: GetValue(mailRoot: mailRoot, nsmgr: nsmgr, where: "m:From/m:Name")
             );
             m.Headers.Add(
-                "X-OrigamEmailIdentifier",
-                GetValue(mailRoot, nsmgr, "m:MessageIdentifier")
+                name: "X-OrigamEmailIdentifier",
+                value: GetValue(mailRoot: mailRoot, nsmgr: nsmgr, where: "m:MessageIdentifier")
             );
 
             //load recipient list
             XmlNodeList recipientList;
-            recipientList = mailRoot.SelectNodes("m:To/m:EmailAddress", nsmgr);
+            recipientList = mailRoot.SelectNodes(xpath: "m:To/m:EmailAddress", nsmgr: nsmgr);
             foreach (XmlNode recipientRoot in recipientList)
             {
                 m.To.Add(
-                    new MailAddress(
-                        GetValue(recipientRoot, nsmgr, "m:Address"),
-                        GetValue(recipientRoot, nsmgr, "m:Name")
+                    item: new MailAddress(
+                        address: GetValue(
+                            mailRoot: recipientRoot,
+                            nsmgr: nsmgr,
+                            where: "m:Address"
+                        ),
+                        displayName: GetValue(
+                            mailRoot: recipientRoot,
+                            nsmgr: nsmgr,
+                            where: "m:Name"
+                        )
                     )
                 );
             }
             //put html body inside
-            m.Body = GetValue(mailRoot, nsmgr, "m:Body");
+            m.Body = GetValue(mailRoot: mailRoot, nsmgr: nsmgr, where: "m:Body");
             m.IsBodyHtml = true;
             try
             {
-                MailLogUtils.SendMessageAndLog(smtpClient, m);
+                MailLogUtils.SendMessageAndLog(client: smtpClient, message: m);
                 retVal++;
             }
             catch (Exception ex)
             {
-                log.LogOrigamError(ex);
+                log.LogOrigamError(ex: ex);
                 throw;
             }
         }
@@ -151,7 +162,7 @@ public class NetStandardMailService : AbstractMailService
     {
         //return Value positive number (include 0zero) indicates OK result, negative -1 means error
         int retVal = 0;
-        var smtpClient = BuildSmtpClient(server, port);
+        var smtpClient = BuildSmtpClient(server: server, port: port);
         //send one mail per Mail section
         foreach (MailData.MailRow mailrow in mailData.Mail.Rows)
         {
@@ -162,76 +173,80 @@ public class NetStandardMailService : AbstractMailService
             string fromName = "";
             string fromAddress = "";
             OpenPOP.MIMEParser.Utility.ParseEmailAddress(
-                mailrow.Sender,
-                ref fromName,
-                ref fromAddress
+                strEmailAddress: mailrow.Sender,
+                strUser: ref fromName,
+                strAddress: ref fromAddress
             );
-            m.From = new MailAddress(fromAddress, fromName);
-            m.Headers.Add("X-OrigamEmailIdentifier", mailrow.Id.ToString());
-            string[] to = mailrow.Recipient.Split(";".ToCharArray());
+            m.From = new MailAddress(address: fromAddress, displayName: fromName);
+            m.Headers.Add(name: "X-OrigamEmailIdentifier", value: mailrow.Id.ToString());
+            string[] to = mailrow.Recipient.Split(separator: ";".ToCharArray());
             foreach (string recipient in to)
             {
                 string toName = "";
                 string toAddress = "";
-                OpenPOP.MIMEParser.Utility.ParseEmailAddress(recipient, ref toName, ref toAddress);
-                if (!string.IsNullOrEmpty(recipient))
+                OpenPOP.MIMEParser.Utility.ParseEmailAddress(
+                    strEmailAddress: recipient,
+                    strUser: ref toName,
+                    strAddress: ref toAddress
+                );
+                if (!string.IsNullOrEmpty(value: recipient))
                 {
-                    m.To.Add(new MailAddress(toAddress, toName));
+                    m.To.Add(item: new MailAddress(address: toAddress, displayName: toName));
                 }
             }
             if (!mailrow.IsCCNull())
             {
-                var cc = mailrow.CC.Split(";".ToCharArray());
+                var cc = mailrow.CC.Split(separator: ";".ToCharArray());
                 foreach (string recipient in cc)
                 {
                     string ccName = "";
                     string ccAddress = "";
                     OpenPOP.MIMEParser.Utility.ParseEmailAddress(
-                        recipient,
-                        ref ccName,
-                        ref ccAddress
+                        strEmailAddress: recipient,
+                        strUser: ref ccName,
+                        strAddress: ref ccAddress
                     );
-                    if (!string.IsNullOrEmpty(recipient))
+                    if (!string.IsNullOrEmpty(value: recipient))
                     {
-                        m.CC.Add(new MailAddress(ccAddress, ccName));
+                        m.CC.Add(item: new MailAddress(address: ccAddress, displayName: ccName));
                     }
                 }
             }
             if (!mailrow.IsBCCNull())
             {
-                var bcc = mailrow.BCC.Split(";".ToCharArray());
+                var bcc = mailrow.BCC.Split(separator: ";".ToCharArray());
                 foreach (string recipient in bcc)
                 {
                     string bccName = "";
                     string bccAddress = "";
                     OpenPOP.MIMEParser.Utility.ParseEmailAddress(
-                        recipient,
-                        ref bccName,
-                        ref bccAddress
+                        strEmailAddress: recipient,
+                        strUser: ref bccName,
+                        strAddress: ref bccAddress
                     );
-                    if (!string.IsNullOrEmpty(recipient))
+                    if (!string.IsNullOrEmpty(value: recipient))
                     {
-                        m.Bcc.Add(new MailAddress(bccAddress, bccName));
+                        m.Bcc.Add(item: new MailAddress(address: bccAddress, displayName: bccName));
                     }
                 }
             }
             if (!mailrow.IsMessageBodyNull())
             {
                 //put html body inside
-                if (mailrow.MessageBody.StartsWith("<"))
+                if (mailrow.MessageBody.StartsWith(value: "<"))
                 {
                     AlternateView plainTextView = AlternateView.CreateAlternateViewFromString(
-                        HtmlToText(mailrow.MessageBody),
-                        null,
-                        MediaTypeNames.Text.Plain
+                        content: HtmlToText(source: mailrow.MessageBody),
+                        contentEncoding: null,
+                        mediaType: MediaTypeNames.Text.Plain
                     );
-                    m.AlternateViews.Add(plainTextView);
+                    m.AlternateViews.Add(item: plainTextView);
                     AlternateView htmlView = AlternateView.CreateAlternateViewFromString(
-                        WebUtility.HtmlDecode(mailrow.MessageBody),
-                        null,
-                        MediaTypeNames.Text.Html
+                        content: WebUtility.HtmlDecode(value: mailrow.MessageBody),
+                        contentEncoding: null,
+                        mediaType: MediaTypeNames.Text.Html
                     );
-                    m.AlternateViews.Add(htmlView);
+                    m.AlternateViews.Add(item: htmlView);
                 }
                 else
                 {
@@ -241,18 +256,21 @@ public class NetStandardMailService : AbstractMailService
             }
             foreach (MailData.MailAttachmentRow attachment in mailrow.GetMailAttachmentRows())
             {
-                System.IO.MemoryStream stream = new System.IO.MemoryStream(attachment.Data, false);
-                Attachment att = new Attachment(stream, attachment.FileName);
-                m.Attachments.Add(att);
+                System.IO.MemoryStream stream = new System.IO.MemoryStream(
+                    buffer: attachment.Data,
+                    writable: false
+                );
+                Attachment att = new Attachment(contentStream: stream, name: attachment.FileName);
+                m.Attachments.Add(item: att);
             }
             try
             {
-                MailLogUtils.SendMessageAndLog(smtpClient, m);
+                MailLogUtils.SendMessageAndLog(client: smtpClient, message: m);
                 retVal++;
             }
             catch (Exception ex)
             {
-                log.LogOrigamError(ex);
+                log.LogOrigamError(ex: ex);
                 throw;
             }
         }
@@ -262,13 +280,13 @@ public class NetStandardMailService : AbstractMailService
     private SmtpClient BuildSmtpClient(string server, int port)
     {
         var smtpClient = new SmtpClient();
-        if (!string.IsNullOrEmpty(server))
+        if (!string.IsNullOrEmpty(value: server))
         {
             smtpClient.Host = server;
             smtpClient.Port = port;
             smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
         }
-        else if (!string.IsNullOrWhiteSpace(pickupDirectoryLocation))
+        else if (!string.IsNullOrWhiteSpace(value: pickupDirectoryLocation))
         {
             smtpClient.PickupDirectoryLocation = pickupDirectoryLocation;
             smtpClient.DeliveryMethod = SmtpDeliveryMethod.SpecifiedPickupDirectory;
@@ -276,7 +294,7 @@ public class NetStandardMailService : AbstractMailService
         }
         else
         {
-            SetConfigValues(smtpClient);
+            SetConfigValues(smtpClient: smtpClient);
         }
         return smtpClient;
     }
@@ -288,6 +306,6 @@ public class NetStandardMailService : AbstractMailService
         smtpClient.EnableSsl = useSsl;
         smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
         smtpClient.UseDefaultCredentials = false;
-        smtpClient.Credentials = new NetworkCredential(username, password);
+        smtpClient.Credentials = new NetworkCredential(userName: username, password: password);
     }
 }

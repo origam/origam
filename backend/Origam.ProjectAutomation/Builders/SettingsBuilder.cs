@@ -39,12 +39,12 @@ public class SettingsBuilder : AbstractBuilder
         _setting.DataDataService = project.GetDataDataService;
         _setting.SchemaDataService = project.GetDataDataService;
         _setting.ModelSourceControlLocation = project.ModelSourceFolder;
-        _settingsIndex = _settings.Add(_setting);
+        _settingsIndex = _settings.Add(value: _setting);
         project.ActiveConfigurationIndex = _settingsIndex;
-        ConfigurationManager.SetActiveConfiguration(_setting);
+        ConfigurationManager.SetActiveConfiguration(configuration: _setting);
         try
         {
-            SaveSettings(_settings);
+            SaveSettings(settings: _settings);
         }
         catch
         {
@@ -55,9 +55,9 @@ public class SettingsBuilder : AbstractBuilder
 
     public override void Rollback()
     {
-        _settings.RemoveAt(_settingsIndex);
-        SaveSettings(_settings);
-        ConfigurationManager.SetActiveConfiguration(null);
+        _settings.RemoveAt(index: _settingsIndex);
+        SaveSettings(settings: _settings);
+        ConfigurationManager.SetActiveConfiguration(configuration: null);
     }
 
     private static OrigamSettingsCollection GetSettings() =>
@@ -65,6 +65,6 @@ public class SettingsBuilder : AbstractBuilder
 
     private static void SaveSettings(OrigamSettingsCollection settings)
     {
-        ConfigurationManager.WriteConfiguration(settings);
+        ConfigurationManager.WriteConfiguration(configuration: settings);
     }
 }

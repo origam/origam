@@ -35,12 +35,12 @@ public class RuleSchemaItemProvider
 {
     public RuleSchemaItemProvider()
     {
-        this.ChildItemTypes.Add(typeof(StartRule));
-        this.ChildItemTypes.Add(typeof(EndRule));
-        this.ChildItemTypes.Add(typeof(EndRuleLookupXPath));
-        this.ChildItemTypes.Add(typeof(EntityRule));
-        this.ChildItemTypes.Add(typeof(ComplexDataRule));
-        this.ChildItemTypes.Add(typeof(SimpleDataRule));
+        this.ChildItemTypes.Add(item: typeof(StartRule));
+        this.ChildItemTypes.Add(item: typeof(EndRule));
+        this.ChildItemTypes.Add(item: typeof(EndRuleLookupXPath));
+        this.ChildItemTypes.Add(item: typeof(EntityRule));
+        this.ChildItemTypes.Add(item: typeof(ComplexDataRule));
+        this.ChildItemTypes.Add(item: typeof(SimpleDataRule));
     }
 
     #region ISchemaItemProvider Members
@@ -65,7 +65,7 @@ public class RuleSchemaItemProvider
             {
                 if (rule is StartRule startRule)
                 {
-                    result.Add(startRule);
+                    result.Add(item: startRule);
                 }
             }
             return result;
@@ -80,7 +80,7 @@ public class RuleSchemaItemProvider
             {
                 if (rule is IEndRule endRule)
                 {
-                    result.Add(endRule);
+                    result.Add(item: endRule);
                 }
             }
             return result;
@@ -95,7 +95,7 @@ public class RuleSchemaItemProvider
             {
                 if (rule is IDataRule dataRule)
                 {
-                    result.Add(dataRule);
+                    result.Add(item: dataRule);
                 }
             }
             return result;
@@ -110,7 +110,7 @@ public class RuleSchemaItemProvider
             {
                 if (rule is EntityRule entityRule)
                 {
-                    result.Add(entityRule);
+                    result.Add(item: entityRule);
                 }
             }
             return result;

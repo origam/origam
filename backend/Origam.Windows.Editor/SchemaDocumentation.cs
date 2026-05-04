@@ -33,7 +33,7 @@ public class SchemaDocumentation
         this.annotation = annotation;
         if (annotation != null)
         {
-            ReadDocumentationFromAnnotation(annotation.Items);
+            ReadDocumentationFromAnnotation(annotationItems: annotation.Items);
         }
     }
 
@@ -44,7 +44,7 @@ public class SchemaDocumentation
             XmlSchemaDocumentation schemaDocumentation = schemaObject as XmlSchemaDocumentation;
             if (schemaDocumentation != null)
             {
-                ReadSchemaDocumentationFromMarkup(schemaDocumentation.Markup);
+                ReadSchemaDocumentationFromMarkup(markup: schemaDocumentation.Markup);
             }
         }
         RemoveWhitespaceFromDocumentation();
@@ -55,7 +55,7 @@ public class SchemaDocumentation
         foreach (XmlNode node in markup)
         {
             XmlText textNode = node as XmlText;
-            AppendTextToDocumentation(textNode);
+            AppendTextToDocumentation(textNode: textNode);
         }
     }
 
@@ -65,15 +65,15 @@ public class SchemaDocumentation
         {
             if (textNode.Data != null)
             {
-                documentation.Append(textNode.Data);
+                documentation.Append(value: textNode.Data);
             }
         }
     }
 
     void RemoveWhitespaceFromDocumentation()
     {
-        string[] lines = documentation.ToString().Split('\n');
-        RemoveWhitespaceFromLines(lines);
+        string[] lines = documentation.ToString().Split(separator: '\n');
+        RemoveWhitespaceFromLines(lines: lines);
     }
 
     void RemoveWhitespaceFromLines(string[] lines)
@@ -81,7 +81,7 @@ public class SchemaDocumentation
         foreach (string line in lines)
         {
             string lineWithoutWhitespace = line.Trim();
-            documentationWithoutWhitespace.AppendLine(lineWithoutWhitespace);
+            documentationWithoutWhitespace.AppendLine(value: lineWithoutWhitespace);
         }
     }
 

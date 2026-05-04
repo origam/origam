@@ -47,7 +47,7 @@ public class KeystrokeMessageFilter : System.Windows.Forms.IMessageFilter
         )
         {
             IMenuCommandService mcs =
-                host.GetService(typeof(IMenuCommandService)) as IMenuCommandService;
+                host.GetService(serviceType: typeof(IMenuCommandService)) as IMenuCommandService;
             // WM_KEYCHAR only tells us the last key pressed. Thus we check
             // Control for modifier keys (Control, Shift, etc.)
             //
@@ -55,115 +55,115 @@ public class KeystrokeMessageFilter : System.Windows.Forms.IMessageFilter
             {
                 case (int)Keys.Up:
                 {
-                    mcs.GlobalInvoke(MenuCommands.KeyMoveUp);
+                    mcs.GlobalInvoke(commandID: MenuCommands.KeyMoveUp);
                     break;
                 }
 
                 case (int)Keys.Down:
                 {
-                    mcs.GlobalInvoke(MenuCommands.KeyMoveDown);
+                    mcs.GlobalInvoke(commandID: MenuCommands.KeyMoveDown);
                     break;
                 }
 
                 case (int)Keys.Right:
                 {
-                    mcs.GlobalInvoke(MenuCommands.KeyMoveRight);
+                    mcs.GlobalInvoke(commandID: MenuCommands.KeyMoveRight);
                     break;
                 }
 
                 case (int)Keys.Left:
                 {
-                    mcs.GlobalInvoke(MenuCommands.KeyMoveLeft);
+                    mcs.GlobalInvoke(commandID: MenuCommands.KeyMoveLeft);
                     break;
                 }
 
                 case (int)(Keys.Control | Keys.Up):
                 {
-                    mcs.GlobalInvoke(MenuCommands.KeyNudgeUp);
+                    mcs.GlobalInvoke(commandID: MenuCommands.KeyNudgeUp);
                     break;
                 }
 
                 case (int)(Keys.Control | Keys.Down):
                 {
-                    mcs.GlobalInvoke(MenuCommands.KeyNudgeDown);
+                    mcs.GlobalInvoke(commandID: MenuCommands.KeyNudgeDown);
                     break;
                 }
 
                 case (int)(Keys.Control | Keys.Right):
                 {
-                    mcs.GlobalInvoke(MenuCommands.KeyNudgeRight);
+                    mcs.GlobalInvoke(commandID: MenuCommands.KeyNudgeRight);
                     break;
                 }
 
                 case (int)(Keys.Control | Keys.Left):
                 {
-                    mcs.GlobalInvoke(MenuCommands.KeyNudgeLeft);
+                    mcs.GlobalInvoke(commandID: MenuCommands.KeyNudgeLeft);
                     break;
                 }
 
                 case (int)(Keys.Shift | Keys.Up):
                 {
-                    mcs.GlobalInvoke(MenuCommands.KeySizeHeightDecrease);
+                    mcs.GlobalInvoke(commandID: MenuCommands.KeySizeHeightDecrease);
                     break;
                 }
 
                 case (int)(Keys.Shift | Keys.Down):
                 {
-                    mcs.GlobalInvoke(MenuCommands.KeySizeHeightIncrease);
+                    mcs.GlobalInvoke(commandID: MenuCommands.KeySizeHeightIncrease);
                     break;
                 }
 
                 case (int)(Keys.Shift | Keys.Right):
                 {
-                    mcs.GlobalInvoke(MenuCommands.KeySizeWidthIncrease);
+                    mcs.GlobalInvoke(commandID: MenuCommands.KeySizeWidthIncrease);
                     break;
                 }
 
                 case (int)(Keys.Shift | Keys.Left):
                 {
-                    mcs.GlobalInvoke(MenuCommands.KeySizeWidthDecrease);
+                    mcs.GlobalInvoke(commandID: MenuCommands.KeySizeWidthDecrease);
                     break;
                 }
 
                 case (int)(Keys.Control | Keys.Shift | Keys.Up):
                 {
-                    mcs.GlobalInvoke(MenuCommands.KeyNudgeHeightIncrease);
+                    mcs.GlobalInvoke(commandID: MenuCommands.KeyNudgeHeightIncrease);
                     break;
                 }
 
                 case (int)(Keys.Control | Keys.Shift | Keys.Down):
                 {
-                    mcs.GlobalInvoke(MenuCommands.KeyNudgeHeightDecrease);
+                    mcs.GlobalInvoke(commandID: MenuCommands.KeyNudgeHeightDecrease);
                     break;
                 }
 
                 case (int)(Keys.Control | Keys.Shift | Keys.Right):
                 {
-                    mcs.GlobalInvoke(MenuCommands.KeyNudgeWidthIncrease);
+                    mcs.GlobalInvoke(commandID: MenuCommands.KeyNudgeWidthIncrease);
                     break;
                 }
 
                 case (int)(Keys.ControlKey | Keys.Shift | Keys.Left):
                 {
-                    mcs.GlobalInvoke(MenuCommands.KeyNudgeWidthDecrease);
+                    mcs.GlobalInvoke(commandID: MenuCommands.KeyNudgeWidthDecrease);
                     break;
                 }
 
                 case (int)(Keys.Escape):
                 {
-                    mcs.GlobalInvoke(MenuCommands.KeyCancel);
+                    mcs.GlobalInvoke(commandID: MenuCommands.KeyCancel);
                     break;
                 }
 
                 case (int)(Keys.Shift | Keys.Escape):
                 {
-                    mcs.GlobalInvoke(MenuCommands.KeyReverseCancel);
+                    mcs.GlobalInvoke(commandID: MenuCommands.KeyReverseCancel);
                     break;
                 }
 
                 case (int)(Keys.Enter):
                 {
-                    mcs.GlobalInvoke(MenuCommands.KeyDefaultAction);
+                    mcs.GlobalInvoke(commandID: MenuCommands.KeyDefaultAction);
                     break;
                 }
             }

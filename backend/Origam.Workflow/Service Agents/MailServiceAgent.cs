@@ -52,36 +52,44 @@ public class MailServiceAgent : AbstractServiceAgent
             case "SendMail":
             {
                 // Check input parameters
-                if (!(this.Parameters["Data"] is IXmlContainer))
+                if (!(this.Parameters[key: "Data"] is IXmlContainer))
                 {
-                    throw new InvalidCastException(ResourceUtils.GetString("ErrorNotXmlDocument"));
+                    throw new InvalidCastException(
+                        message: ResourceUtils.GetString(key: "ErrorNotXmlDocument")
+                    );
                 }
 
                 string server = null;
                 int port = 25;
-                if (this.Parameters.Contains("Server"))
+                if (this.Parameters.Contains(key: "Server"))
                 {
-                    if (!(this.Parameters["Server"] is string))
+                    if (!(this.Parameters[key: "Server"] is string))
                     {
                         throw new InvalidCastException(
-                            ResourceUtils.GetString("ErrorServerNotString")
+                            message: ResourceUtils.GetString(key: "ErrorServerNotString")
                         );
                     }
 
-                    server = this.Parameters["Server"] as String;
+                    server = this.Parameters[key: "Server"] as String;
                 }
-                if (this.Parameters.Contains("Port"))
+                if (this.Parameters.Contains(key: "Port"))
                 {
-                    if (!(this.Parameters["Port"] is int))
+                    if (!(this.Parameters[key: "Port"] is int))
                     {
-                        throw new InvalidCastException(ResourceUtils.GetString("ErrorPortNotInt"));
+                        throw new InvalidCastException(
+                            message: ResourceUtils.GetString(key: "ErrorPortNotInt")
+                        );
                     }
 
-                    port = Convert.ToInt32(this.Parameters["Port"]);
+                    port = Convert.ToInt32(value: this.Parameters[key: "Port"]);
                 }
                 _result = MailServiceFactory
                     .GetMailService()
-                    .SendMail(this.Parameters["Data"] as IXmlContainer, server, port);
+                    .SendMail(
+                        mailDocument: this.Parameters[key: "Data"] as IXmlContainer,
+                        server: server,
+                        port: port
+                    );
 
                 break;
             }
@@ -89,37 +97,41 @@ public class MailServiceAgent : AbstractServiceAgent
             case "RetrieveMails":
             {
                 // Check input parameters
-                if (!(this.Parameters["UserName"] is string))
+                if (!(this.Parameters[key: "UserName"] is string))
                 {
                     throw new InvalidCastException(
-                        ResourceUtils.GetString("ErrorMailServerNotString")
+                        message: ResourceUtils.GetString(key: "ErrorMailServerNotString")
                     );
                 }
 
-                if (!(this.Parameters["Password"] is string))
+                if (!(this.Parameters[key: "Password"] is string))
                 {
                     throw new InvalidCastException(
-                        ResourceUtils.GetString("ErrorPasswordNotString")
+                        message: ResourceUtils.GetString(key: "ErrorPasswordNotString")
                     );
                 }
 
-                if (!(this.Parameters["Server"] is string))
+                if (!(this.Parameters[key: "Server"] is string))
                 {
-                    throw new InvalidCastException(ResourceUtils.GetString("ErrorServerNotString"));
+                    throw new InvalidCastException(
+                        message: ResourceUtils.GetString(key: "ErrorServerNotString")
+                    );
                 }
 
-                if (!(this.Parameters["Port"] is int))
+                if (!(this.Parameters[key: "Port"] is int))
                 {
-                    throw new InvalidCastException(ResourceUtils.GetString("ErrorPortNotInt"));
+                    throw new InvalidCastException(
+                        message: ResourceUtils.GetString(key: "ErrorPortNotInt")
+                    );
                 }
 
                 _result = AbstractMailService.GetMails(
-                    this.Parameters["Server"] as String,
-                    Convert.ToInt32(this.Parameters["Port"]),
-                    this.Parameters["UserName"] as String,
-                    this.Parameters["Password"] as String,
-                    this.TransactionId,
-                    0
+                    mailServer: this.Parameters[key: "Server"] as String,
+                    port: Convert.ToInt32(value: this.Parameters[key: "Port"]),
+                    userName: this.Parameters[key: "UserName"] as String,
+                    password: this.Parameters[key: "Password"] as String,
+                    transactionId: this.TransactionId,
+                    maxCount: 0
                 );
 
                 break;
@@ -128,9 +140,9 @@ public class MailServiceAgent : AbstractServiceAgent
             default:
             {
                 throw new ArgumentOutOfRangeException(
-                    "MethodName",
-                    this.MethodName,
-                    ResourceUtils.GetString("InvalidMethodName")
+                    paramName: "MethodName",
+                    actualValue: this.MethodName,
+                    message: ResourceUtils.GetString(key: "InvalidMethodName")
                 );
             }
         }

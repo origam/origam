@@ -33,7 +33,8 @@ namespace Origam.Gui.Win.Commands;
 public class ShowDataStructureEntitySql : AbstractMenuCommand
 {
     private WorkbenchSchemaService _schema =
-        ServiceManager.Services.GetService(typeof(SchemaService)) as WorkbenchSchemaService;
+        ServiceManager.Services.GetService(serviceType: typeof(SchemaService))
+        as WorkbenchSchemaService;
     public override bool IsEnabled
     {
         get { return Owner is DataStructureEntity; }
@@ -51,24 +52,28 @@ public class ShowDataStructureEntitySql : AbstractMenuCommand
         if (entity.Columns.Count > 0)
         {
             DataStructure ds = (Owner as ISchemaItem).RootItem as DataStructure;
-            builder.AppendLine("-- SQL statements for data structure: " + ds.Name);
+            builder.AppendLine(value: "-- SQL statements for data structure: " + ds.Name);
             generator.PrettyFormat = true;
             generator.GenerateConsoleUseSyntax = true;
             // parameter declarations
             builder.AppendLine(
-                generator.SelectParameterDeclarationsSql(
-                    ds,
-                    Owner as DataStructureEntity,
-                    (DataStructureFilterSet)null,
-                    false,
-                    null
+                value: generator.SelectParameterDeclarationsSql(
+                    ds: ds,
+                    entity: Owner as DataStructureEntity,
+                    filter: (DataStructureFilterSet)null,
+                    paging: false,
+                    columnName: null
                 )
             );
-            builder.AppendLine("-----------------------------------------------------------------");
-            builder.AppendLine("-- " + (Owner as DataStructureEntity).Name);
-            builder.AppendLine("-----------------------------------------------------------------");
             builder.AppendLine(
-                generator.SelectSql(
+                value: "-----------------------------------------------------------------"
+            );
+            builder.AppendLine(value: "-- " + (Owner as DataStructureEntity).Name);
+            builder.AppendLine(
+                value: "-----------------------------------------------------------------"
+            );
+            builder.AppendLine(
+                value: generator.SelectSql(
                     ds: ds,
                     entity: Owner as DataStructureEntity,
                     filter: null,
@@ -80,38 +85,62 @@ public class ShowDataStructureEntitySql : AbstractMenuCommand
                 )
             );
             builder.AppendLine();
-            builder.AppendLine("-----------------------------------------------------------------");
-            builder.AppendLine("-- Load Record After Update SQL");
-            builder.AppendLine("-----------------------------------------------------------------");
             builder.AppendLine(
-                generator.SelectRowSql(
-                    Owner as DataStructureEntity,
-                    null,
-                    new Hashtable(),
-                    DA.ColumnsInfo.Empty,
-                    true
+                value: "-----------------------------------------------------------------"
+            );
+            builder.AppendLine(value: "-- Load Record After Update SQL");
+            builder.AppendLine(
+                value: "-----------------------------------------------------------------"
+            );
+            builder.AppendLine(
+                value: generator.SelectRowSql(
+                    entity: Owner as DataStructureEntity,
+                    filterSet: null,
+                    selectParameterReferences: new Hashtable(),
+                    columnsInfo: DA.ColumnsInfo.Empty,
+                    forceDatabaseCalculation: true
                 )
             );
             builder.AppendLine();
-            builder.AppendLine("-----------------------------------------------------------------");
-            builder.AppendLine("-- INSERT SQL");
-            builder.AppendLine("-----------------------------------------------------------------");
-            builder.AppendLine(generator.InsertSql(ds, Owner as DataStructureEntity));
+            builder.AppendLine(
+                value: "-----------------------------------------------------------------"
+            );
+            builder.AppendLine(value: "-- INSERT SQL");
+            builder.AppendLine(
+                value: "-----------------------------------------------------------------"
+            );
+            builder.AppendLine(
+                value: generator.InsertSql(ds: ds, entity: Owner as DataStructureEntity)
+            );
             builder.AppendLine();
-            builder.AppendLine("-----------------------------------------------------------------");
-            builder.AppendLine("-- UPDATE SQL");
-            builder.AppendLine("-----------------------------------------------------------------");
-            builder.AppendLine(generator.UpdateSql(ds, Owner as DataStructureEntity));
+            builder.AppendLine(
+                value: "-----------------------------------------------------------------"
+            );
+            builder.AppendLine(value: "-- UPDATE SQL");
+            builder.AppendLine(
+                value: "-----------------------------------------------------------------"
+            );
+            builder.AppendLine(
+                value: generator.UpdateSql(ds: ds, entity: Owner as DataStructureEntity)
+            );
             builder.AppendLine();
-            builder.AppendLine("-----------------------------------------------------------------");
-            builder.AppendLine("-- DELETE SQL");
-            builder.AppendLine("-----------------------------------------------------------------");
-            builder.AppendLine(generator.DeleteSql(ds, Owner as DataStructureEntity));
+            builder.AppendLine(
+                value: "-----------------------------------------------------------------"
+            );
+            builder.AppendLine(value: "-- DELETE SQL");
+            builder.AppendLine(
+                value: "-----------------------------------------------------------------"
+            );
+            builder.AppendLine(
+                value: generator.DeleteSql(ds: ds, entity: Owner as DataStructureEntity)
+            );
         }
         else
         {
-            builder.AppendLine("No SQL command generated for this entity. No columns selected.");
+            builder.AppendLine(
+                value: "No SQL command generated for this entity. No columns selected."
+            );
         }
-        new ShowSqlConsole(new SqlConsoleParameters(builder.ToString())).Run();
+        new ShowSqlConsole(owner: new SqlConsoleParameters(command: builder.ToString())).Run();
     }
 }

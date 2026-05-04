@@ -45,7 +45,7 @@ public sealed class SimpleSiteImpl : ISite, IServiceProvider
             services = new Dictionary<Type, object>();
         }
 
-        services[typeof(T)] = service;
+        services[key: typeof(T)] = service;
     }
 
     public void RemoveService<T>()
@@ -53,14 +53,14 @@ public sealed class SimpleSiteImpl : ISite, IServiceProvider
     {
         if (services != null)
         {
-            services.Remove(typeof(T));
+            services.Remove(key: typeof(T));
         }
     }
 
     object IServiceProvider.GetService(Type serviceType)
     {
         object service;
-        if (services != null && services.TryGetValue(serviceType, out service))
+        if (services != null && services.TryGetValue(key: serviceType, value: out service))
         {
             return service;
         }

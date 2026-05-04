@@ -32,23 +32,23 @@ namespace Origam.Schema.WorkflowModel;
 /// <summary>
 /// Summary description for WorkflowTask.
 /// </summary>
-[ClassMetaVersion("6.0.0")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public abstract class WorkflowTask : AbstractWorkflowStep, ISchemaItemFactory, IWorkflowTask
 {
     public WorkflowTask()
         : base() { }
 
     public WorkflowTask(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(schemaExtensionId: schemaExtensionId) { }
 
     public WorkflowTask(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Overriden ISchemaItem Members
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(this.OutputContextStore);
-        base.GetExtraDependencies(dependencies);
+        dependencies.Add(item: this.OutputContextStore);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override void UpdateReferences()
@@ -57,7 +57,7 @@ public abstract class WorkflowTask : AbstractWorkflowStep, ISchemaItemFactory, I
         {
             if (item.OldPrimaryKey != null)
             {
-                if (item.OldPrimaryKey.Equals(this.OutputContextStore.PrimaryKey))
+                if (item.OldPrimaryKey.Equals(obj: this.OutputContextStore.PrimaryKey))
                 {
                     this.OutputContextStore = item as IContextStore;
                     break;
@@ -71,9 +71,9 @@ public abstract class WorkflowTask : AbstractWorkflowStep, ISchemaItemFactory, I
 
     public Guid OutputContextStoreId;
 
-    [TypeConverter(typeof(ContextStoreConverter))]
+    [TypeConverter(type: typeof(ContextStoreConverter))]
     [NotNullModelElementRule()]
-    [XmlReference("outputContextStore", "OutputContextStoreId")]
+    [XmlReference(attributeName: "outputContextStore", idField: "OutputContextStoreId")]
     public IContextStore OutputContextStore
     {
         get
@@ -81,7 +81,10 @@ public abstract class WorkflowTask : AbstractWorkflowStep, ISchemaItemFactory, I
             ModelElementKey key = new ModelElementKey();
             key.Id = this.OutputContextStoreId;
             return (IContextStore)
-                this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
+                this.PersistenceProvider.RetrieveInstance(
+                    type: typeof(ISchemaItem),
+                    primaryKey: key
+                );
         }
         set
         {
@@ -91,13 +94,13 @@ public abstract class WorkflowTask : AbstractWorkflowStep, ISchemaItemFactory, I
             }
             else
             {
-                this.OutputContextStoreId = (Guid)value.PrimaryKey["Id"];
+                this.OutputContextStoreId = (Guid)value.PrimaryKey[key: "Id"];
             }
         }
     }
 
-    [DefaultValue(ServiceOutputMethod.AppendMergeExisting)]
-    [XmlAttribute("outputMethod")]
+    [DefaultValue(value: ServiceOutputMethod.AppendMergeExisting)]
+    [XmlAttribute(attributeName: "outputMethod")]
     public virtual ServiceOutputMethod OutputMethod { get; set; } =
         ServiceOutputMethod.AppendMergeExisting;
     #endregion

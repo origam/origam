@@ -49,20 +49,24 @@ public abstract class AbstractMenuCommand : AbstractCommand, IMenuCommand, IRunC
     {
         AbstractSqlDataService abstractSqlData = (AbstractSqlDataService)
             DataServiceFactory.GetDataService();
-        string script = abstractSqlData.EntityDdl(guid);
+        string script = abstractSqlData.EntityDdl(entityId: guid);
         OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
-        settings.DeployPlatforms?.ForEach(platform =>
+        settings.DeployPlatforms?.ForEach(action: platform =>
         {
             AbstractSqlDataService DsPlatform = (AbstractSqlDataService)
-                DataServiceFactory.GetDataService(platform);
-            string platformscript = DsPlatform.EntityDdl(guid);
+                DataServiceFactory.GetDataService(deployPlatform: platform);
+            string platformscript = DsPlatform.EntityDdl(entityId: guid);
             ServiceCommandUpdateScriptActivity _create = DeploymentHelper.CreateDatabaseScript(
-                name,
-                platformscript,
-                DsPlatform.PlatformName
+                name: name,
+                script: platformscript,
+                platformName: DsPlatform.PlatformName
             );
         });
-        return DeploymentHelper.CreateDatabaseScript(name, script, abstractSqlData.PlatformName);
+        return DeploymentHelper.CreateDatabaseScript(
+            name: name,
+            script: script,
+            platformName: abstractSqlData.PlatformName
+        );
     }
 
     public ServiceCommandUpdateScriptActivity CreateDatabaseScript(
@@ -73,11 +77,11 @@ public abstract class AbstractMenuCommand : AbstractCommand, IMenuCommand, IRunC
         ServiceCommandUpdateScriptActivity create = null;
         for (int index = 0; index < dict.Count; index++)
         {
-            var item = dict.ElementAt(index);
+            var item = dict.ElementAt(index: index);
             create = DeploymentHelper.CreateDatabaseScript(
-                name,
-                ((StringBuilder)item.Value).ToString(),
-                ((AbstractSqlDataService)item.Key).PlatformName
+                name: name,
+                script: ((StringBuilder)item.Value).ToString(),
+                platformName: ((AbstractSqlDataService)item.Key).PlatformName
             );
         }
         return create;
@@ -90,13 +94,13 @@ public abstract class AbstractMenuCommand : AbstractCommand, IMenuCommand, IRunC
         AbstractSqlDataService abstractSqlData = (AbstractSqlDataService)
             DataServiceFactory.GetDataService();
         OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
-        settings.DeployPlatforms?.ForEach(platform =>
+        settings.DeployPlatforms?.ForEach(action: platform =>
         {
             AbstractSqlDataService DsPlatform = (AbstractSqlDataService)
-                DataServiceFactory.GetDataService(platform);
-            dict.Add(DsPlatform, new StringBuilder());
+                DataServiceFactory.GetDataService(deployPlatform: platform);
+            dict.Add(key: DsPlatform, value: new StringBuilder());
         });
-        dict.Add(abstractSqlData, new StringBuilder());
+        dict.Add(key: abstractSqlData, value: new StringBuilder());
         return dict;
     }
 
@@ -107,7 +111,7 @@ public abstract class AbstractMenuCommand : AbstractCommand, IMenuCommand, IRunC
     )
     {
         OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
-        string[] fkDdl = DataService.Instance.FieldDdl(fk.Id);
+        string[] fkDdl = DataService.Instance.FieldDdl(fieldId: fk.Id);
         int i = 0;
         foreach (string ddl in fkDdl)
         {
@@ -116,19 +120,21 @@ public abstract class AbstractMenuCommand : AbstractCommand, IMenuCommand, IRunC
             if (baseField == null || i == 1)
             {
                 var script3 = DeploymentHelper.CreateDatabaseScript(
-                    baseEntity.Name + "_" + fk.Name,
-                    ddl,
-                    ((AbstractSqlDataService)DataServiceFactory.GetDataService()).PlatformName
+                    name: baseEntity.Name + "_" + fk.Name,
+                    script: ddl,
+                    platformName: (
+                        (AbstractSqlDataService)DataServiceFactory.GetDataService()
+                    ).PlatformName
                 );
-                GeneratedModelElements.Add(script3);
+                GeneratedModelElements.Add(item: script3);
             }
             i++;
         }
-        settings.DeployPlatforms?.ForEach(platform =>
+        settings.DeployPlatforms?.ForEach(action: platform =>
         {
             AbstractSqlDataService DsPlatform = (AbstractSqlDataService)
-                DataServiceFactory.GetDataService(platform);
-            fkDdl = DsPlatform.FieldDdl(fk.Id);
+                DataServiceFactory.GetDataService(deployPlatform: platform);
+            fkDdl = DsPlatform.FieldDdl(fieldId: fk.Id);
             i = 0;
             foreach (string ddl in fkDdl)
             {
@@ -137,9 +143,9 @@ public abstract class AbstractMenuCommand : AbstractCommand, IMenuCommand, IRunC
                 if (baseField == null || i == 1)
                 {
                     var script3 = DeploymentHelper.CreateDatabaseScript(
-                        baseEntity.Name + "_" + fk.Name,
-                        ddl,
-                        DsPlatform.PlatformName
+                        name: baseEntity.Name + "_" + fk.Name,
+                        script: ddl,
+                        platformName: DsPlatform.PlatformName
                     );
                 }
                 i++;
@@ -150,11 +156,15 @@ public abstract class AbstractMenuCommand : AbstractCommand, IMenuCommand, IRunC
     public static List<string> GetListDatastructure(string itemTypeConst)
     {
         ISchemaService schema =
-            ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
+            ServiceManager.Services.GetService(serviceType: typeof(ISchemaService))
+            as ISchemaService;
         DataStructureSchemaItemProvider dsprovider =
-            schema.GetProvider(typeof(DataStructureSchemaItemProvider))
+            schema.GetProvider(type: typeof(DataStructureSchemaItemProvider))
             as DataStructureSchemaItemProvider;
-        return dsprovider.ChildItemsByType<ISchemaItem>(itemTypeConst).Select(x => x.Name).ToList();
+        return dsprovider
+            .ChildItemsByType<ISchemaItem>(itemType: itemTypeConst)
+            .Select(selector: x => x.Name)
+            .ToList();
     }
 
     public ServiceCommandUpdateScriptActivity CreateRole(string role)
@@ -162,16 +172,16 @@ public abstract class AbstractMenuCommand : AbstractCommand, IMenuCommand, IRunC
         OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
         AbstractSqlDataService abstractSqlData = (AbstractSqlDataService)
             DataServiceFactory.GetDataService();
-        settings.DeployPlatforms?.ForEach(platform =>
+        settings.DeployPlatforms?.ForEach(action: platform =>
         {
             AbstractSqlDataService DsPlatform = (AbstractSqlDataService)
-                DataServiceFactory.GetDataService(platform);
+                DataServiceFactory.GetDataService(deployPlatform: platform);
             ServiceCommandUpdateScriptActivity _create = DeploymentHelper.CreateSystemRole(
-                role,
-                DsPlatform
+                roleName: role,
+                abstractSqlData: DsPlatform
             );
         });
-        return DeploymentHelper.CreateSystemRole(role, abstractSqlData);
+        return DeploymentHelper.CreateSystemRole(roleName: role, abstractSqlData: abstractSqlData);
     }
     #endregion
     #region IDisposable Members
@@ -192,13 +202,13 @@ public abstract class AbstractMenuCommand : AbstractCommand, IMenuCommand, IRunC
 
     public static void ShowListItems(RichTextBox richTextBoxSummary, Hashtable selectedFieldNames)
     {
-        richTextBoxSummary.AppendText(Environment.NewLine);
-        richTextBoxSummary.AppendText("List of fields: \t\t");
+        richTextBoxSummary.AppendText(text: Environment.NewLine);
+        richTextBoxSummary.AppendText(text: "List of fields: \t\t");
         foreach (DictionaryEntry row in selectedFieldNames)
         {
-            richTextBoxSummary.AppendText(row.Key.ToString());
-            richTextBoxSummary.AppendText(Environment.NewLine);
-            richTextBoxSummary.AppendText("\t\t\t");
+            richTextBoxSummary.AppendText(text: row.Key.ToString());
+            richTextBoxSummary.AppendText(text: Environment.NewLine);
+            richTextBoxSummary.AppendText(text: "\t\t\t");
         }
     }
     #endregion

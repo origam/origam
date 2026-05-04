@@ -37,10 +37,10 @@ public abstract class AbstractIndexFile : IDisposable
     {
         this.indexFile = indexFile;
         fileStream = File.Open(
-            indexFile,
-            FileMode.OpenOrCreate,
-            FileAccess.ReadWrite,
-            FileShare.None
+            path: indexFile,
+            mode: FileMode.OpenOrCreate,
+            access: FileAccess.ReadWrite,
+            share: FileShare.None
         );
     }
 
@@ -49,14 +49,16 @@ public abstract class AbstractIndexFile : IDisposable
         if (disposed)
         {
             throw new ObjectDisposedException(
-                "Dispose method has been already called and file is closed!"
+                objectName: "Dispose method has been already called and file is closed!"
             );
         }
 
         try
         {
-            byte[] bytes = new UTF8Encoding(true).GetBytes(entry + Environment.NewLine);
-            fileStream.Seek(0, SeekOrigin.End);
+            byte[] bytes = new UTF8Encoding(encoderShouldEmitUTF8Identifier: true).GetBytes(
+                s: entry + Environment.NewLine
+            );
+            fileStream.Seek(offset: 0, origin: SeekOrigin.End);
             fileStream.Write(array: bytes, offset: 0, count: bytes.Length);
         }
         catch (Exception)
@@ -68,14 +70,14 @@ public abstract class AbstractIndexFile : IDisposable
 
     private string ReadAllText()
     {
-        fileStream.Seek(0, SeekOrigin.Begin);
+        fileStream.Seek(offset: 0, origin: SeekOrigin.Begin);
         byte[] bytes = new byte[fileStream.Length];
         int numBytesToRead = (int)fileStream.Length;
         int numBytesRead = 0;
         while (numBytesToRead > 0)
         {
             // Read may return anything from 0 to numBytesToRead.
-            int n = fileStream.Read(bytes, numBytesRead, numBytesToRead);
+            int n = fileStream.Read(array: bytes, offset: numBytesRead, count: numBytesToRead);
             // Break when the end of the file is reached.
             if (n == 0)
             {
@@ -85,12 +87,15 @@ public abstract class AbstractIndexFile : IDisposable
             numBytesRead += n;
             numBytesToRead -= n;
         }
-        return Encoding.UTF8.GetString(bytes, 0, bytes.Length);
+        return Encoding.UTF8.GetString(bytes: bytes, index: 0, count: bytes.Length);
     }
 
     protected IEnumerable<string> ReadAllLines()
     {
-        return ReadAllText().Split('\n').Select(line => line.Trim()).Where(line => line != "");
+        return ReadAllText()
+            .Split(separator: '\n')
+            .Select(selector: line => line.Trim())
+            .Where(predicate: line => line != "");
     }
 
     public void Dispose()
@@ -98,7 +103,7 @@ public abstract class AbstractIndexFile : IDisposable
         if (!disposed)
         {
             fileStream?.Dispose();
-            GC.SuppressFinalize(this);
+            GC.SuppressFinalize(obj: this);
         }
         disposed = true;
     }

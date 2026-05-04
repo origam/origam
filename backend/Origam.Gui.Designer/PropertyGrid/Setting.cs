@@ -61,13 +61,13 @@ public class Setting
 
     #region Other constructors that call the one above
     public Setting(object val, string desc, string category)
-        : this(val, desc, category, null, null) { }
+        : this(val: val, desc: desc, category: category, update: null, type: null) { }
 
     public Setting(object val, string desc)
-        : this(val, desc, null, null, null) { }
+        : this(val: val, desc: desc, category: null, update: null, type: null) { }
 
     public Setting(object val, Type type)
-        : this(val, null, null, null, type) { }
+        : this(val: val, desc: null, category: null, update: null, type: type) { }
     #endregion
     #region get/set properties for the private data
     public object Value
@@ -116,7 +116,7 @@ public class Setting
         //I could do the same thing with a second property, but this works fine.
         if (ValueChanged != null)
         {
-            ValueChanged(this, e);
+            ValueChanged(sender: this, e: e);
         }
     }
 }

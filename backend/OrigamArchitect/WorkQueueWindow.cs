@@ -56,7 +56,7 @@ public class WorkQueueWindow : AsForm
         this.label2.ForeColor = OrigamColorScheme.TitleActiveForeColor;
         this.TitleNameChanged += new EventHandler(WorkQueueWindow_TitleNameChanged);
         this.collapsibleSplitter1.BackColor = OrigamColorScheme.SplitterBackColor;
-        Console.WriteLine(strings.Commands_PanelTitle);
+        Console.WriteLine(value: strings.Commands_PanelTitle);
     }
 
     #region Windows Form Designer generated code
@@ -171,33 +171,37 @@ public class WorkQueueWindow : AsForm
     public void LoadQueue()
     {
         IWorkQueueService wqs =
-            ServiceManager.Services.GetService(typeof(IWorkQueueService)) as IWorkQueueService;
-        WorkQueueClass wqc = (WorkQueueClass)wqs.WQClass(this.QueueClass);
+            ServiceManager.Services.GetService(serviceType: typeof(IWorkQueueService))
+            as IWorkQueueService;
+        WorkQueueClass wqc = (WorkQueueClass)wqs.WQClass(name: this.QueueClass);
 
-        BuildUI(wqc, this.QueueId);
+        BuildUI(wqc: wqc, queueId: this.QueueId);
         BuildCommands();
     }
 
     private void BuildCommands()
     {
         DataSet data = DataService.Instance.LoadData(
-            new Guid("1d33b667-ca76-4aaa-a47d-0e404ed6f8a6"),
-            new Guid("421aec03-1eec-43f9-b0bb-17cfc24510a0"),
-            Guid.Empty,
-            Guid.Empty,
-            null,
-            "WorkQueueCommand_parWorkQueueId",
-            this.QueueId
+            dataStructureId: new Guid(g: "1d33b667-ca76-4aaa-a47d-0e404ed6f8a6"),
+            methodId: new Guid(g: "421aec03-1eec-43f9-b0bb-17cfc24510a0"),
+            defaultSetId: Guid.Empty,
+            sortSetId: Guid.Empty,
+            transactionId: null,
+            paramName1: "WorkQueueCommand_parWorkQueueId",
+            paramValue1: this.QueueId
         );
         int x = 8;
         int y = 32;
         int step = 24;
         IOrigamAuthorizationProvider auth = SecurityManager.GetAuthorizationProvider();
-        foreach (DataRow row in data.Tables["WorkQueueCommand"].Rows)
+        foreach (DataRow row in data.Tables[name: "WorkQueueCommand"].Rows)
         {
             if (
-                row.IsNull("Roles")
-                || !auth.Authorize(SecurityManager.CurrentPrincipal, (string)row["Roles"])
+                row.IsNull(columnName: "Roles")
+                || !auth.Authorize(
+                    principal: SecurityManager.CurrentPrincipal,
+                    context: (string)row[columnName: "Roles"]
+                )
             )
             {
                 continue;
@@ -206,10 +210,10 @@ public class WorkQueueWindow : AsForm
             link.Left = x;
             link.Top = y;
             link.Anchor = AnchorStyles.Right | AnchorStyles.Left | AnchorStyles.Top;
-            link.Text = (string)row["Text"];
-            link.Links.Add(0, link.Text.Length, row);
+            link.Text = (string)row[columnName: "Text"];
+            link.Links.Add(start: 0, length: link.Text.Length, linkData: row);
             link.LinkClicked += new LinkLabelLinkClickedEventHandler(link_LinkClicked);
-            panel1.Controls.Add(link);
+            panel1.Controls.Add(value: link);
             y += step;
         }
     }
@@ -220,14 +224,18 @@ public class WorkQueueWindow : AsForm
         this.FormGenerator.MainFormDataStructureId = wqc.WorkQueueStructureId;
         this.FormGenerator.MainFormMethodId = wqc.WorkQueueStructureUserListMethodId;
         IWorkQueueService wqs =
-            ServiceManager.Services.GetService(typeof(IWorkQueueService)) as IWorkQueueService;
+            ServiceManager.Services.GetService(serviceType: typeof(IWorkQueueService))
+            as IWorkQueueService;
 
-        DataSet data = wqs.LoadWorkQueueData(wqc.Name, queueId);
-        Origam.DA.DatasetTools.AddSortColumns(data);
-        DataTable table = data.Tables["WorkQueueEntry"];
+        DataSet data = wqs.LoadWorkQueueData(workQueueClass: wqc.Name, queueId: queueId);
+        Origam.DA.DatasetTools.AddSortColumns(data: data);
+        DataTable table = data.Tables[name: "WorkQueueEntry"];
         this.FormGenerator.DataSet = data;
         this.FormGenerator.Form = this;
-        this.FormGenerator.SelectionParameters.Add("WorkQueueEntry_parWorkQueueId", queueId);
+        this.FormGenerator.SelectionParameters.Add(
+            key: "WorkQueueEntry_parWorkQueueId",
+            value: queueId
+        );
         AsPanel panel = new AsPanel();
         _dataPanel = panel;
         panel.BeginInit();
@@ -246,7 +254,7 @@ public class WorkQueueWindow : AsForm
         int lastPos = 0;
         foreach (
             DataStructureColumn col in (
-                (DataStructureEntity)wqc.WorkQueueStructure.Entities[0]
+                (DataStructureEntity)wqc.WorkQueueStructure.Entities[index: 0]
             ).Columns
         )
         {
@@ -273,9 +281,9 @@ public class WorkQueueWindow : AsForm
                         tb.Caption = col.Caption == "" ? col.Field.Caption : col.Caption;
                         tb.CaptionPosition = CaptionPosition.Left;
                         tb.CaptionLength = 100;
-                        tb.DataType = table.Columns[col.Name].DataType;
-                        tb.Size = new System.Drawing.Size(100, 16);
-                        tb.Location = new System.Drawing.Point(110, lastPos);
+                        tb.DataType = table.Columns[name: col.Name].DataType;
+                        tb.Size = new System.Drawing.Size(width: 100, height: 16);
+                        tb.Location = new System.Drawing.Point(x: 110, y: lastPos);
                         if (col.Field.DataType == OrigamDataType.Float)
                         {
                             //tb.FormatType = C1.Win.C1Input.FormatTypeEnum.CustomFormat;
@@ -295,14 +303,14 @@ public class WorkQueueWindow : AsForm
                         {
                             tb.Multiline = true;
                         }
-                        panel.Controls.Add(tb);
+                        panel.Controls.Add(value: tb);
                         Binding binding = new Binding(
-                            tb.DefaultBindableProperty,
-                            data,
-                            panel.DataMember + "." + col.Name
+                            propertyName: tb.DefaultBindableProperty,
+                            dataSource: data,
+                            dataMember: panel.DataMember + "." + col.Name
                         );
                         //this.FormGenerator.SetTooltip(tb, "", tb.Caption);
-                        this.FormGenerator.ControlBindings.Add(tb, binding);
+                        this.FormGenerator.ControlBindings.Add(key: tb, value: binding);
                         tb.BindingContext = FormGenerator.BindingContext;
                         break;
                     }
@@ -316,20 +324,24 @@ public class WorkQueueWindow : AsForm
                             dd.Caption = col.Caption == "" ? col.Field.Caption : col.Caption;
                             dd.CaptionPosition = CaptionPosition.Left;
                             dd.CaptionLength = 100;
-                            dd.Size = new System.Drawing.Size(100, 16);
-                            dd.Location = new System.Drawing.Point(110, lastPos);
-                            dd.LookupId = (Guid)col.FinalLookup.PrimaryKey["Id"];
-                            panel.Controls.Add(dd);
+                            dd.Size = new System.Drawing.Size(width: 100, height: 16);
+                            dd.Location = new System.Drawing.Point(x: 110, y: lastPos);
+                            dd.LookupId = (Guid)col.FinalLookup.PrimaryKey[key: "Id"];
+                            panel.Controls.Add(value: dd);
                             Binding binding = new Binding(
-                                dd.DefaultBindableProperty,
-                                data,
-                                panel.DataMember + "." + col.Name
+                                propertyName: dd.DefaultBindableProperty,
+                                dataSource: data,
+                                dataMember: panel.DataMember + "." + col.Name
                             );
                             //this.FormGenerator.SetTooltip(dd, "", dd.Caption);
-                            this.FormGenerator.ControlBindings.Add(dd, binding);
+                            this.FormGenerator.ControlBindings.Add(key: dd, value: binding);
                             ServiceManager
                                 .Services.GetService<IControlsLookUpService>()
-                                .AddLookupControl(dd, this, true);
+                                .AddLookupControl(
+                                    lookupControl: dd,
+                                    form: this,
+                                    showEditCommand: true
+                                );
                         }
                         break;
                     }
@@ -340,24 +352,24 @@ public class WorkQueueWindow : AsForm
                         db.Caption = col.Caption == "" ? col.Field.Caption : col.Caption;
                         db.CaptionPosition = CaptionPosition.Left;
                         db.CaptionLength = 100;
-                        db.Size = new System.Drawing.Size(100, 16);
-                        db.Location = new System.Drawing.Point(110, lastPos);
+                        db.Size = new System.Drawing.Size(width: 100, height: 16);
+                        db.Location = new System.Drawing.Point(x: 110, y: lastPos);
 
-                        panel.Controls.Add(db);
+                        panel.Controls.Add(value: db);
                         Binding binding = new Binding(
-                            db.DefaultBindableProperty,
-                            data,
-                            panel.DataMember + "." + col.Name
+                            propertyName: db.DefaultBindableProperty,
+                            dataSource: data,
+                            dataMember: panel.DataMember + "." + col.Name
                         );
                         //this.FormGenerator.SetTooltip(db, "", db.Caption);
-                        this.FormGenerator.ControlBindings.Add(db, binding);
+                        this.FormGenerator.ControlBindings.Add(key: db, value: binding);
                         break;
                     }
                 }
             }
         }
-        this.Controls.Add(panel);
-        this.FormGenerator.DataConsumers.Add(panel, data);
+        this.Controls.Add(value: panel);
+        this.FormGenerator.DataConsumers.Add(key: panel, value: data);
         panel.EndInit();
         panel.BringToFront();
         this.FormGenerator.BindControls();
@@ -373,45 +385,60 @@ public class WorkQueueWindow : AsForm
         if (grid != null && grid.DataSource != null)
         {
             CurrencyManager cm =
-                this.BindingContext[grid.DataSource, grid.DataMember] as CurrencyManager;
+                this.BindingContext[dataSource: grid.DataSource, dataMember: grid.DataMember]
+                as CurrencyManager;
             DataSet result = (grid.DataSource as DataSet).Clone();
-            DataTable resultTable = result.Tables["WorkQueueEntry"];
+            DataTable resultTable = result.Tables[name: "WorkQueueEntry"];
             int count = cm.Count;
             for (int i = 0; i < count; i++)
             {
-                if (grid.IsSelected(i))
+                if (grid.IsSelected(row: i))
                 {
-                    resultTable.LoadDataRow((cm.List[i] as DataRowView).Row.ItemArray, true);
+                    resultTable.LoadDataRow(
+                        values: (cm.List[index: i] as DataRowView).Row.ItemArray,
+                        fAcceptChanges: true
+                    );
                 }
             }
             // no multiple selection - so we take the currently active record
             if (resultTable.Rows.Count == 0 && cm.Position >= 0)
             {
-                resultTable.LoadDataRow((cm.Current as DataRowView).Row.ItemArray, true);
+                resultTable.LoadDataRow(
+                    values: (cm.Current as DataRowView).Row.ItemArray,
+                    fAcceptChanges: true
+                );
             }
             try
             {
                 IWorkQueueService wqs =
-                    ServiceManager.Services.GetService(typeof(IWorkQueueService))
+                    ServiceManager.Services.GetService(serviceType: typeof(IWorkQueueService))
                     as IWorkQueueService;
                 wqs.HandleAction(
-                    (Guid)row["Id"],
-                    this.QueueClass,
-                    resultTable,
-                    (Guid)row["refWorkQueueCommandTypeId"],
-                    row.IsNull("Command") ? null : (string)row["Command"],
-                    row.IsNull("Param1") ? null : (string)row["Param1"],
-                    row.IsNull("Param2") ? null : (string)row["Param2"],
-                    row.IsNull("refErrorWorkQueueId") ? null : row["refErrorWorkQueueId"]
+                    queueId: (Guid)row[columnName: "Id"],
+                    workQueueClassIdentifier: this.QueueClass,
+                    selectedRows: resultTable,
+                    commandType: (Guid)row[columnName: "refWorkQueueCommandTypeId"],
+                    command: row.IsNull(columnName: "Command")
+                        ? null
+                        : (string)row[columnName: "Command"],
+                    param1: row.IsNull(columnName: "Param1")
+                        ? null
+                        : (string)row[columnName: "Param1"],
+                    param2: row.IsNull(columnName: "Param2")
+                        ? null
+                        : (string)row[columnName: "Param2"],
+                    errorQueueId: row.IsNull(columnName: "refErrorWorkQueueId")
+                        ? null
+                        : row[columnName: "refErrorWorkQueueId"]
                 );
             }
             catch (Exception ex)
             {
                 AsMessageBox.ShowError(
-                    this,
-                    ex.Message,
-                    strings.ErrorWhenProcessingWorkQueueCommand_Message,
-                    ex
+                    owner: this,
+                    text: ex.Message,
+                    caption: strings.ErrorWhenProcessingWorkQueueCommand_Message,
+                    exception: ex
                 );
             }
             this.RefreshContent();

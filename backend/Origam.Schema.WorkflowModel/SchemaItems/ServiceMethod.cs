@@ -27,10 +27,10 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.WorkflowModel;
 
-[SchemaItemDescription("Method", "Methods", "method-1.png")]
-[HelpTopic("Service+Method")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Method", folderName: "Methods", iconName: "method-1.png")]
+[HelpTopic(topic: "Service+Method")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class ServiceMethod : AbstractSchemaItem, IServiceMethod, ISchemaItemFactory
 {
     public const string CategoryConst = "ServiceMethod";
@@ -38,15 +38,15 @@ public class ServiceMethod : AbstractSchemaItem, IServiceMethod, ISchemaItemFact
     public ServiceMethod() { }
 
     public ServiceMethod(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public ServiceMethod(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Properties
     private OrigamDataType _returnValueDataType;
 
-    [XmlAttribute("returnValueDataType")]
+    [XmlAttribute(attributeName: "returnValueDataType")]
     public OrigamDataType ReturnValueDataType
     {
         get => _returnValueDataType;
@@ -59,15 +59,15 @@ public class ServiceMethod : AbstractSchemaItem, IServiceMethod, ISchemaItemFact
     public override bool UseFolders => false;
     #endregion
     #region ISchemaItemFactory Members
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public override Type[] NewItemTypes => new[] { typeof(ServiceMethodParameter) };
 
     public override T NewItem<T>(Guid schemaExtensionId, SchemaItemGroup group)
     {
         return base.NewItem<T>(
-            schemaExtensionId,
-            group,
-            typeof(T) == typeof(ServiceMethodParameter) ? "NewParameter" : null
+            schemaExtensionId: schemaExtensionId,
+            group: group,
+            itemName: typeof(T) == typeof(ServiceMethodParameter) ? "NewParameter" : null
         );
     }
     #endregion

@@ -48,11 +48,14 @@ public class DecodeQP
     {
         try
         {
-            return ConvertHexToString(Hexstring, System.Text.Encoding.GetEncoding(Encoding));
+            return ConvertHexToString(
+                Hexstring: Hexstring,
+                encode: System.Text.Encoding.GetEncoding(name: Encoding)
+            );
         }
         catch
         {
-            return ConvertHexContent(Hexstring);
+            return ConvertHexContent(Hexstring: Hexstring);
         }
     }
 
@@ -66,24 +69,24 @@ public class DecodeQP
     {
         try
         {
-            if (Hexstring == null || Hexstring.Equals(""))
+            if (Hexstring == null || Hexstring.Equals(value: ""))
             {
                 return "";
             }
 
-            if (Hexstring.StartsWith("="))
+            if (Hexstring.StartsWith(value: "="))
             {
-                Hexstring = Hexstring.Substring(1);
+                Hexstring = Hexstring.Substring(startIndex: 1);
             }
 
-            string[] aHex = Hexstring.Split(new char[1] { '=' });
+            string[] aHex = Hexstring.Split(separator: new char[1] { '=' });
             byte[] abyte = new Byte[aHex.Length];
 
             for (int i = 0; i < abyte.Length; i++)
             {
-                abyte[i] = (byte)int.Parse(aHex[i], NumberStyles.HexNumber);
+                abyte[i] = (byte)int.Parse(s: aHex[i], style: NumberStyles.HexNumber);
             }
-            return encode.GetString(abyte);
+            return encode.GetString(bytes: abyte);
         }
         catch
         {
@@ -106,10 +109,10 @@ public class DecodeQP
         }
         //to hold string to be decoded
         StringBuilder sbHex = new StringBuilder();
-        sbHex.Append("");
+        sbHex.Append(value: "");
         //to hold decoded string
         StringBuilder sbEncoded = new StringBuilder();
-        sbEncoded.Append("");
+        sbEncoded.Append(value: "");
         //wether we reach Quoted-Printable string
         bool isBegin = false;
         string temp;
@@ -117,16 +120,16 @@ public class DecodeQP
         while (i < Hexstring.Length)
         {
             //init next loop
-            sbHex.Remove(0, sbHex.Length);
+            sbHex.Remove(startIndex: 0, length: sbHex.Length);
             isBegin = false;
             int count = 0;
             while (i < Hexstring.Length)
             {
-                temp = Hexstring.Substring(i, 1); //before reaching Quoted-Printable string, one char at a time
-                if (temp.StartsWith("="))
+                temp = Hexstring.Substring(startIndex: i, length: 1); //before reaching Quoted-Printable string, one char at a time
+                if (temp.StartsWith(value: "="))
                 {
-                    temp = Hexstring.Substring(i, 3); //get 3 chars
-                    if (temp.EndsWith("\r\n")) //return char
+                    temp = Hexstring.Substring(startIndex: i, length: 3); //get 3 chars
+                    if (temp.EndsWith(value: "\r\n")) //return char
                     {
                         if (isBegin && (count % 2 == 0))
                         {
@@ -135,9 +138,9 @@ public class DecodeQP
                         //	sbEncoded.Append("");
                         i = i + 3;
                     }
-                    else if (!temp.EndsWith("3D"))
+                    else if (!temp.EndsWith(value: "3D"))
                     {
-                        sbHex.Append(temp);
+                        sbHex.Append(value: temp);
                         isBegin = true; //we reach Quoted-Printable string, put it into buffer
                         i = i + 3;
                         count++;
@@ -149,7 +152,7 @@ public class DecodeQP
                             break;
                         }
 
-                        sbEncoded.Append("=");
+                        sbEncoded.Append(value: "=");
                         i = i + 3;
                     }
                 }
@@ -160,12 +163,14 @@ public class DecodeQP
                         break;
                     }
 
-                    sbEncoded.Append(temp); //not Quoted-Printable string, put it into buffer
+                    sbEncoded.Append(value: temp); //not Quoted-Printable string, put it into buffer
                     i++;
                 }
             }
             //decode Quoted-Printable string
-            sbEncoded.Append(ConvertHexToString(sbHex.ToString(), encode));
+            sbEncoded.Append(
+                value: ConvertHexToString(Hexstring: sbHex.ToString(), encode: encode)
+            );
         }
 
         return sbEncoded.ToString();
@@ -178,17 +183,17 @@ public class DecodeQP
     /// <returns>decoded string</returns>
     public static string ConvertHexContent(string Hexstring)
     {
-        if (Hexstring == null || Hexstring.Equals(""))
+        if (Hexstring == null || Hexstring.Equals(value: ""))
         {
             return Hexstring;
         }
 
-        return ConvertHexContent(Hexstring, Encoding.Default, 0);
+        return ConvertHexContent(Hexstring: Hexstring, encode: Encoding.Default, nStart: 0);
     }
 
     public static string ConvertHexContent(string Hexstring, string encoding)
     {
-        Encoding enc = Encoding.GetEncoding(encoding);
-        return ConvertHexContent(Hexstring, enc, 0);
+        Encoding enc = Encoding.GetEncoding(name: encoding);
+        return ConvertHexContent(Hexstring: Hexstring, encode: enc, nStart: 0);
     }
 }

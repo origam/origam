@@ -37,12 +37,12 @@ public class EditorPropertyFactory
     public EditorProperty CreateIfMarkedAsEditable(PropertyInfo property, ISchemaItem item)
     {
         string category = property.GetAttribute<CategoryAttribute>()?.Category;
-        if (category == null || !PropertyUtils.CanBeEdited(property))
+        if (category == null || !PropertyUtils.CanBeEdited(property: property))
         {
             return null;
         }
 
-        return Create(property, item);
+        return Create(property: property, instance: item);
     }
 
     public EditorProperty Create(PropertyInfo property, object instance)
@@ -50,14 +50,14 @@ public class EditorPropertyFactory
         string category = property.GetAttribute<CategoryAttribute>()?.Category;
         string description = property.GetAttribute<DescriptionAttribute>()?.Description;
 
-        object value = property.GetValue(instance);
+        object value = property.GetValue(obj: instance);
 
         return new EditorProperty(
             name: property.Name,
             controlPropertyId: null,
-            type: ToPropertyTypeName(property),
-            value: ToSerializableValue(value),
-            dropDownValues: GetAvailableValues(property, instance),
+            type: ToPropertyTypeName(property: property),
+            value: ToSerializableValue(value: value),
+            dropDownValues: GetAvailableValues(property: property, instance: instance),
             category: category,
             description: description,
             readOnly: property.GetSetMethod() == null
@@ -93,9 +93,9 @@ public class EditorPropertyFactory
         return new EditorProperty(
             name: name,
             controlPropertyId: controlPropertyId,
-            type: ToPropertyTypeName(property),
+            type: ToPropertyTypeName(property: property),
             value: typedValue,
-            dropDownValues: GetAvailableValues(property, instance: null),
+            dropDownValues: GetAvailableValues(property: property, instance: null),
             category: category,
             description: description,
             readOnly: property.GetSetMethod() == null
@@ -113,7 +113,9 @@ public class EditorPropertyFactory
             var editorValue = new List<object>();
             foreach (var item in collection)
             {
-                editorValue.Add(item is IPersistent persistentValue ? persistentValue.Id : value);
+                editorValue.Add(
+                    item: item is IPersistent persistentValue ? persistentValue.Id : value
+                );
             }
 
             return editorValue;
@@ -145,9 +147,9 @@ public class EditorPropertyFactory
 
         if (property.PropertyType.IsEnum)
         {
-            return Enum.GetValues(property.PropertyType)
+            return Enum.GetValues(enumType: property.PropertyType)
                 .Cast<object>()
-                .Select(x => new DropDownValue(x.ToString(), (int)x))
+                .Select(selector: x => new DropDownValue(Name: x.ToString(), Value: (int)x))
                 .ToArray();
         }
 
@@ -157,20 +159,20 @@ public class EditorPropertyFactory
             return [];
         }
 
-        Type type = Type.GetType(converterType);
+        Type type = Type.GetType(typeName: converterType);
         if (type == null)
         {
-            throw new Exception($"Could not find type {converterType}");
+            throw new Exception(message: $"Could not find type {converterType}");
         }
 
-        object converterInstance = Activator.CreateInstance(type);
+        object converterInstance = Activator.CreateInstance(type: type);
         MethodInfo getValuesMethod = type.GetMethod(
-            "GetStandardValues",
-            new Type[] { typeof(ITypeDescriptorContext) }
+            name: "GetStandardValues",
+            types: new Type[] { typeof(ITypeDescriptorContext) }
         )!;
-        var context = new Context(instance);
+        var context = new Context(instance: instance);
         var values =
-            getValuesMethod.Invoke(converterInstance, new object[] { context })
+            getValuesMethod.Invoke(obj: converterInstance, parameters: new object[] { context })
             as TypeConverter.StandardValuesCollection;
         if (values == null || values.Count == 0)
         {
@@ -179,7 +181,7 @@ public class EditorPropertyFactory
 
         return values
             .Cast<ISchemaItem>()
-            .Select(x => new DropDownValue(x?.Name ?? "", x?.Id))
+            .Select(selector: x => new DropDownValue(Name: x?.Name ?? "", Value: x?.Id))
             .ToArray();
     }
 
@@ -208,7 +210,7 @@ public class EditorPropertyFactory
 
         bool isReferenceProperty =
             property.GetCustomAttribute<ReferencePropertyAttribute>() != null;
-        if (isReferenceProperty || type.IsAssignableTo(typeof(ISchemaItem)))
+        if (isReferenceProperty || type.IsAssignableTo(targetType: typeof(ISchemaItem)))
         {
             return "looukup";
         }

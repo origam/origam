@@ -29,10 +29,10 @@ using Origam.Schema.ItemCollection;
 namespace Origam.Schema.LookupModel;
 
 [SchemaItemDescription(name: "New Record Screen Binding Parameter Mapping", icon: 3)]
-[HelpTopic("")]
-[XmlModelRoot(CategoryConst)]
-[DefaultProperty("ParameterName")]
-[ClassMetaVersion("6.0.0")]
+[HelpTopic(topic: "")]
+[XmlModelRoot(category: CategoryConst)]
+[DefaultProperty(name: "ParameterName")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class NewRecordScreenBindingParameterMapping : AbstractSchemaItem
 {
     public const string CategoryConst = "NewRecordScreenBindingParameterMapping";
@@ -40,10 +40,10 @@ public class NewRecordScreenBindingParameterMapping : AbstractSchemaItem
     public NewRecordScreenBindingParameterMapping() { }
 
     public NewRecordScreenBindingParameterMapping(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public NewRecordScreenBindingParameterMapping(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Overriden ISchemaItem Members
     public override string ItemType => CategoryConst;
@@ -54,18 +54,18 @@ public class NewRecordScreenBindingParameterMapping : AbstractSchemaItem
 
     #region Properties
 
-    [Category("Data")]
+    [Category(category: "Data")]
     [NotNullModelElementRule]
-    [XmlAttribute("parameterName")]
+    [XmlAttribute(attributeName: "parameterName")]
     [Description(
-        "Parameter used in (added to) the list data structure of the lookup. The referenced source column will be set in the properties of the screen section combo box where the lookup is used. If the actual text content of the lookup field should be copied, the value should be set to SearchText."
+        description: "Parameter used in (added to) the list data structure of the lookup. The referenced source column will be set in the properties of the screen section combo box where the lookup is used. If the actual text content of the lookup field should be copied, the value should be set to SearchText."
     )]
     public string ParameterName { get; set; }
 
-    [Category("Data")]
+    [Category(category: "Data")]
     [NotNullModelElementRule]
-    [XmlAttribute("targetRootEntityField")]
-    [Description("Column in target root entity to be filled.")]
+    [XmlAttribute(attributeName: "targetRootEntityField")]
+    [Description(description: "Column in target root entity to be filled.")]
     public string TargetRootEntityField { get; set; }
 
     #endregion

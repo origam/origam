@@ -32,6 +32,6 @@ public class WorkQueueItemLockedException : Exception
 
     public override string Message
     {
-        get { return ResourceUtils.GetString("ErrorRecordsLockedAlready"); }
+        get { return ResourceUtils.GetString(key: "ErrorRecordsLockedAlready"); }
     }
 }

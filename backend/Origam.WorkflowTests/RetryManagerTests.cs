@@ -37,18 +37,28 @@ public class RetryManagerTests
 {
     private static DateTime GetTimeNow()
     {
-        return new DateTime(2000, 1, 1, 0, 0, 0);
+        return new DateTime(year: 2000, month: 1, day: 1, hour: 0, minute: 0, second: 0);
     }
 
     private static TestData[] testDataArray = new[]
     {
-        new TestData(WorkQueueRetryType.NoRetry, 0, 0, DateTime.MaxValue),
-        new TestData(WorkQueueRetryType.LinearRetry, 20, 1, GetTimeNow().AddSeconds(20)),
+        new TestData(
+            RetryType: WorkQueueRetryType.NoRetry,
+            RetryIntervalSeconds: 0,
+            MaxRetries: 0,
+            ExpectedNextAttempt: DateTime.MaxValue
+        ),
+        new TestData(
+            RetryType: WorkQueueRetryType.LinearRetry,
+            RetryIntervalSeconds: 20,
+            MaxRetries: 1,
+            ExpectedNextAttempt: GetTimeNow().AddSeconds(value: 20)
+        ),
     };
 
     [Test]
     public void ShouldAssignCorrectRetryTimeBasedOnRetryType(
-        [ValueSource(nameof(testDataArray))] TestData testData
+        [ValueSource(sourceName: nameof(testDataArray))] TestData testData
     )
     {
         var (retryType, retryIntervalSeconds, maxRetries, expectedNextAttempt) = testData;
@@ -60,11 +70,11 @@ public class RetryManagerTests
 
         var queueEntryRow = CreateEmptyEntryRow();
 
-        var sut = new RetryManager(GetTimeNow);
-        sut.SetEntryRetryData(queueEntryRow, queueRow, "Test");
+        var sut = new RetryManager(getTimeNow: GetTimeNow);
+        sut.SetEntryRetryData(queueEntryRow: queueEntryRow, queue: queueRow, errorMessage: "Test");
 
-        DateTime nextAttempt = (DateTime)queueEntryRow["NextAttemptTime"];
-        Assert.That(nextAttempt, Is.EqualTo(expectedNextAttempt));
+        DateTime nextAttempt = (DateTime)queueEntryRow[columnName: "NextAttemptTime"];
+        Assert.That(actual: nextAttempt, expression: Is.EqualTo(expected: expectedNextAttempt));
     }
 
     [Test]
@@ -78,7 +88,7 @@ public class RetryManagerTests
 
         DataRow queueEntryRow = CreateEmptyEntryRow();
 
-        var sut = new RetryManager(GetTimeNow);
+        var sut = new RetryManager(getTimeNow: GetTimeNow);
 
         var expectedDelayLimits = new[]
         {
@@ -92,12 +102,22 @@ public class RetryManagerTests
         for (int i = 0; i < 5; i++)
         {
             var (minDelay, maxDelay) = expectedDelayLimits[i];
-            var expectedMax = GetTimeNow().AddSeconds(maxDelay);
-            var expectedMin = GetTimeNow().AddSeconds(minDelay);
-            sut.SetEntryRetryData(queueEntryRow, queueRow, "Test");
-            DateTime nextAttempt = (DateTime)queueEntryRow["NextAttemptTime"];
-            Assert.That(nextAttempt, Is.LessThanOrEqualTo(expectedMax));
-            Assert.That(nextAttempt, Is.GreaterThanOrEqualTo(expectedMin));
+            var expectedMax = GetTimeNow().AddSeconds(value: maxDelay);
+            var expectedMin = GetTimeNow().AddSeconds(value: minDelay);
+            sut.SetEntryRetryData(
+                queueEntryRow: queueEntryRow,
+                queue: queueRow,
+                errorMessage: "Test"
+            );
+            DateTime nextAttempt = (DateTime)queueEntryRow[columnName: "NextAttemptTime"];
+            Assert.That(
+                actual: nextAttempt,
+                expression: Is.LessThanOrEqualTo(expected: expectedMax)
+            );
+            Assert.That(
+                actual: nextAttempt,
+                expression: Is.GreaterThanOrEqualTo(expected: expectedMin)
+            );
         }
     }
 
@@ -114,11 +134,21 @@ public class RetryManagerTests
     private static DataRow CreateEmptyEntryRow()
     {
         var queueEntryTable = new DataTable();
-        queueEntryTable.Columns.Add(new DataColumn("InRetry", typeof(bool)));
-        queueEntryTable.Columns.Add(new DataColumn("ErrorText", typeof(string)));
-        queueEntryTable.Columns.Add(new DataColumn("LastAttemptTime", typeof(DateTime)));
-        queueEntryTable.Columns.Add(new DataColumn("AttemptCount", typeof(int)));
-        queueEntryTable.Columns.Add(new DataColumn("NextAttemptTime", typeof(DateTime)));
+        queueEntryTable.Columns.Add(
+            column: new DataColumn(columnName: "InRetry", dataType: typeof(bool))
+        );
+        queueEntryTable.Columns.Add(
+            column: new DataColumn(columnName: "ErrorText", dataType: typeof(string))
+        );
+        queueEntryTable.Columns.Add(
+            column: new DataColumn(columnName: "LastAttemptTime", dataType: typeof(DateTime))
+        );
+        queueEntryTable.Columns.Add(
+            column: new DataColumn(columnName: "AttemptCount", dataType: typeof(int))
+        );
+        queueEntryTable.Columns.Add(
+            column: new DataColumn(columnName: "NextAttemptTime", dataType: typeof(DateTime))
+        );
         var queueEntryRow = queueEntryTable.NewRow();
         return queueEntryRow;
     }

@@ -40,15 +40,15 @@ public class SiteImpl : ISite, IDictionaryService
     {
         if (comp == null)
         {
-            throw new ArgumentException("comp");
+            throw new ArgumentException(message: "comp");
         }
         if (host == null)
         {
-            throw new ArgumentException("host");
+            throw new ArgumentException(message: "host");
         }
         if (name == null || name.Trim().Length == 0)
         {
-            throw new ArgumentException("name");
+            throw new ArgumentException(message: "name");
         }
         component = comp;
         this.host = host;
@@ -78,38 +78,43 @@ public class SiteImpl : ISite, IDictionaryService
             // null name is not valid
             if (value == null)
             {
-                throw new ArgumentException("value");
+                throw new ArgumentException(message: "value");
             }
             // if we have the same name
-            if (string.Compare(value, name, false) != 0)
+            if (string.Compare(strA: value, strB: name, ignoreCase: false) != 0)
             {
                 // make sure we have a valid name
                 INameCreationService nameCreationService = (INameCreationService)
-                    host.GetService(typeof(INameCreationService));
+                    host.GetService(serviceType: typeof(INameCreationService));
                 if (nameCreationService == null)
                 {
-                    throw new Exception("Failed to service: INameCreationService");
+                    throw new Exception(message: "Failed to service: INameCreationService");
                 }
-                if (nameCreationService.IsValidName(value))
+                if (nameCreationService.IsValidName(name: value))
                 {
                     DesignerHostImpl hostImpl = (DesignerHostImpl)host;
                     // get the current name
                     string oldName = name;
                     // set the new name
                     MemberDescriptor md = TypeDescriptor.CreateProperty(
-                        component.GetType(),
-                        "Name",
-                        typeof(string),
-                        new Attribute[] { }
+                        componentType: component.GetType(),
+                        name: "Name",
+                        type: typeof(string),
+                        attributes: new Attribute[] { }
                     );
                     // fire changing event
-                    hostImpl.OnComponentChanging(component, md);
+                    hostImpl.OnComponentChanging(component: component, member: md);
                     // set the value
                     name = value;
                     // we also have to fire the rename event
-                    host.OnComponentRename(component, oldName, name);
+                    host.OnComponentRename(component: component, oldName: oldName, newName: name);
                     // fire changed event
-                    hostImpl.OnComponentChanged(component, md, oldName, name);
+                    hostImpl.OnComponentChanged(
+                        component: component,
+                        member: md,
+                        oldValue: oldName,
+                        newValue: name
+                    );
                 }
             }
         }
@@ -123,7 +128,7 @@ public class SiteImpl : ISite, IDictionaryService
             return this;
         }
         // forward request to the host
-        return host.GetService(service);
+        return host.GetService(serviceType: service);
     }
     #endregion
 
@@ -131,17 +136,17 @@ public class SiteImpl : ISite, IDictionaryService
 
     public object GetKey(object value)
     {
-        return dictionaryService.GetKey(value);
+        return dictionaryService.GetKey(value: value);
     }
 
     public object GetValue(object key)
     {
-        return dictionaryService.GetValue(key);
+        return dictionaryService.GetValue(key: key);
     }
 
     public void SetValue(object key, object value)
     {
-        dictionaryService.SetValue(key, value);
+        dictionaryService.SetValue(key: key, value: value);
     }
 
     #endregion

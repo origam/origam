@@ -24,7 +24,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 @if (ViewContext.ModelState.IsValid == false)
 {
     <div class="alert alert-danger">
-        <strong>@SharedLocalizer["Error"]</strong>
+        <strong>@SharedLocalizer[name: "Error"]</strong>
         <div asp-validation-summary="All" class="danger"></div>
     </div>
 }

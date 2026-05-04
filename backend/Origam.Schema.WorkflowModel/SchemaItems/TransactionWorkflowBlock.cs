@@ -35,23 +35,27 @@ public enum TransactionTypes
 /// <summary>
 /// Summary description for TransactionWorkflowBlock.
 /// </summary>
-[SchemaItemDescription("(Block) Transaction", "Tasks", "block-transaction.png")]
-[HelpTopic("Transaction+Block")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(
+    name: "(Block) Transaction",
+    folderName: "Tasks",
+    iconName: "block-transaction.png"
+)]
+[HelpTopic(topic: "Transaction+Block")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class TransactionWorkflowBlock : AbstractWorkflowBlock, IWorkflowTransaction
 {
     public TransactionWorkflowBlock()
         : base() { }
 
     public TransactionWorkflowBlock(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(schemaExtensionId: schemaExtensionId) { }
 
     public TransactionWorkflowBlock(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Properties
-    [Category("Transaction"), DefaultValue(TransactionTypes.None)]
-    [XmlAttribute("transactionType")]
+    [Category(category: "Transaction"), DefaultValue(value: TransactionTypes.None)]
+    [XmlAttribute(attributeName: "transactionType")]
     public TransactionTypes TransactionType { get; set; } = TransactionTypes.None;
     #endregion
 }

@@ -73,7 +73,7 @@ public class DataReaderXPathNavigator : XPathNavigator
             {
                 return entityName;
             }
-            return dataReader.GetName(position - 1);
+            return dataReader.GetName(i: position - 1);
         }
     }
     public override string Name
@@ -88,7 +88,7 @@ public class DataReaderXPathNavigator : XPathNavigator
             {
                 return entityName;
             }
-            return dataReader.GetName(position - 1);
+            return dataReader.GetName(i: position - 1);
         }
     }
     public override string NamespaceURI => String.Empty;
@@ -99,55 +99,55 @@ public class DataReaderXPathNavigator : XPathNavigator
     {
         get
         {
-            if ((position < 1) || (dataReader.IsDBNull(position - 1)))
+            if ((position < 1) || (dataReader.IsDBNull(i: position - 1)))
             {
                 return string.Empty;
             }
-            Type fieldType = dataReader.GetFieldType(position - 1);
+            Type fieldType = dataReader.GetFieldType(i: position - 1);
             if (fieldType == typeof(int))
             {
-                return XmlConvert.ToString(dataReader.GetInt32(position - 1));
+                return XmlConvert.ToString(value: dataReader.GetInt32(i: position - 1));
             }
 
             if (fieldType == typeof(Guid))
             {
-                return XmlConvert.ToString(dataReader.GetGuid(position - 1));
+                return XmlConvert.ToString(value: dataReader.GetGuid(i: position - 1));
             }
 
             if (fieldType == typeof(long))
             {
-                return XmlConvert.ToString(dataReader.GetInt32(position - 1));
+                return XmlConvert.ToString(value: dataReader.GetInt32(i: position - 1));
             }
 
             if (fieldType == typeof(decimal))
             {
-                return XmlConvert.ToString(dataReader.GetDecimal(position - 1));
+                return XmlConvert.ToString(value: dataReader.GetDecimal(i: position - 1));
             }
 
             if (fieldType == typeof(bool))
             {
-                return XmlConvert.ToString(dataReader.GetBoolean(position - 1));
+                return XmlConvert.ToString(value: dataReader.GetBoolean(i: position - 1));
             }
 
             if (fieldType == typeof(DateTime))
             {
                 return XmlConvert.ToString(
-                    dataReader.GetDateTime(position - 1),
-                    XmlDateTimeSerializationMode.RoundtripKind
+                    value: dataReader.GetDateTime(i: position - 1),
+                    dateTimeOption: XmlDateTimeSerializationMode.RoundtripKind
                 );
             }
 
-            return dataReader.GetValue(position - 1).ToString();
+            return dataReader.GetValue(i: position - 1).ToString();
         }
     }
 
     public override XPathNavigator Clone()
     {
         return new DataReaderXPathNavigator(
-            dataReader,
-            entityName,
-            position,
-            wasMoveToFirstChildInvoked
+            dataReader: dataReader,
+            entityName: entityName,
+            position: position,
+            wasMoveToFirstChildInvoked: wasMoveToFirstChildInvoked
         );
     }
 

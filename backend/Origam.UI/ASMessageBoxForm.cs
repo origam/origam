@@ -90,7 +90,7 @@ public class ASMessageBoxForm : System.Windows.Forms.Form
 
             case MessageBoxIcon.Error:
             {
-                image = imageList2.Images[0];
+                image = imageList2.Images[index: 0];
                 break;
             }
 
@@ -115,9 +115,9 @@ public class ASMessageBoxForm : System.Windows.Forms.Form
             default:
             {
                 throw new ArgumentOutOfRangeException(
-                    "icon",
-                    icon,
-                    ResourceUtils.GetString("ErrorUnknownIconType")
+                    paramName: "icon",
+                    actualValue: icon,
+                    message: ResourceUtils.GetString(key: "ErrorUnknownIconType")
                 );
             }
         }
@@ -139,8 +139,8 @@ public class ASMessageBoxForm : System.Windows.Forms.Form
             txtDetails.Text += stackTrace;
         }
         // size the dialog box
-        System.Drawing.Graphics g = System.Drawing.Graphics.FromHwnd(lblMessage.Handle);
-        System.Drawing.SizeF size = g.MeasureString(text, lblMessage.Font);
+        System.Drawing.Graphics g = System.Drawing.Graphics.FromHwnd(hwnd: lblMessage.Handle);
+        System.Drawing.SizeF size = g.MeasureString(text: text, font: lblMessage.Font);
         lblMessage.Size = size.ToSize();
         lblMessage.Width += 16;
         lblMessage.Height += 16;
@@ -175,7 +175,7 @@ public class ASMessageBoxForm : System.Windows.Forms.Form
                 components.Dispose();
             }
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
 
     #region Windows Form Designer generated code
@@ -368,7 +368,7 @@ public class ASMessageBoxForm : System.Windows.Forms.Form
         try
         {
             ErrorReportSendForm reportForm = new ErrorReportSendForm();
-            if (reportForm.ShowDialog(this) == DialogResult.OK)
+            if (reportForm.ShowDialog(owner: this) == DialogResult.OK)
             {
                 string text =
                     reportForm.txtUserText.Text == ""
@@ -383,21 +383,21 @@ public class ASMessageBoxForm : System.Windows.Forms.Form
                             + txtDetails.Text;
                 text += this.DebugInfo();
                 Mapi ma = new Mapi();
-                ma.Logon(IntPtr.Zero);
-                ma.AddRecip("ORIGAM Support", "SMTP:support@advantages.cz", false);
+                ma.Logon(hwnd: IntPtr.Zero);
+                ma.AddRecip(name: "ORIGAM Support", addr: "SMTP:support@advantages.cz", cc: false);
                 //					ma.AddRecip("ORIGAM Support", "SMTP:tomas.vavrda@advantages.cz", false );
-                ma.Send("Error Report: " + this.Text, text);
+                ma.Send(sub: "Error Report: " + this.Text, txt: text);
                 ma.Logoff();
             }
         }
         catch (Exception ex)
         {
             MessageBox.Show(
-                this,
-                ex.Message,
-                ResourceUtils.GetString("ErrorWhenSendMail"),
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error
+                owner: this,
+                text: ex.Message,
+                caption: ResourceUtils.GetString(key: "ErrorWhenSendMail"),
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Error
             );
         }
     }
@@ -406,16 +406,16 @@ public class ASMessageBoxForm : System.Windows.Forms.Form
     {
         try
         {
-            Clipboard.SetDataObject(txtDetails.Text + this.DebugInfo());
+            Clipboard.SetDataObject(data: txtDetails.Text + this.DebugInfo());
         }
         catch (Exception ex)
         {
             MessageBox.Show(
-                this,
-                ex.Message,
-                "Chyba pøi kopírování do schránky",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error
+                owner: this,
+                text: ex.Message,
+                caption: "Chyba pøi kopírování do schránky",
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Error
             );
         }
     }

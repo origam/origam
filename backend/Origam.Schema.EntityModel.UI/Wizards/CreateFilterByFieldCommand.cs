@@ -36,7 +36,10 @@ public abstract class AbstractFilterMenuCommand : AbstractMenuCommand
         }
         set
         {
-            throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
+            throw new ArgumentException(
+                message: ResourceUtils.GetString(key: "ErrorSetProperty"),
+                paramName: "IsEnabled"
+            );
         }
     }
 }
@@ -49,7 +52,13 @@ public class CreateFilterByFieldCommand : AbstractFilterMenuCommand
     public override void Run()
     {
         IDataEntityColumn field = Owner as IDataEntityColumn;
-        EntityHelper.CreateFilter(field, "Equal", "GetBy", false, GeneratedModelElements);
+        EntityHelper.CreateFilter(
+            field: field,
+            functionName: "Equal",
+            filterPrefix: "GetBy",
+            createParameter: false,
+            generatedElements: GeneratedModelElements
+        );
     }
 }
 
@@ -58,7 +67,13 @@ public class CreateFilterWithParameterByFieldCommand : AbstractFilterMenuCommand
     public override void Run()
     {
         IDataEntityColumn field = Owner as IDataEntityColumn;
-        EntityHelper.CreateFilter(field, "Equal", "GetBy", true, GeneratedModelElements);
+        EntityHelper.CreateFilter(
+            field: field,
+            functionName: "Equal",
+            filterPrefix: "GetBy",
+            createParameter: true,
+            generatedElements: GeneratedModelElements
+        );
     }
 }
 
@@ -67,7 +82,13 @@ public class CreateFilterLikeWithParameterByFieldCommand : AbstractFilterMenuCom
     public override void Run()
     {
         IDataEntityColumn field = Owner as IDataEntityColumn;
-        EntityHelper.CreateFilter(field, "Like", "GetLike", true, GeneratedModelElements);
+        EntityHelper.CreateFilter(
+            field: field,
+            functionName: "Like",
+            filterPrefix: "GetLike",
+            createParameter: true,
+            generatedElements: GeneratedModelElements
+        );
     }
 }
 
@@ -76,7 +97,13 @@ public class CreateFilterByListWithParameterByFieldCommand : AbstractFilterMenuC
     public override void Run()
     {
         IDataEntityColumn field = Owner as IDataEntityColumn;
-        EntityHelper.CreateFilter(field, "In", "GetBy", true, GeneratedModelElements);
+        EntityHelper.CreateFilter(
+            field: field,
+            functionName: "In",
+            filterPrefix: "GetBy",
+            createParameter: true,
+            generatedElements: GeneratedModelElements
+        );
     }
 }
 
@@ -85,14 +112,20 @@ public class CreateFilterLikeByFieldCommand : AbstractFilterMenuCommand
     public override void Run()
     {
         IDataEntityColumn field = Owner as IDataEntityColumn;
-        EntityHelper.CreateFilter(field, "Like", "GetLike", false, GeneratedModelElements);
+        EntityHelper.CreateFilter(
+            field: field,
+            functionName: "Like",
+            filterPrefix: "GetLike",
+            createParameter: false,
+            generatedElements: GeneratedModelElements
+        );
     }
 }
 
 public class CreateFilterBetweenWithParameterByFieldCommand : AbstractFilterMenuCommand
 {
     WorkbenchSchemaService _schema =
-        ServiceManager.Services.GetService(typeof(WorkbenchSchemaService))
+        ServiceManager.Services.GetService(serviceType: typeof(WorkbenchSchemaService))
         as WorkbenchSchemaService;
 
     public override void Run()
@@ -100,63 +133,98 @@ public class CreateFilterBetweenWithParameterByFieldCommand : AbstractFilterMenu
         IDataEntityColumn field = Owner as IDataEntityColumn;
         if (field.Name == null)
         {
-            throw new ArgumentException("Filed Name is not set.");
+            throw new ArgumentException(message: "Filed Name is not set.");
         }
 
         IDataEntity entity = field.ParentItem as IDataEntity;
         // first paramater
         DatabaseParameter param1 = entity.NewItem<DatabaseParameter>(
-            _schema.ActiveSchemaExtensionId,
-            null
+            schemaExtensionId: _schema.ActiveSchemaExtensionId,
+            group: null
         );
         param1.DataType = field.DataType;
         param1.DataLength = field.DataLength;
         param1.Name =
-            "par" + (field.Name.StartsWith("ref") ? field.Name.Substring(3) : field.Name) + "From";
+            "par"
+            + (
+                field.Name.StartsWith(value: "ref")
+                    ? field.Name.Substring(startIndex: 3)
+                    : field.Name
+            )
+            + "From";
         param1.Persist();
-        GeneratedModelElements.Add(param1);
+        GeneratedModelElements.Add(item: param1);
         // second parameter
         DatabaseParameter param2 = entity.NewItem<DatabaseParameter>(
-            _schema.ActiveSchemaExtensionId,
-            null
+            schemaExtensionId: _schema.ActiveSchemaExtensionId,
+            group: null
         );
         param2.DataType = field.DataType;
         param2.DataLength = field.DataLength;
         param2.Name =
-            "par" + (field.Name.StartsWith("ref") ? field.Name.Substring(3) : field.Name) + "To";
+            "par"
+            + (
+                field.Name.StartsWith(value: "ref")
+                    ? field.Name.Substring(startIndex: 3)
+                    : field.Name
+            )
+            + "To";
         param2.Persist();
-        GeneratedModelElements.Add(param2);
+        GeneratedModelElements.Add(item: param2);
         // filter
-        EntityFilter filter = entity.NewItem<EntityFilter>(_schema.ActiveSchemaExtensionId, null);
+        EntityFilter filter = entity.NewItem<EntityFilter>(
+            schemaExtensionId: _schema.ActiveSchemaExtensionId,
+            group: null
+        );
         filter.Name =
-            "GetBetween" + (field.Name.StartsWith("ref") ? field.Name.Substring(3) : field.Name);
+            "GetBetween"
+            + (
+                field.Name.StartsWith(value: "ref")
+                    ? field.Name.Substring(startIndex: 3)
+                    : field.Name
+            );
         filter.Persist();
-        GeneratedModelElements.Add(filter);
+        GeneratedModelElements.Add(item: filter);
         // function call
-        FunctionCall call = filter.NewItem<FunctionCall>(_schema.ActiveSchemaExtensionId, null);
+        FunctionCall call = filter.NewItem<FunctionCall>(
+            schemaExtensionId: _schema.ActiveSchemaExtensionId,
+            group: null
+        );
         FunctionSchemaItemProvider functionProvider =
-            _schema.GetProvider(typeof(FunctionSchemaItemProvider)) as FunctionSchemaItemProvider;
+            _schema.GetProvider(type: typeof(FunctionSchemaItemProvider))
+            as FunctionSchemaItemProvider;
         Function equalFunction = (Function)
-            functionProvider.GetChildByName("Between", Function.CategoryConst);
+            functionProvider.GetChildByName(name: "Between", itemType: Function.CategoryConst);
         if (equalFunction == null)
         {
-            throw new Exception(ResourceUtils.GetString("ErrorBetweenFunctionNotFound"));
+            throw new Exception(
+                message: ResourceUtils.GetString(key: "ErrorBetweenFunctionNotFound")
+            );
         }
 
         call.Function = equalFunction;
         call.Name = "Between";
         call.Persist();
         // function parameters
-        EntityColumnReference reference1 = call.GetChildByName("Expression")
-            .NewItem<EntityColumnReference>(_schema.ActiveSchemaExtensionId, null);
+        EntityColumnReference reference1 = call.GetChildByName(name: "Expression")
+            .NewItem<EntityColumnReference>(
+                schemaExtensionId: _schema.ActiveSchemaExtensionId,
+                group: null
+            );
         reference1.Field = field;
         reference1.Persist();
-        ParameterReference reference2 = call.GetChildByName("Left")
-            .NewItem<ParameterReference>(_schema.ActiveSchemaExtensionId, null);
+        ParameterReference reference2 = call.GetChildByName(name: "Left")
+            .NewItem<ParameterReference>(
+                schemaExtensionId: _schema.ActiveSchemaExtensionId,
+                group: null
+            );
         reference2.Parameter = param1;
         reference2.Persist();
-        ParameterReference reference3 = call.GetChildByName("Right")
-            .NewItem<ParameterReference>(_schema.ActiveSchemaExtensionId, null);
+        ParameterReference reference3 = call.GetChildByName(name: "Right")
+            .NewItem<ParameterReference>(
+                schemaExtensionId: _schema.ActiveSchemaExtensionId,
+                group: null
+            );
         reference3.Parameter = param2;
         reference3.Persist();
     }

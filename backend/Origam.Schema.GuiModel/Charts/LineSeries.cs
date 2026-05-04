@@ -26,9 +26,13 @@ using Origam.DA.Common;
 
 namespace Origam.Schema.GuiModel;
 
-[SchemaItemDescription("Line Series", "Data Series", "icon_line-series-2.png")]
-[HelpTopic("Line+Series")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(
+    name: "Line Series",
+    folderName: "Data Series",
+    iconName: "icon_line-series-2.png"
+)]
+[HelpTopic(topic: "Line+Series")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class LineSeries : AbstractCartesianSeries
 {
     public LineSeries()
@@ -38,13 +42,13 @@ public class LineSeries : AbstractCartesianSeries
     }
 
     public LineSeries(Guid schemaExtensionId)
-        : base(schemaExtensionId)
+        : base(schemaExtensionId: schemaExtensionId)
     {
         Init();
     }
 
     public LineSeries(Key primaryKey)
-        : base(primaryKey)
+        : base(primaryKey: primaryKey)
     {
         Init();
     }
@@ -54,8 +58,8 @@ public class LineSeries : AbstractCartesianSeries
     #region Properties
     private LineSeriesForm _form = LineSeriesForm.Segment;
 
-    [Category("Series"), DefaultValue(LineSeriesForm.Segment)]
-    [XmlAttribute("form")]
+    [Category(category: "Series"), DefaultValue(value: LineSeriesForm.Segment)]
+    [XmlAttribute(attributeName: "form")]
     public LineSeriesForm Form
     {
         get { return _form; }

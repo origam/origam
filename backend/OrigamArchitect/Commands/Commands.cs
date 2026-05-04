@@ -62,11 +62,13 @@ namespace OrigamArchitect.Commands;
 public class ExecuteSchemaItem : AbstractCommand
 {
     private SchemaService _schemaService =
-        ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
+        ServiceManager.Services.GetService(serviceType: typeof(SchemaService)) as SchemaService;
     private IPersistenceService _persistence =
-        ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+        ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+        as IPersistenceService;
     private IParameterService _parameterService =
-        ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
+        ServiceManager.Services.GetService(serviceType: typeof(IParameterService))
+        as IParameterService;
     public readonly Hashtable Parameters = new Hashtable();
     public bool RecordEditingMode = false;
 
@@ -80,67 +82,87 @@ public class ExecuteSchemaItem : AbstractCommand
         {
             if (
                 !authorizationProvider.Authorize(
-                    SecurityManager.CurrentPrincipal,
-                    (node as IAuthorizationContextContainer).AuthorizationContext
+                    principal: SecurityManager.CurrentPrincipal,
+                    context: (node as IAuthorizationContextContainer).AuthorizationContext
                 )
             )
             {
-                MessageBox.Show(strings.InsufficientPrivileges_Message);
+                MessageBox.Show(text: strings.InsufficientPrivileges_Message);
                 return;
             }
         }
 #endif
         if (node is FormControlSet)
         {
-            this.RunItem(node as FormControlSet, (node as FormControlSet).Name, false);
+            this.RunItem(
+                item: node as FormControlSet,
+                titleName: (node as FormControlSet).Name,
+                isRepeatable: false
+            );
         }
         else if (node is IWorkflow)
         {
-            this.RunItem(node as IWorkflow, (node as IWorkflow).Name, false);
+            this.RunItem(
+                item: node as IWorkflow,
+                titleName: (node as IWorkflow).Name,
+                isRepeatable: false
+            );
         }
         else if (node is AbstractReport)
         {
-            this.RunItem(node as AbstractReport, (node as AbstractReport).Name, false);
+            this.RunItem(
+                item: node as AbstractReport,
+                titleName: (node as AbstractReport).Name,
+                isRepeatable: false
+            );
         }
         else if (node is FormReferenceMenuItem)
         {
             this.RunItem(
-                node as FormReferenceMenuItem,
-                (node as FormReferenceMenuItem).DisplayName,
-                false
+                item: node as FormReferenceMenuItem,
+                titleName: (node as FormReferenceMenuItem).DisplayName,
+                isRepeatable: false
             );
         }
         else if (node is WorkflowReferenceMenuItem)
         {
             this.RunItem(
-                node as WorkflowReferenceMenuItem,
-                (node as WorkflowReferenceMenuItem).DisplayName,
-                (node as WorkflowReferenceMenuItem).IsRepeatable
+                item: node as WorkflowReferenceMenuItem,
+                titleName: (node as WorkflowReferenceMenuItem).DisplayName,
+                isRepeatable: (node as WorkflowReferenceMenuItem).IsRepeatable
             );
         }
         else if (node is ReportReferenceMenuItem)
         {
             this.RunItem(
-                node as ReportReferenceMenuItem,
-                (node as ReportReferenceMenuItem).DisplayName,
-                false
+                item: node as ReportReferenceMenuItem,
+                titleName: (node as ReportReferenceMenuItem).DisplayName,
+                isRepeatable: false
             );
         }
         else if (node is AbstractUpdateScriptActivity)
         {
-            this.RunItem(node as AbstractUpdateScriptActivity, null, false);
+            this.RunItem(
+                item: node as AbstractUpdateScriptActivity,
+                titleName: null,
+                isRepeatable: false
+            );
         }
         else if (node is DataConstantReferenceMenuItem)
         {
             this.RunItem(
-                node as DataConstantReferenceMenuItem,
-                (node as DataConstantReferenceMenuItem).DisplayName,
-                false
+                item: node as DataConstantReferenceMenuItem,
+                titleName: (node as DataConstantReferenceMenuItem).DisplayName,
+                isRepeatable: false
             );
         }
         else if (node is WorkflowSchedule)
         {
-            this.RunItem(node as WorkflowSchedule, (node as WorkflowSchedule).Name, false);
+            this.RunItem(
+                item: node as WorkflowSchedule,
+                titleName: (node as WorkflowSchedule).Name,
+                isRepeatable: false
+            );
         }
         //			else
         //			{
@@ -151,7 +173,8 @@ public class ExecuteSchemaItem : AbstractCommand
     private void RunItem(ISchemaItem item, string titleName, bool isRepeatable)
     {
         WorkflowPlayerPad pad =
-            WorkbenchSingleton.Workbench.GetPad(typeof(WorkflowPlayerPad)) as WorkflowPlayerPad;
+            WorkbenchSingleton.Workbench.GetPad(type: typeof(WorkflowPlayerPad))
+            as WorkflowPlayerPad;
         FormControlSet formControlSet = item as FormControlSet;
         FormReferenceMenuItem formReferenceMenuItem = item as FormReferenceMenuItem;
         AbstractReport abstractReport = item as AbstractReport;
@@ -159,13 +182,13 @@ public class ExecuteSchemaItem : AbstractCommand
         {
             System.Windows.Forms.Cursor.Current = System.Windows.Forms.Cursors.WaitCursor;
             FormGenerator generator = new FormGenerator();
-            AsForm frm = new AsForm(generator);
+            AsForm frm = new AsForm(generator: generator);
             if (formReferenceMenuItem != null)
             {
                 // pass any parameters
                 foreach (DictionaryEntry entry in this.Parameters)
                 {
-                    generator.SelectionParameters.Add(entry.Key, entry.Value);
+                    generator.SelectionParameters.Add(key: entry.Key, value: entry.Value);
                 }
                 if (RecordEditingMode)
                 {
@@ -179,10 +202,10 @@ public class ExecuteSchemaItem : AbstractCommand
                     if (formReferenceMenuItem.SelectionDialogPanel != null)
                     {
                         DataRow row = this.ShowSelectionDialog(
-                            formReferenceMenuItem.SelectionDialogPanel,
-                            formReferenceMenuItem.TransformationBeforeSelection,
-                            formReferenceMenuItem.TransformationAfterSelection,
-                            formReferenceMenuItem.SelectionDialogEndRule
+                            selectionDialogPanel: formReferenceMenuItem.SelectionDialogPanel,
+                            transformationBeforeSelection: formReferenceMenuItem.TransformationBeforeSelection,
+                            transformationAfterSelection: formReferenceMenuItem.TransformationAfterSelection,
+                            endRule: formReferenceMenuItem.SelectionDialogEndRule
                         );
                         if (row == null)
                         {
@@ -191,50 +214,58 @@ public class ExecuteSchemaItem : AbstractCommand
 
                         foreach (
                             var mapping in formReferenceMenuItem.ChildItemsByType<SelectionDialogParameterMapping>(
-                                SelectionDialogParameterMapping.CategoryConst
+                                itemType: SelectionDialogParameterMapping.CategoryConst
                             )
                         )
                         {
                             generator.SelectionParameters.Add(
-                                mapping.Name,
-                                row[mapping.SelectionDialogField.Name]
+                                key: mapping.Name,
+                                value: row[columnName: mapping.SelectionDialogField.Name]
                             );
                         }
                     }
                 }
             }
             var schemaBrowser =
-                WorkbenchSingleton.Workbench.GetPad(typeof(IBrowserPad)) as IBrowserPad;
+                WorkbenchSingleton.Workbench.GetPad(type: typeof(IBrowserPad)) as IBrowserPad;
             if (schemaBrowser != null && item.NodeImage == null)
             {
                 (frm as Form).Icon = System.Drawing.Icon.FromHandle(
-                    (
+                    handle: (
                         (System.Drawing.Bitmap)
-                            schemaBrowser.ImageList.Images[schemaBrowser.ImageIndex(item.Icon)]
+                            schemaBrowser.ImageList.Images[
+                                index: schemaBrowser.ImageIndex(icon: item.Icon)
+                            ]
                     ).GetHicon()
                 );
             }
             else
             {
                 (frm as Form).Icon = System.Drawing.Icon.FromHandle(
-                    item.NodeImage.ToBitmap().GetHicon()
+                    handle: item.NodeImage.ToBitmap().GetHicon()
                 );
             }
             frm.TitleName = titleName;
-            WorkbenchSingleton.Workbench.ShowView(frm);
+            WorkbenchSingleton.Workbench.ShowView(content: frm);
             Application.DoEvents();
             try
             {
-                frm.LoadObject(item);
-                (frm as Form).SelectNextControl(frm as Control, true, true, true, false);
+                frm.LoadObject(objectToLoad: item);
+                (frm as Form).SelectNextControl(
+                    ctl: frm as Control,
+                    forward: true,
+                    tabStopOnly: true,
+                    nested: true,
+                    wrap: false
+                );
             }
             catch (Exception ex)
             {
                 AsMessageBox.ShowError(
-                    WorkbenchSingleton.Workbench as IWin32Window,
-                    ex.Message,
-                    strings.FormLoadingError_Message,
-                    ex
+                    owner: WorkbenchSingleton.Workbench as IWin32Window,
+                    text: ex.Message,
+                    caption: strings.FormLoadingError_Message,
+                    exception: ex
                 );
                 if (frm != null)
                 {
@@ -248,15 +279,15 @@ public class ExecuteSchemaItem : AbstractCommand
         }
         else if (item is IWorkflow || item is WorkflowSchedule || item is WorkflowReferenceMenuItem)
         {
-            ProcessWorkflow(item, titleName, isRepeatable);
+            ProcessWorkflow(item: item, titleName: titleName, isRepeatable: isRepeatable);
         }
         else if (item is CrystalReport)
         {
-            ProcessCrystalReport(item, titleName);
+            ProcessCrystalReport(item: item, titleName: titleName);
         }
         else if (item is WebReport)
         {
-            OpenBrowser((item as WebReport).Url);
+            OpenBrowser(sURL: (item as WebReport).Url);
         }
         else if (abstractReport != null)
         {
@@ -265,13 +296,13 @@ public class ExecuteSchemaItem : AbstractCommand
             if (sfd.ShowDialog() == DialogResult.OK)
             {
                 byte[] report = core.ReportService.GetReport(
-                    abstractReport.Id,
-                    null,
-                    DataReportExportFormatType.PDF.ToString(),
-                    this.Parameters,
-                    null
+                    reportId: abstractReport.Id,
+                    data: null,
+                    format: DataReportExportFormatType.PDF.ToString(),
+                    parameters: this.Parameters,
+                    transactionId: null
                 );
-                File.WriteAllBytes(sfd.FileName, report);
+                File.WriteAllBytes(path: sfd.FileName, bytes: report);
             }
         }
         else if (item is ReportReferenceMenuItem)
@@ -284,10 +315,10 @@ public class ExecuteSchemaItem : AbstractCommand
             if (reportRef.SelectionDialogPanel != null)
             {
                 DataRow row = this.ShowSelectionDialog(
-                    reportRef.SelectionDialogPanel,
-                    reportRef.TransformationBeforeSelection,
-                    reportRef.TransformationAfterSelection,
-                    reportRef.SelectionDialogEndRule
+                    selectionDialogPanel: reportRef.SelectionDialogPanel,
+                    transformationBeforeSelection: reportRef.TransformationBeforeSelection,
+                    transformationAfterSelection: reportRef.TransformationAfterSelection,
+                    endRule: reportRef.SelectionDialogEndRule
                 );
                 if (row == null)
                 {
@@ -296,32 +327,45 @@ public class ExecuteSchemaItem : AbstractCommand
 
                 foreach (
                     var mapping in reportRef.ChildItemsByType<SelectionDialogParameterMapping>(
-                        SelectionDialogParameterMapping.CategoryConst
+                        itemType: SelectionDialogParameterMapping.CategoryConst
                     )
                 )
                 {
-                    parameters.Add(mapping.Name, row[mapping.SelectionDialogField.Name]);
+                    parameters.Add(
+                        key: mapping.Name,
+                        value: row[columnName: mapping.SelectionDialogField.Name]
+                    );
                 }
             }
             CrystalReport crReport = reportRef.Report as CrystalReport;
             WebReport webReport = reportRef.Report as WebReport;
             if (crReport != null)
             {
-                ReportViewer viewer = new ReportViewer(crReport, titleName, parameters);
+                ReportViewer viewer = new ReportViewer(
+                    reportElement: crReport,
+                    titleName: titleName,
+                    parameters: parameters
+                );
                 viewer.LoadReport();
-                WorkbenchSingleton.Workbench.ShowView(viewer);
+                WorkbenchSingleton.Workbench.ShowView(content: viewer);
             }
             else if (webReport != null)
             {
-                Origam.BI.ReportHelper.PopulateDefaultValues(reportRef.Report, parameters);
-                Origam.BI.ReportHelper.ComputeXsltValueParameters(reportRef.Report, parameters);
+                Origam.BI.ReportHelper.PopulateDefaultValues(
+                    report: reportRef.Report,
+                    parameters: parameters
+                );
+                Origam.BI.ReportHelper.ComputeXsltValueParameters(
+                    report: reportRef.Report,
+                    parameters: parameters
+                );
                 OpenBrowser(
-                    HttpTools.Instance.BuildUrl(
-                        webReport.Url,
-                        parameters,
-                        webReport.ForceExternalUrl,
-                        webReport.ExternalUrlScheme,
-                        webReport.IsUrlEscaped
+                    sURL: HttpTools.Instance.BuildUrl(
+                        url: webReport.Url,
+                        parameters: parameters,
+                        forceExternal: webReport.ForceExternalUrl,
+                        externalScheme: webReport.ExternalUrlScheme,
+                        isUrlEscaped: webReport.IsUrlEscaped
                     )
                 );
             }
@@ -335,25 +379,25 @@ public class ExecuteSchemaItem : AbstractCommand
             Platform[] platforms = settings.GetAllPlatforms();
             if (
                 !platforms
-                    .Where(platform =>
-                        platform.GetParseEnum(platform.DataService)
+                    .Where(predicate: platform =>
+                        platform.GetParseEnum(dataDataService: platform.DataService)
                         == scriptActivity.DatabaseType.ToString()
                     )
                     .Any()
             )
             {
                 MessageBox.Show(
-                    "Platform is not supported for execute this script!",
-                    "Platform",
-                    MessageBoxButtons.OK
+                    text: "Platform is not supported for execute this script!",
+                    caption: "Platform",
+                    buttons: MessageBoxButtons.OK
                 );
                 return;
             }
-            ProcessUpdateScript(item);
+            ProcessUpdateScript(item: item);
         }
         else if (item is DataConstantReferenceMenuItem)
         {
-            ProcessConstant(item as DataConstantReferenceMenuItem, titleName);
+            ProcessConstant(item: item as DataConstantReferenceMenuItem, titleName: titleName);
         }
     }
 
@@ -365,9 +409,9 @@ public class ExecuteSchemaItem : AbstractCommand
         // load non-cached element
         DataConstant copy =
             _persistence.SchemaProvider.RetrieveInstance(
-                typeof(DataConstant),
-                constant.PrimaryKey,
-                false
+                type: typeof(DataConstant),
+                primaryKey: constant.PrimaryKey,
+                useCache: false
             ) as DataConstant;
         // Temporarily overwrite the original lookup by the menu item's own
         // lookup. The constant will be thrown away anyway
@@ -377,16 +421,17 @@ public class ExecuteSchemaItem : AbstractCommand
         }
         // load constant into the editor
         editor.TitleName = titleName;
-        editor.LoadObject(copy);
+        editor.LoadObject(objectToLoad: copy);
         // show the editor
-        WorkbenchSingleton.Workbench.ShowView(editor);
+        WorkbenchSingleton.Workbench.ShowView(content: editor);
     }
 
     private static void ProcessUpdateScript(ISchemaItem item)
     {
         IDeploymentService deployment =
-            ServiceManager.Services.GetService(typeof(IDeploymentService)) as IDeploymentService;
-        deployment.ExecuteActivity(item.PrimaryKey);
+            ServiceManager.Services.GetService(serviceType: typeof(IDeploymentService))
+            as IDeploymentService;
+        deployment.ExecuteActivity(key: item.PrimaryKey);
     }
 
     private void ProcessWorkflow(ISchemaItem item, string titleName, bool isRepeatable)
@@ -400,12 +445,15 @@ public class ExecuteSchemaItem : AbstractCommand
         {
             wf = wfRef.Workflow;
             // set parameters
-            RuleEngine ruleEngine = RuleEngine.Create(null, null);
+            RuleEngine ruleEngine = RuleEngine.Create(contextStores: null, transactionId: null);
             foreach (ISchemaItem parameter in item.ChildItems)
             {
                 if (parameter != null)
                 {
-                    parameters.Add(parameter.Name, ruleEngine.Evaluate(parameter));
+                    parameters.Add(
+                        key: parameter.Name,
+                        value: ruleEngine.Evaluate(item: parameter)
+                    );
                 }
             }
         }
@@ -419,57 +467,66 @@ public class ExecuteSchemaItem : AbstractCommand
             WorkflowSchedule schedule = item as WorkflowSchedule;
             wf = schedule.Workflow;
             // set parameters
-            RuleEngine ruleEngine = RuleEngine.Create(null, null);
+            RuleEngine ruleEngine = RuleEngine.Create(contextStores: null, transactionId: null);
             foreach (ISchemaItem parameter in schedule.ChildItems)
             {
                 if (parameter != null)
                 {
-                    parameters.Add(parameter.Name, ruleEngine.Evaluate(parameter));
+                    parameters.Add(
+                        key: parameter.Name,
+                        value: ruleEngine.Evaluate(item: parameter)
+                    );
                 }
             }
         }
         System.Drawing.Icon icon;
-        var schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(IBrowserPad)) as IBrowserPad;
+        var schemaBrowser =
+            WorkbenchSingleton.Workbench.GetPad(type: typeof(IBrowserPad)) as IBrowserPad;
         if (schemaBrowser != null && item.NodeImage == null)
         {
             icon = System.Drawing.Icon.FromHandle(
-                (
+                handle: (
                     (System.Drawing.Bitmap)
-                        schemaBrowser.ImageList.Images[schemaBrowser.ImageIndex(item.Icon)]
+                        schemaBrowser.ImageList.Images[
+                            index: schemaBrowser.ImageIndex(icon: item.Icon)
+                        ]
                 ).GetHicon()
             );
         }
         else
         {
-            icon = System.Drawing.Icon.FromHandle(item.NodeImage.ToBitmap().GetHicon());
+            icon = System.Drawing.Icon.FromHandle(handle: item.NodeImage.ToBitmap().GetHicon());
         }
         WorkflowHost host = WorkflowHost.DefaultHost;
         // Initialize view for this workflow
         WorkflowForm form = Origam.Workflow.Gui.Win.WorkflowHelper.CreateWorkflowForm(
-            host,
-            icon,
-            titleName,
-            (Guid)wf.PrimaryKey["Id"]
+            host: host,
+            icon: icon,
+            titleName: titleName,
+            workflowId: (Guid)wf.PrimaryKey[key: "Id"]
         );
         WorkflowEngine workflowEngine = WorkflowEngine.PrepareWorkflow(
-            wf,
-            parameters,
-            isRepeatable,
-            titleName
+            workflow: wf,
+            parameters: parameters,
+            isRepeatable: isRepeatable,
+            titleName: titleName
         );
         form.WorkflowEngine = workflowEngine;
-        host.ExecuteWorkflow(workflowEngine);
+        host.ExecuteWorkflow(engine: workflowEngine);
     }
 
     private void ProcessCrystalReport(ISchemaItem item, string titleName)
     {
-        ReportViewer viewer = new ReportViewer((item as CrystalReport), titleName);
+        ReportViewer viewer = new ReportViewer(
+            reportElement: (item as CrystalReport),
+            titleName: titleName
+        );
         foreach (DictionaryEntry param in Parameters)
         {
-            viewer.Parameters.Add(param.Key, param.Value);
+            viewer.Parameters.Add(key: param.Key, value: param.Value);
         }
         viewer.LoadReport();
-        WorkbenchSingleton.Workbench.ShowView(viewer);
+        WorkbenchSingleton.Workbench.ShowView(content: viewer);
     }
 
     private DataRow ShowSelectionDialog(
@@ -479,7 +536,7 @@ public class ExecuteSchemaItem : AbstractCommand
         IEndRule endRule
     )
     {
-        DatasetGenerator gen = new DatasetGenerator(true);
+        DatasetGenerator gen = new DatasetGenerator(userDefinedParameters: true);
         FormGenerator sdGenerator = null;
         AsForm sd = null;
 
@@ -490,31 +547,39 @@ public class ExecuteSchemaItem : AbstractCommand
             if (transformationBeforeSelection == null)
             {
                 dataDoc = DataDocumentFactory.New(
-                    FormTools.GetSelectionDialogData(
-                        selectionDialogPanel.DataSourceId,
-                        Guid.Empty,
-                        false,
-                        profile.Id
+                    dataSet: FormTools.GetSelectionDialogData(
+                        entityId: selectionDialogPanel.DataSourceId,
+                        transformationBeforeId: Guid.Empty,
+                        createEmptyRow: false,
+                        profileId: profile.Id
                     )
                 );
             }
             else
             {
                 dataDoc = DataDocumentFactory.New(
-                    FormTools.GetSelectionDialogData(
-                        selectionDialogPanel.DataSourceId,
-                        (Guid)transformationBeforeSelection.PrimaryKey["Id"],
-                        false,
-                        profile.Id
+                    dataSet: FormTools.GetSelectionDialogData(
+                        entityId: selectionDialogPanel.DataSourceId,
+                        transformationBeforeId: (Guid)
+                            transformationBeforeSelection.PrimaryKey[key: "Id"],
+                        createEmptyRow: false,
+                        profileId: profile.Id
                     )
                 );
             }
             sdGenerator = new FormGenerator();
-            sd = sdGenerator.LoadSelectionDialog(dataDoc, selectionDialogPanel, endRule) as AsForm;
+            sd =
+                sdGenerator.LoadSelectionDialog(
+                    xmlData: dataDoc,
+                    panelDefinition: selectionDialogPanel,
+                    endRule: endRule
+                ) as AsForm;
 
-            sd.AutoAddNewEntity = dataDoc.DataSet.Tables[0].TableName;
+            sd.AutoAddNewEntity = dataDoc.DataSet.Tables[index: 0].TableName;
             sd.SaveOnClose = false;
-            DialogResult result = sd.ShowDialog(WorkbenchSingleton.Workbench as IWin32Window);
+            DialogResult result = sd.ShowDialog(
+                owner: WorkbenchSingleton.Workbench as IWin32Window
+            );
             if (result == DialogResult.Cancel)
             {
                 return null;
@@ -524,19 +589,19 @@ public class ExecuteSchemaItem : AbstractCommand
             if (transformationAfterSelection == null)
             {
                 row = FormTools.GetSelectionDialogResultRow(
-                    selectionDialogPanel.DataSourceId,
-                    Guid.Empty,
-                    dataDoc,
-                    profile.Id
+                    entityId: selectionDialogPanel.DataSourceId,
+                    transformationAfterId: Guid.Empty,
+                    dataDoc: dataDoc,
+                    profileId: profile.Id
                 );
             }
             else
             {
                 row = FormTools.GetSelectionDialogResultRow(
-                    selectionDialogPanel.DataSourceId,
-                    (Guid)transformationAfterSelection.PrimaryKey["Id"],
-                    dataDoc,
-                    profile.Id
+                    entityId: selectionDialogPanel.DataSourceId,
+                    transformationAfterId: (Guid)transformationAfterSelection.PrimaryKey[key: "Id"],
+                    dataDoc: dataDoc,
+                    profileId: profile.Id
                 );
             }
             return row;
@@ -560,15 +625,18 @@ public class ExecuteSchemaItem : AbstractCommand
         {
             //Return the path used to access http from the registry
             sBrws = Microsoft
-                .Win32.Registry.ClassesRoot.OpenSubKey("http\\shell\\open\\command", false)
-                .GetValue(null)
+                .Win32.Registry.ClassesRoot.OpenSubKey(
+                    name: "http\\shell\\open\\command",
+                    writable: false
+                )
+                .GetValue(name: null)
                 .ToString()
                 .ToLower();
             //Trim the file path (removing everything after the ".exe") and get rid of quotation marks
-            sBrws = sBrws.Substring(1, sBrws.IndexOf(".exe") + 3);
-            sBrws = sBrws.Replace("\"", "");
+            sBrws = sBrws.Substring(startIndex: 1, length: sBrws.IndexOf(value: ".exe") + 3);
+            sBrws = sBrws.Replace(oldValue: "\"", newValue: "");
             //Open the URL using the path
-            System.Diagnostics.Process.Start(sBrws, sURL);
+            System.Diagnostics.Process.Start(fileName: sBrws, arguments: sURL);
         }
         catch
         {
@@ -576,7 +644,7 @@ public class ExecuteSchemaItem : AbstractCommand
             try
             {
                 //First just try using Process.Start, which will open the default browser, but might reuse IE's window
-                System.Diagnostics.Process.Start(sURL);
+                System.Diagnostics.Process.Start(fileName: sURL);
             }
             catch
             {
@@ -584,13 +652,18 @@ public class ExecuteSchemaItem : AbstractCommand
                 {
                     //If Process.Start fails (due to known bug), try launching IE directly and passing it the URL
                     System.Diagnostics.ProcessStartInfo psi =
-                        new System.Diagnostics.ProcessStartInfo("IExplore.exe", sURL);
-                    System.Diagnostics.Process.Start(psi);
+                        new System.Diagnostics.ProcessStartInfo(
+                            fileName: "IExplore.exe",
+                            arguments: sURL
+                        );
+                    System.Diagnostics.Process.Start(startInfo: psi);
                     psi = null;
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception("Could not launch the browser. Details: " + ex.Message);
+                    throw new Exception(
+                        message: "Could not launch the browser. Details: " + ex.Message
+                    );
                 }
             }
         }
@@ -632,10 +705,11 @@ public class ViewProcessBrowserPad : AbstractMenuCommand
     public override void Run()
     {
         WorkflowPlayerPad pad =
-            WorkbenchSingleton.Workbench.GetPad(typeof(WorkflowPlayerPad)) as WorkflowPlayerPad;
+            WorkbenchSingleton.Workbench.GetPad(type: typeof(WorkflowPlayerPad))
+            as WorkflowPlayerPad;
         if (pad != null)
         {
-            WorkbenchSingleton.Workbench.ShowPad(pad);
+            WorkbenchSingleton.Workbench.ShowPad(content: pad);
         }
     }
 }
@@ -651,10 +725,10 @@ public class ViewWorkQueuePad : AbstractMenuCommand
     public override void Run()
     {
         WorkQueuePad pad =
-            WorkbenchSingleton.Workbench.GetPad(typeof(WorkQueuePad)) as WorkQueuePad;
+            WorkbenchSingleton.Workbench.GetPad(type: typeof(WorkQueuePad)) as WorkQueuePad;
         if (pad != null)
         {
-            WorkbenchSingleton.Workbench.ShowPad(pad);
+            WorkbenchSingleton.Workbench.ShowPad(content: pad);
         }
     }
 }
@@ -665,7 +739,7 @@ public class ViewWorkQueuePad : AbstractMenuCommand
 public class ExecuteActiveSchemaItem : AbstractMenuCommand
 {
     WorkbenchSchemaService _schemaService =
-        ServiceManager.Services.GetService(typeof(WorkbenchSchemaService))
+        ServiceManager.Services.GetService(serviceType: typeof(WorkbenchSchemaService))
         as WorkbenchSchemaService;
     public override bool IsEnabled
     {
@@ -683,7 +757,13 @@ public class ExecuteActiveSchemaItem : AbstractMenuCommand
                 | _schemaService.ActiveNode is WorkflowSchedule
             );
         }
-        set { throw new ArgumentException("Cannot set this property", "IsEnabled"); }
+        set
+        {
+            throw new ArgumentException(
+                message: "Cannot set this property",
+                paramName: "IsEnabled"
+            );
+        }
     }
 
     public override void Run()
@@ -709,7 +789,13 @@ public class FinishWorkflowTask : AbstractMenuCommand
                 && WorkbenchSingleton.Workbench.ActiveDocument is WorkflowForm
                 && (WorkbenchSingleton.Workbench.ActiveDocument as WorkflowForm).CanFinishTask;
         }
-        set { throw new ArgumentException("Cannot set this property", "IsEnabled"); }
+        set
+        {
+            throw new ArgumentException(
+                message: "Cannot set this property",
+                paramName: "IsEnabled"
+            );
+        }
     }
 
     public override void Run()
@@ -727,7 +813,13 @@ public class DumpWindowXml : AbstractMenuCommand
             return WorkbenchSingleton.Workbench.ActiveDocument != null
                 && WorkbenchSingleton.Workbench.ActiveDocument is AsForm;
         }
-        set { throw new ArgumentException("Cannot set this property", "IsEnabled"); }
+        set
+        {
+            throw new ArgumentException(
+                message: "Cannot set this property",
+                paramName: "IsEnabled"
+            );
+        }
     }
 
     public override void Run()
@@ -735,33 +827,39 @@ public class DumpWindowXml : AbstractMenuCommand
         Origam.Workbench.Commands.ViewOutputPad outputPad =
             new Origam.Workbench.Commands.ViewOutputPad();
         outputPad.Run();
-        OutputPad p = WorkbenchSingleton.Workbench.GetPad(typeof(OutputPad)) as OutputPad;
+        OutputPad p = WorkbenchSingleton.Workbench.GetPad(type: typeof(OutputPad)) as OutputPad;
         AsForm activeForm = WorkbenchSingleton.Workbench.ActiveDocument as AsForm;
-        p.SetOutputText(activeForm.FormGenerator.DataSet.GetXml());
+        p.SetOutputText(sText: activeForm.FormGenerator.DataSet.GetXml());
     }
 }
 
 public class ShowEditorXml : AbstractMenuCommand
 {
     WorkbenchSchemaService _schemaService =
-        ServiceManager.Services.GetService(typeof(WorkbenchSchemaService))
+        ServiceManager.Services.GetService(serviceType: typeof(WorkbenchSchemaService))
         as WorkbenchSchemaService;
     public override bool IsEnabled
     {
         get { return _schemaService.ActiveNode is ISchemaItem; }
-        set { throw new ArgumentException("Cannot set this property", "IsEnabled"); }
+        set
+        {
+            throw new ArgumentException(
+                message: "Cannot set this property",
+                paramName: "IsEnabled"
+            );
+        }
     }
 
     public override void Run()
     {
-        OutputPad p = WorkbenchSingleton.Workbench.GetPad(typeof(OutputPad)) as OutputPad;
+        OutputPad p = WorkbenchSingleton.Workbench.GetPad(type: typeof(OutputPad)) as OutputPad;
         ISchemaItem item = _schemaService.ActiveNode as ISchemaItem;
         System.Text.StringBuilder sb = new System.Text.StringBuilder();
-        System.IO.StringWriter sw = new System.IO.StringWriter(sb);
-        XmlTextWriter xw = new XmlTextWriter(sw);
+        System.IO.StringWriter sw = new System.IO.StringWriter(sb: sb);
+        XmlTextWriter xw = new XmlTextWriter(w: sw);
         xw.Formatting = Formatting.Indented;
-        Origam.OrigamEngine.ModelXmlBuilders.PropertyGridBuilder.Build(item).WriteTo(xw);
-        p.SetOutputText(sb.ToString());
+        Origam.OrigamEngine.ModelXmlBuilders.PropertyGridBuilder.Build(item: item).WriteTo(w: xw);
+        p.SetOutputText(sText: sb.ToString());
     }
 }
 
@@ -771,17 +869,23 @@ public class ShowEditorXml : AbstractMenuCommand
 public class ShowDbCompare : AbstractMenuCommand
 {
     SchemaService _schemaService =
-        ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
+        ServiceManager.Services.GetService(serviceType: typeof(SchemaService)) as SchemaService;
     public override bool IsEnabled
     {
         get { return _schemaService.IsSchemaLoaded; }
-        set { throw new ArgumentException("Cannot set this property", "IsEnabled"); }
+        set
+        {
+            throw new ArgumentException(
+                message: "Cannot set this property",
+                paramName: "IsEnabled"
+            );
+        }
     }
 
     public override void Run()
     {
         SchemaCompareEditor editor = new SchemaCompareEditor();
-        WorkbenchSingleton.Workbench.ShowView(editor);
+        WorkbenchSingleton.Workbench.ShowView(content: editor);
     }
 
     public override void Dispose()
@@ -796,13 +900,20 @@ public class ShowDbCompare : AbstractMenuCommand
 public class ShowTrace : AbstractMenuCommand
 {
     IPersistenceService _persistence =
-        ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+        ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+        as IPersistenceService;
     SchemaService _schemaService =
-        ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
+        ServiceManager.Services.GetService(serviceType: typeof(SchemaService)) as SchemaService;
     public override bool IsEnabled
     {
         get { return _schemaService.IsSchemaLoaded; }
-        set { throw new ArgumentException("Cannot set this property", "IsEnabled"); }
+        set
+        {
+            throw new ArgumentException(
+                message: "Cannot set this property",
+                paramName: "IsEnabled"
+            );
+        }
     }
 
     public override void Run()
@@ -810,23 +921,27 @@ public class ShowTrace : AbstractMenuCommand
         FormReferenceMenuItem formMenu = new FormReferenceMenuItem();
         formMenu.PersistenceProvider = _persistence.SchemaProvider;
         formMenu.DisplayName = strings.WorkFlowTrace_MenuItem;
-        formMenu.ScreenId = new Guid("75C3B61C-77BD-41AB-AE8F-39361500CEC4");
-        formMenu.ListDataStructureId = new Guid("309843cc-39ec-4eca-8848-8c69c885790c");
-        formMenu.ListEntityId = new Guid("3b041438-2f59-4c01-976b-a2f9e89038fe");
-        formMenu.MethodId = new Guid("77cdbb0c-430e-4552-a0c2-f494cfb0c782");
+        formMenu.ScreenId = new Guid(g: "75C3B61C-77BD-41AB-AE8F-39361500CEC4");
+        formMenu.ListDataStructureId = new Guid(g: "309843cc-39ec-4eca-8848-8c69c885790c");
+        formMenu.ListEntityId = new Guid(g: "3b041438-2f59-4c01-976b-a2f9e89038fe");
+        formMenu.MethodId = new Guid(g: "77cdbb0c-430e-4552-a0c2-f494cfb0c782");
         formMenu.ListSortSet =
             _persistence.SchemaProvider.RetrieveInstance(
-                typeof(ISchemaItem),
-                new ModelElementKey(new Guid("d20be524-2178-42c0-943d-7d84ee6bb53b")),
-                true,
-                false
+                type: typeof(ISchemaItem),
+                primaryKey: new ModelElementKey(
+                    id: new Guid(g: "d20be524-2178-42c0-943d-7d84ee6bb53b")
+                ),
+                useCache: true,
+                throwNotFoundException: false
             ) as DataStructureSortSet;
         formMenu.SortSet =
             _persistence.SchemaProvider.RetrieveInstance(
-                typeof(ISchemaItem),
-                new ModelElementKey(new Guid("f68c419b-6130-4665-bee1-d81f2769c5ad")),
-                true,
-                false
+                type: typeof(ISchemaItem),
+                primaryKey: new ModelElementKey(
+                    id: new Guid(g: "f68c419b-6130-4665-bee1-d81f2769c5ad")
+                ),
+                useCache: true,
+                throwNotFoundException: false
             ) as DataStructureSortSet;
         formMenu.Roles = "*";
         ExecuteSchemaItem cmd = new ExecuteSchemaItem();
@@ -848,7 +963,11 @@ public class ShowRuleTrace : AbstractMenuCommand
     public override bool IsEnabled
     {
         get => _schemaService.IsSchemaLoaded;
-        set => throw new ArgumentException("Cannot set this property", "IsEnabled");
+        set =>
+            throw new ArgumentException(
+                message: "Cannot set this property",
+                paramName: "IsEnabled"
+            );
     }
 
     public override void Run()
@@ -856,14 +975,16 @@ public class ShowRuleTrace : AbstractMenuCommand
         FormReferenceMenuItem formMenu = new FormReferenceMenuItem();
         formMenu.PersistenceProvider = _persistence.SchemaProvider;
         formMenu.DisplayName = strings.RuleTrace_MenuItem;
-        formMenu.ScreenId = new Guid("57dc7edd-7b9c-43f2-b94a-54ddd2d98206");
+        formMenu.ScreenId = new Guid(g: "57dc7edd-7b9c-43f2-b94a-54ddd2d98206");
         formMenu.Roles = "*";
         formMenu.SortSet =
             _persistence.SchemaProvider.RetrieveInstance(
-                typeof(ISchemaItem),
-                new ModelElementKey(new Guid("6b22f4c9-bc05-4e52-88f9-486e64dc7b1b")),
-                true,
-                false
+                type: typeof(ISchemaItem),
+                primaryKey: new ModelElementKey(
+                    id: new Guid(g: "6b22f4c9-bc05-4e52-88f9-486e64dc7b1b")
+                ),
+                useCache: true,
+                throwNotFoundException: false
             ) as DataStructureSortSet;
         ExecuteSchemaItem cmd = new ExecuteSchemaItem();
         cmd.Owner = formMenu;
@@ -887,7 +1008,8 @@ public class MakeWorkflowRecurring : AbstractMenuCommand
         get
         {
             WorkflowPlayerPad pad =
-                WorkbenchSingleton.Workbench.GetPad(typeof(WorkflowPlayerPad)) as WorkflowPlayerPad;
+                WorkbenchSingleton.Workbench.GetPad(type: typeof(WorkflowPlayerPad))
+                as WorkflowPlayerPad;
 
             if (pad.ebrSchemaBrowser.ActiveNode is WorkflowReferenceMenuItem)
             {
@@ -901,18 +1023,25 @@ public class MakeWorkflowRecurring : AbstractMenuCommand
             }
             return pad.ebrSchemaBrowser.ActiveNode is WorkflowReferenceMenuItem;
         }
-        set { throw new ArgumentException("Cannot set this property", "IsEnabled"); }
+        set
+        {
+            throw new ArgumentException(
+                message: "Cannot set this property",
+                paramName: "IsEnabled"
+            );
+        }
     }
 
     public override void Run()
     {
         (this.Owner as AsMenuCommand).Checked = !(this.Owner as AsMenuCommand).Checked;
         WorkflowPlayerPad pad =
-            WorkbenchSingleton.Workbench.GetPad(typeof(WorkflowPlayerPad)) as WorkflowPlayerPad;
+            WorkbenchSingleton.Workbench.GetPad(type: typeof(WorkflowPlayerPad))
+            as WorkflowPlayerPad;
         (pad.ebrSchemaBrowser.ActiveNode as WorkflowReferenceMenuItem).IsRepeatable = (
             this.Owner as AsMenuCommand
         ).Checked;
-        pad.ebrSchemaBrowser.RefreshItem(pad.ebrSchemaBrowser.ActiveNode);
+        pad.ebrSchemaBrowser.RefreshItem(node: pad.ebrSchemaBrowser.ActiveNode);
     }
 }
 
@@ -922,49 +1051,57 @@ public class MakeWorkflowRecurring : AbstractMenuCommand
 public class GenerateLocalizationFile : AbstractMenuCommand
 {
     SchemaService _schemaService =
-        ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
+        ServiceManager.Services.GetService(serviceType: typeof(SchemaService)) as SchemaService;
     public override bool IsEnabled
     {
         get { return _schemaService.IsSchemaLoaded; }
-        set { throw new ArgumentException("Cannot set this property", "IsEnabled"); }
+        set
+        {
+            throw new ArgumentException(
+                message: "Cannot set this property",
+                paramName: "IsEnabled"
+            );
+        }
     }
 
     public override void Run()
     {
         OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
-        string[] languages = settings.TranslationBuilderLanguages.Split(",".ToCharArray());
+        string[] languages = settings.TranslationBuilderLanguages.Split(
+            separator: ",".ToCharArray()
+        );
         SchemaService ss =
-            ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
+            ServiceManager.Services.GetService(serviceType: typeof(SchemaService)) as SchemaService;
         string packageName = ss.ActiveExtension.Name;
         foreach (string language in languages)
         {
             string fileName = packageName + "-" + language.Trim() + ".xml";
             string outputPath = Path.Combine(
-                Path.Combine(settings.ModelSourceControlLocation, @"..\l10n"),
-                fileName
+                path1: Path.Combine(path1: settings.ModelSourceControlLocation, path2: @"..\l10n"),
+                path2: fileName
             );
-            if (!string.IsNullOrEmpty(settings.LocalizationFolder))
+            if (!string.IsNullOrEmpty(value: settings.LocalizationFolder))
             {
-                outputPath = Path.Combine(settings.LocalizationFolder, fileName);
+                outputPath = Path.Combine(path1: settings.LocalizationFolder, path2: fileName);
             }
             LocalizationCache currentTranslations = null;
-            if (File.Exists(outputPath))
+            if (File.Exists(path: outputPath))
             {
-                currentTranslations = new LocalizationCache(outputPath);
+                currentTranslations = new LocalizationCache(filePath: outputPath);
             }
             MemoryStream ms = new MemoryStream();
             FileStream fs = null;
             try
             {
                 TranslationBuilder.Build(
-                    ms,
-                    currentTranslations,
-                    language,
-                    ss.ActiveSchemaExtensionId
+                    stream: ms,
+                    currentTranslations: currentTranslations,
+                    locale: language,
+                    packageId: ss.ActiveSchemaExtensionId
                 );
-                fs = new FileStream(outputPath, FileMode.Create);
-                ms.Seek(0, SeekOrigin.Begin);
-                ms.WriteTo(fs);
+                fs = new FileStream(path: outputPath, mode: FileMode.Create);
+                ms.Seek(offset: 0, loc: SeekOrigin.Begin);
+                ms.WriteTo(stream: fs);
             }
             finally
             {
@@ -995,7 +1132,7 @@ public class GenerateGuid : AbstractMenuCommand
 
     public override void Run()
     {
-        Clipboard.SetDataObject(Guid.NewGuid().ToString());
+        Clipboard.SetDataObject(data: Guid.NewGuid().ToString());
     }
 }
 
@@ -1030,10 +1167,10 @@ public class ViewWorkflowWatchPad : AbstractMenuCommand
     public override void Run()
     {
         WorkflowWatchPad pad =
-            WorkbenchSingleton.Workbench.GetPad(typeof(WorkflowWatchPad)) as WorkflowWatchPad;
+            WorkbenchSingleton.Workbench.GetPad(type: typeof(WorkflowWatchPad)) as WorkflowWatchPad;
         if (pad != null)
         {
-            WorkbenchSingleton.Workbench.ShowPad(pad);
+            WorkbenchSingleton.Workbench.ShowPad(content: pad);
         }
     }
 }
@@ -1041,7 +1178,7 @@ public class ViewWorkflowWatchPad : AbstractMenuCommand
 public class SetServerRestart : AbstractMenuCommand
 {
     private SchemaService _schemaService =
-        ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
+        ServiceManager.Services.GetService(serviceType: typeof(SchemaService)) as SchemaService;
     public override bool IsEnabled
     {
         get { return _schemaService.IsSchemaLoaded; }
@@ -1063,7 +1200,7 @@ public class ShowHelp : AbstractMenuCommand
         {
             target += WorkbenchSingleton.Workbench.ActiveDocument.HelpTopic;
         }
-        System.Diagnostics.Process.Start(target);
+        System.Diagnostics.Process.Start(fileName: target);
     }
 }
 
@@ -1072,7 +1209,7 @@ public class ShowCommunity : AbstractMenuCommand
     public override void Run()
     {
         string target = "http://community.origam.com";
-        System.Diagnostics.Process.Start(target);
+        System.Diagnostics.Process.Start(fileName: target);
     }
 }
 
@@ -1088,19 +1225,19 @@ public class ShowWebApplication : AbstractMenuCommand
     {
         OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
         string target = settings.ServerUrl;
-        if (string.IsNullOrEmpty(target))
+        if (string.IsNullOrEmpty(value: target))
         {
             MessageBox.Show(
-                WorkbenchSingleton.Workbench as IWin32Window,
-                strings.ServerUrlNotSet_Message,
-                strings.ServerUrlNotSet_Title,
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error
+                owner: WorkbenchSingleton.Workbench as IWin32Window,
+                text: strings.ServerUrlNotSet_Message,
+                caption: strings.ServerUrlNotSet_Title,
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Error
             );
         }
         else
         {
-            System.Diagnostics.Process.Start(target);
+            System.Diagnostics.Process.Start(fileName: target);
         }
     }
 }
@@ -1110,14 +1247,14 @@ public class CreateNewProject : AbstractMenuCommand
     public override void Run()
     {
         NewProjectWizard wiz = new NewProjectWizard();
-        wiz.ShowDialog((IWin32Window)WorkbenchSingleton.Workbench);
+        wiz.ShowDialog(owner: (IWin32Window)WorkbenchSingleton.Workbench);
     }
 }
 
 public abstract class StorageConvertor : AbstractMenuCommand
 {
     private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
-        System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
+        type: System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
     );
     protected IPersistenceService CurrentPersistenceService =>
         ServiceManager.Services.GetService<IPersistenceService>();
@@ -1132,16 +1269,21 @@ public abstract class StorageConvertor : AbstractMenuCommand
     private static IEnumerable<Type> AllProviderTypes =>
         ServiceManager
             .Services.GetService<SchemaService>()
-            .Providers.Select(provider => provider.GetType());
+            .Providers.Select(selector: provider => provider.GetType());
 
     private ISchemaItemCollection GetAllItems(Type providerType) =>
-        schemaService.GetProvider(providerType).ChildItems;
+        schemaService.GetProvider(type: providerType).ChildItems;
 
     private void UpdateStatusBar(Type type, int typeNumber)
     {
         int providerCount = AllProviderTypes.Count();
         statusBar.SetStatusText(
-            string.Format("Converting {0}. {1}/{2}", type.Name, typeNumber, providerCount)
+            text: string.Format(
+                format: "Converting {0}. {1}/{2}",
+                arg0: type.Name,
+                arg1: typeNumber,
+                arg2: providerCount
+            )
         );
         Application.DoEvents();
     }
@@ -1155,8 +1297,8 @@ public abstract class StorageConvertor : AbstractMenuCommand
         int typeNumber = 1;
         foreach (Type type in AllProviderTypes)
         {
-            UpdateStatusBar(type, typeNumber);
-            PersistAllProviderItems(type);
+            UpdateStatusBar(type: type, typeNumber: typeNumber);
+            PersistAllProviderItems(providerType: type);
             typeNumber++;
         }
         newPersistenceService.SchemaProvider.EndTransaction();
@@ -1164,42 +1306,43 @@ public abstract class StorageConvertor : AbstractMenuCommand
 
     private void PersistFolders<T>()
     {
-        statusBar.SetStatusText("Converting " + typeof(T));
+        statusBar.SetStatusText(text: "Converting " + typeof(T));
         IPersistenceService dbSvc =
-            ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-        var listOfItems = dbSvc.SchemaProvider.RetrieveList<T>(null);
+            ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+            as IPersistenceService;
+        var listOfItems = dbSvc.SchemaProvider.RetrieveList<T>(filter: null);
 
         foreach (IPersistent item in listOfItems)
         {
-            newPersistenceService.SchemaProvider.Persist(item);
+            newPersistenceService.SchemaProvider.Persist(obj: item);
         }
     }
 
     private void PersistAllProviderItems(Type providerType)
     {
-        ISchemaItemCollection allItems = GetAllItems(providerType);
+        ISchemaItemCollection allItems = GetAllItems(providerType: providerType);
         if (log.IsDebugEnabled)
         {
-            log.Debug($"ProviderType:{providerType}, items: {allItems.Count}");
+            log.Debug(message: $"ProviderType:{providerType}, items: {allItems.Count}");
         }
         foreach (ISchemaItem item in allItems)
         {
-            Persist(item);
+            Persist(item: item);
         }
     }
 
     private void Persist(ISchemaItem item)
     {
-        newPersistenceService.SchemaProvider.Persist(item);
+        newPersistenceService.SchemaProvider.Persist(obj: item);
         foreach (var ancestor in item.Ancestors)
         {
-            newPersistenceService.SchemaProvider.Persist(ancestor);
+            newPersistenceService.SchemaProvider.Persist(obj: ancestor);
         }
         foreach (var child in item.ChildItems)
         {
             if (child.DerivedFrom == null && child.IsPersistable)
             {
-                Persist(child);
+                Persist(item: child);
             }
         }
     }
@@ -1213,7 +1356,7 @@ public class SchemaExtensionSorter : IDatasetFormatter
         data.EnforceConstraints = false;
         foreach (DataTable originalTable in unsortedData.Tables)
         {
-            DataTable newTable = data.Tables[originalTable.TableName];
+            DataTable newTable = data.Tables[name: originalTable.TableName];
             switch (originalTable.TableName)
             {
                 case "SchemaItemGroup":
@@ -1222,11 +1365,15 @@ public class SchemaExtensionSorter : IDatasetFormatter
                 {
                     originalTable
                         .Rows.Cast<DataRow>()
-                        .OrderBy(row => row["Id"])
-                        .ForEach(row =>
+                        .OrderBy(keySelector: row => row[columnName: "Id"])
+                        .ForEach(action: row =>
                         {
-                            newTable.ImportRow(row);
-                            ImportChildRows(originalTable, newTable, row);
+                            newTable.ImportRow(row: row);
+                            ImportChildRows(
+                                originalTable: originalTable,
+                                newTable: newTable,
+                                parentRow: row
+                            );
                         });
                     break;
                 }
@@ -1235,7 +1382,7 @@ public class SchemaExtensionSorter : IDatasetFormatter
                 {
                     foreach (DataRow row in originalTable.Rows)
                     {
-                        newTable.ImportRow(row);
+                        newTable.ImportRow(row: row);
                     }
                     break;
                 }
@@ -1246,10 +1393,10 @@ public class SchemaExtensionSorter : IDatasetFormatter
 
     private void ImportChildRows(DataTable originalTable, DataTable newTable, DataRow parentRow)
     {
-        foreach (DataRow row in parentRow.GetChildRows("ChildSchemaItem"))
+        foreach (DataRow row in parentRow.GetChildRows(relationName: "ChildSchemaItem"))
         {
-            newTable.ImportRow(row);
-            ImportChildRows(originalTable, newTable, row);
+            newTable.ImportRow(row: row);
+            ImportChildRows(originalTable: originalTable, newTable: newTable, parentRow: row);
         }
     }
 }

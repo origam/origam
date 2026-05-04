@@ -32,8 +32,8 @@ namespace Origam.Schema.EntityModel;
 /// <summary>
 /// Maps physical table to an entity.
 /// </summary>
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public abstract class AbstractDataEntity : AbstractSchemaItem, IDataEntity, ISchemaItemFactory
 {
     public AbstractDataEntity()
@@ -43,13 +43,13 @@ public abstract class AbstractDataEntity : AbstractSchemaItem, IDataEntity, ISch
     }
 
     public AbstractDataEntity(Guid schemaExtensionId)
-        : base(schemaExtensionId)
+        : base(extensionId: schemaExtensionId)
     {
         Init();
     }
 
     public AbstractDataEntity(Key primaryKey)
-        : base(primaryKey)
+        : base(primaryKey: primaryKey)
     {
         Init();
     }
@@ -59,8 +59,8 @@ public abstract class AbstractDataEntity : AbstractSchemaItem, IDataEntity, ISch
     private void Init()
     {
         this.ChildItemTypes.InsertRange(
-            0,
-            new Type[]
+            index: 0,
+            collection: new Type[]
             {
                 typeof(FieldMappingItem),
                 typeof(DetachedField),
@@ -79,11 +79,11 @@ public abstract class AbstractDataEntity : AbstractSchemaItem, IDataEntity, ISch
     }
 
     #region IDataEntity Members
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public List<SchemaItemParameter> EntityParameters =>
-        ChildItemsByType<SchemaItemParameter>(SchemaItemParameter.CategoryConst);
+        ChildItemsByType<SchemaItemParameter>(itemType: SchemaItemParameter.CategoryConst);
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public virtual List<IDataEntityColumn> EntityPrimaryKey
     {
         get
@@ -93,7 +93,7 @@ public abstract class AbstractDataEntity : AbstractSchemaItem, IDataEntity, ISch
             {
                 if (column.IsPrimaryKey)
                 {
-                    list.Add(column);
+                    list.Add(item: column);
                 }
             }
             return list;
@@ -101,25 +101,25 @@ public abstract class AbstractDataEntity : AbstractSchemaItem, IDataEntity, ISch
     }
     public Guid DescribingFieldId;
 
-    [TypeConverter(typeof(EntityColumnReferenceConverter))]
-    [XmlReference("describingField", "DescribingFieldId")]
+    [TypeConverter(type: typeof(EntityColumnReferenceConverter))]
+    [XmlReference(attributeName: "describingField", idField: "DescribingFieldId")]
     public IDataEntityColumn DescribingField
     {
         get
         {
             return (ISchemaItem)
                     this.PersistenceProvider.RetrieveInstance(
-                        typeof(ISchemaItem),
-                        new ModelElementKey(this.DescribingFieldId)
+                        type: typeof(ISchemaItem),
+                        primaryKey: new ModelElementKey(id: this.DescribingFieldId)
                     ) as IDataEntityColumn;
         }
-        set => DescribingFieldId = (Guid?)value?.PrimaryKey["Id"] ?? Guid.Empty;
+        set => DescribingFieldId = (Guid?)value?.PrimaryKey[key: "Id"] ?? Guid.Empty;
     }
     bool _entityIsReadOnly = false;
 
-    [Category("Entity"), DefaultValue(false)]
-    [Browsable(false)]
-    [XmlAttribute("readOnly")]
+    [Category(category: "Entity"), DefaultValue(value: false)]
+    [Browsable(browsable: false)]
+    [XmlAttribute(attributeName: "readOnly")]
     public bool EntityIsReadOnly
     {
         get { return _entityIsReadOnly; }
@@ -127,11 +127,11 @@ public abstract class AbstractDataEntity : AbstractSchemaItem, IDataEntity, ISch
     }
     EntityAuditingType _auditingType = EntityAuditingType.None;
 
-    [Category("Entity"), DefaultValue(EntityAuditingType.None)]
+    [Category(category: "Entity"), DefaultValue(value: EntityAuditingType.None)]
     [Description(
-        "Indicates if audit trail will be recorded for changes in this entity. If set to All, every change (create/update/delete) will be recorded in the audit log that users can browse in the UI. If set UpdatesAndDeletes only update and delete changes will be recorded."
+        description: "Indicates if audit trail will be recorded for changes in this entity. If set to All, every change (create/update/delete) will be recorded in the audit log that users can browse in the UI. If set UpdatesAndDeletes only update and delete changes will be recorded."
     )]
-    [XmlAttribute("audit")]
+    [XmlAttribute(attributeName: "audit")]
     public EntityAuditingType AuditingType
     {
         get { return _auditingType; }
@@ -139,30 +139,34 @@ public abstract class AbstractDataEntity : AbstractSchemaItem, IDataEntity, ISch
     }
     public Guid AuditingSecondReferenceKeyColumnId;
 
-    [TypeConverter(typeof(EntityColumnReferenceConverter))]
-    [Category("Entity")]
+    [TypeConverter(type: typeof(EntityColumnReferenceConverter))]
+    [Category(category: "Entity")]
     [Description(
-        "If auditing is enabled and this value is filled, system will store value of designated column to audit log when recording delete operation."
+        description: "If auditing is enabled and this value is filled, system will store value of designated column to audit log when recording delete operation."
     )]
-    [XmlReference("auditingSecondReferenceKeyColumn", "AuditingSecondReferenceKeyColumnId")]
+    [XmlReference(
+        attributeName: "auditingSecondReferenceKeyColumn",
+        idField: "AuditingSecondReferenceKeyColumnId"
+    )]
     public IDataEntityColumn AuditingSecondReferenceKeyColumn
     {
         get =>
             (ISchemaItem)
                 PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(AuditingSecondReferenceKeyColumnId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: AuditingSecondReferenceKeyColumnId)
                 ) as IDataEntityColumn;
-        set => AuditingSecondReferenceKeyColumnId = (Guid?)value?.PrimaryKey["Id"] ?? Guid.Empty;
+        set =>
+            AuditingSecondReferenceKeyColumnId = (Guid?)value?.PrimaryKey[key: "Id"] ?? Guid.Empty;
     }
     private string _caption = "";
 
-    [Category("Entity")]
-    [Localizable(true)]
+    [Category(category: "Entity")]
+    [Localizable(isLocalizable: true)]
     [Description(
-        "User interface label for this entity. It is used e.g. for generic error messages about the entity ('Error occured in Invoice' instead of 'Error occured in InvDocRec')."
+        description: "User interface label for this entity. It is used e.g. for generic error messages about the entity ('Error occured in Invoice' instead of 'Error occured in InvDocRec')."
     )]
-    [XmlAttribute("label")]
+    [XmlAttribute(attributeName: "label")]
     public string Caption
     {
         get { return _caption; }
@@ -173,7 +177,7 @@ public abstract class AbstractDataEntity : AbstractSchemaItem, IDataEntity, ISch
     private List<IDataEntityColumn> _columns;
 #endif
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public List<IDataEntityColumn> EntityColumns
     {
         get
@@ -186,7 +190,7 @@ public abstract class AbstractDataEntity : AbstractSchemaItem, IDataEntity, ISch
                     if (!_columnsPopulated)
                     {
                         _columns = ChildItemsByType<IDataEntityColumn>(
-                            AbstractDataEntityColumn.CategoryConst
+                            itemType: AbstractDataEntityColumn.CategoryConst
                         );
                         _columnsPopulated = true;
                     }
@@ -199,11 +203,11 @@ public abstract class AbstractDataEntity : AbstractSchemaItem, IDataEntity, ISch
         }
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public List<EntityRelationItem> EntityRelations =>
-        ChildItemsByType<EntityRelationItem>(EntityRelationItem.CategoryConst);
+        ChildItemsByType<EntityRelationItem>(itemType: EntityRelationItem.CategoryConst);
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public List<IDataEntity> ChildEntities
     {
         get
@@ -213,14 +217,14 @@ public abstract class AbstractDataEntity : AbstractSchemaItem, IDataEntity, ISch
             {
                 if (relation.IsParentChild)
                 {
-                    result.Add(relation.RelatedEntity);
+                    result.Add(item: relation.RelatedEntity);
                 }
             }
             return result;
         }
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public List<IDataEntity> ChildEntitiesRecursive
     {
         get
@@ -228,65 +232,69 @@ public abstract class AbstractDataEntity : AbstractSchemaItem, IDataEntity, ISch
             var result = new List<IDataEntity>();
             foreach (IDataEntity entity in this.ChildEntities)
             {
-                result.Add(entity);
-                result.AddRange(entity.ChildEntitiesRecursive);
+                result.Add(item: entity);
+                result.AddRange(collection: entity.ChildEntitiesRecursive);
             }
             return result;
         }
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public List<EntityFilter> EntityFilters =>
-        ChildItemsByType<EntityFilter>(EntityFilter.CategoryConst);
+        ChildItemsByType<EntityFilter>(itemType: EntityFilter.CategoryConst);
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public List<DataEntityIndex> EntityIndexes =>
-        ChildItemsByType<DataEntityIndex>(DataEntityIndex.CategoryConst);
+        ChildItemsByType<DataEntityIndex>(itemType: DataEntityIndex.CategoryConst);
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public List<AbstractEntitySecurityRule> RowLevelSecurityRules =>
-        ChildItemsByType<AbstractEntitySecurityRule>(AbstractEntitySecurityRule.CategoryConst);
+        ChildItemsByType<AbstractEntitySecurityRule>(
+            itemType: AbstractEntitySecurityRule.CategoryConst
+        );
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public List<EntityConditionalFormatting> ConditionalFormattingRules =>
-        ChildItemsByType<EntityConditionalFormatting>(EntityConditionalFormatting.CategoryConst);
+        ChildItemsByType<EntityConditionalFormatting>(
+            itemType: EntityConditionalFormatting.CategoryConst
+        );
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public List<DataEntityConstraint> Constraints
     {
         get
         {
             var result = new List<DataEntityConstraint>();
-            DataEntityConstraint pk = new DataEntityConstraint(ConstraintType.PrimaryKey);
+            DataEntityConstraint pk = new DataEntityConstraint(type: ConstraintType.PrimaryKey);
             foreach (IDataEntityColumn column in this.EntityColumns)
             {
                 if (column.IsPrimaryKey)
                 {
-                    pk.Fields.Add(column);
+                    pk.Fields.Add(item: column);
                 }
                 DataEntityConstraint foreignKey = column.ForeignKeyConstraint;
                 if (foreignKey != null)
                 {
-                    result.Add(foreignKey);
+                    result.Add(item: foreignKey);
                 }
             }
             if (pk.Fields.Count > 0)
             {
-                result.Add(pk);
+                result.Add(item: pk);
             }
 
             return result;
         }
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public bool HasEntityAFieldDenyReadRule()
     {
         if (
-            ChildItemsByTypeRecursive(EntityFieldSecurityRule.CategoryConst)
+            ChildItemsByTypeRecursive(itemType: EntityFieldSecurityRule.CategoryConst)
                 .ToArray()
                 .Cast<EntityFieldSecurityRule>()
-                .Where(rule => rule.Type == PermissionType.Deny && rule.ReadCredential)
+                .Where(predicate: rule => rule.Type == PermissionType.Deny && rule.ReadCredential)
                 .Count() > 0
         )
         {
@@ -301,10 +309,10 @@ public abstract class AbstractDataEntity : AbstractSchemaItem, IDataEntity, ISch
     {
         if (this.DescribingField != null)
         {
-            dependencies.Add(this.DescribingField);
+            dependencies.Add(item: this.DescribingField);
         }
 
-        base.GetExtraDependencies(dependencies);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override string ItemType

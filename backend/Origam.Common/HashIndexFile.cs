@@ -34,43 +34,50 @@ namespace Origam;
 public class HashIndexFile : AbstractIndexFile
 {
     private static readonly ILog log = LogManager.GetLogger(
-        MethodBase.GetCurrentMethod().DeclaringType
+        type: MethodBase.GetCurrentMethod().DeclaringType
     );
 
     public HashIndexFile(string indexFile)
-        : base(indexFile) { }
+        : base(indexFile: indexFile) { }
 
     public override string GetFirstUnprocessedFile(string path, string mask)
     {
-        HashSet<string> processedFileHashes = new HashSet<string>(GetProcessedFileHashes());
+        HashSet<string> processedFileHashes = new HashSet<string>(
+            collection: GetProcessedFileHashes()
+        );
         return Directory
-            .GetFiles(path, mask)
-            .FirstOrDefault(filename => !processedFileHashes.Contains(GetHash(filename)));
+            .GetFiles(path: path, searchPattern: mask)
+            .FirstOrDefault(predicate: filename =>
+                !processedFileHashes.Contains(item: GetHash(filename: filename))
+            );
     }
 
     public IEnumerable<string> GetProcessedFileHashes()
     {
-        return ReadAllLines().Select(line => line.Split('|')[0]);
+        return ReadAllLines().Select(selector: line => line.Split(separator: '|')[0]);
     }
 
     public string CreateIndexFileEntry(string filename)
     {
         return string.Format(
-            "{0}|{1}|{2:yyyyMMddHHmmss}",
-            GetHash(filename),
-            filename,
-            DateTime.Now
+            format: "{0}|{1}|{2:yyyyMMddHHmmss}",
+            arg0: GetHash(filename: filename),
+            arg1: filename,
+            arg2: DateTime.Now
         );
     }
 
     public string CreateIndexFileEntry(string archiveName, ZipArchiveEntry archiveEntry)
     {
         return string.Format(
-            "{0}|{1}|{2}|{3:yyyyMMddHHmmss}",
-            GetHash(archiveEntry),
-            archiveName,
-            archiveEntry.FullName,
-            DateTime.Now
+            format: "{0}|{1}|{2}|{3:yyyyMMddHHmmss}",
+            args: new object[]
+            {
+                GetHash(archiveEntry: archiveEntry),
+                archiveName,
+                archiveEntry.FullName,
+                DateTime.Now,
+            }
         );
     }
 
@@ -78,11 +85,11 @@ public class HashIndexFile : AbstractIndexFile
     {
         if (log.IsDebugEnabled)
         {
-            log.DebugFormat("Starting to compute hash for file {0}", filename);
+            log.DebugFormat(format: "Starting to compute hash for file {0}", arg0: filename);
         }
-        using (FileStream fileStream = new FileStream(filename, FileMode.Open))
+        using (FileStream fileStream = new FileStream(path: filename, mode: FileMode.Open))
         {
-            return GetHash(fileStream);
+            return GetHash(stream: fileStream);
         }
     }
 
@@ -90,20 +97,20 @@ public class HashIndexFile : AbstractIndexFile
     {
         using (Stream stream = archiveEntry.Open())
         {
-            return GetHash(stream);
+            return GetHash(stream: stream);
         }
     }
 
     private string GetHash(Stream stream)
     {
-        using (BufferedStream bufferedStream = new BufferedStream(stream))
+        using (BufferedStream bufferedStream = new BufferedStream(stream: stream))
         using (SHA1Managed sha1 = new SHA1Managed())
         {
-            byte[] hash = sha1.ComputeHash(bufferedStream);
-            StringBuilder output = new StringBuilder(2 * hash.Length);
+            byte[] hash = sha1.ComputeHash(inputStream: bufferedStream);
+            StringBuilder output = new StringBuilder(capacity: 2 * hash.Length);
             foreach (byte b in hash)
             {
-                output.AppendFormat("{0:X2}", b);
+                output.AppendFormat(format: "{0:X2}", arg0: b);
             }
             return output.ToString();
         }
@@ -111,13 +118,13 @@ public class HashIndexFile : AbstractIndexFile
 
     public bool IsFileProcessed(string filename)
     {
-        string fileHash = GetHash(filename);
-        return GetProcessedFileHashes().Any(hash => hash == fileHash);
+        string fileHash = GetHash(filename: filename);
+        return GetProcessedFileHashes().Any(predicate: hash => hash == fileHash);
     }
 
     public bool IsZipArchiveEntryProcessed(ZipArchiveEntry archiveEntry)
     {
-        string fileHash = GetHash(archiveEntry);
-        return GetProcessedFileHashes().Any(hash => hash == fileHash);
+        string fileHash = GetHash(archiveEntry: archiveEntry);
+        return GetProcessedFileHashes().Any(predicate: hash => hash == fileHash);
     }
 }

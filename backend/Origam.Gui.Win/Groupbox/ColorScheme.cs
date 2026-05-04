@@ -67,15 +67,15 @@ internal class ColorScheme
                 //Setting color properties of button control for
                 //Green color scheme
                 //---------------------------------------------------------
-                aCtrl.BackgroundBottomColor = Color.FromArgb(193, 201, 140);
-                aCtrl.BackgroundTopColor = Color.FromArgb(230, 233, 208);
-                aCtrl.BorderBottomColor = Color.FromArgb(230, 233, 208);
-                aCtrl.BorderTopColor = Color.FromArgb(193, 201, 140);
-                aCtrl.DefaultBorderColor = Color.FromArgb(167, 168, 127);
-                aCtrl.DisabledFontColor = Color.FromArgb(156, 147, 113);
-                aCtrl.DisbaledBottomColor = Color.FromArgb(209, 215, 170);
-                aCtrl.DisabledTopColor = Color.FromArgb(240, 242, 227);
-                aCtrl.FontColor = Color.FromArgb(105, 110, 26);
+                aCtrl.BackgroundBottomColor = Color.FromArgb(red: 193, green: 201, blue: 140);
+                aCtrl.BackgroundTopColor = Color.FromArgb(red: 230, green: 233, blue: 208);
+                aCtrl.BorderBottomColor = Color.FromArgb(red: 230, green: 233, blue: 208);
+                aCtrl.BorderTopColor = Color.FromArgb(red: 193, green: 201, blue: 140);
+                aCtrl.DefaultBorderColor = Color.FromArgb(red: 167, green: 168, blue: 127);
+                aCtrl.DisabledFontColor = Color.FromArgb(red: 156, green: 147, blue: 113);
+                aCtrl.DisbaledBottomColor = Color.FromArgb(red: 209, green: 215, blue: 170);
+                aCtrl.DisabledTopColor = Color.FromArgb(red: 240, green: 242, blue: 227);
+                aCtrl.FontColor = Color.FromArgb(red: 105, green: 110, blue: 26);
                 aCtrl.PressedFontColor = Color.Black;
                 break;
             }
@@ -86,15 +86,15 @@ internal class ColorScheme
                 //Setting color properties of button control for
                 //Purple color scheme
                 //---------------------------------------------------------
-                aCtrl.BackgroundBottomColor = Color.FromArgb(183, 157, 206);
-                aCtrl.BackgroundTopColor = Color.FromArgb(231, 222, 239);
-                aCtrl.BorderBottomColor = Color.FromArgb(224, 215, 233);
-                aCtrl.BorderTopColor = Color.FromArgb(193, 157, 206);
-                aCtrl.DefaultBorderColor = Color.FromArgb(132, 100, 161);
-                aCtrl.DisabledFontColor = Color.FromArgb(143, 116, 156);
-                aCtrl.DisbaledBottomColor = Color.FromArgb(209, 192, 210);
-                aCtrl.DisabledTopColor = Color.FromArgb(237, 231, 230);
-                aCtrl.FontColor = Color.FromArgb(74, 30, 115);
+                aCtrl.BackgroundBottomColor = Color.FromArgb(red: 183, green: 157, blue: 206);
+                aCtrl.BackgroundTopColor = Color.FromArgb(red: 231, green: 222, blue: 239);
+                aCtrl.BorderBottomColor = Color.FromArgb(red: 224, green: 215, blue: 233);
+                aCtrl.BorderTopColor = Color.FromArgb(red: 193, green: 157, blue: 206);
+                aCtrl.DefaultBorderColor = Color.FromArgb(red: 132, green: 100, blue: 161);
+                aCtrl.DisabledFontColor = Color.FromArgb(red: 143, green: 116, blue: 156);
+                aCtrl.DisbaledBottomColor = Color.FromArgb(red: 209, green: 192, blue: 210);
+                aCtrl.DisabledTopColor = Color.FromArgb(red: 237, green: 231, blue: 230);
+                aCtrl.FontColor = Color.FromArgb(red: 74, green: 30, blue: 115);
                 aCtrl.PressedFontColor = Color.Black;
                 break;
             }
@@ -105,15 +105,15 @@ internal class ColorScheme
                 //Setting color properties of button control for
                 //Yellow color scheme
                 //---------------------------------------------------------
-                aCtrl.BackgroundBottomColor = Color.FromArgb(194, 168, 120);
-                aCtrl.BackgroundTopColor = Color.FromArgb(248, 245, 224);
-                aCtrl.BorderBottomColor = Color.FromArgb(229, 219, 196);
-                aCtrl.BorderTopColor = Color.FromArgb(194, 168, 120);
-                aCtrl.DefaultBorderColor = Color.FromArgb(189, 153, 74);
-                aCtrl.DisabledFontColor = Color.FromArgb(156, 147, 113);
-                aCtrl.DisbaledBottomColor = Color.FromArgb(201, 177, 135);
-                aCtrl.DisabledTopColor = Color.FromArgb(241, 236, 212);
-                aCtrl.FontColor = Color.FromArgb(96, 83, 43);
+                aCtrl.BackgroundBottomColor = Color.FromArgb(red: 194, green: 168, blue: 120);
+                aCtrl.BackgroundTopColor = Color.FromArgb(red: 248, green: 245, blue: 224);
+                aCtrl.BorderBottomColor = Color.FromArgb(red: 229, green: 219, blue: 196);
+                aCtrl.BorderTopColor = Color.FromArgb(red: 194, green: 168, blue: 120);
+                aCtrl.DefaultBorderColor = Color.FromArgb(red: 189, green: 153, blue: 74);
+                aCtrl.DisabledFontColor = Color.FromArgb(red: 156, green: 147, blue: 113);
+                aCtrl.DisbaledBottomColor = Color.FromArgb(red: 201, green: 177, blue: 135);
+                aCtrl.DisabledTopColor = Color.FromArgb(red: 241, green: 236, blue: 212);
+                aCtrl.FontColor = Color.FromArgb(red: 96, green: 83, blue: 43);
                 aCtrl.PressedFontColor = Color.Black;
                 break;
             }
@@ -150,12 +150,12 @@ internal class ColorScheme
                 // Setting color properties of container control for
                 // Green color scheme
                 //---------------------------------------------------------
-                aCtrl.FontColor = Color.FromArgb(57, 66, 1);
-                aCtrl.ShadowColor = Color.FromArgb(142, 143, 116);
-                aCtrl.BorderTopColor = Color.FromArgb(225, 225, 183);
-                aCtrl.BorderBottomColor = Color.FromArgb(167, 168, 127);
-                aCtrl.BackgroundTopColor = Color.FromArgb(245, 243, 219);
-                aCtrl.BackgroundBottomColor = Color.FromArgb(214, 209, 153);
+                aCtrl.FontColor = Color.FromArgb(red: 57, green: 66, blue: 1);
+                aCtrl.ShadowColor = Color.FromArgb(red: 142, green: 143, blue: 116);
+                aCtrl.BorderTopColor = Color.FromArgb(red: 225, green: 225, blue: 183);
+                aCtrl.BorderBottomColor = Color.FromArgb(red: 167, green: 168, blue: 127);
+                aCtrl.BackgroundTopColor = Color.FromArgb(red: 245, green: 243, blue: 219);
+                aCtrl.BackgroundBottomColor = Color.FromArgb(red: 214, green: 209, blue: 153);
                 break;
             }
             //---------------------------------------------------------
@@ -165,12 +165,12 @@ internal class ColorScheme
                 // Setting color properties of container control for
                 // Purple color scheme
                 //---------------------------------------------------------
-                aCtrl.FontColor = Color.FromArgb(137, 101, 163);
-                aCtrl.ShadowColor = Color.FromArgb(110, 92, 121);
-                aCtrl.BorderTopColor = Color.FromArgb(234, 218, 245);
-                aCtrl.BorderBottomColor = Color.FromArgb(191, 161, 211);
-                aCtrl.BackgroundTopColor = Color.FromArgb(251, 246, 255);
-                aCtrl.BackgroundBottomColor = Color.FromArgb(241, 229, 249);
+                aCtrl.FontColor = Color.FromArgb(red: 137, green: 101, blue: 163);
+                aCtrl.ShadowColor = Color.FromArgb(red: 110, green: 92, blue: 121);
+                aCtrl.BorderTopColor = Color.FromArgb(red: 234, green: 218, blue: 245);
+                aCtrl.BorderBottomColor = Color.FromArgb(red: 191, green: 161, blue: 211);
+                aCtrl.BackgroundTopColor = Color.FromArgb(red: 251, green: 246, blue: 255);
+                aCtrl.BackgroundBottomColor = Color.FromArgb(red: 241, green: 229, blue: 249);
                 break;
             }
             //---------------------------------------------------------
@@ -190,7 +190,7 @@ internal class ColorScheme
 public class InvalidColorSchemeException : Exception
 {
     public InvalidColorSchemeException()
-        : base(ResourceUtils.GetString("ErrorColorScheme")) { }
+        : base(message: ResourceUtils.GetString(key: "ErrorColorScheme")) { }
 }
 
 ///<summary>

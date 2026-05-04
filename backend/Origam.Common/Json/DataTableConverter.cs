@@ -37,14 +37,14 @@ class DataTableConverter : newton.DataTableConverter
         DataTable table = (DataTable)value;
         DefaultContractResolver resolver = serializer.ContractResolver as DefaultContractResolver;
         bool serializeAsSingleJsonObject = table.ExtendedProperties.Contains(
-            Constants.SerializeAsSingleJsonObject
+            key: Constants.SerializeAsSingleJsonObject
         )
-            ? table.ExtendedProperties.Get<bool>(Constants.SerializeAsSingleJsonObject)
+            ? table.ExtendedProperties.Get<bool>(key: Constants.SerializeAsSingleJsonObject)
             : false;
         if (serializeAsSingleJsonObject && table.Rows.Count > 1)
         {
             throw new OrigamException(
-                "JSON Serialization failed. "
+                message: "JSON Serialization failed. "
                     + $"Table '{table.TableName}' is defined to serialize to a "
                     + $"single object, but multiple objects came ({table.Rows.Count})."
             );
@@ -55,7 +55,7 @@ class DataTableConverter : newton.DataTableConverter
         }
         foreach (DataRow row in table.Rows)
         {
-            serializer.Serialize(writer, row);
+            serializer.Serialize(jsonWriter: writer, value: row);
         }
         if (!serializeAsSingleJsonObject)
         {

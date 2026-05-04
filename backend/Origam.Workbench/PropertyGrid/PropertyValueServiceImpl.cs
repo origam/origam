@@ -40,14 +40,14 @@ public sealed class PropertyValueServiceImpl : IPropertyValueUIService
         if (QueryPropertyUIValueItems != null)
         {
             list = new ArrayList();
-            QueryPropertyUIValueItems(context, propDesc, list);
+            QueryPropertyUIValueItems(context: context, propDesc: propDesc, valueUIItemList: list);
         }
         if (list == null || list.Count == 0)
         {
             return new PropertyValueUIItem[0];
         }
         PropertyValueUIItem[] result = new PropertyValueUIItem[list.Count];
-        list.CopyTo(result);
+        list.CopyTo(array: result);
         return result;
     }
 
@@ -55,7 +55,7 @@ public sealed class PropertyValueServiceImpl : IPropertyValueUIService
     {
         if (PropertyUIValueItemsChanged != null)
         {
-            PropertyUIValueItemsChanged(this, EventArgs.Empty);
+            PropertyUIValueItemsChanged(sender: this, e: EventArgs.Empty);
         }
     }
 

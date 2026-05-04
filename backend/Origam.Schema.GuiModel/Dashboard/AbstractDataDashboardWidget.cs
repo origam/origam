@@ -29,7 +29,7 @@ using Origam.Schema.EntityModel;
 
 namespace Origam.Schema.GuiModel;
 
-[ClassMetaVersion("6.0.0")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class AbstractDataDashboardWidget : AbstractDashboardWidget, IDataStructureReference
 {
     public AbstractDataDashboardWidget()
@@ -39,13 +39,13 @@ public class AbstractDataDashboardWidget : AbstractDashboardWidget, IDataStructu
     }
 
     public AbstractDataDashboardWidget(Guid schemaExtensionId)
-        : base(schemaExtensionId)
+        : base(schemaExtensionId: schemaExtensionId)
     {
         Init();
     }
 
     public AbstractDataDashboardWidget(Key primaryKey)
-        : base(primaryKey)
+        : base(primaryKey: primaryKey)
     {
         Init();
     }
@@ -54,18 +54,18 @@ public class AbstractDataDashboardWidget : AbstractDashboardWidget, IDataStructu
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(this.DataStructure);
+        dependencies.Add(item: this.DataStructure);
         if (this.Method != null)
         {
-            dependencies.Add(this.Method);
+            dependencies.Add(item: this.Method);
         }
 
         if (this.SortSet != null)
         {
-            dependencies.Add(this.SortSet);
+            dependencies.Add(item: this.SortSet);
         }
 
-        base.GetExtraDependencies(dependencies);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     #region Properties
@@ -76,65 +76,68 @@ public class AbstractDataDashboardWidget : AbstractDashboardWidget, IDataStructu
 
     public Guid DataStructureId;
 
-    [TypeConverter(typeof(DataStructureConverter))]
-    [Category("Data"), RefreshProperties(RefreshProperties.Repaint)]
-    [XmlReference("dataStructure", "DataStructureId")]
+    [TypeConverter(type: typeof(DataStructureConverter))]
+    [Category(category: "Data"), RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [XmlReference(attributeName: "dataStructure", idField: "DataStructureId")]
     public DataStructure DataStructure
     {
         get
         {
             return (DataStructure)
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(this.DataStructureId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: this.DataStructureId)
                 );
         }
         set
         {
             this.Method = null;
             this.SortSet = null;
-            this.DataStructureId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
+            this.DataStructureId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]);
         }
     }
     public Guid DataStructureMethodId;
 
-    [Category("Data"), TypeConverter(typeof(DataStructureReferenceMethodConverter))]
-    [XmlReference("method", "DataStructureMethodId")]
+    [Category(category: "Data"), TypeConverter(type: typeof(DataStructureReferenceMethodConverter))]
+    [XmlReference(attributeName: "method", idField: "DataStructureMethodId")]
     public DataStructureMethod Method
     {
         get
         {
             return (DataStructureMethod)
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(this.DataStructureMethodId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: this.DataStructureMethodId)
                 );
         }
         set
         {
             this.DataStructureMethodId = (
-                value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]
+                value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]
             );
         }
     }
     public Guid DataStructureSortSetId;
 
-    [Category("Data"), TypeConverter(typeof(DataStructureReferenceSortSetConverter))]
-    [XmlReference("sortSet", "DataStructureSortSetId")]
+    [
+        Category(category: "Data"),
+        TypeConverter(type: typeof(DataStructureReferenceSortSetConverter))
+    ]
+    [XmlReference(attributeName: "sortSet", idField: "DataStructureSortSetId")]
     public DataStructureSortSet SortSet
     {
         get
         {
             return (DataStructureSortSet)
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(this.DataStructureSortSetId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: this.DataStructureSortSetId)
                 );
         }
         set
         {
             this.DataStructureSortSetId = (
-                value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]
+                value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]
             );
         }
     }
@@ -143,14 +146,15 @@ public class AbstractDataDashboardWidget : AbstractDashboardWidget, IDataStructu
         get
         {
             var result = new ArrayList();
-            DataStructureEntity entity = this.DataStructure.Entities[0] as DataStructureEntity;
+            DataStructureEntity entity =
+                this.DataStructure.Entities[index: 0] as DataStructureEntity;
             foreach (DataStructureColumn column in entity.Columns)
             {
                 result.Add(
-                    new DashboardWidgetProperty(
-                        column.Name,
-                        (column.Caption == null ? column.Field.Caption : column.Caption),
-                        column.Field.DataType
+                    value: new DashboardWidgetProperty(
+                        name: column.Name,
+                        caption: (column.Caption == null ? column.Field.Caption : column.Caption),
+                        dataType: column.Field.DataType
                     )
                 );
             }

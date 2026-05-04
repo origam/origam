@@ -35,31 +35,35 @@ internal class NodePainter : INodeItemPainter
     public NodePainter(InternalPainter painter)
     {
         this.painter = painter;
-        nodeHeaderPainter = new NodeHeaderPainter(painter);
+        nodeHeaderPainter = new NodeHeaderPainter(painter: painter);
     }
 
     public ICurve GetBoundary(Node node)
     {
-        var borderSize = painter.CalculateMinHeaderBorder(node);
-        return CurveFactory.CreateRectangle(borderSize.Width, borderSize.Height, new Point());
+        var borderSize = painter.CalculateMinHeaderBorder(node: node);
+        return CurveFactory.CreateRectangle(
+            width: borderSize.Width,
+            height: borderSize.Height,
+            center: new Point()
+        );
     }
 
     public bool Draw(Node node, object graphicsObj)
     {
         Graphics editorGraphics = (Graphics)graphicsObj;
-        var borderSize = painter.CalculateMinHeaderBorder(node);
+        var borderSize = painter.CalculateMinHeaderBorder(node: node);
         var borderCorner = new System.Drawing.Point(
-            (int)node.GeometryNode.Center.X - (borderSize.Width / 2),
-            (int)node.GeometryNode.Center.Y - (borderSize.Height / 2)
+            x: (int)node.GeometryNode.Center.X - (borderSize.Width / 2),
+            y: (int)node.GeometryNode.Center.Y - (borderSize.Height / 2)
         );
-        Rectangle border = new Rectangle(borderCorner, borderSize);
+        Rectangle border = new Rectangle(location: borderCorner, size: borderSize);
 
-        nodeHeaderPainter.Draw(node, editorGraphics, border);
+        nodeHeaderPainter.Draw(node: node, editorGraphics: editorGraphics, border: border);
 
         editorGraphics.DrawUpSideDown(
             drawAction: graphics =>
             {
-                graphics.DrawRectangle(painter.GetActiveBorderPen(node), border);
+                graphics.DrawRectangle(pen: painter.GetActiveBorderPen(node: node), rect: border);
             },
             yAxisCoordinate: (float)node.GeometryNode.Center.Y
         );

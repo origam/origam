@@ -34,7 +34,7 @@ namespace Origam.Rule;
 public class DatasetRuleHandler
 {
     private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
-        System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
+        type: System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
     );
     private bool _inRowChanging = false;
     private DataStructureRuleSet _ruleSet = null;
@@ -54,7 +54,7 @@ public class DatasetRuleHandler
         _ruleEngine = ruleEngine;
         foreach (DataTable table in xmlData.DataSet.Tables)
         {
-            RegisterTableEvents(table);
+            RegisterTableEvents(table: table);
         }
     }
 
@@ -65,7 +65,7 @@ public class DatasetRuleHandler
         _ruleEngine = null;
         foreach (DataTable table in xmlData.DataSet.Tables)
         {
-            UnregisterTableEvents(table);
+            UnregisterTableEvents(table: table);
         }
     }
 
@@ -105,27 +105,31 @@ public class DatasetRuleHandler
             if (e.Action == DataRowAction.Change && e.Row.RowState != DataRowState.Added)
             {
                 if (
-                    e.Row.Table.Columns.Contains("RecordUpdated")
-                    && !e.Row["RecordUpdated"].Equals(DateTime.Now)
+                    e.Row.Table.Columns.Contains(name: "RecordUpdated")
+                    && !e.Row[columnName: "RecordUpdated"].Equals(obj: DateTime.Now)
                 )
                 {
-                    e.Row["RecordUpdated"] = DateTime.Now;
+                    e.Row[columnName: "RecordUpdated"] = DateTime.Now;
                 }
-                if (e.Row.Table.Columns.Contains("RecordUpdatedBy"))
+                if (e.Row.Table.Columns.Contains(name: "RecordUpdatedBy"))
                 {
                     try
                     {
                         UserProfile profile = SecurityManager.CurrentUserProfile();
 
-                        if (!e.Row["RecordUpdatedBy"].Equals(profile.Id))
+                        if (!e.Row[columnName: "RecordUpdatedBy"].Equals(obj: profile.Id))
                         {
-                            e.Row["RecordUpdatedBy"] = profile.Id;
+                            e.Row[columnName: "RecordUpdatedBy"] = profile.Id;
                         }
                     }
                     catch { }
                 }
             }
-            DatasetTools.CheckRowErrorRecursive(DatasetTools.RootRow(e.Row), null, false);
+            DatasetTools.CheckRowErrorRecursive(
+                row: DatasetTools.RootRow(childRow: e.Row),
+                skipRow: null,
+                includeChildErrorsInParent: false
+            );
         }
         finally
         {
@@ -140,24 +144,25 @@ public class DatasetRuleHandler
         {
             if (log.IsDebugEnabled)
             {
-                log.Debug("Starting rules after '" + e.Row?.Table.TableName + "' changed.");
+                log.Debug(
+                    message: "Starting rules after '" + e.Row?.Table.TableName + "' changed."
+                );
             }
             try
             {
-                ruleEngine.ProcessRules(e.Row, data, ruleSet);
+                ruleEngine.ProcessRules(rowChanged: e.Row, data: data, ruleSet: ruleSet);
             }
             catch (Exception ex)
             {
                 var origamRuleException = new OrigamRuleException(
-                    ResourceUtils.GetString(
-                        "ErrorRuleFailureRecord",
-                        e.Row.Table.DisplayExpression,
-                        Environment.NewLine + ex.Message
+                    message: ResourceUtils.GetString(
+                        key: "ErrorRuleFailureRecord",
+                        args: [e.Row.Table.DisplayExpression, Environment.NewLine + ex.Message]
                     ),
-                    ex,
-                    e.Row
+                    innerException: ex,
+                    row: e.Row
                 );
-                log.LogOrigamError(origamRuleException); // DataTable will ignore the exception after we throw it so we at least log it here
+                log.LogOrigamError(ex: origamRuleException); // DataTable will ignore the exception after we throw it so we at least log it here
                 throw origamRuleException;
             }
         }
@@ -183,13 +188,13 @@ public class DatasetRuleHandler
             foreach (DataRelation rel in e.Row.Table.ParentRelations)
             {
                 // only self-join relations
-                if (rel.ParentTable.Equals(rel.ChildTable))
+                if (rel.ParentTable.Equals(obj: rel.ChildTable))
                 {
                     bool isFkChanging = false;
                     // only if the changed column is the fk
                     foreach (DataColumn childCol in rel.ChildColumns)
                     {
-                        if (e.Column.Equals(childCol))
+                        if (e.Column.Equals(obj: childCol))
                         {
                             isFkChanging = true;
                         }
@@ -197,14 +202,16 @@ public class DatasetRuleHandler
                     if (isFkChanging)
                     {
                         // go up
-                        while (row.GetParentRows(rel).Length != 0)
+                        while (row.GetParentRows(relation: rel).Length != 0)
                         {
-                            foreach (DataRow parentRow in row.GetParentRows(rel))
+                            foreach (DataRow parentRow in row.GetParentRows(relation: rel))
                             {
-                                if (parentRow.Equals(e.Row))
+                                if (parentRow.Equals(obj: e.Row))
                                 {
-                                    e.Row.SetParentRow(null);
-                                    throw new Exception(ResourceUtils.GetString("ErrorRecursion"));
+                                    e.Row.SetParentRow(parentRow: null);
+                                    throw new Exception(
+                                        message: ResourceUtils.GetString(key: "ErrorRecursion")
+                                    );
                                 }
                                 row = parentRow as OrigamDataRow;
                             }
@@ -215,7 +222,7 @@ public class DatasetRuleHandler
             if (log.IsDebugEnabled)
             {
                 log.Debug(
-                    "Column '"
+                    message: "Column '"
                         + e.Row?.Table.TableName
                         + "."
                         + e.Column?.ColumnName
@@ -223,7 +230,12 @@ public class DatasetRuleHandler
                         + e.ProposedValue
                 );
             }
-            ruleEngine.ProcessRules(e.Row, data, e.Column, ruleSet);
+            ruleEngine.ProcessRules(
+                rowChanged: e.Row,
+                data: data,
+                columnChanged: e.Column,
+                ruleSet: ruleSet
+            );
         }
         catch (OrigamRuleException)
         {
@@ -232,13 +244,12 @@ public class DatasetRuleHandler
         catch (Exception ex)
         {
             throw new OrigamRuleException(
-                ResourceUtils.GetString(
-                    "ErrorRuleFailureColumn",
-                    e.Column.Caption,
-                    e.Row.Table.DisplayExpression
+                message: ResourceUtils.GetString(
+                    key: "ErrorRuleFailureColumn",
+                    args: [e.Column.Caption, e.Row.Table.DisplayExpression]
                 ),
-                ex,
-                e.Row
+                innerException: ex,
+                row: e.Row
             );
         }
     }
@@ -258,10 +269,17 @@ public class DatasetRuleHandler
                 if (log.IsDebugEnabled)
                 {
                     log.Debug(
-                        "Starting rules after '" + deletedRow?.Table?.TableName + "' deleted."
+                        message: "Starting rules after '"
+                            + deletedRow?.Table?.TableName
+                            + "' deleted."
                     );
                 }
-                ruleEngine.ProcessRules(deletedRow, data, ruleSet, parentRows);
+                ruleEngine.ProcessRules(
+                    rowChanged: deletedRow,
+                    data: data,
+                    ruleSet: ruleSet,
+                    parentRows: parentRows
+                );
                 foreach (DataRow row in parentRows)
                 {
                     try
@@ -269,18 +287,25 @@ public class DatasetRuleHandler
                         // we pass all the columns from the deleted row so if some parent rules
                         // depended on some of these fields, they will be fired
                         //ruleEngine.ProcessRules(row, data, deletedRow.Table.Columns, ruleSet);
-                        DatasetTools.CheckRowErrorRecursive(DatasetTools.RootRow(row), null, false);
+                        DatasetTools.CheckRowErrorRecursive(
+                            row: DatasetTools.RootRow(childRow: row),
+                            skipRow: null,
+                            includeChildErrorsInParent: false
+                        );
                     }
                     catch (Exception ex)
                     {
                         throw new OrigamRuleException(
-                            ResourceUtils.GetString(
-                                "ErrorRuleFailureDelete",
-                                deletedRow.Table.DisplayExpression,
-                                Environment.NewLine + ex.Message
+                            message: ResourceUtils.GetString(
+                                key: "ErrorRuleFailureDelete",
+                                args:
+                                [
+                                    deletedRow.Table.DisplayExpression,
+                                    Environment.NewLine + ex.Message,
+                                ]
                             ),
-                            ex,
-                            row
+                            innerException: ex,
+                            row: row
                         );
                     }
                 }
@@ -289,13 +314,12 @@ public class DatasetRuleHandler
         catch (Exception ex)
         {
             throw new OrigamRuleException(
-                ResourceUtils.GetString(
-                    "ErrorDeleteFailed",
-                    deletedRow.Table.TableName,
-                    Environment.NewLine + ex.Message
+                message: ResourceUtils.GetString(
+                    key: "ErrorDeleteFailed",
+                    args: [deletedRow.Table.TableName, Environment.NewLine + ex.Message]
                 ),
-                ex,
-                deletedRow
+                innerException: ex,
+                row: deletedRow
             );
         }
     }
@@ -309,7 +333,7 @@ public class DatasetRuleHandler
     {
         if (log.IsDebugEnabled)
         {
-            log.Debug("Starting rules after '" + row?.Table?.TableName + "' was copied.");
+            log.Debug(message: "Starting rules after '" + row?.Table?.TableName + "' was copied.");
         }
         try
         {
@@ -318,19 +342,18 @@ public class DatasetRuleHandler
             // (they should not have any).
             if (data != null)
             {
-                ruleEngine.ProcessRules(data, ruleSet, row);
+                ruleEngine.ProcessRules(data: data, ruleSet: ruleSet, contextRow: row);
             }
         }
         catch (Exception ex)
         {
             throw new OrigamRuleException(
-                ResourceUtils.GetString(
-                    "ErrorRuleFailureCopy",
-                    row.Table.DisplayExpression,
-                    Environment.NewLine + ex.Message
+                message: ResourceUtils.GetString(
+                    key: "ErrorRuleFailureCopy",
+                    args: [row.Table.DisplayExpression, Environment.NewLine + ex.Message]
                 ),
-                ex,
-                row
+                innerException: ex,
+                row: row
             );
         }
     }
@@ -339,12 +362,22 @@ public class DatasetRuleHandler
     {
         if (e.Action != DataRowAction.Nothing && e.Action != DataRowAction.Commit)
         {
-            OnRowChanged(e, _currentRuleDocument, _ruleSet, _ruleEngine);
+            OnRowChanged(
+                e: e,
+                data: _currentRuleDocument,
+                ruleSet: _ruleSet,
+                ruleEngine: _ruleEngine
+            );
         }
     }
 
     private void table_ColumnChanged(object sender, DataColumnChangeEventArgs e)
     {
-        OnColumnChanged(e, _currentRuleDocument, _ruleSet, _ruleEngine);
+        OnColumnChanged(
+            e: e,
+            data: _currentRuleDocument,
+            ruleSet: _ruleSet,
+            ruleEngine: _ruleEngine
+        );
     }
 }

@@ -60,10 +60,10 @@ internal class StandardHttpResponseWrapper : IResponseWrapper
     {
         set
         {
-            var mediaType = new MediaTypeHeaderValue(value);
+            var mediaType = new MediaTypeHeaderValue(mediaType: value);
             // if we're sending a zip file, we need to kick out the encoding
             // otherwise the delivered file is invalid and of double size
-            if (!IsZipType(value))
+            if (!IsZipType(contentType: value))
             {
                 mediaType.Encoding = encoding;
             }
@@ -99,13 +99,13 @@ internal class StandardHttpResponseWrapper : IResponseWrapper
     public void WriteToOutput(Action<TextWriter> writeAction)
     {
         TextWriter textWriter = new StringWriterWithUtf8Encoding();
-        writeAction(textWriter);
-        response.WriteAsync(textWriter.ToString()).Wait();
+        writeAction(obj: textWriter);
+        response.WriteAsync(text: textWriter.ToString()).Wait();
     }
 
     public void CacheSetMaxAge(TimeSpan timeSpan)
     {
-        response.Headers[HeaderNames.CacheControl] = "max-age=" + timeSpan.TotalSeconds;
+        response.Headers[key: HeaderNames.CacheControl] = "max-age=" + timeSpan.TotalSeconds;
     }
 
     public void End() { }
@@ -117,31 +117,31 @@ internal class StandardHttpResponseWrapper : IResponseWrapper
 
     public void Write(string message)
     {
-        response.WriteAsync(message).Wait();
+        response.WriteAsync(text: message).Wait();
     }
 
     public void AddHeader(string name, string value)
     {
-        response.Headers[name] = value;
+        response.Headers[key: name] = value;
     }
 
     public void BinaryWrite(byte[] bytes)
     {
-        response.Body.WriteAsync(bytes, 0, bytes.Length).Wait();
+        response.Body.WriteAsync(buffer: bytes, offset: 0, count: bytes.Length).Wait();
     }
 
     public void Redirect(string requestUrlReferrerAbsolutePath)
     {
-        response.Redirect(requestUrlReferrerAbsolutePath);
+        response.Redirect(location: requestUrlReferrerAbsolutePath);
     }
 
     public void OutputStreamWrite(byte[] buffer, int offset, int count)
     {
-        response.Body.WriteAsync(buffer, offset, count).Wait();
+        response.Body.WriteAsync(buffer: buffer, offset: offset, count: count).Wait();
     }
 
     public void AppendHeader(string contentDisposition, string disposition)
     {
-        response.Headers[contentDisposition] = disposition;
+        response.Headers[key: contentDisposition] = disposition;
     }
 }

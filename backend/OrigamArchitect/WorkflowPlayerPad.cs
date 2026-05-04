@@ -43,7 +43,7 @@ public class WorkflowPlayerPad : AbstractPadContent, IBrowserPad
     private void InitializeComponent()
     {
         System.Resources.ResourceManager resources = new System.Resources.ResourceManager(
-            typeof(WorkflowPlayerPad)
+            resourceSource: typeof(WorkflowPlayerPad)
         );
         this.ebrSchemaBrowser = new Origam.Workbench.ExpressionBrowser();
         this.SuspendLayout();
@@ -53,12 +53,12 @@ public class WorkflowPlayerPad : AbstractPadContent, IBrowserPad
         this.ebrSchemaBrowser.AllowEdit = false;
         this.ebrSchemaBrowser.CheckSecurity = true;
         this.ebrSchemaBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
-        this.ebrSchemaBrowser.Location = new System.Drawing.Point(0, 0);
+        this.ebrSchemaBrowser.Location = new System.Drawing.Point(x: 0, y: 0);
         this.ebrSchemaBrowser.Name = "ebrSchemaBrowser";
         this.ebrSchemaBrowser.NodeUnderMouse = null;
         this.ebrSchemaBrowser.ShowFilter = false;
         this.ebrSchemaBrowser.DisableOtherExtensionNodes = false;
-        this.ebrSchemaBrowser.Size = new System.Drawing.Size(288, 589);
+        this.ebrSchemaBrowser.Size = new System.Drawing.Size(width: 288, height: 589);
         this.ebrSchemaBrowser.TabIndex = 3;
         this.ebrSchemaBrowser.NodeUnderMouseChanged += new System.EventHandler(
             this.ebrSchemaBrowser_NodeUnderMouseChanged
@@ -72,10 +72,10 @@ public class WorkflowPlayerPad : AbstractPadContent, IBrowserPad
         //
         // WorkflowPlayerPad
         //
-        this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+        this.AutoScaleBaseSize = new System.Drawing.Size(width: 5, height: 13);
         this.BackColor = System.Drawing.Color.White;
-        this.ClientSize = new System.Drawing.Size(288, 589);
-        this.Controls.Add(this.ebrSchemaBrowser);
+        this.ClientSize = new System.Drawing.Size(width: 288, height: 589);
+        this.Controls.Add(value: this.ebrSchemaBrowser);
         this.DockAreas = (
             (WeifenLuo.WinFormsUI.Docking.DockAreas)(
                 (
@@ -91,11 +91,11 @@ public class WorkflowPlayerPad : AbstractPadContent, IBrowserPad
             )
         );
         this.HideOnClose = true;
-        this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+        this.Icon = ((System.Drawing.Icon)(resources.GetObject(name: "$this.Icon")));
         this.Name = "WorkflowPlayerPad";
         this.TabText = strings.ProcessesTabText;
         this.Text = strings.ProcessList;
-        this.ResumeLayout(false);
+        this.ResumeLayout(performLayout: false);
     }
 
     public WorkflowPlayerPad()
@@ -121,7 +121,7 @@ public class WorkflowPlayerPad : AbstractPadContent, IBrowserPad
             this.ebrSchemaBrowser.RemoveAllNodes();
             if (_menu != null)
             {
-                this.ebrSchemaBrowser.AddRootNode(_menu);
+                this.ebrSchemaBrowser.AddRootNode(node: _menu);
             }
         }
     }
@@ -144,17 +144,17 @@ public class WorkflowPlayerPad : AbstractPadContent, IBrowserPad
                 this.components.Dispose();
             }
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
 
     private void ebrSchemaBrowser_NodeUnderMouseChanged(object sender, EventArgs e)
     {
         _documentationService =
-            ServiceManager.Services.GetService(typeof(IDocumentationService))
+            ServiceManager.Services.GetService(serviceType: typeof(IDocumentationService))
             as IDocumentationService;
         if (ebrSchemaBrowser.NodeUnderMouse == null)
         {
-            ebrSchemaBrowser.SetToolTip(null);
+            ebrSchemaBrowser.SetToolTip(text: null);
         }
         else
         {
@@ -170,15 +170,15 @@ public class WorkflowPlayerPad : AbstractPadContent, IBrowserPad
             if (item != null)
             {
                 ebrSchemaBrowser.SetToolTip(
-                    _documentationService.GetDocumentation(
-                        (Guid)item.PrimaryKey["Id"],
-                        DocumentationType.USER_LONG_HELP
+                    text: _documentationService.GetDocumentation(
+                        schemaItemId: (Guid)item.PrimaryKey[key: "Id"],
+                        docType: DocumentationType.USER_LONG_HELP
                     )
                 );
             }
             else
             {
-                ebrSchemaBrowser.SetToolTip(null);
+                ebrSchemaBrowser.SetToolTip(text: null);
             }
         }
     }
@@ -194,14 +194,15 @@ public class WorkflowPlayerPad : AbstractPadContent, IBrowserPad
         else if (menu != null)
         {
             IParameterService param =
-                ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
+                ServiceManager.Services.GetService(serviceType: typeof(IParameterService))
+                as IParameterService;
 
-            e.Filter = !param.IsFeatureOn(menu.Features);
+            e.Filter = !param.IsFeatureOn(featureCode: menu.Features);
         }
     }
 
     public int ImageIndex(string icon)
     {
-        return this.ImageList.ImageIndex(icon);
+        return this.ImageList.ImageIndex(icon: icon);
     }
 }

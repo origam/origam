@@ -28,9 +28,9 @@ class CreateGitRepository : AbstractBuilder
 
     public override void Execute(Project project)
     {
-        GitManager.CreateRepository(project.SourcesFolder);
-        GitManager gitmanager = new GitManager(project.SourcesFolder);
-        gitmanager.Init(project.GitUsername, project.GitEmail);
+        GitManager.CreateRepository(modelSourceControlLocation: project.SourcesFolder);
+        GitManager gitmanager = new GitManager(path: project.SourcesFolder);
+        gitmanager.Init(gitusername: project.GitUsername, gitemail: project.GitEmail);
     }
 
     public override void Rollback() { }

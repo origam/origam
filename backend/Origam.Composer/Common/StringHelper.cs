@@ -27,7 +27,7 @@ public static class StringHelper
 {
     public static string RemoveAllWhitespace(string input)
     {
-        if (string.IsNullOrEmpty(input))
+        if (string.IsNullOrEmpty(value: input))
         {
             return input;
         }
@@ -36,9 +36,9 @@ public static class StringHelper
 
         foreach (char c in input)
         {
-            if (!char.IsWhiteSpace(c))
+            if (!char.IsWhiteSpace(c: c))
             {
-                sb.Append(c);
+                sb.Append(value: c);
             }
         }
 

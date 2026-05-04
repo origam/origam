@@ -32,11 +32,15 @@ namespace Origam.Schema.WorkflowModel;
 /// <summary>
 /// Summary description for ContextStoreLink.
 /// </summary>
-[SchemaItemDescription("Field Dependency", "Field Dependencies", "field-dependency.png")]
-[HelpTopic("Data+Event+Field+Dependency")]
-[DefaultProperty("Field")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(
+    name: "Field Dependency",
+    folderName: "Field Dependencies",
+    iconName: "field-dependency.png"
+)]
+[HelpTopic(topic: "Data+Event+Field+Dependency")]
+[DefaultProperty(name: "Field")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class StateMachineEventFieldDependency : AbstractSchemaItem
 {
     public const string CategoryConst = "StateMachineEventFieldDependency";
@@ -45,10 +49,10 @@ public class StateMachineEventFieldDependency : AbstractSchemaItem
         : base() { }
 
     public StateMachineEventFieldDependency(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public StateMachineEventFieldDependency(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Overriden ISchemaItem Members
 
@@ -59,8 +63,8 @@ public class StateMachineEventFieldDependency : AbstractSchemaItem
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(this.Field);
-        base.GetExtraDependencies(dependencies);
+        dependencies.Add(item: this.Field);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override ISchemaItemCollection ChildItems
@@ -71,21 +75,24 @@ public class StateMachineEventFieldDependency : AbstractSchemaItem
     #region Properties
     public Guid FieldId;
 
-    [TypeConverter(typeof(StateMachineAllFieldConverter))]
+    [TypeConverter(type: typeof(StateMachineAllFieldConverter))]
     [NotNullModelElementRule()]
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [XmlReference("field", "FieldId")]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [XmlReference(attributeName: "field", idField: "FieldId")]
     public IDataEntityColumn Field
     {
         get
         {
-            ModelElementKey key = new ModelElementKey(this.FieldId);
+            ModelElementKey key = new ModelElementKey(id: this.FieldId);
             return (IDataEntityColumn)
-                this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
+                this.PersistenceProvider.RetrieveInstance(
+                    type: typeof(ISchemaItem),
+                    primaryKey: key
+                );
         }
         set
         {
-            this.FieldId = (Guid)value.PrimaryKey["Id"];
+            this.FieldId = (Guid)value.PrimaryKey[key: "Id"];
             if (this.FieldId == Guid.Empty)
             {
                 this.Name = "";

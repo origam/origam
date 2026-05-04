@@ -39,11 +39,11 @@ public class OrigamDatabaseAuthorizationProvider : IOrigamAuthorizationProvider
     {
         string cacheName = "DatabaseAuthorizationProviderCache";
         Hashtable context = OrigamUserContext.Context;
-        if (!context.Contains(cacheName))
+        if (!context.Contains(key: cacheName))
         {
-            context.Add(cacheName, new Hashtable());
+            context.Add(key: cacheName, value: new Hashtable());
         }
-        return (Hashtable)OrigamUserContext.Context[cacheName];
+        return (Hashtable)OrigamUserContext.Context[key: cacheName];
     }
 
     #region IAuthorizationProvider Members
@@ -64,16 +64,18 @@ public class OrigamDatabaseAuthorizationProvider : IOrigamAuthorizationProvider
             return true;
         }
 
-        string[] roles = context.Split(";".ToCharArray());
+        string[] roles = context.Split(separator: ";".ToCharArray());
         foreach (string roleTest in roles)
         {
-            string[] rolePart = roleTest.Split(SecurityManager.ROLE_SUFFIX_DIVIDER.ToCharArray());
+            string[] rolePart = roleTest.Split(
+                separator: SecurityManager.ROLE_SUFFIX_DIVIDER.ToCharArray()
+            );
             string appRole = rolePart[0];
             bool negation = false;
 
-            if (appRole.StartsWith("!"))
+            if (appRole.StartsWith(value: "!"))
             {
-                appRole = appRole.Substring(1);
+                appRole = appRole.Substring(startIndex: 1);
                 negation = true;
             }
             if (appRole == "*")
@@ -81,7 +83,7 @@ public class OrigamDatabaseAuthorizationProvider : IOrigamAuthorizationProvider
                 return false;
             }
 
-            foreach (Credential c in RoleList(principal))
+            foreach (Credential c in RoleList(principal: principal))
             {
                 bool process = true;
                 if (rolePart.Length == 2 && rolePart[1] == SecurityManager.READ_ONLY_ROLE_SUFFIX)
@@ -98,7 +100,7 @@ public class OrigamDatabaseAuthorizationProvider : IOrigamAuthorizationProvider
                 bool result = false;
                 if (process)
                 {
-                    if (appRole.Equals(c.RoleName))
+                    if (appRole.Equals(value: c.RoleName))
                     {
                         result = true;
                     }
@@ -129,63 +131,73 @@ public class OrigamDatabaseAuthorizationProvider : IOrigamAuthorizationProvider
         {
             name = "guest";
         }
-        if (cache.Contains(name))
+        if (cache.Contains(key: name))
         {
-            return (Credential[])cache[name];
+            return (Credential[])cache[key: name];
         }
         IServiceAgent dataServiceAgent;
         try
         {
             dataServiceAgent = (
-                ServiceManager.Services.GetService(typeof(IBusinessServicesService))
+                ServiceManager.Services.GetService(serviceType: typeof(IBusinessServicesService))
                 as IBusinessServicesService
-            ).GetAgent("DataService", null, null);
+            ).GetAgent(serviceType: "DataService", ruleEngine: null, workflowEngine: null);
         }
         catch
         {
-            throw new Exception(ResourceUtils.GetString("ErrorNoDataServiceAgent"));
+            throw new Exception(message: ResourceUtils.GetString(key: "ErrorNoDataServiceAgent"));
         }
         UserProfile profile =
-            SecurityManager.GetProfileProvider().GetProfile(principal.Identity) as UserProfile;
+            SecurityManager.GetProfileProvider().GetProfile(identity: principal.Identity)
+            as UserProfile;
         DataStructureQuery query = new DataStructureQuery(
-            new Guid("24ec7286-942e-4ed8-9934-d7619f6216d7"),
-            new Guid("603938fd-a9dd-4807-aca2-a161bc6fadc5")
+            dataStructureId: new Guid(g: "24ec7286-942e-4ed8-9934-d7619f6216d7"),
+            methodId: new Guid(g: "603938fd-a9dd-4807-aca2-a161bc6fadc5")
         );
         query.Parameters.Add(
-            new QueryParameter("BusinessPartnerOrigamRole_parBusinessPartnerId", profile.Id)
+            value: new QueryParameter(
+                _parameterName: "BusinessPartnerOrigamRole_parBusinessPartnerId",
+                value: profile.Id
+            )
         );
 
         dataServiceAgent.MethodName = "LoadDataByQuery";
         dataServiceAgent.Parameters.Clear();
-        dataServiceAgent.Parameters.Add("Query", query);
+        dataServiceAgent.Parameters.Add(key: "Query", value: query);
         try
         {
             dataServiceAgent.Run();
         }
         catch (Exception ex)
         {
-            throw new Exception(ResourceUtils.GetString("ErrorWhenLoadingRoleList"), ex);
+            throw new Exception(
+                message: ResourceUtils.GetString(key: "ErrorWhenLoadingRoleList"),
+                innerException: ex
+            );
         }
         DataSet result = (DataSet)dataServiceAgent.Result;
-        DataTable table = result.Tables["OrigamRoleOrigamApplicationRole"];
+        DataTable table = result.Tables[name: "OrigamRoleOrigamApplicationRole"];
         if (table == null)
         {
-            throw new NullReferenceException(ResourceUtils.GetString("ErrorRoleListNotLoaded"));
+            throw new NullReferenceException(
+                message: ResourceUtils.GetString(key: "ErrorRoleListNotLoaded")
+            );
         }
 
         Credential[] array = new Credential[table.Rows.Count];
 
         for (int i = 0; i < array.Length; i++)
         {
-            DataRow row = table.Rows[i];
+            DataRow row = table.Rows[index: i];
             array[i] = new Credential(
-                RoleName: (string)row["OrigamApplicationRole_Name"],
-                IsReadOnly: table.Columns.Contains("IsFormReadOnly") && (bool)row["IsFormReadOnly"],
-                IsInitialScreen: table.Columns.Contains("IsInitialScreen")
-                    && (bool)row["IsInitialScreen"]
+                RoleName: (string)row[columnName: "OrigamApplicationRole_Name"],
+                IsReadOnly: table.Columns.Contains(name: "IsFormReadOnly")
+                    && (bool)row[columnName: "IsFormReadOnly"],
+                IsInitialScreen: table.Columns.Contains(name: "IsInitialScreen")
+                    && (bool)row[columnName: "IsInitialScreen"]
             );
         }
-        cache[name] = array;
+        cache[key: name] = array;
         return array;
     }
     #endregion

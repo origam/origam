@@ -29,10 +29,14 @@ namespace Origam.Schema.GuiModel;
 /// <summary>
 /// Summary description for EntitySecurityRule.
 /// </summary>
-[SchemaItemDescription("Parameter Mapping", "Parameter Mappings", "icon_parameter-mapping.png")]
-[HelpTopic("Action+Parameter+Mapping")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(
+    name: "Parameter Mapping",
+    folderName: "Parameter Mappings",
+    iconName: "icon_parameter-mapping.png"
+)]
+[HelpTopic(topic: "Action+Parameter+Mapping")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class EntityUIActionParameterMapping : AbstractSchemaItem, IComparable
 {
     public const string CategoryConst = "EntityUIActionParameterMapping";
@@ -41,10 +45,10 @@ public class EntityUIActionParameterMapping : AbstractSchemaItem, IComparable
         : base() { }
 
     public EntityUIActionParameterMapping(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public EntityUIActionParameterMapping(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Overriden AbstractDataEntityColumn Members
 
@@ -57,7 +61,7 @@ public class EntityUIActionParameterMapping : AbstractSchemaItem, IComparable
     private string _field = "";
 
     [StringNotEmptyModelElementRule()]
-    [XmlAttribute("field")]
+    [XmlAttribute(attributeName: "field")]
     public string Field
     {
         get { return _field; }
@@ -65,7 +69,7 @@ public class EntityUIActionParameterMapping : AbstractSchemaItem, IComparable
     }
     EntityUIActionParameterMappingType _type = EntityUIActionParameterMappingType.Current;
 
-    [XmlAttribute("type")]
+    [XmlAttribute(attributeName: "type")]
     public EntityUIActionParameterMappingType Type
     {
         get { return _type; }

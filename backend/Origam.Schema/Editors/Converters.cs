@@ -46,15 +46,15 @@ public class ParameterReferenceConverter : System.ComponentModel.TypeConverter
         ISchemaItem reference = context.Instance as ISchemaItem;
         ISchemaItem root = reference.RootItem;
         List<SchemaItemParameter> parameters = root.Parameters;
-        var paramArray = new List<SchemaItemParameter>(parameters.Count);
-        paramArray.Add(null);
+        var paramArray = new List<SchemaItemParameter>(capacity: parameters.Count);
+        paramArray.Add(item: null);
         foreach (SchemaItemParameter parameter in parameters)
         {
             // TODO: Check for recursion and skip any columns that could cause it
-            paramArray.Add(parameter);
+            paramArray.Add(item: parameter);
         }
         paramArray.Sort();
-        return new StandardValuesCollection(paramArray);
+        return new StandardValuesCollection(values: paramArray);
     }
 
     public override bool CanConvertFrom(
@@ -67,7 +67,7 @@ public class ParameterReferenceConverter : System.ComponentModel.TypeConverter
             return true;
         }
 
-        return base.CanConvertFrom(context, sourceType);
+        return base.CanConvertFrom(context: context, sourceType: sourceType);
     }
 
     public override object ConvertFrom(
@@ -90,7 +90,7 @@ public class ParameterReferenceConverter : System.ComponentModel.TypeConverter
             return null;
         }
 
-        return base.ConvertFrom(context, culture, value);
+        return base.ConvertFrom(context: context, culture: culture, value: value);
     }
 }
 
@@ -106,7 +106,7 @@ public class SchemaItemAncestorConverter : System.ComponentModel.TypeConverter
             return true;
         }
 
-        return base.CanConvertFrom(context, sourceType);
+        return base.CanConvertFrom(context: context, sourceType: sourceType);
     }
     //		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
     //		{
@@ -152,20 +152,20 @@ public class AncestorItemConverter : System.ComponentModel.TypeConverter
 
         if (ancestor.SchemaItem.ParentItem != null)
         {
-            return new StandardValuesCollection(new List<object>());
+            return new StandardValuesCollection(values: new List<object>());
         }
 
         ISchemaItemProvider provider = ancestor.SchemaItem.RootProvider;
         var items = new List<ISchemaItem>();
         foreach (ISchemaItem item in provider.ChildItems)
         {
-            if (item.IsAbstract && (!item.PrimaryKey.Equals(ancestor.SchemaItem.PrimaryKey)))
+            if (item.IsAbstract && (!item.PrimaryKey.Equals(obj: ancestor.SchemaItem.PrimaryKey)))
             {
-                items.Add(item);
+                items.Add(item: item);
             }
         }
         items.Sort();
-        return new StandardValuesCollection(items);
+        return new StandardValuesCollection(values: items);
     }
 
     public override bool CanConvertFrom(
@@ -178,7 +178,7 @@ public class AncestorItemConverter : System.ComponentModel.TypeConverter
             return true;
         }
 
-        return base.CanConvertFrom(context, sourceType);
+        return base.CanConvertFrom(context: context, sourceType: sourceType);
     }
 
     public override object ConvertFrom(
@@ -193,7 +193,7 @@ public class AncestorItemConverter : System.ComponentModel.TypeConverter
 
             if (ancestor.SchemaItem.ParentItem != null)
             {
-                return new StandardValuesCollection(new List<object>());
+                return new StandardValuesCollection(values: new List<object>());
             }
 
             ISchemaItemProvider provider = ancestor.SchemaItem.RootProvider;
@@ -207,6 +207,6 @@ public class AncestorItemConverter : System.ComponentModel.TypeConverter
             return null;
         }
 
-        return base.ConvertFrom(context, culture, value);
+        return base.ConvertFrom(context: context, culture: culture, value: value);
     }
 }

@@ -40,60 +40,60 @@ public class FastReportService : IReportService
         string dbTransaction
     )
     {
-        var report = ReportHelper.GetReportElement<AbstractDataReport>(reportId);
+        var report = ReportHelper.GetReportElement<AbstractDataReport>(reportId: reportId);
         parameters ??= new Hashtable();
-        ReportHelper.PopulateDefaultValues(report, parameters);
+        ReportHelper.PopulateDefaultValues(report: report, parameters: parameters);
         IDataDocument xmlDataDoc = ReportHelper.LoadOrUseReportData(
-            report,
-            data,
-            parameters,
-            dbTransaction
+            report: report,
+            data: data,
+            parameters: parameters,
+            dbTransaction: dbTransaction
         );
         DataSet dataset = xmlDataDoc.DataSet;
         using var languageSwitcher = new LanguageSwitcher(
-            langIetf: ReportHelper.ResolveLanguage(xmlDataDoc, report)
+            langIetf: ReportHelper.ResolveLanguage(doc: xmlDataDoc, reportElement: report)
         );
         using var reportDoc = new Report();
         OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
         string path = Path.Combine(
-            settings.ReportsFolder(),
-            ReportHelper.ExpandCurlyBracketPlaceholdersWithParameters(
-                report.ReportFileName,
-                parameters
+            path1: settings.ReportsFolder(),
+            path2: ReportHelper.ExpandCurlyBracketPlaceholdersWithParameters(
+                input: report.ReportFileName,
+                parameters: parameters
             )
         );
-        if (!IOTools.IsSubPathOf(path, settings.ReportsFolder()))
+        if (!IOTools.IsSubPathOf(path: path, basePath: settings.ReportsFolder()))
         {
-            throw new Exception(Strings.PathNotOnReportPath);
+            throw new Exception(message: Strings.PathNotOnReportPath);
         }
-        if (File.Exists(path))
+        if (File.Exists(path: path))
         {
-            reportDoc.Load(path);
+            reportDoc.Load(fileName: path);
         }
         else
         {
-            throw new Exception(ResourceUtils.GetString("PathNotFound", path));
+            throw new Exception(message: ResourceUtils.GetString(key: "PathNotFound", args: path));
         }
         foreach (DataTable table in dataset.Tables)
         {
-            reportDoc.RegisterData(table, table.TableName);
+            reportDoc.RegisterData(data: table, name: table.TableName);
         }
         reportDoc.Prepare();
         if (format != "PDF")
         {
             throw new ArgumentOutOfRangeException(
-                nameof(format),
-                format,
-                ResourceUtils.GetString("FormatNotSupported")
+                paramName: nameof(format),
+                actualValue: format,
+                message: ResourceUtils.GetString(key: "FormatNotSupported")
             );
         }
         ReportHelper.LogInfo(
-            System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType,
-            $"Exporting report '{report.Name}' to {format}"
+            type: System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType,
+            message: $"Exporting report '{report.Name}' to {format}"
         );
         using var stream = new MemoryStream();
         var pdf = new PDFSimpleExport();
-        reportDoc.Export(pdf, stream);
+        reportDoc.Export(export: pdf, stream: stream);
         return stream.ToArray();
     }
 

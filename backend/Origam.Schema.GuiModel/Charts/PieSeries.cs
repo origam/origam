@@ -27,9 +27,13 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.GuiModel;
 
-[SchemaItemDescription("Pie Series", "Data Series", "icon_pie-series.png")]
-[HelpTopic("Pie+Series")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(
+    name: "Pie Series",
+    folderName: "Data Series",
+    iconName: "icon_pie-series.png"
+)]
+[HelpTopic(topic: "Pie+Series")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class PieSeries : AbstractSeries
 {
     public PieSeries()
@@ -39,13 +43,13 @@ public class PieSeries : AbstractSeries
     }
 
     public PieSeries(Guid schemaExtensionId)
-        : base(schemaExtensionId)
+        : base(schemaExtensionId: schemaExtensionId)
     {
         Init();
     }
 
     public PieSeries(Key primaryKey)
-        : base(primaryKey)
+        : base(primaryKey: primaryKey)
     {
         Init();
     }
@@ -55,9 +59,9 @@ public class PieSeries : AbstractSeries
     #region Properties
     private string _namefield = "";
 
-    [Category("Series")]
+    [Category(category: "Series")]
     [StringNotEmptyModelElementRule()]
-    [XmlAttribute("nameField")]
+    [XmlAttribute(attributeName: "nameField")]
     public string NameField
     {
         get { return _namefield; }

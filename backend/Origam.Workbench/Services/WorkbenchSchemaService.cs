@@ -126,7 +126,7 @@ public class WorkbenchSchemaService : SchemaService
 
     private void ebrSchemaBrowser_NodeClick(object sender, EventArgs e)
     {
-        OnActiveNodeChanged(new EventArgs());
+        OnActiveNodeChanged(e: new EventArgs());
     }
 
     private void ebrSchemaBrowser_NodeDoubleClick(object sender, EventArgs e)
@@ -146,13 +146,13 @@ public class WorkbenchSchemaService : SchemaService
     {
         if (this.SchemaBrowser != null && persistedObject is IBrowserNode browserNode)
         {
-            this.SchemaBrowser.EbrSchemaBrowser.RefreshItem(browserNode);
+            this.SchemaBrowser.EbrSchemaBrowser.RefreshItem(node: browserNode);
         }
-        base.SchemaProvider_InstancePersisted(sender, persistedObject);
+        base.SchemaProvider_InstancePersisted(sender: sender, persistedObject: persistedObject);
     }
 
     public void SelectItem(ISchemaItem schemaItem)
     {
-        SchemaBrowser.EbrSchemaBrowser.SelectItem(schemaItem);
+        SchemaBrowser.EbrSchemaBrowser.SelectItem(item: schemaItem);
     }
 }

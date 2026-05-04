@@ -61,10 +61,10 @@ public class RoundedRectangularGroupBoxWithToolbar : BaseContainer
         set
         {
             // Create object of ColorScheme Class
-            ColorScheme oColorScheme = new ColorScheme(value);
+            ColorScheme oColorScheme = new ColorScheme(aoColorScheme: value);
             // Set the controls Diffrent color properties depending on the
             // Color Scheme selected
-            oColorScheme.SetColorScheme(this);
+            oColorScheme.SetColorScheme(aCtrl: this);
             meColorScheme = value;
             this.Invalidate();
         }
@@ -85,52 +85,52 @@ public class RoundedRectangularGroupBoxWithToolbar : BaseContainer
 
         // Add top horizontal line till the downward curve to graphics path
         oInteriorPath.AddLine(
-            aoRectangle.Left,
-            aoRectangle.Top,
-            aoRectangle.Right - iBarWidth - (Single)(sz.Width / 2),
-            aoRectangle.Top
+            x1: aoRectangle.Left,
+            y1: aoRectangle.Top,
+            x2: aoRectangle.Right - iBarWidth - (Single)(sz.Width / 2),
+            y2: aoRectangle.Top
         );
 
         // Add arc to graphics path get the downward curve
         oInteriorPath.AddArc(
-            aoRectangle.Right - iBarWidth - (Single)(sz.Width / 2),
-            aoRectangle.Top - (Single)(sz.Height / 2),
-            sz.Width,
-            sz.Height,
-            180,
-            -90
+            x: aoRectangle.Right - iBarWidth - (Single)(sz.Width / 2),
+            y: aoRectangle.Top - (Single)(sz.Height / 2),
+            width: sz.Width,
+            height: sz.Height,
+            startAngle: 180,
+            sweepAngle: -90
         );
 
         // Add Horizontal line from the curve to the right edge
         oInteriorPath.AddLine(
-            aoRectangle.Right - iBarWidth,
-            aoRectangle.Top + (Single)(sz.Height / 2),
-            aoRectangle.Right,
-            aoRectangle.Top + (Single)(sz.Height / 2)
+            x1: aoRectangle.Right - iBarWidth,
+            y1: aoRectangle.Top + (Single)(sz.Height / 2),
+            x2: aoRectangle.Right,
+            y2: aoRectangle.Top + (Single)(sz.Height / 2)
         );
 
         // Add right vertical line to the graphics path
         oInteriorPath.AddLine(
-            aoRectangle.Right,
-            aoRectangle.Top + (Single)(sz.Height / 2),
-            aoRectangle.Right,
-            aoRectangle.Bottom
+            x1: aoRectangle.Right,
+            y1: aoRectangle.Top + (Single)(sz.Height / 2),
+            x2: aoRectangle.Right,
+            y2: aoRectangle.Bottom
         );
 
         // Add bottom horizontal line to the graphics path
         oInteriorPath.AddLine(
-            aoRectangle.Right,
-            aoRectangle.Bottom,
-            aoRectangle.Left,
-            aoRectangle.Bottom
+            x1: aoRectangle.Right,
+            y1: aoRectangle.Bottom,
+            x2: aoRectangle.Left,
+            y2: aoRectangle.Bottom
         );
 
         // Add left vertical line to the graphics path
         oInteriorPath.AddLine(
-            aoRectangle.Left,
-            aoRectangle.Bottom,
-            aoRectangle.Left,
-            aoRectangle.Top
+            x1: aoRectangle.Left,
+            y1: aoRectangle.Bottom,
+            x2: aoRectangle.Left,
+            y2: aoRectangle.Top
         );
 
         return oInteriorPath;
@@ -142,10 +142,10 @@ public class RoundedRectangularGroupBoxWithToolbar : BaseContainer
     {
         // Create rectangle to draw interior
         Rectangle oRcInterior = new Rectangle(
-            this.BorderRectangle.X + this.BorderWidth + 1,
-            this.BorderRectangle.Y + this.BorderWidth + 12,
-            this.BorderRectangle.Width - (this.BorderWidth * 2),
-            this.BorderRectangle.Height - (12 + (this.BorderWidth * 2))
+            x: this.BorderRectangle.X + this.BorderWidth + 1,
+            y: this.BorderRectangle.Y + this.BorderWidth + 12,
+            width: this.BorderRectangle.Width - (this.BorderWidth * 2),
+            height: this.BorderRectangle.Height - (12 + (this.BorderWidth * 2))
         );
 
         int iWdth = miToolBarWidth;
@@ -154,45 +154,47 @@ public class RoundedRectangularGroupBoxWithToolbar : BaseContainer
         for (int i = 1; i >= 0; i--)
         {
             // Define Shadow Brushes Dark to Light
-            oSolidBrush = new SolidBrush(Color.FromArgb(127 * (2 - i), this.ShadowColor));
-            Pen oPen = new Pen(oSolidBrush);
+            oSolidBrush = new SolidBrush(
+                color: Color.FromArgb(alpha: 127 * (2 - i), baseColor: this.ShadowColor)
+            );
+            Pen oPen = new Pen(brush: oSolidBrush);
 
             // Draws vertical shadow lines on the left
             aoGraphics.DrawLine(
-                oPen,
-                oRcInterior.X,
-                oRcInterior.Y,
-                oRcInterior.X,
-                oRcInterior.Bottom
+                pen: oPen,
+                x1: oRcInterior.X,
+                y1: oRcInterior.Y,
+                x2: oRcInterior.X,
+                y2: oRcInterior.Bottom
             );
 
             // Draws horizontal shadow line till the Toolbar
             aoGraphics.DrawLine(
-                oPen,
-                oRcInterior.X,
-                oRcInterior.Y,
-                oRcInterior.Right - iWdth - (Single)(mosizeBorderPixelIndent.Width / 2),
-                oRcInterior.Y
+                pen: oPen,
+                x1: oRcInterior.X,
+                y1: oRcInterior.Y,
+                x2: oRcInterior.Right - iWdth - (Single)(mosizeBorderPixelIndent.Width / 2),
+                y2: oRcInterior.Y
             );
 
             // Draws Shadow for the downward arc
             aoGraphics.DrawArc(
-                oPen,
-                oRcInterior.Right - iWdth - (Single)(mosizeBorderPixelIndent.Width / 2),
-                oRcInterior.Top - (Single)(mosizeBorderPixelIndent.Height / 2),
-                mosizeBorderPixelIndent.Width,
-                mosizeBorderPixelIndent.Height,
-                180,
-                -90
+                pen: oPen,
+                x: oRcInterior.Right - iWdth - (Single)(mosizeBorderPixelIndent.Width / 2),
+                y: oRcInterior.Top - (Single)(mosizeBorderPixelIndent.Height / 2),
+                width: mosizeBorderPixelIndent.Width,
+                height: mosizeBorderPixelIndent.Height,
+                startAngle: 180,
+                sweepAngle: -90
             );
 
             // Draws the horizontal shadow line after the curve
             aoGraphics.DrawLine(
-                oPen,
-                oRcInterior.Right - iWdth - 1,
-                oRcInterior.Y + (Single)(mosizeBorderPixelIndent.Height / 2),
-                oRcInterior.Right,
-                oRcInterior.Y + (Single)(mosizeBorderPixelIndent.Height / 2)
+                pen: oPen,
+                x1: oRcInterior.Right - iWdth - 1,
+                y1: oRcInterior.Y + (Single)(mosizeBorderPixelIndent.Height / 2),
+                x2: oRcInterior.Right,
+                y2: oRcInterior.Y + (Single)(mosizeBorderPixelIndent.Height / 2)
             );
 
             // Increasing the X and Y postion of the rectangle
@@ -207,10 +209,10 @@ public class RoundedRectangularGroupBoxWithToolbar : BaseContainer
         // Brush of LinearGradient type is created to draw gradient
         IGradientContainer oConatiner = this;
         LinearGradientBrush oGradientBrush = new LinearGradientBrush(
-            oRcInterior,
-            oConatiner.BackgroundTopColor,
-            oConatiner.BackgroundBottomColor,
-            LinearGradientMode.Vertical
+            rect: oRcInterior,
+            color1: oConatiner.BackgroundTopColor,
+            color2: oConatiner.BackgroundBottomColor,
+            linearGradientMode: LinearGradientMode.Vertical
         );
 
         // Blend is used to define the blend of the gradient
@@ -221,8 +223,12 @@ public class RoundedRectangularGroupBoxWithToolbar : BaseContainer
 
         // Fill the rectangle using Gradient Brush created above
         aoGraphics.FillPath(
-            oGradientBrush,
-            GetInteriorRoundedRectanglarPath(oRcInterior, miToolBarWidth, mosizeBorderPixelIndent)
+            brush: oGradientBrush,
+            path: GetInteriorRoundedRectanglarPath(
+                aoRectangle: oRcInterior,
+                iBarWidth: miToolBarWidth,
+                sz: mosizeBorderPixelIndent
+            )
         );
     }
     #endregion

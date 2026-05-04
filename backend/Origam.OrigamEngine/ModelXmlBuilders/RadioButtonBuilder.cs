@@ -30,13 +30,13 @@ public class RadioButtonBuilder
 {
     public static void Build(XmlElement propertyElement, string text, string value)
     {
-        propertyElement.SetAttribute("Entity", "String");
-        propertyElement.SetAttribute("Column", "RadioButton");
+        propertyElement.SetAttribute(name: "Entity", value: "String");
+        propertyElement.SetAttribute(name: "Column", value: "RadioButton");
         if (text != "" && text != null)
         {
-            propertyElement.SetAttribute("Name", text);
+            propertyElement.SetAttribute(name: "Name", value: text);
         }
-        propertyElement.SetAttribute("CaptionPosition", "Right");
-        propertyElement.SetAttribute("Value", value);
+        propertyElement.SetAttribute(name: "CaptionPosition", value: "Right");
+        propertyElement.SetAttribute(name: "Value", value: value);
     }
 }

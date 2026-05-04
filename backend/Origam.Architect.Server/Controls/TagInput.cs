@@ -26,17 +26,17 @@ namespace Origam.Architect.Server.Controls;
 
 public class TagInput : LabeledEditor, IAsControl
 {
-    [Category("(ORIGAM)")]
+    [Category(category: "(ORIGAM)")]
     public string Caption { get; set; }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public Guid LookupId { get; set; }
 
     public bool HideOnForm { get; set; }
 
     public string Value { get; set; }
 
-    [Category("(ORIGAM)")]
+    [Category(category: "(ORIGAM)")]
     public string GridColumnCaption { get; set; }
 
     public bool ReadOnly { get; set; }

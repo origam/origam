@@ -35,11 +35,11 @@ public class ParameterData
     public ParameterData(string name, string type)
     {
         Name = name;
-        Type = StringTypeToParameterDataType(type);
+        Type = StringTypeToParameterDataType(type: type);
     }
 
     public ParameterData(string name, string type, string textValue)
-        : this(name, type)
+        : this(name: name, type: type)
     {
         TextValue = textValue;
     }
@@ -51,10 +51,12 @@ public class ParameterData
             return OrigamDataType.String;
         }
 
-        return Enum.GetValues(typeof(OrigamDataType))
+        return Enum.GetValues(enumType: typeof(OrigamDataType))
                 .Cast<OrigamDataType?>()
-                .FirstOrDefault(origamType => origamType.ToString() == type)
-            ?? throw new ArgumentException(string.Format(Strings.WrongParameterType, type));
+                .FirstOrDefault(predicate: origamType => origamType.ToString() == type)
+            ?? throw new ArgumentException(
+                message: string.Format(format: Strings.WrongParameterType, arg0: type)
+            );
     }
 
     public object Value
@@ -63,11 +65,11 @@ public class ParameterData
         {
             if (Type == OrigamDataType.Xml)
             {
-                return new XmlContainer(TextValue);
+                return new XmlContainer(xmlString: TextValue);
             }
-            Type systemType = DatasetGenerator.ConvertDataType(Type);
+            Type systemType = DatasetGenerator.ConvertDataType(dataType: Type);
 
-            return DatasetTools.ConvertValue(TextValue, systemType);
+            return DatasetTools.ConvertValue(value: TextValue, targetType: systemType);
         }
     }
 

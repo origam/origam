@@ -26,5 +26,5 @@ namespace OrigamArchitect;
 public class OrigamTheme : VS2015ThemeBase
 {
     public OrigamTheme()
-        : base(Decompress(Resources.origam_vstheme)) { }
+        : base(resources: Decompress(fileToDecompress: Resources.origam_vstheme)) { }
 }

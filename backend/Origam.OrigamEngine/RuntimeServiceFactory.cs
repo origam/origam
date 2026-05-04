@@ -42,25 +42,29 @@ public class RuntimeServiceFactory : IRuntimeServiceFactory
 {
     public void InitializeServices()
     {
-        ServiceManager.Services.AddService(new MetaModelUpgradeService());
-        ServiceManager.Services.AddService(CreatePersistenceService());
-        ServiceManager.Services.AddService(new Origam.Workflow.StateMachineService());
+        ServiceManager.Services.AddService(service: new MetaModelUpgradeService());
+        ServiceManager.Services.AddService(service: CreatePersistenceService());
+        ServiceManager.Services.AddService(service: new Origam.Workflow.StateMachineService());
         // Architect initializes its own version of schema service
-        if (ServiceManager.Services.GetService(typeof(SchemaService)) == null)
+        if (ServiceManager.Services.GetService(serviceType: typeof(SchemaService)) == null)
         {
-            ServiceManager.Services.AddService(new SchemaService());
+            ServiceManager.Services.AddService(service: new SchemaService());
         }
         ServiceManager.Services.AddService(
-            new ServiceAgentFactory(externalAgent => new ExternalAgentWrapper(externalAgent))
+            service: new ServiceAgentFactory(
+                fromExternalAgent: externalAgent => new ExternalAgentWrapper(
+                    externalServiceAgent: externalAgent
+                )
+            )
         );
-        ServiceManager.Services.AddService(CreateDocumentationService());
-        ServiceManager.Services.AddService(new TracingService());
-        ServiceManager.Services.AddService(new DataLookupService());
-        ServiceManager.Services.AddService(CreateParameterService());
-        ServiceManager.Services.AddService(new DeploymentService());
-        ServiceManager.Services.AddService(CreateWorkQueueService());
-        ServiceManager.Services.AddService(new AttachmentService());
-        ServiceManager.Services.AddService(new RuleEngineService());
+        ServiceManager.Services.AddService(service: CreateDocumentationService());
+        ServiceManager.Services.AddService(service: new TracingService());
+        ServiceManager.Services.AddService(service: new DataLookupService());
+        ServiceManager.Services.AddService(service: CreateParameterService());
+        ServiceManager.Services.AddService(service: new DeploymentService());
+        ServiceManager.Services.AddService(service: CreateWorkQueueService());
+        ServiceManager.Services.AddService(service: new AttachmentService());
+        ServiceManager.Services.AddService(service: new RuleEngineService());
     }
 
     public void UnloadServices()
@@ -79,7 +83,7 @@ public class RuntimeServiceFactory : IRuntimeServiceFactory
             typeof(IAttachmentService),
             typeof(IRuleEngineService),
         }
-            .Select(ServiceManager.Services.GetService)
+            .Select(selector: ServiceManager.Services.GetService)
             .ToList();
         foreach (var service in services.OfType<IBackgroundService>())
         {
@@ -87,7 +91,7 @@ public class RuntimeServiceFactory : IRuntimeServiceFactory
         }
         foreach (var service in services)
         {
-            ServiceManager.Services.UnloadService(service);
+            ServiceManager.Services.UnloadService(service: service);
         }
     }
 
@@ -114,8 +118,9 @@ public class RuntimeServiceFactory : IRuntimeServiceFactory
     private static IPersistenceBuilder GetPersistenceBuilder()
     {
         OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
-        string[] classpath = settings.ModelProvider.Split(',');
-        return Reflector.InvokeObject(classpath[0], classpath[1]) as IPersistenceBuilder;
+        string[] classpath = settings.ModelProvider.Split(separator: ',');
+        return Reflector.InvokeObject(classname: classpath[0], assembly: classpath[1])
+            as IPersistenceBuilder;
     }
 }
 

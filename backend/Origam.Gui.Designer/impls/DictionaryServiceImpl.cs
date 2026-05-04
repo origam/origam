@@ -39,12 +39,12 @@ public class DictionaryServiceImpl : IDictionaryService
     #region IDictionaryService Members
     public object GetValue(object key)
     {
-        return table[key];
+        return table[key: key];
     }
 
     public void SetValue(object key, object value)
     {
-        table[key] = value;
+        table[key: key] = value;
     }
 
     public object GetKey(object value)

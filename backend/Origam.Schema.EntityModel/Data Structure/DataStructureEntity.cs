@@ -39,11 +39,11 @@ public enum RelationType
     InnerJoin,
 }
 
-[SchemaItemDescription("Entity", "Entities", "icon_entity.png")]
-[HelpTopic("Entities")]
-[XmlModelRoot(CategoryConst)]
-[DefaultProperty("Entity")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Entity", folderName: "Entities", iconName: "icon_entity.png")]
+[HelpTopic(topic: "Entities")]
+[XmlModelRoot(category: CategoryConst)]
+[DefaultProperty(name: "Entity")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class DataStructureEntity : AbstractSchemaItem
 {
     public const string CategoryConst = "DataStructureEntity";
@@ -51,10 +51,10 @@ public class DataStructureEntity : AbstractSchemaItem
     public DataStructureEntity() { }
 
     public DataStructureEntity(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public DataStructureEntity(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Properties
     public Guid EntityId = Guid.Empty;
@@ -63,18 +63,18 @@ public class DataStructureEntity : AbstractSchemaItem
     /// Can be IDataEntity (as a root entity of the data structure) or
     /// IAssociation (as a child entity of another entity in the data structure).
     /// </summary>
-    [TypeConverter(typeof(DataStructureEntityConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
+    [TypeConverter(type: typeof(DataStructureEntityConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
     [NotNullModelElementRule()]
     [RelationshipWithKeyRule()]
-    [XmlReference("entity", "EntityId")]
+    [XmlReference(attributeName: "entity", idField: "EntityId")]
     public ISchemaItem Entity
     {
         get =>
             (ISchemaItem)
                 PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(EntityId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: EntityId)
                 );
         set
         {
@@ -88,18 +88,18 @@ public class DataStructureEntity : AbstractSchemaItem
                 if (!(value is IDataEntity || value is IAssociation))
                 {
                     throw new ArgumentOutOfRangeException(
-                        "Entity",
-                        value,
-                        ResourceUtils.GetString("ErrorNotIDataItem")
+                        paramName: "Entity",
+                        actualValue: value,
+                        message: ResourceUtils.GetString(key: "ErrorNotIDataItem")
                     );
                 }
-                EntityId = (Guid)value.PrimaryKey["Id"];
+                EntityId = (Guid)value.PrimaryKey[key: "Id"];
                 Name = Entity.Name;
             }
         }
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public IDataEntity EntityDefinition
     {
         get
@@ -119,9 +119,9 @@ public class DataStructureEntity : AbstractSchemaItem
                     if (Entity != null)
                     {
                         throw new ArgumentOutOfRangeException(
-                            "Entity",
-                            this.Entity,
-                            ResourceUtils.GetString("ErrorNotIDataEntity")
+                            paramName: "Entity",
+                            actualValue: this.Entity,
+                            message: ResourceUtils.GetString(key: "ErrorNotIDataEntity")
                         );
                     }
                     break;
@@ -131,19 +131,19 @@ public class DataStructureEntity : AbstractSchemaItem
         }
     }
 
-    [Browsable(false)]
-    public DataStructureEntity RootEntity => GetRootEntity(this);
+    [Browsable(browsable: false)]
+    public DataStructureEntity RootEntity => GetRootEntity(parentEntity: this);
 
     private DataStructureEntity GetRootEntity(DataStructureEntity parentEntity)
     {
         return parentEntity.ParentItem is DataStructure
             ? parentEntity
-            : GetRootEntity(parentEntity.ParentItem as DataStructureEntity);
+            : GetRootEntity(parentEntity: parentEntity.ParentItem as DataStructureEntity);
     }
 
     private string _caption = "";
 
-    [XmlAttribute("label")]
+    [XmlAttribute(attributeName: "label")]
     public string Caption
     {
         get => _caption;
@@ -151,7 +151,7 @@ public class DataStructureEntity : AbstractSchemaItem
     }
     private bool _allFields = true;
 
-    [XmlAttribute("allFields")]
+    [XmlAttribute(attributeName: "allFields")]
     public bool AllFields
     {
         get => _allFields;
@@ -164,7 +164,7 @@ public class DataStructureEntity : AbstractSchemaItem
             if (value)
             {
                 List<DataStructureColumn> list = ChildItemsByType<DataStructureColumn>(
-                    DataStructureColumn.CategoryConst
+                    itemType: DataStructureColumn.CategoryConst
                 );
                 foreach (DataStructureColumn column in list)
                 {
@@ -184,11 +184,11 @@ public class DataStructureEntity : AbstractSchemaItem
     }
     private bool _ignoreImplicitFilters = false;
 
-    [DefaultValue(false)]
+    [DefaultValue(value: false)]
     [Description(
-        "Disables row level security filters for an entity. Row-level filters are defined under entitities."
+        description: "Disables row level security filters for an entity. Row-level filters are defined under entitities."
     )]
-    [XmlAttribute("ignoreImplicitFilters")]
+    [XmlAttribute(attributeName: "ignoreImplicitFilters")]
     public bool IgnoreImplicitFilters
     {
         get => _ignoreImplicitFilters;
@@ -196,11 +196,11 @@ public class DataStructureEntity : AbstractSchemaItem
     }
     private DataStructureIgnoreCondition _ignoreCondition = DataStructureIgnoreCondition.None;
 
-    [DefaultValue(DataStructureIgnoreCondition.None)]
+    [DefaultValue(value: DataStructureIgnoreCondition.None)]
     [Description(
-        "Specify the condition resulting in not adding the whole entity to data query. Value 'IgnoreWhenNoFilters' means that the entity is skipped when neither one filter would be constructed for that entity. Value 'IgnoreWhenNoExplicitFilters' means the same as 'IgnoreWhenNoFilters' but it doesn't count implicit filters (aka row level security filters), so only datastructure filters are examined. Note, that filters can be avoided from construction according to their ignore condition settings and provided the whole corresponding filterset is 'dynamic'"
+        description: "Specify the condition resulting in not adding the whole entity to data query. Value 'IgnoreWhenNoFilters' means that the entity is skipped when neither one filter would be constructed for that entity. Value 'IgnoreWhenNoExplicitFilters' means the same as 'IgnoreWhenNoFilters' but it doesn't count implicit filters (aka row level security filters), so only datastructure filters are examined. Note, that filters can be avoided from construction according to their ignore condition settings and provided the whole corresponding filterset is 'dynamic'"
     )]
-    [XmlAttribute("ignoreCondition")]
+    [XmlAttribute(attributeName: "ignoreCondition")]
     public DataStructureIgnoreCondition IgnoreCondition
     {
         get => _ignoreCondition;
@@ -209,11 +209,11 @@ public class DataStructureEntity : AbstractSchemaItem
     private DataStructureConcurrencyHandling _concurrencyHandling =
         DataStructureConcurrencyHandling.Standard;
 
-    [DefaultValue(DataStructureConcurrencyHandling.Standard)]
+    [DefaultValue(value: DataStructureConcurrencyHandling.Standard)]
     [Description(
-        "Specify behaviour during cuncurrency handling. Standard - concurrency checks are performed; LastWins - no concurrency checks are performed."
+        description: "Specify behaviour during cuncurrency handling. Standard - concurrency checks are performed; LastWins - no concurrency checks are performed."
     )]
-    [XmlAttribute("concurrencyHandling")]
+    [XmlAttribute(attributeName: "concurrencyHandling")]
     public DataStructureConcurrencyHandling ConcurrencyHandling
     {
         get => _concurrencyHandling;
@@ -222,7 +222,7 @@ public class DataStructureEntity : AbstractSchemaItem
     private RelationType _relationType = RelationType.Normal;
 
     [RelationTypeModelElementRule()]
-    [XmlAttribute("relationType")]
+    [XmlAttribute(attributeName: "relationType")]
     public RelationType RelationType
     {
         get => _relationType;
@@ -230,25 +230,26 @@ public class DataStructureEntity : AbstractSchemaItem
     }
     public Guid ConditionEntityConstantId;
 
-    [TypeConverter(typeof(DataConstantConverter))]
-    [XmlReference("conditionEntityConstant", "ConditionEntityConstantId")]
+    [TypeConverter(type: typeof(DataConstantConverter))]
+    [XmlReference(attributeName: "conditionEntityConstant", idField: "ConditionEntityConstantId")]
     public DataConstant ConditionEntityConstant
     {
         get =>
             (DataConstant)
                 PersistenceProvider.RetrieveInstance(
-                    typeof(EntityFilter),
-                    new ModelElementKey(ConditionEntityConstantId)
+                    type: typeof(EntityFilter),
+                    primaryKey: new ModelElementKey(id: ConditionEntityConstantId)
                 );
         set =>
-            ConditionEntityConstantId = (value == null) ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+            ConditionEntityConstantId =
+                (value == null) ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"];
     }
     private string _conditionEntityParameterName;
 
     [Description(
-        "When defined (e.g. Resource_parName) together with a value of 'ConditionEntityConstant' then a value of the parameter is tested whether equals to a value of 'ConditionalEntityConstant'. If equals then an entity is APPLIED to resulting data query, otherwise the entity is skipped. When not defined, entity is allways applied."
+        description: "When defined (e.g. Resource_parName) together with a value of 'ConditionEntityConstant' then a value of the parameter is tested whether equals to a value of 'ConditionalEntityConstant'. If equals then an entity is APPLIED to resulting data query, otherwise the entity is skipped. When not defined, entity is allways applied."
     )]
-    [XmlAttribute("conditionEntityParameterName")]
+    [XmlAttribute(attributeName: "conditionEntityParameterName")]
     public string ConditionEntityParameterName
     {
         get => _conditionEntityParameterName;
@@ -256,11 +257,11 @@ public class DataStructureEntity : AbstractSchemaItem
     }
     private bool _serializeAsSingleJsonObject = false;
 
-    [DefaultValue(false)]
+    [DefaultValue(value: false)]
     [Description(
-        "It controls JSON serialization to API. If false it always serializes as array of objects. If true it serializes as a single JSON object and return an error if there are more objects."
+        description: "It controls JSON serialization to API. If false it always serializes as array of objects. If true it serializes as a single JSON object and return an error if there are more objects."
     )]
-    [XmlAttribute("serializeAsSingleJsonObject")]
+    [XmlAttribute(attributeName: "serializeAsSingleJsonObject")]
     public bool SerializeAsSingleJsonObject
     {
         get => _serializeAsSingleJsonObject;
@@ -268,8 +269,8 @@ public class DataStructureEntity : AbstractSchemaItem
     }
     private bool _useUpsert = false;
 
-    [Category("Update"), DefaultValue(false)]
-    [XmlAttribute("useUpsert")]
+    [Category(category: "Update"), DefaultValue(value: false)]
+    [XmlAttribute(attributeName: "useUpsert")]
     public bool UseUpsert
     {
         get => _useUpsert;
@@ -280,7 +281,7 @@ public class DataStructureEntity : AbstractSchemaItem
     private List<DataStructureColumn> _columns = new List<DataStructureColumn>();
 #endif
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public List<DataStructureColumn> Columns
     {
         get
@@ -306,7 +307,7 @@ public class DataStructureEntity : AbstractSchemaItem
 
     public DataStructureColumn Column(string name)
     {
-        return Columns.FirstOrDefault(column => column.Name == name);
+        return Columns.FirstOrDefault(predicate: column => column.Name == name);
     }
 
     public List<DataStructureColumn> GetColumnsFromEntity()
@@ -322,20 +323,22 @@ public class DataStructureEntity : AbstractSchemaItem
             {
                 continue;
             }
-            var newColumn = new DataStructureColumn(SchemaExtensionId);
+            var newColumn = new DataStructureColumn(schemaExtensionId: SchemaExtensionId);
             newColumn.IsPersistable = false;
             newColumn.PersistenceProvider = PersistenceProvider;
             newColumn.Field = column;
             newColumn.Name = column.Name;
             newColumn.ParentItem = this;
-            columns.Add(newColumn);
+            columns.Add(item: newColumn);
         }
         return columns;
     }
 
     public bool ExistsEntityFieldAsColumn(IDataEntityColumn entityField)
     {
-        return Columns.Any(column => column.Field.PrimaryKey.Equals(entityField.PrimaryKey));
+        return Columns.Any(predicate: column =>
+            column.Field.PrimaryKey.Equals(obj: entityField.PrimaryKey)
+        );
     }
 
     private List<DataStructureColumn> GetColumns()
@@ -343,7 +346,11 @@ public class DataStructureEntity : AbstractSchemaItem
         // columns from entity (AllFields=true)
         List<DataStructureColumn> columns = GetColumnsFromEntity();
         // add all extra columns specified
-        columns.AddRange(ChildItemsByType<DataStructureColumn>(DataStructureColumn.CategoryConst));
+        columns.AddRange(
+            collection: ChildItemsByType<DataStructureColumn>(
+                itemType: DataStructureColumn.CategoryConst
+            )
+        );
         columns.Sort();
         return columns;
     }
@@ -358,31 +365,34 @@ public class DataStructureEntity : AbstractSchemaItem
         if (Entity is IAssociation)
         {
             var childList = new Dictionary<string, ParameterReference>();
-            Entity.GetParameterReferences(Entity, childList);
+            Entity.GetParameterReferences(parentItem: Entity, list: childList);
             // If children had some parameter references, we rename them and add them to the final
             // collection.
             foreach (var entry in childList)
             {
                 // we rename it using parent data structure entity name
                 var name = ParentItem.Name + "_" + entry.Key;
-                if (!list.ContainsKey(name))
+                if (!list.ContainsKey(key: name))
                 {
-                    list.Add(name, entry.Value);
+                    list.Add(key: name, value: entry.Value);
                 }
             }
         }
         foreach (DataStructureColumn dataStructureColumn in Columns)
         {
             var childList = new Dictionary<string, ParameterReference>();
-            dataStructureColumn.GetParameterReferences(dataStructureColumn, childList);
+            dataStructureColumn.GetParameterReferences(
+                parentItem: dataStructureColumn,
+                list: childList
+            );
             // If children had some parameter references,
             // we rename them and add them to the final collection.
             foreach (var entry in childList)
             {
                 var name = Name + "_" + entry.Key;
-                if (!list.ContainsKey(name))
+                if (!list.ContainsKey(key: name))
                 {
-                    list.Add(name, entry.Value);
+                    list.Add(key: name, value: entry.Value);
                 }
             }
         }
@@ -392,17 +402,17 @@ public class DataStructureEntity : AbstractSchemaItem
 
     public override bool CanMove(UI.IBrowserNode2 newNode) =>
         // can move to the root only
-        newNode.Equals(RootItem);
+        newNode.Equals(obj: RootItem);
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(Entity);
-        dependencies.Add(ConditionEntityConstant);
-        base.GetExtraDependencies(dependencies);
+        dependencies.Add(item: Entity);
+        dependencies.Add(item: ConditionEntityConstant);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
     #endregion
     #region ISchemaItemFactory Members
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public override Type[] NewItemTypes =>
         new[] { typeof(DataStructureEntity), typeof(DataStructureColumn) };
     #endregion

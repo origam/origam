@@ -57,21 +57,21 @@ public class ExcelTools
     {
         if (excelFormat == ExcelFormat.XLSX)
         {
-            return new XSSFWorkbook(stream);
+            return new XSSFWorkbook(fileStream: stream);
         }
 
-        return new HSSFWorkbook(stream);
+        return new HSSFWorkbook(s: stream);
     }
 
     public static void SetWorkbookSubject(IWorkbook workbook, string subject)
     {
         if (workbook is HSSFWorkbook)
         {
-            SetHSSFWorkbookSubject(workbook as HSSFWorkbook, subject);
+            SetHSSFWorkbookSubject(workbook: workbook as HSSFWorkbook, subject: subject);
         }
         else if (workbook is XSSFWorkbook)
         {
-            SetXSSFWorkbookSubject(workbook as XSSFWorkbook, subject);
+            SetXSSFWorkbookSubject(workbook: workbook as XSSFWorkbook, subject: subject);
         }
     }
 
@@ -91,7 +91,7 @@ public class ExcelTools
 
     public static ISheet[] Sheets(IWorkbook wb)
     {
-        return Sheets(null, wb);
+        return Sheets(sheetName: null, wb: wb);
     }
 
     public static ISheet[] Sheets(string sheetName, IWorkbook wb)
@@ -103,19 +103,19 @@ public class ExcelTools
             // get all sheets
             for (int i = 0; i < wb.NumberOfSheets; i++)
             {
-                sheets[i] = wb.GetSheetAt(i);
+                sheets[i] = wb.GetSheetAt(index: i);
             }
         }
         else
         {
             // get one sheet
-            ISheet sheet = wb.GetSheet(sheetName);
+            ISheet sheet = wb.GetSheet(name: sheetName);
             if (sheet == null)
             {
                 throw new ArgumentOutOfRangeException(
-                    "sheetName",
-                    sheetName,
-                    ResourceUtils.GetString("ExcelSheetNotFound")
+                    paramName: "sheetName",
+                    actualValue: sheetName,
+                    message: ResourceUtils.GetString(key: "ExcelSheetNotFound")
                 );
             }
             sheets = new ISheet[] { sheet };
@@ -127,31 +127,34 @@ public class ExcelTools
     {
         IWorkbook wb;
         // read from disk
-        FileInfo fi = new FileInfo(fileName);
+        FileInfo fi = new FileInfo(fileName: fileName);
         FileStream stream = null;
         if (fi.Exists)
         {
-            stream = fi.Open(FileMode.Open);
+            stream = fi.Open(mode: FileMode.Open);
             if (excelFormat == ExcelFormat.XLSX)
             {
-                wb = new XSSFWorkbook(stream);
+                wb = new XSSFWorkbook(fileStream: stream);
             }
             else
             {
-                wb = new HSSFWorkbook(stream);
+                wb = new HSSFWorkbook(s: stream);
             }
             stream.Close();
         }
         else
         {
-            throw new FileNotFoundException(ResourceUtils.GetString("ExcelFileNotFound"), fileName);
+            throw new FileNotFoundException(
+                message: ResourceUtils.GetString(key: "ExcelFileNotFound"),
+                fileName: fileName
+            );
         }
         return wb;
     }
 
     public static void ReadValue(TextReaderOptions options, DataRow row, ICell cell, DataColumn col)
     {
-        TextReaderOptionsField fieldOptions = options.GetFieldOption(col.ColumnName);
+        TextReaderOptionsField fieldOptions = options.GetFieldOption(fieldName: col.ColumnName);
         CellType cellType =
             cell.CellType == CellType.Formula ? cell.CachedFormulaResultType : cell.CellType;
         if (cellType == CellType.Blank)
@@ -159,7 +162,10 @@ public class ExcelTools
             if (fieldOptions?.NullValue != null)
             {
                 // we always assign a value if NullValue was specified
-                row[col] = Convert.ChangeType(fieldOptions.NullValue, col.DataType);
+                row[column: col] = Convert.ChangeType(
+                    value: fieldOptions.NullValue,
+                    conversionType: col.DataType
+                );
             }
             else if (col.AllowDBNull || col.DefaultValue != null)
             {
@@ -169,46 +175,70 @@ public class ExcelTools
             else
             {
                 throw new NoNullAllowedException(
-                    string.Format(
-                        "Cell {0},{1} is empty but field {2} does not allow nulls.",
-                        cell.RowIndex + 1,
-                        cell.ColumnIndex + 1,
-                        col.ColumnName
+                    s: string.Format(
+                        format: "Cell {0},{1} is empty but field {2} does not allow nulls.",
+                        arg0: cell.RowIndex + 1,
+                        arg1: cell.ColumnIndex + 1,
+                        arg2: col.ColumnName
                     )
                 );
             }
         }
         if (col.DataType == typeof(string))
         {
-            ReadStringValue(row, cellType, cell, col);
+            ReadStringValue(row: row, cellType: cellType, cell: cell, col: col);
         }
         else if (col.DataType == typeof(DateTime))
         {
-            ReadDateValue(fieldOptions, row, cellType, cell, col);
+            ReadDateValue(
+                fieldOptions: fieldOptions,
+                row: row,
+                cellType: cellType,
+                cell: cell,
+                col: col
+            );
         }
         else if (col.DataType == typeof(Guid))
         {
-            ReadGuidValue(row, cell, col);
+            ReadGuidValue(row: row, cell: cell, col: col);
         }
         else if (col.DataType == typeof(bool))
         {
-            ReadBoolValue(row, cellType, cell, col);
+            ReadBoolValue(row: row, cellType: cellType, cell: cell, col: col);
         }
         else if (col.DataType == typeof(int))
         {
-            ReadIntValue(row, cellType, cell, col);
+            ReadIntValue(row: row, cellType: cellType, cell: cell, col: col);
         }
         else if (col.DataType == typeof(float))
         {
-            ReadDecimalValue(fieldOptions, row, cellType, cell, col);
+            ReadDecimalValue(
+                fieldOptions: fieldOptions,
+                row: row,
+                cellType: cellType,
+                cell: cell,
+                col: col
+            );
         }
         else if (col.DataType == typeof(decimal))
         {
-            ReadDecimalValue(fieldOptions, row, cellType, cell, col);
+            ReadDecimalValue(
+                fieldOptions: fieldOptions,
+                row: row,
+                cellType: cellType,
+                cell: cell,
+                col: col
+            );
         }
         else if (col.DataType == typeof(long))
         {
-            ReadLongValue(fieldOptions, row, cellType, cell, col);
+            ReadLongValue(
+                fieldOptions: fieldOptions,
+                row: row,
+                cellType: cellType,
+                cell: cell,
+                col: col
+            );
         }
     }
 
@@ -222,15 +252,18 @@ public class ExcelTools
     {
         if (cellType == CellType.Numeric)
         {
-            row[col] = cell.NumericCellValue;
+            row[column: col] = cell.NumericCellValue;
         }
         else if (fieldOptions != null)
         {
-            row[col] = long.Parse(cell.StringCellValue, fieldOptions.GetCulture());
+            row[column: col] = long.Parse(
+                s: cell.StringCellValue,
+                provider: fieldOptions.GetCulture()
+            );
         }
         else
         {
-            row[col] = long.Parse(cell.StringCellValue);
+            row[column: col] = long.Parse(s: cell.StringCellValue);
         }
     }
 
@@ -244,15 +277,18 @@ public class ExcelTools
     {
         if (cellType == CellType.Numeric)
         {
-            row[col] = cell.NumericCellValue;
+            row[column: col] = cell.NumericCellValue;
         }
         else if (fieldOptions != null)
         {
-            row[col] = decimal.Parse(cell.StringCellValue, fieldOptions.GetCulture());
+            row[column: col] = decimal.Parse(
+                s: cell.StringCellValue,
+                provider: fieldOptions.GetCulture()
+            );
         }
         else
         {
-            row[col] = decimal.Parse(cell.StringCellValue);
+            row[column: col] = decimal.Parse(s: cell.StringCellValue);
         }
     }
 
@@ -260,11 +296,11 @@ public class ExcelTools
     {
         if (cellType == CellType.Numeric)
         {
-            row[col] = cell.NumericCellValue;
+            row[column: col] = cell.NumericCellValue;
         }
         else
         {
-            row[col] = int.Parse(cell.StringCellValue);
+            row[column: col] = int.Parse(s: cell.StringCellValue);
         }
     }
 
@@ -272,11 +308,11 @@ public class ExcelTools
     {
         if (cellType == CellType.Boolean)
         {
-            row[col] = cell.BooleanCellValue;
+            row[column: col] = cell.BooleanCellValue;
         }
         else
         {
-            row[col] = bool.Parse(cell.StringCellValue);
+            row[column: col] = bool.Parse(value: cell.StringCellValue);
         }
     }
 
@@ -284,7 +320,7 @@ public class ExcelTools
     {
         if (cell.StringCellValue != "")
         {
-            row[col] = new Guid(cell.StringCellValue);
+            row[column: col] = new Guid(g: cell.StringCellValue);
         }
     }
 
@@ -298,17 +334,17 @@ public class ExcelTools
     {
         if (cellType == CellType.Numeric)
         {
-            row[col] = cell.DateCellValue;
+            row[column: col] = cell.DateCellValue;
         }
         else if (cellType == CellType.String)
         {
             if (fieldOptions != null && fieldOptions.Format != null && cell.StringCellValue != "")
             {
-                row[col] = DateTime.ParseExact(
-                    cell.StringCellValue,
-                    fieldOptions.Formats,
-                    fieldOptions.GetCulture(),
-                    System.Globalization.DateTimeStyles.None
+                row[column: col] = DateTime.ParseExact(
+                    s: cell.StringCellValue,
+                    formats: fieldOptions.Formats,
+                    provider: fieldOptions.GetCulture(),
+                    style: System.Globalization.DateTimeStyles.None
                 );
             }
         }
@@ -318,11 +354,11 @@ public class ExcelTools
     {
         if (cellType == CellType.Numeric)
         {
-            row[col] = cell.NumericCellValue.ToString();
+            row[column: col] = cell.NumericCellValue.ToString();
         }
         else
         {
-            row[col] = cell.StringCellValue;
+            row[column: col] = cell.StringCellValue;
         }
     }
 
@@ -331,33 +367,33 @@ public class ExcelTools
         FileStream stream = null;
         if (fi.Exists)
         {
-            stream = fi.Open(FileMode.Open);
+            stream = fi.Open(mode: FileMode.Open);
         }
         else
         {
-            stream = fi.Open(FileMode.Create);
+            stream = fi.Open(mode: FileMode.Create);
         }
         // recalculate formulas on all sheets
         for (int i = 0; i < wb.NumberOfSheets; i++)
         {
-            wb.GetSheetAt(i).ForceFormulaRecalculation = true;
+            wb.GetSheetAt(index: i).ForceFormulaRecalculation = true;
         }
-        wb.Write(stream, false);
+        wb.Write(stream: stream, leaveOpen: false);
         stream.Close();
     }
 
     public static ISheet CreateOrEmptySheet(string sheetName, IWorkbook wb)
     {
-        ISheet sheet = wb.GetSheet(sheetName);
+        ISheet sheet = wb.GetSheet(name: sheetName);
         if (sheet == null)
         {
             // sheet does not exist, we create it
-            sheet = wb.CreateSheet(sheetName);
+            sheet = wb.CreateSheet(sheetname: sheetName);
         }
         else
         {
             // sheet exists already, we empty it
-            EmptySheet(sheet);
+            EmptySheet(sheet: sheet);
         }
         return sheet;
     }
@@ -367,14 +403,14 @@ public class ExcelTools
         IWorkbook wb;
         if (fi.Exists)
         {
-            Stream openStream = fi.Open(FileMode.Open);
+            Stream openStream = fi.Open(mode: FileMode.Open);
             if (excelFormat == ExcelFormat.XLSX)
             {
-                wb = new XSSFWorkbook(openStream);
+                wb = new XSSFWorkbook(fileStream: openStream);
             }
             else
             {
-                wb = new HSSFWorkbook(openStream);
+                wb = new HSSFWorkbook(s: openStream);
             }
             openStream.Close();
         }
@@ -396,10 +432,10 @@ public class ExcelTools
     {
         for (int i = 0; i < sheet.PhysicalNumberOfRows; i++)
         {
-            IRow xlRow = sheet.GetRow(i);
+            IRow xlRow = sheet.GetRow(rownum: i);
             foreach (ICell cell in xlRow.Cells)
             {
-                xlRow.RemoveCell(cell);
+                xlRow.RemoveCell(cell: cell);
             }
         }
     }
@@ -412,42 +448,45 @@ public class ExcelTools
         ICellStyle dateCellStyle
     )
     {
-        ICell cell = excelRow.CreateCell(i);
+        ICell cell = excelRow.CreateCell(column: i);
         if (val is DateTime)
         {
             DateTime date = (DateTime)val;
             if (fieldOptions != null && fieldOptions.Format != null)
             {
-                string resultDate = date.ToString(fieldOptions.Format, fieldOptions.GetCulture());
-                cell.SetCellValue(resultDate);
+                string resultDate = date.ToString(
+                    format: fieldOptions.Format,
+                    provider: fieldOptions.GetCulture()
+                );
+                cell.SetCellValue(value: resultDate);
             }
             else
             {
-                cell.SetCellValue(date);
+                cell.SetCellValue(value: date);
                 cell.CellStyle = dateCellStyle;
             }
         }
         else if (val is int || val is double || val is float || val is decimal)
         {
-            cell.SetCellValue(Convert.ToDouble(val));
+            cell.SetCellValue(value: Convert.ToDouble(value: val));
         }
         else if (val is bool)
         {
-            cell.SetCellValue((bool)val);
+            cell.SetCellValue(value: (bool)val);
         }
         else if (val != null)
         {
             string fieldValue = val.ToString();
-            if (fieldValue.IndexOf("\r") > 0)
+            if (fieldValue.IndexOf(value: "\r") > 0)
             {
-                fieldValue = fieldValue.Replace("\n", "");
-                fieldValue = fieldValue.Replace("\r", Environment.NewLine);
-                fieldValue = fieldValue.Replace("\t", " ");
-                cell.SetCellValue(fieldValue);
+                fieldValue = fieldValue.Replace(oldValue: "\n", newValue: "");
+                fieldValue = fieldValue.Replace(oldValue: "\r", newValue: Environment.NewLine);
+                fieldValue = fieldValue.Replace(oldValue: "\t", newValue: " ");
+                cell.SetCellValue(value: fieldValue);
             }
             else
             {
-                cell.SetCellValue(fieldValue);
+                cell.SetCellValue(value: fieldValue);
             }
         }
         return cell;

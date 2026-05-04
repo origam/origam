@@ -44,10 +44,12 @@ public static class FormTools
         bool result = formRef.ReadOnlyAccess;
         if (!result)
         {
-            string authContext = SecurityManager.GetReadOnlyRoles(formRef.AuthorizationContext);
+            string authContext = SecurityManager.GetReadOnlyRoles(
+                roles: formRef.AuthorizationContext
+            );
             result = SecurityManager
                 .GetAuthorizationProvider()
-                .Authorize(SecurityManager.CurrentPrincipal, authContext);
+                .Authorize(principal: SecurityManager.CurrentPrincipal, context: authContext);
         }
         return result;
     }
@@ -58,19 +60,21 @@ public static class FormTools
         {
             return false;
         }
-        string authContext = SecurityManager.GetInitialScreenRoles(menuItem.AuthorizationContext);
+        string authContext = SecurityManager.GetInitialScreenRoles(
+            roles: menuItem.AuthorizationContext
+        );
         return SecurityManager
             .GetAuthorizationProvider()
-            .Authorize(SecurityManager.CurrentPrincipal, authContext);
+            .Authorize(principal: SecurityManager.CurrentPrincipal, context: authContext);
     }
 
     public static ControlSetItem GetItemFromControlSet(AbstractControlSet controlSet)
     {
         var children = controlSet.Alternatives.Cast<ControlSetItem>().ToList();
-        children.Sort(new AlternativeControlSetItemComparer());
+        children.Sort(comparer: new AlternativeControlSetItemComparer());
         foreach (ControlSetItem item in children)
         {
-            if (IsValid(item.Features, item.Roles))
+            if (IsValid(features: item.Features, roles: item.Roles))
             {
                 return item;
             }
@@ -94,8 +98,9 @@ public static class FormTools
         }
 #endif
         IParameterService parameterService =
-            ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
-        if (!parameterService.IsFeatureOn(features))
+            ServiceManager.Services.GetService(serviceType: typeof(IParameterService))
+            as IParameterService;
+        if (!parameterService.IsFeatureOn(featureCode: features))
         {
             return false;
         }
@@ -105,7 +110,7 @@ public static class FormTools
             if (
                 !SecurityManager
                     .GetAuthorizationProvider()
-                    .Authorize(SecurityManager.CurrentPrincipal, roles)
+                    .Authorize(principal: SecurityManager.CurrentPrincipal, context: roles)
             )
             {
                 return false;
@@ -129,10 +134,10 @@ public static class FormTools
             OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
             if (settings.ActivateReadOnlyRoles)
             {
-                string authContext = SecurityManager.GetReadOnlyRoles(cntrlSet.Roles);
+                string authContext = SecurityManager.GetReadOnlyRoles(roles: cntrlSet.Roles);
                 return SecurityManager
                     .GetAuthorizationProvider()
-                    .Authorize(SecurityManager.CurrentPrincipal, authContext);
+                    .Authorize(principal: SecurityManager.CurrentPrincipal, context: authContext);
             }
         }
         return currentReadOnlyStatus;
@@ -151,37 +156,39 @@ public static class FormTools
         }
 
         string tableName = "";
-        if (member.IndexOf(".") > 0)
+        if (member.IndexOf(value: ".") > 0)
         {
-            string[] path = member.Split(".".ToCharArray());
-            DataTable table = ds.Tables[path[0]];
+            string[] path = member.Split(separator: ".".ToCharArray());
+            DataTable table = ds.Tables[name: path[0]];
             if (table == null)
             {
-                throw new Exception(ResourceUtils.GetString("ErrorGenerateForm", path[0]));
+                throw new Exception(
+                    message: ResourceUtils.GetString(key: "ErrorGenerateForm", args: path[0])
+                );
             }
             for (int i = 1; i < path.Length; i++)
             {
                 if (
                     table.ChildRelations.Count > 0
-                    && table.ChildRelations[path[i]] != null
-                    && table.ChildRelations[path[i]].ChildTable != null
+                    && table.ChildRelations[name: path[i]] != null
+                    && table.ChildRelations[name: path[i]].ChildTable != null
                 )
                 {
-                    table = table.ChildRelations[path[i]].ChildTable;
+                    table = table.ChildRelations[name: path[i]].ChildTable;
                 }
                 else
                 {
                     // if editing screen sections the last part of the member is
                     // the column name so we try to find it in the last table
-                    if (!table.Columns.Contains(path[i]))
+                    if (!table.Columns.Contains(name: path[i]))
                     {
                         throw (
                             new ArgumentOutOfRangeException(
-                                "DataMember",
-                                String.Format(
-                                    "Could not find entity `{0}' in data structure id `{1}'.",
-                                    path[i],
-                                    ds.ExtendedProperties["Id"]
+                                paramName: "DataMember",
+                                message: String.Format(
+                                    format: "Could not find entity `{0}' in data structure id `{1}'.",
+                                    arg0: path[i],
+                                    arg1: ds.ExtendedProperties[key: "Id"]
                                 )
                             )
                         );
@@ -206,11 +213,11 @@ public static class FormTools
     )
     {
         return GetSelectionDialogData(
-            entityId,
-            transformationBeforeId,
-            createEmptyRow,
-            profileId,
-            new Hashtable()
+            entityId: entityId,
+            transformationBeforeId: transformationBeforeId,
+            createEmptyRow: createEmptyRow,
+            profileId: profileId,
+            parameters: new Hashtable()
         );
     }
 
@@ -223,44 +230,57 @@ public static class FormTools
     )
     {
         IPersistenceService persistence =
-            ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+            ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+            as IPersistenceService;
         IDataEntity entity =
             persistence.SchemaProvider.RetrieveInstance(
-                typeof(ISchemaItem),
-                new ModelElementKey(entityId)
+                type: typeof(ISchemaItem),
+                primaryKey: new ModelElementKey(id: entityId)
             ) as IDataEntity;
-        DatasetGenerator gen = new DatasetGenerator(true);
-        DataSet sdData = gen.CreateDataSet(entity);
+        DatasetGenerator gen = new DatasetGenerator(userDefinedParameters: true);
+        DataSet sdData = gen.CreateDataSet(entity: entity);
         sdData.RemoveNullConstraints();
         if (transformationBeforeId != Guid.Empty)
         {
             // we have to clone the dataset, because we need to return DataSet without XmlDataDocument bound to it
-            IDataDocument dataDoc = DataDocumentFactory.New(DatasetTools.CloneDataSet(sdData));
-            IDataDocument inputDoc = DataDocumentFactory.New(new DataSet("ROOT"));
+            IDataDocument dataDoc = DataDocumentFactory.New(
+                dataSet: DatasetTools.CloneDataSet(dataset: sdData)
+            );
+            IDataDocument inputDoc = DataDocumentFactory.New(
+                dataSet: new DataSet(dataSetName: "ROOT")
+            );
             IServiceAgent transformer = (
-                ServiceManager.Services.GetService(typeof(IBusinessServicesService))
+                ServiceManager.Services.GetService(serviceType: typeof(IBusinessServicesService))
                 as IBusinessServicesService
             ).GetAgent(
-                "DataTransformationService",
-                RuleEngine.Create(new System.Collections.Hashtable(), null),
-                null
+                serviceType: "DataTransformationService",
+                ruleEngine: RuleEngine.Create(
+                    contextStores: new System.Collections.Hashtable(),
+                    transactionId: null
+                ),
+                workflowEngine: null
             );
             transformer.MethodName = "Transform";
-            transformer.Parameters.Add("XslScript", transformationBeforeId);
-            transformer.Parameters.Add("Data", inputDoc);
-            transformer.Parameters.Add("Parameters", parameters);
+            transformer.Parameters.Add(key: "XslScript", value: transformationBeforeId);
+            transformer.Parameters.Add(key: "Data", value: inputDoc);
+            transformer.Parameters.Add(key: "Parameters", value: parameters);
             transformer.Run();
             IXmlContainer transformationResult = transformer.Result as IXmlContainer;
             if (transformationResult != null)
             {
-                dataDoc.Load(new XmlNodeReader(transformationResult.Xml));
+                dataDoc.Load(xmlReader: new XmlNodeReader(node: transformationResult.Xml));
             }
-            sdData.Merge(dataDoc.DataSet);
+            sdData.Merge(dataSet: dataDoc.DataSet);
         }
         else if (createEmptyRow)
         {
-            DataRow row = DatasetTools.CreateRow(null, sdData.Tables[0], null, profileId);
-            sdData.Tables[0].Rows.Add(row);
+            DataRow row = DatasetTools.CreateRow(
+                parentRow: null,
+                newRowTable: sdData.Tables[index: 0],
+                relation: null,
+                profileId: profileId
+            );
+            sdData.Tables[index: 0].Rows.Add(row: row);
         }
         return sdData;
     }
@@ -273,43 +293,47 @@ public static class FormTools
     )
     {
         IPersistenceService persistence =
-            ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+            ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+            as IPersistenceService;
         IDataEntity entity =
             persistence.SchemaProvider.RetrieveInstance(
-                typeof(ISchemaItem),
-                new ModelElementKey(entityId)
+                type: typeof(ISchemaItem),
+                primaryKey: new ModelElementKey(id: entityId)
             ) as IDataEntity;
         // TRANSFORMATION - AFTER
         if (transformationAfterId != Guid.Empty)
         {
             IServiceAgent transformer = (
-                ServiceManager.Services.GetService(typeof(IBusinessServicesService))
+                ServiceManager.Services.GetService(serviceType: typeof(IBusinessServicesService))
                 as IBusinessServicesService
             ).GetAgent(
-                "DataTransformationService",
-                RuleEngine.Create(new System.Collections.Hashtable(), null),
-                null
+                serviceType: "DataTransformationService",
+                ruleEngine: RuleEngine.Create(
+                    contextStores: new System.Collections.Hashtable(),
+                    transactionId: null
+                ),
+                workflowEngine: null
             );
             transformer.MethodName = "Transform";
-            transformer.Parameters.Add("XslScript", transformationAfterId);
-            transformer.Parameters.Add("Data", dataDoc);
+            transformer.Parameters.Add(key: "XslScript", value: transformationAfterId);
+            transformer.Parameters.Add(key: "Data", value: dataDoc);
             transformer.Run();
             XmlContainer transformationResult = transformer.Result as XmlContainer;
             if (transformationResult != null)
             {
-                DatasetGenerator gen = new DatasetGenerator(true);
-                DataSet resultData = gen.CreateDataSet(entity);
+                DatasetGenerator gen = new DatasetGenerator(userDefinedParameters: true);
+                DataSet resultData = gen.CreateDataSet(entity: entity);
                 resultData.EnforceConstraints = false;
-                IDataDocument resultDoc = DataDocumentFactory.New(resultData);
-                resultDoc.Load(new XmlNodeReader(transformationResult.Xml));
+                IDataDocument resultDoc = DataDocumentFactory.New(dataSet: resultData);
+                resultDoc.Load(xmlReader: new XmlNodeReader(node: transformationResult.Xml));
                 DatasetTools.MergeDataSet(
-                    dataDoc.DataSet,
-                    resultDoc.DataSet,
-                    null,
-                    new MergeParams(profileId)
+                    inout_dsTarget: dataDoc.DataSet,
+                    in_dsSource: resultDoc.DataSet,
+                    changeList: null,
+                    mergeParams: new MergeParams(ProfileId: profileId)
                 );
             }
         }
-        return dataDoc.DataSet.Tables[0].Rows[0];
+        return dataDoc.DataSet.Tables[index: 0].Rows[index: 0];
     }
 }

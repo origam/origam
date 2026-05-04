@@ -28,9 +28,9 @@ using Origam.Schema.EntityModel;
 
 namespace Origam.Schema.GuiModel;
 
-[SchemaItemDescription("Parameter", "Parameters", 29)]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Parameter", folderName: "Parameters", icon: 29)]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class DashboardWidgetParameter : AbstractSchemaItem
 {
     public const string CategoryConst = "DashboardWidgetParameter";
@@ -42,13 +42,13 @@ public class DashboardWidgetParameter : AbstractSchemaItem
     }
 
     public DashboardWidgetParameter(Guid schemaExtensionId)
-        : base(schemaExtensionId)
+        : base(extensionId: schemaExtensionId)
     {
         Init();
     }
 
     public DashboardWidgetParameter(Key primaryKey)
-        : base(primaryKey)
+        : base(primaryKey: primaryKey)
     {
         Init();
     }
@@ -58,10 +58,10 @@ public class DashboardWidgetParameter : AbstractSchemaItem
     #region Properties
     private string _caption = "";
 
-    [Category("User Interface")]
+    [Category(category: "User Interface")]
     [StringNotEmptyModelElementRule()]
-    [Localizable(true)]
-    [XmlAttribute("label")]
+    [Localizable(isLocalizable: true)]
+    [XmlAttribute(attributeName: "label")]
     public string Caption
     {
         get { return _caption; }
@@ -69,8 +69,8 @@ public class DashboardWidgetParameter : AbstractSchemaItem
     }
     private OrigamDataType _dataType = OrigamDataType.String;
 
-    [Category("Mapping")]
-    [XmlAttribute("dataType")]
+    [Category(category: "Mapping")]
+    [XmlAttribute(attributeName: "dataType")]
     public OrigamDataType DataType
     {
         get { return _dataType; }
@@ -78,39 +78,42 @@ public class DashboardWidgetParameter : AbstractSchemaItem
     }
     public Guid DataConstantId;
 
-    [Category("Mapping")]
-    [TypeConverter(typeof(DataConstantConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [XmlReference("defaultValue", "DataConstantId")]
+    [Category(category: "Mapping")]
+    [TypeConverter(type: typeof(DataConstantConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [XmlReference(attributeName: "defaultValue", idField: "DataConstantId")]
     public DataConstant DefaultValue
     {
         get
         {
             return (ISchemaItem)
                     this.PersistenceProvider.RetrieveInstance(
-                        typeof(ISchemaItem),
-                        new ModelElementKey(this.DataConstantId)
+                        type: typeof(ISchemaItem),
+                        primaryKey: new ModelElementKey(id: this.DataConstantId)
                     ) as DataConstant;
         }
-        set { this.DataConstantId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]); }
+        set
+        {
+            this.DataConstantId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]);
+        }
     }
     public Guid LookupId;
 
-    [Category("Mapping")]
-    [TypeConverter(typeof(DataLookupConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [XmlReference("lookup", "LookupId")]
+    [Category(category: "Mapping")]
+    [TypeConverter(type: typeof(DataLookupConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [XmlReference(attributeName: "lookup", idField: "LookupId")]
     public IDataLookup Lookup
     {
         get
         {
             return (ISchemaItem)
                     this.PersistenceProvider.RetrieveInstance(
-                        typeof(ISchemaItem),
-                        new ModelElementKey(this.LookupId)
+                        type: typeof(ISchemaItem),
+                        primaryKey: new ModelElementKey(id: this.LookupId)
                     ) as IDataLookup;
         }
-        set { this.LookupId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]); }
+        set { this.LookupId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]); }
     }
     public override string Icon
     {

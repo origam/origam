@@ -29,14 +29,16 @@ internal class DynamicModelElementRuleAttribute : AbstractModelElementRuleAttrib
 {
     public override Exception CheckRule(object instance)
     {
-        return new NotSupportedException(ResourceUtils.GetString("MemberNameRequired"));
+        return new NotSupportedException(
+            message: ResourceUtils.GetString(key: "MemberNameRequired")
+        );
     }
 
     public override Exception CheckRule(object instance, string memberName)
     {
-        if (string.IsNullOrEmpty(memberName))
+        if (string.IsNullOrEmpty(value: memberName))
         {
-            CheckRule(instance);
+            CheckRule(instance: instance);
         }
         var filterSet = (DataStructureFilterSet)instance;
         List<ISchemaItem> filters = filterSet.ChildItemsRecursive;
@@ -45,12 +47,14 @@ internal class DynamicModelElementRuleAttribute : AbstractModelElementRuleAttrib
             if (
                 (
                     (filter.IgnoreFilterConstantId != Guid.Empty)
-                    || !string.IsNullOrEmpty(filter.IgnoreFilterParameterName)
+                    || !string.IsNullOrEmpty(value: filter.IgnoreFilterParameterName)
                     || filter.PassWhenParameterMatch
                 ) && !filterSet.IsDynamic
             )
             {
-                return new Exception(ResourceUtils.GetString("ErrorDynamicParameter", memberName));
+                return new Exception(
+                    message: ResourceUtils.GetString(key: "ErrorDynamicParameter", args: memberName)
+                );
             }
         }
         return null;

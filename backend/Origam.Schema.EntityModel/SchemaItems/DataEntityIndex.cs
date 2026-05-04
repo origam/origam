@@ -33,26 +33,26 @@ public enum DataEntityIndexSortOrder
     Descending,
 }
 
-[SchemaItemDescription("Index", "Indexes", "icon_index.png")]
-[HelpTopic("Indexes")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Index", folderName: "Indexes", iconName: "icon_index.png")]
+[HelpTopic(topic: "Indexes")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class DataEntityIndex : AbstractSchemaItem
 {
     public DataEntityIndex() { }
 
     public DataEntityIndex(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public DataEntityIndex(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     public const string CategoryConst = "DataEntityIndex";
     #region Properties
     private bool _isUnique = false;
 
-    [DefaultValue(false)]
-    [XmlAttribute("unique")]
+    [DefaultValue(value: false)]
+    [XmlAttribute(attributeName: "unique")]
     public bool IsUnique
     {
         get => _isUnique;
@@ -60,11 +60,11 @@ public class DataEntityIndex : AbstractSchemaItem
     }
     private bool _generateDeploymentScript = true;
 
-    [Category("Mapping"), DefaultValue(true)]
+    [Category(category: "Mapping"), DefaultValue(value: true)]
     [Description(
-        "Indicates if deployment script will be generated for this index. If set to false, this index will be skipped from the deployment scripts generator."
+        description: "Indicates if deployment script will be generated for this index. If set to false, this index will be skipped from the deployment scripts generator."
     )]
-    [XmlAttribute("generateDeploymentScript")]
+    [XmlAttribute(attributeName: "generateDeploymentScript")]
     public bool GenerateDeploymentScript
     {
         get { return _generateDeploymentScript; }
@@ -83,7 +83,7 @@ public class DataEntityIndex : AbstractSchemaItem
     }
     #endregion
     #region ISchemaItemFactory Members
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public override Type[] NewItemTypes => new[] { typeof(DataEntityIndexField) };
 
     public override SchemaItemGroup NewGroup(Guid schemaExtensionId, string groupName)
@@ -94,9 +94,9 @@ public class DataEntityIndex : AbstractSchemaItem
     public override T NewItem<T>(Guid schemaExtensionId, SchemaItemGroup group)
     {
         return base.NewItem<T>(
-            schemaExtensionId,
-            group,
-            typeof(T) == typeof(DataEntityIndexField)
+            schemaExtensionId: schemaExtensionId,
+            group: group,
+            itemName: typeof(T) == typeof(DataEntityIndexField)
                 ? Name + "Field" + (ChildItems.Count + 1)
                 : null
         );

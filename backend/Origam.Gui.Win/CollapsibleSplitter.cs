@@ -92,17 +92,17 @@ public enum SplitterState
 /// <summary>
 /// A custom collapsible splitter that can resize, hide and show associated form controls
 /// </summary>
-[ToolboxBitmap(typeof(CollapsibleSplitter))]
-[DesignerAttribute(typeof(CollapsibleSplitterDesigner))]
+[ToolboxBitmap(t: typeof(CollapsibleSplitter))]
+[DesignerAttribute(designerType: typeof(CollapsibleSplitterDesigner))]
 public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPaint
 {
     #region Private Properties
     // declare and define some base properties
     private bool hot;
     private System.Drawing.Color hotColor = CalculateColor(
-        SystemColors.Highlight,
-        SystemColors.Window,
-        70
+        front: SystemColors.Highlight,
+        back: SystemColors.Window,
+        alpha: 70
     );
     private System.Windows.Forms.Control controlToHide;
     private System.Drawing.Rectangle rr;
@@ -133,11 +133,11 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
     /// The initial state of the Splitter. Set to True if the control to hide is not visible by default
     /// </summary>
     [
-        Bindable(true),
-        Category("Collapsing Options"),
-        DefaultValue("False"),
+        Bindable(bindable: true),
+        Category(category: "Collapsing Options"),
+        DefaultValue(value: "False"),
         Description(
-            "The initial state of the Splitter. Set to True if the control to hide is not visible by default"
+            description: "The initial state of the Splitter. Set to True if the control to hide is not visible by default"
         )
     ]
     public bool IsCollapsed
@@ -157,10 +157,10 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
     /// The System.Windows.Forms.Control that the splitter will collapse
     /// </summary>
     [
-        Bindable(true),
-        Category("Collapsing Options"),
-        DefaultValue(""),
-        Description("The System.Windows.Forms.Control that the splitter will collapse")
+        Bindable(bindable: true),
+        Category(category: "Collapsing Options"),
+        DefaultValue(value: ""),
+        Description(description: "The System.Windows.Forms.Control that the splitter will collapse")
     ]
     public System.Windows.Forms.Control ControlToHide
     {
@@ -172,10 +172,12 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
     /// Determines if the collapse and expanding actions will be animated
     /// </summary>
     [
-        Bindable(true),
-        Category("Collapsing Options"),
-        DefaultValue("True"),
-        Description("Determines if the collapse and expanding actions will be animated")
+        Bindable(bindable: true),
+        Category(category: "Collapsing Options"),
+        DefaultValue(value: "True"),
+        Description(
+            description: "Determines if the collapse and expanding actions will be animated"
+        )
     ]
     public bool UseAnimations
     {
@@ -187,10 +189,10 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
     /// The delay in millisenconds between animation steps
     /// </summary>
     [
-        Bindable(true),
-        Category("Collapsing Options"),
-        DefaultValue("20"),
-        Description("The delay in millisenconds between animation steps")
+        Bindable(bindable: true),
+        Category(category: "Collapsing Options"),
+        DefaultValue(value: "20"),
+        Description(description: "The delay in millisenconds between animation steps")
     ]
     public int AnimationDelay
     {
@@ -202,10 +204,10 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
     /// The amount of pixels moved in each animation step
     /// </summary>
     [
-        Bindable(true),
-        Category("Collapsing Options"),
-        DefaultValue("20"),
-        Description("The amount of pixels moved in each animation step")
+        Bindable(bindable: true),
+        Category(category: "Collapsing Options"),
+        DefaultValue(value: "20"),
+        Description(description: "The amount of pixels moved in each animation step")
     ]
     public int AnimationStep
     {
@@ -217,11 +219,11 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
     /// When true the entire parent form will be expanded and collapsed, otherwise just the contol to expand will be changed
     /// </summary>
     [
-        Bindable(true),
-        Category("Collapsing Options"),
-        DefaultValue("False"),
+        Bindable(bindable: true),
+        Category(category: "Collapsing Options"),
+        DefaultValue(value: "False"),
         Description(
-            "When true the entire parent form will be expanded and collapsed, otherwise just the contol to expand will be changed"
+            description: "When true the entire parent form will be expanded and collapsed, otherwise just the contol to expand will be changed"
         )
     ]
     public bool ExpandParentForm
@@ -234,10 +236,10 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
     /// The visual style that will be painted on the control
     /// </summary>
     [
-        Bindable(true),
-        Category("Collapsing Options"),
-        DefaultValue("VisualStyles.XP"),
-        Description("The visual style that will be painted on the control")
+        Bindable(bindable: true),
+        Category(category: "Collapsing Options"),
+        DefaultValue(value: "VisualStyles.XP"),
+        Description(description: "The visual style that will be painted on the control")
     ]
     public VisualStyles VisualStyle
     {
@@ -253,10 +255,12 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
     /// An optional border style to paint on the control. Set to Flat for no border
     /// </summary>
     [
-        Bindable(true),
-        Category("Collapsing Options"),
-        DefaultValue("System.Windows.Forms.Border3DStyle.Flat"),
-        Description("An optional border style to paint on the control. Set to Flat for no border")
+        Bindable(bindable: true),
+        Category(category: "Collapsing Options"),
+        DefaultValue(value: "System.Windows.Forms.Border3DStyle.Flat"),
+        Description(
+            description: "An optional border style to paint on the control. Set to Flat for no border"
+        )
     ]
     public System.Windows.Forms.Border3DStyle BorderStyle3D
     {
@@ -292,7 +296,7 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
     #region Overrides
     protected override void OnHandleCreated(EventArgs e)
     {
-        base.OnHandleCreated(e);
+        base.OnHandleCreated(e: e);
         this.parentForm = this.FindForm();
         // set the current state
         if (this.controlToHide != null)
@@ -310,7 +314,7 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
 
     protected override void OnEnabledChanged(System.EventArgs e)
     {
-        base.OnEnabledChanged(e);
+        base.OnEnabledChanged(e: e);
         this.Invalidate();
     }
     #endregion
@@ -322,7 +326,7 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
         {
             if (!this.hot && this.controlToHide.Visible)
             {
-                base.OnMouseDown(e);
+                base.OnMouseDown(e: e);
             }
         }
     }
@@ -638,60 +642,68 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
     // OnPaint is now an override rather than an event in version 1.1
     protected override void OnPaint(PaintEventArgs e)
     {
-        ModificationStarts?.Invoke(this, EventArgs.Empty);
+        ModificationStarts?.Invoke(sender: this, e: EventArgs.Empty);
         int width = (this.Enabled ? 8 : 1);
         // create a Graphics object
         Graphics g = e.Graphics;
 
         // find the rectangle for the splitter and paint it
         Rectangle r = this.ClientRectangle; // fixed in version 1.1
-        g.FillRectangle(new SolidBrush(this.BackColor), r);
+        g.FillRectangle(brush: new SolidBrush(color: this.BackColor), rect: r);
         #region Vertical Splitter
         // Check the docking style and create the control rectangle accordingly
         if (this.Dock == DockStyle.Left || this.Dock == DockStyle.Right)
         {
             // create a new rectangle in the vertical center of the splitter for our collapse control button
-            rr = new Rectangle(r.X, (int)r.Y + ((r.Height - 115) / 2), width, 115);
+            rr = new Rectangle(
+                x: r.X,
+                y: (int)r.Y + ((r.Height - 115) / 2),
+                width: width,
+                height: 115
+            );
             // force the width to 8px so that everything always draws correctly
             this.Width = width;
             // draw the background color for our control image
             if (hot)
             {
-                g.FillRectangle(new SolidBrush(hotColor), new Rectangle(rr.X + 1, rr.Y, 6, 115));
+                g.FillRectangle(
+                    brush: new SolidBrush(color: hotColor),
+                    rect: new Rectangle(x: rr.X + 1, y: rr.Y, width: 6, height: 115)
+                );
             }
             else
             {
                 g.FillRectangle(
-                    new SolidBrush(this.BackColor),
-                    new Rectangle(rr.X + 1, rr.Y, 6, 115)
+                    brush: new SolidBrush(color: this.BackColor),
+                    rect: new Rectangle(x: rr.X + 1, y: rr.Y, width: 6, height: 115)
                 );
             }
             // draw the top & bottom lines for our control image
             g.DrawLine(
-                new Pen(SystemColors.ControlDark, 1),
-                rr.X + 1,
-                rr.Y,
-                rr.X + rr.Width - 2,
-                rr.Y
+                pen: new Pen(color: SystemColors.ControlDark, width: 1),
+                x1: rr.X + 1,
+                y1: rr.Y,
+                x2: rr.X + rr.Width - 2,
+                y2: rr.Y
             );
             g.DrawLine(
-                new Pen(SystemColors.ControlDark, 1),
-                rr.X + 1,
-                rr.Y + rr.Height,
-                rr.X + rr.Width - 2,
-                rr.Y + rr.Height
+                pen: new Pen(color: SystemColors.ControlDark, width: 1),
+                x1: rr.X + 1,
+                y1: rr.Y + rr.Height,
+                x2: rr.X + rr.Width - 2,
+                y2: rr.Y + rr.Height
             );
             if (this.Enabled)
             {
                 // draw the arrows for our control image
                 // the ArrowPointArray is a point array that defines an arrow shaped polygon
                 g.FillPolygon(
-                    new SolidBrush(SystemColors.ControlDarkDark),
-                    ArrowPointArray(rr.X + 2, rr.Y + 3)
+                    brush: new SolidBrush(color: SystemColors.ControlDarkDark),
+                    points: ArrowPointArray(x: rr.X + 2, y: rr.Y + 3)
                 );
                 g.FillPolygon(
-                    new SolidBrush(SystemColors.ControlDarkDark),
-                    ArrowPointArray(rr.X + 2, rr.Y + rr.Height - 9)
+                    brush: new SolidBrush(color: SystemColors.ControlDarkDark),
+                    points: ArrowPointArray(x: rr.X + 2, y: rr.Y + rr.Height - 9)
                 );
                 // draw the dots for our control image using a loop
                 int x = rr.X + 3;
@@ -705,39 +717,39 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
                         {
                             // light dot
                             g.DrawLine(
-                                new Pen(SystemColors.ControlLightLight),
-                                x,
-                                y + (i * 3),
-                                x + 1,
-                                y + 1 + (i * 3)
+                                pen: new Pen(color: SystemColors.ControlLightLight),
+                                x1: x,
+                                y1: y + (i * 3),
+                                x2: x + 1,
+                                y2: y + 1 + (i * 3)
                             );
                             // dark dot
                             g.DrawLine(
-                                new Pen(SystemColors.ControlDarkDark),
-                                x + 1,
-                                y + 1 + (i * 3),
-                                x + 2,
-                                y + 2 + (i * 3)
+                                pen: new Pen(color: SystemColors.ControlDarkDark),
+                                x1: x + 1,
+                                y1: y + 1 + (i * 3),
+                                x2: x + 2,
+                                y2: y + 2 + (i * 3)
                             );
                             // overdraw the background color as we actually drew 2px diagonal lines, not just dots
                             if (hot)
                             {
                                 g.DrawLine(
-                                    new Pen(hotColor),
-                                    x + 2,
-                                    y + 1 + (i * 3),
-                                    x + 2,
-                                    y + 2 + (i * 3)
+                                    pen: new Pen(color: hotColor),
+                                    x1: x + 2,
+                                    y1: y + 1 + (i * 3),
+                                    x2: x + 2,
+                                    y2: y + 2 + (i * 3)
                                 );
                             }
                             else
                             {
                                 g.DrawLine(
-                                    new Pen(this.BackColor),
-                                    x + 2,
-                                    y + 1 + (i * 3),
-                                    x + 2,
-                                    y + 2 + (i * 3)
+                                    pen: new Pen(color: this.BackColor),
+                                    x1: x + 2,
+                                    y1: y + 1 + (i * 3),
+                                    x2: x + 2,
+                                    y2: y + 2 + (i * 3)
                                 );
                             }
                         }
@@ -750,46 +762,70 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
                         {
                             // light dot
                             g.DrawRectangle(
-                                new Pen(SystemColors.ControlLightLight),
-                                x,
-                                y + 1 + (i * 3),
-                                1,
-                                1
+                                pen: new Pen(color: SystemColors.ControlLightLight),
+                                x: x,
+                                y: y + 1 + (i * 3),
+                                width: 1,
+                                height: 1
                             );
                             // dark dot
                             g.DrawRectangle(
-                                new Pen(SystemColors.ControlDark),
-                                x - 1,
-                                y + (i * 3),
-                                1,
-                                1
+                                pen: new Pen(color: SystemColors.ControlDark),
+                                x: x - 1,
+                                y: y + (i * 3),
+                                width: 1,
+                                height: 1
                             );
                             i++;
                             // light dot
                             g.DrawRectangle(
-                                new Pen(SystemColors.ControlLightLight),
-                                x + 2,
-                                y + 1 + (i * 3),
-                                1,
-                                1
+                                pen: new Pen(color: SystemColors.ControlLightLight),
+                                x: x + 2,
+                                y: y + 1 + (i * 3),
+                                width: 1,
+                                height: 1
                             );
                             // dark dot
                             g.DrawRectangle(
-                                new Pen(SystemColors.ControlDark),
-                                x + 1,
-                                y + (i * 3),
-                                1,
-                                1
+                                pen: new Pen(color: SystemColors.ControlDark),
+                                x: x + 1,
+                                y: y + (i * 3),
+                                width: 1,
+                                height: 1
                             );
                         }
                         break;
                     }
                     case VisualStyles.Win9x:
                     {
-                        g.DrawLine(new Pen(SystemColors.ControlLightLight), x, y, x + 2, y);
-                        g.DrawLine(new Pen(SystemColors.ControlLightLight), x, y, x, y + 90);
-                        g.DrawLine(new Pen(SystemColors.ControlDark), x + 2, y, x + 2, y + 90);
-                        g.DrawLine(new Pen(SystemColors.ControlDark), x, y + 90, x + 2, y + 90);
+                        g.DrawLine(
+                            pen: new Pen(color: SystemColors.ControlLightLight),
+                            x1: x,
+                            y1: y,
+                            x2: x + 2,
+                            y2: y
+                        );
+                        g.DrawLine(
+                            pen: new Pen(color: SystemColors.ControlLightLight),
+                            x1: x,
+                            y1: y,
+                            x2: x,
+                            y2: y + 90
+                        );
+                        g.DrawLine(
+                            pen: new Pen(color: SystemColors.ControlDark),
+                            x1: x + 2,
+                            y1: y,
+                            x2: x + 2,
+                            y2: y + 90
+                        );
+                        g.DrawLine(
+                            pen: new Pen(color: SystemColors.ControlDark),
+                            x1: x,
+                            y1: y + 90,
+                            x2: x + 2,
+                            y2: y + 90
+                        );
                         break;
                     }
                     case VisualStyles.XP:
@@ -798,42 +834,42 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
                         {
                             // light dot
                             g.DrawRectangle(
-                                new Pen(SystemColors.ControlLight),
-                                x,
-                                y + (i * 5),
-                                2,
-                                2
+                                pen: new Pen(color: SystemColors.ControlLight),
+                                x: x,
+                                y: y + (i * 5),
+                                width: 2,
+                                height: 2
                             );
                             // light light dot
                             g.DrawRectangle(
-                                new Pen(SystemColors.ControlLightLight),
-                                x + 1,
-                                y + 1 + (i * 5),
-                                1,
-                                1
+                                pen: new Pen(color: SystemColors.ControlLightLight),
+                                x: x + 1,
+                                y: y + 1 + (i * 5),
+                                width: 1,
+                                height: 1
                             );
                             // dark dark dot
                             g.DrawRectangle(
-                                new Pen(SystemColors.ControlDarkDark),
-                                x,
-                                y + (i * 5),
-                                1,
-                                1
+                                pen: new Pen(color: SystemColors.ControlDarkDark),
+                                x: x,
+                                y: y + (i * 5),
+                                width: 1,
+                                height: 1
                             );
                             // dark fill
                             g.DrawLine(
-                                new Pen(SystemColors.ControlDark),
-                                x,
-                                y + (i * 5),
-                                x,
-                                y + (i * 5) + 1
+                                pen: new Pen(color: SystemColors.ControlDark),
+                                x1: x,
+                                y1: y + (i * 5),
+                                x2: x,
+                                y2: y + (i * 5) + 1
                             );
                             g.DrawLine(
-                                new Pen(SystemColors.ControlDark),
-                                x,
-                                y + (i * 5),
-                                x + 1,
-                                y + (i * 5)
+                                pen: new Pen(color: SystemColors.ControlDark),
+                                x1: x,
+                                y1: y + (i * 5),
+                                x2: x + 1,
+                                y2: y + (i * 5)
                             );
                         }
                         break;
@@ -843,11 +879,11 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
                         for (int i = 0; i < 44; i++)
                         {
                             g.DrawLine(
-                                new Pen(SystemColors.ControlDark),
-                                x,
-                                y + (i * 2),
-                                x + 2,
-                                y + (i * 2)
+                                pen: new Pen(color: SystemColors.ControlDark),
+                                x1: x,
+                                y1: y + (i * 2),
+                                x2: x + 2,
+                                y2: y + (i * 2)
                             );
                         }
                         break;
@@ -859,16 +895,16 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
             {
                 // Paint the control border
                 ControlPaint.DrawBorder3D(
-                    e.Graphics,
-                    this.ClientRectangle,
-                    this.borderStyle,
-                    Border3DSide.Left
+                    graphics: e.Graphics,
+                    rectangle: this.ClientRectangle,
+                    style: this.borderStyle,
+                    sides: Border3DSide.Left
                 );
                 ControlPaint.DrawBorder3D(
-                    e.Graphics,
-                    this.ClientRectangle,
-                    this.borderStyle,
-                    Border3DSide.Right
+                    graphics: e.Graphics,
+                    rectangle: this.ClientRectangle,
+                    style: this.borderStyle,
+                    sides: Border3DSide.Right
                 );
             }
         }
@@ -878,47 +914,55 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
         else if (this.Dock == DockStyle.Top || this.Dock == DockStyle.Bottom)
         {
             // create a new rectangle in the horizontal center of the splitter for our collapse control button
-            rr = new Rectangle((int)r.X + ((r.Width - 115) / 2), r.Y, 115, width);
+            rr = new Rectangle(
+                x: (int)r.X + ((r.Width - 115) / 2),
+                y: r.Y,
+                width: 115,
+                height: width
+            );
             // force the height to 8px
             this.Height = width;
             // draw the background color for our control image
             if (hot)
             {
-                g.FillRectangle(new SolidBrush(hotColor), new Rectangle(rr.X, rr.Y + 1, 115, 6));
+                g.FillRectangle(
+                    brush: new SolidBrush(color: hotColor),
+                    rect: new Rectangle(x: rr.X, y: rr.Y + 1, width: 115, height: 6)
+                );
             }
             else
             {
                 g.FillRectangle(
-                    new SolidBrush(this.BackColor),
-                    new Rectangle(rr.X, rr.Y + 1, 115, 6)
+                    brush: new SolidBrush(color: this.BackColor),
+                    rect: new Rectangle(x: rr.X, y: rr.Y + 1, width: 115, height: 6)
                 );
             }
             // draw the left & right lines for our control image
             g.DrawLine(
-                new Pen(SystemColors.ControlDark, 1),
-                rr.X,
-                rr.Y + 1,
-                rr.X,
-                rr.Y + rr.Height - 2
+                pen: new Pen(color: SystemColors.ControlDark, width: 1),
+                x1: rr.X,
+                y1: rr.Y + 1,
+                x2: rr.X,
+                y2: rr.Y + rr.Height - 2
             );
             g.DrawLine(
-                new Pen(SystemColors.ControlDark, 1),
-                rr.X + rr.Width,
-                rr.Y + 1,
-                rr.X + rr.Width,
-                rr.Y + rr.Height - 2
+                pen: new Pen(color: SystemColors.ControlDark, width: 1),
+                x1: rr.X + rr.Width,
+                y1: rr.Y + 1,
+                x2: rr.X + rr.Width,
+                y2: rr.Y + rr.Height - 2
             );
             if (this.Enabled)
             {
                 // draw the arrows for our control image
                 // the ArrowPointArray is a point array that defines an arrow shaped polygon
                 g.FillPolygon(
-                    new SolidBrush(SystemColors.ControlDarkDark),
-                    ArrowPointArray(rr.X + 3, rr.Y + 2)
+                    brush: new SolidBrush(color: SystemColors.ControlDarkDark),
+                    points: ArrowPointArray(x: rr.X + 3, y: rr.Y + 2)
                 );
                 g.FillPolygon(
-                    new SolidBrush(SystemColors.ControlDarkDark),
-                    ArrowPointArray(rr.X + rr.Width - 9, rr.Y + 2)
+                    brush: new SolidBrush(color: SystemColors.ControlDarkDark),
+                    points: ArrowPointArray(x: rr.X + rr.Width - 9, y: rr.Y + 2)
                 );
                 // draw the dots for our control image using a loop
                 int x = rr.X + 14;
@@ -932,39 +976,39 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
                         {
                             // light dot
                             g.DrawLine(
-                                new Pen(SystemColors.ControlLightLight),
-                                x + (i * 3),
-                                y,
-                                x + 1 + (i * 3),
-                                y + 1
+                                pen: new Pen(color: SystemColors.ControlLightLight),
+                                x1: x + (i * 3),
+                                y1: y,
+                                x2: x + 1 + (i * 3),
+                                y2: y + 1
                             );
                             // dark dot
                             g.DrawLine(
-                                new Pen(SystemColors.ControlDarkDark),
-                                x + 1 + (i * 3),
-                                y + 1,
-                                x + 2 + (i * 3),
-                                y + 2
+                                pen: new Pen(color: SystemColors.ControlDarkDark),
+                                x1: x + 1 + (i * 3),
+                                y1: y + 1,
+                                x2: x + 2 + (i * 3),
+                                y2: y + 2
                             );
                             // overdraw the background color as we actually drew 2px diagonal lines, not just dots
                             if (hot)
                             {
                                 g.DrawLine(
-                                    new Pen(hotColor),
-                                    x + 1 + (i * 3),
-                                    y + 2,
-                                    x + 2 + (i * 3),
-                                    y + 2
+                                    pen: new Pen(color: hotColor),
+                                    x1: x + 1 + (i * 3),
+                                    y1: y + 2,
+                                    x2: x + 2 + (i * 3),
+                                    y2: y + 2
                                 );
                             }
                             else
                             {
                                 g.DrawLine(
-                                    new Pen(this.BackColor),
-                                    x + 1 + (i * 3),
-                                    y + 2,
-                                    x + 2 + (i * 3),
-                                    y + 2
+                                    pen: new Pen(color: this.BackColor),
+                                    x1: x + 1 + (i * 3),
+                                    y1: y + 2,
+                                    x2: x + 2 + (i * 3),
+                                    y2: y + 2
                                 );
                             }
                         }
@@ -976,46 +1020,70 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
                         {
                             // light dot
                             g.DrawRectangle(
-                                new Pen(SystemColors.ControlLightLight),
-                                x + 1 + (i * 3),
-                                y,
-                                1,
-                                1
+                                pen: new Pen(color: SystemColors.ControlLightLight),
+                                x: x + 1 + (i * 3),
+                                y: y,
+                                width: 1,
+                                height: 1
                             );
                             // dark dot
                             g.DrawRectangle(
-                                new Pen(SystemColors.ControlDark),
-                                x + (i * 3),
-                                y - 1,
-                                1,
-                                1
+                                pen: new Pen(color: SystemColors.ControlDark),
+                                x: x + (i * 3),
+                                y: y - 1,
+                                width: 1,
+                                height: 1
                             );
                             i++;
                             // light dot
                             g.DrawRectangle(
-                                new Pen(SystemColors.ControlLightLight),
-                                x + 1 + (i * 3),
-                                y + 2,
-                                1,
-                                1
+                                pen: new Pen(color: SystemColors.ControlLightLight),
+                                x: x + 1 + (i * 3),
+                                y: y + 2,
+                                width: 1,
+                                height: 1
                             );
                             // dark dot
                             g.DrawRectangle(
-                                new Pen(SystemColors.ControlDark),
-                                x + (i * 3),
-                                y + 1,
-                                1,
-                                1
+                                pen: new Pen(color: SystemColors.ControlDark),
+                                x: x + (i * 3),
+                                y: y + 1,
+                                width: 1,
+                                height: 1
                             );
                         }
                         break;
                     }
                     case VisualStyles.Win9x:
                     {
-                        g.DrawLine(new Pen(SystemColors.ControlLightLight), x, y, x, y + 2);
-                        g.DrawLine(new Pen(SystemColors.ControlLightLight), x, y, x + 88, y);
-                        g.DrawLine(new Pen(SystemColors.ControlDark), x, y + 2, x + 88, y + 2);
-                        g.DrawLine(new Pen(SystemColors.ControlDark), x + 88, y, x + 88, y + 2);
+                        g.DrawLine(
+                            pen: new Pen(color: SystemColors.ControlLightLight),
+                            x1: x,
+                            y1: y,
+                            x2: x,
+                            y2: y + 2
+                        );
+                        g.DrawLine(
+                            pen: new Pen(color: SystemColors.ControlLightLight),
+                            x1: x,
+                            y1: y,
+                            x2: x + 88,
+                            y2: y
+                        );
+                        g.DrawLine(
+                            pen: new Pen(color: SystemColors.ControlDark),
+                            x1: x,
+                            y1: y + 2,
+                            x2: x + 88,
+                            y2: y + 2
+                        );
+                        g.DrawLine(
+                            pen: new Pen(color: SystemColors.ControlDark),
+                            x1: x + 88,
+                            y1: y,
+                            x2: x + 88,
+                            y2: y + 2
+                        );
                         break;
                     }
                     case VisualStyles.XP:
@@ -1024,42 +1092,42 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
                         {
                             // light dot
                             g.DrawRectangle(
-                                new Pen(SystemColors.ControlLight),
-                                x + (i * 5),
-                                y,
-                                2,
-                                2
+                                pen: new Pen(color: SystemColors.ControlLight),
+                                x: x + (i * 5),
+                                y: y,
+                                width: 2,
+                                height: 2
                             );
                             // light light dot
                             g.DrawRectangle(
-                                new Pen(SystemColors.ControlLightLight),
-                                x + 1 + (i * 5),
-                                y + 1,
-                                1,
-                                1
+                                pen: new Pen(color: SystemColors.ControlLightLight),
+                                x: x + 1 + (i * 5),
+                                y: y + 1,
+                                width: 1,
+                                height: 1
                             );
                             // dark dark dot
                             g.DrawRectangle(
-                                new Pen(SystemColors.ControlDarkDark),
-                                x + (i * 5),
-                                y,
-                                1,
-                                1
+                                pen: new Pen(color: SystemColors.ControlDarkDark),
+                                x: x + (i * 5),
+                                y: y,
+                                width: 1,
+                                height: 1
                             );
                             // dark fill
                             g.DrawLine(
-                                new Pen(SystemColors.ControlDark),
-                                x + (i * 5),
-                                y,
-                                x + (i * 5) + 1,
-                                y
+                                pen: new Pen(color: SystemColors.ControlDark),
+                                x1: x + (i * 5),
+                                y1: y,
+                                x2: x + (i * 5) + 1,
+                                y2: y
                             );
                             g.DrawLine(
-                                new Pen(SystemColors.ControlDark),
-                                x + (i * 5),
-                                y,
-                                x + (i * 5),
-                                y + 1
+                                pen: new Pen(color: SystemColors.ControlDark),
+                                x1: x + (i * 5),
+                                y1: y,
+                                x2: x + (i * 5),
+                                y2: y + 1
                             );
                         }
                         break;
@@ -1069,11 +1137,11 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
                         for (int i = 0; i < 44; i++)
                         {
                             g.DrawLine(
-                                new Pen(SystemColors.ControlDark),
-                                x + (i * 2),
-                                y,
-                                x + (i * 2),
-                                y + 2
+                                pen: new Pen(color: SystemColors.ControlDark),
+                                x1: x + (i * 2),
+                                y1: y,
+                                x2: x + (i * 2),
+                                y2: y + 2
                             );
                         }
                         break;
@@ -1085,16 +1153,16 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
             {
                 // Paint the control border
                 ControlPaint.DrawBorder3D(
-                    e.Graphics,
-                    this.ClientRectangle,
-                    this.borderStyle,
-                    Border3DSide.Top
+                    graphics: e.Graphics,
+                    rectangle: this.ClientRectangle,
+                    style: this.borderStyle,
+                    sides: Border3DSide.Top
                 );
                 ControlPaint.DrawBorder3D(
-                    e.Graphics,
-                    this.ClientRectangle,
-                    this.borderStyle,
-                    Border3DSide.Bottom
+                    graphics: e.Graphics,
+                    rectangle: this.ClientRectangle,
+                    style: this.borderStyle,
+                    sides: Border3DSide.Bottom
                 );
             }
         }
@@ -1102,13 +1170,13 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
         else
         {
             throw new Exception(
-                "The Collapsible Splitter control cannot have the Filled or None Dockstyle property"
+                message: "The Collapsible Splitter control cannot have the Filled or None Dockstyle property"
             );
         }
 
         // dispose the Graphics object
         g.Dispose();
-        ModificationEnds?.Invoke(this, EventArgs.Empty);
+        ModificationEnds?.Invoke(sender: this, e: EventArgs.Empty);
     }
     #endregion
     #region Arrow Polygon Array
@@ -1125,9 +1193,9 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
             )
             {
                 // right arrow
-                point[0] = new Point(x, y);
-                point[1] = new Point(x + 3, y + 3);
-                point[2] = new Point(x, y + 6);
+                point[0] = new Point(x: x, y: y);
+                point[1] = new Point(x: x + 3, y: y + 3);
+                point[2] = new Point(x: x, y: y + 6);
             }
             else if (
                 (this.Dock == DockStyle.Right && !controlToHide.Visible)
@@ -1135,9 +1203,9 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
             )
             {
                 // left arrow
-                point[0] = new Point(x + 3, y);
-                point[1] = new Point(x, y + 3);
-                point[2] = new Point(x + 3, y + 6);
+                point[0] = new Point(x: x + 3, y: y);
+                point[1] = new Point(x: x, y: y + 3);
+                point[2] = new Point(x: x + 3, y: y + 6);
             }
             // Up/Down arrows added in v1.2
             else if (
@@ -1146,9 +1214,9 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
             )
             {
                 // up arrow
-                point[0] = new Point(x + 3, y);
-                point[1] = new Point(x + 6, y + 4);
-                point[2] = new Point(x, y + 4);
+                point[0] = new Point(x: x + 3, y: y);
+                point[1] = new Point(x: x + 6, y: y + 4);
+                point[2] = new Point(x: x, y: y + 4);
             }
             else if (
                 (this.Dock == DockStyle.Top && !controlToHide.Visible)
@@ -1156,9 +1224,9 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
             )
             {
                 // down arrow
-                point[0] = new Point(x, y);
-                point[1] = new Point(x + 6, y);
-                point[2] = new Point(x + 3, y + 3);
+                point[0] = new Point(x: x, y: y);
+                point[1] = new Point(x: x + 6, y: y);
+                point[2] = new Point(x: x + 3, y: y + 3);
             }
         }
         return point;
@@ -1169,8 +1237,8 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
     private static Color CalculateColor(Color front, Color back, int alpha)
     {
         // solid color obtained as a result of alpha-blending
-        Color frontColor = Color.FromArgb(255, front);
-        Color backColor = Color.FromArgb(255, back);
+        Color frontColor = Color.FromArgb(alpha: 255, baseColor: front);
+        Color backColor = Color.FromArgb(alpha: 255, baseColor: back);
 
         float frontRed = frontColor.R;
         float frontGreen = frontColor.G;
@@ -1185,7 +1253,7 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
         byte newGreen = (byte)fGreen;
         float fBlue = (frontBlue * alpha / 255) + (backBlue * ((float)(255 - alpha) / 255));
         byte newBlue = (byte)fBlue;
-        return Color.FromArgb(255, newRed, newGreen, newBlue);
+        return Color.FromArgb(alpha: 255, red: newRed, green: newGreen, blue: newBlue);
     }
 
     #endregion
@@ -1204,9 +1272,9 @@ public class CollapsibleSplitterDesigner : System.Windows.Forms.Design.ControlDe
 
     protected override void PreFilterProperties(System.Collections.IDictionary properties)
     {
-        properties.Remove("IsCollapsed");
-        properties.Remove("BorderStyle");
-        properties.Remove("Size");
+        properties.Remove(key: "IsCollapsed");
+        properties.Remove(key: "BorderStyle");
+        properties.Remove(key: "Size");
     }
 }
 

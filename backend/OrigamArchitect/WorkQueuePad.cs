@@ -62,12 +62,15 @@ public class WorkQueuePad : AbstractPadContent
         WorkQueue.GridLineColor = OrigamColorScheme.GridLineColor;
         WorkQueue.GridLineStyle = System.Windows.Forms.DataGridLineStyle.Solid;
         WorkQueue.HeaderBackColor = OrigamColorScheme.GridHeaderBackColor;
-        WorkQueue.HeaderFont = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+        WorkQueue.HeaderFont = new System.Drawing.Font(
+            familyName: "Microsoft Sans Serif",
+            emSize: 8F
+        );
         WorkQueue.HeaderForeColor = OrigamColorScheme.GridHeaderForeColor;
         WorkQueue.SelectionBackColor = OrigamColorScheme.GridSelectionBackColor;
         WorkQueue.SelectionForeColor = OrigamColorScheme.GridSelectionForeColor;
         SchemaService schema =
-            ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
+            ServiceManager.Services.GetService(serviceType: typeof(SchemaService)) as SchemaService;
         schema.SchemaLoaded += schema_SchemaLoaded;
     }
 
@@ -269,14 +272,16 @@ public class WorkQueuePad : AbstractPadContent
                 WQTimer.Interval = settings.WorkQueueListRefreshPeriod * 1000;
             }
             IWorkQueueService wqs =
-                ServiceManager.Services.GetService(typeof(IWorkQueueService)) as IWorkQueueService;
+                ServiceManager.Services.GetService(serviceType: typeof(IWorkQueueService))
+                as IWorkQueueService;
             if (wqs == null)
             {
                 return;
             }
 
             SchemaService schema =
-                ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
+                ServiceManager.Services.GetService(serviceType: typeof(SchemaService))
+                as SchemaService;
             if (!schema.IsSchemaLoaded)
             {
                 return;
@@ -284,13 +289,18 @@ public class WorkQueuePad : AbstractPadContent
 
             if (_data.Tables.Count == 0)
             {
-                _data.Merge(wqs.UserQueueList());
+                _data.Merge(dataSet: wqs.UserQueueList());
             }
             else
             {
                 Origam.DA.MergeParams mergeParams = new Origam.DA.MergeParams();
                 mergeParams.TrueDelete = true;
-                Origam.DA.DatasetTools.MergeDataSet(_data, wqs.UserQueueList(), null, mergeParams);
+                Origam.DA.DatasetTools.MergeDataSet(
+                    inout_dsTarget: _data,
+                    in_dsSource: wqs.UserQueueList(),
+                    changeList: null,
+                    mergeParams: mergeParams
+                );
                 _data.AcceptChanges();
             }
             if (dataGrid1.DataSource == null)
@@ -298,7 +308,7 @@ public class WorkQueuePad : AbstractPadContent
                 dataGrid1.DataSource = _data;
                 dataGrid1.DataMember = "WorkQueue";
             }
-            Thread t = new Thread(new ThreadStart(GetCounts));
+            Thread t = new Thread(start: new ThreadStart(GetCounts));
             t.IsBackground = true;
             t.Start();
         }
@@ -316,11 +326,12 @@ public class WorkQueuePad : AbstractPadContent
         try
         {
             IDataLookupService ls =
-                ServiceManager.Services.GetService(typeof(IDataLookupService))
+                ServiceManager.Services.GetService(serviceType: typeof(IDataLookupService))
                 as IDataLookupService;
             IWorkQueueService wqs =
-                ServiceManager.Services.GetService(typeof(IWorkQueueService)) as IWorkQueueService;
-            foreach (DataRow row in _data.Tables[0].Rows)
+                ServiceManager.Services.GetService(serviceType: typeof(IWorkQueueService))
+                as IWorkQueueService;
+            foreach (DataRow row in _data.Tables[index: 0].Rows)
             {
                 object id = null;
                 string wqClassName = null;
@@ -329,26 +340,26 @@ public class WorkQueuePad : AbstractPadContent
                 {
                     if (row.RowState != DataRowState.Deleted)
                     {
-                        id = row["Id"];
-                        wqClassName = (string)row["WorkQueueClass"];
+                        id = row[columnName: "Id"];
+                        wqClassName = (string)row[columnName: "WorkQueueClass"];
                     }
                 }
                 if (id != null)
                 {
-                    WorkQueueClass wqc = wqs.WQClass(wqClassName) as WorkQueueClass;
+                    WorkQueueClass wqc = wqs.WQClass(name: wqClassName) as WorkQueueClass;
                     if (wqc != null && wqc.WorkQueueItemCountLookup != null)
                     {
                         long cnt = (long)
                             ls.GetDisplayText(
-                                wqc.WorkQueueItemCountLookupId,
-                                id,
-                                false,
-                                false,
-                                null
+                                lookupId: wqc.WorkQueueItemCountLookupId,
+                                lookupValue: id,
+                                useCache: false,
+                                returnMessageIfNull: false,
+                                transactionId: null
                             );
                         lock (_data)
                         {
-                            row["CntTotal"] = cnt;
+                            row[columnName: "CntTotal"] = cnt;
                         }
                     }
                 }
@@ -371,7 +382,9 @@ public class WorkQueuePad : AbstractPadContent
         {
             if (e.Button == btnShow)
             {
-                CurrencyManager cm = this.BindingContext[_data, "WorkQueue"] as CurrencyManager;
+                CurrencyManager cm =
+                    this.BindingContext[dataSource: _data, dataMember: "WorkQueue"]
+                    as CurrencyManager;
                 if (cm.Position >= 0)
                 {
                     DataRow row = (cm.Current as DataRowView).Row;
@@ -380,18 +393,20 @@ public class WorkQueuePad : AbstractPadContent
                         IViewContent content in WorkbenchSingleton.Workbench.ViewContentCollection
                     )
                     {
-                        if (content.DisplayedItemId.Equals(row["Id"]))
+                        if (content.DisplayedItemId.Equals(o: row[columnName: "Id"]))
                         {
                             (content as DockContent).Activate();
                             return;
                         }
                     }
                     WorkQueueWindow queueWindow = new WorkQueueWindow();
-                    queueWindow.TitleName = (string)row["Name"];
-                    queueWindow.QueueId = (Guid)row["Id"];
-                    queueWindow.QueueClass = (string)row["WorkQueueClass"];
-                    queueWindow.DisplayedItemId = Guid.Parse(row["Id"].ToString());
-                    WorkbenchSingleton.Workbench.ShowView(queueWindow);
+                    queueWindow.TitleName = (string)row[columnName: "Name"];
+                    queueWindow.QueueId = (Guid)row[columnName: "Id"];
+                    queueWindow.QueueClass = (string)row[columnName: "WorkQueueClass"];
+                    queueWindow.DisplayedItemId = Guid.Parse(
+                        input: row[columnName: "Id"].ToString()
+                    );
+                    WorkbenchSingleton.Workbench.ShowView(content: queueWindow);
                     queueWindow.LoadQueue();
                 }
             }
@@ -402,7 +417,12 @@ public class WorkQueuePad : AbstractPadContent
         }
         catch (Exception ex)
         {
-            AsMessageBox.ShowError(this, ex.Message, strings.WorkQueueCommand_Title, ex);
+            AsMessageBox.ShowError(
+                owner: this,
+                text: ex.Message,
+                caption: strings.WorkQueueCommand_Title,
+                exception: ex
+            );
         }
     }
 

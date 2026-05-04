@@ -32,8 +32,8 @@ internal class ResourceHelper
     static ResourceHelper()
     {
         m_resourceManager = new ResourceManager(
-            "Origam.Gui.Win.Strings",
-            typeof(AsTextBox).Assembly
+            baseName: "Origam.Gui.Win.Strings",
+            assembly: typeof(AsTextBox).Assembly
         );
     }
 
@@ -41,11 +41,11 @@ internal class ResourceHelper
     {
         Assembly assembly = typeof(ResourceHelper).Assembly;
         string fullNamePrefix = "Origam.Gui.Win.Resources.";
-        return new Bitmap(assembly.GetManifestResourceStream(fullNamePrefix + name));
+        return new Bitmap(stream: assembly.GetManifestResourceStream(name: fullNamePrefix + name));
     }
 
     public static string GetString(string name)
     {
-        return m_resourceManager.GetString(name);
+        return m_resourceManager.GetString(name: name);
     }
 }

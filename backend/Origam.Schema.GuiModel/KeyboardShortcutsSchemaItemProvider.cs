@@ -28,7 +28,7 @@ public class KeyboardShortcutsSchemaItemProvider : AbstractSchemaItemProvider, I
 {
     public KeyboardShortcutsSchemaItemProvider()
     {
-        this.ChildItemTypes.Add(typeof(KeyboardShortcut));
+        this.ChildItemTypes.Add(item: typeof(KeyboardShortcut));
     }
 
     #region ISchemaItemProvider Members

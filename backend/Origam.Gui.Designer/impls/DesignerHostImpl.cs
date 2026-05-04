@@ -101,9 +101,9 @@ public class DesignerHostImpl
     public DesignerHostImpl(IServiceProvider parentProvider)
     {
         // append to the parentProvider...
-        serviceContainer = new ServiceContainer(parentProvider);
+        serviceContainer = new ServiceContainer(parentProvider: parentProvider);
         // site name to ISite mapping
-        sites = new Hashtable(StringComparer.InvariantCultureIgnoreCase);
+        sites = new Hashtable(equalityComparer: StringComparer.InvariantCultureIgnoreCase);
         // component to designer mapping
         designers = new Hashtable();
         // list of extender providers
@@ -111,29 +111,54 @@ public class DesignerHostImpl
         // services
         ServiceCreatorCallback callback = new ServiceCreatorCallback(this.OnCreateService);
 
-        serviceContainer.AddService(typeof(IDesignerHost), this);
-        serviceContainer.AddService(typeof(IContainer), this);
-        serviceContainer.AddService(typeof(IComponentChangeService), this);
-        serviceContainer.AddService(typeof(IExtenderProviderService), this);
-        serviceContainer.AddService(typeof(IExtenderListService), this);
-        serviceContainer.AddService(typeof(IDesignerEventService), this);
-        serviceContainer.AddService(typeof(IDesignerOptionService), this);
+        serviceContainer.AddService(serviceType: typeof(IDesignerHost), serviceInstance: this);
+        serviceContainer.AddService(serviceType: typeof(IContainer), serviceInstance: this);
         serviceContainer.AddService(
-            typeof(INameCreationService),
-            new NameCreationServiceImpl(this)
+            serviceType: typeof(IComponentChangeService),
+            serviceInstance: this
         );
-        serviceContainer.AddService(typeof(ISelectionService), callback);
-        serviceContainer.AddService(typeof(IMenuCommandService), callback);
-        serviceContainer.AddService(typeof(ITypeDescriptorFilterService), callback);
-        serviceContainer.AddService(typeof(IToolboxService), callback);
-        serviceContainer.AddService(typeof(AmbientProperties), callback);
-        serviceContainer.AddService(typeof(IPropertyValueUIService), callback);
+        serviceContainer.AddService(
+            serviceType: typeof(IExtenderProviderService),
+            serviceInstance: this
+        );
+        serviceContainer.AddService(
+            serviceType: typeof(IExtenderListService),
+            serviceInstance: this
+        );
+        serviceContainer.AddService(
+            serviceType: typeof(IDesignerEventService),
+            serviceInstance: this
+        );
+        serviceContainer.AddService(
+            serviceType: typeof(IDesignerOptionService),
+            serviceInstance: this
+        );
+        serviceContainer.AddService(
+            serviceType: typeof(INameCreationService),
+            serviceInstance: new NameCreationServiceImpl(host: this)
+        );
+        serviceContainer.AddService(serviceType: typeof(ISelectionService), callback: callback);
+        serviceContainer.AddService(serviceType: typeof(IMenuCommandService), callback: callback);
+        serviceContainer.AddService(
+            serviceType: typeof(ITypeDescriptorFilterService),
+            callback: callback
+        );
+        serviceContainer.AddService(serviceType: typeof(IToolboxService), callback: callback);
+        serviceContainer.AddService(serviceType: typeof(AmbientProperties), callback: callback);
+        serviceContainer.AddService(
+            serviceType: typeof(IPropertyValueUIService),
+            callback: callback
+        );
         IExtenderProviderService extenderProvider = (IExtenderProviderService)GetService(
-            typeof(IExtenderProviderService)
+            serviceType: typeof(IExtenderProviderService)
         );
-        extenderProvider.AddExtenderProvider(new ControlExtenderProvider());
-        extenderProvider.AddExtenderProvider(new MultiColumnAdapterFieldExtenderProvider());
-        extenderProvider.AddExtenderProvider(new RequestSaveAfterChangeExtenderProvider());
+        extenderProvider.AddExtenderProvider(provider: new ControlExtenderProvider());
+        extenderProvider.AddExtenderProvider(
+            provider: new MultiColumnAdapterFieldExtenderProvider()
+        );
+        extenderProvider.AddExtenderProvider(
+            provider: new RequestSaveAfterChangeExtenderProvider()
+        );
     }
 
     #region IDesignerHost Members
@@ -147,7 +172,7 @@ public class DesignerHostImpl
 
     public IDesigner GetDesigner(IComponent component)
     {
-        return designers[component] as IDesigner;
+        return designers[key: component] as IDesigner;
     }
 
     public event System.EventHandler Activated;
@@ -164,22 +189,26 @@ public class DesignerHostImpl
 
     public IComponent CreateComponent(Type componentClass, string name)
     {
-        return CreateComponent(componentClass, null, name);
+        return CreateComponent(componentClass: componentClass, controlItem: null, name: name);
     }
 
     public IComponent CreateComponent(Type componentClass, ControlItem controlItem, string name)
     {
         try
         {
-            return TryCreateComponent(componentClass, controlItem, name);
+            return TryCreateComponent(
+                componentClass: componentClass,
+                controlItem: controlItem,
+                name: name
+            );
         }
         catch (Exception ex)
         {
             AsMessageBox.ShowError(
-                WorkbenchSingleton.Workbench as IWin32Window,
-                ex.Message,
-                "Error creating component",
-                ex
+                owner: WorkbenchSingleton.Workbench as IWin32Window,
+                text: ex.Message,
+                caption: "Error creating component",
+                exception: ex
             );
             throw;
         }
@@ -187,24 +216,27 @@ public class DesignerHostImpl
 
     private IComponent TryCreateComponent(Type componentClass, ControlItem controlItem, string name)
     {
-        var (newComponent, componentName) = CreateComponentInstance(componentClass, controlItem);
-        Add(newComponent, name ?? componentName);
+        var (newComponent, componentName) = CreateComponentInstance(
+            type: componentClass,
+            controlItem: controlItem
+        );
+        Add(component: newComponent, name: name ?? componentName);
         if (this.IsFieldControl && this.DataSet != null && newComponent is IAsControl)
         {
             string BindProp = (newComponent as IAsControl).DefaultBindableProperty;
             try
             {
                 (newComponent as Control).DataBindings.Add(
-                    BindProp,
-                    this.DataSet,
-                    this.DataSet.Tables[0].TableName + "." + this.FieldName
+                    propertyName: BindProp,
+                    dataSource: this.DataSet,
+                    dataMember: this.DataSet.Tables[index: 0].TableName + "." + this.FieldName
                 );
             }
             catch (ArgumentException ex)
             {
                 throw new ArgumentException(
-                    $"{newComponent.GetType()} does not contain {FieldName}. Your Root model might be out of date.",
-                    ex
+                    message: $"{newComponent.GetType()} does not contain {FieldName}. Your Root model might be out of date.",
+                    innerException: ex
                 );
             }
             //If is it dataconsumer (valuelist editor)
@@ -213,9 +245,10 @@ public class DesignerHostImpl
                 if (newComponent is Origam.UI.ILookupControl)
                 {
                     Guid lookupId = (Guid)
-                        this.DataSet.Tables[0].Columns[this.FieldName].ExtendedProperties[
-                            Const.DefaultLookupIdAttribute
-                        ];
+                        this.DataSet
+                            .Tables[index: 0]
+                            .Columns[name: this.FieldName]
+                            .ExtendedProperties[key: Const.DefaultLookupIdAttribute];
                     (newComponent as Origam.UI.ILookupControl).LookupId = lookupId;
                     (newComponent as Origam.UI.ILookupControl).CreateMappingItemsCollection();
                 }
@@ -232,14 +265,16 @@ public class DesignerHostImpl
     {
         if (IsComplexControl)
         {
-            Control instance = Generator.LoadControl(FormTools.GetItemFromControlSet(PanelSet));
+            Control instance = Generator.LoadControl(
+                cntrlSet: FormTools.GetItemFromControlSet(controlSet: PanelSet)
+            );
             return (instance, null);
         }
         var baseControl = ServiceManager
             .Services.GetService<ISchemaService>()
             .GetProvider<UserControlSchemaItemProvider>()
             .ChildItems.Cast<ControlItem>()
-            .FirstOrDefault(item => item.ControlType == type.FullName);
+            .FirstOrDefault(predicate: item => item.ControlType == type.FullName);
         ControlItem refControl = controlItem;
         if (refControl == null)
         {
@@ -257,27 +292,27 @@ public class DesignerHostImpl
         }
 
         var missingPropertyItems = refControl
-            ?.ChildItemsByType<ControlPropertyItem>(ControlPropertyItem.CategoryConst)
-            .Where(propItem => type.GetProperty(propItem.Name) == null)
+            ?.ChildItemsByType<ControlPropertyItem>(itemType: ControlPropertyItem.CategoryConst)
+            .Where(predicate: propItem => type.GetProperty(name: propItem.Name) == null)
             .ToList();
 
         if (missingPropertyItems == null || missingPropertyItems.Count == 0)
         {
-            IComponent instance = Activator.CreateInstance(type) as IComponent;
+            IComponent instance = Activator.CreateInstance(type: type) as IComponent;
             return (instance, refControl?.Name);
         }
         DynamicTypeFactory dynamicTypeFactory = new DynamicTypeFactory();
         Type newType = dynamicTypeFactory.CreateNewTypeWithDynamicProperties(
             parentType: type,
             inheritor: refControl,
-            dynamicProperties: missingPropertyItems.Select(propItem => new DynamicProperty
+            dynamicProperties: missingPropertyItems.Select(selector: propItem => new DynamicProperty
             {
                 Name = propItem.Name,
                 SystemType = propItem.SystemType,
                 Category = "Data",
             })
         );
-        IComponent component = Activator.CreateInstance(newType) as IComponent;
+        IComponent component = Activator.CreateInstance(type: newType) as IComponent;
         if (component is Control control)
         {
             control.Name = type.Name;
@@ -288,7 +323,7 @@ public class DesignerHostImpl
 
     IComponent System.ComponentModel.Design.IDesignerHost.CreateComponent(Type componentClass)
     {
-        return CreateComponent(componentClass, null, null);
+        return CreateComponent(componentClass: componentClass, controlItem: null, name: null);
     }
 
     // Gets a value indicating whether the designer host is currently in a transaction.
@@ -332,19 +367,19 @@ public class DesignerHostImpl
 
     public DesignerTransaction CreateTransaction(string description)
     {
-        return new DesignerTransactionImpl(this, description);
+        return new DesignerTransactionImpl(host: this, description: description);
     }
 
     DesignerTransaction System.ComponentModel.Design.IDesignerHost.CreateTransaction()
     {
-        return CreateTransaction("");
+        return CreateTransaction(description: "");
     }
 
     internal void OnTransactionOpened(EventArgs e)
     {
         if (TransactionOpened != null)
         {
-            TransactionOpened(this, e);
+            TransactionOpened(sender: this, e: e);
         }
     }
 
@@ -352,7 +387,7 @@ public class DesignerHostImpl
     {
         if (TransactionOpening != null)
         {
-            TransactionOpening(this, e);
+            TransactionOpening(sender: this, e: e);
         }
     }
 
@@ -360,7 +395,7 @@ public class DesignerHostImpl
     {
         if (TransactionClosed != null)
         {
-            TransactionClosed(this, e);
+            TransactionClosed(sender: this, e: e);
         }
     }
 
@@ -368,7 +403,7 @@ public class DesignerHostImpl
     {
         if (TransactionClosing != null)
         {
-            TransactionClosing(this, e);
+            TransactionClosing(sender: this, e: e);
         }
     }
 
@@ -377,7 +412,7 @@ public class DesignerHostImpl
         string name;
         if (component == null)
         {
-            throw new ArgumentNullException("component");
+            throw new ArgumentNullException(paramName: "component");
         }
         if (component.Site != null && component.Site.Name != null)
         {
@@ -391,23 +426,29 @@ public class DesignerHostImpl
         //
         //
         InheritanceAttribute ia = (InheritanceAttribute)
-            TypeDescriptor.GetAttributes(component)[typeof(InheritanceAttribute)];
+            TypeDescriptor.GetAttributes(component: component)[
+                attributeType: typeof(InheritanceAttribute)
+            ];
         if (ia != null && ia.InheritanceLevel != InheritanceLevel.NotInherited)
         {
-            throw new InvalidOperationException("Cannot remove inherited components.");
+            throw new InvalidOperationException(message: "Cannot remove inherited components.");
         }
-        if (IsInherited(component))
+        if (IsInherited(component: component))
         {
             return;
         }
         if (((IDesignerHost)this).InTransaction)
         {
-            Remove(component);
+            Remove(component: component);
         }
         else
         {
             DesignerTransaction t;
-            using (t = ((IDesignerHost)this).CreateTransaction("Destroying Component " + name))
+            using (
+                t = ((IDesignerHost)this).CreateTransaction(
+                    description: "Destroying Component " + name
+                )
+            )
             {
                 // We need to signal changing and then perform the remove.  Remove must be done by us and not
                 // by Dispose because (a) people need a chance to cancel through a Removing event, and (b)
@@ -415,7 +456,7 @@ public class DesignerHostImpl
                 // with a dead component.
                 //
                 //
-                Remove(component);
+                Remove(component: component);
                 //
 
                 component.Dispose();
@@ -430,7 +471,7 @@ public class DesignerHostImpl
         {
             if (Activated != null)
             {
-                Activated(this, EventArgs.Empty);
+                Activated(sender: this, e: EventArgs.Empty);
             }
         }
         catch { }
@@ -442,7 +483,7 @@ public class DesignerHostImpl
         {
             if (LoadComplete != null)
             {
-                LoadComplete(this, EventArgs.Empty);
+                LoadComplete(sender: this, e: EventArgs.Empty);
             }
         }
         catch { }
@@ -457,16 +498,16 @@ public class DesignerHostImpl
     {
         Type type = null;
         ITypeResolutionService typeResolverService = (ITypeResolutionService)GetService(
-            typeof(ITypeResolutionService)
+            serviceType: typeof(ITypeResolutionService)
         );
 
         if (typeResolverService != null)
         {
-            type = typeResolverService.GetType(typeName);
+            type = typeResolverService.GetType(name: typeName);
         }
         else
         {
-            type = Type.GetType(typeName);
+            type = Type.GetType(typeName: typeName);
         }
         return type;
     }
@@ -480,12 +521,12 @@ public class DesignerHostImpl
     #region IServiceContainer Members
     public void RemoveService(Type serviceType, bool promote)
     {
-        serviceContainer.RemoveService(serviceType, promote);
+        serviceContainer.RemoveService(serviceType: serviceType, promote: promote);
     }
 
     void System.ComponentModel.Design.IServiceContainer.RemoveService(Type serviceType)
     {
-        serviceContainer.RemoveService(serviceType);
+        serviceContainer.RemoveService(serviceType: serviceType);
     }
 
     public void AddService(
@@ -494,7 +535,7 @@ public class DesignerHostImpl
         bool promote
     )
     {
-        serviceContainer.AddService(serviceType, callback, promote);
+        serviceContainer.AddService(serviceType: serviceType, callback: callback, promote: promote);
     }
 
     void System.ComponentModel.Design.IServiceContainer.AddService(
@@ -502,7 +543,7 @@ public class DesignerHostImpl
         System.ComponentModel.Design.ServiceCreatorCallback callback
     )
     {
-        serviceContainer.AddService(serviceType, callback);
+        serviceContainer.AddService(serviceType: serviceType, callback: callback);
     }
 
     void System.ComponentModel.Design.IServiceContainer.AddService(
@@ -511,7 +552,11 @@ public class DesignerHostImpl
         bool promote
     )
     {
-        serviceContainer.AddService(serviceType, serviceInstance, promote);
+        serviceContainer.AddService(
+            serviceType: serviceType,
+            serviceInstance: serviceInstance,
+            promote: promote
+        );
     }
 
     void System.ComponentModel.Design.IServiceContainer.AddService(
@@ -519,41 +564,41 @@ public class DesignerHostImpl
         object serviceInstance
     )
     {
-        serviceContainer.AddService(serviceType, serviceInstance);
+        serviceContainer.AddService(serviceType: serviceType, serviceInstance: serviceInstance);
     }
     #endregion
     #region IServiceProvider Members
     public object GetService(Type serviceType)
     {
-        object service = serviceContainer.GetService(serviceType);
+        object service = serviceContainer.GetService(serviceType: serviceType);
         if (service == null)
         {
             return null;
         }
-        return serviceContainer.GetService(serviceType);
+        return serviceContainer.GetService(serviceType: serviceType);
     }
     #endregion
     #region IContainer Members
     public ComponentCollection Components
     {
-        get { return new ComponentCollection(GetAllComponents()); }
+        get { return new ComponentCollection(components: GetAllComponents()); }
     }
 
     public void Remove(IComponent component)
     {
         if (component == null)
         {
-            throw new ArgumentException("component");
+            throw new ArgumentException(message: "component");
         }
-        IDesigner designer = designers[component] as IDesigner;
+        IDesigner designer = designers[key: component] as IDesigner;
         // fire off changing and removing event
-        ComponentEventArgs ce = new ComponentEventArgs(component);
-        OnComponentChanging(component, null);
+        ComponentEventArgs ce = new ComponentEventArgs(component: component);
+        OnComponentChanging(component: component, member: null);
         try
         {
             if (ComponentRemoving != null)
             {
-                ComponentRemoving(this, ce);
+                ComponentRemoving(sender: this, e: ce);
             }
         }
         catch
@@ -567,21 +612,21 @@ public class DesignerHostImpl
             if (component is IExtenderProvider)
             {
                 IExtenderProviderService extenderProvider = (IExtenderProviderService)GetService(
-                    typeof(IExtenderProviderService)
+                    serviceType: typeof(IExtenderProviderService)
                 );
                 if (extenderProvider != null)
                 {
-                    extenderProvider.RemoveExtenderProvider((IExtenderProvider)component);
+                    extenderProvider.RemoveExtenderProvider(provider: (IExtenderProvider)component);
                 }
             }
             // remove the site
-            sites.Remove(component.Site.Name);
+            sites.Remove(key: component.Site.Name);
             // dispose the designer
             if (designer != null)
             {
                 designer.Dispose();
                 // get rid of the designer from the list
-                designers.Remove(component);
+                designers.Remove(key: component);
             }
             if (!_disposing)
             {
@@ -590,9 +635,14 @@ public class DesignerHostImpl
                 {
                     if (ComponentRemoved != null)
                     {
-                        ComponentRemoved(this, ce);
+                        ComponentRemoved(sender: this, e: ce);
                     }
-                    this.OnComponentChanged(component, null, null, null);
+                    this.OnComponentChanged(
+                        component: component,
+                        member: null,
+                        oldValue: null,
+                        newValue: null
+                    );
                 }
                 catch
                 {
@@ -611,12 +661,13 @@ public class DesignerHostImpl
         IInheritanceService service = null;
         if (component != null)
         {
-            service = (IInheritanceService)this.GetService(typeof(IInheritanceService));
+            service = (IInheritanceService)
+                this.GetService(serviceType: typeof(IInheritanceService));
             if (
                 (service != null)
                 && service
-                    .GetInheritanceAttribute(component)
-                    .Equals(InheritanceAttribute.InheritedReadOnly)
+                    .GetInheritanceAttribute(component: component)
+                    .Equals(value: InheritanceAttribute.InheritedReadOnly)
             )
             {
                 return true;
@@ -630,7 +681,7 @@ public class DesignerHostImpl
         // we have to have a component
         if (component == null)
         {
-            throw new ArgumentException("component");
+            throw new ArgumentException(message: "component");
         }
 
         // if we dont have a name, create one
@@ -638,17 +689,19 @@ public class DesignerHostImpl
         {
             // we need the naming service
             INameCreationService nameCreationService =
-                GetService(typeof(INameCreationService)) as INameCreationService;
+                GetService(serviceType: typeof(INameCreationService)) as INameCreationService;
             if (nameCreationService == null)
             {
-                throw new Exception("Failed to get INameCreationService.");
+                throw new Exception(message: "Failed to get INameCreationService.");
             }
-            Type nameType = DynamicTypeFactory.GetOriginalType(component.GetType());
-            name = nameCreationService.CreateName(this, nameType);
+            Type nameType = DynamicTypeFactory.GetOriginalType(
+                maybeDynamicType: component.GetType()
+            );
+            name = nameCreationService.CreateName(container: this, dataType: nameType);
         }
         else
         {
-            name = ModifyNameIfPresent(name);
+            name = ModifyNameIfPresent(componentName: name);
         }
         // if we own the component and the name has changed
         // we just rename the component
@@ -656,7 +709,7 @@ public class DesignerHostImpl
             component.Site != null
             && component.Site.Container == this
             && name != null
-            && string.Compare(name, component.Site.Name, true) != 0
+            && string.Compare(strA: name, strB: component.Site.Name, ignoreCase: true) != 0
         )
         {
             // name validation and component changing/changed events
@@ -667,7 +720,7 @@ public class DesignerHostImpl
             return;
         }
         // create a site for the component
-        ISite site = new SiteImpl(component, name, this);
+        ISite site = new SiteImpl(comp: component, name: name, host: this);
         // create component-site association
 
         component.Site = site;
@@ -675,13 +728,13 @@ public class DesignerHostImpl
         // we created the site through site.host.
         // we need to fire adding/added events. create a component event args
         // for the component we are adding.
-        ComponentEventArgs evtArgs = new ComponentEventArgs(component);
+        ComponentEventArgs evtArgs = new ComponentEventArgs(component: component);
         // fire off adding event
         if (ComponentAdding != null)
         {
             try
             {
-                ComponentAdding(this, evtArgs);
+                ComponentAdding(sender: this, e: evtArgs);
             }
             catch { }
         }
@@ -694,28 +747,34 @@ public class DesignerHostImpl
             rootComponent = component;
             // create the root designer
             designer = (IRootDesigner)
-                TypeDescriptor.CreateDesigner(component, typeof(IRootDesigner));
+                TypeDescriptor.CreateDesigner(
+                    component: component,
+                    designerBaseType: typeof(IRootDesigner)
+                );
             rootDesigner = (IRootDesigner)designer;
         }
         else
         {
-            designer = TypeDescriptor.CreateDesigner(component, typeof(IDesigner));
+            designer = TypeDescriptor.CreateDesigner(
+                component: component,
+                designerBaseType: typeof(IDesigner)
+            );
         }
         if (designer != null)
         {
             // add the designer to the list
-            designers.Add(component, designer);
+            designers.Add(key: component, value: designer);
             // initialize the designer
-            designer.Initialize(component);
+            designer.Initialize(component: component);
         }
         // add to container component list
-        sites.Add(site.Name, site);
+        sites.Add(key: site.Name, value: site);
         // now fire off added event
         if (ComponentAdded != null)
         {
             try
             {
-                ComponentAdded(this, evtArgs);
+                ComponentAdded(sender: this, e: evtArgs);
             }
             catch { }
         }
@@ -723,24 +782,24 @@ public class DesignerHostImpl
 
     private string ModifyNameIfPresent(string componentName)
     {
-        if (!sites.Contains(componentName))
+        if (!sites.Contains(key: componentName))
         {
             return componentName;
         }
         for (int i = 1; i < 1000; i++)
         {
             string candidateName = componentName + i;
-            if (!sites.Contains(candidateName))
+            if (!sites.Contains(key: candidateName))
             {
                 return candidateName;
             }
         }
-        throw new Exception("Could not create a valid name from " + componentName);
+        throw new Exception(message: "Could not create a valid name from " + componentName);
     }
 
     void System.ComponentModel.IContainer.Add(IComponent component)
     {
-        Add(component, null);
+        Add(component: component, name: null);
     }
 
     /// Creates some of the more infrequently used services
@@ -751,20 +810,20 @@ public class DesignerHostImpl
         {
             if (selectionService == null)
             {
-                selectionService = new SelectionServiceImpl(this);
+                selectionService = new SelectionServiceImpl(host: this);
             }
             return selectionService;
         }
         if (serviceType == typeof(ITypeDescriptorFilterService))
         {
-            return new TypeDescriptorFilterServiceImpl(this);
+            return new TypeDescriptorFilterServiceImpl(host: this);
         }
 
         if (serviceType == typeof(IToolboxService))
         {
             if (toolboxService == null)
             {
-                toolboxService = new ToolboxServiceImpl(this);
+                toolboxService = new ToolboxServiceImpl(host: this);
             }
             return toolboxService;
         }
@@ -773,7 +832,7 @@ public class DesignerHostImpl
         {
             if (menuCommandService == null)
             {
-                menuCommandService = new MenuCommandServiceImpl(this);
+                menuCommandService = new MenuCommandServiceImpl(host: this);
             }
             return menuCommandService;
         }
@@ -797,7 +856,7 @@ public class DesignerHostImpl
         {
             if (designerActionService == null)
             {
-                designerActionService = new DesignerActionService(this);
+                designerActionService = new DesignerActionService(serviceProvider: this);
             }
             return designerActionService;
         }
@@ -897,14 +956,14 @@ public class DesignerHostImpl
         if (ComponentChanged != null)
         {
             ComponentChangedEventArgs ce = new ComponentChangedEventArgs(
-                component,
-                member,
-                oldValue,
-                newValue
+                component: component,
+                member: member,
+                oldValue: oldValue,
+                newValue: newValue
             );
             try
             {
-                ComponentChanged(this, ce);
+                ComponentChanged(sender: this, e: ce);
             }
             catch { }
         }
@@ -914,10 +973,13 @@ public class DesignerHostImpl
     {
         if (ComponentChanging != null)
         {
-            ComponentChangingEventArgs ce = new ComponentChangingEventArgs(component, member);
+            ComponentChangingEventArgs ce = new ComponentChangingEventArgs(
+                component: component,
+                member: member
+            );
             try
             {
-                ComponentChanging(this, ce);
+                ComponentChanging(sender: this, e: ce);
             }
             catch { }
         }
@@ -929,7 +991,14 @@ public class DesignerHostImpl
         {
             try
             {
-                ComponentRename(this, new ComponentRenameEventArgs(component, oldName, newName));
+                ComponentRename(
+                    sender: this,
+                    e: new ComponentRenameEventArgs(
+                        component: component,
+                        oldName: oldName,
+                        newName: newName
+                    )
+                );
             }
             catch { }
         }
@@ -963,8 +1032,8 @@ public class DesignerHostImpl
         if (helpService != null && rootDesigner != null)
         {
             helpService.RemoveContextAttribute(
-                "Keyword",
-                "Designer_" + rootDesigner.GetType().FullName
+                name: "Keyword",
+                value: "Designer_" + rootDesigner.GetType().FullName
             );
         }
 
@@ -975,11 +1044,14 @@ public class DesignerHostImpl
         // or components who's designer has been destroyed.
         IServiceProvider sp = (IServiceProvider)this;
         ISelectionService selectionService = (ISelectionService)
-            sp.GetService(typeof(ISelectionService));
-        System.Diagnostics.Debug.Assert(selectionService != null, "ISelectionService not found");
+            sp.GetService(serviceType: typeof(ISelectionService));
+        System.Diagnostics.Debug.Assert(
+            condition: selectionService != null,
+            message: "ISelectionService not found"
+        );
         if (selectionService != null)
         {
-            selectionService.SetSelectedComponents(null);
+            selectionService.SetSelectedComponents(components: null);
         }
         // Stash off the base designer and component.  We are
         // going to be destroying these and we don't want them
@@ -990,24 +1062,24 @@ public class DesignerHostImpl
         rootDesigner = null;
         rootComponent = null;
         SiteImpl[] siteArray = new SiteImpl[sites.Values.Count];
-        sites.Values.CopyTo(siteArray, 0);
+        sites.Values.CopyTo(array: siteArray, index: 0);
         // Destroy all designers.  We save the base designer for last.
         //
         IDesigner[] d = new IDesigner[designers.Values.Count];
-        designers.Values.CopyTo(d, 0);
+        designers.Values.CopyTo(array: d, index: 0);
         designers.Clear();
         // Loading, unloading, it's all the same.  It indicates that you
         // shouldn't dirty or otherwise mess with the buffer.  We also
         // create a transaction here to limit the effects of making
         // so many changes.
         //			loadingDesigner = true;
-        DesignerTransaction trans = CreateTransaction(null);
+        DesignerTransaction trans = CreateTransaction(description: null);
 
         try
         {
             for (int i = 0; i < d.Length; i++)
             {
-                if (designers[i] != rootDesignerHolder)
+                if (designers[key: i] != rootDesignerHolder)
                 {
                     try
                     {
@@ -1016,8 +1088,8 @@ public class DesignerHostImpl
                     catch
                     {
                         System.Diagnostics.Debug.Fail(
-                            "Designer "
-                                + designers[i].GetType().Name
+                            message: "Designer "
+                                + designers[key: i].GetType().Name
                                 + " threw an exception during Dispose."
                         );
                     }
@@ -1044,12 +1116,14 @@ public class DesignerHostImpl
                     catch
                     {
                         System.Diagnostics.Debug.Fail(
-                            "Component " + site.Name + " threw during dispose.  Bad component!!"
+                            message: "Component "
+                                + site.Name
+                                + " threw during dispose.  Bad component!!"
                         );
                     }
                     if (comp.Site != null)
                     {
-                        Remove(comp);
+                        Remove(component: comp);
                     }
                 }
             }
@@ -1074,7 +1148,7 @@ public class DesignerHostImpl
                 catch
                 {
                     System.Diagnostics.Debug.Fail(
-                        "Component "
+                        message: "Component "
                             + rootComponentHolder.GetType().Name
                             + " threw during dispose.  Bad component!!"
                     );
@@ -1082,7 +1156,7 @@ public class DesignerHostImpl
 
                 if (rootComponentHolder.Site != null)
                 {
-                    Remove(rootComponentHolder);
+                    Remove(component: rootComponentHolder);
                 }
             }
 
@@ -1097,12 +1171,12 @@ public class DesignerHostImpl
     #region IExtenderProviderService Members
     public void RemoveExtenderProvider(IExtenderProvider provider)
     {
-        extenderProviders.Remove(provider);
+        extenderProviders.Remove(item: provider);
     }
 
     public void AddExtenderProvider(IExtenderProvider provider)
     {
-        extenderProviders.Add(provider);
+        extenderProviders.Add(item: provider);
     }
     #endregion
     #region IDesignerEventService Members
@@ -1112,7 +1186,7 @@ public class DesignerHostImpl
         {
             // we just have one designer
             IDesignerHost[] designers = new IDesignerHost[] { this };
-            return new DesignerCollection(designers);
+            return new DesignerCollection(designers: designers);
         }
     }
     public event System.ComponentModel.Design.DesignerEventHandler DesignerDisposed
@@ -1148,7 +1222,7 @@ public class DesignerHostImpl
     public IExtenderProvider[] GetExtenderProviders()
     {
         IExtenderProvider[] e = new IExtenderProvider[extenderProviders.Count];
-        extenderProviders.CopyTo(e, 0);
+        extenderProviders.CopyTo(array: e, arrayIndex: 0);
         return e;
     }
     #endregion
@@ -1175,7 +1249,7 @@ public class DesignerHostImpl
                 {
                     case "GridSize":
                     {
-                        return new Size(9, 9);
+                        return new Size(width: 9, height: 9);
                     }
                     default:
                     {

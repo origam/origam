@@ -50,9 +50,9 @@ public class WorkflowScheduleSchemaItemProvider : AbstractSchemaItemProvider
     public override T NewItem<T>(Guid schemaExtensionId, SchemaItemGroup group)
     {
         return base.NewItem<T>(
-            schemaExtensionId,
-            group,
-            typeof(T) == typeof(WorkflowSchedule) ? "NewSchedule" : null
+            schemaExtensionId: schemaExtensionId,
+            group: group,
+            itemName: typeof(T) == typeof(WorkflowSchedule) ? "NewSchedule" : null
         );
     }
     #endregion

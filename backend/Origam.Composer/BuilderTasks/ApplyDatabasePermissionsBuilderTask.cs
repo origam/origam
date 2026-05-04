@@ -32,13 +32,12 @@ public class ApplyDatabasePermissionsBuilderTask
 
     public override void Execute(Project project)
     {
-        DataService(project.DatabaseType).DbUser = project.DatabaseInternalUserName;
-        DataService(project.DatabaseType).ConnectionString = BuildSuperAdminConnectionString(
-            project: project
-        );
+        DataService(databaseType: project.DatabaseType).DbUser = project.DatabaseInternalUserName;
+        DataService(databaseType: project.DatabaseType).ConnectionString =
+            BuildSuperAdminConnectionString(project: project);
 
         // MSSQL: User will be created only if project.DatabaseIntegratedAuthentication == true
-        DataService(project.DatabaseType)
+        DataService(databaseType: project.DatabaseType)
             .CreateDatabaseUser(
                 user: project.DatabaseInternalUserName,
                 password: project.DatabaseInternalUserPassword,
@@ -49,7 +48,7 @@ public class ApplyDatabasePermissionsBuilderTask
 
     private string BuildSuperAdminConnectionString(Project project)
     {
-        return DataService(project.DatabaseType)
+        return DataService(databaseType: project.DatabaseType)
             .BuildConnectionString(
                 serverName: project.DatabaseHost,
                 port: project.DatabasePort,

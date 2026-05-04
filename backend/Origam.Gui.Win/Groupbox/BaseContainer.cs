@@ -36,13 +36,29 @@ public abstract class BaseContainer : System.Windows.Forms.GroupBox, IGradientCo
 {
     #region Constants
     private const int IDEFAULT_BORDERWIDTH = 3; // Default value of  BorderWidth Property
-    private Size ODEFAULT_SIZEBORDERPIXELINDET = new Size(16, 16); // Default value of moSizeBorderPixelIndent
-    private static Color ODEFAULT_GRADIENTTOPCOLOR = Color.FromArgb(225, 225, 183); // Default value of GradientTopColor Property
-    private static Color ODEFAULT_GRADIENTBOTTOMCOLOR = Color.FromArgb(167, 168, 127); // Default value of GradientBottomColor Property
-    private static Color ODEFAULT_HEADINGTEXTCOLOR = Color.FromArgb(57, 66, 1); // Default value of HeaderTextColor Property
-    private static Color ODEFAULT_INTERIORTOPCOLOR = Color.FromArgb(245, 243, 219); // Default value of InteriorGradientTopColor Property
-    private static Color ODEFAULT_INTERIORBOTTOMCOLOR = Color.FromArgb(214, 209, 153); // Default value of InteriorGradientBottomColor Property
-    private static Color ODEFAULT_SHADOWCOLOR = Color.FromArgb(142, 143, 116); // Default value of ShadowColor Property
+    private Size ODEFAULT_SIZEBORDERPIXELINDET = new Size(width: 16, height: 16); // Default value of moSizeBorderPixelIndent
+    private static Color ODEFAULT_GRADIENTTOPCOLOR = Color.FromArgb(
+        red: 225,
+        green: 225,
+        blue: 183
+    ); // Default value of GradientTopColor Property
+    private static Color ODEFAULT_GRADIENTBOTTOMCOLOR = Color.FromArgb(
+        red: 167,
+        green: 168,
+        blue: 127
+    ); // Default value of GradientBottomColor Property
+    private static Color ODEFAULT_HEADINGTEXTCOLOR = Color.FromArgb(red: 57, green: 66, blue: 1); // Default value of HeaderTextColor Property
+    private static Color ODEFAULT_INTERIORTOPCOLOR = Color.FromArgb(
+        red: 245,
+        green: 243,
+        blue: 219
+    ); // Default value of InteriorGradientTopColor Property
+    private static Color ODEFAULT_INTERIORBOTTOMCOLOR = Color.FromArgb(
+        red: 214,
+        green: 209,
+        blue: 153
+    ); // Default value of InteriorGradientBottomColor Property
+    private static Color ODEFAULT_SHADOWCOLOR = Color.FromArgb(red: 142, green: 143, blue: 116); // Default value of ShadowColor Property
 
     // These values are used in LinerGradientBrush's blend property to specify the Factor and Postion
     // When the values are changed the gradient is drawn differently
@@ -69,7 +85,7 @@ public abstract class BaseContainer : System.Windows.Forms.GroupBox, IGradientCo
         get
         {
             Rectangle rc = this.ClientRectangle; // We reduce the size of drawing to show everything properly.
-            return new Rectangle(1, 1, rc.Width - 3, rc.Height - 3);
+            return new Rectangle(x: 1, y: 1, width: rc.Width - 3, height: rc.Height - 3);
         }
     }
 
@@ -144,10 +160,10 @@ public abstract class BaseContainer : System.Windows.Forms.GroupBox, IGradientCo
             // Brush of LinearGradient type is created to draw gradient
             System.Drawing.Drawing2D.LinearGradientBrush brush =
                 new System.Drawing.Drawing2D.LinearGradientBrush(
-                    this.ClientRectangle,
-                    moGradientTopColor,
-                    moGradientBottomColor,
-                    LinearGradientMode.Vertical
+                    rect: this.ClientRectangle,
+                    color1: moGradientTopColor,
+                    color2: moGradientBottomColor,
+                    linearGradientMode: LinearGradientMode.Vertical
                 );
             // Blend is used to define the blending method for the gradient
             Blend blend = new Blend();
@@ -164,16 +180,16 @@ public abstract class BaseContainer : System.Windows.Forms.GroupBox, IGradientCo
         get
         {
             Rectangle oRectangle = new Rectangle(
-                this.BorderRectangle.X,
-                this.BorderRectangle.Y,
-                this.BorderRectangle.Width + 3,
-                this.BorderRectangle.Height + 3
+                x: this.BorderRectangle.X,
+                y: this.BorderRectangle.Y,
+                width: this.BorderRectangle.Width + 3,
+                height: this.BorderRectangle.Height + 3
             );
             Size oSize = new Size(
-                mosizeBorderPixelIndent.Width + 2,
-                mosizeBorderPixelIndent.Height + 2
+                width: mosizeBorderPixelIndent.Width + 2,
+                height: mosizeBorderPixelIndent.Height + 2
             );
-            return this.GetRoundedRectanglarPath(oRectangle, oSize);
+            return this.GetRoundedRectanglarPath(aoRectangle: oRectangle, aoSize: oSize);
         }
     }
 
@@ -183,16 +199,16 @@ public abstract class BaseContainer : System.Windows.Forms.GroupBox, IGradientCo
         get
         {
             Rectangle oRectangle = new Rectangle(
-                this.BorderRectangle.X + 1,
-                this.BorderRectangle.Y + 1,
-                this.BorderRectangle.Width - 2,
-                this.BorderRectangle.Height - 2
+                x: this.BorderRectangle.X + 1,
+                y: this.BorderRectangle.Y + 1,
+                width: this.BorderRectangle.Width - 2,
+                height: this.BorderRectangle.Height - 2
             );
             Size oSize = new Size(
-                mosizeBorderPixelIndent.Width - 2,
-                mosizeBorderPixelIndent.Height - 2
+                width: mosizeBorderPixelIndent.Width - 2,
+                height: mosizeBorderPixelIndent.Height - 2
             );
-            return this.GetRoundedRectanglarPath(oRectangle, oSize);
+            return this.GetRoundedRectanglarPath(aoRectangle: oRectangle, aoSize: oSize);
         }
     }
     #endregion
@@ -203,10 +219,10 @@ public abstract class BaseContainer : System.Windows.Forms.GroupBox, IGradientCo
         // to use it. The double buffering is used so that the control does not flicker when the
         // Invalidate method is called.
         this.SetStyle(
-            System.Windows.Forms.ControlStyles.UserPaint
+            flag: System.Windows.Forms.ControlStyles.UserPaint
                 | System.Windows.Forms.ControlStyles.AllPaintingInWmPaint
                 | System.Windows.Forms.ControlStyles.DoubleBuffer,
-            true
+            value: true
         );
         mosizeBorderPixelIndent = ODEFAULT_SIZEBORDERPIXELINDET;
     }
@@ -216,68 +232,73 @@ public abstract class BaseContainer : System.Windows.Forms.GroupBox, IGradientCo
     protected virtual void DrawBorder(Graphics aoGraphics, Rectangle aoRectangle)
     {
         Pen oPen;
-        Size oSize = new Size(mosizeBorderPixelIndent.Width, mosizeBorderPixelIndent.Height);
-        Rectangle oRectangle = new Rectangle(
-            aoRectangle.X,
-            aoRectangle.Y,
-            aoRectangle.Width,
-            aoRectangle.Height
+        Size oSize = new Size(
+            width: mosizeBorderPixelIndent.Width,
+            height: mosizeBorderPixelIndent.Height
         );
-        SizeF szText = aoGraphics.MeasureString(this.Text, this.Font);
+        Rectangle oRectangle = new Rectangle(
+            x: aoRectangle.X,
+            y: aoRectangle.Y,
+            width: aoRectangle.Width,
+            height: aoRectangle.Height
+        );
+        SizeF szText = aoGraphics.MeasureString(text: this.Text, font: this.Font);
         // We are looping 3 times for a 3 pixel wide shadow.
         for (int i = 0; i < 3; i++)
         {
             // Creates a pen to draw Lines and Arcs Dark To Light
-            oPen = new Pen(Color.FromArgb((2 - i + 1) * 64, moShadowColor));
+            oPen = new Pen(
+                color: Color.FromArgb(alpha: (2 - i + 1) * 64, baseColor: moShadowColor)
+            );
             // Draws a shadow arc for the Top Right corner
             aoGraphics.DrawArc(
-                oPen,
-                oRectangle.Right - oSize.Width,
-                oRectangle.Top + 2,
-                oSize.Width,
-                oSize.Height,
-                270,
-                90
+                pen: oPen,
+                x: oRectangle.Right - oSize.Width,
+                y: oRectangle.Top + 2,
+                width: oSize.Width,
+                height: oSize.Height,
+                startAngle: 270,
+                sweepAngle: 90
             );
 
             // Draws a vertical shadow line for the right side
             aoGraphics.DrawLine(
-                oPen,
-                oRectangle.Right,
-                oRectangle.Top + (Single)(oSize.Height / 2),
-                oRectangle.Right,
-                oRectangle.Bottom - (Single)(oSize.Height / 2)
+                pen: oPen,
+                x1: oRectangle.Right,
+                y1: oRectangle.Top + (Single)(oSize.Height / 2),
+                x2: oRectangle.Right,
+                y2: oRectangle.Bottom - (Single)(oSize.Height / 2)
             );
             // Draws a shadow arc for bottom right corner
             aoGraphics.DrawArc(
-                oPen,
-                oRectangle.Right - oSize.Width,
-                oRectangle.Bottom - oSize.Height,
-                oSize.Width,
-                oSize.Height,
-                0,
-                90
+                pen: oPen,
+                x: oRectangle.Right - oSize.Width,
+                y: oRectangle.Bottom - oSize.Height,
+                width: oSize.Width,
+                height: oSize.Height,
+                startAngle: 0,
+                sweepAngle: 90
             );
             // Draws a horizontal shadow line for the bottom
             aoGraphics.DrawLine(
-                oPen,
-                oRectangle.Right - (Single)(oSize.Width / 2),
-                oRectangle.Bottom,
-                oRectangle.Left + (Single)(oSize.Width / 2),
-                oRectangle.Bottom
+                pen: oPen,
+                x1: oRectangle.Right - (Single)(oSize.Width / 2),
+                y1: oRectangle.Bottom,
+                x2: oRectangle.Left + (Single)(oSize.Width / 2),
+                y2: oRectangle.Bottom
             );
 
             // Creates a pen to draw lines and arcs Light to Dark
-            oPen = new Pen(Color.FromArgb((2 - i) * 127, moShadowColor));
+            oPen = new Pen(color: Color.FromArgb(alpha: (2 - i) * 127, baseColor: moShadowColor));
             // Draw a shadow arc for the bottom left corner
             aoGraphics.DrawArc(
-                oPen,
-                oRectangle.Left + 2,
-                oRectangle.Bottom - oSize.Height,
-                oSize.Width,
-                oSize.Height,
-                90,
-                90
+                pen: oPen,
+                x: oRectangle.Left + 2,
+                y: oRectangle.Bottom - oSize.Height,
+                width: oSize.Width,
+                height: oSize.Height,
+                startAngle: 90,
+                sweepAngle: 90
             );
 
             // Increasing the Rectangles X and Y position
@@ -298,33 +319,35 @@ public abstract class BaseContainer : System.Windows.Forms.GroupBox, IGradientCo
     {
         // Create rectangle to draw interior
         Rectangle oRcInterior = new Rectangle(
-            this.BorderRectangle.X + miBorderWidth + 1,
-            this.BorderRectangle.Y + 12 + miBorderWidth,
-            this.BorderRectangle.Width - (miBorderWidth * 2),
-            this.BorderRectangle.Height - (12 + (miBorderWidth * 2))
+            x: this.BorderRectangle.X + miBorderWidth + 1,
+            y: this.BorderRectangle.Y + 12 + miBorderWidth,
+            width: this.BorderRectangle.Width - (miBorderWidth * 2),
+            height: this.BorderRectangle.Height - (12 + (miBorderWidth * 2))
         );
         SolidBrush oSolidBrush;
         for (int Index = 1; Index >= 0; Index--)
         {
             // Define Shadow Brushes Dark to Light
-            oSolidBrush = new SolidBrush(Color.FromArgb(127 * (2 - Index), moShadowColor));
-            Pen oPen = new Pen(oSolidBrush);
+            oSolidBrush = new SolidBrush(
+                color: Color.FromArgb(alpha: 127 * (2 - Index), baseColor: moShadowColor)
+            );
+            Pen oPen = new Pen(brush: oSolidBrush);
             // Draws vertical line on Left side
             aoGraphics.DrawLine(
-                oPen,
-                oRcInterior.X,
-                oRcInterior.Y,
-                oRcInterior.X,
-                oRcInterior.Bottom
+                pen: oPen,
+                x1: oRcInterior.X,
+                y1: oRcInterior.Y,
+                x2: oRcInterior.X,
+                y2: oRcInterior.Bottom
             );
 
             // Draws horizontal lines on the top
             aoGraphics.DrawLine(
-                oPen,
-                oRcInterior.X,
-                oRcInterior.Y,
-                oRcInterior.Right,
-                oRcInterior.Y
+                pen: oPen,
+                x1: oRcInterior.X,
+                y1: oRcInterior.Y,
+                x2: oRcInterior.Right,
+                y2: oRcInterior.Y
             );
             // Increasing the X and Y postion of the rectangle
             oRcInterior.X += 1;
@@ -338,10 +361,10 @@ public abstract class BaseContainer : System.Windows.Forms.GroupBox, IGradientCo
         }
         // Brush of LinearGradient type is created to draw gradient
         LinearGradientBrush oLinearGradient = new LinearGradientBrush(
-            oRcInterior,
-            moInteriorTopColor,
-            moInteriorBottomColor,
-            LinearGradientMode.Vertical
+            rect: oRcInterior,
+            color1: moInteriorTopColor,
+            color2: moInteriorBottomColor,
+            linearGradientMode: LinearGradientMode.Vertical
         );
         // Blend is used to define the blend of the gradient
         Blend oBlend = new Blend();
@@ -349,7 +372,7 @@ public abstract class BaseContainer : System.Windows.Forms.GroupBox, IGradientCo
         oBlend.Positions = IARR_RELATIVEPOSITIONS;
         oLinearGradient.Blend = oBlend;
         // Fill the rectangle using Gradient Brush created above
-        aoGraphics.FillRectangle(oLinearGradient, oRcInterior);
+        aoGraphics.FillRectangle(brush: oLinearGradient, rect: oRcInterior);
         oLinearGradient.Dispose();
     }
     #endregion
@@ -361,74 +384,74 @@ public abstract class BaseContainer : System.Windows.Forms.GroupBox, IGradientCo
 
         // Add top horizontal line to the Graphics Path Object
         oExteriorGraphicPath.AddLine(
-            aoRectangle.Left + (Single)(aoSize.Height / 2),
-            aoRectangle.Top,
-            aoRectangle.Right - (Single)(aoSize.Height / 2),
-            aoRectangle.Top
+            x1: aoRectangle.Left + (Single)(aoSize.Height / 2),
+            y1: aoRectangle.Top,
+            x2: aoRectangle.Right - (Single)(aoSize.Height / 2),
+            y2: aoRectangle.Top
         );
 
         // Add arc for the top right corner curve to the Graphics Path object
         oExteriorGraphicPath.AddArc(
-            aoRectangle.Right - aoSize.Width,
-            aoRectangle.Top,
-            aoSize.Width,
-            aoSize.Height,
-            270,
-            90
+            x: aoRectangle.Right - aoSize.Width,
+            y: aoRectangle.Top,
+            width: aoSize.Width,
+            height: aoSize.Height,
+            startAngle: 270,
+            sweepAngle: 90
         );
 
         // Add right vertical line to the Graphics Path object
         oExteriorGraphicPath.AddLine(
-            aoRectangle.Right,
-            aoRectangle.Top + aoSize.Height,
-            aoRectangle.Right,
-            aoRectangle.Bottom - (Single)(aoSize.Height / 2)
+            x1: aoRectangle.Right,
+            y1: aoRectangle.Top + aoSize.Height,
+            x2: aoRectangle.Right,
+            y2: aoRectangle.Bottom - (Single)(aoSize.Height / 2)
         );
 
         // Add the bottom right corner curve to the Graphics object
         oExteriorGraphicPath.AddArc(
-            aoRectangle.Right - aoSize.Width,
-            aoRectangle.Bottom - aoSize.Height,
-            aoSize.Width,
-            aoSize.Height,
-            0,
-            90
+            x: aoRectangle.Right - aoSize.Width,
+            y: aoRectangle.Bottom - aoSize.Height,
+            width: aoSize.Width,
+            height: aoSize.Height,
+            startAngle: 0,
+            sweepAngle: 90
         );
 
         // Add the bottom horizontal line to the Graphics Path object
         oExteriorGraphicPath.AddLine(
-            aoRectangle.Right - (Single)(aoSize.Width / 2),
-            aoRectangle.Bottom,
-            aoRectangle.Left + (Single)(aoSize.Width / 2),
-            aoRectangle.Bottom
+            x1: aoRectangle.Right - (Single)(aoSize.Width / 2),
+            y1: aoRectangle.Bottom,
+            x2: aoRectangle.Left + (Single)(aoSize.Width / 2),
+            y2: aoRectangle.Bottom
         );
 
         // Add arc for the bottom left curve to the Graphics object
         oExteriorGraphicPath.AddArc(
-            aoRectangle.Left,
-            aoRectangle.Bottom - aoSize.Height,
-            aoSize.Width,
-            aoSize.Height,
-            90,
-            90
+            x: aoRectangle.Left,
+            y: aoRectangle.Bottom - aoSize.Height,
+            width: aoSize.Width,
+            height: aoSize.Height,
+            startAngle: 90,
+            sweepAngle: 90
         );
 
         // Add left vertical line to the Graphics Path object
         oExteriorGraphicPath.AddLine(
-            aoRectangle.Left,
-            aoRectangle.Bottom - (Single)(aoSize.Height / 2),
-            aoRectangle.Left,
-            aoRectangle.Top + (Single)(aoSize.Height / 2)
+            x1: aoRectangle.Left,
+            y1: aoRectangle.Bottom - (Single)(aoSize.Height / 2),
+            x2: aoRectangle.Left,
+            y2: aoRectangle.Top + (Single)(aoSize.Height / 2)
         );
 
         // Add arc for the top left curve to the Graphics object
         oExteriorGraphicPath.AddArc(
-            aoRectangle.Left,
-            aoRectangle.Top,
-            aoSize.Width,
-            aoSize.Height,
-            180,
-            90
+            x: aoRectangle.Left,
+            y: aoRectangle.Top,
+            width: aoSize.Width,
+            height: aoSize.Height,
+            startAngle: 180,
+            sweepAngle: 90
         );
         return oExteriorGraphicPath;
     }
@@ -437,39 +460,45 @@ public abstract class BaseContainer : System.Windows.Forms.GroupBox, IGradientCo
     protected override void OnPaint(System.Windows.Forms.PaintEventArgs e)
     {
         // Get the size of the string in pixels for the string for a font
-        this.moTextSize = e.Graphics.MeasureString(this.Text, this.Font);
+        this.moTextSize = e.Graphics.MeasureString(text: this.Text, font: this.Font);
         // Original Smoothing is Saved and Smoothing mode mode is change to AntiAlias
         SmoothingMode oldSmooting = e.Graphics.SmoothingMode;
         e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
         // Draws shadow border for the control
-        DrawBorder(e.Graphics, this.BorderRectangle);
+        DrawBorder(aoGraphics: e.Graphics, aoRectangle: this.BorderRectangle);
 
         // Fill the rectangle that represents the border with gradient
-        e.Graphics.FillPath(this.InteriorRegionPathBrush, this.InteriorRegionPath);
+        e.Graphics.FillPath(brush: this.InteriorRegionPathBrush, path: this.InteriorRegionPath);
 
         // Draws the gradient background with shadows
-        DrawInterior(e.Graphics);
+        DrawInterior(aoGraphics: e.Graphics);
         // Defines string format to center the string
         StringFormat oStringFormat = new StringFormat();
 
         // The rectangle where the text is to be drawn
         RectangleF oRectangleF = new RectangleF(
-            this.BorderRectangle.X + (Single)(this.mosizeBorderPixelIndent.Width / 2) + 8,
-            this.BorderRectangle.Y + 2,
-            moTextSize.Width + (Single)(this.mosizeBorderPixelIndent.Width / 2),
-            moTextSize.Height
+            x: this.BorderRectangle.X + (Single)(this.mosizeBorderPixelIndent.Width / 2) + 8,
+            y: this.BorderRectangle.Y + 2,
+            width: moTextSize.Width + (Single)(this.mosizeBorderPixelIndent.Width / 2),
+            height: moTextSize.Height
         );
         // Drawing the string in the rectangle
-        using (SolidBrush brush = new SolidBrush(moHeadingTextColor))
+        using (SolidBrush brush = new SolidBrush(color: moHeadingTextColor))
         {
-            e.Graphics.DrawString(this.Text, this.Font, brush, oRectangleF, oStringFormat);
+            e.Graphics.DrawString(
+                s: this.Text,
+                font: this.Font,
+                brush: brush,
+                layoutRectangle: oRectangleF,
+                format: oStringFormat
+            );
         }
         // Reseting the smoothingmode back to original for OS purposes.
         e.Graphics.SmoothingMode = oldSmooting;
 
         // Using the graphics path property regionpath to define the non rectangular shape for the control
-        this.Region = new Region(this.ExteriorRegionPath);
+        this.Region = new Region(path: this.ExteriorRegionPath);
     }
     #endregion
 }

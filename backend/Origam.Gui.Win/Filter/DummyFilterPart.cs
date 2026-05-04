@@ -37,7 +37,14 @@ public class DummyFilterPart : FilterPart
         string label,
         FormGenerator formGenerator
     )
-        : base(filteredControl, dataType, dataMember, gridColumnName, label, formGenerator) { }
+        : base(
+            filteredControl: filteredControl,
+            dataType: dataType,
+            dataMember: dataMember,
+            gridColumnName: gridColumnName,
+            label: label,
+            formGenerator: formGenerator
+        ) { }
 
     public override FilterOperator[] AllowedOperators
     {

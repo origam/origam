@@ -40,7 +40,7 @@ public class FileDeleteTransaction : OrigamTransaction
     {
         foreach (DictionaryEntry entry in _files)
         {
-            FileInfo fi = new FileInfo((string)entry.Key);
+            FileInfo fi = new FileInfo(fileName: (string)entry.Key);
             FileStream fs = (FileStream)entry.Value;
             fs.Close();
             fi.Delete();

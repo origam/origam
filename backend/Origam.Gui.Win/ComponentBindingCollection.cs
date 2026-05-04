@@ -50,7 +50,7 @@ public class ComponentBindingCollection : CollectionBase
     /// </param>
     public ComponentBindingCollection(ComponentBindingCollection value)
     {
-        this.AddRange(value);
+        this.AddRange(value: value);
     }
 
     /// <summary>
@@ -63,7 +63,7 @@ public class ComponentBindingCollection : CollectionBase
     /// </param>
     public ComponentBindingCollection(ComponentBinding[] value)
     {
-        this.AddRange(value);
+        this.AddRange(value: value);
     }
 
     /// <summary>
@@ -76,8 +76,8 @@ public class ComponentBindingCollection : CollectionBase
     /// <exception cref='System.ArgumentOutOfRangeException'><paramref name='index'/> is outside the valid range of indexes for the collection.</exception>
     public ComponentBinding this[int index]
     {
-        get { return ((ComponentBinding)(List[index])); }
-        set { List[index] = value; }
+        get { return ((ComponentBinding)(List[index: index])); }
+        set { List[index: index] = value; }
     }
 
     /// <summary>
@@ -91,7 +91,7 @@ public class ComponentBindingCollection : CollectionBase
     /// <seealso cref='Origam.Gui.Win.ComponentBindingCollection.AddRange'/>
     public int Add(ComponentBinding value)
     {
-        return List.Add(value);
+        return List.Add(value: value);
     }
 
     /// <summary>
@@ -108,7 +108,7 @@ public class ComponentBindingCollection : CollectionBase
     {
         for (int i = 0; (i < value.Length); i = (i + 1))
         {
-            this.Add(value[i]);
+            this.Add(value: value[i]);
         }
     }
 
@@ -128,7 +128,7 @@ public class ComponentBindingCollection : CollectionBase
     {
         for (int i = 0; (i < value.Count); i = (i + 1))
         {
-            this.Add(value[i]);
+            this.Add(value: value[index: i]);
         }
     }
 
@@ -144,7 +144,7 @@ public class ComponentBindingCollection : CollectionBase
     /// <seealso cref='Origam.Gui.Win.ComponentBindingCollection.IndexOf'/>
     public bool Contains(ComponentBinding value)
     {
-        return List.Contains(value);
+        return List.Contains(value: value);
     }
 
     /// <summary>
@@ -162,7 +162,7 @@ public class ComponentBindingCollection : CollectionBase
     /// <seealso cref='System.Array'/>
     public void CopyTo(ComponentBinding[] array, int index)
     {
-        List.CopyTo(array, index);
+        List.CopyTo(array: array, index: index);
     }
 
     /// <summary>
@@ -177,7 +177,7 @@ public class ComponentBindingCollection : CollectionBase
     /// <seealso cref='Origam.Gui.Win.ComponentBindingCollection.Contains'/>
     public int IndexOf(ComponentBinding value)
     {
-        return List.IndexOf(value);
+        return List.IndexOf(value: value);
     }
 
     /// <summary>
@@ -189,7 +189,7 @@ public class ComponentBindingCollection : CollectionBase
     /// <seealso cref='Origam.Gui.Win.ComponentBindingCollection.Add'/>
     public void Insert(int index, ComponentBinding value)
     {
-        List.Insert(index, value);
+        List.Insert(index: index, value: value);
     }
 
     /// <summary>
@@ -200,7 +200,7 @@ public class ComponentBindingCollection : CollectionBase
     /// <seealso cref='System.Collections.IEnumerator'/>
     public new ComponentBindingEnumerator GetEnumerator()
     {
-        return new ComponentBindingEnumerator(this);
+        return new ComponentBindingEnumerator(mappings: this);
     }
 
     /// <summary>
@@ -212,7 +212,7 @@ public class ComponentBindingCollection : CollectionBase
     /// <exception cref='System.ArgumentException'><paramref name='value'/> is not found in the Collection. </exception>
     public void Remove(ComponentBinding value)
     {
-        List.Remove(value);
+        List.Remove(value: value);
     }
 
     public class ComponentBindingEnumerator : object, IEnumerator

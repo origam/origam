@@ -32,97 +32,134 @@ public class OrigamSettingsReaderTests : AbstractFileTestClass
     [Test]
     public void ShouldReadAllSettings()
     {
-        string pathToOrigamSettings = Path.Combine(TestFilesDir.FullName, "OrigamSettings.config");
-        OrigamSettingsCollection settings = new OrigamSettingsReader(pathToOrigamSettings).GetAll();
+        string pathToOrigamSettings = Path.Combine(
+            path1: TestFilesDir.FullName,
+            path2: "OrigamSettings.config"
+        );
+        OrigamSettingsCollection settings = new OrigamSettingsReader(
+            pathToOrigamSettings: pathToOrigamSettings
+        ).GetAll();
 
-        Assert.That(settings, Has.Count.EqualTo(2));
-        var firstSettings = settings[0];
+        Assert.That(actual: settings, expression: Has.Count.EqualTo(expected: 2));
+        var firstSettings = settings[index: 0];
         //Assert.That(firstSettings.BaseFolder, Is.EqualTo(@"C:\Test\Test\"));
-        Assert.That(firstSettings.SchemaConnectionString, Is.Empty);
-        Assert.That(firstSettings.ModelSourceControlLocation, Is.EqualTo(@"C:\Test\Test1\"));
+        Assert.That(actual: firstSettings.SchemaConnectionString, expression: Is.Empty);
         Assert.That(
-            firstSettings.DataConnectionString,
-            Is.EqualTo(
-                @"Data Source=.;Initial Catalog=test_data;Integrated Security=True;User ID=;Password=;Pooling=True"
+            actual: firstSettings.ModelSourceControlLocation,
+            expression: Is.EqualTo(expected: @"C:\Test\Test1\")
+        );
+        Assert.That(
+            actual: firstSettings.DataConnectionString,
+            expression: Is.EqualTo(
+                expected: @"Data Source=.;Initial Catalog=test_data;Integrated Security=True;User ID=;Password=;Pooling=True"
             )
         );
         Assert.That(
-            firstSettings.SchemaDataService,
-            Is.EqualTo("Origam.DA.Service.MsSqlDataService, Origam.DA.Service")
+            actual: firstSettings.SchemaDataService,
+            expression: Is.EqualTo(
+                expected: "Origam.DA.Service.MsSqlDataService, Origam.DA.Service"
+            )
         );
         Assert.That(
-            firstSettings.DataDataService,
-            Is.EqualTo("Origam.DA.Service.MsSqlDataService, Origam.DA.Service")
+            actual: firstSettings.DataDataService,
+            expression: Is.EqualTo(
+                expected: "Origam.DA.Service.MsSqlDataService, Origam.DA.Service"
+            )
         );
-        Assert.That(firstSettings.SecurityDomain, Is.Empty);
-        Assert.That(firstSettings.ReportConnectionString, Is.Empty);
-        Assert.That(firstSettings.PrintItServiceUrl, Is.Empty);
-        Assert.That(firstSettings.SQLReportServiceUrl, Is.Empty);
-        Assert.That(firstSettings.SQLReportServiceAccount, Is.Empty);
-        Assert.That(firstSettings.SQLReportServicePassword, Is.Empty);
-        Assert.That(firstSettings.SQLReportServiceTimeout, Is.EqualTo(60000));
-        Assert.That(firstSettings.GUIExcelExportFormat, Is.EqualTo("XLS"));
+        Assert.That(actual: firstSettings.SecurityDomain, expression: Is.Empty);
+        Assert.That(actual: firstSettings.ReportConnectionString, expression: Is.Empty);
+        Assert.That(actual: firstSettings.PrintItServiceUrl, expression: Is.Empty);
+        Assert.That(actual: firstSettings.SQLReportServiceUrl, expression: Is.Empty);
+        Assert.That(actual: firstSettings.SQLReportServiceAccount, expression: Is.Empty);
+        Assert.That(actual: firstSettings.SQLReportServicePassword, expression: Is.Empty);
         Assert.That(
-            firstSettings.DefaultSchemaExtensionId,
-            Is.EqualTo(new Guid("3e37fa44-cdb7-4804-8176-8df118a918ae"))
-        );
-        Assert.That(firstSettings.ExtraSchemaExtensionId, Is.EqualTo(Guid.Empty));
-        Assert.That(firstSettings.TitleText, Is.EqualTo("test"));
-        Assert.That(firstSettings.Slogan, Is.Empty);
-        Assert.That(firstSettings.LocalizationFolder, Is.Empty);
-        Assert.That(firstSettings.TranslationBuilderLanguages, Is.Empty);
-        Assert.That(firstSettings.HelpUrl, Is.EqualTo("http://origam.com/doc"));
-        Assert.That(
-            firstSettings.ModelProvider,
-            Is.EqualTo("Origam.OrigamEngine.FilePersistenceBuilder, Origam.OrigamEngine")
+            actual: firstSettings.SQLReportServiceTimeout,
+            expression: Is.EqualTo(expected: 60000)
         );
         Assert.That(
-            firstSettings.AuthorizationProvider,
-            Is.EqualTo("Origam.Security.OrigamDatabaseAuthorizationProvider, Origam.Security")
+            actual: firstSettings.GUIExcelExportFormat,
+            expression: Is.EqualTo(expected: "XLS")
         );
         Assert.That(
-            firstSettings.ProfileProvider,
-            Is.EqualTo("Origam.Security.OrigamProfileProvider, Origam.Security")
+            actual: firstSettings.DefaultSchemaExtensionId,
+            expression: Is.EqualTo(expected: new Guid(g: "3e37fa44-cdb7-4804-8176-8df118a918ae"))
+        );
+        Assert.That(
+            actual: firstSettings.ExtraSchemaExtensionId,
+            expression: Is.EqualTo(expected: Guid.Empty)
+        );
+        Assert.That(actual: firstSettings.TitleText, expression: Is.EqualTo(expected: "test"));
+        Assert.That(actual: firstSettings.Slogan, expression: Is.Empty);
+        Assert.That(actual: firstSettings.LocalizationFolder, expression: Is.Empty);
+        Assert.That(actual: firstSettings.TranslationBuilderLanguages, expression: Is.Empty);
+        Assert.That(
+            actual: firstSettings.HelpUrl,
+            expression: Is.EqualTo(expected: "http://origam.com/doc")
+        );
+        Assert.That(
+            actual: firstSettings.ModelProvider,
+            expression: Is.EqualTo(
+                expected: "Origam.OrigamEngine.FilePersistenceBuilder, Origam.OrigamEngine"
+            )
+        );
+        Assert.That(
+            actual: firstSettings.AuthorizationProvider,
+            expression: Is.EqualTo(
+                expected: "Origam.Security.OrigamDatabaseAuthorizationProvider, Origam.Security"
+            )
+        );
+        Assert.That(
+            actual: firstSettings.ProfileProvider,
+            expression: Is.EqualTo(
+                expected: "Origam.Security.OrigamProfileProvider, Origam.Security"
+            )
         );
     }
 
     [Test]
     public void ShouldWriteSettings()
     {
-        string pathToReadFrom = Path.Combine(TestFilesDir.FullName, "OrigamSettings.config");
-        string pathToWriteTo = Path.Combine(
-            TestFilesDir.FullName,
-            "OrigamSettingsWriteTest.config"
+        string pathToReadFrom = Path.Combine(
+            path1: TestFilesDir.FullName,
+            path2: "OrigamSettings.config"
         );
-        OrigamSettingsCollection settings = new OrigamSettingsReader(pathToReadFrom).GetAll();
-        OrigamSettings clone = (OrigamSettings)settings[0].Clone();
-        clone.Name = "New Settings";
-        settings.Add(clone);
-        new OrigamSettingsReader(pathToWriteTo).Write(settings);
-        Assert.IsTrue(File.Exists(pathToWriteTo));
-        OrigamSettingsCollection settingsRedFromTestFile = new OrigamSettingsReader(
-            pathToWriteTo
+        string pathToWriteTo = Path.Combine(
+            path1: TestFilesDir.FullName,
+            path2: "OrigamSettingsWriteTest.config"
+        );
+        OrigamSettingsCollection settings = new OrigamSettingsReader(
+            pathToOrigamSettings: pathToReadFrom
         ).GetAll();
-        Assert.That(settingsRedFromTestFile, Has.Count.EqualTo(3));
+        OrigamSettings clone = (OrigamSettings)settings[index: 0].Clone();
+        clone.Name = "New Settings";
+        settings.Add(value: clone);
+        new OrigamSettingsReader(pathToOrigamSettings: pathToWriteTo).Write(
+            configuration: settings
+        );
+        Assert.IsTrue(condition: File.Exists(path: pathToWriteTo));
+        OrigamSettingsCollection settingsRedFromTestFile = new OrigamSettingsReader(
+            pathToOrigamSettings: pathToWriteTo
+        ).GetAll();
+        Assert.That(actual: settingsRedFromTestFile, expression: Has.Count.EqualTo(expected: 3));
     }
 
     [Test]
     public void ShouldFailWhenArrayOfOrigamSettingsIsMissing()
     {
-        var exception = Assert.Throws<OrigamSettingsException>(() =>
+        var exception = Assert.Throws<OrigamSettingsException>(code: () =>
         {
             string pathToOrigamSettings = Path.Combine(
-                TestFilesDir.FullName,
-                "OrigamSettingsWithArrayOfOrigamSettingsMissing.config"
+                path1: TestFilesDir.FullName,
+                path2: "OrigamSettingsWithArrayOfOrigamSettingsMissing.config"
             );
             OrigamSettingsCollection settings = new OrigamSettingsReader(
-                pathToOrigamSettings
+                pathToOrigamSettings: pathToOrigamSettings
             ).GetAll();
         });
         Assert.That(
-            exception.Message,
-            Is.EqualTo(
-                "Cannot read OrigamSettings.config... Cannot read OrigamSettings.config... Could not find path \"OrigamSettings/xmlSerializerSection/ArrayOfOrigamSettings\""
+            actual: exception.Message,
+            expression: Is.EqualTo(
+                expected: "Cannot read OrigamSettings.config... Cannot read OrigamSettings.config... Could not find path \"OrigamSettings/xmlSerializerSection/ArrayOfOrigamSettings\""
             )
         );
     }

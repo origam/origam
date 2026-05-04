@@ -39,24 +39,36 @@ public class DockerBuilder : AbstractBuilder
 
     public override void Execute(Project project)
     {
-        newProjectFolder = Path.Combine(project.SourcesFolder, DockerFolderName);
-        project.DockerEnvPathLinux = Path.Combine(newProjectFolder, project.Name + "_Linux.env");
-        project.DockerCmdPathLinux = Path.Combine(newProjectFolder, project.Name + "_Linux.cmd");
+        newProjectFolder = Path.Combine(path1: project.SourcesFolder, path2: DockerFolderName);
+        project.DockerEnvPathLinux = Path.Combine(
+            path1: newProjectFolder,
+            path2: project.Name + "_Linux.env"
+        );
+        project.DockerCmdPathLinux = Path.Combine(
+            path1: newProjectFolder,
+            path2: project.Name + "_Linux.cmd"
+        );
         project.DockerEnvPathWindows = Path.Combine(
-            newProjectFolder,
-            project.Name + "_Windows.env"
+            path1: newProjectFolder,
+            path2: project.Name + "_Windows.env"
         );
         project.DockerCmdPathWindows = Path.Combine(
-            newProjectFolder,
-            project.Name + "_Windows.cmd"
+            path1: newProjectFolder,
+            path2: project.Name + "_Windows.cmd"
         );
-        Directory.CreateDirectory(newProjectFolder);
-        DockerConfig dockerConfigLinux = GetDockerConfig(Platform.Linux, project);
-        CreateEnvFile(project, dockerConfigLinux);
-        CreateCmdFile(project, dockerConfigLinux);
-        DockerConfig dockerConfigWindows = GetDockerConfig(Platform.Windows, project);
-        CreateEnvFile(project, dockerConfigWindows);
-        CreateCmdFile(project, dockerConfigWindows);
+        Directory.CreateDirectory(path: newProjectFolder);
+        DockerConfig dockerConfigLinux = GetDockerConfig(
+            platform: Platform.Linux,
+            project: project
+        );
+        CreateEnvFile(project: project, config: dockerConfigLinux);
+        CreateCmdFile(project: project, config: dockerConfigLinux);
+        DockerConfig dockerConfigWindows = GetDockerConfig(
+            platform: Platform.Windows,
+            project: project
+        );
+        CreateEnvFile(project: project, config: dockerConfigWindows);
+        CreateCmdFile(project: project, config: dockerConfigWindows);
     }
 
     private void CreateEnvFile(Project project, DockerConfig config)
@@ -73,7 +85,7 @@ public class DockerBuilder : AbstractBuilder
                 : project.DatabasePassword;
 
         string connectionString = dataDatabaseBuilder.BuildConnectionString(
-            new ConnectionStringData(
+            project: new ConnectionStringData(
                 databaseType: project.DatabaseType,
                 databaseServerName: "host.docker.internal",
                 databasePort: project.DatabasePort,
@@ -82,7 +94,7 @@ public class DockerBuilder : AbstractBuilder
                 databasePassword: project.DatabasePassword,
                 databaseIntegratedAuthentication: project.DatabaseIntegratedAuthentication
             ),
-            true
+            pooling: true
         );
 
         string content =
@@ -92,9 +104,9 @@ public class DockerBuilder : AbstractBuilder
             + $"CustomAssetsConfig__PathToCustomAssetsFolder={config.CustomAssetsPath}\n"
             + $"CustomAssetsConfig__RouteToCustomAssetsFolder=/customAssets\n"
             + $"DatabaseType={dbType}\n"
-            + $"ExternalDomain_SetOnStart={WebSiteUrl(project)}\n"
+            + $"ExternalDomain_SetOnStart={WebSiteUrl(project: project)}\n"
             + "TZ=Europe/Prague";
-        File.WriteAllText(config.EnvFilePath, content);
+        File.WriteAllText(path: config.EnvFilePath, contents: content);
     }
 
     private void CreateCmdFile(Project project, DockerConfig config)
@@ -112,7 +124,7 @@ public class DockerBuilder : AbstractBuilder
             + $"REM {config.BaseImage} is the latest version, that may not be what you want.\n"
             + "REM Here you can find current releases and their docker images:\n"
             + "REM https://github.com/origam/origam/releases";
-        File.WriteAllText(config.CmdFilePath, content);
+        File.WriteAllText(path: config.CmdFilePath, contents: content);
     }
 
     private static DockerConfig GetDockerConfig(Platform platform, Project project)
@@ -135,16 +147,19 @@ public class DockerBuilder : AbstractBuilder
                 CmdFilePath = project.DockerCmdPathWindows,
                 BaseImage = "origam/server:master-latest.win-core",
             },
-            _ => throw new ArgumentOutOfRangeException(nameof(platform), "Unknown platform"),
+            _ => throw new ArgumentOutOfRangeException(
+                paramName: nameof(platform),
+                message: "Unknown platform"
+            ),
         };
     }
 
     private string GetDbHost(Project project)
     {
         if (
-            project.DatabaseServerName.Equals("localhost")
-            || project.DatabaseServerName.Equals(".")
-            || project.DatabaseServerName.Equals("127.0.0.1")
+            project.DatabaseServerName.Equals(value: "localhost")
+            || project.DatabaseServerName.Equals(value: ".")
+            || project.DatabaseServerName.Equals(value: "127.0.0.1")
         )
         {
             return "host.docker.internal";

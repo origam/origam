@@ -42,38 +42,38 @@ public class ClassGenerator
             // Add namespace for property type
             if (
                 prop.PropertyType.Namespace != "System"
-                && !prop.PropertyType.Namespace.StartsWith("System.Windows.Forms")
+                && !prop.PropertyType.Namespace.StartsWith(value: "System.Windows.Forms")
             )
             {
-                usings.Add($"using {prop.PropertyType.Namespace};");
+                usings.Add(item: $"using {prop.PropertyType.Namespace};");
             }
 
             // Add namespaces from attributes, excluding Windows.Forms
-            foreach (var attr in prop.GetCustomAttributes(true))
+            foreach (var attr in prop.GetCustomAttributes(inherit: true))
             {
                 var attrNamespace = attr.GetType().Namespace;
                 if (
                     attrNamespace != "System"
-                    && !string.IsNullOrEmpty(attrNamespace)
-                    && !attrNamespace.StartsWith("System.Windows.Forms")
+                    && !string.IsNullOrEmpty(value: attrNamespace)
+                    && !attrNamespace.StartsWith(value: "System.Windows.Forms")
                 )
                 {
-                    usings.Add($"using {attrNamespace};");
+                    usings.Add(item: $"using {attrNamespace};");
                 }
             }
         }
 
-        foreach (var @using in usings.OrderBy(u => u))
+        foreach (var @using in usings.OrderBy(keySelector: u => u))
         {
-            sb.AppendLine(@using);
+            sb.AppendLine(value: @using);
         }
         sb.AppendLine();
-        sb.AppendLine("namespace Origam.Architect.Server.Controls;");
+        sb.AppendLine(value: "namespace Origam.Architect.Server.Controls;");
         sb.AppendLine();
 
         // Begin class definition
-        sb.AppendLine("public class " + className + ": IControl");
-        sb.AppendLine("{");
+        sb.AppendLine(value: "public class " + className + ": IControl");
+        sb.AppendLine(value: "{");
 
         // Add properties
         foreach (var prop in properties)
@@ -85,39 +85,39 @@ public class ClassGenerator
                 "DesignerSerializationVisibilityAttribute",
             };
             // Filter out Windows.Forms attributes
-            var filteredAttributes = prop.GetCustomAttributes(true)
-                .Where(attr =>
+            var filteredAttributes = prop.GetCustomAttributes(inherit: true)
+                .Where(predicate: attr =>
                     attr.GetType().Namespace == null
-                    || !attr.GetType().Namespace.StartsWith("System.Windows.Forms")
+                    || !attr.GetType().Namespace.StartsWith(value: "System.Windows.Forms")
                 )
-                .Where(attr => !attributesToIgnore.Contains(attr.GetType().Name));
+                .Where(predicate: attr => !attributesToIgnore.Contains(item: attr.GetType().Name));
 
             // Add remaining attributes
             foreach (var attr in filteredAttributes)
             {
-                sb.Append("    [");
-                sb.Append(GetAttributeString(attr));
-                sb.AppendLine("]");
+                sb.Append(value: "    [");
+                sb.Append(value: GetAttributeString(attribute: attr));
+                sb.AppendLine(value: "]");
             }
 
             // Add property, but check if type is from Windows.Forms
             Type propertyType = prop.PropertyType;
-            if (propertyType.Namespace?.StartsWith("System.Windows.Forms") == true)
+            if (propertyType.Namespace?.StartsWith(value: "System.Windows.Forms") == true)
             {
                 // Skip Windows.Forms properties
                 continue;
             }
 
-            string typeName = GetTypeName(propertyType);
-            sb.AppendLine($"    public {typeName} {prop.Name} {{ get; set; }}");
+            string typeName = GetTypeName(type: propertyType);
+            sb.AppendLine(value: $"    public {typeName} {prop.Name} {{ get; set; }}");
             sb.AppendLine();
         }
 
-        sb.AppendLine("    public void Initialize(ControlSetItem controlSetItem)");
-        sb.AppendLine("    {");
-        sb.AppendLine("    }");
+        sb.AppendLine(value: "    public void Initialize(ControlSetItem controlSetItem)");
+        sb.AppendLine(value: "    {");
+        sb.AppendLine(value: "    }");
 
-        sb.AppendLine("}");
+        sb.AppendLine(value: "}");
 
         return sb.ToString();
     }
@@ -128,40 +128,44 @@ public class ClassGenerator
         var attrName = attrType.Name;
 
         // Remove "Attribute" suffix if present
-        if (attrName.EndsWith("Attribute"))
+        if (attrName.EndsWith(value: "Attribute"))
         {
-            attrName = attrName.Substring(0, attrName.Length - 9);
+            attrName = attrName.Substring(startIndex: 0, length: attrName.Length - 9);
         }
 
         // Get constructor parameters
         var constructorParams = new List<string>();
-        foreach (var prop in attrType.GetProperties(BindingFlags.Public | BindingFlags.Instance))
+        foreach (
+            var prop in attrType.GetProperties(
+                bindingAttr: BindingFlags.Public | BindingFlags.Instance
+            )
+        )
         {
             if (prop.Name == "TypeId")
             {
                 continue;
             }
-            var value = prop.GetValue(attribute);
+            var value = prop.GetValue(obj: attribute);
             if (value != null)
             {
                 if (value is string)
                 {
-                    constructorParams.Add($"\"{value}\"");
+                    constructorParams.Add(item: $"\"{value}\"");
                 }
                 else if (value is bool boolValue)
                 {
-                    constructorParams.Add(boolValue ? "true" : "false");
+                    constructorParams.Add(item: boolValue ? "true" : "false");
                 }
                 else
                 {
-                    constructorParams.Add(value.ToString());
+                    constructorParams.Add(item: value.ToString());
                 }
             }
         }
 
         if (constructorParams.Count > 0)
         {
-            return $"{attrName}({string.Join(", ", constructorParams)})";
+            return $"{attrName}({string.Join(separator: ", ", values: constructorParams)})";
         }
 
         return attrName;
@@ -171,15 +175,21 @@ public class ClassGenerator
     {
         if (type.IsGenericType)
         {
-            var genericArgs = string.Join(", ", type.GetGenericArguments().Select(GetTypeName));
-            var genericTypeName = type.Name.Substring(0, type.Name.IndexOf('`'));
+            var genericArgs = string.Join(
+                separator: ", ",
+                values: type.GetGenericArguments().Select(selector: GetTypeName)
+            );
+            var genericTypeName = type.Name.Substring(
+                startIndex: 0,
+                length: type.Name.IndexOf(value: '`')
+            );
             return $"{genericTypeName}<{genericArgs}>";
         }
 
         // Handle nullable types
-        if (Nullable.GetUnderlyingType(type) != null)
+        if (Nullable.GetUnderlyingType(nullableType: type) != null)
         {
-            return GetTypeName(Nullable.GetUnderlyingType(type)) + "?";
+            return GetTypeName(type: Nullable.GetUnderlyingType(nullableType: type)) + "?";
         }
 
         // Use C# keywords for primitive types

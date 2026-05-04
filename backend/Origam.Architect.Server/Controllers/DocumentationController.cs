@@ -30,46 +30,54 @@ using Origam.Workbench.Services;
 namespace Origam.Architect.Server.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route(template: "[controller]")]
 public class DocumentationController(
     TreeNodeFactory treeNodeFactory,
     EditorService editorService,
     IDocumentationService documentationService,
     DocumentationHelperService documentationHelper,
     ILogger<OrigamController> log
-) : OrigamController(log)
+) : OrigamController(log: log)
 {
-    [HttpPost("OpenEditor")]
+    [HttpPost(template: "OpenEditor")]
     public IActionResult OpenEditor([Required] [FromBody] OpenEditorModel input)
     {
-        EditorData editor = editorService.OpenDocumentationEditor(input.SchemaItemId);
+        EditorData editor = editorService.OpenDocumentationEditor(schemaItemId: input.SchemaItemId);
         ISchemaItem item = editor.Item;
-        TreeNode treeNode = treeNodeFactory.Create(item);
+        TreeNode treeNode = treeNodeFactory.Create(node: item);
 
-        editor.DocumentationData = documentationService.LoadDocumentation(item.Id);
+        editor.DocumentationData = documentationService.LoadDocumentation(schemaItemId: item.Id);
         var openEditorData = new OpenEditorData(
             editorId: editor.Id,
             node: treeNode,
-            data: documentationHelper.GetData(editor.DocumentationData, item.Name),
+            data: documentationHelper.GetData(
+                documentationComplete: editor.DocumentationData,
+                label: item.Name
+            ),
             isPersisted: true
         );
-        return Ok(openEditorData);
+        return Ok(value: openEditorData);
     }
 
-    [HttpPost("Update")]
+    [HttpPost(template: "Update")]
     public IActionResult Update([FromBody] ChangesModel changes)
     {
-        EditorData editor = editorService.OpenDocumentationEditor(changes.SchemaItemId);
-        documentationHelper.Update(changes, editor);
+        EditorData editor = editorService.OpenDocumentationEditor(
+            schemaItemId: changes.SchemaItemId
+        );
+        documentationHelper.Update(changes: changes, editor: editor);
 
-        return Ok(new UpdatePropertiesResult { IsDirty = editor.IsDirty });
+        return Ok(value: new UpdatePropertiesResult { IsDirty = editor.IsDirty });
     }
 
-    [HttpPost("PersistChanges")]
+    [HttpPost(template: "PersistChanges")]
     public IActionResult PersistChanges([FromBody] PersistModel input)
     {
-        EditorData editor = editorService.OpenDocumentationEditor(input.SchemaItemId);
-        documentationService.SaveDocumentation(editor.DocumentationData, input.SchemaItemId);
+        EditorData editor = editorService.OpenDocumentationEditor(schemaItemId: input.SchemaItemId);
+        documentationService.SaveDocumentation(
+            documentationData: editor.DocumentationData,
+            schemaItemId: input.SchemaItemId
+        );
         editor.IsDirty = false;
         return Ok();
     }

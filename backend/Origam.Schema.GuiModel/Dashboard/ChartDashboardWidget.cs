@@ -26,7 +26,7 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.GuiModel;
 
-[SchemaItemDescription("Chart Widget", "icon_chart-widget.png")]
+[SchemaItemDescription(name: "Chart Widget", iconName: "icon_chart-widget.png")]
 public class ChartDashboardWidget : AbstractDataDashboardWidget
 {
     public ChartDashboardWidget()
@@ -36,13 +36,13 @@ public class ChartDashboardWidget : AbstractDataDashboardWidget
     }
 
     public ChartDashboardWidget(Guid schemaExtensionId)
-        : base(schemaExtensionId)
+        : base(schemaExtensionId: schemaExtensionId)
     {
         Init();
     }
 
     public ChartDashboardWidget(Key primaryKey)
-        : base(primaryKey)
+        : base(primaryKey: primaryKey)
     {
         Init();
     }
@@ -51,27 +51,27 @@ public class ChartDashboardWidget : AbstractDataDashboardWidget
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(this.Chart);
-        base.GetExtraDependencies(dependencies);
+        dependencies.Add(item: this.Chart);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     #region Properties
     public Guid ChartId;
 
-    [Category("UI")]
-    [TypeConverter(typeof(ChartsConverter))]
-    [XmlReference("chart", "ChartId")]
+    [Category(category: "UI")]
+    [TypeConverter(type: typeof(ChartsConverter))]
+    [XmlReference(attributeName: "chart", idField: "ChartId")]
     public AbstractChart Chart
     {
         get
         {
             return (AbstractChart)
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(this.ChartId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: this.ChartId)
                 );
         }
-        set { this.ChartId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]; }
+        set { this.ChartId = value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]; }
     }
     #endregion
 }

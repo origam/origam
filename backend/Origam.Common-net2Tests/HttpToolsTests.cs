@@ -27,13 +27,13 @@ namespace Origam.Common_net2Tests;
 public class HttpToolsCookieTests
 {
     [TestCase(
-        "laravel_session=YmY3NDk3NTgwZmZhU5NDU5NjExZTQifQ%3D%3D; expires=Thu, 11-Jan-2018 17:50:21 GMT; Max-Age=7200; path=/; HttpOnly",
-        1
+        arg1: "laravel_session=YmY3NDk3NTgwZmZhU5NDU5NjExZTQifQ%3D%3D; expires=Thu, 11-Jan-2018 17:50:21 GMT; Max-Age=7200; path=/; HttpOnly",
+        arg2: 1
     )]
     [TestCase(
-        "laravel_session=YmY3NDk3NTgwZmZhU5NDU5NjExZTQifQ%3D%3D; expires=Thu, 11-Jan-2018 17:50:21 GMT; Max-Age=7200; path=/; HttpOnly, "
+        arg1: "laravel_session=YmY3NDk3NTgwZmZhU5NDU5NjExZTQifQ%3D%3D; expires=Thu, 11-Jan-2018 17:50:21 GMT; Max-Age=7200; path=/; HttpOnly, "
             + "laravel_session=YmY3NDk3NTgwZmZhU5NDU5NjExZTQifQ%3D%3D; expires=Thu, 11-Jan-2018 17:50:21 GMT; Max-Age=7200; path=/; HttpOnly",
-        2
+        arg2: 2
     )]
     public void ShouldNotSplitASingleCookieWithAnExpiresAttribute(
         string setHeaderStr,
@@ -41,8 +41,8 @@ public class HttpToolsCookieTests
     )
     {
         var sut = HttpTools.Instance;
-        var cookies = sut.SplitCookiesHeaderToSingleCookies(setHeaderStr);
-        Assert.That(cookies.Count, Is.EqualTo(numOfCookiesInside));
+        var cookies = sut.SplitCookiesHeaderToSingleCookies(setCookieHeader: setHeaderStr);
+        Assert.That(actual: cookies.Count, expression: Is.EqualTo(expected: numOfCookiesInside));
     }
 
     [Test]
@@ -53,12 +53,15 @@ public class HttpToolsCookieTests
             "laravel_session=YmY3NDk3NTgwZmZhU5NDU5NjExZTQifQ%3D%3D; expires=Thu, 11-Jan-2018 17:50:21 GMT; Max-Age=7200; path=/; HttpOnly",
         };
         var sut = HttpTools.Instance;
-        var cookies = sut.CookiesFromStrings("test", singleCookie);
-        var cookie = cookies[0];
+        var cookies = sut.CookiesFromStrings(host: "test", singleCookies: singleCookie);
+        var cookie = cookies[index: 0];
 
         // We are only interested in name and value.
         // Rest of the cookie is ignored.
-        Assert.That(cookie.Name, Is.EqualTo("laravel_session"));
-        Assert.That(cookie.Value, Is.EqualTo("YmY3NDk3NTgwZmZhU5NDU5NjExZTQifQ%3D%3D"));
+        Assert.That(actual: cookie.Name, expression: Is.EqualTo(expected: "laravel_session"));
+        Assert.That(
+            actual: cookie.Value,
+            expression: Is.EqualTo(expected: "YmY3NDk3NTgwZmZhU5NDU5NjExZTQifQ%3D%3D")
+        );
     }
 }

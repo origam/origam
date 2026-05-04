@@ -31,10 +31,10 @@ namespace Origam.Schema.EntityModel;
 /// <summary>
 /// Summary description for DataStructureDefaultSetDefault.
 /// </summary>
-[SchemaItemDescription("Default", "icon_default.png")]
-[HelpTopic("Default+Sets")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Default", iconName: "icon_default.png")]
+[HelpTopic(topic: "Default+Sets")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class DataStructureDefaultSetDefault : AbstractSchemaItem
 {
     public const string CategoryConst = "DataStructureDefaultSetDefault";
@@ -43,17 +43,17 @@ public class DataStructureDefaultSetDefault : AbstractSchemaItem
         : base() { }
 
     public DataStructureDefaultSetDefault(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public DataStructureDefaultSetDefault(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Properties
     public Guid DataConstantId;
 
-    [TypeConverter(typeof(DataConstantConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [XmlReference("default", "DataConstantId")]
+    [TypeConverter(type: typeof(DataConstantConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [XmlReference(attributeName: "default", idField: "DataConstantId")]
     public DataConstant Default
     {
         get
@@ -61,7 +61,10 @@ public class DataStructureDefaultSetDefault : AbstractSchemaItem
             ModelElementKey key = new ModelElementKey();
             key.Id = this.DataConstantId;
             return (DataConstant)
-                this.PersistenceProvider.RetrieveInstance(typeof(DataConstant), key);
+                this.PersistenceProvider.RetrieveInstance(
+                    type: typeof(DataConstant),
+                    primaryKey: key
+                );
         }
         set
         {
@@ -71,7 +74,7 @@ public class DataStructureDefaultSetDefault : AbstractSchemaItem
             }
             else
             {
-                this.DataConstantId = (Guid)value.PrimaryKey["Id"];
+                this.DataConstantId = (Guid)value.PrimaryKey[key: "Id"];
             }
             UpdateName();
         }
@@ -79,64 +82,65 @@ public class DataStructureDefaultSetDefault : AbstractSchemaItem
 
     public Guid DataStructureEntityId;
 
-    [TypeConverter(typeof(DataQueryEntityConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [XmlReference("entity", "DataStructureEntityId")]
+    [TypeConverter(type: typeof(DataQueryEntityConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [XmlReference(attributeName: "entity", idField: "DataStructureEntityId")]
     public DataStructureEntity Entity
     {
         get
         {
             return (DataStructureEntity)
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(DataStructureEntity),
-                    new ModelElementKey(this.DataStructureEntityId)
+                    type: typeof(DataStructureEntity),
+                    primaryKey: new ModelElementKey(id: this.DataStructureEntityId)
                 );
         }
         set
         {
-            this.DataStructureEntityId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+            this.DataStructureEntityId =
+                value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"];
             this.Field = null;
             UpdateName();
         }
     }
     public Guid EntityFieldId;
 
-    [TypeConverter(typeof(DataStructureEntityFieldConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [XmlReference("field", "EntityFieldId")]
+    [TypeConverter(type: typeof(DataStructureEntityFieldConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [XmlReference(attributeName: "field", idField: "EntityFieldId")]
     public IDataEntityColumn Field
     {
         get
         {
             return (IDataEntityColumn)
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(DataStructureEntity),
-                    new ModelElementKey(this.EntityFieldId)
+                    type: typeof(DataStructureEntity),
+                    primaryKey: new ModelElementKey(id: this.EntityFieldId)
                 );
         }
         set
         {
-            this.EntityFieldId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+            this.EntityFieldId = value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"];
             UpdateName();
         }
     }
 
     public Guid ParameterId;
 
-    [TypeConverter(typeof(ParameterReferenceConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [XmlReference("parameter", "ParameterId")]
+    [TypeConverter(type: typeof(ParameterReferenceConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [XmlReference(attributeName: "parameter", idField: "ParameterId")]
     public SchemaItemParameter Parameter
     {
         get
         {
             return (SchemaItemParameter)
                     this.PersistenceProvider.RetrieveInstance(
-                        typeof(SchemaItemParameter),
-                        new ModelElementKey(this.ParameterId)
+                        type: typeof(SchemaItemParameter),
+                        primaryKey: new ModelElementKey(id: this.ParameterId)
                     ) as SchemaItemParameter;
         }
-        set { this.ParameterId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]; }
+        set { this.ParameterId = value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]; }
     }
     #endregion
     #region Overriden ISchemaItem Members
@@ -147,14 +151,14 @@ public class DataStructureDefaultSetDefault : AbstractSchemaItem
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(this.Entity);
-        dependencies.Add(this.Default);
-        dependencies.Add(this.Field);
+        dependencies.Add(item: this.Entity);
+        dependencies.Add(item: this.Default);
+        dependencies.Add(item: this.Field);
         if (this.Parameter != null)
         {
-            dependencies.Add(this.Parameter);
+            dependencies.Add(item: this.Parameter);
         }
-        base.GetExtraDependencies(dependencies);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override void GetParameterReferences(
@@ -164,13 +168,13 @@ public class DataStructureDefaultSetDefault : AbstractSchemaItem
     {
         if (this.Parameter != null)
         {
-            if (!list.ContainsKey(this.Parameter.Name))
+            if (!list.ContainsKey(key: this.Parameter.Name))
             {
                 ParameterReference pr = new ParameterReference();
                 pr.PersistenceProvider = this.PersistenceProvider;
                 pr.Parameter = this.Parameter;
                 pr.Name = this.Parameter.Name;
-                list.Add(this.Parameter.Name, pr);
+                list.Add(key: this.Parameter.Name, value: pr);
             }
         }
     }
@@ -181,7 +185,7 @@ public class DataStructureDefaultSetDefault : AbstractSchemaItem
         {
             if (item.OldPrimaryKey != null)
             {
-                if (item.OldPrimaryKey.Equals(this.Entity.PrimaryKey))
+                if (item.OldPrimaryKey.Equals(obj: this.Entity.PrimaryKey))
                 {
                     this.Entity = item as DataStructureEntity;
                     break;
@@ -199,7 +203,7 @@ public class DataStructureDefaultSetDefault : AbstractSchemaItem
     public override bool CanMove(Origam.UI.IBrowserNode2 newNode)
     {
         ISchemaItem item = newNode as ISchemaItem;
-        return item != null && item.PrimaryKey.Equals(this.ParentItem.PrimaryKey);
+        return item != null && item.PrimaryKey.Equals(obj: this.ParentItem.PrimaryKey);
     }
     #endregion
     #region Private Methods

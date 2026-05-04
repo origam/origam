@@ -38,7 +38,7 @@ namespace OrigamArchitect;
 public class MainClass
 {
     private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
-        System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
+        type: System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
     );
 
     /// <summary>
@@ -47,7 +47,7 @@ public class MainClass
     [STAThread]
     static void Main(string[] args)
     {
-        log.Info("ORIGAM Desktop starting.");
+        log.Info(message: "ORIGAM Desktop starting.");
         Application.ThreadException += Application_ThreadException;
         AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
         try
@@ -69,17 +69,17 @@ public class MainClass
                 form.AdministratorMode = true;
             }
 
-            Application.Run(WorkbenchSingleton.Workbench as Form);
+            Application.Run(mainForm: WorkbenchSingleton.Workbench as Form);
         }
         catch (Exception ex)
         {
-            HandleUnhandledException(ex);
+            HandleUnhandledException(o: ex);
         }
     }
 
     private static void Application_ThreadException(object sender, ThreadExceptionEventArgs e)
     {
-        HandleUnhandledException(e.Exception);
+        HandleUnhandledException(o: e.Exception);
     }
 
     private static void CurrentDomain_UnhandledException(
@@ -87,7 +87,7 @@ public class MainClass
         UnhandledExceptionEventArgs e
     )
     {
-        HandleUnhandledException(e.ExceptionObject);
+        HandleUnhandledException(o: e.ExceptionObject);
     }
 
     private static void HandleUnhandledException(object o)
@@ -95,19 +95,29 @@ public class MainClass
         Exception ex = o as Exception;
         if (ex == null)
         {
-            log.Fatal(o);
-            AsMessageBox.ShowError(null, o.ToString(), strings.GenericError_Title, null);
+            log.Fatal(message: o);
+            AsMessageBox.ShowError(
+                owner: null,
+                text: o.ToString(),
+                caption: strings.GenericError_Title,
+                exception: null
+            );
         }
         else
         {
-            log.Fatal("HandleUnhandledException", ex);
-            if (ex.StackTrace.IndexOf("System.Windows.Forms.ParkingWindow") > 0)
+            log.Fatal(message: "HandleUnhandledException", exception: ex);
+            if (ex.StackTrace.IndexOf(value: "System.Windows.Forms.ParkingWindow") > 0)
             {
-                System.Diagnostics.Debug.WriteLine(ex);
+                System.Diagnostics.Debug.WriteLine(value: ex);
             }
             else
             {
-                AsMessageBox.ShowError(null, ex.Message, strings.GenericError_Title, ex);
+                AsMessageBox.ShowError(
+                    owner: null,
+                    text: ex.Message,
+                    caption: strings.GenericError_Title,
+                    exception: ex
+                );
             }
         }
     }

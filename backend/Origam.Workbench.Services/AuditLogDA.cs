@@ -44,7 +44,7 @@ public static class AuditLogDA
         {
             try
             {
-                Guid guidId = new Guid(stringId);
+                Guid guidId = new Guid(g: stringId);
                 return true;
             }
             catch
@@ -57,24 +57,33 @@ public static class AuditLogDA
 
     public static DataSet RetrieveLog(Guid entityId, object recordId)
     {
-        if (!IsRecordIdValid(recordId))
+        if (!IsRecordIdValid(recordId: recordId))
         {
             return null;
         }
 
         IBusinessServicesService services =
-            ServiceManager.Services.GetService(typeof(IBusinessServicesService))
+            ServiceManager.Services.GetService(serviceType: typeof(IBusinessServicesService))
             as IBusinessServicesService;
-        IServiceAgent dataServiceAgent = services.GetAgent("DataService", null, null);
-        DataStructureQuery query = new DataStructureQuery(
-            new Guid("530eba45-40db-470d-8e53-8b98ace758ad"),
-            new Guid("e0602afa-e86d-4f03-bcb8-aee19f976961")
+        IServiceAgent dataServiceAgent = services.GetAgent(
+            serviceType: "DataService",
+            ruleEngine: null,
+            workflowEngine: null
         );
-        query.Parameters.Add(new QueryParameter("AuditRecord_parRefParentRecordId", recordId));
+        DataStructureQuery query = new DataStructureQuery(
+            dataStructureId: new Guid(g: "530eba45-40db-470d-8e53-8b98ace758ad"),
+            methodId: new Guid(g: "e0602afa-e86d-4f03-bcb8-aee19f976961")
+        );
+        query.Parameters.Add(
+            value: new QueryParameter(
+                _parameterName: "AuditRecord_parRefParentRecordId",
+                value: recordId
+            )
+        );
 
         dataServiceAgent.MethodName = "LoadDataByQuery";
         dataServiceAgent.Parameters.Clear();
-        dataServiceAgent.Parameters.Add("Query", query);
+        dataServiceAgent.Parameters.Add(key: "Query", value: query);
         dataServiceAgent.Run();
         DataSet result = dataServiceAgent.Result as DataSet;
         return result;
@@ -82,53 +91,54 @@ public static class AuditLogDA
 
     public static DataSet RetrieveLogTransformed(Guid entityId, object recordId)
     {
-        if (!IsRecordIdValid(recordId))
+        if (!IsRecordIdValid(recordId: recordId))
         {
             return null;
         }
-        var sourceDataSet = RetrieveLog(entityId, recordId);
-        var dataSet = new DataSet("ROOT");
-        var table = new OrigamDataTable("AuditLog");
-        dataSet.Tables.Add(table);
-        table.Columns.Add("Id", typeof(Guid));
-        table.Columns.Add("Timestamp", typeof(DateTime));
-        table.Columns.Add("User", typeof(string));
-        table.Columns.Add("Property", typeof(string));
-        table.Columns.Add("OldValue", typeof(string));
-        table.Columns.Add("NewValue", typeof(string));
-        table.Columns.Add("ActionType", typeof(int));
-        table.Columns.Add("ParentRecordId", typeof(Guid));
-        table.Columns.Add("Entity", typeof(string));
-        foreach (DataRow row in sourceDataSet.Tables[0].Rows)
+        var sourceDataSet = RetrieveLog(entityId: entityId, recordId: recordId);
+        var dataSet = new DataSet(dataSetName: "ROOT");
+        var table = new OrigamDataTable(tableName: "AuditLog");
+        dataSet.Tables.Add(table: table);
+        table.Columns.Add(columnName: "Id", type: typeof(Guid));
+        table.Columns.Add(columnName: "Timestamp", type: typeof(DateTime));
+        table.Columns.Add(columnName: "User", type: typeof(string));
+        table.Columns.Add(columnName: "Property", type: typeof(string));
+        table.Columns.Add(columnName: "OldValue", type: typeof(string));
+        table.Columns.Add(columnName: "NewValue", type: typeof(string));
+        table.Columns.Add(columnName: "ActionType", type: typeof(int));
+        table.Columns.Add(columnName: "ParentRecordId", type: typeof(Guid));
+        table.Columns.Add(columnName: "Entity", type: typeof(string));
+        foreach (DataRow row in sourceDataSet.Tables[index: 0].Rows)
         {
             string user;
             try
             {
                 var profileProvider = SecurityManager.GetProfileProvider();
                 var profile =
-                    profileProvider.GetProfile((Guid)row["RecordCreatedBy"]) as UserProfile;
+                    profileProvider.GetProfile(profileId: (Guid)row[columnName: "RecordCreatedBy"])
+                    as UserProfile;
                 user = profile.FullName;
             }
             catch (Exception ex)
             {
                 user = ex.Message;
             }
-            var entity = GetEntity(row);
-            var property = GetProperty(row);
+            var entity = GetEntity(row: row);
+            var property = GetProperty(row: row);
             table.LoadDataRow(
-                new[]
+                values: new[]
                 {
-                    row["Id"],
-                    row["RecordCreated"],
+                    row[columnName: "Id"],
+                    row[columnName: "RecordCreated"],
                     user,
                     property,
-                    row["OldValue"],
-                    row["NewValue"],
-                    row["ActionType"],
-                    row["refParentRecordId"],
+                    row[columnName: "OldValue"],
+                    row[columnName: "NewValue"],
+                    row[columnName: "ActionType"],
+                    row[columnName: "refParentRecordId"],
                     entity,
                 },
-                true
+                fAcceptChanges: true
             );
         }
         return dataSet;
@@ -136,15 +146,15 @@ public static class AuditLogDA
 
     private static string GetProperty(DataRow row)
     {
-        var columnId = (Guid)row["refColumnId"];
+        var columnId = (Guid)row[columnName: "refColumnId"];
         try
         {
             var persistenceService = ServiceManager.Services.GetService<IPersistenceService>();
             if (
                 !(
                     persistenceService.SchemaProvider.RetrieveInstance(
-                        typeof(ISchemaItem),
-                        new ModelElementKey(columnId)
+                        type: typeof(ISchemaItem),
+                        primaryKey: new ModelElementKey(id: columnId)
                     )
                     is ISchemaItem schemaItem
                 )
@@ -154,7 +164,7 @@ public static class AuditLogDA
             }
             if (schemaItem is ICaptionSchemaItem captionSchemaItem)
             {
-                return string.IsNullOrEmpty(captionSchemaItem.Caption)
+                return string.IsNullOrEmpty(value: captionSchemaItem.Caption)
                     ? schemaItem.Name
                     : captionSchemaItem.Caption;
             }
@@ -168,19 +178,19 @@ public static class AuditLogDA
 
     private static string GetEntity(DataRow row)
     {
-        if ((DataRowState)row["ActionType"] != DataRowState.Deleted)
+        if ((DataRowState)row[columnName: "ActionType"] != DataRowState.Deleted)
         {
             return null;
         }
-        var entityId = (Guid)row["refParentRecordEntityId"];
+        var entityId = (Guid)row[columnName: "refParentRecordEntityId"];
         try
         {
             var persistenceService = ServiceManager.Services.GetService<IPersistenceService>();
             if (
                 !(
                     persistenceService.SchemaProvider.RetrieveInstance(
-                        typeof(ISchemaItem),
-                        new ModelElementKey(entityId)
+                        type: typeof(ISchemaItem),
+                        primaryKey: new ModelElementKey(id: entityId)
                     )
                     is ISchemaItem schemaItem
                 )

@@ -40,28 +40,28 @@ class RulesProcessor
         RuntimeServiceFactoryProcessor RuntimeServiceFactory = new RuntimeServiceFactoryProcessor();
         OrigamEngine.OrigamEngine.ConnectRuntime(customServiceFactory: RuntimeServiceFactory);
         OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
-        FilePersistenceService persistence = ServiceManager.Services.GetService(typeof(FilePersistenceService)) as FilePersistenceService;
+        FilePersistenceService persistence = ServiceManager.Services.GetService(serviceType: typeof(FilePersistenceService)) as FilePersistenceService;
         List<AbstractSchemaItemProvider> allproviders = new OrigamProviderBuilder()
-            .SetSchemaProvider(persistence.SchemaProvider)
+            .SetSchemaProvider(schemaProvider: persistence.SchemaProvider)
             .GetAll();
         List<Dictionary<ISchemaItem, string>> errorFragments
                 = ModelRules.GetErrors(
-                    allproviders,
-                    persistence,
-                    new CancellationTokenSource().Token);
+                    schemaProviders: allproviders,
+                    independentPersistenceService: persistence,
+                    cancellationToken: new CancellationTokenSource().Token);
         if (errorFragments.Count != 0)
         {
-            StringBuilder sb = new StringBuilder("Rule violations in ");
-            sb.Append(settings.ModelSourceControlLocation.ToUpper());
-            sb.Append("\n");
+            StringBuilder sb = new StringBuilder(value: "Rule violations in ");
+            sb.Append(value: settings.ModelSourceControlLocation.ToUpper());
+            sb.Append(value: "\n");
             foreach (Dictionary<ISchemaItem, string> dict in errorFragments)
             {
                 ISchemaItem retrievedObj = dict.First().Key;
-                sb.Append("Object with Id: \"" + retrievedObj.Id +
-                           "\" in file: \"" + retrievedObj.RelativeFilePath +
-                            "\" --> " + string.Join("\n", dict.First().Value) + "\n");
+                sb.Append(value: "Object with Id: \"" + retrievedObj.Id +
+                                 "\" in file: \"" + retrievedObj.RelativeFilePath +
+                                 "\" --> " + string.Join(separator: "\n", value: dict.First().Value) + "\n");
             }
-            System.Console.Write(sb.ToString());
+            System.Console.Write(value: sb.ToString());
             return 1;
         }
 

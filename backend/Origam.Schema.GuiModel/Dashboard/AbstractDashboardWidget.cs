@@ -27,7 +27,7 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.GuiModel;
 
-[XmlModelRoot(CategoryConst)]
+[XmlModelRoot(category: CategoryConst)]
 public abstract class AbstractDashboardWidget : AbstractSchemaItem
 {
     public const string CategoryConst = "DashboardWidget";
@@ -39,23 +39,23 @@ public abstract class AbstractDashboardWidget : AbstractSchemaItem
     }
 
     public AbstractDashboardWidget(Guid schemaExtensionId)
-        : base(schemaExtensionId)
+        : base(extensionId: schemaExtensionId)
     {
         Init();
     }
 
     public AbstractDashboardWidget(Key primaryKey)
-        : base(primaryKey)
+        : base(primaryKey: primaryKey)
     {
         Init();
     }
 
     private void Init()
     {
-        this.ChildItemTypes.Add(typeof(DashboardWidgetParameter));
+        this.ChildItemTypes.Add(item: typeof(DashboardWidgetParameter));
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public override bool UseFolders
     {
         get { return false; }
@@ -69,10 +69,10 @@ public abstract class AbstractDashboardWidget : AbstractSchemaItem
     #region Properties
     private string _caption = "";
 
-    [Category("User Interface")]
+    [Category(category: "User Interface")]
     [StringNotEmptyModelElementRule()]
-    [Localizable(true)]
-    [XmlAttribute("label")]
+    [Localizable(isLocalizable: true)]
+    [XmlAttribute(attributeName: "label")]
     public string Caption
     {
         get { return _caption; }
@@ -80,8 +80,8 @@ public abstract class AbstractDashboardWidget : AbstractSchemaItem
     }
     private string _roles;
 
-    [Category("Security")]
-    [XmlAttribute("roles")]
+    [Category(category: "Security")]
+    [XmlAttribute(attributeName: "roles")]
     public string Roles
     {
         get { return _roles; }
@@ -89,7 +89,7 @@ public abstract class AbstractDashboardWidget : AbstractSchemaItem
     }
     private string _features;
 
-    [XmlAttribute("features")]
+    [XmlAttribute(attributeName: "features")]
     public string Features
     {
         get { return _features; }

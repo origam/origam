@@ -62,11 +62,14 @@ public class OrigamDbTransaction : OrigamTransaction
         if (tran == null)
         {
             throw new NotSupportedException(
-                ResourceUtils.GetString("PartialRollbackNotSupported", _transaction.ToString())
+                message: ResourceUtils.GetString(
+                    key: "PartialRollbackNotSupported",
+                    args: _transaction.ToString()
+                )
             );
         }
 
-        tran.Rollback(savePointName);
+        tran.Rollback(transactionName: savePointName);
     }
 
     public override void Save(string savePointName)
@@ -75,11 +78,14 @@ public class OrigamDbTransaction : OrigamTransaction
         if (tran == null)
         {
             throw new NotSupportedException(
-                ResourceUtils.GetString("SavingNotSupported", _transaction.ToString())
+                message: ResourceUtils.GetString(
+                    key: "SavingNotSupported",
+                    args: _transaction.ToString()
+                )
             );
         }
 
-        tran.Save(savePointName);
+        tran.Save(savePointName: savePointName);
     }
 
     public IDbTransaction Transaction

@@ -37,7 +37,7 @@ public class Pop3Transaction : OrigamTransaction
     public override void Commit()
     {
         CheckStatus();
-        PopClient.Disconnect(true);
+        PopClient.Disconnect(quit: true);
         PopClient.Dispose();
     }
 
@@ -45,7 +45,7 @@ public class Pop3Transaction : OrigamTransaction
     {
         CheckStatus();
         PopClient.Reset();
-        PopClient.Disconnect(true);
+        PopClient.Disconnect(quit: true);
         PopClient.Dispose();
     }
 
@@ -56,12 +56,14 @@ public class Pop3Transaction : OrigamTransaction
         if (PopClient == null)
         {
             throw new InvalidOperationException(
-                ResourceUtils.GetString("ErrorTransactionNotStarted")
+                message: ResourceUtils.GetString(key: "ErrorTransactionNotStarted")
             );
         }
         if (!PopClient.IsConnected)
         {
-            throw new InvalidOperationException(ResourceUtils.GetString("ErrorNotConnected"));
+            throw new InvalidOperationException(
+                message: ResourceUtils.GetString(key: "ErrorNotConnected")
+            );
         }
     }
 }

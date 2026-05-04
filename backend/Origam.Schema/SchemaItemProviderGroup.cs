@@ -128,7 +128,7 @@ public class SchemaItemProviderGroup : IBrowserNode2, IComparable
         SchemaItemProviderGroup group = obj as SchemaItemProviderGroup;
         if (group != null)
         {
-            return _order.CompareTo(group.Order);
+            return _order.CompareTo(value: group.Order);
         }
 
         throw new InvalidCastException();

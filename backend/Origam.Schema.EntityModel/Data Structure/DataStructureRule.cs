@@ -28,10 +28,10 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.EntityModel;
 
-[SchemaItemDescription("Rule", "icon_rule.png")]
-[HelpTopic("Rule+Set+Rule")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Rule", iconName: "icon_rule.png")]
+[HelpTopic(topic: "Rule+Set+Rule")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class DataStructureRule : AbstractSchemaItem
 {
     public const string CategoryConst = "DataStructureRule";
@@ -39,18 +39,20 @@ public class DataStructureRule : AbstractSchemaItem
     public DataStructureRule() { }
 
     public DataStructureRule(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public DataStructureRule(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Properties
     public List<DataStructureRuleDependency> RuleDependencies =>
-        ChildItemsByType<DataStructureRuleDependency>(DataStructureRuleDependency.CategoryConst);
+        ChildItemsByType<DataStructureRuleDependency>(
+            itemType: DataStructureRuleDependency.CategoryConst
+        );
     private int _priority = 100;
 
-    [DefaultValue(100)]
-    [XmlAttribute("priority")]
+    [DefaultValue(value: 100)]
+    [XmlAttribute(attributeName: "priority")]
     public int Priority
     {
         get => _priority;
@@ -61,72 +63,73 @@ public class DataStructureRule : AbstractSchemaItem
     private string entityName;
     public string EntityName => entityName ??= Entity?.Name;
 
-    [TypeConverter(typeof(DataQueryEntityConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [XmlReference("entity", "DataStructureEntityId")]
+    [TypeConverter(type: typeof(DataQueryEntityConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [XmlReference(attributeName: "entity", idField: "DataStructureEntityId")]
     [NotNullModelElementRule]
     public DataStructureEntity Entity
     {
         get =>
             (DataStructureEntity)
                 PersistenceProvider.RetrieveInstance(
-                    typeof(DataStructureEntity),
-                    new ModelElementKey(DataStructureEntityId)
+                    type: typeof(DataStructureEntity),
+                    primaryKey: new ModelElementKey(id: DataStructureEntityId)
                 );
         set
         {
-            DataStructureEntityId = (value == null) ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+            DataStructureEntityId =
+                (value == null) ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"];
             TargetField = null;
         }
     }
 
     public Guid TargetFieldId;
 
-    [TypeConverter(typeof(DataStructureEntityFieldConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [XmlReference("targetField", "TargetFieldId")]
+    [TypeConverter(type: typeof(DataStructureEntityFieldConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [XmlReference(attributeName: "targetField", idField: "TargetFieldId")]
     public IDataEntityColumn TargetField
     {
         get =>
             (IDataEntityColumn)
                 PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(TargetFieldId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: TargetFieldId)
                 );
-        set => TargetFieldId = (value == null) ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+        set => TargetFieldId = (value == null) ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"];
     }
 
     public Guid ValueRuleId;
 
-    [TypeConverter(typeof(DataRuleConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [XmlReference("valueRule", "ValueRuleId")]
+    [TypeConverter(type: typeof(DataRuleConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [XmlReference(attributeName: "valueRule", idField: "ValueRuleId")]
     [NotNullModelElementRule]
     public IDataRule ValueRule
     {
         get =>
             (IDataRule)
                 PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(ValueRuleId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: ValueRuleId)
                 );
-        set => ValueRuleId = (value == null) ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+        set => ValueRuleId = (value == null) ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"];
     }
 
     public Guid CheckRuleId;
 
-    [TypeConverter(typeof(StartRuleConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [XmlReference("conditionRule", "CheckRuleId")]
+    [TypeConverter(type: typeof(StartRuleConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [XmlReference(attributeName: "conditionRule", idField: "CheckRuleId")]
     public IStartRule ConditionRule
     {
         get =>
             (IStartRule)
                 PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(CheckRuleId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: CheckRuleId)
                 );
-        set => CheckRuleId = (value == null) ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+        set => CheckRuleId = (value == null) ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"];
     }
     #endregion
     #region Overriden ISchemaItem Members
@@ -135,27 +138,27 @@ public class DataStructureRule : AbstractSchemaItem
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(Entity);
+        dependencies.Add(item: Entity);
         if (TargetField != null)
         {
-            dependencies.Add(TargetField);
+            dependencies.Add(item: TargetField);
         }
         if (ValueRule != null)
         {
-            dependencies.Add(ValueRule);
+            dependencies.Add(item: ValueRule);
         }
         if (ConditionRule != null)
         {
-            dependencies.Add(ConditionRule);
+            dependencies.Add(item: ConditionRule);
         }
-        base.GetExtraDependencies(dependencies);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override void UpdateReferences()
     {
         foreach (ISchemaItem item in RootItem.ChildItemsRecursive)
         {
-            if (item.OldPrimaryKey?.Equals(Entity.PrimaryKey) == true)
+            if (item.OldPrimaryKey?.Equals(obj: Entity.PrimaryKey) == true)
             {
                 var targetFieldBck = TargetField;
                 // setting the Entity normally resets TargetField as well
@@ -169,14 +172,14 @@ public class DataStructureRule : AbstractSchemaItem
 
     public override bool CanMove(UI.IBrowserNode2 newNode)
     {
-        return newNode.Equals(ParentItem);
+        return newNode.Equals(obj: ParentItem);
     }
 
     public override int CompareTo(object obj)
     {
         if ((obj as DataStructureRule) != null)
         {
-            return this.Name.CompareTo((obj as DataStructureRule).Name);
+            return this.Name.CompareTo(strB: (obj as DataStructureRule).Name);
         }
         // rulesets are always an top, so rules are lower
         return 1;
@@ -188,9 +191,9 @@ public class DataStructureRule : AbstractSchemaItem
     public override T NewItem<T>(Guid schemaExtensionId, SchemaItemGroup group)
     {
         return base.NewItem<T>(
-            schemaExtensionId,
-            group,
-            typeof(T) == typeof(DataStructureRuleDependency) ? "NewDependency" : null
+            schemaExtensionId: schemaExtensionId,
+            group: group,
+            itemName: typeof(T) == typeof(DataStructureRuleDependency) ? "NewDependency" : null
         );
     }
     #endregion

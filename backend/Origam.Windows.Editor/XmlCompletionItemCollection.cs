@@ -33,19 +33,19 @@ public class XmlCompletionItemCollection : Collection<XmlCompletionItem>, ICompl
 
     public XmlCompletionItemCollection()
     {
-        normalKeys.AddRange(new char[] { ':', '.', '_' });
+        normalKeys.AddRange(collection: new char[] { ':', '.', '_' });
     }
 
     public XmlCompletionItemCollection(XmlCompletionItemCollection items)
         : this()
     {
-        AddRange(items);
+        AddRange(item: items);
     }
 
     public XmlCompletionItemCollection(XmlCompletionItem[] items)
         : this()
     {
-        AddRange(items);
+        AddRange(items: items);
     }
 
     public bool HasItems
@@ -67,9 +67,9 @@ public class XmlCompletionItemCollection : Collection<XmlCompletionItem>, ICompl
     {
         for (int i = 0; i < items.Length; i++)
         {
-            if (!Contains(items[i].Text))
+            if (!Contains(name: items[i].Text))
             {
-                Add(items[i]);
+                Add(item: items[i]);
             }
         }
     }
@@ -78,9 +78,9 @@ public class XmlCompletionItemCollection : Collection<XmlCompletionItem>, ICompl
     {
         for (int i = 0; i < item.Count; i++)
         {
-            if (!Contains(item[i].Text))
+            if (!Contains(name: item[index: i].Text))
             {
-                Add(item[i]);
+                Add(item: item[index: i]);
             }
         }
     }
@@ -130,7 +130,7 @@ public class XmlCompletionItemCollection : Collection<XmlCompletionItem>, ICompl
         {
             if (item.Text == name)
             {
-                if (Convert.ToString(item.Description) == description)
+                if (Convert.ToString(value: item.Description) == description)
                 {
                     return true;
                 }
@@ -142,7 +142,7 @@ public class XmlCompletionItemCollection : Collection<XmlCompletionItem>, ICompl
     public XmlCompletionItem[] ToArray()
     {
         XmlCompletionItem[] data = new XmlCompletionItem[Count];
-        CopyTo(data, 0);
+        CopyTo(array: data, index: 0);
         return data;
     }
 
@@ -153,12 +153,12 @@ public class XmlCompletionItemCollection : Collection<XmlCompletionItem>, ICompl
             return CompletionItemListKeyResult.Cancel;
         }
 
-        if (char.IsLetterOrDigit(key))
+        if (char.IsLetterOrDigit(c: key))
         {
             return CompletionItemListKeyResult.NormalKey;
         }
 
-        if (normalKeys.Contains(key))
+        if (normalKeys.Contains(item: key))
         {
             return CompletionItemListKeyResult.NormalKey;
         }
@@ -176,7 +176,7 @@ public class XmlCompletionItemCollection : Collection<XmlCompletionItem>, ICompl
         {
             if (HasItems && PreselectionLength == 0)
             {
-                return this[0];
+                return this[index: 0];
             }
             return null;
         }
@@ -186,6 +186,6 @@ public class XmlCompletionItemCollection : Collection<XmlCompletionItem>, ICompl
 
     public void Complete(TextArea area, ISegment segment, EventArgs e, ICompletionData item)
     {
-        item.Complete(area, segment, e);
+        item.Complete(textArea: area, completionSegment: segment, insertionRequestEventArgs: e);
     }
 }

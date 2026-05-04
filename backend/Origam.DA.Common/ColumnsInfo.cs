@@ -32,7 +32,7 @@ public class ColumnsInfo
     private ColumnsInfo() { }
 
     public ColumnsInfo(string columnName)
-        : this(columnName, false) { }
+        : this(columnName: columnName, renderSqlForDetachedFields: false) { }
 
     public ColumnsInfo(string columnName, bool renderSqlForDetachedFields)
     {
@@ -43,9 +43,9 @@ public class ColumnsInfo
             return;
         }
         Columns = columnName
-            .Split(';')
-            .Where(x => !string.IsNullOrWhiteSpace(x))
-            .Select(x => new ColumnData(x))
+            .Split(separator: ';')
+            .Where(predicate: x => !string.IsNullOrWhiteSpace(value: x))
+            .Select(selector: x => new ColumnData(name: x))
             .ToList();
     }
 
@@ -58,11 +58,11 @@ public class ColumnsInfo
     public List<ColumnData> Columns { get; } = new List<ColumnData>();
     public int Count => Columns.Count;
     public bool IsEmpty => Count == 0;
-    public List<string> ColumnNames => Columns.Select(x => x.Name).ToList();
+    public List<string> ColumnNames => Columns.Select(selector: x => x.Name).ToList();
 
     public override string ToString()
     {
-        return string.Join(";", ColumnNames);
+        return string.Join(separator: ";", values: ColumnNames);
     }
 }
 
@@ -72,8 +72,8 @@ public class ColumnData
     public bool IsVirtual { get; }
     public object DefaultValue { get; }
     public bool HasRelation { get; }
-    public static readonly ColumnData GroupByCountColumn = new ColumnData("groupCount");
-    public static readonly ColumnData GroupByCaptionColumn = new ColumnData("groupCaption");
+    public static readonly ColumnData GroupByCountColumn = new ColumnData(name: "groupCount");
+    public static readonly ColumnData GroupByCaptionColumn = new ColumnData(name: "groupCaption");
 
     public ColumnData(string name, bool isVirtual, object defaultValue, bool hasRelation)
     {

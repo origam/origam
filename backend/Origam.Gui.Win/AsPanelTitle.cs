@@ -35,10 +35,10 @@ public class AsPanelTitle : Panel
         : base()
     {
         this.SetStyle(
-            System.Windows.Forms.ControlStyles.UserPaint
+            flag: System.Windows.Forms.ControlStyles.UserPaint
                 | System.Windows.Forms.ControlStyles.AllPaintingInWmPaint
                 | System.Windows.Forms.ControlStyles.DoubleBuffer,
-            true
+            value: true
         );
         this.ResizeRedraw = true;
     }
@@ -50,7 +50,7 @@ public class AsPanelTitle : Panel
         set
         {
             _panelTitle = value;
-            this.Invalidate(true);
+            this.Invalidate(invalidateChildren: true);
         }
     }
     private Bitmap _panelIcon;
@@ -60,7 +60,7 @@ public class AsPanelTitle : Panel
         set
         {
             _panelIcon = value;
-            this.Invalidate(true);
+            this.Invalidate(invalidateChildren: true);
         }
     }
     private Bitmap _statusIcon;
@@ -70,7 +70,7 @@ public class AsPanelTitle : Panel
         set
         {
             _statusIcon = value;
-            this.Invalidate(true);
+            this.Invalidate(invalidateChildren: true);
         }
     }
     private Color _startColor;
@@ -80,7 +80,7 @@ public class AsPanelTitle : Panel
         set
         {
             _startColor = value;
-            this.Invalidate(true);
+            this.Invalidate(invalidateChildren: true);
         }
     }
     private Color _endColor;
@@ -90,7 +90,7 @@ public class AsPanelTitle : Panel
         set
         {
             _endColor = value;
-            this.Invalidate(true);
+            this.Invalidate(invalidateChildren: true);
         }
     }
     private Color _middleStartColor;
@@ -100,7 +100,7 @@ public class AsPanelTitle : Panel
         set
         {
             _middleStartColor = value;
-            this.Invalidate(true);
+            this.Invalidate(invalidateChildren: true);
         }
     }
     private Color _middleEndColor;
@@ -110,7 +110,7 @@ public class AsPanelTitle : Panel
         set
         {
             _middleEndColor = value;
-            this.Invalidate(true);
+            this.Invalidate(invalidateChildren: true);
         }
     }
 
@@ -132,39 +132,45 @@ public class AsPanelTitle : Panel
         try
         {
             graphics = e.Graphics;
-            int splitPosition = GetColorSplitPosition(this.Height);
+            int splitPosition = GetColorSplitPosition(height: this.Height);
             //				// declare linear gradient brush for fill background of label
             //				GBrush = new LinearGradientBrush(
             //					new Point(0, 0),
             //					new Point(0, splitPosition), this.StartColor, this.MiddleEndColor);
             //					//new Point(this.Width, 0), this.StartColor, this.EndColor);
             GBrush = new LinearGradientBrush(
-                new Point(0, 0),
-                new Point(0, splitPosition),
-                this.StartColor,
-                this.MiddleEndColor
+                point1: new Point(x: 0, y: 0),
+                point2: new Point(x: 0, y: splitPosition),
+                color1: this.StartColor,
+                color2: this.MiddleEndColor
             );
             //				Rectangle rect = new Rectangle(0, 0, this.Width, this.Height);
             //				path = RoundedRect.CreatePath(rect, 7, 0, CornerType.None);
             //				graphics.FillPath(GBrush, path);
-            graphics.FillRectangle(GBrush, 0, 0, this.Width, splitPosition);
+            graphics.FillRectangle(
+                brush: GBrush,
+                x: 0,
+                y: 0,
+                width: this.Width,
+                height: splitPosition
+            );
             Rectangle rect = new Rectangle(
-                0,
-                splitPosition,
-                this.Width,
-                this.Height - splitPosition + 2
+                x: 0,
+                y: splitPosition,
+                width: this.Width,
+                height: this.Height - splitPosition + 2
             );
 
             GBrush = new LinearGradientBrush(
-                rect,
-                this.MiddleStartColor,
-                this.EndColor,
-                LinearGradientMode.Vertical
+                rect: rect,
+                color1: this.MiddleStartColor,
+                color2: this.EndColor,
+                linearGradientMode: LinearGradientMode.Vertical
             );
 
-            graphics.FillRectangle(GBrush, rect);
+            graphics.FillRectangle(brush: GBrush, rect: rect);
             // draw text on label
-            drawBrush = new SolidBrush(this.ForeColor);
+            drawBrush = new SolidBrush(color: this.ForeColor);
             sf = new StringFormat();
             // align with center
             sf.Alignment = StringAlignment.Near;
@@ -176,26 +182,44 @@ public class AsPanelTitle : Panel
                 x = 20;
             }
 
-            RectangleF rectF = new RectangleF(x, 12 - (Font.Height / 2), this.Width, this.Height);
-            RectangleF rectIcon = new RectangleF(3, 4, 16, 16);
+            RectangleF rectF = new RectangleF(
+                x: x,
+                y: 12 - (Font.Height / 2),
+                width: this.Width,
+                height: this.Height
+            );
+            RectangleF rectIcon = new RectangleF(x: 3, y: 4, width: 16, height: 16);
             // output string
-            font = new Font(this.Font, FontStyle.Bold);
+            font = new Font(prototype: this.Font, newStyle: FontStyle.Bold);
 
             if (PanelIcon != null)
             {
-                graphics.DrawImage(this.PanelIcon, rectIcon);
+                graphics.DrawImage(image: this.PanelIcon, rect: rectIcon);
             }
 
-            graphics.DrawString(this.PanelTitle, font, drawBrush, rectF, sf);
+            graphics.DrawString(
+                s: this.PanelTitle,
+                font: font,
+                brush: drawBrush,
+                layoutRectangle: rectF,
+                format: sf
+            );
             if (StatusIcon != null)
             {
                 RectangleF rectStatusIcon = new RectangleF(
-                    graphics.MeasureString(this.PanelTitle, font, new PointF(x, 0), sf).Width + 14,
-                    4,
-                    16,
-                    16
+                    x: graphics
+                        .MeasureString(
+                            text: this.PanelTitle,
+                            font: font,
+                            origin: new PointF(x: x, y: 0),
+                            stringFormat: sf
+                        )
+                        .Width + 14,
+                    y: 4,
+                    width: 16,
+                    height: 16
                 );
-                graphics.DrawImage(this.StatusIcon, rectStatusIcon);
+                graphics.DrawImage(image: this.StatusIcon, rect: rectStatusIcon);
             }
         }
         finally
@@ -234,6 +258,6 @@ public class AsPanelTitle : Panel
 
     private int GetColorSplitPosition(int height)
     {
-        return Convert.ToInt32((height / 2.5));
+        return Convert.ToInt32(value: (height / 2.5));
     }
 }

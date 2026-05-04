@@ -44,7 +44,8 @@ namespace Origam.Gui.Win
         private System.Windows.Forms.Button btnDropDown;
         private System.ComponentModel.IContainer components;
         private IPersistenceService _persistence =
-            ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+            ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+            as IPersistenceService;
         private ToolStripMenuItem mnuUpload;
         private ToolStripMenuItem mnuDownload;
         private ToolStripMenuItem mnuPreview;
@@ -57,25 +58,31 @@ namespace Origam.Gui.Win
             // This call is required by the Windows.Forms Form Designer.
             InitializeComponent();
 
-            mnuUpload = new ToolStripMenuItem(ResourceUtils.GetString("MenuUpload"));
+            mnuUpload = new ToolStripMenuItem(text: ResourceUtils.GetString(key: "MenuUpload"));
             mnuUpload.Click += new EventHandler(mnuUpload_Click);
             mnuUpload.Image = Origam.Workbench.Images.Open;
 
-            mnuDownload = new ToolStripMenuItem(ResourceUtils.GetString("MenuDownload"));
+            mnuDownload = new ToolStripMenuItem(text: ResourceUtils.GetString(key: "MenuDownload"));
             mnuDownload.Click += new EventHandler(mnuDownload_Click);
             mnuDownload.Image = Origam.Workbench.Images.Save;
 
-            mnuPreview = new ToolStripMenuItem(ResourceUtils.GetString("MenuPreview"));
+            mnuPreview = new ToolStripMenuItem(text: ResourceUtils.GetString(key: "MenuPreview"));
             mnuPreview.Click += new EventHandler(mnuPreview_Click);
             mnuPreview.Image = Origam.Workbench.Images.Preview;
 
-            mnuDelete = new ToolStripMenuItem(ResourceUtils.GetString("MenuDelete"));
+            mnuDelete = new ToolStripMenuItem(text: ResourceUtils.GetString(key: "MenuDelete"));
             mnuDelete.Click += new EventHandler(mnuDelete_Click);
             mnuDelete.Image = Origam.Workbench.Images.Delete;
 
             txtEdit.ContextMenuStrip = new ContextMenuStrip();
             txtEdit.ContextMenuStrip.Items.AddRange(
-                new ToolStripMenuItem[] { mnuUpload, mnuDownload, mnuPreview, mnuDelete }
+                toolStripItems: new ToolStripMenuItem[]
+                {
+                    mnuUpload,
+                    mnuDownload,
+                    mnuPreview,
+                    mnuDelete,
+                }
             );
             txtEdit.ContextMenuStrip.Opening += ContextMenuStrip_Opening;
             txtEdit.MouseDown += new MouseEventHandler(txtEdit_MouseDown);
@@ -116,7 +123,7 @@ namespace Origam.Gui.Win
                     components.Dispose();
                 }
             }
-            base.Dispose(disposing);
+            base.Dispose(disposing: disposing);
         }
 
         protected override void OnMouseWheel(MouseEventArgs e)
@@ -124,11 +131,11 @@ namespace Origam.Gui.Win
             AsDataGrid grid = this.Parent as AsDataGrid;
             if (grid != null)
             {
-                grid.OnControlMouseWheel(e);
+                grid.OnControlMouseWheel(e: e);
             }
             else
             {
-                base.OnMouseWheel(e);
+                base.OnMouseWheel(e: e);
             }
         }
 
@@ -280,13 +287,13 @@ namespace Origam.Gui.Win
 
                 this.txtEdit.Value = value;
 
-                OnFileNameChanged(EventArgs.Empty);
+                OnFileNameChanged(e: EventArgs.Empty);
             }
         }
 
         string _originalPathMember;
 
-        [Category("Data Members")]
+        [Category(category: "Data Members")]
         public string OriginalPathMember
         {
             get { return _originalPathMember; }
@@ -295,7 +302,7 @@ namespace Origam.Gui.Win
 
         string _fileSizeMember;
 
-        [Category("Data Members")]
+        [Category(category: "Data Members")]
         public string FileSizeMember
         {
             get { return _fileSizeMember; }
@@ -304,7 +311,7 @@ namespace Origam.Gui.Win
 
         string _blobMember;
 
-        [Category("Data Members")]
+        [Category(category: "Data Members")]
         public string BlobMember
         {
             get { return _blobMember; }
@@ -313,7 +320,7 @@ namespace Origam.Gui.Win
 
         string _thumbnailMember;
 
-        [Category("Data Members")]
+        [Category(category: "Data Members")]
         public string ThumbnailMember
         {
             get { return _thumbnailMember; }
@@ -322,7 +329,7 @@ namespace Origam.Gui.Win
 
         string _dateCreatedMember;
 
-        [Category("Data Members")]
+        [Category(category: "Data Members")]
         public string DateCreatedMember
         {
             get { return _dateCreatedMember; }
@@ -331,7 +338,7 @@ namespace Origam.Gui.Win
 
         string _dateLastModifiedMember;
 
-        [Category("Data Members")]
+        [Category(category: "Data Members")]
         public string DateLastModifiedMember
         {
             get { return _dateLastModifiedMember; }
@@ -340,7 +347,7 @@ namespace Origam.Gui.Win
 
         string _authorMember;
 
-        [Category("Data Members")]
+        [Category(category: "Data Members")]
         public string AuthorMember
         {
             get { return _authorMember; }
@@ -349,7 +356,7 @@ namespace Origam.Gui.Win
 
         string _remarkMember;
 
-        [Category("Data Members")]
+        [Category(category: "Data Members")]
         public string RemarkMember
         {
             get { return _remarkMember; }
@@ -358,7 +365,7 @@ namespace Origam.Gui.Win
 
         string _compressionStateMember;
 
-        [Category("Data Members")]
+        [Category(category: "Data Members")]
         public string CompressionStateMember
         {
             get { return _compressionStateMember; }
@@ -374,7 +381,7 @@ namespace Origam.Gui.Win
 
         bool _displayStorageTypeSelection;
 
-        [Category("Blob Settings")]
+        [Category(category: "Blob Settings")]
         public bool DisplayStorageTypeSelection
         {
             get { return _displayStorageTypeSelection; }
@@ -383,142 +390,147 @@ namespace Origam.Gui.Win
 
         private Guid _blobLookupId;
 
-        [Browsable(false)]
+        [Browsable(browsable: false)]
         public Guid BlobLookupId
         {
             get { return _blobLookupId; }
             set { _blobLookupId = value; }
         }
 
-        [TypeConverter(typeof(DataLookupConverter))]
-        [Category("Blob Settings")]
+        [TypeConverter(type: typeof(DataLookupConverter))]
+        [Category(category: "Blob Settings")]
         public IDataLookup BlobLookup
         {
             get
             {
                 return (IDataLookup)
                     _persistence.SchemaProvider.RetrieveInstance(
-                        typeof(ISchemaItem),
-                        new ModelElementKey(this.BlobLookupId)
+                        type: typeof(ISchemaItem),
+                        primaryKey: new ModelElementKey(id: this.BlobLookupId)
                     );
             }
-            set { this.BlobLookupId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]); }
+            set
+            {
+                this.BlobLookupId = (
+                    value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]
+                );
+            }
         }
 
         private Guid _thumbnailWidthConstantId;
 
-        [Browsable(false)]
+        [Browsable(browsable: false)]
         public Guid ThumbnailWidthConstantId
         {
             get { return _thumbnailWidthConstantId; }
             set { _thumbnailWidthConstantId = value; }
         }
 
-        [TypeConverter(typeof(DataConstantConverter))]
-        [Category("Blob Settings")]
+        [TypeConverter(type: typeof(DataConstantConverter))]
+        [Category(category: "Blob Settings")]
         public DataConstant ThumbnailWidthConstant
         {
             get
             {
                 return (DataConstant)
                     _persistence.SchemaProvider.RetrieveInstance(
-                        typeof(DataConstant),
-                        new ModelElementKey(this.ThumbnailWidthConstantId)
+                        type: typeof(DataConstant),
+                        primaryKey: new ModelElementKey(id: this.ThumbnailWidthConstantId)
                     );
             }
             set
             {
                 this.ThumbnailWidthConstantId = (
-                    value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]
+                    value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]
                 );
             }
         }
 
         private Guid _thumbnailHeightConstantId;
 
-        [Browsable(false)]
+        [Browsable(browsable: false)]
         public Guid ThumbnailHeightConstantId
         {
             get { return _thumbnailHeightConstantId; }
             set { _thumbnailHeightConstantId = value; }
         }
 
-        [TypeConverter(typeof(DataConstantConverter))]
-        [Category("Blob Settings")]
+        [TypeConverter(type: typeof(DataConstantConverter))]
+        [Category(category: "Blob Settings")]
         public DataConstant ThumbnailHeightConstant
         {
             get
             {
                 return (DataConstant)
                     _persistence.SchemaProvider.RetrieveInstance(
-                        typeof(DataConstant),
-                        new ModelElementKey(this.ThumbnailHeightConstantId)
+                        type: typeof(DataConstant),
+                        primaryKey: new ModelElementKey(id: this.ThumbnailHeightConstantId)
                     );
             }
             set
             {
                 this.ThumbnailHeightConstantId = (
-                    value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]
+                    value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]
                 );
             }
         }
 
-        [Browsable(false)]
+        [Browsable(browsable: false)]
         private Guid _storageTypeDefaultConstantId;
 
-        [Browsable(false)]
+        [Browsable(browsable: false)]
         public Guid StorageTypeDefaultConstantId
         {
             get { return _storageTypeDefaultConstantId; }
             set { _storageTypeDefaultConstantId = value; }
         }
 
-        [TypeConverter(typeof(DataConstantConverter))]
-        [Category("Blob Settings")]
+        [TypeConverter(type: typeof(DataConstantConverter))]
+        [Category(category: "Blob Settings")]
         public DataConstant StorageTypeDefaultConstant
         {
             get
             {
                 return (DataConstant)
                     _persistence.SchemaProvider.RetrieveInstance(
-                        typeof(DataConstant),
-                        new ModelElementKey(this.StorageTypeDefaultConstantId)
+                        type: typeof(DataConstant),
+                        primaryKey: new ModelElementKey(id: this.StorageTypeDefaultConstantId)
                     );
             }
             set
             {
                 this.StorageTypeDefaultConstantId = (
-                    value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]
+                    value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]
                 );
             }
         }
 
-        [Browsable(false)]
+        [Browsable(browsable: false)]
         private Guid _defaultCompressionConstantId;
 
-        [Browsable(false)]
+        [Browsable(browsable: false)]
         public Guid DefaultCompressionConstantId
         {
             get { return _defaultCompressionConstantId; }
             set { _defaultCompressionConstantId = value; }
         }
 
-        [TypeConverter(typeof(DataConstantConverter))]
-        [Category("Blob Settings")]
+        [TypeConverter(type: typeof(DataConstantConverter))]
+        [Category(category: "Blob Settings")]
         public DataConstant DefaultCompressionConstant
         {
             get
             {
                 return (DataConstant)
                     _persistence.SchemaProvider.RetrieveInstance(
-                        typeof(DataConstant),
-                        new ModelElementKey(this.DefaultCompressionConstantId)
+                        type: typeof(DataConstant),
+                        primaryKey: new ModelElementKey(id: this.DefaultCompressionConstantId)
                     );
             }
             set
             {
                 this.DefaultCompressionConstantId = (
-                    value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]
+                    value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]
                 );
             }
         }
@@ -531,7 +543,13 @@ namespace Origam.Gui.Win
         #region Private Methods
         private DataRow CurrentRow
         {
-            get { return DataBindingTools.CurrentRow(this, DefaultBindableProperty); }
+            get
+            {
+                return DataBindingTools.CurrentRow(
+                    control: this,
+                    property: DefaultBindableProperty
+                );
+            }
         }
 
         private bool IsControlPressed
@@ -546,9 +564,9 @@ namespace Origam.Gui.Win
                 CheckCurrentRow();
 
                 bool compressed = false;
-                if (CheckMember("CompressionStateMember", false))
+                if (CheckMember(member: "CompressionStateMember", throwExceptions: false))
                 {
-                    compressed = (bool)CurrentRow[this.CompressionStateMember];
+                    compressed = (bool)CurrentRow[columnName: this.CompressionStateMember];
                 }
 
                 return compressed;
@@ -561,10 +579,10 @@ namespace Origam.Gui.Win
             {
                 CheckCurrentRow();
 
-                if (CheckMember("CompressionStateMember", false))
+                if (CheckMember(member: "CompressionStateMember", throwExceptions: false))
                 {
                     IParameterService param =
-                        ServiceManager.Services.GetService(typeof(IParameterService))
+                        ServiceManager.Services.GetService(serviceType: typeof(IParameterService))
                         as IParameterService;
 
                     bool compress = false;
@@ -572,8 +590,8 @@ namespace Origam.Gui.Win
                     {
                         compress = (bool)
                             param.GetParameterValue(
-                                DefaultCompressionConstantId,
-                                OrigamDataType.Boolean
+                                id: DefaultCompressionConstantId,
+                                targetType: OrigamDataType.Boolean
                             );
                     }
 
@@ -591,13 +609,17 @@ namespace Origam.Gui.Win
 
         private bool CheckMember(string member, bool throwExceptions)
         {
-            object val = Reflector.GetValue(this.GetType(), this, member);
+            object val = Reflector.GetValue(
+                type: this.GetType(),
+                instance: this,
+                memberName: member
+            );
 
-            if (val == null || val.Equals(String.Empty))
+            if (val == null || val.Equals(obj: String.Empty))
             {
                 if (throwExceptions)
                 {
-                    throw new NullReferenceException(member + " not set.");
+                    throw new NullReferenceException(message: member + " not set.");
                 }
 
                 return false;
@@ -610,7 +632,9 @@ namespace Origam.Gui.Win
         {
             if (CurrentRow == null)
             {
-                throw new NullReferenceException(ResourceUtils.GetString("ErrorHandleBlob"));
+                throw new NullReferenceException(
+                    message: ResourceUtils.GetString(key: "ErrorHandleBlob")
+                );
             }
         }
 
@@ -619,11 +643,11 @@ namespace Origam.Gui.Win
             try
             {
                 IParameterService param =
-                    ServiceManager.Services.GetService(typeof(IParameterService))
+                    ServiceManager.Services.GetService(serviceType: typeof(IParameterService))
                     as IParameterService;
 
                 CheckCurrentRow();
-                CheckMember("BlobMember", true);
+                CheckMember(member: "BlobMember", throwExceptions: true);
 
                 OpenFileDialog _dlgOpen = new OpenFileDialog();
 
@@ -634,51 +658,55 @@ namespace Origam.Gui.Win
                     DataRow row = CurrentRow;
                     row.BeginEdit();
 
-                    OnValueChangingByUser(EventArgs.Empty);
+                    OnValueChangingByUser(e: EventArgs.Empty);
 
-                    if (CheckMember("OriginalPathMember", false))
+                    if (CheckMember(member: "OriginalPathMember", throwExceptions: false))
                     {
-                        row[this.OriginalPathMember] = path;
+                        row[columnName: this.OriginalPathMember] = path;
                     }
 
-                    if (CheckMember("DateCreatedMember", false))
+                    if (CheckMember(member: "DateCreatedMember", throwExceptions: false))
                     {
-                        row[this.DateCreatedMember] = File.GetCreationTime(path);
+                        row[columnName: this.DateCreatedMember] = File.GetCreationTime(path: path);
                     }
 
-                    if (CheckMember("DateLastModifiedMember", false))
+                    if (CheckMember(member: "DateLastModifiedMember", throwExceptions: false))
                     {
-                        row[this.DateLastModifiedMember] = File.GetLastWriteTime(path);
+                        row[columnName: this.DateLastModifiedMember] = File.GetLastWriteTime(
+                            path: path
+                        );
                     }
 
-                    if (CheckMember("CompressionStateMember", false))
+                    if (CheckMember(member: "CompressionStateMember", throwExceptions: false))
                     {
-                        row[this.CompressionStateMember] = this.ShouldCompress;
+                        row[columnName: this.CompressionStateMember] = this.ShouldCompress;
                     }
 
                     ByteArrayConverter.SaveToDataSet(
-                        path,
-                        row,
-                        this.BlobMember,
-                        this.ShouldCompress
+                        fullFileName: path,
+                        dataRow: row,
+                        columnName: this.BlobMember,
+                        compress: this.ShouldCompress
                     );
 
-                    if (CheckMember("FileSizeMember", false))
+                    if (CheckMember(member: "FileSizeMember", throwExceptions: false))
                     {
-                        row[this.FileSizeMember] = ((byte[])row[this.BlobMember]).LongLength;
+                        row[columnName: this.FileSizeMember] = (
+                            (byte[])row[columnName: this.BlobMember]
+                        ).LongLength;
                     }
 
-                    if (CheckMember("ThumbnailMember", false))
+                    if (CheckMember(member: "ThumbnailMember", throwExceptions: false))
                     {
                         Image img = null;
 
                         try
                         {
-                            img = Image.FromFile(path);
+                            img = Image.FromFile(filename: path);
                         }
                         catch
                         {
-                            row[this.ThumbnailMember] = DBNull.Value;
+                            row[columnName: this.ThumbnailMember] = DBNull.Value;
                         }
 
                         if (img != null)
@@ -687,27 +715,36 @@ namespace Origam.Gui.Win
                             {
                                 int width = (int)
                                     param.GetParameterValue(
-                                        this.ThumbnailWidthConstantId,
-                                        OrigamDataType.Integer
+                                        id: this.ThumbnailWidthConstantId,
+                                        targetType: OrigamDataType.Integer
                                     );
                                 int height = (int)
                                     param.GetParameterValue(
-                                        this.ThumbnailHeightConstantId,
-                                        OrigamDataType.Integer
+                                        id: this.ThumbnailHeightConstantId,
+                                        targetType: OrigamDataType.Integer
                                     );
 
                                 Image.GetThumbnailImageAbort myCallback =
                                     new Image.GetThumbnailImageAbort(ThumbnailCallback);
 
-                                using (Image thumbnail = ImageResizer.FixedSize(img, width, height))
+                                using (
+                                    Image thumbnail = ImageResizer.FixedSize(
+                                        imgPhoto: img,
+                                        Width: width,
+                                        Height: height
+                                    )
+                                )
                                 {
                                     MemoryStream ms = new MemoryStream();
 
                                     try
                                     {
-                                        thumbnail.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                                        thumbnail.Save(
+                                            stream: ms,
+                                            format: System.Drawing.Imaging.ImageFormat.Png
+                                        );
                                         byte[] byteArray = ms.GetBuffer();
-                                        row[this.ThumbnailMember] = byteArray;
+                                        row[columnName: this.ThumbnailMember] = byteArray;
                                     }
                                     finally
                                     {
@@ -734,8 +771,8 @@ namespace Origam.Gui.Win
                         {
                             CurrencyManager c =
                                 this.BindingContext[
-                                    row.Table.DataSet,
-                                    FormGenerator.DataMemberFromTable(row.Table)
+                                    dataSource: row.Table.DataSet,
+                                    dataMember: FormGenerator.DataMemberFromTable(table: row.Table)
                                 ] as CurrencyManager;
                             c.Refresh();
                         }
@@ -743,16 +780,16 @@ namespace Origam.Gui.Win
                     catch { }
 
                     // we do this in the end, because CurrencyManager.Refresh would revert the value back
-                    this.FileName = System.IO.Path.GetFileName(path);
+                    this.FileName = System.IO.Path.GetFileName(path: path);
                 }
             }
             catch (Exception ex)
             {
                 AsMessageBox.ShowError(
-                    this,
-                    ex.Message,
-                    ResourceUtils.GetString("ErrorSaveFile"),
-                    ex
+                    owner: this,
+                    text: ex.Message,
+                    caption: ResourceUtils.GetString(key: "ErrorSaveFile"),
+                    exception: ex
                 );
             }
         }
@@ -771,16 +808,16 @@ namespace Origam.Gui.Win
 
                 if (dlgSave.ShowDialog() == DialogResult.OK)
                 {
-                    Download(dlgSave.FileName);
+                    Download(path: dlgSave.FileName);
                 }
             }
             catch (Exception ex)
             {
                 AsMessageBox.ShowError(
-                    this,
-                    ex.Message,
-                    ResourceUtils.GetString("ErrorLoadFile"),
-                    ex
+                    owner: this,
+                    text: ex.Message,
+                    caption: ResourceUtils.GetString(key: "ErrorLoadFile"),
+                    exception: ex
                 );
             }
         }
@@ -796,21 +833,21 @@ namespace Origam.Gui.Win
                 if (BlobLookup != null)
                 {
                     IDataLookupService lookupService =
-                        ServiceManager.Services.GetService(typeof(IDataLookupService))
+                        ServiceManager.Services.GetService(serviceType: typeof(IDataLookupService))
                         as IDataLookupService;
 
                     object result = lookupService.GetDisplayText(
-                        this.BlobLookupId,
-                        row["Id"],
-                        false,
-                        false,
-                        null
+                        lookupId: this.BlobLookupId,
+                        lookupValue: row[columnName: "Id"],
+                        useCache: false,
+                        returnMessageIfNull: false,
+                        transactionId: null
                     );
                     byte[] bytes;
 
                     if (result == null)
                     {
-                        throw new Exception("Data source did not return any data.");
+                        throw new Exception(message: "Data source did not return any data.");
                     }
 
                     if (result is byte[])
@@ -819,21 +856,34 @@ namespace Origam.Gui.Win
                     }
                     else
                     {
-                        throw new InvalidCastException(ResourceUtils.GetString("ErrorNotBlob"));
+                        throw new InvalidCastException(
+                            message: ResourceUtils.GetString(key: "ErrorNotBlob")
+                        );
                     }
 
-                    ByteArrayConverter.ByteArrayToFile(path, bytes, IsCompressed);
+                    ByteArrayConverter.ByteArrayToFile(
+                        fileName: path,
+                        bytes: bytes,
+                        compressed: IsCompressed
+                    );
                 }
                 else
                 {
-                    CheckMember("BlobMember", true);
+                    CheckMember(member: "BlobMember", throwExceptions: true);
 
-                    if (row[this.BlobMember] == DBNull.Value)
+                    if (row[columnName: this.BlobMember] == DBNull.Value)
                     {
-                        throw new Exception(ResourceUtils.GetString("ErrorRecordEmpty"));
+                        throw new Exception(
+                            message: ResourceUtils.GetString(key: "ErrorRecordEmpty")
+                        );
                     }
 
-                    ByteArrayConverter.SaveFromDataSet(path, row, BlobMember, IsCompressed);
+                    ByteArrayConverter.SaveFromDataSet(
+                        fullFileName: path,
+                        dataRow: row,
+                        columnName: BlobMember,
+                        compressed: IsCompressed
+                    );
                 }
 
                 return true;
@@ -841,10 +891,10 @@ namespace Origam.Gui.Win
             catch (Exception ex)
             {
                 AsMessageBox.ShowError(
-                    this,
-                    ex.Message,
-                    ResourceUtils.GetString("ErrorFileSave"),
-                    ex
+                    owner: this,
+                    text: ex.Message,
+                    caption: ResourceUtils.GetString(key: "ErrorFileSave"),
+                    exception: ex
                 );
                 return false;
             }
@@ -857,36 +907,41 @@ namespace Origam.Gui.Win
             try
             {
                 filePath = System.IO.Path.GetTempFileName();
-                filePath = Path.ChangeExtension(filePath, Path.GetExtension(this.FileName));
+                filePath = Path.ChangeExtension(
+                    path: filePath,
+                    extension: Path.GetExtension(path: this.FileName)
+                );
             }
             catch (Exception ex)
             {
                 AsMessageBox.ShowError(
-                    this.FindForm(),
-                    ResourceUtils.GetString("ErrorTmpName"),
-                    ResourceUtils.GetString("ErrorShowPreviewTitle"),
-                    ex
+                    owner: this.FindForm(),
+                    text: ResourceUtils.GetString(key: "ErrorTmpName"),
+                    caption: ResourceUtils.GetString(key: "ErrorShowPreviewTitle"),
+                    exception: ex
                 );
             }
 
             try
             {
-                if (Download(filePath))
+                if (Download(path: filePath))
                 {
-                    System.Diagnostics.Process process = System.Diagnostics.Process.Start(filePath);
+                    System.Diagnostics.Process process = System.Diagnostics.Process.Start(
+                        fileName: filePath
+                    );
                     process.EnableRaisingEvents = true;
 
-                    _openFiles.Add(process, filePath);
+                    _openFiles.Add(key: process, value: filePath);
                     process.Exited += new EventHandler(process_Exited);
                 }
             }
             catch (Exception ex)
             {
                 AsMessageBox.ShowError(
-                    this.FindForm(),
-                    ResourceUtils.GetString("ErrorExecuteFile", filePath),
-                    ResourceUtils.GetString("ErrorShowPreviewTitle"),
-                    ex
+                    owner: this.FindForm(),
+                    text: ResourceUtils.GetString(key: "ErrorExecuteFile", args: filePath),
+                    caption: ResourceUtils.GetString(key: "ErrorShowPreviewTitle"),
+                    exception: ex
                 );
             }
         }
@@ -900,7 +955,7 @@ namespace Origam.Gui.Win
         {
             if (this.fileNameChanged != null)
             {
-                this.fileNameChanged(this, e);
+                this.fileNameChanged(sender: this, e: e);
             }
         }
 
@@ -910,7 +965,7 @@ namespace Origam.Gui.Win
         {
             if (this.ValueChangingByUser != null)
             {
-                this.ValueChangingByUser(this, e);
+                this.ValueChangingByUser(sender: this, e: e);
             }
         }
         #endregion
@@ -918,7 +973,10 @@ namespace Origam.Gui.Win
         #region Event Handlers
         private void btnDropDown_Click(object sender, System.EventArgs e)
         {
-            txtEdit.ContextMenuStrip.Show(txtEdit, new Point(txtEdit.Left, txtEdit.Bottom));
+            txtEdit.ContextMenuStrip.Show(
+                control: txtEdit,
+                position: new Point(x: txtEdit.Left, y: txtEdit.Bottom)
+            );
         }
 
         private void mnuUpload_Click(object sender, EventArgs e)
@@ -943,44 +1001,44 @@ namespace Origam.Gui.Win
         {
             DataRow row = CurrentRow;
             row.EndEdit();
-            if (CheckMember("OriginalPathMember", false))
+            if (CheckMember(member: "OriginalPathMember", throwExceptions: false))
             {
-                SetNull(row, this.OriginalPathMember);
+                SetNull(row: row, member: this.OriginalPathMember);
             }
-            if (CheckMember("DateCreatedMember", false))
+            if (CheckMember(member: "DateCreatedMember", throwExceptions: false))
             {
-                SetNull(row, this.DateCreatedMember);
+                SetNull(row: row, member: this.DateCreatedMember);
             }
-            if (CheckMember("DateLastModifiedMember", false))
+            if (CheckMember(member: "DateLastModifiedMember", throwExceptions: false))
             {
-                SetNull(row, this.DateLastModifiedMember);
+                SetNull(row: row, member: this.DateLastModifiedMember);
             }
-            if (CheckMember("CompressionStateMember", false))
+            if (CheckMember(member: "CompressionStateMember", throwExceptions: false))
             {
-                SetNull(row, this.CompressionStateMember);
+                SetNull(row: row, member: this.CompressionStateMember);
             }
-            if (CheckMember("FileSizeMember", false))
+            if (CheckMember(member: "FileSizeMember", throwExceptions: false))
             {
-                SetNull(row, this.FileSizeMember);
+                SetNull(row: row, member: this.FileSizeMember);
             }
-            if (CheckMember("ThumbnailMember", false))
+            if (CheckMember(member: "ThumbnailMember", throwExceptions: false))
             {
-                SetNull(row, this.ThumbnailMember);
+                SetNull(row: row, member: this.ThumbnailMember);
             }
             this.FileName = null;
         }
 
         private static void SetNull(DataRow row, string member)
         {
-            if (CheckNullable(row, member))
+            if (CheckNullable(row: row, member: member))
             {
-                row[member] = DBNull.Value;
+                row[columnName: member] = DBNull.Value;
             }
         }
 
         private static bool CheckNullable(DataRow row, string member)
         {
-            return row.Table.Columns[member].AllowDBNull;
+            return row.Table.Columns[name: member].AllowDBNull;
         }
 
         private void txtEdit_MouseDown(object sender, MouseEventArgs e)
@@ -1005,29 +1063,29 @@ namespace Origam.Gui.Win
             System.Diagnostics.Process process = sender as System.Diagnostics.Process;
             process.Exited -= new EventHandler(process_Exited);
 
-            string filePath = (string)_openFiles[process];
+            string filePath = (string)_openFiles[key: process];
 
             if (filePath != null)
             {
                 try
                 {
-                    System.IO.File.Delete(filePath);
+                    System.IO.File.Delete(path: filePath);
                 }
                 finally
                 {
-                    _openFiles.Remove(process);
+                    _openFiles.Remove(key: process);
                 }
             }
         }
 
         private void txtEdit_MouseHover(object sender, EventArgs e)
         {
-            this.OnMouseHover(e);
+            this.OnMouseHover(e: e);
         }
 
         private void txtEdit_MouseEnter(object sender, EventArgs e)
         {
-            this.OnMouseEnter(e);
+            this.OnMouseEnter(e: e);
         }
 
         private void txtEdit_MouseMove(object sender, MouseEventArgs e)
@@ -1041,7 +1099,7 @@ namespace Origam.Gui.Win
                 txtEdit.Cursor = Cursors.IBeam;
             }
 
-            this.OnMouseMove(e);
+            this.OnMouseMove(e: e);
         }
 
         private void txtEdit_KeyDown(object sender, KeyEventArgs e)
@@ -1058,7 +1116,7 @@ namespace Origam.Gui.Win
                 & e.KeyCode != Keys.ShiftKey
             )
             {
-                OnValueChangingByUser(EventArgs.Empty);
+                OnValueChangingByUser(e: EventArgs.Empty);
             }
         }
 

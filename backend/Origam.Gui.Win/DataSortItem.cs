@@ -65,10 +65,12 @@ public class DataSortItem : IComparable
         DataSortItem compareItem = obj as DataSortItem;
         if (compareItem == null)
         {
-            throw new InvalidCastException(ResourceUtils.GetString("ErrorCompareDataSortItem"));
+            throw new InvalidCastException(
+                message: ResourceUtils.GetString(key: "ErrorCompareDataSortItem")
+            );
         }
 
-        return this.SortOrder.CompareTo(compareItem.SortOrder);
+        return this.SortOrder.CompareTo(value: compareItem.SortOrder);
     }
     #endregion
 }

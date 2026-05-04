@@ -30,10 +30,10 @@ namespace Origam.Schema;
 /// <summary>
 /// Summary description for String.
 /// </summary>
-[SchemaItemDescription("String", "icon_string.png")]
-[HelpTopic("String+Library")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "String", iconName: "icon_string.png")]
+[HelpTopic(topic: "String+Library")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class StringItem : AbstractSchemaItem
 {
     public const string CategoryConst = "String";
@@ -42,10 +42,10 @@ public class StringItem : AbstractSchemaItem
         : base() { }
 
     public StringItem(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public StringItem(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Overriden ISchemaItem Members
 
@@ -57,8 +57,8 @@ public class StringItem : AbstractSchemaItem
     #region Properties
     private string _string;
 
-    [Localizable(true)]
-    [XmlAttribute("string")]
+    [Localizable(isLocalizable: true)]
+    [XmlAttribute(attributeName: "string")]
     public string String
     {
         get { return _string; }

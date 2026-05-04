@@ -33,7 +33,8 @@ namespace Origam.Gui.Win.Commands;
 public class ShowDataStructureFilterSetSql : AbstractMenuCommand
 {
     private WorkbenchSchemaService _schema =
-        ServiceManager.Services.GetService(typeof(SchemaService)) as WorkbenchSchemaService;
+        ServiceManager.Services.GetService(serviceType: typeof(SchemaService))
+        as WorkbenchSchemaService;
     public override bool IsEnabled
     {
         get { return Owner is DataStructureFilterSet; }
@@ -51,39 +52,48 @@ public class ShowDataStructureFilterSetSql : AbstractMenuCommand
         generator.GenerateConsoleUseSyntax = true;
         StringBuilder builder = new StringBuilder();
         DataStructure ds = filterSet.RootItem as DataStructure;
-        builder.AppendFormat("-- SQL statements for data structure: {0}\r\n", ds.Name);
+        builder.AppendFormat(
+            format: "-- SQL statements for data structure: {0}\r\n",
+            arg0: ds.Name
+        );
         // parameter declarations
-        builder.AppendLine(generator.SelectParameterDeclarationsSql(filterSet, false, null));
+        builder.AppendLine(
+            value: generator.SelectParameterDeclarationsSql(
+                filter: filterSet,
+                paging: false,
+                columnName: null
+            )
+        );
         List<string> tmpTables = new List<string>();
         foreach (DataStructureEntity entity in ds.Entities)
         {
             if (entity.Columns.Count > 0)
             {
                 string tmpTable = "tmptable" + System.Guid.NewGuid();
-                tmpTables.Add(tmpTable);
-                builder.AppendLine(generator.CreateOutputTableSql(tmpTable));
+                tmpTables.Add(item: tmpTable);
+                builder.AppendLine(value: generator.CreateOutputTableSql(tmpTable: tmpTable));
                 builder.AppendLine(
-                    "-----------------------------------------------------------------"
+                    value: "-----------------------------------------------------------------"
                 );
-                builder.AppendLine("-- " + entity.Name);
+                builder.AppendLine(value: "-- " + entity.Name);
                 builder.AppendLine(
-                    "-----------------------------------------------------------------"
+                    value: "-----------------------------------------------------------------"
                 );
                 builder.AppendLine(
-                    generator.SelectSql(
-                        ds,
-                        entity,
-                        filterSet,
-                        null,
-                        DA.ColumnsInfo.Empty,
-                        new Hashtable(),
-                        null,
-                        false
+                    value: generator.SelectSql(
+                        ds: ds,
+                        entity: entity,
+                        filter: filterSet,
+                        sortSet: null,
+                        columnsInfo: DA.ColumnsInfo.Empty,
+                        parameters: new Hashtable(),
+                        selectParameterReferences: null,
+                        paging: false
                     ) + ";"
                 );
             }
         }
-        builder.AppendLine(generator.CreateDataStructureFooterSql(tmpTables));
-        new ShowSqlConsole(new SqlConsoleParameters(builder.ToString())).Run();
+        builder.AppendLine(value: generator.CreateDataStructureFooterSql(tmpTables: tmpTables));
+        new ShowSqlConsole(owner: new SqlConsoleParameters(command: builder.ToString())).Run();
     }
 }

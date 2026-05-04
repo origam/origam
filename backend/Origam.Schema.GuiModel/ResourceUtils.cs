@@ -36,23 +36,29 @@ public class ResourceUtils
     {
         if (stringResmanager == null)
         {
-            stringResmanager = new ResourceManager(StringBaseName, typeof(ResourceUtils).Assembly);
+            stringResmanager = new ResourceManager(
+                baseName: StringBaseName,
+                assembly: typeof(ResourceUtils).Assembly
+            );
         }
-        return stringResmanager.GetString(key, Thread.CurrentThread.CurrentCulture);
+        return stringResmanager.GetString(name: key, culture: Thread.CurrentThread.CurrentCulture);
     }
 
     public static string GetString(string key, params object[] args)
     {
-        string rawString = GetString(key);
-        return string.Format(rawString, args);
+        string rawString = GetString(key: key);
+        return string.Format(format: rawString, args: args);
     }
 
     public static Image GetImage(string key)
     {
         if (imageResmanager == null)
         {
-            imageResmanager = new ResourceManager(ImageBaseName, typeof(ResourceUtils).Assembly);
+            imageResmanager = new ResourceManager(
+                baseName: ImageBaseName,
+                assembly: typeof(ResourceUtils).Assembly
+            );
         }
-        return (Image)imageResmanager.GetObject(key);
+        return (Image)imageResmanager.GetObject(name: key);
     }
 }

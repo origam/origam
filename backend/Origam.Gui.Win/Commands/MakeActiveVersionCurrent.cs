@@ -35,10 +35,10 @@ namespace Origam.Gui.Win.Commands;
 public class MakeActiveVersionCurrent : AbstractMenuCommand
 {
     WorkbenchSchemaService _schemaService =
-        ServiceManager.Services.GetService(typeof(WorkbenchSchemaService))
+        ServiceManager.Services.GetService(serviceType: typeof(WorkbenchSchemaService))
         as WorkbenchSchemaService;
     SchemaBrowser _schemaBrowser =
-        WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+        WorkbenchSingleton.Workbench.GetPad(type: typeof(SchemaBrowser)) as SchemaBrowser;
     public override bool IsEnabled
     {
         get
@@ -47,22 +47,28 @@ public class MakeActiveVersionCurrent : AbstractMenuCommand
                 && (
                     (Owner as DeploymentVersion).IsCurrentVersion == false
                     & (Owner as DeploymentVersion).Package.PrimaryKey.Equals(
-                        _schemaService.ActiveExtension.PrimaryKey
+                        obj: _schemaService.ActiveExtension.PrimaryKey
                     )
                 );
         }
-        set { throw new ArgumentException("Cannot set this property", "IsEnabled"); }
+        set
+        {
+            throw new ArgumentException(
+                message: "Cannot set this property",
+                paramName: "IsEnabled"
+            );
+        }
     }
 
     public override void Run()
     {
         bool dirtyDocumentExists = WorkbenchSingleton
             .Workbench.ViewContentCollection.Cast<IViewContent>()
-            .Any(x => x.IsDirty);
+            .Any(predicate: x => x.IsDirty);
         if (dirtyDocumentExists)
         {
             throw new Exception(
-                "Model not saved. Please, save the model before setting the version."
+                message: "Model not saved. Please, save the model before setting the version."
             );
         }
         MakeVersionCurrent cmd = new MakeVersionCurrent();
@@ -70,10 +76,10 @@ public class MakeActiveVersionCurrent : AbstractMenuCommand
         cmd.Run();
         WorkbenchSingleton.Workbench.UpdateTitle();
         ExtensionPad extensionPad =
-            WorkbenchSingleton.Workbench.GetPad(typeof(ExtensionPad)) as ExtensionPad;
+            WorkbenchSingleton.Workbench.GetPad(type: typeof(ExtensionPad)) as ExtensionPad;
         WorkbenchSchemaService schema =
             ServiceManager.Services.GetService<WorkbenchSchemaService>();
-        extensionPad!.UpdateExtensionInfo(schema.ActiveExtension);
+        extensionPad!.UpdateExtensionInfo(updatedPackage: schema.ActiveExtension);
     }
 
     public override void Dispose()
@@ -83,6 +89,6 @@ public class MakeActiveVersionCurrent : AbstractMenuCommand
 
     public override int GetImageIndex(string icon)
     {
-        return _schemaBrowser.ImageIndex(icon);
+        return _schemaBrowser.ImageIndex(icon: icon);
     }
 }

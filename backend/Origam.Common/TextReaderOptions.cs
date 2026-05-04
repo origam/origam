@@ -47,9 +47,9 @@ public class TextReaderOptions
             return new TextReaderOptions();
         }
 
-        XmlSerializer ser = new XmlSerializer(typeof(TextReaderOptions));
-        XmlNodeReader reader = new XmlNodeReader(doc);
-        return (TextReaderOptions)ser.Deserialize(reader);
+        XmlSerializer ser = new XmlSerializer(type: typeof(TextReaderOptions));
+        XmlNodeReader reader = new XmlNodeReader(node: doc);
+        return (TextReaderOptions)ser.Deserialize(xmlReader: reader);
     }
 
     [XmlAttribute()]
@@ -73,7 +73,7 @@ public class TextReaderOptions
         set { _separator = value; }
     }
 
-    [XmlArrayItem("Option", typeof(TextReaderOptionsField))]
+    [XmlArrayItem(elementName: "Option", type: typeof(TextReaderOptionsField))]
     public TextReaderOptionsField[] FieldOptions
     {
         get { return _fieldOptions; }
@@ -89,10 +89,10 @@ public class TextReaderOptions
             {
                 foreach (TextReaderOptionsField fld in this.FieldOptions)
                 {
-                    _cache[fld.Name] = fld;
+                    _cache[key: fld.Name] = fld;
                 }
             }
         }
-        return _cache[fieldName] as TextReaderOptionsField;
+        return _cache[key: fieldName] as TextReaderOptionsField;
     }
 }

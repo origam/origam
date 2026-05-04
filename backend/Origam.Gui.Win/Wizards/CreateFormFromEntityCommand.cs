@@ -41,40 +41,61 @@ namespace Origam.Gui.Win.Wizards;
 public class CreateFormFromEntityCommand : AbstractMenuCommand
 {
     SchemaBrowser _schemaBrowser =
-        WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+        WorkbenchSingleton.Workbench.GetPad(type: typeof(SchemaBrowser)) as SchemaBrowser;
     ScreenWizardForm screenwizardForm;
     public override bool IsEnabled
     {
         get { return Owner is IDataEntity; }
-        set { throw new ArgumentException("Cannot set this property", "IsEnabled"); }
+        set
+        {
+            throw new ArgumentException(
+                message: "Cannot set this property",
+                paramName: "IsEnabled"
+            );
+        }
     }
 
     public override void Run()
     {
-        List<string> listdsName = GetListDatastructure(DataStructure.CategoryConst);
+        List<string> listdsName = GetListDatastructure(itemTypeConst: DataStructure.CategoryConst);
         var list = new List<ListViewItem>();
         DataStructure dd = new DataStructure();
         PanelControlSet pp = new PanelControlSet();
         FormControlSet ff = new FormControlSet();
-        list.Add(new ListViewItem(dd.GetType().SchemaItemDescription().Name, dd.Icon));
-        list.Add(new ListViewItem(pp.GetType().SchemaItemDescription().Name, pp.Icon));
-        list.Add(new ListViewItem(ff.GetType().SchemaItemDescription().Name, ff.Icon));
+        list.Add(
+            item: new ListViewItem(
+                text: dd.GetType().SchemaItemDescription().Name,
+                imageKey: dd.Icon
+            )
+        );
+        list.Add(
+            item: new ListViewItem(
+                text: pp.GetType().SchemaItemDescription().Name,
+                imageKey: pp.Icon
+            )
+        );
+        list.Add(
+            item: new ListViewItem(
+                text: ff.GetType().SchemaItemDescription().Name,
+                imageKey: ff.Icon
+            )
+        );
 
         Stack stackPage = new Stack();
-        stackPage.Push(PagesList.Finish);
-        stackPage.Push(PagesList.SummaryPage);
-        stackPage.Push(PagesList.ScreenForm);
-        if (listdsName.Any(name => name == (Owner as IDataEntity).Name))
+        stackPage.Push(obj: PagesList.Finish);
+        stackPage.Push(obj: PagesList.SummaryPage);
+        stackPage.Push(obj: PagesList.ScreenForm);
+        if (listdsName.Any(predicate: name => name == (Owner as IDataEntity).Name))
         {
-            stackPage.Push(PagesList.StructureNamePage);
+            stackPage.Push(obj: PagesList.StructureNamePage);
         }
-        stackPage.Push(PagesList.StartPage);
+        stackPage.Push(obj: PagesList.StartPage);
         screenwizardForm = new ScreenWizardForm
         {
             ItemTypeList = list,
-            Title = ResourceUtils.GetString("ScreenWizardTitle"),
+            Title = ResourceUtils.GetString(key: "ScreenWizardTitle"),
 
-            Description = ResourceUtils.GetString("ScreenWizardDescription"),
+            Description = ResourceUtils.GetString(key: "ScreenWizardDescription"),
             Pages = stackPage,
             Entity = Owner as IDataEntity,
             IsRoleVisible = false,
@@ -84,7 +105,7 @@ public class CreateFormFromEntityCommand : AbstractMenuCommand
             ImageList = _schemaBrowser.EbrSchemaBrowser.imgList,
             Command = this,
         };
-        Wizard wiz = new Wizard(screenwizardForm);
+        Wizard wiz = new Wizard(objectForm: screenwizardForm);
         if (wiz.ShowDialog() != DialogResult.OK)
         {
             GeneratedModelElements.Clear();
@@ -100,25 +121,29 @@ public class CreateFormFromEntityCommand : AbstractMenuCommand
         }
 
         DataStructure dataStructure = EntityHelper.CreateDataStructure(
-            screenwizardForm.Entity,
-            screenwizardForm.NameOfEntity,
-            true
+            entity: screenwizardForm.Entity,
+            name: screenwizardForm.NameOfEntity,
+            persist: true
         );
-        GeneratedModelElements.Add(dataStructure);
+        GeneratedModelElements.Add(item: dataStructure);
         PanelControlSet panel = GuiHelper.CreatePanel(
-            groupName,
-            screenwizardForm.Entity,
-            screenwizardForm.SelectedFieldNames,
-            screenwizardForm.NameOfEntity
+            groupName: groupName,
+            entity: screenwizardForm.Entity,
+            fieldsToPopulate: screenwizardForm.SelectedFieldNames,
+            name: screenwizardForm.NameOfEntity
         );
-        GeneratedModelElements.Add(panel);
-        FormControlSet form = GuiHelper.CreateForm(dataStructure, groupName, panel);
-        GeneratedModelElements.Add(form);
+        GeneratedModelElements.Add(item: panel);
+        FormControlSet form = GuiHelper.CreateForm(
+            dataSource: dataStructure,
+            groupName: groupName,
+            defaultPanel: panel
+        );
+        GeneratedModelElements.Add(item: form);
     }
 
     public override int GetImageIndex(string icon)
     {
-        return _schemaBrowser.ImageIndex(icon);
+        return _schemaBrowser.ImageIndex(icon: icon);
     }
 
     public override void SetSummaryText(object summary)
@@ -126,58 +151,90 @@ public class CreateFormFromEntityCommand : AbstractMenuCommand
         RichTextBox richTextBoxSummary = (RichTextBox)summary;
         richTextBoxSummary.Text =
             "This Wizard will create a Screen from an Entity with these parameters:";
-        richTextBoxSummary.AppendText(Environment.NewLine);
-        richTextBoxSummary.AppendText(Environment.NewLine);
-        richTextBoxSummary.AppendText("Datastructure: \t\t");
-        richTextBoxSummary.AppendText(screenwizardForm.NameOfEntity);
-        richTextBoxSummary.AppendText(Environment.NewLine);
-        ShowListItems(richTextBoxSummary, screenwizardForm.SelectedFieldNames);
+        richTextBoxSummary.AppendText(text: Environment.NewLine);
+        richTextBoxSummary.AppendText(text: Environment.NewLine);
+        richTextBoxSummary.AppendText(text: "Datastructure: \t\t");
+        richTextBoxSummary.AppendText(text: screenwizardForm.NameOfEntity);
+        richTextBoxSummary.AppendText(text: Environment.NewLine);
+        ShowListItems(
+            richTextBoxSummary: richTextBoxSummary,
+            selectedFieldNames: screenwizardForm.SelectedFieldNames
+        );
     }
 }
 
 public class CreateCompleteUICommand : AbstractMenuCommand
 {
     SchemaBrowser _schemaBrowser =
-        WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+        WorkbenchSingleton.Workbench.GetPad(type: typeof(SchemaBrowser)) as SchemaBrowser;
     ScreenWizardForm wizardForm;
     public override bool IsEnabled
     {
         get { return Owner is IDataEntity; }
-        set { throw new ArgumentException("Cannot set this property", "IsEnabled"); }
+        set
+        {
+            throw new ArgumentException(
+                message: "Cannot set this property",
+                paramName: "IsEnabled"
+            );
+        }
     }
 
     public override void Run()
     {
         IDataEntity entity = Owner as IDataEntity;
-        List<string> listdsName = GetListDatastructure(DataStructure.CategoryConst);
+        List<string> listdsName = GetListDatastructure(itemTypeConst: DataStructure.CategoryConst);
         var list = new List<ListViewItem>();
         DataStructure ds = new DataStructure();
         PanelControlSet panel1 = new PanelControlSet();
         FormControlSet frmSet = new FormControlSet();
         FormReferenceMenuItem form1 = new FormReferenceMenuItem();
         ServiceCommandUpdateScriptActivity activity1 = new ServiceCommandUpdateScriptActivity();
-        list.Add(new ListViewItem(ds.GetType().SchemaItemDescription().Name, ds.Icon));
-        list.Add(new ListViewItem(panel1.GetType().SchemaItemDescription().Name, panel1.Icon));
-        list.Add(new ListViewItem(frmSet.GetType().SchemaItemDescription().Name, frmSet.Icon));
-        list.Add(new ListViewItem(form1.GetType().SchemaItemDescription().Name, form1.Icon));
         list.Add(
-            new ListViewItem(activity1.GetType().SchemaItemDescription().Name, activity1.Icon)
+            item: new ListViewItem(
+                text: ds.GetType().SchemaItemDescription().Name,
+                imageKey: ds.Icon
+            )
+        );
+        list.Add(
+            item: new ListViewItem(
+                text: panel1.GetType().SchemaItemDescription().Name,
+                imageKey: panel1.Icon
+            )
+        );
+        list.Add(
+            item: new ListViewItem(
+                text: frmSet.GetType().SchemaItemDescription().Name,
+                imageKey: frmSet.Icon
+            )
+        );
+        list.Add(
+            item: new ListViewItem(
+                text: form1.GetType().SchemaItemDescription().Name,
+                imageKey: form1.Icon
+            )
+        );
+        list.Add(
+            item: new ListViewItem(
+                text: activity1.GetType().SchemaItemDescription().Name,
+                imageKey: activity1.Icon
+            )
         );
         Stack stackPage = new Stack();
-        stackPage.Push(PagesList.Finish);
-        stackPage.Push(PagesList.SummaryPage);
-        stackPage.Push(PagesList.ScreenForm);
-        if (listdsName.Any(name => name == (Owner as IDataEntity).Name))
+        stackPage.Push(obj: PagesList.Finish);
+        stackPage.Push(obj: PagesList.SummaryPage);
+        stackPage.Push(obj: PagesList.ScreenForm);
+        if (listdsName.Any(predicate: name => name == (Owner as IDataEntity).Name))
         {
-            stackPage.Push(PagesList.StructureNamePage);
+            stackPage.Push(obj: PagesList.StructureNamePage);
         }
-        stackPage.Push(PagesList.StartPage);
+        stackPage.Push(obj: PagesList.StartPage);
         wizardForm = new ScreenWizardForm
         {
             ItemTypeList = list,
-            Title = ResourceUtils.GetString("CreateCompleteUIWizardTitle"),
+            Title = ResourceUtils.GetString(key: "CreateCompleteUIWizardTitle"),
             PageTitle = "",
-            Description = ResourceUtils.GetString("CreateCompleteUIWizardDescription"),
+            Description = ResourceUtils.GetString(key: "CreateCompleteUIWizardDescription"),
             Pages = stackPage,
             Entity = Owner as IDataEntity,
             IsRoleVisible = true,
@@ -188,7 +245,7 @@ public class CreateCompleteUICommand : AbstractMenuCommand
             Command = this,
             Role = entity.Name,
         };
-        Wizard wiz = new Wizard(wizardForm);
+        Wizard wiz = new Wizard(objectForm: wizardForm);
         if (wiz.ShowDialog() != DialogResult.OK)
         {
             GeneratedModelElements.Clear();
@@ -204,36 +261,42 @@ public class CreateCompleteUICommand : AbstractMenuCommand
         }
 
         DataStructure dataStructure = EntityHelper.CreateDataStructure(
-            wizardForm.Entity,
-            wizardForm.NameOfEntity,
-            true
+            entity: wizardForm.Entity,
+            name: wizardForm.NameOfEntity,
+            persist: true
         );
         PanelControlSet panel = GuiHelper.CreatePanel(
-            groupName,
-            wizardForm.Entity,
-            wizardForm.SelectedFieldNames,
-            wizardForm.NameOfEntity
+            groupName: groupName,
+            entity: wizardForm.Entity,
+            fieldsToPopulate: wizardForm.SelectedFieldNames,
+            name: wizardForm.NameOfEntity
         );
-        FormControlSet form = GuiHelper.CreateForm(dataStructure, groupName, panel);
+        FormControlSet form = GuiHelper.CreateForm(
+            dataSource: dataStructure,
+            groupName: groupName,
+            defaultPanel: panel
+        );
         FormReferenceMenuItem menu = MenuHelper.CreateMenuItem(
-            !string.IsNullOrEmpty(wizardForm.Caption) ? wizardForm.Caption : wizardForm.Entity.Name,
-            wizardForm.Role,
-            form
+            caption: !string.IsNullOrEmpty(value: wizardForm.Caption)
+                ? wizardForm.Caption
+                : wizardForm.Entity.Name,
+            role: wizardForm.Role,
+            form: form
         );
-        GeneratedModelElements.Add(dataStructure);
-        GeneratedModelElements.Add(panel);
-        GeneratedModelElements.Add(form);
-        GeneratedModelElements.Add(menu);
+        GeneratedModelElements.Add(item: dataStructure);
+        GeneratedModelElements.Add(item: panel);
+        GeneratedModelElements.Add(item: form);
+        GeneratedModelElements.Add(item: menu);
         if (wizardForm.Role != "*" && wizardForm.Role != "")
         {
-            ServiceCommandUpdateScriptActivity activity = CreateRole(wizardForm.Role);
-            GeneratedModelElements.Add(activity);
+            ServiceCommandUpdateScriptActivity activity = CreateRole(role: wizardForm.Role);
+            GeneratedModelElements.Add(item: activity);
         }
     }
 
     public override int GetImageIndex(string icon)
     {
-        return _schemaBrowser.ImageIndex(icon);
+        return _schemaBrowser.ImageIndex(icon: icon);
     }
 
     public override void SetSummaryText(object summary)
@@ -241,22 +304,25 @@ public class CreateCompleteUICommand : AbstractMenuCommand
         RichTextBox richTextBoxSummary = (RichTextBox)summary;
         richTextBoxSummary.Text =
             "This Wizard will create a Menu from an Entity with these parameters:";
-        richTextBoxSummary.AppendText(Environment.NewLine);
-        richTextBoxSummary.AppendText(Environment.NewLine);
-        richTextBoxSummary.AppendText("Datastructure: \t\t");
-        richTextBoxSummary.AppendText(wizardForm.NameOfEntity);
-        richTextBoxSummary.AppendText(Environment.NewLine);
-        richTextBoxSummary.AppendText("Menu: \t\t\t");
+        richTextBoxSummary.AppendText(text: Environment.NewLine);
+        richTextBoxSummary.AppendText(text: Environment.NewLine);
+        richTextBoxSummary.AppendText(text: "Datastructure: \t\t");
+        richTextBoxSummary.AppendText(text: wizardForm.NameOfEntity);
+        richTextBoxSummary.AppendText(text: Environment.NewLine);
+        richTextBoxSummary.AppendText(text: "Menu: \t\t\t");
         richTextBoxSummary.AppendText(
-            wizardForm.Entity.Caption == null || wizardForm.Entity.Caption == ""
+            text: wizardForm.Entity.Caption == null || wizardForm.Entity.Caption == ""
                 ? wizardForm.NameOfEntity
                 : wizardForm.Entity.Caption
         );
-        richTextBoxSummary.AppendText(Environment.NewLine);
-        richTextBoxSummary.AppendText("Role: \t\t\t");
-        richTextBoxSummary.AppendText(wizardForm.Role);
-        richTextBoxSummary.AppendText(Environment.NewLine);
-        ShowListItems(richTextBoxSummary, wizardForm.SelectedFieldNames);
+        richTextBoxSummary.AppendText(text: Environment.NewLine);
+        richTextBoxSummary.AppendText(text: "Role: \t\t\t");
+        richTextBoxSummary.AppendText(text: wizardForm.Role);
+        richTextBoxSummary.AppendText(text: Environment.NewLine);
+        ShowListItems(
+            richTextBoxSummary: richTextBoxSummary,
+            selectedFieldNames: wizardForm.SelectedFieldNames
+        );
     }
 }
 
@@ -264,11 +330,17 @@ public class CreateFormFromPanelCommand : AbstractMenuCommand
 {
     PanelWizardForm panelWizard;
     SchemaBrowser _schemaBrowser =
-        WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+        WorkbenchSingleton.Workbench.GetPad(type: typeof(SchemaBrowser)) as SchemaBrowser;
     public override bool IsEnabled
     {
         get { return Owner is PanelControlSet; }
-        set { throw new ArgumentException("Cannot set this property", "IsEnabled"); }
+        set
+        {
+            throw new ArgumentException(
+                message: "Cannot set this property",
+                paramName: "IsEnabled"
+            );
+        }
     }
 
     public override void Run()
@@ -276,24 +348,34 @@ public class CreateFormFromPanelCommand : AbstractMenuCommand
         PanelControlSet panel = Owner as PanelControlSet;
         DataStructure ds = new DataStructure();
         FormControlSet frmSet = new FormControlSet();
-        List<string> listdsName = GetListDatastructure(DataStructure.CategoryConst);
+        List<string> listdsName = GetListDatastructure(itemTypeConst: DataStructure.CategoryConst);
         var list = new List<ListViewItem>();
-        list.Add(new ListViewItem(ds.GetType().SchemaItemDescription().Name, ds.Icon));
-        list.Add(new ListViewItem(frmSet.GetType().SchemaItemDescription().Name, frmSet.Icon));
+        list.Add(
+            item: new ListViewItem(
+                text: ds.GetType().SchemaItemDescription().Name,
+                imageKey: ds.Icon
+            )
+        );
+        list.Add(
+            item: new ListViewItem(
+                text: frmSet.GetType().SchemaItemDescription().Name,
+                imageKey: frmSet.Icon
+            )
+        );
         Stack stackPage = new Stack();
-        stackPage.Push(PagesList.Finish);
-        stackPage.Push(PagesList.SummaryPage);
-        if (listdsName.Any(name => name == panel.Name))
+        stackPage.Push(obj: PagesList.Finish);
+        stackPage.Push(obj: PagesList.SummaryPage);
+        if (listdsName.Any(predicate: name => name == panel.Name))
         {
-            stackPage.Push(PagesList.StructureNamePage);
+            stackPage.Push(obj: PagesList.StructureNamePage);
         }
-        stackPage.Push(PagesList.StartPage);
+        stackPage.Push(obj: PagesList.StartPage);
         panelWizard = new PanelWizardForm
         {
             ItemTypeList = list,
-            Title = ResourceUtils.GetString("CreateFormFromPanelWizardTitle"),
+            Title = ResourceUtils.GetString(key: "CreateFormFromPanelWizardTitle"),
             PageTitle = "",
-            Description = ResourceUtils.GetString("CreateFormFromPanelWizardDescription."),
+            Description = ResourceUtils.GetString(key: "CreateFormFromPanelWizardDescription."),
             StructureList = listdsName,
             NameOfEntity = panel.Name,
             Pages = stackPage,
@@ -301,7 +383,7 @@ public class CreateFormFromPanelCommand : AbstractMenuCommand
             ImageList = _schemaBrowser.EbrSchemaBrowser.imgList,
             Command = this,
         };
-        Wizard wiz = new Wizard(panelWizard);
+        Wizard wiz = new Wizard(objectForm: panelWizard);
         if (wiz.ShowDialog() != DialogResult.OK)
         {
             GeneratedModelElements.Clear();
@@ -318,13 +400,17 @@ public class CreateFormFromPanelCommand : AbstractMenuCommand
         }
 
         DataStructure dataStructure = EntityHelper.CreateDataStructure(
-            panel.DataEntity,
-            panelWizard.NameOfEntity,
-            true
+            entity: panel.DataEntity,
+            name: panelWizard.NameOfEntity,
+            persist: true
         );
-        GeneratedModelElements.Add(dataStructure);
-        FormControlSet form = GuiHelper.CreateForm(dataStructure, groupName, panel);
-        GeneratedModelElements.Add(form);
+        GeneratedModelElements.Add(item: dataStructure);
+        FormControlSet form = GuiHelper.CreateForm(
+            dataSource: dataStructure,
+            groupName: groupName,
+            defaultPanel: panel
+        );
+        GeneratedModelElements.Add(item: form);
         Origam.Workbench.Commands.EditSchemaItem edit =
             new Origam.Workbench.Commands.EditSchemaItem();
         edit.Owner = form;
@@ -333,7 +419,7 @@ public class CreateFormFromPanelCommand : AbstractMenuCommand
 
     public override int GetImageIndex(string icon)
     {
-        return _schemaBrowser.ImageIndex(icon);
+        return _schemaBrowser.ImageIndex(icon: icon);
     }
 
     public override void SetSummaryText(object summary)
@@ -341,13 +427,13 @@ public class CreateFormFromPanelCommand : AbstractMenuCommand
         RichTextBox richTextBoxSummary = (RichTextBox)summary;
         richTextBoxSummary.Text =
             "This Wizard will create a Screen from a ScreenSection with these parameters:";
-        richTextBoxSummary.AppendText(Environment.NewLine);
-        richTextBoxSummary.AppendText(Environment.NewLine);
-        richTextBoxSummary.AppendText("Datastructure: \t");
-        richTextBoxSummary.AppendText(panelWizard.NameOfEntity);
-        richTextBoxSummary.AppendText(Environment.NewLine);
-        richTextBoxSummary.AppendText("Screen: \t\t");
-        richTextBoxSummary.AppendText(panelWizard.NameOfEntity);
+        richTextBoxSummary.AppendText(text: Environment.NewLine);
+        richTextBoxSummary.AppendText(text: Environment.NewLine);
+        richTextBoxSummary.AppendText(text: "Datastructure: \t");
+        richTextBoxSummary.AppendText(text: panelWizard.NameOfEntity);
+        richTextBoxSummary.AppendText(text: Environment.NewLine);
+        richTextBoxSummary.AppendText(text: "Screen: \t\t");
+        richTextBoxSummary.AppendText(text: panelWizard.NameOfEntity);
     }
 }
 
@@ -355,11 +441,17 @@ public class CreateMenuFromFormCommand : AbstractMenuCommand
 {
     MenuFromForm menuFrom;
     SchemaBrowser _schemaBrowser =
-        WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+        WorkbenchSingleton.Workbench.GetPad(type: typeof(SchemaBrowser)) as SchemaBrowser;
     public override bool IsEnabled
     {
         get { return Owner is FormControlSet; }
-        set { throw new ArgumentException("Cannot set this property", "IsEnabled"); }
+        set
+        {
+            throw new ArgumentException(
+                message: "Cannot set this property",
+                paramName: "IsEnabled"
+            );
+        }
     }
 
     public override void Run()
@@ -367,25 +459,30 @@ public class CreateMenuFromFormCommand : AbstractMenuCommand
         FormControlSet form = Owner as FormControlSet;
         var list = new List<ListViewItem>();
         FormReferenceMenuItem form1 = new FormReferenceMenuItem();
-        list.Add(new ListViewItem(form1.GetType().SchemaItemDescription().Name, form1.Icon));
+        list.Add(
+            item: new ListViewItem(
+                text: form1.GetType().SchemaItemDescription().Name,
+                imageKey: form1.Icon
+            )
+        );
         Stack stackPage = new Stack();
-        stackPage.Push(PagesList.Finish);
-        stackPage.Push(PagesList.SummaryPage);
-        stackPage.Push(PagesList.MenuPage);
-        stackPage.Push(PagesList.StartPage);
+        stackPage.Push(obj: PagesList.Finish);
+        stackPage.Push(obj: PagesList.SummaryPage);
+        stackPage.Push(obj: PagesList.MenuPage);
+        stackPage.Push(obj: PagesList.StartPage);
         menuFrom = new MenuFromForm
         {
             ItemTypeList = list,
-            Title = ResourceUtils.GetString("CreateMenuFromFormWizardTitle"),
+            Title = ResourceUtils.GetString(key: "CreateMenuFromFormWizardTitle"),
             PageTitle = "",
-            Description = ResourceUtils.GetString("CreateMenuFromFormWizardDescription"),
+            Description = ResourceUtils.GetString(key: "CreateMenuFromFormWizardDescription"),
             Pages = stackPage,
             Entity = form,
             Role = form.Name,
             ImageList = _schemaBrowser.EbrSchemaBrowser.imgList,
             Command = this,
         };
-        Wizard wiz = new Wizard(menuFrom);
+        Wizard wiz = new Wizard(objectForm: menuFrom);
         if (wiz.ShowDialog() != DialogResult.OK)
         {
             GeneratedModelElements.Clear();
@@ -395,22 +492,24 @@ public class CreateMenuFromFormCommand : AbstractMenuCommand
     public override void Execute()
     {
         FormReferenceMenuItem menu = MenuHelper.CreateMenuItem(
-            !string.IsNullOrEmpty(menuFrom.Caption) ? menuFrom.Caption : menuFrom.Entity.Name,
-            menuFrom.Role,
-            (FormControlSet)menuFrom.Entity
+            caption: !string.IsNullOrEmpty(value: menuFrom.Caption)
+                ? menuFrom.Caption
+                : menuFrom.Entity.Name,
+            role: menuFrom.Role,
+            form: (FormControlSet)menuFrom.Entity
         );
-        GeneratedModelElements.Add(menu);
+        GeneratedModelElements.Add(item: menu);
         bool createRole = menuFrom.Role != "*" && menuFrom.Role != "";
         if (createRole)
         {
-            ServiceCommandUpdateScriptActivity activity = CreateRole(menuFrom.Role);
-            GeneratedModelElements.Add(activity);
+            ServiceCommandUpdateScriptActivity activity = CreateRole(role: menuFrom.Role);
+            GeneratedModelElements.Add(item: activity);
         }
     }
 
     public override int GetImageIndex(string icon)
     {
-        return _schemaBrowser.ImageIndex(icon);
+        return _schemaBrowser.ImageIndex(icon: icon);
     }
 
     public override void SetSummaryText(object summary)
@@ -418,14 +517,14 @@ public class CreateMenuFromFormCommand : AbstractMenuCommand
         RichTextBox richTextBoxSummary = (RichTextBox)summary;
         richTextBoxSummary.Text =
             "This Wizard will create a Menu for a Screen with these parameters:";
-        richTextBoxSummary.AppendText(Environment.NewLine);
-        richTextBoxSummary.AppendText(Environment.NewLine);
-        richTextBoxSummary.AppendText("Menu: \t");
-        richTextBoxSummary.AppendText(menuFrom.Caption);
-        richTextBoxSummary.AppendText(Environment.NewLine);
-        richTextBoxSummary.AppendText("Role: \t");
-        richTextBoxSummary.AppendText(menuFrom.Role);
-        richTextBoxSummary.AppendText(Environment.NewLine);
+        richTextBoxSummary.AppendText(text: Environment.NewLine);
+        richTextBoxSummary.AppendText(text: Environment.NewLine);
+        richTextBoxSummary.AppendText(text: "Menu: \t");
+        richTextBoxSummary.AppendText(text: menuFrom.Caption);
+        richTextBoxSummary.AppendText(text: Environment.NewLine);
+        richTextBoxSummary.AppendText(text: "Role: \t");
+        richTextBoxSummary.AppendText(text: menuFrom.Role);
+        richTextBoxSummary.AppendText(text: Environment.NewLine);
     }
 }
 
@@ -433,11 +532,17 @@ public class CreateMenuFromDataConstantCommand : AbstractMenuCommand
 {
     MenuFromForm menuFrom;
     SchemaBrowser _schemaBrowser =
-        WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+        WorkbenchSingleton.Workbench.GetPad(type: typeof(SchemaBrowser)) as SchemaBrowser;
     public override bool IsEnabled
     {
         get { return Owner is DataConstant; }
-        set { throw new ArgumentException("Cannot set this property", "IsEnabled"); }
+        set
+        {
+            throw new ArgumentException(
+                message: "Cannot set this property",
+                paramName: "IsEnabled"
+            );
+        }
     }
 
     public override void Run()
@@ -445,25 +550,32 @@ public class CreateMenuFromDataConstantCommand : AbstractMenuCommand
         DataConstant constant = Owner as DataConstant;
         var list = new List<ListViewItem>();
         DataConstantReferenceMenuItem form1 = new DataConstantReferenceMenuItem();
-        list.Add(new ListViewItem(form1.GetType().SchemaItemDescription().Name, form1.Icon));
+        list.Add(
+            item: new ListViewItem(
+                text: form1.GetType().SchemaItemDescription().Name,
+                imageKey: form1.Icon
+            )
+        );
         Stack stackPage = new Stack();
-        stackPage.Push(PagesList.Finish);
-        stackPage.Push(PagesList.SummaryPage);
-        stackPage.Push(PagesList.MenuPage);
-        stackPage.Push(PagesList.StartPage);
+        stackPage.Push(obj: PagesList.Finish);
+        stackPage.Push(obj: PagesList.SummaryPage);
+        stackPage.Push(obj: PagesList.MenuPage);
+        stackPage.Push(obj: PagesList.StartPage);
         menuFrom = new MenuFromForm
         {
             ItemTypeList = list,
-            Title = ResourceUtils.GetString("CreateMenuFromDataConstantWizardTitle"),
+            Title = ResourceUtils.GetString(key: "CreateMenuFromDataConstantWizardTitle"),
             PageTitle = "",
-            Description = ResourceUtils.GetString("CreateMenuFromDataConstantWizardDescription"),
+            Description = ResourceUtils.GetString(
+                key: "CreateMenuFromDataConstantWizardDescription"
+            ),
             Pages = stackPage,
             Entity = constant,
             Role = constant.Name,
             ImageList = _schemaBrowser.EbrSchemaBrowser.imgList,
             Command = this,
         };
-        Wizard wiz = new Wizard(menuFrom);
+        Wizard wiz = new Wizard(objectForm: menuFrom);
         if (wiz.ShowDialog() != DialogResult.OK)
         {
             GeneratedModelElements.Clear();
@@ -473,22 +585,22 @@ public class CreateMenuFromDataConstantCommand : AbstractMenuCommand
     public override void Execute()
     {
         DataConstantReferenceMenuItem menu = MenuHelper.CreateMenuItem(
-            menuFrom.Caption,
-            menuFrom.Role,
-            menuFrom.Entity as DataConstant
+            caption: menuFrom.Caption,
+            role: menuFrom.Role,
+            constant: menuFrom.Entity as DataConstant
         );
-        GeneratedModelElements.Add(menu);
+        GeneratedModelElements.Add(item: menu);
         bool createRole = menuFrom.Role != "*" && menuFrom.Role != "";
         if (createRole)
         {
-            ServiceCommandUpdateScriptActivity activity = CreateRole(menuFrom.Role);
-            GeneratedModelElements.Add(activity);
+            ServiceCommandUpdateScriptActivity activity = CreateRole(role: menuFrom.Role);
+            GeneratedModelElements.Add(item: activity);
         }
     }
 
     public override int GetImageIndex(string icon)
     {
-        return _schemaBrowser.ImageIndex(icon);
+        return _schemaBrowser.ImageIndex(icon: icon);
     }
 
     public override void SetSummaryText(object summary)
@@ -496,14 +608,14 @@ public class CreateMenuFromDataConstantCommand : AbstractMenuCommand
         RichTextBox richTextBoxSummary = (RichTextBox)summary;
         richTextBoxSummary.Text =
             "This Wizard will create a Menu for a DataConstant with these parameters:";
-        richTextBoxSummary.AppendText(Environment.NewLine);
-        richTextBoxSummary.AppendText(Environment.NewLine);
-        richTextBoxSummary.AppendText("Menu: \t");
-        richTextBoxSummary.AppendText(menuFrom.Caption);
-        richTextBoxSummary.AppendText(Environment.NewLine);
-        richTextBoxSummary.AppendText("Role: \t");
-        richTextBoxSummary.AppendText(menuFrom.Role);
-        richTextBoxSummary.AppendText(Environment.NewLine);
+        richTextBoxSummary.AppendText(text: Environment.NewLine);
+        richTextBoxSummary.AppendText(text: Environment.NewLine);
+        richTextBoxSummary.AppendText(text: "Menu: \t");
+        richTextBoxSummary.AppendText(text: menuFrom.Caption);
+        richTextBoxSummary.AppendText(text: Environment.NewLine);
+        richTextBoxSummary.AppendText(text: "Role: \t");
+        richTextBoxSummary.AppendText(text: menuFrom.Role);
+        richTextBoxSummary.AppendText(text: Environment.NewLine);
     }
 }
 
@@ -511,11 +623,17 @@ public class CreateMenuFromSequentialWorkflowCommand : AbstractMenuCommand
 {
     MenuFromForm menuFrom;
     SchemaBrowser _schemaBrowser =
-        WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+        WorkbenchSingleton.Workbench.GetPad(type: typeof(SchemaBrowser)) as SchemaBrowser;
     public override bool IsEnabled
     {
         get { return Owner is Schema.WorkflowModel.Workflow; }
-        set { throw new ArgumentException("Cannot set this property", "IsEnabled"); }
+        set
+        {
+            throw new ArgumentException(
+                message: "Cannot set this property",
+                paramName: "IsEnabled"
+            );
+        }
     }
 
     public override void Run()
@@ -524,29 +642,31 @@ public class CreateMenuFromSequentialWorkflowCommand : AbstractMenuCommand
         var list = new List<ListViewItem>();
         WorkflowReferenceMenuItem workflowReference = new WorkflowReferenceMenuItem();
         list.Add(
-            new ListViewItem(
-                workflowReference.GetType().SchemaItemDescription().Name,
-                workflowReference.Icon
+            item: new ListViewItem(
+                text: workflowReference.GetType().SchemaItemDescription().Name,
+                imageKey: workflowReference.Icon
             )
         );
         Stack stackPage = new Stack();
-        stackPage.Push(PagesList.Finish);
-        stackPage.Push(PagesList.SummaryPage);
-        stackPage.Push(PagesList.MenuPage);
-        stackPage.Push(PagesList.StartPage);
+        stackPage.Push(obj: PagesList.Finish);
+        stackPage.Push(obj: PagesList.SummaryPage);
+        stackPage.Push(obj: PagesList.MenuPage);
+        stackPage.Push(obj: PagesList.StartPage);
         menuFrom = new MenuFromForm
         {
             ItemTypeList = list,
-            Title = ResourceUtils.GetString("CreateMenuFromSequentialWorkflowWizardTitle"),
+            Title = ResourceUtils.GetString(key: "CreateMenuFromSequentialWorkflowWizardTitle"),
             PageTitle = "",
-            Description = ResourceUtils.GetString("CreateMenuFromSequentialWorkflowWizardTitle"),
+            Description = ResourceUtils.GetString(
+                key: "CreateMenuFromSequentialWorkflowWizardTitle"
+            ),
             Pages = stackPage,
             Entity = wf,
             Role = wf.Name,
             ImageList = _schemaBrowser.EbrSchemaBrowser.imgList,
             Command = this,
         };
-        Wizard wiz = new Wizard(menuFrom);
+        Wizard wiz = new Wizard(objectForm: menuFrom);
         if (wiz.ShowDialog() != DialogResult.OK)
         {
             GeneratedModelElements.Clear();
@@ -556,22 +676,22 @@ public class CreateMenuFromSequentialWorkflowCommand : AbstractMenuCommand
     public override void Execute()
     {
         WorkflowReferenceMenuItem menu = MenuHelper.CreateMenuItem(
-            menuFrom.Caption,
-            menuFrom.Role,
-            menuFrom.Entity as Schema.WorkflowModel.Workflow
+            caption: menuFrom.Caption,
+            role: menuFrom.Role,
+            workflow: menuFrom.Entity as Schema.WorkflowModel.Workflow
         );
-        GeneratedModelElements.Add(menu);
+        GeneratedModelElements.Add(item: menu);
         bool createRole = menuFrom.Role != "*" && menuFrom.Role != "";
         if (createRole)
         {
-            ServiceCommandUpdateScriptActivity activity = CreateRole(menuFrom.Role);
-            GeneratedModelElements.Add(activity);
+            ServiceCommandUpdateScriptActivity activity = CreateRole(role: menuFrom.Role);
+            GeneratedModelElements.Add(item: activity);
         }
     }
 
     public override int GetImageIndex(string icon)
     {
-        return _schemaBrowser.ImageIndex(icon);
+        return _schemaBrowser.ImageIndex(icon: icon);
     }
 
     public override void SetSummaryText(object summary)
@@ -579,13 +699,13 @@ public class CreateMenuFromSequentialWorkflowCommand : AbstractMenuCommand
         RichTextBox richTextBoxSummary = (RichTextBox)summary;
         richTextBoxSummary.Text =
             "This Wizard will create a Menu for a Workflow with these parameters:";
-        richTextBoxSummary.AppendText(Environment.NewLine);
-        richTextBoxSummary.AppendText(Environment.NewLine);
-        richTextBoxSummary.AppendText("Menu: \t");
-        richTextBoxSummary.AppendText(menuFrom.Caption);
-        richTextBoxSummary.AppendText(Environment.NewLine);
-        richTextBoxSummary.AppendText("Role: \t");
-        richTextBoxSummary.AppendText(menuFrom.Role);
-        richTextBoxSummary.AppendText(Environment.NewLine);
+        richTextBoxSummary.AppendText(text: Environment.NewLine);
+        richTextBoxSummary.AppendText(text: Environment.NewLine);
+        richTextBoxSummary.AppendText(text: "Menu: \t");
+        richTextBoxSummary.AppendText(text: menuFrom.Caption);
+        richTextBoxSummary.AppendText(text: Environment.NewLine);
+        richTextBoxSummary.AppendText(text: "Role: \t");
+        richTextBoxSummary.AppendText(text: menuFrom.Role);
+        richTextBoxSummary.AppendText(text: Environment.NewLine);
     }
 }

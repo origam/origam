@@ -39,90 +39,105 @@ namespace Origam.Workbench.ServicesTests;
 public class FilePersistenceServiceTests : AbstractFileTestClass
 {
     private string PathToRuntimeModelConfig =>
-        Path.Combine(PathToTestDirectory, "RuntimeModelConfiguration.json");
+        Path.Combine(path1: PathToTestDirectory, path2: "RuntimeModelConfiguration.json");
     private string PathToTestDirectory =>
-        Path.Combine(TestContext.WorkDirectory, "FilePersistenceServiceTests", "TestFiles");
+        Path.Combine(
+            path1: TestContext.WorkDirectory,
+            path2: "FilePersistenceServiceTests",
+            path3: "TestFiles"
+        );
     protected override TestContext TestContext => TestContext.CurrentContext;
 
     [Test]
     public void ShouldReloadModelWhenChangesDetected()
     {
         string pathToTestDirectory = Path.Combine(
-            TestContext.WorkDirectory,
-            "FilePersistenceServiceTests",
-            "TestFiles"
+            path1: TestContext.WorkDirectory,
+            path2: "FilePersistenceServiceTests",
+            path3: "TestFiles"
         );
-        string pathToTestFile = Path.Combine(pathToTestDirectory, "TestEntity.origam");
-        Guid testEntityId = new Guid("4a803640-f5dd-46d8-8294-7ba3baa8ff6d");
+        string pathToTestFile = Path.Combine(
+            path1: pathToTestDirectory,
+            path2: "TestEntity.origam"
+        );
+        Guid testEntityId = new Guid(g: "4a803640-f5dd-46d8-8294-7ba3baa8ff6d");
 
-        var sut = InitializeFilePersistenceService(pathToTestDirectory);
+        var sut = InitializeFilePersistenceService(pathToTestDirectory: pathToTestDirectory);
         bool reloadNeededEventCalled = false;
-        var itemBeforeChange = sut.SchemaProvider.RetrieveInstance<TableMappingItem>(testEntityId);
+        var itemBeforeChange = sut.SchemaProvider.RetrieveInstance<TableMappingItem>(
+            instanceId: testEntityId
+        );
 
-        Assert.That(itemBeforeChange.Name, Is.EqualTo("TestEntity"));
+        Assert.That(actual: itemBeforeChange.Name, expression: Is.EqualTo(expected: "TestEntity"));
 
         sut.ReloadNeeded += (sender, args) =>
         {
             reloadNeededEventCalled = true;
             Maybe<XmlLoadError> maybeError = sut.Reload();
-            Assert.IsTrue(maybeError.HasNoValue);
+            Assert.IsTrue(condition: maybeError.HasNoValue);
 
             var itemAfterChange = sut.SchemaProvider.RetrieveInstance<TableMappingItem>(
-                testEntityId
+                instanceId: testEntityId
             );
-            Assert.That(itemAfterChange.Name, Is.EqualTo("TestEntityChanged"));
+            Assert.That(
+                actual: itemAfterChange.Name,
+                expression: Is.EqualTo(expected: "TestEntityChanged")
+            );
         };
-        string testFileContents = File.ReadAllText(pathToTestFile);
+        string testFileContents = File.ReadAllText(path: pathToTestFile);
         testFileContents = testFileContents.Replace(
-            "asi:name=\"TestEntity\"",
-            "asi:name=\"TestEntityChanged\""
+            oldValue: "asi:name=\"TestEntity\"",
+            newValue: "asi:name=\"TestEntityChanged\""
         );
-        File.WriteAllText(pathToTestFile, testFileContents);
-        Thread.Sleep(3000);
+        File.WriteAllText(path: pathToTestFile, contents: testFileContents);
+        Thread.Sleep(millisecondsTimeout: 3000);
 
-        Assert.IsTrue(reloadNeededEventCalled);
-        File.Delete(pathToTestFile);
+        Assert.IsTrue(condition: reloadNeededEventCalled);
+        File.Delete(path: pathToTestFile);
     }
 
     [Test]
     public void ShouldReadNewValueAfterRuntimeConfigChanged()
     {
-        Guid testItemId = new Guid("5c42ad31-e3f6-4bb4-bc03-fd5f6d930b1d");
+        Guid testItemId = new Guid(g: "5c42ad31-e3f6-4bb4-bc03-fd5f6d930b1d");
 
         SetTraceLevelInConfigFile(oldValue: "No", newValue: "Yes");
-        var sut = InitializeFilePersistenceService(PathToTestDirectory);
+        var sut = InitializeFilePersistenceService(pathToTestDirectory: PathToTestDirectory);
 
         var itemBeforeChange = sut.SchemaProvider.RetrieveInstance<Schema.WorkflowModel.Workflow>(
-            testItemId
+            instanceId: testItemId
         );
-        Assert.That(itemBeforeChange.TraceLevel, Is.EqualTo(Trace.Yes));
+        Assert.That(
+            actual: itemBeforeChange.TraceLevel,
+            expression: Is.EqualTo(expected: Trace.Yes)
+        );
         SetTraceLevelInConfigFile(oldValue: "Yes", newValue: "No");
-        Thread.Sleep(500);
+        Thread.Sleep(millisecondsTimeout: 500);
 
         var itemAfterChange = sut.SchemaProvider.RetrieveInstance<Schema.WorkflowModel.Workflow>(
-            testItemId
+            instanceId: testItemId
         );
-        Assert.That(itemAfterChange.TraceLevel, Is.EqualTo(Trace.No));
+        Assert.That(actual: itemAfterChange.TraceLevel, expression: Is.EqualTo(expected: Trace.No));
     }
 
     private void SetTraceLevelInConfigFile(string oldValue, string newValue)
     {
-        string configText = File.ReadAllText(PathToRuntimeModelConfig);
+        string configText = File.ReadAllText(path: PathToRuntimeModelConfig);
         configText = configText.Replace(
-            $"\"PropertyValue\": \"{oldValue}\"",
-            $"\"PropertyValue\": \"{newValue}\""
+            oldValue: $"\"PropertyValue\": \"{oldValue}\"",
+            newValue: $"\"PropertyValue\": \"{newValue}\""
         );
-        File.WriteAllText(PathToRuntimeModelConfig, configText);
+        File.WriteAllText(path: PathToRuntimeModelConfig, contents: configText);
     }
 
     private FilePersistenceService InitializeFilePersistenceService(string pathToTestDirectory)
     {
         List<string> defaultFolders = new List<string>
         {
-            CategoryFactory.Create(typeof(Package)),
-            CategoryFactory.Create(typeof(SchemaItemGroup)),
+            CategoryFactory.Create(type: typeof(Package)),
+            CategoryFactory.Create(type: typeof(SchemaItemGroup)),
         };
-        ConfigurationManager.SetActiveConfiguration(new OrigamSettings());
+        ConfigurationManager.SetActiveConfiguration(configuration: new OrigamSettings());
 
         var sut = new FilePersistenceService(
             metaModelUpgradeService: new NullMetaModelUpgradeService(),

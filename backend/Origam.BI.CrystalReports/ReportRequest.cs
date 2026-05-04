@@ -37,16 +37,21 @@ public class ReportRequest
         get
         {
             var stringBuilder = new StringBuilder();
-            using (var stringWriter = new EncodingStringWriter(stringBuilder, Encoding.UTF8))
+            using (
+                var stringWriter = new EncodingStringWriter(
+                    builder: stringBuilder,
+                    encoding: Encoding.UTF8
+                )
+            )
             {
                 using (
                     var xmlWriter = XmlWriter.Create(
-                        stringWriter,
-                        new XmlWriterSettings { Encoding = UTF8Encoding.UTF8 }
+                        output: stringWriter,
+                        settings: new XmlWriterSettings { Encoding = UTF8Encoding.UTF8 }
                     )
                 )
                 {
-                    Dataset.WriteXml(xmlWriter, XmlWriteMode.WriteSchema);
+                    Dataset.WriteXml(writer: xmlWriter, mode: XmlWriteMode.WriteSchema);
                 }
             }
             return stringBuilder.ToString();

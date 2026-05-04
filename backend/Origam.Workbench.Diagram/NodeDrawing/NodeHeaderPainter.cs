@@ -37,49 +37,52 @@ class NodeHeaderPainter
     public void Draw(Node node, Graphics editorGraphics, Rectangle border)
     {
         INodeData nodeData = (INodeData)node.UserData;
-        SizeF stringSize = editorGraphics.MeasureString(node.LabelText, painter.Font);
+        SizeF stringSize = editorGraphics.MeasureString(text: node.LabelText, font: painter.Font);
 
         Rectangle imageBackground = new Rectangle(
-            border.Location,
-            new Size(painter.NodeHeaderHeight, painter.NodeHeaderHeight)
+            location: border.Location,
+            size: new Size(width: painter.NodeHeaderHeight, height: painter.NodeHeaderHeight)
         );
         Point headerCenter = border.GetCenter();
         var labelPoint = new PointF(
-            headerCenter.X
+            x: headerCenter.X
                 - ((float)border.Width / 2)
                 + painter.NodeHeaderHeight
                 + painter.TextSideMargin
                 + (nodeData.SecondaryImage == null ? 0 : imageBackground.Width - 5),
-            (float)headerCenter.Y - ((int)stringSize.Height / 2)
+            y: (float)headerCenter.Y - ((int)stringSize.Height / 2)
         );
         var imageBorder = new Size(
-            (imageBackground.Width - nodeData.PrimaryImage.Width) / 2,
-            (imageBackground.Height - nodeData.PrimaryImage.Height) / 2
+            width: (imageBackground.Width - nodeData.PrimaryImage.Width) / 2,
+            height: (imageBackground.Height - nodeData.PrimaryImage.Height) / 2
         );
         var primaryImagePoint = new PointF(
-            headerCenter.X - ((float)border.Width / 2) + imageBorder.Width,
-            headerCenter.Y - ((float)border.Height / 2) + imageBorder.Height
+            x: headerCenter.X - ((float)border.Width / 2) + imageBorder.Width,
+            y: headerCenter.Y - ((float)border.Height / 2) + imageBorder.Height
         );
 
         var secondaryImagePoint = new PointF(
-            headerCenter.X - ((float)border.Width / 2) + imageBorder.Width + imageBackground.Width,
-            headerCenter.Y - ((float)border.Height / 2) + imageBorder.Height
+            x: headerCenter.X
+                - ((float)border.Width / 2)
+                + imageBorder.Width
+                + imageBackground.Width,
+            y: headerCenter.Y - ((float)border.Height / 2) + imageBorder.Height
         );
         editorGraphics.DrawUpSideDown(
             drawAction: graphics =>
             {
                 graphics.DrawString(
-                    node.LabelText,
-                    painter.Font,
-                    painter.GetTextBrush(nodeData.IsFromActivePackage),
-                    labelPoint,
-                    painter.DrawFormat
+                    s: node.LabelText,
+                    font: painter.Font,
+                    brush: painter.GetTextBrush(isFromActivePackage: nodeData.IsFromActivePackage),
+                    point: labelPoint,
+                    format: painter.DrawFormat
                 );
-                graphics.FillRectangle(painter.LightGreyBrush, imageBackground);
-                graphics.DrawImage(nodeData.PrimaryImage, primaryImagePoint);
+                graphics.FillRectangle(brush: painter.LightGreyBrush, rect: imageBackground);
+                graphics.DrawImage(image: nodeData.PrimaryImage, point: primaryImagePoint);
                 if (nodeData.SecondaryImage != null)
                 {
-                    graphics.DrawImage(nodeData.SecondaryImage, secondaryImagePoint);
+                    graphics.DrawImage(image: nodeData.SecondaryImage, point: secondaryImagePoint);
                 }
             },
             yAxisCoordinate: headerCenter.Y

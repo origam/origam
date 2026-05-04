@@ -30,10 +30,10 @@ public class ConfigurationManager
 {
     public static string UserProfileOrigamSettings =>
         Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-            "ORIGAM",
-            GetVersion(),
-            "OrigamSettings.config"
+            path1: Environment.GetFolderPath(folder: Environment.SpecialFolder.ApplicationData),
+            path2: "ORIGAM",
+            path3: GetVersion(),
+            path4: "OrigamSettings.config"
         );
     private static OrigamSettings _activeConfiguration;
     private static string _pathToOrigamSettings;
@@ -62,13 +62,13 @@ public class ConfigurationManager
         string origamSettingsPath = null
     )
     {
-        CreateUserProfileConfigFile(origamSettingsPath);
-        return new OrigamSettingsReader(_pathToOrigamSettings).GetAll();
+        CreateUserProfileConfigFile(origamSettingsPath: origamSettingsPath);
+        return new OrigamSettingsReader(pathToOrigamSettings: _pathToOrigamSettings).GetAll();
     }
 
     public static OrigamSettingsCollection GetAllConfigurations()
     {
-        return new OrigamSettingsReader(_pathToOrigamSettings).GetAll();
+        return new OrigamSettingsReader(pathToOrigamSettings: _pathToOrigamSettings).GetAll();
     }
 
     public static void WriteConfiguration(OrigamSettingsCollection configuration)
@@ -77,37 +77,46 @@ public class ConfigurationManager
         SortedList list = new SortedList();
         foreach (OrigamSettings setting in configuration)
         {
-            if (!list.Contains(setting.Name))
+            if (!list.Contains(key: setting.Name))
             {
-                list.Add(setting.Name, setting);
+                list.Add(key: setting.Name, value: setting);
             }
             else
             {
-                throw new Exception(ResourceUtils.GetString("CantSaveConfigDuplicateName"));
+                throw new Exception(
+                    message: ResourceUtils.GetString(key: "CantSaveConfigDuplicateName")
+                );
             }
         }
-        new OrigamSettingsReader(_pathToOrigamSettings).Write(configuration);
+        new OrigamSettingsReader(pathToOrigamSettings: _pathToOrigamSettings).Write(
+            configuration: configuration
+        );
     }
 
     private static void CreateUserProfileConfigFile(string origamSettingsPath = null)
     {
         string origamSettings = origamSettingsPath ?? UserProfileOrigamSettings;
 
-        if (!File.Exists(origamSettings))
+        if (!File.Exists(path: origamSettings))
         {
-            FileInfo file = new(origamSettings);
+            FileInfo file = new(fileName: origamSettings);
             file.Directory.Create();
-            OrigamSettingsReader origamSetting = new(origamSettings);
-            if (File.Exists(origamSetting.GetDefaultPathToOrigamSettings()))
+            OrigamSettingsReader origamSetting = new(pathToOrigamSettings: origamSettings);
+            if (File.Exists(path: origamSetting.GetDefaultPathToOrigamSettings()))
             {
-                File.Copy(origamSetting.GetDefaultPathToOrigamSettings(), origamSettings);
+                File.Copy(
+                    sourceFileName: origamSetting.GetDefaultPathToOrigamSettings(),
+                    destFileName: origamSettings
+                );
             }
             else
             {
-                new OrigamSettingsReader(origamSettings).Write(new OrigamSettingsCollection());
+                new OrigamSettingsReader(pathToOrigamSettings: origamSettings).Write(
+                    configuration: new OrigamSettingsCollection()
+                );
             }
         }
-        SetPathOrigamSettings(origamSettings);
+        SetPathOrigamSettings(pathToOrigamSettings: origamSettings);
     }
 
     private static string GetVersion()
@@ -123,8 +132,8 @@ public class OrigamSettingsException : Exception
         Strings.OrigamSettingsExceptionPrefix + message;
 
     public OrigamSettingsException(string message, Exception innerException)
-        : base(MakeMessage(message), innerException) { }
+        : base(message: MakeMessage(message: message), innerException: innerException) { }
 
     public OrigamSettingsException(string message)
-        : base(MakeMessage(message)) { }
+        : base(message: MakeMessage(message: message)) { }
 }

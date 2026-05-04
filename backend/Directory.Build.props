@@ -11,6 +11,9 @@
     43>Origam.Documentation.csproj: Error MSB4057 : The target "CSharpierFormatInner" does not exist in the project.
 -->
     <DisableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Documentation'">true</DisableStrictBuild>
+    <DisableMeziantouAnalyzer Condition="'$(TargetFramework)' == 'netstandard2.0' Or '$(TargetFramework)' == 'net472'">true</DisableMeziantouAnalyzer>
+    <DisableMeziantouAnalyzer Condition="'$(TargetFrameworks)' != '' And ($(TargetFrameworks.Contains('netstandard2.0')) Or $(TargetFrameworks.Contains('net472')))">true</DisableMeziantouAnalyzer>
+    <DisableMeziantouAnalyzer Condition="$([System.IO.File]::ReadAllText('$(MSBuildProjectFullPath)').Contains('TargetFrameworkVersion'))">true</DisableMeziantouAnalyzer>
   </PropertyGroup>
     <Choose>
         <When Condition="'$(DisableStrictBuild)' != 'true'">
@@ -33,6 +36,15 @@
                                   PrivateAssets="all" IncludeAssets="build;analyzers;buildtransitive"/>
                 <PackageReference Include="CSharpier.MsBuild" Version="1.1.2"
                                   PrivateAssets="all" IncludeAssets="build;analyzers;buildtransitive"/>
+		<PackageReference Include="Meziantou.Analyzer" Version="2.0.221"
+                                  Condition="'$(DisableMeziantouAnalyzer)' != 'true'"
+                                  PrivateAssets="all" IncludeAssets="build;analyzers;buildtransitive"/>
+                <EditorConfigFiles Include="$(MSBuildThisFileDirectory)origam.globalconfig"
+                                   Condition="'$(DisableMeziantouAnalyzer)' != 'true'"/>
+                <ProjectReference Include="$(MSBuildThisFileDirectory)Origam.Analyzers\Origam.Analyzers.csproj"
+                                  OutputItemType="Analyzer"
+                                  ReferenceOutputAssembly="false"
+                                  Condition="'$(MSBuildProjectName)' != 'Origam.Analyzers'"/>
             </ItemGroup>
 
             <PropertyGroup Condition="'$(Configuration)' == 'Release Server' or '$(Configuration)' == 'Release Architect Server' or '$(Configuration)' == 'Release Architect'">

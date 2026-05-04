@@ -45,21 +45,21 @@ abstract class SqlRunner : ISqlRunner
     public static ISqlRunner Create(ILog log)
     {
         OrigamSettings origamSettings = GetOrigamSettings();
-        if (origamSettings.DataDataService.Contains(nameof(PgSqlDataService)))
+        if (origamSettings.DataDataService.Contains(value: nameof(PgSqlDataService)))
         {
-            return new PgSqlRunner(log);
+            return new PgSqlRunner(log: log);
         }
-        if (origamSettings.DataDataService.Contains(nameof(MsSqlDataService)))
+        if (origamSettings.DataDataService.Contains(value: nameof(MsSqlDataService)))
         {
-            return new MsSqlRunner(log);
+            return new MsSqlRunner(log: log);
         }
-        throw new NotSupportedException("DataService is not supported");
+        throw new NotSupportedException(message: "DataService is not supported");
     }
 
     public int GetRootVersion(Program.GetRootVersionOptions arguments)
     {
         string sqlCommand = BuildRootVersionSql();
-        return RunSqlCommand(new Program.RunSqlCommandOptions
+        return RunSqlCommand(arguments: new Program.RunSqlCommandOptions
         {
             Delay = arguments.Delay,
             Attempts = arguments.Attempts,
@@ -69,8 +69,8 @@ abstract class SqlRunner : ISqlRunner
 
     public int RunSqlProcedure(Program.RunSqlProcedureCommandOptions arguments)
     {
-        string sqlCommand = BuildProcedureCall(arguments.ProcedureName);
-        return RunSqlCommand(new Program.RunSqlCommandOptions
+        string sqlCommand = BuildProcedureCall(procedureName: arguments.ProcedureName);
+        return RunSqlCommand(arguments: new Program.RunSqlCommandOptions
         {
             Delay = arguments.Delay,
             Attempts = arguments.Attempts,
@@ -87,22 +87,22 @@ abstract class SqlRunner : ISqlRunner
         }
         catch (Exception ex)
         {
-            Console.Error.WriteLine(ex);
-            log.Error(ex);
+            Console.Error.WriteLine(value: ex);
+            log.Error(message: ex);
             return 1;
         }
         for (int i = 0; i < arguments.Attempts; i++)
         {
             try
             {
-                ExecuteSqlCommand(origamSettings.DataConnectionString, arguments.SqlCommand);
+                ExecuteSqlCommand(connectionString: origamSettings.DataConnectionString, sqlCommand: arguments.SqlCommand);
                 return 0;
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine(ex);
-                log.Error("Failure:", ex);
-                Thread.Sleep(arguments.Delay);
+                Console.Error.WriteLine(value: ex);
+                log.Error(message: "Failure:", exception: ex);
+                Thread.Sleep(millisecondsTimeout: arguments.Delay);
             }
         }
         return 1;
@@ -113,9 +113,9 @@ abstract class SqlRunner : ISqlRunner
         OrigamSettingsCollection configurations = ConfigurationManager.GetAllConfigurations();
         if (configurations.Count != 1)
         {
-            throw new Exception("Exactly one configuration in OrigamSettings is required.");
+            throw new Exception(message: "Exactly one configuration in OrigamSettings is required.");
         }
-        return configurations[0];
+        return configurations[index: 0];
     }
 
     protected abstract string BuildRootVersionSql();

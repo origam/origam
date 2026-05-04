@@ -36,17 +36,20 @@ namespace Origam.Schema.EntityModel.UI.Wizards;
 public class CreateChildEntityCommand : AbstractMenuCommand
 {
     WorkbenchSchemaService _schema =
-        ServiceManager.Services.GetService(typeof(WorkbenchSchemaService))
+        ServiceManager.Services.GetService(serviceType: typeof(WorkbenchSchemaService))
         as WorkbenchSchemaService;
     SchemaBrowser _schemaBrowser =
-        WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+        WorkbenchSingleton.Workbench.GetPad(type: typeof(SchemaBrowser)) as SchemaBrowser;
     ChildEntityForm childEntityForm;
     public override bool IsEnabled
     {
         get { return Owner is IDataEntity; }
         set
         {
-            throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
+            throw new ArgumentException(
+                message: ResourceUtils.GetString(key: "ErrorSetProperty"),
+                paramName: "IsEnabled"
+            );
         }
     }
 
@@ -57,36 +60,44 @@ public class CreateChildEntityCommand : AbstractMenuCommand
         TableMappingItem table = new TableMappingItem();
         DataEntityIndex entityIndex = new DataEntityIndex();
         EntityRelationItem entityRelation = new EntityRelationItem();
-        list.Add(new ListViewItem(table.GetType().SchemaItemDescription().Name, table.Icon));
         list.Add(
-            new ListViewItem(entityIndex.GetType().SchemaItemDescription().Name, entityIndex.Icon)
+            item: new ListViewItem(
+                text: table.GetType().SchemaItemDescription().Name,
+                imageKey: table.Icon
+            )
         );
         list.Add(
-            new ListViewItem(
-                entityRelation.GetType().SchemaItemDescription().Name,
-                entityRelation.Icon
+            item: new ListViewItem(
+                text: entityIndex.GetType().SchemaItemDescription().Name,
+                imageKey: entityIndex.Icon
+            )
+        );
+        list.Add(
+            item: new ListViewItem(
+                text: entityRelation.GetType().SchemaItemDescription().Name,
+                imageKey: entityRelation.Icon
             )
         );
 
         Stack stackPage = new Stack();
-        stackPage.Push(PagesList.Finish);
-        stackPage.Push(PagesList.SummaryPage);
-        stackPage.Push(PagesList.ChildEntity);
-        stackPage.Push(PagesList.StartPage);
+        stackPage.Push(obj: PagesList.Finish);
+        stackPage.Push(obj: PagesList.SummaryPage);
+        stackPage.Push(obj: PagesList.ChildEntity);
+        stackPage.Push(obj: PagesList.StartPage);
         childEntityForm = new ChildEntityForm()
         {
             ItemTypeList = list,
-            Title = ResourceUtils.GetString("CreateChildEntityWizardTitle"),
+            Title = ResourceUtils.GetString(key: "CreateChildEntityWizardTitle"),
             PageTitle = "",
-            Description = ResourceUtils.GetString("CreateChildEntityWizardDescription"),
+            Description = ResourceUtils.GetString(key: "CreateChildEntityWizardDescription"),
             Pages = stackPage,
             Entity1 = entity,
             ImageList = _schemaBrowser.EbrSchemaBrowser.imgList,
             Command = this,
-            EnterAllInfo = ResourceUtils.GetString("EnterAllInfo"),
-            ChildEntityWiz = ResourceUtils.GetString("ChildEntityWiz"),
+            EnterAllInfo = ResourceUtils.GetString(key: "EnterAllInfo"),
+            ChildEntityWiz = ResourceUtils.GetString(key: "ChildEntityWiz"),
         };
-        Wizard wiz = new Wizard(childEntityForm);
+        Wizard wiz = new Wizard(objectForm: childEntityForm);
         if (wiz.ShowDialog() != DialogResult.OK)
         {
             GeneratedModelElements.Clear();
@@ -98,28 +109,28 @@ public class CreateChildEntityCommand : AbstractMenuCommand
         IDataEntity entity1 = childEntityForm.Entity1;
         // 1. Create N:N Entity with reference to both entities
         TableMappingItem newEntity = EntityHelper.CreateTable(
-            childEntityForm.EntityName,
-            childEntityForm.Entity1.Group,
-            false
+            name: childEntityForm.EntityName,
+            group: childEntityForm.Entity1.Group,
+            persist: false
         );
         newEntity.Persist();
-        GeneratedModelElements.Add(newEntity);
+        GeneratedModelElements.Add(item: newEntity);
         // Create index by parent entity
         DataEntityIndex index = newEntity.NewItem<DataEntityIndex>(
-            _schema.ActiveSchemaExtensionId,
-            null
+            schemaExtensionId: _schema.ActiveSchemaExtensionId,
+            group: null
         );
         index.Name = "ix_" + entity1.Name;
         index.Persist();
-        GeneratedModelElements.Add(index);
+        GeneratedModelElements.Add(item: index);
         // Create relation from the parent entity
         EntityRelationItem parentRelation = EntityHelper.CreateRelation(
-            entity1,
-            newEntity,
-            true,
-            true
+            parentEntity: entity1,
+            relatedEntity: newEntity,
+            masterDetail: true,
+            persist: true
         );
-        GeneratedModelElements.Add(parentRelation);
+        GeneratedModelElements.Add(item: parentRelation);
         var entity1keys = new List<FieldMappingItem>();
         // Create reference columns
         foreach (IDataEntityColumn pk in entity1.EntityPrimaryKey)
@@ -127,23 +138,23 @@ public class CreateChildEntityCommand : AbstractMenuCommand
             if (!pk.ExcludeFromAllFields)
             {
                 FieldMappingItem refEntity1 = EntityHelper.CreateColumn(
-                    newEntity,
-                    "ref" + entity1.Name + pk.Name,
-                    false,
-                    pk.DataType,
-                    pk.DataLength,
-                    entity1.Caption,
-                    entity1,
-                    pk,
-                    true
+                    entity: newEntity,
+                    name: "ref" + entity1.Name + pk.Name,
+                    allowNulls: false,
+                    dataType: pk.DataType,
+                    dataLength: pk.DataLength,
+                    caption: entity1.Caption,
+                    foreignKeyEntity: entity1,
+                    foreignKeyField: pk,
+                    persist: true
                 );
                 EntityRelationColumnPairItem key = EntityHelper.CreateRelationKey(
-                    parentRelation,
-                    pk,
-                    refEntity1,
-                    true
+                    relation: parentRelation,
+                    baseField: pk,
+                    relatedField: refEntity1,
+                    persist: true
                 );
-                entity1keys.Add(refEntity1);
+                entity1keys.Add(item: refEntity1);
             }
         }
         if (childEntityForm.Entity2 != null)
@@ -153,15 +164,15 @@ public class CreateChildEntityCommand : AbstractMenuCommand
                 if (!pk.ExcludeFromAllFields)
                 {
                     EntityHelper.CreateColumn(
-                        newEntity,
-                        "ref" + childEntityForm.Entity2.Name + pk.Name,
-                        false,
-                        pk.DataType,
-                        pk.DataLength,
-                        childEntityForm.Entity2.Caption,
-                        childEntityForm.Entity2,
-                        pk,
-                        true
+                        entity: newEntity,
+                        name: "ref" + childEntityForm.Entity2.Name + pk.Name,
+                        allowNulls: false,
+                        dataType: pk.DataType,
+                        dataLength: pk.DataLength,
+                        caption: childEntityForm.Entity2.Caption,
+                        foreignKeyEntity: childEntityForm.Entity2,
+                        foreignKeyField: pk,
+                        persist: true
                     );
                 }
             }
@@ -170,8 +181,8 @@ public class CreateChildEntityCommand : AbstractMenuCommand
         foreach (FieldMappingItem col in entity1keys)
         {
             DataEntityIndexField field = index.NewItem<DataEntityIndexField>(
-                _schema.ActiveSchemaExtensionId,
-                null
+                schemaExtensionId: _schema.ActiveSchemaExtensionId,
+                group: null
             );
             field.Field = col;
             field.OrdinalPosition = i;
@@ -184,18 +195,18 @@ public class CreateChildEntityCommand : AbstractMenuCommand
 
     public override int GetImageIndex(string icon)
     {
-        return _schemaBrowser.ImageIndex(icon);
+        return _schemaBrowser.ImageIndex(icon: icon);
     }
 
     public override void SetSummaryText(object summary)
     {
         RichTextBox richTextBoxSummary = (RichTextBox)summary;
         richTextBoxSummary.Text =
-            ResourceUtils.GetString("CreateChildEntityWizardDescription")
+            ResourceUtils.GetString(key: "CreateChildEntityWizardDescription")
             + " with this parameters:";
-        richTextBoxSummary.AppendText(Environment.NewLine);
-        richTextBoxSummary.AppendText(Environment.NewLine);
-        richTextBoxSummary.AppendText("Child Entity: \t");
-        richTextBoxSummary.AppendText(childEntityForm.EntityName);
+        richTextBoxSummary.AppendText(text: Environment.NewLine);
+        richTextBoxSummary.AppendText(text: Environment.NewLine);
+        richTextBoxSummary.AppendText(text: "Child Entity: \t");
+        richTextBoxSummary.AppendText(text: childEntityForm.EntityName);
     }
 }

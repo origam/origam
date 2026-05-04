@@ -25,17 +25,17 @@ using Origam.Schema.EntityModel.Interfaces;
 
 namespace Origam.Schema.RuleModel;
 
-[SchemaItemDescription("Validation Rule", "validation-rule.png")]
-[HelpTopic("Validation+Rule")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Validation Rule", iconName: "validation-rule.png")]
+[HelpTopic(topic: "Validation+Rule")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class EndRule : XslRule, IEndRule
 {
     public EndRule()
         : base() { }
 
     public EndRule(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(schemaExtensionId: schemaExtensionId) { }
 
     public EndRule(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 }

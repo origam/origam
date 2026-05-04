@@ -28,85 +28,85 @@ public class CreateCommandSettings : CommandSettings
 {
     #region General
 
-    [CommandOption("--commands-add-windows-containers")]
+    [CommandOption(template: "--commands-add-windows-containers")]
     public bool CommandsAddWindowsContainers { get; set; }
 
-    [CommandOption("--commands-output-format <FORMAT>", true)]
-    [AllowedValues("cmd", "sh")]
+    [CommandOption(template: "--commands-output-format <FORMAT>", isRequired: true)]
+    [AllowedValues(values: ["cmd", "sh"])]
     public required string CommandsOutputFormat { get; set; }
 
     #endregion
 
     #region Database
 
-    [CommandOption("--db-type <TYPE>", true)]
-    [AllowedValues("mssql", "postgres")]
+    [CommandOption(template: "--db-type <TYPE>", isRequired: true)]
+    [AllowedValues(values: ["mssql", "postgres"])]
     public required string DbType { get; set; }
 
-    [CommandOption("--db-host <HOST>", true)]
+    [CommandOption(template: "--db-host <HOST>", isRequired: true)]
     public required string DbHost { get; set; }
 
-    [CommandOption("--db-port <PORT>", true)]
+    [CommandOption(template: "--db-port <PORT>", isRequired: true)]
     public required int DbPort { get; set; }
 
-    [CommandOption("--db-name <NAME>", true)]
+    [CommandOption(template: "--db-name <NAME>", isRequired: true)]
     public required string DbName { get; set; }
 
-    [CommandOption("--db-username <USERNAME>", true)]
+    [CommandOption(template: "--db-username <USERNAME>", isRequired: true)]
     public required string DbUsername { get; set; }
 
-    [CommandOption("--db-password <PASSWORD>", true)]
+    [CommandOption(template: "--db-password <PASSWORD>", isRequired: true)]
     public required string DbPassword { get; set; }
 
     #endregion
 
     #region Project
 
-    [CommandOption("--p-docker-image-linux <IMAGE>", true)]
+    [CommandOption(template: "--p-docker-image-linux <IMAGE>", isRequired: true)]
     public required string ProjectDockerImageLinux { get; set; }
 
-    [CommandOption("--p-docker-image-win <IMAGE>", true)]
+    [CommandOption(template: "--p-docker-image-win <IMAGE>", isRequired: true)]
     public required string ProjectDockerImageWin { get; set; }
 
-    [CommandOption("--p-name <NAME>", true)]
+    [CommandOption(template: "--p-name <NAME>", isRequired: true)]
     public required string ProjectName { get; set; }
 
-    [CommandOption("--p-folder <FOLDER>", true)]
+    [CommandOption(template: "--p-folder <FOLDER>", isRequired: true)]
     public required string ProjectFolder { get; set; }
 
-    [CommandOption("--p-admin-username <NAME>", true)]
+    [CommandOption(template: "--p-admin-username <NAME>", isRequired: true)]
     public required string ProjectWebAdminUsername { get; set; }
 
-    [CommandOption("--p-admin-password <PASSWORD>", true)]
+    [CommandOption(template: "--p-admin-password <PASSWORD>", isRequired: true)]
     public required string ProjectWebAdminPassword { get; set; }
 
-    [CommandOption("--p-admin-email <EMAIL>", true)]
+    [CommandOption(template: "--p-admin-email <EMAIL>", isRequired: true)]
     public required string ProjectWebAdminEmail { get; set; }
 
     #endregion
 
     #region Architect
 
-    [CommandOption("--arch-docker-image-linux <IMAGE>", true)]
+    [CommandOption(template: "--arch-docker-image-linux <IMAGE>", isRequired: true)]
     public required string ArchitectDockerImageLinux { get; set; }
 
-    [CommandOption("--arch-docker-image-win <IMAGE>", true)]
+    [CommandOption(template: "--arch-docker-image-win <IMAGE>", isRequired: true)]
     public required string ArchitectDockerImageWin { get; set; }
 
-    [CommandOption("--arch-port <PORT>", true)]
+    [CommandOption(template: "--arch-port <PORT>", isRequired: true)]
     public int ArchitectPort { get; set; }
 
     #endregion
 
     #region Git
 
-    [CommandOption("--git-enabled")]
+    [CommandOption(template: "--git-enabled")]
     public bool GitEnabled { get; set; }
 
-    [CommandOption("--git-user <USER>")]
+    [CommandOption(template: "--git-user <USER>")]
     public string GitUser { get; set; }
 
-    [CommandOption("--git-email <EMAIL>")]
+    [CommandOption(template: "--git-email <EMAIL>")]
     public string GitEmail { get; set; }
 
     #endregion

@@ -46,16 +46,16 @@ public class MenuFormReferenceMethodConverter : TypeConverter
         List<DataStructureMethod> methods = currentItem?.Screen?.DataStructure?.Methods;
         if (methods == null)
         {
-            return new StandardValuesCollection(new List<DataStructureMethod>());
+            return new StandardValuesCollection(values: new List<DataStructureMethod>());
         }
-        var output = new List<DataStructureMethod>(methods.Count);
+        var output = new List<DataStructureMethod>(capacity: methods.Count);
         foreach (DataStructureMethod method in methods)
         {
-            output.Add(method);
+            output.Add(item: method);
         }
-        output.Add(null);
+        output.Add(item: null);
         output.Sort();
-        return new StandardValuesCollection(output);
+        return new StandardValuesCollection(values: output);
     }
 
     public override bool CanConvertFrom(
@@ -68,7 +68,7 @@ public class MenuFormReferenceMethodConverter : TypeConverter
             return true;
         }
 
-        return base.CanConvertFrom(context, sourceType);
+        return base.CanConvertFrom(context: context, sourceType: sourceType);
     }
 
     public override object ConvertFrom(
@@ -91,6 +91,6 @@ public class MenuFormReferenceMethodConverter : TypeConverter
             return null;
         }
 
-        return base.ConvertFrom(context, culture, value);
+        return base.ConvertFrom(context: context, culture: culture, value: value);
     }
 }

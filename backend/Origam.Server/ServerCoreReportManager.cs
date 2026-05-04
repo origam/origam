@@ -49,14 +49,19 @@ public class ServerCoreReportManager : IReportManager
     )
     {
         Guid key = Guid.NewGuid();
-        SessionStore sessionStore = sessionManager.GetSession(new Guid(sessionFormIdentifier));
-        DataRow row = sessionStore.GetSessionRow(entity, id);
-        Hashtable resultParams = DatasetTools.RetrieveParameters(
-            parameterMappings,
-            new List<DataRow> { row }
+        SessionStore sessionStore = sessionManager.GetSession(
+            sessionFormIdentifier: new Guid(g: sessionFormIdentifier)
         );
-        sessionManager.AddReportRequest(key, new ReportRequest(reportId, resultParams));
-        return ReportRequestKeyToUrl(key);
+        DataRow row = sessionStore.GetSessionRow(entity: entity, id: id);
+        Hashtable resultParams = DatasetTools.RetrieveParameters(
+            parameterMappings: parameterMappings,
+            rows: new List<DataRow> { row }
+        );
+        sessionManager.AddReportRequest(
+            key: key,
+            request: new ReportRequest(reportId: reportId, parameters: resultParams)
+        );
+        return ReportRequestKeyToUrl(key: key);
     }
 
     public string GetReportFromMenu(Guid menuId)
@@ -66,18 +71,18 @@ public class ServerCoreReportManager : IReportManager
             ServiceManager.Services.GetService<IPersistenceService>();
         ReportReferenceMenuItem reportReferenceMenuItem =
             persistenceService.SchemaProvider.RetrieveInstance(
-                typeof(AbstractMenuItem),
-                new ModelElementKey(menuId)
+                type: typeof(AbstractMenuItem),
+                primaryKey: new ModelElementKey(id: menuId)
             ) as ReportReferenceMenuItem;
         sessionManager.AddReportRequest(
-            key,
-            new ReportRequest(
-                reportReferenceMenuItem.ReportId.ToString(),
-                new Hashtable(),
-                reportReferenceMenuItem.ExportFormatType
+            key: key,
+            request: new ReportRequest(
+                reportId: reportReferenceMenuItem.ReportId.ToString(),
+                parameters: new Hashtable(),
+                dataReportExportFormatType: reportReferenceMenuItem.ExportFormatType
             )
         );
-        return ReportRequestKeyToUrl(key);
+        return ReportRequestKeyToUrl(key: key);
     }
 
     public string GetReportStandalone(
@@ -88,10 +93,14 @@ public class ServerCoreReportManager : IReportManager
     {
         Guid key = Guid.NewGuid();
         sessionManager.AddReportRequest(
-            key,
-            new ReportRequest(reportId, parameters, dataReportExportFormatType)
+            key: key,
+            request: new ReportRequest(
+                reportId: reportId,
+                parameters: parameters,
+                dataReportExportFormatType: dataReportExportFormatType
+            )
         );
-        return ReportRequestKeyToUrl(key);
+        return ReportRequestKeyToUrl(key: key);
     }
 
     private static string ReportRequestKeyToUrl(Guid key)

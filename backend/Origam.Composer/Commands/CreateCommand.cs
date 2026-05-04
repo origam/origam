@@ -36,26 +36,27 @@ public class CreateCommand(
 {
     public override int Execute(CommandContext context, CreateCommandSettings settings)
     {
-        var modelFolder = Path.Combine(settings.ProjectFolder, "model");
+        var modelFolder = Path.Combine(path1: settings.ProjectFolder, path2: "model");
         if (
-            Directory.Exists(modelFolder) && Directory.EnumerateFileSystemEntries(modelFolder).Any()
+            Directory.Exists(path: modelFolder)
+            && Directory.EnumerateFileSystemEntries(path: modelFolder).Any()
         )
         {
-            visualService.PrintProjectAlreadyExists(modelFolder);
+            visualService.PrintProjectAlreadyExists(folder: modelFolder);
             return 0;
         }
 
-        GitIdentity gitIdentity = GitIdentityResolver(settings);
+        GitIdentity gitIdentity = GitIdentityResolver(settings: settings);
         ShowVisualBanner(settings: settings, gitIdentity: gitIdentity);
 
-        var dockerFolder = Path.Combine(settings.ProjectFolder, "docker");
+        var dockerFolder = Path.Combine(path1: settings.ProjectFolder, path2: "docker");
         var project = new Project
         {
             #region General
             CommandsAddWindowsContainers = settings.CommandsAddWindowsContainers,
             CommandsOutputFormat = settings.CommandsOutputFormat.Equals(
-                "cmd",
-                StringComparison.CurrentCultureIgnoreCase
+                value: "cmd",
+                comparisonType: StringComparison.CurrentCultureIgnoreCase
             )
                 ? Enums.CommandOutputFormat.Cmd
                 : Enums.CommandOutputFormat.Sh,
@@ -63,8 +64,8 @@ public class CreateCommand(
 
             #region DB
             DatabaseType = settings.DbType.Equals(
-                "postgres",
-                StringComparison.CurrentCultureIgnoreCase
+                value: "postgres",
+                comparisonType: StringComparison.CurrentCultureIgnoreCase
             )
                 ? DatabaseType.PgSql
                 : DatabaseType.MsSql,
@@ -73,15 +74,17 @@ public class CreateCommand(
             DatabaseUserName = settings.DbUsername,
             DatabasePassword = settings.DbPassword,
             DatabaseIntegratedAuthentication = false,
-            DatabaseName = StringHelper.RemoveAllWhitespace(settings.DbName).ToLower(),
-            DatabaseInternalUserName = StringHelper.RemoveAllWhitespace(settings.DbName).ToLower(),
+            DatabaseName = StringHelper.RemoveAllWhitespace(input: settings.DbName).ToLower(),
+            DatabaseInternalUserName = StringHelper
+                .RemoveAllWhitespace(input: settings.DbName)
+                .ToLower(),
             DatabaseInternalUserPassword = passwordGeneratorService.Generate(length: 24),
             #endregion
 
             #region Project and client web app
             NewPackageId = Guid.NewGuid().ToString(),
-            Name = StringHelper.RemoveAllWhitespace(settings.ProjectName),
-            ModelFolder = Path.Combine(settings.ProjectFolder, "model"),
+            Name = StringHelper.RemoveAllWhitespace(input: settings.ProjectName),
+            ModelFolder = Path.Combine(path1: settings.ProjectFolder, path2: "model"),
             ProjectFolder = settings.ProjectFolder,
 
             // Admin user account for client web app
@@ -108,30 +111,30 @@ public class CreateCommand(
 
             // Linux
             DockerEnvironmentsPathLinux = Path.Combine(
-                dockerFolder,
-                settings.ProjectName + "_Environments_Linux.env"
+                path1: dockerFolder,
+                path2: settings.ProjectName + "_Environments_Linux.env"
             ),
             DockerClientPathLinux = Path.Combine(
-                dockerFolder,
-                settings.ProjectName + "_Client_Linux."
+                path1: dockerFolder,
+                path2: settings.ProjectName + "_Client_Linux."
             ),
             DockerArchitectPathLinux = Path.Combine(
-                dockerFolder,
-                settings.ProjectName + "_Architect_Linux."
+                path1: dockerFolder,
+                path2: settings.ProjectName + "_Architect_Linux."
             ),
 
             // Windows
             DockerEnvironmentsPathWindows = Path.Combine(
-                dockerFolder,
-                settings.ProjectName + "_Environments_Windows.env"
+                path1: dockerFolder,
+                path2: settings.ProjectName + "_Environments_Windows.env"
             ),
             DockerClientPathWindows = Path.Combine(
-                dockerFolder,
-                settings.ProjectName + "_Client_Windows."
+                path1: dockerFolder,
+                path2: settings.ProjectName + "_Client_Windows."
             ),
             DockerArchitectPathWindows = Path.Combine(
-                dockerFolder,
-                settings.ProjectName + "_Architect_Windows."
+                path1: dockerFolder,
+                path2: settings.ProjectName + "_Architect_Windows."
             ),
             #endregion
         };
@@ -187,15 +190,15 @@ public class CreateCommand(
             gitUser = gitCredentials[0];
             gitEmail = gitCredentials[1];
         }
-        if (!string.IsNullOrWhiteSpace(settings.GitUser))
+        if (!string.IsNullOrWhiteSpace(value: settings.GitUser))
         {
             gitUser = settings.GitUser;
         }
-        if (!string.IsNullOrWhiteSpace(settings.GitEmail))
+        if (!string.IsNullOrWhiteSpace(value: settings.GitEmail))
         {
             gitEmail = settings.GitEmail;
         }
 
-        return new GitIdentity(gitUser, gitEmail);
+        return new GitIdentity(User: gitUser, Email: gitEmail);
     }
 }

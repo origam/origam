@@ -48,10 +48,10 @@ class DeletedRowInfo
 {
     public DeletedRowInfo(DataRow row)
     {
-        _rowData = GetRowData(row, DataRowVersion.Default);
+        _rowData = GetRowData(row: row, version: DataRowVersion.Default);
         if (row.RowState == DataRowState.Modified)
         {
-            _originalRowData = GetRowData(row, DataRowVersion.Original);
+            _originalRowData = GetRowData(row: row, version: DataRowVersion.Original);
         }
 
         _state = row.RowState;
@@ -62,21 +62,21 @@ class DeletedRowInfo
         if (_originalRowData != null)
         {
             // change
-            DataRow newRow = table.Rows.Add(_originalRowData);
+            DataRow newRow = table.Rows.Add(values: _originalRowData);
             newRow.AcceptChanges();
             for (int i = 0; i < table.Columns.Count; i++)
             {
-                DataColumn col = table.Columns[i];
+                DataColumn col = table.Columns[index: i];
                 if (!col.ReadOnly && (col.Expression == "" || col.Expression == null))
                 {
-                    newRow[col] = _rowData[i];
+                    newRow[column: col] = _rowData[i];
                 }
             }
         }
         else
         {
             // new
-            DataRow newRow = table.Rows.Add(_rowData);
+            DataRow newRow = table.Rows.Add(values: _rowData);
             // or unchanged
             if (_state == DataRowState.Unchanged)
             {
@@ -91,7 +91,7 @@ class DeletedRowInfo
         object[] result = new object[count];
         for (int i = 0; i < count; i++)
         {
-            result[i] = row[i, version];
+            result[i] = row[columnIndex: i, version: version];
         }
         return result;
     }

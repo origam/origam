@@ -104,7 +104,7 @@ public class XslEditor : AbstractEditor, IToolStripContainer
         InitializeComponent();
         this.ContentLoaded += XslEditor_ContentLoaded;
         _output =
-            WorkbenchSingleton.Workbench.GetPad(typeof(Workbench.Pads.OutputPad))
+            WorkbenchSingleton.Workbench.GetPad(type: typeof(Workbench.Pads.OutputPad))
             as Workbench.Pads.OutputPad;
         this.txtText.ContentChanged += TextArea_KeyDown;
         cboDataStructure.SelectedValueChanged += cboDataStructure_SelectedValueChanged;
@@ -117,35 +117,37 @@ public class XslEditor : AbstractEditor, IToolStripContainer
         txtResult.Text = "";
 
         InitToolStrip();
-        parameterListUpdater = new ParameterListUpdater(parameterList);
+        parameterListUpdater = new ParameterListUpdater(parameterList: parameterList);
     }
 
     private void InitToolStrip()
     {
-        toolStrip = new LabeledToolStrip(this);
+        toolStrip = new LabeledToolStrip(owner: this);
         toolStrip.Text = "Xsl Transformation";
         var transformToolStripButton = new BigToolStripButton();
         transformToolStripButton.Click += btnTransform_Click;
         transformToolStripButton.Text = "Transform";
         transformToolStripButton.Image = ImageRes.Transform;
-        toolStrip.Items.Add(transformToolStripButton);
+        toolStrip.Items.Add(value: transformToolStripButton);
         var validateToolStripButton = new BigToolStripButton();
         validateToolStripButton.Click += btnValidate_Click;
         validateToolStripButton.Text = "Validate";
         validateToolStripButton.Image = ImageRes.Validate;
-        toolStrip.Items.Add(validateToolStripButton);
+        toolStrip.Items.Add(value: validateToolStripButton);
 
         var loadToolStripButton = new BigToolStripButton();
         loadToolStripButton.Click += btnLoadSource_Click;
         loadToolStripButton.Text = "Load Source";
         loadToolStripButton.Image = ImageRes.LoadSource;
-        toolStrip.Items.Add(loadToolStripButton);
+        toolStrip.Items.Add(value: loadToolStripButton);
     }
 
     private void InitParameterTypeComboBox()
     {
-        object[] allAdapDataTypes = Enum.GetValues(typeof(OrigamDataType)).Cast<object>().ToArray();
-        parameterTypeComboBox.Items.AddRange(allAdapDataTypes);
+        object[] allAdapDataTypes = Enum.GetValues(enumType: typeof(OrigamDataType))
+            .Cast<object>()
+            .ToArray();
+        parameterTypeComboBox.Items.AddRange(items: allAdapDataTypes);
         parameterTypeComboBox.SelectedIndex = 0;
     }
 
@@ -155,11 +157,11 @@ public class XslEditor : AbstractEditor, IToolStripContainer
         if (!ValidateXslt())
         {
             DialogResult result = MessageBox.Show(
-                this,
-                "XSLT validation did not succeed. Do you want to save the transformation anyway?",
-                "XSLT Validation Failed",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question
+                owner: this,
+                text: "XSLT validation did not succeed. Do you want to save the transformation anyway?",
+                caption: "XSLT Validation Failed",
+                buttons: MessageBoxButtons.YesNo,
+                icon: MessageBoxIcon.Question
             );
             if (result == DialogResult.No)
             {
@@ -176,7 +178,7 @@ public class XslEditor : AbstractEditor, IToolStripContainer
         }
         else
         {
-            throw new InvalidCastException("Object type not supported.");
+            throw new InvalidCastException(message: "Object type not supported.");
         }
         base.SaveObject();
     }
@@ -244,17 +246,17 @@ public class XslEditor : AbstractEditor, IToolStripContainer
                 )
             )
         );
-        this.txtName.Location = new System.Drawing.Point(128, 7);
+        this.txtName.Location = new System.Drawing.Point(x: 128, y: 7);
         this.txtName.Name = "txtName";
-        this.txtName.Size = new System.Drawing.Size(500, 20);
+        this.txtName.Size = new System.Drawing.Size(width: 500, height: 20);
         this.txtName.TabIndex = 3;
         this.txtName.TextChanged += new System.EventHandler(this.txtName_TextChanged);
         //
         // lblXslName
         //
-        this.lblXslName.Location = new System.Drawing.Point(8, 7);
+        this.lblXslName.Location = new System.Drawing.Point(x: 8, y: 7);
         this.lblXslName.Name = "lblXslName";
-        this.lblXslName.Size = new System.Drawing.Size(112, 17);
+        this.lblXslName.Size = new System.Drawing.Size(width: 112, height: 17);
         this.lblXslName.TabIndex = 2;
         this.lblXslName.Text = "Name";
         //
@@ -264,13 +266,13 @@ public class XslEditor : AbstractEditor, IToolStripContainer
         //
         // panel4
         //
-        this.panel4.Controls.Add(this.tabControl);
-        this.panel4.Controls.Add(this.txtName);
-        this.panel4.Controls.Add(this.lblXslName);
+        this.panel4.Controls.Add(value: this.tabControl);
+        this.panel4.Controls.Add(value: this.txtName);
+        this.panel4.Controls.Add(value: this.lblXslName);
         this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
-        this.panel4.Location = new System.Drawing.Point(0, 32);
+        this.panel4.Location = new System.Drawing.Point(x: 0, y: 32);
         this.panel4.Name = "panel4";
-        this.panel4.Size = new System.Drawing.Size(768, 541);
+        this.panel4.Size = new System.Drawing.Size(width: 768, height: 541);
         this.panel4.TabIndex = 16;
         //
         // tabControl
@@ -288,17 +290,17 @@ public class XslEditor : AbstractEditor, IToolStripContainer
                 )
             )
         );
-        this.tabControl.Controls.Add(this.tabXsl);
-        this.tabControl.Controls.Add(this.tabSource);
-        this.tabControl.Controls.Add(this.tabParameters);
-        this.tabControl.Controls.Add(this.tabResult);
-        this.tabControl.Controls.Add(this.tabDataResult);
-        this.tabControl.Controls.Add(this.settingsTab);
-        this.tabControl.Location = new System.Drawing.Point(0, 31);
+        this.tabControl.Controls.Add(value: this.tabXsl);
+        this.tabControl.Controls.Add(value: this.tabSource);
+        this.tabControl.Controls.Add(value: this.tabParameters);
+        this.tabControl.Controls.Add(value: this.tabResult);
+        this.tabControl.Controls.Add(value: this.tabDataResult);
+        this.tabControl.Controls.Add(value: this.settingsTab);
+        this.tabControl.Location = new System.Drawing.Point(x: 0, y: 31);
         this.tabControl.Multiline = true;
         this.tabControl.Name = "tabControl";
         this.tabControl.SelectedIndex = 0;
-        this.tabControl.Size = new System.Drawing.Size(762, 506);
+        this.tabControl.Size = new System.Drawing.Size(width: 762, height: 506);
         this.tabControl.TabIndex = 8;
         this.tabControl.SelectedIndexChanged += new System.EventHandler(
             this.tabControl_SelectedIndexChanged
@@ -306,10 +308,10 @@ public class XslEditor : AbstractEditor, IToolStripContainer
         //
         // tabXsl
         //
-        this.tabXsl.Controls.Add(this.txtText);
-        this.tabXsl.Location = new System.Drawing.Point(4, 4);
+        this.tabXsl.Controls.Add(value: this.txtText);
+        this.tabXsl.Location = new System.Drawing.Point(x: 4, y: 4);
         this.tabXsl.Name = "tabXsl";
-        this.tabXsl.Size = new System.Drawing.Size(754, 480);
+        this.tabXsl.Size = new System.Drawing.Size(width: 754, height: 480);
         this.tabXsl.TabIndex = 0;
         this.tabXsl.Text = "XSL";
         //
@@ -318,20 +320,20 @@ public class XslEditor : AbstractEditor, IToolStripContainer
         this.txtText.BackColor = System.Drawing.Color.White;
         this.txtText.Dock = System.Windows.Forms.DockStyle.Fill;
         this.txtText.IsReadOnly = false;
-        this.txtText.Location = new System.Drawing.Point(0, 0);
-        this.txtText.Margin = new System.Windows.Forms.Padding(4);
+        this.txtText.Location = new System.Drawing.Point(x: 0, y: 0);
+        this.txtText.Margin = new System.Windows.Forms.Padding(all: 4);
         this.txtText.Name = "txtText";
         this.txtText.ResultSchema = null;
-        this.txtText.Size = new System.Drawing.Size(754, 480);
+        this.txtText.Size = new System.Drawing.Size(width: 754, height: 480);
         this.txtText.TabIndex = 8;
         //
         // tabSource
         //
-        this.tabSource.Controls.Add(this.txtSource);
-        this.tabSource.Controls.Add(this.txtXpath);
-        this.tabSource.Location = new System.Drawing.Point(4, 4);
+        this.tabSource.Controls.Add(value: this.txtSource);
+        this.tabSource.Controls.Add(value: this.txtXpath);
+        this.tabSource.Location = new System.Drawing.Point(x: 4, y: 4);
         this.tabSource.Name = "tabSource";
-        this.tabSource.Size = new System.Drawing.Size(535, 373);
+        this.tabSource.Size = new System.Drawing.Size(width: 535, height: 373);
         this.tabSource.TabIndex = 1;
         this.tabSource.Text = "Source XML";
         //
@@ -340,35 +342,35 @@ public class XslEditor : AbstractEditor, IToolStripContainer
         this.txtSource.BackColor = System.Drawing.Color.White;
         this.txtSource.Dock = System.Windows.Forms.DockStyle.Fill;
         this.txtSource.IsReadOnly = false;
-        this.txtSource.Location = new System.Drawing.Point(0, 20);
-        this.txtSource.Margin = new System.Windows.Forms.Padding(4);
+        this.txtSource.Location = new System.Drawing.Point(x: 0, y: 20);
+        this.txtSource.Margin = new System.Windows.Forms.Padding(all: 4);
         this.txtSource.Name = "txtSource";
         this.txtSource.ResultSchema = null;
-        this.txtSource.Size = new System.Drawing.Size(535, 353);
+        this.txtSource.Size = new System.Drawing.Size(width: 535, height: 353);
         this.txtSource.TabIndex = 7;
         //
         // txtXpath
         //
         this.txtXpath.Dock = System.Windows.Forms.DockStyle.Top;
         this.txtXpath.Font = new System.Drawing.Font(
-            "Courier New",
-            8.25F,
-            System.Drawing.FontStyle.Regular,
-            System.Drawing.GraphicsUnit.Point,
-            ((byte)(238))
+            familyName: "Courier New",
+            emSize: 8.25F,
+            style: System.Drawing.FontStyle.Regular,
+            unit: System.Drawing.GraphicsUnit.Point,
+            gdiCharSet: ((byte)(238))
         );
-        this.txtXpath.Location = new System.Drawing.Point(0, 0);
+        this.txtXpath.Location = new System.Drawing.Point(x: 0, y: 0);
         this.txtXpath.Name = "txtXpath";
-        this.txtXpath.Size = new System.Drawing.Size(535, 20);
+        this.txtXpath.Size = new System.Drawing.Size(width: 535, height: 20);
         this.txtXpath.TabIndex = 8;
         //
         // tabParameters
         //
-        this.tabParameters.Controls.Add(this.tableLayoutPanel1);
-        this.tabParameters.Location = new System.Drawing.Point(4, 4);
+        this.tabParameters.Controls.Add(value: this.tableLayoutPanel1);
+        this.tabParameters.Location = new System.Drawing.Point(x: 4, y: 4);
         this.tabParameters.Name = "tabParameters";
-        this.tabParameters.Padding = new System.Windows.Forms.Padding(3);
-        this.tabParameters.Size = new System.Drawing.Size(535, 373);
+        this.tabParameters.Padding = new System.Windows.Forms.Padding(all: 3);
+        this.tabParameters.Size = new System.Drawing.Size(width: 535, height: 373);
         this.tabParameters.TabIndex = 6;
         this.tabParameters.Text = "Input Parameters";
         this.tabParameters.UseVisualStyleBackColor = true;
@@ -377,44 +379,56 @@ public class XslEditor : AbstractEditor, IToolStripContainer
         //
         this.tableLayoutPanel1.ColumnCount = 2;
         this.tableLayoutPanel1.ColumnStyles.Add(
-            new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 19.50887F)
+            columnStyle: new System.Windows.Forms.ColumnStyle(
+                sizeType: System.Windows.Forms.SizeType.Percent,
+                width: 19.50887F
+            )
         );
         this.tableLayoutPanel1.ColumnStyles.Add(
-            new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 80.49113F)
+            columnStyle: new System.Windows.Forms.ColumnStyle(
+                sizeType: System.Windows.Forms.SizeType.Percent,
+                width: 80.49113F
+            )
         );
-        this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel1, 1, 0);
-        this.tableLayoutPanel1.Controls.Add(this.parameterList, 0, 1);
-        this.tableLayoutPanel1.Controls.Add(this.paremeterEditor, 1, 1);
+        this.tableLayoutPanel1.Controls.Add(control: this.flowLayoutPanel1, column: 1, row: 0);
+        this.tableLayoutPanel1.Controls.Add(control: this.parameterList, column: 0, row: 1);
+        this.tableLayoutPanel1.Controls.Add(control: this.paremeterEditor, column: 1, row: 1);
         this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-        this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 3);
+        this.tableLayoutPanel1.Location = new System.Drawing.Point(x: 3, y: 3);
         this.tableLayoutPanel1.Name = "tableLayoutPanel1";
         this.tableLayoutPanel1.RowCount = 2;
         this.tableLayoutPanel1.RowStyles.Add(
-            new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 9.82801F)
+            rowStyle: new System.Windows.Forms.RowStyle(
+                sizeType: System.Windows.Forms.SizeType.Percent,
+                height: 9.82801F
+            )
         );
         this.tableLayoutPanel1.RowStyles.Add(
-            new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 90.17199F)
+            rowStyle: new System.Windows.Forms.RowStyle(
+                sizeType: System.Windows.Forms.SizeType.Percent,
+                height: 90.17199F
+            )
         );
-        this.tableLayoutPanel1.Size = new System.Drawing.Size(529, 367);
+        this.tableLayoutPanel1.Size = new System.Drawing.Size(width: 529, height: 367);
         this.tableLayoutPanel1.TabIndex = 14;
         //
         // flowLayoutPanel1
         //
-        this.flowLayoutPanel1.Controls.Add(this.label2);
-        this.flowLayoutPanel1.Controls.Add(this.parameterTypeComboBox);
-        this.flowLayoutPanel1.Location = new System.Drawing.Point(106, 3);
-        this.flowLayoutPanel1.MinimumSize = new System.Drawing.Size(180, 32);
+        this.flowLayoutPanel1.Controls.Add(value: this.label2);
+        this.flowLayoutPanel1.Controls.Add(value: this.parameterTypeComboBox);
+        this.flowLayoutPanel1.Location = new System.Drawing.Point(x: 106, y: 3);
+        this.flowLayoutPanel1.MinimumSize = new System.Drawing.Size(width: 180, height: 32);
         this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-        this.flowLayoutPanel1.Size = new System.Drawing.Size(180, 32);
+        this.flowLayoutPanel1.Size = new System.Drawing.Size(width: 180, height: 32);
         this.flowLayoutPanel1.TabIndex = 13;
         //
         // label2
         //
         this.label2.Anchor = System.Windows.Forms.AnchorStyles.Left;
         this.label2.AutoSize = true;
-        this.label2.Location = new System.Drawing.Point(3, 7);
+        this.label2.Location = new System.Drawing.Point(x: 3, y: 7);
         this.label2.Name = "label2";
-        this.label2.Size = new System.Drawing.Size(31, 13);
+        this.label2.Size = new System.Drawing.Size(width: 31, height: 13);
         this.label2.TabIndex = 12;
         this.label2.Text = "Type";
         //
@@ -422,19 +436,19 @@ public class XslEditor : AbstractEditor, IToolStripContainer
         //
         this.parameterTypeComboBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
         this.parameterTypeComboBox.FormattingEnabled = true;
-        this.parameterTypeComboBox.Location = new System.Drawing.Point(40, 3);
+        this.parameterTypeComboBox.Location = new System.Drawing.Point(x: 40, y: 3);
         this.parameterTypeComboBox.Name = "parameterTypeComboBox";
-        this.parameterTypeComboBox.Size = new System.Drawing.Size(86, 21);
+        this.parameterTypeComboBox.Size = new System.Drawing.Size(width: 86, height: 21);
         this.parameterTypeComboBox.TabIndex = 10;
         //
         // parameterList
         //
         this.parameterList.Dock = System.Windows.Forms.DockStyle.Fill;
         this.parameterList.FormattingEnabled = true;
-        this.parameterList.Location = new System.Drawing.Point(3, 39);
-        this.parameterList.MinimumSize = new System.Drawing.Size(120, 0);
+        this.parameterList.Location = new System.Drawing.Point(x: 3, y: 39);
+        this.parameterList.MinimumSize = new System.Drawing.Size(width: 120, height: 0);
         this.parameterList.Name = "parameterList";
-        this.parameterList.Size = new System.Drawing.Size(120, 325);
+        this.parameterList.Size = new System.Drawing.Size(width: 120, height: 325);
         this.parameterList.TabIndex = 11;
         this.parameterList.SelectedIndexChanged += new System.EventHandler(
             this.paremeterList_SelectedIndexChanged
@@ -445,19 +459,19 @@ public class XslEditor : AbstractEditor, IToolStripContainer
         this.paremeterEditor.BackColor = System.Drawing.Color.White;
         this.paremeterEditor.Dock = System.Windows.Forms.DockStyle.Fill;
         this.paremeterEditor.IsReadOnly = false;
-        this.paremeterEditor.Location = new System.Drawing.Point(107, 40);
-        this.paremeterEditor.Margin = new System.Windows.Forms.Padding(4);
+        this.paremeterEditor.Location = new System.Drawing.Point(x: 107, y: 40);
+        this.paremeterEditor.Margin = new System.Windows.Forms.Padding(all: 4);
         this.paremeterEditor.Name = "paremeterEditor";
         this.paremeterEditor.ResultSchema = null;
-        this.paremeterEditor.Size = new System.Drawing.Size(418, 323);
+        this.paremeterEditor.Size = new System.Drawing.Size(width: 418, height: 323);
         this.paremeterEditor.TabIndex = 9;
         //
         // tabResult
         //
-        this.tabResult.Controls.Add(this.txtResult);
-        this.tabResult.Location = new System.Drawing.Point(4, 4);
+        this.tabResult.Controls.Add(value: this.txtResult);
+        this.tabResult.Location = new System.Drawing.Point(x: 4, y: 4);
         this.tabResult.Name = "tabResult";
-        this.tabResult.Size = new System.Drawing.Size(535, 373);
+        this.tabResult.Size = new System.Drawing.Size(width: 535, height: 373);
         this.tabResult.TabIndex = 2;
         this.tabResult.Text = "Result";
         //
@@ -466,19 +480,19 @@ public class XslEditor : AbstractEditor, IToolStripContainer
         this.txtResult.BackColor = System.Drawing.Color.White;
         this.txtResult.Dock = System.Windows.Forms.DockStyle.Fill;
         this.txtResult.IsReadOnly = false;
-        this.txtResult.Location = new System.Drawing.Point(0, 0);
-        this.txtResult.Margin = new System.Windows.Forms.Padding(4);
+        this.txtResult.Location = new System.Drawing.Point(x: 0, y: 0);
+        this.txtResult.Margin = new System.Windows.Forms.Padding(all: 4);
         this.txtResult.Name = "txtResult";
         this.txtResult.ResultSchema = null;
-        this.txtResult.Size = new System.Drawing.Size(535, 373);
+        this.txtResult.Size = new System.Drawing.Size(width: 535, height: 373);
         this.txtResult.TabIndex = 8;
         //
         // tabDataResult
         //
-        this.tabDataResult.Controls.Add(this.grdResult);
-        this.tabDataResult.Location = new System.Drawing.Point(4, 4);
+        this.tabDataResult.Controls.Add(value: this.grdResult);
+        this.tabDataResult.Location = new System.Drawing.Point(x: 4, y: 4);
         this.tabDataResult.Name = "tabDataResult";
-        this.tabDataResult.Size = new System.Drawing.Size(535, 373);
+        this.tabDataResult.Size = new System.Drawing.Size(width: 535, height: 373);
         this.tabDataResult.TabIndex = 3;
         this.tabDataResult.Text = "Data Result";
         //
@@ -488,29 +502,29 @@ public class XslEditor : AbstractEditor, IToolStripContainer
         this.grdResult.DataMember = "";
         this.grdResult.Dock = System.Windows.Forms.DockStyle.Fill;
         this.grdResult.HeaderForeColor = System.Drawing.SystemColors.ControlText;
-        this.grdResult.Location = new System.Drawing.Point(0, 0);
+        this.grdResult.Location = new System.Drawing.Point(x: 0, y: 0);
         this.grdResult.Name = "grdResult";
-        this.grdResult.Size = new System.Drawing.Size(535, 373);
+        this.grdResult.Size = new System.Drawing.Size(width: 535, height: 373);
         this.grdResult.TabIndex = 0;
         //
         // settingsTab
         //
-        this.settingsTab.Controls.Add(this.cboTraceLevel);
-        this.settingsTab.Controls.Add(this.lblTraceLevel);
-        this.settingsTab.Controls.Add(this.txtPackage);
-        this.settingsTab.Controls.Add(this.txtId);
-        this.settingsTab.Controls.Add(this.cboDataStructure);
-        this.settingsTab.Controls.Add(this.cboSourceStructure);
-        this.settingsTab.Controls.Add(this.lblId);
-        this.settingsTab.Controls.Add(this.label1);
-        this.settingsTab.Controls.Add(this.cboRuleSet);
-        this.settingsTab.Controls.Add(this.lblDataStructure);
-        this.settingsTab.Controls.Add(this.lblPackage);
-        this.settingsTab.Controls.Add(this.lblRuleSet);
-        this.settingsTab.Location = new System.Drawing.Point(4, 4);
+        this.settingsTab.Controls.Add(value: this.cboTraceLevel);
+        this.settingsTab.Controls.Add(value: this.lblTraceLevel);
+        this.settingsTab.Controls.Add(value: this.txtPackage);
+        this.settingsTab.Controls.Add(value: this.txtId);
+        this.settingsTab.Controls.Add(value: this.cboDataStructure);
+        this.settingsTab.Controls.Add(value: this.cboSourceStructure);
+        this.settingsTab.Controls.Add(value: this.lblId);
+        this.settingsTab.Controls.Add(value: this.label1);
+        this.settingsTab.Controls.Add(value: this.cboRuleSet);
+        this.settingsTab.Controls.Add(value: this.lblDataStructure);
+        this.settingsTab.Controls.Add(value: this.lblPackage);
+        this.settingsTab.Controls.Add(value: this.lblRuleSet);
+        this.settingsTab.Location = new System.Drawing.Point(x: 4, y: 4);
         this.settingsTab.Name = "settingsTab";
-        this.settingsTab.Padding = new System.Windows.Forms.Padding(3);
-        this.settingsTab.Size = new System.Drawing.Size(754, 480);
+        this.settingsTab.Padding = new System.Windows.Forms.Padding(all: 3);
+        this.settingsTab.Size = new System.Drawing.Size(width: 754, height: 480);
         this.settingsTab.TabIndex = 5;
         this.settingsTab.Text = "Settings";
         this.settingsTab.UseVisualStyleBackColor = true;
@@ -525,18 +539,18 @@ public class XslEditor : AbstractEditor, IToolStripContainer
                 )
             )
         );
-        this.txtPackage.Location = new System.Drawing.Point(381, 10);
+        this.txtPackage.Location = new System.Drawing.Point(x: 381, y: 10);
         this.txtPackage.Name = "txtPackage";
         this.txtPackage.ReadOnly = true;
-        this.txtPackage.Size = new System.Drawing.Size(235, 20);
+        this.txtPackage.Size = new System.Drawing.Size(width: 235, height: 20);
         this.txtPackage.TabIndex = 2;
         //
         // txtId
         //
-        this.txtId.Location = new System.Drawing.Point(125, 10);
+        this.txtId.Location = new System.Drawing.Point(x: 125, y: 10);
         this.txtId.Name = "txtId";
         this.txtId.ReadOnly = true;
-        this.txtId.Size = new System.Drawing.Size(204, 20);
+        this.txtId.Size = new System.Drawing.Size(width: 204, height: 20);
         this.txtId.TabIndex = 1;
         //
         // cboDataStructure
@@ -555,9 +569,9 @@ public class XslEditor : AbstractEditor, IToolStripContainer
             .Forms
             .AutoCompleteSource
             .ListItems;
-        this.cboDataStructure.Location = new System.Drawing.Point(125, 60);
+        this.cboDataStructure.Location = new System.Drawing.Point(x: 125, y: 60);
         this.cboDataStructure.Name = "cboDataStructure";
-        this.cboDataStructure.Size = new System.Drawing.Size(491, 21);
+        this.cboDataStructure.Size = new System.Drawing.Size(width: 491, height: 21);
         this.cboDataStructure.Sorted = true;
         this.cboDataStructure.TabIndex = 6;
         //
@@ -577,25 +591,25 @@ public class XslEditor : AbstractEditor, IToolStripContainer
             .Forms
             .AutoCompleteSource
             .ListItems;
-        this.cboSourceStructure.Location = new System.Drawing.Point(125, 35);
+        this.cboSourceStructure.Location = new System.Drawing.Point(x: 125, y: 35);
         this.cboSourceStructure.Name = "cboSourceStructure";
-        this.cboSourceStructure.Size = new System.Drawing.Size(491, 21);
+        this.cboSourceStructure.Size = new System.Drawing.Size(width: 491, height: 21);
         this.cboSourceStructure.Sorted = true;
         this.cboSourceStructure.TabIndex = 5;
         //
         // lblId
         //
-        this.lblId.Location = new System.Drawing.Point(7, 12);
+        this.lblId.Location = new System.Drawing.Point(x: 7, y: 12);
         this.lblId.Name = "lblId";
-        this.lblId.Size = new System.Drawing.Size(112, 16);
+        this.lblId.Size = new System.Drawing.Size(width: 112, height: 16);
         this.lblId.TabIndex = 0;
         this.lblId.Text = "Id";
         //
         // label1
         //
-        this.label1.Location = new System.Drawing.Point(5, 35);
+        this.label1.Location = new System.Drawing.Point(x: 5, y: 35);
         this.label1.Name = "label1";
-        this.label1.Size = new System.Drawing.Size(120, 17);
+        this.label1.Size = new System.Drawing.Size(width: 120, height: 17);
         this.label1.TabIndex = 4;
         this.label1.Text = "Source Structure:";
         //
@@ -611,68 +625,68 @@ public class XslEditor : AbstractEditor, IToolStripContainer
         );
         this.cboRuleSet.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
         this.cboRuleSet.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-        this.cboRuleSet.Location = new System.Drawing.Point(125, 84);
+        this.cboRuleSet.Location = new System.Drawing.Point(x: 125, y: 84);
         this.cboRuleSet.Name = "cboRuleSet";
-        this.cboRuleSet.Size = new System.Drawing.Size(491, 21);
+        this.cboRuleSet.Size = new System.Drawing.Size(width: 491, height: 21);
         this.cboRuleSet.Sorted = true;
         this.cboRuleSet.TabIndex = 7;
         //
         // lblDataStructure
         //
-        this.lblDataStructure.Location = new System.Drawing.Point(5, 60);
+        this.lblDataStructure.Location = new System.Drawing.Point(x: 5, y: 60);
         this.lblDataStructure.Name = "lblDataStructure";
-        this.lblDataStructure.Size = new System.Drawing.Size(120, 16);
+        this.lblDataStructure.Size = new System.Drawing.Size(width: 120, height: 16);
         this.lblDataStructure.TabIndex = 6;
         this.lblDataStructure.Text = "Destination Structure:";
         //
         // lblPackage
         //
-        this.lblPackage.Location = new System.Drawing.Point(334, 12);
+        this.lblPackage.Location = new System.Drawing.Point(x: 334, y: 12);
         this.lblPackage.Name = "lblPackage";
-        this.lblPackage.Size = new System.Drawing.Size(55, 16);
+        this.lblPackage.Size = new System.Drawing.Size(width: 55, height: 16);
         this.lblPackage.TabIndex = 14;
         this.lblPackage.Text = "Package";
         //
         // lblRuleSet
         //
-        this.lblRuleSet.Location = new System.Drawing.Point(7, 84);
+        this.lblRuleSet.Location = new System.Drawing.Point(x: 7, y: 84);
         this.lblRuleSet.Name = "lblRuleSet";
-        this.lblRuleSet.Size = new System.Drawing.Size(110, 20);
+        this.lblRuleSet.Size = new System.Drawing.Size(width: 110, height: 20);
         this.lblRuleSet.TabIndex = 13;
         this.lblRuleSet.Text = "Rule Set:";
         //
         // lblSource
         //
         this.lblSource.Dock = System.Windows.Forms.DockStyle.Top;
-        this.lblSource.Location = new System.Drawing.Point(0, 0);
+        this.lblSource.Location = new System.Drawing.Point(x: 0, y: 0);
         this.lblSource.Name = "lblSource";
-        this.lblSource.Size = new System.Drawing.Size(269, 20);
+        this.lblSource.Size = new System.Drawing.Size(width: 269, height: 20);
         this.lblSource.TabIndex = 0;
         //
         // tvwSource
         //
         this.tvwSource.Dock = System.Windows.Forms.DockStyle.Fill;
         this.tvwSource.LineColor = System.Drawing.Color.Empty;
-        this.tvwSource.Location = new System.Drawing.Point(0, 20);
+        this.tvwSource.Location = new System.Drawing.Point(x: 0, y: 20);
         this.tvwSource.Name = "tvwSource";
-        this.tvwSource.Size = new System.Drawing.Size(269, 393);
+        this.tvwSource.Size = new System.Drawing.Size(width: 269, height: 393);
         this.tvwSource.TabIndex = 1;
         //
         // lblDestination
         //
         this.lblDestination.Dock = System.Windows.Forms.DockStyle.Top;
-        this.lblDestination.Location = new System.Drawing.Point(0, 0);
+        this.lblDestination.Location = new System.Drawing.Point(x: 0, y: 0);
         this.lblDestination.Name = "lblDestination";
-        this.lblDestination.Size = new System.Drawing.Size(258, 20);
+        this.lblDestination.Size = new System.Drawing.Size(width: 258, height: 20);
         this.lblDestination.TabIndex = 1;
         //
         // tvwDestination
         //
         this.tvwDestination.Dock = System.Windows.Forms.DockStyle.Fill;
         this.tvwDestination.LineColor = System.Drawing.Color.Empty;
-        this.tvwDestination.Location = new System.Drawing.Point(0, 20);
+        this.tvwDestination.Location = new System.Drawing.Point(x: 0, y: 20);
         this.tvwDestination.Name = "tvwDestination";
-        this.tvwDestination.Size = new System.Drawing.Size(258, 393);
+        this.tvwDestination.Size = new System.Drawing.Size(width: 258, height: 393);
         this.tvwDestination.TabIndex = 2;
         //
         // chboTraceLevel
@@ -687,9 +701,9 @@ public class XslEditor : AbstractEditor, IToolStripContainer
         );
         this.cboTraceLevel.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
         this.cboTraceLevel.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-        this.cboTraceLevel.Location = new System.Drawing.Point(125, 111);
+        this.cboTraceLevel.Location = new System.Drawing.Point(x: 125, y: 111);
         this.cboTraceLevel.Name = "cboTraceLevel";
-        this.cboTraceLevel.Size = new System.Drawing.Size(491, 21);
+        this.cboTraceLevel.Size = new System.Drawing.Size(width: 491, height: 21);
         this.cboTraceLevel.Sorted = true;
         this.cboTraceLevel.TabIndex = 17;
         this.cboTraceLevel.SelectedIndexChanged += new System.EventHandler(
@@ -698,43 +712,43 @@ public class XslEditor : AbstractEditor, IToolStripContainer
         //
         // lblTraceLevel
         //
-        this.lblTraceLevel.Location = new System.Drawing.Point(7, 111);
+        this.lblTraceLevel.Location = new System.Drawing.Point(x: 7, y: 111);
         this.lblTraceLevel.Name = "lblTraceLevel";
-        this.lblTraceLevel.Size = new System.Drawing.Size(110, 20);
+        this.lblTraceLevel.Size = new System.Drawing.Size(width: 110, height: 20);
         this.lblTraceLevel.TabIndex = 18;
         this.lblTraceLevel.Text = "Trace Level:";
         //
         // XslEditor
         //
-        this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-        this.ClientSize = new System.Drawing.Size(847, 573);
-        this.Controls.Add(this.panel4);
+        this.AutoScaleBaseSize = new System.Drawing.Size(width: 5, height: 13);
+        this.ClientSize = new System.Drawing.Size(width: 847, height: 573);
+        this.Controls.Add(value: this.panel4);
         this.Font = new System.Drawing.Font(
-            "Microsoft Sans Serif",
-            8.25F,
-            System.Drawing.FontStyle.Regular,
-            System.Drawing.GraphicsUnit.Point,
-            ((byte)(238))
+            familyName: "Microsoft Sans Serif",
+            emSize: 8.25F,
+            style: System.Drawing.FontStyle.Regular,
+            unit: System.Drawing.GraphicsUnit.Point,
+            gdiCharSet: ((byte)(238))
         );
         this.Name = "XslEditor";
         this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-        this.Controls.SetChildIndex(this.panel4, 0);
-        this.panel4.ResumeLayout(false);
+        this.Controls.SetChildIndex(child: this.panel4, newIndex: 0);
+        this.panel4.ResumeLayout(performLayout: false);
         this.panel4.PerformLayout();
-        this.tabControl.ResumeLayout(false);
-        this.tabXsl.ResumeLayout(false);
-        this.tabSource.ResumeLayout(false);
+        this.tabControl.ResumeLayout(performLayout: false);
+        this.tabXsl.ResumeLayout(performLayout: false);
+        this.tabSource.ResumeLayout(performLayout: false);
         this.tabSource.PerformLayout();
-        this.tabParameters.ResumeLayout(false);
-        this.tableLayoutPanel1.ResumeLayout(false);
-        this.flowLayoutPanel1.ResumeLayout(false);
+        this.tabParameters.ResumeLayout(performLayout: false);
+        this.tableLayoutPanel1.ResumeLayout(performLayout: false);
+        this.flowLayoutPanel1.ResumeLayout(performLayout: false);
         this.flowLayoutPanel1.PerformLayout();
-        this.tabResult.ResumeLayout(false);
-        this.tabDataResult.ResumeLayout(false);
+        this.tabResult.ResumeLayout(performLayout: false);
+        this.tabDataResult.ResumeLayout(performLayout: false);
         ((System.ComponentModel.ISupportInitialize)(this.grdResult)).EndInit();
-        this.settingsTab.ResumeLayout(false);
+        this.settingsTab.ResumeLayout(performLayout: false);
         this.settingsTab.PerformLayout();
-        this.ResumeLayout(false);
+        this.ResumeLayout(performLayout: false);
         this.PerformLayout();
     }
 
@@ -757,21 +771,22 @@ public class XslEditor : AbstractEditor, IToolStripContainer
         cboRuleSet.Items.Clear();
         IDataStructure oldValue = control.SelectedItem as IDataStructure;
         ISchemaService schema =
-            ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
+            ServiceManager.Services.GetService(serviceType: typeof(ISchemaService))
+            as ISchemaService;
         DataStructureSchemaItemProvider structures =
-            schema.GetProvider(typeof(DataStructureSchemaItemProvider))
+            schema.GetProvider(type: typeof(DataStructureSchemaItemProvider))
             as DataStructureSchemaItemProvider;
         control.BeginUpdate();
         control.Items.Clear();
         foreach (IDataStructure structure in structures.ChildItems)
         {
-            control.Items.Add(structure);
+            control.Items.Add(item: structure);
         }
 
         control.EndUpdate();
         if (oldValue != null)
         {
-            if (control.Items.Contains(oldValue))
+            if (control.Items.Contains(value: oldValue))
             {
                 control.SelectedItem = oldValue;
             }
@@ -790,7 +805,7 @@ public class XslEditor : AbstractEditor, IToolStripContainer
                 this.IsDirty = true;
             }
             txtText.ResultSchema = txtResult.ResultSchema = GetSchema(
-                cboDataStructure.SelectedItem
+                data: cboDataStructure.SelectedItem
             );
         }
         cboRuleSet.BeginUpdate();
@@ -800,11 +815,11 @@ public class XslEditor : AbstractEditor, IToolStripContainer
             IDataStructure structure = cboDataStructure.SelectedItem as IDataStructure;
             foreach (
                 DataStructureRuleSet ruleSet in structure.ChildItemsByType<DataStructureRuleSet>(
-                    DataStructureRuleSet.CategoryConst
+                    itemType: DataStructureRuleSet.CategoryConst
                 )
             )
             {
-                cboRuleSet.Items.Add(ruleSet);
+                cboRuleSet.Items.Add(item: ruleSet);
             }
         }
         cboRuleSet.EndUpdate();
@@ -816,8 +831,8 @@ public class XslEditor : AbstractEditor, IToolStripContainer
         XsdDataStructure xsdds = data as XsdDataStructure;
         if (ds != null)
         {
-            DatasetGenerator gen = new DatasetGenerator(true);
-            return gen.CreateDataSet(ds).GetXmlSchema();
+            DatasetGenerator gen = new DatasetGenerator(userDefinedParameters: true);
+            return gen.CreateDataSet(ds: ds).GetXmlSchema();
         }
         if (xsdds != null)
         {
@@ -839,8 +854,8 @@ public class XslEditor : AbstractEditor, IToolStripContainer
 
     private void XslEditor_ContentLoaded(object sender, EventArgs e)
     {
-        LoadDataStructures(cboDataStructure);
-        LoadDataStructures(cboSourceStructure);
+        LoadDataStructures(control: cboDataStructure);
+        LoadDataStructures(control: cboSourceStructure);
         txtSource.Text = "<ROOT>\r\n</ROOT>";
         if (this.IsViewOnly)
         {
@@ -862,9 +877,9 @@ public class XslEditor : AbstractEditor, IToolStripContainer
             {
                 cboDataStructure.SelectedItem = _xslRule.Structure;
             }
-            cboTraceLevel.Items.Add(Trace.InheritFromParent);
-            cboTraceLevel.Items.Add(Trace.Yes);
-            cboTraceLevel.Items.Add(Trace.No);
+            cboTraceLevel.Items.Add(item: Trace.InheritFromParent);
+            cboTraceLevel.Items.Add(item: Trace.Yes);
+            cboTraceLevel.Items.Add(item: Trace.No);
             cboTraceLevel.SelectedItem = _xslRule.TraceLevel;
             if (txtText.Text == "")
             {
@@ -973,7 +988,7 @@ public class XslEditor : AbstractEditor, IToolStripContainer
         }
         else
         {
-            throw new InvalidCastException("Object type not supported.");
+            throw new InvalidCastException(message: "Object type not supported.");
         }
     }
 
@@ -984,7 +999,7 @@ public class XslEditor : AbstractEditor, IToolStripContainer
             System.IO.StreamReader reader = null;
             try
             {
-                reader = new System.IO.StreamReader(openDialog.OpenFile());
+                reader = new System.IO.StreamReader(stream: openDialog.OpenFile());
                 txtSource.Text = reader.ReadToEnd();
             }
             finally
@@ -1000,8 +1015,12 @@ public class XslEditor : AbstractEditor, IToolStripContainer
 
     private void btnTransform_Click(object sender, EventArgs e)
     {
-        IXmlContainer result = this.Transform(txtText.Text, txtSource.Text, false);
-        string resultText = GetFormattedXml(result?.Xml);
+        IXmlContainer result = this.Transform(
+            xslt: txtText.Text,
+            sourceXml: txtSource.Text,
+            validateOnly: false
+        );
+        string resultText = GetFormattedXml(node: result?.Xml);
 
         txtResult.Text = resultText;
 
@@ -1020,7 +1039,7 @@ public class XslEditor : AbstractEditor, IToolStripContainer
             else
             {
                 DataSet data = new DataSet();
-                data.ReadXml(new XmlNodeReader(result.Xml));
+                data.ReadXml(reader: new XmlNodeReader(node: result.Xml));
                 grdResult.DataSource = data;
             }
         }
@@ -1033,30 +1052,34 @@ public class XslEditor : AbstractEditor, IToolStripContainer
         Workbench.Commands.ViewOutputPad outputPad = new Workbench.Commands.ViewOutputPad();
         outputPad.Run();
         Workbench.Pads.OutputPad output =
-            WorkbenchSingleton.Workbench.GetPad(typeof(Workbench.Pads.OutputPad))
+            WorkbenchSingleton.Workbench.GetPad(type: typeof(Workbench.Pads.OutputPad))
             as Workbench.Pads.OutputPad;
-        output.SetOutputText("");
+        output.SetOutputText(sText: "");
         string transactionId = Guid.NewGuid().ToString();
         try
         {
             IServiceAgent transformer = (
-                ServiceManager.Services.GetService(typeof(IBusinessServicesService))
+                ServiceManager.Services.GetService(serviceType: typeof(IBusinessServicesService))
                 as IBusinessServicesService
-            ).GetAgent("DataTransformationService", RuleEngine.Create(new Hashtable(), null), null);
-            var doc = new XmlContainer(sourceXml);
+            ).GetAgent(
+                serviceType: "DataTransformationService",
+                ruleEngine: RuleEngine.Create(contextStores: new Hashtable(), transactionId: null),
+                workflowEngine: null
+            );
+            var doc = new XmlContainer(xmlString: sourceXml);
             transformer.MethodName = "TransformText";
-            transformer.Parameters.Add("XslScript", xslt);
-            transformer.Parameters.Add("Data", doc);
-            transformer.Parameters.Add("ValidateOnly", validateOnly);
+            transformer.Parameters.Add(key: "XslScript", value: xslt);
+            transformer.Parameters.Add(key: "Data", value: doc);
+            transformer.Parameters.Add(key: "ValidateOnly", value: validateOnly);
             transformer.TransactionId = transactionId;
             transformer.OutputStructure = cboDataStructure.SelectedItem as IDataStructure;
             // resolve transformation input parameters and try to put an empty xml document to each just
             // in case it expects a node set as a parameter
-            var xsltParams = XmlTools.ResolveTransformationParameters(xslt);
+            var xsltParams = XmlTools.ResolveTransformationParameters(transformationText: xslt);
             RefreshParameterList();
             LoadDisplayedParameterData();
-            Hashtable parameterValues = GetParameterValues(xsltParams);
-            transformer.Parameters.Add("Parameters", parameterValues);
+            Hashtable parameterValues = GetParameterValues(paramNames: xsltParams);
+            transformer.Parameters.Add(key: "Parameters", value: parameterValues);
             transformer.Run();
             IXmlContainer result = transformer.Result as IXmlContainer;
             if (result == null)
@@ -1070,8 +1093,8 @@ public class XslEditor : AbstractEditor, IToolStripContainer
             {
                 if (dataDoc.DataSet.HasErrors == false && ruleSet != null)
                 {
-                    RuleEngine re = RuleEngine.Create(null, null);
-                    re.ProcessRules(dataDoc, ruleSet, null);
+                    RuleEngine re = RuleEngine.Create(contextStores: null, transactionId: null);
+                    re.ProcessRules(data: dataDoc, ruleSet: ruleSet, contextRow: null);
                 }
             }
             return result;
@@ -1079,13 +1102,13 @@ public class XslEditor : AbstractEditor, IToolStripContainer
         catch (Exception ex)
         {
             StringBuilder sb = new StringBuilder();
-            ErrorMessage(ex, sb);
-            _output.SetOutputText(sb.ToString());
+            ErrorMessage(ex: ex, sb: sb);
+            _output.SetOutputText(sText: sb.ToString());
             return null;
         }
         finally
         {
-            ResourceMonitor.Rollback(transactionId);
+            ResourceMonitor.Rollback(transactionId: transactionId);
         }
     }
 
@@ -1097,12 +1120,12 @@ public class XslEditor : AbstractEditor, IToolStripContainer
             ParameterData correspondingData =
                 parameterList
                     .Items.Cast<ParameterData>()
-                    .FirstOrDefault(parData => parData.Name == paramName)
+                    .FirstOrDefault(predicate: parData => parData.Name == paramName)
                 ?? throw new ArgumentException(
-                    $"Parameter named {paramName} was not found among Input Parameters."
+                    message: $"Parameter named {paramName} was not found among Input Parameters."
                 );
 
-            parHashtable.Add(paramName, correspondingData.Value);
+            parHashtable.Add(key: paramName, value: correspondingData.Value);
         }
         return parHashtable;
     }
@@ -1110,16 +1133,16 @@ public class XslEditor : AbstractEditor, IToolStripContainer
     private void LoadDisplayedParameterData()
     {
         var previousParData = (ParameterData)parameterList.SelectedItem;
-        UpdateParameterData(previousParData);
+        UpdateParameterData(parData: previousParData);
     }
 
     private void ErrorMessage(Exception ex, StringBuilder sb)
     {
-        sb.Append(ex.Message);
-        sb.Append(Environment.NewLine);
+        sb.Append(value: ex.Message);
+        sb.Append(value: Environment.NewLine);
         if (ex.InnerException != null)
         {
-            ErrorMessage(ex.InnerException, sb);
+            ErrorMessage(ex: ex.InnerException, sb: sb);
         }
     }
 
@@ -1127,11 +1150,11 @@ public class XslEditor : AbstractEditor, IToolStripContainer
     {
         if (keyData == Keys.Enter)
         {
-            ProcessXpath(txtXpath.Text, txtSource.Text);
+            ProcessXpath(xpath: txtXpath.Text, xml: txtSource.Text);
             return true;
         }
 
-        return base.ProcessDialogKey(keyData);
+        return base.ProcessDialogKey(keyData: keyData);
     }
 
     private void ProcessXpath(string xpath, string xml)
@@ -1139,34 +1162,39 @@ public class XslEditor : AbstractEditor, IToolStripContainer
         try
         {
             XmlDocument doc = new XmlDocument();
-            doc.LoadXml(xml);
+            doc.LoadXml(xml: xml);
             XPathNavigator nav = doc.CreateNavigator();
-            XPathExpression expr = nav.Compile(xpath);
-            OrigamXsltContext ctx = OrigamXsltContext.Create(new NameTable(), null);
-            expr.SetContext(ctx);
-            object result = nav.Evaluate(expr);
+            XPathExpression expr = nav.Compile(xpath: xpath);
+            OrigamXsltContext ctx = OrigamXsltContext.Create(
+                nameTable: new NameTable(),
+                transactionId: null
+            );
+            expr.SetContext(nsManager: ctx);
+            object result = nav.Evaluate(expr: expr);
             if (result is XPathNodeIterator)
             {
                 XPathNodeIterator iterator = result as XPathNodeIterator;
                 StringBuilder builder = new StringBuilder();
-                builder.Append("Returned " + iterator.Count.ToString() + " nodes:");
-                builder.Append(Environment.NewLine);
+                builder.Append(value: "Returned " + iterator.Count.ToString() + " nodes:");
+                builder.Append(value: Environment.NewLine);
                 for (int i = 0; i < iterator.Count; i++)
                 {
                     iterator.MoveNext();
                     XmlNode node = ((IHasXmlNode)iterator.Current).GetNode();
-                    builder.Append(GetFormattedXml(node) + Environment.NewLine);
+                    builder.Append(value: GetFormattedXml(node: node) + Environment.NewLine);
                 }
-                _output.SetOutputText(builder.ToString());
+                _output.SetOutputText(sText: builder.ToString());
             }
             else
             {
-                _output.SetOutputText(string.Format("Returned value:\n{0}", result));
+                _output.SetOutputText(
+                    sText: string.Format(format: "Returned value:\n{0}", arg0: result)
+                );
             }
         }
         catch (Exception ex)
         {
-            _output.SetOutputText(ex.Message);
+            _output.SetOutputText(sText: ex.Message);
         }
     }
 
@@ -1179,11 +1207,11 @@ public class XslEditor : AbstractEditor, IToolStripContainer
 
         string resultText = "";
         System.IO.StringWriter swriter = new System.IO.StringWriter();
-        XmlTextWriter xwriter = new XmlTextWriter(swriter);
+        XmlTextWriter xwriter = new XmlTextWriter(w: swriter);
         try
         {
             xwriter.Formatting = Formatting.Indented;
-            node.WriteTo(xwriter);
+            node.WriteTo(w: xwriter);
             resultText = swriter.ToString();
         }
         finally
@@ -1199,30 +1227,33 @@ public class XslEditor : AbstractEditor, IToolStripContainer
         try
         {
             XmlDocument doc = new XmlDocument();
-            doc.LoadXml(txtText.Text);
+            doc.LoadXml(xml: txtText.Text);
             return doc;
         }
         catch (Exception ex)
         {
-            _output.SetOutputText(ex.Message);
+            _output.SetOutputText(sText: ex.Message);
             return null;
         }
     }
 
     private bool ValidateXslt()
     {
-        if (LoadXslt() == null || this.Transform(txtText.Text, "<ROOT/>", true) == null)
+        if (
+            LoadXslt() == null
+            || this.Transform(xslt: txtText.Text, sourceXml: "<ROOT/>", validateOnly: true) == null
+        )
         {
             MessageBox.Show(
-                this,
-                "XSLT validation failed. See output for details.",
-                "XSLT Validation",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error
+                owner: this,
+                text: "XSLT validation failed. See output for details.",
+                caption: "XSLT Validation",
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Error
             );
             return false;
         }
-        _output.SetOutputText("XSLT is valid.");
+        _output.SetOutputText(sText: "XSLT is valid.");
         return true;
     }
 
@@ -1231,26 +1262,26 @@ public class XslEditor : AbstractEditor, IToolStripContainer
         if (ValidateXslt())
         {
             MessageBox.Show(
-                this,
-                "The stylesheet is valid.",
-                "XSLT Validation",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information
+                owner: this,
+                text: "The stylesheet is valid.",
+                caption: "XSLT Validation",
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Information
             );
         }
     }
 
     private void cboSourceStructure_SelectedValueChanged(object sender, EventArgs e)
     {
-        txtSource.ResultSchema = GetSchema(cboSourceStructure.SelectedItem);
+        txtSource.ResultSchema = GetSchema(data: cboSourceStructure.SelectedItem);
     }
 
     private void paremeterList_SelectedIndexChanged(object sender, EventArgs e)
     {
         var previousParData = (ParameterData)parameterList.PreviouslySelectedItem;
-        UpdateParameterData(previousParData);
+        UpdateParameterData(parData: previousParData);
         var selectedParameterName = (ParameterData)parameterList.SelectedItem;
-        DisplayParameterData(selectedParameterName);
+        DisplayParameterData(parData: selectedParameterName);
     }
 
     private void UpdateParameterData(ParameterData parData)
@@ -1301,7 +1332,7 @@ public class XslEditor : AbstractEditor, IToolStripContainer
     private void RefreshParameterList()
     {
         XmlDocument xsltDoc = LoadXslt();
-        parameterListUpdater.Refresh(xsltDoc);
+        parameterListUpdater.Refresh(xsltDoc: xsltDoc);
     }
 
     private void cboTraceLevel_SelectedIndexChanged(object sender, EventArgs e)
@@ -1338,58 +1369,64 @@ internal class ParameterListUpdater
             return;
         }
 
-        UpdateNameSpaceDictionary(xsltDoc);
-        var newParamNodes = XmlTools.ResolveTransformationParameterElements(xsltDoc);
-        RemoveParametersIfNotIn(newParamNodes);
-        AddNewParametersIfNotAlredyInList(newParamNodes);
+        UpdateNameSpaceDictionary(xsltDoc: xsltDoc);
+        var newParamNodes = XmlTools.ResolveTransformationParameterElements(doc: xsltDoc);
+        RemoveParametersIfNotIn(newParamNodes: newParamNodes);
+        AddNewParametersIfNotAlredyInList(paramNodes: newParamNodes);
     }
 
     private void UpdateNameSpaceDictionary(XmlDocument xsltDoc)
     {
-        XPathDocument x = new XPathDocument(new StringReader(xsltDoc.InnerXml));
+        XPathDocument x = new XPathDocument(textReader: new StringReader(s: xsltDoc.InnerXml));
         XPathNavigator navigator = x.CreateNavigator();
-        navigator.MoveToFollowing(XPathNodeType.Element);
-        aliasToNameSpaceDict = navigator.GetNamespacesInScope(XmlNamespaceScope.All).Invert();
+        navigator.MoveToFollowing(type: XPathNodeType.Element);
+        aliasToNameSpaceDict = navigator
+            .GetNamespacesInScope(scope: XmlNamespaceScope.All)
+            .Invert();
     }
 
     private void RemoveParametersIfNotIn(IList<XmlElement> newParamNodes)
     {
         List<string> newParNames = newParamNodes
-            .Select(node => node.Attributes["name"].Value)
+            .Select(selector: node => node.Attributes[name: "name"].Value)
             .ToList();
 
         parameterList
             .Items.Cast<ParameterData>()
-            .Where(parData => !newParNames.Contains(parData.Name))
+            .Where(predicate: parData => !newParNames.Contains(item: parData.Name))
             .ToList()
-            .ForEach(item => parameterList.RemoveAndKeepSomeSelected(item));
+            .ForEach(action: item => parameterList.RemoveAndKeepSomeSelected(item: item));
     }
 
     private void AddNewParametersIfNotAlredyInList(IList<XmlElement> paramNodes)
     {
         List<string> oldParNames = parameterList
             .Items.Cast<ParameterData>()
-            .Select(parData => parData.Name)
+            .Select(selector: parData => parData.Name)
             .ToList();
 
         paramNodes
-            .Where(paramNode => !oldParNames.Contains(paramNode.Attributes["name"].Value))
-            .ForEach(paramNode => parameterList.Items.Add(NodeToParamData(paramNode)));
+            .Where(predicate: paramNode =>
+                !oldParNames.Contains(item: paramNode.Attributes[name: "name"].Value)
+            )
+            .ForEach(action: paramNode =>
+                parameterList.Items.Add(item: NodeToParamData(parameterNode: paramNode))
+            );
     }
 
     private ParameterData NodeToParamData(XmlNode parameterNode)
     {
-        string name = parameterNode.Attributes["name"].Value;
+        string name = parameterNode.Attributes[name: "name"].Value;
         try
         {
-            string asPrefix = aliasToNameSpaceDict[XmlTools.AsNameSpace];
+            string asPrefix = aliasToNameSpaceDict[key: XmlTools.AsNameSpace];
             string typeAttribute = $"{asPrefix}:DataType";
-            string type = parameterNode.Attributes[typeAttribute]?.Value;
-            return new ParameterData(name, type);
+            string type = parameterNode.Attributes[name: typeAttribute]?.Value;
+            return new ParameterData(name: name, type: type);
         }
         catch (KeyNotFoundException)
         {
-            return new ParameterData(name, null);
+            return new ParameterData(name: name, type: null);
         }
     }
 }
@@ -1403,7 +1440,7 @@ internal class ParameterData
     public ParameterData(string name, string type)
     {
         this.Name = name;
-        Type = StringTypeToParameterDataType(type);
+        Type = StringTypeToParameterDataType(type: type);
     }
 
     private OrigamDataType StringTypeToParameterDataType(string type)
@@ -1413,10 +1450,12 @@ internal class ParameterData
             return OrigamDataType.String;
         }
 
-        return Enum.GetValues(typeof(OrigamDataType))
+        return Enum.GetValues(enumType: typeof(OrigamDataType))
                 .Cast<OrigamDataType?>()
-                .FirstOrDefault(origamType => origamType.ToString() == type)
-            ?? throw new ArgumentException($"parameter type {type} is not OrigamDataType.");
+                .FirstOrDefault(predicate: origamType => origamType.ToString() == type)
+            ?? throw new ArgumentException(
+                message: $"parameter type {type} is not OrigamDataType."
+            );
     }
 
     public object Value
@@ -1425,11 +1464,11 @@ internal class ParameterData
         {
             if (Type == OrigamDataType.Xml)
             {
-                return new XmlContainer(Text);
+                return new XmlContainer(xmlString: Text);
             }
-            Type systemType = DatasetGenerator.ConvertDataType(Type);
+            Type systemType = DatasetGenerator.ConvertDataType(dataType: Type);
 
-            return DatasetTools.ConvertValue(Text, systemType);
+            return DatasetTools.ConvertValue(value: Text, targetType: systemType);
         }
     }
 

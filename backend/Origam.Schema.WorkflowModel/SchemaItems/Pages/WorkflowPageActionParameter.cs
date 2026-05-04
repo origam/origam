@@ -27,10 +27,10 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.WorkflowModel;
 
-[SchemaItemDescription("Parameter", "Parameters", 17)]
-[HelpTopic("Action+Parameter")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Parameter", folderName: "Parameters", icon: 17)]
+[HelpTopic(topic: "Action+Parameter")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class WorkflowPageActionParameter : AbstractSchemaItem
 {
     public WorkflowPageActionParameter()
@@ -40,13 +40,13 @@ public class WorkflowPageActionParameter : AbstractSchemaItem
     }
 
     public WorkflowPageActionParameter(Guid schemaExtensionId)
-        : base(schemaExtensionId)
+        : base(extensionId: schemaExtensionId)
     {
         Init();
     }
 
     public WorkflowPageActionParameter(Key primaryKey)
-        : base(primaryKey)
+        : base(primaryKey: primaryKey)
     {
         Init();
     }
@@ -66,11 +66,11 @@ public class WorkflowPageActionParameter : AbstractSchemaItem
     }
     private string _xpath;
 
-    [Category("Result")]
+    [Category(category: "Result")]
     [Description(
-        "An XPath expression from the context of the data returned by the workflow. The result will be used as the URL."
+        description: "An XPath expression from the context of the data returned by the workflow. The result will be used as the URL."
     )]
-    [XmlAttribute("xPath")]
+    [XmlAttribute(attributeName: "xPath")]
     public string XPath
     {
         get { return _xpath; }

@@ -29,21 +29,21 @@ namespace Origam.Schema.MenuModel;
 /// <summary>
 /// Summary description for Submenu.
 /// </summary>
-[SchemaItemDescription("Dynamic Menu", "icon_dynamic-menu.png")]
-[HelpTopic("Dynamic+Menu")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Dynamic Menu", iconName: "icon_dynamic-menu.png")]
+[HelpTopic(topic: "Dynamic+Menu")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class DynamicMenu : AbstractMenuItem, ISchemaItemFactory
 {
     public DynamicMenu()
         : base() { }
 
     public DynamicMenu(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(schemaExtensionId: schemaExtensionId) { }
 
     public DynamicMenu(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public override string Roles
     {
         get { return "*"; }
@@ -51,7 +51,7 @@ public class DynamicMenu : AbstractMenuItem, ISchemaItemFactory
     }
     string _classPath;
 
-    [XmlAttribute("classPath")]
+    [XmlAttribute(attributeName: "classPath")]
     public string ClassPath
     {
         get { return _classPath; }

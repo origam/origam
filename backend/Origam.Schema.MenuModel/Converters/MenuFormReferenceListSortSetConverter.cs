@@ -47,24 +47,24 @@ public class MenuFormReferenceListSortSetConverter : TypeConverter
         FormReferenceMenuItem currentItem = context.Instance as FormReferenceMenuItem;
         if (currentItem == null)
         {
-            return new StandardValuesCollection(new List<DataStructureSortSet>());
+            return new StandardValuesCollection(values: new List<DataStructureSortSet>());
         }
 
         if (currentItem.ListDataStructure == null)
         {
-            return new StandardValuesCollection(new List<DataStructureSortSet>());
+            return new StandardValuesCollection(values: new List<DataStructureSortSet>());
         }
 
         List<DataStructureSortSet> sortSets = currentItem.ListDataStructure.SortSets;
-        var array = new List<DataStructureSortSet>(sortSets.Count);
+        var array = new List<DataStructureSortSet>(capacity: sortSets.Count);
         foreach (DataStructureSortSet item in sortSets)
         {
-            array.Add(item);
+            array.Add(item: item);
         }
-        array.Add(null);
+        array.Add(item: null);
 
         array.Sort();
-        return new StandardValuesCollection(array);
+        return new StandardValuesCollection(values: array);
     }
 
     public override bool CanConvertFrom(
@@ -77,7 +77,7 @@ public class MenuFormReferenceListSortSetConverter : TypeConverter
             return true;
         }
 
-        return base.CanConvertFrom(context, sourceType);
+        return base.CanConvertFrom(context: context, sourceType: sourceType);
     }
 
     public override object ConvertFrom(
@@ -100,6 +100,6 @@ public class MenuFormReferenceListSortSetConverter : TypeConverter
             return null;
         }
 
-        return base.ConvertFrom(context, culture, value);
+        return base.ConvertFrom(context: context, culture: culture, value: value);
     }
 }

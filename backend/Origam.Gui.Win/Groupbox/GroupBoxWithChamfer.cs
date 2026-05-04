@@ -36,14 +36,15 @@ namespace Origam.Gui.Win;
 /// <summary>
 /// Summary description for GroupBoxWithChamfer.
 /// </summary>
-[ToolboxBitmap(typeof(GroupBoxWithChamfer))]
+[ToolboxBitmap(t: typeof(GroupBoxWithChamfer))]
 public class GroupBoxWithChamfer : BaseContainer
 {
     #region Private Data Members
     // The enum object to store the colorscheme value
     private EnmColorScheme meColorScheme = EnmColorScheme.Origam;
     private IPersistenceService _persistence =
-        ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+        ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+        as IPersistenceService;
     #endregion
     public GroupBoxWithChamfer()
         : base()
@@ -53,25 +54,25 @@ public class GroupBoxWithChamfer : BaseContainer
 
     private Guid _styleId;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public Guid StyleId
     {
         get { return _styleId; }
         set { _styleId = value; }
     }
 
-    [TypeConverter(typeof(StylesConverter))]
+    [TypeConverter(type: typeof(StylesConverter))]
     public UIStyle Style
     {
         get
         {
             return (UIStyle)
                 _persistence.SchemaProvider.RetrieveInstance(
-                    typeof(UIStyle),
-                    new ModelElementKey(this.StyleId)
+                    type: typeof(UIStyle),
+                    primaryKey: new ModelElementKey(id: this.StyleId)
                 );
         }
-        set { this.StyleId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]); }
+        set { this.StyleId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]); }
     }
     #region Overridden Properties
     public override EnmColorScheme ColorScheme
@@ -80,11 +81,11 @@ public class GroupBoxWithChamfer : BaseContainer
         set
         {
             // Create object of ColorScheme Class
-            ColorScheme oColor = new ColorScheme(value);
+            ColorScheme oColor = new ColorScheme(aoColorScheme: value);
 
             // Set the controls Diffrent color properties depending on the
             // Color Scheme selected
-            oColor.SetColorScheme(this);
+            oColor.SetColorScheme(aCtrl: this);
             meColorScheme = value;
         }
     }
@@ -96,16 +97,20 @@ public class GroupBoxWithChamfer : BaseContainer
         get
         {
             Rectangle oRectangle = new Rectangle(
-                this.BorderRectangle.X + 1,
-                this.BorderRectangle.Y + 1,
-                this.BorderRectangle.Width - 2,
-                this.BorderRectangle.Height - 2
+                x: this.BorderRectangle.X + 1,
+                y: this.BorderRectangle.Y + 1,
+                width: this.BorderRectangle.Width - 2,
+                height: this.BorderRectangle.Height - 2
             );
             Size oSize = new Size(
-                mosizeBorderPixelIndent.Width - 2,
-                mosizeBorderPixelIndent.Height - 2
+                width: mosizeBorderPixelIndent.Width - 2,
+                height: mosizeBorderPixelIndent.Height - 2
             );
-            return this.GetRoundedRectanglarPath(oRectangle, moTextSize, oSize);
+            return this.GetRoundedRectanglarPath(
+                aoRectangle: oRectangle,
+                aoTextSize: moTextSize,
+                aoCurveSize: oSize
+            );
         }
     }
 
@@ -116,19 +121,19 @@ public class GroupBoxWithChamfer : BaseContainer
         get
         {
             Rectangle oRectangle = new Rectangle(
-                this.BorderRectangle.X,
-                this.BorderRectangle.Y,
-                this.BorderRectangle.Width + 3,
-                this.BorderRectangle.Height + 3
+                x: this.BorderRectangle.X,
+                y: this.BorderRectangle.Y,
+                width: this.BorderRectangle.Width + 3,
+                height: this.BorderRectangle.Height + 3
             );
             Size oSize = new Size(
-                mosizeBorderPixelIndent.Width + 2,
-                mosizeBorderPixelIndent.Width + 2
+                width: mosizeBorderPixelIndent.Width + 2,
+                height: mosizeBorderPixelIndent.Width + 2
             );
             return this.GetRoundedRectanglarPath(
-                oRectangle,
-                new SizeF(moTextSize.Width + 3, moTextSize.Height),
-                oSize
+                aoRectangle: oRectangle,
+                aoTextSize: new SizeF(width: moTextSize.Width + 3, height: moTextSize.Height),
+                aoCurveSize: oSize
             );
         }
     }
@@ -148,92 +153,92 @@ public class GroupBoxWithChamfer : BaseContainer
 
         // Add arc for the top left corner curve to the graphic path
         oGraphicPath.AddArc(
-            aoRectangle.Left,
-            aoRectangle.Top,
-            aoCurveSize.Width,
-            aoCurveSize.Height,
-            180,
-            90
+            x: aoRectangle.Left,
+            y: aoRectangle.Top,
+            width: aoCurveSize.Width,
+            height: aoCurveSize.Height,
+            startAngle: 180,
+            sweepAngle: 90
         );
 
         // Add top horizontal line for chamfer to the graphic path
         oGraphicPath.AddLine(
-            aoRectangle.Left + (Single)(aoCurveSize.Height / 2),
-            aoRectangle.Top,
-            aoRectangle.Left + (Single)(aoCurveSize.Height / 2) + aoTextSize.Width + 2,
-            aoRectangle.Top
+            x1: aoRectangle.Left + (Single)(aoCurveSize.Height / 2),
+            y1: aoRectangle.Top,
+            x2: aoRectangle.Left + (Single)(aoCurveSize.Height / 2) + aoTextSize.Width + 2,
+            y2: aoRectangle.Top
         );
 
         // Add Right side arc for the chamfer to the Graphics object
         oGraphicPath.AddArc(
-            aoRectangle.Left + aoTextSize.Width + 7,
-            aoRectangle.Top,
-            aoCurveSize.Width,
-            aoCurveSize.Height,
-            270,
-            90
+            x: aoRectangle.Left + aoTextSize.Width + 7,
+            y: aoRectangle.Top,
+            width: aoCurveSize.Width,
+            height: aoCurveSize.Height,
+            startAngle: 270,
+            sweepAngle: 90
         );
         //=======================================================================
 
         // Add Top Horizontal line below the chamfer to the graphic path object
         oGraphicPath.AddLine(
-            aoRectangle.Left + aoTextSize.Width + (Single)(aoCurveSize.Width + 7),
-            aoRectangle.Top + (Single)(aoCurveSize.Height / 2),
-            aoRectangle.Right - (Single)(aoCurveSize.Height / 2),
-            aoRectangle.Top + (Single)(aoCurveSize.Height / 2)
+            x1: aoRectangle.Left + aoTextSize.Width + (Single)(aoCurveSize.Width + 7),
+            y1: aoRectangle.Top + (Single)(aoCurveSize.Height / 2),
+            x2: aoRectangle.Right - (Single)(aoCurveSize.Height / 2),
+            y2: aoRectangle.Top + (Single)(aoCurveSize.Height / 2)
         );
 
         // Add arc for the top right corner curve to the Graphics Path object
         oGraphicPath.AddArc(
-            aoRectangle.Right - aoCurveSize.Width,
-            aoRectangle.Top + (Single)(aoCurveSize.Height / 2),
-            aoCurveSize.Width,
-            aoCurveSize.Height,
-            270,
-            90
+            x: aoRectangle.Right - aoCurveSize.Width,
+            y: aoRectangle.Top + (Single)(aoCurveSize.Height / 2),
+            width: aoCurveSize.Width,
+            height: aoCurveSize.Height,
+            startAngle: 270,
+            sweepAngle: 90
         );
         // Add Right Vertical Line to the Graphics Path object
         oGraphicPath.AddLine(
-            aoRectangle.Right,
-            aoRectangle.Top + aoCurveSize.Height,
-            aoRectangle.Right,
-            aoRectangle.Bottom - (Single)(aoCurveSize.Height / 2)
+            x1: aoRectangle.Right,
+            y1: aoRectangle.Top + aoCurveSize.Height,
+            x2: aoRectangle.Right,
+            y2: aoRectangle.Bottom - (Single)(aoCurveSize.Height / 2)
         );
 
         // Add arc for the bottom right corner curve to the Graphics Path object
         oGraphicPath.AddArc(
-            aoRectangle.Right - aoCurveSize.Width,
-            aoRectangle.Bottom - aoCurveSize.Height,
-            aoCurveSize.Width,
-            aoCurveSize.Height,
-            0,
-            90
+            x: aoRectangle.Right - aoCurveSize.Width,
+            y: aoRectangle.Bottom - aoCurveSize.Height,
+            width: aoCurveSize.Width,
+            height: aoCurveSize.Height,
+            startAngle: 0,
+            sweepAngle: 90
         );
 
         // Add Bottom Horizontal line to the Graphics Path object
         oGraphicPath.AddLine(
-            aoRectangle.Right - (Single)(aoCurveSize.Width / 2),
-            aoRectangle.Bottom,
-            aoRectangle.Left + (Single)(aoCurveSize.Width / 2),
-            aoRectangle.Bottom
+            x1: aoRectangle.Right - (Single)(aoCurveSize.Width / 2),
+            y1: aoRectangle.Bottom,
+            x2: aoRectangle.Left + (Single)(aoCurveSize.Width / 2),
+            y2: aoRectangle.Bottom
         );
 
         // Add arc for the bottom left corner curve to the graphics path object
         oGraphicPath.AddArc(
-            aoRectangle.Left,
-            aoRectangle.Bottom - aoCurveSize.Height,
-            aoCurveSize.Width,
-            aoCurveSize.Height,
-            90,
-            90
+            x: aoRectangle.Left,
+            y: aoRectangle.Bottom - aoCurveSize.Height,
+            width: aoCurveSize.Width,
+            height: aoCurveSize.Height,
+            startAngle: 90,
+            sweepAngle: 90
         );
 
         // Add Left Vertical Line to the GraphicsPath object
         oGraphicPath.AddLine(
-            aoRectangle.Left,
-            aoRectangle.Bottom - (Single)(aoCurveSize.Height / 2),
-            aoRectangle.Left,
-            aoRectangle.Top + (Single)(aoCurveSize.Height / 2)
+            x1: aoRectangle.Left,
+            y1: aoRectangle.Bottom - (Single)(aoCurveSize.Height / 2),
+            x2: aoRectangle.Left,
+            y2: aoRectangle.Top + (Single)(aoCurveSize.Height / 2)
         );
         return oGraphicPath;
     }
@@ -243,84 +248,91 @@ public class GroupBoxWithChamfer : BaseContainer
     protected override void DrawBorder(System.Drawing.Graphics aoGraphics, Rectangle aoRectangle)
     {
         Pen oPen;
-        Size oSize = new Size(mosizeBorderPixelIndent.Width, mosizeBorderPixelIndent.Height);
+        Size oSize = new Size(
+            width: mosizeBorderPixelIndent.Width,
+            height: mosizeBorderPixelIndent.Height
+        );
 
         Rectangle oRectangle = new Rectangle(
-            aoRectangle.X,
-            aoRectangle.Y,
-            aoRectangle.Width,
-            aoRectangle.Height
+            x: aoRectangle.X,
+            y: aoRectangle.Y,
+            width: aoRectangle.Width,
+            height: aoRectangle.Height
         );
-        SizeF aotextsize = aoGraphics.MeasureString(this.Text, this.Font);
+        SizeF aotextsize = aoGraphics.MeasureString(text: this.Text, font: this.Font);
         // Draw the shadows for the borders
         for (int i = 0; i <= 2; i++)
         {
             // Creates a pen to draw Lines and Arcs Dark To Light
-            oPen = new Pen(Color.FromArgb((2 - i + 1) * 64, this.ShadowColor));
+            oPen = new Pen(
+                color: Color.FromArgb(alpha: (2 - i + 1) * 64, baseColor: this.ShadowColor)
+            );
 
             // Draws a shadow arc for the Chamfer's right hand side
             aoGraphics.DrawArc(
-                oPen,
-                oRectangle.Left + aotextsize.Width - i,
-                oRectangle.Top + 2,
-                oSize.Width,
-                oSize.Height,
-                270,
-                90
+                pen: oPen,
+                x: oRectangle.Left + aotextsize.Width - i,
+                y: oRectangle.Top + 2,
+                width: oSize.Width,
+                height: oSize.Height,
+                startAngle: 270,
+                sweepAngle: 90
             );
 
             // Draws a shadow arc for the Top Right corner
             aoGraphics.DrawArc(
-                oPen,
-                oRectangle.Right - oSize.Width,
-                oRectangle.Top + (Single)(oSize.Height / 2) + 2,
-                oSize.Width,
-                oSize.Height,
-                270,
-                90
+                pen: oPen,
+                x: oRectangle.Right - oSize.Width,
+                y: oRectangle.Top + (Single)(oSize.Height / 2) + 2,
+                width: oSize.Width,
+                height: oSize.Height,
+                startAngle: 270,
+                sweepAngle: 90
             );
 
             // Draws a vertical shadow line for the right side
             aoGraphics.DrawLine(
-                oPen,
-                oRectangle.Right,
-                oRectangle.Top + oSize.Height,
-                oRectangle.Right,
-                oRectangle.Bottom - (Single)(oSize.Height / 2)
+                pen: oPen,
+                x1: oRectangle.Right,
+                y1: oRectangle.Top + oSize.Height,
+                x2: oRectangle.Right,
+                y2: oRectangle.Bottom - (Single)(oSize.Height / 2)
             );
 
             // Draws a shadow arc for bottom right corner
             aoGraphics.DrawArc(
-                oPen,
-                oRectangle.Right - oSize.Width,
-                oRectangle.Bottom - oSize.Height,
-                oSize.Width,
-                oSize.Height,
-                0,
-                90
+                pen: oPen,
+                x: oRectangle.Right - oSize.Width,
+                y: oRectangle.Bottom - oSize.Height,
+                width: oSize.Width,
+                height: oSize.Height,
+                startAngle: 0,
+                sweepAngle: 90
             );
 
             // Creates a pen to draw lines and arcs Light to Dark
-            oPen = new Pen(Color.FromArgb((2 - i) * 127, this.ShadowColor));
+            oPen = new Pen(
+                color: Color.FromArgb(alpha: (2 - i) * 127, baseColor: this.ShadowColor)
+            );
 
             // Draws a horizontal shadow line for the bottom
             aoGraphics.DrawLine(
-                oPen,
-                oRectangle.Right - (Single)(oSize.Width / 2),
-                oRectangle.Bottom,
-                oRectangle.Left + (Single)(oSize.Width / 2),
-                oRectangle.Bottom
+                pen: oPen,
+                x1: oRectangle.Right - (Single)(oSize.Width / 2),
+                y1: oRectangle.Bottom,
+                x2: oRectangle.Left + (Single)(oSize.Width / 2),
+                y2: oRectangle.Bottom
             );
 
             // Draw a shadow arc for the bottom left corner
             aoGraphics.DrawArc(
-                oPen,
-                oRectangle.Left + 2,
-                oRectangle.Bottom - oSize.Height,
-                oSize.Width,
-                oSize.Height,
-                90,
-                90
+                pen: oPen,
+                x: oRectangle.Left + 2,
+                y: oRectangle.Bottom - oSize.Height,
+                width: oSize.Width,
+                height: oSize.Height,
+                startAngle: 90,
+                sweepAngle: 90
             );
 
             // Increasing the Rectangles X and Y position

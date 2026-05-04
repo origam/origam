@@ -28,13 +28,13 @@ namespace Origam.Server.Identity.Controllers;
 [AllowAnonymous]
 public class ErrorController : Microsoft.AspNetCore.Mvc.Controller
 {
-    [Route("~/Error")]
+    [Route(template: "~/Error")]
     public IActionResult Error()
     {
         var feature = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
-        ViewData["OriginalPath"] = feature?.Path ?? "";
-        ViewData["ErrorMessage"] = feature?.Error?.Message ?? Resources.ErrorDetailsInLog;
+        ViewData[index: "OriginalPath"] = feature?.Path ?? "";
+        ViewData[index: "ErrorMessage"] = feature?.Error?.Message ?? Resources.ErrorDetailsInLog;
 
-        return View("~/Identity/Views/Shared/Error.cshtml");
+        return View(viewName: "~/Identity/Views/Shared/Error.cshtml");
     }
 }

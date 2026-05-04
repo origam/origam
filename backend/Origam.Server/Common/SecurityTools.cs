@@ -29,14 +29,14 @@ namespace Origam.Server.Common;
 public static class SecurityTools
 {
     private static readonly Guid OrigamOnlineUserDataStructureId = new(
-        "aa4c9df9-d6da-408e-a095-fd377ffcc319"
+        g: "aa4c9df9-d6da-408e-a095-fd377ffcc319"
     );
     private static readonly Guid GetByUserNameMethodId = new(
-        "ece8b03a-f378-4026-b3b3-588cb58317b6"
+        g: "ece8b03a-f378-4026-b3b3-588cb58317b6"
     );
 
     private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
-        System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType
+        type: System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType
     );
 
     public static UserProfile CurrentUserProfile()
@@ -48,10 +48,10 @@ public static class SecurityTools
         catch (Exception ex)
         {
             log.DebugFormat(
-                "Couldn't get user profile for current thread {0}",
-                Thread.CurrentThread.ManagedThreadId
+                format: "Couldn't get user profile for current thread {0}",
+                arg0: Thread.CurrentThread.ManagedThreadId
             );
-            throw new LoginFailedException(ex.Message, ex);
+            throw new LoginFailedException(message: ex.Message, innerException: ex);
         }
     }
 
@@ -67,22 +67,23 @@ public static class SecurityTools
             paramValue1: username
         );
         DataRow row;
-        if (origamOnlineUserRecord.Tables[0].Rows.Count == 0)
+        if (origamOnlineUserRecord.Tables[index: 0].Rows.Count == 0)
         {
-            row = origamOnlineUserRecord.Tables[0].NewRow();
-            row["Id"] = Guid.NewGuid();
-            row["UserName"] = SecurityManager.CurrentPrincipal.Identity?.Name ?? string.Empty;
-            row["LastOperationTimestamp"] = DateTime.Now;
-            row["DirtyScreens"] = stats.DirtyScreens;
-            row["RunningWorkflows"] = stats.RunningWorkflows;
-            origamOnlineUserRecord.Tables[0].Rows.Add(row);
+            row = origamOnlineUserRecord.Tables[index: 0].NewRow();
+            row[columnName: "Id"] = Guid.NewGuid();
+            row[columnName: "UserName"] =
+                SecurityManager.CurrentPrincipal.Identity?.Name ?? string.Empty;
+            row[columnName: "LastOperationTimestamp"] = DateTime.Now;
+            row[columnName: "DirtyScreens"] = stats.DirtyScreens;
+            row[columnName: "RunningWorkflows"] = stats.RunningWorkflows;
+            origamOnlineUserRecord.Tables[index: 0].Rows.Add(row: row);
         }
         else
         {
-            row = origamOnlineUserRecord.Tables[0].Rows[0];
-            row["LastOperationTimestamp"] = DateTime.Now;
-            row["DirtyScreens"] = stats.DirtyScreens;
-            row["RunningWorkflows"] = stats.RunningWorkflows;
+            row = origamOnlineUserRecord.Tables[index: 0].Rows[index: 0];
+            row[columnName: "LastOperationTimestamp"] = DateTime.Now;
+            row[columnName: "DirtyScreens"] = stats.DirtyScreens;
+            row[columnName: "RunningWorkflows"] = stats.RunningWorkflows;
         }
         DataService.Instance.StoreData(
             dataStructureId: OrigamOnlineUserDataStructureId,
@@ -103,9 +104,9 @@ public static class SecurityTools
             paramName1: "OrigamOnlineUser_par_UserName",
             paramValue1: username
         );
-        if (origamOnlineUserRecord.Tables[0].Rows.Count != 0)
+        if (origamOnlineUserRecord.Tables[index: 0].Rows.Count != 0)
         {
-            origamOnlineUserRecord.Tables[0].Rows[0].Delete();
+            origamOnlineUserRecord.Tables[index: 0].Rows[index: 0].Delete();
         }
         DataService.Instance.StoreData(
             dataStructureId: OrigamOnlineUserDataStructureId,
@@ -119,6 +120,6 @@ public static class SecurityTools
     {
         return SecurityManager
             .GetAuthorizationProvider()
-            .Authorize(SecurityManager.CurrentPrincipal, roleName);
+            .Authorize(principal: SecurityManager.CurrentPrincipal, context: roleName);
     }
 }

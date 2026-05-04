@@ -30,19 +30,19 @@ public static class IOTools
     public static bool IsSubPathOf(string path, string basePath)
     {
         if (
-            (Path.IsPathRooted(path) && Path.IsPathRooted(basePath))
-            || (!Path.IsPathRooted(path) && !Path.IsPathRooted(basePath))
+            (Path.IsPathRooted(path: path) && Path.IsPathRooted(path: basePath))
+            || (!Path.IsPathRooted(path: path) && !Path.IsPathRooted(path: basePath))
         )
         {
-            string fullPath = Normalize(path);
-            string fullBasePath = Normalize(basePath);
-            string[] baseDirNames = fullBasePath.Split(Path.DirectorySeparatorChar);
-            string[] dirNames = fullPath.Split(Path.DirectorySeparatorChar);
+            string fullPath = Normalize(path: path);
+            string fullBasePath = Normalize(path: basePath);
+            string[] baseDirNames = fullBasePath.Split(separator: Path.DirectorySeparatorChar);
+            string[] dirNames = fullPath.Split(separator: Path.DirectorySeparatorChar);
             if (baseDirNames.Length > dirNames.Length)
             {
                 return false;
             }
-            return !baseDirNames.Where((dir, i) => dir != dirNames[i]).Any();
+            return !baseDirNames.Where(predicate: (dir, i) => dir != dirNames[i]).Any();
         }
         // The paths cannot be really compared.
         return false;
@@ -50,11 +50,11 @@ public static class IOTools
 
     private static string Normalize(string path)
     {
-        if (path.Length == 2 && Char.IsLetter(path[0]) && path[1] == ':')
+        if (path.Length == 2 && Char.IsLetter(c: path[index: 0]) && path[index: 1] == ':')
         {
             return path;
         }
         // The paths have to be converted to full paths to deal with the /../ relative navigation
-        return Path.GetFullPath(path).TrimEnd(Path.DirectorySeparatorChar).Trim();
+        return Path.GetFullPath(path: path).TrimEnd(trimChars: Path.DirectorySeparatorChar).Trim();
     }
 }

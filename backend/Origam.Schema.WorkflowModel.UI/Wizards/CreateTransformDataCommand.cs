@@ -34,13 +34,19 @@ public class CreateTransformDataCommand : AbstractMenuCommand
         get { return Owner is ContextStore; }
         set
         {
-            throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
+            throw new ArgumentException(
+                message: ResourceUtils.GetString(key: "ErrorSetProperty"),
+                paramName: "IsEnabled"
+            );
         }
     }
 
     public override void Run()
     {
         ContextStore context = Owner as ContextStore;
-        WorkflowHelper.CreateDataTransformationServiceTransformTask(context, true);
+        WorkflowHelper.CreateDataTransformationServiceTransformTask(
+            contextStore: context,
+            persist: true
+        );
     }
 }

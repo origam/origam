@@ -23,7 +23,7 @@ using System;
 
 namespace Origam.DA;
 
-[AttributeUsage(AttributeTargets.Property)]
+[AttributeUsage(validOn: AttributeTargets.Property)]
 public class RuntimeConfigurableAttribute : Attribute
 {
     public string Name { get; }

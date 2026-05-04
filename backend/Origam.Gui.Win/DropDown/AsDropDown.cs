@@ -39,7 +39,7 @@ namespace Origam.Gui.Win
     /// <summary>
     /// Summary description for AsDropDown.
     /// </summary>
-    [ToolboxBitmap(typeof(AsDropDown))]
+    [ToolboxBitmap(t: typeof(AsDropDown))]
     public class AsDropDown
         : BaseDropDownControl,
             ILookupControl,
@@ -49,7 +49,8 @@ namespace Origam.Gui.Win
         private const int WM_KEYUP = 0x101;
 
         private IPersistenceService _persistence =
-            ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+            ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+            as IPersistenceService;
         private DataTable _currentTable;
         private bool resetParameterMappings = true;
         private readonly ToolStripMenuItem mnuEdit;
@@ -65,19 +66,19 @@ namespace Origam.Gui.Win
             this.BindingContextChanged += AsDropDown_BindingContextChanged;
             this.DataBindings.CollectionChanged += DataBindings_CollectionChanged;
 
-            mnuRefresh = new ToolStripMenuItem(ResourceUtils.GetString("MenuRefresh"));
+            mnuRefresh = new ToolStripMenuItem(text: ResourceUtils.GetString(key: "MenuRefresh"));
             mnuRefresh.Click += refreshMenu_Click;
             mnuRefresh.Image = Workbench.Images.Refresh;
 
-            mnuEdit = new ToolStripMenuItem(ResourceUtils.GetString("MenuEdit"));
+            mnuEdit = new ToolStripMenuItem(text: ResourceUtils.GetString(key: "MenuEdit"));
             mnuEdit.Click += mnuEdit_Click;
             mnuEdit.Image = Workbench.Images.Edit;
 
-            mnuEditList = new ToolStripMenuItem(ResourceUtils.GetString("MenuEditList"));
+            mnuEditList = new ToolStripMenuItem(text: ResourceUtils.GetString(key: "MenuEditList"));
             mnuEditList.Click += btnOpenList_Click;
             mnuEditList.Image = Workbench.Images.Open;
 
-            mnuDelete = new ToolStripMenuItem(ResourceUtils.GetString("MenuDelete"));
+            mnuDelete = new ToolStripMenuItem(text: ResourceUtils.GetString(key: "MenuDelete"));
             mnuDelete.ShortcutKeys = Keys.Delete;
             mnuDelete.ShowShortcutKeys = true;
             mnuDelete.Click += mnuDelete_Click;
@@ -85,7 +86,13 @@ namespace Origam.Gui.Win
 
             this.EditControl.ContextMenuStrip = new ContextMenuStrip();
             this.EditControl.ContextMenuStrip.Items.AddRange(
-                new ToolStripMenuItem[] { mnuRefresh, mnuEditList, mnuEdit, mnuDelete }
+                toolStripItems: new ToolStripMenuItem[]
+                {
+                    mnuRefresh,
+                    mnuEditList,
+                    mnuEdit,
+                    mnuDelete,
+                }
             );
             this.EditControl.ContextMenuStrip.Opening += ContextMenuStrip_Opening;
             this.EditControl.CursorDownPressed += txtEdit_CursorDownPressed;
@@ -147,7 +154,7 @@ namespace Origam.Gui.Win
                     _currentTable = null;
                 }
             }
-            base.Dispose(disposing);
+            base.Dispose(disposing: disposing);
         }
 
         public override string DefaultBindableProperty => "LookupValue";
@@ -182,15 +189,15 @@ namespace Origam.Gui.Win
         #endregion
 
         #region Properties
-        [TypeConverter(typeof(DataLookupConverter))]
-        [RefreshProperties(RefreshProperties.All)]
+        [TypeConverter(type: typeof(DataLookupConverter))]
+        [RefreshProperties(refresh: RefreshProperties.All)]
         public AbstractDataLookup DataLookup
         {
             get =>
                 (AbstractDataLookup)
                     _persistence.SchemaProvider.RetrieveInstance(
-                        typeof(AbstractDataLookup),
-                        new ModelElementKey(this.LookupId)
+                        type: typeof(AbstractDataLookup),
+                        primaryKey: new ModelElementKey(id: this.LookupId)
                     );
             set
             {
@@ -201,12 +208,12 @@ namespace Origam.Gui.Win
                 else
                 {
                     // if same as before, no action is needed
-                    if (this.LookupId == (Guid)value.PrimaryKey["Id"])
+                    if (this.LookupId == (Guid)value.PrimaryKey[key: "Id"])
                     {
                         return;
                     }
 
-                    this.LookupId = (Guid)value.PrimaryKey["Id"];
+                    this.LookupId = (Guid)value.PrimaryKey[key: "Id"];
                 }
                 resetParameterMappings = true;
             }
@@ -265,12 +272,12 @@ namespace Origam.Gui.Win
 
         protected virtual void OnLookupValueChanged(EventArgs e)
         {
-            lookupValueChanged?.Invoke(this, e);
+            lookupValueChanged?.Invoke(sender: this, e: e);
         }
 
         protected virtual void OnLookupDisplayTextRequested(EventArgs e)
         {
-            LookupDisplayTextRequested?.Invoke(this, e);
+            LookupDisplayTextRequested?.Invoke(sender: this, e: e);
         }
 
         protected virtual void OnLookupListRefreshRequested(EventArgs e)
@@ -279,7 +286,7 @@ namespace Origam.Gui.Win
             {
                 if (!(this.Parent is FilterPanel))
                 {
-                    SetEntityAndField(CurrentRow, ColumnName);
+                    SetEntityAndField(row: CurrentRow, columnName: ColumnName);
                 }
 
                 if (this.LookupListRefreshRequested != null)
@@ -293,16 +300,16 @@ namespace Origam.Gui.Win
                         }
                     }
 
-                    this.LookupListRefreshRequested(this, e);
+                    this.LookupListRefreshRequested(sender: this, e: e);
                 }
             }
             catch (Exception ex)
             {
                 AsMessageBox.ShowError(
-                    this.FindForm(),
-                    ex.Message,
-                    "Chyba pøi obnovování seznamu '" + this.Caption + "'",
-                    ex
+                    owner: this.FindForm(),
+                    text: ex.Message,
+                    caption: "Chyba pøi obnovování seznamu '" + this.Caption + "'",
+                    exception: ex
                 );
             }
         }
@@ -316,8 +323,8 @@ namespace Origam.Gui.Win
                     AsDataGrid grid = this.Parent as AsDataGrid;
 
                     return FormTools.FindTableByDataMember(
-                        grid.DataSource as DataSet,
-                        grid.DataMember
+                        ds: grid.DataSource as DataSet,
+                        member: grid.DataMember
                     );
                 }
 
@@ -325,21 +332,22 @@ namespace Origam.Gui.Win
             }
         }
 
-        public DataRow CurrentRow => DataBindingTools.CurrentRow(this, DefaultBindableProperty);
+        public DataRow CurrentRow =>
+            DataBindingTools.CurrentRow(control: this, property: DefaultBindableProperty);
 
         protected virtual void OnLookupShowSourceListRequested(EventArgs e)
         {
-            LookupShowSourceListRequested?.Invoke(this, e);
+            LookupShowSourceListRequested?.Invoke(sender: this, e: e);
         }
 
         protected virtual void OnLookupEditSourceRecordRequested(EventArgs e)
         {
-            LookupEditSourceRecordRequested?.Invoke(this, e);
+            LookupEditSourceRecordRequested?.Invoke(sender: this, e: e);
         }
 
         protected virtual void OnLookupValueChangingByUser(EventArgs e)
         {
-            LookupValueChangingByUser?.Invoke(this, e);
+            LookupValueChangingByUser?.Invoke(sender: this, e: e);
         }
         #endregion
 
@@ -381,7 +389,7 @@ namespace Origam.Gui.Win
                     }
                 }
 
-                return row[ColumnName, version];
+                return row[columnName: ColumnName, version: version];
             }
         }
 
@@ -392,27 +400,36 @@ namespace Origam.Gui.Win
             {
                 _selectedValue = value;
 
-                OnLookupDisplayTextRequested(EventArgs.Empty);
-                OnLookupValueChanged(EventArgs.Empty);
+                OnLookupDisplayTextRequested(e: EventArgs.Empty);
+                OnLookupValueChanged(e: EventArgs.Empty);
                 if (PropertyChanged != null)
                 {
-                    PropertyChanged(this, new PropertyChangedEventArgs("LookupValue"));
+                    PropertyChanged(
+                        sender: this,
+                        e: new PropertyChangedEventArgs(propertyName: "LookupValue")
+                    );
                 }
 
                 if (this.SelectedValue != DBNull.Value && LookupCanEditSourceRecord)
                 {
-                    this.EditControl.Font = new Font(this.EditControl.Font, FontStyle.Underline);
+                    this.EditControl.Font = new Font(
+                        prototype: this.EditControl.Font,
+                        newStyle: FontStyle.Underline
+                    );
                     this.EditControl.ForeColor = OrigamColorScheme.LinkColor;
                 }
                 else
                 {
-                    this.EditControl.Font = new Font(this.EditControl.Font, FontStyle.Regular);
+                    this.EditControl.Font = new Font(
+                        prototype: this.EditControl.Font,
+                        newStyle: FontStyle.Regular
+                    );
                     this.EditControl.ForeColor = SystemColors.ControlText;
                 }
             }
         }
 
-        [Browsable(false)]
+        [Browsable(browsable: false)]
         public string LookupDisplayText
         {
             get => this.DisplayText;
@@ -459,37 +476,37 @@ namespace Origam.Gui.Win
 
         public string LookupListTreeParentMember { get; set; }
 
-        [Browsable(false)]
+        [Browsable(browsable: false)]
         public Guid LookupId { get; set; }
 
-        [Browsable(false)]
+        [Browsable(browsable: false)]
         private Guid _entityId;
         public Guid EntityId => _entityId;
 
-        [Browsable(false)]
+        [Browsable(browsable: false)]
         private Guid _valueFieldId;
         public Guid ValueFieldId => _valueFieldId;
 
-        [Browsable(false)]
+        [Browsable(browsable: false)]
         public string ColumnName { get; set; }
 
         private DataView _lookupList;
 
         private bool _typing = false;
 
-        [Browsable(false)]
+        [Browsable(browsable: false)]
         public DataView LookupList
         {
             get
             {
                 if (_lookupList == null | CacheList == false)
                 {
-                    OnLookupListRefreshRequested(EventArgs.Empty);
+                    OnLookupListRefreshRequested(e: EventArgs.Empty);
                 }
 
                 if (_lookupList == null)
                 {
-                    throw new Exception(ResourceUtils.GetString("ErrorNoDataInList"));
+                    throw new Exception(message: ResourceUtils.GetString(key: "ErrorNoDataInList"));
                 }
 
                 return _lookupList;
@@ -518,7 +535,9 @@ namespace Origam.Gui.Win
                 return;
             }
 
-            string firstColumn = this.LookupListDisplayMember.Split(";".ToCharArray())[0];
+            string firstColumn = this.LookupListDisplayMember.Split(separator: ";".ToCharArray())[
+                0
+            ];
             _lookupList.Sort = firstColumn;
         }
 
@@ -529,7 +548,7 @@ namespace Origam.Gui.Win
             if (this.ParameterMappings.Count > 0)
             {
                 // we always call for refresh if this is parametrized lookup
-                OnLookupListRefreshRequested(EventArgs.Empty);
+                OnLookupListRefreshRequested(e: EventArgs.Empty);
             }
             else
             {
@@ -578,7 +597,9 @@ namespace Origam.Gui.Win
                 }
 
                 var col = _origamMetadata
-                    .ChildItemsByType<ColumnParameterMapping>(ColumnParameterMapping.CategoryConst)
+                    .ChildItemsByType<ColumnParameterMapping>(
+                        itemType: ColumnParameterMapping.CategoryConst
+                    )
                     .ToList();
 
                 foreach (ColumnParameterMapping mapping in col)
@@ -588,7 +609,7 @@ namespace Origam.Gui.Win
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine("AsDropDown:ERROR=>" + ex.ToString());
+                System.Diagnostics.Debug.WriteLine(message: "AsDropDown:ERROR=>" + ex.ToString());
             }
         }
 
@@ -603,18 +624,18 @@ namespace Origam.Gui.Win
             {
                 var _dataServiceAgent = ServiceManager
                     .Services.GetService<IBusinessServicesService>()
-                    .GetAgent("DataService", null, null);
+                    .GetAgent(serviceType: "DataService", ruleEngine: null, workflowEngine: null);
                 var parameters = _dataServiceAgent.ExpectedParameterNames(
-                    this.DataLookup,
-                    "LoadData",
-                    "Parameters"
+                    item: this.DataLookup,
+                    method: "LoadData",
+                    parameter: "Parameters"
                 );
                 foreach (string parameterName in parameters)
                 {
                     ColumnParameterMapping mapping =
                         _origamMetadata.NewItem<ColumnParameterMapping>(
-                            _origamMetadata.SchemaExtensionId,
-                            null
+                            schemaExtensionId: _origamMetadata.SchemaExtensionId,
+                            group: null
                         );
                     mapping.Name = parameterName;
                 }
@@ -625,15 +646,15 @@ namespace Origam.Gui.Win
                 )
                 {
                     var mapping = _origamMetadata.NewItem<ColumnParameterMapping>(
-                        _origamMetadata.SchemaExtensionId,
-                        null
+                        schemaExtensionId: _origamMetadata.SchemaExtensionId,
+                        group: null
                     );
                     mapping.Name = schemaItemParameter.Name;
                 }
             }
 
             //Refill Parameter collection (and dictionary)
-            FillParameterCache(this._origamMetadata as ControlSetItem);
+            FillParameterCache(controlItem: this._origamMetadata as ControlSetItem);
         }
 
         private void FillParameterCache(ControlSetItem controlItem)
@@ -647,13 +668,13 @@ namespace Origam.Gui.Win
 
             foreach (
                 var mapInfo in controlItem.ChildItemsByType<ColumnParameterMapping>(
-                    ColumnParameterMapping.CategoryConst
+                    itemType: ColumnParameterMapping.CategoryConst
                 )
             )
             {
                 if (!mapInfo.IsDeleted)
                 {
-                    parameterMappings.Add(mapInfo);
+                    parameterMappings.Add(value: mapInfo);
                 }
             }
         }
@@ -672,7 +693,7 @@ namespace Origam.Gui.Win
             if (e.Control & !e.Shift & e.KeyCode == Keys.C)
             {
                 // Ctrl+C = Copy
-                Clipboard.SetDataObject(this.EditControl.Text);
+                Clipboard.SetDataObject(data: this.EditControl.Text);
                 return;
             }
 
@@ -803,17 +824,22 @@ namespace Origam.Gui.Win
             {
                 this.DropDown();
 
-                this.EditControl.Font = new Font(this.EditControl.Font, FontStyle.Regular);
+                this.EditControl.Font = new Font(
+                    prototype: this.EditControl.Font,
+                    newStyle: FontStyle.Regular
+                );
                 this.EditControl.ForeColor = SystemColors.ControlText;
 
                 string sTypedText = this.EditControl.Text;
                 try
                 {
-                    FilterClientSide(sTypedText);
+                    FilterClientSide(sTypedText: sTypedText);
                     // select the first found item
                     if (_lookupList.Count > 0)
                     {
-                        Popup.SelectedValue = _lookupList[0].Row[this.LookupListValueMember];
+                        Popup.SelectedValue = _lookupList[recordIndex: 0].Row[
+                            columnName: this.LookupListValueMember
+                        ];
 
                         // if pasting action resulted in an exact match, we close the popup
                         if (_lookupList.Count == 1 & pasting)
@@ -865,7 +891,7 @@ namespace Origam.Gui.Win
                         + " "
                         + oper
                         + " '"
-                        + sTypedText.Replace("'", "''")
+                        + sTypedText.Replace(oldValue: "'", newValue: "''")
                         + wildcard
                         + "'";
                     i++;
@@ -892,7 +918,7 @@ namespace Origam.Gui.Win
             }
 
             OrigamDataRow row = e.Row as OrigamDataRow;
-            if (!row.IsColumnWithValidChange(e.Column))
+            if (!row.IsColumnWithValidChange(dataColumn: e.Column))
             {
                 return;
             }
@@ -909,12 +935,12 @@ namespace Origam.Gui.Win
                 return;
             }
 
-            if (!e.Row.Equals(this.CurrentRow))
+            if (!e.Row.Equals(obj: this.CurrentRow))
             {
                 return;
             }
             // return if nothing has changed
-            if (e.Row[e.Column].Equals(e.ProposedValue))
+            if (e.Row[column: e.Column].Equals(obj: e.ProposedValue))
             {
                 return;
             }
@@ -943,7 +969,7 @@ namespace Origam.Gui.Win
 
         private void UpdateBindings()
         {
-            Binding binding = this.DataBindings[this.DefaultBindableProperty];
+            Binding binding = this.DataBindings[propertyName: this.DefaultBindableProperty];
             if (binding == null)
             {
                 return;
@@ -952,9 +978,12 @@ namespace Origam.Gui.Win
             DataSet dataSource = binding.DataSource as DataSet;
 
             DataTable table = dataSource.Tables[
-                FormTools.FindTableByDataMember(dataSource, binding.BindingMemberInfo.BindingPath)
+                name: FormTools.FindTableByDataMember(
+                    ds: dataSource,
+                    member: binding.BindingMemberInfo.BindingPath
+                )
             ];
-            DataColumn column = table.Columns[binding.BindingMemberInfo.BindingField];
+            DataColumn column = table.Columns[name: binding.BindingMemberInfo.BindingField];
 
             if (column != null)
             {
@@ -977,26 +1006,26 @@ namespace Origam.Gui.Win
             if (columnName == null)
             {
                 throw new InvalidOperationException(
-                    ResourceUtils.GetString("ErrorDropDownNotBound")
+                    message: ResourceUtils.GetString(key: "ErrorDropDownNotBound")
                 );
             }
 
             if (row == null)
             {
                 throw new InvalidOperationException(
-                    ResourceUtils.GetString("ErrorRecordNeeded0")
+                    message: ResourceUtils.GetString(key: "ErrorRecordNeeded0")
                         + Environment.NewLine
-                        + ResourceUtils.GetString("ErrorRecordNeeded1")
+                        + ResourceUtils.GetString(key: "ErrorRecordNeeded1")
                 );
             }
-            _entityId = (Guid)row.Table.ExtendedProperties["EntityId"];
+            _entityId = (Guid)row.Table.ExtendedProperties[key: "EntityId"];
 
-            _valueFieldId = (Guid)row.Table.Columns[columnName].ExtendedProperties["Id"];
+            _valueFieldId = (Guid)row.Table.Columns[name: columnName].ExtendedProperties[key: "Id"];
 
-            DataColumn column = row.Table.Columns[columnName];
+            DataColumn column = row.Table.Columns[name: columnName];
             if (
-                column.ExtendedProperties.Contains("IsState")
-                && (bool)column.ExtendedProperties["IsState"] == true
+                column.ExtendedProperties.Contains(key: "IsState")
+                && (bool)column.ExtendedProperties[key: "IsState"] == true
             )
             {
                 this.CacheList = false;
@@ -1005,7 +1034,7 @@ namespace Origam.Gui.Win
 
         private void refreshMenu_Click(object sender, EventArgs e)
         {
-            OnLookupListRefreshRequested(EventArgs.Empty);
+            OnLookupListRefreshRequested(e: EventArgs.Empty);
 
             ILookupDropDownPart popup = this.Popup as ILookupDropDownPart;
 
@@ -1026,7 +1055,7 @@ namespace Origam.Gui.Win
                 {
                     this.LookupDisplayText = (e.Popup as IDropDownPart).SelectedText;
 
-                    OnLookupValueChangingByUser(EventArgs.Empty);
+                    OnLookupValueChangingByUser(e: EventArgs.Empty);
                     this.LookupValue = (e.Popup as IDropDownPart).SelectedValue;
                 }
             }
@@ -1041,7 +1070,7 @@ namespace Origam.Gui.Win
 
         ColumnParameterMappingCollection parameterMappings = new ColumnParameterMappingCollection();
 
-        [TypeConverter(typeof(ColumnParameterMappingCollectionConverter))]
+        [TypeConverter(type: typeof(ColumnParameterMappingCollectionConverter))]
         public ColumnParameterMappingCollection ParameterMappings
         {
             get
@@ -1051,7 +1080,7 @@ namespace Origam.Gui.Win
                     Hashtable oldMappings = new Hashtable();
                     foreach (ColumnParameterMapping mapping in parameterMappings)
                     {
-                        oldMappings.Add(mapping.Name, mapping.ColumnName);
+                        oldMappings.Add(key: mapping.Name, value: mapping.ColumnName);
                     }
 
                     ClearMappingItems();
@@ -1059,9 +1088,9 @@ namespace Origam.Gui.Win
 
                     foreach (ColumnParameterMapping mapping in parameterMappings)
                     {
-                        if (oldMappings.Contains(mapping.Name))
+                        if (oldMappings.Contains(key: mapping.Name))
                         {
-                            mapping.ColumnName = (string)oldMappings[mapping.Name];
+                            mapping.ColumnName = (string)oldMappings[key: mapping.Name];
                         }
                     }
                     resetParameterMappings = false;
@@ -1075,10 +1104,10 @@ namespace Origam.Gui.Win
         {
             get
             {
-                Hashtable result = new Hashtable(this.ParameterMappings.Count);
+                Hashtable result = new Hashtable(capacity: this.ParameterMappings.Count);
                 foreach (ColumnParameterMapping mapping in this.ParameterMappings)
                 {
-                    result.Add(mapping.Name, mapping.ColumnName);
+                    result.Add(key: mapping.Name, value: mapping.ColumnName);
                 }
 
                 return result;
@@ -1102,9 +1131,9 @@ namespace Origam.Gui.Win
                 try
                 {
                     return _origamMetadata.PersistenceProvider.RetrieveInstance(
-                            _origamMetadata.GetType(),
-                            _origamMetadata.PrimaryKey,
-                            true
+                            type: _origamMetadata.GetType(),
+                            primaryKey: _origamMetadata.PrimaryKey,
+                            useCache: true
                         ) as ISchemaItem;
                 }
                 catch
@@ -1117,7 +1146,7 @@ namespace Origam.Gui.Win
                 _origamMetadata = value;
                 _itemsLoaded = true;
 
-                FillParameterCache(_origamMetadata as ControlSetItem);
+                FillParameterCache(controlItem: _origamMetadata as ControlSetItem);
             }
         }
 
@@ -1141,12 +1170,12 @@ namespace Origam.Gui.Win
 
         private void txtEdit_MouseHover(object sender, EventArgs e)
         {
-            this.OnMouseHover(e);
+            this.OnMouseHover(e: e);
         }
 
         private void txtEdit_MouseEnter(object sender, EventArgs e)
         {
-            this.OnMouseEnter(e);
+            this.OnMouseEnter(e: e);
         }
 
         private void txtEdit_MouseMove(object sender, MouseEventArgs e)
@@ -1160,12 +1189,12 @@ namespace Origam.Gui.Win
                 this.EditControl.Cursor = Cursors.IBeam;
             }
 
-            this.OnMouseMove(e);
+            this.OnMouseMove(e: e);
         }
 
         private void btnOpenList_Click(object sender, EventArgs e)
         {
-            this.OnLookupShowSourceListRequested(EventArgs.Empty);
+            this.OnLookupShowSourceListRequested(e: EventArgs.Empty);
         }
 
         private void mnuDelete_Click(object sender, EventArgs e)
@@ -1177,7 +1206,7 @@ namespace Origam.Gui.Win
         {
             if (!this.ReadOnly)
             {
-                OnLookupValueChangingByUser(EventArgs.Empty);
+                OnLookupValueChangingByUser(e: EventArgs.Empty);
                 this.LookupValue = DBNull.Value;
             }
         }
@@ -1204,14 +1233,14 @@ namespace Origam.Gui.Win
 
         private void mnuEdit_Click(object sender, EventArgs e)
         {
-            OnLookupEditSourceRecordRequested(EventArgs.Empty);
+            OnLookupEditSourceRecordRequested(e: EventArgs.Empty);
         }
 
         private void txtEdit_MouseDown(object sender, MouseEventArgs e)
         {
             if (PreparedForEditingSourceRecord)
             {
-                OnLookupEditSourceRecordRequested(EventArgs.Empty);
+                OnLookupEditSourceRecordRequested(e: EventArgs.Empty);
             }
         }
 

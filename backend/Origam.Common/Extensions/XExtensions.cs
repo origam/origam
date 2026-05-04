@@ -36,7 +36,7 @@ public static class XExtensions
     {
         var attribute = element
             .Attributes()
-            .FirstOrDefault(attr => attr.Name.LocalName == oldLocalName);
+            .FirstOrDefault(predicate: attr => attr.Name.LocalName == oldLocalName);
         if (attribute == null)
         {
             return;
@@ -46,6 +46,6 @@ public static class XExtensions
         string value = attribute.Value;
         attribute.Remove();
 
-        element.SetAttributeValue(nameSpace.GetName(newLocalName), value);
+        element.SetAttributeValue(name: nameSpace.GetName(localName: newLocalName), value: value);
     }
 }

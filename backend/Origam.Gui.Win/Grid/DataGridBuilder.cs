@@ -45,7 +45,7 @@ public class DataGridBuilder : IGridBuilder
     public DataGridBuilder()
     {
         _documentationService =
-            ServiceManager.Services.GetService(typeof(IDocumentationService))
+            ServiceManager.Services.GetService(serviceType: typeof(IDocumentationService))
             as IDocumentationService;
     }
 
@@ -62,12 +62,18 @@ public class DataGridBuilder : IGridBuilder
         _form = control.FindForm() as AsForm;
         grid = InitGrid();
         _panelId = panelId;
-        control.Controls.Add(grid);
+        control.Controls.Add(value: grid);
         grid.TableStyles.Clear();
         grid.TableStyles.Add(
-            SetUpGridStyle(grid, control, dataSource as DataSet, dataMember, ruleEngine)
+            table: SetUpGridStyle(
+                grid: grid,
+                control: control,
+                ds: dataSource as DataSet,
+                member: dataMember,
+                ruleEngine: ruleEngine
+            )
         );
-        grid.TableStyles[0].RowHeaderWidthChanged += DataGridBuilder_RowHeaderWidthChanged;
+        grid.TableStyles[index: 0].RowHeaderWidthChanged += DataGridBuilder_RowHeaderWidthChanged;
         grid.Scroll += grid_Scroll;
         return grid;
     }
@@ -76,7 +82,7 @@ public class DataGridBuilder : IGridBuilder
     {
         if (!(grid is AsDataGrid asGrid))
         {
-            throw new NullReferenceException(ResourceUtils.GetString("ErrorNoGrid"));
+            throw new NullReferenceException(message: ResourceUtils.GetString(key: "ErrorNoGrid"));
         }
         if (asGrid.DataSource != dataSource | asGrid.DataMember != dataMember)
         {
@@ -95,22 +101,33 @@ public class DataGridBuilder : IGridBuilder
                 try
                 {
                     asGrid.SuspendLayout();
-                    asGrid.SetDataBinding(dataSource, dataMember);
+                    asGrid.SetDataBinding(dataSource: dataSource, dataMember: dataMember);
                     int columnNumber = asGrid.CurrentCell.ColumnNumber;
                     int rowNumber = asGrid.CurrentCell.RowNumber;
                     if (dataSource != null && !this._form.FormGenerator.IgnoreDataChanges)
                     {
                         try
                         {
-                            object layout = Reflector.GetValue(typeof(DataGrid), asGrid, "layout");
+                            object layout = Reflector.GetValue(
+                                type: typeof(DataGrid),
+                                instance: asGrid,
+                                memberName: "layout"
+                            );
                             if (layout != null)
                             {
                                 bool dirty = (bool)
-                                    Reflector.GetValue(layout.GetType(), layout, "dirty");
+                                    Reflector.GetValue(
+                                        type: layout.GetType(),
+                                        instance: layout,
+                                        memberName: "dirty"
+                                    );
                                 if (!dirty)
                                 {
-                                    asGrid.CurrentCell = new DataGridCell(0, columnNumber);
-                                    asGrid.CurrentCell = new DataGridCell(rowNumber, columnNumber);
+                                    asGrid.CurrentCell = new DataGridCell(r: 0, c: columnNumber);
+                                    asGrid.CurrentCell = new DataGridCell(
+                                        r: rowNumber,
+                                        c: columnNumber
+                                    );
                                 }
                             }
                         }
@@ -123,7 +140,7 @@ public class DataGridBuilder : IGridBuilder
                 }
                 finally
                 {
-                    asGrid.ResumeLayout(false);
+                    asGrid.ResumeLayout(performLayout: false);
                 }
             }
         }
@@ -136,9 +153,15 @@ public class DataGridBuilder : IGridBuilder
     public string GetSortColumn(string columnName)
     {
         DataTable table = (grid.DataSource as DataSet).Tables[
-            FormTools.FindTableByDataMember(grid.DataSource as DataSet, grid.DataMember)
+            name: FormTools.FindTableByDataMember(
+                ds: grid.DataSource as DataSet,
+                member: grid.DataMember
+            )
         ];
-        return (parentControl as AsPanel).GetSortColumn(columnName, table);
+        return (parentControl as AsPanel).GetSortColumn(
+            originalColumnName: columnName,
+            table: table
+        );
     }
     #endregion
     #region Private Methods
@@ -150,8 +173,8 @@ public class DataGridBuilder : IGridBuilder
         grid.AllowNavigation = false;
         grid.DataMember = "";
         grid.FlatMode = true;
-        grid.Size = new System.Drawing.Size(176, 72);
-        grid.Location = new System.Drawing.Point(-1000, -1000);
+        grid.Size = new System.Drawing.Size(width: 176, height: 72);
+        grid.Location = new System.Drawing.Point(x: -1000, y: -1000);
         grid.Name = "grid";
         grid.ReadOnly = true;
         grid.TabIndex = 0;
@@ -161,12 +184,12 @@ public class DataGridBuilder : IGridBuilder
         grid.AlternatingBackColor = OrigamColorScheme.GridAlternatingBackColor;
         grid.BackgroundColor = OrigamColorScheme.FormBackgroundColor;
         grid.BorderStyle = BorderStyle.None;
-        grid.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+        grid.Font = new System.Drawing.Font(familyName: "Microsoft Sans Serif", emSize: 8F);
         grid.ForeColor = OrigamColorScheme.GridForeColor;
         grid.GridLineColor = OrigamColorScheme.GridLineColor;
         grid.GridLineStyle = DataGridLineStyle.Solid;
         grid.HeaderBackColor = OrigamColorScheme.GridHeaderBackColor;
-        grid.HeaderFont = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+        grid.HeaderFont = new System.Drawing.Font(familyName: "Microsoft Sans Serif", emSize: 8F);
         grid.HeaderForeColor = OrigamColorScheme.GridHeaderForeColor;
         grid.SelectionBackColor = OrigamColorScheme.GridSelectionBackColor;
         grid.SelectionForeColor = OrigamColorScheme.GridSelectionForeColor;
@@ -191,20 +214,28 @@ public class DataGridBuilder : IGridBuilder
         DataGridTableStyle tableStyle = new DataGridTableStyle();
         tableStyle.AllowSorting = false;
         //all necessary style attrib. are copied into new one
-        CopyDefaultTableStyle(grid, tableStyle);
+        CopyDefaultTableStyle(datagrid: grid, ts: tableStyle);
         UserProfile profile = SecurityManager.CurrentUserProfile();
         OrigamPanelColumnConfig userConfig = null;
 
         if (_useUserConfig)
         {
-            userConfig = OrigamPanelColumnConfigDA.LoadUserConfig(_panelId, profile.Id);
+            userConfig = OrigamPanelColumnConfigDA.LoadUserConfig(
+                panelId: _panelId,
+                profileId: profile.Id
+            );
         }
         //Go through all controls and find any bound columns
-        _styles = GetColumnStylesFromControls(control, 0, userConfig, ruleEngine);
+        _styles = GetColumnStylesFromControls(
+            control: control,
+            offset: 0,
+            userConfig: userConfig,
+            ruleEngine: ruleEngine
+        );
 
         //mapping name to grid
-        tableStyle.MappingName = FormTools.FindTableByDataMember(ds, member);
-        UpdateColumns(grid, tableStyle, true, ds);
+        tableStyle.MappingName = FormTools.FindTableByDataMember(ds: ds, member: member);
+        UpdateColumns(grid: grid, tableStyle: tableStyle, firstTime: true, ds: ds);
         return tableStyle;
     }
 
@@ -232,28 +263,28 @@ public class DataGridBuilder : IGridBuilder
         _styles.Sort();
         if (allHidden & _styles.Count > 0)
         {
-            _styles[0].Hidden = false;
+            _styles[index: 0].Hidden = false;
         }
         foreach (DataGridColumnStyleHolder style in _styles)
         {
             if (firstTime)
             {
-                if (!tableStyle.GridColumnStyles.Contains(style.Style.MappingName))
+                if (!tableStyle.GridColumnStyles.Contains(name: style.Style.MappingName))
                 {
-                    tableStyle.GridColumnStyles.Add(style.Style);
+                    tableStyle.GridColumnStyles.Add(column: style.Style);
                     style.Style.WidthChanged += Style_WidthChanged;
                     Guid columnId = (Guid)
-                        ds.Tables[tableStyle.MappingName]
-                            .Columns[style.Style.MappingName]
-                            .ExtendedProperties["Id"];
+                        ds.Tables[name: tableStyle.MappingName]
+                            .Columns[name: style.Style.MappingName]
+                            .ExtendedProperties[key: "Id"];
                     string tipText = _documentationService.GetDocumentation(
-                        columnId,
-                        DocumentationType.USER_LONG_HELP
+                        schemaItemId: columnId,
+                        docType: DocumentationType.USER_LONG_HELP
                     );
-                    _form.FormGenerator.SetTooltip(style.Style, tipText);
+                    _form.FormGenerator.SetTooltip(style: style.Style, tipText: tipText);
                     if (style.Hidden)
                     {
-                        tableStyle.GridColumnStyles.Remove(style.Style);
+                        tableStyle.GridColumnStyles.Remove(column: style.Style);
                     }
                 }
             }
@@ -261,14 +292,18 @@ public class DataGridBuilder : IGridBuilder
             {
                 if (!style.Hidden)
                 {
-                    if (!tableStyle.GridColumnStyles.Contains(style.Style.MappingName))
+                    if (!tableStyle.GridColumnStyles.Contains(name: style.Style.MappingName))
                     {
-                        tableStyle.GridColumnStyles.Add(style.Style);
+                        tableStyle.GridColumnStyles.Add(column: style.Style);
                     }
                 }
 
                 // not for the first time, so the config has changed -> we must persist the changes
-                StoreColumnConfig(style.Style, style.Index, style.Hidden);
+                StoreColumnConfig(
+                    columnStyle: style.Style,
+                    position: style.Index,
+                    hidden: style.Hidden
+                );
             }
         }
     }
@@ -309,7 +344,11 @@ public class DataGridBuilder : IGridBuilder
         {
             if (item is IAsControl)
             {
-                DataGridColumnStyle colStyle = CreateColumnStyle(item, userConfig, ruleEngine);
+                DataGridColumnStyle colStyle = CreateColumnStyle(
+                    control: item,
+                    userConfig: userConfig,
+                    ruleEngine: ruleEngine
+                );
 
                 if (colStyle != null)
                 {
@@ -319,7 +358,7 @@ public class DataGridBuilder : IGridBuilder
                     {
                         DataRow[] configRow = null;
                         configRow = userConfig.PanelColumnConfig.Select(
-                            "ColumnName = '" + colStyle.MappingName + "'"
+                            filterExpression: "ColumnName = '" + colStyle.MappingName + "'"
                         );
                         if (configRow != null && configRow.Length > 0)
                         {
@@ -332,21 +371,27 @@ public class DataGridBuilder : IGridBuilder
                             hidden = conf.IsHidden;
                         }
                     }
-                    styles.Add(new DataGridColumnStyleHolder(colStyle, position, hidden));
+                    styles.Add(
+                        item: new DataGridColumnStyleHolder(
+                            style: colStyle,
+                            index: position,
+                            hidden: hidden
+                        )
+                    );
                 }
                 else
                 {
-                    System.Diagnostics.Debug.WriteLine("NULL CONTROL STYLE");
+                    System.Diagnostics.Debug.WriteLine(message: "NULL CONTROL STYLE");
                 }
             }
             if (item.Controls.Count > 0)
             {
                 styles.AddRange(
-                    GetColumnStylesFromControls(
-                        item,
-                        offset + item.TabIndex,
-                        userConfig,
-                        ruleEngine
+                    collection: GetColumnStylesFromControls(
+                        control: item,
+                        offset: offset + item.TabIndex,
+                        userConfig: userConfig,
+                        ruleEngine: ruleEngine
                     )
                 );
             }
@@ -366,15 +411,19 @@ public class DataGridBuilder : IGridBuilder
             return null;
         }
 
-        DataColumn column = GetDataColumn(control);
+        DataColumn column = GetDataColumn(control: control);
         if (column == null)
         {
             return null;
         }
 
-        DataGridColumnStyle columnStyle = MakeDataGridColumnStyle(control, ruleEngine, column);
+        DataGridColumnStyle columnStyle = MakeDataGridColumnStyle(
+            control: control,
+            ruleEngine: ruleEngine,
+            column: column
+        );
 
-        columnStyle.HeaderText = SelectCaption(column, control);
+        columnStyle.HeaderText = SelectCaption(column: column, control: control);
         columnStyle.MappingName = column.ColumnName;
 
         if (column.ReadOnly)
@@ -382,10 +431,14 @@ public class DataGridBuilder : IGridBuilder
             columnStyle.ReadOnly = true;
         }
 
-        SetColumnWidth(control, userConfig, columnStyle);
+        SetColumnWidth(control: control, userConfig: userConfig, columnStyle: columnStyle);
         columnStyle.NullText = "";
 
-        FilterFactory.AddControlToPanel(control, column, columnStyle.Width);
+        FilterFactory.AddControlToPanel(
+            control: control,
+            column: column,
+            controlWidth: columnStyle.Width
+        );
 
         return columnStyle;
     }
@@ -400,7 +453,7 @@ public class DataGridBuilder : IGridBuilder
         if (_useUserConfig)
         {
             configRow = userConfig.PanelColumnConfig.Select(
-                "ColumnName = '" + columnStyle.MappingName + "'"
+                filterExpression: "ColumnName = '" + columnStyle.MappingName + "'"
             );
         }
         if (configRow != null && configRow.Length > 0)
@@ -435,21 +488,24 @@ public class DataGridBuilder : IGridBuilder
         if (control is AsDropDown dropDown)
         {
             var dataGridDropdownColumn = new DataGridDropdownColumn(
-                dropDown,
-                column.ColumnName,
-                ruleEngine
+                dropDown: dropDown,
+                columnName: column.ColumnName,
+                ruleEngine: ruleEngine
             );
 
-            grid.WatchClicksToRaiseEditorDoubleClicked(dataGridDropdownColumn.DropDown);
+            grid.WatchClicksToRaiseEditorDoubleClicked(gridEditor: dataGridDropdownColumn.DropDown);
             result = dataGridDropdownColumn;
         }
         else if (control is BlobControl)
         {
-            result = new DataGridBlobColumn(control as BlobControl, ruleEngine);
+            result = new DataGridBlobColumn(
+                blobControl: control as BlobControl,
+                ruleEngine: ruleEngine
+            );
         }
         else if (control is ImageBox)
         {
-            result = new DataGridImageColumn(control.Width, control.Height);
+            result = new DataGridImageColumn(width: control.Width, height: control.Height);
         }
         else if (control is AsDateBox dateBox)
         {
@@ -460,7 +516,7 @@ public class DataGridBuilder : IGridBuilder
             asDataViewColumn.Format = dateBox.EditControl.CustomFormat;
             asDataViewColumn.FormatInfo = null;
 
-            grid.WatchClicksToRaiseEditorDoubleClicked(asDataViewColumn.AsDateBox);
+            grid.WatchClicksToRaiseEditorDoubleClicked(gridEditor: asDataViewColumn.AsDateBox);
 
             result = asDataViewColumn;
         }
@@ -497,7 +553,7 @@ public class DataGridBuilder : IGridBuilder
                 {
                     asTextBoxStyleColumn.TextBox.TextAlign = HorizontalAlignment.Right;
                     asTextBoxStyleColumn.AsTextBox.TextAlign = HorizontalAlignment.Right;
-                    if (!string.IsNullOrEmpty(asTextBoxStyleColumn.AsTextBox.CustomFormat))
+                    if (!string.IsNullOrEmpty(value: asTextBoxStyleColumn.AsTextBox.CustomFormat))
                     {
                         asTextBoxStyleColumn.Format = asTextBoxStyleColumn.AsTextBox.CustomFormat;
                     }
@@ -512,7 +568,9 @@ public class DataGridBuilder : IGridBuilder
                 }
                 asTextBoxStyleColumn.Alignment = asTextBoxStyleColumn.AsTextBox.TextAlign;
 
-                grid.WatchClicksToRaiseEditorDoubleClicked(asTextBoxStyleColumn.AsTextBox);
+                grid.WatchClicksToRaiseEditorDoubleClicked(
+                    gridEditor: asTextBoxStyleColumn.AsTextBox
+                );
             }
         }
         return result;
@@ -520,7 +578,7 @@ public class DataGridBuilder : IGridBuilder
 
     private static DataColumn GetDataColumn(Control control)
     {
-        Binding controlDataBinding = control.DataBindings[0];
+        Binding controlDataBinding = control.DataBindings[index: 0];
         if (controlDataBinding == null)
         {
             return null;
@@ -529,19 +587,19 @@ public class DataGridBuilder : IGridBuilder
         var bindingField = controlDataBinding.BindingMemberInfo.BindingField;
         if (controlDataBinding.DataSource is DataView dataView)
         {
-            return dataView.Table.Columns[bindingField];
+            return dataView.Table.Columns[name: bindingField];
         }
         if (controlDataBinding.DataSource is DataSet dataSet)
         {
             string tableName = FormTools.FindTableByDataMember(
-                dataSet,
-                controlDataBinding.BindingMemberInfo.BindingPath
+                ds: dataSet,
+                member: controlDataBinding.BindingMemberInfo.BindingPath
             );
-            return dataSet.Tables[tableName].Columns[bindingField];
+            return dataSet.Tables[name: tableName].Columns[name: bindingField];
         }
         if (controlDataBinding.DataSource is DataTable dataTable)
         {
-            return dataTable.Columns[bindingField];
+            return dataTable.Columns[name: bindingField];
         }
         return null;
     }
@@ -555,12 +613,12 @@ public class DataGridBuilder : IGridBuilder
         }
         if (control is IAsCaptionControl iAsCaptionControl)
         {
-            if (!string.IsNullOrEmpty(iAsCaptionControl.GridColumnCaption))
+            if (!string.IsNullOrEmpty(value: iAsCaptionControl.GridColumnCaption))
             {
                 return ((IAsCaptionControl)control).GridColumnCaption;
             }
 
-            if (!string.IsNullOrEmpty(iAsCaptionControl.Caption))
+            if (!string.IsNullOrEmpty(value: iAsCaptionControl.Caption))
             {
                 return ((IAsCaptionControl)control).Caption;
             }
@@ -576,15 +634,21 @@ public class DataGridBuilder : IGridBuilder
             if (columnStyle.DataGridTableStyle != null)
             {
                 this.FilterFactory.PlotControls(
-                    columnStyle.DataGridTableStyle,
-                    (columnStyle.DataGridTableStyle.DataGrid as AsDataGrid).HorizontalScrollPosition
+                    style: columnStyle.DataGridTableStyle,
+                    offset: (
+                        columnStyle.DataGridTableStyle.DataGrid as AsDataGrid
+                    ).HorizontalScrollPosition
                 );
             }
             foreach (DataGridColumnStyleHolder holder in _styles)
             {
-                if (holder.Style.Equals(columnStyle))
+                if (holder.Style.Equals(obj: columnStyle))
                 {
-                    StoreColumnConfig(columnStyle, holder.Index, holder.Hidden);
+                    StoreColumnConfig(
+                        columnStyle: columnStyle,
+                        position: holder.Index,
+                        hidden: holder.Hidden
+                    );
                     break;
                 }
             }
@@ -594,42 +658,42 @@ public class DataGridBuilder : IGridBuilder
     private void StoreColumnConfig(DataGridColumnStyle columnStyle, int position, bool hidden)
     {
         OrigamPanelColumnConfigDA.PersistColumnConfig(
-            _panelId,
-            columnStyle.MappingName,
-            position,
-            columnStyle.Width,
-            hidden
+            panelId: _panelId,
+            columnName: columnStyle.MappingName,
+            position: position,
+            width: columnStyle.Width,
+            hidden: hidden
         );
     }
 
     private void DataGridBuilder_RowHeaderWidthChanged(object sender, EventArgs e)
     {
         this.FilterFactory.PlotControls(
-            sender as DataGridTableStyle,
-            ((sender as DataGridTableStyle).DataGrid as AsDataGrid).HorizontalScrollPosition
+            style: sender as DataGridTableStyle,
+            offset: ((sender as DataGridTableStyle).DataGrid as AsDataGrid).HorizontalScrollPosition
         );
     }
 
     private void grid_SizeChanged(object sender, EventArgs e)
     {
         this.FilterFactory.PlotControls(
-            (sender as DataGrid).TableStyles[0],
-            (sender as AsDataGrid).HorizontalScrollPosition
+            style: (sender as DataGrid).TableStyles[index: 0],
+            offset: (sender as AsDataGrid).HorizontalScrollPosition
         );
     }
 
     private void grid_Scroll(object sender, EventArgs e)
     {
         this.FilterFactory.PlotControls(
-            (sender as DataGrid).TableStyles[0],
-            (sender as AsDataGrid).HorizontalScrollPosition
+            style: (sender as DataGrid).TableStyles[index: 0],
+            offset: (sender as AsDataGrid).HorizontalScrollPosition
         );
     }
 
     private void grid_MouseDown(object sender, MouseEventArgs e)
     {
         AsDataGrid grid = sender as AsDataGrid;
-        DataGrid.HitTestInfo hti = (sender as DataGrid).HitTest(e.X, e.Y);
+        DataGrid.HitTestInfo hti = (sender as DataGrid).HitTest(x: e.X, y: e.Y);
         if (hti.Type == DataGrid.HitTestType.ColumnHeader)
         {
             // if user clicked on column header while inserting a new row, we ignore this action,
@@ -642,8 +706,8 @@ public class DataGridBuilder : IGridBuilder
                 return;
             }
             string sortColumnName = this.grid
-                .TableStyles[0]
-                .GridColumnStyles[hti.Column]
+                .TableStyles[index: 0]
+                .GridColumnStyles[index: hti.Column]
                 .MappingName;
             AsPanel panel = parentControl as AsPanel;
             if (e.Button == MouseButtons.Left)
@@ -652,28 +716,31 @@ public class DataGridBuilder : IGridBuilder
                 {
                     if (Control.ModifierKeys == Keys.Shift)
                     {
-                        if (panel.IsColumnSorted(sortColumnName))
+                        if (panel.IsColumnSorted(columnName: sortColumnName))
                         {
-                            panel.ReverseSort(sortColumnName);
+                            panel.ReverseSort(columnName: sortColumnName);
                         }
                         else
                         {
                             panel.AddSort(
-                                sortColumnName,
-                                Schema.EntityModel.DataStructureColumnSortDirection.Ascending
+                                columnName: sortColumnName,
+                                sortDirection: Schema
+                                    .EntityModel
+                                    .DataStructureColumnSortDirection
+                                    .Ascending
                             );
                         }
                     }
                     else
                     {
-                        if (panel.IsColumnSorted(sortColumnName))
+                        if (panel.IsColumnSorted(columnName: sortColumnName))
                         {
                             Schema.EntityModel.DataStructureColumnSortDirection dir = Schema
                                 .EntityModel
                                 .DataStructureColumnSortDirection
                                 .Ascending;
                             if (
-                                panel.ColumnSortDirection(sortColumnName)
+                                panel.ColumnSortDirection(columnName: sortColumnName)
                                 == Schema.EntityModel.DataStructureColumnSortDirection.Ascending
                             )
                             {
@@ -682,13 +749,16 @@ public class DataGridBuilder : IGridBuilder
                                     .DataStructureColumnSortDirection
                                     .Descending;
                             }
-                            panel.Sort(sortColumnName, dir);
+                            panel.Sort(columnName: sortColumnName, sortDirection: dir);
                         }
                         else
                         {
                             panel.Sort(
-                                sortColumnName,
-                                Schema.EntityModel.DataStructureColumnSortDirection.Ascending
+                                columnName: sortColumnName,
+                                sortDirection: Schema
+                                    .EntityModel
+                                    .DataStructureColumnSortDirection
+                                    .Ascending
                             );
                         }
                     }
@@ -698,32 +768,46 @@ public class DataGridBuilder : IGridBuilder
             {
                 DataGridColumnConfig configForm = new DataGridColumnConfig();
                 configForm.Hide();
-                configForm.TableStyle = grid.TableStyles[0];
+                configForm.TableStyle = grid.TableStyles[index: 0];
                 configForm.Columns = _styles;
-                configForm.ShowDialog((this.Grid as Control).FindForm());
-                UpdateColumns(grid, grid.TableStyles[0], false, null);
+                configForm.ShowDialog(owner: (this.Grid as Control).FindForm());
+                UpdateColumns(
+                    grid: grid,
+                    tableStyle: grid.TableStyles[index: 0],
+                    firstTime: false,
+                    ds: null
+                );
                 this.FilterFactory.PlotControls(
-                    (sender as DataGrid).TableStyles[0],
-                    (sender as AsDataGrid).HorizontalScrollPosition
+                    style: (sender as DataGrid).TableStyles[index: 0],
+                    offset: (sender as AsDataGrid).HorizontalScrollPosition
                 );
             }
         }
         if (
             hti.Column >= 0
             && hti.Row >= 0
-            && hti.Row < grid.BindingContext[grid.DataSource, grid.DataMember].Count
+            && hti.Row
+                < grid.BindingContext[
+                    dataSource: grid.DataSource,
+                    dataMember: grid.DataMember
+                ].Count
         )
         {
             try
             {
                 // If the user clicked on the checkbox column, we change the value of this column.
                 if (
-                    grid.TableStyles[0].GridColumnStyles[hti.Column] is AsCheckStyleColumn
-                    && grid.TableStyles[0].GridColumnStyles[hti.Column].ReadOnly == false
+                    grid.TableStyles[index: 0].GridColumnStyles[index: hti.Column]
+                        is AsCheckStyleColumn
+                    && grid.TableStyles[index: 0].GridColumnStyles[index: hti.Column].ReadOnly
+                        == false
                 )
                 {
                     CurrencyManager cm =
-                        grid.BindingContext[grid.DataSource, grid.DataMember] as CurrencyManager;
+                        grid.BindingContext[
+                            dataSource: grid.DataSource,
+                            dataMember: grid.DataMember
+                        ] as CurrencyManager;
                     RuleEngine ruleEngine = _form.FormGenerator.FormRuleEngine;
                     switch (e.Button)
                     {
@@ -733,9 +817,12 @@ public class DataGridBuilder : IGridBuilder
                             {
                                 // set the current cell to the checkbox column, otherwise datagrid will
                                 // scroll to a wrong column after changing the value
-                                grid.CurrentCell = new DataGridCell(hti.Row, hti.Column);
+                                grid.CurrentCell = new DataGridCell(r: hti.Row, c: hti.Column);
                                 // then we end any edits made so far
-                                grid.BindingContext[grid.DataSource, grid.DataMember]
+                                grid.BindingContext[
+                                        dataSource: grid.DataSource,
+                                        dataMember: grid.DataMember
+                                    ]
                                     .EndCurrentEdit();
                             }
 
@@ -743,32 +830,43 @@ public class DataGridBuilder : IGridBuilder
                             if (
                                 grid.DataSource != null
                                 && hti.Row
-                                    < grid.BindingContext[grid.DataSource, grid.DataMember].Count
+                                    < grid.BindingContext[
+                                        dataSource: grid.DataSource,
+                                        dataMember: grid.DataMember
+                                    ].Count
                             )
                             {
                                 bool canEdit = ruleEngine.EvaluateRowLevelSecurityState(
-                                    (cm.Current as DataRowView).Row,
-                                    grid.TableStyles[0].GridColumnStyles[hti.Column].MappingName,
-                                    Schema.EntityModel.CredentialType.Update
+                                    row: (cm.Current as DataRowView).Row,
+                                    field: grid.TableStyles[index: 0]
+                                        .GridColumnStyles[index: hti.Column]
+                                        .MappingName,
+                                    type: Schema.EntityModel.CredentialType.Update
                                 );
                                 if (canEdit)
                                 {
                                     // revert the value of the checkbox
-                                    grid[hti.Row, hti.Column] = !Convert.ToBoolean(
-                                        grid[hti.Row, hti.Column]
-                                    );
+                                    grid[rowIndex: hti.Row, columnIndex: hti.Column] =
+                                        !Convert.ToBoolean(
+                                            value: grid[rowIndex: hti.Row, columnIndex: hti.Column]
+                                        );
                                     // force value to form component to prevent loss of data
                                     DataBindingTools.UpdateBindedFormComponent(
-                                        grid.BindingContext[
-                                            grid.DataSource,
-                                            grid.DataMember
+                                        bindings: grid.BindingContext[
+                                            dataSource: grid.DataSource,
+                                            dataMember: grid.DataMember
                                         ].Bindings,
-                                        grid.TableStyles[0].GridColumnStyles[hti.Column].MappingName
+                                        mappingName: grid.TableStyles[index: 0]
+                                            .GridColumnStyles[index: hti.Column]
+                                            .MappingName
                                     );
                                     // End edit - so the checkbox immediately gets its value and the user
                                     // does not have to commit it. Useful for all kinds of selection dialogs etc. where
                                     // checkboxes are mainly used.
-                                    grid.BindingContext[grid.DataSource, grid.DataMember]
+                                    grid.BindingContext[
+                                            dataSource: grid.DataSource,
+                                            dataMember: grid.DataMember
+                                        ]
                                         .EndCurrentEdit();
                                 }
                             }
@@ -782,25 +880,27 @@ public class DataGridBuilder : IGridBuilder
                             int count = cm.Count;
                             for (int i = 0; i < count; i++)
                             {
-                                if (grid.IsSelected(i))
+                                if (grid.IsSelected(row: i))
                                 {
-                                    selectedRows.Add((cm.List[i] as DataRowView).Row);
+                                    selectedRows.Add(item: (cm.List[index: i] as DataRowView).Row);
                                 }
                             }
-                            string columnName = grid.TableStyles[0]
-                                .GridColumnStyles[hti.Column]
+                            string columnName = grid.TableStyles[index: 0]
+                                .GridColumnStyles[index: hti.Column]
                                 .PropertyDescriptor
                                 .Name;
                             foreach (DataRow row in selectedRows)
                             {
                                 bool canEdit = ruleEngine.EvaluateRowLevelSecurityState(
-                                    row,
-                                    columnName,
-                                    Schema.EntityModel.CredentialType.Update
+                                    row: row,
+                                    field: columnName,
+                                    type: Schema.EntityModel.CredentialType.Update
                                 );
                                 if (canEdit)
                                 {
-                                    row[columnName] = !Convert.ToBoolean(row[columnName]);
+                                    row[columnName: columnName] = !Convert.ToBoolean(
+                                        value: row[columnName: columnName]
+                                    );
                                 }
                             }
 
@@ -816,14 +916,14 @@ public class DataGridBuilder : IGridBuilder
     private void grid_MouseUp(object sender, MouseEventArgs e)
     {
         AsDataGrid grid = sender as AsDataGrid;
-        DataGrid.HitTestInfo hti = (sender as DataGrid).HitTest(e.X, e.Y);
+        DataGrid.HitTestInfo hti = (sender as DataGrid).HitTest(x: e.X, y: e.Y);
         if (hti.Column < 0 || hti.Row < 0)
         {
             return;
         }
 
         if (
-            grid.TableStyles[0].GridColumnStyles[hti.Column] is DataGridDropdownColumn
+            grid.TableStyles[index: 0].GridColumnStyles[index: hti.Column] is DataGridDropdownColumn
             && (
                 (Control.ModifierKeys & Keys.Control) == Keys.Control
                 & e.Button == MouseButtons.Left
@@ -831,22 +931,33 @@ public class DataGridBuilder : IGridBuilder
         )
         {
             DataGridDropdownColumn col =
-                grid.TableStyles[0].GridColumnStyles[hti.Column] as DataGridDropdownColumn;
+                grid.TableStyles[index: 0].GridColumnStyles[index: hti.Column]
+                as DataGridDropdownColumn;
             IDataLookupService lookupService =
-                ServiceManager.Services.GetService(typeof(IDataLookupService))
+                ServiceManager.Services.GetService(serviceType: typeof(IDataLookupService))
                 as IDataLookupService;
             CurrencyManager cm =
-                grid.BindingContext[grid.DataSource, grid.DataMember] as CurrencyManager;
-            object value = (cm.List[hti.Row] as DataRowView).Row[col.MappingName];
-            object linkTarget = lookupService.LinkTarget(col.DropDown, value);
-            Dictionary<string, object> parameters = lookupService.LinkParameters(linkTarget, value);
-            Workbench.WorkbenchSingleton.Workbench.ProcessGuiLink(_form, linkTarget, parameters);
+                grid.BindingContext[dataSource: grid.DataSource, dataMember: grid.DataMember]
+                as CurrencyManager;
+            object value = (cm.List[index: hti.Row] as DataRowView).Row[
+                columnName: col.MappingName
+            ];
+            object linkTarget = lookupService.LinkTarget(lookupControl: col.DropDown, value: value);
+            Dictionary<string, object> parameters = lookupService.LinkParameters(
+                linkTarget: linkTarget,
+                value: value
+            );
+            Workbench.WorkbenchSingleton.Workbench.ProcessGuiLink(
+                sourceForm: _form,
+                linkTarget: linkTarget,
+                parameters: parameters
+            );
         }
     }
 
     private void grid_MouseMove(object sender, MouseEventArgs e)
     {
-        DataGrid.HitTestInfo hti = (sender as DataGrid).HitTest(e.X, e.Y);
+        DataGrid.HitTestInfo hti = (sender as DataGrid).HitTest(x: e.X, y: e.Y);
         AsDataGrid grid = sender as AsDataGrid;
         if (hti.Column < 0 || hti.Row < 0)
         {
@@ -854,16 +965,20 @@ public class DataGridBuilder : IGridBuilder
         }
 
         DataGridDropdownColumn col =
-            grid.TableStyles[0].GridColumnStyles[hti.Column] as DataGridDropdownColumn;
+            grid.TableStyles[index: 0].GridColumnStyles[index: hti.Column]
+            as DataGridDropdownColumn;
         if (col != null && (Control.ModifierKeys & Keys.Control) == Keys.Control)
         {
             CurrencyManager cm =
-                grid.BindingContext[grid.DataSource, grid.DataMember] as CurrencyManager;
+                grid.BindingContext[dataSource: grid.DataSource, dataMember: grid.DataMember]
+                as CurrencyManager;
             IDataLookupService lookupService =
-                ServiceManager.Services.GetService(typeof(IDataLookupService))
+                ServiceManager.Services.GetService(serviceType: typeof(IDataLookupService))
                 as IDataLookupService;
-            object value = (cm.List[hti.Row] as DataRowView).Row[col.MappingName];
-            object linkTarget = lookupService.LinkTarget(col.DropDown, value);
+            object value = (cm.List[index: hti.Row] as DataRowView).Row[
+                columnName: col.MappingName
+            ];
+            object linkTarget = lookupService.LinkTarget(lookupControl: col.DropDown, value: value);
             if (linkTarget != null && value != DBNull.Value)
             {
                 grid.Cursor = Cursors.Hand;
@@ -890,16 +1005,20 @@ public class DataGridBuilder : IGridBuilder
         }
 
         if (
-            grid.TableStyles[0].GridColumnStyles[grid.CurrentCell.ColumnNumber]
+            grid.TableStyles[index: 0].GridColumnStyles[index: grid.CurrentCell.ColumnNumber]
                 is AsCheckStyleColumn
-            && grid.TableStyles[0].GridColumnStyles[grid.CurrentCell.ColumnNumber].ReadOnly == false
+            && grid.TableStyles[index: 0]
+                .GridColumnStyles[index: grid.CurrentCell.ColumnNumber]
+                .ReadOnly == false
         )
         {
             switch (e.KeyChar)
             {
                 case (char)32: // space
                 {
-                    grid[grid.CurrentCell] = !Convert.ToBoolean(grid[grid.CurrentCell]);
+                    grid[cell: grid.CurrentCell] = !Convert.ToBoolean(
+                        value: grid[cell: grid.CurrentCell]
+                    );
                     e.Handled = true;
                     break;
                 }
@@ -908,15 +1027,23 @@ public class DataGridBuilder : IGridBuilder
                 {
                     for (
                         int i = 0;
-                        i < grid.BindingContext[grid.DataSource, grid.DataMember].Count;
+                        i
+                            < grid.BindingContext[
+                                dataSource: grid.DataSource,
+                                dataMember: grid.DataMember
+                            ].Count;
                         i++
                     )
                     {
-                        if (grid.IsSelected(i))
+                        if (grid.IsSelected(row: i))
                         {
-                            grid[i, grid.CurrentCell.ColumnNumber] = !Convert.ToBoolean(
-                                grid[i, grid.CurrentCell.ColumnNumber]
-                            );
+                            grid[rowIndex: i, columnIndex: grid.CurrentCell.ColumnNumber] =
+                                !Convert.ToBoolean(
+                                    value: grid[
+                                        rowIndex: i,
+                                        columnIndex: grid.CurrentCell.ColumnNumber
+                                    ]
+                                );
                         }
                     }
                     break;
@@ -940,14 +1067,15 @@ public class DataGridBuilder : IGridBuilder
         grid.AfterMouseMove -= grid_MouseMove;
         if (grid.TableStyles.Count > 0)
         {
-            grid.TableStyles[0].RowHeaderWidthChanged -= DataGridBuilder_RowHeaderWidthChanged;
+            grid.TableStyles[index: 0].RowHeaderWidthChanged -=
+                DataGridBuilder_RowHeaderWidthChanged;
         }
         if (_styles != null)
         {
             foreach (DataGridColumnStyleHolder style in _styles)
             {
                 style.Style.WidthChanged -= Style_WidthChanged;
-                _form.FormGenerator.SetTooltip(style.Style, null);
+                _form.FormGenerator.SetTooltip(style: style.Style, tipText: null);
             }
         }
         grid.Scroll -= grid_Scroll;

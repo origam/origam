@@ -29,7 +29,7 @@ namespace Origam.DA.ObjectPersistence;
 /// but when retrieving it will be passed from a parent object.
 /// </summary>
 [AttributeUsage(
-    AttributeTargets.Property | AttributeTargets.Field,
+    validOn: AttributeTargets.Property | AttributeTargets.Field,
     AllowMultiple = false,
     Inherited = true
 )]
@@ -56,5 +56,5 @@ public class XmlReferenceAttribute : Attribute
 public class XmlPackageReferenceAttribute : XmlReferenceAttribute
 {
     public XmlPackageReferenceAttribute(string attributeName, string idField)
-        : base(attributeName, idField) { }
+        : base(attributeName: attributeName, idField: idField) { }
 }

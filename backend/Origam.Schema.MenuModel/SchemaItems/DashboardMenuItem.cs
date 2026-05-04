@@ -27,16 +27,16 @@ namespace Origam.Schema.MenuModel;
 /// <summary>
 /// Summary description for Submenu.
 /// </summary>
-[SchemaItemDescription("Dashboard", "icon_dashboard.png")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Dashboard", iconName: "icon_dashboard.png")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class DashboardMenuItem : AbstractMenuItem, ISchemaItemFactory
 {
     public DashboardMenuItem()
         : base() { }
 
     public DashboardMenuItem(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(schemaExtensionId: schemaExtensionId) { }
 
     public DashboardMenuItem(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 }

@@ -33,8 +33,8 @@ namespace Origam.Schema.EntityModel;
 /// <summary>
 /// Abstract implementation of IDataEntityColumn.
 /// </summary>
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public abstract class AbstractDataEntityColumn : AbstractSchemaItem, IDataEntityColumn
 {
     public const string CategoryConst = "DataEntityColumn";
@@ -46,13 +46,13 @@ public abstract class AbstractDataEntityColumn : AbstractSchemaItem, IDataEntity
     }
 
     public AbstractDataEntityColumn(Guid schemaExtensionId)
-        : base(schemaExtensionId)
+        : base(extensionId: schemaExtensionId)
     {
         Init();
     }
 
     public AbstractDataEntityColumn(Key primaryKey)
-        : base(primaryKey)
+        : base(primaryKey: primaryKey)
     {
         Init();
     }
@@ -60,8 +60,8 @@ public abstract class AbstractDataEntityColumn : AbstractSchemaItem, IDataEntity
     private void Init()
     {
         ChildItemTypes.InsertRange(
-            0,
-            new Type[]
+            index: 0,
+            collection: new Type[]
             {
                 typeof(EntityFieldSecurityRule),
                 typeof(EntityFieldDependency),
@@ -99,27 +99,27 @@ public abstract class AbstractDataEntityColumn : AbstractSchemaItem, IDataEntity
     public abstract bool ReadOnly { get; }
     private OrigamDataType _dataType;
 
-    [Category("Entity Column")]
-    [Description("Data type of this field")]
-    [XmlAttribute("dataType")]
+    [Category(category: "Entity Column")]
+    [Description(description: "Data type of this field")]
+    [XmlAttribute(attributeName: "dataType")]
     public OrigamDataType DataType
     {
         get { return _dataType; }
         set
         {
             _dataType = value;
-            OnPropertyChanged("DataType");
+            OnPropertyChanged(propertyName: "DataType");
         }
     }
     private int _dataLength = 0;
 
-    [Category("Entity Column"), DefaultValue(0)]
+    [Category(category: "Entity Column"), DefaultValue(value: 0)]
     [Description(
-        "Length of this field. Used only for String data type. It is used for specifying a length of a database field (in case when the field is database mapped) and a maximum length in the user interface (in case of TextBox)."
+        description: "Length of this field. Used only for String data type. It is used for specifying a length of a database field (in case when the field is database mapped) and a maximum length in the user interface (in case of TextBox)."
     )]
     [PositiveValueModelElementRuleAttribute()]
     [NoLengthLimitOnMemoFieldRule]
-    [XmlAttribute("dataLength")]
+    [XmlAttribute(attributeName: "dataLength")]
     public int DataLength
     {
         get { return _dataLength; }
@@ -127,11 +127,11 @@ public abstract class AbstractDataEntityColumn : AbstractSchemaItem, IDataEntity
     }
     private bool _allowNulls = true;
 
-    [Category("Entity Column"), DefaultValue(true)]
+    [Category(category: "Entity Column"), DefaultValue(value: true)]
     [Description(
-        "Indicates if the field allows empty values or not. If set to False, also the database column will be generated so that it does not allow nulls. In the user interface the user will have to enter a value before saving the record."
+        description: "Indicates if the field allows empty values or not. If set to False, also the database column will be generated so that it does not allow nulls. In the user interface the user will have to enter a value before saving the record."
     )]
-    [XmlAttribute("allowNulls")]
+    [XmlAttribute(attributeName: "allowNulls")]
     public bool AllowNulls
     {
         get { return _allowNulls; }
@@ -139,11 +139,11 @@ public abstract class AbstractDataEntityColumn : AbstractSchemaItem, IDataEntity
     }
     private bool _isPrimaryKey = false;
 
-    [Category("Entity Column"), DefaultValue(false)]
+    [Category(category: "Entity Column"), DefaultValue(value: false)]
     [Description(
-        "Indicates if the field is a primary key. If set to True, also a database primary key is generated. IMPORTANT: Every entity should have a primary key specified, otherwise data merges will not be able to correlate existing records. NOTE: Multi-column primary keys are possible but GUI expects always only single-column primary keys."
+        description: "Indicates if the field is a primary key. If set to True, also a database primary key is generated. IMPORTANT: Every entity should have a primary key specified, otherwise data merges will not be able to correlate existing records. NOTE: Multi-column primary keys are possible but GUI expects always only single-column primary keys."
     )]
-    [XmlAttribute("isPrimaryKey")]
+    [XmlAttribute(attributeName: "isPrimaryKey")]
     public bool IsPrimaryKey
     {
         get { return _isPrimaryKey; }
@@ -151,12 +151,12 @@ public abstract class AbstractDataEntityColumn : AbstractSchemaItem, IDataEntity
     }
     private string _caption = "";
 
-    [Category("Entity Column")]
-    [Localizable(true)]
+    [Category(category: "Entity Column")]
+    [Localizable(isLocalizable: true)]
     [Description(
-        "Default label for the field in a GUI. Audit log viewer also gets the field names from here."
+        description: "Default label for the field in a GUI. Audit log viewer also gets the field names from here."
     )]
-    [XmlAttribute("label")]
+    [XmlAttribute(attributeName: "label")]
     public string Caption
     {
         get { return _caption; }
@@ -164,18 +164,18 @@ public abstract class AbstractDataEntityColumn : AbstractSchemaItem, IDataEntity
     }
     private bool _excludeFromAllFields = false;
 
-    [Category("Entity Column"), DefaultValue(false)]
+    [Category(category: "Entity Column"), DefaultValue(value: false)]
     [Description(
-        "If set to True, the field will not be included in the list of fields in a Data Structure if 'AllFields=True' is set in a Data Structure Entity. This is useful e.g. for database function calls that are expensive and used only for lookups that would otherwise slow down the system if loaded e.g. to forms."
+        description: "If set to True, the field will not be included in the list of fields in a Data Structure if 'AllFields=True' is set in a Data Structure Entity. This is useful e.g. for database function calls that are expensive and used only for lookups that would otherwise slow down the system if loaded e.g. to forms."
     )]
-    [XmlAttribute("excludeFromAllFields")]
+    [XmlAttribute(attributeName: "excludeFromAllFields")]
     public bool ExcludeFromAllFields
     {
         get { return _excludeFromAllFields; }
         set { _excludeFromAllFields = value; }
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public virtual bool ExcludeFromAuditing
     {
         get { return true; }
@@ -183,11 +183,11 @@ public abstract class AbstractDataEntityColumn : AbstractSchemaItem, IDataEntity
     }
     private bool _autoIncrement = false;
 
-    [Category("Entity Column"), DefaultValue(false)]
+    [Category(category: "Entity Column"), DefaultValue(value: false)]
     [Description(
-        "If set to True, the new record gets the next highest value in a data context. DataType has to be numeric."
+        description: "If set to True, the new record gets the next highest value in a data context. DataType has to be numeric."
     )]
-    [XmlAttribute("autoIncrement")]
+    [XmlAttribute(attributeName: "autoIncrement")]
     public bool AutoIncrement
     {
         get { return _autoIncrement; }
@@ -195,8 +195,8 @@ public abstract class AbstractDataEntityColumn : AbstractSchemaItem, IDataEntity
     }
     private long _autoIncrementSeed = 0;
 
-    [Category("Entity Column"), DefaultValue((long)0)]
-    [Browsable(false)]
+    [Category(category: "Entity Column"), DefaultValue(value: (long)0)]
+    [Browsable(browsable: false)]
     public long AutoIncrementSeed
     {
         get { return _autoIncrementSeed; }
@@ -204,8 +204,8 @@ public abstract class AbstractDataEntityColumn : AbstractSchemaItem, IDataEntity
     }
     private long _autoIncrementStep = 1;
 
-    [Category("Entity Column"), DefaultValue((long)1)]
-    [Browsable(false)]
+    [Category(category: "Entity Column"), DefaultValue(value: (long)1)]
+    [Browsable(browsable: false)]
     public long AutoIncrementStep
     {
         get { return _autoIncrementStep; }
@@ -214,9 +214,9 @@ public abstract class AbstractDataEntityColumn : AbstractSchemaItem, IDataEntity
             if (value == 0)
             {
                 throw new ArgumentOutOfRangeException(
-                    "AutoIncrementStep",
-                    value,
-                    ResourceUtils.GetString("ErrorAutoIncrement")
+                    paramName: "AutoIncrementStep",
+                    actualValue: value,
+                    message: ResourceUtils.GetString(key: "ErrorAutoIncrement")
                 );
             }
             _autoIncrementStep = value;
@@ -224,30 +224,33 @@ public abstract class AbstractDataEntityColumn : AbstractSchemaItem, IDataEntity
     }
     public Guid DefaultLookupId;
 
-    [TypeConverter(typeof(DataLookupConverter))]
-    [Category("Entity Column")]
+    [TypeConverter(type: typeof(DataLookupConverter))]
+    [Category(category: "Entity Column")]
     [Description(
-        "Lookup that will be used as default for creating GUI (putting a Drop Down Box on a form). It will be also used by an Audit Trail for converting an ID to a text value for the user. If not set, audit log will display ID's only."
+        description: "Lookup that will be used as default for creating GUI (putting a Drop Down Box on a form). It will be also used by an Audit Trail for converting an ID to a text value for the user. If not set, audit log will display ID's only."
     )]
-    [XmlReference("defaultLookup", "DefaultLookupId")]
+    [XmlReference(attributeName: "defaultLookup", idField: "DefaultLookupId")]
     public IDataLookup DefaultLookup
     {
         get
         {
             return (IDataLookup)
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(this.DefaultLookupId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: this.DefaultLookupId)
                 );
         }
-        set { this.DefaultLookupId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]); }
+        set
+        {
+            this.DefaultLookupId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]);
+        }
     }
     public Guid ForeignEntityId;
 
-    [TypeConverter(typeof(EntityConverter))]
-    [Category("Foreign Key")]
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [XmlReference("foreignKeyEntity", "ForeignEntityId")]
+    [TypeConverter(type: typeof(EntityConverter))]
+    [Category(category: "Foreign Key")]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [XmlReference(attributeName: "foreignKeyEntity", idField: "ForeignEntityId")]
     public IDataEntity ForeignKeyEntity
     {
         get
@@ -257,11 +260,16 @@ public abstract class AbstractDataEntityColumn : AbstractSchemaItem, IDataEntity
             try
             {
                 return (IDataEntity)
-                    this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
+                    this.PersistenceProvider.RetrieveInstance(
+                        type: typeof(ISchemaItem),
+                        primaryKey: key
+                    );
             }
             catch
             {
-                throw new Exception(ResourceUtils.GetString("ErrorForeignEntityNotFound"));
+                throw new Exception(
+                    message: ResourceUtils.GetString(key: "ErrorForeignEntityNotFound")
+                );
             }
         }
         set
@@ -273,16 +281,16 @@ public abstract class AbstractDataEntityColumn : AbstractSchemaItem, IDataEntity
             }
             else
             {
-                this.ForeignEntityId = (Guid)value.PrimaryKey["Id"];
+                this.ForeignEntityId = (Guid)value.PrimaryKey[key: "Id"];
             }
         }
     }
     public Guid ForeignEntityColumnId;
 
-    [TypeConverter(typeof(EntityForeignColumnConverter))]
-    [NotNullModelElementRule("ForeignKeyEntity")]
-    [Category("Foreign Key")]
-    [XmlReference("foreignKeyField", "ForeignEntityColumnId")]
+    [TypeConverter(type: typeof(EntityForeignColumnConverter))]
+    [NotNullModelElementRule(conditionField: "ForeignKeyEntity")]
+    [Category(category: "Foreign Key")]
+    [XmlReference(attributeName: "foreignKeyField", idField: "ForeignEntityColumnId")]
     public IDataEntityColumn ForeignKeyField
     {
         get
@@ -292,11 +300,16 @@ public abstract class AbstractDataEntityColumn : AbstractSchemaItem, IDataEntity
             try
             {
                 return (IDataEntityColumn)
-                    this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
+                    this.PersistenceProvider.RetrieveInstance(
+                        type: typeof(ISchemaItem),
+                        primaryKey: key
+                    );
             }
             catch
             {
-                throw new Exception(ResourceUtils.GetString("ErrorForeignEntityNotFound"));
+                throw new Exception(
+                    message: ResourceUtils.GetString(key: "ErrorForeignEntityNotFound")
+                );
             }
         }
         set
@@ -307,15 +320,15 @@ public abstract class AbstractDataEntityColumn : AbstractSchemaItem, IDataEntity
             }
             else
             {
-                this.ForeignEntityColumnId = (Guid)value.PrimaryKey["Id"];
+                this.ForeignEntityColumnId = (Guid)value.PrimaryKey[key: "Id"];
             }
         }
     }
     public Guid DefaultValueId;
 
-    [TypeConverter(typeof(DataConstantConverter))]
-    [Category("Entity Column")]
-    [XmlReference("defaultValue", "DefaultValueId")]
+    [TypeConverter(type: typeof(DataConstantConverter))]
+    [Category(category: "Entity Column")]
+    [XmlReference(attributeName: "defaultValue", idField: "DefaultValueId")]
     public DataConstant DefaultValue
     {
         get
@@ -323,7 +336,10 @@ public abstract class AbstractDataEntityColumn : AbstractSchemaItem, IDataEntity
             ModelElementKey key = new ModelElementKey();
             key.Id = this.DefaultValueId;
             return (DataConstant)
-                this.PersistenceProvider.RetrieveInstance(typeof(DataConstant), key);
+                this.PersistenceProvider.RetrieveInstance(
+                    type: typeof(DataConstant),
+                    primaryKey: key
+                );
         }
         set
         {
@@ -333,39 +349,39 @@ public abstract class AbstractDataEntityColumn : AbstractSchemaItem, IDataEntity
             }
             else
             {
-                this.DefaultValueId = (Guid)value.PrimaryKey["Id"];
+                this.DefaultValueId = (Guid)value.PrimaryKey[key: "Id"];
             }
         }
     }
     public Guid defaultValueParameterId;
 
-    [Category("Entity Column")]
-    [TypeConverter(typeof(ParameterReferenceConverter))]
+    [Category(category: "Entity Column")]
+    [TypeConverter(type: typeof(ParameterReferenceConverter))]
     [Description(
-        "Choose a parameter which is used to fill this mapped column when no value is provided (by default). Takes a priority over 'DefaultValue' property."
+        description: "Choose a parameter which is used to fill this mapped column when no value is provided (by default). Takes a priority over 'DefaultValue' property."
     )]
-    [XmlReference("defaultValueParameter", "defaultValueParameterId")]
+    [XmlReference(attributeName: "defaultValueParameter", idField: "defaultValueParameterId")]
     public SchemaItemParameter DefaultValueParameter
     {
         get
         {
             return (SchemaItemParameter)
                     this.PersistenceProvider.RetrieveInstance(
-                        typeof(SchemaItemParameter),
-                        new ModelElementKey(this.defaultValueParameterId)
+                        type: typeof(SchemaItemParameter),
+                        primaryKey: new ModelElementKey(id: this.defaultValueParameterId)
                     ) as SchemaItemParameter;
         }
         set
         {
             this.defaultValueParameterId = (
-                value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]
+                value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]
             );
         }
     }
     private EntityColumnXmlMapping _xmlMappingType = EntityColumnXmlMapping.Attribute;
 
-    [Category("Entity Column"), DefaultValue(EntityColumnXmlMapping.Attribute)]
-    [XmlAttribute("xmlMappingType")]
+    [Category(category: "Entity Column"), DefaultValue(value: EntityColumnXmlMapping.Attribute)]
+    [XmlAttribute(attributeName: "xmlMappingType")]
     public EntityColumnXmlMapping XmlMappingType
     {
         get { return _xmlMappingType; }
@@ -373,36 +389,42 @@ public abstract class AbstractDataEntityColumn : AbstractSchemaItem, IDataEntity
     }
     private OnCopyActionType _onCopyAction = OnCopyActionType.Copy;
 
-    [Category("Entity Column"), DefaultValue(OnCopyActionType.Copy)]
-    [XmlAttribute("onCopyAction")]
+    [Category(category: "Entity Column"), DefaultValue(value: OnCopyActionType.Copy)]
+    [XmlAttribute(attributeName: "onCopyAction")]
     public OnCopyActionType OnCopyAction
     {
         get { return _onCopyAction; }
         set { _onCopyAction = value; }
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public List<AbstractEntitySecurityRule> RowLevelSecurityRules =>
-        ChildItemsByType<AbstractEntitySecurityRule>(AbstractEntitySecurityRule.CategoryConst);
+        ChildItemsByType<AbstractEntitySecurityRule>(
+            itemType: AbstractEntitySecurityRule.CategoryConst
+        );
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public List<EntityConditionalFormatting> ConditionalFormattingRules =>
-        ChildItemsByType<EntityConditionalFormatting>(EntityConditionalFormatting.CategoryConst);
+        ChildItemsByType<EntityConditionalFormatting>(
+            itemType: EntityConditionalFormatting.CategoryConst
+        );
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public List<EntityFieldDynamicLabel> DynamicLabels =>
-        ChildItemsByType<EntityFieldDynamicLabel>(EntityFieldDynamicLabel.CategoryConst);
+        ChildItemsByType<EntityFieldDynamicLabel>(itemType: EntityFieldDynamicLabel.CategoryConst);
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public DataEntityConstraint ForeignKeyConstraint
     {
         get
         {
             if (ForeignKeyEntity != null && ForeignKeyField != null)
             {
-                DataEntityConstraint result = new DataEntityConstraint(ConstraintType.ForeignKey);
+                DataEntityConstraint result = new DataEntityConstraint(
+                    type: ConstraintType.ForeignKey
+                );
                 result.ForeignEntity = ForeignKeyEntity as IDataEntity;
-                result.Fields.Add(this);
+                result.Fields.Add(item: this);
                 return result;
             }
 
@@ -423,30 +445,30 @@ public abstract class AbstractDataEntityColumn : AbstractSchemaItem, IDataEntity
     {
         if (this.ForeignKeyEntity != null)
         {
-            dependencies.Add(this.ForeignKeyEntity);
+            dependencies.Add(item: this.ForeignKeyEntity);
         }
 
         if (this.ForeignKeyField != null)
         {
-            dependencies.Add(this.ForeignKeyField);
+            dependencies.Add(item: this.ForeignKeyField);
         }
 
         if (this.DefaultLookup != null)
         {
-            dependencies.Add(this.DefaultLookup);
+            dependencies.Add(item: this.DefaultLookup);
         }
 
         if (this.DefaultValue != null)
         {
-            dependencies.Add(this.DefaultValue);
+            dependencies.Add(item: this.DefaultValue);
         }
 
         if (this.DefaultValueParameter != null)
         {
-            dependencies.Add(this.DefaultValueParameter);
+            dependencies.Add(item: this.DefaultValueParameter);
         }
 
-        base.GetExtraDependencies(dependencies);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override string FontStyle

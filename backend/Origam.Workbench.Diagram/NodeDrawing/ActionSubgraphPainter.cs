@@ -42,35 +42,38 @@ internal class ActionSubgraphPainter : INodeItemPainter
     {
         var clusterBoundary = ((Cluster)node.GeometryNode).RectangularBoundary;
         var height = clusterBoundary.TopMargin;
-        var labelWidth = painter.GetLabelWidth(node);
+        var labelWidth = painter.GetLabelWidth(node: node);
         var width =
             clusterBoundary.MinWidth > labelWidth
                 ? clusterBoundary.MinWidth
                 : labelWidth + (painter.LabelSideMargin * 2);
-        return CurveFactory.CreateRectangle(width, height, new Point());
+        return CurveFactory.CreateRectangle(width: width, height: height, center: new Point());
     }
 
     public bool Draw(Node node, object graphicsObj)
     {
         INodeData nodeData = (INodeData)node.UserData;
-        var borderSize = new Size((int)node.BoundingBox.Width, (int)node.BoundingBox.Height);
+        var borderSize = new Size(
+            width: (int)node.BoundingBox.Width,
+            height: (int)node.BoundingBox.Height
+        );
         Graphics editorGraphics = (Graphics)graphicsObj;
         double centerX = node.GeometryNode.Center.X;
         double centerY = node.GeometryNode.Center.Y;
         var labelPoint = new PointF(
-            (float)(centerX - (borderSize.Width / 2) + labelLeftMargin),
-            (float)centerY - (borderSize.Height / 2.0f) + painter.LabelTopMargin
+            x: (float)(centerX - (borderSize.Width / 2) + labelLeftMargin),
+            y: (float)centerY - (borderSize.Height / 2.0f) + painter.LabelTopMargin
         );
 
         editorGraphics.DrawUpSideDown(
             drawAction: graphics =>
             {
                 graphics.DrawString(
-                    nodeData.Text,
-                    painter.Font,
-                    painter.BlackBrush,
-                    labelPoint,
-                    painter.DrawFormat
+                    s: nodeData.Text,
+                    font: painter.Font,
+                    brush: painter.BlackBrush,
+                    point: labelPoint,
+                    format: painter.DrawFormat
                 );
             },
             yAxisCoordinate: (float)node.GeometryNode.Center.Y

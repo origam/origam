@@ -40,12 +40,12 @@ public class EventInstance : IComparable
     {
         if (obj is EventInstance)
         {
-            return Time.CompareTo(((EventInstance)obj).Time);
+            return Time.CompareTo(value: ((EventInstance)obj).Time);
         }
 
         if (obj is DateTime)
         {
-            return Time.CompareTo((DateTime)obj);
+            return Time.CompareTo(value: (DateTime)obj);
         }
 
         return 0;

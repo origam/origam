@@ -30,7 +30,7 @@ public class TaskListViewItem : ListViewItem
     string _name;
 
     public TaskListViewItem(string name, IProjectBuilder builder)
-        : base(name)
+        : base(text: name)
     {
         _name = name;
         _builder = builder;
@@ -41,9 +41,9 @@ public class TaskListViewItem : ListViewItem
     {
         if (this.SubItems.Count < 2)
         {
-            this.SubItems.Add("");
+            this.SubItems.Add(text: "");
         }
-        this.SubItems[1].Text = _builder.State.ToString();
+        this.SubItems[index: 1].Text = _builder.State.ToString();
         Application.DoEvents();
     }
 }

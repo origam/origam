@@ -27,17 +27,21 @@ namespace Origam.Schema.WorkflowModel;
 /// <summary>
 /// Summary description for WorkflowCallTask.
 /// </summary>
-[SchemaItemDescription("(Task) Check Rule", "Tasks", "task-check-rule-4.png")]
-[HelpTopic("Check+Rule+Task")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(
+    name: "(Task) Check Rule",
+    folderName: "Tasks",
+    iconName: "task-check-rule-4.png"
+)]
+[HelpTopic(topic: "Check+Rule+Task")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class CheckRuleStep : AbstractWorkflowStep
 {
     public CheckRuleStep()
         : base() { }
 
     public CheckRuleStep(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(schemaExtensionId: schemaExtensionId) { }
 
     public CheckRuleStep(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 }

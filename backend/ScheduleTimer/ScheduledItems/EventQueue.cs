@@ -36,7 +36,7 @@ public class EventQueue : IScheduledItem
     /// <param name="time">The scheduled time to add</param>
     public void Add(IScheduledItem time)
     {
-        _List.Add(time);
+        _List.Add(item: time);
     }
 
     /// <summary>
@@ -57,7 +57,7 @@ public class EventQueue : IScheduledItem
     {
         foreach (IScheduledItem st in _List)
         {
-            st.AddEventsInInterval(Begin, End, List);
+            st.AddEventsInInterval(Begin: Begin, End: End, List: List);
         }
 
         List.Sort();
@@ -75,7 +75,7 @@ public class EventQueue : IScheduledItem
         //Get minimum datetime from the list.
         foreach (IScheduledItem st in _List)
         {
-            DateTime Proposed = st.NextRunTime(time, AllowExact);
+            DateTime Proposed = st.NextRunTime(time: time, IncludeStartTime: AllowExact);
             next = (Proposed < next) ? Proposed : next;
         }
         return next;

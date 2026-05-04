@@ -27,10 +27,10 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.WorkflowModel;
 
-[SchemaItemDescription("Service", "service.png")]
-[HelpTopic("Services")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Service", iconName: "service.png")]
+[HelpTopic(topic: "Services")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class Service : AbstractSchemaItem, IService
 {
     public const string CategoryConst = "Service";
@@ -38,10 +38,10 @@ public class Service : AbstractSchemaItem, IService
     public Service() { }
 
     public Service(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public Service(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Overriden ISchemaItem Members
 
@@ -51,7 +51,7 @@ public class Service : AbstractSchemaItem, IService
     #region Properties
     private string _classPath;
 
-    [XmlAttribute("classPath")]
+    [XmlAttribute(attributeName: "classPath")]
     public string ClassPath
     {
         get => _classPath;
@@ -59,15 +59,15 @@ public class Service : AbstractSchemaItem, IService
     }
     #endregion
     #region ISchemaItemFactory Members
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public override Type[] NewItemTypes => new[] { typeof(ServiceMethod) };
 
     public override T NewItem<T>(Guid schemaExtensionId, SchemaItemGroup group)
     {
         return base.NewItem<T>(
-            schemaExtensionId,
-            group,
-            typeof(T) == typeof(ServiceMethod) ? "NewServiceMethod" : null
+            schemaExtensionId: schemaExtensionId,
+            group: group,
+            itemName: typeof(T) == typeof(ServiceMethod) ? "NewServiceMethod" : null
         );
     }
     #endregion

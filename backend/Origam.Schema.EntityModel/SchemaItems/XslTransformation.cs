@@ -27,9 +27,9 @@ using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.EntityModel;
 
-[SchemaItemDescription("XSL Transformation (XSLT)", "xsl-transformation.png")]
-[HelpTopic("Transformations")]
-[ClassMetaVersion("6.0.1")]
+[SchemaItemDescription(name: "XSL Transformation (XSLT)", iconName: "xsl-transformation.png")]
+[HelpTopic(topic: "Transformations")]
+[ClassMetaVersion(versionStr: "6.0.1")]
 public class XslTransformation : AbstractTransformation
 {
     public XslTransformation()
@@ -39,13 +39,13 @@ public class XslTransformation : AbstractTransformation
     }
 
     public XslTransformation(Guid schemaExtensionId)
-        : base(schemaExtensionId)
+        : base(schemaExtensionId: schemaExtensionId)
     {
         InitializeProperyContainers();
     }
 
     public XslTransformation(Key primaryKey)
-        : base(primaryKey)
+        : base(primaryKey: primaryKey)
     {
         InitializeProperyContainers();
     }
@@ -65,8 +65,12 @@ public class XslTransformation : AbstractTransformation
     #region Overriden ISchemaItem members
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        XsltDependencyHelper.GetDependencies(this, dependencies, this.TextStore);
-        base.GetExtraDependencies(dependencies);
+        XsltDependencyHelper.GetDependencies(
+            item: this,
+            dependencies: dependencies,
+            text: this.TextStore
+        );
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override ISchemaItemCollection ChildItems
@@ -82,7 +86,7 @@ public class XslTransformation : AbstractTransformation
     public string TextStore
     {
         get => text.Get();
-        set => text.Set(value);
+        set => text.Set(value: value);
     }
     #endregion
 }

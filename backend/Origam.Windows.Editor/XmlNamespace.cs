@@ -64,12 +64,14 @@ public class XmlNamespace
     }
     public bool HasName
     {
-        get { return !String.IsNullOrEmpty(name); }
+        get { return !String.IsNullOrEmpty(value: name); }
     }
 
     public override string ToString()
     {
-        return String.Concat(prefixToStringStart, prefix, uriToStringMiddle, name, "]");
+        return String.Concat(
+            values: new[] { prefixToStringStart, prefix, uriToStringMiddle, name, "]" }
+        );
     }
 
     /// <summary>
@@ -78,24 +80,30 @@ public class XmlNamespace
     /// </summary>
     public static XmlNamespace FromString(string namespaceString)
     {
-        int prefixIndex = namespaceString.IndexOf(prefixToStringStart, StringComparison.Ordinal);
+        int prefixIndex = namespaceString.IndexOf(
+            value: prefixToStringStart,
+            comparisonType: StringComparison.Ordinal
+        );
         if (prefixIndex >= 0)
         {
             prefixIndex += prefixToStringStart.Length;
             int uriIndex = namespaceString.IndexOf(
-                uriToStringMiddle,
-                prefixIndex,
-                StringComparison.Ordinal
+                value: uriToStringMiddle,
+                startIndex: prefixIndex,
+                comparisonType: StringComparison.Ordinal
             );
             if (uriIndex >= 0)
             {
-                string prefix = namespaceString.Substring(prefixIndex, uriIndex - prefixIndex);
+                string prefix = namespaceString.Substring(
+                    startIndex: prefixIndex,
+                    length: uriIndex - prefixIndex
+                );
                 uriIndex += uriToStringMiddle.Length;
                 string uri = namespaceString.Substring(
-                    uriIndex,
-                    namespaceString.Length - (uriIndex + 1)
+                    startIndex: uriIndex,
+                    length: namespaceString.Length - (uriIndex + 1)
                 );
-                return new XmlNamespace(prefix, uri);
+                return new XmlNamespace(prefix: prefix, name: uri);
             }
         }
         return new XmlNamespace();

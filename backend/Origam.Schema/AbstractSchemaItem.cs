@@ -40,7 +40,7 @@ namespace Origam.Schema;
 /// it uses a ModelElementKey, which has strongly typed accessors to the primary key of
 /// any class that is contained under schema versions.
 /// </summary>
-[ClassMetaVersion("6.0.0")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public abstract class AbstractSchemaItem
     : AbstractPersistent,
         ISchemaItem,
@@ -51,9 +51,11 @@ public abstract class AbstractSchemaItem
     //public const string NAMESPACE = "http://schemas.origam.com/*.*.*/model-element";
     public readonly object Lock = new object();
     private static string _regexSearch =
-        new string(System.IO.Path.GetInvalidFileNameChars())
-        + new string(System.IO.Path.GetInvalidPathChars());
-    private static Regex _regex = new Regex(string.Format("[{0}]", Regex.Escape(_regexSearch)));
+        new string(value: System.IO.Path.GetInvalidFileNameChars())
+        + new string(value: System.IO.Path.GetInvalidPathChars());
+    private static Regex _regex = new Regex(
+        pattern: string.Format(format: "[{0}]", arg0: Regex.Escape(str: _regexSearch))
+    );
 
     #region Constructors
     public AbstractSchemaItem()
@@ -68,7 +70,7 @@ public abstract class AbstractSchemaItem
     }
 
     public AbstractSchemaItem(Key primaryKey)
-        : base(primaryKey, new ModelElementKey().KeyArray) { }
+        : base(primaryKey: primaryKey, correctKeys: new ModelElementKey().KeyArray) { }
     #endregion
     #region Properties
     public override string ToString()
@@ -76,14 +78,14 @@ public abstract class AbstractSchemaItem
         return this.Name;
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public IEnumerable<ISchemaItem> ChildrenRecursive
     {
         get
         {
             foreach (var child1 in ChildItems)
             {
-                foreach (var child2 in GetChildrenRecursive(child1))
+                foreach (var child2 in GetChildrenRecursive(schemaItem: child1))
                 {
                     yield return child2;
                 }
@@ -92,23 +94,23 @@ public abstract class AbstractSchemaItem
     }
     private ModelElementKey _oldPrimarykey = null;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public ModelElementKey OldPrimaryKey
     {
         get { return _oldPrimarykey; }
         set { _oldPrimarykey = value; }
     }
 
-    [Category("(Info)")]
+    [Category(category: "(Info)")]
     [Description(
-        "Unique ID of this model element. Model elements are internally identified by ID's, not names."
+        description: "Unique ID of this model element. Model elements are internally identified by ID's, not names."
     )]
     public new Guid Id
     {
-        get { return (Guid)this.PrimaryKey["Id"]; }
+        get { return (Guid)this.PrimaryKey[key: "Id"]; }
     }
 
-    [Category("(Info)")]
+    [Category(category: "(Info)")]
     //[Browsable(false)]
     public string SchemaItemType
     {
@@ -116,14 +118,14 @@ public abstract class AbstractSchemaItem
     }
     private bool _isPersistable = true;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public bool IsPersistable
     {
         get { return _isPersistable; }
         set { _isPersistable = value; }
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public List<ISchemaItem> ChildItemsRecursive
     {
         get
@@ -131,28 +133,28 @@ public abstract class AbstractSchemaItem
             var items = new List<ISchemaItem>();
             foreach (ISchemaItem item in this.ChildItems)
             {
-                items.Add(item);
-                items.AddRange(GetChildItemsRecursive(item));
+                items.Add(item: item);
+                items.AddRange(collection: GetChildItemsRecursive(parentItem: item));
             }
             return items;
         }
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public string Path =>
         ParentItem == null ? Name : ParentItem.Path + System.IO.Path.DirectorySeparatorChar + Name;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public bool IsFileRootElement => FileParentId == Guid.Empty;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public virtual bool UseFolders
     {
         get { return true; }
     }
     private bool _clearCacheOnPersist = true;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public bool ClearCacheOnPersist
     {
         get { return _clearCacheOnPersist; }
@@ -160,7 +162,7 @@ public abstract class AbstractSchemaItem
     }
     private bool _throwEventOnPersist = true;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public bool ThrowEventOnPersist
     {
         get { return _throwEventOnPersist; }
@@ -168,7 +170,7 @@ public abstract class AbstractSchemaItem
     }
     private bool _neverRetrieveChildren = false;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public bool NeverRetrieveChildren
     {
         get => _neverRetrieveChildren;
@@ -195,31 +197,31 @@ public abstract class AbstractSchemaItem
         {
             if (item is ParameterReference parameterReference && item.IsDeleted == false)
             {
-                if (!list.ContainsKey(parameterReference.Parameter.Name))
+                if (!list.ContainsKey(key: parameterReference.Parameter.Name))
                 {
-                    list.Add(parameterReference.Parameter.Name, parameterReference);
+                    list.Add(key: parameterReference.Parameter.Name, value: parameterReference);
                 }
             }
 
-            item.GetParameterReferences(item, list);
+            item.GetParameterReferences(parentItem: item, list: list);
         }
     }
 
     public List<ISchemaItem> GetUsage()
     {
         List<ISchemaItem> referencelist = PersistenceProvider.GetReference<ISchemaItem>(
-            this.PrimaryKey
+            key: this.PrimaryKey
         );
         if (referencelist == null)
         {
-            throw new Exception(ResourceUtils.GetString("ErrorBuildReferenceIndex"));
+            throw new Exception(message: ResourceUtils.GetString(key: "ErrorBuildReferenceIndex"));
         }
         return referencelist;
     }
 
     public static void FinishConversion(ISchemaItem source, ISchemaItem converted)
     {
-        converted.PrimaryKey["Id"] = source.PrimaryKey["Id"];
+        converted.PrimaryKey[key: "Id"] = source.PrimaryKey[key: "Id"];
         converted.Name = source.Name;
         converted.IsAbstract = source.IsAbstract;
         // remember the parent because the newly created item
@@ -230,7 +232,7 @@ public abstract class AbstractSchemaItem
         source.IsDeleted = true;
         source.Persist();
         // re-add the item to its parent
-        parent.ChildItems.Add(converted);
+        parent.ChildItems.Add(item: converted);
         converted.Persist();
     }
 
@@ -243,7 +245,7 @@ public abstract class AbstractSchemaItem
         this.Package = extension;
         foreach (ISchemaItem child in this.ChildItems)
         {
-            child.SetExtensionRecursive(extension);
+            child.SetExtensionRecursive(extension: extension);
         }
     }
 
@@ -251,7 +253,7 @@ public abstract class AbstractSchemaItem
     {
         foreach (var child1 in schemaItem.ChildItems)
         {
-            foreach (var child2 in GetChildrenRecursive(child1))
+            foreach (var child2 in GetChildrenRecursive(schemaItem: child1))
             {
                 yield return child2;
             }
@@ -264,14 +266,14 @@ public abstract class AbstractSchemaItem
         ISchemaItem parent = this.ParentItem;
         while (parent != null)
         {
-            parent.PersistenceProvider.RemoveFromCache(parent);
+            parent.PersistenceProvider.RemoveFromCache(instance: parent);
             parent = parent.ParentItem;
         }
     }
 
     public void InvalidateChildrenPersistenceCache()
     {
-        this.PersistenceProvider.RemoveFromCache(this);
+        this.PersistenceProvider.RemoveFromCache(instance: this);
         foreach (ISchemaItem child in this.ChildItems)
         {
             child.InvalidateChildrenPersistenceCache();
@@ -289,18 +291,22 @@ public abstract class AbstractSchemaItem
     {
         if (DerivedFrom != null)
         {
-            throw new InvalidOperationException(ResourceUtils.GetString("ErrorModifyDerived"));
+            throw new InvalidOperationException(
+                message: ResourceUtils.GetString(key: "ErrorModifyDerived")
+            );
         }
         if (IsAbstract == false && ParentItem != null && ParentItem.IsAbstract)
         {
-            throw new InvalidOperationException(ResourceUtils.GetString("ErrorInheritable"));
+            throw new InvalidOperationException(
+                message: ResourceUtils.GetString(key: "ErrorInheritable")
+            );
         }
         if (IsPersistable == false)
         {
             return;
         }
 
-        ISchemaItem _rootItemForRefresh = GetRootItem(this);
+        ISchemaItem _rootItemForRefresh = GetRootItem(parentItem: this);
         var ISchemaItemCollection = ChildItems;
         if (!IsDeleted)
         {
@@ -335,16 +341,16 @@ public abstract class AbstractSchemaItem
                     ChildItems.RemoveDeletedItems = true;
                     if (item.IsDeleted)
                     {
-                        deletedItems.Add(item);
+                        deletedItems.Add(item: item);
                     }
                 }
             }
 
             foreach (ISchemaItem item in deletedItems)
             {
-                ChildItems.Remove(item);
+                ChildItems.Remove(item: item);
             }
-            RefreshDescendants(_rootItemForRefresh);
+            RefreshDescendants(abstractSchemaItem: _rootItemForRefresh);
         }
         if (IsDeleted)
         {
@@ -366,7 +372,7 @@ public abstract class AbstractSchemaItem
         InvalidateParentPersistenceCache();
         if (ThrowEventOnPersist)
         {
-            PersistenceProvider.OnTransactionEnded(this);
+            PersistenceProvider.OnTransactionEnded(sender: this);
         }
     }
 
@@ -432,7 +438,7 @@ public abstract class AbstractSchemaItem
 
     private bool _persistChildItems = true;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public bool PersistChildItems
     {
         get { return _persistChildItems; }
@@ -440,7 +446,7 @@ public abstract class AbstractSchemaItem
     }
     private bool _deleteChildItems = true;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public bool DeleteChildItems
     {
         get { return _deleteChildItems; }
@@ -453,7 +459,9 @@ public abstract class AbstractSchemaItem
         {
             if (this.DerivedFrom != null)
             {
-                throw new InvalidOperationException(ResourceUtils.GetString("ErrorModifyDerived"));
+                throw new InvalidOperationException(
+                    message: ResourceUtils.GetString(key: "ErrorModifyDerived")
+                );
             }
 
             if (this.DeleteChildItems)
@@ -462,9 +470,9 @@ public abstract class AbstractSchemaItem
                 int cnt = this.ChildItems.Count;
                 for (int i = 0; i < cnt; i++)
                 {
-                    if (this.ChildItems[i].DerivedFrom == null)
+                    if (this.ChildItems[index: i].DerivedFrom == null)
                     {
-                        this.ChildItems[i].IsDeleted = true;
+                        this.ChildItems[index: i].IsDeleted = true;
                     }
                 }
                 // We delete all the ancestor references
@@ -499,12 +507,12 @@ public abstract class AbstractSchemaItem
     #region ISchemaItem Members
     private string _name;
 
-    [Category("(Schema Item)")]
+    [Category(category: "(Schema Item)")]
     [StringNotEmptyModelElementRule]
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [XmlAttribute("name")]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [XmlAttribute(attributeName: "name")]
     [Description(
-        "Name of the model element. The name is mainly used for giving the model elements a human readable name. In some cases the name is an identificator of the model element (e.g. for defining XML structures or for requesting constants from XSLT tranformations)."
+        description: "Name of the model element. The name is mainly used for giving the model elements a human readable name. In some cases the name is an identificator of the model element (e.g. for defining XML structures or for requesting constants from XSLT tranformations)."
     )]
     public virtual string Name
     {
@@ -521,15 +529,15 @@ public abstract class AbstractSchemaItem
         {
             string originalName = _name;
             _name = value;
-            OnNameChanged(originalName);
+            OnNameChanged(originalName: originalName);
         }
     }
 
     public virtual void OnNameChanged(string originalName) { }
 
-    [Category("(Schema Item)"), DefaultValue(false)]
+    [Category(category: "(Schema Item)"), DefaultValue(value: false)]
     [Description(
-        "Indicates if this model element allows to be inherited by another model element. If set to true, it is possible e.g. to reuse an entity definition in other entities. If an element is inheritable, all child elements must be set to Inheritable=true."
+        description: "Indicates if this model element allows to be inherited by another model element. If set to true, it is possible e.g. to reuse an entity definition in other entities. If an element is inheritable, all child elements must be set to Inheritable=true."
     )]
     public bool Inheritable
     {
@@ -538,19 +546,19 @@ public abstract class AbstractSchemaItem
     }
     private bool _isAbstract;
 
-    [Browsable(false)]
-    [XmlAttribute("abstract")]
+    [Browsable(browsable: false)]
+    [XmlAttribute(attributeName: "abstract")]
     public bool IsAbstract
     {
         get { return _isAbstract; }
         set { _isAbstract = value; }
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public Guid ParentItemId { get; set; }
     private ISchemaItem _parentItem = null;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public ISchemaItem ParentItem
     {
         get
@@ -562,7 +570,11 @@ public abstract class AbstractSchemaItem
 
             ModelElementKey key = new ModelElementKey();
             key.Id = this.ParentItemId;
-            return (ISchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
+            return (ISchemaItem)
+                this.PersistenceProvider.RetrieveInstance(
+                    type: typeof(ISchemaItem),
+                    primaryKey: key
+                );
         }
         set
         {
@@ -573,15 +585,15 @@ public abstract class AbstractSchemaItem
             }
             else
             {
-                this.ParentItemId = (Guid)value.PrimaryKey["Id"];
+                this.ParentItemId = (Guid)value.PrimaryKey[key: "Id"];
             }
         }
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public ISchemaItem RootItem
     {
-        get { return this.GetRootItem(this); }
+        get { return this.GetRootItem(parentItem: this); }
     }
 
     private ISchemaItem GetRootItem(ISchemaItem parentItem)
@@ -591,10 +603,10 @@ public abstract class AbstractSchemaItem
             return parentItem;
         }
 
-        return GetRootItem(parentItem.ParentItem);
+        return GetRootItem(parentItem: parentItem.ParentItem);
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public IEnumerable<ISchemaItem> Parents
     {
         get
@@ -608,27 +620,28 @@ public abstract class AbstractSchemaItem
         }
     }
 
-    [XmlParent(typeof(Package))]
-    [Browsable(false)]
+    [XmlParent(type: typeof(Package))]
+    [Browsable(browsable: false)]
     public Guid SchemaExtensionId { get; set; }
 
-    [Category("(Info)")]
-    [Description("Name of the package this model element belongs to.")]
+    [Category(category: "(Info)")]
+    [Description(description: "Name of the package this model element belongs to.")]
     public string PackageName
     {
         get { return this.Package.ToString(); }
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public Package Package
     {
         get
         {
             ModelElementKey key = new ModelElementKey();
             key.Id = this.SchemaExtensionId;
-            return (Package)this.PersistenceProvider.RetrieveInstance(typeof(Package), key);
+            return (Package)
+                this.PersistenceProvider.RetrieveInstance(type: typeof(Package), primaryKey: key);
         }
-        set { this.SchemaExtensionId = (Guid)value.PrimaryKey["Id"]; }
+        set { this.SchemaExtensionId = (Guid)value.PrimaryKey[key: "Id"]; }
     }
     private bool _ancestorsPopulated = false;
     private SchemaItemAncestorCollection _ancestors = new SchemaItemAncestorCollection();
@@ -636,7 +649,7 @@ public abstract class AbstractSchemaItem
     private Dictionary<string, List<ISchemaItem>> _childItemsByType = new();
     private Hashtable _childItemsByName = new Hashtable();
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public SchemaItemAncestorCollection AllAncestors
     {
         get
@@ -651,10 +664,10 @@ public abstract class AbstractSchemaItem
                         // Get children
                         List<SchemaItemAncestor> myAncestors =
                             PersistenceProvider.RetrieveListByParent<SchemaItemAncestor>(
-                                PrimaryKey,
-                                "SchemaItem",
-                                "SchemaItemAncestor",
-                                true
+                                primaryKey: PrimaryKey,
+                                parentTableName: "SchemaItem",
+                                childTableName: "SchemaItemAncestor",
+                                useCache: true
                             );
                         // We remove any ancestors from superior model packages (i.e. ancestors we could not load)
                         List<SchemaItemAncestor> toDelete = new List<SchemaItemAncestor>();
@@ -662,12 +675,12 @@ public abstract class AbstractSchemaItem
                         {
                             if (anc.Ancestor == null)
                             {
-                                toDelete.Add(anc);
+                                toDelete.Add(item: anc);
                             }
                         }
                         foreach (SchemaItemAncestor del in toDelete)
                         {
-                            myAncestors.Remove(del);
+                            myAncestors.Remove(item: del);
                         }
                         toDelete.Clear();
                         toDelete = null;
@@ -675,9 +688,9 @@ public abstract class AbstractSchemaItem
                         foreach (SchemaItemAncestor anc in myAncestors)
                         {
                             anc.SchemaItem = this;
-                            if (!_ancestors.Contains(anc))
+                            if (!_ancestors.Contains(item: anc))
                             {
-                                _ancestors.Add(anc);
+                                _ancestors.Add(value: anc);
                                 // Also add all ancestors of this ancestor
                                 try
                                 {
@@ -685,9 +698,9 @@ public abstract class AbstractSchemaItem
                                         SchemaItemAncestor childAncestor in anc.Ancestor.AllAncestors
                                     )
                                     {
-                                        if (!_ancestors.Contains(childAncestor))
+                                        if (!_ancestors.Contains(item: childAncestor))
                                         {
-                                            _ancestors.Add(childAncestor);
+                                            _ancestors.Add(value: childAncestor);
                                         }
                                     }
                                 }
@@ -704,11 +717,11 @@ public abstract class AbstractSchemaItem
     private bool _myAncestorsPopulated = false;
     private SchemaItemAncestorCollection _myAncestors = new SchemaItemAncestorCollection();
 
-    [Category("(Schema Item)")]
+    [Category(category: "(Schema Item)")]
     [Description(
-        "Inherited model elements. E.g. inherited entities from which you want to share fields, filters, etc. In order to inherit a model element, the inherited model element has to be set to Inheritable=true."
+        description: "Inherited model elements. E.g. inherited entities from which you want to share fields, filters, etc. In order to inherit a model element, the inherited model element has to be set to Inheritable=true."
     )]
-    [TypeConverter(typeof(SchemaItemAncestorConverter))]
+    [TypeConverter(type: typeof(SchemaItemAncestorConverter))]
     public SchemaItemAncestorCollection Ancestors
     {
         get
@@ -723,16 +736,16 @@ public abstract class AbstractSchemaItem
                         // Get children
                         List<SchemaItemAncestor> myAncestors =
                             this.PersistenceProvider.RetrieveListByParent<SchemaItemAncestor>(
-                                this.PrimaryKey,
-                                "SchemaItem",
-                                "SchemaItemAncestor",
-                                this.UseObjectCache
+                                primaryKey: this.PrimaryKey,
+                                parentTableName: "SchemaItem",
+                                childTableName: "SchemaItemAncestor",
+                                useCache: this.UseObjectCache
                             );
                         // Set parent for each child
                         foreach (SchemaItemAncestor anc in myAncestors)
                         {
                             anc.SchemaItem = this;
-                            _myAncestors.Add(anc);
+                            _myAncestors.Add(value: anc);
                         }
                         _myAncestorsPopulated = true;
                     }
@@ -742,20 +755,20 @@ public abstract class AbstractSchemaItem
         }
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public List<SchemaItemGroup> ChildGroups => new List<SchemaItemGroup>();
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public bool HasChildItems => ChildItems.Count > 0;
 
     public bool HasChildItemsByType(string itemType)
     {
-        return ChildItemsByType<ISchemaItem>(itemType).Count > 0;
+        return ChildItemsByType<ISchemaItem>(itemType: itemType).Count > 0;
     }
 
     public bool HasChildItemsByGroup(SchemaItemGroup group)
     {
-        return this.ChildItemsByGroup(group).Count > 0;
+        return this.ChildItemsByGroup(group: group).Count > 0;
     }
 
     public ISchemaItem GetChildByName(string name, string itemType)
@@ -773,7 +786,7 @@ public abstract class AbstractSchemaItem
     public ISchemaItem GetChildByName(string name)
     {
 #if ORIGAM_CLIENT
-        ISchemaItem result = GetItemFromCache(name);
+        ISchemaItem result = GetItemFromCache(name: name);
         if (result != null)
         {
             return result;
@@ -793,7 +806,7 @@ public abstract class AbstractSchemaItem
     public ISchemaItem GetChildById(Guid id)
     {
 #if ORIGAM_CLIENT
-        ISchemaItem result = GetItemFromCache(id);
+        ISchemaItem result = GetItemFromCache(id: id);
         if (result != null)
         {
             return result;
@@ -802,7 +815,7 @@ public abstract class AbstractSchemaItem
 #endif
         foreach (ISchemaItem item in this.ChildItems)
         {
-            if (item.PrimaryKey["Id"].Equals(id))
+            if (item.PrimaryKey[key: "Id"].Equals(obj: id))
             {
                 return item;
             }
@@ -813,13 +826,13 @@ public abstract class AbstractSchemaItem
     public ISchemaItem GetChildByIdRecursive(Guid id)
     {
         // first try from the current level
-        ISchemaItem result = GetChildById(id);
+        ISchemaItem result = GetChildById(id: id);
         if (result == null)
         {
             // if not found, try recursive
             foreach (ISchemaItem child in this.ChildItems)
             {
-                result = child.GetChildByIdRecursive(id);
+                result = child.GetChildByIdRecursive(id: id);
                 if (result != null)
                 {
                     break;
@@ -832,7 +845,7 @@ public abstract class AbstractSchemaItem
     ISchemaItemCollection _childItems;
     bool _childItemsPopulated = false;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public virtual ISchemaItemCollection ChildItems
     {
         get
@@ -855,16 +868,16 @@ public abstract class AbstractSchemaItem
                     if (_childItems == null)
                     {
                         _childItems = SchemaItemCollection.Create(
-                            this.PersistenceProvider,
-                            this.RootProvider,
-                            this
+                            persistence: this.PersistenceProvider,
+                            provider: this.RootProvider,
+                            parentItem: this
                         );
                     }
                     _childItems.Clear();
-                    _childItems.AddRange(this.GetChildItems(this));
+                    _childItems.AddRange(value: this.GetChildItems(parentItem: this));
                     foreach (SchemaItemAncestor anc in this.AllAncestors)
                     {
-                        _childItems.AddRange(this.GetChildItems(anc.Ancestor));
+                        _childItems.AddRange(value: this.GetChildItems(parentItem: anc.Ancestor));
                     }
 #if ORIGAM_CLIENT
                     _childItemsById.Clear();
@@ -872,7 +885,7 @@ public abstract class AbstractSchemaItem
                     _childItemsByType.Clear();
                     foreach (ISchemaItem item in _childItems)
                     {
-                        AddItemToCache(item);
+                        AddItemToCache(item: item);
                     }
 #endif
                     _childItemsPopulated = true;
@@ -883,20 +896,20 @@ public abstract class AbstractSchemaItem
 
     private void AddItemToCache(ISchemaItem item)
     {
-        _childItemsById[item.PrimaryKey["Id"]] = item;
-        _childItemsByName[item.Name] = item;
-        AddItemToTypeCache(item);
+        _childItemsById[key: item.PrimaryKey[key: "Id"]] = item;
+        _childItemsByName[key: item.Name] = item;
+        AddItemToTypeCache(item: item);
     }
 
     private int _childItemsTypeCacheCount = 0;
 
     private void AddItemToTypeCache(ISchemaItem item)
     {
-        if (!_childItemsByType.ContainsKey(item.ItemType))
+        if (!_childItemsByType.ContainsKey(key: item.ItemType))
         {
-            _childItemsByType.Add(item.ItemType, new List<ISchemaItem>());
+            _childItemsByType.Add(key: item.ItemType, value: new List<ISchemaItem>());
         }
-        _childItemsByType[item.ItemType].Add(item);
+        _childItemsByType[key: item.ItemType].Add(item: item);
 
         _childItemsTypeCacheCount++;
     }
@@ -905,9 +918,9 @@ public abstract class AbstractSchemaItem
     {
         // initialize the cache
         InitializeItemCache();
-        if (_childItemsByName.Contains(name))
+        if (_childItemsByName.Contains(key: name))
         {
-            return _childItemsByName[name] as ISchemaItem;
+            return _childItemsByName[key: name] as ISchemaItem;
         }
 
         return null;
@@ -917,9 +930,9 @@ public abstract class AbstractSchemaItem
     {
         // initialize the cache
         InitializeItemCache();
-        if (_childItemsById.Contains(id))
+        if (_childItemsById.Contains(key: id))
         {
-            return _childItemsById[id] as ISchemaItem;
+            return _childItemsById[key: id] as ISchemaItem;
         }
 
         return null;
@@ -930,24 +943,24 @@ public abstract class AbstractSchemaItem
     {
         // initialize the cache
         InitializeItemCache();
-        if (_childItemsByType.TryGetValue(itemType, out var value))
+        if (_childItemsByType.TryGetValue(key: itemType, value: out var value))
         {
             // we copy the array, because of multithreading (collection may change while
             // another thread is running)
-            return new List<T>(value.Cast<T>());
+            return new List<T>(collection: value.Cast<T>());
         }
 
         return new List<T>();
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public List<SchemaItemParameter> Parameters =>
-        ChildItemsByType<SchemaItemParameter>(SchemaItemParameter.CategoryConst);
+        ChildItemsByType<SchemaItemParameter>(itemType: SchemaItemParameter.CategoryConst);
 
     Dictionary<string, ParameterReference> _parameterReferences = new();
 
-    [Category("(Schema Item)")]
-    [Browsable(false)]
+    [Category(category: "(Schema Item)")]
+    [Browsable(browsable: false)]
     public virtual Dictionary<string, ParameterReference> ParameterReferences
     {
         get
@@ -964,7 +977,7 @@ public abstract class AbstractSchemaItem
             {
 #endif
                         _parameterReferences.Clear();
-                        GetParameterReferences(this, _parameterReferences);
+                        GetParameterReferences(parentItem: this, list: _parameterReferences);
 #if ORIGAM_CLIENT
                         _hasParameterReferences = (_parameterReferences.Count > 0);
                         _hasParameterReferencesCached = true;
@@ -980,7 +993,7 @@ public abstract class AbstractSchemaItem
 #endif
     private bool _hasParameterReferences = false;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public bool HasParameterReferences
     {
         get
@@ -1014,7 +1027,7 @@ public abstract class AbstractSchemaItem
         // if the number of items is different than cached, we go through the whole collection
         if (_childItemsTypeCacheCount == this.ChildItems.Count)
         {
-            return GetItemsFromCache<T>(itemType);
+            return GetItemsFromCache<T>(itemType: itemType);
         }
 #endif
         var list = new List<T>();
@@ -1022,7 +1035,7 @@ public abstract class AbstractSchemaItem
         {
             if (item.ItemType == itemType)
             {
-                list.Add((T)item);
+                list.Add(item: (T)item);
             }
         }
 
@@ -1036,7 +1049,7 @@ public abstract class AbstractSchemaItem
         {
             if (item.ItemType == itemType)
             {
-                list.Add(item);
+                list.Add(item: item);
             }
         }
 
@@ -1050,25 +1063,25 @@ public abstract class AbstractSchemaItem
         {
             if (
                 (item.Group == null && group == null)
-                || item.Group.PrimaryKey.Equals(group.PrimaryKey)
+                || item.Group.PrimaryKey.Equals(obj: group.PrimaryKey)
             )
             {
-                list.Add(item);
+                list.Add(item: item);
             }
         }
 
         return list;
     }
 
-    [Category("(Info)")]
-    [Description("Type of the model element.")]
+    [Category(category: "(Info)")]
+    [Description(description: "Type of the model element.")]
     public abstract string ItemType { get; }
 
-    [XmlParent(typeof(SchemaItemGroup))]
-    [Browsable(false)]
+    [XmlParent(type: typeof(SchemaItemGroup))]
+    [Browsable(browsable: false)]
     public Guid GroupId { get; set; }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public SchemaItemGroup Group
     {
         get
@@ -1078,13 +1091,19 @@ public abstract class AbstractSchemaItem
             try
             {
                 return (SchemaItemGroup)
-                    this.PersistenceProvider.RetrieveInstance(typeof(SchemaItemGroup), key);
+                    this.PersistenceProvider.RetrieveInstance(
+                        type: typeof(SchemaItemGroup),
+                        primaryKey: key
+                    );
             }
             catch (Exception ex)
             {
                 throw new Exception(
-                    ResourceUtils.GetString("ErrorGroupNotFound", this.ItemType, this.Path),
-                    ex
+                    message: ResourceUtils.GetString(
+                        key: "ErrorGroupNotFound",
+                        args: new object[] { this.ItemType, this.Path }
+                    ),
+                    innerException: ex
                 );
             }
         }
@@ -1096,13 +1115,13 @@ public abstract class AbstractSchemaItem
             }
             else
             {
-                this.GroupId = (Guid)value.PrimaryKey["Id"];
+                this.GroupId = (Guid)value.PrimaryKey[key: "Id"];
             }
         }
     }
     private ISchemaItem _derivedFrom = null;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public ISchemaItem DerivedFrom
     {
         get { return _derivedFrom; }
@@ -1110,7 +1129,9 @@ public abstract class AbstractSchemaItem
         {
             if (_derivedFrom != null & value == null)
             {
-                throw new InvalidOperationException(ResourceUtils.GetString("ErrorRevertDerived"));
+                throw new InvalidOperationException(
+                    message: ResourceUtils.GetString(key: "ErrorRevertDerived")
+                );
             }
 
             _derivedFrom = value;
@@ -1118,24 +1139,24 @@ public abstract class AbstractSchemaItem
     }
     private ISchemaItemProvider _rootProvider;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public ISchemaItemProvider RootProvider
     {
         get { return _rootProvider; }
         set { _rootProvider = value; }
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public List<ISchemaItem> GetDependencies(bool ignoreErrors)
     {
         var dependencies = new List<ISchemaItem>();
         foreach (SchemaItemAncestor anc in this.Ancestors)
         {
-            dependencies.Add(anc.Ancestor);
+            dependencies.Add(item: anc.Ancestor);
         }
         try
         {
-            GetExtraDependencies(dependencies);
+            GetExtraDependencies(dependencies: dependencies);
         }
         catch
         {
@@ -1160,58 +1181,63 @@ public abstract class AbstractSchemaItem
         }
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public bool AutoCreateFolder
     {
         get { return false; }
     }
     #endregion
     #region IPersistent2 Members
-    [Category("(Info)")]
+    [Category(category: "(Info)")]
     public string RelativeFilePath
     {
         get
         {
             SchemaItemGroup group = RootItem.Group;
             string fileName =
-                RemoveIllegalCharactersFromPath(RootItem.Name) + PersistenceFiles.Extension;
+                RemoveIllegalCharactersFromPath(text: RootItem.Name) + PersistenceFiles.Extension;
             string groupPath = "";
             if (group != null)
             {
                 groupPath = group.Path;
             }
-            return System.IO.Path.Combine(Package.Name, RootItem.ItemType, groupPath, fileName);
+            return System.IO.Path.Combine(
+                path1: Package.Name,
+                path2: RootItem.ItemType,
+                path3: groupPath,
+                path4: fileName
+            );
         }
     }
 
     private string RemoveIllegalCharactersFromPath(string text)
     {
-        if (!string.IsNullOrEmpty(text))
+        if (!string.IsNullOrEmpty(value: text))
         {
-            return _regex.Replace(text, "");
+            return _regex.Replace(input: text, replacement: "");
         }
         return text;
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public Guid FileParentId
     {
         get => this.ParentItemId;
         set => ParentItemId = value;
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public bool IsFolder
     {
         get { return false; }
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public IDictionary<string, Guid> ParentFolderIds =>
         new Dictionary<string, Guid>
         {
-            { CategoryFactory.Create(typeof(Package)), SchemaExtensionId },
-            { CategoryFactory.Create(typeof(SchemaItemGroup)), GroupId },
+            { CategoryFactory.Create(type: typeof(Package)), SchemaExtensionId },
+            { CategoryFactory.Create(type: typeof(SchemaItemGroup)), GroupId },
         };
     #endregion
     #region Private Methods
@@ -1220,8 +1246,8 @@ public abstract class AbstractSchemaItem
         var items = new List<ISchemaItem>();
         foreach (ISchemaItem childItem in parentItem.ChildItems)
         {
-            items.Add(childItem);
-            items.AddRange(GetChildItemsRecursive(childItem));
+            items.Add(item: childItem);
+            items.AddRange(collection: GetChildItemsRecursive(parentItem: childItem));
         }
         return items;
     }
@@ -1229,9 +1255,9 @@ public abstract class AbstractSchemaItem
     private ISchemaItemCollection GetChildItems(ISchemaItem parentItem)
     {
         ISchemaItemCollection col = SchemaItemCollection.Create(
-            this.PersistenceProvider,
-            this.RootProvider,
-            parentItem
+            persistence: this.PersistenceProvider,
+            provider: this.RootProvider,
+            parentItem: parentItem
         );
         // Get children if we're allowed to do so
         if (!NeverRetrieveChildren)
@@ -1241,14 +1267,14 @@ public abstract class AbstractSchemaItem
             // updated-not-cancelled items in the cache.
             bool useCache = parentItem.UseObjectCache;
             List<ISchemaItem> list = this.PersistenceProvider.RetrieveListByParent<ISchemaItem>(
-                parentItem.PrimaryKey,
-                "SchemaItem",
-                "ChildSchemaItem",
-                useCache
+                primaryKey: parentItem.PrimaryKey,
+                parentTableName: "SchemaItem",
+                childTableName: "ChildSchemaItem",
+                useCache: useCache
             );
             foreach (ISchemaItem si in list)
             {
-                col.Add(si);
+                col.Add(item: si);
             }
         }
         return col;
@@ -1267,23 +1293,26 @@ public abstract class AbstractSchemaItem
             _myAncestors.Clear();
             _parentItem = null;
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
 
     public virtual void OnPropertyChanged(string propertyName)
     {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        PropertyChanged?.Invoke(
+            sender: this,
+            e: new PropertyChangedEventArgs(propertyName: propertyName)
+        );
     }
     #endregion
     #region IBrowserNode Members
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public bool HasChildNodes
     {
         get { return this.ChildNodes().Count > 0; }
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public virtual bool CanRename
     {
         get
@@ -1293,7 +1322,7 @@ public abstract class AbstractSchemaItem
         }
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public virtual bool CanDelete
     {
         get { return true; }
@@ -1309,12 +1338,12 @@ public abstract class AbstractSchemaItem
         else
         {
             throw new InvalidOperationException(
-                ResourceUtils.GetString("ErrorDeleteReferenced", this.Path)
+                message: ResourceUtils.GetString(key: "ErrorDeleteReferenced", args: this.Path)
             );
         }
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public virtual BrowserNodeCollection ChildNodes()
     {
         Hashtable folders = new Hashtable();
@@ -1322,14 +1351,14 @@ public abstract class AbstractSchemaItem
         // All groups
         foreach (SchemaItemGroup group in this.ChildGroups)
         {
-            col.Add(group);
+            col.Add(value: group);
         }
         if (this.AllAncestors.Count > 0)
         {
             NonpersistentSchemaItemNode folder = new NonpersistentSchemaItemNode();
             folder.NodeText = "_Ancestors";
             folder.ParentNode = this;
-            col.Add(folder);
+            col.Add(value: folder);
         }
         // All other child items
         foreach (ISchemaItem item in this.ChildItems)
@@ -1346,27 +1375,27 @@ public abstract class AbstractSchemaItem
                         description = item.ItemType;
                     }
 
-                    if (!folders.Contains(description))
+                    if (!folders.Contains(key: description))
                     {
                         NonpersistentSchemaItemNode folder = new NonpersistentSchemaItemNode();
                         folder.ParentNode = this;
                         folder.NodeText = description;
-                        col.Add(folder);
-                        folders.Add(description, folder);
+                        col.Add(value: folder);
+                        folders.Add(key: description, value: folder);
                     }
                     // we just add the folders here, the items in the nonpersistent folder will
                     // be returned by the folder itself (filtered from this item's child items
                 }
                 else
                 {
-                    col.Add(item);
+                    col.Add(value: item);
                 }
             }
         }
         return col;
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public virtual string NodeText
     {
         get { return this.Name; }
@@ -1377,32 +1406,37 @@ public abstract class AbstractSchemaItem
         }
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public string NodeId
     {
         get { return this.Id.ToString(); }
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public bool Hide
     {
         get { return !this.IsPersisted; }
-        set { throw new InvalidOperationException(ResourceUtils.GetString("ErrorSetHide")); }
+        set
+        {
+            throw new InvalidOperationException(
+                message: ResourceUtils.GetString(key: "ErrorSetHide")
+            );
+        }
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public virtual string Icon
     {
         get { return this.GetType().SchemaItemIcon()?.ToString(); }
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public virtual byte[] NodeImage
     {
         get { return null; }
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public virtual string FontStyle
     {
         get { return "Regular"; }
@@ -1413,7 +1447,7 @@ public abstract class AbstractSchemaItem
         return false;
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public IBrowserNode2 ParentNode
     {
         get { return this.ParentItem; }
@@ -1422,20 +1456,20 @@ public abstract class AbstractSchemaItem
             if (value is ISchemaItem)
             {
                 // first remove us from the parent's child items
-                if (this.ParentItem != null && this.ParentItem.ChildItems.Contains(this))
+                if (this.ParentItem != null && this.ParentItem.ChildItems.Contains(item: this))
                 {
-                    this.ParentItem.ChildItems.Remove(this);
+                    this.ParentItem.ChildItems.Remove(item: this);
                 }
                 this.ParentItem = value as ISchemaItem;
                 // then add us as the child of the new item
-                (value as ISchemaItem).ChildItems.Add(this);
+                (value as ISchemaItem).ChildItems.Add(item: this);
             }
             else
             {
                 throw new ArgumentOutOfRangeException(
-                    "ParentItem",
-                    value,
-                    ResourceUtils.GetString("ErrorNotAbstractSchemaItem")
+                    paramName: "ParentItem",
+                    actualValue: value,
+                    message: ResourceUtils.GetString(key: "ErrorNotAbstractSchemaItem")
                 );
             }
         }
@@ -1444,7 +1478,7 @@ public abstract class AbstractSchemaItem
     #region ISchemaItemFactory Members
     private List<Type> _childItemTypes = new();
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public List<Type> ChildItemTypes
     {
         get
@@ -1452,11 +1486,11 @@ public abstract class AbstractSchemaItem
             foreach (Type[] entry in ExtensionChildItemTypes)
             {
                 if (
-                    (entry[0].Equals(GetType()) || GetType().IsSubclassOf(entry[0]))
-                    && !_childItemTypes.Contains(entry[1])
+                    (entry[0].Equals(o: GetType()) || GetType().IsSubclassOf(c: entry[0]))
+                    && !_childItemTypes.Contains(item: entry[1])
                 )
                 {
-                    _childItemTypes.Add(entry[1]);
+                    _childItemTypes.Add(item: entry[1]);
                 }
             }
             return _childItemTypes;
@@ -1469,40 +1503,40 @@ public abstract class AbstractSchemaItem
     public virtual T NewItem<T>(Guid schemaExtensionId, SchemaItemGroup group)
         where T : class, ISchemaItem
     {
-        return NewItem<T>(schemaExtensionId, group, null);
+        return NewItem<T>(schemaExtensionId: schemaExtensionId, group: group, itemName: null);
     }
 
     protected T NewItem<T>(Guid schemaExtensionId, SchemaItemGroup group, string itemName)
         where T : class, ISchemaItem
     {
         T item;
-        if (((IList)NewItemTypes).Contains(typeof(T)))
+        if (((IList)NewItemTypes).Contains(value: typeof(T)))
         {
             item = (T)
                 typeof(T)
-                    .GetConstructor(new[] { typeof(Guid) })
-                    .Invoke(new object[] { schemaExtensionId });
+                    .GetConstructor(types: new[] { typeof(Guid) })
+                    .Invoke(parameters: new object[] { schemaExtensionId });
         }
         else
         {
             throw new ArgumentOutOfRangeException(
-                "type",
-                typeof(T),
-                ResourceUtils.GetString("ErrorTypeNotSupported", GetType().Name)
+                paramName: "type",
+                actualValue: typeof(T),
+                message: ResourceUtils.GetString(key: "ErrorTypeNotSupported", args: GetType().Name)
             );
         }
         item.Group = group;
         item.PersistenceProvider = PersistenceProvider;
         item.IsAbstract = IsAbstract;
-        if (!string.IsNullOrEmpty(itemName))
+        if (!string.IsNullOrEmpty(value: itemName))
         {
             item.Name = itemName;
         }
-        ChildItems.Add(item);
+        ChildItems.Add(item: item);
 #if ORIGAM_CLIENT
-        AddItemToTypeCache(item);
+        AddItemToTypeCache(item: item);
 #endif
-        ItemCreated?.Invoke(item);
+        ItemCreated?.Invoke(obj: item);
         return item;
     }
 
@@ -1511,10 +1545,10 @@ public abstract class AbstractSchemaItem
         return null;
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public virtual Type[] NewItemTypes => _childItemTypes.ToArray();
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public virtual IList<string> NewTypeNames
     {
         get { return new List<string>(); }
@@ -1524,7 +1558,7 @@ public abstract class AbstractSchemaItem
     /// By default all NewItemTypes are nameable. Override if only a subset of types can
     /// be populated with NewTypeNames.
     /// </summary>
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public virtual Type[] NameableTypes
     {
         get { return NewItemTypes; }
@@ -1534,20 +1568,25 @@ public abstract class AbstractSchemaItem
     #region ICloneable Members
     public virtual object Clone()
     {
-        return this.Clone(false);
+        return this.Clone(keepKeys: false);
     }
 
     public object Clone(bool keepKeys)
     {
         if (!this.IsPersisted)
         {
-            throw new InvalidOperationException(ResourceUtils.GetString("ErrorCloneNotPersisted"));
+            throw new InvalidOperationException(
+                message: ResourceUtils.GetString(key: "ErrorCloneNotPersisted")
+            );
         }
         ISchemaItem newItem =
-            this.PersistenceProvider.RetrieveInstance(this.GetType(), this.PrimaryKey, false)
-            as ISchemaItem;
+            this.PersistenceProvider.RetrieveInstance(
+                type: this.GetType(),
+                primaryKey: this.PrimaryKey,
+                useCache: false
+            ) as ISchemaItem;
         // we preserve current primary key, so references can be updated later
-        newItem.OldPrimaryKey = new ModelElementKey((Guid)this.PrimaryKey["Id"]);
+        newItem.OldPrimaryKey = new ModelElementKey(id: (Guid)this.PrimaryKey[key: "Id"]);
         // if we're keeping keys (deep clone),
         // flag that we don't want to load children,
         // because we're going to inject them
@@ -1558,7 +1597,7 @@ public abstract class AbstractSchemaItem
         // we create a new unique primary key
         else
         {
-            newItem.PrimaryKey = new ModelElementKey(Guid.NewGuid());
+            newItem.PrimaryKey = new ModelElementKey(id: Guid.NewGuid());
         }
         // in case that for any reason child items were populated already
         // in the item's construction, we clear them
@@ -1573,22 +1612,22 @@ public abstract class AbstractSchemaItem
 
         if (this.ParentItem == null)
         {
-            this.RootProvider.ChildItems.Add(newItem);
+            this.RootProvider.ChildItems.Add(item: newItem);
         }
 
         foreach (SchemaItemAncestor ancestor in this.Ancestors)
         {
             SchemaItemAncestor newAncestor = ancestor.Clone() as SchemaItemAncestor;
             newAncestor.SchemaItem = newItem;
-            newItem.Ancestors.Add(newAncestor);
+            newItem.Ancestors.Add(value: newAncestor);
         }
         foreach (ISchemaItem childItem in this.ChildItems)
         {
             if (childItem.DerivedFrom == null) // we do not copy derived items directly, they will be derived
             {
-                ISchemaItem newChild = childItem.Clone(keepKeys) as ISchemaItem;
+                ISchemaItem newChild = childItem.Clone(keepKeys: keepKeys) as ISchemaItem;
                 newChild.ParentItem = newItem;
-                newItem.ChildItems.Add(newChild);
+                newItem.ChildItems.Add(item: newChild);
             }
         }
         return newItem;
@@ -1602,7 +1641,7 @@ public abstract class AbstractSchemaItem
         string name = this.Name ?? "";
         if (item != null)
         {
-            return name.CompareTo(item.Name);
+            return name.CompareTo(strB: item.Name);
         }
 
         if (group != null)
@@ -1617,11 +1656,11 @@ public abstract class AbstractSchemaItem
     public virtual ISchemaItem ConvertTo(Type type)
     {
         var methodInfo = typeof(AbstractSchemaItem).GetMethod(
-            "ConvertTo",
-            BindingFlags.NonPublic | BindingFlags.Instance
+            name: "ConvertTo",
+            bindingAttr: BindingFlags.NonPublic | BindingFlags.Instance
         );
-        var genericMethodInfo = methodInfo.MakeGenericMethod(type);
-        return (ISchemaItem)genericMethodInfo.Invoke(this, null);
+        var genericMethodInfo = methodInfo.MakeGenericMethod(typeArguments: type);
+        return (ISchemaItem)genericMethodInfo.Invoke(obj: this, parameters: null);
     }
 
     public virtual bool CanConvertTo(Type type)
@@ -1632,12 +1671,17 @@ public abstract class AbstractSchemaItem
     protected virtual ISchemaItem ConvertTo<T>()
         where T : class, ISchemaItem
     {
-        throw new Exception(ResourceUtils.GetString("ErrorConvertTo", typeof(T).ToString()));
+        throw new Exception(
+            message: ResourceUtils.GetString(key: "ErrorConvertTo", args: typeof(T).ToString())
+        );
     }
 
     public void Dump()
     {
-        System.Diagnostics.Debug.WriteLine(Path + "[" + GetHashCode() + "]", "DUMP");
+        System.Diagnostics.Debug.WriteLine(
+            message: Path + "[" + GetHashCode() + "]",
+            category: "DUMP"
+        );
         foreach (ISchemaItem item in ChildItems)
         {
             item.Dump();

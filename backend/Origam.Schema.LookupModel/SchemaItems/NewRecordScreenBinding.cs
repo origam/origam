@@ -34,11 +34,11 @@ using Origam.Workbench.Services;
 
 namespace Origam.Schema.LookupModel;
 
-[SchemaItemDescription("New Record Screen Binding", "icon_menu-binding.png")]
-[HelpTopic("")]
-[XmlModelRoot(CategoryConst)]
-[DefaultProperty("MenuItem")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "New Record Screen Binding", iconName: "icon_menu-binding.png")]
+[HelpTopic(topic: "")]
+[XmlModelRoot(category: CategoryConst)]
+[DefaultProperty(name: "MenuItem")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class NewRecordScreenBinding : AbstractSchemaItem, IAuthorizationContextContainer
 {
     public const string CategoryConst = "NewRecordScreenBinding";
@@ -46,12 +46,12 @@ public class NewRecordScreenBinding : AbstractSchemaItem, IAuthorizationContextC
     public NewRecordScreenBinding() { }
 
     public NewRecordScreenBinding(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public NewRecordScreenBinding(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public bool IsAvailable
     {
         get
@@ -69,18 +69,24 @@ public class NewRecordScreenBinding : AbstractSchemaItem, IAuthorizationContextC
                 SecurityManager.GetAuthorizationProvider();
             IPrincipal principal = SecurityManager.CurrentPrincipal;
             string authContext = SecurityManager.GetReadOnlyRoles(
-                referenceMenuItem.AuthorizationContext
+                roles: referenceMenuItem.AuthorizationContext
             );
             bool hasReadOnlyRole = SecurityManager
                 .GetAuthorizationProvider()
-                .Authorize(SecurityManager.CurrentPrincipal, authContext);
+                .Authorize(principal: SecurityManager.CurrentPrincipal, context: authContext);
             if (hasReadOnlyRole)
             {
                 return false;
             }
-            return authorizationProvider.Authorize(principal, AuthorizationContext)
-                && authorizationProvider.Authorize(principal, MenuItem.AuthorizationContext)
-                && parameterService.IsFeatureOn(MenuItem.Features);
+            return authorizationProvider.Authorize(
+                    principal: principal,
+                    context: AuthorizationContext
+                )
+                && authorizationProvider.Authorize(
+                    principal: principal,
+                    context: MenuItem.AuthorizationContext
+                )
+                && parameterService.IsFeatureOn(featureCode: MenuItem.Features);
         }
     }
 
@@ -89,14 +95,14 @@ public class NewRecordScreenBinding : AbstractSchemaItem, IAuthorizationContextC
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(MenuItem);
+        dependencies.Add(item: MenuItem);
         ISchemaItem menu = MenuItem;
         while (menu.ParentItem != null)
         {
             menu = menu.ParentItem;
-            dependencies.Add(menu);
+            dependencies.Add(item: menu);
         }
-        base.GetExtraDependencies(dependencies);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override bool CanMove(UI.IBrowserNode2 newNode)
@@ -111,34 +117,34 @@ public class NewRecordScreenBinding : AbstractSchemaItem, IAuthorizationContextC
     #region Properties
     public Guid MenuItemId;
 
-    [Category("Menu Reference")]
-    [TypeConverter(typeof(MenuItemConverter))]
+    [Category(category: "Menu Reference")]
+    [TypeConverter(type: typeof(MenuItemConverter))]
     [NotNullModelElementRule]
     [NotNullMenuRecordEditMethod]
     [NoRecursiveNewRecordScreenBindingsRule]
-    [XmlReference("menuItem", "MenuItemId")]
+    [XmlReference(attributeName: "menuItem", idField: "MenuItemId")]
     public AbstractMenuItem MenuItem
     {
-        get => PersistenceProvider.RetrieveInstance<AbstractMenuItem>(MenuItemId);
-        set => MenuItemId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+        get => PersistenceProvider.RetrieveInstance<AbstractMenuItem>(instanceId: MenuItemId);
+        set => MenuItemId = value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"];
     }
 
-    [Category("Security")]
+    [Category(category: "Security")]
     [NotNullModelElementRule]
-    [XmlAttribute("roles")]
+    [XmlAttribute(attributeName: "roles")]
     public string Roles { get; set; }
 
-    [XmlAttribute("dialogWidth")]
+    [XmlAttribute(attributeName: "dialogWidth")]
     public int DialogWidth { get; set; }
 
-    [XmlAttribute("dialogHeight")]
+    [XmlAttribute(attributeName: "dialogHeight")]
     public int DialogHeight { get; set; }
 
     #endregion
 
     #region IAuthorizationContextContainer Members
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public string AuthorizationContext => Roles;
 
     #endregion
@@ -154,7 +160,7 @@ public class NewRecordScreenBinding : AbstractSchemaItem, IAuthorizationContextC
     }
 }
 
-[AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
+[AttributeUsage(validOn: AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
 class NoRecursiveNewRecordScreenBindingsRule : AbstractModelElementRuleAttribute
 {
     public override Exception CheckRule(object instance)
@@ -162,7 +168,7 @@ class NoRecursiveNewRecordScreenBindingsRule : AbstractModelElementRuleAttribute
         if (!(instance is NewRecordScreenBinding newRecordScreenBinding))
         {
             return new Exception(
-                $"{nameof(NoRecursiveNewRecordScreenBindingsRule)} can be only applied to type {nameof(NewRecordScreenBinding)}"
+                message: $"{nameof(NoRecursiveNewRecordScreenBindingsRule)} can be only applied to type {nameof(NewRecordScreenBinding)}"
             );
         }
         if (newRecordScreenBinding.MenuItem == null)
@@ -172,32 +178,36 @@ class NoRecursiveNewRecordScreenBindingsRule : AbstractModelElementRuleAttribute
         if (newRecordScreenBinding.MenuItem is not FormReferenceMenuItem menuItem)
         {
             return new Exception(
-                $"The MenuItem in {nameof(NewRecordScreenBinding)} must be a {nameof(FormReferenceMenuItem)}"
+                message: $"The MenuItem in {nameof(NewRecordScreenBinding)} must be a {nameof(FormReferenceMenuItem)}"
             );
         }
         IEnumerable<IDataLookup> allLookups = menuItem
             .Screen.ChildrenRecursive.OfType<ControlSetItem>()
-            .SelectMany(controlSetItem =>
+            .SelectMany(selector: controlSetItem =>
             {
-                IEnumerable<PanelControlSet> panelControlSets = FindScreenSections(controlSetItem);
-                IEnumerable<ControlSetItem> comboBoxes = panelControlSets.SelectMany(
-                    FindComboBoxes
+                IEnumerable<PanelControlSet> panelControlSets = FindScreenSections(
+                    controlSetItem: controlSetItem
                 );
-                IEnumerable<IDataLookup> lookups = comboBoxes.SelectMany(GetLookups);
+                IEnumerable<ControlSetItem> comboBoxes = panelControlSets.SelectMany(
+                    selector: FindComboBoxes
+                );
+                IEnumerable<IDataLookup> lookups = comboBoxes.SelectMany(selector: GetLookups);
                 return lookups;
             })
             .Distinct();
         var conflictingNewRecordBindingIds = allLookups
-            .Select(lookup => lookup.ChildItems.OfType<NewRecordScreenBinding>().FirstOrDefault())
-            .Where(binding => binding != null)
-            .Select(binding => binding.Id.ToString())
+            .Select(selector: lookup =>
+                lookup.ChildItems.OfType<NewRecordScreenBinding>().FirstOrDefault()
+            )
+            .Where(predicate: binding => binding != null)
+            .Select(selector: binding => binding.Id.ToString())
             .ToList();
         if (conflictingNewRecordBindingIds.Count != 0)
         {
             return new Exception(
-                "The selected menu item references a screen with NewRecordScreenBindings. "
+                message: "The selected menu item references a screen with NewRecordScreenBindings. "
                     + "This would lead to nested NewRecordScreenBindings and is therefore not allowed. "
-                    + $"The conflicting NewRecordScreenBinding ids are: [{string.Join(", ", conflictingNewRecordBindingIds)}]"
+                    + $"The conflicting NewRecordScreenBinding ids are: [{string.Join(separator: ", ", values: conflictingNewRecordBindingIds)}]"
             );
         }
         return null;
@@ -206,7 +216,7 @@ class NoRecursiveNewRecordScreenBindingsRule : AbstractModelElementRuleAttribute
     private IEnumerable<PanelControlSet> FindScreenSections(ControlSetItem controlSetItem)
     {
         var dependencies = new List<ISchemaItem>();
-        controlSetItem.GetExtraDependencies(dependencies);
+        controlSetItem.GetExtraDependencies(dependencies: dependencies);
         return dependencies.OfType<PanelControlSet>();
     }
 
@@ -218,18 +228,18 @@ class NoRecursiveNewRecordScreenBindingsRule : AbstractModelElementRuleAttribute
         }
         return panelControlSet
             .ChildrenRecursive.OfType<ControlSetItem>()
-            .Where(item => item.Name == "AsCombo");
+            .Where(predicate: item => item.Name == "AsCombo");
     }
 
     private IEnumerable<IDataLookup> GetLookups(ControlSetItem comboBox)
     {
         var dependencies = new List<ISchemaItem>();
-        comboBox.GetExtraDependencies(dependencies);
+        comboBox.GetExtraDependencies(dependencies: dependencies);
         return dependencies.OfType<IDataLookup>();
     }
 
     public override Exception CheckRule(object instance, string memberName)
     {
-        return CheckRule(instance);
+        return CheckRule(instance: instance);
     }
 }

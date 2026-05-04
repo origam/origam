@@ -37,7 +37,7 @@ public class ShowSqlConsoleMenuBuilder : ISubmenuBuilder
         {
             foreach (var platform in settings.GetAllPlatforms())
             {
-                CreateMenuItem(list, platform);
+                CreateMenuItem(list: list, platform: platform);
             }
         }
         return list.ToArray();
@@ -58,9 +58,9 @@ public class ShowSqlConsoleMenuBuilder : ISubmenuBuilder
     private void CreateMenuItem(List<AsMenuCommand> list, Platform platform)
     {
         SqlConsoleParameters parameters = new SqlConsoleParameters { Platform = platform };
-        ShowSqlConsole command = new ShowSqlConsole(parameters);
-        AsMenuCommand menuItem = new AsMenuCommand(platform.Name, command);
+        ShowSqlConsole command = new ShowSqlConsole(owner: parameters);
+        AsMenuCommand menuItem = new AsMenuCommand(label: platform.Name, menuCommand: command);
         menuItem.Click += new EventHandler(MenuItemClick);
-        list.Add(menuItem);
+        list.Add(item: menuItem);
     }
 }

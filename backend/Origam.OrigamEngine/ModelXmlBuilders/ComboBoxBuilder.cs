@@ -43,13 +43,18 @@ public class ComboBoxBuilder
         DataTable table
     )
     {
-        propertyElement.SetAttribute("Entity", "String");
-        propertyElement.SetAttribute("Column", "ComboBox");
+        propertyElement.SetAttribute(name: "Entity", value: "String");
+        propertyElement.SetAttribute(name: "Column", value: "ComboBox");
         propertyElement.SetAttribute(
-            "DropDownShowUniqueValues",
-            XmlConvert.ToString(showUniqueValues)
+            name: "DropDownShowUniqueValues",
+            value: XmlConvert.ToString(value: showUniqueValues)
         );
-        BuildCommonDropdown(propertyElement, lookupId, bindingMember, table);
+        BuildCommonDropdown(
+            propertyElement: propertyElement,
+            lookupId: lookupId,
+            bindingMember: bindingMember,
+            table: table
+        );
     }
 
     public static void BuildCommonDropdown(
@@ -62,7 +67,7 @@ public class ComboBoxBuilder
         if (lookupId == Guid.Empty)
         {
             throw new Exception(
-                "Lookup not set for a DropDown widget bound to the field "
+                message: "Lookup not set for a DropDown widget bound to the field "
                     + table.TableName
                     + "."
                     + bindingMember
@@ -70,41 +75,53 @@ public class ComboBoxBuilder
         }
         bool useCache = true;
         IPersistenceService persistence =
-            ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+            ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+            as IPersistenceService;
         DataServiceDataLookup lookup =
             persistence.SchemaProvider.RetrieveInstance(
-                typeof(DataServiceDataLookup),
-                new ModelElementKey(lookupId)
+                type: typeof(DataServiceDataLookup),
+                primaryKey: new ModelElementKey(id: lookupId)
             ) as DataServiceDataLookup;
-        DatasetGenerator gen = new DatasetGenerator(true);
-        DataSet comboListDataset = gen.CreateDataSet(lookup.ListDataStructure);
+        DatasetGenerator gen = new DatasetGenerator(userDefinedParameters: true);
+        DataSet comboListDataset = gen.CreateDataSet(ds: lookup.ListDataStructure);
         DataTable comboListTable = comboListDataset.Tables[
-            (
+            name: (
                 lookup.ListDataStructure.ChildItemsByType<DataStructureEntity>(
-                    DataStructureEntity.CategoryConst
-                )[0]
+                    itemType: DataStructureEntity.CategoryConst
+                )[index: 0]
             ).Name
         ];
-        propertyElement.SetAttribute("LookupId", lookupId.ToString());
-        propertyElement.SetAttribute("Identifier", lookup.ListValueMember);
+        propertyElement.SetAttribute(name: "LookupId", value: lookupId.ToString());
+        propertyElement.SetAttribute(name: "Identifier", value: lookup.ListValueMember);
         propertyElement.SetAttribute(
-            "IdentifierIndex",
-            comboListTable.Columns[lookup.ListValueMember].Ordinal.ToString()
-        );
-        propertyElement.SetAttribute("EntityName", lookupId.ToString().Replace("-", "_"));
-        propertyElement.SetAttribute("IsTree", XmlConvert.ToString(lookup.IsTree));
-        propertyElement.SetAttribute(
-            "AllowReturnToForm",
-            XmlConvert.ToString(lookup.ListMethod == null || lookup.AlwaysAllowReturnToForm)
+            name: "IdentifierIndex",
+            value: comboListTable.Columns[name: lookup.ListValueMember].Ordinal.ToString()
         );
         propertyElement.SetAttribute(
-            "SearchByFirstColumnOnly",
-            XmlConvert.ToString(lookup.SearchByFirstColumnOnly)
+            name: "EntityName",
+            value: lookupId.ToString().Replace(oldValue: "-", newValue: "_")
         );
-        propertyElement.SetAttribute("AutoSort", XmlConvert.ToString(lookup.ListSortSet == null));
         propertyElement.SetAttribute(
-            "SupportsServerSideSorting",
-            XmlConvert.ToString(lookup.ValueMethod is DataStructureFilterSet)
+            name: "IsTree",
+            value: XmlConvert.ToString(value: lookup.IsTree)
+        );
+        propertyElement.SetAttribute(
+            name: "AllowReturnToForm",
+            value: XmlConvert.ToString(
+                value: lookup.ListMethod == null || lookup.AlwaysAllowReturnToForm
+            )
+        );
+        propertyElement.SetAttribute(
+            name: "SearchByFirstColumnOnly",
+            value: XmlConvert.ToString(value: lookup.SearchByFirstColumnOnly)
+        );
+        propertyElement.SetAttribute(
+            name: "AutoSort",
+            value: XmlConvert.ToString(value: lookup.ListSortSet == null)
+        );
+        propertyElement.SetAttribute(
+            name: "SupportsServerSideSorting",
+            value: XmlConvert.ToString(value: lookup.ValueMethod is DataStructureFilterSet)
         );
         string dropDownType = "EagerlyLoadedGrid";
         if (lookup.IsTree && lookup.IsFilteredServerside)
@@ -119,47 +136,53 @@ public class ComboBoxBuilder
         {
             dropDownType = "LazilyLoadedGrid";
         }
-        propertyElement.SetAttribute("DropDownType", dropDownType);
+        propertyElement.SetAttribute(name: "DropDownType", value: dropDownType);
         if (lookup.HasTooltip)
         {
-            propertyElement.SetAttribute("HasTooltip", XmlConvert.ToString(true));
+            propertyElement.SetAttribute(
+                name: "HasTooltip",
+                value: XmlConvert.ToString(value: true)
+            );
         }
         if (lookup.IsTree)
         {
-            propertyElement.SetAttribute("ParentIdProperty", lookup.TreeParentMember);
-            propertyElement.SetAttribute("NameProperty", lookup.ListDisplayMember);
+            propertyElement.SetAttribute(name: "ParentIdProperty", value: lookup.TreeParentMember);
+            propertyElement.SetAttribute(name: "NameProperty", value: lookup.ListDisplayMember);
             propertyElement.SetAttribute(
-                "ParentIdPropertyIndex",
-                comboListTable.Columns[lookup.TreeParentMember].Ordinal.ToString()
+                name: "ParentIdPropertyIndex",
+                value: comboListTable.Columns[name: lookup.TreeParentMember].Ordinal.ToString()
             );
             propertyElement.SetAttribute(
-                "NamePropertyIndex",
-                comboListTable.Columns[lookup.ListDisplayMember].Ordinal.ToString()
+                name: "NamePropertyIndex",
+                value: comboListTable.Columns[name: lookup.ListDisplayMember].Ordinal.ToString()
             );
         }
         else
         {
             XmlElement comboListColumnsElement = propertyElement.OwnerDocument.CreateElement(
-                "DropDownColumns"
+                name: "DropDownColumns"
             );
-            propertyElement.AppendChild(comboListColumnsElement);
-            foreach (string comboColumn in lookup.ListDisplayMember.Split(";".ToCharArray()))
+            propertyElement.AppendChild(newChild: comboListColumnsElement);
+            foreach (
+                string comboColumn in lookup.ListDisplayMember.Split(separator: ";".ToCharArray())
+            )
             {
-                DataColumn dataColumn = comboListTable.Columns[comboColumn];
+                DataColumn dataColumn = comboListTable.Columns[name: comboColumn];
                 if (dataColumn == null)
                 {
                     throw new ArgumentOutOfRangeException(
-                        "comboColumn",
-                        comboColumn,
-                        "Field not found for the dropdown list column. Lookup: " + lookup.Path
+                        paramName: "comboColumn",
+                        actualValue: comboColumn,
+                        message: "Field not found for the dropdown list column. Lookup: "
+                            + lookup.Path
                     );
                 }
                 OrigamDataType origamType = (OrigamDataType)
-                    dataColumn.ExtendedProperties["OrigamDataType"];
+                    dataColumn.ExtendedProperties[key: "OrigamDataType"];
                 XmlElement comboColumnElement = propertyElement.OwnerDocument.CreateElement(
-                    "Property"
+                    name: "Property"
                 );
-                comboListColumnsElement.AppendChild(comboColumnElement);
+                comboListColumnsElement.AppendChild(newChild: comboColumnElement);
                 string targetColumn = "Text";
                 string targetEntity = "String";
                 string formatPattern = "";
@@ -190,25 +213,28 @@ public class ComboBoxBuilder
                         break;
                     }
                 }
-                comboColumnElement.SetAttribute("Id", comboColumn);
-                comboColumnElement.SetAttribute("Name", dataColumn.Caption);
-                comboColumnElement.SetAttribute("Entity", targetEntity);
-                comboColumnElement.SetAttribute("Column", targetColumn);
+                comboColumnElement.SetAttribute(name: "Id", value: comboColumn);
+                comboColumnElement.SetAttribute(name: "Name", value: dataColumn.Caption);
+                comboColumnElement.SetAttribute(name: "Entity", value: targetEntity);
+                comboColumnElement.SetAttribute(name: "Column", value: targetColumn);
                 if (formatPattern != "")
                 {
-                    comboColumnElement.SetAttribute("FormatterPattern", formatPattern);
+                    comboColumnElement.SetAttribute(name: "FormatterPattern", value: formatPattern);
                 }
 
-                comboColumnElement.SetAttribute("Index", dataColumn.Ordinal.ToString());
+                comboColumnElement.SetAttribute(
+                    name: "Index",
+                    value: dataColumn.Ordinal.ToString()
+                );
             }
         }
         if (table != null)
         {
             // set caching policy
-            DataColumn column = table.Columns[bindingMember];
+            DataColumn column = table.Columns[name: bindingMember];
             if (
-                column.ExtendedProperties.Contains("IsState")
-                && (bool)column.ExtendedProperties["IsState"] == true
+                column.ExtendedProperties.Contains(key: "IsState")
+                && (bool)column.ExtendedProperties[key: "IsState"] == true
             )
             {
                 useCache = false;
@@ -217,42 +243,42 @@ public class ComboBoxBuilder
 
         var dataLookupService = ServiceManager.Services.GetService<DataLookupService>();
         NewRecordScreenBinding newRecordScreenBinding = dataLookupService.GetNewRecordScreenBinding(
-            lookup
+            lookup: lookup
         );
         if (newRecordScreenBinding != null)
         {
             XmlElement newRecordElement = propertyElement.OwnerDocument.CreateElement(
-                "NewRecordScreen"
+                name: "NewRecordScreen"
             );
             newRecordElement.SetAttribute(
-                "Width",
-                XmlConvert.ToString(newRecordScreenBinding.DialogWidth)
+                name: "Width",
+                value: XmlConvert.ToString(value: newRecordScreenBinding.DialogWidth)
             );
             newRecordElement.SetAttribute(
-                "Height",
-                XmlConvert.ToString(newRecordScreenBinding.DialogHeight)
+                name: "Height",
+                value: XmlConvert.ToString(value: newRecordScreenBinding.DialogHeight)
             );
             newRecordElement.SetAttribute(
-                "MenuItemId",
-                XmlConvert.ToString(newRecordScreenBinding.MenuItemId)
+                name: "MenuItemId",
+                value: XmlConvert.ToString(value: newRecordScreenBinding.MenuItemId)
             );
-            propertyElement.AppendChild(newRecordElement);
+            propertyElement.AppendChild(newChild: newRecordElement);
             foreach (var parameterMapping in newRecordScreenBinding.GetParameterMappings())
             {
                 XmlElement parameterMappingElement = newRecordElement.OwnerDocument.CreateElement(
-                    "ParameterMapping"
+                    name: "ParameterMapping"
                 );
                 parameterMappingElement.SetAttribute(
-                    "ParameterName",
-                    parameterMapping.ParameterName
+                    name: "ParameterName",
+                    value: parameterMapping.ParameterName
                 );
                 parameterMappingElement.SetAttribute(
-                    "TargetRootEntityField",
-                    parameterMapping.TargetRootEntityField
+                    name: "TargetRootEntityField",
+                    value: parameterMapping.TargetRootEntityField
                 );
-                newRecordElement.AppendChild(parameterMappingElement);
+                newRecordElement.AppendChild(newChild: parameterMappingElement);
             }
         }
-        propertyElement.SetAttribute("Cached", XmlConvert.ToString(useCache));
+        propertyElement.SetAttribute(name: "Cached", value: XmlConvert.ToString(value: useCache));
     }
 }

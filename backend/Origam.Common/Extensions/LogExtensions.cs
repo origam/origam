@@ -41,40 +41,46 @@ public static class LogExtensions
         }
         catch (Exception ex)
         {
-            log.LogOrigamError(ex);
+            log.LogOrigamError(ex: ex);
         }
     }
 
     // This method prevents multiple logging of workflow exceptions.
     public static void LogOrigamError(this ILog log, string message, Exception ex)
     {
-        if (ex.Data.Contains(IsLoggedKey) && Equals(ex.Data[IsLoggedKey], true))
+        if (
+            ex.Data.Contains(key: IsLoggedKey)
+            && Equals(objA: ex.Data[key: IsLoggedKey], objB: true)
+        )
         {
             return;
         }
         if (ex is RuleException && log.IsDebugEnabled)
         {
-            log.Debug(message, ex);
+            log.Debug(message: message, exception: ex);
         }
         else if (log.IsErrorEnabled)
         {
-            log.Error(message, ex);
+            log.Error(message: message, exception: ex);
         }
-        ex.Data[IsLoggedKey] = true;
+        ex.Data[key: IsLoggedKey] = true;
     }
 
     public static void LogOrigamError(this ILog log, Exception ex)
     {
-        if (ex.Data.Contains(IsLoggedKey) && Equals(ex.Data[IsLoggedKey], true))
+        if (
+            ex.Data.Contains(key: IsLoggedKey)
+            && Equals(objA: ex.Data[key: IsLoggedKey], objB: true)
+        )
         {
             return;
         }
 
         if (log.IsErrorEnabled)
         {
-            log.Error(ex);
+            log.Error(message: ex);
         }
-        ex.Data[IsLoggedKey] = true;
+        ex.Data[key: IsLoggedKey] = true;
     }
 }
 
@@ -83,13 +89,13 @@ public static class ILoggerExtensions
     public static void LogOrigamError(this ILogger log, Exception ex, string message)
     {
         if (
-            ex.Data.Contains(LogExtensions.IsLoggedKey)
-            && Equals(ex.Data[LogExtensions.IsLoggedKey], true)
+            ex.Data.Contains(key: LogExtensions.IsLoggedKey)
+            && Equals(objA: ex.Data[key: LogExtensions.IsLoggedKey], objB: true)
         )
         {
             return;
         }
-        log.LogError(ex, message);
-        ex.Data[LogExtensions.IsLoggedKey] = true;
+        log.LogError(exception: ex, message: message);
+        ex.Data[key: LogExtensions.IsLoggedKey] = true;
     }
 }

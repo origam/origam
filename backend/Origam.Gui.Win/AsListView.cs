@@ -59,7 +59,7 @@ namespace Origam.Gui.Win;
 /// certainly be a better idea to look at the various professional
 /// bindable grid controls on the market.</p>
 /// </remarks>
-[ToolboxBitmap(typeof(System.Windows.Forms.ListView), "System.Windows.Forms.ListView.bmp")]
+[ToolboxBitmap(t: typeof(System.Windows.Forms.ListView), name: "System.Windows.Forms.ListView.bmp")]
 public class AsListView : System.Windows.Forms.ListView, IAsDataConsumer
 {
     public AsListView()
@@ -76,16 +76,16 @@ public class AsListView : System.Windows.Forms.ListView, IAsDataConsumer
     private static readonly object EventListChanged = null;
     public event EventHandler ListChanged
     {
-        add { base.Events.AddHandler(EventListChanged, value); }
-        remove { base.Events.RemoveHandler(EventListChanged, value); }
+        add { base.Events.AddHandler(key: EventListChanged, value: value); }
+        remove { base.Events.RemoveHandler(key: EventListChanged, value: value); }
     }
 
     public void OnListChanged()
     {
-        EventHandler handler = base.Events[EventListChanged] as EventHandler;
+        EventHandler handler = base.Events[key: EventListChanged] as EventHandler;
         if (handler != null)
         {
-            handler(this, EventArgs.Empty);
+            handler(sender: this, e: EventArgs.Empty);
         }
     }
 
@@ -93,14 +93,14 @@ public class AsListView : System.Windows.Forms.ListView, IAsDataConsumer
     private string _valueMember;
 
     [
-        DefaultValue(""),
+        DefaultValue(value: ""),
         Editor(
-            "System.Windows.Forms.Design.DataMemberListEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
-            typeof(UITypeEditor)
+            typeName: "System.Windows.Forms.Design.DataMemberListEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+            baseType: typeof(UITypeEditor)
         ),
-        RefreshProperties(RefreshProperties.Repaint),
-        Category("Data"),
-        Description("Data member of the listview.")
+        RefreshProperties(refresh: RefreshProperties.Repaint),
+        Category(category: "Data"),
+        Description(description: "Data member of the listview.")
     ]
     public string ColumnNames
     {
@@ -109,7 +109,7 @@ public class AsListView : System.Windows.Forms.ListView, IAsDataConsumer
     }
     private string[] ColumnList
     {
-        get { return this.ColumnNames.Split(";".ToCharArray()); }
+        get { return this.ColumnNames.Split(separator: ";".ToCharArray()); }
     }
     private bool ValueMemberDisplayed
     {
@@ -129,7 +129,7 @@ public class AsListView : System.Windows.Forms.ListView, IAsDataConsumer
     }
     private bool _handleItemChanged = true;
 
-    [DefaultValue(true)]
+    [DefaultValue(value: true)]
     public bool HandleItemChanged
     {
         get { return _handleItemChanged; }
@@ -151,7 +151,8 @@ public class AsListView : System.Windows.Forms.ListView, IAsDataConsumer
 
             if (m_currencyManager.Position >= 0)
             {
-                return m_properties[this.ValueMember].GetValue(m_currencyManager.Current);
+                return m_properties[name: this.ValueMember]
+                    .GetValue(component: m_currencyManager.Current);
             }
 
             return null;
@@ -166,11 +167,13 @@ public class AsListView : System.Windows.Forms.ListView, IAsDataConsumer
             PropertyDescriptor property;
             try
             {
-                property = m_properties[this.ValueMember];
+                property = m_properties[name: this.ValueMember];
             }
             catch
             {
-                throw new Exception("Lookup cannot find value member: " + this.ValueMember);
+                throw new Exception(
+                    message: "Lookup cannot find value member: " + this.ValueMember
+                );
             }
             if (
                 ((property != null) && (m_currencyManager.List is IBindingList))
@@ -178,14 +181,14 @@ public class AsListView : System.Windows.Forms.ListView, IAsDataConsumer
             )
             {
                 m_currencyManager.Position = ((IBindingList)m_currencyManager.List).Find(
-                    property,
-                    value
+                    property: property,
+                    key: value
                 );
             }
             for (int i = 0; i < m_currencyManager.Count; i++)
             {
-                object obj = property.GetValue(m_currencyManager.List[i]);
-                if (value.Equals(obj))
+                object obj = property.GetValue(component: m_currencyManager.List[index: i]);
+                if (value.Equals(obj: obj))
                 {
                     m_currencyManager.Position = i;
                     return;
@@ -212,8 +215,8 @@ public class AsListView : System.Windows.Forms.ListView, IAsDataConsumer
     /// DataSource refers to a list, since <see cref="DataMember"/> can
     /// also be used to navigate relations between lists.</p>
     /// </remarks>
-    [Category("Data")]
-    [TypeConverter("System.Windows.Forms.Design.DataSourceConverter, System.Design")]
+    [Category(category: "Data")]
+    [TypeConverter(typeName: "System.Windows.Forms.Design.DataSourceConverter, System.Design")]
     public object DataSource
     {
         get { return m_dataSource; }
@@ -224,11 +227,13 @@ public class AsListView : System.Windows.Forms.ListView, IAsDataConsumer
                 // Must be either a list or a list source
                 if (value != null && !(value is IList) && !(value is IListSource))
                 {
-                    throw new ArgumentException(ResourceUtils.GetString("ErrorDataSourceIList"));
+                    throw new ArgumentException(
+                        message: ResourceUtils.GetString(key: "ErrorDataSourceIList")
+                    );
                 }
                 m_dataSource = value;
                 SetDataBinding();
-                OnDataSourceChanged(EventArgs.Empty);
+                OnDataSourceChanged(e: EventArgs.Empty);
             }
         }
     }
@@ -248,7 +253,7 @@ public class AsListView : System.Windows.Forms.ListView, IAsDataConsumer
     {
         if (DataSourceChanged != null)
         {
-            DataSourceChanged(this, e);
+            DataSourceChanged(sender: this, e: e);
         }
     }
 
@@ -267,10 +272,10 @@ public class AsListView : System.Windows.Forms.ListView, IAsDataConsumer
     /// this control to display only those rows in the child table related
     /// to the currently selected row in the parent table.</p>
     /// </remarks>
-    [Category("Data")]
+    [Category(category: "Data")]
     [Editor(
-        "System.Windows.Forms.Design.DataMemberListEditor, System.Design",
-        typeof(System.Drawing.Design.UITypeEditor)
+        typeName: "System.Windows.Forms.Design.DataMemberListEditor, System.Design",
+        baseType: typeof(System.Drawing.Design.UITypeEditor)
     )]
     public string DataMember
     {
@@ -281,7 +286,7 @@ public class AsListView : System.Windows.Forms.ListView, IAsDataConsumer
             {
                 m_DataMember = value;
                 SetDataBinding();
-                OnDataMemberChanged(EventArgs.Empty);
+                OnDataMemberChanged(e: EventArgs.Empty);
             }
         }
     }
@@ -301,7 +306,7 @@ public class AsListView : System.Windows.Forms.ListView, IAsDataConsumer
     {
         if (DataMemberChanged != null)
         {
-            DataMemberChanged(this, e);
+            DataMemberChanged(sender: this, e: e);
         }
     }
 
@@ -312,7 +317,7 @@ public class AsListView : System.Windows.Forms.ListView, IAsDataConsumer
     /// of the BindingContextChanged event.</param>
     protected override void OnBindingContextChanged(EventArgs e)
     {
-        base.OnBindingContextChanged(e);
+        base.OnBindingContextChanged(e: e);
         // If our binding context changes, we must rebind, since we will
         // have a new currency managers, even if we are still bound to the
         // same data source.
@@ -325,7 +330,7 @@ public class AsListView : System.Windows.Forms.ListView, IAsDataConsumer
     /// <param name="e">Unused EventArgs.</param>
     protected override void OnParentBindingContextChanged(EventArgs e)
     {
-        base.OnParentBindingContextChanged(e);
+        base.OnParentBindingContextChanged(e: e);
         // BindingContext is an ambient property - by default it simply picks
         // up the parent control's context (unless something has explicitly
         // given us our own). So we must respond to changes in our parent's
@@ -350,7 +355,8 @@ public class AsListView : System.Windows.Forms.ListView, IAsDataConsumer
             IBindingList bindingList = null;
             if (DataSource != null)
             {
-                currencyManager = (CurrencyManager)BindingContext[DataSource, DataMember];
+                currencyManager = (CurrencyManager)
+                    BindingContext[dataSource: DataSource, dataMember: DataMember];
                 if (currencyManager != null)
                 {
                     bindingList = currencyManager.List as IBindingList;
@@ -430,7 +436,7 @@ public class AsListView : System.Windows.Forms.ListView, IAsDataConsumer
             if (reloadMetaData)
             {
                 bool setDefaultWidth = !(reloadItems && bindingList.Count > 0);
-                LoadColumnsFromSource(setDefaultWidth);
+                LoadColumnsFromSource(setDefaultWidth: setDefaultWidth);
             }
             // If a change occurred that means the set of items to be
             // shown in the list may have changed, reload those.
@@ -477,7 +483,7 @@ public class AsListView : System.Windows.Forms.ListView, IAsDataConsumer
                     }
                 }
             }
-            m_properties = new PropertyDescriptorCollection(arr);
+            m_properties = new PropertyDescriptorCollection(properties: arr);
 
             //m_properties = m_currencyManager.GetItemProperties();
             // Build new column headers for the ListView.
@@ -485,9 +491,9 @@ public class AsListView : System.Windows.Forms.ListView, IAsDataConsumer
             Columns.Clear();
             for (int column = 0; column < m_properties.Count; ++column)
             {
-                if (m_properties[column] != null)
+                if (m_properties[index: column] != null)
                 {
-                    string columnName = m_properties[column].Name;
+                    string columnName = m_properties[index: column].Name;
                     if (columnName != ValueMember | ValueMemberDisplayed)
                     {
                         string humanColumnName = columnName;
@@ -498,12 +504,12 @@ public class AsListView : System.Windows.Forms.ListView, IAsDataConsumer
                             {
                                 humanColumnName = (this.DataSource as DataSet)
                                     .Tables[
-                                        FormTools.FindTableByDataMember(
-                                            this.DataSource as DataSet,
-                                            this.DataMember
+                                        name: FormTools.FindTableByDataMember(
+                                            ds: this.DataSource as DataSet,
+                                            member: this.DataMember
                                         )
                                     ]
-                                    .Columns[columnName]
+                                    .Columns[name: columnName]
                                     .Caption;
                             }
                             catch (Exception)
@@ -515,20 +521,20 @@ public class AsListView : System.Windows.Forms.ListView, IAsDataConsumer
                         {
                             humanColumnName = (this.DataSource as DataView)
                                 .Table
-                                .Columns[columnName]
+                                .Columns[name: columnName]
                                 .Caption;
                         }
                         HorizontalAlignment alignment = HorizontalAlignment.Left;
                         if (
-                            m_properties[column].PropertyType == typeof(System.Single)
-                            | m_properties[column].PropertyType == typeof(System.Decimal)
-                            | m_properties[column].PropertyType == typeof(System.Int32)
-                            | m_properties[column].PropertyType == typeof(long)
+                            m_properties[index: column].PropertyType == typeof(System.Single)
+                            | m_properties[index: column].PropertyType == typeof(System.Decimal)
+                            | m_properties[index: column].PropertyType == typeof(System.Int32)
+                            | m_properties[index: column].PropertyType == typeof(long)
                         )
                         {
                             alignment = HorizontalAlignment.Right;
                         }
-                        Columns.Add(humanColumnName, 0, alignment);
+                        Columns.Add(text: humanColumnName, width: 0, textAlign: alignment);
                     }
                 }
             }
@@ -567,31 +573,34 @@ public class AsListView : System.Windows.Forms.ListView, IAsDataConsumer
             int nItems = items.Count;
             for (int i = 0; i < nItems; ++i)
             {
-                if (!(items[i] is DataRowView && (items[i] as DataRowView).IsNew)) // skip new datarowview
+                if (!(items[index: i] is DataRowView && (items[index: i] as DataRowView).IsNew)) // skip new datarowview
                 {
-                    Items.Add(BuildItemForRow(items[i]));
+                    Items.Add(value: BuildItemForRow(row: items[index: i]));
                 }
             }
             int index = m_currencyManager.Position;
             if (index != -1)
             {
-                SetSelectedIndex(index);
+                SetSelectedIndex(index: index);
             }
             // We set the width to be -1 in order to auto-size the column
             // to the longest column text.
             for (int headerIndex = 0; headerIndex < this.Columns.Count; headerIndex++)
             {
                 bool sizeByText = false;
-                ColumnHeader header = this.Columns[headerIndex];
+                ColumnHeader header = this.Columns[index: headerIndex];
                 float headerSize = Graphics
-                    .FromHwnd(this.Handle)
-                    .MeasureString(header.Text, this.Font)
+                    .FromHwnd(hwnd: this.Handle)
+                    .MeasureString(text: header.Text, font: this.Font)
                     .Width;
                 foreach (ListViewItem item in this.Items)
                 {
                     float textSize = Graphics
-                        .FromHwnd(this.Handle)
-                        .MeasureString(item.SubItems[headerIndex].Text, this.Font)
+                        .FromHwnd(hwnd: this.Handle)
+                        .MeasureString(
+                            text: item.SubItems[index: headerIndex].Text,
+                            font: this.Font
+                        )
                         .Width;
                     if (textSize > headerSize)
                     {
@@ -631,10 +640,10 @@ public class AsListView : System.Windows.Forms.ListView, IAsDataConsumer
         {
             // Use the PropertyDescriptors to extract the property value -
             // this might be a virtual property.
-            PropertyDescriptor pd = m_properties[column];
+            PropertyDescriptor pd = m_properties[index: column];
             if (pd != null)
             {
-                object columnValue = pd.GetValue(row);
+                object columnValue = pd.GetValue(component: row);
                 DateTime dateValue = DateTime.MinValue;
                 if (columnValue is DateTime)
                 {
@@ -654,7 +663,7 @@ public class AsListView : System.Windows.Forms.ListView, IAsDataConsumer
                 }
             }
         }
-        return new ListViewItem(itemText);
+        return new ListViewItem(items: itemText);
     }
 
     // IBindingList ListChanged event handler. Deals with fine-grained
@@ -673,16 +682,16 @@ public class AsListView : System.Windows.Forms.ListView, IAsDataConsumer
             // A single item has changed, so just rebuild that.
             case ListChangedType.ItemChanged:
             {
-                object changedRow = m_currencyManager.List[e.NewIndex];
+                object changedRow = m_currencyManager.List[index: e.NewIndex];
                 BeginUpdate();
-                Items[e.NewIndex] = BuildItemForRow(changedRow);
+                Items[index: e.NewIndex] = BuildItemForRow(row: changedRow);
                 EndUpdate();
                 break;
             }
             // A new item has appeared, so add that.
             case ListChangedType.ItemAdded:
             {
-                object newRow = m_currencyManager.List[e.NewIndex];
+                object newRow = m_currencyManager.List[index: e.NewIndex];
                 // We get this event twice if certain grid controls
                 // are used to add a new row to a datatable: once when
                 // the editing of a new row begins, and once again when
@@ -699,7 +708,7 @@ public class AsListView : System.Windows.Forms.ListView, IAsDataConsumer
                     // way, this is the final notification, so we want
                     // to add the new row now!
                     BeginUpdate();
-                    Items.Insert(e.NewIndex, BuildItemForRow(newRow));
+                    Items.Insert(index: e.NewIndex, item: BuildItemForRow(row: newRow));
                     EndUpdate();
                 }
                 break;
@@ -709,7 +718,7 @@ public class AsListView : System.Windows.Forms.ListView, IAsDataConsumer
             {
                 if (e.NewIndex < Items.Count)
                 {
-                    Items.RemoveAt(e.NewIndex);
+                    Items.RemoveAt(index: e.NewIndex);
                 }
                 break;
             }
@@ -717,9 +726,9 @@ public class AsListView : System.Windows.Forms.ListView, IAsDataConsumer
             case ListChangedType.ItemMoved:
             {
                 BeginUpdate();
-                ListViewItem moving = Items[e.OldIndex];
-                Items.Insert(e.NewIndex, moving.Clone() as ListViewItem);
-                Items.Remove(moving);
+                ListViewItem moving = Items[index: e.OldIndex];
+                Items.Insert(index: e.NewIndex, item: moving.Clone() as ListViewItem);
+                Items.Remove(item: moving);
                 EndUpdate();
                 break;
             }
@@ -732,7 +741,7 @@ public class AsListView : System.Windows.Forms.ListView, IAsDataConsumer
             case ListChangedType.PropertyDescriptorChanged:
             case ListChangedType.PropertyDescriptorDeleted:
             {
-                LoadColumnsFromSource(true);
+                LoadColumnsFromSource(setDefaultWidth: true);
                 LoadItemsFromSource();
                 break;
             }
@@ -743,7 +752,7 @@ public class AsListView : System.Windows.Forms.ListView, IAsDataConsumer
     // different. We just reload everything.
     private void currencyManager_MetaDataChanged(object sender, EventArgs e)
     {
-        LoadColumnsFromSource(true);
+        LoadColumnsFromSource(setDefaultWidth: true);
         LoadItemsFromSource();
     }
 
@@ -752,7 +761,7 @@ public class AsListView : System.Windows.Forms.ListView, IAsDataConsumer
     // with any other controls bound to the same source.
     private void currencyManager_PositionChanged(object sender, EventArgs e)
     {
-        SetSelectedIndex(m_currencyManager.Position);
+        SetSelectedIndex(index: m_currencyManager.Position);
     }
 
     // Change the currently-selected item. (I'm sure I'm missing a simpler
@@ -774,7 +783,7 @@ public class AsListView : System.Windows.Forms.ListView, IAsDataConsumer
             SelectedItems.Clear();
             if (index != -1 && Items.Count > index)
             {
-                ListViewItem item = Items[index];
+                ListViewItem item = Items[index: index];
                 item.Selected = true;
                 item.EnsureVisible();
             }
@@ -793,7 +802,7 @@ public class AsListView : System.Windows.Forms.ListView, IAsDataConsumer
     // case we avoid notifying the CurrencyManager back!
     protected override void OnSelectedIndexChanged(EventArgs e)
     {
-        base.OnSelectedIndexChanged(e);
+        base.OnSelectedIndexChanged(e: e);
         // Did this originate from us, or was this caused by the
         // CurrencyManager in the first place. If we're sure it was us,
         // and there is actually a selected item (this event is also raised
@@ -802,7 +811,7 @@ public class AsListView : System.Windows.Forms.ListView, IAsDataConsumer
         // to a data source), then we notify the CurrencyManager.
         if (!m_changingIndex && SelectedIndices.Count > 0 && m_currencyManager != null)
         {
-            m_currencyManager.Position = SelectedIndices[0];
+            m_currencyManager.Position = SelectedIndices[index: 0];
         }
     }
 
@@ -834,7 +843,7 @@ public class AsListView : System.Windows.Forms.ListView, IAsDataConsumer
             // ...but before we reload all items from source, we also look
             // to see if the list we're supposed to bind to has changed
             // since last time, and if it has, reattach our event handlers.
-            if (!object.ReferenceEquals(m_bindingList, m_currencyManager.List))
+            if (!object.ReferenceEquals(objA: m_bindingList, objB: m_currencyManager.List))
             {
                 m_bindingList.ListChanged -= new ListChangedEventHandler(bindingList_ListChanged);
                 m_bindingList = m_currencyManager.List as IBindingList;

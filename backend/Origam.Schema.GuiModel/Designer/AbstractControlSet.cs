@@ -29,10 +29,10 @@ public abstract class AbstractControlSet : AbstractSchemaItem, IControlSet
     public AbstractControlSet() { }
 
     public AbstractControlSet(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public AbstractControlSet(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     public Guid DataSourceId;
     public BrowserNodeCollection Alternatives
@@ -40,11 +40,13 @@ public abstract class AbstractControlSet : AbstractSchemaItem, IControlSet
         get
         {
             var result = new BrowserNodeCollection();
-            foreach (var item in ChildItemsByType<ControlSetItem>(ControlSetItem.CategoryConst))
+            foreach (
+                var item in ChildItemsByType<ControlSetItem>(itemType: ControlSetItem.CategoryConst)
+            )
             {
                 if (item.IsAlternative)
                 {
-                    result.Add(item);
+                    result.Add(value: item);
                 }
             }
             return result;
@@ -54,14 +56,16 @@ public abstract class AbstractControlSet : AbstractSchemaItem, IControlSet
     {
         get
         {
-            foreach (var item in ChildItemsByType<ControlSetItem>(ControlSetItem.CategoryConst))
+            foreach (
+                var item in ChildItemsByType<ControlSetItem>(itemType: ControlSetItem.CategoryConst)
+            )
             {
                 if (!item.IsAlternative)
                 {
                     return item;
                 }
             }
-            throw new Exception($"Main item was not found for a control set {Path}");
+            throw new Exception(message: $"Main item was not found for a control set {Path}");
         }
     }
     #region ISchemaItemFactory Members
@@ -70,9 +74,9 @@ public abstract class AbstractControlSet : AbstractSchemaItem, IControlSet
     public override T NewItem<T>(Guid schemaExtensionId, SchemaItemGroup group)
     {
         return base.NewItem<T>(
-            schemaExtensionId,
-            group,
-            typeof(T) == typeof(ControlSetItem) ? "NewComponent" : null
+            schemaExtensionId: schemaExtensionId,
+            group: group,
+            itemName: typeof(T) == typeof(ControlSetItem) ? "NewComponent" : null
         );
     }
 

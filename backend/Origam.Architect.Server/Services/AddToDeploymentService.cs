@@ -37,22 +37,22 @@ public class AddToDeploymentService(
 {
     public void Process(string platform, Guid deploymentVersionId, List<Guid> schemaItemIdList)
     {
-        Platform platformParsed = platformResolveService.Resolve(platform);
+        Platform platformParsed = platformResolveService.Resolve(requestedPlatformName: platform);
 
         var targetVersion = persistenceService.SchemaProvider.RetrieveInstance<DeploymentVersion>(
-            deploymentVersionId,
+            instanceId: deploymentVersionId,
             useCache: false
         );
         if (targetVersion is null)
         {
-            throw new Exception("DeploymentVersion is not found.");
+            throw new Exception(message: "DeploymentVersion is not found.");
         }
 
         var selectedResults = schemaDbCompareResultsService.GetByIds(
-            schemaItemIdList,
-            platformParsed
+            schemaItemIds: schemaItemIdList,
+            platform: platformParsed
         );
-        ProcessAllDeploymentActivities(targetVersion, selectedResults);
+        ProcessAllDeploymentActivities(version: targetVersion, selectedResults: selectedResults);
     }
 
     private void ProcessAllDeploymentActivities(
@@ -63,30 +63,32 @@ public class AddToDeploymentService(
         IService dataService = schemaService
             .GetProvider<ServiceSchemaItemProvider>()
             .ChildItems.Cast<IService>()
-            .FirstOrDefault(service => service.Name == "DataService");
+            .FirstOrDefault(predicate: service => service.Name == "DataService");
 
         foreach (SchemaDbCompareResult result in selectedResults)
         {
             var scripts = new[] { result.Script, result.Script2 };
             foreach (var script in scripts)
             {
-                if (string.IsNullOrEmpty(script))
+                if (string.IsNullOrEmpty(value: script))
                 {
                     continue;
                 }
 
                 var dbType = (DatabaseType)
                     Enum.Parse(
-                        typeof(DatabaseType),
-                        result.Platform.GetParseEnum(result.Platform.DataService)
+                        enumType: typeof(DatabaseType),
+                        value: result.Platform.GetParseEnum(
+                            dataDataService: result.Platform.DataService
+                        )
                     );
 
                 CreateAndPersistActivity(
-                    result.SchemaItem.ModelDescription() + "_" + result.ItemName,
-                    script,
-                    version,
-                    dataService,
-                    dbType
+                    name: result.SchemaItem.ModelDescription() + "_" + result.ItemName,
+                    command: script,
+                    version: version,
+                    dataService: dataService,
+                    databaseType: dbType
                 );
             }
         }
@@ -101,10 +103,13 @@ public class AddToDeploymentService(
     )
     {
         var activity = version.NewItem<ServiceCommandUpdateScriptActivity>(
-            schemaService.ActiveSchemaExtensionId,
-            null
+            schemaExtensionId: schemaService.ActiveSchemaExtensionId,
+            group: null
         );
-        activity.Name = activity.ActivityOrder.ToString("00000") + "_" + name.Replace(" ", "_");
+        activity.Name =
+            activity.ActivityOrder.ToString(format: "00000")
+            + "_"
+            + name.Replace(oldValue: " ", newValue: "_");
         activity.Service = dataService;
         activity.CommandText = command;
         activity.DatabaseType = databaseType;

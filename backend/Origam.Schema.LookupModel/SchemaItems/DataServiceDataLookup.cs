@@ -27,17 +27,17 @@ namespace Origam.Schema.LookupModel;
 /// <summary>
 /// Summary description for DataServiceDataLookup.
 /// </summary>
-[SchemaItemDescription("Data Service Lookup", "icon_lookup.png")]
-[HelpTopic("Lookups")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Data Service Lookup", iconName: "icon_lookup.png")]
+[HelpTopic(topic: "Lookups")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class DataServiceDataLookup : AbstractDataLookup
 {
     public DataServiceDataLookup()
         : base() { }
 
     public DataServiceDataLookup(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(schemaExtensionId: schemaExtensionId) { }
 
     public DataServiceDataLookup(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 }

@@ -35,7 +35,7 @@ namespace Origam.Gui.Win;
 // GDI32.dll and User32.dll refer to ‘msdn.microsoft.com’
 internal class GDI32
 {
-    [DllImport("GDI32.dll")]
+    [DllImport(dllName: "GDI32.dll")]
     public static extern bool BitBlt(
         IntPtr hdcDest, // handle to destination DC
         int nXDest, // x-coord of destination upper-left corner
@@ -48,27 +48,27 @@ internal class GDI32
         System.Int32 dwRop // raster operation code
     );
 
-    [DllImport("GDI32.dll")]
+    [DllImport(dllName: "GDI32.dll")]
     public static extern int CreateCompatibleBitmap(int hdc, int nWidth, int nHeight);
 
-    [DllImport("GDI32.dll")]
+    [DllImport(dllName: "GDI32.dll")]
     public static extern int CreateCompatibleDC(int hdc);
 
-    [DllImport("GDI32.dll")]
+    [DllImport(dllName: "GDI32.dll")]
     public static extern bool DeleteDC(int hdc);
 
-    [DllImport("GDI32.dll")]
+    [DllImport(dllName: "GDI32.dll")]
     public static extern bool DeleteObject(int hObject);
 
-    [DllImport("GDI32.dll")]
+    [DllImport(dllName: "GDI32.dll")]
     public static extern int GetDeviceCaps(int hdc, int nIndex);
 
-    [DllImport("GDI32.dll")]
+    [DllImport(dllName: "GDI32.dll")]
     public static extern int SelectObject(int hdc, int hgdiobj);
 
     internal class User32
     {
-        [StructLayout(LayoutKind.Sequential)]
+        [StructLayout(layoutKind: LayoutKind.Sequential)]
         public struct RECT
         {
             public int left;
@@ -77,16 +77,16 @@ internal class GDI32
             public int bottom;
         }
 
-        [DllImport("user32.dll")]
+        [DllImport(dllName: "user32.dll")]
         public static extern int GetWindowRect(IntPtr hwnd, ref RECT rc);
 
-        [DllImport("User32.dll")]
+        [DllImport(dllName: "User32.dll")]
         public static extern int GetDesktopWindow();
 
-        [DllImport("User32.dll")]
+        [DllImport(dllName: "User32.dll")]
         public static extern IntPtr GetWindowDC(IntPtr hwnd);
 
-        [DllImport("User32.dll")]
+        [DllImport(dllName: "User32.dll")]
         public static extern int ReleaseDC(IntPtr hWnd, int hDC);
     }
 }

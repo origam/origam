@@ -48,30 +48,34 @@ public class AuthorizationController : Microsoft.AspNetCore.Mvc.Controller
         _userManager = userManager;
     }
 
-    [HttpGet("~/connect/authorize")]
+    [HttpGet(template: "~/connect/authorize")]
     public async Task<IActionResult> AuthorizeGet()
     {
         // Authenticate the Identity cookie explicitly (important if default scheme != cookie)
-        var cookieAuth = await HttpContext.AuthenticateAsync(IdentityConstants.ApplicationScheme);
+        var cookieAuth = await HttpContext.AuthenticateAsync(
+            scheme: IdentityConstants.ApplicationScheme
+        );
         if (!cookieAuth.Succeeded)
         {
-            return Challenge(IdentityConstants.ApplicationScheme); // -> /Account/Login
+            return Challenge(authenticationSchemes: IdentityConstants.ApplicationScheme); // -> /Account/Login
         }
 
-        return await HandleAuthorizeAsync(cookieAuth.Principal!);
+        return await HandleAuthorizeAsync(cookiePrincipal: cookieAuth.Principal!);
     }
 
     [ValidateAntiForgeryToken]
-    [HttpPost("~/connect/authorize")]
+    [HttpPost(template: "~/connect/authorize")]
     public async Task<IActionResult> AuthorizePost()
     {
-        var cookieAuth = await HttpContext.AuthenticateAsync(IdentityConstants.ApplicationScheme);
+        var cookieAuth = await HttpContext.AuthenticateAsync(
+            scheme: IdentityConstants.ApplicationScheme
+        );
         if (!cookieAuth.Succeeded)
         {
-            return Challenge(IdentityConstants.ApplicationScheme);
+            return Challenge(authenticationSchemes: IdentityConstants.ApplicationScheme);
         }
 
-        return await HandleAuthorizeAsync(cookieAuth.Principal!);
+        return await HandleAuthorizeAsync(cookiePrincipal: cookieAuth.Principal!);
     }
 
     private async Task<IActionResult> HandleAuthorizeAsync(ClaimsPrincipal cookiePrincipal)
@@ -83,26 +87,32 @@ public class AuthorizationController : Microsoft.AspNetCore.Mvc.Controller
         }
 
         // Rebuild a full Identity principal (brings in claims from your factory, including "sub")
-        var user = await _userManager.GetUserAsync(cookiePrincipal);
+        var user = await _userManager.GetUserAsync(principal: cookiePrincipal);
         if (user is null)
         {
-            return Challenge(IdentityConstants.ApplicationScheme);
+            return Challenge(authenticationSchemes: IdentityConstants.ApplicationScheme);
         }
 
-        var principal = await _signInManager.CreateUserPrincipalAsync(user);
+        var principal = await _signInManager.CreateUserPrincipalAsync(user: user);
 
-        if (!principal.HasClaim(c => c.Type == OpenIddictConstants.Claims.Subject))
+        if (!principal.HasClaim(match: c => c.Type == OpenIddictConstants.Claims.Subject))
         {
-            principal.SetClaim(OpenIddictConstants.Claims.Subject, user.BusinessPartnerId);
+            principal.SetClaim(
+                type: OpenIddictConstants.Claims.Subject,
+                value: user.BusinessPartnerId
+            );
         }
-        principal.SetClaim(OpenIddictConstants.Claims.Name, user.UserName);
+        principal.SetClaim(type: OpenIddictConstants.Claims.Name, value: user.UserName);
 
-        SetScopes(principal, request);
+        SetScopes(principal: principal, request: request);
 
-        return SignIn(principal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+        return SignIn(
+            principal: principal,
+            authenticationScheme: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme
+        );
     }
 
-    [HttpPost("~/connect/token")]
+    [HttpPost(template: "~/connect/token")]
     [AllowAnonymous]
     public async Task<IActionResult> Token()
     {
@@ -116,19 +126,19 @@ public class AuthorizationController : Microsoft.AspNetCore.Mvc.Controller
         {
             // Retrieve the claims principal from the authorization code/refresh token
             var result = await HttpContext.AuthenticateAsync(
-                OpenIddictServerAspNetCoreDefaults.AuthenticationScheme
+                scheme: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme
             );
 
-            var user = await _userManager.GetUserAsync(result.Principal);
+            var user = await _userManager.GetUserAsync(principal: result.Principal);
             if (user == null)
             {
                 return Forbid(
                     properties: new AuthenticationProperties(
-                        new Dictionary<string, string>
+                        items: new Dictionary<string, string>
                         {
-                            [OpenIddictServerAspNetCoreConstants.Properties.Error] =
+                            [key: OpenIddictServerAspNetCoreConstants.Properties.Error] =
                                 OpenIddictConstants.Errors.InvalidGrant,
-                            [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] =
+                            [key: OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] =
                                 "The token is no longer valid.",
                         }
                     ),
@@ -137,45 +147,61 @@ public class AuthorizationController : Microsoft.AspNetCore.Mvc.Controller
             }
 
             // Recreate the principal
-            var principal = await _signInManager.CreateUserPrincipalAsync(user);
+            var principal = await _signInManager.CreateUserPrincipalAsync(user: user);
 
             // Ensure the subject claim exists
-            if (!principal.HasClaim(c => c.Type == OpenIddictConstants.Claims.Subject))
+            if (!principal.HasClaim(match: c => c.Type == OpenIddictConstants.Claims.Subject))
             {
-                principal.SetClaim(OpenIddictConstants.Claims.Subject, user.BusinessPartnerId);
+                principal.SetClaim(
+                    type: OpenIddictConstants.Claims.Subject,
+                    value: user.BusinessPartnerId
+                );
             }
 
-            SetScopes(principal, request);
+            SetScopes(principal: principal, request: request);
 
-            return SignIn(principal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+            return SignIn(
+                principal: principal,
+                authenticationScheme: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme
+            );
         }
 
         if (request.IsPasswordGrantType())
         {
-            var user = await _userManager.FindByNameAsync(request.Username);
+            var user = await _userManager.FindByNameAsync(userName: request.Username);
             if (user == null)
             {
-                return Forbid(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+                return Forbid(
+                    authenticationSchemes: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme
+                );
             }
 
             var result = await _signInManager.CheckPasswordSignInAsync(
-                user,
-                request.Password,
+                user: user,
+                password: request.Password,
                 lockoutOnFailure: true
             );
             if (!result.Succeeded)
             {
-                return Forbid(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+                return Forbid(
+                    authenticationSchemes: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme
+                );
             }
 
-            ClaimsPrincipal principal = await _signInManager.CreateUserPrincipalAsync(user);
-            if (!principal.HasClaim(c => c.Type == OpenIddictConstants.Claims.Subject))
+            ClaimsPrincipal principal = await _signInManager.CreateUserPrincipalAsync(user: user);
+            if (!principal.HasClaim(match: c => c.Type == OpenIddictConstants.Claims.Subject))
             {
-                principal.SetClaim(OpenIddictConstants.Claims.Subject, user.BusinessPartnerId);
+                principal.SetClaim(
+                    type: OpenIddictConstants.Claims.Subject,
+                    value: user.BusinessPartnerId
+                );
             }
 
-            SetScopes(principal, request);
-            return SignIn(principal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+            SetScopes(principal: principal, request: request);
+            return SignIn(
+                principal: principal,
+                authenticationScheme: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme
+            );
         }
 
         return BadRequest();
@@ -183,9 +209,9 @@ public class AuthorizationController : Microsoft.AspNetCore.Mvc.Controller
 
     private static void SetScopes(ClaimsPrincipal principal, OpenIddictRequest request)
     {
-        principal.SetScopes(request.GetScopes());
-        principal.SetResources("origam-local", "api");
-        principal.SetDestinations(claim =>
+        principal.SetScopes(scopes: request.GetScopes());
+        principal.SetResources(resources: new[] { "origam-local", "api" });
+        principal.SetDestinations(selector: claim =>
             claim.Type switch
             {
                 OpenIddictConstants.Claims.Name => new[]
@@ -205,17 +231,17 @@ public class AuthorizationController : Microsoft.AspNetCore.Mvc.Controller
         );
     }
 
-    [HttpGet("~/connect/logout")]
-    [HttpPost("~/connect/logout")]
+    [HttpGet(template: "~/connect/logout")]
+    [HttpPost(template: "~/connect/logout")]
     [IgnoreAntiforgeryToken]
     public async Task<IActionResult> Logout()
     {
         OpenIddictRequest request = HttpContext.GetOpenIddictServerRequest();
-        await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
+        await HttpContext.SignOutAsync(scheme: IdentityConstants.ApplicationScheme);
         return SignOut(
             properties: new AuthenticationProperties
             {
-                RedirectUri = request?.PostLogoutRedirectUri ?? Url.Content("~/"),
+                RedirectUri = request?.PostLogoutRedirectUri ?? Url.Content(contentPath: "~/"),
             },
             authenticationSchemes: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme
         );

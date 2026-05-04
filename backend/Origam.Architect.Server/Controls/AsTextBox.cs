@@ -27,26 +27,26 @@ namespace Origam.Architect.Server.Controls;
 public class AsTextBox : LabeledEditor, IAsControl
 {
     [Description(
-        "Valid only for numeric data types. If specified, it will override default formatting for the given data type."
+        description: "Valid only for numeric data types. If specified, it will override default formatting for the given data type."
     )]
     public string CustomNumericFormat { get; set; }
 
     public bool AllowTab { get; set; } = false;
 
-    [Category("Behavior")]
+    [Category(category: "Behavior")]
     public bool ReadOnly { get; set; } = false;
 
-    [Category("(ORIGAM)")]
+    [Category(category: "(ORIGAM)")]
     public string GridColumnCaption { get; set; }
 
-    [Category("(ORIGAM)")]
+    [Category(category: "(ORIGAM)")]
     public string Caption { get; set; }
 
     public bool HideOnForm { get; set; }
 
     public bool IsRichText { get; set; } = false;
 
-    [Category("Behavior")]
+    [Category(category: "Behavior")]
     public bool Multiline { get; set; }
 
     public bool IsPassword { get; set; }

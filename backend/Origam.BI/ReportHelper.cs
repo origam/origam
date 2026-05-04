@@ -37,10 +37,10 @@ public static class ReportHelper
 {
     public static void LogInfo(Type type, string message)
     {
-        var log = log4net.LogManager.GetLogger(type);
+        var log = log4net.LogManager.GetLogger(type: type);
         if (log.IsInfoEnabled)
         {
-            log.Info(message);
+            log.Info(message: message);
         }
     }
 
@@ -61,7 +61,7 @@ public static class ReportHelper
             // send all ordinary parameters as an input to the Xslt
             if (parameter is not null and not XsltInitialValueParameter)
             {
-                transformParams.Add(parameter.Name, parameters[parameter.Name]);
+                transformParams.Add(key: parameter.Name, value: parameters[key: parameter.Name]);
             }
         }
         string oldStepName = null;
@@ -77,44 +77,46 @@ public static class ReportHelper
             }
             // do not recompute parameters if they were sent and they have some value
             if (
-                parameters.ContainsKey(xsltParameter.Name)
-                && (parameters[xsltParameter.Name] != null)
+                parameters.ContainsKey(key: xsltParameter.Name)
+                && (parameters[key: xsltParameter.Name] != null)
             )
             {
                 continue;
             }
-            IXsltEngine transformer = new CompiledXsltEngine(persistence.SchemaProvider);
-            IXmlContainer xmlData = new XmlContainer("<ROOT/>");
+            IXsltEngine transformer = new CompiledXsltEngine(
+                persistence: persistence.SchemaProvider
+            );
+            IXmlContainer xmlData = new XmlContainer(xmlString: "<ROOT/>");
             if (traceTaskInfo != null)
             {
                 traceTaskInfo.TraceStepName = $"{oldStepName}/ComputeParam_{xsltParameter.Name}";
-                transformer.SetTraceTaskInfo(traceTaskInfo);
+                transformer.SetTraceTaskInfo(traceTaskInfo: traceTaskInfo);
             }
             IXmlContainer result = transformer.Transform(
-                xmlData,
-                xsltParameter.transformationId,
+                data: xmlData,
+                transformationId: xsltParameter.transformationId,
                 retransformationId: Guid.Empty,
-                transformParams,
+                parameters: transformParams,
                 transactionId: null,
                 retransformationParameters: null,
                 outputStructure: null,
                 validateOnly: false
             );
-            var resultNode = result.Xml.SelectSingleNode("/ROOT/value");
+            var resultNode = result.Xml.SelectSingleNode(xpath: "/ROOT/value");
             // add a newly created computed parameter
             if (resultNode == null)
             {
-                parameters.Add(xsltParameter.Name, null);
+                parameters.Add(key: xsltParameter.Name, value: null);
             }
             else
             {
                 object valueToContext = resultNode.InnerText;
                 RuleEngine.ConvertStringValueToContextValue(
-                    xsltParameter.DataType,
-                    resultNode.InnerText,
-                    ref valueToContext
+                    origamDataType: xsltParameter.DataType,
+                    inputString: resultNode.InnerText,
+                    contextValue: ref valueToContext
                 );
-                parameters.Add(xsltParameter.Name, valueToContext);
+                parameters.Add(key: xsltParameter.Name, value: valueToContext);
             }
         }
         if (traceTaskInfo != null)
@@ -134,15 +136,17 @@ public static class ReportHelper
                 value = entry.Value.ToString();
             }
             var replacement = "{" + key + "}";
-            if (filePath.IndexOf(replacement, StringComparison.Ordinal) <= -1)
+            if (
+                filePath.IndexOf(value: replacement, comparisonType: StringComparison.Ordinal) <= -1
+            )
             {
                 continue;
             }
             if (value == null)
             {
-                throw new Exception(ResourceUtils.GetString("ParametersDontMatch"));
+                throw new Exception(message: ResourceUtils.GetString(key: "ParametersDontMatch"));
             }
-            filePath = filePath.Replace(replacement, value);
+            filePath = filePath.Replace(oldValue: replacement, newValue: value);
         }
         return filePath;
     }
@@ -162,9 +166,9 @@ public static class ReportHelper
                 value = entry.Value.ToString();
             }
             var replacement = "{" + key + "}";
-            if (output.IndexOf(replacement, StringComparison.Ordinal) > -1)
+            if (output.IndexOf(value: replacement, comparisonType: StringComparison.Ordinal) > -1)
             {
-                output = output.Replace(replacement, value);
+                output = output.Replace(oldValue: replacement, newValue: value);
             }
         }
         return output;
@@ -172,10 +176,10 @@ public static class ReportHelper
 
     public static void LogError(Type type, string message)
     {
-        var log = log4net.LogManager.GetLogger(type);
+        var log = log4net.LogManager.GetLogger(type: type);
         if (log.IsErrorEnabled)
         {
-            log.Error(message);
+            log.Error(message: message);
         }
     }
 
@@ -188,20 +192,20 @@ public static class ReportHelper
             {
                 continue;
             }
-            if (parameters.Contains(defaultParam.Name))
+            if (parameters.Contains(key: defaultParam.Name))
             {
-                object paramValue = parameters[defaultParam.Name];
+                object paramValue = parameters[key: defaultParam.Name];
                 if ((paramValue == null) || (paramValue == DBNull.Value))
                 {
-                    parameters[defaultParam.Name] = parameterService.GetParameterValue(
-                        defaultParam.DefaultValue.Id
+                    parameters[key: defaultParam.Name] = parameterService.GetParameterValue(
+                        id: defaultParam.DefaultValue.Id
                     );
                 }
             }
             else
             {
-                parameters[defaultParam.Name] = parameterService.GetParameterValue(
-                    defaultParam.DefaultValue.Id
+                parameters[key: defaultParam.Name] = parameterService.GetParameterValue(
+                    id: defaultParam.DefaultValue.Id
                 );
             }
         }
@@ -210,12 +214,12 @@ public static class ReportHelper
     public static T GetReportElement<T>(Guid reportId)
     {
         var persistence = ServiceManager.Services.GetService<IPersistenceService>();
-        var report = persistence.SchemaProvider.RetrieveInstance<T>(reportId);
+        var report = persistence.SchemaProvider.RetrieveInstance<T>(instanceId: reportId);
         if (report == null)
         {
             throw new ArgumentException(
-                nameof(reportId),
-                ResourceUtils.GetString("DefinitionNotInModel")
+                message: nameof(reportId),
+                paramName: ResourceUtils.GetString(key: "DefinitionNotInModel")
             );
         }
         return report;
@@ -223,16 +227,16 @@ public static class ReportHelper
 
     public static string ResolveLanguage(IXmlContainer doc, AbstractDataReport reportElement)
     {
-        if (string.IsNullOrEmpty(reportElement.LocaleXPath))
+        if (string.IsNullOrEmpty(value: reportElement.LocaleXPath))
         {
             return null;
         }
         RuleEngine ruleEngine = RuleEngine.Create(contextStores: null, transactionId: null);
         var cultureString = (string)
             ruleEngine.EvaluateContext(
-                reportElement.LocaleXPath,
-                doc,
-                OrigamDataType.String,
+                xpath: reportElement.LocaleXPath,
+                context: doc,
+                dataType: OrigamDataType.String,
                 targetStructure: null
             );
         return cultureString;
@@ -255,18 +259,21 @@ public static class ReportHelper
                     foreach (DictionaryEntry entry in parameters)
                     {
                         queryParameterCollection.Add(
-                            new QueryParameter((string)entry.Key, entry.Value)
+                            value: new QueryParameter(
+                                _parameterName: (string)entry.Key,
+                                value: entry.Value
+                            )
                         );
                     }
                 }
                 return DataDocumentFactory.New(
-                    core.DataService.Instance.LoadData(
-                        report.DataStructureId,
-                        report.DataStructureMethodId,
+                    dataSet: core.DataService.Instance.LoadData(
+                        dataStructureId: report.DataStructureId,
+                        methodId: report.DataStructureMethodId,
                         defaultSetId: Guid.Empty,
-                        report.DataStructureSortSetId,
-                        dbTransaction,
-                        queryParameterCollection
+                        sortSetId: report.DataStructureSortSetId,
+                        transactionId: dbTransaction,
+                        parameters: queryParameterCollection
                     )
                 );
             }
@@ -277,8 +284,8 @@ public static class ReportHelper
             default:
             {
                 throw new ArgumentException(
-                    nameof(data),
-                    ResourceUtils.GetString("OnlyXmlDocSupported")
+                    message: nameof(data),
+                    paramName: ResourceUtils.GetString(key: "OnlyXmlDocSupported")
                 );
             }
         }

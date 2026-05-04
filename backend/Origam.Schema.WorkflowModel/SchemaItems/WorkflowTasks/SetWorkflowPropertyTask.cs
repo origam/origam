@@ -42,18 +42,22 @@ public enum SetWorkflowPropertyMethod
     Add,
 }
 
-[SchemaItemDescription("(Task) Set Workflow Property", "Tasks", "task-set-workflow-property.png")]
-[HelpTopic("Set+Workflow+Property+Task")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(
+    name: "(Task) Set Workflow Property",
+    folderName: "Tasks",
+    iconName: "task-set-workflow-property.png"
+)]
+[HelpTopic(topic: "Set+Workflow+Property+Task")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class SetWorkflowPropertyTask : AbstractWorkflowStep
 {
     public SetWorkflowPropertyTask() { }
 
     public SetWorkflowPropertyTask(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(schemaExtensionId: schemaExtensionId) { }
 
     public SetWorkflowPropertyTask(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Overriden ISchemaItem Members
 
@@ -61,16 +65,16 @@ public class SetWorkflowPropertyTask : AbstractWorkflowStep
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        XsltDependencyHelper.GetDependencies(this, dependencies, XPath);
-        dependencies.Add(this.ContextStore);
-        base.GetExtraDependencies(dependencies);
+        XsltDependencyHelper.GetDependencies(item: this, dependencies: dependencies, text: XPath);
+        dependencies.Add(item: this.ContextStore);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override void UpdateReferences()
     {
         foreach (ISchemaItem item in RootItem.ChildItemsRecursive)
         {
-            if (item.OldPrimaryKey?.Equals(ContextStore.PrimaryKey) == true)
+            if (item.OldPrimaryKey?.Equals(obj: ContextStore.PrimaryKey) == true)
             {
                 ContextStore = item as IContextStore;
                 break;
@@ -82,14 +86,15 @@ public class SetWorkflowPropertyTask : AbstractWorkflowStep
     #region Properties
     public Guid ContextStoreId;
 
-    [TypeConverter(typeof(ContextStoreConverter))]
-    [XmlReference("contextStore", "ContextStoreId")]
+    [TypeConverter(type: typeof(ContextStoreConverter))]
+    [XmlReference(attributeName: "contextStore", idField: "ContextStoreId")]
     public IContextStore ContextStore
     {
         get
         {
             var key = new ModelElementKey { Id = ContextStoreId };
-            return (IContextStore)PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
+            return (IContextStore)
+                PersistenceProvider.RetrieveInstance(type: typeof(ISchemaItem), primaryKey: key);
         }
         set
         {
@@ -99,28 +104,28 @@ public class SetWorkflowPropertyTask : AbstractWorkflowStep
             }
             else
             {
-                ContextStoreId = (Guid)value.PrimaryKey["Id"];
+                ContextStoreId = (Guid)value.PrimaryKey[key: "Id"];
             }
         }
     }
 
     public Guid TransformationId;
 
-    [TypeConverter(typeof(TransformationConverter))]
-    [XmlReference("transformation", "TransformationId")]
+    [TypeConverter(type: typeof(TransformationConverter))]
+    [XmlReference(attributeName: "transformation", idField: "TransformationId")]
     public ITransformation Transformation
     {
         get =>
             (ISchemaItem)
                 PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(TransformationId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: TransformationId)
                 ) as ITransformation;
-        set => TransformationId = (value == null) ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+        set => TransformationId = (value == null) ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"];
     }
     string _xpath;
 
-    [XmlAttribute("xPath")]
+    [XmlAttribute(attributeName: "xPath")]
     public string XPath
     {
         get => _xpath;
@@ -128,7 +133,7 @@ public class SetWorkflowPropertyTask : AbstractWorkflowStep
     }
     string _delimiter = "";
 
-    [XmlAttribute("delimiter")]
+    [XmlAttribute(attributeName: "delimiter")]
     public string Delimiter
     {
         get => _delimiter;
@@ -136,7 +141,7 @@ public class SetWorkflowPropertyTask : AbstractWorkflowStep
     }
     WorkflowProperty _workflowProperty;
 
-    [XmlAttribute("workflowProperty")]
+    [XmlAttribute(attributeName: "workflowProperty")]
     public WorkflowProperty WorkflowProperty
     {
         get => _workflowProperty;
@@ -144,7 +149,7 @@ public class SetWorkflowPropertyTask : AbstractWorkflowStep
     }
     SetWorkflowPropertyMethod _setWorkflowPropertyMethod;
 
-    [XmlAttribute("method")]
+    [XmlAttribute(attributeName: "method")]
     public SetWorkflowPropertyMethod Method
     {
         get => _setWorkflowPropertyMethod;
@@ -157,9 +162,11 @@ public class SetWorkflowPropertyTask : AbstractWorkflowStep
     public override T NewItem<T>(Guid schemaExtensionId, SchemaItemGroup group)
     {
         return base.NewItem<T>(
-            schemaExtensionId,
-            group,
-            typeof(T) == typeof(WorkflowTaskDependency) ? "NewWorkflowTaskDependency" : null
+            schemaExtensionId: schemaExtensionId,
+            group: group,
+            itemName: typeof(T) == typeof(WorkflowTaskDependency)
+                ? "NewWorkflowTaskDependency"
+                : null
         );
     }
     #endregion

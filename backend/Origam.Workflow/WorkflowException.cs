@@ -30,11 +30,11 @@ public class WorkflowException : OrigamException
         : base() { }
 
     public WorkflowException(string message)
-        : base(message) { }
+        : base(message: message) { }
 
     public WorkflowException(string message, string customStackTrace)
-        : base(message)
+        : base(message: message)
     {
-        this.AppendStackTrace(customStackTrace);
+        this.AppendStackTrace(stacktrace: customStackTrace);
     }
 }

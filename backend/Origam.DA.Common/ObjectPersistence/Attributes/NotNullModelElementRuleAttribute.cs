@@ -27,7 +27,7 @@ namespace Origam.DA.ObjectPersistence;
 /// Summary description for NotNullModelElementRuleAttribute.
 /// </summary>
 [AttributeUsage(
-    AttributeTargets.Property | AttributeTargets.Field,
+    validOn: AttributeTargets.Property | AttributeTargets.Field,
     AllowMultiple = false,
     Inherited = true
 )]
@@ -70,26 +70,40 @@ public class NotNullModelElementRuleAttribute : AbstractModelElementRuleAttribut
 
     public override Exception CheckRule(object instance)
     {
-        return new NotSupportedException(ResourceUtils.GetString("MemberNameRequired"));
+        return new NotSupportedException(
+            message: ResourceUtils.GetString(key: "MemberNameRequired")
+        );
     }
 
     public override Exception CheckRule(object instance, string memberName)
     {
         if (memberName == String.Empty || memberName == null)
         {
-            CheckRule(instance);
+            CheckRule(instance: instance);
         }
 
-        object value = Reflector.GetValue(instance.GetType(), instance, memberName);
+        object value = Reflector.GetValue(
+            type: instance.GetType(),
+            instance: instance,
+            memberName: memberName
+        );
         object field1Value = null;
         object field2Value = null;
         if (_conditionField != null)
         {
-            field1Value = Reflector.GetValue(instance.GetType(), instance, _conditionField);
+            field1Value = Reflector.GetValue(
+                type: instance.GetType(),
+                instance: instance,
+                memberName: _conditionField
+            );
         }
         if (_conditionField2 != null)
         {
-            field2Value = Reflector.GetValue(instance.GetType(), instance, _conditionField2);
+            field2Value = Reflector.GetValue(
+                type: instance.GetType(),
+                instance: instance,
+                memberName: _conditionField2
+            );
         }
         if (value == null || (value as string) == string.Empty)
         {
@@ -100,17 +114,17 @@ public class NotNullModelElementRuleAttribute : AbstractModelElementRuleAttribut
                 || (
                     _conditionField != null
                     && _conditionValue != null
-                    && field1Value.Equals(_conditionValue)
+                    && field1Value.Equals(obj: _conditionValue)
                 )
                 || (
                     _conditionField2 != null
                     && _conditionValue2 != null
-                    && field2Value.Equals(_conditionValue2)
+                    && field2Value.Equals(obj: _conditionValue2)
                 )
             )
             {
                 return new NullReferenceException(
-                    ResourceUtils.GetString("CantBeNull", memberName)
+                    message: ResourceUtils.GetString(key: "CantBeNull", args: memberName)
                 );
             }
         }

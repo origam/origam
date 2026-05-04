@@ -39,14 +39,14 @@ public class ParameterServiceAgent : AbstractServiceAgent
             case "SetCustomParameterValue":
             {
                 // Check input parameters
-                if (!(this.Parameters["ParameterName"] is string))
+                if (!(this.Parameters[key: "ParameterName"] is string))
                 {
-                    throw new InvalidCastException("ParameterName has to be string");
+                    throw new InvalidCastException(message: "ParameterName has to be string");
                 }
 
-                object value = this.Parameters["Value"];
+                object value = this.Parameters[key: "Value"];
                 IParameterService paramSvc =
-                    ServiceManager.Services.GetService(typeof(IParameterService))
+                    ServiceManager.Services.GetService(serviceType: typeof(IParameterService))
                     as IParameterService;
                 int intValue = 0;
                 string stringValue = "";
@@ -78,11 +78,11 @@ public class ParameterServiceAgent : AbstractServiceAgent
                 {
                     dateValue = value;
                 }
-                object profileIdParam = Parameters["ProfileId"];
+                object profileIdParam = Parameters[key: "ProfileId"];
                 Guid? profileId;
                 if (profileIdParam is string)
                 {
-                    profileId = new Guid((string)profileIdParam);
+                    profileId = new Guid(g: (string)profileIdParam);
                 }
                 else if (profileIdParam is Guid)
                 {
@@ -95,22 +95,22 @@ public class ParameterServiceAgent : AbstractServiceAgent
                 else
                 {
                     throw new ArgumentOutOfRangeException(
-                        "ProfileId",
-                        profileIdParam,
-                        "ProfileId must be Guid, string or empty."
+                        paramName: "ProfileId",
+                        actualValue: profileIdParam,
+                        message: "ProfileId must be Guid, string or empty."
                     );
                 }
                 paramSvc.SetCustomParameterValue(
-                    (string)Parameters["ParameterName"],
-                    value,
-                    guidValue,
-                    intValue,
-                    stringValue,
-                    boolValue,
-                    decimalValue,
-                    decimalValue,
-                    dateValue,
-                    profileId
+                    parameterName: (string)Parameters[key: "ParameterName"],
+                    value: value,
+                    guidValue: guidValue,
+                    intValue: intValue,
+                    stringValue: stringValue,
+                    boolValue: boolValue,
+                    floatValue: decimalValue,
+                    currencyValue: decimalValue,
+                    dateValue: dateValue,
+                    overridenProfileId: profileId
                 );
                 break;
             }
@@ -118,9 +118,9 @@ public class ParameterServiceAgent : AbstractServiceAgent
             default:
             {
                 throw new ArgumentOutOfRangeException(
-                    "MethodName",
-                    this.MethodName,
-                    ResourceUtils.GetString("InvalidMethodName")
+                    paramName: "MethodName",
+                    actualValue: this.MethodName,
+                    message: ResourceUtils.GetString(key: "InvalidMethodName")
                 );
             }
         }

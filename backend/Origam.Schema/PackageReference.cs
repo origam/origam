@@ -32,8 +32,8 @@ namespace Origam.Schema;
 /// <summary>
 /// Summary description for Schema.
 /// </summary>
-[XmlPackageRoot("packageReference")]
-[ClassMetaVersion("6.0.0")]
+[XmlPackageRoot(category: "packageReference")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class PackageReference : AbstractPersistent, IBrowserNode2, IComparable, IFilePersistent
 {
     public PackageReference()
@@ -42,7 +42,7 @@ public class PackageReference : AbstractPersistent, IBrowserNode2, IComparable, 
     }
 
     public PackageReference(Key primaryKey)
-        : base(primaryKey, new ModelElementKey().KeyArray) { }
+        : base(primaryKey: primaryKey, correctKeys: new ModelElementKey().KeyArray) { }
 
     public override string ToString()
     {
@@ -60,26 +60,26 @@ public class PackageReference : AbstractPersistent, IBrowserNode2, IComparable, 
         {
             return (Package)
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(Package),
-                    new ModelElementKey(this.PackageId)
+                    type: typeof(Package),
+                    primaryKey: new ModelElementKey(id: this.PackageId)
                 );
         }
-        set { this.PackageId = (Guid)value.PrimaryKey["Id"]; }
+        set { this.PackageId = (Guid)value.PrimaryKey[key: "Id"]; }
     }
     public Guid ReferencedPackageId;
 
-    [XmlPackageReference("referencedPackage", "ReferencedPackageId")]
+    [XmlPackageReference(attributeName: "referencedPackage", idField: "ReferencedPackageId")]
     public Package ReferencedPackage
     {
         get
         {
             return (Package)
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(Package),
-                    new ModelElementKey(this.ReferencedPackageId)
+                    type: typeof(Package),
+                    primaryKey: new ModelElementKey(id: this.ReferencedPackageId)
                 );
         }
-        set { this.ReferencedPackageId = (Guid)value.PrimaryKey["Id"]; }
+        set { this.ReferencedPackageId = (Guid)value.PrimaryKey[key: "Id"]; }
     }
     public int ReferenceType
     {
@@ -93,11 +93,16 @@ public class PackageReference : AbstractPersistent, IBrowserNode2, IComparable, 
     }
     #endregion
     #region IBrowserNode2 Members
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public bool Hide
     {
         get { return !this.IsPersisted; }
-        set { throw new InvalidOperationException(ResourceUtils.GetString("ErrorSetHide")); }
+        set
+        {
+            throw new InvalidOperationException(
+                message: ResourceUtils.GetString(key: "ErrorSetHide")
+            );
+        }
     }
 
     public bool CanDelete
@@ -120,24 +125,29 @@ public class PackageReference : AbstractPersistent, IBrowserNode2, IComparable, 
         return false;
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public IBrowserNode2 ParentNode
     {
         get { return null; }
-        set { throw new InvalidOperationException(ResourceUtils.GetString("ErrorMoveExtension")); }
+        set
+        {
+            throw new InvalidOperationException(
+                message: ResourceUtils.GetString(key: "ErrorMoveExtension")
+            );
+        }
     }
     public byte[] NodeImage
     {
         get { return null; }
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public string NodeId
     {
-        get { return this.PrimaryKey["Id"].ToString(); }
+        get { return this.PrimaryKey[key: "Id"].ToString(); }
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public virtual string FontStyle
     {
         get { return "Regular"; }
@@ -187,7 +197,10 @@ public class PackageReference : AbstractPersistent, IBrowserNode2, IComparable, 
         get { return false; }
     }
     public IDictionary<string, Guid> ParentFolderIds =>
-        new Dictionary<string, Guid> { { CategoryFactory.Create(typeof(Package)), PackageId } };
+        new Dictionary<string, Guid>
+        {
+            { CategoryFactory.Create(type: typeof(Package)), PackageId },
+        };
     public string Path
     {
         get { throw new NotImplementedException(); }
@@ -199,7 +212,7 @@ public class PackageReference : AbstractPersistent, IBrowserNode2, IComparable, 
         IBrowserNode bn = obj as IBrowserNode;
         if (bn != null)
         {
-            return this.NodeText.CompareTo(bn.NodeText);
+            return this.NodeText.CompareTo(strB: bn.NodeText);
         }
 
         throw new InvalidCastException();

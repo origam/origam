@@ -53,7 +53,9 @@ public abstract class AbstractDocumentationService : IDocumentationService
         {
             if (item.OldPrimaryKey != null)
             {
-                DocumentationComplete doc = LoadDocumentation((Guid)item.OldPrimaryKey["Id"]);
+                DocumentationComplete doc = LoadDocumentation(
+                    schemaItemId: (Guid)item.OldPrimaryKey[key: "Id"]
+                );
 
                 foreach (DocumentationComplete.DocumentationRow row in doc.Documentation.Rows)
                 {
@@ -65,14 +67,14 @@ public abstract class AbstractDocumentationService : IDocumentationService
                     // We copy all the other properties.
                     newRow.Category = row.Category;
                     newRow.Data = row.Data;
-                    newRow.refSchemaItemId = (Guid)item.PrimaryKey["Id"];
-                    newDoc.Documentation.AddDocumentationRow(newRow);
+                    newRow.refSchemaItemId = (Guid)item.PrimaryKey[key: "Id"];
+                    newDoc.Documentation.AddDocumentationRow(row: newRow);
                 }
             }
         }
         if (newDoc.Documentation.Rows.Count > 0)
         {
-            SaveDocumentation(newDoc);
+            SaveDocumentation(documentationData: newDoc);
         }
     }
 

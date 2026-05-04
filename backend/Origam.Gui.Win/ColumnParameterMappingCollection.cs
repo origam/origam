@@ -36,7 +36,10 @@ namespace Origam.Gui.Win;
 /// </summary>
 /// <seealso cref='Origam.Gui.Win.ColumnParameterMappingCollection'/>
 [Serializable()]
-[Editor(typeof(ColumnParameterMappingCollectionEditor), typeof(System.Drawing.Design.UITypeEditor))]
+[Editor(
+    type: typeof(ColumnParameterMappingCollectionEditor),
+    baseType: typeof(System.Drawing.Design.UITypeEditor)
+)]
 public class ColumnParameterMappingCollection : CollectionBase, ICustomTypeDescriptor
 {
     /// <summary>
@@ -56,7 +59,7 @@ public class ColumnParameterMappingCollection : CollectionBase, ICustomTypeDescr
     /// </param>
     public ColumnParameterMappingCollection(ColumnParameterMappingCollection value)
     {
-        this.AddRange(value);
+        this.AddRange(value: value);
     }
 
     /// <summary>
@@ -69,7 +72,7 @@ public class ColumnParameterMappingCollection : CollectionBase, ICustomTypeDescr
     /// </param>
     public ColumnParameterMappingCollection(ColumnParameterMapping[] value)
     {
-        this.AddRange(value);
+        this.AddRange(value: value);
     }
 
     /// <summary>
@@ -82,8 +85,8 @@ public class ColumnParameterMappingCollection : CollectionBase, ICustomTypeDescr
     /// <exception cref='System.ArgumentOutOfRangeException'><paramref name='index'/> is outside the valid range of indexes for the collection.</exception>
     public ColumnParameterMapping this[int index]
     {
-        get { return ((ColumnParameterMapping)(List[index])); }
-        set { List[index] = value; }
+        get { return ((ColumnParameterMapping)(List[index: index])); }
+        set { List[index: index] = value; }
     }
 
     /// <summary>
@@ -97,7 +100,7 @@ public class ColumnParameterMappingCollection : CollectionBase, ICustomTypeDescr
     /// <seealso cref='Origam.Gui.Win.ColumnParameterMappingCollection.AddRange'/>
     public int Add(ColumnParameterMapping value)
     {
-        return List.Add(value);
+        return List.Add(value: value);
     }
 
     /// <summary>
@@ -114,7 +117,7 @@ public class ColumnParameterMappingCollection : CollectionBase, ICustomTypeDescr
     {
         for (int i = 0; (i < value.Length); i = (i + 1))
         {
-            this.Add(value[i]);
+            this.Add(value: value[i]);
         }
     }
 
@@ -134,7 +137,7 @@ public class ColumnParameterMappingCollection : CollectionBase, ICustomTypeDescr
     {
         for (int i = 0; (i < value.Count); i = (i + 1))
         {
-            this.Add(value[i]);
+            this.Add(value: value[index: i]);
         }
     }
 
@@ -150,7 +153,7 @@ public class ColumnParameterMappingCollection : CollectionBase, ICustomTypeDescr
     /// <seealso cref='Origam.Gui.Win.ColumnParameterMappingCollection.IndexOf'/>
     public bool Contains(ColumnParameterMapping value)
     {
-        return List.Contains(value);
+        return List.Contains(value: value);
     }
 
     /// <summary>
@@ -168,7 +171,7 @@ public class ColumnParameterMappingCollection : CollectionBase, ICustomTypeDescr
     /// <seealso cref='System.Array'/>
     public void CopyTo(ColumnParameterMapping[] array, int index)
     {
-        List.CopyTo(array, index);
+        List.CopyTo(array: array, index: index);
     }
 
     /// <summary>
@@ -183,7 +186,7 @@ public class ColumnParameterMappingCollection : CollectionBase, ICustomTypeDescr
     /// <seealso cref='Origam.Gui.Win.ColumnParameterMappingCollection.Contains'/>
     public int IndexOf(ColumnParameterMapping value)
     {
-        return List.IndexOf(value);
+        return List.IndexOf(value: value);
     }
 
     /// <summary>
@@ -195,7 +198,7 @@ public class ColumnParameterMappingCollection : CollectionBase, ICustomTypeDescr
     /// <seealso cref='Origam.Gui.Win.ColumnParameterMappingCollection.Add'/>
     public void Insert(int index, ColumnParameterMapping value)
     {
-        List.Insert(index, value);
+        List.Insert(index: index, value: value);
     }
 
     /// <summary>
@@ -206,7 +209,7 @@ public class ColumnParameterMappingCollection : CollectionBase, ICustomTypeDescr
     /// <seealso cref='System.Collections.IEnumerator'/>
     public new ColumnParameterMappingEnumerator GetEnumerator()
     {
-        return new ColumnParameterMappingEnumerator(this);
+        return new ColumnParameterMappingEnumerator(mappings: this);
     }
 
     /// <summary>
@@ -218,7 +221,7 @@ public class ColumnParameterMappingCollection : CollectionBase, ICustomTypeDescr
     /// <exception cref='System.ArgumentException'><paramref name='value'/> is not found in the Collection. </exception>
     public void Remove(ColumnParameterMapping value)
     {
-        List.Remove(value);
+        List.Remove(value: value);
     }
 
     public class ColumnParameterMappingEnumerator : object, IEnumerator
@@ -273,7 +276,7 @@ public class ColumnParameterMappingCollection : CollectionBase, ICustomTypeDescr
     public PropertyDescriptorCollection GetProperties()
     {
         // Create a new collection object PropertyDescriptorCollection
-        PropertyDescriptorCollection pds = new PropertyDescriptorCollection(null);
+        PropertyDescriptorCollection pds = new PropertyDescriptorCollection(properties: null);
         // Iterate the list of items
         for (int i = 0; i < this.List.Count; i++)
         {
@@ -281,55 +284,63 @@ public class ColumnParameterMappingCollection : CollectionBase, ICustomTypeDescr
             // and add it to the
             // PropertyDescriptorCollection instance
             ColumnParameterMappingPropertyDescriptor pd =
-                new ColumnParameterMappingPropertyDescriptor(this, i);
-            pds.Add(pd);
+                new ColumnParameterMappingPropertyDescriptor(coll: this, idx: i);
+            pds.Add(value: pd);
         }
         return pds;
     }
 
     public String GetClassName()
     {
-        return TypeDescriptor.GetClassName(this, true);
+        return TypeDescriptor.GetClassName(component: this, noCustomTypeDesc: true);
     }
 
     public AttributeCollection GetAttributes()
     {
-        return TypeDescriptor.GetAttributes(this, true);
+        return TypeDescriptor.GetAttributes(component: this, noCustomTypeDesc: true);
     }
 
     public String GetComponentName()
     {
-        return TypeDescriptor.GetComponentName(this, true);
+        return TypeDescriptor.GetComponentName(component: this, noCustomTypeDesc: true);
     }
 
     public TypeConverter GetConverter()
     {
-        return TypeDescriptor.GetConverter(this, true);
+        return TypeDescriptor.GetConverter(component: this, noCustomTypeDesc: true);
     }
 
     public EventDescriptor GetDefaultEvent()
     {
-        return TypeDescriptor.GetDefaultEvent(this, true);
+        return TypeDescriptor.GetDefaultEvent(component: this, noCustomTypeDesc: true);
     }
 
     public PropertyDescriptor GetDefaultProperty()
     {
-        return TypeDescriptor.GetDefaultProperty(this, true);
+        return TypeDescriptor.GetDefaultProperty(component: this, noCustomTypeDesc: true);
     }
 
     public object GetEditor(Type editorBaseType)
     {
-        return TypeDescriptor.GetEditor(this, editorBaseType, true);
+        return TypeDescriptor.GetEditor(
+            component: this,
+            editorBaseType: editorBaseType,
+            noCustomTypeDesc: true
+        );
     }
 
     public EventDescriptorCollection GetEvents(Attribute[] attributes)
     {
-        return TypeDescriptor.GetEvents(this, attributes, true);
+        return TypeDescriptor.GetEvents(
+            component: this,
+            attributes: attributes,
+            noCustomTypeDesc: true
+        );
     }
 
     public EventDescriptorCollection GetEvents()
     {
-        return TypeDescriptor.GetEvents(this, true);
+        return TypeDescriptor.GetEvents(component: this, noCustomTypeDesc: true);
     }
 
     public object GetPropertyOwner(PropertyDescriptor pd)
@@ -345,7 +356,7 @@ public class ColumnParameterMappingPropertyDescriptor : PropertyDescriptor
     private int index = -1;
 
     public ColumnParameterMappingPropertyDescriptor(ColumnParameterMappingCollection coll, int idx)
-        : base("#" + idx.ToString(), null)
+        : base(name: "#" + idx.ToString(), attrs: null)
     {
         this.collection = coll;
         this.index = idx;
@@ -353,7 +364,7 @@ public class ColumnParameterMappingPropertyDescriptor : PropertyDescriptor
 
     public override AttributeCollection Attributes
     {
-        get { return new AttributeCollection(null); }
+        get { return new AttributeCollection(attributes: null); }
     }
 
     public override bool CanResetValue(object component)
@@ -373,7 +384,7 @@ public class ColumnParameterMappingPropertyDescriptor : PropertyDescriptor
             {
                 return null;
             }
-            ColumnParameterMapping mapping = this.collection[index];
+            ColumnParameterMapping mapping = this.collection[index: index];
             return mapping.Name;
         }
     }
@@ -381,18 +392,18 @@ public class ColumnParameterMappingPropertyDescriptor : PropertyDescriptor
     {
         get
         {
-            ColumnParameterMapping mapping = this.collection[index];
+            ColumnParameterMapping mapping = this.collection[index: index];
             StringBuilder sb = new StringBuilder();
-            sb.Append(mapping.Name);
-            sb.Append(",");
-            sb.Append(mapping.ColumnName);
+            sb.Append(value: mapping.Name);
+            sb.Append(value: ",");
+            sb.Append(value: mapping.ColumnName);
             return sb.ToString();
         }
     }
 
     public override object GetValue(object component)
     {
-        ColumnParameterMapping mapping = this.collection[index] as ColumnParameterMapping;
+        ColumnParameterMapping mapping = this.collection[index: index] as ColumnParameterMapping;
         return mapping.ColumnName;
     }
 
@@ -418,7 +429,7 @@ public class ColumnParameterMappingPropertyDescriptor : PropertyDescriptor
 
     public override void SetValue(object component, object value)
     {
-        ColumnParameterMapping mapping = this.collection[index] as ColumnParameterMapping;
+        ColumnParameterMapping mapping = this.collection[index: index] as ColumnParameterMapping;
         mapping.ColumnName = (string)value;
     }
 }
@@ -443,14 +454,19 @@ public class ColumnParameterMappingCollectionConverter : ExpandableObjectConvert
 
             return col.Count.ToString() + " parameters";
         }
-        return base.ConvertTo(context, culture, value, destinationType);
+        return base.ConvertTo(
+            context: context,
+            culture: culture,
+            value: value,
+            destinationType: destinationType
+        );
     }
 }
 
 public class ColumnParameterMappingCollectionEditor : CollectionEditor
 {
     public ColumnParameterMappingCollectionEditor(Type type)
-        : base(type) { }
+        : base(type: type) { }
 
     /// <summary>
     /// This is the way to remove the collection editor button from the property grid.

@@ -136,7 +136,7 @@ public class Message
         {
             try
             {
-                if (value.EndsWith("\\"))
+                if (value.EndsWith(value: "\\"))
                 {
                     _basePath = value;
                 }
@@ -477,9 +477,15 @@ public class Message
     )
     {
         string strMessage = null;
-        if (Utility.ReadPlainTextFromFile(strEMLFile, ref strMessage))
+        if (Utility.ReadPlainTextFromFile(strFile: strEMLFile, strText: ref strMessage))
         {
-            NewMessage(ref blnFinish, strBasePath, blnAutoDecodeMSTNEF, strMessage, blnOnlyHeader);
+            NewMessage(
+                blnFinish: ref blnFinish,
+                strBasePath: strBasePath,
+                blnAutoDecodeMSTNEF: blnAutoDecodeMSTNEF,
+                strMessage: strMessage,
+                blnOnlyHeader: blnOnlyHeader
+            );
         }
         else
         {
@@ -503,7 +509,13 @@ public class Message
         bool blnOnlyHeader
     )
     {
-        NewMessage(ref blnFinish, strBasePath, blnAutoDecodeMSTNEF, strMessage, blnOnlyHeader);
+        NewMessage(
+            blnFinish: ref blnFinish,
+            strBasePath: strBasePath,
+            blnAutoDecodeMSTNEF: blnAutoDecodeMSTNEF,
+            strMessage: strMessage,
+            blnOnlyHeader: blnOnlyHeader
+        );
     }
 
     /// <summary>
@@ -514,7 +526,13 @@ public class Message
     /// <param name="blnOnlyHeader">whether only decode the header without body</param>
     public Message(ref bool blnFinish, string strMessage, bool blnOnlyHeader)
     {
-        NewMessage(ref blnFinish, "", false, strMessage, blnOnlyHeader);
+        NewMessage(
+            blnFinish: ref blnFinish,
+            strBasePath: "",
+            blnAutoDecodeMSTNEF: false,
+            strMessage: strMessage,
+            blnOnlyHeader: blnOnlyHeader
+        );
     }
 
     /// <summary>
@@ -524,7 +542,13 @@ public class Message
     /// <param name="strMessage">raw message content</param>
     public Message(ref bool blnFinish, string strMessage)
     {
-        NewMessage(ref blnFinish, "", false, strMessage, false);
+        NewMessage(
+            blnFinish: ref blnFinish,
+            strBasePath: "",
+            blnAutoDecodeMSTNEF: false,
+            strMessage: strMessage,
+            blnOnlyHeader: false
+        );
     }
 
     /// <summary>
@@ -540,10 +564,10 @@ public class Message
             || intAttachmentNumber > _attachments.Count
         )
         {
-            Utility.LogError("GetAttachment():attachment not exist");
-            throw new ArgumentOutOfRangeException("intAttachmentNumber");
+            Utility.LogError(strText: "GetAttachment():attachment not exist");
+            throw new ArgumentOutOfRangeException(paramName: "intAttachmentNumber");
         }
-        return (Attachment)_attachments[intAttachmentNumber];
+        return (Attachment)_attachments[index: intAttachmentNumber];
     }
 
     /// <summary>
@@ -563,17 +587,17 @@ public class Message
         bool blnOnlyHeader
     )
     {
-        StringReader srdReader = new StringReader(strMessage);
+        StringReader srdReader = new StringReader(s: strMessage);
         StringBuilder sbdBuilder = new StringBuilder();
         _basePath = strBasePath;
         _autoDecodeMSTNEF = blnAutoDecodeMSTNEF;
         _rawMessage = strMessage;
         string strLine = srdReader.ReadLine();
-        while (Utility.IsNotNullTextEx(strLine))
+        while (Utility.IsNotNullTextEx(strText: strLine))
         {
-            sbdBuilder.Append(strLine + "\r\n");
-            ParseHeader(sbdBuilder, srdReader, ref strLine);
-            if (Utility.IsOrNullTextEx(strLine))
+            sbdBuilder.Append(value: strLine + "\r\n");
+            ParseHeader(sbdBuilder: sbdBuilder, srdReader: srdReader, strLine: ref strLine);
+            if (Utility.IsOrNullTextEx(strText: strLine))
             {
                 break;
             }
@@ -582,7 +606,7 @@ public class Message
         }
         _rawHeader = sbdBuilder.ToString();
 
-        SetAttachmentBoundry2(_rawMessage);
+        SetAttachmentBoundry2(strBuffer: _rawMessage);
         if (_contentLength == 0)
         {
             _contentLength = strMessage.Length; //_rawMessageBody.Length;
@@ -594,32 +618,32 @@ public class Message
             //the auto reply mail by outlook uses ms-tnef format
             if (
                 (_hasAttachment == true && _attachmentboundry != null)
-                || MIMETypes.IsMSTNEF(_contentType)
+                || MIMETypes.IsMSTNEF(strContentType: _contentType)
             )
             {
                 set_attachments();
                 if (this.Attachments.Count > 0)
                 {
-                    Attachment at = this.GetAttachment(0);
+                    Attachment at = this.GetAttachment(intAttachmentNumber: 0);
                     if (at != null && at.NotAttachment)
                     {
-                        this.GetMessageBody(at.DecodeAsText());
+                        this.GetMessageBody(strBuffer: at.DecodeAsText());
                     }
 
                     //in case body parts as text[0] html[1]
                     if (this.Attachments.Count > 1 && !this.IsReport())
                     {
-                        at = this.GetAttachment(1);
+                        at = this.GetAttachment(intAttachmentNumber: 1);
                         if (at != null && at.NotAttachment)
                         {
-                            this.GetMessageBody(at.DecodeAsText());
+                            this.GetMessageBody(strBuffer: at.DecodeAsText());
                         }
                     }
                 }
             }
             else
             {
-                GetMessageBody(_rawMessageBody);
+                GetMessageBody(strBuffer: _rawMessageBody);
             }
         }
         blnFinish = true;
@@ -633,9 +657,9 @@ public class Message
     /// <returns>message body</returns>
     public string GetTextBody(string strBuffer)
     {
-        if (strBuffer.EndsWith("\r\n."))
+        if (strBuffer.EndsWith(value: "\r\n."))
         {
-            return strBuffer.Substring(0, strBuffer.Length - "\r\n.".Length);
+            return strBuffer.Substring(startIndex: 0, length: strBuffer.Length - "\r\n.".Length);
         }
 
         return strBuffer;
@@ -656,39 +680,39 @@ public class Message
         _messageBody.Clear();
         try
         {
-            if (Utility.IsOrNullTextEx(strBuffer))
+            if (Utility.IsOrNullTextEx(strText: strBuffer))
             {
                 return;
             }
 
-            if (Utility.IsOrNullTextEx(_contentType) && _contentTransferEncoding == null)
+            if (Utility.IsOrNullTextEx(strText: _contentType) && _contentTransferEncoding == null)
             {
-                _messageBody.Add(GetTextBody(strBuffer));
+                _messageBody.Add(item: GetTextBody(strBuffer: strBuffer));
             }
-            else if (_contentType != null && _contentType.IndexOf("digest") >= 0)
+            else if (_contentType != null && _contentType.IndexOf(value: "digest") >= 0)
             {
                 // this is a digest method
                 //ParseDigestMessage(strBuffer);
-                _messageBody.Add(GetTextBody(strBuffer));
+                _messageBody.Add(item: GetTextBody(strBuffer: strBuffer));
             }
             else if (_attachmentboundry2 == null)
             {
-                body = GetTextBody(strBuffer);
-                if (Utility.IsQuotedPrintable(_contentTransferEncoding))
+                body = GetTextBody(strBuffer: strBuffer);
+                if (Utility.IsQuotedPrintable(strText: _contentTransferEncoding))
                 {
-                    body = DecodeQP.ConvertHexContent(body);
+                    body = DecodeQP.ConvertHexContent(Hexstring: body);
                 }
-                else if (Utility.IsBase64(_contentTransferEncoding))
+                else if (Utility.IsBase64(strText: _contentTransferEncoding))
                 {
-                    body = Utility.deCodeB64s(Utility.RemoveNonB64(body));
+                    body = Utility.deCodeB64s(strText: Utility.RemoveNonB64(strText: body));
                 }
-                else if (Utility.IsNotNullText(_contentCharset))
+                else if (Utility.IsNotNullText(strText: _contentCharset))
                 {
                     body = Encoding
-                        .GetEncoding(_contentCharset)
-                        .GetString(Encoding.Default.GetBytes(body));
+                        .GetEncoding(name: _contentCharset)
+                        .GetString(bytes: Encoding.Default.GetBytes(s: body));
                 }
-                _messageBody.Add(Utility.RemoveNonB64(body));
+                _messageBody.Add(item: Utility.RemoveNonB64(strText: body));
             }
             else
             {
@@ -696,15 +720,24 @@ public class Message
                 while (begin != -1)
                 {
                     // find "\r\n\r\n" denoting end of header
-                    begin = strBuffer.IndexOf("--" + _attachmentboundry2, begin);
+                    begin = strBuffer.IndexOf(value: "--" + _attachmentboundry2, startIndex: begin);
                     if (begin != -1)
                     {
-                        encoding = MIMETypes.GetContentTransferEncoding(strBuffer, begin);
-                        string charset = MIMETypes.GetContentCharset(strBuffer, begin);
-                        begin = strBuffer.IndexOf("\r\n\r\n", begin + 1); //strBuffer.LastIndexOfAny(ALPHABET.ToCharArray());
+                        encoding = MIMETypes.GetContentTransferEncoding(
+                            strBuffer: strBuffer,
+                            pos: begin
+                        );
+                        string charset = MIMETypes.GetContentCharset(
+                            strBuffer: strBuffer,
+                            pos: begin
+                        );
+                        begin = strBuffer.IndexOf(value: "\r\n\r\n", startIndex: begin + 1); //strBuffer.LastIndexOfAny(ALPHABET.ToCharArray());
 
                         // find end of text
-                        end = strBuffer.IndexOf("--" + _attachmentboundry2, begin + 1);
+                        end = strBuffer.IndexOf(
+                            value: "--" + _attachmentboundry2,
+                            startIndex: begin + 1
+                        );
                         if (begin != -1)
                         {
                             if (end != -1)
@@ -717,45 +750,51 @@ public class Message
 
                                 if (
                                     this._contentEncoding != null
-                                    && this._contentEncoding.IndexOf("8bit") != -1
+                                    && this._contentEncoding.IndexOf(value: "8bit") != -1
                                 )
                                 {
                                     body = Utility.Change(
-                                        strBuffer.Substring(begin, end - begin - 2),
-                                        _contentCharset
+                                        strText: strBuffer.Substring(
+                                            startIndex: begin,
+                                            length: end - begin - 2
+                                        ),
+                                        strCharset: _contentCharset
                                     );
                                 }
                                 else
                                 {
-                                    body = strBuffer.Substring(begin, end - begin - 2);
+                                    body = strBuffer.Substring(
+                                        startIndex: begin,
+                                        length: end - begin - 2
+                                    );
                                 }
                             }
                             else
                             {
-                                body = strBuffer.Substring(begin);
+                                body = strBuffer.Substring(startIndex: begin);
                             }
-                            if (Utility.IsQuotedPrintable(encoding))
+                            if (Utility.IsQuotedPrintable(strText: encoding))
                             {
                                 string ret = body;
-                                ret = DecodeQP.ConvertHexContent(ret, charset);
-                                _messageBody.Add(ret);
+                                ret = DecodeQP.ConvertHexContent(Hexstring: ret, encoding: charset);
+                                _messageBody.Add(item: ret);
                             }
-                            else if (Utility.IsBase64(encoding))
+                            else if (Utility.IsBase64(strText: encoding))
                             {
-                                string ret = Utility.RemoveNonB64(body);
-                                ret = Utility.deCodeB64s(ret, charset);
+                                string ret = Utility.RemoveNonB64(strText: body);
+                                ret = Utility.deCodeB64s(strText: ret, strEncoding: charset);
                                 if (ret != "\0")
                                 {
-                                    _messageBody.Add(ret);
+                                    _messageBody.Add(item: ret);
                                 }
                                 else
                                 {
-                                    _messageBody.Add(body);
+                                    _messageBody.Add(item: body);
                                 }
                             }
                             else
                             {
-                                _messageBody.Add(body);
+                                _messageBody.Add(item: body);
                             }
 
                             if (end == -1)
@@ -772,7 +811,7 @@ public class Message
                     {
                         if (_messageBody.Count == 0)
                         {
-                            _messageBody.Add(strBuffer);
+                            _messageBody.Add(item: strBuffer);
                         }
                         break;
                     }
@@ -781,8 +820,8 @@ public class Message
         }
         catch (Exception e)
         {
-            Utility.LogError("GetMessageBody():" + e.Message);
-            _messageBody.Add(Utility.deCodeB64s(strBuffer));
+            Utility.LogError(strText: "GetMessageBody():" + e.Message);
+            _messageBody.Add(item: Utility.deCodeB64s(strText: strBuffer));
         }
         if (_messageBody.Count > 1)
         {
@@ -796,9 +835,9 @@ public class Message
     /// <returns>if it is a report message, return true, else, false</returns>
     public bool IsReport()
     {
-        if (Utility.IsNotNullText(_contentType))
+        if (Utility.IsNotNullText(strText: _contentType))
         {
-            return (_contentType.ToLower().IndexOf("report".ToLower()) != -1);
+            return (_contentType.ToLower().IndexOf(value: "report".ToLower()) != -1);
         }
 
         return false;
@@ -814,13 +853,13 @@ public class Message
         try
         {
             return (
-                attItem.ContentFileName.ToLower().EndsWith(".eml".ToLower())
+                attItem.ContentFileName.ToLower().EndsWith(value: ".eml".ToLower())
                 || attItem.ContentType.ToLower() == "message/rfc822".ToLower()
             );
         }
         catch (Exception e)
         {
-            Utility.LogError("IsMIMEMailFile():" + e.Message);
+            Utility.LogError(strText: "IsMIMEMailFile():" + e.Message);
             return false;
         }
     }
@@ -837,28 +876,28 @@ public class Message
         {
             for (int i = 0; i < this.AttachmentCount; i++)
             {
-                Attachment att = this.GetAttachment(i);
-                if (Utility.IsPictureFile(att.ContentFileName) == true)
+                Attachment att = this.GetAttachment(intAttachmentNumber: i);
+                if (Utility.IsPictureFile(strFile: att.ContentFileName) == true)
                 {
-                    if (Utility.IsNotNullText(att.ContentID))
+                    if (Utility.IsNotNullText(strText: att.ContentID))
                     {
                         //support for embedded pictures
                         strBody = strBody.Replace(
-                            "cid:" + att.ContentID,
-                            hsbFiles[att.ContentFileName].ToString()
+                            oldValue: "cid:" + att.ContentID,
+                            newValue: hsbFiles[key: att.ContentFileName].ToString()
                         );
                     }
 
                     strBody = strBody.Replace(
-                        att.ContentFileName,
-                        hsbFiles[att.ContentFileName].ToString()
+                        oldValue: att.ContentFileName,
+                        newValue: hsbFiles[key: att.ContentFileName].ToString()
                     );
                 }
             }
         }
         catch (Exception e)
         {
-            Utility.LogError("TranslateHTMLPictureFiles():" + e.Message);
+            Utility.LogError(strText: "TranslateHTMLPictureFiles():" + e.Message);
         }
         return strBody;
     }
@@ -873,31 +912,34 @@ public class Message
     {
         try
         {
-            if (!strPath.EndsWith("\\"))
+            if (!strPath.EndsWith(value: "\\"))
             {
                 strPath += "\\";
             }
             for (int i = 0; i < this.AttachmentCount; i++)
             {
-                Attachment att = this.GetAttachment(i);
-                if (Utility.IsPictureFile(att.ContentFileName) == true)
+                Attachment att = this.GetAttachment(intAttachmentNumber: i);
+                if (Utility.IsPictureFile(strFile: att.ContentFileName) == true)
                 {
-                    if (Utility.IsNotNullText(att.ContentID))
+                    if (Utility.IsNotNullText(strText: att.ContentID))
                     {
                         //support for embedded pictures
                         strBody = strBody.Replace(
-                            "cid:" + att.ContentID,
-                            strPath + att.ContentFileName
+                            oldValue: "cid:" + att.ContentID,
+                            newValue: strPath + att.ContentFileName
                         );
                     }
 
-                    strBody = strBody.Replace(att.ContentFileName, strPath + att.ContentFileName);
+                    strBody = strBody.Replace(
+                        oldValue: att.ContentFileName,
+                        newValue: strPath + att.ContentFileName
+                    );
                 }
             }
         }
         catch (Exception e)
         {
-            Utility.LogError("TranslateHTMLPictureFiles():" + e.Message);
+            Utility.LogError(strText: "TranslateHTMLPictureFiles():" + e.Message);
         }
         return strBody;
     }
@@ -916,7 +958,10 @@ public class Message
             if (attItem.ContentFileName == attItem.DefaultFileName)
             {
                 items++;
-                attItem.ContentFileName = attItem.DefaultFileName2.Replace("*", items.ToString());
+                attItem.ContentFileName = attItem.DefaultFileName2.Replace(
+                    oldValue: "*",
+                    newValue: items.ToString()
+                );
             }
         }
         string name = attItem.ContentFileName;
@@ -926,7 +971,7 @@ public class Message
                 ? (
                     IsReport() == true
                         ? (
-                            this.IsMIMEMailFile(attItem) == true
+                            this.IsMIMEMailFile(attItem: attItem) == true
                                 ? attItem.DefaultMIMEFileName
                                 : attItem.DefaultReportFileName
                         )
@@ -943,19 +988,22 @@ public class Message
     /// <returns>true if save successfully, false if failed</returns>
     public bool SaveAttachments(string strPath)
     {
-        if (Utility.IsNotNullText(strPath))
+        if (Utility.IsNotNullText(strText: strPath))
         {
             try
             {
                 bool blnRet = true;
-                if (!strPath.EndsWith("\\"))
+                if (!strPath.EndsWith(value: "\\"))
                 {
                     strPath += "\\";
                 }
                 for (int i = 0; i < this.Attachments.Count; i++)
                 {
-                    Attachment att = GetAttachment(i);
-                    blnRet = SaveAttachment(att, strPath + GetAttachmentFileName(att));
+                    Attachment att = GetAttachment(intAttachmentNumber: i);
+                    blnRet = SaveAttachment(
+                        attItem: att,
+                        strFileName: strPath + GetAttachmentFileName(attItem: att)
+                    );
                     if (!blnRet)
                     {
                         break;
@@ -965,7 +1013,7 @@ public class Message
             }
             catch (Exception e)
             {
-                Utility.LogError(e.Message);
+                Utility.LogError(strText: e.Message);
                 return false;
             }
         }
@@ -1008,21 +1056,21 @@ public class Message
             }
             else if (attItem.ContentType.ToLower() == "message/rfc822".ToLower())
             {
-                da = Encoding.Default.GetBytes(attItem.RawAttachment);
+                da = Encoding.Default.GetBytes(s: attItem.RawAttachment);
             }
             else
             {
-                this.GetMessageBody(attItem.DecodeAsText());
-                da = Encoding.Default.GetBytes(MessageBody[MessageBody.Count - 1]);
+                this.GetMessageBody(strBuffer: attItem.DecodeAsText());
+                da = Encoding.Default.GetBytes(s: MessageBody[index: MessageBody.Count - 1]);
             }
-            return Utility.SaveByteContentToFile(strFileName, da);
+            return Utility.SaveByteContentToFile(strFile: strFileName, bytContent: da);
         }
         catch
         {
             /*Utility.LogError("SaveAttachment():"+e.Message);
             return false;*/
-            da = Encoding.Default.GetBytes(attItem.RawAttachment);
-            return Utility.SaveByteContentToFile(strFileName, da);
+            da = Encoding.Default.GetBytes(s: attItem.RawAttachment);
+            return Utility.SaveByteContentToFile(strFile: strFileName, bytContent: da);
         }
     }
 
@@ -1035,22 +1083,24 @@ public class Message
         int indexOfAttachmentEnd = 0;
         bool processed = false;
         Attachment att = null;
-        SetAttachmentBoundry2(_rawMessageBody);
+        SetAttachmentBoundry2(strBuffer: _rawMessageBody);
         while (!processed)
         {
-            if (Utility.IsNotNullText(_attachmentboundry))
+            if (Utility.IsNotNullText(strText: _attachmentboundry))
             {
                 indexOf_attachmentstart =
-                    _rawMessageBody.IndexOf(_attachmentboundry, indexOf_attachmentstart)
-                    + _attachmentboundry.Length;
+                    _rawMessageBody.IndexOf(
+                        value: _attachmentboundry,
+                        startIndex: indexOf_attachmentstart
+                    ) + _attachmentboundry.Length;
                 if (_rawMessageBody == "" || indexOf_attachmentstart < 0)
                 {
                     return;
                 }
 
                 indexOfAttachmentEnd = _rawMessageBody.IndexOf(
-                    _attachmentboundry,
-                    indexOf_attachmentstart + 1
+                    value: _attachmentboundry,
+                    startIndex: indexOf_attachmentstart + 1
                 );
             }
             else
@@ -1075,16 +1125,24 @@ public class Message
                 processed = true;
             }
             string strLine = _rawMessageBody.Substring(
-                indexOf_attachmentstart,
-                (indexOfAttachmentEnd - indexOf_attachmentstart - 2)
+                startIndex: indexOf_attachmentstart,
+                length: (indexOfAttachmentEnd - indexOf_attachmentstart - 2)
             );
             bool isMSTNEF;
-            isMSTNEF = MIMETypes.IsMSTNEF(_contentType);
-            att = new Attachment(strLine.Trim(), _contentType, !isMSTNEF);
+            isMSTNEF = MIMETypes.IsMSTNEF(strContentType: _contentType);
+            att = new Attachment(
+                strAttachment: strLine.Trim(),
+                strContentType: _contentType,
+                blnParseHeader: !isMSTNEF
+            );
             //ms-tnef format might contain multiple attachments
-            if (MIMETypes.IsMSTNEF(att.ContentType) && AutoDecodeMSTNEF && !isMSTNEF)
+            if (
+                MIMETypes.IsMSTNEF(strContentType: att.ContentType)
+                && AutoDecodeMSTNEF
+                && !isMSTNEF
+            )
             {
-                Utility.LogError("set_attachments():found ms-tnef file");
+                Utility.LogError(strText: "set_attachments():found ms-tnef file");
                 TNEFParser tnef = new TNEFParser();
                 TNEFAttachment tatt = new TNEFAttachment();
                 Attachment attNew = null;
@@ -1092,7 +1150,7 @@ public class Message
                 tnef.Verbose = false;
                 tnef.BasePath = this.BasePath;
                 //tnef.LogFilePath=this.BasePath + "OpenPOP.TNEF.log";
-                if (tnef.OpenTNEFStream(att.DecodedAsBytes()))
+                if (tnef.OpenTNEFStream(bytContents: att.DecodedAsBytes()))
                 {
                     if (tnef.Parse())
                     {
@@ -1104,29 +1162,29 @@ public class Message
                         {
                             tatt = (TNEFAttachment)i.Value;
                             attNew = new Attachment(
-                                tatt.FileContent,
-                                tatt.FileLength,
-                                tatt.FileName,
-                                MIMETypes.GetMimeType(tatt.FileName)
+                                bytAttachment: tatt.FileContent,
+                                lngFileLength: tatt.FileLength,
+                                strFileName: tatt.FileName,
+                                strContentType: MIMETypes.GetMimeType(strFileName: tatt.FileName)
                             );
                             _attachmentCount++;
-                            _attachments.Add(attNew);
+                            _attachments.Add(item: attNew);
                         }
                     }
                     else
                     {
-                        Utility.LogError("set_attachments():ms-tnef file parse failed");
+                        Utility.LogError(strText: "set_attachments():ms-tnef file parse failed");
                     }
                 }
                 else
                 {
-                    Utility.LogError("set_attachments():ms-tnef file open failed");
+                    Utility.LogError(strText: "set_attachments():ms-tnef file open failed");
                 }
             }
             else
             {
                 _attachmentCount++;
-                _attachments.Add(att);
+                _attachments.Add(item: att);
             }
             indexOf_attachmentstart++;
         }
@@ -1142,7 +1200,7 @@ public class Message
         int indexOfAttachmentBoundry2End = 0;
         indexOfAttachmentBoundry2Begin = strBuffer
             .ToLower()
-            .IndexOf("Multipart/Alternative".ToLower());
+            .IndexOf(value: "Multipart/Alternative".ToLower());
         if (indexOfAttachmentBoundry2Begin != -1)
         {
             /*				indexOfAttachmentBoundry2Begin=strBuffer.IndexOf("boundary=\"");
@@ -1150,14 +1208,20 @@ public class Message
                             if(indexOfAttachmentBoundry2Begin!=-1&&indexOfAttachmentBoundry2End!=-1)
                                 _attachmentboundry2=strBuffer.Substring(indexOfAttachmentBoundry2Begin+10,indexOfAttachmentBoundry2End-indexOfAttachmentBoundry2Begin-10).Trim();
             */
-            indexOfAttachmentBoundry2Begin = strBuffer.IndexOf("boundary=");
+            indexOfAttachmentBoundry2Begin = strBuffer.IndexOf(value: "boundary=");
             if (indexOfAttachmentBoundry2Begin != -1)
             {
-                int p = strBuffer.IndexOf("\r\n", indexOfAttachmentBoundry2Begin);
-                string s = strBuffer.Substring(indexOfAttachmentBoundry2Begin + 29, 4);
+                int p = strBuffer.IndexOf(
+                    value: "\r\n",
+                    startIndex: indexOfAttachmentBoundry2Begin
+                );
+                string s = strBuffer.Substring(
+                    startIndex: indexOfAttachmentBoundry2Begin + 29,
+                    length: 4
+                );
                 indexOfAttachmentBoundry2End = strBuffer.IndexOf(
-                    "\r\n",
-                    indexOfAttachmentBoundry2Begin + 9
+                    value: "\r\n",
+                    startIndex: indexOfAttachmentBoundry2Begin + 9
                 );
                 if (indexOfAttachmentBoundry2End == -1)
                 {
@@ -1165,9 +1229,9 @@ public class Message
                 }
 
                 _attachmentboundry2 = Utility.RemoveQuote(
-                    strBuffer.Substring(
-                        indexOfAttachmentBoundry2Begin + 9,
-                        indexOfAttachmentBoundry2End - indexOfAttachmentBoundry2Begin - 9
+                    strText: strBuffer.Substring(
+                        startIndex: indexOfAttachmentBoundry2Begin + 9,
+                        length: indexOfAttachmentBoundry2End - indexOfAttachmentBoundry2Begin - 9
                     )
                 );
             }
@@ -1185,7 +1249,11 @@ public class Message
     /// <returns></returns>
     public bool SaveToMIMEEmailFile(string strFile, bool blnReplaceExists)
     {
-        return Utility.SavePlainTextToFile(strFile, _rawMessage, blnReplaceExists);
+        return Utility.SavePlainTextToFile(
+            strFile: strFile,
+            strText: _rawMessage,
+            blnReplaceExists: blnReplaceExists
+        );
     }
 
     /// <summary>
@@ -1206,27 +1274,30 @@ public class Message
     {
         string strFormmated;
         int intLines = 0;
-        alCollection.Add(strValue);
-        sbdBuilder.Append(strLine);
+        alCollection.Add(item: strValue);
+        sbdBuilder.Append(value: strLine);
         strLine = srdReader.ReadLine();
-        while (strLine.Trim() != "" && (strLine.StartsWith("\t") || strLine.StartsWith(" ")))
+        while (
+            strLine.Trim() != ""
+            && (strLine.StartsWith(value: "\t") || strLine.StartsWith(value: " "))
+        )
         {
-            strFormmated = strLine.Substring(1);
-            alCollection.Add(Utility.DecodeLine(strFormmated));
-            sbdBuilder.Append(strLine);
+            strFormmated = strLine.Substring(startIndex: 1);
+            alCollection.Add(item: Utility.DecodeLine(strText: strFormmated));
+            sbdBuilder.Append(value: strLine);
             strLine = srdReader.ReadLine();
             intLines++;
         }
         if (strLine != "")
         {
-            sbdBuilder.Append(strLine);
+            sbdBuilder.Append(value: strLine);
         }
         else if (intLines == 0)
         {
             strLine = srdReader.ReadLine();
-            sbdBuilder.Append(strLine);
+            sbdBuilder.Append(value: strLine);
         }
-        ParseHeader(sbdBuilder, srdReader, ref strLine);
+        ParseHeader(sbdBuilder: sbdBuilder, srdReader: srdReader, strLine: ref strLine);
     }
 
     /// <summary>
@@ -1252,29 +1323,32 @@ public class Message
         int intLines = 0;
         //sbdBuilder.Append(strLine);
         strLine = srdReader.ReadLine();
-        while (strLine.Trim() != "" && (strLine.StartsWith("\t") || strLine.StartsWith(" ")))
+        while (
+            strLine.Trim() != ""
+            && (strLine.StartsWith(value: "\t") || strLine.StartsWith(value: " "))
+        )
         {
-            strFormmated = strLine.Substring(1);
-            strReturn += Utility.DecodeLine(strFormmated);
-            sbdBuilder.Append(strLine + "\r\n");
+            strFormmated = strLine.Substring(startIndex: 1);
+            strReturn += Utility.DecodeLine(strText: strFormmated);
+            sbdBuilder.Append(value: strLine + "\r\n");
             strLine = srdReader.ReadLine();
             intLines++;
         }
-        if (!hstCollection.ContainsKey(strName))
+        if (!hstCollection.ContainsKey(key: strName))
         {
-            hstCollection.Add(strName, strReturn);
+            hstCollection.Add(key: strName, value: strReturn);
         }
 
         if (strLine != "")
         {
-            sbdBuilder.Append(strLine + "\r\n");
+            sbdBuilder.Append(value: strLine + "\r\n");
         }
         else if (intLines == 0)
         {
             //					strLine=srdReader.ReadLine();
             //					sbdBuilder.Append(strLine + "\r\n");
         }
-        ParseHeader(sbdBuilder, srdReader, ref strLine);
+        ParseHeader(sbdBuilder: sbdBuilder, srdReader: srdReader, strLine: ref strLine);
     }
 
     /// <summary>
@@ -1298,38 +1372,43 @@ public class Message
         string strFormmated;
         int intLines = 0;
         strReturn = strValue;
-        sbdBuilder.Append(strLine + "\r\n");
+        sbdBuilder.Append(value: strLine + "\r\n");
         if (blnLineDecode == true)
         {
-            strReturn = Utility.DecodeLine(strReturn);
+            strReturn = Utility.DecodeLine(strText: strReturn);
         }
 
         strLine = srdReader.ReadLine();
-        while (strLine.Trim() != "" && (strLine.StartsWith("\t") || strLine.StartsWith(" ")))
+        while (
+            strLine.Trim() != ""
+            && (strLine.StartsWith(value: "\t") || strLine.StartsWith(value: " "))
+        )
         {
-            strFormmated = strLine.Substring(1);
+            strFormmated = strLine.Substring(startIndex: 1);
             strReturn += (
-                blnLineDecode == true ? Utility.DecodeLine(strFormmated) : "\r\n" + strFormmated
+                blnLineDecode == true
+                    ? Utility.DecodeLine(strText: strFormmated)
+                    : "\r\n" + strFormmated
             );
-            sbdBuilder.Append(strLine + "\r\n");
+            sbdBuilder.Append(value: strLine + "\r\n");
             strLine = srdReader.ReadLine();
             intLines++;
         }
         if (strLine != "")
         {
-            sbdBuilder.Append(strLine + "\r\n");
+            sbdBuilder.Append(value: strLine + "\r\n");
         }
         else if (intLines == 0)
         {
             strLine = srdReader.ReadLine();
-            sbdBuilder.Append(strLine + "\r\n");
+            sbdBuilder.Append(value: strLine + "\r\n");
         }
         if (!blnLineDecode)
         {
-            strReturn = Utility.RemoveWhiteBlanks(Utility.DecodeText(strReturn));
+            strReturn = Utility.RemoveWhiteBlanks(strText: Utility.DecodeText(strText: strReturn));
         }
 
-        ParseHeader(sbdBuilder, srdReader, ref strLine);
+        ParseHeader(sbdBuilder: sbdBuilder, srdReader: srdReader, strLine: ref strLine);
     }
 
     /// <summary>
@@ -1340,66 +1419,80 @@ public class Message
     /// <param name="strLine">reference header line</param>
     private void ParseHeader(StringBuilder sbdBuilder, StringReader srdReader, ref string strLine)
     {
-        string[] array = Utility.GetHeadersValue(strLine); //Regex.Split(strLine,":");
+        string[] array = Utility.GetHeadersValue(strRawHeader: strLine); //Regex.Split(strLine,":");
         switch (array[0].ToUpper())
         {
             case "TO":
             {
-                _to = array[1].Split(',');
+                _to = array[1].Split(separator: ',');
                 for (int i = 0; i < _to.Length; i++)
                 {
-                    _to[i] = Utility.DecodeLine(_to[i].Trim());
+                    _to[i] = Utility.DecodeLine(strText: _to[i].Trim());
                 }
                 break;
             }
 
             case "CC":
             {
-                _cc = array[1].Split(',');
+                _cc = array[1].Split(separator: ',');
                 for (int i = 0; i < _cc.Length; i++)
                 {
-                    _cc[i] = Utility.DecodeLine(_cc[i].Trim());
+                    _cc[i] = Utility.DecodeLine(strText: _cc[i].Trim());
                 }
                 break;
             }
 
             case "BCC":
             {
-                _bcc = array[1].Split(',');
+                _bcc = array[1].Split(separator: ',');
                 for (int i = 0; i < _bcc.Length; i++)
                 {
-                    _bcc[i] = Utility.DecodeLine(_bcc[i].Trim());
+                    _bcc[i] = Utility.DecodeLine(strText: _bcc[i].Trim());
                 }
                 break;
             }
 
             case "FROM":
             {
-                Utility.ParseEmailAddress(array[1], ref _from, ref _fromEmail);
+                Utility.ParseEmailAddress(
+                    strEmailAddress: array[1],
+                    strUser: ref _from,
+                    strAddress: ref _fromEmail
+                );
                 break;
             }
 
             case "REPLY-TO":
             {
-                Utility.ParseEmailAddress(array[1], ref _replyTo, ref _replyToEmail);
+                Utility.ParseEmailAddress(
+                    strEmailAddress: array[1],
+                    strUser: ref _replyTo,
+                    strAddress: ref _replyToEmail
+                );
                 break;
             }
 
             case "KEYWORDS": //ms outlook keywords
             {
-                ParseStreamLines(sbdBuilder, srdReader, array[1].Trim(), ref strLine, _keywords);
+                ParseStreamLines(
+                    sbdBuilder: sbdBuilder,
+                    srdReader: srdReader,
+                    strValue: array[1].Trim(),
+                    strLine: ref strLine,
+                    alCollection: _keywords
+                );
                 break;
             }
 
             case "RECEIVED":
             {
                 ParseStreamLines(
-                    sbdBuilder,
-                    srdReader,
-                    array[1].Trim(),
-                    ref strLine,
-                    ref _received,
-                    true
+                    sbdBuilder: sbdBuilder,
+                    srdReader: srdReader,
+                    strValue: array[1].Trim(),
+                    strLine: ref strLine,
+                    strReturn: ref _received,
+                    blnLineDecode: true
                 );
                 break;
             }
@@ -1430,19 +1523,26 @@ public class Message
                 {
                     strRet += array[i];
                 }
-                ParseStreamLines(sbdBuilder, srdReader, strRet, ref strLine, ref _subject, false);
+                ParseStreamLines(
+                    sbdBuilder: sbdBuilder,
+                    srdReader: srdReader,
+                    strValue: strRet,
+                    strLine: ref strLine,
+                    strReturn: ref _subject,
+                    blnLineDecode: false
+                );
                 break;
             }
 
             case "RETURN-PATH":
             {
-                _returnPath = array[1].Trim().Trim('>').Trim('<');
+                _returnPath = array[1].Trim().Trim(trimChars: '>').Trim(trimChars: '<');
                 break;
             }
 
             case "MESSAGE-ID":
             {
-                _messageID = array[1].Trim().Trim('>').Trim('<');
+                _messageID = array[1].Trim().Trim(trimChars: '>').Trim(trimChars: '<');
                 break;
             }
 
@@ -1453,13 +1553,13 @@ public class Message
                     _dateTimeInfo += array[i];
                 }
                 _dateTimeInfo = _dateTimeInfo.Trim();
-                _date = Utility.ParseEmailDate(_dateTimeInfo);
+                _date = Utility.ParseEmailDate(strDate: _dateTimeInfo);
                 break;
             }
 
             case "CONTENT-LENGTH":
             {
-                _contentLength = Convert.ToInt32(array[1]);
+                _contentLength = Convert.ToInt32(value: array[1]);
                 break;
             }
 
@@ -1478,30 +1578,38 @@ public class Message
                 }
 
                 strLine = array[1];
-                _contentType = strLine.Split(';')[0];
+                _contentType = strLine.Split(separator: ';')[0];
                 _contentType = _contentType.Trim();
-                int intCharset = strLine.IndexOf("charset=");
+                int intCharset = strLine.IndexOf(value: "charset=");
                 if (intCharset != -1)
                 {
-                    int intBound2 = strLine.ToLower().IndexOf(";", intCharset + 8);
+                    int intBound2 = strLine
+                        .ToLower()
+                        .IndexOf(value: ";", startIndex: intCharset + 8);
                     if (intBound2 == -1)
                     {
                         intBound2 = strLine.Length;
                     }
 
                     intBound2 -= (intCharset + 8);
-                    _contentCharset = strLine.Substring(intCharset + 8, intBound2);
-                    _contentCharset = Utility.RemoveQuote(_contentCharset);
+                    _contentCharset = strLine.Substring(
+                        startIndex: intCharset + 8,
+                        length: intBound2
+                    );
+                    _contentCharset = Utility.RemoveQuote(strText: _contentCharset);
                 }
                 else
                 {
-                    intCharset = strLine.ToLower().IndexOf("report-type=".ToLower());
+                    intCharset = strLine.ToLower().IndexOf(value: "report-type=".ToLower());
                     if (intCharset != -1)
                     {
-                        int intPos = strLine.IndexOf(";", intCharset + 13);
-                        _reportType = strLine.Substring(intCharset + 12, intPos - intCharset - 13);
+                        int intPos = strLine.IndexOf(value: ";", startIndex: intCharset + 13);
+                        _reportType = strLine.Substring(
+                            startIndex: intCharset + 12,
+                            length: intPos - intCharset - 13
+                        );
                     }
-                    else if (strLine.ToLower().IndexOf("boundary=".ToLower()) == -1)
+                    else if (strLine.ToLower().IndexOf(value: "boundary=".ToLower()) == -1)
                     {
                         strLine = srdReader.ReadLine();
                         if (strLine == "")
@@ -1509,23 +1617,27 @@ public class Message
                             return;
                         }
 
-                        intCharset = strLine.ToLower().IndexOf("charset=".ToLower());
+                        intCharset = strLine.ToLower().IndexOf(value: "charset=".ToLower());
                         if (intCharset != -1)
                         {
                             _contentCharset = strLine.Substring(
-                                intCharset + 9,
-                                strLine.Length - intCharset - 10
+                                startIndex: intCharset + 9,
+                                length: strLine.Length - intCharset - 10
                             );
                         }
-                        else if (strLine.IndexOf(":") != -1)
+                        else if (strLine.IndexOf(value: ":") != -1)
                         {
-                            sbdBuilder.Append(strLine + "\r\n");
-                            ParseHeader(sbdBuilder, srdReader, ref strLine);
+                            sbdBuilder.Append(value: strLine + "\r\n");
+                            ParseHeader(
+                                sbdBuilder: sbdBuilder,
+                                srdReader: srdReader,
+                                strLine: ref strLine
+                            );
                             return;
                         }
                         else
                         {
-                            sbdBuilder.Append(strLine + "\r\n");
+                            sbdBuilder.Append(value: strLine + "\r\n");
                         }
                     }
                 }
@@ -1536,7 +1648,7 @@ public class Message
 
                 if (
                     _contentType.ToLower() == "text/html"
-                    || _contentType.ToLower().IndexOf("multipart/") != -1
+                    || _contentType.ToLower().IndexOf(value: "multipart/") != -1
                 )
                 {
                     _html = true;
@@ -1544,22 +1656,26 @@ public class Message
 
                 if (
                     strLine.Trim().Length == _contentType.Length + 1
-                    || strLine.ToLower().IndexOf("boundary=".ToLower()) == -1
+                    || strLine.ToLower().IndexOf(value: "boundary=".ToLower()) == -1
                 )
                 {
                     strLine = srdReader.ReadLine();
-                    if (strLine == null || strLine == "" || strLine.IndexOf(":") != -1)
+                    if (strLine == null || strLine == "" || strLine.IndexOf(value: ":") != -1)
                     {
-                        sbdBuilder.Append(strLine + "\r\n");
-                        ParseHeader(sbdBuilder, srdReader, ref strLine);
+                        sbdBuilder.Append(value: strLine + "\r\n");
+                        ParseHeader(
+                            sbdBuilder: sbdBuilder,
+                            srdReader: srdReader,
+                            strLine: ref strLine
+                        );
                         return;
                     }
 
-                    sbdBuilder.Append(strLine + "\r\n");
-                    if (strLine.ToLower().IndexOf("boundary=".ToLower()) == -1)
+                    sbdBuilder.Append(value: strLine + "\r\n");
+                    if (strLine.ToLower().IndexOf(value: "boundary=".ToLower()) == -1)
                     {
                         _attachmentboundry = srdReader.ReadLine();
-                        sbdBuilder.Append(_attachmentboundry + "\r\n");
+                        sbdBuilder.Append(value: _attachmentboundry + "\r\n");
                     }
                     _attachmentboundry = strLine;
                 }
@@ -1570,19 +1686,24 @@ public class Message
                     else*/
                     _attachmentboundry = strLine;
                 }
-                int intBound = _attachmentboundry.ToLower().IndexOf("boundary=");
+                int intBound = _attachmentboundry.ToLower().IndexOf(value: "boundary=");
                 if (intBound != -1)
                 {
-                    int intBound2 = _attachmentboundry.ToLower().IndexOf(";", intBound + 10);
+                    int intBound2 = _attachmentboundry
+                        .ToLower()
+                        .IndexOf(value: ";", startIndex: intBound + 10);
                     if (intBound2 == -1)
                     {
                         intBound2 = _attachmentboundry.Length;
                     }
 
                     intBound2 -= (intBound + 9);
-                    _attachmentboundry = _attachmentboundry.Substring(intBound + 9, intBound2);
+                    _attachmentboundry = _attachmentboundry.Substring(
+                        startIndex: intBound + 9,
+                        length: intBound2
+                    );
                 }
-                _attachmentboundry = Utility.RemoveQuote(_attachmentboundry);
+                _attachmentboundry = Utility.RemoveQuote(strText: _attachmentboundry);
                 _hasAttachment = true;
                 break;
             }
@@ -1592,15 +1713,15 @@ public class Message
                 if (array.Length > 1) //here we parse all custom headers
                 {
                     string headerName = array[0].Trim();
-                    if (headerName.ToUpper().StartsWith("X")) //every custom header starts with "X"
+                    if (headerName.ToUpper().StartsWith(value: "X")) //every custom header starts with "X"
                     {
                         ParseStreamLines(
-                            sbdBuilder,
-                            srdReader,
-                            headerName,
-                            array[1].Trim(),
-                            ref strLine,
-                            _customHeaders
+                            sbdBuilder: sbdBuilder,
+                            srdReader: srdReader,
+                            strName: headerName,
+                            strValue: array[1].Trim(),
+                            strLine: ref strLine,
+                            hstCollection: _customHeaders
                         );
                     }
                 }

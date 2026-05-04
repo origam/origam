@@ -40,41 +40,43 @@ public class StartUpConfiguration
 
     public IEnumerable<string> UserApiPublicRoutes =>
         configuration
-            .GetSection("UserApiOptions")
-            .GetSection("PublicRoutes")
+            .GetSection(key: "UserApiOptions")
+            .GetSection(key: "PublicRoutes")
             .GetChildren()
-            .Select(c => c.Value);
+            .Select(selector: c => c.Value);
     public IEnumerable<string> UserApiRestrictedRoutes =>
         configuration
-            .GetSection("UserApiOptions")
-            .GetSection("RestrictedRoutes")
+            .GetSection(key: "UserApiOptions")
+            .GetSection(key: "RestrictedRoutes")
             .GetChildren()
-            .Select(c => c.Value);
+            .Select(selector: c => c.Value);
     public bool EnableSoapInterface =>
-        configuration.GetSection("SoapAPI").GetValue<bool>("Enabled");
+        configuration.GetSection(key: "SoapAPI").GetValue<bool>(key: "Enabled");
 
     public bool SoapInterfaceRequiresAuthentication =>
-        configuration.GetSection("SoapAPI").GetValue("RequiresAuthentication", true);
+        configuration
+            .GetSection(key: "SoapAPI")
+            .GetValue(key: "RequiresAuthentication", defaultValue: true);
     public bool ExpectAndReturnOldDotNetAssemblyReferences =>
         configuration
-            .GetSection("SoapAPI")
-            .GetValue("ExpectAndReturnOldDotNetAssemblyReferences", true);
+            .GetSection(key: "SoapAPI")
+            .GetValue(key: "ExpectAndReturnOldDotNetAssemblyReferences", defaultValue: true);
     public string PathToCustomAssetsFolder =>
-        configuration.GetSection("CustomAssetsConfig")["PathToCustomAssetsFolder"];
+        configuration.GetSection(key: "CustomAssetsConfig")[key: "PathToCustomAssetsFolder"];
     public string RouteToCustomAssetsFolder =>
-        configuration.GetSection("CustomAssetsConfig")["RouteToCustomAssetsFolder"];
+        configuration.GetSection(key: "CustomAssetsConfig")[key: "RouteToCustomAssetsFolder"];
     public bool HasCustomAssets =>
-        !string.IsNullOrWhiteSpace(PathToCustomAssetsFolder)
-        && !string.IsNullOrWhiteSpace(RouteToCustomAssetsFolder);
+        !string.IsNullOrWhiteSpace(value: PathToCustomAssetsFolder)
+        && !string.IsNullOrWhiteSpace(value: RouteToCustomAssetsFolder);
     public string PathToClientApp
     {
         get
         {
-            string pathToClientApp = configuration["PathToClientApp"];
-            if (!Path.IsPathRooted(pathToClientApp))
+            string pathToClientApp = configuration[key: "PathToClientApp"];
+            if (!Path.IsPathRooted(path: pathToClientApp))
             {
                 throw new Exception(
-                    $"The PathToClientApp \"{pathToClientApp}\" must be an absolute path"
+                    message: $"The PathToClientApp \"{pathToClientApp}\" must be an absolute path"
                 );
             }
             return pathToClientApp;
@@ -85,7 +87,7 @@ public class StartUpConfiguration
     {
         get
         {
-            var subSection = configuration.GetSection("ExtensionDlls");
+            var subSection = configuration.GetSection(key: "ExtensionDlls");
             if (!subSection.Exists())
             {
                 return Array.Empty<string>();
@@ -95,30 +97,32 @@ public class StartUpConfiguration
     }
 
     public bool ReloadModelWhenFilesChangesDetected =>
-        configuration.GetValue<bool>("ReloadModelWhenFilesChangesDetected");
+        configuration.GetValue<bool>(key: "ReloadModelWhenFilesChangesDetected");
 
     public bool EnableMiniProfiler =>
-        configuration.GetSection("MiniProfiler").GetValue("Enabled", false);
+        configuration.GetSection(key: "MiniProfiler").GetValue(key: "Enabled", defaultValue: false);
 
     public int MultipartBodyLengthLimit =>
         configuration
-            .GetSection("HttpFormSettings")
-            .GetValue("MultipartBodyLengthLimit", 134_217_728);
+            .GetSection(key: "HttpFormSettings")
+            .GetValue(key: "MultipartBodyLengthLimit", defaultValue: 134_217_728);
 
     public int MultipartHeadersLengthLimit =>
         configuration
-            .GetSection("HttpFormSettings")
-            .GetValue("MultipartHeadersLengthLimit", 16_384);
+            .GetSection(key: "HttpFormSettings")
+            .GetValue(key: "MultipartHeadersLengthLimit", defaultValue: 16_384);
 
     public int ValueLengthLimit =>
-        configuration.GetSection("HttpFormSettings").GetValue("ValueLengthLimit", 4_194_304);
+        configuration
+            .GetSection(key: "HttpFormSettings")
+            .GetValue(key: "ValueLengthLimit", defaultValue: 4_194_304);
 
     public SecurityProtocolType SecurityProtocol
     {
         get
         {
             var protocols = configuration
-                .GetSection("SupportedSecurityProtocols")
+                .GetSection(key: "SupportedSecurityProtocols")
                 .GetChildren()
                 .ToArray();
             if (protocols.Length == 0)
@@ -126,20 +130,20 @@ public class StartUpConfiguration
                 return SecurityProtocolType.SystemDefault;
             }
             return protocols
-                .Select(ParseSecurityProtocolType)
-                .Aggregate((current, next) => current | next);
+                .Select(selector: ParseSecurityProtocolType)
+                .Aggregate(func: (current, next) => current | next);
         }
     }
 
     private SecurityProtocolType ParseSecurityProtocolType(IConfigurationSection section)
     {
-        if (Enum.TryParse(section.Value, out SecurityProtocolType protocolType))
+        if (Enum.TryParse(value: section.Value, result: out SecurityProtocolType protocolType))
         {
             return protocolType;
         }
 
         throw new ArgumentException(
-            $"Cannot parse \"{section.Value}\" to a valid {nameof(SecurityProtocol)} when parsing values of SupportedSecurityProtocols"
+            message: $"Cannot parse \"{section.Value}\" to a valid {nameof(SecurityProtocol)} when parsing values of SupportedSecurityProtocols"
         );
     }
 }

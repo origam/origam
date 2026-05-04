@@ -42,7 +42,8 @@ public class AsButtonCommand : BigToolStripButton, IStatusUpdate, IDisposable
         set
         {
             description = value;
-            this.ToolTipText = RemoveSingleAmpersands(value).Replace("&&", "&");
+            this.ToolTipText = RemoveSingleAmpersands(str: value)
+                .Replace(oldValue: "&&", newValue: "&");
         }
     }
 
@@ -54,7 +55,7 @@ public class AsButtonCommand : BigToolStripButton, IStatusUpdate, IDisposable
     /// <returns></returns>
     private string RemoveSingleAmpersands(string str)
     {
-        return Regex.Replace(str, @"(^|[^&])(&)($|[^&])", "$1$3");
+        return Regex.Replace(input: str, pattern: @"(^|[^&])(&)($|[^&])", replacement: "$1$3");
     }
 
     public bool IsEnabled

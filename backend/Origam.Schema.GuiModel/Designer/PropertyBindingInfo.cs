@@ -31,8 +31,8 @@ namespace Origam.Schema.GuiModel;
 /// Summary description for PropertyValueItem.
 /// </summary>
 ///
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class PropertyBindingInfo : AbstractPropertyValueItem
 {
     public const string CategoryConst = "PropertyBindingInfo";
@@ -41,15 +41,15 @@ public class PropertyBindingInfo : AbstractPropertyValueItem
         : base() { }
 
     public PropertyBindingInfo(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(schemaExtensionId: schemaExtensionId) { }
 
     public PropertyBindingInfo(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     private string _value;
 
-    [Localizable(true)]
-    [XmlAttribute("value")]
+    [Localizable(isLocalizable: true)]
+    [XmlAttribute(attributeName: "value")]
     public string Value
     {
         get
@@ -65,7 +65,7 @@ public class PropertyBindingInfo : AbstractPropertyValueItem
     }
     private string _designDataSetPath;
 
-    [XmlAttribute("designDataSetPath")]
+    [XmlAttribute(attributeName: "designDataSetPath")]
     public string DesignDataSetPath
     {
         get { return _designDataSetPath; }

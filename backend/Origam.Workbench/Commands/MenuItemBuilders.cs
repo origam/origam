@@ -50,7 +50,7 @@ public class SchemaItemEditorsMenuBuilder : ISubmenuBuilder
     public bool HasItems()
     {
         WorkbenchSchemaService sch =
-            ServiceManager.Services.GetService(typeof(WorkbenchSchemaService))
+            ServiceManager.Services.GetService(serviceType: typeof(WorkbenchSchemaService))
             as WorkbenchSchemaService;
         if (!(sch.IsSchemaLoaded && sch.ActiveNode is ISchemaItemFactory))
         {
@@ -74,7 +74,7 @@ public class SchemaItemEditorsMenuBuilder : ISubmenuBuilder
     public AsMenuCommand[] BuildSubmenu(object owner)
     {
         WorkbenchSchemaService sch =
-            ServiceManager.Services.GetService(typeof(WorkbenchSchemaService))
+            ServiceManager.Services.GetService(serviceType: typeof(WorkbenchSchemaService))
             as WorkbenchSchemaService;
         object activeNode = owner ?? sch.ActiveNode;
         if (activeNode == null)
@@ -107,31 +107,38 @@ public class SchemaItemEditorsMenuBuilder : ISubmenuBuilder
                 }
                 if (!found)
                 {
-                    names.Add(name);
+                    names.Add(item: name);
                 }
             }
             var nameableTypes = new List<Type>();
             foreach (Type type in factory.NewItemTypes)
             {
-                if (names.Count == 0 || !IsNameableType(factory, type))
+                if (names.Count == 0 || !IsNameableType(factory: factory, type: type))
                 {
-                    AddNewItem(sch, type, factory, null, items, showDialog);
+                    AddNewItem(
+                        sch: sch,
+                        type: type,
+                        parentElement: factory,
+                        newItemName: null,
+                        items: items,
+                        showDialog: showDialog
+                    );
                 }
                 else
                 {
-                    nameableTypes.Add(type);
+                    nameableTypes.Add(item: type);
                 }
             }
             // populate a submenu builder for nameable types
             foreach (string name in names)
             {
                 SchemaItemEditorNamesBuilder builder = new SchemaItemEditorNamesBuilder(
-                    nameableTypes,
-                    name,
-                    factory,
-                    showDialog
+                    types: nameableTypes,
+                    name: name,
+                    parentElement: factory,
+                    showDialog: showDialog
                 );
-                AddNewSubmenu(name, builder, items);
+                AddNewSubmenu(name: name, builder: builder, items: items);
             }
         }
         return items.ToArray();
@@ -141,7 +148,7 @@ public class SchemaItemEditorsMenuBuilder : ISubmenuBuilder
     {
         foreach (Type nameableType in factory.NameableTypes)
         {
-            if (nameableType.Equals(type))
+            if (nameableType.Equals(o: type))
             {
                 return true;
             }
@@ -158,7 +165,7 @@ public class SchemaItemEditorsMenuBuilder : ISubmenuBuilder
         bool showDialog
     )
     {
-        AddNewSchemaItem cmd = new AddNewSchemaItem(showDialog);
+        AddNewSchemaItem cmd = new AddNewSchemaItem(showDialog: showDialog);
         cmd.ParentElement = parentElement;
         cmd.Owner = type;
         cmd.Name = newItemName;
@@ -171,17 +178,17 @@ public class SchemaItemEditorsMenuBuilder : ISubmenuBuilder
             int imageIndex = -1;
             if (attr.Icon is string)
             {
-                imageIndex = sch.SchemaBrowser.ImageList.Images.IndexOfKey((string)attr.Icon);
+                imageIndex = sch.SchemaBrowser.ImageList.Images.IndexOfKey(key: (string)attr.Icon);
             }
             else
             {
                 imageIndex = (int)attr.Icon;
             }
-            image = sch.SchemaBrowser.ImageList.Images[imageIndex];
+            image = sch.SchemaBrowser.ImageList.Images[index: imageIndex];
         }
-        AsMenuCommand menu = new AsMenuCommand(name, cmd);
+        AsMenuCommand menu = new AsMenuCommand(label: name, menuCommand: cmd);
         menu.Image = image;
-        items.Add(menu);
+        items.Add(item: menu);
         menu.Click += new EventHandler(EditNewItem);
     }
 
@@ -191,9 +198,9 @@ public class SchemaItemEditorsMenuBuilder : ISubmenuBuilder
         List<AsMenuCommand> items
     )
     {
-        AsMenuCommand result = new AsMenuCommand(name, builder);
-        result.SubItems.Add(builder);
-        items.Add(result);
+        AsMenuCommand result = new AsMenuCommand(label: name, caller: builder);
+        result.SubItems.Add(item: builder);
+        items.Add(item: result);
     }
     #endregion
     private static void EditNewItem(object sender, EventArgs e)
@@ -205,10 +212,10 @@ public class SchemaItemEditorsMenuBuilder : ISubmenuBuilder
         catch (Exception ex)
         {
             AsMessageBox.ShowError(
-                WorkbenchSingleton.Workbench as Form,
-                ex.Message,
-                ResourceUtils.GetString("ErrorTitle"),
-                ex
+                owner: WorkbenchSingleton.Workbench as Form,
+                text: ex.Message,
+                caption: ResourceUtils.GetString(key: "ErrorTitle"),
+                exception: ex
             );
         }
     }
@@ -225,14 +232,14 @@ public class SchemaItemConvertMenuBuilder : ISubmenuBuilder
     public bool HasItems()
     {
         WorkbenchSchemaService sch =
-            ServiceManager.Services.GetService(typeof(WorkbenchSchemaService))
+            ServiceManager.Services.GetService(serviceType: typeof(WorkbenchSchemaService))
             as WorkbenchSchemaService;
-        if (!sch.CanEditItem(sch.ActiveNode))
+        if (!sch.CanEditItem(item: sch.ActiveNode))
         {
             return false;
         }
 
-        ISchemaItemFactory factory = ParentFactory(sch.ActiveNode);
+        ISchemaItemFactory factory = ParentFactory(item: sch.ActiveNode);
         if (factory == null)
         {
             return false;
@@ -253,14 +260,14 @@ public class SchemaItemConvertMenuBuilder : ISubmenuBuilder
             return new AsMenuCommand[0];
         }
         WorkbenchSchemaService sch =
-            ServiceManager.Services.GetService(typeof(WorkbenchSchemaService))
+            ServiceManager.Services.GetService(serviceType: typeof(WorkbenchSchemaService))
             as WorkbenchSchemaService;
-        ISchemaItemFactory factory = ParentFactory(sch.ActiveNode);
+        ISchemaItemFactory factory = ParentFactory(item: sch.ActiveNode);
         var items = new List<AsMenuCommand>();
         for (int i = 0; i < factory.NewItemTypes.Length; ++i)
         {
             Type type = factory.NewItemTypes[i];
-            if ((sch.ActiveNode as ISchemaItemConvertible).CanConvertTo(type))
+            if ((sch.ActiveNode as ISchemaItemConvertible).CanConvertTo(type: type))
             {
                 ConvertSchemaItem cmd = new ConvertSchemaItem();
                 cmd.Owner = type;
@@ -274,19 +281,21 @@ public class SchemaItemConvertMenuBuilder : ISubmenuBuilder
                 {
                     name = type.Name;
                 }
-                AsMenuCommand menu = new AsMenuCommand(name, cmd);
+                AsMenuCommand menu = new AsMenuCommand(label: name, menuCommand: cmd);
                 int imageIndex = -1;
                 if (attr.Icon is string)
                 {
-                    imageIndex = sch.SchemaBrowser.ImageList.Images.IndexOfKey((string)attr.Icon);
+                    imageIndex = sch.SchemaBrowser.ImageList.Images.IndexOfKey(
+                        key: (string)attr.Icon
+                    );
                 }
                 else
                 {
                     imageIndex = (int)attr.Icon;
                 }
-                menu.Image = sch.SchemaBrowser.ImageList.Images[imageIndex];
+                menu.Image = sch.SchemaBrowser.ImageList.Images[index: imageIndex];
                 menu.Click += new EventHandler(ConvertItem);
-                items.Add(menu);
+                items.Add(item: menu);
             }
         }
         return items.ToArray();
@@ -316,10 +325,10 @@ public class SchemaItemConvertMenuBuilder : ISubmenuBuilder
         catch (Exception ex)
         {
             AsMessageBox.ShowError(
-                WorkbenchSingleton.Workbench as Form,
-                ex.Message,
-                ResourceUtils.GetString("ErrorTitle"),
-                ex
+                owner: WorkbenchSingleton.Workbench as Form,
+                text: ex.Message,
+                caption: ResourceUtils.GetString(key: "ErrorTitle"),
+                exception: ex
             );
         }
     }
@@ -359,18 +368,18 @@ public class SchemaItemEditorNamesBuilder : ISubmenuBuilder
     public AsMenuCommand[] BuildSubmenu(object owner)
     {
         WorkbenchSchemaService sch =
-            ServiceManager.Services.GetService(typeof(WorkbenchSchemaService))
+            ServiceManager.Services.GetService(serviceType: typeof(WorkbenchSchemaService))
             as WorkbenchSchemaService;
         var items = new List<AsMenuCommand>();
         foreach (Type type in _types)
         {
             SchemaItemEditorsMenuBuilder.AddNewItem(
-                sch,
-                type,
-                _parentElement,
-                _name,
-                items,
-                ShowDialog
+                sch: sch,
+                type: type,
+                parentElement: _parentElement,
+                newItemName: _name,
+                items: items,
+                showDialog: ShowDialog
             );
         }
         return items.ToArray();
@@ -390,7 +399,10 @@ public class GitMenuBuilder : ISubmenuBuilder
 
     public AsMenuCommand[] BuildSubmenu(object owner)
     {
-        AsMenuCommand menu = new AsMenuCommand("Diff with previous version", new ShowFileDiffXml());
+        AsMenuCommand menu = new AsMenuCommand(
+            label: "Diff with previous version",
+            menuCommand: new ShowFileDiffXml()
+        );
         menu.Click += new EventHandler(ExeItem);
         items[0] = menu;
         return items;
@@ -398,7 +410,8 @@ public class GitMenuBuilder : ISubmenuBuilder
 
     public bool HasItems()
     {
-        return items.Length > 0 && GitManager.IsValid(settings.ModelSourceControlLocation);
+        return items.Length > 0
+            && GitManager.IsValid(modelSourceControlLocation: settings.ModelSourceControlLocation);
     }
 
     private void ExeItem(object sender, EventArgs e)
@@ -410,10 +423,10 @@ public class GitMenuBuilder : ISubmenuBuilder
         catch (Exception ex)
         {
             AsMessageBox.ShowError(
-                WorkbenchSingleton.Workbench as Form,
-                ex.Message,
-                ResourceUtils.GetString("ErrorTitle"),
-                ex
+                owner: WorkbenchSingleton.Workbench as Form,
+                text: ex.Message,
+                caption: ResourceUtils.GetString(key: "ErrorTitle"),
+                exception: ex
             );
         }
     }

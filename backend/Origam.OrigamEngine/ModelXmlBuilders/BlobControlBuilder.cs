@@ -32,14 +32,16 @@ public class BlobControlBuilder
 {
     public static void Build(XmlElement propertyElement, ControlSetItem control)
     {
-        propertyElement.SetAttribute("Entity", "String");
-        propertyElement.SetAttribute("Column", "Blob");
-        XmlElement propertiesElement = propertyElement.OwnerDocument.CreateElement("Parameters");
-        propertyElement.AppendChild(propertiesElement);
+        propertyElement.SetAttribute(name: "Entity", value: "String");
+        propertyElement.SetAttribute(name: "Column", value: "Blob");
+        XmlElement propertiesElement = propertyElement.OwnerDocument.CreateElement(
+            name: "Parameters"
+        );
+        propertyElement.AppendChild(newChild: propertiesElement);
 
         foreach (
             var property in control.ChildItemsByType<PropertyValueItem>(
-                PropertyValueItem.CategoryConst
+                itemType: PropertyValueItem.CategoryConst
             )
         )
         {
@@ -57,21 +59,21 @@ public class BlobControlBuilder
             )
             {
                 XmlElement blobPropertyElement = propertiesElement.OwnerDocument.CreateElement(
-                    "Parameter"
+                    name: "Parameter"
                 );
-                propertiesElement.AppendChild(blobPropertyElement);
+                propertiesElement.AppendChild(newChild: blobPropertyElement);
                 string value;
                 switch (property.ControlPropertyItem.PropertyType)
                 {
                     case ControlPropertyValueType.Boolean:
                     {
-                        value = XmlConvert.ToString(property.BoolValue);
+                        value = XmlConvert.ToString(value: property.BoolValue);
                         break;
                     }
 
                     case ControlPropertyValueType.Integer:
                     {
-                        value = XmlConvert.ToString(property.IntValue);
+                        value = XmlConvert.ToString(value: property.IntValue);
                         break;
                     }
 
@@ -96,14 +98,17 @@ public class BlobControlBuilder
                     default:
                     {
                         throw new ArgumentOutOfRangeException(
-                            "PropertyType",
-                            property.ControlPropertyItem.PropertyType,
-                            "Unknown property type."
+                            paramName: "PropertyType",
+                            actualValue: property.ControlPropertyItem.PropertyType,
+                            message: "Unknown property type."
                         );
                     }
                 }
-                blobPropertyElement.SetAttribute("Name", property.ControlPropertyItem.Name);
-                blobPropertyElement.SetAttribute("Value", value);
+                blobPropertyElement.SetAttribute(
+                    name: "Name",
+                    value: property.ControlPropertyItem.Name
+                );
+                blobPropertyElement.SetAttribute(name: "Value", value: value);
             }
         }
     }

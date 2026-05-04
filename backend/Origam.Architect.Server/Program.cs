@@ -39,7 +39,7 @@ public class Program
     public static void Main(string[] args)
     {
         var schema = new SchemaService();
-        var workbench = new Workbench(schema);
+        var workbench = new Workbench(schema: schema);
         workbench.InitializeDefaultServices();
         workbench.Connect();
 
@@ -49,8 +49,8 @@ public class Program
         var businessServicesService =
             ServiceManager.Services.GetService<IBusinessServicesService>();
 
-        var builder = WebApplication.CreateBuilder(args);
-        builder.Services.AddSingleton(deploymentService);
+        var builder = WebApplication.CreateBuilder(args: args);
+        builder.Services.AddSingleton(implementationInstance: deploymentService);
         builder.Services.AddSingleton<TreeNodeFactory>();
         builder.Services.AddSingleton<EditorPropertyFactory>();
         builder.Services.AddSingleton<PropertyParser>();
@@ -62,11 +62,11 @@ public class Program
         builder.Services.AddSingleton<DeploymentVersionCurrentService>();
         builder.Services.AddSingleton<DeploymentScriptRunnerService>();
         builder.Services.AddSingleton<ControlAdapterFactory>();
-        builder.Services.AddSingleton(schema);
-        builder.Services.AddSingleton(workbench);
-        builder.Services.AddSingleton(persistence);
-        builder.Services.AddSingleton(documentation);
-        builder.Services.AddSingleton(businessServicesService);
+        builder.Services.AddSingleton(implementationInstance: schema);
+        builder.Services.AddSingleton(implementationInstance: workbench);
+        builder.Services.AddSingleton(implementationInstance: persistence);
+        builder.Services.AddSingleton(implementationInstance: documentation);
+        builder.Services.AddSingleton(implementationInstance: businessServicesService);
         builder.Services.AddSingleton<DocumentationHelperService>();
         builder.Services.AddSingleton<IAddToDeploymentService, AddToDeploymentService>();
         builder.Services.AddSingleton<IAddToModelService, AddToModelService>();
@@ -80,17 +80,17 @@ public class Program
         builder.Services.AddSwaggerGen();
         builder
             .Services.AddControllers()
-            .AddJsonOptions(options =>
+            .AddJsonOptions(configure: options =>
             {
-                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                options.JsonSerializerOptions.Converters.Add(item: new JsonStringEnumConverter());
             });
-        builder.Services.AddLogging(logging =>
+        builder.Services.AddLogging(configure: logging =>
         {
             logging.AddLog4Net();
         });
 
-        var spaConfig = builder.Configuration.GetSectionOrThrow("SpaConfig").Get<SpaConfig>();
-        builder.Services.AddSpaStaticFiles(configuration =>
+        var spaConfig = builder.Configuration.GetSectionOrThrow(key: "SpaConfig").Get<SpaConfig>();
+        builder.Services.AddSpaStaticFiles(configuration: configuration =>
         {
             configuration.RootPath = spaConfig.PathToClientApplication;
         });
@@ -105,23 +105,25 @@ public class Program
         app.UseMiddleware<OrigamErrorHandlingMiddleware>();
         app.UseMiddleware<ServerIdentityMiddleware>();
         app.UseStaticFiles();
-        string assemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        string assemblyPath = Path.GetDirectoryName(path: Assembly.GetExecutingAssembly().Location);
         app.UseStaticFiles(
-            new StaticFileOptions
+            options: new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(
-                    Path.Combine(assemblyPath, "Assets", "Icons")
+                    root: Path.Combine(path1: assemblyPath, path2: "Assets", path3: "Icons")
                 ),
                 RequestPath = "/Icons",
             }
         );
         app.UseSpaStaticFiles();
         app.MapControllers();
-        app.UseSpa(spa =>
+        app.UseSpa(configuration: spa =>
         {
             spa.Options.SourcePath = spaConfig.PathToClientApplication;
         });
         app.Run();
-        SecurityManager.SetDIServiceProvider(((IApplicationBuilder)app).ApplicationServices);
+        SecurityManager.SetDIServiceProvider(
+            diServiceProvider: ((IApplicationBuilder)app).ApplicationServices
+        );
     }
 }

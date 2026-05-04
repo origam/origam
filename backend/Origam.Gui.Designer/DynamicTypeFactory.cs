@@ -38,32 +38,34 @@ public class DynamicTypeFactory
 
     public static ControlItem GetAssociatedControlItem(Type maybeDynamicType)
     {
-        return controlItemMapping.ContainsKey(maybeDynamicType)
-            ? controlItemMapping[maybeDynamicType].Inheritor
+        return controlItemMapping.ContainsKey(key: maybeDynamicType)
+            ? controlItemMapping[key: maybeDynamicType].Inheritor
             : null;
     }
 
     public static Type GetOriginalType(Type maybeDynamicType)
     {
-        return !controlItemMapping.ContainsKey(maybeDynamicType)
+        return !controlItemMapping.ContainsKey(key: maybeDynamicType)
             ? maybeDynamicType
-            : controlItemMapping[maybeDynamicType].OriginalType;
+            : controlItemMapping[key: maybeDynamicType].OriginalType;
     }
 
     private static string CreateNewTypeName(Type parentType)
     {
-        return parentType.Name + typeNameSeparator + Guid.NewGuid().ToString().Replace("-", "");
+        return parentType.Name
+            + typeNameSeparator
+            + Guid.NewGuid().ToString().Replace(oldValue: "-", newValue: "");
     }
 
     public DynamicTypeFactory()
     {
-        var uniqueIdentifier = Guid.NewGuid().ToString().Replace("-", "");
-        var assemblyName = new AssemblyName(uniqueIdentifier);
+        var uniqueIdentifier = Guid.NewGuid().ToString().Replace(oldValue: "-", newValue: "");
+        var assemblyName = new AssemblyName(assemblyName: uniqueIdentifier);
         var assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(
-            assemblyName,
-            AssemblyBuilderAccess.RunAndCollect
+            name: assemblyName,
+            access: AssemblyBuilderAccess.RunAndCollect
         );
-        moduleBuilder = assemblyBuilder.DefineDynamicModule(uniqueIdentifier);
+        moduleBuilder = assemblyBuilder.DefineDynamicModule(name: uniqueIdentifier);
     }
 
     public Type CreateNewTypeWithDynamicProperties(
@@ -73,17 +75,17 @@ public class DynamicTypeFactory
     )
     {
         typeBuilder = moduleBuilder.DefineType(
-            CreateNewTypeName(parentType),
-            TypeAttributes.Public
+            name: CreateNewTypeName(parentType: parentType),
+            attr: TypeAttributes.Public
         );
-        typeBuilder.SetParent(parentType);
+        typeBuilder.SetParent(parent: parentType);
         foreach (DynamicProperty property in dynamicProperties)
         {
-            AddDynamicPropertyToType(property, inheritor);
+            AddDynamicPropertyToType(dynamicProperty: property, inheritor: inheritor);
         }
 
         Type childType = typeBuilder.CreateType();
-        controlItemMapping[childType] = new DynamicTypeInfo(
+        controlItemMapping[key: childType] = new DynamicTypeInfo(
             originalType: parentType,
             inheritor: inheritor
         );
@@ -95,48 +97,48 @@ public class DynamicTypeFactory
         Type propertyType = dynamicProperty.SystemType;
         string fieldName = $"_{dynamicProperty.Name}";
         FieldBuilder fieldBuilder = typeBuilder.DefineField(
-            fieldName,
-            propertyType,
-            FieldAttributes.Private
+            fieldName: fieldName,
+            type: propertyType,
+            attributes: FieldAttributes.Private
         );
         MethodAttributes getSetAttributes =
             MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig;
         MethodBuilder getMethodBuilder = typeBuilder.DefineMethod(
-            $"get_{dynamicProperty.Name}",
-            getSetAttributes,
-            propertyType,
-            Type.EmptyTypes
+            name: $"get_{dynamicProperty.Name}",
+            attributes: getSetAttributes,
+            returnType: propertyType,
+            parameterTypes: Type.EmptyTypes
         );
         ILGenerator propertyGetGenerator = getMethodBuilder.GetILGenerator();
-        propertyGetGenerator.Emit(OpCodes.Ldarg_0);
-        propertyGetGenerator.Emit(OpCodes.Ldfld, fieldBuilder);
-        propertyGetGenerator.Emit(OpCodes.Ret);
+        propertyGetGenerator.Emit(opcode: OpCodes.Ldarg_0);
+        propertyGetGenerator.Emit(opcode: OpCodes.Ldfld, field: fieldBuilder);
+        propertyGetGenerator.Emit(opcode: OpCodes.Ret);
         MethodBuilder setMethodBuilder = typeBuilder.DefineMethod(
-            $"set_{dynamicProperty.Name}",
-            getSetAttributes,
-            null,
-            new Type[] { propertyType }
+            name: $"set_{dynamicProperty.Name}",
+            attributes: getSetAttributes,
+            returnType: null,
+            parameterTypes: new Type[] { propertyType }
         );
         ILGenerator propertySetGenerator = setMethodBuilder.GetILGenerator();
-        propertySetGenerator.Emit(OpCodes.Ldarg_0);
-        propertySetGenerator.Emit(OpCodes.Ldarg_1);
-        propertySetGenerator.Emit(OpCodes.Stfld, fieldBuilder);
-        propertySetGenerator.Emit(OpCodes.Ret);
+        propertySetGenerator.Emit(opcode: OpCodes.Ldarg_0);
+        propertySetGenerator.Emit(opcode: OpCodes.Ldarg_1);
+        propertySetGenerator.Emit(opcode: OpCodes.Stfld, field: fieldBuilder);
+        propertySetGenerator.Emit(opcode: OpCodes.Ret);
         PropertyBuilder propertyBuilder = typeBuilder.DefineProperty(
-            dynamicProperty.Name,
-            PropertyAttributes.HasDefault,
-            propertyType,
-            null
+            name: dynamicProperty.Name,
+            attributes: PropertyAttributes.HasDefault,
+            returnType: propertyType,
+            parameterTypes: null
         );
-        propertyBuilder.SetGetMethod(getMethodBuilder);
-        propertyBuilder.SetSetMethod(setMethodBuilder);
+        propertyBuilder.SetGetMethod(mdBuilder: getMethodBuilder);
+        propertyBuilder.SetSetMethod(mdBuilder: setMethodBuilder);
         var categoryAttributeBuilder = new CustomAttributeBuilder(
-            typeof(CategoryAttribute).GetConstructor(new[] { typeof(string) }),
-            new object[] { dynamicProperty.Category },
-            new PropertyInfo[] { },
-            new object[] { }
+            con: typeof(CategoryAttribute).GetConstructor(types: new[] { typeof(string) }),
+            constructorArgs: new object[] { dynamicProperty.Category },
+            namedProperties: new PropertyInfo[] { },
+            propertyValues: new object[] { }
         );
-        propertyBuilder.SetCustomAttribute(categoryAttributeBuilder);
+        propertyBuilder.SetCustomAttribute(customBuilder: categoryAttributeBuilder);
     }
 }
 

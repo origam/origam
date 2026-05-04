@@ -30,28 +30,28 @@ public class XsltCryptoFunctionContainer
     public string Nonce()
     {
         Guid guid = Guid.NewGuid();
-        return Convert.ToBase64String(guid.ToByteArray());
+        return Convert.ToBase64String(inArray: guid.ToByteArray());
     }
 
     public string PasswordDigest(string password, string timestamp, string nonce)
     {
         SHA1 sha1 = SHA1Managed.Create();
-        byte[] passwordHashedBytes = sha1.ComputeHash(Encoding.UTF8.GetBytes(password));
-        byte[] timestampBytes = string.IsNullOrEmpty(timestamp)
+        byte[] passwordHashedBytes = sha1.ComputeHash(buffer: Encoding.UTF8.GetBytes(s: password));
+        byte[] timestampBytes = string.IsNullOrEmpty(value: timestamp)
             ? new byte[0]
-            : Encoding.UTF8.GetBytes(timestamp);
-        byte[] nonceBytes = string.IsNullOrEmpty(nonce)
+            : Encoding.UTF8.GetBytes(s: timestamp);
+        byte[] nonceBytes = string.IsNullOrEmpty(value: nonce)
             ? new byte[0]
-            : Convert.FromBase64String(nonce);
+            : Convert.FromBase64String(s: nonce);
         byte[] input = new byte[
             passwordHashedBytes.Length + timestampBytes.Length + nonceBytes.Length
         ];
         int offset = 0;
-        nonceBytes.CopyTo(input, offset);
+        nonceBytes.CopyTo(array: input, index: offset);
         offset += nonceBytes.Length;
-        timestampBytes.CopyTo(input, offset);
+        timestampBytes.CopyTo(array: input, index: offset);
         offset += timestampBytes.Length;
-        passwordHashedBytes.CopyTo(input, offset);
-        return Convert.ToBase64String(sha1.ComputeHash(input));
+        passwordHashedBytes.CopyTo(array: input, index: offset);
+        return Convert.ToBase64String(inArray: sha1.ComputeHash(buffer: input));
     }
 }

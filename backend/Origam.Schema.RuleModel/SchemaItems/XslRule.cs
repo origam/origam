@@ -32,7 +32,7 @@ namespace Origam.Schema.RuleModel;
 /// <summary>
 /// Summary description for XslRule.
 /// </summary>
-[ClassMetaVersion("6.0.0")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class XslRule : AbstractRule
 {
     public XslRule()
@@ -42,13 +42,13 @@ public class XslRule : AbstractRule
     }
 
     public XslRule(Guid schemaExtensionId)
-        : base(schemaExtensionId)
+        : base(schemaExtensionId: schemaExtensionId)
     {
         InitializeProperyContainers();
     }
 
     public XslRule(Key primaryKey)
-        : base(primaryKey)
+        : base(primaryKey: primaryKey)
     {
         InitializeProperyContainers();
     }
@@ -61,8 +61,12 @@ public class XslRule : AbstractRule
     #region Overriden ISchemaItem members
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        XsltDependencyHelper.GetDependencies(this, dependencies, this.Xsl);
-        base.GetExtraDependencies(dependencies);
+        XsltDependencyHelper.GetDependencies(
+            item: this,
+            dependencies: dependencies,
+            text: this.Xsl
+        );
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override ISchemaItemCollection ChildItems
@@ -77,10 +81,10 @@ public class XslRule : AbstractRule
     public string Xsl
     {
         get => xsl.Get();
-        set => xsl.Set(value);
+        set => xsl.Set(value: value);
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public override bool IsPathRelative
     {
         get { return false; }

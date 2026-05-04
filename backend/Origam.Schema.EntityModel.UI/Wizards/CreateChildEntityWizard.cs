@@ -66,7 +66,7 @@ public class CreateChildEntityWizard : System.Windows.Forms.Form
                 components.Dispose();
             }
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
 
     #region Windows Form Designer generated code
@@ -201,10 +201,10 @@ public class CreateChildEntityWizard : System.Windows.Forms.Form
         if (this.txtName.Text == "" | this.Entity1 == null)
         {
             MessageBox.Show(
-                ResourceUtils.GetString("EnterAllInfo"),
-                ResourceUtils.GetString("ChildEntityWiz"),
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Asterisk
+                text: ResourceUtils.GetString(key: "EnterAllInfo"),
+                caption: ResourceUtils.GetString(key: "ChildEntityWiz"),
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Asterisk
             );
             return;
         }
@@ -262,9 +262,9 @@ public class CreateChildEntityWizard : System.Windows.Forms.Form
         object selectedItem = null;
         foreach (IDataEntity entity in this.Entity1.RootProvider.ChildItems)
         {
-            cboEntity1.Items.Add(entity);
-            cboEntity2.Items.Add(entity);
-            if (entity.PrimaryKey.Equals(this.Entity1.PrimaryKey))
+            cboEntity1.Items.Add(item: entity);
+            cboEntity2.Items.Add(item: entity);
+            if (entity.PrimaryKey.Equals(obj: this.Entity1.PrimaryKey))
             {
                 selectedItem = entity;
             }

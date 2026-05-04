@@ -58,7 +58,7 @@ public class OutputPad : AbstractPadContent, IOutputPad
                 components.Dispose();
             }
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
 
     #region Windows Form Designer generated code
@@ -164,11 +164,11 @@ public class OutputPad : AbstractPadContent, IOutputPad
         }
 
         int startPosition = 0;
-        if (sText.StartsWith("Origam."))
+        if (sText.StartsWith(value: "Origam."))
         {
             startPosition = 19;
         }
-        txtOutput.AppendText(sText.Substring(startPosition));
+        txtOutput.AppendText(text: sText.Substring(startIndex: startPosition));
         int pos = txtOutput.Text.Length;
         int originalPosition = txtOutput.SelectionStart;
         bool shouldScroll = txtOutput.SelectionStart == pos;
@@ -187,7 +187,7 @@ public class OutputPad : AbstractPadContent, IOutputPad
 
     public void AppendText(string sText)
     {
-        AddText(sText + Environment.NewLine);
+        AddText(sText: sText + Environment.NewLine);
     }
 
     public void AddText(string sText)
@@ -196,13 +196,13 @@ public class OutputPad : AbstractPadContent, IOutputPad
         {
             lock (_lock)
             {
-                _queue.Append(sText);
+                _queue.Append(value: sText);
             }
         }
         else
         {
             FlushQueue();
-            AddTextInternal(sText);
+            AddTextInternal(sText: sText);
         }
     }
 
@@ -224,7 +224,7 @@ public class OutputPad : AbstractPadContent, IOutputPad
         {
             if (_queue.Length != 0)
             {
-                AddTextInternal(_queue.ToString());
+                AddTextInternal(sText: _queue.ToString());
                 _queue = new StringBuilder();
             }
         }

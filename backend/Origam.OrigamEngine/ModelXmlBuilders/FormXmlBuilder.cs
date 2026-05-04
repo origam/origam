@@ -57,21 +57,22 @@ public class FormXmlBuilder
     public static XmlOutput GetXml(Guid menuId)
     {
         IPersistenceService persistence =
-            ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+            ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+            as IPersistenceService;
         FormReferenceMenuItem menuItem =
             persistence.SchemaProvider.RetrieveInstance(
-                typeof(FormReferenceMenuItem),
-                new ModelElementKey(menuId)
+                type: typeof(FormReferenceMenuItem),
+                primaryKey: new ModelElementKey(id: menuId)
             ) as FormReferenceMenuItem;
-        bool readOnly = FormTools.IsFormMenuReadOnly(menuItem);
+        bool readOnly = FormTools.IsFormMenuReadOnly(formRef: menuItem);
         return GetXml(
-            menuItem.Screen,
-            menuItem.DisplayName,
-            menuItem.ListDataStructure == null,
-            menuItem.Id,
-            menuItem.Screen.DataStructure,
-            readOnly,
-            menuItem.SelectionChangeEntity
+            item: menuItem.Screen,
+            name: menuItem.DisplayName,
+            isPreloaded: menuItem.ListDataStructure == null,
+            menuId: menuItem.Id,
+            structure: menuItem.Screen.DataStructure,
+            forceReadOnly: readOnly,
+            confirmSelectionChangeEntity: menuItem.SelectionChangeEntity
         );
     }
 
@@ -86,37 +87,44 @@ public class FormXmlBuilder
         string confirmSelectionChangeEntity
     )
     {
-        if (formId == new Guid(WORKFLOW_FINISHED_FORMID))
+        if (formId == new Guid(g: WORKFLOW_FINISHED_FORMID))
         {
-            return GetWorkflowFinishedXml(name, menuId, message);
+            return GetWorkflowFinishedXml(name: name, menuId: menuId, message: message);
         }
         IPersistenceService persistence =
-            ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+            ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+            as IPersistenceService;
         FormControlSet item =
             persistence.SchemaProvider.RetrieveInstance(
-                typeof(FormControlSet),
-                new ModelElementKey(formId)
+                type: typeof(FormControlSet),
+                primaryKey: new ModelElementKey(id: formId)
             ) as FormControlSet;
         DataStructure structure =
             persistence.SchemaProvider.RetrieveInstance(
-                typeof(DataStructure),
-                new ModelElementKey(structureId)
+                type: typeof(DataStructure),
+                primaryKey: new ModelElementKey(id: structureId)
             ) as DataStructure;
 
         return GetXml(
-            item,
-            name,
-            isPreloaded,
-            menuId,
-            structure,
-            forceReadOnly,
-            confirmSelectionChangeEntity
+            item: item,
+            name: name,
+            isPreloaded: isPreloaded,
+            menuId: menuId,
+            structure: structure,
+            forceReadOnly: forceReadOnly,
+            confirmSelectionChangeEntity: confirmSelectionChangeEntity
         ).Document;
     }
 
     public static XmlDocument GetXmlFromPanel(Guid panelId, string name, Guid menuId)
     {
-        return GetXmlFromPanel(panelId, name, menuId, panelId, true);
+        return GetXmlFromPanel(
+            panelId: panelId,
+            name: name,
+            menuId: menuId,
+            instanceId: panelId,
+            forceHideNavigationPanel: true
+        );
     }
 
     public static XmlDocument GetXmlFromPanel(
@@ -128,21 +136,25 @@ public class FormXmlBuilder
     )
     {
         IPersistenceService persistence =
-            ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+            ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+            as IPersistenceService;
         PanelControlSet panel =
             persistence.SchemaProvider.RetrieveInstance(
-                typeof(PanelControlSet),
-                new ModelElementKey(panelId)
+                type: typeof(PanelControlSet),
+                primaryKey: new ModelElementKey(id: panelId)
             ) as PanelControlSet;
         FormControlSet form = new FormControlSet();
         form.PersistenceProvider = persistence.SchemaProvider;
-        ControlSetItem control = form.NewItem<ControlSetItem>(form.SchemaExtensionId, form.Group);
-        control.PrimaryKey = new ModelElementKey(instanceId);
+        ControlSetItem control = form.NewItem<ControlSetItem>(
+            schemaExtensionId: form.SchemaExtensionId,
+            group: form.Group
+        );
+        control.PrimaryKey = new ModelElementKey(id: instanceId);
         control.ControlItem = panel.PanelControl;
         foreach (
             var panelProperty in FormTools
-                .GetItemFromControlSet(panel)
-                .ChildItemsByType<PropertyValueItem>(PropertyValueItem.CategoryConst)
+                .GetItemFromControlSet(controlSet: panel)
+                .ChildItemsByType<PropertyValueItem>(itemType: PropertyValueItem.CategoryConst)
         )
         {
             PropertyValueItem copy = panelProperty.Clone() as PropertyValueItem;
@@ -152,25 +164,25 @@ public class FormXmlBuilder
                 copy.BoolValue = true;
             }
             copy.ParentItem = control;
-            control.ChildItems.Add(copy);
+            control.ChildItems.Add(item: copy);
         }
         PropertyValueItem dataMemberProperty = control.NewItem<PropertyValueItem>(
-            control.SchemaExtensionId,
-            null
+            schemaExtensionId: control.SchemaExtensionId,
+            group: null
         );
         dataMemberProperty.Name = "DataMember";
         dataMemberProperty.Value = panel.DataEntity.Name;
         dataMemberProperty.ControlPropertyItem =
-            control.ControlItem.GetChildByName("DataMember") as ControlPropertyItem;
-        DatasetGenerator gen = new DatasetGenerator(true);
+            control.ControlItem.GetChildByName(name: "DataMember") as ControlPropertyItem;
+        DatasetGenerator gen = new DatasetGenerator(userDefinedParameters: true);
         return GetXml(
-            form,
-            gen.CreateDataSet(panel.DataEntity),
-            name,
-            true,
-            menuId,
-            false,
-            ""
+            item: form,
+            dataset: gen.CreateDataSet(entity: panel.DataEntity),
+            name: name,
+            isPreloaded: true,
+            menuId: menuId,
+            forceReadOnly: false,
+            confirmSelectionChangeEntity: ""
         ).Document;
     }
 
@@ -185,75 +197,86 @@ public class FormXmlBuilder
     {
         XmlDocument doc = new XmlDocument();
         doc.LoadXml(
-            "<Window xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"/>"
+            xml: "<Window xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"/>"
         );
         // <Window>
         XmlElement windowElement = doc.FirstChild as XmlElement;
-        doc.AppendChild(windowElement);
-        windowElement.SetAttribute("Title", name);
-        windowElement.SetAttribute("MenuId", menuId.ToString());
-        windowElement.SetAttribute("ShowInfoPanel", "false");
-        windowElement.SetAttribute("AutoRefreshInterval", XmlConvert.ToString(autoRefreshInterval));
-        windowElement.SetAttribute("CacheOnClient", "true");
+        doc.AppendChild(newChild: windowElement);
+        windowElement.SetAttribute(name: "Title", value: name);
+        windowElement.SetAttribute(name: "MenuId", value: menuId.ToString());
+        windowElement.SetAttribute(name: "ShowInfoPanel", value: "false");
+        windowElement.SetAttribute(
+            name: "AutoRefreshInterval",
+            value: XmlConvert.ToString(value: autoRefreshInterval)
+        );
+        windowElement.SetAttribute(name: "CacheOnClient", value: "true");
         if (refreshOnFocus || (autoRefreshInterval > 0))
         {
-            windowElement.SetAttribute("RefreshOnFocus", "true");
+            windowElement.SetAttribute(name: "RefreshOnFocus", value: "true");
         }
         windowElement.SetAttribute(
-            "AutoSaveOnListRecordChange",
-            XmlConvert.ToString(autoSaveOnListRecordChange)
+            name: "AutoSaveOnListRecordChange",
+            value: XmlConvert.ToString(value: autoSaveOnListRecordChange)
         );
         windowElement.SetAttribute(
-            "RequestSaveAfterUpdate",
-            XmlConvert.ToString(requestSaveAfterUpdate)
+            name: "RequestSaveAfterUpdate",
+            value: XmlConvert.ToString(value: requestSaveAfterUpdate)
         );
         IPersistenceService persistenceService =
-            ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+            ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+            as IPersistenceService;
         FormReferenceMenuItem formReferenceMenuItem =
             persistenceService.SchemaProvider.RetrieveInstance(
-                typeof(FormReferenceMenuItem),
-                new ModelElementKey(menuId)
+                type: typeof(FormReferenceMenuItem),
+                primaryKey: new ModelElementKey(id: menuId)
             ) as FormReferenceMenuItem;
         if (
             (formReferenceMenuItem != null)
             && (formReferenceMenuItem.DynamicFormLabelEntity != null)
-            && !string.IsNullOrEmpty(formReferenceMenuItem.DynamicFormLabelField)
+            && !string.IsNullOrEmpty(value: formReferenceMenuItem.DynamicFormLabelField)
         )
         {
             windowElement.SetAttribute(
-                "DynamicFormLabelSource",
-                formReferenceMenuItem.DynamicFormLabelEntity.Name
+                name: "DynamicFormLabelSource",
+                value: formReferenceMenuItem.DynamicFormLabelEntity.Name
                     + "."
                     + formReferenceMenuItem.DynamicFormLabelField
             );
         }
         // <Window><DataSources>
-        XmlElement dataSourcesElement = doc.CreateElement("DataSources");
-        windowElement.AppendChild(dataSourcesElement);
+        XmlElement dataSourcesElement = doc.CreateElement(name: "DataSources");
+        windowElement.AppendChild(newChild: dataSourcesElement);
         // <Window><ComponentBindings>
-        XmlElement bindingsElement = doc.CreateElement("ComponentBindings");
-        windowElement.AppendChild(bindingsElement);
+        XmlElement bindingsElement = doc.CreateElement(name: "ComponentBindings");
+        windowElement.AppendChild(newChild: bindingsElement);
         // <Window><UIRoot>
-        XmlElement uiRootElement = doc.CreateElement("UIRoot");
-        windowElement.AppendChild(uiRootElement);
+        XmlElement uiRootElement = doc.CreateElement(name: "UIRoot");
+        windowElement.AppendChild(newChild: uiRootElement);
         return doc;
     }
 
     private static XmlDocument GetWorkflowFinishedXml(string name, Guid menuId, string message)
     {
-        XmlDocument doc = GetWindowBaseXml(name, menuId, 0, false, false, false);
-        XmlElement windowElement = WindowElement(doc);
-        XmlElement uiRootElement = UIRootElement(windowElement);
-        windowElement.SetAttribute("CacheOnClient", "false");
-        uiRootElement.SetAttribute(
-            "type",
-            "UIElement",
-            "http://www.w3.org/2001/XMLSchema-instance"
+        XmlDocument doc = GetWindowBaseXml(
+            name: name,
+            menuId: menuId,
+            autoRefreshInterval: 0,
+            refreshOnFocus: false,
+            autoSaveOnListRecordChange: false,
+            requestSaveAfterUpdate: false
         );
-        uiRootElement.SetAttribute("Type", "WorkflowFinishedPanel");
-        uiRootElement.SetAttribute("Message", message);
-        uiRootElement.SetAttribute("showWorkflowCloseButton", "true");
-        uiRootElement.SetAttribute("showWorkflowRepeatButton", "true");
+        XmlElement windowElement = WindowElement(doc: doc);
+        XmlElement uiRootElement = UIRootElement(windowElement: windowElement);
+        windowElement.SetAttribute(name: "CacheOnClient", value: "false");
+        uiRootElement.SetAttribute(
+            localName: "type",
+            namespaceURI: "UIElement",
+            value: "http://www.w3.org/2001/XMLSchema-instance"
+        );
+        uiRootElement.SetAttribute(name: "Type", value: "WorkflowFinishedPanel");
+        uiRootElement.SetAttribute(name: "Message", value: message);
+        uiRootElement.SetAttribute(name: "showWorkflowCloseButton", value: "true");
+        uiRootElement.SetAttribute(name: "showWorkflowRepeatButton", value: "true");
         return doc;
     }
 
@@ -267,30 +290,30 @@ public class FormXmlBuilder
         string confirmSelectionChangeEntity
     )
     {
-        DatasetGenerator gen = new DatasetGenerator(true);
+        DatasetGenerator gen = new DatasetGenerator(userDefinedParameters: true);
         return GetXml(
-            item,
-            gen.CreateDataSet(structure),
-            name,
-            isPreloaded,
-            menuId,
-            forceReadOnly,
-            confirmSelectionChangeEntity,
-            structure
+            item: item,
+            dataset: gen.CreateDataSet(ds: structure),
+            name: name,
+            isPreloaded: isPreloaded,
+            menuId: menuId,
+            forceReadOnly: forceReadOnly,
+            confirmSelectionChangeEntity: confirmSelectionChangeEntity,
+            structure: structure
         );
     }
 
     public static XmlElement CreateDataSourceField(XmlDocument doc, string name, int index)
     {
-        XmlElement dataSourceFieldElement = doc.CreateElement("Field");
-        dataSourceFieldElement.SetAttribute("Name", name);
-        dataSourceFieldElement.SetAttribute("Index", index.ToString());
+        XmlElement dataSourceFieldElement = doc.CreateElement(name: "Field");
+        dataSourceFieldElement.SetAttribute(name: "Name", value: name);
+        dataSourceFieldElement.SetAttribute(name: "Index", value: index.ToString());
         return dataSourceFieldElement;
     }
 
     private static void RenderDataSources(XmlElement windowElement, Hashtable dataSources)
     {
-        XmlElement dataSourcesElement = DataSourcesElement(windowElement);
+        XmlElement dataSourcesElement = DataSourcesElement(windowElement: windowElement);
         foreach (DictionaryEntry entry in dataSources)
         {
             DataTable table = (DataTable)entry.Value;
@@ -298,30 +321,34 @@ public class FormXmlBuilder
             if (table.PrimaryKey.Length == 0)
             {
                 throw new ArgumentException(
-                    $"Cannot render data source into xml, because the source table \"{table.TableName}\" does not have a primary key."
+                    message: $"Cannot render data source into xml, because the source table \"{table.TableName}\" does not have a primary key."
                 );
             }
             string identifier = table.PrimaryKey[0].ColumnName;
-            string lookupCacheKey = DatabaseTableName(table);
-            string dataStructureEntityId = table.ExtendedProperties["Id"]?.ToString();
+            string lookupCacheKey = DatabaseTableName(table: table);
+            string dataStructureEntityId = table.ExtendedProperties[key: "Id"]?.ToString();
             XmlElement dataSourceElement = AddDataSourceElement(
-                dataSourcesElement,
-                entityName,
-                identifier,
-                lookupCacheKey,
-                dataStructureEntityId
+                dataSourcesElement: dataSourcesElement,
+                entity: entityName,
+                identifier: identifier,
+                lookupCacheKey: lookupCacheKey,
+                dataStructureEntityId: dataStructureEntityId
             );
             foreach (DataColumn c in table.Columns)
             {
                 dataSourceElement.AppendChild(
-                    CreateDataSourceField(dataSourceElement.OwnerDocument, c.ColumnName, c.Ordinal)
+                    newChild: CreateDataSourceField(
+                        doc: dataSourceElement.OwnerDocument,
+                        name: c.ColumnName,
+                        index: c.Ordinal
+                    )
                 );
             }
             dataSourceElement.AppendChild(
-                CreateDataSourceField(
-                    dataSourceElement.OwnerDocument,
-                    "__Errors",
-                    table.Columns.Count
+                newChild: CreateDataSourceField(
+                    doc: dataSourceElement.OwnerDocument,
+                    name: "__Errors",
+                    index: table.Columns.Count
                 )
             );
         }
@@ -330,11 +357,12 @@ public class FormXmlBuilder
     public static string DatabaseTableName(DataTable table)
     {
         IPersistenceService ps =
-            ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+            ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+            as IPersistenceService;
         TableMappingItem tableMapping =
             ps.SchemaProvider.RetrieveInstance(
-                typeof(TableMappingItem),
-                new ModelElementKey((Guid)table.ExtendedProperties["EntityId"])
+                type: typeof(TableMappingItem),
+                primaryKey: new ModelElementKey(id: (Guid)table.ExtendedProperties[key: "EntityId"])
             ) as TableMappingItem;
         if (tableMapping != null)
         {
@@ -352,17 +380,22 @@ public class FormXmlBuilder
         string dataStructureEntityId
     )
     {
-        XmlElement dataSourceElement = dataSourcesElement.OwnerDocument.CreateElement("DataSource");
-        dataSourcesElement.AppendChild(dataSourceElement);
-        dataSourceElement.SetAttribute("Entity", entity);
-        if (!string.IsNullOrEmpty(dataStructureEntityId))
+        XmlElement dataSourceElement = dataSourcesElement.OwnerDocument.CreateElement(
+            name: "DataSource"
+        );
+        dataSourcesElement.AppendChild(newChild: dataSourceElement);
+        dataSourceElement.SetAttribute(name: "Entity", value: entity);
+        if (!string.IsNullOrEmpty(value: dataStructureEntityId))
         {
-            dataSourceElement.SetAttribute("DataStructureEntityId", dataStructureEntityId);
+            dataSourceElement.SetAttribute(
+                name: "DataStructureEntityId",
+                value: dataStructureEntityId
+            );
         }
-        dataSourceElement.SetAttribute("Identifier", identifier);
+        dataSourceElement.SetAttribute(name: "Identifier", value: identifier);
         if (lookupCacheKey != null)
         {
-            dataSourceElement.SetAttribute("LookupCacheKey", lookupCacheKey);
+            dataSourceElement.SetAttribute(name: "LookupCacheKey", value: lookupCacheKey);
         }
         return dataSourceElement;
     }
@@ -374,17 +407,17 @@ public class FormXmlBuilder
 
     internal static XmlElement UIRootElement(XmlElement windowElement)
     {
-        return windowElement.SelectSingleNode("UIRoot") as XmlElement;
+        return windowElement.SelectSingleNode(xpath: "UIRoot") as XmlElement;
     }
 
     internal static XmlElement DataSourcesElement(XmlElement windowElement)
     {
-        return windowElement.SelectSingleNode("DataSources") as XmlElement;
+        return windowElement.SelectSingleNode(xpath: "DataSources") as XmlElement;
     }
 
     internal static XmlElement ComponentBindingsElement(XmlElement windowElement)
     {
-        return windowElement.SelectSingleNode("ComponentBindings") as XmlElement;
+        return windowElement.SelectSingleNode(xpath: "ComponentBindings") as XmlElement;
     }
 
     public static XmlDocument GetXml(
@@ -401,39 +434,44 @@ public class FormXmlBuilder
             SecurityManager.GetAuthorizationProvider();
         var parameterService = ServiceManager.Services.GetService<IParameterService>();
         DataSet workQueueCommands = core.DataService.Instance.LoadData(
-            dataStructureId: new Guid("1d33b667-ca76-4aaa-a47d-0e404ed6f8a6"),
-            methodId: new Guid("421aec03-1eec-43f9-b0bb-17cfc24510a0"),
+            dataStructureId: new Guid(g: "1d33b667-ca76-4aaa-a47d-0e404ed6f8a6"),
+            methodId: new Guid(g: "421aec03-1eec-43f9-b0bb-17cfc24510a0"),
             defaultSetId: Guid.Empty,
             sortSetId: Guid.Empty,
             transactionId: null,
             parameters: new QueryParameterCollection
             {
-                new QueryParameter("WorkQueueCommand_parWorkQueueId", queueId),
+                new QueryParameter(
+                    _parameterName: "WorkQueueCommand_parWorkQueueId",
+                    value: queueId
+                ),
             }
         );
         List<DataRow> authorizedCommands = workQueueCommands
-            .Tables["WorkQueueCommand"]
+            .Tables[name: "WorkQueueCommand"]
             .Rows.Cast<DataRow>()
-            .Where(dataRow =>
-                !dataRow.IsNull("Roles")
+            .Where(predicate: dataRow =>
+                !dataRow.IsNull(columnName: "Roles")
                 && authorizationProvider.Authorize(
-                    SecurityManager.CurrentPrincipal,
-                    (string)dataRow["Roles"]
+                    principal: SecurityManager.CurrentPrincipal,
+                    context: (string)dataRow[columnName: "Roles"]
                 )
             )
             .ToList();
-        bool showCheckboxes = authorizedCommands.Any(command =>
+        bool showCheckboxes = authorizedCommands.Any(predicate: command =>
         {
             if (
-                (Guid)command["refWorkQueueCommandTypeId"]
+                (Guid)command[columnName: "refWorkQueueCommandTypeId"]
                 != (Guid)
-                    parameterService.GetParameterValue("WorkQueueCommandType_WorkQueueClassCommand")
+                    parameterService.GetParameterValue(
+                        parameterName: "WorkQueueCommandType_WorkQueueClassCommand"
+                    )
             )
             {
                 return true;
             }
             WorkQueueWorkflowCommand commandDefinition = workQueueClass.GetCommand(
-                (string)command["Command"]
+                name: (string)command[columnName: "Command"]
             );
             return commandDefinition.Mode == PanelActionMode.MultipleCheckboxes;
         });
@@ -446,75 +484,87 @@ public class FormXmlBuilder
             autoSaveOnListRecordChange: false,
             requestSaveAfterUpdate: false
         );
-        XmlElement windowElement = WindowElement(xmlDocument);
-        windowElement.SetAttribute("SuppressSave", "true");
-        windowElement.SetAttribute("CacheOnClient", "false");
-        XmlElement uiRootElement = UIRootElement(windowElement);
-        XmlElement bindingsElement = ComponentBindingsElement(windowElement);
+        XmlElement windowElement = WindowElement(doc: xmlDocument);
+        windowElement.SetAttribute(name: "SuppressSave", value: "true");
+        windowElement.SetAttribute(name: "CacheOnClient", value: "false");
+        XmlElement uiRootElement = UIRootElement(windowElement: windowElement);
+        XmlElement bindingsElement = ComponentBindingsElement(windowElement: windowElement);
         XmlElement actionsElement = customScreen is null
             ? BuildGeneratedWorkQueueScreen(
-                xmlDocument,
-                uiRootElement,
-                bindingsElement,
-                dataSources,
-                dataset,
-                workQueueClass,
-                queueId,
-                showCheckboxes
+                xml: xmlDocument,
+                uiRoot: uiRootElement,
+                bindings: bindingsElement,
+                dataSources: dataSources,
+                dataset: dataset,
+                workQueueClass: workQueueClass,
+                queueId: queueId,
+                showCheckboxes: showCheckboxes
             )
             : BuildCustomWorkQueueScreen(
-                xmlDocument,
-                windowElement,
-                uiRootElement,
-                dataSources,
-                dataset,
-                customScreen,
-                showCheckboxes
+                xml: xmlDocument,
+                windowElement: windowElement,
+                uiRoot: uiRootElement,
+                dataSources: dataSources,
+                dataset: dataset,
+                customScreen: customScreen,
+                showCheckboxes: showCheckboxes
             );
-        foreach (DataRow authorizedCommand in authorizedCommands.OrderBy(x => x["SortOrder"]))
+        foreach (
+            DataRow authorizedCommand in authorizedCommands.OrderBy(keySelector: x =>
+                x[columnName: "SortOrder"]
+            )
+        )
         {
             Hashtable cmdParams = new Hashtable();
             string confirmationMessage = null;
             if (
-                (Guid)authorizedCommand["refWorkQueueCommandTypeId"]
+                (Guid)authorizedCommand[columnName: "refWorkQueueCommandTypeId"]
                 == (Guid)
-                    parameterService.GetParameterValue("WorkQueueCommandType_WorkQueueClassCommand")
+                    parameterService.GetParameterValue(
+                        parameterName: "WorkQueueCommandType_WorkQueueClassCommand"
+                    )
             )
             {
                 WorkQueueWorkflowCommand workQueueWorkflowCommand = workQueueClass.GetCommand(
-                    (string)authorizedCommand["Command"]
+                    name: (string)authorizedCommand[columnName: "Command"]
                 );
                 var config = new ActionConfiguration
                 {
                     Type = PanelActionType.QueueAction,
                     Mode = workQueueWorkflowCommand.Mode,
                     Placement = workQueueWorkflowCommand.Placement,
-                    ActionId = authorizedCommand["Id"].ToString(),
+                    ActionId = authorizedCommand[columnName: "Id"].ToString(),
                     GroupId = "",
-                    Caption = (string)authorizedCommand["Text"],
+                    Caption = (string)authorizedCommand[columnName: "Text"],
                     IconUrl = workQueueWorkflowCommand.ButtonIcon?.Name,
-                    IsDefault = (bool)authorizedCommand["IsDefault"],
+                    IsDefault = (bool)authorizedCommand[columnName: "IsDefault"],
                     ConfirmationMessage = null,
                     Parameters = cmdParams,
                 };
-                AsPanelActionButtonBuilder.Build(actionsElement, config);
+                AsPanelActionButtonBuilder.Build(actionsElement: actionsElement, config: config);
             }
             else
             {
                 string iconName = "";
                 if (
-                    (Guid)authorizedCommand["refWorkQueueCommandTypeId"]
-                    == (Guid)parameterService.GetParameterValue("WorkQueueCommandType_Remove")
+                    (Guid)authorizedCommand[columnName: "refWorkQueueCommandTypeId"]
+                    == (Guid)
+                        parameterService.GetParameterValue(
+                            parameterName: "WorkQueueCommandType_Remove"
+                        )
                 )
                 {
                     iconName = "queue_remove.png";
                     confirmationMessage = ResourceUtils.GetString(
-                        "WorkQueueRemoveConfirmationMessage"
+                        key: "WorkQueueRemoveConfirmationMessage"
                     );
                 }
                 else if (
-                    (Guid)authorizedCommand["refWorkQueueCommandTypeId"]
-                    == (Guid)parameterService.GetParameterValue("WorkQueueCommandType_StateChange")
+                    (Guid)authorizedCommand[columnName: "refWorkQueueCommandTypeId"]
+                    == (Guid)
+                        parameterService.GetParameterValue(
+                            parameterName: "WorkQueueCommandType_StateChange"
+                        )
                 )
                 {
                     iconName = "queue_statechange.png";
@@ -524,19 +574,19 @@ public class FormXmlBuilder
                     Type = PanelActionType.QueueAction,
                     Mode = PanelActionMode.MultipleCheckboxes,
                     Placement = ActionButtonPlacement.Toolbar,
-                    ActionId = authorizedCommand["Id"].ToString(),
+                    ActionId = authorizedCommand[columnName: "Id"].ToString(),
                     GroupId = "",
-                    Caption = (string)authorizedCommand["Text"],
+                    Caption = (string)authorizedCommand[columnName: "Text"],
                     IconUrl = iconName,
-                    IsDefault = (bool)authorizedCommand["IsDefault"],
+                    IsDefault = (bool)authorizedCommand[columnName: "IsDefault"],
                     Parameters = cmdParams,
                     ConfirmationMessage = confirmationMessage,
                     ShowAlways = true,
                 };
-                AsPanelActionButtonBuilder.Build(actionsElement, config);
+                AsPanelActionButtonBuilder.Build(actionsElement: actionsElement, config: config);
             }
         }
-        RenderDataSources(windowElement, dataSources);
+        RenderDataSources(windowElement: windowElement, dataSources: dataSources);
         return xmlDocument;
     }
 
@@ -552,14 +602,14 @@ public class FormXmlBuilder
     {
         var persistenceService = ServiceManager.Services.GetService<IPersistenceService>();
         var structure = persistenceService.SchemaProvider.RetrieveInstance<DataStructure>(
-            customScreen.Screen.DataStructure.Id
+            instanceId: customScreen.Screen.DataStructure.Id
         );
         var xmlOutput = new XmlOutput { Document = xml };
         int controlCounter = 0;
         RenderUIElement(
             xmlOutput: xmlOutput,
             parentNode: uiRoot,
-            item: FormTools.GetItemFromControlSet(customScreen.Screen),
+            item: FormTools.GetItemFromControlSet(controlSet: customScreen.Screen),
             dataset: dataset,
             dataSources: dataSources,
             controlCounter: ref controlCounter,
@@ -570,19 +620,22 @@ public class FormXmlBuilder
             confirmSelectionChangeEntity: string.Empty,
             structure: structure
         );
-        RenderDataSources(windowElement, dataSources);
+        RenderDataSources(windowElement: windowElement, dataSources: dataSources);
         PostProcessScreenXml(
-            xml,
-            dataset,
-            windowElement,
+            doc: xml,
+            dataset: dataset,
+            windowElement: windowElement,
             confirmSelectionChangeEntity: string.Empty
         );
         if (showCheckboxes)
         {
-            var rootGrid = (XmlElement)xml.SelectSingleNode(RootGridXPath);
-            rootGrid?.SetAttribute("ShowSelectionCheckboxes", XmlConvert.ToString(true));
+            var rootGrid = (XmlElement)xml.SelectSingleNode(xpath: RootGridXPath);
+            rootGrid?.SetAttribute(
+                name: "ShowSelectionCheckboxes",
+                value: XmlConvert.ToString(value: true)
+            );
         }
-        var actionsElement = (XmlElement)xml.SelectSingleNode($"{RootGridXPath}/Actions");
+        var actionsElement = (XmlElement)xml.SelectSingleNode(xpath: $"{RootGridXPath}/Actions");
         return actionsElement;
     }
 
@@ -597,20 +650,20 @@ public class FormXmlBuilder
         bool showCheckboxes
     )
     {
-        var table = dataset.Tables[Entity_WorkQueueEntry];
+        var table = dataset.Tables[name: Entity_WorkQueueEntry];
         SplitPanelBuilder.Build(
             parentNode: uiRoot,
             orientation: SplitPanelOrientation.Horizontal,
             fixedSize: false
         );
-        uiRoot.SetAttribute("ModelInstanceId", "52DEFCEA-587C-47e0-97F5-3590B6AC492F");
-        XmlElement children = xml.CreateElement("UIChildren");
-        uiRoot.AppendChild(children);
-        XmlElement listElement = xml.CreateElement("UIElement");
-        children.AppendChild(listElement);
+        uiRoot.SetAttribute(name: "ModelInstanceId", value: "52DEFCEA-587C-47e0-97F5-3590B6AC492F");
+        XmlElement children = xml.CreateElement(name: "UIChildren");
+        uiRoot.AppendChild(newChild: children);
+        XmlElement listElement = xml.CreateElement(name: "UIElement");
+        children.AppendChild(newChild: listElement);
         var panelData = new UIElementRenderData
         {
-            PanelTitle = ResourceUtils.GetString("WorkQueueFromTitle"),
+            PanelTitle = ResourceUtils.GetString(key: "WorkQueueFromTitle"),
             IsGridVisible = true,
             DataMember = Entity_WorkQueueEntry,
         };
@@ -626,23 +679,23 @@ public class FormXmlBuilder
             formId: Guid.Empty,
             isIndependent: false
         );
-        listElement.SetAttribute("Id", "queuePanel1");
-        listElement.SetAttribute("ModelInstanceId", queueId.ToString());
-        listElement.SetAttribute("IsRootGrid", XmlConvert.ToString(true));
-        listElement.SetAttribute("IsRootEntity", XmlConvert.ToString(true));
-        listElement.SetAttribute("IsPreloaded", XmlConvert.ToString(true));
-        XmlElement formRoot = AsPanelBuilder.FormRootElement(listElement);
-        XmlElement properties = AsPanelBuilder.PropertiesElement(listElement);
-        XmlElement actions = AsPanelBuilder.ActionsElement(listElement);
-        XmlElement propertyNames = xml.CreateElement("PropertyNames");
-        formRoot.AppendChild(propertyNames);
+        listElement.SetAttribute(name: "Id", value: "queuePanel1");
+        listElement.SetAttribute(name: "ModelInstanceId", value: queueId.ToString());
+        listElement.SetAttribute(name: "IsRootGrid", value: XmlConvert.ToString(value: true));
+        listElement.SetAttribute(name: "IsRootEntity", value: XmlConvert.ToString(value: true));
+        listElement.SetAttribute(name: "IsPreloaded", value: XmlConvert.ToString(value: true));
+        XmlElement formRoot = AsPanelBuilder.FormRootElement(panelNode: listElement);
+        XmlElement properties = AsPanelBuilder.PropertiesElement(panelNode: listElement);
+        XmlElement actions = AsPanelBuilder.ActionsElement(panelNode: listElement);
+        XmlElement propertyNames = xml.CreateElement(name: "PropertyNames");
+        formRoot.AppendChild(newChild: propertyNames);
         int lastPos = 5;
         DataStructureColumn memoColumn = null;
         var mappedColumns = workQueueClass.ChildItemsByType<WorkQueueClassEntityMapping>(
-            WorkQueueClassEntityMapping.CategoryConst
+            itemType: WorkQueueClassEntityMapping.CategoryConst
         );
         mappedColumns.Sort();
-        var entity = workQueueClass.WorkQueueStructure.Entities[0];
+        var entity = workQueueClass.WorkQueueStructure.Entities[index: 0];
         foreach (var mapping in mappedColumns)
         {
             // don't add RecordCreated twice
@@ -651,66 +704,74 @@ public class FormXmlBuilder
                 continue;
             }
             AddColumn(
-                entity,
-                mapping.Name,
-                ref memoColumn,
-                ref lastPos,
-                properties,
-                propertyNames,
-                table,
-                mapping.FormatPattern
+                entity: entity,
+                columnName: mapping.Name,
+                memoColumn: ref memoColumn,
+                lastPos: ref lastPos,
+                propertiesElement: properties,
+                propertyNamesElement: propertyNames,
+                table: table,
+                formatPattern: mapping.FormatPattern
             );
         }
         AddColumn(
-            entity,
-            "IsLocked",
-            ref memoColumn,
-            ref lastPos,
-            properties,
-            propertyNames,
-            table,
-            null
+            entity: entity,
+            columnName: "IsLocked",
+            memoColumn: ref memoColumn,
+            lastPos: ref lastPos,
+            propertiesElement: properties,
+            propertyNamesElement: propertyNames,
+            table: table,
+            formatPattern: null
         );
         AddColumn(
-            entity,
-            "refLockedByBusinessPartnerId",
-            ref memoColumn,
-            ref lastPos,
-            properties,
-            propertyNames,
-            table,
-            null
+            entity: entity,
+            columnName: "refLockedByBusinessPartnerId",
+            memoColumn: ref memoColumn,
+            lastPos: ref lastPos,
+            propertiesElement: properties,
+            propertyNamesElement: propertyNames,
+            table: table,
+            formatPattern: null
         );
         AddColumn(
-            entity,
-            "ErrorText",
-            ref memoColumn,
-            ref lastPos,
-            properties,
-            propertyNames,
-            table,
-            null
+            entity: entity,
+            columnName: "ErrorText",
+            memoColumn: ref memoColumn,
+            lastPos: ref lastPos,
+            propertiesElement: properties,
+            propertyNamesElement: propertyNames,
+            table: table,
+            formatPattern: null
         );
         AddColumn(
-            entity,
-            "RecordCreated",
-            ref memoColumn,
-            ref lastPos,
-            properties,
-            propertyNames,
-            table,
-            null
+            entity: entity,
+            columnName: "RecordCreated",
+            memoColumn: ref memoColumn,
+            lastPos: ref lastPos,
+            propertiesElement: properties,
+            propertyNamesElement: propertyNames,
+            table: table,
+            formatPattern: null
         );
         SetUserConfig(
-            xml,
-            listElement,
-            workQueueClass.DefaultPanelConfiguration,
-            queueId,
-            Guid.Empty
+            doc: xml,
+            parentNode: listElement,
+            defaultConfiguration: workQueueClass.DefaultPanelConfiguration,
+            objectId: queueId,
+            workflowId: Guid.Empty
         );
         if (memoColumn is not null)
         {
-            BuildMemoPanel(xml, children, bindings, dataSources, table, queueId, memoColumn);
+            BuildMemoPanel(
+                xml: xml,
+                children: children,
+                bindings: bindings,
+                dataSources: dataSources,
+                table: table,
+                queueId: queueId,
+                memoColumn: memoColumn
+            );
         }
         return actions;
     }
@@ -725,8 +786,8 @@ public class FormXmlBuilder
         DataStructureColumn memoColumn
     )
     {
-        XmlElement memoElement = xml.CreateElement("UIElement");
-        children.AppendChild(memoElement);
+        XmlElement memoElement = xml.CreateElement(name: "UIElement");
+        children.AppendChild(newChild: memoElement);
         var memoRenderData = new UIElementRenderData
         {
             DataMember = Entity_WorkQueueEntry,
@@ -745,26 +806,29 @@ public class FormXmlBuilder
             formId: Guid.Empty,
             isIndependent: false
         );
-        memoElement.SetAttribute("Id", "memoPanel");
-        memoElement.SetAttribute("ModelInstanceId", "65DF44F9-C050-4554-AD9A-896445314279");
-        memoElement.SetAttribute("IsRootGrid", XmlConvert.ToString(false));
-        memoElement.SetAttribute("IsRootEntity", XmlConvert.ToString(true));
-        memoElement.SetAttribute("IsPreloaded", XmlConvert.ToString(true));
-        memoElement.SetAttribute("ParentId", queueId.ToString());
-        memoElement.SetAttribute("ParentEntityName", Entity_WorkQueueEntry);
-        var filterExpressions = xml.CreateElement("FilterExpressions");
-        memoElement.AppendChild(filterExpressions);
+        memoElement.SetAttribute(name: "Id", value: "memoPanel");
+        memoElement.SetAttribute(
+            name: "ModelInstanceId",
+            value: "65DF44F9-C050-4554-AD9A-896445314279"
+        );
+        memoElement.SetAttribute(name: "IsRootGrid", value: XmlConvert.ToString(value: false));
+        memoElement.SetAttribute(name: "IsRootEntity", value: XmlConvert.ToString(value: true));
+        memoElement.SetAttribute(name: "IsPreloaded", value: XmlConvert.ToString(value: true));
+        memoElement.SetAttribute(name: "ParentId", value: queueId.ToString());
+        memoElement.SetAttribute(name: "ParentEntityName", value: Entity_WorkQueueEntry);
+        var filterExpressions = xml.CreateElement(name: "FilterExpressions");
+        memoElement.AppendChild(newChild: filterExpressions);
         foreach (DataColumn dataColumn in table.PrimaryKey)
         {
-            XmlElement filter = xml.CreateElement("FilterExpression");
-            filterExpressions.AppendChild(filter);
-            filter.SetAttribute("ParentProperty", dataColumn.ColumnName);
-            filter.SetAttribute("ItemProperty", dataColumn.ColumnName);
+            XmlElement filter = xml.CreateElement(name: "FilterExpression");
+            filterExpressions.AppendChild(newChild: filter);
+            filter.SetAttribute(name: "ParentProperty", value: dataColumn.ColumnName);
+            filter.SetAttribute(name: "ItemProperty", value: dataColumn.ColumnName);
         }
-        XmlElement memoFormRoot = AsPanelBuilder.FormRootElement(memoElement);
-        XmlElement memoProperties = AsPanelBuilder.PropertiesElement(memoElement);
-        XmlElement memoPropertyNames = xml.CreateElement("PropertyNames");
-        memoFormRoot.AppendChild(memoPropertyNames);
+        XmlElement memoFormRoot = AsPanelBuilder.FormRootElement(panelNode: memoElement);
+        XmlElement memoProperties = AsPanelBuilder.PropertiesElement(panelNode: memoElement);
+        XmlElement memoPropertyNames = xml.CreateElement(name: "PropertyNames");
+        memoFormRoot.AppendChild(newChild: memoPropertyNames);
         var propertyElement = AsPanelPropertyBuilder.CreateProperty(
             propertiesElement: memoProperties,
             propertyNamesElement: memoPropertyNames,
@@ -785,23 +849,23 @@ public class FormXmlBuilder
             tabIndex: null,
             fieldType: memoColumn.Field.FieldType
         );
-        var buildDefinition = new TextBoxBuildDefinition(OrigamDataType.Memo)
+        var buildDefinition = new TextBoxBuildDefinition(type: OrigamDataType.Memo)
         {
             Dock = "Fill",
             Multiline = true,
         };
-        TextBoxBuilder.Build(propertyElement, buildDefinition);
+        TextBoxBuilder.Build(propertyElement: propertyElement, buildDefinition: buildDefinition);
         // binding from the parent grid to the memo grid (same entity)
         CreateComponentBinding(
-            xml,
-            bindings,
-            queueId.ToString(),
-            "Id",
-            Entity_WorkQueueEntry,
-            "65DF44F9-C050-4554-AD9A-896445314279",
-            "Id",
-            Entity_WorkQueueEntry,
-            false
+            doc: xml,
+            bindingsElement: bindings,
+            parentId: queueId.ToString(),
+            parentProperty: "Id",
+            parentEntity: Entity_WorkQueueEntry,
+            childId: "65DF44F9-C050-4554-AD9A-896445314279",
+            childProperty: "Id",
+            childEntity: Entity_WorkQueueEntry,
+            isChildParameter: false
         );
     }
 
@@ -817,18 +881,18 @@ public class FormXmlBuilder
     )
     {
         AddColumn(
-            entity,
-            columnName,
-            ref memoColumn,
-            ref lastPos,
-            propertiesElement,
-            propertyNamesElement,
-            table,
-            formatPattern,
-            "",
-            true,
-            null,
-            null
+            entity: entity,
+            columnName: columnName,
+            memoColumn: ref memoColumn,
+            lastPos: ref lastPos,
+            propertiesElement: propertiesElement,
+            propertyNamesElement: propertyNamesElement,
+            table: table,
+            formatPattern: formatPattern,
+            label: "",
+            readOnly: true,
+            lookupParameterName: null,
+            lookupParameterValue: null
         );
     }
 
@@ -849,24 +913,25 @@ public class FormXmlBuilder
     {
         UIStyle style = null;
         SchemaService schema =
-            ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
+            ServiceManager.Services.GetService(serviceType: typeof(SchemaService)) as SchemaService;
         StylesSchemaItemProvider styles =
-            schema.GetProvider(typeof(StylesSchemaItemProvider)) as StylesSchemaItemProvider;
+            schema.GetProvider(type: typeof(StylesSchemaItemProvider)) as StylesSchemaItemProvider;
         int height = 0;
-        DataStructureColumn col = entity.Column(columnName);
+        DataStructureColumn col = entity.Column(name: columnName);
         if (col == null)
         {
             throw new ArgumentOutOfRangeException(
-                "columnName",
-                columnName,
-                "Column not found in the work queue data structure."
+                paramName: "columnName",
+                actualValue: columnName,
+                message: "Column not found in the work queue data structure."
             );
         }
         if (col.Field.DataType != OrigamDataType.Blob && col.Name != "Id")
         {
             if (col.Field.Name == "s1")
             {
-                style = styles.GetChildByName("bold", UIStyle.CategoryConst) as UIStyle;
+                style =
+                    styles.GetChildByName(name: "bold", itemType: UIStyle.CategoryConst) as UIStyle;
             }
             if (col.Field.Name == "m1")
             {
@@ -907,58 +972,74 @@ public class FormXmlBuilder
                     case OrigamDataType.Memo:
                     case OrigamDataType.String:
                     {
-                        var buildDefinition = new TextBoxBuildDefinition(col.Field.DataType)
+                        var buildDefinition = new TextBoxBuildDefinition(type: col.Field.DataType)
                         {
                             Multiline = col.Field.DataType == OrigamDataType.Memo,
                         };
-                        if (!string.IsNullOrEmpty(formatPattern))
+                        if (!string.IsNullOrEmpty(value: formatPattern))
                         {
                             buildDefinition.CustomNumberFormat = formatPattern;
                         }
-                        TextBoxBuilder.Build(propertyElement, buildDefinition);
+                        TextBoxBuilder.Build(
+                            propertyElement: propertyElement,
+                            buildDefinition: buildDefinition
+                        );
                         break;
                     }
 
                     case OrigamDataType.UniqueIdentifier:
                     {
                         ComboBoxBuilder.Build(
-                            propertyElement,
-                            (Guid)col.FinalLookup.PrimaryKey["Id"],
-                            false,
-                            col.Name,
-                            table
+                            propertyElement: propertyElement,
+                            lookupId: (Guid)col.FinalLookup.PrimaryKey[key: "Id"],
+                            showUniqueValues: false,
+                            bindingMember: col.Name,
+                            table: table
                         );
                         if (lookupParameterName != null)
                         {
                             XmlDocument doc = propertyElement.OwnerDocument;
                             XmlElement comboParametersElement = doc.CreateElement(
-                                "DropDownParameters"
+                                name: "DropDownParameters"
                             );
-                            propertyElement.AppendChild(comboParametersElement);
+                            propertyElement.AppendChild(newChild: comboParametersElement);
                             XmlElement comboParamElement = doc.CreateElement(
-                                "ComboBoxParameterMapping"
+                                name: "ComboBoxParameterMapping"
                             );
-                            comboParametersElement.AppendChild(comboParamElement);
-                            comboParamElement.SetAttribute("ParameterName", lookupParameterName);
-                            comboParamElement.SetAttribute("FieldName", lookupParameterValue);
-                            propertyElement.SetAttribute("Cached", XmlConvert.ToString(false));
+                            comboParametersElement.AppendChild(newChild: comboParamElement);
+                            comboParamElement.SetAttribute(
+                                name: "ParameterName",
+                                value: lookupParameterName
+                            );
+                            comboParamElement.SetAttribute(
+                                name: "FieldName",
+                                value: lookupParameterValue
+                            );
+                            propertyElement.SetAttribute(
+                                name: "Cached",
+                                value: XmlConvert.ToString(value: false)
+                            );
                         }
                         break;
                     }
 
                     case OrigamDataType.Date:
                     {
-                        if (string.IsNullOrEmpty(formatPattern))
+                        if (string.IsNullOrEmpty(value: formatPattern))
                         {
                             formatPattern = "dd. MM. yyyy HH:mm:ss";
                         }
-                        DateBoxBuilder.Build(propertyElement, "Custom", formatPattern);
+                        DateBoxBuilder.Build(
+                            propertyElement: propertyElement,
+                            format: "Custom",
+                            customFormat: formatPattern
+                        );
                         break;
                     }
 
                     case OrigamDataType.Boolean:
                     {
-                        CheckBoxBuilder.Build(propertyElement, caption);
+                        CheckBoxBuilder.Build(propertyElement: propertyElement, text: caption);
                         break;
                     }
                 }
@@ -971,22 +1052,36 @@ public class FormXmlBuilder
     {
         Hashtable dataSources = new Hashtable();
         OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() as OrigamSettings;
-        DataTable table = dataset.Tables["OrigamRecord"];
+        DataTable table = dataset.Tables[name: "OrigamRecord"];
         SimpleModelData.OrigamEntityRow entityRow =
-            simpleModel.OrigamEntity.Rows[0] as SimpleModelData.OrigamEntityRow;
+            simpleModel.OrigamEntity.Rows[index: 0] as SimpleModelData.OrigamEntityRow;
         // Window
-        XmlDocument doc = GetWindowBaseXml(name, Guid.Empty, 0, false, true, false);
-        XmlElement windowElement = WindowElement(doc);
-        XmlElement uiRootElement = UIRootElement(windowElement);
-        XmlElement bindingsElement = ComponentBindingsElement(windowElement);
-        windowElement.SetAttribute("SuppressSave", "false");
-        windowElement.SetAttribute("CacheOnClient", "false");
-        SplitPanelBuilder.Build(uiRootElement, SplitPanelOrientation.Horizontal, false);
-        uiRootElement.SetAttribute("ModelInstanceId", "52DEFCEA-587C-47e0-97F5-3590B6AC492F");
-        XmlElement children = doc.CreateElement("UIChildren");
-        uiRootElement.AppendChild(children);
-        XmlElement listElement = doc.CreateElement("UIElement");
-        children.AppendChild(listElement);
+        XmlDocument doc = GetWindowBaseXml(
+            name: name,
+            menuId: Guid.Empty,
+            autoRefreshInterval: 0,
+            refreshOnFocus: false,
+            autoSaveOnListRecordChange: true,
+            requestSaveAfterUpdate: false
+        );
+        XmlElement windowElement = WindowElement(doc: doc);
+        XmlElement uiRootElement = UIRootElement(windowElement: windowElement);
+        XmlElement bindingsElement = ComponentBindingsElement(windowElement: windowElement);
+        windowElement.SetAttribute(name: "SuppressSave", value: "false");
+        windowElement.SetAttribute(name: "CacheOnClient", value: "false");
+        SplitPanelBuilder.Build(
+            parentNode: uiRootElement,
+            orientation: SplitPanelOrientation.Horizontal,
+            fixedSize: false
+        );
+        uiRootElement.SetAttribute(
+            name: "ModelInstanceId",
+            value: "52DEFCEA-587C-47e0-97F5-3590B6AC492F"
+        );
+        XmlElement children = doc.CreateElement(name: "UIChildren");
+        uiRootElement.AppendChild(newChild: children);
+        XmlElement listElement = doc.CreateElement(name: "UIElement");
+        children.AppendChild(newChild: listElement);
         // Panel
         UIElementRenderData renderData = new UIElementRenderData();
         renderData.PanelTitle = entityRow.Label;
@@ -1003,119 +1098,132 @@ public class FormXmlBuilder
         {
             renderData.IsCalendarSupported = true;
             renderData.CalendarDateFromMember = GetMember(
-                entityRow,
-                entityRow.refCalendarDateStartOrigamFieldId
+                entityRow: entityRow,
+                memberId: entityRow.refCalendarDateStartOrigamFieldId
             );
             if (!entityRow.IsrefCalendarDateEndOrigamFieldIdNull())
             {
                 renderData.CalendarDateToMember = GetMember(
-                    entityRow,
-                    entityRow.refCalendarDateEndOrigamFieldId
+                    entityRow: entityRow,
+                    memberId: entityRow.refCalendarDateEndOrigamFieldId
                 );
             }
             renderData.CalendarNameMember = GetMember(
-                entityRow,
-                entityRow.refCalendarNameOrigamFieldId
+                entityRow: entityRow,
+                memberId: entityRow.refCalendarNameOrigamFieldId
             );
             if (!entityRow.IsrefCalendarResourceOrigamFieldIdNull())
             {
                 renderData.CalendarResourceIdMember = GetMember(
-                    entityRow,
-                    entityRow.refCalendarResourceOrigamFieldId
+                    entityRow: entityRow,
+                    memberId: entityRow.refCalendarResourceOrigamFieldId
                 );
             }
             if (!entityRow.IsrefCalendarDescriptionOrigamFieldIdNull())
             {
                 renderData.CalendarDescriptionMember = GetMember(
-                    entityRow,
-                    entityRow.refCalendarDescriptionOrigamFieldId
+                    entityRow: entityRow,
+                    memberId: entityRow.refCalendarDescriptionOrigamFieldId
                 );
             }
         }
         AsPanelBuilder.Build(
-            listElement,
-            renderData,
-            entityRow.Id.ToString(),
-            "recordPanel1",
-            table,
-            dataSources,
-            table.PrimaryKey[0].ColumnName,
-            false,
-            Guid.Empty,
-            false
+            parentNode: listElement,
+            renderData: renderData,
+            modelId: entityRow.Id.ToString(),
+            controlId: "recordPanel1",
+            table: table,
+            dataSources: dataSources,
+            primaryKeyColumnName: table.PrimaryKey[0].ColumnName,
+            showSelectionCheckboxes: false,
+            formId: Guid.Empty,
+            isIndependent: false
         );
-        listElement.SetAttribute("Id", "recordPanel1");
-        listElement.SetAttribute("ModelInstanceId", entityRow.Id.ToString());
-        listElement.SetAttribute("IsRootGrid", XmlConvert.ToString(true));
-        listElement.SetAttribute("IsRootEntity", XmlConvert.ToString(true));
-        listElement.SetAttribute("IsPreloaded", XmlConvert.ToString(true));
-        listElement.SetAttribute("RequestDataAfterSelectionChange", XmlConvert.ToString(true));
-        listElement.SetAttribute("ConfirmSelectionChange", XmlConvert.ToString(true));
-        XmlElement formRootElement = AsPanelBuilder.FormRootElement(listElement);
-        XmlElement propertiesElement = AsPanelBuilder.PropertiesElement(listElement);
-        XmlElement actionsElement = AsPanelBuilder.ActionsElement(listElement);
-        XmlElement configElement = doc.CreateElement("Configuration");
-        listElement.AppendChild(configElement);
-        XmlElement propertyNamesElement = doc.CreateElement("PropertyNames");
-        formRootElement.AppendChild(propertyNamesElement);
+        listElement.SetAttribute(name: "Id", value: "recordPanel1");
+        listElement.SetAttribute(name: "ModelInstanceId", value: entityRow.Id.ToString());
+        listElement.SetAttribute(name: "IsRootGrid", value: XmlConvert.ToString(value: true));
+        listElement.SetAttribute(name: "IsRootEntity", value: XmlConvert.ToString(value: true));
+        listElement.SetAttribute(name: "IsPreloaded", value: XmlConvert.ToString(value: true));
+        listElement.SetAttribute(
+            name: "RequestDataAfterSelectionChange",
+            value: XmlConvert.ToString(value: true)
+        );
+        listElement.SetAttribute(
+            name: "ConfirmSelectionChange",
+            value: XmlConvert.ToString(value: true)
+        );
+        XmlElement formRootElement = AsPanelBuilder.FormRootElement(panelNode: listElement);
+        XmlElement propertiesElement = AsPanelBuilder.PropertiesElement(panelNode: listElement);
+        XmlElement actionsElement = AsPanelBuilder.ActionsElement(panelNode: listElement);
+        XmlElement configElement = doc.CreateElement(name: "Configuration");
+        listElement.AppendChild(newChild: configElement);
+        XmlElement propertyNamesElement = doc.CreateElement(name: "PropertyNames");
+        formRootElement.AppendChild(newChild: propertyNamesElement);
         DataStructureColumn memoColumn = null;
         // Panel controls
         IPersistenceService persistence =
-            ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-        Guid dsId = (Guid)dataset.ExtendedProperties["Id"];
+            ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+            as IPersistenceService;
+        Guid dsId = (Guid)dataset.ExtendedProperties[key: "Id"];
         DataStructure ds =
             persistence.SchemaProvider.RetrieveInstance(
-                typeof(DataStructure),
-                new ModelElementKey(dsId)
+                type: typeof(DataStructure),
+                primaryKey: new ModelElementKey(id: dsId)
             ) as DataStructure;
-        DataStructureEntity entity = ds.Entities[0] as DataStructureEntity;
+        DataStructureEntity entity = ds.Entities[index: 0] as DataStructureEntity;
         int lastPos = 5;
         if (entityRow.WorkflowCount > 0)
         {
             AddColumn(
-                entity,
-                "refOrigamWorkflowId",
-                ref memoColumn,
-                ref lastPos,
-                propertiesElement,
-                propertyNamesElement,
-                table,
-                null,
-                dataset.Tables["OrigamRecord"].Columns["refOrigamWorkflowId"].Caption,
-                false,
-                "OrigamWorkflow_parOrigamEntityId",
-                "'" + entityRow.Id.ToString() + "'"
+                entity: entity,
+                columnName: "refOrigamWorkflowId",
+                memoColumn: ref memoColumn,
+                lastPos: ref lastPos,
+                propertiesElement: propertiesElement,
+                propertyNamesElement: propertyNamesElement,
+                table: table,
+                formatPattern: null,
+                label: dataset
+                    .Tables[name: "OrigamRecord"]
+                    .Columns[name: "refOrigamWorkflowId"]
+                    .Caption,
+                readOnly: false,
+                lookupParameterName: "OrigamWorkflow_parOrigamEntityId",
+                lookupParameterValue: "'" + entityRow.Id.ToString() + "'"
             );
             AddColumn(
-                entity,
-                "refOrigamStateId",
-                ref memoColumn,
-                ref lastPos,
-                propertiesElement,
-                propertyNamesElement,
-                table,
-                null,
-                dataset.Tables["OrigamRecord"].Columns["refOrigamStateId"].Caption,
-                false,
-                "OrigamState_parOrigamWorkflowId",
-                "refOrigamWorkflowId"
+                entity: entity,
+                columnName: "refOrigamStateId",
+                memoColumn: ref memoColumn,
+                lastPos: ref lastPos,
+                propertiesElement: propertiesElement,
+                propertyNamesElement: propertyNamesElement,
+                table: table,
+                formatPattern: null,
+                label: dataset
+                    .Tables[name: "OrigamRecord"]
+                    .Columns[name: "refOrigamStateId"]
+                    .Caption,
+                readOnly: false,
+                lookupParameterName: "OrigamState_parOrigamWorkflowId",
+                lookupParameterValue: "refOrigamWorkflowId"
             );
         }
         foreach (var column in entityRow.GetOrigamFieldRows())
         {
             AddColumn(
-                entity,
-                column.MappedColumn,
-                ref memoColumn,
-                ref lastPos,
-                propertiesElement,
-                propertyNamesElement,
-                table,
-                null,
-                column.Label,
-                false,
-                "OrigamRecord_parOrigamEntityId",
-                column.IsrefLookupOrigamEntityIdNull()
+                entity: entity,
+                columnName: column.MappedColumn,
+                memoColumn: ref memoColumn,
+                lastPos: ref lastPos,
+                propertiesElement: propertiesElement,
+                propertyNamesElement: propertyNamesElement,
+                table: table,
+                formatPattern: null,
+                label: column.Label,
+                readOnly: false,
+                lookupParameterName: "OrigamRecord_parOrigamEntityId",
+                lookupParameterValue: column.IsrefLookupOrigamEntityIdNull()
                     ? null
                     : "'" + column.refLookupOrigamEntityId.ToString() + "'"
             );
@@ -1125,8 +1233,8 @@ public class FormXmlBuilder
             formId: entityRow.Id,
             panelId: entityRow.Id,
             disableActionButtons: renderData.DisableActionButtons,
-            entityId: table.ExtendedProperties.Contains("EntityId")
-                ? (Guid)table.ExtendedProperties["EntityId"]
+            entityId: table.ExtendedProperties.Contains(key: "EntityId")
+                ? (Guid)table.ExtendedProperties[key: "EntityId"]
                 : Guid.Empty,
             validActions: validActions
         );
@@ -1134,7 +1242,7 @@ public class FormXmlBuilder
         EntityUIAction actionToRemove = null;
         foreach (EntityUIAction action in validActions)
         {
-            if (action.Name == "Design" && !entityRow.RecordCreatedBy.Equals(profile.Id))
+            if (action.Name == "Design" && !entityRow.RecordCreatedBy.Equals(g: profile.Id))
             {
                 actionToRemove = action;
                 break;
@@ -1142,15 +1250,30 @@ public class FormXmlBuilder
         }
         if (actionToRemove != null)
         {
-            validActions.Remove(actionToRemove);
+            validActions.Remove(item: actionToRemove);
         }
         Hashtable designButtonParams = new Hashtable();
-        designButtonParams.Add("OrigamEntity_parId", "'" + entityRow.Id.ToString() + "'");
+        designButtonParams.Add(
+            key: "OrigamEntity_parId",
+            value: "'" + entityRow.Id.ToString() + "'"
+        );
         IParameterService parameterService =
-            ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
-        RenderActions(parameterService, validActions, actionsElement, designButtonParams);
-        SetUserConfig(doc, listElement, null, entityRow.Id, Guid.Empty);
-        RenderDataSources(windowElement, dataSources);
+            ServiceManager.Services.GetService(serviceType: typeof(IParameterService))
+            as IParameterService;
+        RenderActions(
+            parameterService: parameterService,
+            validActions: validActions,
+            actionsElement: actionsElement,
+            inputParameters: designButtonParams
+        );
+        SetUserConfig(
+            doc: doc,
+            parentNode: listElement,
+            defaultConfiguration: null,
+            objectId: entityRow.Id,
+            workflowId: Guid.Empty
+        );
+        RenderDataSources(windowElement: windowElement, dataSources: dataSources);
         return doc;
     }
 
@@ -1158,12 +1281,16 @@ public class FormXmlBuilder
     {
         foreach (var item in entityRow.GetOrigamFieldRows())
         {
-            if (item.Id.Equals(memberId))
+            if (item.Id.Equals(g: memberId))
             {
                 return item.MappedColumn;
             }
         }
-        throw new ArgumentOutOfRangeException("memberId", memberId, "Member not found");
+        throw new ArgumentOutOfRangeException(
+            paramName: "memberId",
+            actualValue: memberId,
+            message: "Member not found"
+        );
     }
 
     public static XmlDocument GetXml(
@@ -1174,32 +1301,39 @@ public class FormXmlBuilder
     )
     {
         XmlDocument configXml = new XmlDocument();
-        configXml.LoadXml(dashboardViewConfig);
-        DashboardConfiguration config = DashboardConfiguration.Deserialize(configXml);
-        XmlDocument doc = GetWindowBaseXml(name, menuId, 0, false, false, false);
-        XmlElement windowElement = WindowElement(doc);
-        XmlElement uiRootElement = UIRootElement(windowElement);
-        XmlElement bindingsElement = ComponentBindingsElement(windowElement);
-        XmlElement dataSourcesElement = DataSourcesElement(windowElement);
-        XmlElement views = doc.CreateElement("DashboardViews");
-        windowElement.AppendChild(views);
+        configXml.LoadXml(xml: dashboardViewConfig);
+        DashboardConfiguration config = DashboardConfiguration.Deserialize(doc: configXml);
+        XmlDocument doc = GetWindowBaseXml(
+            name: name,
+            menuId: menuId,
+            autoRefreshInterval: 0,
+            refreshOnFocus: false,
+            autoSaveOnListRecordChange: false,
+            requestSaveAfterUpdate: false
+        );
+        XmlElement windowElement = WindowElement(doc: doc);
+        XmlElement uiRootElement = UIRootElement(windowElement: windowElement);
+        XmlElement bindingsElement = ComponentBindingsElement(windowElement: windowElement);
+        XmlElement dataSourcesElement = DataSourcesElement(windowElement: windowElement);
+        XmlElement views = doc.CreateElement(name: "DashboardViews");
+        windowElement.AppendChild(newChild: views);
         if (dashboardViews != null)
         {
             views.InnerXml = dashboardViews.FirstChild.InnerXml;
         }
-        GridLayoutPanelBuilder.Build(uiRootElement);
-        XmlElement children = doc.CreateElement("UIChildren");
-        uiRootElement.AppendChild(children);
+        GridLayoutPanelBuilder.Build(parentNode: uiRootElement);
+        XmlElement children = doc.CreateElement(name: "UIChildren");
+        uiRootElement.AppendChild(newChild: children);
         if (config.Items != null)
         {
             foreach (DashboardConfigurationItem item in config.Items)
             {
                 DashboardConfigurationItemBuilder.Build(
-                    doc,
-                    children,
-                    menuId,
-                    item,
-                    dataSourcesElement
+                    doc: doc,
+                    children: children,
+                    menuId: menuId,
+                    item: item,
+                    dataSourcesElement: dataSourcesElement
                 );
             }
             // component bindings (after all grids are configured)
@@ -1213,18 +1347,24 @@ public class FormXmlBuilder
                         {
                             string parentId = param.BoundItemId.ToString();
                             string parentProperty = param.BoundItemProperty;
-                            string parentEntity = EntityByGridInstanceId(doc, parentId);
-                            string childEntity = EntityByGridInstanceId(doc, item.Id.ToString());
+                            string parentEntity = EntityByGridInstanceId(
+                                doc: doc,
+                                instanceId: parentId
+                            );
+                            string childEntity = EntityByGridInstanceId(
+                                doc: doc,
+                                instanceId: item.Id.ToString()
+                            );
                             CreateComponentBinding(
-                                doc,
-                                bindingsElement,
-                                parentId,
-                                parentProperty,
-                                parentEntity,
-                                item.Id.ToString(),
-                                param.Name,
-                                childEntity,
-                                true
+                                doc: doc,
+                                bindingsElement: bindingsElement,
+                                parentId: parentId,
+                                parentProperty: parentProperty,
+                                parentEntity: parentEntity,
+                                childId: item.Id.ToString(),
+                                childProperty: param.Name,
+                                childEntity: childEntity,
+                                isChildParameter: true
                             );
                         }
                     }
@@ -1247,16 +1387,17 @@ public class FormXmlBuilder
     {
         int controlCounter = 0;
         IPersistenceService ps =
-            ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+            ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+            as IPersistenceService;
         WorkflowReferenceMenuItem wfmi =
             ps.SchemaProvider.RetrieveInstance(
-                typeof(WorkflowReferenceMenuItem),
-                new ModelElementKey(menuId)
+                type: typeof(WorkflowReferenceMenuItem),
+                primaryKey: new ModelElementKey(id: menuId)
             ) as WorkflowReferenceMenuItem;
         FormReferenceMenuItem frmi =
             ps.SchemaProvider.RetrieveInstance(
-                typeof(FormReferenceMenuItem),
-                new ModelElementKey(menuId)
+                type: typeof(FormReferenceMenuItem),
+                primaryKey: new ModelElementKey(id: menuId)
             ) as FormReferenceMenuItem;
         Guid workflowId = (wfmi == null ? Guid.Empty : wfmi.WorkflowId);
         int autoRefreshInterval = 0;
@@ -1264,62 +1405,68 @@ public class FormXmlBuilder
         if (frmi != null && frmi.AutoRefreshInterval != null)
         {
             IParameterService parameterService =
-                ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
+                ServiceManager.Services.GetService(serviceType: typeof(IParameterService))
+                as IParameterService;
             autoRefreshInterval = (int)
                 parameterService.GetParameterValue(
-                    frmi.AutoRefreshIntervalConstantId,
-                    OrigamDataType.Integer
+                    id: frmi.AutoRefreshIntervalConstantId,
+                    targetType: OrigamDataType.Integer
                 );
         }
         // Window
         XmlDocument doc = GetWindowBaseXml(
-            name,
-            menuId,
-            autoRefreshInterval,
-            (frmi != null) ? frmi.RefreshOnFocus : false,
-            (frmi != null) ? frmi.AutoSaveOnListRecordChange : false,
-            (frmi != null) ? frmi.RequestSaveAfterUpdate : false
+            name: name,
+            menuId: menuId,
+            autoRefreshInterval: autoRefreshInterval,
+            refreshOnFocus: (frmi != null) ? frmi.RefreshOnFocus : false,
+            autoSaveOnListRecordChange: (frmi != null) ? frmi.AutoSaveOnListRecordChange : false,
+            requestSaveAfterUpdate: (frmi != null) ? frmi.RequestSaveAfterUpdate : false
         );
-        XmlElement windowElement = WindowElement(doc);
-        XmlElement uiRootElement = UIRootElement(windowElement);
+        XmlElement windowElement = WindowElement(doc: doc);
+        XmlElement uiRootElement = UIRootElement(windowElement: windowElement);
         if (forceReadOnly)
         {
-            windowElement.SetAttribute("SuppressSave", "true");
+            windowElement.SetAttribute(name: "SuppressSave", value: "true");
         }
         if (frmi?.ListDataStructure != null)
         {
-            windowElement.SetAttribute("UseSession", "true");
+            windowElement.SetAttribute(name: "UseSession", value: "true");
         }
         XmlOutput xmlOutput = new XmlOutput { Document = doc };
         RenderUIElement(
-            xmlOutput,
-            uiRootElement,
-            FormTools.GetItemFromControlSet(item),
-            dataset,
-            dataSources,
-            ref controlCounter,
-            isPreloaded,
-            item.Id,
-            workflowId,
-            forceReadOnly,
-            confirmSelectionChangeEntity,
-            structure
+            xmlOutput: xmlOutput,
+            parentNode: uiRootElement,
+            item: FormTools.GetItemFromControlSet(controlSet: item),
+            dataset: dataset,
+            dataSources: dataSources,
+            controlCounter: ref controlCounter,
+            isPreloaded: isPreloaded,
+            formId: item.Id,
+            menuWorkflowId: workflowId,
+            forceReadOnly: forceReadOnly,
+            confirmSelectionChangeEntity: confirmSelectionChangeEntity,
+            structure: structure
         );
-        RenderDataSources(windowElement, dataSources);
-        PostProcessScreenXml(doc, dataset, windowElement, confirmSelectionChangeEntity);
+        RenderDataSources(windowElement: windowElement, dataSources: dataSources);
+        PostProcessScreenXml(
+            doc: doc,
+            dataset: dataset,
+            windowElement: windowElement,
+            confirmSelectionChangeEntity: confirmSelectionChangeEntity
+        );
         return xmlOutput;
     }
 
     private static XmlElement FindComponentByInstanceId(XmlDocument doc, string instanceId)
     {
         XmlElement result = (XmlElement)
-            doc.SelectSingleNode("//*[@ModelInstanceId='" + instanceId + "']");
+            doc.SelectSingleNode(xpath: "//*[@ModelInstanceId='" + instanceId + "']");
         if (result == null)
         {
             throw new ArgumentOutOfRangeException(
-                "instanceId",
-                instanceId,
-                "Component with specified model instance id not found."
+                paramName: "instanceId",
+                actualValue: instanceId,
+                message: "Component with specified model instance id not found."
             );
         }
         return result;
@@ -1327,14 +1474,14 @@ public class FormXmlBuilder
 
     private static string DataMemberByGridInstanceId(XmlDocument doc, string instanceId)
     {
-        XmlElement parentGrid = FindComponentByInstanceId(doc, instanceId);
-        return parentGrid.GetAttribute("DataMember");
+        XmlElement parentGrid = FindComponentByInstanceId(doc: doc, instanceId: instanceId);
+        return parentGrid.GetAttribute(name: "DataMember");
     }
 
     private static string EntityByGridInstanceId(XmlDocument doc, string instanceId)
     {
-        XmlElement parentGrid = FindComponentByInstanceId(doc, instanceId);
-        return parentGrid.GetAttribute("Entity");
+        XmlElement parentGrid = FindComponentByInstanceId(doc: doc, instanceId: instanceId);
+        return parentGrid.GetAttribute(name: "Entity");
     }
 
     private static void CreateComponentBinding(
@@ -1349,28 +1496,28 @@ public class FormXmlBuilder
         bool isChildParameter
     )
     {
-        XmlElement binding = doc.CreateElement("Binding");
-        binding.SetAttribute("ParentId", parentId);
-        binding.SetAttribute("ParentProperty", parentProperty);
+        XmlElement binding = doc.CreateElement(name: "Binding");
+        binding.SetAttribute(name: "ParentId", value: parentId);
+        binding.SetAttribute(name: "ParentProperty", value: parentProperty);
         if (parentEntity != null)
         {
-            binding.SetAttribute("ParentEntity", parentEntity);
+            binding.SetAttribute(name: "ParentEntity", value: parentEntity);
         }
-        binding.SetAttribute("ChildId", childId);
-        binding.SetAttribute("ChildProperty", childProperty);
+        binding.SetAttribute(name: "ChildId", value: childId);
+        binding.SetAttribute(name: "ChildProperty", value: childProperty);
         if (childEntity != null)
         {
-            binding.SetAttribute("ChildEntity", childEntity);
+            binding.SetAttribute(name: "ChildEntity", value: childEntity);
         }
         if (isChildParameter)
         {
-            binding.SetAttribute("ChildPropertyType", "Parameter");
+            binding.SetAttribute(name: "ChildPropertyType", value: "Parameter");
         }
         else
         {
-            binding.SetAttribute("ChildPropertyType", "Field");
+            binding.SetAttribute(name: "ChildPropertyType", value: "Field");
         }
-        bindingsElement.AppendChild(binding);
+        bindingsElement.AppendChild(newChild: binding);
     }
 
     private static XmlElement FindParentGridInParentEntity(
@@ -1379,16 +1526,17 @@ public class FormXmlBuilder
         XmlNodeList grids
     )
     {
-        int lastDot = dataMember.LastIndexOf(".");
+        int lastDot = dataMember.LastIndexOf(value: ".");
         if (lastDot > 0)
         {
-            string parentMember = dataMember.Substring(0, lastDot);
+            string parentMember = dataMember.Substring(startIndex: 0, length: lastDot);
             // find parent grid
             foreach (XmlElement parentGrid in grids)
             {
                 if (
-                    parentGrid.GetAttribute("Type") != "ReportButton"
-                    && parentGrid.GetAttribute("DataMember").ToLower() == parentMember.ToLower()
+                    parentGrid.GetAttribute(name: "Type") != "ReportButton"
+                    && parentGrid.GetAttribute(name: "DataMember").ToLower()
+                        == parentMember.ToLower()
                 )
                 {
                     return parentGrid;
@@ -1416,51 +1564,66 @@ public class FormXmlBuilder
     {
         ControlSetItem control = item as ControlSetItem;
         IParameterService parameterService =
-            ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
+            ServiceManager.Services.GetService(serviceType: typeof(IParameterService))
+            as IParameterService;
         if (control.ControlItem.Name == "AsForm")
         {
             // for the Form we find its root control and we continue
-            if (control.ChildItemsByType<ControlSetItem>(ControlSetItem.CategoryConst).Count == 0)
+            if (
+                control
+                    .ChildItemsByType<ControlSetItem>(itemType: ControlSetItem.CategoryConst)
+                    .Count == 0
+            )
             {
                 return false;
             }
-            item = control.ChildItemsByType<ControlSetItem>(ControlSetItem.CategoryConst)[0];
+            item = control.ChildItemsByType<ControlSetItem>(itemType: ControlSetItem.CategoryConst)[
+                index: 0
+            ];
             control = item as ControlSetItem;
         }
-        if (!RenderTools.ShouldRender(control))
+        if (!RenderTools.ShouldRender(control: control))
         {
             return false;
         }
-        forceReadOnly = FormTools.GetReadOnlyStatus(control, forceReadOnly);
-        UIElementRenderData renderData = UIElementRenderData.GetRenderData(control, forceReadOnly);
+        forceReadOnly = FormTools.GetReadOnlyStatus(
+            cntrlSet: control,
+            currentReadOnlyStatus: forceReadOnly
+        );
+        UIElementRenderData renderData = UIElementRenderData.GetRenderData(
+            control: control,
+            forceReadOnly: forceReadOnly
+        );
         if (renderData.Style != null)
         {
-            parentNode.SetAttribute("Style", renderData.Style.StyleDefinition());
+            parentNode.SetAttribute(name: "Style", value: renderData.Style.StyleDefinition());
         }
 
         DataTable table;
 
         if (renderData.IndependentDataSourceId == Guid.Empty)
         {
-            table = dataset.Tables[FormTools.FindTableByDataMember(dataset, renderData.DataMember)];
+            table = dataset.Tables[
+                name: FormTools.FindTableByDataMember(ds: dataset, member: renderData.DataMember)
+            ];
         }
         else
         {
             IPersistenceService ps =
-                ServiceManager.Services.GetService(typeof(IPersistenceService))
+                ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
                 as IPersistenceService;
             DataStructure ds = (DataStructure)
                 ps.SchemaProvider.RetrieveInstance(
-                    typeof(DataStructure),
-                    new ModelElementKey(renderData.IndependentDataSourceId)
+                    type: typeof(DataStructure),
+                    primaryKey: new ModelElementKey(id: renderData.IndependentDataSourceId)
                 );
-            DatasetGenerator dg = new DatasetGenerator(true);
-            DataSet independentDataset = dg.CreateDataSet(ds);
-            table = independentDataset.Tables[0];
+            DatasetGenerator dg = new DatasetGenerator(userDefinedParameters: true);
+            DataSet independentDataset = dg.CreateDataSet(ds: ds);
+            table = independentDataset.Tables[index: 0];
         }
-        parentNode.SetAttribute("Id", control.Name + "_" + controlCounter.ToString());
+        parentNode.SetAttribute(name: "Id", value: control.Name + "_" + controlCounter.ToString());
         controlCounter++;
-        parentNode.SetAttribute("ModelInstanceId", control.Id.ToString());
+        parentNode.SetAttribute(name: "ModelInstanceId", value: control.Id.ToString());
         // for the first control in the fixed sized splitter we must set the height of the control
         // the second control in the splitter will have 100% size
         XmlElement parentControlElement = parentNode.ParentNode.ParentNode as XmlElement;
@@ -1468,85 +1631,99 @@ public class FormXmlBuilder
             renderData.TabIndex == 0
             && parentControlElement != null
             && (
-                parentControlElement.GetAttribute("Type") == "VBox"
-                || parentControlElement.GetAttribute("Type") == "CollapsiblePanel"
+                parentControlElement.GetAttribute(name: "Type") == "VBox"
+                || parentControlElement.GetAttribute(name: "Type") == "CollapsiblePanel"
             )
         )
         {
-            parentNode.SetAttribute("Height", XmlConvert.ToString(renderData.Height));
+            parentNode.SetAttribute(
+                name: "Height",
+                value: XmlConvert.ToString(value: renderData.Height)
+            );
         }
 
         if (
             renderData.TabIndex == 0
             && parentControlElement != null
-            && parentControlElement.GetAttribute("Type") == "HBox"
+            && parentControlElement.GetAttribute(name: "Type") == "HBox"
         )
         {
-            parentNode.SetAttribute("Width", XmlConvert.ToString(renderData.Width));
+            parentNode.SetAttribute(
+                name: "Width",
+                value: XmlConvert.ToString(value: renderData.Width)
+            );
         }
-        string tabIndex = string.IsNullOrEmpty(parentTabIndex)
+        string tabIndex = string.IsNullOrEmpty(value: parentTabIndex)
             ? renderData.TabIndex.ToString()
             : $"{parentTabIndex}.{renderData.TabIndex}";
         bool isIndependent = renderData.IndependentDataSourceId != Guid.Empty;
         if (!control.ControlItem.IsComplexType)
         {
-            var controlItem = GentControlItem(control);
+            var controlItem = GentControlItem(control: control);
             switch (controlItem.Name)
             {
                 case "Panel":
                 {
-                    PanelBuilder.Build(parentNode);
+                    PanelBuilder.Build(parentNode: parentNode);
                     break;
                 }
 
                 case "AsReportPanel":
                 {
-                    ReportPanelBuilder.Build(parentNode, renderData, table, control);
+                    ReportPanelBuilder.Build(
+                        parentNode: parentNode,
+                        renderData: renderData,
+                        table: table,
+                        control: control
+                    );
                     break;
                 }
 
                 case "TabControl":
                 {
-                    TabControlBuilder.Build(parentNode);
+                    TabControlBuilder.Build(parentNode: parentNode);
                     break;
                 }
 
                 case "TabPage":
                 {
-                    TabBuilder.Build(parentNode, renderData.Text);
+                    TabBuilder.Build(parentNode: parentNode, text: renderData.Text);
                     break;
                 }
 
                 case "CollapsibleContainer":
                 {
-                    CollapsibleContainerBuilder.Build(parentNode);
+                    CollapsibleContainerBuilder.Build(parentNode: parentNode);
                     break;
                 }
 
                 case "CollapsiblePanel":
                 {
-                    CollapsiblePanelBuilder.Build(parentNode, renderData);
+                    CollapsiblePanelBuilder.Build(parentNode: parentNode, renderData: renderData);
                     break;
                 }
 
                 case "GridLayoutPanel":
                 {
-                    GridLayoutPanelBuilder.Build(parentNode);
+                    GridLayoutPanelBuilder.Build(parentNode: parentNode);
                     break;
                 }
 
                 case "GridLayoutPanelItem":
                 {
-                    GridLayoutPanelItemBuilder.Build(parentNode, renderData);
+                    GridLayoutPanelItemBuilder.Build(
+                        parentNode: parentNode,
+                        renderData: renderData
+                    );
                     break;
                 }
 
                 case "SplitPanel":
                 {
                     SplitPanelBuilder.Build(
-                        parentNode,
-                        (SplitPanelOrientation)renderData.Orientation,
-                        renderData.FixedSize
+                        parentNode: parentNode,
+                        orientation: (SplitPanelOrientation)renderData.Orientation,
+                        fixedSize: renderData.FixedSize
                     );
                     break;
                 }
@@ -1554,12 +1731,12 @@ public class FormXmlBuilder
                 case "AsTree":
                 {
                     TreeControlBuilder.Build(
-                        parentNode,
-                        renderData,
-                        table,
-                        control.Id.ToString(),
-                        dataSources,
-                        false
+                        parentNode: parentNode,
+                        renderData: renderData,
+                        table: table,
+                        controlId: control.Id.ToString(),
+                        dataSources: dataSources,
+                        isIndependent: false
                     );
                     break;
                 }
@@ -1567,9 +1744,9 @@ public class FormXmlBuilder
                 case "AsTree2":
                 {
                     TreeControlBuilder.Build2(
-                        parentNode,
-                        renderData.FormParameterName,
-                        renderData.TreeId
+                        parentNode: parentNode,
+                        formParameterName: renderData.FormParameterName,
+                        treeId: renderData.TreeId
                     );
                     break;
                 }
@@ -1605,72 +1782,83 @@ public class FormXmlBuilder
 
                 case "Label":
                 {
-                    FormLabelBuilder.Build(parentNode, renderData.Text);
+                    FormLabelBuilder.Build(parentNode: parentNode, text: renderData.Text);
                     break;
                 }
 
                 default:
                 {
                     parentNode.SetAttribute(
-                        "type",
-                        "http://www.w3.org/2001/XMLSchema-instance",
-                        "UIElement"
+                        localName: "type",
+                        namespaceURI: "http://www.w3.org/2001/XMLSchema-instance",
+                        value: "UIElement"
                     );
-                    parentNode.SetAttribute("Type", "Box");
-                    parentNode.SetAttribute("Title", "UNKNOWN CONTROL:" + control.Name);
+                    parentNode.SetAttribute(name: "Type", value: "Box");
+                    parentNode.SetAttribute(
+                        name: "Title",
+                        value: "UNKNOWN CONTROL:" + control.Name
+                    );
                     break;
                 }
             }
-            AddDynamicProperties(parentNode, renderData);
+            AddDynamicProperties(parentNode: parentNode, renderData: renderData);
         }
         else // complex type = screen section
         {
             if (table == null)
             {
-                if (string.IsNullOrWhiteSpace(renderData.DataMember))
+                if (string.IsNullOrWhiteSpace(value: renderData.DataMember))
                 {
                     throw new NullReferenceException(
-                        "DataMember not set for a screen section inside a screen. Cannot render a screen section. "
+                        message: "DataMember not set for a screen section inside a screen. Cannot render a screen section. "
                             + control.Path
                     );
                 }
                 throw new Exception(
-                    $"DataMember {renderData.DataMember} was not found in data source. Cannot render a screen section. {control.Path}"
+                    message: $"DataMember {renderData.DataMember} was not found in data source. Cannot render a screen section. {control.Path}"
                 );
             }
             if (table.PrimaryKey.Length == 0)
             {
                 throw new Exception(
-                    "Panel's data source has no primary key. Cannot render panel. " + control.Path
+                    message: "Panel's data source has no primary key. Cannot render panel. "
+                        + control.Path
                 );
             }
             // get list of valid actions and set the panel multi-select-checkbox column visibility
             var validActions = new List<EntityUIAction>();
             bool hasMultipleSelection = UIActionTools.GetValidActions(
-                formId,
-                control.ControlItem.PanelControlSet.Id,
-                renderData.DisableActionButtons,
-                table.ExtendedProperties.Contains("EntityId")
-                    ? (Guid)table.ExtendedProperties["EntityId"]
+                formId: formId,
+                panelId: control.ControlItem.PanelControlSet.Id,
+                disableActionButtons: renderData.DisableActionButtons,
+                entityId: table.ExtendedProperties.Contains(key: "EntityId")
+                    ? (Guid)table.ExtendedProperties[key: "EntityId"]
                     : Guid.Empty,
-                validActions
+                validActions: validActions
             );
             AsPanelBuilder.Build(
-                parentNode,
-                renderData,
-                FormTools.GetItemFromControlSet(control.ControlItem.PanelControlSet).Id.ToString(),
-                control.Id.ToString(),
-                table,
-                dataSources,
-                table.PrimaryKey[0].ColumnName,
-                hasMultipleSelection,
-                formId,
-                isIndependent
+                parentNode: parentNode,
+                renderData: renderData,
+                modelId: FormTools
+                    .GetItemFromControlSet(controlSet: control.ControlItem.PanelControlSet)
+                    .Id.ToString(),
+                controlId: control.Id.ToString(),
+                table: table,
+                dataSources: dataSources,
+                primaryKeyColumnName: table.PrimaryKey[0].ColumnName,
+                showSelectionCheckboxes: hasMultipleSelection,
+                formId: formId,
+                isIndependent: isIndependent
             );
-            XmlElement formRootElement = AsPanelBuilder.FormRootElement(parentNode);
-            XmlElement propertiesElement = AsPanelBuilder.PropertiesElement(parentNode);
-            XmlElement actionsElement = AsPanelBuilder.ActionsElement(parentNode);
-            RenderActions(parameterService, validActions, actionsElement, new Hashtable());
+            XmlElement formRootElement = AsPanelBuilder.FormRootElement(panelNode: parentNode);
+            XmlElement propertiesElement = AsPanelBuilder.PropertiesElement(panelNode: parentNode);
+            XmlElement actionsElement = AsPanelBuilder.ActionsElement(panelNode: parentNode);
+            RenderActions(
+                parameterService: parameterService,
+                validActions: validActions,
+                actionsElement: actionsElement,
+                inputParameters: new Hashtable()
+            );
             // render controls (both directly placed edit controls and containers)
             RenderPanel(
                 panel: control,
@@ -1678,7 +1866,9 @@ public class FormXmlBuilder
                 table: table,
                 parentElement: formRootElement,
                 propertiesElement: propertiesElement,
-                item: FormTools.GetItemFromControlSet(control.ControlItem.PanelControlSet),
+                item: FormTools.GetItemFromControlSet(
+                    controlSet: control.ControlItem.PanelControlSet
+                ),
                 processContainers: true,
                 processEditControls: true,
                 forceReadOnly: forceReadOnly,
@@ -1687,24 +1877,26 @@ public class FormXmlBuilder
         }
         // add config
         SetUserConfig(
-            xmlOutput.Document,
-            parentNode,
-            renderData.DefaultConfiguration,
-            control.Id,
-            menuWorkflowId
+            doc: xmlOutput.Document,
+            parentNode: parentNode,
+            defaultConfiguration: renderData.DefaultConfiguration,
+            objectId: control.Id,
+            workflowId: menuWorkflowId
         );
         var sortedChildren = new List<ControlSetItem>(
-            item.ChildItemsByType<ControlSetItem>(ControlSetItem.CategoryConst)
+            collection: item.ChildItemsByType<ControlSetItem>(
+                itemType: ControlSetItem.CategoryConst
+            )
         );
         if (sortedChildren.Count > 0)
         {
-            sortedChildren.Sort(new ControlSetItemComparer());
-            XmlElement children = xmlOutput.Document.CreateElement("UIChildren");
-            parentNode.AppendChild(children);
+            sortedChildren.Sort(comparer: new ControlSetItemComparer());
+            XmlElement children = xmlOutput.Document.CreateElement(name: "UIChildren");
+            parentNode.AppendChild(newChild: children);
             foreach (ControlSetItem child in sortedChildren)
             {
-                XmlElement el = xmlOutput.Document.CreateElement("UIElement");
-                children.AppendChild(el);
+                XmlElement el = xmlOutput.Document.CreateElement(name: "UIElement");
+                children.AppendChild(newChild: el);
                 if (
                     !RenderUIElement(
                         xmlOutput: xmlOutput,
@@ -1723,7 +1915,7 @@ public class FormXmlBuilder
                     )
                 )
                 {
-                    children.RemoveChild(el);
+                    children.RemoveChild(oldChild: el);
                 }
             }
         }
@@ -1732,47 +1924,74 @@ public class FormXmlBuilder
         if (table != null && renderData.DataMember != null)
         {
             hasParentTables =
-                table.ParentRelations.Count > 0 & renderData.DataMember.IndexOf(".") >= 0;
+                table.ParentRelations.Count > 0 & renderData.DataMember.IndexOf(value: ".") >= 0;
         }
         if (isIndependent)
         {
-            parentNode.SetAttribute("IsRootGrid", XmlConvert.ToString(true));
-            parentNode.SetAttribute("IsRootEntity", XmlConvert.ToString(true));
-            parentNode.SetAttribute("IsPreloaded", XmlConvert.ToString(false));
+            parentNode.SetAttribute(name: "IsRootGrid", value: XmlConvert.ToString(value: true));
+            parentNode.SetAttribute(name: "IsRootEntity", value: XmlConvert.ToString(value: true));
+            parentNode.SetAttribute(name: "IsPreloaded", value: XmlConvert.ToString(value: false));
         }
         else if (control.ControlItem.Name == "AsReportPanel")
         {
-            parentNode.SetAttribute("IsRootGrid", XmlConvert.ToString(false));
-            parentNode.SetAttribute("IsRootEntity", XmlConvert.ToString(!hasParentTables));
+            parentNode.SetAttribute(name: "IsRootGrid", value: XmlConvert.ToString(value: false));
+            parentNode.SetAttribute(
+                name: "IsRootEntity",
+                value: XmlConvert.ToString(value: !hasParentTables)
+            );
         }
         // grid or tree
         else if (hasParentTables)
         {
-            DataRelation relation = table.ParentRelations[0];
-            parentNode.SetAttribute("IsRootGrid", XmlConvert.ToString(false));
-            parentNode.SetAttribute("IsRootEntity", XmlConvert.ToString(false));
+            DataRelation relation = table.ParentRelations[index: 0];
+            parentNode.SetAttribute(name: "IsRootGrid", value: XmlConvert.ToString(value: false));
+            parentNode.SetAttribute(name: "IsRootEntity", value: XmlConvert.ToString(value: false));
             if (renderData.HideNavigationPanel)
             {
-                parentNode.SetAttribute("IsPreloaded", XmlConvert.ToString(true));
+                parentNode.SetAttribute(
+                    name: "IsPreloaded",
+                    value: XmlConvert.ToString(value: true)
+                );
             }
             else
             {
-                parentNode.SetAttribute("IsPreloaded", XmlConvert.ToString(isPreloaded));
+                parentNode.SetAttribute(
+                    name: "IsPreloaded",
+                    value: XmlConvert.ToString(value: isPreloaded)
+                );
             }
         }
         else if (control.ControlItem.Name == "SectionLevelPlugin")
         {
             if (renderData.AllowNavigation)
             {
-                parentNode.SetAttribute("IsRootGrid", XmlConvert.ToString(true));
-                parentNode.SetAttribute("IsRootEntity", XmlConvert.ToString(true));
-                parentNode.SetAttribute("IsPreloaded", XmlConvert.ToString(false));
+                parentNode.SetAttribute(
+                    name: "IsRootGrid",
+                    value: XmlConvert.ToString(value: true)
+                );
+                parentNode.SetAttribute(
+                    name: "IsRootEntity",
+                    value: XmlConvert.ToString(value: true)
+                );
+                parentNode.SetAttribute(
+                    name: "IsPreloaded",
+                    value: XmlConvert.ToString(value: false)
+                );
             }
             else
             {
-                parentNode.SetAttribute("IsRootGrid", XmlConvert.ToString(false));
-                parentNode.SetAttribute("IsRootEntity", XmlConvert.ToString(true));
-                parentNode.SetAttribute("IsPreloaded", XmlConvert.ToString(true));
+                parentNode.SetAttribute(
+                    name: "IsRootGrid",
+                    value: XmlConvert.ToString(value: false)
+                );
+                parentNode.SetAttribute(
+                    name: "IsRootEntity",
+                    value: XmlConvert.ToString(value: true)
+                );
+                parentNode.SetAttribute(
+                    name: "IsPreloaded",
+                    value: XmlConvert.ToString(value: true)
+                );
             }
         }
         // grid without navigation on a root level but without an implicit filter
@@ -1793,16 +2012,16 @@ public class FormXmlBuilder
             )
         )
         {
-            parentNode.SetAttribute("IsRootGrid", XmlConvert.ToString(false));
-            parentNode.SetAttribute("IsRootEntity", XmlConvert.ToString(true));
-            parentNode.SetAttribute("IsPreloaded", XmlConvert.ToString(true));
+            parentNode.SetAttribute(name: "IsRootGrid", value: XmlConvert.ToString(value: false));
+            parentNode.SetAttribute(name: "IsRootEntity", value: XmlConvert.ToString(value: true));
+            parentNode.SetAttribute(name: "IsPreloaded", value: XmlConvert.ToString(value: true));
         }
         // root grid with navigation or SectionLevelPlugin
         else
         {
-            parentNode.SetAttribute("IsRootGrid", XmlConvert.ToString(true));
-            parentNode.SetAttribute("IsRootEntity", XmlConvert.ToString(true));
-            parentNode.SetAttribute("IsPreloaded", XmlConvert.ToString(true));
+            parentNode.SetAttribute(name: "IsRootGrid", value: XmlConvert.ToString(value: true));
+            parentNode.SetAttribute(name: "IsRootEntity", value: XmlConvert.ToString(value: true));
+            parentNode.SetAttribute(name: "IsPreloaded", value: XmlConvert.ToString(value: true));
         }
         return true;
     }
@@ -1812,11 +2031,11 @@ public class FormXmlBuilder
         if (control.ControlItem.Ancestors.Count > 1)
         {
             throw new Exception(
-                $"Could not find control for {control.ControlItem.Name} because it has more than one ancestor."
+                message: $"Could not find control for {control.ControlItem.Name} because it has more than one ancestor."
             );
         }
         return control.ControlItem.Ancestors.Count == 1
-            ? control.ControlItem.Ancestors[0].Ancestor
+            ? control.ControlItem.Ancestors[index: 0].Ancestor
             : control.ControlItem;
     }
 
@@ -1824,7 +2043,7 @@ public class FormXmlBuilder
     {
         foreach (var pair in renderData.DynamicProperties)
         {
-            parentNode.SetAttribute(pair.Key, pair.Value);
+            parentNode.SetAttribute(name: pair.Key, value: pair.Value);
         }
     }
 
@@ -1838,14 +2057,14 @@ public class FormXmlBuilder
         // render action buttons
         foreach (EntityUIAction action in validActions)
         {
-            Hashtable parameters = new Hashtable(inputParameters);
+            Hashtable parameters = new Hashtable(d: inputParameters);
             foreach (
                 var mapping in action.ChildItemsByType<EntityUIActionParameterMapping>(
-                    EntityUIActionParameterMapping.CategoryConst
+                    itemType: EntityUIActionParameterMapping.CategoryConst
                 )
             )
             {
-                parameters.Add(mapping.Name, mapping.Field);
+                parameters.Add(key: mapping.Name, value: mapping.Field);
             }
             string groupId = "";
             if (action.ParentItem is EntityDropdownAction)
@@ -1867,12 +2086,14 @@ public class FormXmlBuilder
             }
             if ((action.ScannerTerminator != "") && (action.ScannerTerminator != null))
             {
-                terminator = int.Parse(action.ScannerTerminator);
+                terminator = int.Parse(s: action.ScannerTerminator);
             }
             string confirmationMessage = null;
             if (action.ConfirmationMessage != null)
             {
-                confirmationMessage = parameterService.GetString(action.ConfirmationMessage.Name);
+                confirmationMessage = parameterService.GetString(
+                    name: action.ConfirmationMessage.Name
+                );
             }
             var builderConfiguration = new ActionConfiguration
             {
@@ -1899,7 +2120,10 @@ public class FormXmlBuilder
                     TerminatorCharCode = terminator,
                 },
             };
-            AsPanelActionButtonBuilder.Build(actionsElement, builderConfiguration);
+            AsPanelActionButtonBuilder.Build(
+                actionsElement: actionsElement,
+                config: builderConfiguration
+            );
         }
     }
 
@@ -1912,31 +2136,37 @@ public class FormXmlBuilder
     )
     {
         UserProfile profile = SecurityManager.CurrentUserProfile();
-        DataSet userConfig = OrigamPanelConfigDA.LoadConfigData(objectId, workflowId, profile.Id);
+        DataSet userConfig = OrigamPanelConfigDA.LoadConfigData(
+            panelInstanceId: objectId,
+            workflowId: workflowId,
+            profileId: profile.Id
+        );
 
-        if (userConfig.Tables["OrigamFormPanelConfig"].Rows.Count == 0)
+        if (userConfig.Tables[name: "OrigamFormPanelConfig"].Rows.Count == 0)
         {
             if (defaultConfiguration != null && defaultConfiguration != "")
             {
                 XmlDocumentFragment configElement = doc.CreateDocumentFragment();
                 configElement.InnerXml = defaultConfiguration;
-                parentNode.AppendChild(configElement);
+                parentNode.AppendChild(newChild: configElement);
             }
             else
             {
-                XmlElement configElement = doc.CreateElement("Configuration");
-                parentNode.AppendChild(configElement);
+                XmlElement configElement = doc.CreateElement(name: "Configuration");
+                parentNode.AppendChild(newChild: configElement);
             }
         }
         else
         {
             XmlDocumentFragment configElement = doc.CreateDocumentFragment();
-            object data = userConfig.Tables["OrigamFormPanelConfig"].Rows[0]["SettingsData"];
+            object data = userConfig.Tables[name: "OrigamFormPanelConfig"].Rows[index: 0][
+                columnName: "SettingsData"
+            ];
             if (data is String)
             {
                 configElement.InnerXml = (string)data;
             }
-            parentNode.AppendChild(configElement);
+            parentNode.AppendChild(newChild: configElement);
         }
     }
 
@@ -1953,30 +2183,32 @@ public class FormXmlBuilder
         string parentTabIndex = null
     )
     {
-        if (string.IsNullOrWhiteSpace(parentTabIndex))
+        if (string.IsNullOrWhiteSpace(value: parentTabIndex))
         {
             int itemTabIndex =
-                item.ChildItemsByType<PropertyValueItem>(PropertyValueItem.CategoryConst)
-                    .FirstOrDefault(prop => prop.ControlPropertyItem.Name == "TabIndex")
+                item.ChildItemsByType<PropertyValueItem>(itemType: PropertyValueItem.CategoryConst)
+                    .FirstOrDefault(predicate: prop => prop.ControlPropertyItem.Name == "TabIndex")
                     ?.IntValue
                 ?? -1;
             parentTabIndex = itemTabIndex.ToString();
         }
-        XmlElement childrenElement = xmlOutput.Document.CreateElement("Children");
-        parentElement.AppendChild(childrenElement);
-        XmlElement propertyNamesElement = xmlOutput.Document.CreateElement("PropertyNames");
-        parentElement.AppendChild(propertyNamesElement);
+        XmlElement childrenElement = xmlOutput.Document.CreateElement(name: "Children");
+        parentElement.AppendChild(newChild: childrenElement);
+        XmlElement propertyNamesElement = xmlOutput.Document.CreateElement(name: "PropertyNames");
+        parentElement.AppendChild(newChild: propertyNamesElement);
         XmlElement formExclusiveControlsElement = xmlOutput.Document.CreateElement(
-            "FormExclusiveControls"
+            name: "FormExclusiveControls"
         );
-        parentElement.AppendChild(formExclusiveControlsElement);
+        parentElement.AppendChild(newChild: formExclusiveControlsElement);
         // other properties
-        var childItems = item.ChildItemsByType<ControlSetItem>(ControlSetItem.CategoryConst)
+        var childItems = item.ChildItemsByType<ControlSetItem>(
+                itemType: ControlSetItem.CategoryConst
+            )
             .ToList();
-        childItems.Sort(new ControlSetItemComparer());
+        childItems.Sort(comparer: new ControlSetItemComparer());
         foreach (ControlSetItem csi in childItems)
         {
-            if (RenderTools.ShouldRender(csi))
+            if (RenderTools.ShouldRender(control: csi))
             {
                 string caption = "";
                 string gridCaption = "";
@@ -1986,7 +2218,7 @@ public class FormXmlBuilder
                 bool readOnly = forceReadOnly;
                 if (!forceReadOnly)
                 {
-                    FormTools.GetReadOnlyStatus(csi, false);
+                    FormTools.GetReadOnlyStatus(cntrlSet: csi, currentReadOnlyStatus: false);
                 }
                 string text = "";
                 bool showUniqueValues = false;
@@ -2014,14 +2246,19 @@ public class FormXmlBuilder
                 string customNumericFormat = "";
                 foreach (
                     var property in csi.ChildItemsByType<PropertyValueItem>(
-                        PropertyValueItem.CategoryConst
+                        itemType: PropertyValueItem.CategoryConst
                     )
                 )
                 {
                     string stringValue = property.Value;
-                    if (stringValue != null && DatasetGenerator.IsCaptionExpression(stringValue))
+                    if (
+                        stringValue != null
+                        && DatasetGenerator.IsCaptionExpression(caption: stringValue)
+                    )
                     {
-                        stringValue = DatasetGenerator.EvaluateCaptionExpression(stringValue);
+                        stringValue = DatasetGenerator.EvaluateCaptionExpression(
+                            caption: stringValue
+                        );
                     }
                     switch (property.ControlPropertyItem.Name)
                     {
@@ -2111,7 +2348,7 @@ public class FormXmlBuilder
 
                         case "Dock":
                         {
-                            dock = ToWinFormsDockStyle(property.IntValue);
+                            dock = ToWinFormsDockStyle(intVal: property.IntValue);
                             break;
                         }
 
@@ -2166,9 +2403,9 @@ public class FormXmlBuilder
                             else
                             {
                                 XmlDocument formatDoc = new XmlDocument();
-                                formatDoc.LoadXml(property.Value);
+                                formatDoc.LoadXml(xml: property.Value);
                                 format = formatDoc
-                                    .SelectSingleNode("DateTimePickerFormat")
+                                    .SelectSingleNode(xpath: "DateTimePickerFormat")
                                     .InnerText;
                             }
                             break;
@@ -2205,15 +2442,15 @@ public class FormXmlBuilder
                         }
                     }
                 }
-                if (!styleId.Equals(Guid.Empty))
+                if (!styleId.Equals(g: Guid.Empty))
                 {
                     IPersistenceService persistence =
-                        ServiceManager.Services.GetService(typeof(IPersistenceService))
+                        ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
                         as IPersistenceService;
                     style =
                         persistence.SchemaProvider.RetrieveInstance(
-                            typeof(UIStyle),
-                            new ModelElementKey(styleId)
+                            type: typeof(UIStyle),
+                            primaryKey: new ModelElementKey(id: styleId)
                         ) as UIStyle;
                 }
                 ControlSetItem parentPanel = csi.ParentItem as ControlSetItem;
@@ -2221,8 +2458,8 @@ public class FormXmlBuilder
                 {
                     PropertyValueItem hideProperty =
                         parentPanel.GetChildByName(
-                            "HideNavigationPanel",
-                            PropertyValueItem.CategoryConst
+                            name: "HideNavigationPanel",
+                            itemType: PropertyValueItem.CategoryConst
                         ) as PropertyValueItem;
                     if (hideProperty != null)
                     {
@@ -2234,7 +2471,7 @@ public class FormXmlBuilder
                 }
                 foreach (
                     var bindItem in csi.ChildItemsByType<PropertyBindingInfo>(
-                        PropertyBindingInfo.CategoryConst
+                        itemType: PropertyBindingInfo.CategoryConst
                     )
                 )
                 {
@@ -2243,23 +2480,30 @@ public class FormXmlBuilder
                 var fieldType =
                     csi.FirstParentOfType<PanelControlSet>()
                         ?.DataEntity?.ChildItems?.OfType<IDataEntityColumn>()
-                        ?.FirstOrDefault(child => child.Name == bindingMember)
+                        ?.FirstOrDefault(predicate: child => child.Name == bindingMember)
                         ?.FieldType ?? "";
 
-                if (int.Parse(tabIndex) >= 0)
+                if (int.Parse(s: tabIndex) >= 0)
                 {
                     tabIndex = parentTabIndex + "." + tabIndex;
                 }
                 if (csi.ControlItem.Name == "Label" && processContainers)
                 {
-                    PanelLabelBuilder.Build(childrenElement, text, top, left, height, width);
+                    PanelLabelBuilder.Build(
+                        childrenElement: childrenElement,
+                        text: text,
+                        top: top,
+                        left: left,
+                        height: height,
+                        width: width
+                    );
                 }
                 else if (csi.ControlItem.Name == "RadioButton" && processEditControls)
                 {
-                    if (!table.Columns.Contains(bindingMember))
+                    if (!table.Columns.Contains(name: bindingMember))
                     {
                         throw new Exception(
-                            "Field '"
+                            message: "Field '"
                                 + bindingMember
                                 + "' not found in a data structure for the form '"
                                 + panel.RootItem.Path
@@ -2289,23 +2533,36 @@ public class FormXmlBuilder
                         fieldType: fieldType
                     );
                     IParameterService parameterService =
-                        ServiceManager.Services.GetService(typeof(IParameterService))
+                        ServiceManager.Services.GetService(serviceType: typeof(IParameterService))
                         as IParameterService;
                     string value = (string)
-                        parameterService.GetParameterValue(dataConstantId, OrigamDataType.String);
-                    RadioButtonBuilder.Build(controlElement, text, value);
+                        parameterService.GetParameterValue(
+                            id: dataConstantId,
+                            targetType: OrigamDataType.String
+                        );
+                    RadioButtonBuilder.Build(
+                        propertyElement: controlElement,
+                        text: text,
+                        value: value
+                    );
                 }
                 else if (bindingMember == "" && processContainers) // visual element
                 {
-                    XmlElement formElement = xmlOutput.Document.CreateElement("FormElement");
-                    childrenElement.AppendChild(formElement);
-                    formElement.SetAttribute("Type", "FormSection");
-                    formElement.SetAttribute("Title", text);
-                    formElement.SetAttribute("TabIndex", tabIndex);
-                    formElement.SetAttribute("X", XmlConvert.ToString(left));
-                    formElement.SetAttribute("Y", XmlConvert.ToString(top));
-                    formElement.SetAttribute("Width", XmlConvert.ToString(width));
-                    formElement.SetAttribute("Height", XmlConvert.ToString(height));
+                    XmlElement formElement = xmlOutput.Document.CreateElement(name: "FormElement");
+                    childrenElement.AppendChild(newChild: formElement);
+                    formElement.SetAttribute(name: "Type", value: "FormSection");
+                    formElement.SetAttribute(name: "Title", value: text);
+                    formElement.SetAttribute(name: "TabIndex", value: tabIndex);
+                    formElement.SetAttribute(name: "X", value: XmlConvert.ToString(value: left));
+                    formElement.SetAttribute(name: "Y", value: XmlConvert.ToString(value: top));
+                    formElement.SetAttribute(
+                        name: "Width",
+                        value: XmlConvert.ToString(value: width)
+                    );
+                    formElement.SetAttribute(
+                        name: "Height",
+                        value: XmlConvert.ToString(value: height)
+                    );
                     RenderPanel(
                         panel: panel,
                         xmlOutput: xmlOutput,
@@ -2321,10 +2578,10 @@ public class FormXmlBuilder
                 }
                 else if (bindingMember != "" & processEditControls) // property (entry field)
                 {
-                    if (!table.Columns.Contains(bindingMember))
+                    if (!table.Columns.Contains(name: bindingMember))
                     {
                         throw new Exception(
-                            "Field '"
+                            message: "Field '"
                                 + table.TableName
                                 + "."
                                 + bindingMember
@@ -2357,39 +2614,45 @@ public class FormXmlBuilder
                     {
                         case "ColorPicker":
                         {
-                            var bindingColumn = table.Columns[bindingMember];
+                            var bindingColumn = table.Columns[name: bindingMember];
                             if (bindingColumn.DataType != typeof(int))
                             {
                                 throw new Exception(
-                                    "Field '"
+                                    message: "Field '"
                                         + table.TableName
                                         + "."
                                         + bindingMember
                                         + "' must be of type int because it si bound to a color editor"
                                 );
                             }
-                            ColorPickerBuilder.Build(propertyElement);
+                            ColorPickerBuilder.Build(propertyElement: propertyElement);
                             break;
                         }
 
                         case "BlobControl":
                         {
-                            BlobControlBuilder.Build(propertyElement, csi);
+                            BlobControlBuilder.Build(
+                                propertyElement: propertyElement,
+                                control: csi
+                            );
                             break;
                         }
 
                         case "ImageBox":
                         {
-                            ImageBoxBuilder.Build(propertyElement, sourceType);
+                            ImageBoxBuilder.Build(
+                                propertyElement: propertyElement,
+                                sourceType: sourceType
+                            );
                             break;
                         }
 
                         case "AsTextBox":
                         {
                             TextBoxBuildDefinition buildDefinition = new TextBoxBuildDefinition(
-                                (OrigamDataType)
-                                    table.Columns[bindingMember].ExtendedProperties[
-                                        "OrigamDataType"
+                                type: (OrigamDataType)
+                                    table.Columns[name: bindingMember].ExtendedProperties[
+                                        key: "OrigamDataType"
                                     ]
                             );
                             buildDefinition.Dock = dock;
@@ -2397,20 +2660,29 @@ public class FormXmlBuilder
                             buildDefinition.IsPassword = isPassword;
                             buildDefinition.IsRichText = isRichText;
                             buildDefinition.AllowTab = allowTab;
-                            buildDefinition.MaxLength = table.Columns[bindingMember].MaxLength;
+                            buildDefinition.MaxLength = table
+                                .Columns[name: bindingMember]
+                                .MaxLength;
                             buildDefinition.CustomNumberFormat = customNumericFormat;
-                            TextBoxBuilder.Build(propertyElement, buildDefinition);
+                            TextBoxBuilder.Build(
+                                propertyElement: propertyElement,
+                                buildDefinition: buildDefinition
+                            );
                             break;
                         }
 
                         case "AsDateBox":
                         {
-                            DateBoxBuilder.Build(propertyElement, format, customFormat);
+                            DateBoxBuilder.Build(
+                                propertyElement: propertyElement,
+                                format: format,
+                                customFormat: customFormat
+                            );
                             break;
                         }
                         case "AsCheckBox":
                         {
-                            CheckBoxBuilder.Build(propertyElement, text);
+                            CheckBoxBuilder.Build(propertyElement: propertyElement, text: text);
                             break;
                         }
                         case "AsCombo":
@@ -2420,93 +2692,102 @@ public class FormXmlBuilder
                             if (csi.ControlItem.Name == "AsCombo")
                             {
                                 ComboBoxBuilder.Build(
-                                    propertyElement,
-                                    lookupId,
-                                    showUniqueValues,
-                                    bindingMember,
-                                    table
+                                    propertyElement: propertyElement,
+                                    lookupId: lookupId,
+                                    showUniqueValues: showUniqueValues,
+                                    bindingMember: bindingMember,
+                                    table: table
                                 );
                             }
                             else if (csi.ControlItem.Name == "TagInput")
                             {
                                 TagInputBuilder.BuildTagInput(
-                                    propertyElement,
-                                    lookupId,
-                                    bindingMember,
-                                    table
+                                    propertyElement: propertyElement,
+                                    lookupId: lookupId,
+                                    bindingMember: bindingMember,
+                                    table: table
                                 );
                             }
                             else
                             {
                                 TagInputBuilder.BuildChecklist(
-                                    propertyElement,
-                                    lookupId,
-                                    bindingMember,
-                                    columnWidth,
-                                    table
+                                    propertyElement: propertyElement,
+                                    lookupId: lookupId,
+                                    bindingMember: bindingMember,
+                                    columnWidth: columnWidth,
+                                    table: table
                                 );
                             }
                             // set parameters
                             XmlElement comboParametersElement = xmlOutput.Document.CreateElement(
-                                "DropDownParameters"
+                                name: "DropDownParameters"
                             );
-                            propertyElement.AppendChild(comboParametersElement);
+                            propertyElement.AppendChild(newChild: comboParametersElement);
                             foreach (
                                 var mapping in csi.ChildItemsByType<ColumnParameterMapping>(
-                                    ColumnParameterMapping.CategoryConst
+                                    itemType: ColumnParameterMapping.CategoryConst
                                 )
                             )
                             {
                                 XmlElement comboParamElement = xmlOutput.Document.CreateElement(
-                                    "ComboBoxParameterMapping"
+                                    name: "ComboBoxParameterMapping"
                                 );
-                                comboParametersElement.AppendChild(comboParamElement);
-                                comboParamElement.SetAttribute("ParameterName", mapping.Name);
-                                comboParamElement.SetAttribute("FieldName", mapping.ColumnName);
-                                propertyElement.SetAttribute("Cached", XmlConvert.ToString(false));
+                                comboParametersElement.AppendChild(newChild: comboParamElement);
+                                comboParamElement.SetAttribute(
+                                    name: "ParameterName",
+                                    value: mapping.Name
+                                );
+                                comboParamElement.SetAttribute(
+                                    name: "FieldName",
+                                    value: mapping.ColumnName
+                                );
+                                propertyElement.SetAttribute(
+                                    name: "Cached",
+                                    value: XmlConvert.ToString(value: false)
+                                );
                             }
                             break;
                         }
                         case "MultiColumnAdapterFieldWrapper":
                         {
                             MultiColumnAdapterFieldWrapperBuilder.Build(
-                                propertyElement,
-                                csi,
-                                controlMember
+                                propertyElement: propertyElement,
+                                control: csi,
+                                controlMember: controlMember
                             );
                             RenderPanel(
-                                panel,
-                                xmlOutput,
-                                table,
-                                propertyElement,
-                                propertyElement,
-                                csi,
-                                false,
-                                true,
-                                readOnly
+                                panel: panel,
+                                xmlOutput: xmlOutput,
+                                table: table,
+                                parentElement: propertyElement,
+                                propertiesElement: propertyElement,
+                                item: csi,
+                                processContainers: false,
+                                processEditControls: true,
+                                forceReadOnly: readOnly
                             );
                             XmlNode propertyNames = propertyElement.SelectSingleNode(
-                                "PropertyNames"
+                                xpath: "PropertyNames"
                             );
                             if (propertyNames == null)
                             {
                                 throw new Exception(
-                                    "There are no widgets defined in MultiColumnAdapterFieldWrapper "
+                                    message: "There are no widgets defined in MultiColumnAdapterFieldWrapper "
                                         + csi.Path
                                 );
                             }
-                            propertyElement.RemoveChild(propertyNames);
+                            propertyElement.RemoveChild(oldChild: propertyNames);
                             break;
                         }
 
                         default: // fallback: TextBox
                         {
                             TextBoxBuilder.Build(
-                                propertyElement,
-                                new TextBoxBuildDefinition(
-                                    (OrigamDataType)
-                                        table.Columns[bindingMember].ExtendedProperties[
-                                            "OrigamDataType"
+                                propertyElement: propertyElement,
+                                buildDefinition: new TextBoxBuildDefinition(
+                                    type: (OrigamDataType)
+                                        table.Columns[name: bindingMember].ExtendedProperties[
+                                            key: "OrigamDataType"
                                         ]
                                 )
                             );
@@ -2520,45 +2801,49 @@ public class FormXmlBuilder
                     // Id column is removed. Duplicated Id column would create
                     // problems in the client
                     XmlElement zeroColumn = propertiesElement.FirstChild as XmlElement;
-                    if (propertyElement.GetAttribute("Id") == zeroColumn.GetAttribute("Id"))
+                    if (
+                        propertyElement.GetAttribute(name: "Id")
+                        == zeroColumn.GetAttribute(name: "Id")
+                    )
                     {
-                        propertiesElement.RemoveChild(zeroColumn);
+                        propertiesElement.RemoveChild(oldChild: zeroColumn);
                     }
                     if (csi.MultiColumnAdapterFieldCondition != Guid.Empty)
                     {
                         IParameterService parameterService =
-                            ServiceManager.Services.GetService(typeof(IParameterService))
-                            as IParameterService;
+                            ServiceManager.Services.GetService(
+                                serviceType: typeof(IParameterService)
+                            ) as IParameterService;
                         propertyElement.SetAttribute(
-                            "ControlPropertyValue",
-                            parameterService.GetParameterValue(
-                                csi.MultiColumnAdapterFieldCondition,
-                                OrigamDataType.String
+                            name: "ControlPropertyValue",
+                            value: parameterService.GetParameterValue(
+                                id: csi.MultiColumnAdapterFieldCondition,
+                                targetType: OrigamDataType.String
                             ) as string
                         );
                     }
                     if (csi.RequestSaveAfterChange)
                     {
-                        propertyElement.SetAttribute("RequestSaveAfterChange", "true");
+                        propertyElement.SetAttribute(name: "RequestSaveAfterChange", value: "true");
                     }
                 }
                 if (lookupId != Guid.Empty)
                 {
-                    xmlOutput.ContainedLookups.Add(lookupId);
+                    xmlOutput.ContainedLookups.Add(item: lookupId);
                 }
             }
         }
         if (childrenElement.InnerXml == "")
         {
-            parentElement.RemoveChild(childrenElement);
+            parentElement.RemoveChild(oldChild: childrenElement);
         }
         if (propertyNamesElement.InnerXml == "")
         {
-            parentElement.RemoveChild(propertyNamesElement);
+            parentElement.RemoveChild(oldChild: propertyNamesElement);
         }
         if (formExclusiveControlsElement.InnerXml == "")
         {
-            parentElement.RemoveChild(formExclusiveControlsElement);
+            parentElement.RemoveChild(oldChild: formExclusiveControlsElement);
         }
     }
 
@@ -2598,7 +2883,7 @@ public class FormXmlBuilder
             default:
             {
                 throw new Exception(
-                    "Cannot convert value " + intVal + " to System.Windows.Forms string"
+                    message: "Cannot convert value " + intVal + " to System.Windows.Forms string"
                 );
             }
         }
@@ -2616,7 +2901,7 @@ public class FormXmlBuilder
         {
             entityName = controlId + "_" + entityName;
         }
-        dataSources[entityName] = table;
+        dataSources[key: entityName] = table;
         return entityName;
     }
 
@@ -2628,25 +2913,25 @@ public class FormXmlBuilder
     )
     {
         // check if there is no root grid
-        XmlNodeList grids = doc.SelectNodes(RootGridXPath);
+        XmlNodeList grids = doc.SelectNodes(xpath: RootGridXPath);
         if (grids.Count == 0)
         {
             grids = doc.SelectNodes(
-                "//*[(@Type='Grid' or @Type='TreePanel' or @Type='ReportButton') and @IsRootEntity = 'true']"
+                xpath: "//*[(@Type='Grid' or @Type='TreePanel' or @Type='ReportButton') and @IsRootEntity = 'true']"
             );
             if (grids.Count > 0)
             {
-                (grids[0] as XmlElement).SetAttribute("IsRootGrid", "true");
+                (grids[i: 0] as XmlElement).SetAttribute(name: "IsRootGrid", value: "true");
             }
         }
         grids = doc.SelectNodes(
-            "//*[@Type='Grid' or @Type='TreePanel' or @Type='ReportButton' or @Type='SectionLevelPlugin']"
+            xpath: "//*[@Type='Grid' or @Type='TreePanel' or @Type='ReportButton' or @Type='SectionLevelPlugin']"
         );
         foreach (XmlElement g in grids)
         {
             if (
-                g.GetAttribute("IsRootGrid") == "false"
-                && g.GetAttribute("IsRootEntity") == "false"
+                g.GetAttribute(name: "IsRootGrid") == "false"
+                && g.GetAttribute(name: "IsRootEntity") == "false"
             )
             {
                 // if this panel has no navigation and displays form (detail) view, so we think it displays
@@ -2654,14 +2939,14 @@ public class FormXmlBuilder
                 // and connect them 1=1.
                 if (
                     (
-                        g.GetAttribute("IsHeadless") == "true"
-                        || g.GetAttribute("DisableActionButtons") == "true"
+                        g.GetAttribute(name: "IsHeadless") == "true"
+                        || g.GetAttribute(name: "DisableActionButtons") == "true"
                     )
                     && (
-                        g.GetAttribute("DefaultPanelView")
-                            == XmlConvert.ToString((int)OrigamPanelViewMode.Form)
-                        || g.GetAttribute("DefaultPanelView")
-                            == XmlConvert.ToString((int)OrigamPanelViewMode.Map)
+                        g.GetAttribute(name: "DefaultPanelView")
+                            == XmlConvert.ToString(value: (int)OrigamPanelViewMode.Form)
+                        || g.GetAttribute(name: "DefaultPanelView")
+                            == XmlConvert.ToString(value: (int)OrigamPanelViewMode.Map)
                     )
                 )
                 {
@@ -2670,19 +2955,34 @@ public class FormXmlBuilder
                     foreach (XmlElement parentGrid in grids)
                     {
                         if (
-                            (parentGrid.GetAttribute("Entity") == g.GetAttribute("Entity"))
+                            (
+                                parentGrid.GetAttribute(name: "Entity")
+                                == g.GetAttribute(name: "Entity")
+                            )
                             && (
-                                (parentGrid.GetAttribute("Type") == "TreePanel")
+                                (parentGrid.GetAttribute(name: "Type") == "TreePanel")
                                 || (
-                                    (parentGrid.GetAttribute("IsHeadless") == "false")
-                                    && (parentGrid.GetAttribute("DisableActionButtons") == "false")
+                                    (parentGrid.GetAttribute(name: "IsHeadless") == "false")
+                                    && (
+                                        parentGrid.GetAttribute(name: "DisableActionButtons")
+                                        == "false"
+                                    )
                                 )
                             )
                         )
                         {
-                            g.SetAttribute("ParentId", parentGrid.GetAttribute("ModelInstanceId"));
-                            g.SetAttribute("ParentEntityName", parentGrid.GetAttribute("Entity"));
-                            g.SetAttribute("IsPreloaded", XmlConvert.ToString(true));
+                            g.SetAttribute(
+                                name: "ParentId",
+                                value: parentGrid.GetAttribute(name: "ModelInstanceId")
+                            );
+                            g.SetAttribute(
+                                name: "ParentEntityName",
+                                value: parentGrid.GetAttribute(name: "Entity")
+                            );
+                            g.SetAttribute(
+                                name: "IsPreloaded",
+                                value: XmlConvert.ToString(value: true)
+                            );
                             found = true;
                             break;
                         }
@@ -2691,101 +2991,133 @@ public class FormXmlBuilder
                     {
                         // there is no grid in the same entity, we find one in the parent entity
                         XmlElement parentGrid = FindParentGridInParentEntity(
-                            dataset,
-                            g.GetAttribute("DataMember"),
-                            grids
+                            dataset: dataset,
+                            dataMember: g.GetAttribute(name: "DataMember"),
+                            grids: grids
                         );
                         if (parentGrid != null)
                         {
-                            g.SetAttribute("ParentId", parentGrid.GetAttribute("ModelInstanceId"));
-                            g.SetAttribute("ParentEntityName", parentGrid.GetAttribute("Entity"));
+                            g.SetAttribute(
+                                name: "ParentId",
+                                value: parentGrid.GetAttribute(name: "ModelInstanceId")
+                            );
+                            g.SetAttribute(
+                                name: "ParentEntityName",
+                                value: parentGrid.GetAttribute(name: "Entity")
+                            );
                         }
                     }
                 }
                 else
                 {
                     XmlElement parentGrid = FindParentGridInParentEntity(
-                        dataset,
-                        g.GetAttribute("DataMember"),
-                        grids
+                        dataset: dataset,
+                        dataMember: g.GetAttribute(name: "DataMember"),
+                        grids: grids
                     );
                     if (parentGrid != null)
                     {
-                        g.SetAttribute("ParentId", parentGrid.GetAttribute("ModelInstanceId"));
-                        g.SetAttribute("ParentEntityName", parentGrid.GetAttribute("Entity"));
+                        g.SetAttribute(
+                            name: "ParentId",
+                            value: parentGrid.GetAttribute(name: "ModelInstanceId")
+                        );
+                        g.SetAttribute(
+                            name: "ParentEntityName",
+                            value: parentGrid.GetAttribute(name: "Entity")
+                        );
                     }
                 }
             }
             else if (
-                g.GetAttribute("IsRootGrid") == "false"
-                & g.GetAttribute("IsRootEntity") == "true"
+                g.GetAttribute(name: "IsRootGrid") == "false"
+                & g.GetAttribute(name: "IsRootEntity") == "true"
             )
             {
                 // we lookup a root grid
                 foreach (XmlElement parentGrid in grids)
                 {
                     if (
-                        parentGrid.GetAttribute("IsRootGrid") == "true"
-                        && parentGrid.GetAttribute("Entity") == g.GetAttribute("Entity")
+                        parentGrid.GetAttribute(name: "IsRootGrid") == "true"
+                        && parentGrid.GetAttribute(name: "Entity") == g.GetAttribute(name: "Entity")
                     )
                     {
-                        g.SetAttribute("ParentId", parentGrid.GetAttribute("ModelInstanceId"));
-                        g.SetAttribute("ParentEntityName", parentGrid.GetAttribute("Entity"));
+                        g.SetAttribute(
+                            name: "ParentId",
+                            value: parentGrid.GetAttribute(name: "ModelInstanceId")
+                        );
+                        g.SetAttribute(
+                            name: "ParentEntityName",
+                            value: parentGrid.GetAttribute(name: "Entity")
+                        );
                         break;
                     }
                 }
             }
             if (
-                g.GetAttribute("IsRootGrid") == "false"
-                && (g.GetAttribute("ParentId") == null || g.GetAttribute("ParentId") == "")
+                g.GetAttribute(name: "IsRootGrid") == "false"
+                && (
+                    g.GetAttribute(name: "ParentId") == null
+                    || g.GetAttribute(name: "ParentId") == ""
+                )
             )
             {
-                g.SetAttribute("IsRootGrid", "true");
+                g.SetAttribute(name: "IsRootGrid", value: "true");
             }
         }
-        XmlElement bindingsElement = ComponentBindingsElement(windowElement);
+        XmlElement bindingsElement = ComponentBindingsElement(windowElement: windowElement);
         // set filters between related grids & lazy loading parameters
         foreach (XmlElement g in grids)
         {
             // set lazy loading parameters
             if (
-                g.GetAttribute("Entity") == confirmSelectionChangeEntity
-                && g.GetAttribute("IsRootGrid") == "true"
+                g.GetAttribute(name: "Entity") == confirmSelectionChangeEntity
+                && g.GetAttribute(name: "IsRootGrid") == "true"
             )
             {
-                g.SetAttribute("RequestDataAfterSelectionChange", XmlConvert.ToString(true));
-                g.SetAttribute("ConfirmSelectionChange", XmlConvert.ToString(true));
+                g.SetAttribute(
+                    name: "RequestDataAfterSelectionChange",
+                    value: XmlConvert.ToString(value: true)
+                );
+                g.SetAttribute(
+                    name: "ConfirmSelectionChange",
+                    value: XmlConvert.ToString(value: true)
+                );
             }
             // the grid references some parent grid
-            if (g.GetAttribute("ParentId").Length > 0)
+            if (g.GetAttribute(name: "ParentId").Length > 0)
             {
-                string entity = g.GetAttribute("Entity");
-                string parentEntity = g.GetAttribute("ParentEntityName");
-                string dataMember = g.GetAttribute("DataMember");
-                string parentId = g.GetAttribute("ParentId");
+                string entity = g.GetAttribute(name: "Entity");
+                string parentEntity = g.GetAttribute(name: "ParentEntityName");
+                string dataMember = g.GetAttribute(name: "DataMember");
+                string parentId = g.GetAttribute(name: "ParentId");
                 if (dataMember == "")
                 {
                     dataMember = entity;
                 }
 
-                string parentDataMember = DataMemberByGridInstanceId(doc, parentId);
-                DataTable t = dataset.Tables[entity];
+                string parentDataMember = DataMemberByGridInstanceId(
+                    doc: doc,
+                    instanceId: parentId
+                );
+                DataTable t = dataset.Tables[name: entity];
                 if (entity == parentEntity && dataMember == parentDataMember) // references to the same entity
                 {
-                    XmlElement filterExpressionsElement = doc.CreateElement("FilterExpressions");
-                    g.AppendChild(filterExpressionsElement);
+                    XmlElement filterExpressionsElement = doc.CreateElement(
+                        name: "FilterExpressions"
+                    );
+                    g.AppendChild(newChild: filterExpressionsElement);
                     foreach (DataColumn col in t.PrimaryKey)
                     {
                         CreateComponentBinding(
-                            doc,
-                            bindingsElement,
-                            parentId,
-                            col.ColumnName,
-                            parentEntity,
-                            g.GetAttribute("ModelInstanceId"),
-                            col.ColumnName,
-                            entity,
-                            false
+                            doc: doc,
+                            bindingsElement: bindingsElement,
+                            parentId: parentId,
+                            parentProperty: col.ColumnName,
+                            parentEntity: parentEntity,
+                            childId: g.GetAttribute(name: "ModelInstanceId"),
+                            childProperty: col.ColumnName,
+                            childEntity: entity,
+                            isChildParameter: false
                         );
                     }
                 }
@@ -2804,28 +3136,30 @@ public class FormXmlBuilder
                     if (relation == null)
                     {
                         throw new ArgumentOutOfRangeException(
-                            "ParentEntityName",
-                            parentEntity,
-                            "Parent entity not found for entity '"
+                            paramName: "ParentEntityName",
+                            actualValue: parentEntity,
+                            message: "Parent entity not found for entity '"
                                 + entity
                                 + "'. Cannot generate filters."
                         );
                     }
 
-                    XmlElement filterExpressionsElement = doc.CreateElement("FilterExpressions");
-                    g.AppendChild(filterExpressionsElement);
+                    XmlElement filterExpressionsElement = doc.CreateElement(
+                        name: "FilterExpressions"
+                    );
+                    g.AppendChild(newChild: filterExpressionsElement);
                     for (int i = 0; i < relation.ChildColumns.Length; i++)
                     {
                         CreateComponentBinding(
-                            doc,
-                            bindingsElement,
-                            parentId,
-                            relation.ParentColumns[i].ColumnName,
-                            parentEntity,
-                            g.GetAttribute("ModelInstanceId"),
-                            relation.ChildColumns[i].ColumnName,
-                            entity,
-                            false
+                            doc: doc,
+                            bindingsElement: bindingsElement,
+                            parentId: parentId,
+                            parentProperty: relation.ParentColumns[i].ColumnName,
+                            parentEntity: parentEntity,
+                            childId: g.GetAttribute(name: "ModelInstanceId"),
+                            childProperty: relation.ChildColumns[i].ColumnName,
+                            childEntity: entity,
+                            isChildParameter: false
                         );
                     }
                 }

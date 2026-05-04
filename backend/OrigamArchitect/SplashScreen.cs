@@ -49,27 +49,36 @@ public class SplashScreen : System.Windows.Forms.Form
         // Required for Windows Form Designer support
         //
         InitializeComponent();
-        lblVersion.Text = string.Format(strings.AppVersion_Label, Application.ProductVersion);
+        lblVersion.Text = string.Format(
+            format: strings.AppVersion_Label,
+            arg0: Application.ProductVersion
+        );
         SchemaService schemaService =
-            ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
+            ServiceManager.Services.GetService(serviceType: typeof(SchemaService)) as SchemaService;
         if (schemaService != null && schemaService.ActiveExtension != null)
         {
             lblVersion.Text += string.Format(
-                strings.AppVersionModel_Label,
-                schemaService.ActiveExtension.Name
+                format: strings.AppVersionModel_Label,
+                arg0: schemaService.ActiveExtension.Name
             );
         }
 #if ORIGAM_CLIENT
         string fileName = "splash.png";
 
-        if (!File.Exists(fileName))
+        if (!File.Exists(path: fileName))
         {
             return;
         }
 
-        using (Stream file = new FileStream(fileName, FileMode.Open, FileAccess.Read))
+        using (
+            Stream file = new FileStream(
+                path: fileName,
+                mode: FileMode.Open,
+                access: FileAccess.Read
+            )
+        )
         {
-            Bitmap bitmap = (Bitmap)Bitmap.FromStream(file);
+            Bitmap bitmap = (Bitmap)Bitmap.FromStream(stream: file);
             pictureBox1.Image = bitmap;
         }
 #endif
@@ -87,7 +96,7 @@ public class SplashScreen : System.Windows.Forms.Form
                 components.Dispose();
             }
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
 
     #region Windows Form Designer generated code
@@ -266,7 +275,7 @@ public class SplashScreen : System.Windows.Forms.Form
         System.Windows.Forms.LinkLabelLinkClickedEventArgs e
     )
     {
-        System.Diagnostics.Process.Start("https://www.origam.com");
+        System.Diagnostics.Process.Start(fileName: "https://www.origam.com");
     }
 
     private void btnSystemInformation_Click(object sender, System.EventArgs e)

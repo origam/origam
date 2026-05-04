@@ -37,15 +37,15 @@ class RuntimeServiceFactoryProcessor : IRuntimeServiceFactory
     private static IPersistenceBuilder GetPersistenceBuilder()
     {
         OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
-        string[] classpath = settings.ModelProvider.Split(',');
-        return Reflector.InvokeObject(classpath[0], classpath[1]) as IPersistenceBuilder;
+        string[] classpath = settings.ModelProvider.Split(separator: ',');
+        return Reflector.InvokeObject(classname: classpath[0], assembly: classpath[1]) as IPersistenceBuilder;
     }
     public void InitializeServices()
     {
-        ServiceManager.Services.AddService(new MetaModelUpgradeService());
-        ServiceManager.Services.AddService(CreatePersistenceService());
-        ServiceManager.Services.AddService(new SchemaService());
-        ServiceManager.Services.AddService(new NullParameterService());
+        ServiceManager.Services.AddService(service: new MetaModelUpgradeService());
+        ServiceManager.Services.AddService(service: CreatePersistenceService());
+        ServiceManager.Services.AddService(service: new SchemaService());
+        ServiceManager.Services.AddService(service: new NullParameterService());
     }
     protected virtual IParameterService CreateParameterService()
     {

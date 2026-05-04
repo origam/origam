@@ -28,47 +28,52 @@ namespace Origam.SchemaTests;
 [TestFixture]
 public class PackageVersionTests
 {
-    [TestCase("5.0")]
-    [TestCase("1.111")]
-    [TestCase("1.011")]
-    [TestCase("1.011.11")]
-    [TestCase("")]
-    [TestCase(null)]
+    [TestCase(arg: "5.0")]
+    [TestCase(arg: "1.111")]
+    [TestCase(arg: "1.011")]
+    [TestCase(arg: "1.011.11")]
+    [TestCase(arg: "")]
+    [TestCase(arguments: null)]
     public void ShouldParse(string versionCandidate)
     {
-        new PackageVersion(versionCandidate);
+        new PackageVersion(completeVersionString: versionCandidate);
     }
 
-    [TestCase("5.")]
-    [TestCase("1.111A")]
-    [TestCase("dcsd")]
-    [TestCase("1.cdf.11")]
+    [TestCase(arg: "5.")]
+    [TestCase(arg: "1.111A")]
+    [TestCase(arg: "dcsd")]
+    [TestCase(arg: "1.cdf.11")]
     public void ShouldFailToParse(string versionCandidate)
     {
-        Assert.Throws<ArgumentException>(() => new PackageVersion(versionCandidate));
+        Assert.Throws<ArgumentException>(code: () =>
+            new PackageVersion(completeVersionString: versionCandidate)
+        );
     }
 
-    [TestCase("5.0", "4.0")]
-    [TestCase("5.0.1", "5.0")]
-    [TestCase("5.1", "5.0")]
-    [TestCase("5.2", "5.0.11")]
+    [TestCase(arg1: "5.0", arg2: "4.0")]
+    [TestCase(arg1: "5.0.1", arg2: "5.0")]
+    [TestCase(arg1: "5.1", arg2: "5.0")]
+    [TestCase(arg1: "5.2", arg2: "5.0.11")]
     public void ShouldRecognizeFirstIsNewer(string newerVersionString, string olderVersionString)
     {
-        var newerVersion = new PackageVersion(newerVersionString);
-        var olderVersion = new PackageVersion(olderVersionString);
+        var newerVersion = new PackageVersion(completeVersionString: newerVersionString);
+        var olderVersion = new PackageVersion(completeVersionString: olderVersionString);
 
-        Assert.True(newerVersion > olderVersion);
-        Assert.True(newerVersion.CompareTo(olderVersion) > 0);
+        Assert.True(condition: newerVersion > olderVersion);
+        Assert.True(condition: newerVersion.CompareTo(other: olderVersion) > 0);
     }
 
-    [TestCase("5.0", "5")]
-    [TestCase("5.0", "5.0")]
-    [TestCase("5.0.11", "5.0.011")]
+    [TestCase(arg1: "5.0", arg2: "5")]
+    [TestCase(arg1: "5.0", arg2: "5.0")]
+    [TestCase(arg1: "5.0.11", arg2: "5.0.011")]
     public void ShouldBerecognizedAsEqual(string versionString1, string versionString2)
     {
-        var version1 = new PackageVersion(versionString1);
-        var version2 = new PackageVersion(versionString2);
-        Assert.That(version1, Is.EqualTo(version2));
-        Assert.That(version1.GetHashCode(), Is.EqualTo(version2.GetHashCode()));
+        var version1 = new PackageVersion(completeVersionString: versionString1);
+        var version2 = new PackageVersion(completeVersionString: versionString2);
+        Assert.That(actual: version1, expression: Is.EqualTo(expected: version2));
+        Assert.That(
+            actual: version1.GetHashCode(),
+            expression: Is.EqualTo(expected: version2.GetHashCode())
+        );
     }
 }

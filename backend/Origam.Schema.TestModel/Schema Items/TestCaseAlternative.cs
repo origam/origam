@@ -24,8 +24,8 @@ using Origam.DA.Common;
 
 namespace Origam.Schema.TestModel;
 
-[SchemaItemDescription("Alternative", "Alternatives", 27)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Alternative", folderName: "Alternatives", icon: 27)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class TestCaseAlternative : AbstractSchemaItem
 {
     public const string CategoryConst = "TestCaseAlternative";
@@ -33,10 +33,10 @@ public class TestCaseAlternative : AbstractSchemaItem
     public TestCaseAlternative() { }
 
     public TestCaseAlternative(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public TestCaseAlternative(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Overriden ISchemaItem Members
 
@@ -50,9 +50,9 @@ public class TestCaseAlternative : AbstractSchemaItem
     public override T NewItem<T>(Guid schemaExtensionId, SchemaItemGroup group)
     {
         return base.NewItem<T>(
-            schemaExtensionId,
-            group,
-            typeof(T) == typeof(TestCaseStep) ? "NewTestCaseStep" : null
+            schemaExtensionId: schemaExtensionId,
+            group: group,
+            itemName: typeof(T) == typeof(TestCaseStep) ? "NewTestCaseStep" : null
         );
     }
     #endregion

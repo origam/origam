@@ -76,7 +76,7 @@ public class EntityExportInfo
     }
     public DataTable Table
     {
-        get { return Store.GetDataTable(Entity, DataSource); }
+        get { return Store.GetDataTable(entity: Entity, data: DataSource); }
     }
     public DataSet DataSource
     {

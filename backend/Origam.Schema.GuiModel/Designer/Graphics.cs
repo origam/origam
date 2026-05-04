@@ -33,10 +33,10 @@ namespace Origam.Schema.GuiModel;
 /// <summary>
 /// Summary description for Graphics.
 /// </summary>
-[SchemaItemDescription("Image", "icon_image.png")]
-[HelpTopic("Images")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Image", iconName: "icon_image.png")]
+[HelpTopic(topic: "Images")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class Graphics : AbstractSchemaItem
 {
     public const string CategoryConst = "Graphics";
@@ -48,13 +48,13 @@ public class Graphics : AbstractSchemaItem
     }
 
     public Graphics(Guid schemaExtensionId)
-        : base(schemaExtensionId)
+        : base(extensionId: schemaExtensionId)
     {
         InitializeProperyContainers();
     }
 
     public Graphics(Key primaryKey)
-        : base(primaryKey)
+        : base(primaryKey: primaryKey)
     {
         InitializeProperyContainers();
     }
@@ -77,15 +77,15 @@ public class Graphics : AbstractSchemaItem
     #region Properties
     private PropertyContainer<byte[]> graphicsDataByte;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     [XmlExternalFileReference(containerName: nameof(graphicsDataByte), extension: Png)]
     public byte[] GraphicsDataByte
     {
         get => graphicsDataByte.Get();
-        set => graphicsDataByte.Set(value);
+        set => graphicsDataByte.Set(value: value);
     }
 
-    [Category("Graphics")]
+    [Category(category: "Graphics")]
     //[Editor(typeof(System.Drawing.Design.BitmapEditor), typeof(System.Drawing.Design.UITypeEditor))]
     public Bitmap GraphicsData
     {
@@ -96,10 +96,12 @@ public class Graphics : AbstractSchemaItem
                 return null;
             }
 
-            Bitmap b = new System.Drawing.Bitmap(new System.IO.MemoryStream(GraphicsDataByte));
+            Bitmap b = new System.Drawing.Bitmap(
+                stream: new System.IO.MemoryStream(buffer: GraphicsDataByte)
+            );
             if (b.RawFormat == ImageFormat.Bmp)
             {
-                b.MakeTransparent(Color.Magenta);
+                b.MakeTransparent(transparentColor: Color.Magenta);
             }
             return b;
         }
@@ -113,12 +115,12 @@ public class Graphics : AbstractSchemaItem
             System.IO.MemoryStream stream = new System.IO.MemoryStream();
             if (value.RawFormat == ImageFormat.Bmp)
             {
-                SetTransparentColor(value);
-                value.Save(stream, ImageFormat.Bmp);
+                SetTransparentColor(value: value);
+                value.Save(stream: stream, format: ImageFormat.Bmp);
             }
             else
             {
-                value.Save(stream, ImageFormat.Png);
+                value.Save(stream: stream, format: ImageFormat.Png);
             }
             GraphicsDataByte = stream.ToArray();
         }
@@ -130,9 +132,9 @@ public class Graphics : AbstractSchemaItem
         {
             for (int j = 0; j < value.Width; j++)
             {
-                if (value.GetPixel(j, i) == Color.Transparent)
+                if (value.GetPixel(x: j, y: i) == Color.Transparent)
                 {
-                    value.SetPixel(j, i, Color.Magenta);
+                    value.SetPixel(x: j, y: i, color: Color.Magenta);
                 }
             }
         }

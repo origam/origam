@@ -26,6 +26,6 @@ public class ServerIdentityMiddleware(RequestDelegate next)
     public async Task InvokeAsync(HttpContext context)
     {
         SecurityManager.SetServerIdentity();
-        await next(context);
+        await next(context: context);
     }
 }

@@ -27,10 +27,14 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.GuiModel;
 
-[SchemaItemDescription("Horizontal Axis", "Horizontal Axes", "icon_horizontal-axis.png")]
-[HelpTopic("Horizontal+Axis")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(
+    name: "Horizontal Axis",
+    folderName: "Horizontal Axes",
+    iconName: "icon_horizontal-axis.png"
+)]
+[HelpTopic(topic: "Horizontal+Axis")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class CartesianChartHorizontalAxis : AbstractSchemaItem
 {
     public const string CategoryConst = "CartesianChartHorizontalAxis";
@@ -42,13 +46,13 @@ public class CartesianChartHorizontalAxis : AbstractSchemaItem
     }
 
     public CartesianChartHorizontalAxis(Guid schemaExtensionId)
-        : base(schemaExtensionId)
+        : base(extensionId: schemaExtensionId)
     {
         Init();
     }
 
     public CartesianChartHorizontalAxis(Key primaryKey)
-        : base(primaryKey)
+        : base(primaryKey: primaryKey)
     {
         Init();
     }
@@ -58,9 +62,9 @@ public class CartesianChartHorizontalAxis : AbstractSchemaItem
     #region Properties
     private string _field = "";
 
-    [Category("Field")]
+    [Category(category: "Field")]
     [StringNotEmptyModelElementRule()]
-    [XmlAttribute("field")]
+    [XmlAttribute(attributeName: "field")]
     public string Field
     {
         get { return _field; }
@@ -68,9 +72,9 @@ public class CartesianChartHorizontalAxis : AbstractSchemaItem
     }
     private string _caption = "";
 
-    [Category("Axis")]
-    [Localizable(true)]
-    [XmlAttribute("label")]
+    [Category(category: "Axis")]
+    [Localizable(isLocalizable: true)]
+    [XmlAttribute(attributeName: "label")]
     public string Caption
     {
         get { return _caption; }
@@ -78,8 +82,8 @@ public class CartesianChartHorizontalAxis : AbstractSchemaItem
     }
     private ChartAggregationType _aggregationType = ChartAggregationType.Distinct;
 
-    [Category("Limits"), DefaultValue(ChartAggregationType.Distinct)]
-    [XmlAttribute("aggregationType")]
+    [Category(category: "Limits"), DefaultValue(value: ChartAggregationType.Distinct)]
+    [XmlAttribute(attributeName: "aggregationType")]
     public ChartAggregationType AggregationType
     {
         get { return _aggregationType; }

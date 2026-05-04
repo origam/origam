@@ -40,7 +40,7 @@ public class XmlElementPath
 
     public void AddElement(QualifiedName category)
     {
-        elements.Add(category);
+        elements.Add(item: category);
     }
 
     public bool IsEmpty
@@ -63,10 +63,10 @@ public class XmlElementPath
             int index = 0;
             while (index != -1)
             {
-                index = LastIndexNotMatchingNamespace(lastName.Namespace);
+                index = LastIndexNotMatchingNamespace(namespaceUri: lastName.Namespace);
                 if (index != -1)
                 {
-                    elements.RemoveAt(index);
+                    elements.RemoveAt(index: index);
                 }
             }
         }
@@ -79,7 +79,7 @@ public class XmlElementPath
 
     public string GetNamespaceForPrefix(string prefix)
     {
-        return namespacesInScope.GetNamespaceForPrefix(prefix);
+        return namespacesInScope.GetNamespaceForPrefix(prefix: prefix);
     }
 
     /// <summary>
@@ -93,7 +93,7 @@ public class XmlElementPath
         {
             return false;
         }
-        return elements.Equals(rhsPath.elements);
+        return elements.Equals(obj: rhsPath.elements);
     }
 
     public override int GetHashCode()
@@ -132,7 +132,7 @@ public class XmlElementPath
             // Start the check from the last but one item.
             for (int i = elements.Count - 2; i >= 0; --i)
             {
-                QualifiedName name = elements[i];
+                QualifiedName name = elements[index: i];
                 if (name.Namespace != namespaceUri)
                 {
                     return i;

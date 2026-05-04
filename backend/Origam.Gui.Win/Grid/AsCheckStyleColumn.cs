@@ -68,9 +68,9 @@ public class AsCheckStyleColumn : DataGridBoolColumn
                 if (ruleEngine != null)
                 {
                     this.ReadOnly = !ruleEngine.EvaluateRowLevelSecurityState(
-                        (source.Current as DataRowView).Row,
-                        this.MappingName,
-                        Schema.EntityModel.CredentialType.Update
+                        row: (source.Current as DataRowView).Row,
+                        field: this.MappingName,
+                        type: Schema.EntityModel.CredentialType.Update
                     );
                 }
             }
@@ -79,6 +79,13 @@ public class AsCheckStyleColumn : DataGridBoolColumn
                 this.ReadOnly = true;
             }
         }
-        base.Edit(source, rowNum, bounds, readOnly, instantText, cellIsVisible);
+        base.Edit(
+            source: source,
+            rowNum: rowNum,
+            bounds: bounds,
+            readOnly: readOnly,
+            displayText: instantText,
+            cellIsVisible: cellIsVisible
+        );
     }
 }

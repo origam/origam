@@ -30,9 +30,9 @@ using Origam.Workbench.Services;
 
 namespace Origam.Schema.GuiModel;
 
-[SchemaItemDescription("File Download Page", "data-page.png")]
-[HelpTopic("File+Download+Page")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "File Download Page", iconName: "data-page.png")]
+[HelpTopic(topic: "File+Download+Page")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class FileDownloadPage : AbstractPage, IDataStructureReference
 {
     public FileDownloadPage()
@@ -42,36 +42,36 @@ public class FileDownloadPage : AbstractPage, IDataStructureReference
     }
 
     public FileDownloadPage(Guid schemaExtensionId)
-        : base(schemaExtensionId)
+        : base(schemaExtensionId: schemaExtensionId)
     {
         Init();
     }
 
     public FileDownloadPage(Key primaryKey)
-        : base(primaryKey)
+        : base(primaryKey: primaryKey)
     {
         Init();
     }
 
     private void Init()
     {
-        this.ChildItemTypes.Add(typeof(PageParameterMapping));
+        this.ChildItemTypes.Add(item: typeof(PageParameterMapping));
     }
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(this.DataStructure);
+        dependencies.Add(item: this.DataStructure);
         if (this.Method != null)
         {
-            dependencies.Add(this.Method);
+            dependencies.Add(item: this.Method);
         }
 
         if (this.SortSet != null)
         {
-            dependencies.Add(this.SortSet);
+            dependencies.Add(item: this.SortSet);
         }
 
-        base.GetExtraDependencies(dependencies);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override IList<string> NewTypeNames
@@ -81,10 +81,19 @@ public class FileDownloadPage : AbstractPage, IDataStructureReference
             try
             {
                 IBusinessServicesService agents =
-                    ServiceManager.Services.GetService(typeof(IBusinessServicesService))
-                    as IBusinessServicesService;
-                IServiceAgent agent = agents.GetAgent("DataService", null, null);
-                return agent.ExpectedParameterNames(this, "LoadData", "Parameters");
+                    ServiceManager.Services.GetService(
+                        serviceType: typeof(IBusinessServicesService)
+                    ) as IBusinessServicesService;
+                IServiceAgent agent = agents.GetAgent(
+                    serviceType: "DataService",
+                    ruleEngine: null,
+                    workflowEngine: null
+                );
+                return agent.ExpectedParameterNames(
+                    item: this,
+                    method: "LoadData",
+                    parameter: "Parameters"
+                );
             }
             catch
             {
@@ -95,73 +104,73 @@ public class FileDownloadPage : AbstractPage, IDataStructureReference
     #region Properties
     public Guid DataStructureId;
 
-    [TypeConverter(typeof(DataStructureConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [XmlReference("dataStructure", "DataStructureId")]
+    [TypeConverter(type: typeof(DataStructureConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [XmlReference(attributeName: "dataStructure", idField: "DataStructureId")]
     public DataStructure DataStructure
     {
         get
         {
             return (DataStructure)
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(this.DataStructureId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: this.DataStructureId)
                 );
         }
         set
         {
             this.Method = null;
             this.SortSet = null;
-            this.DataStructureId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
+            this.DataStructureId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]);
         }
     }
     public Guid DataStructureMethodId;
 
-    [TypeConverter(typeof(DataStructureReferenceMethodConverter))]
-    [XmlReference("method", "DataStructureMethodId")]
+    [TypeConverter(type: typeof(DataStructureReferenceMethodConverter))]
+    [XmlReference(attributeName: "method", idField: "DataStructureMethodId")]
     public DataStructureMethod Method
     {
         get
         {
             return (DataStructureMethod)
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(this.DataStructureMethodId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: this.DataStructureMethodId)
                 );
         }
         set
         {
             this.DataStructureMethodId = (
-                value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]
+                value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]
             );
         }
     }
     public Guid DataStructureSortSetId;
 
-    [TypeConverter(typeof(DataStructureReferenceSortSetConverter))]
-    [XmlReference("sortSet", "DataStructureSortSetId")]
+    [TypeConverter(type: typeof(DataStructureReferenceSortSetConverter))]
+    [XmlReference(attributeName: "sortSet", idField: "DataStructureSortSetId")]
     public DataStructureSortSet SortSet
     {
         get
         {
             return (DataStructureSortSet)
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(this.DataStructureSortSetId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: this.DataStructureSortSetId)
                 );
         }
         set
         {
             this.DataStructureSortSetId = (
-                value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]
+                value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]
             );
         }
     }
     private string _contentField = "";
 
-    [Category("File Data")]
+    [Category(category: "File Data")]
     [StringNotEmptyModelElementRule()]
-    [XmlAttribute("contentField")]
+    [XmlAttribute(attributeName: "contentField")]
     public string ContentField
     {
         get { return _contentField; }
@@ -169,9 +178,9 @@ public class FileDownloadPage : AbstractPage, IDataStructureReference
     }
     private string _fileNameField = "";
 
-    [Category("File Data")]
+    [Category(category: "File Data")]
     [StringNotEmptyModelElementRule()]
-    [XmlAttribute("fileNameField")]
+    [XmlAttribute(attributeName: "fileNameField")]
     public string FileNameField
     {
         get { return _fileNameField; }

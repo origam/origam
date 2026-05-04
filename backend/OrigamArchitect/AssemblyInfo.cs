@@ -28,18 +28,18 @@ using System.Windows.Media;
 // associated with an assembly.
 //
 #if ORIGAM_CLIENT
-[assembly: AssemblyTitle("ORIGAM Client")]
-[assembly: AssemblyDescription("ORIGAM Client Application")]
+[assembly: AssemblyTitle(title: "ORIGAM Client")]
+[assembly: AssemblyDescription(description: "ORIGAM Client Application")]
 #else
 [assembly: AssemblyTitle("ORIGAM Architect")]
 [assembly: AssemblyDescription("Enterprise software development and prototyping platform")]
 #endif
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Advantage Solutions, s. r. o.")]
-[assembly: AssemblyProduct("ORIGAM")]
-[assembly: AssemblyCopyright("(c) 2005 - 2021 Advantage Solutions, s. r. o.")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
+[assembly: AssemblyConfiguration(configuration: "")]
+[assembly: AssemblyCompany(company: "Advantage Solutions, s. r. o.")]
+[assembly: AssemblyProduct(product: "ORIGAM")]
+[assembly: AssemblyCopyright(copyright: "(c) 2005 - 2021 Advantage Solutions, s. r. o.")]
+[assembly: AssemblyTrademark(trademark: "")]
+[assembly: AssemblyCulture(culture: "")]
 [assembly: DisableDpiAwareness()]
 
 //
@@ -53,8 +53,8 @@ using System.Windows.Media;
 // You can specify all the values or you can default the Revision and Build Numbers
 // by using the '*' as shown below:
 
-[assembly: AssemblyVersion("0.0.0.0")]
-[assembly: AssemblyFileVersion("0.0.0.0")]
+[assembly: AssemblyVersion(version: "0.0.0.0")]
+[assembly: AssemblyFileVersion(version: "0.0.0.0")]
 
 //
 // In order to sign your assembly you must specify a key to use. Refer to the
@@ -81,6 +81,6 @@ using System.Windows.Media;
 //   (*) Delay Signing is an advanced option - see the Microsoft .NET Framework
 //       documentation for more information on this.
 //
-[assembly: AssemblyDelaySign(false)]
+[assembly: AssemblyDelaySign(delaySign: false)]
 //[assembly: AssemblyKeyFile("..\\..\\..\\AssemblySigning\\origamKey.snk")]
-[assembly: AssemblyKeyName("")]
+[assembly: AssemblyKeyName(keyName: "")]

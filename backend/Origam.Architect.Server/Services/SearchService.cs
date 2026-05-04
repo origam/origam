@@ -37,13 +37,19 @@ public class SearchService(
     public IEnumerable<SearchResult> SearchByText(string text)
     {
         List<Guid> referencePackages = GetReferencePackages();
-        var results = persistenceService.SchemaProvider.FullTextSearch<ISchemaItem>(text);
-        return results.Where(x => x != null).Select(result => GetResult(result, referencePackages));
+        var results = persistenceService.SchemaProvider.FullTextSearch<ISchemaItem>(text: text);
+        return results
+            .Where(predicate: x => x != null)
+            .Select(selector: result =>
+                GetResult(item: result, referencePackages: referencePackages)
+            );
     }
 
     public IEnumerable<SearchResult> FindReferences(Guid schemaItemId)
     {
-        var item = persistenceService.SchemaProvider.RetrieveInstance<ISchemaItem>(schemaItemId);
+        var item = persistenceService.SchemaProvider.RetrieveInstance<ISchemaItem>(
+            instanceId: schemaItemId
+        );
         List<Guid> referencePackages = GetReferencePackages();
         List<ISchemaItem> schemaItems = item.GetUsage();
         if (schemaItems == null)
@@ -51,24 +57,30 @@ public class SearchService(
             return [];
         }
         return schemaItems
-            .Where(x => x != null)
-            .Select(result => GetResult(result, referencePackages));
+            .Where(predicate: x => x != null)
+            .Select(selector: result =>
+                GetResult(item: result, referencePackages: referencePackages)
+            );
     }
 
     public IEnumerable<SearchResult> FindDependencies(Guid schemaItemId)
     {
-        var item = persistenceService.SchemaProvider.RetrieveInstance<ISchemaItem>(schemaItemId);
+        var item = persistenceService.SchemaProvider.RetrieveInstance<ISchemaItem>(
+            instanceId: schemaItemId
+        );
         List<Guid> referencePackages = GetReferencePackages();
-        return item.GetDependencies(false)
-            .Where(x => x != null)
-            .Select(result => GetResult(result, referencePackages));
+        return item.GetDependencies(ignoreErrors: false)
+            .Where(predicate: x => x != null)
+            .Select(selector: result =>
+                GetResult(item: result, referencePackages: referencePackages)
+            );
     }
 
     private List<Guid> GetReferencePackages()
     {
         var referencePackages = schemaService
-            .ActiveExtension.IncludedPackages.Select(x => x.Id)
-            .Append(schemaService.ActiveExtension.Id)
+            .ActiveExtension.IncludedPackages.Select(selector: x => x.Id)
+            .Append(element: schemaService.ActiveExtension.Id)
             .ToList();
         return referencePackages;
     }
@@ -77,7 +89,7 @@ public class SearchService(
     {
         try
         {
-            ISchemaItem root = GetRoot(item);
+            ISchemaItem root = GetRoot(item: item);
             return new SearchResult
             {
                 SchemaId = item.Id,
@@ -86,18 +98,18 @@ public class SearchService(
                 FoundIn = item.Path,
                 Folder = root.Group?.Path ?? "",
                 Package = item.PackageName,
-                PackageReference = referencePackages.Contains(item.SchemaExtensionId),
-                ParentNodeIds = GetParentNodeIds(item, root),
+                PackageReference = referencePackages.Contains(item: item.SchemaExtensionId),
+                ParentNodeIds = GetParentNodeIds(item: item, root: root),
                 IsOrphaned = false,
             };
         }
         catch (OrphanedSchemaReferenceException ex)
         {
-            if (logger.IsEnabled(LogLevel.Warning))
+            if (logger.IsEnabled(logLevel: LogLevel.Warning))
             {
                 logger.LogWarning(
-                    ex,
-                    $"Orphaned reference while building search result for schema item {item.Id}"
+                    exception: ex,
+                    message: $"Orphaned reference while building search result for schema item {item.Id}"
                 );
             }
             return new SearchResult
@@ -123,7 +135,7 @@ public class SearchService(
         }
         catch (Exception ex)
         {
-            throw new OrphanedSchemaReferenceException(item.Id, ex);
+            throw new OrphanedSchemaReferenceException(itemId: item.Id, inner: ex);
         }
     }
 
@@ -137,36 +149,36 @@ public class SearchService(
             }
 
             var ids = new List<string>();
-            AddFolderNameIfAny(ids, item);
+            AddFolderNameIfAny(target: ids, schemaItem: item);
 
             for (ISchemaItem parent = item.ParentItem; parent != null; parent = parent.ParentItem)
             {
-                ids.Add(parent.Id.ToString());
-                AddFolderNameIfAny(ids, parent);
+                ids.Add(item: parent.Id.ToString());
+                AddFolderNameIfAny(target: ids, schemaItem: parent);
             }
 
             for (SchemaItemGroup group = root.Group; group != null; group = group.ParentGroup)
             {
-                ids.Add(group.Id.ToString());
+                ids.Add(item: group.Id.ToString());
             }
 
-            ids.Add(provider.NodeId);
-            ids.Add(provider.Group);
+            ids.Add(item: provider.NodeId);
+            ids.Add(item: provider.Group);
             ids.Reverse();
 
             return ids;
         }
         catch (Exception ex)
         {
-            throw new OrphanedSchemaReferenceException(item.Id, ex);
+            throw new OrphanedSchemaReferenceException(itemId: item.Id, inner: ex);
         }
 
         static void AddFolderNameIfAny(List<string> target, ISchemaItem schemaItem)
         {
             var folderName = schemaItem?.GetType().SchemaItemDescription()?.FolderName;
-            if (!string.IsNullOrWhiteSpace(folderName))
+            if (!string.IsNullOrWhiteSpace(value: folderName))
             {
-                target.Add(folderName);
+                target.Add(item: folderName);
             }
         }
     }

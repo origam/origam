@@ -26,15 +26,15 @@ using Origam.Workbench.Services;
 namespace Origam.Architect.Server.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route(template: "[controller]")]
 public class PackageController(SchemaService schemaService) : ControllerBase
 {
-    [HttpGet("GetAll")]
+    [HttpGet(template: "GetAll")]
     public PackagesInfo GetAll()
     {
         var packages = schemaService
-            .AllPackages.OrderBy(x => x.Name)
-            .Select(x => new PackageModel(x.Id, x.NodeText));
+            .AllPackages.OrderBy(keySelector: x => x.Name)
+            .Select(selector: x => new PackageModel(id: x.Id, name: x.NodeText));
 
         return new PackagesInfo
         {
@@ -46,7 +46,7 @@ public class PackageController(SchemaService schemaService) : ControllerBase
         };
     }
 
-    [HttpPost("SetActive")]
+    [HttpPost(template: "SetActive")]
     public ActionResult SetActive([FromBody] PackageIdentifier package)
     {
         if (schemaService.ActiveSchemaExtensionId == package.Id)
@@ -54,7 +54,7 @@ public class PackageController(SchemaService schemaService) : ControllerBase
             return Ok();
         }
         SecurityManager.SetServerIdentity();
-        schemaService.LoadSchema(package.Id);
+        schemaService.LoadSchema(schemaExtensionId: package.Id);
         return Ok();
     }
 }

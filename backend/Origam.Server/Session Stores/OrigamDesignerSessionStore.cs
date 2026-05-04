@@ -47,18 +47,24 @@ public class OrigamDesignerSessionStore : FormSessionStore
         Guid entityId,
         Analytics analytics
     )
-        : base(service, request, name, menuItem, analytics)
+        : base(
+            service: service,
+            request: request,
+            name: name,
+            menuItem: menuItem,
+            analytics: analytics
+        )
     {
         FormId = entityId;
         GetModelData();
         SimpleModelData.OrigamEntityRow entityRow =
-            _modelData.OrigamEntity.Rows[0] as SimpleModelData.OrigamEntityRow;
+            _modelData.OrigamEntity.Rows[index: 0] as SimpleModelData.OrigamEntityRow;
         if (entityRow.WorkflowCount == 0)
         {
-            request.Parameters.Add("WorkflowId", Guid.Empty);
-            request.Parameters.Add("StateId", Guid.Empty);
+            request.Parameters.Add(key: "WorkflowId", value: Guid.Empty);
+            request.Parameters.Add(key: "StateId", value: Guid.Empty);
         }
-        DataStructureId = new Guid("1240e912-2c96-4bb7-800c-6b6649541efc"); //GenerateDataStructure();
+        DataStructureId = new Guid(g: "1240e912-2c96-4bb7-800c-6b6649541efc"); //GenerateDataStructure();
     }
 
     public override string HelpTooltipFormId
@@ -70,13 +76,13 @@ public class OrigamDesignerSessionStore : FormSessionStore
     {
         _modelData =
             CoreServices.DataService.Instance.LoadData(
-                new Guid("3aaec7cd-5e40-40af-b4ad-1edd0e0fdade"),
-                new Guid("b3cc44d5-aa9f-4ff5-b078-15dd2f7af46f"),
-                Guid.Empty,
-                new Guid("d217d65d-c1f4-4b53-b449-a971277cacb8"),
-                null,
-                "OrigamEntity_parId",
-                FormId
+                dataStructureId: new Guid(g: "3aaec7cd-5e40-40af-b4ad-1edd0e0fdade"),
+                methodId: new Guid(g: "b3cc44d5-aa9f-4ff5-b078-15dd2f7af46f"),
+                defaultSetId: Guid.Empty,
+                sortSetId: new Guid(g: "d217d65d-c1f4-4b53-b449-a971277cacb8"),
+                transactionId: null,
+                paramName1: "OrigamEntity_parId",
+                paramValue1: FormId
             ) as SimpleModelData;
     }
 
@@ -86,8 +92,14 @@ public class OrigamDesignerSessionStore : FormSessionStore
         {
             GetModelData();
         }
-        DataSet dataset = new DatasetGenerator(true).CreateDataSet(DataStructure());
-        XmlDocument result = FormXmlBuilder.GetXml(_modelData, dataset, this.Title);
+        DataSet dataset = new DatasetGenerator(userDefinedParameters: true).CreateDataSet(
+            ds: DataStructure()
+        );
+        XmlDocument result = FormXmlBuilder.GetXml(
+            simpleModel: _modelData,
+            dataset: dataset,
+            name: this.Title
+        );
         _modelData = null;
         return result;
     }
@@ -97,16 +109,16 @@ public class OrigamDesignerSessionStore : FormSessionStore
         string name = "xxx";
         lock (_dataStructureslock)
         {
-            if (_dataStructures.ContainsKey(name))
+            if (_dataStructures.ContainsKey(key: name))
             {
-                return _dataStructures[name].Id;
+                return _dataStructures[key: name].Id;
             }
             DataStructure originalDataStructure = DataStructure(
-                new Guid("1240e912-2c96-4bb7-800c-6b6649541efc")
+                id: new Guid(g: "1240e912-2c96-4bb7-800c-6b6649541efc")
             );
             DataStructure clone = originalDataStructure.Clone() as DataStructure;
             clone.Persist();
-            _dataStructures.Add(name, clone);
+            _dataStructures.Add(key: name, value: clone);
 
             return clone.Id;
         }

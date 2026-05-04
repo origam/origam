@@ -38,33 +38,33 @@ public class FileCallbackResult : FileResult
         MediaTypeHeaderValue contentType,
         Func<Stream, ActionContext, Task> callback
     )
-        : base(contentType?.ToString())
+        : base(contentType: contentType?.ToString())
     {
-        _callback = callback ?? throw new ArgumentNullException(nameof(callback));
+        _callback = callback ?? throw new ArgumentNullException(paramName: nameof(callback));
     }
 
     public override Task ExecuteResultAsync(ActionContext context)
     {
         if (context == null)
         {
-            throw new ArgumentNullException(nameof(context));
+            throw new ArgumentNullException(paramName: nameof(context));
         }
 
         var executor = new FileCallbackResultExecutor(
-            context.HttpContext.RequestServices.GetRequiredService<ILoggerFactory>()
+            loggerFactory: context.HttpContext.RequestServices.GetRequiredService<ILoggerFactory>()
         );
-        return executor.ExecuteAsync(context, this);
+        return executor.ExecuteAsync(context: context, result: this);
     }
 
     private sealed class FileCallbackResultExecutor : FileResultExecutorBase
     {
         public FileCallbackResultExecutor(ILoggerFactory loggerFactory)
-            : base(CreateLogger<FileCallbackResultExecutor>(loggerFactory)) { }
+            : base(logger: CreateLogger<FileCallbackResultExecutor>(factory: loggerFactory)) { }
 
         public Task ExecuteAsync(ActionContext context, FileCallbackResult result)
         {
             // SetHeadersAndLog(context, result);
-            return result._callback(context.HttpContext.Response.Body, context);
+            return result._callback(arg1: context.HttpContext.Response.Body, arg2: context);
         }
     }
 }

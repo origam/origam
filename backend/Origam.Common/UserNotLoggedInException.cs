@@ -27,6 +27,6 @@ public class UserNotLoggedInException : Exception
 {
     public override string Message
     {
-        get { return ResourceUtils.GetString("UserNotLoggedInException"); }
+        get { return ResourceUtils.GetString(key: "UserNotLoggedInException"); }
     }
 }

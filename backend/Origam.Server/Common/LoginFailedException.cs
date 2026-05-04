@@ -26,11 +26,11 @@ namespace Origam.Server;
 public class LoginFailedException : Exception
 {
     public LoginFailedException(Exception innerException)
-        : base(innerException.Message, innerException) { }
+        : base(message: innerException.Message, innerException: innerException) { }
 
     public LoginFailedException(string message)
-        : base(message) { }
+        : base(message: message) { }
 
     public LoginFailedException(string message, Exception innerException)
-        : base(message, innerException) { }
+        : base(message: message, innerException: innerException) { }
 }

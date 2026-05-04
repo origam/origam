@@ -39,7 +39,7 @@ class DataSetConverter : newton.DataSetConverter
 
     public override bool CanConvert(Type valueType)
     {
-        return typeof(DataSet).IsAssignableFrom(valueType);
+        return typeof(DataSet).IsAssignableFrom(c: valueType);
     }
 
     public override void WriteJson(
@@ -56,7 +56,9 @@ class DataSetConverter : newton.DataSetConverter
             string name = dataSet.DataSetName;
             writer.WriteStartObject();
             writer.WritePropertyName(
-                (resolver != null) ? resolver.GetResolvedPropertyName(name) : name
+                name: (resolver != null)
+                    ? resolver.GetResolvedPropertyName(propertyName: name)
+                    : name
             );
         }
         if (!omitMainElement)
@@ -65,17 +67,17 @@ class DataSetConverter : newton.DataSetConverter
         }
         foreach (DataTable table in dataSet.Tables)
         {
-            if (IsRoot(table))
+            if (IsRoot(table: table))
             {
                 if (!omitMainElement)
                 {
                     writer.WritePropertyName(
-                        (resolver != null)
-                            ? resolver.GetResolvedPropertyName(table.TableName)
+                        name: (resolver != null)
+                            ? resolver.GetResolvedPropertyName(propertyName: table.TableName)
                             : table.TableName
                     );
                 }
-                converter.WriteJson(writer, table, serializer);
+                converter.WriteJson(writer: writer, value: table, serializer: serializer);
             }
         }
         if (!omitMainElement)
@@ -92,7 +94,7 @@ class DataSetConverter : newton.DataSetConverter
     {
         foreach (DataRelation relation in table.DataSet.Relations)
         {
-            if (relation.Nested && relation.ChildTable.Equals(table))
+            if (relation.Nested && relation.ChildTable.Equals(obj: table))
             {
                 return false;
             }

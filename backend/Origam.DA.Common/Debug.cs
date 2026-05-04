@@ -43,7 +43,7 @@ public sealed class DebugClass
             + "**********************************Begin**ListRowErrors**********************************************"
             + Environment.NewLine;
         result = result + Environment.NewLine;
-        result = result + ListRowErrors(dataSet) + Environment.NewLine;
+        result = result + ListRowErrors(dataSet: dataSet) + Environment.NewLine;
         result =
             result
             + "**********************************end**ListRowErrors**********************************************"
@@ -53,7 +53,7 @@ public sealed class DebugClass
             + "**********************************Begin**ListUniqueColumns**********************************************"
             + Environment.NewLine;
         result = result + Environment.NewLine;
-        result = result + ListUniqueColumns(dataSet) + Environment.NewLine;
+        result = result + ListUniqueColumns(dataSet: dataSet) + Environment.NewLine;
         result =
             result
             + "**********************************end**ListUniqueColumns**********************************************"
@@ -63,7 +63,7 @@ public sealed class DebugClass
             + "**********************************Begin**ListConstraints**********************************************"
             + Environment.NewLine;
         result = result + Environment.NewLine;
-        result = result + ListConstraints(dataSet) + Environment.NewLine;
+        result = result + ListConstraints(dataSet: dataSet) + Environment.NewLine;
         result =
             result
             + "**********************************end**ListConstraints**********************************************"

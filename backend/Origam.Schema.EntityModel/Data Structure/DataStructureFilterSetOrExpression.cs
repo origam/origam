@@ -25,9 +25,9 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.EntityModel;
 
-[SchemaItemDescription("OR Expression", 2)]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "OR Expression", icon: 2)]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class DataStructureFilterSetOrExpression : AbstractSchemaItem
 {
     public const string CategoryConst = "DataStructureFilterSetFilter";
@@ -35,7 +35,7 @@ public class DataStructureFilterSetOrExpression : AbstractSchemaItem
     public DataStructureFilterSetOrExpression() { }
 
     public DataStructureFilterSetOrExpression(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Overriden AbstractDataEntityColumn Members
 
@@ -44,7 +44,7 @@ public class DataStructureFilterSetOrExpression : AbstractSchemaItem
     public override bool UseFolders => false;
 
     public override bool CanMove(UI.IBrowserNode2 newNode) =>
-        ((ISchemaItem)newNode).PrimaryKey.Equals(ParentItem.PrimaryKey);
+        ((ISchemaItem)newNode).PrimaryKey.Equals(obj: ParentItem.PrimaryKey);
     #endregion
     #region ISchemaItemFactory Members
     public override Type[] NewItemTypes => new[] { typeof(DataStructureFilterSetFilter) };
@@ -52,9 +52,9 @@ public class DataStructureFilterSetOrExpression : AbstractSchemaItem
     public override T NewItem<T>(Guid schemaExtensionId, SchemaItemGroup group)
     {
         return base.NewItem<T>(
-            schemaExtensionId,
-            group,
-            typeof(T) == typeof(DataStructureDefaultSetDefault)
+            schemaExtensionId: schemaExtensionId,
+            group: group,
+            itemName: typeof(T) == typeof(DataStructureDefaultSetDefault)
                 ? "NewDataStructureDefaultSetDefault"
                 : null
         );

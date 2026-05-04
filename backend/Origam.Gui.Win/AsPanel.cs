@@ -44,8 +44,8 @@ using Origam.Workbench.Services;
 
 namespace Origam.Gui.Win;
 
-[Designer(typeof(ControlDesigner))]
-[ToolboxBitmap(typeof(AsPanel), "AsPanel.bmp")]
+[Designer(designerType: typeof(ControlDesigner))]
+[ToolboxBitmap(t: typeof(AsPanel), name: "AsPanel.bmp")]
 public class AsPanel
     : BasePanel,
         IAsDataConsumer,
@@ -107,9 +107,11 @@ public class AsPanel
         if (ImgListStreamer == null)
         {
             System.Resources.ResourceManager resources = new System.Resources.ResourceManager(
-                typeof(AsPanel)
+                resourceSource: typeof(AsPanel)
             );
-            ImgListStreamer = ((ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
+            ImgListStreamer = (
+                (ImageListStreamer)(resources.GetObject(name: "imageList1.ImageStream"))
+            );
         }
         this.imageList1.ImageStream = ImgListStreamer;
         this.BackColor = OrigamColorScheme.FormBackgroundColor;
@@ -120,13 +122,14 @@ public class AsPanel
         pnlDataControl.MiddleEndColor = OrigamColorScheme.TitleInactiveMiddleEndColor;
         if (!this.DesignMode)
         {
-            _auditLogPad = WorkbenchSingleton.Workbench.GetPad(typeof(AuditLogPad)) as AuditLogPad;
+            _auditLogPad =
+                WorkbenchSingleton.Workbench.GetPad(type: typeof(AuditLogPad)) as AuditLogPad;
             _persistence =
-                ServiceManager.Services.GetService(typeof(IPersistenceService))
+                ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
                 as IPersistenceService;
 
             _attachmentPad =
-                WorkbenchSingleton.Workbench.GetPad(typeof(AttachmentPad)) as AttachmentPad;
+                WorkbenchSingleton.Workbench.GetPad(type: typeof(AttachmentPad)) as AttachmentPad;
             if (_attachmentPad != null)
             {
                 _attachmentPad.AttachmentsUpdated += _attachmentPad_AttachmentsUpdated;
@@ -142,14 +145,14 @@ public class AsPanel
             dataMemberGetter: () => DataMember,
             toolStripGetter: () => ToolStrip,
             formGeneratorGetter: () => Generator,
-            formIdGetter: () => (Guid)(FindForm() as AsForm).PrimaryKey["Id"]
+            formIdGetter: () => (Guid)(FindForm() as AsForm).PrimaryKey[key: "Id"]
         );
     }
 
     public AsPanel(IContainer container)
         : this()
     {
-        container.Add(this);
+        container.Add(component: this);
     }
     #endregion
     #region Component Designer generated code
@@ -411,18 +414,18 @@ public class AsPanel
         get
         {
             string tableName = FormTools.FindTableByDataMember(
-                this.DataSource as DataSet,
-                this.DataMember
+                ds: this.DataSource as DataSet,
+                member: this.DataMember
             );
-            if (string.IsNullOrEmpty(tableName))
+            if (string.IsNullOrEmpty(value: tableName))
             {
                 return Guid.Empty;
             }
 
             return new Guid(
-                (this.DataSource as DataSet)
-                    .Tables[tableName]
-                    .ExtendedProperties["EntityId"]
+                g: (this.DataSource as DataSet)
+                    .Tables[name: tableName]
+                    .ExtendedProperties[key: "EntityId"]
                     .ToString()
             );
         }
@@ -431,10 +434,10 @@ public class AsPanel
     public string DefaultConfiguration { get; set; }
     public DataGrid Grid => grid as DataGrid;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public FormGenerator Generator { get; set; }
 
-    [Category("(ORIGAM)")]
+    [Category(category: "(ORIGAM)")]
     public PanelControlSet Panel
     {
         get
@@ -448,7 +451,7 @@ public class AsPanel
         }
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public bool FilterActive => pnlFilter.FilterActive;
     public bool FilterVisible
     {
@@ -472,7 +475,7 @@ public class AsPanel
     }
     private Guid _iconId = Guid.Empty;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public Guid IconId
     {
         get => _iconId;
@@ -483,7 +486,7 @@ public class AsPanel
         }
     }
 
-    [TypeConverter(typeof(GraphicsConverter))]
+    [TypeConverter(type: typeof(GraphicsConverter))]
     public Schema.GuiModel.Graphics TitleIcon
     {
         get
@@ -491,7 +494,10 @@ public class AsPanel
             ModelElementKey key = new ModelElementKey();
             key.Id = this.IconId;
             return (Schema.GuiModel.Graphics)
-                _persistence.SchemaProvider.RetrieveInstance(typeof(ISchemaItem), key);
+                _persistence.SchemaProvider.RetrieveInstance(
+                    type: typeof(ISchemaItem),
+                    primaryKey: key
+                );
         }
         set
         {
@@ -501,7 +507,7 @@ public class AsPanel
             }
             else
             {
-                this.IconId = (Guid)value.PrimaryKey["Id"];
+                this.IconId = (Guid)value.PrimaryKey[key: "Id"];
             }
             SetPanelTitleIcon();
         }
@@ -514,9 +520,9 @@ public class AsPanel
     /// <value>true if the New button is visible. The default is true.</value>
     ///
     [
-        DefaultValue(false),
-        Category("Behavior"),
-        Description("Indicates whether New Button will be shown.")
+        DefaultValue(value: false),
+        Category(category: "Behavior"),
+        Description(description: "Indicates whether New Button will be shown.")
     ]
     public bool ShowNewButton
     {
@@ -524,7 +530,7 @@ public class AsPanel
         set => dbNav.ShowNewButton = value;
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public bool OriginalShowNewButton { get; private set; }
 
     /// <summary>
@@ -534,9 +540,9 @@ public class AsPanel
     /// <value>True if the Copy button is hidden. The default is false.</value>
     ///
     [
-        DefaultValue(false),
-        Category("Behavior"),
-        Description("Indicates whether Copy Button will be hidden.")
+        DefaultValue(value: false),
+        Category(category: "Behavior"),
+        Description(description: "Indicates whether Copy Button will be hidden.")
     ]
     public bool HideCopyButton { get; set; }
 
@@ -547,9 +553,9 @@ public class AsPanel
     /// <value>True if the Delete button is visible. The default is true.</value>
     ///
     [
-        DefaultValue(false),
-        Category("Behavior"),
-        Description("Indicates whether Delete Button will be shown.")
+        DefaultValue(value: false),
+        Category(category: "Behavior"),
+        Description(description: "Indicates whether Delete Button will be shown.")
     ]
     public bool ShowDeleteButton
     {
@@ -558,9 +564,9 @@ public class AsPanel
     }
 
     [
-        DefaultValue(true),
-        Category("Behavior"),
-        Description("Indicates whether Grid/Form Toggle Button will be shown.")
+        DefaultValue(value: true),
+        Category(category: "Behavior"),
+        Description(description: "Indicates whether Grid/Form Toggle Button will be shown.")
     ]
     public bool ShowGridButton
     {
@@ -580,9 +586,9 @@ public class AsPanel
     }
 
     [
-        DefaultValue(true),
-        Category("Behavior"),
-        Description("Indicates whether Attachments Button will be shown.")
+        DefaultValue(value: true),
+        Category(category: "Behavior"),
+        Description(description: "Indicates whether Attachments Button will be shown.")
     ]
     public bool ShowAttachmentsButton
     {
@@ -602,9 +608,9 @@ public class AsPanel
     }
 
     [
-        DefaultValue(true),
-        Category("Behavior"),
-        Description("Indicates whether AuditLog Button will be shown.")
+        DefaultValue(value: true),
+        Category(category: "Behavior"),
+        Description(description: "Indicates whether AuditLog Button will be shown.")
     ]
     public bool ShowAuditLogButton
     {
@@ -624,17 +630,17 @@ public class AsPanel
     }
 
     [
-        Category("Misc"),
+        Category(category: "Misc"),
         Description(
-            "Member will be treated as ordered - it will be read only and a special UI components will be available."
+            description: "Member will be treated as ordered - it will be read only and a special UI components will be available."
         )
     ]
     public string OrderMember { get; set; }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public bool OriginalShowDeleteButton => _originalDisplayDeleteButton;
 
-    [DefaultValue(false)]
+    [DefaultValue(value: false)]
     public bool GridVisible
     {
         get => btnGrid.Pushed;
@@ -650,12 +656,12 @@ public class AsPanel
             btnGrid.Pushed = value;
             ProcessGridBinding();
             // restore the saved position
-            SetPosition(key);
+            SetPosition(primaryKey: key);
         }
     }
     private bool _hideNavigationPanel = false;
 
-    [DefaultValue(false)]
+    [DefaultValue(value: false)]
     public bool HideNavigationPanel
     {
         get => _hideNavigationPanel;
@@ -666,10 +672,12 @@ public class AsPanel
         }
     }
 
-    [Description("This setting is only applied on the action buttons placed on the toolbar.")]
+    [Description(
+        description: "This setting is only applied on the action buttons placed on the toolbar."
+    )]
     public bool DisableActionButtons { get; set; }
 
-    [Category("(ORIGAM)")]
+    [Category(category: "(ORIGAM)")]
     public string PanelTitle
     {
         get => this.pnlDataControl.PanelTitle;
@@ -677,179 +685,181 @@ public class AsPanel
     }
     public string SelectionMember { get; set; }
 
-    [Category("Calendar View")]
+    [Category(category: "Calendar View")]
     public string CalendarDateDueMember { get; set; }
 
-    [Category("Calendar View")]
+    [Category(category: "Calendar View")]
     public string CalendarDateFromMember { get; set; }
 
-    [Category("Calendar View")]
+    [Category(category: "Calendar View")]
     public string CalendarDateToMember { get; set; }
 
-    [Category("Calendar View")]
+    [Category(category: "Calendar View")]
     public string CalendarNameMember { get; set; }
 
-    [Category("Calendar View")]
+    [Category(category: "Calendar View")]
     public string CalendarDescriptionMember { get; set; }
 
-    [Category("Calendar View")]
+    [Category(category: "Calendar View")]
     public string CalendarIsFinishedMember { get; set; }
 
-    [Category("Calendar View")]
+    [Category(category: "Calendar View")]
     public string CalendarResourceIdMember { get; set; }
 
-    [Category("Calendar View")]
+    [Category(category: "Calendar View")]
     public string CalendarResourceNameLookupField { get; set; }
 
-    [Category("Calendar View"), DefaultValue(false)]
+    [Category(category: "Calendar View"), DefaultValue(value: false)]
     public bool CalendarShowAllResources { get; set; }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public Guid CalendarRowHeightConstantId { get; set; }
 
-    [TypeConverter(typeof(DataConstantConverter))]
-    [Category("Calendar View")]
+    [TypeConverter(type: typeof(DataConstantConverter))]
+    [Category(category: "Calendar View")]
     public DataConstant CalendarRowHeight
     {
         get =>
             (DataConstant)
                 _persistence.SchemaProvider.RetrieveInstance(
-                    typeof(DataConstant),
-                    new ModelElementKey(this.CalendarRowHeightConstantId)
+                    type: typeof(DataConstant),
+                    primaryKey: new ModelElementKey(id: this.CalendarRowHeightConstantId)
                 );
         set =>
             this.CalendarRowHeightConstantId = (
-                value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]
+                value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]
             );
     }
 
-    [Category("Calendar View")]
+    [Category(category: "Calendar View")]
     public string CalendarCustomSortMember { get; set; } = null;
 
-    [Category("Calendar View")]
+    [Category(category: "Calendar View")]
     public AsPanelCalendarViewEnum DefaultCalendarView { get; set; }
 
-    [Category("Calendar View")]
+    [Category(category: "Calendar View")]
     public bool IsCalendarSupported { get; set; }
 
-    [Category("Calendar View")]
+    [Category(category: "Calendar View")]
     public bool IsCalendarVisible { get; set; }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public Guid CalendarViewStyleId { get; set; }
 
-    [TypeConverter(typeof(StylesConverter))]
-    [Category("Calendar View")]
+    [TypeConverter(type: typeof(StylesConverter))]
+    [Category(category: "Calendar View")]
     public UIStyle CalendarViewStyle
     {
         get =>
             (UIStyle)
                 _persistence.SchemaProvider.RetrieveInstance(
-                    typeof(UIStyle),
-                    new ModelElementKey(this.CalendarViewStyleId)
+                    type: typeof(UIStyle),
+                    primaryKey: new ModelElementKey(id: this.CalendarViewStyleId)
                 );
         set =>
-            this.CalendarViewStyleId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
+            this.CalendarViewStyleId = (
+                value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]
+            );
     }
 
-    [Category("Pipeline View")]
+    [Category(category: "Pipeline View")]
     public bool IsPipelineSupported { get; set; }
 
-    [Category("Pipeline View")]
+    [Category(category: "Pipeline View")]
     public bool IsPipelineVisible { get; set; }
 
-    [Category("Pipeline View")]
+    [Category(category: "Pipeline View")]
     public string PipelineNameMember { get; set; }
 
-    [Category("Pipeline View")]
+    [Category(category: "Pipeline View")]
     public string PipelineDateMember { get; set; }
 
-    [Category("Pipeline View")]
+    [Category(category: "Pipeline View")]
     public string PipelinePriceMember { get; set; }
 
-    [Category("Pipeline View")]
+    [Category(category: "Pipeline View")]
     public string PipelineStateMember { get; set; }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public Guid PipelineStateLookupId { get; set; }
 
-    [TypeConverter(typeof(DataLookupConverter))]
-    [Category("Pipeline View")]
+    [TypeConverter(type: typeof(DataLookupConverter))]
+    [Category(category: "Pipeline View")]
     public AbstractDataLookup PipelineStateLookup
     {
         get =>
             (AbstractDataLookup)
                 _persistence.SchemaProvider.RetrieveInstance(
-                    typeof(AbstractDataLookup),
-                    new ModelElementKey(this.PipelineStateLookupId)
+                    type: typeof(AbstractDataLookup),
+                    primaryKey: new ModelElementKey(id: this.PipelineStateLookupId)
                 );
         set =>
             this.PipelineStateLookupId = (
-                value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]
+                value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]
             );
     }
 
-    [Category("Map View")]
+    [Category(category: "Map View")]
     public string MapLocationMember { get; set; }
 
-    [Category("Map View")]
+    [Category(category: "Map View")]
     public string MapAzimuthMember { get; set; }
 
-    [Category("Map View")]
+    [Category(category: "Map View")]
     public string MapColorMember { get; set; }
 
-    [Category("Map View")]
+    [Category(category: "Map View")]
     public string MapIconMember { get; set; }
 
-    [Category("Map View")]
+    [Category(category: "Map View")]
     public string MapTextMember { get; set; }
 
-    [Category("Map View")]
+    [Category(category: "Map View")]
     public string MapTextLocationMember { get; set; }
 
-    [Category("Map View")]
+    [Category(category: "Map View")]
     public string MapTextRotationMember { get; set; }
 
-    [Category("Map View")]
+    [Category(category: "Map View")]
     public string MapTextColorMember { get; set; }
 
-    [Category("Map View")]
+    [Category(category: "Map View")]
     public string MapCenter { get; set; }
 
-    [Category("Map View")]
+    [Category(category: "Map View")]
     public string MapLayers { get; set; }
 
-    [Category("Map View")]
+    [Category(category: "Map View")]
     public int MapResolution { get; set; }
 
-    [Category("Map View")]
-    [DefaultValue(false)]
+    [Category(category: "Map View")]
+    [DefaultValue(value: false)]
     public bool IsMapSupported { get; set; }
 
-    [Category("Map View")]
-    [DefaultValue(false)]
+    [Category(category: "Map View")]
+    [DefaultValue(value: false)]
     public bool IsMapVisible { get; set; }
 
-    [DefaultValue(false)]
+    [DefaultValue(value: false)]
     public bool IsGridHeightDynamic { get; set; } = false;
 
-    [DefaultValue(0)]
+    [DefaultValue(value: 0)]
     public int MaxDynamicGridHeight { get; set; } = 0;
 
-    [DefaultValue(false)]
+    [DefaultValue(value: false)]
     public bool NewRecordInDetailView { get; set; } = false;
     public string ImplicitFilter { get; set; } = null;
 
-    [DefaultValue(false), Category("Drag & Drop")]
+    [DefaultValue(value: false), Category(category: "Drag & Drop")]
     public bool IsDraggingEnabled { get; set; } = false;
 
-    [Category("Drag & Drop")]
+    [Category(category: "Drag & Drop")]
     public string DraggingLabelMember { get; set; } = null;
 
-    [Category("Visual Editor View")]
+    [Category(category: "Visual Editor View")]
     public bool IsVisualEditorSupported { get; set; }
 
-    [Category("Visual Editor View")]
+    [Category(category: "Visual Editor View")]
     public bool IsVisualEditorVisible { get; set; }
     #endregion
     #region Private Properties
@@ -861,9 +871,9 @@ public class AsPanel
             this.btnGrid.Pushed = value;
             if (_userConfig != null)
             {
-                _userConfig.Tables["OrigamFormPanelConfig"].Rows[0]["DefaultView"] = (
-                    value ? OrigamPanelViewMode.Grid : OrigamPanelViewMode.Form
-                );
+                _userConfig.Tables[name: "OrigamFormPanelConfig"].Rows[index: 0][
+                    columnName: "DefaultView"
+                ] = (value ? OrigamPanelViewMode.Grid : OrigamPanelViewMode.Form);
                 SaveUserConfig();
             }
             ProcessGridBinding();
@@ -879,7 +889,7 @@ public class AsPanel
         _internalDisposing = true;
         if (disposing)
         {
-            Generator?.SetTooltip(this.pnlDataControl, null);
+            Generator?.SetTooltip(component: this.pnlDataControl, text: null);
             this.toolBar.ButtonClick -= this.toolBar_ButtonClick;
             this.toolBar.Validated -= this.toolBar_Validated;
             this.filterMenu.Popup -= this.filterMenu_Popup;
@@ -934,7 +944,7 @@ public class AsPanel
             _auditLogPad = null;
             components?.Dispose();
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
 
     protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
@@ -980,10 +990,10 @@ public class AsPanel
                 catch (Exception ex)
                 {
                     AsMessageBox.ShowError(
-                        this.FindForm(),
-                        ex.Message,
-                        "Chyba v panelu '" + this.PanelTitle + "'",
-                        ex
+                        owner: this.FindForm(),
+                        text: ex.Message,
+                        caption: "Chyba v panelu '" + this.PanelTitle + "'",
+                        exception: ex
                     );
                 }
                 return true;
@@ -1028,12 +1038,12 @@ public class AsPanel
                 return true;
             }
         }
-        return base.ProcessCmdKey(ref msg, keyData);
+        return base.ProcessCmdKey(msg: ref msg, keyData: keyData);
     }
 
     protected override bool ProcessMnemonic(char charCode)
     {
-        if (IsMnemonic(charCode))
+        if (IsMnemonic(charCode: charCode))
         {
             FocusControls();
             return true;
@@ -1051,8 +1061,8 @@ public class AsPanel
     public bool EndEdit()
     {
         object[] key = CurrentKey;
-        bool result = this.EndEdit(true);
-        SetPosition(key);
+        bool result = this.EndEdit(validate: true);
+        SetPosition(primaryKey: key);
         return result;
     }
 
@@ -1087,8 +1097,11 @@ public class AsPanel
             catch (Exception ex)
             {
                 throw new Exception(
-                    ResourceUtils.GetString("ErrorWhenConfirm", this.PanelTitle),
-                    ex
+                    message: ResourceUtils.GetString(
+                        key: "ErrorWhenConfirm",
+                        args: this.PanelTitle
+                    ),
+                    innerException: ex
                 );
             }
         }
@@ -1099,7 +1112,12 @@ public class AsPanel
         }
         catch (Exception ex)
         {
-            AsMessageBox.ShowError(this.FindForm(), ex.Message, "Chyba pøi aktualizaci barvy", ex);
+            AsMessageBox.ShowError(
+                owner: this.FindForm(),
+                text: ex.Message,
+                caption: "Chyba pøi aktualizaci barvy",
+                exception: ex
+            );
         }
         return true;
     }
@@ -1123,7 +1141,7 @@ public class AsPanel
 
     public bool SetPosition(object[] primaryKey)
     {
-        if (CurrentKey == null || !CurrentKey.Equals(primaryKey))
+        if (CurrentKey == null || !CurrentKey.Equals(obj: primaryKey))
         {
             _auditLogPad?.ClearList();
             CurrentKey = primaryKey;
@@ -1134,7 +1152,7 @@ public class AsPanel
 
     public EntityFormatting Formatting(DataRow row, object id)
     {
-        if (IsPkNull(id))
+        if (IsPkNull(pk: id))
         {
             return null;
         }
@@ -1152,19 +1170,24 @@ public class AsPanel
         }
 
         EntityFormatting formatting;
-        if (id.Equals(_cachedFormattingId))
+        if (id.Equals(obj: _cachedFormattingId))
         {
             formatting = _cachedFormatting;
         }
         else
         {
-            if (!DatasetTools.HasRowValidParent(row))
+            if (!DatasetTools.HasRowValidParent(row: row))
             {
                 return null;
             }
 
-            XmlContainer data = DatasetTools.GetRowXml(row, DataRowVersion.Default);
-            formatting = ruleEngine.Formatting(data, entityId, Guid.Empty, null);
+            XmlContainer data = DatasetTools.GetRowXml(row: row, version: DataRowVersion.Default);
+            formatting = ruleEngine.Formatting(
+                data: data,
+                entityId: entityId,
+                fieldId: Guid.Empty,
+                contextPosition: null
+            );
         }
 
         _cachedFormatting = formatting;
@@ -1174,54 +1197,63 @@ public class AsPanel
 
     public bool IsColumnSorted(string columnName)
     {
-        return CurrentSort.Contains(columnName);
+        return CurrentSort.Contains(key: columnName);
     }
 
     public DataStructureColumnSortDirection ColumnSortDirection(string columnName)
     {
-        if (!CurrentSort.Contains(columnName))
+        if (!CurrentSort.Contains(key: columnName))
         {
             throw new ArgumentOutOfRangeException(
-                "columnName",
-                columnName,
-                ResourceUtils.GetString("ErrorSortDirection")
+                paramName: "columnName",
+                actualValue: columnName,
+                message: ResourceUtils.GetString(key: "ErrorSortDirection")
             );
         }
 
-        DataSortItem sortItem = CurrentSort[columnName] as DataSortItem;
+        DataSortItem sortItem = CurrentSort[key: columnName] as DataSortItem;
         return sortItem.SortDirection;
     }
 
     public void Sort(string columnName, DataStructureColumnSortDirection sortDirection)
     {
         CurrentSort.Clear();
-        AddSort(columnName, sortDirection);
+        AddSort(columnName: columnName, sortDirection: sortDirection);
     }
 
     public void AddSort(string columnName, DataStructureColumnSortDirection sortDirection)
     {
-        if (CurrentSort.Contains(columnName))
+        if (CurrentSort.Contains(key: columnName))
         {
-            throw new Exception(ResourceUtils.GetString("ErrorAlreadySorted", columnName));
+            throw new Exception(
+                message: ResourceUtils.GetString(key: "ErrorAlreadySorted", args: columnName)
+            );
         }
 
-        CurrentSort.Add(columnName, new DataSortItem(columnName, sortDirection, CurrentSort.Count));
+        CurrentSort.Add(
+            key: columnName,
+            value: new DataSortItem(
+                columnName: columnName,
+                sortDirection: sortDirection,
+                sortOrder: CurrentSort.Count
+            )
+        );
         UpdateSorting();
         SetActualRecordId();
     }
 
     public void ReverseSort(string columnName)
     {
-        if (!CurrentSort.Contains(columnName))
+        if (!CurrentSort.Contains(key: columnName))
         {
             throw new ArgumentOutOfRangeException(
-                "columnName",
-                columnName,
-                ResourceUtils.GetString("ErrorReverseSort")
+                paramName: "columnName",
+                actualValue: columnName,
+                message: ResourceUtils.GetString(key: "ErrorReverseSort")
             );
         }
 
-        DataSortItem sortItem = CurrentSort[columnName] as DataSortItem;
+        DataSortItem sortItem = CurrentSort[key: columnName] as DataSortItem;
         sortItem.SortDirection =
             sortItem.SortDirection == DataStructureColumnSortDirection.Ascending
                 ? DataStructureColumnSortDirection.Descending
@@ -1238,19 +1270,21 @@ public class AsPanel
         {
             UserProfile profile = SecurityManager.CurrentUserProfile();
             _userConfig = OrigamPanelConfigDA.LoadConfigData(
-                this.FormPanelId,
-                form.WorkflowId,
-                profile.Id
+                panelInstanceId: this.FormPanelId,
+                workflowId: form.WorkflowId,
+                profileId: profile.Id
             );
             // Create default config if none exists
-            if (_userConfig.Tables["OrigamFormPanelConfig"].Rows.Count == 0)
+            if (_userConfig.Tables[name: "OrigamFormPanelConfig"].Rows.Count == 0)
             {
                 OrigamPanelConfigDA.CreatePanelConfigRow(
-                    _userConfig.Tables["OrigamFormPanelConfig"],
-                    this.FormPanelId,
-                    form.WorkflowId,
-                    profile.Id,
-                    (this.ShowGrid ? OrigamPanelViewMode.Grid : OrigamPanelViewMode.Form)
+                    configTable: _userConfig.Tables[name: "OrigamFormPanelConfig"],
+                    panelInstanceId: this.FormPanelId,
+                    workflowId: form.WorkflowId,
+                    profileId: profile.Id,
+                    defaultView: (
+                        this.ShowGrid ? OrigamPanelViewMode.Grid : OrigamPanelViewMode.Form
+                    )
                 );
             }
             else
@@ -1258,9 +1292,12 @@ public class AsPanel
                 if (!this.HideNavigationPanel)
                 {
                     // there is a config already, so we set it
-                    DataRow configRow = _userConfig.Tables["OrigamFormPanelConfig"].Rows[0];
+                    DataRow configRow = _userConfig.Tables[name: "OrigamFormPanelConfig"].Rows[
+                        index: 0
+                    ];
                     btnGrid.Pushed =
-                        (OrigamPanelViewMode)configRow["DefaultView"] != OrigamPanelViewMode.Form;
+                        (OrigamPanelViewMode)configRow[columnName: "DefaultView"]
+                        != OrigamPanelViewMode.Form;
                     ProcessGridBinding();
                 }
             }
@@ -1284,19 +1321,19 @@ public class AsPanel
         try
         {
             OrigamPanelConfigDA.SaveUserConfig(
-                _userConfig,
-                this.FormPanelId,
-                form.WorkflowId,
-                profile.Id
+                userConfig: _userConfig,
+                panelInstanceId: this.FormPanelId,
+                workflowId: form.WorkflowId,
+                profileId: profile.Id
             );
         }
         catch (Exception ex)
         {
             AsMessageBox.ShowError(
-                this.FindForm(),
-                ResourceUtils.GetString("ErrorWhenSavingConfig", this.PanelTitle),
-                ResourceUtils.GetString("SaveConfigTitle"),
-                ex
+                owner: this.FindForm(),
+                text: ResourceUtils.GetString(key: "ErrorWhenSavingConfig", args: this.PanelTitle),
+                caption: ResourceUtils.GetString(key: "SaveConfigTitle"),
+                exception: ex
             );
         }
     }
@@ -1308,15 +1345,21 @@ public class AsPanel
             if ((grid as AsDataGrid).CurrentCell.ColumnNumber != 0)
             {
                 (grid as AsDataGrid).CurrentCell = new DataGridCell(
-                    (grid as AsDataGrid).CurrentRowIndex,
-                    0
+                    r: (grid as AsDataGrid).CurrentRowIndex,
+                    c: 0
                 );
             }
         }
         else
         {
             this.Focus();
-            this.SelectNextControl(this, true, true, true, true);
+            this.SelectNextControl(
+                ctl: this,
+                forward: true,
+                tabStopOnly: true,
+                nested: true,
+                wrap: true
+            );
         }
     }
 
@@ -1356,7 +1399,7 @@ public class AsPanel
 
     private void UpdateTooltip(DataRow row)
     {
-        Generator.SetTooltip(this.pnlDataControl, "");
+        Generator.SetTooltip(component: this.pnlDataControl, text: "");
         if (row == null)
         {
             return;
@@ -1370,28 +1413,29 @@ public class AsPanel
         if (row.Table.PrimaryKey.Length > 0)
         {
             string pkName = row.Table.PrimaryKey[0].ColumnName;
-            if (row.Table.Columns.Contains(pkName))
+            if (row.Table.Columns.Contains(name: pkName))
             {
-                idText = row[pkName].ToString();
+                idText = row[columnName: pkName].ToString();
             }
         }
-        if (row.Table.Columns.Contains("RecordCreated"))
+        if (row.Table.Columns.Contains(name: "RecordCreated"))
         {
-            recordCreatedDate = row["RecordCreated"].ToString();
+            recordCreatedDate = row[columnName: "RecordCreated"].ToString();
         }
-        if (row.Table.Columns.Contains("RecordUpdated"))
+        if (row.Table.Columns.Contains(name: "RecordUpdated"))
         {
-            recordUpdatedDate = row["RecordUpdated"].ToString();
+            recordUpdatedDate = row[columnName: "RecordUpdated"].ToString();
         }
-        if (row.Table.Columns.Contains("RecordCreatedBy"))
+        if (row.Table.Columns.Contains(name: "RecordCreatedBy"))
         {
-            object id = row["RecordCreatedBy"];
+            object id = row[columnName: "RecordCreatedBy"];
             if (id != DBNull.Value)
             {
                 try
                 {
                     IOrigamProfileProvider profileProvider = SecurityManager.GetProfileProvider();
-                    UserProfile profile = profileProvider.GetProfile((Guid)id) as UserProfile;
+                    UserProfile profile =
+                        profileProvider.GetProfile(profileId: (Guid)id) as UserProfile;
                     recordCreatedByName = profile.FullName;
                 }
                 catch (Exception ex)
@@ -1400,15 +1444,16 @@ public class AsPanel
                 }
             }
         }
-        if (row.Table.Columns.Contains("RecordUpdatedBy"))
+        if (row.Table.Columns.Contains(name: "RecordUpdatedBy"))
         {
-            object id = row["RecordUpdatedBy"];
+            object id = row[columnName: "RecordUpdatedBy"];
             if (id != DBNull.Value)
             {
                 try
                 {
                     IOrigamProfileProvider profileProvider = SecurityManager.GetProfileProvider();
-                    UserProfile profile = profileProvider.GetProfile((Guid)id) as UserProfile;
+                    UserProfile profile =
+                        profileProvider.GetProfile(profileId: (Guid)id) as UserProfile;
                     recordUpdatedByName = profile.FullName;
                 }
                 catch (Exception ex)
@@ -1418,17 +1463,17 @@ public class AsPanel
             }
         }
         string tooltip =
-            ResourceUtils.GetString("TooltipSegmentCreated")
+            ResourceUtils.GetString(key: "TooltipSegmentCreated")
             + recordCreatedByName
             + (recordCreatedDate != "" ? " (" + recordCreatedDate + ")" : "")
             + Environment.NewLine
-            + ResourceUtils.GetString("TooltipSegmentLastChange")
+            + ResourceUtils.GetString(key: "TooltipSegmentLastChange")
             + recordUpdatedByName
             + (recordUpdatedDate != "" ? " (" + recordUpdatedDate + ")" : "")
             + Environment.NewLine
-            + ResourceUtils.GetString("TooltipSegmentId")
+            + ResourceUtils.GetString(key: "TooltipSegmentId")
             + idText;
-        Generator.SetTooltip(this.pnlDataControl, tooltip);
+        Generator.SetTooltip(component: this.pnlDataControl, text: tooltip);
     }
 
     private bool RestorePosition()
@@ -1442,7 +1487,7 @@ public class AsPanel
                 && this._bindingManager.Current is DataRowView
             )
             {
-                this.OnRecordIdChanged((this._bindingManager.Current as DataRowView).Row);
+                this.OnRecordIdChanged(row: (this._bindingManager.Current as DataRowView).Row);
             }
             CurrencyManager cm = this._bindingManager;
             DataView view = (DataView)cm.List;
@@ -1450,7 +1495,7 @@ public class AsPanel
             {
                 if (CurrentKey != null && CurrentKey.Length > 0)
                 {
-                    DataRow foundRow = view.Table.Rows.Find(CurrentKey);
+                    DataRow foundRow = view.Table.Rows.Find(keys: CurrentKey);
 
                     if (foundRow != null)
                     {
@@ -1463,7 +1508,7 @@ public class AsPanel
                                 {
                                     // We have to call this even if the row is actual, because of delayed data loading
                                     // The delayed data loading has to reload the details of this master (if any).
-                                    OnRecordIdChanged(foundRow);
+                                    OnRecordIdChanged(row: foundRow);
                                 }
                                 else
                                 {
@@ -1490,10 +1535,16 @@ public class AsPanel
             return false;
         }
 
-        int i = this.PanelTitle.IndexOf("&");
+        int i = this.PanelTitle.IndexOf(value: "&");
         if (i >= 0 & i < this.PanelTitle.Length)
         {
-            if (String.Compare(charCode.ToString(), this.PanelTitle.Substring(i + 1, 1), true) == 0)
+            if (
+                String.Compare(
+                    strA: charCode.ToString(),
+                    strB: this.PanelTitle.Substring(startIndex: i + 1, length: 1),
+                    ignoreCase: true
+                ) == 0
+            )
             {
                 return true;
             }
@@ -1534,7 +1585,8 @@ public class AsPanel
         try
         {
             _bindingManager =
-                this.BindingContext[this._dataSource, this.DataMember] as CurrencyManager;
+                this.BindingContext[dataSource: this._dataSource, dataMember: this.DataMember]
+                as CurrencyManager;
         }
         catch
         {
@@ -1545,11 +1597,11 @@ public class AsPanel
         if (_filterFactory == null)
         {
             _filterFactory = new DataGridFilterFactory(
-                this.pnlFilter,
-                this.Generator,
-                this.DataMember,
-                this.PanelUniqueId,
-                _gridBuilder
+                panel: this.pnlFilter,
+                generator: this.Generator,
+                datamember: this.DataMember,
+                panelId: this.PanelUniqueId,
+                gridBuilder: _gridBuilder
             );
             _filterFactory.DataViewQueryChanged += filterFactory_DataViewQueryChanged;
             _gridBuilder.FilterFactory = _filterFactory;
@@ -1558,11 +1610,11 @@ public class AsPanel
         {
             // grid will be added to Controls collection by the factory, so we don't have to add it on the panel
             grid = _gridBuilder.CreateGrid(
-                this.DataSource,
-                this.DataMember,
-                this,
-                this.FormPanelId,
-                this.Generator.FormRuleEngine
+                dataSource: this.DataSource,
+                dataMember: this.DataMember,
+                control: this,
+                panelId: this.FormPanelId,
+                ruleEngine: this.Generator.FormRuleEngine
             );
             grid.HandleCreated += grid_HandleCreated;
             grid.VisibleChanged += grid_VisibleChanged;
@@ -1571,7 +1623,7 @@ public class AsPanel
         }
 
         BindGrid();
-        this.dbNav.SetDataBinding(this._dataSource, this.DataMember);
+        this.dbNav.SetDataBinding(dataSource: this._dataSource, dataMember: this.DataMember);
 
         SubscribeBindingManagerEvents();
         ProcessGridBinding();
@@ -1579,16 +1631,17 @@ public class AsPanel
         if (!_defaultFilterUsed & _userConfig != null & !form.SingleRecordEditing)
         {
             // Load default filter, if it exists
-            DataRow configRow = _userConfig.Tables["OrigamFormPanelConfig"].Rows[0];
-            if (configRow["refOrigamPanelFilterId"] != DBNull.Value)
+            DataRow configRow = _userConfig.Tables[name: "OrigamFormPanelConfig"].Rows[index: 0];
+            if (configRow[columnName: "refOrigamPanelFilterId"] != DBNull.Value)
             {
                 OrigamPanelFilter filter = _filterFactory.LoadFilter(
-                    (Guid)configRow["refOrigamPanelFilterId"]
+                    id: (Guid)configRow[columnName: "refOrigamPanelFilterId"]
                 );
                 if (filter.PanelFilter.Rows.Count > 0)
                 {
                     _filterFactory.ApplyFilter(
-                        filter.PanelFilter.Rows[0] as OrigamPanelFilter.PanelFilterRow
+                        filter: filter.PanelFilter.Rows[index: 0]
+                            as OrigamPanelFilter.PanelFilterRow
                     );
                     this.FilterVisible = true;
                 }
@@ -1603,8 +1656,11 @@ public class AsPanel
         if (currentManager != null && currentManager.GetType().Name == "RelatedCurrencyManager")
         {
             string propertyName = "parentManager";
-            return Reflector.GetValue(currentManager.GetType(), currentManager, propertyName)
-                as CurrencyManager;
+            return Reflector.GetValue(
+                    type: currentManager.GetType(),
+                    instance: currentManager,
+                    memberName: propertyName
+                ) as CurrencyManager;
         }
 
         return null;
@@ -1617,18 +1673,23 @@ public class AsPanel
             return false;
         }
 
-        return (bool)Reflector.GetValue(typeof(CurrencyManager), cm, "IsBinding");
+        return (bool)
+            Reflector.GetValue(
+                type: typeof(CurrencyManager),
+                instance: cm,
+                memberName: "IsBinding"
+            );
     }
 
     private bool IsParentManagerBinding(CurrencyManager currentManager)
     {
-        CurrencyManager parentManager = this.ParentManager(currentManager);
+        CurrencyManager parentManager = this.ParentManager(currentManager: currentManager);
         if (parentManager == null)
         {
             return true;
         }
 
-        return IsManagerBinding(parentManager);
+        return IsManagerBinding(cm: parentManager);
     }
 
     public void BindGrid(bool isBinding)
@@ -1640,11 +1701,19 @@ public class AsPanel
 
         if (isBinding & !this.HideNavigationPanel)
         {
-            _gridBuilder.UpdateDataSource(grid, this.DataSource, this.DataMember);
+            _gridBuilder.UpdateDataSource(
+                grid: grid,
+                dataSource: this.DataSource,
+                dataMember: this.DataMember
+            );
         }
         else
         {
-            _gridBuilder.UpdateDataSource(grid, null, this.DataMember);
+            _gridBuilder.UpdateDataSource(
+                grid: grid,
+                dataSource: null,
+                dataMember: this.DataMember
+            );
         }
     }
 
@@ -1652,16 +1721,16 @@ public class AsPanel
     {
         CurrencyManager cm = _bindingManager;
         if (
-            IsBinding(cm) == false
-            || this.IsParentManagerBinding(cm) == false
+            IsBinding(bindingManager: cm) == false
+            || this.IsParentManagerBinding(currentManager: cm) == false
             || this.GridVisible == false
         )
         {
-            BindGrid(false);
+            BindGrid(isBinding: false);
         }
         else
         {
-            BindGrid(true);
+            BindGrid(isBinding: true);
         }
     }
 
@@ -1675,14 +1744,14 @@ public class AsPanel
         foreach (DictionaryEntry entry in this.BindingContext as IEnumerable)
         {
             CurrencyManager childManager = (entry.Value as WeakReference).Target as CurrencyManager;
-            CurrencyManager parentManager = this.ParentManager(childManager);
+            CurrencyManager parentManager = this.ParentManager(currentManager: childManager);
             if (parentManager == currentManager)
             {
                 if (suspend)
                 {
                     try
                     {
-                        if (IsManagerBinding(childManager))
+                        if (IsManagerBinding(cm: childManager))
                         {
                             childManager.SuspendBinding();
                         }
@@ -1691,7 +1760,7 @@ public class AsPanel
                 }
                 else
                 {
-                    if (!IsManagerBinding(childManager))
+                    if (!IsManagerBinding(cm: childManager))
                     {
                         childManager.ResumeBinding();
                     }
@@ -1702,7 +1771,7 @@ public class AsPanel
 
     private object[] PositionKey(DataRow row)
     {
-        return DatasetTools.PrimaryKey(row);
+        return DatasetTools.PrimaryKey(row: row);
     }
 
     bool _noRecordIdChangedRecursion = false;
@@ -1728,38 +1797,41 @@ public class AsPanel
             }
             else
             {
-                CurrentKey = PositionKey(row);
+                CurrentKey = PositionKey(row: row);
                 // don't do anything if there is no primary key
                 if (CurrentKey.Length > 0)
                 {
                     // store the "Id" column
                     string pkName = row.Table.PrimaryKey[0].ColumnName;
-                    object recordId = row[pkName];
+                    object recordId = row[columnName: pkName];
                     if (row.RowState == DataRowState.Unchanged)
                     {
                         try
                         {
-                            if (Generator.LoadDataPiece(recordId, this.DataMember))
+                            if (Generator.LoadDataPiece(id: recordId, dataMember: this.DataMember))
                             {
                                 foreach (DataColumn col in row.Table.Columns)
                                 {
                                     this.UpdateTempSortColumn(
-                                        col,
-                                        row,
-                                        LookupId(col.ColumnName),
-                                        true
+                                        col: col,
+                                        singleRow: row,
+                                        lookupId: LookupId(originalColumnName: col.ColumnName),
+                                        acceptChangesOnUnchanged: true
                                     );
                                 }
-                                ManageChildBindingContexts(_bindingManager, false);
+                                ManageChildBindingContexts(
+                                    currentManager: _bindingManager,
+                                    suspend: false
+                                );
                             }
                         }
                         catch (Exception ex)
                         {
                             AsMessageBox.ShowError(
-                                this.FindForm(),
-                                ex.Message,
-                                "Chyba pøi naèítání detailù",
-                                ex
+                                owner: this.FindForm(),
+                                text: ex.Message,
+                                caption: "Chyba pøi naèítání detailù",
+                                exception: ex
                             );
                         }
                     }
@@ -1775,7 +1847,7 @@ public class AsPanel
             }
             if (raiseRecordIdChangedEvent & RecordIdChanged != null)
             {
-                RecordIdChanged(this, EventArgs.Empty);
+                RecordIdChanged(sender: this, e: EventArgs.Empty);
             }
         }
         catch { }
@@ -1785,21 +1857,24 @@ public class AsPanel
             UpdateSorting();
             UpdateErrorProvider();
             actionButtonManager.UpdateActionButtons();
-            UpdateTooltip(row);
+            UpdateTooltip(row: row);
             UpdateRowLevelSecurity();
             UpdateColor();
-            UpdateAttachmentIcon(row);
+            UpdateAttachmentIcon(row: row);
         }
     }
 
     private void UpdateErrorProvider()
     {
         CurrencyManager cm = this._bindingManager;
-        if (IsBinding(cm) == false || this.IsParentManagerBinding(cm) == false)
+        if (
+            IsBinding(bindingManager: cm) == false
+            || this.IsParentManagerBinding(currentManager: cm) == false
+        )
         {
             if (this.errorProvider1 != null)
             {
-                ResetErrors(this);
+                ResetErrors(control: this);
                 this.errorProvider1.DataSource = null;
                 this.errorProvider1.Dispose();
                 this.errorProvider1 = null;
@@ -1809,8 +1884,11 @@ public class AsPanel
         {
             if (this.errorProvider1 == null)
             {
-                this.errorProvider1 = new ErrorProvider(this);
-                this.errorProvider1.BindToDataAndErrors(this.DataSource, this.DataMember);
+                this.errorProvider1 = new ErrorProvider(parentControl: this);
+                this.errorProvider1.BindToDataAndErrors(
+                    newDataSource: this.DataSource,
+                    newDataMember: this.DataMember
+                );
             }
         }
     }
@@ -1823,9 +1901,9 @@ public class AsPanel
     {
         foreach (Control child in control.Controls)
         {
-            ResetErrors(child);
+            ResetErrors(control: child);
         }
-        this.errorProvider1.SetError(control, "");
+        this.errorProvider1.SetError(control: control, value: "");
     }
 
     private void UpdateControlsForZeroRows(Control control)
@@ -1859,7 +1937,7 @@ public class AsPanel
                 }
                 if (item.Controls.Count > 0)
                 {
-                    UpdateControlsForZeroRows(item);
+                    UpdateControlsForZeroRows(control: item);
                 }
             }
         }
@@ -1867,7 +1945,7 @@ public class AsPanel
 
     private bool IsBinding()
     {
-        return IsBinding(_bindingManager);
+        return IsBinding(bindingManager: _bindingManager);
     }
 
     private bool IsBinding(BindingManagerBase bindingManager)
@@ -1875,7 +1953,7 @@ public class AsPanel
         if (
             bindingManager == null
             || bindingManager.Position < 0
-            || IsManagerBinding(bindingManager as CurrencyManager) == false
+            || IsManagerBinding(cm: bindingManager as CurrencyManager) == false
         )
         {
             return false;
@@ -1906,7 +1984,7 @@ public class AsPanel
             }
             if (item.Controls.Count > 0 && (item != this.pnlFilter))
             {
-                VisibleControl(item, visible);
+                VisibleControl(control: item, visible: visible);
             }
         }
     }
@@ -1914,7 +1992,7 @@ public class AsPanel
     private void OnShowAttachmentsChanged()
     {
         SetActualRecordId();
-        ShowAttachmentsChanged?.Invoke(this, EventArgs.Empty);
+        ShowAttachmentsChanged?.Invoke(sender: this, e: EventArgs.Empty);
         if (this.ShowAttachments)
         {
             Workbench.Commands.ViewAttachmentPad cmd = new Workbench.Commands.ViewAttachmentPad();
@@ -1929,11 +2007,11 @@ public class AsPanel
         if (IsBinding())
         {
             DataRowView dView = (cm.Current as DataRowView);
-            OnRecordIdChanged(dView.Row);
+            OnRecordIdChanged(row: dView.Row);
         }
         else
         {
-            OnRecordIdChanged(null);
+            OnRecordIdChanged(row: null);
         }
     }
 
@@ -1942,7 +2020,10 @@ public class AsPanel
         SetActualRecordId();
         if (this.RecordId is Guid)
         {
-            _auditLogPad.GetAuditLog(this.EntityId, (Guid)this.RecordId);
+            _auditLogPad.GetAuditLog(
+                mainEntityId: this.EntityId,
+                mainRecordId: (Guid)this.RecordId
+            );
 
             Workbench.Commands.ViewAuditLogPad cmd = new Workbench.Commands.ViewAuditLogPad();
             cmd.Run();
@@ -1976,22 +2057,22 @@ public class AsPanel
     {
         // enable form view binding
         {
-            Generator.BindControls(this);
+            Generator.BindControls(parent: this);
         }
-        BindGrid(false);
+        BindGrid(isBinding: false);
         if (btnFilter.Pushed)
         {
             this.FilterVisible = false;
         }
         if (IsBinding())
         {
-            VisibleControl(this as Control, true);
-            UpdateRowLevelSecurity(true);
+            VisibleControl(control: this as Control, visible: true);
+            UpdateRowLevelSecurity(forceUpdate: true);
             UpdateColor();
         }
         else
         {
-            UpdateControlsForZeroRows(this);
+            UpdateControlsForZeroRows(control: this);
         }
         this.AutoScroll = true;
         grid.Visible = false;
@@ -2006,33 +2087,36 @@ public class AsPanel
     {
         // disable form view binding
         {
-            BindingsCollection bindingsCollection = BindingContext[DataSource, DataMember].Bindings;
+            BindingsCollection bindingsCollection = BindingContext[
+                dataSource: DataSource,
+                dataMember: DataMember
+            ].Bindings;
             IList<Binding> toRemove = new List<Binding>();
             foreach (Binding binding in bindingsCollection)
             {
-                if (FormGenerator.IsChildControl(this, binding.Control))
+                if (FormGenerator.IsChildControl(parent: this, control: binding.Control))
                 {
                     System.Diagnostics.Debug.WriteLine(
-                        binding.BindingMemberInfo.BindingField,
-                        "Removing binding"
+                        message: binding.BindingMemberInfo.BindingField,
+                        category: "Removing binding"
                     );
-                    toRemove.Add(binding);
+                    toRemove.Add(item: binding);
                 }
             }
             foreach (var binding in toRemove)
             {
-                FormGenerator.RemoveBinding(binding.Control, binding);
+                FormGenerator.RemoveBinding(control: binding.Control, binding: binding);
             }
         }
-        VisibleControl(this as Control, false);
+        VisibleControl(control: this as Control, visible: false);
         this.AutoScroll = false;
-        BindGrid(IsBinding());
+        BindGrid(isBinding: IsBinding());
         grid.Visible = true;
         grid.Enabled = true;
         grid.BringToFront();
         grid.Dock = DockStyle.Fill;
-        grid.Controls[0].Enabled = true; // Index zero is the horizontal scrollbar
-        grid.Controls[1].Enabled = true; // Index one is the vertical scrollbar
+        grid.Controls[index: 0].Enabled = true; // Index zero is the horizontal scrollbar
+        grid.Controls[index: 1].Enabled = true; // Index one is the vertical scrollbar
     }
 
     private void SetPanelTitleIcon()
@@ -2048,7 +2132,10 @@ public class AsPanel
             {
                 DataRow row = (_bindingManager.Current as DataRowView).Row;
 
-                DataSet tmpDS = DatasetTools.CloneDataSet(row.Table.DataSet, false);
+                DataSet tmpDS = DatasetTools.CloneDataSet(
+                    dataset: row.Table.DataSet,
+                    cloneExpressions: false
+                );
                 object profileId = SecurityManager.CurrentUserProfile().Id;
                 var toSkip = new List<string>();
                 var toAdd = new List<string>();
@@ -2056,23 +2143,31 @@ public class AsPanel
                 {
                     if (panel.OriginalShowNewButton)
                     {
-                        toAdd.Add(FormTools.FindTableByDataMember(tmpDS, panel.DataMember));
+                        toAdd.Add(
+                            item: FormTools.FindTableByDataMember(
+                                ds: tmpDS,
+                                member: panel.DataMember
+                            )
+                        );
                     }
                 }
                 foreach (AsPanel panel in (this.FindForm() as AsForm).Panels)
                 {
-                    string tableName = FormTools.FindTableByDataMember(tmpDS, panel.DataMember);
-                    if (!panel.OriginalShowNewButton && !toAdd.Contains(tableName))
+                    string tableName = FormTools.FindTableByDataMember(
+                        ds: tmpDS,
+                        member: panel.DataMember
+                    );
+                    if (!panel.OriginalShowNewButton && !toAdd.Contains(item: tableName))
                     {
-                        toSkip.Add(tableName);
+                        toSkip.Add(item: tableName);
                     }
                 }
                 DatasetTools.GetDataSlice(
-                    tmpDS,
-                    new List<DataRow> { row },
-                    profileId,
-                    true,
-                    toSkip
+                    target: tmpDS,
+                    rows: new List<DataRow> { row },
+                    profileId: profileId,
+                    copy: true,
+                    tablesToSkip: toSkip
                 );
 
                 try
@@ -2081,18 +2176,22 @@ public class AsPanel
                     this.EndEdit();
                     Generator.IgnoreDataChanges = true;
                     DatasetTools.MergeDataSet(
-                        row.Table.DataSet,
-                        tmpDS,
-                        null,
-                        new MergeParams(profileId)
+                        inout_dsTarget: row.Table.DataSet,
+                        in_dsSource: tmpDS,
+                        changeList: null,
+                        mergeParams: new MergeParams(ProfileId: profileId)
                     );
                     Generator.IgnoreDataChanges = false;
-                    SetPosition(PositionKey(tmpDS.Tables[row.Table.TableName].Rows[0]));
+                    SetPosition(
+                        primaryKey: PositionKey(
+                            row: tmpDS.Tables[name: row.Table.TableName].Rows[index: 0]
+                        )
+                    );
 
                     if (_bindingManager.Position >= 0)
                     {
                         DataRow newRow = (_bindingManager.Current as DataRowView).Row;
-                        Generator.table_rowCopied(newRow, Generator.XmlData);
+                        Generator.table_rowCopied(row: newRow, document: Generator.XmlData);
                     }
                     this.EndEdit();
                     this.FocusGridFirstColumn();
@@ -2106,10 +2205,10 @@ public class AsPanel
         catch (Exception ex)
         {
             AsMessageBox.ShowError(
-                this.FindForm(),
-                ResourceUtils.GetString("ErrorWhenCopy"),
-                ResourceUtils.GetString("ErrorWhenCopyTitle"),
-                ex
+                owner: this.FindForm(),
+                text: ResourceUtils.GetString(key: "ErrorWhenCopy"),
+                caption: ResourceUtils.GetString(key: "ErrorWhenCopyTitle"),
+                exception: ex
             );
         }
     }
@@ -2118,7 +2217,7 @@ public class AsPanel
 
     private void UpdateRowLevelSecurity()
     {
-        UpdateRowLevelSecurity(false);
+        UpdateRowLevelSecurity(forceUpdate: false);
     }
 
     private void UpdateRowLevelSecurity(bool forceUpdate)
@@ -2155,7 +2254,7 @@ public class AsPanel
 
         Guid fieldId = Guid.Empty;
         DataRow row = (this._bindingManager.Current as DataRowView).Row;
-        if (!DatasetTools.HasRowValidParent(row))
+        if (!DatasetTools.HasRowValidParent(row: row))
         {
             return;
         }
@@ -2163,10 +2262,13 @@ public class AsPanel
         bool isNewRow = (
             row.RowState == DataRowState.Added | row.RowState == DataRowState.Detached
         );
-        XmlContainer originalData = DatasetTools.GetRowXml(row, DataRowVersion.Original);
+        XmlContainer originalData = DatasetTools.GetRowXml(
+            row: row,
+            version: DataRowVersion.Original
+        );
         XmlContainer actualData = DatasetTools.GetRowXml(
-            row,
-            row.HasVersion(DataRowVersion.Proposed)
+            row: row,
+            version: row.HasVersion(version: DataRowVersion.Proposed)
                 ? DataRowVersion.Proposed
                 : DataRowVersion.Default
         );
@@ -2177,23 +2279,23 @@ public class AsPanel
                 foreach (Binding b in control.DataBindings)
                 {
                     string field = b.BindingMemberInfo.BindingField;
-                    fieldId = (Guid)row.Table.Columns[field].ExtendedProperties["Id"];
+                    fieldId = (Guid)row.Table.Columns[name: field].ExtendedProperties[key: "Id"];
                     control.Enabled = ruleEngine.EvaluateRowLevelSecurityState(
-                        originalData,
-                        actualData,
-                        field,
-                        CredentialType.Update,
-                        entityId,
-                        fieldId,
-                        isNewRow
+                        originalData: originalData,
+                        actualData: actualData,
+                        field: field,
+                        type: CredentialType.Update,
+                        entityId: entityId,
+                        fieldId: fieldId,
+                        isNewRow: isNewRow
                     );
                     if (control is IAsCaptionControl)
                     {
                         string caption = ruleEngine.DynamicLabel(
-                            actualData,
-                            entityId,
-                            fieldId,
-                            null
+                            data: actualData,
+                            entityId: entityId,
+                            fieldId: fieldId,
+                            contextPosition: null
                         );
                         if (caption != null)
                         {
@@ -2207,13 +2309,13 @@ public class AsPanel
                     else
                     {
                         control.Visible = ruleEngine.EvaluateRowLevelSecurityState(
-                            originalData,
-                            actualData,
-                            field,
-                            CredentialType.Read,
-                            entityId,
-                            fieldId,
-                            isNewRow
+                            originalData: originalData,
+                            actualData: actualData,
+                            field: field,
+                            type: CredentialType.Read,
+                            entityId: entityId,
+                            fieldId: fieldId,
+                            isNewRow: isNewRow
                         );
                     }
                 }
@@ -2222,25 +2324,25 @@ public class AsPanel
         if (_originalDisplayDeleteButton)
         {
             this.ShowDeleteButton = ruleEngine.EvaluateRowLevelSecurityState(
-                originalData,
-                actualData,
-                null,
-                CredentialType.Delete,
-                entityId,
-                fieldId,
-                isNewRow
+                originalData: originalData,
+                actualData: actualData,
+                field: null,
+                type: CredentialType.Delete,
+                entityId: entityId,
+                fieldId: fieldId,
+                isNewRow: isNewRow
             );
         }
         if (OriginalShowNewButton)
         {
             this.ShowNewButton = ruleEngine.EvaluateRowLevelSecurityState(
-                originalData,
-                actualData,
-                null,
-                CredentialType.Create,
-                entityId,
-                fieldId,
-                isNewRow
+                originalData: originalData,
+                actualData: actualData,
+                field: null,
+                type: CredentialType.Create,
+                entityId: entityId,
+                fieldId: fieldId,
+                isNewRow: isNewRow
             );
         }
         _lastRowLevelSecurityRecordId = this.RecordId;
@@ -2268,13 +2370,13 @@ public class AsPanel
     {
         try
         {
-            if (!IsBinding() || IsPkNull(this.RecordId))
+            if (!IsBinding() || IsPkNull(pk: this.RecordId))
             {
                 SetStandardColors();
                 return;
             }
             DataRow row = (this._bindingManager.Current as DataRowView).Row;
-            EntityFormatting formatting = this.Formatting(row, this.RecordId);
+            EntityFormatting formatting = this.Formatting(row: row, id: this.RecordId);
 
             if (formatting == null)
             {
@@ -2283,13 +2385,13 @@ public class AsPanel
             else
             {
                 bool isActive = IsActive();
-                SetStandardStartColor(isActive);
-                SetStandardMiddleStartColor(isActive);
-                SetStandardMiddleEndColor(isActive);
+                SetStandardStartColor(isActive: isActive);
+                SetStandardMiddleStartColor(isActive: isActive);
+                SetStandardMiddleEndColor(isActive: isActive);
 
                 if (formatting.UseDefaultBackColor)
                 {
-                    SetStandardEndColor(isActive);
+                    SetStandardEndColor(isActive: isActive);
                 }
                 else
                 {
@@ -2297,7 +2399,7 @@ public class AsPanel
                 }
                 if (formatting.UseDefaultForeColor)
                 {
-                    SetStandardForeColor(isActive);
+                    SetStandardForeColor(isActive: isActive);
                 }
                 else
                 {
@@ -2307,7 +2409,10 @@ public class AsPanel
         }
         catch (Exception ex)
         {
-            throw new Exception(ResourceUtils.GetString("ErrorWhenColorUpdate"), ex);
+            throw new Exception(
+                message: ResourceUtils.GetString(key: "ErrorWhenColorUpdate"),
+                innerException: ex
+            );
         }
     }
 
@@ -2316,7 +2421,7 @@ public class AsPanel
         if (IsBinding())
         {
             DataRow row = (this._bindingManager.Current as DataRowView).Row;
-            UpdateAttachmentIcon(row);
+            UpdateAttachmentIcon(row: row);
         }
     }
 
@@ -2329,25 +2434,25 @@ public class AsPanel
             return;
         }
 
-        if (!row.Table.Columns.Contains(Const.ValuelistIdField))
+        if (!row.Table.Columns.Contains(name: Const.ValuelistIdField))
         {
             return;
         }
 
-        if (!(row[Const.ValuelistIdField] is Guid))
+        if (!(row[columnName: Const.ValuelistIdField] is Guid))
         {
             return;
         }
 
         OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
-        btnAttachment.ToolTipText = ResourceUtils.GetString("TooltipAttachment");
+        btnAttachment.ToolTipText = ResourceUtils.GetString(key: "TooltipAttachment");
         btnAttachment.ImageIndex = 1;
         if (!settings.CheckAttachmentsOnRecordSelection)
         {
             btnAttachment.ImageIndex = 7;
             return;
         }
-        if (!(row != null && row.Table.Columns.Contains(Const.ValuelistIdField)))
+        if (!(row != null && row.Table.Columns.Contains(name: Const.ValuelistIdField)))
         {
             return;
         }
@@ -2355,34 +2460,35 @@ public class AsPanel
         AsForm form = this.ParentForm as AsForm;
         Hashtable references = new Hashtable();
         RecordReference newRef = new RecordReference(
-            this.EntityId,
-            (Guid)row[Const.ValuelistIdField]
+            entityId: this.EntityId,
+            recordId: (Guid)row[columnName: Const.ValuelistIdField]
         );
-        references.Add(newRef.GetHashCode(), newRef);
-        form.RetrieveChildReferences(row, references);
+        references.Add(key: newRef.GetHashCode(), value: newRef);
+        form.RetrieveChildReferences(row: row, references: references);
         if (references.Count > 1000)
         {
             btnAttachment.ImageIndex = 7;
             return;
         }
-        CalculateAttachmentCount(references);
+        CalculateAttachmentCount(references: references);
     }
 
     private void CalculateAttachmentCount(Hashtable references)
     {
         IDataLookupService ls =
-            ServiceManager.Services.GetService(typeof(IDataLookupService)) as IDataLookupService;
+            ServiceManager.Services.GetService(serviceType: typeof(IDataLookupService))
+            as IDataLookupService;
         long count = 0;
         foreach (RecordReference r in references.Values)
         {
             lock (ls)
             {
                 object result = ls.GetDisplayText(
-                    new Guid("fbf2cadd-e529-401d-80ce-d68de0a89f13"),
-                    r.RecordId,
-                    false,
-                    false,
-                    null
+                    lookupId: new Guid(g: "fbf2cadd-e529-401d-80ce-d68de0a89f13"),
+                    lookupValue: r.RecordId,
+                    useCache: false,
+                    returnMessageIfNull: false,
+                    transactionId: null
                 );
                 if (result is int)
                 {
@@ -2392,17 +2498,17 @@ public class AsPanel
             }
         }
         _attachmentCount = count;
-        this.AttachmentCountCalculated(this, EventArgs.Empty);
+        this.AttachmentCountCalculated(sender: this, e: EventArgs.Empty);
     }
 
     private void AsPanel_AttachmentCountCalculated(object sender, EventArgs e)
     {
-        btnAttachment.ToolTipText = ResourceUtils.GetString("TooltipAttachment");
+        btnAttachment.ToolTipText = ResourceUtils.GetString(key: "TooltipAttachment");
         if (_attachmentCount > 0)
         {
             btnAttachment.ImageIndex = 5;
             btnAttachment.ToolTipText =
-                ResourceUtils.GetString("TooltipSegmentAttachmentCount")
+                ResourceUtils.GetString(key: "TooltipSegmentAttachmentCount")
                 + _attachmentCount.ToString()
                 + Environment.NewLine
                 + btnAttachment.ToolTipText;
@@ -2421,11 +2527,11 @@ public class AsPanel
     private void SetStandardColors()
     {
         bool isActive = IsActive();
-        SetStandardStartColor(isActive);
-        SetStandardEndColor(isActive);
-        SetStandardMiddleStartColor(isActive);
-        SetStandardMiddleEndColor(isActive);
-        SetStandardForeColor(isActive);
+        SetStandardStartColor(isActive: isActive);
+        SetStandardEndColor(isActive: isActive);
+        SetStandardMiddleStartColor(isActive: isActive);
+        SetStandardMiddleEndColor(isActive: isActive);
+        SetStandardForeColor(isActive: isActive);
     }
 
     private void SetStandardStartColor(bool isActive)
@@ -2479,7 +2585,7 @@ public class AsPanel
         get
         {
             var list = new List<Control>();
-            GetBoundControls(this, list);
+            GetBoundControls(control: this, list: list);
             return list;
         }
     }
@@ -2490,9 +2596,9 @@ public class AsPanel
         {
             if (child.DataBindings.Count > 0)
             {
-                list.Add(child);
+                list.Add(item: child);
             }
-            GetBoundControls(child, list);
+            GetBoundControls(control: child, list: list);
         }
     }
 
@@ -2514,7 +2620,7 @@ public class AsPanel
                 if (view.RowFilter != query)
                 {
                     view.RowFilter = query;
-                    this.EndEdit(false);
+                    this.EndEdit(validate: false);
                 }
                 if (query == null | query == "")
                 {
@@ -2522,7 +2628,7 @@ public class AsPanel
                 }
                 else
                 {
-                    pnlDataControl.StatusIcon = imageList1.Images[6] as Bitmap;
+                    pnlDataControl.StatusIcon = imageList1.Images[index: 6] as Bitmap;
                 }
             }
         }
@@ -2562,13 +2668,17 @@ public class AsPanel
         {
             if (sortString.Length > 0)
             {
-                sortString.Append(", ");
+                sortString.Append(value: ", ");
             }
 
-            sortString.Append(GetSortColumn(item.ColumnName, view.Table));
-            sortString.Append(" ");
             sortString.Append(
-                item.SortDirection == DataStructureColumnSortDirection.Ascending ? "ASC" : "DESC"
+                value: GetSortColumn(originalColumnName: item.ColumnName, table: view.Table)
+            );
+            sortString.Append(value: " ");
+            sortString.Append(
+                value: item.SortDirection == DataStructureColumnSortDirection.Ascending
+                    ? "ASC"
+                    : "DESC"
             );
         }
         string finalSort = sortString.ToString();
@@ -2614,8 +2724,8 @@ public class AsPanel
         if (!dialog.Canceled)
         {
             this._filterFactory.StoreCurrentFilter(
-                dialog.txtFilterName.Text,
-                dialog.chkIsGlobal.Checked
+                name: dialog.txtFilterName.Text,
+                global: dialog.chkIsGlobal.Checked
             );
         }
     }
@@ -2626,15 +2736,18 @@ public class AsPanel
         {
             try
             {
-                _filterFactory.DeleteFilter(_filterFactory.CurrentStoredFilter);
+                _filterFactory.DeleteFilter(filter: _filterFactory.CurrentStoredFilter);
             }
             catch (Exception ex)
             {
                 AsMessageBox.ShowError(
-                    this.FindForm(),
-                    ex.Message,
-                    ResourceUtils.GetString("ErrorWhenFilterDelete", this.PanelTitle),
-                    ex
+                    owner: this.FindForm(),
+                    text: ex.Message,
+                    caption: ResourceUtils.GetString(
+                        key: "ErrorWhenFilterDelete",
+                        args: this.PanelTitle
+                    ),
+                    exception: ex
                 );
             }
         }
@@ -2648,18 +2761,22 @@ public class AsPanel
         }
 
         OrigamPanelFilter filter = _filterFactory.LoadFilter(
-            (Guid)_userConfig.Tables["OrigamFormPanelConfig"].Rows[0]["refOrigamPanelFilterId"]
+            id: (Guid)
+                _userConfig.Tables[name: "OrigamFormPanelConfig"].Rows[index: 0][
+                    columnName: "refOrigamPanelFilterId"
+                ]
         );
         if (filter.PanelFilter.Rows.Count > 0)
         {
-            filter.PanelFilter.Rows[0].Delete();
+            filter.PanelFilter.Rows[index: 0].Delete();
         }
-        _userConfig.Tables["OrigamFormPanelConfig"].Rows[0]["refOrigamPanelFilterId"] =
-            DBNull.Value;
+        _userConfig.Tables[name: "OrigamFormPanelConfig"].Rows[index: 0][
+            columnName: "refOrigamPanelFilterId"
+        ] = DBNull.Value;
         // first save user config - so reference to the filter is cleared
         SaveUserConfig();
         // then save (delete) the filter
-        _filterFactory.PersistFilter(filter);
+        _filterFactory.PersistFilter(filter: filter);
     }
 
     private void mnuSetDefaultFilter_Click(object sender, EventArgs e)
@@ -2671,8 +2788,9 @@ public class AsPanel
 
         OrigamPanelFilter filter;
         if (
-            _userConfig.Tables["OrigamFormPanelConfig"].Rows[0]["refOrigamPanelFilterId"]
-            == DBNull.Value
+            _userConfig.Tables[name: "OrigamFormPanelConfig"].Rows[index: 0][
+                columnName: "refOrigamPanelFilterId"
+            ] == DBNull.Value
         )
         {
             filter = new OrigamPanelFilter();
@@ -2680,7 +2798,10 @@ public class AsPanel
         else
         {
             filter = _filterFactory.LoadFilter(
-                (Guid)_userConfig.Tables["OrigamFormPanelConfig"].Rows[0]["refOrigamPanelFilterId"]
+                id: (Guid)
+                    _userConfig.Tables[name: "OrigamFormPanelConfig"].Rows[index: 0][
+                        columnName: "refOrigamPanelFilterId"
+                    ]
             );
         }
         if (filter.PanelFilter.Rows.Count == 0)
@@ -2688,21 +2809,28 @@ public class AsPanel
             OrigamPanelFilter.PanelFilterRow filterRow = filter.PanelFilter.NewPanelFilterRow();
             filterRow.Id = Guid.NewGuid();
 
-            _filterFactory.GetFilterFromCurrent(filterRow, "default", false, true, Guid.Empty);
-            _userConfig.Tables["OrigamFormPanelConfig"].Rows[0]["refOrigamPanelFilterId"] =
-                filterRow.Id;
+            _filterFactory.GetFilterFromCurrent(
+                filter: filterRow,
+                name: "default",
+                global: false,
+                isDefault: true,
+                panelId: Guid.Empty
+            );
+            _userConfig.Tables[name: "OrigamFormPanelConfig"].Rows[index: 0][
+                columnName: "refOrigamPanelFilterId"
+            ] = filterRow.Id;
         }
         else
         {
             _filterFactory.GetFilterFromCurrent(
-                filter.PanelFilter.Rows[0] as OrigamPanelFilter.PanelFilterRow,
-                "default",
-                false,
-                true,
-                Guid.Empty
+                filter: filter.PanelFilter.Rows[index: 0] as OrigamPanelFilter.PanelFilterRow,
+                name: "default",
+                global: false,
+                isDefault: true,
+                panelId: Guid.Empty
             );
         }
-        _filterFactory.PersistFilter(filter);
+        _filterFactory.PersistFilter(filter: filter);
         SaveUserConfig();
     }
 
@@ -2710,7 +2838,7 @@ public class AsPanel
     {
         filterMenu.MenuItems.Clear();
         this.filterMenu.MenuItems.AddRange(
-            new MenuItem[]
+            items: new MenuItem[]
             {
                 this.mnuSetDefaultFilter,
                 this.mnuUnsetDefaultFilter,
@@ -2729,8 +2857,9 @@ public class AsPanel
         else
         {
             this.mnuUnsetDefaultFilter.Enabled =
-                _userConfig.Tables["OrigamFormPanelConfig"].Rows[0]["refOrigamPanelFilterId"]
-                != DBNull.Value;
+                _userConfig.Tables[name: "OrigamFormPanelConfig"].Rows[index: 0][
+                    columnName: "refOrigamPanelFilterId"
+                ] != DBNull.Value;
             this.mnuSetDefaultFilter.Enabled = FilterVisible;
         }
         this.mnuFilterAdd.Enabled = this.FilterActive;
@@ -2747,12 +2876,12 @@ public class AsPanel
             {
                 try
                 {
-                    FilterMenuItem storedFilterItem = new FilterMenuItem(filter.Name);
+                    FilterMenuItem storedFilterItem = new FilterMenuItem(name: filter.Name);
                     storedFilterItem.Enabled = true;
                     storedFilterItem.Filter = filter;
                     storedFilterItem.Checked = filter == _filterFactory.CurrentStoredFilter;
                     storedFilterItem.Click += storedFilterItem_Click;
-                    filterMenu.MenuItems.Add(storedFilterItem);
+                    filterMenu.MenuItems.Add(item: storedFilterItem);
                 }
                 catch { }
             }
@@ -2760,10 +2889,13 @@ public class AsPanel
         catch (Exception ex)
         {
             AsMessageBox.ShowError(
-                this.FindForm(),
-                ex.Message,
-                ResourceUtils.GetString("ErrorWhenFilterListe", this.PanelTitle),
-                ex
+                owner: this.FindForm(),
+                text: ex.Message,
+                caption: ResourceUtils.GetString(
+                    key: "ErrorWhenFilterListe",
+                    args: this.PanelTitle
+                ),
+                exception: ex
             );
         }
     }
@@ -2788,12 +2920,13 @@ public class AsPanel
         if (!this.ShowNewButton)
         {
             AsMessageBox.ShowError(
-                this.FindForm(),
-                ResourceUtils.GetString("NoAuthorization"),
-                ResourceUtils.GetString("AuthorizationTitle", this.PanelTitle),
-                null
+                owner: this.FindForm(),
+                text: ResourceUtils.GetString(key: "NoAuthorization"),
+                caption: ResourceUtils.GetString(key: "AuthorizationTitle", args: this.PanelTitle),
+                exception: null
             );
-            this.BindingContext[this.DataSource, this.DataMember].CancelCurrentEdit();
+            this.BindingContext[dataSource: this.DataSource, dataMember: this.DataMember]
+                .CancelCurrentEdit();
         }
         FocusControls();
         FocusGridFirstColumn();
@@ -2807,29 +2940,29 @@ public class AsPanel
             CurrencyManager cm = _bindingManager;
 
             if (
-                IsBinding(cm) == false
-                || this.IsParentManagerBinding(cm) == false
+                IsBinding(bindingManager: cm) == false
+                || this.IsParentManagerBinding(currentManager: cm) == false
                 || (
                     (cm.Current as DataRowView).IsNew
                     && (this.FindForm() as AsForm).AddingDataMember != this.DataMember
                 )
             )
             {
-                ManageChildBindingContexts(cm, true);
+                ManageChildBindingContexts(currentManager: cm, suspend: true);
                 BindGrid();
-                OnRecordIdChanged(null);
+                OnRecordIdChanged(row: null);
             }
             else
             {
                 BindGrid();
 
-                ManageChildBindingContexts(cm, false);
+                ManageChildBindingContexts(currentManager: cm, suspend: false);
             }
         }
         finally
         {
             UpdateRowLevelSecurity();
-            UpdateControlsForZeroRows(this);
+            UpdateControlsForZeroRows(control: this);
             dbNav.UpdateControls();
         }
     }
@@ -2845,8 +2978,8 @@ public class AsPanel
         }
         _prevCount = count;
         System.Diagnostics.Debug.WriteLine(
-            this.DataMember + " " + (sender as BindingManagerBase).Position,
-            "PositionChanged"
+            message: this.DataMember + " " + (sender as BindingManagerBase).Position,
+            category: "PositionChanged"
         );
         UpdateBindings();
     }
@@ -2858,8 +2991,8 @@ public class AsPanel
         if (_isNewRow)
         {
             System.Diagnostics.Debug.WriteLine(
-                "Position: " + (sender as CurrencyManager).Position,
-                "IsNewRow=False"
+                message: "Position: " + (sender as CurrencyManager).Position,
+                category: "IsNewRow=False"
             );
             _isNewRow = false;
             object[] key = _newRowKey;
@@ -2870,7 +3003,7 @@ public class AsPanel
                 return;
             }
             // if position will change, we return, because this event will be repeated on row change
-            if (SetPosition(key))
+            if (SetPosition(primaryKey: key))
             {
                 return;
             }
@@ -2886,13 +3019,13 @@ public class AsPanel
                 {
                     _isNewRow = true;
                     System.Diagnostics.Debug.WriteLine(
-                        "Position: " + cm.Position,
-                        "IsNewRow=True (begin method)"
+                        message: "Position: " + cm.Position,
+                        category: "IsNewRow=True (begin method)"
                     );
 
-                    if (row.Row.IsNull(Const.ValuelistIdField))
+                    if (row.Row.IsNull(columnName: Const.ValuelistIdField))
                     {
-                        row.Row[Const.ValuelistIdField] = Guid.NewGuid();
+                        row.Row[columnName: Const.ValuelistIdField] = Guid.NewGuid();
                     }
                     else
                     {
@@ -2900,31 +3033,33 @@ public class AsPanel
                         // Once it assigns the new GUID and second time it goes here. But the first
                         // time it does not fires any RuleEngine events, so here we assign the
                         // value again (same id), so rules are fired.
-                        row.Row[Const.ValuelistIdField] = row.Row[Const.ValuelistIdField];
+                        row.Row[columnName: Const.ValuelistIdField] = row.Row[
+                            columnName: Const.ValuelistIdField
+                        ];
                     }
-                    _newRowKey = DatasetTools.PrimaryKey(row.Row);
+                    _newRowKey = DatasetTools.PrimaryKey(row: row.Row);
                     if (
-                        row.Row.Table.Columns.Contains("RecordCreated")
-                        && row.Row.IsNull("RecordCreated")
+                        row.Row.Table.Columns.Contains(name: "RecordCreated")
+                        && row.Row.IsNull(columnName: "RecordCreated")
                     )
                     {
-                        row.Row["RecordCreated"] = DateTime.Now;
+                        row.Row[columnName: "RecordCreated"] = DateTime.Now;
                     }
                     try
                     {
                         if (
-                            row.Row.Table.Columns.Contains("RecordCreatedBy")
-                            && row.Row.IsNull("RecordCreatedBy")
+                            row.Row.Table.Columns.Contains(name: "RecordCreatedBy")
+                            && row.Row.IsNull(columnName: "RecordCreatedBy")
                         )
                         {
                             UserProfile profile = SecurityManager.CurrentUserProfile();
-                            row.Row["RecordCreatedBy"] = profile.Id;
+                            row.Row[columnName: "RecordCreatedBy"] = profile.Id;
                         }
                     }
                     catch { }
                     System.Diagnostics.Debug.WriteLine(
-                        "Position: " + cm.Position,
-                        "IsNewRow=false (end method)"
+                        message: "Position: " + cm.Position,
+                        category: "IsNewRow=false (end method)"
                     );
                     _isNewRow = false;
                 }
@@ -2936,9 +3071,9 @@ public class AsPanel
             if (cm.Position >= 0)
             {
                 DataRowView dView = (cm.Current as DataRowView);
-                if (dView.Row.Table.Columns.Contains(Const.ValuelistIdField))
+                if (dView.Row.Table.Columns.Contains(name: Const.ValuelistIdField))
                 {
-                    OnRecordIdChanged(dView.Row);
+                    OnRecordIdChanged(row: dView.Row);
                 }
             }
         }
@@ -2978,7 +3113,7 @@ public class AsPanel
         object[] position = CurrentKey;
         this.toolBar.Focus();
         // after leaving focus, the data might have been resorted, so we set the old position
-        SetPosition(position);
+        SetPosition(primaryKey: position);
         try
         {
             this.Cursor = Cursors.WaitCursor;
@@ -3003,10 +3138,10 @@ public class AsPanel
         {
             this.Cursor = Cursors.Default;
             AsMessageBox.ShowError(
-                this.FindForm(),
-                ex.Message,
-                ResourceUtils.GetString("ErrorInPanel", this.PanelTitle),
-                ex
+                owner: this.FindForm(),
+                text: ex.Message,
+                caption: ResourceUtils.GetString(key: "ErrorInPanel", args: this.PanelTitle),
+                exception: ex
             );
         }
         finally
@@ -3019,7 +3154,7 @@ public class AsPanel
 
     private void filterFactory_DataViewQueryChanged(object sender, string query)
     {
-        if (!this.IsParentManagerBinding(_bindingManager))
+        if (!this.IsParentManagerBinding(currentManager: _bindingManager))
         {
             // if parent binding is suspended, we will not do any filtering
             return;
@@ -3038,7 +3173,12 @@ public class AsPanel
             }
             catch (Exception ex)
             {
-                AsMessageBox.ShowError(this.FindForm(), ex.Message, ex.Source, ex);
+                AsMessageBox.ShowError(
+                    owner: this.FindForm(),
+                    text: ex.Message,
+                    caption: ex.Source,
+                    exception: ex
+                );
             }
         }
     }
@@ -3079,17 +3219,17 @@ public class AsPanel
             // notified that e.g. we added a new row (bug in data binding?)
             if (IsBinding())
             {
-                this.EndEdit(!this.GridVisible);
-                SetPosition(key);
+                this.EndEdit(validate: !this.GridVisible);
+                SetPosition(primaryKey: key);
             }
         }
         catch (Exception ex)
         {
             AsMessageBox.ShowError(
-                this.FindForm(),
-                ex.Message,
-                ResourceUtils.GetString("ErrorLeavingPanel", this.PanelTitle),
-                ex
+                owner: this.FindForm(),
+                text: ex.Message,
+                caption: ResourceUtils.GetString(key: "ErrorLeavingPanel", args: this.PanelTitle),
+                exception: ex
             );
         }
         finally
@@ -3130,14 +3270,14 @@ public class AsPanel
         }
         if (shouldDrawLine)
         {
-            Rectangle rect = new Rectangle(0, 0, this.Width, 5);
+            Rectangle rect = new Rectangle(x: 0, y: 0, width: this.Width, height: 5);
             LinearGradientBrush b = new LinearGradientBrush(
-                rect,
-                OrigamColorScheme.TitleActiveStartColor,
-                this.BackColor,
-                LinearGradientMode.Vertical
+                rect: rect,
+                color1: OrigamColorScheme.TitleActiveStartColor,
+                color2: this.BackColor,
+                linearGradientMode: LinearGradientMode.Vertical
             );
-            e.Graphics.FillRectangle(b, rect);
+            e.Graphics.FillRectangle(brush: b, rect: rect);
         }
     }
 
@@ -3148,10 +3288,10 @@ public class AsPanel
     #endregion
     #region IAsDataServiceComplexConsumer Members
     //implements standard Datamember
-    [Category("Data")]
+    [Category(category: "Data")]
     [Editor(
-        "System.Windows.Forms.Design.DataMemberListEditor, System.Design, Version=1.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
-        typeof(System.Drawing.Design.UITypeEditor)
+        typeName: "System.Windows.Forms.Design.DataMemberListEditor, System.Design, Version=1.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+        baseType: typeof(System.Drawing.Design.UITypeEditor)
     )]
     public string DataMember { get; set; }
 
@@ -3159,10 +3299,10 @@ public class AsPanel
     private DataSet _dataSource;
     private bool _settingDataSource = false;
 
-    [Category("Data")]
-    [RefreshProperties(RefreshProperties.Repaint)]
+    [Category(category: "Data")]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
     [TypeConverter(
-        "System.Windows.Forms.Design.DataSourceConverter, System.Design, Version=1.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
+        typeName: "System.Windows.Forms.Design.DataSourceConverter, System.Design, Version=1.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
     )]
     public object DataSource
     {
@@ -3172,20 +3312,27 @@ public class AsPanel
             _settingDataSource = true;
             try
             {
-                DataSet newData = ConvertInputData(value);
+                DataSet newData = ConvertInputData(data: value);
                 if (!this.DesignMode)
                 {
-                    string oldTable = FormTools.FindTableByDataMember(_dataSource, this.DataMember);
-                    string newTable = FormTools.FindTableByDataMember(newData, this.DataMember);
+                    string oldTable = FormTools.FindTableByDataMember(
+                        ds: _dataSource,
+                        member: this.DataMember
+                    );
+                    string newTable = FormTools.FindTableByDataMember(
+                        ds: newData,
+                        member: this.DataMember
+                    );
                     if (_dataSource != newData)
                     {
-                        if (oldTable != "" && _dataSource.Tables.Contains(oldTable))
+                        if (oldTable != "" && _dataSource.Tables.Contains(name: oldTable))
                         {
-                            _dataSource.Tables[oldTable].ColumnChanged -= AsPanel_ColumnChanged;
+                            _dataSource.Tables[name: oldTable].ColumnChanged -=
+                                AsPanel_ColumnChanged;
                         }
-                        if (newTable != "" && newData.Tables.Contains(newTable))
+                        if (newTable != "" && newData.Tables.Contains(name: newTable))
                         {
-                            DataTable t = newData.Tables[newTable];
+                            DataTable t = newData.Tables[name: newTable];
                             // we subscribe to the event, so we can update lookup sort values, when changed
                             t.ColumnChanged += AsPanel_ColumnChanged;
                         }
@@ -3196,7 +3343,11 @@ public class AsPanel
 
                             if (grid != null)
                             {
-                                _gridBuilder.UpdateDataSource(grid, null, this.DataMember);
+                                _gridBuilder.UpdateDataSource(
+                                    grid: grid,
+                                    dataSource: null,
+                                    dataMember: this.DataMember
+                                );
                             }
                         }
                         _dataSource = newData;
@@ -3236,7 +3387,7 @@ public class AsPanel
             // normal form
             return FormTools
                 .GetItemFromControlSet(
-                    (this.OrigamMetadata as ControlSetItem).ControlItem.PanelControlSet
+                    controlSet: (this.OrigamMetadata as ControlSetItem).ControlItem.PanelControlSet
                 )
                 .Id;
         }
@@ -3277,7 +3428,7 @@ public class AsPanel
         }
 
         OrigamDataRow row = e.Row as OrigamDataRow;
-        if (!row.IsColumnWithValidChange(e.Column))
+        if (!row.IsColumnWithValidChange(dataColumn: e.Column))
         {
             return;
         }
@@ -3287,7 +3438,12 @@ public class AsPanel
             return;
         }
 
-        UpdateTempSortColumn(e.Column, e.Row, LookupId(e.Column.ColumnName), false);
+        UpdateTempSortColumn(
+            col: e.Column,
+            singleRow: e.Row,
+            lookupId: LookupId(originalColumnName: e.Column.ColumnName),
+            acceptChangesOnUnchanged: false
+        );
         _lastRowLevelSecurityRecordId = Guid.Empty;
         UpdateRowLevelSecurity();
         actionButtonManager.UpdateActionButtons();
@@ -3311,7 +3467,7 @@ public class AsPanel
             return originalColumnName;
         }
 
-        return GetSortColumn(originalColumnName, view.Table);
+        return GetSortColumn(originalColumnName: originalColumnName, table: view.Table);
     }
 
     public string GetSortColumn(string originalColumnName, DataTable table)
@@ -3319,10 +3475,12 @@ public class AsPanel
         foreach (DataColumn tempColumn in table.Columns)
         {
             if (
-                tempColumn.ExtendedProperties.Contains(Const.TemporaryColumnAttribute)
-                && (string)tempColumn.ExtendedProperties[Const.TemporaryColumnAttribute]
+                tempColumn.ExtendedProperties.Contains(key: Const.TemporaryColumnAttribute)
+                && (string)tempColumn.ExtendedProperties[key: Const.TemporaryColumnAttribute]
                     == originalColumnName
-                && tempColumn.ExtendedProperties.Contains(Const.TemporaryColumnInitializedAttribute)
+                && tempColumn.ExtendedProperties.Contains(
+                    key: Const.TemporaryColumnInitializedAttribute
+                )
             )
             {
                 return tempColumn.ColumnName;
@@ -3334,7 +3492,8 @@ public class AsPanel
         if (grid != null)
         {
             DataGridDropdownColumn gridCol =
-                grid.TableStyles[0].GridColumnStyles[originalColumnName] as DataGridDropdownColumn;
+                grid.TableStyles[index: 0].GridColumnStyles[columnName: originalColumnName]
+                as DataGridDropdownColumn;
             // only create lookup sort columns for DropDown (lookup) grid columns
             if (gridCol != null)
             {
@@ -3342,17 +3501,27 @@ public class AsPanel
                 {
                     grid.IgnoreLayoutEvent = true;
                     Guid lookupId = gridCol.DropDown.LookupId;
-                    string lookupColumnName = DatasetTools.SortColumnName(originalColumnName);
-                    if (!table.Columns.Contains(lookupColumnName))
+                    string lookupColumnName = DatasetTools.SortColumnName(
+                        originalColumnName: originalColumnName
+                    );
+                    if (!table.Columns.Contains(name: lookupColumnName))
                     {
                         // temp sort column does not exist, we sort by the original column
                         return lookupColumnName;
                     }
                     // and we fill the column with all the looked up data
-                    UpdateTempSortColumn(table.Columns[originalColumnName], null, lookupId, true);
+                    UpdateTempSortColumn(
+                        col: table.Columns[name: originalColumnName],
+                        singleRow: null,
+                        lookupId: lookupId,
+                        acceptChangesOnUnchanged: true
+                    );
                     table
-                        .Columns[lookupColumnName]
-                        .ExtendedProperties.Add(Const.TemporaryColumnInitializedAttribute, true);
+                        .Columns[name: lookupColumnName]
+                        .ExtendedProperties.Add(
+                            key: Const.TemporaryColumnInitializedAttribute,
+                            value: true
+                        );
                     return lookupColumnName;
                 }
                 finally
@@ -3370,7 +3539,7 @@ public class AsPanel
         if (this.grid is AsDataGrid grid)
         {
             if (
-                grid.TableStyles[0].GridColumnStyles[originalColumnName]
+                grid.TableStyles[index: 0].GridColumnStyles[columnName: originalColumnName]
                 is DataGridDropdownColumn gridCol
             )
             {
@@ -3394,7 +3563,7 @@ public class AsPanel
             return;
         }
 
-        if (lookupId.Equals(Guid.Empty))
+        if (lookupId.Equals(g: Guid.Empty))
         {
             return;
         }
@@ -3409,15 +3578,15 @@ public class AsPanel
         {
             // find the temp column for this column
             if (
-                tempColumn.ExtendedProperties.Contains(Const.TemporaryColumnAttribute)
-                && (string)tempColumn.ExtendedProperties[Const.TemporaryColumnAttribute]
+                tempColumn.ExtendedProperties.Contains(key: Const.TemporaryColumnAttribute)
+                && (string)tempColumn.ExtendedProperties[key: Const.TemporaryColumnAttribute]
                     == col.ColumnName
             )
             {
                 // we found a dummy sort column and we update its value
                 //Guid lookupId = (Guid)tempColumn.ExtendedProperties[Const.TemporaryColumnLookupAttribute];
                 IDataLookupService lookupService =
-                    ServiceManager.Services.GetService(typeof(IDataLookupService))
+                    ServiceManager.Services.GetService(serviceType: typeof(IDataLookupService))
                     as IDataLookupService;
                 bool prevIgnoreDataChanges = this.Generator.IgnoreDataChanges;
                 _updatingSortColumn = true;
@@ -3428,10 +3597,10 @@ public class AsPanel
                     {
                         // if single row is provided
                         bool unchanged = (singleRow.RowState == DataRowState.Unchanged);
-                        singleRow[tempColumn] = lookupService.GetDisplayText(
-                            lookupId,
-                            singleRow[col],
-                            null
+                        singleRow[column: tempColumn] = lookupService.GetDisplayText(
+                            lookupId: lookupId,
+                            lookupValue: singleRow[column: col],
+                            transactionId: null
                         );
                         if (unchanged & acceptChangesOnUnchanged)
                         {
@@ -3442,7 +3611,11 @@ public class AsPanel
                     {
                         try
                         {
-                            this._gridBuilder.UpdateDataSource(this.grid, null, this.DataMember);
+                            this._gridBuilder.UpdateDataSource(
+                                grid: this.grid,
+                                dataSource: null,
+                                dataMember: this.DataMember
+                            );
                             if (this.errorProvider1 != null)
                             {
                                 this.errorProvider1.DataSource = null;
@@ -3452,7 +3625,7 @@ public class AsPanel
                             // all rows will be scanned
                             for (int i = 0; i < table.Rows.Count; i++)
                             {
-                                DataRow row = table.Rows[i];
+                                DataRow row = table.Rows[index: i];
                                 if (
                                     row.RowState != DataRowState.Deleted
                                     && row.RowState != DataRowState.Detached
@@ -3460,17 +3633,20 @@ public class AsPanel
                                 {
                                     bool unchanged = (row.RowState == DataRowState.Unchanged);
                                     object newValue = lookupService.GetDisplayText(
-                                        lookupId,
-                                        row[col],
-                                        null
+                                        lookupId: lookupId,
+                                        lookupValue: row[column: col],
+                                        transactionId: null
                                     );
 
                                     if (
-                                        row[tempColumn] != newValue
-                                        && !(row.IsNull(tempColumn) && row.IsNull(col))
+                                        row[column: tempColumn] != newValue
+                                        && !(
+                                            row.IsNull(column: tempColumn)
+                                            && row.IsNull(column: col)
+                                        )
                                     )
                                     {
-                                        row[tempColumn] = newValue;
+                                        row[column: tempColumn] = newValue;
                                         // If the row's state was originaly Unchanged, our change set it to Modified.
                                         // Therefore we set it back to Unchanged by accepting the changes.
                                         if (unchanged & acceptChangesOnUnchanged)
@@ -3539,15 +3715,15 @@ public class AsPanel
         if (panel == null)
         {
             throw new ArgumentOutOfRangeException(
-                "obj",
-                obj,
-                ResourceUtils.GetString("ErrorCompareAsPanel")
+                paramName: "obj",
+                actualValue: obj,
+                message: ResourceUtils.GetString(key: "ErrorCompareAsPanel")
             );
         }
 
         return this
-            .DataMember.Split(".".ToCharArray())
-            .Length.CompareTo(panel.DataMember.Split(".".ToCharArray()).Length);
+            .DataMember.Split(separator: ".".ToCharArray())
+            .Length.CompareTo(value: panel.DataMember.Split(separator: ".".ToCharArray()).Length);
     }
     #endregion
 }

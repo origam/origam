@@ -46,25 +46,25 @@ public sealed class UserStore
         IUserSecurityStampStore<IOrigamUser>
 {
     public static readonly Guid ORIGAM_USER_DATA_STRUCTURE = new Guid(
-        "43b67a51-68f3-4696-b08d-de46ae0223ce"
+        g: "43b67a51-68f3-4696-b08d-de46ae0223ce"
     );
     public static readonly Guid GET_ORIGAM_USER_BY_BUSINESS_PARTNER_ID = new Guid(
-        "982f45a9-b610-4e2f-8d7f-2b1eebe93390"
+        g: "982f45a9-b610-4e2f-8d7f-2b1eebe93390"
     );
     public static readonly Guid GET_ORIGAM_USER_BY_USER_NAME = new Guid(
-        "a60c9817-ae18-465c-a91f-d4b8a25f15a4"
+        g: "a60c9817-ae18-465c-a91f-d4b8a25f15a4"
     );
     public static readonly Guid BUSINESS_PARTNER_DATA_STRUCTURE = new Guid(
-        "f4c92dce-d634-4179-adb4-98876b870cc7"
+        g: "f4c92dce-d634-4179-adb4-98876b870cc7"
     );
     public static readonly Guid GET_BUSINESS_PARTNER_BY_USER_NAME = new Guid(
-        "545396e7-d88e-4315-a112-f8feda7229bf"
+        g: "545396e7-d88e-4315-a112-f8feda7229bf"
     );
     public static readonly Guid GET_BUSINESS_PARTNER_BY_ID = new Guid(
-        "4e46424b-349f-4314-bc75-424206cd35b0"
+        g: "4e46424b-349f-4314-bc75-424206cd35b0"
     );
     public static readonly Guid GET_BUSINESS_PARTNER_BY_USER_EMAIL = new Guid(
-        "46fd2484-4506-45a2-8a96-7855ea116210"
+        g: "46fd2484-4506-45a2-8a96-7855ea116210"
     );
 
     private readonly IStringLocalizer<SharedResources> localizer;
@@ -76,60 +76,69 @@ public sealed class UserStore
 
     public Task<IdentityResult> CreateAsync(IOrigamUser user, CancellationToken cancellationToken)
     {
-        DatasetGenerator dataSetGenerator = new DatasetGenerator(true);
+        DatasetGenerator dataSetGenerator = new DatasetGenerator(userDefinedParameters: true);
         IPersistenceService persistenceService =
-            ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+            ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+            as IPersistenceService;
         DataStructure dataStructure = (DataStructure)
             persistenceService.SchemaProvider.RetrieveInstance(
-                typeof(ISchemaItem),
-                new ModelElementKey(ORIGAM_USER_DATA_STRUCTURE)
+                type: typeof(ISchemaItem),
+                primaryKey: new ModelElementKey(id: ORIGAM_USER_DATA_STRUCTURE)
             );
-        DataSet origamUserDataSet = dataSetGenerator.CreateDataSet(dataStructure);
-        DataRow origamUserRow = origamUserDataSet.Tables["OrigamUser"].NewRow();
-        UserTools.AddToOrigamUserRow(user, origamUserRow);
-        origamUserDataSet.Tables["OrigamUser"].Rows.Add(origamUserRow);
+        DataSet origamUserDataSet = dataSetGenerator.CreateDataSet(ds: dataStructure);
+        DataRow origamUserRow = origamUserDataSet.Tables[name: "OrigamUser"].NewRow();
+        UserTools.AddToOrigamUserRow(user: user, origamUserRow: origamUserRow);
+        origamUserDataSet.Tables[name: "OrigamUser"].Rows.Add(row: origamUserRow);
         DataService.Instance.StoreData(
-            ORIGAM_USER_DATA_STRUCTURE,
-            origamUserDataSet,
-            false,
-            user.TransactionId
+            dataStructureId: ORIGAM_USER_DATA_STRUCTURE,
+            data: origamUserDataSet,
+            loadActualValuesAfterUpdate: false,
+            transactionId: user.TransactionId
         );
-        return Task.FromResult(IdentityResult.Success);
+        return Task.FromResult(result: IdentityResult.Success);
     }
 
     public Task<IdentityResult> DeleteAsync(IOrigamUser user, CancellationToken cancellationToken)
     {
-        DataRow origamUserRow = FindOrigamUserRowByUserName(user.UserName, user.TransactionId);
+        DataRow origamUserRow = FindOrigamUserRowByUserName(
+            normalizedUserName: user.UserName,
+            transactionId: user.TransactionId
+        );
         if (origamUserRow == null)
         {
-            throw new Exception($"User {user.UserName} already doesn't have access to the system.");
+            throw new Exception(
+                message: $"User {user.UserName} already doesn't have access to the system."
+            );
         }
         origamUserRow.Delete();
         DataService.Instance.StoreData(
-            ORIGAM_USER_DATA_STRUCTURE,
-            origamUserRow.Table.DataSet,
-            false,
-            user.TransactionId
+            dataStructureId: ORIGAM_USER_DATA_STRUCTURE,
+            data: origamUserRow.Table.DataSet,
+            loadActualValuesAfterUpdate: false,
+            transactionId: user.TransactionId
         );
-        return Task.FromResult(IdentityResult.Success);
+        return Task.FromResult(result: IdentityResult.Success);
     }
 
     public Task<IOrigamUser> FindByIdAsync(string userId, CancellationToken cancellationToken)
     {
-        DataRow origamUserRow = FindOrigamUserRowById(userId);
+        DataRow origamUserRow = FindOrigamUserRowById(userId: userId);
         if (origamUserRow == null)
         {
-            return Task.FromResult<IOrigamUser>(null);
+            return Task.FromResult<IOrigamUser>(result: null);
         }
 
-        DataRow businessPartnerRow = FindBusinessPartnerRowById(userId);
+        DataRow businessPartnerRow = FindBusinessPartnerRowById(userId: userId);
         if (businessPartnerRow == null)
         {
-            return Task.FromResult<IOrigamUser>(null);
+            return Task.FromResult<IOrigamUser>(result: null);
         }
 
         return Task.FromResult(
-            UserTools.Create(origamUserRow: origamUserRow, businessPartnerRow: businessPartnerRow)
+            result: UserTools.Create(
+                origamUserRow: origamUserRow,
+                businessPartnerRow: businessPartnerRow
+            )
         );
     }
 
@@ -138,7 +147,11 @@ public sealed class UserStore
         CancellationToken cancellationToken
     )
     {
-        return FindByNameAsync(normalizedUserName, null, cancellationToken);
+        return FindByNameAsync(
+            normalizedUserName: normalizedUserName,
+            transactionId: null,
+            cancellationToken: cancellationToken
+        );
     }
 
     public Task<IOrigamUser> FindByNameAsync(
@@ -147,23 +160,29 @@ public sealed class UserStore
         CancellationToken cancellationToken
     )
     {
-        var origamUserRow = FindOrigamUserRowByUserName(normalizedUserName, transactionId);
+        var origamUserRow = FindOrigamUserRowByUserName(
+            normalizedUserName: normalizedUserName,
+            transactionId: transactionId
+        );
         if (origamUserRow == null)
         {
-            return Task.FromResult<IOrigamUser>(null);
+            return Task.FromResult<IOrigamUser>(result: null);
         }
 
         var businessPartnerRow = FindBusinessPartnerRowByUserName(
-            normalizedUserName,
-            transactionId
+            normalizedUserName: normalizedUserName,
+            transactionId: transactionId
         );
         if (businessPartnerRow == null)
         {
-            return Task.FromResult<IOrigamUser>(null);
+            return Task.FromResult<IOrigamUser>(result: null);
         }
 
         return Task.FromResult(
-            UserTools.Create(origamUserRow: origamUserRow, businessPartnerRow: businessPartnerRow)
+            result: UserTools.Create(
+                origamUserRow: origamUserRow,
+                businessPartnerRow: businessPartnerRow
+            )
         );
     }
 
@@ -172,17 +191,17 @@ public sealed class UserStore
         CancellationToken cancellationToken
     )
     {
-        return Task.FromResult(user.NormalizedUserName);
+        return Task.FromResult(result: user.NormalizedUserName);
     }
 
     public Task<string> GetUserIdAsync(IOrigamUser user, CancellationToken cancellationToken)
     {
-        return Task.FromResult(user.BusinessPartnerId);
+        return Task.FromResult(result: user.BusinessPartnerId);
     }
 
     public Task<string> GetUserNameAsync(IOrigamUser user, CancellationToken cancellationToken)
     {
-        return Task.FromResult(user.UserName);
+        return Task.FromResult(result: user.UserName);
     }
 
     public Task SetNormalizedUserNameAsync(
@@ -206,23 +225,26 @@ public sealed class UserStore
 
     public Task<IdentityResult> UpdateAsync(IOrigamUser user, CancellationToken cancellationToken)
     {
-        DataRow origamUserRow = FindOrigamUserRowByUserName(user.UserName, user.TransactionId);
+        DataRow origamUserRow = FindOrigamUserRowByUserName(
+            normalizedUserName: user.UserName,
+            transactionId: user.TransactionId
+        );
         if (origamUserRow == null)
         {
             return Task.FromResult(
-                IdentityResult.Failed(
-                    new IdentityError { Description = localizer["ErrorUserNotFound"] }
+                result: IdentityResult.Failed(
+                    errors: new IdentityError { Description = localizer[name: "ErrorUserNotFound"] }
                 )
             );
         }
-        UserTools.UpdateOrigamUserRow(user, origamUserRow);
+        UserTools.UpdateOrigamUserRow(user: user, origamUserRow: origamUserRow);
         DataService.Instance.StoreData(
-            ORIGAM_USER_DATA_STRUCTURE,
-            origamUserRow.Table.DataSet,
-            false,
-            null
+            dataStructureId: ORIGAM_USER_DATA_STRUCTURE,
+            data: origamUserRow.Table.DataSet,
+            loadActualValuesAfterUpdate: false,
+            transactionId: null
         );
-        return Task.FromResult(IdentityResult.Success);
+        return Task.FromResult(result: IdentityResult.Success);
     }
 
     public Task SetEmailAsync(IOrigamUser user, string email, CancellationToken cancellationToken)
@@ -233,12 +255,12 @@ public sealed class UserStore
 
     public Task<string> GetEmailAsync(IOrigamUser user, CancellationToken cancellationToken)
     {
-        return Task.FromResult(user.Email);
+        return Task.FromResult(result: user.Email);
     }
 
     public Task<bool> GetEmailConfirmedAsync(IOrigamUser user, CancellationToken cancellationToken)
     {
-        return Task.FromResult(user.EmailConfirmed);
+        return Task.FromResult(result: user.EmailConfirmed);
     }
 
     public Task SetEmailConfirmedAsync(
@@ -256,24 +278,30 @@ public sealed class UserStore
         CancellationToken cancellationToken
     )
     {
-        DataRow businessPartnerRow = FindBusinessPartnerRowByEmail(normalizedEmail);
+        DataRow businessPartnerRow = FindBusinessPartnerRowByEmail(email: normalizedEmail);
         if (businessPartnerRow == null)
         {
-            return Task.FromResult<IOrigamUser>(null);
+            return Task.FromResult<IOrigamUser>(result: null);
         }
 
         string userName =
-            businessPartnerRow["UserName"] == DBNull.Value
+            businessPartnerRow[columnName: "UserName"] == DBNull.Value
                 ? null
-                : (string)businessPartnerRow["UserName"];
-        DataRow origamUserRow = FindOrigamUserRowByUserName(userName, null);
+                : (string)businessPartnerRow[columnName: "UserName"];
+        DataRow origamUserRow = FindOrigamUserRowByUserName(
+            normalizedUserName: userName,
+            transactionId: null
+        );
         if (origamUserRow == null)
         {
-            return Task.FromResult<IOrigamUser>(null);
+            return Task.FromResult<IOrigamUser>(result: null);
         }
 
         return Task.FromResult(
-            UserTools.Create(origamUserRow: origamUserRow, businessPartnerRow: businessPartnerRow)
+            result: UserTools.Create(
+                origamUserRow: origamUserRow,
+                businessPartnerRow: businessPartnerRow
+            )
         );
     }
 
@@ -282,7 +310,7 @@ public sealed class UserStore
         CancellationToken cancellationToken
     )
     {
-        return Task.FromResult(user.NormalizedEmail);
+        return Task.FromResult(result: user.NormalizedEmail);
     }
 
     public Task SetNormalizedEmailAsync(
@@ -309,7 +337,7 @@ public sealed class UserStore
         CancellationToken cancellationToken
     )
     {
-        return Task.FromResult(user.TwoFactorEnabled);
+        return Task.FromResult(result: user.TwoFactorEnabled);
     }
 
     public Task SetPasswordHashAsync(
@@ -324,12 +352,12 @@ public sealed class UserStore
 
     public Task<string> GetPasswordHashAsync(IOrigamUser user, CancellationToken cancellationToken)
     {
-        return Task.FromResult(user.PasswordHash);
+        return Task.FromResult(result: user.PasswordHash);
     }
 
     public Task<bool> HasPasswordAsync(IOrigamUser user, CancellationToken cancellationToken)
     {
-        return Task.FromResult(user.PasswordHash != null);
+        return Task.FromResult(result: user.PasswordHash != null);
     }
 
     public void Dispose()
@@ -340,15 +368,15 @@ public sealed class UserStore
     private static DataRow FindBusinessPartnerRowByEmail(string email)
     {
         DataSet businessPartnerDataSet = GetBusinessPartnerDataSet(
-            GET_BUSINESS_PARTNER_BY_USER_EMAIL,
-            "BusinessPartner_parUserEmail",
-            email
+            methodId: GET_BUSINESS_PARTNER_BY_USER_EMAIL,
+            paramName: "BusinessPartner_parUserEmail",
+            paramValue: email
         );
-        if (businessPartnerDataSet.Tables["BusinessPartner"].Rows.Count == 0)
+        if (businessPartnerDataSet.Tables[name: "BusinessPartner"].Rows.Count == 0)
         {
             return null;
         }
-        return businessPartnerDataSet.Tables["BusinessPartner"].Rows[0];
+        return businessPartnerDataSet.Tables[name: "BusinessPartner"].Rows[index: 0];
     }
 
     private static DataRow FindBusinessPartnerRowByUserName(
@@ -357,68 +385,73 @@ public sealed class UserStore
     )
     {
         DataSet businessPartnerDataSet = GetBusinessPartnerDataSet(
-            GET_BUSINESS_PARTNER_BY_USER_NAME,
-            "BusinessPartner_parUserName",
-            normalizedUserName,
-            transactionId
+            methodId: GET_BUSINESS_PARTNER_BY_USER_NAME,
+            paramName: "BusinessPartner_parUserName",
+            paramValue: normalizedUserName,
+            transactionId: transactionId
         );
-        if (businessPartnerDataSet.Tables["BusinessPartner"].Rows.Count == 0)
+        if (businessPartnerDataSet.Tables[name: "BusinessPartner"].Rows.Count == 0)
         {
             return null;
         }
-        return businessPartnerDataSet.Tables["BusinessPartner"].Rows[0];
+        return businessPartnerDataSet.Tables[name: "BusinessPartner"].Rows[index: 0];
     }
 
     private DataRow FindOrigamUserRowByUserName(string normalizedUserName, string transactionId)
     {
-        if (string.IsNullOrEmpty(normalizedUserName))
+        if (string.IsNullOrEmpty(value: normalizedUserName))
         {
             return null;
         }
         DataSet origamUserDataSet = GetOrigamUserDataSet(
-            GET_ORIGAM_USER_BY_USER_NAME,
-            "OrigamUser_parUserName",
-            normalizedUserName,
-            transactionId
+            methodId: GET_ORIGAM_USER_BY_USER_NAME,
+            paramName: "OrigamUser_parUserName",
+            paramValue: normalizedUserName,
+            transactionId: transactionId
         );
-        if (origamUserDataSet.Tables["OrigamUser"].Rows.Count == 0)
+        if (origamUserDataSet.Tables[name: "OrigamUser"].Rows.Count == 0)
         {
             return null;
         }
-        return origamUserDataSet.Tables["OrigamUser"].Rows[0];
+        return origamUserDataSet.Tables[name: "OrigamUser"].Rows[index: 0];
     }
 
     private static DataRow FindBusinessPartnerRowById(string userId)
     {
         DataSet businessPartnerDataSet = GetBusinessPartnerDataSet(
-            GET_BUSINESS_PARTNER_BY_ID,
-            "BusinessPartner_parId",
-            userId
+            methodId: GET_BUSINESS_PARTNER_BY_ID,
+            paramName: "BusinessPartner_parId",
+            paramValue: userId
         );
-        if (businessPartnerDataSet.Tables["BusinessPartner"].Rows.Count == 0)
+        if (businessPartnerDataSet.Tables[name: "BusinessPartner"].Rows.Count == 0)
         {
             return null;
         }
-        return businessPartnerDataSet.Tables["BusinessPartner"].Rows[0];
+        return businessPartnerDataSet.Tables[name: "BusinessPartner"].Rows[index: 0];
     }
 
     private DataRow FindOrigamUserRowById(string userId)
     {
         DataSet origamUserDataSet = GetOrigamUserDataSet(
-            GET_ORIGAM_USER_BY_BUSINESS_PARTNER_ID,
-            "OrigamUser_parBusinessPartnerId",
-            userId
+            methodId: GET_ORIGAM_USER_BY_BUSINESS_PARTNER_ID,
+            paramName: "OrigamUser_parBusinessPartnerId",
+            paramValue: userId
         );
-        if (origamUserDataSet.Tables["OrigamUser"].Rows.Count == 0)
+        if (origamUserDataSet.Tables[name: "OrigamUser"].Rows.Count == 0)
         {
             return null;
         }
-        return origamUserDataSet.Tables["OrigamUser"].Rows[0];
+        return origamUserDataSet.Tables[name: "OrigamUser"].Rows[index: 0];
     }
 
     public static DataSet GetOrigamUserDataSet(Guid methodId, string paramName, object paramValue)
     {
-        return GetOrigamUserDataSet(methodId, paramName, paramValue, null);
+        return GetOrigamUserDataSet(
+            methodId: methodId,
+            paramName: paramName,
+            paramValue: paramValue,
+            transactionId: null
+        );
     }
 
     public static DataSet GetOrigamUserDataSet(
@@ -429,13 +462,13 @@ public sealed class UserStore
     )
     {
         return DataService.Instance.LoadData(
-            ORIGAM_USER_DATA_STRUCTURE,
-            methodId,
-            Guid.Empty,
-            Guid.Empty,
-            transactionId,
-            paramName,
-            paramValue
+            dataStructureId: ORIGAM_USER_DATA_STRUCTURE,
+            methodId: methodId,
+            defaultSetId: Guid.Empty,
+            sortSetId: Guid.Empty,
+            transactionId: transactionId,
+            paramName1: paramName,
+            paramValue1: paramValue
         );
     }
 
@@ -445,7 +478,12 @@ public sealed class UserStore
         object paramValue
     )
     {
-        return GetBusinessPartnerDataSet(methodId, paramName, paramValue, null);
+        return GetBusinessPartnerDataSet(
+            methodId: methodId,
+            paramName: paramName,
+            paramValue: paramValue,
+            transactionId: null
+        );
     }
 
     private static DataSet GetBusinessPartnerDataSet(
@@ -456,13 +494,13 @@ public sealed class UserStore
     )
     {
         return DataService.Instance.LoadData(
-            BUSINESS_PARTNER_DATA_STRUCTURE,
-            methodId,
-            Guid.Empty,
-            Guid.Empty,
-            transactionId,
-            paramName,
-            paramValue
+            dataStructureId: BUSINESS_PARTNER_DATA_STRUCTURE,
+            methodId: methodId,
+            defaultSetId: Guid.Empty,
+            sortSetId: Guid.Empty,
+            transactionId: transactionId,
+            paramName1: paramName,
+            paramValue1: paramValue
         );
     }
 
@@ -475,9 +513,11 @@ public sealed class UserStore
     {
         if (!user.LastLockoutDate.HasValue || user.LastLockoutDate.Value == DateTime.MinValue)
         {
-            return Task.FromResult<DateTimeOffset?>(null);
+            return Task.FromResult<DateTimeOffset?>(result: null);
         }
-        return Task.FromResult<DateTimeOffset?>(new DateTimeOffset(user.LastLockoutDate.Value));
+        return Task.FromResult<DateTimeOffset?>(
+            result: new DateTimeOffset(dateTime: user.LastLockoutDate.Value)
+        );
     }
 
     public Task SetLockoutEndDateAsync(
@@ -503,7 +543,7 @@ public sealed class UserStore
     )
     {
         user.FailedPasswordAttemptCount++;
-        return Task.FromResult(user.FailedPasswordAttemptCount);
+        return Task.FromResult(result: user.FailedPasswordAttemptCount);
     }
 
     public Task ResetAccessFailedCountAsync(IOrigamUser user, CancellationToken cancellationToken)
@@ -517,12 +557,12 @@ public sealed class UserStore
         CancellationToken cancellationToken
     )
     {
-        return Task.FromResult(user.FailedPasswordAttemptCount);
+        return Task.FromResult(result: user.FailedPasswordAttemptCount);
     }
 
     public Task<bool> GetLockoutEnabledAsync(IOrigamUser user, CancellationToken cancellationToken)
     {
-        return Task.FromResult(true);
+        return Task.FromResult(result: true);
     }
 
     public Task SetLockoutEnabledAsync(
@@ -536,7 +576,7 @@ public sealed class UserStore
 
     public Task<string> GetPhoneNumberAsync(IOrigamUser user, CancellationToken cancellationToken)
     {
-        return Task.FromResult("1");
+        return Task.FromResult(result: "1");
     }
 
     public Task<bool> GetPhoneNumberConfirmedAsync(
@@ -544,7 +584,7 @@ public sealed class UserStore
         CancellationToken cancellationToken
     )
     {
-        return Task.FromResult(false);
+        return Task.FromResult(result: false);
     }
 
     public Task SetPhoneNumberAsync(
@@ -571,7 +611,7 @@ public sealed class UserStore
         CancellationToken cancellationToken
     )
     {
-        return Task.FromResult<string>(null);
+        return Task.FromResult<string>(result: null);
     }
 
     public Task SetAuthenticatorKeyAsync(
@@ -586,7 +626,7 @@ public sealed class UserStore
     //https://stackoverflow.com/questions/19487322/what-is-asp-net-identitys-iusersecuritystampstoretuser-interface
     public Task<string> GetSecurityStampAsync(IOrigamUser user, CancellationToken cancellationToken)
     {
-        return Task.FromResult(user.SecurityStamp ?? "");
+        return Task.FromResult(result: user.SecurityStamp ?? "");
     }
 
     public Task SetSecurityStampAsync(

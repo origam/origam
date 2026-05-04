@@ -37,7 +37,7 @@ namespace Origam.Architect.Server;
 public class Workbench
 {
     private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
-        MethodBase.GetCurrentMethod().DeclaringType
+        type: MethodBase.GetCurrentMethod().DeclaringType
     );
 
     private readonly CancellationTokenSource modelCheckCancellationTokenSource = new();
@@ -52,14 +52,14 @@ public class Workbench
 
     public void InitializeDefaultServices()
     {
-        ServiceManager.Services.AddService(new MetaModelUpgradeService());
-        ServiceManager.Services.AddService(schema);
+        ServiceManager.Services.AddService(service: new MetaModelUpgradeService());
+        ServiceManager.Services.AddService(service: schema);
         schema.SchemaLoaded += _schema_SchemaLoaded;
     }
 
     private void _schema_SchemaLoaded(object sender, bool isInteractive)
     {
-        OrigamEngine.OrigamEngine.InitializeSchemaItemProviders(schema);
+        OrigamEngine.OrigamEngine.InitializeSchemaItemProviders(service: schema);
         IDeploymentService deployment = ServiceManager.Services.GetService<IDeploymentService>();
         IParameterService parameterService =
             ServiceManager.Services.GetService<IParameterService>();
@@ -80,7 +80,7 @@ public class Workbench
             }
         }
 
-        RunDeploymentScripts(deployment, isInteractive);
+        RunDeploymentScripts(deployment: deployment, isInteractive: isInteractive);
         parameterService.RefreshParameters();
         // we have to initialize the new user after parameter service gets loaded
         // otherwise it would fail generating SQL statements
@@ -88,7 +88,7 @@ public class Workbench
         {
             string userName = SecurityManager.CurrentPrincipal.Identity.Name;
             IOrigamProfileProvider profileProvider = SecurityManager.GetProfileProvider();
-            profileProvider.AddUser("Architect (" + userName + ")", userName);
+            profileProvider.AddUser(name: "Architect (" + userName + ")", userName: userName);
         }
     }
 
@@ -109,45 +109,53 @@ public class Workbench
     private void InitPersistenceService()
     {
         IPersistenceService persistence = OrigamEngine.OrigamEngine.CreatePersistenceService();
-        ServiceManager.Services.AddService(persistence);
+        ServiceManager.Services.AddService(service: persistence);
     }
 
     private bool LoadConfiguration()
     {
         string origamSettingsPath = Path.Combine(
-            AppDomain.CurrentDomain.BaseDirectory,
-            "OrigamSettings.config"
+            path1: AppDomain.CurrentDomain.BaseDirectory,
+            path2: "OrigamSettings.config"
         );
         OrigamSettingsCollection configurations = ConfigurationManager.GetAllUserHomeConfigurations(
-            origamSettingsPath
+            origamSettingsPath: origamSettingsPath
         );
         var configuration = configurations.Cast<OrigamSettings>().FirstOrDefault();
         if (configuration != null)
         {
-            ConfigurationManager.SetActiveConfiguration(configuration);
+            ConfigurationManager.SetActiveConfiguration(configuration: configuration);
             return true;
         }
 
-        throw new Exception("Configuration not found");
+        throw new Exception(message: "Configuration not found");
     }
 
     private void InitializeConnectedServices()
     {
         ServiceManager.Services.AddService(
-            new ServiceAgentFactory(externalAgent => new ExternalAgentWrapper(externalAgent))
+            service: new ServiceAgentFactory(
+                fromExternalAgent: externalAgent => new ExternalAgentWrapper(
+                    externalServiceAgent: externalAgent
+                )
+            )
         );
-        ServiceManager.Services.AddService(new StateMachineService());
-        ServiceManager.Services.AddService(OrigamEngine.OrigamEngine.CreateDocumentationService());
-        ServiceManager.Services.AddService(new TracingService());
-        ServiceManager.Services.AddService(new DataLookupService());
-        ServiceManager.Services.AddService(new DeploymentService());
-        ServiceManager.Services.AddService(new ParameterService());
-        ServiceManager.Services.AddService(new Origam.Workflow.WorkQueue.WorkQueueService());
-        ServiceManager.Services.AddService(new AttachmentService());
-        ServiceManager.Services.AddService(new RuleEngineService());
+        ServiceManager.Services.AddService(service: new StateMachineService());
+        ServiceManager.Services.AddService(
+            service: OrigamEngine.OrigamEngine.CreateDocumentationService()
+        );
+        ServiceManager.Services.AddService(service: new TracingService());
+        ServiceManager.Services.AddService(service: new DataLookupService());
+        ServiceManager.Services.AddService(service: new DeploymentService());
+        ServiceManager.Services.AddService(service: new ParameterService());
+        ServiceManager.Services.AddService(
+            service: new Origam.Workflow.WorkQueue.WorkQueueService()
+        );
+        ServiceManager.Services.AddService(service: new AttachmentService());
+        ServiceManager.Services.AddService(service: new RuleEngineService());
 
         var settings = ConfigurationManager.GetActiveConfiguration();
-        ServiceManager.Services.AddService(new DatabaseProfileService(settings));
+        ServiceManager.Services.AddService(service: new DatabaseProfileService(settings: settings));
     }
 
     public void RunBackgroundInitializationTasks()
@@ -159,20 +167,26 @@ public class Workbench
         }
         var cancellationToken = modelCheckCancellationTokenSource.Token;
         Task.Factory.StartNew(
-                () =>
+                action: () =>
                 {
                     using (
                         FilePersistenceService independentPersistenceService =
                             new FilePersistenceBuilder().CreateNoBinFilePersistenceService()
                     )
                     {
-                        IndexReferences(independentPersistenceService, cancellationToken);
-                        DoModelChecks(independentPersistenceService, cancellationToken);
+                        IndexReferences(
+                            independentPersistenceService: independentPersistenceService,
+                            cancellationToken: cancellationToken
+                        );
+                        DoModelChecks(
+                            independentPersistenceService: independentPersistenceService,
+                            cancellationToken: cancellationToken
+                        );
                     }
                 },
-                cancellationToken
+                cancellationToken: cancellationToken
             )
-            .ContinueWith(TaskErrorHandler);
+            .ContinueWith(continuationAction: TaskErrorHandler);
     }
 
     private void TaskErrorHandler(Task previousTask)
@@ -184,10 +198,10 @@ public class Workbench
         catch (AggregateException ae)
         {
             bool actualExceptionsExist = ae.Flatten()
-                .InnerExceptions.Any(x => !(x is OperationCanceledException));
+                .InnerExceptions.Any(predicate: x => !(x is OperationCanceledException));
             if (actualExceptionsExist)
             {
-                log.LogOrigamError(ae);
+                log.LogOrigamError(ex: ae);
             }
         }
     }
@@ -202,10 +216,10 @@ public class Workbench
             .SchemaProvider.RetrieveList<IFilePersistent>()
             .OfType<ISchemaItem>()
             .AsParallel()
-            .ForEach(item =>
+            .ForEach(action: item =>
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                ReferenceIndexManager.Add(item);
+                ReferenceIndexManager.Add(item: item);
             });
         ReferenceIndexManager.Initialize();
     }
@@ -217,7 +231,7 @@ public class Workbench
     {
         List<Dictionary<ISchemaItem, string>> errorFragments = ModelRules.GetErrors(
             schemaProviders: new OrigamProviderBuilder()
-                .SetSchemaProvider(independentPersistenceService.SchemaProvider)
+                .SetSchemaProvider(schemaProvider: independentPersistenceService.SchemaProvider)
                 .GetAll(),
             independentPersistenceService: independentPersistenceService,
             cancellationToken: cancellationToken

@@ -41,21 +41,21 @@ public class ModelRules
             .SchemaProvider.RetrieveList<IFilePersistent>()
             .OfType<ISchemaItem>()
             .AsParallel()
-            .Select(retrievedObj =>
+            .Select(selector: retrievedObj =>
             {
-                retrievedObj.RootProvider = schemaProviders.FirstOrDefault(x =>
-                    BelongsToProvider(x, retrievedObj)
+                retrievedObj.RootProvider = schemaProviders.FirstOrDefault(predicate: x =>
+                    BelongsToProvider(provider: x, retrievedObj: retrievedObj)
                 );
                 cancellationToken.ThrowIfCancellationRequested();
                 return retrievedObj;
             })
             .AsParallel()
-            .Select(retrievedObj =>
+            .Select(selector: retrievedObj =>
             {
                 cancellationToken.ThrowIfCancellationRequested();
                 var errorMessages = RuleTools
-                    .GetExceptions(retrievedObj)
-                    .Select(exception => exception.Message)
+                    .GetExceptions(instance: retrievedObj)
+                    .Select(selector: exception => exception.Message)
                     .ToList();
                 if (errorMessages.Count == 0)
                 {
@@ -64,10 +64,10 @@ public class ModelRules
 
                 return new Dictionary<ISchemaItem, string>
                 {
-                    { retrievedObj, string.Join("\n", errorMessages) },
+                    { retrievedObj, string.Join(separator: "\n", values: errorMessages) },
                 };
             })
-            .Where(x => x != null)
+            .Where(predicate: x => x != null)
             .ToList();
         return errorFragments;
     }
@@ -75,9 +75,9 @@ public class ModelRules
     private static bool BelongsToProvider(ISchemaItemProvider provider, ISchemaItem retrievedObj)
     {
         return String.Compare(
-                retrievedObj.ItemType,
-                ((AbstractSchemaItemProvider)provider).RootItemType,
-                true
+                strA: retrievedObj.ItemType,
+                strB: ((AbstractSchemaItemProvider)provider).RootItemType,
+                ignoreCase: true
             ) == 0;
     }
 }

@@ -25,31 +25,34 @@ using Origam.Workbench.Services;
 
 namespace Origam.Schema.EntityModel.Attributes;
 
-[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
+[AttributeUsage(validOn: AttributeTargets.Property | AttributeTargets.Field)]
 public class LengthLimitAttribute : AbstractModelElementRuleAttribute
 {
     public override Exception CheckRule(object instance)
     {
-        return new NotSupportedException(Strings.MemberNameRequired);
+        return new NotSupportedException(message: Strings.MemberNameRequired);
     }
 
     public override Exception CheckRule(object instance, string memberName)
     {
-        if (string.IsNullOrEmpty(memberName))
+        if (string.IsNullOrEmpty(value: memberName))
         {
-            CheckRule(instance);
+            CheckRule(instance: instance);
         }
 
         var databaseProfile = ServiceManager.Services.GetService<DatabaseProfileService>();
-        if (Reflector.GetValue(instance.GetType(), instance, memberName) is not string value)
+        if (
+            Reflector.GetValue(type: instance.GetType(), instance: instance, memberName: memberName)
+            is not string value
+        )
         {
             return null;
         }
 
-        string errorMessage = databaseProfile.CheckIdentifierLength(value.Length);
-        if (!string.IsNullOrEmpty(errorMessage))
+        string errorMessage = databaseProfile.CheckIdentifierLength(length: value.Length);
+        if (!string.IsNullOrEmpty(value: errorMessage))
         {
-            return new Exception(errorMessage);
+            return new Exception(message: errorMessage);
         }
         return null;
     }

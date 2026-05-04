@@ -75,7 +75,7 @@ public class CreateFormFromEntityWizard : System.Windows.Forms.Form
                 components.Dispose();
             }
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
 
     #region Windows Form Designer generated code
@@ -194,7 +194,7 @@ public class CreateFormFromEntityWizard : System.Windows.Forms.Form
             Hashtable result = new Hashtable();
             foreach (IDataEntityColumn column in lstFields.CheckedItems)
             {
-                result.Add(column.Name, null);
+                result.Add(key: column.Name, value: null);
             }
             return result;
         }
@@ -226,7 +226,7 @@ public class CreateFormFromEntityWizard : System.Windows.Forms.Form
 
         foreach (IDataEntityColumn column in this.Entity.EntityColumns)
         {
-            if (string.IsNullOrEmpty(column.ToString()))
+            if (string.IsNullOrEmpty(value: column.ToString()))
             {
                 continue;
             }
@@ -239,7 +239,7 @@ public class CreateFormFromEntityWizard : System.Windows.Forms.Form
                 )
             )
             {
-                lstFields.Items.Add(column);
+                lstFields.Items.Add(item: column);
             }
         }
     }

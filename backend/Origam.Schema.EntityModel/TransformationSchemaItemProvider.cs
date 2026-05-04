@@ -53,12 +53,16 @@ public class TransformationSchemaItemProvider : AbstractSchemaItemProvider
         if (typeof(T) != typeof(XslTransformation))
         {
             throw new ArgumentOutOfRangeException(
-                "type",
-                typeof(T),
-                ResourceUtils.GetString("ErrorTransformationModelUnknownType")
+                paramName: "type",
+                actualValue: typeof(T),
+                message: ResourceUtils.GetString(key: "ErrorTransformationModelUnknownType")
             );
         }
-        var item = base.NewItem<T>(schemaExtensionId, group, "NewXslTransformation");
+        var item = base.NewItem<T>(
+            schemaExtensionId: schemaExtensionId,
+            group: group,
+            itemName: "NewXslTransformation"
+        );
         return item;
     }
     #endregion

@@ -60,8 +60,8 @@ internal class SelectionServiceImpl : ISelectionService
         this.batchMode = true;
         // And configure the events we want to listen to.
         IComponentChangeService cs = (IComponentChangeService)
-            host.GetService(typeof(IComponentChangeService));
-        Debug.Assert(cs != null, "IComponentChangeService not found");
+            host.GetService(serviceType: typeof(IComponentChangeService));
+        Debug.Assert(condition: cs != null, message: "IComponentChangeService not found");
         if (cs != null)
         {
             cs.ComponentAdded += new ComponentEventHandler(this.DesignerHost_ComponentAdd);
@@ -79,7 +79,7 @@ internal class SelectionServiceImpl : ISelectionService
         // If our host is already in a transaction, we handle it.
         if (host.InTransaction)
         {
-            DesignerHost_TransactionOpened(host, EventArgs.Empty);
+            DesignerHost_TransactionOpened(sender: host, e: EventArgs.Empty);
         }
         host.LoadComplete += new EventHandler(this.DesignerHost_LoadComplete);
     }
@@ -124,14 +124,14 @@ internal class SelectionServiceImpl : ISelectionService
     /// Check to see if the given component is in our selection group.
     bool ISelectionService.GetComponentSelected(object component)
     {
-        return (component != null && null != selectionsByComponent[component]);
+        return (component != null && null != selectionsByComponent[key: component]);
     }
 
     /// Return our list of selected components.
     ICollection ISelectionService.GetSelectedComponents()
     {
         object[] sels = new object[selectionsByComponent.Values.Count];
-        selectionsByComponent.Values.CopyTo(sels, 0);
+        selectionsByComponent.Values.CopyTo(array: sels, index: 0);
         object[] objects = new object[sels.Length];
         for (int i = 0; i < sels.Length; i++)
         {
@@ -143,7 +143,10 @@ internal class SelectionServiceImpl : ISelectionService
     /// Select the given components.
     void ISelectionService.SetSelectedComponents(ICollection components)
     {
-        ((ISelectionService)this).SetSelectedComponents(components, SelectionTypes.Normal);
+        ((ISelectionService)this).SetSelectedComponents(
+            components: components,
+            selectionType: SelectionTypes.Normal
+        );
     }
 
     /// Select the given components with the given SelectionType.
@@ -199,11 +202,11 @@ internal class SelectionServiceImpl : ISelectionService
             if (
                 fClick
                 && 1 == components.Count
-                && ((ISelectionService)this).GetComponentSelected(firstSelection)
+                && ((ISelectionService)this).GetComponentSelected(component: firstSelection)
             )
             {
                 SelectionItem oldPrimary = primarySelection;
-                SetPrimarySelection((SelectionItem)selectionsByComponent[firstSelection]);
+                SetPrimarySelection(sel: (SelectionItem)selectionsByComponent[key: firstSelection]);
                 if (oldPrimary != primarySelection)
                 {
                     fChanged = true;
@@ -212,7 +215,7 @@ internal class SelectionServiceImpl : ISelectionService
             else
             {
                 SelectionItem[] selections = new SelectionItem[selectionsByComponent.Values.Count];
-                selectionsByComponent.Values.CopyTo(selections, 0);
+                selectionsByComponent.Values.CopyTo(array: selections, index: 0);
                 // Even with several hundred components this should be fairly fast
                 foreach (SelectionItem item in selections)
                 {
@@ -229,7 +232,7 @@ internal class SelectionServiceImpl : ISelectionService
 
                     if (remove)
                     {
-                        RemoveSelection(item);
+                        RemoveSelection(s: item);
                         fChanged = true;
                     }
                 }
@@ -242,12 +245,12 @@ internal class SelectionServiceImpl : ISelectionService
         {
             if (comp != null)
             {
-                SelectionItem s = (SelectionItem)selectionsByComponent[comp];
+                SelectionItem s = (SelectionItem)selectionsByComponent[key: comp];
 
                 if (null == s)
                 {
-                    s = new SelectionItem(this, comp);
-                    AddSelection(s);
+                    s = new SelectionItem(selectionMgr: this, component: comp);
+                    AddSelection(sel: s);
                     if (fControl || fToggle)
                     {
                         primarySel = s;
@@ -259,7 +262,7 @@ internal class SelectionServiceImpl : ISelectionService
                     if (fToggle)
                     {
                         // Remove the selection from our list.
-                        RemoveSelection(s);
+                        RemoveSelection(s: s);
                         fChanged = true;
                     }
                 }
@@ -267,7 +270,7 @@ internal class SelectionServiceImpl : ISelectionService
         }
         if (primarySel != null)
         {
-            SetPrimarySelection(primarySel);
+            SetPrimarySelection(sel: primarySel);
         }
         // Now notify that our selection has changed
         if (fChanged)
@@ -279,7 +282,7 @@ internal class SelectionServiceImpl : ISelectionService
     ///     Adds the given selection to our selection list.
     private void AddSelection(SelectionItem sel)
     {
-        selectionsByComponent[sel.Component] = sel;
+        selectionsByComponent[key: sel.Component] = sel;
     }
 
     private void DesignerHost_LoadComplete(object sender, EventArgs e)
@@ -316,7 +319,7 @@ internal class SelectionServiceImpl : ISelectionService
     ///     selected.  If it is, we notify STrackSelection that the selection has changed.
     private void DesignerHost_ComponentChanged(object sender, ComponentChangedEventArgs ce)
     {
-        if (selectionsByComponent[ce.Component] != null)
+        if (selectionsByComponent[key: ce.Component] != null)
         {
             OnSelectionContentsChanged();
         }
@@ -327,11 +330,11 @@ internal class SelectionServiceImpl : ISelectionService
     ///     the selection.
     private void DesignerHost_ComponentRemove(object sender, ComponentEventArgs ce)
     {
-        SelectionItem sel = (SelectionItem)selectionsByComponent[ce.Component];
+        SelectionItem sel = (SelectionItem)selectionsByComponent[key: ce.Component];
 
         if (sel != null)
         {
-            RemoveSelection(sel);
+            RemoveSelection(s: sel);
 
             // If we removed the last selection and we have a designer host, then select the base
             // component of the host.  Otherwise, it is OK to have an empty selection.
@@ -340,7 +343,7 @@ internal class SelectionServiceImpl : ISelectionService
                 // Now we have to run through all the components and pick
                 // the control with the highest z-order.
                 IComponent[] comps = new IComponent[host.Container.Components.Count];
-                host.Container.Components.CopyTo(comps, 0);
+                host.Container.Components.CopyTo(array: comps, index: 0);
 
                 if (comps == null)
                 {
@@ -393,8 +396,8 @@ internal class SelectionServiceImpl : ISelectionService
                 }
 
                 ((ISelectionService)this).SetSelectedComponents(
-                    new object[] { maxIndexComp },
-                    SelectionTypes.Replace
+                    components: new object[] { maxIndexComp },
+                    selectionType: SelectionTypes.Replace
                 );
             }
             else
@@ -416,18 +419,21 @@ internal class SelectionServiceImpl : ISelectionService
         // We've got to be careful here.  We're one of the last things to go away when
         // a form is being torn down, and we've got to be wary if things have pulled out
         // already.
-        host.RemoveService(typeof(ISelectionService));
+        host.RemoveService(serviceType: typeof(ISelectionService));
         host.TransactionOpened -= new EventHandler(this.DesignerHost_TransactionOpened);
         host.TransactionClosed -= new DesignerTransactionCloseEventHandler(
             this.DesignerHost_TransactionClosed
         );
         if (host.InTransaction)
         {
-            DesignerHost_TransactionClosed(host, new DesignerTransactionCloseEventArgs(true));
+            DesignerHost_TransactionClosed(
+                sender: host,
+                e: new DesignerTransactionCloseEventArgs(commit: true)
+            );
         }
         host.LoadComplete -= new EventHandler(this.DesignerHost_LoadComplete);
         IComponentChangeService cs = (IComponentChangeService)
-            host.GetService(typeof(IComponentChangeService));
+            host.GetService(serviceType: typeof(IComponentChangeService));
         if (cs != null)
         {
             cs.ComponentAdded -= new ComponentEventHandler(this.DesignerHost_ComponentAdd);
@@ -437,7 +443,7 @@ internal class SelectionServiceImpl : ISelectionService
             );
         }
         SelectionItem[] sels = new SelectionItem[selectionsByComponent.Values.Count];
-        selectionsByComponent.Values.CopyTo(sels, 0);
+        selectionsByComponent.Values.CopyTo(array: sels, index: 0);
 
         for (int i = 0; i < sels.Length; i++)
         {
@@ -483,26 +489,26 @@ internal class SelectionServiceImpl : ISelectionService
             {
                 try
                 {
-                    SelectionChanging(this, EventArgs.Empty);
+                    SelectionChanging(sender: this, e: EventArgs.Empty);
                     ;
                 }
                 catch (Exception)
                 {
                     // It is an error to ever throw in this event.
-                    Debug.Fail("Exception thrown in selectionChanging event");
+                    Debug.Fail(message: "Exception thrown in selectionChanging event");
                 }
             }
             if (SelectionChanged != null)
             {
                 try
                 {
-                    SelectionChanged(this, EventArgs.Empty);
+                    SelectionChanged(sender: this, e: EventArgs.Empty);
                     ;
                 }
                 catch (Exception)
                 {
                     // It is an error to ever throw in this event.
-                    Debug.Fail("Exception thrown in selectionChanging event");
+                    Debug.Fail(message: "Exception thrown in selectionChanging event");
                 }
             }
 
@@ -524,12 +530,12 @@ internal class SelectionServiceImpl : ISelectionService
             selectionContentsChanged = false;
 
             System.Windows.Forms.PropertyGrid grid = (System.Windows.Forms.PropertyGrid)
-                host.GetService(typeof(System.Windows.Forms.PropertyGrid));
+                host.GetService(serviceType: typeof(System.Windows.Forms.PropertyGrid));
             if (grid != null)
             {
                 ICollection col = ((ISelectionService)this).GetSelectedComponents();
                 object[] selection = new Object[col.Count];
-                col.CopyTo(selection, 0);
+                col.CopyTo(array: selection, index: 0);
                 grid.SelectedObjects = selection;
             }
         }
@@ -538,7 +544,7 @@ internal class SelectionServiceImpl : ISelectionService
     ///     Removes the given selection from our selection list
     private void RemoveSelection(SelectionItem s)
     {
-        selectionsByComponent.Remove(s.Component);
+        selectionsByComponent.Remove(key: s.Component);
         s.Dispose();
     }
 

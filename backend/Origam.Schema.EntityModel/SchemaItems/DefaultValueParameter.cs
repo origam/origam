@@ -30,34 +30,38 @@ namespace Origam.Schema.EntityModel;
 /// <summary>
 /// Summary description for DeaultValueParameter.
 /// </summary>
-[SchemaItemDescription("Default Value Parameter", "Parameters", "icon_default-value-parameter.png")]
-[HelpTopic("Default+Value+Parameter")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(
+    name: "Default Value Parameter",
+    folderName: "Parameters",
+    iconName: "icon_default-value-parameter.png"
+)]
+[HelpTopic(topic: "Default+Value+Parameter")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class DefaultValueParameter : SchemaItemParameter
 {
     public DefaultValueParameter()
         : base() { }
 
     public DefaultValueParameter(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(schemaExtensionId: schemaExtensionId) { }
 
     public DefaultValueParameter(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(this.DefaultValue);
+        dependencies.Add(item: this.DefaultValue);
     }
 
     #region Properties
     public Guid DefaultValueId;
 
-    [Category("Reference")]
-    [TypeConverter(typeof(DataConstantConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
+    [Category(category: "Reference")]
+    [TypeConverter(type: typeof(DataConstantConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
     [NotNullModelElementRule()]
-    [XmlReference("defaultValue", "DefaultValueId")]
+    [XmlReference(attributeName: "defaultValue", idField: "DefaultValueId")]
     public DataConstant DefaultValue
     {
         get
@@ -66,18 +70,21 @@ public class DefaultValueParameter : SchemaItemParameter
             {
                 return (ISchemaItem)
                         this.PersistenceProvider.RetrieveInstance(
-                            typeof(ISchemaItem),
-                            new ModelElementKey(this.DefaultValueId)
+                            type: typeof(ISchemaItem),
+                            primaryKey: new ModelElementKey(id: this.DefaultValueId)
                         ) as DataConstant;
             }
             catch
             {
                 throw new Exception(
-                    ResourceUtils.GetString("ErrorDataConstantNotFound", this.Name)
+                    message: ResourceUtils.GetString(
+                        key: "ErrorDataConstantNotFound",
+                        args: this.Name
+                    )
                 );
             }
         }
-        set { this.DefaultValueId = (Guid)value.PrimaryKey["Id"]; }
+        set { this.DefaultValueId = (Guid)value.PrimaryKey[key: "Id"]; }
     }
     #endregion
 }

@@ -24,16 +24,16 @@ using Origam.Schema.EntityModel;
 
 namespace Origam.Schema.RuleModel;
 
-[SchemaItemDescription("Condition Rule", "condition-rule.png")]
-[HelpTopic("Condition+Rule")]
+[SchemaItemDescription(name: "Condition Rule", iconName: "condition-rule.png")]
+[HelpTopic(topic: "Condition+Rule")]
 public class StartRule : XPathRule, IStartRule
 {
     public StartRule()
         : base() { }
 
     public StartRule(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(schemaExtensionId: schemaExtensionId) { }
 
     public StartRule(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 }

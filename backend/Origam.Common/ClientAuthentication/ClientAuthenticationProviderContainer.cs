@@ -31,14 +31,14 @@ public class ClientAuthenticationProviderContainer
 
     public void Register(IClientAuthenticationProvider provider)
     {
-        providers.Add(provider);
+        providers.Add(item: provider);
     }
 
     public void TryAuthenticate(string url, Hashtable headers)
     {
         foreach (var provider in providers)
         {
-            if (provider.TryAuthenticate(url, headers))
+            if (provider.TryAuthenticate(url: url, headers: headers))
             {
                 return;
             }

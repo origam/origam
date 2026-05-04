@@ -28,18 +28,18 @@ namespace Origam.Schema.EntityModel;
 /// <summary>
 /// Summary description for XsdDataStructure.
 /// </summary>
-[SchemaItemDescription("XSD Data Structure", "icon_xsd-data-structure.png")]
-[HelpTopic("Data+Structures")]
+[SchemaItemDescription(name: "XSD Data Structure", iconName: "icon_xsd-data-structure.png")]
+[HelpTopic(topic: "Data+Structures")]
 public class XsdDataStructure : AbstractDataStructure
 {
     public XsdDataStructure()
         : base() { }
 
     public XsdDataStructure(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(schemaExtensionId: schemaExtensionId) { }
 
     public XsdDataStructure(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     public override ISchemaItemCollection ChildItems
     {
@@ -48,7 +48,7 @@ public class XsdDataStructure : AbstractDataStructure
     #region Properties
     private string _xsd = "";
 
-    [XmlAttribute("xsd")]
+    [XmlAttribute(attributeName: "xsd")]
     public string Xsd
     {
         get { return _xsd; }

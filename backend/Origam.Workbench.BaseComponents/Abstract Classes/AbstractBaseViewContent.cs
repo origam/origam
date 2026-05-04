@@ -35,7 +35,7 @@ public class AbstractBaseViewContent : DockContent, IBaseViewContent
         set
         {
             workbenchWindow = value;
-            OnWorkbenchWindowChanged(EventArgs.Empty);
+            OnWorkbenchWindowChanged(e: EventArgs.Empty);
         }
     }
 
@@ -56,7 +56,7 @@ public class AbstractBaseViewContent : DockContent, IBaseViewContent
     {
         if (WorkbenchWindowChanged != null)
         {
-            WorkbenchWindowChanged(this, e);
+            WorkbenchWindowChanged(sender: this, e: e);
         }
     }
 

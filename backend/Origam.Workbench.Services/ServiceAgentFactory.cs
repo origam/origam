@@ -36,7 +36,7 @@ public class ServiceAgentFactory : IBusinessServicesService
 {
     private readonly Func<IExternalServiceAgent, IServiceAgent> fromExternalAgent;
     private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
-        MethodBase.GetCurrentMethod().DeclaringType
+        type: MethodBase.GetCurrentMethod().DeclaringType
     );
     private IPersistenceService _persistence;
 
@@ -44,7 +44,8 @@ public class ServiceAgentFactory : IBusinessServicesService
     {
         this.fromExternalAgent = fromExternalAgent;
         _persistence =
-            ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+            ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+            as IPersistenceService;
     }
 
     public IServiceAgent GetAgent(string serviceName, object ruleEngine, object workflowEngine)
@@ -55,7 +56,10 @@ public class ServiceAgentFactory : IBusinessServicesService
             case "DataService":
             {
                 result = (IServiceAgent)
-                    Reflector.InvokeObject("Origam.Workflow.DataServiceAgent", "Origam.Workflow");
+                    Reflector.InvokeObject(
+                        classname: "Origam.Workflow.DataServiceAgent",
+                        assembly: "Origam.Workflow"
+                    );
                 break;
             }
 
@@ -63,8 +67,8 @@ public class ServiceAgentFactory : IBusinessServicesService
             {
                 result = (IServiceAgent)
                     Reflector.InvokeObject(
-                        "Origam.Workflow.TransformationAgent",
-                        "Origam.Workflow"
+                        classname: "Origam.Workflow.TransformationAgent",
+                        assembly: "Origam.Workflow"
                     );
                 break;
             }
@@ -73,8 +77,8 @@ public class ServiceAgentFactory : IBusinessServicesService
             {
                 result = (IServiceAgent)
                     Reflector.InvokeObject(
-                        "Origam.Workflow.SimplicorService.WarehouseServiceAgent",
-                        "Origam.Workflow.SimplicorService"
+                        classname: "Origam.Workflow.SimplicorService.WarehouseServiceAgent",
+                        assembly: "Origam.Workflow.SimplicorService"
                     );
                 break;
             }
@@ -82,14 +86,20 @@ public class ServiceAgentFactory : IBusinessServicesService
             case "MailService":
             {
                 result = (IServiceAgent)
-                    Reflector.InvokeObject("Origam.Workflow.MailServiceAgent", "Origam.Workflow");
+                    Reflector.InvokeObject(
+                        classname: "Origam.Workflow.MailServiceAgent",
+                        assembly: "Origam.Workflow"
+                    );
                 break;
             }
 
             case "ReportService":
             {
                 result = (IServiceAgent)
-                    Reflector.InvokeObject("Origam.Workflow.ReportServiceAgent", "Origam.Workflow");
+                    Reflector.InvokeObject(
+                        classname: "Origam.Workflow.ReportServiceAgent",
+                        assembly: "Origam.Workflow"
+                    );
                 break;
             }
 
@@ -97,8 +107,8 @@ public class ServiceAgentFactory : IBusinessServicesService
             {
                 result = (IServiceAgent)
                     Reflector.InvokeObject(
-                        "Origam.Workflow.FileSystemServiceAgent",
-                        "Origam.Workflow"
+                        classname: "Origam.Workflow.FileSystemServiceAgent",
+                        assembly: "Origam.Workflow"
                     );
                 break;
             }
@@ -107,8 +117,8 @@ public class ServiceAgentFactory : IBusinessServicesService
             {
                 result = (IServiceAgent)
                     Reflector.InvokeObject(
-                        "Origam.Workflow.WorkflowServiceAgent",
-                        "Origam.Workflow"
+                        classname: "Origam.Workflow.WorkflowServiceAgent",
+                        assembly: "Origam.Workflow"
                     );
                 break;
             }
@@ -117,8 +127,8 @@ public class ServiceAgentFactory : IBusinessServicesService
             {
                 result = (IServiceAgent)
                     Reflector.InvokeObject(
-                        "Origam.Workflow.OperatingSystemServiceAgent",
-                        "Origam.Workflow"
+                        classname: "Origam.Workflow.OperatingSystemServiceAgent",
+                        assembly: "Origam.Workflow"
                     );
                 break;
             }
@@ -127,8 +137,8 @@ public class ServiceAgentFactory : IBusinessServicesService
             {
                 result = (IServiceAgent)
                     Reflector.InvokeObject(
-                        "Origam.Workflow.FileService.ExcelAgent",
-                        "Origam.Workflow.FileService"
+                        classname: "Origam.Workflow.FileService.ExcelAgent",
+                        assembly: "Origam.Workflow.FileService"
                     );
                 break;
             }
@@ -137,8 +147,8 @@ public class ServiceAgentFactory : IBusinessServicesService
             {
                 result = (IServiceAgent)
                     Reflector.InvokeObject(
-                        "Origam.Workflow.FileService.FileServiceAgent",
-                        "Origam.Workflow.FileService"
+                        classname: "Origam.Workflow.FileService.FileServiceAgent",
+                        assembly: "Origam.Workflow.FileService"
                     );
                 break;
             }
@@ -146,14 +156,20 @@ public class ServiceAgentFactory : IBusinessServicesService
             case "HttpService":
             {
                 result = (IServiceAgent)
-                    Reflector.InvokeObject("Origam.Workflow.HttpServiceAgent", "Origam.Workflow");
+                    Reflector.InvokeObject(
+                        classname: "Origam.Workflow.HttpServiceAgent",
+                        assembly: "Origam.Workflow"
+                    );
                 break;
             }
 
             case "PrintService":
             {
                 result = (IServiceAgent)
-                    Reflector.InvokeObject("Origam.Workflow.PrintServiceAgent", "Origam.Workflow");
+                    Reflector.InvokeObject(
+                        classname: "Origam.Workflow.PrintServiceAgent",
+                        assembly: "Origam.Workflow"
+                    );
                 break;
             }
 
@@ -161,8 +177,8 @@ public class ServiceAgentFactory : IBusinessServicesService
             {
                 result = (IServiceAgent)
                     Reflector.InvokeObject(
-                        "Origam.Workflow.XmlJsonConvertServiceAgent",
-                        "Origam.Workflow"
+                        classname: "Origam.Workflow.XmlJsonConvertServiceAgent",
+                        assembly: "Origam.Workflow"
                     );
                 break;
             }
@@ -171,8 +187,8 @@ public class ServiceAgentFactory : IBusinessServicesService
             {
                 result = (IServiceAgent)
                     Reflector.InvokeObject(
-                        "Origam.Workflow.EDIFACT2XMLServiceAgent",
-                        "Origam.Workflow"
+                        classname: "Origam.Workflow.EDIFACT2XMLServiceAgent",
+                        assembly: "Origam.Workflow"
                     );
                 break;
             }
@@ -181,8 +197,8 @@ public class ServiceAgentFactory : IBusinessServicesService
             {
                 result = (IServiceAgent)
                     Reflector.InvokeObject(
-                        "Origam.Workflow.CompressionServiceAgent",
-                        "Origam.Workflow"
+                        classname: "Origam.Workflow.CompressionServiceAgent",
+                        assembly: "Origam.Workflow"
                     );
                 break;
             }
@@ -190,26 +206,27 @@ public class ServiceAgentFactory : IBusinessServicesService
             default:
             {
                 SchemaService schema =
-                    ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
+                    ServiceManager.Services.GetService(serviceType: typeof(SchemaService))
+                    as SchemaService;
                 ServiceSchemaItemProvider services =
-                    schema.GetProvider(typeof(ServiceSchemaItemProvider))
+                    schema.GetProvider(type: typeof(ServiceSchemaItemProvider))
                     as ServiceSchemaItemProvider;
                 Origam.Schema.WorkflowModel.Service service =
                     services.GetChildByName(
-                        serviceName,
-                        Origam.Schema.WorkflowModel.Service.CategoryConst
+                        name: serviceName,
+                        itemType: Origam.Schema.WorkflowModel.Service.CategoryConst
                     ) as Origam.Schema.WorkflowModel.Service;
-                object agent = InstantiateObject(serviceName, service);
+                object agent = InstantiateObject(serviceName: serviceName, service: service);
                 if (agent == null)
                 {
                     throw new ArgumentOutOfRangeException(
-                        "serviceName",
-                        serviceName,
-                        ResourceUtils.GetString("ErrorUnknownService")
+                        paramName: "serviceName",
+                        actualValue: serviceName,
+                        message: ResourceUtils.GetString(key: "ErrorUnknownService")
                     );
                 }
                 result = agent is IExternalServiceAgent externalAgent
-                    ? fromExternalAgent(externalAgent)
+                    ? fromExternalAgent(arg: externalAgent)
                     : agent as IServiceAgent;
                 break;
             }
@@ -227,15 +244,15 @@ public class ServiceAgentFactory : IBusinessServicesService
     {
         if (service.ClassPath != null && service.ClassPath != string.Empty)
         {
-            string[] classPath = service.ClassPath.Split(",".ToCharArray());
+            string[] classPath = service.ClassPath.Split(separator: ",".ToCharArray());
             string className = classPath[0];
-            string assembly = String.Join(",", classPath.Skip(1));
-            return Reflector.InvokeObject(className, assembly);
+            string assembly = String.Join(separator: ",", values: classPath.Skip(count: 1));
+            return Reflector.InvokeObject(classname: className, assembly: assembly);
         }
 
         return Reflector.InvokeObject(
-            "Origam.Workflow." + serviceName + "." + serviceName + "Agent",
-            "Origam.Workflow." + serviceName
+            classname: "Origam.Workflow." + serviceName + "." + serviceName + "Agent",
+            assembly: "Origam.Workflow." + serviceName
         );
     }
 

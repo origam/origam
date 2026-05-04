@@ -45,15 +45,15 @@ public class OrigamNameSpace
 
     public static bool IsOrigamNamespace(string candidate)
     {
-        return candidate.StartsWith(firstPart);
+        return candidate.StartsWith(value: firstPart);
     }
 
     public static OrigamNameSpace CreateOrGet(Type type, Version version)
     {
-        string namespaceString = MakeNamespaceString(type.FullName, version);
+        string namespaceString = MakeNamespaceString(fullTypeName: type.FullName, version: version);
         return instances.GetOrAdd(
-            namespaceString,
-            new OrigamNameSpace(
+            key: namespaceString,
+            value: new OrigamNameSpace(
                 version: version,
                 stringValue: namespaceString,
                 fullTypeName: type.FullName
@@ -63,43 +63,43 @@ public class OrigamNameSpace
 
     public static OrigamNameSpace CreateOrGet(string fullTypeName, Version version)
     {
-        string namespaceString = MakeNamespaceString(fullTypeName, version);
-        return CreateOrGet(namespaceString);
+        string namespaceString = MakeNamespaceString(fullTypeName: fullTypeName, version: version);
+        return CreateOrGet(xmlNamespace: namespaceString);
     }
 
     public static OrigamNameSpace CreateOrGet(string xmlNamespace)
     {
-        return instances.GetOrAdd(xmlNamespace, CreateNonCached);
+        return instances.GetOrAdd(key: xmlNamespace, valueFactory: CreateNonCached);
     }
 
     private static OrigamNameSpace CreateNonCached(string xmlNamespace)
     {
         if (xmlNamespace == null)
         {
-            throw new ArgumentNullException(nameof(xmlNamespace));
+            throw new ArgumentNullException(paramName: nameof(xmlNamespace));
         }
 
-        if (!IsOrigamNamespace(xmlNamespace))
+        if (!IsOrigamNamespace(candidate: xmlNamespace))
         {
             throw new ArgumentException(
-                $" {nameof(OrigamNameSpace)} must start with {firstPart}. The invalid namespace is: \"{xmlNamespace}\""
+                message: $" {nameof(OrigamNameSpace)} must start with {firstPart}. The invalid namespace is: \"{xmlNamespace}\""
             );
         }
-        if (!Uri.IsWellFormedUriString(xmlNamespace, UriKind.Absolute))
+        if (!Uri.IsWellFormedUriString(uriString: xmlNamespace, uriKind: UriKind.Absolute))
         {
-            throw new ArgumentException($"{xmlNamespace} is not a valid absolute Uri");
+            throw new ArgumentException(message: $"{xmlNamespace} is not a valid absolute Uri");
         }
-        string[] splitElName = xmlNamespace.Split('/');
+        string[] splitElName = xmlNamespace.Split(separator: '/');
         if (splitElName.Length < 5)
         {
             throw new ArgumentException(
-                $"{xmlNamespace} cannot be parsed to {nameof(OrigamNameSpace)}"
+                message: $"{xmlNamespace} cannot be parsed to {nameof(OrigamNameSpace)}"
             );
         }
-        if (!Version.TryParse(splitElName[4], out var version))
+        if (!Version.TryParse(input: splitElName[4], result: out var version))
         {
             throw new ArgumentException(
-                $"{xmlNamespace} cannot be parsed to {nameof(OrigamNameSpace)} because \"{splitElName[4]}\" cannot be parsed to version"
+                message: $"{xmlNamespace} cannot be parsed to {nameof(OrigamNameSpace)} because \"{splitElName[4]}\" cannot be parsed to version"
             );
         }
         return new OrigamNameSpace(

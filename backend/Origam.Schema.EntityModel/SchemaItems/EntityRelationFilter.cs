@@ -31,11 +31,11 @@ namespace Origam.Schema.EntityModel;
 /// <summary>
 /// Summary description for EntityRelationFilter.
 /// </summary>
-[SchemaItemDescription("Filter Reference", 5)]
-[HelpTopic("Relationship+Filter")]
-[XmlModelRoot(CategoryConst)]
-[DefaultProperty("Filter")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Filter Reference", icon: 5)]
+[HelpTopic(topic: "Relationship+Filter")]
+[XmlModelRoot(category: CategoryConst)]
+[DefaultProperty(name: "Filter")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class EntityRelationFilter : AbstractSchemaItem
 {
     public const string CategoryConst = "EntityRelationFilter";
@@ -44,18 +44,18 @@ public class EntityRelationFilter : AbstractSchemaItem
         : base() { }
 
     public EntityRelationFilter(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public EntityRelationFilter(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Properties
     public Guid FilterId;
 
-    [TypeConverter(typeof(RelationFilterConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
+    [TypeConverter(type: typeof(RelationFilterConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
     [NotNullModelElementRuleAttribute()]
-    [XmlReference("filter", "FilterId")]
+    [XmlReference(attributeName: "filter", idField: "FilterId")]
     public EntityFilter Filter
     {
         get
@@ -63,7 +63,10 @@ public class EntityRelationFilter : AbstractSchemaItem
             ModelElementKey key = new ModelElementKey();
             key.Id = this.FilterId;
             return (EntityFilter)
-                this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
+                this.PersistenceProvider.RetrieveInstance(
+                    type: typeof(ISchemaItem),
+                    primaryKey: key
+                );
         }
         set
         {
@@ -74,7 +77,7 @@ public class EntityRelationFilter : AbstractSchemaItem
             }
             else
             {
-                this.FilterId = (Guid)value.PrimaryKey["Id"];
+                this.FilterId = (Guid)value.PrimaryKey[key: "Id"];
                 this.Name = this.Filter.Name;
             }
         }
@@ -93,8 +96,8 @@ public class EntityRelationFilter : AbstractSchemaItem
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(this.Filter);
-        base.GetExtraDependencies(dependencies);
+        dependencies.Add(item: this.Filter);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override void UpdateReferences()
@@ -103,7 +106,7 @@ public class EntityRelationFilter : AbstractSchemaItem
         {
             if (item.OldPrimaryKey != null)
             {
-                if (item.OldPrimaryKey.Equals(this.Filter.PrimaryKey))
+                if (item.OldPrimaryKey.Equals(obj: this.Filter.PrimaryKey))
                 {
                     this.Filter = item as EntityFilter;
                     break;

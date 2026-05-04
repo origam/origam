@@ -54,7 +54,7 @@ public class UIEngineTask : AbstractWorkflowEngineTask
         catch (Exception ex)
         {
             exception = ex;
-            OnFinished(new WorkflowEngineTaskEventArgs(exception));
+            OnFinished(e: new WorkflowEngineTaskEventArgs(exception: exception));
         }
     }
 
@@ -65,16 +65,19 @@ public class UIEngineTask : AbstractWorkflowEngineTask
         // into the dataset (because of GUID columns sorting). This is not possible if the DataSet
         // is mapped to an XmlDataDocument (which it is always in the workflow).
         IDataDocument originalData =
-            this.Engine.RuleEngine.GetContext(task.OutputContextStore) as IDataDocument;
+            this.Engine.RuleEngine.GetContext(contextStore: task.OutputContextStore)
+            as IDataDocument;
         if (originalData == null)
         {
-            throw new Exception(ResourceUtils.GetString("ErrorContextEmpty"));
+            throw new Exception(message: ResourceUtils.GetString(key: "ErrorContextEmpty"));
         }
         IDataDocument data = originalData;
 #if ORIGAM_SERVER
         if (task.OutputMethod != ServiceOutputMethod.FullMerge)
         {
-            data = this.Engine.CloneContext(originalData, false) as IDataDocument;
+            data =
+                this.Engine.CloneContext(context: originalData, returnDataSet: false)
+                as IDataDocument;
         }
 #else
         DataSet cloned = this.Engine.CloneContext(originalData, true) as DataSet;
@@ -85,7 +88,9 @@ public class UIEngineTask : AbstractWorkflowEngineTask
         // only assign a validation rule, if it is on the context the user will be editing
         if (
             task.ValidationRuleContextStore != null
-            && task.OutputContextStore.PrimaryKey.Equals(task.ValidationRuleContextStore.PrimaryKey)
+            && task.OutputContextStore.PrimaryKey.Equals(
+                obj: task.ValidationRuleContextStore.PrimaryKey
+            )
         )
         {
             validationRule = task.ValidationRule;
@@ -103,27 +108,27 @@ public class UIEngineTask : AbstractWorkflowEngineTask
         // get parameters for the form
         foreach (ISchemaItem param in task.RefreshParameters)
         {
-            parameters.Add(param.Name, this.Evaluate(param));
+            parameters.Add(key: param.Name, value: this.Evaluate(item: param));
         }
         this.Engine.Host.OnWorkflowForm(
-            this,
-            data,
-            this.Engine.GetTaskDescription(task),
-            this.Engine.Notification,
-            task.Screen,
-            task.OutputContextStore.RuleSet,
-            validationRule,
-            task.IsFinalForm,
-            task.AllowSave,
-            task.AutoNext,
-            structure,
-            task.RefreshMethod,
-            task.RefreshSortSet,
-            task.IsRefreshSuppressedBeforeFirstSave,
-            task.SaveConfirmationRule,
-            task.SaveDataStructure,
-            parameters,
-            task.RefreshPortalAfterSave == TrueFalseEnum.True
+            task: this,
+            data: data,
+            description: this.Engine.GetTaskDescription(task: task),
+            notification: this.Engine.Notification,
+            form: task.Screen,
+            ruleSet: task.OutputContextStore.RuleSet,
+            endRule: validationRule,
+            isFinalForm: task.IsFinalForm,
+            allowSave: task.AllowSave,
+            isAutoNext: task.AutoNext,
+            structure: structure,
+            refreshMethod: task.RefreshMethod,
+            refreshSort: task.RefreshSortSet,
+            isRefreshSuppressedBeforeFirstSave: task.IsRefreshSuppressedBeforeFirstSave,
+            saveConfirmationRule: task.SaveConfirmationRule,
+            saveStructure: task.SaveDataStructure,
+            parameters: parameters,
+            refreshPortalAfterSave: task.RefreshPortalAfterSave == TrueFalseEnum.True
         );
     }
 
@@ -132,23 +137,25 @@ public class UIEngineTask : AbstractWorkflowEngineTask
         if (this.Result == null)
         {
             OnFinished(
-                new WorkflowEngineTaskEventArgs(
-                    new NullReferenceException(ResourceUtils.GetString("ErrorNoResultData"))
+                e: new WorkflowEngineTaskEventArgs(
+                    exception: new NullReferenceException(
+                        message: ResourceUtils.GetString(key: "ErrorNoResultData")
+                    )
                 )
             );
         }
 
-        OnFinished(new WorkflowEngineTaskEventArgs());
+        OnFinished(e: new WorkflowEngineTaskEventArgs());
     }
 
     public void Abort(bool isDirty)
     {
         bool showAbortError = isDirty || !((UIFormTask)Step).IsFinalForm;
         OnFinished(
-            showAbortError
+            e: showAbortError
                 ? new WorkflowEngineTaskEventArgs(
-                    new WorkflowCancelledByUserException(
-                        ResourceUtils.GetString("ErrorUserCanceled")
+                    exception: new WorkflowCancelledByUserException(
+                        message: ResourceUtils.GetString(key: "ErrorUserCanceled")
                     )
                 )
                 : new WorkflowEngineTaskEventArgs()

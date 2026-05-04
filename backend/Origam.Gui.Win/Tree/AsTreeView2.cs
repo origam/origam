@@ -32,11 +32,12 @@ namespace Origam.Gui.Win;
 /// <summary>
 /// Summary description for AsTextBox.
 /// </summary>
-[ToolboxBitmap(typeof(AsTextBox))]
+[ToolboxBitmap(t: typeof(AsTextBox))]
 public class AsTreeView2 : TextBox
 {
     private IPersistenceService _persistence =
-        ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+        ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+        as IPersistenceService;
 
     #region Handling base events
     protected override void InitLayout()
@@ -55,7 +56,7 @@ public class AsTreeView2 : TextBox
     #endregion
     private Guid _styleId;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public Guid StyleId
     {
         get { return _styleId; }
@@ -63,39 +64,39 @@ public class AsTreeView2 : TextBox
     }
     private Guid _treeId;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public Guid TreeId
     {
         get { return _treeId; }
         set { _treeId = value; }
     }
 
-    [TypeConverter(typeof(TreeStructureConverter))]
+    [TypeConverter(type: typeof(TreeStructureConverter))]
     public TreeStructure Tree
     {
         get
         {
             return (TreeStructure)
                 _persistence.SchemaProvider.RetrieveInstance(
-                    typeof(TreeStructure),
-                    new ModelElementKey(this.TreeId)
+                    type: typeof(TreeStructure),
+                    primaryKey: new ModelElementKey(id: this.TreeId)
                 );
         }
-        set { this.TreeId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]); }
+        set { this.TreeId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]); }
     }
 
-    [TypeConverter(typeof(StylesConverter))]
+    [TypeConverter(type: typeof(StylesConverter))]
     public UIStyle Style
     {
         get
         {
             return (UIStyle)
                 _persistence.SchemaProvider.RetrieveInstance(
-                    typeof(UIStyle),
-                    new ModelElementKey(this.StyleId)
+                    type: typeof(UIStyle),
+                    primaryKey: new ModelElementKey(id: this.StyleId)
                 );
         }
-        set { this.StyleId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]); }
+        set { this.StyleId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]); }
     }
     private string _formParameterName;
     public string FormParameterName

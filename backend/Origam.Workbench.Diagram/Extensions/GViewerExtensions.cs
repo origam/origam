@@ -31,7 +31,7 @@ public static class GViewerExtensions
     {
         return gViewer
             .Entities.OfType<IViewerNode>()
-            .SingleOrDefault(viewerNode => Equals(viewerNode.Node, node));
+            .SingleOrDefault(predicate: viewerNode => Equals(objA: viewerNode.Node, objB: node));
     }
 
     public static void Redraw(this GViewer gViewer)

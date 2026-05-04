@@ -50,7 +50,7 @@ public class BrowserNodeCollection : CollectionBase
     /// </param>
     public BrowserNodeCollection(BrowserNodeCollection value)
     {
-        this.AddRange(value);
+        this.AddRange(value: value);
     }
 
     /// <summary>
@@ -63,7 +63,7 @@ public class BrowserNodeCollection : CollectionBase
     /// </param>
     public BrowserNodeCollection(IBrowserNode[] value)
     {
-        this.AddRange(value);
+        this.AddRange(value: value);
     }
 
     /// <summary>
@@ -76,8 +76,8 @@ public class BrowserNodeCollection : CollectionBase
     /// <exception cref='System.ArgumentOutOfRangeException'><paramref name='index'/> is outside the valid range of indexes for the collection.</exception>
     public IBrowserNode this[int index]
     {
-        get { return ((IBrowserNode)(List[index])); }
-        set { List[index] = value; }
+        get { return ((IBrowserNode)(List[index: index])); }
+        set { List[index: index] = value; }
     }
 
     /// <summary>
@@ -91,7 +91,7 @@ public class BrowserNodeCollection : CollectionBase
     /// <seealso cref='Origam.UI.BrowserNodeCollection.AddRange'/>
     public int Add(IBrowserNode value)
     {
-        return List.Add(value);
+        return List.Add(value: value);
     }
 
     /// <summary>
@@ -108,7 +108,7 @@ public class BrowserNodeCollection : CollectionBase
     {
         for (int i = 0; (i < value.Length); i = (i + 1))
         {
-            this.Add(value[i]);
+            this.Add(value: value[i]);
         }
     }
 
@@ -128,7 +128,7 @@ public class BrowserNodeCollection : CollectionBase
     {
         for (int i = 0; (i < value.Count); i = (i + 1))
         {
-            this.Add(value[i]);
+            this.Add(value: value[index: i]);
         }
     }
 
@@ -144,7 +144,7 @@ public class BrowserNodeCollection : CollectionBase
     /// <seealso cref='Origam.UI.BrowserNodeCollection.IndexOf'/>
     public bool Contains(IBrowserNode value)
     {
-        return List.Contains(value);
+        return List.Contains(value: value);
     }
 
     /// <summary>
@@ -162,7 +162,7 @@ public class BrowserNodeCollection : CollectionBase
     /// <seealso cref='System.Array'/>
     public void CopyTo(IBrowserNode[] array, int index)
     {
-        List.CopyTo(array, index);
+        List.CopyTo(array: array, index: index);
     }
 
     /// <summary>
@@ -177,7 +177,7 @@ public class BrowserNodeCollection : CollectionBase
     /// <seealso cref='Origam.UI.BrowserNodeCollection.Contains'/>
     public int IndexOf(IBrowserNode value)
     {
-        return List.IndexOf(value);
+        return List.IndexOf(value: value);
     }
 
     /// <summary>
@@ -189,7 +189,7 @@ public class BrowserNodeCollection : CollectionBase
     /// <seealso cref='Origam.UI.BrowserNodeCollection.Add'/>
     public void Insert(int index, IBrowserNode value)
     {
-        List.Insert(index, value);
+        List.Insert(index: index, value: value);
     }
 
     /// <summary>
@@ -200,7 +200,7 @@ public class BrowserNodeCollection : CollectionBase
     /// <seealso cref='System.Collections.IEnumerator'/>
     public new IBrowserNodeEnumerator GetEnumerator()
     {
-        return new IBrowserNodeEnumerator(this);
+        return new IBrowserNodeEnumerator(mappings: this);
     }
 
     /// <summary>
@@ -212,7 +212,7 @@ public class BrowserNodeCollection : CollectionBase
     /// <exception cref='System.ArgumentException'><paramref name='value'/> is not found in the Collection. </exception>
     public void Remove(IBrowserNode value)
     {
-        List.Remove(value);
+        List.Remove(value: value);
     }
 
     protected override void OnSet(int index, object oldValue, object newValue)

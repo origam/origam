@@ -26,9 +26,9 @@ using Origam.DA.Common;
 
 namespace Origam.Schema.GuiModel;
 
-[SchemaItemDescription("File Mapping", "Parameter Mappings", 29)]
-[HelpTopic("File+Mapping")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "File Mapping", folderName: "Parameter Mappings", icon: 29)]
+[HelpTopic(topic: "File+Mapping")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class PageParameterFileMapping : PageParameterMapping
 {
     public PageParameterFileMapping()
@@ -38,13 +38,13 @@ public class PageParameterFileMapping : PageParameterMapping
     }
 
     public PageParameterFileMapping(Guid schemaExtensionId)
-        : base(schemaExtensionId)
+        : base(schemaExtensionId: schemaExtensionId)
     {
         Init();
     }
 
     public PageParameterFileMapping(Key primaryKey)
-        : base(primaryKey)
+        : base(primaryKey: primaryKey)
     {
         Init();
     }
@@ -54,8 +54,8 @@ public class PageParameterFileMapping : PageParameterMapping
     #region Properties
     private PageParameterFileInfo _fileInfoType = PageParameterFileInfo.FileContent;
 
-    [Category("File Info")]
-    [XmlAttribute("fileInfoType")]
+    [Category(category: "File Info")]
+    [XmlAttribute(attributeName: "fileInfoType")]
     public PageParameterFileInfo FileInfoType
     {
         get { return _fileInfoType; }
@@ -63,9 +63,9 @@ public class PageParameterFileMapping : PageParameterMapping
     }
     private int _thumbnailWidth = 0;
 
-    [Category("File Info")]
-    [DefaultValue(0)]
-    [XmlAttribute("thumbnailWidth")]
+    [Category(category: "File Info")]
+    [DefaultValue(value: 0)]
+    [XmlAttribute(attributeName: "thumbnailWidth")]
     public int ThumbnailWidth
     {
         get { return _thumbnailWidth; }
@@ -73,9 +73,9 @@ public class PageParameterFileMapping : PageParameterMapping
     }
     private int _thumbnailHeight = 0;
 
-    [Category("File Info")]
-    [DefaultValue(0)]
-    [XmlAttribute("thumbnailHeight")]
+    [Category(category: "File Info")]
+    [DefaultValue(value: 0)]
+    [XmlAttribute(attributeName: "thumbnailHeight")]
     public int ThumbnailHeight
     {
         get { return _thumbnailHeight; }

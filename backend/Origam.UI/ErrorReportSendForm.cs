@@ -58,7 +58,7 @@ public class ErrorReportSendForm : System.Windows.Forms.Form
                 components.Dispose();
             }
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
 
     #region Windows Form Designer generated code
@@ -183,11 +183,11 @@ public class ErrorReportSendForm : System.Windows.Forms.Form
         if (txtUserText.Text == "" | txtExpectedResult.Text == "")
         {
             MessageBox.Show(
-                this,
-                ResourceUtils.GetString("EnterAll"),
-                ResourceUtils.GetString("ErrorMessage"),
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error
+                owner: this,
+                text: ResourceUtils.GetString(key: "EnterAll"),
+                caption: ResourceUtils.GetString(key: "ErrorMessage"),
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Error
             );
             return;
         }

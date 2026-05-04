@@ -27,17 +27,17 @@ using Schedule;
 
 namespace Origam.Schema.WorkflowModel;
 
-[SchemaItemDescription("Simple Schedule", "simple-schedule-1.png")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Simple Schedule", iconName: "simple-schedule-1.png")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class SimpleScheduleTime : AbstractScheduleTime
 {
     public SimpleScheduleTime() { }
 
     public SimpleScheduleTime(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(schemaExtensionId: schemaExtensionId) { }
 
     public SimpleScheduleTime(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Override AbstractScheduleTime Members
     public override bool CanConvertTo(Type type) => type == typeof(ScheduleGroup);
@@ -48,8 +48,8 @@ public class SimpleScheduleTime : AbstractScheduleTime
         {
             return base.ConvertTo<T>();
         }
-        var converted = RootProvider.NewItem<T>(SchemaExtensionId, Group);
-        converted.PrimaryKey["Id"] = PrimaryKey["Id"];
+        var converted = RootProvider.NewItem<T>(schemaExtensionId: SchemaExtensionId, group: Group);
+        converted.PrimaryKey[key: "Id"] = PrimaryKey[key: "Id"];
         converted.Name = Name;
         converted.IsAbstract = IsAbstract;
         // we have to delete first (also from the cache)
@@ -68,8 +68,8 @@ public class SimpleScheduleTime : AbstractScheduleTime
     #region Properties
     private ScheduleIntervalType _intervalType = ScheduleIntervalType.Daily;
 
-    [Category("Schedule Interval"), RefreshProperties(RefreshProperties.Repaint)]
-    [XmlAttribute("intervalType")]
+    [Category(category: "Schedule Interval"), RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [XmlAttribute(attributeName: "intervalType")]
     public ScheduleIntervalType IntervalType
     {
         get => _intervalType;
@@ -109,8 +109,8 @@ public class SimpleScheduleTime : AbstractScheduleTime
     }
     private int _milliseconds = 0;
 
-    [Browsable(false)]
-    [XmlAttribute("milliseconds")]
+    [Browsable(browsable: false)]
+    [XmlAttribute(attributeName: "milliseconds")]
     public int Milliseconds
     {
         get => _milliseconds;
@@ -119,9 +119,9 @@ public class SimpleScheduleTime : AbstractScheduleTime
             if ((value < 0) || (value > 999))
             {
                 throw new ArgumentOutOfRangeException(
-                    "Milliseconds",
-                    value,
-                    ResourceUtils.GetString("EnterNumberBetween0")
+                    paramName: "Milliseconds",
+                    actualValue: value,
+                    message: ResourceUtils.GetString(key: "EnterNumberBetween0")
                 );
             }
             _milliseconds = value;
@@ -129,8 +129,8 @@ public class SimpleScheduleTime : AbstractScheduleTime
     }
     private int _seconds = 0;
 
-    [Category("Schedule"), RefreshProperties(RefreshProperties.Repaint)]
-    [XmlAttribute("seconds")]
+    [Category(category: "Schedule"), RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [XmlAttribute(attributeName: "seconds")]
     public int Seconds
     {
         get => _seconds;
@@ -139,9 +139,9 @@ public class SimpleScheduleTime : AbstractScheduleTime
             if ((value < 0) || (value > 59))
             {
                 throw new ArgumentOutOfRangeException(
-                    "Seconds",
-                    value,
-                    ResourceUtils.GetString("EnterNumberBetween1")
+                    paramName: "Seconds",
+                    actualValue: value,
+                    message: ResourceUtils.GetString(key: "EnterNumberBetween1")
                 );
             }
             _seconds = value;
@@ -149,8 +149,8 @@ public class SimpleScheduleTime : AbstractScheduleTime
     }
     private int _minutes = 0;
 
-    [Category("Schedule"), RefreshProperties(RefreshProperties.Repaint)]
-    [XmlAttribute("minutes")]
+    [Category(category: "Schedule"), RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [XmlAttribute(attributeName: "minutes")]
     public int Minutes
     {
         get => _minutes;
@@ -159,9 +159,9 @@ public class SimpleScheduleTime : AbstractScheduleTime
             if ((value < 0) || (value > 59))
             {
                 throw new ArgumentOutOfRangeException(
-                    "Minutes",
-                    value,
-                    ResourceUtils.GetString("EnterNumberBetween1")
+                    paramName: "Minutes",
+                    actualValue: value,
+                    message: ResourceUtils.GetString(key: "EnterNumberBetween1")
                 );
             }
             _minutes = value;
@@ -169,8 +169,8 @@ public class SimpleScheduleTime : AbstractScheduleTime
     }
     private int _hours = 0;
 
-    [Category("Schedule"), RefreshProperties(RefreshProperties.Repaint)]
-    [XmlAttribute("hours")]
+    [Category(category: "Schedule"), RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [XmlAttribute(attributeName: "hours")]
     public int Hours
     {
         get => _hours;
@@ -179,9 +179,9 @@ public class SimpleScheduleTime : AbstractScheduleTime
             if ((value < 0) || (value > 23))
             {
                 throw new ArgumentOutOfRangeException(
-                    "Hours",
-                    value,
-                    ResourceUtils.GetString("EnterNumberBetween2")
+                    paramName: "Hours",
+                    actualValue: value,
+                    message: ResourceUtils.GetString(key: "EnterNumberBetween2")
                 );
             }
             _hours = value;
@@ -189,8 +189,8 @@ public class SimpleScheduleTime : AbstractScheduleTime
     }
     private int _days = 0;
 
-    [Category("Schedule"), RefreshProperties(RefreshProperties.Repaint)]
-    [XmlAttribute("days")]
+    [Category(category: "Schedule"), RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [XmlAttribute(attributeName: "days")]
     public int Days
     {
         get => _days;
@@ -201,9 +201,9 @@ public class SimpleScheduleTime : AbstractScheduleTime
                 if ((value < 1) || (value > 31))
                 {
                     throw new ArgumentOutOfRangeException(
-                        "Days",
-                        value,
-                        ResourceUtils.GetString("EnterNumberBetween3")
+                        paramName: "Days",
+                        actualValue: value,
+                        message: ResourceUtils.GetString(key: "EnterNumberBetween3")
                     );
                 }
             }
@@ -212,9 +212,9 @@ public class SimpleScheduleTime : AbstractScheduleTime
                 if ((value < 0) || (value > 6))
                 {
                     throw new ArgumentOutOfRangeException(
-                        "Days",
-                        value,
-                        ResourceUtils.GetString("EnterNumberBetween4")
+                        paramName: "Days",
+                        actualValue: value,
+                        message: ResourceUtils.GetString(key: "EnterNumberBetween4")
                     );
                 }
             }
@@ -230,8 +230,17 @@ public class SimpleScheduleTime : AbstractScheduleTime
         {
             days--;
         }
-        var span = new TimeSpan(days, Hours, Minutes, Seconds, Milliseconds);
-        return new ScheduledTime(SchedulerEventTimeBase(IntervalType), span);
+        var span = new TimeSpan(
+            days: days,
+            hours: Hours,
+            minutes: Minutes,
+            seconds: Seconds,
+            milliseconds: Milliseconds
+        );
+        return new ScheduledTime(
+            Base: SchedulerEventTimeBase(intervalType: IntervalType),
+            Offset: span
+        );
     }
     #endregion
     #region Private Methods
@@ -266,9 +275,9 @@ public class SimpleScheduleTime : AbstractScheduleTime
             default:
             {
                 throw new ArgumentOutOfRangeException(
-                    "intervalType",
-                    intervalType,
-                    ResourceUtils.GetString("ErrorUknownIntervalType")
+                    paramName: "intervalType",
+                    actualValue: intervalType,
+                    message: ResourceUtils.GetString(key: "ErrorUknownIntervalType")
                 );
             }
         }

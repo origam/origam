@@ -50,7 +50,7 @@ public class FormSessionStore : SaveableSessionStore
         FormReferenceMenuItem menuItem,
         Analytics analytics
     )
-        : base(service, request, name, analytics)
+        : base(service: service, request: request, name: name, analytics: analytics)
     {
         _menuItem = menuItem;
         SetMenuProperties();
@@ -62,14 +62,15 @@ public class FormSessionStore : SaveableSessionStore
         string name,
         Analytics analytics
     )
-        : base(service, request, name, analytics)
+        : base(service: service, request: request, name: name, analytics: analytics)
     {
         IPersistenceService ps =
-            ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+            ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+            as IPersistenceService;
         FormReferenceMenuItem fr = (FormReferenceMenuItem)
             ps.SchemaProvider.RetrieveInstance(
-                typeof(FormReferenceMenuItem),
-                new ModelElementKey(new Guid(this.Request.ObjectId))
+                type: typeof(FormReferenceMenuItem),
+                primaryKey: new ModelElementKey(id: new Guid(g: this.Request.ObjectId))
             );
         _menuItem = fr;
         FormId = _menuItem.ScreenId;
@@ -109,9 +110,9 @@ public class FormSessionStore : SaveableSessionStore
 
     private void PrepareDataCore()
     {
-        var data = InitializeFullStructure(_menuItem.DefaultSet);
-        SetDataSource(data);
-        SetDelayedLoadingParameter(_menuItem.Method);
+        var data = InitializeFullStructure(defaultSet: _menuItem.DefaultSet);
+        SetDataSource(dataSource: data);
+        SetDelayedLoadingParameter(method: _menuItem.Method);
         this.IsDelayedLoading = true;
         this.DataListEntity = _menuItem.ListEntity.Name;
     }
@@ -125,13 +126,13 @@ public class FormSessionStore : SaveableSessionStore
             if (_menuItem.ListEntity != null)
             {
                 SetDataList(
-                    null,
-                    _menuItem.ListEntity.Name,
-                    _menuItem.ListDataStructure,
-                    _menuItem.ListMethod
+                    list: null,
+                    entity: _menuItem.ListEntity.Name,
+                    listDataStructure: _menuItem.ListDataStructure,
+                    method: _menuItem.ListMethod
                 );
             }
-            SetDelayedLoadingParameter(_menuItem.RecordEditMethod);
+            SetDelayedLoadingParameter(method: _menuItem.RecordEditMethod);
         }
         else if (_menuItem.ListDataStructure == null)
         {
@@ -141,7 +142,7 @@ public class FormSessionStore : SaveableSessionStore
         else
         {
             throw new Exception(
-                "A screen is lazy loaded but the client requested session data on InitUI "
+                message: "A screen is lazy loaded but the client requested session data on InitUI "
                     + "call by setting DataRequested=true. Instead the client should set DataRequested=false "
                     + "and call GetRows in order to get the list data and then MasterRecord to load "
                     + "one of the records and GetData to request entity data."
@@ -149,36 +150,38 @@ public class FormSessionStore : SaveableSessionStore
         }
         if (data != null)
         {
-            SetDataSource(data);
+            SetDataSource(dataSource: data);
         }
     }
 
     private void SetDelayedLoadingParameter(DataStructureMethod method)
     {
         // set the parameter for delayed data loading - there should be just 1
-        DelayedLoadingParameterName = CustomParameterService.GetFirstNonCustomParameter(method);
+        DelayedLoadingParameterName = CustomParameterService.GetFirstNonCustomParameter(
+            method: method
+        );
     }
 
     private string ListPrimaryKeyColumns(DataSet data, string listEntity)
     {
-        return GetDataSetBuilder().ListPrimaryKeyColumns(data, listEntity);
+        return GetDataSetBuilder().ListPrimaryKeyColumns(data: data, listEntity: listEntity);
     }
 
     private DataSet LoadCompleteData()
     {
         if (_menuItem.Method != null)
         {
-            ResolveFormMethodParameters(_menuItem.Method);
+            ResolveFormMethodParameters(method: _menuItem.Method);
         }
         DataSet data;
         QueryParameterCollection qparams = Request.QueryParameters;
         data = CoreServices.DataService.Instance.LoadData(
-            DataStructureId,
-            _menuItem.MethodId,
-            _menuItem.DefaultSetId,
-            _menuItem.SortSetId,
-            null,
-            qparams
+            dataStructureId: DataStructureId,
+            methodId: _menuItem.MethodId,
+            defaultSetId: _menuItem.DefaultSetId,
+            sortSetId: _menuItem.SortSetId,
+            transactionId: null,
+            parameters: qparams
         );
         return data;
     }
@@ -190,20 +193,29 @@ public class FormSessionStore : SaveableSessionStore
         var arrayColumns = new List<string>();
         foreach (var column in columns)
         {
-            if (!DataListLoadedColumns.Contains(column))
+            if (!DataListLoadedColumns.Contains(item: column))
             {
-                if (IsColumnArray(DataList.Tables[DataListEntity].Columns[column]))
+                if (
+                    IsColumnArray(
+                        dataColumn: DataList.Tables[name: DataListEntity].Columns[name: column]
+                    )
+                )
                 {
-                    arrayColumns.Add(column);
+                    arrayColumns.Add(item: column);
                 }
                 else
                 {
-                    finalColumns.Add(column);
+                    finalColumns.Add(item: column);
                 }
             }
         }
-        LoadStandardColumns(qparams, finalColumns);
-        LoadArrayColumns(this.DataList, this.DataListEntity, qparams, arrayColumns);
+        LoadStandardColumns(qparams: qparams, finalColumns: finalColumns);
+        LoadArrayColumns(
+            dataset: this.DataList,
+            entity: this.DataListEntity,
+            qparams: qparams,
+            arrayColumns: arrayColumns
+        );
     }
 
     private void LoadArrayColumns(
@@ -217,22 +229,22 @@ public class FormSessionStore : SaveableSessionStore
         {
             foreach (string column in arrayColumns)
             {
-                if (!DataListLoadedColumns.Contains(column))
+                if (!DataListLoadedColumns.Contains(item: column))
                 {
-                    DataColumn col = dataset.Tables[entity].Columns[column];
-                    string relationName = (string)col.ExtendedProperties[Const.ArrayRelation];
+                    DataColumn col = dataset.Tables[name: entity].Columns[name: column];
+                    string relationName = (string)col.ExtendedProperties[key: Const.ArrayRelation];
                     CoreServices.DataService.Instance.LoadData(
-                        _menuItem.ListDataStructureId,
-                        _menuItem.ListMethodId,
-                        Guid.Empty,
-                        _menuItem.ListSortSetId,
-                        null,
-                        qparams,
-                        dataset,
-                        relationName,
-                        null
+                        dataStructureId: _menuItem.ListDataStructureId,
+                        methodId: _menuItem.ListMethodId,
+                        defaultSetId: Guid.Empty,
+                        sortSetId: _menuItem.ListSortSetId,
+                        transactionId: null,
+                        parameters: qparams,
+                        currentData: dataset,
+                        entity: relationName,
+                        columnName: null
                     );
-                    DataListLoadedColumns.Add(column);
+                    DataListLoadedColumns.Add(item: column);
                 }
             }
         }
@@ -246,31 +258,35 @@ public class FormSessionStore : SaveableSessionStore
             {
                 return;
             }
-            finalColumns.Add(ListPrimaryKeyColumns(this.DataList, this.DataListEntity));
-            DataSet columnData = DatasetTools.CloneDataSet(DataList);
-            DataTable listTable = DataList.Tables[DataListEntity];
+            finalColumns.Add(
+                item: ListPrimaryKeyColumns(data: this.DataList, listEntity: this.DataListEntity)
+            );
+            DataSet columnData = DatasetTools.CloneDataSet(dataset: DataList);
+            DataTable listTable = DataList.Tables[name: DataListEntity];
             CoreServices.DataService.Instance.LoadData(
-                _menuItem.ListDataStructureId,
-                _menuItem.ListMethodId,
-                Guid.Empty,
-                _menuItem.ListSortSetId,
-                null,
-                qparams,
-                columnData,
-                this.DataListEntity,
-                string.Join(";", finalColumns)
+                dataStructureId: _menuItem.ListDataStructureId,
+                methodId: _menuItem.ListMethodId,
+                defaultSetId: Guid.Empty,
+                sortSetId: _menuItem.ListSortSetId,
+                transactionId: null,
+                parameters: qparams,
+                currentData: columnData,
+                entity: this.DataListEntity,
+                columnName: string.Join(separator: ";", values: finalColumns)
             );
             listTable.BeginLoadData();
             try
             {
-                foreach (DataRow columnRow in columnData.Tables[DataListEntity].Rows)
+                foreach (DataRow columnRow in columnData.Tables[name: DataListEntity].Rows)
                 {
-                    DataRow listRow = listTable.Rows.Find(DatasetTools.PrimaryKey(columnRow));
+                    DataRow listRow = listTable.Rows.Find(
+                        keys: DatasetTools.PrimaryKey(row: columnRow)
+                    );
                     if (listRow != null)
                     {
                         foreach (string column in finalColumns)
                         {
-                            listRow[column] = columnRow[column];
+                            listRow[columnName: column] = columnRow[columnName: column];
                         }
                     }
                 }
@@ -280,7 +296,7 @@ public class FormSessionStore : SaveableSessionStore
                 listTable.EndLoadData();
                 foreach (string column in finalColumns)
                 {
-                    DataListLoadedColumns.Add(column);
+                    DataListLoadedColumns.Add(item: column);
                 }
             }
         }
@@ -290,15 +306,15 @@ public class FormSessionStore : SaveableSessionStore
     {
         DataSet data;
         // We use the RecordEdit filter set for single record editing.
-        ResolveFormMethodParameters(_menuItem.RecordEditMethod);
+        ResolveFormMethodParameters(method: _menuItem.RecordEditMethod);
         QueryParameterCollection qparams = Request.QueryParameters;
         data = CoreServices.DataService.Instance.LoadData(
-            DataStructureId,
-            _menuItem.RecordEditMethodId,
-            _menuItem.DefaultSetId,
-            _menuItem.SortSetId,
-            null,
-            qparams
+            dataStructureId: DataStructureId,
+            methodId: _menuItem.RecordEditMethodId,
+            defaultSetId: _menuItem.DefaultSetId,
+            sortSetId: _menuItem.SortSetId,
+            transactionId: null,
+            parameters: qparams
         );
         return data;
     }
@@ -307,17 +323,17 @@ public class FormSessionStore : SaveableSessionStore
     {
         // And we have to get the real parameter names from the filters/defaults instead of the "id"
         // set by the client.
-        if (this.Request.Parameters.Contains("id"))
+        if (this.Request.Parameters.Contains(key: "id"))
         {
-            object value = this.Request.Parameters["id"];
+            object value = this.Request.Parameters[key: "id"];
             this.Request.Parameters.Clear();
             foreach (var entry in method.ParameterReferences)
             {
-                this.Request.Parameters[entry.Key] = value;
+                this.Request.Parameters[key: entry.Key] = value;
             }
             foreach (var entry in DataStructure().ParameterReferences)
             {
-                this.Request.Parameters[entry.Key] = value;
+                this.Request.Parameters[key: entry.Key] = value;
             }
         }
     }
@@ -326,7 +342,7 @@ public class FormSessionStore : SaveableSessionStore
     {
         if (MenuItem.ReadOnlyAccess)
         {
-            throw new Exception("Read only session cannot be saved");
+            throw new Exception(message: "Read only session cannot be saved");
         }
         return base.Save();
     }
@@ -352,9 +368,9 @@ public class FormSessionStore : SaveableSessionStore
             default:
             {
                 throw new ArgumentOutOfRangeException(
-                    "actionId",
-                    actionId,
-                    Resources.ErrorContextUnknownAction
+                    paramName: "actionId",
+                    actualValue: actionId,
+                    message: Resources.ErrorContextUnknownAction
                 );
             }
         }
@@ -377,26 +393,26 @@ public class FormSessionStore : SaveableSessionStore
                 CurrentRecordId = null;
                 return result;
             }
-            DataTable table = GetDataTable(entity);
-            DataRow row = GetSessionRow(entity, id);
+            DataTable table = GetDataTable(entity: entity);
+            DataRow row = GetSessionRow(entity: entity, id: id);
             // for new rows we don't even try to load the data from the database
             if (row == null || row.RowState != DataRowState.Added)
             {
                 if (!ignoreDirtyState && this.Data.HasChanges())
                 {
-                    throw new Exception(Resources.ErrorDataNotSavedWhileChangingRow);
+                    throw new Exception(message: Resources.ErrorDataNotSavedWhileChangingRow);
                 }
                 this.CurrentRecordId = null;
-                SetDataSource(LoadDataPiece(id));
+                SetDataSource(dataSource: LoadDataPiece(parentId: id));
             }
             this.CurrentRecordId = id;
-            DataRow actualDataRow = GetSessionRow(entity, id);
-            UpdateListRow(actualDataRow);
-            ChangeInfo ci = GetChangeInfo(null, actualDataRow, 0);
-            result.Add(ci);
+            DataRow actualDataRow = GetSessionRow(entity: entity, id: id);
+            UpdateListRow(r: actualDataRow);
+            ChangeInfo ci = GetChangeInfo(requestingGrid: null, row: actualDataRow, operation: 0);
+            result.Add(item: ci);
             if (actualDataRow.RowState == DataRowState.Unchanged)
             {
-                result.Add(ChangeInfo.SavedChangeInfo());
+                result.Add(item: ChangeInfo.SavedChangeInfo());
             }
         }
         return result;
@@ -411,8 +427,8 @@ public class FormSessionStore : SaveableSessionStore
                 CurrentRecordId = null;
                 return null;
             }
-            DataRow row = GetSessionRow(entity, id);
-            return GetChangeInfo(null, row, Operation.Update);
+            DataRow row = GetSessionRow(entity: entity, id: id);
+            return GetChangeInfo(requestingGrid: null, row: row, operation: Operation.Update);
         }
     }
 
@@ -430,12 +446,16 @@ public class FormSessionStore : SaveableSessionStore
         object rootRecordId
     )
     {
-        return GetDataImplementation(childEntity, parentRecordId, rootRecordId);
+        return GetDataImplementation(
+            childEntity: childEntity,
+            parentRecordId: parentRecordId,
+            rootRecordId: rootRecordId
+        );
     }
 
     internal override void OnNewRecord(string entity, object id)
     {
-        if (IsLazyLoadedEntity(entity))
+        if (IsLazyLoadedEntity(entity: entity))
         {
             this.CurrentRecordId = null;
 
@@ -459,42 +479,44 @@ public class FormSessionStore : SaveableSessionStore
         var result = new List<ChangeInfo>();
         // get the original row and return it to the client, so it updates to
         // the original state
-        DataRow originalRow = this.GetSessionRow(this.DataListEntity, recordId);
+        DataRow originalRow = this.GetSessionRow(entity: this.DataListEntity, id: recordId);
         if (originalRow.RowState == DataRowState.Added)
         {
-            result.AddRange(this.DeleteObject(originalRow.Table.TableName, recordId));
+            result.AddRange(
+                collection: this.DeleteObject(entity: originalRow.Table.TableName, id: recordId)
+            );
         }
         else
         {
             this.CurrentRecordId = null;
 
             // update the values from database
-            this.GetRowData(this.DataListEntity, recordId, true);
+            this.GetRowData(entity: this.DataListEntity, id: recordId, ignoreDirtyState: true);
 
             // get the loaded data
-            originalRow = this.GetSessionRow(this.DataListEntity, recordId);
+            originalRow = this.GetSessionRow(entity: this.DataListEntity, id: recordId);
             // return the loaded data
-            result.Add(GetChangeInfo(null, originalRow, 0));
+            result.Add(item: GetChangeInfo(requestingGrid: null, row: originalRow, operation: 0));
         }
-        if (recordId.Equals(this.CurrentRecordId))
+        if (recordId.Equals(obj: this.CurrentRecordId))
         {
             this.CurrentRecordId = null;
         }
         // add SAVED operation in the end, since we ignored the data and start with a fresh copy
-        result.Add(ChangeInfo.SavedChangeInfo());
+        result.Add(item: ChangeInfo.SavedChangeInfo());
         return result;
     }
 
     private DataSet LoadDataPiece(object parentId)
     {
         return CoreServices.DataService.Instance.LoadData(
-            DataStructureId,
-            _menuItem.MethodId,
-            _menuItem.DefaultSetId,
-            Guid.Empty,
-            null,
-            DelayedLoadingParameterName,
-            parentId
+            dataStructureId: DataStructureId,
+            methodId: _menuItem.MethodId,
+            defaultSetId: _menuItem.DefaultSetId,
+            sortSetId: Guid.Empty,
+            transactionId: null,
+            paramName1: DelayedLoadingParameterName,
+            paramValue1: parentId
         );
     }
 
@@ -508,21 +530,21 @@ public class FormSessionStore : SaveableSessionStore
             return result;
         }
         XmlDocument formXml = OrigamEngine
-            .ModelXmlBuilders.FormXmlBuilder.GetXml(new Guid(this.Request.ObjectId))
+            .ModelXmlBuilders.FormXmlBuilder.GetXml(menuId: new Guid(g: this.Request.ObjectId))
             .Document;
-        XmlNodeList list = formXml.SelectNodes("/Window");
-        XmlElement windowElement = list[0] as XmlElement;
+        XmlNodeList list = formXml.SelectNodes(xpath: "/Window");
+        XmlElement windowElement = list[i: 0] as XmlElement;
         // The SuppressSave attribute causes the Save button to disappear.
         // It should not be set to true if there is at least one editable field on the screen. The final result can be
         // determined only after the whole screen xml has been created.
         if (
-            windowElement.GetAttribute("SuppressSave") == "true"
-            && formXml.SelectNodes("//Property[@ReadOnly='false']")?.Count > 0
+            windowElement.GetAttribute(name: "SuppressSave") == "true"
+            && formXml.SelectNodes(xpath: "//Property[@ReadOnly='false']")?.Count > 0
         )
         {
-            windowElement.SetAttribute("SuppressSave", "false");
+            windowElement.SetAttribute(name: "SuppressSave", value: "false");
         }
-        if (windowElement.GetAttribute("SuppressSave") == "true")
+        if (windowElement.GetAttribute(name: "SuppressSave") == "true")
         {
             this.SuppressSave = true;
         }
@@ -533,12 +555,12 @@ public class FormSessionStore : SaveableSessionStore
     {
         if (log.IsDebugEnabled)
         {
-            log.Debug("Preparing XML...");
+            log.Debug(message: "Preparing XML...");
         }
         _preparedFormXml = GetFormXml();
         if (log.IsDebugEnabled)
         {
-            log.Debug("XML prepared...");
+            log.Debug(message: "XML prepared...");
         }
     }
 
@@ -555,7 +577,11 @@ public class FormSessionStore : SaveableSessionStore
         {
             try
             {
-                GetRowData(this.DataListEntity, currentRecordId, false);
+                GetRowData(
+                    entity: this.DataListEntity,
+                    id: currentRecordId,
+                    ignoreDirtyState: false
+                );
             }
             catch (ArgumentOutOfRangeException)
             {

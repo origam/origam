@@ -47,7 +47,7 @@ class PropertyGridEx : System.Windows.Forms.PropertyGrid
         Site = new SimpleSiteImpl();
         PropertyValueServiceImpl svc = new PropertyValueServiceImpl();
         svc.QueryPropertyUIValueItems += VerifyDataErrorInfo;
-        ((SimpleSiteImpl)Site).AddService<IPropertyValueUIService>(svc);
+        ((SimpleSiteImpl)Site).AddService<IPropertyValueUIService>(service: svc);
     }
 
     void VerifyDataErrorInfo(
@@ -61,29 +61,33 @@ class PropertyGridEx : System.Windows.Forms.PropertyGrid
             IModelElementRule rule = item as IModelElementRule;
             if (rule != null)
             {
-                Exception ex = rule.CheckRule(context.Instance, propDesc.Name);
+                Exception ex = rule.CheckRule(
+                    instance: context.Instance,
+                    memberName: propDesc.Name
+                );
                 if (ex != null)
                 {
                     valueUIItemList.Add(
-                        new PropertyValueUIItem(
-                            UIItemErrorImage,
-                            new PropertyValueUIItemInvokeHandler(UIItemNullHandler),
-                            ex.Message
+                        value: new PropertyValueUIItem(
+                            uiItemImage: UIItemErrorImage,
+                            handler: new PropertyValueUIItemInvokeHandler(UIItemNullHandler),
+                            tooltip: ex.Message
                         )
                     );
                 }
             }
         }
-        var element = propDesc.GetValue(context.Instance) as ISchemaItem;
+        var element = propDesc.GetValue(component: context.Instance) as ISchemaItem;
         if (element != null)
         {
             var editHandler = new ModelElementEditHandler();
-            editHandler.LinkClicked += (sender, args) => LinkClicked?.Invoke(this, EventArgs.Empty);
+            editHandler.LinkClicked += (sender, args) =>
+                LinkClicked?.Invoke(sender: this, e: EventArgs.Empty);
             valueUIItemList.Add(
-                new PropertyValueUIItem(
-                    UIItemEditImage,
-                    editHandler.Run,
-                    "Double click to open " + element.Path
+                value: new PropertyValueUIItem(
+                    uiItemImage: UIItemEditImage,
+                    handler: editHandler.Run,
+                    tooltip: "Double click to open " + element.Path
                 )
             );
         }
@@ -103,21 +107,27 @@ class PropertyGridEx : System.Windows.Forms.PropertyGrid
             {
                 // navigate in model browser
                 var schemaBrowser =
-                    WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+                    WorkbenchSingleton.Workbench.GetPad(type: typeof(SchemaBrowser))
+                    as SchemaBrowser;
                 schemaBrowser.EbrSchemaBrowser.SelectItem(
-                    descriptor.GetValue(context.Instance) as ISchemaItem
+                    item: descriptor.GetValue(component: context.Instance) as ISchemaItem
                 );
                 ViewSchemaBrowserPad cmd = new ViewSchemaBrowserPad();
                 cmd.Run();
                 // edit
                 EditSchemaItem cmdEdit = new Commands.EditSchemaItem();
-                cmdEdit.Owner = descriptor.GetValue(context.Instance);
+                cmdEdit.Owner = descriptor.GetValue(component: context.Instance);
                 cmdEdit.Run();
-                LinkClicked?.Invoke(this, EventArgs.Empty);
+                LinkClicked?.Invoke(sender: this, e: EventArgs.Empty);
             }
             catch (Exception ex)
             {
-                Origam.UI.AsMessageBox.ShowError(null, ex.Message, "Error", ex);
+                Origam.UI.AsMessageBox.ShowError(
+                    owner: null,
+                    text: ex.Message,
+                    caption: "Error",
+                    exception: ex
+                );
             }
         }
     }
@@ -130,20 +140,30 @@ class PropertyGridEx : System.Windows.Forms.PropertyGrid
             | BindingFlags.Instance
             | BindingFlags.InvokeMethod
             | BindingFlags.Public;
-        FieldInfo View = this.GetType().BaseType.GetField("gridView", flags);
-        Control controll = (Control)View.GetValue(this);
-        MethodInfo methodInfo = controll.GetType().GetMethod("MoveSplitterTo", flags);
+        FieldInfo View = this.GetType().BaseType.GetField(name: "gridView", bindingAttr: flags);
+        Control controll = (Control)View.GetValue(obj: this);
+        MethodInfo methodInfo = controll
+            .GetType()
+            .GetMethod(name: "MoveSplitterTo", bindingAttr: flags);
         GridItemCollection gridItemCollection = (GridItemCollection)
-            controll.GetType().InvokeMember("GetAllGridEntries", flags, null, controll, null);
+            controll
+                .GetType()
+                .InvokeMember(
+                    name: "GetAllGridEntries",
+                    invokeAttr: flags,
+                    binder: null,
+                    target: controll,
+                    args: null
+                );
         int maxwidth =
             gridItemCollection
                 .OfType<GridItem>()
-                .OrderByDescending(gridItem => gridItem.Label.Width(Font))
+                .OrderByDescending(keySelector: gridItem => gridItem.Label.Width(font: Font))
                 .First()
-                .Label.Width(Font) + 50;
+                .Label.Width(font: Font) + 50;
         if (methodInfo != null)
         {
-            methodInfo.Invoke(controll, new object[] { maxwidth });
+            methodInfo.Invoke(obj: controll, parameters: new object[] { maxwidth });
         }
     }
 }

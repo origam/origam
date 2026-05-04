@@ -31,11 +31,15 @@ namespace Origam.Schema.EntityModel;
 /// <summary>
 /// Summary description for DataStructureRuleDependency.
 /// </summary>
-[SchemaItemDescription("Dependency", "Dependencies", "icon_rule-dependency.png")]
-[HelpTopic("Rule+Set+Rule+Dependency")]
-[XmlModelRoot(CategoryConst)]
-[DefaultProperty("Entity")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(
+    name: "Dependency",
+    folderName: "Dependencies",
+    iconName: "icon_rule-dependency.png"
+)]
+[HelpTopic(topic: "Rule+Set+Rule+Dependency")]
+[XmlModelRoot(category: CategoryConst)]
+[DefaultProperty(name: "Entity")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class DataStructureRuleDependency : AbstractSchemaItem
 {
     public const string CategoryConst = "DataStructureRuleDependency";
@@ -44,31 +48,31 @@ public class DataStructureRuleDependency : AbstractSchemaItem
         : base() { }
 
     public DataStructureRuleDependency(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public DataStructureRuleDependency(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Properties
     public Guid DataStructureEntityId;
 
-    [TypeConverter(typeof(DataQueryEntityConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [XmlReference("entity", "DataStructureEntityId")]
+    [TypeConverter(type: typeof(DataQueryEntityConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [XmlReference(attributeName: "entity", idField: "DataStructureEntityId")]
     public DataStructureEntity Entity
     {
         get
         {
             return (DataStructureEntity)
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(DataStructureEntity),
-                    new ModelElementKey(this.DataStructureEntityId)
+                    type: typeof(DataStructureEntity),
+                    primaryKey: new ModelElementKey(id: this.DataStructureEntityId)
                 );
         }
         set
         {
             this.DataStructureEntityId = (
-                value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]
+                value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]
             );
             this.Field = null;
         }
@@ -76,22 +80,22 @@ public class DataStructureRuleDependency : AbstractSchemaItem
 
     public Guid FieldId;
 
-    [TypeConverter(typeof(DataStructureEntityFieldConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [XmlReference("field", "FieldId")]
+    [TypeConverter(type: typeof(DataStructureEntityFieldConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [XmlReference(attributeName: "field", idField: "FieldId")]
     public IDataEntityColumn Field
     {
         get
         {
             return (IDataEntityColumn)
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(this.FieldId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: this.FieldId)
                 );
         }
         set
         {
-            this.FieldId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
+            this.FieldId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]);
             UpdateName();
         }
     }
@@ -104,9 +108,9 @@ public class DataStructureRuleDependency : AbstractSchemaItem
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(this.Entity);
-        dependencies.Add(this.Field);
-        base.GetExtraDependencies(dependencies);
+        dependencies.Add(item: this.Entity);
+        dependencies.Add(item: this.Field);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override void UpdateReferences()
@@ -115,7 +119,7 @@ public class DataStructureRuleDependency : AbstractSchemaItem
         {
             if (item.OldPrimaryKey != null)
             {
-                if (item.OldPrimaryKey.Equals(this.Entity.PrimaryKey))
+                if (item.OldPrimaryKey.Equals(obj: this.Entity.PrimaryKey))
                 {
                     this.Entity = item as DataStructureEntity;
                     break;

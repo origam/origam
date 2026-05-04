@@ -30,14 +30,20 @@ namespace Origam.Gui.Win.Commands;
 public class GenerateDataStructureEntityColumns : AbstractMenuCommand
 {
     WorkbenchSchemaService _schema =
-        ServiceManager.Services.GetService(typeof(WorkbenchSchemaService))
+        ServiceManager.Services.GetService(serviceType: typeof(WorkbenchSchemaService))
         as WorkbenchSchemaService;
     SchemaBrowser _schemaBrowser =
-        WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+        WorkbenchSingleton.Workbench.GetPad(type: typeof(SchemaBrowser)) as SchemaBrowser;
     public override bool IsEnabled
     {
         get { return Owner is DataStructureEntity; }
-        set { throw new ArgumentException("Cannot set this property", "IsEnabled"); }
+        set
+        {
+            throw new ArgumentException(
+                message: "Cannot set this property",
+                paramName: "IsEnabled"
+            );
+        }
     }
 
     public override void Run()
@@ -56,8 +62,8 @@ public class GenerateDataStructureEntityColumns : AbstractMenuCommand
         foreach (IDataEntityColumn column in entity.EntityDefinition.EntityColumns)
         {
             DataStructureColumn newColumn = entity.NewItem<DataStructureColumn>(
-                _schema.ActiveSchemaExtensionId,
-                null
+                schemaExtensionId: _schema.ActiveSchemaExtensionId,
+                group: null
             );
             newColumn.Field = column;
             newColumn.Name = column.Name;
@@ -73,6 +79,6 @@ public class GenerateDataStructureEntityColumns : AbstractMenuCommand
 
     public override int GetImageIndex(string icon)
     {
-        return _schemaBrowser.ImageIndex(icon);
+        return _schemaBrowser.ImageIndex(icon: icon);
     }
 }

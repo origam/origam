@@ -48,18 +48,20 @@ class ActionNodePainter : INodeItemPainter
     public ICurve GetBoundary(Node node)
     {
         INodeData nodeData = (INodeData)node.UserData;
-        var borderSize = CalculateBorder(node);
+        var borderSize = CalculateBorder(node: node);
         return CurveFactory.CreateRectangle(
-            borderSize.Width + nodeData.LeftMargin,
-            borderSize.Height,
-            new Point()
+            width: borderSize.Width + nodeData.LeftMargin,
+            height: borderSize.Height,
+            center: new Point()
         );
     }
 
     private Size CalculateBorder(Node node)
     {
         var nodeData = (INodeData)node.UserData;
-        int actualTextWidth = GetTextLines(nodeData).Select(line => line.Width(painter.Font)).Max();
+        int actualTextWidth = GetTextLines(nodeData: nodeData)
+            .Select(selector: line => line.Width(font: painter.Font))
+            .Max();
         int totalWidth = textSideMargin + actualTextWidth + textSideMargin;
         int totalHeight =
             imageTopMargin
@@ -67,7 +69,7 @@ class ActionNodePainter : INodeItemPainter
             + imageTextGap
             + (painter.Font.Height * 2)
             + textBottomMargin;
-        return new Size(totalWidth, totalHeight);
+        return new Size(width: totalWidth, height: totalHeight);
     }
 
     private Tuple<int, int> CalculateLabelPointOffsets(int[] lineWidths)
@@ -82,9 +84,11 @@ class ActionNodePainter : INodeItemPainter
         {
             width1 = lineWidths[1];
         }
-        int widthDifference = Math.Abs(width0 - width1);
+        int widthDifference = Math.Abs(value: width0 - width1);
         int offset = widthDifference / 2;
-        return width0 > width1 ? new Tuple<int, int>(0, offset) : new Tuple<int, int>(offset, 0);
+        return width0 > width1
+            ? new Tuple<int, int>(item1: 0, item2: offset)
+            : new Tuple<int, int>(item1: offset, item2: 0);
     }
 
     public bool Draw(Node node, object graphicsObj)
@@ -92,58 +96,63 @@ class ActionNodePainter : INodeItemPainter
         INodeData nodeData = (INodeData)node.UserData;
         Graphics editorGraphics = (Graphics)graphicsObj;
         var image = nodeData.PrimaryImage;
-        var borderSize = CalculateBorder(node);
+        var borderSize = CalculateBorder(node: node);
         var borderCorner = new System.Drawing.Point(
-            (int)node.GeometryNode.Center.X - (borderSize.Width / 2),
-            (int)node.GeometryNode.Center.Y - (borderSize.Height / 2)
+            x: (int)node.GeometryNode.Center.X - (borderSize.Width / 2),
+            y: (int)node.GeometryNode.Center.Y - (borderSize.Height / 2)
         );
-        Rectangle border = new Rectangle(borderCorner, borderSize);
+        Rectangle border = new Rectangle(location: borderCorner, size: borderSize);
 
         var imagePoint = new PointF(
-            (float)(node.GeometryNode.Center.X - ((float)image.Width / 2)),
-            borderCorner.Y + imageTopMargin
+            x: (float)(node.GeometryNode.Center.X - ((float)image.Width / 2)),
+            y: borderCorner.Y + imageTopMargin
         );
 
-        var lines = GetTextLines(nodeData);
-        var lineWidths = lines.Select(line => line.Width(painter.Font)).ToArray();
+        var lines = GetTextLines(nodeData: nodeData);
+        var lineWidths = lines.Select(selector: line => line.Width(font: painter.Font)).ToArray();
         int actualTextWidth = lineWidths.Max();
-        var (label1XOffset, label2XOffset) = CalculateLabelPointOffsets(lineWidths);
+        var (label1XOffset, label2XOffset) = CalculateLabelPointOffsets(lineWidths: lineWidths);
         float textXCoordinate = (float)node.GeometryNode.Center.X - ((float)actualTextWidth / 2);
         PointF line1LabelPoint = new PointF(
-            textXCoordinate + label1XOffset,
-            (float)borderCorner.Y + imageTopMargin + image.Height + imageTextGap
+            x: textXCoordinate + label1XOffset,
+            y: (float)borderCorner.Y + imageTopMargin + image.Height + imageTextGap
         );
 
         PointF line2LabelPoint = new PointF(
-            textXCoordinate + label2XOffset,
-            line1LabelPoint.Y + painter.Font.Height
+            x: textXCoordinate + label2XOffset,
+            y: line1LabelPoint.Y + painter.Font.Height
         );
 
         editorGraphics.DrawUpSideDown(
             drawAction: graphics =>
             {
-                graphics.FillRectangle(painter.LightGreyBrush, border);
+                graphics.FillRectangle(brush: painter.LightGreyBrush, rect: border);
                 graphics.DrawString(
-                    lines[0],
-                    painter.Font,
-                    painter.GetTextBrush(nodeData.IsFromActivePackage),
-                    line1LabelPoint,
-                    painter.DrawFormat
+                    s: lines[0],
+                    font: painter.Font,
+                    brush: painter.GetTextBrush(isFromActivePackage: nodeData.IsFromActivePackage),
+                    point: line1LabelPoint,
+                    format: painter.DrawFormat
                 );
                 if (lines.Length > 1)
                 {
                     graphics.DrawString(
-                        lines[1],
-                        painter.Font,
-                        painter.GetTextBrush(nodeData.IsFromActivePackage),
-                        line2LabelPoint,
-                        painter.DrawFormat
+                        s: lines[1],
+                        font: painter.Font,
+                        brush: painter.GetTextBrush(
+                            isFromActivePackage: nodeData.IsFromActivePackage
+                        ),
+                        point: line2LabelPoint,
+                        format: painter.DrawFormat
                     );
                 }
-                graphics.DrawImage(image, imagePoint);
-                if (Equals(painter.NodeSelector.Selected, node))
+                graphics.DrawImage(image: image, point: imagePoint);
+                if (Equals(objA: painter.NodeSelector.Selected, objB: node))
                 {
-                    graphics.DrawRectangle(painter.GetActiveBorderPen(node), border);
+                    graphics.DrawRectangle(
+                        pen: painter.GetActiveBorderPen(node: node),
+                        rect: border
+                    );
                 }
             },
             yAxisCoordinate: (float)node.GeometryNode.Center.Y
@@ -154,9 +163,9 @@ class ActionNodePainter : INodeItemPainter
     private string[] GetTextLines(INodeData nodeData)
     {
         return nodeData
-            .Text.Wrap(preferedTextWidth, painter.Font)
-            .Split("\n")
-            .Select(x => x.Trim())
+            .Text.Wrap(widthInPixels: preferedTextWidth, font: painter.Font)
+            .Split(splitWith: "\n")
+            .Select(selector: x => x.Trim())
             .ToArray();
     }
 }

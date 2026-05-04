@@ -29,9 +29,9 @@ namespace Origam.Windows.Editor
 
         public XmlElementPathsByNamespace(XmlElementPath path)
         {
-            SeparateIntoPathsByNamespace(path);
+            SeparateIntoPathsByNamespace(path: path);
             AddSeparatedPathsToCollection();
-            FindNamespacesWithoutAssociatedPaths(path.NamespacesInScope);
+            FindNamespacesWithoutAssociatedPaths(namespacesInScope: path.NamespacesInScope);
             pathsByNamespace.Clear();
         }
 
@@ -39,25 +39,25 @@ namespace Origam.Windows.Editor
         {
             foreach (QualifiedName category in path.Elements)
             {
-                XmlElementPath matchedPath = FindOrCreatePath(category.Namespace);
-                matchedPath.AddElement(category);
+                XmlElementPath matchedPath = FindOrCreatePath(elementNamespace: category.Namespace);
+                matchedPath.AddElement(category: category);
             }
         }
 
         XmlElementPath FindOrCreatePath(string elementNamespace)
         {
-            XmlElementPath path = FindPath(elementNamespace);
+            XmlElementPath path = FindPath(elementNamespace: elementNamespace);
             if (path != null)
             {
                 return path;
             }
-            return CreatePath(elementNamespace);
+            return CreatePath(elementNamespace: elementNamespace);
         }
 
         XmlElementPath FindPath(string elementNamespace)
         {
             XmlElementPath path;
-            if (pathsByNamespace.TryGetValue(elementNamespace, out path))
+            if (pathsByNamespace.TryGetValue(key: elementNamespace, value: out path))
             {
                 return path;
             }
@@ -67,7 +67,7 @@ namespace Origam.Windows.Editor
         XmlElementPath CreatePath(string elementNamespace)
         {
             XmlElementPath path = new XmlElementPath();
-            pathsByNamespace.Add(elementNamespace, path);
+            pathsByNamespace.Add(key: elementNamespace, value: path);
             return path;
         }
 
@@ -75,7 +75,7 @@ namespace Origam.Windows.Editor
         {
             foreach (KeyValuePair<string, XmlElementPath> dictionaryEntry in pathsByNamespace)
             {
-                Add(dictionaryEntry.Value);
+                Add(item: dictionaryEntry.Value);
             }
         }
 
@@ -83,16 +83,16 @@ namespace Origam.Windows.Editor
         {
             foreach (XmlNamespace ns in namespacesInScope)
             {
-                if (!HavePathForNamespace(ns))
+                if (!HavePathForNamespace(ns: ns))
                 {
-                    namespacesWithoutPaths.Add(ns);
+                    namespacesWithoutPaths.Add(item: ns);
                 }
             }
         }
 
         bool HavePathForNamespace(XmlNamespace ns)
         {
-            return pathsByNamespace.ContainsKey(ns.Name);
+            return pathsByNamespace.ContainsKey(key: ns.Name);
         }
 
         public XmlNamespaceCollection NamespacesWithoutPaths

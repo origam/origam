@@ -41,19 +41,24 @@ public class DashboardSimpleWidgetBuilder
     )
     {
         string modelInstanceId = dashboardItemId.ToString();
-        XmlElement element = itemChildren.AppendChild(doc.CreateElement("UIElement")) as XmlElement;
-        element.SetAttribute("type", "http://www.w3.org/2001/XMLSchema-instance", "UIElement");
-        element.SetAttribute("Type", "SimplePanel");
-        element.SetAttribute("Id", simpleWidget.Id.ToString());
-        element.SetAttribute("ModelInstanceId", modelInstanceId);
-        element.SetAttribute("Entity", modelInstanceId);
-        element.SetAttribute("Height", "20");
+        XmlElement element =
+            itemChildren.AppendChild(newChild: doc.CreateElement(name: "UIElement")) as XmlElement;
+        element.SetAttribute(
+            localName: "type",
+            namespaceURI: "http://www.w3.org/2001/XMLSchema-instance",
+            value: "UIElement"
+        );
+        element.SetAttribute(name: "Type", value: "SimplePanel");
+        element.SetAttribute(name: "Id", value: simpleWidget.Id.ToString());
+        element.SetAttribute(name: "ModelInstanceId", value: modelInstanceId);
+        element.SetAttribute(name: "Entity", value: modelInstanceId);
+        element.SetAttribute(name: "Height", value: "20");
         XmlElement componentElement =
-            element.AppendChild(doc.CreateElement("Component")) as XmlElement;
-        componentElement.SetAttribute("Name", caption);
-        componentElement.SetAttribute("CaptionLength", "100");
-        componentElement.SetAttribute("CaptionPosition", "Left");
-        componentElement.SetAttribute("DataMember", "Value");
+            element.AppendChild(newChild: doc.CreateElement(name: "Component")) as XmlElement;
+        componentElement.SetAttribute(name: "Name", value: caption);
+        componentElement.SetAttribute(name: "CaptionLength", value: "100");
+        componentElement.SetAttribute(name: "CaptionPosition", value: "Left");
+        componentElement.SetAttribute(name: "DataMember", value: "Value");
         LookupDashboardWidget lookupWidget = simpleWidget as LookupDashboardWidget;
         CurrencyDashboardWidget currencyWidget = simpleWidget as CurrencyDashboardWidget;
         TextDashboardWidget textWidget = simpleWidget as TextDashboardWidget;
@@ -61,38 +66,52 @@ public class DashboardSimpleWidgetBuilder
         CheckBoxDashboardWidget checkWidghet = simpleWidget as CheckBoxDashboardWidget;
         if (lookupWidget != null)
         {
-            ComboBoxBuilder.Build(componentElement, lookupWidget.LookupId, false, null, null);
+            ComboBoxBuilder.Build(
+                propertyElement: componentElement,
+                lookupId: lookupWidget.LookupId,
+                showUniqueValues: false,
+                bindingMember: null,
+                table: null
+            );
         }
         else if (textWidget != null)
         {
             TextBoxBuilder.Build(
-                componentElement,
-                new TextBoxBuildDefinition(OrigamDataType.String)
+                propertyElement: componentElement,
+                buildDefinition: new TextBoxBuildDefinition(type: OrigamDataType.String)
             );
         }
         else if (currencyWidget != null)
         {
             TextBoxBuilder.Build(
-                componentElement,
-                new TextBoxBuildDefinition(OrigamDataType.Currency)
+                propertyElement: componentElement,
+                buildDefinition: new TextBoxBuildDefinition(type: OrigamDataType.Currency)
             );
         }
         else if (dateWidget != null)
         {
-            DateBoxBuilder.Build(componentElement, null, null);
+            DateBoxBuilder.Build(
+                propertyElement: componentElement,
+                format: null,
+                customFormat: null
+            );
         }
         else if (checkWidghet != null)
         {
-            CheckBoxBuilder.Build(componentElement, caption);
+            CheckBoxBuilder.Build(propertyElement: componentElement, text: caption);
         }
         XmlElement newDataSourceElement = FormXmlBuilder.AddDataSourceElement(
-            dataSourcesElement,
-            modelInstanceId,
-            "Id",
-            null,
-            null
+            dataSourcesElement: dataSourcesElement,
+            entity: modelInstanceId,
+            identifier: "Id",
+            lookupCacheKey: null,
+            dataStructureEntityId: null
         );
-        newDataSourceElement.AppendChild(FormXmlBuilder.CreateDataSourceField(doc, "Id", 0));
-        newDataSourceElement.AppendChild(FormXmlBuilder.CreateDataSourceField(doc, "Value", 1));
+        newDataSourceElement.AppendChild(
+            newChild: FormXmlBuilder.CreateDataSourceField(doc: doc, name: "Id", index: 0)
+        );
+        newDataSourceElement.AppendChild(
+            newChild: FormXmlBuilder.CreateDataSourceField(doc: doc, name: "Value", index: 1)
+        );
     }
 }

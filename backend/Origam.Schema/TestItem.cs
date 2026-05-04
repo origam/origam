@@ -27,17 +27,17 @@ namespace Origam.Schema;
 /// <summary>
 /// Summary description for TestItem.
 /// </summary>
-[ClassMetaVersion("6.0.0")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class TestItem : AbstractSchemaItem
 {
     public TestItem()
         : base() { }
 
     public TestItem(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public TestItem(ModelElementKey primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     public string TestField = "";
     #region Overriden ISchemaItem Methods

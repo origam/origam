@@ -67,7 +67,8 @@ public class AsTreeView : TreeView, IAsDataConsumer
     private bool selectionChanging;
     private object _lastSelectedId = null;
     private IPersistenceService _persistence =
-        ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+        ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+        as IPersistenceService;
     #endregion
     #region Constructors
     /// <summary>
@@ -137,11 +138,11 @@ public class AsTreeView : TreeView, IAsDataConsumer
                 items_Positions = null;
             }
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
     #endregion
     #region Win32
-    [DllImport("User32.dll")]
+    [DllImport(dllName: "User32.dll")]
     static extern bool ShowScrollBar(IntPtr hWnd, int wBar, bool bShow);
     #endregion
     #region Internal classes
@@ -202,7 +203,7 @@ public class AsTreeView : TreeView, IAsDataConsumer
     {
         if (!_dontFireSelectEvent)
         {
-            base.OnAfterSelect(e);
+            base.OnAfterSelect(e: e);
         }
     }
 
@@ -212,13 +213,13 @@ public class AsTreeView : TreeView, IAsDataConsumer
     /// Data source of the tree.
     /// </summary>
     [
-        DefaultValue((string)null),
+        DefaultValue(value: (string)null),
         TypeConverter(
-            "System.Windows.Forms.Design.DataSourceConverter, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
+            typeName: "System.Windows.Forms.Design.DataSourceConverter, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
         ),
-        RefreshProperties(RefreshProperties.Repaint),
-        Category("Data"),
-        Description("Data source of the tree.")
+        RefreshProperties(refresh: RefreshProperties.Repaint),
+        Category(category: "Data"),
+        Description(description: "Data source of the tree.")
     ]
     public object DataSource
     {
@@ -241,14 +242,14 @@ public class AsTreeView : TreeView, IAsDataConsumer
     /// Data member of the tree.
     /// </summary>
     [
-        DefaultValue(""),
+        DefaultValue(value: ""),
         Editor(
-            "System.Windows.Forms.Design.DataMemberListEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
-            typeof(UITypeEditor)
+            typeName: "System.Windows.Forms.Design.DataMemberListEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+            baseType: typeof(UITypeEditor)
         ),
-        RefreshProperties(RefreshProperties.Repaint),
-        Category("Data"),
-        Description("Data member of the tree.")
+        RefreshProperties(refresh: RefreshProperties.Repaint),
+        Category(category: "Data"),
+        Description(description: "Data member of the tree.")
     ]
     public string DataMember
     {
@@ -267,10 +268,12 @@ public class AsTreeView : TreeView, IAsDataConsumer
     /// Identifier member, in most cases this is primary column of the table.
     /// </summary>
     [
-        DefaultValue(""),
+        DefaultValue(value: ""),
         //		Editor(typeof(FieldTypeEditor), typeof(UITypeEditor)),
-        Category("Data"),
-        Description("Identifier member, in most cases this is primary column of the table.")
+        Category(category: "Data"),
+        Description(
+            description: "Identifier member, in most cases this is primary column of the table."
+        )
     ]
     public string IDColumn
     {
@@ -294,11 +297,11 @@ public class AsTreeView : TreeView, IAsDataConsumer
     /// Name member. Note: editing of this column available only with types that support converting from string.
     /// </summary>
     [
-        DefaultValue(""),
+        DefaultValue(value: ""),
         //		Editor(typeof(FieldTypeEditor), typeof(UITypeEditor)),
-        Category("Data"),
+        Category(category: "Data"),
         Description(
-            "Name member. Note: editing of this column available only with types that support converting from string."
+            description: "Name member. Note: editing of this column available only with types that support converting from string."
         )
     ]
     public string NameColumn
@@ -319,11 +322,11 @@ public class AsTreeView : TreeView, IAsDataConsumer
     /// Identifier of the parent. Note: this member must have the same type as identifier column.
     /// </summary>
     [
-        DefaultValue(""),
+        DefaultValue(value: ""),
         //		Editor(typeof(FieldTypeEditor), typeof(UITypeEditor)),
-        Category("Data"),
+        Category(category: "Data"),
         Description(
-            "Identifier of the parent. Note: this member must have the same type as identifier column."
+            description: "Identifier of the parent. Note: this member must have the same type as identifier column."
         )
     ]
     public string ParentIDColumn
@@ -344,10 +347,10 @@ public class AsTreeView : TreeView, IAsDataConsumer
     /// Value member. Form this column value will be taken.
     /// </summary>
     [
-        DefaultValue(""),
+        DefaultValue(value: ""),
         //		Editor(typeof(FieldTypeEditor), typeof(UITypeEditor)),
-        Category("Data"),
-        Description("Value member. Form this column value will be taken.")
+        Category(category: "Data"),
+        Description(description: "Value member. Form this column value will be taken.")
     ]
     public string ValueColumn
     {
@@ -366,7 +369,7 @@ public class AsTreeView : TreeView, IAsDataConsumer
     /// <summary>
     /// Get value current selected item.
     /// </summary>
-    [Category("Data"), Description("Get value current selected item.")]
+    [Category(category: "Data"), Description(description: "Get value current selected item.")]
     public object Value
     {
         get
@@ -376,7 +379,9 @@ public class AsTreeView : TreeView, IAsDataConsumer
                 DataTreeViewNode node = this.SelectedNode as DataTreeViewNode;
                 if (node != null && this.PrepareValueDescriptor())
                 {
-                    return this.valueProperty.GetValue(this.listManager.List[node.Position]);
+                    return this.valueProperty.GetValue(
+                        component: this.listManager.List[index: node.Position]
+                    );
                 }
             }
             return null;
@@ -384,7 +389,7 @@ public class AsTreeView : TreeView, IAsDataConsumer
         set
         {
             _dontFireSelectEvent = true;
-            DataTreeViewNode node = this.items_Identifiers[value] as DataTreeViewNode;
+            DataTreeViewNode node = this.items_Identifiers[key: value] as DataTreeViewNode;
             if (node != null)
             {
                 this.SelectedNode = node;
@@ -394,25 +399,25 @@ public class AsTreeView : TreeView, IAsDataConsumer
     }
     private Guid _styleId;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public Guid StyleId
     {
         get { return _styleId; }
         set { _styleId = value; }
     }
 
-    [TypeConverter(typeof(StylesConverter))]
+    [TypeConverter(type: typeof(StylesConverter))]
     public UIStyle Style
     {
         get
         {
             return (UIStyle)
                 _persistence.SchemaProvider.RetrieveInstance(
-                    typeof(UIStyle),
-                    new ModelElementKey(this.StyleId)
+                    type: typeof(UIStyle),
+                    primaryKey: new ModelElementKey(id: this.StyleId)
                 );
         }
-        set { this.StyleId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]); }
+        set { this.StyleId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]); }
     }
     #endregion
     #region Events
@@ -436,7 +441,7 @@ public class AsTreeView : TreeView, IAsDataConsumer
             {
                 ((AsForm)this.FindForm()).FormGenerator.IgnoreDataChanges = false;
             }
-            _lastSelectedId = GetID(node.Position);
+            _lastSelectedId = GetID(position: node.Position);
         }
         this.EndSelectionChanging();
     }
@@ -449,11 +454,11 @@ public class AsTreeView : TreeView, IAsDataConsumer
         DataTreeViewNode node = e.Node as DataTreeViewNode;
         if (node != null)
         {
-            if (this.PrepareValueConvertor() && this.valueConverter.IsValid(e.Label))
+            if (this.PrepareValueConvertor() && this.valueConverter.IsValid(value: e.Label))
             {
                 this.nameProperty.SetValue(
-                    this.listManager.List[node.Position],
-                    this.valueConverter.ConvertFromString(e.Label)
+                    component: this.listManager.List[index: node.Position],
+                    value: this.valueConverter.ConvertFromString(text: e.Label)
                 );
                 this.listManager.EndCurrentEdit();
                 return;
@@ -493,10 +498,20 @@ public class AsTreeView : TreeView, IAsDataConsumer
             {
                 case ListChangedType.ItemAdded:
                 {
-                    if (!TryAddNode(this.CreateNode(this.listManager, e.NewIndex)))
+                    if (
+                        !TryAddNode(
+                            node: this.CreateNode(
+                                currencyManager: this.listManager,
+                                position: e.NewIndex
+                            )
+                        )
+                    )
                     {
                         throw new ApplicationException(
-                            ResourceUtils.GetString("ErrorAddItemToTree", e.NewIndex.ToString())
+                            message: ResourceUtils.GetString(
+                                key: "ErrorAddItemToTree",
+                                args: e.NewIndex.ToString()
+                            )
                         );
                     }
                     break;
@@ -505,16 +520,16 @@ public class AsTreeView : TreeView, IAsDataConsumer
                 case ListChangedType.ItemChanged:
                 {
                     DataTreeViewNode chnagedNode =
-                        this.items_Positions[e.NewIndex] as DataTreeViewNode;
+                        this.items_Positions[key: e.NewIndex] as DataTreeViewNode;
                     if (chnagedNode != null)
                     {
-                        this.ChangeParent(chnagedNode);
-                        this.RefreshData(chnagedNode);
+                        this.ChangeParent(node: chnagedNode);
+                        this.RefreshData(node: chnagedNode);
                     }
                     else
                     {
                         throw new ApplicationException(
-                            ResourceUtils.GetString("ErrorItemNotFound")
+                            message: ResourceUtils.GetString(key: "ErrorItemNotFound")
                         );
                     }
                     break;
@@ -525,16 +540,16 @@ public class AsTreeView : TreeView, IAsDataConsumer
                     if (e.NewIndex >= 0)
                     {
                         DataTreeViewNode movedNode =
-                            this.items_Positions[e.OldIndex] as DataTreeViewNode;
+                            this.items_Positions[key: e.OldIndex] as DataTreeViewNode;
                         if (movedNode != null)
                         {
-                            this.items_Positions.Remove(e.OldIndex);
-                            this.items_Positions.Add(e.NewIndex, movedNode);
+                            this.items_Positions.Remove(key: e.OldIndex);
+                            this.items_Positions.Add(key: e.NewIndex, value: movedNode);
                         }
                         else
                         {
                             throw new ApplicationException(
-                                ResourceUtils.GetString("ErrorItemNotFound")
+                                message: ResourceUtils.GetString(key: "ErrorItemNotFound")
                             );
                         }
                     }
@@ -545,10 +560,10 @@ public class AsTreeView : TreeView, IAsDataConsumer
                 {
                     try
                     {
-                        if (items_Positions.Contains(e.NewIndex))
+                        if (items_Positions.Contains(key: e.NewIndex))
                         {
                             DataTreeViewNode parent =
-                                (items_Positions[e.NewIndex] as TreeNode).Parent
+                                (items_Positions[key: e.NewIndex] as TreeNode).Parent
                                 as DataTreeViewNode;
 
                             if (parent == null)
@@ -597,10 +612,10 @@ public class AsTreeView : TreeView, IAsDataConsumer
         catch (Exception ex)
         {
             Origam.UI.AsMessageBox.ShowError(
-                this.FindForm(),
-                ex.Message,
-                ResourceUtils.GetString("ErrorTitle"),
-                ex
+                owner: this.FindForm(),
+                text: ex.Message,
+                caption: ResourceUtils.GetString(key: "ErrorTitle"),
+                exception: ex
             );
         }
     }
@@ -632,7 +647,8 @@ public class AsTreeView : TreeView, IAsDataConsumer
             if (this.dataSource != null)
             {
                 this.listManager =
-                    this.BindingContext[this.dataSource, this.dataMember] as CurrencyManager;
+                    this.BindingContext[dataSource: this.dataSource, dataMember: this.dataMember]
+                    as CurrencyManager;
                 return true;
             }
             this.listManager = null;
@@ -652,16 +668,18 @@ public class AsTreeView : TreeView, IAsDataConsumer
         {
             if (this.idProperty == null)
             {
-                this.idProperty = this.listManager.GetItemProperties()[this.idPropertyName];
+                this.idProperty = this.listManager.GetItemProperties()[name: this.idPropertyName];
             }
             if (this.nameProperty == null)
             {
-                this.nameProperty = this.listManager.GetItemProperties()[this.namePropertyName];
+                this.nameProperty = this.listManager.GetItemProperties()[
+                    name: this.namePropertyName
+                ];
             }
             if (this.parentIdProperty == null)
             {
                 this.parentIdProperty = this.listManager.GetItemProperties()[
-                    this.parentIdPropertyName
+                    name: this.parentIdPropertyName
                 ];
             }
         }
@@ -678,7 +696,7 @@ public class AsTreeView : TreeView, IAsDataConsumer
             {
                 this.valuePropertyName = this.idPropertyName;
             }
-            this.valueProperty = this.listManager.GetItemProperties()[this.valuePropertyName];
+            this.valueProperty = this.listManager.GetItemProperties()[name: this.valuePropertyName];
         }
         return (this.valueProperty != null);
     }
@@ -688,10 +706,13 @@ public class AsTreeView : TreeView, IAsDataConsumer
         if (this.valueConverter == null)
         {
             this.valueConverter =
-                TypeDescriptor.GetConverter(this.nameProperty.PropertyType) as TypeConverter;
+                TypeDescriptor.GetConverter(type: this.nameProperty.PropertyType) as TypeConverter;
         }
 
-        return (this.valueConverter != null && this.valueConverter.CanConvertFrom(typeof(string)));
+        return (
+            this.valueConverter != null
+            && this.valueConverter.CanConvertFrom(sourceType: typeof(string))
+        );
     }
 
     private void WireDataSource()
@@ -714,7 +735,9 @@ public class AsTreeView : TreeView, IAsDataConsumer
                 var unsortedNodes = new List<DataTreeViewNode>();
                 for (int i = 0; i < this.listManager.Count; i++)
                 {
-                    unsortedNodes.Add(this.CreateNode(this.listManager, i));
+                    unsortedNodes.Add(
+                        item: this.CreateNode(currencyManager: this.listManager, position: i)
+                    );
                 }
 
                 int startCount;
@@ -723,9 +746,9 @@ public class AsTreeView : TreeView, IAsDataConsumer
                     startCount = unsortedNodes.Count;
                     for (int i = unsortedNodes.Count - 1; i >= 0; i--)
                     {
-                        if (this.TryAddNode(unsortedNodes[i]))
+                        if (this.TryAddNode(node: unsortedNodes[index: i]))
                         {
-                            unsortedNodes.RemoveAt(i);
+                            unsortedNodes.RemoveAt(index: i);
                         }
                     }
                     if (startCount == unsortedNodes.Count)
@@ -740,28 +763,29 @@ public class AsTreeView : TreeView, IAsDataConsumer
         {
             this.EndUpdate();
         }
-        if (_lastSelectedId != null && this.items_Identifiers.ContainsKey(_lastSelectedId))
+        if (_lastSelectedId != null && this.items_Identifiers.ContainsKey(key: _lastSelectedId))
         {
-            DataTreeViewNode node = items_Identifiers[_lastSelectedId] as DataTreeViewNode;
+            DataTreeViewNode node = items_Identifiers[key: _lastSelectedId] as DataTreeViewNode;
             this.SelectedNode = node;
         }
     }
 
     private bool TryAddNode(DataTreeViewNode node)
     {
-        if (this.IsIDNull(node.ParentID))
+        if (this.IsIDNull(id: node.ParentID))
         {
-            this.AddNode(this.Nodes, node);
+            this.AddNode(nodes: this.Nodes, node: node);
             return true;
         }
 
-        if (this.items_Identifiers.ContainsKey(node.ParentID))
+        if (this.items_Identifiers.ContainsKey(key: node.ParentID))
         {
-            DataTreeViewNode parentNode = this.items_Identifiers[node.ParentID] as DataTreeViewNode;
+            DataTreeViewNode parentNode =
+                this.items_Identifiers[key: node.ParentID] as DataTreeViewNode;
             if (parentNode != null)
             {
-                CheckRecursion(node, parentNode);
-                this.AddNode(parentNode.Nodes, node);
+                CheckRecursion(node: node, parentNode: parentNode);
+                this.AddNode(nodes: parentNode.Nodes, node: node);
                 return true;
             }
         }
@@ -775,30 +799,32 @@ public class AsTreeView : TreeView, IAsDataConsumer
             return;
         }
 
-        if (!this.items_Positions.ContainsKey(node.Position))
+        if (!this.items_Positions.ContainsKey(key: node.Position))
         {
-            this.items_Positions.Add(node.Position, node);
-            this.items_Identifiers.Add(node.ID, node);
-            nodes.Add(node);
+            this.items_Positions.Add(key: node.Position, value: node);
+            this.items_Identifiers.Add(key: node.ID, value: node);
+            nodes.Add(node: node);
         }
     }
 
     private void ChangeParent(DataTreeViewNode node)
     {
-        object dataParentID = this.parentIdProperty.GetValue(this.listManager.List[node.Position]);
+        object dataParentID = this.parentIdProperty.GetValue(
+            component: this.listManager.List[index: node.Position]
+        );
         if (node.ParentID != dataParentID)
         {
             DataTreeViewNode newParentNode =
-                this.items_Identifiers[dataParentID] as DataTreeViewNode;
-            CheckRecursion(node, newParentNode);
+                this.items_Identifiers[key: dataParentID] as DataTreeViewNode;
+            CheckRecursion(node: node, parentNode: newParentNode);
             node.Remove();
             if (newParentNode != null)
             {
-                newParentNode.Nodes.Add(node);
+                newParentNode.Nodes.Add(node: node);
             }
             else
             {
-                this.Nodes.Add(node);
+                this.Nodes.Add(node: node);
             }
         }
     }
@@ -810,18 +836,21 @@ public class AsTreeView : TreeView, IAsDataConsumer
             return;
         }
 
-        if (node.ID.Equals(parentNode.ID))
+        if (node.ID.Equals(obj: parentNode.ID))
         {
-            this.parentIdProperty.SetValue(this.listManager.List[node.Position], DBNull.Value);
+            this.parentIdProperty.SetValue(
+                component: this.listManager.List[index: node.Position],
+                value: DBNull.Value
+            );
             throw new NotSupportedException(
-                "Stromové zobrazení: Není možné pøidat položku pod sebe sama."
+                message: "Stromové zobrazení: Není možné pøidat položku pod sebe sama."
             );
         }
         foreach (DataTreeViewNode child in node.Nodes)
         {
             if (child != null)
             {
-                CheckRecursion(node, child);
+                CheckRecursion(node: node, parentNode: child);
             }
         }
     }
@@ -833,7 +862,8 @@ public class AsTreeView : TreeView, IAsDataConsumer
             return;
         }
 
-        DataTreeViewNode node = this.items_Positions[this.listManager.Position] as DataTreeViewNode;
+        DataTreeViewNode node =
+            this.items_Positions[key: this.listManager.Position] as DataTreeViewNode;
         if (node != null)
         {
             this.SelectedNode = node;
@@ -848,10 +878,10 @@ public class AsTreeView : TreeView, IAsDataConsumer
         }
 
         int position = node.Position;
-        node.ID = this.GetID(position);
-        object name = this.GetName(position);
+        node.ID = this.GetID(position: position);
+        object name = this.GetName(position: position);
         node.Text = name == null ? "" : name.ToString();
-        object parentId = GetParentID(position);
+        object parentId = GetParentID(position: position);
         node.ParentID = parentId == null ? "" : parentId;
     }
 
@@ -863,29 +893,29 @@ public class AsTreeView : TreeView, IAsDataConsumer
     /// <returns></returns>
     private DataTreeViewNode CreateNode(CurrencyManager currencyManager, int position)
     {
-        DataTreeViewNode node = new DataTreeViewNode(position);
-        this.RefreshData(node);
+        DataTreeViewNode node = new DataTreeViewNode(position: position);
+        this.RefreshData(node: node);
         return node;
     }
 
     private object GetName(int position)
     {
-        return this.nameProperty.GetValue(this.listManager.List[position]);
+        return this.nameProperty.GetValue(component: this.listManager.List[index: position]);
     }
 
     private object GetID(int position)
     {
-        return this.idProperty.GetValue(this.listManager.List[position]);
+        return this.idProperty.GetValue(component: this.listManager.List[index: position]);
     }
 
     private object GetParentID(int position)
     {
-        return this.parentIdProperty.GetValue(this.listManager.List[position]);
+        return this.parentIdProperty.GetValue(component: this.listManager.List[index: position]);
     }
 
     private bool IsIDNull(object id)
     {
-        if (id == null || Convert.IsDBNull(id))
+        if (id == null || Convert.IsDBNull(value: id))
         {
             return true;
         }
@@ -905,7 +935,7 @@ public class AsTreeView : TreeView, IAsDataConsumer
     protected override void InitLayout()
     {
         base.InitLayout();
-        ShowScrollBar(Handle, SB_HORZ, false);
+        ShowScrollBar(hWnd: Handle, wBar: SB_HORZ, bShow: false);
     }
 
     private void BeginSelectionChanging()

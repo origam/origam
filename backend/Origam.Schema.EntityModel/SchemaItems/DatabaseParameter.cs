@@ -26,35 +26,38 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.EntityModel;
 
-[ClassMetaVersion("6.0.0")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class DatabaseParameter : SchemaItemParameter, IDatabaseDataTypeMapping
 {
     public DatabaseParameter()
         : base() { }
 
     public DatabaseParameter(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(schemaExtensionId: schemaExtensionId) { }
 
     public DatabaseParameter(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     public Guid dataTypeMappingId;
 
-    [Category("Database Mapping")]
-    [TypeConverter(typeof(DataTypeMappingConverter))]
-    [Description("Database specific data type")]
-    [DisplayName("Data Type Mapping")]
-    [XmlReference("mappedDataType", "dataTypeMappingId")]
+    [Category(category: "Database Mapping")]
+    [TypeConverter(type: typeof(DataTypeMappingConverter))]
+    [Description(description: "Database specific data type")]
+    [DisplayName(displayName: "Data Type Mapping")]
+    [XmlReference(attributeName: "mappedDataType", idField: "dataTypeMappingId")]
     public DatabaseDataType MappedDataType
     {
         get
         {
             return (DatabaseDataType)
                     PersistenceProvider.RetrieveInstance(
-                        typeof(DatabaseDataType),
-                        new ModelElementKey(dataTypeMappingId)
+                        type: typeof(DatabaseDataType),
+                        primaryKey: new ModelElementKey(id: dataTypeMappingId)
                     ) as DatabaseDataType;
         }
-        set { dataTypeMappingId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]); }
+        set
+        {
+            dataTypeMappingId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]);
+        }
     }
 }

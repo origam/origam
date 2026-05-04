@@ -28,14 +28,16 @@ public class DatabaseDataTypeSchemaItemProvider : AbstractSchemaItemProvider, IS
 {
     public DatabaseDataTypeSchemaItemProvider()
     {
-        this.ChildItemTypes.Add(typeof(DatabaseDataType));
+        this.ChildItemTypes.Add(item: typeof(DatabaseDataType));
     }
 
     public DatabaseDataType FindDataType(string name)
     {
         foreach (DatabaseDataType item in ChildItems)
         {
-            if (string.Compare(name, item.MappedDatabaseTypeName, true) == 0)
+            if (
+                string.Compare(strA: name, strB: item.MappedDatabaseTypeName, ignoreCase: true) == 0
+            )
             {
                 return item;
             }

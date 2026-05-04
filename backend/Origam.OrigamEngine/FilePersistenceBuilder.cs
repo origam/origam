@@ -34,8 +34,8 @@ public class FilePersistenceBuilder : IPersistenceBuilder
 
     public IDocumentationService GetDocumentationService() =>
         new FileStorageDocumentationService(
-            (IFilePersistenceProvider)persistenceService.SchemaProvider,
-            persistenceService.FileEventQueue
+            persistenceService: (IFilePersistenceProvider)persistenceService.SchemaProvider,
+            fileEventQueue: persistenceService.FileEventQueue
         );
 
     public IPersistenceService GetPersistenceService() =>
@@ -47,7 +47,11 @@ public class FilePersistenceBuilder : IPersistenceBuilder
         bool useBinFile
     )
     {
-        persistenceService = CreateNewPersistenceService(watchFileChanges, checkRules, useBinFile);
+        persistenceService = CreateNewPersistenceService(
+            watchFileChanges: watchFileChanges,
+            checkRules: checkRules,
+            useBinFile: useBinFile
+        );
         return persistenceService;
     }
 
@@ -59,8 +63,8 @@ public class FilePersistenceBuilder : IPersistenceBuilder
     {
         List<string> defaultFolders = new List<string>
         {
-            CategoryFactory.Create(typeof(Package)),
-            CategoryFactory.Create(typeof(SchemaItemGroup)),
+            CategoryFactory.Create(type: typeof(Package)),
+            CategoryFactory.Create(type: typeof(SchemaItemGroup)),
         };
         var metaModelUpgradeService = ServiceManager.Services.GetService<MetaModelUpgradeService>();
 
@@ -87,15 +91,15 @@ public class FilePersistenceBuilder : IPersistenceBuilder
     {
         List<string> defaultFolders = new List<string>
         {
-            CategoryFactory.Create(typeof(Package)),
-            CategoryFactory.Create(typeof(SchemaItemGroup)),
+            CategoryFactory.Create(type: typeof(Package)),
+            CategoryFactory.Create(type: typeof(SchemaItemGroup)),
         };
         string pathToRuntimeModelConfig = ConfigurationManager
             .GetActiveConfiguration()
             .PathToRuntimeModelConfig;
 
         return new FilePersistenceService(
-            new NullMetaModelUpgradeService(),
+            metaModelUpgradeService: new NullMetaModelUpgradeService(),
             defaultFolders: defaultFolders,
             pathToRuntimeModelConfig: pathToRuntimeModelConfig,
             watchFileChanges: false,

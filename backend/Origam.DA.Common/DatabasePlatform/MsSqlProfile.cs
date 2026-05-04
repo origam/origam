@@ -30,7 +30,11 @@ public class MsSqlProfile : IDatabaseProfile
     public string CheckIdentifierLength(int length)
     {
         return length > maxIdentifierLength
-            ? string.Format(Strings.IdentifierMaxLength, "SQL Server", maxIdentifierLength)
+            ? string.Format(
+                format: Strings.IdentifierMaxLength,
+                arg0: "SQL Server",
+                arg1: maxIdentifierLength
+            )
             : null;
     }
 
@@ -38,10 +42,10 @@ public class MsSqlProfile : IDatabaseProfile
     {
         return indexName.Length > maxIdentifierLength
             ? string.Format(
-                Strings.IndexMaxLength,
-                $"\n{indexName}\n",
-                "SQL Server",
-                maxIdentifierLength
+                format: Strings.IndexMaxLength,
+                arg0: $"\n{indexName}\n",
+                arg1: "SQL Server",
+                arg2: maxIdentifierLength
             )
             : null;
     }

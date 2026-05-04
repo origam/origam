@@ -34,15 +34,18 @@ public class PortalStyle
         {
             Dictionary<string, int> result = new Dictionary<string, int>();
             DataSet ds = CoreServices.DataService.Instance.LoadData(
-                new Guid("5a98c98f-d930-4a94-a13e-82685bb6dc29"),
-                Guid.Empty,
-                Guid.Empty,
-                Guid.Empty,
-                null
+                dataStructureId: new Guid(g: "5a98c98f-d930-4a94-a13e-82685bb6dc29"),
+                methodId: Guid.Empty,
+                defaultSetId: Guid.Empty,
+                sortSetId: Guid.Empty,
+                transactionId: null
             );
-            foreach (DataRow row in ds.Tables[0].Rows)
+            foreach (DataRow row in ds.Tables[index: 0].Rows)
             {
-                result.Add((string)row["Name"], (int)row["Color"]);
+                result.Add(
+                    key: (string)row[columnName: "Name"],
+                    value: (int)row[columnName: "Color"]
+                );
             }
             return result;
         }

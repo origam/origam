@@ -58,17 +58,17 @@ public class DataGridColumnStylePadding
 
     public void SetPadding(int top, int right, int bottom, int left)
     {
-        UpdatePaddingValues(top, right, bottom, left);
+        UpdatePaddingValues(top: top, right: right, bottom: bottom, left: left);
     }
 
     public DataGridColumnStylePadding(int padValue)
     {
-        this.SetPadding(padValue);
+        this.SetPadding(padValue: padValue);
     }
 
     public DataGridColumnStylePadding(int top, int right, int bottom, int left)
     {
-        UpdatePaddingValues(top, right, bottom, left);
+        UpdatePaddingValues(top: top, right: right, bottom: bottom, left: left);
     }
 
     private void UpdatePaddingValues(int top, int right, int bottom, int left)

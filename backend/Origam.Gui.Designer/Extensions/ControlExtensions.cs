@@ -30,7 +30,7 @@ public static class ControlExtensions
         foreach (Control child in control.Controls)
         {
             yield return child;
-            foreach (Control innerChild in GetAllControls(child))
+            foreach (Control innerChild in GetAllControls(control: child))
             {
                 yield return innerChild;
             }

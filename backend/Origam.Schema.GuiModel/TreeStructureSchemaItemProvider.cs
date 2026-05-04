@@ -28,7 +28,7 @@ public class TreeStructureSchemaItemProvider : AbstractSchemaItemProvider, ISche
 {
     public TreeStructureSchemaItemProvider()
     {
-        this.ChildItemTypes.Add(typeof(TreeStructure));
+        this.ChildItemTypes.Add(item: typeof(TreeStructure));
     }
 
     #region ISchemaItemProvider Members

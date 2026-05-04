@@ -44,14 +44,14 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
 {
     private ContextMenuStrip BuildContextMenu()
     {
-        object objectUnderMouse = gViewer.GetObjectAt(mouseRightButtonDownPoint);
+        object objectUnderMouse = gViewer.GetObjectAt(point: mouseRightButtonDownPoint);
         if (objectUnderMouse is DEdge edge)
         {
-            return CreateContextMenuForEdge(edge);
+            return CreateContextMenuForEdge(edge: edge);
         }
         if (objectUnderMouse is DNode node)
         {
-            return CreateContextMenuForNode(node);
+            return CreateContextMenuForNode(dNodeUnderMouse: node);
         }
         return new ContextMenuStrip();
     }
@@ -66,17 +66,18 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
         var deleteMenuItem = new ToolStripMenuItem();
         deleteMenuItem.Text = Strings.WorkFlowDiagramEditor_ContextMenuEdge_Delete;
         deleteMenuItem.Image = ImageRes.icon_delete;
-        deleteMenuItem.Click += (sender, args) => gViewer.RemoveEdge(edge, true);
+        deleteMenuItem.Click += (sender, args) =>
+            gViewer.RemoveEdge(edge: edge, registerForUndo: true);
 
         ToolStripMenuItem addBetweenMenu = new ToolStripMenuItem(
-            Strings.WorkFlowDiagramEditor_ContextMenuEdge_Add_Between
+            text: Strings.WorkFlowDiagramEditor_ContextMenuEdge_Add_Between
         );
         addBetweenMenu.Image = ImageRes.icon_new;
-        var builder = new SchemaItemEditorsMenuBuilder(true);
+        var builder = new SchemaItemEditorsMenuBuilder(showDialog: true);
         var dependency = (WorkflowTaskDependency)edge.Edge.UserData;
         var targetStep = (IWorkflowStep)dependency.ParentItem;
         var parentBlock = targetStep.ParentItem;
-        var submenuItems = builder.BuildSubmenu(parentBlock);
+        var submenuItems = builder.BuildSubmenu(owner: parentBlock);
         foreach (AsMenuCommand submenuItem in submenuItems)
         {
             if (!(submenuItem.Command is AddNewSchemaItem addNewCommand))
@@ -85,8 +86,8 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
             }
             addNewCommand.ItemCreated += (sender, newItem) =>
             {
-                ISchemaItem sourceItem = RetrieveItem(edge.Edge.Source);
-                ISchemaItem targetItem = RetrieveItem(edge.Edge.Target);
+                ISchemaItem sourceItem = RetrieveItem(strId: edge.Edge.Source);
+                ISchemaItem targetItem = RetrieveItem(strId: edge.Edge.Target);
                 taskRunner.AddDependencyTask(
                     independentItem: (IWorkflowStep)newItem,
                     dependentItem: targetItem,
@@ -107,20 +108,20 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
                 }
             };
         }
-        addBetweenMenu.DropDownItems.AddRange(submenuItems);
+        addBetweenMenu.DropDownItems.AddRange(toolStripItems: submenuItems);
 
         var contextMenu = new ContextMenuStrip();
-        contextMenu.Items.Add(deleteMenuItem);
-        contextMenu.Items.Add(addBetweenMenu);
+        contextMenu.Items.Add(value: deleteMenuItem);
+        contextMenu.Items.Add(value: addBetweenMenu);
         return contextMenu;
     }
 
     private ContextMenuStrip CreateContextMenuForNode(DNode dNodeUnderMouse)
     {
-        var contextMenu = new AsContextMenu(WorkbenchSingleton.Workbench);
-        var schemaItemUnderMouse = RetrieveItem(dNodeUnderMouse.Node);
+        var contextMenu = new AsContextMenu(caller: WorkbenchSingleton.Workbench);
+        var schemaItemUnderMouse = RetrieveItem(node: dNodeUnderMouse.Node);
         if (
-            IsObjectSelectionInconsistent(schemaItemUnderMouse)
+            IsObjectSelectionInconsistent(schemaItemUnderMouse: schemaItemUnderMouse)
             || schemaItemUnderMouse is EntityUIAction
             || schemaItemUnderMouse is DataStructureEntity
         )
@@ -128,36 +129,42 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
             return contextMenu;
         }
 
-        var deleteMenuItem = MakeDeleteItem(dNodeUnderMouse, schemaItemUnderMouse);
-        contextMenu.AddSubItem(deleteMenuItem);
+        var deleteMenuItem = MakeDeleteItem(
+            dNodeUnderMouse: dNodeUnderMouse,
+            schemaItemUnderMouse: schemaItemUnderMouse
+        );
+        contextMenu.AddSubItem(subItem: deleteMenuItem);
         if (schemaItemUnderMouse is IContextStore contextStore)
         {
-            ToolStripMenuItem hideDataFlowItem = MakeHideDatFlowItem(contextStore);
+            ToolStripMenuItem hideDataFlowItem = MakeHideDatFlowItem(contextStore: contextStore);
             ToolStripMenuItem showDataFlowItem = MakeShowDataFlowItem(
-                dNodeUnderMouse.Node,
-                contextStore
+                nodeUnderMouse: dNodeUnderMouse.Node,
+                contextStore: contextStore
             );
-            contextMenu.AddSubItem(hideDataFlowItem);
-            contextMenu.AddSubItem(showDataFlowItem);
+            contextMenu.AddSubItem(subItem: hideDataFlowItem);
+            contextMenu.AddSubItem(subItem: showDataFlowItem);
         }
-        var newMenu = MakeNewItem(dNodeUnderMouse, schemaItemUnderMouse);
+        var newMenu = MakeNewItem(
+            dNodeUnderMouse: dNodeUnderMouse,
+            schemaItemUnderMouse: schemaItemUnderMouse
+        );
         if (newMenu.DropDownItems.Count > 0)
         {
-            contextMenu.AddSubItem(newMenu);
+            contextMenu.AddSubItem(subItem: newMenu);
         }
 
-        var actionsMenu = MakeActionsItem(schemaItemUnderMouse);
+        var actionsMenu = MakeActionsItem(schemaItemUnderMouse: schemaItemUnderMouse);
         if (actionsMenu.DropDownItems.Count > 0)
         {
-            contextMenu.AddSubItem(actionsMenu);
+            contextMenu.AddSubItem(subItem: actionsMenu);
         }
-        if (Graph.IsWorkFlowItemSubGraph(dNodeUnderMouse.Node))
+        if (Graph.IsWorkFlowItemSubGraph(node: dNodeUnderMouse.Node))
         {
             ToolStripMenuItem addAfterMenu = MakeAddAfterItem(
-                dNodeUnderMouse,
-                schemaItemUnderMouse
+                dNodeUnderMouse: dNodeUnderMouse,
+                schemaItemUnderMouse: schemaItemUnderMouse
             );
-            contextMenu.AddSubItem(addAfterMenu);
+            contextMenu.AddSubItem(subItem: addAfterMenu);
         }
         return contextMenu;
     }
@@ -168,7 +175,7 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
             schemaItemUnderMouse != null
             && (
                 schemaItemUnderMouse.Id != nodeSelector.SelectedNodeId
-                || schemaItemUnderMouse.Id != Guid.Parse(schemaService.ActiveNode.NodeId)
+                || schemaItemUnderMouse.Id != Guid.Parse(input: schemaService.ActiveNode.NodeId)
             );
         return objectSelectionIsInconsistent;
     }
@@ -180,7 +187,7 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
             return false;
         }
 
-        if (Equals(nodeSelector.Selected, Graph.MainDrawingSubgraf))
+        if (Equals(objA: nodeSelector.Selected, objB: Graph.MainDrawingSubgraf))
         {
             return false;
         }
@@ -190,7 +197,7 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
             return false;
         }
 
-        return Equals(objectUnderMouse.Node, nodeSelector.Selected);
+        return Equals(objA: objectUnderMouse.Node, objB: nodeSelector.Selected);
     }
 
     private bool IsAddAfterMenuItemAvailable(DNode objectUnderMouse)
@@ -200,12 +207,12 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
             return false;
         }
 
-        if (Equals(nodeSelector.Selected, Graph.MainDrawingSubgraf))
+        if (Equals(objA: nodeSelector.Selected, objB: Graph.MainDrawingSubgraf))
         {
             return false;
         }
 
-        return Equals(objectUnderMouse.Node, nodeSelector.Selected);
+        return Equals(objA: objectUnderMouse.Node, objB: nodeSelector.Selected);
     }
 
     private bool IsNewMenuAvailable(DNode dNodeUnderMouse)
@@ -213,8 +220,8 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
         if (
             dNodeUnderMouse?.Node is Subgraph
             && nodeSelector.Selected is Subgraph
-            && !Graph.IsWorkFlowItemSubGraph(dNodeUnderMouse.Node)
-            && !Graph.IsWorkFlowItemSubGraph(nodeSelector.Selected)
+            && !Graph.IsWorkFlowItemSubGraph(node: dNodeUnderMouse.Node)
+            && !Graph.IsWorkFlowItemSubGraph(node: nodeSelector.Selected)
         )
         {
             return true;
@@ -225,14 +232,14 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
         }
 
         var schemaItem = dNodeUnderMouse.Node is InfrastructureSubgraph infrastructureGraph
-            ? RetrieveItem(infrastructureGraph.WorkflowItemId)
-            : RetrieveItem(dNodeUnderMouse.Node);
+            ? RetrieveItem(id: infrastructureGraph.WorkflowItemId)
+            : RetrieveItem(node: dNodeUnderMouse.Node);
         if (!(dNodeUnderMouse.Node is Subgraph) && !(schemaItem is ServiceMethodCallParameter))
         {
             return false;
         }
 
-        Guid nodeId = IdTranslator.ToSchemaId(dNodeUnderMouse.Node);
+        Guid nodeId = IdTranslator.ToSchemaId(node: dNodeUnderMouse.Node);
         return nodeId == nodeSelector.SelectedNodeId;
     }
 
@@ -242,11 +249,11 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
     )
     {
         ToolStripMenuItem addAfterMenu = new ToolStripMenuItem(
-            Strings.WorkFlowDiagramEditor_ContextMenuNode_Add_After
+            text: Strings.WorkFlowDiagramEditor_ContextMenuNode_Add_After
         );
         addAfterMenu.Image = ImageRes.icon_new;
-        var builder = new SchemaItemEditorsMenuBuilder(true);
-        var submenuItems = builder.BuildSubmenu(schemaItemUnderMouse.ParentItem);
+        var builder = new SchemaItemEditorsMenuBuilder(showDialog: true);
+        var submenuItems = builder.BuildSubmenu(owner: schemaItemUnderMouse.ParentItem);
         foreach (AsMenuCommand submenuItem in submenuItems)
         {
             if (
@@ -265,55 +272,59 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
                 );
             };
         }
-        addAfterMenu.DropDownItems.AddRange(submenuItems);
-        addAfterMenu.Enabled = IsAddAfterMenuItemAvailable(dNodeUnderMouse);
+        addAfterMenu.DropDownItems.AddRange(toolStripItems: submenuItems);
+        addAfterMenu.Enabled = IsAddAfterMenuItemAvailable(objectUnderMouse: dNodeUnderMouse);
         return addAfterMenu;
     }
 
     private static ToolStripMenuItem MakeActionsItem(ISchemaItem schemaItemUnderMouse)
     {
         ToolStripMenuItem actionsMenu = new ToolStripMenuItem(
-            Strings.WorkFlowDiagramEditor_ContextMenuNode_Actions
+            text: Strings.WorkFlowDiagramEditor_ContextMenuNode_Actions
         );
         actionsMenu.Image = ImageRes.icon_actions;
-        AsMenuCommand dummyMenu = new AsMenuCommand("dummy", schemaItemUnderMouse);
+        AsMenuCommand dummyMenu = new AsMenuCommand(label: "dummy", caller: schemaItemUnderMouse);
         var builder1 = new SchemaActionsMenuBuilder();
-        dummyMenu.PopulateMenu(builder1);
-        actionsMenu.DropDownItems.AddRange(dummyMenu.DropDownItems.ToArray<ToolStripItem>());
+        dummyMenu.PopulateMenu(item: builder1);
+        actionsMenu.DropDownItems.AddRange(
+            toolStripItems: dummyMenu.DropDownItems.ToArray<ToolStripItem>()
+        );
         return actionsMenu;
     }
 
     private ToolStripMenuItem MakeNewItem(DNode dNodeUnderMouse, ISchemaItem schemaItemUnderMouse)
     {
         ToolStripMenuItem newMenu = new ToolStripMenuItem(
-            Strings.WorkFlowDiagramEditor_ContextMenuNode_New
+            text: Strings.WorkFlowDiagramEditor_ContextMenuNode_New
         );
         newMenu.Image = ImageRes.icon_new;
-        newMenu.Enabled = IsNewMenuAvailable(dNodeUnderMouse);
+        newMenu.Enabled = IsNewMenuAvailable(dNodeUnderMouse: dNodeUnderMouse);
         if (schemaItemUnderMouse is ServiceMethodCallTask)
         {
             schemaItemUnderMouse
-                .ChildItems.Where(item => !(item is WorkflowTaskDependency))
-                .ForEach(schemaItem =>
+                .ChildItems.Where(predicate: item => !(item is WorkflowTaskDependency))
+                .ForEach(action: schemaItem =>
                 {
-                    var menuItem = new AsMenuCommand(schemaItem.Name, schemaItem);
-                    var builder = new SchemaItemEditorsMenuBuilder(true);
-                    menuItem.PopulateMenu(builder);
-                    newMenu.DropDownItems.Add(menuItem);
+                    var menuItem = new AsMenuCommand(label: schemaItem.Name, caller: schemaItem);
+                    var builder = new SchemaItemEditorsMenuBuilder(showDialog: true);
+                    menuItem.PopulateMenu(item: builder);
+                    newMenu.DropDownItems.Add(value: menuItem);
                 });
         }
         else
         {
             AsMenuCommand menuItem = new AsMenuCommand(
-                Strings.WorkFlowDiagramEditor_ContextMenuNode_New,
-                schemaItemUnderMouse
+                label: Strings.WorkFlowDiagramEditor_ContextMenuNode_New,
+                caller: schemaItemUnderMouse
             );
-            var builder = new SchemaItemEditorsMenuBuilder(true);
-            menuItem.PopulateMenu(builder);
-            menuItem.SubItems.AddRange(menuItem.DropDownItems.Cast<object>());
-            new AsContextMenu(WorkbenchSingleton.Workbench).AddSubItem(menuItem);
+            var builder = new SchemaItemEditorsMenuBuilder(showDialog: true);
+            menuItem.PopulateMenu(item: builder);
+            menuItem.SubItems.AddRange(collection: menuItem.DropDownItems.Cast<object>());
+            new AsContextMenu(caller: WorkbenchSingleton.Workbench).AddSubItem(subItem: menuItem);
             menuItem.ShowDropDown();
-            newMenu.DropDownItems.AddRange(menuItem.DropDownItems.ToArray<ToolStripItem>());
+            newMenu.DropDownItems.AddRange(
+                toolStripItems: menuItem.DropDownItems.ToArray<ToolStripItem>()
+            );
         }
         return newMenu;
     }
@@ -325,11 +336,11 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
         showDataFlowItem.Image = ImageRes.icon_execute;
         showDataFlowItem.Click += (sender, args) =>
         {
-            dependencyPainter.Activate(contextStore);
+            dependencyPainter.Activate(contextStore: contextStore);
             nodeSelector.Selected = nodeUnderMouse;
             ReDrawAndKeepFocus();
         };
-        showDataFlowItem.Enabled = !contextStore.Equals(dependencyPainter.CurrentContextStore);
+        showDataFlowItem.Enabled = !contextStore.Equals(obj: dependencyPainter.CurrentContextStore);
         return showDataFlowItem;
     }
 
@@ -339,7 +350,7 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
         hideDataFlowItem.Text = Strings.WorkFlowDiagramEditor_ContextMenuNode_Hide_data_flow;
         hideDataFlowItem.Image = ImageRes.icon_delete;
         hideDataFlowItem.Click += (sender, args) => dependencyPainter.DeActivate();
-        hideDataFlowItem.Enabled = contextStore.Equals(dependencyPainter.CurrentContextStore);
+        hideDataFlowItem.Enabled = contextStore.Equals(obj: dependencyPainter.CurrentContextStore);
         return hideDataFlowItem;
     }
 
@@ -352,7 +363,10 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
         deleteMenuItem.Text = Strings.WorkFlowDiagramEditor_ContextMenuNode_Delete;
         deleteMenuItem.Image = ImageRes.icon_delete;
         deleteMenuItem.Click += DeleteNode_Click;
-        deleteMenuItem.Enabled = IsDeleteMenuItemAvailable(dNodeUnderMouse, schemaItemUnderMouse);
+        deleteMenuItem.Enabled = IsDeleteMenuItemAvailable(
+            objectUnderMouse: dNodeUnderMouse,
+            schemaItemUnderMouse: schemaItemUnderMouse
+        );
         return deleteMenuItem;
     }
 
@@ -365,43 +379,43 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
         }
         else
         {
-            throw new Exception(Strings.WorkFlowDiagramEditor_Node_Not_Selected);
+            throw new Exception(message: Strings.WorkFlowDiagramEditor_Node_Not_Selected);
         }
     }
 
     private void DeleteActiveNodeWithDependencies()
     {
         Node nodeToDelete = Graph.FindNodeOrSubgraph(
-            IdTranslator.SchemaToFirstNode(schemaService.ActiveNode.NodeId)
+            id: IdTranslator.SchemaToFirstNode(schemaItemId: schemaService.ActiveNode.NodeId)
         );
         var deleteNodeCommand = new DeleteActiveNode();
         deleteNodeCommand.BeforeDelete += (o, args) =>
         {
             nodeToDelete
                 .OutEdges.ToArray()
-                .Where(ConnectsSchemaItems)
-                .Where(x => !(x.UserData is IContextStore))
-                .ForEach(DeleteDependency);
+                .Where(predicate: ConnectsSchemaItems)
+                .Where(predicate: x => !(x.UserData is IContextStore))
+                .ForEach(action: DeleteDependency);
         };
         deleteNodeCommand.AfterDelete += (o, args) =>
         {
-            var sourceIds = nodeToDelete.InEdges.Select(edge => edge.Source);
-            var targetIds = nodeToDelete.OutEdges.Select(edge => edge.Target);
+            var sourceIds = nodeToDelete.InEdges.Select(selector: edge => edge.Source);
+            var targetIds = nodeToDelete.OutEdges.Select(selector: edge => edge.Target);
             foreach (string sourceId in sourceIds)
             {
-                if (IdTranslator.NodeToSchema(sourceId) == Guid.Empty)
+                if (IdTranslator.NodeToSchema(nodeId: sourceId) == Guid.Empty)
                 {
                     continue;
                 }
 
                 foreach (string targetId in targetIds)
                 {
-                    if (IdTranslator.NodeToSchema(targetId) == Guid.Empty)
+                    if (IdTranslator.NodeToSchema(nodeId: targetId) == Guid.Empty)
                     {
                         continue;
                     }
 
-                    AddDependency(sourceId, targetId);
+                    AddDependency(source: sourceId, target: targetId);
                 }
             }
         };

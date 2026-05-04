@@ -42,7 +42,7 @@ public class ResourceOwnerPasswordAuthenticationProvider : IClientAuthentication
 
     public bool TryAuthenticate(string url, Hashtable headers)
     {
-        bool canHandle = providerConfig.UrlsToBeAuthenticated.Any(url.StartsWith);
+        bool canHandle = providerConfig.UrlsToBeAuthenticated.Any(predicate: url.StartsWith);
         if (!canHandle)
         {
             return false;
@@ -58,7 +58,7 @@ public class ResourceOwnerPasswordAuthenticationProvider : IClientAuthentication
             }
         }
 
-        headers.Add("Authorization", $"Bearer {accessToken.Value}");
+        headers.Add(key: "Authorization", value: $"Bearer {accessToken.Value}");
         return true;
     }
 
@@ -66,20 +66,24 @@ public class ResourceOwnerPasswordAuthenticationProvider : IClientAuthentication
     {
         using var client = new HttpClient();
         var discoveryUrl =
-            providerConfig.AuthServerUrl.TrimEnd('/') + "/.well-known/openid-configuration";
+            providerConfig.AuthServerUrl.TrimEnd(trimChar: '/')
+            + "/.well-known/openid-configuration";
 
-        using var discoveryResponse = await client.GetAsync(discoveryUrl);
+        using var discoveryResponse = await client.GetAsync(requestUri: discoveryUrl);
         var discoveryContent = await discoveryResponse.Content.ReadAsStringAsync();
 
         if (!discoveryResponse.IsSuccessStatusCode)
         {
             throw new Exception(
-                string.Format(
-                    Resources.ErrorDiscoveryDocumentRetrieval,
-                    discoveryUrl,
-                    (int)discoveryResponse.StatusCode,
-                    discoveryResponse.ReasonPhrase,
-                    discoveryContent
+                message: string.Format(
+                    format: Resources.ErrorDiscoveryDocumentRetrieval,
+                    args:
+                    [
+                        discoveryUrl,
+                        (int)discoveryResponse.StatusCode,
+                        discoveryResponse.ReasonPhrase,
+                        discoveryContent,
+                    ]
                 )
             );
         }
@@ -87,13 +91,21 @@ public class ResourceOwnerPasswordAuthenticationProvider : IClientAuthentication
         string tokenEndpoint;
         try
         {
-            using var discoveryJson = JsonDocument.Parse(discoveryContent);
+            using var discoveryJson = JsonDocument.Parse(json: discoveryContent);
             var root = discoveryJson.RootElement;
 
-            if (!root.TryGetProperty("token_endpoint", out var tokenEndpointElement))
+            if (
+                !root.TryGetProperty(
+                    propertyName: "token_endpoint",
+                    value: out var tokenEndpointElement
+                )
+            )
             {
                 throw new Exception(
-                    string.Format(Resources.ErrorTokenEndpointNotFoundInDiscovery, discoveryUrl)
+                    message: string.Format(
+                        format: Resources.ErrorTokenEndpointNotFoundInDiscovery,
+                        arg0: discoveryUrl
+                    )
                 );
             }
 
@@ -102,89 +114,112 @@ public class ResourceOwnerPasswordAuthenticationProvider : IClientAuthentication
         catch (JsonException ex)
         {
             throw new Exception(
-                string.Format(Resources.ErrorDiscoveryDocumentParseFailed, discoveryUrl),
-                ex
+                message: string.Format(
+                    format: Resources.ErrorDiscoveryDocumentParseFailed,
+                    arg0: discoveryUrl
+                ),
+                innerException: ex
             );
         }
 
-        if (string.IsNullOrWhiteSpace(tokenEndpoint))
+        if (string.IsNullOrWhiteSpace(value: tokenEndpoint))
         {
             throw new Exception(
-                string.Format(Resources.ErrorTokenEndpointNullOrEmpty, discoveryUrl)
+                message: string.Format(
+                    format: Resources.ErrorTokenEndpointNullOrEmpty,
+                    arg0: discoveryUrl
+                )
             );
         }
 
         var body = new Dictionary<string, string>
         {
-            ["grant_type"] = "password",
-            ["client_id"] = providerConfig.ClientId,
-            ["client_secret"] = providerConfig.ClientSecret,
-            ["username"] = providerConfig.UserName,
-            ["password"] = providerConfig.Password,
-            ["scope"] = "internal_api",
+            [key: "grant_type"] = "password",
+            [key: "client_id"] = providerConfig.ClientId,
+            [key: "client_secret"] = providerConfig.ClientSecret,
+            [key: "username"] = providerConfig.UserName,
+            [key: "password"] = providerConfig.Password,
+            [key: "scope"] = "internal_api",
         };
 
-        using var tokenRequest = new HttpRequestMessage(HttpMethod.Post, tokenEndpoint)
+        using var tokenRequest = new HttpRequestMessage(
+            method: HttpMethod.Post,
+            requestUri: tokenEndpoint
+        )
         {
-            Content = new FormUrlEncodedContent(body),
+            Content = new FormUrlEncodedContent(nameValueCollection: body),
         };
 
-        using var tokenResponse = await client.SendAsync(tokenRequest);
+        using var tokenResponse = await client.SendAsync(request: tokenRequest);
         var tokenContent = await tokenResponse.Content.ReadAsStringAsync();
 
         if (!tokenResponse.IsSuccessStatusCode)
         {
             throw new Exception(
-                string.Format(
-                    Resources.ErrorPasswordTokenRequest,
-                    tokenEndpoint,
-                    (int)tokenResponse.StatusCode,
-                    tokenResponse.ReasonPhrase,
-                    tokenContent
+                message: string.Format(
+                    format: Resources.ErrorPasswordTokenRequest,
+                    args:
+                    [
+                        tokenEndpoint,
+                        (int)tokenResponse.StatusCode,
+                        tokenResponse.ReasonPhrase,
+                        tokenContent,
+                    ]
                 )
             );
         }
 
         try
         {
-            using var tokenJson = JsonDocument.Parse(tokenContent);
+            using var tokenJson = JsonDocument.Parse(json: tokenContent);
             var root = tokenJson.RootElement;
 
-            if (!root.TryGetProperty("access_token", out var accessTokenElement))
+            if (
+                !root.TryGetProperty(
+                    propertyName: "access_token",
+                    value: out var accessTokenElement
+                )
+            )
             {
                 throw new Exception(
-                    string.Format(
-                        Resources.ErrorAccessTokenNotFoundInResponse,
-                        providerConfig.AuthServerUrl
+                    message: string.Format(
+                        format: Resources.ErrorAccessTokenNotFoundInResponse,
+                        arg0: providerConfig.AuthServerUrl
                     )
                 );
             }
 
             var accessTokenValue = accessTokenElement.GetString();
-            if (string.IsNullOrWhiteSpace(accessTokenValue))
+            if (string.IsNullOrWhiteSpace(value: accessTokenValue))
             {
-                throw new Exception(Resources.ErrorAccessTokenNullOrEmpty);
+                throw new Exception(message: Resources.ErrorAccessTokenNullOrEmpty);
             }
 
             int expiresInSeconds = 3600;
-            if (root.TryGetProperty("expires_in", out var expiresInElement))
+            if (root.TryGetProperty(propertyName: "expires_in", value: out var expiresInElement))
             {
                 if (expiresInElement.ValueKind == JsonValueKind.Number)
                 {
-                    if (!expiresInElement.TryGetInt32(out expiresInSeconds))
+                    if (!expiresInElement.TryGetInt32(value: out expiresInSeconds))
                     {
                         throw new Exception(
-                            string.Format(Resources.ErrorExpiresInParseNumber, expiresInElement)
+                            message: string.Format(
+                                format: Resources.ErrorExpiresInParseNumber,
+                                arg0: expiresInElement
+                            )
                         );
                     }
                 }
                 else if (expiresInElement.ValueKind == JsonValueKind.String)
                 {
                     var str = expiresInElement.GetString();
-                    if (!int.TryParse(str, out expiresInSeconds))
+                    if (!int.TryParse(s: str, result: out expiresInSeconds))
                     {
                         throw new Exception(
-                            string.Format(Resources.ErrorExpiresInParseString, str)
+                            message: string.Format(
+                                format: Resources.ErrorExpiresInParseString,
+                                arg0: str
+                            )
                         );
                     }
                 }
@@ -192,21 +227,27 @@ public class ResourceOwnerPasswordAuthenticationProvider : IClientAuthentication
 
             return new AccessToken(
                 value: accessTokenValue,
-                lifeTime: TimeSpan.FromSeconds(expiresInSeconds)
+                lifeTime: TimeSpan.FromSeconds(value: expiresInSeconds)
             );
         }
         catch (JsonException ex)
         {
             throw new Exception(
-                string.Format(Resources.ErrorTokenResponseParseFailed, tokenEndpoint, tokenContent),
-                ex
+                message: string.Format(
+                    format: Resources.ErrorTokenResponseParseFailed,
+                    arg0: tokenEndpoint,
+                    arg1: tokenContent
+                ),
+                innerException: ex
             );
         }
     }
 
     public void Configure(IConfiguration configuration)
     {
-        providerConfig = new ResourceOwnerPasswordAuthenticationProviderConfig(configuration);
+        providerConfig = new ResourceOwnerPasswordAuthenticationProviderConfig(
+            configuration: configuration
+        );
     }
 }
 
@@ -220,11 +261,11 @@ class AccessToken
     {
         this.lifeTime = lifeTime;
         Value = value;
-        Expiration = DateTime.Now.Add(lifeTime);
+        Expiration = DateTime.Now.Add(value: lifeTime);
     }
 
     public bool IsExpired =>
-        lifeTime < TimeSpan.FromMinutes(10)
-            ? DateTime.Now - Expiration < lifeTime.Divide(4)
-            : DateTime.Now - Expiration < TimeSpan.FromMinutes(10);
+        lifeTime < TimeSpan.FromMinutes(value: 10)
+            ? DateTime.Now - Expiration < lifeTime.Divide(divisor: 4)
+            : DateTime.Now - Expiration < TimeSpan.FromMinutes(value: 10);
 }

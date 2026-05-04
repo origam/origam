@@ -54,24 +54,36 @@ public class EntityModelSchemaItemProvider : AbstractSchemaItemProvider
         T item;
         if (typeof(T) == typeof(TableMappingItem))
         {
-            item = base.NewItem<T>(schemaExtensionId, group, "NewTable");
+            item = base.NewItem<T>(
+                schemaExtensionId: schemaExtensionId,
+                group: group,
+                itemName: "NewTable"
+            );
         }
         else if (typeof(T) == typeof(DetachedEntity))
         {
-            item = base.NewItem<T>(schemaExtensionId, group, "NewEntity");
+            item = base.NewItem<T>(
+                schemaExtensionId: schemaExtensionId,
+                group: group,
+                itemName: "NewEntity"
+            );
         }
         else
         {
             throw new ArgumentOutOfRangeException(
-                "type",
-                typeof(T),
-                "This type is not supported by EntityModel"
+                paramName: "type",
+                actualValue: typeof(T),
+                message: "This type is not supported by EntityModel"
             );
         }
         // add default ancestor to all database entities
         if (typeof(T) == typeof(TableMappingItem))
         {
-            EntityHelper.AddAncestor(item as IDataEntity, EntityHelper.DefaultAncestor, false);
+            EntityHelper.AddAncestor(
+                entity: item as IDataEntity,
+                ancestorEntity: EntityHelper.DefaultAncestor,
+                persist: false
+            );
         }
         return item;
     }

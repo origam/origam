@@ -30,7 +30,7 @@ public static class IdentityErrorExtensions
     public static string ToErrorMessage(this IEnumerable<IdentityError> errors)
     {
         return errors
-            .Select(error => error.Description)
-            .Aggregate((allErrors, error) => allErrors += "\n" + error);
+            .Select(selector: error => error.Description)
+            .Aggregate(func: (allErrors, error) => allErrors += "\n" + error);
     }
 }

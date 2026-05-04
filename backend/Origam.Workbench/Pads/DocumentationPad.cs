@@ -57,23 +57,25 @@ public class DocumentationPad : AbstractPadContent
         //
         InitializeComponent();
         _schemaService =
-            ServiceManager.Services.GetService(typeof(Services.SchemaService))
+            ServiceManager.Services.GetService(serviceType: typeof(Services.SchemaService))
             as Services.SchemaService;
         _schemaService.SchemaLoaded += _schemaService_SchemaLoaded;
         _schemaService.SchemaUnloaded += _schemaService_SchemaUnloaded;
         this.colText.TextBox.Multiline = true;
         this.dataGridTableStyle1.PreferredRowHeight *= 2;
-        tblCategory.Rows.Add(new object[] { DBNull.Value });
-        Enum.GetValues(typeof(DocumentationType))
+        tblCategory.Rows.Add(values: new object[] { DBNull.Value });
+        Enum.GetValues(enumType: typeof(DocumentationType))
             .Cast<DocumentationType>()
-            .ForEach(docType => tblCategory.Rows.Add(new object[] { docType.ToString() }));
+            .ForEach(action: docType =>
+                tblCategory.Rows.Add(values: new object[] { docType.ToString() })
+            );
         this.colCategory.ColumnComboBox.DataSource = tblCategory.DefaultView;
         this.colCategory.ColumnComboBox.ValueMember = "Name";
         this.colCategory.ColumnComboBox.DisplayMember = "Name";
         _cm =
             this.BindingContext[
-                documentationComplete,
-                documentationComplete.Documentation.TableName
+                dataSource: documentationComplete,
+                dataMember: documentationComplete.Documentation.TableName
             ] as CurrencyManager;
         _cm.CurrentChanged += _cm_CurrentChanged;
         this.BackColor = Origam.UI.OrigamColorScheme.FormBackgroundColor;
@@ -91,7 +93,7 @@ public class DocumentationPad : AbstractPadContent
         _documentationService = ServiceManager.Services.GetService<IDocumentationService>();
         if (_documentationService == null)
         {
-            throw new NullReferenceException("Documentation service not found");
+            throw new NullReferenceException(message: "Documentation service not found");
         }
     }
 
@@ -110,7 +112,7 @@ public class DocumentationPad : AbstractPadContent
                 components.Dispose();
             }
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
 
     #region Windows Form Designer generated code
@@ -312,12 +314,15 @@ public class DocumentationPad : AbstractPadContent
         }
         DocumentationComplete.DocumentationRow row =
             ((DataRowView)_cm.Current).Row as DocumentationComplete.DocumentationRow;
-        ShowDocumentation(row.refSchemaItemId);
+        ShowDocumentation(schemaItemId: row.refSchemaItemId);
     }
 
     private void Save()
     {
-        _documentationService.SaveDocumentation(documentationComplete, _schemaItemId);
+        _documentationService.SaveDocumentation(
+            documentationData: documentationComplete,
+            schemaItemId: _schemaItemId
+        );
     }
 
     public void ClearDocumentation()
@@ -327,13 +332,13 @@ public class DocumentationPad : AbstractPadContent
 
     public void ShowDocumentation(Guid schemaItemId)
     {
-        documentationComplete = _documentationService.LoadDocumentation(schemaItemId);
+        documentationComplete = _documentationService.LoadDocumentation(schemaItemId: schemaItemId);
         _schemaItemId = schemaItemId;
         this.dataGrid1.DataSource = this.documentationComplete;
         _cm =
             this.BindingContext[
-                documentationComplete,
-                documentationComplete.Documentation.TableName
+                dataSource: documentationComplete,
+                dataMember: documentationComplete.Documentation.TableName
             ] as CurrencyManager;
         _cm.CurrentChanged += _cm_CurrentChanged;
     }
@@ -375,6 +380,6 @@ public class DocumentationPad : AbstractPadContent
             return true;
         }
 
-        return base.ProcessCmdKey(ref msg, keyData);
+        return base.ProcessCmdKey(msg: ref msg, keyData: keyData);
     }
 }

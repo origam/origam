@@ -41,30 +41,33 @@ public static class IOExtensions
                 try
                 {
                     stream = fileInfo.OpenRead();
-                    return md5.ComputeHash(stream);
+                    return md5.ComputeHash(inputStream: stream);
                 }
                 catch (IOException ex)
                 {
                     lastException = ex;
-                    Thread.Sleep(100);
+                    Thread.Sleep(millisecondsTimeout: 100);
                 }
                 finally
                 {
                     stream?.Dispose();
                 }
             }
-            throw new Exception("Could not get hash of: " + fileInfo, lastException);
+            throw new Exception(
+                message: "Could not get hash of: " + fileInfo,
+                innerException: lastException
+            );
         }
     }
 
     public static bool ExistsNow(this FileInfo file)
     {
-        return File.Exists(file.FullName);
+        return File.Exists(path: file.FullName);
     }
 
     public static string GetFileBase64Hash(this FileInfo fileInfo)
     {
-        return Convert.ToBase64String(GetFileHash(fileInfo));
+        return Convert.ToBase64String(inArray: GetFileHash(fileInfo: fileInfo));
     }
 
     public static IEnumerable<DirectoryInfo> GetAllSubDirectories(this DirectoryInfo directory)
@@ -81,17 +84,17 @@ public static class IOExtensions
 
     public static bool DoesNotContain(this DirectoryInfo directory, string fileName)
     {
-        return !directory.Contains(fileName);
+        return !directory.Contains(fileName: fileName);
     }
 
     public static bool Contains(this DirectoryInfo directory, string fileName)
     {
-        return directory.Contains(file => file.Name == fileName);
+        return directory.Contains(predicate: file => file.Name == fileName);
     }
 
     public static bool Contains(this DirectoryInfo directory, Func<FileInfo, bool> predicate)
     {
-        return directory.GetFiles().Any(predicate);
+        return directory.GetFiles().Any(predicate: predicate);
     }
 
     public static IEnumerable<FileInfo> GetAllFilesInSubDirectories(this DirectoryInfo directory)
@@ -111,12 +114,12 @@ public static class IOExtensions
 
     public static bool IsOnPathOf(this DirectoryInfo thisDirInfo, DirectoryInfo other)
     {
-        return IOTools.IsSubPathOf(other.FullName, thisDirInfo.FullName);
+        return IOTools.IsSubPathOf(path: other.FullName, basePath: thisDirInfo.FullName);
     }
 
     public static bool IsOnPathOf(this DirectoryInfo thisDirInfo, string otherPath)
     {
-        return IOTools.IsSubPathOf(otherPath, thisDirInfo.FullName);
+        return IOTools.IsSubPathOf(path: otherPath, basePath: thisDirInfo.FullName);
     }
 
     public static void DeleteAllIncludingReadOnly(this DirectoryInfo dir)
@@ -128,18 +131,21 @@ public static class IOExtensions
 
         foreach (FileInfo file in dir.GetAllFilesInSubDirectories())
         {
-            File.SetAttributes(file.FullName, FileAttributes.Normal);
+            File.SetAttributes(path: file.FullName, fileAttributes: FileAttributes.Normal);
         }
 
         dir.Attributes = dir.Attributes & ~FileAttributes.ReadOnly;
-        dir.Delete(true);
+        dir.Delete(recursive: true);
     }
 
     public static FileInfo MakeNew(this FileInfo file, string newExtension)
     {
         int extensionLength = file.Extension.Length;
         int fullNameLength = file.FullName.Length;
-        string baseName = file.FullName.Substring(0, fullNameLength - extensionLength);
-        return new FileInfo(baseName + "." + newExtension);
+        string baseName = file.FullName.Substring(
+            startIndex: 0,
+            length: fullNameLength - extensionLength
+        );
+        return new FileInfo(fileName: baseName + "." + newExtension);
     }
 }

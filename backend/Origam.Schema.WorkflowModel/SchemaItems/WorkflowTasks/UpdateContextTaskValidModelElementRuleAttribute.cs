@@ -30,7 +30,7 @@ namespace Origam.Schema.WorkflowModel;
 /// provided that AllFields flag on datastructure entity is set.
 /// </summary>
 [AttributeUsage(
-    AttributeTargets.Property | AttributeTargets.Field,
+    validOn: AttributeTargets.Property | AttributeTargets.Field,
     AllowMultiple = false,
     Inherited = true
 )]
@@ -53,9 +53,9 @@ public class UpdateContextTaskValidModelElementRuleAttribute : AbstractModelElem
         if (updateContextTask.GetFieldSchemaItem() == null)
         {
             return new NullReferenceException(
-                ResourceUtils.GetString(
-                    "ErrorUpdateContextTaskInvalid",
-                    updateContextTask.FieldName
+                message: ResourceUtils.GetString(
+                    key: "ErrorUpdateContextTaskInvalid",
+                    args: updateContextTask.FieldName
                 )
             );
         }
@@ -64,6 +64,6 @@ public class UpdateContextTaskValidModelElementRuleAttribute : AbstractModelElem
 
     public override Exception CheckRule(object instance, string memberName)
     {
-        return CheckRule(instance);
+        return CheckRule(instance: instance);
     }
 }

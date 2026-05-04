@@ -35,8 +35,8 @@ public class WorkQueueAdapterFactory
             case "57bed127-45cc-46f1-b29b-53c635f665b3": // IMAP
             {
                 return Reflector.InvokeObject(
-                        "Origam.workflow.mail.WorkQueueImapLoaderAdapter",
-                        "Origam.workflow.mail"
+                        classname: "Origam.workflow.mail.WorkQueueImapLoaderAdapter",
+                        assembly: "Origam.workflow.mail"
                     ) as WorkQueueLoaderAdapter;
             }
             case "07329b7b-90e8-4594-b738-c04856fc998e": // FILE
@@ -46,8 +46,8 @@ public class WorkQueueAdapterFactory
             case "4c15f1a1-4bd8-4fa6-9a37-df5aa19f02a5": // POP3
             {
                 return Reflector.InvokeObject(
-                        "Origam.workflow.mail.WorkQueuePop3LoaderAdapter",
-                        "Origam.workflow.mail"
+                        classname: "Origam.workflow.mail.WorkQueuePop3LoaderAdapter",
+                        assembly: "Origam.workflow.mail"
                     ) as WorkQueueLoaderAdapter;
             }
             case "75e3b51a-e4f5-48ed-941c-597f49fcc775": // Sequential Workflow
@@ -61,8 +61,8 @@ public class WorkQueueAdapterFactory
             case "58c4ef05-537b-489e-bdf1-bbc3ed109e55": // WebSphere MQ
             {
                 return Reflector.InvokeObject(
-                        "Origam.Workflow.WorkQueue.WorkQueueWebSphereMQLoader",
-                        "Origam.Workflow.WorkQueue.WebSphereMQLoader"
+                        classname: "Origam.Workflow.WorkQueue.WorkQueueWebSphereMQLoader",
+                        assembly: "Origam.Workflow.WorkQueue.WebSphereMQLoader"
                     ) as WorkQueueLoaderAdapter;
             }
             case "76402268-6e7e-4ee4-bbf5-ae054b2eb793": // IATA BSP File
@@ -76,9 +76,9 @@ public class WorkQueueAdapterFactory
             default:
             {
                 throw new ArgumentOutOfRangeException(
-                    "refWorkQueueExternalSourceTypeId",
-                    adapterId,
-                    ResourceUtils.GetString("ErrorUnknownWorkQueueAdapter")
+                    paramName: "refWorkQueueExternalSourceTypeId",
+                    actualValue: adapterId,
+                    message: ResourceUtils.GetString(key: "ErrorUnknownWorkQueueAdapter")
                 );
             }
         }

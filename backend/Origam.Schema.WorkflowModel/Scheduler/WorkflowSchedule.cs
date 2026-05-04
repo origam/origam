@@ -29,9 +29,9 @@ using Origam.Schema.GuiModel;
 
 namespace Origam.Schema.WorkflowModel;
 
-[SchemaItemDescription("Workflow Schedule", "workflow-schedule.png")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Workflow Schedule", iconName: "workflow-schedule.png")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class WorkflowSchedule : AbstractSchemaItem
 {
     public const string CategoryConst = "WorkflowSchedule";
@@ -39,22 +39,23 @@ public class WorkflowSchedule : AbstractSchemaItem
     public WorkflowSchedule() { }
 
     public WorkflowSchedule(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public WorkflowSchedule(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Properties
     public Guid WorkflowId;
 
-    [TypeConverter(typeof(WorkflowConverter))]
-    [XmlReference("workflow", "WorkflowId")]
+    [TypeConverter(type: typeof(WorkflowConverter))]
+    [XmlReference(attributeName: "workflow", idField: "WorkflowId")]
     public IWorkflow Workflow
     {
         get
         {
             var key = new ModelElementKey { Id = WorkflowId };
-            return (IWorkflow)PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
+            return (IWorkflow)
+                PersistenceProvider.RetrieveInstance(type: typeof(ISchemaItem), primaryKey: key);
         }
         set
         {
@@ -64,22 +65,22 @@ public class WorkflowSchedule : AbstractSchemaItem
             }
             else
             {
-                WorkflowId = (Guid)value.PrimaryKey["Id"];
+                WorkflowId = (Guid)value.PrimaryKey[key: "Id"];
             }
         }
     }
 
     public Guid ScheduleTimeId;
 
-    [TypeConverter(typeof(ScheduleTimeConverter))]
-    [XmlReference("scheduleTime", "ScheduleTimeId")]
+    [TypeConverter(type: typeof(ScheduleTimeConverter))]
+    [XmlReference(attributeName: "scheduleTime", idField: "ScheduleTimeId")]
     public AbstractScheduleTime ScheduleTime
     {
         get
         {
             var key = new ModelElementKey { Id = ScheduleTimeId };
             return (AbstractScheduleTime)
-                PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
+                PersistenceProvider.RetrieveInstance(type: typeof(ISchemaItem), primaryKey: key);
         }
         set
         {
@@ -89,7 +90,7 @@ public class WorkflowSchedule : AbstractSchemaItem
             }
             else
             {
-                ScheduleTimeId = (Guid)value.PrimaryKey["Id"];
+                ScheduleTimeId = (Guid)value.PrimaryKey[key: "Id"];
             }
         }
     }
@@ -100,15 +101,15 @@ public class WorkflowSchedule : AbstractSchemaItem
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(Workflow);
-        dependencies.Add(ScheduleTime);
-        base.GetExtraDependencies(dependencies);
+        dependencies.Add(item: Workflow);
+        dependencies.Add(item: ScheduleTime);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override bool UseFolders => false;
     #endregion
     #region ISchemaItemFactory Members
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public override Type[] NewItemTypes =>
         new[]
         {
@@ -132,7 +133,11 @@ public class WorkflowSchedule : AbstractSchemaItem
         {
             itemName = "NewSystemFunctionCall";
         }
-        return base.NewItem<T>(schemaExtensionId, group, itemName);
+        return base.NewItem<T>(
+            schemaExtensionId: schemaExtensionId,
+            group: group,
+            itemName: itemName
+        );
     }
     #endregion
 }

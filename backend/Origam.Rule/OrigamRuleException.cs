@@ -32,7 +32,7 @@ public class OrigamRuleException : OrigamException
     DataRow _row;
 
     public OrigamRuleException(string message, Exception innerException, DataRow row)
-        : base(message, innerException)
+        : base(message: message, innerException: innerException)
     {
         _row = row;
     }

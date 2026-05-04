@@ -37,7 +37,14 @@ public class StringFilterPart : TextBoxFilterPart
         string label,
         FormGenerator formGenerator
     )
-        : base(filteredControl, dataType, dataMember, gridColumnName, label, formGenerator) { }
+        : base(
+            filteredControl: filteredControl,
+            dataType: dataType,
+            dataMember: dataMember,
+            gridColumnName: gridColumnName,
+            label: label,
+            formGenerator: formGenerator
+        ) { }
     #endregion
     #region Overriden Members
     public override FilterOperator[] AllowedOperators

@@ -28,22 +28,22 @@ public class OrigamTypeRegistrar(IServiceCollection services) : ITypeRegistrar
 {
     public void Register(Type service, Type implementation)
     {
-        services.AddSingleton(service, implementation);
+        services.AddSingleton(serviceType: service, implementationType: implementation);
     }
 
     public void RegisterInstance(Type service, object implementation)
     {
-        services.AddSingleton(service, implementation);
+        services.AddSingleton(serviceType: service, implementationInstance: implementation);
     }
 
     public void RegisterLazy(Type service, Func<object> factory)
     {
-        services.AddSingleton(service, provider => factory());
+        services.AddSingleton(serviceType: service, implementationFactory: provider => factory());
     }
 
     public ITypeResolver Build()
     {
         var provider = services.BuildServiceProvider();
-        return new OrigamTypeResolver(provider);
+        return new OrigamTypeResolver(provider: provider);
     }
 }

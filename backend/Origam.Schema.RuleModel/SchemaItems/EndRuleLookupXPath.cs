@@ -25,17 +25,20 @@ using Origam.Schema.EntityModel.Interfaces;
 
 namespace Origam.Schema.RuleModel;
 
-[SchemaItemDescription("Validation Rule Lookup XPath", "validation-rule-lookup-xpath.png")]
-[HelpTopic("Validation+Rule+Lookup+XPath")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(
+    name: "Validation Rule Lookup XPath",
+    iconName: "validation-rule-lookup-xpath.png"
+)]
+[HelpTopic(topic: "Validation+Rule+Lookup+XPath")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class EndRuleLookupXPath : XPathRule, IEndRule
 {
     public EndRuleLookupXPath()
         : base() { }
 
     public EndRuleLookupXPath(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(schemaExtensionId: schemaExtensionId) { }
 
     public EndRuleLookupXPath(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 }

@@ -36,9 +36,9 @@ namespace Origam.Security.Common;
 
 public class AccountMailSender
 {
-    protected static readonly ILog log = LogManager.GetLogger(typeof(AccountMailSender));
+    protected static readonly ILog log = LogManager.GetLogger(type: typeof(AccountMailSender));
     private static readonly Guid LANGUAGE_TAGIETF_LOOKUP = new Guid(
-        "7823d8af-4968-48c3-a772-287475d429e1"
+        g: "7823d8af-4968-48c3-a772-287475d429e1"
     );
     private readonly string portalBaseUrl;
     private readonly string registerNewUserFilename;
@@ -93,32 +93,44 @@ public class AccountMailSender
     {
         List<KeyValuePair<string, string>> replacements = new List<KeyValuePair<string, string>>
         {
-            new KeyValuePair<string, string>("<%Token%>", Uri.EscapeDataString(token)),
-            new KeyValuePair<string, string>("<%UserId%>", userId),
-            new KeyValuePair<string, string>("<%UserName%>", username),
-            new KeyValuePair<string, string>("<%PortalBaseUrl%>", portalBaseUrl),
-            new KeyValuePair<string, string>("<%EscapedUserName%>", Uri.EscapeDataString(username)),
-            new KeyValuePair<string, string>("<%Name%>", name),
-            new KeyValuePair<string, string>("<%EscapedName%>", Uri.EscapeDataString(name)),
-            new KeyValuePair<string, string>("<%FirstName%>", firstName),
             new KeyValuePair<string, string>(
-                "<%EscapedFirstName%>",
-                Uri.EscapeDataString(firstName)
+                key: "<%Token%>",
+                value: Uri.EscapeDataString(stringToEscape: token)
             ),
-            new KeyValuePair<string, string>("<%UserEmail%>", email),
-            new KeyValuePair<string, string>("<%EscapedUserEmail%>", Uri.EscapeDataString(email)),
+            new KeyValuePair<string, string>(key: "<%UserId%>", value: userId),
+            new KeyValuePair<string, string>(key: "<%UserName%>", value: username),
+            new KeyValuePair<string, string>(key: "<%PortalBaseUrl%>", value: portalBaseUrl),
+            new KeyValuePair<string, string>(
+                key: "<%EscapedUserName%>",
+                value: Uri.EscapeDataString(stringToEscape: username)
+            ),
+            new KeyValuePair<string, string>(key: "<%Name%>", value: name),
+            new KeyValuePair<string, string>(
+                key: "<%EscapedName%>",
+                value: Uri.EscapeDataString(stringToEscape: name)
+            ),
+            new KeyValuePair<string, string>(key: "<%FirstName%>", value: firstName),
+            new KeyValuePair<string, string>(
+                key: "<%EscapedFirstName%>",
+                value: Uri.EscapeDataString(stringToEscape: firstName)
+            ),
+            new KeyValuePair<string, string>(key: "<%UserEmail%>", value: email),
+            new KeyValuePair<string, string>(
+                key: "<%EscapedUserEmail%>",
+                value: Uri.EscapeDataString(stringToEscape: email)
+            ),
         };
         // PORTAL_BASE_URL is mandatory if using default template
         if (
-            string.IsNullOrWhiteSpace(portalBaseUrl)
-            && string.IsNullOrEmpty(registerNewUserFilename)
+            string.IsNullOrWhiteSpace(value: portalBaseUrl)
+            && string.IsNullOrEmpty(value: registerNewUserFilename)
         )
         {
             log.Error(
-                "'PortalBaseUrl' not configured while default template"
+                message: "'PortalBaseUrl' not configured while default template"
                     + "is used. Can't send a new registration email confirmation."
             );
-            throw new Exception(Resources.RegisterNewUser_PortalBaseUrlNotConfigured);
+            throw new Exception(message: Resources.RegisterNewUser_PortalBaseUrlNotConfigured);
         }
         MailMessage mail = null;
         string userLangIETF = System
@@ -127,29 +139,29 @@ public class AccountMailSender
             .CurrentThread
             .CurrentUICulture
             .IetfLanguageTag;
-        using (LanguageSwitcher langSwitcher = new LanguageSwitcher(userLangIETF))
+        using (LanguageSwitcher langSwitcher = new LanguageSwitcher(langIetf: userLangIETF))
         {
             mail = GenerateMail(
-                email,
-                fromAddress,
-                registerNewUserFilename,
-                Resources.RegisterNewUserTemplate,
-                registerNewUserSubject,
-                userLangIETF,
-                replacements
+                userEmail: email,
+                fromAddress: fromAddress,
+                templateFilename: registerNewUserFilename,
+                templateFromResources: Resources.RegisterNewUserTemplate,
+                subjectFromConfig: registerNewUserSubject,
+                userLangIETF: userLangIETF,
+                replacements: replacements
             );
         }
         try
         {
-            SendMailByAWorkflow(mail);
+            SendMailByAWorkflow(mail: mail);
         }
         catch (Exception ex)
         {
             if (log.IsErrorEnabled)
             {
-                log.LogOrigamError("Failed to send new user registration mail", ex);
+                log.LogOrigamError(message: "Failed to send new user registration mail", ex: ex);
             }
-            throw new Exception(Resources.FailedToSendNewUserRegistrationMail);
+            throw new Exception(message: Resources.FailedToSendNewUserRegistrationMail);
         }
         finally
         {
@@ -164,26 +176,26 @@ public class AccountMailSender
         string firstNameAndName
     )
     {
-        string userLangIETF = ResolveIetfTagFromOrigamLanguageId(languageId);
+        string userLangIETF = ResolveIetfTagFromOrigamLanguageId(languageId: languageId);
         // build template replacements
         List<KeyValuePair<string, string>> replacements = new List<KeyValuePair<string, string>>
         {
-            new KeyValuePair<string, string>("<%UserName%>", username),
-            new KeyValuePair<string, string>("<%FirstNameAndName%>", firstNameAndName),
+            new KeyValuePair<string, string>(key: "<%UserName%>", value: username),
+            new KeyValuePair<string, string>(key: "<%FirstNameAndName%>", value: firstNameAndName),
         };
         MailMessage userUnlockNotificationMail;
-        using (LanguageSwitcher langSwitcher = new LanguageSwitcher(userLangIETF))
+        using (LanguageSwitcher langSwitcher = new LanguageSwitcher(langIetf: userLangIETF))
         {
             try
             {
                 userUnlockNotificationMail = GenerateMail(
-                    email,
-                    fromAddress,
-                    userUnlockNotificationBodyFilename,
-                    Resources.UserUnlockNotificationTemplate,
-                    userUnlockNotificationSubject,
-                    userLangIETF,
-                    replacements
+                    userEmail: email,
+                    fromAddress: fromAddress,
+                    templateFilename: userUnlockNotificationBodyFilename,
+                    templateFromResources: Resources.UserUnlockNotificationTemplate,
+                    subjectFromConfig: userUnlockNotificationSubject,
+                    userLangIETF: userLangIETF,
+                    replacements: replacements
                 );
             }
             catch (Exception ex)
@@ -191,11 +203,11 @@ public class AccountMailSender
                 if (log.IsErrorEnabled)
                 {
                     log.ErrorFormat(
-                        "Unlocking user: Failed to generate a mail"
+                        format: "Unlocking user: Failed to generate a mail"
                             + " for a user '{0}' to '{1}': {2}",
-                        username,
-                        email,
-                        ex
+                        arg0: username,
+                        arg1: email,
+                        arg2: ex
                     );
                 }
                 throw;
@@ -203,20 +215,21 @@ public class AccountMailSender
         }
         try
         {
-            SendMailByAWorkflow(userUnlockNotificationMail);
+            SendMailByAWorkflow(mail: userUnlockNotificationMail);
         }
         catch (Exception ex)
         {
             if (log.IsErrorEnabled)
             {
                 log.ErrorFormat(
-                    "Unlocking user: Failed to send a mail" + " for a user '{0}' to '{1}': {2}",
-                    username,
-                    email,
-                    ex
+                    format: "Unlocking user: Failed to send a mail"
+                        + " for a user '{0}' to '{1}': {2}",
+                    arg0: username,
+                    arg1: email,
+                    arg2: ex
                 );
             }
-            throw new Exception(Resources.FailedToSendUserUnlockNotification);
+            throw new Exception(message: Resources.FailedToSendUserUnlockNotification);
         }
         finally
         {
@@ -225,10 +238,10 @@ public class AccountMailSender
         if (log.IsDebugEnabled)
         {
             log.DebugFormat(
-                "User '{0}' has been unlocked and the"
+                format: "User '{0}' has been unlocked and the"
                     + " notification mail has been sent to '{1}'.",
-                username,
-                email
+                arg0: username,
+                arg1: email
             );
         }
         return true;
@@ -237,11 +250,18 @@ public class AccountMailSender
     private static string ResolveIetfTagFromOrigamLanguageId(string languageId)
     {
         IDataLookupService ls =
-            ServiceManager.Services.GetService(typeof(IDataLookupService)) as IDataLookupService;
+            ServiceManager.Services.GetService(serviceType: typeof(IDataLookupService))
+            as IDataLookupService;
         string userLangIETF = "";
-        if (!string.IsNullOrEmpty(languageId))
+        if (!string.IsNullOrEmpty(value: languageId))
         {
-            object ret = ls.GetDisplayText(LANGUAGE_TAGIETF_LOOKUP, languageId, false, false, null);
+            object ret = ls.GetDisplayText(
+                lookupId: LANGUAGE_TAGIETF_LOOKUP,
+                lookupValue: languageId,
+                useCache: false,
+                returnMessageIfNull: false,
+                transactionId: null
+            );
             if (ret != null)
             {
                 userLangIETF = (string)ret;
@@ -254,20 +274,23 @@ public class AccountMailSender
     {
         List<KeyValuePair<string, string>> replacements = new List<KeyValuePair<string, string>>
         {
-            new KeyValuePair<string, string>("<%AuthenticationCode%>", Uri.EscapeDataString(code)),
-            new KeyValuePair<string, string>("<%UserEmail%>", email),
+            new KeyValuePair<string, string>(
+                key: "<%AuthenticationCode%>",
+                value: Uri.EscapeDataString(stringToEscape: code)
+            ),
+            new KeyValuePair<string, string>(key: "<%UserEmail%>", value: email),
         };
         // PORTAL_BASE_URL is mandatory if using default template
         if (
-            string.IsNullOrWhiteSpace(portalBaseUrl)
-            && string.IsNullOrEmpty(registerNewUserFilename)
+            string.IsNullOrWhiteSpace(value: portalBaseUrl)
+            && string.IsNullOrEmpty(value: registerNewUserFilename)
         )
         {
             log.Error(
-                "'PortalBaseUrl' not configured while default template"
+                message: "'PortalBaseUrl' not configured while default template"
                     + "is used. Can't send a new registration email confirmation."
             );
-            throw new Exception(Resources.RegisterNewUser_PortalBaseUrlNotConfigured);
+            throw new Exception(message: Resources.RegisterNewUser_PortalBaseUrlNotConfigured);
         }
         MailMessage mail;
         string userLangIETF = System
@@ -276,29 +299,32 @@ public class AccountMailSender
             .CurrentThread
             .CurrentUICulture
             .IetfLanguageTag;
-        using (new LanguageSwitcher(userLangIETF))
+        using (new LanguageSwitcher(langIetf: userLangIETF))
         {
             mail = GenerateMail(
-                email,
-                fromAddress,
-                mfaTemplateFileName,
-                Resources.RegisterNewUserTemplate,
-                mfaSubject,
-                userLangIETF,
-                replacements
+                userEmail: email,
+                fromAddress: fromAddress,
+                templateFilename: mfaTemplateFileName,
+                templateFromResources: Resources.RegisterNewUserTemplate,
+                subjectFromConfig: mfaSubject,
+                userLangIETF: userLangIETF,
+                replacements: replacements
             );
         }
         try
         {
-            SendMailByAWorkflow(mail);
+            SendMailByAWorkflow(mail: mail);
         }
         catch (Exception ex)
         {
             if (log.IsErrorEnabled)
             {
-                log.LogOrigamError("Failed to send multi factor authentication mail", ex);
+                log.LogOrigamError(
+                    message: "Failed to send multi factor authentication mail",
+                    ex: ex
+                );
             }
-            throw new Exception(Resources.FailedToSendMultiFactorAuthCode);
+            throw new Exception(message: Resources.FailedToSendMultiFactorAuthCode);
         }
         finally
         {
@@ -318,68 +344,71 @@ public class AccountMailSender
         out string resultMessage
     )
     {
-        string userLangIETF = ResolveIetfTagFromOrigamLanguageId(languageId);
+        string userLangIETF = ResolveIetfTagFromOrigamLanguageId(languageId: languageId);
         if (userLangIETF == "")
         {
             userLangIETF = System.Threading.Thread.CurrentThread.CurrentUICulture.IetfLanguageTag;
         }
         var replacements = new List<KeyValuePair<string, string>>
         {
-            new("<%Token%>", Uri.EscapeDataString(token)),
-            new("<%TokenValidityHours%>", tokenValidityHours.ToString()),
-            new("<%UserName%>", username),
-            new("<%EscapedUserName%>", Uri.EscapeDataString(username)),
-            new("<%Name%>", name),
-            new("<%EscapedName%>", Uri.EscapeDataString(name)),
-            new("<%UserEmail%>", email),
-            new("<%EscapedUserEmail%>", Uri.EscapeDataString(email)),
-            new("<%PortalBaseUrl%>", portalBaseUrl),
-            new("<%ReturnUrl%>", Uri.EscapeDataString(returnUrl)),
+            new(key: "<%Token%>", value: Uri.EscapeDataString(stringToEscape: token)),
+            new(key: "<%TokenValidityHours%>", value: tokenValidityHours.ToString()),
+            new(key: "<%UserName%>", value: username),
+            new(key: "<%EscapedUserName%>", value: Uri.EscapeDataString(stringToEscape: username)),
+            new(key: "<%Name%>", value: name),
+            new(key: "<%EscapedName%>", value: Uri.EscapeDataString(stringToEscape: name)),
+            new(key: "<%UserEmail%>", value: email),
+            new(key: "<%EscapedUserEmail%>", value: Uri.EscapeDataString(stringToEscape: email)),
+            new(key: "<%PortalBaseUrl%>", value: portalBaseUrl),
+            new(key: "<%ReturnUrl%>", value: Uri.EscapeDataString(stringToEscape: returnUrl)),
         };
         if (firstName != null)
         {
             replacements.AddRange(
-                new List<KeyValuePair<string, string>>
+                collection: new List<KeyValuePair<string, string>>
                 {
-                    new("<%FirstName%>", firstName),
-                    new("<%EscapedFirstName%>", Uri.EscapeDataString(firstName)),
+                    new(key: "<%FirstName%>", value: firstName),
+                    new(
+                        key: "<%EscapedFirstName%>",
+                        value: Uri.EscapeDataString(stringToEscape: firstName)
+                    ),
                 }
             );
         }
         // PORTAL_BASE_URL is mandatory if using default template
-        if (string.IsNullOrWhiteSpace(portalBaseUrl))
+        if (string.IsNullOrWhiteSpace(value: portalBaseUrl))
         {
             log.Error(
-                "'PortalBaseUrl' not configured while default template"
+                message: "'PortalBaseUrl' not configured while default template"
                     + "is used. Can't send a password reset email."
             );
-            throw new Exception(Resources.ResetPasswordMail_PortalBaseUrlNotConfigured);
+            throw new Exception(message: Resources.ResetPasswordMail_PortalBaseUrlNotConfigured);
         }
         if (
-            string.IsNullOrEmpty(ResetPasswordSubject)
-            || string.IsNullOrEmpty(ResetPasswordBodyFilename)
+            string.IsNullOrEmpty(value: ResetPasswordSubject)
+            || string.IsNullOrEmpty(value: ResetPasswordBodyFilename)
         )
         {
             log.Error(
-                "'ResetPasswordMailSubject' or 'ResetPasswordMailBodyFileName' "
+                message: "'ResetPasswordMailSubject' or 'ResetPasswordMailBodyFileName' "
                     + "not configured while template"
                     + "is used for specific language. Can't send a password reset email."
             );
-            throw new Exception(Resources.ResetPasswordMail_PortalBaseUrlNotConfigured);
+            throw new Exception(message: Resources.ResetPasswordMail_PortalBaseUrlNotConfigured);
         }
         MailMessage mail = null;
-        using (LanguageSwitcher langSwitcher = new LanguageSwitcher(userLangIETF))
+        using (LanguageSwitcher langSwitcher = new LanguageSwitcher(langIetf: userLangIETF))
         {
             try
             {
                 mail = GenerateMail(
-                    email,
-                    fromAddress,
-                    ResetPasswordBodyFilename,
-                    Resources.ResetPasswordMailTemplate,
-                    ResetPasswordSubject,
-                    userLangIETF,
-                    replacements
+                    userEmail: email,
+                    fromAddress: fromAddress,
+                    templateFilename: ResetPasswordBodyFilename,
+                    templateFromResources: Resources.ResetPasswordMailTemplate,
+                    subjectFromConfig: ResetPasswordSubject,
+                    userLangIETF: userLangIETF,
+                    replacements: replacements
                 );
             }
             catch (Exception ex)
@@ -387,11 +416,11 @@ public class AccountMailSender
                 if (log.IsErrorEnabled)
                 {
                     log.ErrorFormat(
-                        "Failed to generate a password reset mail "
+                        format: "Failed to generate a password reset mail "
                             + " for the user '{0}' to email '{1}': {2}",
-                        username,
-                        email,
-                        ex
+                        arg0: username,
+                        arg1: email,
+                        arg2: ex
                     );
                 }
                 resultMessage = Resources.FailedToSendPasswordResetToken;
@@ -400,19 +429,20 @@ public class AccountMailSender
         }
         try
         {
-            SendMailByAWorkflow(mail);
+            SendMailByAWorkflow(mail: mail);
         }
         catch (Exception ex)
         {
             if (log.IsErrorEnabled)
             {
                 log.LogOrigamError(
-                    string.Format(
-                        "Failed to send password reset " + "mail for username '{0}', email '{1}'",
-                        username,
-                        email
+                    message: string.Format(
+                        format: "Failed to send password reset "
+                            + "mail for username '{0}', email '{1}'",
+                        arg0: username,
+                        arg1: email
                     ),
-                    ex
+                    ex: ex
                 );
             }
             resultMessage = Resources.FailedToSendPassword;
@@ -425,9 +455,10 @@ public class AccountMailSender
         if (log.IsDebugEnabled)
         {
             log.DebugFormat(
-                "A new password for the user '{0}' " + "successfully generated and sent to '{1}'.",
-                username,
-                email
+                format: "A new password for the user '{0}' "
+                    + "successfully generated and sent to '{1}'.",
+                arg0: username,
+                arg1: email
             );
         }
         resultMessage = Resources.PasswordResetMailSent;
@@ -471,15 +502,21 @@ public class AccountMailSender
         List<KeyValuePair<string, string>> replacements
     )
     {
-        MailMessage passwordRecoveryMail = new MailMessage(fromAddress, userEmail);
+        MailMessage passwordRecoveryMail = new MailMessage(from: fromAddress, to: userEmail);
         string templateContent =
-            (String.IsNullOrEmpty(templateFilename))
+            (String.IsNullOrEmpty(value: templateFilename))
                 ? templateFromResources
-                : GetLocalizedMailTemplateText(templateFilename, userLangIETF);
-        string[] subjectAndBody = processMailTemplate(templateContent, replacements);
+                : GetLocalizedMailTemplateText(
+                    templateFilename: templateFilename,
+                    languageIETF: userLangIETF
+                );
+        string[] subjectAndBody = processMailTemplate(
+            templateContent: templateContent,
+            replacements: replacements
+        );
         passwordRecoveryMail.Subject = subjectAndBody[0];
         passwordRecoveryMail.Body = subjectAndBody[1];
-        if (string.IsNullOrWhiteSpace(passwordRecoveryMail.Subject))
+        if (string.IsNullOrWhiteSpace(value: passwordRecoveryMail.Subject))
         {
             passwordRecoveryMail.Subject = subjectFromConfig;
         }
@@ -497,8 +534,11 @@ public class AccountMailSender
     /// <returns></returns>
     private string GetLocalizedMailTemplateText(string templateFilename, string languageIETF = "")
     {
-        string filePath = Path.Combine(applicationBasePath, templateFilename);
-        return File.ReadAllText(FindBestLocalizedFile(filePath, languageIETF)).Trim();
+        string filePath = Path.Combine(path1: applicationBasePath, path2: templateFilename);
+        return File.ReadAllText(
+                path: FindBestLocalizedFile(filePath: filePath, languageIETF: languageIETF)
+            )
+            .Trim();
     }
 
     private static string[] processMailTemplate(
@@ -507,31 +547,38 @@ public class AccountMailSender
     )
     {
         string subject = null;
-        if (templateContent.ToLower().StartsWith("subject:"))
+        if (templateContent.ToLower().StartsWith(value: "subject:"))
         {
-            subject = templateContent.Substring(8, templateContent.IndexOf('\n') - 8).Trim();
+            subject = templateContent
+                .Substring(startIndex: 8, length: templateContent.IndexOf(value: '\n') - 8)
+                .Trim();
             foreach (KeyValuePair<string, string> replacement in replacements)
             {
-                subject = subject.Replace(replacement.Key, replacement.Value);
+                subject = subject.Replace(oldValue: replacement.Key, newValue: replacement.Value);
             }
-            templateContent = templateContent.Substring(templateContent.IndexOf('\n')).TrimStart();
+            templateContent = templateContent
+                .Substring(startIndex: templateContent.IndexOf(value: '\n'))
+                .TrimStart();
         }
         foreach (KeyValuePair<string, string> replacement in replacements)
         {
-            templateContent = templateContent.Replace(replacement.Key, replacement.Value);
+            templateContent = templateContent.Replace(
+                oldValue: replacement.Key,
+                newValue: replacement.Value
+            );
         }
         return new string[] { subject, templateContent };
     }
 
     public static string FindBestLocalizedFile(string filePath, string languageIETF)
     {
-        if (String.IsNullOrEmpty(languageIETF))
+        if (String.IsNullOrEmpty(value: languageIETF))
         {
             // language not sent, use current thread one
             languageIETF = System.Threading.Thread.CurrentThread.CurrentUICulture.IetfLanguageTag;
         }
         // find the last '.'
-        int lastDotIndex = filePath.LastIndexOf('.');
+        int lastDotIndex = filePath.LastIndexOf(value: '.');
         // create a localized file candidate ( password_reset.de-DE.txt )
         /*
             password_reset.txt -> password_reset.de-DE.txt
@@ -541,18 +588,18 @@ public class AccountMailSender
         if (lastDotIndex == -1)
         {
             // dot not found
-            candidate = String.Format("{0}.{1}", filePath, languageIETF);
+            candidate = String.Format(format: "{0}.{1}", arg0: filePath, arg1: languageIETF);
         }
         else
         {
             candidate = String.Format(
-                "{0}.{1}{2}",
-                filePath.Substring(0, lastDotIndex),
-                languageIETF,
-                filePath.Substring(lastDotIndex)
+                format: "{0}.{1}{2}",
+                arg0: filePath.Substring(startIndex: 0, length: lastDotIndex),
+                arg1: languageIETF,
+                arg2: filePath.Substring(startIndex: lastDotIndex)
             );
         }
-        if (File.Exists(candidate))
+        if (File.Exists(path: candidate))
         {
             return candidate;
         }
@@ -561,23 +608,23 @@ public class AccountMailSender
             password_reset.txt -> password_reset.de.txt
             password_reset -> password_reset.de
          */
-        string[] splittedIETF = languageIETF.Split('-');
+        string[] splittedIETF = languageIETF.Split(separator: '-');
         if (splittedIETF.Length == 2)
         {
             if (lastDotIndex == -1)
             {
-                candidate = String.Format("{0}.{1}", filePath, splittedIETF[0]);
+                candidate = String.Format(format: "{0}.{1}", arg0: filePath, arg1: splittedIETF[0]);
             }
             else
             {
                 candidate = String.Format(
-                    "{0}.{1}{2}",
-                    filePath.Substring(0, lastDotIndex),
-                    splittedIETF[0],
-                    filePath.Substring(lastDotIndex)
+                    format: "{0}.{1}{2}",
+                    arg0: filePath.Substring(startIndex: 0, length: lastDotIndex),
+                    arg1: splittedIETF[0],
+                    arg2: filePath.Substring(startIndex: lastDotIndex)
                 );
             }
-            if (File.Exists(candidate))
+            if (File.Exists(path: candidate))
             {
                 return candidate;
             }
@@ -590,25 +637,37 @@ public class AccountMailSender
     {
         // send mail - by a workflow located at root package
         QueryParameterCollection pms = new QueryParameterCollection();
-        pms.Add(new QueryParameter("subject", mail.Subject));
-        pms.Add(new QueryParameter("body", mail.Body));
-        pms.Add(new QueryParameter("recipientEmail", mail.To.First().Address));
-        pms.Add(new QueryParameter("senderEmail", mail.From.Address));
-        if (!string.IsNullOrWhiteSpace(mail.From.DisplayName))
+        pms.Add(value: new QueryParameter(_parameterName: "subject", value: mail.Subject));
+        pms.Add(value: new QueryParameter(_parameterName: "body", value: mail.Body));
+        pms.Add(
+            value: new QueryParameter(
+                _parameterName: "recipientEmail",
+                value: mail.To.First().Address
+            )
+        );
+        pms.Add(value: new QueryParameter(_parameterName: "senderEmail", value: mail.From.Address));
+        if (!string.IsNullOrWhiteSpace(value: mail.From.DisplayName))
         {
-            pms.Add(new QueryParameter("senderName", mail.From.DisplayName));
+            pms.Add(
+                value: new QueryParameter(
+                    _parameterName: "senderName",
+                    value: mail.From.DisplayName
+                )
+            );
         }
-        if (!string.IsNullOrWhiteSpace(mailQueueName))
+        if (!string.IsNullOrWhiteSpace(value: mailQueueName))
         {
-            pms.Add(new QueryParameter("MailWorkQueueName", mailQueueName));
+            pms.Add(
+                value: new QueryParameter(_parameterName: "MailWorkQueueName", value: mailQueueName)
+            );
         }
 #if DEBUG
-        SaveToDebugMailLog(pms);
+        SaveToDebugMailLog(pms: pms);
 #endif
         WorkflowService.ExecuteWorkflow(
-            new Guid("6e6d4e02-812a-4c95-afd1-eb2428802e2b"),
-            pms,
-            null
+            workflowId: new Guid(g: "6e6d4e02-812a-4c95-afd1-eb2428802e2b"),
+            parameters: pms,
+            transactionId: null
         );
     }
 
@@ -618,8 +677,8 @@ public class AccountMailSender
             $"\n\n--------------------------------------------------------------------------------\n"
             + $"Sent:{DateTime.Now}\n";
         string mailString = pms.Cast<QueryParameter>()
-            .Select(parameter => $"{parameter.Name}: {parameter.Value}")
-            .Aggregate(header, (x, y) => x + "\n\n" + y);
-        log.Info(mailString);
+            .Select(selector: parameter => $"{parameter.Name}: {parameter.Value}")
+            .Aggregate(seed: header, func: (x, y) => x + "\n\n" + y);
+        log.Info(message: mailString);
     }
 }

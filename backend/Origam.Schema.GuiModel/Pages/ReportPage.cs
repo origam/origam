@@ -29,9 +29,9 @@ using Origam.Workbench.Services;
 
 namespace Origam.Schema.GuiModel;
 
-[SchemaItemDescription("Report Page", "report-page.png")]
-[HelpTopic("Report+Page")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Report Page", iconName: "report-page.png")]
+[HelpTopic(topic: "Report+Page")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class ReportPage : AbstractPage
 {
     public ReportPage()
@@ -41,26 +41,26 @@ public class ReportPage : AbstractPage
     }
 
     public ReportPage(Guid schemaExtensionId)
-        : base(schemaExtensionId)
+        : base(schemaExtensionId: schemaExtensionId)
     {
         Init();
     }
 
     public ReportPage(Key primaryKey)
-        : base(primaryKey)
+        : base(primaryKey: primaryKey)
     {
         Init();
     }
 
     private void Init()
     {
-        this.ChildItemTypes.Add(typeof(PageParameterMapping));
+        this.ChildItemTypes.Add(item: typeof(PageParameterMapping));
     }
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(this.Report);
-        base.GetExtraDependencies(dependencies);
+        dependencies.Add(item: this.Report);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override IList<string> NewTypeNames
@@ -70,10 +70,19 @@ public class ReportPage : AbstractPage
             try
             {
                 IBusinessServicesService agents =
-                    ServiceManager.Services.GetService(typeof(IBusinessServicesService))
-                    as IBusinessServicesService;
-                IServiceAgent agent = agents.GetAgent("DataService", null, null);
-                return agent.ExpectedParameterNames(this.Report, "LoadData", "Parameters");
+                    ServiceManager.Services.GetService(
+                        serviceType: typeof(IBusinessServicesService)
+                    ) as IBusinessServicesService;
+                IServiceAgent agent = agents.GetAgent(
+                    serviceType: "DataService",
+                    ruleEngine: null,
+                    workflowEngine: null
+                );
+                return agent.ExpectedParameterNames(
+                    item: this.Report,
+                    method: "LoadData",
+                    parameter: "Parameters"
+                );
             }
             catch
             {
@@ -84,26 +93,26 @@ public class ReportPage : AbstractPage
     #region Properties
     public Guid ReportId;
 
-    [Category("Report")]
-    [TypeConverter(typeof(ReportConverter))]
-    [XmlReference("report", "ReportId")]
+    [Category(category: "Report")]
+    [TypeConverter(type: typeof(ReportConverter))]
+    [XmlReference(attributeName: "report", idField: "ReportId")]
     public AbstractReport Report
     {
         get
         {
             return (AbstractReport)
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(this.ReportId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: this.ReportId)
                 );
         }
-        set { this.ReportId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]; }
+        set { this.ReportId = value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]; }
     }
     private DataReportExportFormatType _exportFormatType;
 
-    [Category("Data Report")]
-    [Description("Export Format Type")]
-    [XmlAttribute("exportFormatType")]
+    [Category(category: "Data Report")]
+    [Description(description: "Export Format Type")]
+    [XmlAttribute(attributeName: "exportFormatType")]
     public DataReportExportFormatType ExportFormatType
     {
         get { return _exportFormatType; }

@@ -35,22 +35,25 @@ public class AddToModelService(
 {
     public void Process(string platform, List<string> schemaItemNames)
     {
-        Platform platformParsed = platformResolveService.Resolve(platform);
+        Platform platformParsed = platformResolveService.Resolve(requestedPlatformName: platform);
 
-        var results = schemaDbCompareResultsService.GetByNames(schemaItemNames, platformParsed);
-        var missingInSchemaResults = results.Where(r =>
+        var results = schemaDbCompareResultsService.GetByNames(
+            schemaItemNames: schemaItemNames,
+            platform: platformParsed
+        );
+        var missingInSchemaResults = results.Where(predicate: r =>
             r.ResultType == DbCompareResultType.MissingInSchema
         );
 
         var activeExtensionName = schemaService.ActiveExtension.Name;
         var entityModelProvider = schemaService.GetProvider<EntityModelSchemaItemProvider>();
-        SchemaItemGroup targetGroup = entityModelProvider.GetGroup(activeExtensionName);
+        SchemaItemGroup targetGroup = entityModelProvider.GetGroup(name: activeExtensionName);
 
         foreach (SchemaDbCompareResult result in missingInSchemaResults)
         {
             ISchemaItem schemaItem = result.SchemaItem;
             schemaItem.Group = targetGroup;
-            schemaItem.RootProvider.ChildItems.Add(schemaItem);
+            schemaItem.RootProvider.ChildItems.Add(item: schemaItem);
             schemaItem.Persist();
         }
     }

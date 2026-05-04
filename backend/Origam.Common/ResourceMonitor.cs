@@ -33,7 +33,7 @@ public class ResourceMonitor
     private static ConcurrentDictionary<string, OrderedDictionary> _transactionStore = new();
     private static ConcurrentDictionary<string, List<string>> _savePoints = new();
     private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
-        System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
+        type: System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
     );
 
     public static void RegisterTransaction(
@@ -44,31 +44,31 @@ public class ResourceMonitor
     {
         if (log.IsDebugEnabled)
         {
-            log.Debug("Registering transaction id " + transactionId);
+            log.Debug(message: "Registering transaction id " + transactionId);
         }
-        OrderedDictionary transactions = Transactions(transactionId);
-        if (transactions.Contains(resourceManagerId))
+        OrderedDictionary transactions = Transactions(transactionId: transactionId);
+        if (transactions.Contains(key: resourceManagerId))
         {
-            throw new Exception(ResourceUtils.GetString("TransactionRegistered"));
+            throw new Exception(message: ResourceUtils.GetString(key: "TransactionRegistered"));
         }
-        transactions.Add(resourceManagerId, transaction);
-        List<string> savePoints = SavePoints(transactionId);
+        transactions.Add(key: resourceManagerId, value: transaction);
+        List<string> savePoints = SavePoints(transactionId: transactionId);
 
         foreach (string savePointName in savePoints)
         {
             foreach (OrigamTransaction t in transactions.Values)
             {
-                t.Save(savePointName);
+                t.Save(savePointName: savePointName);
             }
         }
     }
 
     public static OrigamTransaction GetTransaction(string transactionId, string resourceManagerId)
     {
-        OrderedDictionary transactions = Transactions(transactionId);
-        if (transactions.Contains(resourceManagerId))
+        OrderedDictionary transactions = Transactions(transactionId: transactionId);
+        if (transactions.Contains(key: resourceManagerId))
         {
-            return transactions[resourceManagerId] as OrigamTransaction;
+            return transactions[key: resourceManagerId] as OrigamTransaction;
         }
 
         return null;
@@ -78,15 +78,15 @@ public class ResourceMonitor
     {
         if (log.IsDebugEnabled)
         {
-            log.Debug("Committing transaction id " + transactionId);
+            log.Debug(message: "Committing transaction id " + transactionId);
         }
         try
         {
-            OrderedDictionary transactions = Transactions(transactionId);
+            OrderedDictionary transactions = Transactions(transactionId: transactionId);
             // commit in reverse order (first transactions last)
             for (int i = transactions.Count - 1; i >= 0; i--)
             {
-                OrigamTransaction tran = transactions[i] as OrigamTransaction;
+                OrigamTransaction tran = transactions[index: i] as OrigamTransaction;
                 try
                 {
                     tran.Commit();
@@ -95,17 +95,21 @@ public class ResourceMonitor
                 {
                     if (log.IsFatalEnabled)
                     {
-                        log.FatalFormat("Failed committing transaction {0}", transactionId, ex);
+                        log.FatalFormat(
+                            format: "Failed committing transaction {0}",
+                            arg0: transactionId,
+                            arg1: ex
+                        );
                     }
-                    Rollback(transactionId);
+                    Rollback(transactionId: transactionId);
                     throw;
                 }
             }
         }
         finally
         {
-            _transactionStore.TryRemove(transactionId, out _);
-            _savePoints.TryRemove(transactionId, out _);
+            _transactionStore.TryRemove(key: transactionId, value: out _);
+            _savePoints.TryRemove(key: transactionId, value: out _);
         }
     }
 
@@ -113,9 +117,9 @@ public class ResourceMonitor
     {
         if (log.IsDebugEnabled)
         {
-            log.Debug("Rolling back transaction id " + transactionId);
+            log.Debug(message: "Rolling back transaction id " + transactionId);
         }
-        OrderedDictionary transactions = Transactions(transactionId);
+        OrderedDictionary transactions = Transactions(transactionId: transactionId);
         string errorMessage = "";
         try
         {
@@ -129,7 +133,11 @@ public class ResourceMonitor
                 {
                     if (log.IsFatalEnabled)
                     {
-                        log.FatalFormat("Failed rolling back transaction {0}", transactionId, ex);
+                        log.FatalFormat(
+                            format: "Failed rolling back transaction {0}",
+                            arg0: transactionId,
+                            arg1: ex
+                        );
                     }
                     if (errorMessage != "")
                     {
@@ -142,14 +150,14 @@ public class ResourceMonitor
         }
         finally
         {
-            _transactionStore.TryRemove(transactionId, out _);
-            _savePoints.TryRemove(transactionId, out _);
+            _transactionStore.TryRemove(key: transactionId, value: out _);
+            _savePoints.TryRemove(key: transactionId, value: out _);
             if (errorMessage != "")
             {
                 throw new Exception(
-                    ResourceUtils.GetString(
-                        "ErrorsDuringRollback",
-                        Environment.NewLine + Environment.NewLine + errorMessage
+                    message: ResourceUtils.GetString(
+                        key: "ErrorsDuringRollback",
+                        args: Environment.NewLine + Environment.NewLine + errorMessage
                     )
                 );
             }
@@ -161,10 +169,13 @@ public class ResourceMonitor
         if (log.IsDebugEnabled)
         {
             log.Debug(
-                "Rolling back transaction id " + transactionId + " to save point " + savePointName
+                message: "Rolling back transaction id "
+                    + transactionId
+                    + " to save point "
+                    + savePointName
             );
         }
-        OrderedDictionary transactions = Transactions(transactionId);
+        OrderedDictionary transactions = Transactions(transactionId: transactionId);
         string errorMessage = "";
         try
         {
@@ -173,13 +184,13 @@ public class ResourceMonitor
                 OrigamTransaction t = entry.Value as OrigamTransaction;
                 try
                 {
-                    t.Rollback(savePointName);
+                    t.Rollback(savePointName: savePointName);
                 }
                 catch (Exception ex)
                 {
                     if (log.IsErrorEnabled)
                     {
-                        log.LogOrigamError(ex.Message, ex);
+                        log.LogOrigamError(message: ex.Message, ex: ex);
                     }
                     if (errorMessage != "")
                     {
@@ -192,15 +203,15 @@ public class ResourceMonitor
         }
         finally
         {
-            List<string> savePoints = SavePoints(transactionId);
-            int min = savePoints.IndexOf(savePointName);
-            savePoints.RemoveRange(min, savePoints.Count - min);
+            List<string> savePoints = SavePoints(transactionId: transactionId);
+            int min = savePoints.IndexOf(item: savePointName);
+            savePoints.RemoveRange(index: min, count: savePoints.Count - min);
             if (errorMessage != "")
             {
                 throw new Exception(
-                    ResourceUtils.GetString(
-                        "ErrorsDuringPartialRollback",
-                        Environment.NewLine + Environment.NewLine + errorMessage
+                    message: ResourceUtils.GetString(
+                        key: "ErrorsDuringPartialRollback",
+                        args: Environment.NewLine + Environment.NewLine + errorMessage
                     )
                 );
             }
@@ -211,19 +222,24 @@ public class ResourceMonitor
     {
         if (log.IsDebugEnabled)
         {
-            log.Debug("Saving transaction id " + transactionId + ", save point " + savePointName);
+            log.Debug(
+                message: "Saving transaction id " + transactionId + ", save point " + savePointName
+            );
         }
-        OrderedDictionary transactions = Transactions(transactionId);
-        SavePoints(transactionId).Add(savePointName);
+        OrderedDictionary transactions = Transactions(transactionId: transactionId);
+        SavePoints(transactionId: transactionId).Add(item: savePointName);
         foreach (OrigamTransaction transaction in transactions.Values)
         {
             try
             {
-                transaction.Save(savePointName);
+                transaction.Save(savePointName: savePointName);
             }
             catch (Exception ex)
             {
-                throw new Exception(ResourceUtils.GetString("ExceptionSavingTransaction"), ex);
+                throw new Exception(
+                    message: ResourceUtils.GetString(key: "ExceptionSavingTransaction"),
+                    innerException: ex
+                );
             }
         }
     }
@@ -231,12 +247,15 @@ public class ResourceMonitor
     #region Private Methods
     private static OrderedDictionary Transactions(string transactionId)
     {
-        return _transactionStore.GetOrAdd(transactionId, key => new OrderedDictionary());
+        return _transactionStore.GetOrAdd(
+            key: transactionId,
+            valueFactory: key => new OrderedDictionary()
+        );
     }
 
     private static List<string> SavePoints(string transactionId)
     {
-        return _savePoints.GetOrAdd(transactionId, key => new List<string>());
+        return _savePoints.GetOrAdd(key: transactionId, valueFactory: key => new List<string>());
     }
     #endregion
 }

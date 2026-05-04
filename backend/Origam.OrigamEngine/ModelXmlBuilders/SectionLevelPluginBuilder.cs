@@ -42,44 +42,58 @@ public class SectionLevelPluginBuilder
     )
     {
         DataStructureEntity entity = dataStructure
-            .ChildItemsByTypeRecursive(DataStructureEntity.CategoryConst)
+            .ChildItemsByTypeRecursive(itemType: DataStructureEntity.CategoryConst)
             .Cast<DataStructureEntity>()
-            .First(item => item.Name == table.TableName);
-        parentNode.SetAttribute("type", "http://www.w3.org/2001/XMLSchema-instance", "UIElement");
-        parentNode.SetAttribute("Type", "SectionLevelPlugin");
-        parentNode.SetAttribute("Name", text);
-        parentNode.SetAttribute("HasPanelConfiguration", XmlConvert.ToString(true));
-        parentNode.SetAttribute("Entity", entity.Name);
-        parentNode.SetAttribute("ModelId", modelId);
-        parentNode.SetAttribute("DataMember", dataMember);
-        FormXmlBuilder.AddDataSource(dataSources, table, modelId, isIndependent);
+            .First(predicate: item => item.Name == table.TableName);
+        parentNode.SetAttribute(
+            localName: "type",
+            namespaceURI: "http://www.w3.org/2001/XMLSchema-instance",
+            value: "UIElement"
+        );
+        parentNode.SetAttribute(name: "Type", value: "SectionLevelPlugin");
+        parentNode.SetAttribute(name: "Name", value: text);
+        parentNode.SetAttribute(
+            name: "HasPanelConfiguration",
+            value: XmlConvert.ToString(value: true)
+        );
+        parentNode.SetAttribute(name: "Entity", value: entity.Name);
+        parentNode.SetAttribute(name: "ModelId", value: modelId);
+        parentNode.SetAttribute(name: "DataMember", value: dataMember);
+        FormXmlBuilder.AddDataSource(
+            dataSources: dataSources,
+            table: table,
+            controlId: modelId,
+            isIndependent: isIndependent
+        );
 
-        XmlElement propertiesElement = parentNode.OwnerDocument.CreateElement("Properties");
-        parentNode.AppendChild(propertiesElement);
+        XmlElement propertiesElement = parentNode.OwnerDocument.CreateElement(name: "Properties");
+        parentNode.AppendChild(newChild: propertiesElement);
 
-        XmlElement propertyNamesElement = parentNode.OwnerDocument.CreateElement("PropertyNames");
+        XmlElement propertyNamesElement = parentNode.OwnerDocument.CreateElement(
+            name: "PropertyNames"
+        );
         // parentNode.AppendChild(propertyNamesElement);
         string primaryKeyColumnName = table.PrimaryKey[0].ColumnName;
-        XmlElement idPropertyElement = parentNode.OwnerDocument.CreateElement("Property");
-        propertiesElement.AppendChild(idPropertyElement);
-        idPropertyElement.SetAttribute("Id", primaryKeyColumnName);
-        idPropertyElement.SetAttribute("Name", primaryKeyColumnName);
-        idPropertyElement.SetAttribute("Entity", "String");
-        idPropertyElement.SetAttribute("Column", "Text");
+        XmlElement idPropertyElement = parentNode.OwnerDocument.CreateElement(name: "Property");
+        propertiesElement.AppendChild(newChild: idPropertyElement);
+        idPropertyElement.SetAttribute(name: "Id", value: primaryKeyColumnName);
+        idPropertyElement.SetAttribute(name: "Name", value: primaryKeyColumnName);
+        idPropertyElement.SetAttribute(name: "Entity", value: "String");
+        idPropertyElement.SetAttribute(name: "Column", value: "Text");
         DataStructureColumn memoColumn = null;
         int lastPos = 5;
 
         foreach (var column in entity.Columns)
         {
             FormXmlBuilder.AddColumn(
-                entity,
-                column.Name,
-                ref memoColumn,
-                ref lastPos,
-                propertiesElement,
-                propertyNamesElement,
-                table,
-                null
+                entity: entity,
+                columnName: column.Name,
+                memoColumn: ref memoColumn,
+                lastPos: ref lastPos,
+                propertiesElement: propertiesElement,
+                propertyNamesElement: propertyNamesElement,
+                table: table,
+                formatPattern: null
             );
         }
     }

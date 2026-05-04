@@ -56,17 +56,17 @@ public class MenuSelectionDialogFieldConverter : TypeConverter
         }
         if (selectionDialogPanel == null)
         {
-            return new StandardValuesCollection(new List<object>());
+            return new StandardValuesCollection(values: new List<object>());
         }
 
         List<IDataEntityColumn> fields = selectionDialogPanel.DataEntity.EntityColumns;
-        var array = new List<IDataEntityColumn>(fields.Count);
+        var array = new List<IDataEntityColumn>(capacity: fields.Count);
         foreach (IDataEntityColumn item in fields)
         {
-            array.Add(item);
+            array.Add(item: item);
         }
         array.Sort();
-        return new StandardValuesCollection(array);
+        return new StandardValuesCollection(values: array);
     }
 
     public override bool CanConvertFrom(
@@ -79,7 +79,7 @@ public class MenuSelectionDialogFieldConverter : TypeConverter
             return true;
         }
 
-        return base.CanConvertFrom(context, sourceType);
+        return base.CanConvertFrom(context: context, sourceType: sourceType);
     }
 
     public override object ConvertFrom(
@@ -120,6 +120,6 @@ public class MenuSelectionDialogFieldConverter : TypeConverter
             return null;
         }
 
-        return base.ConvertFrom(context, culture, value);
+        return base.ConvertFrom(context: context, culture: culture, value: value);
     }
 }

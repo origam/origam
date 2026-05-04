@@ -27,7 +27,10 @@ using Origam.DA.Common.Extensiosn;
 namespace Origam.Server;
 
 /// <remarks/>
-[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute(
+    tool: "Microsoft.Tools.ServiceModel.Svcutil",
+    version: "2.0.2"
+)]
 [System.Diagnostics.DebuggerStepThroughAttribute()]
 [XmlType(TypeName = "parameter", Namespace = "http://asapenginewebapi.advantages.cz/")]
 public partial class Parameter
@@ -58,7 +61,7 @@ public static class ParameterUtils
     public static QueryParameterCollection ToQueryParameterCollection(Parameter[] parameters)
     {
         return (parameters ?? new Parameter[0])
-            .Select(x => new QueryParameter(x.name, x.value))
+            .Select(selector: x => new QueryParameter(_parameterName: x.name, value: x.value))
             .ToQueryParameterCollection();
     }
 }

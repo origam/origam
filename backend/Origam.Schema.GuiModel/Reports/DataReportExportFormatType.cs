@@ -73,7 +73,8 @@ public static class DataReportExportFormatTypeExtensions
     {
         return contentTypes[(int)value] == null
             ? throw new OrigamException(
-                "There isn't a content type" + " defined for the DataReportExportFormatType"
+                message: "There isn't a content type"
+                    + " defined for the DataReportExportFormatType"
             )
             : contentTypes[(int)value];
     }
@@ -82,7 +83,8 @@ public static class DataReportExportFormatTypeExtensions
     {
         return extensions[(int)value] == null
             ? throw new OrigamException(
-                "There isn't a file extension" + " defined for the DataReportExportFormatType"
+                message: "There isn't a file extension"
+                    + " defined for the DataReportExportFormatType"
             )
             : extensions[(int)value];
     }

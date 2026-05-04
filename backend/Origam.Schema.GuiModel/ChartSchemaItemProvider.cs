@@ -41,14 +41,14 @@ public class ChartSchemaItemProvider : AbstractSchemaItemProvider
             var chart = (AbstractChart)abstractSchemaItem;
             if (
                 chart
-                    .ChildItemsByType<ChartFormMapping>(ChartFormMapping.CategoryConst)
-                    .Any(chartFormMapping =>
-                        formId.Equals(chartFormMapping.Screen.Id)
-                        && entity.Equals(chartFormMapping.Entity.Name)
+                    .ChildItemsByType<ChartFormMapping>(itemType: ChartFormMapping.CategoryConst)
+                    .Any(predicate: chartFormMapping =>
+                        formId.Equals(g: chartFormMapping.Screen.Id)
+                        && entity.Equals(value: chartFormMapping.Entity.Name)
                     )
             )
             {
-                result.Add(chart);
+                result.Add(item: chart);
             }
         }
         return result;
@@ -86,7 +86,11 @@ public class ChartSchemaItemProvider : AbstractSchemaItemProvider
         {
             itemName = "NewSvgChart";
         }
-        return base.NewItem<T>(schemaExtensionId, group, itemName);
+        return base.NewItem<T>(
+            schemaExtensionId: schemaExtensionId,
+            group: group,
+            itemName: itemName
+        );
     }
     #endregion
 }

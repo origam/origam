@@ -28,17 +28,17 @@ namespace Origam.Schema.GuiModel;
 /// <summary>
 /// Summary description for CrystalReport.
 /// </summary>
-[SchemaItemDescription("Crystal Report", "icon_crystal-report.png")]
-[HelpTopic("Crystal+Report")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Crystal Report", iconName: "icon_crystal-report.png")]
+[HelpTopic(topic: "Crystal+Report")]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class CrystalReport : AbstractDataReport, IDataStructureReference
 {
     public CrystalReport()
         : base() { }
 
     public CrystalReport(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(schemaExtensionId: schemaExtensionId) { }
 
     public CrystalReport(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 }

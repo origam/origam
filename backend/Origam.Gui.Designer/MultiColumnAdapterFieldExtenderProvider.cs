@@ -30,24 +30,24 @@ using Origam.Workbench.Services;
 
 namespace Origam.Gui.Designer;
 
-[ProvideProperty("MappingCondition", typeof(Control))]
+[ProvideProperty(propertyName: "MappingCondition", receiverType: typeof(Control))]
 public class MultiColumnAdapterFieldExtenderProvider : IExtenderProvider
 {
-    [Category("Multi Column Adapter Field")]
-    [TypeConverter(typeof(DataConstantConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
+    [Category(category: "Multi Column Adapter Field")]
+    [TypeConverter(type: typeof(DataConstantConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
     public DataConstant GetMappingCondition(Control acontrol)
     {
         ControlSetItem csi = acontrol.Tag as ControlSetItem;
         if (csi != null)
         {
             IPersistenceService persistence =
-                ServiceManager.Services.GetService(typeof(IPersistenceService))
+                ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
                 as IPersistenceService;
             return (DataConstant)
                 persistence.SchemaProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(csi.MultiColumnAdapterFieldCondition)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: csi.MultiColumnAdapterFieldCondition)
                 );
         }
 
@@ -60,7 +60,7 @@ public class MultiColumnAdapterFieldExtenderProvider : IExtenderProvider
         if (csi != null)
         {
             csi.MultiColumnAdapterFieldCondition = (
-                value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]
+                value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]
             );
         }
     }

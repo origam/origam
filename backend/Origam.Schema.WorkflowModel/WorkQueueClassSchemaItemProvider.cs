@@ -50,9 +50,9 @@ public class WorkQueueClassSchemaItemProvider : AbstractSchemaItemProvider
     public override T NewItem<T>(Guid schemaExtensionId, SchemaItemGroup group)
     {
         return base.NewItem<T>(
-            schemaExtensionId,
-            group,
-            typeof(T) == typeof(WorkQueueClass) ? "NewWorkQueueClass" : null
+            schemaExtensionId: schemaExtensionId,
+            group: group,
+            itemName: typeof(T) == typeof(WorkQueueClass) ? "NewWorkQueueClass" : null
         );
     }
     #endregion

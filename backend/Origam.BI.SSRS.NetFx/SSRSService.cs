@@ -37,7 +37,7 @@ public class SSRSService : IReportService
 {
     private TraceTaskInfo traceTaskInfo = null;
     private static readonly ILog log = LogManager.GetLogger(
-        MethodBase.GetCurrentMethod().DeclaringType
+        type: MethodBase.GetCurrentMethod().DeclaringType
     );
 
     public object GetReport(
@@ -49,49 +49,54 @@ public class SSRSService : IReportService
     )
     {
         IPersistenceService persistenceService =
-            ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+            ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+            as IPersistenceService;
         SSRSReport report =
             persistenceService.SchemaProvider.RetrieveInstance(
-                typeof(AbstractReport),
-                new ModelElementKey(reportId)
+                type: typeof(AbstractReport),
+                primaryKey: new ModelElementKey(id: reportId)
             ) as SSRSReport;
         if (report == null)
         {
             throw new ArgumentOutOfRangeException(
-                "reportId",
-                reportId,
-                Strings.DefinitionNotInModel
+                paramName: "reportId",
+                actualValue: reportId,
+                message: Strings.DefinitionNotInModel
             );
         }
         if (parameters == null)
         {
             parameters = new Hashtable();
         }
-        ReportHelper.PopulateDefaultValues(report, parameters);
-        ReportHelper.ComputeXsltValueParameters(report, parameters, traceTaskInfo);
+        ReportHelper.PopulateDefaultValues(report: report, parameters: parameters);
+        ReportHelper.ComputeXsltValueParameters(
+            report: report,
+            parameters: parameters,
+            traceTaskInfo: traceTaskInfo
+        );
         ReportExecutionService reportService = new ReportExecutionService();
         OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() as OrigamSettings;
         reportService.Url = settings.SQLReportServiceUrl;
-        if (String.IsNullOrEmpty(settings.SQLReportServiceAccount))
+        if (String.IsNullOrEmpty(value: settings.SQLReportServiceAccount))
         {
             reportService.Credentials = CredentialCache.DefaultCredentials;
         }
         else
         {
             reportService.Credentials = new NetworkCredential(
-                settings.SQLReportServiceAccount,
-                settings.SQLReportServicePassword
+                userName: settings.SQLReportServiceAccount,
+                password: settings.SQLReportServicePassword
             );
         }
         reportService.Timeout = settings.SQLReportServiceTimeout;
         if (log.IsDebugEnabled)
         {
-            log.DebugFormat("SSRSService Timeout: {0}", reportService?.Timeout);
+            log.DebugFormat(format: "SSRSService Timeout: {0}", arg0: reportService?.Timeout);
         }
         byte[] result = null;
         string reportPath = ReportHelper.ExpandCurlyBracketPlaceholdersWithParameters(
-            report.ReportPath,
-            parameters
+            input: report.ReportPath,
+            parameters: parameters
         );
         string historyID = null;
         string devInfo = @"<DeviceInfo><Toolbar>False</Toolbar></DeviceInfo>";
@@ -103,7 +108,7 @@ public class SSRSService : IReportService
         ExecutionInfo execInfo = new ExecutionInfo();
         ExecutionHeader execHeader = new ExecutionHeader();
         reportService.ExecutionHeaderValue = execHeader;
-        execInfo = reportService.LoadReport(reportPath, historyID);
+        execInfo = reportService.LoadReport(Report: reportPath, HistoryID: historyID);
         if ((parameters != null) && (parameters.Count > 0))
         {
             ParameterValue[] reportParameters = new ParameterValue[parameters.Count];
@@ -112,23 +117,23 @@ public class SSRSService : IReportService
             {
                 ParameterValue parameterValue = new ParameterValue();
                 parameterValue.Name = key;
-                parameterValue.Value = parameters[key].ToString();
+                parameterValue.Value = parameters[key: key].ToString();
                 reportParameters[index] = parameterValue;
                 index++;
             }
             reportService.SetExecutionParameters(
-                reportParameters,
-                Thread.CurrentThread.CurrentCulture.IetfLanguageTag
+                Parameters: reportParameters,
+                ParameterLanguage: Thread.CurrentThread.CurrentCulture.IetfLanguageTag
             );
         }
         result = reportService.Render(
-            format,
-            devInfo,
-            out extension,
-            out encoding,
-            out mimeType,
-            out warnings,
-            out streamIDs
+            Format: format,
+            DeviceInfo: devInfo,
+            Extension: out extension,
+            MimeType: out encoding,
+            Encoding: out mimeType,
+            Warnings: out warnings,
+            StreamIds: out streamIDs
         );
         execInfo = reportService.GetExecutionInfo();
         return result;

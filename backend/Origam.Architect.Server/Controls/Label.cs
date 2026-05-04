@@ -26,26 +26,26 @@ namespace Origam.Architect.Server.Controls;
 
 public class Label : IControl
 {
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public int Left { get; set; }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public int Width { get; set; }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public int Height { get; set; }
 
-    [Category("Behavior")]
+    [Category(category: "Behavior")]
     public int TabIndex { get; set; }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public int Top { get; set; }
 
     [Editor(
-        "System.Drawing.Design.UITypeEditor, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
-        "System.ComponentModel.Design.MultilineStringEditor, System.Design, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
+        typeName: "System.Drawing.Design.UITypeEditor, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+        baseTypeName: "System.ComponentModel.Design.MultilineStringEditor, System.Design, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
     )]
-    [SettingsBindable(true)]
+    [SettingsBindable(bindable: true)]
     public string Text { get; set; }
 
     public void Initialize(ControlSetItem controlSetItem) { }

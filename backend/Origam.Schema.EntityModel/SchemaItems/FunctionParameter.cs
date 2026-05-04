@@ -30,10 +30,10 @@ namespace Origam.Schema.EntityModel;
 /// <summary>
 /// Summary description for FunctionParameter.
 /// </summary>
-[SchemaItemDescription("Parameter", 15)]
-[HelpTopic("Function+Parameter")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Parameter", icon: 15)]
+[HelpTopic(topic: "Function+Parameter")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class FunctionParameter : AbstractSchemaItem
 {
     public const string CategoryConst = "FunctionParameter";
@@ -42,10 +42,10 @@ public class FunctionParameter : AbstractSchemaItem
         : base() { }
 
     public FunctionParameter(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public FunctionParameter(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Overriden AbstractDataEntityColumn Members
 
@@ -64,7 +64,7 @@ public class FunctionParameter : AbstractSchemaItem
     #endregion
     private int _ordinalPosition;
 
-    [XmlAttribute("ordinalPosition")]
+    [XmlAttribute(attributeName: "ordinalPosition")]
     public int OrdinalPosition
     {
         get { return _ordinalPosition; }

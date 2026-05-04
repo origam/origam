@@ -26,12 +26,12 @@ using Origam.Workbench.Services;
 
 namespace Origam.Schema.EntityModel.Attributes;
 
-[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
+[AttributeUsage(validOn: AttributeTargets.Property | AttributeTargets.Field)]
 public class IndexNameLengthLimitAttribute : AbstractModelElementRuleAttribute
 {
     public override Exception CheckRule(object instance)
     {
-        return new NotSupportedException(Strings.MemberNameRequired);
+        return new NotSupportedException(message: Strings.MemberNameRequired);
     }
 
     public override Exception CheckRule(object instance, string memberName)
@@ -39,32 +39,34 @@ public class IndexNameLengthLimitAttribute : AbstractModelElementRuleAttribute
         if (instance is not TableMappingItem table)
         {
             throw new Exception(
-                string.Format(
-                    Strings.IndexNameTargetMisMatch,
-                    nameof(IndexNameLengthLimitAttribute)
+                message: string.Format(
+                    format: Strings.IndexNameTargetMisMatch,
+                    arg0: nameof(IndexNameLengthLimitAttribute)
                 )
             );
         }
 
-        if (string.IsNullOrEmpty(memberName))
+        if (string.IsNullOrEmpty(value: memberName))
         {
-            CheckRule(instance);
+            CheckRule(instance: instance);
         }
 
         var databaseProfile = ServiceManager.Services.GetService<DatabaseProfileService>();
-        var indices = table.ChildItemsByType<DataEntityIndex>(DataEntityIndex.CategoryConst);
+        var indices = table.ChildItemsByType<DataEntityIndex>(
+            itemType: DataEntityIndex.CategoryConst
+        );
         string errorMessage = string.Join(
-            "\n",
-            indices.Select(entityIndex =>
+            separator: "\n",
+            values: indices.Select(selector: entityIndex =>
             {
-                string finalIndexName = entityIndex.MakeDatabaseName(table);
-                return databaseProfile.CheckIndexNameLength(finalIndexName);
+                string finalIndexName = entityIndex.MakeDatabaseName(table: table);
+                return databaseProfile.CheckIndexNameLength(indexName: finalIndexName);
             })
         );
 
-        if (!string.IsNullOrWhiteSpace(errorMessage))
+        if (!string.IsNullOrWhiteSpace(value: errorMessage))
         {
-            return new Exception(errorMessage);
+            return new Exception(message: errorMessage);
         }
         return null;
     }

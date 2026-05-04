@@ -36,7 +36,8 @@ namespace Origam.Gui.Win;
 public class AsRadioButton : RadioButton, IAsControl
 {
     private IPersistenceService _persistence =
-        ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+        ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+        as IPersistenceService;
 
     public AsRadioButton()
         : base()
@@ -52,7 +53,7 @@ public class AsRadioButton : RadioButton, IAsControl
     }
     private Guid _lookupId;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public Guid LookupId
     {
         get { return _lookupId; }
@@ -60,39 +61,42 @@ public class AsRadioButton : RadioButton, IAsControl
     }
     private Guid _dataConstantId;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public Guid DataConstantId
     {
         get { return _dataConstantId; }
         set { _dataConstantId = value; }
     }
 
-    [TypeConverter(typeof(Origam.Schema.EntityModel.DataLookupConverter))]
+    [TypeConverter(type: typeof(Origam.Schema.EntityModel.DataLookupConverter))]
     public AbstractDataLookup DataLookup
     {
         get
         {
             return (AbstractDataLookup)
                 _persistence.SchemaProvider.RetrieveInstance(
-                    typeof(AbstractDataLookup),
-                    new ModelElementKey(this.LookupId)
+                    type: typeof(AbstractDataLookup),
+                    primaryKey: new ModelElementKey(id: this.LookupId)
                 );
         }
-        set { this.LookupId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]); }
+        set { this.LookupId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]); }
     }
 
-    [TypeConverter(typeof(DataConstantConverter))]
+    [TypeConverter(type: typeof(DataConstantConverter))]
     public DataConstant ValueConstant
     {
         get
         {
             return (DataConstant)
                 _persistence.SchemaProvider.RetrieveInstance(
-                    typeof(DataConstant),
-                    new ModelElementKey(this.DataConstantId)
+                    type: typeof(DataConstant),
+                    primaryKey: new ModelElementKey(id: this.DataConstantId)
                 );
         }
-        set { this.DataConstantId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]); }
+        set
+        {
+            this.DataConstantId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]);
+        }
     }
     bool _settingValue = false;
     object _value = null;
@@ -102,7 +106,7 @@ public class AsRadioButton : RadioButton, IAsControl
     /// have the same value. The radio button will only be checked if the value equals to the
     /// data constant specifed under ValueConstant.
     /// </summary>
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public object Value
     {
         get { return _value; }
@@ -137,8 +141,9 @@ public class AsRadioButton : RadioButton, IAsControl
     private object GetValue()
     {
         IParameterService pms =
-            ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
-        return pms.GetParameterValue(this.DataConstantId);
+            ServiceManager.Services.GetService(serviceType: typeof(IParameterService))
+            as IParameterService;
+        return pms.GetParameterValue(id: this.DataConstantId);
     }
 
     public event EventHandler ValueChanged;
@@ -147,7 +152,7 @@ public class AsRadioButton : RadioButton, IAsControl
     {
         if (ValueChanged != null)
         {
-            ValueChanged(this, EventArgs.Empty);
+            ValueChanged(sender: this, e: EventArgs.Empty);
         }
     }
 

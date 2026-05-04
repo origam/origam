@@ -299,7 +299,7 @@ public class Attachment : IComparable
             _contentFileName = _defaultMSTNEFFileName;
             _contentType = strContentType;
         }
-        this.NewAttachment(strAttachment, blnParseHeader);
+        this.NewAttachment(strAttachment: strAttachment, blnParseHeader: blnParseHeader);
     }
 
     /// <summary>
@@ -308,7 +308,7 @@ public class Attachment : IComparable
     /// <param name="strAttachment">attachment content</param>
     public Attachment(string strAttachment)
     {
-        this.NewAttachment(strAttachment, true);
+        this.NewAttachment(strAttachment: strAttachment, blnParseHeader: true);
     }
 
     /// <summary>
@@ -321,17 +321,17 @@ public class Attachment : IComparable
         _inBytes = false;
         if (strAttachment == null)
         {
-            throw new ArgumentNullException("strAttachment");
+            throw new ArgumentNullException(paramName: "strAttachment");
         }
 
-        StringReader srReader = new StringReader(strAttachment);
+        StringReader srReader = new StringReader(s: strAttachment);
         if (blnParseHeader)
         {
             string strLine = srReader.ReadLine();
-            while (Utility.IsNotNullTextEx(strLine))
+            while (Utility.IsNotNullTextEx(strText: strLine))
             {
-                ParseHeader(srReader, ref strLine);
-                if (Utility.IsOrNullTextEx(strLine))
+                ParseHeader(srReader: srReader, strLine: ref strLine);
+                if (Utility.IsOrNullTextEx(strText: strLine))
                 {
                     break;
                 }
@@ -350,8 +350,8 @@ public class Attachment : IComparable
     /// <param name="strLine">header line</param>
     private void ParseHeader(StringReader srReader, ref string strLine)
     {
-        string[] array = Utility.GetHeadersValue(strLine); //Regex.Split(strLine,":");
-        string[] values = Regex.Split(array[1], ";"); //array[1].Split(';');
+        string[] array = Utility.GetHeadersValue(strRawHeader: strLine); //Regex.Split(strLine,":");
+        string[] values = Regex.Split(input: array[1], pattern: ";"); //array[1].Split(';');
         string strRet = null;
         switch (array[0].ToUpper())
         {
@@ -364,13 +364,21 @@ public class Attachment : IComparable
 
                 if (values.Length > 1)
                 {
-                    _contentCharset = Utility.GetQuotedValue(values[1], "=", "charset");
+                    _contentCharset = Utility.GetQuotedValue(
+                        strText: values[1],
+                        strSplitter: "=",
+                        strTag: "charset"
+                    );
                 }
                 if (values.Length > 2)
                 {
-                    _contentFormat = Utility.GetQuotedValue(values[2], "=", "format");
+                    _contentFormat = Utility.GetQuotedValue(
+                        strText: values[2],
+                        strSplitter: "=",
+                        strTag: "format"
+                    );
                 }
-                _contentFileName = Utility.ParseFileName(strLine);
+                _contentFileName = Utility.ParseFileName(strHeader: strLine);
                 if (_contentFileName == "")
                 {
                     strRet = srReader.ReadLine();
@@ -379,8 +387,11 @@ public class Attachment : IComparable
                         strLine = "";
                         break;
                     }
-                    _contentFileName = Utility.ParseFileName(strRet);
-                    _contentCharset = MIMETypes.GetContentCharset(strRet + "\r\n", 0);
+                    _contentFileName = Utility.ParseFileName(strHeader: strRet);
+                    _contentCharset = MIMETypes.GetContentCharset(
+                        strBuffer: strRet + "\r\n",
+                        pos: 0
+                    );
                     if (_contentCharset == "")
                     {
                         _contentCharset = null;
@@ -388,7 +399,7 @@ public class Attachment : IComparable
 
                     if (_contentFileName == "")
                     {
-                        ParseHeader(srReader, ref strRet);
+                        ParseHeader(srReader: srReader, strLine: ref strRet);
                     }
                 }
                 break;
@@ -396,13 +407,13 @@ public class Attachment : IComparable
 
             case "CONTENT-TRANSFER-ENCODING":
             {
-                _contentTransferEncoding = Utility.SplitOnSemiColon(array[1])[0].Trim();
+                _contentTransferEncoding = Utility.SplitOnSemiColon(strText: array[1])[0].Trim();
                 break;
             }
             case "CONTENT-DESCRIPTION":
             {
                 _contentDescription = Utility.DecodeText(
-                    Utility.SplitOnSemiColon(array[1])[0].Trim()
+                    strText: Utility.SplitOnSemiColon(strText: array[1])[0].Trim()
                 );
                 break;
             }
@@ -429,14 +440,21 @@ public class Attachment : IComparable
                     _contentFileName = srReader.ReadLine();
                 }
 
-                _contentFileName = _contentFileName.Replace("\t", "");
-                _contentFileName = Utility.GetQuotedValue(_contentFileName, "=", "filename");
-                _contentFileName = Utility.DecodeText(_contentFileName);
+                _contentFileName = _contentFileName.Replace(oldValue: "\t", newValue: "");
+                _contentFileName = Utility.GetQuotedValue(
+                    strText: _contentFileName,
+                    strSplitter: "=",
+                    strTag: "filename"
+                );
+                _contentFileName = Utility.DecodeText(strText: _contentFileName);
                 break;
             }
             case "CONTENT-ID":
             {
-                _contentID = Utility.SplitOnSemiColon(array[1])[0].Trim('<').Trim('>');
+                _contentID = Utility
+                    .SplitOnSemiColon(strText: array[1])[0]
+                    .Trim(trimChars: '<')
+                    .Trim(trimChars: '>');
                 break;
             }
         }
@@ -449,7 +467,7 @@ public class Attachment : IComparable
     /// <returns>true if encoding</returns>
     private bool IsEncoding(string encoding)
     {
-        return _contentTransferEncoding.ToLower().IndexOf(encoding.ToLower()) != -1;
+        return _contentTransferEncoding.ToLower().IndexOf(value: encoding.ToLower()) != -1;
     }
 
     /// <summary>
@@ -463,38 +481,47 @@ public class Attachment : IComparable
         {
             if (_contentType.ToLower() == "message/rfc822".ToLower())
             {
-                decodedAttachment = Utility.DecodeText(_rawAttachment);
+                decodedAttachment = Utility.DecodeText(strText: _rawAttachment);
             }
             else if (_contentTransferEncoding != null)
             {
                 decodedAttachment = _rawAttachment;
-                if (!IsEncoding("7bit"))
+                if (!IsEncoding(encoding: "7bit"))
                 {
-                    if (IsEncoding("8bit") && (_contentCharset != null & _contentCharset != ""))
+                    if (
+                        IsEncoding(encoding: "8bit")
+                        && (_contentCharset != null & _contentCharset != "")
+                    )
                     {
-                        decodedAttachment = Utility.Change(decodedAttachment, _contentCharset);
-                    }
-
-                    if (Utility.IsQuotedPrintable(_contentTransferEncoding))
-                    {
-                        decodedAttachment = DecodeQP.ConvertHexContent(
-                            decodedAttachment,
-                            _contentCharset
+                        decodedAttachment = Utility.Change(
+                            strText: decodedAttachment,
+                            strCharset: _contentCharset
                         );
                     }
-                    else if (IsEncoding("8bit")) { }
+
+                    if (Utility.IsQuotedPrintable(strText: _contentTransferEncoding))
+                    {
+                        decodedAttachment = DecodeQP.ConvertHexContent(
+                            Hexstring: decodedAttachment,
+                            encoding: _contentCharset
+                        );
+                    }
+                    else if (IsEncoding(encoding: "8bit")) { }
                     else
                     {
                         decodedAttachment = Utility.deCodeB64s(
-                            Utility.RemoveNonB64(decodedAttachment),
-                            _contentCharset
+                            strText: Utility.RemoveNonB64(strText: decodedAttachment),
+                            strEncoding: _contentCharset
                         );
                     }
                 }
             }
             else if (_contentCharset != null)
             {
-                decodedAttachment = Utility.Change(_rawAttachment, _contentCharset); //Encoding.Default.GetString(Encoding.GetEncoding(_contentCharset).GetBytes(_rawAttachment));
+                decodedAttachment = Utility.Change(
+                    strText: _rawAttachment,
+                    strCharset: _contentCharset
+                ); //Encoding.Default.GetString(Encoding.GetEncoding(_contentCharset).GetBytes(_rawAttachment));
             }
             else
             {
@@ -515,7 +542,13 @@ public class Attachment : IComparable
     public Message DecodeAsMessage()
     {
         bool blnRet = false;
-        return new Message(ref blnRet, "", false, _rawAttachment, false);
+        return new Message(
+            blnFinish: ref blnRet,
+            strBasePath: "",
+            blnAutoDecodeMSTNEF: false,
+            strMessage: _rawAttachment,
+            blnOnlyHeader: false
+        );
     }
 
     /// <summary>
@@ -534,47 +567,57 @@ public class Attachment : IComparable
             byte[] decodedBytes = null;
             if (_contentType != null && _contentType.ToLower() == "message/rfc822".ToLower())
             {
-                decodedBytes = Encoding.Default.GetBytes(Utility.DecodeText(_rawAttachment));
+                decodedBytes = Encoding.Default.GetBytes(
+                    s: Utility.DecodeText(strText: _rawAttachment)
+                );
             }
             else if (_contentTransferEncoding != null)
             {
                 string bytContent = _rawAttachment;
-                if (!IsEncoding("7bit"))
+                if (!IsEncoding(encoding: "7bit"))
                 {
-                    if (IsEncoding("8bit") && (_contentCharset != null & _contentCharset != ""))
+                    if (
+                        IsEncoding(encoding: "8bit")
+                        && (_contentCharset != null & _contentCharset != "")
+                    )
                     {
-                        bytContent = Utility.Change(bytContent, _contentCharset);
-                    }
-
-                    if (Utility.IsQuotedPrintable(_contentTransferEncoding))
-                    {
-                        decodedBytes = Encoding.Default.GetBytes(
-                            DecodeQP.ConvertHexContent(bytContent)
+                        bytContent = Utility.Change(
+                            strText: bytContent,
+                            strCharset: _contentCharset
                         );
                     }
-                    else if (IsEncoding("8bit"))
+
+                    if (Utility.IsQuotedPrintable(strText: _contentTransferEncoding))
                     {
-                        decodedBytes = Encoding.Default.GetBytes(bytContent);
+                        decodedBytes = Encoding.Default.GetBytes(
+                            s: DecodeQP.ConvertHexContent(Hexstring: bytContent)
+                        );
+                    }
+                    else if (IsEncoding(encoding: "8bit"))
+                    {
+                        decodedBytes = Encoding.Default.GetBytes(s: bytContent);
                     }
                     else
                     {
-                        decodedBytes = Convert.FromBase64String(Utility.RemoveNonB64(bytContent));
+                        decodedBytes = Convert.FromBase64String(
+                            s: Utility.RemoveNonB64(strText: bytContent)
+                        );
                     }
                 }
                 else
                 {
-                    decodedBytes = Encoding.Default.GetBytes(bytContent);
+                    decodedBytes = Encoding.Default.GetBytes(s: bytContent);
                 }
             }
             else if (_contentCharset != null)
             {
                 decodedBytes = Encoding.Default.GetBytes(
-                    Utility.Change(_rawAttachment, _contentCharset)
+                    s: Utility.Change(strText: _rawAttachment, strCharset: _contentCharset)
                 ); //Encoding.Default.GetString(Encoding.GetEncoding(_contentCharset).GetBytes(_rawAttachment));
             }
             else
             {
-                decodedBytes = Encoding.Default.GetBytes(_rawAttachment);
+                decodedBytes = Encoding.Default.GetBytes(s: _rawAttachment);
             }
 
             return decodedBytes;
@@ -585,6 +628,6 @@ public class Attachment : IComparable
 
     public int CompareTo(object attachment)
     {
-        return (this.RawAttachment.CompareTo(((Attachment)(attachment)).RawAttachment));
+        return (this.RawAttachment.CompareTo(strB: ((Attachment)(attachment)).RawAttachment));
     }
 }

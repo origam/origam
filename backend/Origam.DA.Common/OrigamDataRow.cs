@@ -30,13 +30,13 @@ public class OrigamDataRow : DataRow
     private bool _hasChangedOnce = false;
 
     protected internal OrigamDataRow(DataRowBuilder builder)
-        : base(builder) { }
+        : base(builder: builder) { }
 
     public void AddColumnWithValidChange(DataColumn dataColumn)
     {
-        if (!_columnsWithValidChange.Contains(dataColumn))
+        if (!_columnsWithValidChange.Contains(item: dataColumn))
         {
-            _columnsWithValidChange.Add(dataColumn);
+            _columnsWithValidChange.Add(item: dataColumn);
             _hasChangedOnce = true;
         }
     }
@@ -48,7 +48,7 @@ public class OrigamDataRow : DataRow
 
     public bool IsColumnWithValidChange(DataColumn dataColumn)
     {
-        return _columnsWithValidChange.Contains(dataColumn);
+        return _columnsWithValidChange.Contains(item: dataColumn);
     }
 
     public void ResetColumnsWithValidChange()

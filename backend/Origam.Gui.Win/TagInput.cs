@@ -39,7 +39,8 @@ namespace Origam.Gui.Win;
 public class TagInput : BaseCaptionControl, IOrigamMetadataConsumer, ILookupControl
 {
     private IPersistenceService _persistence =
-        ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+        ServiceManager.Services.GetService(serviceType: typeof(IPersistenceService))
+        as IPersistenceService;
     private System.Windows.Forms.ColorDialog colorDialog1;
     private System.Windows.Forms.TextBox textBox1;
 
@@ -67,7 +68,7 @@ public class TagInput : BaseCaptionControl, IOrigamMetadataConsumer, ILookupCont
                 components.Dispose();
             }
         }
-        base.Dispose(disposing);
+        base.Dispose(disposing: disposing);
     }
 
     #region Component Designer generated code
@@ -106,7 +107,7 @@ public class TagInput : BaseCaptionControl, IOrigamMetadataConsumer, ILookupCont
     #region Properties
     private Guid _lookupId;
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public Guid LookupId
     {
         get { return _lookupId; }
@@ -129,13 +130,13 @@ public class TagInput : BaseCaptionControl, IOrigamMetadataConsumer, ILookupCont
     }
     ColumnParameterMappingCollection _parameterMappings = new ColumnParameterMappingCollection();
 
-    [TypeConverter(typeof(ColumnParameterMappingCollectionConverter))]
+    [TypeConverter(type: typeof(ColumnParameterMappingCollectionConverter))]
     public ColumnParameterMappingCollection ParameterMappings
     {
         get { return _parameterMappings; }
     }
 
-    [TypeConverter(typeof(DataLookupConverter))]
+    [TypeConverter(type: typeof(DataLookupConverter))]
     public AbstractDataLookup DataLookup
     {
         get
@@ -143,7 +144,10 @@ public class TagInput : BaseCaptionControl, IOrigamMetadataConsumer, ILookupCont
             ModelElementKey key = new ModelElementKey();
             key.Id = this.LookupId;
             return (AbstractDataLookup)
-                _persistence.SchemaProvider.RetrieveInstance(typeof(AbstractDataLookup), key);
+                _persistence.SchemaProvider.RetrieveInstance(
+                    type: typeof(AbstractDataLookup),
+                    primaryKey: key
+                );
         }
         set
         {
@@ -155,12 +159,12 @@ public class TagInput : BaseCaptionControl, IOrigamMetadataConsumer, ILookupCont
             else
             {
                 // if same as before, no action is needed
-                if (this.LookupId == (Guid)value.PrimaryKey["Id"])
+                if (this.LookupId == (Guid)value.PrimaryKey[key: "Id"])
                 {
                     return;
                 }
 
-                this.LookupId = (Guid)value.PrimaryKey["Id"];
+                this.LookupId = (Guid)value.PrimaryKey[key: "Id"];
                 ClearMappingItems();
                 CreateMappingItemsCollection();
             }
@@ -180,7 +184,9 @@ public class TagInput : BaseCaptionControl, IOrigamMetadataConsumer, ILookupCont
             }
 
             var col = _origamMetadata
-                .ChildItemsByType<ColumnParameterMapping>(ColumnParameterMapping.CategoryConst)
+                .ChildItemsByType<ColumnParameterMapping>(
+                    itemType: ColumnParameterMapping.CategoryConst
+                )
                 .ToList();
             foreach (ColumnParameterMapping mapping in col)
             {
@@ -189,7 +195,7 @@ public class TagInput : BaseCaptionControl, IOrigamMetadataConsumer, ILookupCont
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine("AsDropDown:ERROR=>" + ex.ToString());
+            System.Diagnostics.Debug.WriteLine(message: "AsDropDown:ERROR=>" + ex.ToString());
         }
     }
 
@@ -206,14 +212,14 @@ public class TagInput : BaseCaptionControl, IOrigamMetadataConsumer, ILookupCont
             {
                 string parameterName = entry.Key;
                 ColumnParameterMapping mapping = _origamMetadata.NewItem<ColumnParameterMapping>(
-                    _origamMetadata.SchemaExtensionId,
-                    null
+                    schemaExtensionId: _origamMetadata.SchemaExtensionId,
+                    group: null
                 );
                 mapping.Name = parameterName;
             }
         }
         //Refill Parameter collection (and dictionary)
-        FillParameterCache(this._origamMetadata as ControlSetItem);
+        FillParameterCache(controlItem: this._origamMetadata as ControlSetItem);
     }
 
     private void FillParameterCache(ControlSetItem controlItem)
@@ -227,13 +233,13 @@ public class TagInput : BaseCaptionControl, IOrigamMetadataConsumer, ILookupCont
 
         foreach (
             var mapInfo in controlItem.ChildItemsByType<ColumnParameterMapping>(
-                ColumnParameterMapping.CategoryConst
+                itemType: ColumnParameterMapping.CategoryConst
             )
         )
         {
             if (!mapInfo.IsDeleted)
             {
-                ParameterMappings.Add(mapInfo);
+                ParameterMappings.Add(value: mapInfo);
             }
         }
     }
@@ -247,7 +253,7 @@ public class TagInput : BaseCaptionControl, IOrigamMetadataConsumer, ILookupCont
         {
             _origamMetadata = value;
             _itemsLoaded = true;
-            FillParameterCache(_origamMetadata as ControlSetItem);
+            FillParameterCache(controlItem: _origamMetadata as ControlSetItem);
         }
     }
     #endregion
@@ -377,7 +383,7 @@ public class TagInput : BaseCaptionControl, IOrigamMetadataConsumer, ILookupCont
         get
         {
             // TODO:  Add TagInput.ScreenLocation getter implementation
-            return new ScreenLocation(0, 0);
+            return new ScreenLocation(x: 0, y: 0);
         }
     }
     public string LookupListDisplayMember

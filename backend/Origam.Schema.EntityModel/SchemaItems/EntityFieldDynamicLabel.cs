@@ -34,28 +34,28 @@ namespace Origam.Schema.EntityModel;
 /// <summary>
 /// Summary description for DataEntityIndex.
 /// </summary>
-[SchemaItemDescription("Dynamic Field Label", "Dynamic Labels", 5)]
-[HelpTopic("Dynamic+Field+Labels")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Dynamic Field Label", folderName: "Dynamic Labels", icon: 5)]
+[HelpTopic(topic: "Dynamic+Field+Labels")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class EntityFieldDynamicLabel : AbstractSchemaItem, IComparable
 {
     public EntityFieldDynamicLabel()
         : base() { }
 
     public EntityFieldDynamicLabel(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public EntityFieldDynamicLabel(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     public const string CategoryConst = "DataEntityFieldDynamicLabel";
     #region Properties
     private string _roles = "";
 
-    [Category("Condition"), RefreshProperties(RefreshProperties.Repaint)]
+    [Category(category: "Condition"), RefreshProperties(refresh: RefreshProperties.Repaint)]
     [StringNotEmptyModelElementRule()]
-    [XmlAttribute("roles")]
+    [XmlAttribute(attributeName: "roles")]
     public string Roles
     {
         get { return _roles; }
@@ -67,8 +67,12 @@ public class EntityFieldDynamicLabel : AbstractSchemaItem, IComparable
     }
     private int _level = 100;
 
-    [Category("Condition"), DefaultValue(100), RefreshProperties(RefreshProperties.Repaint)]
-    [XmlAttribute("level")]
+    [
+        Category(category: "Condition"),
+        DefaultValue(value: 100),
+        RefreshProperties(refresh: RefreshProperties.Repaint)
+    ]
+    [XmlAttribute(attributeName: "level")]
     public int Level
     {
         get { return _level; }
@@ -82,23 +86,23 @@ public class EntityFieldDynamicLabel : AbstractSchemaItem, IComparable
 
     public Guid RuleId;
 
-    [TypeConverter(typeof(EntityRuleConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [Category("Condition")]
-    [XmlReference("rule", "RuleId")]
+    [TypeConverter(type: typeof(EntityRuleConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [Category(category: "Condition")]
+    [XmlReference(attributeName: "rule", idField: "RuleId")]
     public IEntityRule Rule
     {
         get
         {
             return (IEntityRule)
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(this.RuleId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: this.RuleId)
                 );
         }
         set
         {
-            this.RuleId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
+            this.RuleId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]);
 
             UpdateName();
         }
@@ -106,24 +110,24 @@ public class EntityFieldDynamicLabel : AbstractSchemaItem, IComparable
 
     public Guid LabelConstantId;
 
-    [TypeConverter(typeof(DataConstantConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
+    [TypeConverter(type: typeof(DataConstantConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
     [NotNullModelElementRule()]
-    [Category("Label")]
-    [XmlReference("labelConstant", "LabelConstantId")]
+    [Category(category: "Label")]
+    [XmlReference(attributeName: "labelConstant", idField: "LabelConstantId")]
     public DataConstant LabelConstant
     {
         get
         {
             return (DataConstant)
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(this.LabelConstantId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: this.LabelConstantId)
                 );
         }
         set
         {
-            this.LabelConstantId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
+            this.LabelConstantId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]);
 
             UpdateName();
         }
@@ -149,7 +153,7 @@ public class EntityFieldDynamicLabel : AbstractSchemaItem, IComparable
         {
             name += "_" + this.Rule.Name;
         }
-        name += "_" + this.Roles.Replace(";", "_");
+        name += "_" + this.Roles.Replace(oldValue: ";", newValue: "_");
         this.Name = name;
     }
     #endregion
@@ -158,15 +162,15 @@ public class EntityFieldDynamicLabel : AbstractSchemaItem, IComparable
     {
         if (this.Rule != null)
         {
-            dependencies.Add(this.Rule);
+            dependencies.Add(item: this.Rule);
         }
 
         if (this.LabelConstant != null)
         {
-            dependencies.Add(this.LabelConstant);
+            dependencies.Add(item: this.LabelConstant);
         }
 
-        base.GetExtraDependencies(dependencies);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
 
     public override string Icon
@@ -185,13 +189,13 @@ public class EntityFieldDynamicLabel : AbstractSchemaItem, IComparable
         EntityFieldDynamicLabel compared = obj as EntityFieldDynamicLabel;
         if (obj != null)
         {
-            return this.Level.CompareTo(compared.Level);
+            return this.Level.CompareTo(value: compared.Level);
         }
 
         throw new ArgumentOutOfRangeException(
-            "obj",
-            obj,
-            ResourceUtils.GetString("ErrorCompareEntityConditionalFormatting")
+            paramName: "obj",
+            actualValue: obj,
+            message: ResourceUtils.GetString(key: "ErrorCompareEntityConditionalFormatting")
         );
     }
     #endregion

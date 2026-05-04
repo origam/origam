@@ -30,10 +30,10 @@ namespace Origam.Schema.MenuModel;
 /// <summary>
 /// Summary description for Menu.
 /// </summary>
-[SchemaItemDescription("Menu", "home.png")]
-[HelpTopic("Menu")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Menu", iconName: "home.png")]
+[HelpTopic(topic: "Menu")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class Menu : AbstractSchemaItem, ISchemaItemFactory
 {
     public const string CategoryConst = "Menu";
@@ -45,26 +45,26 @@ public class Menu : AbstractSchemaItem, ISchemaItemFactory
     }
 
     public Menu(Guid schemaExtensionId)
-        : base(schemaExtensionId)
+        : base(extensionId: schemaExtensionId)
     {
         Init();
     }
 
     public Menu(Key primaryKey)
-        : base(primaryKey)
+        : base(primaryKey: primaryKey)
     {
         Init();
     }
 
     private void Init()
     {
-        ChildItemTypes.Add(typeof(Submenu));
-        ChildItemTypes.Add(typeof(FormReferenceMenuItem));
-        ChildItemTypes.Add(typeof(DataConstantReferenceMenuItem));
-        ChildItemTypes.Add(typeof(WorkflowReferenceMenuItem));
-        ChildItemTypes.Add(typeof(ReportReferenceMenuItem));
-        ChildItemTypes.Add(typeof(DashboardMenuItem));
-        ChildItemTypes.Add(typeof(DynamicMenu));
+        ChildItemTypes.Add(item: typeof(Submenu));
+        ChildItemTypes.Add(item: typeof(FormReferenceMenuItem));
+        ChildItemTypes.Add(item: typeof(DataConstantReferenceMenuItem));
+        ChildItemTypes.Add(item: typeof(WorkflowReferenceMenuItem));
+        ChildItemTypes.Add(item: typeof(ReportReferenceMenuItem));
+        ChildItemTypes.Add(item: typeof(DashboardMenuItem));
+        ChildItemTypes.Add(item: typeof(DynamicMenu));
     }
 
     #region Overriden ISchemaItem Members
@@ -73,15 +73,15 @@ public class Menu : AbstractSchemaItem, ISchemaItemFactory
         get { return CategoryConst; }
     }
 
-    [Browsable(false)]
+    [Browsable(browsable: false)]
     public override bool UseFolders
     {
         get { return false; }
     }
     #endregion
     #region Properties
-    [Category("Menu Item")]
-    [XmlAttribute("displayName")]
+    [Category(category: "Menu Item")]
+    [XmlAttribute(attributeName: "displayName")]
     public string DisplayName { get; set; }
     #endregion
 }

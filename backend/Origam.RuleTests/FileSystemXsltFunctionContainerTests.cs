@@ -62,82 +62,94 @@ public class FileSystemXsltFunctionContainerTests
     {
         xsltFunctionDefinitions = new List<XsltFunctionsDefinition>
         {
-            new(new FileSystemXsltFunctionContainer(), "fs", "http://xsl.origam.com/filesystem"),
+            new(
+                Container: new FileSystemXsltFunctionContainer(),
+                NameSpacePrefix: "fs",
+                NameSpaceUri: "http://xsl.origam.com/filesystem"
+            ),
         };
     }
 
     private object RunInXpath(string xsltCall, XmlDocument document = null)
     {
-        Thread.CurrentThread.CurrentCulture = new CultureInfo("cs-CZ");
+        Thread.CurrentThread.CurrentCulture = new CultureInfo(name: "cs-CZ");
         XPathNavigator nav = (document ?? new XmlDocument()).CreateNavigator();
-        XPathExpression expr = nav.Compile(xsltCall);
-        OrigamXsltContext sut = new OrigamXsltContext(new NameTable(), xsltFunctionDefinitions);
-        expr.SetContext(sut);
-        return nav.Evaluate(expr);
+        XPathExpression expr = nav.Compile(xpath: xsltCall);
+        OrigamXsltContext sut = new OrigamXsltContext(
+            nt: new NameTable(),
+            xsltFunctionsDefinitions: xsltFunctionDefinitions
+        );
+        expr.SetContext(nsManager: sut);
+        return nav.Evaluate(expr: expr);
     }
 
     private string RunInXslt(string xsltCall, XmlDocument document = null)
     {
-        string xsltScript = string.Format(xsltScriptTemplate, xsltCall);
+        string xsltScript = string.Format(format: xsltScriptTemplate, arg0: xsltCall);
 
-        var transformer = new CompiledXsltEngine(xsltFunctionDefinitions);
+        var transformer = new CompiledXsltEngine(functionsDefinitions: xsltFunctionDefinitions);
         if (document == null)
         {
             document = new XmlDocument();
-            document.LoadXml("<ROOT></ROOT>");
+            document.LoadXml(xml: "<ROOT></ROOT>");
         }
 
-        XmlContainer xmlContainer = new XmlContainer(document);
+        XmlContainer xmlContainer = new XmlContainer(xmlDocument: document);
         IXmlContainer resultContainer = transformer.Transform(
-            xmlContainer,
-            xsltScript,
-            new Hashtable(),
-            null,
-            null,
-            false
+            data: xmlContainer,
+            xsl: xsltScript,
+            parameters: new Hashtable(),
+            transactionId: null,
+            outputStructure: null,
+            validateOnly: false
         );
 
-        var regex = new Regex("d1=\"(.*)\"");
-        Match match = regex.Match(resultContainer.Xml.OuterXml);
-        return match.Success ? match.Groups[1].Value : "";
+        var regex = new Regex(pattern: "d1=\"(.*)\"");
+        Match match = regex.Match(input: resultContainer.Xml.OuterXml);
+        return match.Success ? match.Groups[groupnum: 1].Value : "";
     }
 
     [Test]
     public void ShouldCombinePath()
     {
-        string expectedResult = Path.Combine("root", "file.txt");
+        string expectedResult = Path.Combine(path1: "root", path2: "file.txt");
         string xsltCall = "fs:CombinePath('root', 'file.txt')";
 
-        object xPathResult = RunInXpath(xsltCall);
-        Assert.That(xPathResult, Is.EqualTo(expectedResult));
+        object xPathResult = RunInXpath(xsltCall: xsltCall);
+        Assert.That(actual: xPathResult, expression: Is.EqualTo(expected: expectedResult));
 
-        string xsltResult = RunInXslt(xsltCall);
-        Assert.That(xsltResult, Is.EqualTo(expectedResult));
+        string xsltResult = RunInXslt(xsltCall: xsltCall);
+        Assert.That(actual: xsltResult, expression: Is.EqualTo(expected: expectedResult));
     }
 
     [Test]
     public void ShouldCombinePathWithThreeSegments()
     {
-        string expectedResult = Path.Combine("root", "folder", "file.txt");
+        string expectedResult = Path.Combine(path1: "root", path2: "folder", path3: "file.txt");
         string xsltCall = "fs:CombinePath('root', 'folder', 'file.txt')";
 
-        object xPathResult = RunInXpath(xsltCall);
-        Assert.That(xPathResult, Is.EqualTo(expectedResult));
+        object xPathResult = RunInXpath(xsltCall: xsltCall);
+        Assert.That(actual: xPathResult, expression: Is.EqualTo(expected: expectedResult));
 
-        string xsltResult = RunInXslt(xsltCall);
-        Assert.That(xsltResult, Is.EqualTo(expectedResult));
+        string xsltResult = RunInXslt(xsltCall: xsltCall);
+        Assert.That(actual: xsltResult, expression: Is.EqualTo(expected: expectedResult));
     }
 
     [Test]
     public void ShouldCombinePathWithFourSegments()
     {
-        string expectedResult = Path.Combine("root", "folder", "child", "file.txt");
+        string expectedResult = Path.Combine(
+            path1: "root",
+            path2: "folder",
+            path3: "child",
+            path4: "file.txt"
+        );
         string xsltCall = "fs:CombinePath('root', 'folder', 'child', 'file.txt')";
 
-        object xPathResult = RunInXpath(xsltCall);
-        Assert.That(xPathResult, Is.EqualTo(expectedResult));
+        object xPathResult = RunInXpath(xsltCall: xsltCall);
+        Assert.That(actual: xPathResult, expression: Is.EqualTo(expected: expectedResult));
 
-        string xsltResult = RunInXslt(xsltCall);
-        Assert.That(xsltResult, Is.EqualTo(expectedResult));
+        string xsltResult = RunInXslt(xsltCall: xsltCall);
+        Assert.That(actual: xsltResult, expression: Is.EqualTo(expected: expectedResult));
     }
 }

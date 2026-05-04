@@ -35,7 +35,7 @@ public class DataDocumentFx : IDataDocument
 
     public DataDocumentFx(DataSet dataSet)
     {
-        xmlDataDocument = new XmlDataDocument(dataSet);
+        xmlDataDocument = new XmlDataDocument(dataset: dataSet);
     }
 
     public DataDocumentFx(XmlDocument xmlDoc)
@@ -43,8 +43,8 @@ public class DataDocumentFx : IDataDocument
         xmlDataDocument = new XmlDataDocument();
         foreach (XmlNode childNode in xmlDoc.ChildNodes)
         {
-            var importNode = xmlDataDocument.ImportNode(childNode, true);
-            xmlDataDocument.AppendChild(importNode);
+            var importNode = xmlDataDocument.ImportNode(node: childNode, deep: true);
+            xmlDataDocument.AppendChild(newChild: importNode);
         }
     }
 #pragma warning restore 618
@@ -53,35 +53,35 @@ public class DataDocumentFx : IDataDocument
 
     public void AppendChild(XmlNodeType element, string prefix, string name)
     {
-        XmlNode node = xmlDataDocument.CreateNode(element, prefix, name);
-        xmlDataDocument.AppendChild(node);
+        XmlNode node = xmlDataDocument.CreateNode(type: element, name: prefix, namespaceURI: name);
+        xmlDataDocument.AppendChild(newChild: node);
     }
 
     public void AppendChild(XmlElement documentElement, bool deep)
     {
-        XmlNode node = xmlDataDocument.ImportNode(documentElement, true);
-        xmlDataDocument.AppendChild(node);
+        XmlNode node = xmlDataDocument.ImportNode(node: documentElement, deep: true);
+        xmlDataDocument.AppendChild(newChild: node);
     }
 
     public void DocumentElementAppendChild(XmlNode node)
     {
-        XmlNode newNode = xmlDataDocument.ImportNode(node, true);
-        xmlDataDocument.DocumentElement.AppendChild(newNode);
+        XmlNode newNode = xmlDataDocument.ImportNode(node: node, deep: true);
+        xmlDataDocument.DocumentElement.AppendChild(newChild: newNode);
     }
 
     public void Load(XmlReader xmlReader, bool doProcessing)
     {
-        xmlDataDocument.Load(xmlReader);
+        xmlDataDocument.Load(reader: xmlReader);
     }
 
     public void LoadXml(string xmlString)
     {
-        xmlDataDocument.LoadXml(xmlString);
+        xmlDataDocument.LoadXml(xml: xmlString);
     }
 
     public object Clone()
     {
-        return new DataDocumentFx(xmlDataDocument);
+        return new DataDocumentFx(xmlDoc: xmlDataDocument);
     }
 }
 #endif

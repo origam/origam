@@ -32,11 +32,11 @@ public class Key : Hashtable
     public Key() { }
 
     public Key(string id)
-        : this(new Guid(id)) { }
+        : this(id: new Guid(g: id)) { }
 
     public Key(Guid id)
     {
-        this["Id"] = id;
+        this[key: "Id"] = id;
     }
 
     public override string ToString()
@@ -54,7 +54,7 @@ public class Key : Hashtable
         get
         {
             object[] ret = new object[this.Values.Count];
-            this.Values.CopyTo(ret, 0);
+            this.Values.CopyTo(array: ret, index: 0);
             return ret;
         }
     }
@@ -63,19 +63,19 @@ public class Key : Hashtable
         get
         {
             object[] ret = new object[this.Values.Count];
-            this.Keys.CopyTo(ret, 0);
+            this.Keys.CopyTo(array: ret, index: 0);
             return ret;
         }
     }
 
     public override bool Equals(object obj)
     {
-        if (ReferenceEquals(null, obj))
+        if (ReferenceEquals(objA: null, objB: obj))
         {
             return false;
         }
 
-        if (ReferenceEquals(this, obj))
+        if (ReferenceEquals(objA: this, objB: obj))
         {
             return true;
         }
@@ -86,9 +86,9 @@ public class Key : Hashtable
         }
 
         var refKey = obj as Key;
-        if (refKey.Count == 1 && Count == 1 && refKey.Contains("Id") && Contains("Id"))
+        if (refKey.Count == 1 && Count == 1 && refKey.Contains(key: "Id") && Contains(key: "Id"))
         {
-            return refKey["Id"].Equals(this["Id"]);
+            return refKey[key: "Id"].Equals(obj: this[key: "Id"]);
         }
         if (Count != refKey.Count)
         {
@@ -97,7 +97,7 @@ public class Key : Hashtable
 
         foreach (object key in this.Keys)
         {
-            if (!(this[key].Equals(refKey[key])))
+            if (!(this[key: key].Equals(obj: refKey[key: key])))
             {
                 return false;
             }
@@ -107,9 +107,9 @@ public class Key : Hashtable
 
     public override int GetHashCode()
     {
-        if (Count == 1 && Contains("Id"))
+        if (Count == 1 && Contains(key: "Id"))
         {
-            return this["Id"].GetHashCode();
+            return this[key: "Id"].GetHashCode();
         }
 
         int hashCode = 0;

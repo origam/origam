@@ -36,35 +36,38 @@ public class ApplyDatabasePermissionsBuilder : AbstractDatabaseBuilder
     public override void Execute(Project project)
     {
         _databaseType = project.DatabaseType;
-        DataService(_databaseType).DbUser = project.Name;
-        _loginName = DataService(_databaseType).DbUser;
+        DataService(DatabaseType: _databaseType).DbUser = project.Name;
+        _loginName = DataService(DatabaseType: _databaseType).DbUser;
         _integratedAuthentication = project.DatabaseIntegratedAuthentication;
-        DataService(_databaseType).ConnectionString = BuildConnectionString(project);
-        DataService(_databaseType)
+        DataService(DatabaseType: _databaseType).ConnectionString = BuildConnectionString(
+            project: project
+        );
+        DataService(DatabaseType: _databaseType)
             .CreateDatabaseUser(
-                _loginName,
-                project.UserPassword,
-                project.DataDatabaseName,
-                project.DatabaseIntegratedAuthentication
+                user: _loginName,
+                password: project.UserPassword,
+                name: project.DataDatabaseName,
+                databaseIntegratedAuthentication: project.DatabaseIntegratedAuthentication
             );
     }
 
     private string BuildConnectionString(Project project)
     {
-        return DataService(_databaseType)
+        return DataService(DatabaseType: _databaseType)
             .BuildConnectionString(
-                project.DatabaseServerName,
-                project.DatabasePort,
-                project.DataDatabaseName,
-                project.DatabaseUserName,
-                project.DatabasePassword,
-                project.DatabaseIntegratedAuthentication,
-                false
+                serverName: project.DatabaseServerName,
+                port: project.DatabasePort,
+                databaseName: project.DataDatabaseName,
+                userName: project.DatabaseUserName,
+                password: project.DatabasePassword,
+                integratedAuthentication: project.DatabaseIntegratedAuthentication,
+                pooling: false
             );
     }
 
     public override void Rollback()
     {
-        DataService(_databaseType).DeleteUser(_loginName, _integratedAuthentication);
+        DataService(DatabaseType: _databaseType)
+            .DeleteUser(user: _loginName, _integratedAuthentication: _integratedAuthentication);
     }
 }

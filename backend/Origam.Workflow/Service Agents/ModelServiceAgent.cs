@@ -51,7 +51,9 @@ public class ModelServiceAgent : AbstractServiceAgent
         {
             case "GenerateSimpleModel":
             {
-                result = GenerateSimpleModel(Parameters.Get<IDataDocument>("Data"));
+                result = GenerateSimpleModel(
+                    dataDocument: Parameters.Get<IDataDocument>(key: "Data")
+                );
                 break;
             }
             case "GetDatabaseFieldsMetaData":
@@ -62,22 +64,22 @@ public class ModelServiceAgent : AbstractServiceAgent
             case "ElementAttribute":
             {
                 result = ElementAttribute(
-                    Parameters.Get<Guid>("Id"),
-                    Parameters.Get<string>("AttributeName")
+                    id: Parameters.Get<Guid>(key: "Id"),
+                    attributeName: Parameters.Get<string>(key: "AttributeName")
                 );
                 break;
             }
             case "ElementListByParent":
             {
                 result = ElementList(
-                    Parameters.Get<Guid>("ParentId"),
-                    Parameters.Get<string>("ItemType")
+                    parentId: Parameters.Get<Guid>(key: "ParentId"),
+                    itemType: Parameters.Get<string>(key: "ItemType")
                 );
                 break;
             }
             case "SetTrace":
             {
-                tracingService.Enabled = Parameters.Get<bool>("Enabled");
+                tracingService.Enabled = Parameters.Get<bool>(key: "Enabled");
                 result = tracingService.Enabled;
                 break;
             }
@@ -88,29 +90,29 @@ public class ModelServiceAgent : AbstractServiceAgent
             }
             case "TraceObject":
             {
-                Guid objectId = Parameters.Get<Guid>("ObjectId");
+                Guid objectId = Parameters.Get<Guid>(key: "ObjectId");
                 var traceable = persistenceService.SchemaProvider.RetrieveInstance<ITraceable>(
-                    objectId,
+                    instanceId: objectId,
                     useCache: true
                 );
-                string traceType = Parameters.Get<string>("TraceType");
-                if (!Enum.TryParse(traceType, out Trace trace))
+                string traceType = Parameters.Get<string>(key: "TraceType");
+                if (!Enum.TryParse(value: traceType, result: out Trace trace))
                 {
                     throw new ArgumentException(
-                        $"\"{traceType}\" cannot be parsed to {nameof(Trace)}"
+                        message: $"\"{traceType}\" cannot be parsed to {nameof(Trace)}"
                     );
                 }
                 traceable.TraceLevel = trace;
-                persistenceService.SchemaProvider.Persist(traceable as IPersistent);
+                persistenceService.SchemaProvider.Persist(obj: traceable as IPersistent);
                 result = traceable.TraceLevel;
                 break;
             }
             default:
             {
                 throw new ArgumentOutOfRangeException(
-                    nameof(MethodName),
-                    MethodName,
-                    ResourceUtils.GetString("InvalidMethodName")
+                    paramName: nameof(MethodName),
+                    actualValue: MethodName,
+                    message: ResourceUtils.GetString(key: "InvalidMethodName")
                 );
             }
         }
@@ -120,23 +122,27 @@ public class ModelServiceAgent : AbstractServiceAgent
     private object GenerateSimpleModel(IDataDocument dataDocument)
     {
         ISchemaService schemaService = ServiceManager.Services.GetService<ISchemaService>();
-        schemaService.StorageSchemaExtensionId = new Guid(GENERATED_PACKAGE_ID);
+        schemaService.StorageSchemaExtensionId = new Guid(g: GENERATED_PACKAGE_ID);
         SimpleModelData model = dataDocument.DataSet as SimpleModelData;
         if (model == null)
         {
-            throw new ArgumentOutOfRangeException("Data", dataDocument, "Unknown data");
+            throw new ArgumentOutOfRangeException(
+                paramName: "Data",
+                actualValue: dataDocument,
+                message: "Unknown data"
+            );
         }
         foreach (var entity in model.OrigamEntity)
         {
-            var table = EntityHelper.CreateTable(entity.Name, group: null, persist: true);
+            var table = EntityHelper.CreateTable(name: entity.Name, group: null, persist: true);
             foreach (var field in entity.GetOrigamFieldRows())
             {
                 EntityHelper.CreateColumn(
-                    table,
-                    field.Name,
+                    entity: table,
+                    name: field.Name,
                     allowNulls: !field.IsMandatory,
-                    ConvertType(field.refOrigamDataTypeId.ToString()),
-                    field.IsTextLengthNull() ? 0 : field.TextLength,
+                    dataType: ConvertType(origamDataTypeId: field.refOrigamDataTypeId.ToString()),
+                    dataLength: field.IsTextLengthNull() ? 0 : field.TextLength,
                     caption: field.Label,
                     foreignKeyEntity: null,
                     foreignKeyField: null,
@@ -160,9 +166,9 @@ public class ModelServiceAgent : AbstractServiceAgent
             "cb4d42d9-ce9e-4824-b0e8-d45b7b77e8a3" => OrigamDataType.UniqueIdentifier,
             "d7483b5f-cb08-4691-a886-67eb548cb3c2" => OrigamDataType.Memo,
             _ => throw new ArgumentOutOfRangeException(
-                nameof(origamDataTypeId),
-                origamDataTypeId,
-                "Invalid type"
+                paramName: nameof(origamDataTypeId),
+                actualValue: origamDataTypeId,
+                message: "Invalid type"
             ),
         };
     }
@@ -172,12 +178,12 @@ public class ModelServiceAgent : AbstractServiceAgent
         var documentationService = ServiceManager.Services.GetService<IDocumentationService>();
         DataStructure fieldDocumentationStructure =
             persistenceService.SchemaProvider.RetrieveInstance<DataStructure>(
-                new Guid("214c9cf7-5459-45e2-b3ff-7ee813bb85f4")
+                instanceId: new Guid(g: "214c9cf7-5459-45e2-b3ff-7ee813bb85f4")
             );
         DataSet fieldDocumentationDataSet = new DatasetGenerator(
             userDefinedParameters: false
-        ).CreateDataSet(fieldDocumentationStructure);
-        DataTable resultTable = fieldDocumentationDataSet.Tables["OrigamFieldDocumentation"];
+        ).CreateDataSet(ds: fieldDocumentationStructure);
+        DataTable resultTable = fieldDocumentationDataSet.Tables[name: "OrigamFieldDocumentation"];
         var allFields = persistenceService.SchemaProvider.RetrieveList<FieldMappingItem>();
         foreach (var field in allFields)
         {
@@ -189,7 +195,11 @@ public class ModelServiceAgent : AbstractServiceAgent
                 }
                 case DetachedEntity { Inheritable: true }:
                 {
-                    HandleFieldInInheritableEntity(resultTable, field, documentationService);
+                    HandleFieldInInheritableEntity(
+                        resultTable: resultTable,
+                        fieldMappingItem: field,
+                        documentationService: documentationService
+                    );
                     continue;
                 }
                 case TableMappingItem { DatabaseObjectType: DatabaseMappingObjectType.View }:
@@ -199,16 +209,16 @@ public class ModelServiceAgent : AbstractServiceAgent
                 default:
                 {
                     AddDatabaseFieldToResultTable(
-                        resultTable,
-                        field,
-                        field.ParentItem as TableMappingItem,
-                        documentationService
+                        resultTable: resultTable,
+                        fieldMappingItem: field,
+                        parentTableMappingItem: field.ParentItem as TableMappingItem,
+                        documentationService: documentationService
                     );
                     break;
                 }
             }
         }
-        return DataDocumentFactory.New(fieldDocumentationDataSet);
+        return DataDocumentFactory.New(dataSet: fieldDocumentationDataSet);
     }
 
     private void HandleFieldInInheritableEntity(
@@ -227,13 +237,13 @@ public class ModelServiceAgent : AbstractServiceAgent
             }
             foreach (SchemaItemAncestor ancestor in tableMappingItem.Ancestors)
             {
-                if (ancestor.AncestorId.Equals(fieldMappingItem.ParentItem.Id))
+                if (ancestor.AncestorId.Equals(g: fieldMappingItem.ParentItem.Id))
                 {
                     AddDatabaseFieldToResultTable(
-                        resultTable,
-                        fieldMappingItem,
-                        tableMappingItem,
-                        documentationService
+                        resultTable: resultTable,
+                        fieldMappingItem: fieldMappingItem,
+                        parentTableMappingItem: tableMappingItem,
+                        documentationService: documentationService
                     );
                     break;
                 }
@@ -249,53 +259,55 @@ public class ModelServiceAgent : AbstractServiceAgent
     )
     {
         DataRow row = resultTable.NewRow();
-        row["AllowNulls"] = fieldMappingItem.AllowNulls;
-        row["Caption"] = fieldMappingItem.Caption;
-        row["DataLength"] = fieldMappingItem.DataLength;
-        row["DataType"] = fieldMappingItem.DataType;
-        row["DefaultValue"] = fieldMappingItem.DefaultValue;
-        row["PackageName"] = fieldMappingItem.PackageName;
-        row["ForeignKeyEntity"] =
+        row[columnName: "AllowNulls"] = fieldMappingItem.AllowNulls;
+        row[columnName: "Caption"] = fieldMappingItem.Caption;
+        row[columnName: "DataLength"] = fieldMappingItem.DataLength;
+        row[columnName: "DataType"] = fieldMappingItem.DataType;
+        row[columnName: "DefaultValue"] = fieldMappingItem.DefaultValue;
+        row[columnName: "PackageName"] = fieldMappingItem.PackageName;
+        row[columnName: "ForeignKeyEntity"] =
             (fieldMappingItem.ForeignKeyEntity as TableMappingItem)?.MappedObjectName ?? "";
-        row["ForeignKeyField"] =
+        row[columnName: "ForeignKeyField"] =
             (fieldMappingItem.ForeignKeyField as FieldMappingItem)?.MappedColumnName ?? "";
-        row["IsPrimaryKey"] = fieldMappingItem.IsPrimaryKey;
-        row["Name"] = fieldMappingItem.MappedColumnName;
-        row["ParentEntityName"] = parentTableMappingItem.MappedObjectName;
-        row["UserShortHelp"] = documentationService.GetDocumentation(
-            fieldMappingItem.Id,
-            DocumentationType.USER_SHORT_HELP
+        row[columnName: "IsPrimaryKey"] = fieldMappingItem.IsPrimaryKey;
+        row[columnName: "Name"] = fieldMappingItem.MappedColumnName;
+        row[columnName: "ParentEntityName"] = parentTableMappingItem.MappedObjectName;
+        row[columnName: "UserShortHelp"] = documentationService.GetDocumentation(
+            schemaItemId: fieldMappingItem.Id,
+            docType: DocumentationType.USER_SHORT_HELP
         );
-        row["UserLongHelp"] = documentationService.GetDocumentation(
-            fieldMappingItem.Id,
-            DocumentationType.USER_LONG_HELP
+        row[columnName: "UserLongHelp"] = documentationService.GetDocumentation(
+            schemaItemId: fieldMappingItem.Id,
+            docType: DocumentationType.USER_LONG_HELP
         );
-        resultTable.Rows.Add(row);
+        resultTable.Rows.Add(row: row);
     }
 
     private string ElementAttribute(Guid id, string attributeName)
     {
         var persistence = ServiceManager.Services.GetService<IPersistenceService>();
-        var element = persistence.SchemaProvider.RetrieveInstance<ISchemaItem>(id);
-        return Reflector.GetValue(element.GetType(), element, attributeName)?.ToString() ?? "";
+        var element = persistence.SchemaProvider.RetrieveInstance<ISchemaItem>(instanceId: id);
+        return Reflector
+                .GetValue(type: element.GetType(), instance: element, memberName: attributeName)
+                ?.ToString() ?? "";
     }
 
     private IDataDocument ElementList(Guid parentId, string itemType)
     {
         var persistence = ServiceManager.Services.GetService<IPersistenceService>();
-        var parent = persistence.SchemaProvider.RetrieveInstance<ISchemaItem>(parentId);
-        DataSet data = new DataSet("ROOT");
-        DataTable table = new DataTable("Element");
-        table.Columns.Add("Id", typeof(Guid));
-        table.Columns.Add("Name", typeof(string));
-        data.Tables.Add(table);
-        foreach (ISchemaItem item in parent.ChildItemsByType<ISchemaItem>(itemType))
+        var parent = persistence.SchemaProvider.RetrieveInstance<ISchemaItem>(instanceId: parentId);
+        DataSet data = new DataSet(dataSetName: "ROOT");
+        DataTable table = new DataTable(tableName: "Element");
+        table.Columns.Add(columnName: "Id", type: typeof(Guid));
+        table.Columns.Add(columnName: "Name", type: typeof(string));
+        data.Tables.Add(table: table);
+        foreach (ISchemaItem item in parent.ChildItemsByType<ISchemaItem>(itemType: itemType))
         {
             DataRow row = table.NewRow();
-            row["Id"] = item.Id;
+            row[columnName: "Id"] = item.Id;
             var members = Reflector.FindMembers(
-                item.GetType(),
-                typeof(System.Xml.Serialization.XmlAttributeAttribute)
+                type: item.GetType(),
+                primaryAttribute: typeof(System.Xml.Serialization.XmlAttributeAttribute)
             );
             foreach (MemberAttributeInfo memberInfo in members)
             {
@@ -317,18 +329,21 @@ public class ModelServiceAgent : AbstractServiceAgent
 
                     default:
                     {
-                        throw new Exception("Unknown type.");
+                        throw new Exception(message: "Unknown type.");
                     }
                 }
-                if (!table.Columns.Contains(name))
+                if (!table.Columns.Contains(name: name))
                 {
-                    table.Columns.Add(name, type);
+                    table.Columns.Add(columnName: name, type: type);
                 }
-                row[name] = Reflector.GetValue(memberInfo.MemberInfo, item);
+                row[columnName: name] = Reflector.GetValue(
+                    memberInfo: memberInfo.MemberInfo,
+                    instance: item
+                );
             }
-            table.Rows.Add(row);
+            table.Rows.Add(row: row);
         }
-        return DataDocumentFactory.New(data);
+        return DataDocumentFactory.New(dataSet: data);
     }
     #endregion
 }

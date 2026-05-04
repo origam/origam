@@ -31,7 +31,7 @@ namespace Origam.Workflow;
 public class TaskRunner
 {
     private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
-        System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
+        type: System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
     );
 
     private readonly List<Task> tasks = new List<Task>();
@@ -50,19 +50,24 @@ public class TaskRunner
         var cancToken = tokenSource.Token;
         for (int i = 0; i < workerCount; i++)
         {
-            tasks.Add(Task.Factory.StartNew(() => funcToRun(cancToken), cancToken));
+            tasks.Add(
+                item: Task.Factory.StartNew(
+                    action: () => funcToRun(obj: cancToken),
+                    cancellationToken: cancToken
+                )
+            );
         }
     }
 
     public void CleanUp()
     {
         tasks
-            .Where(t => t.Exception != null)
-            .Select(t => t.Exception)
-            .Peek(aggrEx => aggrEx.Flatten())
-            .SelectMany(aggrEx => aggrEx.InnerExceptions)
+            .Where(predicate: t => t.Exception != null)
+            .Select(selector: t => t.Exception)
+            .Peek(action: aggrEx => aggrEx.Flatten())
+            .SelectMany(selector: aggrEx => aggrEx.InnerExceptions)
             .ToList()
-            .ForEach(LogTaskException);
+            .ForEach(action: LogTaskException);
     }
 
     public void Cancel()
@@ -72,26 +77,30 @@ public class TaskRunner
 
     public bool AllTasksFinished()
     {
-        return tasks.All(task => task.IsCompleted || task.IsCanceled);
+        return tasks.All(predicate: task => task.IsCompleted || task.IsCanceled);
     }
 
     public void Wait()
     {
         try
         {
-            Task.WaitAll(tasks.ToArray());
+            Task.WaitAll(tasks: tasks.ToArray());
         }
         catch (AggregateException aggrEx)
         {
-            aggrEx.Flatten().InnerExceptions.AsEnumerable().ToList().ForEach(LogTaskException);
+            aggrEx
+                .Flatten()
+                .InnerExceptions.AsEnumerable()
+                .ToList()
+                .ForEach(action: LogTaskException);
         }
     }
 
     private void LogTaskException(Exception ex)
     {
-        log.Error("THIS UNHANDLED EXCEPTION OCCURED IN A TASK WHEN IT WAS RUNNING:");
-        log.Error(ex);
-        log.Error(ex.Message);
-        log.Error("---------------------------------------");
+        log.Error(message: "THIS UNHANDLED EXCEPTION OCCURED IN A TASK WHEN IT WAS RUNNING:");
+        log.Error(message: ex);
+        log.Error(message: ex.Message);
+        log.Error(message: "---------------------------------------");
     }
 }

@@ -51,19 +51,19 @@ public class Analytics
 {
     private static Analytics instance;
     public static Analytics Instance => instance ?? (instance = new Analytics());
-    private static readonly ILog perfLog = LogManager.GetLogger(typeof(Analytics));
+    private static readonly ILog perfLog = LogManager.GetLogger(type: typeof(Analytics));
     public const string PropertyNamePrefix = "log4net_app_";
 
     public void SetProperty(string propertyName, object value)
     {
-        log4net.ThreadContext.Properties[propertyName] = new NullPropertyProvider();
+        log4net.ThreadContext.Properties[key: propertyName] = new NullPropertyProvider();
     }
 
     public void Log(string message)
     {
         if (perfLog.IsInfoEnabled)
         {
-            perfLog.Info(message);
+            perfLog.Info(message: message);
         }
     }
 
@@ -72,18 +72,18 @@ public class Analytics
         if (perfLog.IsInfoEnabled)
         {
             LoggingEvent loggingEvent = new LoggingEvent(
-                type,
-                perfLog.Logger.Repository,
-                perfLog.Logger.Name,
-                Level.Info,
-                message,
-                null
+                callerStackBoundaryDeclaringType: type,
+                repository: perfLog.Logger.Repository,
+                loggerName: perfLog.Logger.Name,
+                level: Level.Info,
+                message: message,
+                exception: null
             );
             foreach (KeyValuePair<string, string> item in properties)
             {
-                loggingEvent.Properties[item.Key] = item.Value;
+                loggingEvent.Properties[key: item.Key] = item.Value;
             }
-            perfLog.Logger.Log(loggingEvent);
+            perfLog.Logger.Log(logEvent: loggingEvent);
         }
     }
 

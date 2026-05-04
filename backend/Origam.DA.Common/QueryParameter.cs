@@ -26,7 +26,7 @@ namespace Origam.DA;
 /// <summary>
 /// Reference to the parameter in the data structure.
 /// </summary>
-[XmlType("parameter")]
+[XmlType(typeName: "parameter")]
 public class QueryParameter
 {
     public QueryParameter() { }
@@ -42,7 +42,7 @@ public class QueryParameter
     /// <summary>
     /// Gets or sets name of the parameter we will be setting on the query.
     /// </summary>
-    [XmlAttribute("name")]
+    [XmlAttribute(attributeName: "name")]
     public string Name
     {
         get { return _parameterName; }
@@ -53,7 +53,7 @@ public class QueryParameter
     /// <summary>
     /// Gets or sets value of the parameter.
     /// </summary>
-    [XmlElement("value")]
+    [XmlElement(elementName: "value")]
     public object Value
     {
         get { return _value; }

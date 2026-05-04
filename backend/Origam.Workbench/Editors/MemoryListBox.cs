@@ -36,7 +36,7 @@ public class MemoryListBox : ListBox
                 return null;
             }
 
-            if (!Items.Contains(previouslySelectedItem))
+            if (!Items.Contains(value: previouslySelectedItem))
             {
                 return null;
             }
@@ -47,7 +47,7 @@ public class MemoryListBox : ListBox
 
     protected override void OnSelectedIndexChanged(EventArgs e)
     {
-        base.OnSelectedIndexChanged(e);
+        base.OnSelectedIndexChanged(e: e);
         PreviouslySelectedItem = SelectedItem;
     }
 
@@ -61,7 +61,7 @@ public class MemoryListBox : ListBox
 
     public void RemoveAndKeepSomeSelected(object item)
     {
-        Items.Remove(item);
+        Items.Remove(value: item);
         if (SelectedItem == null)
         {
             SelectFirstIfAny();

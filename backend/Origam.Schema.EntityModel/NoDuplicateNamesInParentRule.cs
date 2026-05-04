@@ -27,27 +27,30 @@ using Origam.Schema.EntityModel;
 
 namespace Origam.DA.EntityModel;
 
-[AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
+[AttributeUsage(validOn: AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
 public class NoDuplicateNamesInParentRule : AbstractModelElementRuleAttribute
 {
     public NoDuplicateNamesInParentRule() { }
 
     public override Exception CheckRule(object instance)
     {
-        return new NotSupportedException(ResourceUtils.GetString("MemberNameRequired"));
+        return new NotSupportedException(
+            message: ResourceUtils.GetString(key: "MemberNameRequired")
+        );
     }
 
     public override Exception CheckRule(object instance, string memberName)
     {
-        if (string.IsNullOrEmpty(memberName))
+        if (string.IsNullOrEmpty(value: memberName))
         {
-            CheckRule(instance);
+            CheckRule(instance: instance);
         }
 
         if (memberName != "Name")
         {
             throw new Exception(
-                nameof(NoDuplicateNamesInParentRule) + " can be only applied to Name properties"
+                message: nameof(NoDuplicateNamesInParentRule)
+                    + " can be only applied to Name properties"
             );
         }
 
@@ -61,15 +64,20 @@ public class NoDuplicateNamesInParentRule : AbstractModelElementRuleAttribute
             return null;
         }
 
-        string instanceName = (string)Reflector.GetValue(instance.GetType(), instance, memberName);
+        string instanceName = (string)
+            Reflector.GetValue(
+                type: instance.GetType(),
+                instance: instance,
+                memberName: memberName
+            );
         ISchemaItem itemWithDuplicateName = abstractSchemaItem
-            .ParentItem.ChildItems.Where(item => item is AbstractDataEntityColumn)
-            .Where(item => item.Name == instanceName)
-            .FirstOrDefault(item => item.Id != abstractSchemaItem.Id);
+            .ParentItem.ChildItems.Where(predicate: item => item is AbstractDataEntityColumn)
+            .Where(predicate: item => item.Name == instanceName)
+            .FirstOrDefault(predicate: item => item.Id != abstractSchemaItem.Id);
         if (itemWithDuplicateName != null)
         {
             return new Exception(
-                abstractSchemaItem.ParentItem.Name
+                message: abstractSchemaItem.ParentItem.Name
                     + " contains duplicate child names: "
                     + instanceName
             );

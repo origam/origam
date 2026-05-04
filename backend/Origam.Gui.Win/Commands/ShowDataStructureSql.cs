@@ -45,7 +45,7 @@ public class ShowDataStructureSql : AbstractMenuCommand
         sqlGenerator.GenerateConsoleUseSyntax = true;
         var dataStructure = Owner as DataStructure;
         StringBuilder output = new();
-        output.AppendLine($"-- SQL statements for data structure: {dataStructure.Name}");
+        output.AppendLine(value: $"-- SQL statements for data structure: {dataStructure.Name}");
         List<string> tmpTables = new();
         foreach (var dsEntity in dataStructure.Entities)
         {
@@ -54,13 +54,17 @@ public class ShowDataStructureSql : AbstractMenuCommand
                 continue;
             }
             string tmpTable = $"tmptable{System.Guid.NewGuid()}";
-            tmpTables.Add(tmpTable);
-            output.AppendLine(sqlGenerator.CreateOutputTableSql(tmpTable));
-            output.AppendLine("-----------------------------------------------------------------");
-            output.AppendLine($"-- {dsEntity.Name}");
-            output.AppendLine("-----------------------------------------------------------------");
+            tmpTables.Add(item: tmpTable);
+            output.AppendLine(value: sqlGenerator.CreateOutputTableSql(tmpTable: tmpTable));
+            output.AppendLine(
+                value: "-----------------------------------------------------------------"
+            );
+            output.AppendLine(value: $"-- {dsEntity.Name}");
+            output.AppendLine(
+                value: "-----------------------------------------------------------------"
+            );
             output.Append(
-                sqlGenerator.SelectSql(
+                value: sqlGenerator.SelectSql(
                     ds: dataStructure,
                     entity: dsEntity,
                     filter: null,
@@ -71,9 +75,9 @@ public class ShowDataStructureSql : AbstractMenuCommand
                     paging: false
                 )
             );
-            output.AppendLine(";");
+            output.AppendLine(value: ";");
         }
-        output.AppendLine(sqlGenerator.CreateDataStructureFooterSql(tmpTables));
-        new ShowSqlConsole(new SqlConsoleParameters(output.ToString())).Run();
+        output.AppendLine(value: sqlGenerator.CreateDataStructureFooterSql(tmpTables: tmpTables));
+        new ShowSqlConsole(owner: new SqlConsoleParameters(command: output.ToString())).Run();
     }
 }

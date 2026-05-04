@@ -31,8 +31,12 @@ namespace Origam.Schema.WorkflowModel;
 /// <summary>
 /// Summary description for WorkQueueWorkflowCommand.
 /// </summary>
-[SchemaItemDescription("Workflow Command", "Commands", "workflow-command.png")]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(
+    name: "Workflow Command",
+    folderName: "Commands",
+    iconName: "workflow-command.png"
+)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class WorkQueueWorkflowCommand : EntityUIAction
 {
     public new const string CategoryConst = "WorkQueueCommand";
@@ -44,26 +48,26 @@ public class WorkQueueWorkflowCommand : EntityUIAction
     }
 
     public WorkQueueWorkflowCommand(Guid schemaExtensionId)
-        : base(schemaExtensionId)
+        : base(schemaExtensionId: schemaExtensionId)
     {
         Init();
     }
 
     public WorkQueueWorkflowCommand(Key primaryKey)
-        : base(primaryKey)
+        : base(primaryKey: primaryKey)
     {
         Init();
     }
 
     private void Init()
     {
-        this.ChildItemTypes.Remove(typeof(EntityUIActionParameterMapping));
-        this.ChildItemTypes.Add(typeof(WorkQueueWorkflowCommandParameterMapping));
+        this.ChildItemTypes.Remove(item: typeof(EntityUIActionParameterMapping));
+        this.ChildItemTypes.Add(item: typeof(WorkQueueWorkflowCommandParameterMapping));
     }
 
     public new List<WorkQueueWorkflowCommandParameterMapping> ParameterMappings =>
         ChildItemsByType<WorkQueueWorkflowCommandParameterMapping>(
-            WorkQueueWorkflowCommandParameterMapping.CategoryConst
+            itemType: WorkQueueWorkflowCommandParameterMapping.CategoryConst
         );
 
     #region Overriden AbstractDataEntityColumn Members
@@ -75,27 +79,27 @@ public class WorkQueueWorkflowCommand : EntityUIAction
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
-        dependencies.Add(this.Workflow);
-        base.GetExtraDependencies(dependencies);
+        dependencies.Add(item: this.Workflow);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
     #endregion
     #region Properties
     public Guid WorkflowId;
 
-    [Category("References")]
-    [TypeConverter(typeof(WorkflowConverter)), NotNullModelElementRule()]
-    [XmlReference("workflow", "WorkflowId")]
+    [Category(category: "References")]
+    [TypeConverter(type: typeof(WorkflowConverter)), NotNullModelElementRule()]
+    [XmlReference(attributeName: "workflow", idField: "WorkflowId")]
     public IWorkflow Workflow
     {
         get
         {
             return (IWorkflow)
                 this.PersistenceProvider.RetrieveInstance(
-                    typeof(ISchemaItem),
-                    new ModelElementKey(this.WorkflowId)
+                    type: typeof(ISchemaItem),
+                    primaryKey: new ModelElementKey(id: this.WorkflowId)
                 );
         }
-        set { this.WorkflowId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]); }
+        set { this.WorkflowId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey[key: "Id"]); }
     }
     #endregion
     #region IComparable Members
@@ -104,9 +108,9 @@ public class WorkQueueWorkflowCommand : EntityUIAction
         WorkQueueWorkflowCommand compared = obj as WorkQueueWorkflowCommand;
         if (compared != null)
         {
-            return this.Order.CompareTo(compared.Order);
+            return this.Order.CompareTo(value: compared.Order);
         }
-        return base.CompareTo(obj);
+        return base.CompareTo(obj: obj);
     }
     #endregion
 }

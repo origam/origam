@@ -31,61 +31,87 @@ public class AsPanelActionButtonBuilder
 {
     public static void Build(XmlElement actionsElement, ActionConfiguration config)
     {
-        XmlElement actionElement = actionsElement.OwnerDocument.CreateElement("Action");
-        actionsElement.AppendChild(actionElement);
+        XmlElement actionElement = actionsElement.OwnerDocument.CreateElement(name: "Action");
+        actionsElement.AppendChild(newChild: actionElement);
 
-        actionElement.SetAttribute("ShowAlways", XmlConvert.ToString(config.ShowAlways));
-        actionElement.SetAttribute("Type", config.Type.ToString());
-        actionElement.SetAttribute("Id", config.ActionId);
-        actionElement.SetAttribute("GroupId", config.GroupId);
-        actionElement.SetAttribute("Caption", config.Caption);
-        actionElement.SetAttribute("IconUrl", config.IconUrl);
-        actionElement.SetAttribute("Mode", config.Mode.ToString());
-        actionElement.SetAttribute("IsDefault", XmlConvert.ToString(config.IsDefault));
-        actionElement.SetAttribute("Placement", config.Placement.ToString());
+        actionElement.SetAttribute(
+            name: "ShowAlways",
+            value: XmlConvert.ToString(value: config.ShowAlways)
+        );
+        actionElement.SetAttribute(name: "Type", value: config.Type.ToString());
+        actionElement.SetAttribute(name: "Id", value: config.ActionId);
+        actionElement.SetAttribute(name: "GroupId", value: config.GroupId);
+        actionElement.SetAttribute(name: "Caption", value: config.Caption);
+        actionElement.SetAttribute(name: "IconUrl", value: config.IconUrl);
+        actionElement.SetAttribute(name: "Mode", value: config.Mode.ToString());
+        actionElement.SetAttribute(
+            name: "IsDefault",
+            value: XmlConvert.ToString(value: config.IsDefault)
+        );
+        actionElement.SetAttribute(name: "Placement", value: config.Placement.ToString());
 
-        if (!string.IsNullOrEmpty(config.ConfirmationMessage))
+        if (!string.IsNullOrEmpty(value: config.ConfirmationMessage))
         {
-            actionElement.SetAttribute("ConfirmationMessage", config.ConfirmationMessage);
+            actionElement.SetAttribute(
+                name: "ConfirmationMessage",
+                value: config.ConfirmationMessage
+            );
         }
 
         if (config.Shortcut != null && config.Shortcut.KeyCode != 0)
         {
             XmlElement shortcutElement = actionElement.OwnerDocument.CreateElement(
-                "KeyboardShortcut"
+                name: "KeyboardShortcut"
             );
-            actionElement.AppendChild(shortcutElement);
-            shortcutElement.SetAttribute("Ctrl", XmlConvert.ToString(config.Shortcut.IsControl));
-            shortcutElement.SetAttribute("Shift", XmlConvert.ToString(config.Shortcut.IsShift));
-            shortcutElement.SetAttribute("Alt", XmlConvert.ToString(config.Shortcut.IsAlt));
-            shortcutElement.SetAttribute("KeyCode", XmlConvert.ToString(config.Shortcut.KeyCode));
+            actionElement.AppendChild(newChild: shortcutElement);
+            shortcutElement.SetAttribute(
+                name: "Ctrl",
+                value: XmlConvert.ToString(value: config.Shortcut.IsControl)
+            );
+            shortcutElement.SetAttribute(
+                name: "Shift",
+                value: XmlConvert.ToString(value: config.Shortcut.IsShift)
+            );
+            shortcutElement.SetAttribute(
+                name: "Alt",
+                value: XmlConvert.ToString(value: config.Shortcut.IsAlt)
+            );
+            shortcutElement.SetAttribute(
+                name: "KeyCode",
+                value: XmlConvert.ToString(value: config.Shortcut.KeyCode)
+            );
         }
 
         if (config.Scanner != null && config.Scanner.TerminatorCharCode != 0)
         {
             actionElement.SetAttribute(
-                "ScannerInputTerminator",
-                XmlConvert.ToString(config.Scanner.TerminatorCharCode)
+                name: "ScannerInputTerminator",
+                value: XmlConvert.ToString(value: config.Scanner.TerminatorCharCode)
             );
         }
 
-        if (!string.IsNullOrEmpty(config.Scanner?.Parameter))
+        if (!string.IsNullOrEmpty(value: config.Scanner?.Parameter))
         {
-            actionElement.SetAttribute("ScannerInputParameterName", config.Scanner.Parameter);
+            actionElement.SetAttribute(
+                name: "ScannerInputParameterName",
+                value: config.Scanner.Parameter
+            );
         }
 
         if (config.Parameters is { Count: > 0 })
         {
-            XmlElement parametersElement = actionElement.OwnerDocument.CreateElement("Parameters");
-            actionElement.AppendChild(parametersElement);
+            XmlElement parametersElement = actionElement.OwnerDocument.CreateElement(
+                name: "Parameters"
+            );
+            actionElement.AppendChild(newChild: parametersElement);
             foreach (DictionaryEntry entry in config.Parameters)
             {
                 XmlElement parameterElement = parametersElement.OwnerDocument.CreateElement(
-                    "Parameter"
+                    name: "Parameter"
                 );
-                parametersElement.AppendChild(parameterElement);
-                parameterElement.SetAttribute("Name", (string)entry.Key);
-                parameterElement.SetAttribute("FieldName", (string)entry.Value);
+                parametersElement.AppendChild(newChild: parameterElement);
+                parameterElement.SetAttribute(name: "Name", value: (string)entry.Key);
+                parameterElement.SetAttribute(name: "FieldName", value: (string)entry.Value);
             }
         }
     }

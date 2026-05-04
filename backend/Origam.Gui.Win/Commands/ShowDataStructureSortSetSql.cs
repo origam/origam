@@ -34,7 +34,8 @@ namespace Origam.Gui.Win.Commands;
 public class ShowDataStructureSortSetSql : AbstractMenuCommand
 {
     private WorkbenchSchemaService _schema =
-        ServiceManager.Services.GetService(typeof(SchemaService)) as WorkbenchSchemaService;
+        ServiceManager.Services.GetService(serviceType: typeof(SchemaService))
+        as WorkbenchSchemaService;
     public override bool IsEnabled
     {
         get { return Owner is DataStructureSortSet; }
@@ -52,15 +53,15 @@ public class ShowDataStructureSortSetSql : AbstractMenuCommand
         generator.GenerateConsoleUseSyntax = true;
         bool displayPagingParameters = true;
         DataStructure ds = (Owner as ISchemaItem).RootItem as DataStructure;
-        builder.AppendLine("-- SQL statements for data structure: " + ds.Name);
+        builder.AppendLine(value: "-- SQL statements for data structure: " + ds.Name);
         List<string> tmpTables = new List<string>();
         // parameter declarations
         builder.AppendLine(
-            generator.SelectParameterDeclarationsSql(
-                ds,
-                Owner as DataStructureSortSet,
-                displayPagingParameters,
-                null
+            value: generator.SelectParameterDeclarationsSql(
+                ds: ds,
+                sort: Owner as DataStructureSortSet,
+                paging: displayPagingParameters,
+                columnName: null
             )
         );
         foreach (DataStructureEntity entity in ds.Entities)
@@ -68,30 +69,30 @@ public class ShowDataStructureSortSetSql : AbstractMenuCommand
             if (entity.Columns.Count > 0)
             {
                 builder.AppendLine(
-                    "-----------------------------------------------------------------"
+                    value: "-----------------------------------------------------------------"
                 );
-                builder.AppendLine("-- " + entity.Name);
+                builder.AppendLine(value: "-- " + entity.Name);
                 builder.AppendLine(
-                    "-----------------------------------------------------------------"
+                    value: "-----------------------------------------------------------------"
                 );
                 string tmpTable = "tmptable" + System.Guid.NewGuid();
-                tmpTables.Add(tmpTable);
-                builder.AppendLine(generator.CreateOutputTableSql(tmpTable));
+                tmpTables.Add(item: tmpTable);
+                builder.AppendLine(value: generator.CreateOutputTableSql(tmpTable: tmpTable));
                 builder.AppendLine(
-                    generator.SelectSql(
-                        ds,
-                        entity,
-                        null,
-                        Owner as DataStructureSortSet,
-                        DA.ColumnsInfo.Empty,
-                        new Hashtable(),
-                        new Hashtable(),
-                        displayPagingParameters
+                    value: generator.SelectSql(
+                        ds: ds,
+                        entity: entity,
+                        filter: null,
+                        sortSet: Owner as DataStructureSortSet,
+                        columnsInfo: DA.ColumnsInfo.Empty,
+                        parameters: new Hashtable(),
+                        selectParameterReferences: new Hashtable(),
+                        paging: displayPagingParameters
                     ) + ";"
                 );
             }
         }
-        builder.AppendLine(generator.CreateDataStructureFooterSql(tmpTables));
-        new ShowSqlConsole(new SqlConsoleParameters(builder.ToString())).Run();
+        builder.AppendLine(value: generator.CreateDataStructureFooterSql(tmpTables: tmpTables));
+        new ShowSqlConsole(owner: new SqlConsoleParameters(command: builder.ToString())).Run();
     }
 }

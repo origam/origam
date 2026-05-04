@@ -28,13 +28,13 @@ public class ReportSchemaItemProvider : AbstractSchemaItemProvider
 {
     public ReportSchemaItemProvider()
     {
-        this.ChildItemTypes.Add(typeof(CrystalReport));
-        this.ChildItemTypes.Add(typeof(WebReport));
-        this.ChildItemTypes.Add(typeof(PrintItReport));
-        this.ChildItemTypes.Add(typeof(ExcelReport));
-        this.ChildItemTypes.Add(typeof(SSRSReport));
-        this.ChildItemTypes.Add(typeof(FileSystemReport));
-        this.ChildItemTypes.Add(typeof(FastReport));
+        this.ChildItemTypes.Add(item: typeof(CrystalReport));
+        this.ChildItemTypes.Add(item: typeof(WebReport));
+        this.ChildItemTypes.Add(item: typeof(PrintItReport));
+        this.ChildItemTypes.Add(item: typeof(ExcelReport));
+        this.ChildItemTypes.Add(item: typeof(SSRSReport));
+        this.ChildItemTypes.Add(item: typeof(FileSystemReport));
+        this.ChildItemTypes.Add(item: typeof(FastReport));
     }
 
     #region ISchemaItemProvider Members

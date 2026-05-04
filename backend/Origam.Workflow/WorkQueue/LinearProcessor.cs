@@ -32,7 +32,7 @@ namespace Origam.Workflow.WorkQueue;
 public class LinearProcessor : IWorkQueueProcessor
 {
     private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
-        System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
+        type: System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
     );
     private readonly WorkQueueUtils workQueueUtils;
     private readonly RetryManager retryManager;
@@ -71,31 +71,39 @@ public class LinearProcessor : IWorkQueueProcessor
         int forceWaitMillis = 0
     )
     {
-        var processErrors = IsAnyCommandSetToAutoProcessedWithErrors(queue);
+        var processErrors = IsAnyCommandSetToAutoProcessedWithErrors(queue: queue);
         int itemsProcessed = 0;
         while (true)
         {
             if (cancellationToken.IsCancellationRequested)
             {
-                log.Info($"Stopping worker on thread " + $"{Thread.CurrentThread.ManagedThreadId}");
+                log.Info(
+                    message: $"Stopping worker on thread "
+                        + $"{Thread.CurrentThread.ManagedThreadId}"
+                );
                 cancellationToken.ThrowIfCancellationRequested();
             }
-            var queueItemRow = GetNextItem(queue, null, processErrors, cancellationToken);
+            var queueItemRow = GetNextItem(
+                queue: queue,
+                transactionId: null,
+                processErrors: processErrors,
+                cancellationToken: cancellationToken
+            );
             if (queueItemRow == null)
             {
                 return itemsProcessed;
             }
             if (log.IsDebugEnabled)
             {
-                string errorText = queueItemRow.IsNull("ErrorText")
+                string errorText = queueItemRow.IsNull(columnName: "ErrorText")
                     ? "NULL"
-                    : queueItemRow["ErrorText"].ToString();
+                    : queueItemRow[columnName: "ErrorText"].ToString();
                 log.Debug(
-                    $"Checking whether processing failed - IsLocked: {queueItemRow["IsLocked"]}, ErrorText: {errorText}"
+                    message: $"Checking whether processing failed - IsLocked: {queueItemRow[columnName: "IsLocked"]}, ErrorText: {errorText}"
                 );
             }
             // we have to store the item id now because later the queue entry can be removed by HandleRemove() command
-            itemProcessAction(queue, queueItemRow);
+            itemProcessAction(arg1: queue, arg2: queueItemRow);
             itemsProcessed++;
             if (maxItemsToProcess.HasValue && itemsProcessed >= maxItemsToProcess.Value)
             {
@@ -107,12 +115,12 @@ public class LinearProcessor : IWorkQueueProcessor
                 if (log.IsInfoEnabled)
                 {
                     log.Info(
-                        $"forceWait parameter causes worker on thread "
+                        message: $"forceWait parameter causes worker on thread "
                             + $"{Thread.CurrentThread.ManagedThreadId} to sleep for: "
                             + $"{forceWaitMillis} ms"
                     );
                 }
-                Thread.Sleep(forceWaitMillis);
+                Thread.Sleep(millisecondsTimeout: forceWaitMillis);
             }
         }
     }
@@ -140,7 +148,7 @@ public class LinearProcessor : IWorkQueueProcessor
     {
         const int pageSize = 10;
         int pageNumber = 1;
-        WorkQueueClass workQueueClass = workQueueUtils.WorkQueueClass(queue.Id);
+        WorkQueueClass workQueueClass = workQueueUtils.WorkQueueClass(queueId: queue.Id);
         DataRow result = null;
         do
         {
@@ -149,25 +157,34 @@ public class LinearProcessor : IWorkQueueProcessor
                 return null;
             }
             DataSet queueItems = workQueueUtils.LoadWorkQueueData(
-                workQueueClass.Name,
-                queue.Id,
-                pageSize,
-                pageNumber,
-                transactionId
+                workQueueClass: workQueueClass.Name,
+                queueId: queue.Id,
+                pageSize: pageSize,
+                pageNumber: pageNumber,
+                transactionId: transactionId
             );
-            DataTable queueTable = queueItems.Tables[0];
+            DataTable queueTable = queueItems.Tables[index: 0];
             if (queueTable.Rows.Count > 0)
             {
                 foreach (DataRow queueRow in queueTable.Rows)
                 {
                     if (
-                        (bool)queueRow["IsLocked"] == false
-                        && retryManager.CanRunNow(queueRow, queue, processErrors)
-                        && workQueueThrottle.CanRunNow(queue)
+                        (bool)queueRow[columnName: "IsLocked"] == false
+                        && retryManager.CanRunNow(
+                            queueEntryRow: queueRow,
+                            queue: queue,
+                            processErrors: processErrors
+                        )
+                        && workQueueThrottle.CanRunNow(queue: queue)
                     )
                     {
-                        result = DatasetTools.CloneRow(queueRow);
-                        if (workQueueUtils.LockQueueItems(workQueueClass, result.Table))
+                        result = DatasetTools.CloneRow(queueRow: queueRow);
+                        if (
+                            workQueueUtils.LockQueueItems(
+                                queueClass: workQueueClass,
+                                selectedRows: result.Table
+                            )
+                        )
                         {
                             // item successfully locked, we finish
                             break;

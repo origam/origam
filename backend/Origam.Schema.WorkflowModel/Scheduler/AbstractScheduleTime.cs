@@ -38,7 +38,7 @@ public enum ScheduleIntervalType
 /// <summary>
 /// Summary description for AbstractScheduleTime.
 /// </summary>
-[XmlModelRoot(CategoryConst)]
+[XmlModelRoot(category: CategoryConst)]
 public abstract class AbstractScheduleTime : AbstractSchemaItem
 {
     public const string CategoryConst = "ScheduleTime";
@@ -47,10 +47,10 @@ public abstract class AbstractScheduleTime : AbstractSchemaItem
         : base() { }
 
     public AbstractScheduleTime(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public AbstractScheduleTime(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Abstract Members
     public abstract IScheduledItem GetScheduledTime();
@@ -58,7 +58,12 @@ public abstract class AbstractScheduleTime : AbstractSchemaItem
     #region Properties
     public string NextScheduleTime
     {
-        get { return GetScheduledTime().NextRunTime(DateTime.Now, true).ToString(); }
+        get
+        {
+            return GetScheduledTime()
+                .NextRunTime(time: DateTime.Now, IncludeStartTime: true)
+                .ToString();
+        }
     }
     #endregion
     #region Overriden ISchemaItem Members

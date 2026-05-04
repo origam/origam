@@ -33,8 +33,8 @@ namespace Origam.Schema.RuleModel;
 /// <summary>
 /// Summary description for AbstractRule.
 /// </summary>
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public abstract class AbstractRule : AbstractSchemaItem, IRule
 {
     public const string CategoryConst = "Rule";
@@ -43,10 +43,10 @@ public abstract class AbstractRule : AbstractSchemaItem, IRule
         : base() { }
 
     public AbstractRule(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public AbstractRule(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Overriden ISchemaItem Members
 
@@ -59,21 +59,21 @@ public abstract class AbstractRule : AbstractSchemaItem, IRule
     {
         if (this.Structure != null)
         {
-            dependencies.Add(this.Structure);
+            dependencies.Add(item: this.Structure);
         }
 
-        base.GetExtraDependencies(dependencies);
+        base.GetExtraDependencies(dependencies: dependencies);
     }
     #endregion
     #region Properties
-    [Category("Rule")]
-    [XmlAttribute("dataType")]
+    [Category(category: "Rule")]
+    [XmlAttribute(attributeName: "dataType")]
     public OrigamDataType DataType { get; set; }
     public Guid DataStructureId;
 
-    [Category("Rule")]
-    [TypeConverter(typeof(DataStructureConverter))]
-    [XmlReference("dataStructure", "DataStructureId")]
+    [Category(category: "Rule")]
+    [TypeConverter(type: typeof(DataStructureConverter))]
+    [XmlReference(attributeName: "dataStructure", idField: "DataStructureId")]
     public IDataStructure Structure
     {
         get
@@ -81,7 +81,10 @@ public abstract class AbstractRule : AbstractSchemaItem, IRule
             ModelElementKey key = new ModelElementKey();
             key.Id = this.DataStructureId;
             return (IDataStructure)
-                this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
+                this.PersistenceProvider.RetrieveInstance(
+                    type: typeof(ISchemaItem),
+                    primaryKey: key
+                );
         }
         set
         {
@@ -91,19 +94,19 @@ public abstract class AbstractRule : AbstractSchemaItem, IRule
             }
             else
             {
-                this.DataStructureId = (Guid)value.PrimaryKey["Id"];
+                this.DataStructureId = (Guid)value.PrimaryKey[key: "Id"];
             }
         }
     }
     public abstract bool IsPathRelative { get; set; }
 
-    [DefaultValue(Trace.InheritFromParent)]
-    [Category("Tracing"), RefreshProperties(RefreshProperties.Repaint)]
-    [RuntimeConfigurable("traceLevel")]
-    [DisplayName("Trace Level")]
+    [DefaultValue(value: Trace.InheritFromParent)]
+    [Category(category: "Tracing"), RefreshProperties(refresh: RefreshProperties.Repaint)]
+    [RuntimeConfigurable(name: "traceLevel")]
+    [DisplayName(displayName: "Trace Level")]
     public Trace TraceLevel { get; set; } = Trace.InheritFromParent;
 
-    [Category("Tracing")]
+    [Category(category: "Tracing")]
     public Trace Trace => TraceLevel;
     #endregion
 }

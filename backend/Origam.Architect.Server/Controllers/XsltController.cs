@@ -26,11 +26,11 @@ using Origam.Architect.Server.Services.Xslt;
 namespace Origam.Architect.Server.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route(template: "[controller]")]
 public class XsltController(XsltService xsltService, ILogger<OrigamController> log)
-    : OrigamController(log)
+    : OrigamController(log: log)
 {
-    [HttpPost("Validate")]
+    [HttpPost(template: "Validate")]
     public IActionResult Validate([FromBody] XsltValidateModel model)
     {
         var input = new TransformationInput(
@@ -41,9 +41,9 @@ public class XsltController(XsltService xsltService, ILogger<OrigamController> l
             InputXml: "<ROOT/>",
             Parameters: null
         );
-        ValidationResult result = xsltService.Validate(input);
+        ValidationResult result = xsltService.Validate(input: input);
         return Ok(
-            new ValidationResponse
+            value: new ValidationResponse
             {
                 Text = result.Text,
                 Title = result.Title,
@@ -53,7 +53,7 @@ public class XsltController(XsltService xsltService, ILogger<OrigamController> l
         );
     }
 
-    [HttpPost("Transform")]
+    [HttpPost(template: "Transform")]
     public IActionResult Transform([FromBody] XsltTransformModel model)
     {
         var input = new TransformationInput(
@@ -64,32 +64,32 @@ public class XsltController(XsltService xsltService, ILogger<OrigamController> l
             InputXml: model.InputXml,
             Parameters:
             [
-                .. model.Parameters.Select(x => new ParameterData(
+                .. model.Parameters.Select(selector: x => new ParameterData(
                     name: x.Name,
                     type: x.Type,
                     textValue: x.Value
                 )),
             ]
         );
-        TransformationResult result = xsltService.Transform(input);
-        return Ok(new TransformationResponse { Output = result.Output, Xml = result.Xml });
+        TransformationResult result = xsltService.Transform(input: input);
+        return Ok(value: new TransformationResponse { Output = result.Output, Xml = result.Xml });
     }
 
-    [HttpGet("Parameters")]
+    [HttpGet(template: "Parameters")]
     public IActionResult Parameters([FromQuery] Guid schemaItemId)
     {
-        return Ok(xsltService.GetParameters(schemaItemId));
+        return Ok(value: xsltService.GetParameters(schemaItemId: schemaItemId));
     }
 
-    [HttpGet("Settings")]
+    [HttpGet(template: "Settings")]
     public IActionResult Settings()
     {
-        return Ok(xsltService.GetSettings());
+        return Ok(value: xsltService.GetSettings());
     }
 
-    [HttpGet("RuleSets")]
+    [HttpGet(template: "RuleSets")]
     public IActionResult RuleSets([FromQuery] Guid dataStructureId)
     {
-        return Ok(xsltService.GetRuleSets(dataStructureId));
+        return Ok(value: xsltService.GetRuleSets(dataStructureId: dataStructureId));
     }
 }

@@ -35,15 +35,18 @@ public static class DocumentUtilities
     /// <remarks>
     /// Use the more efficient <see cref="LoadReadOnlyDocumentFromBuffer"/> if you only need a read-only document.
     /// </remarks>
-    [Obsolete("Use the TextDocument constructor instead")]
+    [Obsolete(message: "Use the TextDocument constructor instead")]
     public static IDocument LoadDocumentFromBuffer(ITextSource buffer)
     {
-        return new TextDocument(buffer);
+        return new TextDocument(initialText: buffer);
     }
 
     public static void ClearSelection(this TextEditor editor)
     {
-        editor.Select(editor.Document.GetOffset(editor.TextArea.Caret.Location), 0);
+        editor.Select(
+            start: editor.Document.GetOffset(location: editor.TextArea.Caret.Location),
+            length: 0
+        );
     }
 
     /// <summary>
@@ -53,17 +56,17 @@ public static class DocumentUtilities
     {
         if (editor == null)
         {
-            throw new ArgumentNullException("editor");
+            throw new ArgumentNullException(paramName: "editor");
         }
 
         int endOffset = editor.TextArea.Caret.Offset;
-        int startOffset = FindPrevWordStart(editor.Document, endOffset);
+        int startOffset = FindPrevWordStart(textSource: editor.Document, offset: endOffset);
         if (startOffset < 0)
         {
             return string.Empty;
         }
 
-        return editor.Document.GetText(startOffset, endOffset - startOffset);
+        return editor.Document.GetText(offset: startOffset, length: endOffset - startOffset);
     }
 
     static readonly char[] whitespaceChars = { ' ', '\t' };
@@ -81,27 +84,30 @@ public static class DocumentUtilities
     {
         if (document == null)
         {
-            throw new ArgumentNullException("document");
+            throw new ArgumentNullException(paramName: "document");
         }
 
         if (line == null)
         {
-            throw new ArgumentNullException("line");
+            throw new ArgumentNullException(paramName: "line");
         }
 
         if (newLineText == null)
         {
-            throw new ArgumentNullException("newLineText");
+            throw new ArgumentNullException(paramName: "newLineText");
         }
 
-        string newLineTextTrim = newLineText.Trim(whitespaceChars);
-        string oldLineText = document.GetText(line);
+        string newLineTextTrim = newLineText.Trim(trimChars: whitespaceChars);
+        string oldLineText = document.GetText(segment: line);
         if (oldLineText == newLineText)
         {
             return;
         }
 
-        int pos = oldLineText.IndexOf(newLineTextTrim, StringComparison.Ordinal);
+        int pos = oldLineText.IndexOf(
+            value: newLineTextTrim,
+            comparisonType: StringComparison.Ordinal
+        );
         if (newLineTextTrim.Length > 0 && pos >= 0)
         {
             using (document.OpenUndoGroup())
@@ -110,7 +116,7 @@ public static class DocumentUtilities
                 int startWhitespaceLength = 0;
                 while (startWhitespaceLength < newLineText.Length)
                 {
-                    char c = newLineText[startWhitespaceLength];
+                    char c = newLineText[index: startWhitespaceLength];
                     if (c != ' ' && c != '\t')
                     {
                         break;
@@ -124,16 +130,22 @@ public static class DocumentUtilities
                 // replace whitespace sections
                 int lineOffset = line.Offset;
                 document.Replace(
-                    lineOffset + pos + newLineTextTrim.Length,
-                    line.Length - pos - newLineTextTrim.Length,
-                    newLineText.Substring(newLineText.Length - endWhitespaceLength)
+                    offset: lineOffset + pos + newLineTextTrim.Length,
+                    length: line.Length - pos - newLineTextTrim.Length,
+                    newText: newLineText.Substring(
+                        startIndex: newLineText.Length - endWhitespaceLength
+                    )
                 );
-                document.Replace(lineOffset, pos, newLineText.Substring(0, startWhitespaceLength));
+                document.Replace(
+                    offset: lineOffset,
+                    length: pos,
+                    newText: newLineText.Substring(startIndex: 0, length: startWhitespaceLength)
+                );
             }
         }
         else
         {
-            document.Replace(line.Offset, line.Length, newLineText);
+            document.Replace(offset: line.Offset, length: line.Length, newText: newLineText);
         }
     }
 
@@ -144,10 +156,10 @@ public static class DocumentUtilities
     public static int FindPrevWordStart(this ITextSource textSource, int offset)
     {
         return TextUtilities.GetNextCaretPosition(
-            textSource,
-            offset,
-            LogicalDirection.Backward,
-            CaretPositioningMode.WordStart
+            textSource: textSource,
+            offset: offset,
+            direction: LogicalDirection.Backward,
+            mode: CaretPositioningMode.WordStart
         );
     }
 
@@ -158,10 +170,10 @@ public static class DocumentUtilities
     public static int FindNextWordStart(this ITextSource textSource, int offset)
     {
         return TextUtilities.GetNextCaretPosition(
-            textSource,
-            offset,
-            LogicalDirection.Forward,
-            CaretPositioningMode.WordStart
+            textSource: textSource,
+            offset: offset,
+            direction: LogicalDirection.Forward,
+            mode: CaretPositioningMode.WordStart
         );
     }
 
@@ -170,34 +182,41 @@ public static class DocumentUtilities
     /// </summary>
     public static string GetWordAt(this ITextSource document, int offset)
     {
-        if (offset < 0 || offset >= document.TextLength || !IsWordPart(document.GetCharAt(offset)))
+        if (
+            offset < 0
+            || offset >= document.TextLength
+            || !IsWordPart(ch: document.GetCharAt(offset: offset))
+        )
         {
             return String.Empty;
         }
         int startOffset = offset;
         int endOffset = offset;
-        while (startOffset > 0 && IsWordPart(document.GetCharAt(startOffset - 1)))
+        while (startOffset > 0 && IsWordPart(ch: document.GetCharAt(offset: startOffset - 1)))
         {
             --startOffset;
         }
-        while (endOffset < document.TextLength - 1 && IsWordPart(document.GetCharAt(endOffset + 1)))
+        while (
+            endOffset < document.TextLength - 1
+            && IsWordPart(ch: document.GetCharAt(offset: endOffset + 1))
+        )
         {
             ++endOffset;
         }
-        Debug.Assert(endOffset >= startOffset);
-        return document.GetText(startOffset, endOffset - startOffset + 1);
+        Debug.Assert(condition: endOffset >= startOffset);
+        return document.GetText(offset: startOffset, length: endOffset - startOffset + 1);
     }
 
     static bool IsWordPart(char ch)
     {
-        return char.IsLetterOrDigit(ch) || ch == '_';
+        return char.IsLetterOrDigit(c: ch) || ch == '_';
     }
 
     public static string GetIndentation(IDocument document, int line)
     {
         return DocumentUtilities.GetWhitespaceAfter(
-            document,
-            document.GetLineByNumber(line).Offset
+            textSource: document,
+            offset: document.GetLineByNumber(lineNumber: line).Offset
         );
     }
 
@@ -206,8 +225,11 @@ public static class DocumentUtilities
     /// </summary>
     public static bool IsEmptyLine(IDocument document, int lineNumber)
     {
-        var line = document.GetLineByNumber(lineNumber);
-        ISegment segment = TextUtilities.GetWhitespaceAfter(document, line.Offset);
+        var line = document.GetLineByNumber(lineNumber: lineNumber);
+        ISegment segment = TextUtilities.GetWhitespaceAfter(
+            textSource: document,
+            offset: line.Offset
+        );
         return segment.Length == line.Length;
     }
 
@@ -219,8 +241,8 @@ public static class DocumentUtilities
     /// <returns>The indentation text.</returns>
     public static string GetWhitespaceAfter(ITextSource textSource, int offset)
     {
-        ISegment segment = TextUtilities.GetWhitespaceAfter(textSource, offset);
-        return textSource.GetText(segment.Offset, segment.Length);
+        ISegment segment = TextUtilities.GetWhitespaceAfter(textSource: textSource, offset: offset);
+        return textSource.GetText(offset: segment.Offset, length: segment.Length);
     }
 
     /// <summary>
@@ -231,8 +253,11 @@ public static class DocumentUtilities
     /// <returns>The indentation text.</returns>
     public static string GetWhitespaceBefore(ITextSource textSource, int offset)
     {
-        ISegment segment = TextUtilities.GetWhitespaceBefore(textSource, offset);
-        return textSource.GetText(segment.Offset, segment.Length);
+        ISegment segment = TextUtilities.GetWhitespaceBefore(
+            textSource: textSource,
+            offset: offset
+        );
+        return textSource.GetText(offset: segment.Offset, length: segment.Length);
     }
 
     /// <summary>
@@ -240,7 +265,7 @@ public static class DocumentUtilities
     /// </summary>
     public static string GetLineTerminator(IDocument document, int lineNumber)
     {
-        IDocumentLine line = document.GetLineByNumber(lineNumber);
+        IDocumentLine line = document.GetLineByNumber(lineNumber: lineNumber);
         if (line.DelimiterLength == 0)
         {
             // at the end of the document, there's no line delimiter, so use the delimiter
@@ -250,35 +275,41 @@ public static class DocumentUtilities
                 return Environment.NewLine;
             }
 
-            line = document.GetLineByNumber(lineNumber - 1);
+            line = document.GetLineByNumber(lineNumber: lineNumber - 1);
         }
-        return document.GetText(line.Offset + line.Length, line.DelimiterLength);
+        return document.GetText(offset: line.Offset + line.Length, length: line.DelimiterLength);
     }
 
     public static string NormalizeNewLines(string input, string newLine)
     {
-        return input.Replace("\r\n", "\n").Replace('\r', '\n').Replace("\n", newLine);
+        return input
+            .Replace(oldValue: "\r\n", newValue: "\n")
+            .Replace(oldChar: '\r', newChar: '\n')
+            .Replace(oldValue: "\n", newValue: newLine);
     }
 
     public static string NormalizeNewLines(string input, IDocument document, int lineNumber)
     {
-        return NormalizeNewLines(input, GetLineTerminator(document, lineNumber));
+        return NormalizeNewLines(
+            input: input,
+            newLine: GetLineTerminator(document: document, lineNumber: lineNumber)
+        );
     }
 
     public static void InsertNormalized(this IDocument document, int offset, string text)
     {
         if (document == null)
         {
-            throw new ArgumentNullException("document");
+            throw new ArgumentNullException(paramName: "document");
         }
 
-        IDocumentLine line = document.GetLineByOffset(offset);
-        text = NormalizeNewLines(text, document, line.LineNumber);
-        document.Insert(offset, text);
+        IDocumentLine line = document.GetLineByOffset(offset: offset);
+        text = NormalizeNewLines(input: text, document: document, lineNumber: line.LineNumber);
+        document.Insert(offset: offset, text: text);
     }
 
     #region ITextSource implementation
-    [Obsolete("We now directly use ITextSource everywhere, no need for adapters")]
+    [Obsolete(message: "We now directly use ITextSource everywhere, no need for adapters")]
     public static ITextSource GetTextSource(ITextSource textBuffer)
     {
         return textBuffer;

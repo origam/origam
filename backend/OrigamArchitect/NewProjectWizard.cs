@@ -47,8 +47,8 @@ public partial class NewProjectWizard : Form
         InitGitConfig();
         wizard1.FinishButtonText = "Close";
         _project.DefaultModelPath = Path.Combine(
-            Application.StartupPath,
-            @"Project Templates\DefaultModel.zip"
+            path1: Application.StartupPath,
+            path2: @"Project Templates\DefaultModel.zip"
         );
     }
 
@@ -71,9 +71,9 @@ public partial class NewProjectWizard : Form
                 0 => DatabaseType.MsSql,
                 1 => DatabaseType.PgSql,
                 _ => throw new ArgumentOutOfRangeException(
-                    "DatabaseType",
-                    txtDatabaseType.SelectedIndex,
-                    strings.UnknownDatabaseType
+                    paramName: "DatabaseType",
+                    actualValue: txtDatabaseType.SelectedIndex,
+                    message: strings.UnknownDatabaseType
                 ),
             };
         }
@@ -89,20 +89,25 @@ public partial class NewProjectWizard : Form
         Application.DoEvents();
         try
         {
-            _builder.Create(_project);
+            _builder.Create(project: _project);
             WorkbenchSingleton.Workbench.Disconnect();
-            WorkbenchSingleton.Workbench.Connect(_project.Name);
+            WorkbenchSingleton.Workbench.Connect(configurationName: _project.Name);
             WorkbenchSchemaService schema =
-                ServiceManager.Services.GetService(typeof(WorkbenchSchemaService))
+                ServiceManager.Services.GetService(serviceType: typeof(WorkbenchSchemaService))
                 as WorkbenchSchemaService;
-            schema.LoadSchema(new Guid(_project.NewPackageId));
+            schema.LoadSchema(schemaExtensionId: new Guid(g: _project.NewPackageId));
             ViewSchemaBrowserPad cmdViewBrowser = new ViewSchemaBrowserPad();
             cmdViewBrowser.Run();
         }
         catch (Exception ex)
         {
             e.Cancel = true;
-            AsMessageBox.ShowError(this, ex.Message, strings.NewProjectFailed_Message, ex);
+            AsMessageBox.ShowError(
+                owner: this,
+                text: ex.Message,
+                caption: strings.NewProjectFailed_Message,
+                exception: ex
+            );
             WorkbenchSingleton.Workbench.Disconnect();
             pageReview.AllowNext = true;
         }
@@ -116,13 +121,15 @@ public partial class NewProjectWizard : Form
     {
         _settings.SourcesFolder = txtSourcesFolder.Text;
         _settings.DatabaseServerName = txtServerName.Text;
-        _settings.DatabaseTypeText = txtDatabaseType.GetItemText(txtDatabaseType.SelectedItem);
+        _settings.DatabaseTypeText = txtDatabaseType.GetItemText(
+            item: txtDatabaseType.SelectedItem
+        );
         _settings.Save();
     }
 
     private void pageReview_Initialize(object sender, WizardPageInitEventArgs e)
     {
-        _builder.CreateTasks(_project);
+        _builder.CreateTasks(project: _project);
         InitTaskList();
     }
 
@@ -145,69 +152,75 @@ public partial class NewProjectWizard : Form
         lstTasks.Items.Clear();
         foreach (IProjectBuilder builder in _builder.Tasks)
         {
-            lstTasks.Items.Add(new TaskListViewItem(builder.Name, builder));
+            lstTasks.Items.Add(value: new TaskListViewItem(name: builder.Name, builder: builder));
         }
         lstTasks.EndUpdate();
     }
 
     private void pageLocalDeploymentSettings_Commit(object sender, WizardPageConfirmEventArgs e)
     {
-        if (txtName.Text.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
+        if (txtName.Text.IndexOfAny(anyOf: Path.GetInvalidFileNameChars()) >= 0)
         {
             AsMessageBox.ShowError(
-                this,
-                strings.NameContainsInvalidChars_Message,
-                strings.NewProjectWizard_Title,
-                null
+                owner: this,
+                text: strings.NameContainsInvalidChars_Message,
+                caption: strings.NewProjectWizard_Title,
+                exception: null
             );
             e.Cancel = true;
             return;
         }
-        if (string.IsNullOrEmpty(txtServerName.Text))
+        if (string.IsNullOrEmpty(value: txtServerName.Text))
         {
             AsMessageBox.ShowError(
-                this,
-                strings.EnterDbServerName_Message,
-                strings.NewProjectWizard_Title,
-                null
+                owner: this,
+                text: strings.EnterDbServerName_Message,
+                caption: strings.NewProjectWizard_Title,
+                exception: null
             );
             e.Cancel = true;
             return;
         }
-        if (string.IsNullOrEmpty(txtDatabaseUserName.Text))
+        if (string.IsNullOrEmpty(value: txtDatabaseUserName.Text))
         {
             AsMessageBox.ShowError(
-                this,
-                strings.EnterDbUserName_Message,
-                strings.NewProjectWizard_Title,
-                null
+                owner: this,
+                text: strings.EnterDbUserName_Message,
+                caption: strings.NewProjectWizard_Title,
+                exception: null
             );
             e.Cancel = true;
             return;
         }
-        if (string.IsNullOrEmpty(txtDatabasePassword.Text))
+        if (string.IsNullOrEmpty(value: txtDatabasePassword.Text))
         {
             AsMessageBox.ShowError(
-                this,
-                strings.EnterDbPassword_Message,
-                strings.NewProjectWizard_Title,
-                null
+                owner: this,
+                text: strings.EnterDbPassword_Message,
+                caption: strings.NewProjectWizard_Title,
+                exception: null
             );
             e.Cancel = true;
             return;
         }
-        if (!int.TryParse(txtPort.Text, out int port))
+        if (!int.TryParse(s: txtPort.Text, result: out int port))
         {
-            AsMessageBox.ShowError(this, strings.PortError, strings.NewProjectWizard_Title, null);
+            AsMessageBox.ShowError(
+                owner: this,
+                text: strings.PortError,
+                caption: strings.NewProjectWizard_Title,
+                exception: null
+            );
             e.Cancel = true;
             return;
         }
-        _project.Name = txtName.Text.ToLower().Replace("\\s+", "_");
+        _project.Name = txtName.Text.ToLower().Replace(oldValue: "\\s+", newValue: "_");
         _project.DatabaseServerName = txtServerName.Text;
         _project.DatabaseUserName = txtDatabaseUserName.Text;
         _project.DatabasePassword = txtDatabasePassword.Text;
-        _project.DataDatabaseName = txtName.Text.ToLower().Replace("\\s+", "_");
-        _project.ModelDatabaseName = txtName.Text.ToLower().Replace("\\s+", "_") + "_model";
+        _project.DataDatabaseName = txtName.Text.ToLower().Replace(oldValue: "\\s+", newValue: "_");
+        _project.ModelDatabaseName =
+            txtName.Text.ToLower().Replace(oldValue: "\\s+", newValue: "_") + "_model";
         _project.Url = txtName.Text;
         _project.ArchitectUserName = SecurityManager.CurrentPrincipal.Identity.Name;
         _project.DatabaseType = DatabaseType;
@@ -217,17 +230,17 @@ public partial class NewProjectWizard : Form
 
     private void pageLocalDeploymentSettings_Initialize(object sender, WizardPageInitEventArgs e)
     {
-        txtServerName.Text = string.IsNullOrEmpty(txtServerName.Text)
+        txtServerName.Text = string.IsNullOrEmpty(value: txtServerName.Text)
             ? _settings.DatabaseServerName
             : txtServerName.Text;
         if (txtDatabaseType.SelectedIndex == -1)
         {
             txtDatabaseType.SelectedItem = null;
             txtDatabaseType.Items.AddRange(
-                new object[] { "Microsoft Sql Server", "Postgre Sql Server" }
+                items: new object[] { "Microsoft Sql Server", "Postgre Sql Server" }
             );
             txtDatabaseType.SelectedIndex = txtDatabaseType.FindStringExact(
-                _settings.DatabaseTypeText
+                s: _settings.DatabaseTypeText
             );
         }
     }
@@ -239,40 +252,40 @@ public partial class NewProjectWizard : Form
 
     private void btnSelectSourcesFolder_Click(object sender, EventArgs e)
     {
-        SelectFolder(txtSourcesFolder);
+        SelectFolder(targetControl: txtSourcesFolder);
     }
 
     private void SelectFolder(TextBox targetControl)
     {
-        if (!string.IsNullOrEmpty(targetControl.Text))
+        if (!string.IsNullOrEmpty(value: targetControl.Text))
         {
             folderBrowserDialog1.SelectedPath = targetControl.Text;
         }
-        folderBrowserDialog1.ShowDialog(this);
+        folderBrowserDialog1.ShowDialog(owner: this);
         targetControl.Text = folderBrowserDialog1.SelectedPath;
         targetControl.Focus();
     }
 
     private void pageDeploymentType_Commit(object sender, WizardPageConfirmEventArgs e)
     {
-        if (string.IsNullOrEmpty(txtName.Text))
+        if (string.IsNullOrEmpty(value: txtName.Text))
         {
             AsMessageBox.ShowError(
-                this,
-                strings.EnterProjectName_Message,
-                strings.NewProjectWizard_Title,
-                null
+                owner: this,
+                text: strings.EnterProjectName_Message,
+                caption: strings.NewProjectWizard_Title,
+                exception: null
             );
             e.Cancel = true;
             return;
         }
-        if (!Regex.IsMatch(txtName.Text, @"^[a-zA-Z0-9]+$"))
+        if (!Regex.IsMatch(input: txtName.Text, pattern: @"^[a-zA-Z0-9]+$"))
         {
             AsMessageBox.ShowError(
-                this,
-                "Only alphanumeric characters are allowed.",
-                strings.NewProjectWizard_Title,
-                null
+                owner: this,
+                text: "Only alphanumeric characters are allowed.",
+                caption: strings.NewProjectWizard_Title,
+                exception: null
             );
             e.Cancel = true;
         }
@@ -280,53 +293,57 @@ public partial class NewProjectWizard : Form
 
     private void PageGit_Commit(object sender, WizardPageConfirmEventArgs e)
     {
-        if (string.IsNullOrEmpty(txtGitUser.Text) && gitrepo.Checked)
+        if (string.IsNullOrEmpty(value: txtGitUser.Text) && gitrepo.Checked)
         {
             AsMessageBox.ShowError(
-                this,
-                strings.EnterUser_name,
-                strings.NewProjectWizard_Title,
-                null
+                owner: this,
+                text: strings.EnterUser_name,
+                caption: strings.NewProjectWizard_Title,
+                exception: null
             );
             e.Cancel = true;
             return;
         }
-        if (string.IsNullOrEmpty(txtGitEmail.Text) && gitrepo.Checked)
+        if (string.IsNullOrEmpty(value: txtGitEmail.Text) && gitrepo.Checked)
         {
             AsMessageBox.ShowError(
-                this,
-                strings.EnterEmail_name,
-                strings.NewProjectWizard_Title,
-                null
+                owner: this,
+                text: strings.EnterEmail_name,
+                caption: strings.NewProjectWizard_Title,
+                exception: null
             );
             e.Cancel = true;
             return;
         }
-        if (string.IsNullOrEmpty(txtSourcesFolder.Text))
+        if (string.IsNullOrEmpty(value: txtSourcesFolder.Text))
         {
             AsMessageBox.ShowError(
-                this,
-                strings.EnterSourceFolder_Message,
-                strings.NewProjectWizard_Title,
-                null
+                owner: this,
+                text: strings.EnterSourceFolder_Message,
+                caption: strings.NewProjectWizard_Title,
+                exception: null
             );
             e.Cancel = true;
             return;
         }
-        DirectoryInfo dir = new DirectoryInfo(txtSourcesFolder.Text);
+        DirectoryInfo dir = new DirectoryInfo(path: txtSourcesFolder.Text);
         if (!dir.Exists)
         {
             AsMessageBox.ShowError(
-                this,
-                strings.SourceFolderNotExists_Message,
-                strings.NewProjectWizard_Title,
-                null
+                owner: this,
+                text: strings.SourceFolderNotExists_Message,
+                caption: strings.NewProjectWizard_Title,
+                exception: null
             );
             e.Cancel = true;
             return;
         }
-        _project.SourcesFolder = Path.Combine(txtSourcesFolder.Text, txtName.Text);
-        _project.ModelSourceFolder = Path.Combine(txtSourcesFolder.Text, txtName.Text, "model");
+        _project.SourcesFolder = Path.Combine(path1: txtSourcesFolder.Text, path2: txtName.Text);
+        _project.ModelSourceFolder = Path.Combine(
+            path1: txtSourcesFolder.Text,
+            path2: txtName.Text,
+            path3: "model"
+        );
         _project.RootSourceFolder = txtSourcesFolder.Text;
         _project.GitRepository = gitrepo.Checked;
         _project.GitUsername = txtGitUser.Text;
@@ -341,39 +358,69 @@ public partial class NewProjectWizard : Form
 
     private void pageWebUser_Commit(object sender, WizardPageConfirmEventArgs e)
     {
-        if (string.IsNullOrEmpty(txtWebUserLoginName.Text))
+        if (string.IsNullOrEmpty(value: txtWebUserLoginName.Text))
         {
-            AsMessageBox.ShowError(this, strings.EnterWebUserName_Message, "Template", null);
+            AsMessageBox.ShowError(
+                owner: this,
+                text: strings.EnterWebUserName_Message,
+                caption: "Template",
+                exception: null
+            );
             e.Cancel = true;
             return;
         }
-        if (string.IsNullOrEmpty(txtWebUserPassword.Text))
+        if (string.IsNullOrEmpty(value: txtWebUserPassword.Text))
         {
-            AsMessageBox.ShowError(this, strings.EnterWebPassword_Message, "Template", null);
+            AsMessageBox.ShowError(
+                owner: this,
+                text: strings.EnterWebPassword_Message,
+                caption: "Template",
+                exception: null
+            );
             e.Cancel = true;
             return;
         }
-        if (!txtWebUserPasswordConfirmed.Text.Equals(txtWebUserPassword.Text))
+        if (!txtWebUserPasswordConfirmed.Text.Equals(value: txtWebUserPassword.Text))
         {
-            AsMessageBox.ShowError(this, strings.WebPasswordNotMatch_Message, "Template", null);
+            AsMessageBox.ShowError(
+                owner: this,
+                text: strings.WebPasswordNotMatch_Message,
+                caption: "Template",
+                exception: null
+            );
             e.Cancel = true;
             return;
         }
-        if (string.IsNullOrEmpty(txtWebFirstname.Text))
+        if (string.IsNullOrEmpty(value: txtWebFirstname.Text))
         {
-            AsMessageBox.ShowError(this, strings.EnterWebFirstName_Message, "Template", null);
+            AsMessageBox.ShowError(
+                owner: this,
+                text: strings.EnterWebFirstName_Message,
+                caption: "Template",
+                exception: null
+            );
             e.Cancel = true;
             return;
         }
-        if (string.IsNullOrEmpty(txtWebSurname.Text))
+        if (string.IsNullOrEmpty(value: txtWebSurname.Text))
         {
-            AsMessageBox.ShowError(this, strings.EnterWebSurname_Message, "Template", null);
+            AsMessageBox.ShowError(
+                owner: this,
+                text: strings.EnterWebSurname_Message,
+                caption: "Template",
+                exception: null
+            );
             e.Cancel = true;
             return;
         }
-        if (string.IsNullOrEmpty(txtWebEmail.Text))
+        if (string.IsNullOrEmpty(value: txtWebEmail.Text))
         {
-            AsMessageBox.ShowError(this, strings.EnterWebEmail_Message, "Template", null);
+            AsMessageBox.ShowError(
+                owner: this,
+                text: strings.EnterWebEmail_Message,
+                caption: "Template",
+                exception: null
+            );
             e.Cancel = true;
             return;
         }

@@ -29,9 +29,9 @@ namespace Origam.Schema;
 /// <summary>
 /// Parameter that can be used to parametrize any kind of schema item.
 /// </summary>
-[SchemaItemDescription("Parameter", "Parameters", "icon_parameter.png")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
+[SchemaItemDescription(name: "Parameter", folderName: "Parameters", iconName: "icon_parameter.png")]
+[XmlModelRoot(category: CategoryConst)]
+[ClassMetaVersion(versionStr: "6.0.0")]
 public class SchemaItemParameter : AbstractSchemaItem
 {
     public const string CategoryConst = "Parameter";
@@ -40,15 +40,15 @@ public class SchemaItemParameter : AbstractSchemaItem
         : base() { }
 
     public SchemaItemParameter(Guid schemaExtensionId)
-        : base(schemaExtensionId) { }
+        : base(extensionId: schemaExtensionId) { }
 
     public SchemaItemParameter(Key primaryKey)
-        : base(primaryKey) { }
+        : base(primaryKey: primaryKey) { }
 
     #region Properties
     protected OrigamDataType _dataType;
 
-    [XmlAttribute("dataType")]
+    [XmlAttribute(attributeName: "dataType")]
     public virtual OrigamDataType DataType
     {
         get { return _dataType; }
@@ -56,7 +56,7 @@ public class SchemaItemParameter : AbstractSchemaItem
     }
     private int _dataLength = 0;
 
-    [XmlAttribute("dataLength")]
+    [XmlAttribute(attributeName: "dataLength")]
     public int DataLength
     {
         get
@@ -72,7 +72,7 @@ public class SchemaItemParameter : AbstractSchemaItem
     }
     private bool _allowNulls = true;
 
-    [XmlAttribute("allowNulls")]
+    [XmlAttribute(attributeName: "allowNulls")]
     public bool AllowNulls
     {
         get { return _allowNulls; }
@@ -90,10 +90,10 @@ public class SchemaItemParameter : AbstractSchemaItem
         ISchemaItem newItem = newNode as ISchemaItem;
         if (newItem != null)
         {
-            return newItem.ItemType.Equals(this.ParentItem.ItemType);
+            return newItem.ItemType.Equals(value: this.ParentItem.ItemType);
         }
 
-        return newNode.GetType().Equals(this.ParentItem.GetType());
+        return newNode.GetType().Equals(o: this.ParentItem.GetType());
     }
     #endregion
 }

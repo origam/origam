@@ -36,21 +36,23 @@ public static class MenuHelper
         FormControlSet form
     )
     {
-        if (string.IsNullOrEmpty(caption))
+        if (string.IsNullOrEmpty(value: caption))
         {
-            throw new ArgumentOutOfRangeException("Caption cannot be null for new menu item");
+            throw new ArgumentOutOfRangeException(
+                paramName: "Caption cannot be null for new menu item"
+            );
         }
         var schemaService = ServiceManager.Services.GetService<ISchemaService>();
         var menuSchemaItemProvider = schemaService.GetProvider<MenuSchemaItemProvider>();
         if (
             (menuSchemaItemProvider.ChildItems.Count > 0)
-            && menuSchemaItemProvider.ChildItems[0].IsPersisted
+            && menuSchemaItemProvider.ChildItems[index: 0].IsPersisted
         )
         {
             var menu = menuSchemaItemProvider.MainMenu;
             var formReferenceMenuItem = menu.NewItem<FormReferenceMenuItem>(
-                schemaService.ActiveSchemaExtensionId,
-                null
+                schemaExtensionId: schemaService.ActiveSchemaExtensionId,
+                group: null
             );
             formReferenceMenuItem.Name = form.Name;
             formReferenceMenuItem.DisplayName = caption;
@@ -59,7 +61,7 @@ public static class MenuHelper
             formReferenceMenuItem.Persist();
             return formReferenceMenuItem;
         }
-        throw new Exception("No menu defined. Create a root menu element.");
+        throw new Exception(message: "No menu defined. Create a root menu element.");
     }
 
     public static DataConstantReferenceMenuItem CreateMenuItem(
@@ -68,9 +70,11 @@ public static class MenuHelper
         DataConstant constant
     )
     {
-        if (string.IsNullOrEmpty(caption))
+        if (string.IsNullOrEmpty(value: caption))
         {
-            throw new ArgumentOutOfRangeException("Caption cannot be null for new menu item");
+            throw new ArgumentOutOfRangeException(
+                paramName: "Caption cannot be null for new menu item"
+            );
         }
         var schemaService = ServiceManager.Services.GetService<ISchemaService>();
         var menuSchemaItemProvider = schemaService.GetProvider<MenuSchemaItemProvider>();
@@ -78,8 +82,8 @@ public static class MenuHelper
         {
             var menu = menuSchemaItemProvider.MainMenu;
             var dataConstantReferenceMenuItem = menu.NewItem<DataConstantReferenceMenuItem>(
-                schemaService.ActiveSchemaExtensionId,
-                null
+                schemaExtensionId: schemaService.ActiveSchemaExtensionId,
+                group: null
             );
             dataConstantReferenceMenuItem.Name = constant.Name;
             dataConstantReferenceMenuItem.DisplayName = caption;
@@ -88,7 +92,7 @@ public static class MenuHelper
             dataConstantReferenceMenuItem.Persist();
             return dataConstantReferenceMenuItem;
         }
-        throw new Exception("No menu defined. Create a root menu element.");
+        throw new Exception(message: "No menu defined. Create a root menu element.");
     }
 
     public static WorkflowReferenceMenuItem CreateMenuItem(
@@ -97,9 +101,11 @@ public static class MenuHelper
         IWorkflow workflow
     )
     {
-        if (string.IsNullOrEmpty(caption))
+        if (string.IsNullOrEmpty(value: caption))
         {
-            throw new ArgumentOutOfRangeException("Caption cannot be null for new menu item");
+            throw new ArgumentOutOfRangeException(
+                paramName: "Caption cannot be null for new menu item"
+            );
         }
         var schemaService = ServiceManager.Services.GetService<ISchemaService>();
         var menuSchemaItemProvider = schemaService.GetProvider<MenuSchemaItemProvider>();
@@ -107,8 +113,8 @@ public static class MenuHelper
         {
             var menu = menuSchemaItemProvider.MainMenu;
             var workflowReferenceMenuItem = menu.NewItem<WorkflowReferenceMenuItem>(
-                schemaService.ActiveSchemaExtensionId,
-                null
+                schemaExtensionId: schemaService.ActiveSchemaExtensionId,
+                group: null
             );
             workflowReferenceMenuItem.Name = workflow.Name;
             workflowReferenceMenuItem.DisplayName = caption;
@@ -117,6 +123,6 @@ public static class MenuHelper
             workflowReferenceMenuItem.Persist();
             return workflowReferenceMenuItem;
         }
-        throw new Exception("No menu defined. Create a root menu element.");
+        throw new Exception(message: "No menu defined. Create a root menu element.");
     }
 }

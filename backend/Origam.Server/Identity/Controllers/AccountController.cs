@@ -82,8 +82,8 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
     {
         var schemes = await schemeProvider.GetAllSchemesAsync();
         var externalProviders = schemes
-            .Where(x => x.DisplayName != null)
-            .Select(x => new ExternalProvider
+            .Where(predicate: x => x.DisplayName != null)
+            .Select(selector: x => new ExternalProvider
             {
                 DisplayName = x.DisplayName,
                 AuthenticationScheme = x.Name,
@@ -101,9 +101,9 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
     [AllowAnonymous]
     public async Task<IActionResult> Login(string returnUrl = null)
     {
-        ViewData["ReturnUrl"] = returnUrl;
-        LoginViewModel model = await BuildLoginViewModelAsync(returnUrl);
-        return View(model);
+        ViewData[index: "ReturnUrl"] = returnUrl;
+        LoginViewModel model = await BuildLoginViewModelAsync(returnUrl: returnUrl);
+        return View(model: model);
     }
 
     [HttpPost]
@@ -111,62 +111,68 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
     {
-        ViewData["ReturnUrl"] = returnUrl;
+        ViewData[index: "ReturnUrl"] = returnUrl;
         if (!ModelState.IsValid)
         {
-            return View(model);
+            return View(model: model);
         }
 
         SignInResult result = await signInManager.PasswordSignInAsync(
-            model.UserName,
-            model.Password,
-            model.RememberMe,
+            userName: model.UserName,
+            password: model.Password,
+            isPersistent: model.RememberMe,
             lockoutOnFailure: true
         );
 
         if (result.Succeeded)
         {
-            return RedirectToLocal(returnUrl);
+            return RedirectToLocal(returnUrl: returnUrl);
         }
 
         if (result.RequiresTwoFactor)
         {
             // Get user so we can send the code
-            var user = await userManager.FindByNameAsync(model.UserName);
+            var user = await userManager.FindByNameAsync(userName: model.UserName);
             if (user == null)
             {
-                ModelState.AddModelError(string.Empty, localizer["InvalidLogin"]);
-                return View(model);
+                ModelState.AddModelError(
+                    key: string.Empty,
+                    errorMessage: localizer[name: "InvalidLogin"]
+                );
+                return View(model: model);
             }
 
             // Email provider (default ASP.NET Identity email 2FA)
             string code = await userManager.GenerateTwoFactorTokenAsync(
-                user,
-                TokenOptions.DefaultEmailProvider
+                user: user,
+                tokenProvider: TokenOptions.DefaultEmailProvider
             );
 
-            mailService.SendMultiFactorAuthCode(user, code);
+            mailService.SendMultiFactorAuthCode(user: user, token: code);
 
             // Redirect to second-step screen
             return RedirectToAction(
-                nameof(LoginTwoStep),
-                new { returnUrl, rememberMe = model.RememberMe }
+                actionName: nameof(LoginTwoStep),
+                routeValues: new { returnUrl, rememberMe = model.RememberMe }
             );
         }
 
         if (result.IsLockedOut)
         {
-            ModelState.AddModelError(string.Empty, localizer["UserLockedOut"]);
-            LoginViewModel newModel = await BuildLoginViewModelAsync(returnUrl);
+            ModelState.AddModelError(
+                key: string.Empty,
+                errorMessage: localizer[name: "UserLockedOut"]
+            );
+            LoginViewModel newModel = await BuildLoginViewModelAsync(returnUrl: returnUrl);
             newModel.UserName = model.UserName;
-            return View(newModel);
+            return View(model: newModel);
         }
 
         // Invalid credentials
-        LoginViewModel invalidModel = await BuildLoginViewModelAsync(returnUrl);
+        LoginViewModel invalidModel = await BuildLoginViewModelAsync(returnUrl: returnUrl);
         invalidModel.UserName = model.UserName;
-        ModelState.AddModelError(string.Empty, localizer["InvalidLogin"]);
-        return View(invalidModel);
+        ModelState.AddModelError(key: string.Empty, errorMessage: localizer[name: "InvalidLogin"]);
+        return View(model: invalidModel);
     }
 
     [HttpGet]
@@ -178,12 +184,12 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
         if (user == null)
         {
             // 2FA cookie missing/expired
-            return RedirectToAction(nameof(Login), new { returnUrl });
+            return RedirectToAction(actionName: nameof(Login), routeValues: new { returnUrl });
         }
 
         var model = new LoginTwoStepViewModel { ReturnUrl = returnUrl, RememberMe = rememberMe };
 
-        return View(model);
+        return View(model: model);
     }
 
     [HttpPost]
@@ -193,38 +199,49 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
     {
         if (!ModelState.IsValid)
         {
-            return View(model);
+            return View(model: model);
         }
 
         IOrigamUser user = await signInManager.GetTwoFactorAuthenticationUserAsync();
         if (user == null)
         {
-            return RedirectToAction(nameof(Login), new { returnUrl = model.ReturnUrl });
+            return RedirectToAction(
+                actionName: nameof(Login),
+                routeValues: new { returnUrl = model.ReturnUrl }
+            );
         }
 
         // Normalize the code (remove spaces/dashes)
-        string code = model.TwoFactorCode?.Replace(" ", string.Empty)?.Replace("-", string.Empty);
+        string code = model
+            .TwoFactorCode?.Replace(oldValue: " ", newValue: string.Empty)
+            ?.Replace(oldValue: "-", newValue: string.Empty);
 
         SignInResult result = await signInManager.TwoFactorSignInAsync(
-            TokenOptions.DefaultEmailProvider,
-            code,
+            provider: TokenOptions.DefaultEmailProvider,
+            code: code,
             isPersistent: model.RememberMe,
             rememberClient: false
         );
 
         if (result.Succeeded)
         {
-            return RedirectToLocal(model.ReturnUrl);
+            return RedirectToLocal(returnUrl: model.ReturnUrl);
         }
 
         if (result.IsLockedOut)
         {
-            ModelState.AddModelError(string.Empty, localizer["UserLockedOut"]);
-            return View(model);
+            ModelState.AddModelError(
+                key: string.Empty,
+                errorMessage: localizer[name: "UserLockedOut"]
+            );
+            return View(model: model);
         }
 
-        ModelState.AddModelError(string.Empty, localizer["LoginFailedWrongCode"]);
-        return View(model);
+        ModelState.AddModelError(
+            key: string.Empty,
+            errorMessage: localizer[name: "LoginFailedWrongCode"]
+        );
+        return View(model: model);
     }
 
     [HttpGet]
@@ -233,25 +250,25 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
     {
         if (!configOptions.AllowPasswordReset)
         {
-            return RedirectToAction(nameof(Login), "Account");
+            return RedirectToAction(actionName: nameof(Login), controllerName: "Account");
         }
         var model = new ForgotPasswordViewModel
         {
-            ReturnUrl = ExtractRedirectUriFromReturnUrl(returnUrl),
+            ReturnUrl = ExtractRedirectUriFromReturnUrl(returnUrl: returnUrl),
         };
-        return View(model);
+        return View(model: model);
     }
 
     private string ExtractRedirectUriFromReturnUrl(string returnUrl)
     {
-        if (string.IsNullOrEmpty(returnUrl))
+        if (string.IsNullOrEmpty(value: returnUrl))
         {
             return "/";
         }
-        string decodedUrl = Uri.UnescapeDataString(returnUrl);
+        string decodedUrl = Uri.UnescapeDataString(stringToUnescape: returnUrl);
         string pattern = @"redirect_uri=([^&#]+)";
-        Match match = Regex.Match(decodedUrl, pattern);
-        return match.Success ? match.Groups[1].Value : "/";
+        Match match = Regex.Match(input: decodedUrl, pattern: pattern);
+        return match.Success ? match.Groups[groupnum: 1].Value : "/";
     }
 
     [HttpPost]
@@ -261,37 +278,39 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
     {
         if (!configOptions.AllowPasswordReset)
         {
-            return RedirectToAction(nameof(Login), "Account");
+            return RedirectToAction(actionName: nameof(Login), controllerName: "Account");
         }
         if (ModelState.IsValid)
         {
-            var user = await userManager.FindByEmailAsync(model.Email);
+            var user = await userManager.FindByEmailAsync(email: model.Email);
             if (user == null)
             {
                 // Don't reveal that the user does not exist or is not confirmed
-                logger.LogWarning("ForgotPassword - " + model.Email + " User does not exist.");
-                return View("ForgotPasswordConfirmation");
+                logger.LogWarning(
+                    message: "ForgotPassword - " + model.Email + " User does not exist."
+                );
+                return View(viewName: "ForgotPasswordConfirmation");
             }
             // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=532713
             // Send an email with this link
-            var passwordResetToken = await userManager.GeneratePasswordResetTokenAsync(user);
+            var passwordResetToken = await userManager.GeneratePasswordResetTokenAsync(user: user);
             var callbackUrl = Url.Action(
-                "ResetPassword",
-                "Account",
-                new { userId = user.BusinessPartnerId, code = passwordResetToken },
+                action: "ResetPassword",
+                controller: "Account",
+                values: new { userId = user.BusinessPartnerId, code = passwordResetToken },
                 protocol: HttpContext.Request.Scheme
             );
             mailService.SendPasswordResetToken(
-                user,
-                passwordResetToken,
-                model.ReturnUrl,
+                user: user,
+                token: passwordResetToken,
+                returnUrl: model.ReturnUrl,
                 tokenValidityHours: 24
             );
-            logger.LogInformation("ForgotPassword - " + model.Email + " Mail was sent.");
-            return View("ForgotPasswordConfirmation");
+            logger.LogInformation(message: "ForgotPassword - " + model.Email + " Mail was sent.");
+            return View(viewName: "ForgotPasswordConfirmation");
         }
         // If we got this far, something failed, redisplay form
-        return View(model);
+        return View(model: model);
     }
 
     [HttpGet]
@@ -304,24 +323,26 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
     {
         if (!configOptions.AllowPasswordReset)
         {
-            return RedirectToAction(nameof(Login), "Account");
+            return RedirectToAction(actionName: nameof(Login), controllerName: "Account");
         }
         if (code == null)
         {
-            logger.LogWarning($"Code supplied to {nameof(ResetPassword)} was null");
-            return View("Error");
+            logger.LogWarning(message: $"Code supplied to {nameof(ResetPassword)} was null");
+            return View(viewName: "Error");
         }
         if (mail == null)
         {
-            logger.LogWarning($"mail supplied to {nameof(ResetPassword)} was null");
-            return View("Error");
+            logger.LogWarning(message: $"mail supplied to {nameof(ResetPassword)} was null");
+            return View(viewName: "Error");
         }
         var model = new ResetPasswordViewModel
         {
             Email = mail,
-            ReturnUrl = string.IsNullOrEmpty(returnUrl) ? null : Uri.UnescapeDataString(returnUrl),
+            ReturnUrl = string.IsNullOrEmpty(value: returnUrl)
+                ? null
+                : Uri.UnescapeDataString(stringToUnescape: returnUrl),
         };
-        return View(model);
+        return View(model: model);
     }
 
     [HttpPost]
@@ -331,40 +352,48 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
     {
         if (!configOptions.AllowPasswordReset)
         {
-            return RedirectToAction(nameof(Login), "Account");
+            return RedirectToAction(actionName: nameof(Login), controllerName: "Account");
         }
         if (!ModelState.IsValid)
         {
-            return View(model);
+            return View(model: model);
         }
-        var user = await userManager.FindByEmailAsync(model.Email);
+        var user = await userManager.FindByEmailAsync(email: model.Email);
         if (user == null)
         {
             // Don't reveal that the user does not exist
             return RedirectToAction(
-                nameof(ResetPasswordConfirmation),
+                actionName: nameof(ResetPasswordConfirmation),
                 controllerName: "Account",
                 routeValues: new
                 {
-                    returnUrl = Uri.EscapeDataString(model.ReturnUrl ?? "/account/login"),
+                    returnUrl = Uri.EscapeDataString(
+                        stringToEscape: model.ReturnUrl ?? "/account/login"
+                    ),
                 }
             );
         }
         user.EmailConfirmed = true;
-        var result = await userManager.ResetPasswordAsync(user, model.Code, model.Password);
+        var result = await userManager.ResetPasswordAsync(
+            user: user,
+            token: model.Code,
+            newPassword: model.Password
+        );
         if (result.Succeeded)
         {
             return RedirectToAction(
-                nameof(ResetPasswordConfirmation),
+                actionName: nameof(ResetPasswordConfirmation),
                 controllerName: "Account",
                 routeValues: new
                 {
-                    returnUrl = Uri.EscapeDataString(model.ReturnUrl ?? "/account/login"),
+                    returnUrl = Uri.EscapeDataString(
+                        stringToEscape: model.ReturnUrl ?? "/account/login"
+                    ),
                 }
             );
         }
-        AddErrors(result);
-        return View(model);
+        AddErrors(result: result);
+        return View(model: model);
     }
 
     [HttpGet]
@@ -373,9 +402,11 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
     {
         var model = new ResetPasswordConfirmationViewModel
         {
-            ReturnUrl = string.IsNullOrEmpty(returnUrl) ? null : Uri.UnescapeDataString(returnUrl),
+            ReturnUrl = string.IsNullOrEmpty(value: returnUrl)
+                ? null
+                : Uri.UnescapeDataString(stringToUnescape: returnUrl),
         };
-        return View(model);
+        return View(model: model);
     }
 
     [HttpGet]
@@ -391,9 +422,12 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
     {
         if (!userConfig.UserRegistrationAllowed)
         {
-            return View("Error", new ErrorViewModel(localizer["RegistrationNotAllowed"]));
+            return View(
+                viewName: "Error",
+                model: new ErrorViewModel(error: localizer[name: "RegistrationNotAllowed"])
+            );
         }
-        ViewData["ReturnUrl"] = returnUrl;
+        ViewData[index: "ReturnUrl"] = returnUrl;
         return View();
     }
 
@@ -404,7 +438,10 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
     {
         if (!userConfig.UserRegistrationAllowed)
         {
-            return View("Error", new ErrorViewModel(localizer["RegistrationNotAllowed"]));
+            return View(
+                viewName: "Error",
+                model: new ErrorViewModel(error: localizer[name: "RegistrationNotAllowed"])
+            );
         }
         if (ModelState.IsValid)
         {
@@ -416,17 +453,23 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
                 Name = model.Name,
                 RoleId = userConfig.NewUserRoleId,
             };
-            IdentityResult result = UserTools.RunCreateUserWorkFlow(model.Password, user);
-            user = await userManager.FindByNameAsync(user.UserName);
+            IdentityResult result = UserTools.RunCreateUserWorkFlow(
+                password: model.Password,
+                user: user
+            );
+            user = await userManager.FindByNameAsync(userName: user.UserName);
             if (result.Succeeded)
             {
-                var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
-                mailService.SendNewUserToken(user, code);
-                return RedirectToAction(nameof(RegisterConfirmation), "Account");
+                var code = await userManager.GenerateEmailConfirmationTokenAsync(user: user);
+                mailService.SendNewUserToken(user: user, token: code);
+                return RedirectToAction(
+                    actionName: nameof(RegisterConfirmation),
+                    controllerName: "Account"
+                );
             }
-            AddErrors(result);
+            AddErrors(result: result);
         }
-        return View(model);
+        return View(model: model);
     }
 
     [HttpGet]
@@ -435,7 +478,10 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
     {
         if (!UserTools.IsInitialSetupNeeded())
         {
-            return View("Error", new ErrorViewModel(localizer["AlreadySetUp"]));
+            return View(
+                viewName: "Error",
+                model: new ErrorViewModel(error: localizer[name: "AlreadySetUp"])
+            );
         }
         return View();
     }
@@ -447,7 +493,10 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
     {
         if (!UserTools.IsInitialSetupNeeded())
         {
-            return View("Error", new ErrorViewModel(localizer["AlreadySetUp"]));
+            return View(
+                viewName: "Error",
+                model: new ErrorViewModel(error: localizer[name: "AlreadySetUp"])
+            );
         }
 
         if (ModelState.IsValid)
@@ -461,21 +510,24 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
                 RoleId = SecurityManager.BUILTIN_SUPER_USER_ROLE,
                 SecurityStamp = "",
             };
-            IdentityResult result = UserTools.RunCreateUserWorkFlow(model.Password, user);
-            user = await userManager.FindByNameAsync(user.UserName);
+            IdentityResult result = UserTools.RunCreateUserWorkFlow(
+                password: model.Password,
+                user: user
+            );
+            user = await userManager.FindByNameAsync(userName: user.UserName);
             if (result.Succeeded)
             {
-                await signInManager.SignInAsync(user, false);
+                await signInManager.SignInAsync(user: user, isPersistent: false);
                 string emailConfirmToken = await userManager.GenerateEmailConfirmationTokenAsync(
-                    user
+                    user: user
                 );
-                await userManager.ConfirmEmailAsync(user, emailConfirmToken);
+                await userManager.ConfirmEmailAsync(user: user, token: emailConfirmToken);
                 UserTools.SetInitialSetupComplete();
-                return Redirect("/");
+                return Redirect(url: "/");
             }
-            AddErrors(result);
+            AddErrors(result: result);
         }
-        return View(model);
+        return View(model: model);
     }
 
     [HttpGet]
@@ -484,28 +536,36 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
     {
         if (!userConfig.UserRegistrationAllowed)
         {
-            return View("Error", new ErrorViewModel(localizer["RegistrationNotAllowed"]));
+            return View(
+                viewName: "Error",
+                model: new ErrorViewModel(error: localizer[name: "RegistrationNotAllowed"])
+            );
         }
         if (userId == null || code == null)
         {
-            logger.LogWarning($"Invalid confirm email data: userId:\"{userId}\", code:\"{code}\"");
-            return View("Error");
+            logger.LogWarning(
+                message: $"Invalid confirm email data: userId:\"{userId}\", code:\"{code}\""
+            );
+            return View(viewName: "Error");
         }
-        var user = await userManager.FindByIdAsync(userId);
+        var user = await userManager.FindByIdAsync(userId: userId);
         if (user == null)
         {
-            logger.LogWarning($"User not found: userId:\"{userId}\"");
-            return View("Error");
+            logger.LogWarning(message: $"User not found: userId:\"{userId}\"");
+            return View(viewName: "Error");
         }
-        var result = await userManager.ConfirmEmailAsync(user, code);
+        var result = await userManager.ConfirmEmailAsync(user: user, token: code);
         if (result.Succeeded)
         {
-            return View("EmailConfirmation");
+            return View(viewName: "EmailConfirmation");
         }
-        string errors = string.Join("\n", result.Errors.Select(error => error.Description));
-        logger.LogWarning($"ConfirmEmailAsync failed, errors:\"{errors}\"");
+        string errors = string.Join(
+            separator: "\n",
+            values: result.Errors.Select(selector: error => error.Description)
+        );
+        logger.LogWarning(message: $"ConfirmEmailAsync failed, errors:\"{errors}\"");
 
-        return View("Error");
+        return View(viewName: "Error");
     }
 
     [HttpPost]
@@ -513,9 +573,9 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
     public async Task<IActionResult> Logout(string returnUrl = null)
     {
         await signInManager.SignOutAsync();
-        return !string.IsNullOrEmpty(returnUrl)
-            ? LocalRedirect(returnUrl)
-            : RedirectToAction(nameof(Login));
+        return !string.IsNullOrEmpty(value: returnUrl)
+            ? LocalRedirect(localUrl: returnUrl)
+            : RedirectToAction(actionName: nameof(Login));
     }
 
     [HttpPost]
@@ -523,9 +583,16 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
     [ValidateAntiForgeryToken]
     public IActionResult ExternalLogin(string provider, string returnUrl = null)
     {
-        var redirectUrl = Url.Action(nameof(ExternalLoginCallback), "Account", new { returnUrl });
-        var props = signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
-        return Challenge(props, provider);
+        var redirectUrl = Url.Action(
+            action: nameof(ExternalLoginCallback),
+            controller: "Account",
+            values: new { returnUrl }
+        );
+        var props = signInManager.ConfigureExternalAuthenticationProperties(
+            provider: provider,
+            redirectUrl: redirectUrl
+        );
+        return Challenge(properties: props, authenticationSchemes: provider);
     }
 
     [HttpGet]
@@ -537,49 +604,55 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
     {
         if (remoteError != null)
         {
-            ModelState.AddModelError(string.Empty, $"External provider error: {remoteError}");
-            return RedirectToAction(nameof(Login), new { returnUrl });
+            ModelState.AddModelError(
+                key: string.Empty,
+                errorMessage: $"External provider error: {remoteError}"
+            );
+            return RedirectToAction(actionName: nameof(Login), routeValues: new { returnUrl });
         }
 
         var info = await signInManager.GetExternalLoginInfoAsync();
         if (info == null)
         {
-            return RedirectToAction(nameof(Login), new { returnUrl });
+            return RedirectToAction(actionName: nameof(Login), routeValues: new { returnUrl });
         }
 
         var signIn = await signInManager.ExternalLoginSignInAsync(
-            info.LoginProvider,
-            info.ProviderKey,
+            loginProvider: info.LoginProvider,
+            providerKey: info.ProviderKey,
             isPersistent: false,
             bypassTwoFactor: true
         );
 
         if (signIn.Succeeded)
         {
-            return RedirectToLocal(returnUrl);
+            return RedirectToLocal(returnUrl: returnUrl);
         }
 
         // Create/link a local user if missing
         var email =
-            info.Principal.FindFirstValue(ClaimTypes.Email)
-            ?? info.Principal.FindFirstValue("preferred_username");
+            info.Principal.FindFirstValue(claimType: ClaimTypes.Email)
+            ?? info.Principal.FindFirstValue(claimType: "preferred_username");
         var userName = email ?? info.ProviderKey;
 
-        var user = await userManager.FindByNameAsync(userName);
+        var user = await userManager.FindByNameAsync(userName: userName);
         if (user == null)
         {
             user = new User { UserName = userName, Email = email };
-            var createRes = await userManager.CreateAsync(user);
+            var createRes = await userManager.CreateAsync(user: user);
             if (!createRes.Succeeded)
             {
-                ModelState.AddModelError(string.Empty, localizer["CannotCreateUser"]);
-                return RedirectToAction(nameof(Login), new { returnUrl });
+                ModelState.AddModelError(
+                    key: string.Empty,
+                    errorMessage: localizer[name: "CannotCreateUser"]
+                );
+                return RedirectToAction(actionName: nameof(Login), routeValues: new { returnUrl });
             }
         }
 
-        await userManager.AddLoginAsync(user, info);
-        await signInManager.SignInAsync(user, isPersistent: false);
-        return RedirectToLocal(returnUrl);
+        await userManager.AddLoginAsync(user: user, login: info);
+        await signInManager.SignInAsync(user: user, isPersistent: false);
+        return RedirectToLocal(returnUrl: returnUrl);
     }
 
     [HttpGet]
@@ -593,21 +666,25 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
             .RequestCultureProviders.OfType<OrigamCookieRequestCultureProvider>()
             .First();
         Response.Cookies.Append(
-            cultureProvider.CookieName,
-            cultureProvider.MakeCookieValue(new RequestCulture(culture)),
-            new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) }
+            key: cultureProvider.CookieName,
+            value: cultureProvider.MakeCookieValue(
+                requestCulture: new RequestCulture(culture: culture)
+            ),
+            options: new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(years: 1) }
         );
-        return LocalRedirect(returnUrl);
+        return LocalRedirect(localUrl: returnUrl);
     }
 
     private IActionResult RedirectToLocal(string returnUrl) =>
-        Url.IsLocalUrl(returnUrl) ? LocalRedirect(returnUrl) : RedirectToAction("Index", "Home");
+        Url.IsLocalUrl(url: returnUrl)
+            ? LocalRedirect(localUrl: returnUrl)
+            : RedirectToAction(actionName: "Index", controllerName: "Home");
 
     private void AddErrors(IdentityResult result)
     {
         foreach (var error in result.Errors)
         {
-            ModelState.AddModelError(string.Empty, error.Description);
+            ModelState.AddModelError(key: string.Empty, errorMessage: error.Description);
         }
     }
 }

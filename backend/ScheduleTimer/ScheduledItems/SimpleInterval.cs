@@ -36,7 +36,7 @@ public class SimpleInterval : IScheduledItem
     {
         _Interval = Interval;
         _StartTime = StartTime;
-        _EndTime = StartTime + TimeSpan.FromTicks(Interval.Ticks * count);
+        _EndTime = StartTime + TimeSpan.FromTicks(value: Interval.Ticks * count);
     }
 
     public SimpleInterval(DateTime StartTime, TimeSpan Interval, DateTime EndTime)
@@ -53,20 +53,20 @@ public class SimpleInterval : IScheduledItem
             return;
         }
 
-        DateTime Next = NextRunTime(Begin, true);
+        DateTime Next = NextRunTime(time: Begin, AllowExact: true);
         while (Next < End)
         {
-            List.Add(Next);
-            Next = NextRunTime(Next, false);
+            List.Add(item: Next);
+            Next = NextRunTime(time: Next, AllowExact: false);
         }
     }
 
     public DateTime NextRunTime(DateTime time, bool AllowExact)
     {
-        DateTime returnTime = NextRunTimeInt(time, AllowExact);
-        Debug.WriteLine(time);
-        Debug.WriteLine(returnTime);
-        Debug.WriteLine(_EndTime);
+        DateTime returnTime = NextRunTimeInt(time: time, AllowExact: AllowExact);
+        Debug.WriteLine(value: time);
+        Debug.WriteLine(value: returnTime);
+        Debug.WriteLine(value: _EndTime);
         return (returnTime >= _EndTime) ? DateTime.MaxValue : returnTime;
     }
 
@@ -78,7 +78,7 @@ public class SimpleInterval : IScheduledItem
             return _StartTime;
         }
 
-        if (ExactMatch(time))
+        if (ExactMatch(time: time))
         {
             return AllowExact ? time : time + _Interval;
         }
@@ -87,7 +87,7 @@ public class SimpleInterval : IScheduledItem
             _Interval.TotalMilliseconds
             - ((ulong)Span.TotalMilliseconds % (ulong)_Interval.TotalMilliseconds)
         );
-        return time.AddMilliseconds(msRemaining);
+        return time.AddMilliseconds(value: msRemaining);
     }
 
     private bool ExactMatch(DateTime time)

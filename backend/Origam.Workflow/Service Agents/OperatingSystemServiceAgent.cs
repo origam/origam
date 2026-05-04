@@ -30,7 +30,7 @@ namespace Origam.Workflow;
 public class OperatingSystemServiceAgent : AbstractServiceAgent
 {
     private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
-        System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType
+        type: System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType
     );
     #region IServiceAgent Members
     private object result;
@@ -41,14 +41,14 @@ public class OperatingSystemServiceAgent : AbstractServiceAgent
         result = MethodName switch
         {
             "StartProcess" => StartProcess(
-                Parameters.Get<string>("FileName"),
-                Parameters.Get<string>("Arguments"),
-                Parameters.Get<int>("Timeout")
+                filename: Parameters.Get<string>(key: "FileName"),
+                arguments: Parameters.Get<string>(key: "Arguments"),
+                timeout: Parameters.Get<int>(key: "Timeout")
             ),
             _ => throw new ArgumentOutOfRangeException(
-                nameof(MethodName),
-                MethodName,
-                ResourceUtils.GetString("InvalidMethodName")
+                paramName: nameof(MethodName),
+                actualValue: MethodName,
+                message: ResourceUtils.GetString(key: "InvalidMethodName")
             ),
         };
     }
@@ -64,8 +64,8 @@ public class OperatingSystemServiceAgent : AbstractServiceAgent
         process.StartInfo.RedirectStandardError = true;
         var standardOutput = new StringBuilder();
         var standardError = new StringBuilder();
-        using var outputWaitHandle = new AutoResetEvent(false);
-        using var errorWaitHandle = new AutoResetEvent(false);
+        using var outputWaitHandle = new AutoResetEvent(initialState: false);
+        using var errorWaitHandle = new AutoResetEvent(initialState: false);
         process.OutputDataReceived += (sender, e) =>
         {
             if (e.Data == null)
@@ -74,7 +74,7 @@ public class OperatingSystemServiceAgent : AbstractServiceAgent
             }
             else
             {
-                standardOutput.AppendLine(e.Data);
+                standardOutput.AppendLine(value: e.Data);
             }
         };
         process.ErrorDataReceived += (sender, e) =>
@@ -85,20 +85,20 @@ public class OperatingSystemServiceAgent : AbstractServiceAgent
             }
             else
             {
-                standardError.AppendLine(e.Data);
+                standardError.AppendLine(value: e.Data);
             }
         };
         if (log.IsDebugEnabled)
         {
-            log.DebugFormat("Executing {0} {1}", filename, arguments);
+            log.DebugFormat(format: "Executing {0} {1}", arg0: filename, arg1: arguments);
         }
         process.Start();
         process.BeginOutputReadLine();
         process.BeginErrorReadLine();
         if (
-            !process.WaitForExit(timeout)
-            || !outputWaitHandle.WaitOne(timeout)
-            || !errorWaitHandle.WaitOne(timeout)
+            !process.WaitForExit(milliseconds: timeout)
+            || !outputWaitHandle.WaitOne(millisecondsTimeout: timeout)
+            || !errorWaitHandle.WaitOne(millisecondsTimeout: timeout)
         )
         {
             try
@@ -109,12 +109,14 @@ public class OperatingSystemServiceAgent : AbstractServiceAgent
             {
                 /* ignore failure */
             }
-            throw new Exception($"Timeout while executing process: {filename} {arguments}");
+            throw new Exception(
+                message: $"Timeout while executing process: {filename} {arguments}"
+            );
         }
         if (standardError.Length > 0)
         {
             throw new Exception(
-                $"Error while executing process: {filename} {arguments}\n{standardError}"
+                message: $"Error while executing process: {filename} {arguments}\n{standardError}"
             );
         }
         return true;

@@ -36,14 +36,14 @@ public class ImageBox : PictureBox, IAsCaptionControl, IAsControl
     public ImageBox()
         : base() { }
 
-    [Browsable(true)]
+    [Browsable(browsable: true)]
     public new int TabIndex
     {
         get { return base.TabIndex; }
         set { base.TabIndex = value; }
     }
 
-    [Browsable(true)]
+    [Browsable(browsable: true)]
     public ImageBoxSourceType SourceType
     {
         get { return _sourceType; }
@@ -71,10 +71,12 @@ public class ImageBox : PictureBox, IAsCaptionControl, IAsControl
                         {
                             if (!(value is byte[]))
                             {
-                                throw new Exception(ResourceUtils.GetString("ErrorImageData"));
+                                throw new Exception(
+                                    message: ResourceUtils.GetString(key: "ErrorImageData")
+                                );
                             }
                             _imageData = (byte[])value;
-                            stream = new MemoryStream(_imageData);
+                            stream = new MemoryStream(buffer: _imageData);
                             break;
                         }
 
@@ -82,25 +84,32 @@ public class ImageBox : PictureBox, IAsCaptionControl, IAsControl
                         {
                             if (!(value is string))
                             {
-                                throw new Exception(ResourceUtils.GetString("ErrorImageData"));
+                                throw new Exception(
+                                    message: ResourceUtils.GetString(key: "ErrorImageData")
+                                );
                             }
 
                             string svalue = (string)value;
                             string path = svalue;
-                            if (svalue.StartsWith("http"))
+                            if (svalue.StartsWith(value: "http"))
                             {
                                 stream =
                                     HttpTools
-                                        .Instance.SendRequest(new Request(url: path, method: "GET"))
+                                        .Instance.SendRequest(
+                                            request: new Request(url: path, method: "GET")
+                                        )
                                         .Content as Stream;
                             }
 
                             {
-                                path = Path.Combine(Application.StartupPath, @"images\");
-                                path = Path.Combine(path, svalue);
+                                path = Path.Combine(
+                                    path1: Application.StartupPath,
+                                    path2: @"images\"
+                                );
+                                path = Path.Combine(path1: path, path2: svalue);
                                 try
                                 {
-                                    stream = new FileStream(path, FileMode.Open);
+                                    stream = new FileStream(path: path, mode: FileMode.Open);
                                 }
                                 catch { }
                                 break;
@@ -115,9 +124,9 @@ public class ImageBox : PictureBox, IAsCaptionControl, IAsControl
                     else
                     {
                         System.Drawing.Bitmap bm = new System.Drawing.Bitmap(
-                            System.Drawing.Image.FromStream(stream)
+                            original: System.Drawing.Image.FromStream(stream: stream)
                         );
-                        bm.MakeTransparent(System.Drawing.Color.Transparent);
+                        bm.MakeTransparent(transparentColor: System.Drawing.Color.Transparent);
                         this.Image = bm;
                     }
                 }
@@ -129,7 +138,7 @@ public class ImageBox : PictureBox, IAsCaptionControl, IAsControl
                     }
                 }
             }
-            OnImageDataChanged(EventArgs.Empty);
+            OnImageDataChanged(e: EventArgs.Empty);
         }
     }
     #region Events
@@ -139,7 +148,7 @@ public class ImageBox : PictureBox, IAsCaptionControl, IAsControl
     {
         if (this.imageDataChanged != null)
         {
-            this.imageDataChanged(this, e);
+            this.imageDataChanged(sender: this, e: e);
         }
     }
     #endregion
@@ -152,9 +161,9 @@ public class ImageBox : PictureBox, IAsCaptionControl, IAsControl
     #region IAsCaptionControl Members
     int _gridColumnWidth;
 
-    [Category("(ORIGAM)")]
-    [DefaultValue(100)]
-    [Description(CaptionDoc.GridColumnWidthDescription)]
+    [Category(category: "(ORIGAM)")]
+    [DefaultValue(value: 100)]
+    [Description(description: CaptionDoc.GridColumnWidthDescription)]
     public int GridColumnWidth
     {
         get { return _gridColumnWidth; }
@@ -162,7 +171,7 @@ public class ImageBox : PictureBox, IAsCaptionControl, IAsControl
     }
     string _gridColumnCaption = "";
 
-    [Category("(ORIGAM)")]
+    [Category(category: "(ORIGAM)")]
     public string GridColumnCaption
     {
         get { return _gridColumnCaption; }
@@ -182,7 +191,7 @@ public class ImageBox : PictureBox, IAsCaptionControl, IAsControl
     }
     private int _captionLength = 100;
 
-    [Category("(ORIGAM)")]
+    [Category(category: "(ORIGAM)")]
     public int CaptionLength
     {
         get { return _captionLength; }
