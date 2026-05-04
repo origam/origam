@@ -59,7 +59,11 @@ export class EditorTabViewState {
     }
 
     if (this.rootStore.uiState.getDsGeneratorState().isOpen) {
-      yield* this.openDeploymentScriptsGeneratorModule()();
+      try {
+        yield* this.openDeploymentScriptsGeneratorModule()();
+      } catch (err) {
+        console.error('Failed to auto-open Deployment Scripts Generator module:', err);
+      }
     }
   }
 

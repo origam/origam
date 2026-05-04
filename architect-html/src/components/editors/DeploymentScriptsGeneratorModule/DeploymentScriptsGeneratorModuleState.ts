@@ -214,12 +214,21 @@ export default class DeploymentScriptsGeneratorModuleState implements IEditorSta
   });
 
   reload = flow(function* (this: DeploymentScriptsGeneratorModuleState) {
+    const previousSelectedVersionId = this.selectedDeploymentVersionId;
+
     const response = yield this.architectApi.fetchDeploymentScriptsList(this.selectedPlatform);
 
     this.results = response.results;
     this.possibleDeploymentVersions = response.deploymentVersions;
     this.currentDeploymentVersionId = response.currentDeploymentVersionId;
-    this.selectedDeploymentVersionId = response.currentDeploymentVersionId;
+
+    const stillAvailable =
+      previousSelectedVersionId !== null &&
+      this.possibleDeploymentVersions.some(v => v.id === previousSelectedVersionId);
+    this.selectedDeploymentVersionId = stillAvailable
+      ? previousSelectedVersionId
+      : response.currentDeploymentVersionId;
+
     this.clearSelection();
 
     if (this.uniquePlatforms.length > 0 && !this.uniquePlatforms.includes(this.selectedPlatform!)) {

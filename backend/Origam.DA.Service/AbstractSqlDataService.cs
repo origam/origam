@@ -2186,6 +2186,8 @@ public abstract class AbstractSqlDataService : AbstractDataService
                     var result = new SchemaDbCompareResult
                     {
                         ResultType = DbCompareResultType.MissingInSchema,
+                        // Name is taken as-is from the database; it does not need to match the
+                        // sanitized name that would be generated for a new constraint.
                         ItemName = (string)row["Constraint"],
                         // TODO: result.SchemaItem = ?
                         ParentSchemaItem = table,
@@ -2691,7 +2693,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
         return schemaTables;
     }
 
-private void DoCompare(
+    private void DoCompare(
         List<SchemaDbCompareResult> results,
         Hashtable dbList,
         Hashtable schemaList,
