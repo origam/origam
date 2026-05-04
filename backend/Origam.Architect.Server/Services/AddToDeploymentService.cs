@@ -67,23 +67,29 @@ public class AddToDeploymentService(
 
         foreach (SchemaDbCompareResult result in selectedResults)
         {
-            var scripts = new[] { result.Script, result.Script2 };
-            foreach (var script in scripts)
+            var dbType = (DatabaseType)
+                Enum.Parse(
+                    typeof(DatabaseType),
+                    result.Platform.GetParseEnum(result.Platform.DataService)
+                );
+
+            if (!string.IsNullOrEmpty(result.Script))
             {
-                if (string.IsNullOrEmpty(script))
-                {
-                    continue;
-                }
-
-                var dbType = (DatabaseType)
-                    Enum.Parse(
-                        typeof(DatabaseType),
-                        result.Platform.GetParseEnum(result.Platform.DataService)
-                    );
-
                 CreateAndPersistActivity(
                     result.SchemaItem.ModelDescription() + "_" + result.ItemName,
-                    script,
+                    result.Script,
+                    version,
+                    dataService,
+                    dbType
+                );
+            }
+
+            if (!string.IsNullOrEmpty(result.Script2))
+            {
+                // Script2 carries the foreign keys
+                CreateAndPersistActivity(
+                    result.SchemaItem.ModelDescription() + "_FK_" + result.ItemName,
+                    result.Script2,
                     version,
                     dataService,
                     dbType
