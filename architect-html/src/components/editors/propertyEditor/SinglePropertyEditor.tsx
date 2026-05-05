@@ -28,6 +28,9 @@ import { observer } from 'mobx-react-lite';
 import { useContext } from 'react';
 import { VscChevronDown, VscCopy } from 'react-icons/vsc';
 
+const NO_WHITESPACE_PROPERTIES = new Set(['Name', 'MappedObjectName']);
+const stripWhitespace = (value: string) => value.replace(/\s+/gu, '');
+
 const SinglePropertyEditor = observer(
   (props: { property: EditorProperty; propertyManager: IPropertyManager; compact?: boolean }) => {
     const rootStore = useContext(RootStoreContext);
@@ -116,7 +119,12 @@ const SinglePropertyEditor = observer(
             type="text"
             disabled={property.readOnly}
             value={property.value != null ? String(property.value) : undefined}
-            onChange={e => onValueChange(property, e.target.value)}
+            onChange={e => {
+              const next = NO_WHITESPACE_PROPERTIES.has(property.name)
+                ? stripWhitespace(e.target.value)
+                : e.target.value;
+              onValueChange(property, next);
+            }}
             title={property.value != null ? property.value.toString() : ''}
           />
         </div>
