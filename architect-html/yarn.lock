@@ -1721,7 +1721,7 @@ __metadata:
     react-dnd-html5-backend: "npm:^16.0.1"
     react-dom: "npm:^19.2.5"
     react-icons: "npm:^5.6.0"
-    react-inlinesvg: "npm:^4.3.0"
+    react-inlinesvg: "npm:^4.4.0"
     sass: "npm:^1.99.0"
     typescript: "npm:^6.0.3"
     vite: "npm:^8.0.10"
@@ -4493,14 +4493,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-inlinesvg@npm:^4.3.0":
-  version: 4.3.0
-  resolution: "react-inlinesvg@npm:4.3.0"
+"react-inlinesvg@npm:^4.4.0":
+  version: 4.4.0
+  resolution: "react-inlinesvg@npm:4.4.0"
   dependencies:
     react-from-dom: "npm:^0.7.5"
   peerDependencies:
     react: 16.8 - 19
-  checksum: 10c0/2909624f36f3ab49fdd2f8c336099e4cd933174cb342c22df19d025e023194ef608cdc8980912b8c6b2ea939965d156eed352bc7214eda886aeb83ec26e7f79f
+  checksum: 10c0/571785fce9ac45bf4e379c4be4316982af0208020f7306d17ecba5cb0aab545ab3077ecf03439000341c66391c98e4585c34d574e2a9da0a669c74de33f4a55c
   languageName: node
   linkType: hard
 
