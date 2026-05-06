@@ -1709,7 +1709,7 @@ __metadata:
     eslint-plugin-react-hooks: "npm:^7.1.1"
     eslint-plugin-react-refresh: "npm:^0.5.2"
     lodash: "npm:^4.18.1"
-    mobx: "npm:^6.15.0"
+    mobx: "npm:^6.15.2"
     mobx-react-lite: "npm:^4.1.1"
     moment: "npm:^2.30.1"
     monaco-editor: "npm:^0.55.1"
@@ -4016,10 +4016,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mobx@npm:^6.15.0":
-  version: 6.15.0
-  resolution: "mobx@npm:6.15.0"
-  checksum: 10c0/afbfdc5659caac4ba620d1caca8eb471bbe56746403a8023ae402e27f9e04856394e1529ccf46feb7fdad0c6d695fa1972e8421e7fbfcb1cf453131739a12ac4
+"mobx@npm:^6.15.2":
+  version: 6.15.2
+  resolution: "mobx@npm:6.15.2"
+  checksum: 10c0/80599353f53ec0ff35cd017e9b160ae3a1ec50ef7c574e06fa9183c3e0c88776390a6fdfc3ab99a3c459191d3bd4da74c6ab0d7e460bfb5d5864a8fa5dcd8a81
   languageName: node
   linkType: hard
 
