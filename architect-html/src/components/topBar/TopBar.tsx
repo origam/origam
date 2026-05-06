@@ -22,6 +22,7 @@ import Logo from '@components/logo/Logo';
 import SearchInput from '@components/search/SearchInput.tsx';
 import ProgressBar from '@components/topBar/ProgressBar';
 import S from '@components/topBar/TopBar.module.scss';
+import GuidGeneratorButton from '@modules/guidGenerator/GuidGeneratorButton';
 import SettingsButtonHOC from '@modules/settings/SettingsButtonHOC';
 
 const TopBar = () => {
@@ -32,6 +33,7 @@ const TopBar = () => {
         <Logo />
         <div className={S.actionBar}>
           <SearchInput />
+          <GuidGeneratorButton />
           <DeploymentScriptsGeneratorButtonHOC />
           <SettingsButtonHOC />
         </div>
