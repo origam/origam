@@ -63,8 +63,9 @@ public class DataStructureEntity : AbstractSchemaItem
     /// Can be IDataEntity (as a root entity of the data structure) or
     /// IAssociation (as a child entity of another entity in the data structure).
     /// </summary>
-    [TypeConverter(typeof(DataStructureEntityConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
+    [Category(category: "Reference")]
+    [TypeConverter(type: typeof(DataStructureEntityConverter))]
+    [RefreshProperties(refresh: RefreshProperties.Repaint)]
     [NotNullModelElementRule()]
     [RelationshipWithKeyRule()]
     [XmlReference("entity", "EntityId")]
