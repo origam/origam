@@ -17,17 +17,18 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { T } from '@/main';
 import Button from '@components/Button/Button';
-import { useState } from 'react';
-import { VscSymbolKey } from 'react-icons/vsc';
+import { useCallback, useState } from 'react';
+import { VscSymbolNumeric } from 'react-icons/vsc';
 
-const COPIED_FEEDBACK_MS = 1500;
+const COPIED_FEEDBACK_MS = 800;
 
 const GuidGeneratorButton = () => {
   const [copied, setCopied] = useState(false);
 
-  const handleOnClick = async () => {
+  const handleOnClick = useCallback(async () => {
     const guid = crypto.randomUUID();
     try {
       await navigator.clipboard.writeText(guid);
@@ -36,19 +37,23 @@ const GuidGeneratorButton = () => {
     } catch {
       window.prompt(T('Copy GUID', 'guid_button_copy_prompt'), guid);
     }
-  };
+  }, []);
+
+  useKeyboardShortcuts([
+    {
+      predicate: (e: KeyboardEvent) => e.ctrlKey && e.shiftKey && (e.key === 'G' || e.key === 'g'),
+      handler: () => void handleOnClick(),
+    },
+  ]);
 
   return (
     <Button
       type="secondary"
       title={
-        copied
-          ? T('Copied!', 'guid_button_copied_label')
-          : T('New GUID', 'guid_button_label')
+        copied ? T('Copied!', 'guid_button_copied_label') : T('Generate GUID', 'guid_button_label')
       }
-      prefix={<VscSymbolKey />}
+      prefix={<VscSymbolNumeric />}
       onClick={handleOnClick}
-      isAnimated
     />
   );
 };
