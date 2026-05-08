@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { T } from '@/main';
 import { IArchitectApi, IUpdatePropertiesResult } from '@api/IArchitectApi';
 import { IEditorNode } from '@components/editorTabView/EditorTabViewState';
 import { IEditorState } from '@components/editorTabView/IEditorState';
@@ -53,6 +54,18 @@ export class GridEditorState implements IEditorState, IPropertyManager {
   get label() {
     const nameValue = this.properties.find(x => x.name === 'Name')?.value;
     return typeof nameValue === 'string' ? nameValue : '';
+  }
+
+  get title(): string {
+    const typeName = this.editorNode.itemTypeName;
+    const label = this.label;
+    if (typeName && label) {
+      return T('{0}: {1}', 'grid_editor_title_full', typeName, label);
+    }
+    if (typeName) {
+      return typeName;
+    }
+    return T('Editing: {0}', 'grid_editor_title', label);
   }
 
   *save(): Generator<Promise<any>, void, any> {
