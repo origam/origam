@@ -23,7 +23,10 @@ const Logo = () => {
   return (
     <div className={S.root}>
       <img src="/ORIGAM-logo.svg" alt="ORIGAM" />
-      <span>Architect</span>
+      <div className={S.label}>
+        <span className={S.product}>Architect</span>
+        <span className={S.version}>{__ORIGAM_ARCHITECT_HTML_VERSION__}</span>
+      </div>
     </div>
   );
 };

@@ -5,6 +5,11 @@ import { defineConfig } from 'vite';
 import mkcert from 'vite-plugin-mkcert';
 
 export default defineConfig({
+  define: {
+    __ORIGAM_ARCHITECT_HTML_VERSION__: JSON.stringify(
+      process.env.VITE_ORIGAM_ARCHITECT_HTML_VERSION ?? 'dev',
+    ),
+  },
   plugins: [
     react(),
     babel({
