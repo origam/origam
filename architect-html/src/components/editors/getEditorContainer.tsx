@@ -108,9 +108,7 @@ export function getEditorContainer(args: {
       isDirty,
       architectApi,
     );
-    const editorComponent = (
-      <GridEditor editorState={editorState} title={editorState.title} />
-    );
+    const editorComponent = <GridEditor editorState={editorState} title={editorState.title} />;
     return new EditorContainer(editorState, editorComponent);
   }
 
