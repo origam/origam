@@ -43,9 +43,9 @@ export const FilterableSelect = observer((props: FilterableSelectProps) => {
   const [open, setOpen] = useState(false);
   const [filter, setFilter] = useState<string | null>(null);
   const [highlight, setHighlight] = useState(0);
-  const [menuPos, setMenuPos] = useState<{ top: number; left: number; width: number } | null>(
-    null,
-  );
+  const [menuPos, setMenuPos] = useState<
+    { top: number; left: number; width: number; maxHeight: number; openUp: boolean } | null
+  >(null);
 
   const wrapperRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -62,8 +62,10 @@ export const FilterableSelect = observer((props: FilterableSelectProps) => {
     const handler = (e: MouseEvent) => {
       const target = e.target as Node;
       if (
-        wrapperRef.current && !wrapperRef.current.contains(target) &&
-        listRef.current && !listRef.current.contains(target)
+        wrapperRef.current &&
+        !wrapperRef.current.contains(target) &&
+        listRef.current &&
+        !listRef.current.contains(target)
       ) {
         if (filter != null && filteredOptions[highlight]) {
           commit(filteredOptions[highlight].value);
@@ -82,7 +84,14 @@ export const FilterableSelect = observer((props: FilterableSelectProps) => {
     const update = () => {
       if (!wrapperRef.current) return;
       const r = wrapperRef.current.getBoundingClientRect();
-      setMenuPos({ top: r.bottom + 2, left: r.left, width: r.width });
+      const margin = 2;
+      const desired = 240;
+      const spaceBelow = window.innerHeight - r.bottom - margin;
+      const spaceAbove = r.top - margin;
+      const openUp = spaceBelow < Math.min(desired, 160) && spaceAbove > spaceBelow;
+      const maxHeight = Math.max(80, Math.min(desired, openUp ? spaceAbove : spaceBelow));
+      const top = openUp ? Math.max(margin, r.top - margin - maxHeight) : r.bottom + margin;
+      setMenuPos({ top, left: r.left, width: r.width, maxHeight, openUp });
     };
     update();
     window.addEventListener('scroll', update, true);
@@ -141,6 +150,13 @@ export const FilterableSelect = observer((props: FilterableSelectProps) => {
     } else if (e.key === 'Escape') {
       setOpen(false);
       setFilter(null);
+    } else if (e.key === 'Tab') {
+      if (open && filter != null && filteredOptions[highlight]) {
+        commit(filteredOptions[highlight].value);
+      } else {
+        setOpen(false);
+        setFilter(null);
+      }
     }
   };
 
@@ -162,25 +178,27 @@ export const FilterableSelect = observer((props: FilterableSelectProps) => {
         onKeyDown={onKeyDown}
       />
       <VscChevronDown className={S.selectIcon} />
-      {open && menuPos &&
+      {open &&
+        menuPos &&
         createPortal(
           <ul
             className={S.dropdownList}
             ref={listRef}
-            style={{ top: menuPos.top, left: menuPos.left, width: menuPos.width }}
+            style={{
+              top: menuPos.top,
+              left: menuPos.left,
+              width: menuPos.width,
+              maxHeight: menuPos.maxHeight,
+            }}
           >
-            {filteredOptions.length === 0 && (
-              <li className={S.dropdownEmpty}>No matches</li>
-            )}
+            {filteredOptions.length === 0 && <li className={S.dropdownEmpty}>No matches</li>}
             {filteredOptions.map((o, i) => (
               <li
                 key={String(o.value) + o.name}
                 className={
                   S.dropdownItem +
                   (i === highlight ? ' ' + S.dropdownItemHighlight : '') +
-                  (String(o.value) === String(selectedValue)
-                    ? ' ' + S.dropdownItemSelected
-                    : '')
+                  (String(o.value) === String(selectedValue) ? ' ' + S.dropdownItemSelected : '')
                 }
                 onMouseDown={e => {
                   e.preventDefault();
