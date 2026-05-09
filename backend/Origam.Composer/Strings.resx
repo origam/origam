@@ -36,9 +36,6 @@
     <data name="Init_commit_message" xml:space="preserve">
         <value>[orange1][bold]- init commit:[/][/] {0}</value>
     </data>
-    <data name="Git_config_set" xml:space="preserve">
-        <value>[orange1][bold]- git config set:[/][/] {0}, {1}</value>
-    </data>
     <data name="Executing_task" xml:space="preserve">
         <value>[orange1][bold]Executing:[/][/] {0}</value>
     </data>
@@ -50,9 +47,6 @@
     </data>
     <data name="Architect_Configuration_Header" xml:space="preserve">
         <value>[purple]Architect Configuration[/]</value>
-    </data>
-    <data name="Git_Configuration_Header" xml:space="preserve">
-        <value>[cyan1]Git Configuration[/]</value>
     </data>
     <data name="Actions_to_be_performed" xml:space="preserve">
         <value>[bold]Actions to be performed[/]</value>
@@ -83,9 +77,6 @@
     </data>
     <data name="BuilderTask_Create_database_structure_from_model" xml:space="preserve">
         <value>Create database structure (from model)</value>
-    </data>
-    <data name="BuilderTask_Initialize_Git" xml:space="preserve">
-        <value>Initialize Git</value>
     </data>
     <data name="BuilderTask_Create_new_Package" xml:space="preserve">
         <value>Create new Package</value>

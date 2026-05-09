@@ -44,8 +44,7 @@ public class CreateCommand(
             return 0;
         }
 
-        GitIdentity gitIdentity = GitIdentityResolver(settings);
-        ShowVisualBanner(settings: settings, gitIdentity: gitIdentity);
+        ShowVisualBanner(settings);
 
         var dockerFolder = Path.Combine(settings.ProjectFolder, "docker");
         var project = new Project
@@ -163,32 +162,5 @@ public class CreateCommand(
             dockerImageWindows: settings.ArchitectDockerImageWin,
             port: settings.ArchitectPort
         );
-        visualService.PrintGitValues(
-            isEnabled: settings.GitEnabled,
-            user: gitIdentity.User,
-            email: gitIdentity.Email
-        );
-    }
-
-    private GitIdentity GitIdentityResolver(CreateCommandSettings settings)
-    {
-        var gitUser = "";
-        var gitEmail = "";
-        string[] gitCredentials = gitService.FetchGitUserFromGlobalConfig();
-        if (gitCredentials != null)
-        {
-            gitUser = gitCredentials[0];
-            gitEmail = gitCredentials[1];
-        }
-        if (!string.IsNullOrWhiteSpace(settings.GitUser))
-        {
-            gitUser = settings.GitUser;
-        }
-        if (!string.IsNullOrWhiteSpace(settings.GitEmail))
-        {
-            gitEmail = settings.GitEmail;
-        }
-
-        return new GitIdentity(gitUser, gitEmail);
     }
 }
