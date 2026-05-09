@@ -97,17 +97,4 @@ public class CreateCommandSettings : CommandSettings
     public int ArchitectPort { get; set; }
 
     #endregion
-
-    #region Git
-
-    [CommandOption("--git-enabled")]
-    public bool GitEnabled { get; set; }
-
-    [CommandOption("--git-user <USER>")]
-    public string GitUser { get; set; }
-
-    [CommandOption("--git-email <EMAIL>")]
-    public string GitEmail { get; set; }
-
-    #endregion
 }

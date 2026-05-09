@@ -30,8 +30,7 @@ namespace Origam.Composer.Commands;
 public class CreateCommand(
     IVisualService visualService,
     IPasswordGeneratorService passwordGeneratorService,
-    IProjectBuilderService projectBuilderService,
-    IGitService gitService
+    IProjectBuilderService projectBuilderService
 ) : Command<CreateCommandSettings>
 {
     public override int Execute(CommandContext context, CreateCommandSettings settings)
@@ -97,12 +96,6 @@ public class CreateCommand(
             ArchitectDockerImageWin = settings.ArchitectDockerImageWin,
             ArchitectPort = settings.ArchitectPort,
 
-            #region Git
-            IsGitEnabled = settings.GitEnabled,
-            GitUsername = gitIdentity.User,
-            GitEmail = gitIdentity.Email,
-            #endregion
-
             #region Docker
             DockerFolder = dockerFolder,
 
@@ -147,7 +140,7 @@ public class CreateCommand(
         return 0;
     }
 
-    private void ShowVisualBanner(CreateCommandSettings settings, GitIdentity gitIdentity)
+    private void ShowVisualBanner(CreateCommandSettings settings)
     {
         visualService.PrintHeader(title: Strings.Create_New_Project);
         visualService.PrintDatabaseValues(
