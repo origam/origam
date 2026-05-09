@@ -43,9 +43,13 @@ export const FilterableSelect = observer((props: FilterableSelectProps) => {
   const [open, setOpen] = useState(false);
   const [filter, setFilter] = useState<string | null>(null);
   const [highlight, setHighlight] = useState(0);
-  const [menuPos, setMenuPos] = useState<
-    { top: number; left: number; width: number; maxHeight: number; openUp: boolean } | null
-  >(null);
+  const [menuPos, setMenuPos] = useState<{
+    top: number;
+    left: number;
+    width: number;
+    maxHeight: number;
+    openUp: boolean;
+  } | null>(null);
 
   const wrapperRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
