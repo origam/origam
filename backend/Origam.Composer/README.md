@@ -40,8 +40,6 @@ You can insert parameters into `Jetbrains Rider` > `Edit Configurations` > `Prog
 
 On `MacOS` you can use something like this: `--p-folder "/Users/JohnDoe/OrigamProjects/MyOrigamApp"`.
 
-You can use custom git identity `--git-user "Origam Dev"` `--git-email "no-reply@origam.com"`
-
 NOTES: 
 For running the Composer you need to have the .NET runtime installed.
 The model used in new project is taken from Master so the versions of Server and Architect should be the same version otherwise there can be version issues.
@@ -71,7 +69,6 @@ Origam.Composer.exe create
 --arch-docker-image-win "origam/architect:2025.11.alpha.4051.win"
 --arch-port 8081
 
---git-enabled
 ```
 
 Example for `PostgreSQL`:
@@ -98,7 +95,6 @@ Origam.Composer.exe create
 --arch-docker-image-win "origam/architect:2025.11.alpha.4051.win"
 --arch-port 8081
 
---git-enabled
 ```
 
 ## Warning!
