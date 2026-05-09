@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { IDropDownValue } from '@api/IArchitectApi';
 import S from '@editors/propertyEditor/SinglePropertyEditor.module.scss';
 import { observer } from 'mobx-react-lite';
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { VscChevronDown } from 'react-icons/vsc';
 
@@ -61,6 +61,16 @@ export const FilterableSelect = observer((props: FilterableSelectProps) => {
     return options.filter(o => o.name.toLowerCase().includes(f));
   }, [options, filter]);
 
+  const commit = useCallback(
+    (value: any) => {
+      onChange(value);
+      setOpen(false);
+      setFilter(null);
+      inputRef.current?.blur();
+    },
+    [onChange],
+  );
+
   useEffect(() => {
     if (!open) return;
     const handler = (e: MouseEvent) => {
@@ -81,7 +91,7 @@ export const FilterableSelect = observer((props: FilterableSelectProps) => {
     };
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
-  }, [open, filter, filteredOptions, highlight]);
+  }, [open, filter, filteredOptions, highlight, commit]);
 
   useLayoutEffect(() => {
     if (!open || !wrapperRef.current) return;
@@ -129,13 +139,6 @@ export const FilterableSelect = observer((props: FilterableSelectProps) => {
         filteredOptions.findIndex(o => String(o.value) === String(selectedValue)),
       ),
     );
-  };
-
-  const commit = (value: any) => {
-    onChange(value);
-    setOpen(false);
-    setFilter(null);
-    inputRef.current?.blur();
   };
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
