@@ -62,9 +62,10 @@ export class XsltEditorState implements ITabViewState, IEditorState, IPropertyMa
   private readonly transformPropertyName: string;
 
   get xsl(): string {
-    return (
-      this.gridEditorState.properties.find(x => x.name === this.transformPropertyName)?.value ?? ''
-    );
+    const value = this.gridEditorState.properties.find(
+      x => x.name === this.transformPropertyName,
+    )?.value;
+    return typeof value === 'string' ? value : '';
   }
 
   constructor(
@@ -84,7 +85,8 @@ export class XsltEditorState implements ITabViewState, IEditorState, IPropertyMa
     this.nameProperty = properties?.find(prop => prop.name === 'Name');
     this.targetStructureProperty = properties?.find(prop => prop.name === 'Structure');
     if (this.targetStructureProperty) {
-      this.targetDataStructureId = this.targetStructureProperty.value;
+      const value = this.targetStructureProperty.value;
+      this.targetDataStructureId = typeof value === 'string' ? value : undefined;
     }
 
     if (properties?.find(x => x.name === 'TextStore')) {

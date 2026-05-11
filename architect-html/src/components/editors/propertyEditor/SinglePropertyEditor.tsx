@@ -18,6 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { RootStoreContext } from '@/main.tsx';
+import { PropertyValue } from '@api/IArchitectApi';
 import { EditorProperty } from '@editors/gridEditor/EditorProperty.ts';
 import { IPropertyManager } from '@editors/propertyEditor/IPropertyManager.tsx';
 import { NumericPropertyInput } from '@editors/propertyEditor/NumericPropertyInput.tsx';
@@ -26,6 +27,9 @@ import { runInFlowWithHandler } from '@errors/runInFlowWithHandler.ts';
 import { observer } from 'mobx-react-lite';
 import { useContext } from 'react';
 import { VscChevronDown, VscCopy } from 'react-icons/vsc';
+
+const NO_WHITESPACE_PROPERTIES = new Set(['Name', 'MappedObjectName']);
+const stripWhitespace = (value: string) => value.replace(/\s+/gu, '');
 
 const SinglePropertyEditor = observer(
   (props: { property: EditorProperty; propertyManager: IPropertyManager; compact?: boolean }) => {
@@ -37,10 +41,11 @@ const SinglePropertyEditor = observer(
       }
     };
 
-    const onValueChange = (property: EditorProperty, value: any) => {
+    const onValueChange = (property: EditorProperty, value: PropertyValue) => {
       runInFlowWithHandler(rootStore.errorDialogController)({
         generator: function* () {
-          const parsedValue = property.type === 'enum' ? parseInt(value) : value;
+          const parsedValue =
+            property.type === 'enum' && typeof value === 'string' ? parseInt(value) : value;
           yield* props.propertyManager.onPropertyUpdated(property, parsedValue);
         },
       });
@@ -48,12 +53,13 @@ const SinglePropertyEditor = observer(
 
     const renderControl = (property: EditorProperty) => {
       if (property.type === 'enum' || property.type === 'looukup') {
+        const selectedValue =
+          property.type === 'enum'
+            ? (property.dropDownValues.find(x => x.name === property.value)?.value ?? '')
+            : (property.value ?? '');
         return (
           <div className={S.selectWrapper}>
-            <select
-              value={property.value ?? ''}
-              onChange={e => onValueChange(property, e.target.value)}
-            >
+            <select value={selectedValue} onChange={e => onValueChange(property, e.target.value)}>
               {property.dropDownValues.map(x => (
                 <option key={x.value + x.name} value={x.value}>
                   {x.name}
@@ -70,7 +76,7 @@ const SinglePropertyEditor = observer(
           <div className={S.checkboxContainer}>
             <input
               type="checkbox"
-              checked={property.value}
+              checked={property.value as boolean}
               onChange={e => onValueChange(property, e.target.checked)}
               disabled={property.readOnly}
               className={S.checkbox}
@@ -82,11 +88,6 @@ const SinglePropertyEditor = observer(
       if (property.type === 'integer' || property.type === 'float') {
         return (
           <div className={S.inputWithCopyButton}>
-            <NumericPropertyInput
-              property={property}
-              type={property.type}
-              onChange={value => onValueChange(property, value)}
-            />
             <button
               type="button"
               className={S.copyButton}
@@ -95,6 +96,11 @@ const SinglePropertyEditor = observer(
             >
               <VscCopy />
             </button>
+            <NumericPropertyInput
+              property={property}
+              type={property.type}
+              onChange={value => onValueChange(property, value)}
+            />
           </div>
         );
       }
@@ -112,8 +118,13 @@ const SinglePropertyEditor = observer(
           <input
             type="text"
             disabled={property.readOnly}
-            value={property.value != null ? property.value : undefined}
-            onChange={e => onValueChange(property, e.target.value)}
+            value={property.value != null ? String(property.value) : undefined}
+            onChange={e => {
+              const next = NO_WHITESPACE_PROPERTIES.has(property.name)
+                ? stripWhitespace(e.target.value)
+                : e.target.value;
+              onValueChange(property, next);
+            }}
             title={property.value != null ? property.value.toString() : ''}
           />
         </div>

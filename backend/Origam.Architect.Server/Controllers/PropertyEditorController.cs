@@ -49,6 +49,7 @@ public class PropertyEditorController(
                 return new PropertyUpdate
                 {
                     PropertyName = editorProperty.Name,
+                    Value = editorProperty.Value,
                     Errors = propertyService.GetRuleErrors(property, editor.Item),
                     DropDownValues = editorProperty.DropDownValues ?? Array.Empty<DropDownValue>(),
                 };

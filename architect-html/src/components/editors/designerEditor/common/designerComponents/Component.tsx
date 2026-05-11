@@ -50,7 +50,7 @@ export class Component {
   }
 
   get relativeLeft(): number {
-    return this.getProperty('Left')!.value;
+    return this.getProperty('Left')!.value as number;
   }
 
   set relativeLeft(value: number) {
@@ -58,7 +58,7 @@ export class Component {
   }
 
   get relativeTop(): number {
-    return this.getProperty('Top')!.value;
+    return this.getProperty('Top')!.value as number;
   }
 
   set relativeTop(value: number) {
@@ -101,7 +101,7 @@ export class Component {
   }
 
   get width(): number {
-    return this.getProperty('Width')!.value;
+    return this.getProperty('Width')!.value as number;
   }
 
   set width(value: number) {
@@ -109,7 +109,7 @@ export class Component {
   }
 
   get height(): number {
-    return this.getProperty('Height')!.value;
+    return this.getProperty('Height')!.value as number;
   }
 
   set height(value: number) {
@@ -117,7 +117,7 @@ export class Component {
   }
 
   get labelWidth(): number {
-    return this.getProperty('CaptionLength')!.value;
+    return this.getProperty('CaptionLength')!.value as number;
   }
 
   set labelWidth(value: number) {

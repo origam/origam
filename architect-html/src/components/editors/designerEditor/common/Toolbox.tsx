@@ -59,7 +59,11 @@ const Toolbox = observer(
             <input
               type="text"
               value={toolboxState.name}
-              onChange={e => run({ generator: toolboxState.nameChanged(e.target.value) })}
+              onChange={e =>
+                run({
+                  generator: toolboxState.nameChanged(e.target.value.replace(/\s+/gu, '')),
+                })
+              }
             />
           </div>
           <div className={S.inputContainer}>

@@ -61,7 +61,10 @@ const DeploymentScriptsEditor = ({ editorState }: { editorState: GridEditorState
                 />
                 <CodeEditor
                   defaultLanguage="sql"
-                  value={editorState.properties.find(x => x.name === 'CommandText')?.value ?? ''}
+                  value={(() => {
+                    const value = editorState.properties.find(x => x.name === 'CommandText')?.value;
+                    return typeof value === 'string' ? value : '';
+                  })()}
                   onChange={text => handleInputChange(text)}
                 />
               </div>

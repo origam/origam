@@ -51,7 +51,8 @@ export class GridEditorState implements IEditorState, IPropertyManager {
   }
 
   get label() {
-    return this.properties.find(x => x.name === 'Name')?.value || '';
+    const nameValue = this.properties.find(x => x.name === 'Name')?.value;
+    return typeof nameValue === 'string' ? nameValue : '';
   }
 
   *save(): Generator<Promise<any>, void, any> {

@@ -23,4 +23,5 @@ export interface IEditorState {
   isActive: boolean;
   isDirty: boolean;
   save(): Generator<Promise<any>, void, any>;
+  dispose?(): void;
 }
