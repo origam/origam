@@ -42,7 +42,7 @@
     "immer": "^11.1.8",
     "immutable": "^5.1.5",
     "jest": "^30.3.0",
-    "jest-environment-jsdom": "^30.3.0",
+    "jest-environment-jsdom": "^30.4.1",
     "js-cookie": "^3.0.5",
     "js-file-download": "^0.4.12",
     "leaflet": "^1.8.0",
