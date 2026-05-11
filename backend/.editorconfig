@@ -15,11 +15,9 @@ dotnet_analyzer_diagnostic.category-Roslynator.severity = none
 # thus we disable associated warning
 dotnet_diagnostic.CS1591.severity = none
 
-# Rules
 # Unused using
 dotnet_diagnostic.IDE0005.severity = warning
-# Add parameter name to improve readability
-dotnet_diagnostic.MA0003.severity = error
+
 # Order named arguments according to the order of parameters
 dotnet_diagnostic.RCS1205.severity = error
 # Enforce parentheses
