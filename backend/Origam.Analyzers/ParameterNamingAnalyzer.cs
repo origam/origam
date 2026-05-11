@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System;
 using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis;
@@ -49,11 +50,41 @@ public sealed class ParameterNamingAnalyzer : DiagnosticAnalyzer
     {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
         context.EnableConcurrentExecution();
-        context.RegisterSyntaxNodeAction(AnalyzeInvocation, SyntaxKind.InvocationExpression);
-        context.RegisterSyntaxNodeAction(
-            AnalyzeObjectCreation,
-            SyntaxKind.ObjectCreationExpression
-        );
+        context.RegisterCompilationStartAction(compilationStart =>
+        {
+            if (!IsModernDotNet(compilationStart.Compilation))
+            {
+                return;
+            }
+
+            compilationStart.RegisterSyntaxNodeAction(
+                AnalyzeInvocation,
+                SyntaxKind.InvocationExpression
+            );
+            compilationStart.RegisterSyntaxNodeAction(
+                AnalyzeObjectCreation,
+                SyntaxKind.ObjectCreationExpression
+            );
+        });
+    }
+
+    private static bool IsModernDotNet(Compilation compilation)
+    {
+        var attribute = compilation
+            .Assembly.GetAttributes()
+            .FirstOrDefault(a =>
+                a.AttributeClass?.ToDisplayString()
+                == "System.Runtime.Versioning.TargetFrameworkAttribute"
+            );
+
+        if (attribute?.ConstructorArguments.FirstOrDefault().Value is not string frameworkName)
+        {
+            return false;
+        }
+
+        // .NETCoreApp covers .NET Core 1-3 and .NET 5+;
+        // excludes .NETFramework and .NETStandard.
+        return frameworkName.StartsWith(".NETCoreApp", StringComparison.Ordinal);
     }
 
     private static void AnalyzeInvocation(SyntaxNodeAnalysisContext context)
