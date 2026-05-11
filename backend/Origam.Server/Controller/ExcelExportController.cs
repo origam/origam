@@ -63,7 +63,7 @@ public class ExcelExportController : AbstractController
         );
         if (!sessionStore.RuleEngine.IsExportAllowed(sessionStore.GetEntityId(input.Entity)))
         {
-            return StatusCode(403, localizer["ExcelExportForbidden"].ToString());
+            return StatusCode(statusCode: 403, localizer["ExcelExportForbidden"].ToString());
         }
         bool isLazyLoaded = sessionStore.IsLazyLoadedEntity(input.Entity);
         switch (isLazyLoaded)
@@ -110,13 +110,19 @@ public class ExcelExportController : AbstractController
         if (excelEntityExporter.ExportFormat == ExcelFormat.XLS)
         {
             Response.ContentType = "application/vnd.ms-excel";
-            Response.Headers.Append("content-disposition", "attachment; filename=export.xls");
+            Response.Headers.Append(
+                key: "content-disposition",
+                value: "attachment; filename=export.xls"
+            );
         }
         else
         {
             Response.ContentType =
                 "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-            Response.Headers.Append("content-disposition", "attachment; filename=export.xlsx");
+            Response.Headers.Append(
+                key: "content-disposition",
+                value: "attachment; filename=export.xlsx"
+            );
         }
 #pragma warning disable 1998
         return new FileCallbackResult(

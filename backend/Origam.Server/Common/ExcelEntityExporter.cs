@@ -50,7 +50,7 @@ public class ExcelEntityExporter
         ConfigurationManager.GetActiveConfiguration() as OrigamSettings;
     readonly bool isExportUnlimited = SecurityManager
         .GetAuthorizationProvider()
-        .Authorize(SecurityManager.CurrentPrincipal, "SYS_ExcelExport_Unlimited");
+        .Authorize(SecurityManager.CurrentPrincipal, context: "SYS_ExcelExport_Unlimited");
     public ExcelFormat ExportFormat =>
         settings.GUIExcelExportFormat == "XLSX" ? ExcelFormat.XLSX : ExcelFormat.XLS;
 
@@ -329,7 +329,13 @@ public class ExcelEntityExporter
         {
             cache.Add(
                 key,
-                lookupService.GetDisplayText(new Guid(lookupId), key, false, false, null)
+                lookupService.GetDisplayText(
+                    new Guid(lookupId),
+                    key,
+                    useCache: false,
+                    returnMessageIfNull: false,
+                    transactionId: null
+                )
             );
         }
         return cache[key];
@@ -382,9 +388,9 @@ public class ExcelEntityExporter
             string fieldValue = val.ToString();
             if (fieldValue.Contains("\r"))
             {
-                fieldValue = fieldValue.Replace("\n", "");
-                fieldValue = fieldValue.Replace("\r", Environment.NewLine);
-                fieldValue = fieldValue.Replace("\t", " ");
+                fieldValue = fieldValue.Replace(oldValue: "\n", newValue: "");
+                fieldValue = fieldValue.Replace(oldValue: "\r", Environment.NewLine);
+                fieldValue = fieldValue.Replace(oldValue: "\t", newValue: " ");
                 cell.SetCellValue(fieldValue.Truncate(characterCellLimit));
             }
             else

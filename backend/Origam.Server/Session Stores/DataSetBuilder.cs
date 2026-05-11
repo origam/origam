@@ -38,7 +38,11 @@ public class DataSetBuilder
 
     public DataSet InitializeFullStructure(Guid id, DataStructureDefaultSet defaultSet)
     {
-        return new DatasetGenerator(true).CreateDataSet(DataStructure(id), true, defaultSet);
+        return new DatasetGenerator(true).CreateDataSet(
+            DataStructure(id),
+            includeCalculatedColumns: true,
+            defaultSet
+        );
     }
 
     public DataSet InitializeListStructure(DataSet data, string listEntity, bool isDbSource)
@@ -63,7 +67,10 @@ public class DataSetBuilder
         // the database
         if (isDbSource)
         {
-            DataColumn loadedFlagColumn = listTable.Columns.Add("___ORIGAM_IsLoaded", typeof(bool));
+            DataColumn loadedFlagColumn = listTable.Columns.Add(
+                columnName: "___ORIGAM_IsLoaded",
+                typeof(bool)
+            );
             loadedFlagColumn.AllowDBNull = false;
             loadedFlagColumn.DefaultValue = false;
         }
@@ -114,7 +121,7 @@ public class DataSetBuilder
             _menuItem.ListMethodId,
             Guid.Empty,
             _menuItem.ListSortSetId,
-            null,
+            transactionId: null,
             queryParameter,
             data,
             listEntity,
@@ -164,11 +171,11 @@ public class DataSetBuilder
                         _menuItem.ListMethodId,
                         Guid.Empty,
                         _menuItem.ListSortSetId,
-                        null,
+                        transactionId: null,
                         qparams,
                         dataset,
                         relationName,
-                        null
+                        columnName: null
                     );
                     DataListLoadedColumns.Add(column);
                 }

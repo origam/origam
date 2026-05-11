@@ -101,7 +101,7 @@ abstract class SqlRunner : ISqlRunner
             catch (Exception ex)
             {
                 Console.Error.WriteLine(ex);
-                log.Error("Failure:", ex);
+                log.Error(message: "Failure:", ex);
                 Thread.Sleep(arguments.Delay);
             }
         }

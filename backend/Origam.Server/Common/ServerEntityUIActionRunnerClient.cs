@@ -138,7 +138,7 @@ public class ServerEntityUIActionRunnerClient : IEntityUIActionRunnerClient
                     default:
                     {
                         throw new ArgumentOutOfRangeException(
-                            "CloseType",
+                            paramName: "CloseType",
                             ewa.CloseType,
                             $@"Invalid CloseType value {ewa.CloseType}"
                         );

@@ -99,7 +99,7 @@ class UrlApiPageCache
                 {
                     throw new OrigamException(
                         string.Format(
-                            "Can't initialize API Url resolver. Duplicate API route '{0}'",
+                            format: "Can't initialize API Url resolver. Duplicate API route '{0}'",
                             page.Url
                         )
                     );
@@ -111,7 +111,7 @@ class UrlApiPageCache
         if (log.IsDebugEnabled)
         {
             log.DebugFormat(
-                "parameterless URL Api resolver initialised for culture {0}.",
+                format: "parameterless URL Api resolver initialised for culture {0}.",
                 currentCulture
             );
         }

@@ -93,7 +93,7 @@ public class SqlDataServiceMonitor
             dataset.Tables[0].Rows[0].Delete();
             AddOperation(
                 new DeleteWorkQueueEntryOperation(
-                    "UpdateData",
+                    Name: "UpdateData",
                     new Dictionary<string, object>
                     {
                         { "refWorkQueueId", refWorkQueueId },
@@ -110,7 +110,10 @@ public record Operation(string Name, Dictionary<string, object> Parameters)
 {
     public override string ToString()
     {
-        string parameters = string.Join(", ", Parameters.Select(x => $"[{x.Key}, {x.Value}]"));
+        string parameters = string.Join(
+            separator: ", ",
+            Parameters.Select(x => $"[{x.Key}, {x.Value}]")
+        );
         return $"Operation: {Name}, Parameters: {parameters}";
     }
 }

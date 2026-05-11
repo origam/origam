@@ -123,7 +123,8 @@ public class ServerEntityUIActionRunner : EntityUIActionRunner
         DataSet copy = processData.DataTable.DataSet.Clone();
         foreach (DataRow selectedRow in processData.SelectedRows)
         {
-            copy.Tables[processData.DataTable.TableName].LoadDataRow(selectedRow.ItemArray, true);
+            copy.Tables[processData.DataTable.TableName]
+                .LoadDataRow(selectedRow.ItemArray, fAcceptChanges: true);
         }
         DataTable selectedRows = copy.Tables[processData.DataTable.TableName];
         DataSet command = DataService.Instance.LoadData(
@@ -131,8 +132,8 @@ public class ServerEntityUIActionRunner : EntityUIActionRunner
             new Guid("6eefc3cf-6b6e-4d40-81f7-5c37a81e8a01"),
             Guid.Empty,
             Guid.Empty,
-            null,
-            "WorkQueueCommand_parId",
+            transactionId: null,
+            paramName1: "WorkQueueCommand_parId",
             processData.ActionId
         );
         if (command.Tables["WorkQueueCommand"].Rows.Count == 0)
@@ -185,7 +186,7 @@ public class ServerEntityUIActionRunner : EntityUIActionRunner
                         default:
                         {
                             throw new ArgumentOutOfRangeException(
-                                "Value",
+                                paramName: "Value",
                                 pm.Value,
                                 Resources.ErrorUnknownWorkQueueCommandValueType
                             );

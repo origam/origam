@@ -89,7 +89,7 @@ public class WorkflowSessionStore : SaveableSessionStore
         WorkflowEngine engine = WorkflowEngine.PrepareWorkflow(
             workflow,
             new Hashtable(this.Request.Parameters),
-            false,
+            isRepeatable: false,
             this.Request.Caption
         );
         _host = new WorkflowHost();
@@ -143,7 +143,7 @@ public class WorkflowSessionStore : SaveableSessionStore
             default:
             {
                 throw new ArgumentOutOfRangeException(
-                    "actionId",
+                    paramName: "actionId",
                     actionId,
                     Resources.ErrorContextUnknownAction
                 );
@@ -162,44 +162,47 @@ public class WorkflowSessionStore : SaveableSessionStore
         formXml = Origam.OrigamEngine.ModelXmlBuilders.FormXmlBuilder.GetXml(
             this.FormId,
             this.Title,
-            true,
+            isPreloaded: true,
             new Guid(this.Request.ObjectId),
             this.FinishMessage,
             (this.DataStructure == null ? Guid.Empty : this.DataStructure.Id),
-            false,
-            ""
+            forceReadOnly: false,
+            confirmSelectionChangeEntity: ""
         );
         XmlNodeList list = formXml.SelectNodes("/Window");
         XmlElement windowElement = list[0] as XmlElement;
         XmlElement uiRootElement = windowElement.SelectSingleNode("UIRoot") as XmlElement;
         if (this.RefreshMethod == null)
         {
-            windowElement.SetAttribute("SuppressRefresh", "true");
+            windowElement.SetAttribute(name: "SuppressRefresh", value: "true");
         }
         if (this.IsAutoNext)
         {
-            windowElement.SetAttribute("AutoWorkflowNext", "true");
+            windowElement.SetAttribute(name: "AutoWorkflowNext", value: "true");
         }
         if (!this.AllowSave)
         {
-            windowElement.SetAttribute("SuppressSave", "true");
+            windowElement.SetAttribute(name: "SuppressSave", value: "true");
             // we MUST not turn on this.SupressSave here because that would
             // automatically accept all changes in workflow screens, resulting
             // in data not being saved by the workflow
-            windowElement.SetAttribute("SuppressDirtyNotification", "true");
+            windowElement.SetAttribute(name: "SuppressDirtyNotification", value: "true");
         }
-        windowElement.SetAttribute("AskWorkflowClose", XmlConvert.ToString(this.AskWorkflowClose));
+        windowElement.SetAttribute(
+            name: "AskWorkflowClose",
+            XmlConvert.ToString(this.AskWorkflowClose)
+        );
         if (this.IsFinalForm)
         {
             if (this.Request.Parameters.Count > 0)
             {
-                uiRootElement.SetAttribute("showWorkflowRepeatButton", "false");
+                uiRootElement.SetAttribute(name: "showWorkflowRepeatButton", value: "false");
             }
         }
         else
         {
-            windowElement.SetAttribute("ShowWorkflowNextButton", "true");
-            windowElement.SetAttribute("ShowWorkflowCancelButton", "true");
+            windowElement.SetAttribute(name: "ShowWorkflowNextButton", value: "true");
+            windowElement.SetAttribute(name: "ShowWorkflowCancelButton", value: "true");
         }
         return formXml;
     }
@@ -229,7 +232,7 @@ public class WorkflowSessionStore : SaveableSessionStore
             methodId,
             Guid.Empty,
             sortSetId,
-            null,
+            transactionId: null,
             qparams
         );
         return data;

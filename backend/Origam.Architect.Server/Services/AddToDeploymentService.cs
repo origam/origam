@@ -108,9 +108,12 @@ public class AddToDeploymentService(
     {
         var activity = version.NewItem<ServiceCommandUpdateScriptActivity>(
             schemaService.ActiveSchemaExtensionId,
-            null
+            group: null
         );
-        activity.Name = activity.ActivityOrder.ToString("00000") + "_" + name.Replace(" ", "_");
+        activity.Name =
+            activity.ActivityOrder.ToString("00000")
+            + "_"
+            + name.Replace(oldValue: " ", newValue: "_");
         activity.Service = dataService;
         activity.CommandText = command;
         activity.DatabaseType = databaseType;

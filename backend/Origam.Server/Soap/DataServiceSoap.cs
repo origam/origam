@@ -54,7 +54,7 @@ public class DataServiceSoap : IDataServiceSoap
     {
         if (log.IsEnabled(LogLevel.Information))
         {
-            log.Log(LogLevel.Information, "LoadData");
+            log.Log(LogLevel.Information, message: "LoadData");
         }
         Guid dsId = new Guid(dataStructureId);
         Guid fId = string.IsNullOrWhiteSpace(filterId) ? Guid.Empty : new Guid(filterId);
@@ -66,7 +66,7 @@ public class DataServiceSoap : IDataServiceSoap
             fId,
             dId,
             sId,
-            null,
+            transactionId: null,
             parameterCollection
         );
         return Task.FromResult(dataSet);
@@ -81,13 +81,19 @@ public class DataServiceSoap : IDataServiceSoap
     {
         if (log.IsEnabled(LogLevel.Information))
         {
-            log.Log(LogLevel.Information, "LoadData0");
+            log.Log(LogLevel.Information, message: "LoadData0");
         }
         Guid dsId = new Guid(dataStructureId);
         Guid fId = string.IsNullOrWhiteSpace(filterId) ? Guid.Empty : new Guid(filterId);
         Guid dId = string.IsNullOrWhiteSpace(defaultSetId) ? Guid.Empty : new Guid(defaultSetId);
         Guid sId = string.IsNullOrWhiteSpace(sortSetId) ? Guid.Empty : new Guid(sortSetId);
-        var dataSet = CoreServices.DataService.Instance.LoadData(dsId, fId, dId, sId, null);
+        var dataSet = CoreServices.DataService.Instance.LoadData(
+            dsId,
+            fId,
+            dId,
+            sId,
+            transactionId: null
+        );
         return Task.FromResult(dataSet);
     }
 
@@ -102,7 +108,7 @@ public class DataServiceSoap : IDataServiceSoap
     {
         if (log.IsEnabled(LogLevel.Information))
         {
-            log.Log(LogLevel.Information, "LoadData1");
+            log.Log(LogLevel.Information, message: "LoadData1");
         }
         Guid dsId = new Guid(dataStructureId);
         Guid fId = string.IsNullOrWhiteSpace(filterId) ? Guid.Empty : new Guid(filterId);
@@ -113,7 +119,7 @@ public class DataServiceSoap : IDataServiceSoap
             fId,
             dId,
             sId,
-            null,
+            transactionId: null,
             paramName1,
             paramValue1
         );
@@ -133,7 +139,7 @@ public class DataServiceSoap : IDataServiceSoap
     {
         if (log.IsEnabled(LogLevel.Information))
         {
-            log.Log(LogLevel.Information, "LoadData2");
+            log.Log(LogLevel.Information, message: "LoadData2");
         }
         Guid dsId = new Guid(dataStructureId);
         Guid fId = string.IsNullOrWhiteSpace(filterId) ? Guid.Empty : new Guid(filterId);
@@ -144,7 +150,7 @@ public class DataServiceSoap : IDataServiceSoap
             fId,
             dId,
             sId,
-            null,
+            transactionId: null,
             paramName1,
             paramValue1,
             paramName2,
@@ -155,13 +161,13 @@ public class DataServiceSoap : IDataServiceSoap
 
     public Task<DataSet> ExecuteProcedureAsync(string procedureName, Parameter[] parameters)
     {
-        log.Log(LogLevel.Information, "ExecuteProcedure");
+        log.Log(LogLevel.Information, message: "ExecuteProcedure");
 
         var parameterCollection = ParameterUtils.ToQueryParameterCollection(parameters);
         var dataSet = CoreServices.DataService.Instance.ExecuteProcedure(
             procedureName,
             parameterCollection,
-            null
+            transactionId: null
         );
         return Task.FromResult(dataSet);
     }
@@ -174,7 +180,7 @@ public class DataServiceSoap : IDataServiceSoap
     {
         if (log.IsEnabled(LogLevel.Information))
         {
-            log.Log(LogLevel.Information, "StoreData");
+            log.Log(LogLevel.Information, message: "StoreData");
             log.Log(LogLevel.Information, data.GetXml());
         }
 
@@ -218,7 +224,7 @@ public class DataServiceSoap : IDataServiceSoap
             guid,
             data,
             loadActualValuesAfterUpdate,
-            null
+            transactionId: null
         );
         return Task.FromResult(returnDataSet);
     }
@@ -231,7 +237,7 @@ public class DataServiceSoap : IDataServiceSoap
     {
         if (log.IsEnabled(LogLevel.Information))
         {
-            log.Log(LogLevel.Information, "StoreXml");
+            log.Log(LogLevel.Information, message: "StoreXml");
             log.Log(LogLevel.Information, xml.OuterXml);
         }
         Guid guid = new Guid(dataStructureId);
@@ -255,17 +261,17 @@ public class DataServiceSoap : IDataServiceSoap
             ProfileId = obj2,
             TrueDelete = false,
         };
-        DatasetTools.MergeDataSet(set2, set, null, mergeParams);
+        DatasetTools.MergeDataSet(set2, set, changeList: null, mergeParams);
         if (log.IsEnabled(LogLevel.Debug))
         {
-            log.Log(LogLevel.Debug, "StoreXml - merged xml below");
+            log.Log(LogLevel.Debug, message: "StoreXml - merged xml below");
             log.Log(LogLevel.Debug, set2.GetXml());
         }
         DataSet dataSet = CoreServices.DataService.Instance.StoreData(
             guid,
             set2,
             loadActualValuesAfterUpdate,
-            null
+            transactionId: null
         );
         return Task.FromResult(dataSet);
     }

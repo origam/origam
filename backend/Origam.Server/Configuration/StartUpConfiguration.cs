@@ -54,11 +54,13 @@ public class StartUpConfiguration
         configuration.GetSection("SoapAPI").GetValue<bool>("Enabled");
 
     public bool SoapInterfaceRequiresAuthentication =>
-        configuration.GetSection("SoapAPI").GetValue("RequiresAuthentication", true);
+        configuration
+            .GetSection("SoapAPI")
+            .GetValue(key: "RequiresAuthentication", defaultValue: true);
     public bool ExpectAndReturnOldDotNetAssemblyReferences =>
         configuration
             .GetSection("SoapAPI")
-            .GetValue("ExpectAndReturnOldDotNetAssemblyReferences", true);
+            .GetValue(key: "ExpectAndReturnOldDotNetAssemblyReferences", defaultValue: true);
     public string PathToCustomAssetsFolder =>
         configuration.GetSection("CustomAssetsConfig")["PathToCustomAssetsFolder"];
     public string RouteToCustomAssetsFolder =>
@@ -98,20 +100,22 @@ public class StartUpConfiguration
         configuration.GetValue<bool>("ReloadModelWhenFilesChangesDetected");
 
     public bool EnableMiniProfiler =>
-        configuration.GetSection("MiniProfiler").GetValue("Enabled", false);
+        configuration.GetSection("MiniProfiler").GetValue(key: "Enabled", defaultValue: false);
 
     public int MultipartBodyLengthLimit =>
         configuration
             .GetSection("HttpFormSettings")
-            .GetValue("MultipartBodyLengthLimit", 134_217_728);
+            .GetValue(key: "MultipartBodyLengthLimit", defaultValue: 134_217_728);
 
     public int MultipartHeadersLengthLimit =>
         configuration
             .GetSection("HttpFormSettings")
-            .GetValue("MultipartHeadersLengthLimit", 16_384);
+            .GetValue(key: "MultipartHeadersLengthLimit", defaultValue: 16_384);
 
     public int ValueLengthLimit =>
-        configuration.GetSection("HttpFormSettings").GetValue("ValueLengthLimit", 4_194_304);
+        configuration
+            .GetSection("HttpFormSettings")
+            .GetValue(key: "ValueLengthLimit", defaultValue: 4_194_304);
 
     public SecurityProtocolType SecurityProtocol
     {

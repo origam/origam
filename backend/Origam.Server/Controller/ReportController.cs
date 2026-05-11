@@ -100,7 +100,7 @@ public class ReportController : AbstractController
         }
         catch (Exception ex)
         {
-            return StatusCode(500, ex);
+            return StatusCode(statusCode: 500, ex);
         }
         finally
         {
@@ -226,7 +226,7 @@ public class ReportController : AbstractController
                     Request
                         .Headers[HeaderNames.UserAgent]
                         .ToString()
-                        .IndexOf("Edge", StringComparison.Ordinal) == -1
+                        .IndexOf(value: "Edge", StringComparison.Ordinal) == -1
                 )
             )
         )

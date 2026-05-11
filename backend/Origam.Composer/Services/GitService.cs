@@ -37,7 +37,7 @@ public class GitService : IGitService
         GitConfigPath = Path.Combine(
             Environment.GetEnvironmentVariable("HOMEDRIVE")
                 + FixSlash(file: Environment.GetEnvironmentVariable("HOMEPATH")),
-            ".gitconfig"
+            path2: ".gitconfig"
         );
     }
 
@@ -80,15 +80,15 @@ public class GitService : IGitService
 
         Repo.Ignore.AddTemporaryRules(IgnoreRules);
 
-        LibGit2Sharp.Commands.Stage(Repo, "*");
+        LibGit2Sharp.Commands.Stage(Repo, path: "*");
 
         var signature = new Signature(username, userEmail, DateTime.Now);
         Repo.Commit(Strings.Initial_commit, signature, signature);
         AnsiConsole.MarkupLine(string.Format(Strings.Init_commit_message, DateTime.Now));
 
         Configuration config = Repo.Config;
-        config.Set("user.name", username);
-        config.Set("user.email", userEmail);
+        config.Set(key: "user.name", username);
+        config.Set(key: "user.email", userEmail);
         AnsiConsole.MarkupLine(string.Format(Strings.Git_config_set, username, userEmail));
     }
 
@@ -101,8 +101,8 @@ public class GitService : IGitService
 
         var output = new string[2];
         string gitFileText = File.ReadAllText(GitConfigPath);
-        var nameRegex = new Regex(@"name\s*=\s*(.*)", RegexOptions.IgnoreCase);
-        var emailRegex = new Regex(@"email\s*=\s*(.*)", RegexOptions.IgnoreCase);
+        var nameRegex = new Regex(pattern: @"name\s*=\s*(.*)", RegexOptions.IgnoreCase);
+        var emailRegex = new Regex(pattern: @"email\s*=\s*(.*)", RegexOptions.IgnoreCase);
 
         Match nameMatch = nameRegex.Match(gitFileText);
         Match emailMatch = emailRegex.Match(gitFileText);
@@ -121,6 +121,6 @@ public class GitService : IGitService
 
     private string FixSlash(string file)
     {
-        return file == null ? "" : file.Replace("\\", "/");
+        return file == null ? "" : file.Replace(oldValue: "\\", newValue: "/");
     }
 }

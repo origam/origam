@@ -106,9 +106,12 @@ public sealed class ParameterNamingAnalyzer : DiagnosticAnalyzer
         SyntaxNode node
     )
     {
+        // Only report when Roslyn can unambiguously resolve the target method.
+        // For overload-ambiguous call sites the first candidate often has
+        // different parameter names, so silently skipping avoids reporting
+        // diagnostics the code fix cannot reliably apply.
         var symbolInfo = context.SemanticModel.GetSymbolInfo(node, context.CancellationToken);
-        return symbolInfo.Symbol as IMethodSymbol
-            ?? symbolInfo.CandidateSymbols.OfType<IMethodSymbol>().FirstOrDefault();
+        return symbolInfo.Symbol as IMethodSymbol;
     }
 
     private static void AnalyzeArgumentList(
@@ -128,14 +131,23 @@ public sealed class ParameterNamingAnalyzer : DiagnosticAnalyzer
             return;
         }
 
-        foreach (var argument in argumentList.Arguments)
+        for (var i = 0; i < argumentList.Arguments.Count; i++)
         {
+            var argument = argumentList.Arguments[i];
+
             if (argument.NameColon is not null)
             {
                 continue;
             }
 
             if (!IsReportableLiteral(argument.Expression))
+            {
+                continue;
+            }
+
+            // Skip params arguments — they cannot be named without wrapping
+            // the literal in an explicit array, which the code fix won't do.
+            if (i >= methodSymbol.Parameters.Length || methodSymbol.Parameters[i].IsParams)
             {
                 continue;
             }

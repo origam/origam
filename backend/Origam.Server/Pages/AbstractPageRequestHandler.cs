@@ -72,17 +72,20 @@ public abstract class AbstractPageRequestHandler : IPageRequestHandler
         foreach (DictionaryEntry capEntry in request.BrowserCapabilities)
         {
             XmlElement capability = capabDoc.CreateElement("Capability");
-            capability.SetAttribute("Name", capEntry.Key.ToString());
-            capability.SetAttribute("Value", Origam.XmlTools.ConvertToString(capEntry.Value));
+            capability.SetAttribute(name: "Name", capEntry.Key.ToString());
+            capability.SetAttribute(name: "Value", Origam.XmlTools.ConvertToString(capEntry.Value));
             capabilities.AppendChild(capability);
         }
-        preprocessorParams.Add("UserAgent", request.UserAgent);
+        preprocessorParams.Add(key: "UserAgent", request.UserAgent);
         if (request.UserLanguages != null)
         {
-            preprocessorParams.Add("UserLanguages", string.Join(";", request.UserLanguages));
+            preprocessorParams.Add(
+                key: "UserLanguages",
+                string.Join(separator: ";", request.UserLanguages)
+            );
         }
-        preprocessorParams.Add("BrowserCapabilities", capabilities);
-        preprocessorParams.Add("HttpMethod", request.HttpMethod);
+        preprocessorParams.Add(key: "BrowserCapabilities", capabilities);
+        preprocessorParams.Add(key: "HttpMethod", request.HttpMethod);
         return preprocessorParams;
     }
 

@@ -165,7 +165,7 @@ public class EditorPropertyFactory
 
         object converterInstance = Activator.CreateInstance(type);
         MethodInfo getValuesMethod = type.GetMethod(
-            "GetStandardValues",
+            name: "GetStandardValues",
             new Type[] { typeof(ITypeDescriptorContext) }
         )!;
         var context = new Context(instance);

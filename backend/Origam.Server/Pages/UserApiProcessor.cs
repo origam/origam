@@ -156,7 +156,7 @@ public class UserApiProcessor
             }
             if (log.IsDebugEnabled)
             {
-                log.DebugFormat("Result Content Type: {0}", resultContentType);
+                log.DebugFormat(format: "Result Content Type: {0}", resultContentType);
             }
 
             context.Response.Clear();
@@ -205,8 +205,8 @@ public class UserApiProcessor
 
     private static void PageAnalytics(AbstractPage page, Dictionary<string, string> urlParameters)
     {
-        Analytics.Instance.SetProperty("OrigamPageId", page.Id);
-        Analytics.Instance.SetProperty("OrigamPageName", page.Name);
+        Analytics.Instance.SetProperty(propertyName: "OrigamPageId", page.Id);
+        Analytics.Instance.SetProperty(propertyName: "OrigamPageName", page.Name);
         foreach (KeyValuePair<string, string> pair in urlParameters)
         {
             Analytics.Instance.SetProperty("Parameter_" + pair.Key, pair.Value);
@@ -216,17 +216,26 @@ public class UserApiProcessor
 
     private static void RequestAnalytics(IHttpContextWrapper context, string mimeType)
     {
-        Analytics.Instance.SetProperty("ContentType", mimeType);
-        Analytics.Instance.SetProperty("HttpMethod", context.Request.HttpMethod);
-        Analytics.Instance.SetProperty("RawUrl", context.Request.RawUrl);
-        Analytics.Instance.SetProperty("Url", context.Request.Url);
-        Analytics.Instance.SetProperty("UrlReferrer", context.Request.UrlReferrer);
-        Analytics.Instance.SetProperty("UserAgent", context.Request.UserAgent);
-        Analytics.Instance.SetProperty("BrowserName", context.Request.Browser);
-        Analytics.Instance.SetProperty("BrowserVersion", context.Request.BrowserVersion);
-        Analytics.Instance.SetProperty("UserHostAddress", context.Request.UserHostAddress);
-        Analytics.Instance.SetProperty("UserHostName", context.Request.UserHostName);
-        Analytics.Instance.SetProperty("UserLanguages", context.Request.UserLanguages);
+        Analytics.Instance.SetProperty(propertyName: "ContentType", mimeType);
+        Analytics.Instance.SetProperty(propertyName: "HttpMethod", context.Request.HttpMethod);
+        Analytics.Instance.SetProperty(propertyName: "RawUrl", context.Request.RawUrl);
+        Analytics.Instance.SetProperty(propertyName: "Url", context.Request.Url);
+        Analytics.Instance.SetProperty(propertyName: "UrlReferrer", context.Request.UrlReferrer);
+        Analytics.Instance.SetProperty(propertyName: "UserAgent", context.Request.UserAgent);
+        Analytics.Instance.SetProperty(propertyName: "BrowserName", context.Request.Browser);
+        Analytics.Instance.SetProperty(
+            propertyName: "BrowserVersion",
+            context.Request.BrowserVersion
+        );
+        Analytics.Instance.SetProperty(
+            propertyName: "UserHostAddress",
+            context.Request.UserHostAddress
+        );
+        Analytics.Instance.SetProperty(propertyName: "UserHostName", context.Request.UserHostName);
+        Analytics.Instance.SetProperty(
+            propertyName: "UserLanguages",
+            context.Request.UserLanguages
+        );
         foreach (var key in context.Request.Params.Keys)
         {
             Analytics.Instance.SetProperty("Parameter_" + key, context.Request.Params[key]);
@@ -327,11 +336,11 @@ public class UserApiProcessor
         string pageNumber = context.Request.Params["_pageNumber"];
         if (pageSize != null)
         {
-            mappedParameters.Add("_pageSize", pageSize);
+            mappedParameters.Add(key: "_pageSize", pageSize);
         }
         if (pageNumber != null)
         {
-            mappedParameters.Add("_pageNumber", pageNumber);
+            mappedParameters.Add(key: "_pageNumber", pageNumber);
         }
         return mappedParameters;
     }
@@ -352,7 +361,11 @@ public class UserApiProcessor
             paramValue = urlParameters[ppm.MappedParameter];
             if (log.IsDebugEnabled)
             {
-                log.DebugFormat("Mapping URL parameter {0}, value: {1}.", ppm.Name, paramValue);
+                log.DebugFormat(
+                    format: "Mapping URL parameter {0}, value: {1}.",
+                    ppm.Name,
+                    paramValue
+                );
             }
         }
         else
@@ -364,7 +377,7 @@ public class UserApiProcessor
                 if (log.IsDebugEnabled)
                 {
                     log.DebugFormat(
-                        "Mapping POST parameter {0}, value: {1}.",
+                        format: "Mapping POST parameter {0}, value: {1}.",
                         ppm.Name,
                         paramValue
                     );
@@ -466,7 +479,7 @@ public class UserApiProcessor
 
             case "Server_UserLanguages":
             {
-                systemParameterValue = string.Join(",", context.Request.UserLanguages);
+                systemParameterValue = string.Join(separator: ",", context.Request.UserLanguages);
                 break;
             }
         }
@@ -489,7 +502,7 @@ public class UserApiProcessor
             if (log.IsDebugEnabled)
             {
                 log.DebugFormat(
-                    "Mapping File Parameter {0}, FileInfo: {1}",
+                    format: "Mapping File Parameter {0}, FileInfo: {1}",
                     fileMapping.Name,
                     fileMapping.FileInfoType
                 );
@@ -527,9 +540,9 @@ public class UserApiProcessor
                 default:
                 {
                     throw new ArgumentOutOfRangeException(
-                        "FileInfoType",
+                        paramName: "FileInfoType",
                         fileMapping.FileInfoType,
-                        "Unknown Type"
+                        message: "Unknown Type"
                     );
                 }
             }
@@ -547,7 +560,7 @@ public class UserApiProcessor
         if (log.IsDebugEnabled)
         {
             log.DebugFormat(
-                "Mapping parameter {0}, Request content type: {1}",
+                format: "Mapping parameter {0}, Request content type: {1}",
                 ppm.Name,
                 requestMimeType
             );
@@ -634,14 +647,18 @@ public class UserApiProcessor
                         // deserialize from JSON to XML
                         if (string.IsNullOrEmpty(ppm.DatastructureEntityName))
                         {
-                            xd = (XmlDocument)JsonConvert.DeserializeXmlNode(body, "ROOT");
+                            xd = (XmlDocument)
+                                JsonConvert.DeserializeXmlNode(
+                                    body,
+                                    deserializeRootElementName: "ROOT"
+                                );
                         }
                         else
                         {
                             xd = (XmlDocument)
                                 JsonConvert.DeserializeXmlNode(
                                     "{\"" + ppm.DatastructureEntityName + "\" :" + body + "}",
-                                    "ROOT"
+                                    deserializeRootElementName: "ROOT"
                                 );
                         }
                         if (log.IsDebugEnabled)
@@ -684,9 +701,9 @@ public class UserApiProcessor
                     default:
                     {
                         throw new ArgumentOutOfRangeException(
-                            "ContentType",
+                            paramName: "ContentType",
                             requestMimeType,
-                            "Unknown content type. Use text/xml or application/json."
+                            message: "Unknown content type. Use text/xml or application/json."
                         );
                     }
                 }
@@ -712,7 +729,7 @@ public class UserApiProcessor
         Dictionary<string, object> mappedParameters
     )
     {
-        GetEmptyData(ref doc, ref data, ds, mappedParameters, null);
+        GetEmptyData(ref doc, ref data, ds, mappedParameters, defaultSet: null);
     }
 
     private static void GetEmptyData(
@@ -729,7 +746,7 @@ public class UserApiProcessor
         doc = DataDocumentFactory.New(data);
         if (log.IsDebugEnabled)
         {
-            log.DebugFormat("Mapping content to data structure: {0}", ds.Path);
+            log.DebugFormat(format: "Mapping content to data structure: {0}", ds.Path);
         }
     }
 
@@ -741,7 +758,7 @@ public class UserApiProcessor
             foreach (XmlNode node in nodes)
             {
                 log.DebugFormat(
-                    "Node: {0} Value: {1} HasChildNodes: {2}",
+                    format: "Node: {0} Value: {1} HasChildNodes: {2}",
                     node.Name,
                     node.Value == null ? "<null>" : node.Value,
                     node.HasChildNodes
@@ -769,7 +786,7 @@ public class UserApiProcessor
             {
                 if (log.IsDebugEnabled)
                 {
-                    log.DebugFormat("Removing empty node: {0}", node.Name);
+                    log.DebugFormat(format: "Removing empty node: {0}", node.Name);
                 }
                 node.ParentNode.RemoveChild(node);
             }
@@ -817,7 +834,7 @@ public class UserApiProcessor
         string path = context.Request.AppRelativeCurrentExecutionFilePath;
         if (log.IsDebugEnabled)
         {
-            log.DebugFormat("Resolving page {0}.", path);
+            log.DebugFormat(format: "Resolving page {0}.", path);
         }
         IOrigamAuthorizationProvider auth = SecurityManager.GetAuthorizationProvider();
         SchemaService schemaService = ServiceManager.Services.GetService<SchemaService>();
@@ -826,7 +843,7 @@ public class UserApiProcessor
         List<AbstractPage> validPagesByVerbAndPath = new List<AbstractPage>();
         // try to find parameterless page first, remove the preceding ~/ from the path
         AbstractPage parameterlessResultPage = urlApiPageCache.Value.GetParameterlessPage(
-            String.Join("/", requestPath.Skip(1))
+            String.Join(separator: "/", requestPath.Skip(1))
         );
         if (parameterlessResultPage != null)
         {
@@ -863,16 +880,16 @@ public class UserApiProcessor
                     if (paramValue.EndsWith(".aspx") && (i == (requestPath.Length - 2)))
                     {
                         // remove .aspx from the end of the string
-                        paramValue = paramValue.Substring(0, paramValue.Length - 5);
+                        paramValue = paramValue.Substring(startIndex: 0, paramValue.Length - 5);
                     }
                     string paramName;
                     if (pathPart.EndsWith(".aspx"))
                     {
-                        paramName = pathPart.Substring(1, pathPart.Length - 7);
+                        paramName = pathPart.Substring(startIndex: 1, pathPart.Length - 7);
                     }
                     else
                     {
-                        paramName = pathPart.Substring(1, pathPart.Length - 2);
+                        paramName = pathPart.Substring(startIndex: 1, pathPart.Length - 2);
                     }
                     currentUrlParams.Add(paramName, paramValue);
                 }
@@ -883,7 +900,7 @@ public class UserApiProcessor
                     if (paramValue.EndsWith(".aspx") && (i == (requestPath.Length - 2)))
                     {
                         // remove .aspx from the end of the string
-                        paramValue = paramValue.Substring(0, paramValue.Length - 5);
+                        paramValue = paramValue.Substring(startIndex: 0, paramValue.Length - 5);
                     }
                     if (pathPart != paramValue)
                     {
@@ -912,7 +929,7 @@ public class UserApiProcessor
             default:
             {
                 log.ErrorFormat(
-                    "Multiple routes detected '{0}' for request '{1}'",
+                    format: "Multiple routes detected '{0}' for request '{1}'",
                     validPagesByVerbAndPath
                         .Select(x => x.Id.ToString() + ":" + x.Url)
                         .Aggregate((res, i) => res + "," + i),

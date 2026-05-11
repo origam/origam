@@ -41,8 +41,8 @@ public class DownloadFileModelBuilderTask(
 
     public void Execute(Project project)
     {
-        repositoryZipPath = Path.Combine(project.ProjectFolder, "master.zip");
-        
+        repositoryZipPath = Path.Combine(project.ProjectFolder, path2: "master.zip");
+
         DownloadModelFromRepository(origamRepositoryUrl: project.OrigamRepositoryUrl);
         UnzipDefaultModelAndCopy(projectFolder: project.ProjectFolder);
         CreateCustomAssetsFolder(projectFolder: project.ProjectFolder);
@@ -51,11 +51,11 @@ public class DownloadFileModelBuilderTask(
 
     private void CleanupUnnecessaryFiles(string projectFolder)
     {
-        var buildPath = Path.Combine(projectFolder, "build");
+        var buildPath = Path.Combine(projectFolder, path2: "build");
         fileSystemService.DeleteDirectory(buildPath);
 
-        DeleteFileIfExists(Path.Combine(projectFolder, "LICENSE"));
-        DeleteFileIfExists(Path.Combine(projectFolder, ".gitignore"));
+        DeleteFileIfExists(Path.Combine(projectFolder, path2: "LICENSE"));
+        DeleteFileIfExists(Path.Combine(projectFolder, path2: ".gitignore"));
     }
 
     private static void DeleteFileIfExists(string filePath)
@@ -94,7 +94,11 @@ public class DownloadFileModelBuilderTask(
         var tempExtractPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
         ZipFile.ExtractToDirectory(repositoryZipPath, tempExtractPath);
 
-        var modelRootPath = Path.Combine(tempExtractPath, "origam-master", "model-root");
+        var modelRootPath = Path.Combine(
+            tempExtractPath,
+            path2: "origam-master",
+            path3: "model-root"
+        );
 
         if (Directory.Exists(modelRootPath))
         {
@@ -110,7 +114,7 @@ public class DownloadFileModelBuilderTask(
 
         if (Directory.Exists(tempExtractPath))
         {
-            Directory.Delete(tempExtractPath, true);
+            Directory.Delete(tempExtractPath, recursive: true);
         }
         if (File.Exists(repositoryZipPath))
         {
@@ -120,7 +124,7 @@ public class DownloadFileModelBuilderTask(
 
     private void CreateCustomAssetsFolder(string projectFolder)
     {
-        var dir = new DirectoryInfo(Path.Combine(projectFolder, "customAssets"));
+        var dir = new DirectoryInfo(Path.Combine(projectFolder, path2: "customAssets"));
         if (!dir.Exists)
         {
             dir.Create();
