@@ -27,8 +27,7 @@ namespace Origam.Architect.Server.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class XsltController(XsltService xsltService, ILogger<OrigamController> log)
-    : OrigamController(log)
+public class XsltController(XsltService xsltService) : ControllerBase
 {
     [HttpPost("Validate")]
     public IActionResult Validate([FromBody] XsltValidateModel model)

@@ -38,9 +38,8 @@ public class EditorController(
     DesignerEditorService sectionService,
     TreeNodeFactory treeNodeFactory,
     EditorService editorService,
-    DocumentationHelperService documentationHelper,
-    ILogger<OrigamController> log
-) : OrigamController(log)
+    DocumentationHelperService documentationHelper
+) : ControllerBase
 {
     [HttpPost("CreateNode")]
     public OpenEditorData CreateNode([Required] [FromBody] NewItemModel input)
