@@ -207,7 +207,6 @@ public class EditorPropertyFactory
 
         bool isReferenceProperty =
             property.GetCustomAttribute<ReferencePropertyAttribute>() != null;
-       
         if (isReferenceProperty || type.IsAssignableTo(typeof(ISchemaItem)))
         {
             return "looukup";
