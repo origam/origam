@@ -298,7 +298,7 @@ jobs:
          ArtifactName: origam-client
        condition: succeededOrFailed()
      - script: |
-        yarn install --frozen-lockfile
+        yarn install --immutable
        workingDirectory: $(Agent.BuildDirectory)\s\origam\chat-html\
        displayName: 'origam-chat yarn'
      - script: |
