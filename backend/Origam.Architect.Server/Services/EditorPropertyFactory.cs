@@ -36,8 +36,7 @@ public class EditorPropertyFactory
 {
     public EditorProperty CreateIfMarkedAsEditable(PropertyInfo property, ISchemaItem item)
     {
-        string category = property.GetAttribute<CategoryAttribute>()?.Category;
-        if (category == null || !PropertyUtils.CanBeEdited(property))
+        if (!PropertyUtils.CanBeEdited(property))
         {
             return null;
         }
