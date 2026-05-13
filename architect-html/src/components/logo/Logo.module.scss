@@ -26,13 +26,20 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     width: auto;
   }
 
-  > span {
+  > .label {
     position: absolute;
     bottom: -6px;
     right: 0;
-    font-size: 12px;
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
     color: var(--brand);
+    font-size: 12px;
     line-height: 1;
     font-weight: 400;
+  }
+
+  .version {
+    text-transform: uppercase;
   }
 }

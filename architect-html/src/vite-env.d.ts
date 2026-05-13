@@ -18,3 +18,5 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 /// <reference types="vite/client" />
+
+declare const __ORIGAM_ARCHITECT_HTML_VERSION__: string;
