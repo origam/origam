@@ -173,7 +173,7 @@ public class UIServiceController : AbstractController
             .ToList();
         if (errors.Count > 0)
         {
-            return StatusCode(409, string.Join("\n", errors));
+            return StatusCode(statusCode: 409, string.Join(separator: "\n", errors));
         }
         return Ok(sessionObjects.UIService.SaveData(sessionFormIdentifier));
     }
@@ -655,7 +655,7 @@ public class UIServiceController : AbstractController
                     query.DataSourceId = workQueueSessionStore.WorkQueueClass.WorkQueueStructureId;
                     query.Parameters.Add(
                         new QueryParameter(
-                            "WorkQueueEntry_parWorkQueueId",
+                            _parameterName: "WorkQueueEntry_parWorkQueueId",
                             sessionStore.Request.ObjectId
                         )
                     );
@@ -747,9 +747,9 @@ public class UIServiceController : AbstractController
                 object lookupResult = lookupService.GetDisplayText(
                     input.LookupId,
                     id,
-                    false,
-                    true,
-                    null
+                    useCache: false,
+                    returnMessageIfNull: true,
+                    transactionId: null
                 );
                 return lookupResult is decimal result
                     ? result.ToString("0.#")
@@ -907,7 +907,7 @@ public class UIServiceController : AbstractController
         {
             if (
                 parameterMapping.Key.Equals(
-                    "SearchText",
+                    value: "SearchText",
                     StringComparison.InvariantCultureIgnoreCase
                 )
             )
@@ -1029,7 +1029,10 @@ public class UIServiceController : AbstractController
             query.Parameters.Add(new QueryParameter(key.ToString(), parameters[key]));
         }
         query.Parameters.Add(
-            new QueryParameter("WorkQueueEntry_parWorkQueueId", sessionStore.Request.ObjectId)
+            new QueryParameter(
+                _parameterName: "WorkQueueEntry_parWorkQueueId",
+                sessionStore.Request.ObjectId
+            )
         );
         return query;
     }
@@ -1208,7 +1211,7 @@ public class UIServiceController : AbstractController
         DatasetTools.ApplyPrimaryKey(rowData.Row);
         DatasetTools.UpdateOrigamSystemColumns(
             rowData.Row,
-            true,
+            isNew: true,
             SecurityManager.CurrentUserProfile().Id
         );
         FillRow(rowData, input.NewValues);
@@ -1221,7 +1224,7 @@ public class UIServiceController : AbstractController
         DatasetTools.ApplyPrimaryKey(rowData.Row);
         DatasetTools.UpdateOrigamSystemColumns(
             rowData.Row,
-            true,
+            isNew: true,
             SecurityManager.CurrentUserProfile().Id
         );
         rowData.Row.Table.NewRow();
@@ -1269,7 +1272,9 @@ public class UIServiceController : AbstractController
         var auditLog = AuditLogDA.RetrieveLogTransformed(entityId, id);
         if (log != null)
         {
-            return Ok(DataTools.DatatableToDictionary(auditLog.Tables[0], false));
+            return Ok(
+                DataTools.DatatableToDictionary(auditLog.Tables[0], includeColumnNames: false)
+            );
         }
         return Ok();
     }

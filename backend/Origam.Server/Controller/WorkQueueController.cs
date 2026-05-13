@@ -70,7 +70,7 @@ public class WorkQueueController : ControllerBase
             if (ex is RuleException ruleException)
             {
                 output = String.Format(
-                    "{{\"Message\" : {0}, \"RuleResult\" : {1}}}",
+                    format: "{{\"Message\" : {0}, \"RuleResult\" : {1}}}",
                     JsonConvert.SerializeObject(ruleException.Message),
                     JsonConvert.SerializeObject(ruleException.RuleResult)
                 );
@@ -78,7 +78,7 @@ public class WorkQueueController : ControllerBase
             else if (ex is ArgumentOutOfRangeException argumentException)
             {
                 output = String.Format(
-                    "{{\"Message\" : {0}, \"ParamName\" : {1}, \"ActualValue\" : {2}}}",
+                    format: "{{\"Message\" : {0}, \"ParamName\" : {1}, \"ActualValue\" : {2}}}",
                     JsonConvert.SerializeObject(argumentException.Message),
                     JsonConvert.SerializeObject(argumentException.ParamName),
                     JsonConvert.SerializeObject(argumentException.ActualValue)

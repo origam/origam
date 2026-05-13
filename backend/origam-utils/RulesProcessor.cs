@@ -59,7 +59,7 @@ class RulesProcessor
                 ISchemaItem retrievedObj = dict.First().Key;
                 sb.Append("Object with Id: \"" + retrievedObj.Id +
                            "\" in file: \"" + retrievedObj.RelativeFilePath +
-                            "\" --> " + string.Join("\n", dict.First().Value) + "\n");
+                            "\" --> " + string.Join(separator: "\n", dict.First().Value) + "\n");
             }
             System.Console.Write(sb.ToString());
             return 1;

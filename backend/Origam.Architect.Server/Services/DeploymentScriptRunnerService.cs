@@ -36,18 +36,25 @@ public class DeploymentScriptRunnerService(ILogger<DeploymentScriptRunnerService
 
         try
         {
-            logger.LogInformation("Executing deployment script: {ScriptName}", script.Name);
+            logger.LogInformation(
+                message: "Executing deployment script: {ScriptName}",
+                script.Name
+            );
             ExecuteActivity(script, transactionId);
             ResourceMonitor.Commit(transactionId);
             logger.LogInformation(
-                "Deployment script executed successfully: {ScriptName}",
+                message: "Deployment script executed successfully: {ScriptName}",
                 script.Name
             );
         }
         catch (Exception ex)
         {
             ResourceMonitor.Rollback(transactionId);
-            logger.LogError(ex, "Error executing deployment script: {ScriptName}", script.Name);
+            logger.LogError(
+                ex,
+                message: "Error executing deployment script: {ScriptName}",
+                script.Name
+            );
             throw new Exception($"Error executing deployment script '{script.Name}'", ex);
         }
     }
@@ -56,7 +63,10 @@ public class DeploymentScriptRunnerService(ILogger<DeploymentScriptRunnerService
     {
         if (logger.IsEnabled(LogLevel.Information))
         {
-            logger.LogInformation("Executing deployment activity: {ActivityName}", activity.Name);
+            logger.LogInformation(
+                message: "Executing deployment activity: {ActivityName}",
+                activity.Name
+            );
         }
 
         try
@@ -84,7 +94,7 @@ public class DeploymentScriptRunnerService(ILogger<DeploymentScriptRunnerService
             {
                 logger.LogCritical(
                     ex,
-                    "Error occurred while running deployment activity {ActivityPath}",
+                    message: "Error occurred while running deployment activity {ActivityPath}",
                     activity.Path
                 );
             }
@@ -103,7 +113,11 @@ public class DeploymentScriptRunnerService(ILogger<DeploymentScriptRunnerService
             throw new InvalidOperationException("Business services service not available");
         }
 
-        IServiceAgent agent = service.GetAgent(activity.Service.Name, null, null);
+        IServiceAgent agent = service.GetAgent(
+            activity.Service.Name,
+            ruleEngine: null,
+            workflowEngine: null
+        );
         var result = "";
 
         if (

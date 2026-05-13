@@ -100,7 +100,7 @@ public class SessionManager
 
     public SessionStore GetSession(Guid sessionFormIdentifier)
     {
-        return GetSession(sessionFormIdentifier, false);
+        return GetSession(sessionFormIdentifier, rootSession: false);
     }
 
     public SessionStore GetSession(ExecuteActionProcessData processData)
@@ -316,7 +316,10 @@ public class SessionManager
                     {
                         wf = wfMenuItem.Workflow;
                         // set default workflow menu item parameters (assigned constants to the menu item)
-                        RuleEngine ruleEngine = RuleEngine.Create(null, null);
+                        RuleEngine ruleEngine = RuleEngine.Create(
+                            contextStores: null,
+                            transactionId: null
+                        );
                         foreach (ISchemaItem parameter in wfMenuItem.ChildItems)
                         {
                             if (parameter != null)

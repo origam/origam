@@ -44,7 +44,7 @@ class MailService : IMailService
         this.languageConfig = languageConfig;
         string baseUrl =
             configuration[WebHostDefaults.ServerUrlsKey]
-                ?.Replace(";", ",")
+                ?.Replace(oldValue: ";", newValue: ",")
                 ?.Split(",")
                 ?.FirstOrDefault(url => url.StartsWith("https"))
             ?? throw new ArgumentException("Could not find server's https url");

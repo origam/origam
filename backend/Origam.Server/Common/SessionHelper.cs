@@ -63,7 +63,7 @@ public class SessionHelper
         // if session not found, we just remove it from the list of sessions
         try
         {
-            ss = sessionManager.GetSession(sessionFormIdentifier, true);
+            ss = sessionManager.GetSession(sessionFormIdentifier, rootSession: true);
             // if the form was a modal dialog that needs to pass data to its parent,
             // we do it here
             if (ss.Request.ParentSessionId != null && ss.IsModalDialogCommited)

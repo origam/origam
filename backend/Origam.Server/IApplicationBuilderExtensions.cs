@@ -212,12 +212,12 @@ public static class IApplicationBuilderExtensions
                     apiBranch.UseMiddleware<ReturnOldDotNetAssemblyReferencesInSoapMiddleware>();
                 }
                 apiBranch.UseSoapEndpoint<DataServiceSoap>(
-                    "/soap/DataService",
+                    path: "/soap/DataService",
                     new SoapEncoderOptions(),
                     SoapSerializer.XmlSerializer
                 );
                 apiBranch.UseSoapEndpoint<WorkflowServiceSoap>(
-                    "/soap/WorkflowService",
+                    path: "/soap/WorkflowService",
                     new SoapEncoderOptions(),
                     SoapSerializer.XmlSerializer
                 );

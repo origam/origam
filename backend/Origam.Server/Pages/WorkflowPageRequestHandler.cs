@@ -77,8 +77,8 @@ class WorkflowPageRequestHandler : AbstractPageRequestHandler
         {
             transformParams.Add(rp.Key, rp.Value);
         }
-        RuleEngine ruleEngine = RuleEngine.Create(null, null);
-        Validate(null, transformParams, ruleEngine, workflowPage.InputValidationRule);
+        RuleEngine ruleEngine = RuleEngine.Create(contextStores: null, transactionId: null);
+        Validate(data: null, transformParams, ruleEngine, workflowPage.InputValidationRule);
         if (workflowPage.DisableConstraintForInputValidation)
         {
             // reenable constraints for context parameter
@@ -93,20 +93,21 @@ class WorkflowPageRequestHandler : AbstractPageRequestHandler
         object workflowResult = CoreServices.WorkflowService.ExecuteWorkflow(
             workflowPage.WorkflowId,
             qparams,
-            null
+            transactionId: null
         );
         bool handled = false;
         var actions = workflowPage.ChildItemsByType<AbstractWorkflowPageAction>(
             AbstractWorkflowPageAction.CategoryConst
         );
         actions.Sort();
-        RuleEngine re = RuleEngine.Create(new Hashtable(), null);
+        RuleEngine re = RuleEngine.Create(new Hashtable(), transactionId: null);
         foreach (AbstractWorkflowPageAction action in actions)
         {
             bool conditionResult = true;
             if (action.ConditionRule != null)
             {
-                conditionResult = (bool)re.EvaluateRule(action.ConditionRule, workflowResult, null);
+                conditionResult = (bool)
+                    re.EvaluateRule(action.ConditionRule, workflowResult, contextPosition: null);
             }
             if (
                 conditionResult
@@ -123,7 +124,7 @@ class WorkflowPageRequestHandler : AbstractPageRequestHandler
                 else
                 {
                     throw new ArgumentOutOfRangeException(
-                        "action",
+                        paramName: "action",
                         action,
                         Resources.ErrorUnknownWorkflowPageAction
                     );

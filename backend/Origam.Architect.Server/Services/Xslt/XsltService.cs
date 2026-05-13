@@ -134,16 +134,16 @@ public class XsltService(
         try
         {
             IServiceAgent transformer = businessServicesService.GetAgent(
-                "DataTransformationService",
-                RuleEngine.Create(new Hashtable(), null),
-                null
+                serviceType: "DataTransformationService",
+                RuleEngine.Create(new Hashtable(), transactionId: null),
+                workflowEngine: null
             );
 
             var doc = new XmlContainer(input.InputXml);
             transformer.MethodName = "TransformText";
-            transformer.Parameters.Add("XslScript", xslt);
-            transformer.Parameters.Add("Data", doc);
-            transformer.Parameters.Add("ValidateOnly", validateOnly);
+            transformer.Parameters.Add(key: "XslScript", xslt);
+            transformer.Parameters.Add(key: "Data", doc);
+            transformer.Parameters.Add(key: "ValidateOnly", validateOnly);
             transformer.TransactionId = transactionId;
             transformer.OutputStructure = input.TargetDataStructureId.IsDefault()
                 ? null
@@ -158,7 +158,7 @@ public class XsltService(
             {
                 parameterValues.Add(parameter.Name, parameter.Value);
             }
-            transformer.Parameters.Add("Parameters", parameterValues);
+            transformer.Parameters.Add(key: "Parameters", parameterValues);
             transformer.Run();
             IXmlContainer container = transformer.Result as IXmlContainer;
             if (container == null)
@@ -175,8 +175,8 @@ public class XsltService(
             {
                 if (dataDoc.DataSet.HasErrors == false && ruleSet != null)
                 {
-                    RuleEngine re = RuleEngine.Create(null, null);
-                    re.ProcessRules(dataDoc, ruleSet, null);
+                    RuleEngine re = RuleEngine.Create(contextStores: null, transactionId: null);
+                    re.ProcessRules(dataDoc, ruleSet, contextRow: null);
                 }
             }
 
@@ -259,7 +259,7 @@ public class XsltService(
         }
         catch (KeyNotFoundException)
         {
-            return new ParameterData(name, null);
+            return new ParameterData(name, type: null);
         }
     }
 

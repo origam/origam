@@ -50,6 +50,6 @@ public class FileSystemService : IFileSystemService
             DeleteDirectory(dir);
         }
         File.SetAttributes(directoryPath, FileAttributes.Normal);
-        Directory.Delete(directoryPath, false);
+        Directory.Delete(directoryPath, recursive: false);
     }
 }

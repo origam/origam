@@ -31,7 +31,14 @@ public static class DataTools
 {
     public static IDictionary<string, object> DatasetToDictionary(DataSet data)
     {
-        return DatasetToDictionary(data, null, 0, null, null, null);
+        return DatasetToDictionary(
+            data,
+            columns: null,
+            firstPageRecords: 0,
+            firstRecordId: null,
+            dataListEntity: null,
+            ss: null
+        );
     }
 
     public static IDictionary<string, object> DatasetToDictionary(
@@ -65,7 +72,7 @@ public static class DataTools
                             columns,
                             firstPageRecords,
                             firstRecordId,
-                            false,
+                            includeColumnNames: false,
                             ss
                         )
                     );
@@ -73,7 +80,7 @@ public static class DataTools
                 else
                 {
                     Hashtable emptyTable = new Hashtable();
-                    emptyTable.Add("data", new ArrayList());
+                    emptyTable.Add(key: "data", new ArrayList());
                     resultDataset.Add(t.TableName, emptyTable);
                 }
             }
@@ -81,7 +88,14 @@ public static class DataTools
             {
                 resultDataset.Add(
                     t.TableName,
-                    DatatableToDictionary(t, columns, firstPageRecords, recordId, false, ss)
+                    DatatableToDictionary(
+                        t,
+                        columns,
+                        firstPageRecords,
+                        recordId,
+                        includeColumnNames: false,
+                        ss
+                    )
                 );
             }
         }
@@ -93,7 +107,14 @@ public static class DataTools
         bool includeColumnNames
     )
     {
-        return DatatableToDictionary(t, null, 0, null, includeColumnNames, null);
+        return DatatableToDictionary(
+            t,
+            columns: null,
+            initialPageRecords: 0,
+            initialRecordId: null,
+            includeColumnNames,
+            ss: null
+        );
     }
 
     public static IDictionary<string, List<object>> DatatableToDictionary(
@@ -115,7 +136,7 @@ public static class DataTools
         }
         if (includeColumnNames)
         {
-            resultTable.Add("columnNames", new List<object>(allColumnNames));
+            resultTable.Add(key: "columnNames", new List<object>(allColumnNames));
         }
         if (primaryKeysOnly && !primaryKeysOnlyFinal && ss != null)
         {
@@ -140,18 +161,18 @@ public static class DataTools
                 columnNamesFinal[i] = t.PrimaryKey[i].ColumnName;
             }
             columns.CopyTo(columnNamesFinal, t.PrimaryKey.Length);
-            resultTable.Add("columnNames", new List<object>(columnNamesFinal));
+            resultTable.Add(key: "columnNames", new List<object>(columnNamesFinal));
         }
         else
         {
             columnNamesFinal = allColumnNames;
         }
         List<object> data = DataTableToList(t, columnNamesFinal);
-        resultTable.Add("data", data);
+        resultTable.Add(key: "data", data);
         if (primaryKeysOnlyFinal)
         {
             resultTable.Add(
-                "initialPage",
+                key: "initialPage",
                 DataTableToList(t, initialPageRecords, initialRecordId, ss)
             );
         }

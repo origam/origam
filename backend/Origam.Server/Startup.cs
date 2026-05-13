@@ -285,7 +285,7 @@ public class Startup
         services.AddAuthorization(options =>
         {
             options.AddPolicy(
-                "InternalApi",
+                name: "InternalApi",
                 policy =>
                 {
                     policy.AddAuthenticationSchemes(AuthenticationScheme);
@@ -296,7 +296,7 @@ public class Startup
                         var scopes = ctx
                             .User.FindAll(Claims.Scope)
                             .SelectMany(c =>
-                                c.Value.Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                                c.Value.Split(separator: ' ', StringSplitOptions.RemoveEmptyEntries)
                             );
 
                         return scopes.Contains("internal_api");
@@ -328,7 +328,7 @@ public class Startup
             options.SupportedUICultures = languageConfig.AllowedCultures;
             options.RequestCultureProviders.Clear();
             options.RequestCultureProviders.Insert(
-                0,
+                index: 0,
                 new OrigamCookieRequestCultureProvider(languageConfig)
             );
         });
@@ -354,7 +354,10 @@ public class Startup
                 options.ResultsAuthorize = request =>
                     SecurityManager
                         .GetAuthorizationProvider()
-                        .Authorize(SecurityManager.CurrentPrincipal, "SYS_ViewMiniProfilerResults");
+                        .Authorize(
+                            SecurityManager.CurrentPrincipal,
+                            context: "SYS_ViewMiniProfilerResults"
+                        );
                 options.ShouldProfile = request =>
                     ShouldProfileRequest(request, startUpConfiguration, chatConfig);
             });
@@ -367,7 +370,7 @@ public class Startup
         services.AddCors(options =>
         {
             options.AddPolicy(
-                "OrigamCorsPolicy",
+                name: "OrigamCorsPolicy",
                 builder =>
                 {
                     builder
@@ -412,7 +415,7 @@ public class Startup
         {
             auth.AddGoogle(
                 GoogleDefaults.AuthenticationScheme,
-                "SignInWithGoogleAccount",
+                displayName: "SignInWithGoogleAccount",
                 options =>
                 {
                     options.ClientId = openIddictConfig.GoogleLogin.ClientId;
@@ -426,7 +429,7 @@ public class Startup
         {
             auth.AddMicrosoftAccount(
                 MicrosoftAccountDefaults.AuthenticationScheme,
-                "SignInWithMicrosoftAccount",
+                displayName: "SignInWithMicrosoftAccount",
                 microsoftOptions =>
                 {
                     microsoftOptions.ClientId = openIddictConfig.MicrosoftLogin.ClientId;
@@ -439,8 +442,8 @@ public class Startup
         if (openIddictConfig.AzureAdLogin != null)
         {
             auth.AddOpenIdConnect(
-                "AzureAdOIDC",
-                "SignInWithAzureAd",
+                authenticationScheme: "AzureAdOIDC",
+                displayName: "SignInWithAzureAd",
                 options =>
                 {
                     options.ClientId = openIddictConfig.AzureAdLogin.ClientId;
@@ -503,7 +506,7 @@ public class Startup
             return false;
         }
 
-        if (path.StartsWith("/assets", StringComparison.OrdinalIgnoreCase))
+        if (path.StartsWith(value: "/assets", StringComparison.OrdinalIgnoreCase))
         {
             return false;
         }
@@ -521,12 +524,12 @@ public class Startup
 
         if (!string.IsNullOrWhiteSpace(chatConfig.PathToChatApp))
         {
-            if (path.StartsWith("/chatrooms", StringComparison.OrdinalIgnoreCase))
+            if (path.StartsWith(value: "/chatrooms", StringComparison.OrdinalIgnoreCase))
             {
                 return false;
             }
 
-            if (path.StartsWith("/chatAssets", StringComparison.OrdinalIgnoreCase))
+            if (path.StartsWith(value: "/chatAssets", StringComparison.OrdinalIgnoreCase))
             {
                 return false;
             }
@@ -587,7 +590,7 @@ public class Startup
             new StaticFileOptions()
             {
                 FileProvider = new PhysicalFileProvider(
-                    Path.Combine(Directory.GetCurrentDirectory(), "assets")
+                    Path.Combine(Directory.GetCurrentDirectory(), path2: "assets")
                 ),
                 RequestPath = new PathString("/assets"),
             }
@@ -654,7 +657,7 @@ public class Startup
                         if (ctx.File.Name == "index.html")
                         {
                             ctx.Context.Response.Headers.Append(
-                                "Cache-Control",
+                                key: "Cache-Control",
                                 $"no-store, max-age=0"
                             );
                         }
@@ -666,7 +669,7 @@ public class Startup
                 {
                     RequestPath = new PathString("/chatAssets"),
                     FileProvider = new PhysicalFileProvider(
-                        Path.Combine(chatConfig.PathToChatApp, "chatAssets")
+                        Path.Combine(chatConfig.PathToChatApp, path2: "chatAssets")
                     ),
                 }
             );

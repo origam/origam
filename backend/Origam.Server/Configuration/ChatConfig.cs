@@ -34,7 +34,7 @@ public class ChatConfig
     {
         var chatSection = configuration.GetSection("ChatConfig");
 
-        PathToChatApp = chatSection.GetValue("PathToChatApp", "");
-        ChatRefreshInterval = chatSection.GetValue("ChatRefreshInterval", 1000);
+        PathToChatApp = chatSection.GetValue(key: "PathToChatApp", defaultValue: "");
+        ChatRefreshInterval = chatSection.GetValue(key: "ChatRefreshInterval", defaultValue: 1000);
     }
 }

@@ -110,7 +110,7 @@ public class Program
             new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(
-                    Path.Combine(assemblyPath, "Assets", "Icons")
+                    Path.Combine(assemblyPath, path2: "Assets", path3: "Icons")
                 ),
                 RequestPath = "/Icons",
             }

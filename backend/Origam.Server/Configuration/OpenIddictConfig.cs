@@ -64,12 +64,18 @@ public class OpenIddictConfig
     public OpenIddictConfig(IConfiguration configuration)
     {
         var openIddictSection = configuration.GetSectionOrThrow("OpenIddictConfig");
-        CookieSlidingExpiration = openIddictSection.GetValue("CookieSlidingExpiration", true);
+        CookieSlidingExpiration = openIddictSection.GetValue(
+            key: "CookieSlidingExpiration",
+            defaultValue: true
+        );
         PrivateApiAuthentication = openIddictSection.GetValue(
-            "PrivateApiAuthentication",
+            key: "PrivateApiAuthentication",
             AuthenticationMethod.Cookie
         );
-        CookieExpirationMinutes = openIddictSection.GetValue("CookieExpirationMinutes", 60);
+        CookieExpirationMinutes = openIddictSection.GetValue(
+            key: "CookieExpirationMinutes",
+            defaultValue: 60
+        );
         GoogleLogin = ConfigureGoogleLogin(openIddictSection);
         MicrosoftLogin = ConfigureMicrosoftLogin(openIddictSection);
         AzureAdLogin = ConfigureAzureAdLogin(openIddictSection);
@@ -80,8 +86,11 @@ public class OpenIddictConfig
             MobileClient = ConfigureMobileClient(clientSection),
             ServerClient = ConfigureServerClient(clientSection),
         };
-        AuthenticationPostProcessor = openIddictSection.GetValue("AuthenticationPostProcessor", "");
-        AccessTokenIssuer = openIddictSection.GetValue("AccessTokenIssuer", "");
+        AuthenticationPostProcessor = openIddictSection.GetValue(
+            key: "AuthenticationPostProcessor",
+            defaultValue: ""
+        );
+        AccessTokenIssuer = openIddictSection.GetValue(key: "AccessTokenIssuer", defaultValue: "");
     }
 
     private ServerClient ConfigureServerClient(IConfigurationSection identityServerSection)
@@ -128,7 +137,7 @@ public class OpenIddictConfig
                 RedirectUris = webClientSection
                     .GetSectionOrThrow("RedirectUris")
                     .GetStringArrayOrThrow()
-                    .Select(x => x.Replace("#", ""))
+                    .Select(x => x.Replace(oldValue: "#", newValue: ""))
                     .ToArray(),
                 AllowedCorsOrigins =
                     webClientSection.GetSection("AllowedCorsOrigins")?.Get<string[]>() ?? [],
@@ -238,10 +247,10 @@ public abstract class ExternalCallbackProcessingInfo
     protected ExternalCallbackProcessingInfo(IConfigurationSection configurationSection)
     {
         AuthenticationType = configurationSection.GetValue(
-            "AuthenticationType",
+            key: "AuthenticationType",
             AuthenticationType.Email
         );
-        ClaimType = configurationSection.GetValue("ClaimType", ClaimTypes.Email);
+        ClaimType = configurationSection.GetValue(key: "ClaimType", ClaimTypes.Email);
     }
 
     protected ExternalCallbackProcessingInfo() { }

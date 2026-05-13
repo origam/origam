@@ -147,8 +147,8 @@ public class UIManager
         )
         {
             ss = sessionManager.CreateSessionStore(request, basicUIService);
-            analytics.SetProperty("OrigamFormId", ss.FormId);
-            analytics.SetProperty("OrigamFormName", ss.Name);
+            analytics.SetProperty(propertyName: "OrigamFormId", ss.FormId);
+            analytics.SetProperty(propertyName: "OrigamFormName", ss.Name);
             analytics.Log("UI_OPENFORM");
             if (ss.SupportsFormXmlAsync && IsFormXmlNotCachedOnClient(request, ss))
             {
@@ -365,7 +365,7 @@ public class UIManager
         foreach (XmlElement l in lookups)
         {
             Guid lookupId = XmlConvert.ToGuid(l.GetAttribute("LookupId"));
-            IMenuBindingResult binding = ls.GetMenuBinding(lookupId, null);
+            IMenuBindingResult binding = ls.GetMenuBinding(lookupId, value: null);
             result.LookupMenuMappings.Add(
                 new LookupConfig(
                     lookupId,
@@ -379,13 +379,13 @@ public class UIManager
 
     private UIResult InitDashboardView(UIRequest request)
     {
-        return InitDashboardView(request.ObjectId, null);
+        return InitDashboardView(request.ObjectId, viewId: null);
     }
 
     private UIResult InitDashboardView(string objectId, string viewId)
     {
         UserProfile profile = SecurityTools.CurrentUserProfile();
-        UIResult result = new UIResult(Guid.Empty, null, null, false);
+        UIResult result = new UIResult(Guid.Empty, data: null, variables: null, isDirty: false);
         XmlDocument dashboardViews = DashboardViews(objectId);
         XmlDocument formXml;
         if (dashboardViews.FirstChild.ChildNodes.Count > 0)
@@ -404,7 +404,7 @@ public class UIManager
             if (viewNode == null)
             {
                 throw new ArgumentOutOfRangeException(
-                    "viewId",
+                    paramName: "viewId",
                     viewId,
                     Resources.ErrorDashboardViewNotFound
                 );
@@ -422,13 +422,13 @@ public class UIManager
         else
         {
             formXml = FormXmlBuilder.GetXml(
-                "<configuration/>",
-                "",
+                dashboardViewConfig: "<configuration/>",
+                name: "",
                 new Guid(objectId),
                 dashboardViews
             );
         }
-        FormXmlPostProcessing(result, null, formXml, profile, Guid.Empty, null);
+        FormXmlPostProcessing(result, data: null, formXml, profile, Guid.Empty, sortSet: null);
         Task.Run(() =>
             SecurityTools.CreateUpdateOrigamOnlineUser(
                 SecurityManager.CurrentPrincipal.Identity.Name,
@@ -459,17 +459,17 @@ public class UIManager
                 && grid.GetAttribute("ShowAddButton") == "true"
             )
             {
-                RuleEngine re = RuleEngine.Create(new Hashtable(), null);
+                RuleEngine re = RuleEngine.Create(new Hashtable(), transactionId: null);
                 XmlContainer newRecordData = new XmlContainer();
                 newRecordData.Xml.AppendChild(newRecordData.Xml.CreateElement("ROOT"));
                 panelConfig.AllowCreate = re.EvaluateRowLevelSecurityState(
                     newRecordData,
                     newRecordData,
-                    null,
+                    field: null,
                     CredentialType.Create,
                     (Guid)data.Tables[panel.Entity].ExtendedProperties["EntityId"],
                     Guid.Empty,
-                    true
+                    isNewRow: true
                 );
             }
             // filters
@@ -555,8 +555,8 @@ public class UIManager
                     uigfc.Details.Add(
                         new UIGridFilterFieldConfiguration(
                             pfdr.ColumnName,
-                            OrigamPanelFilterDA.StoredFilterValue(pfdr, t, 1),
-                            OrigamPanelFilterDA.StoredFilterValue(pfdr, t, 2),
+                            OrigamPanelFilterDA.StoredFilterValue(pfdr, t, valueNumber: 1),
+                            OrigamPanelFilterDA.StoredFilterValue(pfdr, t, valueNumber: 2),
                             pfdr.Operator
                         )
                     );
@@ -573,9 +573,9 @@ public class UIManager
         return ls.GetDisplayText(
                 new Guid("d27877bc-3fd5-4fe6-a5c9-b4119fb821b6"),
                 viewId,
-                false,
-                false,
-                null
+                useCache: false,
+                returnMessageIfNull: false,
+                transactionId: null
             )
             .ToString();
     }
@@ -591,8 +591,8 @@ public class UIManager
             new Guid("916f8028-9d89-49b2-bb66-97548bde8b7d"),
             Guid.Empty,
             Guid.Empty,
-            null,
-            "OrigamDashboardView_parMenuId",
+            transactionId: null,
+            paramName1: "OrigamDashboardView_parMenuId",
             menuId
         );
         foreach (DataRow row in data.Tables["OrigamDashboardView"].Rows)
@@ -601,9 +601,9 @@ public class UIManager
             if (auth.Authorize(principal, (string)row["Roles"]))
             {
                 XmlElement viewElement = doc.CreateElement("view");
-                viewElement.SetAttribute("id", row["Id"].ToString());
-                viewElement.SetAttribute("name", (string)row["Name"]);
-                viewElement.SetAttribute("roles", (string)row["Roles"]);
+                viewElement.SetAttribute(name: "id", row["Id"].ToString());
+                viewElement.SetAttribute(name: "name", (string)row["Name"]);
+                viewElement.SetAttribute(name: "roles", (string)row["Roles"]);
                 rootElement.AppendChild(viewElement);
             }
         }

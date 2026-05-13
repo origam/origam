@@ -103,7 +103,7 @@ public class DesignerEditorService(
                 .ChildItems.Select(x => new DataSource { Name = x.Name, SchemaItemId = x.Id })
                 .OrderBy(x => x.Name)
                 .ToList();
-            dataSources.Insert(0, DataSource.Empty);
+            dataSources.Insert(index: 0, DataSource.Empty);
 
             List<EditorField> fields = GetFields(screenSection);
             DropDownValue[] dataSourceDropDownValues = fields
@@ -139,7 +139,7 @@ public class DesignerEditorService(
                 .ChildItems.Select(x => new DataSource { Name = x.Name, SchemaItemId = x.Id })
                 .OrderBy(x => x.Name)
                 .ToList();
-            dataSources.Insert(0, DataSource.Empty);
+            dataSources.Insert(index: 0, DataSource.Empty);
 
             var userControlProvider = schemaService.GetProvider<UserControlSchemaItemProvider>();
 
