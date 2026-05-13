@@ -55,7 +55,7 @@ public class DocProcessor
         RootFile = rootfile;
         XsltPath = xslt;
         ps = persprovider ?? throw new Exception("Persprovider  is not set!"); 
-        DirectoryPath = string.Join("", path.Split(Path.GetInvalidPathChars()));
+        DirectoryPath = string.Join(separator: "", path.Split(Path.GetInvalidPathChars()));
         this.documentation = documentation ?? throw new Exception("Documentation  is not set!");
         this.menuprovider = menuprovider ?? throw new Exception("MenuSchemaItemProvider is not set!");
         CreateWriter();
@@ -125,8 +125,8 @@ public class DocProcessor
                 caption = table.Columns[bindingMember].Caption;
             }
             Guid id = (Guid)table.Columns[bindingMember].ExtendedProperties["Id"];
-            WriteStartElement("Field", caption, control.ControlItem.Id.ToString(), control.ControlItem.GetType().Name);
-            WriteElement("description",
+            WriteStartElement(element: "Field", caption, control.ControlItem.Id.ToString(), control.ControlItem.GetType().Name);
+            WriteElement(caption: "description",
                  documentation.GetDocumentation(id, DocumentationType.USER_LONG_HELP));
         }
         List<ControlSetItem> sortedControls;
@@ -145,12 +145,12 @@ public class DocProcessor
                 section = "Panel";
             }
             AbstractDataEntity entity = GetEntity(ps, dataMember, dataset);
-            WriteStartElement("Section", section, control.ControlItem.Id.ToString(), control.ControlItem.GetType().Name);
+            WriteStartElement(element: "Section", section, control.ControlItem.Id.ToString(), control.ControlItem.GetType().Name);
             WriteStartElement("entity");
-            WriteElement("entityid", entity.PrimaryKey["Id"].ToString());
-            WriteElement("entityname", entity.NodeText);
+            WriteElement(caption: "entityid", entity.PrimaryKey["Id"].ToString());
+            WriteElement(caption: "entityname", entity.NodeText);
             WriteEndElement();
-            WriteElement("description",
+            WriteElement(caption: "description",
                 documentation.GetDocumentation(control.ControlItem.PanelControlSet.Id, DocumentationType.USER_LONG_HELP));
             sortedControls = control.ControlItem.PanelControlSet.ChildItems[0].ChildItemsByType<ControlSetItem>(ControlSetItem.CategoryConst);
         }
@@ -235,16 +235,16 @@ public class DocProcessor
     }
     private void SaveXslt(XslCompiledTransform xslTransform, XmlWriter xmlWriter)
     {
-        mstream.Seek(0, SeekOrigin.Begin);
+        mstream.Seek(offset: 0, SeekOrigin.Begin);
         XPathDocument doc = new XPathDocument(mstream);
-        xslTransform.Transform(doc, null, xmlWriter);
+        xslTransform.Transform(doc, arguments: null, xmlWriter);
     }
     private void CreateXml(ISchemaItem menuSublist)
     {
         foreach (ISchemaItem menuitem in menuSublist.ChildItems)
         {
-            WriteStartElement("Menuitem", menuitem.NodeText, menuitem.Id.ToString(), menuitem.GetType().Name);
-            WriteElement("documentation",
+            WriteStartElement(element: "Menuitem", menuitem.NodeText, menuitem.Id.ToString(), menuitem.GetType().Name);
+            WriteElement(caption: "documentation",
                 documentation.GetDocumentation(menuitem.Id, DocumentationType.USER_LONG_HELP));
             if (menuitem is FormReferenceMenuItem formItem)
             {
@@ -257,7 +257,7 @@ public class DocProcessor
     private void MakeXmlSections(FormControlSet form)
     {
         DataSet dataset = new DatasetGenerator(false).CreateDataSet(form.DataStructure);
-        MakeXml(form.ChildItems[0] as ControlSetItem, form, dataset, null);
+        MakeXml(form.ChildItems[0] as ControlSetItem, form, dataset, dataMember: null);
     }
     private void WriteStartElement(string element)
     {
@@ -266,9 +266,9 @@ public class DocProcessor
     private void WriteStartElement(string element, string displayName, string id, string typeitem)
     {
         WriteStartElement(element);
-        Xmlwriter.WriteAttributeString("DisplayName", displayName);
-        Xmlwriter.WriteAttributeString("Id", id);
-        Xmlwriter.WriteAttributeString("Type", typeitem);
+        Xmlwriter.WriteAttributeString(localName: "DisplayName", displayName);
+        Xmlwriter.WriteAttributeString(localName: "Id", id);
+        Xmlwriter.WriteAttributeString(localName: "Type", typeitem);
     }
     private void WriteElement(string caption, string description)
     {

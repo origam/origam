@@ -308,6 +308,8 @@ jobs:
         yarn build
        workingDirectory: $(Agent.BuildDirectory)\s\origam\architect-html\
        displayName: 'origam-architect-client yarn build'
+       env:
+         VITE_ORIGAM_ARCHITECT_HTML_VERSION: $(VERSION_NUMBER)
      - task: PublishBuildArtifacts@1
        displayName: 'Publish artifact: origam-architect-client'
        inputs:

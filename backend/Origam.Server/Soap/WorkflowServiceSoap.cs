@@ -46,11 +46,11 @@ public class WorkflowServiceSoap : IWorkflowServiceSoap
     {
         if (log.IsEnabled(LogLevel.Information))
         {
-            log.Log(LogLevel.Information, "ExecuteWorkflow0");
+            log.Log(LogLevel.Information, message: "ExecuteWorkflow0");
         }
         Guid guid = new Guid(workflowId);
         object result = CoreServices.WorkflowService.ExecuteWorkflow(guid);
-        object diffGram = ToDiffGram(result, "ExecuteWorkflow0Result");
+        object diffGram = ToDiffGram(result, rootElementName: "ExecuteWorkflow0Result");
         return Task.FromResult(diffGram);
     }
 
@@ -58,16 +58,16 @@ public class WorkflowServiceSoap : IWorkflowServiceSoap
     {
         if (log.IsEnabled(LogLevel.Information))
         {
-            log.Log(LogLevel.Information, "ExecuteWorkflow");
+            log.Log(LogLevel.Information, message: "ExecuteWorkflow");
         }
         Guid guid = new Guid(workflowId);
         var parameterCollection = ParameterUtils.ToQueryParameterCollection(parameters);
         object result = CoreServices.WorkflowService.ExecuteWorkflow(
             guid,
             parameterCollection,
-            null
+            transactionId: null
         );
-        object diffGram = ToDiffGram(result, "ExecuteWorkflowResult");
+        object diffGram = ToDiffGram(result, rootElementName: "ExecuteWorkflowResult");
         return Task.FromResult(diffGram);
     }
 
@@ -79,13 +79,17 @@ public class WorkflowServiceSoap : IWorkflowServiceSoap
     {
         if (log.IsEnabled(LogLevel.Information))
         {
-            log.Log(LogLevel.Information, "ExecuteWorkflow1");
+            log.Log(LogLevel.Information, message: "ExecuteWorkflow1");
         }
         Guid guid = new Guid(workflowId);
         QueryParameterCollection parameters = new QueryParameterCollection();
         parameters.Add(new QueryParameter(paramName, paramValue));
-        object result = CoreServices.WorkflowService.ExecuteWorkflow(guid, parameters, null);
-        object diffGram = ToDiffGram(result, "ExecuteWorkflow1Result");
+        object result = CoreServices.WorkflowService.ExecuteWorkflow(
+            guid,
+            parameters,
+            transactionId: null
+        );
+        object diffGram = ToDiffGram(result, rootElementName: "ExecuteWorkflow1Result");
         return Task.FromResult(diffGram);
     }
 

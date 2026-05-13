@@ -1,0 +1,31 @@
+# Origam Meziantou / Origam.Analyzers overrides.
+#
+# This is a Roslyn "global AnalyzerConfig" file (is_global = true). Settings
+# from global configs override settings from regular .editorconfig files for
+# the same diagnostic ID. Among multiple global configs, the one with the
+# highest global_level wins. Meziantou ships its own global config at
+# global_level = 0 with all MA* rules set to 'none' (because we use
+# MeziantouAnalysisMode=None in Directory.Build.props). This file uses
+# global_level = 100 so the rules below win against that.
+#
+# Scope: only rules that need to override Meziantou's silencing or that come
+# from our custom Origam.Analyzers project. Roslynator (RCS*) and IDE / CS
+# severities live in .editorconfig — they don't need a global config because
+# nothing is silencing them at a higher precedence.
+#
+# This file is conditionally included from Directory.Build.props and only
+# attaches to modern SDK-style projects (i.e. NOT to legacy net472 / .NET
+# Framework non-SDK csproj files), matching where Meziantou.Analyzer itself
+# is referenced.
+
+is_global = true
+global_level = 100
+
+# MA0003: Add parameter name to improve readability — disabled, replaced by
+# ORIGAM002 from Origam.Analyzers.
+dotnet_diagnostic.MA0003.severity = none
+# Default is "Null | Boolean" — also flag string and numeric literals.
+MA0003.expression_kinds = Null, Boolean, Numeric, String
+
+# ORIGAM002: Add parameter name to improve readability (Origam.Analyzers)
+dotnet_diagnostic.ORIGAM002.severity = error

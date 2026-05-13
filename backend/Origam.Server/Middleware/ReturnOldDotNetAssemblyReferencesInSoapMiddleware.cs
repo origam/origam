@@ -56,7 +56,7 @@ public class ReturnOldDotNetAssemblyReferencesInSoapMiddleware
 
     private async Task<MemoryStream> FixAssemblyReferencesInResponse(HttpResponse response)
     {
-        response.Body.Seek(0, SeekOrigin.Begin);
+        response.Body.Seek(offset: 0, SeekOrigin.Begin);
         using (var streamReader = new StreamReader(response.Body))
         {
             var responseContent = await streamReader.ReadToEndAsync();
@@ -68,7 +68,7 @@ public class ReturnOldDotNetAssemblyReferencesInSoapMiddleware
             var coreLibKey = match.Groups[2].Value;
             responseContent = responseContent.Replace(
                 $"System.Private.CoreLib, Version={coreLibVersion}, Culture=neutral, PublicKeyToken={coreLibKey}",
-                "mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+                newValue: "mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
             );
             var responseData = Encoding.UTF8.GetBytes(responseContent);
             return new MemoryStream(responseData);

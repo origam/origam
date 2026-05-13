@@ -72,7 +72,7 @@ public class CoreUserManager<TUser> : UserManager<IOrigamUser>
     {
         var origamUserDataSet = UserStore.GetOrigamUserDataSet(
             UserStore.GET_ORIGAM_USER_BY_USER_NAME,
-            "OrigamUser_parUserName",
+            paramName: "OrigamUser_parUserName",
             user.UserName,
             user.TransactionId
         );
@@ -93,7 +93,7 @@ public class CoreUserManager<TUser> : UserManager<IOrigamUser>
         DataService.Instance.StoreData(
             UserStore.ORIGAM_USER_DATA_STRUCTURE,
             origamUserDataSet,
-            false,
+            loadActualValuesAfterUpdate: false,
             user.TransactionId
         );
         return IdentityResult.Success;

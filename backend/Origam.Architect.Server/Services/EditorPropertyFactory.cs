@@ -36,8 +36,7 @@ public class EditorPropertyFactory
 {
     public EditorProperty CreateIfMarkedAsEditable(PropertyInfo property, ISchemaItem item)
     {
-        string category = property.GetAttribute<CategoryAttribute>()?.Category;
-        if (category == null || !PropertyUtils.CanBeEdited(property))
+        if (!PropertyUtils.CanBeEdited(property))
         {
             return null;
         }
@@ -165,7 +164,7 @@ public class EditorPropertyFactory
 
         object converterInstance = Activator.CreateInstance(type);
         MethodInfo getValuesMethod = type.GetMethod(
-            "GetStandardValues",
+            name: "GetStandardValues",
             new Type[] { typeof(ITypeDescriptorContext) }
         )!;
         var context = new Context(instance);

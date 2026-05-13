@@ -56,8 +56,8 @@ class ReportPageRequestHandler : AbstractPageRequestHandler
         {
             transformParams.Add(rp.Key, rp.Value);
         }
-        RuleEngine ruleEngine = RuleEngine.Create(null, null);
-        Validate(null, transformParams, ruleEngine, reportPage.InputValidationRule);
+        RuleEngine ruleEngine = RuleEngine.Create(contextStores: null, transactionId: null);
+        Validate(data: null, transformParams, ruleEngine, reportPage.InputValidationRule);
         // get report
         if (report is FileSystemReport reportstream)
         {
@@ -67,15 +67,15 @@ class ReportPageRequestHandler : AbstractPageRequestHandler
         {
             byte[] result = CoreServices.ReportService.GetReport(
                 report.Id,
-                null,
+                data: null,
                 reportPage.ExportFormatType.GetString(),
                 hashParams,
-                null
+                transactionId: null
             );
             // set proper content type
             response.ContentType = "application/pdf";
             // write to response.OutputStream
-            response.OutputStreamWrite(result, 0, result.Length);
+            response.OutputStreamWrite(result, offset: 0, result.Length);
         }
     }
 
@@ -141,7 +141,7 @@ class ReportPageRequestHandler : AbstractPageRequestHandler
         if (firstbracket == 0)
         {
             int secondBracket = reportPath.IndexOf("}");
-            string paramDefaultdirectory = reportPath.Substring(1, secondBracket - 1);
+            string paramDefaultdirectory = reportPath.Substring(startIndex: 1, secondBracket - 1);
             if (hashParams.ContainsKey(paramDefaultdirectory))
             {
                 string dir = (string)hashParams[paramDefaultdirectory];
@@ -150,7 +150,9 @@ class ReportPageRequestHandler : AbstractPageRequestHandler
         }
         if (firstbracket > 0)
         {
-            return reportPath.Substring(0, firstbracket).ReplaceInvalidFileCharacters("");
+            return reportPath
+                .Substring(startIndex: 0, firstbracket)
+                .ReplaceInvalidFileCharacters("");
         }
         return null;
     }

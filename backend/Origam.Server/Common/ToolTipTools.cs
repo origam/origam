@@ -42,10 +42,10 @@ public static class ToolTipTools
             new Guid("4b9c5b97-f81f-4859-b2ac-3067da68e47a"),
             Guid.Empty,
             new Guid("e2446ba7-ae8f-4b87-a728-f461b093614f"),
-            null,
-            "OrigamTooltipHelpUsage_parBusinessPartnerId",
+            transactionId: null,
+            paramName1: "OrigamTooltipHelpUsage_parBusinessPartnerId",
             profile.Id,
-            "OrigamTooltipHelp_parFormId",
+            paramName2: "OrigamTooltipHelp_parFormId",
             formId
         );
         IOrigamAuthorizationProvider auth = SecurityManager.GetAuthorizationProvider();
@@ -72,8 +72,8 @@ public static class ToolTipTools
             new Guid("7eaf8cd8-e6a5-418d-b4e3-c7549e8080b4"),
             Guid.Empty,
             Guid.Empty,
-            null,
-            "OrigamTooltipHelp_parId",
+            transactionId: null,
+            paramName1: "OrigamTooltipHelp_parId",
             tooltipId
         );
         DataRow row = data.Tables[0].Rows[0];
@@ -86,7 +86,7 @@ public static class ToolTipTools
         }
         tt.SubContext = (string)row["SubContext"];
         tt.RelatedComponent = (string)row["RelatedComponent"];
-        tt.Text = ((string)row["Text"]).Replace("COLOR=\"#000000\"", "");
+        tt.Text = ((string)row["Text"]).Replace(oldValue: "COLOR=\"#000000\"", newValue: "");
         if (!row.IsNull("DestroyParameter"))
         {
             tt.DestroyParameter = (string)row["DestroyParameter"];

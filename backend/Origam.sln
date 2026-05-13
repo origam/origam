@@ -187,6 +187,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Origam.Server.Common", "Ori
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Composer", "Origam.Composer\Origam.Composer.csproj", "{DDD973C7-87B8-4D58-91CA-3A0481429128}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Analyzers", "Origam.Analyzers\Origam.Analyzers.csproj", "{6F2293D0-671B-4A82-A342-3DB6D4A5ED81}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Analyzers.CodeFixes", "Origam.Analyzers.CodeFixes\Origam.Analyzers.CodeFixes.csproj", "{09C89E0C-0F9E-48DF-A1C3-77FFB03E6D0D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug Architect Server|Any CPU = Debug Architect Server|Any CPU
@@ -1502,6 +1506,46 @@ Global
 		{DDD973C7-87B8-4D58-91CA-3A0481429128}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DDD973C7-87B8-4D58-91CA-3A0481429128}.Release Server|Any CPU.ActiveCfg = Release|Any CPU
 		{DDD973C7-87B8-4D58-91CA-3A0481429128}.Release Server|Any CPU.Build.0 = Release|Any CPU
+		{6F2293D0-671B-4A82-A342-3DB6D4A5ED81}.Debug Architect Server|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F2293D0-671B-4A82-A342-3DB6D4A5ED81}.Debug Architect Server|Any CPU.Build.0 = Debug|Any CPU
+		{6F2293D0-671B-4A82-A342-3DB6D4A5ED81}.Debug Architect|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F2293D0-671B-4A82-A342-3DB6D4A5ED81}.Debug Architect|Any CPU.Build.0 = Debug|Any CPU
+		{6F2293D0-671B-4A82-A342-3DB6D4A5ED81}.Debug Client|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F2293D0-671B-4A82-A342-3DB6D4A5ED81}.Debug Client|Any CPU.Build.0 = Debug|Any CPU
+		{6F2293D0-671B-4A82-A342-3DB6D4A5ED81}.Debug Server|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F2293D0-671B-4A82-A342-3DB6D4A5ED81}.Debug Server|Any CPU.Build.0 = Debug|Any CPU
+		{6F2293D0-671B-4A82-A342-3DB6D4A5ED81}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F2293D0-671B-4A82-A342-3DB6D4A5ED81}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F2293D0-671B-4A82-A342-3DB6D4A5ED81}.Release Architect Server|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F2293D0-671B-4A82-A342-3DB6D4A5ED81}.Release Architect Server|Any CPU.Build.0 = Debug|Any CPU
+		{6F2293D0-671B-4A82-A342-3DB6D4A5ED81}.Release Architect|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F2293D0-671B-4A82-A342-3DB6D4A5ED81}.Release Architect|Any CPU.Build.0 = Debug|Any CPU
+		{6F2293D0-671B-4A82-A342-3DB6D4A5ED81}.Release Client|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F2293D0-671B-4A82-A342-3DB6D4A5ED81}.Release Client|Any CPU.Build.0 = Debug|Any CPU
+		{6F2293D0-671B-4A82-A342-3DB6D4A5ED81}.Release Server|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F2293D0-671B-4A82-A342-3DB6D4A5ED81}.Release Server|Any CPU.Build.0 = Debug|Any CPU
+		{6F2293D0-671B-4A82-A342-3DB6D4A5ED81}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F2293D0-671B-4A82-A342-3DB6D4A5ED81}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09C89E0C-0F9E-48DF-A1C3-77FFB03E6D0D}.Debug Architect Server|Any CPU.ActiveCfg = Debug|Any CPU
+		{09C89E0C-0F9E-48DF-A1C3-77FFB03E6D0D}.Debug Architect Server|Any CPU.Build.0 = Debug|Any CPU
+		{09C89E0C-0F9E-48DF-A1C3-77FFB03E6D0D}.Debug Architect|Any CPU.ActiveCfg = Debug|Any CPU
+		{09C89E0C-0F9E-48DF-A1C3-77FFB03E6D0D}.Debug Architect|Any CPU.Build.0 = Debug|Any CPU
+		{09C89E0C-0F9E-48DF-A1C3-77FFB03E6D0D}.Debug Client|Any CPU.ActiveCfg = Debug|Any CPU
+		{09C89E0C-0F9E-48DF-A1C3-77FFB03E6D0D}.Debug Client|Any CPU.Build.0 = Debug|Any CPU
+		{09C89E0C-0F9E-48DF-A1C3-77FFB03E6D0D}.Debug Server|Any CPU.ActiveCfg = Debug|Any CPU
+		{09C89E0C-0F9E-48DF-A1C3-77FFB03E6D0D}.Debug Server|Any CPU.Build.0 = Debug|Any CPU
+		{09C89E0C-0F9E-48DF-A1C3-77FFB03E6D0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09C89E0C-0F9E-48DF-A1C3-77FFB03E6D0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09C89E0C-0F9E-48DF-A1C3-77FFB03E6D0D}.Release Architect Server|Any CPU.ActiveCfg = Debug|Any CPU
+		{09C89E0C-0F9E-48DF-A1C3-77FFB03E6D0D}.Release Architect Server|Any CPU.Build.0 = Debug|Any CPU
+		{09C89E0C-0F9E-48DF-A1C3-77FFB03E6D0D}.Release Architect|Any CPU.ActiveCfg = Debug|Any CPU
+		{09C89E0C-0F9E-48DF-A1C3-77FFB03E6D0D}.Release Architect|Any CPU.Build.0 = Debug|Any CPU
+		{09C89E0C-0F9E-48DF-A1C3-77FFB03E6D0D}.Release Client|Any CPU.ActiveCfg = Debug|Any CPU
+		{09C89E0C-0F9E-48DF-A1C3-77FFB03E6D0D}.Release Client|Any CPU.Build.0 = Debug|Any CPU
+		{09C89E0C-0F9E-48DF-A1C3-77FFB03E6D0D}.Release Server|Any CPU.ActiveCfg = Debug|Any CPU
+		{09C89E0C-0F9E-48DF-A1C3-77FFB03E6D0D}.Release Server|Any CPU.Build.0 = Debug|Any CPU
+		{09C89E0C-0F9E-48DF-A1C3-77FFB03E6D0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09C89E0C-0F9E-48DF-A1C3-77FFB03E6D0D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

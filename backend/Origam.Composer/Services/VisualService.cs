@@ -32,7 +32,7 @@ public class VisualService : IVisualService
         var headerPanel = new Panel($"[orange1 bold]ORIGAM Composer[/] [orange1]| {title}[/]")
             .Border(BoxBorder.Double)
             .BorderColor(Color.Orange1)
-            .Padding(1, 0);
+            .Padding(horizontal: 1, vertical: 0);
 
         AnsiConsole.Write(headerPanel);
         AnsiConsole.WriteLine();
@@ -179,7 +179,7 @@ public class VisualService : IVisualService
             Header = new PanelHeader("[yellow] Model already exists [/]"),
             Border = BoxBorder.Rounded,
             BorderStyle = new Style(foreground: Color.Yellow),
-            Padding = new Padding(1, 0, 1, 0),
+            Padding = new Padding(left: 1, top: 0, right: 1, bottom: 0),
         };
         AnsiConsole.WriteLine();
         AnsiConsole.Write(panel);

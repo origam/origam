@@ -52,14 +52,17 @@ public class CoreHttpTools : IHttpTools
         {
             disposition = "attachment; " + disposition;
         }
-        response.AppendHeader("content-length", file == null ? "0" : file.Length.ToString());
-        response.AppendHeader("content-disposition", disposition);
-        response.OutputStreamWrite(file, 0, file.Length);
+        response.AppendHeader(
+            contentDisposition: "content-length",
+            file == null ? "0" : file.Length.ToString()
+        );
+        response.AppendHeader(contentDisposition: "content-disposition", disposition);
+        response.OutputStreamWrite(file, offset: 0, file.Length);
     }
 
     public string GetFileDisposition(string userAgent, string fileName)
     {
-        fileName = fileName.Replace(",", "");
+        fileName = fileName.Replace(oldValue: ",", newValue: "");
         var encodedFileName = Uri.EscapeDataString(fileName);
         return $"filename=\"{encodedFileName}\"";
     }

@@ -46,7 +46,7 @@ public class PlatformResolveService : IPlatformResolveService
             return match;
         }
 
-        var available = string.Join(", ", platforms.Select(p => p.Name));
+        var available = string.Join(separator: ", ", platforms.Select(p => p.Name));
         throw new InvalidOperationException(
             $"Unknown platform '{requested}'. Available platforms: {available}."
         );

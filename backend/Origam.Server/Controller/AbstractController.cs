@@ -102,7 +102,12 @@ public abstract class AbstractController : ControllerBase
         return !(
             ServiceManager
                 .Services.GetService<IPersistenceService>()
-                .SchemaProvider.RetrieveInstance(typeof(T), new Key(id), true, false)
+                .SchemaProvider.RetrieveInstance(
+                    typeof(T),
+                    new Key(id),
+                    useCache: true,
+                    throwNotFoundException: false
+                )
             is T instance
         )
             ? Result.Failure<T, IActionResult>(NotFound("Object with requested id not found."))
@@ -480,7 +485,7 @@ public abstract class AbstractController : ControllerBase
         var listData = datasetBuilder.InitializeListStructure(
             data,
             menuItem.ListEntity.Name,
-            false
+            isDbSource: false
         );
         return TransformData(
             datasetBuilder.LoadListData(
@@ -579,7 +584,10 @@ public abstract class AbstractController : ControllerBase
             query.Parameters.Add(new QueryParameter(key.ToString(), parameters[key]));
         }
         query.Parameters.Add(
-            new QueryParameter("WorkQueueEntry_parWorkQueueId", sessionStore.Request.ObjectId)
+            new QueryParameter(
+                _parameterName: "WorkQueueEntry_parWorkQueueId",
+                sessionStore.Request.ObjectId
+            )
         );
         return query;
     }

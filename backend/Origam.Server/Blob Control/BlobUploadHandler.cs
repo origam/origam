@@ -60,7 +60,9 @@ public class BlobUploadHandler
         Image backgroundImage = new Image<Rgba32>(width, height);
         backgroundImage.Mutate(x => x.Fill(Color.Black));
         using Image resizedImage = sourceImage.Clone(ctx => ctx.Resize(destWidth, destHeight));
-        backgroundImage.Mutate(x => x.DrawImage(resizedImage, new Point(destX, destY), 1f));
+        backgroundImage.Mutate(x =>
+            x.DrawImage(resizedImage, new Point(destX, destY), opacity: 1f)
+        );
         return backgroundImage;
     }
 }

@@ -80,8 +80,8 @@ public class PortalSessionStore
             new Guid("ece8b03a-f378-4026-b3b3-588cb58317b6"),
             Guid.Empty,
             Guid.Empty,
-            null,
-            "OrigamOnlineUser_par_UserName",
+            transactionId: null,
+            paramName1: "OrigamOnlineUser_par_UserName",
             SecurityManager.CurrentPrincipal.Identity.Name
         );
         if (data.Tables[0].Rows.Count == 0)

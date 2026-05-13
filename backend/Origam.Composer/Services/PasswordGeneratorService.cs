@@ -38,7 +38,7 @@ public class PasswordGeneratorService : IPasswordGeneratorService
             while (result.Length < length)
             {
                 rng.GetBytes(uintBuffer);
-                var num = BitConverter.ToUInt32(uintBuffer, 0);
+                var num = BitConverter.ToUInt32(uintBuffer, startIndex: 0);
                 result.Append(validChars[(int)(num % (uint)validChars.Length)]);
             }
         }

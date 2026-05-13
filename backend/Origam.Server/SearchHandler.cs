@@ -55,7 +55,7 @@ public class SearchHandler
             dataSource.DataStructureMethodId,
             Guid.Empty,
             Guid.Empty,
-            null,
+            transactionId: null,
             dataSource.FilterParameter,
             searchTerm
         );

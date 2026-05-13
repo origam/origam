@@ -58,7 +58,7 @@ public class ResourceOwnerPasswordAuthenticationProvider : IClientAuthentication
             }
         }
 
-        headers.Add("Authorization", $"Bearer {accessToken.Value}");
+        headers.Add(key: "Authorization", $"Bearer {accessToken.Value}");
         return true;
     }
 
@@ -90,7 +90,7 @@ public class ResourceOwnerPasswordAuthenticationProvider : IClientAuthentication
             using var discoveryJson = JsonDocument.Parse(discoveryContent);
             var root = discoveryJson.RootElement;
 
-            if (!root.TryGetProperty("token_endpoint", out var tokenEndpointElement))
+            if (!root.TryGetProperty(propertyName: "token_endpoint", out var tokenEndpointElement))
             {
                 throw new Exception(
                     string.Format(Resources.ErrorTokenEndpointNotFoundInDiscovery, discoveryUrl)
@@ -150,7 +150,7 @@ public class ResourceOwnerPasswordAuthenticationProvider : IClientAuthentication
             using var tokenJson = JsonDocument.Parse(tokenContent);
             var root = tokenJson.RootElement;
 
-            if (!root.TryGetProperty("access_token", out var accessTokenElement))
+            if (!root.TryGetProperty(propertyName: "access_token", out var accessTokenElement))
             {
                 throw new Exception(
                     string.Format(
@@ -167,7 +167,7 @@ public class ResourceOwnerPasswordAuthenticationProvider : IClientAuthentication
             }
 
             int expiresInSeconds = 3600;
-            if (root.TryGetProperty("expires_in", out var expiresInElement))
+            if (root.TryGetProperty(propertyName: "expires_in", out var expiresInElement))
             {
                 if (expiresInElement.ValueKind == JsonValueKind.Number)
                 {

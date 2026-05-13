@@ -77,7 +77,7 @@ public class Analytics
                 perfLog.Logger.Name,
                 Level.Info,
                 message,
-                null
+                exception: null
             );
             foreach (KeyValuePair<string, string> item in properties)
             {

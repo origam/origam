@@ -61,14 +61,14 @@ class FileDownloadPageRequestHandler : AbstractPageRequestHandler
         {
             transformParams.Add(rp.Key, rp.Value);
         }
-        RuleEngine ruleEngine = RuleEngine.Create(null, null);
-        Validate(null, transformParams, ruleEngine, fdPage.InputValidationRule);
+        RuleEngine ruleEngine = RuleEngine.Create(contextStores: null, transactionId: null);
+        Validate(data: null, transformParams, ruleEngine, fdPage.InputValidationRule);
         DataSet data = CoreServices.DataService.Instance.LoadData(
             fdPage.DataStructureId,
             fdPage.DataStructureMethodId,
             Guid.Empty,
             fdPage.DataStructureSortSetId,
-            null,
+            transactionId: null,
             qparams
         );
         DataTable table = data.Tables[0];
@@ -103,7 +103,7 @@ class FileDownloadPageRequestHandler : AbstractPageRequestHandler
                 response,
                 bytes,
                 (string)table.Rows[0][fdPage.FileNameField],
-                true,
+                isPreview: true,
                 contentType
             );
         }

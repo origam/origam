@@ -36,7 +36,7 @@ public class CreateCommand(
 {
     public override int Execute(CommandContext context, CreateCommandSettings settings)
     {
-        var modelFolder = Path.Combine(settings.ProjectFolder, "model");
+        var modelFolder = Path.Combine(settings.ProjectFolder, path2: "model");
         if (
             Directory.Exists(modelFolder) && Directory.EnumerateFileSystemEntries(modelFolder).Any()
         )
@@ -48,13 +48,13 @@ public class CreateCommand(
         GitIdentity gitIdentity = GitIdentityResolver(settings);
         ShowVisualBanner(settings: settings, gitIdentity: gitIdentity);
 
-        var dockerFolder = Path.Combine(settings.ProjectFolder, "docker");
+        var dockerFolder = Path.Combine(settings.ProjectFolder, path2: "docker");
         var project = new Project
         {
             #region General
             CommandsAddWindowsContainers = settings.CommandsAddWindowsContainers,
             CommandsOutputFormat = settings.CommandsOutputFormat.Equals(
-                "cmd",
+                value: "cmd",
                 StringComparison.CurrentCultureIgnoreCase
             )
                 ? Enums.CommandOutputFormat.Cmd
@@ -63,7 +63,7 @@ public class CreateCommand(
 
             #region DB
             DatabaseType = settings.DbType.Equals(
-                "postgres",
+                value: "postgres",
                 StringComparison.CurrentCultureIgnoreCase
             )
                 ? DatabaseType.PgSql
@@ -81,7 +81,7 @@ public class CreateCommand(
             #region Project and client web app
             NewPackageId = Guid.NewGuid().ToString(),
             Name = StringHelper.RemoveAllWhitespace(settings.ProjectName),
-            ModelFolder = Path.Combine(settings.ProjectFolder, "model"),
+            ModelFolder = Path.Combine(settings.ProjectFolder, path2: "model"),
             ProjectFolder = settings.ProjectFolder,
 
             // Admin user account for client web app
