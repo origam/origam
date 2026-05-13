@@ -37,6 +37,7 @@ export class EditorNode implements IEditorNode {
   origamId: string;
   nodeText: string;
   editorType: EditorSubType;
+  itemTypeName?: string;
   parent: TreeNode | null = null;
 
   constructor(node: IApiEditorNode, parent: TreeNode | null) {
@@ -44,6 +45,7 @@ export class EditorNode implements IEditorNode {
     this.origamId = node.origamId;
     this.nodeText = node.nodeText;
     this.editorType = node.editorType;
+    this.itemTypeName = node.itemTypeName;
     this.parent = parent;
   }
 }
