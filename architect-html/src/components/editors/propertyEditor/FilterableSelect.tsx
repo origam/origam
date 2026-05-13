@@ -35,7 +35,7 @@ export const FilterableSelect = observer((props: FilterableSelectProps) => {
   const { options, selectedValue, disabled, onChange } = props;
 
   const selectedOption = useMemo(
-    () => options.find(o => String(o.value) === String(selectedValue)),
+    () => options.find(option => String(option.value) === String(selectedValue)),
     [options, selectedValue],
   );
   const selectedLabel = selectedOption?.name ?? '';
@@ -57,8 +57,8 @@ export const FilterableSelect = observer((props: FilterableSelectProps) => {
 
   const filteredOptions = useMemo(() => {
     if (filter == null || filter === '') return options;
-    const f = filter.toLowerCase();
-    return options.filter(o => o.name.toLowerCase().includes(f));
+    const lowerCaseFilter = filter.toLowerCase();
+    return options.filter(option => option.name.toLowerCase().includes(lowerCaseFilter));
   }, [options, filter]);
 
   const commit = useCallback(
@@ -73,8 +73,8 @@ export const FilterableSelect = observer((props: FilterableSelectProps) => {
 
   useEffect(() => {
     if (!open) return;
-    const handler = (e: MouseEvent) => {
-      const target = e.target as Node;
+    const handler = (event: MouseEvent) => {
+      const target = event.target as Node;
       if (
         wrapperRef.current &&
         !wrapperRef.current.contains(target) &&
@@ -97,15 +97,17 @@ export const FilterableSelect = observer((props: FilterableSelectProps) => {
     if (!open || !wrapperRef.current) return;
     const update = () => {
       if (!wrapperRef.current) return;
-      const r = wrapperRef.current.getBoundingClientRect();
+      const wrapperRect = wrapperRef.current.getBoundingClientRect();
       const margin = 2;
       const desired = 240;
-      const spaceBelow = window.innerHeight - r.bottom - margin;
-      const spaceAbove = r.top - margin;
+      const spaceBelow = window.innerHeight - wrapperRect.bottom - margin;
+      const spaceAbove = wrapperRect.top - margin;
       const openUp = spaceBelow < Math.min(desired, 160) && spaceAbove > spaceBelow;
       const maxHeight = Math.max(80, Math.min(desired, openUp ? spaceAbove : spaceBelow));
-      const top = openUp ? Math.max(margin, r.top - margin - maxHeight) : r.bottom + margin;
-      setMenuPos({ top, left: r.left, width: r.width, maxHeight, openUp });
+      const top = openUp
+        ? Math.max(margin, wrapperRect.top - margin - maxHeight)
+        : wrapperRect.bottom + margin;
+      setMenuPos({ top, left: wrapperRect.left, width: wrapperRect.width, maxHeight, openUp });
     };
     update();
     window.addEventListener('scroll', update, true);
@@ -119,10 +121,10 @@ export const FilterableSelect = observer((props: FilterableSelectProps) => {
   useEffect(() => {
     if (!open || !listRef.current) return;
     const list = listRef.current;
-    const el = list.children[highlight] as HTMLElement | undefined;
-    if (!el) return;
-    const itemTop = el.offsetTop;
-    const itemBottom = itemTop + el.offsetHeight;
+    const element = list.children[highlight] as HTMLElement | undefined;
+    if (!element) return;
+    const itemTop = element.offsetTop;
+    const itemBottom = itemTop + element.offsetHeight;
     if (itemTop < list.scrollTop) {
       list.scrollTop = itemTop;
     } else if (itemBottom > list.scrollTop + list.clientHeight) {
@@ -136,28 +138,28 @@ export const FilterableSelect = observer((props: FilterableSelectProps) => {
     setHighlight(
       Math.max(
         0,
-        filteredOptions.findIndex(o => String(o.value) === String(selectedValue)),
+        filteredOptions.findIndex(option => String(option.value) === String(selectedValue)),
       ),
     );
   };
 
-  const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'ArrowDown') {
-      e.preventDefault();
+  const onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'ArrowDown') {
+      event.preventDefault();
       if (!open) openDropdown();
-      else setHighlight(h => Math.min(filteredOptions.length - 1, h + 1));
-    } else if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      setHighlight(h => Math.max(0, h - 1));
-    } else if (e.key === 'Enter') {
+      else setHighlight(current => Math.min(filteredOptions.length - 1, current + 1));
+    } else if (event.key === 'ArrowUp') {
+      event.preventDefault();
+      setHighlight(current => Math.max(0, current - 1));
+    } else if (event.key === 'Enter') {
       if (open && filteredOptions[highlight]) {
-        e.preventDefault();
+        event.preventDefault();
         commit(filteredOptions[highlight].value);
       }
-    } else if (e.key === 'Escape') {
+    } else if (event.key === 'Escape') {
       setOpen(false);
       setFilter(null);
-    } else if (e.key === 'Tab') {
+    } else if (event.key === 'Tab') {
       if (open && filter != null && filteredOptions[highlight]) {
         commit(filteredOptions[highlight].value);
       } else {
@@ -175,8 +177,8 @@ export const FilterableSelect = observer((props: FilterableSelectProps) => {
         disabled={disabled}
         className={S.filterableInput}
         value={filter ?? selectedLabel}
-        onChange={e => {
-          setFilter(e.target.value);
+        onChange={event => {
+          setFilter(event.target.value);
           setOpen(true);
           setHighlight(0);
         }}
@@ -199,21 +201,23 @@ export const FilterableSelect = observer((props: FilterableSelectProps) => {
             }}
           >
             {filteredOptions.length === 0 && <li className={S.dropdownEmpty}>No matches</li>}
-            {filteredOptions.map((o, i) => (
+            {filteredOptions.map((option, index) => (
               <li
-                key={String(o.value) + o.name}
+                key={String(option.value) + option.name}
                 className={
                   S.dropdownItem +
-                  (i === highlight ? ' ' + S.dropdownItemHighlight : '') +
-                  (String(o.value) === String(selectedValue) ? ' ' + S.dropdownItemSelected : '')
+                  (index === highlight ? ' ' + S.dropdownItemHighlight : '') +
+                  (String(option.value) === String(selectedValue)
+                    ? ' ' + S.dropdownItemSelected
+                    : '')
                 }
-                onMouseDown={e => {
-                  e.preventDefault();
-                  commit(o.value);
+                onMouseDown={event => {
+                  event.preventDefault();
+                  commit(option.value);
                 }}
-                onMouseEnter={() => setHighlight(i)}
+                onMouseEnter={() => setHighlight(index)}
               >
-                {o.name}
+                {option.name}
               </li>
             ))}
           </ul>,
