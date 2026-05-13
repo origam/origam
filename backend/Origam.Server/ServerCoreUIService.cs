@@ -427,7 +427,7 @@ public class ServerCoreUIService : IBasicUIService
         {
             return new List<ChangeInfo>();
         }
-        return sessionStore.GetRowData(input.Entity, input.RowId, false);
+        return sessionStore.GetRowData(input.Entity, input.RowId, ignoreDirtyState: false);
     }
 
     public ChangeInfo GetRow(MasterRecordInput input)
@@ -811,9 +811,9 @@ public class ServerCoreUIService : IBasicUIService
                             lookupService.GetDisplayText(
                                 workQueueClass.WorkQueueItemCountLookupId,
                                 workQueueId,
-                                false,
-                                false,
-                                null
+                                useCache: false,
+                                returnMessageIfNull: false,
+                                transactionId: null
                             );
                     }
                 }
@@ -946,10 +946,10 @@ public class ServerCoreUIService : IBasicUIService
         SecurityTools.CurrentUserProfile();
         OrigamPanelColumnConfigDA.PersistColumnConfig(
             input.InstanceId,
-            "splitPanel",
-            0,
+            columnName: "splitPanel",
+            position: 0,
             input.Position,
-            false
+            hidden: false
         );
     }
 
@@ -962,8 +962,8 @@ public class ServerCoreUIService : IBasicUIService
             new Guid("e468076e-a641-4b7d-b9b4-7d80ff312b1c"),
             Guid.Empty,
             Guid.Empty,
-            null,
-            "OrigamFavoritesUserConfig_parBusinessPartnerId",
+            transactionId: null,
+            paramName1: "OrigamFavoritesUserConfig_parBusinessPartnerId",
             profile.Id
         );
         if (favorites.Tables["OrigamFavoritesUserConfig"].Rows.Count > 0)
@@ -987,8 +987,8 @@ public class ServerCoreUIService : IBasicUIService
         CoreServices.DataService.Instance.StoreData(
             new Guid("e564c554-ca83-47eb-980d-95b4faba8fb8"),
             favorites,
-            false,
-            null
+            loadActualValuesAfterUpdate: false,
+            transactionId: null
         );
     }
 
@@ -1005,7 +1005,13 @@ public class ServerCoreUIService : IBasicUIService
         var sessionStore = sessionManager.GetSession(input.SessionFormIdentifier);
         var hasErrors = sessionStore.Data.HasErrors;
         var hasChanges = sessionStore.Data.HasChanges();
-        return sessionStore.GetChanges(input.Entity, input.RowId, 0, hasErrors, hasChanges);
+        return sessionStore.GetChanges(
+            input.Entity,
+            input.RowId,
+            operation: 0,
+            hasErrors,
+            hasChanges
+        );
     }
 
     public static Result<Guid, IActionResult> SaveFilter(
@@ -1372,7 +1378,7 @@ public class ServerCoreUIService : IBasicUIService
     {
         var xmlDocument = new XmlDocument();
         var tooltipElement = xmlDocument.CreateElement("tooltip");
-        tooltipElement.SetAttribute("title", row.Table.DisplayExpression);
+        tooltipElement.SetAttribute(name: "title", row.Table.DisplayExpression);
         xmlDocument.AppendChild(tooltipElement);
         var y = 1;
         if (row.Table.Columns.Contains("Id"))
@@ -1454,11 +1460,11 @@ public class ServerCoreUIService : IBasicUIService
     )
     {
         var gridElement = xmlDocument.CreateElement("cell");
-        gridElement.SetAttribute("type", "text");
-        gridElement.SetAttribute("x", "0");
-        gridElement.SetAttribute("y", y.ToString());
-        gridElement.SetAttribute("height", "1");
-        gridElement.SetAttribute("width", "1");
+        gridElement.SetAttribute(name: "type", value: "text");
+        gridElement.SetAttribute(name: "x", value: "0");
+        gridElement.SetAttribute(name: "y", y.ToString());
+        gridElement.SetAttribute(name: "height", value: "1");
+        gridElement.SetAttribute(name: "width", value: "1");
         gridElement.InnerText = text;
         parentElement.AppendChild(gridElement);
     }
@@ -1474,7 +1480,7 @@ public class ServerCoreUIService : IBasicUIService
                 logoNotificationBox.ChildItemsByType<DataServiceDataTooltip>(
                     DataServiceDataTooltip.CategoryConst
                 );
-            doc = GetTooltip(null, tooltips)?.Xml;
+            doc = GetTooltip(id: null, tooltips)?.Xml;
         }
         if (doc == null)
         {
@@ -1512,7 +1518,7 @@ public class ServerCoreUIService : IBasicUIService
             tooltip.TooltipDataStructureMethodId,
             Guid.Empty,
             Guid.Empty,
-            null,
+            transactionId: null,
             qparams
         );
         IPersistenceService persistence = ServiceManager.Services.GetService<IPersistenceService>();
@@ -1521,9 +1527,9 @@ public class ServerCoreUIService : IBasicUIService
             DataDocumentFactory.New(data),
             tooltip.TooltipTransformationId,
             new Hashtable(),
-            null,
-            null,
-            false
+            transactionId: null,
+            outputStructure: null,
+            validateOnly: false
         );
         return result;
     }

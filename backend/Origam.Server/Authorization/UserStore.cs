@@ -91,7 +91,7 @@ public sealed class UserStore
         DataService.Instance.StoreData(
             ORIGAM_USER_DATA_STRUCTURE,
             origamUserDataSet,
-            false,
+            loadActualValuesAfterUpdate: false,
             user.TransactionId
         );
         return Task.FromResult(IdentityResult.Success);
@@ -108,7 +108,7 @@ public sealed class UserStore
         DataService.Instance.StoreData(
             ORIGAM_USER_DATA_STRUCTURE,
             origamUserRow.Table.DataSet,
-            false,
+            loadActualValuesAfterUpdate: false,
             user.TransactionId
         );
         return Task.FromResult(IdentityResult.Success);
@@ -138,7 +138,7 @@ public sealed class UserStore
         CancellationToken cancellationToken
     )
     {
-        return FindByNameAsync(normalizedUserName, null, cancellationToken);
+        return FindByNameAsync(normalizedUserName, transactionId: null, cancellationToken);
     }
 
     public Task<IOrigamUser> FindByNameAsync(
@@ -219,8 +219,8 @@ public sealed class UserStore
         DataService.Instance.StoreData(
             ORIGAM_USER_DATA_STRUCTURE,
             origamUserRow.Table.DataSet,
-            false,
-            null
+            loadActualValuesAfterUpdate: false,
+            transactionId: null
         );
         return Task.FromResult(IdentityResult.Success);
     }
@@ -266,7 +266,7 @@ public sealed class UserStore
             businessPartnerRow["UserName"] == DBNull.Value
                 ? null
                 : (string)businessPartnerRow["UserName"];
-        DataRow origamUserRow = FindOrigamUserRowByUserName(userName, null);
+        DataRow origamUserRow = FindOrigamUserRowByUserName(userName, transactionId: null);
         if (origamUserRow == null)
         {
             return Task.FromResult<IOrigamUser>(null);
@@ -341,7 +341,7 @@ public sealed class UserStore
     {
         DataSet businessPartnerDataSet = GetBusinessPartnerDataSet(
             GET_BUSINESS_PARTNER_BY_USER_EMAIL,
-            "BusinessPartner_parUserEmail",
+            paramName: "BusinessPartner_parUserEmail",
             email
         );
         if (businessPartnerDataSet.Tables["BusinessPartner"].Rows.Count == 0)
@@ -358,7 +358,7 @@ public sealed class UserStore
     {
         DataSet businessPartnerDataSet = GetBusinessPartnerDataSet(
             GET_BUSINESS_PARTNER_BY_USER_NAME,
-            "BusinessPartner_parUserName",
+            paramName: "BusinessPartner_parUserName",
             normalizedUserName,
             transactionId
         );
@@ -377,7 +377,7 @@ public sealed class UserStore
         }
         DataSet origamUserDataSet = GetOrigamUserDataSet(
             GET_ORIGAM_USER_BY_USER_NAME,
-            "OrigamUser_parUserName",
+            paramName: "OrigamUser_parUserName",
             normalizedUserName,
             transactionId
         );
@@ -392,7 +392,7 @@ public sealed class UserStore
     {
         DataSet businessPartnerDataSet = GetBusinessPartnerDataSet(
             GET_BUSINESS_PARTNER_BY_ID,
-            "BusinessPartner_parId",
+            paramName: "BusinessPartner_parId",
             userId
         );
         if (businessPartnerDataSet.Tables["BusinessPartner"].Rows.Count == 0)
@@ -406,7 +406,7 @@ public sealed class UserStore
     {
         DataSet origamUserDataSet = GetOrigamUserDataSet(
             GET_ORIGAM_USER_BY_BUSINESS_PARTNER_ID,
-            "OrigamUser_parBusinessPartnerId",
+            paramName: "OrigamUser_parBusinessPartnerId",
             userId
         );
         if (origamUserDataSet.Tables["OrigamUser"].Rows.Count == 0)
@@ -418,7 +418,7 @@ public sealed class UserStore
 
     public static DataSet GetOrigamUserDataSet(Guid methodId, string paramName, object paramValue)
     {
-        return GetOrigamUserDataSet(methodId, paramName, paramValue, null);
+        return GetOrigamUserDataSet(methodId, paramName, paramValue, transactionId: null);
     }
 
     public static DataSet GetOrigamUserDataSet(
@@ -445,7 +445,7 @@ public sealed class UserStore
         object paramValue
     )
     {
-        return GetBusinessPartnerDataSet(methodId, paramName, paramValue, null);
+        return GetBusinessPartnerDataSet(methodId, paramName, paramValue, transactionId: null);
     }
 
     private static DataSet GetBusinessPartnerDataSet(

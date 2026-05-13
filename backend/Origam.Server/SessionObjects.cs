@@ -41,7 +41,7 @@ public class SessionObjects
             blobDownloadRequests: new ConcurrentDictionary<Guid, BlobDownloadRequest>(),
             blobUploadRequests: new ConcurrentDictionary<Guid, BlobUploadRequest>()
         );
-        UIManager = new UIManager(50, SessionManager, analytics);
+        UIManager = new UIManager(initialPageNumberOfRecords: 50, SessionManager, analytics);
         UIService = new ServerCoreUIService(UIManager, SessionManager);
     }
 }

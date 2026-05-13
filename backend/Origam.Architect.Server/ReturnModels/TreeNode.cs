@@ -36,6 +36,7 @@ public class TreeNode
     public List<TreeNode> Children { get; set; }
     public EditorSubType? DefaultEditor { get; set; }
     public string ItemType { get; set; }
+    public string ItemTypeName { get; set; }
     public bool? IsCurrentVersion { get; set; }
 
     public static string ToTreeNodeId(IBrowserNode2 node)
@@ -63,6 +64,7 @@ public class TreeNodeFactory
             DefaultEditor = GetEditorType(node),
             IconUrl = GetIcon(node),
             ItemType = node.GetType().FullName,
+            ItemTypeName = node.GetType().SchemaItemDescription()?.Name,
             IsCurrentVersion = (node as Schema.DeploymentModel.DeploymentVersion)?.IsCurrentVersion,
         };
     }

@@ -211,7 +211,7 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
                     XPathNavigator xPathNavigator = result.Xml.CreateNavigator();
                     xPathNavigator!.Select(xsltPage.ResultXPath);
                     byte[] bytes = Encoding.UTF8.GetBytes(xPathNavigator.Value);
-                    response.AddHeader("Content-Length", bytes.LongLength.ToString());
+                    response.AddHeader(name: "Content-Length", bytes.LongLength.ToString());
                     response.BinaryWrite(bytes);
                 }
                 else
@@ -309,8 +309,8 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
         {
             Entity = entity.Name,
             DataSourceId = xsltPage.DataStructureId,
-            RowLimit = GetIntParameterValue(parameters, "_pageSize"),
-            RowOffset = GetIntParameterValue(parameters, "_pageNumber"),
+            RowLimit = GetIntParameterValue(parameters, parameterName: "_pageSize"),
+            RowOffset = GetIntParameterValue(parameters, parameterName: "_pageNumber"),
             Parameters = parameterCollection,
             CustomFilters = new CustomFilters
             {

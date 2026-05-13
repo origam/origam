@@ -123,7 +123,7 @@ public abstract class SaveableSessionStore : SessionStore
                     changedRows.Add(r);
                     if (!changedKeys.ContainsKey(DatasetTools.PrimaryKey(r)[0]))
                     {
-                        changedKeys.Add(DatasetTools.PrimaryKey(r)[0], null);
+                        changedKeys.Add(DatasetTools.PrimaryKey(r)[0], value: null);
                     }
                 }
             }
@@ -147,7 +147,16 @@ public abstract class SaveableSessionStore : SessionStore
             foreach (DataRow r in changedRows)
             {
                 listOfChanges.AddRange(
-                    GetChangesByRow(null, r, 0, changedKeys, true, false, false, false)
+                    GetChangesByRow(
+                        requestingGrid: null,
+                        r,
+                        operation: 0,
+                        changedKeys,
+                        includeRowStates: true,
+                        hasErrors: false,
+                        hasChanges: false,
+                        fromTemplate: false
+                    )
                 );
                 // if there is a list, we update the list, so it has the actual changed data
                 if ((DataList != null) && DataList.Tables.Contains(r.Table.TableName))
@@ -195,7 +204,7 @@ public abstract class SaveableSessionStore : SessionStore
         if (parameters.Count == 0)
         {
             key = TemplateTools.AddTemplateRecord(
-                null,
+                parentRow: null,
                 this.Template,
                 entity,
                 this.DataStructureId,
@@ -205,7 +214,7 @@ public abstract class SaveableSessionStore : SessionStore
         else
         {
             object[] keys = new object[parameters.Count];
-            parameters.Values.CopyTo(keys, 0);
+            parameters.Values.CopyTo(keys, arrayIndex: 0);
             DataRelation relation = table.ParentRelations[0];
             DataRow parentRow = relation.ParentTable.Rows.Find(keys);
             key = TemplateTools.AddTemplateRecord(
@@ -224,7 +233,7 @@ public abstract class SaveableSessionStore : SessionStore
             Operation.Create,
             this.Data.HasErrors,
             this.Data.HasChanges(),
-            true
+            fromTemplate: true
         );
 
         return listOfChanges;
@@ -239,7 +248,7 @@ public abstract class SaveableSessionStore : SessionStore
     {
         lock (_lock)
         {
-            return UpdateObjectWithDependenies(entity, id, property, newValue, true);
+            return UpdateObjectWithDependenies(entity, id, property, newValue, isTopLevel: true);
         }
     }
 
@@ -268,8 +277,8 @@ public abstract class SaveableSessionStore : SessionStore
                             entity,
                             id,
                             dependentColumnName,
-                            null,
-                            false
+                            newValue: null,
+                            isTopLevel: false
                         );
                     }
                     catch (NullReferenceException e)
@@ -308,7 +317,7 @@ public abstract class SaveableSessionStore : SessionStore
             }
         }
         throw new ArgumentOutOfRangeException(
-            "columnId",
+            paramName: "columnId",
             columnId,
             "Column not found in entity " + table.TableName
         );

@@ -163,7 +163,7 @@ public class BlobController : AbstractController
         }
         catch (Exception ex)
         {
-            return StatusCode(500, ex);
+            return StatusCode(statusCode: 500, ex);
         }
         finally
         {
@@ -188,21 +188,21 @@ public class BlobController : AbstractController
                 new string[] { }
             );
             var profile = SecurityTools.CurrentUserProfile();
-            if (CheckMember(blobUploadRequest.OriginalPathMember, false))
+            if (CheckMember(blobUploadRequest.OriginalPathMember, throwExceptions: false))
             {
                 blobUploadRequest.Row[blobUploadRequest.OriginalPathMember] = filename;
             }
-            if (CheckMember(blobUploadRequest.DateCreatedMember, false))
+            if (CheckMember(blobUploadRequest.DateCreatedMember, throwExceptions: false))
             {
                 blobUploadRequest.Row[blobUploadRequest.DateCreatedMember] =
                     blobUploadRequest.DateCreated;
             }
-            if (CheckMember(blobUploadRequest.DateLastModifiedMember, false))
+            if (CheckMember(blobUploadRequest.DateLastModifiedMember, throwExceptions: false))
             {
                 blobUploadRequest.Row[blobUploadRequest.DateLastModifiedMember] =
                     blobUploadRequest.DateLastModified;
             }
-            if (CheckMember(blobUploadRequest.CompressionStateMember, false))
+            if (CheckMember(blobUploadRequest.CompressionStateMember, throwExceptions: false))
             {
                 blobUploadRequest.Row[blobUploadRequest.CompressionStateMember] =
                     blobUploadRequest.ShouldCompress;
@@ -219,11 +219,11 @@ public class BlobController : AbstractController
             {
                 blobUploadRequest.Row[blobUploadRequest.BlobMember] = input;
             }
-            if (CheckMember(blobUploadRequest.FileSizeMember, false))
+            if (CheckMember(blobUploadRequest.FileSizeMember, throwExceptions: false))
             {
                 blobUploadRequest.Row[blobUploadRequest.FileSizeMember] = input.LongLength;
             }
-            if (CheckMember(blobUploadRequest.ThumbnailMember, false))
+            if (CheckMember(blobUploadRequest.ThumbnailMember, throwExceptions: false))
             {
                 try
                 {
@@ -250,13 +250,13 @@ public class BlobController : AbstractController
                     blobUploadRequest.Row[blobUploadRequest.ThumbnailMember] = DBNull.Value;
                 }
             }
-            DatasetTools.UpdateOrigamSystemColumns(blobUploadRequest.Row, false, profile.Id);
+            DatasetTools.UpdateOrigamSystemColumns(blobUploadRequest.Row, isNew: false, profile.Id);
             blobUploadRequest.Row[blobUploadRequest.Property] = filename;
             return Ok();
         }
         catch (Exception ex)
         {
-            return StatusCode(500, ex);
+            return StatusCode(statusCode: 500, ex);
         }
         finally
         {
@@ -334,7 +334,7 @@ public class BlobController : AbstractController
         var destHeight = (int)(sourceHeight * percent);
         using var backgroundImage = new Image<Rgba32>(width, height, Color.Black);
         image.Mutate(x => x.Resize(destWidth, destHeight));
-        backgroundImage.Mutate(x => x.DrawImage(image, new Point(destX, destY), 1f));
+        backgroundImage.Mutate(x => x.DrawImage(image, new Point(destX, destY), opacity: 1f));
         using var memoryStream = new MemoryStream();
         backgroundImage.Save(memoryStream, format);
         return memoryStream.ToArray();

@@ -58,7 +58,7 @@ class RedirectWorkflowPageActionHandler : AbstractWorkflowPageActionHandler
     )
     {
         RedirectWorkflowPageAction redirectAction = action as RedirectWorkflowPageAction;
-        RuleEngine re = RuleEngine.Create(new Hashtable(), null);
+        RuleEngine re = RuleEngine.Create(new Hashtable(), transactionId: null);
         IXmlContainer doc = re.GetXmlDocumentFromData(workflowResult);
         XPathNavigator nav = doc.Xml.CreateNavigator();
         string url = XpathEvaluator.Instance.Evaluate(nav, redirectAction.XPath);
@@ -75,8 +75,8 @@ class RedirectWorkflowPageActionHandler : AbstractWorkflowPageActionHandler
         string result = HttpTools.Instance.BuildUrl(
             url,
             parameters,
-            false,
-            "http",
+            forceExternal: false,
+            externalScheme: "http",
             redirectAction.IsUrlEscaped
         );
         response.Redirect(result);

@@ -314,8 +314,8 @@ public class Program
         }
 		Directory
             .EnumerateFiles(
-                configurations[0].ModelSourceControlLocation, 
-                "*.origam", 
+                configurations[0].ModelSourceControlLocation,
+searchPattern: "*.origam", 
                 SearchOption.AllDirectories)
             .AsParallel()
             .ForEach(path =>
@@ -364,7 +364,7 @@ public class Program
             persistenceService.FileEventQueue);
         new DocProcessor(config.Output, config.Xslt, config.RootFile,
             documentation,
-            menuProvider, persistenceService, null).Run();
+            menuProvider, persistenceService, xmlfile: null).Run();
         return 0;
     }
     private static int ProcessRule(ProcessCheckRulesOptions invokedVerbInstance)
@@ -380,7 +380,7 @@ public class Program
         log.Info($"forceWait_ms: {options.ForceWaitMs}");
         log.Info($"-------------------------------");
         cancelHandler += CancelHandler;
-        SetConsoleCtrlHandler(cancelHandler, true);
+        SetConsoleCtrlHandler(cancelHandler, add: true);
         RunQueueProcessor(options);
         log.Info("Exiting...");
         return 0;
@@ -434,7 +434,7 @@ public class Program
         if (log.IsInfoEnabled)
         {
             log.InfoFormat(
-                "Creating hash index file {1} on folder {0} with pattern {2}.",
+format: "Creating hash index file {1} on folder {0} with pattern {2}.",
                 options?.Input, options?.Output, options?.Mask);
         }
         var fileNames 
@@ -444,7 +444,7 @@ public class Program
         {
             if (log.IsInfoEnabled)
             {
-                log.InfoFormat("Hashing {0}...", filename);
+                log.InfoFormat(format: "Hashing {0}...", filename);
             }
             hashIndexFile.AddEntryToIndexFile(
                 hashIndexFile.CreateIndexFileEntry(filename));
@@ -528,19 +528,19 @@ public class Program
         if (options.MissingInDb)
         {
             DisplayComparisonResultGroup(
-                missingInDatabase, "Missing in Database:");
+                missingInDatabase, header: "Missing in Database:");
             displayedResultsCount += missingInDatabase.Count;
         }
         if (options.MissingInSchema)
         {
             DisplayComparisonResultGroup(
-                missingInSchema, "Missing in Schema:");
+                missingInSchema, header: "Missing in Schema:");
             displayedResultsCount += missingInSchema.Count;
         }
         if (options.ExistingButDifferent)
         {
             DisplayComparisonResultGroup(
-                existingButDifferent, "Existing But Different:");
+                existingButDifferent, header: "Existing But Different:");
             displayedResultsCount += existingButDifferent.Count;
         }
         if (displayedResultsCount == 0)

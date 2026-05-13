@@ -130,7 +130,7 @@ public abstract class SessionStore : IDisposable
         this.Request = request;
         this.IsModalDialog = request.IsModalDialog;
         _ruleHandler = new DatasetRuleHandler();
-        _ruleEngine = RuleEngine.Create(null, null);
+        _ruleEngine = RuleEngine.Create(contextStores: null, transactionId: null);
         this.CacheExpiration = DateTime.Now.AddMinutes(5);
         dataRequested = request.DataRequested || request.IsSingleRecordEdit;
     }
@@ -450,7 +450,10 @@ public abstract class SessionStore : IDisposable
         }
         else if (method != null)
         {
-            throw new ArgumentOutOfRangeException("method", "List method must be a filter set.");
+            throw new ArgumentOutOfRangeException(
+                paramName: "method",
+                message: "List method must be a filter set."
+            );
         }
         if (this.DataList != null)
         {
@@ -483,12 +486,17 @@ public abstract class SessionStore : IDisposable
             EnforceConstraints = false,
             MethodId = methodId,
         };
-        query.Parameters.Add(new QueryParameter("Id", rowIds));
+        query.Parameters.Add(new QueryParameter(_parameterName: "Id", rowIds));
         DataSet dataSet = dataService.GetEmptyDataSet(
             entity.RootEntity.ParentItemId,
             CultureInfo.InvariantCulture
         );
-        dataService.LoadDataSet(query, SecurityManager.CurrentPrincipal, dataSet, null);
+        dataService.LoadDataSet(
+            query,
+            SecurityManager.CurrentPrincipal,
+            dataSet,
+            transactionId: null
+        );
         DataTable dataSetTable = dataSet.Tables[entity.Name];
         return dataSetTable.Rows;
     }
@@ -532,9 +540,9 @@ public abstract class SessionStore : IDisposable
         else
         {
             throw new ArgumentOutOfRangeException(
-                "dataSource",
+                paramName: "dataSource",
                 dataSource,
-                "Invalid session data format."
+                message: "Invalid session data format."
             );
         }
         if (this.Data != null)
@@ -691,8 +699,8 @@ public abstract class SessionStore : IDisposable
     #region IDisposable Members
     public void Dispose()
     {
-        analytics.SetProperty("OrigamFormId", this.FormId);
-        analytics.SetProperty("OrigamFormName", this.Name);
+        analytics.SetProperty(propertyName: "OrigamFormId", this.FormId);
+        analytics.SetProperty(propertyName: "OrigamFormName", this.Name);
         analytics.Log("UI_CLOSEFORM");
         if (this.ParentSession != null)
         {
@@ -730,8 +738,8 @@ public abstract class SessionStore : IDisposable
             requestingGrid,
             row,
             operation,
-            null,
-            true,
+            ignoreKeys: null,
+            includeRowStates: true,
             hasErrors,
             hasChanges,
             fromTemplate
@@ -751,7 +759,11 @@ public abstract class SessionStore : IDisposable
     {
         var listOfChanges = new List<ChangeInfo>();
         DataRow rootRow = DatasetTools.RootRow(row);
-        DatasetTools.CheckRowErrorRecursive(rootRow, null, false);
+        DatasetTools.CheckRowErrorRecursive(
+            rootRow,
+            skipRow: null,
+            includeChildErrorsInParent: false
+        );
         // when there is an error, copy it to the list entity, too
         if (this.DataList != null)
         {
@@ -773,7 +785,7 @@ public abstract class SessionStore : IDisposable
                 rootRow,
                 operation,
                 row,
-                true,
+                allDetails: true,
                 ignoreKeys,
                 includeRowStates
             );
@@ -843,12 +855,12 @@ public abstract class SessionStore : IDisposable
     )
     {
         return GetChangesByRow(
-            null,
+            requestingGrid: null,
             this.GetSessionRow(entity, id),
             operation,
             hasErrors,
             hasChanges,
-            false
+            fromTemplate: false
         );
     }
 
@@ -863,14 +875,14 @@ public abstract class SessionStore : IDisposable
     )
     {
         return GetChangesByRow(
-            null,
+            requestingGrid: null,
             this.GetSessionRow(entity, id),
             operation,
             ignoreKeys,
             includeRowStates,
             hasErrors,
             hasChanges,
-            false
+            fromTemplate: false
         );
     }
 
@@ -942,7 +954,7 @@ public abstract class SessionStore : IDisposable
                     // we processed it once so we do not want to get it again in a next iteration
                     if (ignoreKeys != null)
                     {
-                        ignoreKeys.Add(ignoreRowIndex, null);
+                        ignoreKeys.Add(ignoreRowIndex, value: null);
                     }
                 }
             }
@@ -1061,12 +1073,12 @@ public abstract class SessionStore : IDisposable
 
     internal static string ConvertTextToUnixStyle(string text)
     {
-        return text.Replace("\r\n", "\n");
+        return text.Replace(oldValue: "\r\n", newValue: "\n");
     }
 
     public static List<object> GetRowData(DataRow row, string[] columns)
     {
-        return GetRowData(row, columns, true);
+        return GetRowData(row, columns, withErrors: true);
     }
 
     private static List<object> GetRowData(DataRow row, string[] columns, bool withErrors)
@@ -1249,12 +1261,16 @@ public abstract class SessionStore : IDisposable
                         DataListFilterSetId,
                         pms,
                         loadedRow,
-                        null
+                        transactionId: null
                     );
                     if (loadedRow.Tables[row.Table.TableName].Rows.Count == 0)
                     {
                         throw new ArgumentOutOfRangeException(
-                            string.Format("Row {0} not found in {1}.", rowId, row.Table.TableName)
+                            string.Format(
+                                format: "Row {0} not found in {1}.",
+                                rowId,
+                                row.Table.TableName
+                            )
                         );
                     }
                     SessionStore.MergeRow(loadedRow.Tables[row.Table.TableName].Rows[0], row);
@@ -1470,12 +1486,17 @@ public abstract class SessionStore : IDisposable
                 RegisterEvents();
                 if (parameters.Count == 0)
                 {
-                    newRow = DatasetTools.CreateRow(null, table, null, profile.Id);
+                    newRow = DatasetTools.CreateRow(
+                        parentRow: null,
+                        table,
+                        relation: null,
+                        profile.Id
+                    );
                 }
                 else
                 {
                     object[] keys = new object[parameters.Count];
-                    parameters.Values.CopyTo(keys, 0);
+                    parameters.Values.CopyTo(keys, arrayIndex: 0);
                     DataRelation relation = table.ParentRelations[0];
                     DataRow parentRow = GetParentRow(parameters, keys, relation);
                     newRow = DatasetTools.CreateRow(parentRow, table, relation, profile.Id);
@@ -1511,7 +1532,7 @@ public abstract class SessionStore : IDisposable
                 Operation.Create,
                 this.Data.HasErrors,
                 this.Data.HasChanges(),
-                false
+                fromTemplate: false
             );
             return listOfChanges;
         }
@@ -1546,9 +1567,9 @@ public abstract class SessionStore : IDisposable
                 if (parentKeyColumn == null)
                 {
                     throw new ArgumentOutOfRangeException(
-                        "key",
+                        paramName: "key",
                         entry.Key,
-                        "Key not found in the parent table by the provided child key."
+                        message: "Key not found in the parent table by the provided child key."
                     );
                 }
                 string value = entry.Value.ToString();
@@ -1616,12 +1637,12 @@ public abstract class SessionStore : IDisposable
             );
         }
         List<ChangeInfo> listOfChanges = GetChangesByRow(
-            null,
+            requestingGrid: null,
             row,
             Operation.Update,
             this.Data.HasErrors,
             this.Data.HasChanges(),
-            false
+            fromTemplate: false
         );
         if (!this.Data.HasChanges())
         {
@@ -1639,7 +1660,11 @@ public abstract class SessionStore : IDisposable
             UserProfile profile = SecurityTools.CurrentUserProfile();
             if (row == null)
             {
-                throw new ArgumentOutOfRangeException("id", id, Resources.ErrorRecordNotFound);
+                throw new ArgumentOutOfRangeException(
+                    paramName: "id",
+                    id,
+                    Resources.ErrorRecordNotFound
+                );
             }
             DataColumn dataColumn = row.Table.Columns[property];
             if (dataColumn == null)
@@ -1802,7 +1827,7 @@ public abstract class SessionStore : IDisposable
             var deletedItems = new List<ChangeInfo>();
             Dictionary<string, List<DeletedRowInfo>> backup = BackupDeletedRows(row);
             object[] listRowBackup = null;
-            deletedItems.Add(GetChangeInfo(null, row, Operation.Delete));
+            deletedItems.Add(GetChangeInfo(requestingGrid: null, row, Operation.Delete));
             AddChildDeletedItems(deletedItems, row);
             // get the parent rows for the rule handler in order to update them
             var parentRows = new List<DataRow>();
@@ -1832,7 +1857,7 @@ public abstract class SessionStore : IDisposable
                                 )
                             )
                             {
-                                object zero = Convert.ChangeType(0, col.DataType);
+                                object zero = Convert.ChangeType(value: 0, col.DataType);
                                 if (!row[col].Equals(zero))
                                 {
                                     row[col] = 0;
@@ -1880,12 +1905,12 @@ public abstract class SessionStore : IDisposable
                 {
                     listOfChanges.AddRange(
                         GetChangesByRow(
-                            null,
+                            requestingGrid: null,
                             rootRow,
                             Operation.Update,
                             this.Data.HasErrors,
                             this.Data.HasChanges(),
-                            false
+                            fromTemplate: false
                         )
                     );
                 }
@@ -1913,7 +1938,7 @@ public abstract class SessionStore : IDisposable
                 if (log.IsErrorEnabled)
                 {
                     log.ErrorFormat(
-                        "Caught an exception when trying to delete an object {0},{1} from session store: `{2}'",
+                        format: "Caught an exception when trying to delete an object {0},{1} from session store: `{2}'",
                         entity,
                         id,
                         ex.ToString()
@@ -2005,8 +2030,14 @@ public abstract class SessionStore : IDisposable
                     toSkip.Add(t.TableName);
                 }
             }
-            DataSet tmpDS = DatasetTools.CloneDataSet(row.Table.DataSet, false);
-            DatasetTools.GetDataSlice(tmpDS, new List<DataRow> { row }, profile.Id, true, toSkip);
+            DataSet tmpDS = DatasetTools.CloneDataSet(row.Table.DataSet, cloneExpressions: false);
+            DatasetTools.GetDataSlice(
+                tmpDS,
+                new List<DataRow> { row },
+                profile.Id,
+                copy: true,
+                toSkip
+            );
             try
             {
                 DataRow newTmpRow = tmpDS.Tables[table.TableName].Rows[0];
@@ -2035,7 +2066,7 @@ public abstract class SessionStore : IDisposable
                     DatasetTools.Clear(this.Data);
                 }
                 MergeParams mergeParams = new MergeParams(profile.Id);
-                DatasetTools.MergeDataSet(this.Data, tmpDS, null, mergeParams);
+                DatasetTools.MergeDataSet(this.Data, tmpDS, changeList: null, mergeParams);
                 object[] pk = DatasetTools.PrimaryKey(newTmpRow);
                 if (IsLazyLoadedEntity(entity))
                 {
@@ -2058,7 +2089,7 @@ public abstract class SessionStore : IDisposable
                     Operation.CurrentRecordNeedsUpdate,
                     this.Data.HasErrors,
                     this.Data.HasChanges(),
-                    false
+                    fromTemplate: false
                 );
             }
             finally
@@ -2196,7 +2227,7 @@ public abstract class SessionStore : IDisposable
         {
             foreach (DataRow childRow in deletedRow.GetChildRows(child))
             {
-                deletedItems.Add(GetChangeInfo(null, childRow, Operation.Delete));
+                deletedItems.Add(GetChangeInfo(requestingGrid: null, childRow, Operation.Delete));
                 AddChildDeletedItems(deletedItems, childRow);
             }
         }

@@ -125,7 +125,7 @@ public class FormSessionStore : SaveableSessionStore
             if (_menuItem.ListEntity != null)
             {
                 SetDataList(
-                    null,
+                    list: null,
                     _menuItem.ListEntity.Name,
                     _menuItem.ListDataStructure,
                     _menuItem.ListMethod
@@ -177,7 +177,7 @@ public class FormSessionStore : SaveableSessionStore
             _menuItem.MethodId,
             _menuItem.DefaultSetId,
             _menuItem.SortSetId,
-            null,
+            transactionId: null,
             qparams
         );
         return data;
@@ -226,11 +226,11 @@ public class FormSessionStore : SaveableSessionStore
                         _menuItem.ListMethodId,
                         Guid.Empty,
                         _menuItem.ListSortSetId,
-                        null,
+                        transactionId: null,
                         qparams,
                         dataset,
                         relationName,
-                        null
+                        columnName: null
                     );
                     DataListLoadedColumns.Add(column);
                 }
@@ -254,11 +254,11 @@ public class FormSessionStore : SaveableSessionStore
                 _menuItem.ListMethodId,
                 Guid.Empty,
                 _menuItem.ListSortSetId,
-                null,
+                transactionId: null,
                 qparams,
                 columnData,
                 this.DataListEntity,
-                string.Join(";", finalColumns)
+                string.Join(separator: ";", finalColumns)
             );
             listTable.BeginLoadData();
             try
@@ -297,7 +297,7 @@ public class FormSessionStore : SaveableSessionStore
             _menuItem.RecordEditMethodId,
             _menuItem.DefaultSetId,
             _menuItem.SortSetId,
-            null,
+            transactionId: null,
             qparams
         );
         return data;
@@ -352,7 +352,7 @@ public class FormSessionStore : SaveableSessionStore
             default:
             {
                 throw new ArgumentOutOfRangeException(
-                    "actionId",
+                    paramName: "actionId",
                     actionId,
                     Resources.ErrorContextUnknownAction
                 );
@@ -392,7 +392,7 @@ public class FormSessionStore : SaveableSessionStore
             this.CurrentRecordId = id;
             DataRow actualDataRow = GetSessionRow(entity, id);
             UpdateListRow(actualDataRow);
-            ChangeInfo ci = GetChangeInfo(null, actualDataRow, 0);
+            ChangeInfo ci = GetChangeInfo(requestingGrid: null, actualDataRow, operation: 0);
             result.Add(ci);
             if (actualDataRow.RowState == DataRowState.Unchanged)
             {
@@ -412,7 +412,7 @@ public class FormSessionStore : SaveableSessionStore
                 return null;
             }
             DataRow row = GetSessionRow(entity, id);
-            return GetChangeInfo(null, row, Operation.Update);
+            return GetChangeInfo(requestingGrid: null, row, Operation.Update);
         }
     }
 
@@ -469,12 +469,12 @@ public class FormSessionStore : SaveableSessionStore
             this.CurrentRecordId = null;
 
             // update the values from database
-            this.GetRowData(this.DataListEntity, recordId, true);
+            this.GetRowData(this.DataListEntity, recordId, ignoreDirtyState: true);
 
             // get the loaded data
             originalRow = this.GetSessionRow(this.DataListEntity, recordId);
             // return the loaded data
-            result.Add(GetChangeInfo(null, originalRow, 0));
+            result.Add(GetChangeInfo(requestingGrid: null, originalRow, operation: 0));
         }
         if (recordId.Equals(this.CurrentRecordId))
         {
@@ -492,7 +492,7 @@ public class FormSessionStore : SaveableSessionStore
             _menuItem.MethodId,
             _menuItem.DefaultSetId,
             Guid.Empty,
-            null,
+            transactionId: null,
             DelayedLoadingParameterName,
             parentId
         );
@@ -520,7 +520,7 @@ public class FormSessionStore : SaveableSessionStore
             && formXml.SelectNodes("//Property[@ReadOnly='false']")?.Count > 0
         )
         {
-            windowElement.SetAttribute("SuppressSave", "false");
+            windowElement.SetAttribute(name: "SuppressSave", value: "false");
         }
         if (windowElement.GetAttribute("SuppressSave") == "true")
         {
@@ -555,7 +555,7 @@ public class FormSessionStore : SaveableSessionStore
         {
             try
             {
-                GetRowData(this.DataListEntity, currentRecordId, false);
+                GetRowData(this.DataListEntity, currentRecordId, ignoreDirtyState: false);
             }
             catch (ArgumentOutOfRangeException)
             {

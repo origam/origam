@@ -127,7 +127,7 @@ internal class StandardHttpResponseWrapper : IResponseWrapper
 
     public void BinaryWrite(byte[] bytes)
     {
-        response.Body.WriteAsync(bytes, 0, bytes.Length).Wait();
+        response.Body.WriteAsync(bytes, offset: 0, bytes.Length).Wait();
     }
 
     public void Redirect(string requestUrlReferrerAbsolutePath)

@@ -60,6 +60,7 @@ const SinglePropertyEditor = observer(
         return (
           <div className={S.selectWrapper}>
             <select value={selectedValue} onChange={e => onValueChange(property, e.target.value)}>
+              {(property.value ?? '') === '' && <option value="" />}
               {property.dropDownValues.map(x => (
                 <option key={x.value + x.name} value={x.value}>
                   {x.name}

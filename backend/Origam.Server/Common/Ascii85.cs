@@ -91,7 +91,7 @@ class Ascii85
         }
         if (s.EndsWith(SuffixMark))
         {
-            s = s.Substring(0, s.Length - SuffixMark.Length);
+            s = s.Substring(startIndex: 0, s.Length - SuffixMark.Length);
         }
 
         MemoryStream ms = new MemoryStream();
@@ -114,7 +114,7 @@ class Ascii85
                     _decodedBlock[1] = 0;
                     _decodedBlock[2] = 0;
                     _decodedBlock[3] = 0;
-                    ms.Write(_decodedBlock, 0, _decodedBlock.Length);
+                    ms.Write(_decodedBlock, offset: 0, _decodedBlock.Length);
                     processChar = false;
                     break;
                 }
@@ -152,7 +152,7 @@ class Ascii85
                 if (count == _encodedBlock.Length)
                 {
                     DecodeBlock();
-                    ms.Write(_decodedBlock, 0, _decodedBlock.Length);
+                    ms.Write(_decodedBlock, offset: 0, _decodedBlock.Length);
                     _tuple = 0;
                     count = 0;
                 }
@@ -204,7 +204,7 @@ class Ascii85
                 _tuple |= b;
                 if (_tuple == 0)
                 {
-                    AppendChar(sb, 'z');
+                    AppendChar(sb, c: 'z');
                 }
                 else
                 {

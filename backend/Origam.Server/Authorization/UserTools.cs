@@ -56,8 +56,8 @@ public static class UserTools
             origamUserRow["SecurityStamp"] is DBNull ? "" : (string)origamUserRow["SecurityStamp"];
         user.Is2FAEnforced = (bool)origamUserRow["Is2FAEnforced"];
         user.EmailConfirmed = (bool)origamUserRow["EmailConfirmed"];
-        user.LastLockoutDate = GetDate(origamUserRow, "LastLockoutDate");
-        user.LastLoginDate = GetDate(origamUserRow, "LastLoginDate");
+        user.LastLockoutDate = GetDate(origamUserRow, propertyName: "LastLockoutDate");
+        user.LastLoginDate = GetDate(origamUserRow, propertyName: "LastLoginDate");
         user.ProviderUserKey = (Guid)origamUserRow["refBusinessPartnerId"];
         user.BusinessPartnerId = user.ProviderUserKey.ToString();
         user.PasswordHash = (string)origamUserRow["Password"];
@@ -87,8 +87,8 @@ public static class UserTools
         origamUserRow["EmailConfirmed"] = user.EmailConfirmed;
         origamUserRow["SecurityStamp"] = user.SecurityStamp;
         origamUserRow["Is2FAEnforced"] = user.Is2FAEnforced;
-        SetDate(origamUserRow, "LastLockoutDate", user.LastLockoutDate);
-        SetDate(origamUserRow, "LastLoginDate", user.LastLoginDate);
+        SetDate(origamUserRow, columnName: "LastLockoutDate", user.LastLockoutDate);
+        SetDate(origamUserRow, columnName: "LastLoginDate", user.LastLoginDate);
         origamUserRow["Is2FAEnforced"] = user.Is2FAEnforced;
         origamUserRow["Password"] = user.PasswordHash;
         origamUserRow["FailedPasswordAttemptCount"] = user.FailedPasswordAttemptCount;
@@ -100,8 +100,8 @@ public static class UserTools
         origamUserRow["EmailConfirmed"] = user.EmailConfirmed;
         origamUserRow["SecurityStamp"] = user.SecurityStamp;
         origamUserRow["Is2FAEnforced"] = user.Is2FAEnforced;
-        SetDate(origamUserRow, "LastLockoutDate", user.LastLockoutDate);
-        SetDate(origamUserRow, "LastLoginDate", user.LastLoginDate);
+        SetDate(origamUserRow, columnName: "LastLockoutDate", user.LastLockoutDate);
+        SetDate(origamUserRow, columnName: "LastLoginDate", user.LastLoginDate);
         origamUserRow["Is2FAEnforced"] = user.Is2FAEnforced;
         origamUserRow["Password"] = user.PasswordHash;
         origamUserRow["RecordUpdated"] = DateTime.Now;
@@ -136,7 +136,7 @@ public static class UserTools
     private static DateTime GetDate(DataRow row, string propertyName)
     {
         var value = row[propertyName];
-        return value is DBNull ? new DateTime(1900, 1, 1) : (DateTime)value;
+        return value is DBNull ? new DateTime(year: 1900, month: 1, day: 1) : (DateTime)value;
     }
 
     public static IdentityResult RunCreateUserWorkFlow(string password, IOrigamUser user)
@@ -145,26 +145,28 @@ public static class UserTools
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, "origam_server"),
-                new Claim(ClaimTypes.NameIdentifier, "1"),
-                new Claim("name", "origam_server"),
+                new Claim(ClaimTypes.Name, value: "origam_server"),
+                new Claim(ClaimTypes.NameIdentifier, value: "1"),
+                new Claim(type: "name", value: "origam_server"),
             };
-            var identity = new ClaimsIdentity(claims, "TestAuthType");
+            var identity = new ClaimsIdentity(claims, authenticationType: "TestAuthType");
             Thread.CurrentPrincipal = new ClaimsPrincipal(identity);
 
             user.BusinessPartnerId = Guid.NewGuid().ToString();
             QueryParameterCollection parameters = new QueryParameterCollection();
-            parameters.Add(new QueryParameter("Id", user.BusinessPartnerId));
-            parameters.Add(new QueryParameter("UserName", user.UserName));
-            parameters.Add(new QueryParameter("Password", password));
-            parameters.Add(new QueryParameter("FirstName", user.FirstName));
-            parameters.Add(new QueryParameter("Name", user.Name));
-            parameters.Add(new QueryParameter("Email", user.Email));
-            parameters.Add(new QueryParameter("RoleId", user.RoleId));
-            parameters.Add(new QueryParameter("RequestEmailConfirmation", !user.EmailConfirmed));
-            parameters.Add(new QueryParameter("SecurityStamp", user.SecurityStamp));
+            parameters.Add(new QueryParameter(_parameterName: "Id", user.BusinessPartnerId));
+            parameters.Add(new QueryParameter(_parameterName: "UserName", user.UserName));
+            parameters.Add(new QueryParameter(_parameterName: "Password", password));
+            parameters.Add(new QueryParameter(_parameterName: "FirstName", user.FirstName));
+            parameters.Add(new QueryParameter(_parameterName: "Name", user.Name));
+            parameters.Add(new QueryParameter(_parameterName: "Email", user.Email));
+            parameters.Add(new QueryParameter(_parameterName: "RoleId", user.RoleId));
+            parameters.Add(
+                new QueryParameter(_parameterName: "RequestEmailConfirmation", !user.EmailConfirmed)
+            );
+            parameters.Add(new QueryParameter(_parameterName: "SecurityStamp", user.SecurityStamp));
             // Will create new line in BusinessPartner and OrigamUser
-            WorkflowService.ExecuteWorkflow(CREATE_USER_WORKFLOW, parameters, null);
+            WorkflowService.ExecuteWorkflow(CREATE_USER_WORKFLOW, parameters, transactionId: null);
             return IdentityResult.Success;
         }
         catch (Exception e)
@@ -179,14 +181,14 @@ public static class UserTools
             .Services.GetService<IParameterService>()
             .SetCustomParameterValue(
                 INITIAL_SETUP_PARAMETERNAME,
-                true,
+                value: true,
                 Guid.Empty,
-                0,
-                null,
-                true,
-                0,
-                0,
-                null
+                intValue: 0,
+                stringValue: null,
+                boolValue: true,
+                floatValue: 0,
+                currencyValue: 0,
+                dateValue: null
             );
     }
 

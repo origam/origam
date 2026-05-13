@@ -35,9 +35,8 @@ public class DocumentationController(
     TreeNodeFactory treeNodeFactory,
     EditorService editorService,
     IDocumentationService documentationService,
-    DocumentationHelperService documentationHelper,
-    ILogger<OrigamController> log
-) : OrigamController(log)
+    DocumentationHelperService documentationHelper
+) : ControllerBase
 {
     [HttpPost("OpenEditor")]
     public IActionResult OpenEditor([Required] [FromBody] OpenEditorModel input)

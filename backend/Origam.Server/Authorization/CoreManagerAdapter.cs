@@ -121,7 +121,10 @@ public class CoreManagerAdapter : IManager
         {
             return false;
         }
-        Task<IdentityResult> unlockTask = coreUserManager.SetLockoutEndDateAsync(user, null);
+        Task<IdentityResult> unlockTask = coreUserManager.SetLockoutEndDateAsync(
+            user,
+            lockoutEnd: null
+        );
         bool success = (await unlockTask).Succeeded;
         if (success)
         {

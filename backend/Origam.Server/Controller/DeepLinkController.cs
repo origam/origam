@@ -119,9 +119,9 @@ public class DeepLinkController : AbstractController
                 object lookupResult = lookupService.GetDisplayText(
                     input.LookupId,
                     id,
-                    false,
-                    true,
-                    null
+                    useCache: false,
+                    returnMessageIfNull: true,
+                    transactionId: null
                 );
                 return lookupResult is decimal result
                     ? result.ToString("0.#")
@@ -226,7 +226,7 @@ public class DeepLinkController : AbstractController
         }
         logger.LogError(
             string.Format(
-                "Lookup {0} has property IsFilteredServerSide set to false!",
+                format: "Lookup {0} has property IsFilteredServerSide set to false!",
                 input.LookupId
             )
         );
@@ -278,7 +278,13 @@ public class DeepLinkController : AbstractController
         XmlDocument doc = new XmlDocument();
         XmlElement controlElement = doc.CreateElement("control");
         doc.AppendChild(controlElement);
-        ComboBoxBuilder.Build(controlElement, category.LookupId, false, null, null);
+        ComboBoxBuilder.Build(
+            controlElement,
+            category.LookupId,
+            showUniqueValues: false,
+            bindingMember: null,
+            table: null
+        );
         return doc.InnerXml;
     }
 }

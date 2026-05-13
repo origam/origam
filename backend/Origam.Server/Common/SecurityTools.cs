@@ -48,7 +48,7 @@ public static class SecurityTools
         catch (Exception ex)
         {
             log.DebugFormat(
-                "Couldn't get user profile for current thread {0}",
+                format: "Couldn't get user profile for current thread {0}",
                 Thread.CurrentThread.ManagedThreadId
             );
             throw new LoginFailedException(ex.Message, ex);

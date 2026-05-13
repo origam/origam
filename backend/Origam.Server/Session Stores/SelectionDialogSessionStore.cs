@@ -94,7 +94,7 @@ public class SelectionDialogSessionStore : SessionStore
         DataSet data = FormTools.GetSelectionDialogData(
             this.DataStructureId,
             this.BeforeTransformationId,
-            true,
+            createEmptyRow: true,
             SecurityTools.CurrentUserProfile().Id,
             parameters
         );
@@ -116,7 +116,7 @@ public class SelectionDialogSessionStore : SessionStore
             default:
             {
                 throw new ArgumentOutOfRangeException(
-                    "actionId",
+                    paramName: "actionId",
                     actionId,
                     Resources.ErrorContextUnknownAction
                 );
@@ -128,15 +128,15 @@ public class SelectionDialogSessionStore : SessionStore
     {
         XmlDocument formXml = FormXmlBuilder.GetXmlFromPanel(
             this.PanelId,
-            "",
+            name: "",
             new Guid(this.Request.ObjectId)
         );
         XmlNodeList list = formXml.SelectNodes("/Window");
         XmlElement windowElement = list[0] as XmlElement;
-        windowElement.SetAttribute("SuppressDirtyNotification", "true");
-        windowElement.SetAttribute("SuppressSave", "true");
+        windowElement.SetAttribute(name: "SuppressDirtyNotification", value: "true");
+        windowElement.SetAttribute(name: "SuppressSave", value: "true");
         this.SuppressSave = true;
-        windowElement.SetAttribute("SuppressRefresh", "true");
+        windowElement.SetAttribute(name: "SuppressRefresh", value: "true");
         //windowElement.SetAttribute("ShowWorkflowNextButton", "true");
         list = formXml.SelectNodes("//Actions");
         XmlElement actionsElement = list[0] as XmlElement;

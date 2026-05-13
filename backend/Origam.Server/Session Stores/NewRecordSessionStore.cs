@@ -64,7 +64,11 @@ public class NewRecordSessionStore : FormSessionStore
         var table = dataSet.Tables[rootEntity.Name];
         var row = table!.NewRow();
         DatasetTools.ApplyPrimaryKey(row);
-        DatasetTools.UpdateOrigamSystemColumns(row, true, SecurityManager.CurrentUserProfile().Id);
+        DatasetTools.UpdateOrigamSystemColumns(
+            row,
+            isNew: true,
+            SecurityManager.CurrentUserProfile().Id
+        );
         dataSet.RemoveNullConstraints();
         table.Rows.Add(row);
         SetDataSource(dataSet);

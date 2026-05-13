@@ -208,7 +208,7 @@ public class PgSqlManager : SqlManager
             WHERE ""refWorkQueueId"" = '{FailingQueue}';
             "
         );
-        var match = Regex.Match(result, @"-------------\s*\n(\d+)");
+        var match = Regex.Match(result, pattern: @"-------------\s*\n(\d+)");
         if (match.Success)
         {
             return int.Parse(match.Groups[1].Value);
@@ -225,7 +225,7 @@ public class PgSqlManager : SqlManager
             WHERE ""refWorkQueueId"" = '{workQueueId}';
             "
         );
-        var match = Regex.Match(result, @"(\d+)");
+        var match = Regex.Match(result, pattern: @"(\d+)");
         if (match.Success)
         {
             return int.Parse(match.Groups[1].Value);
@@ -241,7 +241,7 @@ public class PgSqlManager : SqlManager
     public override int GetWorkQueueEntryCount()
     {
         string result = dataService.ExecuteSql(@"SELECT COUNT(*) FROM ""WorkQueueEntry"";");
-        var match = Regex.Match(result, @"(\d+)");
+        var match = Regex.Match(result, pattern: @"(\d+)");
         if (!match.Success)
         {
             throw new Exception("Could not find row count in:\n" + result);
