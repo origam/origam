@@ -91,10 +91,4 @@ public class Project
     public required string DockerEnvironmentsPathWindows { get; init; }
     public required string DockerClientPathWindows { get; init; }
     #endregion
-
-    #region Git
-    public bool IsGitEnabled { get; init; }
-    public string GitUsername { get; init; }
-    public string GitEmail { get; init; }
-    #endregion
 }

@@ -118,26 +118,6 @@ public class VisualService : IVisualService
         AnsiConsole.WriteLine();
     }
 
-    public void PrintGitValues(bool isEnabled, string user, string email)
-    {
-        var table = new Table()
-            .Border(TableBorder.Rounded)
-            .BorderColor(Color.Cyan1)
-            .AddColumn("[bold]Parameter[/]")
-            .AddColumn("[bold]Value[/]");
-
-        table.AddRow("Git", isEnabled ? "[green]Enabled[/]" : "[red]Disabled[/]");
-        table.AddRow("Git user", user);
-        table.AddRow("Git email", email);
-
-        var panel = new Panel(table)
-            .Header(Strings.Git_Configuration_Header)
-            .BorderColor(Color.Cyan1);
-
-        AnsiConsole.Write(panel);
-        AnsiConsole.WriteLine();
-    }
-
     public void PrintProjectCreateTasks(List<IBuilderTask> tasks)
     {
         var actionsList = new List<string>();

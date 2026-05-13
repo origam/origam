@@ -30,8 +30,7 @@ namespace Origam.Composer.Commands;
 public class CreateCommand(
     IVisualService visualService,
     IPasswordGeneratorService passwordGeneratorService,
-    IProjectBuilderService projectBuilderService,
-    IGitService gitService
+    IProjectBuilderService projectBuilderService
 ) : Command<CreateCommandSettings>
 {
     public override int Execute(CommandContext context, CreateCommandSettings settings)
@@ -45,8 +44,7 @@ public class CreateCommand(
             return 0;
         }
 
-        GitIdentity gitIdentity = GitIdentityResolver(settings);
-        ShowVisualBanner(settings: settings, gitIdentity: gitIdentity);
+        ShowVisualBanner(settings);
 
         var dockerFolder = Path.Combine(settings.ProjectFolder, path2: "docker");
         var project = new Project
@@ -97,12 +95,6 @@ public class CreateCommand(
             ArchitectDockerImageWin = settings.ArchitectDockerImageWin,
             ArchitectPort = settings.ArchitectPort,
 
-            #region Git
-            IsGitEnabled = settings.GitEnabled,
-            GitUsername = gitIdentity.User,
-            GitEmail = gitIdentity.Email,
-            #endregion
-
             #region Docker
             DockerFolder = dockerFolder,
 
@@ -147,7 +139,7 @@ public class CreateCommand(
         return 0;
     }
 
-    private void ShowVisualBanner(CreateCommandSettings settings, GitIdentity gitIdentity)
+    private void ShowVisualBanner(CreateCommandSettings settings)
     {
         visualService.PrintHeader(title: Strings.Create_New_Project);
         visualService.PrintDatabaseValues(
@@ -170,32 +162,5 @@ public class CreateCommand(
             dockerImageWindows: settings.ArchitectDockerImageWin,
             port: settings.ArchitectPort
         );
-        visualService.PrintGitValues(
-            isEnabled: settings.GitEnabled,
-            user: gitIdentity.User,
-            email: gitIdentity.Email
-        );
-    }
-
-    private GitIdentity GitIdentityResolver(CreateCommandSettings settings)
-    {
-        var gitUser = "";
-        var gitEmail = "";
-        string[] gitCredentials = gitService.FetchGitUserFromGlobalConfig();
-        if (gitCredentials != null)
-        {
-            gitUser = gitCredentials[0];
-            gitEmail = gitCredentials[1];
-        }
-        if (!string.IsNullOrWhiteSpace(settings.GitUser))
-        {
-            gitUser = settings.GitUser;
-        }
-        if (!string.IsNullOrWhiteSpace(settings.GitEmail))
-        {
-            gitEmail = settings.GitEmail;
-        }
-
-        return new GitIdentity(gitUser, gitEmail);
     }
 }
