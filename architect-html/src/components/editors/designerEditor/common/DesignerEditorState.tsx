@@ -42,7 +42,7 @@ export abstract class DesignerEditorState implements IDesignerEditorState {
   }
 
   protected constructor(
-    public editorId: string,
+    public tabId: string,
     protected editorNode: IEditorNode,
     isDirty: boolean,
     editorData: IDesignerEditorData,

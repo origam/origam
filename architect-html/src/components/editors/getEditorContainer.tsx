@@ -46,7 +46,7 @@ import { EditorProperty } from '@editors/gridEditor/EditorProperty';
 import GridEditor from '@editors/gridEditor/GridEditor';
 import { GridEditorState } from '@editors/gridEditor/GridEditorState';
 import SearchResultsEditor from '@editors/searchResultsEditor/SearchResultsEditor';
-import { SearchResultsEditorState } from '@editors/searchResultsEditor/SearchResultsEditorState';
+import { SearchResultsTabState } from '@editors/searchResultsEditor/SearchResultsTabState';
 import { XsltEditorState } from '@editors/gridEditor/XsltEditorState.ts';
 import XsltEditor from '@editors/xsltEditor/XsltEditor';
 import { FlowHandlerInput } from '@errors/runInFlowWithHandler';
@@ -179,7 +179,7 @@ export function getEditorContainer(args: {
 
   if (editorType === 'SearchResultsEditor') {
     const searchResultsData = data as ISearchResultsEditorData;
-    const editorState = new SearchResultsEditorState(
+    const editorState = new SearchResultsTabState(
       editorData.editorId,
       searchResultsData.query ?? '',
       searchResultsData.results ?? [],

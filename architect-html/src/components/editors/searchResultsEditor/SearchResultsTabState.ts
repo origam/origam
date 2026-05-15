@@ -1,5 +1,5 @@
 /*
-Copyright 2005 - 2025 Advantage Solutions, s. r. o.
+Copyright 2005 - 2026 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -18,11 +18,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { ISearchResult } from '@api/IArchitectApi';
-import { IEditorState } from '@components/editorTabView/IEditorState';
+import { ITabState } from '@/components/editorTabView/ITabState';
 import { T } from '@/main';
 import { observable } from 'mobx';
 
-export class SearchResultsEditorState implements IEditorState {
+export class SearchResultsTabState implements ITabState {
   @observable accessor results: ISearchResult[] = [];
   @observable accessor isActive = false;
   @observable accessor label = '';
@@ -31,7 +31,7 @@ export class SearchResultsEditorState implements IEditorState {
   isDirty = false;
 
   constructor(
-    public editorId: string,
+    public tabId: string,
     query: string,
     results: ISearchResult[],
   ) {

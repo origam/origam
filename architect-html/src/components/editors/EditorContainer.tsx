@@ -17,12 +17,12 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { IEditorState } from '@components/editorTabView/IEditorState.ts';
+import { ITabState } from '@/components/editorTabView/ITabState';
 import React from 'react';
 
 export class EditorContainer {
   constructor(
-    public state: IEditorState,
+    public state: ITabState,
     public element: React.ReactElement,
   ) {}
 }

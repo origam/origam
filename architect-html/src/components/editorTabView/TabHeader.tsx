@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { RootStoreContext, T } from '@/main';
-import { IEditorState } from '@components/editorTabView/IEditorState';
+import { ITabState } from '@/components/editorTabView/ITabState';
 import S from '@components/editorTabView/TabHeader.module.scss';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { action } from 'mobx';
@@ -27,18 +27,18 @@ import { useContext } from 'react';
 import { Item, Menu, TriggerEvent, useContextMenu } from 'react-contexify';
 import { VscClose, VscCloseAll } from 'react-icons/vsc';
 
-export const TabHeader = observer(({ editor }: { editor: IEditorState }) => {
+export const TabHeader = observer(({ tab }: { tab: ITabState }) => {
   const rootStore = useContext(RootStoreContext);
   const state = rootStore.editorTabViewState;
   const run = runInFlowWithHandler(rootStore.errorDialogController);
-  const menuId = 'TabMenu_' + editor.editorId;
+  const menuId = 'TabMenu_' + tab.tabId;
 
   const { show, hideAll } = useContextMenu({
     id: menuId,
   });
 
-  function onClose(editor: IEditorState) {
-    run({ generator: state.closeEditor(editor.editorId) });
+  function onClose(tab: ITabState) {
+    run({ generator: state.closeEditor(tab.tabId) });
   }
 
   async function handleContextMenu(event: TriggerEvent) {
@@ -48,12 +48,12 @@ export const TabHeader = observer(({ editor }: { editor: IEditorState }) => {
   function closeAllTabsExcept(ignoreId: string | null) {
     run({
       generator: function* () {
-        const editors = state.editorsContainers.map(x => x.state);
-        for (const editor of editors) {
-          if (ignoreId && editor.editorId === ignoreId) {
+        const tabs = state.editorsContainers.map(x => x.state);
+        for (const t of tabs) {
+          if (ignoreId && t.tabId === ignoreId) {
             continue;
           }
-          yield* state.closeEditor(editor.editorId)();
+          yield* state.closeEditor(t.tabId)();
         }
       },
     });
@@ -69,16 +69,16 @@ export const TabHeader = observer(({ editor }: { editor: IEditorState }) => {
 
   return (
     <div
-      key={editor.label}
-      className={S.root + ' ' + (editor.isActive ? S.activeTab : '')}
-      onClick={() => action(() => state.setActiveEditor(editor.editorId))()}
+      key={tab.label}
+      className={S.root + ' ' + (tab.isActive ? S.activeTab : '')}
+      onClick={() => action(() => state.setActiveEditor(tab.tabId))()}
     >
       <div className={S.title} onContextMenu={handleContextMenu}>
-        <span className={S.label}>{editor.label}</span>
-        {editor.isDirty && <span className={S.asterisk}>*</span>}
+        <span className={S.label}>{tab.label}</span>
+        {tab.isDirty && <span className={S.asterisk}>*</span>}
       </div>
 
-      <div className={S.close} onClick={() => onClose(editor)}>
+      <div className={S.close} onClick={() => onClose(tab)}>
         <VscClose />
       </div>
 
@@ -87,7 +87,7 @@ export const TabHeader = observer(({ editor }: { editor: IEditorState }) => {
           <VscCloseAll />
           <span>{T('Close All', 'tab_header_close_all')}</span>
         </Item>
-        <Item className={S.contextMenuButton} onClick={() => closeAllTabsExcept(editor.editorId)}>
+        <Item className={S.contextMenuButton} onClick={() => closeAllTabsExcept(tab.tabId)}>
           <VscCloseAll />
           <span>{T('Close All But This', 'tab_header_close_all_but_this')}</span>
         </Item>
