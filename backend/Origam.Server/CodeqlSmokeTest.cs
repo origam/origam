@@ -32,7 +32,7 @@ public static class CodeqlSmokeTest
     public static string HashPassword(string input)
     {
         using var md5 = MD5.Create();
-        var bytes = md5.ComputeHash(Encoding.UTF8.GetBytes(input ));
+        var bytes = md5.ComputeHash(Encoding.UTF8.GetBytes(input));
         return System.Convert.ToBase64String(bytes);
     }
 }
