@@ -21,12 +21,13 @@ import { RootStoreContext } from '@/main.tsx';
 import { PropertyValue } from '@api/IArchitectApi';
 import { EditorProperty } from '@editors/gridEditor/EditorProperty.ts';
 import { IPropertyManager } from '@editors/propertyEditor/IPropertyManager.tsx';
+import { FilterableSelect } from '@editors/propertyEditor/FilterableSelect.tsx';
 import { NumericPropertyInput } from '@editors/propertyEditor/NumericPropertyInput.tsx';
 import S from '@editors/propertyEditor/SinglePropertyEditor.module.scss';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler.ts';
 import { observer } from 'mobx-react-lite';
 import { useContext } from 'react';
-import { VscChevronDown, VscCopy } from 'react-icons/vsc';
+import { VscCopy } from 'react-icons/vsc';
 
 const NO_WHITESPACE_PROPERTIES = new Set(['Name', 'MappedObjectName']);
 const stripWhitespace = (value: string) => value.replace(/\s+/gu, '');
@@ -58,17 +59,12 @@ const SinglePropertyEditor = observer(
             ? (property.dropDownValues.find(x => x.name === property.value)?.value ?? '')
             : (property.value ?? '');
         return (
-          <div className={S.selectWrapper}>
-            <select value={selectedValue} onChange={e => onValueChange(property, e.target.value)}>
-              {(property.value ?? '') === '' && <option value="" />}
-              {property.dropDownValues.map(x => (
-                <option key={x.value + x.name} value={x.value}>
-                  {x.name}
-                </option>
-              ))}
-            </select>
-            <VscChevronDown className={S.selectIcon} />
-          </div>
+          <FilterableSelect
+            options={property.dropDownValues}
+            selectedValue={selectedValue}
+            disabled={property.readOnly}
+            onChange={value => onValueChange(property, value)}
+          />
         );
       }
 
