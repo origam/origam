@@ -43,7 +43,7 @@ public class CodeqlCanaryController : ControllerBase
     public IActionResult GetUser(string name)
     {
         using var conn = new SqlConnection("Server=.;Database=test;");
-        var cmd = new SqlCommand(
+        using var cmd = new SqlCommand(
             "SELECT * FROM Users WHERE Name = '" + name + "'",
             conn
         );
