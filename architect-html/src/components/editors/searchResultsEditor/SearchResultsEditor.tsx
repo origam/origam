@@ -26,92 +26,90 @@ import { observer } from 'mobx-react-lite';
 import { useContext } from 'react';
 import { VscWarning } from 'react-icons/vsc';
 
-const SearchResultsEditor = observer(
-  ({ editorState }: { editorState: SearchResultsTabState }) => {
-    const rootStore = useContext(RootStoreContext);
-    const run = runInFlowWithHandler(rootStore.errorDialogController);
+const SearchResultsEditor = observer(({ editorState }: { editorState: SearchResultsTabState }) => {
+  const rootStore = useContext(RootStoreContext);
+  const run = runInFlowWithHandler(rootStore.errorDialogController);
 
-    function highlightInModelTree(result: ISearchResult) {
-      run({
-        generator: function* () {
-          yield* rootStore.modelTreeState.expandAndHighlightSchemaItem({
-            parentNodeIds: result.parentNodeIds ?? [],
-            schemaItemId: result.schemaId,
-          });
-        },
-      });
-    }
+  function highlightInModelTree(result: ISearchResult) {
+    run({
+      generator: function* () {
+        yield* rootStore.modelTreeState.expandAndHighlightSchemaItem({
+          parentNodeIds: result.parentNodeIds ?? [],
+          schemaItemId: result.schemaId,
+        });
+      },
+    });
+  }
 
-    return (
-      <div className={S.root}>
-        <div className={S.header}>
-          <span className={S.title}>
-            {T('Search results for "{0}"', 'editor_search_results_header', editorState.query)}
-          </span>
-          <span className={S.count}>{editorState.results.length}</span>
-        </div>
-        <div className={S.tableWrapper}>
-          <table className={S.table}>
-            <thead>
-              <tr>
-                <th className={S.statusColumn} aria-label="Status" />
-                <th>{T('Found in', 'editor_search_results_column_found_in')}</th>
-                <th>{T('Root type', 'editor_search_results_column_root_type')}</th>
-                <th>{T('Type', 'editor_search_results_column_type')}</th>
-                <th>{T('Folder', 'editor_search_results_column_folder')}</th>
-                <th>{T('Package', 'editor_search_results_column_package')}</th>
-                <th>{T('Package reference', 'editor_search_results_column_package_reference')}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {[...editorState.results]
-                .sort((left, right) => left.foundIn.localeCompare(right.foundIn))
-                .map(result => (
-                  <tr
-                    key={result.schemaId}
-                    className={result.isOrphaned ? S.orphanedRow : S.row}
-                    onClick={() => highlightInModelTree(result)}
-                  >
-                    <td className={S.statusCell}>
-                      {result.isOrphaned && (
-                        <span
-                          className={S.orphanedMarker}
-                          title={T(
-                            'Orphaned reference — parent chain is broken',
-                            'editor_search_results_orphaned_note',
-                          )}
-                        >
-                          <VscWarning />
-                        </span>
-                      )}
-                    </td>
-                    <td>{result.foundIn}</td>
-                    <td>{result.isOrphaned ? 'n/a' : result.rootType}</td>
-                    <td>{result.type}</td>
-                    <td>{result.isOrphaned ? 'n/a' : result.folder}</td>
-                    <td>{result.isOrphaned ? 'n/a' : result.package}</td>
-                    <td>
-                      {result.isOrphaned
-                        ? 'n/a'
-                        : result.packageReference
-                          ? T('Yes', 'dialog_yes')
-                          : T('No', 'dialog_no')}
-                    </td>
-                  </tr>
-                ))}
-              {editorState.results.length === 0 && (
-                <tr>
-                  <td className={S.empty} colSpan={7}>
-                    {T('No results found.', 'editor_search_results_empty')}
+  return (
+    <div className={S.root}>
+      <div className={S.header}>
+        <span className={S.title}>
+          {T('Search results for "{0}"', 'editor_search_results_header', editorState.query)}
+        </span>
+        <span className={S.count}>{editorState.results.length}</span>
+      </div>
+      <div className={S.tableWrapper}>
+        <table className={S.table}>
+          <thead>
+            <tr>
+              <th className={S.statusColumn} aria-label="Status" />
+              <th>{T('Found in', 'editor_search_results_column_found_in')}</th>
+              <th>{T('Root type', 'editor_search_results_column_root_type')}</th>
+              <th>{T('Type', 'editor_search_results_column_type')}</th>
+              <th>{T('Folder', 'editor_search_results_column_folder')}</th>
+              <th>{T('Package', 'editor_search_results_column_package')}</th>
+              <th>{T('Package reference', 'editor_search_results_column_package_reference')}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {[...editorState.results]
+              .sort((left, right) => left.foundIn.localeCompare(right.foundIn))
+              .map(result => (
+                <tr
+                  key={result.schemaId}
+                  className={result.isOrphaned ? S.orphanedRow : S.row}
+                  onClick={() => highlightInModelTree(result)}
+                >
+                  <td className={S.statusCell}>
+                    {result.isOrphaned && (
+                      <span
+                        className={S.orphanedMarker}
+                        title={T(
+                          'Orphaned reference — parent chain is broken',
+                          'editor_search_results_orphaned_note',
+                        )}
+                      >
+                        <VscWarning />
+                      </span>
+                    )}
+                  </td>
+                  <td>{result.foundIn}</td>
+                  <td>{result.isOrphaned ? 'n/a' : result.rootType}</td>
+                  <td>{result.type}</td>
+                  <td>{result.isOrphaned ? 'n/a' : result.folder}</td>
+                  <td>{result.isOrphaned ? 'n/a' : result.package}</td>
+                  <td>
+                    {result.isOrphaned
+                      ? 'n/a'
+                      : result.packageReference
+                        ? T('Yes', 'dialog_yes')
+                        : T('No', 'dialog_no')}
                   </td>
                 </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+              ))}
+            {editorState.results.length === 0 && (
+              <tr>
+                <td className={S.empty} colSpan={7}>
+                  {T('No results found.', 'editor_search_results_empty')}
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
-    );
-  },
-);
+    </div>
+  );
+});
 
 export default SearchResultsEditor;

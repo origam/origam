@@ -53,9 +53,7 @@ export class EditorTabViewState {
     const openEditorsData = (yield this.architectApi.getOpenEditors()) as IApiEditorData[];
     this.editorsContainers = openEditorsData.map(data => this.toEditor(data)) as EditorContainer[];
     if (this.editorsContainers.length > 0) {
-      this.setActiveEditor(
-        this.editorsContainers[this.editorsContainers.length - 1].state.tabId,
-      );
+      this.setActiveEditor(this.editorsContainers[this.editorsContainers.length - 1].state.tabId);
     }
 
     if (this.rootStore.uiState.getDsGeneratorState().isOpen) {
