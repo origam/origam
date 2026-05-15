@@ -19,7 +19,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
@@ -49,14 +48,6 @@ public class CodeqlCanaryController : ControllerBase
             conn
         );
         return Ok(cmd.CommandText);
-    }
-
-    // Expected CodeQL alert: cs/path-injection (High)
-    [HttpGet("file")]
-    public IActionResult ReadFile(string path)
-    {
-        var content = File.ReadAllText(path);
-        return Ok(content);
     }
 
     // Expected CodeQL alert: cs/weak-cryptographic-algorithm (MD5)
