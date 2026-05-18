@@ -30,7 +30,7 @@ import { TreeNode } from '@components/modelTree/TreeNode';
 import { askYesNoQuestion, YesNoResult } from '@dialogs/DialogUtils';
 import { EditorContainer } from '@editors/EditorContainer.tsx';
 import { getEditorContainer } from '@editors/getEditorContainer.tsx';
-import { SearchResultsTabState } from '@editors/searchResultsEditor/SearchResultsTabState.ts';
+import { SearchResultsTabState } from '@components/search/SearchResultsTabState.ts';
 import { FlowHandlerInput, runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { RootStore } from '@stores/RootStore';
 import { observable } from 'mobx';

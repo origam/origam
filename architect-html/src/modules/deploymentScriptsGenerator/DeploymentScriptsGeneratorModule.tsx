@@ -23,8 +23,8 @@ import { TabView } from '@/components/tabView/TabView';
 import { TabViewState } from '@/components/tabView/TabViewState';
 import { T } from '@/main';
 import { ModalWindow } from '@dialogs/ModalWindow';
-import S from '@editors/DeploymentScriptsGeneratorModule/DeploymentScriptsGeneratorModule.module.scss';
-import DeploymentScriptsGeneratorModuleState from '@editors/DeploymentScriptsGeneratorModule/DeploymentScriptsGeneratorModuleState';
+import S from '@modules/deploymentScriptsGenerator/DeploymentScriptsGeneratorModule.module.scss';
+import DeploymentScriptsGeneratorModuleState from '@modules/deploymentScriptsGenerator/DeploymentScriptsGeneratorModuleState';
 import { observer } from 'mobx-react-lite';
 import { VscRefresh } from 'react-icons/vsc';
 

@@ -19,14 +19,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { RootStoreContext, T } from '@/main';
 import { ISearchResult } from '@api/IArchitectApi';
-import { SearchResultsTabState } from '@editors/searchResultsEditor/SearchResultsTabState';
+import { SearchResultsTabState } from '@components/search/SearchResultsTabState';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
-import S from '@editors/searchResultsEditor/SearchResultsEditor.module.scss';
+import S from '@components/search/SearchResultsView.module.scss';
 import { observer } from 'mobx-react-lite';
 import { useContext } from 'react';
 import { VscWarning } from 'react-icons/vsc';
 
-const SearchResultsEditor = observer(({ editorState }: { editorState: SearchResultsTabState }) => {
+const SearchResultsView = observer(({ editorState }: { editorState: SearchResultsTabState }) => {
   const rootStore = useContext(RootStoreContext);
   const run = runInFlowWithHandler(rootStore.errorDialogController);
 
@@ -112,4 +112,4 @@ const SearchResultsEditor = observer(({ editorState }: { editorState: SearchResu
   );
 });
 
-export default SearchResultsEditor;
+export default SearchResultsView;
