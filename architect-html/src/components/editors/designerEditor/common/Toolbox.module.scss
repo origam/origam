@@ -29,6 +29,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   margin-top: 10px;
 }
 
+.dataSourceSelect {
+  width: 100%;
+  display: block;
+}
+
 .toolbox {
   display: flex;
   flex-direction: column;
