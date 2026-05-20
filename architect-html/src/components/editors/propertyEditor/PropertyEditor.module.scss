@@ -21,7 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   flex: 1;
 
   .category {
-    max-width: 650px;
     margin-bottom: 2rem;
     border-radius: 0.25rem;
     overflow: hidden;
@@ -35,10 +34,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     }
 
     .property {
-      display: flex;
-      flex-direction: row;
+      display: grid;
+      grid-template-columns: minmax(8rem, 14rem) minmax(0, 1fr);
       align-items: center;
-      justify-content: space-between;
+      column-gap: 1rem;
       padding: 0.5rem;
       color: #000;
 
@@ -47,7 +46,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
       }
 
       .propertyName {
-        margin-right: 1rem;
+        overflow-wrap: anywhere;
       }
 
       .errorProperty {
@@ -65,13 +64,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
       display: none;
     }
     .property {
-      justify-content: flex-start;
+      grid-template-columns: 17rem 25rem;
+      column-gap: 0;
+      margin: 0;
       .propertyName {
         width: 17rem;
       }
-    }
-    .property {
-      margin: 0;
       input {
         width: 25rem;
       }
