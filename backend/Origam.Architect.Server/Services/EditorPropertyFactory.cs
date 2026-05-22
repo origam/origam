@@ -55,7 +55,7 @@ public class EditorPropertyFactory
             name: property.Name,
             controlPropertyId: null,
             type: ToPropertyTypeName(property),
-            value: ToSerializableValue(value),
+            value: ToSerializableValue(value, property),
             dropDownValues: GetAvailableValues(property, instance),
             category: category,
             description: description,
@@ -101,8 +101,12 @@ public class EditorPropertyFactory
         );
     }
 
-    private object ToSerializableValue(object value)
+    private object ToSerializableValue(object value, PropertyInfo property)
     {
+        if (value is ISchemaItem schemaItem && property.GetSetMethod() == null)
+        {
+            return schemaItem.ToString();
+        }
         if (value is IPersistent persistentObject)
         {
             return persistentObject.Id;
@@ -209,7 +213,7 @@ public class EditorPropertyFactory
             property.GetCustomAttribute<ReferencePropertyAttribute>() != null;
         if (isReferenceProperty || type.IsAssignableTo(typeof(ISchemaItem)))
         {
-            return "looukup";
+            return property.GetSetMethod() == null ? "string" : "looukup";
         }
 
         return "string";

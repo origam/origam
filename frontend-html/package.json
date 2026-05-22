@@ -33,7 +33,7 @@
     "@types/react-virtualized": "^9.22.3",
     "@vitejs/plugin-basic-ssl": "^2.3.0",
     "@xstate/inspect": "^0.8.0",
-    "axios": "^1.16.0",
+    "axios": "^1.16.1",
     "bind-decorator": "^1.0.11",
     "classnames": "^2.5.1",
     "draft-js": "^0.11.7",
@@ -43,7 +43,7 @@
     "immutable": "^5.1.5",
     "jest": "^30.4.2",
     "jest-environment-jsdom": "^30.4.1",
-    "js-cookie": "^3.0.5",
+    "js-cookie": "^3.0.7",
     "js-file-download": "^0.4.12",
     "leaflet": "^1.8.0",
     "leaflet-draw": "^1.0.4",
@@ -89,7 +89,7 @@
     "esbuild": "^0.28.0",
     "identity-obj-proxy": "^3.0.0",
     "ts-jest": "^29.4.9",
-    "vite": "^8.0.12",
+    "vite": "^8.0.13",
     "ws": "^8.20.1"
   },
   "resolutions": {

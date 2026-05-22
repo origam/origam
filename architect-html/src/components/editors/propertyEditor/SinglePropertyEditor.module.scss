@@ -18,9 +18,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 .root {
+  display: block;
+  width: 100%;
+  max-width: 40rem;
+  min-width: 0;
+
   input,
   select {
-    width: 200px;
+    width: 100%;
+    box-sizing: border-box;
     &:disabled {
       background-color: var(--background3);
       cursor: not-allowed;
@@ -147,6 +153,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     display: flex;
     align-items: center;
     gap: 0.25rem;
+    width: 100%;
+
+    input {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
 
     .copyButton {
       background: transparent;
@@ -161,8 +173,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
       min-width: 24px;
       height: 24px;
       transition: all 0.2s ease;
-      opacity: 0;
-      visibility: hidden;
+      opacity: 1;
+      visibility: visible;
 
       &:hover {
         background-color: var(--background2);
@@ -172,11 +184,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
       &:active {
         background-color: var(--background3);
       }
-    }
-
-    &:hover .copyButton {
-      opacity: 1;
-      visibility: visible;
     }
   }
 }

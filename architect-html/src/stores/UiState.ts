@@ -1,5 +1,5 @@
 /*
-Copyright 2005 - 2025 Advantage Solutions, s. r. o. 
+Copyright 2005 - 2026 Advantage Solutions, s. r. o. 
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -24,7 +24,12 @@ enum EStorageKeys {
   TREE_EXPANDED_NODES = 'treeExpandedNodes',
   SETTINGS = 'settings',
   DEPLOYMENT_SCRIPTS_GENERATOR_STATE = 'deploymentScriptsGeneratorState',
+  SIDEBAR_WIDTH = 'sidebarWidth',
 }
+
+export const SIDEBAR_MIN_WIDTH = 250;
+export const SIDEBAR_MAX_WIDTH = 1200;
+const SIDEBAR_DEFAULT_WIDTH = 400;
 
 type TSettings = {
   isVimEnabled: boolean;
@@ -52,7 +57,13 @@ const STORAGE_DEFAULTS = {
   [EStorageKeys.TREE_EXPANDED_NODES]: [] as string[],
   [EStorageKeys.SETTINGS]: defaultSettings,
   [EStorageKeys.DEPLOYMENT_SCRIPTS_GENERATOR_STATE]: defaultDsGeneratorState,
+  [EStorageKeys.SIDEBAR_WIDTH]: SIDEBAR_DEFAULT_WIDTH,
 } as const;
+
+function clampSidebarWidth(value: number): number {
+  if (!Number.isFinite(value)) return SIDEBAR_DEFAULT_WIDTH;
+  return Math.min(SIDEBAR_MAX_WIDTH, Math.max(SIDEBAR_MIN_WIDTH, value));
+}
 
 export class UIState {
   @observable accessor expandedNodes: string[] = [];
@@ -60,6 +71,7 @@ export class UIState {
   @observable accessor dsGeneratorState: IDsGeneratorPersistedState = {
     ...defaultDsGeneratorState,
   };
+  @observable accessor sidebarWidth: number = SIDEBAR_DEFAULT_WIDTH;
 
   constructor() {
     this.expandedNodes = this.loadStateFromLocalStorage(EStorageKeys.TREE_EXPANDED_NODES);
@@ -71,6 +83,19 @@ export class UIState {
       EStorageKeys.DEPLOYMENT_SCRIPTS_GENERATOR_STATE,
     );
     this.dsGeneratorState = { ...defaultDsGeneratorState, ...loadedDsGeneratorState };
+
+    const rawSidebarWidth = localStorage.getItem(EStorageKeys.SIDEBAR_WIDTH);
+    if (rawSidebarWidth !== null) {
+      const parsed = Number.parseFloat(rawSidebarWidth);
+      this.sidebarWidth = clampSidebarWidth(parsed);
+    }
+  }
+
+  @action
+  setSidebarWidth(width: number) {
+    const clamped = clampSidebarWidth(width);
+    this.sidebarWidth = clamped;
+    localStorage.setItem(EStorageKeys.SIDEBAR_WIDTH, String(clamped));
   }
 
   setExpanded(nodeId: string, expanded: boolean) {

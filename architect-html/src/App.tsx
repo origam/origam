@@ -1,5 +1,5 @@
 /*
-Copyright 2005 - 2025 Advantage Solutions, s. r. o. 
+Copyright 2005 - 2026 Advantage Solutions, s. r. o. 
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -34,6 +34,7 @@ import { useContext, useEffect } from 'react';
 import Output from '@components/properties/Output.tsx';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { isSaveShortcut } from '@/utils/keyShortcuts';
+import { SIDEBAR_MAX_WIDTH, SIDEBAR_MIN_WIDTH } from '@stores/UiState';
 
 const App = observer(() => {
   const rootStore = useContext(RootStoreContext);
@@ -80,9 +81,13 @@ const App = observer(() => {
       <TopLayout
         topToolBar={<TopBar />}
         editorArea={<EditorTabView />}
+        sideBarWidth={rootStore.uiState.sidebarWidth}
+        onSideBarWidthChange={width => rootStore.uiState.setSidebarWidth(width)}
+        minSideBarWidth={SIDEBAR_MIN_WIDTH}
+        maxSideBarWidth={SIDEBAR_MAX_WIDTH}
         sideBar={
           <TabView
-            width={400}
+            width={rootStore.uiState.sidebarWidth}
             state={rootStore.sideBarTabViewState}
             items={[
               {

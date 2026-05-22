@@ -1,5 +1,5 @@
 /*
-Copyright 2005 - 2025 Advantage Solutions, s. r. o. 
+Copyright 2005 - 2026 Advantage Solutions, s. r. o. 
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -40,14 +40,28 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
       overflow: auto;
     }
 
+    .splitter {
+      flex: 0 0 5px;
+      width: 5px;
+      cursor: col-resize;
+      background: var(--background4);
+      transition: background 0.15s ease;
+      user-select: none;
+      touch-action: none;
+
+      &:hover,
+      &:active {
+        background: var(--brand);
+      }
+    }
+
     .sideBar {
       display: flex;
-      min-width: 300px;
-      width: 400px;
+      flex: 0 0 auto;
       padding: 1rem;
+      overflow: hidden;
 
       background: var(--brand-light);
-      border-left: 1px solid var(--background4);
     }
   }
 }
