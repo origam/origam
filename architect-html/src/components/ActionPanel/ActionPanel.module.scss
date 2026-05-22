@@ -25,6 +25,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   margin-bottom: 0.5rem;
   background: var(--background2);
   border-bottom: 1px solid var(--background3);
+  position: sticky;
+  top: 0;
+  z-index: 1;
 
   .header {
     display: flex;
