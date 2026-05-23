@@ -60,34 +60,31 @@ public class WorkQueueController : ControllerBase
             workQueueService.HandleAction(workQueueCode, commandText, workQueueEntryId);
             return Ok();
         }
-        catch (Exception ex)
+        catch (RuleException ruleException)
         {
             if (log.IsErrorEnabled)
             {
-                log.Error(ex.Message, ex);
+                log.Error(ruleException.Message, ruleException);
             }
-            string output;
-            if (ex is RuleException ruleException)
+            string output = String.Format(
+                format: "{{\"Message\" : {0}, \"RuleResult\" : {1}}}",
+                JsonConvert.SerializeObject(ruleException.Message),
+                JsonConvert.SerializeObject(ruleException.RuleResult)
+            );
+            return BadRequest(output);
+        }
+        catch (ArgumentOutOfRangeException argumentException)
+        {
+            if (log.IsErrorEnabled)
             {
-                output = String.Format(
-                    format: "{{\"Message\" : {0}, \"RuleResult\" : {1}}}",
-                    JsonConvert.SerializeObject(ruleException.Message),
-                    JsonConvert.SerializeObject(ruleException.RuleResult)
-                );
+                log.Error(argumentException.Message, argumentException);
             }
-            else if (ex is ArgumentOutOfRangeException argumentException)
-            {
-                output = String.Format(
-                    format: "{{\"Message\" : {0}, \"ParamName\" : {1}, \"ActualValue\" : {2}}}",
-                    JsonConvert.SerializeObject(argumentException.Message),
-                    JsonConvert.SerializeObject(argumentException.ParamName),
-                    JsonConvert.SerializeObject(argumentException.ActualValue)
-                );
-            }
-            else
-            {
-                output = JsonConvert.SerializeObject(ex);
-            }
+            string output = String.Format(
+                format: "{{\"Message\" : {0}, \"ParamName\" : {1}, \"ActualValue\" : {2}}}",
+                JsonConvert.SerializeObject(argumentException.Message),
+                JsonConvert.SerializeObject(argumentException.ParamName),
+                JsonConvert.SerializeObject(argumentException.ActualValue)
+            );
             return BadRequest(output);
         }
     }
