@@ -105,9 +105,7 @@ export class UIState {
   }
 
   isPropertySectionCollapsed(category: string): boolean {
-    const stored = this.propertySectionCollapsed[category];
-    if (typeof stored === 'boolean') return stored;
-    return isCollapsedByDefault(category);
+    return this.propertySectionCollapsed[category] ?? isCollapsedByDefault(category);
   }
 
   @action
