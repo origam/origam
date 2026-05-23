@@ -25,12 +25,32 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     border-radius: 0.25rem;
     overflow: hidden;
 
-    h4 {
+    .categoryHeader {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.25rem;
+      width: 100%;
       color: var(--brand);
       padding: 0.25rem;
-      margin-top: 0;
-      margin-bottom: 0.5rem;
+      margin: 0 0 0.5rem 0;
+      border: none;
       border-bottom: 1px solid var(--brand);
+      background: transparent;
+      cursor: pointer;
+      text-align: left;
+      font-size: 1rem;
+      font-weight: bold;
+      font-family: inherit;
+
+      &:hover {
+        background-color: var(--background2);
+      }
+
+      .chevron {
+        flex-shrink: 0;
+        color: var(--brand);
+      }
     }
 
     .property {
@@ -69,7 +89,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   div.category {
     margin: 0;
     max-width: unset;
-    h4 {
+    .categoryHeader {
       display: none;
     }
     .property {
