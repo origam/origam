@@ -34,8 +34,7 @@ const PropertyEditor = observer(
     propertyManager: IPropertyManager;
     compact?: boolean;
   }) => {
-    const rootStore = useContext(RootStoreContext);
-    const uiState = rootStore.uiState;
+    const { uiState } = useContext(RootStoreContext);
 
     if (!props.properties) {
       return null;
