@@ -19,10 +19,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { RootStoreContext, T } from '@/main';
 import Button from '@components/Button/Button';
+import S from '@/components/SaveButtonHOC/SaveButtonHOC.module.scss';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { observer } from 'mobx-react-lite';
 import { useContext } from 'react';
-import { VscSave } from 'react-icons/vsc';
+import { VscSave, VscWarning } from 'react-icons/vsc';
 
 const SaveButtonHOC = observer(() => {
   const rootStore = useContext(RootStoreContext);
@@ -49,14 +50,35 @@ const SaveButtonHOC = observer(() => {
     });
   };
 
+  const isDisabled = !activeEditor.isDirty;
+  const validationErrors = activeEditor.validationErrors ?? [];
+  const showMissing = isDisabled && validationErrors.length > 0;
+
   return (
-    <Button
-      type="primary"
-      title={T('Save', 'save_button_label')}
-      prefix={<VscSave />}
-      onClick={handleSave}
-      isDisabled={!activeEditor.isDirty}
-    />
+    <div className={S.root}>
+      {showMissing && (
+        <div
+          className={S.missingFields}
+          title={validationErrors.map(e => `${e.propertyName}: ${e.error}`).join('\n')}
+        >
+          <VscWarning />
+          <span>
+            {T(
+              'Required: {0}',
+              'save_required_fields',
+              validationErrors.map(e => e.propertyName).join(', '),
+            )}
+          </span>
+        </div>
+      )}
+      <Button
+        type="primary"
+        title={T('Save', 'save_button_label')}
+        prefix={<VscSave />}
+        onClick={handleSave}
+        isDisabled={isDisabled}
+      />
+    </div>
   );
 });
 

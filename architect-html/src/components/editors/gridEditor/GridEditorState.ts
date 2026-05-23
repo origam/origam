@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { T } from '@/main';
 import { IArchitectApi, IUpdatePropertiesResult } from '@api/IArchitectApi';
 import { IEditorNode } from '@components/editorTabView/EditorTabViewState';
-import { IEditorState } from '@components/editorTabView/IEditorState';
+import { IEditorState, IValidationError } from '@components/editorTabView/IEditorState';
 import { EditorProperty, toChanges } from '@editors/gridEditor/EditorProperty';
 import { IPropertyManager } from '@editors/propertyEditor/IPropertyManager';
 import { computed, observable } from 'mobx';
@@ -49,6 +49,13 @@ export class GridEditorState implements IEditorState, IPropertyManager {
       someHasError = someHasError || !!property.error;
     }
     return this._isDirty && !someHasError;
+  }
+
+  @computed
+  get validationErrors(): IValidationError[] {
+    return this.properties
+      .filter(p => p.error)
+      .map(p => ({ propertyName: p.name, error: p.error! }));
   }
 
   get label() {

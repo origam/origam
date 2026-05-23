@@ -1,5 +1,5 @@
 /*
-Copyright 2005 - 2025 Advantage Solutions, s. r. o.
+Copyright 2005 - 2026 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -17,17 +17,24 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-export interface IValidationError {
-  propertyName: string;
-  error: string;
+.root {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-export interface IEditorState {
-  editorId: string;
-  label: string;
-  isActive: boolean;
-  isDirty: boolean;
-  validationErrors?: IValidationError[];
-  save(): Generator<Promise<any>, void, any>;
-  dispose?(): void;
+.missingFields {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: red;
+  font-size: 0.875rem;
+  max-width: 24rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  svg {
+    flex-shrink: 0;
+  }
 }
