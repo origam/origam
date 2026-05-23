@@ -30,7 +30,9 @@ enum EStorageKeys {
 
 type TPropertySectionCollapsed = { [category: string]: boolean };
 
-const DEFAULT_COLLAPSED_CATEGORIES = new Set<string>(['Info']);
+function isCollapsedByDefault(category: string): boolean {
+  return category === 'Info';
+}
 
 export const SIDEBAR_MIN_WIDTH = 250;
 export const SIDEBAR_MAX_WIDTH = 1200;
@@ -105,7 +107,7 @@ export class UIState {
   isPropertySectionCollapsed(category: string): boolean {
     const stored = this.propertySectionCollapsed[category];
     if (typeof stored === 'boolean') return stored;
-    return DEFAULT_COLLAPSED_CATEGORIES.has(category);
+    return isCollapsedByDefault(category);
   }
 
   @action
