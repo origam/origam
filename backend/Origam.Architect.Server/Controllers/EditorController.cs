@@ -130,6 +130,13 @@ public class EditorController(
         return Ok();
     }
 
+    [HttpPost("CloseAllEditors")]
+    public IActionResult CloseAllEditors()
+    {
+        editorService.CloseAllEditors();
+        return Ok();
+    }
+
     [HttpPost("PersistChanges")]
     public IActionResult PersistChanges([FromBody] PersistModel input)
     {

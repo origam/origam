@@ -201,6 +201,14 @@ public class EditorService(
         }
     }
 
+    public void CloseAllEditors()
+    {
+        foreach (EditorId editorId in editorSchemaItems.Keys.ToList())
+        {
+            CloseEditor(editorId);
+        }
+    }
+
     public EditorData ChangesToEditorData(ChangesModel input)
     {
         EditorData editor = OpenDefaultEditor(input.SchemaItemId);

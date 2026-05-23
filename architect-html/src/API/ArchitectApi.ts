@@ -113,6 +113,10 @@ export class ArchitectApi implements IArchitectApi {
     await this.http.post('/Editor/CloseEditor', { editorId: editorId });
   }
 
+  async closeAllEditors() {
+    await this.http.post('/Editor/CloseAllEditors', {});
+  }
+
   async openDocumentationEditor(schemaItemId: string): Promise<IApiEditorData> {
     return (await this.http.post('/Documentation/OpenEditor', { schemaItemId: schemaItemId })).data;
   }
