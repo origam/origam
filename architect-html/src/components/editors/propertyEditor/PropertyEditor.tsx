@@ -48,6 +48,7 @@ const PropertyEditor = observer(
         {sortedCategories.map(category => {
           const categoryKey = category ?? 'Misc';
           const collapsed = !props.compact && uiState.isPropertySectionCollapsed(categoryKey);
+          const Chevron = collapsed ? VscChevronRight : VscChevronDown;
           return (
             <div className={S.category} key={category}>
               {!props.compact && (
@@ -58,11 +59,7 @@ const PropertyEditor = observer(
                   aria-expanded={!collapsed}
                 >
                   <span>{categoryKey}</span>
-                  {collapsed ? (
-                    <VscChevronRight className={S.chevron} />
-                  ) : (
-                    <VscChevronDown className={S.chevron} />
-                  )}
+                  <Chevron className={S.chevron} />
                 </button>
               )}
               {!collapsed &&
