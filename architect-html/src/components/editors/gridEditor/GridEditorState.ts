@@ -87,9 +87,7 @@ export class GridEditorState implements IEditorState, IPropertyManager {
   ): Generator<Promise<IUpdatePropertiesResult>, void, IUpdatePropertiesResult> {
     if (property.name === 'Name') {
       const oldName = property.value;
-      const mappedObjectName = this.properties.find(
-        p => p.name === 'MappedObjectName',
-      );
+      const mappedObjectName = this.properties.find(p => p.name === 'MappedObjectName');
       if (
         mappedObjectName &&
         !mappedObjectName.readOnly &&
