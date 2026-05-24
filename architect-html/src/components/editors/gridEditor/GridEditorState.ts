@@ -87,16 +87,18 @@ export class GridEditorState implements IEditorState, IPropertyManager {
   ): Generator<Promise<IUpdatePropertiesResult>, void, IUpdatePropertiesResult> {
     if (property.name === 'Name') {
       const oldName = property.value;
-      const mappedObjectName = this.properties.find(p => p.name === 'MappedObjectName');
-      if (
-        mappedObjectName &&
-        !mappedObjectName.readOnly &&
-        (mappedObjectName.value === null ||
-          mappedObjectName.value === undefined ||
-          mappedObjectName.value === '' ||
-          mappedObjectName.value === oldName)
-      ) {
-        mappedObjectName.value = value;
+      for (const mappedName of ['MappedObjectName', 'MappedColumnName']) {
+        const mapped = this.properties.find(p => p.name === mappedName);
+        if (
+          mapped &&
+          !mapped.readOnly &&
+          (mapped.value === null ||
+            mapped.value === undefined ||
+            mapped.value === '' ||
+            mapped.value === oldName)
+        ) {
+          mapped.value = value;
+        }
       }
     }
     property.value = value;
