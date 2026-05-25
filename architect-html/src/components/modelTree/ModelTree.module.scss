@@ -17,6 +17,11 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+.root {
+  flex: 1;
+  min-width: max-content;
+}
+
 .packageName {
   font-weight: bold;
   padding: 8px;
@@ -39,6 +44,23 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     0 0 0 1px var(--background4);
 }
 
+.categoryNode {
+  background-color: var(--background4);
+
+  .treeNodeTitle {
+    font-weight: bold;
+    cursor: default;
+  }
+}
+
+.providerNode {
+  background-color: var(--background3);
+
+  .treeNodeTitle {
+    font-weight: bold;
+  }
+}
+
 .iconAndText {
   display: flex;
   align-items: center;
@@ -46,8 +68,22 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   text-wrap-mode: nowrap;
 }
 
+.crossPackage {
+  color: var(--background6);
+}
+
+.dirty {
+  color: var(--brand);
+}
+
 .currentVersion {
   font-weight: bold;
+}
+
+.loading {
+  margin-left: 8px;
+  font-style: italic;
+  color: var(--background6);
 }
 
 .symbol {

@@ -38,7 +38,8 @@ public class EditorController(
     DesignerEditorService sectionService,
     TreeNodeFactory treeNodeFactory,
     EditorService editorService,
-    DocumentationHelperService documentationHelper
+    DocumentationHelperService documentationHelper,
+    GitNodeStatusService gitNodeStatusService
 ) : ControllerBase
 {
     [HttpPost("CreateNode")]
@@ -150,6 +151,7 @@ public class EditorController(
         finally
         {
             persistenceService.SchemaProvider.EndTransaction();
+            gitNodeStatusService.ClearCache();
         }
     }
 }
