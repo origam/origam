@@ -74,7 +74,7 @@ public class ExternalController : Microsoft.AspNetCore.Mvc.Controller
             throw new Exception("Invalid return URL");
         }
 
-        var redirectUrl = Url.Action(nameof(Callback), "External", new { returnUrl });
+        var redirectUrl = Url.Action(nameof(Callback), controller: "External", new { returnUrl });
         var props = signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
 
         return Challenge(props, provider);
@@ -93,22 +93,30 @@ public class ExternalController : Microsoft.AspNetCore.Mvc.Controller
 
         if (remoteError != null)
         {
-            logger.LogWarning("External provider error: {RemoteError}", remoteError);
-            return RedirectToAction("Login", "Account", new { returnUrl });
+            logger.LogWarning(message: "External provider error: {RemoteError}", remoteError);
+            return RedirectToAction(
+                actionName: "Login",
+                controllerName: "Account",
+                new { returnUrl }
+            );
         }
 
         var info = await signInManager.GetExternalLoginInfoAsync();
         if (info == null)
         {
             logger.LogWarning("GetExternalLoginInfoAsync returned null.");
-            return RedirectToAction("Login", "Account", new { returnUrl });
+            return RedirectToAction(
+                actionName: "Login",
+                controllerName: "Account",
+                new { returnUrl }
+            );
         }
 
         var (user, provider, providerUserId, claims) = FindUserFromExternalProvider(info);
         if (user == null)
         {
             logger.LogWarning(
-                "External login rejected. Provider: {Provider}, ProviderUserId: {ProviderUserId}",
+                message: "External login rejected. Provider: {Provider}, ProviderUserId: {ProviderUserId}",
                 provider,
                 providerUserId
             );
@@ -155,7 +163,7 @@ public class ExternalController : Microsoft.AspNetCore.Mvc.Controller
         if (checkedClaim == null)
         {
             logger.LogError(
-                "ClaimType {ClaimType} not found in external principal.",
+                message: "ClaimType {ClaimType} not found in external principal.",
                 externalCallbackProcessingInfo.ClaimType
             );
             return (null, provider, providerUserId, claims);

@@ -30,13 +30,12 @@ namespace Origam.Composer.Commands;
 public class CreateCommand(
     IVisualService visualService,
     IPasswordGeneratorService passwordGeneratorService,
-    IProjectBuilderService projectBuilderService,
-    IGitService gitService
+    IProjectBuilderService projectBuilderService
 ) : Command<CreateCommandSettings>
 {
     public override int Execute(CommandContext context, CreateCommandSettings settings)
     {
-        var modelFolder = Path.Combine(settings.ProjectFolder, "model");
+        var modelFolder = Path.Combine(settings.ProjectFolder, path2: "model");
         if (
             Directory.Exists(modelFolder) && Directory.EnumerateFileSystemEntries(modelFolder).Any()
         )
@@ -45,16 +44,15 @@ public class CreateCommand(
             return 0;
         }
 
-        GitIdentity gitIdentity = GitIdentityResolver(settings);
-        ShowVisualBanner(settings: settings, gitIdentity: gitIdentity);
+        ShowVisualBanner(settings);
 
-        var dockerFolder = Path.Combine(settings.ProjectFolder, "docker");
+        var dockerFolder = Path.Combine(settings.ProjectFolder, path2: "docker");
         var project = new Project
         {
             #region General
             CommandsAddWindowsContainers = settings.CommandsAddWindowsContainers,
             CommandsOutputFormat = settings.CommandsOutputFormat.Equals(
-                "cmd",
+                value: "cmd",
                 StringComparison.CurrentCultureIgnoreCase
             )
                 ? Enums.CommandOutputFormat.Cmd
@@ -63,7 +61,7 @@ public class CreateCommand(
 
             #region DB
             DatabaseType = settings.DbType.Equals(
-                "postgres",
+                value: "postgres",
                 StringComparison.CurrentCultureIgnoreCase
             )
                 ? DatabaseType.PgSql
@@ -81,7 +79,7 @@ public class CreateCommand(
             #region Project and client web app
             NewPackageId = Guid.NewGuid().ToString(),
             Name = StringHelper.RemoveAllWhitespace(settings.ProjectName),
-            ModelFolder = Path.Combine(settings.ProjectFolder, "model"),
+            ModelFolder = Path.Combine(settings.ProjectFolder, path2: "model"),
             ProjectFolder = settings.ProjectFolder,
 
             // Admin user account for client web app
@@ -96,12 +94,6 @@ public class CreateCommand(
             ArchitectDockerImageLinux = settings.ArchitectDockerImageLinux,
             ArchitectDockerImageWin = settings.ArchitectDockerImageWin,
             ArchitectPort = settings.ArchitectPort,
-
-            #region Git
-            IsGitEnabled = settings.GitEnabled,
-            GitUsername = gitIdentity.User,
-            GitEmail = gitIdentity.Email,
-            #endregion
 
             #region Docker
             DockerFolder = dockerFolder,
@@ -147,7 +139,7 @@ public class CreateCommand(
         return 0;
     }
 
-    private void ShowVisualBanner(CreateCommandSettings settings, GitIdentity gitIdentity)
+    private void ShowVisualBanner(CreateCommandSettings settings)
     {
         visualService.PrintHeader(title: Strings.Create_New_Project);
         visualService.PrintDatabaseValues(
@@ -170,32 +162,5 @@ public class CreateCommand(
             dockerImageWindows: settings.ArchitectDockerImageWin,
             port: settings.ArchitectPort
         );
-        visualService.PrintGitValues(
-            isEnabled: settings.GitEnabled,
-            user: gitIdentity.User,
-            email: gitIdentity.Email
-        );
-    }
-
-    private GitIdentity GitIdentityResolver(CreateCommandSettings settings)
-    {
-        var gitUser = "";
-        var gitEmail = "";
-        string[] gitCredentials = gitService.FetchGitUserFromGlobalConfig();
-        if (gitCredentials != null)
-        {
-            gitUser = gitCredentials[0];
-            gitEmail = gitCredentials[1];
-        }
-        if (!string.IsNullOrWhiteSpace(settings.GitUser))
-        {
-            gitUser = settings.GitUser;
-        }
-        if (!string.IsNullOrWhiteSpace(settings.GitEmail))
-        {
-            gitEmail = settings.GitEmail;
-        }
-
-        return new GitIdentity(gitUser, gitEmail);
     }
 }

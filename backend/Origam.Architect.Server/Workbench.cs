@@ -116,7 +116,7 @@ public class Workbench
     {
         string origamSettingsPath = Path.Combine(
             AppDomain.CurrentDomain.BaseDirectory,
-            "OrigamSettings.config"
+            path2: "OrigamSettings.config"
         );
         OrigamSettingsCollection configurations = ConfigurationManager.GetAllUserHomeConfigurations(
             origamSettingsPath

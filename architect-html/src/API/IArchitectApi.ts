@@ -340,6 +340,7 @@ export interface IApiTreeNode extends INodeLoadData {
   children?: IApiTreeNode[];
   iconUrl?: string;
   itemType?: string;
+  itemTypeName?: string;
   isCurrentVersion?: boolean;
 }
 
@@ -405,4 +406,5 @@ export interface IApiEditorNode {
   origamId: string;
   nodeText: string;
   editorType: EditorSubType;
+  itemTypeName?: string;
 }

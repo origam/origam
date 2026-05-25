@@ -55,8 +55,8 @@ public class OrigamDesignerSessionStore : FormSessionStore
             _modelData.OrigamEntity.Rows[0] as SimpleModelData.OrigamEntityRow;
         if (entityRow.WorkflowCount == 0)
         {
-            request.Parameters.Add("WorkflowId", Guid.Empty);
-            request.Parameters.Add("StateId", Guid.Empty);
+            request.Parameters.Add(key: "WorkflowId", Guid.Empty);
+            request.Parameters.Add(key: "StateId", Guid.Empty);
         }
         DataStructureId = new Guid("1240e912-2c96-4bb7-800c-6b6649541efc"); //GenerateDataStructure();
     }
@@ -74,8 +74,8 @@ public class OrigamDesignerSessionStore : FormSessionStore
                 new Guid("b3cc44d5-aa9f-4ff5-b078-15dd2f7af46f"),
                 Guid.Empty,
                 new Guid("d217d65d-c1f4-4b53-b449-a971277cacb8"),
-                null,
-                "OrigamEntity_parId",
+                transactionId: null,
+                paramName1: "OrigamEntity_parId",
                 FormId
             ) as SimpleModelData;
     }

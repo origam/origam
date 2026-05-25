@@ -40,8 +40,6 @@ public interface IVisualService
 
     void PrintArchitectValues(string dockerImageLinux, string dockerImageWindows, int port);
 
-    void PrintGitValues(bool isEnabled, string user, string email);
-
     void PrintProjectCreateTasks(List<IBuilderTask> tasks);
 
     void PrintBye();

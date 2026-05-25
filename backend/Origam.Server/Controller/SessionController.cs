@@ -100,7 +100,11 @@ public class SessionController : AbstractController
         SessionStore ss = sessionObjects.SessionManager.GetSession(
             sessionData.SessionFormIdentifier
         );
-        List<ChangeInfo> output = ss.GetRowData(sessionData.Entity, sessionData.RowId, false);
+        List<ChangeInfo> output = ss.GetRowData(
+            sessionData.Entity,
+            sessionData.RowId,
+            ignoreDirtyState: false
+        );
         CallOrigamUserUpdate();
         return Ok(output);
     }

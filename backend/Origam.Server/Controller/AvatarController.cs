@@ -38,14 +38,14 @@ public class AvatarController : ControllerBase
     {
         QueryParameterCollection parameters = new QueryParameterCollection
         {
-            new QueryParameter("BusinessPartner_parId", avatarId),
+            new QueryParameter(_parameterName: "BusinessPartner_parId", avatarId),
         };
         DataSet datasetUsersForInvite = LoadData(
             new Guid("d11d9049-8dcb-4d3f-824d-8d63d0fb0ba5"),
             new Guid("d014e645-dda1-4999-b577-d82221715583"),
             Guid.Empty,
             Guid.Empty,
-            null,
+            transactionId: null,
             parameters
         );
         if (datasetUsersForInvite.Tables[0].Rows.Count == 0)
@@ -56,7 +56,7 @@ public class AvatarController : ControllerBase
         byte[] imageBytes = userRow.Field<byte[]>("AvatarFile");
         if (imageBytes == null)
         {
-            return Content(MakeInitialsSvg(userRow), "image/svg+xml; charset=utf-8");
+            return Content(MakeInitialsSvg(userRow), contentType: "image/svg+xml; charset=utf-8");
         }
         return File(
             imageBytes,

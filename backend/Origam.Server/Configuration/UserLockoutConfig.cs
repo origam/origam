@@ -36,7 +36,7 @@ public class UserLockoutConfig
     public UserLockoutConfig(IConfiguration configuration)
     {
         var section = configuration.GetSection("UserLockoutConfig");
-        LockoutTimeMinutes = section.GetValue("LockoutTimeMinutes", oneThousandYearsInMinutes);
+        LockoutTimeMinutes = section.GetValue(key: "LockoutTimeMinutes", oneThousandYearsInMinutes);
         MaxFailedAccessAttempts = section.GetValue<int>("MaxFailedAccessAttempts");
     }
 }

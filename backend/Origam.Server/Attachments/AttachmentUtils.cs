@@ -34,8 +34,8 @@ public class AttachmentUtils
             new Guid("08a7d05e-c3e8-414e-a9a3-11bee9a26025"),
             Guid.Empty,
             Guid.Empty,
-            null,
-            "Attachment_parId",
+            transactionId: null,
+            paramName1: "Attachment_parId",
             id
         );
         DataTable t = result.Tables["Attachment"];
@@ -51,8 +51,8 @@ public class AttachmentUtils
         CoreServices.DataService.Instance.StoreData(
             new Guid("44a25061-750f-4b42-a6de-09f3363f8621"),
             row.Table.DataSet,
-            false,
-            null
+            loadActualValuesAfterUpdate: false,
+            transactionId: null
         );
     }
 }

@@ -145,9 +145,9 @@ class ParameterSessionStore : SessionStore
                 default:
                 {
                     throw new ArgumentOutOfRangeException(
-                        "DataType",
+                        paramName: "DataType",
                         this.Constant.DataType,
-                        "Unsupported data type for DataConstantReferenceMenuItem."
+                        message: "Unsupported data type for DataConstantReferenceMenuItem."
                     );
                 }
             }
@@ -199,7 +199,7 @@ class ParameterSessionStore : SessionStore
             default:
             {
                 throw new ArgumentOutOfRangeException(
-                    "actionId",
+                    paramName: "actionId",
                     actionId,
                     Resources.ErrorContextUnknownAction
                 );
@@ -216,7 +216,7 @@ class ParameterSessionStore : SessionStore
             ps.SchemaProvider.RetrieveInstance(
                 typeof(FormControlSet),
                 new ModelElementKey(this.FormId),
-                false
+                useCache: false
             ) as FormControlSet;
         foreach (ISchemaItem item in fcs.ChildItemsRecursive)
         {
@@ -244,10 +244,10 @@ class ParameterSessionStore : SessionStore
                 fcs,
                 this.Data,
                 this.TitleName,
-                true,
+                isPreloaded: true,
                 new Guid(this.Request.ObjectId),
-                false,
-                ""
+                forceReadOnly: false,
+                confirmSelectionChangeEntity: ""
             )
             .Document;
         XmlNode node = formXml.SelectSingleNode("//*[@*='$caption']");

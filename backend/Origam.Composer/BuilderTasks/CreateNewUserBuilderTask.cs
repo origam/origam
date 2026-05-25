@@ -42,14 +42,17 @@ public class CreateNewUserBuilderTask : AbstractDatabaseBuilderTask, ICreateNewU
 
         var parameters = new QueryParameterCollection
         {
-            new QueryParameter("Id", Guid.NewGuid().ToString()),
-            new QueryParameter("UserName", project.WebAdminUsername),
-            new QueryParameter("Password", adaptivePassword.HashPassword(project.WebAdminPassword)),
-            new QueryParameter("FirstName", project.WebAdminUsername),
-            new QueryParameter("Name", project.WebAdminUsername),
-            new QueryParameter("Email", project.WebAdminEmail),
-            new QueryParameter("RoleId", Common.Constants.OrigamRoleSuperUserId),
-            new QueryParameter("RequestEmailConfirmation", "false"),
+            new QueryParameter(_parameterName: "Id", Guid.NewGuid().ToString()),
+            new QueryParameter(_parameterName: "UserName", project.WebAdminUsername),
+            new QueryParameter(
+                _parameterName: "Password",
+                adaptivePassword.HashPassword(project.WebAdminPassword)
+            ),
+            new QueryParameter(_parameterName: "FirstName", project.WebAdminUsername),
+            new QueryParameter(_parameterName: "Name", project.WebAdminUsername),
+            new QueryParameter(_parameterName: "Email", project.WebAdminEmail),
+            new QueryParameter(_parameterName: "RoleId", Common.Constants.OrigamRoleSuperUserId),
+            new QueryParameter(_parameterName: "RequestEmailConfirmation", value: "false"),
         };
         DataService(project.DatabaseType).CreateFirstNewWebUser(parameters: parameters);
     }

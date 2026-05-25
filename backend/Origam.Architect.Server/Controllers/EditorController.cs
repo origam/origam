@@ -38,9 +38,8 @@ public class EditorController(
     DesignerEditorService sectionService,
     TreeNodeFactory treeNodeFactory,
     EditorService editorService,
-    DocumentationHelperService documentationHelper,
-    ILogger<OrigamController> log
-) : OrigamController(log)
+    DocumentationHelperService documentationHelper
+) : ControllerBase
 {
     [HttpPost("CreateNode")]
     public OpenEditorData CreateNode([Required] [FromBody] NewItemModel input)
@@ -112,9 +111,11 @@ public class EditorController(
     {
         object data = treeNode.DefaultEditor switch
         {
-            EditorSubType.GridEditor => propertyService.GetEditorProperties(item),
-            EditorSubType.DeploymentScriptsEditor => propertyService.GetEditorProperties(item),
-            EditorSubType.XsltEditor => propertyService.GetEditorProperties(item),
+            EditorSubType.GridEditor => propertyService.GetEditorPropertiesWithErrors(item),
+            EditorSubType.DeploymentScriptsEditor => propertyService.GetEditorPropertiesWithErrors(
+                item
+            ),
+            EditorSubType.XsltEditor => propertyService.GetEditorPropertiesWithErrors(item),
             EditorSubType.ScreenSectionEditor => sectionService.GetSectionEditorData(item),
             EditorSubType.ScreenEditor => sectionService.GetScreenEditorData(item),
             _ => null,

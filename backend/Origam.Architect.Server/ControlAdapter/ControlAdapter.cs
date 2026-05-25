@@ -167,7 +167,7 @@ public class ControlAdapter(
                 // the default value before we started editing. We have to create it.
                 valueItem = controlSetItem.NewItem<PropertyValueItem>(
                     schemaService.ActiveSchemaExtensionId,
-                    null
+                    group: null
                 );
                 valueItem.ControlPropertyId = propertyChange.ControlPropertyId.Value;
                 valueItem.Name = propertyChange.Name;
