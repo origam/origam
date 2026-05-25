@@ -67,10 +67,16 @@ public class GitNodeStatusService
         try
         {
             using var repo = new Repository(repoPath);
-            foreach (
-                string absolutePath in item.Files.Select(file => Path.Combine(sourcePath, file))
-            )
+            foreach (string file in item.Files)
             {
+                string relativeFile = Path.IsPathRooted(file)
+                    ? Path.GetRelativePath(sourcePath, file)
+                    : file;
+                relativeFile = relativeFile.TrimStart(
+                    Path.DirectorySeparatorChar,
+                    Path.AltDirectorySeparatorChar
+                );
+                string absolutePath = Path.Combine(sourcePath, relativeFile);
                 if (!File.Exists(absolutePath))
                 {
                     continue;
