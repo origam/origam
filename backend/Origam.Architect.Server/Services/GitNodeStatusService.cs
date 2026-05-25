@@ -20,7 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.Collections.Concurrent;
-using System.Linq;
 using LibGit2Sharp;
 using Origam.DA.ObjectPersistence;
 
@@ -68,7 +67,9 @@ public class GitNodeStatusService
         try
         {
             using var repo = new Repository(repoPath);
-            foreach (string absolutePath in item.Files.Select(file => Path.Combine(sourcePath, file)))
+            foreach (
+                string absolutePath in item.Files.Select(file => Path.Combine(sourcePath, file))
+            )
             {
                 if (!File.Exists(absolutePath))
                 {
