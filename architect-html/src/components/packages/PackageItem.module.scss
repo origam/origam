@@ -18,7 +18,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 .root {
-  padding-left: 3px;
+  padding: 0 0 0 16px;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .selected {
