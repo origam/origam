@@ -84,7 +84,23 @@ public class GitNodeStatusService
                 }
             }
         }
-        catch (Exception)
+        catch (LibGit2SharpException)
+        {
+            return false;
+        }
+        catch (IOException)
+        {
+            return false;
+        }
+        catch (UnauthorizedAccessException)
+        {
+            return false;
+        }
+        catch (ArgumentException)
+        {
+            return false;
+        }
+        catch (InvalidOperationException)
         {
             return false;
         }
