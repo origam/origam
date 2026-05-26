@@ -41,7 +41,7 @@ const PropertyEditor = observer(
       <div className={cn(S.root, { [S.compact]: props.compact })}>
         {sortedCategories.map(category => (
           <div className={S.category} key={category}>
-            {!props.compact && <h4>{category ?? 'Misc'}</h4>}
+            {!props.compact && <h4>{(category ?? 'Misc').replace(/^\((.*)\)$/, '$1')}</h4>}
             {groupedProperties[category].map((property: EditorProperty) => (
               <div className={S.property} key={property.name}>
                 <div
