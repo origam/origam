@@ -36,7 +36,7 @@ public class DesignerEditorService(
     SchemaService schemaService,
     IPersistenceService persistenceService,
     IDocumentationService documentationService,
-    EditorService editorService,
+    TabService tabService,
     ControlAdapterFactory adapterFactory
 )
 {
@@ -511,7 +511,7 @@ public class DesignerEditorService(
                 newControl.ControlToolBoxVisibility = ControlToolBoxVisibility.FormDesigner;
                 SchemaItemAncestor ancestor = new SchemaItemAncestor();
                 ancestor.SchemaItem = newControl;
-                ancestor.Ancestor = editorService.GetControlByType("Origam.Gui.Win.AsPanel");
+                ancestor.Ancestor = tabService.GetControlByType("Origam.Gui.Win.AsPanel");
                 ancestor.PersistenceProvider = newControl.PersistenceProvider;
                 newControl.ThrowEventOnPersist = false;
                 newControl.Persist();

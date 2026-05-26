@@ -31,7 +31,7 @@ using Origam.Workbench.Services;
 
 namespace Origam.Architect.Server.Services;
 
-public class EditorService(
+public class TabService(
     SchemaService schemaService,
     IPersistenceService persistenceService,
     PropertyParser propertyParser
@@ -39,9 +39,9 @@ public class EditorService(
 {
     private readonly IPersistenceProvider persistenceProvider = persistenceService.SchemaProvider;
 
-    private readonly ConcurrentDictionary<EditorId, EditorData> editorSchemaItems = new();
+    private readonly ConcurrentDictionary<TabId, TabData> tabSchemaItems = new();
 
-    public EditorData OpenEditorWithNewItem(string parentId, string fullTypeName)
+    public TabData OpenTabWithNewItem(string parentId, string fullTypeName)
     {
         ISchemaItemFactory factory = GetParentItemFactory(parentId);
 
@@ -80,10 +80,7 @@ public class EditorService(
         }
 
         ISchemaItem item = (ISchemaItem)result;
-        return editorSchemaItems.GetOrAdd(
-            EditorId.Default(item.Id),
-            id => new EditorData(item, id)
-        );
+        return tabSchemaItems.GetOrAdd(TabId.Default(item.Id), id => new TabData(item, id));
     }
 
     private ISchemaItemFactory GetParentItemFactory(string parentId)
@@ -143,39 +140,39 @@ public class EditorService(
         return null;
     }
 
-    public EditorData OpenDefaultEditor(Guid schemaItemId)
+    public TabData OpenDefaultTab(Guid schemaItemId)
     {
-        return editorSchemaItems.GetOrAdd(
-            EditorId.Default(schemaItemId),
-            editorId =>
+        return tabSchemaItems.GetOrAdd(
+            TabId.Default(schemaItemId),
+            tabId =>
             {
                 ISchemaItem item = persistenceService.SchemaProvider.RetrieveInstance<ISchemaItem>(
-                    editorId.SchemaItemId,
+                    tabId.SchemaItemId,
                     useCache: false
                 );
-                return new EditorData(item, editorId);
+                return new TabData(item, tabId);
             }
         );
     }
 
-    public EditorData OpenDocumentationEditor(Guid schemaItemId)
+    public TabData OpenDocumentationTab(Guid schemaItemId)
     {
-        return editorSchemaItems.GetOrAdd(
-            EditorId.Documentation(schemaItemId),
-            editorId =>
+        return tabSchemaItems.GetOrAdd(
+            TabId.Documentation(schemaItemId),
+            tabId =>
             {
                 ISchemaItem item = persistenceService.SchemaProvider.RetrieveInstance<ISchemaItem>(
-                    editorId.SchemaItemId,
+                    tabId.SchemaItemId,
                     useCache: false
                 );
-                return new EditorData(item, editorId);
+                return new TabData(item, tabId);
             }
         );
     }
 
-    public void CloseEditor(EditorId editorId)
+    public void CloseTab(TabId tabId)
     {
-        bool success = editorSchemaItems.TryRemove(editorId, out EditorData removedData);
+        bool success = tabSchemaItems.TryRemove(tabId, out TabData removedData);
         if (!success)
         {
             return;
@@ -201,10 +198,10 @@ public class EditorService(
         }
     }
 
-    public EditorData ChangesToEditorData(ChangesModel input)
+    public TabData ChangesToTabData(ChangesModel input)
     {
-        EditorData editor = OpenDefaultEditor(input.SchemaItemId);
-        PropertyInfo[] properties = editor.Item.GetType().GetProperties();
+        TabData tab = OpenDefaultTab(input.SchemaItemId);
+        PropertyInfo[] properties = tab.Item.GetType().GetProperties();
         foreach (var change in input.Changes)
         {
             PropertyInfo propertyToChange = properties.FirstOrDefault(prop =>
@@ -214,32 +211,32 @@ public class EditorService(
             if (propertyToChange == null)
             {
                 throw new Exception(
-                    $"Property {change.Name} not found on type {editor.GetType().Name}"
+                    $"Property {change.Name} not found on type {tab.GetType().Name}"
                 );
             }
 
             object newValue = propertyParser.Parse(propertyToChange, change.Value);
-            object oldValue = propertyToChange.GetValue(editor.Item);
+            object oldValue = propertyToChange.GetValue(tab.Item);
             if (oldValue != newValue)
             {
-                editor.IsDirty = true;
+                tab.IsDirty = true;
             }
 
-            propertyToChange.SetValue(editor.Item, newValue);
+            propertyToChange.SetValue(tab.Item, newValue);
         }
 
-        return editor;
+        return tab;
     }
 
-    public IEnumerable<EditorData> GetOpenEditors()
+    public IEnumerable<TabData> GetOpenTabs()
     {
-        return editorSchemaItems.Values.OrderBy(x => x.OpenedAt);
+        return tabSchemaItems.Values.OrderBy(x => x.OpenedAt);
     }
 }
 
-public class EditorData(ISchemaItem item, EditorId id)
+public class TabData(ISchemaItem item, TabId id)
 {
-    public EditorId Id { get; } = id;
+    public TabId Id { get; } = id;
     public ISchemaItem Item { get; } = item;
     public DocumentationComplete DocumentationData { get; set; }
     public DateTime OpenedAt { get; } = DateTime.Now;

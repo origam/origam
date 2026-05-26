@@ -54,7 +54,7 @@ public class Program
         builder.Services.AddSingleton<TreeNodeFactory>();
         builder.Services.AddSingleton<EditorPropertyFactory>();
         builder.Services.AddSingleton<PropertyParser>();
-        builder.Services.AddSingleton<EditorService>();
+        builder.Services.AddSingleton<TabService>();
         builder.Services.AddTransient<XsltService>();
         builder.Services.AddTransient<SearchService>();
         builder.Services.AddSingleton<PropertyEditorService>();

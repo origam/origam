@@ -21,7 +21,7 @@ import {
   IAddToDeploymentRequest,
   IAddToModelRequest,
   IApiControl,
-  IApiEditorData,
+  IApiTabData,
   IApiTreeNode,
   IArchitectApi,
   IDatabaseResultResponse,
@@ -105,15 +105,15 @@ export class ArchitectApi implements IArchitectApi {
     ).data;
   }
 
-  async openEditor(schemaItemId: string): Promise<IApiEditorData> {
-    return (await this.http.post('/Editor/OpenEditor', { schemaItemId: schemaItemId })).data;
+  async openTab(schemaItemId: string): Promise<IApiTabData> {
+    return (await this.http.post('/Tab/Open', { schemaItemId: schemaItemId })).data;
   }
 
-  async closeEditor(editorId: string) {
-    await this.http.post('/Editor/CloseEditor', { editorId: editorId });
+  async closeTab(tabId: string) {
+    await this.http.post('/Tab/Close', { tabId: tabId });
   }
 
-  async openDocumentationEditor(schemaItemId: string): Promise<IApiEditorData> {
+  async openDocumentationEditor(schemaItemId: string): Promise<IApiTabData> {
     return (await this.http.post('/Documentation/OpenEditor', { schemaItemId: schemaItemId })).data;
   }
 
@@ -156,7 +156,7 @@ export class ArchitectApi implements IArchitectApi {
   }
 
   async persistChanges(schemaItemId: string): Promise<void> {
-    await this.http.post(`/Editor/PersistChanges`, {
+    await this.http.post(`/Tab/PersistChanges`, {
       schemaItemId,
     });
   }
@@ -195,13 +195,13 @@ export class ArchitectApi implements IArchitectApi {
     ).data;
   }
 
-  async getOpenEditors(): Promise<IApiEditorData[]> {
-    return (await this.http.get(`/Editor/GetOpenEditors`)).data;
+  async getOpenTabs(): Promise<IApiTabData[]> {
+    return (await this.http.get(`/Tab/GetOpen`)).data;
   }
 
-  async createNode(node: IApiTreeNode, typeName: string): Promise<IApiEditorData> {
+  async createNode(node: IApiTreeNode, typeName: string): Promise<IApiTabData> {
     return (
-      await this.http.post('/Editor/CreateNode', {
+      await this.http.post('/Tab/CreateNode', {
         nodeId: node.origamId,
         newTypeName: typeName,
       })

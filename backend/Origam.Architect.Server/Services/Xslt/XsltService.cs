@@ -34,7 +34,7 @@ using Origam.Workbench.Services;
 namespace Origam.Architect.Server.Services.Xslt;
 
 public class XsltService(
-    EditorService editorService,
+    TabService tabService,
     IBusinessServicesService businessServicesService,
     IPersistenceService persistenceService
 )
@@ -77,8 +77,8 @@ public class XsltService(
 
     private string GetXsl(Guid schemaItemId)
     {
-        EditorData editorData = editorService.OpenDefaultEditor(schemaItemId);
-        ISchemaItem item = editorData.Item;
+        TabData tabData = tabService.OpenDefaultTab(schemaItemId);
+        ISchemaItem item = tabData.Item;
         if (item is XslTransformation transformation)
         {
             return transformation.TextStore;

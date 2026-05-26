@@ -19,12 +19,28 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.Server.Attributes;
+using Origam.Architect.Server.Services;
 
-namespace Origam.Architect.Server.Models;
+namespace Origam.Architect.Server.ReturnModels;
 
-public class OpenEditorModel
+public class OpenTabData(
+    TabId tabId,
+    TreeNode node,
+    object data,
+    bool isPersisted,
+    string parentNodeId = null,
+    bool isDirty = false
+)
 {
-    [RequiredNonDefault]
-    public Guid SchemaItemId { get; set; }
+    public string TabId { get; } = tabId.ToString();
+    public string TabType { get; } =
+        tabId.Type == Services.TabType.Default
+            ? node.DefaultEditor.ToString()
+            : tabId.Type.ToString();
+
+    public TreeNode Node { get; } = node;
+    public object Data { get; } = data;
+    public bool IsPersisted { get; } = isPersisted;
+    public string ParentNodeId { get; } = parentNodeId;
+    public bool IsDirty { get; } = isDirty;
 }

@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 export interface IArchitectApi {
-  getOpenEditors(): Promise<IApiEditorData[]>;
+  getOpenTabs(): Promise<IApiTabData[]>;
 
   getPackages(): Promise<IPackagesInfo>;
 
@@ -34,9 +34,9 @@ export interface IArchitectApi {
 
   searchDependencies(schemaItemId: string): Promise<ISearchResult[]>;
 
-  openEditor(schemaItemId: string): Promise<IApiEditorData>;
+  openTab(schemaItemId: string): Promise<IApiTabData>;
 
-  closeEditor(editorId: string): Promise<void>;
+  closeTab(tabId: string): Promise<void>;
 
   persistChanges(schemaItemId: string): Promise<void>;
 
@@ -51,7 +51,7 @@ export interface IArchitectApi {
 
   getMenuItems(node: INodeLoadData): Promise<IMenuItemInfo[]>;
 
-  createNode(node: INodeLoadData, typeName: string): Promise<IApiEditorData>;
+  createNode(node: INodeLoadData, typeName: string): Promise<IApiTabData>;
 
   updateSectionEditor(args: {
     schemaItemId: string | undefined;
@@ -99,7 +99,7 @@ export interface IArchitectApi {
     sectionIds: string[],
   ): Promise<Record<string, IApiControl>>;
 
-  openDocumentationEditor(origamId: string): Promise<IApiEditorData>;
+  openDocumentationEditor(origamId: string): Promise<IApiTabData>;
 
   updateDocumentationProperties(
     schemaItemId: string,
@@ -386,9 +386,9 @@ export interface IDropDownValue {
   value: any;
 }
 
-export interface IApiEditorData {
-  editorId: string;
-  editorType: EditorType;
+export interface IApiTabData {
+  tabId: string;
+  tabType: EditorType;
   parentNodeId: string | undefined;
   node: IApiEditorNode;
   data:

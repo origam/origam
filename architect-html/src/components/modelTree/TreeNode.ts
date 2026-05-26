@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import {
   EditorSubType,
-  IApiEditorData,
+  IApiTabData,
   IApiTreeNode,
   IArchitectApi,
   IMenuItemInfo,
@@ -125,9 +125,9 @@ export class TreeNode implements IEditorNode {
   }
 
   createNode(typeName: string) {
-    return function* (this: TreeNode): Generator<Promise<IApiEditorData>, void, IApiEditorData> {
-      const apiEditorData = yield this.architectApi.createNode(this, typeName);
-      const editorData = new EditorData(apiEditorData, this);
+    return function* (this: TreeNode): Generator<Promise<IApiTabData>, void, IApiTabData> {
+      const apiTabData = yield this.architectApi.createNode(this, typeName);
+      const editorData = new EditorData(apiTabData, this);
       this.rootStore.editorTabViewState.openEditor(editorData);
     }.bind(this);
   }
