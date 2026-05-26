@@ -28,6 +28,7 @@ interface FilterableSelectProps {
   options: IDropDownValue[];
   selectedValue: any;
   disabled?: boolean;
+  className?: string;
   onChange: (value: any) => void;
 }
 
@@ -35,7 +36,7 @@ const VIRTUAL_OVERSCAN = 5;
 const DEFAULT_ITEM_HEIGHT = 26;
 
 export const FilterableSelect = observer((props: FilterableSelectProps) => {
-  const { options, selectedValue, disabled, onChange } = props;
+  const { options, selectedValue, disabled, className, onChange } = props;
 
   const selectedOption = useMemo(
     () => options.find(option => String(option.value) === String(selectedValue)),
@@ -62,6 +63,8 @@ export const FilterableSelect = observer((props: FilterableSelectProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
   const highlightSourceRef = useRef<'keyboard' | 'mouse'>('keyboard');
+  const isScrollingRef = useRef(false);
+  const scrollEndTimeoutRef = useRef<number | null>(null);
 
   const filteredOptions = useMemo(() => {
     if (filter == null || filter === '') return options;
@@ -133,21 +136,33 @@ export const FilterableSelect = observer((props: FilterableSelectProps) => {
       }
     };
     update();
-    window.addEventListener('scroll', update, true);
+    const handleScroll = (event: Event) => {
+      if (event.target === listRef.current) return;
+      update();
+    };
+    window.addEventListener('scroll', handleScroll, true);
     window.addEventListener('resize', update);
     return () => {
-      window.removeEventListener('scroll', update, true);
+      window.removeEventListener('scroll', handleScroll, true);
       window.removeEventListener('resize', update);
     };
   }, [open]);
+
+  useEffect(() => {
+    return () => {
+      if (scrollEndTimeoutRef.current != null) {
+        window.clearTimeout(scrollEndTimeoutRef.current);
+      }
+    };
+  }, []);
 
   useLayoutEffect(() => {
     if (!open || !listRef.current) return;
     const list = listRef.current;
     const probe = list.querySelector<HTMLElement>(`.${S.dropdownItem}`);
     if (probe) {
-      const probeHeight = probe.getBoundingClientRect().height;
-      if (probeHeight > 0 && Math.abs(probeHeight - itemHeight) > 0.5) {
+      const probeHeight = Math.round(probe.getBoundingClientRect().height);
+      if (probeHeight > 0 && probeHeight !== itemHeight) {
         setItemHeight(probeHeight);
       }
     }
@@ -221,7 +236,7 @@ export const FilterableSelect = observer((props: FilterableSelectProps) => {
   };
 
   return (
-    <div className={S.selectWrapper} ref={wrapperRef}>
+    <div className={S.selectWrapper + (className ? ' ' + className : '')} ref={wrapperRef}>
       <input
         ref={inputRef}
         type="text"
@@ -245,7 +260,16 @@ export const FilterableSelect = observer((props: FilterableSelectProps) => {
           <ul
             className={S.dropdownList}
             ref={listRef}
-            onScroll={event => setScrollTop((event.target as HTMLUListElement).scrollTop)}
+            onScroll={event => {
+              setScrollTop((event.target as HTMLUListElement).scrollTop);
+              isScrollingRef.current = true;
+              if (scrollEndTimeoutRef.current != null) {
+                window.clearTimeout(scrollEndTimeoutRef.current);
+              }
+              scrollEndTimeoutRef.current = window.setTimeout(() => {
+                isScrollingRef.current = false;
+              }, 150);
+            }}
             style={{
               top: menuPos.top,
               bottom: menuPos.bottom,
@@ -275,6 +299,7 @@ export const FilterableSelect = observer((props: FilterableSelectProps) => {
                     commit(option.value);
                   }}
                   onMouseEnter={() => {
+                    if (isScrollingRef.current) return;
                     highlightSourceRef.current = 'mouse';
                     setHighlight(index);
                   }}

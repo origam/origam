@@ -73,31 +73,31 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     }
   }
 
-  .selectWrapper {
-    position: relative;
+}
+
+.selectWrapper {
+  position: relative;
+  width: 200px;
+  display: inline-block;
+
+  .selectIcon {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    font-size: 16px;
+    color: #000000;
+  }
+
+  .filterableInput {
     width: 100%;
-    display: block;
+    padding-right: 24px;
+    cursor: pointer;
 
-    .selectIcon {
-      position: absolute;
-      right: 8px;
-      top: 50%;
-      transform: translateY(-50%);
-      pointer-events: none;
-      font-size: 16px;
-      color: #000000;
+    &:focus {
+      cursor: text;
     }
-
-    .filterableInput {
-      width: 100%;
-      padding-right: 24px;
-      cursor: pointer;
-
-      &:focus {
-        cursor: text;
-      }
-    }
-
   }
 }
 
@@ -116,6 +116,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 .dropdownItem {
+  box-sizing: border-box;
+  height: 26px;
+  line-height: 18px;
   padding: 4px 8px;
   cursor: pointer;
   white-space: nowrap;
@@ -132,6 +135,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 .dropdownEmpty {
+  box-sizing: border-box;
+  height: 26px;
+  line-height: 18px;
   padding: 4px 8px;
   color: var(--foreground3, #888);
   font-style: italic;

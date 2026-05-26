@@ -21,9 +21,10 @@ import { RootStoreContext, T } from '@/main';
 import { ITabViewItem, TabView } from '@components/tabView/TabView';
 import S from '@editors/designerEditor/common/Toolbox.module.scss';
 import { ToolboxState } from '@editors/designerEditor/common/ToolboxState';
+import { FilterableSelect } from '@editors/propertyEditor/FilterableSelect';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { observer } from 'mobx-react-lite';
-import { useContext } from 'react';
+import { useContext, useMemo } from 'react';
 
 const Toolbox = observer(
   ({
@@ -36,23 +37,28 @@ const Toolbox = observer(
     const rootStore = useContext(RootStoreContext);
     const run = runInFlowWithHandler(rootStore.errorDialogController);
 
+    const dataSourceOptions = useMemo(
+      () =>
+        toolboxState.dataSources.map(dataSource => ({
+          value: dataSource.schemaItemId,
+          name: dataSource.name,
+        })),
+      [toolboxState.dataSources],
+    );
+
     return (
       <div className={S.toolbox}>
         <div className={S.inputs}>
           <div className={S.inputContainer}>
             <div>{T('Data Source', 'tool_box_data_source')}</div>
-            <select
-              value={toolboxState.selectedDataSourceId ?? ''}
-              onChange={e =>
-                run({ generator: toolboxState.selectedDataSourceIdChanged(e.target.value) })
+            <FilterableSelect
+              className={S.dataSourceSelect}
+              options={dataSourceOptions}
+              selectedValue={toolboxState.selectedDataSourceId ?? ''}
+              onChange={value =>
+                run({ generator: toolboxState.selectedDataSourceIdChanged(value) })
               }
-            >
-              {toolboxState.dataSources.map(x => (
-                <option key={x.schemaItemId + x.name} value={x.schemaItemId}>
-                  {x.name}
-                </option>
-              ))}
-            </select>
+            />
           </div>
           <div className={S.inputContainer}>
             <div>{T('Name', 'tool_box_name')}</div>
