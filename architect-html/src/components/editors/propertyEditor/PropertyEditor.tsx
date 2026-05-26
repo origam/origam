@@ -24,6 +24,7 @@ import SinglePropertyEditor from '@editors/propertyEditor/SinglePropertyEditor.t
 import { getSortedProperties } from '@editors/propertyEditor/utils';
 import cn from 'classnames';
 import { observer } from 'mobx-react-lite';
+import { VscWarning } from 'react-icons/vsc';
 
 const PropertyEditor = observer(
   (props: {
@@ -48,7 +49,8 @@ const PropertyEditor = observer(
                   title={property.error}
                   className={cn(S.propertyName, { [S.errorProperty]: property.error })}
                 >
-                  {property.name}
+                  {property.error && <VscWarning className={S.errorIcon} />}
+                  <span>{property.name}</span>
                 </div>
                 <SinglePropertyEditor
                   property={property}
