@@ -51,6 +51,7 @@ public class Program
 
         var builder = WebApplication.CreateBuilder(args);
         builder.Services.AddSingleton(deploymentService);
+        builder.Services.AddSingleton<GitNodeStatusService>();
         builder.Services.AddSingleton<TreeNodeFactory>();
         builder.Services.AddSingleton<EditorPropertyFactory>();
         builder.Services.AddSingleton<PropertyParser>();

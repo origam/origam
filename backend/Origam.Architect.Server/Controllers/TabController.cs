@@ -38,7 +38,8 @@ public class TabController(
     DesignerEditorService sectionService,
     TreeNodeFactory treeNodeFactory,
     TabService tabService,
-    DocumentationHelperService documentationHelper
+    DocumentationHelperService documentationHelper,
+    GitNodeStatusService gitNodeStatusService
 ) : ControllerBase
 {
     [HttpPost("CreateNode")]
@@ -130,6 +131,13 @@ public class TabController(
         return Ok();
     }
 
+    [HttpPost("CloseAll")]
+    public IActionResult CloseAll()
+    {
+        tabService.CloseAllTabs();
+        return Ok();
+    }
+
     [HttpPost("PersistChanges")]
     public IActionResult PersistChanges([FromBody] PersistModel input)
     {
@@ -150,6 +158,7 @@ public class TabController(
         finally
         {
             persistenceService.SchemaProvider.EndTransaction();
+            gitNodeStatusService.ClearCache();
         }
     }
 }

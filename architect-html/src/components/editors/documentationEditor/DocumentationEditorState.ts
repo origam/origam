@@ -46,8 +46,8 @@ export class DocumentationEditorState extends GridEditorState {
     try {
       this.isSaving = true;
       yield this.architectApi.persistDocumentationChanges(this.editorNode.origamId);
-      if (this.editorNode.parent) {
-        yield* this.editorNode.parent.loadChildren();
+      if (this.editorNode.parent?.parent) {
+        yield* this.editorNode.parent.parent.loadChildren();
       }
       this._isDirty = false;
     } finally {

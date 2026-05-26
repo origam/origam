@@ -19,11 +19,21 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.Architect.Server.Services;
+using Origam.DA.ObjectPersistence;
 using Origam.Schema;
 using Origam.Schema.GuiModel;
 using Origam.UI;
+using Origam.Workbench.Services;
 
 namespace Origam.Architect.Server.ReturnModels;
+
+public enum NodeLevelType
+{
+    Category,
+    Provider,
+    Item,
+}
 
 public class TreeNode
 {
@@ -38,6 +48,9 @@ public class TreeNode
     public string ItemType { get; set; }
     public string ItemTypeName { get; set; }
     public bool? IsCurrentVersion { get; set; }
+    public NodeLevelType NodeLevelType { get; set; } = NodeLevelType.Item;
+    public bool IsInActivePackage { get; set; } = true;
+    public bool IsFileDirty { get; set; }
 
     public static string ToTreeNodeId(IBrowserNode2 node)
     {
@@ -45,7 +58,7 @@ public class TreeNode
     }
 }
 
-public class TreeNodeFactory
+public class TreeNodeFactory(SchemaService schemaService, GitNodeStatusService gitNodeStatusService)
 {
     public TreeNode Create(IBrowserNode2 node)
     {
@@ -66,7 +79,32 @@ public class TreeNodeFactory
             ItemType = node.GetType().FullName,
             ItemTypeName = node.GetType().SchemaItemDescription()?.Name,
             IsCurrentVersion = (node as Schema.DeploymentModel.DeploymentVersion)?.IsCurrentVersion,
+            NodeLevelType = GetNodeLevelType(node),
+            IsInActivePackage = IsInActivePackage(node),
+            IsFileDirty = gitNodeStatusService.IsFileDirty(node as IPersistent),
         };
+    }
+
+    private NodeLevelType GetNodeLevelType(IBrowserNode2 node)
+    {
+        if (node is SchemaItemProviderGroup)
+        {
+            return NodeLevelType.Category;
+        }
+        if (node is AbstractSchemaItemProvider)
+        {
+            return NodeLevelType.Provider;
+        }
+        return NodeLevelType.Item;
+    }
+
+    private bool IsInActivePackage(IBrowserNode2 node)
+    {
+        if (node is ISchemaItem || node is SchemaItemGroup)
+        {
+            return schemaService.IsItemFromExtension(node);
+        }
+        return true;
     }
 
     private string GetIcon(IBrowserNode2 node)

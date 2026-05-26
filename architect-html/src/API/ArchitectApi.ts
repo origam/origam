@@ -113,6 +113,10 @@ export class ArchitectApi implements IArchitectApi {
     await this.http.post('/Tab/Close', { tabId: tabId });
   }
 
+  async closeAllTabs() {
+    await this.http.post('/Tab/CloseAll', {});
+  }
+
   async openDocumentationEditor(schemaItemId: string): Promise<IApiTabData> {
     return (await this.http.post('/Documentation/OpenEditor', { schemaItemId: schemaItemId })).data;
   }

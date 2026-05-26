@@ -198,6 +198,14 @@ public class TabService(
         }
     }
 
+    public void CloseAllTabs()
+    {
+        foreach (TabId tabId in tabSchemaItems.Keys.ToList())
+        {
+            CloseTab(tabId);
+        }
+    }
+
     public TabData ChangesToTabData(ChangesModel input)
     {
         TabData tab = OpenDefaultTab(input.SchemaItemId);

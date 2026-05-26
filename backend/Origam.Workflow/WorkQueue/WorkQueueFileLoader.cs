@@ -298,9 +298,13 @@ public class WorkQueueFileLoader : WorkQueueLoaderAdapter
                 var fileStream = OpenFile(fileName);
                 _files.Add(fileName, fileStream);
             }
-            catch
+            catch (Exception e)
             {
-                // ignored
+                // ignored, do not do anything but log
+                if (log.IsWarnEnabled)
+                {
+                    log.Warn("Locking of file " + fileName + " failed. Exception: " + e.Message);
+                }
             }
         }
         var fileDeleteTransaction =

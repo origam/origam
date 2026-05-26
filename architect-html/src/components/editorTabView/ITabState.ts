@@ -17,11 +17,17 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+export interface IValidationError {
+  propertyName: string;
+  error: string;
+}
+
 export interface ITabState {
   tabId: string;
   label: string;
   isActive: boolean;
   isDirty: boolean;
+  validationErrors?: IValidationError[];
   save(): Generator<Promise<any>, void, any>;
   dispose?(): void;
 }

@@ -38,6 +38,8 @@ export interface IArchitectApi {
 
   closeTab(tabId: string): Promise<void>;
 
+  closeAllTabs(): Promise<void>;
+
   persistChanges(schemaItemId: string): Promise<void>;
 
   persistSectionEditorChanges(schemaItemId: string): Promise<void>;
@@ -342,7 +344,12 @@ export interface IApiTreeNode extends INodeLoadData {
   itemType?: string;
   itemTypeName?: string;
   isCurrentVersion?: boolean;
+  nodeLevelType?: NodeLevelType;
+  isInActivePackage?: boolean;
+  isFileDirty?: boolean;
 }
+
+export type NodeLevelType = 'Category' | 'Provider' | 'Item';
 
 export interface IPackagesInfo {
   packages: IPackage[];

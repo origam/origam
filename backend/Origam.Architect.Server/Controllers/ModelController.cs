@@ -23,6 +23,7 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using Origam.Architect.Server.Models;
 using Origam.Architect.Server.ReturnModels;
+using Origam.Architect.Server.Services;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema;
 using Origam.UI;
@@ -35,7 +36,8 @@ namespace Origam.Architect.Server.Controllers;
 public class ModelController(
     SchemaService schemaService,
     IPersistenceService persistenceService,
-    TreeNodeFactory treeNodeFactory
+    TreeNodeFactory treeNodeFactory,
+    GitNodeStatusService gitNodeStatusService
 ) : ControllerBase
 {
     private readonly IPersistenceProvider persistenceProvider = persistenceService.SchemaProvider;
@@ -57,6 +59,7 @@ public class ModelController(
                 Id = x.NodeId + x.NodeText,
                 NodeText = x.NodeText,
                 HasChildNodes = x.HasChildNodes,
+                NodeLevelType = NodeLevelType.Category,
                 Children = x.ChildNodes()
                     .Cast<ISchemaItemProvider>()
                     .OrderBy(child => child.NodeText, StringComparer.OrdinalIgnoreCase)
@@ -176,6 +179,7 @@ public class ModelController(
         }
 
         persistenceProvider.EndTransaction();
+        gitNodeStatusService.ClearCache();
         return Ok();
     }
 

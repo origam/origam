@@ -18,9 +18,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 .root {
+  display: block;
+  width: 100%;
+  max-width: 40rem;
+  min-width: 0;
+
   input,
   select {
-    width: 200px;
+    width: 100%;
+    box-sizing: border-box;
     &:disabled {
       background-color: var(--background3);
       cursor: not-allowed;
@@ -67,22 +73,77 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     }
   }
 
-  .selectWrapper {
-    position: relative;
-    width: 200px;
-    display: inline-block;
+}
 
-    .selectIcon {
-      position: absolute;
-      right: 8px;
-      top: 50%;
-      transform: translateY(-50%);
-      pointer-events: none;
-      font-size: 16px;
-      color: #000000;
-    }
+.selectWrapper {
+  position: relative;
+  width: 200px;
+  display: inline-block;
+
+  .selectIcon {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    font-size: 16px;
+    color: #000000;
   }
 
+  .filterableInput {
+    width: 100%;
+    padding-right: 24px;
+    cursor: pointer;
+
+    &:focus {
+      cursor: text;
+    }
+  }
+}
+
+.dropdownList {
+  position: fixed;
+  z-index: 9999;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  max-height: 240px;
+  overflow-y: auto;
+  background-color: var(--background1);
+  border: 1px solid var(--background4);
+  border-radius: 0.25rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.dropdownItem {
+  box-sizing: border-box;
+  height: 26px;
+  line-height: 18px;
+  padding: 4px 8px;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  &.dropdownItemHighlight {
+    background-color: var(--background3);
+  }
+
+  &.dropdownItemSelected {
+    font-weight: 600;
+  }
+}
+
+.dropdownEmpty {
+  box-sizing: border-box;
+  height: 26px;
+  line-height: 18px;
+  padding: 4px 8px;
+  color: var(--foreground3, #888);
+  font-style: italic;
+}
+
+.root {
   .checkboxContainer {
     width: 200px;
     display: flex;
@@ -92,6 +153,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     display: flex;
     align-items: center;
     gap: 0.25rem;
+    width: 100%;
+
+    input {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
 
     .copyButton {
       background: transparent;
@@ -106,8 +173,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
       min-width: 24px;
       height: 24px;
       transition: all 0.2s ease;
-      opacity: 0;
-      visibility: hidden;
+      opacity: 1;
+      visibility: visible;
 
       &:hover {
         background-color: var(--background2);
@@ -117,11 +184,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
       &:active {
         background-color: var(--background3);
       }
-    }
-
-    &:hover .copyButton {
-      opacity: 1;
-      visibility: visible;
     }
   }
 }

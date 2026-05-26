@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { observable } from 'mobx';
 import { IArchitectApi, IPackage, IPackagesInfo } from '@api/IArchitectApi';
+import { EditorTabViewState } from '@components/editorTabView/EditorTabViewState';
 import { ModelTreeState } from '@components/modelTree/ModelTreeState';
 import { TabViewState } from '@components/tabView/TabViewState';
 import { ProgressBarState } from '@components/topBar/ProgressBarState';
@@ -33,6 +34,7 @@ export class PackagesState {
     private progressBarState: ProgressBarState,
     private sideBarTabViewState: TabViewState,
     private modelTreeState: ModelTreeState,
+    private editorTabViewState: EditorTabViewState,
     private uiState: UIState,
     private architectApi: IArchitectApi,
   ) {}
@@ -61,7 +63,14 @@ export class PackagesState {
   }
 
   setActivePackageClick(packageId: string) {
-    return function* (this: PackagesState) {
+    return function* (this: PackagesState): Generator<any, void, any> {
+      if (packageId === this.activePackageId) {
+        return;
+      }
+      const proceed: boolean = yield* this.editorTabViewState.closeAllEditors()();
+      if (!proceed) {
+        return;
+      }
       yield* this.setActivePackage(packageId)();
       if (this.activePackageChanged) {
         this.uiState.clearExpandedNodes();

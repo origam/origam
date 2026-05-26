@@ -1,5 +1,5 @@
 /*
-Copyright 2005 - 2025 Advantage Solutions, s. r. o. 
+Copyright 2005 - 2026 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -18,6 +18,23 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 .root {
-  flex: 1;
-  padding-top: 16px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.missingFields {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: red;
+  font-size: 0.875rem;
+  max-width: 24rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  svg {
+    flex-shrink: 0;
+  }
 }

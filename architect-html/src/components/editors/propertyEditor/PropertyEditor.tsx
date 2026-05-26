@@ -24,6 +24,7 @@ import SinglePropertyEditor from '@editors/propertyEditor/SinglePropertyEditor.t
 import { getSortedProperties } from '@editors/propertyEditor/utils';
 import cn from 'classnames';
 import { observer } from 'mobx-react-lite';
+import { VscWarning } from 'react-icons/vsc';
 
 const PropertyEditor = observer(
   (props: {
@@ -41,14 +42,15 @@ const PropertyEditor = observer(
       <div className={cn(S.root, { [S.compact]: props.compact })}>
         {sortedCategories.map(category => (
           <div className={S.category} key={category}>
-            {!props.compact && <h4>{category ?? 'Misc'}</h4>}
+            {!props.compact && <h4>{(category ?? 'Misc').replace(/^\((.*)\)$/, '$1')}</h4>}
             {groupedProperties[category].map((property: EditorProperty) => (
               <div className={S.property} key={property.name}>
                 <div
                   title={property.error}
                   className={cn(S.propertyName, { [S.errorProperty]: property.error })}
                 >
-                  {property.name}
+                  {property.error && <VscWarning className={S.errorIcon} />}
+                  <span>{property.name}</span>
                 </div>
                 <SinglePropertyEditor
                   property={property}

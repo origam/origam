@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { T } from '@/main';
 import { IArchitectApi, IUpdatePropertiesResult } from '@api/IArchitectApi';
 import { IEditorNode } from '@components/editorTabView/EditorTabViewState';
-import { ITabState } from '@/components/editorTabView/ITabState';
+import { ITabState, IValidationError } from '@/components/editorTabView/ITabState';
 import { EditorProperty, toChanges } from '@editors/gridEditor/EditorProperty';
 import { IPropertyManager } from '@editors/propertyEditor/IPropertyManager';
 import { computed, observable } from 'mobx';
@@ -51,6 +51,13 @@ export class GridEditorState implements ITabState, IPropertyManager {
     return this._isDirty && !someHasError;
   }
 
+  @computed
+  get validationErrors(): IValidationError[] {
+    return this.properties
+      .filter(p => p.error)
+      .map(p => ({ propertyName: p.name, error: p.error! }));
+  }
+
   get label() {
     const nameValue = this.properties.find(x => x.name === 'Name')?.value;
     return typeof nameValue === 'string' ? nameValue : '';
@@ -72,8 +79,8 @@ export class GridEditorState implements ITabState, IPropertyManager {
     try {
       this.isSaving = true;
       yield this.architectApi.persistChanges(this.editorNode.origamId);
-      if (this.editorNode.parent) {
-        yield* this.editorNode.parent.loadChildren();
+      if (this.editorNode.parent?.parent) {
+        yield* this.editorNode.parent.parent.loadChildren();
       }
       this._isDirty = false;
     } finally {
@@ -85,6 +92,22 @@ export class GridEditorState implements ITabState, IPropertyManager {
     property: EditorProperty,
     value: any,
   ): Generator<Promise<IUpdatePropertiesResult>, void, IUpdatePropertiesResult> {
+    if (property.name === 'Name') {
+      const oldName = property.value;
+      for (const mappedName of ['MappedObjectName', 'MappedColumnName']) {
+        const mapped = this.properties.find(p => p.name === mappedName);
+        if (
+          mapped &&
+          !mapped.readOnly &&
+          (mapped.value === null ||
+            mapped.value === undefined ||
+            mapped.value === '' ||
+            mapped.value === oldName)
+        ) {
+          mapped.value = value;
+        }
+      }
+    }
     property.value = value;
     const changes = toChanges(this.properties);
     const updateResult = (yield this.architectApi.updateProperties(

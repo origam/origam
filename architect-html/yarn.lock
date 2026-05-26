@@ -1322,10 +1322,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rolldown/pluginutils@npm:1.0.0-rc.7":
-  version: 1.0.0-rc.7
-  resolution: "@rolldown/pluginutils@npm:1.0.0-rc.7"
-  checksum: 10c0/9d5490b5805b25bcd1720ca01c4c032b55a0ef953dab36a8dd42c568e82214576baa464f3027cd5dff3fabcfbe3bf3db2251d12b60220f5d1cd2ffde5ee37082
+"@rolldown/pluginutils@npm:^1.0.0":
+  version: 1.0.1
+  resolution: "@rolldown/pluginutils@npm:1.0.1"
+  checksum: 10c0/99d9b06d90196823e4d8c841f258db7a16e5dbba5824a2962b05d907b79f1ba929d56f22dd744fd530936e568c865ee56a719dc31e57e13bc0a8eb4764a8d8dd
   languageName: node
   linkType: hard
 
@@ -1432,12 +1432,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:^19.2.14":
-  version: 19.2.14
-  resolution: "@types/react@npm:19.2.14"
+"@types/react@npm:^19.2.15":
+  version: 19.2.15
+  resolution: "@types/react@npm:19.2.15"
   dependencies:
     csstype: "npm:^3.2.2"
-  checksum: 10c0/7d25bf41b57719452d86d2ac0570b659210402707313a36ee612666bf11275a1c69824f8c3ee1fdca077ccfe15452f6da8f1224529b917050eb2d861e52b59b7
+  checksum: 10c0/b554eab715bb14e581f0ae60e5cefe91e1a5e06c31022b543a9806cf224aa056f21e4fb46208e46eb934d86ca0b247ebc82377192a0dead303cb28b8764c6e67
   languageName: node
   linkType: hard
 
@@ -1583,11 +1583,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vitejs/plugin-react@npm:^6.0.0":
-  version: 6.0.1
-  resolution: "@vitejs/plugin-react@npm:6.0.1"
+"@vitejs/plugin-react@npm:^6.0.2":
+  version: 6.0.2
+  resolution: "@vitejs/plugin-react@npm:6.0.2"
   dependencies:
-    "@rolldown/pluginutils": "npm:1.0.0-rc.7"
+    "@rolldown/pluginutils": "npm:^1.0.0"
   peerDependencies:
     "@rolldown/plugin-babel": ^0.1.7 || ^0.2.0
     babel-plugin-react-compiler: ^1.0.0
@@ -1597,7 +1597,7 @@ __metadata:
       optional: true
     babel-plugin-react-compiler:
       optional: true
-  checksum: 10c0/6c42f53a970cb6b0776ba5b4203bb01690ac564c56fca706d4037b50aec965ddc0f11530ab58ab2cd0fbe8c12e14cff6966b22d90391283b4a53294e3ddd478d
+  checksum: 10c0/6e2d90974e05f2a9aefafad1d137b75c3b3b4bf3f2affdbfe77c6b11b24832cff22dd8852430c6341e2fb5b00a4513fb00db306a6abdbec6f0f5841e93bbcfba
   languageName: node
   linkType: hard
 
@@ -1695,11 +1695,11 @@ __metadata:
     "@types/babel__core": "npm:^7.20.5"
     "@types/lodash": "npm:^4.17.24"
     "@types/node": "npm:^25.6.2"
-    "@types/react": "npm:^19.2.14"
+    "@types/react": "npm:^19.2.15"
     "@types/react-dom": "npm:^19.2.3"
     "@typescript-eslint/eslint-plugin": "npm:^8.59.2"
     "@typescript-eslint/parser": "npm:^8.59.2"
-    "@vitejs/plugin-react": "npm:^6.0.0"
+    "@vitejs/plugin-react": "npm:^6.0.2"
     classnames: "npm:^2.5.1"
     eslint: "npm:^9.39.4"
     eslint-config-prettier: "npm:^10.1.8"
@@ -1709,7 +1709,7 @@ __metadata:
     eslint-plugin-react-hooks: "npm:^7.1.1"
     eslint-plugin-react-refresh: "npm:^0.5.2"
     lodash: "npm:^4.18.1"
-    mobx: "npm:^6.15.3"
+    mobx: "npm:^6.15.4"
     mobx-react-lite: "npm:^4.1.1"
     moment: "npm:^2.30.1"
     monaco-editor: "npm:^0.55.1"
@@ -1721,7 +1721,7 @@ __metadata:
     react-dnd-html5-backend: "npm:^16.0.1"
     react-dom: "npm:^19.2.6"
     react-icons: "npm:^5.6.0"
-    react-inlinesvg: "npm:^4.3.0"
+    react-inlinesvg: "npm:^4.4.1"
     sass: "npm:^1.99.0"
     typescript: "npm:^6.0.3"
     vite: "npm:^8.0.11"
@@ -4016,10 +4016,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mobx@npm:^6.15.3":
-  version: 6.15.3
-  resolution: "mobx@npm:6.15.3"
-  checksum: 10c0/3a49d0d9ad2d9f9d28842b1f49147a2b074629120150f9cbe3d99b5c1d84528f8f43a72d084e97892407238d4f5140e03c90e434d7004c4167efd2d11fb198b1
+"mobx@npm:^6.15.4":
+  version: 6.15.4
+  resolution: "mobx@npm:6.15.4"
+  checksum: 10c0/d8dde76b2ac24ad509bd94d391275407614311b305647318f26e1c73c69409d1927f9d9553367aaec7f23c52fa2a47683d8f535f45a5e36d6c307c3474e442fc
   languageName: node
   linkType: hard
 
@@ -4493,14 +4493,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-inlinesvg@npm:^4.3.0":
-  version: 4.3.0
-  resolution: "react-inlinesvg@npm:4.3.0"
+"react-inlinesvg@npm:^4.4.1":
+  version: 4.4.1
+  resolution: "react-inlinesvg@npm:4.4.1"
   dependencies:
     react-from-dom: "npm:^0.7.5"
   peerDependencies:
     react: 16.8 - 19
-  checksum: 10c0/2909624f36f3ab49fdd2f8c336099e4cd933174cb342c22df19d025e023194ef608cdc8980912b8c6b2ea939965d156eed352bc7214eda886aeb83ec26e7f79f
+  checksum: 10c0/2b86b45a86a9aa3529ed02de960c8ed8831bd9da18187c5ccef8977970c8618c95b0cd38a21777fe578b840b288009f0a49f73959e7da032f6777784473903b5
   languageName: node
   linkType: hard
 
