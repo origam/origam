@@ -56,5 +56,5 @@
     "vite-plugin-mkcert": "^1.17.9",
     "vite-tsconfig-paths": "^6.0.4"
   },
-  "packageManager": "yarn@4.5.0"
+  "packageManager": "yarn@4.13.0"
 }
