@@ -79,8 +79,8 @@ export class GridEditorState implements IEditorState, IPropertyManager {
     try {
       this.isSaving = true;
       yield this.architectApi.persistChanges(this.editorNode.origamId);
-      if (this.editorNode.parent) {
-        yield* this.editorNode.parent.loadChildren();
+      if (this.editorNode.parent?.parent) {
+        yield* this.editorNode.parent.parent.loadChildren();
       }
       this._isDirty = false;
     } finally {

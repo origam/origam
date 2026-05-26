@@ -48,6 +48,10 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
   });
 
   async function handleContextMenu(event: TriggerEvent) {
+    if (node.nodeLevelType === 'Category') {
+      event.preventDefault();
+      return;
+    }
     run({ generator: node.getMenuItems.bind(node) });
     show({ event, props: {} });
   }
@@ -132,13 +136,26 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
     }
   }, [isHighlighted, highlightToken]);
 
+  const rowClassNames = [
+    isHighlighted ? S.highlighted : '',
+    node.nodeLevelType === 'Category' ? S.categoryNode : '',
+    node.nodeLevelType === 'Provider' ? S.providerNode : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
+
+  const labelClassNames = [
+    S.iconAndText,
+    node.isCurrentVersion ? S.currentVersion : '',
+    !node.isInActivePackage && !node.isFileDirty ? S.crossPackage : '',
+    node.isFileDirty ? S.dirty : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
+
   return (
     <>
-      <div
-        ref={nodeRef}
-        className={isHighlighted ? S.highlighted : ''}
-        style={{ paddingLeft: `${level * 20}px` }}
-      >
+      <div ref={nodeRef} className={rowClassNames} style={{ paddingLeft: `${level * 20}px` }}>
         <div className={S.treeNodeTitle}>
           <div className={S.symbol} onClick={onToggle}>
             {getSymbol()}
@@ -146,7 +163,7 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
           <div
             onDoubleClick={() => onNodeDoubleClick(node)}
             onContextMenu={handleContextMenu}
-            className={`${S.iconAndText} ${node.isCurrentVersion ? S.currentVersion : ''}`}
+            className={labelClassNames}
           >
             <div className={S.icon}>
               <Icon src={node.iconUrl ?? '/Icons/generic.svg'} />
@@ -204,7 +221,7 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
               </Item>
             )}
           </Menu>
-          {node.isLoading && ' Loading...'}
+          {node.isLoading && <span className={S.loading}>Loading...</span>}
         </div>
       </div>
       {node.isExpanded &&
@@ -224,7 +241,7 @@ const ModelTree = observer(() => {
   const modelTreeState = useContext(RootStoreContext).modelTreeState;
 
   return (
-    <div>
+    <div className={S.root}>
       {modelTreeState.activePackageName && (
         <div className={S.packageName}>{modelTreeState.activePackageName}</div>
       )}

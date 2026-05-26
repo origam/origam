@@ -23,6 +23,7 @@ import {
   IApiTreeNode,
   IArchitectApi,
   IMenuItemInfo,
+  NodeLevelType,
 } from '@api/IArchitectApi';
 import { IEditorNode } from '@components/editorTabView/EditorTabViewState';
 import { EditorData } from '@components/modelTree/EditorData';
@@ -48,6 +49,9 @@ export class TreeNode implements IEditorNode {
     this.itemType = apiNode.itemType;
     this.itemTypeName = apiNode.itemTypeName;
     this.isCurrentVersion = apiNode.isCurrentVersion;
+    this.nodeLevelType = apiNode.nodeLevelType ?? 'Item';
+    this.isInActivePackage = apiNode.isInActivePackage ?? true;
+    this.isFileDirty = apiNode.isFileDirty ?? false;
     this.children = apiNode.children
       ? apiNode.children.map(child => new TreeNode(child, this.rootStore, this))
       : [];
@@ -67,6 +71,9 @@ export class TreeNode implements IEditorNode {
   itemType?: string;
   itemTypeName?: string;
   isCurrentVersion?: boolean;
+  nodeLevelType: NodeLevelType;
+  isInActivePackage: boolean;
+  isFileDirty: boolean;
 
   @observable accessor isLoading: boolean = false;
   @observable accessor contextMenuItems: IMenuItemInfo[] = [];
