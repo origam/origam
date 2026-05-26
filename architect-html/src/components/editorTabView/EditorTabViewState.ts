@@ -202,6 +202,40 @@ export class EditorTabViewState {
     }
   }
 
+  closeAllEditors() {
+    return function* (this: EditorTabViewState): Generator<Promise<any>, boolean, any> {
+      const dirtyEditors = this.editorsContainers.filter(editor => editor.state.isDirty);
+      if (dirtyEditors.length > 0) {
+        const saveChanges = yield askYesNoQuestion(
+          this.rootStore.dialogStack,
+          'Save changes',
+          dirtyEditors.length === 1
+            ? `Do you want to save ${dirtyEditors[0].state.label}?`
+            : `Do you want to save changes to ${dirtyEditors.length} open tabs?`,
+        );
+        switch (saveChanges) {
+          case YesNoResult.Cancel:
+            return false;
+          case YesNoResult.Yes:
+            for (const editor of dirtyEditors) {
+              yield* editor.state.save();
+            }
+            break;
+          case YesNoResult.No:
+            break;
+        }
+      }
+
+      for (const editor of this.editorsContainers) {
+        editor.state.dispose?.();
+      }
+      this.editorsContainers = [];
+      yield this.architectApi.closeAllEditors();
+      this.rootStore.uiState.setDsGeneratorState({ isOpen: false });
+      return true;
+    }.bind(this);
+  }
+
   closeEditor(editorId: string) {
     return function* (this: EditorTabViewState): Generator<Promise<any>, void, any> {
       if (this.activeEditorState?.isDirty) {

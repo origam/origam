@@ -38,6 +38,8 @@ export interface IArchitectApi {
 
   closeEditor(editorId: string): Promise<void>;
 
+  closeAllEditors(): Promise<void>;
+
   persistChanges(schemaItemId: string): Promise<void>;
 
   persistSectionEditorChanges(schemaItemId: string): Promise<void>;
