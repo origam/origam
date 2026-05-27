@@ -92,6 +92,7 @@ export class GridEditorState implements IEditorState, IPropertyManager {
     property: EditorProperty,
     value: any,
   ): Generator<Promise<IUpdatePropertiesResult>, void, IUpdatePropertiesResult> {
+    const changedProperties: EditorProperty[] = [property];
     if (property.name === 'Name') {
       const oldName = property.value;
       for (const mappedName of ['MappedObjectName', 'MappedColumnName']) {
@@ -105,11 +106,12 @@ export class GridEditorState implements IEditorState, IPropertyManager {
             mapped.value === oldName)
         ) {
           mapped.value = value;
+          changedProperties.push(mapped);
         }
       }
     }
     property.value = value;
-    const changes = toChanges(this.properties);
+    const changes = toChanges(changedProperties);
     const updateResult = (yield this.architectApi.updateProperties(
       this.editorNode.origamId,
       changes,
