@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:dc="http://schemas.origam.com/Origam.Schema.EntityModel.DataConstant/6.0.0">
+  <dc:DataConstant
+    asi:abstract="false"
+    dc:dataType="UniqueIdentifier"
+    x:id="e068db0c-1b52-421d-86bf-1f1c4498e97b"
+    dc:lookup="WorkflowStates#WorkflowStates/9f63dc66-d4cf-4664-a793-38b4a5aa33bf"
+    asi:name="WorkflowStates_start"
+    dc:userDefinable="false"
+    dc:value="d8f7f09e-a18f-4345-89a3-9dafc3afefd1" />
+</x:file>
