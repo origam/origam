@@ -21,7 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.ComponentModel;
 using System.Reflection;
-using Origam.Extensions;
 
 namespace Origam.Architect.Server.Utils;
 
@@ -29,12 +28,8 @@ public static class PropertyUtils
 {
     public static bool CanBeEdited(PropertyInfo property)
     {
-        var browsableAttribute = property.GetAttribute<BrowsableAttribute>();
-        if (browsableAttribute == null)
-        {
-            return true;
-        }
-
-        return browsableAttribute.Browsable;
+        var browsableAttribute = (BrowsableAttribute)
+            Attribute.GetCustomAttribute(property, typeof(BrowsableAttribute), inherit: true);
+        return browsableAttribute?.Browsable ?? true;
     }
 }
