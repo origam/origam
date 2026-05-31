@@ -45,7 +45,7 @@ const PropertyEditor = observer(
     return (
       <div className={cn(S.root, { [S.compact]: props.compact })}>
         {sortedCategories.map(category => {
-          const categoryKey = category ?? 'Misc';
+          const categoryKey = (category ?? 'Misc').replace(/^\((.*)\)$/, '$1');
           const collapsed = !props.compact && uiState.isPropertySectionCollapsed(categoryKey);
           const Chevron = collapsed ? VscChevronRight : VscChevronDown;
           return (
