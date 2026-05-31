@@ -35,7 +35,9 @@ public class DeploymentStatusService(
     public StatusResponseModel BuildStatus()
     {
         Package activeExtension = schemaService.ActiveExtension;
-        var packages = new List<Package>(activeExtension.IncludedPackages) { activeExtension };
+        var packages = new List<Package>(activeExtension.IncludedPackages) { activeExtension }
+            .DistinctBy(package => package.Id)
+            .ToList();
 
         var deploymentVersionsByPackage = schemaService
             .GetProvider<DeploymentSchemaItemProvider>()
