@@ -65,6 +65,14 @@ export class EditorTabViewState {
         console.error('Failed to auto-open Deployment Scripts Generator module:', err);
       }
     }
+
+    if (this.rootStore.uiState.getDeploymentStatusState().isOpen) {
+      try {
+        yield* this.openDeploymentStatusModule()();
+      } catch (err) {
+        console.error('Failed to auto-open Deployment Status module:', err);
+      }
+    }
   }
 
   private toEditor(data: IApiTabData) {
