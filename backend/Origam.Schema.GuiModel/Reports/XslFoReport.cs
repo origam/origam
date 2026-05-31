@@ -32,7 +32,7 @@ namespace Origam.Schema.GuiModel;
 /// <summary>
 /// Summary description for AbstractDataReport.
 /// </summary>
-[SchemaItemDescription("XSO-FO Report", "icon_web-report.png")]
+[SchemaItemDescription("XSL-FO Report", "icon_web-report.png")]
 [HelpTopic("XSL-FO+Report")]
 [ClassMetaVersion("1.0.0")]
 public class XslFoReport : AbstractReport, IDataStructureReference, IDataReport
