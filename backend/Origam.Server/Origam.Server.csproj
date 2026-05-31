@@ -95,6 +95,7 @@
     <ProjectReference Include="..\Origam.BI.Excel\Origam.BI.Excel.csproj" />
     <ProjectReference Include="..\Origam.BI.FastReport\Origam.BI.FastReport.csproj" />
     <ProjectReference Include="..\Origam.BI.SSRS\Origam.BI.SSRS.csproj" />
+    <ProjectReference Include="..\Origam.BI.XslFO\Origam.BI.XslFO.csproj" />
     <ProjectReference Include="..\Origam.Common\Origam.Common.csproj" />
     <ProjectReference Include="..\Origam.DA.Common\Origam.DA.Common.csproj" />
     <ProjectReference Include="..\Origam.OrigamEngine\Origam.OrigamEngine.csproj" />

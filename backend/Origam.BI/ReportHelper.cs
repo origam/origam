@@ -239,7 +239,7 @@ public static class ReportHelper
     }
 
     public static IDataDocument LoadOrUseReportData(
-        AbstractDataReport report,
+        IDataReport report,
         IXmlContainer data,
         Hashtable parameters,
         string dbTransaction
@@ -261,10 +261,10 @@ public static class ReportHelper
                 }
                 return DataDocumentFactory.New(
                     core.DataService.Instance.LoadData(
-                        report.DataStructureId,
-                        report.DataStructureMethodId,
+                        report.DataStructure?.Id ?? Guid.Empty,
+                        report.Method?.Id ?? Guid.Empty,
                         defaultSetId: Guid.Empty,
-                        report.DataStructureSortSetId,
+                        report.SortSet?.Id ?? Guid.Empty,
                         dbTransaction,
                         queryParameterCollection
                     )

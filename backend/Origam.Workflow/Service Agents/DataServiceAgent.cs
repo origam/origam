@@ -1051,7 +1051,7 @@ public class DataServiceAgent : AbstractServiceAgent
         out DataStructureMethod method
     )
     {
-        AbstractDataReport dr = report as AbstractDataReport;
+        var dr = report as IDataReport;
         if (dr != null)
         {
             ds = dr.DataStructure;

@@ -32,20 +32,21 @@ namespace Origam.Schema.GuiModel;
 /// <summary>
 /// Summary description for AbstractDataReport.
 /// </summary>
-[ClassMetaVersion("6.0.0")]
-public abstract class AbstractDataReport : AbstractReport, IDataReport
+[SchemaItemDescription("XSO-FO Report", "icon_web-report.png")]
+[HelpTopic("XSL-FO+Report")]
+[ClassMetaVersion("1.0.0")]
+public class XslFoReport : AbstractReport, IDataStructureReference, IDataReport
 {
-    public AbstractDataReport()
+    public XslFoReport()
         : base() { }
 
-    public AbstractDataReport(Guid schemaExtensionId)
+    public XslFoReport(Guid schemaExtensionId)
         : base(schemaExtensionId) { }
 
-    public AbstractDataReport(Key primaryKey)
+    public XslFoReport(Key primaryKey)
         : base(primaryKey) { }
 
     #region Properties
-    private string _reportFileName;
     public Guid DataStructureId;
 
     [TypeConverter(typeof(DataStructureConverter))]
@@ -110,29 +111,27 @@ public abstract class AbstractDataReport : AbstractReport, IDataReport
             );
         }
     }
-    public Guid TransformationId;
+    public Guid XslFoTransformationId;
 
     [TypeConverter(typeof(TransformationConverter))]
-    [XmlReference("transformation", "TransformationId")]
-    public AbstractTransformation Transformation
+    [NotNullModelElementRule()]
+    [XmlReference("xsl-fo-transformation", "XslFoTransformationId")]
+    public AbstractTransformation XslFoTransformation
     {
         get
         {
             return (AbstractTransformation)
                 this.PersistenceProvider.RetrieveInstance(
                     typeof(ISchemaItem),
-                    new ModelElementKey(this.TransformationId)
+                    new ModelElementKey(this.XslFoTransformationId)
                 );
         }
-        set { this.TransformationId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]; }
+        set
+        {
+            this.XslFoTransformationId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+        }
     }
 
-    [XmlAttribute("reportFileName")]
-    public string ReportFileName
-    {
-        get { return _reportFileName; }
-        set { _reportFileName = value; }
-    }
     string _localeXPath;
 
     [Description(
@@ -173,9 +172,9 @@ public abstract class AbstractDataReport : AbstractReport, IDataReport
             dependencies.Add(this.SortSet);
         }
 
-        if (this.Transformation != null)
+        if (this.XslFoTransformation != null)
         {
-            dependencies.Add(this.Transformation);
+            dependencies.Add(this.XslFoTransformation);
         }
 
         base.GetExtraDependencies(dependencies);
