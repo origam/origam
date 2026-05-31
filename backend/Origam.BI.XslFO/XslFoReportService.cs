@@ -210,7 +210,7 @@ namespace Origam.BI.XslFO
             {
                 return Encoding.UTF8.GetString(bytes);
             }
-            catch
+            catch (DecoderFallbackException)
             {
                 return "<Could not decode renderer response as UTF-8. Response length: "
                     + bytes.Length
