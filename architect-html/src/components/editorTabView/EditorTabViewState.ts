@@ -278,6 +278,7 @@ export class EditorTabViewState {
       this.editorsContainers = [];
       yield this.architectApi.closeAllTabs();
       this.rootStore.uiState.setDsGeneratorState({ isOpen: false });
+      this.rootStore.uiState.setDeploymentStatusState({ isOpen: false });
       return true;
     }.bind(this);
   }
