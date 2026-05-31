@@ -1,0 +1,243 @@
+/*
+Copyright 2005 - 2026 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+.root {
+  display: flex;
+  flex: 1;
+
+  .editorBox {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+  }
+
+  .scrollArea {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0.5rem 1rem;
+  }
+
+  .packageBlock {
+    margin-bottom: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #fff;
+  }
+
+  .packageHeader {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.5rem 0.75rem;
+    background-color: #f5f5f5;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    cursor: pointer;
+    user-select: none;
+
+    &:hover {
+      background-color: #eee;
+    }
+
+    &:focus-visible {
+      outline: 2px solid #007bff;
+      outline-offset: -2px;
+    }
+
+    .chevron {
+      display: inline-flex;
+      align-items: center;
+      color: #666;
+      font-size: 14px;
+    }
+
+    .packageName {
+      flex: 0 0 12rem;
+      font-weight: 600;
+      font-size: 14px;
+      color: #333;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .versionInfo {
+      flex: 0 0 6rem;
+      font-size: 12px;
+      color: #666;
+      text-align: right;
+
+      strong {
+        color: #333;
+      }
+    }
+
+    .packageName + .versionInfo {
+      margin-left: auto;
+    }
+
+    .summary {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      .activityCount {
+        flex: 0 0 6rem;
+        font-size: 12px;
+        color: #555;
+        text-align: right;
+      }
+
+      .pendingCount {
+        font-size: 12px;
+        color: #856404;
+        font-weight: 500;
+      }
+    }
+  }
+
+  .statusTable {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    border-top: 1px solid #ddd;
+    table-layout: fixed;
+
+    col.colName {
+      width: auto;
+    }
+
+    col.colType {
+      width: 8rem;
+    }
+
+    col.colOrder {
+      width: 4rem;
+    }
+
+    col.colStatus {
+      width: 6rem;
+    }
+
+    thead {
+      background-color: #fafafa;
+
+      th {
+        padding: 0.4rem 0.5rem;
+        text-align: left;
+        font-weight: 600;
+        color: #333;
+        border-bottom: 1px solid #eee;
+
+        &:last-child {
+          text-align: right;
+        }
+      }
+    }
+
+    tbody {
+      tr {
+        border-bottom: 1px solid #f0f0f0;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        &:hover {
+          background-color: #fafafa;
+        }
+
+        td {
+          padding: 0.35rem 0.5rem;
+          color: #555;
+          vertical-align: top;
+
+          &:last-child {
+            text-align: right;
+          }
+        }
+      }
+    }
+  }
+
+  .versionRow td {
+    background-color: #fbfbfb;
+    font-weight: 700;
+    color: #333;
+  }
+
+  .activityRow td.indented {
+    padding-left: 1.5rem;
+  }
+
+  .clickable {
+    cursor: pointer;
+
+    &:hover td.indented {
+      color: var(--brand);
+      text-decoration: underline;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--brand);
+      outline-offset: -2px;
+    }
+
+    td.indented {
+      color: #222;
+    }
+  }
+
+  .currentBadge {
+    margin-left: 0.5rem;
+    padding: 0.05rem 0.4rem;
+    background-color: var(--brand);
+    color: #fff;
+    border-radius: 3px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  .statusBadge {
+    display: inline-block;
+    padding: 0.05rem 0.5rem;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  .statusDone {
+    background-color: #d4edda;
+    color: #155724;
+  }
+
+  .statusPending {
+    background-color: #fff3cd;
+    color: #856404;
+  }
+
+  .empty {
+    padding: 2rem;
+    text-align: center;
+    color: #999;
+    font-style: italic;
+  }
+}
