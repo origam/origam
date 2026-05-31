@@ -114,7 +114,7 @@ namespace Origam.BI.XslFO
                     ex
                 );
             }
-            catch (Exception ex)
+            catch (HttpRequestException ex)
             {
                 throw new InvalidOperationException(
                     $"Could not call XSL-FO renderer at '{renderUri}'.",
