@@ -99,10 +99,7 @@ export function getEditorContainer(args: {
       uiState,
     );
 
-    return new EditorContainer(
-      editorState,
-      <DeploymentStatusModule editorState={editorState} />,
-    );
+    return new EditorContainer(editorState, <DeploymentStatusModule editorState={editorState} />);
   }
 
   if (editorType === 'DeploymentScriptsEditor') {

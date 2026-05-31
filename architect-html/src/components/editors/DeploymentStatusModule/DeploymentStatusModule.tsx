@@ -99,15 +99,11 @@ const PackageBlock = observer(
     onActivityClick: (activityId: string) => void;
   }) => {
     const currentVersion = pkg.versions.find(v => v.isCurrentVersion) ?? null;
-    const totalActivities = pkg.versions.reduce(
-      (sum, v) => sum + v.activities.length,
-      0,
-    );
+    const totalActivities = pkg.versions.reduce((sum, v) => sum + v.activities.length, 0);
     const pendingActivities = pkg.versions
       .filter(v => v.status === 'Pending')
       .reduce((sum, v) => sum + v.activities.length, 0);
-    const aggregateStatus: DeploymentActivityStatus =
-      pendingActivities > 0 ? 'Pending' : 'Done';
+    const aggregateStatus: DeploymentActivityStatus = pendingActivities > 0 ? 'Pending' : 'Done';
     return (
       <div className={S.packageBlock}>
         <div
@@ -122,9 +118,7 @@ const PackageBlock = observer(
             }
           }}
         >
-          <span className={S.chevron}>
-            {isExpanded ? <VscChevronDown /> : <VscChevronRight />}
-          </span>
+          <span className={S.chevron}>{isExpanded ? <VscChevronDown /> : <VscChevronRight />}</span>
           <span className={S.packageName}>{pkg.packageName}</span>
           <span className={S.versionInfo}>
             {T('Model:', 'editor_DeploymentStatus_Label_Model')}{' '}
@@ -136,27 +130,16 @@ const PackageBlock = observer(
           </span>
           <span className={S.summary}>
             <span className={S.activityCount}>
-              {T(
-                '{0} activities',
-                'editor_DeploymentStatus_ActivityCount',
-                totalActivities,
-              )}
+              {T('{0} activities', 'editor_DeploymentStatus_ActivityCount', totalActivities)}
             </span>
             {pendingActivities > 0 && (
               <span className={S.pendingCount}>
-                {T(
-                  '({0} pending)',
-                  'editor_DeploymentStatus_PendingSuffix',
-                  pendingActivities,
-                )}
+                {T('({0} pending)', 'editor_DeploymentStatus_PendingSuffix', pendingActivities)}
               </span>
             )}
             {!currentVersion && (
               <span className={S.activityCount}>
-                {T(
-                  'No current version',
-                  'editor_DeploymentStatus_NoCurrentVersion',
-                )}
+                {T('No current version', 'editor_DeploymentStatus_NoCurrentVersion')}
               </span>
             )}
             <StatusBadge status={aggregateStatus} />
@@ -172,9 +155,7 @@ const PackageBlock = observer(
             </colgroup>
             <thead>
               <tr>
-                <th>
-                  {T('Version / Activity', 'editor_DeploymentStatus_Column_Item')}
-                </th>
+                <th>{T('Version / Activity', 'editor_DeploymentStatus_Column_Item')}</th>
                 <th>{T('Type', 'editor_DeploymentStatus_Column_Type')}</th>
                 <th>{T('Order', 'editor_DeploymentStatus_Column_Order')}</th>
                 <th>{T('Status', 'editor_DeploymentStatus_Column_Status')}</th>
@@ -184,10 +165,7 @@ const PackageBlock = observer(
               {pkg.versions.length === 0 ? (
                 <tr>
                   <td colSpan={4} className={S.empty}>
-                    {T(
-                      'No deployment versions defined.',
-                      'editor_DeploymentStatus_NoVersions',
-                    )}
+                    {T('No deployment versions defined.', 'editor_DeploymentStatus_NoVersions')}
                   </td>
                 </tr>
               ) : (
@@ -244,13 +222,7 @@ const ActivityRows = observer(
   },
 );
 
-const ActivityRow = ({
-  activity,
-  onClick,
-}: {
-  activity: IActivityStatus;
-  onClick: () => void;
-}) => {
+const ActivityRow = ({ activity, onClick }: { activity: IActivityStatus; onClick: () => void }) => {
   return (
     <tr
       className={`${S.activityRow} ${S.clickable}`}
