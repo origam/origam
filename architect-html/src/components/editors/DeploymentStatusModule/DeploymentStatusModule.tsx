@@ -103,7 +103,9 @@ const PackageBlock = observer(
     const pendingActivities = pkg.versions
       .filter(v => v.status === 'Pending')
       .reduce((sum, v) => sum + v.activities.length, 0);
-    const aggregateStatus: DeploymentActivityStatus = pendingActivities > 0 ? 'Pending' : 'Done';
+    const aggregateStatus: DeploymentActivityStatus = pkg.versions.some(v => v.status === 'Pending')
+      ? 'Pending'
+      : 'Done';
     return (
       <div className={S.packageBlock}>
         <div
@@ -199,7 +201,13 @@ const ActivityRows = observer(
           <td>
             {version.name}
             {version.isCurrentVersion && (
-              <span className={S.currentBadge}>
+              <span
+                className={S.currentBadge}
+                title={T(
+                  'The version the model is currently set to. New deployment scripts are added to this version. It is independent of whether the version is already deployed.',
+                  'editor_DeploymentStatus_CurrentBadge_Tooltip',
+                )}
+              >
                 {T('Current', 'editor_DeploymentStatus_CurrentBadge')}
               </span>
             )}
@@ -239,9 +247,7 @@ const ActivityRow = ({ activity, onClick }: { activity: IActivityStatus; onClick
       <td className={S.indented}>{activity.name}</td>
       <td>{activity.activityType}</td>
       <td>{activity.activityOrder}</td>
-      <td>
-        <StatusBadge status={activity.status} />
-      </td>
+      <td />
     </tr>
   );
 };
@@ -252,7 +258,21 @@ const StatusBadge = ({ status }: { status: DeploymentActivityStatus }) => {
     status === 'Done'
       ? T('Done', 'editor_DeploymentStatus_Status_Done')
       : T('Pending', 'editor_DeploymentStatus_Status_Pending');
-  return <span className={`${S.statusBadge} ${cls}`}>{label}</span>;
+  const tooltip =
+    status === 'Done'
+      ? T(
+          'This version has already been deployed to the database (its number is at or below the version currently deployed).',
+          'editor_DeploymentStatus_Status_Done_Tooltip',
+        )
+      : T(
+          'This version has not been deployed to the database yet (its number is higher than the version currently deployed).',
+          'editor_DeploymentStatus_Status_Pending_Tooltip',
+        );
+  return (
+    <span className={`${S.statusBadge} ${cls}`} title={tooltip}>
+      {label}
+    </span>
+  );
 };
 
 export default DeploymentStatusModule;
