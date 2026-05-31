@@ -132,7 +132,13 @@ const PackageBlock = observer(
           </span>
           <span className={S.summary}>
             <span className={S.activityCount}>
-              {T('{0} activities', 'editor_DeploymentStatus_ActivityCount', totalActivities)}
+              {totalActivities === 1
+                ? T(
+                    '{0} activity',
+                    'editor_DeploymentStatus_ActivityCountSingular',
+                    totalActivities,
+                  )
+                : T('{0} activities', 'editor_DeploymentStatus_ActivityCount', totalActivities)}
             </span>
             {pendingActivities > 0 && (
               <span className={S.pendingCount}>

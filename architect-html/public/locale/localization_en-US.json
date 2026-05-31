@@ -71,6 +71,7 @@
   "editor_DeploymentStatus_NoVersions": "No deployment versions defined.",
   "editor_DeploymentStatus_NoCurrentVersion": "No current version",
   "editor_DeploymentStatus_ActivityCount": "{0} activities",
+  "editor_DeploymentStatus_ActivityCountSingular": "{0} activity",
   "editor_DeploymentStatus_PendingSuffix": "({0} pending)",
   "editor_DeploymentStatus_VersionRowType": "Version",
   "tree_node_make_version_current": "Make version current",
