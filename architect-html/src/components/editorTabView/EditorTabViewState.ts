@@ -23,6 +23,7 @@ import {
   IApiTabData,
   IArchitectApi,
   IDatabaseResultResponse,
+  IDeploymentStatusResponse,
   ISearchResult,
 } from '@api/IArchitectApi';
 import { EditorData } from '@components/modelTree/EditorData';
@@ -38,6 +39,7 @@ import { CancellablePromise } from 'mobx/dist/api/flow';
 
 const SearchEditorId = 'SearchResultsEditor-Id';
 const DeploymentScriptsGeneratorModuleId = 'DeploymentScriptsGeneratorModule-Id';
+const DeploymentStatusModuleId = 'DeploymentStatusModule-Id';
 
 export class EditorTabViewState {
   @observable accessor editorsContainers: EditorContainer[] = [];
@@ -90,6 +92,16 @@ export class EditorTabViewState {
     }.bind(this);
   }
 
+  openEditorBySchemaItemId(schemaItemId: string) {
+    return function* (
+      this: EditorTabViewState,
+    ): Generator<Promise<IApiEditorData>, void, IApiEditorData> {
+      const apiEditorData = yield this.architectApi.openEditor(schemaItemId);
+      const editorData = new EditorData(apiEditorData, null);
+      this.openEditor(editorData);
+    }.bind(this);
+  }
+
   openDocumentationEditor(node: TreeNode) {
     return function* (
       this: EditorTabViewState,
@@ -127,6 +139,34 @@ export class EditorTabViewState {
       const editorData = new EditorData(tempTabData, null);
       this.openEditor(editorData, 'DeploymentScriptsGeneratorModule');
       this.rootStore.uiState.setDsGeneratorState({ isOpen: true });
+    }.bind(this);
+  }
+
+  openDeploymentStatusModule() {
+    return function* (
+      this: EditorTabViewState,
+    ): Generator<Promise<IDeploymentStatusResponse>, void, IDeploymentStatusResponse> {
+      const response = yield this.architectApi.fetchDeploymentStatus();
+
+      const tempEditorData: IApiEditorData = {
+        editorId: DeploymentStatusModuleId,
+        editorType: 'DeploymentStatusModule' as EditorType,
+        parentNodeId: undefined,
+        isDirty: false,
+        node: {
+          id: '',
+          origamId: '',
+          nodeText: '',
+          editorType: 'DeploymentStatusModule',
+        },
+        data: {
+          response,
+        },
+      };
+
+      const editorData = new EditorData(tempEditorData, null);
+      this.openEditor(editorData, 'DeploymentStatusModule');
+      this.rootStore.uiState.setDeploymentStatusState({ isOpen: true });
     }.bind(this);
   }
 
@@ -264,6 +304,8 @@ export class EditorTabViewState {
 
       if (editorId === DeploymentScriptsGeneratorModuleId) {
         this.rootStore.uiState.setDsGeneratorState({ isOpen: false });
+      } else if (editorId === DeploymentStatusModuleId) {
+        this.rootStore.uiState.setDeploymentStatusState({ isOpen: false });
       } else if (editorId !== SearchEditorId) {
         yield this.architectApi.closeTab(editorId);
       }

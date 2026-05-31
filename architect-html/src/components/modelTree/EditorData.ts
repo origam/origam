@@ -25,6 +25,7 @@ import {
   IApiEditorProperty,
   IApiTabData,
   IDeploymentScriptsGeneratorModuleData,
+  IDeploymentStatusModuleData,
   ISearchResultsEditorData,
   IScreenEditorData,
   ISectionEditorData,
@@ -62,6 +63,7 @@ export class EditorData {
     | IScreenEditorData
     | DocumentationEditorData
     | IDeploymentScriptsGeneratorModuleData
+    | IDeploymentStatusModuleData
     | ISearchResultsEditorData;
 
   constructor(data: IApiTabData, parent: TreeNode | null) {

@@ -24,6 +24,7 @@ import {
   IApiEditorProperty,
   IArchitectApi,
   IDeploymentScriptsGeneratorModuleData,
+  IDeploymentStatusModuleData,
   ISearchResultsEditorData,
   IScreenEditorData,
   ISectionEditorData,
@@ -34,6 +35,8 @@ import { PropertiesState } from '@components/properties/PropertiesState';
 import DeploymentScriptsEditor from '@editors/DeploymentScriptsEditor/DeploymentScriptsEditor';
 import DeploymentScriptsGeneratorModule from '@modules/deploymentScriptsGenerator/DeploymentScriptsGeneratorModule';
 import DeploymentScriptsGeneratorModuleState from '@modules/deploymentScriptsGenerator/DeploymentScriptsGeneratorModuleState';
+import DeploymentStatusModule from '@editors/DeploymentStatusModule/DeploymentStatusModule';
+import DeploymentStatusModuleState from '@editors/DeploymentStatusModule/DeploymentStatusModuleState';
 import ScreenEditor from '@editors/designerEditor/screenEditor/ScreenEditor';
 import { ScreenEditorState } from '@editors/designerEditor/screenEditor/ScreenEditorState';
 import { ScreenToolboxState } from '@editors/designerEditor/screenEditor/ScreenToolboxState';
@@ -84,6 +87,21 @@ export function getEditorContainer(args: {
     return new EditorContainer(
       editorState,
       <DeploymentScriptsGeneratorModule editorState={editorState} />,
+    );
+  }
+
+  if (editorType === 'DeploymentStatusModule') {
+    const editorDataTyped = data as IDeploymentStatusModuleData;
+    const editorState = new DeploymentStatusModuleState(
+      editorData.editorId,
+      editorDataTyped.response,
+      architectApi,
+      uiState,
+    );
+
+    return new EditorContainer(
+      editorState,
+      <DeploymentStatusModule editorState={editorState} />,
     );
   }
 
