@@ -26,6 +26,7 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using Newtonsoft.Json;
 using Origam.Service.Core;
 using Origam.Workbench.Services;
@@ -39,6 +40,13 @@ public class WorkQueueController : ControllerBase
     private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
         System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
     );
+
+    private readonly IStringLocalizer<SharedResources> localizer;
+
+    public WorkQueueController(IStringLocalizer<SharedResources> localizer)
+    {
+        this.localizer = localizer;
+    }
 
     [HttpPost]
     [Route("workQueue/{workQueueCode}/{commandText}")]
@@ -60,31 +68,37 @@ public class WorkQueueController : ControllerBase
             workQueueService.HandleAction(workQueueCode, commandText, workQueueEntryId);
             return Ok();
         }
-        catch (RuleException ruleException)
+        catch (Exception ex)
         {
             if (log.IsErrorEnabled)
             {
-                log.Error(ruleException.Message, ruleException);
+                log.Error(ex.Message, ex);
             }
-            string output = String.Format(
-                format: "{{\"Message\" : {0}, \"RuleResult\" : {1}}}",
-                JsonConvert.SerializeObject(ruleException.Message),
-                JsonConvert.SerializeObject(ruleException.RuleResult)
-            );
-            return BadRequest(output);
-        }
-        catch (ArgumentOutOfRangeException argumentException)
-        {
-            if (log.IsErrorEnabled)
+            string output;
+            if (ex is RuleException ruleException)
             {
-                log.Error(argumentException.Message, argumentException);
+                output = String.Format(
+                    format: "{{\"Message\" : {0}, \"RuleResult\" : {1}}}",
+                    JsonConvert.SerializeObject(ruleException.Message),
+                    JsonConvert.SerializeObject(ruleException.RuleResult)
+                );
             }
-            string output = String.Format(
-                format: "{{\"Message\" : {0}, \"ParamName\" : {1}, \"ActualValue\" : {2}}}",
-                JsonConvert.SerializeObject(argumentException.Message),
-                JsonConvert.SerializeObject(argumentException.ParamName),
-                JsonConvert.SerializeObject(argumentException.ActualValue)
-            );
+            else if (ex is ArgumentOutOfRangeException argumentException)
+            {
+                output = String.Format(
+                    format: "{{\"Message\" : {0}, \"ParamName\" : {1}, \"ActualValue\" : {2}}}",
+                    JsonConvert.SerializeObject(argumentException.Message),
+                    JsonConvert.SerializeObject(argumentException.ParamName),
+                    JsonConvert.SerializeObject(argumentException.ActualValue)
+                );
+            }
+            else
+            {
+                output = String.Format(
+                    format: "{{\"Message\" : {0}}}",
+                    JsonConvert.SerializeObject(localizer["UnknownError"].ToString())
+                );
+            }
             return BadRequest(output);
         }
     }
