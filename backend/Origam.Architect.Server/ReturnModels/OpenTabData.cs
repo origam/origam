@@ -23,8 +23,8 @@ using Origam.Architect.Server.Services;
 
 namespace Origam.Architect.Server.ReturnModels;
 
-public class OpenEditorData(
-    EditorId editorId,
+public class OpenTabData(
+    TabId tabId,
     TreeNode node,
     object data,
     bool isPersisted,
@@ -32,11 +32,11 @@ public class OpenEditorData(
     bool isDirty = false
 )
 {
-    public string EditorId { get; } = editorId.ToString();
-    public string EditorType { get; } =
-        editorId.Type == Services.EditorType.Default
+    public string TabId { get; } = tabId.ToString();
+    public string TabType { get; } =
+        tabId.Type == Services.TabType.Default
             ? node.DefaultEditor.ToString()
-            : editorId.Type.ToString();
+            : tabId.Type.ToString();
 
     public TreeNode Node { get; } = node;
     public object Data { get; } = data;

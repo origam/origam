@@ -32,80 +32,80 @@ namespace Origam.Architect.Server.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class EditorController(
+public class TabController(
     PropertyEditorService propertyService,
     IPersistenceService persistenceService,
     DesignerEditorService sectionService,
     TreeNodeFactory treeNodeFactory,
-    EditorService editorService,
+    TabService tabService,
     DocumentationHelperService documentationHelper,
     GitNodeStatusService gitNodeStatusService
 ) : ControllerBase
 {
     [HttpPost("CreateNode")]
-    public OpenEditorData CreateNode([Required] [FromBody] NewItemModel input)
+    public OpenTabData CreateNode([Required] [FromBody] NewItemModel input)
     {
-        var editor = editorService.OpenEditorWithNewItem(input.NodeId, input.NewTypeName);
+        var tab = tabService.OpenTabWithNewItem(input.NodeId, input.NewTypeName);
 
-        TreeNode treeNode = treeNodeFactory.Create(editor.Item);
-        return new OpenEditorData(
-            editorId: editor.Id,
+        TreeNode treeNode = treeNodeFactory.Create(tab.Item);
+        return new OpenTabData(
+            tabId: tab.Id,
             node: treeNode,
-            data: GetData(treeNode, editor.Item),
+            data: GetData(treeNode, tab.Item),
             isPersisted: false,
             parentNodeId: null,
             isDirty: true
         );
     }
 
-    [HttpGet("GetOpenEditors")]
-    public IActionResult GetOpenEditors()
+    [HttpGet("GetOpen")]
+    public IActionResult GetOpen()
     {
-        var items = editorService
-            .GetOpenEditors()
-            .Select(editor =>
+        var items = tabService
+            .GetOpenTabs()
+            .Select(tab =>
             {
-                var item = editor.Item;
+                var item = tab.Item;
                 TreeNode treeNode = treeNodeFactory.Create(item);
 
-                return editor.Id.Type switch
+                return tab.Id.Type switch
                 {
-                    EditorType.Default => new OpenEditorData(
-                        editorId: editor.Id,
+                    TabType.Default => new OpenTabData(
+                        tabId: tab.Id,
                         node: treeNode,
                         data: GetData(treeNode, item),
                         isPersisted: item.IsPersisted,
                         parentNodeId: TreeNode.ToTreeNodeId(item.ParentItem),
-                        isDirty: editor.IsDirty
+                        isDirty: tab.IsDirty
                     ),
-                    EditorType.DocumentationEditor => new OpenEditorData(
-                        editorId: editor.Id,
+                    TabType.DocumentationEditor => new OpenTabData(
+                        tabId: tab.Id,
                         node: treeNode,
-                        data: documentationHelper.GetData(editor.DocumentationData, item.Name),
+                        data: documentationHelper.GetData(tab.DocumentationData, item.Name),
                         isPersisted: item.IsPersisted,
-                        isDirty: editor.IsDirty
+                        isDirty: tab.IsDirty
                     ),
-                    _ => throw new Exception("Unknown editor type: " + editor.Id.Type),
+                    _ => throw new Exception("Unknown tab type: " + tab.Id.Type),
                 };
             })
             .ToList();
         return Ok(items);
     }
 
-    [HttpPost("OpenEditor")]
-    public IActionResult OpenEditor([Required] [FromBody] OpenEditorModel input)
+    [HttpPost("Open")]
+    public IActionResult Open([Required] [FromBody] OpenTabModel input)
     {
-        EditorData editor = editorService.OpenDefaultEditor(input.SchemaItemId);
-        ISchemaItem item = editor.Item;
+        TabData tab = tabService.OpenDefaultTab(input.SchemaItemId);
+        ISchemaItem item = tab.Item;
         TreeNode treeNode = treeNodeFactory.Create(item);
 
-        var openEditorData = new OpenEditorData(
-            editorId: editor.Id,
+        var openTabData = new OpenTabData(
+            tabId: tab.Id,
             node: treeNode,
             data: GetData(treeNode, item),
             isPersisted: true
         );
-        return Ok(openEditorData);
+        return Ok(openTabData);
     }
 
     private object GetData(TreeNode treeNode, ISchemaItem item)
@@ -124,25 +124,25 @@ public class EditorController(
         return data;
     }
 
-    [HttpPost("CloseEditor")]
-    public IActionResult CloseEditor([Required] [FromBody] CloseEditorModel input)
+    [HttpPost("Close")]
+    public IActionResult Close([Required] [FromBody] CloseTabModel input)
     {
-        editorService.CloseEditor(input.GetTypedEditorId());
+        tabService.CloseTab(input.GetTypedTabId());
         return Ok();
     }
 
-    [HttpPost("CloseAllEditors")]
-    public IActionResult CloseAllEditors()
+    [HttpPost("CloseAll")]
+    public IActionResult CloseAll()
     {
-        editorService.CloseAllEditors();
+        tabService.CloseAllTabs();
         return Ok();
     }
 
     [HttpPost("PersistChanges")]
     public IActionResult PersistChanges([FromBody] PersistModel input)
     {
-        EditorData editorData = editorService.OpenDefaultEditor(input.SchemaItemId);
-        ISchemaItem item = editorData.Item;
+        TabData tabData = tabService.OpenDefaultTab(input.SchemaItemId);
+        ISchemaItem item = tabData.Item;
         if (item is AbstractControlSet controlSet && controlSet.DataSourceId == Guid.Empty)
         {
             return BadRequest("No Datasource selected can't save");
@@ -152,7 +152,7 @@ public class EditorController(
         {
             persistenceService.SchemaProvider.BeginTransaction();
             item.Persist();
-            editorData.IsDirty = false;
+            tabData.IsDirty = false;
             return Ok();
         }
         finally

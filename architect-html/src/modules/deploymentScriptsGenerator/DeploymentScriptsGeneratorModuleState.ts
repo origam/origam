@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { IEditorState } from '@/components/editorTabView/IEditorState';
+import { ITabState } from '@/components/editorTabView/ITabState';
 import { ModelTreeState } from '@/components/modelTree/ModelTreeState';
 import { IArchitectApi, IDatabaseResult, IDeploymentVersion } from '@api/IArchitectApi';
 import { UIState } from '@stores/UiState';
@@ -25,7 +25,7 @@ import { computed, flow, observable, reaction } from 'mobx';
 
 export const DEFAULT_RESULT_FILTER = 'MissingInDatabase';
 
-export default class DeploymentScriptsGeneratorModuleState implements IEditorState {
+export default class DeploymentScriptsGeneratorModuleState implements ITabState {
   @observable accessor results: IDatabaseResult[];
   @observable accessor isSaving = false;
   @observable accessor isActive = false;
@@ -58,7 +58,7 @@ export default class DeploymentScriptsGeneratorModuleState implements IEditorSta
   isDirty = false;
 
   constructor(
-    public editorId: string,
+    public tabId: string,
     results: IDatabaseResult[],
     possibleDeploymentVersions: IDeploymentVersion[],
     currentDeploymentVersionId: string | null,

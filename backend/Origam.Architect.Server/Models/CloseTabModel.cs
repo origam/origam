@@ -24,10 +24,10 @@ using Origam.Architect.Server.Services;
 
 namespace Origam.Architect.Server.Models;
 
-public class CloseEditorModel
+public class CloseTabModel
 {
     [Required]
-    public string EditorId { get; set; }
+    public string TabId { get; set; }
 
-    public EditorId GetTypedEditorId() => new EditorId(EditorId);
+    public TabId GetTypedTabId() => new TabId(TabId);
 }

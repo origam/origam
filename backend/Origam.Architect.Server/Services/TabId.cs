@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 /*
 Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
@@ -21,42 +21,42 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 namespace Origam.Architect.Server.Services;
 
-public class EditorId
+public class TabId
 {
     public Guid SchemaItemId { get; }
     private readonly string id;
-    public EditorType Type { get; }
+    public TabType Type { get; }
 
-    public static EditorId Default(Guid schemaItemId)
+    public static TabId Default(Guid schemaItemId)
     {
-        return new EditorId(schemaItemId, EditorType.Default);
+        return new TabId(schemaItemId, TabType.Default);
     }
 
-    public static EditorId Documentation(Guid schemaItemId)
+    public static TabId Documentation(Guid schemaItemId)
     {
-        return new EditorId(schemaItemId, EditorType.DocumentationEditor);
+        return new TabId(schemaItemId, TabType.DocumentationEditor);
     }
 
-    public EditorId(string editorId)
+    public TabId(string tabId)
     {
-        if (string.IsNullOrEmpty(editorId))
+        if (string.IsNullOrEmpty(tabId))
         {
-            throw new ArgumentException($"Could not parse {editorId} to editor Id");
+            throw new ArgumentException($"Could not parse {tabId} to tab Id");
         }
 
-        string[] strings = editorId.Split("_");
+        string[] strings = tabId.Split("_");
         if (strings.Length != 2)
         {
-            throw new ArgumentException($"Could not parse {editorId} to editor Id");
+            throw new ArgumentException($"Could not parse {tabId} to tab Id");
         }
 
-        if (Enum.TryParse(strings[0], out EditorType editorType))
+        if (Enum.TryParse(strings[0], out TabType tabType))
         {
-            Type = editorType;
+            Type = tabType;
         }
         else
         {
-            throw new ArgumentException($"Could not parse {editorId} to editor Id");
+            throw new ArgumentException($"Could not parse {tabId} to tab Id");
         }
 
         if (Guid.TryParse(strings[1], out Guid parsedId))
@@ -65,20 +65,20 @@ public class EditorId
         }
         else
         {
-            throw new ArgumentException($"Could not parse {editorId} to editor Id");
+            throw new ArgumentException($"Could not parse {tabId} to tab Id");
         }
 
-        id = editorId;
+        id = tabId;
     }
 
-    EditorId(Guid schemaItemId, EditorType editorType)
+    TabId(Guid schemaItemId, TabType tabType)
     {
         SchemaItemId = schemaItemId;
-        Type = editorType;
-        id = editorType + "_" + schemaItemId;
+        Type = tabType;
+        id = tabType + "_" + schemaItemId;
     }
 
-    protected bool Equals(EditorId other)
+    protected bool Equals(TabId other)
     {
         return id == other.id;
     }
@@ -97,7 +97,7 @@ public class EditorId
         {
             return false;
         }
-        return Equals((EditorId)obj);
+        return Equals((TabId)obj);
     }
 
     public override int GetHashCode()
@@ -111,7 +111,7 @@ public class EditorId
     }
 }
 
-public enum EditorType
+public enum TabType
 {
     Default,
     DocumentationEditor,

@@ -49,7 +49,7 @@ export default defineConfig({
         target: 'https://localhost:7099',
         secure: false,
       },
-      '/Editor': {
+      '/Tab': {
         target: 'https://localhost:7099',
         secure: false,
       },

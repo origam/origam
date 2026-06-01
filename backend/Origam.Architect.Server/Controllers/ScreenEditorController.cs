@@ -29,33 +29,31 @@ namespace Origam.Architect.Server.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class ScreenEditorController(
-    DesignerEditorService designerService,
-    EditorService editorService
-) : ControllerBase
+public class ScreenEditorController(DesignerEditorService designerService, TabService tabService)
+    : ControllerBase
 {
     [HttpPost("Update")]
     public ActionResult<ScreenEditorData> Update([FromBody] SectionEditorChangesModel input)
     {
-        EditorData editor = editorService.OpenDefaultEditor(input.SchemaItemId);
-        if (editor.Item is not FormControlSet screenSection)
+        TabData tab = tabService.OpenDefaultTab(input.SchemaItemId);
+        if (tab.Item is not FormControlSet screenSection)
         {
             return BadRequest($"item id: {input.SchemaItemId} is not a PanelControlSet");
         }
 
-        editor.IsDirty = designerService.Update(screenSection, input);
+        tab.IsDirty = designerService.Update(screenSection, input);
         var editorData = designerService.GetScreenEditorData(screenSection);
-        return Ok(new ScreenEditorModel { Data = editorData, IsDirty = editor.IsDirty });
+        return Ok(new ScreenEditorModel { Data = editorData, IsDirty = tab.IsDirty });
     }
 
     [HttpPost("Delete")]
     public ActionResult<ScreenEditorModel> Delete([FromBody] ScreenEditorDeleteItemModel input)
     {
-        EditorData editor = editorService.OpenDefaultEditor(input.EditorSchemaItemId);
-        if (editor.Item is FormControlSet screenSection)
+        TabData tab = tabService.OpenDefaultTab(input.EditorSchemaItemId);
+        if (tab.Item is FormControlSet screenSection)
         {
             designerService.DeleteItem(input.SchemaItemIds, screenSection);
-            editor.IsDirty = true;
+            tab.IsDirty = true;
             var editorData = designerService.GetScreenEditorData(screenSection);
             return new ScreenEditorModel { Data = editorData, IsDirty = true };
         }
@@ -66,12 +64,12 @@ public class ScreenEditorController(
     [HttpPost("CreateItem")]
     public ActionResult<ScreenEditorItem> CreateItem([FromBody] ScreenEditorItemModel itemModelData)
     {
-        EditorData editor = editorService.OpenDefaultEditor(itemModelData.EditorSchemaItemId);
-        ISchemaItem item = editor.Item;
+        TabData tab = tabService.OpenDefaultTab(itemModelData.EditorSchemaItemId);
+        ISchemaItem item = tab.Item;
         if (item is FormControlSet screenSection)
         {
             ScreenEditorItem newItem = designerService.CreateNewItem(itemModelData, screenSection);
-            editor.IsDirty = true;
+            tab.IsDirty = true;
             return Ok(newItem);
         }
 
@@ -84,8 +82,8 @@ public class ScreenEditorController(
         [FromQuery] Guid editorSchemaItemId
     )
     {
-        EditorData editor = editorService.OpenDefaultEditor(editorSchemaItemId);
-        ISchemaItem item = editor.Item;
+        TabData tab = tabService.OpenDefaultTab(editorSchemaItemId);
+        ISchemaItem item = tab.Item;
         if (item is FormControlSet screenSection)
         {
             return designerService.LoadSections(screenSection, sectionIds);
