@@ -35,18 +35,11 @@ namespace Origam.Server.Controller;
 
 [Authorize(Policy = "InternalApi")]
 [ApiController]
-public class WorkQueueController : ControllerBase
+public class WorkQueueController(IStringLocalizer<SharedResources> localizer) : ControllerBase
 {
     private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
         System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
     );
-
-    private readonly IStringLocalizer<SharedResources> localizer;
-
-    public WorkQueueController(IStringLocalizer<SharedResources> localizer)
-    {
-        this.localizer = localizer;
-    }
 
     [HttpPost]
     [Route("workQueue/{workQueueCode}/{commandText}")]
