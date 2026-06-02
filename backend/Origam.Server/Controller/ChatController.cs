@@ -25,6 +25,7 @@ using System.Data;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Origam.DA;
 using Origam.DA.Service;
@@ -44,6 +45,7 @@ namespace Origam.Server.Controller;
 public class ChatController : ControllerBase
 {
     private readonly ILogger<ChatController> log;
+    private readonly IStringLocalizer<SharedResources> localizer;
 
     private readonly Guid OrigamChatMessageDataStructureId = new Guid(
         "f9ec17ce-13fc-420c-88b0-3a793fae4001"
@@ -100,9 +102,10 @@ public class ChatController : ControllerBase
         "763e029f-b306-40bd-98f9-36f89297cfbf"
     );
 
-    public ChatController(ILogger<ChatController> log)
+    public ChatController(ILogger<ChatController> log, IStringLocalizer<SharedResources> localizer)
     {
         this.log = log;
+        this.localizer = localizer;
     }
 
     [HttpGet("chatrooms/{requestChatRoomId:guid}/messages")]
@@ -834,16 +837,22 @@ public class ChatController : ControllerBase
         catch (DBConcurrencyException ex)
         {
             log.LogError(ex, ex.Message);
-            return StatusCode(statusCode: 409, ex);
+            return StatusCode(
+                statusCode: 409,
+                new { Message = localizer["ObjectModified"].ToString() }
+            );
         }
         catch (Exception ex)
         {
             if (ex is IUserException)
             {
-                return StatusCode(statusCode: 420, ex);
+                return StatusCode(statusCode: 420, new { Message = ex.Message });
             }
             log.LogOrigamError(ex, ex.Message);
-            return StatusCode(statusCode: 500, ex);
+            return StatusCode(
+                statusCode: 500,
+                new { Message = localizer["UnknownError"].ToString() }
+            );
         }
     }
 }
