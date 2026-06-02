@@ -1,0 +1,333 @@
+/*
+Copyright 2005 - 2026 Advantage Solutions, s. r. o.
+This file is part of ORIGAM (http://www.origam.org).
+*/
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: 1000;
+  animation: fadeIn 160ms ease-out;
+}
+
+.drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 760px;
+  max-width: 100vw;
+  background: var(--background1);
+  border-left: 1px solid var(--background4);
+  box-shadow: -8px 0 32px rgba(0, 0, 0, 0.18);
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  animation: slideIn 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--background3);
+  gap: 12px;
+}
+
+.headerIcon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--foreground1), #6b8cff);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.headerText { flex-grow: 1; }
+
+.headerTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--background8);
+}
+
+.headerSubtitle {
+  font-size: 12px;
+  color: var(--background6);
+  margin-top: 2px;
+}
+
+.closeBtn {
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--background7);
+  &:hover { background: var(--background3); }
+}
+
+.body {
+  flex-grow: 1;
+  display: flex;
+  min-height: 0;
+}
+
+.stepperCol {
+  width: 220px;
+  padding: 24px 16px;
+  border-right: 1px solid var(--background3);
+  background: var(--background2);
+}
+
+.stepperItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+
+  &.active { background: var(--background3); }
+  &.done .stepBullet {
+    background: var(--foreground1);
+    color: white;
+    border-color: var(--foreground1);
+  }
+  &.active .stepBullet {
+    border-color: var(--foreground1);
+    color: var(--foreground1);
+    font-weight: 700;
+  }
+}
+
+.stepBullet {
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  border-radius: 50%;
+  border: 1.5px solid var(--background5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  background: var(--background1);
+}
+
+.stepText { display: flex; flex-direction: column; }
+
+.stepLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--background8);
+}
+
+.stepHint {
+  font-size: 11px;
+  color: var(--background6);
+  margin-top: 2px;
+}
+
+.formCol {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.formContent {
+  padding: 24px 28px;
+  overflow-y: auto;
+  flex-grow: 1;
+}
+
+.formTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--background8);
+  margin: 0 0 4px;
+}
+
+.formSubtitle {
+  font-size: 13px;
+  color: var(--background6);
+  margin: 0 0 20px;
+}
+
+.field {
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.fieldLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--background7);
+}
+
+.required { color: var(--error1); }
+
+.fieldHint {
+  font-size: 11px;
+  color: var(--background6);
+  font-weight: 400;
+  margin-left: 4px;
+}
+
+.input, .select {
+  height: 34px;
+  padding: 0 10px;
+  border: 1px solid var(--background4);
+  border-radius: 6px;
+  background: var(--background1);
+  font-size: 13px;
+  color: var(--background8);
+
+  &:focus {
+    outline: none;
+    border-color: var(--foreground1);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+  }
+}
+
+.fieldRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.preview {
+  margin-top: 24px;
+  padding: 16px;
+  border-radius: 8px;
+  background: var(--background2);
+  border: 1px dashed var(--background4);
+}
+
+.previewTitle {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--background6);
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.previewItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  font-size: 13px;
+  color: var(--background8);
+}
+
+.previewBadge {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 10px;
+  background: var(--foreground1);
+  color: white;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.reviewCard {
+  border: 1px solid var(--background4);
+  border-radius: 10px;
+  padding: 18px;
+  margin-bottom: 14px;
+  background: var(--background2);
+}
+
+.reviewCardHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.reviewCardIcon {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: var(--foreground1);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.reviewCardTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--background8);
+}
+
+.reviewKv {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  font-size: 12px;
+  padding: 4px 0;
+  color: var(--background7);
+}
+
+.reviewKey { color: var(--background6); }
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 24px;
+  border-top: 1px solid var(--background3);
+  background: var(--background2);
+}
+
+.footerHint {
+  font-size: 12px;
+  color: var(--background6);
+}
+
+.footerBtns { display: flex; gap: 8px; }
+
+.btn {
+  height: 34px;
+  padding: 0 18px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid var(--background4);
+  background: var(--background1);
+  color: var(--background8);
+  &:hover { background: var(--background3); }
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
+}
+
+.btnPrimary {
+  background: var(--foreground1);
+  border-color: var(--foreground1);
+  color: white;
+  &:hover { filter: brightness(1.08); background: var(--foreground1); }
+}

@@ -22,6 +22,11 @@ import { ISearchResult } from '@api/IArchitectApi';
 import { Icon } from '@components/icon/Icon';
 import S from '@components/modelTree/ModelTree.module.scss';
 import { TreeNode } from '@components/modelTree/TreeNode';
+import {
+  CreateLookupDrawer,
+  LookupModel,
+} from '@components/modelTree/createWizard/CreateLookupDrawer';
+import { MultiPaneWorkspace } from '@components/modelTree/createWizard/MultiPaneWorkspace';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { observer } from 'mobx-react-lite';
 import { useContext, useEffect, useRef } from 'react';
@@ -122,6 +127,44 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
     run({ generator: node.runUpdateScriptActivity() });
   }
 
+  function openCreateLookupDrawer() {
+    const closeDialog = rootStore.dialogStack.pushDialog(
+      '',
+      <CreateLookupDrawer
+        parentNodeName={node.nodeText}
+        onCancel={() => closeDialog()}
+        onCreate={(model: LookupModel) => {
+          closeDialog();
+          // eslint-disable-next-line no-console
+          console.log('[CreateLookupDrawer] submit', model);
+          run({ generator: node.createNode('DataLookup') });
+        }}
+      />,
+      undefined,
+      true,
+    );
+  }
+
+  function openFloatingInspector() {
+    rootStore.uiState.openInspectorFor(node.nodeText);
+  }
+
+  function openMultiPaneWorkspace() {
+    const closeDialog = rootStore.dialogStack.pushDialog(
+      '',
+      <MultiPaneWorkspace
+        parentNodeName={node.nodeText}
+        onCancel={() => closeDialog()}
+        onCreate={() => {
+          closeDialog();
+          run({ generator: node.createNode('DataLookup') });
+        }}
+      />,
+      undefined,
+      false,
+    );
+  }
+
   function getSymbol() {
     if (node.children.length > 0 || !node.childrenInitialized) {
       return node.isExpanded ? '▼' : '▶';
@@ -181,6 +224,17 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
                   {item.caption}
                 </Item>
               ))}
+            </Submenu>
+            <Submenu label="Actions">
+              <Item id="create-lookup-drawer" onClick={openCreateLookupDrawer}>
+                Create Lookup — Drawer + Stepper
+              </Item>
+              <Item id="create-lookup-inspector" onClick={openFloatingInspector}>
+                Create Lookup — Floating Inspector
+              </Item>
+              <Item id="create-lookup-workspace" onClick={openMultiPaneWorkspace}>
+                Create Lookup — Multi-pane Workspace
+              </Item>
             </Submenu>
             <Separator />
             {!node.isNonPersistentItem && (
