@@ -17,13 +17,13 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { IEditorState } from '@/components/editorTabView/IEditorState';
+import { ITabState } from '@/components/editorTabView/ITabState';
 import { T } from '@/main';
 import { IArchitectApi, IDeploymentStatusResponse } from '@api/IArchitectApi';
 import { UIState } from '@stores/UiState';
 import { flow, observable } from 'mobx';
 
-export default class DeploymentStatusModuleState implements IEditorState {
+export default class DeploymentStatusModuleState implements ITabState {
   @observable accessor response: IDeploymentStatusResponse;
   @observable accessor isActive = false;
   @observable accessor expandedPackages: Set<string> = new Set();
@@ -32,7 +32,7 @@ export default class DeploymentStatusModuleState implements IEditorState {
   label = T('Deployment Status', 'editor_DeploymentStatus_TabLabel');
 
   constructor(
-    public editorId: string,
+    public tabId: string,
     response: IDeploymentStatusResponse,
     protected architectApi: IArchitectApi,
     protected uiState: UIState,

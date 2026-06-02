@@ -103,9 +103,9 @@ export class EditorTabViewState {
   openEditorBySchemaItemId(schemaItemId: string) {
     return function* (
       this: EditorTabViewState,
-    ): Generator<Promise<IApiEditorData>, void, IApiEditorData> {
-      const apiEditorData = yield this.architectApi.openEditor(schemaItemId);
-      const editorData = new EditorData(apiEditorData, null);
+    ): Generator<Promise<IApiTabData>, void, IApiTabData> {
+      const apiTabData = yield this.architectApi.openTab(schemaItemId);
+      const editorData = new EditorData(apiTabData, null);
       this.openEditor(editorData);
     }.bind(this);
   }
@@ -156,9 +156,9 @@ export class EditorTabViewState {
     ): Generator<Promise<IDeploymentStatusResponse>, void, IDeploymentStatusResponse> {
       const response = yield this.architectApi.fetchDeploymentStatus();
 
-      const tempEditorData: IApiEditorData = {
-        editorId: DeploymentStatusModuleId,
-        editorType: 'DeploymentStatusModule' as EditorType,
+      const tempTabData: IApiTabData = {
+        tabId: DeploymentStatusModuleId,
+        tabType: 'DeploymentStatusModule' as EditorType,
         parentNodeId: undefined,
         isDirty: false,
         node: {
@@ -172,7 +172,7 @@ export class EditorTabViewState {
         },
       };
 
-      const editorData = new EditorData(tempEditorData, null);
+      const editorData = new EditorData(tempTabData, null);
       this.openEditor(editorData, 'DeploymentStatusModule');
       this.rootStore.uiState.setDeploymentStatusState({ isOpen: true });
     }.bind(this);
