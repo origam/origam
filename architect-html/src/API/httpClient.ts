@@ -107,7 +107,16 @@ export class HttpClient {
     const data = await parseBody(response);
 
     if (!response.ok) {
-      const err = new HttpError(`Request failed with status ${response.status}`);
+      const bodyMessage =
+        typeof data === 'string'
+          ? data
+          : (data && typeof data === 'object' && 'message' in (data as any)
+              ? String((data as any).message)
+              : '');
+      const message = bodyMessage
+        ? `Request failed with status ${response.status}: ${bodyMessage}`
+        : `Request failed with status ${response.status}`;
+      const err = new HttpError(message);
       err.status = response.status;
       err.response = { data, status: response.status };
       this.onError(err);

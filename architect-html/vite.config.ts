@@ -89,6 +89,14 @@ export default defineConfig({
         target: 'http://localhost:5003',
         secure: false,
       },
+      '/LookupWizard': {
+        target: 'https://localhost:7099',
+        secure: false,
+      },
+      '/EntityActions': {
+        target: 'https://localhost:7099',
+        secure: false,
+      },
     },
   },
 });

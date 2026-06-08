@@ -35,7 +35,6 @@ import Output from '@components/properties/Output.tsx';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { isSaveShortcut } from '@/utils/keyShortcuts';
 import { SIDEBAR_MAX_WIDTH, SIDEBAR_MIN_WIDTH } from '@stores/UiState';
-import { FloatingInspector } from '@components/modelTree/createWizard/FloatingInspector';
 
 const App = observer(() => {
   const rootStore = useContext(RootStoreContext);
@@ -77,22 +76,11 @@ const App = observer(() => {
     },
   ]);
 
-  const inspectorParent = rootStore.uiState.inspectorParentNodeName;
-  const editorArea = inspectorParent ? (
-    <FloatingInspector
-      parentNodeName={inspectorParent}
-      onCancel={() => rootStore.uiState.closeInspector()}
-      onCreate={() => rootStore.uiState.closeInspector()}
-    />
-  ) : (
-    <EditorTabView />
-  );
-
   return (
     <>
       <TopLayout
         topToolBar={<TopBar />}
-        editorArea={editorArea}
+        editorArea={<EditorTabView />}
         sideBarWidth={rootStore.uiState.sidebarWidth}
         onSideBarWidthChange={width => rootStore.uiState.setSidebarWidth(width)}
         minSideBarWidth={SIDEBAR_MIN_WIDTH}

@@ -28,6 +28,7 @@ import {
   ISearchResultsEditorData,
   IScreenEditorData,
   ISectionEditorData,
+  IShowSqlEditorData,
 } from '@api/IArchitectApi';
 import { IEditorNode } from '@components/editorTabView/EditorTabViewState';
 import { TreeNode } from '@components/modelTree/TreeNode';
@@ -62,7 +63,8 @@ export class EditorData {
     | IScreenEditorData
     | DocumentationEditorData
     | IDeploymentScriptsGeneratorModuleData
-    | ISearchResultsEditorData;
+    | ISearchResultsEditorData
+    | IShowSqlEditorData;
 
   constructor(data: IApiTabData, parent: TreeNode | null) {
     this.editorId = data.tabId;

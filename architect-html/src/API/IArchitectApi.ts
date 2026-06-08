@@ -126,6 +126,126 @@ export interface IArchitectApi {
   fetchDeploymentScriptsList(platform: string | null): Promise<IDatabaseResultResponse>;
   addToDeployment(request: IAddToDeploymentRequest): Promise<void>;
   addToModel(request: IAddToModelRequest): Promise<void>;
+
+  getLookupWizardEntityData(entityId: string): Promise<ILookupWizardEntityData>;
+  createLookup(request: ICreateLookupRequest): Promise<ICreateLookupResult>;
+
+  createFilter(request: ICreateFilterRequest): Promise<ICreateFilterResult>;
+
+  getScreenWizardData(entityId: string): Promise<IScreenWizardData>;
+  createScreen(request: ICreateScreenRequest): Promise<ICreateScreenResult>;
+
+  createWorkQueueClass(
+    request: ICreateWorkQueueRequest,
+  ): Promise<ICreateWorkQueueResult>;
+
+  createMenuItem(request: ICreateMenuItemRequest): Promise<ICreateMenuItemResult>;
+
+  getDataStructureSql(dataStructureId: string): Promise<IGetDataStructureSqlResult>;
+}
+
+export interface IGetDataStructureSqlResult {
+  dataStructureId: string;
+  dataStructureName: string;
+  sql: string;
+}
+
+export interface IShowSqlEditorData {
+  dataStructureId: string;
+  dataStructureName: string;
+  sql: string;
+}
+
+export interface ICreateWorkQueueRequest {
+  entityId: string;
+  selectedFieldIds: string[];
+}
+
+export interface ICreateWorkQueueResult {
+  workQueueClassId: string;
+  workQueueClassName: string;
+  searchResults: ISearchResult[];
+}
+
+export interface ICreateMenuItemRequest {
+  formId: string;
+  caption: string;
+  role: string;
+}
+
+export interface ICreateMenuItemResult {
+  menuItemId: string;
+  menuItemName: string;
+  searchResults: ISearchResult[];
+}
+
+export interface ICreateFilterRequest {
+  columnId: string;
+  withParameter: boolean;
+}
+
+export interface ICreateFilterResult {
+  filterId: string;
+  filterName: string;
+  searchResults: ISearchResult[];
+}
+
+export interface IScreenWizardData {
+  entityName: string;
+  columns: IScreenWizardColumn[];
+}
+
+export interface IScreenWizardColumn {
+  id: string;
+  name: string;
+  isPrimaryKey: boolean;
+}
+
+export interface ICreateScreenRequest {
+  entityId: string;
+  name: string;
+  caption: string;
+  selectedFieldIds: string[];
+}
+
+export interface ICreateScreenResult {
+  dataStructureId: string;
+  dataStructureName: string;
+  panelId: string;
+  panelName: string;
+  formId: string;
+  formName: string;
+  searchResults: ISearchResult[];
+}
+
+export interface ILookupIdName {
+  id: string;
+  name: string;
+}
+
+export interface ILookupWizardEntityData {
+  entityName: string;
+  primaryKeyId: string;
+  primaryKeyName: string;
+  defaultDisplayFieldId: string;
+  columns: ILookupIdName[];
+  filters: ILookupIdName[];
+}
+
+export interface ICreateLookupRequest {
+  entityId: string;
+  name: string;
+  displayFieldId: string;
+  idFilterId: string;
+  listFilterId: string | null;
+}
+
+export interface ICreateLookupResult {
+  lookupId: string;
+  lookupName: string;
+  dataStructureId: string;
+  dataStructureName: string;
+  searchResults: ISearchResult[];
 }
 
 export interface ITransformationInput {
@@ -326,7 +446,11 @@ export type EditorSubType =
   | 'ScreenEditor'
   | null;
 
-export type EditorType = EditorSubType | 'DocumentationEditor' | 'SearchResultsEditor';
+export type EditorType =
+  | EditorSubType
+  | 'DocumentationEditor'
+  | 'SearchResultsEditor'
+  | 'ShowSqlEditor';
 
 export interface INodeLoadData {
   id: string;
@@ -404,7 +528,8 @@ export interface IApiTabData {
     | IScreenEditorData
     | DocumentationEditorData
     | IDeploymentScriptsGeneratorModuleData
-    | ISearchResultsEditorData;
+    | ISearchResultsEditorData
+    | IShowSqlEditorData;
   isDirty: boolean;
 }
 

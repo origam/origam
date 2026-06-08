@@ -22,11 +22,11 @@ import { ISearchResult } from '@api/IArchitectApi';
 import { Icon } from '@components/icon/Icon';
 import S from '@components/modelTree/ModelTree.module.scss';
 import { TreeNode } from '@components/modelTree/TreeNode';
-import {
-  CreateLookupDrawer,
-  LookupModel,
-} from '@components/modelTree/createWizard/CreateLookupDrawer';
-import { MultiPaneWorkspace } from '@components/modelTree/createWizard/MultiPaneWorkspace';
+import { CreateLookupDrawer } from '@components/modelTree/createWizard/CreateLookupDrawer';
+import { CreateScreenDrawer } from '@components/modelTree/createWizard/CreateScreenDrawer';
+import { CreateWorkQueueDrawer } from '@components/modelTree/createWizard/CreateWorkQueueDrawer';
+import { CreateMenuItemDrawer } from '@components/modelTree/createWizard/CreateMenuItemDrawer';
+import { CreatedConfirmationDialog } from '@components/modelTree/createWizard/CreatedConfirmationDialog';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { observer } from 'mobx-react-lite';
 import { useContext, useEffect, useRef } from 'react';
@@ -127,17 +127,20 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
     run({ generator: node.runUpdateScriptActivity() });
   }
 
-  function openCreateLookupDrawer() {
+  function showCreatedConfirmation(actionLabel: string, results: ISearchResult[]) {
     const closeDialog = rootStore.dialogStack.pushDialog(
       '',
-      <CreateLookupDrawer
-        parentNodeName={node.nodeText}
-        onCancel={() => closeDialog()}
-        onCreate={(model: LookupModel) => {
+      <CreatedConfirmationDialog
+        title={`${actionLabel} created`}
+        results={results}
+        onClose={() => closeDialog()}
+        onShowResult={() => {
           closeDialog();
-          // eslint-disable-next-line no-console
-          console.log('[CreateLookupDrawer] submit', model);
-          run({ generator: node.createNode('DataLookup') });
+          rootStore.editorTabViewState.openSearchResults(
+            actionLabel,
+            results,
+            `${actionLabel}: ${results[0]?.foundIn ?? node.nodeText}`,
+          );
         }}
       />,
       undefined,
@@ -145,19 +148,124 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
     );
   }
 
-  function openFloatingInspector() {
-    rootStore.uiState.openInspectorFor(node.nodeText);
+  function createFilter(withParameter: boolean) {
+    run({
+      generator: function* () {
+        const result: { searchResults: ISearchResult[] } = yield rootStore.architectApi.createFilter({
+          columnId: node.origamId,
+          withParameter,
+        });
+        yield* rootStore.modelTreeState.loadPackageNodes.bind(rootStore.modelTreeState)();
+        showCreatedConfirmation(
+          withParameter ? 'Filter with parameter' : 'Filter',
+          result.searchResults ?? [],
+        );
+      },
+    });
   }
 
-  function openMultiPaneWorkspace() {
+  function openCreateLookupDrawer() {
     const closeDialog = rootStore.dialogStack.pushDialog(
       '',
-      <MultiPaneWorkspace
+      <CreateLookupDrawer
+        entityId={node.origamId}
         parentNodeName={node.nodeText}
         onCancel={() => closeDialog()}
-        onCreate={() => {
+        onCreate={result => {
           closeDialog();
-          run({ generator: node.createNode('DataLookup') });
+          run({
+            generator: function* () {
+              yield* rootStore.modelTreeState.loadPackageNodes.bind(
+                rootStore.modelTreeState,
+              )();
+              showCreatedConfirmation('Lookup', result?.searchResults ?? []);
+            },
+          });
+        }}
+      />,
+      undefined,
+      false,
+    );
+  }
+
+  function openCreateScreenDrawer() {
+    const closeDialog = rootStore.dialogStack.pushDialog(
+      '',
+      <CreateScreenDrawer
+        entityId={node.origamId}
+        parentNodeName={node.nodeText}
+        onCancel={() => closeDialog()}
+        onCreate={result => {
+          closeDialog();
+          run({
+            generator: function* () {
+              yield* rootStore.modelTreeState.loadPackageNodes.bind(
+                rootStore.modelTreeState,
+              )();
+              showCreatedConfirmation('Screen', result?.searchResults ?? []);
+            },
+          });
+        }}
+      />,
+      undefined,
+      false,
+    );
+  }
+
+  function openCreateWorkQueueDrawer() {
+    const closeDialog = rootStore.dialogStack.pushDialog(
+      '',
+      <CreateWorkQueueDrawer
+        entityId={node.origamId}
+        parentNodeName={node.nodeText}
+        onCancel={() => closeDialog()}
+        onCreate={result => {
+          closeDialog();
+          run({
+            generator: function* () {
+              yield* rootStore.modelTreeState.loadPackageNodes.bind(
+                rootStore.modelTreeState,
+              )();
+              showCreatedConfirmation('WorkQueue Class', result?.searchResults ?? []);
+            },
+          });
+        }}
+      />,
+      undefined,
+      false,
+    );
+  }
+
+  function showDataStructureSql() {
+    run({
+      generator: function* () {
+        const result = yield rootStore.architectApi.getDataStructureSql(node.origamId);
+        rootStore.editorTabViewState.openShowSqlEditor(
+          result.dataStructureId,
+          result.dataStructureName,
+          result.sql,
+        );
+      },
+    });
+  }
+
+  function openCreateMenuItemDrawer() {
+    const closeDialog = rootStore.dialogStack.pushDialog(
+      '',
+      <CreateMenuItemDrawer
+        formId={node.origamId}
+        parentNodeName={node.nodeText}
+        onCancel={() => closeDialog()}
+        onCreate={result => {
+          closeDialog();
+          run({
+            generator: function* () {
+              yield* rootStore.modelTreeState.loadPackageNodes.bind(
+                rootStore.modelTreeState,
+              )();
+              showCreatedConfirmation('Menu Item', result?.searchResults ?? []);
+            },
+          });
         }}
       />,
       undefined,
@@ -225,17 +333,43 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
                 </Item>
               ))}
             </Submenu>
-            <Submenu label="Actions">
-              <Item id="create-lookup-drawer" onClick={openCreateLookupDrawer}>
-                Create Lookup — Drawer + Stepper
-              </Item>
-              <Item id="create-lookup-inspector" onClick={openFloatingInspector}>
-                Create Lookup — Floating Inspector
-              </Item>
-              <Item id="create-lookup-workspace" onClick={openMultiPaneWorkspace}>
-                Create Lookup — Multi-pane Workspace
-              </Item>
-            </Submenu>
+            {node.isDataEntity && (
+              <Submenu label="Actions">
+                <Item id="create-lookup" onClick={openCreateLookupDrawer}>
+                  Create Lookup
+                </Item>
+                <Item id="create-screen" onClick={openCreateScreenDrawer}>
+                  Create Screen
+                </Item>
+                <Item id="create-workqueue" onClick={openCreateWorkQueueDrawer}>
+                  Create Workqueue class
+                </Item>
+              </Submenu>
+            )}
+            {node.isScreen && (
+              <Submenu label="Actions">
+                <Item id="create-menu-item" onClick={openCreateMenuItemDrawer}>
+                  Create Menu Item
+                </Item>
+              </Submenu>
+            )}
+            {node.isDataStructure && (
+              <Submenu label="Actions">
+                <Item id="show-sql" onClick={showDataStructureSql}>
+                  Show SQL
+                </Item>
+              </Submenu>
+            )}
+            {node.isDataEntityColumn && (
+              <Submenu label="Actions">
+                <Item id="create-filter" onClick={() => createFilter(false)}>
+                  Create Filter
+                </Item>
+                <Item id="create-filter-with-param" onClick={() => createFilter(true)}>
+                  Create Filter with parameter
+                </Item>
+              </Submenu>
+            )}
             <Separator />
             {!node.isNonPersistentItem && (
               <Item id="edit" onClick={() => onNodeDoubleClick(node)}>

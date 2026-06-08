@@ -73,19 +73,6 @@ export class UIState {
   };
   @observable accessor sidebarWidth: number = SIDEBAR_DEFAULT_WIDTH;
 
-  // Prototype: when set, FloatingInspector takes over the editor area
-  @observable accessor inspectorParentNodeName: string | null = null;
-
-  @action
-  openInspectorFor(parentNodeName: string) {
-    this.inspectorParentNodeName = parentNodeName;
-  }
-
-  @action
-  closeInspector() {
-    this.inspectorParentNodeName = null;
-  }
-
   constructor() {
     this.expandedNodes = this.loadStateFromLocalStorage(EStorageKeys.TREE_EXPANDED_NODES);
 

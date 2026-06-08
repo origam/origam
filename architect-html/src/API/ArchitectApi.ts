@@ -24,7 +24,10 @@ import {
   IApiTabData,
   IApiTreeNode,
   IArchitectApi,
+  ICreateLookupRequest,
+  ICreateLookupResult,
   IDatabaseResultResponse,
+  ILookupWizardEntityData,
   IMenuItemInfo,
   IModelChange,
   IPackagesInfo,
@@ -305,6 +308,62 @@ export class ArchitectApi implements IArchitectApi {
 
   async addToModel(request: IAddToModelRequest): Promise<void> {
     await this.http.post('/DeploymentScriptsGenerator/AddToModel', request);
+  }
+
+  async getLookupWizardEntityData(entityId: string): Promise<ILookupWizardEntityData> {
+    return (
+      await this.http.get('/LookupWizard/GetEntityData', {
+        params: { entityId },
+      })
+    ).data;
+  }
+
+  async createLookup(request: ICreateLookupRequest): Promise<ICreateLookupResult> {
+    return (await this.http.post('/LookupWizard/CreateLookup', request)).data;
+  }
+
+  async createFilter(
+    request: import('@api/IArchitectApi').ICreateFilterRequest,
+  ): Promise<import('@api/IArchitectApi').ICreateFilterResult> {
+    return (await this.http.post('/EntityActions/CreateFilter', request)).data;
+  }
+
+  async getScreenWizardData(
+    entityId: string,
+  ): Promise<import('@api/IArchitectApi').IScreenWizardData> {
+    return (
+      await this.http.get('/EntityActions/GetScreenWizardData', {
+        params: { entityId },
+      })
+    ).data;
+  }
+
+  async createScreen(
+    request: import('@api/IArchitectApi').ICreateScreenRequest,
+  ): Promise<import('@api/IArchitectApi').ICreateScreenResult> {
+    return (await this.http.post('/EntityActions/CreateScreen', request)).data;
+  }
+
+  async createWorkQueueClass(
+    request: import('@api/IArchitectApi').ICreateWorkQueueRequest,
+  ): Promise<import('@api/IArchitectApi').ICreateWorkQueueResult> {
+    return (await this.http.post('/EntityActions/CreateWorkQueueClass', request)).data;
+  }
+
+  async createMenuItem(
+    request: import('@api/IArchitectApi').ICreateMenuItemRequest,
+  ): Promise<import('@api/IArchitectApi').ICreateMenuItemResult> {
+    return (await this.http.post('/EntityActions/CreateMenuItem', request)).data;
+  }
+
+  async getDataStructureSql(
+    dataStructureId: string,
+  ): Promise<import('@api/IArchitectApi').IGetDataStructureSqlResult> {
+    return (
+      await this.http.get('/EntityActions/GetDataStructureSql', {
+        params: { dataStructureId },
+      })
+    ).data;
   }
 }
 

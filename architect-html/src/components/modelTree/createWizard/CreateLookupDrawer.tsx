@@ -5,61 +5,146 @@ This file is part of ORIGAM (http://www.origam.org).
 
 import S from './CreateLookupDrawer.module.scss';
 import { observer } from 'mobx-react-lite';
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { VscChevronDown } from 'react-icons/vsc';
+import { RootStoreContext } from '@/main';
+import {
+  ICreateLookupResult,
+  ILookupWizardEntityData,
+} from '@api/IArchitectApi';
+import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 
 interface CreateLookupDrawerProps {
+  entityId: string;
   parentNodeName: string;
   onCancel: () => void;
-  onCreate: (model: LookupModel) => void;
+  onCreate: (result: ICreateLookupResult) => void;
 }
 
 export interface LookupModel {
   name: string;
-  dataType: string;
-  dataStructure: string;
-  valueMember: string;
-  displayMember: string;
-  autoCreateScreen: boolean;
+  displayFieldId: string;
+  idFilterId: string;
+  listFilterId: string;
 }
 
 const STEPS = [
-  { label: 'Basics', hint: 'Name & data type' },
-  { label: 'Source', hint: 'Data structure & members' },
+  { label: 'Basics', hint: 'Name your lookup' },
+  { label: 'Source', hint: 'Display field & filters' },
   { label: 'Review', hint: 'Confirm and create' },
 ];
 
-const DATA_TYPES = ['String', 'Integer', 'UniqueIdentifier', 'Boolean', 'Date', 'Currency'];
-
-const MOCK_STRUCTURES = [
-  'BusinessPartner_LookupList',
-  'Country_LookupList',
-  'Currency_LookupList',
-  'User_LookupList',
-];
-
 export const CreateLookupDrawer: React.FC<CreateLookupDrawerProps> = observer(
-  ({ parentNodeName, onCancel, onCreate }) => {
+  ({ entityId, parentNodeName, onCancel, onCreate }) => {
+    const rootStore = useContext(RootStoreContext);
+    const run = runInFlowWithHandler(rootStore.errorDialogController);
+
+    const drawerRef = useRef<HTMLDivElement>(null);
     const [step, setStep] = useState(0);
+    const [entityData, setEntityData] = useState<ILookupWizardEntityData | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [submitting, setSubmitting] = useState(false);
     const [model, setModel] = useState<LookupModel>({
       name: '',
-      dataType: 'UniqueIdentifier',
-      dataStructure: '',
-      valueMember: 'Id',
-      displayMember: 'Name',
-      autoCreateScreen: true,
+      displayFieldId: '',
+      idFilterId: '',
+      listFilterId: '',
     });
 
     const update = (patch: Partial<LookupModel>) => setModel(m => ({ ...m, ...patch }));
 
+    useEffect(() => {
+      let cancelled = false;
+      run({
+        generator: function* () {
+          try {
+            const data = (yield rootStore.architectApi.getLookupWizardEntityData(
+              entityId,
+            )) as ILookupWizardEntityData;
+            if (cancelled) return;
+            setEntityData(data);
+          } finally {
+            if (!cancelled) setLoading(false);
+          }
+        },
+      });
+      return () => {
+        cancelled = true;
+      };
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [entityId]);
+
+    useEffect(() => {
+      const onKeyDown = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') {
+          e.stopPropagation();
+          onCancel();
+          return;
+        }
+        if (e.key === 'Tab' && drawerRef.current) {
+          const nodes = Array.from(
+            drawerRef.current.querySelectorAll<HTMLElement>(
+              'a[href], button, input, select, textarea, [tabindex]',
+            ),
+          ).filter(el => {
+            if (el.hasAttribute('disabled')) return false;
+            if (el.getAttribute('tabindex') === '-1') return false;
+            if (el.offsetParent === null && el !== document.activeElement) return false;
+            return true;
+          });
+          if (nodes.length === 0) return;
+          e.preventDefault();
+          e.stopPropagation();
+          const active = document.activeElement as HTMLElement | null;
+          const idx = active ? nodes.indexOf(active) : -1;
+          const dir = e.shiftKey ? -1 : 1;
+          const nextIdx = idx === -1
+            ? (e.shiftKey ? nodes.length - 1 : 0)
+            : (idx + dir + nodes.length) % nodes.length;
+          nodes[nextIdx].focus();
+        }
+      };
+      document.addEventListener('keydown', onKeyDown);
+      return () => document.removeEventListener('keydown', onKeyDown);
+    }, [onCancel]);
+
     const canAdvance =
       (step === 0 && model.name.trim().length > 0) ||
-      (step === 1 && model.dataStructure.length > 0) ||
+      (step === 1 && !!model.displayFieldId && !!model.idFilterId) ||
       step === 2;
 
     const next = () => setStep(s => Math.min(s + 1, STEPS.length - 1));
     const back = () => setStep(s => Math.max(s - 1, 0));
 
+    const submit = () => {
+      if (submitting) return;
+      setSubmitting(true);
+      run({
+        generator: function* () {
+          try {
+            const result = (yield rootStore.architectApi.createLookup({
+              entityId,
+              name: model.name.trim(),
+              displayFieldId: model.displayFieldId,
+              idFilterId: model.idFilterId,
+              listFilterId: model.listFilterId || null,
+            })) as ICreateLookupResult;
+            onCreate(result);
+          } finally {
+            setSubmitting(false);
+          }
+        },
+      });
+    };
+
+    const findName = (list: { id: string; name: string }[] | undefined, id: string) =>
+      (list ?? []).find(x => x.id === id)?.name ?? '';
+
     const renderStep = () => {
+      if (loading || !entityData) {
+        return <div className={S.formSubtitle}>Loading entity data…</div>;
+      }
+
       if (step === 0) {
         return (
           <>
@@ -72,34 +157,19 @@ export const CreateLookupDrawer: React.FC<CreateLookupDrawerProps> = observer(
             <div className={S.field}>
               <label className={S.fieldLabel}>
                 Name <span className={S.required}>*</span>
-                <span className={S.fieldHint}>— used everywhere this lookup is referenced</span>
               </label>
               <input
                 className={S.input}
                 autoFocus
-                placeholder="e.g. BusinessPartner"
+                placeholder="e.g. BusinessPartner_Name_GetId"
                 value={model.name}
                 onChange={e => update({ name: e.target.value })}
               />
             </div>
 
-            <div className={S.fieldRow}>
-              <div className={S.field}>
-                <label className={S.fieldLabel}>Value data type</label>
-                <select
-                  className={S.select}
-                  value={model.dataType}
-                  onChange={e => update({ dataType: e.target.value })}
-                >
-                  {DATA_TYPES.map(t => (
-                    <option key={t}>{t}</option>
-                  ))}
-                </select>
-              </div>
-              <div className={S.field}>
-                <label className={S.fieldLabel}>Created in</label>
-                <input className={S.input} value={parentNodeName} disabled />
-              </div>
+            <div className={S.field}>
+              <label className={S.fieldLabel}>Created from entity</label>
+              <input className={S.input} value={entityData.entityName} disabled />
             </div>
 
             <div className={S.preview}>
@@ -107,6 +177,10 @@ export const CreateLookupDrawer: React.FC<CreateLookupDrawerProps> = observer(
               <div className={S.previewItem}>
                 <span className={S.previewBadge}>Lookup</span>
                 <span>{model.name || '<name>'}</span>
+              </div>
+              <div className={S.previewItem}>
+                <span className={S.previewBadge}>Data Structure</span>
+                <span>Lookup{model.name || '<name>'}</span>
               </div>
             </div>
           </>
@@ -118,55 +192,69 @@ export const CreateLookupDrawer: React.FC<CreateLookupDrawerProps> = observer(
           <>
             <h2 className={S.formTitle}>Where does the data come from?</h2>
             <p className={S.formSubtitle}>
-              Pick a data structure to read from, and choose which columns are the value and the
-              display.
+              Choose which column shows as the display value, and the filters used to fetch
+              records by id or build the dropdown list.
             </p>
 
             <div className={S.field}>
               <label className={S.fieldLabel}>
-                Data structure <span className={S.required}>*</span>
+                Display Field <span className={S.required}>*</span>
               </label>
-              <select
-                className={S.select}
-                value={model.dataStructure}
-                onChange={e => update({ dataStructure: e.target.value })}
-              >
-                <option value="">— select —</option>
-                {MOCK_STRUCTURES.map(s => (
-                  <option key={s}>{s}</option>
-                ))}
-              </select>
+              <div className={S.selectWrapper}>
+                <select
+                  className={S.select}
+                  value={model.displayFieldId}
+                  onChange={e => update({ displayFieldId: e.target.value })}
+                >
+                  <option value="">— select —</option>
+                  {(entityData.columns ?? []).map(c => (
+                    <option key={c.id} value={c.id}>
+                      {c.name}
+                    </option>
+                  ))}
+                </select>
+                <VscChevronDown className={S.selectIcon} />
+              </div>
             </div>
 
-            <div className={S.fieldRow}>
-              <div className={S.field}>
-                <label className={S.fieldLabel}>Value member</label>
-                <input
-                  className={S.input}
-                  value={model.valueMember}
-                  onChange={e => update({ valueMember: e.target.value })}
-                />
-              </div>
-              <div className={S.field}>
-                <label className={S.fieldLabel}>Display member</label>
-                <input
-                  className={S.input}
-                  value={model.displayMember}
-                  onChange={e => update({ displayMember: e.target.value })}
-                />
+            <div className={S.field}>
+              <label className={S.fieldLabel}>List Filter</label>
+              <div className={S.selectWrapper}>
+                <select
+                  className={S.select}
+                  value={model.listFilterId}
+                  onChange={e => update({ listFilterId: e.target.value })}
+                >
+                  <option value="">— none —</option>
+                  {(entityData.filters ?? []).map(f => (
+                    <option key={f.id} value={f.id}>
+                      {f.name}
+                    </option>
+                  ))}
+                </select>
+                <VscChevronDown className={S.selectIcon} />
               </div>
             </div>
 
             <div className={S.field}>
               <label className={S.fieldLabel}>
-                <input
-                  type="checkbox"
-                  checked={model.autoCreateScreen}
-                  onChange={e => update({ autoCreateScreen: e.target.checked })}
-                  style={{ marginRight: 6 }}
-                />
-                Also create a default Screen Section for this lookup
+                Id Filter <span className={S.required}>*</span>
               </label>
+              <div className={S.selectWrapper}>
+                <select
+                  className={S.select}
+                  value={model.idFilterId}
+                  onChange={e => update({ idFilterId: e.target.value })}
+                >
+                  <option value="">— select —</option>
+                  {(entityData.filters ?? []).map(f => (
+                    <option key={f.id} value={f.id}>
+                      {f.name}
+                    </option>
+                  ))}
+                </select>
+                <VscChevronDown className={S.selectIcon} />
+              </div>
             </div>
 
             <div className={S.preview}>
@@ -175,20 +263,10 @@ export const CreateLookupDrawer: React.FC<CreateLookupDrawerProps> = observer(
                 <span className={S.previewBadge}>Lookup</span>
                 <span>{model.name}</span>
               </div>
-              {model.dataStructure && (
-                <div className={S.previewItem}>
-                  <span className={S.previewBadge}>Binds to</span>
-                  <span>
-                    {model.dataStructure} · {model.valueMember} → {model.displayMember}
-                  </span>
-                </div>
-              )}
-              {model.autoCreateScreen && (
-                <div className={S.previewItem}>
-                  <span className={S.previewBadge}>Screen Section</span>
-                  <span>{model.name}_Section</span>
-                </div>
-              )}
+              <div className={S.previewItem}>
+                <span className={S.previewBadge}>Data Structure</span>
+                <span>Lookup{model.name}</span>
+              </div>
             </div>
           </>
         );
@@ -206,121 +284,116 @@ export const CreateLookupDrawer: React.FC<CreateLookupDrawerProps> = observer(
               <div className={S.reviewCardIcon}>L</div>
               <div>
                 <div className={S.reviewCardTitle}>{model.name || 'Untitled'}</div>
-                <div style={{ fontSize: 12, color: 'var(--background6)' }}>Data Lookup</div>
+                <div style={{ fontSize: 12, color: 'var(--background6)' }}>Data Service Lookup</div>
               </div>
             </div>
             <div className={S.reviewKv}>
-              <div className={S.reviewKey}>Data type</div>
-              <div>{model.dataType}</div>
+              <div className={S.reviewKey}>Entity</div>
+              <div>{entityData.entityName}</div>
             </div>
             <div className={S.reviewKv}>
-              <div className={S.reviewKey}>Data structure</div>
-              <div>{model.dataStructure}</div>
+              <div className={S.reviewKey}>Id Column</div>
+              <div>{entityData.primaryKeyName}</div>
             </div>
             <div className={S.reviewKv}>
-              <div className={S.reviewKey}>Value member</div>
-              <div>{model.valueMember}</div>
+              <div className={S.reviewKey}>Display Field</div>
+              <div>{findName(entityData.columns, model.displayFieldId)}</div>
             </div>
             <div className={S.reviewKv}>
-              <div className={S.reviewKey}>Display member</div>
-              <div>{model.displayMember}</div>
+              <div className={S.reviewKey}>List Filter</div>
+              <div>{findName(entityData.filters, model.listFilterId) || 'none'}</div>
             </div>
             <div className={S.reviewKv}>
-              <div className={S.reviewKey}>Parent</div>
-              <div>{parentNodeName}</div>
+              <div className={S.reviewKey}>Id Filter</div>
+              <div>{findName(entityData.filters, model.idFilterId)}</div>
             </div>
           </div>
 
-          {model.autoCreateScreen && (
-            <div className={S.reviewCard}>
-              <div className={S.reviewCardHeader}>
-                <div className={S.reviewCardIcon} style={{ background: '#7c3aed' }}>
-                  S
-                </div>
-                <div>
-                  <div className={S.reviewCardTitle}>{model.name}_Section</div>
-                  <div style={{ fontSize: 12, color: 'var(--background6)' }}>
-                    Screen Section (auto-generated)
-                  </div>
+          <div className={S.reviewCard}>
+            <div className={S.reviewCardHeader}>
+              <div className={S.reviewCardIcon}>D</div>
+              <div>
+                <div className={S.reviewCardTitle}>Lookup{model.name}</div>
+                <div style={{ fontSize: 12, color: 'var(--background6)' }}>
+                  Data Structure (auto-generated)
                 </div>
               </div>
             </div>
-          )}
+          </div>
         </>
       );
     };
 
     return (
-      <>
-        <div className={S.drawer} role="dialog" aria-modal="true">
-          <div className={S.header}>
-            <div className={S.headerIcon}>L</div>
-            <div className={S.headerText}>
-              <div className={S.headerTitle}>Create Lookup</div>
-              <div className={S.headerSubtitle}>in {parentNodeName}</div>
-            </div>
-            <button className={S.closeBtn} onClick={onCancel} aria-label="Close">
-              ✕
-            </button>
+      <div className={S.drawer} role="dialog" aria-modal="true" ref={drawerRef}>
+        <div className={S.header}>
+          <div className={S.headerIcon}>L</div>
+          <div className={S.headerText}>
+            <div className={S.headerTitle}>Create Lookup</div>
+            <div className={S.headerSubtitle}>in {parentNodeName}</div>
+          </div>
+          <button className={S.closeBtn} onClick={onCancel} aria-label="Close">
+            ✕
+          </button>
+        </div>
+
+        <div className={S.body}>
+          <div className={S.stepperCol}>
+            {STEPS.map((s, i) => (
+              <div
+                key={s.label}
+                className={`${S.stepperItem} ${i === step ? S.active : ''} ${
+                  i < step ? S.done : ''
+                }`}
+                onClick={() => i < step && setStep(i)}
+              >
+                <div className={S.stepBullet}>{i < step ? '✓' : i + 1}</div>
+                <div className={S.stepText}>
+                  <div className={S.stepLabel}>{s.label}</div>
+                  <div className={S.stepHint}>{s.hint}</div>
+                </div>
+              </div>
+            ))}
           </div>
 
-          <div className={S.body}>
-            <div className={S.stepperCol}>
-              {STEPS.map((s, i) => (
-                <div
-                  key={s.label}
-                  className={`${S.stepperItem} ${i === step ? S.active : ''} ${
-                    i < step ? S.done : ''
-                  }`}
-                  onClick={() => i < step && setStep(i)}
-                >
-                  <div className={S.stepBullet}>{i < step ? '✓' : i + 1}</div>
-                  <div className={S.stepText}>
-                    <div className={S.stepLabel}>{s.label}</div>
-                    <div className={S.stepHint}>{s.hint}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
+          <div className={S.formCol}>
+            <div className={S.formContent}>{renderStep()}</div>
 
-            <div className={S.formCol}>
-              <div className={S.formContent}>{renderStep()}</div>
-
-              <div className={S.footer}>
-                <div className={S.footerHint}>
-                  Step {step + 1} of {STEPS.length}
-                </div>
-                <div className={S.footerBtns}>
-                  <button className={S.btn} onClick={onCancel}>
-                    Cancel
+            <div className={S.footer}>
+              <div className={S.footerHint}>
+                Step {step + 1} of {STEPS.length}
+              </div>
+              <div className={S.footerBtns}>
+                <button className={S.btn} onClick={onCancel}>
+                  Cancel
+                </button>
+                {step > 0 && (
+                  <button className={S.btn} onClick={back} disabled={submitting}>
+                    Back
                   </button>
-                  {step > 0 && (
-                    <button className={S.btn} onClick={back}>
-                      Back
-                    </button>
-                  )}
-                  {step < STEPS.length - 1 ? (
-                    <button
-                      className={`${S.btn} ${S.btnPrimary}`}
-                      onClick={next}
-                      disabled={!canAdvance}
-                    >
-                      Next →
-                    </button>
-                  ) : (
-                    <button
-                      className={`${S.btn} ${S.btnPrimary}`}
-                      onClick={() => onCreate(model)}
-                    >
-                      Create Lookup
-                    </button>
-                  )}
-                </div>
+                )}
+                {step < STEPS.length - 1 ? (
+                  <button
+                    className={`${S.btn} ${S.btnPrimary}`}
+                    onClick={next}
+                    disabled={!canAdvance || loading}
+                  >
+                    Next →
+                  </button>
+                ) : (
+                  <button
+                    className={`${S.btn} ${S.btnPrimary}`}
+                    onClick={submit}
+                    disabled={submitting || loading}
+                  >
+                    {submitting ? 'Creating…' : 'Create Lookup'}
+                  </button>
+                )}
               </div>
             </div>
           </div>
         </div>
-      </>
+      </div>
     );
   },
 );

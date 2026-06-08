@@ -64,6 +64,17 @@ public class SearchService(
             .Select(result => GetResult(result, referencePackages));
     }
 
+    /// <summary>
+    /// Convert a set of schema items into the same SearchResult shape used by
+    /// FindReferences/FindDependencies. Useful for surfacing the result of a
+    /// create-* wizard in the existing Search Results view.
+    /// </summary>
+    public List<SearchResult> BuildResults(IEnumerable<ISchemaItem> items)
+    {
+        List<Guid> referencePackages = GetReferencePackages();
+        return items.Where(x => x != null).Select(x => GetResult(x, referencePackages)).ToList();
+    }
+
     private List<Guid> GetReferencePackages()
     {
         var referencePackages = schemaService

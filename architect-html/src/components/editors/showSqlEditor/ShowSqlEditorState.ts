@@ -1,5 +1,5 @@
 /*
-Copyright 2005 - 2025 Advantage Solutions, s. r. o.
+Copyright 2005 - 2026 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -17,12 +17,26 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-.modalWindowOverlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(var(--background8-rgb), 0.08);
-  z-index: 1000;
+import { ITabState } from '@/components/editorTabView/ITabState';
+import { observable } from 'mobx';
+
+export class ShowSqlEditorState implements ITabState {
+  @observable accessor isActive = false;
+  @observable accessor sql = '';
+  @observable accessor label = '';
+
+  isDirty = false;
+
+  constructor(
+    public tabId: string,
+    public dataStructureName: string,
+    sql: string,
+  ) {
+    this.sql = sql;
+    this.label = `SQL: ${dataStructureName}`;
+  }
+
+  save(): Generator<Promise<any>, void, any> {
+    throw new Error('Method not implemented');
+  }
 }
