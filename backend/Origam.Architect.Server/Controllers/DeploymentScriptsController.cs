@@ -34,9 +34,25 @@ namespace Origam.Architect.Server.Controllers;
 public class DeploymentScriptsController(
     IPersistenceService persistenceService,
     DeploymentScriptRunnerService deploymentScriptRunner,
-    DeploymentVersionCurrentService deploymentVersionCurrentService
+    DeploymentVersionCurrentService deploymentVersionCurrentService,
+    DeploymentStatusService deploymentStatusService,
+    SchemaService schemaService
 ) : ControllerBase
 {
+    [HttpGet("Status")]
+    public IActionResult Status()
+    {
+        if (schemaService.ActiveExtension == null || schemaService.ActiveExtension.Id == Guid.Empty)
+        {
+            throw new InvalidOperationException(
+                "Active extension (package) is not set (activeExtensionId missing)."
+            );
+        }
+
+        SecurityManager.SetServerIdentity();
+        return Ok(deploymentStatusService.BuildStatus());
+    }
+
     [HttpPost("SetVersionCurrent")]
     public IActionResult SetVersionCurrent(
         [Required] [FromBody] SetVersionCurrentRequestModel requestModel
