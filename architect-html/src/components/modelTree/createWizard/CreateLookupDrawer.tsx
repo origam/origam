@@ -5,14 +5,15 @@ This file is part of ORIGAM (http://www.origam.org).
 
 import S from './CreateLookupDrawer.module.scss';
 import { observer } from 'mobx-react-lite';
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import { VscChevronDown } from 'react-icons/vsc';
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { RootStoreContext } from '@/main';
 import {
   ICreateLookupResult,
+  IDropDownValue,
   ILookupWizardEntityData,
 } from '@api/IArchitectApi';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
+import { FilterableSelect } from '@editors/propertyEditor/FilterableSelect';
 
 interface CreateLookupDrawerProps {
   entityId: string;
@@ -29,8 +30,8 @@ export interface LookupModel {
 }
 
 const STEPS = [
-  { label: 'Basics', hint: 'Name your lookup' },
   { label: 'Source', hint: 'Display field & filters' },
+  { label: 'Basics', hint: 'Name your lookup' },
   { label: 'Review', hint: 'Confirm and create' },
 ];
 
@@ -40,6 +41,7 @@ export const CreateLookupDrawer: React.FC<CreateLookupDrawerProps> = observer(
     const run = runInFlowWithHandler(rootStore.errorDialogController);
 
     const drawerRef = useRef<HTMLDivElement>(null);
+    const nameManuallyEditedRef = useRef(false);
     const [step, setStep] = useState(0);
     const [entityData, setEntityData] = useState<ILookupWizardEntityData | null>(null);
     const [loading, setLoading] = useState(true);
@@ -52,6 +54,54 @@ export const CreateLookupDrawer: React.FC<CreateLookupDrawerProps> = observer(
     });
 
     const update = (patch: Partial<LookupModel>) => setModel(m => ({ ...m, ...patch }));
+
+    const buildAutoName = (
+      entityName: string,
+      displayColumnName: string | undefined,
+      idFilterName: string | undefined,
+    ) => {
+      let name = entityName;
+      if (displayColumnName) {
+        name += `_${displayColumnName}`;
+      }
+      if (idFilterName) {
+        name += `_${idFilterName}`;
+      }
+      return name;
+    };
+
+    const onDisplayFieldChange = (newDisplayFieldId: string) => {
+      if (nameManuallyEditedRef.current || !entityData) {
+        update({ displayFieldId: newDisplayFieldId });
+        return;
+      }
+      const column = entityData.columns?.find(c => c.id === newDisplayFieldId);
+      const idFilter = entityData.filters?.find(f => f.id === model.idFilterId);
+      setModel(m => ({
+        ...m,
+        displayFieldId: newDisplayFieldId,
+        name: buildAutoName(entityData.entityName, column?.name, idFilter?.name),
+      }));
+    };
+
+    const onIdFilterChange = (newIdFilterId: string) => {
+      if (nameManuallyEditedRef.current || !entityData) {
+        update({ idFilterId: newIdFilterId });
+        return;
+      }
+      const column = entityData.columns?.find(c => c.id === model.displayFieldId);
+      const idFilter = entityData.filters?.find(f => f.id === newIdFilterId);
+      setModel(m => ({
+        ...m,
+        idFilterId: newIdFilterId,
+        name: buildAutoName(entityData.entityName, column?.name, idFilter?.name),
+      }));
+    };
+
+    const onNameChange = (newName: string) => {
+      nameManuallyEditedRef.current = true;
+      update({ name: newName });
+    };
 
     useEffect(() => {
       let cancelled = false;
@@ -109,8 +159,8 @@ export const CreateLookupDrawer: React.FC<CreateLookupDrawerProps> = observer(
     }, [onCancel]);
 
     const canAdvance =
-      (step === 0 && model.name.trim().length > 0) ||
-      (step === 1 && !!model.displayFieldId && !!model.idFilterId) ||
+      (step === 0 && !!model.displayFieldId && !!model.idFilterId) ||
+      (step === 1 && model.name.trim().length > 0) ||
       step === 2;
 
     const next = () => setStep(s => Math.min(s + 1, STEPS.length - 1));
@@ -140,12 +190,18 @@ export const CreateLookupDrawer: React.FC<CreateLookupDrawerProps> = observer(
     const findName = (list: { id: string; name: string }[] | undefined, id: string) =>
       (list ?? []).find(x => x.id === id)?.name ?? '';
 
-    const renderStep = () => {
-      if (loading || !entityData) {
-        return <div className={S.formSubtitle}>Loading entity data…</div>;
-      }
+    const columnOptions = useMemo<IDropDownValue[]>(
+      () => (entityData?.columns ?? []).map(c => ({ value: c.id, name: c.name })),
+      [entityData?.columns],
+    );
+    const idFilterOptions = useMemo<IDropDownValue[]>(
+      () => (entityData?.filters ?? []).map(f => ({ value: f.id, name: f.name })),
+      [entityData?.filters],
+    );
+    const listFilterOptions = idFilterOptions;
 
-      if (step === 0) {
+    const renderStep = () => {
+      if (step === 1) {
         return (
           <>
             <h2 className={S.formTitle}>Let's name your lookup</h2>
@@ -163,13 +219,13 @@ export const CreateLookupDrawer: React.FC<CreateLookupDrawerProps> = observer(
                 autoFocus
                 placeholder="e.g. BusinessPartner_Name_GetId"
                 value={model.name}
-                onChange={e => update({ name: e.target.value })}
+                onChange={e => onNameChange(e.target.value)}
               />
             </div>
 
             <div className={S.field}>
               <label className={S.fieldLabel}>Created from entity</label>
-              <input className={S.input} value={entityData.entityName} disabled />
+              <input className={S.input} value={entityData?.entityName ?? ''} disabled />
             </div>
 
             <div className={S.preview}>
@@ -187,7 +243,7 @@ export const CreateLookupDrawer: React.FC<CreateLookupDrawerProps> = observer(
         );
       }
 
-      if (step === 1) {
+      if (step === 0) {
         return (
           <>
             <h2 className={S.formTitle}>Where does the data come from?</h2>
@@ -200,61 +256,38 @@ export const CreateLookupDrawer: React.FC<CreateLookupDrawerProps> = observer(
               <label className={S.fieldLabel}>
                 Display Field <span className={S.required}>*</span>
               </label>
-              <div className={S.selectWrapper}>
-                <select
-                  className={S.select}
-                  value={model.displayFieldId}
-                  onChange={e => update({ displayFieldId: e.target.value })}
-                >
-                  <option value="">— select —</option>
-                  {(entityData.columns ?? []).map(c => (
-                    <option key={c.id} value={c.id}>
-                      {c.name}
-                    </option>
-                  ))}
-                </select>
-                <VscChevronDown className={S.selectIcon} />
-              </div>
+              <FilterableSelect
+                className={S.filterableSelect}
+                options={columnOptions}
+                selectedValue={model.displayFieldId}
+                disabled={loading}
+                autoFocus={!loading}
+                onChange={value => onDisplayFieldChange(value ?? '')}
+              />
             </div>
 
             <div className={S.field}>
               <label className={S.fieldLabel}>List Filter</label>
-              <div className={S.selectWrapper}>
-                <select
-                  className={S.select}
-                  value={model.listFilterId}
-                  onChange={e => update({ listFilterId: e.target.value })}
-                >
-                  <option value="">— none —</option>
-                  {(entityData.filters ?? []).map(f => (
-                    <option key={f.id} value={f.id}>
-                      {f.name}
-                    </option>
-                  ))}
-                </select>
-                <VscChevronDown className={S.selectIcon} />
-              </div>
+              <FilterableSelect
+                className={S.filterableSelect}
+                options={listFilterOptions}
+                selectedValue={model.listFilterId}
+                disabled={loading}
+                onChange={value => update({ listFilterId: value ?? '' })}
+              />
             </div>
 
             <div className={S.field}>
               <label className={S.fieldLabel}>
                 Id Filter <span className={S.required}>*</span>
               </label>
-              <div className={S.selectWrapper}>
-                <select
-                  className={S.select}
-                  value={model.idFilterId}
-                  onChange={e => update({ idFilterId: e.target.value })}
-                >
-                  <option value="">— select —</option>
-                  {(entityData.filters ?? []).map(f => (
-                    <option key={f.id} value={f.id}>
-                      {f.name}
-                    </option>
-                  ))}
-                </select>
-                <VscChevronDown className={S.selectIcon} />
-              </div>
+              <FilterableSelect
+                className={S.filterableSelect}
+                options={idFilterOptions}
+                selectedValue={model.idFilterId}
+                disabled={loading}
+                onChange={value => onIdFilterChange(value ?? '')}
+              />
             </div>
 
             <div className={S.preview}>

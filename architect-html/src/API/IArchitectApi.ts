@@ -179,9 +179,17 @@ export interface ICreateMenuItemResult {
   searchResults: ISearchResult[];
 }
 
+export type CreateFilterType =
+  | 'Equal'
+  | 'EqualParam'
+  | 'Like'
+  | 'LikeParam'
+  | 'InList'
+  | 'Between';
+
 export interface ICreateFilterRequest {
   columnId: string;
-  withParameter: boolean;
+  filterType: CreateFilterType;
 }
 
 export interface ICreateFilterResult {
@@ -193,6 +201,7 @@ export interface ICreateFilterResult {
 export interface IScreenWizardData {
   entityName: string;
   columns: IScreenWizardColumn[];
+  existingDataStructureNames: string[];
 }
 
 export interface IScreenWizardColumn {

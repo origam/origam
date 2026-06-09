@@ -46,6 +46,7 @@ export const CreateScreenDrawer: React.FC<CreateScreenDrawerProps> = observer(
 
     const drawerRef = useRef<HTMLDivElement | null>(null);
     const formContentRef = useRef<HTMLDivElement | null>(null);
+    const nameManuallyEditedRef = useRef(false);
 
     useEffect(() => {
       let cancelled = false;
@@ -57,6 +58,9 @@ export const CreateScreenDrawer: React.FC<CreateScreenDrawerProps> = observer(
             )) as IScreenWizardData;
             if (cancelled) return;
             setEntityData(data);
+            if (!nameManuallyEditedRef.current) {
+              setModel(m => ({ ...m, name: data.entityName }));
+            }
           } finally {
             if (!cancelled) setLoading(false);
           }
@@ -146,12 +150,25 @@ export const CreateScreenDrawer: React.FC<CreateScreenDrawerProps> = observer(
       setModel(m => ({ ...m, selectedFieldIds: new Set() }));
     };
 
+    const trimmedName = model.name.trim();
+    const nameExists =
+      trimmedName.length > 0 &&
+      (entityData?.existingDataStructureNames ?? []).some(
+        n => n.toLowerCase() === trimmedName.toLowerCase(),
+      );
+
     const canAdvance =
-      (step === 0 && model.name.trim().length > 0) ||
+      (step === 0 && trimmedName.length > 0) ||
       (step === 1 && model.selectedFieldIds.size > 0) ||
       step === 2;
 
-    const next = () => setStep(s => Math.min(s + 1, STEPS.length - 1));
+    const next = () => {
+      if (step === 0 && nameExists) {
+        window.alert(`A DataStructure named "${trimmedName}" already exists.`);
+        return;
+      }
+      setStep(s => Math.min(s + 1, STEPS.length - 1));
+    };
     const back = () => setStep(s => Math.max(s - 1, 0));
 
     const submit = () => {
@@ -175,10 +192,6 @@ export const CreateScreenDrawer: React.FC<CreateScreenDrawerProps> = observer(
     };
 
     const renderStep = () => {
-      if (loading || !entityData) {
-        return <div className={S.formSubtitle}>Loading entity data…</div>;
-      }
-
       if (step === 0) {
         return (
           <>
@@ -195,15 +208,23 @@ export const CreateScreenDrawer: React.FC<CreateScreenDrawerProps> = observer(
               <input
                 className={S.input}
                 autoFocus
-                placeholder={`e.g. ${entityData.entityName}`}
+                placeholder={entityData ? `e.g. ${entityData.entityName}` : ''}
                 value={model.name}
-                onChange={e => setModel(m => ({ ...m, name: e.target.value }))}
+                onChange={e => {
+                  nameManuallyEditedRef.current = true;
+                  setModel(m => ({ ...m, name: e.target.value }));
+                }}
               />
+              {nameExists && (
+                <div style={{ fontSize: 12, color: 'var(--error1)', marginTop: 2 }}>
+                  A DataStructure named "{trimmedName}" already exists.
+                </div>
+              )}
             </div>
 
             <div className={S.field}>
               <label className={S.fieldLabel}>Created from entity</label>
-              <input className={S.input} value={entityData.entityName} disabled />
+              <input className={S.input} value={entityData?.entityName ?? ''} disabled />
             </div>
 
             <div className={S.preview}>

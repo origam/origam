@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { RootStoreContext, T } from '@/main';
-import { ISearchResult } from '@api/IArchitectApi';
+import { CreateFilterType, ICreateFilterResult, ISearchResult } from '@api/IArchitectApi';
 import { Icon } from '@components/icon/Icon';
 import S from '@components/modelTree/ModelTree.module.scss';
 import { TreeNode } from '@components/modelTree/TreeNode';
@@ -26,7 +26,6 @@ import { CreateLookupDrawer } from '@components/modelTree/createWizard/CreateLoo
 import { CreateScreenDrawer } from '@components/modelTree/createWizard/CreateScreenDrawer';
 import { CreateWorkQueueDrawer } from '@components/modelTree/createWizard/CreateWorkQueueDrawer';
 import { CreateMenuItemDrawer } from '@components/modelTree/createWizard/CreateMenuItemDrawer';
-import { CreatedConfirmationDialog } from '@components/modelTree/createWizard/CreatedConfirmationDialog';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { observer } from 'mobx-react-lite';
 import { useContext, useEffect, useRef } from 'react';
@@ -128,38 +127,27 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
   }
 
   function showCreatedConfirmation(actionLabel: string, results: ISearchResult[]) {
-    const closeDialog = rootStore.dialogStack.pushDialog(
-      '',
-      <CreatedConfirmationDialog
-        title={`${actionLabel} created`}
-        results={results}
-        onClose={() => closeDialog()}
-        onShowResult={() => {
-          closeDialog();
-          rootStore.editorTabViewState.openSearchResults(
-            actionLabel,
-            results,
-            `${actionLabel}: ${results[0]?.foundIn ?? node.nodeText}`,
-          );
-        }}
-      />,
-      undefined,
-      true,
-    );
+    rootStore.toastState.pushActionResult({
+      title: `${actionLabel} created`,
+      results,
+      onShowResult: () =>
+        rootStore.editorTabViewState.openSearchResults(
+          actionLabel,
+          results,
+          `${actionLabel}: ${results[0]?.foundIn ?? node.nodeText}`,
+        ),
+    });
   }
 
-  function createFilter(withParameter: boolean) {
+  function createFilter(filterType: CreateFilterType, label: string) {
     run({
       generator: function* () {
-        const result: { searchResults: ISearchResult[] } = yield rootStore.architectApi.createFilter({
+        const result = (yield rootStore.architectApi.createFilter({
           columnId: node.origamId,
-          withParameter,
-        });
+          filterType,
+        })) as ICreateFilterResult;
         yield* rootStore.modelTreeState.loadPackageNodes.bind(rootStore.modelTreeState)();
-        showCreatedConfirmation(
-          withParameter ? 'Filter with parameter' : 'Filter',
-          result.searchResults ?? [],
-        );
+        showCreatedConfirmation(label, result?.searchResults ?? []);
       },
     });
   }
@@ -362,11 +350,41 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
             )}
             {node.isDataEntityColumn && (
               <Submenu label="Actions">
-                <Item id="create-filter" onClick={() => createFilter(false)}>
-                  Create Filter
+                <Item
+                  id="create-filter-equal"
+                  onClick={() => createFilter('Equal', 'Filter (=)')}
+                >
+                  Create (=) Filter
                 </Item>
-                <Item id="create-filter-with-param" onClick={() => createFilter(true)}>
-                  Create Filter with parameter
+                <Item
+                  id="create-filter-equal-param"
+                  onClick={() => createFilter('EqualParam', 'Filter (=) with parameter')}
+                >
+                  Create (=) Filter With Parameter
+                </Item>
+                <Item
+                  id="create-filter-like"
+                  onClick={() => createFilter('Like', 'Filter (Like)')}
+                >
+                  Create (Like) Filter
+                </Item>
+                <Item
+                  id="create-filter-like-param"
+                  onClick={() => createFilter('LikeParam', 'Filter (Like) with parameter')}
+                >
+                  Create (Like) Filter With Parameter
+                </Item>
+                <Item
+                  id="create-filter-list-param"
+                  onClick={() => createFilter('InList', 'Filter (List) with parameter')}
+                >
+                  Create (List) Filter With Parameter
+                </Item>
+                <Item
+                  id="create-filter-between"
+                  onClick={() => createFilter('Between', 'Filter (Between) with parameters')}
+                >
+                  Create (Between) Filter With Parameters
                 </Item>
               </Submenu>
             )}

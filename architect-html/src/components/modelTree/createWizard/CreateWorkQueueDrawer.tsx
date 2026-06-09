@@ -110,25 +110,23 @@ export const CreateWorkQueueDrawer: React.FC<CreateWorkQueueDrawerProps> = obser
     };
 
     const renderStep = () => {
-      if (loading || !entityData) {
-        return <div className={S.formSubtitle}>Loading entity data…</div>;
-      }
-
       if (step === 0) {
-        const columns = entityData.columns ?? [];
+        const columns = entityData?.columns ?? [];
         return (
           <>
             <h2 className={S.formTitle}>Which columns to track?</h2>
             <p className={S.formSubtitle}>
-              The WorkQueue Class will be created with name <strong>{entityData.entityName}</strong>
-              . Pick the columns that should be exposed on the work queue records.
+              The WorkQueue Class will be created with name{' '}
+              <strong>{entityData?.entityName ?? '…'}</strong>. Pick the columns that should be
+              exposed on the work queue records.
             </p>
 
             <div className={S.field}>
               <label className={S.fieldLabel}>Caption</label>
               <input
                 className={S.input}
-                placeholder={`e.g. ${entityData.entityName}`}
+                autoFocus
+                placeholder={entityData ? `e.g. ${entityData.entityName}` : ''}
                 value={caption}
                 onChange={e => setCaption(e.target.value)}
               />

@@ -272,6 +272,43 @@ This file is part of ORIGAM (http://www.origam.org).
   display: block;
 }
 
+.filterableSelect {
+  width: 100%;
+  display: block;
+
+  svg {
+    color: var(--background7);
+  }
+
+  input {
+    height: 34px;
+    padding: 0 28px 0 10px;
+    border: 1px solid var(--background4);
+    border-radius: 6px;
+    background: var(--background1);
+    font-size: 13px;
+    color: var(--background8);
+    transition: border-color 140ms ease, box-shadow 140ms ease;
+    width: 100%;
+    box-sizing: border-box;
+
+    &:hover:not(:disabled):not(:focus) {
+      border-color: var(--background5);
+    }
+
+    &:focus {
+      outline: none;
+      border-color: var(--brand);
+      box-shadow: 0 0 0 3px rgba(var(--brand-rgb), 0.18);
+    }
+
+    &:disabled {
+      background: var(--background2);
+      color: var(--background6);
+    }
+  }
+}
+
 .selectIcon {
   position: absolute;
   right: 8px;

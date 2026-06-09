@@ -28,6 +28,7 @@ import { TabView } from '@components/tabView/TabView';
 import TopBar from '@components/topBar/TopBar';
 import TopLayout from '@components/topLayout/TopLayout';
 import { ApplicationDialogStack } from '@dialogs/DialogStack';
+import { ToastContainer } from '@components/toast/ToastContainer';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { observer } from 'mobx-react-lite';
 import { useContext, useEffect } from 'react';
@@ -111,6 +112,7 @@ const App = observer(() => {
         }
       />
       <ApplicationDialogStack />
+      <ToastContainer />
     </>
   );
 });

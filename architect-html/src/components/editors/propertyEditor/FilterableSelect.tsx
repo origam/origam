@@ -29,6 +29,8 @@ interface FilterableSelectProps {
   selectedValue: any;
   disabled?: boolean;
   className?: string;
+  /** Focus the input on mount / when this becomes true. Does NOT auto-open the dropdown. */
+  autoFocus?: boolean;
   onChange: (value: any) => void;
 }
 
@@ -36,7 +38,7 @@ const VIRTUAL_OVERSCAN = 5;
 const DEFAULT_ITEM_HEIGHT = 26;
 
 export const FilterableSelect = observer((props: FilterableSelectProps) => {
-  const { options, selectedValue, disabled, className, onChange } = props;
+  const { options, selectedValue, disabled, className, autoFocus, onChange } = props;
 
   const selectedOption = useMemo(
     () => options.find(option => String(option.value) === String(selectedValue)),
@@ -65,6 +67,16 @@ export const FilterableSelect = observer((props: FilterableSelectProps) => {
   const highlightSourceRef = useRef<'keyboard' | 'mouse'>('keyboard');
   const isScrollingRef = useRef(false);
   const scrollEndTimeoutRef = useRef<number | null>(null);
+  // Set briefly before a programmatic focus() so the resulting onFocus does not
+  // auto-open the dropdown (used by the autoFocus prop and step-1 re-focus).
+  const suppressOpenOnNextFocusRef = useRef(false);
+
+  useEffect(() => {
+    if (autoFocus && inputRef.current && document.activeElement !== inputRef.current) {
+      suppressOpenOnNextFocusRef.current = true;
+      inputRef.current.focus();
+    }
+  }, [autoFocus]);
 
   const filteredOptions = useMemo(() => {
     if (filter == null || filter === '') return options;
@@ -195,6 +207,10 @@ export const FilterableSelect = observer((props: FilterableSelectProps) => {
 
   const openDropdown = () => {
     if (disabled) return;
+    if (suppressOpenOnNextFocusRef.current) {
+      suppressOpenOnNextFocusRef.current = false;
+      return;
+    }
     setOpen(true);
     highlightSourceRef.current = 'keyboard';
     setHighlight(
@@ -223,11 +239,18 @@ export const FilterableSelect = observer((props: FilterableSelectProps) => {
         commit(filteredOptions[highlight].value, { keepFocus: true });
       }
     } else if (event.key === 'Escape') {
+      if (open) {
+        event.stopPropagation();
+        event.nativeEvent.stopImmediatePropagation();
+      }
       setOpen(false);
       setFilter(null);
     } else if (event.key === 'Tab') {
       if (open && filter != null && filteredOptions[highlight]) {
-        commit(filteredOptions[highlight].value);
+        // Keep focus on input so any wrapping Tab handler (e.g. drawer focus trap)
+        // can read activeElement and advance to the next field instead of falling
+        // back to the first focusable element.
+        commit(filteredOptions[highlight].value, { keepFocus: true });
       } else {
         setOpen(false);
         setFilter(null);
@@ -296,7 +319,7 @@ export const FilterableSelect = observer((props: FilterableSelectProps) => {
                   }
                   onMouseDown={event => {
                     event.preventDefault();
-                    commit(option.value);
+                    commit(option.value, { keepFocus: true });
                   }}
                   onMouseEnter={() => {
                     if (isScrollingRef.current) return;

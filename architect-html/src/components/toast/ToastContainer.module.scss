@@ -1,0 +1,172 @@
+/*
+Copyright 2005 - 2026 Advantage Solutions, s. r. o.
+This file is part of ORIGAM (http://www.origam.org).
+*/
+
+.container {
+  position: fixed;
+  left: 20px;
+  bottom: 20px;
+  z-index: 1100;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+  max-width: 380px;
+  width: calc(100vw - 40px);
+}
+
+.toast {
+  pointer-events: auto;
+  background: var(--background1);
+  border: 1px solid var(--background3);
+  border-left: 3px solid var(--brand);
+  border-radius: 10px;
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.06),
+    0 12px 32px -10px rgba(0, 0, 0, 0.22);
+  padding: 12px 14px 12px 14px;
+  display: grid;
+  grid-template-columns: 32px 1fr auto;
+  grid-template-rows: auto auto;
+  column-gap: 12px;
+  row-gap: 6px;
+  align-items: start;
+  animation: slideIn 200ms cubic-bezier(0.2, 0.85, 0.25, 1);
+  font-family: inherit;
+}
+
+.toast.leaving {
+  animation: slideOut 160ms ease-in forwards;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideOut {
+  from { opacity: 1; transform: translateX(0); }
+  to   { opacity: 0; transform: translateX(-20px); }
+}
+
+.icon {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(var(--brand-rgb), 0.14);
+  color: var(--brand);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.body {
+  grid-column: 2;
+  grid-row: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--background8);
+  line-height: 1.25;
+  letter-spacing: -0.005em;
+}
+
+.subtitle {
+  font-size: 11.5px;
+  color: var(--background6);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.closeBtn {
+  grid-column: 3;
+  grid-row: 1;
+  background: transparent;
+  border: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 5px;
+  cursor: pointer;
+  color: var(--background6);
+  font-size: 14px;
+  line-height: 1;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    background: var(--background3);
+    color: var(--background8);
+  }
+}
+
+.actions {
+  grid-column: 2 / span 2;
+  grid-row: 2;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.actionBtn {
+  height: 28px;
+  padding: 0 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--brand);
+  background: var(--brand);
+  color: white;
+  transition: filter 120ms ease, transform 80ms ease, box-shadow 120ms ease;
+
+  &:hover { filter: brightness(1.08); }
+  &:active { transform: translateY(1px); }
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(var(--brand-rgb), 0.35);
+  }
+  &:focus:not(:focus-visible) {
+    box-shadow: none;
+  }
+}
+
+.progress {
+  grid-column: 1 / span 3;
+  grid-row: 3;
+  height: 2px;
+  border-radius: 1px;
+  background: rgba(var(--brand-rgb), 0.18);
+  margin-top: 8px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progressBar {
+  position: absolute;
+  inset: 0;
+  background: var(--brand);
+  transform-origin: left center;
+  animation: shrink linear forwards;
+}
+
+.progressBar.paused {
+  animation-play-state: paused;
+}
+
+@keyframes shrink {
+  from { transform: scaleX(1); }
+  to   { transform: scaleX(0); }
+}

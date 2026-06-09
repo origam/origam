@@ -51,8 +51,8 @@ public class EntityActionsController(
     private readonly IPersistenceProvider persistenceProvider = persistenceService.SchemaProvider;
 
     /// <summary>
-    /// Create filter "GetBy{FieldName}" on the entity owning the given column.
-    /// Mirrors WinForms CreateFilterByFieldCommand / CreateFilterWithParameterByFieldCommand.
+    /// Create a filter on the entity owning the given column. Mirrors WinForms
+    /// CreateFilterByFieldCommand family (Equal/Like/In/Between, with or without parameter).
     /// </summary>
     [HttpPost("CreateFilter")]
     public IActionResult CreateFilter([Required] [FromBody] CreateFilterModel input)
@@ -71,12 +71,76 @@ public class EntityActionsController(
         try
         {
             persistenceProvider.BeginTransaction();
-            var filter = EntityHelper.CreateFilter(
-                column,
-                functionName: "Equal",
-                filterPrefix: "GetBy",
-                createParameter: input.WithParameter
-            );
+            var generated = new List<ISchemaItem>();
+            EntityFilter filter;
+            switch (input.FilterType)
+            {
+                case CreateFilterType.Equal:
+                {
+                    filter = EntityHelper.CreateFilter(
+                        field: column,
+                        functionName: "Equal",
+                        filterPrefix: "GetBy",
+                        createParameter: false,
+                        generatedElements: generated
+                    );
+                    break;
+                }
+                case CreateFilterType.EqualParam:
+                {
+                    filter = EntityHelper.CreateFilter(
+                        field: column,
+                        functionName: "Equal",
+                        filterPrefix: "GetBy",
+                        createParameter: true,
+                        generatedElements: generated
+                    );
+                    break;
+                }
+                case CreateFilterType.Like:
+                {
+                    filter = EntityHelper.CreateFilter(
+                        field: column,
+                        functionName: "Like",
+                        filterPrefix: "GetLike",
+                        createParameter: false,
+                        generatedElements: generated
+                    );
+                    break;
+                }
+                case CreateFilterType.LikeParam:
+                {
+                    filter = EntityHelper.CreateFilter(
+                        field: column,
+                        functionName: "Like",
+                        filterPrefix: "GetLike",
+                        createParameter: true,
+                        generatedElements: generated
+                    );
+                    break;
+                }
+                case CreateFilterType.InList:
+                {
+                    filter = EntityHelper.CreateFilter(
+                        field: column,
+                        functionName: "In",
+                        filterPrefix: "GetBy",
+                        createParameter: true,
+                        generatedElements: generated
+                    );
+                    break;
+                }
+                case CreateFilterType.Between:
+                {
+                    filter = CreateBetweenFilter(column, generated);
+                    break;
+                }
+                default:
+                {
+                    persistenceProvider.EndTransactionDontSave();
+                    return BadRequest($"Unknown filter type '{input.FilterType}'.");
+                }
+            }
             persistenceProvider.EndTransaction();
             gitNodeStatusService.ClearCache();
             return Ok(
@@ -84,7 +148,7 @@ public class EntityActionsController(
                 {
                     FilterId = filter.Id,
                     FilterName = filter.Name,
-                    SearchResults = searchService.BuildResults(new[] { (ISchemaItem)filter }),
+                    SearchResults = searchService.BuildResults(generated),
                 }
             );
         }
@@ -99,8 +163,97 @@ public class EntityActionsController(
     }
 
     /// <summary>
+    /// Port of WinForms CreateFilterBetweenWithParameterByFieldCommand.Run — creates
+    /// two parameters (par&lt;Field&gt;From / par&lt;Field&gt;To), the GetBetween&lt;Field&gt; filter
+    /// and a Between function call wired to them.
+    /// </summary>
+    private static EntityFilter CreateBetweenFilter(
+        IDataEntityColumn field,
+        IList<ISchemaItem> generated
+    )
+    {
+        if (string.IsNullOrEmpty(field.Name))
+        {
+            throw new ArgumentException("Field Name is not set.");
+        }
+        var schemaService = ServiceManager.Services.GetService<ISchemaService>();
+        var entity = (IDataEntity)field.ParentItem;
+        var baseName = field.Name.StartsWith("ref") ? field.Name.Substring(3) : field.Name;
+
+        var paramFrom = entity.NewItem<DatabaseParameter>(
+            schemaExtensionId: schemaService.ActiveSchemaExtensionId,
+            group: null
+        );
+        paramFrom.DataType = field.DataType;
+        paramFrom.DataLength = field.DataLength;
+        paramFrom.Name = "par" + baseName + "From";
+        paramFrom.Persist();
+        generated.Add(paramFrom);
+
+        var paramTo = entity.NewItem<DatabaseParameter>(
+            schemaExtensionId: schemaService.ActiveSchemaExtensionId,
+            group: null
+        );
+        paramTo.DataType = field.DataType;
+        paramTo.DataLength = field.DataLength;
+        paramTo.Name = "par" + baseName + "To";
+        paramTo.Persist();
+        generated.Add(paramTo);
+
+        var filter = entity.NewItem<EntityFilter>(
+            schemaExtensionId: schemaService.ActiveSchemaExtensionId,
+            group: null
+        );
+        filter.Name = "GetBetween" + baseName;
+        filter.Persist();
+        generated.Add(filter);
+
+        var call = filter.NewItem<FunctionCall>(
+            schemaExtensionId: schemaService.ActiveSchemaExtensionId,
+            group: null
+        );
+        var functionProvider = schemaService.GetProvider<FunctionSchemaItemProvider>();
+        var betweenFunction = (Function)
+            functionProvider.GetChildByName(name: "Between", itemType: Function.CategoryConst);
+        if (betweenFunction == null)
+        {
+            throw new Exception("Between function not found. Cannot create filter.");
+        }
+        call.Function = betweenFunction;
+        call.Name = "Between";
+        call.Persist();
+
+        var expressionRef = call.GetChildByName(name: "Expression")
+            .NewItem<EntityColumnReference>(
+                schemaExtensionId: schemaService.ActiveSchemaExtensionId,
+                group: null
+            );
+        expressionRef.Field = field;
+        expressionRef.Persist();
+
+        var leftRef = call.GetChildByName(name: "Left")
+            .NewItem<ParameterReference>(
+                schemaExtensionId: schemaService.ActiveSchemaExtensionId,
+                group: null
+            );
+        leftRef.Parameter = paramFrom;
+        leftRef.Persist();
+
+        var rightRef = call.GetChildByName(name: "Right")
+            .NewItem<ParameterReference>(
+                schemaExtensionId: schemaService.ActiveSchemaExtensionId,
+                group: null
+            );
+        rightRef.Parameter = paramTo;
+        rightRef.Persist();
+
+        return filter;
+    }
+
+    /// <summary>
     /// Returns entity info needed by the Create Screen wizard:
-    /// entity name and its columns (id + name).
+    /// entity name, its columns (id + name), and the names of existing
+    /// DataStructures so the wizard can warn before colliding on Name.
     /// </summary>
     [HttpGet("GetScreenWizardData")]
     public IActionResult GetScreenWizardData([FromQuery] [Required] Guid entityId)
@@ -122,7 +275,24 @@ public class EntityActionsController(
             })
             .ToList();
 
-        return Ok(new ScreenWizardData { EntityName = entity.Name, Columns = columns });
+        var schemaService = ServiceManager.Services.GetService<ISchemaService>();
+        var dsProvider =
+            schemaService?.GetProvider(typeof(DataStructureSchemaItemProvider))
+            as DataStructureSchemaItemProvider;
+        var existingNames =
+            dsProvider
+                ?.ChildItemsByType<ISchemaItem>(DataStructure.CategoryConst)
+                .Select(x => x.Name)
+                .ToList() ?? new List<string>();
+
+        return Ok(
+            new ScreenWizardData
+            {
+                EntityName = entity.Name,
+                Columns = columns,
+                ExistingDataStructureNames = existingNames,
+            }
+        );
     }
 
     /// <summary>
@@ -146,6 +316,21 @@ public class EntityActionsController(
         if (input.SelectedFieldIds == null || input.SelectedFieldIds.Count == 0)
         {
             return BadRequest("At least one field must be selected.");
+        }
+
+        var trimmedName = input.Name.Trim();
+        var schemaService = ServiceManager.Services.GetService<ISchemaService>();
+        var dsProvider =
+            schemaService?.GetProvider(typeof(DataStructureSchemaItemProvider))
+            as DataStructureSchemaItemProvider;
+        var duplicate = dsProvider
+            ?.ChildItemsByType<ISchemaItem>(DataStructure.CategoryConst)
+            .FirstOrDefault(x =>
+                string.Equals(x.Name, trimmedName, StringComparison.OrdinalIgnoreCase)
+            );
+        if (duplicate != null)
+        {
+            return Conflict($"A DataStructure named \"{trimmedName}\" already exists.");
         }
 
         // Resolve selected column ids to names; reject any unknown ids.
@@ -449,12 +634,23 @@ public class EntityActionsController(
     }
 }
 
+public enum CreateFilterType
+{
+    Equal,
+    EqualParam,
+    Like,
+    LikeParam,
+    InList,
+    Between,
+}
+
 public class CreateFilterModel
 {
     [Required]
     public Guid ColumnId { get; set; }
 
-    public bool WithParameter { get; set; }
+    [Required]
+    public CreateFilterType FilterType { get; set; }
 }
 
 public class CreateFilterResult
@@ -468,6 +664,7 @@ public class ScreenWizardData
 {
     public string EntityName { get; set; }
     public List<ScreenWizardColumn> Columns { get; set; } = new();
+    public List<string> ExistingDataStructureNames { get; set; } = new();
 }
 
 public class ScreenWizardColumn
