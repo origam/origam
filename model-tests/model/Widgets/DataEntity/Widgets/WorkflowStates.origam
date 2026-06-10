@@ -4,6 +4,11 @@
   xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
   xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
   xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:dcr="http://schemas.origam.com/Origam.Schema.EntityModel.DataConstantReference/6.0.0"
+  xmlns:ecr="http://schemas.origam.com/Origam.Schema.EntityModel.EntityColumnReference/6.0.0"
+  xmlns:ef="http://schemas.origam.com/Origam.Schema.EntityModel.EntityFilter/6.0.0"
+  xmlns:fc1="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCall/6.0.0"
+  xmlns:fcp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCallParameter/6.0.0"
   xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0"
   xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0"
   xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0">
@@ -16,6 +21,47 @@
     tmi:mappedObjectName="WorkflowStates"
     asi:name="WorkflowStates"
     ade:readOnly="false">
+    <ef:EntityFilter
+      asi:abstract="false"
+      x:id="10274ad6-6c0c-4432-a2d1-ed5d50b5a61b"
+      asi:name="GetByWorkflowStateNotError">
+      <fc1:DataEntityColumn
+        asi:abstract="false"
+        adec:allowNulls="true"
+        adec:autoIncrement="false"
+        adec:dataType="Boolean"
+        adec:excludeFromAllFields="false"
+        fc1:forceDatabaseCalculation="false"
+        fc1:function="NotEqual#NotEqual/4da95828-d10e-4224-8461-debfa6284dfd"
+        x:id="c7f42f6b-7378-4e62-9c48-09dc3c1c0a36"
+        adec:isPrimaryKey="false"
+        asi:name="NotEqual"
+        adec:onCopyAction="Copy"
+        adec:xmlMappingType="Attribute">
+        <fcp:FunctionCallParameter
+          asi:abstract="false"
+          x:id="9839fcdb-feb0-4597-b145-1f590c7eb1c3"
+          asi:name="Left"
+          fcp:parameter="Left#NotEqual/Left/a85bea50-ed47-4db4-937a-7bcdddee61fe">
+          <ecr:EntityColumnReference
+            asi:abstract="false"
+            ecr:field="Id#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+            x:id="0a88ec25-d1e1-484c-9286-ed01fdce296c"
+            asi:name="Id" />
+        </fcp:FunctionCallParameter>
+        <fcp:FunctionCallParameter
+          asi:abstract="false"
+          x:id="b4915d75-259a-4f91-91ba-aaaa3a9f87b5"
+          asi:name="Right"
+          fcp:parameter="Right#NotEqual/Right/437f1b6e-3fee-44cf-9954-e0e4e816d80e">
+          <dcr:DataConstantReference
+            asi:abstract="false"
+            dcr:constant="WorkflowStates_error#WorkflowStates_error/2310d48f-9d21-4143-b01c-275b23d4cd4a"
+            x:id="3567cba2-b41f-4175-9af4-409f4e674ff5"
+            asi:name="WorkflowStates_error" />
+        </fcp:FunctionCallParameter>
+      </fc1:DataEntityColumn>
+    </ef:EntityFilter>
     <fmi:DataEntityColumn
       asi:abstract="false"
       adec:allowNulls="false"

@@ -18,7 +18,7 @@
       x:id="35505c2d-d7fd-4218-8a1a-27ff38f8405d"
       asi:name="00060_AddRole_WidgetPlainTextTest"
       scusa:platform="MsSql"
-      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+      scusa:service="DataService#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
       ausa:activityOrder="20"
@@ -42,7 +42,7 @@
       x:id="6ebcca0b-8fa6-462c-997e-7f1660edcb58"
       asi:name="00080_AddRole_WidgetRichTextTest"
       scusa:platform="MsSql"
-      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+      scusa:service="DataService#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
       ausa:activityOrder="10"

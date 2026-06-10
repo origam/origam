@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ads="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataStructure/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ds1="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0"
+  xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0">
+  <ds1:DataStructure
+    asi:abstract="false"
+    x:id="634df903-88bd-4b06-9315-1e127314f41e"
+    ds1:localized="false"
+    asi:name="AllDataTypes_WithDetail">
+    <dse:DataStructureEntity
+      asi:abstract="false"
+      dse:allFields="true"
+      dse:concurrencyHandling="Standard"
+      dse:entity="AllDataTypes#AllDataTypes/7a2338f2-7290-4cec-b0ad-2c0ee6386885"
+      x:id="f479b9a4-44e6-4659-8d49-02b44e7a7fef"
+      dse:ignoreCondition="None"
+      dse:ignoreImplicitFilters="false"
+      asi:name="AllDataTypes"
+      dse:relationType="Normal"
+      dse:serializeAsSingleJsonObject="false"
+      dse:useUpsert="false">
+      <dse:DataStructureEntity
+        asi:abstract="false"
+        dse:allFields="true"
+        dse:concurrencyHandling="Standard"
+        dse:entity="AllDataTypesDetail#AllDataTypes/AllDataTypesDetail/e77bcbd3-3ec0-4560-ae7c-6c7a64cbc43e"
+        x:id="ab8d4280-2040-4e6a-8e80-9ce09e631954"
+        dse:ignoreCondition="None"
+        dse:ignoreImplicitFilters="false"
+        asi:name="AllDataTypesDetail"
+        dse:relationType="Normal"
+        dse:serializeAsSingleJsonObject="false"
+        dse:useUpsert="false" />
+    </dse:DataStructureEntity>
+  </ds1:DataStructure>
+</x:file>

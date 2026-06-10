@@ -1,0 +1,9 @@
+﻿CREATE TABLE "AllDataTypesDetail" (
+	"refAllDataTypesId" Uuid NOT NULL,
+	"refWorkflowStatesId" Uuid NOT NULL,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdatedBy" Uuid NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordUpdated" Timestamp(3) NULL);
+CREATE  INDEX  "AllDataTypesDetail_ix_AllDataTypes" ON "AllDataTypesDetail" ("refAllDataTypesId" ASC);

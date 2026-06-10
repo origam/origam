@@ -39,15 +39,30 @@
     <df:DataEntityColumn
       asi:abstract="false"
       adec:allowNulls="true"
-      df:arrayRelation="Widgets/DataEntity/Widgets/AllDataTypes.origam#AllDataTypes/TagInputBinding/9a7b8c2c-f8a8-4fed-8470-895d2618499a"
-      df:arrayValueField="Widgets/DataEntity/Widgets/TagInputBinding.origam#TagInputBinding/refTagInputSourceId/7ce7edc1-f490-4a3f-bf8c-f4430dae2af8"
+      df:arrayRelation="TagInputBinding#AllDataTypes/TagInputBinding/9a7b8c2c-f8a8-4fed-8470-895d2618499a"
+      df:arrayValueField="refTagInputSourceId#TagInputBinding/refTagInputSourceId/7ce7edc1-f490-4a3f-bf8c-f4430dae2af8"
       adec:autoIncrement="false"
       adec:dataType="Array"
-      adec:defaultLookup="Widgets/DataLookup/Widgets/TagInputSource_Label_GetId.origam#TagInputSource_Label_GetId/991a8bec-5169-4506-9457-7f91c27bb5fd"
+      adec:defaultLookup="TagInputSource_Label_GetId#TagInputSource_Label_GetId/991a8bec-5169-4506-9457-7f91c27bb5fd"
       adec:excludeFromAllFields="false"
       x:id="56f2a591-7951-4148-8bcd-ded817cb22ac"
       adec:isPrimaryKey="false"
       asi:name="TagInput"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <df:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      df:arrayRelation="AllDataTypesDetail#AllDataTypes/AllDataTypesDetail/e77bcbd3-3ec0-4560-ae7c-6c7a64cbc43e"
+      df:arrayValueField="refWorkflowStatesId#AllDataTypesDetail/refWorkflowStatesId/5ecf2c4f-18b0-4f9e-8acf-6ed078a443a9"
+      adec:autoIncrement="false"
+      adec:dataType="Array"
+      adec:defaultLookup="WorkflowStates#WorkflowStates/9f63dc66-d4cf-4664-a793-38b4a5aa33bf"
+      adec:excludeFromAllFields="false"
+      x:id="b959b347-0ff4-47b6-958e-60cec7cf8a23"
+      adec:isPrimaryKey="false"
+      adec:label="Workflow State"
+      asi:name="WorkflowStatesId"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute" />
     <df:DataEntityColumn
@@ -152,7 +167,7 @@
         adec:dataType="Boolean"
         adec:excludeFromAllFields="false"
         fc1:forceDatabaseCalculation="false"
-        fc1:function="Root/Function/Like.origam#Like/519cd4e2-59fd-49cf-a820-9d5cb4f5078c"
+        fc1:function="Like#Like/519cd4e2-59fd-49cf-a820-9d5cb4f5078c"
         x:id="814eed3c-7b5e-4e3a-b471-0465d93f8235"
         adec:isPrimaryKey="false"
         asi:name="Like"
@@ -162,7 +177,7 @@
           asi:abstract="false"
           x:id="17666e5c-2919-4679-ab0b-aa8e8ed0be0c"
           asi:name="Right"
-          fcp:parameter="Root/Function/Like.origam#Like/Right/561a7476-b805-466d-a71d-0654eaff7b1f">
+          fcp:parameter="Right#Like/Right/561a7476-b805-466d-a71d-0654eaff7b1f">
           <fc1:DataEntityColumn
             asi:abstract="false"
             adec:allowNulls="true"
@@ -170,7 +185,7 @@
             adec:dataType="Boolean"
             adec:excludeFromAllFields="false"
             fc1:forceDatabaseCalculation="false"
-            fc1:function="Root/Function/Concat.origam#Concat/de6ad4e0-aa2d-406b-a48f-190a5aafa37e"
+            fc1:function="Concat#Concat/de6ad4e0-aa2d-406b-a48f-190a5aafa37e"
             x:id="9bbdcf5f-39ca-4361-806e-731040c62bdc"
             adec:isPrimaryKey="false"
             asi:name="Concat"
@@ -180,22 +195,22 @@
               asi:abstract="false"
               x:id="4a7b62b6-a9b1-4c7e-8427-d9d2363daff9"
               asi:name="Strings"
-              fcp:parameter="Root/Function/Concat.origam#Concat/Strings/53183c5f-f3bc-47a4-933d-dc5ffdd9c503">
+              fcp:parameter="Strings#Concat/Strings/53183c5f-f3bc-47a4-933d-dc5ffdd9c503">
               <dcr:DataConstantReference
                 asi:abstract="false"
-                dcr:constant="Root/DataConstant/_strings/_wildcard.origam#_wildcard/7623e70b-d02d-4856-b713-a7a8510e2f3a"
+                dcr:constant="_wildcard#_wildcard/7623e70b-d02d-4856-b713-a7a8510e2f3a"
                 x:id="b48b1f68-2d5b-4e0e-9499-222b48f7cbd9"
                 asi:name="3_wildcard" />
               <dcr:DataConstantReference
                 asi:abstract="false"
-                dcr:constant="Root/DataConstant/_strings/_wildcard.origam#_wildcard/7623e70b-d02d-4856-b713-a7a8510e2f3a"
+                dcr:constant="_wildcard#_wildcard/7623e70b-d02d-4856-b713-a7a8510e2f3a"
                 x:id="e122fc85-2709-4477-8d34-668faec6d427"
                 asi:name="1_wildcard" />
               <pr1:ParameterReference
                 asi:abstract="false"
                 x:id="5f03d1e3-1fd0-42ce-8458-7143996729b6"
                 asi:name="2_parText1"
-                pr1:parameter="Widgets/DataEntity/Widgets/AllDataTypes.origam#AllDataTypes/parText1/daafcc1e-46db-44bd-9bf1-732e4a2d1387" />
+                pr1:parameter="parText1#AllDataTypes/parText1/daafcc1e-46db-44bd-9bf1-732e4a2d1387" />
             </fcp:FunctionCallParameter>
           </fc1:DataEntityColumn>
         </fcp:FunctionCallParameter>
@@ -203,10 +218,10 @@
           asi:abstract="false"
           x:id="9fbdf658-4a1c-4824-a5b9-8a6f93e49d09"
           asi:name="Left"
-          fcp:parameter="Root/Function/Like.origam#Like/Left/f09324de-cc07-40f4-834e-2fe90599d1b7">
+          fcp:parameter="Left#Like/Left/f09324de-cc07-40f4-834e-2fe90599d1b7">
           <ecr:EntityColumnReference
             asi:abstract="false"
-            ecr:field="Widgets/DataEntity/Widgets/AllDataTypes.origam#AllDataTypes/Text1/8954ae10-e0db-49b8-b04c-351e03249c36"
+            ecr:field="Text1#AllDataTypes/Text1/8954ae10-e0db-49b8-b04c-351e03249c36"
             x:id="b87a1c63-d3f5-4d7b-879e-521a4b5a51c2"
             asi:name="Text1" />
         </fcp:FunctionCallParameter>
@@ -223,7 +238,7 @@
         adec:dataType="Boolean"
         adec:excludeFromAllFields="false"
         fc1:forceDatabaseCalculation="false"
-        fc1:function="Root/Function/LessThanOrEqual.origam#LessThanOrEqual/be0784a0-8a51-4003-a9cd-aa8467ca4f93"
+        fc1:function="LessThanOrEqual#LessThanOrEqual/be0784a0-8a51-4003-a9cd-aa8467ca4f93"
         x:id="a4c459ca-a0d3-4488-a70f-5a4e3521b862"
         adec:isPrimaryKey="false"
         asi:name="&lt;="
@@ -233,10 +248,10 @@
           asi:abstract="false"
           x:id="312a5182-1a22-4cc8-9c08-b011779bd5e4"
           asi:name="Left"
-          fcp:parameter="Root/Function/LessThanOrEqual.origam#LessThanOrEqual/Left/fbc7a40a-2e85-4fa0-b919-7f7cb528e574">
+          fcp:parameter="Left#LessThanOrEqual/Left/fbc7a40a-2e85-4fa0-b919-7f7cb528e574">
           <ecr:EntityColumnReference
             asi:abstract="false"
-            ecr:field="Widgets/DataEntity/Widgets/AllDataTypes.origam#AllDataTypes/Integer1/c5f2891f-b0b7-48e4-b7d6-5237b778d867"
+            ecr:field="Integer1#AllDataTypes/Integer1/c5f2891f-b0b7-48e4-b7d6-5237b778d867"
             x:id="63320ff2-7f23-40d6-a3be-cafe8bc10d01"
             asi:name="Integer1" />
         </fcp:FunctionCallParameter>
@@ -244,10 +259,10 @@
           asi:abstract="false"
           x:id="4b96ab42-1055-4b4d-8830-5fc023e02427"
           asi:name="Right"
-          fcp:parameter="Root/Function/LessThanOrEqual.origam#LessThanOrEqual/Right/c3749287-8436-4123-bc75-0eb57f62969a">
+          fcp:parameter="Right#LessThanOrEqual/Right/c3749287-8436-4123-bc75-0eb57f62969a">
           <dcr:DataConstantReference
             asi:abstract="false"
-            dcr:constant="Root/DataConstant/_numbers/_Number_30.origam#_Number_30/1463511f-a52c-4043-b2b9-6373688349b8"
+            dcr:constant="_Number_30#_Number_30/1463511f-a52c-4043-b2b9-6373688349b8"
             x:id="54927d2b-ec6e-453a-8b49-ccaad7062fe2"
             asi:name="_Number_30" />
         </fcp:FunctionCallParameter>
@@ -305,7 +320,7 @@
         adec:dataType="Boolean"
         adec:excludeFromAllFields="false"
         fc1:forceDatabaseCalculation="false"
-        fc1:function="Root/Function/LessThanOrEqual.origam#LessThanOrEqual/be0784a0-8a51-4003-a9cd-aa8467ca4f93"
+        fc1:function="LessThanOrEqual#LessThanOrEqual/be0784a0-8a51-4003-a9cd-aa8467ca4f93"
         x:id="54a9e105-f7f4-4696-9fad-bdc6c4237898"
         adec:isPrimaryKey="false"
         asi:name="&lt;="
@@ -315,10 +330,10 @@
           asi:abstract="false"
           x:id="012dbd15-be4c-4799-b01e-f55a501ce9e3"
           asi:name="Right"
-          fcp:parameter="Root/Function/LessThanOrEqual.origam#LessThanOrEqual/Right/c3749287-8436-4123-bc75-0eb57f62969a">
+          fcp:parameter="Right#LessThanOrEqual/Right/c3749287-8436-4123-bc75-0eb57f62969a">
           <dcr:DataConstantReference
             asi:abstract="false"
-            dcr:constant="Root/DataConstant/_numbers/_Number_2.origam#_Number_2/54faca0b-4eac-429e-a13d-5407ecc48afa"
+            dcr:constant="_Number_2#_Number_2/54faca0b-4eac-429e-a13d-5407ecc48afa"
             x:id="3d6c2625-fdca-4672-891c-e7ef24291c94"
             asi:name="_Number_3" />
         </fcp:FunctionCallParameter>
@@ -326,10 +341,10 @@
           asi:abstract="false"
           x:id="d37c773f-59c1-491a-8b95-5f2a6ba4026b"
           asi:name="Left"
-          fcp:parameter="Root/Function/LessThanOrEqual.origam#LessThanOrEqual/Left/fbc7a40a-2e85-4fa0-b919-7f7cb528e574">
+          fcp:parameter="Left#LessThanOrEqual/Left/fbc7a40a-2e85-4fa0-b919-7f7cb528e574">
           <ecr:EntityColumnReference
             asi:abstract="false"
-            ecr:field="Widgets/DataEntity/Widgets/AllDataTypes.origam#AllDataTypes/Integer1/c5f2891f-b0b7-48e4-b7d6-5237b778d867"
+            ecr:field="Integer1#AllDataTypes/Integer1/c5f2891f-b0b7-48e4-b7d6-5237b778d867"
             x:id="31ea799e-b50e-4a4e-9812-237fa9f8702f"
             asi:name="Integer1" />
         </fcp:FunctionCallParameter>
@@ -346,7 +361,7 @@
         adec:dataType="UniqueIdentifier"
         adec:excludeFromAllFields="false"
         fc1:forceDatabaseCalculation="false"
-        fc1:function="Root/Function/In.origam#In/ad39eb50-0e1c-4f91-bfbe-11e741b3f86d"
+        fc1:function="In#In/ad39eb50-0e1c-4f91-bfbe-11e741b3f86d"
         x:id="41333304-a366-4853-9ca1-a04444df7a60"
         adec:isPrimaryKey="false"
         asi:name="In"
@@ -356,10 +371,10 @@
           asi:abstract="false"
           x:id="35282448-b640-4a39-bc90-620eaa2361ef"
           asi:name="FilterExpression"
-          fcp:parameter="Root/Function/In.origam#In/FilterExpression/32e47284-2c22-4aa8-b9d5-445012257b52">
+          fcp:parameter="FilterExpression#In/FilterExpression/32e47284-2c22-4aa8-b9d5-445012257b52">
           <ecr:EntityColumnReference
             asi:abstract="false"
-            ecr:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+            ecr:field="Id#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
             x:id="961cfc70-961a-44ea-b663-67fd090744f1"
             asi:name="Id" />
         </fcp:FunctionCallParameter>
@@ -367,12 +382,12 @@
           asi:abstract="false"
           x:id="83d3b8c8-f65d-46e5-a4a4-da6e27c74155"
           asi:name="List"
-          fcp:parameter="Root/Function/In.origam#In/List/06ad3693-55ff-404c-a813-16b41cd5751b">
+          fcp:parameter="List#In/List/06ad3693-55ff-404c-a813-16b41cd5751b">
           <pr1:ParameterReference
             asi:abstract="false"
             x:id="fd5aa6b9-cc9a-4e75-a540-3b2509324ae9"
             asi:name="parIdList"
-            pr1:parameter="Widgets/DataEntity/Widgets/AllDataTypes.origam#AllDataTypes/parIdList/78cddd1d-44e7-470e-93d9-878c62516c5d" />
+            pr1:parameter="parIdList#AllDataTypes/parIdList/78cddd1d-44e7-470e-93d9-878c62516c5d" />
         </fcp:FunctionCallParameter>
       </fc1:DataEntityColumn>
     </ef:EntityFilter>
@@ -382,7 +397,7 @@
       euia:default="false"
       x:id="ae37c20c-360e-42a8-ba9f-db3b90a99b28"
       euia:label="Single Record"
-      ema:menu="Widgets/Menu/Menu.origam#Menu/_hidden/AllDataTypes_SingleRecord/984a9885-96e5-44ab-8c9f-aec9afd925ab"
+      ema:menu="Menu/_hidden/AllDataTypes_SingleRecord#Menu/_hidden/AllDataTypes_SingleRecord/984a9885-96e5-44ab-8c9f-aec9afd925ab"
       euia:modal="false"
       euia:mode="ActiveRecord"
       asi:name="SingleRecord"
@@ -401,7 +416,7 @@
         asi:abstract="false"
         x:id="c8929804-687b-4f8f-9bad-f9b65dec919e"
         asi:name="AllDataTypes"
-        sc2:screen="Widgets/FormControlSet/Widgets/AllDataTypes.origam#AllDataTypes/acf532d5-5a54-49d7-ac50-30a59ff6b32d" />
+        sc2:screen="AllDataTypes#AllDataTypes/acf532d5-5a54-49d7-ac50-30a59ff6b32d" />
     </ema:EntityUIAction>
     <eri:EntityRelation
       asi:abstract="false"
@@ -409,14 +424,29 @@
       asi:name="TagInputBinding"
       eri:or="false"
       eri:parentChild="true"
-      eri:relatedEntity="Widgets/DataEntity/Widgets/TagInputBinding.origam#TagInputBinding/933d7409-8df9-455a-bb2a-bd2411e6e025"
+      eri:relatedEntity="TagInputBinding#TagInputBinding/933d7409-8df9-455a-bb2a-bd2411e6e025"
       eri:selfJoin="false">
       <ercpi:EntityRelationColumnPair
         asi:abstract="false"
-        ercpi:baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        ercpi:baseEntityField="Id#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
         x:id="bb1abb7b-d1c4-478f-ab71-a3457767bf78"
         asi:name="TagInputBindingKey1"
-        ercpi:relatedEntityField="Widgets/DataEntity/Widgets/TagInputBinding.origam#TagInputBinding/refAllDataTypesId/cbe68de1-d044-439b-8c29-790bbca44937" />
+        ercpi:relatedEntityField="refAllDataTypesId#TagInputBinding/refAllDataTypesId/cbe68de1-d044-439b-8c29-790bbca44937" />
+    </eri:EntityRelation>
+    <eri:EntityRelation
+      asi:abstract="false"
+      x:id="e77bcbd3-3ec0-4560-ae7c-6c7a64cbc43e"
+      asi:name="AllDataTypesDetail"
+      eri:or="false"
+      eri:parentChild="true"
+      eri:relatedEntity="AllDataTypesDetail#AllDataTypesDetail/91eb8ce5-c4d5-40df-a8cb-04ac178fb9e3"
+      eri:selfJoin="false">
+      <ercpi:EntityRelationColumnPair
+        asi:abstract="false"
+        ercpi:baseEntityField="Id#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="03c6526f-9525-459d-a008-877c6a05afec"
+        asi:name="AllDataTypesDetailKey1"
+        ercpi:relatedEntityField="refAllDataTypesId#AllDataTypesDetail/refAllDataTypesId/3b68df5f-782b-4546-b6ce-309f94b49479" />
     </eri:EntityRelation>
     <eri:EntityRelation
       asi:abstract="false"
@@ -424,14 +454,14 @@
       asi:name="TagInputSource"
       eri:or="false"
       eri:parentChild="false"
-      eri:relatedEntity="Widgets/DataEntity/Widgets/TagInputSource.origam#TagInputSource/c28f9bbe-76a1-4149-8141-680e7653086f"
+      eri:relatedEntity="TagInputSource#TagInputSource/c28f9bbe-76a1-4149-8141-680e7653086f"
       eri:selfJoin="false">
       <ercpi:EntityRelationColumnPair
         asi:abstract="false"
-        ercpi:baseEntityField="Widgets/DataEntity/Widgets/AllDataTypes.origam#AllDataTypes/refTagInputSourceId/7142586a-1798-4f99-af0a-9166319d11e0"
+        ercpi:baseEntityField="refTagInputSourceId#AllDataTypes/refTagInputSourceId/7142586a-1798-4f99-af0a-9166319d11e0"
         x:id="3fca4f51-ca4c-411f-872c-5d9b9184284d"
         asi:name="TagInputSourceKey1"
-        ercpi:relatedEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e" />
+        ercpi:relatedEntityField="Id#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e" />
     </eri:EntityRelation>
     <esr1:EntitySecurityRule
       asi:abstract="false"
@@ -479,7 +509,7 @@
       euia:roles="*"
       ewa:saveAfterWorkflow="false"
       euia:valueType="SavedValue"
-      ewa:workflow="Widgets/Workflow/Widgets/ArrayParameterTest_Input.origam#ArrayParameterTest_Input/a0506116-547f-430f-a557-9c9603c040c7">
+      ewa:workflow="ArrayParameterTest_Input#ArrayParameterTest_Input/a0506116-547f-430f-a557-9c9603c040c7">
       <euiapm:EntityUIActionParameterMapping
         asi:abstract="false"
         euiapm:field="Id"
@@ -511,12 +541,12 @@
       euia:roles="*"
       ewa:saveAfterWorkflow="false"
       euia:valueType="SavedValue"
-      ewa:workflow="Widgets/Workflow/Widgets/MultistepWorkflow.origam#MultistepWorkflow/20732249-ef09-4238-ba2e-022fbc76c7a6">
+      ewa:workflow="MultistepWorkflow#MultistepWorkflow/20732249-ef09-4238-ba2e-022fbc76c7a6">
       <sc2:ScreenCondition
         asi:abstract="false"
         x:id="03cf98a0-a1d4-438c-997e-b2639c915d21"
         asi:name="AllDataTypes"
-        sc2:screen="Widgets/FormControlSet/Widgets/AllDataTypes.origam#AllDataTypes/acf532d5-5a54-49d7-ac50-30a59ff6b32d" />
+        sc2:screen="AllDataTypes#AllDataTypes/acf532d5-5a54-49d7-ac50-30a59ff6b32d" />
     </ewa:EntityUIAction>
     <ewa:EntityUIAction
       asi:abstract="false"
@@ -540,12 +570,12 @@
       euia:roles="*"
       ewa:saveAfterWorkflow="false"
       euia:valueType="SavedValue"
-      ewa:workflow="Widgets/Workflow/Widgets/DummyWorkflowDoingNotihng.origam#DummyWorkflowDoingNotihng/0caa17cf-fca6-4453-a44c-ab6ea0ee1b0a">
+      ewa:workflow="DummyWorkflowDoingNothing#DummyWorkflowDoingNothing/0caa17cf-fca6-4453-a44c-ab6ea0ee1b0a">
       <sc2:ScreenCondition
         asi:abstract="false"
         x:id="74dc7285-c0df-483f-b71f-90660e7d0776"
         asi:name="AllDataTypes_MultipleCheckboxesActionTest"
-        sc2:screen="Widgets/FormControlSet/Widgets/AllDataTypes_MultipleCheckboxesActionTest.origam#AllDataTypes_MultipleCheckboxesActionTest/c025c9df-6bbb-4a9c-920a-66dcd7d7d348" />
+        sc2:screen="AllDataTypes_MultipleCheckboxesActionTest#AllDataTypes_MultipleCheckboxesActionTest/c025c9df-6bbb-4a9c-920a-66dcd7d7d348" />
     </ewa:EntityUIAction>
     <ewa:EntityUIAction
       asi:abstract="false"
@@ -569,12 +599,12 @@
       euia:roles="*"
       ewa:saveAfterWorkflow="false"
       euia:valueType="SavedValue"
-      ewa:workflow="Widgets/Workflow/Widgets/DummyWorkflowDoingNotihng.origam#DummyWorkflowDoingNotihng/0caa17cf-fca6-4453-a44c-ab6ea0ee1b0a">
+      ewa:workflow="DummyWorkflowDoingNothing#DummyWorkflowDoingNothing/0caa17cf-fca6-4453-a44c-ab6ea0ee1b0a">
       <sc2:ScreenCondition
         asi:abstract="false"
         x:id="81add448-6e02-4621-9421-a85079f206b3"
         asi:name="AllDataTypes"
-        sc2:screen="Widgets/FormControlSet/Widgets/AllDataTypes.origam#AllDataTypes/acf532d5-5a54-49d7-ac50-30a59ff6b32d" />
+        sc2:screen="AllDataTypes#AllDataTypes/acf532d5-5a54-49d7-ac50-30a59ff6b32d" />
     </ewa:EntityUIAction>
     <ewa:EntityUIAction
       asi:abstract="false"
@@ -596,10 +626,10 @@
       ewa:refreshPortalAfterFinish="false"
       ewa:requestSaveBeforeWorkflow="false"
       euia:roles="*"
-      euia:rule="Widgets/Rule/Widgets/AllDataTypes_Boolean1_True.origam#AllDataTypes_Boolean1_True/8eaff3da-6e70-48b6-ad38-70514ce9a9fc"
+      euia:rule="AllDataTypes_Boolean1_True#AllDataTypes_Boolean1_True/8eaff3da-6e70-48b6-ad38-70514ce9a9fc"
       ewa:saveAfterWorkflow="false"
       euia:valueType="SavedValue"
-      ewa:workflow="Widgets/Workflow/Widgets/LoopTest.origam#LoopTest/541f17de-efdf-43e8-99eb-afd477870606" />
+      ewa:workflow="LoopTest#LoopTest/541f17de-efdf-43e8-99eb-afd477870606" />
     <ewa:EntityUIAction
       asi:abstract="false"
       euia:actionType="Workflow"
@@ -620,10 +650,10 @@
       ewa:refreshPortalAfterFinish="false"
       ewa:requestSaveBeforeWorkflow="false"
       euia:roles="*"
-      euia:rule="Widgets/Rule/Widgets/AllDataTypes_Boolean1_False.origam#AllDataTypes_Boolean1_False/3ae7302d-cb19-4340-934b-1f97582a709e"
+      euia:rule="AllDataTypes_Boolean1_False#AllDataTypes_Boolean1_False/3ae7302d-cb19-4340-934b-1f97582a709e"
       ewa:saveAfterWorkflow="false"
       euia:valueType="SavedValue"
-      ewa:workflow="Widgets/Workflow/Widgets/LoopTest.origam#LoopTest/541f17de-efdf-43e8-99eb-afd477870606" />
+      ewa:workflow="LoopTest#LoopTest/541f17de-efdf-43e8-99eb-afd477870606" />
     <fmi:DataEntityColumn
       asi:abstract="false"
       adec:allowNulls="true"
@@ -658,11 +688,11 @@
       adec:allowNulls="true"
       adec:autoIncrement="false"
       adec:dataType="UniqueIdentifier"
-      adec:defaultLookup="Widgets/DataLookup/Widgets/TagInputSource_Label_GetId.origam#TagInputSource_Label_GetId/991a8bec-5169-4506-9457-7f91c27bb5fd"
+      adec:defaultLookup="TagInputSource_Label_GetId#TagInputSource_Label_GetId/991a8bec-5169-4506-9457-7f91c27bb5fd"
       adec:excludeFromAllFields="false"
       fmi:excludeFromAuditing="false"
-      adec:foreignKeyEntity="Widgets/DataEntity/Widgets/TagInputSource.origam#TagInputSource/c28f9bbe-76a1-4149-8141-680e7653086f"
-      adec:foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+      adec:foreignKeyEntity="TagInputSource#TagInputSource/c28f9bbe-76a1-4149-8141-680e7653086f"
+      adec:foreignKeyField="Id#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
       x:id="7142586a-1798-4f99-af0a-9166319d11e0"
       adec:isPrimaryKey="false"
       adec:label="Guid1"
@@ -744,18 +774,18 @@
     <lf:DataEntityColumn
       asi:abstract="false"
       lf:allowNulls="true"
-      lf:defaultLookup="Widgets/DataLookup/Widgets/TagInputSource_Label_GetId.origam#TagInputSource_Label_GetId/991a8bec-5169-4506-9457-7f91c27bb5fd"
+      lf:defaultLookup="TagInputSource_Label_GetId#TagInputSource_Label_GetId/991a8bec-5169-4506-9457-7f91c27bb5fd"
       lf:excludeFromAllFields="false"
-      lf:field="Widgets/DataEntity/Widgets/AllDataTypes.origam#AllDataTypes/refTagInputSourceId/7142586a-1798-4f99-af0a-9166319d11e0"
+      lf:field="refTagInputSourceId#AllDataTypes/refTagInputSourceId/7142586a-1798-4f99-af0a-9166319d11e0"
       x:id="c5bc351d-cc9b-433b-93b5-2fb2870b14cb"
       lf:isPrimaryKey="false"
       asi:name="TagInputSourceLabel"
       lf:xmlMappingType="Attribute" />
     <sia:ancestor
-      sia:ancestor="Attachments/DataEntity/Attachments/IOrigamAttachments.origam#IOrigamAttachments/b5ed521a-4f64-4323-baed-6e01ceb2dada"
+      sia:ancestor="IOrigamAttachments#IOrigamAttachments/b5ed521a-4f64-4323-baed-6e01ceb2dada"
       x:id="e47782d5-7a7e-4b13-8e3a-a10db02f3da6" />
     <sia:ancestor
-      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      sia:ancestor="IOrigamEntity2#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
       x:id="f63bb67a-b8b6-4936-b5af-b158f97c1dab" />
   </tmi:DataEntity>
 </x:file>

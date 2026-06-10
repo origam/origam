@@ -1,0 +1,17 @@
+﻿
+ALTER TABLE "AllDataTypesDetail" ADD CONSTRAINT "FK_AllDataTypesDetail_refAllDataTypesId_AllDataTypes"
+	FOREIGN KEY (
+		"refAllDataTypesId"
+	)
+
+	REFERENCES "AllDataTypes" (
+		"Id"
+	);
+ALTER TABLE "AllDataTypesDetail" ADD CONSTRAINT "FK_AllDataTypesDetail_refWorkflowStatesId_WorkflowStates"
+	FOREIGN KEY (
+		"refWorkflowStatesId"
+	)
+
+	REFERENCES "WorkflowStates" (
+		"Id"
+	);
