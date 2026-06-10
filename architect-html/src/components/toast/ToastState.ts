@@ -19,7 +19,7 @@ export interface IActionResultToast {
   durationMs: number;
 }
 
-const DEFAULT_DURATION_MS = 6000;
+const DEFAULT_DURATION_MS = 15000;
 
 export class ToastState {
   @observable.shallow accessor toasts: IActionResultToast[] = [];
