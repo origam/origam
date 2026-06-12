@@ -13,34 +13,66 @@
     dv:version="1.5.9">
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
-      ausa:activityOrder="30"
+      ausa:activityOrder="10"
+      scusa:commandText="-***-ExternalFile:1.5.9.origam___commandText___0d29cac5-8f85-45a7-889e-c206dca59d9b.txt"
+      x:id="0d29cac5-8f85-45a7-889e-c206dca59d9b"
+      asi:name="00010_Database_Entity_ArrayTest"
+      scusa:platform="MsSql"
+      scusa:service="DataService#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="70"
       scusa:commandText="-***-ExternalFile:1.5.9.origam___commandText___6031e0c6-5195-434e-a20d-c5deaba153d4.txt"
       x:id="6031e0c6-5195-434e-a20d-c5deaba153d4"
-      asi:name="00030_PG_Database_Entity_AllDataTypesDetail"
+      asi:name="00070_PG_Database_Entity_AllDataTypesDetail"
+      scusa:platform="PgSql"
+      scusa:service="DataService#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="50"
+      scusa:commandText="-***-ExternalFile:1.5.9.origam___commandText___64ceee34-e59d-4d34-bb90-33c662e11bfd.txt"
+      x:id="64ceee34-e59d-4d34-bb90-33c662e11bfd"
+      asi:name="00050_PG_Database_Entity_ArrayTest"
       scusa:platform="PgSql"
       scusa:service="DataService#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
       ausa:activityOrder="20"
-      scusa:commandText="-***-ExternalFile:1.5.9.origam___commandText___a844348c-65fc-4f9c-8387-c2ff078c1059.txt"
-      x:id="a844348c-65fc-4f9c-8387-c2ff078c1059"
-      asi:name="00020_Database_Entity_AllDataTypesDetail"
-      scusa:platform="MsSql"
-      scusa:service="DataService#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
-    <scusa:DeploymentUpdateScriptActivity
-      asi:abstract="false"
-      ausa:activityOrder="10"
-      scusa:commandText="-***-ExternalFile:1.5.9.origam___commandText___b38507c0-0862-4ab3-871a-a317975173fd.txt"
-      x:id="b38507c0-0862-4ab3-871a-a317975173fd"
-      asi:name="00010_Database_Entity_AllDataTypesDetail"
+      scusa:commandText="-***-ExternalFile:1.5.9.origam___commandText___9ea05288-ebc5-4cff-8acb-b8da5c438c24.txt"
+      x:id="9ea05288-ebc5-4cff-8acb-b8da5c438c24"
+      asi:name="00020_Database_Entity_ArrayTest"
       scusa:platform="MsSql"
       scusa:service="DataService#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
       ausa:activityOrder="40"
+      scusa:commandText="-***-ExternalFile:1.5.9.origam___commandText___a844348c-65fc-4f9c-8387-c2ff078c1059.txt"
+      x:id="a844348c-65fc-4f9c-8387-c2ff078c1059"
+      asi:name="00040_Database_Entity_AllDataTypesDetail"
+      scusa:platform="MsSql"
+      scusa:service="DataService#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="30"
+      scusa:commandText="-***-ExternalFile:1.5.9.origam___commandText___b38507c0-0862-4ab3-871a-a317975173fd.txt"
+      x:id="b38507c0-0862-4ab3-871a-a317975173fd"
+      asi:name="00030_Database_Entity_AllDataTypesDetail"
+      scusa:platform="MsSql"
+      scusa:service="DataService#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="60"
+      scusa:commandText="-***-ExternalFile:1.5.9.origam___commandText___e3f462f0-fd07-4e04-a4b7-4b10e48b56b0.txt"
+      x:id="e3f462f0-fd07-4e04-a4b7-4b10e48b56b0"
+      asi:name="00060_PG_Database_Entity_ArrayTest"
+      scusa:platform="PgSql"
+      scusa:service="DataService#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="80"
       scusa:commandText="-***-ExternalFile:1.5.9.origam___commandText___e84de459-cb06-4667-bf57-c89d9d63e226.txt"
       x:id="e84de459-cb06-4667-bf57-c89d9d63e226"
-      asi:name="00040_PG_Database_Entity_AllDataTypesDetail"
+      asi:name="00080_PG_Database_Entity_AllDataTypesDetail"
       scusa:platform="PgSql"
       scusa:service="DataService#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
   </dv:DeploymentVersion>

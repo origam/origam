@@ -163,7 +163,11 @@
       frmi:autoSaveOnListRecordChange="false"
       ami:displayName="All Data Types - Array Filter Test"
       x:id="9041c7b0-1273-49c8-be0c-0375f4b8f153"
-      frmi:method="GetByWorkflowStateNotError#AllDataTypes_ArrayFilterTest/GetByWorkflowStateNotError/4a949c1a-00d9-4d3f-ac95-bfa656b56190"
+      frmi:listDataStructure="AllDataTypesList_ArrayFilterTest#AllDataTypesList_ArrayFilterTest/2933d647-6342-493e-9b3c-75e995472c5f"
+      frmi:listEntity="AllDataTypes#AllDataTypesList_ArrayFilterTest/AllDataTypes/278f5e29-2c37-4963-897a-e386ffabdb9c"
+      frmi:listMethod="GetByWorkflowStateNotError#AllDataTypesList_ArrayFilterTest/GetByWorkflowStateNotError/4a949c1a-00d9-4d3f-ac95-bfa656b56190"
+      frmi:listSortSet="Sort#AllDataTypesList_ArrayFilterTest/Sort/8ac4a08d-6e40-4f08-a1c0-dcc6cc1e0fb2"
+      frmi:method="GetId#AllDataTypesDetail_ArrayFilterTest/GetId/8b529d6a-2af0-4419-8df1-3ab85f860da9"
       asi:name="AllDataTypesArrayFilterTest"
       ami:openExclusively="false"
       ami:order="100"
@@ -173,7 +177,8 @@
       frmi:refreshPortalAfterSave="false"
       frmi:requestSaveAfterUpdate="false"
       ami:roles="*"
-      frmi:screen="AllDataTypes_WithArray#AllDataTypes_WithArray/0e0a136a-6cb2-4449-be6c-0f2912ed569b" />
+      frmi:screen="AllDataTypes_WithArray#AllDataTypes_WithArray/0e0a136a-6cb2-4449-be6c-0f2912ed569b"
+      frmi:sortSet="Sort#AllDataTypesDetail_ArrayFilterTest/Sort/0087972a-9ee3-4ee6-80e4-84a2827bb714" />
     <frmi:MenuItem
       asi:abstract="false"
       ami:alwaysOpenNew="false"
@@ -238,6 +243,22 @@
       frmi:requestSaveAfterUpdate="false"
       ami:roles="*"
       frmi:screen="AllDataTypes_WithDetail#AllDataTypes_WithDetail/e4108696-8d87-4521-920b-a00586a07762" />
+    <frmi:MenuItem
+      asi:abstract="false"
+      ami:alwaysOpenNew="false"
+      frmi:autoSaveOnListRecordChange="false"
+      ami:displayName="Array Test"
+      x:id="bf5f8e05-f28c-41fb-9fe4-44a02f7402b7"
+      asi:name="ArrayTest"
+      ami:openExclusively="false"
+      ami:order="100"
+      frmi:readOnlyAccess="false"
+      frmi:refreshAfterSaveType="RefreshChangedRecords"
+      frmi:refreshOnFocus="false"
+      frmi:refreshPortalAfterSave="false"
+      frmi:requestSaveAfterUpdate="false"
+      ami:roles="*"
+      frmi:screen="ArrayTest#ArrayTest/64266781-83b6-44e2-919e-49fb63be0691" />
     <s2:MenuItem
       asi:abstract="false"
       ami:displayName="Dropdown"

@@ -1,6 +1,6 @@
 ﻿CREATE TABLE "AllDataTypesDetail" (
 	"refAllDataTypesId" Uuid NOT NULL,
-	"refWorkflowStatesId" Uuid NOT NULL,
+	"refArrayTestId" Uuid NOT NULL,
 	"RecordCreated" Timestamp(3) NULL,
 	"RecordUpdatedBy" Uuid NULL,
 	"Id" Uuid NOT NULL PRIMARY KEY,

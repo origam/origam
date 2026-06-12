@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:adl="http://schemas.origam.com/Origam.Schema.LookupModel.AbstractDataLookup/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:dsdl="http://schemas.origam.com/Origam.Schema.LookupModel.DataServiceDataLookup/6.0.0">
+  <dsdl:DataLookup
+    asi:abstract="false"
+    adl:alwaysAllowReturnToForm="false"
+    x:id="ac42c31f-b978-4dd6-906a-3a736eeeb85f"
+    adl:isFilteredServerside="false"
+    adl:isTree="false"
+    adl:listDataStructure="LookupArrayTest_Text#LookupArrayTest_Text/30eb4601-2536-4980-8d9a-e25a1f88ce19"
+    adl:listDisplayMember="Text"
+    adl:listValueMember="Id"
+    asi:name="ArrayTest_Text"
+    adl:searchByFirstColumnOnly="false"
+    adl:suppressEmptyColumns="false"
+    adl:valueDataStructure="LookupArrayTest_Text#LookupArrayTest_Text/30eb4601-2536-4980-8d9a-e25a1f88ce19"
+    adl:valueDisplayMember="Text"
+    adl:valueMethod="GetId#LookupArrayTest_Text/GetId/cddf91e2-2422-40d3-ae6b-695b96d94246"
+    adl:valueValueMember="Id" />
+</x:file>

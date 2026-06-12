@@ -8,12 +8,14 @@
   xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0"
   xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0"
   xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0"
-  xmlns:dsm="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureMethod/6.0.0">
+  xmlns:dsm="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureMethod/6.0.0"
+  xmlns:dsss="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSet/6.0.0"
+  xmlns:dsssi="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSetItem/6.0.0">
   <ds1:DataStructure
     asi:abstract="false"
     x:id="2933d647-6342-493e-9b3c-75e995472c5f"
     ds1:localized="false"
-    asi:name="AllDataTypes_ArrayFilterTest">
+    asi:name="AllDataTypesList_ArrayFilterTest">
     <dse:DataStructureEntity
       asi:abstract="false"
       dse:allFields="true"
@@ -29,15 +31,27 @@
       <dsc:DataStructureColumn
         asi:abstract="false"
         dsc:aggregation="None"
-        dsc:field="WorkflowStatesId#AllDataTypes/WorkflowStatesId/b959b347-0ff4-47b6-958e-60cec7cf8a23"
+        dsc:field="ArrayTestId#AllDataTypes/ArrayTestId/b959b347-0ff4-47b6-958e-60cec7cf8a23"
         dsc:hideInOutput="false"
         x:id="42e29c76-1122-4839-b849-108b70fa6dbb"
-        asi:name="WorkflowStatesId"
+        asi:name="ArrayTestId"
         dsc:upsertType="Replace"
         dsc:useCopiedValue="false"
         dsc:useLookupValue="false"
         dsc:writeOnly="false"
         dsc:xmlMappingType="Default" />
+      <dse:DataStructureEntity
+        asi:abstract="false"
+        dse:allFields="true"
+        dse:concurrencyHandling="Standard"
+        dse:entity="TagInputBinding#AllDataTypes/TagInputBinding/9a7b8c2c-f8a8-4fed-8470-895d2618499a"
+        x:id="578e05ac-06a6-4ba6-9358-36aae6a2ac50"
+        dse:ignoreCondition="None"
+        dse:ignoreImplicitFilters="false"
+        asi:name="TagInputBinding"
+        dse:relationType="Normal"
+        dse:serializeAsSingleJsonObject="false"
+        dse:useUpsert="false" />
       <dse:DataStructureEntity
         asi:abstract="false"
         dse:allFields="true"
@@ -66,11 +80,11 @@
           asi:abstract="false"
           dse:allFields="false"
           dse:concurrencyHandling="Standard"
-          dse:entity="WorkflowStates#AllDataTypesDetail/WorkflowStates/113de725-75d1-43ca-889d-db99d927949d"
+          dse:entity="ArrayTest#AllDataTypesDetail/ArrayTest/6f7944bd-4aca-4ee0-b729-8f75c47d4ed2"
           x:id="bfb95006-5ebb-4408-bd48-c31e9efa3936"
           dse:ignoreCondition="None"
           dse:ignoreImplicitFilters="false"
-          asi:name="WorkflowStates"
+          asi:name="ArrayTest"
           dse:relationType="InnerJoin"
           dse:serializeAsSingleJsonObject="false"
           dse:useUpsert="false" />
@@ -80,14 +94,26 @@
       asi:abstract="false"
       dsfs:dynamic="false"
       x:id="4a949c1a-00d9-4d3f-ac95-bfa656b56190"
-      asi:name="GetByWorkflowStateNotError">
+      asi:name="GetByLoggedInUser">
       <dsfsf:DataStructureFilterSetFilter
         asi:abstract="false"
-        dsfsf:entity="WorkflowStates#AllDataTypes_ArrayFilterTest/AllDataTypes/AllDataTypesDetail_Filter/WorkflowStates/bfb95006-5ebb-4408-bd48-c31e9efa3936"
-        dsfsf:filter="GetByWorkflowStateNotError#WorkflowStates/GetByWorkflowStateNotError/10274ad6-6c0c-4432-a2d1-ed5d50b5a61b"
-        x:id="a75f0331-0398-40c8-8226-0f299eec31b0"
-        asi:name="WorkflowStates_GetByWorkflowStateNotError"
+        dsfsf:entity="ArrayTest#AllDataTypesList_ArrayFilterTest/AllDataTypes/AllDataTypesDetail_Filter/ArrayTest/bfb95006-5ebb-4408-bd48-c31e9efa3936"
+        dsfsf:filter="GetByBusinessPartnerId#ArrayTest/GetByBusinessPartnerId/1d1104ac-c50c-4ef6-be2a-d676d33078c3"
+        x:id="02b26639-4d2c-42fa-b002-830c1b8fa3ea"
+        asi:name="ArrayTest_GetByBusinessPartnerId"
         dsfsf:passWhenParameterMatch="false" />
     </dsfs:DataStructureFilterSet>
+    <dsss:DataStructureSortSet
+      asi:abstract="false"
+      x:id="8ac4a08d-6e40-4f08-a1c0-dcc6cc1e0fb2"
+      asi:name="Sort">
+      <dsssi:DataStructureSortSetItem
+        asi:abstract="false"
+        dsssi:entity="AllDataTypes#AllDataTypesList_ArrayFilterTest/AllDataTypes/278f5e29-2c37-4963-897a-e386ffabdb9c"
+        dsssi:fieldName="Text1"
+        x:id="91f173b6-8a3e-4432-879a-aa9b930868d8"
+        asi:name="AllDataTypes_0_Text1"
+        dsssi:sortDirection="Ascending" />
+    </dsss:DataStructureSortSet>
   </ds1:DataStructure>
 </x:file>

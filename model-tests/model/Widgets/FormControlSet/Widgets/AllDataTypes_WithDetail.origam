@@ -30,370 +30,7 @@
         csi:widget="SplitPanel#SplitPanel/9a805f08-aa81-468e-a2a0-5bdb57b734e5">
         <csi:ControlSetItem
           asi:abstract="false"
-          x:id="067c05bf-657c-4000-b3e0-246877b0d78d"
-          csi:isAlternative="false"
-          csi:level="100"
-          asi:name="AsPanel1"
-          csi:requestSaveAfterChange="false"
-          csi:widget="AllDataTypes#AllDataTypes/e25c335c-6a65-49ff-9f0e-562b4ad27306">
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="0203ed4a-516a-43d7-9a05-2a0acb2e0068"
-            asi:name="CalendarResourceIdMember"
-            apvi:propertyId="8ae87ccd-e465-4fc9-be2c-fc7cadb3df0f" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="09c89bd5-a2ca-4502-93d2-041715892cf7"
-            asi:name="IsVisualEditorSupported"
-            apvi:propertyId="ba13e820-a44c-43e4-8927-f5026ab11a3a"
-            pvi1:value="false" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="0c337b95-fc28-42d9-8bab-01a6c000533b"
-            asi:name="IsMapSupported"
-            apvi:propertyId="d4ecde27-8521-4983-b99a-5e8821b881cb"
-            pvi1:value="false" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="13ad7b25-7e91-44d7-8452-d6ebd1193fcf"
-            asi:name="MapLayers"
-            apvi:propertyId="032cc7ad-fcdf-4abc-b848-3be01947a5b8" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="15b81a91-70b5-4353-a5f7-7b38657c2cfc"
-            asi:name="MapCenter"
-            apvi:propertyId="9724950e-a16b-4844-9038-15f0242a09c8" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="17429feb-9f49-491b-aa3a-96a5e206047f"
-            asi:name="IsGridHeightDynamic"
-            apvi:propertyId="d7a13674-7f44-4463-a595-2fb3ab1dbb61"
-            pvi1:value="false" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="23386aa5-f48e-4146-b165-45f553a796fc"
-            asi:name="GridVisible"
-            apvi:propertyId="84ee631d-39c1-4ecd-91f9-24e434507bc7"
-            pvi1:value="true" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="252363f5-946a-40c8-bc5c-e6600b3f97a7"
-            asi:name="MapTextLocationMember"
-            apvi:propertyId="1ca1946f-3b37-4c49-8443-10c1503dc76c" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="336a9b26-dbdf-4df9-a0ba-3a467b7e2d05"
-            asi:name="IconId"
-            apvi:propertyId="c9a65ec4-4a73-4351-b86a-deb76329b98f"
-            pvi1:value="00000000-0000-0000-0000-000000000000" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="35a9f770-c5c1-419f-aa8a-b13790e7735b"
-            asi:name="MapIconMember"
-            apvi:propertyId="76f51292-1b14-43e3-b044-89d6c1234d5c" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="35c6e25c-4da9-419b-9e3d-0831b0bf9b40"
-            asi:name="CalendarNameMember"
-            apvi:propertyId="6441ece9-86a8-4394-a33a-4a4bdd4489e9" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="3796e192-9720-4c05-84a4-afad74e9ee60"
-            asi:name="ImplicitFilter"
-            apvi:propertyId="c3f96d4c-f4c3-42ca-af5b-e46b4e7536e6" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="38ebbbc2-aef5-4d5b-8e01-0c3747831f17"
-            asi:name="HideCopyButton"
-            apvi:propertyId="4cbf6280-e2ca-4fdf-b621-66df94961094"
-            pvi1:value="false" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="39a4347d-f731-4675-a48a-f0ca032b06ea"
-            asi:name="PipelinePriceMember"
-            apvi:propertyId="63642a1c-b4ad-4984-b487-befbd0a4b216" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="3a9db058-b054-4e0a-8d7d-308ff737a392"
-            asi:name="CalendarIsFinishedMember"
-            apvi:propertyId="ff52e0c4-c2a8-4d47-ae9b-7cb5bcbb415a" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="3bb8d110-134e-456a-ae10-fb8d767a5d49"
-            asi:name="DisableActionButtons"
-            apvi:propertyId="c7625dc7-56c7-4072-a107-390de90a13e5"
-            pvi1:value="false" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="3f578add-f21a-4cc5-a381-fbb63288a860"
-            asi:name="Height"
-            apvi:propertyId="2e965f41-7fea-480b-a44a-095637d0af7d"
-            pvi1:value="321" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="41fd418c-fc9a-49d2-9e62-b7af72a4bb18"
-            asi:name="CalendarCustomSortMember"
-            apvi:propertyId="d3e6cd08-af2d-412f-927f-d4e972a0e380" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="4409bab2-23f3-4742-b5d7-6f335d08efab"
-            asi:name="Left"
-            apvi:propertyId="2ed67118-feb2-4529-bf0b-524d38ab408c"
-            pvi1:value="10" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="4d3ff2fe-31ff-471b-9195-0c4ebeb73d60"
-            asi:name="CalendarShowAllResources"
-            apvi:propertyId="9e6a6536-c207-4c72-9374-12b6a31d1395"
-            pvi1:value="false" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="4f12dcfb-0b5e-44f1-8522-5d63a5cb5509"
-            asi:name="Width"
-            apvi:propertyId="16c346fc-561e-404b-a76a-7198ab488710"
-            pvi1:value="730" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="50b5b779-7084-4be2-882a-a622cdd7b754"
-            asi:name="MaxDynamicGridHeight"
-            apvi:propertyId="147afba9-d58f-4d82-9388-b1f7954efc96"
-            pvi1:value="0" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="51c7c450-d03f-4459-a734-19399393b41a"
-            asi:name="MapAzimuthMember"
-            apvi:propertyId="049c3765-137e-4f7c-a9f5-bef4d9561e61" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="546da34a-a939-4478-ba43-526c93e70063"
-            asi:name="SelectionMember"
-            apvi:propertyId="f3a804f3-61c9-4215-8c42-2b9edd0c4ba1" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="5594049f-78ad-4e09-9593-755f0465100d"
-            asi:name="PipelineStateMember"
-            apvi:propertyId="e5434a33-cb85-47d9-a56f-f81456706911" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="5c3e025a-4f6f-4c39-96e1-d3886f7ae27e"
-            asi:name="PanelTitle"
-            apvi:propertyId="8e2ee6f6-ef26-4954-ae70-b864e3ef21f2" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="68cef5fe-8edc-42ea-90e4-be08690cc4c8"
-            asi:name="DefaultCalendarView"
-            apvi:propertyId="35a06531-13c7-4cf4-bec9-1406ff912040"
-            pvi1:value="0" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="732ee073-3c0e-4a81-9f53-1d5b93499cb9"
-            asi:name="IsVisualEditorVisible"
-            apvi:propertyId="b1b2e6a0-f7f5-44f1-abea-0f3b34da6b76"
-            pvi1:value="false" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="78b2f348-ebb6-4244-a5a2-ebaf132fae11"
-            asi:name="CalendarResourceNameLookupField"
-            apvi:propertyId="fa8c5b1c-42fa-4eeb-9c5f-a073625e5a22" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="81164e3d-2268-4fb5-b8f1-8747d07851ba"
-            asi:name="DraggingLabelMember"
-            apvi:propertyId="cc52b1dd-ac5c-41e9-b054-688e18c91a97" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="86221ef1-a22e-4feb-9770-b7684ffa197d"
-            asi:name="IsPipelineSupported"
-            apvi:propertyId="32a68d80-174e-46ba-b0ca-b86c6fb5abc0"
-            pvi1:value="false" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="867c32c3-f1f9-4c61-9891-14feef6218b4"
-            asi:name="IndependentDataSourceMethodId"
-            apvi:propertyId="cf2165e0-27f2-4155-a003-a861bbe396ef"
-            pvi1:value="00000000-0000-0000-0000-000000000000" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="8aeef157-95c0-4527-8f62-08e9eb33ce7a"
-            asi:name="TabIndex"
-            apvi:propertyId="3496cb84-734e-4100-b8fc-f54431d82770"
-            pvi1:value="0" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="8e37169d-0c74-4608-ac1d-5901067b9a80"
-            asi:name="CalendarDescriptionMember"
-            apvi:propertyId="0646ac0a-46ff-419f-a7b4-3892877ba9dc" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="91851563-cf37-4c45-bc16-1ed5f1fa1fe3"
-            asi:name="OrderMember"
-            apvi:propertyId="5e622365-4906-444e-a802-443bee69c542" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="91f782c7-80c5-4518-b9d0-14ab849b6311"
-            asi:name="CalendarDateFromMember"
-            apvi:propertyId="30e6c918-04b4-4628-90c9-1ba607c9d998" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="925bbea3-17e1-4fae-814b-7405251009bb"
-            asi:name="PipelineDateMember"
-            apvi:propertyId="b8048914-a6a8-4ec2-9063-ba40ea7643b0" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="9bad06ed-6706-46ed-8265-8c063d0267c7"
-            asi:name="IsCalendarVisible"
-            apvi:propertyId="4f2ad140-c94b-49eb-9e65-4a52e3cb3e4e"
-            pvi1:value="false" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="9de1dba6-7803-4ef7-9c10-a461e6108477"
-            asi:name="CalendarViewStyleId"
-            apvi:propertyId="85e7c9e2-0c94-47a2-b297-63c19270cf40"
-            pvi1:value="00000000-0000-0000-0000-000000000000" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="9e73f470-59ac-40bd-9d9c-267f92cf44fe"
-            asi:name="MapTextRotationMember"
-            apvi:propertyId="0688ff2b-b946-463f-9e87-069fa03387c9" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="9e9ccd5a-3174-4a9b-a778-4643fdcd5f0d"
-            asi:name="PipelineStateLookupId"
-            apvi:propertyId="91c94efb-ef4a-4851-a427-4d10f6c0a923"
-            pvi1:value="00000000-0000-0000-0000-000000000000" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="b02ab3fa-67ae-435f-96dd-14d223d2e719"
-            asi:name="CalendarDateDueMember"
-            apvi:propertyId="87bb70a8-a0a7-4c4e-9f18-5724d74b3b98" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="b0e8d56e-9bf3-4514-a03d-63b90dcaf714"
-            asi:name="MapResolution"
-            apvi:propertyId="ac6384aa-a8b8-4344-8402-7a53e1f94c13"
-            pvi1:value="0" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="b459e340-ecfd-4892-905b-51595414bb58"
-            asi:name="DefaultConfiguration"
-            apvi:propertyId="76adc867-8e5c-4d20-869f-e47ecadedf47" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="b68fec5b-9621-4882-934b-9e5439c882c9"
-            asi:name="NewRecordInDetailView"
-            apvi:propertyId="dfed9e9e-2ab8-4ea8-b9de-2b6a31d1b1af"
-            pvi1:value="false" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="b69d12ba-2b1d-45f9-b7e6-b3735f285c23"
-            asi:name="MapTextMember"
-            apvi:propertyId="cd590061-51dc-4cce-a423-d427357d5a03" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="b8bce733-e391-4d47-9e5f-78f2f0d0c7b0"
-            asi:name="DataMember"
-            apvi:propertyId="8c12e0ab-e4bd-4675-8f12-c5930a07be14" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="b93129ba-61e3-4128-bd33-65a9bbd3da85"
-            asi:name="MapColorMember"
-            apvi:propertyId="9c6b43b4-df9a-455d-bbe3-70921e0790db" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="ba983292-d452-46af-9523-ad9bd7b8c08e"
-            asi:name="HideNavigationPanel"
-            apvi:propertyId="298b927a-509d-4c65-930c-c871746fb7e2"
-            pvi1:value="false" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="bb965945-5ae3-4cbe-ae4a-06ef71d4c5b5"
-            asi:name="ShowNewButton"
-            apvi:propertyId="af590ff2-4668-40e3-8195-e1a1f735d433"
-            pvi1:value="true" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="c00f4f78-e3db-47a0-92ad-e21ca1e0f062"
-            asi:name="MapLocationMember"
-            apvi:propertyId="2e429e40-0776-4de8-b6d8-2a3b4e56548c" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="c0eb06f4-2ebc-44a5-a1f5-be6fb4bd1107"
-            asi:name="IsPipelineVisible"
-            apvi:propertyId="c679d676-0489-44d8-a604-77b1c0dbdeb6"
-            pvi1:value="false" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="c9dd404c-888a-4059-872f-b15f06a884f7"
-            asi:name="IndependentDataSourceSortId"
-            apvi:propertyId="dc3ab7b2-3183-4ad4-bafe-886a2407c1bf"
-            pvi1:value="00000000-0000-0000-0000-000000000000" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="ce5d5c0e-0502-4728-8842-eff7a1525130"
-            asi:name="ShowDeleteButton"
-            apvi:propertyId="c9e691f4-520e-46a8-b1a1-941ae833bf88"
-            pvi1:value="true" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="cfb30b77-d97f-4571-87bd-e6cb20e9ef91"
-            asi:name="CalendarDateToMember"
-            apvi:propertyId="f8a067fe-7753-4393-9ab9-70ca3c0c0b11" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="d2f9fbeb-efab-4315-ae88-6dbcdd307fac"
-            asi:name="IsMapVisible"
-            apvi:propertyId="4584fc29-2af7-404e-83ec-3f4847afa367"
-            pvi1:value="false" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="d828519f-9944-425b-86f1-659229d96e92"
-            asi:name="StyleId"
-            apvi:propertyId="5dc5a7d0-4ce9-496e-b528-c10e73368ee5"
-            pvi1:value="00000000-0000-0000-0000-000000000000" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="d93956f4-d43a-4940-8498-7cbd901eaae0"
-            asi:name="IndependentDataSourceId"
-            apvi:propertyId="e47201b5-5334-4748-8f04-1626ef9ee93c"
-            pvi1:value="00000000-0000-0000-0000-000000000000" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="dadaf52f-483d-4b69-93b6-8607257f3ff0"
-            asi:name="PipelineNameMember"
-            apvi:propertyId="6cc64b12-082f-48cd-be8f-6780211718fe" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="dfe4c838-9b5e-4513-942c-7e18cd46419c"
-            asi:name="MapTextColorMember"
-            apvi:propertyId="02d9ba6b-e6ec-46f4-8073-6dc398c081e5" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="e0b6fc14-35db-44d4-bcf9-3f042bb9e6e4"
-            asi:name="Top"
-            apvi:propertyId="0ab85221-d0b8-4df7-bfcc-ac196db06439"
-            pvi1:value="10" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="f828df08-af27-41ec-8fce-17795ec33f24"
-            asi:name="IsDraggingEnabled"
-            apvi:propertyId="f142959e-1909-4769-acf8-e035a345642a"
-            pvi1:value="false" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="f84ca48c-18eb-473b-85e5-d8c5e36a0546"
-            asi:name="IsCalendarSupported"
-            apvi:propertyId="a3bfb334-aa7d-4507-ba2c-75017676892f"
-            pvi1:value="false" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="fd132105-29f8-4952-8c15-20199e98db6a"
-            asi:name="CalendarRowHeightConstantId"
-            apvi:propertyId="8842aa84-6723-411f-ab53-7bf69c00e05a"
-            pvi1:value="00000000-0000-0000-0000-000000000000" />
-        </csi:ControlSetItem>
-        <csi:ControlSetItem
-          asi:abstract="false"
-          x:id="138a2311-0395-49cf-a84a-fe7a69faa117"
+          x:id="9ce9d3fe-76d8-47a8-8020-2ea68c14faf7"
           csi:isAlternative="false"
           csi:level="100"
           asi:name="AsPanel2"
@@ -401,358 +38,723 @@
           csi:widget="AllDataTypesDetail#AllDataTypesDetail/15ba501b-d3d8-41a0-865c-141e1d331b1c">
           <pvi1:PropertyValueItem
             asi:abstract="false"
-            x:id="0a288b7f-d598-45f6-9658-c0be6497f936"
-            asi:name="PipelineNameMember"
-            apvi:propertyId="6cc64b12-082f-48cd-be8f-6780211718fe" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="122ed524-7999-41fb-a997-27482b64994a"
-            asi:name="HideCopyButton"
-            apvi:propertyId="4cbf6280-e2ca-4fdf-b621-66df94961094"
-            pvi1:value="false" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="185f334d-2ee1-41d0-a306-3ef460eb431e"
-            asi:name="StyleId"
-            apvi:propertyId="5dc5a7d0-4ce9-496e-b528-c10e73368ee5"
-            pvi1:value="00000000-0000-0000-0000-000000000000" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="208be3f6-9f55-437b-b13e-f331a632d1d8"
-            asi:name="OrderMember"
-            apvi:propertyId="5e622365-4906-444e-a802-443bee69c542" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="210faed3-cf8a-40c4-a9d5-10b1a3d2c75d"
-            asi:name="PipelineDateMember"
-            apvi:propertyId="b8048914-a6a8-4ec2-9063-ba40ea7643b0" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="212c5c70-3d85-4818-ac79-901ee2f590e3"
-            asi:name="IndependentDataSourceSortId"
-            apvi:propertyId="dc3ab7b2-3183-4ad4-bafe-886a2407c1bf"
-            pvi1:value="00000000-0000-0000-0000-000000000000" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="251f9ca8-fae1-4421-a885-687f25039e6e"
-            asi:name="IsGridHeightDynamic"
-            apvi:propertyId="d7a13674-7f44-4463-a595-2fb3ab1dbb61"
-            pvi1:value="false" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="28a17d6b-1396-4bca-ab3c-afde6b1b76ac"
-            asi:name="IsCalendarVisible"
-            apvi:propertyId="4f2ad140-c94b-49eb-9e65-4a52e3cb3e4e"
-            pvi1:value="false" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="2ab2a60e-801f-44e4-ae7a-50a9cf50df7c"
-            asi:name="IsPipelineSupported"
-            apvi:propertyId="32a68d80-174e-46ba-b0ca-b86c6fb5abc0"
-            pvi1:value="false" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="2b77610f-0b78-4945-adda-adc6429fc3fd"
-            asi:name="DefaultCalendarView"
-            apvi:propertyId="35a06531-13c7-4cf4-bec9-1406ff912040"
-            pvi1:value="0" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="2d4bbdd7-e823-4d72-8fbd-9e932505500a"
-            asi:name="DisableActionButtons"
-            apvi:propertyId="c7625dc7-56c7-4072-a107-390de90a13e5"
-            pvi1:value="false" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="36b71363-cf5c-4502-ad9c-6772cea41ea2"
-            asi:name="MapResolution"
-            apvi:propertyId="ac6384aa-a8b8-4344-8402-7a53e1f94c13"
-            pvi1:value="0" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="3700ea2c-1c8a-4a64-b466-7e27659f48de"
-            asi:name="SelectionMember"
-            apvi:propertyId="f3a804f3-61c9-4215-8c42-2b9edd0c4ba1" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="386a38da-0acd-4152-8a11-9b9f27c1d01a"
-            asi:name="CalendarDateToMember"
-            apvi:propertyId="f8a067fe-7753-4393-9ab9-70ca3c0c0b11" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="39a0201e-66f8-44a1-bbf3-b8be537bb447"
-            asi:name="MapIconMember"
-            apvi:propertyId="76f51292-1b14-43e3-b044-89d6c1234d5c" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="45aa6278-f26c-44fe-b3e0-e1c18af02b03"
-            asi:name="ShowDeleteButton"
-            apvi:propertyId="c9e691f4-520e-46a8-b1a1-941ae833bf88"
-            pvi1:value="false" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="45cdf097-7e76-4608-9677-860c55cb5776"
-            asi:name="MaxDynamicGridHeight"
-            apvi:propertyId="147afba9-d58f-4d82-9388-b1f7954efc96"
-            pvi1:value="0" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="45e266aa-013a-40f5-8ed5-9921486dab41"
-            asi:name="IsVisualEditorSupported"
-            apvi:propertyId="ba13e820-a44c-43e4-8927-f5026ab11a3a"
-            pvi1:value="false" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="48d3be3a-420f-4fef-b9aa-43e6e3ee462c"
-            asi:name="MapTextMember"
-            apvi:propertyId="cd590061-51dc-4cce-a423-d427357d5a03" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="4d14ffdd-fcdc-469d-88c5-9394fc765c38"
-            asi:name="DefaultConfiguration"
-            apvi:propertyId="76adc867-8e5c-4d20-869f-e47ecadedf47" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="52210e0d-9174-4922-909e-9a84f4bccf5a"
-            asi:name="IsMapVisible"
-            apvi:propertyId="4584fc29-2af7-404e-83ec-3f4847afa367"
-            pvi1:value="false" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="55355eba-992c-4e3f-a2f2-7ab860b47af3"
-            asi:name="Left"
-            apvi:propertyId="2ed67118-feb2-4529-bf0b-524d38ab408c"
-            pvi1:value="18" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="5774eec7-cd5a-48dd-befc-df905a73475d"
-            asi:name="Height"
-            apvi:propertyId="2e965f41-7fea-480b-a44a-095637d0af7d"
-            pvi1:value="141" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="5f40be4f-5167-450c-bab3-ccc9144834f1"
-            asi:name="PipelinePriceMember"
-            apvi:propertyId="63642a1c-b4ad-4984-b487-befbd0a4b216" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="61e12a02-c78d-4455-bbe2-706fe0652345"
-            asi:name="MapTextLocationMember"
-            apvi:propertyId="1ca1946f-3b37-4c49-8443-10c1503dc76c" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="62541cca-235e-4c3f-b91b-2759c57feb71"
-            asi:name="IsVisualEditorVisible"
-            apvi:propertyId="b1b2e6a0-f7f5-44f1-abea-0f3b34da6b76"
-            pvi1:value="false" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="62f0b67e-0347-4b85-83f6-55d4baa91825"
-            asi:name="IndependentDataSourceId"
-            apvi:propertyId="e47201b5-5334-4748-8f04-1626ef9ee93c"
-            pvi1:value="00000000-0000-0000-0000-000000000000" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="65b617b8-87a3-4db6-922d-8ca2bb14d94b"
-            asi:name="ShowNewButton"
-            apvi:propertyId="af590ff2-4668-40e3-8195-e1a1f735d433"
-            pvi1:value="false" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="704fafd2-ea43-415b-8d46-133934021223"
-            asi:name="CalendarViewStyleId"
-            apvi:propertyId="85e7c9e2-0c94-47a2-b297-63c19270cf40"
-            pvi1:value="00000000-0000-0000-0000-000000000000" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="76e29537-a921-4112-8a3a-7b932e6ef4d8"
-            asi:name="IsMapSupported"
-            apvi:propertyId="d4ecde27-8521-4983-b99a-5e8821b881cb"
-            pvi1:value="false" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="77c0ee23-9c4f-48ca-ba2d-1e8b3d0866c9"
-            asi:name="CalendarNameMember"
-            apvi:propertyId="6441ece9-86a8-4394-a33a-4a4bdd4489e9" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="78bcb4b5-ab03-41d8-b545-b0731f1060cd"
-            asi:name="MapLocationMember"
-            apvi:propertyId="2e429e40-0776-4de8-b6d8-2a3b4e56548c" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="7cc0dfd4-4cf5-4cdd-9243-a284f1490d61"
+            x:id="058d31c9-36e4-48f2-9918-79ed0f04e001"
             asi:name="NewRecordInDetailView"
             apvi:propertyId="dfed9e9e-2ab8-4ea8-b9de-2b6a31d1b1af"
             pvi1:value="false" />
           <pvi1:PropertyValueItem
             asi:abstract="false"
-            x:id="7e64eb2b-ce65-48a0-a345-fb05d91d46fc"
-            asi:name="MapTextColorMember"
-            apvi:propertyId="02d9ba6b-e6ec-46f4-8073-6dc398c081e5" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="85935b0e-d5f7-4de7-a1ab-2d163bca6cb8"
-            asi:name="ImplicitFilter"
-            apvi:propertyId="c3f96d4c-f4c3-42ca-af5b-e46b4e7536e6" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="86497adb-68a2-4f2a-a56d-273d6b25049c"
-            asi:name="IndependentDataSourceMethodId"
-            apvi:propertyId="cf2165e0-27f2-4155-a003-a861bbe396ef"
-            pvi1:value="00000000-0000-0000-0000-000000000000" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="8dfbcf80-0d3e-4f08-82b2-f9cdf6243712"
-            asi:name="PanelTitle"
-            apvi:propertyId="8e2ee6f6-ef26-4954-ae70-b864e3ef21f2" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="91a64e7b-c059-4663-bc23-a4666e6ae7da"
-            asi:name="CalendarCustomSortMember"
-            apvi:propertyId="d3e6cd08-af2d-412f-927f-d4e972a0e380" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="92735546-8a25-4d7a-9664-b9a9d9eca7af"
-            asi:name="TabIndex"
-            apvi:propertyId="3496cb84-734e-4100-b8fc-f54431d82770"
-            pvi1:value="1" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="93b79930-7a94-4860-9720-29ac3763256d"
-            asi:name="CalendarRowHeightConstantId"
-            apvi:propertyId="8842aa84-6723-411f-ab53-7bf69c00e05a"
-            pvi1:value="00000000-0000-0000-0000-000000000000" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="958e21b8-b9d2-4a36-92db-fbf8cec0c48f"
-            asi:name="CalendarDateDueMember"
-            apvi:propertyId="87bb70a8-a0a7-4c4e-9f18-5724d74b3b98" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="97e474b6-f15c-489b-8879-9293730a9c04"
-            asi:name="MapTextRotationMember"
-            apvi:propertyId="0688ff2b-b946-463f-9e87-069fa03387c9" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="9c80511b-43ce-4655-9033-2931c74ac4a4"
-            asi:name="PipelineStateMember"
-            apvi:propertyId="e5434a33-cb85-47d9-a56f-f81456706911" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="9e035bbd-8ca9-42c8-9c35-27076fa8a3c4"
-            asi:name="CalendarDateFromMember"
-            apvi:propertyId="30e6c918-04b4-4628-90c9-1ba607c9d998" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="a2ae5b5b-85bc-4d93-837d-666751cf785d"
-            asi:name="HideNavigationPanel"
-            apvi:propertyId="298b927a-509d-4c65-930c-c871746fb7e2"
+            x:id="069c810d-4fc6-42c9-9c21-1251815a3a21"
+            asi:name="HideCopyButton"
+            apvi:propertyId="4cbf6280-e2ca-4fdf-b621-66df94961094"
             pvi1:value="false" />
           <pvi1:PropertyValueItem
             asi:abstract="false"
-            x:id="a58f8b5e-e079-4125-9f32-7ad3337cb554"
-            asi:name="CalendarDescriptionMember"
-            apvi:propertyId="0646ac0a-46ff-419f-a7b4-3892877ba9dc" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="a6822c5e-b30e-4d79-ac2b-519d2101800b"
-            asi:name="MapLayers"
-            apvi:propertyId="032cc7ad-fcdf-4abc-b848-3be01947a5b8" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="b12bc954-9d6d-4fcf-b9ac-e784f9bd2654"
-            asi:name="PipelineStateLookupId"
-            apvi:propertyId="91c94efb-ef4a-4851-a427-4d10f6c0a923"
-            pvi1:value="00000000-0000-0000-0000-000000000000" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="b566ef5f-22c7-4ef9-b9dd-021cee280bab"
-            asi:name="IsCalendarSupported"
-            apvi:propertyId="a3bfb334-aa7d-4507-ba2c-75017676892f"
-            pvi1:value="false" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="b68b4b0a-e144-4f60-9948-9fc640bf0e53"
-            asi:name="IsDraggingEnabled"
-            apvi:propertyId="f142959e-1909-4769-acf8-e035a345642a"
-            pvi1:value="false" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="be60ffe2-d643-4528-8930-3bbd5fada164"
-            asi:name="Width"
-            apvi:propertyId="16c346fc-561e-404b-a76a-7198ab488710"
-            pvi1:value="722" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="be998e9c-c9fa-4420-b7c2-9795413815e5"
-            asi:name="MapCenter"
-            apvi:propertyId="9724950e-a16b-4844-9038-15f0242a09c8" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="bfcd23db-8b77-4415-818a-36d1fb0cf3a4"
-            asi:name="DataMember"
-            apvi:propertyId="8c12e0ab-e4bd-4675-8f12-c5930a07be14" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="c0f0f728-d2a4-43a4-bad1-6d6b914cc2ad"
-            asi:name="IsPipelineVisible"
-            apvi:propertyId="c679d676-0489-44d8-a604-77b1c0dbdeb6"
-            pvi1:value="false" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="c89f89ae-fc26-4f9f-8154-6560019540a2"
-            asi:name="CalendarResourceNameLookupField"
-            apvi:propertyId="fa8c5b1c-42fa-4eeb-9c5f-a073625e5a22" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="cd59dfa8-6126-4132-bdc7-702cb25d7485"
-            asi:name="CalendarShowAllResources"
-            apvi:propertyId="9e6a6536-c207-4c72-9374-12b6a31d1395"
-            pvi1:value="false" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="ce66d5ee-b682-420b-867d-5aff5c716b05"
-            asi:name="MapAzimuthMember"
-            apvi:propertyId="049c3765-137e-4f7c-a9f5-bef4d9561e61" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="d631fd68-bcdc-4ba7-aba0-3a22bffca3ef"
-            asi:name="CalendarIsFinishedMember"
-            apvi:propertyId="ff52e0c4-c2a8-4d47-ae9b-7cb5bcbb415a" />
-          <pvi1:PropertyValueItem
-            asi:abstract="false"
-            x:id="e4e5499b-82f5-48c9-b122-1de137daff90"
+            x:id="09e1ada0-4fc1-41d1-8e5f-2e03da8c27ab"
             asi:name="DraggingLabelMember"
             apvi:propertyId="cc52b1dd-ac5c-41e9-b054-688e18c91a97" />
           <pvi1:PropertyValueItem
             asi:abstract="false"
-            x:id="e57ecf84-acfd-494e-a6fb-e94b250e5ae1"
-            asi:name="Top"
-            apvi:propertyId="0ab85221-d0b8-4df7-bfcc-ac196db06439"
-            pvi1:value="331" />
+            x:id="0a1b3c2f-a2e8-4301-a1c8-268be9699963"
+            asi:name="CalendarDateFromMember"
+            apvi:propertyId="30e6c918-04b4-4628-90c9-1ba607c9d998" />
           <pvi1:PropertyValueItem
             asi:abstract="false"
-            x:id="e8b130b8-b649-4b45-aaa7-18f11ca85efa"
-            asi:name="IconId"
-            apvi:propertyId="c9a65ec4-4a73-4351-b86a-deb76329b98f"
-            pvi1:value="00000000-0000-0000-0000-000000000000" />
+            x:id="135dabb9-c134-4cae-a775-05854705b11d"
+            asi:name="CalendarDescriptionMember"
+            apvi:propertyId="0646ac0a-46ff-419f-a7b4-3892877ba9dc" />
           <pvi1:PropertyValueItem
             asi:abstract="false"
-            x:id="ef53d773-93de-49b3-a488-685cf1705c95"
-            asi:name="MapColorMember"
-            apvi:propertyId="9c6b43b4-df9a-455d-bbe3-70921e0790db" />
+            x:id="1da19284-732a-4d9a-80f6-9aebbfa4ef4b"
+            asi:name="MapLocationMember"
+            apvi:propertyId="2e429e40-0776-4de8-b6d8-2a3b4e56548c" />
           <pvi1:PropertyValueItem
             asi:abstract="false"
-            x:id="fa241e80-bcea-4e58-94c2-43d1c49d6d8a"
+            x:id="1f0b7fd8-3839-44fa-b2a1-a131130011f3"
+            asi:name="CalendarNameMember"
+            apvi:propertyId="6441ece9-86a8-4394-a33a-4a4bdd4489e9" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="25f2c829-8efc-4f20-96e6-8d0c9835a5dc"
+            asi:name="IsVisualEditorSupported"
+            apvi:propertyId="ba13e820-a44c-43e4-8927-f5026ab11a3a"
+            pvi1:value="false" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="26229180-1714-4bdd-8c29-009abfd08672"
             asi:name="GridVisible"
             apvi:propertyId="84ee631d-39c1-4ecd-91f9-24e434507bc7"
             pvi1:value="false" />
           <pvi1:PropertyValueItem
             asi:abstract="false"
-            x:id="fb479bc0-55e1-453e-999c-f0ddba77698a"
+            x:id="29b3e88c-2bd0-4c45-83b9-b4b4f301c670"
+            asi:name="IsGridHeightDynamic"
+            apvi:propertyId="d7a13674-7f44-4463-a595-2fb3ab1dbb61"
+            pvi1:value="false" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="33746aa7-b89a-4fe1-9cb1-cd5ccf956440"
+            asi:name="CalendarIsFinishedMember"
+            apvi:propertyId="ff52e0c4-c2a8-4d47-ae9b-7cb5bcbb415a" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="3df0ed5d-6b51-440a-9bad-c7ac9c8bf593"
+            asi:name="MapResolution"
+            apvi:propertyId="ac6384aa-a8b8-4344-8402-7a53e1f94c13"
+            pvi1:value="0" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="4a6f35c8-5756-4981-9a75-146ecc8dd51f"
+            asi:name="MapTextColorMember"
+            apvi:propertyId="02d9ba6b-e6ec-46f4-8073-6dc398c081e5" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="4e7803c1-1a29-4aa3-be10-4668dbefbd80"
+            asi:name="CalendarDateDueMember"
+            apvi:propertyId="87bb70a8-a0a7-4c4e-9f18-5724d74b3b98" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="598e53a1-98e3-4710-bc3b-a2f3cba56b33"
+            asi:name="Width"
+            apvi:propertyId="16c346fc-561e-404b-a76a-7198ab488710"
+            pvi1:value="730" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="59a07219-90bd-4a0e-b7f4-de4ed37a40f4"
+            asi:name="PipelineStateMember"
+            apvi:propertyId="e5434a33-cb85-47d9-a56f-f81456706911" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="59ae0c69-d711-453a-a1aa-39c0266736ca"
+            asi:name="MapLayers"
+            apvi:propertyId="032cc7ad-fcdf-4abc-b848-3be01947a5b8" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="5aac1c70-6da2-4a17-88b6-424824d332b6"
+            asi:name="Top"
+            apvi:propertyId="0ab85221-d0b8-4df7-bfcc-ac196db06439"
+            pvi1:value="307" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="5bdd0829-60e4-4714-9775-fe26f6a419e1"
+            asi:name="CalendarDateToMember"
+            apvi:propertyId="f8a067fe-7753-4393-9ab9-70ca3c0c0b11" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="5cf1c078-0418-4b49-8be7-1299b84720a0"
+            asi:name="IsCalendarSupported"
+            apvi:propertyId="a3bfb334-aa7d-4507-ba2c-75017676892f"
+            pvi1:value="false" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="611d6ccb-0a89-410b-915f-2aebed93b826"
+            asi:name="CalendarShowAllResources"
+            apvi:propertyId="9e6a6536-c207-4c72-9374-12b6a31d1395"
+            pvi1:value="false" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="622a1bb1-891b-46b6-98ec-e02ac4138c52"
+            asi:name="PipelineNameMember"
+            apvi:propertyId="6cc64b12-082f-48cd-be8f-6780211718fe" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="684b98ee-7fca-4b1a-ba6d-3e90af3feb43"
+            asi:name="MapCenter"
+            apvi:propertyId="9724950e-a16b-4844-9038-15f0242a09c8" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="6f28b43c-7734-4b1a-9b37-2ad383324d90"
+            asi:name="DefaultConfiguration"
+            apvi:propertyId="76adc867-8e5c-4d20-869f-e47ecadedf47" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="71167390-8bbf-452a-98c1-301dbbe9c8e6"
+            asi:name="MapColorMember"
+            apvi:propertyId="9c6b43b4-df9a-455d-bbe3-70921e0790db" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="7250859b-b362-443e-9f4f-ad0f918dd125"
+            asi:name="Left"
+            apvi:propertyId="2ed67118-feb2-4529-bf0b-524d38ab408c"
+            pvi1:value="10" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="7b419511-be5e-4622-aafc-b6ac8b235fa9"
+            asi:name="MapTextRotationMember"
+            apvi:propertyId="0688ff2b-b946-463f-9e87-069fa03387c9" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="80972ab7-60df-4fc2-851e-698c29099ebe"
+            asi:name="Height"
+            apvi:propertyId="2e965f41-7fea-480b-a44a-095637d0af7d"
+            pvi1:value="165" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="857e1947-b701-4328-8c01-915c7b8f1f02"
+            asi:name="MapAzimuthMember"
+            apvi:propertyId="049c3765-137e-4f7c-a9f5-bef4d9561e61" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="86b4742c-a4d0-4ec9-acfc-ad13313223cd"
+            asi:name="ShowNewButton"
+            apvi:propertyId="af590ff2-4668-40e3-8195-e1a1f735d433"
+            pvi1:value="true" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="8cc48b10-24e6-42ba-8a3e-38c02be5fcef"
+            asi:name="IsMapSupported"
+            apvi:propertyId="d4ecde27-8521-4983-b99a-5e8821b881cb"
+            pvi1:value="false" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="8d870de2-c8fc-439a-baf7-fe179f2b6a57"
+            asi:name="SelectionMember"
+            apvi:propertyId="f3a804f3-61c9-4215-8c42-2b9edd0c4ba1" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="8e3ee73e-d670-4314-8c2e-d171b60a60b5"
+            asi:name="IndependentDataSourceMethodId"
+            apvi:propertyId="cf2165e0-27f2-4155-a003-a861bbe396ef"
+            pvi1:value="00000000-0000-0000-0000-000000000000" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="90c74139-5eef-4ebf-9407-89d9d4a32b23"
+            asi:name="HideNavigationPanel"
+            apvi:propertyId="298b927a-509d-4c65-930c-c871746fb7e2"
+            pvi1:value="false" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="9323daf9-8201-4e44-b1f7-06f7ad2db4f0"
+            asi:name="IndependentDataSourceSortId"
+            apvi:propertyId="dc3ab7b2-3183-4ad4-bafe-886a2407c1bf"
+            pvi1:value="00000000-0000-0000-0000-000000000000" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="95f100c2-2f42-4410-84f7-375ef2bbecc8"
+            asi:name="PanelTitle"
+            apvi:propertyId="8e2ee6f6-ef26-4954-ae70-b864e3ef21f2" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="9d74190f-46ac-415e-ae19-605d129cf8c5"
             asi:name="CalendarResourceIdMember"
             apvi:propertyId="8ae87ccd-e465-4fc9-be2c-fc7cadb3df0f" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="a5e2ec97-9af9-4af4-b736-a9a3e742da95"
+            asi:name="IsDraggingEnabled"
+            apvi:propertyId="f142959e-1909-4769-acf8-e035a345642a"
+            pvi1:value="false" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="a6c54b44-6b73-493e-ae64-404fd825f903"
+            asi:name="IsMapVisible"
+            apvi:propertyId="4584fc29-2af7-404e-83ec-3f4847afa367"
+            pvi1:value="false" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="a891a529-308e-44cf-9822-07ccdae3d06d"
+            asi:name="DataMember"
+            apvi:propertyId="8c12e0ab-e4bd-4675-8f12-c5930a07be14"
+            pvi1:value="AllDataTypes.AllDataTypesDetail" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="a8cb15ce-c2f5-4b16-9e65-92e8e9ba484f"
+            asi:name="MaxDynamicGridHeight"
+            apvi:propertyId="147afba9-d58f-4d82-9388-b1f7954efc96"
+            pvi1:value="0" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="aa8a185d-25c8-4375-bebd-1337a7c2580d"
+            asi:name="CalendarViewStyleId"
+            apvi:propertyId="85e7c9e2-0c94-47a2-b297-63c19270cf40"
+            pvi1:value="00000000-0000-0000-0000-000000000000" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="ae4f3ad0-4c0d-421e-a530-b7aaf2a16b34"
+            asi:name="IsVisualEditorVisible"
+            apvi:propertyId="b1b2e6a0-f7f5-44f1-abea-0f3b34da6b76"
+            pvi1:value="false" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="b5efcdc4-bdf6-4a95-bd53-de597d747298"
+            asi:name="ShowDeleteButton"
+            apvi:propertyId="c9e691f4-520e-46a8-b1a1-941ae833bf88"
+            pvi1:value="true" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="b7145ac9-6f78-4b46-8835-2310e788c367"
+            asi:name="CalendarCustomSortMember"
+            apvi:propertyId="d3e6cd08-af2d-412f-927f-d4e972a0e380" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="bbbcc900-6a67-4e81-811a-b10ef00271cf"
+            asi:name="DisableActionButtons"
+            apvi:propertyId="c7625dc7-56c7-4072-a107-390de90a13e5"
+            pvi1:value="false" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="bbd84621-5cdf-44d6-a389-0cb517cb424d"
+            asi:name="OrderMember"
+            apvi:propertyId="5e622365-4906-444e-a802-443bee69c542" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="bd2e5750-e6b7-4cba-983f-e7118afa50e0"
+            asi:name="MapIconMember"
+            apvi:propertyId="76f51292-1b14-43e3-b044-89d6c1234d5c" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="bfa23ef2-9604-4ccd-857d-8dec9aef6850"
+            asi:name="IconId"
+            apvi:propertyId="c9a65ec4-4a73-4351-b86a-deb76329b98f"
+            pvi1:value="00000000-0000-0000-0000-000000000000" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="c7a6d754-ca60-413d-8378-3f7bdf773c4e"
+            asi:name="StyleId"
+            apvi:propertyId="5dc5a7d0-4ce9-496e-b528-c10e73368ee5"
+            pvi1:value="00000000-0000-0000-0000-000000000000" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="cccf3606-2209-45e0-83c0-e42a01d72a24"
+            asi:name="IsCalendarVisible"
+            apvi:propertyId="4f2ad140-c94b-49eb-9e65-4a52e3cb3e4e"
+            pvi1:value="false" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="cd01af7a-a319-44df-82ad-a31c8db777e0"
+            asi:name="MapTextLocationMember"
+            apvi:propertyId="1ca1946f-3b37-4c49-8443-10c1503dc76c" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="cf95abba-3278-4648-9cef-a57b13ac097d"
+            asi:name="ImplicitFilter"
+            apvi:propertyId="c3f96d4c-f4c3-42ca-af5b-e46b4e7536e6" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="d6471086-3074-441d-8479-82a42ee473af"
+            asi:name="MapTextMember"
+            apvi:propertyId="cd590061-51dc-4cce-a423-d427357d5a03" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="d814b672-68d9-4739-92ff-742688731d5c"
+            asi:name="IndependentDataSourceId"
+            apvi:propertyId="e47201b5-5334-4748-8f04-1626ef9ee93c"
+            pvi1:value="00000000-0000-0000-0000-000000000000" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="da371675-b2f5-4c45-9e6b-8839033d7bd5"
+            asi:name="PipelinePriceMember"
+            apvi:propertyId="63642a1c-b4ad-4984-b487-befbd0a4b216" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="dd18df87-aac5-4ce2-9314-76938d0c16e6"
+            asi:name="IsPipelineVisible"
+            apvi:propertyId="c679d676-0489-44d8-a604-77b1c0dbdeb6"
+            pvi1:value="false" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="e00b2d8c-6426-479b-8e25-312dddeec64d"
+            asi:name="PipelineStateLookupId"
+            apvi:propertyId="91c94efb-ef4a-4851-a427-4d10f6c0a923"
+            pvi1:value="00000000-0000-0000-0000-000000000000" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="e2978699-c085-4abd-be3a-619cee8d1127"
+            asi:name="CalendarRowHeightConstantId"
+            apvi:propertyId="8842aa84-6723-411f-ab53-7bf69c00e05a"
+            pvi1:value="00000000-0000-0000-0000-000000000000" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="e4969216-e6cb-4c97-8cd8-8d73f456ace1"
+            asi:name="DefaultCalendarView"
+            apvi:propertyId="35a06531-13c7-4cf4-bec9-1406ff912040"
+            pvi1:value="0" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="e765a45d-4ab4-48c8-9385-b8e659548f36"
+            asi:name="IsPipelineSupported"
+            apvi:propertyId="32a68d80-174e-46ba-b0ca-b86c6fb5abc0"
+            pvi1:value="false" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="e82d28db-78be-44e2-85a3-5c32635731f2"
+            asi:name="PipelineDateMember"
+            apvi:propertyId="b8048914-a6a8-4ec2-9063-ba40ea7643b0" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="ec2a5161-3968-475e-9de7-c03c9f3bd73e"
+            asi:name="TabIndex"
+            apvi:propertyId="3496cb84-734e-4100-b8fc-f54431d82770"
+            pvi1:value="1" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="eed6ca18-ed44-42f2-9fe6-5075025e4395"
+            asi:name="CalendarResourceNameLookupField"
+            apvi:propertyId="fa8c5b1c-42fa-4eeb-9c5f-a073625e5a22" />
+        </csi:ControlSetItem>
+        <csi:ControlSetItem
+          asi:abstract="false"
+          x:id="c8086287-7d81-4908-8b7b-dc895b667651"
+          csi:isAlternative="false"
+          csi:level="100"
+          asi:name="AsPanel1"
+          csi:requestSaveAfterChange="false"
+          csi:widget="AllDataTypes#AllDataTypes/e25c335c-6a65-49ff-9f0e-562b4ad27306">
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="007bb833-f81b-4313-a023-b8262aa257b7"
+            asi:name="CalendarDateDueMember"
+            apvi:propertyId="87bb70a8-a0a7-4c4e-9f18-5724d74b3b98" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="01c87337-e641-47c5-afe9-e03827bffc6a"
+            asi:name="MapAzimuthMember"
+            apvi:propertyId="049c3765-137e-4f7c-a9f5-bef4d9561e61" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="023eddc4-6ef7-4fd9-882f-c5f9e10e6712"
+            asi:name="IndependentDataSourceSortId"
+            apvi:propertyId="dc3ab7b2-3183-4ad4-bafe-886a2407c1bf"
+            pvi1:value="00000000-0000-0000-0000-000000000000" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="03575b69-3659-4c63-a901-7a3cab6052c0"
+            asi:name="IconId"
+            apvi:propertyId="c9a65ec4-4a73-4351-b86a-deb76329b98f"
+            pvi1:value="00000000-0000-0000-0000-000000000000" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="068aa904-a317-48cb-9666-e2d7cb8cb442"
+            asi:name="IsCalendarVisible"
+            apvi:propertyId="4f2ad140-c94b-49eb-9e65-4a52e3cb3e4e"
+            pvi1:value="false" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="0f2bbf07-56ca-43c8-b0c8-66ea4d4de6cb"
+            asi:name="TabIndex"
+            apvi:propertyId="3496cb84-734e-4100-b8fc-f54431d82770"
+            pvi1:value="0" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="13bb9865-ebb2-4953-b434-d2930813594b"
+            asi:name="Width"
+            apvi:propertyId="16c346fc-561e-404b-a76a-7198ab488710"
+            pvi1:value="730" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="16de84c8-8b0e-416b-b6ae-34446c3112aa"
+            asi:name="Top"
+            apvi:propertyId="0ab85221-d0b8-4df7-bfcc-ac196db06439"
+            pvi1:value="10" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="1ae9d34e-57f9-445d-b897-2c576329eaa0"
+            asi:name="CalendarIsFinishedMember"
+            apvi:propertyId="ff52e0c4-c2a8-4d47-ae9b-7cb5bcbb415a" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="20b07971-76a0-4d96-840d-32df935c9eef"
+            asi:name="CalendarDateFromMember"
+            apvi:propertyId="30e6c918-04b4-4628-90c9-1ba607c9d998" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="22c9a71f-2978-4b0a-8adf-8e3fd344a478"
+            asi:name="CalendarViewStyleId"
+            apvi:propertyId="85e7c9e2-0c94-47a2-b297-63c19270cf40"
+            pvi1:value="00000000-0000-0000-0000-000000000000" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="2877fce4-9a7a-4b33-91ca-9568941bf193"
+            asi:name="MapIconMember"
+            apvi:propertyId="76f51292-1b14-43e3-b044-89d6c1234d5c" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="290a16f5-63bd-4962-97f4-8adf66cf9d89"
+            asi:name="CalendarResourceIdMember"
+            apvi:propertyId="8ae87ccd-e465-4fc9-be2c-fc7cadb3df0f" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="2cb611ec-e106-473c-ba4d-7c1b8b590d66"
+            asi:name="ImplicitFilter"
+            apvi:propertyId="c3f96d4c-f4c3-42ca-af5b-e46b4e7536e6" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="34f50fc1-4d8a-45db-8aa9-2ddd58287811"
+            asi:name="MapResolution"
+            apvi:propertyId="ac6384aa-a8b8-4344-8402-7a53e1f94c13"
+            pvi1:value="0" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="3530f5d6-d7f5-4262-b8a6-46388b79f688"
+            asi:name="PipelinePriceMember"
+            apvi:propertyId="63642a1c-b4ad-4984-b487-befbd0a4b216" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="3c0b131d-5f70-4db8-b6a2-c95385ac1db6"
+            asi:name="DefaultCalendarView"
+            apvi:propertyId="35a06531-13c7-4cf4-bec9-1406ff912040"
+            pvi1:value="0" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="3d89aae1-c118-4c3f-a5de-f3d347a73a76"
+            asi:name="DisableActionButtons"
+            apvi:propertyId="c7625dc7-56c7-4072-a107-390de90a13e5"
+            pvi1:value="false" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="40e58793-0d6e-4da5-b44a-0afe89190ed3"
+            asi:name="CalendarShowAllResources"
+            apvi:propertyId="9e6a6536-c207-4c72-9374-12b6a31d1395"
+            pvi1:value="false" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="424298eb-ad95-4ce0-ba42-f6d1c536c129"
+            asi:name="ShowDeleteButton"
+            apvi:propertyId="c9e691f4-520e-46a8-b1a1-941ae833bf88"
+            pvi1:value="true" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="486e3d13-807d-4661-bd29-a2fd967e9664"
+            asi:name="IndependentDataSourceId"
+            apvi:propertyId="e47201b5-5334-4748-8f04-1626ef9ee93c"
+            pvi1:value="00000000-0000-0000-0000-000000000000" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="4993c932-05bd-4895-bdf5-b3faf3a4d56b"
+            asi:name="Height"
+            apvi:propertyId="2e965f41-7fea-480b-a44a-095637d0af7d"
+            pvi1:value="289" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="4a774977-264a-48b6-b6b1-dbe5e8dea5f2"
+            asi:name="IndependentDataSourceMethodId"
+            apvi:propertyId="cf2165e0-27f2-4155-a003-a861bbe396ef"
+            pvi1:value="00000000-0000-0000-0000-000000000000" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="506f2d7a-5658-4d60-b837-1cdda31337c6"
+            asi:name="IsDraggingEnabled"
+            apvi:propertyId="f142959e-1909-4769-acf8-e035a345642a"
+            pvi1:value="false" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="5883cce9-3bae-4007-a6a1-75f3bcde21ae"
+            asi:name="MapColorMember"
+            apvi:propertyId="9c6b43b4-df9a-455d-bbe3-70921e0790db" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="5ecf67b8-0396-43e1-96bf-2143de5084f2"
+            asi:name="CalendarRowHeightConstantId"
+            apvi:propertyId="8842aa84-6723-411f-ab53-7bf69c00e05a"
+            pvi1:value="00000000-0000-0000-0000-000000000000" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="659f0076-90a7-4420-8a79-decd72480c4b"
+            asi:name="MapTextLocationMember"
+            apvi:propertyId="1ca1946f-3b37-4c49-8443-10c1503dc76c" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="660539cb-fabb-45fe-8bbd-d3f098c36feb"
+            asi:name="PipelineStateLookupId"
+            apvi:propertyId="91c94efb-ef4a-4851-a427-4d10f6c0a923"
+            pvi1:value="00000000-0000-0000-0000-000000000000" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="6c19acc1-3a88-410a-8399-57e9034314a2"
+            asi:name="MapCenter"
+            apvi:propertyId="9724950e-a16b-4844-9038-15f0242a09c8" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="747f952d-ce1a-43ea-8115-7b6badf5f191"
+            asi:name="PipelineDateMember"
+            apvi:propertyId="b8048914-a6a8-4ec2-9063-ba40ea7643b0" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="81566cc5-4640-4370-80d3-3f6754391a10"
+            asi:name="DraggingLabelMember"
+            apvi:propertyId="cc52b1dd-ac5c-41e9-b054-688e18c91a97" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="8c3e2b0f-248c-4062-841f-2f7f611b6d9a"
+            asi:name="IsMapVisible"
+            apvi:propertyId="4584fc29-2af7-404e-83ec-3f4847afa367"
+            pvi1:value="false" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="946edcf4-8fb0-48aa-af94-fed0c27ceb06"
+            asi:name="IsCalendarSupported"
+            apvi:propertyId="a3bfb334-aa7d-4507-ba2c-75017676892f"
+            pvi1:value="false" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="95bbf0a4-4b5c-4b57-833b-c84b7eba858a"
+            asi:name="MapTextRotationMember"
+            apvi:propertyId="0688ff2b-b946-463f-9e87-069fa03387c9" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="9655f46e-36f7-4074-aef5-a694c3c18914"
+            asi:name="IsPipelineSupported"
+            apvi:propertyId="32a68d80-174e-46ba-b0ca-b86c6fb5abc0"
+            pvi1:value="false" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="9c2e9e84-793e-42bc-8714-3847a8c108e9"
+            asi:name="CalendarCustomSortMember"
+            apvi:propertyId="d3e6cd08-af2d-412f-927f-d4e972a0e380" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="9c30ad87-2d1f-4035-9eb7-910df720a91d"
+            asi:name="IsMapSupported"
+            apvi:propertyId="d4ecde27-8521-4983-b99a-5e8821b881cb"
+            pvi1:value="false" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="9ea2cc9e-4539-4e44-8a55-4c36e65fdb9a"
+            asi:name="PanelTitle"
+            apvi:propertyId="8e2ee6f6-ef26-4954-ae70-b864e3ef21f2" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="a1494000-e9e9-4649-bc79-679a446569e1"
+            asi:name="SelectionMember"
+            apvi:propertyId="f3a804f3-61c9-4215-8c42-2b9edd0c4ba1" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="a329d6a8-9b21-46af-a8e9-448692d0e4a1"
+            asi:name="PipelineNameMember"
+            apvi:propertyId="6cc64b12-082f-48cd-be8f-6780211718fe" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="a8e3800e-8575-43d0-ae0c-f76552f20043"
+            asi:name="IsVisualEditorVisible"
+            apvi:propertyId="b1b2e6a0-f7f5-44f1-abea-0f3b34da6b76"
+            pvi1:value="false" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="b0816254-d5a2-476e-ba42-1a0954ca4cef"
+            asi:name="CalendarNameMember"
+            apvi:propertyId="6441ece9-86a8-4394-a33a-4a4bdd4489e9" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="bc6b0995-58f9-49be-a9a5-87b93fb8f0b0"
+            asi:name="DataMember"
+            apvi:propertyId="8c12e0ab-e4bd-4675-8f12-c5930a07be14"
+            pvi1:value="AllDataTypes" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="bd6e7ed3-815d-47e0-af69-93cab9b6ef5b"
+            asi:name="MapLocationMember"
+            apvi:propertyId="2e429e40-0776-4de8-b6d8-2a3b4e56548c" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="be6c21b7-fa48-4d9b-a431-866f74e67114"
+            asi:name="MapTextMember"
+            apvi:propertyId="cd590061-51dc-4cce-a423-d427357d5a03" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="c2315a34-1f11-4412-840e-17bdbb2678d3"
+            asi:name="CalendarResourceNameLookupField"
+            apvi:propertyId="fa8c5b1c-42fa-4eeb-9c5f-a073625e5a22" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="c46f0244-2f8a-42de-9b9d-cbb9d6639e6a"
+            asi:name="HideCopyButton"
+            apvi:propertyId="4cbf6280-e2ca-4fdf-b621-66df94961094"
+            pvi1:value="false" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="c4e9000b-e8c9-4dc0-ab34-138ff917664c"
+            asi:name="MapLayers"
+            apvi:propertyId="032cc7ad-fcdf-4abc-b848-3be01947a5b8" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="cc96a09b-e4ee-4bf2-aeba-bcce2a501766"
+            asi:name="Left"
+            apvi:propertyId="2ed67118-feb2-4529-bf0b-524d38ab408c"
+            pvi1:value="10" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="cdf30bcc-a69c-4335-8644-91779a993260"
+            asi:name="DefaultConfiguration"
+            apvi:propertyId="76adc867-8e5c-4d20-869f-e47ecadedf47" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="d33e6425-7bad-4d2e-ad83-0213c05336eb"
+            asi:name="NewRecordInDetailView"
+            apvi:propertyId="dfed9e9e-2ab8-4ea8-b9de-2b6a31d1b1af"
+            pvi1:value="false" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="d733e19a-8b9e-43c7-9d59-331352155dbb"
+            asi:name="HideNavigationPanel"
+            apvi:propertyId="298b927a-509d-4c65-930c-c871746fb7e2"
+            pvi1:value="false" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="da656895-ebdc-43c3-b031-cfb051a2a8c2"
+            asi:name="ShowNewButton"
+            apvi:propertyId="af590ff2-4668-40e3-8195-e1a1f735d433"
+            pvi1:value="true" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="dc6e8ca9-62ca-437d-a6a8-ebc6037a4d01"
+            asi:name="IsVisualEditorSupported"
+            apvi:propertyId="ba13e820-a44c-43e4-8927-f5026ab11a3a"
+            pvi1:value="false" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="dfad6db1-cac1-4978-a801-17dc7f3504cb"
+            asi:name="OrderMember"
+            apvi:propertyId="5e622365-4906-444e-a802-443bee69c542" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="e2511cd6-7fce-4176-97e3-99385ce01a1d"
+            asi:name="CalendarDateToMember"
+            apvi:propertyId="f8a067fe-7753-4393-9ab9-70ca3c0c0b11" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="e3c36d70-5b32-4d57-b28e-bfc64f2159a0"
+            asi:name="GridVisible"
+            apvi:propertyId="84ee631d-39c1-4ecd-91f9-24e434507bc7"
+            pvi1:value="true" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="e4ae1a9f-43dd-47b3-ab44-32c347097552"
+            asi:name="MapTextColorMember"
+            apvi:propertyId="02d9ba6b-e6ec-46f4-8073-6dc398c081e5" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="eb9b10c9-2cd2-4ecf-9b6f-de91dfae11e4"
+            asi:name="IsPipelineVisible"
+            apvi:propertyId="c679d676-0489-44d8-a604-77b1c0dbdeb6"
+            pvi1:value="false" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="ef543a97-ec59-4f43-8af0-27bc10c8429e"
+            asi:name="MaxDynamicGridHeight"
+            apvi:propertyId="147afba9-d58f-4d82-9388-b1f7954efc96"
+            pvi1:value="0" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="f1369e9b-6b09-4b6e-8edf-8e0d62396c1b"
+            asi:name="CalendarDescriptionMember"
+            apvi:propertyId="0646ac0a-46ff-419f-a7b4-3892877ba9dc" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="f6e7ace1-d614-4346-bfa7-8d8375a56131"
+            asi:name="StyleId"
+            apvi:propertyId="5dc5a7d0-4ce9-496e-b528-c10e73368ee5"
+            pvi1:value="00000000-0000-0000-0000-000000000000" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="faa27f42-dd47-4835-9139-17d03b83d7b8"
+            asi:name="PipelineStateMember"
+            apvi:propertyId="e5434a33-cb85-47d9-a56f-f81456706911" />
+          <pvi1:PropertyValueItem
+            asi:abstract="false"
+            x:id="fc9d2caa-1aec-4f28-b115-7564092631b5"
+            asi:name="IsGridHeightDynamic"
+            apvi:propertyId="d7a13674-7f44-4463-a595-2fb3ab1dbb61"
+            pvi1:value="false" />
         </csi:ControlSetItem>
         <pvi1:PropertyValueItem
           asi:abstract="false"

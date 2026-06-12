@@ -7,11 +7,11 @@ ALTER TABLE "AllDataTypesDetail" ADD CONSTRAINT "FK_AllDataTypesDetail_refAllDat
 	REFERENCES "AllDataTypes" (
 		"Id"
 	);
-ALTER TABLE "AllDataTypesDetail" ADD CONSTRAINT "FK_AllDataTypesDetail_refWorkflowStatesId_WorkflowStates"
+ALTER TABLE "AllDataTypesDetail" ADD CONSTRAINT "FK_AllDataTypesDetail_refArrayTestId_ArrayTest"
 	FOREIGN KEY (
-		"refWorkflowStatesId"
+		"refArrayTestId"
 	)
 
-	REFERENCES "WorkflowStates" (
+	REFERENCES "ArrayTest" (
 		"Id"
 	);

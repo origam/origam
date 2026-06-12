@@ -1,0 +1,9 @@
+﻿
+ALTER TABLE [ArrayTest] ADD CONSTRAINT [FK_ArrayTest_refBusinessPartnerId_BusinessPartner]
+	FOREIGN KEY (
+		[refBusinessPartnerId]
+	)
+
+	REFERENCES [BusinessPartner] (
+		[Id]
+	);

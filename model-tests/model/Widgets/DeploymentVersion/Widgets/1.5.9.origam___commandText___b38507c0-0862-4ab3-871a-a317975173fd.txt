@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [AllDataTypesDetail] (
 	[refAllDataTypesId] UniqueIdentifier NOT NULL,
-	[refWorkflowStatesId] UniqueIdentifier NOT NULL,
+	[refArrayTestId] UniqueIdentifier NOT NULL,
 	[RecordCreated] DateTime NULL,
 	[RecordUpdatedBy] UniqueIdentifier NULL,
 	[Id] UniqueIdentifier NOT NULL PRIMARY KEY NONCLUSTERED,

@@ -4,6 +4,7 @@
   xmlns:ads="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataStructure/6.0.0"
   xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
   xmlns:ds1="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0"
+  xmlns:dsc="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureColumn/6.0.1"
   xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0">
   <ds1:DataStructure
     asi:abstract="false"
@@ -22,6 +23,43 @@
       dse:relationType="Normal"
       dse:serializeAsSingleJsonObject="false"
       dse:useUpsert="false">
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="refTagInputSourceId#AllDataTypes/refTagInputSourceId/7142586a-1798-4f99-af0a-9166319d11e0"
+        dsc:hideInOutput="false"
+        x:id="3a2fd824-759a-4455-93da-22c44189b44b"
+        dsc:lookup="TagInputSource_Label_GetId#TagInputSource_Label_GetId/991a8bec-5169-4506-9457-7f91c27bb5fd"
+        asi:name="TagInputSourceLabel_DataStructure"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="true"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="ArrayTestId#AllDataTypes/ArrayTestId/b959b347-0ff4-47b6-958e-60cec7cf8a23"
+        dsc:hideInOutput="false"
+        x:id="40f59ee2-37d5-4d01-96a8-9fd1c3573c35"
+        asi:name="ArrayTestId"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dse:DataStructureEntity
+        asi:abstract="false"
+        dse:allFields="true"
+        dse:concurrencyHandling="Standard"
+        dse:entity="TagInputBinding#AllDataTypes/TagInputBinding/9a7b8c2c-f8a8-4fed-8470-895d2618499a"
+        x:id="aa2f584c-4ce5-475c-9fb5-8929778f32d7"
+        dse:ignoreCondition="None"
+        dse:ignoreImplicitFilters="false"
+        asi:name="TagInputBinding"
+        dse:relationType="Normal"
+        dse:serializeAsSingleJsonObject="false"
+        dse:useUpsert="false" />
       <dse:DataStructureEntity
         asi:abstract="false"
         dse:allFields="true"

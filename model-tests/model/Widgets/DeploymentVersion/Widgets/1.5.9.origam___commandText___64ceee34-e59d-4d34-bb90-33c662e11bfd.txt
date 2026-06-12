@@ -1,0 +1,8 @@
+﻿CREATE TABLE "ArrayTest" (
+	"Text" VARCHAR(50),
+	"refBusinessPartnerId" Uuid NULL,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdatedBy" Uuid NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordUpdated" Timestamp(3) NULL);

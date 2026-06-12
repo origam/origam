@@ -35,17 +35,17 @@
     </dei:DataEntityIndex>
     <eri:EntityRelation
       asi:abstract="false"
-      x:id="113de725-75d1-43ca-889d-db99d927949d"
-      asi:name="WorkflowStates"
+      x:id="6f7944bd-4aca-4ee0-b729-8f75c47d4ed2"
+      asi:name="ArrayTest"
       eri:or="false"
       eri:parentChild="false"
-      eri:relatedEntity="WorkflowStates#WorkflowStates/5ab12862-8b65-49c4-ac8d-25b5bc4b80f4"
+      eri:relatedEntity="ArrayTest#ArrayTest/10108bed-abbe-4932-8f03-ddd2ec9b618b"
       eri:selfJoin="false">
       <ercpi:EntityRelationColumnPair
         asi:abstract="false"
-        ercpi:baseEntityField="refWorkflowStatesId#AllDataTypesDetail/refWorkflowStatesId/5ecf2c4f-18b0-4f9e-8acf-6ed078a443a9"
-        x:id="475b4bfc-a107-413b-9172-8509b26f67c2"
-        asi:name="WorkflowStatesKey1"
+        ercpi:baseEntityField="refArrayTestId#AllDataTypesDetail/refArrayTestId/df3272ef-4d3f-4b0f-a30b-5ed7a706ffce"
+        x:id="a9eae18a-b935-421e-bddf-de7aabb51c5d"
+        asi:name="ArrayTestKey1"
         ercpi:relatedEntityField="Id#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e" />
     </eri:EntityRelation>
     <fmi:DataEntityColumn
@@ -66,19 +66,19 @@
       adec:xmlMappingType="Attribute" />
     <fmi:DataEntityColumn
       asi:abstract="false"
-      adec:allowNulls="false"
+      adec:allowNulls="true"
       adec:autoIncrement="false"
       adec:dataType="UniqueIdentifier"
-      adec:defaultLookup="WorkflowStates#WorkflowStates/9f63dc66-d4cf-4664-a793-38b4a5aa33bf"
+      adec:defaultLookup="ArrayTest_Text#ArrayTest_Text/ac42c31f-b978-4dd6-906a-3a736eeeb85f"
       adec:excludeFromAllFields="false"
       fmi:excludeFromAuditing="false"
-      adec:foreignKeyEntity="WorkflowStates#WorkflowStates/5ab12862-8b65-49c4-ac8d-25b5bc4b80f4"
+      adec:foreignKeyEntity="ArrayTest#ArrayTest/10108bed-abbe-4932-8f03-ddd2ec9b618b"
       adec:foreignKeyField="Id#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
-      x:id="5ecf2c4f-18b0-4f9e-8acf-6ed078a443a9"
+      x:id="df3272ef-4d3f-4b0f-a30b-5ed7a706ffce"
       adec:isPrimaryKey="false"
-      adec:label="Workflow State"
-      fmi:mappedColumnName="refWorkflowStatesId"
-      asi:name="refWorkflowStatesId"
+      adec:label="Array Test Id"
+      fmi:mappedColumnName="refArrayTestId"
+      asi:name="refArrayTestId"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute" />
     <sia:ancestor
