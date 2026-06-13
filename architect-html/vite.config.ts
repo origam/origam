@@ -4,6 +4,12 @@ import path from 'path';
 import { defineConfig } from 'vite';
 import mkcert from 'vite-plugin-mkcert';
 
+// Allow disabling the HTTPS dev server (and mkcert) via an env flag. mkcert
+// can't provision a local CA on CI runners, so the HTTPS server never starts
+// there; the e2e job sets VITE_DISABLE_HTTPS=true to run over plain HTTP.
+// Local development keeps HTTPS by default.
+const httpsDisabled = process.env.VITE_DISABLE_HTTPS === 'true';
+
 export default defineConfig({
   define: {
     __ORIGAM_ARCHITECT_HTML_VERSION__: JSON.stringify(
@@ -15,7 +21,7 @@ export default defineConfig({
     babel({
       plugins: [['@babel/plugin-proposal-decorators', { version: '2023-05' }]],
     }),
-    mkcert(),
+    ...(httpsDisabled ? [] : [mkcert()]),
   ],
   resolve: {
     alias: {
@@ -39,7 +45,7 @@ export default defineConfig({
     chunkSizeWarningLimit: 4000, // size in kB
   },
   server: {
-    https: {},
+    ...(httpsDisabled ? {} : { https: {} }),
     proxy: {
       '/Model': {
         target: 'https://localhost:7099',

@@ -24,7 +24,13 @@ import { defineConfig, devices } from '@playwright/test';
 // webServer URL is deterministic in CI. Override the base URL via
 // PLAYWRIGHT_BASE_URL to point the suite at an already-running server.
 const PORT = 5173;
-const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? `https://localhost:${PORT}`;
+// mkcert can't provision a local CA on CI runners, so the HTTPS dev server
+// never comes up there. Run the dev server over plain HTTP in CI (and whenever
+// PW_HTTP=true) and keep HTTPS for local dev. VITE_DISABLE_HTTPS is read by
+// vite.config.ts to drop the https/mkcert setup.
+const useHttp = !!process.env.CI || process.env.PW_HTTP === 'true';
+const protocol = useHttp ? 'http' : 'https';
+const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? `${protocol}://localhost:${PORT}`;
 
 export default defineConfig({
   testDir: './e2e',
@@ -57,6 +63,7 @@ export default defineConfig({
   // it down afterwards. Locally it reuses a server you already have running.
   webServer: {
     command: `yarn dev --port ${PORT} --strictPort`,
+    env: useHttp ? { VITE_DISABLE_HTTPS: 'true' } : {},
     url: baseURL,
     ignoreHTTPSErrors: true,
     reuseExistingServer: !process.env.CI,
