@@ -133,10 +133,11 @@ jobs:
             Out-File -FilePath (Join-Path $dir 'appsettings.json') -Encoding utf8
           Write-Host "Wrote OrigamSettings.config and appsettings.json"
 
-          # The solution build doesn't always copy content next to the dll, so
-          # stage the runtime files the server reads on startup / at runtime.
+          # log4net.config / OrigamSettings.config are gitignored (generated from
+          # templates locally), so they aren't in a fresh checkout. Build the
+          # log4net.config the server reads on startup from the committed template.
           $src = 'backend/Origam.Architect.Server'
-          Copy-Item (Join-Path $src 'log4net.config') -Destination $dir -Force
+          Copy-Item (Join-Path $src 'ConfigTemplates/_log4net.config') -Destination (Join-Path $dir 'log4net.config') -Force
           if (Test-Path (Join-Path $src 'Assets')) {
             Copy-Item (Join-Path $src 'Assets') -Destination $dir -Recurse -Force
           }
