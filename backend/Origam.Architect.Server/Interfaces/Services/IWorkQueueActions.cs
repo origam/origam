@@ -24,12 +24,7 @@ using Origam.Architect.Server.Models.Responses.Actions;
 
 namespace Origam.Architect.Server.Interfaces.Services;
 
-/// <summary>
-/// Create a WorkQueue class from selected entity columns. The wizard reuses
-/// <see cref="IScreenActions.GetScreenWizardData"/> to list the columns.
-/// </summary>
 public interface IWorkQueueActions
 {
-    /// <summary>Create the WorkQueue class for the entity from the selected fields.</summary>
     CreateActionResult CreateWorkQueueClass(CreateWorkQueueModel input);
 }

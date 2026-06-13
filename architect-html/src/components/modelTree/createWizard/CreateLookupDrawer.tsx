@@ -48,7 +48,10 @@ const STEPS = [
 export const CreateLookupDrawer: React.FC<CreateLookupDrawerProps> = observer(
   ({ entityId, parentNodeName, onCancel, onCreate }) => {
     const rootStore = useContext(RootStoreContext);
-    const run = runInFlowWithHandler(rootStore.errorDialogController);
+    const run = useMemo(
+      () => runInFlowWithHandler(rootStore.errorDialogController),
+      [rootStore.errorDialogController],
+    );
 
     const drawerRef = useRef<HTMLDivElement>(null);
     const nameManuallyEditedRef = useRef(false);
@@ -63,7 +66,7 @@ export const CreateLookupDrawer: React.FC<CreateLookupDrawerProps> = observer(
       listFilterId: '',
     });
 
-    const update = (patch: Partial<LookupModel>) => setModel(m => ({ ...m, ...patch }));
+    const update = (patch: Partial<LookupModel>) => setModel(prev => ({ ...prev, ...patch }));
 
     const buildAutoName = (
       entityName: string,
@@ -85,10 +88,10 @@ export const CreateLookupDrawer: React.FC<CreateLookupDrawerProps> = observer(
         update({ displayFieldId: newDisplayFieldId });
         return;
       }
-      const column = entityData.columns?.find(c => c.id === newDisplayFieldId);
-      const idFilter = entityData.filters?.find(f => f.id === model.idFilterId);
-      setModel(m => ({
-        ...m,
+      const column = entityData.columns?.find(column => column.id === newDisplayFieldId);
+      const idFilter = entityData.filters?.find(filter => filter.id === model.idFilterId);
+      setModel(prev => ({
+        ...prev,
         displayFieldId: newDisplayFieldId,
         name: buildAutoName(entityData.entityName, column?.name, idFilter?.name),
       }));
@@ -99,10 +102,10 @@ export const CreateLookupDrawer: React.FC<CreateLookupDrawerProps> = observer(
         update({ idFilterId: newIdFilterId });
         return;
       }
-      const column = entityData.columns?.find(c => c.id === model.displayFieldId);
-      const idFilter = entityData.filters?.find(f => f.id === newIdFilterId);
-      setModel(m => ({
-        ...m,
+      const column = entityData.columns?.find(column => column.id === model.displayFieldId);
+      const idFilter = entityData.filters?.find(filter => filter.id === newIdFilterId);
+      setModel(prev => ({
+        ...prev,
         idFilterId: newIdFilterId,
         name: buildAutoName(entityData.entityName, column?.name, idFilter?.name),
       }));
@@ -131,40 +134,39 @@ export const CreateLookupDrawer: React.FC<CreateLookupDrawerProps> = observer(
       return () => {
         cancelled = true;
       };
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [entityId]);
+    }, [entityId, run, rootStore.architectApi]);
 
     useEffect(() => {
-      const onKeyDown = (e: KeyboardEvent) => {
-        if (e.key === 'Escape') {
-          e.stopPropagation();
+      const onKeyDown = (event: KeyboardEvent) => {
+        if (event.key === 'Escape') {
+          event.stopPropagation();
           onCancel();
           return;
         }
-        if (e.key === 'Tab' && drawerRef.current) {
-          const nodes = Array.from(
+        if (event.key === 'Tab' && drawerRef.current) {
+          const focusableNodes = Array.from(
             drawerRef.current.querySelectorAll<HTMLElement>(
               'a[href], button, input, select, textarea, [tabindex]',
             ),
-          ).filter(el => {
-            if (el.hasAttribute('disabled')) return false;
-            if (el.getAttribute('tabindex') === '-1') return false;
-            if (el.offsetParent === null && el !== document.activeElement) return false;
+          ).filter(node => {
+            if (node.hasAttribute('disabled')) return false;
+            if (node.getAttribute('tabindex') === '-1') return false;
+            if (node.offsetParent === null && node !== document.activeElement) return false;
             return true;
           });
-          if (nodes.length === 0) return;
-          e.preventDefault();
-          e.stopPropagation();
-          const active = document.activeElement as HTMLElement | null;
-          const idx = active ? nodes.indexOf(active) : -1;
-          const dir = e.shiftKey ? -1 : 1;
-          const nextIdx =
-            idx === -1
-              ? e.shiftKey
-                ? nodes.length - 1
+          if (focusableNodes.length === 0) return;
+          event.preventDefault();
+          event.stopPropagation();
+          const activeElement = document.activeElement as HTMLElement | null;
+          const activeIndex = activeElement ? focusableNodes.indexOf(activeElement) : -1;
+          const direction = event.shiftKey ? -1 : 1;
+          const nextIndex =
+            activeIndex === -1
+              ? event.shiftKey
+                ? focusableNodes.length - 1
                 : 0
-              : (idx + dir + nodes.length) % nodes.length;
-          nodes[nextIdx].focus();
+              : (activeIndex + direction + focusableNodes.length) % focusableNodes.length;
+          focusableNodes[nextIndex].focus();
         }
       };
       document.addEventListener('keydown', onKeyDown);
@@ -176,8 +178,8 @@ export const CreateLookupDrawer: React.FC<CreateLookupDrawerProps> = observer(
       (step === 1 && model.name.trim().length > 0) ||
       step === 2;
 
-    const next = () => setStep(s => Math.min(s + 1, STEPS.length - 1));
-    const back = () => setStep(s => Math.max(s - 1, 0));
+    const next = () => setStep(current => Math.min(current + 1, STEPS.length - 1));
+    const back = () => setStep(current => Math.max(current - 1, 0));
 
     const submit = () => {
       if (submitting) return;
@@ -201,14 +203,14 @@ export const CreateLookupDrawer: React.FC<CreateLookupDrawerProps> = observer(
     };
 
     const findName = (list: { id: string; name: string }[] | undefined, id: string) =>
-      (list ?? []).find(x => x.id === id)?.name ?? '';
+      (list ?? []).find(item => item.id === id)?.name ?? '';
 
     const columnOptions = useMemo<IDropDownValue[]>(
-      () => (entityData?.columns ?? []).map(c => ({ value: c.id, name: c.name })),
+      () => (entityData?.columns ?? []).map(column => ({ value: column.id, name: column.name })),
       [entityData?.columns],
     );
     const idFilterOptions = useMemo<IDropDownValue[]>(
-      () => (entityData?.filters ?? []).map(f => ({ value: f.id, name: f.name })),
+      () => (entityData?.filters ?? []).map(filter => ({ value: filter.id, name: filter.name })),
       [entityData?.filters],
     );
     const listFilterOptions = idFilterOptions;
@@ -232,7 +234,7 @@ export const CreateLookupDrawer: React.FC<CreateLookupDrawerProps> = observer(
                 autoFocus
                 placeholder="e.g. BusinessPartner_Name_GetId"
                 value={model.name}
-                onChange={e => onNameChange(e.target.value)}
+                onChange={event => onNameChange(event.target.value)}
               />
             </div>
 
@@ -386,18 +388,18 @@ export const CreateLookupDrawer: React.FC<CreateLookupDrawerProps> = observer(
 
         <div className={S.body}>
           <div className={S.stepperCol}>
-            {STEPS.map((s, i) => (
+            {STEPS.map((stepInfo, index) => (
               <div
-                key={s.label}
-                className={`${S.stepperItem} ${i === step ? S.active : ''} ${
-                  i < step ? S.done : ''
+                key={stepInfo.label}
+                className={`${S.stepperItem} ${index === step ? S.active : ''} ${
+                  index < step ? S.done : ''
                 }`}
-                onClick={() => i < step && setStep(i)}
+                onClick={() => index < step && setStep(index)}
               >
-                <div className={S.stepBullet}>{i < step ? '✓' : i + 1}</div>
+                <div className={S.stepBullet}>{index < step ? '✓' : index + 1}</div>
                 <div className={S.stepText}>
-                  <div className={S.stepLabel}>{s.label}</div>
-                  <div className={S.stepHint}>{s.hint}</div>
+                  <div className={S.stepLabel}>{stepInfo.label}</div>
+                  <div className={S.stepHint}>{stepInfo.hint}</div>
                 </div>
               </div>
             ))}

@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import S from '@components/modelTree/createWizard/CreateLookupDrawer.module.scss';
 import { observer } from 'mobx-react-lite';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { RootStoreContext } from '@/main';
 import { ICreateActionResult, IScreenWizardData } from '@api/IArchitectApi';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
@@ -39,17 +39,16 @@ const STEPS = [
 export const CreateWorkQueueDrawer: React.FC<CreateWorkQueueDrawerProps> = observer(
   ({ entityId, parentNodeName, onCancel, onCreate }) => {
     const rootStore = useContext(RootStoreContext);
-    const run = runInFlowWithHandler(rootStore.errorDialogController);
+    const run = useMemo(
+      () => runInFlowWithHandler(rootStore.errorDialogController),
+      [rootStore.errorDialogController],
+    );
 
     const [step, setStep] = useState(0);
     const [entityData, setEntityData] = useState<IScreenWizardData | null>(null);
     const [loading, setLoading] = useState(true);
     const [submitting, setSubmitting] = useState(false);
     const [selectedFieldIds, setSelectedFieldIds] = useState<Set<string>>(new Set());
-    // Caption is shown in the wizard the same as in the WinForms version
-    // (ScreenWizardForm.Caption). The Desktop CreateWorkQueueClassFromEntityCommand
-    // does not pass it through either — Name is always derived from entity.Name —
-    // so we keep it as a UI-only field.
     const [caption, setCaption] = useState('');
 
     useEffect(() => {
@@ -70,13 +69,12 @@ export const CreateWorkQueueDrawer: React.FC<CreateWorkQueueDrawerProps> = obser
       return () => {
         cancelled = true;
       };
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [entityId]);
+    }, [entityId, run, rootStore.architectApi]);
 
     useEffect(() => {
-      const onKeyDown = (e: KeyboardEvent) => {
-        if (e.key === 'Escape') {
-          e.stopPropagation();
+      const onKeyDown = (event: KeyboardEvent) => {
+        if (event.key === 'Escape') {
+          event.stopPropagation();
           onCancel();
         }
       };
@@ -95,15 +93,15 @@ export const CreateWorkQueueDrawer: React.FC<CreateWorkQueueDrawerProps> = obser
 
     const selectAll = () => {
       if (!entityData) return;
-      setSelectedFieldIds(new Set(entityData.columns.map(c => c.id)));
+      setSelectedFieldIds(new Set(entityData.columns.map(column => column.id)));
     };
 
     const clearAll = () => setSelectedFieldIds(new Set());
 
     const canAdvance = (step === 0 && selectedFieldIds.size > 0) || step === 1;
 
-    const next = () => setStep(s => Math.min(s + 1, STEPS.length - 1));
-    const back = () => setStep(s => Math.max(s - 1, 0));
+    const next = () => setStep(current => Math.min(current + 1, STEPS.length - 1));
+    const back = () => setStep(current => Math.max(current - 1, 0));
 
     const submit = () => {
       if (submitting) return;
@@ -142,7 +140,7 @@ export const CreateWorkQueueDrawer: React.FC<CreateWorkQueueDrawerProps> = obser
                 autoFocus
                 placeholder={entityData ? `e.g. ${entityData.entityName}` : ''}
                 value={caption}
-                onChange={e => setCaption(e.target.value)}
+                onChange={event => setCaption(event.target.value)}
               />
             </div>
 
@@ -192,11 +190,11 @@ export const CreateWorkQueueDrawer: React.FC<CreateWorkQueueDrawerProps> = obser
                 background: 'var(--background1)',
               }}
             >
-              {columns.map(c => {
-                const checked = selectedFieldIds.has(c.id);
+              {columns.map(column => {
+                const checked = selectedFieldIds.has(column.id);
                 return (
                   <label
-                    key={c.id}
+                    key={column.id}
                     style={{
                       display: 'flex',
                       alignItems: 'center',
@@ -211,10 +209,10 @@ export const CreateWorkQueueDrawer: React.FC<CreateWorkQueueDrawerProps> = obser
                     <input
                       type="checkbox"
                       checked={checked}
-                      onChange={() => toggleField(c.id)}
+                      onChange={() => toggleField(column.id)}
                       style={{ accentColor: 'var(--brand)' }}
                     />
-                    {c.name}
+                    {column.name}
                   </label>
                 );
               })}
@@ -224,7 +222,7 @@ export const CreateWorkQueueDrawer: React.FC<CreateWorkQueueDrawerProps> = obser
       }
 
       if (!entityData) return null;
-      const selected = (entityData.columns ?? []).filter(c => selectedFieldIds.has(c.id));
+      const selected = (entityData.columns ?? []).filter(column => selectedFieldIds.has(column.id));
       return (
         <>
           <h2 className={S.formTitle}>Ready to create</h2>
@@ -261,7 +259,7 @@ export const CreateWorkQueueDrawer: React.FC<CreateWorkQueueDrawerProps> = obser
               </div>
             </div>
             <div style={{ fontSize: 13, color: 'var(--background8)', lineHeight: 1.7 }}>
-              {selected.map(c => c.name).join(', ') || '—'}
+              {selected.map(column => column.name).join(', ') || '—'}
             </div>
           </div>
         </>
@@ -283,18 +281,18 @@ export const CreateWorkQueueDrawer: React.FC<CreateWorkQueueDrawerProps> = obser
 
         <div className={S.body}>
           <div className={S.stepperCol}>
-            {STEPS.map((s, i) => (
+            {STEPS.map((stepInfo, index) => (
               <div
-                key={s.label}
-                className={`${S.stepperItem} ${i === step ? S.active : ''} ${
-                  i < step ? S.done : ''
+                key={stepInfo.label}
+                className={`${S.stepperItem} ${index === step ? S.active : ''} ${
+                  index < step ? S.done : ''
                 }`}
-                onClick={() => i < step && setStep(i)}
+                onClick={() => index < step && setStep(index)}
               >
-                <div className={S.stepBullet}>{i < step ? '✓' : i + 1}</div>
+                <div className={S.stepBullet}>{index < step ? '✓' : index + 1}</div>
                 <div className={S.stepText}>
-                  <div className={S.stepLabel}>{s.label}</div>
-                  <div className={S.stepHint}>{s.hint}</div>
+                  <div className={S.stepLabel}>{stepInfo.label}</div>
+                  <div className={S.stepHint}>{stepInfo.hint}</div>
                 </div>
               </div>
             ))}

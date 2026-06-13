@@ -23,11 +23,7 @@ using Origam.Architect.Server.Models.Responses.Actions;
 
 namespace Origam.Architect.Server.Interfaces.Services;
 
-/// <summary>
-/// Generate the SQL statements for a DataStructure ("Show SQL"). Read-only.
-/// </summary>
 public interface ISqlActions
 {
-    /// <summary>Generate the SELECT SQL for the given DataStructure.</summary>
     GetDataStructureSqlResult GetDataStructureSql(Guid dataStructureId);
 }

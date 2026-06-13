@@ -47,9 +47,9 @@ export const CreateMenuItemDrawer: React.FC<CreateMenuItemDrawerProps> = observe
     const [role, setRole] = useState(parentNodeName);
 
     useEffect(() => {
-      const onKeyDown = (e: KeyboardEvent) => {
-        if (e.key === 'Escape') {
-          e.stopPropagation();
+      const onKeyDown = (event: KeyboardEvent) => {
+        if (event.key === 'Escape') {
+          event.stopPropagation();
           onCancel();
         }
       };
@@ -58,8 +58,8 @@ export const CreateMenuItemDrawer: React.FC<CreateMenuItemDrawerProps> = observe
     }, [onCancel]);
 
     const canAdvance = (step === 0 && caption.trim().length > 0) || step === 1;
-    const next = () => setStep(s => Math.min(s + 1, STEPS.length - 1));
-    const back = () => setStep(s => Math.max(s - 1, 0));
+    const next = () => setStep(current => Math.min(current + 1, STEPS.length - 1));
+    const back = () => setStep(current => Math.max(current - 1, 0));
 
     const submit = () => {
       if (submitting) return;
@@ -98,13 +98,17 @@ export const CreateMenuItemDrawer: React.FC<CreateMenuItemDrawerProps> = observe
                 autoFocus
                 placeholder={`e.g. ${parentNodeName}`}
                 value={caption}
-                onChange={e => setCaption(e.target.value)}
+                onChange={event => setCaption(event.target.value)}
               />
             </div>
 
             <div className={S.field}>
               <label className={S.fieldLabel}>Role</label>
-              <input className={S.input} value={role} onChange={e => setRole(e.target.value)} />
+              <input
+                className={S.input}
+                value={role}
+                onChange={event => setRole(event.target.value)}
+              />
             </div>
 
             <div className={S.preview}>
@@ -157,18 +161,18 @@ export const CreateMenuItemDrawer: React.FC<CreateMenuItemDrawerProps> = observe
 
         <div className={S.body}>
           <div className={S.stepperCol}>
-            {STEPS.map((s, i) => (
+            {STEPS.map((stepInfo, index) => (
               <div
-                key={s.label}
-                className={`${S.stepperItem} ${i === step ? S.active : ''} ${
-                  i < step ? S.done : ''
+                key={stepInfo.label}
+                className={`${S.stepperItem} ${index === step ? S.active : ''} ${
+                  index < step ? S.done : ''
                 }`}
-                onClick={() => i < step && setStep(i)}
+                onClick={() => index < step && setStep(index)}
               >
-                <div className={S.stepBullet}>{i < step ? '✓' : i + 1}</div>
+                <div className={S.stepBullet}>{index < step ? '✓' : index + 1}</div>
                 <div className={S.stepText}>
-                  <div className={S.stepLabel}>{s.label}</div>
-                  <div className={S.stepHint}>{s.hint}</div>
+                  <div className={S.stepLabel}>{stepInfo.label}</div>
+                  <div className={S.stepHint}>{stepInfo.hint}</div>
                 </div>
               </div>
             ))}

@@ -24,11 +24,7 @@ using Origam.Architect.Server.Models.Responses.Actions;
 
 namespace Origam.Architect.Server.Interfaces.Services;
 
-/// <summary>
-/// Create entity filters (Equal/Like/In/Between) from a column.
-/// </summary>
 public interface IFilterActions
 {
-    /// <summary>Create a filter on the entity owning the given column.</summary>
     CreateActionResult CreateFilter(CreateFilterModel input);
 }

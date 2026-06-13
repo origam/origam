@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import S from '@components/modelTree/createWizard/CreateLookupDrawer.module.scss';
 import { observer } from 'mobx-react-lite';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { RootStoreContext } from '@/main';
 import { ICreateActionResult, IScreenWizardData } from '@api/IArchitectApi';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
@@ -46,7 +46,10 @@ const STEPS = [
 export const CreateScreenDrawer: React.FC<CreateScreenDrawerProps> = observer(
   ({ entityId, parentNodeName, onCancel, onCreate }) => {
     const rootStore = useContext(RootStoreContext);
-    const run = runInFlowWithHandler(rootStore.errorDialogController);
+    const run = useMemo(
+      () => runInFlowWithHandler(rootStore.errorDialogController),
+      [rootStore.errorDialogController],
+    );
 
     const [step, setStep] = useState(0);
     const [entityData, setEntityData] = useState<IScreenWizardData | null>(null);
@@ -73,7 +76,7 @@ export const CreateScreenDrawer: React.FC<CreateScreenDrawerProps> = observer(
             if (cancelled) return;
             setEntityData(data);
             if (!nameManuallyEditedRef.current) {
-              setModel(m => ({ ...m, name: data.entityName }));
+              setModel(prev => ({ ...prev, name: data.entityName }));
             }
           } finally {
             if (!cancelled) setLoading(false);
@@ -83,13 +86,12 @@ export const CreateScreenDrawer: React.FC<CreateScreenDrawerProps> = observer(
       return () => {
         cancelled = true;
       };
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [entityId]);
+    }, [entityId, run, rootStore.architectApi]);
 
     useEffect(() => {
-      const onKeyDown = (e: KeyboardEvent) => {
-        if (e.key === 'Escape') {
-          e.stopPropagation();
+      const onKeyDown = (event: KeyboardEvent) => {
+        if (event.key === 'Escape') {
+          event.stopPropagation();
           onCancel();
         }
       };
@@ -97,40 +99,36 @@ export const CreateScreenDrawer: React.FC<CreateScreenDrawerProps> = observer(
       return () => document.removeEventListener('keydown', onKeyDown);
     }, [onCancel]);
 
-    // Focus trap: keep Tab/Shift+Tab cycling within the drawer instead of
-    // walking out into the toolbar / model tree behind it.
     useEffect(() => {
-      const trap = (e: KeyboardEvent) => {
-        if (e.key !== 'Tab') return;
+      const trapFocus = (event: KeyboardEvent) => {
+        if (event.key !== 'Tab') return;
         const drawer = drawerRef.current;
         if (!drawer) return;
-        const focusables = Array.from(
+        const focusableNodes = Array.from(
           drawer.querySelectorAll<HTMLElement>(
             'input:not([disabled]), button:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
           ),
-        ).filter(el => el.offsetParent !== null);
-        if (focusables.length === 0) return;
-        const first = focusables[0];
-        const last = focusables[focusables.length - 1];
-        const active = document.activeElement as HTMLElement | null;
-        if (e.shiftKey) {
-          if (active === first || !drawer.contains(active)) {
-            e.preventDefault();
-            last.focus();
+        ).filter(node => node.offsetParent !== null);
+        if (focusableNodes.length === 0) return;
+        const firstNode = focusableNodes[0];
+        const lastNode = focusableNodes[focusableNodes.length - 1];
+        const activeElement = document.activeElement as HTMLElement | null;
+        if (event.shiftKey) {
+          if (activeElement === firstNode || !drawer.contains(activeElement)) {
+            event.preventDefault();
+            lastNode.focus();
           }
         } else {
-          if (active === last || !drawer.contains(active)) {
-            e.preventDefault();
-            first.focus();
+          if (activeElement === lastNode || !drawer.contains(activeElement)) {
+            event.preventDefault();
+            firstNode.focus();
           }
         }
       };
-      document.addEventListener('keydown', trap);
-      return () => document.removeEventListener('keydown', trap);
+      document.addEventListener('keydown', trapFocus);
+      return () => document.removeEventListener('keydown', trapFocus);
     }, []);
 
-    // When a new step renders, drop focus onto the first focusable element in
-    // that step so Tab starts from inside the form, not from the Next button.
     useEffect(() => {
       if (loading) return;
       const first = formContentRef.current?.querySelector<HTMLElement>(
@@ -140,33 +138,33 @@ export const CreateScreenDrawer: React.FC<CreateScreenDrawerProps> = observer(
     }, [step, loading]);
 
     const toggleField = (id: string) => {
-      setModel(m => {
-        const next = new Set(m.selectedFieldIds);
-        if (next.has(id)) next.delete(id);
-        else next.add(id);
-        return { ...m, selectedFieldIds: next };
+      setModel(prev => {
+        const nextSelectedFieldIds = new Set(prev.selectedFieldIds);
+        if (nextSelectedFieldIds.has(id)) nextSelectedFieldIds.delete(id);
+        else nextSelectedFieldIds.add(id);
+        return { ...prev, selectedFieldIds: nextSelectedFieldIds };
       });
     };
 
     const selectAll = () => {
       if (!entityData) return;
-      // Primary-key columns are filtered out of the rendered list entirely,
-      // so we only ever select user-facing columns.
-      setModel(m => ({
-        ...m,
-        selectedFieldIds: new Set(entityData.columns.filter(c => !c.isPrimaryKey).map(c => c.id)),
+      setModel(prev => ({
+        ...prev,
+        selectedFieldIds: new Set(
+          entityData.columns.filter(column => !column.isPrimaryKey).map(column => column.id),
+        ),
       }));
     };
 
     const clearAll = () => {
-      setModel(m => ({ ...m, selectedFieldIds: new Set() }));
+      setModel(prev => ({ ...prev, selectedFieldIds: new Set() }));
     };
 
     const trimmedName = model.name.trim();
     const nameExists =
       trimmedName.length > 0 &&
       (entityData?.existingDataStructureNames ?? []).some(
-        n => n.toLowerCase() === trimmedName.toLowerCase(),
+        existingName => existingName.toLowerCase() === trimmedName.toLowerCase(),
       );
 
     const canAdvance =
@@ -179,9 +177,9 @@ export const CreateScreenDrawer: React.FC<CreateScreenDrawerProps> = observer(
         window.alert(`A DataStructure named "${trimmedName}" already exists.`);
         return;
       }
-      setStep(s => Math.min(s + 1, STEPS.length - 1));
+      setStep(current => Math.min(current + 1, STEPS.length - 1));
     };
-    const back = () => setStep(s => Math.max(s - 1, 0));
+    const back = () => setStep(current => Math.max(current - 1, 0));
 
     const submit = () => {
       if (submitting) return;
@@ -222,9 +220,9 @@ export const CreateScreenDrawer: React.FC<CreateScreenDrawerProps> = observer(
                 autoFocus
                 placeholder={entityData ? `e.g. ${entityData.entityName}` : ''}
                 value={model.name}
-                onChange={e => {
+                onChange={event => {
                   nameManuallyEditedRef.current = true;
-                  setModel(m => ({ ...m, name: e.target.value }));
+                  setModel(prev => ({ ...prev, name: event.target.value }));
                 }}
               />
               {nameExists && (
@@ -260,9 +258,7 @@ export const CreateScreenDrawer: React.FC<CreateScreenDrawerProps> = observer(
 
       if (step === 1) {
         if (!entityData) return null;
-        // Hide primary-key columns — they typically have no Lookup configured,
-        // which would make the wizard fail with "Lookup not set for X/Id".
-        const columns = (entityData.columns ?? []).filter(c => !c.isPrimaryKey);
+        const columns = (entityData.columns ?? []).filter(column => !column.isPrimaryKey);
         return (
           <>
             <h2 className={S.formTitle}>Which columns should appear?</h2>
@@ -280,7 +276,7 @@ export const CreateScreenDrawer: React.FC<CreateScreenDrawerProps> = observer(
                 className={S.input}
                 placeholder={`e.g. ${entityData.entityName}`}
                 value={model.caption}
-                onChange={e => setModel(m => ({ ...m, caption: e.target.value }))}
+                onChange={event => setModel(prev => ({ ...prev, caption: event.target.value }))}
               />
             </div>
 
@@ -330,11 +326,11 @@ export const CreateScreenDrawer: React.FC<CreateScreenDrawerProps> = observer(
                 background: 'var(--background1)',
               }}
             >
-              {columns.map(c => {
-                const checked = model.selectedFieldIds.has(c.id);
+              {columns.map(column => {
+                const checked = model.selectedFieldIds.has(column.id);
                 return (
                   <label
-                    key={c.id}
+                    key={column.id}
                     style={{
                       display: 'flex',
                       alignItems: 'center',
@@ -349,10 +345,10 @@ export const CreateScreenDrawer: React.FC<CreateScreenDrawerProps> = observer(
                     <input
                       type="checkbox"
                       checked={checked}
-                      onChange={() => toggleField(c.id)}
+                      onChange={() => toggleField(column.id)}
                       style={{ accentColor: 'var(--brand)' }}
                     />
-                    {c.name}
+                    {column.name}
                   </label>
                 );
               })}
@@ -362,7 +358,9 @@ export const CreateScreenDrawer: React.FC<CreateScreenDrawerProps> = observer(
       }
 
       if (!entityData) return null;
-      const selected = (entityData.columns ?? []).filter(c => model.selectedFieldIds.has(c.id));
+      const selected = (entityData.columns ?? []).filter(column =>
+        model.selectedFieldIds.has(column.id),
+      );
       return (
         <>
           <h2 className={S.formTitle}>Ready to create</h2>
@@ -405,7 +403,7 @@ export const CreateScreenDrawer: React.FC<CreateScreenDrawerProps> = observer(
               </div>
             </div>
             <div style={{ fontSize: 13, color: 'var(--background8)', lineHeight: 1.7 }}>
-              {selected.map(c => c.name).join(', ') || '—'}
+              {selected.map(column => column.name).join(', ') || '—'}
             </div>
           </div>
         </>
@@ -427,18 +425,18 @@ export const CreateScreenDrawer: React.FC<CreateScreenDrawerProps> = observer(
 
         <div className={S.body}>
           <div className={S.stepperCol}>
-            {STEPS.map((s, i) => (
+            {STEPS.map((stepInfo, index) => (
               <div
-                key={s.label}
-                className={`${S.stepperItem} ${i === step ? S.active : ''} ${
-                  i < step ? S.done : ''
+                key={stepInfo.label}
+                className={`${S.stepperItem} ${index === step ? S.active : ''} ${
+                  index < step ? S.done : ''
                 }`}
-                onClick={() => i < step && setStep(i)}
+                onClick={() => index < step && setStep(index)}
               >
-                <div className={S.stepBullet}>{i < step ? '✓' : i + 1}</div>
+                <div className={S.stepBullet}>{index < step ? '✓' : index + 1}</div>
                 <div className={S.stepText}>
-                  <div className={S.stepLabel}>{s.label}</div>
-                  <div className={S.stepHint}>{s.hint}</div>
+                  <div className={S.stepLabel}>{stepInfo.label}</div>
+                  <div className={S.stepHint}>{stepInfo.hint}</div>
                 </div>
               </div>
             ))}

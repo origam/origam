@@ -24,11 +24,6 @@ using Origam.Workbench.Services;
 
 namespace Origam.Architect.Server.Services;
 
-/// <summary>
-/// Runs a unit of model work inside a persistence transaction. On commit the
-/// git node status cache is invalidated; on any exception the transaction is
-/// rolled back and the exception is rethrown.
-/// </summary>
 public class ModelTransactionRunner(
     IPersistenceService persistenceService,
     GitNodeStatusService gitNodeStatusService

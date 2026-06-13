@@ -31,8 +31,8 @@ export const ToastContainer: React.FC = observer(() => {
   if (!portalRoot) return null;
   return createPortal(
     <div className={S.container} aria-live="polite">
-      {toastState.toasts.map(t => (
-        <ToastCard key={t.id} toast={t} />
+      {toastState.toasts.map(toast => (
+        <ToastCard key={toast.id} toast={toast} />
       ))}
     </div>,
     portalRoot,
@@ -73,9 +73,9 @@ const ToastCard: React.FC<{ toast: IActionResultToast }> = observer(({ toast }) 
     }
   }, [hovered, toast.id, toastState]);
 
-  const onKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === 'Escape') {
-      e.stopPropagation();
+  const onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === 'Escape') {
+      event.stopPropagation();
       toastState.dismiss(toast.id);
     }
   };

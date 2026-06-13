@@ -24,15 +24,9 @@ using Origam.Architect.Server.Models.Responses.Actions;
 
 namespace Origam.Architect.Server.Interfaces.Services;
 
-/// <summary>
-/// Create-Lookup wizard: read the entity's key/columns/filters, then generate
-/// a DataServiceLookup with its ListDataStructure.
-/// </summary>
 public interface ILookupActions
 {
-    /// <summary>Primary key, display field, columns and filters for the wizard.</summary>
     LookupWizardData GetLookupWizardData(Guid entityId);
 
-    /// <summary>Create a DataServiceLookup (+ ListDataStructure) from the entity.</summary>
     CreateActionResult CreateLookup(CreateLookupModel input);
 }

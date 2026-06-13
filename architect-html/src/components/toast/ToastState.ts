@@ -66,9 +66,9 @@ export class ToastState {
 
   @action.bound
   dismiss(id: number) {
-    const idx = this.toasts.findIndex(t => t.id === id);
-    if (idx === -1) return;
-    this.toasts.splice(idx, 1);
+    const index = this.toasts.findIndex(toast => toast.id === id);
+    if (index === -1) return;
+    this.toasts.splice(index, 1);
     this.clearTimer(id);
     this.remaining.delete(id);
     this.startedAt.delete(id);

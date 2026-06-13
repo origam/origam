@@ -24,15 +24,9 @@ using Origam.Architect.Server.Models.Responses.Actions;
 
 namespace Origam.Architect.Server.Interfaces.Services;
 
-/// <summary>
-/// Create-Screen wizard: read the entity's columns and existing DataStructure
-/// names, then generate the DataStructure + Screen Section + Screen.
-/// </summary>
 public interface IScreenActions
 {
-    /// <summary>Entity columns and existing DataStructure names for the wizard.</summary>
     ScreenWizardData GetScreenWizardData(Guid entityId);
 
-    /// <summary>Generate DataStructure + PanelControlSet + FormControlSet from the entity.</summary>
     CreateActionResult CreateScreen(CreateScreenModel input);
 }

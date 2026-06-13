@@ -24,11 +24,7 @@ using Origam.Architect.Server.Models.Responses.Actions;
 
 namespace Origam.Architect.Server.Interfaces.Services;
 
-/// <summary>
-/// Create a Form Reference menu item pointing to a Screen.
-/// </summary>
 public interface IMenuActions
 {
-    /// <summary>Create a menu item under the Main Menu for the given Screen.</summary>
     CreateActionResult CreateMenuItem(CreateMenuItemModel input);
 }
