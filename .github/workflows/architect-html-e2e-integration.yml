@@ -1,0 +1,182 @@
+name: "Architect HTML E2E (integration)"
+
+# Heavy job: builds and starts a real Origam.Architect.Server (with an MSSQL
+# LocalDB database and the model in model-tests/model) and runs the Playwright
+# integration suite against it. The lightweight, backend-less smoke suite lives
+# in architect-html-e2e.yml.
+
+on:
+  push:
+    branches: [ master, 20* ]
+  pull_request:
+    branches: [ master, 20* ]
+
+concurrency:
+  group: architect-e2e-integration-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  e2e-integration:
+    name: architect-html-e2e-integration
+    runs-on: windows-2025
+    timeout-minutes: 45
+    permissions:
+      actions: read
+      contents: read
+
+    env:
+      ARCHITECT_SERVER_URL: https://localhost:7099
+      SERVER_DIR: backend/Origam.Architect.Server/bin/Release Architect Server/net8.0
+      DB_CONNECTION: Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=origam-demo;Integrated Security=True;Pooling=True;Encrypt=False
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Prepare Yarn
+        run: corepack prepare yarn@stable --activate
+        shell: bash
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      # --- Build the Architect Server -------------------------------------
+      - name: Restore backend
+        run: msbuild Origam.sln -t:restore /p:Configuration="Release Architect Server" -v:m
+        working-directory: backend
+
+      - name: Build Architect Server
+        run: msbuild Origam.sln /t:"Architect\Origam_Architect_Server" /p:Configuration="Release Architect Server" -v:m
+        working-directory: backend
+
+      # --- Database -------------------------------------------------------
+      - name: Start SQL Server LocalDB
+        shell: pwsh
+        run: |
+          SqlLocalDB create MSSQLLocalDB 2>$null
+          SqlLocalDB start MSSQLLocalDB
+          sqlcmd -S "(localdb)\MSSQLLocalDB" -Q "IF DB_ID('origam-demo') IS NULL CREATE DATABASE [origam-demo];"
+          sqlcmd -S "(localdb)\MSSQLLocalDB" -Q "SELECT name FROM sys.databases;"
+
+      # --- Server runtime configuration -----------------------------------
+      - name: Write OrigamSettings.config
+        shell: pwsh
+        run: |
+          $model = Join-Path $env:GITHUB_WORKSPACE 'model-tests\model'
+          $config = @"
+          <?xml version="1.0" encoding="UTF-8"?>
+          <OrigamSettings>
+            <xmlSerializerSection type="Origam.OrigamSettingsCollection, Origam, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+              <ArrayOfOrigamSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+                <OrigamSettings>
+                  <ModelSourceControlLocation>$model</ModelSourceControlLocation>
+                  <DataConnectionString>$env:DB_CONNECTION</DataConnectionString>
+                  <SchemaDataService>Origam.DA.Service.MsSqlDataService, Origam.DA.Service</SchemaDataService>
+                  <DataDataService>Origam.DA.Service.MsSqlDataService, Origam.DA.Service</DataDataService>
+                  <SQLReportServiceTimeout>60000</SQLReportServiceTimeout>
+                  <GUIExcelExportFormat>XLS</GUIExcelExportFormat>
+                  <DefaultSchemaExtensionId>f17329d6-3143-420a-a2e6-30e431eea51d</DefaultSchemaExtensionId>
+                  <ExtraSchemaExtensionId>00000000-0000-0000-0000-000000000000</ExtraSchemaExtensionId>
+                  <TitleText>Demo</TitleText>
+                  <Name>Demo</Name>
+                  <DataServiceSelectTimeout>120</DataServiceSelectTimeout>
+                  <AuthorizationProvider>Origam.Security.OrigamDatabaseAuthorizationProvider, Origam.Security</AuthorizationProvider>
+                  <ProfileProvider>Origam.Security.OrigamProfileProvider, Origam.Security</ProfileProvider>
+                  <LoadExternalWorkQueues>false</LoadExternalWorkQueues>
+                  <ExternalWorkQueueCheckPeriod>180</ExternalWorkQueueCheckPeriod>
+                  <TraceEnabled>true</TraceEnabled>
+                  <ModelProvider>Origam.OrigamEngine.FilePersistenceBuilder, Origam.OrigamEngine</ModelProvider>
+                </OrigamSettings>
+              </ArrayOfOrigamSettings>
+            </xmlSerializerSection>
+          </OrigamSettings>
+          "@
+          $config | Out-File -FilePath (Join-Path $env:SERVER_DIR 'OrigamSettings.config') -Encoding utf8
+          # The SPA path only needs to exist; the frontend itself is served by Vite.
+          '{ "SpaConfig": { "PathToClientApplication": "' + ($env:GITHUB_WORKSPACE -replace '\\','/') + '/architect-html" } }' |
+            Out-File -FilePath (Join-Path $env:SERVER_DIR 'appsettings.json') -Encoding utf8
+
+      - name: Trust ASP.NET dev HTTPS certificate
+        run: dotnet dev-certs https
+
+      # --- Start the server ------------------------------------------------
+      - name: Start Architect Server
+        shell: pwsh
+        run: |
+          $exe = Join-Path $env:SERVER_DIR 'Origam.Architect.Server.exe'
+          $env:ASPNETCORE_ENVIRONMENT = 'Development'
+          Start-Process -FilePath $exe -WorkingDirectory $env:SERVER_DIR `
+            -ArgumentList '--urls','https://localhost:7099;http://localhost:5003' `
+            -RedirectStandardOutput "$env:GITHUB_WORKSPACE\architect-server-out.log" `
+            -RedirectStandardError  "$env:GITHUB_WORKSPACE\architect-server-err.log"
+          $ready = $false
+          for ($i = 0; $i -lt 60; $i++) {
+            try {
+              Invoke-WebRequest 'https://localhost:7099/Package/GetAll' -SkipCertificateCheck -TimeoutSec 5 | Out-Null
+              $ready = $true; break
+            } catch { Start-Sleep -Seconds 3 }
+          }
+          if (-not $ready) {
+            Write-Host '--- server stdout ---'; Get-Content "$env:GITHUB_WORKSPACE\architect-server-out.log" -ErrorAction SilentlyContinue
+            Write-Host '--- server stderr ---'; Get-Content "$env:GITHUB_WORKSPACE\architect-server-err.log" -ErrorAction SilentlyContinue
+            throw 'Architect Server did not become ready in time'
+          }
+          Write-Host 'Architect Server is ready.'
+
+      # --- Frontend + tests ------------------------------------------------
+      - name: Install frontend dependencies
+        run: yarn install --immutable
+        working-directory: architect-html
+
+      - name: Install Playwright browser
+        run: yarn playwright install chromium
+        working-directory: architect-html
+
+      - name: Run integration tests
+        env:
+          CI: true
+        run: yarn test:e2e:integration
+        working-directory: architect-html
+
+      # --- Artifacts -------------------------------------------------------
+      - name: Upload Playwright report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-integration-report
+          path: architect-html/playwright-report
+          retention-days: 7
+          if-no-files-found: ignore
+
+      - name: Upload Playwright test results
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-integration-test-results
+          path: architect-html/test-results
+          retention-days: 7
+          if-no-files-found: ignore
+
+      - name: Upload Architect Server logs
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: architect-server-logs
+          path: |
+            architect-server-out.log
+            architect-server-err.log
+          retention-days: 7
+          if-no-files-found: ignore

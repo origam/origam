@@ -15,7 +15,9 @@
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:debug": "playwright test --debug",
     "test:e2e:report": "playwright show-report",
-    "test:e2e:codegen": "playwright codegen https://localhost:5173"
+    "test:e2e:codegen": "playwright codegen https://localhost:5173",
+    "test:e2e:integration": "playwright test --config=playwright.integration.config.ts",
+    "test:e2e:integration:ui": "playwright test --config=playwright.integration.config.ts --ui"
   },
   "dependencies": {
     "@babel/plugin-proposal-decorators": "^7.29.7",
