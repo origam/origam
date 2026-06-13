@@ -133,6 +133,15 @@ jobs:
             Out-File -FilePath (Join-Path $dir 'appsettings.json') -Encoding utf8
           Write-Host "Wrote OrigamSettings.config and appsettings.json"
 
+          # The solution build doesn't always copy content next to the dll, so
+          # stage the runtime files the server reads on startup / at runtime.
+          $src = 'backend/Origam.Architect.Server'
+          Copy-Item (Join-Path $src 'log4net.config') -Destination $dir -Force
+          if (Test-Path (Join-Path $src 'Assets')) {
+            Copy-Item (Join-Path $src 'Assets') -Destination $dir -Recurse -Force
+          }
+          Write-Host "Staged log4net.config and Assets"
+
       - name: Trust ASP.NET dev HTTPS certificate
         run: dotnet dev-certs https
 
