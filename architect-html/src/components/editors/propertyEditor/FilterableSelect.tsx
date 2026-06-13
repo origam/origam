@@ -29,7 +29,6 @@ interface FilterableSelectProps {
   selectedValue: any;
   disabled?: boolean;
   className?: string;
-  /** Focus the input on mount / when this becomes true. Does NOT auto-open the dropdown. */
   autoFocus?: boolean;
   onChange: (value: any) => void;
 }
@@ -67,8 +66,6 @@ export const FilterableSelect = observer((props: FilterableSelectProps) => {
   const highlightSourceRef = useRef<'keyboard' | 'mouse'>('keyboard');
   const isScrollingRef = useRef(false);
   const scrollEndTimeoutRef = useRef<number | null>(null);
-  // Set briefly before a programmatic focus() so the resulting onFocus does not
-  // auto-open the dropdown (used by the autoFocus prop and step-1 re-focus).
   const suppressOpenOnNextFocusRef = useRef(false);
 
   useEffect(() => {
@@ -247,9 +244,6 @@ export const FilterableSelect = observer((props: FilterableSelectProps) => {
       setFilter(null);
     } else if (event.key === 'Tab') {
       if (open && filter != null && filteredOptions[highlight]) {
-        // Keep focus on input so any wrapping Tab handler (e.g. drawer focus trap)
-        // can read activeElement and advance to the next field instead of falling
-        // back to the first focusable element.
         commit(filteredOptions[highlight].value, { keepFocus: true });
       } else {
         setOpen(false);
