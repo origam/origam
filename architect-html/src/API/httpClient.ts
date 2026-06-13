@@ -110,9 +110,9 @@ export class HttpClient {
       const bodyMessage =
         typeof data === 'string'
           ? data
-          : (data && typeof data === 'object' && 'message' in (data as any)
-              ? String((data as any).message)
-              : '');
+          : data && typeof data === 'object' && 'message' in (data as any)
+            ? String((data as any).message)
+            : '';
       const message = bodyMessage
         ? `Request failed with status ${response.status}: ${bodyMessage}`
         : `Request failed with status ${response.status}`;

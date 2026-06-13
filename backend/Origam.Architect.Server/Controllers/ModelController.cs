@@ -182,7 +182,7 @@ public class ModelController(
         gitNodeStatusService.ClearCache();
         return Ok();
     }
-    
+
     [HttpGet("GetMenuItems")]
     public IEnumerable<MenuItemInfo> GetMenuItems(
         [FromQuery] string id,

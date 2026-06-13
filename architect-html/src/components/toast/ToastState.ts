@@ -1,6 +1,20 @@
 /*
 Copyright 2005 - 2026 Advantage Solutions, s. r. o.
+
 This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { ISearchResult } from '@api/IArchitectApi';
@@ -13,9 +27,7 @@ export interface IActionResultToast {
   kind: ToastKind;
   title: string;
   results: ISearchResult[];
-  /** Called when the user clicks the action button (e.g. "Show result"). */
   onShowResult?: () => void;
-  /** Total auto-dismiss delay in ms. */
   durationMs: number;
 }
 
@@ -26,9 +38,7 @@ export class ToastState {
 
   private nextId = 1;
   private timers = new Map<number, ReturnType<typeof setTimeout>>();
-  /** Remaining ms when the timer is paused (mouse hover). */
   private remaining = new Map<number, number>();
-  /** Wall-clock timestamp when the active timer was last started. */
   private startedAt = new Map<number, number>();
 
   @action.bound
@@ -64,7 +74,6 @@ export class ToastState {
     this.startedAt.delete(id);
   }
 
-  /** Pause the auto-dismiss countdown for the given toast (mouse enter). */
   pause(id: number) {
     const startedAt = this.startedAt.get(id);
     const remaining = this.remaining.get(id);
@@ -76,7 +85,6 @@ export class ToastState {
     this.startedAt.delete(id);
   }
 
-  /** Resume the auto-dismiss countdown (mouse leave). */
   resume(id: number) {
     const remaining = this.remaining.get(id);
     if (remaining === undefined) return;

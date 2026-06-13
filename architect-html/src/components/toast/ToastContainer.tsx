@@ -1,9 +1,23 @@
 /*
 Copyright 2005 - 2026 Advantage Solutions, s. r. o.
+
 This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import S from './ToastContainer.module.scss';
+import S from '@components/toast/ToastContainer.module.scss';
 import { RootStoreContext } from '@/main';
 import { IActionResultToast } from '@components/toast/ToastState';
 import { observer } from 'mobx-react-lite';
@@ -29,8 +43,6 @@ const ToastCard: React.FC<{ toast: IActionResultToast }> = observer(({ toast }) 
   const toastState = useContext(RootStoreContext).toastState;
   const [hovered, setHovered] = useState(false);
   const showResultRef = useRef<HTMLButtonElement | null>(null);
-  // Remember the element that owned focus before this toast stole it, so we can
-  // restore focus when the toast goes away without the user taking the action.
   const previouslyFocusedRef = useRef<HTMLElement | null>(null);
   const actionTakenRef = useRef(false);
 
@@ -47,18 +59,12 @@ const ToastCard: React.FC<{ toast: IActionResultToast }> = observer(({ toast }) 
       showResultRef.current.focus();
     }
     return () => {
-      // Restore focus on dismiss unless the user clicked Show result (in which
-      // case the destination view will own focus instead).
       if (!actionTakenRef.current) {
         previouslyFocusedRef.current?.focus?.();
       }
     };
-    // Toast identity is stable for its lifetime; we only want mount/unmount.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Only hover pauses the countdown — focusing the toast must NOT freeze the
-  // timer, so the user can still see the progress bar shrinking and act on it.
   useEffect(() => {
     if (hovered) {
       toastState.pause(toast.id);
