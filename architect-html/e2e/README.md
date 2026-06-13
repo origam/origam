@@ -25,6 +25,7 @@ running.
 
 ```bash
 yarn test:e2e:integration       # headless
+yarn test:e2e:integration --headed
 yarn test:e2e:integration:ui    # UI Mode
 ```
 
