@@ -26,7 +26,6 @@ jobs:
 
     env:
       ARCHITECT_SERVER_URL: https://localhost:7099
-      SERVER_DIR: backend/Origam.Architect.Server/bin/Release Architect Server/net8.0
       DB_CONNECTION: Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=origam-demo;Integrated Security=True;Pooling=True;Encrypt=False
 
     steps:
@@ -62,6 +61,23 @@ jobs:
         run: msbuild Origam.sln /t:"Architect\Origam_Architect_Server" /p:Configuration="Release Architect Server" -v:m
         working-directory: backend
 
+      # Find the actual build output instead of hardcoding it, then expose the
+      # absolute directory to the following steps via $GITHUB_ENV.
+      - name: Locate built server
+        shell: pwsh
+        run: |
+          $exe = Get-ChildItem -Path "backend/Origam.Architect.Server/bin" -Recurse -Filter "Origam.Architect.Server.exe" -ErrorAction SilentlyContinue |
+                 Where-Object { $_.FullName -match "Release Architect Server" } |
+                 Select-Object -First 1
+          if (-not $exe) {
+            Write-Host "Build output under backend/Origam.Architect.Server/bin:"
+            Get-ChildItem -Path "backend/Origam.Architect.Server/bin" -Recurse -Directory | Select-Object -ExpandProperty FullName
+            throw "Origam.Architect.Server.exe not found"
+          }
+          $dir = $exe.Directory.FullName
+          Write-Host "Server build dir: $dir"
+          "SERVER_DIR=$dir" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+
       # --- Database -------------------------------------------------------
       - name: Start SQL Server LocalDB
         shell: pwsh
@@ -75,6 +91,9 @@ jobs:
       - name: Write OrigamSettings.config
         shell: pwsh
         run: |
+          $dir = $env:SERVER_DIR
+          Write-Host "Writing server config to: $dir"
+          if (-not (Test-Path $dir)) { throw "Server build dir not found: $dir" }
           $model = Join-Path $env:GITHUB_WORKSPACE 'model-tests\model'
           $config = @"
           <?xml version="1.0" encoding="UTF-8"?>
@@ -104,10 +123,11 @@ jobs:
             </xmlSerializerSection>
           </OrigamSettings>
           "@
-          $config | Out-File -FilePath (Join-Path $env:SERVER_DIR 'OrigamSettings.config') -Encoding utf8
+          $config | Out-File -FilePath (Join-Path $dir 'OrigamSettings.config') -Encoding utf8
           # The SPA path only needs to exist; the frontend itself is served by Vite.
           '{ "SpaConfig": { "PathToClientApplication": "' + ($env:GITHUB_WORKSPACE -replace '\\','/') + '/architect-html" } }' |
-            Out-File -FilePath (Join-Path $env:SERVER_DIR 'appsettings.json') -Encoding utf8
+            Out-File -FilePath (Join-Path $dir 'appsettings.json') -Encoding utf8
+          Write-Host "Wrote OrigamSettings.config and appsettings.json"
 
       - name: Trust ASP.NET dev HTTPS certificate
         run: dotnet dev-certs https
