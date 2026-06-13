@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { RootStoreContext, T } from '@/main';
-import { CreateFilterType, ICreateFilterResult, ISearchResult } from '@api/IArchitectApi';
+import { CreateFilterType, ICreateActionResult, ISearchResult } from '@api/IArchitectApi';
 import { Icon } from '@components/icon/Icon';
 import S from '@components/modelTree/ModelTree.module.scss';
 import { TreeNode } from '@components/modelTree/TreeNode';
@@ -145,7 +145,7 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
         const result = (yield rootStore.architectApi.createFilter({
           columnId: node.origamId,
           filterType,
-        })) as ICreateFilterResult;
+        })) as ICreateActionResult;
         yield* rootStore.modelTreeState.loadPackageNodes.bind(rootStore.modelTreeState)();
         showCreatedConfirmation(label, result?.searchResults ?? []);
       },
@@ -163,9 +163,7 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
           closeDialog();
           run({
             generator: function* () {
-              yield* rootStore.modelTreeState.loadPackageNodes.bind(
-                rootStore.modelTreeState,
-              )();
+              yield* rootStore.modelTreeState.loadPackageNodes.bind(rootStore.modelTreeState)();
               showCreatedConfirmation('Lookup', result?.searchResults ?? []);
             },
           });
@@ -187,9 +185,7 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
           closeDialog();
           run({
             generator: function* () {
-              yield* rootStore.modelTreeState.loadPackageNodes.bind(
-                rootStore.modelTreeState,
-              )();
+              yield* rootStore.modelTreeState.loadPackageNodes.bind(rootStore.modelTreeState)();
               showCreatedConfirmation('Screen', result?.searchResults ?? []);
             },
           });
@@ -211,9 +207,7 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
           closeDialog();
           run({
             generator: function* () {
-              yield* rootStore.modelTreeState.loadPackageNodes.bind(
-                rootStore.modelTreeState,
-              )();
+              yield* rootStore.modelTreeState.loadPackageNodes.bind(rootStore.modelTreeState)();
               showCreatedConfirmation('WorkQueue Class', result?.searchResults ?? []);
             },
           });
@@ -248,9 +242,7 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
           closeDialog();
           run({
             generator: function* () {
-              yield* rootStore.modelTreeState.loadPackageNodes.bind(
-                rootStore.modelTreeState,
-              )();
+              yield* rootStore.modelTreeState.loadPackageNodes.bind(rootStore.modelTreeState)();
               showCreatedConfirmation('Menu Item', result?.searchResults ?? []);
             },
           });
@@ -350,10 +342,7 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
             )}
             {node.isDataEntityColumn && (
               <Submenu label="Actions">
-                <Item
-                  id="create-filter-equal"
-                  onClick={() => createFilter('Equal', 'Filter (=)')}
-                >
+                <Item id="create-filter-equal" onClick={() => createFilter('Equal', 'Filter (=)')}>
                   Create (=) Filter
                 </Item>
                 <Item
@@ -362,10 +351,7 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
                 >
                   Create (=) Filter With Parameter
                 </Item>
-                <Item
-                  id="create-filter-like"
-                  onClick={() => createFilter('Like', 'Filter (Like)')}
-                >
+                <Item id="create-filter-like" onClick={() => createFilter('Like', 'Filter (Like)')}>
                   Create (Like) Filter
                 </Item>
                 <Item

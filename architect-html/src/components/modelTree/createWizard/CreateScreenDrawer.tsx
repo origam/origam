@@ -3,18 +3,18 @@ Copyright 2005 - 2026 Advantage Solutions, s. r. o.
 This file is part of ORIGAM (http://www.origam.org).
 */
 
-import S from './CreateLookupDrawer.module.scss';
+import S from '@components/modelTree/createWizard/CreateLookupDrawer.module.scss';
 import { observer } from 'mobx-react-lite';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { RootStoreContext } from '@/main';
-import { ICreateScreenResult, IScreenWizardData } from '@api/IArchitectApi';
+import { ICreateActionResult, IScreenWizardData } from '@api/IArchitectApi';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 
 interface CreateScreenDrawerProps {
   entityId: string;
   parentNodeName: string;
   onCancel: () => void;
-  onCreate: (result: ICreateScreenResult) => void;
+  onCreate: (result: ICreateActionResult) => void;
 }
 
 interface ScreenModel {
@@ -140,9 +140,7 @@ export const CreateScreenDrawer: React.FC<CreateScreenDrawerProps> = observer(
       // so we only ever select user-facing columns.
       setModel(m => ({
         ...m,
-        selectedFieldIds: new Set(
-          entityData.columns.filter(c => !c.isPrimaryKey).map(c => c.id),
-        ),
+        selectedFieldIds: new Set(entityData.columns.filter(c => !c.isPrimaryKey).map(c => c.id)),
       }));
     };
 
@@ -182,7 +180,7 @@ export const CreateScreenDrawer: React.FC<CreateScreenDrawerProps> = observer(
               name: model.name.trim(),
               caption: model.caption.trim(),
               selectedFieldIds: Array.from(model.selectedFieldIds),
-            })) as ICreateScreenResult;
+            })) as ICreateActionResult;
             onCreate(result);
           } finally {
             setSubmitting(false);
@@ -195,10 +193,10 @@ export const CreateScreenDrawer: React.FC<CreateScreenDrawerProps> = observer(
       if (step === 0) {
         return (
           <>
-            <h2 className={S.formTitle}>Let's name your screen</h2>
+            <h2 className={S.formTitle}>Let&apos;s name your screen</h2>
             <p className={S.formSubtitle}>
-              A Screen ties a DataStructure to a Screen Section (Panel) and a Form. The name is
-              used for all three artifacts.
+              A Screen ties a DataStructure to a Screen Section (Panel) and a Form. The name is used
+              for all three artifacts.
             </p>
 
             <div className={S.field}>
@@ -217,7 +215,7 @@ export const CreateScreenDrawer: React.FC<CreateScreenDrawerProps> = observer(
               />
               {nameExists && (
                 <div style={{ fontSize: 12, color: 'var(--error1)', marginTop: 2 }}>
-                  A DataStructure named "{trimmedName}" already exists.
+                  A DataStructure named &quot;{trimmedName}&quot; already exists.
                 </div>
               )}
             </div>
@@ -247,6 +245,7 @@ export const CreateScreenDrawer: React.FC<CreateScreenDrawerProps> = observer(
       }
 
       if (step === 1) {
+        if (!entityData) return null;
         // Hide primary-key columns — they typically have no Lookup configured,
         // which would make the wizard fail with "Lookup not set for X/Id".
         const columns = (entityData.columns ?? []).filter(c => !c.isPrimaryKey);
@@ -348,6 +347,7 @@ export const CreateScreenDrawer: React.FC<CreateScreenDrawerProps> = observer(
         );
       }
 
+      if (!entityData) return null;
       const selected = (entityData.columns ?? []).filter(c => model.selectedFieldIds.has(c.id));
       return (
         <>

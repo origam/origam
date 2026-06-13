@@ -1,0 +1,73 @@
+#region license
+/*
+Copyright 2005 - 2026 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+#endregion
+
+using Origam.DA.ObjectPersistence;
+using Origam.Workbench.Services;
+
+namespace Origam.Architect.Server.Services;
+
+/// <summary>
+/// Runs a unit of model work inside a persistence transaction. On commit the
+/// git node status cache is invalidated; on any exception the transaction is
+/// rolled back and the exception is rethrown.
+/// </summary>
+public class ModelTransactionRunner(
+    IPersistenceService persistenceService,
+    GitNodeStatusService gitNodeStatusService
+)
+{
+    private IPersistenceProvider Provider => persistenceService.SchemaProvider;
+
+    public T Run<T>(Func<T> body)
+    {
+        bool committed = false;
+        try
+        {
+            Provider.BeginTransaction();
+            T result = body();
+            Provider.EndTransaction();
+            committed = true;
+            return result;
+        }
+        catch
+        {
+            if (!committed)
+            {
+                Provider.EndTransactionDontSave();
+            }
+            throw;
+        }
+        finally
+        {
+            if (committed)
+            {
+                gitNodeStatusService.ClearCache();
+            }
+        }
+    }
+
+    public void Run(Action body) =>
+        Run(() =>
+        {
+            body();
+            return 0;
+        });
+}

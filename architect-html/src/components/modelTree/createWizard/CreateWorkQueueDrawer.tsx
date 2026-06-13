@@ -3,18 +3,18 @@ Copyright 2005 - 2026 Advantage Solutions, s. r. o.
 This file is part of ORIGAM (http://www.origam.org).
 */
 
-import S from './CreateLookupDrawer.module.scss';
+import S from '@components/modelTree/createWizard/CreateLookupDrawer.module.scss';
 import { observer } from 'mobx-react-lite';
 import React, { useContext, useEffect, useState } from 'react';
 import { RootStoreContext } from '@/main';
-import { ICreateWorkQueueResult, IScreenWizardData } from '@api/IArchitectApi';
+import { ICreateActionResult, IScreenWizardData } from '@api/IArchitectApi';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 
 interface CreateWorkQueueDrawerProps {
   entityId: string;
   parentNodeName: string;
   onCancel: () => void;
-  onCreate: (result: ICreateWorkQueueResult) => void;
+  onCreate: (result: ICreateActionResult) => void;
 }
 
 const STEPS = [
@@ -100,7 +100,7 @@ export const CreateWorkQueueDrawer: React.FC<CreateWorkQueueDrawerProps> = obser
             const result = (yield rootStore.architectApi.createWorkQueueClass({
               entityId,
               selectedFieldIds: Array.from(selectedFieldIds),
-            })) as ICreateWorkQueueResult;
+            })) as ICreateActionResult;
             onCreate(result);
           } finally {
             setSubmitting(false);
@@ -209,6 +209,7 @@ export const CreateWorkQueueDrawer: React.FC<CreateWorkQueueDrawerProps> = obser
         );
       }
 
+      if (!entityData) return null;
       const selected = (entityData.columns ?? []).filter(c => selectedFieldIds.has(c.id));
       return (
         <>
@@ -240,7 +241,9 @@ export const CreateWorkQueueDrawer: React.FC<CreateWorkQueueDrawerProps> = obser
               <div className={S.reviewCardIcon}>F</div>
               <div>
                 <div className={S.reviewCardTitle}>Selected fields</div>
-                <div style={{ fontSize: 12, color: 'var(--background6)' }}>Tracked on the queue</div>
+                <div style={{ fontSize: 12, color: 'var(--background6)' }}>
+                  Tracked on the queue
+                </div>
               </div>
             </div>
             <div style={{ fontSize: 13, color: 'var(--background8)', lineHeight: 1.7 }}>

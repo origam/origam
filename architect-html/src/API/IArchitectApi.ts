@@ -128,18 +128,16 @@ export interface IArchitectApi {
   addToModel(request: IAddToModelRequest): Promise<void>;
 
   getLookupWizardEntityData(entityId: string): Promise<ILookupWizardEntityData>;
-  createLookup(request: ICreateLookupRequest): Promise<ICreateLookupResult>;
+  createLookup(request: ICreateLookupRequest): Promise<ICreateActionResult>;
 
-  createFilter(request: ICreateFilterRequest): Promise<ICreateFilterResult>;
+  createFilter(request: ICreateFilterRequest): Promise<ICreateActionResult>;
 
   getScreenWizardData(entityId: string): Promise<IScreenWizardData>;
-  createScreen(request: ICreateScreenRequest): Promise<ICreateScreenResult>;
+  createScreen(request: ICreateScreenRequest): Promise<ICreateActionResult>;
 
-  createWorkQueueClass(
-    request: ICreateWorkQueueRequest,
-  ): Promise<ICreateWorkQueueResult>;
+  createWorkQueueClass(request: ICreateWorkQueueRequest): Promise<ICreateActionResult>;
 
-  createMenuItem(request: ICreateMenuItemRequest): Promise<ICreateMenuItemResult>;
+  createMenuItem(request: ICreateMenuItemRequest): Promise<ICreateActionResult>;
 
   getDataStructureSql(dataStructureId: string): Promise<IGetDataStructureSqlResult>;
 }
@@ -161,9 +159,7 @@ export interface ICreateWorkQueueRequest {
   selectedFieldIds: string[];
 }
 
-export interface ICreateWorkQueueResult {
-  workQueueClassId: string;
-  workQueueClassName: string;
+export interface ICreateActionResult {
   searchResults: ISearchResult[];
 }
 
@@ -173,29 +169,11 @@ export interface ICreateMenuItemRequest {
   role: string;
 }
 
-export interface ICreateMenuItemResult {
-  menuItemId: string;
-  menuItemName: string;
-  searchResults: ISearchResult[];
-}
-
-export type CreateFilterType =
-  | 'Equal'
-  | 'EqualParam'
-  | 'Like'
-  | 'LikeParam'
-  | 'InList'
-  | 'Between';
+export type CreateFilterType = 'Equal' | 'EqualParam' | 'Like' | 'LikeParam' | 'InList' | 'Between';
 
 export interface ICreateFilterRequest {
   columnId: string;
   filterType: CreateFilterType;
-}
-
-export interface ICreateFilterResult {
-  filterId: string;
-  filterName: string;
-  searchResults: ISearchResult[];
 }
 
 export interface IScreenWizardData {
@@ -215,16 +193,6 @@ export interface ICreateScreenRequest {
   name: string;
   caption: string;
   selectedFieldIds: string[];
-}
-
-export interface ICreateScreenResult {
-  dataStructureId: string;
-  dataStructureName: string;
-  panelId: string;
-  panelName: string;
-  formId: string;
-  formName: string;
-  searchResults: ISearchResult[];
 }
 
 export interface ILookupIdName {
@@ -247,14 +215,6 @@ export interface ICreateLookupRequest {
   displayFieldId: string;
   idFilterId: string;
   listFilterId: string | null;
-}
-
-export interface ICreateLookupResult {
-  lookupId: string;
-  lookupName: string;
-  dataStructureId: string;
-  dataStructureName: string;
-  searchResults: ISearchResult[];
 }
 
 export interface ITransformationInput {

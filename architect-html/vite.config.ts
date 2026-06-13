@@ -89,11 +89,27 @@ export default defineConfig({
         target: 'http://localhost:5003',
         secure: false,
       },
-      '/LookupWizard': {
+      '/FilterActions': {
         target: 'https://localhost:7099',
         secure: false,
       },
-      '/EntityActions': {
+      '/ScreenActions': {
+        target: 'https://localhost:7099',
+        secure: false,
+      },
+      '/WorkQueueActions': {
+        target: 'https://localhost:7099',
+        secure: false,
+      },
+      '/SqlActions': {
+        target: 'https://localhost:7099',
+        secure: false,
+      },
+      '/MenuActions': {
+        target: 'https://localhost:7099',
+        secure: false,
+      },
+      '/LookupActions': {
         target: 'https://localhost:7099',
         secure: false,
       },

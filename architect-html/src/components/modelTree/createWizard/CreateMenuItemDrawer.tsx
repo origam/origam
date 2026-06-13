@@ -3,18 +3,18 @@ Copyright 2005 - 2026 Advantage Solutions, s. r. o.
 This file is part of ORIGAM (http://www.origam.org).
 */
 
-import S from './CreateLookupDrawer.module.scss';
+import S from '@components/modelTree/createWizard/CreateLookupDrawer.module.scss';
 import { observer } from 'mobx-react-lite';
 import React, { useContext, useEffect, useState } from 'react';
 import { RootStoreContext } from '@/main';
-import { ICreateMenuItemResult } from '@api/IArchitectApi';
+import { ICreateActionResult } from '@api/IArchitectApi';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 
 interface CreateMenuItemDrawerProps {
   formId: string;
   parentNodeName: string;
   onCancel: () => void;
-  onCreate: (result: ICreateMenuItemResult) => void;
+  onCreate: (result: ICreateActionResult) => void;
 }
 
 const STEPS = [
@@ -57,7 +57,7 @@ export const CreateMenuItemDrawer: React.FC<CreateMenuItemDrawerProps> = observe
               formId,
               caption: caption.trim(),
               role: role.trim() || '*',
-            })) as ICreateMenuItemResult;
+            })) as ICreateActionResult;
             onCreate(result);
           } finally {
             setSubmitting(false);
@@ -72,8 +72,7 @@ export const CreateMenuItemDrawer: React.FC<CreateMenuItemDrawerProps> = observe
           <>
             <h2 className={S.formTitle}>Configure menu entry</h2>
             <p className={S.formSubtitle}>
-              A Form Reference menu item will be added under the Main Menu, pointing to this
-              screen.
+              A Form Reference menu item will be added under the Main Menu, pointing to this screen.
             </p>
 
             <div className={S.field}>
@@ -91,11 +90,7 @@ export const CreateMenuItemDrawer: React.FC<CreateMenuItemDrawerProps> = observe
 
             <div className={S.field}>
               <label className={S.fieldLabel}>Role</label>
-              <input
-                className={S.input}
-                value={role}
-                onChange={e => setRole(e.target.value)}
-              />
+              <input className={S.input} value={role} onChange={e => setRole(e.target.value)} />
             </div>
 
             <div className={S.preview}>
@@ -112,9 +107,7 @@ export const CreateMenuItemDrawer: React.FC<CreateMenuItemDrawerProps> = observe
       return (
         <>
           <h2 className={S.formTitle}>Ready to create</h2>
-          <p className={S.formSubtitle}>
-            Review what will be added under the Main Menu.
-          </p>
+          <p className={S.formSubtitle}>Review what will be added under the Main Menu.</p>
 
           <div className={S.reviewCard}>
             <div className={S.reviewCardHeader}>

@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2025 Advantage Solutions, s. r. o.
+Copyright 2005 - 2026 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -182,9 +182,7 @@ public class ModelController(
         gitNodeStatusService.ClearCache();
         return Ok();
     }
-
-    // Inspired by class Origam.Workbench.Commands.SchemaItemEditorsMenuBuilder,
-    // method public AsMenuCommand[] BuildSubmenu(object owner)
+    
     [HttpGet("GetMenuItems")]
     public IEnumerable<MenuItemInfo> GetMenuItems(
         [FromQuery] string id,

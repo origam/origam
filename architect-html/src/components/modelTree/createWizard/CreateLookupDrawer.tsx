@@ -3,15 +3,11 @@ Copyright 2005 - 2026 Advantage Solutions, s. r. o.
 This file is part of ORIGAM (http://www.origam.org).
 */
 
-import S from './CreateLookupDrawer.module.scss';
+import S from '@components/modelTree/createWizard/CreateLookupDrawer.module.scss';
 import { observer } from 'mobx-react-lite';
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { RootStoreContext } from '@/main';
-import {
-  ICreateLookupResult,
-  IDropDownValue,
-  ILookupWizardEntityData,
-} from '@api/IArchitectApi';
+import { ICreateActionResult, IDropDownValue, ILookupWizardEntityData } from '@api/IArchitectApi';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { FilterableSelect } from '@editors/propertyEditor/FilterableSelect';
 
@@ -19,7 +15,7 @@ interface CreateLookupDrawerProps {
   entityId: string;
   parentNodeName: string;
   onCancel: () => void;
-  onCreate: (result: ICreateLookupResult) => void;
+  onCreate: (result: ICreateActionResult) => void;
 }
 
 export interface LookupModel {
@@ -148,9 +144,12 @@ export const CreateLookupDrawer: React.FC<CreateLookupDrawerProps> = observer(
           const active = document.activeElement as HTMLElement | null;
           const idx = active ? nodes.indexOf(active) : -1;
           const dir = e.shiftKey ? -1 : 1;
-          const nextIdx = idx === -1
-            ? (e.shiftKey ? nodes.length - 1 : 0)
-            : (idx + dir + nodes.length) % nodes.length;
+          const nextIdx =
+            idx === -1
+              ? e.shiftKey
+                ? nodes.length - 1
+                : 0
+              : (idx + dir + nodes.length) % nodes.length;
           nodes[nextIdx].focus();
         }
       };
@@ -178,7 +177,7 @@ export const CreateLookupDrawer: React.FC<CreateLookupDrawerProps> = observer(
               displayFieldId: model.displayFieldId,
               idFilterId: model.idFilterId,
               listFilterId: model.listFilterId || null,
-            })) as ICreateLookupResult;
+            })) as ICreateActionResult;
             onCreate(result);
           } finally {
             setSubmitting(false);
@@ -204,7 +203,7 @@ export const CreateLookupDrawer: React.FC<CreateLookupDrawerProps> = observer(
       if (step === 1) {
         return (
           <>
-            <h2 className={S.formTitle}>Let's name your lookup</h2>
+            <h2 className={S.formTitle}>Let&apos;s name your lookup</h2>
             <p className={S.formSubtitle}>
               A lookup defines how a foreign key value is resolved into a human-readable label
               across the application.
@@ -248,8 +247,8 @@ export const CreateLookupDrawer: React.FC<CreateLookupDrawerProps> = observer(
           <>
             <h2 className={S.formTitle}>Where does the data come from?</h2>
             <p className={S.formSubtitle}>
-              Choose which column shows as the display value, and the filters used to fetch
-              records by id or build the dropdown list.
+              Choose which column shows as the display value, and the filters used to fetch records
+              by id or build the dropdown list.
             </p>
 
             <div className={S.field}>
@@ -305,6 +304,7 @@ export const CreateLookupDrawer: React.FC<CreateLookupDrawerProps> = observer(
         );
       }
 
+      if (!entityData) return null;
       return (
         <>
           <h2 className={S.formTitle}>Ready to create</h2>
