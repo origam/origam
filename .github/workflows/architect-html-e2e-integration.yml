@@ -146,29 +146,9 @@ jobs:
       - name: Trust ASP.NET dev HTTPS certificate
         run: dotnet dev-certs https
 
-      # --- Start the server ------------------------------------------------
-      - name: Start Architect Server
-        shell: pwsh
-        run: |
-          $env:ASPNETCORE_ENVIRONMENT = 'Development'
-          # Run via the .NET host so we don't depend on the apphost .exe existing.
-          Start-Process -FilePath "dotnet" -WorkingDirectory $env:SERVER_DIR `
-            -ArgumentList $env:SERVER_DLL,'--urls','https://localhost:7099;http://localhost:5003' `
-            -RedirectStandardOutput "$env:GITHUB_WORKSPACE\architect-server-out.log" `
-            -RedirectStandardError  "$env:GITHUB_WORKSPACE\architect-server-err.log"
-          $ready = $false
-          for ($i = 0; $i -lt 60; $i++) {
-            try {
-              Invoke-WebRequest 'https://localhost:7099/Package/GetAll' -SkipCertificateCheck -TimeoutSec 5 | Out-Null
-              $ready = $true; break
-            } catch { Start-Sleep -Seconds 3 }
-          }
-          if (-not $ready) {
-            Write-Host '--- server stdout ---'; Get-Content "$env:GITHUB_WORKSPACE\architect-server-out.log" -ErrorAction SilentlyContinue
-            Write-Host '--- server stderr ---'; Get-Content "$env:GITHUB_WORKSPACE\architect-server-err.log" -ErrorAction SilentlyContinue
-            throw 'Architect Server did not become ready in time'
-          }
-          Write-Host 'Architect Server is ready.'
+      # Playwright itself starts the server (via ARCHITECT_SERVER_CMD below) and
+      # keeps it alive for the whole run, so we don't start it in a separate
+      # step (background processes don't reliably survive between steps).
 
       # --- Frontend + tests ------------------------------------------------
       - name: Install frontend dependencies
@@ -182,6 +162,10 @@ jobs:
       - name: Run integration tests
         env:
           CI: true
+          # Let Playwright launch the server it built (Release dll via the .NET
+          # host) with the build dir as its working dir / content root.
+          ARCHITECT_SERVER_CMD: 'dotnet "${{ env.SERVER_DLL }}" --urls "https://localhost:7099;http://localhost:5003"'
+          ARCHITECT_SERVER_CWD: ${{ env.SERVER_DIR }}
         run: yarn test:e2e:integration
         working-directory: architect-html
 
@@ -209,8 +193,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: architect-server-logs
-          path: |
-            architect-server-out.log
-            architect-server-err.log
+          path: ${{ env.SERVER_DIR }}/logs
           retention-days: 7
           if-no-files-found: ignore

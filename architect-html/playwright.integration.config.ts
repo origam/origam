@@ -42,6 +42,11 @@ const serverDir = path.resolve(process.cwd(), SERVER_DIR);
 const serverExe = path.join(serverDir, 'Origam.Architect.Server.exe');
 const SERVER_CMD =
   process.env.ARCHITECT_SERVER_CMD ?? `"${serverExe}" --urls "${BACKEND_URLS_ARG}"`;
+// Working directory for the server process — also its ASP.NET content root, so
+// it must contain appsettings.json. CI builds Release (not Debug), so it sets
+// ARCHITECT_SERVER_CWD to the actual build dir. Must be an existing directory,
+// otherwise the launcher fails with "spawn cmd.exe ENOENT".
+const serverCwd = process.env.ARCHITECT_SERVER_CWD ?? serverDir;
 
 export default defineConfig({
   ...sharedConfig,
@@ -55,7 +60,7 @@ export default defineConfig({
       // (or CI started it), reuseExistingServer makes Playwright just wait for
       // it instead of launching a second instance.
       command: SERVER_CMD,
-      cwd: process.env.ARCHITECT_SERVER_CMD ? undefined : serverDir,
+      cwd: serverCwd,
       env: { ASPNETCORE_ENVIRONMENT: 'Development' },
       // /Package/GetAll reads the file model and returns 200 without touching
       // the database, so it's a reliable readiness probe.
