@@ -66,17 +66,21 @@ jobs:
       - name: Locate built server
         shell: pwsh
         run: |
-          $exe = Get-ChildItem -Path "backend/Origam.Architect.Server/bin" -Recurse -Filter "Origam.Architect.Server.exe" -ErrorAction SilentlyContinue |
-                 Where-Object { $_.FullName -match "Release Architect Server" } |
+          # Find the runtime dll (always produced; the apphost .exe may not be).
+          # Skip the ref-assembly copy and pick the most recently built one.
+          $dll = Get-ChildItem -Path "backend/Origam.Architect.Server/bin" -Recurse -Filter "Origam.Architect.Server.dll" -ErrorAction SilentlyContinue |
+                 Where-Object { $_.FullName -notmatch '\\ref\\' } |
+                 Sort-Object LastWriteTime -Descending |
                  Select-Object -First 1
-          if (-not $exe) {
-            Write-Host "Build output under backend/Origam.Architect.Server/bin:"
-            Get-ChildItem -Path "backend/Origam.Architect.Server/bin" -Recurse -Directory | Select-Object -ExpandProperty FullName
-            throw "Origam.Architect.Server.exe not found"
+          if (-not $dll) {
+            Write-Host "Contents under backend/Origam.Architect.Server/bin:"
+            Get-ChildItem -Path "backend/Origam.Architect.Server/bin" -Recurse -ErrorAction SilentlyContinue | Select-Object -ExpandProperty FullName
+            throw "Origam.Architect.Server.dll not found"
           }
-          $dir = $exe.Directory.FullName
+          $dir = $dll.Directory.FullName
           Write-Host "Server build dir: $dir"
-          "SERVER_DIR=$dir" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+          "SERVER_DIR=$dir"            | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+          "SERVER_DLL=$($dll.FullName)" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
 
       # --- Database -------------------------------------------------------
       - name: Start SQL Server LocalDB
@@ -136,10 +140,10 @@ jobs:
       - name: Start Architect Server
         shell: pwsh
         run: |
-          $exe = Join-Path $env:SERVER_DIR 'Origam.Architect.Server.exe'
           $env:ASPNETCORE_ENVIRONMENT = 'Development'
-          Start-Process -FilePath $exe -WorkingDirectory $env:SERVER_DIR `
-            -ArgumentList '--urls','https://localhost:7099;http://localhost:5003' `
+          # Run via the .NET host so we don't depend on the apphost .exe existing.
+          Start-Process -FilePath "dotnet" -WorkingDirectory $env:SERVER_DIR `
+            -ArgumentList $env:SERVER_DLL,'--urls','https://localhost:7099;http://localhost:5003' `
             -RedirectStandardOutput "$env:GITHUB_WORKSPACE\architect-server-out.log" `
             -RedirectStandardError  "$env:GITHUB_WORKSPACE\architect-server-err.log"
           $ready = $false
