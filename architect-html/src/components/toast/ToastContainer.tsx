@@ -43,6 +43,8 @@ const ToastCard: React.FC<{ toast: IActionResultToast }> = observer(({ toast }) 
   const toastState = useContext(RootStoreContext).toastState;
   const [hovered, setHovered] = useState(false);
   const showResultRef = useRef<HTMLButtonElement | null>(null);
+  // Remember the element that owned focus before this toast stole it, so we can
+  // restore focus when the toast goes away without the user taking the action.
   const previouslyFocusedRef = useRef<HTMLElement | null>(null);
   const actionTakenRef = useRef(false);
 
@@ -59,12 +61,18 @@ const ToastCard: React.FC<{ toast: IActionResultToast }> = observer(({ toast }) 
       showResultRef.current.focus();
     }
     return () => {
+      // Restore focus on dismiss unless the user clicked Show result (in which
+      // case the destination view will own focus instead).
       if (!actionTakenRef.current) {
         previouslyFocusedRef.current?.focus?.();
       }
     };
+    // Toast identity is stable for its lifetime; we only want mount/unmount.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Only hover pauses the countdown — focusing the toast must NOT freeze the
+  // timer, so the user can still see the progress bar shrinking and act on it.
   useEffect(() => {
     if (hovered) {
       toastState.pause(toast.id);
