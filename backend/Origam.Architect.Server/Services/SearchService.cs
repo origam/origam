@@ -63,7 +63,7 @@ public class SearchService(
             .Where(x => x != null)
             .Select(result => GetResult(result, referencePackages));
     }
-    
+
     public List<SearchResult> BuildResults(IEnumerable<ISchemaItem> items)
     {
         List<Guid> referencePackages = GetReferencePackages();
