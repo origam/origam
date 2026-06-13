@@ -63,8 +63,7 @@ const ToastCard: React.FC<{ toast: IActionResultToast }> = observer(({ toast }) 
         previouslyFocusedRef.current?.focus?.();
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [hasAction]);
 
   useEffect(() => {
     if (hovered) {
