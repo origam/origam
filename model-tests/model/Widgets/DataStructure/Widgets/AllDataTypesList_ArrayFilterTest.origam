@@ -54,18 +54,6 @@
         dse:useUpsert="false" />
       <dse:DataStructureEntity
         asi:abstract="false"
-        dse:allFields="true"
-        dse:concurrencyHandling="Standard"
-        dse:entity="AllDataTypesDetail#AllDataTypes/AllDataTypesDetail/e77bcbd3-3ec0-4560-ae7c-6c7a64cbc43e"
-        x:id="c51b5526-9e21-4bca-ba4a-6a23901aa999"
-        dse:ignoreCondition="None"
-        dse:ignoreImplicitFilters="false"
-        asi:name="AllDataTypesDetail"
-        dse:relationType="Normal"
-        dse:serializeAsSingleJsonObject="false"
-        dse:useUpsert="false" />
-      <dse:DataStructureEntity
-        asi:abstract="false"
         dse:allFields="false"
         dse:concurrencyHandling="Standard"
         dse:entity="AllDataTypesDetail#AllDataTypes/AllDataTypesDetail/e77bcbd3-3ec0-4560-ae7c-6c7a64cbc43e"
@@ -89,6 +77,18 @@
           dse:serializeAsSingleJsonObject="false"
           dse:useUpsert="false" />
       </dse:DataStructureEntity>
+	  <dse:DataStructureEntity
+        asi:abstract="false"
+        dse:allFields="true"
+        dse:concurrencyHandling="Standard"
+        dse:entity="AllDataTypesDetail#AllDataTypes/AllDataTypesDetail/e77bcbd3-3ec0-4560-ae7c-6c7a64cbc43e"
+        x:id="c51b5526-9e21-4bca-ba4a-6a23901aa999"
+        dse:ignoreCondition="None"
+        dse:ignoreImplicitFilters="false"
+        asi:name="AllDataTypesDetail"
+        dse:relationType="Normal"
+        dse:serializeAsSingleJsonObject="false"
+        dse:useUpsert="false" />
     </dse:DataStructureEntity>
     <dsfs:DataStructureFilterSet
       asi:abstract="false"
