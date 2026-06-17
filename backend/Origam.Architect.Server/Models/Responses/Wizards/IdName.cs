@@ -19,11 +19,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.Architect.Server.Models.Requests;
+namespace Origam.Architect.Server.Models.Responses.Wizards;
 
-namespace Origam.Architect.Server.Models.Responses.Actions;
-
-public class CreateActionResult
+public class IdName
 {
-    public List<SearchResult> SearchResults { get; set; } = new();
+    public Guid Id { get; set; }
+    public string Name { get; set; }
 }

@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { RootStoreContext, T } from '@/main';
-import { CreateFilterType, ICreateActionResult, ISearchResult } from '@api/IArchitectApi';
+import { CreateFilterType, ICreateWizardResult, ISearchResult } from '@api/IArchitectApi';
 import { Icon } from '@components/icon/Icon';
 import S from '@components/modelTree/ModelTree.module.scss';
 import { TreeNode } from '@components/modelTree/TreeNode';
@@ -145,7 +145,7 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
         const result = (yield rootStore.architectApi.createFilter({
           columnId: node.origamId,
           filterType,
-        })) as ICreateActionResult;
+        })) as ICreateWizardResult;
         yield* rootStore.modelTreeState.loadPackageNodes.bind(rootStore.modelTreeState)();
         showCreatedConfirmation(label, result?.searchResults ?? []);
       },

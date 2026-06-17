@@ -21,7 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.ComponentModel.DataAnnotations;
 
-namespace Origam.Architect.Server.Models.Requests.Actions;
+namespace Origam.Architect.Server.Models.Requests.Wizards;
 
 public class CreateFilterModel
 {

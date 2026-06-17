@@ -19,11 +19,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Architect.Server.Models.Responses.Actions;
+namespace Origam.Architect.Server.Models.Responses.Wizards;
 
-public class ScreenWizardColumn
+public class GetDataStructureSqlResult
 {
-    public Guid Id { get; set; }
-    public string Name { get; set; }
-    public bool IsPrimaryKey { get; set; }
+    public Guid DataStructureId { get; set; }
+    public string DataStructureName { get; set; }
+    public string Sql { get; set; }
 }

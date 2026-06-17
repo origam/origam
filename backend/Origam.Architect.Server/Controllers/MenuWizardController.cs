@@ -19,12 +19,19 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.Architect.Server.Models.Requests.Actions;
-using Origam.Architect.Server.Models.Responses.Actions;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
+using Origam.Architect.Server.Interfaces.Services;
+using Origam.Architect.Server.Models.Requests.Wizards;
+using Origam.Architect.Server.Models.Responses.Wizards;
 
-namespace Origam.Architect.Server.Interfaces.Services;
+namespace Origam.Architect.Server.Controllers;
 
-public interface IWorkQueueActions
+[ApiController]
+[Route("[controller]")]
+public class MenuWizardController(IMenuWizard wizard) : ControllerBase
 {
-    CreateActionResult CreateWorkQueueClass(CreateWorkQueueModel input);
+    [HttpPost("CreateMenuItem")]
+    public CreateWizardResult CreateMenuItem([Required] [FromBody] CreateMenuItemModel input) =>
+        wizard.CreateMenuItem(input);
 }

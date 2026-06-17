@@ -20,16 +20,18 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
+using Origam.Architect.Server.Interfaces.Services;
+using Origam.Architect.Server.Models.Requests.Wizards;
+using Origam.Architect.Server.Models.Responses.Wizards;
 
-namespace Origam.Architect.Server.Models.Requests.Actions;
+namespace Origam.Architect.Server.Controllers;
 
-public class CreateMenuItemModel
+[ApiController]
+[Route("[controller]")]
+public class FilterWizardController(IFilterWizard wizard) : ControllerBase
 {
-    [Required]
-    public Guid FormId { get; set; }
-
-    [Required]
-    public string Caption { get; set; }
-
-    public string Role { get; set; }
+    [HttpPost("CreateFilter")]
+    public CreateWizardResult CreateFilter([Required] [FromBody] CreateFilterModel input) =>
+        wizard.CreateFilter(input);
 }

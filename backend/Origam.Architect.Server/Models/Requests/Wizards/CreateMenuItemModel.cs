@@ -19,14 +19,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Architect.Server.Models.Responses.Actions;
+using System.ComponentModel.DataAnnotations;
 
-public class LookupWizardData
+namespace Origam.Architect.Server.Models.Requests.Wizards;
+
+public class CreateMenuItemModel
 {
-    public string EntityName { get; set; }
-    public Guid PrimaryKeyId { get; set; }
-    public string PrimaryKeyName { get; set; }
-    public Guid DefaultDisplayFieldId { get; set; }
-    public List<IdName> Columns { get; set; } = new();
-    public List<IdName> Filters { get; set; } = new();
+    [Required]
+    public Guid FormId { get; set; }
+
+    [Required]
+    public string Caption { get; set; }
+
+    public string Role { get; set; }
 }

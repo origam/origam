@@ -22,8 +22,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Collections;
 using System.Text;
 using Origam.Architect.Server.Interfaces.Services;
-using Origam.Architect.Server.Models.Requests.Actions;
-using Origam.Architect.Server.Models.Responses.Actions;
+using Origam.Architect.Server.Models.Requests.Wizards;
+using Origam.Architect.Server.Models.Responses.Wizards;
 using Origam.DA;
 using Origam.DA.ObjectPersistence;
 using Origam.DA.Service;
@@ -40,15 +40,15 @@ using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Architect.Server.Services;
 
-public class ActionsService(
+public class WizardService(
     IPersistenceService persistenceService,
     ModelTransactionRunner transaction,
     SearchService searchService
-) : IFilterActions, IScreenActions, IWorkQueueActions, ISqlActions, IMenuActions, ILookupActions
+) : IFilterWizard, IScreenWizard, IWorkQueueWizard, ISqlWizard, IMenuWizard, ILookupWizard
 {
     private readonly IPersistenceProvider persistenceProvider = persistenceService.SchemaProvider;
 
-    public CreateActionResult CreateFilter(CreateFilterModel input)
+    public CreateWizardResult CreateFilter(CreateFilterModel input)
     {
         var column =
             persistenceProvider.RetrieveInstance<IDataEntityColumn>(input.ColumnId)
@@ -103,7 +103,7 @@ public class ActionsService(
             }
         );
 
-        return new CreateActionResult { SearchResults = searchService.BuildResults(generated) };
+        return new CreateWizardResult { SearchResults = searchService.BuildResults(generated) };
     }
 
     private static EntityFilter CreateBetweenFilter(
@@ -224,7 +224,7 @@ public class ActionsService(
         };
     }
 
-    public CreateActionResult CreateScreen(CreateScreenModel input)
+    public CreateWizardResult CreateScreen(CreateScreenModel input)
     {
         if (string.IsNullOrWhiteSpace(input.Name))
         {
@@ -292,13 +292,13 @@ public class ActionsService(
             });
         }
 
-        return new CreateActionResult
+        return new CreateWizardResult
         {
             SearchResults = searchService.BuildResults([dataStructure, panel, form]),
         };
     }
 
-    public CreateActionResult CreateWorkQueueClass(CreateWorkQueueModel input)
+    public CreateWizardResult CreateWorkQueueClass(CreateWorkQueueModel input)
     {
         var entity =
             persistenceProvider.RetrieveInstance<IDataEntity>(input.EntityId)
@@ -325,7 +325,7 @@ public class ActionsService(
 
         var generatedAll = new List<ISchemaItem> { workQueueClass };
         generatedAll.AddRange(generated);
-        return new CreateActionResult { SearchResults = searchService.BuildResults(generatedAll) };
+        return new CreateWizardResult { SearchResults = searchService.BuildResults(generatedAll) };
     }
 
     public GetDataStructureSqlResult GetDataStructureSql(Guid dataStructureId)
@@ -382,7 +382,7 @@ public class ActionsService(
         };
     }
 
-    public CreateActionResult CreateMenuItem(CreateMenuItemModel input)
+    public CreateWizardResult CreateMenuItem(CreateMenuItemModel input)
     {
         if (string.IsNullOrWhiteSpace(input.Caption))
         {
@@ -437,7 +437,7 @@ public class ActionsService(
             return item;
         });
 
-        return new CreateActionResult { SearchResults = searchService.BuildResults(generated) };
+        return new CreateWizardResult { SearchResults = searchService.BuildResults(generated) };
     }
 
     public LookupWizardData GetLookupWizardData(Guid entityId)
@@ -476,7 +476,7 @@ public class ActionsService(
         };
     }
 
-    public CreateActionResult CreateLookup(CreateLookupModel input)
+    public CreateWizardResult CreateLookup(CreateLookupModel input)
     {
         if (string.IsNullOrWhiteSpace(input.Name))
         {
@@ -519,7 +519,7 @@ public class ActionsService(
                 listFilter,
                 listDisplayMember: null
             );
-            return new CreateActionResult
+            return new CreateWizardResult
             {
                 SearchResults = searchService.BuildResults([lookup, lookup.ListDataStructure]),
             };

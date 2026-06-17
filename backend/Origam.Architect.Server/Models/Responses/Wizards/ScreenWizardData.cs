@@ -19,20 +19,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System.ComponentModel.DataAnnotations;
+namespace Origam.Architect.Server.Models.Responses.Wizards;
 
-namespace Origam.Architect.Server.Models.Requests.Actions;
-
-public class CreateScreenModel
+public class ScreenWizardData
 {
-    [Required]
-    public Guid EntityId { get; set; }
-
-    [Required]
-    public string Name { get; set; }
-
-    public string Caption { get; set; }
-
-    [Required]
-    public List<Guid> SelectedFieldIds { get; set; } = new();
+    public string EntityName { get; set; }
+    public List<ScreenWizardColumn> Columns { get; set; } = new();
+    public List<string> ExistingDataStructureNames { get; set; } = new();
 }

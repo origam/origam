@@ -19,14 +19,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.Architect.Server.Models.Requests.Actions;
-using Origam.Architect.Server.Models.Responses.Actions;
+using System.ComponentModel.DataAnnotations;
 
-namespace Origam.Architect.Server.Interfaces.Services;
+namespace Origam.Architect.Server.Models.Requests.Wizards;
 
-public interface IScreenActions
+public class CreateWorkQueueModel
 {
-    ScreenWizardData GetScreenWizardData(Guid entityId);
+    [Required]
+    public Guid EntityId { get; set; }
 
-    CreateActionResult CreateScreen(CreateScreenModel input);
+    [Required]
+    public List<Guid> SelectedFieldIds { get; set; } = new();
 }

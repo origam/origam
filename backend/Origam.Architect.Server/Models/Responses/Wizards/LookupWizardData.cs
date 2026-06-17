@@ -19,11 +19,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.Architect.Server.Models.Responses.Actions;
+namespace Origam.Architect.Server.Models.Responses.Wizards;
 
-namespace Origam.Architect.Server.Interfaces.Services;
-
-public interface ISqlActions
+public class LookupWizardData
 {
-    GetDataStructureSqlResult GetDataStructureSql(Guid dataStructureId);
+    public string EntityName { get; set; }
+    public Guid PrimaryKeyId { get; set; }
+    public string PrimaryKeyName { get; set; }
+    public Guid DefaultDisplayFieldId { get; set; }
+    public List<IdName> Columns { get; set; } = new();
+    public List<IdName> Filters { get; set; } = new();
 }

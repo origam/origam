@@ -89,27 +89,27 @@ export default defineConfig({
         target: 'http://localhost:5003',
         secure: false,
       },
-      '/FilterActions': {
+      '/FilterWizard': {
         target: 'https://localhost:7099',
         secure: false,
       },
-      '/ScreenActions': {
+      '/ScreenWizard': {
         target: 'https://localhost:7099',
         secure: false,
       },
-      '/WorkQueueActions': {
+      '/WorkQueueWizard': {
         target: 'https://localhost:7099',
         secure: false,
       },
-      '/SqlActions': {
+      '/SqlWizard': {
         target: 'https://localhost:7099',
         secure: false,
       },
-      '/MenuActions': {
+      '/MenuWizard': {
         target: 'https://localhost:7099',
         secure: false,
       },
-      '/LookupActions': {
+      '/LookupWizard': {
         target: 'https://localhost:7099',
         secure: false,
       },

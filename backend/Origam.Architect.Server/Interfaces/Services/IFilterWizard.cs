@@ -19,12 +19,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.Architect.Server.Models.Requests.Actions;
-using Origam.Architect.Server.Models.Responses.Actions;
+using Origam.Architect.Server.Models.Requests.Wizards;
+using Origam.Architect.Server.Models.Responses.Wizards;
 
 namespace Origam.Architect.Server.Interfaces.Services;
 
-public interface IFilterActions
+public interface IFilterWizard
 {
-    CreateActionResult CreateFilter(CreateFilterModel input);
+    CreateWizardResult CreateFilter(CreateFilterModel input);
 }

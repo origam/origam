@@ -19,19 +19,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc;
-using Origam.Architect.Server.Interfaces.Services;
-using Origam.Architect.Server.Models.Responses.Actions;
+namespace Origam.Architect.Server.Models.Requests.Wizards;
 
-namespace Origam.Architect.Server.Controllers;
-
-[ApiController]
-[Route("[controller]")]
-public class SqlActionsController(ISqlActions actions) : ControllerBase
+public enum CreateFilterType
 {
-    [HttpGet("GetDataStructureSql")]
-    public GetDataStructureSqlResult GetDataStructureSql(
-        [FromQuery] [Required] Guid dataStructureId
-    ) => actions.GetDataStructureSql(dataStructureId);
+    Equal,
+    EqualParam,
+    Like,
+    LikeParam,
+    InList,
+    Between,
 }

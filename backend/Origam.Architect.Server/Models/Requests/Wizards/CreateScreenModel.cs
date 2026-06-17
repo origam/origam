@@ -19,14 +19,20 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Architect.Server.Models.Requests.Actions;
+using System.ComponentModel.DataAnnotations;
 
-public enum CreateFilterType
+namespace Origam.Architect.Server.Models.Requests.Wizards;
+
+public class CreateScreenModel
 {
-    Equal,
-    EqualParam,
-    Like,
-    LikeParam,
-    InList,
-    Between,
+    [Required]
+    public Guid EntityId { get; set; }
+
+    [Required]
+    public string Name { get; set; }
+
+    public string Caption { get; set; }
+
+    [Required]
+    public List<Guid> SelectedFieldIds { get; set; } = new();
 }

@@ -21,14 +21,14 @@ import S from '@components/modelTree/createWizard/CreateLookupDrawer.module.scss
 import { observer } from 'mobx-react-lite';
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { RootStoreContext } from '@/main';
-import { ICreateActionResult, IScreenWizardData } from '@api/IArchitectApi';
+import { ICreateWizardResult, IScreenWizardData } from '@api/IArchitectApi';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 
 interface CreateScreenDrawerProps {
   entityId: string;
   parentNodeName: string;
   onCancel: () => void;
-  onCreate: (result: ICreateActionResult) => void;
+  onCreate: (result: ICreateWizardResult) => void;
 }
 
 interface ScreenModel {
@@ -192,7 +192,7 @@ export const CreateScreenDrawer: React.FC<CreateScreenDrawerProps> = observer(
               name: model.name.trim(),
               caption: model.caption.trim(),
               selectedFieldIds: Array.from(model.selectedFieldIds),
-            })) as ICreateActionResult;
+            })) as ICreateWizardResult;
             onCreate(result);
           } finally {
             setSubmitting(false);

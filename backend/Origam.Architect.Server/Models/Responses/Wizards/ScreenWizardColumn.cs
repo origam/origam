@@ -19,23 +19,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System.ComponentModel.DataAnnotations;
+namespace Origam.Architect.Server.Models.Responses.Wizards;
 
-namespace Origam.Architect.Server.Models.Requests.Actions;
-
-public class CreateLookupModel
+public class ScreenWizardColumn
 {
-    [Required]
-    public Guid EntityId { get; set; }
-
-    [Required]
+    public Guid Id { get; set; }
     public string Name { get; set; }
-
-    [Required]
-    public Guid DisplayFieldId { get; set; }
-
-    [Required]
-    public Guid IdFilterId { get; set; }
-
-    public Guid? ListFilterId { get; set; }
+    public bool IsPrimaryKey { get; set; }
 }

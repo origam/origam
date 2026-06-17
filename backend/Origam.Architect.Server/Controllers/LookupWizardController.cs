@@ -19,14 +19,23 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.Architect.Server.Models.Requests.Actions;
-using Origam.Architect.Server.Models.Responses.Actions;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
+using Origam.Architect.Server.Interfaces.Services;
+using Origam.Architect.Server.Models.Requests.Wizards;
+using Origam.Architect.Server.Models.Responses.Wizards;
 
-namespace Origam.Architect.Server.Interfaces.Services;
+namespace Origam.Architect.Server.Controllers;
 
-public interface ILookupActions
+[ApiController]
+[Route("[controller]")]
+public class LookupWizardController(ILookupWizard wizard) : ControllerBase
 {
-    LookupWizardData GetLookupWizardData(Guid entityId);
+    [HttpGet("GetLookupWizardData")]
+    public LookupWizardData GetLookupWizardData([FromQuery] [Required] Guid entityId) =>
+        wizard.GetLookupWizardData(entityId);
 
-    CreateActionResult CreateLookup(CreateLookupModel input);
+    [HttpPost("CreateLookup")]
+    public CreateWizardResult CreateLookup([Required] [FromBody] CreateLookupModel input) =>
+        wizard.CreateLookup(input);
 }

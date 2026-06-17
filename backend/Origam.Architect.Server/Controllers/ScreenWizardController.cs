@@ -19,11 +19,23 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Architect.Server.Models.Responses.Actions;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
+using Origam.Architect.Server.Interfaces.Services;
+using Origam.Architect.Server.Models.Requests.Wizards;
+using Origam.Architect.Server.Models.Responses.Wizards;
 
-public class ScreenWizardData
+namespace Origam.Architect.Server.Controllers;
+
+[ApiController]
+[Route("[controller]")]
+public class ScreenWizardController(IScreenWizard wizard) : ControllerBase
 {
-    public string EntityName { get; set; }
-    public List<ScreenWizardColumn> Columns { get; set; } = new();
-    public List<string> ExistingDataStructureNames { get; set; } = new();
+    [HttpGet("GetScreenWizardData")]
+    public ScreenWizardData GetScreenWizardData([FromQuery] [Required] Guid entityId) =>
+        wizard.GetScreenWizardData(entityId);
+
+    [HttpPost("CreateScreen")]
+    public CreateWizardResult CreateScreen([Required] [FromBody] CreateScreenModel input) =>
+        wizard.CreateScreen(input);
 }

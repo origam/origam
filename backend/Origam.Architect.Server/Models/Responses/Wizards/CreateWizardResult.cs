@@ -19,12 +19,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.Architect.Server.Models.Requests.Actions;
-using Origam.Architect.Server.Models.Responses.Actions;
+using Origam.Architect.Server.Models.Requests;
 
-namespace Origam.Architect.Server.Interfaces.Services;
+namespace Origam.Architect.Server.Models.Responses.Wizards;
 
-public interface IMenuActions
+public class CreateWizardResult
 {
-    CreateActionResult CreateMenuItem(CreateMenuItemModel input);
+    public List<SearchResult> SearchResults { get; set; } = new();
 }

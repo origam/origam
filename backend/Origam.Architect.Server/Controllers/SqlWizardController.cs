@@ -22,20 +22,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using Origam.Architect.Server.Interfaces.Services;
-using Origam.Architect.Server.Models.Requests.Actions;
-using Origam.Architect.Server.Models.Responses.Actions;
+using Origam.Architect.Server.Models.Responses.Wizards;
 
 namespace Origam.Architect.Server.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class ScreenActionsController(IScreenActions actions) : ControllerBase
+public class SqlWizardController(ISqlWizard wizard) : ControllerBase
 {
-    [HttpGet("GetScreenWizardData")]
-    public ScreenWizardData GetScreenWizardData([FromQuery] [Required] Guid entityId) =>
-        actions.GetScreenWizardData(entityId);
-
-    [HttpPost("CreateScreen")]
-    public CreateActionResult CreateScreen([Required] [FromBody] CreateScreenModel input) =>
-        actions.CreateScreen(input);
+    [HttpGet("GetDataStructureSql")]
+    public GetDataStructureSqlResult GetDataStructureSql(
+        [FromQuery] [Required] Guid dataStructureId
+    ) => wizard.GetDataStructureSql(dataStructureId);
 }

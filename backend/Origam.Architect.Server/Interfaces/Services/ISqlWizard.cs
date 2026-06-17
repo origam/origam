@@ -19,15 +19,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System.ComponentModel.DataAnnotations;
+using Origam.Architect.Server.Models.Responses.Wizards;
 
-namespace Origam.Architect.Server.Models.Requests.Actions;
+namespace Origam.Architect.Server.Interfaces.Services;
 
-public class CreateWorkQueueModel
+public interface ISqlWizard
 {
-    [Required]
-    public Guid EntityId { get; set; }
-
-    [Required]
-    public List<Guid> SelectedFieldIds { get; set; } = new();
+    GetDataStructureSqlResult GetDataStructureSql(Guid dataStructureId);
 }

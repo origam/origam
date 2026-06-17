@@ -21,7 +21,7 @@ import S from '@components/modelTree/createWizard/CreateLookupDrawer.module.scss
 import { observer } from 'mobx-react-lite';
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { RootStoreContext } from '@/main';
-import { ICreateActionResult, IDropDownValue, ILookupWizardEntityData } from '@api/IArchitectApi';
+import { ICreateWizardResult, IDropDownValue, ILookupWizardEntityData } from '@api/IArchitectApi';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { FilterableSelect } from '@editors/propertyEditor/FilterableSelect';
 
@@ -29,7 +29,7 @@ interface CreateLookupDrawerProps {
   entityId: string;
   parentNodeName: string;
   onCancel: () => void;
-  onCreate: (result: ICreateActionResult) => void;
+  onCreate: (result: ICreateWizardResult) => void;
 }
 
 export interface LookupModel {
@@ -193,7 +193,7 @@ export const CreateLookupDrawer: React.FC<CreateLookupDrawerProps> = observer(
               displayFieldId: model.displayFieldId,
               idFilterId: model.idFilterId,
               listFilterId: model.listFilterId || null,
-            })) as ICreateActionResult;
+            })) as ICreateWizardResult;
             onCreate(result);
           } finally {
             setSubmitting(false);

@@ -21,14 +21,14 @@ import S from '@components/modelTree/createWizard/CreateLookupDrawer.module.scss
 import { observer } from 'mobx-react-lite';
 import React, { useContext, useEffect, useState } from 'react';
 import { RootStoreContext } from '@/main';
-import { ICreateActionResult } from '@api/IArchitectApi';
+import { ICreateWizardResult } from '@api/IArchitectApi';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 
 interface CreateMenuItemDrawerProps {
   formId: string;
   parentNodeName: string;
   onCancel: () => void;
-  onCreate: (result: ICreateActionResult) => void;
+  onCreate: (result: ICreateWizardResult) => void;
 }
 
 const STEPS = [
@@ -71,7 +71,7 @@ export const CreateMenuItemDrawer: React.FC<CreateMenuItemDrawerProps> = observe
               formId,
               caption: caption.trim(),
               role: role.trim() || '*',
-            })) as ICreateActionResult;
+            })) as ICreateWizardResult;
             onCreate(result);
           } finally {
             setSubmitting(false);

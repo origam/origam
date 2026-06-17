@@ -128,16 +128,16 @@ export interface IArchitectApi {
   addToModel(request: IAddToModelRequest): Promise<void>;
 
   getLookupWizardEntityData(entityId: string): Promise<ILookupWizardEntityData>;
-  createLookup(request: ICreateLookupRequest): Promise<ICreateActionResult>;
+  createLookup(request: ICreateLookupRequest): Promise<ICreateWizardResult>;
 
-  createFilter(request: ICreateFilterRequest): Promise<ICreateActionResult>;
+  createFilter(request: ICreateFilterRequest): Promise<ICreateWizardResult>;
 
   getScreenWizardData(entityId: string): Promise<IScreenWizardData>;
-  createScreen(request: ICreateScreenRequest): Promise<ICreateActionResult>;
+  createScreen(request: ICreateScreenRequest): Promise<ICreateWizardResult>;
 
-  createWorkQueueClass(request: ICreateWorkQueueRequest): Promise<ICreateActionResult>;
+  createWorkQueueClass(request: ICreateWorkQueueRequest): Promise<ICreateWizardResult>;
 
-  createMenuItem(request: ICreateMenuItemRequest): Promise<ICreateActionResult>;
+  createMenuItem(request: ICreateMenuItemRequest): Promise<ICreateWizardResult>;
 
   getDataStructureSql(dataStructureId: string): Promise<IGetDataStructureSqlResult>;
 }
@@ -159,7 +159,7 @@ export interface ICreateWorkQueueRequest {
   selectedFieldIds: string[];
 }
 
-export interface ICreateActionResult {
+export interface ICreateWizardResult {
   searchResults: ISearchResult[];
 }
 

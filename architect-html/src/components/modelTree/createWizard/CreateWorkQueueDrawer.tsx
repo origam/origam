@@ -21,14 +21,14 @@ import S from '@components/modelTree/createWizard/CreateLookupDrawer.module.scss
 import { observer } from 'mobx-react-lite';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { RootStoreContext } from '@/main';
-import { ICreateActionResult, IScreenWizardData } from '@api/IArchitectApi';
+import { ICreateWizardResult, IScreenWizardData } from '@api/IArchitectApi';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 
 interface CreateWorkQueueDrawerProps {
   entityId: string;
   parentNodeName: string;
   onCancel: () => void;
-  onCreate: (result: ICreateActionResult) => void;
+  onCreate: (result: ICreateWizardResult) => void;
 }
 
 const STEPS = [
@@ -112,7 +112,7 @@ export const CreateWorkQueueDrawer: React.FC<CreateWorkQueueDrawerProps> = obser
             const result = (yield rootStore.architectApi.createWorkQueueClass({
               entityId,
               selectedFieldIds: Array.from(selectedFieldIds),
-            })) as ICreateActionResult;
+            })) as ICreateWizardResult;
             onCreate(result);
           } finally {
             setSubmitting(false);
