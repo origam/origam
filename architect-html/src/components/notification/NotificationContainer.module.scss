@@ -30,7 +30,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   width: calc(100vw - 40px);
 }
 
-.toast {
+.notification {
   pointer-events: auto;
   background: var(--background1);
   border: 1px solid var(--background3);
@@ -50,7 +50,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   font-family: inherit;
 }
 
-.toast.leaving {
+.notification.leaving {
   animation: slideOut 160ms ease-in forwards;
 }
 

@@ -17,41 +17,41 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import S from '@components/toast/ToastContainer.module.scss';
+import S from '@components/notification/NotificationContainer.module.scss';
 import { RootStoreContext } from '@/main';
-import { IActionResultToast } from '@components/toast/ToastState';
+import { IActionResultNotification } from '@components/notification/NotificationState';
 import { observer } from 'mobx-react-lite';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { VscPass } from 'react-icons/vsc';
 
-export const ToastContainer: React.FC = observer(() => {
-  const toastState = useContext(RootStoreContext).toastState;
+export const NotificationContainer: React.FC = observer(() => {
+  const notificationState = useContext(RootStoreContext).notificationState;
   const portalRoot = document.getElementById('modal-window-portal');
   if (!portalRoot) return null;
   return createPortal(
     <div className={S.container} aria-live="polite">
-      {toastState.toasts.map(toast => (
-        <ToastCard key={toast.id} toast={toast} />
+      {notificationState.notifications.map(notification => (
+        <NotificationCard key={notification.id} notification={notification} />
       ))}
     </div>,
     portalRoot,
   );
 });
 
-const ToastCard: React.FC<{ toast: IActionResultToast }> = observer(({ toast }) => {
-  const toastState = useContext(RootStoreContext).toastState;
+const NotificationCard: React.FC<{ notification: IActionResultNotification }> = observer(({ notification }) => {
+  const notificationState = useContext(RootStoreContext).notificationState;
   const [hovered, setHovered] = useState(false);
   const showResultRef = useRef<HTMLButtonElement | null>(null);
   const previouslyFocusedRef = useRef<HTMLElement | null>(null);
   const actionTakenRef = useRef(false);
 
-  const count = toast.results.length;
+  const count = notification.results.length;
   const subtitle =
     count === 0
       ? 'No items reported by server'
       : `${count} item${count === 1 ? '' : 's'} added to the model`;
-  const hasAction = !!toast.onShowResult && count > 0;
+  const hasAction = !!notification.onShowResult && count > 0;
 
   useEffect(() => {
     if (hasAction && showResultRef.current) {
@@ -67,22 +67,22 @@ const ToastCard: React.FC<{ toast: IActionResultToast }> = observer(({ toast }) 
 
   useEffect(() => {
     if (hovered) {
-      toastState.pause(toast.id);
+      notificationState.pause(notification.id);
     } else {
-      toastState.resume(toast.id);
+      notificationState.resume(notification.id);
     }
-  }, [hovered, toast.id, toastState]);
+  }, [hovered, notification.id, notificationState]);
 
   const onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     if (event.key === 'Escape') {
       event.stopPropagation();
-      toastState.dismiss(toast.id);
+      notificationState.dismiss(notification.id);
     }
   };
 
   return (
     <div
-      className={S.toast}
+      className={S.notification}
       role="status"
       tabIndex={-1}
       onMouseEnter={() => setHovered(true)}
@@ -93,12 +93,12 @@ const ToastCard: React.FC<{ toast: IActionResultToast }> = observer(({ toast }) 
         <VscPass />
       </div>
       <div className={S.body}>
-        <div className={S.title}>{toast.title}</div>
+        <div className={S.title}>{notification.title}</div>
         <div className={S.subtitle}>{subtitle}</div>
       </div>
       <button
         className={S.closeBtn}
-        onClick={() => toastState.dismiss(toast.id)}
+        onClick={() => notificationState.dismiss(notification.id)}
         aria-label="Dismiss"
       >
         ✕
@@ -110,8 +110,8 @@ const ToastCard: React.FC<{ toast: IActionResultToast }> = observer(({ toast }) 
             className={S.actionBtn}
             onClick={() => {
               actionTakenRef.current = true;
-              toast.onShowResult?.();
-              toastState.dismiss(toast.id);
+              notification.onShowResult?.();
+              notificationState.dismiss(notification.id);
             }}
           >
             Show result
@@ -121,7 +121,7 @@ const ToastCard: React.FC<{ toast: IActionResultToast }> = observer(({ toast }) 
       <div className={S.progress}>
         <div
           className={`${S.progressBar} ${hovered ? S.paused : ''}`}
-          style={{ animationDuration: `${toast.durationMs}ms` }}
+          style={{ animationDuration: `${notification.durationMs}ms` }}
         />
       </div>
     </div>

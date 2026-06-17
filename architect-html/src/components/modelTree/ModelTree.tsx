@@ -127,7 +127,7 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
   }
 
   function showCreatedConfirmation(actionLabel: string, results: ISearchResult[]) {
-    rootStore.toastState.pushActionResult({
+    rootStore.notificationState.pushActionResult({
       title: `${actionLabel} created`,
       results,
       onShowResult: () =>

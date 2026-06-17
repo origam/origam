@@ -20,11 +20,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { ISearchResult } from '@api/IArchitectApi';
 import { action, observable } from 'mobx';
 
-export type ToastKind = 'success' | 'info';
+export type NotificationKind = 'success' | 'info';
 
-export interface IActionResultToast {
+export interface IActionResultNotification {
   id: number;
-  kind: ToastKind;
+  kind: NotificationKind;
   title: string;
   results: ISearchResult[];
   onShowResult?: () => void;
@@ -33,8 +33,8 @@ export interface IActionResultToast {
 
 const DEFAULT_DURATION_MS = 15000;
 
-export class ToastState {
-  @observable.shallow accessor toasts: IActionResultToast[] = [];
+export class NotificationState {
+  @observable.shallow accessor notifications: IActionResultNotification[] = [];
 
   private nextId = 1;
   private timers = new Map<number, ReturnType<typeof setTimeout>>();
@@ -46,12 +46,12 @@ export class ToastState {
     title: string;
     results: ISearchResult[];
     onShowResult?: () => void;
-    kind?: ToastKind;
+    kind?: NotificationKind;
     durationMs?: number;
   }): number {
     const id = this.nextId++;
     const duration = input.durationMs ?? DEFAULT_DURATION_MS;
-    const toast: IActionResultToast = {
+    const notification: IActionResultNotification = {
       id,
       kind: input.kind ?? 'success',
       title: input.title,
@@ -59,16 +59,16 @@ export class ToastState {
       onShowResult: input.onShowResult,
       durationMs: duration,
     };
-    this.toasts.unshift(toast);
+    this.notifications.unshift(notification);
     this.armTimer(id, duration);
     return id;
   }
 
   @action.bound
   dismiss(id: number) {
-    const index = this.toasts.findIndex(toast => toast.id === id);
+    const index = this.notifications.findIndex(notification => notification.id === id);
     if (index === -1) return;
-    this.toasts.splice(index, 1);
+    this.notifications.splice(index, 1);
     this.clearTimer(id);
     this.remaining.delete(id);
     this.startedAt.delete(id);
