@@ -41,13 +41,21 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 @keyframes slideIn {
-  from { transform: translateX(100%); }
-  to   { transform: translateX(0); }
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .header {
@@ -73,7 +81,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   letter-spacing: 0.02em;
 }
 
-.headerText { flex-grow: 1; }
+.headerText {
+  flex-grow: 1;
+}
 
 .headerTitle {
   font-size: 16px;
@@ -142,7 +152,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     background: var(--brand);
   }
 
-  &.active { background: transparent; }
+  &.active {
+    background: transparent;
+  }
 
   &.done .stepBullet {
     background: var(--brand);
@@ -157,8 +169,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     box-shadow: 0 0 0 4px rgba(var(--brand-rgb), 0.12);
   }
 
-  &.active .stepLabel { color: var(--background8); }
-  &.done .stepLabel { color: var(--background7); }
+  &.active .stepLabel {
+    color: var(--background8);
+  }
+  &.done .stepLabel {
+    color: var(--background7);
+  }
 }
 
 .stepBullet {
@@ -174,11 +190,18 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   font-size: 14px;
   background: var(--background1);
   color: var(--background6);
-  transition: background 200ms ease, color 200ms ease, border-color 200ms ease,
-    transform 200ms ease, box-shadow 200ms ease;
+  transition:
+    background 200ms ease,
+    color 200ms ease,
+    border-color 200ms ease,
+    transform 200ms ease,
+    box-shadow 200ms ease;
 }
 
-.stepText { display: flex; flex-direction: column; }
+.stepText {
+  display: flex;
+  flex-direction: column;
+}
 
 .stepLabel {
   font-size: 14px;
@@ -235,7 +258,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   color: var(--background7);
 }
 
-.required { color: var(--error1); }
+.required {
+  color: var(--error1);
+}
 
 .fieldHint {
   font-size: 11px;
@@ -244,7 +269,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   margin-left: 4px;
 }
 
-.input, .select {
+.input,
+.select {
   height: 34px;
   padding: 0 10px;
   border: 1px solid var(--background4);
@@ -252,7 +278,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   background: var(--background1);
   font-size: 13px;
   color: var(--background8);
-  transition: border-color 140ms ease, box-shadow 140ms ease;
+  transition:
+    border-color 140ms ease,
+    box-shadow 140ms ease;
   width: 100%;
   box-sizing: border-box;
 
@@ -302,7 +330,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     background: var(--background1);
     font-size: 13px;
     color: var(--background8);
-    transition: border-color 140ms ease, box-shadow 140ms ease;
+    transition:
+      border-color 140ms ease,
+      box-shadow 140ms ease;
     width: 100%;
     box-sizing: border-box;
 
@@ -421,7 +451,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   color: var(--background7);
 }
 
-.reviewKey { color: var(--background6); }
+.reviewKey {
+  color: var(--background6);
+}
 
 .footer {
   display: flex;
@@ -437,7 +469,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   color: var(--background6);
 }
 
-.footerBtns { display: flex; gap: 8px; }
+.footerBtns {
+  display: flex;
+  gap: 8px;
+}
 
 .btn {
   height: 34px;
@@ -449,12 +484,18 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   border: 1px solid var(--background4);
   background: var(--background1);
   color: var(--background8);
-  transition: background 140ms ease, border-color 140ms ease, color 140ms ease;
+  transition:
+    background 140ms ease,
+    border-color 140ms ease,
+    color 140ms ease;
   &:hover {
     background: var(--background2);
     border-color: var(--background5);
   }
-  &:disabled { opacity: 0.5; cursor: not-allowed; }
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 }
 
 .btnPrimary {

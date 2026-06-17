@@ -39,91 +39,93 @@ export const NotificationContainer: React.FC = observer(() => {
   );
 });
 
-const NotificationCard: React.FC<{ notification: IActionResultNotification }> = observer(({ notification }) => {
-  const notificationState = useContext(RootStoreContext).notificationState;
-  const [hovered, setHovered] = useState(false);
-  const showResultRef = useRef<HTMLButtonElement | null>(null);
-  const previouslyFocusedRef = useRef<HTMLElement | null>(null);
-  const actionTakenRef = useRef(false);
+const NotificationCard: React.FC<{ notification: IActionResultNotification }> = observer(
+  ({ notification }) => {
+    const notificationState = useContext(RootStoreContext).notificationState;
+    const [hovered, setHovered] = useState(false);
+    const showResultRef = useRef<HTMLButtonElement | null>(null);
+    const previouslyFocusedRef = useRef<HTMLElement | null>(null);
+    const actionTakenRef = useRef(false);
 
-  const count = notification.results.length;
-  const subtitle =
-    count === 0
-      ? 'No items reported by server'
-      : `${count} item${count === 1 ? '' : 's'} added to the model`;
-  const hasAction = !!notification.onShowResult && count > 0;
+    const count = notification.results.length;
+    const subtitle =
+      count === 0
+        ? 'No items reported by server'
+        : `${count} item${count === 1 ? '' : 's'} added to the model`;
+    const hasAction = !!notification.onShowResult && count > 0;
 
-  useEffect(() => {
-    if (hasAction && showResultRef.current) {
-      previouslyFocusedRef.current = document.activeElement as HTMLElement | null;
-      showResultRef.current.focus();
-    }
-    return () => {
-      if (!actionTakenRef.current) {
-        previouslyFocusedRef.current?.focus?.();
+    useEffect(() => {
+      if (hasAction && showResultRef.current) {
+        previouslyFocusedRef.current = document.activeElement as HTMLElement | null;
+        showResultRef.current.focus();
+      }
+      return () => {
+        if (!actionTakenRef.current) {
+          previouslyFocusedRef.current?.focus?.();
+        }
+      };
+    }, [hasAction]);
+
+    useEffect(() => {
+      if (hovered) {
+        notificationState.pause(notification.id);
+      } else {
+        notificationState.resume(notification.id);
+      }
+    }, [hovered, notification.id, notificationState]);
+
+    const onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+      if (event.key === 'Escape') {
+        event.stopPropagation();
+        notificationState.dismiss(notification.id);
       }
     };
-  }, [hasAction]);
 
-  useEffect(() => {
-    if (hovered) {
-      notificationState.pause(notification.id);
-    } else {
-      notificationState.resume(notification.id);
-    }
-  }, [hovered, notification.id, notificationState]);
-
-  const onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    if (event.key === 'Escape') {
-      event.stopPropagation();
-      notificationState.dismiss(notification.id);
-    }
-  };
-
-  return (
-    <div
-      className={S.notification}
-      role="status"
-      tabIndex={-1}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      onKeyDown={onKeyDown}
-    >
-      <div className={S.icon}>
-        <VscPass />
-      </div>
-      <div className={S.body}>
-        <div className={S.title}>{notification.title}</div>
-        <div className={S.subtitle}>{subtitle}</div>
-      </div>
-      <button
-        className={S.closeBtn}
-        onClick={() => notificationState.dismiss(notification.id)}
-        aria-label="Dismiss"
+    return (
+      <div
+        className={S.notification}
+        role="status"
+        tabIndex={-1}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        onKeyDown={onKeyDown}
       >
-        ✕
-      </button>
-      {hasAction && (
-        <div className={S.actions}>
-          <button
-            ref={showResultRef}
-            className={S.actionBtn}
-            onClick={() => {
-              actionTakenRef.current = true;
-              notification.onShowResult?.();
-              notificationState.dismiss(notification.id);
-            }}
-          >
-            Show result
-          </button>
+        <div className={S.icon}>
+          <VscPass />
         </div>
-      )}
-      <div className={S.progress}>
-        <div
-          className={`${S.progressBar} ${hovered ? S.paused : ''}`}
-          style={{ animationDuration: `${notification.durationMs}ms` }}
-        />
+        <div className={S.body}>
+          <div className={S.title}>{notification.title}</div>
+          <div className={S.subtitle}>{subtitle}</div>
+        </div>
+        <button
+          className={S.closeBtn}
+          onClick={() => notificationState.dismiss(notification.id)}
+          aria-label="Dismiss"
+        >
+          ✕
+        </button>
+        {hasAction && (
+          <div className={S.actions}>
+            <button
+              ref={showResultRef}
+              className={S.actionBtn}
+              onClick={() => {
+                actionTakenRef.current = true;
+                notification.onShowResult?.();
+                notificationState.dismiss(notification.id);
+              }}
+            >
+              Show result
+            </button>
+          </div>
+        )}
+        <div className={S.progress}>
+          <div
+            className={`${S.progressBar} ${hovered ? S.paused : ''}`}
+            style={{ animationDuration: `${notification.durationMs}ms` }}
+          />
+        </div>
       </div>
-    </div>
-  );
-});
+    );
+  },
+);
