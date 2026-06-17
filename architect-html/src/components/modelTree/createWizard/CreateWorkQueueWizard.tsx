@@ -17,14 +17,14 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import S from '@components/modelTree/createWizard/CreateLookupDrawer.module.scss';
+import S from '@components/modelTree/createWizard/CreateWizard.module.scss';
 import { observer } from 'mobx-react-lite';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { RootStoreContext } from '@/main';
 import { ICreateWizardResult, IScreenWizardData } from '@api/IArchitectApi';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 
-interface CreateWorkQueueDrawerProps {
+interface CreateWorkQueueWizardProps {
   entityId: string;
   parentNodeName: string;
   onCancel: () => void;
@@ -36,7 +36,7 @@ const STEPS = [
   { label: 'Review', hint: 'Confirm and create' },
 ];
 
-export const CreateWorkQueueDrawer: React.FC<CreateWorkQueueDrawerProps> = observer(
+export const CreateWorkQueueWizard: React.FC<CreateWorkQueueWizardProps> = observer(
   ({ entityId, parentNodeName, onCancel, onCreate }) => {
     const rootStore = useContext(RootStoreContext);
     const run = useMemo(

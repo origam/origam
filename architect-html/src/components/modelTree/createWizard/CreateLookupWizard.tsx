@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import S from '@components/modelTree/createWizard/CreateLookupDrawer.module.scss';
+import S from '@components/modelTree/createWizard/CreateWizard.module.scss';
 import { observer } from 'mobx-react-lite';
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { RootStoreContext } from '@/main';
@@ -25,7 +25,7 @@ import { ICreateWizardResult, IDropDownValue, ILookupWizardEntityData } from '@a
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { FilterableSelect } from '@editors/propertyEditor/FilterableSelect';
 
-interface CreateLookupDrawerProps {
+interface CreateLookupWizardProps {
   entityId: string;
   parentNodeName: string;
   onCancel: () => void;
@@ -45,7 +45,7 @@ const STEPS = [
   { label: 'Review', hint: 'Confirm and create' },
 ];
 
-export const CreateLookupDrawer: React.FC<CreateLookupDrawerProps> = observer(
+export const CreateLookupWizard: React.FC<CreateLookupWizardProps> = observer(
   ({ entityId, parentNodeName, onCancel, onCreate }) => {
     const rootStore = useContext(RootStoreContext);
     const run = useMemo(
@@ -53,7 +53,7 @@ export const CreateLookupDrawer: React.FC<CreateLookupDrawerProps> = observer(
       [rootStore.errorDialogController],
     );
 
-    const drawerRef = useRef<HTMLDivElement>(null);
+    const wizardRef = useRef<HTMLDivElement>(null);
     const nameManuallyEditedRef = useRef(false);
     const [step, setStep] = useState(0);
     const [entityData, setEntityData] = useState<ILookupWizardEntityData | null>(null);
@@ -143,9 +143,9 @@ export const CreateLookupDrawer: React.FC<CreateLookupDrawerProps> = observer(
           onCancel();
           return;
         }
-        if (event.key === 'Tab' && drawerRef.current) {
+        if (event.key === 'Tab' && wizardRef.current) {
           const focusableNodes = Array.from(
-            drawerRef.current.querySelectorAll<HTMLElement>(
+            wizardRef.current.querySelectorAll<HTMLElement>(
               'a[href], button, input, select, textarea, [tabindex]',
             ),
           ).filter(node => {
@@ -374,7 +374,7 @@ export const CreateLookupDrawer: React.FC<CreateLookupDrawerProps> = observer(
     };
 
     return (
-      <div className={S.drawer} role="dialog" aria-modal="true" ref={drawerRef}>
+      <div className={S.drawer} role="dialog" aria-modal="true" ref={wizardRef}>
         <div className={S.header}>
           <div className={S.headerIcon}>L</div>
           <div className={S.headerText}>

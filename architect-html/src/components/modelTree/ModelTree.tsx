@@ -22,10 +22,10 @@ import { CreateFilterType, ICreateWizardResult, ISearchResult } from '@api/IArch
 import { Icon } from '@components/icon/Icon';
 import S from '@components/modelTree/ModelTree.module.scss';
 import { TreeNode } from '@components/modelTree/TreeNode';
-import { CreateLookupDrawer } from '@components/modelTree/createWizard/CreateLookupDrawer';
-import { CreateScreenDrawer } from '@components/modelTree/createWizard/CreateScreenDrawer';
-import { CreateWorkQueueDrawer } from '@components/modelTree/createWizard/CreateWorkQueueDrawer';
-import { CreateMenuItemDrawer } from '@components/modelTree/createWizard/CreateMenuItemDrawer';
+import { CreateLookupWizard } from '@components/modelTree/createWizard/CreateLookupWizard';
+import { CreateScreenWizard } from '@components/modelTree/createWizard/CreateScreenWizard';
+import { CreateWorkQueueWizard } from '@components/modelTree/createWizard/CreateWorkQueueWizard';
+import { CreateMenuItemWizard } from '@components/modelTree/createWizard/CreateMenuItemWizard';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { observer } from 'mobx-react-lite';
 import { useContext, useEffect, useRef } from 'react';
@@ -152,10 +152,10 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
     });
   }
 
-  function openCreateLookupDrawer() {
+  function openCreateLookupWizard() {
     const closeDialog = rootStore.dialogStack.pushDialog(
       '',
-      <CreateLookupDrawer
+      <CreateLookupWizard
         entityId={node.origamId}
         parentNodeName={node.nodeText}
         onCancel={() => closeDialog()}
@@ -174,10 +174,10 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
     );
   }
 
-  function openCreateScreenDrawer() {
+  function openCreateScreenWizard() {
     const closeDialog = rootStore.dialogStack.pushDialog(
       '',
-      <CreateScreenDrawer
+      <CreateScreenWizard
         entityId={node.origamId}
         parentNodeName={node.nodeText}
         onCancel={() => closeDialog()}
@@ -196,10 +196,10 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
     );
   }
 
-  function openCreateWorkQueueDrawer() {
+  function openCreateWorkQueueWizard() {
     const closeDialog = rootStore.dialogStack.pushDialog(
       '',
-      <CreateWorkQueueDrawer
+      <CreateWorkQueueWizard
         entityId={node.origamId}
         parentNodeName={node.nodeText}
         onCancel={() => closeDialog()}
@@ -231,10 +231,10 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
     });
   }
 
-  function openCreateMenuItemDrawer() {
+  function openCreateMenuItemWizard() {
     const closeDialog = rootStore.dialogStack.pushDialog(
       '',
-      <CreateMenuItemDrawer
+      <CreateMenuItemWizard
         formId={node.origamId}
         parentNodeName={node.nodeText}
         onCancel={() => closeDialog()}
@@ -315,20 +315,20 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
             </Submenu>
             {node.isDataEntity && (
               <Submenu label="Actions">
-                <Item id="create-lookup" onClick={openCreateLookupDrawer}>
+                <Item id="create-lookup" onClick={openCreateLookupWizard}>
                   Create Lookup
                 </Item>
-                <Item id="create-screen" onClick={openCreateScreenDrawer}>
+                <Item id="create-screen" onClick={openCreateScreenWizard}>
                   Create Screen
                 </Item>
-                <Item id="create-workqueue" onClick={openCreateWorkQueueDrawer}>
+                <Item id="create-workqueue" onClick={openCreateWorkQueueWizard}>
                   Create Workqueue class
                 </Item>
               </Submenu>
             )}
             {node.isScreen && (
               <Submenu label="Actions">
-                <Item id="create-menu-item" onClick={openCreateMenuItemDrawer}>
+                <Item id="create-menu-item" onClick={openCreateMenuItemWizard}>
                   Create Menu Item
                 </Item>
               </Submenu>

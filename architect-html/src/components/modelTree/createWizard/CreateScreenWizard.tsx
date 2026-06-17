@@ -17,14 +17,14 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import S from '@components/modelTree/createWizard/CreateLookupDrawer.module.scss';
+import S from '@components/modelTree/createWizard/CreateWizard.module.scss';
 import { observer } from 'mobx-react-lite';
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { RootStoreContext } from '@/main';
 import { ICreateWizardResult, IScreenWizardData } from '@api/IArchitectApi';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 
-interface CreateScreenDrawerProps {
+interface CreateScreenWizardProps {
   entityId: string;
   parentNodeName: string;
   onCancel: () => void;
@@ -43,7 +43,7 @@ const STEPS = [
   { label: 'Review', hint: 'Confirm and create' },
 ];
 
-export const CreateScreenDrawer: React.FC<CreateScreenDrawerProps> = observer(
+export const CreateScreenWizard: React.FC<CreateScreenWizardProps> = observer(
   ({ entityId, parentNodeName, onCancel, onCreate }) => {
     const rootStore = useContext(RootStoreContext);
     const run = useMemo(
@@ -61,7 +61,7 @@ export const CreateScreenDrawer: React.FC<CreateScreenDrawerProps> = observer(
       selectedFieldIds: new Set<string>(),
     });
 
-    const drawerRef = useRef<HTMLDivElement | null>(null);
+    const wizardRef = useRef<HTMLDivElement | null>(null);
     const formContentRef = useRef<HTMLDivElement | null>(null);
     const nameManuallyEditedRef = useRef(false);
 
@@ -102,7 +102,7 @@ export const CreateScreenDrawer: React.FC<CreateScreenDrawerProps> = observer(
     useEffect(() => {
       const trapFocus = (event: KeyboardEvent) => {
         if (event.key !== 'Tab') return;
-        const drawer = drawerRef.current;
+        const drawer = wizardRef.current;
         if (!drawer) return;
         const focusableNodes = Array.from(
           drawer.querySelectorAll<HTMLElement>(
@@ -411,7 +411,7 @@ export const CreateScreenDrawer: React.FC<CreateScreenDrawerProps> = observer(
     };
 
     return (
-      <div className={S.drawer} role="dialog" aria-modal="true" ref={drawerRef}>
+      <div className={S.drawer} role="dialog" aria-modal="true" ref={wizardRef}>
         <div className={S.header}>
           <div className={S.headerIcon}>S</div>
           <div className={S.headerText}>
