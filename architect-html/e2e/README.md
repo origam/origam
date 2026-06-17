@@ -27,6 +27,7 @@ running.
 yarn test:e2e:integration       # headless
 yarn test:e2e:integration --headed
 yarn test:e2e:integration:ui    # UI Mode
+yarn test:e2e:codegen
 ```
 
 This uses [`playwright.integration.config.ts`](../playwright.integration.config.ts),
