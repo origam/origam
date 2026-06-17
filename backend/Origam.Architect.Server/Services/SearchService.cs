@@ -67,7 +67,10 @@ public class SearchService(
     public List<SearchResult> BuildResults(IEnumerable<ISchemaItem> items)
     {
         List<Guid> referencePackages = GetReferencePackages();
-        return items.Where(x => x != null).Select(x => GetResult(x, referencePackages)).ToList();
+        return items
+            .Where(item => item != null)
+            .Select(item => GetResult(item, referencePackages))
+            .ToList();
     }
 
     private List<Guid> GetReferencePackages()

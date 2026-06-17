@@ -47,6 +47,29 @@ public class WizardService(
 {
     private readonly IPersistenceProvider persistenceProvider = persistenceService.SchemaProvider;
 
+    private const string AllRoles = "*";
+    private const string DbParamPrefix = "par";
+    private const string RefColumnPrefix = "ref";
+    private const string TempTablePrefix = "tmptable";
+    private const string DefaultDisplayColumnName = "Name";
+    private const string PanelTitlePropertyName = "PanelTitle";
+    private const string BetweenFunctionName = "Between";
+    private const string BetweenExpressionChildName = "Expression";
+    private const string BetweenLeftChildName = "Left";
+    private const string BetweenRightChildName = "Right";
+
+    private record FilterDefinition(string FunctionName, string Prefix, bool CreateParameter);
+
+    private static readonly Dictionary<CreateFilterType, FilterDefinition> FilterDefinitions =
+        new()
+        {
+            [CreateFilterType.Equal] = new("Equal", "GetBy", CreateParameter: false),
+            [CreateFilterType.EqualParam] = new("Equal", "GetBy", CreateParameter: true),
+            [CreateFilterType.Like] = new("Like", "GetLike", CreateParameter: false),
+            [CreateFilterType.LikeParam] = new("Like", "GetLike", CreateParameter: true),
+            [CreateFilterType.InList] = new("In", "GetBy", CreateParameter: true),
+        };
+
     public CreateWizardResult CreateFilter(CreateFilterModel input)
     {
         var column =
@@ -60,47 +83,23 @@ public class WizardService(
 
         var generated = new List<ISchemaItem>();
         _ = transaction.Run(() =>
-            input.FilterType switch
+        {
+            if (input.FilterType == CreateFilterType.Between)
             {
-                CreateFilterType.Equal => EntityHelper.CreateFilter(
-                    field: column,
-                    functionName: "Equal",
-                    filterPrefix: "GetBy",
-                    createParameter: false,
-                    generatedElements: generated
-                ),
-                CreateFilterType.EqualParam => EntityHelper.CreateFilter(
-                    field: column,
-                    functionName: "Equal",
-                    filterPrefix: "GetBy",
-                    createParameter: true,
-                    generatedElements: generated
-                ),
-                CreateFilterType.Like => EntityHelper.CreateFilter(
-                    field: column,
-                    functionName: "Like",
-                    filterPrefix: "GetLike",
-                    createParameter: false,
-                    generatedElements: generated
-                ),
-                CreateFilterType.LikeParam => EntityHelper.CreateFilter(
-                    field: column,
-                    functionName: "Like",
-                    filterPrefix: "GetLike",
-                    createParameter: true,
-                    generatedElements: generated
-                ),
-                CreateFilterType.InList => EntityHelper.CreateFilter(
-                    field: column,
-                    functionName: "In",
-                    filterPrefix: "GetBy",
-                    createParameter: true,
-                    generatedElements: generated
-                ),
-                CreateFilterType.Between => CreateBetweenFilter(column, generated),
-                _ => throw new UserOrigamException($"Unknown filter type '{input.FilterType}'."),
+                return CreateBetweenFilter(column, generated);
             }
-        );
+            if (!FilterDefinitions.TryGetValue(input.FilterType, out var definition))
+            {
+                throw new UserOrigamException($"Unknown filter type '{input.FilterType}'.");
+            }
+            return EntityHelper.CreateFilter(
+                field: column,
+                functionName: definition.FunctionName,
+                filterPrefix: definition.Prefix,
+                createParameter: definition.CreateParameter,
+                generatedElements: generated
+            );
+        });
 
         return new CreateWizardResult { SearchResults = searchService.BuildResults(generated) };
     }
@@ -116,7 +115,9 @@ public class WizardService(
         }
         var schemaService = ServiceManager.Services.GetService<ISchemaService>();
         var entity = (IDataEntity)field.ParentItem;
-        var baseName = field.Name.StartsWith("ref") ? field.Name.Substring(3) : field.Name;
+        var baseName = field.Name.StartsWith(RefColumnPrefix)
+            ? field.Name.Substring(RefColumnPrefix.Length)
+            : field.Name;
 
         var paramFrom = entity.NewItem<DatabaseParameter>(
             schemaExtensionId: schemaService.ActiveSchemaExtensionId,
@@ -124,7 +125,7 @@ public class WizardService(
         );
         paramFrom.DataType = field.DataType;
         paramFrom.DataLength = field.DataLength;
-        paramFrom.Name = "par" + baseName + "From";
+        paramFrom.Name = $"{DbParamPrefix}{baseName}From";
         paramFrom.Persist();
         generated.Add(paramFrom);
 
@@ -134,7 +135,7 @@ public class WizardService(
         );
         paramTo.DataType = field.DataType;
         paramTo.DataLength = field.DataLength;
-        paramTo.Name = "par" + baseName + "To";
+        paramTo.Name = $"{DbParamPrefix}{baseName}To";
         paramTo.Persist();
         generated.Add(paramTo);
 
@@ -142,7 +143,7 @@ public class WizardService(
             schemaExtensionId: schemaService.ActiveSchemaExtensionId,
             group: null
         );
-        filter.Name = "GetBetween" + baseName;
+        filter.Name = $"GetBetween{baseName}";
         filter.Persist();
         generated.Add(filter);
 
@@ -152,16 +153,19 @@ public class WizardService(
         );
         var functionProvider = schemaService.GetProvider<FunctionSchemaItemProvider>();
         var betweenFunction = (Function)
-            functionProvider.GetChildByName(name: "Between", itemType: Function.CategoryConst);
+            functionProvider.GetChildByName(
+                name: BetweenFunctionName,
+                itemType: Function.CategoryConst
+            );
         if (betweenFunction == null)
         {
             throw new Exception("Between function not found. Cannot create filter.");
         }
         call.Function = betweenFunction;
-        call.Name = "Between";
+        call.Name = BetweenFunctionName;
         call.Persist();
 
-        var expressionRef = call.GetChildByName(name: "Expression")
+        var expressionRef = call.GetChildByName(name: BetweenExpressionChildName)
             .NewItem<EntityColumnReference>(
                 schemaExtensionId: schemaService.ActiveSchemaExtensionId,
                 group: null
@@ -169,7 +173,7 @@ public class WizardService(
         expressionRef.Field = field;
         expressionRef.Persist();
 
-        var leftRef = call.GetChildByName(name: "Left")
+        var leftRef = call.GetChildByName(name: BetweenLeftChildName)
             .NewItem<ParameterReference>(
                 schemaExtensionId: schemaService.ActiveSchemaExtensionId,
                 group: null
@@ -177,7 +181,7 @@ public class WizardService(
         leftRef.Parameter = paramFrom;
         leftRef.Persist();
 
-        var rightRef = call.GetChildByName(name: "Right")
+        var rightRef = call.GetChildByName(name: BetweenRightChildName)
             .NewItem<ParameterReference>(
                 schemaExtensionId: schemaService.ActiveSchemaExtensionId,
                 group: null
@@ -195,13 +199,13 @@ public class WizardService(
             ?? throw new UserOrigamException($"Entity {entityId} not found");
 
         var columns = entity
-            .EntityColumns.Where(c => !string.IsNullOrEmpty(c.ToString()))
-            .OrderBy(c => c.Name)
-            .Select(c => new ScreenWizardColumn
+            .EntityColumns.Where(column => !string.IsNullOrEmpty(column.ToString()))
+            .OrderBy(column => column.Name)
+            .Select(column => new ScreenWizardColumn
             {
-                Id = c.Id,
-                Name = c.Name,
-                IsPrimaryKey = c.IsPrimaryKey,
+                Id = column.Id,
+                Name = column.Name,
+                IsPrimaryKey = column.IsPrimaryKey,
             })
             .ToList();
 
@@ -212,7 +216,7 @@ public class WizardService(
         var existingNames =
             dsProvider
                 ?.ChildItemsByType<ISchemaItem>(AbstractDataStructure.CategoryConst)
-                .Select(x => x.Name)
+                .Select(item => item.Name)
                 .ToList() ?? new List<string>();
 
         return new ScreenWizardData
@@ -246,8 +250,8 @@ public class WizardService(
             as DataStructureSchemaItemProvider;
         var duplicate = dsProvider
             ?.ChildItemsByType<ISchemaItem>(AbstractDataStructure.CategoryConst)
-            .FirstOrDefault(x =>
-                string.Equals(x.Name, trimmedName, StringComparison.OrdinalIgnoreCase)
+            .FirstOrDefault(item =>
+                string.Equals(item.Name, trimmedName, StringComparison.OrdinalIgnoreCase)
             );
         if (duplicate != null)
         {
@@ -260,7 +264,7 @@ public class WizardService(
         foreach (var fieldId in input.SelectedFieldIds)
         {
             var column =
-                entity.EntityColumns.FirstOrDefault(c => c.Id == fieldId)
+                entity.EntityColumns.FirstOrDefault(column => column.Id == fieldId)
                 ?? throw new UserOrigamException($"Field {fieldId} not found on entity.");
             selectedNames[column.Name] = true;
         }
@@ -269,10 +273,14 @@ public class WizardService(
 
         var (dataStructure, panel, form) = transaction.Run(() =>
         {
-            var ds = EntityHelper.CreateDataStructure(entity, input.Name, persist: true);
-            var p = GuiHelper.CreatePanel(groupName, entity, selectedNames, input.Name);
-            var f = GuiHelper.CreateForm(ds, groupName, p);
-            return (ds, p, f);
+            var newDataStructure = EntityHelper.CreateDataStructure(
+                entity,
+                input.Name,
+                persist: true
+            );
+            var newPanel = GuiHelper.CreatePanel(groupName, entity, selectedNames, input.Name);
+            var newForm = GuiHelper.CreateForm(newDataStructure, groupName, newPanel);
+            return (newDataStructure, newPanel, newForm);
         });
 
         if (!string.IsNullOrWhiteSpace(input.Caption) && panel.ChildItems.Count > 0)
@@ -282,7 +290,9 @@ public class WizardService(
                 var rootControl = panel.ChildItems[0];
                 var titleProp = rootControl
                     .ChildItemsByType<PropertyValueItem>(PropertyValueItem.CategoryConst)
-                    .FirstOrDefault(p => p.ControlPropertyItem?.Name == "PanelTitle");
+                    .FirstOrDefault(prop =>
+                        prop.ControlPropertyItem?.Name == PanelTitlePropertyName
+                    );
                 if (titleProp != null)
                 {
                     titleProp.Value = input.Caption.Trim();
@@ -312,7 +322,7 @@ public class WizardService(
         foreach (var fieldId in input.SelectedFieldIds)
         {
             var column =
-                entity.EntityColumns.FirstOrDefault(c => c.Id == fieldId)
+                entity.EntityColumns.FirstOrDefault(column => column.Id == fieldId)
                 ?? throw new UserOrigamException($"Field {fieldId} not found on entity.");
             selectedColumns.Add(column);
         }
@@ -351,7 +361,7 @@ public class WizardService(
             {
                 continue;
             }
-            string tmpTable = $"tmptable{Guid.NewGuid()}";
+            string tmpTable = $"{TempTablePrefix}{Guid.NewGuid()}";
             tmpTables.Add(tmpTable);
             output.AppendLine(sqlGenerator.CreateOutputTableSql(tmpTable));
             output.AppendLine("-----------------------------------------------------------------");
@@ -392,7 +402,7 @@ public class WizardService(
             persistenceProvider.RetrieveInstance<FormControlSet>(input.FormId)
             ?? throw new UserOrigamException($"Screen (FormControlSet) {input.FormId} not found");
 
-        var role = string.IsNullOrWhiteSpace(input.Role) ? "*" : input.Role.Trim();
+        var role = string.IsNullOrWhiteSpace(input.Role) ? AllRoles : input.Role.Trim();
 
         var generated = new List<ISchemaItem>();
         _ = transaction.Run(() =>
@@ -404,7 +414,7 @@ public class WizardService(
             var deploymentProvider = schemaService?.GetProvider<DeploymentSchemaItemProvider>();
             var hasCurrentVersion = deploymentProvider?.CurrentVersion() != null;
 
-            if (role != "*" && role != "" && hasCurrentVersion)
+            if (role != AllRoles && role != "" && hasCurrentVersion)
             {
                 var settings = ConfigurationManager.GetActiveConfiguration();
                 var activeSqlDataService =
@@ -446,23 +456,27 @@ public class WizardService(
             ?? throw new UserOrigamException($"Entity {entityId} not found");
 
         var primaryKey =
-            entity.EntityColumns.FirstOrDefault(c => c.IsPrimaryKey && !c.ExcludeFromAllFields)
+            entity.EntityColumns.FirstOrDefault(column =>
+                column.IsPrimaryKey && !column.ExcludeFromAllFields
+            )
             ?? throw new UserOrigamException(
                 "Entity has no primary key defined. Cannot create lookup."
             );
 
         var columns = entity
-            .EntityColumns.Where(c => !string.IsNullOrEmpty(c.ToString()))
-            .OrderBy(c => c.Name)
-            .Select(c => new IdName { Id = c.Id, Name = c.Name })
+            .EntityColumns.Where(column => !string.IsNullOrEmpty(column.ToString()))
+            .OrderBy(column => column.Name)
+            .Select(column => new IdName { Id = column.Id, Name = column.Name })
             .ToList();
 
         var filters = entity
-            .EntityFilters.OrderBy(f => f.Name)
-            .Select(f => new IdName { Id = f.Id, Name = f.Name })
+            .EntityFilters.OrderBy(filter => filter.Name)
+            .Select(filter => new IdName { Id = filter.Id, Name = filter.Name })
             .ToList();
 
-        var defaultDisplay = entity.EntityColumns.FirstOrDefault(c => c.Name == "Name");
+        var defaultDisplay = entity.EntityColumns.FirstOrDefault(column =>
+            column.Name == DefaultDisplayColumnName
+        );
 
         return new LookupWizardData
         {
@@ -487,22 +501,23 @@ public class WizardService(
             ?? throw new UserOrigamException($"Entity {input.EntityId} not found");
 
         var idColumn =
-            entity.EntityColumns.FirstOrDefault(c => c.IsPrimaryKey && !c.ExcludeFromAllFields)
-            ?? throw new UserOrigamException("Entity has no primary key defined.");
+            entity.EntityColumns.FirstOrDefault(column =>
+                column.IsPrimaryKey && !column.ExcludeFromAllFields
+            ) ?? throw new UserOrigamException("Entity has no primary key defined.");
 
         var displayColumn =
-            entity.EntityColumns.FirstOrDefault(c => c.Id == input.DisplayFieldId)
+            entity.EntityColumns.FirstOrDefault(column => column.Id == input.DisplayFieldId)
             ?? throw new UserOrigamException("Display field not found on entity.");
 
         var idFilter =
-            entity.EntityFilters.FirstOrDefault(f => f.Id == input.IdFilterId)
+            entity.EntityFilters.FirstOrDefault(filter => filter.Id == input.IdFilterId)
             ?? throw new UserOrigamException("Id filter not found on entity.");
 
         EntityFilter listFilter = null;
         if (input.ListFilterId.HasValue && input.ListFilterId.Value != Guid.Empty)
         {
             listFilter =
-                entity.EntityFilters.FirstOrDefault(f => f.Id == input.ListFilterId.Value)
+                entity.EntityFilters.FirstOrDefault(filter => filter.Id == input.ListFilterId.Value)
                 ?? throw new UserOrigamException("List filter not found on entity.");
         }
 
