@@ -89,27 +89,7 @@ export default defineConfig({
         target: 'http://localhost:5003',
         secure: false,
       },
-      '/FilterWizard': {
-        target: 'https://localhost:7099',
-        secure: false,
-      },
-      '/ScreenWizard': {
-        target: 'https://localhost:7099',
-        secure: false,
-      },
-      '/WorkQueueWizard': {
-        target: 'https://localhost:7099',
-        secure: false,
-      },
-      '/SqlWizard': {
-        target: 'https://localhost:7099',
-        secure: false,
-      },
-      '/MenuWizard': {
-        target: 'https://localhost:7099',
-        secure: false,
-      },
-      '/LookupWizard': {
+      '/wizards': {
         target: 'https://localhost:7099',
         secure: false,
       },

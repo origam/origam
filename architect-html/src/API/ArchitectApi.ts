@@ -312,27 +312,27 @@ export class ArchitectApi implements IArchitectApi {
 
   async getLookupWizardEntityData(entityId: string): Promise<ILookupWizardEntityData> {
     return (
-      await this.http.get('/LookupWizard/GetLookupWizardData', {
+      await this.http.get('/wizards/lookups/form-data', {
         params: { entityId },
       })
     ).data;
   }
 
   async createLookup(request: ICreateLookupRequest): Promise<ICreateWizardResult> {
-    return (await this.http.post('/LookupWizard/CreateLookup', request)).data;
+    return (await this.http.post('/wizards/lookups', request)).data;
   }
 
   async createFilter(
     request: import('@api/IArchitectApi').ICreateFilterRequest,
   ): Promise<import('@api/IArchitectApi').ICreateWizardResult> {
-    return (await this.http.post('/FilterWizard/CreateFilter', request)).data;
+    return (await this.http.post('/wizards/filters', request)).data;
   }
 
   async getScreenWizardData(
     entityId: string,
   ): Promise<import('@api/IArchitectApi').IScreenWizardData> {
     return (
-      await this.http.get('/ScreenWizard/GetScreenWizardData', {
+      await this.http.get('/wizards/screens/form-data', {
         params: { entityId },
       })
     ).data;
@@ -341,29 +341,25 @@ export class ArchitectApi implements IArchitectApi {
   async createScreen(
     request: import('@api/IArchitectApi').ICreateScreenRequest,
   ): Promise<import('@api/IArchitectApi').ICreateWizardResult> {
-    return (await this.http.post('/ScreenWizard/CreateScreen', request)).data;
+    return (await this.http.post('/wizards/screens', request)).data;
   }
 
   async createWorkQueueClass(
     request: import('@api/IArchitectApi').ICreateWorkQueueRequest,
   ): Promise<import('@api/IArchitectApi').ICreateWizardResult> {
-    return (await this.http.post('/WorkQueueWizard/CreateWorkQueueClass', request)).data;
+    return (await this.http.post('/wizards/work-queue-classes', request)).data;
   }
 
   async createMenuItem(
     request: import('@api/IArchitectApi').ICreateMenuItemRequest,
   ): Promise<import('@api/IArchitectApi').ICreateWizardResult> {
-    return (await this.http.post('/MenuWizard/CreateMenuItem', request)).data;
+    return (await this.http.post('/wizards/menu-items', request)).data;
   }
 
   async getDataStructureSql(
     dataStructureId: string,
   ): Promise<import('@api/IArchitectApi').IGetDataStructureSqlResult> {
-    return (
-      await this.http.get('/SqlWizard/GetDataStructureSql', {
-        params: { dataStructureId },
-      })
-    ).data;
+    return (await this.http.get(`/wizards/data-structures/${dataStructureId}/sql`)).data;
   }
 }
 

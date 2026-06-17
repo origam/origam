@@ -21,7 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Collections;
 using System.Text;
-using Origam.Architect.Server.Interfaces.Services;
 using Origam.Architect.Server.Models.Requests.Wizards;
 using Origam.Architect.Server.Models.Responses.Wizards;
 using Origam.DA;
@@ -44,7 +43,7 @@ public class WizardService(
     IPersistenceService persistenceService,
     ModelTransactionRunner transaction,
     SearchService searchService
-) : IFilterWizard, IScreenWizard, IWorkQueueWizard, ISqlWizard, IMenuWizard, ILookupWizard
+)
 {
     private readonly IPersistenceProvider persistenceProvider = persistenceService.SchemaProvider;
 

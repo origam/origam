@@ -73,20 +73,6 @@ public class Program
         builder.Services.AddSingleton<IAddToDeploymentService, AddToDeploymentService>();
         builder.Services.AddSingleton<IAddToModelService, AddToModelService>();
         builder.Services.AddSingleton<WizardService>();
-        builder.Services.AddSingleton<IFilterWizard>(sp =>
-            sp.GetRequiredService<WizardService>()
-        );
-        builder.Services.AddSingleton<IScreenWizard>(sp =>
-            sp.GetRequiredService<WizardService>()
-        );
-        builder.Services.AddSingleton<IWorkQueueWizard>(sp =>
-            sp.GetRequiredService<WizardService>()
-        );
-        builder.Services.AddSingleton<ISqlWizard>(sp => sp.GetRequiredService<WizardService>());
-        builder.Services.AddSingleton<IMenuWizard>(sp => sp.GetRequiredService<WizardService>());
-        builder.Services.AddSingleton<ILookupWizard>(sp =>
-            sp.GetRequiredService<WizardService>()
-        );
         builder.Services.AddSingleton<IPlatformResolveService, PlatformResolveService>();
         builder.Services.AddSingleton<
             ISchemaDbCompareResultsService,
