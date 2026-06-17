@@ -60,15 +60,14 @@ public class WizardService(
 
     private record FilterDefinition(string FunctionName, string Prefix, bool CreateParameter);
 
-    private static readonly Dictionary<CreateFilterType, FilterDefinition> FilterDefinitions =
-        new()
-        {
-            [CreateFilterType.Equal] = new("Equal", "GetBy", CreateParameter: false),
-            [CreateFilterType.EqualParam] = new("Equal", "GetBy", CreateParameter: true),
-            [CreateFilterType.Like] = new("Like", "GetLike", CreateParameter: false),
-            [CreateFilterType.LikeParam] = new("Like", "GetLike", CreateParameter: true),
-            [CreateFilterType.InList] = new("In", "GetBy", CreateParameter: true),
-        };
+    private static readonly Dictionary<CreateFilterType, FilterDefinition> FilterDefinitions = new()
+    {
+        [CreateFilterType.Equal] = new("Equal", "GetBy", CreateParameter: false),
+        [CreateFilterType.EqualParam] = new("Equal", "GetBy", CreateParameter: true),
+        [CreateFilterType.Like] = new("Like", "GetLike", CreateParameter: false),
+        [CreateFilterType.LikeParam] = new("Like", "GetLike", CreateParameter: true),
+        [CreateFilterType.InList] = new("In", "GetBy", CreateParameter: true),
+    };
 
     public CreateWizardResult CreateFilter(CreateFilterModel input)
     {
