@@ -157,13 +157,18 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
     <>
       <div ref={nodeRef} className={rowClassNames} style={{ paddingLeft: `${level * 20}px` }}>
         <div className={S.treeNodeTitle}>
-          <div className={S.symbol} onClick={onToggle}>
+          <div
+            className={S.symbol}
+            onClick={onToggle}
+            data-testid={`tree-toggle-${node.nodeText}`}
+          >
             {getSymbol()}
           </div>
           <div
             onDoubleClick={() => onNodeDoubleClick(node)}
             onContextMenu={handleContextMenu}
             className={labelClassNames}
+            data-testid={`tree-node-${node.nodeText}`}
           >
             <div className={S.icon}>
               <Icon src={node.iconUrl ?? '/Icons/generic.svg'} />
