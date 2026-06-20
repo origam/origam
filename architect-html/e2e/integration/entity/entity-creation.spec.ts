@@ -18,34 +18,31 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { expect, test } from '@playwright/test';
+import { resetBackend } from '../support/resetBackend';
 
 test.describe('Database Entity creation (real backend)', () => {
+  test.beforeEach(async ({ request }) => {
+    await resetBackend(request);
+  });
+
   test('Database Entity creation', async ({ page }) => {
-    await page.goto('/');
+      await page.goto('/');
 
-    await expect(page.getByRole('img', { name: 'ORIGAM' })).toBeVisible();
-
-    await page.getByText('Root Menu').click();
-    await expect(page.getByRole('textbox', { name: 'Search' })).toBeVisible();
-
-    await page.getByTestId('tree-toggle-Data').click();
-    await page.getByTestId('tree-toggle-Entities').click();
-    await page.getByTestId('tree-node-Work Queue').click({
-      button: 'right',
-    });
-    await expect(page.getByRole('menuitem', { name: 'New Database Entity Virtual' })).toBeVisible();
-
-    await page.getByText('New').click();
-    await page.getByText('Database Entity').click();
-    await expect(page.getByRole('button', { name: 'Info' })).toBeVisible();
-
-    await page
-      .locator('div')
-      .filter({ hasText: /^Save$/ })
-      .nth(2)
-      .click();
-    await page.getByRole('img').nth(5).click();
-    await page.getByTestId('tree-toggle-Work Queue').click();
-    await expect(page.getByTestId('tree-node-NewTable').first()).toBeVisible();
+      await page.getByText('Root Menu').click();
+      await page.getByTestId('tree-toggle-Data').click();
+      await page.getByTestId('tree-toggle-Data Structures').click();
+      await page.getByTestId('tree-toggle-Dimensions').click();
+      await page.getByTestId('tree-node-Dimensions').click({
+          button: 'right'
+      });
+      await page.getByTestId('tree-menu-new').getByText('New').click();
+      await page.getByTestId('tree-menu-new-Origam.Schema.EntityModel.DataStructure').getByText('Data Structure').click();
+      await page.getByRole('textbox', { name: 'NewDataStructure' }).click();
+      await page.getByRole('textbox', { name: 'NewDataStructure' }).fill('NewDataStructure44');
+      await page.getByTestId('save-button').click();
+      await expect(page.getByTestId('save-button-disabled')).toBeVisible();
+      await page.getByTestId('tab-close-NewDataStructure44').getByRole('img').click();
+      await page.getByTestId('tree-node-NewDataStructure44').dblclick();
+      await expect(page.locator('#root')).toContainText('Data Structure: NewDataStructure44');
   });
 });

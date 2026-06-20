@@ -54,6 +54,7 @@ const GuidGeneratorButton = () => {
       }
       prefix={<VscSymbolNumeric />}
       onClick={handleOnClick}
+      dataTestId="topbar-generate-guid"
     />
   );
 };

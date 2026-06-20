@@ -88,6 +88,7 @@ const SearchInput = observer(() => {
       <VscSearch className={S.searchIcon} />
       <input
         className={S.input}
+        data-testid="topbar-search-input"
         placeholder={T('Search', 'search_placeholder')}
         value={query}
         onChange={event => onQueryChange(event.target.value)}

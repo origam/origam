@@ -72,13 +72,18 @@ export const TabHeader = observer(({ tab }: { tab: ITabState }) => {
       key={tab.label}
       className={S.root + ' ' + (tab.isActive ? S.activeTab : '')}
       onClick={() => action(() => state.setActiveEditor(tab.tabId))()}
+      data-testid={`tab-${tab.label}`}
     >
       <div className={S.title} onContextMenu={handleContextMenu}>
         <span className={S.label}>{tab.label}</span>
-        {tab.isDirty && <span className={S.asterisk}>*</span>}
+        {tab.isDirty && (
+          <span className={S.asterisk} data-testid={`tab-dirty-${tab.label}`}>
+            *
+          </span>
+        )}
       </div>
 
-      <div className={S.close} onClick={() => onClose(tab)}>
+      <div className={S.close} onClick={() => onClose(tab)} data-testid={`tab-close-${tab.label}`}>
         <VscClose />
       </div>
 

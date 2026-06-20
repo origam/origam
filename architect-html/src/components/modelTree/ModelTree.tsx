@@ -176,11 +176,12 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
             {node.nodeText}
           </div>
           <Menu id={menuId} onVisibilityChange={onMenuVisibilityChange}>
-            <Submenu label="New">
+            <Submenu label="New" data-testid="tree-menu-new">
               {node.contextMenuItems.map(item => (
                 <Item
                   key={item.typeName + item.caption}
                   id={item.typeName}
+                  data-testid={`tree-menu-new-${item.typeName}`}
                   onClick={() => run({ generator: node.createNode(item.typeName) })}
                 >
                   {item.caption}
@@ -189,39 +190,51 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
             </Submenu>
             <Separator />
             {!node.isNonPersistentItem && (
-              <Item id="edit" onClick={() => onNodeDoubleClick(node)}>
+              <Item id="edit" data-testid="tree-menu-edit" onClick={() => onNodeDoubleClick(node)}>
                 {T('Edit', 'tree_node_edit')}
               </Item>
             )}
             {!node.isNonPersistentItem && (
-              <Item id="delete" onClick={onDelete}>
+              <Item id="delete" data-testid="tree-menu-delete" onClick={onDelete}>
                 {T('Delete', 'tree_node_delete')}
               </Item>
             )}
             {!node.isNonPersistentItem && (
-              <Item id="documentation" onClick={openDocumentationEditor}>
+              <Item
+                id="documentation"
+                data-testid="tree-menu-documentation"
+                onClick={openDocumentationEditor}
+              >
                 {T('Documentation', 'tree_node_documentation')}
               </Item>
             )}
             {!node.isNonPersistentItem && (
-              <Item id="references" onClick={findReferences}>
+              <Item id="references" data-testid="tree-menu-references" onClick={findReferences}>
                 {T('Find references', 'tree_node_references')}
               </Item>
             )}
             {!node.isNonPersistentItem && (
-              <Item id="dependencies" onClick={findDependencies}>
+              <Item id="dependencies" data-testid="tree-menu-dependencies" onClick={findDependencies}>
                 {T('Find dependencies', 'tree_node_dependencies')}
               </Item>
             )}
             {node.isDeploymentVersion && <Separator />}
             {node.isDeploymentVersion && (
-              <Item id="setVersionCurrent" onClick={setVersionCurrent}>
+              <Item
+                id="setVersionCurrent"
+                data-testid="tree-menu-set-version-current"
+                onClick={setVersionCurrent}
+              >
                 {T('Make version current', 'tree_node_make_version_current')}
               </Item>
             )}
             {node.isUpdateScriptActivity && <Separator />}
             {node.isUpdateScriptActivity && (
-              <Item id="runUpdateScriptActivity" onClick={runUpdateScriptActivity}>
+              <Item
+                id="runUpdateScriptActivity"
+                data-testid="tree-menu-run-update-script-activity"
+                onClick={runUpdateScriptActivity}
+              >
                 {T('Execute', 'tree_node_run_update_script_activity')}
               </Item>
             )}

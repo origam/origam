@@ -59,6 +59,10 @@ export default defineConfig({
         target: 'https://localhost:7099',
         secure: false,
       },
+      '/Test': {
+        target: 'https://localhost:7099',
+        secure: false,
+      },
       '/ScreenEditor': {
         target: 'https://localhost:7099',
         secure: false,

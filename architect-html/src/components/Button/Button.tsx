@@ -27,6 +27,7 @@ const Button = ({
   isDisabled,
   isAnimated,
   onClick,
+  dataTestId,
 }: {
   title: string | React.ReactNode;
   type: 'primary' | 'secondary';
@@ -34,6 +35,7 @@ const Button = ({
   isDisabled?: boolean;
   isAnimated?: boolean;
   onClick: () => void;
+  dataTestId?: string;
 }) => {
   return (
     <div
@@ -44,6 +46,8 @@ const Button = ({
         [S.animate]: isAnimated,
       })}
       onClick={onClick}
+      aria-disabled={isDisabled}
+      data-testid={dataTestId}
     >
       {prefix}
       <span>{title}</span>
