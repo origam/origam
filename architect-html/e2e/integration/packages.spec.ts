@@ -43,8 +43,7 @@ test.describe('Packages (real backend)', () => {
     // schema on the server (this is the path that requires the database).
     const setActive = page.waitForResponse(
       response =>
-        response.url().includes('/Package/SetActive') &&
-        response.request().method() === 'POST',
+        response.url().includes('/Package/SetActive') && response.request().method() === 'POST',
     );
     await attachments.click();
 

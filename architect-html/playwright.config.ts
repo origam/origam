@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { defineConfig, devices, type PlaywrightTestConfig } from '@playwright/test';
+import { devices, type PlaywrightTestConfig } from '@playwright/test';
 
 // The Vite dev server runs over HTTPS (vite-plugin-mkcert) on port 5173 and
 // proxies API calls to Origam.Architect.Server. We pin the port so the
@@ -43,8 +43,6 @@ export const frontendWebServer: NonNullable<PlaywrightTestConfig['webServer']> =
   timeout: 120_000,
 };
 
-// Settings shared between the smoke config (this file) and the integration
-// config (playwright.integration.config.ts).
 export const sharedConfig: PlaywrightTestConfig = {
   fullyParallel: true,
   // Fail the build if a test was accidentally committed with test.only.
@@ -67,11 +65,3 @@ export const sharedConfig: PlaywrightTestConfig = {
   },
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
 };
-
-// Smoke suite: only touches the app shell, so it needs no backend and runs in
-// the lightweight CI job. Integration tests live in playwright.integration.config.ts.
-export default defineConfig({
-  ...sharedConfig,
-  testDir: './e2e/smoke',
-  webServer: frontendWebServer,
-});

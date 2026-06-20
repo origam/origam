@@ -21,17 +21,17 @@ import { expect, test } from '@playwright/test';
 import { resetBackend } from '../support/resetBackend';
 
 test.describe('Search virtual entity test', () => {
-    test.beforeEach(async ({ request }) => {
-        await resetBackend(request);
-    });
+  test.beforeEach(async ({ request }) => {
+    await resetBackend(request);
+  });
 
-    test('Database Entity creation', async ({ page }) => {
-        await page.goto('/');
+  test('Database Entity creation', async ({ page }) => {
+    await page.goto('/');
 
-        await page.getByTestId('topbar-search-input').click();
-        await page.getByTestId('topbar-search-input').fill('Iactive');
-        await expect(page.locator('tbody')).toContainText('IActive');
-        await page.getByRole('cell', { name: 'Virtual Entity' }).first().click();
-        await expect(page.locator('tbody')).toContainText('Virtual Entity');
-    });
+    await page.getByTestId('topbar-search-input').click();
+    await page.getByTestId('topbar-search-input').fill('Iactive');
+    await expect(page.locator('tbody')).toContainText('IActive');
+    await page.getByRole('cell', { name: 'Virtual Entity' }).first().click();
+    await expect(page.locator('tbody')).toContainText('Virtual Entity');
+  });
 });

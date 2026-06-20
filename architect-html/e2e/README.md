@@ -1,33 +1,17 @@
 # End-to-end tests (Playwright)
 
-E2E tests for the Origam HTML Architect frontend. Two suites:
-
-- **`e2e/smoke`** — only touches the app shell, needs **no backend**. Runs in the
-  lightweight CI job (`architect-html-e2e.yml`).
-- **`e2e/integration`** — drives the frontend against a **real, running
-  `Origam.Architect.Server`** (and its database). Runs in the heavy CI job
-  (`architect-html-e2e-integration.yml`).
-
-## Running the smoke suite
-
-```bash
-yarn test:e2e          # headless (auto-starts the Vite dev server)
-yarn test:e2e:ui       # interactive UI Mode: pick tests, step through, time-travel
-yarn test:e2e:debug    # run with the Playwright Inspector attached
-yarn test:e2e:codegen  # record actions into a test by clicking through the app
-```
-
-Playwright starts `yarn dev` (HTTPS on https://localhost:5173) automatically and
-shuts it down afterwards. Locally it reuses a dev server you already have
-running.
+E2E tests for the Origam HTML Architect frontend. They live in **`e2e/integration`**
+and drive the frontend against a **real, running `Origam.Architect.Server`** (and
+its database). They run in CI via `architect-html-e2e-integration.yml`.
 
 ## Running the integration suite (real backend)
 
 ```bash
-yarn test:e2e:integration       # headless
+yarn test:e2e:integration         # headless
 yarn test:e2e:integration --headed
-yarn test:e2e:integration:ui    # UI Mode
-yarn test:e2e:codegen
+yarn test:e2e:integration:ui      # interactive UI Mode: pick tests, step through, time-travel
+yarn test:e2e:integration:debug   # run with the Playwright Inspector attached
+yarn test:e2e:codegen             # record actions by clicking through the running app
 ```
 
 This uses [`playwright.integration.config.ts`](../playwright.integration.config.ts),
@@ -46,11 +30,11 @@ What it needs:
 
 Override points (env vars):
 
-| Variable | Default | Purpose |
-|---|---|---|
-| `ARCHITECT_SERVER_URL` | `https://localhost:7099` | Where the server listens (readiness probe). |
-| `ARCHITECT_SERVER_DIR` | `../backend/.../bin/Debug/net8.0` | Folder of the server exe to launch. |
-| `ARCHITECT_SERVER_CMD` | run the exe in `ARCHITECT_SERVER_DIR` | Full command to start the server. |
+| Variable               | Default                               | Purpose                                     |
+| ---------------------- | ------------------------------------- | ------------------------------------------- |
+| `ARCHITECT_SERVER_URL` | `https://localhost:7099`              | Where the server listens (readiness probe). |
+| `ARCHITECT_SERVER_DIR` | `../backend/.../bin/Debug/net8.0`     | Folder of the server exe to launch.         |
+| `ARCHITECT_SERVER_CMD` | run the exe in `ARCHITECT_SERVER_DIR` | Full command to start the server.           |
 
 > The backend endpoints/ports must match the proxy targets in `vite.config.ts`
 > (`https://localhost:7099` and `http://localhost:5003`).
@@ -69,10 +53,10 @@ npx playwright show-trace test-results/<...>/trace.zip   # open a raw trace
 
 ### In CI
 
-Both workflows upload the HTML report (traces embedded) and the raw
-`test-results` (trace.zip / video / screenshots). The integration workflow also
-uploads the **Architect Server logs** (`architect-server-*.log`) — check those
-first when the failure is backend-side. Download an artifact, then:
+The workflow uploads the HTML report (traces embedded) and the raw
+`test-results` (trace.zip / video / screenshots), plus the **Architect Server
+logs** (`architect-server-*.log`) — check those first when the failure is
+backend-side. Download an artifact, then:
 
 ```bash
 npx playwright show-report path/to/playwright-report

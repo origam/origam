@@ -157,11 +157,7 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
     <>
       <div ref={nodeRef} className={rowClassNames} style={{ paddingLeft: `${level * 20}px` }}>
         <div className={S.treeNodeTitle}>
-          <div
-            className={S.symbol}
-            onClick={onToggle}
-            data-testid={`tree-toggle-${node.nodeText}`}
-          >
+          <div className={S.symbol} onClick={onToggle} data-testid={`tree-toggle-${node.nodeText}`}>
             {getSymbol()}
           </div>
           <div
@@ -214,7 +210,11 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
               </Item>
             )}
             {!node.isNonPersistentItem && (
-              <Item id="dependencies" data-testid="tree-menu-dependencies" onClick={findDependencies}>
+              <Item
+                id="dependencies"
+                data-testid="tree-menu-dependencies"
+                onClick={findDependencies}
+              >
                 {T('Find dependencies', 'tree_node_dependencies')}
               </Item>
             )}
