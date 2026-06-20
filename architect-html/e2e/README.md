@@ -1,69 +1,56 @@
 # End-to-end tests (Playwright)
 
-E2E tests for the Origam HTML Architect frontend. They live in **`e2e/integration`**
-and drive the frontend against a **real, running `Origam.Architect.Server`** (and
-its database). They run in CI via `architect-html-e2e-integration.yml`.
+End-to-end tests for the **Origam HTML Architect** frontend, powered by [Playwright](https://playwright.dev/).
 
-## Running the integration suite (real backend)
+The integration tests live in [`e2e/integration`](./integration) and run against a **real backend**.
 
-```bash
-yarn test:e2e:integration         # headless
-yarn test:e2e:integration --headed
-yarn test:e2e:integration:ui      # interactive UI Mode: pick tests, step through, time-travel
-yarn test:e2e:integration:debug   # run with the Playwright Inspector attached
-yarn test:e2e:codegen             # record actions by clicking through the running app
-```
+---
 
-This uses [`playwright.integration.config.ts`](../playwright.integration.config.ts),
-which starts **two** servers before the tests: the Architect Server, then the
-Vite dev server that proxies to it.
+## Prerequisites
 
-What it needs:
+Before running the integration suite, start both the backend and the frontend:
 
-- A reachable database. Locally that's `SQLEXPRESS` / `origam-demo` as set in the
-  server's `OrigamSettings.config`. The first package activation deploys into an
-  empty database automatically.
-- The built server. By default Playwright launches the local **Debug** build at
-  `../backend/Origam.Architect.Server/bin/Debug/net8.0`. If you already run the
-  server in Visual Studio, `reuseExistingServer` makes Playwright just wait for
-  it instead of starting a second copy.
+| Component | What to run |
+| --- | --- |
+| Backend | `Origam.Architect.Server` |
+| Frontend | `architect-html` dev server |
 
-Override points (env vars):
+> 📖 Setup instructions live in [`backend/Origam.Architect.Server/HOWTOSTART.md`](../../backend/Origam.Architect.Server/HOWTOSTART.md).
 
-| Variable               | Default                               | Purpose                                     |
-| ---------------------- | ------------------------------------- | ------------------------------------------- |
-| `ARCHITECT_SERVER_URL` | `https://localhost:7099`              | Where the server listens (readiness probe). |
-| `ARCHITECT_SERVER_DIR` | `../backend/.../bin/Debug/net8.0`     | Folder of the server exe to launch.         |
-| `ARCHITECT_SERVER_CMD` | run the exe in `ARCHITECT_SERVER_DIR` | Full command to start the server.           |
+---
 
-> The backend endpoints/ports must match the proxy targets in `vite.config.ts`
-> (`https://localhost:7099` and `http://localhost:5003`).
+## Running the integration suite
 
-## Debugging failures with the Trace Viewer
-
-A trace is a full timeline of every action, network request and DOM snapshot.
-It's captured automatically (`trace: 'on-first-retry'`) when a test fails and
-is retried.
+From the `architect-html` directory, run:
 
 ```bash
-yarn test:e2e:report                       # open the HTML report; click a failed
-                                           # test to launch its trace
-npx playwright show-trace test-results/<...>/trace.zip   # open a raw trace
+yarn test:e2e:integration:ui
 ```
 
-### In CI
+This opens the Playwright UI runner so you can watch and debug the tests interactively.
 
-The workflow uploads the HTML report (traces embedded) and the raw
-`test-results` (trace.zip / video / screenshots), plus the **Architect Server
-logs** (`architect-server-*.log`) — check those first when the failure is
-backend-side. Download an artifact, then:
+---
+
+## Creating a new test
+
+Use Playwright's interactive code generator:
 
 ```bash
-npx playwright show-report path/to/playwright-report
+yarn test:e2e:codegen
 ```
 
-## Writing stable tests
+> 💡 **Tip:** Before recording a new test, rerun your backend and reset (clean) your model so you start from a known, repeatable state.
 
-Tests locate elements by visible text. For durable selectors on dynamic UI (the
-DnD model tree, editors), prefer adding `data-testid` attributes to the relevant
-components and selecting with `page.getByTestId(...)`.
+---
+
+## Troubleshooting
+
+**Codegen can't find the right element?**
+
+Add a stable test id to the element and let the generator target it:
+
+```tsx
+<button dataTestId="topbar-deployment-scripts">…</button>
+```
+
+With an explicit `dataTestId`, codegen detects and interacts with elements far more reliably.
