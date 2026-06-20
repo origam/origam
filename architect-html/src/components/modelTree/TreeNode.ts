@@ -133,9 +133,6 @@ export class TreeNode implements IEditorNode {
 
   createNode(typeName: string) {
     return function* (this: TreeNode): Generator<Promise<IApiTabData>, void, IApiTabData> {
-      // TEMP DEBUG: intentionally break entity creation to verify the e2e test
-      // fails correctly. REMOVE THIS LINE to restore normal behavior.
-      throw new Error('TEMP: simulated broken entity creation');
       const apiTabData = yield this.architectApi.createNode(this, typeName);
       const editorData = new EditorData(apiTabData, this);
       this.rootStore.editorTabViewState.openEditor(editorData);
