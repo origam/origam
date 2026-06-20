@@ -135,6 +135,7 @@ export const DesignSurface: React.FC<{
   return (
     <div
       ref={surfaceRef}
+      data-testid="design-surface"
       className={S.designSurface}
       onDragOver={handleDragOver}
       onDrop={onDrop}
