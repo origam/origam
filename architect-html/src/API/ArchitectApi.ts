@@ -312,7 +312,7 @@ export class ArchitectApi implements IArchitectApi {
 
   async getLookupWizardEntityData(entityId: string): Promise<ILookupWizardEntityData> {
     return (
-      await this.http.get('/wizards/lookups/form-data', {
+      await this.http.get('/wizards/lookups/wizard-data', {
         params: { entityId },
       })
     ).data;
@@ -332,7 +332,7 @@ export class ArchitectApi implements IArchitectApi {
     entityId: string,
   ): Promise<import('@api/IArchitectApi').IScreenWizardData> {
     return (
-      await this.http.get('/wizards/screens/form-data', {
+      await this.http.get('/wizards/screens/wizard-data', {
         params: { entityId },
       })
     ).data;

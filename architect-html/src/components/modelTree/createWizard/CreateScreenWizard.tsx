@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import S from '@components/modelTree/createWizard/CreateWizard.module.scss';
 import { observer } from 'mobx-react-lite';
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { RootStoreContext } from '@/main';
+import { RootStoreContext, T } from '@/main';
 import { ICreateWizardResult, IScreenWizardData } from '@api/IArchitectApi';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 
@@ -36,12 +36,6 @@ interface ScreenModel {
   caption: string;
   selectedFieldIds: Set<string>;
 }
-
-const STEPS = [
-  { label: 'Basics', hint: 'Name your screen' },
-  { label: 'Fields', hint: 'Caption & visible columns' },
-  { label: 'Review', hint: 'Confirm and create' },
-];
 
 export const CreateScreenWizard: React.FC<CreateScreenWizardProps> = observer(
   ({ entityId, parentNodeName, onCancel, onCreate }) => {
@@ -60,6 +54,24 @@ export const CreateScreenWizard: React.FC<CreateScreenWizardProps> = observer(
       caption: '',
       selectedFieldIds: new Set<string>(),
     });
+
+    const steps = [
+      {
+        id: 'basics',
+        label: T('Basics', 'create_screen_step_basics_label'),
+        hint: T('Name your screen', 'create_screen_step_basics_hint'),
+      },
+      {
+        id: 'fields',
+        label: T('Fields', 'create_screen_step_fields_label'),
+        hint: T('Caption & visible columns', 'create_screen_step_fields_hint'),
+      },
+      {
+        id: 'review',
+        label: T('Review', 'wizard_step_review_label'),
+        hint: T('Confirm and create', 'wizard_step_review_hint'),
+      },
+    ];
 
     const wizardRef = useRef<HTMLDivElement | null>(null);
     const formContentRef = useRef<HTMLDivElement | null>(null);
@@ -174,10 +186,16 @@ export const CreateScreenWizard: React.FC<CreateScreenWizardProps> = observer(
 
     const next = () => {
       if (step === 0 && nameExists) {
-        window.alert(`A DataStructure named "${trimmedName}" already exists.`);
+        window.alert(
+          T(
+            'A DataStructure named "{0}" already exists.',
+            'create_screen_datastructure_exists',
+            trimmedName,
+          ),
+        );
         return;
       }
-      setStep(current => Math.min(current + 1, STEPS.length - 1));
+      setStep(current => Math.min(current + 1, steps.length - 1));
     };
     const back = () => setStep(current => Math.max(current - 1, 0));
 
@@ -205,20 +223,28 @@ export const CreateScreenWizard: React.FC<CreateScreenWizardProps> = observer(
       if (step === 0) {
         return (
           <>
-            <h2 className={S.formTitle}>Let&apos;s name your screen</h2>
+            <h2 className={S.formTitle}>
+              {T("Let's name your screen", 'create_screen_basics_title')}
+            </h2>
             <p className={S.formSubtitle}>
-              A Screen ties a DataStructure to a Screen Section (Panel) and a Form. The name is used
-              for all three artifacts.
+              {T(
+                'A Screen ties a DataStructure to a Screen Section (Panel) and a Form. The name is used for all three artifacts.',
+                'create_screen_basics_subtitle',
+              )}
             </p>
 
             <div className={S.field}>
               <label className={S.fieldLabel}>
-                Name <span className={S.required}>*</span>
+                {T('Name', 'create_screen_name_label')} <span className={S.required}>*</span>
               </label>
               <input
                 className={S.input}
                 autoFocus
-                placeholder={entityData ? `e.g. ${entityData.entityName}` : ''}
+                placeholder={
+                  entityData
+                    ? T('e.g. {0}', 'wizard_placeholder_example', entityData.entityName)
+                    : ''
+                }
                 value={model.name}
                 onChange={event => {
                   nameManuallyEditedRef.current = true;
@@ -227,28 +253,40 @@ export const CreateScreenWizard: React.FC<CreateScreenWizardProps> = observer(
               />
               {nameExists && (
                 <div style={{ fontSize: 12, color: 'var(--error1)', marginTop: 2 }}>
-                  A DataStructure named &quot;{trimmedName}&quot; already exists.
+                  {T(
+                    'A DataStructure named "{0}" already exists.',
+                    'create_screen_datastructure_exists',
+                    trimmedName,
+                  )}
                 </div>
               )}
             </div>
 
             <div className={S.field}>
-              <label className={S.fieldLabel}>Created from entity</label>
+              <label className={S.fieldLabel}>
+                {T('Created from entity', 'wizard_created_from_entity')}
+              </label>
               <input className={S.input} value={entityData?.entityName ?? ''} disabled />
             </div>
 
             <div className={S.preview}>
-              <div className={S.previewTitle}>What will be created</div>
+              <div className={S.previewTitle}>
+                {T('What will be created', 'wizard_what_created')}
+              </div>
               <div className={S.previewItem}>
-                <span className={S.previewBadge}>Data Structure</span>
+                <span className={S.previewBadge}>
+                  {T('Data Structure', 'wizard_artifact_data_structure')}
+                </span>
                 <span>{model.name || '<name>'}</span>
               </div>
               <div className={S.previewItem}>
-                <span className={S.previewBadge}>Screen Section</span>
+                <span className={S.previewBadge}>
+                  {T('Screen Section', 'wizard_artifact_screen_section')}
+                </span>
                 <span>{model.name || '<name>'}</span>
               </div>
               <div className={S.previewItem}>
-                <span className={S.previewBadge}>Screen</span>
+                <span className={S.previewBadge}>{T('Screen', 'wizard_artifact_screen')}</span>
                 <span>{model.name || '<name>'}</span>
               </div>
             </div>
@@ -261,20 +299,26 @@ export const CreateScreenWizard: React.FC<CreateScreenWizardProps> = observer(
         const columns = (entityData.columns ?? []).filter(column => !column.isPrimaryKey);
         return (
           <>
-            <h2 className={S.formTitle}>Which columns should appear?</h2>
+            <h2 className={S.formTitle}>
+              {T('Which columns should appear?', 'create_screen_fields_title')}
+            </h2>
             <p className={S.formSubtitle}>
-              Pick the entity fields that will be placed on the Screen Section. You can add or
-              remove fields later in the section editor.
+              {T(
+                'Pick the entity fields that will be placed on the Screen Section. You can add or remove fields later in the section editor.',
+                'create_screen_fields_subtitle',
+              )}
             </p>
 
             <div className={S.field}>
               <label className={S.fieldLabel}>
-                Caption
-                <span className={S.fieldHint}>— shown as the Screen Section title</span>
+                {T('Caption', 'create_screen_caption_label')}
+                <span className={S.fieldHint}>
+                  {T('— shown as the Screen Section title', 'create_screen_caption_hint')}
+                </span>
               </label>
               <input
                 className={S.input}
-                placeholder={`e.g. ${entityData.entityName}`}
+                placeholder={T('e.g. {0}', 'wizard_placeholder_example', entityData.entityName)}
                 value={model.caption}
                 onChange={event => setModel(prev => ({ ...prev, caption: event.target.value }))}
               />
@@ -295,7 +339,7 @@ export const CreateScreenWizard: React.FC<CreateScreenWizardProps> = observer(
                 style={{ height: 28, padding: '0 12px', fontSize: 12 }}
                 onClick={selectAll}
               >
-                Select all
+                {T('Select all', 'wizard_select_all')}
               </button>
               <button
                 type="button"
@@ -303,7 +347,7 @@ export const CreateScreenWizard: React.FC<CreateScreenWizardProps> = observer(
                 style={{ height: 28, padding: '0 12px', fontSize: 12 }}
                 onClick={clearAll}
               >
-                Clear
+                {T('Clear', 'wizard_clear')}
               </button>
               <div
                 style={{
@@ -312,7 +356,12 @@ export const CreateScreenWizard: React.FC<CreateScreenWizardProps> = observer(
                   marginLeft: 'auto',
                 }}
               >
-                {model.selectedFieldIds.size} of {columns.length} selected
+                {T(
+                  '{0} of {1} selected',
+                  'wizard_fields_selected_count',
+                  model.selectedFieldIds.size,
+                  columns.length,
+                )}
               </div>
             </div>
 
@@ -363,32 +412,37 @@ export const CreateScreenWizard: React.FC<CreateScreenWizardProps> = observer(
       );
       return (
         <>
-          <h2 className={S.formTitle}>Ready to create</h2>
+          <h2 className={S.formTitle}>{T('Ready to create', 'wizard_ready_title')}</h2>
           <p className={S.formSubtitle}>
-            Review what will be added to the model. You can edit everything afterward.
+            {T(
+              'Review what will be added to the model. You can edit everything afterward.',
+              'create_screen_review_subtitle',
+            )}
           </p>
 
           <div className={S.reviewCard}>
             <div className={S.reviewCardHeader}>
               <div className={S.reviewCardIcon}>S</div>
               <div>
-                <div className={S.reviewCardTitle}>{model.name || 'Untitled'}</div>
+                <div className={S.reviewCardTitle}>
+                  {model.name || T('Untitled', 'wizard_untitled')}
+                </div>
                 <div style={{ fontSize: 12, color: 'var(--background6)' }}>
-                  Screen + Section + DataStructure
+                  {T('Screen + Section + DataStructure', 'create_screen_review_type')}
                 </div>
               </div>
             </div>
             <div className={S.reviewKv}>
-              <div className={S.reviewKey}>Entity</div>
+              <div className={S.reviewKey}>{T('Entity', 'create_screen_review_entity')}</div>
               <div>{entityData.entityName}</div>
             </div>
             <div className={S.reviewKv}>
-              <div className={S.reviewKey}>Caption</div>
-              <div>{model.caption.trim() || '(none)'}</div>
+              <div className={S.reviewKey}>{T('Caption', 'create_screen_caption_label')}</div>
+              <div>{model.caption.trim() || T('(none)', 'create_screen_review_caption_none')}</div>
             </div>
             <div className={S.reviewKv}>
-              <div className={S.reviewKey}>Fields</div>
-              <div>{selected.length} selected</div>
+              <div className={S.reviewKey}>{T('Fields', 'create_screen_review_fields')}</div>
+              <div>{T('{0} selected', 'create_screen_review_fields_count', selected.length)}</div>
             </div>
           </div>
 
@@ -396,9 +450,14 @@ export const CreateScreenWizard: React.FC<CreateScreenWizardProps> = observer(
             <div className={S.reviewCardHeader}>
               <div className={S.reviewCardIcon}>F</div>
               <div>
-                <div className={S.reviewCardTitle}>Selected fields</div>
+                <div className={S.reviewCardTitle}>
+                  {T('Selected fields', 'create_screen_review_selected_fields_title')}
+                </div>
                 <div style={{ fontSize: 12, color: 'var(--background6)' }}>
-                  Placed on the Screen Section in order
+                  {T(
+                    'Placed on the Screen Section in order',
+                    'create_screen_review_selected_fields_hint',
+                  )}
                 </div>
               </div>
             </div>
@@ -415,19 +474,21 @@ export const CreateScreenWizard: React.FC<CreateScreenWizardProps> = observer(
         <div className={S.header}>
           <div className={S.headerIcon}>S</div>
           <div className={S.headerText}>
-            <div className={S.headerTitle}>Create Screen</div>
-            <div className={S.headerSubtitle}>from {parentNodeName}</div>
+            <div className={S.headerTitle}>{T('Create Screen', 'create_screen_header_title')}</div>
+            <div className={S.headerSubtitle}>
+              {T('from {0}', 'create_screen_header_subtitle', parentNodeName)}
+            </div>
           </div>
-          <button className={S.closeBtn} onClick={onCancel} aria-label="Close">
+          <button className={S.closeBtn} onClick={onCancel} aria-label={T('Close', 'wizard_close')}>
             ✕
           </button>
         </div>
 
         <div className={S.body}>
           <div className={S.stepperCol}>
-            {STEPS.map((stepInfo, index) => (
+            {steps.map((stepInfo, index) => (
               <div
-                key={stepInfo.label}
+                key={stepInfo.id}
                 className={`${S.stepperItem} ${index === step ? S.active : ''} ${
                   index < step ? S.done : ''
                 }`}
@@ -449,24 +510,24 @@ export const CreateScreenWizard: React.FC<CreateScreenWizardProps> = observer(
 
             <div className={S.footer}>
               <div className={S.footerHint}>
-                Step {step + 1} of {STEPS.length}
+                {T('Step {0} of {1}', 'wizard_step_counter', step + 1, steps.length)}
               </div>
               <div className={S.footerBtns}>
                 <button className={S.btn} onClick={onCancel}>
-                  Cancel
+                  {T('Cancel', 'wizard_btn_cancel')}
                 </button>
                 {step > 0 && (
                   <button className={S.btn} onClick={back} disabled={submitting}>
-                    Back
+                    {T('Back', 'wizard_btn_back')}
                   </button>
                 )}
-                {step < STEPS.length - 1 ? (
+                {step < steps.length - 1 ? (
                   <button
                     className={`${S.btn} ${S.btnPrimary}`}
                     onClick={next}
                     disabled={!canAdvance || loading}
                   >
-                    Next →
+                    {T('Next →', 'wizard_btn_next')}
                   </button>
                 ) : (
                   <button
@@ -474,7 +535,9 @@ export const CreateScreenWizard: React.FC<CreateScreenWizardProps> = observer(
                     onClick={submit}
                     disabled={submitting || loading}
                   >
-                    {submitting ? 'Creating…' : 'Create Screen'}
+                    {submitting
+                      ? T('Creating…', 'wizard_btn_creating')
+                      : T('Create Screen', 'create_screen_btn_create')}
                   </button>
                 )}
               </div>

@@ -18,6 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import ActionPanel from '@/components/ActionPanel/ActionPanel';
+import { T } from '@/main';
 import Button from '@components/Button/Button.tsx';
 import CodeEditor from '@editors/codeEditor/CodeEditor';
 import { ShowSqlEditorState } from '@editors/showSqlEditor/ShowSqlEditorState';
@@ -45,11 +46,11 @@ const ShowSqlEditor = observer(({ editorState }: { editorState: ShowSqlEditorSta
     <div className={S.root}>
       <div className={S.editorBox}>
         <ActionPanel
-          title={`SQL: ${editorState.dataStructureName}`}
+          title={T('SQL: {0}', 'show_sql_editor_title', editorState.dataStructureName)}
           buttons={
             <Button
               type="secondary"
-              title={copied ? 'Copied!' : 'Copy'}
+              title={copied ? T('Copied!', 'show_sql_copied') : T('Copy', 'show_sql_copy')}
               prefix={<VscCopy />}
               onClick={handleCopy}
             />

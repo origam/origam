@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import S from '@components/notification/NotificationContainer.module.scss';
-import { RootStoreContext } from '@/main';
+import { RootStoreContext, T } from '@/main';
 import { IActionResultNotification } from '@components/notification/NotificationState';
 import { observer } from 'mobx-react-lite';
 import React, { useContext, useEffect, useRef, useState } from 'react';
@@ -50,8 +50,10 @@ const NotificationCard: React.FC<{ notification: IActionResultNotification }> = 
     const count = notification.results.length;
     const subtitle =
       count === 0
-        ? 'No items reported by server'
-        : `${count} item${count === 1 ? '' : 's'} added to the model`;
+        ? T('No items reported by server', 'notification_no_items')
+        : count === 1
+          ? T('{0} item added to the model', 'notification_items_added_singular', count)
+          : T('{0} items added to the model', 'notification_items_added_plural', count);
     const hasAction = !!notification.onShowResult && count > 0;
 
     useEffect(() => {
@@ -100,7 +102,7 @@ const NotificationCard: React.FC<{ notification: IActionResultNotification }> = 
         <button
           className={S.closeBtn}
           onClick={() => notificationState.dismiss(notification.id)}
-          aria-label="Dismiss"
+          aria-label={T('Dismiss', 'notification_dismiss')}
         >
           ✕
         </button>
@@ -115,7 +117,7 @@ const NotificationCard: React.FC<{ notification: IActionResultNotification }> = 
                 notificationState.dismiss(notification.id);
               }}
             >
-              Show result
+              {T('Show result', 'notification_show_result')}
             </button>
           </div>
         )}

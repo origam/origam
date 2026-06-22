@@ -18,6 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { ITabState } from '@/components/editorTabView/ITabState';
+import { T } from '@/main';
 import { observable } from 'mobx';
 
 export class ShowSqlEditorState implements ITabState {
@@ -33,7 +34,7 @@ export class ShowSqlEditorState implements ITabState {
     sql: string,
   ) {
     this.sql = sql;
-    this.label = `SQL: ${dataStructureName}`;
+    this.label = T('SQL: {0}', 'show_sql_editor_title', dataStructureName);
   }
 
   save(): Generator<Promise<any>, void, any> {

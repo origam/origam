@@ -128,13 +128,18 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
 
   function showCreatedConfirmation(actionLabel: string, results: ISearchResult[]) {
     rootStore.notificationState.pushActionResult({
-      title: `${actionLabel} created`,
+      title: T('{0} created', 'wizard_created_notification_title', actionLabel),
       results,
       onShowResult: () =>
         rootStore.editorTabViewState.openSearchResults(
           actionLabel,
           results,
-          `${actionLabel}: ${results[0]?.foundIn ?? node.nodeText}`,
+          T(
+            '{0}: {1}',
+            'wizard_created_results_title',
+            actionLabel,
+            results[0]?.foundIn ?? node.nodeText,
+          ),
         ),
     });
   }
@@ -164,7 +169,10 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
           run({
             generator: function* () {
               yield* rootStore.modelTreeState.loadPackageNodes.bind(rootStore.modelTreeState)();
-              showCreatedConfirmation('Lookup', result?.searchResults ?? []);
+              showCreatedConfirmation(
+                T('Lookup', 'wizard_artifact_lookup'),
+                result?.searchResults ?? [],
+              );
             },
           });
         }}
@@ -186,7 +194,10 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
           run({
             generator: function* () {
               yield* rootStore.modelTreeState.loadPackageNodes.bind(rootStore.modelTreeState)();
-              showCreatedConfirmation('Screen', result?.searchResults ?? []);
+              showCreatedConfirmation(
+                T('Screen', 'wizard_artifact_screen'),
+                result?.searchResults ?? [],
+              );
             },
           });
         }}
@@ -208,7 +219,10 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
           run({
             generator: function* () {
               yield* rootStore.modelTreeState.loadPackageNodes.bind(rootStore.modelTreeState)();
-              showCreatedConfirmation('WorkQueue Class', result?.searchResults ?? []);
+              showCreatedConfirmation(
+                T('WorkQueue Class', 'wizard_artifact_work_queue_class'),
+                result?.searchResults ?? [],
+              );
             },
           });
         }}
@@ -243,7 +257,10 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
           run({
             generator: function* () {
               yield* rootStore.modelTreeState.loadPackageNodes.bind(rootStore.modelTreeState)();
-              showCreatedConfirmation('Menu Item', result?.searchResults ?? []);
+              showCreatedConfirmation(
+                T('Menu Item', 'wizard_artifact_menu_item'),
+                result?.searchResults ?? [],
+              );
             },
           });
         }}
@@ -302,7 +319,7 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
             {node.nodeText}
           </div>
           <Menu id={menuId} onVisibilityChange={onMenuVisibilityChange}>
-            <Submenu label="New">
+            <Submenu label={T('New', 'tree_node_submenu_new')}>
               {node.contextMenuItems.map(item => (
                 <Item
                   key={item.typeName + item.caption}
@@ -314,63 +331,92 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
               ))}
             </Submenu>
             {node.isDataEntity && (
-              <Submenu label="Actions">
+              <Submenu label={T('Actions', 'tree_node_submenu_actions')}>
                 <Item id="create-lookup" onClick={openCreateLookupWizard}>
-                  Create Lookup
+                  {T('Create Lookup', 'tree_node_create_lookup')}
                 </Item>
                 <Item id="create-screen" onClick={openCreateScreenWizard}>
-                  Create Screen
+                  {T('Create Screen', 'tree_node_create_screen')}
                 </Item>
                 <Item id="create-workqueue" onClick={openCreateWorkQueueWizard}>
-                  Create Workqueue class
+                  {T('Create Workqueue class', 'tree_node_create_workqueue')}
                 </Item>
               </Submenu>
             )}
             {node.isScreen && (
-              <Submenu label="Actions">
+              <Submenu label={T('Actions', 'tree_node_submenu_actions')}>
                 <Item id="create-menu-item" onClick={openCreateMenuItemWizard}>
-                  Create Menu Item
+                  {T('Create Menu Item', 'tree_node_create_menu_item')}
                 </Item>
               </Submenu>
             )}
             {node.isDataStructure && (
-              <Submenu label="Actions">
+              <Submenu label={T('Actions', 'tree_node_submenu_actions')}>
                 <Item id="show-sql" onClick={showDataStructureSql}>
-                  Show SQL
+                  {T('Show SQL', 'tree_node_show_sql')}
                 </Item>
               </Submenu>
             )}
             {node.isDataEntityColumn && (
-              <Submenu label="Actions">
-                <Item id="create-filter-equal" onClick={() => createFilter('Equal', 'Filter (=)')}>
-                  Create (=) Filter
+              <Submenu label={T('Actions', 'tree_node_submenu_actions')}>
+                <Item
+                  id="create-filter-equal"
+                  onClick={() => createFilter('Equal', T('Filter (=)', 'filter_label_equal'))}
+                >
+                  {T('Create (=) Filter', 'tree_node_create_filter_equal')}
                 </Item>
                 <Item
                   id="create-filter-equal-param"
-                  onClick={() => createFilter('EqualParam', 'Filter (=) with parameter')}
+                  onClick={() =>
+                    createFilter(
+                      'EqualParam',
+                      T('Filter (=) with parameter', 'filter_label_equal_param'),
+                    )
+                  }
                 >
-                  Create (=) Filter With Parameter
+                  {T('Create (=) Filter With Parameter', 'tree_node_create_filter_equal_param')}
                 </Item>
-                <Item id="create-filter-like" onClick={() => createFilter('Like', 'Filter (Like)')}>
-                  Create (Like) Filter
+                <Item
+                  id="create-filter-like"
+                  onClick={() => createFilter('Like', T('Filter (Like)', 'filter_label_like'))}
+                >
+                  {T('Create (Like) Filter', 'tree_node_create_filter_like')}
                 </Item>
                 <Item
                   id="create-filter-like-param"
-                  onClick={() => createFilter('LikeParam', 'Filter (Like) with parameter')}
+                  onClick={() =>
+                    createFilter(
+                      'LikeParam',
+                      T('Filter (Like) with parameter', 'filter_label_like_param'),
+                    )
+                  }
                 >
-                  Create (Like) Filter With Parameter
+                  {T('Create (Like) Filter With Parameter', 'tree_node_create_filter_like_param')}
                 </Item>
                 <Item
                   id="create-filter-list-param"
-                  onClick={() => createFilter('InList', 'Filter (List) with parameter')}
+                  onClick={() =>
+                    createFilter(
+                      'InList',
+                      T('Filter (List) with parameter', 'filter_label_list_param'),
+                    )
+                  }
                 >
-                  Create (List) Filter With Parameter
+                  {T('Create (List) Filter With Parameter', 'tree_node_create_filter_list_param')}
                 </Item>
                 <Item
                   id="create-filter-between"
-                  onClick={() => createFilter('Between', 'Filter (Between) with parameters')}
+                  onClick={() =>
+                    createFilter(
+                      'Between',
+                      T('Filter (Between) with parameters', 'filter_label_between_param'),
+                    )
+                  }
                 >
-                  Create (Between) Filter With Parameters
+                  {T(
+                    'Create (Between) Filter With Parameters',
+                    'tree_node_create_filter_between_param',
+                  )}
                 </Item>
               </Submenu>
             )}
@@ -413,7 +459,9 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
               </Item>
             )}
           </Menu>
-          {node.isLoading && <span className={S.loading}>Loading...</span>}
+          {node.isLoading && (
+            <span className={S.loading}>{T('Loading...', 'tree_node_loading')}</span>
+          )}
         </div>
       </div>
       {node.isExpanded &&

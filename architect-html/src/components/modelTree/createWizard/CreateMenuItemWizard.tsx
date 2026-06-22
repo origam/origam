@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import S from '@components/modelTree/createWizard/CreateWizard.module.scss';
 import { observer } from 'mobx-react-lite';
 import React, { useContext, useEffect, useState } from 'react';
-import { RootStoreContext } from '@/main';
+import { RootStoreContext, T } from '@/main';
 import { ICreateWizardResult } from '@api/IArchitectApi';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 
@@ -31,11 +31,6 @@ interface CreateMenuItemWizardProps {
   onCreate: (result: ICreateWizardResult) => void;
 }
 
-const STEPS = [
-  { label: 'Basics', hint: 'Caption & role' },
-  { label: 'Review', hint: 'Confirm and create' },
-];
-
 export const CreateMenuItemWizard: React.FC<CreateMenuItemWizardProps> = observer(
   ({ formId, parentNodeName, onCancel, onCreate }) => {
     const rootStore = useContext(RootStoreContext);
@@ -45,6 +40,19 @@ export const CreateMenuItemWizard: React.FC<CreateMenuItemWizardProps> = observe
     const [submitting, setSubmitting] = useState(false);
     const [caption, setCaption] = useState('');
     const [role, setRole] = useState(parentNodeName);
+
+    const steps = [
+      {
+        id: 'basics',
+        label: T('Basics', 'create_menu_item_step_basics_label'),
+        hint: T('Caption & role', 'create_menu_item_step_basics_hint'),
+      },
+      {
+        id: 'review',
+        label: T('Review', 'wizard_step_review_label'),
+        hint: T('Confirm and create', 'wizard_step_review_hint'),
+      },
+    ];
 
     useEffect(() => {
       const onKeyDown = (event: KeyboardEvent) => {
@@ -58,7 +66,7 @@ export const CreateMenuItemWizard: React.FC<CreateMenuItemWizardProps> = observe
     }, [onCancel]);
 
     const canAdvance = (step === 0 && caption.trim().length > 0) || step === 1;
-    const next = () => setStep(current => Math.min(current + 1, STEPS.length - 1));
+    const next = () => setStep(current => Math.min(current + 1, steps.length - 1));
     const back = () => setStep(current => Math.max(current - 1, 0));
 
     const submit = () => {
@@ -84,26 +92,32 @@ export const CreateMenuItemWizard: React.FC<CreateMenuItemWizardProps> = observe
       if (step === 0) {
         return (
           <>
-            <h2 className={S.formTitle}>Configure menu entry</h2>
+            <h2 className={S.formTitle}>
+              {T('Configure menu entry', 'create_menu_item_basics_title')}
+            </h2>
             <p className={S.formSubtitle}>
-              A Form Reference menu item will be added under the Main Menu, pointing to this screen.
+              {T(
+                'A Form Reference menu item will be added under the Main Menu, pointing to this screen.',
+                'create_menu_item_basics_subtitle',
+              )}
             </p>
 
             <div className={S.field}>
               <label className={S.fieldLabel}>
-                Caption <span className={S.required}>*</span>
+                {T('Caption', 'create_menu_item_caption_label')}{' '}
+                <span className={S.required}>*</span>
               </label>
               <input
                 className={S.input}
                 autoFocus
-                placeholder={`e.g. ${parentNodeName}`}
+                placeholder={T('e.g. {0}', 'wizard_placeholder_example', parentNodeName)}
                 value={caption}
                 onChange={event => setCaption(event.target.value)}
               />
             </div>
 
             <div className={S.field}>
-              <label className={S.fieldLabel}>Role</label>
+              <label className={S.fieldLabel}>{T('Role', 'create_menu_item_role_label')}</label>
               <input
                 className={S.input}
                 value={role}
@@ -112,9 +126,13 @@ export const CreateMenuItemWizard: React.FC<CreateMenuItemWizardProps> = observe
             </div>
 
             <div className={S.preview}>
-              <div className={S.previewTitle}>What will be created</div>
+              <div className={S.previewTitle}>
+                {T('What will be created', 'wizard_what_created')}
+              </div>
               <div className={S.previewItem}>
-                <span className={S.previewBadge}>Menu Item</span>
+                <span className={S.previewBadge}>
+                  {T('Menu Item', 'wizard_artifact_menu_item')}
+                </span>
                 <span>{caption || '<caption>'}</span>
               </div>
             </div>
@@ -124,21 +142,28 @@ export const CreateMenuItemWizard: React.FC<CreateMenuItemWizardProps> = observe
 
       return (
         <>
-          <h2 className={S.formTitle}>Ready to create</h2>
-          <p className={S.formSubtitle}>Review what will be added under the Main Menu.</p>
+          <h2 className={S.formTitle}>{T('Ready to create', 'wizard_ready_title')}</h2>
+          <p className={S.formSubtitle}>
+            {T(
+              'Review what will be added under the Main Menu.',
+              'create_menu_item_review_subtitle',
+            )}
+          </p>
 
           <div className={S.reviewCard}>
             <div className={S.reviewCardHeader}>
               <div className={S.reviewCardIcon}>M</div>
               <div>
-                <div className={S.reviewCardTitle}>{caption || 'Untitled'}</div>
+                <div className={S.reviewCardTitle}>
+                  {caption || T('Untitled', 'wizard_untitled')}
+                </div>
                 <div style={{ fontSize: 12, color: 'var(--background6)' }}>
-                  Form Reference Menu Item
+                  {T('Form Reference Menu Item', 'create_menu_item_review_type')}
                 </div>
               </div>
             </div>
             <div className={S.reviewKv}>
-              <div className={S.reviewKey}>Role</div>
+              <div className={S.reviewKey}>{T('Role', 'create_menu_item_role_label')}</div>
               <div>{role.trim() || '*'}</div>
             </div>
           </div>
@@ -151,19 +176,23 @@ export const CreateMenuItemWizard: React.FC<CreateMenuItemWizardProps> = observe
         <div className={S.header}>
           <div className={S.headerIcon}>M</div>
           <div className={S.headerText}>
-            <div className={S.headerTitle}>Create Menu Item</div>
-            <div className={S.headerSubtitle}>for {parentNodeName}</div>
+            <div className={S.headerTitle}>
+              {T('Create Menu Item', 'create_menu_item_header_title')}
+            </div>
+            <div className={S.headerSubtitle}>
+              {T('for {0}', 'create_menu_item_header_subtitle', parentNodeName)}
+            </div>
           </div>
-          <button className={S.closeBtn} onClick={onCancel} aria-label="Close">
+          <button className={S.closeBtn} onClick={onCancel} aria-label={T('Close', 'wizard_close')}>
             ✕
           </button>
         </div>
 
         <div className={S.body}>
           <div className={S.stepperCol}>
-            {STEPS.map((stepInfo, index) => (
+            {steps.map((stepInfo, index) => (
               <div
-                key={stepInfo.label}
+                key={stepInfo.id}
                 className={`${S.stepperItem} ${index === step ? S.active : ''} ${
                   index < step ? S.done : ''
                 }`}
@@ -183,24 +212,24 @@ export const CreateMenuItemWizard: React.FC<CreateMenuItemWizardProps> = observe
 
             <div className={S.footer}>
               <div className={S.footerHint}>
-                Step {step + 1} of {STEPS.length}
+                {T('Step {0} of {1}', 'wizard_step_counter', step + 1, steps.length)}
               </div>
               <div className={S.footerBtns}>
                 <button className={S.btn} onClick={onCancel}>
-                  Cancel
+                  {T('Cancel', 'wizard_btn_cancel')}
                 </button>
                 {step > 0 && (
                   <button className={S.btn} onClick={back} disabled={submitting}>
-                    Back
+                    {T('Back', 'wizard_btn_back')}
                   </button>
                 )}
-                {step < STEPS.length - 1 ? (
+                {step < steps.length - 1 ? (
                   <button
                     className={`${S.btn} ${S.btnPrimary}`}
                     onClick={next}
                     disabled={!canAdvance}
                   >
-                    Next →
+                    {T('Next →', 'wizard_btn_next')}
                   </button>
                 ) : (
                   <button
@@ -208,7 +237,9 @@ export const CreateMenuItemWizard: React.FC<CreateMenuItemWizardProps> = observe
                     onClick={submit}
                     disabled={submitting}
                   >
-                    {submitting ? 'Creating…' : 'Create Menu Item'}
+                    {submitting
+                      ? T('Creating…', 'wizard_btn_creating')
+                      : T('Create Menu Item', 'create_menu_item_btn_create')}
                   </button>
                 )}
               </div>

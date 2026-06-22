@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import S from '@components/modelTree/createWizard/CreateWizard.module.scss';
 import { observer } from 'mobx-react-lite';
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { RootStoreContext } from '@/main';
+import { RootStoreContext, T } from '@/main';
 import { ICreateWizardResult, IDropDownValue, ILookupWizardEntityData } from '@api/IArchitectApi';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { FilterableSelect } from '@editors/propertyEditor/FilterableSelect';
@@ -38,12 +38,6 @@ export interface LookupModel {
   idFilterId: string;
   listFilterId: string;
 }
-
-const STEPS = [
-  { label: 'Source', hint: 'Display field & filters' },
-  { label: 'Basics', hint: 'Name your lookup' },
-  { label: 'Review', hint: 'Confirm and create' },
-];
 
 export const CreateLookupWizard: React.FC<CreateLookupWizardProps> = observer(
   ({ entityId, parentNodeName, onCancel, onCreate }) => {
@@ -65,6 +59,24 @@ export const CreateLookupWizard: React.FC<CreateLookupWizardProps> = observer(
       idFilterId: '',
       listFilterId: '',
     });
+
+    const steps = [
+      {
+        id: 'source',
+        label: T('Source', 'create_lookup_step_source_label'),
+        hint: T('Display field & filters', 'create_lookup_step_source_hint'),
+      },
+      {
+        id: 'basics',
+        label: T('Basics', 'create_lookup_step_basics_label'),
+        hint: T('Name your lookup', 'create_lookup_step_basics_hint'),
+      },
+      {
+        id: 'review',
+        label: T('Review', 'wizard_step_review_label'),
+        hint: T('Confirm and create', 'wizard_step_review_hint'),
+      },
+    ];
 
     const update = (patch: Partial<LookupModel>) => setModel(prev => ({ ...prev, ...patch }));
 
@@ -178,7 +190,7 @@ export const CreateLookupWizard: React.FC<CreateLookupWizardProps> = observer(
       (step === 1 && model.name.trim().length > 0) ||
       step === 2;
 
-    const next = () => setStep(current => Math.min(current + 1, STEPS.length - 1));
+    const next = () => setStep(current => Math.min(current + 1, steps.length - 1));
     const back = () => setStep(current => Math.max(current - 1, 0));
 
     const submit = () => {
@@ -219,38 +231,48 @@ export const CreateLookupWizard: React.FC<CreateLookupWizardProps> = observer(
       if (step === 1) {
         return (
           <>
-            <h2 className={S.formTitle}>Let&apos;s name your lookup</h2>
+            <h2 className={S.formTitle}>
+              {T("Let's name your lookup", 'create_lookup_basics_title')}
+            </h2>
             <p className={S.formSubtitle}>
-              A lookup defines how a foreign key value is resolved into a human-readable label
-              across the application.
+              {T(
+                'A lookup defines how a foreign key value is resolved into a human-readable label across the application.',
+                'create_lookup_basics_subtitle',
+              )}
             </p>
 
             <div className={S.field}>
               <label className={S.fieldLabel}>
-                Name <span className={S.required}>*</span>
+                {T('Name', 'create_lookup_name_label')} <span className={S.required}>*</span>
               </label>
               <input
                 className={S.input}
                 autoFocus
-                placeholder="e.g. BusinessPartner_Name_GetId"
+                placeholder={T('e.g. BusinessPartner_Name_GetId', 'create_lookup_name_placeholder')}
                 value={model.name}
                 onChange={event => onNameChange(event.target.value)}
               />
             </div>
 
             <div className={S.field}>
-              <label className={S.fieldLabel}>Created from entity</label>
+              <label className={S.fieldLabel}>
+                {T('Created from entity', 'wizard_created_from_entity')}
+              </label>
               <input className={S.input} value={entityData?.entityName ?? ''} disabled />
             </div>
 
             <div className={S.preview}>
-              <div className={S.previewTitle}>What will be created</div>
+              <div className={S.previewTitle}>
+                {T('What will be created', 'wizard_what_created')}
+              </div>
               <div className={S.previewItem}>
-                <span className={S.previewBadge}>Lookup</span>
+                <span className={S.previewBadge}>{T('Lookup', 'wizard_artifact_lookup')}</span>
                 <span>{model.name || '<name>'}</span>
               </div>
               <div className={S.previewItem}>
-                <span className={S.previewBadge}>Data Structure</span>
+                <span className={S.previewBadge}>
+                  {T('Data Structure', 'wizard_artifact_data_structure')}
+                </span>
                 <span>Lookup{model.name || '<name>'}</span>
               </div>
             </div>
@@ -261,15 +283,20 @@ export const CreateLookupWizard: React.FC<CreateLookupWizardProps> = observer(
       if (step === 0) {
         return (
           <>
-            <h2 className={S.formTitle}>Where does the data come from?</h2>
+            <h2 className={S.formTitle}>
+              {T('Where does the data come from?', 'create_lookup_source_title')}
+            </h2>
             <p className={S.formSubtitle}>
-              Choose which column shows as the display value, and the filters used to fetch records
-              by id or build the dropdown list.
+              {T(
+                'Choose which column shows as the display value, and the filters used to fetch records by id or build the dropdown list.',
+                'create_lookup_source_subtitle',
+              )}
             </p>
 
             <div className={S.field}>
               <label className={S.fieldLabel}>
-                Display Field <span className={S.required}>*</span>
+                {T('Display Field', 'create_lookup_display_field_label')}{' '}
+                <span className={S.required}>*</span>
               </label>
               <FilterableSelect
                 className={S.filterableSelect}
@@ -282,7 +309,9 @@ export const CreateLookupWizard: React.FC<CreateLookupWizardProps> = observer(
             </div>
 
             <div className={S.field}>
-              <label className={S.fieldLabel}>List Filter</label>
+              <label className={S.fieldLabel}>
+                {T('List Filter', 'create_lookup_list_filter_label')}
+              </label>
               <FilterableSelect
                 className={S.filterableSelect}
                 options={listFilterOptions}
@@ -294,7 +323,8 @@ export const CreateLookupWizard: React.FC<CreateLookupWizardProps> = observer(
 
             <div className={S.field}>
               <label className={S.fieldLabel}>
-                Id Filter <span className={S.required}>*</span>
+                {T('Id Filter', 'create_lookup_id_filter_label')}{' '}
+                <span className={S.required}>*</span>
               </label>
               <FilterableSelect
                 className={S.filterableSelect}
@@ -306,13 +336,17 @@ export const CreateLookupWizard: React.FC<CreateLookupWizardProps> = observer(
             </div>
 
             <div className={S.preview}>
-              <div className={S.previewTitle}>What will be created</div>
+              <div className={S.previewTitle}>
+                {T('What will be created', 'wizard_what_created')}
+              </div>
               <div className={S.previewItem}>
-                <span className={S.previewBadge}>Lookup</span>
+                <span className={S.previewBadge}>{T('Lookup', 'wizard_artifact_lookup')}</span>
                 <span>{model.name}</span>
               </div>
               <div className={S.previewItem}>
-                <span className={S.previewBadge}>Data Structure</span>
+                <span className={S.previewBadge}>
+                  {T('Data Structure', 'wizard_artifact_data_structure')}
+                </span>
                 <span>Lookup{model.name}</span>
               </div>
             </div>
@@ -323,37 +357,51 @@ export const CreateLookupWizard: React.FC<CreateLookupWizardProps> = observer(
       if (!entityData) return null;
       return (
         <>
-          <h2 className={S.formTitle}>Ready to create</h2>
+          <h2 className={S.formTitle}>{T('Ready to create', 'wizard_ready_title')}</h2>
           <p className={S.formSubtitle}>
-            Review what will be added to the model. You can edit anything afterward.
+            {T(
+              'Review what will be added to the model. You can edit anything afterward.',
+              'create_lookup_review_subtitle',
+            )}
           </p>
 
           <div className={S.reviewCard}>
             <div className={S.reviewCardHeader}>
               <div className={S.reviewCardIcon}>L</div>
               <div>
-                <div className={S.reviewCardTitle}>{model.name || 'Untitled'}</div>
-                <div style={{ fontSize: 12, color: 'var(--background6)' }}>Data Service Lookup</div>
+                <div className={S.reviewCardTitle}>
+                  {model.name || T('Untitled', 'wizard_untitled')}
+                </div>
+                <div style={{ fontSize: 12, color: 'var(--background6)' }}>
+                  {T('Data Service Lookup', 'create_lookup_review_type')}
+                </div>
               </div>
             </div>
             <div className={S.reviewKv}>
-              <div className={S.reviewKey}>Entity</div>
+              <div className={S.reviewKey}>{T('Entity', 'create_lookup_review_entity')}</div>
               <div>{entityData.entityName}</div>
             </div>
             <div className={S.reviewKv}>
-              <div className={S.reviewKey}>Id Column</div>
+              <div className={S.reviewKey}>{T('Id Column', 'create_lookup_review_id_column')}</div>
               <div>{entityData.primaryKeyName}</div>
             </div>
             <div className={S.reviewKv}>
-              <div className={S.reviewKey}>Display Field</div>
+              <div className={S.reviewKey}>
+                {T('Display Field', 'create_lookup_display_field_label')}
+              </div>
               <div>{findName(entityData.columns, model.displayFieldId)}</div>
             </div>
             <div className={S.reviewKv}>
-              <div className={S.reviewKey}>List Filter</div>
-              <div>{findName(entityData.filters, model.listFilterId) || 'none'}</div>
+              <div className={S.reviewKey}>
+                {T('List Filter', 'create_lookup_list_filter_label')}
+              </div>
+              <div>
+                {findName(entityData.filters, model.listFilterId) ||
+                  T('none', 'create_lookup_review_none')}
+              </div>
             </div>
             <div className={S.reviewKv}>
-              <div className={S.reviewKey}>Id Filter</div>
+              <div className={S.reviewKey}>{T('Id Filter', 'create_lookup_id_filter_label')}</div>
               <div>{findName(entityData.filters, model.idFilterId)}</div>
             </div>
           </div>
@@ -364,7 +412,7 @@ export const CreateLookupWizard: React.FC<CreateLookupWizardProps> = observer(
               <div>
                 <div className={S.reviewCardTitle}>Lookup{model.name}</div>
                 <div style={{ fontSize: 12, color: 'var(--background6)' }}>
-                  Data Structure (auto-generated)
+                  {T('Data Structure (auto-generated)', 'create_lookup_review_ds_type')}
                 </div>
               </div>
             </div>
@@ -378,19 +426,21 @@ export const CreateLookupWizard: React.FC<CreateLookupWizardProps> = observer(
         <div className={S.header}>
           <div className={S.headerIcon}>L</div>
           <div className={S.headerText}>
-            <div className={S.headerTitle}>Create Lookup</div>
-            <div className={S.headerSubtitle}>in {parentNodeName}</div>
+            <div className={S.headerTitle}>{T('Create Lookup', 'create_lookup_header_title')}</div>
+            <div className={S.headerSubtitle}>
+              {T('in {0}', 'create_lookup_header_subtitle', parentNodeName)}
+            </div>
           </div>
-          <button className={S.closeBtn} onClick={onCancel} aria-label="Close">
+          <button className={S.closeBtn} onClick={onCancel} aria-label={T('Close', 'wizard_close')}>
             ✕
           </button>
         </div>
 
         <div className={S.body}>
           <div className={S.stepperCol}>
-            {STEPS.map((stepInfo, index) => (
+            {steps.map((stepInfo, index) => (
               <div
-                key={stepInfo.label}
+                key={stepInfo.id}
                 className={`${S.stepperItem} ${index === step ? S.active : ''} ${
                   index < step ? S.done : ''
                 }`}
@@ -410,24 +460,24 @@ export const CreateLookupWizard: React.FC<CreateLookupWizardProps> = observer(
 
             <div className={S.footer}>
               <div className={S.footerHint}>
-                Step {step + 1} of {STEPS.length}
+                {T('Step {0} of {1}', 'wizard_step_counter', step + 1, steps.length)}
               </div>
               <div className={S.footerBtns}>
                 <button className={S.btn} onClick={onCancel}>
-                  Cancel
+                  {T('Cancel', 'wizard_btn_cancel')}
                 </button>
                 {step > 0 && (
                   <button className={S.btn} onClick={back} disabled={submitting}>
-                    Back
+                    {T('Back', 'wizard_btn_back')}
                   </button>
                 )}
-                {step < STEPS.length - 1 ? (
+                {step < steps.length - 1 ? (
                   <button
                     className={`${S.btn} ${S.btnPrimary}`}
                     onClick={next}
                     disabled={!canAdvance || loading}
                   >
-                    Next →
+                    {T('Next →', 'wizard_btn_next')}
                   </button>
                 ) : (
                   <button
@@ -435,7 +485,9 @@ export const CreateLookupWizard: React.FC<CreateLookupWizardProps> = observer(
                     onClick={submit}
                     disabled={submitting || loading}
                   >
-                    {submitting ? 'Creating…' : 'Create Lookup'}
+                    {submitting
+                      ? T('Creating…', 'wizard_btn_creating')
+                      : T('Create Lookup', 'create_lookup_btn_create')}
                   </button>
                 )}
               </div>

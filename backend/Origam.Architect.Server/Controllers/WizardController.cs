@@ -21,7 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Microsoft.AspNetCore.Mvc;
 using Origam.Architect.Server.Models.Requests.Wizards;
-using Origam.Architect.Server.Models.Responses.Wizards;
 using Origam.Architect.Server.Services;
 
 namespace Origam.Architect.Server.Controllers;
@@ -31,29 +30,33 @@ namespace Origam.Architect.Server.Controllers;
 public class WizardController(WizardService wizard) : ControllerBase
 {
     [HttpPost("filters")]
-    public CreateWizardResult Filter(CreateFilterModel input) => wizard.CreateFilter(input);
+    public IActionResult CreateFilter([FromBody] CreateFilterModel input) =>
+        Ok(wizard.CreateFilter(input));
 
     [HttpPost("screens")]
-    public CreateWizardResult Screen(CreateScreenModel input) => wizard.CreateScreen(input);
+    public IActionResult CreateScreen([FromBody] CreateScreenModel input) =>
+        Ok(wizard.CreateScreen(input));
 
     [HttpPost("lookups")]
-    public CreateWizardResult Lookup(CreateLookupModel input) => wizard.CreateLookup(input);
+    public IActionResult CreateLookup([FromBody] CreateLookupModel input) =>
+        Ok(wizard.CreateLookup(input));
 
     [HttpPost("menu-items")]
-    public CreateWizardResult MenuItem(CreateMenuItemModel input) => wizard.CreateMenuItem(input);
+    public IActionResult CreateMenuItem([FromBody] CreateMenuItemModel input) =>
+        Ok(wizard.CreateMenuItem(input));
 
     [HttpPost("work-queue-classes")]
-    public CreateWizardResult WorkQueue(CreateWorkQueueModel input) =>
-        wizard.CreateWorkQueueClass(input);
+    public IActionResult CreateWorkQueueClass([FromBody] CreateWorkQueueModel input) =>
+        Ok(wizard.CreateWorkQueueClass(input));
 
-    [HttpGet("screens/form-data")]
-    public ScreenWizardData ScreenFormData([FromQuery] Guid entityId) =>
-        wizard.GetScreenWizardData(entityId);
+    [HttpGet("screens/wizard-data")]
+    public IActionResult GetScreenWizardData([FromQuery] Guid entityId) =>
+        Ok(wizard.GetScreenWizardData(entityId));
 
-    [HttpGet("lookups/form-data")]
-    public LookupWizardData LookupFormData([FromQuery] Guid entityId) =>
-        wizard.GetLookupWizardData(entityId);
+    [HttpGet("lookups/wizard-data")]
+    public IActionResult GetLookupWizardData([FromQuery] Guid entityId) =>
+        Ok(wizard.GetLookupWizardData(entityId));
 
     [HttpGet("data-structures/{id}/sql")]
-    public GetDataStructureSqlResult Sql(Guid id) => wizard.GetDataStructureSql(id);
+    public IActionResult GetDataStructureSql(Guid id) => Ok(wizard.GetDataStructureSql(id));
 }
