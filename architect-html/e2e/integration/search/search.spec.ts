@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { expect, test } from '@playwright/test';
-import { resetBackend } from '../support/resetBackend';
+import { resetBackend } from '@support/resetBackend';
 
 test.describe('Search virtual entity test', () => {
   test.beforeEach(async ({ request }) => {

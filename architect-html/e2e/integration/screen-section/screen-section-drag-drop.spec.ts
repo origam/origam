@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { expect, test } from '@playwright/test';
-import { resetBackend } from '../support/resetBackend';
+import { resetBackend } from '@support/resetBackend';
 
 test.describe('Screen Section drag and drop (real backend)', () => {
   test.beforeEach(async ({ request }) => {

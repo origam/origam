@@ -1,13 +1,11 @@
 {
-  // The e2e tests live outside src, so they aren't covered by tsconfig.app.json
-  // (which only includes "src"). Without this file the editor type-checks them in
-  // an inferred project with moduleResolution "node", which can't read the
-  // "exports" map in @playwright/test's package.json -> TS2792. Inheriting the
-  // app config gives them moduleResolution "bundler" and the @/ path aliases.
   "extends": "../tsconfig.app.json",
   "compilerOptions": {
     "composite": false,
-    "types": ["node"]
+    "types": ["node"],
+    "paths": {
+      "@support/*": ["./integration/support/*"]
+    }
   },
   "include": ["**/*.ts"]
 }
