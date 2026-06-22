@@ -151,13 +151,19 @@ jobs:
       # step (background processes don't reliably survive between steps).
 
       # --- Frontend + tests ------------------------------------------------
+      # The frontend deps are still needed: Playwright launches `yarn dev` from
+      # architect-html as the dev server it tests against.
       - name: Install frontend dependencies
         run: yarn install --immutable
         working-directory: architect-html
 
+      - name: Install e2e dependencies
+        run: yarn install --immutable
+        working-directory: test/architect-html-e2e
+
       - name: Install Playwright browser
         run: yarn playwright install chromium
-        working-directory: architect-html
+        working-directory: test/architect-html-e2e
 
       - name: Run integration tests
         env:
@@ -167,7 +173,7 @@ jobs:
           ARCHITECT_SERVER_CMD: 'dotnet "${{ env.SERVER_DLL }}" --urls "https://localhost:7099;http://localhost:5003"'
           ARCHITECT_SERVER_CWD: ${{ env.SERVER_DIR }}
         run: yarn test:e2e:integration
-        working-directory: architect-html
+        working-directory: test/architect-html-e2e
 
       # --- Artifacts -------------------------------------------------------
       - name: Upload Playwright report
@@ -175,7 +181,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: playwright-integration-report
-          path: architect-html/playwright-report
+          path: test/architect-html-e2e/playwright-report
           retention-days: 7
           if-no-files-found: ignore
 
@@ -184,7 +190,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: playwright-integration-test-results
-          path: architect-html/test-results
+          path: test/architect-html-e2e/test-results
           retention-days: 7
           if-no-files-found: ignore
 

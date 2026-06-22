@@ -10,12 +10,7 @@
     "preview": "vite preview",
     "format": "prettier --write .",
     "lint:fix": "eslint src --ext ts,tsx,js,jsx --fix --max-warnings 0",
-    "fix": "yarn format && yarn lint:fix",
-    "test:e2e:report": "playwright show-report",
-    "test:e2e:codegen": "playwright codegen https://localhost:5173",
-    "test:e2e:integration": "playwright test --config=playwright.integration.config.ts",
-    "test:e2e:integration:ui": "playwright test --config=playwright.integration.config.ts --ui",
-    "test:e2e:integration:debug": "playwright test --config=playwright.integration.config.ts --debug"
+    "fix": "yarn format && yarn lint:fix"
   },
   "dependencies": {
     "@babel/plugin-proposal-decorators": "^7.29.7",
@@ -37,7 +32,6 @@
   },
   "devDependencies": {
     "@babel/core": "^7.29.7",
-    "@playwright/test": "^1.60.0",
     "@rolldown/plugin-babel": "^0.2.3",
     "@types/babel__core": "^7.20.5",
     "@types/lodash": "^4.17.24",

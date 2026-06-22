@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { defineConfig } from '@playwright/test';
 import path from 'node:path';
-import { frontendWebServer, sharedConfig } from './playwright.config';
+import { frontendWebServer, repoRoot, sharedConfig } from './playwright.config';
 
 // Integration suite: runs the architect-html frontend against a real, running
 // Origam.Architect.Server (which the Vite dev server proxies to). The backend
@@ -34,7 +34,8 @@ const BACKEND_URLS_ARG = 'https://localhost:7099;http://localhost:5003';
 // points at the model + database). Defaults to the local Debug build; CI and
 // custom setups override it, or override the whole command via ARCHITECT_SERVER_CMD.
 const SERVER_DIR =
-  process.env.ARCHITECT_SERVER_DIR ?? '../backend/Origam.Architect.Server/bin/Debug/net8.0';
+  process.env.ARCHITECT_SERVER_DIR ??
+  path.join(repoRoot, 'backend/Origam.Architect.Server/bin/Debug/net8.0');
 // Absolute path with native separators — cmd won't run a relative/forward-slash
 // exe path, and cwd is not on PATH. The server reads OrigamSettings.config from
 // next to its own exe, so cwd doesn't affect config loading.
@@ -50,7 +51,7 @@ const serverCwd = process.env.ARCHITECT_SERVER_CWD ?? serverDir;
 
 export default defineConfig({
   ...sharedConfig,
-  testDir: './e2e/integration',
+  testDir: './integration',
   // Activating a package against a fresh database triggers a server-side deploy
   // (CI starts from an empty origam-demo), so allow generous per-test time.
   timeout: 120_000,

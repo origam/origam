@@ -18,10 +18,23 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { execFileSync } from 'node:child_process';
+import fs from 'node:fs';
 import path from 'node:path';
 import type { APIRequestContext } from '@playwright/test';
 
-const repoRoot = path.resolve(process.cwd(), '..');
+function findRepoRoot(): string {
+  let dir = process.cwd();
+  while (!fs.existsSync(path.join(dir, 'model-tests'))) {
+    const parent = path.dirname(dir);
+    if (parent === dir) {
+      throw new Error('Could not locate the repository root (no model-tests directory above the current working directory).');
+    }
+    dir = parent;
+  }
+  return dir;
+}
+
+const repoRoot = findRepoRoot();
 const MODEL_DIR = 'model-tests/model';
 
 export function restoreModelFiles(): void {

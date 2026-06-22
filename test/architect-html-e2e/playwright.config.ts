@@ -18,6 +18,26 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { devices, type PlaywrightTestConfig } from '@playwright/test';
+import fs from 'node:fs';
+import path from 'node:path';
+
+// This suite lives in test/architect-html-e2e, two levels below the repo root.
+// Resolve the root by walking up to the directory that holds architect-html so
+// the paths below survive being run from any working directory.
+function findRepoRoot(): string {
+  let dir = process.cwd();
+  while (!fs.existsSync(path.join(dir, 'architect-html'))) {
+    const parent = path.dirname(dir);
+    if (parent === dir) {
+      throw new Error('Could not locate the repository root (no architect-html directory above the current working directory).');
+    }
+    dir = parent;
+  }
+  return dir;
+}
+
+export const repoRoot = findRepoRoot();
+export const architectHtmlDir = path.join(repoRoot, 'architect-html');
 
 // The Vite dev server runs over HTTPS (vite-plugin-mkcert) on port 5173 and
 // proxies API calls to Origam.Architect.Server. We pin the port so the
@@ -32,10 +52,14 @@ const useHttp = !!process.env.CI || process.env.PW_HTTP === 'true';
 const protocol = useHttp ? 'http' : 'https';
 export const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? `${protocol}://localhost:${PORT}`;
 
+type WebServerConfig = Exclude<NonNullable<PlaywrightTestConfig['webServer']>, unknown[]>;
+
 // The frontend dev server. Reused by the integration config, which adds the
-// backend server in front of it.
-export const frontendWebServer: NonNullable<PlaywrightTestConfig['webServer']> = {
+// backend server in front of it. The Vite app lives in architect-html, so the
+// command runs there rather than in this suite's directory.
+export const frontendWebServer: WebServerConfig = {
   command: `yarn dev --port ${PORT} --strictPort`,
+  cwd: architectHtmlDir,
   env: useHttp ? { VITE_DISABLE_HTTPS: 'true' } : {},
   url: baseURL,
   ignoreHTTPSErrors: true,

@@ -2,7 +2,12 @@
 
 End-to-end tests for the **Origam HTML Architect** frontend, powered by [Playwright](https://playwright.dev/).
 
-The integration tests live in [`e2e/integration`](./integration) and run against a **real backend**.
+The integration tests live in [`integration`](./integration) and run against a **real backend**.
+
+This suite is a standalone project: install its dependencies with `yarn install`
+from this directory before running anything. The frontend dev server it launches
+still comes from `architect-html`, so that project must have its dependencies
+installed too.
 
 ---
 
@@ -21,7 +26,7 @@ Before running the integration suite, start both the backend and the frontend:
 
 ## Running the integration suite
 
-From the `architect-html` directory, run:
+From the `test/architect-html-e2e` directory, run:
 
 ```bash
 yarn test:e2e:integration:ui
