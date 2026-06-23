@@ -26,6 +26,7 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using Newtonsoft.Json;
 using Origam.Service.Core;
 using Origam.Workbench.Services;
@@ -34,7 +35,7 @@ namespace Origam.Server.Controller;
 
 [Authorize(Policy = "InternalApi")]
 [ApiController]
-public class WorkQueueController : ControllerBase
+public class WorkQueueController(IStringLocalizer<SharedResources> localizer) : ControllerBase
 {
     private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
         System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
@@ -86,7 +87,10 @@ public class WorkQueueController : ControllerBase
             }
             else
             {
-                output = JsonConvert.SerializeObject(ex);
+                output = String.Format(
+                    format: "{{\"Message\" : {0}}}",
+                    JsonConvert.SerializeObject(localizer["UnknownError"].ToString())
+                );
             }
             return BadRequest(output);
         }

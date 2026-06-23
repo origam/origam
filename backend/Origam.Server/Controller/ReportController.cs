@@ -100,7 +100,14 @@ public class ReportController : AbstractController
         }
         catch (Exception ex)
         {
-            return StatusCode(statusCode: 500, ex);
+            log.LogError(
+                exception: ex,
+                message: $"Error processing report request for reportRequestId {reportRequestId}"
+            );
+            return StatusCode(
+                statusCode: 500,
+                value: new { Message = localizer["UnknownError"].ToString() }
+            );
         }
         finally
         {

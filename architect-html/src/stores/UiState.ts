@@ -25,6 +25,13 @@ enum EStorageKeys {
   SETTINGS = 'settings',
   DEPLOYMENT_SCRIPTS_GENERATOR_STATE = 'deploymentScriptsGeneratorState',
   SIDEBAR_WIDTH = 'sidebarWidth',
+  PROPERTY_SECTION_COLLAPSED = 'propertySectionCollapsed',
+}
+
+type TPropertySectionCollapsed = { [category: string]: boolean };
+
+function isCollapsedByDefault(category: string): boolean {
+  return category === 'Info';
 }
 
 export const SIDEBAR_MIN_WIDTH = 250;
@@ -58,6 +65,7 @@ const STORAGE_DEFAULTS = {
   [EStorageKeys.SETTINGS]: defaultSettings,
   [EStorageKeys.DEPLOYMENT_SCRIPTS_GENERATOR_STATE]: defaultDsGeneratorState,
   [EStorageKeys.SIDEBAR_WIDTH]: SIDEBAR_DEFAULT_WIDTH,
+  [EStorageKeys.PROPERTY_SECTION_COLLAPSED]: {} as TPropertySectionCollapsed,
 } as const;
 
 function clampSidebarWidth(value: number): number {
@@ -72,6 +80,7 @@ export class UIState {
     ...defaultDsGeneratorState,
   };
   @observable accessor sidebarWidth: number = SIDEBAR_DEFAULT_WIDTH;
+  @observable accessor propertySectionCollapsed: TPropertySectionCollapsed = {};
 
   constructor() {
     this.expandedNodes = this.loadStateFromLocalStorage(EStorageKeys.TREE_EXPANDED_NODES);
@@ -89,6 +98,24 @@ export class UIState {
       const parsed = Number.parseFloat(rawSidebarWidth);
       this.sidebarWidth = clampSidebarWidth(parsed);
     }
+
+    this.propertySectionCollapsed = this.loadStateFromLocalStorage(
+      EStorageKeys.PROPERTY_SECTION_COLLAPSED,
+    );
+  }
+
+  isPropertySectionCollapsed(category: string): boolean {
+    return this.propertySectionCollapsed[category] ?? isCollapsedByDefault(category);
+  }
+
+  @action
+  togglePropertySectionCollapsed(category: string) {
+    const next = !this.isPropertySectionCollapsed(category);
+    this.propertySectionCollapsed = { ...this.propertySectionCollapsed, [category]: next };
+    localStorage.setItem(
+      EStorageKeys.PROPERTY_SECTION_COLLAPSED,
+      JSON.stringify(this.propertySectionCollapsed),
+    );
   }
 
   @action
