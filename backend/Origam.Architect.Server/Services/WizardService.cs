@@ -73,11 +73,13 @@ public class WizardService(
     {
         var column =
             persistenceProvider.RetrieveInstance<IDataEntityColumn>(input.ColumnId)
-            ?? throw new UserOrigamException($"Column {input.ColumnId} not found");
+            ?? throw new UserOrigamException(
+                string.Format(Strings.Wizard_ColumnNotFound, input.ColumnId)
+            );
 
         if (column.ParentItem is not IDataEntity)
         {
-            throw new UserOrigamException("Column does not belong to an entity.");
+            throw new UserOrigamException(Strings.Wizard_ColumnNotInEntity);
         }
 
         var generated = new List<ISchemaItem>();
@@ -89,7 +91,9 @@ public class WizardService(
             }
             if (!FilterDefinitions.TryGetValue(input.FilterType, out var definition))
             {
-                throw new UserOrigamException($"Unknown filter type '{input.FilterType}'.");
+                throw new UserOrigamException(
+                    string.Format(Strings.Wizard_UnknownFilterType, input.FilterType)
+                );
             }
             return EntityHelper.CreateFilter(
                 field: column,
@@ -110,7 +114,7 @@ public class WizardService(
     {
         if (string.IsNullOrEmpty(field.Name))
         {
-            throw new ArgumentException("Field Name is not set.");
+            throw new ArgumentException(Strings.Wizard_FieldNameNotSet);
         }
         var schemaService = ServiceManager.Services.GetService<ISchemaService>();
         var entity = (IDataEntity)field.ParentItem;
@@ -158,7 +162,7 @@ public class WizardService(
             );
         if (betweenFunction == null)
         {
-            throw new Exception("Between function not found. Cannot create filter.");
+            throw new Exception(Strings.Wizard_BetweenFunctionNotFound);
         }
         call.Function = betweenFunction;
         call.Name = BetweenFunctionName;
@@ -195,7 +199,9 @@ public class WizardService(
     {
         var entity =
             persistenceProvider.RetrieveInstance<IDataEntity>(entityId)
-            ?? throw new UserOrigamException($"Entity {entityId} not found");
+            ?? throw new UserOrigamException(
+                string.Format(Strings.Wizard_EntityNotFound, entityId)
+            );
 
         var columns = entity
             .EntityColumns.Where(column => !string.IsNullOrEmpty(column.ToString()))
@@ -230,16 +236,18 @@ public class WizardService(
     {
         if (string.IsNullOrWhiteSpace(input.Name))
         {
-            throw new UserOrigamException("Screen name is required.");
+            throw new UserOrigamException(Strings.Wizard_ScreenNameRequired);
         }
 
         var entity =
             persistenceProvider.RetrieveInstance<IDataEntity>(input.EntityId)
-            ?? throw new UserOrigamException($"Entity {input.EntityId} not found");
+            ?? throw new UserOrigamException(
+                string.Format(Strings.Wizard_EntityNotFound, input.EntityId)
+            );
 
         if (input.SelectedFieldIds == null || input.SelectedFieldIds.Count == 0)
         {
-            throw new UserOrigamException("At least one field must be selected.");
+            throw new UserOrigamException(Strings.Wizard_AtLeastOneFieldRequired);
         }
 
         var trimmedName = input.Name.Trim();
@@ -255,7 +263,7 @@ public class WizardService(
         if (duplicate != null)
         {
             throw new UserOrigamException(
-                $"A DataStructure named \"{trimmedName}\" already exists."
+                string.Format(Strings.Wizard_DataStructureAlreadyExists, trimmedName)
             );
         }
 
@@ -264,7 +272,9 @@ public class WizardService(
         {
             var column =
                 entity.EntityColumns.FirstOrDefault(column => column.Id == fieldId)
-                ?? throw new UserOrigamException($"Field {fieldId} not found on entity.");
+                ?? throw new UserOrigamException(
+                    string.Format(Strings.Wizard_FieldNotFoundOnEntity, fieldId)
+                );
             selectedNames[column.Name] = true;
         }
 
@@ -310,11 +320,13 @@ public class WizardService(
     {
         var entity =
             persistenceProvider.RetrieveInstance<IDataEntity>(input.EntityId)
-            ?? throw new UserOrigamException($"Entity {input.EntityId} not found");
+            ?? throw new UserOrigamException(
+                string.Format(Strings.Wizard_EntityNotFound, input.EntityId)
+            );
 
         if (input.SelectedFieldIds == null || input.SelectedFieldIds.Count == 0)
         {
-            throw new UserOrigamException("At least one field must be selected.");
+            throw new UserOrigamException(Strings.Wizard_AtLeastOneFieldRequired);
         }
 
         var selectedColumns = new ArrayList();
@@ -322,7 +334,9 @@ public class WizardService(
         {
             var column =
                 entity.EntityColumns.FirstOrDefault(column => column.Id == fieldId)
-                ?? throw new UserOrigamException($"Field {fieldId} not found on entity.");
+                ?? throw new UserOrigamException(
+                    string.Format(Strings.Wizard_FieldNotFoundOnEntity, fieldId)
+                );
             selectedColumns.Add(column);
         }
 
@@ -340,11 +354,13 @@ public class WizardService(
     {
         var dataStructure =
             persistenceProvider.RetrieveInstance<DataStructure>(dataStructureId)
-            ?? throw new UserOrigamException($"DataStructure {dataStructureId} not found");
+            ?? throw new UserOrigamException(
+                string.Format(Strings.Wizard_DataStructureNotFound, dataStructureId)
+            );
 
         if (DataServiceFactory.GetDataService() is not AbstractSqlDataService dataService)
         {
-            throw new UserOrigamException("Active data service is not SQL-based.");
+            throw new UserOrigamException(Strings.Wizard_DataServiceNotSql);
         }
 
         var sqlGenerator = (AbstractSqlCommandGenerator)dataService.DbDataAdapterFactory.Clone();
@@ -394,12 +410,14 @@ public class WizardService(
     {
         if (string.IsNullOrWhiteSpace(input.Caption))
         {
-            throw new UserOrigamException("Menu caption is required.");
+            throw new UserOrigamException(Strings.Wizard_MenuCaptionRequired);
         }
 
         var form =
             persistenceProvider.RetrieveInstance<FormControlSet>(input.FormId)
-            ?? throw new UserOrigamException($"Screen (FormControlSet) {input.FormId} not found");
+            ?? throw new UserOrigamException(
+                string.Format(Strings.Wizard_FormControlSetNotFound, input.FormId)
+            );
 
         var role = string.IsNullOrWhiteSpace(input.Role) ? AllRoles : input.Role.Trim();
 
@@ -452,15 +470,14 @@ public class WizardService(
     {
         var entity =
             persistenceProvider.RetrieveInstance<IDataEntity>(entityId)
-            ?? throw new UserOrigamException($"Entity {entityId} not found");
+            ?? throw new UserOrigamException(
+                string.Format(Strings.Wizard_EntityNotFound, entityId)
+            );
 
         var primaryKey =
             entity.EntityColumns.FirstOrDefault(column =>
                 column.IsPrimaryKey && !column.ExcludeFromAllFields
-            )
-            ?? throw new UserOrigamException(
-                "Entity has no primary key defined. Cannot create lookup."
-            );
+            ) ?? throw new UserOrigamException(Strings.Wizard_EntityHasNoPrimaryKeyForLookup);
 
         var columns = entity
             .EntityColumns.Where(column => !string.IsNullOrEmpty(column.ToString()))
@@ -492,32 +509,34 @@ public class WizardService(
     {
         if (string.IsNullOrWhiteSpace(input.Name))
         {
-            throw new UserOrigamException("Lookup name is required.");
+            throw new UserOrigamException(Strings.Wizard_LookupNameRequired);
         }
 
         var entity =
             persistenceProvider.RetrieveInstance<IDataEntity>(input.EntityId)
-            ?? throw new UserOrigamException($"Entity {input.EntityId} not found");
+            ?? throw new UserOrigamException(
+                string.Format(Strings.Wizard_EntityNotFound, input.EntityId)
+            );
 
         var idColumn =
             entity.EntityColumns.FirstOrDefault(column =>
                 column.IsPrimaryKey && !column.ExcludeFromAllFields
-            ) ?? throw new UserOrigamException("Entity has no primary key defined.");
+            ) ?? throw new UserOrigamException(Strings.Wizard_EntityHasNoPrimaryKey);
 
         var displayColumn =
             entity.EntityColumns.FirstOrDefault(column => column.Id == input.DisplayFieldId)
-            ?? throw new UserOrigamException("Display field not found on entity.");
+            ?? throw new UserOrigamException(Strings.Wizard_DisplayFieldNotFound);
 
         var idFilter =
             entity.EntityFilters.FirstOrDefault(filter => filter.Id == input.IdFilterId)
-            ?? throw new UserOrigamException("Id filter not found on entity.");
+            ?? throw new UserOrigamException(Strings.Wizard_IdFilterNotFound);
 
         EntityFilter listFilter = null;
         if (input.ListFilterId.HasValue && input.ListFilterId.Value != Guid.Empty)
         {
             listFilter =
                 entity.EntityFilters.FirstOrDefault(filter => filter.Id == input.ListFilterId.Value)
-                ?? throw new UserOrigamException("List filter not found on entity.");
+                ?? throw new UserOrigamException(Strings.Wizard_ListFilterNotFound);
         }
 
         return transaction.Run(() =>
