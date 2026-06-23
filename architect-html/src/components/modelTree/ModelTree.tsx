@@ -157,7 +157,11 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
     <>
       <div ref={nodeRef} className={rowClassNames} style={{ paddingLeft: `${level * 20}px` }}>
         <div className={S.treeNodeTitle}>
-          <div className={S.symbol} onClick={onToggle} data-test-id={`tree-toggle-${node.nodeText}`}>
+          <div
+            className={S.symbol}
+            onClick={onToggle}
+            data-test-id={`tree-toggle-${node.nodeText}`}
+          >
             {getSymbol()}
           </div>
           <div
