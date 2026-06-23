@@ -171,17 +171,23 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
             {node.nodeText}
           </div>
           <Menu id={menuId} onVisibilityChange={onMenuVisibilityChange}>
-            <Submenu label="New">
-              {node.contextMenuItems.map(item => (
-                <Item
-                  key={item.typeName + item.caption}
-                  id={item.typeName}
-                  onClick={() => run({ generator: node.createNode(item.typeName) })}
-                >
-                  {item.caption}
-                </Item>
-              ))}
-            </Submenu>
+            {node.contextMenuItems.length > 0 ? (
+              <Submenu label="New">
+                {node.contextMenuItems.map(item => (
+                  <Item
+                    key={item.typeName + item.caption}
+                    id={item.typeName}
+                    onClick={() => run({ generator: node.createNode(item.typeName) })}
+                  >
+                    {item.caption}
+                  </Item>
+                ))}
+              </Submenu>
+            ) : (
+              <Item id="new" disabled>
+                New
+              </Item>
+            )}
             <Separator />
             {!node.isNonPersistentItem && (
               <Item id="edit" onClick={() => onNodeDoubleClick(node)}>
