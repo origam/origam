@@ -78,6 +78,7 @@ export const sharedConfig: PlaywrightTestConfig = {
     : [['html', { open: 'never' }], ['list']],
   use: {
     baseURL,
+    testIdAttribute: 'data-test-id',
     // The mkcert / ASP.NET dev certificates are self-signed; trust them.
     ignoreHTTPSErrors: true,
     // Capture a full trace (actions, network, DOM snapshots) when a test is

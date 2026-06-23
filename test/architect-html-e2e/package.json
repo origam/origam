@@ -7,7 +7,7 @@
     "test:e2e:integration:ui": "playwright test --config=playwright.integration.config.ts --ui",
     "test:e2e:integration:debug": "playwright test --config=playwright.integration.config.ts --debug",
     "test:e2e:report": "playwright show-report",
-    "test:e2e:codegen": "playwright codegen https://localhost:5173"
+    "test:e2e:codegen": "playwright codegen --test-id-attribute=data-test-id https://localhost:5173"
   },
   "devDependencies": {
     "@playwright/test": "^1.60.0",

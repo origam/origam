@@ -157,14 +157,14 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
     <>
       <div ref={nodeRef} className={rowClassNames} style={{ paddingLeft: `${level * 20}px` }}>
         <div className={S.treeNodeTitle}>
-          <div className={S.symbol} onClick={onToggle} data-testid={`tree-toggle-${node.nodeText}`}>
+          <div className={S.symbol} onClick={onToggle} data-test-id={`tree-toggle-${node.nodeText}`}>
             {getSymbol()}
           </div>
           <div
             onDoubleClick={() => onNodeDoubleClick(node)}
             onContextMenu={handleContextMenu}
             className={labelClassNames}
-            data-testid={`tree-node-${node.nodeText}`}
+            data-test-id={`tree-node-${node.nodeText}`}
           >
             <div className={S.icon}>
               <Icon src={node.iconUrl ?? '/Icons/generic.svg'} />
@@ -172,12 +172,12 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
             {node.nodeText}
           </div>
           <Menu id={menuId} onVisibilityChange={onMenuVisibilityChange}>
-            <Submenu label="New" data-testid="tree-menu-new">
+            <Submenu label="New" data-test-id="tree-menu-new">
               {node.contextMenuItems.map(item => (
                 <Item
                   key={item.typeName + item.caption}
                   id={item.typeName}
-                  data-testid={`tree-menu-new-${item.typeName}`}
+                  data-test-id={`tree-menu-new-${item.typeName}`}
                   onClick={() => run({ generator: node.createNode(item.typeName) })}
                 >
                   {item.caption}
@@ -186,33 +186,33 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
             </Submenu>
             <Separator />
             {!node.isNonPersistentItem && (
-              <Item id="edit" data-testid="tree-menu-edit" onClick={() => onNodeDoubleClick(node)}>
+              <Item id="edit" data-test-id="tree-menu-edit" onClick={() => onNodeDoubleClick(node)}>
                 {T('Edit', 'tree_node_edit')}
               </Item>
             )}
             {!node.isNonPersistentItem && (
-              <Item id="delete" data-testid="tree-menu-delete" onClick={onDelete}>
+              <Item id="delete" data-test-id="tree-menu-delete" onClick={onDelete}>
                 {T('Delete', 'tree_node_delete')}
               </Item>
             )}
             {!node.isNonPersistentItem && (
               <Item
                 id="documentation"
-                data-testid="tree-menu-documentation"
+                data-test-id="tree-menu-documentation"
                 onClick={openDocumentationEditor}
               >
                 {T('Documentation', 'tree_node_documentation')}
               </Item>
             )}
             {!node.isNonPersistentItem && (
-              <Item id="references" data-testid="tree-menu-references" onClick={findReferences}>
+              <Item id="references" data-test-id="tree-menu-references" onClick={findReferences}>
                 {T('Find references', 'tree_node_references')}
               </Item>
             )}
             {!node.isNonPersistentItem && (
               <Item
                 id="dependencies"
-                data-testid="tree-menu-dependencies"
+                data-test-id="tree-menu-dependencies"
                 onClick={findDependencies}
               >
                 {T('Find dependencies', 'tree_node_dependencies')}
@@ -222,7 +222,7 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
             {node.isDeploymentVersion && (
               <Item
                 id="setVersionCurrent"
-                data-testid="tree-menu-set-version-current"
+                data-test-id="tree-menu-set-version-current"
                 onClick={setVersionCurrent}
               >
                 {T('Make version current', 'tree_node_make_version_current')}
@@ -232,7 +232,7 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
             {node.isUpdateScriptActivity && (
               <Item
                 id="runUpdateScriptActivity"
-                data-testid="tree-menu-run-update-script-activity"
+                data-test-id="tree-menu-run-update-script-activity"
                 onClick={runUpdateScriptActivity}
               >
                 {T('Execute', 'tree_node_run_update_script_activity')}

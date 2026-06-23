@@ -47,7 +47,7 @@ const Button = ({
       })}
       onClick={onClick}
       aria-disabled={isDisabled}
-      data-testid={dataTestId}
+      data-test-id={dataTestId}
     >
       {prefix}
       <span>{title}</span>
