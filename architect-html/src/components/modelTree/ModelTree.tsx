@@ -319,17 +319,23 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
             {node.nodeText}
           </div>
           <Menu id={menuId} onVisibilityChange={onMenuVisibilityChange}>
-            <Submenu label={T('New', 'tree_node_submenu_new')}>
-              {node.contextMenuItems.map(item => (
-                <Item
-                  key={item.typeName + item.caption}
-                  id={item.typeName}
-                  onClick={() => run({ generator: node.createNode(item.typeName) })}
-                >
-                  {item.caption}
-                </Item>
-              ))}
-            </Submenu>
+            {node.contextMenuItems.length > 0 ? (
+              <Submenu label={T('New', 'tree_node_submenu_new')}>
+                {node.contextMenuItems.map(item => (
+                  <Item
+                    key={item.typeName + item.caption}
+                    id={item.typeName}
+                    onClick={() => run({ generator: node.createNode(item.typeName) })}
+                  >
+                    {item.caption}
+                  </Item>
+                ))}
+              </Submenu>
+            ) : (
+              <Item id="new" disabled>
+                {T('New', 'tree_node_submenu_new')}
+              </Item>
+            )}
             {node.isDataEntity && (
               <Submenu label={T('Actions', 'tree_node_submenu_actions')}>
                 <Item id="create-lookup" onClick={openCreateLookupWizard}>
