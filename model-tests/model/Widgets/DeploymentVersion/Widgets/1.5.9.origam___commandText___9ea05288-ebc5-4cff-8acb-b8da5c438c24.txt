@@ -1,5 +1,4 @@
-﻿
-ALTER TABLE [ArrayTest] ADD CONSTRAINT [FK_ArrayTest_refBusinessPartnerId_BusinessPartner]
+﻿ALTER TABLE [ArrayTest] ADD CONSTRAINT [FK_ArrayTest_refBusinessPartnerId_BusinessPartner]
 	FOREIGN KEY (
 		[refBusinessPartnerId]
 	)
