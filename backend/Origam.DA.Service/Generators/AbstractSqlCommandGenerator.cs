@@ -5934,9 +5934,6 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                     stringBuilder.Append("NOT ");
                 }
                 var arrayRelation = (column.Field as DetachedField).ArrayRelation;
-                stringBuilder.Append("EXISTS(SELECT * FROM ");
-                stringBuilder.Append(RenderExpression(arrayRelation as EntityRelationItem));
-                stringBuilder.Append(" WHERE");
                 DataStructureEntity arrayEntity = null;
                 foreach (
                     var relatedEntity in entity.ChildItemsByType<DataStructureEntity>(
@@ -5953,10 +5950,17 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                 if (arrayEntity == null)
                 {
                     throw new Exception(
-                        $@"Array entity {arrayRelation.AssociatedEntity.Name} 
+                        $@"Array entity {arrayRelation.AssociatedEntity.Name}
                             not found among child entities of {entity.Name}"
                     );
                 }
+                stringBuilder.Append("EXISTS(SELECT * FROM ");
+                stringBuilder.Append(RenderExpression(arrayRelation as EntityRelationItem));
+                stringBuilder.Append(" AS ");
+                stringBuilder.Append(sqlRenderer.NameLeftBracket);
+                stringBuilder.Append(arrayEntity.Name);
+                stringBuilder.Append(sqlRenderer.NameRightBracket);
+                stringBuilder.Append(" WHERE");
                 var andNeeded = false;
                 foreach (
                     var pairItem in arrayRelation.ChildItemsByType<EntityRelationColumnPairItem>(
