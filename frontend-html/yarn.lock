@@ -7184,7 +7184,6 @@ __metadata:
     vite: "npm:^8.0.16"
     vite-tsconfig-paths: "npm:^6.1.1"
     wkt: "npm:^0.1.1"
-    ws: "npm:^8.21.0"
     xml-js: "npm:^1.6.11"
     xstate: "npm:^4.38.3"
   languageName: unknown
@@ -8530,21 +8529,6 @@ __metadata:
   linkType: hard
 
 "ws@npm:^8.18.0":
-  version: 8.18.2
-  resolution: "ws@npm:8.18.2"
-  peerDependencies:
-    bufferutil: ^4.0.1
-    utf-8-validate: ">=5.0.2"
-  peerDependenciesMeta:
-    bufferutil:
-      optional: true
-    utf-8-validate:
-      optional: true
-  checksum: 10c0/4b50f67931b8c6943c893f59c524f0e4905bbd183016cfb0f2b8653aa7f28dad4e456b9d99d285bbb67cca4fedd9ce90dfdfaa82b898a11414ebd66ee99141e4
-  languageName: node
-  linkType: hard
-
-"ws@npm:^8.21.0":
   version: 8.21.0
   resolution: "ws@npm:8.21.0"
   peerDependencies:
