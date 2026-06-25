@@ -90,6 +90,31 @@ export class TreeNode implements IEditorNode {
     return this.itemType === 'Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity';
   }
 
+  get isDataEntity() {
+    return (
+      this.itemType === 'Origam.Schema.EntityModel.TableMappingItem' ||
+      this.itemType === 'Origam.Schema.EntityModel.DetachedEntity'
+    );
+  }
+
+  get isDataEntityColumn() {
+    return (
+      this.itemType === 'Origam.Schema.EntityModel.FieldMappingItem' ||
+      this.itemType === 'Origam.Schema.EntityModel.DetachedField' ||
+      this.itemType === 'Origam.Schema.EntityModel.AggregatedColumn' ||
+      this.itemType === 'Origam.Schema.EntityModel.FunctionCall' ||
+      this.itemType === 'Origam.Schema.EntityModel.LookupField'
+    );
+  }
+
+  get isScreen() {
+    return this.itemType === 'Origam.Schema.GuiModel.FormControlSet';
+  }
+
+  get isDataStructure() {
+    return this.itemType === 'Origam.Schema.EntityModel.DataStructure';
+  }
+
   *loadChildren(): Generator<Promise<IApiTreeNode[]>, void, IApiTreeNode[]> {
     if (this.isLoading) {
       return;

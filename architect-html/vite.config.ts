@@ -99,6 +99,10 @@ export default defineConfig({
         target: 'http://localhost:5003',
         secure: false,
       },
+      '/wizards': {
+        target: 'https://localhost:7099',
+        secure: false,
+      },
     },
   },
 });

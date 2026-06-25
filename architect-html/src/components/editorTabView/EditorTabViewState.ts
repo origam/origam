@@ -37,6 +37,7 @@ import { observable } from 'mobx';
 import { CancellablePromise } from 'mobx/dist/api/flow';
 
 const SearchEditorId = 'SearchResultsEditor-Id';
+const ShowSqlEditorIdPrefix = 'ShowSqlEditor-';
 const DeploymentScriptsGeneratorModuleId = 'DeploymentScriptsGeneratorModule-Id';
 
 export class EditorTabViewState {
@@ -128,6 +129,36 @@ export class EditorTabViewState {
       this.openEditor(editorData, 'DeploymentScriptsGeneratorModule');
       this.rootStore.uiState.setDsGeneratorState({ isOpen: true });
     }.bind(this);
+  }
+
+  openShowSqlEditor(dataStructureId: string, dataStructureName: string, sql: string) {
+    const tabId = ShowSqlEditorIdPrefix + dataStructureId;
+    const existing = this.editorsContainers.find(editor => editor.state.tabId === tabId);
+    if (existing) {
+      this.setActiveEditor(tabId);
+      return;
+    }
+
+    const tempTabData: IApiTabData = {
+      tabId,
+      tabType: 'ShowSqlEditor',
+      parentNodeId: undefined,
+      isDirty: false,
+      node: {
+        id: '',
+        origamId: '',
+        nodeText: '',
+        editorType: null,
+      },
+      data: {
+        dataStructureId,
+        dataStructureName,
+        sql,
+      },
+    };
+
+    const editorData = new EditorData(tempTabData, null);
+    this.openEditor(editorData);
   }
 
   openSearchResults(queryText: string, results: ISearchResult[], label: string) {
@@ -264,7 +295,7 @@ export class EditorTabViewState {
 
       if (editorId === DeploymentScriptsGeneratorModuleId) {
         this.rootStore.uiState.setDsGeneratorState({ isOpen: false });
-      } else if (editorId !== SearchEditorId) {
+      } else if (editorId !== SearchEditorId && !editorId.startsWith(ShowSqlEditorIdPrefix)) {
         yield this.architectApi.closeTab(editorId);
       }
 
