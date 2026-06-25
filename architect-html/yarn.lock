@@ -1630,7 +1630,7 @@ __metadata:
     sass: "npm:^1.100.0"
     typescript: "npm:^6.0.3"
     vite: "npm:^8.0.16"
-    vite-plugin-mkcert: "npm:^2.0.0"
+    vite-plugin-mkcert: "npm:^2.1.0"
     vite-tsconfig-paths: "npm:^6.1.1"
   languageName: unknown
   linkType: soft
@@ -5225,10 +5225,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"undici@npm:^8.0.2":
-  version: 8.1.0
-  resolution: "undici@npm:8.1.0"
-  checksum: 10c0/c55ad57f10efb9b55ab683104dde1c6f620496b9facde640ba26cffdc53a53694c12a8c3f7196069017c5c1b5031ef0843e232d9c04dcc834b3baa046d3ea678
+"undici@npm:^8.3.0":
+  version: 8.3.0
+  resolution: "undici@npm:8.3.0"
+  checksum: 10c0/6a67e46aefc7b882702e76878c4d317040f1ae04aefbab3a3639bcb07b255a050eaf3202ea56b80c42ba5c7140d990cf0096412ca50d6c825a2e1c57c59d1e28
   languageName: node
   linkType: hard
 
@@ -5282,16 +5282,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite-plugin-mkcert@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "vite-plugin-mkcert@npm:2.0.0"
+"vite-plugin-mkcert@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "vite-plugin-mkcert@npm:2.1.0"
   dependencies:
     debug: "npm:^4.4.3"
     supports-color: "npm:^10.2.2"
-    undici: "npm:^8.0.2"
+    undici: "npm:^8.3.0"
   peerDependencies:
     vite: ">=3"
-  checksum: 10c0/1b2aa8ece2661dd6b80246dd8c11efa3534ceb63adde36823994d154dd15eb897debd71d2b460290c68953180f74f5ad1e1a3bb7b9e8570e10be47aec0c1996a
+  checksum: 10c0/989bb8563546f5073f8d422a46413b16a167d6658a3d5cdc1f6491c55ed935bbb8ffbfdcf1ad854a6979995ede0ee135c3df8de6fc6b131f8b0d826aafae4915
   languageName: node
   linkType: hard
 
