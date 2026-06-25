@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -31,7 +32,7 @@ namespace Origam.Workbench.Services;
 public class ServiceManager
 {
     private List<IWorkbenchService> serviceList = new();
-    private Dictionary<Type, IWorkbenchService> services = new();
+    private ConcurrentDictionary<Type, IWorkbenchService> services = new();
 
     private static readonly ServiceManager defaultServiceManager = new();
     private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
@@ -108,7 +109,7 @@ public class ServiceManager
         }
         foreach (Type hashType in hashTypes)
         {
-            services.Remove(hashType);
+            services.TryRemove(hashType, out _);
         }
     }
 

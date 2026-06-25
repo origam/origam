@@ -18,10 +18,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { RootStoreContext, T } from '@/main';
-import { ISearchResult } from '@api/IArchitectApi';
+import { CreateFilterType, ICreateWizardResult, ISearchResult } from '@api/IArchitectApi';
 import { Icon } from '@components/icon/Icon';
 import S from '@components/modelTree/ModelTree.module.scss';
 import { TreeNode } from '@components/modelTree/TreeNode';
+import { CreateLookupWizard } from '@components/modelTree/createWizard/CreateLookupWizard';
+import { CreateScreenWizard } from '@components/modelTree/createWizard/CreateScreenWizard';
+import { CreateWorkQueueWizard } from '@components/modelTree/createWizard/CreateWorkQueueWizard';
+import { CreateMenuItemWizard } from '@components/modelTree/createWizard/CreateMenuItemWizard';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { observer } from 'mobx-react-lite';
 import { useContext, useEffect, useRef } from 'react';
@@ -122,6 +126,150 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
     run({ generator: node.runUpdateScriptActivity() });
   }
 
+  function showCreatedConfirmation(actionLabel: string, results: ISearchResult[]) {
+    rootStore.notificationState.pushActionResult({
+      title: T('{0} created', 'wizard_created_notification_title', actionLabel),
+      results,
+      onShowResult: () =>
+        rootStore.editorTabViewState.openSearchResults(
+          actionLabel,
+          results,
+          T(
+            '{0}: {1}',
+            'wizard_created_results_title',
+            actionLabel,
+            results[0]?.foundIn ?? node.nodeText,
+          ),
+        ),
+    });
+  }
+
+  function createFilter(filterType: CreateFilterType, label: string) {
+    run({
+      generator: function* () {
+        const result = (yield rootStore.architectApi.createFilter({
+          columnId: node.origamId,
+          filterType,
+        })) as ICreateWizardResult;
+        yield* rootStore.modelTreeState.loadPackageNodes.bind(rootStore.modelTreeState)();
+        showCreatedConfirmation(label, result?.searchResults ?? []);
+      },
+    });
+  }
+
+  function openCreateLookupWizard() {
+    const closeDialog = rootStore.dialogStack.pushDialog(
+      '',
+      <CreateLookupWizard
+        entityId={node.origamId}
+        parentNodeName={node.nodeText}
+        onCancel={() => closeDialog()}
+        onCreate={result => {
+          closeDialog();
+          run({
+            generator: function* () {
+              yield* rootStore.modelTreeState.loadPackageNodes.bind(rootStore.modelTreeState)();
+              showCreatedConfirmation(
+                T('Lookup', 'wizard_artifact_lookup'),
+                result?.searchResults ?? [],
+              );
+            },
+          });
+        }}
+      />,
+      undefined,
+      false,
+    );
+  }
+
+  function openCreateScreenWizard() {
+    const closeDialog = rootStore.dialogStack.pushDialog(
+      '',
+      <CreateScreenWizard
+        entityId={node.origamId}
+        parentNodeName={node.nodeText}
+        onCancel={() => closeDialog()}
+        onCreate={result => {
+          closeDialog();
+          run({
+            generator: function* () {
+              yield* rootStore.modelTreeState.loadPackageNodes.bind(rootStore.modelTreeState)();
+              showCreatedConfirmation(
+                T('Screen', 'wizard_artifact_screen'),
+                result?.searchResults ?? [],
+              );
+            },
+          });
+        }}
+      />,
+      undefined,
+      false,
+    );
+  }
+
+  function openCreateWorkQueueWizard() {
+    const closeDialog = rootStore.dialogStack.pushDialog(
+      '',
+      <CreateWorkQueueWizard
+        entityId={node.origamId}
+        parentNodeName={node.nodeText}
+        onCancel={() => closeDialog()}
+        onCreate={result => {
+          closeDialog();
+          run({
+            generator: function* () {
+              yield* rootStore.modelTreeState.loadPackageNodes.bind(rootStore.modelTreeState)();
+              showCreatedConfirmation(
+                T('WorkQueue Class', 'wizard_artifact_work_queue_class'),
+                result?.searchResults ?? [],
+              );
+            },
+          });
+        }}
+      />,
+      undefined,
+      false,
+    );
+  }
+
+  function showDataStructureSql() {
+    run({
+      generator: function* () {
+        const result = yield rootStore.architectApi.getDataStructureSql(node.origamId);
+        rootStore.editorTabViewState.openShowSqlEditor(
+          result.dataStructureId,
+          result.dataStructureName,
+          result.sql,
+        );
+      },
+    });
+  }
+
+  function openCreateMenuItemWizard() {
+    const closeDialog = rootStore.dialogStack.pushDialog(
+      '',
+      <CreateMenuItemWizard
+        formId={node.origamId}
+        parentNodeName={node.nodeText}
+        onCancel={() => closeDialog()}
+        onCreate={result => {
+          closeDialog();
+          run({
+            generator: function* () {
+              yield* rootStore.modelTreeState.loadPackageNodes.bind(rootStore.modelTreeState)();
+              showCreatedConfirmation(
+                T('Menu Item', 'wizard_artifact_menu_item'),
+                result?.searchResults ?? [],
+              );
+            },
+          });
+        }}
+      />,
+      undefined,
+      false,
+    );
+  }
+
   function getSymbol() {
     if (node.children.length > 0 || !node.childrenInitialized) {
       return node.isExpanded ? '▼' : '▶';
@@ -172,7 +320,7 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
           </div>
           <Menu id={menuId} onVisibilityChange={onMenuVisibilityChange}>
             {node.contextMenuItems.length > 0 ? (
-              <Submenu label="New">
+              <Submenu label={T('New', 'tree_node_submenu_new')}>
                 {node.contextMenuItems.map(item => (
                   <Item
                     key={item.typeName + item.caption}
@@ -185,8 +333,98 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
               </Submenu>
             ) : (
               <Item id="new" disabled>
-                New
+                {T('New', 'tree_node_submenu_new')}
               </Item>
+            )}
+            {node.isDataEntity && (
+              <Submenu label={T('Actions', 'tree_node_submenu_actions')}>
+                <Item id="create-lookup" onClick={openCreateLookupWizard}>
+                  {T('Create Lookup', 'tree_node_create_lookup')}
+                </Item>
+                <Item id="create-screen" onClick={openCreateScreenWizard}>
+                  {T('Create Screen', 'tree_node_create_screen')}
+                </Item>
+                <Item id="create-workqueue" onClick={openCreateWorkQueueWizard}>
+                  {T('Create Workqueue class', 'tree_node_create_workqueue')}
+                </Item>
+              </Submenu>
+            )}
+            {node.isScreen && (
+              <Submenu label={T('Actions', 'tree_node_submenu_actions')}>
+                <Item id="create-menu-item" onClick={openCreateMenuItemWizard}>
+                  {T('Create Menu Item', 'tree_node_create_menu_item')}
+                </Item>
+              </Submenu>
+            )}
+            {node.isDataStructure && (
+              <Submenu label={T('Actions', 'tree_node_submenu_actions')}>
+                <Item id="show-sql" onClick={showDataStructureSql}>
+                  {T('Show SQL', 'tree_node_show_sql')}
+                </Item>
+              </Submenu>
+            )}
+            {node.isDataEntityColumn && (
+              <Submenu label={T('Actions', 'tree_node_submenu_actions')}>
+                <Item
+                  id="create-filter-equal"
+                  onClick={() => createFilter('Equal', T('Filter (=)', 'filter_label_equal'))}
+                >
+                  {T('Create (=) Filter', 'tree_node_create_filter_equal')}
+                </Item>
+                <Item
+                  id="create-filter-equal-param"
+                  onClick={() =>
+                    createFilter(
+                      'EqualParam',
+                      T('Filter (=) with parameter', 'filter_label_equal_param'),
+                    )
+                  }
+                >
+                  {T('Create (=) Filter With Parameter', 'tree_node_create_filter_equal_param')}
+                </Item>
+                <Item
+                  id="create-filter-like"
+                  onClick={() => createFilter('Like', T('Filter (Like)', 'filter_label_like'))}
+                >
+                  {T('Create (Like) Filter', 'tree_node_create_filter_like')}
+                </Item>
+                <Item
+                  id="create-filter-like-param"
+                  onClick={() =>
+                    createFilter(
+                      'LikeParam',
+                      T('Filter (Like) with parameter', 'filter_label_like_param'),
+                    )
+                  }
+                >
+                  {T('Create (Like) Filter With Parameter', 'tree_node_create_filter_like_param')}
+                </Item>
+                <Item
+                  id="create-filter-list-param"
+                  onClick={() =>
+                    createFilter(
+                      'InList',
+                      T('Filter (List) with parameter', 'filter_label_list_param'),
+                    )
+                  }
+                >
+                  {T('Create (List) Filter With Parameter', 'tree_node_create_filter_list_param')}
+                </Item>
+                <Item
+                  id="create-filter-between"
+                  onClick={() =>
+                    createFilter(
+                      'Between',
+                      T('Filter (Between) with parameters', 'filter_label_between_param'),
+                    )
+                  }
+                >
+                  {T(
+                    'Create (Between) Filter With Parameters',
+                    'tree_node_create_filter_between_param',
+                  )}
+                </Item>
+              </Submenu>
             )}
             <Separator />
             {!node.isNonPersistentItem && (
@@ -227,7 +465,9 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
               </Item>
             )}
           </Menu>
-          {node.isLoading && <span className={S.loading}>Loading...</span>}
+          {node.isLoading && (
+            <span className={S.loading}>{T('Loading...', 'tree_node_loading')}</span>
+          )}
         </div>
       </div>
       {node.isExpanded &&
