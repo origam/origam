@@ -177,7 +177,7 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
           </div>
           <Menu id={menuId} onVisibilityChange={onMenuVisibilityChange}>
             {node.contextMenuItems.length > 0 ? (
-              <Submenu label="New" data-test-id="tree-menu-new">
+              <Submenu label={T('New', 'tree_node_submenu_new')} data-test-id="tree-menu-new">
                 {node.contextMenuItems.map(item => (
                   <Item
                     key={item.typeName + item.caption}
@@ -191,7 +191,7 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
               </Submenu>
             ) : (
               <Item id="new" disabled data-test-id="tree-menu-new">
-                New
+                {T('New', 'tree_node_submenu_new')}
               </Item>
             )}
             <Separator />
