@@ -125,7 +125,10 @@ public class DeploymentVersion : AbstractSchemaItem, IDeploymentVersion
                 );
             }
             versionString = value;
-            Version = new PackageVersion(versionString);
+            if (PackageVersion.TryParse(value, out PackageVersion parsedVersion))
+            {
+                Version = parsedVersion;
+            }
         }
     }
 
