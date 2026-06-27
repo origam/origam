@@ -27,6 +27,7 @@ import {
   ISearchResultsEditorData,
   IScreenEditorData,
   ISectionEditorData,
+  IShowSqlEditorData,
 } from '@api/IArchitectApi';
 import { EditorData } from '@components/modelTree/EditorData';
 import { ModelTreeState } from '@components/modelTree/ModelTreeState';
@@ -49,6 +50,8 @@ import SearchResultsView from '@components/search/SearchResultsView';
 import { SearchResultsTabState } from '@components/search/SearchResultsTabState';
 import { XsltEditorState } from '@editors/gridEditor/XsltEditorState.ts';
 import XsltEditor from '@editors/xsltEditor/XsltEditor';
+import ShowSqlEditor from '@editors/showSqlEditor/ShowSqlEditor';
+import { ShowSqlEditorState } from '@editors/showSqlEditor/ShowSqlEditorState';
 import { FlowHandlerInput } from '@errors/runInFlowWithHandler';
 import { UIState } from '@stores/UiState';
 import { CancellablePromise } from 'mobx/dist/api/flow';
@@ -175,6 +178,16 @@ export function getEditorContainer(args: {
       />
     );
     return new EditorContainer(editorState, editorComponent);
+  }
+
+  if (editorType === 'ShowSqlEditor') {
+    const sqlData = data as IShowSqlEditorData;
+    const editorState = new ShowSqlEditorState(
+      editorData.editorId,
+      sqlData.dataStructureName,
+      sqlData.sql,
+    );
+    return new EditorContainer(editorState, <ShowSqlEditor editorState={editorState} />);
   }
 
   if (editorType === 'SearchResultsEditor') {

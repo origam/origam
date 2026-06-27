@@ -52,12 +52,13 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
         builder.Services.AddSingleton(deploymentService);
         builder.Services.AddSingleton<GitNodeStatusService>();
+        builder.Services.AddSingleton<ModelTransactionRunner>();
         builder.Services.AddSingleton<TreeNodeFactory>();
         builder.Services.AddSingleton<EditorPropertyFactory>();
         builder.Services.AddSingleton<PropertyParser>();
         builder.Services.AddSingleton<TabService>();
         builder.Services.AddTransient<XsltService>();
-        builder.Services.AddTransient<SearchService>();
+        builder.Services.AddSingleton<SearchService>();
         builder.Services.AddSingleton<PropertyEditorService>();
         builder.Services.AddSingleton<DesignerEditorService>();
         builder.Services.AddSingleton<DeploymentVersionCurrentService>();
@@ -71,6 +72,7 @@ public class Program
         builder.Services.AddSingleton<DocumentationHelperService>();
         builder.Services.AddSingleton<IAddToDeploymentService, AddToDeploymentService>();
         builder.Services.AddSingleton<IAddToModelService, AddToModelService>();
+        builder.Services.AddSingleton<WizardService>();
         builder.Services.AddSingleton<IPlatformResolveService, PlatformResolveService>();
         builder.Services.AddSingleton<
             ISchemaDbCompareResultsService,
