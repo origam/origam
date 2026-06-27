@@ -5934,29 +5934,10 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                     stringBuilder.Append("NOT ");
                 }
                 var arrayRelation = (column.Field as DetachedField).ArrayRelation;
+                string arrayTableReference = RenderExpression(arrayRelation as EntityRelationItem);
                 stringBuilder.Append("EXISTS(SELECT * FROM ");
-                stringBuilder.Append(RenderExpression(arrayRelation as EntityRelationItem));
+                stringBuilder.Append(arrayTableReference);
                 stringBuilder.Append(" WHERE");
-                DataStructureEntity arrayEntity = null;
-                foreach (
-                    var relatedEntity in entity.ChildItemsByType<DataStructureEntity>(
-                        DataStructureEntity.CategoryConst
-                    )
-                )
-                {
-                    if (relatedEntity.EntityDefinition.Id == arrayRelation.AssociatedEntity.Id)
-                    {
-                        arrayEntity = relatedEntity;
-                        break;
-                    }
-                }
-                if (arrayEntity == null)
-                {
-                    throw new Exception(
-                        $@"Array entity {arrayRelation.AssociatedEntity.Name} 
-                            not found among child entities of {entity.Name}"
-                    );
-                }
                 var andNeeded = false;
                 foreach (
                     var pairItem in arrayRelation.ChildItemsByType<EntityRelationColumnPairItem>(
@@ -5969,15 +5950,18 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                     {
                         stringBuilder.Append("AND ");
                     }
-                    RenderSelectRelationKey(
-                        stringBuilder,
-                        pairItem,
+                    string parentField = RenderExpression(
+                        pairItem.BaseEntityField,
                         entity,
-                        arrayEntity,
                         replaceParameterTexts,
                         dynamicParameters,
                         parameterReferences
                     );
+                    string relatedField =
+                        arrayTableReference
+                        + "."
+                        + RenderArrayColumnName(pairItem.RelatedEntityField);
+                    stringBuilder.Append(filterRenderer.Equal(parentField, relatedField));
                     andNeeded = true;
                 }
                 stringBuilder.Append(" ");
@@ -5985,14 +5969,10 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                 {
                     stringBuilder.Append("AND ");
                 }
+                stringBuilder.Append(arrayTableReference);
+                stringBuilder.Append(".");
                 stringBuilder.Append(
-                    RenderExpression(
-                        (column.Field as DetachedField).ArrayValueField,
-                        arrayEntity,
-                        replaceParameterTexts,
-                        dynamicParameters,
-                        parameterReferences
-                    )
+                    RenderArrayColumnName((column.Field as DetachedField).ArrayValueField)
                 );
                 var placeholderElements = placeholder.Replace("\0", "").Split(" ");
                 for (var i = 1; i < placeholderElements.Length; i++)
@@ -6005,6 +5985,14 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
             }
         }
         return output;
+    }
+
+    private string RenderArrayColumnName(IDataEntityColumn arrayColumn)
+    {
+        string columnName = arrayColumn is FieldMappingItem fieldMappingItem
+            ? fieldMappingItem.MappedColumnName
+            : arrayColumn.Name;
+        return sqlRenderer.NameLeftBracket + columnName + sqlRenderer.NameRightBracket;
     }
 
     protected abstract string RenderUpsertKey(string paramName, string fieldName);
