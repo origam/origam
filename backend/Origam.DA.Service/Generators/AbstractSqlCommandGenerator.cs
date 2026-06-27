@@ -5934,32 +5934,13 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                     stringBuilder.Append("NOT ");
                 }
                 var arrayRelation = (column.Field as DetachedField).ArrayRelation;
-                DataStructureEntity arrayEntity = null;
-                foreach (
-                    var relatedEntity in entity.ChildItemsByType<DataStructureEntity>(
-                        DataStructureEntity.CategoryConst
-                    )
-                )
-                {
-                    if (relatedEntity.EntityDefinition.Id == arrayRelation.AssociatedEntity.Id)
-                    {
-                        arrayEntity = relatedEntity;
-                        break;
-                    }
-                }
-                if (arrayEntity == null)
-                {
-                    throw new Exception(
-                        $@"Array entity {arrayRelation.AssociatedEntity.Name}
-                            not found among child entities of {entity.Name}"
-                    );
-                }
+                var arrayTableName =
+                    (arrayRelation.AssociatedEntity as TableMappingItem)?.MappedObjectName
+                    ?? arrayRelation.AssociatedEntity.Name;
+                string arrayTableAlias =
+                    sqlRenderer.NameLeftBracket + arrayTableName + sqlRenderer.NameRightBracket;
                 stringBuilder.Append("EXISTS(SELECT * FROM ");
                 stringBuilder.Append(RenderExpression(arrayRelation as EntityRelationItem));
-                stringBuilder.Append(" AS ");
-                stringBuilder.Append(sqlRenderer.NameLeftBracket);
-                stringBuilder.Append(arrayEntity.Name);
-                stringBuilder.Append(sqlRenderer.NameRightBracket);
                 stringBuilder.Append(" WHERE");
                 var andNeeded = false;
                 foreach (
@@ -5973,15 +5954,20 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                     {
                         stringBuilder.Append("AND ");
                     }
-                    RenderSelectRelationKey(
-                        stringBuilder,
-                        pairItem,
+                    string parentField = RenderExpression(
+                        pairItem.BaseEntityField,
                         entity,
-                        arrayEntity,
                         replaceParameterTexts,
                         dynamicParameters,
                         parameterReferences
                     );
+                    string relatedField =
+                        arrayTableAlias
+                        + "."
+                        + sqlRenderer.NameLeftBracket
+                        + ((FieldMappingItem)pairItem.RelatedEntityField).MappedColumnName
+                        + sqlRenderer.NameRightBracket;
+                    stringBuilder.Append(filterRenderer.Equal(parentField, relatedField));
                     andNeeded = true;
                 }
                 stringBuilder.Append(" ");
@@ -5989,15 +5975,15 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                 {
                     stringBuilder.Append("AND ");
                 }
+                stringBuilder.Append(arrayTableAlias);
+                stringBuilder.Append(".");
+                stringBuilder.Append(sqlRenderer.NameLeftBracket);
                 stringBuilder.Append(
-                    RenderExpression(
-                        (column.Field as DetachedField).ArrayValueField,
-                        arrayEntity,
-                        replaceParameterTexts,
-                        dynamicParameters,
-                        parameterReferences
-                    )
+                    (
+                        (FieldMappingItem)((DetachedField)column.Field).ArrayValueField
+                    ).MappedColumnName
                 );
+                stringBuilder.Append(sqlRenderer.NameRightBracket);
                 var placeholderElements = placeholder.Replace("\0", "").Split(" ");
                 for (var i = 1; i < placeholderElements.Length; i++)
                 {
