@@ -19,14 +19,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Security.Principal;
 using Moq;
 using NUnit.Framework;
 using Origam.DA.ObjectPersistence;
@@ -35,6 +27,14 @@ using Origam.DA.Service.MetaModelUpgrade;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Workbench.Services;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Security.Principal;
 
 namespace Origam.DA.ServiceTests.Generators;
 
@@ -119,7 +119,7 @@ public class SelectSqlArrayFilterTests
     }
 
     [Test]
-    public void Should_render_array_field_filter_as_EXISTS_without_table_alias() //TODO: DELETE THIS TEST 
+    public void Should_render_array_field_filter_as_EXISTS_without_table_alias()
     {
         string sql = GenerateSql(
             $"[\"{ArrayColumnName}\",\"in\",[\"11111111-1111-1111-1111-111111111111\"]]"
