@@ -33,6 +33,8 @@ public class ArrayFieldFilterIntegrationTests
     private static readonly Guid AllDataTypesDataStructureId = new Guid(
         "31791c3b-7265-439e-ac96-ddd57aa82579"
     );
+    private const string ArrayColumnName = "TagInput";
+    private const string ScalarColumnName = "Text1";
 
     public ArrayFieldFilterIntegrationTests()
     {
@@ -52,7 +54,32 @@ public class ArrayFieldFilterIntegrationTests
     }
 
     [Test]
-    public void ArrayFieldFilter_ExecutesAgainstRealDatabase()
+    public void Should_execute_array_field_filter_against_real_database()
+    {
+        DataSet result = ExecuteWithCustomFilter(
+            $"[\"{ArrayColumnName}\",\"in\",[\"11111111-1111-1111-1111-111111111111\"]]"
+        );
+
+        Assert.That(result, Is.Not.Null);
+    }
+
+    [Test]
+    public void Should_execute_scalar_field_filter_against_real_database()
+    {
+        DataSet result = ExecuteWithCustomFilter($"[\"{ScalarColumnName}\",\"eq\",\"sample\"]");
+
+        Assert.That(result, Is.Not.Null);
+    }
+
+    [Test]
+    public void Should_execute_plain_select_when_no_custom_filter_is_given()
+    {
+        DataSet result = ExecuteWithCustomFilter("");
+
+        Assert.That(result, Is.Not.Null);
+    }
+
+    private DataSet ExecuteWithCustomFilter(string customFilter)
     {
         Origam.OrigamEngine.OrigamEngine.ConnectRuntime(
             configName: "LinearWorkQueueProcessor",
@@ -61,20 +88,15 @@ public class ArrayFieldFilterIntegrationTests
 
         var query = new DataStructureQuery(AllDataTypesDataStructureId)
         {
-            CustomFilters = new CustomFilters
-            {
-                Filters = "[\"TagInput\",\"in\",[\"11111111-1111-1111-1111-111111111111\"]]",
-            },
+            CustomFilters = new CustomFilters { Filters = customFilter },
         };
 
         IDataService dataService = DataServiceFactory.GetDataService();
 
-        DataSet result = dataService.LoadDataSet(
+        return dataService.LoadDataSet(
             query,
             SecurityManager.CurrentPrincipal,
             transactionId: null
         );
-
-        Assert.That(result, Is.Not.Null);
     }
 }
