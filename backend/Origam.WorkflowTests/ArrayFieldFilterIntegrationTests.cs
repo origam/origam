@@ -60,6 +60,7 @@ public class ArrayFieldFilterIntegrationTests
             $"[\"{ArrayColumnName}\",\"in\",[\"11111111-1111-1111-1111-111111111111\"]]"
         );
 
+        LogResult(nameof(Should_execute_array_field_filter_against_real_database), result);
         Assert.That(result, Is.Not.Null);
     }
 
@@ -68,6 +69,7 @@ public class ArrayFieldFilterIntegrationTests
     {
         DataSet result = ExecuteWithCustomFilter($"[\"{ScalarColumnName}\",\"eq\",\"sample\"]");
 
+        LogResult(nameof(Should_execute_scalar_field_filter_against_real_database), result);
         Assert.That(result, Is.Not.Null);
     }
 
@@ -76,6 +78,7 @@ public class ArrayFieldFilterIntegrationTests
     {
         DataSet result = ExecuteWithCustomFilter("");
 
+        LogResult(nameof(Should_execute_plain_select_when_no_custom_filter_is_given), result);
         Assert.That(result, Is.Not.Null);
     }
 
@@ -98,5 +101,32 @@ public class ArrayFieldFilterIntegrationTests
             SecurityManager.CurrentPrincipal,
             transactionId: null
         );
+    }
+
+    private static void LogResult(string scenario, DataSet result)
+    {
+        TestContext.Out.WriteLine($"--- {scenario} ---");
+        TestContext.Out.WriteLine($"Tables: {result.Tables.Count}");
+        foreach (DataTable table in result.Tables)
+        {
+            TestContext.Out.WriteLine($"Table '{table.TableName}': {table.Rows.Count} row(s)");
+            int rowIndex = 0;
+            foreach (DataRow row in table.Rows)
+            {
+                if (rowIndex >= 20)
+                {
+                    TestContext.Out.WriteLine("  ... (truncated)");
+                    break;
+                }
+                string values = string.Join(
+                    separator: ", ",
+                    table
+                        .Columns.Cast<DataColumn>()
+                        .Select(column => $"{column.ColumnName}={row[column]}")
+                );
+                TestContext.Out.WriteLine($"  [{rowIndex}] {values}");
+                rowIndex++;
+            }
+        }
     }
 }

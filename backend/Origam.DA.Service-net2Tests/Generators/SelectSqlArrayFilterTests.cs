@@ -29,8 +29,6 @@ using System.Reflection;
 using System.Security.Principal;
 using Moq;
 using NUnit.Framework;
-using Origam;
-using Origam.DA;
 using Origam.DA.ObjectPersistence;
 using Origam.DA.Service;
 using Origam.DA.Service.MetaModelUpgrade;
@@ -116,12 +114,12 @@ public class SelectSqlArrayFilterTests
     private static void SetAuthorizationProvider(IOrigamAuthorizationProvider provider)
     {
         typeof(SecurityManager)
-            .GetField("_authorizationProvider", BindingFlags.NonPublic | BindingFlags.Static)
+            .GetField("_authorizationProvider", BindingFlags.NonPublic | BindingFlags.Static)!
             .SetValue(null, provider);
     }
 
     [Test]
-    public void Should_render_array_field_filter_as_EXISTS_without_table_alias()
+    public void Should_render_array_field_filter_as_EXISTS_without_table_alias()//TODO: DELETE THIS TEST 
     {
         string sql = GenerateSql(
             $"[\"{ArrayColumnName}\",\"in\",[\"11111111-1111-1111-1111-111111111111\"]]"
