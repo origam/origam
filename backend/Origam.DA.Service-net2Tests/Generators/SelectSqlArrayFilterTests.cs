@@ -19,14 +19,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Moq;
-using NUnit.Framework;
-using Origam.DA.ObjectPersistence;
-using Origam.DA.Service;
-using Origam.DA.Service.MetaModelUpgrade;
-using Origam.Schema;
-using Origam.Schema.EntityModel;
-using Origam.Workbench.Services;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -35,6 +27,14 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Security.Principal;
+using Moq;
+using NUnit.Framework;
+using Origam.DA.ObjectPersistence;
+using Origam.DA.Service;
+using Origam.DA.Service.MetaModelUpgrade;
+using Origam.Schema;
+using Origam.Schema.EntityModel;
+using Origam.Workbench.Services;
 
 namespace Origam.DA.ServiceTests.Generators;
 
