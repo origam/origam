@@ -119,7 +119,7 @@ public class SelectSqlArrayFilterTests
     }
 
     [Test]
-    public void Should_render_array_field_filter_as_EXISTS_without_table_alias()//TODO: DELETE THIS TEST 
+    public void Should_render_array_field_filter_as_EXISTS_without_table_alias() //TODO: DELETE THIS TEST 
     {
         string sql = GenerateSql(
             $"[\"{ArrayColumnName}\",\"in\",[\"11111111-1111-1111-1111-111111111111\"]]"
