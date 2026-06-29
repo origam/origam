@@ -35,7 +35,7 @@
     "@rolldown/plugin-babel": "^0.2.3",
     "@types/babel__core": "^7.20.5",
     "@types/lodash": "^4.17.24",
-    "@types/node": "^25.9.1",
+    "@types/node": "^26.0.1",
     "@types/react": "^19.2.16",
     "@types/react-dom": "^19.2.3",
     "@typescript-eslint/eslint-plugin": "^8.60.1",
