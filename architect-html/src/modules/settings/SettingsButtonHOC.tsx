@@ -43,6 +43,7 @@ const SettingsButtonHOC = observer(() => {
       prefix={<VscSettingsGear />}
       onClick={handleOnClick}
       isAnimated
+      dataTestId="topbar-settings"
     />
   );
 });

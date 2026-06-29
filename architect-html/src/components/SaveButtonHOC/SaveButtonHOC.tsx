@@ -55,7 +55,7 @@ const SaveButtonHOC = observer(() => {
   const showMissing = isDisabled && validationErrors.length > 0;
 
   return (
-    <div className={S.root}>
+    <div className={S.root} data-test-id={isDisabled ? 'save-button-disabled' : undefined}>
       {showMissing && (
         <div
           className={S.missingFields}
@@ -74,6 +74,7 @@ const SaveButtonHOC = observer(() => {
         prefix={<VscSave />}
         onClick={handleSave}
         isDisabled={isDisabled}
+        dataTestId={isDisabled ? undefined : 'save-button'}
       />
     </div>
   );

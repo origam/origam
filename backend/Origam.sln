@@ -191,6 +191,43 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Analyzers", "Origam.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Analyzers.CodeFixes", "Origam.Analyzers.CodeFixes\Origam.Analyzers.CodeFixes.csproj", "{09C89E0C-0F9E-48DF-A1C3-77FFB03E6D0D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "architect-html-e2e", "architect-html-e2e", "{BA980B81-3C3B-4EC7-85B6-30C14389371D}"
+	ProjectSection(SolutionItems) = preProject
+		..\test\architect-html-e2e\.gitignore = ..\test\architect-html-e2e\.gitignore
+		..\test\architect-html-e2e\.yarnrc.yml = ..\test\architect-html-e2e\.yarnrc.yml
+		..\test\architect-html-e2e\package.json = ..\test\architect-html-e2e\package.json
+		..\test\architect-html-e2e\playwright.config.ts = ..\test\architect-html-e2e\playwright.config.ts
+		..\test\architect-html-e2e\playwright.integration.config.ts = ..\test\architect-html-e2e\playwright.integration.config.ts
+		..\test\architect-html-e2e\README.md = ..\test\architect-html-e2e\README.md
+		..\test\architect-html-e2e\tsconfig.json = ..\test\architect-html-e2e\tsconfig.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "integration", "integration", "{45B93168-3B28-45E1-A975-EB08173A5B9F}"
+	ProjectSection(SolutionItems) = preProject
+		..\test\architect-html-e2e\integration\packages.spec.ts = ..\test\architect-html-e2e\integration\packages.spec.ts
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "entity", "entity", "{914E5CDD-32E1-4846-8CAD-EC265FD9E4D7}"
+	ProjectSection(SolutionItems) = preProject
+		..\test\architect-html-e2e\integration\entity\entity-creation.spec.ts = ..\test\architect-html-e2e\integration\entity\entity-creation.spec.ts
+		..\test\architect-html-e2e\integration\entity\relationship-creation.spec.ts = ..\test\architect-html-e2e\integration\entity\relationship-creation.spec.ts
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "screen-section", "screen-section", "{4143DB46-C2F2-488C-A80E-1BD48F88B077}"
+	ProjectSection(SolutionItems) = preProject
+		..\test\architect-html-e2e\integration\screen-section\screen-section-drag-drop.spec.ts = ..\test\architect-html-e2e\integration\screen-section\screen-section-drag-drop.spec.ts
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "search", "search", "{F96D9301-24BE-46C0-B77A-540EF9A10110}"
+	ProjectSection(SolutionItems) = preProject
+		..\test\architect-html-e2e\integration\search\search.spec.ts = ..\test\architect-html-e2e\integration\search\search.spec.ts
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "support", "support", "{208EE409-102F-4359-94E0-70432D88909A}"
+	ProjectSection(SolutionItems) = preProject
+		..\test\architect-html-e2e\integration\support\resetBackend.ts = ..\test\architect-html-e2e\integration\support\resetBackend.ts
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug Architect Server|Any CPU = Debug Architect Server|Any CPU
@@ -1602,6 +1639,11 @@ Global
 		{911951B0-9953-4C69-8FDF-4C0A13621860} = {0029C8FC-A94D-4C3D-8952-31A703FD54C8}
 		{4E9545BA-B4EF-440E-9E03-723C3879C58D} = {BC8B57AC-75CA-4EB9-9E0F-11D33B5B071F}
 		{B4299208-8C10-4D67-8E33-67FFDB2A373C} = {A31519ED-616D-4FC0-8E2B-70984B8F760A}
+		{45B93168-3B28-45E1-A975-EB08173A5B9F} = {BA980B81-3C3B-4EC7-85B6-30C14389371D}
+		{914E5CDD-32E1-4846-8CAD-EC265FD9E4D7} = {45B93168-3B28-45E1-A975-EB08173A5B9F}
+		{4143DB46-C2F2-488C-A80E-1BD48F88B077} = {45B93168-3B28-45E1-A975-EB08173A5B9F}
+		{F96D9301-24BE-46C0-B77A-540EF9A10110} = {45B93168-3B28-45E1-A975-EB08173A5B9F}
+		{208EE409-102F-4359-94E0-70432D88909A} = {45B93168-3B28-45E1-A975-EB08173A5B9F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CB8C0770-FBB8-4EAB-B71B-3967781A266B}
