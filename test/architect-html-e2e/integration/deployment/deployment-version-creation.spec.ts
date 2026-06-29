@@ -43,7 +43,7 @@ test.describe('Deployment Version creation (real backend)', () => {
         await expect(page.getByTestId('save-button-disabled')).toBeVisible();
         await page.getByTestId('tab-close-9.9.9').getByRole('img').click();
 
-        await expect(page.getByTestId('tree-node-1.4.0')).toBeVisible();
+        await expect(page.getByTestId('tree-node-9.9.9')).toBeVisible();
         await page.getByTestId('tree-node-9.9.9').dblclick();
         await expect(page.getByText('Deployment Version:')).toBeVisible();
     });
