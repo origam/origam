@@ -19,7 +19,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System.Data;
 using log4net.Config;
 using NUnit.Framework;
 using Origam.DA;
@@ -33,11 +32,13 @@ public class ArrayFieldFilterIntegrationTests
     private static readonly Guid AllDataTypesDataStructureId = new Guid(
         "31791c3b-7265-439e-ac96-ddd57aa82579"
     );
+    private const string RootEntityName = "AllDataTypes";
     private const string ArrayColumnName = "TagInput";
     private const string ScalarColumnName = "Text1";
     private const string IdColumnName = "Id";
-    private const string FirstTagId = "11111111-1111-1111-1111-111111111111";
-    private const string SecondTagId = "22222222-2222-2222-2222-222222222222";
+    private const string ExistingTagId = "eef55cab-d66f-4828-b3bf-f27c7930858f";
+    private const string SecondExistingTagId = "74ba6e7d-6d77-4268-9e73-601a71d8b385";
+    private const string UnknownTagId = "11111111-1111-1111-1111-111111111111";
 
     public ArrayFieldFilterIntegrationTests()
     {
@@ -48,10 +49,14 @@ public class ArrayFieldFilterIntegrationTests
     public void OneTimeSetUp()
     {
         BasicConfigurator.Configure();
+        Origam.OrigamEngine.OrigamEngine.ConnectRuntime(
+            configName: "LinearWorkQueueProcessor",
+            customServiceFactory: new TestRuntimeServiceFactory()
+        );
     }
 
-    [TearDown]
-    public void TearDown()
+    [OneTimeTearDown]
+    public void OneTimeTearDown()
     {
         Origam.OrigamEngine.OrigamEngine.DisconnectRuntime();
     }
@@ -59,49 +64,76 @@ public class ArrayFieldFilterIntegrationTests
     [Test]
     public void ShouldExecuteArrayFieldFilterAgainstRealDatabase()
     {
-        DataSet result = ExecuteWithCustomFilter(
-            $"[\"{ArrayColumnName}\",\"in\",[\"11111111-1111-1111-1111-111111111111\"]]"
+        List<string> rowIds = LoadRootRowIds(
+            $"[\"{ArrayColumnName}\",\"in\",[\"{ExistingTagId}\"]]"
         );
 
-        LogResult(nameof(ShouldExecuteArrayFieldFilterAgainstRealDatabase), result);
-        Assert.That(result, Is.Not.Null);
+        Assert.That(rowIds, Is.Not.Null);
     }
 
     [Test]
     public void ShouldExecuteNegatedArrayFieldFilterAgainstRealDatabase()
     {
-        DataSet result = ExecuteWithCustomFilter(
-            $"[\"{ArrayColumnName}\",\"nin\",[\"{FirstTagId}\"]]"
+        List<string> rowIds = LoadRootRowIds(
+            $"[\"{ArrayColumnName}\",\"nin\",[\"{ExistingTagId}\"]]"
         );
 
-        LogResult(nameof(ShouldExecuteNegatedArrayFieldFilterAgainstRealDatabase), result);
-        Assert.That(result, Is.Not.Null);
+        Assert.That(rowIds, Is.Not.Null);
     }
 
     [Test]
     public void ShouldExecuteArrayFieldFilterWithMultipleValuesAgainstRealDatabase()
     {
-        DataSet result = ExecuteWithCustomFilter(
-            $"[\"{ArrayColumnName}\",\"in\",[\"{FirstTagId}\",\"{SecondTagId}\"]]"
+        List<string> rowIds = LoadRootRowIds(
+            $"[\"{ArrayColumnName}\",\"in\",[\"{ExistingTagId}\",\"{SecondExistingTagId}\"]]"
         );
 
-        LogResult(
-            nameof(ShouldExecuteArrayFieldFilterWithMultipleValuesAgainstRealDatabase),
-            result
+        Assert.That(rowIds, Is.Not.Null);
+    }
+
+    [Test]
+    public void ShouldOnlyReturnRowsCarryingTheTagForArrayFieldInFilter()
+    {
+        List<string> allRowIds = LoadRootRowIds("");
+        List<string> matchingRowIds = LoadRootRowIds(
+            $"[\"{ArrayColumnName}\",\"in\",[\"{ExistingTagId}\"]]"
         );
-        Assert.That(result, Is.Not.Null);
+        List<string> unknownTagRowIds = LoadRootRowIds(
+            $"[\"{ArrayColumnName}\",\"in\",[\"{UnknownTagId}\"]]"
+        );
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(
+                matchingRowIds,
+                Is.Not.Empty,
+                message: "The array \"in\" filter must return the rows carrying the tag."
+            );
+            Assert.That(
+                matchingRowIds.Count,
+                Is.LessThan(allRowIds.Count),
+                message: "A correlated EXISTS must return a strict subset, not every row."
+            );
+            Assert.That(
+                unknownTagRowIds,
+                Is.Empty,
+                message: "A tag that is not assigned to any row must match nothing."
+            );
+        });
     }
 
     [Test]
     public void ShouldPartitionRowsBetweenArrayFieldInAndNin()
     {
-        HashSet<string> allRowIds = LoadRootRowIds("");
+        HashSet<string> allRowIds = LoadRootRowIds("").ToHashSet();
         HashSet<string> matchingRowIds = LoadRootRowIds(
-            $"[\"{ArrayColumnName}\",\"in\",[\"{FirstTagId}\"]]"
-        );
+                $"[\"{ArrayColumnName}\",\"in\",[\"{ExistingTagId}\"]]"
+            )
+            .ToHashSet();
         HashSet<string> nonMatchingRowIds = LoadRootRowIds(
-            $"[\"{ArrayColumnName}\",\"nin\",[\"{FirstTagId}\"]]"
-        );
+                $"[\"{ArrayColumnName}\",\"nin\",[\"{ExistingTagId}\"]]"
+            )
+            .ToHashSet();
 
         Assert.Multiple(() =>
         {
@@ -121,78 +153,40 @@ public class ArrayFieldFilterIntegrationTests
     [Test]
     public void ShouldExecuteScalarFieldFilterAgainstRealDatabase()
     {
-        DataSet result = ExecuteWithCustomFilter($"[\"{ScalarColumnName}\",\"eq\",\"sample\"]");
+        List<string> rowIds = LoadRootRowIds($"[\"{ScalarColumnName}\",\"eq\",\"sample\"]");
 
-        LogResult(nameof(ShouldExecuteScalarFieldFilterAgainstRealDatabase), result);
-        Assert.That(result, Is.Not.Null);
+        Assert.That(rowIds, Is.Not.Null);
     }
 
     [Test]
     public void ShouldExecutePlainSelectWhenNoCustomFilterIsGiven()
     {
-        DataSet result = ExecuteWithCustomFilter("");
+        List<string> rowIds = LoadRootRowIds("");
 
-        LogResult(nameof(ShouldExecutePlainSelectWhenNoCustomFilterIsGiven), result);
-        Assert.That(result, Is.Not.Null);
+        Assert.That(rowIds, Is.Not.Empty);
     }
 
-    private DataSet ExecuteWithCustomFilter(string customFilter)
+    private List<string> LoadRootRowIds(string customFilter)
     {
-        Origam.OrigamEngine.OrigamEngine.ConnectRuntime(
-            configName: "LinearWorkQueueProcessor",
-            customServiceFactory: new TestRuntimeServiceFactory()
-        );
-
         var query = new DataStructureQuery(AllDataTypesDataStructureId)
         {
+            Entity = RootEntityName,
             CustomFilters = new CustomFilters { Filters = customFilter },
+            ColumnsInfo = new ColumnsInfo(
+                columnName: IdColumnName,
+                renderSqlForDetachedFields: true
+            ),
+            ForceDatabaseCalculation = true,
         };
 
         IDataService dataService = DataServiceFactory.GetDataService();
 
-        return dataService.LoadDataSet(
-            query,
-            SecurityManager.CurrentPrincipal,
-            transactionId: null
-        );
-    }
-
-    private HashSet<string> LoadRootRowIds(string customFilter)
-    {
-        DataSet result = ExecuteWithCustomFilter(customFilter);
-        DataTable rootTable = result
-            .Tables.Cast<DataTable>()
-            .First(table => table.Columns.Contains(IdColumnName));
-        return rootTable
-            .Rows.Cast<DataRow>()
+        List<string> rowIds = dataService
+            .ExecuteDataReaderReturnPairs(query)
             .Select(row => row[IdColumnName].ToString() ?? string.Empty)
-            .ToHashSet();
-    }
+            .ToList();
 
-    private static void LogResult(string scenario, DataSet result)
-    {
-        TestContext.Out.WriteLine($"--- {scenario} ---");
-        TestContext.Out.WriteLine($"Tables: {result.Tables.Count}");
-        foreach (DataTable table in result.Tables)
-        {
-            TestContext.Out.WriteLine($"Table '{table.TableName}': {table.Rows.Count} row(s)");
-            int rowIndex = 0;
-            foreach (DataRow row in table.Rows)
-            {
-                if (rowIndex >= 20)
-                {
-                    TestContext.Out.WriteLine("  ... (truncated)");
-                    break;
-                }
-                string values = string.Join(
-                    separator: ", ",
-                    table
-                        .Columns.Cast<DataColumn>()
-                        .Select(column => $"{column.ColumnName}={row[column]}")
-                );
-                TestContext.Out.WriteLine($"  [{rowIndex}] {values}");
-                rowIndex++;
-            }
-        }
+        TestContext.Out.WriteLine($"Filter '{customFilter}' returned {rowIds.Count} row(s).");
+        return rowIds;
     }
 }
