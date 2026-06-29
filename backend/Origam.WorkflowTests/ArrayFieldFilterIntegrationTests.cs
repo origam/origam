@@ -108,12 +108,12 @@ public class ArrayFieldFilterIntegrationTests
             Assert.That(
                 matchingRowIds.Overlaps(nonMatchingRowIds),
                 Is.False,
-                "A row cannot satisfy both the array \"in\" and \"nin\" filters."
+                message: "A row cannot satisfy both the array \"in\" and \"nin\" filters."
             );
             Assert.That(
                 matchingRowIds.Union(nonMatchingRowIds),
                 Is.EquivalentTo(allRowIds),
-                "Together the array \"in\" and \"nin\" filters must cover every unfiltered row."
+                message: "Together the array \"in\" and \"nin\" filters must cover every unfiltered row."
             );
         });
     }
