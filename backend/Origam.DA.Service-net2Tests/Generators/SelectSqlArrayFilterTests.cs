@@ -119,7 +119,7 @@ public class SelectSqlArrayFilterTests
     }
 
     [Test]
-    public void Should_render_array_field_filter_as_EXISTS_without_table_alias()
+    public void ShouldRenderArrayFieldFilterAsExistsWithoutTableAlias()
     {
         string sql = GenerateSql(
             $"[\"{ArrayColumnName}\",\"in\",[\"11111111-1111-1111-1111-111111111111\"]]"
@@ -139,7 +139,7 @@ public class SelectSqlArrayFilterTests
     }
 
     [Test]
-    public void Should_render_scalar_field_filter_as_plain_predicate()
+    public void ShouldRenderScalarFieldFilterAsPlainPredicate()
     {
         string sql = GenerateSql($"[\"{ScalarColumnName}\",\"eq\",\"sample\"]");
 
@@ -148,7 +148,7 @@ public class SelectSqlArrayFilterTests
     }
 
     [Test]
-    public void Should_render_plain_select_when_no_custom_filter_is_given()
+    public void ShouldRenderPlainSelectWhenNoCustomFilterIsGiven()
     {
         string sql = GenerateSql("");
 
