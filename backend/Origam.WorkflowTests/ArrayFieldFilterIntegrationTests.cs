@@ -35,6 +35,9 @@ public class ArrayFieldFilterIntegrationTests
     );
     private const string ArrayColumnName = "TagInput";
     private const string ScalarColumnName = "Text1";
+    private const string IdColumnName = "Id";
+    private const string FirstTagId = "11111111-1111-1111-1111-111111111111";
+    private const string SecondTagId = "22222222-2222-2222-2222-222222222222";
 
     public ArrayFieldFilterIntegrationTests()
     {
@@ -54,31 +57,82 @@ public class ArrayFieldFilterIntegrationTests
     }
 
     [Test]
-    public void Should_execute_array_field_filter_against_real_database()
+    public void ShouldExecuteArrayFieldFilterAgainstRealDatabase()
     {
         DataSet result = ExecuteWithCustomFilter(
             $"[\"{ArrayColumnName}\",\"in\",[\"11111111-1111-1111-1111-111111111111\"]]"
         );
 
-        LogResult(nameof(Should_execute_array_field_filter_against_real_database), result);
+        LogResult(nameof(ShouldExecuteArrayFieldFilterAgainstRealDatabase), result);
         Assert.That(result, Is.Not.Null);
     }
 
     [Test]
-    public void Should_execute_scalar_field_filter_against_real_database()
+    public void ShouldExecuteNegatedArrayFieldFilterAgainstRealDatabase()
+    {
+        DataSet result = ExecuteWithCustomFilter(
+            $"[\"{ArrayColumnName}\",\"nin\",[\"{FirstTagId}\"]]"
+        );
+
+        LogResult(nameof(ShouldExecuteNegatedArrayFieldFilterAgainstRealDatabase), result);
+        Assert.That(result, Is.Not.Null);
+    }
+
+    [Test]
+    public void ShouldExecuteArrayFieldFilterWithMultipleValuesAgainstRealDatabase()
+    {
+        DataSet result = ExecuteWithCustomFilter(
+            $"[\"{ArrayColumnName}\",\"in\",[\"{FirstTagId}\",\"{SecondTagId}\"]]"
+        );
+
+        LogResult(
+            nameof(ShouldExecuteArrayFieldFilterWithMultipleValuesAgainstRealDatabase),
+            result
+        );
+        Assert.That(result, Is.Not.Null);
+    }
+
+    [Test]
+    public void ShouldPartitionRowsBetweenArrayFieldInAndNin()
+    {
+        HashSet<string> allRowIds = LoadRootRowIds("");
+        HashSet<string> matchingRowIds = LoadRootRowIds(
+            $"[\"{ArrayColumnName}\",\"in\",[\"{FirstTagId}\"]]"
+        );
+        HashSet<string> nonMatchingRowIds = LoadRootRowIds(
+            $"[\"{ArrayColumnName}\",\"nin\",[\"{FirstTagId}\"]]"
+        );
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(
+                matchingRowIds.Overlaps(nonMatchingRowIds),
+                Is.False,
+                "A row cannot satisfy both the array \"in\" and \"nin\" filters."
+            );
+            Assert.That(
+                matchingRowIds.Union(nonMatchingRowIds),
+                Is.EquivalentTo(allRowIds),
+                "Together the array \"in\" and \"nin\" filters must cover every unfiltered row."
+            );
+        });
+    }
+
+    [Test]
+    public void ShouldExecuteScalarFieldFilterAgainstRealDatabase()
     {
         DataSet result = ExecuteWithCustomFilter($"[\"{ScalarColumnName}\",\"eq\",\"sample\"]");
 
-        LogResult(nameof(Should_execute_scalar_field_filter_against_real_database), result);
+        LogResult(nameof(ShouldExecuteScalarFieldFilterAgainstRealDatabase), result);
         Assert.That(result, Is.Not.Null);
     }
 
     [Test]
-    public void Should_execute_plain_select_when_no_custom_filter_is_given()
+    public void ShouldExecutePlainSelectWhenNoCustomFilterIsGiven()
     {
         DataSet result = ExecuteWithCustomFilter("");
 
-        LogResult(nameof(Should_execute_plain_select_when_no_custom_filter_is_given), result);
+        LogResult(nameof(ShouldExecutePlainSelectWhenNoCustomFilterIsGiven), result);
         Assert.That(result, Is.Not.Null);
     }
 
@@ -101,6 +155,18 @@ public class ArrayFieldFilterIntegrationTests
             SecurityManager.CurrentPrincipal,
             transactionId: null
         );
+    }
+
+    private HashSet<string> LoadRootRowIds(string customFilter)
+    {
+        DataSet result = ExecuteWithCustomFilter(customFilter);
+        DataTable rootTable = result
+            .Tables.Cast<DataTable>()
+            .First(table => table.Columns.Contains(IdColumnName));
+        return rootTable
+            .Rows.Cast<DataRow>()
+            .Select(row => row[IdColumnName].ToString() ?? string.Empty)
+            .ToHashSet();
     }
 
     private static void LogResult(string scenario, DataSet result)
