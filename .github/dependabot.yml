@@ -5,6 +5,10 @@ updates:
     open-pull-requests-limit: 20
     schedule:
       interval: "daily"
+    cooldown:
+      default-days: 1
+      include:
+        - "*"
     commit-message:
       prefix: "DEV: "
   - package-ecosystem: "npm"
@@ -12,6 +16,10 @@ updates:
     open-pull-requests-limit: 20
     schedule:
       interval: "daily"
+    cooldown:
+      default-days: 1
+      include:
+        - "*"
     commit-message:
       prefix: "DEV: "
   - package-ecosystem: "npm"
@@ -19,6 +27,10 @@ updates:
     open-pull-requests-limit: 20
     schedule:
       interval: "daily"
+    cooldown:
+      default-days: 1
+      include:
+        - "*"
     commit-message:
       prefix: "DEV: "
     ignore:
@@ -29,5 +41,9 @@ updates:
     open-pull-requests-limit: 20
     schedule:
       interval: "daily"
+    cooldown:
+      default-days: 1
+      include:
+        - "*"
     commit-message:
       prefix: "DEV: "
