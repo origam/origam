@@ -52,6 +52,7 @@ export class TreeNode implements IEditorNode {
     this.nodeLevelType = apiNode.nodeLevelType ?? 'Item';
     this.isInActivePackage = apiNode.isInActivePackage ?? true;
     this.isFileDirty = apiNode.isFileDirty ?? false;
+    this.isFolder = apiNode.isFolder ?? false;
     this.children = apiNode.children
       ? apiNode.children.map(child => new TreeNode(child, this.rootStore, this))
       : [];
@@ -74,6 +75,7 @@ export class TreeNode implements IEditorNode {
   nodeLevelType: NodeLevelType;
   isInActivePackage: boolean;
   isFileDirty: boolean;
+  isFolder: boolean;
 
   @observable accessor isLoading: boolean = false;
   @observable accessor contextMenuItems: IMenuItemInfo[] = [];
@@ -113,6 +115,10 @@ export class TreeNode implements IEditorNode {
 
   get isDataStructure() {
     return this.itemType === 'Origam.Schema.EntityModel.DataStructure';
+  }
+
+  get canCreateFolder() {
+    return this.nodeLevelType === 'Provider' || this.isFolder;
   }
 
   *loadChildren(): Generator<Promise<IApiTreeNode[]>, void, IApiTreeNode[]> {
@@ -161,6 +167,15 @@ export class TreeNode implements IEditorNode {
       const apiTabData = yield this.architectApi.createNode(this, typeName);
       const editorData = new EditorData(apiTabData, this);
       this.rootStore.editorTabViewState.openEditor(editorData);
+    }.bind(this);
+  }
+
+  createGroup(name: string) {
+    return function* (this: TreeNode): Generator<Promise<any>, void, any> {
+      const createdNode: IApiTreeNode = yield this.architectApi.createGroup(this, name);
+      yield* this.loadChildren.bind(this)();
+      this.rootStore.uiState.setExpanded(this.id, true);
+      this.rootStore.modelTreeState.highlightNode(createdNode.id);
     }.bind(this);
   }
 }

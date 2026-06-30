@@ -183,6 +183,76 @@ public class ModelController(
         return Ok();
     }
 
+    [HttpPost("CreateGroup")]
+    public ActionResult<TreeNode> CreateGroup([Required] [FromBody] CreateGroupModel input)
+    {
+        if (schemaService.ActiveExtension == null)
+        {
+            return BadRequest("No schema extension is active");
+        }
+
+        string name = input.Name?.Trim();
+        if (string.IsNullOrEmpty(name))
+        {
+            return StatusCode(statusCode: 400, value: "Folder name cannot be empty.");
+        }
+        if (
+            name.IndexOfAny(System.IO.Path.GetInvalidFileNameChars()) >= 0
+            || name.Contains('/')
+            || name.Contains('\\')
+        )
+        {
+            return StatusCode(statusCode: 400, value: "Folder name contains invalid characters.");
+        }
+
+        ISchemaItemFactory factory = ResolveGroupParent(input.NodeId);
+        if (factory == null)
+        {
+            return NotFound();
+        }
+
+        bool nameTaken =
+            (factory as ISchemaItemProvider)?.ChildGroups.Any(existing =>
+                string.Equals(existing.NodeText?.Trim(), name, StringComparison.OrdinalIgnoreCase)
+            ) ?? false;
+        if (nameTaken)
+        {
+            return StatusCode(statusCode: 400, value: "A folder with this name already exists.");
+        }
+
+        SchemaItemGroup group;
+        try
+        {
+            persistenceProvider.BeginTransaction();
+            group = factory.NewGroup(schemaService.ActiveSchemaExtensionId, name);
+            if (group.Name != name)
+            {
+                // NewGroup auto-numbers when the name is a substring of a sibling group;
+                // the name is already validated as unique, so keep what the user typed.
+                group.NodeText = name;
+            }
+        }
+        catch (Exception ex)
+        {
+            persistenceProvider.EndTransactionDontSave();
+            return StatusCode(statusCode: 400, ex.Message);
+        }
+
+        persistenceProvider.EndTransaction();
+        gitNodeStatusService.ClearCache();
+        return treeNodeFactory.Create(group);
+    }
+
+    private ISchemaItemFactory ResolveGroupParent(string nodeId)
+    {
+        if (Guid.TryParse(nodeId, out Guid schemaItemId))
+        {
+            return persistenceProvider.RetrieveInstance<IBrowserNode2>(schemaItemId)
+                as ISchemaItemFactory;
+        }
+        return GetRootProviderById(nodeId);
+    }
+
     [HttpGet("GetMenuItems")]
     public IEnumerable<MenuItemInfo> GetMenuItems(
         [FromQuery] string id,

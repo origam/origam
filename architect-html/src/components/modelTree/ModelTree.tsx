@@ -26,6 +26,7 @@ import { CreateLookupWizard } from '@components/modelTree/createWizard/CreateLoo
 import { CreateScreenWizard } from '@components/modelTree/createWizard/CreateScreenWizard';
 import { CreateWorkQueueWizard } from '@components/modelTree/createWizard/CreateWorkQueueWizard';
 import { CreateMenuItemWizard } from '@components/modelTree/createWizard/CreateMenuItemWizard';
+import { askForName } from '@dialogs/DialogUtils';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { observer } from 'mobx-react-lite';
 import { useContext, useEffect, useRef } from 'react';
@@ -270,6 +271,46 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
     );
   }
 
+  function validateFolderName(value: string, existingNames: string[]): string | null {
+    const name = value.trim();
+    if (name.length === 0) {
+      return T('Folder name cannot be empty.', 'create_folder_error_empty');
+    }
+    if (/[\\/]/.test(name)) {
+      return T('Folder name contains invalid characters.', 'create_folder_error_invalid_chars');
+    }
+    const taken = existingNames.some(
+      existing => existing.trim().toLowerCase() === name.toLowerCase(),
+    );
+    if (taken) {
+      return T('A folder with this name already exists.', 'create_folder_error_duplicate');
+    }
+    return null;
+  }
+
+  function openNewFolderDialog() {
+    run({
+      generator: function* () {
+        if (!node.childrenInitialized) {
+          yield* node.loadChildren.bind(node)();
+        }
+        const existingFolderNames = node.children
+          .filter(child => child.isFolder)
+          .map(child => child.nodeText);
+        const name = (yield askForName(rootStore.dialogStack, {
+          title: T('New Folder', 'tree_node_new_folder_title'),
+          label: T('Folder name', 'tree_node_new_folder_label'),
+          placeholder: T('e.g. Lookups', 'tree_node_new_folder_placeholder'),
+          validate: value => validateFolderName(value, existingFolderNames),
+        })) as string | null;
+        if (!name) {
+          return;
+        }
+        yield* node.createGroup(name)();
+      },
+    });
+  }
+
   function getSymbol() {
     if (node.children.length > 0 || !node.childrenInitialized) {
       return node.isExpanded ? '▼' : '▶';
@@ -340,6 +381,15 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
             ) : (
               <Item id="new" disabled data-test-id="tree-menu-new">
                 {T('New', 'tree_node_submenu_new')}
+              </Item>
+            )}
+            {node.canCreateFolder && (
+              <Item
+                id="new-folder"
+                data-test-id="tree-menu-new-folder"
+                onClick={openNewFolderDialog}
+              >
+                {T('New Folder', 'tree_node_new_folder')}
               </Item>
             )}
             {node.isDataEntity && (

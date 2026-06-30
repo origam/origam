@@ -215,6 +215,15 @@ export class ArchitectApi implements IArchitectApi {
     ).data;
   }
 
+  async createGroup(node: IApiTreeNode, name: string): Promise<IApiTreeNode> {
+    return (
+      await this.http.post('/Model/CreateGroup', {
+        nodeId: node.origamId,
+        name: name,
+      })
+    ).data;
+  }
+
   async updateSectionEditor(args: {
     schemaItemId: string | undefined;
     name: string;
