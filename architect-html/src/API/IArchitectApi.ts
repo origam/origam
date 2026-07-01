@@ -55,6 +55,8 @@ export interface IArchitectApi {
 
   createNode(node: INodeLoadData, typeName: string): Promise<IApiTabData>;
 
+  createGroup(node: INodeLoadData, name: string): Promise<IApiTreeNode>;
+
   updateSectionEditor(args: {
     schemaItemId: string | undefined;
     name: string;
@@ -440,6 +442,7 @@ export interface IApiTreeNode extends INodeLoadData {
   nodeLevelType?: NodeLevelType;
   isInActivePackage?: boolean;
   isFileDirty?: boolean;
+  isFolder?: boolean;
 }
 
 export type NodeLevelType = 'Category' | 'Provider' | 'Item';

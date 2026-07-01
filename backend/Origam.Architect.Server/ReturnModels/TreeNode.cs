@@ -51,6 +51,7 @@ public class TreeNode
     public NodeLevelType NodeLevelType { get; set; } = NodeLevelType.Item;
     public bool IsInActivePackage { get; set; } = true;
     public bool IsFileDirty { get; set; }
+    public bool IsFolder { get; set; }
 
     public static string ToTreeNodeId(IBrowserNode2 node)
     {
@@ -82,6 +83,7 @@ public class TreeNodeFactory(SchemaService schemaService, GitNodeStatusService g
             NodeLevelType = GetNodeLevelType(node),
             IsInActivePackage = IsInActivePackage(node),
             IsFileDirty = gitNodeStatusService.IsFileDirty(node as IPersistent),
+            IsFolder = node is SchemaItemGroup,
         };
     }
 
