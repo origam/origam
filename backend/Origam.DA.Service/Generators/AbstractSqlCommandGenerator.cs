@@ -2841,9 +2841,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         if (missingColumns.Count > 0)
         {
             throw new Exception(
-                $@"Data structure entity {entity.Name}[{
-                    entity.Id}] is missing {
-                    string.Join(", ", missingColumns)} column(s)."
+                $@"Data structure entity {entity.Name}[{entity.Id}] is missing {string.Join(", ", missingColumns)} column(s)."
             );
         }
         return entity.Columns.OrderBy(x => scalarColumnNames.IndexOf(x.Name)).ToList();
@@ -5943,8 +5941,12 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                         DataStructureEntity.CategoryConst
                     )
                 )
-                {
-                    if (relatedEntity.EntityDefinition.Id == arrayRelation.AssociatedEntity.Id)
+                { //We are searching entity, and we need to have a relation normal for the array-column entity,
+                    //by that we can plain reference to the array table without problems with wrong aliases or wrong SQL
+                    if (
+                        relatedEntity.EntityDefinition.Id == arrayRelation.AssociatedEntity.Id
+                        && relatedEntity.RelationType == RelationType.Normal
+                    )
                     {
                         arrayEntity = relatedEntity;
                         break;
