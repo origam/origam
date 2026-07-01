@@ -2841,9 +2841,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         if (missingColumns.Count > 0)
         {
             throw new Exception(
-                $@"Data structure entity {entity.Name}[{
-                    entity.Id}] is missing {
-                        string.Join(", ", missingColumns)} column(s)."
+                $@"Data structure entity {entity.Name}[{entity.Id}] is missing {string.Join(", ", missingColumns)} column(s)."
             );
         }
         return entity.Columns.OrderBy(x => scalarColumnNames.IndexOf(x.Name)).ToList();
@@ -5934,9 +5932,8 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                     stringBuilder.Append("NOT ");
                 }
                 var arrayRelation = (column.Field as DetachedField).ArrayRelation;
-                string arrayTableReference = RenderExpression(arrayRelation as EntityRelationItem);
                 stringBuilder.Append("EXISTS(SELECT * FROM ");
-                stringBuilder.Append(arrayTableReference);
+                stringBuilder.Append(RenderExpression(arrayRelation as EntityRelationItem));
                 stringBuilder.Append(" WHERE");
                 DataStructureEntity arrayEntity = null;
                 foreach (
@@ -5974,18 +5971,15 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                     {
                         stringBuilder.Append("AND ");
                     }
-                    string parentField = RenderExpression(
-                        pairItem.BaseEntityField,
+                    RenderSelectRelationKey(
+                        stringBuilder,
+                        pairItem,
                         entity,
+                        arrayEntity,
                         replaceParameterTexts,
                         dynamicParameters,
                         parameterReferences
                     );
-                    string relatedField =
-                        arrayTableReference
-                        + "."
-                        + RenderArrayColumnName(pairItem.RelatedEntityField);
-                    stringBuilder.Append(filterRenderer.Equal(parentField, relatedField));
                     andNeeded = true;
                 }
                 stringBuilder.Append(" ");
@@ -5993,10 +5987,14 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                 {
                     stringBuilder.Append("AND ");
                 }
-                stringBuilder.Append(arrayTableReference);
-                stringBuilder.Append(".");
                 stringBuilder.Append(
-                    RenderArrayColumnName((column.Field as DetachedField).ArrayValueField)
+                    RenderExpression(
+                        (column.Field as DetachedField).ArrayValueField,
+                        arrayEntity,
+                        replaceParameterTexts,
+                        dynamicParameters,
+                        parameterReferences
+                    )
                 );
                 var placeholderElements = placeholder.Replace("\0", "").Split(" ");
                 for (var i = 1; i < placeholderElements.Length; i++)
@@ -6009,14 +6007,6 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
             }
         }
         return output;
-    }
-
-    private string RenderArrayColumnName(IDataEntityColumn arrayColumn)
-    {
-        string columnName = arrayColumn is FieldMappingItem fieldMappingItem
-            ? fieldMappingItem.MappedColumnName
-            : arrayColumn.Name;
-        return sqlRenderer.NameLeftBracket + columnName + sqlRenderer.NameRightBracket;
     }
 
     protected abstract string RenderUpsertKey(string paramName, string fieldName);
