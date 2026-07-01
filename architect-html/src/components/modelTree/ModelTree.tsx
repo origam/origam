@@ -31,6 +31,9 @@ import { observer } from 'mobx-react-lite';
 import { useContext, useEffect, useRef } from 'react';
 import { Item, Menu, Separator, Submenu, TriggerEvent, useContextMenu } from 'react-contexify';
 import 'react-contexify/ReactContexify.css';
+import { installContexifyMenuShift } from '@components/modelTree/reactContexifyOverrides';
+
+installContexifyMenuShift();
 
 const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number }) => {
   const rootStore = useContext(RootStoreContext);
