@@ -36,7 +36,7 @@
                                   PrivateAssets="all" IncludeAssets="build;analyzers;buildtransitive"/>
                 <PackageReference Include="CSharpier.MsBuild" Version="1.1.2"
                                   PrivateAssets="all" IncludeAssets="build;analyzers;buildtransitive"/>
-		<PackageReference Include="Meziantou.Analyzer" Version="2.0.221"
+		<PackageReference Include="Meziantou.Analyzer" Version="3.0.117"
                                   Condition="'$(DisableMeziantouAnalyzer)' != 'true'"
                                   PrivateAssets="all" IncludeAssets="build;analyzers;buildtransitive"/>
                 <EditorConfigFiles Include="$(MSBuildThisFileDirectory)origam.globalconfig"
