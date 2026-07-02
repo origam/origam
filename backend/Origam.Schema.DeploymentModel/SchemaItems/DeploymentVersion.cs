@@ -113,22 +113,21 @@ public class DeploymentVersion : AbstractSchemaItem, IDeploymentVersion
 
     [Category("Version Information")]
     [XmlAttribute("version")]
+    [NotNullModelElementRule()]
+    //TODO ADD NEW ATTRIBUTE THAT WILL CHECK IF VERSION IS CORRECT
     public string VersionString
     {
         get => versionString;
         set
         {
-            if ((versionString != null) && (versionString != value) && IsCurrentVersion)
+            if ((versionString != null) && (versionString != value) && IsCurrentVersion) //TODO MOVE TO ATTRIBUTE
             {
                 throw new InvalidOperationException(
                     ResourceUtils.GetString("ErrorChangePackageVersion")
                 );
             }
             versionString = value;
-            if (PackageVersion.TryParse(value, out PackageVersion parsedVersion))
-            {
-                Version = parsedVersion;
-            }
+            //Version = new PackageVersion(versionString);
         }
     }
 
@@ -139,7 +138,19 @@ public class DeploymentVersion : AbstractSchemaItem, IDeploymentVersion
             .Cast<AbstractUpdateScriptActivity>();
 
     [Browsable(false)]
-    public PackageVersion Version { get; private set; } = new("0.0");
+    public PackageVersion Version
+    {
+        get
+        {
+            if (PackageVersion.TryParse(versionString, out PackageVersion parsedVersion))
+            {
+                return parsedVersion;
+            }
+
+            return new("0.0");
+        }
+        //private set;
+    }
 
     [XmlAttribute("deploymentDependenciesCsv")]
     public string DeploymentDependenciesCsv;
