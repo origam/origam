@@ -98,6 +98,7 @@
     <Compile Include="FilePersistenceProviderTests\FilePersistenceProviderTestWithOrigamRuntime.cs" />
     <Compile Include="FilePersistenceProviderTests\XmlLoaderTest.cs" />
     <Compile Include="FilterCommandParserTests.cs" />
+    <Compile Include="Generators\SelectSqlArrayFilterTests.cs" />
     <Compile Include="FlatFileSearchTests\FlatFileSearcherTests.cs" />
     <Compile Include="SchemaItemComparator.cs" />
     <Compile Include="SchemaItemsToCompare.cs" />
@@ -259,6 +260,12 @@
     </Content>
     <Content Include="securityconfiguration.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\model-tests\model\**\*">
+      <Link>model-tests\model\%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
