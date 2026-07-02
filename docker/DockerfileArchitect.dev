@@ -1,0 +1,67 @@
+# ORIGAM Architect Server — development image for the HTML modeler backend.
+# The architect-html frontend runs separately via DockerfileVite.dev
+# (see docker-compose.architect.yml).
+
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+
+WORKDIR /src
+
+COPY backend/ /src/backend/
+
+RUN --mount=type=cache,target=/root/.nuget/packages \
+    dotnet restore backend/Origam.sln
+
+RUN dotnet build backend/Origam.Architect.Server/Origam.Architect.Server.csproj \
+    /p:Configuration="Release Architect Server" -v:minimal
+
+# `dotnet publish -o` fails to copy satellite culture dirs for this project
+# graph (not dotnet/sdk#26711, not a race, trailing slash doesn't help; the
+# Server graph publishes fine). The build output is already a complete layout
+# with satellites, so stage it with plain cp.
+RUN mkdir -p /out \
+ && cp -r "backend/Origam.Architect.Server/bin/Release Architect Server/net8.0" /out/architect
+
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+
+WORKDIR /tmp
+
+# libgdiplus from source (System.Drawing for reporting); same as DockerfileServer.dev.
+RUN apt-get update \
+ && apt-get -y install ca-certificates curl sudo git make g++ xmlstarlet \
+ && apt-get -y install libgif-dev autoconf libtool automake gettext \
+    libglib2.0-dev libcairo2-dev libtiff-dev libexif-dev libpango1.0-dev \
+ && git clone --depth 1 https://github.com/mono/libgdiplus.git /tmp/libgdiplus \
+ && cd libgdiplus \
+ && ./autogen.sh --with-pango --prefix=/usr \
+ && make && make install \
+ && cd .. && rm -rf libgdiplus \
+ && apt-get -y purge autoconf automake libtool \
+ && apt-get -y autoremove
+
+RUN useradd -ms /bin/bash origam \
+ && usermod -aG sudo origam \
+ && echo "%sudo   ALL=NOPASSWD: ALL" >> /etc/sudoers
+
+WORKDIR /home/origam
+
+RUN mkdir -p architect_bin ClientApplication Setup \
+ && chown -R origam:origam /home/origam
+
+COPY --chown=origam:origam --from=build /out/architect /home/origam/architect_bin/
+
+COPY --chown=origam:origam docker/server/linux/fill_origam_settings_config.sh \
+     docker/server/_OrigamSettings.template \
+     docker/shared/linux/bootstrap.sh \
+     /home/origam/architect_bin/
+
+COPY --chown=origam:origam docker/dev/appsettings.architect.json \
+     /home/origam/architect_bin/appsettings.json
+
+# AddLog4Net() hard-requires log4net.config in the content root; the build
+# output only ships ConfigTemplates/_log4net.config.
+COPY --chown=origam:origam docker/dev/log4net.config \
+     /home/origam/architect_bin/log4net.config
+
+WORKDIR /home/origam/architect_bin
+
+ENTRYPOINT ["/bin/bash", "-c", "./entrypoint.sh"]
