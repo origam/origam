@@ -26,13 +26,13 @@ COPY architect/windows/EntryPoint.ps1         .
 COPY shared/windows/bootstrap.ps1  .
 COPY server/windows/Utils.ps1                 .
 
-# Install Node.js 18 (matches Linux Dockerfile)
+# Install Node.js 24 (matches Linux Dockerfile)
 RUN pwsh.exe -Command " \
     $ProgressPreference = 'SilentlyContinue'; \
-    Invoke-WebRequest -Uri 'https://nodejs.org/dist/v18.20.8/node-v18.20.8-win-x64.zip' -OutFile node.zip; \
+    Invoke-WebRequest -Uri 'https://nodejs.org/dist/v24.18.0/node-v24.18.0-win-x64.zip' -OutFile node.zip; \
     Expand-Archive node.zip -DestinationPath C:\ -Force; \
     Remove-Item node.zip; \
-    Rename-Item 'C:\node-v18.20.8-win-x64' 'C:\node'"
+    Rename-Item 'C:\node-v24.18.0-win-x64' 'C:\node'"
 RUN setx /M PATH "%PATH%;C:\\node"
 
 RUN if not exist logs mkdir logs
