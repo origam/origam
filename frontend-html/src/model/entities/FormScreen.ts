@@ -138,9 +138,9 @@ export class FormScreen implements IFormScreen {
     if (!dataSource) return undefined;
     const dataSourceField = dataSource!.getFieldByName(columnName);
     const dataTable = dataView!.dataTable;
-    const firstRow = dataTable.rows[0];
-    return firstRow
-      ? dataTable.getCellValueByDataSourceField(firstRow, dataSourceField!)
+    const selectedRow = dataView.selectedRow;
+    return selectedRow
+      ? dataTable.getCellValueByDataSourceField(selectedRow, dataSourceField!)
       : undefined;
   }
 
@@ -294,5 +294,4 @@ export class FormScreenEnvelope implements IFormScreenEnvelope {
 
   parent?: any;
 }
-
 
