@@ -12,6 +12,26 @@ It is also possible to download the compiled server application
 [here](https://github.com/origam/origam/releases) and just build and debug the 
 client application. 
 
+## Running in Docker (alternative to the Windows setup)
+If you don't want to set up Windows, Visual Studio, and a local SQL Server, you
+can run the whole stack (SQL Server + backend + frontend dev server) in Docker.
+It builds the backend from source and runs the frontend via Vite (hot reload),
+against the bundled demo model. Linux, macOS, and Windows hosts all work.
+
+```bash
+docker compose up -d
+```
+
+The app is then at `https://localhost:5173`. See
+[`docker/dev/README.md`](docker/dev/README.md) for details, including how to
+point the stack at your own model instead of the demo.
+
+For editing and debugging the backend with breakpoints, use the devcontainer
+instead — it works in VS Code, Cursor, Rider, and other editors. See
+[`.devcontainer/README.md`](.devcontainer/README.md).
+
+The rest of this guide covers the Windows/Visual Studio setup.
+
 ## Download Software
 Here is what you have to install first. Make sure you have at least 50 GB of free 
 space on you hard drive before you install all the software. That way you should still have enough space to build origam 

@@ -1,0 +1,92 @@
+# ORIGAM Server — development image. Builds the .NET backend from source; the
+# frontend runs separately via DockerfileVite.dev. No nginx/TLS — the Vite dev
+# server proxies straight to :8080 (see docker/dev/README.md).
+
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+
+WORKDIR /src
+
+COPY backend/ /src/backend/
+
+RUN --mount=type=cache,target=/root/.nuget/packages \
+    dotnet restore backend/Origam.sln
+
+# net472 projects can't compile on the Linux SDK, so build only the net8.0
+# server + scheduler targets.
+RUN dotnet build backend/Origam.Server/Origam.Server.csproj \
+    /p:Configuration="Release Server" -v:minimal && \
+    dotnet build backend/OrigamScheduler/OrigamScheduler.csproj \
+    /p:Configuration="Release Server" -v:minimal
+
+# Publish server
+RUN dotnet publish backend/Origam.Server/Origam.Server.csproj \
+    /p:Configuration="Release Server" \
+    -o /out/server
+
+# Publish scheduler
+RUN dotnet publish backend/OrigamScheduler/OrigamScheduler.csproj \
+    /p:Configuration="Release Server" \
+    -o /out/scheduler
+
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+
+WORKDIR /tmp
+
+# libgdiplus from source: fixes international-character rendering in FastReport
+# (same reason as DockerfileServer.linux).
+RUN apt-get update \
+ && apt-get -y install ca-certificates curl sudo git make g++ xmlstarlet \
+ && apt-get -y install libgif-dev autoconf libtool automake gettext \
+    libglib2.0-dev libcairo2-dev libtiff-dev libexif-dev libpango1.0-dev \
+ && git clone --depth 1 https://github.com/mono/libgdiplus.git /tmp/libgdiplus \
+ && cd libgdiplus \
+ && ./autogen.sh --with-pango --prefix=/usr \
+ && make && make install \
+ && cd .. && rm -rf libgdiplus \
+ && apt-get -y purge autoconf automake libtool \
+ && apt-get -y autoremove
+
+RUN useradd -ms /bin/bash origam \
+ && usermod -aG sudo origam \
+ && echo "%sudo   ALL=NOPASSWD: ALL" >> /etc/sudoers
+
+WORKDIR /home/origam
+
+RUN mkdir -p server_bin client_source scheduler_bin Setup \
+ && chown -R origam:origam /home/origam
+
+COPY --chown=origam:origam --from=build /out/server /home/origam/server_bin/
+COPY --chown=origam:origam --from=build /out/scheduler /home/origam/scheduler_bin/
+
+COPY --chown=origam:origam docker/server/linux/configureServer.sh \
+     docker/server/linux/fill_origam_settings_config.sh \
+     docker/server/linux/entrypoint.sh \
+     docker/shared/linux/bootstrap.sh \
+     docker/server/log4net.server.config \
+     docker/server/_appsettings.template \
+     docker/server/_OrigamSettings.template \
+     /home/origam/server_bin/
+
+COPY --chown=origam:origam docker/server/linux/configureScheduler.sh \
+     docker/server/linux/fill_origam_settings_config.sh \
+     docker/server/log4net.scheduler.config \
+     /home/origam/scheduler_bin/
+
+RUN mv /home/origam/server_bin/log4net.server.config /home/origam/server_bin/log4net.config \
+ && mv /home/origam/scheduler_bin/log4net.scheduler.config /home/origam/scheduler_bin/log4net.config
+
+# Used by the production entrypoint copied below; harmless when unused.
+COPY --chown=origam:origam docker/server/linux/cleanUpEnvironment.sh \
+     docker/server/linux/cleanUpEnvironmentRoot.sh \
+     /home/origam/Setup/
+
+RUN cd /home/origam/server_bin && mkdir -p logs \
+ && chmod +x configureServer.sh fill_origam_settings_config.sh entrypoint.sh \
+ && cd /home/origam/scheduler_bin && chmod +x configureScheduler.sh fill_origam_settings_config.sh \
+ && cd /home/origam/Setup && chmod +x cleanUpEnvironment.sh cleanUpEnvironmentRoot.sh
+
+USER origam
+
+WORKDIR /home/origam/server_bin
+
+ENTRYPOINT ["/bin/bash", "-c", "./entrypoint.sh"]

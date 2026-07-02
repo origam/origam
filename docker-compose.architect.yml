@@ -1,0 +1,52 @@
+# Add the HTML Architect (the modeler): Origam.Architect.Server + a Vite dev
+# server for architect-html. Shares the DB + model with the runtime server.
+# Opt-in (not started by `docker compose up`):
+#   docker compose -f docker-compose.yml -f docker-compose.architect.yml up -d
+# Architect frontend: https://localhost:5174 (self-signed cert)  API: :8081
+
+services:
+  architect:
+    build:
+      context: .
+      dockerfile: docker/DockerfileArchitect.dev
+    image: origam/architect:dev
+    environment:
+      - DatabaseType=mssql
+      - OrigamSettings__Name=${OrigamSettings__Name:-DevProject}
+      - OrigamSettings__DefaultSchemaExtensionId=${OrigamSettings__DefaultSchemaExtensionId:-f17329d6-3143-420a-a2e6-30e431eea51d}
+      - OrigamSettings__DataConnectionString=Encrypt=False;Data Source=database,1433;Initial Catalog=origam-dev;User ID=sa;Password=${SA_PASSWORD:-Origam@Dev123};
+      - OrigamSettings__ModelSourceControlLocation=/home/origam/projectData/model
+      - TZ=Europe/Prague
+    ports:
+      - "8081:8081"
+    entrypoint: ["/bin/bash", "/home/origam/architect_bin/entrypoint.architect.sh"]
+    volumes:
+      - ./model-tests/model:/home/origam/projectData/model
+      - ./docker/dev/entrypoint.architect.sh:/home/origam/architect_bin/entrypoint.architect.sh
+      - ./docker/dev/appsettings.architect.json:/home/origam/architect_bin/appsettings.json
+      - origam-dataprotection:/home/origam/.aspnet/DataProtection-Keys
+    depends_on:
+      database:
+        condition: service_healthy
+      # Architect does not deploy the schema on a fresh DB; the server must run first.
+      server:
+        condition: service_healthy
+
+  architect-frontend:
+    build:
+      context: ./architect-html
+      dockerfile: ../docker/DockerfileVite.dev
+    image: origam/architect-frontend:dev
+    ports:
+      - "5174:5173"
+    volumes:
+      - ./architect-html:/src/frontend-html
+    environment:
+      - VITE_ARCHITECT_PROXY_TARGET_HTTPS=http://architect:8081
+      - VITE_ARCHITECT_PROXY_TARGET_HTTP=http://architect:8081
+      - VITE_HOST=0.0.0.0
+      # No auth → no Secure cookies; serve HTTP and avoid vite-plugin-mkcert's
+      # update-ca-certificates dep (absent in node:24-slim).
+      - VITE_DISABLE_HTTPS=true
+    depends_on:
+      - architect

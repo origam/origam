@@ -1,0 +1,11 @@
+# Personal override (gitignored). docker compose auto-loads
+# docker-compose.override.yml on top of docker-compose.yml. Use it to point the
+# stack at your own model. Copy this file to docker-compose.override.yml to use.
+
+services:
+  server:
+    volumes:
+      - ./path/to/your/model:/home/origam/projectData/model
+    environment:
+      # Must match your model's root package id.
+      - OrigamSettings__DefaultSchemaExtensionId=00000000-0000-0000-0000-000000000000
