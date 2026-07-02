@@ -27,6 +27,7 @@ using System.Linq;
 using System.Xml.Serialization;
 using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
+using Origam.Schema.DeploymentModel.SchemaItems;
 using Origam.Services;
 using Origam.Workbench.Services;
 
@@ -96,6 +97,16 @@ public class DeploymentVersion : AbstractSchemaItem, IDeploymentVersion
     [Browsable(false)]
     public override bool UseFolders => false;
 
+    [Category("(Schema Item)")]
+    [StringNotEmptyModelElementRule]
+    [UniqueVersionValueModelElementRule]
+    [XmlAttribute("name")]
+    public override string Name
+    {
+        get => base.Name;
+        set => base.Name = value;
+    }
+
     [Browsable(false)]
     public bool IsCurrentVersion
     {
@@ -114,21 +125,13 @@ public class DeploymentVersion : AbstractSchemaItem, IDeploymentVersion
     [Category("Version Information")]
     [XmlAttribute("version")]
     [NotNullModelElementRule()]
-    //TODO ADD NEW ATTRIBUTE THAT WILL CHECK IF VERSION IS CORRECT
+    [ValidPackageVersionModelElementRule()]
+    [CurrentVersionNumberUnchangedModelElementRule()]
+    [UniqueVersionValueModelElementRule()]
     public string VersionString
     {
         get => versionString;
-        set
-        {
-            if ((versionString != null) && (versionString != value) && IsCurrentVersion) //TODO MOVE TO ATTRIBUTE
-            {
-                throw new InvalidOperationException(
-                    ResourceUtils.GetString("ErrorChangePackageVersion")
-                );
-            }
-            versionString = value;
-            //Version = new PackageVersion(versionString);
-        }
+        set => versionString = value;
     }
 
     [Browsable(false)]
@@ -149,7 +152,6 @@ public class DeploymentVersion : AbstractSchemaItem, IDeploymentVersion
 
             return new("0.0");
         }
-        //private set;
     }
 
     [XmlAttribute("deploymentDependenciesCsv")]

@@ -15,6 +15,7 @@
   "xsl_editor_tab4": "Result",
   "xsl_editor_tab5": "Settings",
   "save_button_label": "Save",
+  "save_validation_errors_label": "Errors:",
   "guid_button_label": "Generate GUID",
   "guid_button_copied_label": "Copied!",
   "guid_button_copy_prompt": "Copy GUID",
