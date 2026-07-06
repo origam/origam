@@ -49,6 +49,33 @@ public class WizardController(WizardService wizard) : ControllerBase
     public IActionResult CreateWorkQueueClass([FromBody] CreateWorkQueueModel input) =>
         Ok(wizard.CreateWorkQueueClass(input));
 
+    [HttpPost("relationships")]
+    public IActionResult CreateRelationship([FromBody] CreateRelationshipModel input) =>
+        Ok(wizard.CreateRelationship(input));
+
+    [HttpGet("relationships/wizard-data")]
+    public IActionResult GetRelationshipWizardData([FromQuery] Guid entityId) =>
+        Ok(wizard.GetRelationshipWizardData(entityId));
+
+    [HttpGet("entities/{entityId}/fields")]
+    public IActionResult GetEntityFields(Guid entityId) => Ok(wizard.GetEntityFields(entityId));
+
+    [HttpPost("data-structures")]
+    public IActionResult CreateDataStructure([FromBody] CreateDataStructureModel input) =>
+        Ok(wizard.CreateDataStructure(input));
+
+    [HttpGet("data-structures/wizard-data")]
+    public IActionResult GetDataStructureWizardData([FromQuery] Guid entityId) =>
+        Ok(wizard.GetDataStructureWizardData(entityId));
+
+    [HttpPost("screens-from-section")]
+    public IActionResult CreateScreenFromSection([FromBody] CreateScreenFromSectionModel input) =>
+        Ok(wizard.CreateScreenFromSection(input));
+
+    [HttpGet("screens-from-section/wizard-data")]
+    public IActionResult GetScreenFromSectionWizardData([FromQuery] Guid screenSectionId) =>
+        Ok(wizard.GetScreenFromSectionWizardData(screenSectionId));
+
     [HttpGet("screens/wizard-data")]
     public IActionResult GetScreenWizardData([FromQuery] Guid entityId) =>
         Ok(wizard.GetScreenWizardData(entityId));

@@ -316,6 +316,145 @@ public class WizardService(
         };
     }
 
+    public DataStructureWizardData GetDataStructureWizardData(Guid entityId)
+    {
+        var entity =
+            persistenceProvider.RetrieveInstance<IDataEntity>(entityId)
+            ?? throw new UserOrigamException(
+                string.Format(Strings.Wizard_EntityNotFound, entityId)
+            );
+
+        var schemaService = ServiceManager.Services.GetService<ISchemaService>();
+        var dsProvider =
+            schemaService?.GetProvider(typeof(DataStructureSchemaItemProvider))
+            as DataStructureSchemaItemProvider;
+        var existingNames =
+            dsProvider
+                ?.ChildItemsByType<ISchemaItem>(AbstractDataStructure.CategoryConst)
+                .Select(item => item.Name)
+                .ToList() ?? new List<string>();
+
+        return new DataStructureWizardData
+        {
+            EntityName = entity.Name,
+            ExistingDataStructureNames = existingNames,
+        };
+    }
+
+    public CreateWizardResult CreateDataStructure(CreateDataStructureModel input)
+    {
+        if (string.IsNullOrWhiteSpace(input.Name))
+        {
+            throw new UserOrigamException(Strings.Wizard_DataStructureNameRequired);
+        }
+
+        var entity =
+            persistenceProvider.RetrieveInstance<IDataEntity>(input.EntityId)
+            ?? throw new UserOrigamException(
+                string.Format(Strings.Wizard_EntityNotFound, input.EntityId)
+            );
+
+        var trimmedName = input.Name.Trim();
+        var schemaService = ServiceManager.Services.GetService<ISchemaService>();
+        var dsProvider =
+            schemaService?.GetProvider(typeof(DataStructureSchemaItemProvider))
+            as DataStructureSchemaItemProvider;
+        var duplicate = dsProvider
+            ?.ChildItemsByType<ISchemaItem>(AbstractDataStructure.CategoryConst)
+            .FirstOrDefault(item =>
+                string.Equals(item.Name, trimmedName, StringComparison.OrdinalIgnoreCase)
+            );
+        if (duplicate != null)
+        {
+            throw new UserOrigamException(
+                string.Format(Strings.Wizard_DataStructureAlreadyExists, trimmedName)
+            );
+        }
+
+        var dataStructure = transaction.Run(() =>
+            EntityHelper.CreateDataStructure(entity, trimmedName, persist: true)
+        );
+
+        return new CreateWizardResult
+        {
+            SearchResults = searchService.BuildResults([dataStructure]),
+        };
+    }
+
+    public ScreenFromSectionWizardData GetScreenFromSectionWizardData(Guid screenSectionId)
+    {
+        var panel =
+            persistenceProvider.RetrieveInstance<PanelControlSet>(screenSectionId)
+            ?? throw new UserOrigamException(
+                string.Format(Strings.Wizard_ScreenSectionNotFound, screenSectionId)
+            );
+
+        var schemaService = ServiceManager.Services.GetService<ISchemaService>();
+        var dsProvider =
+            schemaService?.GetProvider(typeof(DataStructureSchemaItemProvider))
+            as DataStructureSchemaItemProvider;
+        var existingNames =
+            dsProvider
+                ?.ChildItemsByType<ISchemaItem>(AbstractDataStructure.CategoryConst)
+                .Select(item => item.Name)
+                .ToList() ?? new List<string>();
+
+        return new ScreenFromSectionWizardData
+        {
+            SectionName = panel.Name,
+            ExistingDataStructureNames = existingNames,
+        };
+    }
+
+    public CreateWizardResult CreateScreenFromSection(CreateScreenFromSectionModel input)
+    {
+        if (string.IsNullOrWhiteSpace(input.Name))
+        {
+            throw new UserOrigamException(Strings.Wizard_ScreenNameRequired);
+        }
+
+        var panel =
+            persistenceProvider.RetrieveInstance<PanelControlSet>(input.ScreenSectionId)
+            ?? throw new UserOrigamException(
+                string.Format(Strings.Wizard_ScreenSectionNotFound, input.ScreenSectionId)
+            );
+
+        var trimmedName = input.Name.Trim();
+        var schemaService = ServiceManager.Services.GetService<ISchemaService>();
+        var dsProvider =
+            schemaService?.GetProvider(typeof(DataStructureSchemaItemProvider))
+            as DataStructureSchemaItemProvider;
+        var duplicate = dsProvider
+            ?.ChildItemsByType<ISchemaItem>(AbstractDataStructure.CategoryConst)
+            .FirstOrDefault(item =>
+                string.Equals(item.Name, trimmedName, StringComparison.OrdinalIgnoreCase)
+            );
+        if (duplicate != null)
+        {
+            throw new UserOrigamException(
+                string.Format(Strings.Wizard_DataStructureAlreadyExists, trimmedName)
+            );
+        }
+
+        var groupName = panel.Group?.Name;
+
+        var (dataStructure, form) = transaction.Run(() =>
+        {
+            var newDataStructure = EntityHelper.CreateDataStructure(
+                panel.DataEntity,
+                trimmedName,
+                persist: true
+            );
+            var newForm = GuiHelper.CreateForm(newDataStructure, groupName, panel);
+            return (newDataStructure, newForm);
+        });
+
+        return new CreateWizardResult
+        {
+            SearchResults = searchService.BuildResults([dataStructure, form]),
+        };
+    }
+
     public CreateWizardResult CreateWorkQueueClass(CreateWorkQueueModel input)
     {
         var entity =
@@ -341,13 +480,11 @@ public class WizardService(
         }
 
         var generated = new List<ISchemaItem>();
-        var workQueueClass = transaction.Run(() =>
+        transaction.Run(() =>
             WorkflowHelper.CreateWorkQueueClass(entity, selectedColumns, generated)
         );
 
-        var generatedAll = new List<ISchemaItem> { workQueueClass };
-        generatedAll.AddRange(generated);
-        return new CreateWizardResult { SearchResults = searchService.BuildResults(generatedAll) };
+        return new CreateWizardResult { SearchResults = searchService.BuildResults(generated) };
     }
 
     public GetDataStructureSqlResult GetDataStructureSql(Guid dataStructureId)
@@ -556,5 +693,103 @@ public class WizardService(
                 SearchResults = searchService.BuildResults([lookup, lookup.ListDataStructure]),
             };
         });
+    }
+
+    public RelationshipWizardData GetRelationshipWizardData(Guid entityId)
+    {
+        var entity =
+            persistenceProvider.RetrieveInstance<IDataEntity>(entityId)
+            ?? throw new UserOrigamException(
+                string.Format(Strings.Wizard_EntityNotFound, entityId)
+            );
+
+        var schemaService = ServiceManager.Services.GetService<ISchemaService>();
+        var entityProvider = schemaService.GetProvider<EntityModelSchemaItemProvider>();
+        var entities = entityProvider
+            .ChildItemsByType<IDataEntity>(AbstractDataEntity.CategoryConst)
+            .Where(dataEntity => !string.IsNullOrEmpty(dataEntity.Name))
+            .OrderBy(dataEntity => dataEntity.Name)
+            .Select(dataEntity => new IdName { Id = dataEntity.Id, Name = dataEntity.Name })
+            .ToList();
+
+        return new RelationshipWizardData
+        {
+            BaseEntityName = entity.Name,
+            BaseEntityColumns = GetEntityFields(entity),
+            Entities = entities,
+        };
+    }
+
+    public List<IdName> GetEntityFields(Guid entityId)
+    {
+        var entity =
+            persistenceProvider.RetrieveInstance<IDataEntity>(entityId)
+            ?? throw new UserOrigamException(
+                string.Format(Strings.Wizard_EntityNotFound, entityId)
+            );
+        return GetEntityFields(entity);
+    }
+
+    private static List<IdName> GetEntityFields(IDataEntity entity) =>
+        entity
+            .EntityColumns.Where(column => !string.IsNullOrEmpty(column.ToString()))
+            .OrderBy(column => column.Name)
+            .Select(column => new IdName { Id = column.Id, Name = column.Name })
+            .ToList();
+
+    public CreateWizardResult CreateRelationship(CreateRelationshipModel input)
+    {
+        if (string.IsNullOrWhiteSpace(input.RelationName))
+        {
+            throw new UserOrigamException(Strings.Wizard_RelationNameRequired);
+        }
+
+        if (string.IsNullOrWhiteSpace(input.KeyName))
+        {
+            throw new UserOrigamException(Strings.Wizard_RelationKeyNameRequired);
+        }
+
+        var baseEntity =
+            persistenceProvider.RetrieveInstance<IDataEntity>(input.BaseEntityId)
+            ?? throw new UserOrigamException(
+                string.Format(Strings.Wizard_EntityNotFound, input.BaseEntityId)
+            );
+
+        var relatedEntity =
+            persistenceProvider.RetrieveInstance<IDataEntity>(input.RelatedEntityId)
+            ?? throw new UserOrigamException(
+                string.Format(Strings.Wizard_RelatedEntityNotFound, input.RelatedEntityId)
+            );
+
+        var baseField =
+            baseEntity.EntityColumns.FirstOrDefault(column => column.Id == input.BaseFieldId)
+            ?? throw new UserOrigamException(Strings.Wizard_BaseEntityFieldNotFound);
+
+        var relatedField =
+            relatedEntity.EntityColumns.FirstOrDefault(column => column.Id == input.RelatedFieldId)
+            ?? throw new UserOrigamException(Strings.Wizard_RelatedEntityFieldNotFound);
+
+        var relation = transaction.Run(() =>
+        {
+            var createdRelation = EntityHelper.CreateRelation(
+                baseEntity,
+                relatedEntity,
+                input.IsParentChild,
+                persist: true
+            );
+            EntityHelper.CreateRelationKey(
+                createdRelation,
+                baseField,
+                relatedField,
+                persist: true,
+                input.KeyName.Trim()
+            );
+            return createdRelation;
+        });
+
+        return new CreateWizardResult
+        {
+            SearchResults = searchService.BuildResults([baseEntity, relation]),
+        };
     }
 }

@@ -137,6 +137,16 @@ export interface IArchitectApi {
 
   createWorkQueueClass(request: ICreateWorkQueueRequest): Promise<ICreateWizardResult>;
 
+  getRelationshipWizardData(entityId: string): Promise<IRelationshipWizardData>;
+  getEntityFields(entityId: string): Promise<IIdName[]>;
+  createRelationship(request: ICreateRelationshipRequest): Promise<ICreateWizardResult>;
+
+  getDataStructureWizardData(entityId: string): Promise<IDataStructureWizardData>;
+  createDataStructure(request: ICreateDataStructureRequest): Promise<ICreateWizardResult>;
+
+  getScreenFromSectionWizardData(screenSectionId: string): Promise<IScreenFromSectionWizardData>;
+  createScreenFromSection(request: ICreateScreenFromSectionRequest): Promise<ICreateWizardResult>;
+
   createMenuItem(request: ICreateMenuItemRequest): Promise<ICreateWizardResult>;
 
   getDataStructureSql(dataStructureId: string): Promise<IGetDataStructureSqlResult>;
@@ -215,6 +225,47 @@ export interface ICreateLookupRequest {
   displayFieldId: string;
   idFilterId: string;
   listFilterId: string | null;
+}
+
+export interface IIdName {
+  id: string;
+  name: string;
+}
+
+export interface IRelationshipWizardData {
+  baseEntityName: string;
+  baseEntityColumns: IIdName[];
+  entities: IIdName[];
+}
+
+export interface ICreateRelationshipRequest {
+  baseEntityId: string;
+  relatedEntityId: string;
+  relationName: string;
+  isParentChild: boolean;
+  keyName: string;
+  baseFieldId: string;
+  relatedFieldId: string;
+}
+
+export interface IDataStructureWizardData {
+  entityName: string;
+  existingDataStructureNames: string[];
+}
+
+export interface ICreateDataStructureRequest {
+  entityId: string;
+  name: string;
+}
+
+export interface IScreenFromSectionWizardData {
+  sectionName: string;
+  existingDataStructureNames: string[];
+}
+
+export interface ICreateScreenFromSectionRequest {
+  screenSectionId: string;
+  name: string;
 }
 
 export interface ITransformationInput {

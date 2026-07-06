@@ -111,6 +111,10 @@ export class TreeNode implements IEditorNode {
     return this.itemType === 'Origam.Schema.GuiModel.FormControlSet';
   }
 
+  get isScreenSection() {
+    return this.itemType === 'Origam.Schema.GuiModel.PanelControlSet';
+  }
+
   get isDataStructure() {
     return this.itemType === 'Origam.Schema.EntityModel.DataStructure';
   }

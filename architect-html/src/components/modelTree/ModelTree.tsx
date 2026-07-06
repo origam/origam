@@ -25,6 +25,9 @@ import { TreeNode } from '@components/modelTree/TreeNode';
 import { CreateLookupWizard } from '@components/modelTree/createWizard/CreateLookupWizard';
 import { CreateScreenWizard } from '@components/modelTree/createWizard/CreateScreenWizard';
 import { CreateWorkQueueWizard } from '@components/modelTree/createWizard/CreateWorkQueueWizard';
+import { CreateRelationshipWizard } from '@components/modelTree/createWizard/CreateRelationshipWizard';
+import { CreateDataStructureWizard } from '@components/modelTree/createWizard/CreateDataStructureWizard';
+import { CreateScreenFromSectionWizard } from '@components/modelTree/createWizard/CreateScreenFromSectionWizard';
 import { CreateMenuItemWizard } from '@components/modelTree/createWizard/CreateMenuItemWizard';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { observer } from 'mobx-react-lite';
@@ -232,6 +235,81 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
     );
   }
 
+  function openCreateRelationshipWizard() {
+    const closeDialog = rootStore.dialogStack.pushDialog(
+      '',
+      <CreateRelationshipWizard
+        entityId={node.origamId}
+        parentNodeName={node.nodeText}
+        onCancel={() => closeDialog()}
+        onCreate={result => {
+          closeDialog();
+          run({
+            generator: function* () {
+              yield* rootStore.modelTreeState.loadPackageNodes.bind(rootStore.modelTreeState)();
+              showCreatedConfirmation(
+                T('Relationship', 'wizard_artifact_relationship'),
+                result?.searchResults ?? [],
+              );
+            },
+          });
+        }}
+      />,
+      undefined,
+      false,
+    );
+  }
+
+  function openCreateDataStructureWizard() {
+    const closeDialog = rootStore.dialogStack.pushDialog(
+      '',
+      <CreateDataStructureWizard
+        entityId={node.origamId}
+        parentNodeName={node.nodeText}
+        onCancel={() => closeDialog()}
+        onCreate={result => {
+          closeDialog();
+          run({
+            generator: function* () {
+              yield* rootStore.modelTreeState.loadPackageNodes.bind(rootStore.modelTreeState)();
+              showCreatedConfirmation(
+                T('Data Structure', 'wizard_artifact_data_structure'),
+                result?.searchResults ?? [],
+              );
+            },
+          });
+        }}
+      />,
+      undefined,
+      false,
+    );
+  }
+
+  function openCreateScreenFromSectionWizard() {
+    const closeDialog = rootStore.dialogStack.pushDialog(
+      '',
+      <CreateScreenFromSectionWizard
+        screenSectionId={node.origamId}
+        parentNodeName={node.nodeText}
+        onCancel={() => closeDialog()}
+        onCreate={result => {
+          closeDialog();
+          run({
+            generator: function* () {
+              yield* rootStore.modelTreeState.loadPackageNodes.bind(rootStore.modelTreeState)();
+              showCreatedConfirmation(
+                T('Screen', 'wizard_artifact_screen'),
+                result?.searchResults ?? [],
+              );
+            },
+          });
+        }}
+      />,
+      undefined,
+      false,
+    );
+  }
+
   function showDataStructureSql() {
     run({
       generator: function* () {
@@ -353,12 +431,25 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
                 <Item id="create-workqueue" onClick={openCreateWorkQueueWizard}>
                   {T('Create Workqueue class', 'tree_node_create_workqueue')}
                 </Item>
+                <Item id="create-relationship" onClick={openCreateRelationshipWizard}>
+                  {T('Create Relationship With Key', 'tree_node_create_relationship')}
+                </Item>
+                <Item id="create-data-structure" onClick={openCreateDataStructureWizard}>
+                  {T('Create Data Structure', 'tree_node_create_data_structure')}
+                </Item>
               </Submenu>
             )}
             {node.isScreen && (
               <Submenu label={T('Actions', 'tree_node_submenu_actions')}>
                 <Item id="create-menu-item" onClick={openCreateMenuItemWizard}>
                   {T('Create Menu Item', 'tree_node_create_menu_item')}
+                </Item>
+              </Submenu>
+            )}
+            {node.isScreenSection && (
+              <Submenu label={T('Actions', 'tree_node_submenu_actions')}>
+                <Item id="create-screen-from-section" onClick={openCreateScreenFromSectionWizard}>
+                  {T('Create Screen', 'tree_node_create_screen')}
                 </Item>
               </Submenu>
             )}

@@ -350,6 +350,58 @@ export class ArchitectApi implements IArchitectApi {
     return (await this.http.post('/wizards/work-queue-classes', request)).data;
   }
 
+  async getRelationshipWizardData(
+    entityId: string,
+  ): Promise<import('@api/IArchitectApi').IRelationshipWizardData> {
+    return (
+      await this.http.get('/wizards/relationships/wizard-data', {
+        params: { entityId },
+      })
+    ).data;
+  }
+
+  async getEntityFields(entityId: string): Promise<import('@api/IArchitectApi').IIdName[]> {
+    return (await this.http.get(`/wizards/entities/${entityId}/fields`)).data;
+  }
+
+  async createRelationship(
+    request: import('@api/IArchitectApi').ICreateRelationshipRequest,
+  ): Promise<import('@api/IArchitectApi').ICreateWizardResult> {
+    return (await this.http.post('/wizards/relationships', request)).data;
+  }
+
+  async getDataStructureWizardData(
+    entityId: string,
+  ): Promise<import('@api/IArchitectApi').IDataStructureWizardData> {
+    return (
+      await this.http.get('/wizards/data-structures/wizard-data', {
+        params: { entityId },
+      })
+    ).data;
+  }
+
+  async createDataStructure(
+    request: import('@api/IArchitectApi').ICreateDataStructureRequest,
+  ): Promise<import('@api/IArchitectApi').ICreateWizardResult> {
+    return (await this.http.post('/wizards/data-structures', request)).data;
+  }
+
+  async getScreenFromSectionWizardData(
+    screenSectionId: string,
+  ): Promise<import('@api/IArchitectApi').IScreenFromSectionWizardData> {
+    return (
+      await this.http.get('/wizards/screens-from-section/wizard-data', {
+        params: { screenSectionId },
+      })
+    ).data;
+  }
+
+  async createScreenFromSection(
+    request: import('@api/IArchitectApi').ICreateScreenFromSectionRequest,
+  ): Promise<import('@api/IArchitectApi').ICreateWizardResult> {
+    return (await this.http.post('/wizards/screens-from-section', request)).data;
+  }
+
   async createMenuItem(
     request: import('@api/IArchitectApi').ICreateMenuItemRequest,
   ): Promise<import('@api/IArchitectApi').ICreateWizardResult> {

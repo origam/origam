@@ -463,16 +463,17 @@ export const CreateLookupWizard: React.FC<CreateLookupWizardProps> = observer(
                 {T('Step {0} of {1}', 'wizard_step_counter', step + 1, steps.length)}
               </div>
               <div className={S.footerBtns}>
-                <button className={S.btn} onClick={onCancel}>
+                <button type="button" className={S.btn} onClick={onCancel}>
                   {T('Cancel', 'wizard_btn_cancel')}
                 </button>
                 {step > 0 && (
-                  <button className={S.btn} onClick={back} disabled={submitting}>
+                  <button type="button" className={S.btn} onClick={back} disabled={submitting}>
                     {T('Back', 'wizard_btn_back')}
                   </button>
                 )}
                 {step < steps.length - 1 ? (
                   <button
+                    type="button"
                     className={`${S.btn} ${S.btnPrimary}`}
                     onClick={next}
                     disabled={!canAdvance || loading}
@@ -481,6 +482,7 @@ export const CreateLookupWizard: React.FC<CreateLookupWizardProps> = observer(
                   </button>
                 ) : (
                   <button
+                    type="button"
                     className={`${S.btn} ${S.btnPrimary}`}
                     onClick={submit}
                     disabled={submitting || loading}
