@@ -67,10 +67,21 @@ export class MobileFormBuilder extends React.Component<React.PropsWithChildren<{
 
   componentDidMount() {
     document.addEventListener("click", event => this.notifyClick(event))
+    this.autoFocusIfNeeded();
+  }
+
+  componentDidUpdate() {
+    this.autoFocusIfNeeded();
   }
 
   componentWillUnmount() {
     document.removeEventListener("click", event => this.notifyClick(event));
+  }
+
+  autoFocusIfNeeded() {
+    if (this.props.dataView?.isFirst && this.context.isVisible) {
+      this.props.dataView.formFocusManager.autoFocus();
+    }
   }
 
   notifyClick(event: any) {
@@ -310,9 +321,6 @@ export class MobileFormBuilder extends React.Component<React.PropsWithChildren<{
     const topItem = topItems[0];
     const form = recursiveBuild(topItem);
 
-    if (this.props.dataView?.isFirst && this.context.isVisible) {
-      focusManager.autoFocus();
-    }
     return form;
   }
 

@@ -17,7 +17,6 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { bind } from "@decorize/bind";
 import { DataViewData } from "../../DataView/DataViewData";
 import { RowCursor } from "../../DataView/TableCursor";
 import { action, computed,
@@ -26,7 +25,6 @@ import { action, computed,
 import { DropdownEditorData, IDropdownEditorData } from "./DropdownEditorData";
 import { DropdownEditorSetup } from "modules/Editors/DropdownEditor/DropdownEditorSetup";
 
-@bind
 export class TagInputEditorData implements IDropdownEditorData {
   dropdownEditorData: IDropdownEditorData;
 
