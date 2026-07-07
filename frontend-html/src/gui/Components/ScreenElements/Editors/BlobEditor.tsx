@@ -329,6 +329,9 @@ export class BlobEditor extends React.Component<React.PropsWithChildren<{
       );
     }
 
+    const property = this.props.Property;
+    const isReadOnly = this.props.isReadOnly;
+
     return (
       <div className={S.blobEditor + " " + CS.control}>
         <input
@@ -363,7 +366,7 @@ export class BlobEditor extends React.Component<React.PropsWithChildren<{
                   onClick={(event: any) => {
                     setDropped(false);
                     runInFlowWithHandler({
-                      ctx: this.props.Property!,
+                      ctx: property!,
                       action: async () => await this.download({isPreview: false}),
                     });
                   }}
@@ -371,11 +374,11 @@ export class BlobEditor extends React.Component<React.PropsWithChildren<{
                   {T("Download", "blob_download")}
                 </DropdownItem>
                 <DropdownItem
-                  isDisabled={this.props.isReadOnly}
+                  isDisabled={isReadOnly}
                   onClick={(event: any) => {
                     setDropped(false);
                     runGeneratorInFlowWithHandler({
-                      ctx: this.props.Property!,
+                      ctx: property!,
                       generator: this.delete.bind(this)(),
                     });
                   }}
@@ -386,7 +389,7 @@ export class BlobEditor extends React.Component<React.PropsWithChildren<{
                   onClick={(event: any) => {
                     setDropped(false);
                     runInFlowWithHandler({
-                      ctx: this.props.Property!,
+                      ctx: property!,
                       action: async () => await this.download({isPreview: true}),
                     });
                   }}

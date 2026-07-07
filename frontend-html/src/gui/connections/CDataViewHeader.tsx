@@ -137,16 +137,6 @@ export class CDataViewHeaderInner extends React.Component<React.PropsWithChildre
   }
 
   @computed
-  get isBarVisible() {
-    return this.props.isVisible || this.hasSomeRelevantActions;
-  }
-
-  @computed
-  get isActionsOnly() {
-    return !this.props.isVisible && this.hasSomeRelevantActions;
-  }
-
-  @computed
   get hasSomeRelevantActions() {
     return (
       this.relevantActions.filter((action) => action.placement !== IActionPlacement.PanelMenu)
@@ -166,6 +156,7 @@ export class CDataViewHeaderInner extends React.Component<React.PropsWithChildre
 
   render() {
     const {dataView} = this;
+    const {extension, isVisible} = this.props;
     const label = getDataViewLabel(dataView);
     const isFilterSettingsVisible = getIsFilterControlsDisplayed(dataView);
     const onColumnConfigurationClickEvt = onColumnConfigurationClick(dataView);
@@ -202,6 +193,9 @@ export class CDataViewHeaderInner extends React.Component<React.PropsWithChildre
 
     const configurationManager = getConfigurationManager(dataView);
     const customTableConfigsExist = configurationManager.customTableConfigurations.length > 0;
+    const isBarVisible = isVisible || this.hasSomeRelevantActions;
+    const isActionsOnly = !isVisible && this.hasSomeRelevantActions;
+    const relevantActions = this.relevantActions;
     return (
       <Measure bounds={true}>
         {({measureRef, contentRect}) => {
@@ -210,12 +204,12 @@ export class CDataViewHeaderInner extends React.Component<React.PropsWithChildre
           return (
             <Observer>
               {() => (
-                <DataViewHeader domRef={measureRef} isVisible={this.isBarVisible}>
-                  {this.isBarVisible &&
-                  (this.isActionsOnly ? (
+                <DataViewHeader domRef={measureRef} isVisible={isBarVisible}>
+                  {isBarVisible &&
+                  (isActionsOnly ? (
                     <DataViewHeaderGroup grovable={true} noDivider={true}>
-                      {this.props.extension.render("actions")}
-                      <DataViewHeaderButtonGroup actions={this.relevantActions}/>
+                      {extension.render("actions")}
+                      <DataViewHeaderButtonGroup actions={relevantActions}/>
                     </DataViewHeaderGroup>
                   ) : (
                     <>
@@ -289,8 +283,8 @@ export class CDataViewHeaderInner extends React.Component<React.PropsWithChildre
                         }
 
                         <DataViewHeaderGroup grovable={true}>
-                          {this.props.extension.render("actions")}
-                          <DataViewHeaderButtonGroup actions={this.relevantActions}/>
+                          {extension.render("actions")}
+                          <DataViewHeaderButtonGroup actions={relevantActions}/>
                         </DataViewHeaderGroup>
 
                         {!isBreak640 && (

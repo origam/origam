@@ -259,6 +259,17 @@ export class DateTimeEditor extends React.Component<React.PropsWithChildren<{
   }
 
   renderWithCalendarWidget() {
+    const {
+      backgroundColor,
+      className,
+      foregroundColor,
+      id,
+      isReadOnly,
+      onClick,
+      onDoubleClick,
+      outputFormatToShow,
+    } = this.props;
+
     return (
       <Dropdowner
         ref={this.refDropdowner}
@@ -278,18 +289,18 @@ export class DateTimeEditor extends React.Component<React.PropsWithChildren<{
                     <FormatHintTooltip
                       boundingRect={this.inputRect}
                       line1={this.editorModel.autocompletedText}
-                      line2={this.props.outputFormatToShow}
+                      line2={outputFormatToShow}
                     />
                   )}
                   <input
-                    id={this.props.id}
-                    title={this.editorModel.autocompletedText + '\n' + this.props.outputFormatToShow}
+                    id={id}
+                    title={this.editorModel.autocompletedText + '\n' + outputFormatToShow}
                     style={{
-                      color: this.props.foregroundColor,
-                      backgroundColor: this.props.backgroundColor,
+                      color: foregroundColor,
+                      backgroundColor: backgroundColor,
                     }}
                     {...getEditorInputSuppressionProps()}
-                    className={S.input +" "+ this.props.className + " " + (this.props.isReadOnly ? S.readOnlyInput : "")}
+                    className={S.input +" "+ className + " " + (isReadOnly ? S.readOnlyInput : "")}
                     type="text"
                     onBlur={event => this.handleInputBlur(event)()}
                     onFocus={this.handleFocus}
@@ -297,10 +308,10 @@ export class DateTimeEditor extends React.Component<React.PropsWithChildren<{
                       this.refInput(elm);
                     }}
                     value={this.editorModel.textFieldValue}
-                    readOnly={this.props.isReadOnly}
+                    readOnly={isReadOnly}
                     onChange={this.handleTextFieldChange}
-                    onClick={this.props.onClick}
-                    onDoubleClick={this.props.onDoubleClick}
+                    onClick={onClick}
+                    onDoubleClick={onDoubleClick}
                     onKeyDown={this.handleKeyDown}
                     onDragStart={(e: any) =>  e.preventDefault()}
                   />
@@ -308,7 +319,7 @@ export class DateTimeEditor extends React.Component<React.PropsWithChildren<{
               )}
             </Observer>
 
-            {!this.props.isReadOnly && (
+            {!isReadOnly && (
               <div
                 className={S.dropdownSymbol}
                 onMouseDown={() => setDropped(true)}

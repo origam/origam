@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import React from "react";
 import S from "gui/Components/Splitter/Splitter.module.scss";
-import { action, computed, observable, runInAction, makeObservable } from "mobx";
+import { action, observable, runInAction, makeObservable } from "mobx";
 import { observer, Observer } from "mobx-react";
 
 import Measure, { ContentRect } from "react-measure";
@@ -27,24 +27,18 @@ import _ from "lodash";
 import cx from "classnames";
 import { IPanelData } from "gui/Components/Splitter/IPanelData";
 
-@observer
 class SplitterPanel extends React.Component<React.PropsWithChildren<{
   type: "isHoriz" | "isVert";
   size: number;
   className?: string;
 }>> {
-  constructor(props: any, context?: any) {
-    super(props, context);
-    makeObservable(this);
-  }
-
   refPanel = (elm: any) => (this.elmPanel = elm);
   elmPanel: HTMLDivElement | null = null;
 
   componentDidMount() {
   }
 
-  @computed get style() {
+  getStyle() {
     switch (this.props.type) {
       case "isHoriz":
         return {width: this.props.size};
@@ -59,7 +53,7 @@ class SplitterPanel extends React.Component<React.PropsWithChildren<{
       <div
         ref={this.refPanel}
         className={cx(this.props.className || S.splitterPanel, this.props.type)}
-        style={this.style}
+        style={this.getStyle()}
       >
         {this.props.children}
       </div>
@@ -67,7 +61,6 @@ class SplitterPanel extends React.Component<React.PropsWithChildren<{
   }
 }
 
-@observer
 class SplitterDivider extends React.Component<React.PropsWithChildren<{
   type: "isHoriz" | "isVert";
   className?: string;
@@ -76,12 +69,7 @@ class SplitterDivider extends React.Component<React.PropsWithChildren<{
   relativeLoc: number;
   onMouseDown?(event: any): void;
 }>> {
-  constructor(props: any, context?: any) {
-    super(props, context);
-    makeObservable(this);
-  }
-
-  @computed get style() {
+  getStyle() {
     if (!this.props.isDragging) return {};
     switch (this.props.type) {
       case "isVert":
@@ -104,7 +92,7 @@ class SplitterDivider extends React.Component<React.PropsWithChildren<{
             isDragging: this.props.isDragging
           }
         )}
-        style={this.style}
+        style={this.getStyle()}
       >
         <div className="dividerLine"/>
       </div>
@@ -290,12 +278,15 @@ export class Splitter extends React.Component<React.PropsWithChildren<{
 
   render() {
     const content: React.ReactNode[] = [];
+    const style = this.props.STYLE || S;
+    const splitterType = this.props.type;
     for (let i = 0; i < this.props.panels.length; i++) {
       const panel = this.props.panels[i];
+      const panelClassName = style.panel + (i === 0 && this.props.dontPrintLeftPane ? " noPrint" : "");
       content.push(
         <SplitterPanel
-          className={(this.props.STYLE || S).panel + (i === 0 && this.props.dontPrintLeftPane ? " noPrint" : "")}
-          type={this.props.type}
+          className={panelClassName}
+          type={splitterType}
           size={this.sizeMap.get(panel.id)!}
           key={`S${panel.id}`}
         >
@@ -303,28 +294,30 @@ export class Splitter extends React.Component<React.PropsWithChildren<{
         </SplitterPanel>
       );
       if (i < this.props.panels.length - 1) {
+        const dividerClassName = style.divider;
+        const dividerId = panel.id;
         content.push(
           <Measure
             key={i} // Assuming panel structure will not change.
             bounds={true}
             onResize={contentRect =>
-              this.handleDividerResize(contentRect, panel.id)
+              this.handleDividerResize(contentRect, dividerId)
             }
           >
             {({measureRef}) => (
               <Observer>
                 {() => (
                   <SplitterDivider
-                    className={(this.props.STYLE || S).divider}
+                    className={dividerClassName}
                     domRef={measureRef}
-                    key={`D${panel.id}`}
+                    key={`D${dividerId}`}
                     isDragging={
-                      this.isResizing && this.draggingDividerId === panel.id
+                      this.isResizing && this.draggingDividerId === dividerId
                     }
                     relativeLoc={this.dividerRelativeLoc}
-                    type={this.props.type}
+                    type={splitterType}
                     onMouseDown={event =>
-                      this.handleDividerMouseDown(event, panel.id)
+                      this.handleDividerMouseDown(event, dividerId)
                     }
                   />
                 )}
@@ -334,6 +327,7 @@ export class Splitter extends React.Component<React.PropsWithChildren<{
         );
       }
     }
+    const rootClassName = style.root;
     return (
       <Measure bounds={true} onResize={this.handleResize}>
         {({measureRef}) => (
@@ -341,7 +335,7 @@ export class Splitter extends React.Component<React.PropsWithChildren<{
             {() => (
               <div
                 ref={measureRef}
-                className={cx((this.props.STYLE || S).root, this.props.type)}
+                className={cx(rootClassName, splitterType)}
               >
                 {this.isInitialized && content}
               </div>

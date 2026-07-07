@@ -180,6 +180,14 @@ export class Dropdowner extends React.Component<React.PropsWithChildren<{
 
   render() {
     (() => this.isDropped)();
+    const className = this.props.className;
+    const style = this.props.style;
+    const onContainerMouseDown = this.props.onContainerMouseDown;
+    const trigger = this.props.trigger;
+    const content = this.props.content;
+    const onOutsideInteraction = this.props.onOutsideInteraction;
+    const onDroppedUp = this.props.onDroppedUp;
+
     return (
       <Measure bounds={true} ref={this.refMeasTrigger}>
         {({measureRef: mRefTrigger, contentRect: cRectTrigger, measure: measureTrigger}) => (
@@ -194,12 +202,12 @@ export class Dropdowner extends React.Component<React.PropsWithChildren<{
                   <div
                     className={
                       S.dropdownerContainer +
-                      (this.props.className ? ` ${this.props.className}` : "")
+                      (className ? ` ${className}` : "")
                     }
-                    style={this.props.style}
-                    onMouseDown={this.props.onContainerMouseDown}
+                    style={style}
+                    onMouseDown={onContainerMouseDown}
                   >
-                    {this.props.trigger({
+                    {trigger({
                       refTrigger: mRefTrigger,
                       measure: this.reMeasure,
                       setDropped: this.setDropped,
@@ -213,11 +221,11 @@ export class Dropdowner extends React.Component<React.PropsWithChildren<{
                         dropdownRef={mRefDropdown}
                         onCloseRequest={() => {
                           this.setDropped(false);
-                          this.props.onDroppedUp?.();
+                          onDroppedUp?.();
                         }}
-                        onOutsideInteraction={this.props.onOutsideInteraction}
+                        onOutsideInteraction={onOutsideInteraction}
                       >
-                        {this.props.content({setDropped: this.setDropped})}
+                        {content({setDropped: this.setDropped})}
                       </DroppedBox>
                     )}
                   </div>

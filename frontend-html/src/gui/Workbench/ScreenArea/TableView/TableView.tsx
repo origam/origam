@@ -87,9 +87,28 @@ export class TableViewInner extends React.Component<React.PropsWithChildren<ITab
     super(props);
     makeObservable(this);
 
-    this.props.dataView?.initializeNewScrollLoader();
-    getGroupingConfiguration(this.props.dataView).registerGroupingOnOffHandler(() => {
-      this.props.dataView?.initializeNewScrollLoader();
+    const dataView = props.dataView!;
+    const tablePanelView = props.tablePanelView!;
+
+    this.headerRenderer = new HeaderRenderer({
+      gridDimensions: dataView.gridDimensions,
+      tablePanelView: tablePanelView,
+      getFixedColumnCount: () => getFixedColumnsCount(tablePanelView),
+      getIsSelectionCheckboxes: () => getIsSelectionCheckboxesShown(tablePanelView),
+      dataView: dataView,
+      getColumnHeaders: () => getColumnHeaders(dataView),
+      getTableViewProperties: () => getTableViewProperties(dataView),
+      onColumnWidthChange: (propertyId, width) =>
+        onColumnWidthChanged(tablePanelView, propertyId, width),
+      onColumnOrderChange: (id1, id2) =>
+        onColumnOrderChangeFinished(tablePanelView, id1, id2),
+      onColumnOrderAttendantsChange: (idSource, idTarget) =>
+        this.onColumnOrderAttendantsChange(idSource, idTarget),
+    });
+
+    dataView.initializeNewScrollLoader();
+    getGroupingConfiguration(dataView).registerGroupingOnOffHandler(() => {
+      dataView.initializeNewScrollLoader();
     });
   }
 
@@ -159,21 +178,7 @@ export class TableViewInner extends React.Component<React.PropsWithChildren<ITab
 
   elmTable: RawTable | null = null;
 
-  headerRenderer = new HeaderRenderer({
-    gridDimensions: this.props.dataView!.gridDimensions,
-    tablePanelView: this.props.tablePanelView!,
-    getFixedColumnCount: () => getFixedColumnsCount(this.props.tablePanelView),
-    getIsSelectionCheckboxes: () => getIsSelectionCheckboxesShown(this.props.tablePanelView),
-    dataView: this.props.dataView!,
-    getColumnHeaders: () => getColumnHeaders(this.props.dataView),
-    getTableViewProperties: () => getTableViewProperties(this.props.dataView),
-    onColumnWidthChange: (propertyId, width) =>
-      onColumnWidthChanged(this.props.tablePanelView, propertyId, width),
-    onColumnOrderChange: (id1, id2) =>
-      onColumnOrderChangeFinished(this.props.tablePanelView, id1, id2),
-    onColumnOrderAttendantsChange: (idSource, idTarget) =>
-      this.onColumnOrderAttendantsChange(idSource, idTarget),
-  });
+  headerRenderer: HeaderRenderer;
 
   onColumnOrderAttendantsChange(idSource: string | undefined, idTarget: string | undefined) {
     this.props.tablePanelView!.setColumnOrderChangeAttendants(idSource, idTarget);

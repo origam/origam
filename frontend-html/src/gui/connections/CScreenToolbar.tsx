@@ -101,6 +101,7 @@ export class CScreenToolbar extends React.Component<React.PropsWithChildren<{}>>
   }
 
   getOverfullActionsDropdownContent(
+    application: IApplication,
     toolbarActions: Array<{
       section: string;
       actions: IAction[];
@@ -108,7 +109,7 @@ export class CScreenToolbar extends React.Component<React.PropsWithChildren<{}>>
     actionFilter: ((action: IAction) => boolean) | undefined,
     setDropped: (state: boolean) => void
   ) {
-    const customAssetsRoute = getCustomAssetsRoute(this.application);
+    const customAssetsRoute = getCustomAssetsRoute(application);
 
     const iconsWillBeShown = toolbarActions
       .flatMap((toolbar) => toolbar.actions)
@@ -148,15 +149,15 @@ export class CScreenToolbar extends React.Component<React.PropsWithChildren<{}>>
       ));
   }
 
-  renderActions(actions: IAction[]) {
+  renderActions(actions: IAction[], application: IApplication) {
     const actionsToRender = actions.filter((action) => getIsEnabledAction(action));
     return actionsToRender
       .filter((action) => !action.groupId)
-      .map((action, idx) => this.renderAction(action, actionsToRender, idx));
+      .map((action, idx) => this.renderAction(action, actionsToRender, idx, application));
   }
 
-  renderAction(action: IAction, actionsToRender: IAction[], order: number) {
-    const customAssetsRoute = getCustomAssetsRoute(this.application);
+  renderAction(action: IAction, actionsToRender: IAction[], order: number, application: IApplication) {
+    const customAssetsRoute = getCustomAssetsRoute(application);
     if (action.type === IActionType.Dropdown) {
       const childActions = actionsToRender.filter(
         (otherAction) => otherAction.groupId === action.id
@@ -185,6 +186,7 @@ export class CScreenToolbar extends React.Component<React.PropsWithChildren<{}>>
           content={args => (
             <Dropdown>
               {this.getOverfullActionsDropdownContent(
+                application,
                 [{section: "", actions: childActions}],
                 undefined,
                 args.setDropped
@@ -213,13 +215,15 @@ export class CScreenToolbar extends React.Component<React.PropsWithChildren<{}>>
   }
 
   renderForFormScreen() {
-    const actionButtonsState = getScreenActionButtonsState(this.application);
+    const application = this.application;
+    const actionButtonsState = getScreenActionButtonsState(application);
     if(!actionButtonsState){
       return null;
     }
-    const toolbarActions = getActiveScreenActions(this.application);
-    const userName = getLoggedUserName(this.application);
-    const avatarLink = getUserAvatarLink(this.application);
+    const toolbarActions = getActiveScreenActions(application);
+    const userName = getLoggedUserName(application);
+    const avatarLink = getUserAvatarLink(application);
+    const hiddenActionIds = this.state.hiddenActionIds;
     return (
       <ScreenToolbar>
         {actionButtonsState.actionButtonsVisible ? (
@@ -274,7 +278,7 @@ export class CScreenToolbar extends React.Component<React.PropsWithChildren<{}>>
                     .filter((actionGroup) => actionGroup.actions.length > 0)
                     .map((actionGroup) => (
                       <ScreenToolbarActionGroup key={actionGroup.section}>
-                        {this.renderActions(actionGroup.actions)}
+                        {this.renderActions(actionGroup.actions, application)}
                       </ScreenToolbarActionGroup>
                     ))}
                 </ScreenToolbarActionGroup>
@@ -282,7 +286,7 @@ export class CScreenToolbar extends React.Component<React.PropsWithChildren<{}>>
             </Observer>
           </>
         ) : null}
-        {this.state.hiddenActionIds.size > 0 && (
+        {hiddenActionIds.size > 0 && (
           <Dropdowner
             style={{width: "auto"}}
             trigger={({refTrigger, setDropped}) => (
@@ -295,8 +299,9 @@ export class CScreenToolbar extends React.Component<React.PropsWithChildren<{}>>
             content={(args) => (
               <Dropdown>
                 {this.getOverfullActionsDropdownContent(
+                  application,
                   toolbarActions,
-                  action => this.state.hiddenActionIds.has(action.id),
+                  action => hiddenActionIds.has(action.id),
                   args.setDropped
                 )}
               </Dropdown>
@@ -304,9 +309,9 @@ export class CScreenToolbar extends React.Component<React.PropsWithChildren<{}>>
           />
         )}
         <ScreenToolbarAction
-          onClick={() => openSearchWindow(this.application)}
+          onClick={() => openSearchWindow(application)}
           onShortcut={event => {
-              openSearchWindow(this.application);
+              openSearchWindow(application);
           }}
           shortcutPredicate={isSearchShortcut}
           icon={<Icon src="./icons/search.svg"/>}
@@ -315,9 +320,9 @@ export class CScreenToolbar extends React.Component<React.PropsWithChildren<{}>>
           avatarLink={avatarLink}
           userName={userName}
           handleLogoutClick={(event) => this.handleLogoutClick(event)}
-          ctx={this.application}
+          ctx={application}
           onAboutClick={() => this.onAboutClick()}
-          helpUrl={getHelpUrl(this.application)}
+          helpUrl={getHelpUrl(application)}
         />
       </ScreenToolbar>
     );

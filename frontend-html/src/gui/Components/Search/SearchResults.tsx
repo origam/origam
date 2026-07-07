@@ -75,6 +75,8 @@ export class ResultGroup extends React.Component<React.PropsWithChildren<{
   }
 
   render() {
+    const {ctx, name, results} = this.props;
+    const favorites = getFavorites(ctx);
     return (
       <>
         <div className={S.resultGroupRow} onClick={() => this.onGroupClick()}>
@@ -84,11 +86,11 @@ export class ResultGroup extends React.Component<React.PropsWithChildren<{
             <i className={"fas fa-angle-down " + S.arrow}/>
           )}
           <div className={S.groupName}>
-            {this.props.name}
+            {name}
           </div>
         </div>
         <div className={S.dropDownParent}>
-          {this.isExpanded && this.props.results.map(result =>
+          {this.isExpanded && results.map(result =>
             <Dropdowner
               key={result.id}
               trigger={({refTrigger, setDropped}) => (
@@ -104,11 +106,11 @@ export class ResultGroup extends React.Component<React.PropsWithChildren<{
               )}
               content={({setDropped}) => (
                 <Dropdown>
-                  {isIMenuSearchResult(result) && !this.favorites.isInAnyFavoriteFolder(result.id) && (
+                  {isIMenuSearchResult(result) && !favorites.isInAnyFavoriteFolder(result.id) && (
                     <DropdownItem
                       onClick={(event: any) => {
                         setDropped(false);
-                        onAddToFavoritesClicked(this.props.ctx, result.id);
+                        onAddToFavoritesClicked(ctx, result.id);
                       }}
                     >
                       {T("Put to favourites", "put_to_favourites")}

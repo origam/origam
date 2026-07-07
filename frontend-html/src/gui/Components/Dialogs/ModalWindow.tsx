@@ -162,13 +162,13 @@ export class ModalWindow extends React.Component<React.PropsWithChildren<{
   };
   elmFooter: any;
 
-  renderFooter() {
-    if (this.props.buttonsLeft || this.props.buttonsCenter || this.props.buttonsRight) {
+  renderFooter(buttonsLeft: React.ReactNode, buttonsCenter: React.ReactNode, buttonsRight: React.ReactNode) {
+    if (buttonsLeft || buttonsCenter || buttonsRight) {
       return (
         <div ref={this.refFooter} className={S.footer}>
-          {this.props.buttonsLeft}
-          {this.props.buttonsCenter ? this.props.buttonsCenter : <div className={S.pusher}/>}
-          {this.props.buttonsRight}
+          {buttonsLeft}
+          {buttonsCenter ? buttonsCenter : <div className={S.pusher}/>}
+          {buttonsRight}
         </div>
       );
     } else {
@@ -177,6 +177,19 @@ export class ModalWindow extends React.Component<React.PropsWithChildren<{
   }
 
   render() {
+    const {
+      buttonsCenter,
+      buttonsLeft,
+      buttonsRight,
+      children,
+      fullScreen,
+      height,
+      title,
+      titleButtons,
+      titleIsWorking,
+      width,
+    } = this.props;
+    const footer = this.renderFooter(buttonsLeft, buttonsCenter, buttonsRight);
     return (
       <Measure bounds={true} onResize={this.handleResize}>
         {({measureRef}) => (
@@ -186,30 +199,30 @@ export class ModalWindow extends React.Component<React.PropsWithChildren<{
                 ref={measureRef}
                 className={S.modalWindow}
                 style={{
-                  top: this.props.fullScreen ? 0 : this.top,
-                  left: this.props.fullScreen ? 0 : this.left,
-                  minWidth: this.props.fullScreen ? "100%" : this.props.width,
-                  minHeight: this.props.fullScreen ? "100%" : this.props.height,
+                  top: fullScreen ? 0 : this.top,
+                  left: fullScreen ? 0 : this.left,
+                  minWidth: fullScreen ? "100%" : width,
+                  minHeight: fullScreen ? "100%" : height,
                 }}
                 tabIndex={0}
                 onKeyDown={(event: any) => this.onKeyDown(event)}
               >
-                {this.props.title && (
+                {title && (
                   <div className={S.title} onMouseDown={this.handleTitleMouseDown}>
                     <div className={S.label}>
-                      <div className={S.labelText}>{this.props.title}</div>
-                      {this.props.titleIsWorking && (
+                      <div className={S.labelText}>{title}</div>
+                      {titleIsWorking && (
                         <div className={S.progressIndicator}>
                           <div className={S.indefinite}/>
                         </div>
                       )}
                     </div>
 
-                    <div className={S.buttons}>{this.props.titleButtons}</div>
+                    <div className={S.buttons}>{titleButtons}</div>
                   </div>
                 )}
-                <div className={S.body}>{this.props.children}</div>
-                {this.renderFooter()}
+                <div className={S.body}>{children}</div>
+                {footer}
               </div>
             )}
           </Observer>

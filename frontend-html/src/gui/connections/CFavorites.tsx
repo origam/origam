@@ -85,10 +85,13 @@ export class CFavorites extends React.Component<React.PropsWithChildren<{
   }
 
   renderHeader() {
+    const {folder, ctx, forceOpen, isActive, onHeaderClick} = this.props;
+    const favorites = this.favorites;
+    const dragStateContainer = this.dragStateContainer;
     return (
       <Dropdowner
         trigger={({refTrigger, setDropped}) => (
-          <Droppable droppableId={"favorite_folder_header_" + this.props.folder.id}>
+          <Droppable droppableId={"favorite_folder_header_" + folder.id}>
             {(provided) =>
               <div
                 className={S.favoritesFolderHeader}
@@ -98,10 +101,10 @@ export class CFavorites extends React.Component<React.PropsWithChildren<{
                 onMouseLeave={() => this.mouseInHeader = false}
               >
                 <SidebarSectionHeader
-                  isActive={!this.props.forceOpen && this.props.isActive}
-                  icon={<Icon src="./icons/favorites.svg" tooltip={this.props.folder.name}/>}
-                  label={this.props.folder.name}
-                  onClick={() => this.props.onHeaderClick?.()}
+                  isActive={!forceOpen && isActive}
+                  icon={<Icon src="./icons/favorites.svg" tooltip={folder.name}/>}
+                  label={folder.name}
+                  onClick={() => onHeaderClick?.()}
                   refDom={refTrigger}
                   onContextMenu={(event) => {
                     setDropped(true, event);
@@ -113,13 +116,13 @@ export class CFavorites extends React.Component<React.PropsWithChildren<{
                   {() =>
                     <div>
                       <PinButton
-                        isVisible={this.mouseInHeader || this.dragStateContainer.editingEnabled}
-                        isPinned={this.props.folder.isPinned}
-                        onClick={() => this.favorites.setPinned(this.props.folder.id, !this.props.folder.isPinned)}
+                        isVisible={this.mouseInHeader || dragStateContainer.editingEnabled}
+                        isPinned={folder.isPinned}
+                        onClick={() => favorites.setPinned(folder.id, !folder.isPinned)}
                       />
                       <EditButton
                         isVisible={this.mouseInHeader}
-                        isEnabled={this.dragStateContainer.editingEnabled}
+                        isEnabled={dragStateContainer.editingEnabled}
                         onClick={() => this.onEditClick()}
                         tooltip={T("Edit Favourites", "edit_favorites")}
                       />
@@ -131,39 +134,39 @@ export class CFavorites extends React.Component<React.PropsWithChildren<{
         )}
         content={({setDropped}) => (
           <Dropdown>
-            {canBeDeleted(this.props.folder, this.favorites) && (
+            {canBeDeleted(folder, favorites) && (
               <DropdownItem
                 onClick={(event: any) => {
                   setDropped(false);
                   runInFlowWithHandler({
-                    ctx: this.props.ctx,
-                    action: () => this.favorites.removeFolder(this.props.folder.id),
+                    ctx: ctx,
+                    action: () => favorites.removeFolder(folder.id),
                   });
                 }}
               >
                 {T("Remove Folder", "remove_group")}
               </DropdownItem>
             )}
-            {!this.props.folder.isPinned && (
+            {!folder.isPinned && (
               <DropdownItem
                 onClick={(event: any) => {
                   setDropped(false);
                   runInFlowWithHandler({
-                    ctx: this.props.ctx,
-                    action: () => this.favorites.setPinned(this.props.folder.id, true),
+                    ctx: ctx,
+                    action: () => favorites.setPinned(folder.id, true),
                   });
                 }}
               >
                 {T("Pin to the top", "group_pin")}
               </DropdownItem>
             )}
-            {this.props.folder.isPinned && (
+            {folder.isPinned && (
               <DropdownItem
                 onClick={(event: any) => {
                   setDropped(false);
                   runInFlowWithHandler({
-                    ctx: this.props.ctx,
-                    action: () => this.favorites.setPinned(this.props.folder.id, false),
+                    ctx: ctx,
+                    action: () => favorites.setPinned(folder.id, false),
                   });
                 }}
               >
@@ -173,7 +176,7 @@ export class CFavorites extends React.Component<React.PropsWithChildren<{
             <DropdownItem
               onClick={(event: any) => {
                 setDropped(false);
-                onCreateFavoritesFolderClick(this.props.ctx);
+                onCreateFavoritesFolderClick(ctx);
               }}
             >
               {T("Add Folder", "add_group")}
@@ -181,7 +184,7 @@ export class CFavorites extends React.Component<React.PropsWithChildren<{
             <DropdownItem
               onClick={(event: any) => {
                 setDropped(false);
-                onFolderPropertiesClick(this.props.ctx, this.props.folder);
+                onFolderPropertiesClick(ctx, folder);
               }}
             >
               {T("Properties", "group_properties")}

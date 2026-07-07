@@ -70,6 +70,10 @@ export default defineConfig(({ mode }) => {
 			{
 				find: 'process',
 				replacement: 'rollup-plugin-node-polyfills/polyfills/process-es6',
+			},
+			{
+				find: 'util',
+				replacement: 'rollup-plugin-node-polyfills/polyfills/util',
 			}
 		],
 	},
