@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
-import { action, observable,
+import { action, observable, override,
   makeObservable
 } from "mobx";
 import * as React from "react";
@@ -86,8 +86,8 @@ class DesktopNumberEditorModel implements INumberEditorModel {
 }
 
 class MobileNumberEditorModel extends DesktopNumberEditorModel {
-  constructor(props: any, context?: any) {
-    super(props, context);
+  constructor(props: NumberEditorProps, initValue: string) {
+    super(props, initValue);
     makeObservable(this);
   }
 
@@ -100,7 +100,7 @@ class MobileNumberEditorModel extends DesktopNumberEditorModel {
     return "decimal";
   }
 
-  @action.bound handleChange(event: any) {
+  @override handleChange(event: any) {
     const {cleanValue, invalidCharactersBeforeCursor} = getValidCharacters(event, this.props.property.isInteger);
     if (isValidNumber(cleanValue)) {
       this.value = cleanValue;
