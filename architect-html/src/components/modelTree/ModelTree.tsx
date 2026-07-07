@@ -33,6 +33,18 @@ import { useContext, useEffect, useRef } from 'react';
 import { Item, Menu, Separator, Submenu, TriggerEvent, useContextMenu } from 'react-contexify';
 import 'react-contexify/ReactContexify.css';
 
+const RESERVED_DEVICE_NAME = /^(con|prn|aux|nul|com[1-9]|lpt[1-9])(\.|$)/i;
+
+function isReservedOrUnsafeFolderName(name: string): boolean {
+  if (name === '.' || name === '..') {
+    return true;
+  }
+  if (name.endsWith('.')) {
+    return true;
+  }
+  return RESERVED_DEVICE_NAME.test(name);
+}
+
 const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number }) => {
   const rootStore = useContext(RootStoreContext);
   const editorTabViewState = rootStore.editorTabViewState;
@@ -276,8 +288,11 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
     if (name.length === 0) {
       return T('Folder name cannot be empty.', 'create_folder_error_empty');
     }
-    if (/[\\/]/.test(name)) {
+    if (/[\\/:*?"<>|\x00-\x1f]/.test(name)) {
       return T('Folder name contains invalid characters.', 'create_folder_error_invalid_chars');
+    }
+    if (isReservedOrUnsafeFolderName(name)) {
+      return T('Folder name is reserved or not allowed.', 'create_folder_error_reserved');
     }
     const taken = existingNames.some(
       existing => existing.trim().toLowerCase() === name.toLowerCase(),

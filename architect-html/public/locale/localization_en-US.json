@@ -183,6 +183,7 @@
   "create_folder_error_empty": "Folder name cannot be empty.",
   "create_folder_error_invalid_chars": "Folder name contains invalid characters.",
   "create_folder_error_duplicate": "A folder with this name already exists.",
+  "create_folder_error_reserved": "Folder name is reserved or not allowed.",
   "tree_node_create_lookup": "Create Lookup",
   "tree_node_create_screen": "Create Screen",
   "tree_node_create_workqueue": "Create Workqueue class",

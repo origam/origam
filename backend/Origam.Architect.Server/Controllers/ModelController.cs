@@ -37,7 +37,8 @@ public class ModelController(
     SchemaService schemaService,
     IPersistenceService persistenceService,
     TreeNodeFactory treeNodeFactory,
-    GitNodeStatusService gitNodeStatusService
+    GitNodeStatusService gitNodeStatusService,
+    ModelTransactionRunner transactionRunner
 ) : ControllerBase
 {
     private readonly IPersistenceProvider persistenceProvider = persistenceService.SchemaProvider;
@@ -204,6 +205,10 @@ public class ModelController(
         {
             return StatusCode(statusCode: 400, value: "Folder name contains invalid characters.");
         }
+        if (IsReservedOrUnsafeFolderName(name))
+        {
+            return StatusCode(statusCode: 400, value: "Folder name is reserved or not allowed.");
+        }
 
         ISchemaItemFactory factory = ResolveGroupParent(input.NodeId);
         if (factory == null)
@@ -211,6 +216,7 @@ public class ModelController(
             return NotFound();
         }
 
+        // Pre-check only; a concurrent create is harmless - NewGroup auto-numbers collisions.
         bool nameTaken =
             (factory as ISchemaItemProvider)?.ChildGroups.Any(existing =>
                 string.Equals(existing.NodeText?.Trim(), name, StringComparison.OrdinalIgnoreCase)
@@ -220,26 +226,18 @@ public class ModelController(
             return StatusCode(statusCode: 400, value: "A folder with this name already exists.");
         }
 
-        SchemaItemGroup group;
-        try
+        SchemaItemGroup group = transactionRunner.Run(() =>
         {
-            persistenceProvider.BeginTransaction();
-            group = factory.NewGroup(schemaService.ActiveSchemaExtensionId, name);
-            if (group.Name != name)
+            SchemaItemGroup created = factory.NewGroup(schemaService.ActiveSchemaExtensionId, name);
+            if (created.Name != name)
             {
                 // NewGroup auto-numbers when the name is a substring of a sibling group;
                 // the name is already validated as unique, so keep what the user typed.
-                group.NodeText = name;
+                created.NodeText = name;
             }
-        }
-        catch (Exception ex)
-        {
-            persistenceProvider.EndTransactionDontSave();
-            return StatusCode(statusCode: 400, ex.Message);
-        }
+            return created;
+        });
 
-        persistenceProvider.EndTransaction();
-        gitNodeStatusService.ClearCache();
         return treeNodeFactory.Create(group);
     }
 
@@ -251,6 +249,29 @@ public class ModelController(
                 as ISchemaItemFactory;
         }
         return GetRootProviderById(nodeId);
+    }
+
+    private static readonly HashSet<string> ReservedDeviceNames = new(
+        StringComparer.OrdinalIgnoreCase
+    )
+    {
+        "CON", "PRN", "AUX", "NUL",
+        "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9",
+        "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9",
+    };
+
+    private static bool IsReservedOrUnsafeFolderName(string name)
+    {
+        if (name == "." || name == "..")
+        {
+            return true;
+        }
+        if (name.EndsWith("."))
+        {
+            return true;
+        }
+        string baseName = name.Split('.')[0];
+        return ReservedDeviceNames.Contains(baseName);
     }
 
     [HttpGet("GetMenuItems")]
