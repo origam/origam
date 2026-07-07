@@ -18,7 +18,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { IMainMenu, IMainMenuContent, IMainMenuData, IMainMenuEnvelope } from "./types/IMainMenu";
-import { action, observable } from "mobx";
+import { action, observable,
+  makeObservable
+} from "mobx";
 import { proxyEnrich } from "utils/esproxy";
 
 export class MainMenuContent implements IMainMenuContent {
@@ -47,6 +49,10 @@ export class MainMenuContent implements IMainMenuContent {
 }
 
 export class MainMenuEnvelope implements IMainMenuEnvelope {
+  constructor() {
+    makeObservable(this);
+  }
+
   $type_IMainMenuEnvelope: 1 = 1;
 
   @observable mainMenu?: IMainMenu | undefined;

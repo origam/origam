@@ -29,14 +29,14 @@ import { prepareForFilter } from "model/selectors/PortalSettings/getStringFilter
 import { IOption } from "gui/Components/Dialogs/SimpleDropdown";
 
 @observer
-export class MobileSimpleDropdown<T> extends React.Component<{
+export class MobileSimpleDropdown<T> extends React.Component<React.PropsWithChildren<{
   width?: string,
   options: IOption<T>[],
   selectedOption: IOption<T>,
   onOptionClick: (option: IOption<T>) => void
   className?: string;
   ctx: any
-}> {
+}>> {
 
   getStyle(){
     if(this.props.width){

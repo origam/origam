@@ -18,7 +18,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
-import { action, computed, flow, observable, runInAction } from "mobx";
+import { action, computed, flow, observable, runInAction,
+  makeObservable
+} from "mobx";
 import { observer, Observer } from "mobx-react";
 import moment from "moment";
 import * as React from "react";
@@ -36,6 +38,7 @@ import { getEditorInputSuppressionProps } from "gui/Components/ScreenElements/Ed
 
 class DesktopEditorState implements IEditorState{
   constructor(value: string | null) {
+    makeObservable(this);
     this.initialValue = value;
   }
 
@@ -44,7 +47,7 @@ class DesktopEditorState implements IEditorState{
 }
 
 @observer
-export class DateTimeEditor extends React.Component<{
+export class DateTimeEditor extends React.Component<React.PropsWithChildren<{
   id?: string;
   value: string | null;
   outputFormat: string;
@@ -62,7 +65,12 @@ export class DateTimeEditor extends React.Component<{
   onEditorBlur?: (event: any) => Promise<void>;
   subscribeToFocusManager?: (obj: IFocusable, onBlur: ()=> Promise<void>) => void;
   className?: string;
-}> {
+}>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
   @observable isDroppedDown = false;
 
   @observable isShowFormatHintTooltip = false;

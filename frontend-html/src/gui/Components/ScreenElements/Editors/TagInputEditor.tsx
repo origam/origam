@@ -33,7 +33,7 @@ import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
 import { onFieldChange } from "model/actions-ui/DataView/TableView/onFieldChange";
 import { getEditorInputSuppressionProps } from "gui/Components/ScreenElements/Editors/editorInputSuppression";
 
-export const TagInputEditor = inject(({property}: { property: IProperty }, {value}) => {
+export const TagInputEditor = inject(({property}: any, {value}: any) => {
   const dataTable = getDataTable(property);
   return {
     textualValues: value?.map((valueItem: any) => dataTable.resolveCellText(property, valueItem)),

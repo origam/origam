@@ -17,11 +17,12 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { action } from "mobx";
+import { action, makeObservable } from "mobx";
 import { MapRootStore } from "./MapRootStore";
 
 export class MapNavigationStore {
   constructor(private root: MapRootStore) {
+    makeObservable(this);
   }
 
   refMapComponent = (elm: any) => (this.elmMapComponent = elm);

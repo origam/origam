@@ -21,7 +21,9 @@ import S from "gui/Components/Dialogs/ColumnsDialog.module.scss";
 import React from "react";
 import { AutoSizer, MultiGrid } from "react-virtualized";
 import { bind } from "bind-decorator";
-import { action, computed, flow, observable } from "mobx";
+import { action, computed, flow, observable,
+  makeObservable
+} from "mobx";
 import { observer, Observer } from "mobx-react";
 import { T } from "utils/translation";
 import { rowHeight } from "gui/Components/ScreenElements/Table/TableRendering/cells/cellsCommon";
@@ -47,15 +49,16 @@ import { requestFocus } from "utils/focus";
 const SCROLLBAR_SIZE = 20;
 
 @observer
-export class ColumnsDialog extends React.Component<{
+export class ColumnsDialog extends React.Component<React.PropsWithChildren<{
   model: ColumnConfigurationModel;
-}> {
+}>> {
 
   columnOptions: Map<string, IColumnOptions>;
   configuration: ITableConfiguration;
 
   constructor(props: any) {
     super(props);
+    makeObservable(this);
     this.configuration = this.props.model.columnsConfiguration;
     this.columnOptions = this.props.model.columnOptions;
     this.resetOrder();
@@ -486,11 +489,11 @@ export class ColumnsDialog extends React.Component<{
 }
 
 @observer
-export class TableHeader extends React.Component<{
+export class TableHeader extends React.Component<React.PropsWithChildren<{
   columnIndex: number;
   columnWidth: number;
   style: any;
-}> {
+}>> {
   getHeader(columnIndex: number) {
     switch (columnIndex) {
       case 0:

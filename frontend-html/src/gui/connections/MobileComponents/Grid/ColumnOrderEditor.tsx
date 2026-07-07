@@ -26,9 +26,9 @@ import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelV
 import S from "./ColumnOrderEditor.module.scss";
 import { observer } from "mobx-react";
 
-export const ColumnOrderEditor: React.FC<{
+export const ColumnOrderEditor: React.FC<React.PropsWithChildren<{
   dataView: IDataView
-}> = observer((props) => {
+}>> = observer((props) => {
 
   let properties = getTableViewProperties(props.dataView);
 

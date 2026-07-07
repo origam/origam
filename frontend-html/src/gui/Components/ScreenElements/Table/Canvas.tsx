@@ -19,10 +19,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import React from "react";
 import S from "./Canvas.module.css";
-import { action, computed } from "mobx";
+import { action, computed, makeObservable } from "mobx";
 import { CPR } from "utils/canvas";
 
-export class Canvas extends React.Component<{ width: number; height: number, refCanvasElement: any }> {
+export class Canvas extends React.Component<React.PropsWithChildren<{ width: number; height: number, refCanvasElement: any }>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
   firstVisibleRowIndex = 0;
   lastVisibleRowIndex = 0;
 

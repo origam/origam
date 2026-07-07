@@ -50,7 +50,9 @@ import React, { useContext } from "react";
 import Measure from "react-measure";
 import { T } from "utils/translation";
 import { getConfigurationManager } from "model/selectors/TablePanelView/getConfigurationManager";
-import { action, computed } from "mobx";
+import { action, computed,
+  makeObservable
+} from "mobx";
 import { getPanelMenuActions } from "model/selectors/DataView/getPanelMenuActions";
 import { DropdownDivider } from "gui/Components/Dropdown/DropdownDivider";
 import { getAreCrudButtonsEnabled } from "model/selectors/DataView/getAreCrudButtonsEnabled";
@@ -73,11 +75,18 @@ import {
 } from "utils/keyShortcuts";
 
 @observer
-export class DataViewHeaderInner extends React.Component<{
+export class DataViewHeaderInner extends React.Component<React.PropsWithChildren<{
   isVisible: boolean;
   extension: DataViewHeaderExtension;
-}> {
+}>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
   static contextType = MobXProviderContext;
+
+  declare context: any;
 
   get dataView() {
     return this.context.dataView;

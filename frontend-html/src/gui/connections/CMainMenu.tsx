@@ -24,7 +24,9 @@ import { inject, MobXProviderContext, Observer, observer } from "mobx-react";
 import { IApplication } from "model/entities/types/IApplication";
 import { getIsMainMenuLoading } from "model/selectors/MainMenu/getIsMainMenuLoading";
 import { getMainMenu } from "model/selectors/MainMenu/getMainMenu";
-import { action, observable } from "mobx";
+import { action, observable,
+  makeObservable
+} from "mobx";
 import { IWorkbench } from "model/entities/types/IWorkbench";
 import { onMainMenuItemClick } from "model/actions-ui/MainMenu/onMainMenuItemClick";
 import { getActiveScreen } from "model/selectors/getActiveScreen";
@@ -53,12 +55,19 @@ import { listFromNode, MenuItemList } from "./MenuItemList";
 
 @inject(mainMenuState => mainMenuState)
 @observer
-export class CMainMenu extends React.Component<{
+export class CMainMenu extends React.Component<React.PropsWithChildren<{
   isActive: boolean;
   onClick: () => void;
   mainMenuState?: IMainMenuState;
-}> {
+}>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
   static contextType = MobXProviderContext;
+
+  declare context: any;
 
   @observable
   mouseInHeader = false;
@@ -167,13 +176,15 @@ export class CMainMenu extends React.Component<{
 
 
 @observer
-export class CMainMenuCommandItem extends React.Component<{
+export class CMainMenuCommandItem extends React.Component<React.PropsWithChildren<{
   node: any;
   level: number;
   isOpen: boolean;
   editingState?: IEditingState;
-}> {
+}>> {
   static contextType = MobXProviderContext;
+
+  declare context: any;
 
   get workbench(): IWorkbench {
     return this.context.workbench;
@@ -297,13 +308,15 @@ export class CMainMenuCommandItem extends React.Component<{
 }
 
 @observer
-export class CFavoritesMenuItem extends React.Component<{
+export class CFavoritesMenuItem extends React.Component<React.PropsWithChildren<{
   node: any;
   level: number;
   isOpen: boolean;
   editingEnabled: boolean;
-}> {
+}>> {
   static contextType = MobXProviderContext;
+
+  declare context: any;
 
   get workbench(): IWorkbench {
     return this.context.workbench;
@@ -470,11 +483,11 @@ export function onAddToFavoritesClicked(ctx: any, menuId: string) {
 }
 
 @observer
-class FavoritesAddRemoveButton extends React.Component<{
+class FavoritesAddRemoveButton extends React.Component<React.PropsWithChildren<{
   ctx: any;
   isVisible: boolean;
   menuId: string;
-}> {
+}>> {
   render() {
     const favorites = getFavorites(this.props.ctx);
     return (
@@ -501,13 +514,20 @@ class FavoritesAddRemoveButton extends React.Component<{
 }
 
 @observer
-export class CMainMenuFolderItem extends React.Component<{
+export class CMainMenuFolderItem extends React.Component<React.PropsWithChildren<{
   node: any;
   level: number;
   isOpen: boolean;
   editingState: IEditingState
-}> {
+}>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
   static contextType = MobXProviderContext;
+
+  declare context: any;
   itemRef: RefObject<HTMLDivElement> = React.createRef();
 
   componentDidMount() {

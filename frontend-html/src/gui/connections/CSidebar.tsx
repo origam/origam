@@ -26,7 +26,9 @@ import { SidebarSectionDivider } from "gui/Components/Sidebar/SidebarSectionDivi
 import { SidebarSectionHeader } from "gui/Components/Sidebar/SidebarSectionHeader";
 import React from "react";
 import { CMainMenu } from "gui/connections/CMainMenu";
-import { action, reaction } from "mobx";
+import { action, reaction,
+  makeObservable
+} from "mobx";
 import { SidebarSectionBody } from "gui/Components/Sidebar/SidebarSectionBody";
 import { MobXProviderContext, observer, Provider } from "mobx-react";
 import { getWorkQueuesTotalItemsCount } from "model/selectors/WorkQueues/getWorkQueuesTotalItemCount";
@@ -51,8 +53,15 @@ import { DragDropContext } from 'react-beautiful-dnd';
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 
 @observer
-export class CSidebar extends React.Component {
+export class CSidebar extends React.Component<React.PropsWithChildren<{}>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
   static contextType = MobXProviderContext;
+
+  declare context: any;
 
   get workbench(): IWorkbench {
     return this.context.workbench;

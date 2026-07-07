@@ -16,17 +16,24 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { observer } from "mobx-react";
 import React, { RefObject } from "react";
 import { ISearchResult } from "model/entities/types/ISearchResult";
-import { action, observable } from "mobx";
+import { action, observable,
+  makeObservable
+} from "mobx";
 import S from "gui/Components/Search/ResultItem.module.scss";
 import { Icon } from "gui/Components/Icon/Icon";
 
 @observer
-export class ResultItem extends React.Component<{
+export class ResultItem extends React.Component<React.PropsWithChildren<{
   result: ISearchResult;
   onResultItemClick: () => void;
   selected: boolean;
   registerElementRef: (id: string, ref: RefObject<HTMLDivElement>) => void;
-}> {
+}>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
 
   @observable
   mouseOver = false;

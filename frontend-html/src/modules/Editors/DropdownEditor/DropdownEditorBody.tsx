@@ -29,7 +29,9 @@ import { getCanvasFontSize, getTextWidth } from "utils/textMeasurement";
 import { DropdownColumnDrivers, DropdownDataTable } from "modules/Editors/DropdownEditor/DropdownTableModel";
 import { BoundingRect } from "react-measure";
 import { IDropdownEditorBehavior } from "modules/Editors/DropdownEditor/DropdownEditorBehavior";
-import { observable } from "mobx";
+import { observable,
+  makeObservable
+} from "mobx";
 import { T } from "utils/translation";
 import { CtxDropdownCtrlRect, CtxDropdownRefBody } from "gui/Components/Dropdown/DropdownCommon";
 
@@ -93,14 +95,14 @@ function AddNewDropDown(props: {rowHeight: number}) {
 }
 
 @observer
-export class DropdownEditorTable extends  React.Component<{
+export class DropdownEditorTable extends  React.Component<React.PropsWithChildren<{
   drivers: DropdownColumnDrivers,
   dataTable: DropdownDataTable,
   rectCtrl: BoundingRect,
   beh: IDropdownEditorBehavior,
   rowHeight: number,
   height?: number
-}> {
+}>> {
   refMultiGrid = createRef<MultiGrid>();
   @observable
   scrollbarSize = { horiz: 0, vert: 0 };
@@ -138,6 +140,7 @@ export class DropdownEditorTable extends  React.Component<{
 
   constructor(props: any) {
     super(props);
+    makeObservable(this);
   }
 
   handleScrollbarPresenceChange(args: {

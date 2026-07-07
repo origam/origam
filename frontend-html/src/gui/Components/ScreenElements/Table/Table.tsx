@@ -18,7 +18,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { CtxPanelVisibility } from "gui/contexts/GUIContexts";
-import { action, autorun, comparer, computed, observable, runInAction } from "mobx";
+import { action, autorun, comparer, computed, observable, runInAction,
+  makeObservable
+} from "mobx";
 import { MobXProviderContext, Observer, observer } from "mobx-react";
 import { ITablePanelView } from "model/entities/TablePanelView/types/ITablePanelView";
 import { IProperty } from "model/entities/types/IProperty";
@@ -27,7 +29,6 @@ import { getProperties } from "model/selectors/DataView/getProperties";
 import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
 import { getTableViewProperties } from "model/selectors/TablePanelView/getTableViewProperties";
 import * as React from "react";
-import ReactDOM from "react-dom";
 import Measure, { BoundingRect } from "react-measure";
 import { Canvas } from "gui/Components/ScreenElements/Table/Canvas";
 import { HeaderRow } from "gui/Components/ScreenElements/Table/HeaderRow";
@@ -157,18 +158,26 @@ function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
   return {drawTable, setScroll, handleClick, handleMouseMove, setViewportSize, getTooltipContent: getTooltipContent};
 }
 
-export const Table: React.FC<ITableProps & {
+export const Table: React.FC<React.PropsWithChildren<ITableProps & {
   refTable(elm: RawTable | null): void;
-}> = (props) => {
+}>> = (props) => {
   const ctxPanelVisibility = React.useContext(CtxPanelVisibility);
   return <RawTable {...props} isVisible={ctxPanelVisibility.isVisible} ref={props.refTable}/>;
 };
 
 @observer
-export class RawTable extends React.Component<ITableProps & { isVisible: boolean }> {
+export class RawTable extends React.Component<React.PropsWithChildren<ITableProps & { isVisible: boolean }>> {
+  tableRenderer: ReturnType<typeof createTableRenderer>;
+
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+    this.tableRenderer = createTableRenderer(this.context.tablePanelView, this.props.gridDimensions);
+  }
+
   static contextType = MobXProviderContext;
 
-  tableRenderer = createTableRenderer(this.context.tablePanelView, this.props.gridDimensions);
+  declare context: any;
 
   @observable _contentBounds: BoundingRect = {
     top: 0,
@@ -197,8 +206,7 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
   elmMeasure: Measure | null = null;
 
   @action.bound handleWindowClick(event: any) {
-    const domNode = ReactDOM.findDOMNode(this.elmScroller);
-    if (domNode && !domNode.contains(event.target)) {
+    if (this.elmScroller && !this.elmScroller.containsElement(event.target)) {
       this.props.onOutsideTableClick && this.props.onOutsideTableClick(event);
     }
   }

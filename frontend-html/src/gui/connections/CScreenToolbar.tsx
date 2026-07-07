@@ -24,7 +24,9 @@ import { ScreenToolbarPusher } from "gui/Components/ScreenToolbar/ScreenToolbarP
 import { MobXProviderContext, Observer, observer } from "mobx-react";
 import { IApplication } from "model/entities/types/IApplication";
 import React, { Fragment } from "react";
-import { action } from "mobx";
+import { action,
+  makeObservable
+} from "mobx";
 import { onScreenToolbarLogoutClick } from "model/actions-ui/ScreenToolbar/onScreenToolbarLogoutClick";
 import { openSearchWindow } from "model/actions-ui/ScreenToolbar/openSearchWindow";
 import { ScreenToolbarActionGroup } from "gui/Components/ScreenToolbar/ScreenToolbarActionGroup";
@@ -55,8 +57,15 @@ import { getScreenActionButtonsState } from "model/actions-ui/ScreenToolbar/save
 import { isRefreshShortcut, isSaveShortcut, isSearchShortcut } from "utils/keyShortcuts";
 
 @observer
-export class CScreenToolbar extends React.Component<{}> {
+export class CScreenToolbar extends React.Component<React.PropsWithChildren<{}>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
   static contextType = MobXProviderContext;
+
+  declare context: any;
 
   state = {
     hiddenActionIds: new Set<string>(),

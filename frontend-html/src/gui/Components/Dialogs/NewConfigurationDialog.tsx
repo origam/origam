@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import CS from "gui/Components/Dialogs/DialogsCommon.module.css";
 import S from "gui/Components/Dialogs/FavoriteFolderPropertiesDialog.module.scss";
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 import { T } from "utils/translation";
@@ -27,10 +27,15 @@ import { ModalDialog } from "gui/Components/Dialog/ModalDialog";
 import { requestFocus } from "utils/focus";
 
 @observer
-export class NewConfigurationDialog extends React.Component<{
+export class NewConfigurationDialog extends React.Component<React.PropsWithChildren<{
   onCancelClick: (event: any) => void;
   onOkClick: (name: string) => void;
-}> {
+}>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
   @observable
   groupName: string = "";
 

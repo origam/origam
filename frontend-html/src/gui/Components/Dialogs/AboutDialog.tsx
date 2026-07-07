@@ -27,10 +27,10 @@ import { AboutView } from "gui/Components/Dialogs/AboutView";
 import { ModalDialog } from "gui/Components/Dialog/ModalDialog";
 
 @observer
-export class AboutDialog extends React.Component<{
+export class AboutDialog extends React.Component<React.PropsWithChildren<{
   aboutInfo: IAboutInfo;
   onOkClick: () => void;
-}> {
+}>> {
   render() {
     return (
       <ModalDialog

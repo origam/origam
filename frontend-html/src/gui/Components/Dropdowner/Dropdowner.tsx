@@ -21,17 +21,22 @@ import React from "react";
 import ReactDOM from "react-dom";
 import Measure, { ContentRect } from "react-measure";
 import S from "./Dropdowner.module.scss";
-import { action, observable } from "mobx";
+import { action, observable, makeObservable } from "mobx";
 import { observer, Observer } from "mobx-react";
 
-class DroppedBox extends React.Component<{
+class DroppedBox extends React.Component<React.PropsWithChildren<{
   triggerRect: ContentRect;
   dropdownRect: ContentRect;
   dropdownRef: any;
   openEvent?: MouseEvent;
   onCloseRequest?: (event: any) => void;
   onOutsideInteraction?: (event: any) => void;
-}> {
+}>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
   elmDropdown: HTMLDivElement | null = null;
   refDropdown = (elm: HTMLDivElement | null) => {
     this.elmDropdown = elm;
@@ -105,7 +110,7 @@ class DroppedBox extends React.Component<{
 }
 
 @observer
-export class Dropdowner extends React.Component<{
+export class Dropdowner extends React.Component<React.PropsWithChildren<{
   className?: string;
   style?: any;
   trigger: (args: {
@@ -119,7 +124,12 @@ export class Dropdowner extends React.Component<{
   onDroppedUp?: () => void;
   onContainerMouseDown?(event: any): void;
   onOutsideInteraction?(event: any): void;
-}> {
+}>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
   refMeasTrigger = (elm: any) => (this.elmMeasTrigger = elm);
   elmMeasTrigger: any | null = null;
 

@@ -23,7 +23,7 @@ import cx from "classnames";
 import { MobXProviderContext } from "mobx-react";
 import { getMainMenuState } from "model/selectors/MainMenu/getMainMenuState";
 
-export class WorkQueuesItem extends React.Component<{
+export class WorkQueuesItem extends React.Component<React.PropsWithChildren<{
   isActiveScreen?: boolean;
   isOpenedScreen?: boolean;
   isHidden?: boolean;
@@ -34,8 +34,10 @@ export class WorkQueuesItem extends React.Component<{
   tooltip?: string;
   id?: string;
   onClick?(event: any): void;
-}> {
+}>> {
   static contextType = MobXProviderContext;
+
+  declare context: any;
   itemRef: RefObject<HTMLAnchorElement> = React.createRef();
 
   componentDidMount() {

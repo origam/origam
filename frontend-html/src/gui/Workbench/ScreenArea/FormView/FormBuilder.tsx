@@ -46,15 +46,17 @@ import { TabIndex } from "model/entities/TabIndexOwner";
 import { BackupFocusPlaceHolder } from "gui/Workbench/ScreenArea/FormView/BackupFocusPlaceHolder";
 
 
-@inject(({dataView}) => {
+@inject(({dataView}: any) => {
   return {dataView, xmlFormRootObject: dataView.formViewUI};
 })
 @observer
-export class FormBuilder extends React.Component<{
+export class FormBuilder extends React.Component<React.PropsWithChildren<{
   xmlFormRootObject?: any;
   dataView?: IDataView;
-}> {
+}>> {
   static contextType = CtxPanelVisibility
+
+  declare context: any;
 
   onKeyDown(event: any) {
     if (event.key === "Tab") {

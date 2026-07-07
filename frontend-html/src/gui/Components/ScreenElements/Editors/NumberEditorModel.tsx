@@ -18,7 +18,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
-import { action, observable } from "mobx";
+import { action, observable,
+  makeObservable
+} from "mobx";
 import * as React from "react";
 import { NumberEditorProps } from "gui/Components/ScreenElements/Editors/NumberEditor";
 import { getCurrentDecimalSeparator, getCurrentGroupSeparator } from "model/entities/NumberFormating";
@@ -44,6 +46,7 @@ class DesktopNumberEditorModel implements INumberEditorModel {
   inputRef: React.RefObject<HTMLInputElement> = React.createRef<HTMLInputElement>();
 
   constructor(protected props: NumberEditorProps, initValue: string ) {
+    makeObservable(this);
     this.value = initValue;
   }
 
@@ -83,6 +86,11 @@ class DesktopNumberEditorModel implements INumberEditorModel {
 }
 
 class MobileNumberEditorModel extends DesktopNumberEditorModel {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
 
   getInputType() {
     return this.props.isPassword ? "password" : "numeric";

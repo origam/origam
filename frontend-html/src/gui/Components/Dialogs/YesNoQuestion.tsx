@@ -24,17 +24,19 @@ import { ModalDialog } from "gui/Components/Dialog/ModalDialog";
 import { requestFocus } from "utils/focus";
 
 @observer
-export class YesNoQuestion extends React.Component<{
+export class YesNoQuestion extends React.Component<React.PropsWithChildren<{
   screenTitle: string;
   yesLabel: string;
   noLabel: string;
   message: string;
   onYesClick?: (event: any) => void;
   onNoClick?: (event: any) => void;
-}> {
+}>> {
   refPrimaryBtn = (elm: any) => (this.elmPrimaryBtn = elm);
   elmPrimaryBtn: any;
   static contextType = MobXProviderContext;
+
+  declare context: any;
 
   componentDidMount() {
     setTimeout(() => {

@@ -18,7 +18,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Layout } from "./types/IApplication";
-import { observable } from "mobx";
+import { observable,
+  makeObservable
+} from "mobx";
 
 export class LayoutManager {
 
@@ -26,6 +28,7 @@ export class LayoutManager {
   public layout = Layout.Desktop;
 
   constructor() {
+    makeObservable(this);
     window.addEventListener("resize", this.handleResize.bind(this));
     this.handleResize();
   }

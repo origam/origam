@@ -24,10 +24,10 @@ import { MobileState } from "model/entities/MobileState/MobileState";
 import S from "./MobileAboutView.module.scss";
 import { AboutView } from "gui/Components/Dialogs/AboutView";
 
-export class MobileAboutView extends React.Component<{
+export class MobileAboutView extends React.Component<React.PropsWithChildren<{
   aboutInfo: IAboutInfo;
   mobileState: MobileState;
-}> {
+}>> {
 
   render() {
     return (

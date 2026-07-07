@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import _ from "lodash";
-import { action, computed, decorate, flow, observable } from "mobx";
+import { action, computed, flow, observable, makeObservable } from "mobx";
 import { IDropdownEditorApi } from "./DropdownEditorApi";
 import { CancellablePromise, EagerlyLoadedGrid, LazilyLoadedGrid } from "./DropdownEditorCommon";
 import { IDropdownEditorData } from "./DropdownEditorData";
@@ -76,7 +76,7 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
   private dataTable: DropdownDataTable;
   private setup: () => DropdownEditorSetup;
   private cache: DropdownEditorLookupListCache;
-  public isReadOnly: boolean;
+  @observable public isReadOnly: boolean;
   public onDoubleClick?: (event: any) => void;
   public onClick?: (event: any) => void;
   public onBlur?: (target?: any) => void;
@@ -100,6 +100,7 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
   }
 
   constructor(args: IBehaviorData) {
+    makeObservable(this);
     this.api = args.api;
     this.data = args.data;
     this.dataTable = args.dataTable;
@@ -639,8 +640,4 @@ export function compareLookUpItems(item1: any, item2: any) {
   }
   return compareStrings(item1, item2)
 }
-
-decorate(DropdownEditorBehavior, {
-  isReadOnly: observable,
-});
 

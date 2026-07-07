@@ -29,7 +29,7 @@ import { IFocusable } from "model/entities/FormFocusManager";
 import { FieldDimensions } from "gui/Components/Form/FieldDimensions";
 import * as uuid from 'uuid';
 
-export const CheckBox: React.FC<{
+export const CheckBox: React.FC<React.PropsWithChildren<{
   checked: boolean;
   readOnly: boolean;
   isHidden?: boolean;
@@ -40,7 +40,7 @@ export const CheckBox: React.FC<{
   onClick: () => void;
   labelColor?: string;
   fieldDimensions: FieldDimensions;
-}> = inject(({property, formPanelView}) => {
+}>> = inject(({property, formPanelView}: any) => {
   const row = getSelectedRow(formPanelView)!;
   return {
     property,

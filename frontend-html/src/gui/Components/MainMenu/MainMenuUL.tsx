@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import React from "react";
 import S from "gui/Components/MainMenu/MainMenuUL.module.scss";
 
-export class MainMenuUL extends React.Component {
+export class MainMenuUL extends React.Component<React.PropsWithChildren<{}>> {
   render() {
     return <ul className={S.root}>{this.props.children}</ul>;
   }

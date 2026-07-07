@@ -20,16 +20,19 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { observer } from "mobx-react";
 import React from "react";
 import { IDataView } from "../../../model/entities/types/IDataView";
-import { action, computed, observable } from "mobx";
+import { action, computed, observable,
+  makeObservable
+} from "mobx";
 import S from "./TreeView.module.scss";
 import cx from "classnames";
 import { isTreeDataTable, TreeDataTable } from "../../../model/entities/TreeDataTable";
 import { runGeneratorInFlowWithHandler } from "utils/runInFlowWithHandler";
 
 @observer
-export class TreeView extends React.Component<{ dataView: IDataView }> {
+export class TreeView extends React.Component<React.PropsWithChildren<{ dataView: IDataView }>> {
   constructor(props: Readonly<{ dataView: IDataView }>) {
     super(props);
+    makeObservable(this);
 
     if (!isTreeDataTable(this.props.dataView.dataTable)) {
       throw new Error("TreeView requires TreeDataTable to work properly");
@@ -121,6 +124,7 @@ class Node {
   }
 
   constructor(args: { id: string, label: string, row: any[], expansionGetter: (nodeId: string) => boolean }) {
+    makeObservable(this);
     this.id = args.id;
     this.label = args.label;
     this.row = args.row;
@@ -159,12 +163,17 @@ class Node {
   }
 }
 
-class Row extends React.Component<{
+class Row extends React.Component<React.PropsWithChildren<{
   node: Node;
   isSelected: boolean;
   onRowClick: () => void;
   onCaretClick: () => void;
-}> {
+}>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
   getIndent() {
     return this.props.node.level * 20 + "px";
   }

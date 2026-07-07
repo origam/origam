@@ -52,16 +52,18 @@ import { IActionType } from "model/entities/types/IAction";
 import { MobileAction, MobileActionLink } from "gui/connections/MobileComponents/Form/MobileAction";
 
 
-@inject(({dataView}) => {
+@inject(({dataView}: any) => {
   return {dataView, xmlFormRootObject: dataView.formViewUI};
 })
 @observer
-export class MobileFormBuilder extends React.Component<{
+export class MobileFormBuilder extends React.Component<React.PropsWithChildren<{
   mobileState: MobileState
   xmlFormRootObject?: any;
   dataView?: IDataView;
-}> {
+}>> {
   static contextType = CtxPanelVisibility
+
+  declare context: any;
 
   componentDidMount() {
     document.addEventListener("click", event => this.notifyClick(event))

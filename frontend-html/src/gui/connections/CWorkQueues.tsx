@@ -22,14 +22,23 @@ import { IWorkbench } from "model/entities/types/IWorkbench";
 import { MobXProviderContext, observer } from "mobx-react";
 import { getWorkQueuesItems } from "model/selectors/WorkQueues/getWorkQueuesItems";
 import { WorkQueuesItem } from "gui/Components/WorkQueues/WorkQueuesItem";
-import { computed } from "mobx";
+import { computed,
+  makeObservable
+} from "mobx";
 import { Icon } from "gui/Components/Icon/Icon";
 import { onWorkQueuesListItemClick } from "model/actions-ui/WorkQueues/onWorkQueuesListItemClick";
 import { getActiveScreen } from "model/selectors/getActiveScreen";
 
 @observer
-export class CWorkQueues extends React.Component {
+export class CWorkQueues extends React.Component<React.PropsWithChildren<{}>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
   static contextType = MobXProviderContext;
+
+  declare context: any;
 
   get workbench(): IWorkbench {
     return this.context.workbench;

@@ -21,7 +21,9 @@ import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGrou
 import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
 import { getDataView } from "model/selectors/DataView/getDataView";
 import { IGrouper } from "./types/IGrouper";
-import { comparer, flow, IReactionDisposer, observable, reaction } from "mobx";
+import { comparer, flow, IReactionDisposer, observable, reaction,
+  makeObservable
+} from "mobx";
 import { ICellOffset, IGroupTreeNode } from "gui/Components/ScreenElements/Table/TableRendering/types";
 import { ServerSideGroupItem } from "gui/Components/ScreenElements/Table/TableRendering/GroupItem";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
@@ -40,6 +42,10 @@ import { runGeneratorInFlowWithHandler } from "utils/runInFlowWithHandler";
 
 
 export class ServerSideGrouper implements IGrouper {
+  constructor() {
+    makeObservable(this);
+  }
+
   @observable.shallow topLevelGroups: IGroupTreeNode[] = [];
   parent?: any = null;
   disposers: IReactionDisposer[] = [];

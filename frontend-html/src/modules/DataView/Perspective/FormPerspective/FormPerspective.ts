@@ -18,7 +18,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { TypeSymbol } from "dic/Container";
-import { flow, observable } from "mobx";
+import { flow, observable,
+  makeObservable
+} from "mobx";
 import { getIdent, IIId } from "utils/common";
 import { IPerspective, IPerspectiveContrib } from "../Perspective";
 import { bind } from "bind-decorator";
@@ -32,6 +34,7 @@ export class FormPerspective implements IIId, IPerspectiveContrib {
     public perspective = IPerspective(),
     public viewConfiguration = IViewConfiguration()
   ) {
+    makeObservable(this);
   }
 
   @observable isActive = false;

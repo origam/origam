@@ -23,7 +23,7 @@ import "leaflet-draw";
 import "leaflet-draw/dist/leaflet.draw-src.js";
 import "leaflet-draw/dist/leaflet.draw-src.css";
 import "leaflet/dist/leaflet.css";
-import { action, autorun, computed, observable, reaction, runInAction } from "mobx";
+import { action, autorun, computed, observable, reaction, runInAction, makeObservable } from "mobx";
 import React from "react";
 import S from "./MapPerspectiveUI.module.scss";
 import { IMapObject, IMapObjectType } from "./stores/MapObjectsStore";
@@ -80,7 +80,12 @@ function getOptionsEPSG(options: any) {
   return undefined;
 }
 
-export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> {
+export class MapPerspectiveCom extends React.Component<React.PropsWithChildren<IMapPerspectiveComProps>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
   elmMapDiv: HTMLDivElement | null = null;
   refMapDiv = (elm: any) => (this.elmMapDiv = elm);
 

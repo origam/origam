@@ -37,11 +37,11 @@ import { ModalDialog } from "gui/Components/Dialog/ModalDialog";
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 import { CloseButton } from "gui/Components/Dialogs/CloseButton";
 
-export const DialogScreen: React.FC<{
+export const DialogScreen: React.FC<React.PropsWithChildren<{
   openedScreen: IOpenedScreen;
   bottomButtons: JSX.Element | null;
   showCloseButton: boolean
-}> = observer((props) => {
+}>> = observer((props) => {
   const key = `ScreenDialog@${props.openedScreen.menuItemId}@${props.openedScreen.order}`;
   const workbenchLifecycle = getWorkbenchLifecycle(props.openedScreen);
 

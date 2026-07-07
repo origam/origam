@@ -38,20 +38,22 @@ import { SidebarSectionDivider } from "gui/Components/Sidebar/SidebarSectionDivi
 import { SidebarSectionBody } from "gui/Components/Sidebar/SidebarSectionBody";
 import { FavoriteFolder, Favorites } from "model/entities/Favorites";
 import { Draggable, Droppable } from "react-beautiful-dnd";
-import { action, observable } from "mobx";
+import { action, observable,
+  makeObservable
+} from "mobx";
 import { EditButton } from "gui/connections/MenuComponents/EditButton";
 import { PinButton } from "gui/connections/MenuComponents/PinButton";
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 import { IEditingState } from "model/entities/types/IMainMenu";
 
 @observer
-export class CFavorites extends React.Component<{
+export class CFavorites extends React.Component<React.PropsWithChildren<{
   folder: FavoriteFolder;
   isActive: boolean;
   forceOpen?: boolean;
   onHeaderClick?: () => void;
   ctx: any;
-}> {
+}>> {
   favorites: Favorites;
 
   dragStateContainer = new DragStateContainer();
@@ -61,6 +63,7 @@ export class CFavorites extends React.Component<{
 
   constructor(props: any) {
     super(props);
+    makeObservable(this);
     this.favorites = getFavorites(this.props.ctx);
   }
 
@@ -235,6 +238,7 @@ export class DragStateContainer implements IEditingState{
   editingEnabled = false;
 
   constructor() {
+    makeObservable(this);
     DragStateContainer.instances.push(this);
   }
 

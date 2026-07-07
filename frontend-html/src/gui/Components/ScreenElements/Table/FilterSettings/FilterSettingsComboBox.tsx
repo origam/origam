@@ -21,16 +21,23 @@ import React from "react";
 
 import S from "./FilterSettingsComboBox.module.scss";
 import { Observer, observer } from "mobx-react";
-import { action, observable } from "mobx";
+import { action, observable,
+  makeObservable
+} from "mobx";
 import { createPortal } from "react-dom";
 import Measure from "react-measure";
 import _ from "lodash";
 
 @observer
-export class FilterSettingsComboBox extends React.Component<{
+export class FilterSettingsComboBox extends React.Component<React.PropsWithChildren<{
   trigger: React.ReactNode;
   id: string;
-}> {
+}>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
   @observable isDroppedDown = false;
 
   refDropdown = React.createRef<HTMLDivElement>();
@@ -122,9 +129,9 @@ export class FilterSettingsComboBox extends React.Component<{
   }
 }
 
-export const FilterSettingsComboBoxItem: React.FC<{
+export const FilterSettingsComboBoxItem: React.FC<React.PropsWithChildren<{
   onClick?: (event: any) => void;
-}> = (props) => (
+}>> = (props) => (
   <div className={S.dropdownItem} onClick={props.onClick}>
     {props.children}
   </div>

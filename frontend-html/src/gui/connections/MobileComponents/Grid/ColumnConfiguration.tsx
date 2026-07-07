@@ -38,9 +38,9 @@ import { NavigationButton } from "gui/connections/MobileComponents/Navigation/Na
 import { Button } from "gui/Components/Button/Button";
 import { SimpleDropdown } from "gui/Components/Dialogs/SimpleDropdown";
 
-export const ColumnConfiguration: React.FC<{
+export const ColumnConfiguration: React.FC<React.PropsWithChildren<{
   dataView: IDataView
-}> = observer((props) => {
+}>> = observer((props) => {
 
   const configModel = getColumnConfigurationModel(props.dataView);
 
@@ -107,11 +107,11 @@ export const ColumnConfiguration: React.FC<{
   );
 });
 
-export const ColumnConfig: React.FC<{
+export const ColumnConfig: React.FC<React.PropsWithChildren<{
   config: IColumnConfiguration,
   index: number;
   model: ColumnConfigurationModel;
-}> = observer((props) => {
+}>> = observer((props) => {
 
 
   const selectedAggregationOption = aggregationOptions.find(option => option.value === props.config.aggregationType)!;

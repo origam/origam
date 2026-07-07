@@ -64,7 +64,9 @@ import { onFirstRowClick } from "model/actions-ui/DataView/onFirstRowClick";
 import { onLastRowClick } from "model/actions-ui/DataView/onLastRowClick";
 import { T } from "utils/translation";
 import { getConfigurationManager } from "model/selectors/TablePanelView/getConfigurationManager";
-import { computed } from "mobx";
+import { computed,
+  makeObservable
+} from "mobx";
 import { getPanelMenuActions } from "model/selectors/DataView/getPanelMenuActions";
 import { DropdownDivider } from "gui/Components/Dropdown/DropdownDivider";
 import { getTrueSelectedRowIndex } from "model/selectors/DataView/getTrueSelectedRowIndex";
@@ -79,11 +81,18 @@ import {
 } from "utils/keyShortcuts";
 
 @observer
-export class CDataViewHeaderInner extends React.Component<{
+export class CDataViewHeaderInner extends React.Component<React.PropsWithChildren<{
   isVisible: boolean;
   extension: DataViewHeaderExtension;
-}> {
+}>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
   static contextType = MobXProviderContext;
+
+  declare context: any;
 
   get dataView() {
     return this.context.dataView;

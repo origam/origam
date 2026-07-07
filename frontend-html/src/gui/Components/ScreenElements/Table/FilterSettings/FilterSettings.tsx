@@ -34,7 +34,7 @@ import { getAllLookupIds } from "model/entities/getAllLookupIds";
 import { FilterSettingsTagInput } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSettingsTagInput";
 import { getGridFocusManager } from "../../../../../model/entities/GridFocusManager";
 
-export const FilterSettings: React.FC<{ autoFocus: boolean, ctx: any }> = observer((props) => {
+export const FilterSettings: React.FC<React.PropsWithChildren<{ autoFocus: boolean, ctx: any }>> = observer((props) => {
   const property = useContext(MobXProviderContext).property as IProperty;
 
   function getSettings(defaultValue: IFilterSetting) {

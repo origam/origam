@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { IScreenPlugin } from "plugins/interfaces/IScreenPlugin";
 import { EventHandler } from "utils/EventHandler";
 import { ILocalization } from "plugins/interfaces/ILocalization";
@@ -27,6 +27,10 @@ import { IScreenPluginData } from "plugins/interfaces/IScreenPluginData";
 // The abstract keyword had to be removed because of this issue:
 // https://github.com/vitejs/vite/issues/12955 
 export class AbstractScreenPlugin implements IScreenPlugin {
+  constructor() {
+    makeObservable(this);
+  }
+
   $type_IScreenPlugin: 1 = 1; // required by the isIScreenPlugin function
   id: string = ""
 

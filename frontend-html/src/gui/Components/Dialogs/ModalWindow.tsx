@@ -21,12 +21,14 @@ import S from "./ModalWindow.module.scss";
 import React from "react";
 
 import { observer, Observer } from "mobx-react";
-import { action, observable } from "mobx";
+import { action, observable,
+  makeObservable
+} from "mobx";
 import Measure, { BoundingRect } from "react-measure";
 import { requestFocus } from "utils/focus";
 
 @observer
-export class ModalWindow extends React.Component<{
+export class ModalWindow extends React.Component<React.PropsWithChildren<{
   title: React.ReactNode;
   titleButtons: React.ReactNode;
   titleIsWorking?: boolean;
@@ -39,7 +41,12 @@ export class ModalWindow extends React.Component<{
   topPosiotionProc?: number;
   onKeyDown?: (event: any) => void;
   onWindowMove?: (top: number, left: number)=>void;
-}> {
+}>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
   @observable _top: number = window.screen.height + 50;
   set top(value: number){
     this._top = value;

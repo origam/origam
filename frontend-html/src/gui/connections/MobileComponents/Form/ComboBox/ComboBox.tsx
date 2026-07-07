@@ -53,7 +53,7 @@ export interface IComboBoxProps {
   onKeyDown?(event: any): void;
 }
 
-export const ComboBox: React.FC<IComboBoxProps> = observer((props) => {
+export const ComboBox: React.FC<React.PropsWithChildren<IComboBoxProps>> = observer((props) => {
 
   const application = useContext(MobXProviderContext).application;
   const row = getSelectedRow(props.property);

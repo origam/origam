@@ -19,7 +19,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { bind } from "bind-decorator";
-import { action, computed, flow, observable } from "mobx";
+import { action, computed, flow, observable,
+  makeObservable
+} from "mobx";
 import { inject, observer, Provider } from "mobx-react";
 import { onTableKeyDown } from "model/actions-ui/DataView/TableView/onTableKeyDown";
 import React, { useContext } from "react";
@@ -69,7 +71,7 @@ interface ITableViewProps {
   onTableKeyDown?: (event: any) => void;
 }
 
-@inject(({dataView}) => {
+@inject(({dataView}: any) => {
   return {
     dataView,
     tablePanelView: dataView.tablePanelView,
@@ -80,9 +82,10 @@ interface ITableViewProps {
   };
 })
 @observer
-export class TableViewInner extends React.Component<ITableViewProps & { dataViewContext?: DataViewContext }> {
+export class TableViewInner extends React.Component<React.PropsWithChildren<ITableViewProps & { dataViewContext?: DataViewContext }>> {
   constructor(props: any) {
     super(props);
+    makeObservable(this);
 
     this.props.dataView?.initializeNewScrollLoader();
     getGroupingConfiguration(this.props.dataView).registerGroupingOnOffHandler(() => {
@@ -255,6 +258,7 @@ interface IHeaderRendererData {
 
 class HeaderRenderer implements IHeaderRendererData {
   constructor(data: IHeaderRendererData) {
+    makeObservable(this);
     Object.assign(this, data);
   }
 

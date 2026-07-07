@@ -24,7 +24,9 @@ import { ICellOffset, IGroupTreeNode } from "gui/Components/ScreenElements/Table
 import { ClientSideGroupItem } from "gui/Components/ScreenElements/Table/TableRendering/GroupItem";
 import { getTablePanelView } from "../selectors/TablePanelView/getTablePanelView";
 import { IAggregationInfo } from "./types/IAggregationInfo";
-import { computed } from "mobx";
+import { computed,
+  makeObservable
+} from "mobx";
 import { AggregationType } from "./types/AggregationType";
 import { getCellOffset, getNextRowId, getPreviousRowId, getRowById, getRowCount, getRowIndex } from "./GrouperCommon";
 import { IGroupingSettings } from "./types/IGroupingConfiguration";
@@ -34,6 +36,10 @@ import { getOrderingConfiguration } from "model/selectors/DataView/getOrderingCo
 import { IOrderByDirection } from "./types/IOrderingConfiguration";
 
 export class ClientSideGrouper implements IGrouper {
+  constructor() {
+    makeObservable(this);
+  }
+
   parent?: any = null;
   expandedGroupDisplayValues: Set<string> = new Set();
 

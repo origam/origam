@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import React from "react";
 import S from "gui/Components/Splitter/Splitter.module.scss";
-import { action, computed, observable, runInAction } from "mobx";
+import { action, computed, observable, runInAction, makeObservable } from "mobx";
 import { observer, Observer } from "mobx-react";
 
 import Measure, { ContentRect } from "react-measure";
@@ -28,11 +28,16 @@ import cx from "classnames";
 import { IPanelData } from "gui/Components/Splitter/IPanelData";
 
 @observer
-class SplitterPanel extends React.Component<{
+class SplitterPanel extends React.Component<React.PropsWithChildren<{
   type: "isHoriz" | "isVert";
   size: number;
   className?: string;
-}> {
+}>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
   refPanel = (elm: any) => (this.elmPanel = elm);
   elmPanel: HTMLDivElement | null = null;
 
@@ -63,14 +68,19 @@ class SplitterPanel extends React.Component<{
 }
 
 @observer
-class SplitterDivider extends React.Component<{
+class SplitterDivider extends React.Component<React.PropsWithChildren<{
   type: "isHoriz" | "isVert";
   className?: string;
   domRef: any;
   isDragging: boolean;
   relativeLoc: number;
   onMouseDown?(event: any): void;
-}> {
+}>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
   @computed get style() {
     if (!this.props.isDragging) return {};
     switch (this.props.type) {
@@ -103,7 +113,7 @@ class SplitterDivider extends React.Component<{
 }
 
 @observer
-export class Splitter extends React.Component<{
+export class Splitter extends React.Component<React.PropsWithChildren<{
   type: "isHoriz" | "isVert";
   sizeOverrideFirstPanel?: number;
   dontPrintLeftPane?: boolean;
@@ -116,7 +126,7 @@ export class Splitter extends React.Component<{
     panel2Ratio: number
   ): void;
   STYLE?: any;
-}> {
+}>> {
   @observable containerWidth = 0;
   @observable containerHeight = 0;
   @observable isInitialized = false;
@@ -129,6 +139,7 @@ export class Splitter extends React.Component<{
 
   constructor(props: any) {
     super(props);
+    makeObservable(this);
     runInAction(() => {
       for (let i = 0; i < this.props.panels.length; i++) {
         const panel = this.props.panels[i];

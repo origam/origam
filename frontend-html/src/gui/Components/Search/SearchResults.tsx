@@ -22,7 +22,9 @@ import S from "gui/Components/Search/SearchResults.module.scss";
 import { ISearchResult, isIMenuSearchResult } from "model/entities/types/ISearchResult";
 import { observer } from "mobx-react";
 import { ISearchResultGroup } from "model/entities/types/ISearchResultGroup";
-import { observable } from "mobx";
+import { observable,
+  makeObservable
+} from "mobx";
 import { Icon } from "gui/Components/Icon/Icon";
 import { Dropdown } from "../Dropdown/Dropdown";
 import { DropdownItem } from "../Dropdown/DropdownItem";
@@ -31,10 +33,10 @@ import { Dropdowner } from "../Dropdowner/Dropdowner";
 import { getFavorites } from "../../../model/selectors/MainMenu/getFavorites";
 import { onAddToFavoritesClicked } from "../../connections/CMainMenu";
 
-export class SearchResults extends React.Component<{
+export class SearchResults extends React.Component<React.PropsWithChildren<{
   groups: ISearchResultGroup[];
   ctx: any;
-}> {
+}>> {
 
   render() {
     return (
@@ -51,11 +53,16 @@ export class SearchResults extends React.Component<{
 }
 
 @observer
-export class ResultGroup extends React.Component<{
+export class ResultGroup extends React.Component<React.PropsWithChildren<{
   name: string;
   ctx: any;
   results: ISearchResult[];
-}> {
+}>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
   @observable
   isExpanded = true;
 

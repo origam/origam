@@ -40,7 +40,7 @@ import {
 } from "model/selectors/TablePanelView/getConfigurationManager";
 
 @observer
-export class FilterDropDown extends React.Component<{ ctx: any }> {
+export class FilterDropDown extends React.Component<React.PropsWithChildren<{ ctx: any }>> {
   filterManager: FilterGroupManager;
   configurationManager: IConfigurationManager;
 
