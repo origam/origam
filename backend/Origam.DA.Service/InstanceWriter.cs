@@ -249,12 +249,7 @@ namespace Origam.DA.Service
                 XmlAttributeAttribute attribute = (XmlAttributeAttribute)memberInfo.Attribute;
                 object value = GetValueToWrite(instance, memberInfo);
 
-                if (ShouldBeSkipped(value))
-                {
-                    continue;
-                }
-
-                if (Guid.Empty.Equals(value))
+                if (ShouldBeSkipped(instance, memberInfo, value))
                 {
                     continue;
                 }
@@ -269,21 +264,54 @@ namespace Origam.DA.Service
             }
         }
 
-        private bool ShouldBeSkipped(object value)
+        private bool ShouldBeSkipped(
+            IFilePersistent instance,
+            MemberAttributeInfo memberInfo,
+            object value
+        )
         {
-            if (ReferenceEquals(value, null))
+            if (IsSemanticPropertyValueDefault(instance, memberInfo))
             {
                 return true;
             }
 
             if (value is Enum)
             {
+                // Some enum defaults are not the CLR zero value. For example,
+                // ScheduleIntervalType.Daily is 4, so missing XML would not recreate it.
                 return false;
             }
 
-            if (value is bool)
+            return IsReliablyRecreatedDefault(value);
+        }
+
+        private bool IsSemanticPropertyValueDefault(
+            IFilePersistent instance,
+            MemberAttributeInfo memberInfo
+        )
+        {
+            if (
+                instance.GetType().FullName != "Origam.Schema.GuiModel.PropertyValueItem"
+                || memberInfo.MemberInfo.Name != "Value"
+            )
             {
                 return false;
+            }
+
+            object typedValue = GetPropertyValue(instance, "TypedValue");
+            return IsReliablyRecreatedDefault(typedValue);
+        }
+
+        private bool IsReliablyRecreatedDefault(object value)
+        {
+            if (ReferenceEquals(value, null))
+            {
+                return true;
+            }
+
+            if (value is bool boolValue)
+            {
+                return boolValue == false;
             }
 
             if (value is string strValue)
@@ -291,7 +319,29 @@ namespace Origam.DA.Service
                 return string.IsNullOrEmpty(strValue);
             }
 
-            return value.IsDefault();
+            if (value is int intValue)
+            {
+                return intValue == 0;
+            }
+
+            if (value is Guid guidValue)
+            {
+                return guidValue == Guid.Empty;
+            }
+
+            return false;
+        }
+
+        private static object GetPropertyValue(object instance, string propertyName)
+        {
+            try
+            {
+                return instance.GetType().GetProperty(propertyName)?.GetValue(instance);
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         private void WriteXmlExternalFiles(
