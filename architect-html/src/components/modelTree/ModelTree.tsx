@@ -34,6 +34,16 @@ import { Item, Menu, Separator, Submenu, TriggerEvent, useContextMenu } from 're
 import 'react-contexify/ReactContexify.css';
 
 const RESERVED_DEVICE_NAME = /^(con|prn|aux|nul|com[1-9]|lpt[1-9])(\.|$)/i;
+const INVALID_FOLDER_NAME_CHARS = /[\\/:*?"<>|]/;
+
+function hasControlChar(value: string): boolean {
+  for (const char of value) {
+    if (char.charCodeAt(0) < 0x20) {
+      return true;
+    }
+  }
+  return false;
+}
 
 function isReservedOrUnsafeFolderName(name: string): boolean {
   if (name === '.' || name === '..') {
@@ -288,7 +298,7 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
     if (name.length === 0) {
       return T('Folder name cannot be empty.', 'create_folder_error_empty');
     }
-    if (/[\\/:*?"<>|\x00-\x1f]/.test(name)) {
+    if (INVALID_FOLDER_NAME_CHARS.test(name) || hasControlChar(name)) {
       return T('Folder name contains invalid characters.', 'create_folder_error_invalid_chars');
     }
     if (isReservedOrUnsafeFolderName(name)) {
