@@ -202,6 +202,8 @@ export class RawTable extends React.Component<React.PropsWithChildren<ITableProp
   @observable.ref ctxCanvas: CanvasRenderingContext2D | null = null;
 
   @observable.ref elmScroller: Scroller | null = null;
+  @observable fixedColumnCountForDraw = this.props.fixedColumnCount;
+  @observable.ref tableRowsForDraw = this.props.tableRows;
 
   elmMeasure: Measure | null = null;
 
@@ -245,6 +247,11 @@ export class RawTable extends React.Component<React.PropsWithChildren<ITableProp
 
   disposers: Array<() => void> = [];
 
+  @action.bound syncDrawProps(props: ITableProps) {
+    this.fixedColumnCountForDraw = props.fixedColumnCount;
+    this.tableRowsForDraw = props.tableRows;
+  }
+
   componentDidMount() {
     this.disposers.push(
       autorun(
@@ -252,8 +259,8 @@ export class RawTable extends React.Component<React.PropsWithChildren<ITableProp
           if (this.ctxCanvas) {
             this.tableRenderer.drawTable(
               this.ctxCanvas,
-              this.props.fixedColumnCount,
-              this.props.tableRows
+              this.fixedColumnCountForDraw,
+              this.tableRowsForDraw
             );
           }
         },
@@ -267,6 +274,7 @@ export class RawTable extends React.Component<React.PropsWithChildren<ITableProp
   }
 
   componentDidUpdate(prevProps: ITableProps & { isVisible: boolean }) {
+    this.syncDrawProps(this.props);
     this.remeasureCellArea();
   }
 
@@ -328,25 +336,25 @@ export class RawTable extends React.Component<React.PropsWithChildren<ITableProp
     return this.fixedHeaderContainers.length !== 0;
   }
 
-  @computed get fixedColumnsWidth() {
+  get fixedColumnsWidth() {
     return this.fixedHeaderContainers
       .map((container) => container.width)
       .reduce((x, y) => x + y, 0);
   }
 
-  @computed get freeHeaderContainers() {
+  get freeHeaderContainers() {
     return this.props.headerContainers.filter((container) => !container.isFixed);
   }
 
-  @computed get freeHeaders() {
+  get freeHeaders() {
     return this.freeHeaderContainers.map((container) => container.header);
   }
 
-  @computed get fixedHeaderContainers() {
+  get fixedHeaderContainers() {
     return this.props.headerContainers.filter((container) => container.isFixed);
   }
 
-  @computed get fixedHeaders() {
+  get fixedHeaders() {
     return this.fixedHeaderContainers.map((container) => container.header);
   }
 
@@ -449,17 +457,30 @@ export class RawTable extends React.Component<React.PropsWithChildren<ITableProp
   }
 
   render() {
+    const props = this.props;
+    const tablePanelView = this.tablePanelView;
+    const fixedHeaderContainers = props.headerContainers.filter((container) => container.isFixed);
+    const freeHeaderContainers = props.headerContainers.filter((container) => !container.isFixed);
+    const fixedColumnsWidth = fixedHeaderContainers
+      .map((container) => container.width)
+      .reduce((x, y) => x + y, 0);
+    const fixedHeaders = fixedHeaderContainers.map((container) => container.header);
+    const freeHeaders = freeHeaderContainers.map((container) => container.header);
+    const hasFixedColumns = fixedHeaderContainers.length !== 0;
+    const cursorIconPointer = !!tablePanelView.property?.isLink
+      && tablePanelView.ctrlOrCmdPressed
+      && tablePanelView.currentTooltipText !== undefined;
     const editorCellRectangle =
-      this.props.editingRowIndex !== undefined && this.props.editingColumnIndex !== undefined
-        ? this.tablePanelView.getCellRectangle(
-          this.props.editingRowIndex,
-          this.props.editingColumnIndex
+      props.editingRowIndex !== undefined && props.editingColumnIndex !== undefined
+        ? tablePanelView.getCellRectangle(
+          props.editingRowIndex,
+          props.editingColumnIndex
         )
         : undefined;
 
     return (
       <div className={`${S.table} tableContainer`}>
-        {this.props.isLoading && (
+        {props.isLoading && (
           <div className={S.loadingOverlay}>
             <div className={S.loadingIcon}>
               <i className="far fa-clock fa-7x blink"/>
@@ -471,27 +492,27 @@ export class RawTable extends React.Component<React.PropsWithChildren<ITableProp
             <Observer>
               {() => (
                 <>
-                  {this.props.headerContainers &&
+                  {props.headerContainers &&
                   (contentRect.bounds!.width ? (
                     <div
                       onFocus={(event) => this.onFocus(event)}
                       className={S.headers}>
-                      {this.hasFixedColumns ? (
+                      {hasFixedColumns ? (
                         <Scrollee
-                          scrollOffsetSource={this.props.scrollState}
+                          scrollOffsetSource={props.scrollState}
                           fixedHoriz={true}
                           fixedVert={true}
-                          width={this.fixedColumnsWidth}
+                          width={fixedColumnsWidth}
                           zIndex={101}
                         >
-                          <HeaderRow headerElements={this.fixedHeaders} zIndex={100}/>
+                          <HeaderRow headerElements={fixedHeaders} zIndex={100}/>
                         </Scrollee>
                       ) : null}
                       <Scrollee
-                        scrollOffsetSource={this.props.scrollState}
+                        scrollOffsetSource={props.scrollState}
                         fixedVert={true}
                         zIndex={100}
-                        width={contentRect.bounds!.width - 10 - this.fixedColumnsWidth}
+                        width={contentRect.bounds!.width - 10 - fixedColumnsWidth}
                         controlScrollStateByFocus={true}
                         controlScrollStateSelector=".tableContainer"
                         controlScrollStatePadding={{ left: 40, right: 40 }}
@@ -503,7 +524,7 @@ export class RawTable extends React.Component<React.PropsWithChildren<ITableProp
                               // and drop did not work on the headers that were outside of the originally visible area.
                               // This div has to be at least as wide as ALL its children, not just the visible ones.
                               <div style={{width:"10000%"}}  {...provided.droppableProps} ref={provided.innerRef}>
-                                <HeaderRow headerElements={[...this.freeHeaders, <div key={"placeholder"}>{provided.placeholder}</div> as any]}/>
+                                <HeaderRow headerElements={[...freeHeaders, <div key={"placeholder"}>{provided.placeholder}</div> as any]}/>
                               </div>
                             )}
                           </Droppable>
@@ -514,8 +535,8 @@ export class RawTable extends React.Component<React.PropsWithChildren<ITableProp
 
                   <div
                     ref={measureRef}
-                    className={cx("cellAreaContainer", S.cellAreaContainer, (this.isCursorIconPointer()) ? ["isLink", S.isLink] : "")}
-                    title={this.tablePanelView.currentTooltipText}
+                    className={cx("cellAreaContainer", S.cellAreaContainer, cursorIconPointer ? ["isLink", S.isLink] : "")}
+                    title={tablePanelView.currentTooltipText}
                   >
                     <>
                       {contentRect.bounds!.height ? (
@@ -527,17 +548,17 @@ export class RawTable extends React.Component<React.PropsWithChildren<ITableProp
                           />
                         </div>
                       ) : null}
-                      {this.props.isEditorMounted && editorCellRectangle && (
+                      {props.isEditorMounted && editorCellRectangle && (
                         <PositionedField
-                          fixedColumnsCount={this.fixedColumnCount}
-                          rowIndex={this.props.editingRowIndex!}
-                          columnIndex={this.props.editingColumnIndex!}
-                          scrollOffsetSource={this.props.scrollState}
+                          fixedColumnsCount={fixedHeaderContainers.length}
+                          rowIndex={props.editingRowIndex!}
+                          columnIndex={props.editingColumnIndex!}
+                          scrollOffsetSource={props.scrollState}
                           worldBounds={contentRect.bounds!}
                           cellRectangle={editorCellRectangle!}
                           onMouseEnter={(event) => this.onMouseLeaveTooltipEnabledArea(event)}
                         >
-                          {this.props.renderEditor && this.props.renderEditor()}
+                          {props.renderEditor && props.renderEditor()}
                         </PositionedField>
                       )}
                       <Scroller
@@ -545,17 +566,17 @@ export class RawTable extends React.Component<React.PropsWithChildren<ITableProp
                         width={contentRect.bounds!.width}
                         height={contentRect.bounds!.height}
                         isVisible={true}
-                        scrollingDisabled={false /*this.props.isEditorMounted*/}
-                        contentWidth={this.props.gridDimensions.contentWidth + 20}
+                        scrollingDisabled={false /*props.isEditorMounted*/}
+                        contentWidth={props.gridDimensions.contentWidth + 20}
                         // +30px to make the last row visible on some dirty browsers
-                        contentHeight={this.props.gridDimensions.contentHeight + 30}
+                        contentHeight={props.gridDimensions.contentHeight + 30}
                         onScroll={this.handleScroll}
                         onClick={this.handleScrollerClick}
                         onMouseMove={this.handleScrollerMouseMove}
                         onMouseOver={this.onMouseOver}
                         onMouseLeave={(event) => this.onMouseLeaveTooltipEnabledArea(event)}
-                        onKeyDown={this.props.onKeyDown}
-                        onFocus={this.props.onFocus}
+                        onKeyDown={props.onKeyDown}
+                        onFocus={props.onFocus}
                         canFocus={()=>this.canFocus()}
                       />
                     </>

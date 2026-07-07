@@ -64,9 +64,6 @@ import { onFirstRowClick } from "model/actions-ui/DataView/onFirstRowClick";
 import { onLastRowClick } from "model/actions-ui/DataView/onLastRowClick";
 import { T } from "utils/translation";
 import { getConfigurationManager } from "model/selectors/TablePanelView/getConfigurationManager";
-import { computed,
-  makeObservable
-} from "mobx";
 import { getPanelMenuActions } from "model/selectors/DataView/getPanelMenuActions";
 import { DropdownDivider } from "gui/Components/Dropdown/DropdownDivider";
 import { getTrueSelectedRowIndex } from "model/selectors/DataView/getTrueSelectedRowIndex";
@@ -85,11 +82,6 @@ export class CDataViewHeaderInner extends React.Component<React.PropsWithChildre
   isVisible: boolean;
   extension: DataViewHeaderExtension;
 }>> {
-  constructor(props: any, context?: any) {
-    super(props, context);
-    makeObservable(this);
-  }
-
   static contextType = MobXProviderContext;
 
   declare context: any;
@@ -106,22 +98,20 @@ export class CDataViewHeaderInner extends React.Component<React.PropsWithChildre
     return getIsEnabledAction(action) || action.mode !== IActionMode.ActiveRecord;
   }
 
-  @computed
-  get relevantActions() {
-    return this.allActions
+  getRelevantActions(dataView: IDataView) {
+    return getPanelViewActions(dataView)
       .filter((action) => !action.groupId)
       .filter((action) => this.shouldBeShown(action));
   }
 
-  @computed
-  get relevantMenuActions() {
-    return this.allMenuActions
+  getRelevantMenuActions(dataView: IDataView) {
+    return getPanelMenuActions(dataView)
       .filter((action) => !action.groupId)
       .filter((action) => this.shouldBeShown(action));
   }
 
-  renderMenuActions(args: { setMenuDropped(state: boolean): void }) {
-    return this.relevantMenuActions.map((action) => {
+  renderMenuActions(args: { setMenuDropped(state: boolean): void; actions: IAction[] }) {
+    return args.actions.map((action) => {
       return (
         <DropdownItem
           key={action.id}
@@ -136,22 +126,10 @@ export class CDataViewHeaderInner extends React.Component<React.PropsWithChildre
     });
   }
 
-  @computed
-  get hasSomeRelevantActions() {
+  hasSomeRelevantActions(actions: IAction[]) {
     return (
-      this.relevantActions.filter((action) => action.placement !== IActionPlacement.PanelMenu)
-        .length > 0
+      actions.filter((action) => action.placement !== IActionPlacement.PanelMenu).length > 0
     );
-  }
-
-  @computed
-  get allActions() {
-    return getPanelViewActions(this.dataView);
-  }
-
-  @computed
-  get allMenuActions() {
-    return getPanelMenuActions(this.dataView);
   }
 
   render() {
@@ -193,9 +171,11 @@ export class CDataViewHeaderInner extends React.Component<React.PropsWithChildre
 
     const configurationManager = getConfigurationManager(dataView);
     const customTableConfigsExist = configurationManager.customTableConfigurations.length > 0;
-    const isBarVisible = isVisible || this.hasSomeRelevantActions;
-    const isActionsOnly = !isVisible && this.hasSomeRelevantActions;
-    const relevantActions = this.relevantActions;
+    const relevantActions = this.getRelevantActions(dataView);
+    const relevantMenuActions = this.getRelevantMenuActions(dataView);
+    const hasSomeRelevantActions = this.hasSomeRelevantActions(relevantActions);
+    const isBarVisible = isVisible || hasSomeRelevantActions;
+    const isActionsOnly = !isVisible && hasSomeRelevantActions;
     return (
       <Measure bounds={true}>
         {({measureRef, contentRect}) => {
@@ -325,7 +305,7 @@ export class CDataViewHeaderInner extends React.Component<React.PropsWithChildre
                             </DataViewHeaderGroup>
 
                               <DataViewHeaderGroup noShrink={true} className={"rowCount"}>
-                                {renderRowCount(this.dataView)}
+                                {renderRowCount(dataView)}
                               </DataViewHeaderGroup>
                             </>
                           )}
@@ -448,8 +428,8 @@ export class CDataViewHeaderInner extends React.Component<React.PropsWithChildre
                                     {T("Delete View", "delete_current_column_config")}
                                   </DropdownItem>,
                                 ]}
-                                {this.relevantMenuActions.length > 0 && <DropdownDivider />}
-                                {this.renderMenuActions({ setMenuDropped: setDropped })}
+                                {relevantMenuActions.length > 0 && <DropdownDivider />}
+                                {this.renderMenuActions({ setMenuDropped: setDropped, actions: relevantMenuActions })}
                               </Dropdown>
                             )}
                           />

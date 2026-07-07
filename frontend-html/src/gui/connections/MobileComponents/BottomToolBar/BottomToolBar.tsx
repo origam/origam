@@ -26,7 +26,7 @@ import { MobXProviderContext, observer } from "mobx-react";
 import { getScreenActionButtonsState } from "model/actions-ui/ScreenToolbar/saveButtonVisible";
 import { onSaveSessionClick } from "model/actions-ui/ScreenToolbar/onSaveSessionClick";
 import { onRefreshSessionClick } from "model/actions-ui/ScreenToolbar/onRefreshSessionClick";
-import { computed,
+import { computed, observable,
   makeObservable
 } from "mobx";
 import { onWorkflowNextClick } from "model/actions-ui/ScreenHeader/onWorkflowNextClick";
@@ -55,9 +55,16 @@ export class BottomToolBar extends React.Component<React.PropsWithChildren<{
     return this.context.application.mobileState;
   }
 
+  @observable.ref
+  ctx = this.props.ctx;
+
+  componentDidUpdate() {
+    this.ctx = this.props.ctx;
+  }
+
   @computed
   get activeScreen() {
-    return getActiveScreen(this.props.ctx)?.content?.formScreen;
+    return getActiveScreen(this.ctx)?.content?.formScreen;
   }
 
   showNextButton() {

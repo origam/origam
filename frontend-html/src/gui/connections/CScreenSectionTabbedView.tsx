@@ -75,7 +75,7 @@ export class CScreenSectionTabbedView extends React.Component<React.PropsWithChi
   }
 
   render() {
-    const {boxes} = this.props;
+    const {boxes, nextNode} = this.props;
     return (
       <TabbedView>
         <TabbedViewHandleRow>
@@ -103,7 +103,7 @@ export class CScreenSectionTabbedView extends React.Component<React.PropsWithChi
                   key={box.attributes.Id}
                   isActive={this.activePanelId === box.attributes.Id}
                 >
-                  {findUIChildren(box).map((child) => this.props.nextNode(child))}
+                  {findUIChildren(box).map((child) => nextNode(child))}
                 </TabbedViewPanel>
               )}
             </Observer>

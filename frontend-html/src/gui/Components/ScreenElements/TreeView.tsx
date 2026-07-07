@@ -34,14 +34,21 @@ export class TreeView extends React.Component<React.PropsWithChildren<{ dataView
     super(props);
     makeObservable(this);
 
-    if (!isTreeDataTable(this.props.dataView.dataTable)) {
+    if (!isTreeDataTable(this.dataView.dataTable)) {
       throw new Error("TreeView requires TreeDataTable to work properly");
     }
   }
 
+  @observable.ref
+  dataView = this.props.dataView;
+
+  componentDidUpdate() {
+    this.dataView = this.props.dataView;
+  }
+
   @computed
   get nodes() {
-    const nodes = this.props.dataView.dataTable.rows.map(
+    const nodes = this.dataView.dataTable.rows.map(
       (row) => new Node({
         id: this.getRowId(row),
         label: this.getLabel(row),
@@ -60,15 +67,15 @@ export class TreeView extends React.Component<React.PropsWithChildren<{ dataView
   }
 
   getRowId(row: any) {
-    return this.props.dataView.dataTable.getRowId(row);
+    return this.dataView.dataTable.getRowId(row);
   }
 
   getParentId(row: any) {
-    return (this.props.dataView.dataTable as TreeDataTable).getParentId(row);
+    return (this.dataView.dataTable as TreeDataTable).getParentId(row);
   }
 
   private getLabel(row: any[]) {
-    return (this.props.dataView.dataTable as TreeDataTable).getLabel(row);
+    return (this.dataView.dataTable as TreeDataTable).getLabel(row);
   }
 
   @observable
@@ -79,7 +86,7 @@ export class TreeView extends React.Component<React.PropsWithChildren<{ dataView
     runGeneratorInFlowWithHandler({
       ctx: this.props.dataView,
       generator: function*(){
-        yield*self.props.dataView.setSelectedRowId  (node.id);
+        yield*self.dataView.setSelectedRowId  (node.id);
       }()
     })
   }
@@ -101,7 +108,7 @@ export class TreeView extends React.Component<React.PropsWithChildren<{ dataView
             <Row
               key={node.id}
               node={node}
-              isSelected={node.id === this.props.dataView.selectedRowId}
+              isSelected={node.id === this.dataView.selectedRowId}
               onRowClick={() => this.onRowClick(node)}
               onCaretClick={() => this.onCaretClick(node)}
             />

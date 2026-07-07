@@ -157,13 +157,16 @@ export class DropdownEditorTable extends  React.Component<React.PropsWithChildre
 
   renderTableCell({columnIndex, key, parent, rowIndex, style}: GridCellProps) {
     const Prov = CtxCell.Provider as any;
+    const drivers = this.props.drivers;
+    const hasHeader = this.hasHeader;
+    const bodyRowIndex = rowIndex - (hasHeader ? 1 : 0);
     return (
       <Prov
         key={key}
         value={{visibleColumnIndex: columnIndex, visibleRowIndex: rowIndex}}
         style={style}
       >
-        {(this.hasHeader && rowIndex > 0) || !this.hasHeader ? (
+        {(hasHeader && rowIndex > 0) || !hasHeader ? (
           <div
             style={style}
             className={cx({ isHoveredRow: rowIndex === this.hoveredRowIndex })}
@@ -177,9 +180,7 @@ export class DropdownEditorTable extends  React.Component<React.PropsWithChildre
             <Observer>
               {() => (
                 <>
-                  {this.props.drivers
-                    .getDriver(columnIndex)
-                    .bodyCellDriver.render(rowIndex - (this.hasHeader ? 1 : 0))}
+                  {drivers.getDriver(columnIndex).bodyCellDriver.render(bodyRowIndex)}
                 </>
               )}
             </Observer>
@@ -187,7 +188,7 @@ export class DropdownEditorTable extends  React.Component<React.PropsWithChildre
         ) : (
           <div style={style}>
             <Observer>
-              {() => <>{this.props.drivers.getDriver(columnIndex).headerCellDriver.render()}</>}
+              {() => <>{drivers.getDriver(columnIndex).headerCellDriver.render()}</>}
             </Observer>
           </div>
         )}

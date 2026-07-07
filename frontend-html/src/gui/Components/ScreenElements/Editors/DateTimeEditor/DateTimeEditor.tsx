@@ -75,6 +75,8 @@ export class DateTimeEditor extends React.Component<React.PropsWithChildren<{
 
   @observable isShowFormatHintTooltip = false;
 
+  @observable.ref outputFormat = this.props.outputFormat;
+
   refDropdowner = (elm: Dropdowner | null) => (this.elmDropdowner = elm);
   elmDropdowner: Dropdowner | null = null;
 
@@ -141,8 +143,9 @@ export class DateTimeEditor extends React.Component<React.PropsWithChildren<{
     this.disposers.forEach((d) => d());
   }
 
-  componentDidUpdate(prevProps: { value: string | null }) {
+  componentDidUpdate(prevProps: { value: string | null; outputFormat: string }) {
     runInAction(() => {
+      this.outputFormat = this.props.outputFormat;
       if (prevProps.value !== null && this.props.value === null) {
         this.editorModel.dirtyTextualValue = "";
       }
@@ -227,7 +230,7 @@ export class DateTimeEditor extends React.Component<React.PropsWithChildren<{
   @computed get isTooltipShown() {
     return (
       this.editorModel.textFieldValue !== undefined &&
-      (!moment(this.editorModel.textFieldValue, this.props.outputFormat) ||
+      (!moment(this.editorModel.textFieldValue, this.outputFormat) ||
         this.editorModel.formattedMomentValue !== this.editorModel.textFieldValue)
     );
   }

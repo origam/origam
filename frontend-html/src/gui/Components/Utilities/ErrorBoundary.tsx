@@ -24,13 +24,24 @@ import React, { PropsWithChildren } from "react";
 
 export class ErrorBoundary extends React.Component<React.PropsWithChildren<{
   onErrorCaught?: (error: any, errorInfo: any) => void;
-}>> {
+}>, { hasError: boolean }> {
+  state = {
+    hasError: false,
+  };
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
   componentDidCatch(error: any, errorInfo: any) {
     console.log("CAUGHT ERROR:", error, errorInfo); // eslint-disable-line no-console
     this.props.onErrorCaught?.(error, errorInfo);
   }
 
   render() {
+    if (this.state.hasError) {
+      return null;
+    }
     return this.props.children;
   }
 }

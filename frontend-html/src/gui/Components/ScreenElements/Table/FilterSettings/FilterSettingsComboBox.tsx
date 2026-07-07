@@ -87,18 +87,19 @@ export class FilterSettingsComboBox extends React.Component<React.PropsWithChild
   elmMeasure: any;
 
   render() {
+    const {id, trigger, children} = this.props;
     return (
       <Measure ref={this.refMeasure} bounds={true}>
         {({measureRef: refTriggerMeasure, contentRect: triggerContentRect}) => (
           <Observer>
             {() => (
-              <div id={this.props.id} className={S.container} ref={this.refDropdown}>
+              <div id={id} className={S.container} ref={this.refDropdown}>
                 <div
                   ref={refTriggerMeasure}
                   className={S.trigger}
                   onClick={this.handleTriggerClick}
                 >
-                  {this.props.trigger}
+                  {trigger}
                   <div className={S.dropdownSymbol}>
                     <i className="fas fa-caret-down"/>
                   </div>
@@ -106,7 +107,7 @@ export class FilterSettingsComboBox extends React.Component<React.PropsWithChild
                 {this.isDroppedDown &&
                   createPortal(
                     <div
-                      id={"dropdown_" + this.props.id}
+                      id={"dropdown_" + id}
                       className={S.dropdown}
                       onClick={this.handleDropdownClick}
                       style={{
@@ -116,7 +117,7 @@ export class FilterSettingsComboBox extends React.Component<React.PropsWithChild
                         minWidth: triggerContentRect.bounds?.width,
                       }}
                     >
-                      {this.props.children}
+                      {children}
                     </div>,
                     document.getElementById("dropdown-portal")!
                   )}

@@ -179,11 +179,12 @@ export class ColumnsDialog extends React.Component<React.PropsWithChildren<{
   }
 
   render() {
+    const model = this.props.model;
     return (
       <ModalDialog
         title={T("Columns", "column_config_title")}
-        titleButtons={<CloseButton onClick={this.props.model.onColumnConfCancel}/>}
-        onEscape={()=> this.props.model.onColumnConfCancel()}
+        titleButtons={<CloseButton onClick={model.onColumnConfCancel}/>}
+        onEscape={()=> model.onColumnConfCancel()}
         buttonsCenter={
           <Observer>
             {() => (
@@ -200,7 +201,7 @@ export class ColumnsDialog extends React.Component<React.PropsWithChildren<{
                 </button>
                 <button
                   tabIndex={0}
-                  onClick={this.props.model.onColumnConfCancel}
+                  onClick={model.onColumnConfCancel}
                 >
                   {T("Cancel", "button_cancel")}
                 </button>
@@ -234,6 +235,7 @@ export class ColumnsDialog extends React.Component<React.PropsWithChildren<{
   }
 
   renderSettings() {
+    const model = this.props.model;
     return (
       <>
         <div className={S.columnTable}>
@@ -246,7 +248,7 @@ export class ColumnsDialog extends React.Component<React.PropsWithChildren<{
                     fixedRowCount={1}
                     cellRenderer={this.renderSettingsCell}
                     columnCount={5}
-                    rowCount={1 + this.props.model.sortedColumnConfigs.length}
+                    rowCount={1 + model.sortedColumnConfigs.length}
                     columnWidth={({ index }: { index: number }) => {
                       return this.columnWidths[index];
                     }}
