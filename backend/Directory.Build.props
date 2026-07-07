@@ -30,7 +30,7 @@
             </PropertyGroup>
 
             <ItemGroup>
-                <PackageReference Include="Roslynator.Analyzers" Version="4.14.0"
+                <PackageReference Include="Roslynator.Analyzers" Version="4.15.0"
                                   PrivateAssets="all" IncludeAssets="build;analyzers;buildtransitive"/>
                 <PackageReference Include="Roslynator.Formatting.Analyzers" Version="4.14.0"
                                   PrivateAssets="all" IncludeAssets="build;analyzers;buildtransitive"/>
