@@ -18,13 +18,13 @@ services:
       start_period: 30s
     environment: !override
       POSTGRES_USER: "${POSTGRES_USER:-origam}"
-      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:-Origam@Dev123}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:-}"
       POSTGRES_DB: "${POSTGRES_DB:-origam}"
 
   server:
     environment:
       - DatabaseType=postgresql
-      - OrigamSettings__DataConnectionString=sslmode=disable;Application Name=Origam;Host=database;Port=5432;Username=${POSTGRES_USER:-origam};Password=${POSTGRES_PASSWORD:-Origam@Dev123};Database=${POSTGRES_DB:-origam};Pooling=True;Search Path=${POSTGRES_DB:-origam},public
+      - OrigamSettings__DataConnectionString=sslmode=disable;Application Name=Origam;Host=database;Port=5432;Username=${POSTGRES_USER:-origam};Password=${POSTGRES_PASSWORD:-};Database=${POSTGRES_DB:-origam};Pooling=True;Search Path=${POSTGRES_DB:-origam},public
 
 volumes:
   origam-postgres-data:

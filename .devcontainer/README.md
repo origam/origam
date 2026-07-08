@@ -42,19 +42,21 @@ Both proxy to `devcontainer:8080`/`8081` — i.e. to whatever backend you launch
 from the editor. So: F5 the server, then load the frontend in a browser, hit
 breakpoints as you click.
 
-## Override DB / model
+## DB password / model
 
-Every `OrigamSettings__*` var and `SA_PASSWORD` is `${VAR:-default}` in
-`docker-compose.yml`, so you can repoint the DB or model without editing the
-file. Drop a `.devcontainer/.env` (auto-loaded by Compose, gitignored):
+The DB password is NOT baked in — copy `.devcontainer/.env.example` to
+`.devcontainer/.env` (gitignored) and set `MSSQL_SA_PASSWORD`. Compose auto-loads
+`.env` from `.devcontainer/`, so no `--env-file` prefix is needed:
 
 ```
+MSSQL_SA_PASSWORD=YourPassword
 OrigamSettings__ModelSourceControlLocation=/workspaces/origam/your-model
 OrigamSettings__DefaultSchemaExtensionId=<your root package id>
-SA_PASSWORD=YourPassword
 ```
 
-The model path must be inside the repo mount (`/workspaces/origam/...`).
+The `OrigamSettings__*` vars are `${VAR:-default}` in `docker-compose.yml`, so
+they're optional (defaults point at the bundled test model); `MSSQL_SA_PASSWORD` is
+required. The model path must be inside the repo mount (`/workspaces/origam/...`).
 
 ## Debugging in your editor
 

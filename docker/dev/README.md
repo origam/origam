@@ -10,23 +10,20 @@ overrides, log4net config).
 
 ```bash
 # From the repository root:
-docker compose up -d
+cp docker/dev/.env.example docker/dev/.env   # set the DB password (gitignored)
+docker compose --env-file docker/dev/.env up -d
 
 # First run builds the backend image (a few minutes). Subsequent starts reuse
 # the built image and are fast.
 
 # Frontend (the app):    https://localhost:5173  (accept the self-signed cert)
 # Backend API / Swagger: http://localhost:8080
-# SQL Server:            localhost:1433          (sa / Origam@Dev123)
+# SQL Server:            localhost:1433          (sa — password in docker/dev/.env)
 ```
 
-No `.env` file is required — defaults are baked into the compose file. To
-override values, copy `docker/dev/.env.example` to `docker/dev/.env`, edit it,
-and start with:
-
-```bash
-docker compose --env-file docker/dev/.env up
-```
+The DB password is required (no default is baked in). `up` reads it from
+`docker/dev/.env` via `--env-file`; `ps`/`logs`/`config`/`build` run without it.
+`docker/dev/.env.example` documents the variables; other settings have defaults.
 
 ## Services
 
@@ -59,8 +56,8 @@ docker compose up
 on top of the committed `docker-compose.yml`. Verify the merged config with
 `docker compose config`.
 
-`SA_PASSWORD` and the DB connection string are also `${VAR:-default}` and can go
-in `docker/dev/.env`; a model swap needs the override file above because it also
+`MSSQL_SA_PASSWORD` (and `POSTGRES_PASSWORD` for the postgres stack) are required in
+`docker/dev/.env`; a model swap needs the override file above because it also
 changes the bind mount.
 
 ## Login
@@ -80,9 +77,9 @@ creates a super-user, signs you in, and locks itself after one use.
 SQL Server is the default. To use PostgreSQL instead:
 
 ```bash
-docker compose -f docker-compose.yml -f docker-compose.postgres.yml up -d
+docker compose --env-file docker/dev/.env -f docker-compose.yml -f docker-compose.postgres.yml up -d
 # Frontend: https://localhost:5173
-# Postgres: localhost:5432  (origam / Origam@Dev123)
+# Postgres: localhost:5432  (origam — password in docker/dev/.env)
 ```
 
 The postgres file overrides the `database` service and points the backend at

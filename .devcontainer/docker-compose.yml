@@ -6,7 +6,7 @@ services:
     image: mcr.microsoft.com/mssql/server:2019-latest
     environment:
       ACCEPT_EULA: "Y"
-      SA_PASSWORD: "${SA_PASSWORD:-Origam@Dev123}"
+      MSSQL_SA_PASSWORD: "${MSSQL_SA_PASSWORD:-}"
       MSSQL_AGENT_ENABLED: "true"
     volumes:
       - devcontainer-db-data:/var/opt/mssql
@@ -16,7 +16,7 @@ services:
       test:
         [
           "CMD-SHELL",
-          '/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "${SA_PASSWORD:-Origam@Dev123}" -C -Q ''SELECT 1'' || exit 1',
+          '/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "${MSSQL_SA_PASSWORD:-}" -C -Q ''SELECT 1'' || exit 1',
         ]
       interval: 10s
       timeout: 5s
@@ -36,7 +36,7 @@ services:
       - DatabaseType=mssql
       - OrigamSettings__Name=${OrigamSettings__Name:-DevProject}
       - OrigamSettings__DefaultSchemaExtensionId=${OrigamSettings__DefaultSchemaExtensionId:-f17329d6-3143-420a-a2e6-30e431eea51d}
-      - OrigamSettings__DataConnectionString=${OrigamSettings__DataConnectionString:-Encrypt=False;Data Source=database,1433;Initial Catalog=origam-dev;User ID=sa;Password=${SA_PASSWORD:-Origam@Dev123};}
+      - OrigamSettings__DataConnectionString=${OrigamSettings__DataConnectionString:-Encrypt=False;Data Source=database,1433;Initial Catalog=origam-dev;User ID=sa;Password=${MSSQL_SA_PASSWORD:-};}
       - OrigamSettings__ModelSourceControlLocation=${OrigamSettings__ModelSourceControlLocation:-/workspaces/origam/model-tests/model}
     volumes:
       - ..:/workspaces/origam:cached

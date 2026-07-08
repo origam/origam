@@ -14,7 +14,7 @@ services:
       - DatabaseType=mssql
       - OrigamSettings__Name=${OrigamSettings__Name:-DevProject}
       - OrigamSettings__DefaultSchemaExtensionId=${OrigamSettings__DefaultSchemaExtensionId:-f17329d6-3143-420a-a2e6-30e431eea51d}
-      - OrigamSettings__DataConnectionString=Encrypt=False;Data Source=database,1433;Initial Catalog=origam-dev;User ID=sa;Password=${SA_PASSWORD:-Origam@Dev123};
+      - OrigamSettings__DataConnectionString=Encrypt=False;Data Source=database,1433;Initial Catalog=origam-dev;User ID=sa;Password=${MSSQL_SA_PASSWORD:-};
       - OrigamSettings__ModelSourceControlLocation=/home/origam/projectData/model
       - TZ=Europe/Prague
     ports:

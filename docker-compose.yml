@@ -1,14 +1,16 @@
 # ORIGAM development stack: database + .NET backend (built from backend/) +
-# Vite dev server. Defaults work with no .env; override via docker/dev/.env.
+# Vite dev server. The DB password is NOT baked in — set it in docker/dev/.env
+# (copy from docker/dev/.env.example). ps/logs/config/build run without it; only
+# `up` needs it (the DB won't start without a password):
 #
-#   docker compose up -d
-#   docker compose -f docker-compose.yml -f docker-compose.postgres.yml up -d
-#   docker compose build server                   # rebuild after C# changes
+#   docker compose --env-file docker/dev/.env up -d
+#   docker compose --env-file docker/dev/.env -f docker-compose.yml -f docker-compose.postgres.yml up -d
+#   docker compose build server                   # rebuild after C# changes (no --env-file needed)
 #
 # App:             https://localhost:5173 (self-signed cert)
 # Backend/Swagger: http://localhost:8080
-# SQL Server:      localhost:1433 (sa / Origam@Dev123)
-# PostgreSQL:      localhost:5432 (origam / Origam@Dev123)
+# SQL Server:      localhost:1433 (sa — password in docker/dev/.env)
+# PostgreSQL:      localhost:5432 (origam — password in docker/dev/.env)
 
 name: origam-dev
 
@@ -17,7 +19,7 @@ services:
     image: mcr.microsoft.com/mssql/server:2019-latest
     environment:
       ACCEPT_EULA: "Y"
-      SA_PASSWORD: "${SA_PASSWORD:-Origam@Dev123}"
+      MSSQL_SA_PASSWORD: "${MSSQL_SA_PASSWORD:-}"
       MSSQL_AGENT_ENABLED: "true"
     ports:
       - "1433:1433"
@@ -29,7 +31,7 @@ services:
       test:
         [
           "CMD-SHELL",
-          '/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "${SA_PASSWORD:-Origam@Dev123}" -C -Q ''SELECT 1'' || exit 1',
+          '/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "${MSSQL_SA_PASSWORD:-}" -C -Q ''SELECT 1'' || exit 1',
         ]
       interval: 10s
       timeout: 5s
@@ -49,7 +51,7 @@ services:
       - OpenIddictConfig__AccessTokenIssuer=https://localhost:5173
       - OrigamSettings__Name=${OrigamSettings__Name:-DevProject}
       - OrigamSettings__DefaultSchemaExtensionId=${OrigamSettings__DefaultSchemaExtensionId:-f17329d6-3143-420a-a2e6-30e431eea51d}
-      - OrigamSettings__DataConnectionString=${OrigamSettings__DataConnectionString:-Encrypt=False;Data Source=database,1433;Initial Catalog=origam-dev;User ID=sa;Password=${SA_PASSWORD:-Origam@Dev123};}
+      - OrigamSettings__DataConnectionString=${OrigamSettings__DataConnectionString:-Encrypt=False;Data Source=database,1433;Initial Catalog=origam-dev;User ID=sa;Password=${MSSQL_SA_PASSWORD:-};}
       - OrigamSettings__ModelSourceControlLocation=${OrigamSettings__ModelSourceControlLocation:-/home/origam/projectData/model}
       - TZ=Europe/Prague
     ports:
