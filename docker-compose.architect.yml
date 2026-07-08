@@ -18,7 +18,7 @@ services:
       - OrigamSettings__ModelSourceControlLocation=/home/origam/projectData/model
       - TZ=Europe/Prague
     ports:
-      - "8081:8081"
+      - "${ARCHITECT_PORT:-8081}:8081"
     entrypoint: ["/bin/bash", "/home/origam/architect_bin/entrypoint.architect.sh"]
     volumes:
       - ./model-tests/model:/home/origam/projectData/model
@@ -38,7 +38,7 @@ services:
       dockerfile: ../docker/DockerfileVite.dev
     image: origam/architect-frontend:dev
     ports:
-      - "5174:5173"
+      - "${ARCHITECT_FRONTEND_PORT:-5174}:5173"
     volumes:
       - ./architect-html:/src/frontend-html
     environment:

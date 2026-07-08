@@ -22,7 +22,7 @@ services:
       MSSQL_SA_PASSWORD: "${MSSQL_SA_PASSWORD:-}"
       MSSQL_AGENT_ENABLED: "true"
     ports:
-      - "1433:1433"
+      - "${MSSQL_PORT:-1433}:1433"
     volumes:
       - origam-db-data:/var/opt/mssql
       - ./docker/dev/initdb:/docker-entrypoint-initdb.d:ro
@@ -47,15 +47,15 @@ services:
     image: origam/server:dev
     environment:
       - DatabaseType=mssql
-      - ExternalDomain_SetOnStart=https://localhost:5173
-      - OpenIddictConfig__AccessTokenIssuer=https://localhost:5173
+      - ExternalDomain_SetOnStart=https://localhost:${FRONTEND_PORT:-5173}
+      - OpenIddictConfig__AccessTokenIssuer=https://localhost:${FRONTEND_PORT:-5173}
       - OrigamSettings__Name=${OrigamSettings__Name:-DevProject}
       - OrigamSettings__DefaultSchemaExtensionId=${OrigamSettings__DefaultSchemaExtensionId:-f17329d6-3143-420a-a2e6-30e431eea51d}
       - OrigamSettings__DataConnectionString=${OrigamSettings__DataConnectionString:-Encrypt=False;Data Source=database,1433;Initial Catalog=origam-dev;User ID=sa;Password=${MSSQL_SA_PASSWORD:-};}
       - OrigamSettings__ModelSourceControlLocation=${OrigamSettings__ModelSourceControlLocation:-/home/origam/projectData/model}
       - TZ=Europe/Prague
     ports:
-      - "8080:8080"
+      - "${SERVER_PORT:-8080}:8080"
     entrypoint: ["/bin/bash", "/home/origam/server_bin/entrypoint.dev.sh"]
     volumes:
       - ./model-tests/model:/home/origam/projectData/model
@@ -83,14 +83,14 @@ services:
       dockerfile: ../docker/DockerfileVite.dev
     image: origam/frontend:dev
     ports:
-      - "5173:5173"
+      - "${FRONTEND_PORT:-5173}:5173"
     volumes:
       - ./frontend-html:/src/frontend-html
     environment:
       - VITE_PROXY_TARGET=http://server:8080
       - VITE_HOST=0.0.0.0
       # OIDC endpoints are proxied through Vite, so the authority is the SPA origin.
-      - VITE_OIDC_AUTHORITY=https://localhost:5173
+      - VITE_OIDC_AUTHORITY=https://localhost:${FRONTEND_PORT:-5173}
     depends_on:
       - server
 
