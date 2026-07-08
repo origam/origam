@@ -25,8 +25,7 @@
             "cwd": "${workspaceFolder}/backend/Origam.Server/bin/Debug/net8.0",
             "stopAtEntry": false,
             "env": {
-                "ASPNETCORE_URLS": "http://+:8080",
-                "OpenIddictConfig__AccessTokenIssuer": "https://localhost:5173"
+                "ASPNETCORE_URLS": "http://+:8080"
             },
             "console": "internalConsole"
         }

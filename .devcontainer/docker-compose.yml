@@ -38,6 +38,8 @@ services:
       - OrigamSettings__DefaultSchemaExtensionId=${OrigamSettings__DefaultSchemaExtensionId:-f17329d6-3143-420a-a2e6-30e431eea51d}
       - OrigamSettings__DataConnectionString=${OrigamSettings__DataConnectionString:-Encrypt=False;Data Source=database,1433;Initial Catalog=origam-dev;User ID=sa;Password=${MSSQL_SA_PASSWORD:-};}
       - OrigamSettings__ModelSourceControlLocation=${OrigamSettings__ModelSourceControlLocation:-/workspaces/origam/model-tests/model}
+      - ExternalDomain_SetOnStart=https://localhost:${FRONTEND_PORT:-5173}
+      - OpenIddictConfig__AccessTokenIssuer=https://localhost:${FRONTEND_PORT:-5173}
     volumes:
       - ..:/workspaces/origam:cached
       - devcontainer-nuget:/root/.nuget/packages
@@ -49,7 +51,7 @@ services:
       dockerfile: ../docker/DockerfileVite.dev
     image: origam/architect-frontend:dev
     ports:
-      - "5174:5173"
+      - "${ARCHITECT_FRONTEND_PORT:-5174}:5173"
     volumes:
       - ../architect-html:/src/frontend-html
     environment:
@@ -66,13 +68,13 @@ services:
       dockerfile: ../docker/DockerfileVite.dev
     image: origam/frontend:dev
     ports:
-      - "5173:5173"
+      - "${FRONTEND_PORT:-5173}:5173"
     volumes:
       - ../frontend-html:/src/frontend-html
     environment:
       - VITE_PROXY_TARGET=http://devcontainer:8080
       - VITE_HOST=0.0.0.0
-      - VITE_OIDC_AUTHORITY=https://localhost:5173
+      - VITE_OIDC_AUTHORITY=https://localhost:${FRONTEND_PORT:-5173}
     depends_on:
       - devcontainer
 

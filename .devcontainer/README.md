@@ -38,6 +38,8 @@ Run the backends without debugging:
   Vite's self-signed cert.
 - `http://localhost:5174` — architect UI (no auth; HTTP).
 
+These ports are overridable via `FRONTEND_PORT`/`ARCHITECT_FRONTEND_PORT` in `.devcontainer/.env` (the runtime one also retunes OIDC).
+
 Both proxy to `devcontainer:8080`/`8081` — i.e. to whatever backend you launched
 from the editor. So: F5 the server, then load the frontend in a browser, hit
 breakpoints as you click.

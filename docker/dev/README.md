@@ -99,7 +99,7 @@ docker compose exec server bash      # shell into the server container
 ## Troubleshooting
 
 - **`up` fails with "MSSQL_SA_PASSWORD is not set":** you ran `docker compose up` without the password. Copy `docker/dev/.env.example` to `docker/dev/.env` and start with `--env-file docker/dev/.env` (see Quick Start).
-- **Port conflicts:** change the host-side mapping in `docker-compose.yml`.
+- **Port conflicts:** host ports are overridable in `docker/dev/.env` (`MSSQL_PORT`, `SERVER_PORT`, `FRONTEND_PORT`, `ARCHITECT_PORT`, `ARCHITECT_FRONTEND_PORT`); `FRONTEND_PORT` also retunes OIDC so login works on the new port.
 - **Model not loading:** check the mount (`docker compose exec server ls -la
   /home/origam/projectData/model`) and the server logs. A mismatched
   `OrigamSettings__DefaultSchemaExtensionId` is the usual cause.

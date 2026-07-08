@@ -22,7 +22,7 @@ case "$TARGET" in
     DLL="Origam.Server.dll"
     export ASPNETCORE_URLS="http://+:8080"
     # Must match the browser-facing origin or login 401s (ID2088).
-    export OpenIddictConfig__AccessTokenIssuer="https://localhost:5173"
+    export OpenIddictConfig__AccessTokenIssuer="${OpenIddictConfig__AccessTokenIssuer:-https://localhost:5173}"
     BUILD_HINT="bash .devcontainer/debug-build-server.sh"
     ;;
   *)
