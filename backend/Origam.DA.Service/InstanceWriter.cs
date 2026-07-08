@@ -33,6 +33,9 @@ namespace Origam.DA.Service
 {
     public class InstanceWriter
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
+            MethodBase.GetCurrentMethod().DeclaringType
+        );
         private readonly IExternalFileManager externalFileManger;
         private readonly OrigamXmlDocument xmlDocument;
 
@@ -338,8 +341,9 @@ namespace Origam.DA.Service
             {
                 return instance.GetType().GetProperty(propertyName)?.GetValue(instance);
             }
-            catch
+            catch (Exception exception)
             {
+                log.Warn($"Could not read property value '{propertyName}'.", exception);
                 return null;
             }
         }
