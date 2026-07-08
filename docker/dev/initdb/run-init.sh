@@ -10,7 +10,7 @@ SQL_PID=$!
 
 # Wait for SQL Server to be ready
 echo "Waiting for SQL Server to start..."
-while ! sqlcmd -S localhost -U sa -P "$SA_PASSWORD" -C -Q 'SELECT 1' 2>/dev/null; do
+while ! sqlcmd -S localhost -U sa -P "$MSSQL_SA_PASSWORD" -C -Q 'SELECT 1' 2>/dev/null; do
     sleep 2
 done
 echo "SQL Server is ready."
@@ -20,7 +20,7 @@ if [ -d /docker-entrypoint-initdb.d ]; then
     for f in /docker-entrypoint-initdb.d/*.sql; do
         if [ -f "$f" ]; then
             echo "Running init script: $f"
-            sqlcmd -S localhost -U sa -P "$SA_PASSWORD" -C -i "$f" || true
+            sqlcmd -S localhost -U sa -P "$MSSQL_SA_PASSWORD" -C -i "$f" || true
         fi
     done
 fi
