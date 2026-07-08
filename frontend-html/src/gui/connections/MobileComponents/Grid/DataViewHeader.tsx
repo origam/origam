@@ -92,10 +92,6 @@ export class DataViewHeaderInner extends React.Component<React.PropsWithChildren
     return this.context.dataView;
   }
 
-  state = {
-    hiddenActionIds: new Set<string>(),
-  };
-
   shouldBeShown(action: IAction) {
     return getIsEnabledAction(action) || action.mode !== IActionMode.ActiveRecord;
   }
