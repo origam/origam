@@ -15,6 +15,7 @@
   "dependencies": {
     "@babel/plugin-proposal-decorators": "^7.29.7",
     "@monaco-editor/react": "^4.7.0",
+    "@origam/react-contexify": "github:origam/origam-react-contexify#v6.0.1-origam.0",
     "classnames": "^2.5.1",
     "lodash": "^4.18.1",
     "mobx": "^6.15.4",
@@ -23,7 +24,6 @@
     "monaco-editor": "^0.55.1",
     "monaco-vim": "^0.4.4",
     "react": "^19.2.7",
-    "react-contexify": "^6.0.0",
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^19.2.7",
