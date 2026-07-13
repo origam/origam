@@ -161,8 +161,8 @@ export class TreeNode implements IEditorNode {
   }
 
   createNode(typeName: string) {
-    return function* (this: TreeNode): Generator<Promise<IApiTabData>, void, IApiTabData> {
-      const apiTabData = yield this.architectApi.createNode(this, typeName);
+    return function* (this: TreeNode) {
+      const apiTabData: IApiTabData = yield this.architectApi.createNode(this, typeName);
       const editorData = new EditorData(apiTabData, this);
       this.rootStore.editorTabViewState.openEditor(editorData);
       yield* this.loadChildren.bind(this)();
