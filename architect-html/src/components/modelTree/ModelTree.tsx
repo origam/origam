@@ -26,7 +26,7 @@ import { CreateLookupWizard } from '@components/modelTree/createWizard/CreateLoo
 import { CreateScreenWizard } from '@components/modelTree/createWizard/CreateScreenWizard';
 import { CreateWorkQueueWizard } from '@components/modelTree/createWizard/CreateWorkQueueWizard';
 import { CreateMenuItemWizard } from '@components/modelTree/createWizard/CreateMenuItemWizard';
-import { askForName } from '@dialogs/DialogUtils';
+import { askForName, askYesNoQuestion, YesNoResult } from '@dialogs/DialogUtils';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { observer } from 'mobx-react-lite';
 import { useContext, useEffect, useRef } from 'react';
@@ -104,7 +104,45 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
   }
 
   function onDelete() {
-    run({ generator: node.delete.bind(node) });
+    run({
+      generator: function* () {
+        if (node.isFolder) {
+          const answer = yield askYesNoQuestion(
+            rootStore.dialogStack,
+            T('Delete Folder', 'tree_node_delete_folder_title'),
+            T(
+              'Delete folder "{0}" and all of its contents? This cannot be undone.',
+              'tree_node_delete_folder_confirm',
+              node.nodeText,
+            ),
+          );
+          if (answer !== YesNoResult.Yes) {
+            return;
+          }
+        }
+        yield* node.delete.bind(node)();
+      },
+    });
+  }
+
+  function openRenameFolderDialog() {
+    run({
+      generator: function* () {
+        const siblingFolderNames = (node.parent?.children ?? [])
+          .filter(child => child.isFolder && child !== node)
+          .map(child => child.nodeText);
+        const name = (yield askForName(rootStore.dialogStack, {
+          title: T('Rename Folder', 'tree_node_rename_folder_title'),
+          label: T('Folder name', 'tree_node_new_folder_label'),
+          initialValue: node.nodeText,
+          validate: value => validateFolderName(value, siblingFolderNames),
+        })) as string | null;
+        if (!name || name === node.nodeText) {
+          return;
+        }
+        yield* node.rename(name)();
+      },
+    });
   }
 
   function openDocumentationEditor() {
@@ -513,7 +551,16 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
                 {T('Edit', 'tree_node_edit')}
               </Item>
             )}
-            {!node.isNonPersistentItem && (
+            {node.isFolder && node.isInActivePackage && (
+              <Item
+                id="rename-folder"
+                data-test-id="tree-menu-rename-folder"
+                onClick={openRenameFolderDialog}
+              >
+                {T('Rename', 'tree_node_rename_folder')}
+              </Item>
+            )}
+            {!node.isNonPersistentItem && (!node.isFolder || node.isInActivePackage) && (
               <Item id="delete" data-test-id="tree-menu-delete" onClick={onDelete}>
                 {T('Delete', 'tree_node_delete')}
               </Item>

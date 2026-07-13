@@ -305,6 +305,40 @@ export class EditorTabViewState {
       }
     }.bind(this);
   }
+
+  // Force-closes tabs of the given schema items (e.g. after they were deleted). No save prompt. Items no longer exist.
+  closeEditorsByOrigamIds(origamIds: string[]) {
+    return function* (this: EditorTabViewState): Generator<Promise<any>, void, any> {
+      if (origamIds.length === 0) {
+        return;
+      }
+      const idSet = new Set(origamIds);
+      const editorsToClose = this.editorsContainers.filter(editor => {
+        const schemaItemId = editor.state.tabId.split('_')[1];
+        return schemaItemId !== undefined && idSet.has(schemaItemId);
+      });
+      if (editorsToClose.length === 0) {
+        return;
+      }
+
+      const closedTabIds = new Set(editorsToClose.map(editor => editor.state.tabId));
+      for (const editor of editorsToClose) {
+        editor.state.dispose?.();
+      }
+      this.editorsContainers = this.editorsContainers.filter(
+        editor => !closedTabIds.has(editor.state.tabId),
+      );
+
+      for (const tabId of closedTabIds) {
+        yield this.architectApi.closeTab(tabId);
+      }
+
+      if (this.editorsContainers.length > 0 && !this.activeEditorState) {
+        const editorToActivate = this.editorsContainers[this.editorsContainers.length - 1];
+        this.setActiveEditor(editorToActivate.state.tabId);
+      }
+    }.bind(this);
+  }
 }
 
 export interface IEditorNode extends IApiEditorNode {

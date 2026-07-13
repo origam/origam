@@ -22,6 +22,7 @@ import {
   IApiTabData,
   IApiTreeNode,
   IArchitectApi,
+  IDeleteGroupResult,
   IMenuItemInfo,
   NodeLevelType,
 } from '@api/IArchitectApi';
@@ -141,10 +142,31 @@ export class TreeNode implements IEditorNode {
   }
 
   *delete() {
-    yield this.architectApi.deleteSchemaItem(this.origamId);
+    const editorTabViewState = this.rootStore.editorTabViewState;
+    if (this.isFolder) {
+      const result = (yield this.architectApi.deleteGroup(this.origamId)) as IDeleteGroupResult;
+      yield* editorTabViewState.closeEditorsByOrigamIds(result.deletedSchemaItemIds)();
+    } else {
+      yield this.architectApi.deleteSchemaItem(this.origamId);
+      yield* editorTabViewState.closeEditorsByOrigamIds([this.origamId])();
+    }
     if (this.parent) {
       yield* this.parent.loadChildren.bind(this.parent)();
     }
+  }
+
+  rename(name: string) {
+    return function* (this: TreeNode): Generator<Promise<any>, void, any> {
+      const renamedNode: IApiTreeNode = yield this.architectApi.renameGroup(this, name);
+      const wasExpanded = this.isExpanded;
+      if (this.parent) {
+        yield* this.parent.loadChildren.bind(this.parent)();
+      }
+      if (wasExpanded) {
+        this.rootStore.uiState.setExpanded(renamedNode.id, true);
+      }
+      this.rootStore.modelTreeState.highlightNode(renamedNode.id);
+    }.bind(this);
   }
 
   *getMenuItems() {
