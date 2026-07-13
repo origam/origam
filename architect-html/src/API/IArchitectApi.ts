@@ -57,6 +57,10 @@ export interface IArchitectApi {
 
   createGroup(node: INodeLoadData, name: string): Promise<IApiTreeNode>;
 
+  renameGroup(node: INodeLoadData, name: string): Promise<IApiTreeNode>;
+
+  deleteGroup(nodeId: string): Promise<IDeleteGroupResult>;
+
   updateSectionEditor(args: {
     schemaItemId: string | undefined;
     name: string;
@@ -443,6 +447,10 @@ export interface IApiTreeNode extends INodeLoadData {
   isInActivePackage?: boolean;
   isFileDirty?: boolean;
   isFolder?: boolean;
+}
+
+export interface IDeleteGroupResult {
+  deletedSchemaItemIds: string[];
 }
 
 export type NodeLevelType = 'Category' | 'Provider' | 'Item';
