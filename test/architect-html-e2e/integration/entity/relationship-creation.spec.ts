@@ -49,7 +49,7 @@ test.describe('Entity Relationship creation (real backend)', () => {
     await expect(page.getByTestId('save-button-disabled')).toBeVisible();
 
     await page.getByTestId('tree-toggle-DimensionEntity').click();
-    await page.getByTestId('tree-toggle-Relationships').click();
+    await page.getByTestId('tree-toggle-Relationships').first().click();
     await page.getByTestId('tree-toggle-Dimension4').click();
     await page.getByTestId('tree-toggle-_Ancestors').first().click();
     await page.getByTestId('tree-node-SourceDimensionEntityRelation').dblclick();

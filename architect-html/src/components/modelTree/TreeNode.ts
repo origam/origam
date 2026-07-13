@@ -134,6 +134,10 @@ export class TreeNode implements IEditorNode {
     yield;
   }
 
+  *reloadTree(): Generator<Promise<any>, void, any> {
+    yield* this.rootStore.modelTreeState.loadPackageNodes();
+  }
+
   *delete() {
     yield this.architectApi.deleteSchemaItem(this.origamId);
     if (this.parent) {
@@ -161,6 +165,8 @@ export class TreeNode implements IEditorNode {
       const apiTabData = yield this.architectApi.createNode(this, typeName);
       const editorData = new EditorData(apiTabData, this);
       this.rootStore.editorTabViewState.openEditor(editorData);
+      yield* this.loadChildren.bind(this)();
+      this.rootStore.uiState.setExpanded(this.id, true);
     }.bind(this);
   }
 }
