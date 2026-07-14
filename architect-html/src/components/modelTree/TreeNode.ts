@@ -189,6 +189,8 @@ export class TreeNode implements IEditorNode {
       const apiTabData = yield this.architectApi.createNode(this, typeName);
       const editorData = new EditorData(apiTabData, this);
       this.rootStore.editorTabViewState.openEditor(editorData);
+      yield* this.loadChildren.bind(this)();
+      this.rootStore.uiState.setExpanded(this.id, true);
     }.bind(this);
   }
 
