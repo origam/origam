@@ -25,10 +25,12 @@ import { TreeNode } from '@components/modelTree/TreeNode';
 import { CreateLookupWizard } from '@components/modelTree/createWizard/CreateLookupWizard';
 import { CreateScreenWizard } from '@components/modelTree/createWizard/CreateScreenWizard';
 import { CreateWorkQueueWizard } from '@components/modelTree/createWizard/CreateWorkQueueWizard';
-import { CreateRelationshipWizard } from '@components/modelTree/createWizard/CreateRelationshipWizard';
 import { CreateDataStructureWizard } from '@components/modelTree/createWizard/CreateDataStructureWizard';
 import { CreateScreenFromSectionWizard } from '@components/modelTree/createWizard/CreateScreenFromSectionWizard';
 import { CreateMenuItemWizard } from '@components/modelTree/createWizard/CreateMenuItemWizard';
+import { CreateWorkflowMenuItemWizard } from '@components/modelTree/createWizard/CreateWorkflowMenuItemWizard';
+import { CreateLocalizationChildEntityWizard } from '@components/modelTree/createWizard/CreateLocalizationChildEntityWizard';
+import { CreateScreenSectionWizard } from '@components/modelTree/createWizard/CreateScreenSectionWizard';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { observer } from 'mobx-react-lite';
 import { useContext, useEffect, useRef } from 'react';
@@ -235,10 +237,10 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
     );
   }
 
-  function openCreateRelationshipWizard() {
+  function openCreateScreenSectionWizard() {
     const closeDialog = rootStore.dialogStack.pushDialog(
       '',
-      <CreateRelationshipWizard
+      <CreateScreenSectionWizard
         entityId={node.origamId}
         parentNodeName={node.nodeText}
         onCancel={() => closeDialog()}
@@ -248,7 +250,32 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
             generator: function* () {
               yield* rootStore.modelTreeState.loadPackageNodes.bind(rootStore.modelTreeState)();
               showCreatedConfirmation(
-                T('Relationship', 'wizard_artifact_relationship'),
+                T('Screen Section', 'wizard_artifact_screen_section'),
+                result?.searchResults ?? [],
+              );
+            },
+          });
+        }}
+      />,
+      undefined,
+      false,
+    );
+  }
+
+  function openCreateLocalizationChildEntityWizard() {
+    const closeDialog = rootStore.dialogStack.pushDialog(
+      '',
+      <CreateLocalizationChildEntityWizard
+        entityId={node.origamId}
+        parentNodeName={node.nodeText}
+        onCancel={() => closeDialog()}
+        onCreate={result => {
+          closeDialog();
+          run({
+            generator: function* () {
+              yield* rootStore.modelTreeState.loadPackageNodes.bind(rootStore.modelTreeState)();
+              showCreatedConfirmation(
+                T('Localization Child Entity', 'wizard_artifact_l10n_child_entity'),
                 result?.searchResults ?? [],
               );
             },
@@ -328,6 +355,31 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
       '',
       <CreateMenuItemWizard
         formId={node.origamId}
+        parentNodeName={node.nodeText}
+        onCancel={() => closeDialog()}
+        onCreate={result => {
+          closeDialog();
+          run({
+            generator: function* () {
+              yield* rootStore.modelTreeState.loadPackageNodes.bind(rootStore.modelTreeState)();
+              showCreatedConfirmation(
+                T('Menu Item', 'wizard_artifact_menu_item'),
+                result?.searchResults ?? [],
+              );
+            },
+          });
+        }}
+      />,
+      undefined,
+      false,
+    );
+  }
+
+  function openCreateWorkflowMenuItemWizard() {
+    const closeDialog = rootStore.dialogStack.pushDialog(
+      '',
+      <CreateWorkflowMenuItemWizard
+        workflowId={node.origamId}
         parentNodeName={node.nodeText}
         onCancel={() => closeDialog()}
         onCreate={result => {
@@ -428,14 +480,20 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
                 <Item id="create-screen" onClick={openCreateScreenWizard}>
                   {T('Create Screen', 'tree_node_create_screen')}
                 </Item>
+                <Item id="create-screen-section" onClick={openCreateScreenSectionWizard}>
+                  {T('Create Screen Section', 'tree_node_create_screen_section')}
+                </Item>
                 <Item id="create-workqueue" onClick={openCreateWorkQueueWizard}>
                   {T('Create Workqueue class', 'tree_node_create_workqueue')}
                 </Item>
-                <Item id="create-relationship" onClick={openCreateRelationshipWizard}>
-                  {T('Create Relationship With Key', 'tree_node_create_relationship')}
-                </Item>
                 <Item id="create-data-structure" onClick={openCreateDataStructureWizard}>
                   {T('Create Data Structure', 'tree_node_create_data_structure')}
+                </Item>
+                <Item
+                  id="create-l10n-child-entity"
+                  onClick={openCreateLocalizationChildEntityWizard}
+                >
+                  {T('Create Localization Child Entity', 'tree_node_create_l10n_child_entity')}
                 </Item>
               </Submenu>
             )}
@@ -457,6 +515,13 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
               <Submenu label={T('Actions', 'tree_node_submenu_actions')}>
                 <Item id="show-sql" onClick={showDataStructureSql}>
                   {T('Show SQL', 'tree_node_show_sql')}
+                </Item>
+              </Submenu>
+            )}
+            {node.isSequentialWorkflow && (
+              <Submenu label={T('Actions', 'tree_node_submenu_actions')}>
+                <Item id="create-workflow-menu-item" onClick={openCreateWorkflowMenuItemWizard}>
+                  {T('Create Menu Item', 'tree_node_create_workflow_menu_item')}
                 </Item>
               </Submenu>
             )}

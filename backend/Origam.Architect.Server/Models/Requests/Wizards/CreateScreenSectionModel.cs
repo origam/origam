@@ -23,25 +23,16 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Origam.Architect.Server.Models.Requests.Wizards;
 
-public class CreateRelationshipModel
+public class CreateScreenSectionModel
 {
     [Required]
-    public Guid BaseEntityId { get; set; }
+    public Guid EntityId { get; set; }
 
     [Required]
-    public Guid RelatedEntityId { get; set; }
+    public string Name { get; set; }
+
+    public string Caption { get; set; }
 
     [Required]
-    public string RelationName { get; set; }
-
-    public bool IsParentChild { get; set; }
-
-    [Required]
-    public string KeyName { get; set; }
-
-    [Required]
-    public Guid BaseFieldId { get; set; }
-
-    [Required]
-    public Guid RelatedFieldId { get; set; }
+    public List<Guid> SelectedFieldIds { get; set; } = new();
 }

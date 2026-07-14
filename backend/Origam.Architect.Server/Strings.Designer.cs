@@ -267,51 +267,6 @@ namespace Origam.Architect.Server {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Relation name is required..
-        /// </summary>
-        internal static string Wizard_RelationNameRequired {
-            get {
-                return ResourceManager.GetString("Wizard_RelationNameRequired", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Relation key name is required..
-        /// </summary>
-        internal static string Wizard_RelationKeyNameRequired {
-            get {
-                return ResourceManager.GetString("Wizard_RelationKeyNameRequired", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Related entity {0} not found.
-        /// </summary>
-        internal static string Wizard_RelatedEntityNotFound {
-            get {
-                return ResourceManager.GetString("Wizard_RelatedEntityNotFound", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Base entity field not found on entity..
-        /// </summary>
-        internal static string Wizard_BaseEntityFieldNotFound {
-            get {
-                return ResourceManager.GetString("Wizard_BaseEntityFieldNotFound", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Related entity field not found on related entity..
-        /// </summary>
-        internal static string Wizard_RelatedEntityFieldNotFound {
-            get {
-                return ResourceManager.GetString("Wizard_RelatedEntityFieldNotFound", resourceCulture);
-            }
-        }
-
-        /// <summary>
         ///   Looks up a localized string similar to Data structure name is required..
         /// </summary>
         internal static string Wizard_DataStructureNameRequired {
@@ -326,6 +281,42 @@ namespace Origam.Architect.Server {
         internal static string Wizard_ScreenSectionNotFound {
             get {
                 return ResourceManager.GetString("Wizard_ScreenSectionNotFound", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Workflow {0} not found.
+        /// </summary>
+        internal static string Wizard_WorkflowNotFound {
+            get {
+                return ResourceManager.GetString("Wizard_WorkflowNotFound", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Database Entity (TableMappingItem) {0} not found.
+        /// </summary>
+        internal static string Wizard_TableEntityNotFound {
+            get {
+                return ResourceManager.GetString("Wizard_TableEntityNotFound", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Screen Section name is required..
+        /// </summary>
+        internal static string Wizard_ScreenSectionNameRequired {
+            get {
+                return ResourceManager.GetString("Wizard_ScreenSectionNameRequired", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to A Screen Section named "{0}" already exists..
+        /// </summary>
+        internal static string Wizard_ScreenSectionAlreadyExists {
+            get {
+                return ResourceManager.GetString("Wizard_ScreenSectionAlreadyExists", resourceCulture);
             }
         }
 

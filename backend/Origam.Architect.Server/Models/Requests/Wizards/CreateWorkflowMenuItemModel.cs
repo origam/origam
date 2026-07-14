@@ -19,11 +19,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Architect.Server.Models.Responses.Wizards;
+using System.ComponentModel.DataAnnotations;
 
-public class RelationshipWizardData
+namespace Origam.Architect.Server.Models.Requests.Wizards;
+
+public class CreateWorkflowMenuItemModel
 {
-    public string BaseEntityName { get; set; }
-    public List<IdName> BaseEntityColumns { get; set; } = new();
-    public List<IdName> Entities { get; set; } = new();
+    [Required]
+    public Guid WorkflowId { get; set; }
+
+    [Required]
+    public string Caption { get; set; }
+
+    public string Role { get; set; }
 }

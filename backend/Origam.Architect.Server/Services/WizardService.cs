@@ -53,6 +53,9 @@ public class WizardService(
     private const string TempTablePrefix = "tmptable";
     private const string DefaultDisplayColumnName = "Name";
     private const string PanelTitlePropertyName = "PanelTitle";
+    private const string TopPropertyName = "Top";
+    private const int ScreenSectionFieldTopStart = 36;
+    private const int ScreenSectionFieldTopStep = 30;
     private const string BetweenFunctionName = "Between";
     private const string BetweenExpressionChildName = "Expression";
     private const string BetweenLeftChildName = "Left";
@@ -603,6 +606,66 @@ public class WizardService(
         return new CreateWizardResult { SearchResults = searchService.BuildResults(generated) };
     }
 
+    public CreateWizardResult CreateWorkflowMenuItem(CreateWorkflowMenuItemModel input)
+    {
+        if (string.IsNullOrWhiteSpace(input.Caption))
+        {
+            throw new UserOrigamException(Strings.Wizard_MenuCaptionRequired);
+        }
+
+        var workflow =
+            persistenceProvider.RetrieveInstance<IWorkflow>(input.WorkflowId)
+            ?? throw new UserOrigamException(
+                string.Format(Strings.Wizard_WorkflowNotFound, input.WorkflowId)
+            );
+
+        var role = string.IsNullOrWhiteSpace(input.Role) ? AllRoles : input.Role.Trim();
+
+        var generated = new List<ISchemaItem>();
+        _ = transaction.Run(() =>
+        {
+            var item = MenuHelper.CreateMenuItem(input.Caption.Trim(), role, workflow);
+            generated.Add(item);
+
+            var schemaService = ServiceManager.Services.GetService<ISchemaService>();
+            var deploymentProvider = schemaService?.GetProvider<DeploymentSchemaItemProvider>();
+            var hasCurrentVersion = deploymentProvider?.CurrentVersion() != null;
+
+            if (role != AllRoles && role != "" && hasCurrentVersion)
+            {
+                var settings = ConfigurationManager.GetActiveConfiguration();
+                var activeSqlDataService =
+                    DataServiceFactory.GetDataService() as AbstractSqlDataService;
+                if (settings.DeployPlatforms != null)
+                {
+                    foreach (var platform in settings.DeployPlatforms)
+                    {
+                        if (
+                            DataServiceFactory.GetDataService(platform)
+                            is AbstractSqlDataService platformSqlDataService
+                        )
+                        {
+                            var platformActivity = DeploymentHelper.CreateSystemRole(
+                                role,
+                                platformSqlDataService
+                            );
+                            generated.Add(platformActivity);
+                        }
+                    }
+                }
+                if (activeSqlDataService != null)
+                {
+                    var activity = DeploymentHelper.CreateSystemRole(role, activeSqlDataService);
+                    generated.Add(activity);
+                }
+            }
+
+            return item;
+        });
+
+        return new CreateWizardResult { SearchResults = searchService.BuildResults(generated) };
+    }
+
     public LookupWizardData GetLookupWizardData(Guid entityId)
     {
         var entity =
@@ -695,101 +758,248 @@ public class WizardService(
         });
     }
 
-    public RelationshipWizardData GetRelationshipWizardData(Guid entityId)
+    public LocalizationChildEntityWizardData GetLocalizationChildEntityWizardData(Guid entityId)
     {
         var entity =
-            persistenceProvider.RetrieveInstance<IDataEntity>(entityId)
+            persistenceProvider.RetrieveInstance<TableMappingItem>(entityId)
             ?? throw new UserOrigamException(
-                string.Format(Strings.Wizard_EntityNotFound, entityId)
+                string.Format(Strings.Wizard_TableEntityNotFound, entityId)
             );
 
-        var schemaService = ServiceManager.Services.GetService<ISchemaService>();
-        var entityProvider = schemaService.GetProvider<EntityModelSchemaItemProvider>();
-        var entities = entityProvider
-            .ChildItemsByType<IDataEntity>(AbstractDataEntity.CategoryConst)
-            .Where(dataEntity => !string.IsNullOrEmpty(dataEntity.Name))
-            .OrderBy(dataEntity => dataEntity.Name)
-            .Select(dataEntity => new IdName { Id = dataEntity.Id, Name = dataEntity.Name })
-            .ToList();
-
-        return new RelationshipWizardData
-        {
-            BaseEntityName = entity.Name,
-            BaseEntityColumns = GetEntityFields(entity),
-            Entities = entities,
-        };
-    }
-
-    public List<IdName> GetEntityFields(Guid entityId)
-    {
-        var entity =
-            persistenceProvider.RetrieveInstance<IDataEntity>(entityId)
-            ?? throw new UserOrigamException(
-                string.Format(Strings.Wizard_EntityNotFound, entityId)
-            );
-        return GetEntityFields(entity);
-    }
-
-    private static List<IdName> GetEntityFields(IDataEntity entity) =>
-        entity
+        var columns = entity
             .EntityColumns.Where(column => !string.IsNullOrEmpty(column.ToString()))
+            .Where(column =>
+                column.DataType == OrigamDataType.String || column.DataType == OrigamDataType.Memo
+            )
             .OrderBy(column => column.Name)
             .Select(column => new IdName { Id = column.Id, Name = column.Name })
             .ToList();
 
-    public CreateWizardResult CreateRelationship(CreateRelationshipModel input)
+        return new LocalizationChildEntityWizardData
+        {
+            EntityName = entity.Name,
+            Columns = columns,
+        };
+    }
+
+    public CreateWizardResult CreateLocalizationChildEntity(
+        CreateLocalizationChildEntityModel input
+    )
     {
-        if (string.IsNullOrWhiteSpace(input.RelationName))
+        var entity =
+            persistenceProvider.RetrieveInstance<TableMappingItem>(input.EntityId)
+            ?? throw new UserOrigamException(
+                string.Format(Strings.Wizard_TableEntityNotFound, input.EntityId)
+            );
+
+        var selectedColumns = new ArrayList();
+        foreach (var fieldId in input.SelectedFieldIds)
         {
-            throw new UserOrigamException(Strings.Wizard_RelationNameRequired);
+            var column =
+                entity.EntityColumns.FirstOrDefault(c => c.Id == fieldId)
+                ?? throw new UserOrigamException(
+                    string.Format(Strings.Wizard_FieldNotFoundOnEntity, fieldId)
+                );
+            selectedColumns.Add(column);
         }
 
-        if (string.IsNullOrWhiteSpace(input.KeyName))
+        var generated = new List<ISchemaItem>();
+        transaction.Run(() =>
         {
-            throw new UserOrigamException(Strings.Wizard_RelationKeyNameRequired);
-        }
-
-        var baseEntity =
-            persistenceProvider.RetrieveInstance<IDataEntity>(input.BaseEntityId)
-            ?? throw new UserOrigamException(
-                string.Format(Strings.Wizard_EntityNotFound, input.BaseEntityId)
+            var translationEntity = EntityHelper.CreateLanguageTranslationChildEntity(
+                entity,
+                selectedColumns,
+                generated
             );
 
-        var relatedEntity =
-            persistenceProvider.RetrieveInstance<IDataEntity>(input.RelatedEntityId)
-            ?? throw new UserOrigamException(
-                string.Format(Strings.Wizard_RelatedEntityNotFound, input.RelatedEntityId)
-            );
+            var schemaService = ServiceManager.Services.GetService<ISchemaService>();
+            var deploymentProvider = schemaService?.GetProvider<DeploymentSchemaItemProvider>();
+            var hasCurrentVersion = deploymentProvider?.CurrentVersion() != null;
 
-        var baseField =
-            baseEntity.EntityColumns.FirstOrDefault(column => column.Id == input.BaseFieldId)
-            ?? throw new UserOrigamException(Strings.Wizard_BaseEntityFieldNotFound);
+            if (hasCurrentVersion)
+            {
+                var settings = ConfigurationManager.GetActiveConfiguration();
+                if (settings.DeployPlatforms != null)
+                {
+                    foreach (var platform in settings.DeployPlatforms)
+                    {
+                        if (
+                            DataServiceFactory.GetDataService(platform)
+                            is AbstractSqlDataService platformSqlDataService
+                        )
+                        {
+                            var platformScript = platformSqlDataService.EntityDdl(
+                                translationEntity.Id
+                            );
+                            var platformActivity = DeploymentHelper.CreateDatabaseScript(
+                                translationEntity.Name,
+                                platformScript,
+                                platformSqlDataService.PlatformName
+                            );
+                            generated.Add(platformActivity);
+                        }
+                    }
+                }
+                if (
+                    DataServiceFactory.GetDataService()
+                    is AbstractSqlDataService activeSqlDataService
+                )
+                {
+                    var script = activeSqlDataService.EntityDdl(translationEntity.Id);
+                    var activity = DeploymentHelper.CreateDatabaseScript(
+                        translationEntity.Name,
+                        script,
+                        activeSqlDataService.PlatformName
+                    );
+                    generated.Add(activity);
+                }
+            }
 
-        var relatedField =
-            relatedEntity.EntityColumns.FirstOrDefault(column => column.Id == input.RelatedFieldId)
-            ?? throw new UserOrigamException(Strings.Wizard_RelatedEntityFieldNotFound);
-
-        var relation = transaction.Run(() =>
-        {
-            var createdRelation = EntityHelper.CreateRelation(
-                baseEntity,
-                relatedEntity,
-                input.IsParentChild,
-                persist: true
-            );
-            EntityHelper.CreateRelationKey(
-                createdRelation,
-                baseField,
-                relatedField,
-                persist: true,
-                input.KeyName.Trim()
-            );
-            return createdRelation;
+            return translationEntity;
         });
 
-        return new CreateWizardResult
+        return new CreateWizardResult { SearchResults = searchService.BuildResults(generated) };
+    }
+
+    public ScreenSectionWizardData GetScreenSectionWizardData(Guid entityId)
+    {
+        var entity =
+            persistenceProvider.RetrieveInstance<IDataEntity>(entityId)
+            ?? throw new UserOrigamException(
+                string.Format(Strings.Wizard_EntityNotFound, entityId)
+            );
+
+        var columns = entity
+            .EntityColumns.Where(column => !string.IsNullOrEmpty(column.ToString()))
+            .OrderBy(column => column.Name)
+            .Select(column => new ScreenWizardColumn
+            {
+                Id = column.Id,
+                Name = column.Name,
+                IsPrimaryKey = column.IsPrimaryKey,
+            })
+            .ToList();
+
+        var schemaService = ServiceManager.Services.GetService<ISchemaService>();
+        var panelProvider = schemaService?.GetProvider<PanelSchemaItemProvider>();
+        var existingNames =
+            panelProvider
+                ?.ChildItemsByType<ISchemaItem>(PanelControlSet.CategoryConst)
+                .Select(item => item.Name)
+                .ToList() ?? new List<string>();
+
+        return new ScreenSectionWizardData
         {
-            SearchResults = searchService.BuildResults([baseEntity, relation]),
+            EntityName = entity.Name,
+            EntityCaption = entity.Caption,
+            Columns = columns,
+            ExistingScreenSectionNames = existingNames,
         };
+    }
+
+    public CreateWizardResult CreateScreenSection(CreateScreenSectionModel input)
+    {
+        if (string.IsNullOrWhiteSpace(input.Name))
+        {
+            throw new UserOrigamException(Strings.Wizard_ScreenSectionNameRequired);
+        }
+
+        var entity =
+            persistenceProvider.RetrieveInstance<IDataEntity>(input.EntityId)
+            ?? throw new UserOrigamException(
+                string.Format(Strings.Wizard_EntityNotFound, input.EntityId)
+            );
+
+        if (input.SelectedFieldIds == null || input.SelectedFieldIds.Count == 0)
+        {
+            throw new UserOrigamException(Strings.Wizard_AtLeastOneFieldRequired);
+        }
+
+        var trimmedName = input.Name.Trim();
+        var schemaService = ServiceManager.Services.GetService<ISchemaService>();
+        var panelProvider = schemaService?.GetProvider<PanelSchemaItemProvider>();
+        var duplicate = panelProvider
+            ?.ChildItemsByType<ISchemaItem>(PanelControlSet.CategoryConst)
+            .FirstOrDefault(item =>
+                string.Equals(item.Name, trimmedName, StringComparison.OrdinalIgnoreCase)
+            );
+        if (duplicate != null)
+        {
+            throw new UserOrigamException(
+                string.Format(Strings.Wizard_ScreenSectionAlreadyExists, trimmedName)
+            );
+        }
+
+        var selectedNames = new Hashtable();
+        foreach (var fieldId in input.SelectedFieldIds)
+        {
+            var column =
+                entity.EntityColumns.FirstOrDefault(column => column.Id == fieldId)
+                ?? throw new UserOrigamException(
+                    string.Format(Strings.Wizard_FieldNotFoundOnEntity, fieldId)
+                );
+            selectedNames[column.Name] = true;
+        }
+
+        var groupName = entity.Group?.Name;
+
+        var panel = transaction.Run(() =>
+            GuiHelper.CreatePanel(groupName, entity, selectedNames, trimmedName)
+        );
+
+        transaction.Run(() =>
+        {
+            RelayoutScreenSectionFields(panel);
+            return panel;
+        });
+
+        if (!string.IsNullOrWhiteSpace(input.Caption) && panel.ChildItems.Count > 0)
+        {
+            transaction.Run(() =>
+            {
+                var rootControl = panel.ChildItems[0];
+                var titleProp = rootControl
+                    .ChildItemsByType<PropertyValueItem>(PropertyValueItem.CategoryConst)
+                    .FirstOrDefault(prop =>
+                        prop.ControlPropertyItem?.Name == PanelTitlePropertyName
+                    );
+                if (titleProp != null)
+                {
+                    titleProp.Value = input.Caption.Trim();
+                    titleProp.Persist();
+                }
+            });
+        }
+
+        return new CreateWizardResult { SearchResults = searchService.BuildResults([panel]) };
+    }
+
+    private static void RelayoutScreenSectionFields(PanelControlSet panel)
+    {
+        if (panel.ChildItems.Count == 0)
+        {
+            return;
+        }
+        var rootControl = panel.ChildItems[0];
+        var withTops = rootControl
+            .ChildItemsByType<ControlSetItem>(ControlSetItem.CategoryConst)
+            .Select(control => new
+            {
+                Control = control,
+                TopProp = control
+                    .ChildItemsByType<PropertyValueItem>(PropertyValueItem.CategoryConst)
+                    .FirstOrDefault(prop => prop.ControlPropertyItem?.Name == TopPropertyName),
+            })
+            .Where(item => item.TopProp != null)
+            .OrderBy(item => int.TryParse(item.TopProp.Value, out var top) ? top : int.MaxValue)
+            .ToList();
+
+        var y = ScreenSectionFieldTopStart;
+        foreach (var item in withTops)
+        {
+            item.TopProp.Value = y.ToString();
+            item.TopProp.Persist();
+            y += ScreenSectionFieldTopStep;
+        }
     }
 }

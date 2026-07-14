@@ -20,43 +20,32 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { expect, test } from '@playwright/test';
 import { resetBackend } from '@support/resetBackend';
 
-test.describe('Create Relationship With Key wizard (real backend)', () => {
+test.describe('Create Localization Child Entity wizard (real backend)', () => {
   test.beforeEach(async ({ request }) => {
     await resetBackend(request);
   });
 
-  test('Create Relationship With Key', async ({ page }) => {
+  test('Create Localization Child Entity from Dimension2', async ({ page }) => {
     await page.goto('/');
 
     await page.getByText('Root Menu').click();
     await page.getByTestId('tree-toggle-Data').click();
     await page.getByTestId('tree-toggle-Entities').click();
     await page.getByTestId('tree-toggle-Dimensions').click();
-    await page.getByTestId('tree-node-Dimension1').click({ button: 'right' });
+    await page.getByTestId('tree-node-Dimension2').click({ button: 'right' });
     await page.getByText('Actions', { exact: true }).click();
-    await page.getByText('Create Relationship With Key').click();
+    await page.getByText('Create Localization Child Entity').click();
 
     const dialog = page.getByRole('dialog');
-
-    await dialog.getByRole('checkbox', { name: 'Is Parent-Child' }).check();
-
-    const relatedEntity = dialog.getByRole('textbox').nth(1);
-    await relatedEntity.fill('AsapModelVersion');
-    await relatedEntity.press('Enter');
-
-    const baseField = dialog.getByRole('textbox').nth(3);
-    await baseField.click();
-    await baseField.press('Enter');
-
-    const relatedField = dialog.getByRole('textbox').nth(4);
-    await relatedField.click();
-    await relatedField.press('Enter');
+    await expect(dialog).toContainText('Create Localization Child Entity');
+    await expect(dialog).toContainText('Dimension2_l10n');
 
     await page.getByRole('button', { name: 'Next →' }).click();
-    await page.getByRole('button', { name: 'Create Relationship' }).click();
+    await expect(dialog).toContainText('Language Translation Entity');
+
+    await page.getByRole('button', { name: 'Create Entity' }).click();
 
     await page.getByRole('button', { name: 'Show result' }).click();
-    await expect(page.getByRole('cell', { name: 'Dimension1\\AsapModelVersion' })).toBeVisible();
-    await expect(page.getByRole('cell', { name: 'Dimension1', exact: true }).first()).toBeVisible();
+    await expect(page.locator('tbody')).toContainText('Dimension2_l10n');
   });
 });

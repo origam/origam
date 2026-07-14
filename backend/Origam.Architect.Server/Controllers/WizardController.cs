@@ -45,20 +45,13 @@ public class WizardController(WizardService wizard) : ControllerBase
     public IActionResult CreateMenuItem([FromBody] CreateMenuItemModel input) =>
         Ok(wizard.CreateMenuItem(input));
 
+    [HttpPost("workflow-menu-items")]
+    public IActionResult CreateWorkflowMenuItem([FromBody] CreateWorkflowMenuItemModel input) =>
+        Ok(wizard.CreateWorkflowMenuItem(input));
+
     [HttpPost("work-queue-classes")]
     public IActionResult CreateWorkQueueClass([FromBody] CreateWorkQueueModel input) =>
         Ok(wizard.CreateWorkQueueClass(input));
-
-    [HttpPost("relationships")]
-    public IActionResult CreateRelationship([FromBody] CreateRelationshipModel input) =>
-        Ok(wizard.CreateRelationship(input));
-
-    [HttpGet("relationships/wizard-data")]
-    public IActionResult GetRelationshipWizardData([FromQuery] Guid entityId) =>
-        Ok(wizard.GetRelationshipWizardData(entityId));
-
-    [HttpGet("entities/{entityId}/fields")]
-    public IActionResult GetEntityFields(Guid entityId) => Ok(wizard.GetEntityFields(entityId));
 
     [HttpPost("data-structures")]
     public IActionResult CreateDataStructure([FromBody] CreateDataStructureModel input) =>
@@ -86,4 +79,21 @@ public class WizardController(WizardService wizard) : ControllerBase
 
     [HttpGet("data-structures/{id}/sql")]
     public IActionResult GetDataStructureSql(Guid id) => Ok(wizard.GetDataStructureSql(id));
+
+    [HttpGet("localization-child-entities/wizard-data")]
+    public IActionResult GetLocalizationChildEntityWizardData([FromQuery] Guid entityId) =>
+        Ok(wizard.GetLocalizationChildEntityWizardData(entityId));
+
+    [HttpPost("localization-child-entities")]
+    public IActionResult CreateLocalizationChildEntity(
+        [FromBody] CreateLocalizationChildEntityModel input
+    ) => Ok(wizard.CreateLocalizationChildEntity(input));
+
+    [HttpGet("screen-sections/wizard-data")]
+    public IActionResult GetScreenSectionWizardData([FromQuery] Guid entityId) =>
+        Ok(wizard.GetScreenSectionWizardData(entityId));
+
+    [HttpPost("screen-sections")]
+    public IActionResult CreateScreenSection([FromBody] CreateScreenSectionModel input) =>
+        Ok(wizard.CreateScreenSection(input));
 }

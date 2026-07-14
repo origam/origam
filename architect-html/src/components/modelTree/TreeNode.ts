@@ -119,6 +119,10 @@ export class TreeNode implements IEditorNode {
     return this.itemType === 'Origam.Schema.EntityModel.DataStructure';
   }
 
+  get isSequentialWorkflow() {
+    return this.itemType === 'Origam.Schema.WorkflowModel.Workflow';
+  }
+
   *loadChildren(): Generator<Promise<IApiTreeNode[]>, void, IApiTreeNode[]> {
     if (this.isLoading) {
       return;
