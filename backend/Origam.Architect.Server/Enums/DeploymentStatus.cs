@@ -21,7 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 namespace Origam.Architect.Server.Enums;
 
-public enum DeploymentActivityStatus
+public enum DeploymentStatus
 {
     Pending,
     Done,
