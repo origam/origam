@@ -39,7 +39,10 @@ const DeploymentBadges = observer(({ node }: { node: TreeNode }) => {
           title={
             node.deploymentStatus === 'Done'
               ? T('Already deployed to the database.', 'tree_node_deployment_status_done_tooltip')
-              : T('Not deployed to the database yet.', 'tree_node_deployment_status_pending_tooltip')
+              : T(
+                  'Not deployed to the database yet.',
+                  'tree_node_deployment_status_pending_tooltip',
+                )
           }
         >
           {node.deploymentStatus === 'Done'
