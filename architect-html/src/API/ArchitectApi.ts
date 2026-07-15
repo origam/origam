@@ -25,7 +25,6 @@ import {
   IApiTreeNode,
   IArchitectApi,
   IDatabaseResultResponse,
-  IDeploymentStatusResponse,
   IMenuItemInfo,
   IModelChange,
   IPackagesInfo,
@@ -306,10 +305,6 @@ export class ArchitectApi implements IArchitectApi {
 
   async addToModel(request: IAddToModelRequest): Promise<void> {
     await this.http.post('/DeploymentScriptsGenerator/AddToModel', request);
-  }
-
-  async fetchDeploymentStatus(): Promise<IDeploymentStatusResponse> {
-    return (await this.http.get('/DeploymentScripts/Status')).data;
   }
 }
 

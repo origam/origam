@@ -124,7 +124,6 @@ export interface IArchitectApi {
 
   runUpdateScriptActivity(schemaItemId: string): Promise<void>;
   fetchDeploymentScriptsList(platform: string | null): Promise<IDatabaseResultResponse>;
-  fetchDeploymentStatus(): Promise<IDeploymentStatusResponse>;
   addToDeployment(request: IAddToDeploymentRequest): Promise<void>;
   addToModel(request: IAddToModelRequest): Promise<void>;
 }
@@ -320,7 +319,6 @@ export interface IMenuItemInfo {
 
 export type EditorSubType =
   | 'DeploymentScriptsGeneratorModule'
-  | 'DeploymentStatusModule'
   | 'DeploymentScriptsEditor'
   | 'GridEditor'
   | 'XsltEditor'
@@ -346,6 +344,7 @@ export interface IApiTreeNode extends INodeLoadData {
   itemType?: string;
   itemTypeName?: string;
   isCurrentVersion?: boolean;
+  deploymentStatus?: DeploymentStatus;
   nodeLevelType?: NodeLevelType;
   isInActivePackage?: boolean;
   isFileDirty?: boolean;
@@ -373,40 +372,7 @@ export interface IDeploymentScriptsGeneratorModuleData {
   results: IDatabaseResult[];
 }
 
-export type DeploymentActivityStatus = 'Pending' | 'Done';
-
-export interface IActivityStatus {
-  id: string;
-  name: string;
-  activityType: string;
-  activityOrder: number;
-  status: DeploymentActivityStatus;
-}
-
-export interface IDeploymentVersionStatus {
-  id: string;
-  name: string;
-  version: string;
-  status: DeploymentActivityStatus;
-  isCurrentVersion: boolean;
-  activities: IActivityStatus[];
-}
-
-export interface IPackageStatus {
-  packageId: string;
-  packageName: string;
-  packageModelVersion: string;
-  deployedVersion: string;
-  versions: IDeploymentVersionStatus[];
-}
-
-export interface IDeploymentStatusResponse {
-  packages: IPackageStatus[];
-}
-
-export interface IDeploymentStatusModuleData {
-  response: IDeploymentStatusResponse;
-}
+export type DeploymentStatus = 'Pending' | 'Done';
 
 export interface DocumentationEditorData {
   label: string;
@@ -441,7 +407,6 @@ export interface IApiTabData {
     | IScreenEditorData
     | DocumentationEditorData
     | IDeploymentScriptsGeneratorModuleData
-    | IDeploymentStatusModuleData
     | ISearchResultsEditorData;
   isDirty: boolean;
 }

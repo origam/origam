@@ -25,7 +25,6 @@ enum EStorageKeys {
   SETTINGS = 'settings',
   DEPLOYMENT_SCRIPTS_GENERATOR_STATE = 'deploymentScriptsGeneratorState',
   SIDEBAR_WIDTH = 'sidebarWidth',
-  DEPLOYMENT_STATUS_STATE = 'deploymentStatusState',
 }
 
 export const SIDEBAR_MIN_WIDTH = 250;
@@ -54,22 +53,11 @@ const defaultDsGeneratorState: IDsGeneratorPersistedState = {
   selectedDeploymentVersionId: null,
 };
 
-export interface IDeploymentStatusPersistedState {
-  isOpen: boolean;
-  expandedPackageIds: string[];
-}
-
-const defaultDeploymentStatusState: IDeploymentStatusPersistedState = {
-  isOpen: false,
-  expandedPackageIds: [],
-};
-
 const STORAGE_DEFAULTS = {
   [EStorageKeys.TREE_EXPANDED_NODES]: [] as string[],
   [EStorageKeys.SETTINGS]: defaultSettings,
   [EStorageKeys.DEPLOYMENT_SCRIPTS_GENERATOR_STATE]: defaultDsGeneratorState,
   [EStorageKeys.SIDEBAR_WIDTH]: SIDEBAR_DEFAULT_WIDTH,
-  [EStorageKeys.DEPLOYMENT_STATUS_STATE]: defaultDeploymentStatusState,
 } as const;
 
 function clampSidebarWidth(value: number): number {
@@ -84,9 +72,6 @@ export class UIState {
     ...defaultDsGeneratorState,
   };
   @observable accessor sidebarWidth: number = SIDEBAR_DEFAULT_WIDTH;
-  @observable accessor deploymentStatusState: IDeploymentStatusPersistedState = {
-    ...defaultDeploymentStatusState,
-  };
 
   constructor() {
     this.expandedNodes = this.loadStateFromLocalStorage(EStorageKeys.TREE_EXPANDED_NODES);
@@ -104,14 +89,6 @@ export class UIState {
       const parsed = Number.parseFloat(rawSidebarWidth);
       this.sidebarWidth = clampSidebarWidth(parsed);
     }
-
-    const loadedDeploymentStatusState = this.loadStateFromLocalStorage(
-      EStorageKeys.DEPLOYMENT_STATUS_STATE,
-    );
-    this.deploymentStatusState = {
-      ...defaultDeploymentStatusState,
-      ...loadedDeploymentStatusState,
-    };
   }
 
   @action
@@ -180,19 +157,6 @@ export class UIState {
     localStorage.setItem(
       EStorageKeys.DEPLOYMENT_SCRIPTS_GENERATOR_STATE,
       JSON.stringify(this.dsGeneratorState),
-    );
-  }
-
-  getDeploymentStatusState(): IDeploymentStatusPersistedState {
-    return { ...this.deploymentStatusState };
-  }
-
-  @action
-  setDeploymentStatusState(partial: Partial<IDeploymentStatusPersistedState>) {
-    this.deploymentStatusState = { ...this.deploymentStatusState, ...partial };
-    localStorage.setItem(
-      EStorageKeys.DEPLOYMENT_STATUS_STATE,
-      JSON.stringify(this.deploymentStatusState),
     );
   }
 }
