@@ -21,10 +21,13 @@ import {
   IAddToDeploymentRequest,
   IAddToModelRequest,
   IApiControl,
-  IApiEditorData,
+  IApiTabData,
   IApiTreeNode,
   IArchitectApi,
+  ICreateLookupRequest,
+  ICreateWizardResult,
   IDatabaseResultResponse,
+  ILookupWizardEntityData,
   IMenuItemInfo,
   IModelChange,
   IPackagesInfo,
@@ -105,19 +108,19 @@ export class ArchitectApi implements IArchitectApi {
     ).data;
   }
 
-  async openEditor(schemaItemId: string): Promise<IApiEditorData> {
-    return (await this.http.post('/Editor/OpenEditor', { schemaItemId: schemaItemId })).data;
+  async openTab(schemaItemId: string): Promise<IApiTabData> {
+    return (await this.http.post('/Tab/Open', { schemaItemId: schemaItemId })).data;
   }
 
-  async closeEditor(editorId: string) {
-    await this.http.post('/Editor/CloseEditor', { editorId: editorId });
+  async closeTab(tabId: string) {
+    await this.http.post('/Tab/Close', { tabId: tabId });
   }
 
-  async closeAllEditors() {
-    await this.http.post('/Editor/CloseAllEditors', {});
+  async closeAllTabs() {
+    await this.http.post('/Tab/CloseAll', {});
   }
 
-  async openDocumentationEditor(schemaItemId: string): Promise<IApiEditorData> {
+  async openDocumentationEditor(schemaItemId: string): Promise<IApiTabData> {
     return (await this.http.post('/Documentation/OpenEditor', { schemaItemId: schemaItemId })).data;
   }
 
@@ -160,7 +163,7 @@ export class ArchitectApi implements IArchitectApi {
   }
 
   async persistChanges(schemaItemId: string): Promise<void> {
-    await this.http.post(`/Editor/PersistChanges`, {
+    await this.http.post(`/Tab/PersistChanges`, {
       schemaItemId,
     });
   }
@@ -199,13 +202,13 @@ export class ArchitectApi implements IArchitectApi {
     ).data;
   }
 
-  async getOpenEditors(): Promise<IApiEditorData[]> {
-    return (await this.http.get(`/Editor/GetOpenEditors`)).data;
+  async getOpenTabs(): Promise<IApiTabData[]> {
+    return (await this.http.get(`/Tab/GetOpen`)).data;
   }
 
-  async createNode(node: IApiTreeNode, typeName: string): Promise<IApiEditorData> {
+  async createNode(node: IApiTreeNode, typeName: string): Promise<IApiTabData> {
     return (
-      await this.http.post('/Editor/CreateNode', {
+      await this.http.post('/Tab/CreateNode', {
         nodeId: node.origamId,
         newTypeName: typeName,
       })
@@ -305,6 +308,58 @@ export class ArchitectApi implements IArchitectApi {
 
   async addToModel(request: IAddToModelRequest): Promise<void> {
     await this.http.post('/DeploymentScriptsGenerator/AddToModel', request);
+  }
+
+  async getLookupWizardEntityData(entityId: string): Promise<ILookupWizardEntityData> {
+    return (
+      await this.http.get('/wizards/lookups/wizard-data', {
+        params: { entityId },
+      })
+    ).data;
+  }
+
+  async createLookup(request: ICreateLookupRequest): Promise<ICreateWizardResult> {
+    return (await this.http.post('/wizards/lookups', request)).data;
+  }
+
+  async createFilter(
+    request: import('@api/IArchitectApi').ICreateFilterRequest,
+  ): Promise<import('@api/IArchitectApi').ICreateWizardResult> {
+    return (await this.http.post('/wizards/filters', request)).data;
+  }
+
+  async getScreenWizardData(
+    entityId: string,
+  ): Promise<import('@api/IArchitectApi').IScreenWizardData> {
+    return (
+      await this.http.get('/wizards/screens/wizard-data', {
+        params: { entityId },
+      })
+    ).data;
+  }
+
+  async createScreen(
+    request: import('@api/IArchitectApi').ICreateScreenRequest,
+  ): Promise<import('@api/IArchitectApi').ICreateWizardResult> {
+    return (await this.http.post('/wizards/screens', request)).data;
+  }
+
+  async createWorkQueueClass(
+    request: import('@api/IArchitectApi').ICreateWorkQueueRequest,
+  ): Promise<import('@api/IArchitectApi').ICreateWizardResult> {
+    return (await this.http.post('/wizards/work-queue-classes', request)).data;
+  }
+
+  async createMenuItem(
+    request: import('@api/IArchitectApi').ICreateMenuItemRequest,
+  ): Promise<import('@api/IArchitectApi').ICreateWizardResult> {
+    return (await this.http.post('/wizards/menu-items', request)).data;
+  }
+
+  async getDataStructureSql(
+    dataStructureId: string,
+  ): Promise<import('@api/IArchitectApi').IGetDataStructureSqlResult> {
+    return (await this.http.get(`/wizards/data-structures/${dataStructureId}/sql`)).data;
   }
 }
 

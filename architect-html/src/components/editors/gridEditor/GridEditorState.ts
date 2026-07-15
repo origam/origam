@@ -20,19 +20,19 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { T } from '@/main';
 import { IArchitectApi, IUpdatePropertiesResult } from '@api/IArchitectApi';
 import { IEditorNode } from '@components/editorTabView/EditorTabViewState';
-import { IEditorState, IValidationError } from '@components/editorTabView/IEditorState';
+import { ITabState, IValidationError } from '@/components/editorTabView/ITabState';
 import { EditorProperty, toChanges } from '@editors/gridEditor/EditorProperty';
 import { IPropertyManager } from '@editors/propertyEditor/IPropertyManager';
 import { computed, observable } from 'mobx';
 
-export class GridEditorState implements IEditorState, IPropertyManager {
+export class GridEditorState implements ITabState, IPropertyManager {
   @observable accessor properties: EditorProperty[];
   @observable accessor isSaving = false;
   @observable accessor isActive = false;
   @observable accessor _isDirty: boolean;
 
   constructor(
-    public editorId: string,
+    public tabId: string,
     protected editorNode: IEditorNode,
     properties: EditorProperty[] | undefined,
     isDirty: boolean,

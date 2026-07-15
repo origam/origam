@@ -120,8 +120,8 @@ export class ScreenEditorState extends DesignerEditorState {
         editorSchemaItemId: this.editorNode.origamId,
         parentControlSetItemId: parent.id,
         controlItemId: this.surface.draggedComponentData!.identifier!,
-        top: relativeY,
-        left: relativeX,
+        top: Math.round(relativeY),
+        left: Math.round(relativeX),
       });
 
       const sectionLoader = getSectionLoader(this.architectApi, this.editorNode.origamId);

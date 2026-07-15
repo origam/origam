@@ -1,5 +1,5 @@
 /*
-Copyright 2005 - 2026 Advantage Solutions, s. r. o. 
+Copyright 2005 - 2026 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { RootStoreContext } from '@/main';
 import { EditorProperty } from '@editors/gridEditor/EditorProperty';
 import { IPropertyManager } from '@editors/propertyEditor/IPropertyManager';
 import S from '@editors/propertyEditor/PropertyEditor.module.scss';
@@ -24,7 +25,8 @@ import SinglePropertyEditor from '@editors/propertyEditor/SinglePropertyEditor.t
 import { getSortedProperties } from '@editors/propertyEditor/utils';
 import cn from 'classnames';
 import { observer } from 'mobx-react-lite';
-import { VscWarning } from 'react-icons/vsc';
+import { useContext } from 'react';
+import { VscChevronDown, VscChevronRight, VscWarning } from 'react-icons/vsc';
 
 const PropertyEditor = observer(
   (props: {
@@ -32,6 +34,8 @@ const PropertyEditor = observer(
     propertyManager: IPropertyManager;
     compact?: boolean;
   }) => {
+    const { uiState } = useContext(RootStoreContext);
+
     if (!props.properties) {
       return null;
     }
@@ -40,27 +44,43 @@ const PropertyEditor = observer(
 
     return (
       <div className={cn(S.root, { [S.compact]: props.compact })}>
-        {sortedCategories.map(category => (
-          <div className={S.category} key={category}>
-            {!props.compact && <h4>{(category ?? 'Misc').replace(/^\((.*)\)$/, '$1')}</h4>}
-            {groupedProperties[category].map((property: EditorProperty) => (
-              <div className={S.property} key={property.name}>
-                <div
-                  title={property.error}
-                  className={cn(S.propertyName, { [S.errorProperty]: property.error })}
+        {sortedCategories.map(category => {
+          const categoryKey = (category ?? 'Misc').replace(/^\((.*)\)$/, '$1');
+          const collapsed = !props.compact && uiState.isPropertySectionCollapsed(categoryKey);
+          const Chevron = collapsed ? VscChevronRight : VscChevronDown;
+          return (
+            <div className={S.category} key={category}>
+              {!props.compact && (
+                <button
+                  type="button"
+                  className={S.categoryHeader}
+                  onClick={() => uiState.togglePropertySectionCollapsed(categoryKey)}
+                  aria-expanded={!collapsed}
                 >
-                  {property.error && <VscWarning className={S.errorIcon} />}
-                  <span>{property.name}</span>
-                </div>
-                <SinglePropertyEditor
-                  property={property}
-                  propertyManager={props.propertyManager}
-                  compact={props.compact}
-                />
-              </div>
-            ))}
-          </div>
-        ))}
+                  <span>{categoryKey}</span>
+                  <Chevron className={S.chevron} />
+                </button>
+              )}
+              {!collapsed &&
+                groupedProperties[category].map((property: EditorProperty) => (
+                  <div className={S.property} key={property.name}>
+                    <div
+                      title={property.error}
+                      className={cn(S.propertyName, { [S.errorProperty]: property.error })}
+                    >
+                      {property.error && <VscWarning className={S.errorIcon} />}
+                      <span>{property.name}</span>
+                    </div>
+                    <SinglePropertyEditor
+                      property={property}
+                      propertyManager={props.propertyManager}
+                      compact={props.compact}
+                    />
+                  </div>
+                ))}
+            </div>
+          );
+        })}
       </div>
     );
   },

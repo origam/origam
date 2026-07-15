@@ -126,6 +126,12 @@
   <data name="ErrorBlobNotAvailable" xml:space="preserve">
     <value>BLOB již není k dispozici.</value>
   </data>
+  <data name="ErrorBlobDownloadFailed" xml:space="preserve">
+    <value>Při zpracování požadavku na stažení došlo k chybě.</value>
+  </data>
+  <data name="ErrorBlobUploadFailed" xml:space="preserve">
+    <value>Při zpracování požadavku na nahrání došlo k chybě.</value>
+  </data>
   <data name="ErrorBlobMemberBlobLookupNotSpecified" xml:space="preserve">
     <value>Ani BlobMember, ani BlobLookupId nejsou specifikovány. Nelze stáhnout blob.</value>
   </data>

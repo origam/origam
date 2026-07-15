@@ -26,14 +26,14 @@ namespace Origam.Architect.Server.Services;
 
 public class DeploymentVersionCurrentService(
     IDeploymentService deploymentService,
-    EditorService editorService,
+    TabService tabService,
     SchemaService schemaService
 )
 {
     public void SetVersionCurrent(DeploymentVersion deploymentVersion)
     {
-        var isDirtyEditorExists = editorService.GetOpenEditors().Any(x => x.IsDirty);
-        if (isDirtyEditorExists)
+        var isDirtyTabExists = tabService.GetOpenTabs().Any(x => x.IsDirty);
+        if (isDirtyTabExists)
         {
             throw new Exception(Strings.DeploymentScripts_ModelNotSavedBeforeVersionChange);
         }

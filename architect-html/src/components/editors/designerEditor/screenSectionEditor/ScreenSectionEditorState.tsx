@@ -83,8 +83,8 @@ export class ScreenSectionEditorState extends DesignerEditorState {
         parentControlSetItemId: parent.id,
         componentType: this.surface.draggedComponentData!.type,
         fieldName: this.surface.draggedComponentData!.identifier,
-        top: relativeY,
-        left: relativeX,
+        top: Math.round(relativeY),
+        left: Math.round(relativeX),
       });
 
       const newComponent = yield controlToComponent(apiControl, null);

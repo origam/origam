@@ -102,6 +102,8 @@ $brand-desaturate: color.adjust($brand, $saturation: -100%);
   --foreground6-rgb: #{hexToRGB($foreground6)};
   --foreground7-rgb: #{hexToRGB($foreground7)};
 
+  --brand-rgb: #{hexToRGB($brand)};
+
   --ok1-rgb: #{hexToRGB($ok1)};
   --warning1-rgb: #{hexToRGB($warning1)};
   --warning2-rgb: #{hexToRGB($warning2)};

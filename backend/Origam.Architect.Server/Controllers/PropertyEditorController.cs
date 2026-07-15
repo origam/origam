@@ -29,18 +29,16 @@ namespace Origam.Architect.Server.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class PropertyEditorController(
-    PropertyEditorService propertyService,
-    EditorService editorService
-) : ControllerBase
+public class PropertyEditorController(PropertyEditorService propertyService, TabService tabService)
+    : ControllerBase
 {
     [HttpPost("Update")]
     public UpdatePropertiesResult Update([FromBody] ChangesModel changes)
     {
-        EditorData editor = editorService.ChangesToEditorData(changes);
-        PropertyInfo[] properties = editor.Item.GetType().GetProperties();
+        TabData tab = tabService.ChangesToTabData(changes);
+        PropertyInfo[] properties = tab.Item.GetType().GetProperties();
         IEnumerable<PropertyUpdate> propertyUpdates = propertyService
-            .GetEditorProperties(editor.Item)
+            .GetEditorProperties(tab.Item)
             .Select(editorProperty =>
             {
                 PropertyInfo property = properties.FirstOrDefault(x =>
@@ -50,14 +48,14 @@ public class PropertyEditorController(
                 {
                     PropertyName = editorProperty.Name,
                     Value = editorProperty.Value,
-                    Errors = propertyService.GetRuleErrors(property, editor.Item),
+                    Errors = propertyService.GetRuleErrors(property, tab.Item),
                     DropDownValues = editorProperty.DropDownValues ?? Array.Empty<DropDownValue>(),
                 };
             });
         return new UpdatePropertiesResult
         {
             PropertyUpdates = propertyUpdates,
-            IsDirty = editor.IsDirty,
+            IsDirty = tab.IsDirty,
         };
     }
 }

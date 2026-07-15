@@ -65,13 +65,12 @@ public class DocumentationHelperService
         return new DocumentationEditorData { Label = label, Properties = entries.Values.ToList() };
     }
 
-    public void Update(ChangesModel changes, EditorData editor)
+    public void Update(ChangesModel changes, TabData tab)
     {
         foreach (PropertyChange propertyChange in changes.Changes)
         {
-            DocumentationComplete.DocumentationDataTable table = editor
-                .DocumentationData
-                .Documentation;
+            DocumentationComplete.DocumentationDataTable table =
+                tab.DocumentationData.Documentation;
             DocumentationComplete.DocumentationRow row = table
                 .Rows.Cast<DocumentationComplete.DocumentationRow>()
                 .FirstOrDefault(row => row.Category == propertyChange.Name);
@@ -80,7 +79,7 @@ public class DocumentationHelperService
                 if (row != null)
                 {
                     table.RemoveDocumentationRow(row);
-                    editor.IsDirty = true;
+                    tab.IsDirty = true;
                 }
 
                 continue;
@@ -100,7 +99,7 @@ public class DocumentationHelperService
                 row.Data = propertyChange.Value;
             }
 
-            editor.IsDirty = true;
+            tab.IsDirty = true;
         }
     }
 }

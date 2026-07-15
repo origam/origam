@@ -43,6 +43,7 @@ const DeploymentScriptsGeneratorButtonHOC = observer(() => {
       title={T('Deployment Scripts Generator', 'deploymentScripts_GeneratorButtonHOC_label')}
       prefix={<VscSymbolMisc />}
       onClick={handleOnClick}
+      dataTestId="topbar-deployment-scripts"
     />
   );
 });

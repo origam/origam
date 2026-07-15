@@ -21,13 +21,14 @@ import {
   DocumentationEditorData,
   EditorSubType,
   EditorType,
-  IApiEditorData,
   IApiEditorNode,
   IApiEditorProperty,
+  IApiTabData,
   IDeploymentScriptsGeneratorModuleData,
   ISearchResultsEditorData,
   IScreenEditorData,
   ISectionEditorData,
+  IShowSqlEditorData,
 } from '@api/IArchitectApi';
 import { IEditorNode } from '@components/editorTabView/EditorTabViewState';
 import { TreeNode } from '@components/modelTree/TreeNode';
@@ -50,7 +51,7 @@ export class EditorNode implements IEditorNode {
   }
 }
 
-export class EditorData implements IApiEditorData {
+export class EditorData {
   editorId: string;
   editorType: EditorType;
   parentNodeId: string | undefined;
@@ -62,11 +63,12 @@ export class EditorData implements IApiEditorData {
     | IScreenEditorData
     | DocumentationEditorData
     | IDeploymentScriptsGeneratorModuleData
-    | ISearchResultsEditorData;
+    | ISearchResultsEditorData
+    | IShowSqlEditorData;
 
-  constructor(data: IApiEditorData, parent: TreeNode | null) {
-    this.editorId = data.editorId;
-    this.editorType = data.editorType;
+  constructor(data: IApiTabData, parent: TreeNode | null) {
+    this.editorId = data.tabId;
+    this.editorType = data.tabType;
     this.parentNodeId = data.parentNodeId;
     this.isDirty = data.isDirty;
     this.node = new EditorNode(data.node, parent);

@@ -45,7 +45,14 @@ public class MenuFormReferenceTemplateSetConverter : TypeConverter
     )
     {
         FormReferenceMenuItem currentItem = context.Instance as FormReferenceMenuItem;
-        List<DataStructureTemplateSet> templateSets = currentItem.Screen.DataStructure.TemplateSets;
+        List<DataStructureTemplateSet> templateSets = currentItem
+            ?.Screen
+            ?.DataStructure
+            ?.TemplateSets;
+        if (templateSets == null)
+        {
+            return new StandardValuesCollection(new List<DataStructureTemplateSet>());
+        }
         var array = new List<DataStructureTemplateSet>(templateSets.Count);
         foreach (DataStructureTemplateSet item in templateSets)
         {
@@ -79,9 +86,13 @@ public class MenuFormReferenceTemplateSetConverter : TypeConverter
         {
             FormReferenceMenuItem currentItem = context.Instance as FormReferenceMenuItem;
             List<DataStructureTemplateSet> templateSets = currentItem
-                .Screen
-                .DataStructure
-                .TemplateSets;
+                ?.Screen
+                ?.DataStructure
+                ?.TemplateSets;
+            if (templateSets == null)
+            {
+                return null;
+            }
             foreach (DataStructureTemplateSet item in templateSets)
             {
                 if (item.Name == value.ToString())

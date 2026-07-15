@@ -42,4 +42,64 @@
     <data name="DeploymentScript_UnsupportedDeploymentActivityType" xml:space="preserve">
         <value>Unsupported deployment activity type</value>
     </data>
+    <data name="Wizard_ColumnNotFound" xml:space="preserve">
+        <value>Column {0} not found</value>
+    </data>
+    <data name="Wizard_ColumnNotInEntity" xml:space="preserve">
+        <value>Column does not belong to an entity.</value>
+    </data>
+    <data name="Wizard_UnknownFilterType" xml:space="preserve">
+        <value>Unknown filter type '{0}'.</value>
+    </data>
+    <data name="Wizard_FieldNameNotSet" xml:space="preserve">
+        <value>Field Name is not set.</value>
+    </data>
+    <data name="Wizard_BetweenFunctionNotFound" xml:space="preserve">
+        <value>Between function not found. Cannot create filter.</value>
+    </data>
+    <data name="Wizard_EntityNotFound" xml:space="preserve">
+        <value>Entity {0} not found</value>
+    </data>
+    <data name="Wizard_ScreenNameRequired" xml:space="preserve">
+        <value>Screen name is required.</value>
+    </data>
+    <data name="Wizard_AtLeastOneFieldRequired" xml:space="preserve">
+        <value>At least one field must be selected.</value>
+    </data>
+    <data name="Wizard_DataStructureAlreadyExists" xml:space="preserve">
+        <value>A DataStructure named "{0}" already exists.</value>
+    </data>
+    <data name="Wizard_FieldNotFoundOnEntity" xml:space="preserve">
+        <value>Field {0} not found on entity.</value>
+    </data>
+    <data name="Wizard_DataStructureNotFound" xml:space="preserve">
+        <value>DataStructure {0} not found</value>
+    </data>
+    <data name="Wizard_DataServiceNotSql" xml:space="preserve">
+        <value>Active data service is not SQL-based.</value>
+    </data>
+    <data name="Wizard_MenuCaptionRequired" xml:space="preserve">
+        <value>Menu caption is required.</value>
+    </data>
+    <data name="Wizard_FormControlSetNotFound" xml:space="preserve">
+        <value>Screen (FormControlSet) {0} not found</value>
+    </data>
+    <data name="Wizard_EntityHasNoPrimaryKeyForLookup" xml:space="preserve">
+        <value>Entity has no primary key defined. Cannot create lookup.</value>
+    </data>
+    <data name="Wizard_LookupNameRequired" xml:space="preserve">
+        <value>Lookup name is required.</value>
+    </data>
+    <data name="Wizard_EntityHasNoPrimaryKey" xml:space="preserve">
+        <value>Entity has no primary key defined.</value>
+    </data>
+    <data name="Wizard_DisplayFieldNotFound" xml:space="preserve">
+        <value>Display field not found on entity.</value>
+    </data>
+    <data name="Wizard_IdFilterNotFound" xml:space="preserve">
+        <value>Id filter not found on entity.</value>
+    </data>
+    <data name="Wizard_ListFilterNotFound" xml:space="preserve">
+        <value>List filter not found on entity.</value>
+    </data>
 </root>

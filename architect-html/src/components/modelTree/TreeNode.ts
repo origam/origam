@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import {
   EditorSubType,
-  IApiEditorData,
+  IApiTabData,
   IApiTreeNode,
   IArchitectApi,
   IMenuItemInfo,
@@ -90,6 +90,31 @@ export class TreeNode implements IEditorNode {
     return this.itemType === 'Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity';
   }
 
+  get isDataEntity() {
+    return (
+      this.itemType === 'Origam.Schema.EntityModel.TableMappingItem' ||
+      this.itemType === 'Origam.Schema.EntityModel.DetachedEntity'
+    );
+  }
+
+  get isDataEntityColumn() {
+    return (
+      this.itemType === 'Origam.Schema.EntityModel.FieldMappingItem' ||
+      this.itemType === 'Origam.Schema.EntityModel.DetachedField' ||
+      this.itemType === 'Origam.Schema.EntityModel.AggregatedColumn' ||
+      this.itemType === 'Origam.Schema.EntityModel.FunctionCall' ||
+      this.itemType === 'Origam.Schema.EntityModel.LookupField'
+    );
+  }
+
+  get isScreen() {
+    return this.itemType === 'Origam.Schema.GuiModel.FormControlSet';
+  }
+
+  get isDataStructure() {
+    return this.itemType === 'Origam.Schema.EntityModel.DataStructure';
+  }
+
   *loadChildren(): Generator<Promise<IApiTreeNode[]>, void, IApiTreeNode[]> {
     if (this.isLoading) {
       return;
@@ -132,9 +157,9 @@ export class TreeNode implements IEditorNode {
   }
 
   createNode(typeName: string) {
-    return function* (this: TreeNode): Generator<Promise<IApiEditorData>, void, IApiEditorData> {
-      const apiEditorData = yield this.architectApi.createNode(this, typeName);
-      const editorData = new EditorData(apiEditorData, this);
+    return function* (this: TreeNode): Generator<Promise<IApiTabData>, void, IApiTabData> {
+      const apiTabData = yield this.architectApi.createNode(this, typeName);
+      const editorData = new EditorData(apiTabData, this);
       this.rootStore.editorTabViewState.openEditor(editorData);
     }.bind(this);
   }

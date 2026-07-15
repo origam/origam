@@ -126,6 +126,12 @@
   <data name="ErrorBlobNotAvailable" xml:space="preserve">
     <value>BLOB no longer available.</value>
   </data>
+  <data name="ErrorBlobDownloadFailed" xml:space="preserve">
+    <value>Une erreur s'est produite lors du traitement de la demande de téléchargement.</value>
+  </data>
+  <data name="ErrorBlobUploadFailed" xml:space="preserve">
+    <value>Une erreur s'est produite lors du traitement de la demande d'envoi.</value>
+  </data>
   <data name="ErrorBlobMemberBlobLookupNotSpecified" xml:space="preserve">
     <value>Both BlobMember and BlobLookupId are not specified. Cannot download blob.</value>
   </data>

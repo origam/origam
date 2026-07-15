@@ -33,43 +33,43 @@ namespace Origam.Architect.Server.Controllers;
 [Route("[controller]")]
 public class DocumentationController(
     TreeNodeFactory treeNodeFactory,
-    EditorService editorService,
+    TabService tabService,
     IDocumentationService documentationService,
     DocumentationHelperService documentationHelper
 ) : ControllerBase
 {
     [HttpPost("OpenEditor")]
-    public IActionResult OpenEditor([Required] [FromBody] OpenEditorModel input)
+    public IActionResult OpenEditor([Required] [FromBody] OpenTabModel input)
     {
-        EditorData editor = editorService.OpenDocumentationEditor(input.SchemaItemId);
-        ISchemaItem item = editor.Item;
+        TabData tab = tabService.OpenDocumentationTab(input.SchemaItemId);
+        ISchemaItem item = tab.Item;
         TreeNode treeNode = treeNodeFactory.Create(item);
 
-        editor.DocumentationData = documentationService.LoadDocumentation(item.Id);
-        var openEditorData = new OpenEditorData(
-            editorId: editor.Id,
+        tab.DocumentationData = documentationService.LoadDocumentation(item.Id);
+        var openTabData = new OpenTabData(
+            tabId: tab.Id,
             node: treeNode,
-            data: documentationHelper.GetData(editor.DocumentationData, item.Name),
+            data: documentationHelper.GetData(tab.DocumentationData, item.Name),
             isPersisted: true
         );
-        return Ok(openEditorData);
+        return Ok(openTabData);
     }
 
     [HttpPost("Update")]
     public IActionResult Update([FromBody] ChangesModel changes)
     {
-        EditorData editor = editorService.OpenDocumentationEditor(changes.SchemaItemId);
-        documentationHelper.Update(changes, editor);
+        TabData tab = tabService.OpenDocumentationTab(changes.SchemaItemId);
+        documentationHelper.Update(changes, tab);
 
-        return Ok(new UpdatePropertiesResult { IsDirty = editor.IsDirty });
+        return Ok(new UpdatePropertiesResult { IsDirty = tab.IsDirty });
     }
 
     [HttpPost("PersistChanges")]
     public IActionResult PersistChanges([FromBody] PersistModel input)
     {
-        EditorData editor = editorService.OpenDocumentationEditor(input.SchemaItemId);
-        documentationService.SaveDocumentation(editor.DocumentationData, input.SchemaItemId);
-        editor.IsDirty = false;
+        TabData tab = tabService.OpenDocumentationTab(input.SchemaItemId);
+        documentationService.SaveDocumentation(tab.DocumentationData, input.SchemaItemId);
+        tab.IsDirty = false;
         return Ok();
     }
 }

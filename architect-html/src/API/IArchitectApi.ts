@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 export interface IArchitectApi {
-  getOpenEditors(): Promise<IApiEditorData[]>;
+  getOpenTabs(): Promise<IApiTabData[]>;
 
   getPackages(): Promise<IPackagesInfo>;
 
@@ -34,11 +34,11 @@ export interface IArchitectApi {
 
   searchDependencies(schemaItemId: string): Promise<ISearchResult[]>;
 
-  openEditor(schemaItemId: string): Promise<IApiEditorData>;
+  openTab(schemaItemId: string): Promise<IApiTabData>;
 
-  closeEditor(editorId: string): Promise<void>;
+  closeTab(tabId: string): Promise<void>;
 
-  closeAllEditors(): Promise<void>;
+  closeAllTabs(): Promise<void>;
 
   persistChanges(schemaItemId: string): Promise<void>;
 
@@ -53,7 +53,7 @@ export interface IArchitectApi {
 
   getMenuItems(node: INodeLoadData): Promise<IMenuItemInfo[]>;
 
-  createNode(node: INodeLoadData, typeName: string): Promise<IApiEditorData>;
+  createNode(node: INodeLoadData, typeName: string): Promise<IApiTabData>;
 
   updateSectionEditor(args: {
     schemaItemId: string | undefined;
@@ -101,7 +101,7 @@ export interface IArchitectApi {
     sectionIds: string[],
   ): Promise<Record<string, IApiControl>>;
 
-  openDocumentationEditor(origamId: string): Promise<IApiEditorData>;
+  openDocumentationEditor(origamId: string): Promise<IApiTabData>;
 
   updateDocumentationProperties(
     schemaItemId: string,
@@ -126,6 +126,95 @@ export interface IArchitectApi {
   fetchDeploymentScriptsList(platform: string | null): Promise<IDatabaseResultResponse>;
   addToDeployment(request: IAddToDeploymentRequest): Promise<void>;
   addToModel(request: IAddToModelRequest): Promise<void>;
+
+  getLookupWizardEntityData(entityId: string): Promise<ILookupWizardEntityData>;
+  createLookup(request: ICreateLookupRequest): Promise<ICreateWizardResult>;
+
+  createFilter(request: ICreateFilterRequest): Promise<ICreateWizardResult>;
+
+  getScreenWizardData(entityId: string): Promise<IScreenWizardData>;
+  createScreen(request: ICreateScreenRequest): Promise<ICreateWizardResult>;
+
+  createWorkQueueClass(request: ICreateWorkQueueRequest): Promise<ICreateWizardResult>;
+
+  createMenuItem(request: ICreateMenuItemRequest): Promise<ICreateWizardResult>;
+
+  getDataStructureSql(dataStructureId: string): Promise<IGetDataStructureSqlResult>;
+}
+
+export interface IGetDataStructureSqlResult {
+  dataStructureId: string;
+  dataStructureName: string;
+  sql: string;
+}
+
+export interface IShowSqlEditorData {
+  dataStructureId: string;
+  dataStructureName: string;
+  sql: string;
+}
+
+export interface ICreateWorkQueueRequest {
+  entityId: string;
+  selectedFieldIds: string[];
+}
+
+export interface ICreateWizardResult {
+  searchResults: ISearchResult[];
+}
+
+export interface ICreateMenuItemRequest {
+  formId: string;
+  caption: string;
+  role: string;
+}
+
+export type CreateFilterType = 'Equal' | 'EqualParam' | 'Like' | 'LikeParam' | 'InList' | 'Between';
+
+export interface ICreateFilterRequest {
+  columnId: string;
+  filterType: CreateFilterType;
+}
+
+export interface IScreenWizardData {
+  entityName: string;
+  columns: IScreenWizardColumn[];
+  existingDataStructureNames: string[];
+}
+
+export interface IScreenWizardColumn {
+  id: string;
+  name: string;
+  isPrimaryKey: boolean;
+}
+
+export interface ICreateScreenRequest {
+  entityId: string;
+  name: string;
+  caption: string;
+  selectedFieldIds: string[];
+}
+
+export interface ILookupIdName {
+  id: string;
+  name: string;
+}
+
+export interface ILookupWizardEntityData {
+  entityName: string;
+  primaryKeyId: string;
+  primaryKeyName: string;
+  defaultDisplayFieldId: string;
+  columns: ILookupIdName[];
+  filters: ILookupIdName[];
+}
+
+export interface ICreateLookupRequest {
+  entityId: string;
+  name: string;
+  displayFieldId: string;
+  idFilterId: string;
+  listFilterId: string | null;
 }
 
 export interface ITransformationInput {
@@ -326,7 +415,11 @@ export type EditorSubType =
   | 'ScreenEditor'
   | null;
 
-export type EditorType = EditorSubType | 'DocumentationEditor' | 'SearchResultsEditor';
+export type EditorType =
+  | EditorSubType
+  | 'DocumentationEditor'
+  | 'SearchResultsEditor'
+  | 'ShowSqlEditor';
 
 export interface INodeLoadData {
   id: string;
@@ -393,9 +486,9 @@ export interface IDropDownValue {
   value: any;
 }
 
-export interface IApiEditorData {
-  editorId: string;
-  editorType: EditorType;
+export interface IApiTabData {
+  tabId: string;
+  tabType: EditorType;
   parentNodeId: string | undefined;
   node: IApiEditorNode;
   data:
@@ -404,7 +497,8 @@ export interface IApiEditorData {
     | IScreenEditorData
     | DocumentationEditorData
     | IDeploymentScriptsGeneratorModuleData
-    | ISearchResultsEditorData;
+    | ISearchResultsEditorData
+    | IShowSqlEditorData;
   isDirty: boolean;
 }
 

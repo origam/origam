@@ -103,7 +103,187 @@ namespace Origam.Architect.Server {
                 return ResourceManager.GetString("ValidationResultTitle", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to At least one field must be selected..
+        /// </summary>
+        internal static string Wizard_AtLeastOneFieldRequired {
+            get {
+                return ResourceManager.GetString("Wizard_AtLeastOneFieldRequired", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Between function not found. Cannot create filter..
+        /// </summary>
+        internal static string Wizard_BetweenFunctionNotFound {
+            get {
+                return ResourceManager.GetString("Wizard_BetweenFunctionNotFound", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Column {0} not found.
+        /// </summary>
+        internal static string Wizard_ColumnNotFound {
+            get {
+                return ResourceManager.GetString("Wizard_ColumnNotFound", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Column does not belong to an entity..
+        /// </summary>
+        internal static string Wizard_ColumnNotInEntity {
+            get {
+                return ResourceManager.GetString("Wizard_ColumnNotInEntity", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Active data service is not SQL-based..
+        /// </summary>
+        internal static string Wizard_DataServiceNotSql {
+            get {
+                return ResourceManager.GetString("Wizard_DataServiceNotSql", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to A DataStructure named "{0}" already exists..
+        /// </summary>
+        internal static string Wizard_DataStructureAlreadyExists {
+            get {
+                return ResourceManager.GetString("Wizard_DataStructureAlreadyExists", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to DataStructure {0} not found.
+        /// </summary>
+        internal static string Wizard_DataStructureNotFound {
+            get {
+                return ResourceManager.GetString("Wizard_DataStructureNotFound", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Display field not found on entity..
+        /// </summary>
+        internal static string Wizard_DisplayFieldNotFound {
+            get {
+                return ResourceManager.GetString("Wizard_DisplayFieldNotFound", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Entity has no primary key defined..
+        /// </summary>
+        internal static string Wizard_EntityHasNoPrimaryKey {
+            get {
+                return ResourceManager.GetString("Wizard_EntityHasNoPrimaryKey", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Entity has no primary key defined. Cannot create lookup..
+        /// </summary>
+        internal static string Wizard_EntityHasNoPrimaryKeyForLookup {
+            get {
+                return ResourceManager.GetString("Wizard_EntityHasNoPrimaryKeyForLookup", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Entity {0} not found.
+        /// </summary>
+        internal static string Wizard_EntityNotFound {
+            get {
+                return ResourceManager.GetString("Wizard_EntityNotFound", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Field Name is not set..
+        /// </summary>
+        internal static string Wizard_FieldNameNotSet {
+            get {
+                return ResourceManager.GetString("Wizard_FieldNameNotSet", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Field {0} not found on entity..
+        /// </summary>
+        internal static string Wizard_FieldNotFoundOnEntity {
+            get {
+                return ResourceManager.GetString("Wizard_FieldNotFoundOnEntity", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Screen (FormControlSet) {0} not found.
+        /// </summary>
+        internal static string Wizard_FormControlSetNotFound {
+            get {
+                return ResourceManager.GetString("Wizard_FormControlSetNotFound", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Id filter not found on entity..
+        /// </summary>
+        internal static string Wizard_IdFilterNotFound {
+            get {
+                return ResourceManager.GetString("Wizard_IdFilterNotFound", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to List filter not found on entity..
+        /// </summary>
+        internal static string Wizard_ListFilterNotFound {
+            get {
+                return ResourceManager.GetString("Wizard_ListFilterNotFound", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Lookup name is required..
+        /// </summary>
+        internal static string Wizard_LookupNameRequired {
+            get {
+                return ResourceManager.GetString("Wizard_LookupNameRequired", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Menu caption is required..
+        /// </summary>
+        internal static string Wizard_MenuCaptionRequired {
+            get {
+                return ResourceManager.GetString("Wizard_MenuCaptionRequired", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Screen name is required..
+        /// </summary>
+        internal static string Wizard_ScreenNameRequired {
+            get {
+                return ResourceManager.GetString("Wizard_ScreenNameRequired", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown filter type '{0}'..
+        /// </summary>
+        internal static string Wizard_UnknownFilterType {
+            get {
+                return ResourceManager.GetString("Wizard_UnknownFilterType", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Parameter type {0} is not OrigamDataType..
         /// </summary>

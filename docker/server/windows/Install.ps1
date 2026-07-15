@@ -70,7 +70,7 @@ try {
 }
 
 # Install Node.js (Windows, PowerShell version)
-$env:NODE_VERSION = "22.21.0"
+$env:NODE_VERSION = "24.18.0"
 $env:NODE_OPTIONS = "--max-old-space-size=4096"
 
 Write-Host "Downloading Node.js version $env:NODE_VERSION..."

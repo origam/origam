@@ -44,14 +44,14 @@ export const EditorTabView = observer(() => {
   return (
     <div className={S.root}>
       <div className={S.tabs}>
-        {editors.map(editor => (
-          <TabHeader key={editor.editorId} editor={editor} />
+        {editors.map(tab => (
+          <TabHeader key={tab.tabId} tab={tab} />
         ))}
       </div>
       <div className={S.content}>
         {state.editorsContainers.map(editorContainer => (
           <div
-            key={editorContainer.state.editorId}
+            key={editorContainer.state.tabId}
             className={editorContainer.state.isActive ? S.visible : S.hidden}
           >
             {editorContainer.element}

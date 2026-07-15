@@ -163,7 +163,11 @@ public class BlobController : AbstractController
         }
         catch (Exception ex)
         {
-            return StatusCode(statusCode: 500, ex);
+            log.LogError(ex, $"Error processing blob download request for token {token}");
+            return StatusCode(
+                statusCode: 500,
+                value: new { Message = localizer["ErrorBlobDownloadFailed"].ToString() }
+            );
         }
         finally
         {
@@ -256,7 +260,11 @@ public class BlobController : AbstractController
         }
         catch (Exception ex)
         {
-            return StatusCode(statusCode: 500, ex);
+            log.LogError(ex, $"Error processing blob upload request for token {token}");
+            return StatusCode(
+                statusCode: 500,
+                value: new { Message = localizer["ErrorBlobUploadFailed"].ToString() }
+            );
         }
         finally
         {

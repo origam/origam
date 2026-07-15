@@ -1,0 +1,8 @@
+node_modules
+/.yarn/install-state.gz
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/

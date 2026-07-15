@@ -25,6 +25,7 @@ import { PackagesState } from '@components/packages/PackagesState';
 import { PropertiesState } from '@components/properties/PropertiesState';
 import { TabViewState } from '@components/tabView/TabViewState';
 import { ProgressBarState } from '@components/topBar/ProgressBarState';
+import { NotificationState } from '@components/notification/NotificationState';
 import { DialogStackState } from '@dialogs/DialogStackState';
 import { IDialogStackState } from '@dialogs/types';
 import { ErrorDialogController } from '@errors/ErrorDialog';
@@ -40,6 +41,7 @@ export class RootStore {
   public modelTreeState: ModelTreeState;
   public architectApi: IArchitectApi = new ArchitectApi();
   public dialogStack: IDialogStackState = new DialogStackState();
+  public notificationState = new NotificationState();
   public errorDialogController: ErrorDialogController;
   public progressBarState = new ProgressBarState();
   public propertiesState = new PropertiesState();

@@ -5,13 +5,25 @@ updates:
     open-pull-requests-limit: 20
     schedule:
       interval: "daily"
+    cooldown:
+      default-days: 1
+      include:
+        - "*"
     commit-message:
       prefix: "DEV: "
+    ignore:
+      # Origam targets .NET 8, so keep this package on the .NET 8-compatible major version until upgrade to .NET 10.
+      - dependency-name: "Microsoft.Extensions.Logging.Log4Net.AspNetCore"
+        versions: [">=9.0.0"]
   - package-ecosystem: "npm"
     directory: "/frontend-html"
     open-pull-requests-limit: 20
     schedule:
       interval: "daily"
+    cooldown:
+      default-days: 1
+      include:
+        - "*"
     commit-message:
       prefix: "DEV: "
   - package-ecosystem: "npm"
@@ -19,6 +31,10 @@ updates:
     open-pull-requests-limit: 20
     schedule:
       interval: "daily"
+    cooldown:
+      default-days: 1
+      include:
+        - "*"
     commit-message:
       prefix: "DEV: "
     ignore:
@@ -29,5 +45,9 @@ updates:
     open-pull-requests-limit: 20
     schedule:
       interval: "daily"
+    cooldown:
+      default-days: 1
+      include:
+        - "*"
     commit-message:
       prefix: "DEV: "

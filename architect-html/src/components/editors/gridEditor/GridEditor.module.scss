@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 .root {
   flex: 1;
+  align-self: flex-start;
 
   .propertiesBox {
     margin-left: 1rem;

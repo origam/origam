@@ -32,10 +32,10 @@ import { observable } from 'mobx';
 import { ITabViewState } from '@components/tabView/ITabViewState.ts';
 import { IEditorNode } from '@components/editorTabView/EditorTabViewState.ts';
 import { EditorProperty } from '@editors/gridEditor/EditorProperty.ts';
-import { IEditorState } from '@components/editorTabView/IEditorState.ts';
+import { ITabState } from '@/components/editorTabView/ITabState';
 import { IPropertyManager } from '@editors/propertyEditor/IPropertyManager.tsx';
 
-export class XsltEditorState implements ITabViewState, IEditorState, IPropertyManager {
+export class XsltEditorState implements ITabViewState, ITabState, IPropertyManager {
   @observable public accessor activeTabIndex = 0;
   @observable public accessor parameters: string[] = [];
   @observable public accessor xmlResult = '';
@@ -69,14 +69,14 @@ export class XsltEditorState implements ITabViewState, IEditorState, IPropertyMa
   }
 
   constructor(
-    public editorId: string,
+    public tabId: string,
     private editorNode: IEditorNode,
     properties: EditorProperty[] | undefined,
     isDirty: boolean,
     private architectApi: IArchitectApi,
   ) {
     this.gridEditorState = new GridEditorState(
-      editorId,
+      tabId,
       editorNode,
       properties,
       isDirty,
