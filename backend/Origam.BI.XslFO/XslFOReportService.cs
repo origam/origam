@@ -31,7 +31,7 @@ using Origam.Workbench.Services;
 
 namespace Origam.BI.XslFO
 {
-    public class XslFoReportService : IReportService
+    public class XslFOReportService : IReportService
     {
         private const string DefaultRendererUrl = "http://xslfo:8080";
         private const int DefaultRendererTimeoutSeconds = 60;
@@ -44,17 +44,16 @@ namespace Origam.BI.XslFO
             string dbTransaction
         )
         {
-            if (
-                !string.IsNullOrWhiteSpace(format)
-                && !string.Equals(format, "pdf", StringComparison.OrdinalIgnoreCase)
-            )
+            if (format != null && !string.Equals(format, "pdf", StringComparison.OrdinalIgnoreCase))
             {
-                throw new NotSupportedException(
-                    $"XSL-FO report format '{format}' is not supported. Only 'pdf' is supported."
+                throw new ArgumentOutOfRangeException(
+                    nameof(format),
+                    format,
+                    string.Format(Strings.XslFOFormatNotSupported, format)
                 );
             }
 
-            var report = ReportHelper.GetReportElement<XslFoReport>(reportId);
+            var report = ReportHelper.GetReportElement<XslFOReport>(reportId);
             parameters ??= new Hashtable();
             ReportHelper.PopulateDefaultValues(report, parameters);
 
@@ -70,23 +69,21 @@ namespace Origam.BI.XslFO
 
             var resultDoc = transformer.Transform(
                 xmlDataDoc,
-                report.XslFoTransformationId,
+                report.XslFOTransformationId,
                 parameters,
                 transactionId: dbTransaction,
                 outputStructure: null,
                 validateOnly: false
             );
 
-            return RenderPdfWithXslFoServer(resultDoc.Xml.OuterXml);
+            return RenderPdfWithXslFOServer(resultDoc.Xml.OuterXml);
         }
 
-        private static byte[] RenderPdfWithXslFoServer(string xslFoXml)
+        private static byte[] RenderPdfWithXslFOServer(string xslFoXml)
         {
             if (string.IsNullOrWhiteSpace(xslFoXml))
             {
-                throw new InvalidOperationException(
-                    "The XSL-FO transformation produced an empty document."
-                );
+                throw new InvalidOperationException(Strings.XslFOEmptyDocument);
             }
 
             var rendererUrl = GetRendererUrl();
@@ -110,14 +107,14 @@ namespace Origam.BI.XslFO
             catch (TaskCanceledException ex)
             {
                 throw new TimeoutException(
-                    $"XSL-FO renderer did not respond within {timeout.TotalSeconds} seconds. Renderer URL: {renderUri}",
+                    string.Format(Strings.XslFORendererTimeout, timeout.TotalSeconds, renderUri),
                     ex
                 );
             }
             catch (HttpRequestException ex)
             {
                 throw new InvalidOperationException(
-                    $"Could not call XSL-FO renderer at '{renderUri}'.",
+                    string.Format(Strings.XslFORendererCallFailed, renderUri),
                     ex
                 );
             }
@@ -134,26 +131,20 @@ namespace Origam.BI.XslFO
                     var responseText = TryDecodeResponse(responseBytes);
 
                     throw new InvalidOperationException(
-                        "XSL-FO renderer failed."
-                            + Environment.NewLine
-                            + "Renderer URL: "
-                            + renderUri
-                            + Environment.NewLine
-                            + "HTTP status: "
-                            + (int)response.StatusCode
-                            + " "
-                            + response.ReasonPhrase
-                            + Environment.NewLine
-                            + "Response:"
-                            + Environment.NewLine
-                            + responseText
+                        string.Format(
+                            Strings.XslFORendererFailed,
+                            renderUri,
+                            (int)response.StatusCode,
+                            response.ReasonPhrase,
+                            responseText
+                        )
                     );
                 }
 
                 if (responseBytes.Length == 0)
                 {
                     throw new InvalidOperationException(
-                        $"XSL-FO renderer returned an empty PDF response. Renderer URL: {renderUri}"
+                        string.Format(Strings.XslFORendererEmptyResponse, renderUri)
                     );
                 }
 
@@ -180,7 +171,7 @@ namespace Origam.BI.XslFO
             if (!Uri.TryCreate(configuredUrl, UriKind.Absolute, out var uri))
             {
                 throw new InvalidOperationException(
-                    $"Invalid XSL-FO renderer URL '{configuredUrl}'. Check XSLFO_RENDERER_URL."
+                    string.Format(Strings.XslFORendererInvalidUrl, configuredUrl)
                 );
             }
 
@@ -212,9 +203,7 @@ namespace Origam.BI.XslFO
             }
             catch (DecoderFallbackException)
             {
-                return "<Could not decode renderer response as UTF-8. Response length: "
-                    + bytes.Length
-                    + " bytes.>";
+                return string.Format(Strings.XslFORendererDecodeFailed, bytes.Length);
             }
         }
 

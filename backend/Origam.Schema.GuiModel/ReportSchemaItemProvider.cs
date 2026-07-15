@@ -35,7 +35,7 @@ public class ReportSchemaItemProvider : AbstractSchemaItemProvider
         this.ChildItemTypes.Add(typeof(SSRSReport));
         this.ChildItemTypes.Add(typeof(FileSystemReport));
         this.ChildItemTypes.Add(typeof(FastReport));
-        this.ChildItemTypes.Add(typeof(XslFoReport));
+        this.ChildItemTypes.Add(typeof(XslFOReport));
     }
 
     #region ISchemaItemProvider Members
