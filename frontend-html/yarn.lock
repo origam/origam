@@ -5038,10 +5038,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"immer@npm:^11.1.11":
-  version: 11.1.11
-  resolution: "immer@npm:11.1.11"
-  checksum: 10c0/b660b4308966775f8514da8b266d061d90bab83ac90c7be6c400fac66f71054a85a272eb97f87f1c4cad5f9bab92e62ed3d2312bb65308debe4d3318d06ad9e2
+"immer@npm:^11.1.12":
+  version: 11.1.12
+  resolution: "immer@npm:11.1.12"
+  checksum: 10c0/faa209ad2cab6c14aad7b922f6715cba9cd8f34436edbdc58825320cb523b4adc0903b76bb6ba68cdfbe9b674cd6593f1bd67c5449a1d2d1a5f8f40466e91804
   languageName: node
   linkType: hard
 
@@ -7285,7 +7285,7 @@ __metadata:
     esbuild: "npm:^0.28.1"
     html-to-draftjs: "npm:^1.5.0"
     identity-obj-proxy: "npm:^3.0.0"
-    immer: "npm:^11.1.11"
+    immer: "npm:^11.1.12"
     immutable: "npm:^5.1.9"
     jest: "npm:^30.4.2"
     jest-environment-jsdom: "npm:^30.4.1"
