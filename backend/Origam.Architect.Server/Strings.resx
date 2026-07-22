@@ -120,4 +120,13 @@
     <data name="Wizard_ScreenSectionAlreadyExists" xml:space="preserve">
         <value>A Screen Section named "{0}" already exists.</value>
     </data>
+    <data name="Wizard_RoleItemNotFound" xml:space="preserve">
+        <value>Item {0} not found</value>
+    </data>
+    <data name="Wizard_RoleNotSpecific" xml:space="preserve">
+        <value>Create Role is only available for menu items with a specific role (not "*").</value>
+    </data>
+    <data name="Wizard_NoCurrentDeploymentVersion" xml:space="preserve">
+        <value>There is no current deployment version. Create a deployment version and make it current first.</value>
+    </data>
 </root>

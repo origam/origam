@@ -52,6 +52,7 @@ export class TreeNode implements IEditorNode {
     this.nodeLevelType = apiNode.nodeLevelType ?? 'Item';
     this.isInActivePackage = apiNode.isInActivePackage ?? true;
     this.isFileDirty = apiNode.isFileDirty ?? false;
+    this.role = apiNode.role;
     this.children = apiNode.children
       ? apiNode.children.map(child => new TreeNode(child, this.rootStore, this))
       : [];
@@ -74,6 +75,7 @@ export class TreeNode implements IEditorNode {
   nodeLevelType: NodeLevelType;
   isInActivePackage: boolean;
   isFileDirty: boolean;
+  role?: string;
 
   @observable accessor isLoading: boolean = false;
   @observable accessor contextMenuItems: IMenuItemInfo[] = [];
@@ -121,6 +123,10 @@ export class TreeNode implements IEditorNode {
 
   get isSequentialWorkflow() {
     return this.itemType === 'Origam.Schema.WorkflowModel.Workflow';
+  }
+
+  get hasSpecificRole() {
+    return !!this.role && this.role !== '*';
   }
 
   *loadChildren(): Generator<Promise<IApiTreeNode[]>, void, IApiTreeNode[]> {

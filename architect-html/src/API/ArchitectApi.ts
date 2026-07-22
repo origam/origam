@@ -394,6 +394,12 @@ export class ArchitectApi implements IArchitectApi {
     return (await this.http.post('/wizards/workflow-menu-items', request)).data;
   }
 
+  async createRole(
+    request: import('@api/IArchitectApi').ICreateRoleRequest,
+  ): Promise<import('@api/IArchitectApi').ICreateWizardResult> {
+    return (await this.http.post('/wizards/roles', request)).data;
+  }
+
   async getLocalizationChildEntityWizardData(
     entityId: string,
   ): Promise<import('@api/IArchitectApi').ILocalizationChildEntityWizardData> {

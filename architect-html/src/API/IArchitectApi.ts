@@ -147,6 +147,8 @@ export interface IArchitectApi {
 
   createWorkflowMenuItem(request: ICreateWorkflowMenuItemRequest): Promise<ICreateWizardResult>;
 
+  createRole(request: ICreateRoleRequest): Promise<ICreateWizardResult>;
+
   getLocalizationChildEntityWizardData(
     entityId: string,
   ): Promise<ILocalizationChildEntityWizardData>;
@@ -191,6 +193,10 @@ export interface ICreateWorkflowMenuItemRequest {
   workflowId: string;
   caption: string;
   role: string;
+}
+
+export interface ICreateRoleRequest {
+  itemId: string;
 }
 
 export interface ILocalizationEntityColumn {
@@ -513,6 +519,7 @@ export interface IApiTreeNode extends INodeLoadData {
   nodeLevelType?: NodeLevelType;
   isInActivePackage?: boolean;
   isFileDirty?: boolean;
+  role?: string;
 }
 
 export type NodeLevelType = 'Category' | 'Provider' | 'Item';

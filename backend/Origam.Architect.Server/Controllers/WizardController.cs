@@ -49,6 +49,10 @@ public class WizardController(WizardService wizard) : ControllerBase
     public IActionResult CreateWorkflowMenuItem([FromBody] CreateWorkflowMenuItemModel input) =>
         Ok(wizard.CreateWorkflowMenuItem(input));
 
+    [HttpPost("roles")]
+    public IActionResult CreateRole([FromBody] CreateRoleModel input) =>
+        Ok(wizard.CreateRole(input));
+
     [HttpPost("work-queue-classes")]
     public IActionResult CreateWorkQueueClass([FromBody] CreateWorkQueueModel input) =>
         Ok(wizard.CreateWorkQueueClass(input));

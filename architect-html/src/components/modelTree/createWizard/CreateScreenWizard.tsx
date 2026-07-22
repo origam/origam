@@ -223,16 +223,6 @@ export const CreateScreenWizard: React.FC<CreateScreenWizardProps> = observer(
       if (step === 0) {
         return (
           <>
-            <h2 className={S.formTitle}>
-              {T("Let's name your screen", 'create_screen_basics_title')}
-            </h2>
-            <p className={S.formSubtitle}>
-              {T(
-                'A Screen ties a DataStructure to a Screen Section (Panel) and a Form. The name is used for all three artifacts.',
-                'create_screen_basics_subtitle',
-              )}
-            </p>
-
             <div className={S.field}>
               <label className={S.fieldLabel}>
                 {T('Name', 'create_screen_name_label')} <span className={S.required}>*</span>
@@ -299,16 +289,6 @@ export const CreateScreenWizard: React.FC<CreateScreenWizardProps> = observer(
         const columns = (entityData.columns ?? []).filter(column => !column.isPrimaryKey);
         return (
           <>
-            <h2 className={S.formTitle}>
-              {T('Which columns should appear?', 'create_screen_fields_title')}
-            </h2>
-            <p className={S.formSubtitle}>
-              {T(
-                'Pick the entity fields that will be placed on the Screen Section. You can add or remove fields later in the section editor.',
-                'create_screen_fields_subtitle',
-              )}
-            </p>
-
             <div className={S.field}>
               <label className={S.fieldLabel}>
                 {T('Caption', 'create_screen_caption_label')}
@@ -412,14 +392,6 @@ export const CreateScreenWizard: React.FC<CreateScreenWizardProps> = observer(
       );
       return (
         <>
-          <h2 className={S.formTitle}>{T('Ready to create', 'wizard_ready_title')}</h2>
-          <p className={S.formSubtitle}>
-            {T(
-              'Review what will be added to the model. You can edit everything afterward.',
-              'create_screen_review_subtitle',
-            )}
-          </p>
-
           <div className={S.reviewCard}>
             <div className={S.reviewCardHeader}>
               <div className={S.reviewCardIcon}>S</div>

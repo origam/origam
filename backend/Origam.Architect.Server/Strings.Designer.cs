@@ -321,6 +321,33 @@ namespace Origam.Architect.Server {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Item {0} not found.
+        /// </summary>
+        internal static string Wizard_RoleItemNotFound {
+            get {
+                return ResourceManager.GetString("Wizard_RoleItemNotFound", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Create Role is only available for menu items with a specific role (not "*")..
+        /// </summary>
+        internal static string Wizard_RoleNotSpecific {
+            get {
+                return ResourceManager.GetString("Wizard_RoleNotSpecific", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to There is no current deployment version. Create a deployment version and make it current first..
+        /// </summary>
+        internal static string Wizard_NoCurrentDeploymentVersion {
+            get {
+                return ResourceManager.GetString("Wizard_NoCurrentDeploymentVersion", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Screen name is required..
         /// </summary>
         internal static string Wizard_ScreenNameRequired {

@@ -666,6 +666,64 @@ public class WizardService(
         return new CreateWizardResult { SearchResults = searchService.BuildResults(generated) };
     }
 
+    public CreateWizardResult CreateRole(CreateRoleModel input)
+    {
+        var item =
+            persistenceProvider.RetrieveInstance<ISchemaItem>(input.ItemId)
+            ?? throw new UserOrigamException(
+                string.Format(Strings.Wizard_RoleItemNotFound, input.ItemId)
+            );
+
+        if (
+            item is not IAuthorizationContextContainer roleItem
+            || string.IsNullOrEmpty(roleItem.AuthorizationContext)
+            || roleItem.AuthorizationContext == AllRoles
+        )
+        {
+            throw new UserOrigamException(Strings.Wizard_RoleNotSpecific);
+        }
+
+        var role = roleItem.AuthorizationContext;
+
+        var schemaService = ServiceManager.Services.GetService<ISchemaService>();
+        var deploymentProvider = schemaService?.GetProvider<DeploymentSchemaItemProvider>();
+        if (deploymentProvider?.CurrentVersion() == null)
+        {
+            throw new UserOrigamException(Strings.Wizard_NoCurrentDeploymentVersion);
+        }
+
+        var generated = new List<ISchemaItem>();
+        _ = transaction.Run(() =>
+        {
+            var settings = ConfigurationManager.GetActiveConfiguration();
+            if (settings.DeployPlatforms != null)
+            {
+                foreach (var platform in settings.DeployPlatforms)
+                {
+                    if (
+                        DataServiceFactory.GetDataService(platform)
+                        is AbstractSqlDataService platformSqlDataService
+                    )
+                    {
+                        var platformActivity = DeploymentHelper.CreateSystemRole(
+                            role,
+                            platformSqlDataService
+                        );
+                        generated.Add(platformActivity);
+                    }
+                }
+            }
+            if (DataServiceFactory.GetDataService() is AbstractSqlDataService activeSqlDataService)
+            {
+                var activity = DeploymentHelper.CreateSystemRole(role, activeSqlDataService);
+                generated.Add(activity);
+            }
+            return generated;
+        });
+
+        return new CreateWizardResult { SearchResults = searchService.BuildResults(generated) };
+    }
+
     public LookupWizardData GetLookupWizardData(Guid entityId)
     {
         var entity =

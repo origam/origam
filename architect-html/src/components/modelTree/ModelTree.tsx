@@ -29,6 +29,7 @@ import { CreateDataStructureWizard } from '@components/modelTree/createWizard/Cr
 import { CreateScreenFromSectionWizard } from '@components/modelTree/createWizard/CreateScreenFromSectionWizard';
 import { CreateMenuItemWizard } from '@components/modelTree/createWizard/CreateMenuItemWizard';
 import { CreateWorkflowMenuItemWizard } from '@components/modelTree/createWizard/CreateWorkflowMenuItemWizard';
+import { CreateRoleWizard } from '@components/modelTree/createWizard/CreateRoleWizard';
 import { CreateLocalizationChildEntityWizard } from '@components/modelTree/createWizard/CreateLocalizationChildEntityWizard';
 import { CreateScreenSectionWizard } from '@components/modelTree/createWizard/CreateScreenSectionWizard';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
@@ -400,6 +401,32 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
     );
   }
 
+  function openCreateRoleWizard() {
+    const closeDialog = rootStore.dialogStack.pushDialog(
+      '',
+      <CreateRoleWizard
+        itemId={node.origamId}
+        itemName={node.nodeText}
+        role={node.role ?? ''}
+        onCancel={() => closeDialog()}
+        onCreate={result => {
+          closeDialog();
+          run({
+            generator: function* () {
+              yield* rootStore.modelTreeState.loadPackageNodes.bind(rootStore.modelTreeState)();
+              showCreatedConfirmation(
+                T('Role', 'wizard_artifact_role'),
+                result?.searchResults ?? [],
+              );
+            },
+          });
+        }}
+      />,
+      undefined,
+      false,
+    );
+  }
+
   function getSymbol() {
     if (node.children.length > 0 || !node.childrenInitialized) {
       return node.isExpanded ? '▼' : '▶';
@@ -522,6 +549,13 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
               <Submenu label={T('Actions', 'tree_node_submenu_actions')}>
                 <Item id="create-workflow-menu-item" onClick={openCreateWorkflowMenuItemWizard}>
                   {T('Create Menu Item', 'tree_node_create_workflow_menu_item')}
+                </Item>
+              </Submenu>
+            )}
+            {node.hasSpecificRole && (
+              <Submenu label={T('Actions', 'tree_node_submenu_actions')}>
+                <Item id="create-role" onClick={openCreateRoleWizard}>
+                  {T('Create Role', 'tree_node_create_role')}
                 </Item>
               </Submenu>
             )}

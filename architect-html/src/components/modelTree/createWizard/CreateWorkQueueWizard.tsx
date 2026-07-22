@@ -134,21 +134,6 @@ export const CreateWorkQueueWizard: React.FC<CreateWorkQueueWizardProps> = obser
         const columns = entityData?.columns ?? [];
         return (
           <>
-            <h2 className={S.formTitle}>
-              {T('Which columns to track?', 'create_workqueue_fields_title')}
-            </h2>
-            <p className={S.formSubtitle}>
-              {T(
-                'The WorkQueue Class will be created with name',
-                'create_workqueue_fields_subtitle_pre',
-              )}{' '}
-              <strong>{entityData?.entityName ?? '…'}</strong>
-              {T(
-                '. Pick the columns that should be exposed on the work queue records.',
-                'create_workqueue_fields_subtitle_post',
-              )}
-            </p>
-
             <div className={S.field}>
               <label className={S.fieldLabel}>
                 {T('Caption', 'create_workqueue_caption_label')}
@@ -252,14 +237,6 @@ export const CreateWorkQueueWizard: React.FC<CreateWorkQueueWizardProps> = obser
       const selected = (entityData.columns ?? []).filter(column => selectedFieldIds.has(column.id));
       return (
         <>
-          <h2 className={S.formTitle}>{T('Ready to create', 'wizard_ready_title')}</h2>
-          <p className={S.formSubtitle}>
-            {T(
-              'Review what will be added. You can adjust the WorkQueue Class afterward in its editor.',
-              'create_workqueue_review_subtitle',
-            )}
-          </p>
-
           <div className={S.reviewCard}>
             <div className={S.reviewCardHeader}>
               <div className={S.reviewCardIcon}>W</div>

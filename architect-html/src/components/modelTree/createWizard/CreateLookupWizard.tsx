@@ -231,16 +231,6 @@ export const CreateLookupWizard: React.FC<CreateLookupWizardProps> = observer(
       if (step === 1) {
         return (
           <>
-            <h2 className={S.formTitle}>
-              {T("Let's name your lookup", 'create_lookup_basics_title')}
-            </h2>
-            <p className={S.formSubtitle}>
-              {T(
-                'A lookup defines how a foreign key value is resolved into a human-readable label across the application.',
-                'create_lookup_basics_subtitle',
-              )}
-            </p>
-
             <div className={S.field}>
               <label className={S.fieldLabel}>
                 {T('Name', 'create_lookup_name_label')} <span className={S.required}>*</span>
@@ -283,16 +273,6 @@ export const CreateLookupWizard: React.FC<CreateLookupWizardProps> = observer(
       if (step === 0) {
         return (
           <>
-            <h2 className={S.formTitle}>
-              {T('Where does the data come from?', 'create_lookup_source_title')}
-            </h2>
-            <p className={S.formSubtitle}>
-              {T(
-                'Choose which column shows as the display value, and the filters used to fetch records by id or build the dropdown list.',
-                'create_lookup_source_subtitle',
-              )}
-            </p>
-
             <div className={S.field}>
               <label className={S.fieldLabel}>
                 {T('Display Field', 'create_lookup_display_field_label')}{' '}
@@ -357,14 +337,6 @@ export const CreateLookupWizard: React.FC<CreateLookupWizardProps> = observer(
       if (!entityData) return null;
       return (
         <>
-          <h2 className={S.formTitle}>{T('Ready to create', 'wizard_ready_title')}</h2>
-          <p className={S.formSubtitle}>
-            {T(
-              'Review what will be added to the model. You can edit anything afterward.',
-              'create_lookup_review_subtitle',
-            )}
-          </p>
-
           <div className={S.reviewCard}>
             <div className={S.reviewCardHeader}>
               <div className={S.reviewCardIcon}>L</div>
