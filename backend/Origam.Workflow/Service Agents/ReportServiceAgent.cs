@@ -71,6 +71,7 @@ public class ReportServiceAgent : AbstractServiceAgent
             ExcelReport => "Origam.BI.Excel.ExcelService,Origam.BI.Excel",
             SSRSReport => "Origam.BI.SSRS.SSRSService,Origam.BI.SSRS",
             FastReport => "Origam.BI.FastReport.FastReportService,Origam.BI.FastReport",
+            XslFOReport => "Origam.BI.XslFO.XslFOReportService,Origam.BI.XslFO",
             _ => throw new ArgumentOutOfRangeException(
                 nameof(report),
                 report,
