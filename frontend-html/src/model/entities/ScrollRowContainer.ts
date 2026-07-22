@@ -24,10 +24,6 @@ import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { fixRowIdentifier } from "utils/dataRow";
 import { IProperty } from "model/entities/types/IProperty";
 
-// The constants have to be defined here for the unit tests to work.
-// const MAX_CHUNKS_TO_HOLD = 20;
-// const SCROLL_ROW_CHUNK = 1000;
-
 export class ScrollRowContainer implements IRowsContainer {
   $type_ScrollRowContainer: 1 = 1;
 
