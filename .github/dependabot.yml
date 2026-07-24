@@ -15,6 +15,13 @@ updates:
       # Origam targets .NET 8, so keep this package on the .NET 8-compatible major version until upgrade to .NET 10.
       - dependency-name: "Microsoft.Extensions.Logging.Log4Net.AspNetCore"
         versions: [">=9.0.0"]
+      # Microsoft.VisualStudio.Web.CodeGeneration.Design 8.0.7 requires Roslyn 4.8.0 exactly.
+      - dependency-name: "Microsoft.CodeAnalysis.Common"
+        versions: [">=4.8.1"]
+      - dependency-name: "Microsoft.CodeAnalysis.CSharp"
+        versions: [">=4.8.1"]
+      - dependency-name: "Microsoft.CodeAnalysis.VisualBasic"
+        versions: [">=4.8.1"]
   - package-ecosystem: "npm"
     directory: "/frontend-html"
     open-pull-requests-limit: 20
