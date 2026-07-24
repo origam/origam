@@ -30,4 +30,32 @@
     <data name="PathNotOnReportPath" xml:space="preserve">
         <value>The report path is not on the reports path specified in Origam settings.</value>
     </data>
+    <data name="XslFORendererCallFailed" xml:space="preserve">
+        <value>Could not call XSL-FO renderer at '{0}'.</value>
+    </data>
+    <data name="XslFOEmptyDocument" xml:space="preserve">
+        <value>The XSL-FO transformation produced an empty document.</value>
+    </data>
+    <data name="XslFOFormatNotSupported" xml:space="preserve">
+        <value>XSL-FO report format '{0}' is not supported. Only 'pdf' is supported.</value>
+    </data>
+    <data name="XslFORendererDecodeFailed" xml:space="preserve">
+        <value>&lt;Could not decode renderer response as UTF-8. Response length: {0} bytes.&gt;</value>
+    </data>
+    <data name="XslFORendererEmptyResponse" xml:space="preserve">
+        <value>XSL-FO renderer returned an empty PDF response. Renderer URL: {0}</value>
+    </data>
+    <data name="XslFORendererFailed" xml:space="preserve">
+        <value>XSL-FO renderer failed.
+Renderer URL: {0}
+HTTP status: {1} {2}
+Response:
+{3}</value>
+    </data>
+    <data name="XslFORendererTimeout" xml:space="preserve">
+        <value>XSL-FO renderer did not respond within {0} seconds. Renderer URL: {1}</value>
+    </data>
+    <data name="XslFORendererInvalidUrl" xml:space="preserve">
+        <value>Invalid XSL-FO renderer URL '{0}'. Check XSLFO_RENDERER_URL.</value>
+    </data>
 </root>

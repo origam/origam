@@ -24,7 +24,7 @@ import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { action } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import { useContext } from 'react';
-import { Item, Menu, TriggerEvent, useContextMenu } from 'react-contexify';
+import { Item, Menu, TriggerEvent, useContextMenu } from '@origam/react-contexify';
 import { VscClose, VscCloseAll } from 'react-icons/vsc';
 
 export const TabHeader = observer(({ tab }: { tab: ITabState }) => {
