@@ -193,6 +193,7 @@ export class TableViewInner extends React.Component<React.PropsWithChildren<ITab
 
   render() {
     const self = this;
+    const tablePanelView = this.props.tablePanelView;
     const isSelectionCheckboxes = getIsSelectionCheckboxesShown(this.props.tablePanelView);
     const editingRowIndex = getSelectedRowIndex(this.props.tablePanelView);
     let editingColumnIndex = getSelectedColumnIndex(this.props.tablePanelView);
@@ -218,7 +219,7 @@ export class TableViewInner extends React.Component<React.PropsWithChildren<ITab
             headerContainers={self.headerRenderer.headerContainers}
             renderEditor={() => (
               <TableViewEditor
-                expand={this.props.tablePanelView?.expandEditorAfterMounting}
+                expand={tablePanelView?.expandEditorAfterMounting}
                 key={`${editingRowIndex}@${editingColumnIndex}`}/>
             )}
             onNoCellClick={onNoCellClick(this.props.tablePanelView)}

@@ -56,12 +56,18 @@ export class ColumnsDialog extends React.Component<React.PropsWithChildren<{
   columnOptions: Map<string, IColumnOptions>;
   configuration: ITableConfiguration;
 
+  @observable.ref model = this.props.model;
+
   constructor(props: any) {
     super(props);
     makeObservable(this);
-    this.configuration = this.props.model.columnsConfiguration;
-    this.columnOptions = this.props.model.columnOptions;
+    this.configuration = this.model.columnsConfiguration;
+    this.columnOptions = this.model.columnOptions;
     this.resetOrder();
+  }
+
+  componentDidUpdate() {
+    this.model = this.props.model;
   }
 
   @observable columnWidths = [70, 220, 110 - SCROLLBAR_SIZE, 150, 90];
@@ -157,29 +163,29 @@ export class ColumnsDialog extends React.Component<React.PropsWithChildren<{
 
   @action.bound
   resetOrder() {
-    this.temporaryPropertiesOrder = [...this.props.model.tableViewProperties];
+    this.temporaryPropertiesOrder = [...this.model.tableViewProperties];
     this.selectedColumnId = this.temporaryPropertiesOrder[0]?.id || null;
   }
 
   *applyOrder() {    
     if (this.temporaryPropertiesOrder.length === 0) return;
-    this.props.model.setOrderIds(
+    this.model.setOrderIds(
       this.temporaryPropertiesOrder.map((property) => property.id)
     );
   }
 
   *handleOkClick() {
     yield* this.applyOrder();
-    this.props.model.onColumnConfigurationSubmit();
+    this.model.onColumnConfigurationSubmit();
   }
 
   *handleSaveAsClick() {
     yield* this.applyOrder();
-    this.props.model.onSaveAsClick()
+    this.model.onSaveAsClick()
   }
 
   render() {
-    const model = this.props.model;
+    const model = this.model;
     return (
       <ModalDialog
         title={T("Columns", "column_config_title")}
@@ -235,7 +241,7 @@ export class ColumnsDialog extends React.Component<React.PropsWithChildren<{
   }
 
   renderSettings() {
-    const model = this.props.model;
+    const model = this.model;
     return (
       <>
         <div className={S.columnTable}>
@@ -269,7 +275,7 @@ export class ColumnsDialog extends React.Component<React.PropsWithChildren<{
             type="number"
             min={0}
             value={"" + this.configuration.fixedColumnCount}
-            onChange={this.props.model.handleFixedColumnsCountChange}
+            onChange={this.model.handleFixedColumnsCountChange}
           />
         </div>
       </>
@@ -334,7 +340,7 @@ export class ColumnsDialog extends React.Component<React.PropsWithChildren<{
       aggregationType,
       groupingIndex,
       timeGroupingUnit,
-    } = this.props.model.sortedColumnConfigs[rowIndex];
+    } = this.model.sortedColumnConfigs[rowIndex];
 
     const { gridCaption, entity, canGroup, canAggregate, modelInstanceId } = this.columnOptions.get(propertyId)!;
 
@@ -348,7 +354,7 @@ export class ColumnsDialog extends React.Component<React.PropsWithChildren<{
           <input
             type="checkbox"
             key={`${rowIndex}@${columnIndex}`}
-            onChange={(event: any) => this.props.model.setVisible(rowIndex, event.target.checked)}
+            onChange={(event: any) => this.model.setVisible(rowIndex, event.target.checked)}
             checked={isVisible}
           />
         );
@@ -362,7 +368,7 @@ export class ColumnsDialog extends React.Component<React.PropsWithChildren<{
               type="checkbox"
               key={`${rowIndex}@${columnIndex}`}
               checked={groupingIndex > 0}
-              onChange={(event: any) => this.props.model.setGrouping(rowIndex, event.target.checked, entity)}
+              onChange={(event: any) => this.model.setGrouping(rowIndex, event.target.checked, entity)}
               disabled={!canGroup}
             />
             <div>
@@ -376,7 +382,7 @@ export class ColumnsDialog extends React.Component<React.PropsWithChildren<{
             <SimpleDropdown
               options={timeunitOptions}
               selectedOption={selectedTimeUnitOption}
-              onOptionClick={option =>  this.props.model.setTimeGroupingUnit(rowIndex, option.value)}
+              onOptionClick={option =>  this.model.setTimeGroupingUnit(rowIndex, option.value)}
               className={S.dropdown}
             />
           );
@@ -395,7 +401,7 @@ export class ColumnsDialog extends React.Component<React.PropsWithChildren<{
             <SimpleDropdown
               options={aggregationOptions}
               selectedOption={selectedAggregationOption}
-              onOptionClick={option => this.props.model.setAggregation(rowIndex, option.value)}
+              onOptionClick={option => this.model.setAggregation(rowIndex, option.value)}
               className={S.dropdown}
             />
           );
