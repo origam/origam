@@ -51,3 +51,7 @@ updates:
         - "*"
     commit-message:
       prefix: "DEV: "
+    ignore:
+      # Draft.js and react-draft-wysiwyg require Immutable 3.x or 4.x.
+      - dependency-name: "immutable"
+        versions: [">=5.0.0"]
