@@ -29,8 +29,15 @@ import { CreateMenuItemWizard } from '@components/modelTree/createWizard/CreateM
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { observer } from 'mobx-react-lite';
 import { useContext, useEffect, useRef } from 'react';
-import { Item, Menu, Separator, Submenu, TriggerEvent, useContextMenu } from 'react-contexify';
-import 'react-contexify/ReactContexify.css';
+import {
+  Item,
+  Menu,
+  Separator,
+  Submenu,
+  TriggerEvent,
+  useContextMenu,
+} from '@origam/react-contexify';
+import '@origam/react-contexify/ReactContexify.css';
 
 const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number }) => {
   const rootStore = useContext(RootStoreContext);

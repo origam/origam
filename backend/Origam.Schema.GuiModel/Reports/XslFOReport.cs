@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+Copyright 2005 - 2026 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -29,23 +29,21 @@ using Origam.Schema.EntityModel;
 
 namespace Origam.Schema.GuiModel;
 
-/// <summary>
-/// Summary description for AbstractDataReport.
-/// </summary>
-[ClassMetaVersion("6.0.0")]
-public abstract class AbstractDataReport : AbstractReport, IDataReport
+[SchemaItemDescription("XSL-FO Report", "icon_web-report.png")]
+[HelpTopic("XSL-FO+Report")]
+[ClassMetaVersion("1.0.0")]
+public class XslFOReport : AbstractReport, IDataStructureReference, IDataReport
 {
-    public AbstractDataReport()
+    public XslFOReport()
         : base() { }
 
-    public AbstractDataReport(Guid schemaExtensionId)
+    public XslFOReport(Guid schemaExtensionId)
         : base(schemaExtensionId) { }
 
-    public AbstractDataReport(Key primaryKey)
+    public XslFOReport(Key primaryKey)
         : base(primaryKey) { }
 
     #region Properties
-    private string _reportFileName;
     public Guid DataStructureId;
 
     [TypeConverter(typeof(DataStructureConverter))]
@@ -110,29 +108,27 @@ public abstract class AbstractDataReport : AbstractReport, IDataReport
             );
         }
     }
-    public Guid TransformationId;
+    public Guid XslFOTransformationId;
 
     [TypeConverter(typeof(TransformationConverter))]
-    [XmlReference("transformation", "TransformationId")]
-    public AbstractTransformation Transformation
+    [NotNullModelElementRule()]
+    [XmlReference("xsl-fo-transformation", "XslFOTransformationId")]
+    public AbstractTransformation XslFOTransformation
     {
         get
         {
             return (AbstractTransformation)
                 this.PersistenceProvider.RetrieveInstance(
                     typeof(ISchemaItem),
-                    new ModelElementKey(this.TransformationId)
+                    new ModelElementKey(this.XslFOTransformationId)
                 );
         }
-        set { this.TransformationId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]; }
+        set
+        {
+            this.XslFOTransformationId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+        }
     }
 
-    [XmlAttribute("reportFileName")]
-    public string ReportFileName
-    {
-        get { return _reportFileName; }
-        set { _reportFileName = value; }
-    }
     string _localeXPath;
 
     [Description(
@@ -173,9 +169,9 @@ public abstract class AbstractDataReport : AbstractReport, IDataReport
             dependencies.Add(this.SortSet);
         }
 
-        if (this.Transformation != null)
+        if (this.XslFOTransformation != null)
         {
-            dependencies.Add(this.Transformation);
+            dependencies.Add(this.XslFOTransformation);
         }
 
         base.GetExtraDependencies(dependencies);

@@ -910,6 +910,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@origam/react-contexify@github:origam/origam-react-contexify#v6.0.1-origam.0":
+  version: 6.0.1-origam.0
+  resolution: "@origam/react-contexify@https://github.com/origam/origam-react-contexify.git#commit=04290fc0de11ed9cb1743dfead050e4c602c0ced"
+  dependencies:
+    clsx: "npm:^1.2.1"
+  peerDependencies:
+    react: ">=16"
+    react-dom: ">=16"
+  checksum: 10c0/5ac5377df185b1103159f03d999e6df4698680a5f29bc23aa2d828cd32d1922dc2bc0c6351976f024cf8685e5f224f95495b2121519086bc04a15171773ea061
+  languageName: node
+  linkType: hard
+
 "@oxc-project/types@npm:=0.133.0":
   version: 0.133.0
   resolution: "@oxc-project/types@npm:0.133.0"
@@ -1596,6 +1608,7 @@ __metadata:
     "@babel/core": "npm:^7.29.7"
     "@babel/plugin-proposal-decorators": "npm:^7.29.7"
     "@monaco-editor/react": "npm:^4.7.0"
+    "@origam/react-contexify": "github:origam/origam-react-contexify#v6.0.1-origam.0"
     "@rolldown/plugin-babel": "npm:^0.2.3"
     "@types/babel__core": "npm:^7.20.5"
     "@types/lodash": "npm:^4.17.24"
@@ -1621,7 +1634,6 @@ __metadata:
     monaco-vim: "npm:^0.4.4"
     prettier: "npm:^3.8.3"
     react: "npm:^19.2.7"
-    react-contexify: "npm:^6.0.0"
     react-dnd: "npm:^16.0.1"
     react-dnd-html5-backend: "npm:^16.0.1"
     react-dom: "npm:^19.2.7"
@@ -4320,18 +4332,6 @@ __metadata:
   version: 2.3.1
   resolution: "punycode@npm:2.3.1"
   checksum: 10c0/14f76a8206bc3464f794fb2e3d3cc665ae416c01893ad7a02b23766eb07159144ee612ad67af5e84fa4479ccfe67678c4feb126b0485651b302babf66f04f9e9
-  languageName: node
-  linkType: hard
-
-"react-contexify@npm:^6.0.0":
-  version: 6.0.0
-  resolution: "react-contexify@npm:6.0.0"
-  dependencies:
-    clsx: "npm:^1.2.1"
-  peerDependencies:
-    react: ">=16"
-    react-dom: ">=16"
-  checksum: 10c0/f43ece394e0d398941bdc46930759582a447372b48fac06a382acfb447ca6f359d8c882f8bfd25d38d951966dcb19a566d9bd00d157e81a32a15f77a771ef45d
   languageName: node
   linkType: hard
 

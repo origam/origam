@@ -26,7 +26,7 @@ import { IDesignerEditorState } from '@editors/designerEditor/common/IDesignerEd
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { observer } from 'mobx-react-lite';
 import React, { useContext, useEffect, useRef } from 'react';
-import { Item, Menu } from 'react-contexify';
+import { Item, Menu } from '@origam/react-contexify';
 
 export const DesignSurface: React.FC<{
   designerState: IDesignerEditorState;
