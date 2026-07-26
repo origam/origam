@@ -9,12 +9,18 @@ if [ -z "${OrigamSettings__ModelSourceControlLocation}" ]; then
   export OrigamSettings__ModelSourceControlLocation="/home/origam/projectData/model"
 fi
 
-sudo /root/updateTimezone.sh
+container_mode="${ContainerMode:-server}"
+
+if [ "$container_mode" != "server-direct" ]; then
+  sudo /root/updateTimezone.sh
+fi
 cd /home/origam/Setup
 ./cleanUpEnvironment.sh
-sudo ./cleanUpEnvironmentRoot.sh
+if [ "$container_mode" != "server-direct" ]; then
+  sudo ./cleanUpEnvironmentRoot.sh
+fi
 
-if [ -z "$ContainerMode" ] || [ "$ContainerMode" = 'server' ]; then
+if [ "$container_mode" = "server" ]; then
   cd /etc/nginx/ssl
   sudo /etc/nginx/ssl/createSslCertificate.sh
   sudo /etc/init.d/nginx start
@@ -22,12 +28,18 @@ if [ -z "$ContainerMode" ] || [ "$ContainerMode" = 'server' ]; then
   ./configureServer.sh
   export ASPNETCORE_URLS="http://+:8080"
   exec dotnet Origam.Server.dll
-elif [ "$ContainerMode" = "scheduler" ]; then
+elif [ "$container_mode" = "server-direct" ]; then
+  cd /home/origam/server_bin
+  export ORIGAM_SKIP_NGINX=true
+  ./configureServer.sh
+  export ASPNETCORE_URLS="http://+:8080"
+  exec dotnet Origam.Server.dll
+elif [ "$container_mode" = "scheduler" ]; then
   cd /home/origam/scheduler_bin
   ./configureScheduler.sh
   exec dotnet OrigamScheduler.dll
 #  bash
 else
-  echo "Unsupported ContainerMode $ContainerMode"
+  echo "Unsupported ContainerMode $container_mode"
   exit 1
 fi
