@@ -2624,7 +2624,7 @@ __metadata:
     react-router-dom: "npm:^5.3.0"
     react-split: "npm:^2.0.13"
     react-virtualized: "npm:^9.22.6"
-    sass: "npm:^1.101.6"
+    sass: "npm:^1.102.0"
     stream-browserify: "npm:^3.0.0"
     typescript: "npm:^6.0.3"
     uuid: "npm:^14.0.1"
@@ -5042,9 +5042,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sass@npm:^1.101.6":
-  version: 1.101.6
-  resolution: "sass@npm:1.101.6"
+"sass@npm:^1.102.0":
+  version: 1.102.0
+  resolution: "sass@npm:1.102.0"
   dependencies:
     "@parcel/watcher": "npm:^2.4.1"
     chokidar: "npm:^5.0.0"
@@ -5055,7 +5055,7 @@ __metadata:
       optional: true
   bin:
     sass: sass.js
-  checksum: 10c0/975e5b2622549ca29a0051f4cffe68863467571735ae995139d7545539932292eeeb9ca41fdf11ed2d8598e133d8d926f60671ecf45e4f3961025fb53700f25f
+  checksum: 10c0/77c05a0d14dc05653e98978c4f1cc6754254fcbf6cba71f111bc49c0c69477f3f9e180f99c65641d19a23b964d6039ef116191700144ebefc1709a5b6d5899b1
   languageName: node
   linkType: hard
 
