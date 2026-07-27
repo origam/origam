@@ -152,7 +152,9 @@ public class CreateCommand(
             name: settings.ProjectName,
             folder: settings.ProjectFolder,
             dockerImageLinux: settings.ProjectDockerImageLinux,
-            dockerImageWindows: settings.ProjectDockerImageWin
+            dockerImageWindows: settings.ProjectDockerImageWin,
+            adminName: settings.ProjectWebAdminUsername,
+            adminEmail: settings.ProjectWebAdminEmail
         );
         visualService.PrintArchitectValues(
             dockerImageLinux: settings.ArchitectDockerImageLinux,
