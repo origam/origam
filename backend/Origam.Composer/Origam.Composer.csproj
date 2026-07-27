@@ -58,18 +58,6 @@
       CopyToOutputDirectory="PreserveNewest"
       CopyToPublishDirectory="PreserveNewest"
     />
-    <Content
-      Include="..\..\model-root\Dockerfile"
-      Link="model-root\Dockerfile"
-      CopyToOutputDirectory="PreserveNewest"
-      CopyToPublishDirectory="PreserveNewest"
-    />
-    <Content
-      Include="..\..\model-root\.dockerignore"
-      Link="model-root\.dockerignore"
-      CopyToOutputDirectory="PreserveNewest"
-      CopyToPublishDirectory="PreserveNewest"
-    />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Strings.Designer.cs">
