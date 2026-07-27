@@ -23,6 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
 using Origam.Schema;
@@ -173,6 +174,11 @@ public class ModeledOpenApiDocumentGenerator(
             Parameters = CreateParameters(page),
             Responses = CreateResponses(page),
         };
+        if (operationType == OperationType.Get && page is XsltDataPage { AllowCustomFilters: true })
+        {
+            operation.Description +=
+                " Use the POST operation on the same path to send custom filters and ordering.";
+        }
 
         OpenApiRequestBody requestBody = CreateRequestBody(page, operationType);
         if (requestBody != null)
@@ -206,8 +212,7 @@ public class ModeledOpenApiDocumentGenerator(
     private static IList<OpenApiParameter> CreateParameters(AbstractPage page)
     {
         var parameters = new List<OpenApiParameter>();
-        var mappingGroups = page
-            .ChildItemsByType<PageParameterMapping>(
+        var mappingGroups = page.ChildItemsByType<PageParameterMapping>(
                 PageParameterMapping.CategoryConst
             )
             .Where(mapping =>
@@ -218,10 +223,7 @@ public class ModeledOpenApiDocumentGenerator(
                     comparisonType: StringComparison.OrdinalIgnoreCase
                 )
             )
-            .GroupBy(
-                mapping => mapping.MappedParameter,
-                StringComparer.OrdinalIgnoreCase
-            );
+            .GroupBy(mapping => mapping.MappedParameter, StringComparer.OrdinalIgnoreCase);
         foreach (IGrouping<string, PageParameterMapping> mappingGroup in mappingGroups)
         {
             PageParameterMapping firstMapping = mappingGroup.First();
@@ -442,16 +444,27 @@ public class ModeledOpenApiDocumentGenerator(
             return null;
         }
 
-        OpenApiSchema schema =
+        OpenApiSchema schema;
+        if (acceptsCustomFilters)
+        {
+            schema = CreateCustomFilterSchema((XsltDataPage)page);
+        }
+        else if (
             operationType == OperationType.Put
             && page is XsltDataPage dataPage
             && dataPage.DataStructure != null
-                ? CreateDataStructureSchema(
-                    dataPage.DataStructure,
-                    dataPage.OmitJsonRootElement,
-                    dataPage.OmitJsonMainElement
-                )
-                : new OpenApiSchema { Type = "object", AdditionalPropertiesAllowed = true };
+        )
+        {
+            schema = CreateDataStructureSchema(
+                dataPage.DataStructure,
+                dataPage.OmitJsonRootElement,
+                dataPage.OmitJsonMainElement
+            );
+        }
+        else
+        {
+            schema = new OpenApiSchema { Type = "object", AdditionalPropertiesAllowed = true };
+        }
 
         var content = new Dictionary<string, OpenApiMediaType>
         {
@@ -466,6 +479,92 @@ public class ModeledOpenApiDocumentGenerator(
         }
 
         return new OpenApiRequestBody { Required = false, Content = content };
+    }
+
+    private static OpenApiSchema CreateCustomFilterSchema(XsltDataPage page)
+    {
+        DataStructureEntity entity = page.DataStructure.Entities.First();
+        List<DataStructureColumn> columns = entity
+            .Columns.OrderBy(column => column.Name, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+        string availableColumns = string.Join(
+            separator: ", ",
+            values: columns.Select(column =>
+                $"{column.Name} ({GetOpenApiTypeName(CreateColumnSchema(column))})"
+            )
+        );
+        var columnNameSchema = new OpenApiSchema
+        {
+            Type = "string",
+            Description = $"A column in '{entity.Name}'.",
+            Enum = columns.Select(column => (IOpenApiAny)new OpenApiString(column.Name)).ToList(),
+        };
+        var orderingSchema = new OpenApiSchema
+        {
+            Type = "object",
+            Required = new HashSet<string> { "columnId", "direction" },
+            Properties = new Dictionary<string, OpenApiSchema>
+            {
+                ["columnId"] = columnNameSchema,
+                ["direction"] = new OpenApiSchema
+                {
+                    Type = "string",
+                    Enum = new List<IOpenApiAny>
+                    {
+                        new OpenApiString("ASC"),
+                        new OpenApiString("DESC"),
+                    },
+                },
+                ["lookupId"] = new OpenApiSchema
+                {
+                    Type = "string",
+                    Format = "uuid",
+                    Nullable = true,
+                },
+            },
+        };
+        string exampleColumn = columns.FirstOrDefault()?.Name ?? "ColumnName";
+        return new OpenApiSchema
+        {
+            Type = "object",
+            Description =
+                "Custom filtering and ordering input. Available columns: " + availableColumns + ".",
+            Properties = new Dictionary<string, OpenApiSchema>
+            {
+                ["filter"] = new OpenApiSchema
+                {
+                    Type = "string",
+                    Description =
+                        "Origam filter expression. A condition is [\"column\", \"operator\", value]. "
+                        + "Combine conditions with [\"$AND\", ...] or [\"$OR\", ...]. "
+                        + "Operators include eq, neq, gt, gte, lt, lte, starts, nstarts, ends, "
+                        + "nends, contains, ncontains, like, in, nin, between and nbetween.",
+                    Example = new OpenApiString($"[\"{exampleColumn}\",\"eq\",null]"),
+                },
+                ["filterLookups"] = new OpenApiSchema
+                {
+                    Type = "object",
+                    Description =
+                        "Optional map from a filter column name to the UUID of the lookup used "
+                        + "to resolve that column.",
+                    AdditionalPropertiesAllowed = true,
+                    AdditionalProperties = new OpenApiSchema { Type = "string", Format = "uuid" },
+                },
+                ["ordering"] = new OpenApiSchema
+                {
+                    Type = "array",
+                    Description = "Optional custom ordering. Array order determines sort priority.",
+                    Items = orderingSchema,
+                },
+            },
+        };
+    }
+
+    private static string GetOpenApiTypeName(OpenApiSchema schema)
+    {
+        return string.IsNullOrWhiteSpace(schema.Format)
+            ? schema.Type
+            : $"{schema.Type}/{schema.Format}";
     }
 
     private OpenApiResponses CreateResponses(AbstractPage page)
