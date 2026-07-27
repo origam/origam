@@ -48,6 +48,7 @@ export const CreateLookupWizard: React.FC<CreateLookupWizardProps> = observer(
     );
 
     const wizardRef = useRef<HTMLDivElement>(null);
+    const lastFocusedRef = useRef<HTMLElement | null>(null);
     const nameManuallyEditedRef = useRef(false);
     const [step, setStep] = useState(0);
     const [entityData, setEntityData] = useState<ILookupWizardEntityData | null>(null);
@@ -149,6 +150,17 @@ export const CreateLookupWizard: React.FC<CreateLookupWizardProps> = observer(
     }, [entityId, run, rootStore.architectApi]);
 
     useEffect(() => {
+      const onFocusOut = (event: FocusEvent) => {
+        const target = event.target as HTMLElement | null;
+        if (target && wizardRef.current?.contains(target)) {
+          lastFocusedRef.current = target;
+        }
+      };
+      document.addEventListener('focusout', onFocusOut);
+      return () => document.removeEventListener('focusout', onFocusOut);
+    }, []);
+
+    useEffect(() => {
       const onKeyDown = (event: KeyboardEvent) => {
         if (event.key === 'Escape') {
           event.stopPropagation();
@@ -170,7 +182,11 @@ export const CreateLookupWizard: React.FC<CreateLookupWizardProps> = observer(
           event.preventDefault();
           event.stopPropagation();
           const activeElement = document.activeElement as HTMLElement | null;
-          const activeIndex = activeElement ? focusableNodes.indexOf(activeElement) : -1;
+          const referenceElement =
+            activeElement && focusableNodes.includes(activeElement)
+              ? activeElement
+              : lastFocusedRef.current;
+          const activeIndex = referenceElement ? focusableNodes.indexOf(referenceElement) : -1;
           const direction = event.shiftKey ? -1 : 1;
           const nextIndex =
             activeIndex === -1

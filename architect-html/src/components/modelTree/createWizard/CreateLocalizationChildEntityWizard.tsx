@@ -190,24 +190,9 @@ export const CreateLocalizationChildEntityWizard: React.FC<CreateLocalizationChi
               </div>
             </div>
 
-            <div
-              style={{
-                border: '1px solid var(--background3)',
-                borderRadius: 6,
-                flex: 1,
-                minHeight: 0,
-                overflowY: 'auto',
-                background: 'var(--background1)',
-              }}
-            >
+            <div className={S.fieldList}>
               {columns.length === 0 ? (
-                <div
-                  style={{
-                    padding: '12px',
-                    fontSize: 13,
-                    color: 'var(--background6)',
-                  }}
-                >
+                <div className={S.fieldListEmpty}>
                   {T(
                     'No text columns (String/Memo) found on this entity.',
                     'create_l10n_no_text_columns',
@@ -219,22 +204,13 @@ export const CreateLocalizationChildEntityWizard: React.FC<CreateLocalizationChi
                   return (
                     <label
                       key={column.id}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 10,
-                        padding: '8px 12px',
-                        borderBottom: '1px solid var(--background3)',
-                        cursor: 'pointer',
-                        fontSize: 13,
-                        color: 'var(--background8)',
-                      }}
+                      className={`${S.fieldOption} ${checked ? S.fieldOptionSelected : ''}`}
                     >
                       <input
                         type="checkbox"
+                        className={S.fieldOptionCheckbox}
                         checked={checked}
                         onChange={() => toggleField(column.id)}
-                        style={{ accentColor: 'var(--brand)' }}
                       />
                       {column.name}
                     </label>

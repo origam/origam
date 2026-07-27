@@ -150,7 +150,9 @@ export class Component {
     this.id = args.id;
     this.data = args.data;
     this.properties = args.properties;
-    this._labelPosition = parseLabelPosition(this.get('CaptionPosition'));
+    this._labelPosition = this.getProperty('CaptionPosition')
+      ? parseLabelPosition(this.get('CaptionPosition'))
+      : LabelPosition.None;
     this.parent = args.parent;
     if (this.parent) {
       this.hideChildren = this.parent.hideChildren;
@@ -228,6 +230,10 @@ export class Component {
 
   get canHaveChildren(): boolean {
     return false;
+  }
+
+  get hasBorder(): boolean {
+    return true;
   }
 
   update() {}

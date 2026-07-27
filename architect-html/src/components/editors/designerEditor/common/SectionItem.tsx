@@ -40,7 +40,7 @@ export const SectionItem: React.FC<{
             {component.data.identifier}
           </div>
           <div
-            className={SD.designComponent}
+            className={`${SD.designComponent} ${component.hasBorder ? '' : SD.borderless}`}
             style={{
               left: `${component.absoluteLeft}px`,
               top: `${component.absoluteTop}px`,

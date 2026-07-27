@@ -19,10 +19,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import S from '@components/modelTree/createWizard/CreateWizard.module.scss';
 import { observer } from 'mobx-react-lite';
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { RootStoreContext, T } from '@/main';
 import { ICreateWizardResult, IScreenSectionWizardData } from '@api/IArchitectApi';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
+
+const focusableSelector = 'a[href], button, input, select, textarea, [tabindex]';
 
 interface CreateScreenSectionWizardProps {
   entityId: string;
@@ -39,6 +41,9 @@ export const CreateScreenSectionWizard: React.FC<CreateScreenSectionWizardProps>
       [rootStore.errorDialogController],
     );
 
+    const wizardRef = useRef<HTMLDivElement>(null);
+    const formContentRef = useRef<HTMLDivElement>(null);
+    const lastFocusedRef = useRef<HTMLElement | null>(null);
     const [step, setStep] = useState(0);
     const [entityData, setEntityData] = useState<IScreenSectionWizardData | null>(null);
     const [loading, setLoading] = useState(true);
@@ -95,10 +100,56 @@ export const CreateScreenSectionWizard: React.FC<CreateScreenSectionWizardProps>
     }, [entityId, run, rootStore.architectApi]);
 
     useEffect(() => {
+      const onFocusOut = (event: FocusEvent) => {
+        const target = event.target as HTMLElement | null;
+        if (target && wizardRef.current?.contains(target)) {
+          lastFocusedRef.current = target;
+        }
+      };
+      document.addEventListener('focusout', onFocusOut);
+      return () => document.removeEventListener('focusout', onFocusOut);
+    }, []);
+
+    useEffect(() => {
+      const stepNodes = Array.from(
+        formContentRef.current?.querySelectorAll<HTMLElement>(focusableSelector) ?? [],
+      );
+      stepNodes.find(node => !node.hasAttribute('disabled'))?.focus();
+    }, [step]);
+
+    useEffect(() => {
       const onKeyDown = (event: KeyboardEvent) => {
         if (event.key === 'Escape') {
           event.stopPropagation();
           onCancel();
+          return;
+        }
+        if (event.key === 'Tab' && wizardRef.current) {
+          const focusableNodes = Array.from(
+            wizardRef.current.querySelectorAll<HTMLElement>(focusableSelector),
+          ).filter(node => {
+            if (node.hasAttribute('disabled')) return false;
+            if (node.getAttribute('tabindex') === '-1') return false;
+            if (node.offsetParent === null && node !== document.activeElement) return false;
+            return true;
+          });
+          if (focusableNodes.length === 0) return;
+          event.preventDefault();
+          event.stopPropagation();
+          const activeElement = document.activeElement as HTMLElement | null;
+          const referenceElement =
+            activeElement && focusableNodes.includes(activeElement)
+              ? activeElement
+              : lastFocusedRef.current;
+          const activeIndex = referenceElement ? focusableNodes.indexOf(referenceElement) : -1;
+          const direction = event.shiftKey ? -1 : 1;
+          const nextIndex =
+            activeIndex === -1
+              ? event.shiftKey
+                ? focusableNodes.length - 1
+                : 0
+              : (activeIndex + direction + focusableNodes.length) % focusableNodes.length;
+          focusableNodes[nextIndex].focus();
         }
       };
       document.addEventListener('keydown', onKeyDown);
@@ -248,42 +299,24 @@ export const CreateScreenSectionWizard: React.FC<CreateScreenSectionWizardProps>
             </div>
           </div>
 
-          <div
-            style={{
-              border: '1px solid var(--background3)',
-              borderRadius: 6,
-              flex: 1,
-              minHeight: 0,
-              overflowY: 'auto',
-              background: 'var(--background1)',
-            }}
-          >
+          <div className={S.fieldList}>
             {columns.map(column => {
               const checked = selectedFieldIds.has(column.id);
               return (
                 <label
                   key={column.id}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 10,
-                    padding: '8px 12px',
-                    borderBottom: '1px solid var(--background3)',
-                    cursor: 'pointer',
-                    fontSize: 13,
-                    color: 'var(--background8)',
-                  }}
+                  className={`${S.fieldOption} ${checked ? S.fieldOptionSelected : ''}`}
                 >
                   <input
                     type="checkbox"
+                    className={S.fieldOptionCheckbox}
                     checked={checked}
                     onChange={() => toggleField(column.id)}
-                    style={{ accentColor: 'var(--brand)' }}
                   />
                   {column.name}
                   {column.isPrimaryKey && (
-                    <span style={{ color: 'var(--background6)', fontSize: 11 }}>
-                      {T('(primary key)', 'wizard_field_primary_key')}
+                    <span className={S.fieldOptionBadge}>
+                      {T('primary key', 'wizard_field_primary_key')}
                     </span>
                   )}
                 </label>
@@ -359,7 +392,7 @@ export const CreateScreenSectionWizard: React.FC<CreateScreenSectionWizardProps>
     };
 
     return (
-      <div className={S.drawer} role="dialog" aria-modal="true">
+      <div className={S.drawer} role="dialog" aria-modal="true" ref={wizardRef}>
         <div className={S.header}>
           <div className={S.headerIcon}>S</div>
           <div className={S.headerText}>
@@ -395,7 +428,9 @@ export const CreateScreenSectionWizard: React.FC<CreateScreenSectionWizardProps>
           </div>
 
           <div className={S.formCol}>
-            <div className={S.formContent}>{renderStep()}</div>
+            <div className={S.formContent} ref={formContentRef}>
+              {renderStep()}
+            </div>
 
             <div className={S.footer}>
               <div className={S.footerHint}>

@@ -345,37 +345,19 @@ export const CreateScreenWizard: React.FC<CreateScreenWizardProps> = observer(
               </div>
             </div>
 
-            <div
-              style={{
-                border: '1px solid var(--background3)',
-                borderRadius: 6,
-                flex: 1,
-                minHeight: 0,
-                overflowY: 'auto',
-                background: 'var(--background1)',
-              }}
-            >
+            <div className={S.fieldList}>
               {columns.map(column => {
                 const checked = model.selectedFieldIds.has(column.id);
                 return (
                   <label
                     key={column.id}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 10,
-                      padding: '8px 12px',
-                      borderBottom: '1px solid var(--background3)',
-                      cursor: 'pointer',
-                      fontSize: 13,
-                      color: 'var(--background8)',
-                    }}
+                    className={`${S.fieldOption} ${checked ? S.fieldOptionSelected : ''}`}
                   >
                     <input
                       type="checkbox"
+                      className={S.fieldOptionCheckbox}
                       checked={checked}
                       onChange={() => toggleField(column.id)}
-                      style={{ accentColor: 'var(--brand)' }}
                     />
                     {column.name}
                   </label>
@@ -400,7 +382,7 @@ export const CreateScreenWizard: React.FC<CreateScreenWizardProps> = observer(
                   {model.name || T('Untitled', 'wizard_untitled')}
                 </div>
                 <div style={{ fontSize: 12, color: 'var(--background6)' }}>
-                  {T('Screen + Section + DataStructure', 'create_screen_review_type')}
+                  {T('Screen + Screen Section + Data Structure', 'create_screen_review_type')}
                 </div>
               </div>
             </div>
@@ -426,10 +408,7 @@ export const CreateScreenWizard: React.FC<CreateScreenWizardProps> = observer(
                   {T('Selected fields', 'create_screen_review_selected_fields_title')}
                 </div>
                 <div style={{ fontSize: 12, color: 'var(--background6)' }}>
-                  {T(
-                    'Placed on the Screen Section in order',
-                    'create_screen_review_selected_fields_hint',
-                  )}
+                  {T('Placed on the Screen Section', 'create_screen_review_selected_fields_hint')}
                 </div>
               </div>
             </div>

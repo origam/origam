@@ -291,6 +291,7 @@ public class WizardService(
                 persist: true
             );
             var newPanel = GuiHelper.CreatePanel(groupName, entity, selectedNames, input.Name);
+            RelayoutScreenSectionFields(newPanel);
             var newForm = GuiHelper.CreateForm(newDataStructure, groupName, newPanel);
             return (newDataStructure, newPanel, newForm);
         });
