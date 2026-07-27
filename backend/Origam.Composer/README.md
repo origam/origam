@@ -34,6 +34,19 @@ Parameter `--commands-output-format` can be either `sh` (bash scripts for Linux 
 
 If the parameter `--commands-add-windows-containers` is added, the generated scripts will contain commands for both Linux and Windows Docker containers.
 
+Composer can optionally create the initial ORIGAM administrator. Supply all
+three parameters together:
+
+```
+--p-admin-username admin
+--p-admin-password change-this-password
+--p-admin-email admin@example.com
+```
+
+If these parameters are omitted, Composer does not create an application user.
+After the Server starts, create the initial administrator through
+`/Account/RegisterInitialUser`.
+
 All docker images are available on ORIGAM Github: https://github.com/origam/origam/releases
 
 You can insert parameters into `Jetbrains Rider` > `Edit Configurations` > `Program arguments`.
