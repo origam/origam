@@ -29,6 +29,7 @@ namespace Origam.Composer.Services;
 
 public class ProjectBuilderService(
     ICopyBundledModelBuilderTask copyBundledModelBuilderTask,
+    ICreateProjectConfigurationBuilderTask createProjectConfigurationBuilderTask,
     ICreateDatabaseBuilderTask createDatabaseBuilderTask,
     IApplyDatabasePermissionsBuilderTask applyDatabasePermissionsBuilderTask,
     IInitFileModelBuilderTask initFileModelBuilderTask,
@@ -74,6 +75,7 @@ public class ProjectBuilderService(
     {
         Tasks.Add(printOrigamSettingsBuilderTask);
         Tasks.Add(copyBundledModelBuilderTask);
+        Tasks.Add(createProjectConfigurationBuilderTask);
         Tasks.Add(createDatabaseBuilderTask);
         Tasks.Add(applyDatabasePermissionsBuilderTask);
         Tasks.Add(initFileModelBuilderTask);
