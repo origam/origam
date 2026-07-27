@@ -73,7 +73,7 @@ Example for `PostgreSQL`:
 Origam.Composer.exe create
 --commands-output-format cmd
 
---db-type postgres
+--db-type postgresql
 --db-host localhost
 --db-port 5432
 --db-name MyOrigamApp

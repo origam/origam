@@ -61,7 +61,7 @@ public class CreateCommand(
 
             #region DB
             DatabaseType = settings.DbType.Equals(
-                value: "postgres",
+                value: "postgresql",
                 StringComparison.CurrentCultureIgnoreCase
             )
                 ? DatabaseType.PgSql

@@ -41,7 +41,7 @@ public class CreateCommandSettings : CommandSettings
     #region Database
 
     [CommandOption("--db-type <TYPE>", true)]
-    [AllowedValues("mssql", "postgres")]
+    [AllowedValues("mssql", "postgresql")]
     public required string DbType { get; set; }
 
     [CommandOption("--db-host <HOST>", true)]
