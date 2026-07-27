@@ -477,25 +477,18 @@ jobs:
            Server Docker Images
            ```
            docker pull origam/server:$(TAG).$(Build.BuildId).linux
-           docker pull origam/server:$(VERSION_NUMBER).linux
            docker pull origam/server:$(TAG).$(Build.BuildId).win-nano
-           docker pull origam/server:$(VERSION_NUMBER).win-nano
            docker pull origam/server:$(TAG).$(Build.BuildId).win-core
-           docker pull origam/server:$(VERSION_NUMBER).win-core
            ```
            Architect Server Docker Images
            ```
            docker pull origam/architect:$(TAG).$(Build.BuildId).linux
-           docker pull origam/architect:$(VERSION_NUMBER).linux
            docker pull origam/architect:$(TAG).$(Build.BuildId).win-nano
-           docker pull origam/architect:$(VERSION_NUMBER).win-nano
            ```
            Composer Docker Images
            ```
            docker pull origam/composer:$(TAG).$(Build.BuildId).linux
-           docker pull origam/composer:$(VERSION_NUMBER).linux
            docker pull origam/composer:$(TAG).$(Build.BuildId).win-nano
-           docker pull origam/composer:$(VERSION_NUMBER).win-nano
            ```
          assets: |
            $(Build.ArtifactStagingDirectory)/origam-setup/origam-architect.msi
@@ -603,7 +596,6 @@ jobs:
          buildContext: '$(Agent.BuildDirectory)/s/docker'
          tags: |
            $(TAG).$(Build.BuildId).linux
-           $(VERSION_NUMBER).linux
            $(TAG_LATEST).linux
   - job: build_origam_architect_docker
     displayName: Build Origam Architect Linux Docker
@@ -633,7 +625,6 @@ jobs:
          buildContext: '$(Agent.BuildDirectory)/s/docker'
          tags: |
            $(TAG).$(Build.BuildId).linux
-           $(VERSION_NUMBER).linux
            $(TAG_LATEST).linux
   # ------------------------------------
   # DOCKER WINDOWS NANO
@@ -675,7 +666,6 @@ jobs:
          buildContext: '$(Agent.BuildDirectory)/s/docker'
          tags: |
            $(TAG).$(Build.BuildId).win-nano
-           $(VERSION_NUMBER).win-nano
            $(TAG_LATEST).win-nano
   # ------------------------------------
   # DOCKER WINDOWS SERVER CORE
@@ -717,7 +707,6 @@ jobs:
          buildContext: '$(Agent.BuildDirectory)/s/docker'
          tags: |
            $(TAG).$(Build.BuildId).win-core
-           $(VERSION_NUMBER).win-core
            $(TAG_LATEST).win-core
   # ------------------------------------
   # DOCKER ARCHITECT WINDOWS NANO
@@ -750,7 +739,6 @@ jobs:
          buildContext: '$(Agent.BuildDirectory)/s/docker'
          tags: |
            $(TAG).$(Build.BuildId).win-nano
-           $(VERSION_NUMBER).win-nano
            $(TAG_LATEST).win-nano
   # ------------------------------------
   # DOCKER COMPOSER WINDOWS NANO
@@ -784,7 +772,6 @@ jobs:
          buildContext: '$(Agent.BuildDirectory)/s/docker'
          tags: |
            $(TAG).$(Build.BuildId).win-nano
-           $(VERSION_NUMBER).win-nano
            $(TAG_LATEST).win-nano
   # ------------------------------------
   # DOCKER COMPOSER LINUX
@@ -818,5 +805,4 @@ jobs:
          buildContext: '$(Agent.BuildDirectory)/s/docker'
          tags: |
            $(TAG).$(Build.BuildId).linux
-           $(VERSION_NUMBER).linux
            $(TAG_LATEST).linux
