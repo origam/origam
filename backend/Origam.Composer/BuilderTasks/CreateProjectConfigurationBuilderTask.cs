@@ -19,7 +19,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using Origam.Composer.DTOs;
@@ -27,6 +26,7 @@ using Origam.Composer.Enums;
 using Origam.Composer.Interfaces.BuilderTasks;
 using Origam.Composer.Interfaces.Services;
 using Origam.DA.Common.DatabasePlatform;
+using Origam.Extensions;
 
 namespace Origam.Composer.BuilderTasks;
 
@@ -100,12 +100,7 @@ public class CreateProjectConfigurationBuilderTask(
 
     private static string GetOrigamVersion()
     {
-        Assembly composerAssembly = typeof(CreateProjectConfigurationBuilderTask).Assembly;
-        return composerAssembly
-                .GetCustomAttributes<AssemblyMetadataAttribute>()
-                .Single(attribute => attribute.Key == "OrigamVersion")
-                .Value
-            ?? throw new InvalidOperationException("Composer ORIGAM version is not set.");
+        return StringExtensions.GetAssemblyVersion(tag: "master");
     }
 
     private static string GetWebsiteUrl(Project project)

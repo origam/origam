@@ -3,13 +3,9 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
     <Version>0.0.0.0</Version>
-    <OrigamVersion Condition="'$(OrigamVersion)' == ''">master</OrigamVersion>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
   </PropertyGroup>
-  <ItemGroup>
-    <AssemblyMetadata Include="OrigamVersion" Value="$(OrigamVersion)" />
-  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Origam.DA.Common\Origam.DA.Common.csproj" />
     <ProjectReference Include="..\Origam.OrigamEngine\Origam.OrigamEngine.csproj" />
