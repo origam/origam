@@ -38,13 +38,13 @@ public class CopyBundledModelBuilderTask : ICopyBundledModelBuilderTask
 
     private static void CopyBundledModelRoot(string projectFolder)
     {
-        string modelRootPath = Path.Join(AppContext.BaseDirectory, "model-root");
+        string modelRootPath = Path.Join(AppContext.BaseDirectory, path2: "model-root");
         CopyDirectory(modelRootPath, projectFolder);
     }
 
     private static void EnsureCustomAssetsFolderExists(string projectFolder)
     {
-        Directory.CreateDirectory(Path.Join(projectFolder, "customAssets"));
+        Directory.CreateDirectory(Path.Join(projectFolder, path2: "customAssets"));
     }
 
     private static void CopyDirectory(string sourceDir, string destinationDir)

@@ -72,7 +72,7 @@ public class CreateProjectConfigurationBuilderTask(
 
     private static void CreateProjectManifest(Project project)
     {
-        string manifestPath = Path.Join(project.ProjectFolder, "origam-project.json");
+        string manifestPath = Path.Join(project.ProjectFolder, path2: "origam-project.json");
         if (File.Exists(manifestPath))
         {
             return;
