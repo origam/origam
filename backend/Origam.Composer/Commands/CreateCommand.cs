@@ -82,6 +82,10 @@ public class CreateCommand(
             ModelFolder = Path.Combine(settings.ProjectFolder, path2: "model"),
             ProjectFolder = settings.ProjectFolder,
 
+            WebAdminUsername = settings.ProjectWebAdminUsername,
+            WebAdminPassword = settings.ProjectWebAdminPassword,
+            WebAdminEmail = settings.ProjectWebAdminEmail,
+
             ClientDockerImageLinux = settings.ProjectDockerImageLinux,
             ClientDockerImageWin = settings.ProjectDockerImageWin,
             #endregion

@@ -72,6 +72,16 @@ public class Project
     public int ArchitectPort { get; init; }
     #endregion
 
+    #region WebUser
+    public string WebAdminUsername { get; init; }
+    public string WebAdminPassword { get; init; }
+    public string WebAdminEmail { get; init; }
+    public bool ShouldCreateWebAdmin =>
+        !string.IsNullOrWhiteSpace(WebAdminUsername)
+        && !string.IsNullOrWhiteSpace(WebAdminPassword)
+        && !string.IsNullOrWhiteSpace(WebAdminEmail);
+    #endregion
+
     #region Docker
     public required string ClientDockerImageLinux { get; init; }
     public required string ClientDockerImageWin { get; init; }

@@ -74,7 +74,32 @@ public class CreateCommandSettings : CommandSettings
     [CommandOption("--p-folder <FOLDER>", true)]
     public required string ProjectFolder { get; set; }
 
+    [CommandOption("--p-admin-username <NAME>")]
+    public string ProjectWebAdminUsername { get; set; }
+
+    [CommandOption("--p-admin-password <PASSWORD>")]
+    public string ProjectWebAdminPassword { get; set; }
+
+    [CommandOption("--p-admin-email <EMAIL>")]
+    public string ProjectWebAdminEmail { get; set; }
+
     #endregion
+
+    public override ValidationResult Validate()
+    {
+        int adminValueCount = new[]
+        {
+            ProjectWebAdminUsername,
+            ProjectWebAdminPassword,
+            ProjectWebAdminEmail,
+        }.Count(value => !string.IsNullOrWhiteSpace(value));
+
+        return adminValueCount is 0 or 3
+            ? ValidationResult.Success()
+            : ValidationResult.Error(
+                "--p-admin-username, --p-admin-password and --p-admin-email must be supplied together."
+            );
+    }
 
     #region Architect
 

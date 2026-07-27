@@ -57,6 +57,7 @@ class Program
             CreateDatabaseStructureBuilderTask
         >();
         services.AddSingleton<ICreateNewPackageBuilderTask, CreateNewPackageBuilderTask>();
+        services.AddSingleton<ICreateNewUserBuilderTask, CreateNewUserBuilderTask>();
         services.AddSingleton<IPrintOrigamSettingsBuilderTask, PrintOrigamSettingsBuilderTask>();
 
         var registrar = new OrigamTypeRegistrar(services);

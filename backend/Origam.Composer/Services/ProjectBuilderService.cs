@@ -34,6 +34,7 @@ public class ProjectBuilderService(
     IInitFileModelBuilderTask initFileModelBuilderTask,
     ICreateDatabaseStructureBuilderTask createDatabaseStructureBuilderTask,
     ICreateNewPackageBuilderTask createNewPackageBuilderTask,
+    ICreateNewUserBuilderTask createNewUserBuilderTask,
     IPrintOrigamSettingsBuilderTask printOrigamSettingsBuilderTask
 ) : IProjectBuilderService
 {
@@ -78,6 +79,10 @@ public class ProjectBuilderService(
         Tasks.Add(initFileModelBuilderTask);
         Tasks.Add(createDatabaseStructureBuilderTask);
         Tasks.Add(createNewPackageBuilderTask);
+        if (project.ShouldCreateWebAdmin)
+        {
+            Tasks.Add(createNewUserBuilderTask);
+        }
     }
 
     public List<IBuilderTask> GetTasks()
