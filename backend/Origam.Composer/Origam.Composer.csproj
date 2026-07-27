@@ -2,9 +2,14 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
+    <Version>0.0.0.0</Version>
+    <OrigamVersion Condition="'$(OrigamVersion)' == ''">master</OrigamVersion>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
   </PropertyGroup>
+  <ItemGroup>
+    <AssemblyMetadata Include="OrigamVersion" Value="$(OrigamVersion)" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Origam.DA.Common\Origam.DA.Common.csproj" />
     <ProjectReference Include="..\Origam.OrigamEngine\Origam.OrigamEngine.csproj" />
@@ -33,6 +38,38 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Strings.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content
+      Include="..\..\model-root\model\**\*"
+      Link="model-root\model\%(RecursiveDir)%(Filename)%(Extension)"
+      CopyToOutputDirectory="PreserveNewest"
+      CopyToPublishDirectory="PreserveNewest"
+    />
+    <Content
+      Include="..\..\model-root\customAssets\**\*"
+      Link="model-root\customAssets\%(RecursiveDir)%(Filename)%(Extension)"
+      CopyToOutputDirectory="PreserveNewest"
+      CopyToPublishDirectory="PreserveNewest"
+    />
+    <Content
+      Include="..\..\model-root\l10n\**\*"
+      Link="model-root\l10n\%(RecursiveDir)%(Filename)%(Extension)"
+      CopyToOutputDirectory="PreserveNewest"
+      CopyToPublishDirectory="PreserveNewest"
+    />
+    <Content
+      Include="..\..\model-root\Dockerfile"
+      Link="model-root\Dockerfile"
+      CopyToOutputDirectory="PreserveNewest"
+      CopyToPublishDirectory="PreserveNewest"
+    />
+    <Content
+      Include="..\..\model-root\.dockerignore"
+      Link="model-root\.dockerignore"
+      CopyToOutputDirectory="PreserveNewest"
+      CopyToPublishDirectory="PreserveNewest"
+    />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Strings.Designer.cs">

@@ -28,7 +28,6 @@ public class Project
     #region General
     public bool CommandsAddWindowsContainers { get; set; }
     public Enums.CommandOutputFormat CommandsOutputFormat { get; set; }
-    public string OrigamRepositoryUrl => "https://github.com/origam/origam/archive/master.zip";
     #endregion
 
     #region DB
@@ -71,12 +70,6 @@ public class Project
     public required string ArchitectDockerImageLinux { get; init; }
     public required string ArchitectDockerImageWin { get; init; }
     public int ArchitectPort { get; init; }
-    #endregion
-
-    #region WebUser
-    public required string WebAdminUsername { get; set; }
-    public required string WebAdminPassword { get; set; }
-    public required string WebAdminEmail { get; set; }
     #endregion
 
     #region Docker

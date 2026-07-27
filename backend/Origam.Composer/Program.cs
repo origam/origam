@@ -45,7 +45,7 @@ class Program
         services.AddSingleton<IProjectBuilderService, ProjectBuilderService>();
         services.AddSingleton<IPasswordGeneratorService, PasswordGeneratorService>();
         services.AddSingleton<IFileSystemService, FileSystemService>();
-        services.AddSingleton<IDownloadFileModelBuilderTask, DownloadFileModelBuilderTask>();
+        services.AddSingleton<ICopyBundledModelBuilderTask, CopyBundledModelBuilderTask>();
         services.AddSingleton<ICreateDatabaseBuilderTask, CreateDatabaseBuilderTask>();
         services.AddSingleton<
             IApplyDatabasePermissionsBuilderTask,
@@ -57,7 +57,6 @@ class Program
             CreateDatabaseStructureBuilderTask
         >();
         services.AddSingleton<ICreateNewPackageBuilderTask, CreateNewPackageBuilderTask>();
-        services.AddSingleton<ICreateNewUserBuilderTask, CreateNewUserBuilderTask>();
         services.AddSingleton<IPrintOrigamSettingsBuilderTask, PrintOrigamSettingsBuilderTask>();
 
         var registrar = new OrigamTypeRegistrar(services);

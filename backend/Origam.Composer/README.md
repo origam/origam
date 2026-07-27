@@ -59,9 +59,6 @@ Origam.Composer.exe create
 
 --p-name MyOrigamApp
 --p-folder "C:\OrigamProjects\MyOrigamApp"
---p-admin-username admin
---p-admin-password 5axg1zr8
---p-admin-email "john.doe@example.com"
 --p-docker-image-linux "origam/server:2025.11.alpha.4051.linux"
 --p-docker-image-win "origam/server:2025.11.alpha.4051.win"
 
@@ -85,9 +82,6 @@ Origam.Composer.exe create
 
 --p-name MyOrigamApp
 --p-folder "C:\OrigamProjects\MyOrigamApp"
---p-admin-username admin
---p-admin-password 5axg1zr8
---p-admin-email "john.doe@example.com"
 --p-docker-image-linux "origam/server:2025.11.alpha.4051.linux"
 --p-docker-image-win "origam/server:2025.11.alpha.4051.win"
 

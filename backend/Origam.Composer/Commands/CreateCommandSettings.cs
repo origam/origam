@@ -74,15 +74,6 @@ public class CreateCommandSettings : CommandSettings
     [CommandOption("--p-folder <FOLDER>", true)]
     public required string ProjectFolder { get; set; }
 
-    [CommandOption("--p-admin-username <NAME>", true)]
-    public required string ProjectWebAdminUsername { get; set; }
-
-    [CommandOption("--p-admin-password <PASSWORD>", true)]
-    public required string ProjectWebAdminPassword { get; set; }
-
-    [CommandOption("--p-admin-email <EMAIL>", true)]
-    public required string ProjectWebAdminEmail { get; set; }
-
     #endregion
 
     #region Architect

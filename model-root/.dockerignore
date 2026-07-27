@@ -1,0 +1,8 @@
+**
+!Dockerfile
+!model/
+!model/**
+!customAssets/
+!customAssets/**
+!l10n/
+!l10n/**

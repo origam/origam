@@ -28,13 +28,12 @@ using Spectre.Console;
 namespace Origam.Composer.Services;
 
 public class ProjectBuilderService(
-    IDownloadFileModelBuilderTask downloadFileModelBuilderTask,
+    ICopyBundledModelBuilderTask copyBundledModelBuilderTask,
     ICreateDatabaseBuilderTask createDatabaseBuilderTask,
     IApplyDatabasePermissionsBuilderTask applyDatabasePermissionsBuilderTask,
     IInitFileModelBuilderTask initFileModelBuilderTask,
     ICreateDatabaseStructureBuilderTask createDatabaseStructureBuilderTask,
     ICreateNewPackageBuilderTask createNewPackageBuilderTask,
-    ICreateNewUserBuilderTask createNewUserBuilderTask,
     IPrintOrigamSettingsBuilderTask printOrigamSettingsBuilderTask
 ) : IProjectBuilderService
 {
@@ -73,13 +72,12 @@ public class ProjectBuilderService(
     public void PrepareTasks(Project project)
     {
         Tasks.Add(printOrigamSettingsBuilderTask);
-        Tasks.Add(downloadFileModelBuilderTask);
+        Tasks.Add(copyBundledModelBuilderTask);
         Tasks.Add(createDatabaseBuilderTask);
         Tasks.Add(applyDatabasePermissionsBuilderTask);
         Tasks.Add(initFileModelBuilderTask);
         Tasks.Add(createDatabaseStructureBuilderTask);
         Tasks.Add(createNewPackageBuilderTask);
-        Tasks.Add(createNewUserBuilderTask);
     }
 
     public List<IBuilderTask> GetTasks()

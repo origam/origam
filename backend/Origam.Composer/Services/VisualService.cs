@@ -42,9 +42,7 @@ public class VisualService : IVisualService
         string name,
         string folder,
         string dockerImageLinux,
-        string dockerImageWindows,
-        string adminName,
-        string adminEmail
+        string dockerImageWindows
     )
     {
         var table = new Table()
@@ -55,9 +53,6 @@ public class VisualService : IVisualService
 
         table.AddRow("Name", name);
         table.AddRow("Folder", folder);
-        table.AddRow("Admin username", adminName);
-        table.AddRow("Admin email", adminEmail);
-        table.AddRow("Admin password", "[dim]-- masked --[/]");
         table.AddRow("Docker image (linux)", dockerImageLinux);
         table.AddRow("Docker image (win)", dockerImageWindows);
 

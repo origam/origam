@@ -31,9 +31,7 @@ public interface IVisualService
         string name,
         string folder,
         string dockerImageLinux,
-        string dockerImageWindows,
-        string adminName,
-        string adminEmail
+        string dockerImageWindows
     );
 
     void PrintDatabaseValues(string type, string host, int port, string name, string username);

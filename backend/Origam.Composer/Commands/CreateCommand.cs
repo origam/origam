@@ -82,11 +82,6 @@ public class CreateCommand(
             ModelFolder = Path.Combine(settings.ProjectFolder, path2: "model"),
             ProjectFolder = settings.ProjectFolder,
 
-            // Admin user account for client web app
-            WebAdminUsername = settings.ProjectWebAdminUsername,
-            WebAdminPassword = settings.ProjectWebAdminPassword,
-            WebAdminEmail = settings.ProjectWebAdminEmail,
-
             ClientDockerImageLinux = settings.ProjectDockerImageLinux,
             ClientDockerImageWin = settings.ProjectDockerImageWin,
             #endregion
@@ -153,9 +148,7 @@ public class CreateCommand(
             name: settings.ProjectName,
             folder: settings.ProjectFolder,
             dockerImageLinux: settings.ProjectDockerImageLinux,
-            dockerImageWindows: settings.ProjectDockerImageWin,
-            adminName: settings.ProjectWebAdminUsername,
-            adminEmail: settings.ProjectWebAdminEmail
+            dockerImageWindows: settings.ProjectDockerImageWin
         );
         visualService.PrintArchitectValues(
             dockerImageLinux: settings.ArchitectDockerImageLinux,
