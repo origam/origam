@@ -26,17 +26,70 @@ using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using MoreLinq.Extensions;
 using Origam.Server.Configuration;
 using Origam.Server.Middleware;
+using Origam.Server.OpenApi;
 using Origam.Service.Core;
 using SoapCore;
+using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace Origam.Server;
 
 public static class IApplicationBuilderExtensions
 {
+    public static void UseModeledOpenApiDocumentation(this IApplicationBuilder app, bool enabled)
+    {
+        const string documentPath = "/openapi/modelled-api.json";
+        const string userInterfacePath = "/api-docs";
+        if (!enabled)
+        {
+            app.Map(
+                documentPath,
+                branch =>
+                    branch.Run(context =>
+                    {
+                        context.Response.StatusCode = StatusCodes.Status404NotFound;
+                        return System.Threading.Tasks.Task.CompletedTask;
+                    })
+            );
+            app.Map(
+                userInterfacePath,
+                branch =>
+                    branch.Run(context =>
+                    {
+                        context.Response.StatusCode = StatusCodes.Status404NotFound;
+                        return System.Threading.Tasks.Task.CompletedTask;
+                    })
+            );
+            return;
+        }
+
+        app.Map(
+            documentPath,
+            branch =>
+                branch.Run(async context =>
+                {
+                    var provider =
+                        context.RequestServices.GetRequiredService<ModeledOpenApiDocumentProvider>();
+                    context.Response.ContentType = "application/vnd.oai.openapi+json;version=3.0";
+                    await context.Response.WriteAsync(provider.GetDocument());
+                })
+        );
+        app.UseSwaggerUI(options =>
+        {
+            options.RoutePrefix = userInterfacePath.TrimStart('/');
+            options.DocumentTitle = "Origam Modeled API";
+            options.SwaggerEndpoint(
+                url: "../openapi/modelled-api.json",
+                name: "Origam Modeled API"
+            );
+            options.DocExpansion(DocExpansion.List);
+        });
+    }
+
     public static void UseCustomSpa(this IApplicationBuilder app, string pathToClientApp)
     {
         app.Use(

@@ -52,6 +52,7 @@ using Origam.Server.Authorization;
 using Origam.Server.ClientAuthentication;
 using Origam.Server.Configuration;
 using Origam.Server.Middleware;
+using Origam.Server.OpenApi;
 using Origam.Service.Core;
 using SoapCore;
 using static OpenIddict.Abstractions.OpenIddictConstants;
@@ -96,6 +97,8 @@ public class Startup
     {
         ServicePointManager.SecurityProtocol = startUpConfiguration.SecurityProtocol;
         services.AddSingleton(startUpConfiguration);
+        services.AddSingleton<ModeledOpenApiDocumentGenerator>();
+        services.AddSingleton<ModeledOpenApiDocumentProvider>();
         services.Configure<KestrelServerOptions>(options =>
         {
             options.AllowSynchronousIO = true;
@@ -578,6 +581,7 @@ public class Startup
         app.UseMiddleware<FatalErrorMiddleware>();
         app.UseMiddleware<OrigamErrorHandlingMiddleware>();
 
+        app.UseModeledOpenApiDocumentation(startUpConfiguration.OpenApiDocumentationEnabled);
         app.UseUserApi(startUpConfiguration, openIddictConfig);
         app.UseWorkQueueApi();
 
