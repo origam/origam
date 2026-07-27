@@ -45,13 +45,13 @@ public class CopyBundledModelBuilderTask(IConnectionStringService connectionStri
 
     private void CopyBundledModelRoot(string projectFolder)
     {
-        string modelRootPath = Path.Combine(AppContext.BaseDirectory, "model-root");
+        string modelRootPath = Path.Join(AppContext.BaseDirectory, "model-root");
         CopyDirectory(modelRootPath, projectFolder);
     }
 
     private void CreateCustomAssetsFolder(string projectFolder)
     {
-        var dir = new DirectoryInfo(Path.Combine(projectFolder, path2: "customAssets"));
+        var dir = new DirectoryInfo(Path.Join(projectFolder, "customAssets"));
         if (!dir.Exists)
         {
             dir.Create();
@@ -75,7 +75,7 @@ public class CopyBundledModelBuilderTask(IConnectionStringService connectionStri
 
         foreach (FileInfo file in dir.GetFiles())
         {
-            string targetFilePath = Path.Combine(destinationDir, file.Name);
+            string targetFilePath = Path.Join(destinationDir, file.Name);
             if (!File.Exists(targetFilePath))
             {
                 file.CopyTo(targetFilePath);
@@ -84,7 +84,7 @@ public class CopyBundledModelBuilderTask(IConnectionStringService connectionStri
 
         foreach (DirectoryInfo subDir in dirs)
         {
-            string newDestinationDir = Path.Combine(destinationDir, subDir.Name);
+            string newDestinationDir = Path.Join(destinationDir, subDir.Name);
             CopyDirectory(subDir.FullName, newDestinationDir);
         }
     }
@@ -112,14 +112,14 @@ public class CopyBundledModelBuilderTask(IConnectionStringService connectionStri
         sb.Append("TZ=Europe/Prague");
 
         File.WriteAllText(
-            Path.Combine(project.ProjectFolder, $"{project.Name}_Environments.env"),
+            Path.Join(project.ProjectFolder, $"{project.Name}_Environments.env"),
             sb.ToString()
         );
     }
 
     private void CreateProjectManifest(Project project)
     {
-        string manifestPath = Path.Combine(project.ProjectFolder, "origam-project.json");
+        string manifestPath = Path.Join(project.ProjectFolder, "origam-project.json");
         if (File.Exists(manifestPath))
         {
             return;
