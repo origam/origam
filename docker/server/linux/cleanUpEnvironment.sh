@@ -13,6 +13,3 @@ echo "unset gitConfUrl" >> ../.bashrc
 echo "unset gitConfSshUrl" >> ../.bashrc
 echo "unset gitConfSshKey" >> ../.bashrc
 echo "unset gitConfSshDomain" >> ../.bashrc
-echo "unset OrigamSettings_DbUsername" >> ../.bashrc
-echo "unset OrigamSettings_DbPassword" >> ../.bashrc
-

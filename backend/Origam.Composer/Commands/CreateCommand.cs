@@ -61,7 +61,7 @@ public class CreateCommand(
 
             #region DB
             DatabaseType = settings.DbType.Equals(
-                value: "postgres",
+                value: "postgresql",
                 StringComparison.CurrentCultureIgnoreCase
             )
                 ? DatabaseType.PgSql
@@ -82,7 +82,6 @@ public class CreateCommand(
             ModelFolder = Path.Combine(settings.ProjectFolder, path2: "model"),
             ProjectFolder = settings.ProjectFolder,
 
-            // Admin user account for client web app
             WebAdminUsername = settings.ProjectWebAdminUsername,
             WebAdminPassword = settings.ProjectWebAdminPassword,
             WebAdminEmail = settings.ProjectWebAdminEmail,
