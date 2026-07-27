@@ -18,6 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import {
+  DeploymentStatus,
   EditorSubType,
   IApiTabData,
   IApiTreeNode,
@@ -49,6 +50,7 @@ export class TreeNode implements IEditorNode {
     this.itemType = apiNode.itemType;
     this.itemTypeName = apiNode.itemTypeName;
     this.isCurrentVersion = apiNode.isCurrentVersion;
+    this.deploymentStatus = apiNode.deploymentStatus;
     this.nodeLevelType = apiNode.nodeLevelType ?? 'Item';
     this.isInActivePackage = apiNode.isInActivePackage ?? true;
     this.isFileDirty = apiNode.isFileDirty ?? false;
@@ -72,6 +74,7 @@ export class TreeNode implements IEditorNode {
   itemType?: string;
   itemTypeName?: string;
   isCurrentVersion?: boolean;
+  deploymentStatus?: DeploymentStatus;
   nodeLevelType: NodeLevelType;
   isInActivePackage: boolean;
   isFileDirty: boolean;

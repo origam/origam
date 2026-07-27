@@ -35,8 +35,52 @@ import { CreateScreenSectionWizard } from '@components/modelTree/createWizard/Cr
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { observer } from 'mobx-react-lite';
 import { useContext, useEffect, useRef } from 'react';
-import { Item, Menu, Separator, Submenu, TriggerEvent, useContextMenu } from 'react-contexify';
-import 'react-contexify/ReactContexify.css';
+import {
+  Item,
+  Menu,
+  Separator,
+  Submenu,
+  TriggerEvent,
+  useContextMenu,
+} from '@origam/react-contexify';
+import '@origam/react-contexify/ReactContexify.css';
+
+const DeploymentBadges = observer(({ node }: { node: TreeNode }) => {
+  return (
+    <>
+      {node.deploymentStatus && (
+        <span
+          className={`${S.statusBadge} ${
+            node.deploymentStatus === 'Done' ? S.statusDone : S.statusPending
+          }`}
+          title={
+            node.deploymentStatus === 'Done'
+              ? T('Already deployed to the database.', 'tree_node_deployment_status_done_tooltip')
+              : T(
+                  'Not deployed to the database yet.',
+                  'tree_node_deployment_status_pending_tooltip',
+                )
+          }
+        >
+          {node.deploymentStatus === 'Done'
+            ? T('Done', 'tree_node_deployment_status_done')
+            : T('Pending', 'tree_node_deployment_status_pending')}
+        </span>
+      )}
+      {node.isCurrentVersion && (
+        <span
+          className={S.currentBadge}
+          title={T(
+            'The version new deployment scripts are added to.',
+            'tree_node_deployment_current_tooltip',
+          )}
+        >
+          {T('Current', 'tree_node_deployment_current')}
+        </span>
+      )}
+    </>
+  );
+});
 
 const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number }) => {
   const rootStore = useContext(RootStoreContext);
@@ -479,6 +523,7 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
               <Icon src={node.iconUrl ?? '/Icons/generic.svg'} />
             </div>
             {node.nodeText}
+            <DeploymentBadges node={node} />
           </div>
           <Menu id={menuId} onVisibilityChange={onMenuVisibilityChange}>
             {node.contextMenuItems.length > 0 ? (

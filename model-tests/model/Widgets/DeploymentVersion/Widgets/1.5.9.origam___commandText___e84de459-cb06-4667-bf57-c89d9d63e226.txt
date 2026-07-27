@@ -1,0 +1,16 @@
+﻿ALTER TABLE "AllDataTypesDetail" ADD CONSTRAINT "FK_AllDataTypesDetail_refAllDataTypesId_AllDataTypes"
+	FOREIGN KEY (
+		"refAllDataTypesId"
+	)
+
+	REFERENCES "AllDataTypes" (
+		"Id"
+	);
+ALTER TABLE "AllDataTypesDetail" ADD CONSTRAINT "FK_AllDataTypesDetail_refArrayTestId_ArrayTest"
+	FOREIGN KEY (
+		"refArrayTestId"
+	)
+
+	REFERENCES "ArrayTest" (
+		"Id"
+	);
