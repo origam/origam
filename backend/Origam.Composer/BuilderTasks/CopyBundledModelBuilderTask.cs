@@ -33,7 +33,7 @@ public class CopyBundledModelBuilderTask : ICopyBundledModelBuilderTask
     public void Execute(Project project)
     {
         CopyBundledModelRoot(project.ProjectFolder);
-        CreateCustomAssetsFolder(project.ProjectFolder);
+        EnsureCustomAssetsFolderExists(project.ProjectFolder);
     }
 
     private static void CopyBundledModelRoot(string projectFolder)
@@ -42,7 +42,7 @@ public class CopyBundledModelBuilderTask : ICopyBundledModelBuilderTask
         CopyDirectory(modelRootPath, projectFolder);
     }
 
-    private static void CreateCustomAssetsFolder(string projectFolder)
+    private static void EnsureCustomAssetsFolderExists(string projectFolder)
     {
         Directory.CreateDirectory(Path.Join(projectFolder, "customAssets"));
     }
