@@ -34,6 +34,19 @@ Parameter `--commands-output-format` can be either `sh` (bash scripts for Linux 
 
 If the parameter `--commands-add-windows-containers` is added, the generated scripts will contain commands for both Linux and Windows Docker containers.
 
+Composer can optionally create the initial ORIGAM administrator. Supply all
+three parameters together:
+
+```
+--p-admin-username admin
+--p-admin-password change-this-password
+--p-admin-email admin@example.com
+```
+
+If these parameters are omitted, Composer does not create an application user.
+After the Server starts, create the initial administrator through
+`/Account/RegisterInitialUser`.
+
 All docker images are available on ORIGAM Github: https://github.com/origam/origam/releases
 
 You can insert parameters into `Jetbrains Rider` > `Edit Configurations` > `Program arguments`.
@@ -59,9 +72,6 @@ Origam.Composer.exe create
 
 --p-name MyOrigamApp
 --p-folder "C:\OrigamProjects\MyOrigamApp"
---p-admin-username admin
---p-admin-password 5axg1zr8
---p-admin-email "john.doe@example.com"
 --p-docker-image-linux "origam/server:2025.11.alpha.4051.linux"
 --p-docker-image-win "origam/server:2025.11.alpha.4051.win"
 
@@ -76,7 +86,7 @@ Example for `PostgreSQL`:
 Origam.Composer.exe create
 --commands-output-format cmd
 
---db-type postgres
+--db-type postgresql
 --db-host localhost
 --db-port 5432
 --db-name MyOrigamApp
@@ -85,9 +95,6 @@ Origam.Composer.exe create
 
 --p-name MyOrigamApp
 --p-folder "C:\OrigamProjects\MyOrigamApp"
---p-admin-username admin
---p-admin-password 5axg1zr8
---p-admin-email "john.doe@example.com"
 --p-docker-image-linux "origam/server:2025.11.alpha.4051.linux"
 --p-docker-image-win "origam/server:2025.11.alpha.4051.win"
 

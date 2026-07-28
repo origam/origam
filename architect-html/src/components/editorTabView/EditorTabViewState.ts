@@ -91,6 +91,16 @@ export class EditorTabViewState {
     }.bind(this);
   }
 
+  openEditorBySchemaItemId(schemaItemId: string) {
+    return function* (
+      this: EditorTabViewState,
+    ): Generator<Promise<IApiTabData>, void, IApiTabData> {
+      const apiTabData = yield this.architectApi.openTab(schemaItemId);
+      const editorData = new EditorData(apiTabData, null);
+      this.openEditor(editorData);
+    }.bind(this);
+  }
+
   openDocumentationEditor(node: TreeNode) {
     return function* (
       this: EditorTabViewState,

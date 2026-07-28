@@ -437,6 +437,7 @@ export interface IApiTreeNode extends INodeLoadData {
   itemType?: string;
   itemTypeName?: string;
   isCurrentVersion?: boolean;
+  deploymentStatus?: DeploymentStatus;
   nodeLevelType?: NodeLevelType;
   isInActivePackage?: boolean;
   isFileDirty?: boolean;
@@ -463,6 +464,8 @@ export interface IDeploymentScriptsGeneratorModuleData {
   currentDeploymentVersionId: string | null;
   results: IDatabaseResult[];
 }
+
+export type DeploymentStatus = 'Pending' | 'Done';
 
 export interface DocumentationEditorData {
   label: string;

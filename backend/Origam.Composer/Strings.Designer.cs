@@ -222,15 +222,6 @@ namespace Origam.Composer {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Model root directory not found at: {0}.
-        /// </summary>
-        internal static string Model_root_directory_not_found {
-            get {
-                return ResourceManager.GetString("Model_root_directory_not_found", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to [green]Project Configuration[/].
         /// </summary>
         internal static string Project_Configuration_Header {
@@ -272,15 +263,6 @@ namespace Origam.Composer {
         internal static string Repository_not_initialized {
             get {
                 return ResourceManager.GetString("Repository_not_initialized", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to RepositoryZipPath is not set..
-        /// </summary>
-        internal static string RepositoryZipPath_not_set {
-            get {
-                return ResourceManager.GetString("RepositoryZipPath_not_set", resourceCulture);
             }
         }
         
