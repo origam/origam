@@ -6,7 +6,7 @@ updates:
     schedule:
       interval: "daily"
     cooldown:
-      default-days: 1
+      default-days: 7
       include:
         - "*"
     commit-message:
@@ -28,7 +28,7 @@ updates:
     schedule:
       interval: "daily"
     cooldown:
-      default-days: 1
+      default-days: 7
       include:
         - "*"
     commit-message:
@@ -39,7 +39,7 @@ updates:
     schedule:
       interval: "daily"
     cooldown:
-      default-days: 1
+      default-days: 7
       include:
         - "*"
     commit-message:
@@ -53,7 +53,7 @@ updates:
     schedule:
       interval: "daily"
     cooldown:
-      default-days: 1
+      default-days: 7
       include:
         - "*"
     commit-message:
