@@ -724,6 +724,267 @@ namespace Origam.Server {
                 return ResourceManager.GetString("MenuNotAuthorized", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The modeled API contains more than one {0} operation for '{1}'..
+        /// </summary>
+        public static string ErrorModeledApiDuplicateOperation {
+            get {
+                return ResourceManager.GetString("ErrorModeledApiDuplicateOperation", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Access denied..
+        /// </summary>
+        public static string ModeledApiAccessDeniedResponse {
+            get {
+                return ResourceManager.GetString("ModeledApiAccessDeniedResponse", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Origam access token..
+        /// </summary>
+        public static string ModeledApiAccessTokenDescription {
+            get {
+                return ResourceManager.GetString("ModeledApiAccessTokenDescription", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Origam authentication cookie..
+        /// </summary>
+        public static string ModeledApiAuthenticationCookieDescription {
+            get {
+                return ResourceManager.GetString("ModeledApiAuthenticationCookieDescription", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Authentication required..
+        /// </summary>
+        public static string ModeledApiAuthenticationRequiredResponse {
+            get {
+                return ResourceManager.GetString("ModeledApiAuthenticationRequiredResponse", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to A column in '{0}'..
+        /// </summary>
+        public static string ModeledApiColumnDescription {
+            get {
+                return ResourceManager.GetString("ModeledApiColumnDescription", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to API endpoints defined in the active Origam application model..
+        /// </summary>
+        public static string ModeledApiDescription {
+            get {
+                return ResourceManager.GetString("ModeledApiDescription", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Modeled {0} endpoint..
+        /// </summary>
+        public static string ModeledApiEndpointDescription {
+            get {
+                return ResourceManager.GetString("ModeledApiEndpointDescription", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to ColumnName.
+        /// </summary>
+        public static string ModeledApiExampleColumnName {
+            get {
+                return ResourceManager.GetString("ModeledApiExampleColumnName", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The modeled endpoint failed..
+        /// </summary>
+        public static string ModeledApiFailedResponse {
+            get {
+                return ResourceManager.GetString("ModeledApiFailedResponse", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Origam filter expression..
+        /// </summary>
+        public static string ModeledApiFilterExpressionDescription {
+            get {
+                return ResourceManager.GetString("ModeledApiFilterExpressionDescription", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Custom filtering and ordering input. Available columns: {0}..
+        /// </summary>
+        public static string ModeledApiFilterInputDescription {
+            get {
+                return ResourceManager.GetString("ModeledApiFilterInputDescription", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Optional map from a filter column name to a lookup UUID..
+        /// </summary>
+        public static string ModeledApiFilterLookupsDescription {
+            get {
+                return ResourceManager.GetString("ModeledApiFilterLookupsDescription", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The EXAMPLE_JSON output documentation entry is not valid JSON..
+        /// </summary>
+        public static string ModeledApiInvalidJsonExample {
+            get {
+                return ResourceManager.GetString("ModeledApiInvalidJsonExample", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The EXAMPLE_XML output documentation entry is not valid XML..
+        /// </summary>
+        public static string ModeledApiInvalidXmlExample {
+            get {
+                return ResourceManager.GetString("ModeledApiInvalidXmlExample", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Successful response. The response schema is not available..
+        /// </summary>
+        public static string ModeledApiMissingOutputDocumentationResponse {
+            get {
+                return ResourceManager.GetString("ModeledApiMissingOutputDocumentationResponse", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Modeled endpoint not found..
+        /// </summary>
+        public static string ModeledApiNotFoundResponse {
+            get {
+                return ResourceManager.GetString("ModeledApiNotFoundResponse", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Optional custom ordering. Array order determines sort priority..
+        /// </summary>
+        public static string ModeledApiOrderingDescription {
+            get {
+                return ResourceManager.GetString("ModeledApiOrderingDescription", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Maps to the modeled parameter '{0}'..
+        /// </summary>
+        public static string ModeledApiParameterMapping {
+            get {
+                return ResourceManager.GetString("ModeledApiParameterMapping", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Maps to the modeled parameters {0}..
+        /// </summary>
+        public static string ModeledApiParametersMapping {
+            get {
+                return ResourceManager.GetString("ModeledApiParametersMapping", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Use the POST operation on the same path..
+        /// </summary>
+        public static string ModeledApiPostFiltersHint {
+            get {
+                return ResourceManager.GetString("ModeledApiPostFiltersHint", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Successful response..
+        /// </summary>
+        public static string ModeledApiSuccessfulResponse {
+            get {
+                return ResourceManager.GetString("ModeledApiSuccessfulResponse", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Modeled API endpoints in the '{0}' folder..
+        /// </summary>
+        public static string ModeledApiTagDescription {
+            get {
+                return ResourceManager.GetString("ModeledApiTagDescription", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Origam Modeled API.
+        /// </summary>
+        public static string ModeledApiTitle {
+            get {
+                return ResourceManager.GetString("ModeledApiTitle", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Uncategorized.
+        /// </summary>
+        public static string ModeledApiUncategorized {
+            get {
+                return ResourceManager.GetString("ModeledApiUncategorized", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Successful response. This endpoint returns JSON data..
+        /// </summary>
+        public static string ModeledApiUnknownJsonResponse {
+            get {
+                return ResourceManager.GetString("ModeledApiUnknownJsonResponse", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to OpenAPI documentation generation is not implemented for the modeled page type '{0}'..
+        /// </summary>
+        public static string ModeledApiUnsupportedPageTypeDescription {
+            get {
+                return ResourceManager.GetString("ModeledApiUnsupportedPageTypeDescription", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to OpenAPI documentation generation is not implemented for this modeled page type..
+        /// </summary>
+        public static string ModeledApiUnsupportedPageTypeResponse {
+            get {
+                return ResourceManager.GetString("ModeledApiUnsupportedPageTypeResponse", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Unsupported page type: {0}.
+        /// </summary>
+        public static string ModeledApiUnsupportedPageTypeSummary {
+            get {
+                return ResourceManager.GetString("ModeledApiUnsupportedPageTypeSummary", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Looks up a localized string similar to Taskflow Error.

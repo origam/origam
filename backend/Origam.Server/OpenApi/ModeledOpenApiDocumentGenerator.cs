@@ -64,7 +64,7 @@ public class ModeledOpenApiDocumentGenerator(
             .Select(folderName => new OpenApiTag
             {
                 Name = folderName,
-                Description = $"Modeled API endpoints in the '{folderName}' folder.",
+                Description = string.Format(Resources.ModeledApiTagDescription, folderName),
             })
             .ToList();
 
@@ -86,9 +86,9 @@ public class ModeledOpenApiDocumentGenerator(
         {
             Info = new OpenApiInfo
             {
-                Title = "Origam Modeled API",
+                Title = Resources.ModeledApiTitle,
                 Version = "1.0",
-                Description = "API endpoints defined in the active Origam application model.",
+                Description = Resources.ModeledApiDescription,
             },
             Paths = new OpenApiPaths(),
             Components = new OpenApiComponents
@@ -110,7 +110,7 @@ public class ModeledOpenApiDocumentGenerator(
                 Type = SecuritySchemeType.Http,
                 Scheme = "bearer",
                 BearerFormat = "JWT",
-                Description = "Origam access token.",
+                Description = Resources.ModeledApiAccessTokenDescription,
             };
         }
 
@@ -119,7 +119,7 @@ public class ModeledOpenApiDocumentGenerator(
             Type = SecuritySchemeType.ApiKey,
             In = ParameterLocation.Cookie,
             Name = ".AspNetCore.Identity.Application",
-            Description = "Origam authentication cookie.",
+            Description = Resources.ModeledApiAuthenticationCookieDescription,
         };
     }
 
@@ -186,26 +186,25 @@ public class ModeledOpenApiDocumentGenerator(
         }
     }
 
-    private static void AddUnsupportedPageOperation(OpenApiPathItem pathItem, AbstractPage page)
+    private void AddUnsupportedPageOperation(OpenApiPathItem pathItem, AbstractPage page)
     {
         pathItem.Operations.Add(
             OperationType.Get,
             new OpenApiOperation
             {
                 OperationId = $"{SanitizeOperationId(page.Name)}_unsupported",
-                Summary = $"Unsupported page type: {page.Name}",
-                Description =
-                    $"OpenAPI documentation generation is not implemented for "
-                    + $"the modeled page type '{page.GetType().FullName}'.",
+                Summary = string.Format(Resources.ModeledApiUnsupportedPageTypeSummary, page.Name),
+                Description = string.Format(
+                    Resources.ModeledApiUnsupportedPageTypeDescription,
+                    page.GetType().FullName
+                ),
                 Deprecated = true,
                 Tags = new List<OpenApiTag> { new() { Name = GetFolderName(page) } },
                 Responses = new OpenApiResponses
                 {
                     ["501"] = new OpenApiResponse
                     {
-                        Description =
-                            "OpenAPI documentation generation is not implemented "
-                            + "for this modeled page type.",
+                        Description = Resources.ModeledApiUnsupportedPageTypeResponse,
                     },
                 },
             }
@@ -221,7 +220,7 @@ public class ModeledOpenApiDocumentGenerator(
         if (pathItem.Operations.ContainsKey(operationType))
         {
             throw new OrigamException(
-                $"The modeled API contains more than one {operationType} operation for '{page.Url}'."
+                string.Format(Resources.ErrorModeledApiDuplicateOperation, operationType, page.Url)
             );
         }
 
@@ -230,15 +229,17 @@ public class ModeledOpenApiDocumentGenerator(
             OperationId =
                 $"{SanitizeOperationId(page.Name)}_{operationType.ToString().ToLowerInvariant()}",
             Summary = page.Name,
-            Description = $"Modeled {page.GetType().Name} endpoint.",
+            Description = string.Format(
+                Resources.ModeledApiEndpointDescription,
+                page.GetType().Name
+            ),
             Tags = new List<OpenApiTag> { new() { Name = GetFolderName(page) } },
             Parameters = CreateParameters(page),
             Responses = CreateResponses(page),
         };
         if (operationType == OperationType.Get && page is XsltDataPage { AllowCustomFilters: true })
         {
-            operation.Description +=
-                " Use the POST operation on the same path to send custom filters and ordering.";
+            operation.Description += Resources.ModeledApiPostFiltersHint;
         }
 
         OpenApiRequestBody requestBody = CreateRequestBody(page, operationType);
@@ -306,13 +307,17 @@ public class ModeledOpenApiDocumentGenerator(
                     Required = isPathParameter,
                     Description =
                         modeledParameterNames.Length == 1
-                            ? $"Maps to the modeled parameter '{modeledParameterNames[0]}'."
-                            : "Maps to the modeled parameters "
-                                + string.Join(
+                            ? string.Format(
+                                Resources.ModeledApiParameterMapping,
+                                modeledParameterNames[0]
+                            )
+                            : string.Format(
+                                Resources.ModeledApiParametersMapping,
+                                string.Join(
                                     separator: ", ",
                                     values: modeledParameterNames.Select(name => $"'{name}'")
                                 )
-                                + ".",
+                            ),
                     Schema = allMappingsAreLists
                         ? new OpenApiSchema { Type = "array", Items = itemSchema }
                         : itemSchema,
@@ -456,10 +461,7 @@ public class ModeledOpenApiDocumentGenerator(
         };
     }
 
-    private static OpenApiRequestBody CreateRequestBody(
-        AbstractPage page,
-        OperationType operationType
-    )
+    private OpenApiRequestBody CreateRequestBody(AbstractPage page, OperationType operationType)
     {
         if (operationType is OperationType.Get or OperationType.Delete)
         {
@@ -559,7 +561,7 @@ public class ModeledOpenApiDocumentGenerator(
         var columnNameSchema = new OpenApiSchema
         {
             Type = "string",
-            Description = $"A column in '{entity.Name}'.",
+            Description = string.Format(Resources.ModeledApiColumnDescription, entity.Name),
             Enum = columns.Select(column => (IOpenApiAny)new OpenApiString(column.Name)).ToList(),
         };
         var orderingSchema = new OpenApiSchema
@@ -586,37 +588,34 @@ public class ModeledOpenApiDocumentGenerator(
                 },
             },
         };
-        string exampleColumn = columns.FirstOrDefault()?.Name ?? "ColumnName";
+        string exampleColumn =
+            columns.FirstOrDefault()?.Name ?? Resources.ModeledApiExampleColumnName;
         return new OpenApiSchema
         {
             Type = "object",
-            Description =
-                "Custom filtering and ordering input. Available columns: " + availableColumns + ".",
+            Description = string.Format(
+                Resources.ModeledApiFilterInputDescription,
+                availableColumns
+            ),
             Properties = new Dictionary<string, OpenApiSchema>
             {
                 ["filter"] = new OpenApiSchema
                 {
                     Type = "string",
-                    Description =
-                        "Origam filter expression. A condition is [\"column\", \"operator\", value]. "
-                        + "Combine conditions with [\"$AND\", ...] or [\"$OR\", ...]. "
-                        + "Operators include eq, neq, gt, gte, lt, lte, starts, nstarts, ends, "
-                        + "nends, contains, ncontains, like, in, nin, between and nbetween.",
+                    Description = Resources.ModeledApiFilterExpressionDescription,
                     Example = new OpenApiString($"[\"{exampleColumn}\",\"eq\",null]"),
                 },
                 ["filterLookups"] = new OpenApiSchema
                 {
                     Type = "object",
-                    Description =
-                        "Optional map from a filter column name to the UUID of the lookup used "
-                        + "to resolve that column.",
+                    Description = Resources.ModeledApiFilterLookupsDescription,
                     AdditionalPropertiesAllowed = true,
                     AdditionalProperties = new OpenApiSchema { Type = "string", Format = "uuid" },
                 },
                 ["ordering"] = new OpenApiSchema
                 {
                     Type = "array",
-                    Description = "Optional custom ordering. Array order determines sort priority.",
+                    Description = Resources.ModeledApiOrderingDescription,
                     Items = orderingSchema,
                 },
             },
@@ -639,30 +638,36 @@ public class ModeledOpenApiDocumentGenerator(
                 Description = GetSuccessfulResponseDescription(page),
                 Content = CreateResponseContent(page),
             },
-            ["404"] = new OpenApiResponse { Description = "Modeled endpoint not found." },
-            ["500"] = new OpenApiResponse { Description = "The modeled endpoint failed." },
+            ["404"] = new OpenApiResponse { Description = Resources.ModeledApiNotFoundResponse },
+            ["500"] = new OpenApiResponse { Description = Resources.ModeledApiFailedResponse },
         };
 
         if (RequiresAuthentication(page))
         {
-            responses["401"] = new OpenApiResponse { Description = "Authentication required." };
-            responses["403"] = new OpenApiResponse { Description = "Access denied." };
+            responses["401"] = new OpenApiResponse
+            {
+                Description = Resources.ModeledApiAuthenticationRequiredResponse,
+            };
+            responses["403"] = new OpenApiResponse
+            {
+                Description = Resources.ModeledApiAccessDeniedResponse,
+            };
         }
 
         return responses;
     }
 
-    private static string GetSuccessfulResponseDescription(AbstractPage page)
+    private string GetSuccessfulResponseDescription(AbstractPage page)
     {
         if (page is WorkflowPage)
         {
-            return "Successful response.";
+            return Resources.ModeledApiSuccessfulResponse;
         }
 
         string invalidExampleMessage = GetInvalidExampleMessage(page);
         if (invalidExampleMessage != null)
         {
-            return "Successful response. " + invalidExampleMessage;
+            return Resources.ModeledApiSuccessfulResponse + " " + invalidExampleMessage;
         }
 
         if (
@@ -670,24 +675,20 @@ public class ModeledOpenApiDocumentGenerator(
             && CreateDocumentedExampleContent(page) == null
         )
         {
-            return "Successful response. The response schema is not available because "
-                + "the output documentation is not filled out. "
-                + "Add an EXAMPLE_JSON, EXAMPLE_XML or EXAMPLE documentation entry to expose "
-                + "an example response here.";
+            return Resources.ModeledApiMissingOutputDocumentationResponse;
         }
 
         if (page.MimeType != "application/json")
         {
-            return "Successful response.";
+            return Resources.ModeledApiSuccessfulResponse;
         }
 
         if (page is not XsltDataPage)
         {
-            return "Successful response. This endpoint returns JSON data, but its response "
-                + "schema cannot be inferred from the Origam model.";
+            return Resources.ModeledApiUnknownJsonResponse;
         }
 
-        return "Successful response.";
+        return Resources.ModeledApiSuccessfulResponse;
     }
 
     private string GetInvalidExampleMessage(AbstractPage page)
@@ -711,8 +712,7 @@ public class ModeledOpenApiDocumentGenerator(
             && !TryCreateJsonExample(jsonExample, out IOpenApiAny _)
         )
         {
-            return "The EXAMPLE_JSON output documentation entry is not valid JSON "
-                + "and cannot be displayed.";
+            return Resources.ModeledApiInvalidJsonExample;
         }
 
         string xmlExample = documentationService.GetDocumentation(
@@ -721,8 +721,7 @@ public class ModeledOpenApiDocumentGenerator(
         );
         if (!string.IsNullOrWhiteSpace(xmlExample) && !IsXml(xmlExample))
         {
-            return "The EXAMPLE_XML output documentation entry is not valid XML "
-                + "and cannot be displayed.";
+            return Resources.ModeledApiInvalidXmlExample;
         }
 
         return null;
@@ -1046,10 +1045,10 @@ public class ModeledOpenApiDocumentGenerator(
             && !url.StartsWith(value: "/", comparisonType: StringComparison.Ordinal);
     }
 
-    private static string GetFolderName(AbstractPage page)
+    private string GetFolderName(AbstractPage page)
     {
         return page.Group == null
-            ? "Uncategorized"
+            ? Resources.ModeledApiUncategorized
             : string.Join(
                 separator: " / ",
                 values: page.Group.Path.Replace(oldValue: "\\", newValue: "/")

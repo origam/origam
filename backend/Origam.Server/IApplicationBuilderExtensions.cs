@@ -82,10 +82,10 @@ public static class IApplicationBuilderExtensions
         app.UseSwaggerUI(options =>
         {
             options.RoutePrefix = userInterfacePath.TrimStart('/');
-            options.DocumentTitle = "Origam Modeled API";
+            options.DocumentTitle = Resources.ModeledApiTitle;
             options.SwaggerEndpoint(
                 url: "../openapi/modelled-api.json",
-                name: "Origam Modeled API"
+                name: Resources.ModeledApiTitle
             );
             options.DocExpansion(DocExpansion.List);
         });
