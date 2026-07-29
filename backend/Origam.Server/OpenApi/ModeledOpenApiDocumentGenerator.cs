@@ -139,8 +139,40 @@ public class ModeledOpenApiDocumentGenerator(
             document.Paths.Add(path, pathItem);
         }
 
-        AddOperation(pathItem, OperationType.Get, page);
-        AddOperation(pathItem, OperationType.Post, page);
+        switch (page)
+        {
+            case XsltDataPage dataPage:
+            {
+                if (dataPage.AllowCustomFilters)
+                {
+                    AddOperation(pathItem, OperationType.Post, page);
+                }
+                else
+                {
+                    AddOperation(pathItem, OperationType.Get, page);
+                }
+                break;
+            }
+
+            case WorkflowPage:
+            {
+                AddOperation(pathItem, OperationType.Post, page);
+                break;
+            }
+
+            case ReportPage:
+            case FileDownloadPage:
+            {
+                AddOperation(pathItem, OperationType.Get, page);
+                break;
+            }
+
+            default:
+            {
+                AddUnsupportedPageOperation(pathItem, page);
+                break;
+            }
+        }
         if (page.AllowPUT)
         {
             AddOperation(pathItem, OperationType.Put, page);
@@ -149,6 +181,32 @@ public class ModeledOpenApiDocumentGenerator(
         {
             AddOperation(pathItem, OperationType.Delete, page);
         }
+    }
+
+    private static void AddUnsupportedPageOperation(OpenApiPathItem pathItem, AbstractPage page)
+    {
+        pathItem.Operations.Add(
+            OperationType.Get,
+            new OpenApiOperation
+            {
+                OperationId = $"{SanitizeOperationId(page.Name)}_unsupported",
+                Summary = $"Unsupported page type: {page.Name}",
+                Description =
+                    $"OpenAPI documentation generation is not implemented for "
+                    + $"the modeled page type '{page.GetType().FullName}'.",
+                Deprecated = true,
+                Tags = new List<OpenApiTag> { new() { Name = GetFolderName(page) } },
+                Responses = new OpenApiResponses
+                {
+                    ["501"] = new OpenApiResponse
+                    {
+                        Description =
+                            "OpenAPI documentation generation is not implemented "
+                            + "for this modeled page type.",
+                    },
+                },
+            }
+        );
     }
 
     private void AddOperation(
