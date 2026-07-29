@@ -23,6 +23,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
+using System.Xml.Linq;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
@@ -467,6 +469,8 @@ public class ModeledOpenApiDocumentGenerator(
                 PageParameterMapping.CategoryConst
             )
             .ToList();
+        IDictionary<string, OpenApiMediaType> documentedExamples =
+            page is WorkflowPage ? CreateDocumentedExampleContent(page) : null;
         var fileMappings = mappings.OfType<PageParameterFileMapping>().ToList();
         if (fileMappings.Count > 0 && operationType == OperationType.Post)
         {
@@ -479,16 +483,15 @@ public class ModeledOpenApiDocumentGenerator(
                     Format = "binary",
                 };
             }
-            return new OpenApiRequestBody
+            var multipartContent = new Dictionary<string, OpenApiMediaType>
             {
-                Content = new Dictionary<string, OpenApiMediaType>
+                ["multipart/form-data"] = new()
                 {
-                    ["multipart/form-data"] = new()
-                    {
-                        Schema = new OpenApiSchema { Type = "object", Properties = properties },
-                    },
+                    Schema = new OpenApiSchema { Type = "object", Properties = properties },
                 },
             };
+            AddExamples(multipartContent, documentedExamples);
+            return new OpenApiRequestBody { Content = multipartContent };
         }
 
         bool hasContentMapping = mappings.Any(mapping =>
@@ -497,7 +500,7 @@ public class ModeledOpenApiDocumentGenerator(
         bool acceptsCustomFilters =
             page is XsltDataPage { AllowCustomFilters: true }
             && operationType == OperationType.Post;
-        if (!hasContentMapping && !acceptsCustomFilters)
+        if (!hasContentMapping && !acceptsCustomFilters && documentedExamples == null)
         {
             return null;
         }
@@ -536,6 +539,7 @@ public class ModeledOpenApiDocumentGenerator(
             };
         }
 
+        AddExamples(content, documentedExamples);
         return new OpenApiRequestBody { Required = false, Content = content };
     }
 
@@ -649,17 +653,31 @@ public class ModeledOpenApiDocumentGenerator(
 
     private static string GetSuccessfulResponseDescription(AbstractPage page)
     {
-        if (page.MimeType != "application/json")
+        if (page is WorkflowPage)
         {
             return "Successful response.";
         }
 
-        if (page is XsltDataPage { Transformation: not null, TransformationOutputStructure: null })
+        string invalidExampleMessage = GetInvalidExampleMessage(page);
+        if (invalidExampleMessage != null)
         {
-            return "Successful response. This endpoint returns JSON data, but its schema "
-                + "is not described because the transformation has no output data structure "
-                + "configured. Set TransformationOutputStructure in the Origam model to expose "
-                + "the response schema here.";
+            return "Successful response. " + invalidExampleMessage;
+        }
+
+        if (
+            page is XsltDataPage { Transformation: not null }
+            && CreateDocumentedExampleContent(page) == null
+        )
+        {
+            return "Successful response. The response schema is not available because "
+                + "the output documentation is not filled out. "
+                + "Add an EXAMPLE_JSON, EXAMPLE_XML or EXAMPLE documentation entry to expose "
+                + "an example response here.";
+        }
+
+        if (page.MimeType != "application/json")
+        {
+            return "Successful response.";
         }
 
         if (page is not XsltDataPage)
@@ -671,8 +689,53 @@ public class ModeledOpenApiDocumentGenerator(
         return "Successful response.";
     }
 
+    private static string GetInvalidExampleMessage(AbstractPage page)
+    {
+        if (page is not XsltDataPage { Transformation: not null })
+        {
+            return null;
+        }
+
+        IDocumentationService documentationService =
+            ServiceManager.Services.GetService<IDocumentationService>();
+        if (documentationService == null)
+        {
+            return null;
+        }
+
+        string jsonExample = documentationService.GetDocumentation(
+            page.Id,
+            DocumentationType.EXAMPLE_JSON
+        );
+        if (
+            !string.IsNullOrWhiteSpace(jsonExample)
+            && !TryCreateJsonExample(jsonExample, out IOpenApiAny _)
+        )
+        {
+            return "The EXAMPLE_JSON output documentation entry is not valid JSON "
+                + "and cannot be displayed.";
+        }
+
+        string xmlExample = documentationService.GetDocumentation(
+            page.Id,
+            DocumentationType.EXAMPLE_XML
+        );
+        if (!string.IsNullOrWhiteSpace(xmlExample) && !IsXml(xmlExample))
+        {
+            return "The EXAMPLE_XML output documentation entry is not valid XML "
+                + "and cannot be displayed.";
+        }
+
+        return null;
+    }
+
     private static IDictionary<string, OpenApiMediaType> CreateResponseContent(AbstractPage page)
     {
+        if (page is WorkflowPage)
+        {
+            return null;
+        }
+
         if (page is FileDownloadPage)
         {
             string contentType = page.MimeType == "?" ? "application/octet-stream" : page.MimeType;
@@ -687,12 +750,13 @@ public class ModeledOpenApiDocumentGenerator(
 
         string mimeType = string.IsNullOrWhiteSpace(page.MimeType) ? "text/plain" : page.MimeType;
         OpenApiSchema responseSchema = new() { Type = "string" };
+        if (page is XsltDataPage { Transformation: not null })
+        {
+            return CreateDocumentedExampleContent(page);
+        }
         if (page is XsltDataPage xsltPage && mimeType == "application/json")
         {
-            DataStructure dataStructure =
-                xsltPage.Transformation == null
-                    ? xsltPage.DataStructure
-                    : xsltPage.TransformationOutputStructure;
+            DataStructure dataStructure = xsltPage.DataStructure;
             if (dataStructure == null)
             {
                 return new Dictionary<string, OpenApiMediaType> { [mimeType] = new() };
@@ -712,6 +776,179 @@ public class ModeledOpenApiDocumentGenerator(
         {
             [mimeType] = new() { Schema = responseSchema },
         };
+    }
+
+    private static IDictionary<string, OpenApiMediaType> CreateDocumentedExampleContent(
+        AbstractPage page
+    )
+    {
+        IDocumentationService documentationService =
+            ServiceManager.Services.GetService<IDocumentationService>();
+        if (documentationService == null)
+        {
+            return null;
+        }
+
+        var content = new Dictionary<string, OpenApiMediaType>();
+        AddDocumentedExample(
+            content: content,
+            mimeType: "application/json",
+            example: documentationService.GetDocumentation(page.Id, DocumentationType.EXAMPLE_JSON),
+            isJson: true
+        );
+        AddDocumentedExample(
+            content: content,
+            mimeType: "text/xml",
+            example: documentationService.GetDocumentation(page.Id, DocumentationType.EXAMPLE_XML),
+            isJson: false
+        );
+
+        string example = documentationService.GetDocumentation(page.Id, DocumentationType.EXAMPLE);
+        if (!string.IsNullOrWhiteSpace(example))
+        {
+            if (TryCreateJsonExample(example, out IOpenApiAny jsonExample))
+            {
+                AddExample(content: content, mimeType: "application/json", example: jsonExample);
+            }
+            else if (IsXml(example))
+            {
+                AddExample(
+                    content: content,
+                    mimeType: "text/xml",
+                    example: new OpenApiString(example)
+                );
+            }
+        }
+
+        return content.Count == 0 ? null : content;
+    }
+
+    private static void AddDocumentedExample(
+        IDictionary<string, OpenApiMediaType> content,
+        string mimeType,
+        string example,
+        bool isJson
+    )
+    {
+        if (string.IsNullOrWhiteSpace(example))
+        {
+            return;
+        }
+
+        IOpenApiAny openApiExample;
+        if (isJson)
+        {
+            if (!TryCreateJsonExample(example, out openApiExample))
+            {
+                return;
+            }
+        }
+        else
+        {
+            if (!IsXml(example))
+            {
+                return;
+            }
+            openApiExample = new OpenApiString(example);
+        }
+        AddExample(content, mimeType, openApiExample);
+    }
+
+    private static void AddExample(
+        IDictionary<string, OpenApiMediaType> content,
+        string mimeType,
+        IOpenApiAny example
+    )
+    {
+        if (!content.TryGetValue(mimeType, out OpenApiMediaType mediaType))
+        {
+            mediaType = new OpenApiMediaType();
+            content[mimeType] = mediaType;
+        }
+        mediaType.Example ??= example;
+    }
+
+    private static void AddExamples(
+        IDictionary<string, OpenApiMediaType> content,
+        IDictionary<string, OpenApiMediaType> documentedExamples
+    )
+    {
+        if (documentedExamples == null)
+        {
+            return;
+        }
+        foreach ((string mimeType, OpenApiMediaType documentedMediaType) in documentedExamples)
+        {
+            AddExample(content, mimeType, documentedMediaType.Example);
+        }
+    }
+
+    private static bool TryCreateJsonExample(string value, out IOpenApiAny example)
+    {
+        try
+        {
+            using JsonDocument document = JsonDocument.Parse(value);
+            example = CreateOpenApiValue(document.RootElement);
+            return true;
+        }
+        catch (JsonException)
+        {
+            example = null;
+            return false;
+        }
+    }
+
+    private static IOpenApiAny CreateOpenApiValue(JsonElement element)
+    {
+        return element.ValueKind switch
+        {
+            JsonValueKind.Object => CreateOpenApiObject(element),
+            JsonValueKind.Array => CreateOpenApiArray(element),
+            JsonValueKind.String => new OpenApiString(element.GetString()),
+            JsonValueKind.Number when element.TryGetInt32(out int intValue) => new OpenApiInteger(
+                intValue
+            ),
+            JsonValueKind.Number when element.TryGetInt64(out long longValue) => new OpenApiLong(
+                longValue
+            ),
+            JsonValueKind.Number => new OpenApiDouble(element.GetDouble()),
+            JsonValueKind.True => new OpenApiBoolean(true),
+            JsonValueKind.False => new OpenApiBoolean(false),
+            _ => new OpenApiNull(),
+        };
+    }
+
+    private static OpenApiObject CreateOpenApiObject(JsonElement element)
+    {
+        var result = new OpenApiObject();
+        foreach (JsonProperty property in element.EnumerateObject())
+        {
+            result[property.Name] = CreateOpenApiValue(property.Value);
+        }
+        return result;
+    }
+
+    private static OpenApiArray CreateOpenApiArray(JsonElement element)
+    {
+        var result = new OpenApiArray();
+        foreach (JsonElement item in element.EnumerateArray())
+        {
+            result.Add(CreateOpenApiValue(item));
+        }
+        return result;
+    }
+
+    private static bool IsXml(string value)
+    {
+        try
+        {
+            XDocument.Parse(value);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
     }
 
     private static OpenApiSchema CreateDataStructureSchema(
