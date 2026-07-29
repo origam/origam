@@ -237,10 +237,47 @@ async function typeAndWaitForSelector(args){
   throw Error(`${args.selector} did not appear before timeout`);
 }
 
+// Records what is actually at the click coordinates. A click that misses its target
+// (a dropdown still being repositioned, an overlay on top) looks exactly like a click
+// that landed but did nothing, this tells the two apart.
+async function describeClickTarget(page, clickable){
+  try{
+    return await page.evaluate(element => {
+      const describe = node => {
+        if(!node){
+          return null;
+        }
+        const id = node.id ? "#" + node.id : "";
+        const className = typeof node.className === "string" && node.className
+          ? "." + node.className.trim().replace(/\s+/g, ".")
+          : "";
+        return node.tagName + id + className;
+      };
+      const rect = element.getBoundingClientRect();
+      const x = rect.left + rect.width / 2;
+      const y = rect.top + rect.height / 2;
+      const elementAtPoint = document.elementFromPoint(x, y);
+      return {
+        target: describe(element),
+        rect: {top: rect.top, left: rect.left, width: rect.width, height: rect.height},
+        clickPoint: {x: x, y: y},
+        elementAtClickPoint: describe(elementAtPoint),
+        hitsTarget: !!elementAtPoint
+          && (elementAtPoint === element || element.contains(elementAtPoint))
+      };
+    }, clickable);
+  }catch(error){
+    return {error: error.message};
+  }
+}
+
 // Dumps the state of the page when an element does not appear. Tells apart the cases
 // when the element was never rendered, was rendered but is invisible, or the whole
 // application is gone.
-async function logPageStateOnTimeout(page, selector){
+async function logPageStateOnTimeout(page, selector, clickTarget){
+  if(clickTarget){
+    console.error("CLICK TARGET BEFORE FIRST CLICK: " + JSON.stringify(clickTarget, null, 2));
+  }
   try{
     const state = await page.evaluate(selector => {
       const describe = element => {
@@ -273,9 +310,14 @@ async function logPageStateOnTimeout(page, selector){
   }
 }
 
+// args.reopen is an optional function returning a fresh clickable. It is needed when
+// the first click removes the element from the document (a dropdown closing itself),
+// because clicking the detached handle again can never succeed.
 async function clickAndWaitForSelector(args){
+  const clickTarget = await describeClickTarget(args.page, args.clickable);
+  let clickable = args.clickable;
   try{
-    await args.clickable.click();
+    await clickable.click();
   }catch(error){
     console.error(error);
     await sleep(200);
@@ -290,19 +332,27 @@ async function clickAndWaitForSelector(args){
       if(error.name !== "TimeoutError"){
         console.error(error);
       }
+      if(args.reopen){
+        try{
+          clickable = await args.reopen();
+        }catch(reopenError){
+          console.error("Reopening the clickable failed: " + reopenError.message);
+        }
+      }
       try {
-        await args.clickable.click();
+        await clickable.click();
       }catch(error){
         console.error(error)
-        await args.page.evaluate(x => x.click(), args.clickable);
+        await args.page.evaluate(x => x.click(), clickable);
       }
     }
   }
-  await logPageStateOnTimeout(args.page, args.selector);
+  await logPageStateOnTimeout(args.page, args.selector, clickTarget);
   throw Error(`${args.selector} did not appear before timeout`);
 }
 
 async function clickAndWaitForXPath(args){
+  const clickTarget = await describeClickTarget(args.page, args.clickable);
   await args.clickable.click();
   for (let i = 0; i < 3; i++) {
     try{
@@ -317,7 +367,7 @@ async function clickAndWaitForXPath(args){
       await args.clickable.click();
     }
   }
-  await logPageStateOnTimeout(args.page, null);
+  await logPageStateOnTimeout(args.page, null, clickTarget);
   throw Error(`${args.xPath} did not appear before timeout`);
 }
 
