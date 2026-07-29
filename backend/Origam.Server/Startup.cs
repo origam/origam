@@ -54,6 +54,7 @@ using Origam.Server.Configuration;
 using Origam.Server.Middleware;
 using Origam.Server.OpenApi;
 using Origam.Service.Core;
+using Origam.Workbench.Services;
 using SoapCore;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 using static OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreDefaults;
@@ -97,6 +98,8 @@ public class Startup
     {
         ServicePointManager.SecurityProtocol = startUpConfiguration.SecurityProtocol;
         services.AddSingleton(startUpConfiguration);
+        services.AddSingleton(_ => ServiceManager.Services.GetService<SchemaService>());
+        services.AddSingleton(_ => ServiceManager.Services.GetService<IDocumentationService>());
         services.AddSingleton<ModeledOpenApiDocumentGenerator>();
         services.AddSingleton<ModeledOpenApiDocumentProvider>();
         services.Configure<KestrelServerOptions>(options =>
@@ -544,7 +547,8 @@ public class Startup
     public void Configure(
         IApplicationBuilder app,
         IWebHostEnvironment env,
-        ILoggerFactory loggerFactory
+        ILoggerFactory loggerFactory,
+        ModeledOpenApiDocumentProvider modeledOpenApiDocumentProvider
     )
     {
         loggerFactory.AddLog4Net();
@@ -581,7 +585,10 @@ public class Startup
         app.UseMiddleware<FatalErrorMiddleware>();
         app.UseMiddleware<OrigamErrorHandlingMiddleware>();
 
-        app.UseModeledOpenApiDocumentation(startUpConfiguration.OpenApiDocumentationEnabled);
+        app.UseModeledOpenApiDocumentation(
+            startUpConfiguration.OpenApiDocumentationEnabled,
+            modeledOpenApiDocumentProvider
+        );
         app.UseUserApi(startUpConfiguration, openIddictConfig);
         app.UseWorkQueueApi();
 

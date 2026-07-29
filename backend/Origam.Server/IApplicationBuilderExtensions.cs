@@ -26,7 +26,6 @@ using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using MoreLinq.Extensions;
 using Origam.Server.Configuration;
@@ -40,7 +39,11 @@ namespace Origam.Server;
 
 public static class IApplicationBuilderExtensions
 {
-    public static void UseModeledOpenApiDocumentation(this IApplicationBuilder app, bool enabled)
+    public static void UseModeledOpenApiDocumentation(
+        this IApplicationBuilder app,
+        bool enabled,
+        ModeledOpenApiDocumentProvider provider
+    )
     {
         const string documentPath = "/openapi/modelled-api.json";
         const string userInterfacePath = "/api-docs";
@@ -72,8 +75,6 @@ public static class IApplicationBuilderExtensions
             branch =>
                 branch.Run(async context =>
                 {
-                    var provider =
-                        context.RequestServices.GetRequiredService<ModeledOpenApiDocumentProvider>();
                     context.Response.ContentType = "application/vnd.oai.openapi+json;version=3.0";
                     await context.Response.WriteAsync(provider.GetDocument());
                 })

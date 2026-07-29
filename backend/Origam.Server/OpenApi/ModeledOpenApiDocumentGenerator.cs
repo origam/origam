@@ -39,14 +39,15 @@ namespace Origam.Server.OpenApi;
 
 public class ModeledOpenApiDocumentGenerator(
     StartUpConfiguration startUpConfiguration,
-    OpenIddictConfig openIddictConfig
+    OpenIddictConfig openIddictConfig,
+    SchemaService schemaService,
+    IDocumentationService documentationService
 )
 {
     private const string AuthenticationSchemeName = "OrigamAuthentication";
 
     public string Generate()
     {
-        var schemaService = ServiceManager.Services.GetService<SchemaService>();
         var pageProvider = schemaService.GetProvider<PagesSchemaItemProvider>();
         var document = CreateDocument();
         var pages = pageProvider
@@ -689,15 +690,13 @@ public class ModeledOpenApiDocumentGenerator(
         return "Successful response.";
     }
 
-    private static string GetInvalidExampleMessage(AbstractPage page)
+    private string GetInvalidExampleMessage(AbstractPage page)
     {
         if (page is not XsltDataPage { Transformation: not null })
         {
             return null;
         }
 
-        IDocumentationService documentationService =
-            ServiceManager.Services.GetService<IDocumentationService>();
         if (documentationService == null)
         {
             return null;
@@ -729,7 +728,7 @@ public class ModeledOpenApiDocumentGenerator(
         return null;
     }
 
-    private static IDictionary<string, OpenApiMediaType> CreateResponseContent(AbstractPage page)
+    private IDictionary<string, OpenApiMediaType> CreateResponseContent(AbstractPage page)
     {
         if (page is WorkflowPage)
         {
@@ -778,12 +777,8 @@ public class ModeledOpenApiDocumentGenerator(
         };
     }
 
-    private static IDictionary<string, OpenApiMediaType> CreateDocumentedExampleContent(
-        AbstractPage page
-    )
+    private IDictionary<string, OpenApiMediaType> CreateDocumentedExampleContent(AbstractPage page)
     {
-        IDocumentationService documentationService =
-            ServiceManager.Services.GetService<IDocumentationService>();
         if (documentationService == null)
         {
             return null;
