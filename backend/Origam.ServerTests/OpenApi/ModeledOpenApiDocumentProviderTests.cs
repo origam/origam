@@ -1,18 +1,18 @@
 using System.Text.Json;
 using Microsoft.Extensions.Configuration;
+using NUnit.Framework;
 using Origam.Schema;
 using Origam.Schema.GuiModel;
 using Origam.Server.Configuration;
 using Origam.Server.OpenApi;
 using Origam.Services;
 using Origam.Workbench.Services;
-using Xunit;
 
 namespace Origam.ServerTests.OpenApi;
 
 public class ModeledOpenApiDocumentProviderTests
 {
-    [Fact]
+    [Test]
     public void GetDocumentReturnsCachedModeledApiDocument()
     {
         IConfiguration configuration = new ConfigurationBuilder()
@@ -55,40 +55,31 @@ public class ModeledOpenApiDocumentProviderTests
         string firstDocument = provider.GetDocument();
         string secondDocument = provider.GetDocument();
 
-        Assert.Same(firstDocument, secondDocument);
+        Assert.That(secondDocument, Is.SameAs(firstDocument));
         using JsonDocument document = JsonDocument.Parse(firstDocument);
         JsonElement root = document.RootElement;
-        Assert.Equal(
-            expected: "Origam Modeled API",
-            actual: root.GetProperty("info").GetProperty("title").GetString()
+        Assert.That(
+            root.GetProperty("info").GetProperty("title").GetString(),
+            Is.EqualTo("Origam Modeled API")
         );
-        Assert.Equal(
-            expected: "1.0",
-            actual: root.GetProperty("info").GetProperty("version").GetString()
-        );
+        Assert.That(root.GetProperty("info").GetProperty("version").GetString(), Is.EqualTo("1.0"));
         JsonElement operation = root.GetProperty("paths")
             .GetProperty("/reports/sales")
             .GetProperty("get");
-        Assert.Equal(
-            expected: "Sales_report_get",
-            actual: operation.GetProperty("operationId").GetString()
+        Assert.That(
+            operation.GetProperty("operationId").GetString(),
+            Is.EqualTo("Sales_report_get")
         );
-        Assert.Equal(
-            expected: "Sales report",
-            actual: operation.GetProperty("summary").GetString()
+        Assert.That(operation.GetProperty("summary").GetString(), Is.EqualTo("Sales report"));
+        Assert.That(
+            operation.TryGetProperty(propertyName: "security", out JsonElement _),
+            Is.False
         );
-        Assert.False(operation.TryGetProperty(propertyName: "security", out JsonElement _));
         JsonElement authenticationScheme = root.GetProperty("components")
             .GetProperty("securitySchemes")
             .GetProperty("OrigamAuthentication");
-        Assert.Equal(
-            expected: "http",
-            actual: authenticationScheme.GetProperty("type").GetString()
-        );
-        Assert.Equal(
-            expected: "bearer",
-            actual: authenticationScheme.GetProperty("scheme").GetString()
-        );
+        Assert.That(authenticationScheme.GetProperty("type").GetString(), Is.EqualTo("http"));
+        Assert.That(authenticationScheme.GetProperty("scheme").GetString(), Is.EqualTo("bearer"));
     }
 
     private sealed class TestPagesSchemaItemProvider(params AbstractPage[] pages)

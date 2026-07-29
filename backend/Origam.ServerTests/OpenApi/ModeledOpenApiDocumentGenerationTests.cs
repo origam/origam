@@ -1,6 +1,7 @@
 using System.Text.Json;
 using Microsoft.Extensions.Configuration;
 using Moq;
+using NUnit.Framework;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
@@ -10,13 +11,12 @@ using Origam.Server.Configuration;
 using Origam.Server.OpenApi;
 using Origam.Services;
 using Origam.Workbench.Services;
-using Xunit;
 
 namespace Origam.ServerTests.OpenApi;
 
 public class ModeledOpenApiDocumentGenerationTests
 {
-    [Fact]
+    [Test]
     public void ConfiguredConcretePagesAreTheOnlyDocumentedPages()
     {
         using var fixture = new ModeledOpenApiFixture();
@@ -31,19 +31,24 @@ public class ModeledOpenApiDocumentGenerationTests
 
         JsonElement paths = fixture.Generate().RootElement.GetProperty("paths");
 
-        Assert.Equal(expected: 2, actual: paths.EnumerateObject().Count());
-        Assert.True(paths.TryGetProperty(propertyName: "/public/public-report", out _));
-        Assert.True(paths.TryGetProperty(propertyName: "/restricted/restricted-report", out _));
-        Assert.False(paths.TryGetProperty(propertyName: "/other/unconfigured-report", out _));
-        Assert.False(paths.TryGetProperty(propertyName: "/public/abstract-report", out _));
+        Assert.That(paths.EnumerateObject().Count(), Is.EqualTo(2));
+        Assert.That(paths.TryGetProperty(propertyName: "/public/public-report", out _), Is.True);
+        Assert.That(
+            paths.TryGetProperty(propertyName: "/restricted/restricted-report", out _),
+            Is.True
+        );
+        Assert.That(
+            paths.TryGetProperty(propertyName: "/other/unconfigured-report", out _),
+            Is.False
+        );
+        Assert.That(paths.TryGetProperty(propertyName: "/public/abstract-report", out _), Is.False);
     }
 
-    [Theory]
-    [InlineData(PageKind.Xslt, false, "get")]
-    [InlineData(PageKind.Xslt, true, "post")]
-    [InlineData(PageKind.Workflow, false, "post")]
-    [InlineData(PageKind.Report, false, "get")]
-    [InlineData(PageKind.Download, false, "get")]
+    [TestCase(PageKind.Xslt, false, "get")]
+    [TestCase(PageKind.Xslt, true, "post")]
+    [TestCase(PageKind.Workflow, false, "post")]
+    [TestCase(PageKind.Report, false, "get")]
+    [TestCase(PageKind.Download, false, "get")]
     public void PageTypeDeterminesOperation(
         PageKind pageKind,
         bool allowCustomFilters,
@@ -63,11 +68,11 @@ public class ModeledOpenApiDocumentGenerationTests
             .RootElement.GetProperty("paths")
             .GetProperty("/public/operation");
 
-        Assert.True(path.TryGetProperty(expectedOperation, out JsonElement _));
-        Assert.Single(path.EnumerateObject());
+        Assert.That(path.TryGetProperty(expectedOperation, out JsonElement _), Is.True);
+        Assert.That(path.EnumerateObject().Count(), Is.EqualTo(1));
     }
 
-    [Fact]
+    [Test]
     public void UpdateAndDeleteFlagsAddOperations()
     {
         using var fixture = new ModeledOpenApiFixture();
@@ -86,13 +91,13 @@ public class ModeledOpenApiDocumentGenerationTests
             .RootElement.GetProperty("paths")
             .GetProperty("/public/mutable");
 
-        Assert.True(path.TryGetProperty(propertyName: "get", out _));
-        Assert.True(path.TryGetProperty(propertyName: "put", out _));
-        Assert.True(path.TryGetProperty(propertyName: "delete", out _));
-        Assert.Equal(expected: 3, actual: path.EnumerateObject().Count());
+        Assert.That(path.TryGetProperty(propertyName: "get", out _), Is.True);
+        Assert.That(path.TryGetProperty(propertyName: "put", out _), Is.True);
+        Assert.That(path.TryGetProperty(propertyName: "delete", out _), Is.True);
+        Assert.That(path.EnumerateObject().Count(), Is.EqualTo(3));
     }
 
-    [Fact]
+    [Test]
     public void RestrictedOperationContainsSecurityRequirement()
     {
         using var fixture = new ModeledOpenApiFixture();
@@ -105,16 +110,17 @@ public class ModeledOpenApiDocumentGenerationTests
             .GetProperty("get");
 
         JsonElement requirement = operation.GetProperty("security")[0];
-        Assert.True(
+        Assert.That(
             requirement.TryGetProperty(
                 propertyName: ModeledOpenApiPageDocumenter.AuthenticationSchemeName,
                 out JsonElement scopes
-            )
+            ),
+            Is.True
         );
-        Assert.Empty(scopes.EnumerateArray());
+        Assert.That(scopes.EnumerateArray(), Is.Empty);
     }
 
-    [Fact]
+    [Test]
     public void XsltJsonDocumentationBecomesResponseExample()
     {
         using var fixture = new ModeledOpenApiFixture();
@@ -140,10 +146,10 @@ public class ModeledOpenApiDocumentGenerationTests
             .GetProperty("application/json")
             .GetProperty("example");
 
-        Assert.Equal(expected: "documented", actual: example.GetProperty("result").GetString());
+        Assert.That(example.GetProperty("result").GetString(), Is.EqualTo("documented"));
     }
 
-    [Fact]
+    [Test]
     public void WorkflowJsonDocumentationBecomesRequestExample()
     {
         using var fixture = new ModeledOpenApiFixture();
@@ -164,7 +170,7 @@ public class ModeledOpenApiDocumentGenerationTests
             .GetProperty("application/json")
             .GetProperty("example");
 
-        Assert.Equal(expected: "run", actual: example.GetProperty("command").GetString());
+        Assert.That(example.GetProperty("command").GetString(), Is.EqualTo("run"));
     }
 
     public enum PageKind
