@@ -271,6 +271,26 @@ async function describeClickTarget(page, clickable){
   }
 }
 
+// Waits until the element stops moving and returns its final click target. A dropdown
+// is rendered at a stale position and moved once it gets measured, so a click sent
+// right after it becomes visible can land next to it.
+async function waitForStableClickTarget(page, clickable){
+  let previous = null;
+  for (let i = 0; i < 20; i++) {
+    const current = await describeClickTarget(page, clickable);
+    if(current.error){
+      return current;
+    }
+    if(previous && JSON.stringify(previous.rect) === JSON.stringify(current.rect)){
+      return current;
+    }
+    previous = current;
+    await sleep(50);
+  }
+  console.warn("The clickable kept moving, clicking it anyway");
+  return previous;
+}
+
 // Dumps the state of the page when an element does not appear. Tells apart the cases
 // when the element was never rendered, was rendered but is invisible, or the whole
 // application is gone.
@@ -314,7 +334,7 @@ async function logPageStateOnTimeout(page, selector, clickTarget){
 // the first click removes the element from the document (a dropdown closing itself),
 // because clicking the detached handle again can never succeed.
 async function clickAndWaitForSelector(args){
-  const clickTarget = await describeClickTarget(args.page, args.clickable);
+  const clickTarget = await waitForStableClickTarget(args.page, args.clickable);
   let clickable = args.clickable;
   try{
     await clickable.click();
@@ -340,6 +360,7 @@ async function clickAndWaitForSelector(args){
         }
       }
       try {
+        await waitForStableClickTarget(args.page, clickable);
         await clickable.click();
       }catch(error){
         console.error(error)
@@ -352,7 +373,7 @@ async function clickAndWaitForSelector(args){
 }
 
 async function clickAndWaitForXPath(args){
-  const clickTarget = await describeClickTarget(args.page, args.clickable);
+  const clickTarget = await waitForStableClickTarget(args.page, args.clickable);
   await args.clickable.click();
   for (let i = 0; i < 3; i++) {
     try{
