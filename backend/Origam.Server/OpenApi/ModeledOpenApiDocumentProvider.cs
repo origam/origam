@@ -19,29 +19,21 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System;
+
 namespace Origam.Server.OpenApi;
 
-public class ModeledOpenApiDocumentProvider(ModeledOpenApiDocumentGenerator generator)
+public class ModeledOpenApiDocumentProvider
 {
-    private readonly object initializationLock = new();
-    private string document;
+    private readonly Lazy<string> _document;
 
-    public void Initialize()
+    public ModeledOpenApiDocumentProvider(ModeledOpenApiDocumentGenerator generator)
     {
-        if (document != null)
-        {
-            return;
-        }
-
-        lock (initializationLock)
-        {
-            document ??= generator.Generate();
-        }
+        _document = new Lazy<string>(generator.Generate, isThreadSafe: true);
     }
 
     public string GetDocument()
     {
-        Initialize();
-        return document;
+        return _document.Value;
     }
 }
