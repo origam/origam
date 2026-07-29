@@ -54,6 +54,7 @@ using Origam.Server.Configuration;
 using Origam.Server.Middleware;
 using Origam.Server.OpenApi;
 using Origam.Service.Core;
+using Origam.Services;
 using Origam.Workbench.Services;
 using SoapCore;
 using static OpenIddict.Abstractions.OpenIddictConstants;
@@ -98,9 +99,14 @@ public class Startup
     {
         ServicePointManager.SecurityProtocol = startUpConfiguration.SecurityProtocol;
         services.AddSingleton(startUpConfiguration);
-        services.AddSingleton(_ => ServiceManager.Services.GetService<SchemaService>());
+        services.AddSingleton<ISchemaService>(_ =>
+            ServiceManager.Services.GetService<SchemaService>()
+        );
         services.AddSingleton(_ => ServiceManager.Services.GetService<IDocumentationService>());
         services.AddSingleton<ModeledOpenApiPagePolicy>();
+        services.AddSingleton<ModeledOpenApiSchemaFactory>();
+        services.AddSingleton<ModeledOpenApiExampleFactory>();
+        services.AddSingleton<ModeledOpenApiPageDocumenter>();
         services.AddSingleton<ModeledOpenApiDocumentGenerator>();
         services.AddSingleton<ModeledOpenApiDocumentProvider>();
         services.Configure<KestrelServerOptions>(options =>
