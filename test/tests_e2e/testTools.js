@@ -39,6 +39,19 @@ async function afterEachTest(browser){
   }
 }
 
+// Forwards errors from the browser to the test output. Without this an exception
+// thrown in the client is invisible and shows up only as a selector timeout.
+function logBrowserErrors(page){
+  page.on("pageerror", error => {
+    console.error("BROWSER PAGE ERROR: " + (error.stack || error.message));
+  });
+  page.on("console", message => {
+    if(message.type() === "error"){
+      console.error("BROWSER CONSOLE ERROR: " + message.text());
+    }
+  });
+}
+
 async function beforeEachTest(){
   const browser = await puppeteer.launch({
     ignoreHTTPSErrors: true,
@@ -57,6 +70,7 @@ async function beforeEachTest(){
     ]
   });
   const page = await browser.newPage();
+  logBrowserErrors(page);
   // await installMouseHelper(page); // uncomment to see the mouse movement
   await page.goto(backEndUrl);
   await sleep(500);
@@ -223,6 +237,42 @@ async function typeAndWaitForSelector(args){
   throw Error(`${args.selector} did not appear before timeout`);
 }
 
+// Dumps the state of the page when an element does not appear. Tells apart the cases
+// when the element was never rendered, was rendered but is invisible, or the whole
+// application is gone.
+async function logPageStateOnTimeout(page, selector){
+  try{
+    const state = await page.evaluate(selector => {
+      const describe = element => {
+        if(!element){
+          return null;
+        }
+        const rect = element.getBoundingClientRect();
+        const style = window.getComputedStyle(element);
+        return {
+          rect: {top: rect.top, left: rect.left, width: rect.width, height: rect.height},
+          display: style.display,
+          visibility: style.visibility,
+          opacity: style.opacity
+        };
+      };
+      const dropdownPortal = document.getElementById("dropdown-portal");
+      const root = document.getElementById("root");
+      return {
+        url: window.location.href,
+        target: selector ? describe(document.querySelector(selector)) : undefined,
+        modalWindowCount: document.querySelectorAll("[class*='modalWindow']").length,
+        dropdownPortalContentLength: dropdownPortal ? dropdownPortal.innerHTML.length : -1,
+        rootChildCount: root ? root.children.length : -1,
+        bodyText: document.body.innerText.substring(0, 500)
+      };
+    }, selector || null);
+    console.error("PAGE STATE ON TIMEOUT: " + JSON.stringify(state, null, 2));
+  }catch(error){
+    console.error("PAGE STATE ON TIMEOUT could not be read: " + error.message);
+  }
+}
+
 async function clickAndWaitForSelector(args){
   try{
     await args.clickable.click();
@@ -248,6 +298,7 @@ async function clickAndWaitForSelector(args){
       }
     }
   }
+  await logPageStateOnTimeout(args.page, args.selector);
   throw Error(`${args.selector} did not appear before timeout`);
 }
 
@@ -266,6 +317,7 @@ async function clickAndWaitForXPath(args){
       await args.clickable.click();
     }
   }
+  await logPageStateOnTimeout(args.page, null);
   throw Error(`${args.xPath} did not appear before timeout`);
 }
 
