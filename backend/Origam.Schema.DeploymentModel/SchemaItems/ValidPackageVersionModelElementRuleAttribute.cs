@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+Copyright 2005 - 2026 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.DeploymentModel.SchemaItems;
@@ -28,7 +29,10 @@ namespace Origam.Schema.DeploymentModel.SchemaItems;
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
 public class ValidPackageVersionModelElementRuleAttribute : AbstractModelElementRuleAttribute
 {
-    private const int MinimumVersionPartCount = 3;
+    private static readonly Regex VersionNumberRegex = new Regex(
+        @"^[0-9]+(\.[0-9]+){2,}$",
+        RegexOptions.CultureInvariant
+    );
 
     public override Exception CheckRule(object instance)
     {
@@ -58,11 +62,7 @@ public class ValidPackageVersionModelElementRuleAttribute : AbstractModelElement
 
     private static bool IsValidVersion(string versionString)
     {
-        string[] parts = versionString.Split('.');
-        if (parts.Length < MinimumVersionPartCount)
-        {
-            return false;
-        }
-        return parts.All(part => int.TryParse(part, out int number) && number >= 0);
+        return VersionNumberRegex.IsMatch(versionString)
+            && versionString.Split('.').All(part => int.TryParse(part, out _));
     }
 }
