@@ -573,7 +573,7 @@ public class ModeledOpenApiDocumentGenerator(
         {
             ["200"] = new OpenApiResponse
             {
-                Description = "Successful response.",
+                Description = GetSuccessfulResponseDescription(page),
                 Content = CreateResponseContent(page),
             },
             ["404"] = new OpenApiResponse { Description = "Modeled endpoint not found." },
@@ -587,6 +587,30 @@ public class ModeledOpenApiDocumentGenerator(
         }
 
         return responses;
+    }
+
+    private static string GetSuccessfulResponseDescription(AbstractPage page)
+    {
+        if (page.MimeType != "application/json")
+        {
+            return "Successful response.";
+        }
+
+        if (page is XsltDataPage { Transformation: not null, TransformationOutputStructure: null })
+        {
+            return "Successful response. This endpoint returns JSON data, but its schema "
+                + "is not described because the transformation has no output data structure "
+                + "configured. Set TransformationOutputStructure in the Origam model to expose "
+                + "the response schema here.";
+        }
+
+        if (page is not XsltDataPage)
+        {
+            return "Successful response. This endpoint returns JSON data, but its response "
+                + "schema cannot be inferred from the Origam model.";
+        }
+
+        return "Successful response.";
     }
 
     private static IDictionary<string, OpenApiMediaType> CreateResponseContent(AbstractPage page)
@@ -611,22 +635,19 @@ public class ModeledOpenApiDocumentGenerator(
                 xsltPage.Transformation == null
                     ? xsltPage.DataStructure
                     : xsltPage.TransformationOutputStructure;
-            responseSchema =
-                dataStructure == null
-                    ? new OpenApiSchema { Type = "object", AdditionalPropertiesAllowed = true }
-                    : CreateDataStructureSchema(
-                        dataStructure,
-                        xsltPage.OmitJsonRootElement,
-                        xsltPage.OmitJsonMainElement
-                    );
+            if (dataStructure == null)
+            {
+                return new Dictionary<string, OpenApiMediaType> { [mimeType] = new() };
+            }
+            responseSchema = CreateDataStructureSchema(
+                dataStructure,
+                xsltPage.OmitJsonRootElement,
+                xsltPage.OmitJsonMainElement
+            );
         }
         else if (mimeType == "application/json")
         {
-            responseSchema = new OpenApiSchema
-            {
-                Type = "object",
-                AdditionalPropertiesAllowed = true,
-            };
+            return new Dictionary<string, OpenApiMediaType> { [mimeType] = new() };
         }
 
         return new Dictionary<string, OpenApiMediaType>
