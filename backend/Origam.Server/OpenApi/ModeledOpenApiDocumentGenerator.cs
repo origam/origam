@@ -38,10 +38,10 @@ using Origam.Workbench.Services;
 namespace Origam.Server.OpenApi;
 
 public class ModeledOpenApiDocumentGenerator(
-    StartUpConfiguration startUpConfiguration,
     OpenIddictConfig openIddictConfig,
     SchemaService schemaService,
-    IDocumentationService documentationService
+    IDocumentationService documentationService,
+    ModeledOpenApiPagePolicy pagePolicy
 )
 {
     private const string AuthenticationSchemeName = "OrigamAuthentication";
@@ -52,14 +52,14 @@ public class ModeledOpenApiDocumentGenerator(
         var document = CreateDocument();
         var pages = pageProvider
             .ChildItems.OfType<AbstractPage>()
-            .Where(IsDocumentedPage)
-            .OrderBy(GetFolderName)
+            .Where(pagePolicy.IsDocumented)
+            .OrderBy(pagePolicy.GetTagName)
             .ThenBy(page => page.Url)
             .ThenBy(page => page.Name)
             .ToList();
 
         document.Tags = pages
-            .Select(GetFolderName)
+            .Select(pagePolicy.GetTagName)
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .Select(folderName => new OpenApiTag
             {
@@ -121,16 +121,6 @@ public class ModeledOpenApiDocumentGenerator(
             Name = ".AspNetCore.Identity.Application",
             Description = Resources.ModeledApiAuthenticationCookieDescription,
         };
-    }
-
-    private bool IsDocumentedPage(AbstractPage page)
-    {
-        return !page.IsAbstract
-            && IsRuntimeCompatibleUrl(page.Url)
-            && (
-                IsRouteIn(page.Url, startUpConfiguration.UserApiPublicRoutes)
-                || IsRouteIn(page.Url, startUpConfiguration.UserApiRestrictedRoutes)
-            );
     }
 
     private void AddPage(OpenApiDocument document, AbstractPage page)
@@ -199,7 +189,7 @@ public class ModeledOpenApiDocumentGenerator(
                     page.GetType().FullName
                 ),
                 Deprecated = true,
-                Tags = new List<OpenApiTag> { new() { Name = GetFolderName(page) } },
+                Tags = new List<OpenApiTag> { new() { Name = pagePolicy.GetTagName(page) } },
                 Responses = new OpenApiResponses
                 {
                     ["501"] = new OpenApiResponse
@@ -233,7 +223,7 @@ public class ModeledOpenApiDocumentGenerator(
                 Resources.ModeledApiEndpointDescription,
                 page.GetType().Name
             ),
-            Tags = new List<OpenApiTag> { new() { Name = GetFolderName(page) } },
+            Tags = new List<OpenApiTag> { new() { Name = pagePolicy.GetTagName(page) } },
             Parameters = CreateParameters(page),
             Responses = CreateResponses(page),
         };
@@ -248,7 +238,7 @@ public class ModeledOpenApiDocumentGenerator(
             operation.RequestBody = requestBody;
         }
 
-        if (RequiresAuthentication(page))
+        if (pagePolicy.RequiresAuthentication(page))
         {
             operation.Security = new List<OpenApiSecurityRequirement>
             {
@@ -642,7 +632,7 @@ public class ModeledOpenApiDocumentGenerator(
             ["500"] = new OpenApiResponse { Description = Resources.ModeledApiFailedResponse },
         };
 
-        if (RequiresAuthentication(page))
+        if (pagePolicy.RequiresAuthentication(page))
         {
             responses["401"] = new OpenApiResponse
             {
@@ -1018,43 +1008,6 @@ public class ModeledOpenApiDocumentGenerator(
             schema.MaxLength = column.Field.DataLength;
         }
         return schema;
-    }
-
-    private bool RequiresAuthentication(AbstractPage page)
-    {
-        return !string.Equals(a: page.Roles, b: "*", comparisonType: StringComparison.Ordinal)
-            || IsRouteIn(page.Url, startUpConfiguration.UserApiRestrictedRoutes);
-    }
-
-    private static bool IsRouteIn(string pageUrl, IEnumerable<string> configuredRoutes)
-    {
-        string normalizedPageUrl = "/" + pageUrl.TrimStart('/');
-        return configuredRoutes
-            .Where(route => !string.IsNullOrWhiteSpace(route))
-            .Any(route =>
-                normalizedPageUrl.StartsWith(
-                    "/" + route.TrimStart('/'),
-                    StringComparison.OrdinalIgnoreCase
-                )
-            );
-    }
-
-    private static bool IsRuntimeCompatibleUrl(string url)
-    {
-        return !string.IsNullOrWhiteSpace(url)
-            && !url.StartsWith(value: "/", comparisonType: StringComparison.Ordinal);
-    }
-
-    private string GetFolderName(AbstractPage page)
-    {
-        return page.Group == null
-            ? Resources.ModeledApiUncategorized
-            : string.Join(
-                separator: " / ",
-                values: page.Group.Path.Replace(oldValue: "\\", newValue: "/")
-                    .Split(separator: '/', options: StringSplitOptions.RemoveEmptyEntries)
-                    .AsEnumerable()
-            );
     }
 
     private static string SanitizeOperationId(string name)

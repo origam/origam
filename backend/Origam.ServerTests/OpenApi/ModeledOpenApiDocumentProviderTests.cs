@@ -28,10 +28,10 @@ public class ModeledOpenApiDocumentProviderTests
             new PagesSchemaItemProvider { PersistenceProvider = new NullPersistenceProvider() }
         );
         var generator = new ModeledOpenApiDocumentGenerator(
-            new StartUpConfiguration(configuration),
             new OpenIddictConfig(configuration),
             schemaService,
-            documentationService: null
+            documentationService: null,
+            new ModeledOpenApiPagePolicy(new StartUpConfiguration(configuration))
         );
         var provider = new ModeledOpenApiDocumentProvider(generator);
 

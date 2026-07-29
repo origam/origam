@@ -100,6 +100,7 @@ public class Startup
         services.AddSingleton(startUpConfiguration);
         services.AddSingleton(_ => ServiceManager.Services.GetService<SchemaService>());
         services.AddSingleton(_ => ServiceManager.Services.GetService<IDocumentationService>());
+        services.AddSingleton<ModeledOpenApiPagePolicy>();
         services.AddSingleton<ModeledOpenApiDocumentGenerator>();
         services.AddSingleton<ModeledOpenApiDocumentProvider>();
         services.Configure<KestrelServerOptions>(options =>
