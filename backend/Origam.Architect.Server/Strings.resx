@@ -72,6 +72,9 @@
     <data name="Wizard_FieldNotFoundOnEntity" xml:space="preserve">
         <value>Field {0} not found on entity.</value>
     </data>
+    <data name="Wizard_FieldCannotGenerateControl" xml:space="preserve">
+        <value>Field "{0}" cannot be placed on a screen automatically. Its data type has no default control, or it is a foreign key without a default lookup.</value>
+    </data>
     <data name="Wizard_DataStructureNotFound" xml:space="preserve">
         <value>DataStructure {0} not found</value>
     </data>

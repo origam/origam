@@ -416,6 +416,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
       background: rgba(var(--brand-rgb), 0.1);
     }
   }
+
+  &.fieldOptionDisabled {
+    cursor: default;
+    opacity: 0.55;
+
+    &:hover {
+      background: none;
+      color: var(--background7);
+    }
+  }
 }
 
 .fieldOptionCheckbox {
@@ -427,6 +437,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   border-radius: 3px;
   accent-color: var(--brand);
   cursor: pointer;
+
+  &:disabled {
+    cursor: default;
+  }
 }
 
 .fieldOptionBadge {

@@ -187,7 +187,11 @@ export const CreateScreenSectionWizard: React.FC<CreateScreenSectionWizardProps>
     const selectAll = () => {
       if (!entityData) return;
       setSelectedFieldIds(
-        new Set(entityData.columns.filter(column => !column.isPrimaryKey).map(column => column.id)),
+        new Set(
+          entityData.columns
+            .filter(column => column.canGenerateControl && !column.isPrimaryKey)
+            .map(column => column.id),
+        ),
       );
     };
 
@@ -258,6 +262,10 @@ export const CreateScreenSectionWizard: React.FC<CreateScreenSectionWizardProps>
 
     const renderFields = () => {
       const columns = entityData?.columns ?? [];
+      const noDefaultControlHint = T(
+        'This field has no default control, so it cannot be placed on a screen section.',
+        'wizard_field_no_default_control_hint',
+      );
       return (
         <>
           <div
@@ -304,21 +312,31 @@ export const CreateScreenSectionWizard: React.FC<CreateScreenSectionWizardProps>
           <div className={S.fieldList}>
             {columns.map(column => {
               const checked = selectedFieldIds.has(column.id);
+              const disabled = !column.canGenerateControl;
               return (
                 <label
                   key={column.id}
-                  className={`${S.fieldOption} ${checked ? S.fieldOptionSelected : ''}`}
+                  title={disabled ? noDefaultControlHint : undefined}
+                  className={`${S.fieldOption} ${checked ? S.fieldOptionSelected : ''} ${
+                    disabled ? S.fieldOptionDisabled : ''
+                  }`}
                 >
                   <input
                     type="checkbox"
                     className={S.fieldOptionCheckbox}
                     checked={checked}
+                    disabled={disabled}
                     onChange={() => toggleField(column.id)}
                   />
                   {column.name}
                   {column.isPrimaryKey && (
                     <span className={S.fieldOptionBadge}>
                       {T('primary key', 'wizard_field_primary_key')}
+                    </span>
+                  )}
+                  {disabled && (
+                    <span className={S.fieldOptionBadge}>
+                      {T('no default control', 'wizard_field_no_default_control')}
                     </span>
                   )}
                 </label>

@@ -127,7 +127,7 @@ export const CreateLocalizationChildEntityWizard: React.FC<CreateLocalizationChi
       });
     };
 
-    const translationEntityName = entityData ? `${entityData.entityName}_l10n` : '…';
+    const translationEntityName = entityData?.translationEntityName ?? '…';
 
     const renderStep = () => {
       if (step === 0) {
@@ -139,13 +139,9 @@ export const CreateLocalizationChildEntityWizard: React.FC<CreateLocalizationChi
             </h2>
             <p className={S.formSubtitle}>
               {T(
-                'This wizard creates a language translation Entity ',
-                'create_l10n_fields_subtitle_pre',
-              )}
-              <strong>{translationEntityName}</strong>
-              {T(
-                '. Selected text columns are duplicated on the translation entity so they can hold per-language values.',
-                'create_l10n_fields_subtitle_post',
+                'This wizard creates a language translation Entity {0}. Selected text columns are duplicated on the translation entity so they can hold per-language values.',
+                'create_l10n_fields_subtitle',
+                translationEntityName,
               )}
             </p>
 

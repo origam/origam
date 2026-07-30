@@ -206,6 +206,7 @@ export interface ILocalizationEntityColumn {
 
 export interface ILocalizationChildEntityWizardData {
   entityName: string;
+  translationEntityName: string;
   columns: ILocalizationEntityColumn[];
 }
 
@@ -245,6 +246,7 @@ export interface IScreenWizardColumn {
   id: string;
   name: string;
   isPrimaryKey: boolean;
+  canGenerateControl: boolean;
 }
 
 export interface ICreateScreenRequest {

@@ -20,6 +20,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { expect, test } from '@playwright/test';
 import { resetBackend } from '@support/resetBackend';
 
+function normalizeSql(sql: string): string {
+  return sql
+    .replace(/["[\]]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 test.describe('Show SQL for data structure (real backend)', () => {
   test.beforeEach(async ({ request }) => {
     await resetBackend(request);
@@ -37,21 +44,27 @@ test.describe('Show SQL for data structure (real backend)', () => {
 
     const code = page.getByRole('code');
     await expect(code).toContainText('SELECT');
-    await expect(code).toContainText(
-      '[Dimension1].[refDimensionTypeId] AS [refDimensionTypeId],',
-    );
-    await expect(code).toContainText('[Dimension1].[Name] AS [Name],');
-    await expect(code).toContainText(
-      '-- SQL statements for data structure: Dimension1' +
-        '------------------------------------------------------------------- Dimension1' +
-        '-----------------------------------------------------------------SELECT ' +
-        '[Dimension1].[refDimensionTypeId] AS [refDimensionTypeId], ' +
-        '[Dimension1].[Name] AS [Name], [Dimension1].[IsActive] AS [IsActive], ' +
-        '[Dimension1].[RecordCreated] AS [RecordCreated], ' +
-        '[Dimension1].[RecordUpdatedBy] AS [RecordUpdatedBy], ' +
-        '[Dimension1].[Id] AS [Id], [Dimension1].[RecordCreatedBy] AS [RecordCreatedBy], ' +
-        '[Dimension1].[RecordUpdated] AS [RecordUpdated]FROM [Dimension1] AS [Dimension1];',
-    );
+    await expect(code).toContainText('-- SQL statements for data structure: Dimension1');
+
+    // The statement is rendered by the server's SQL generator, so its shape depends
+    // on the configured database platform: MSSQL quotes identifiers with [brackets],
+    // PostgreSQL with "double quotes" and wraps the select in a temp table. Strip the
+    // quoting and normalize whitespace so this asserts on the generated statement
+    // instead of on whichever platform the server happens to be configured for.
+    await expect
+      .poll(async () => normalizeSql(await code.innerText()))
+      .toContain(
+        'SELECT ' +
+          'Dimension1.refDimensionTypeId AS refDimensionTypeId, ' +
+          'Dimension1.Name AS Name, ' +
+          'Dimension1.IsActive AS IsActive, ' +
+          'Dimension1.RecordCreated AS RecordCreated, ' +
+          'Dimension1.RecordUpdatedBy AS RecordUpdatedBy, ' +
+          'Dimension1.Id AS Id, ' +
+          'Dimension1.RecordCreatedBy AS RecordCreatedBy, ' +
+          'Dimension1.RecordUpdated AS RecordUpdated ' +
+          'FROM Dimension1 AS Dimension1;',
+      );
 
     await expect(page.getByText('SQL: Dimension1').nth(1)).toBeVisible();
   });

@@ -24,5 +24,6 @@ namespace Origam.Architect.Server.Models.Responses.Wizards;
 public class LocalizationChildEntityWizardData
 {
     public string EntityName { get; set; }
+    public string TranslationEntityName { get; set; }
     public List<IdName> Columns { get; set; } = new();
 }

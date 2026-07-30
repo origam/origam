@@ -214,6 +214,7 @@ public class WizardService(
                 Id = column.Id,
                 Name = column.Name,
                 IsPrimaryKey = column.IsPrimaryKey,
+                CanGenerateControl = GuiHelper.CanBuildDefaultControl(column),
             })
             .ToList();
 
@@ -279,6 +280,12 @@ public class WizardService(
                 ?? throw new UserOrigamException(
                     string.Format(Strings.Wizard_FieldNotFoundOnEntity, fieldId)
                 );
+            if (!GuiHelper.CanBuildDefaultControl(column))
+            {
+                throw new UserOrigamException(
+                    string.Format(Strings.Wizard_FieldCannotGenerateControl, column.Name)
+                );
+            }
             selectedNames[column.Name] = true;
         }
 
@@ -337,7 +344,8 @@ public class WizardService(
             dsProvider
                 ?.ChildItemsByType<ISchemaItem>(AbstractDataStructure.CategoryConst)
                 .Select(item => item.Name)
-                .ToList() ?? new List<string>();
+                .ToList()
+            ?? new List<string>();
 
         return new DataStructureWizardData
         {
@@ -402,7 +410,8 @@ public class WizardService(
             dsProvider
                 ?.ChildItemsByType<ISchemaItem>(AbstractDataStructure.CategoryConst)
                 .Select(item => item.Name)
-                .ToList() ?? new List<string>();
+                .ToList()
+            ?? new List<string>();
 
         return new ScreenFromSectionWizardData
         {
@@ -838,6 +847,7 @@ public class WizardService(
         return new LocalizationChildEntityWizardData
         {
             EntityName = entity.Name,
+            TranslationEntityName = EntityHelper.LanguageTranslationChildEntityName(entity),
             Columns = columns,
         };
     }
@@ -937,6 +947,7 @@ public class WizardService(
                 Id = column.Id,
                 Name = column.Name,
                 IsPrimaryKey = column.IsPrimaryKey,
+                CanGenerateControl = GuiHelper.CanBuildDefaultControl(column),
             })
             .ToList();
 
@@ -946,7 +957,8 @@ public class WizardService(
             panelProvider
                 ?.ChildItemsByType<ISchemaItem>(PanelControlSet.CategoryConst)
                 .Select(item => item.Name)
-                .ToList() ?? new List<string>();
+                .ToList()
+            ?? new List<string>();
 
         return new ScreenSectionWizardData
         {
@@ -998,40 +1010,44 @@ public class WizardService(
                 ?? throw new UserOrigamException(
                     string.Format(Strings.Wizard_FieldNotFoundOnEntity, fieldId)
                 );
+            if (!GuiHelper.CanBuildDefaultControl(column))
+            {
+                throw new UserOrigamException(
+                    string.Format(Strings.Wizard_FieldCannotGenerateControl, column.Name)
+                );
+            }
             selectedNames[column.Name] = true;
         }
 
         var groupName = entity.Group?.Name;
 
         var panel = transaction.Run(() =>
-            GuiHelper.CreatePanel(groupName, entity, selectedNames, trimmedName)
-        );
-
-        transaction.Run(() =>
         {
-            RelayoutScreenSectionFields(panel);
-            return panel;
+            var newPanel = GuiHelper.CreatePanel(groupName, entity, selectedNames, trimmedName);
+            RelayoutScreenSectionFields(newPanel);
+            SetPanelTitle(newPanel, input.Caption);
+            return newPanel;
         });
 
-        if (!string.IsNullOrWhiteSpace(input.Caption) && panel.ChildItems.Count > 0)
-        {
-            transaction.Run(() =>
-            {
-                var rootControl = panel.ChildItems[0];
-                var titleProp = rootControl
-                    .ChildItemsByType<PropertyValueItem>(PropertyValueItem.CategoryConst)
-                    .FirstOrDefault(prop =>
-                        prop.ControlPropertyItem?.Name == PanelTitlePropertyName
-                    );
-                if (titleProp != null)
-                {
-                    titleProp.Value = input.Caption.Trim();
-                    titleProp.Persist();
-                }
-            });
-        }
-
         return new CreateWizardResult { SearchResults = searchService.BuildResults([panel]) };
+    }
+
+    private static void SetPanelTitle(PanelControlSet panel, string caption)
+    {
+        if (string.IsNullOrWhiteSpace(caption) || panel.ChildItems.Count == 0)
+        {
+            return;
+        }
+        var rootControl = panel.ChildItems[0];
+        var titleProp = rootControl
+            .ChildItemsByType<PropertyValueItem>(PropertyValueItem.CategoryConst)
+            .FirstOrDefault(prop => prop.ControlPropertyItem?.Name == PanelTitlePropertyName);
+        if (titleProp == null)
+        {
+            return;
+        }
+        titleProp.Value = caption.Trim();
+        titleProp.Persist();
     }
 
     private static void RelayoutScreenSectionFields(PanelControlSet panel)

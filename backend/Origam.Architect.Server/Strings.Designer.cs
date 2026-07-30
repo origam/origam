@@ -222,6 +222,15 @@ namespace Origam.Architect.Server {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Field &quot;{0}&quot; cannot be placed on a screen automatically. Its data type has no default control, or it is a foreign key without a default lookup..
+        /// </summary>
+        internal static string Wizard_FieldCannotGenerateControl {
+            get {
+                return ResourceManager.GetString("Wizard_FieldCannotGenerateControl", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Screen (FormControlSet) {0} not found.
         /// </summary>
         internal static string Wizard_FormControlSetNotFound {
