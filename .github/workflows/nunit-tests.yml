@@ -36,6 +36,9 @@ jobs:
     - name: Build Origam.CommonTests
       run: |
        msbuild backend/Origam.sln -warnaserror -t:build /p:Configuration="Release Architect" /t:Common\Origam_CommonTests:Publish -v:m
+    - name: Build Origam.ServerTests
+      run: |
+       msbuild backend/Origam.ServerTests/Origam.ServerTests.csproj -warnaserror -t:publish /p:Configuration="Release Server" -v:m
 
     - name: Upload testing artifact
       uses: actions/upload-artifact@v4
