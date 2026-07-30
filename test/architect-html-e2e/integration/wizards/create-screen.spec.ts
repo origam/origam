@@ -28,13 +28,12 @@ test.describe('Create Screen wizard (real backend)', () => {
   test('Create Screen with all fields', async ({ page }) => {
     await page.goto('/');
 
-    await page.getByText('Root Menu').click();
     await page.getByTestId('tree-toggle-Data').click();
     await page.getByTestId('tree-toggle-Entities').click();
     await page.getByTestId('tree-toggle-Dimensions').click();
     await page.getByTestId('tree-node-Dimension1').click({ button: 'right' });
     await page.getByText('Actions', { exact: true }).click();
-    await page.getByText('Create Screen').click();
+    await page.getByText('Create Screen', { exact: true }).click();
 
     const dialog = page.getByRole('dialog');
 

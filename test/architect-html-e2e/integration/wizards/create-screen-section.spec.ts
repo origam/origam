@@ -28,7 +28,6 @@ test.describe('Create Screen Section wizard (real backend)', () => {
   test('Create Screen Section from Dimension1 with a custom name', async ({ page }) => {
     await page.goto('/');
 
-    await page.getByText('Root Menu').click();
     await page.getByTestId('tree-toggle-Data').click();
     await page.getByTestId('tree-toggle-Entities').click();
     await page.getByTestId('tree-toggle-Dimensions').click();
@@ -38,9 +37,10 @@ test.describe('Create Screen Section wizard (real backend)', () => {
 
     const dialog = page.getByRole('dialog');
     await expect(dialog).toContainText('Create Screen Section');
-    await expect(dialog).toContainText('No Data Structure is created');
+    await expect(dialog).toContainText('from Dimension1');
 
     const nameInput = dialog.getByRole('textbox').first();
+    await expect(nameInput).toHaveValue(/.+/);
     await nameInput.fill('Dimension1SectionE2E');
 
     await page.getByRole('button', { name: 'Next →' }).click();

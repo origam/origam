@@ -18,11 +18,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { expect, test } from '@playwright/test';
+import { activatePackage } from '@support/activatePackage';
 import { resetBackend } from '@support/resetBackend';
 
 test.describe('Create Menu Item from Sequential Workflow wizard (real backend)', () => {
   test.beforeEach(async ({ request }) => {
     await resetBackend(request);
+    await activatePackage(request, 'Widgets');
   });
 
   test('Create Menu Item from a workflow with a role', async ({ page }) => {

@@ -28,7 +28,6 @@ test.describe('Show SQL for data structure (real backend)', () => {
   test('Show SQL renders the Dimension1 SELECT statement', async ({ page }) => {
     await page.goto('/');
 
-    await page.getByText('Root Menu').click();
     await page.getByTestId('tree-toggle-Data').click();
     await page.getByTestId('tree-toggle-Data Structures').click();
     await page.getByTestId('tree-toggle-Dimensions').click();

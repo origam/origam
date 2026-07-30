@@ -186,7 +186,9 @@ export const CreateScreenSectionWizard: React.FC<CreateScreenSectionWizardProps>
 
     const selectAll = () => {
       if (!entityData) return;
-      setSelectedFieldIds(new Set(entityData.columns.map(column => column.id)));
+      setSelectedFieldIds(
+        new Set(entityData.columns.filter(column => !column.isPrimaryKey).map(column => column.id)),
+      );
     };
 
     const clearAll = () => setSelectedFieldIds(new Set());

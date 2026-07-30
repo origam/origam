@@ -28,7 +28,6 @@ test.describe('Create Localization Child Entity wizard (real backend)', () => {
   test('Create Localization Child Entity from Dimension2', async ({ page }) => {
     await page.goto('/');
 
-    await page.getByText('Root Menu').click();
     await page.getByTestId('tree-toggle-Data').click();
     await page.getByTestId('tree-toggle-Entities').click();
     await page.getByTestId('tree-toggle-Dimensions').click();

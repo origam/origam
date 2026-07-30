@@ -35,7 +35,6 @@ test.describe('Create Filter actions on entity field (real backend)', () => {
   test('Create all filter types from a field context menu', async ({ page }) => {
     await page.goto('/');
 
-    await page.getByText('Root Menu').dblclick();
     await page.getByTestId('tree-toggle-Data').click();
     await page.getByTestId('tree-toggle-Entities').click();
     await page.getByTestId('tree-toggle-Dimensions').click();

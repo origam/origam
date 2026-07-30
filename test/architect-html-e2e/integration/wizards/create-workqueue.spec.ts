@@ -28,7 +28,6 @@ test.describe('Create WorkQueue Class wizard (real backend)', () => {
   test('Create WorkQueue Class with all fields', async ({ page }) => {
     await page.goto('/');
 
-    await page.getByText('Root Menu').click();
     await page.getByTestId('tree-toggle-Data').click();
     await page.getByTestId('tree-toggle-Entities').click();
     await page.getByTestId('tree-toggle-Dimensions').click();

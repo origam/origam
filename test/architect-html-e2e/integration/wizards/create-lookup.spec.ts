@@ -28,7 +28,6 @@ test.describe('Create Lookup wizard (real backend)', () => {
   test('Create Lookup with keyboard navigation', async ({ page }) => {
     await page.goto('/');
 
-    await page.getByText('Root Menu').click();
     await page.getByTestId('tree-toggle-Data').click();
     await page.getByTestId('tree-toggle-Entities').click();
     await page.getByTestId('tree-toggle-Dimensions').click();

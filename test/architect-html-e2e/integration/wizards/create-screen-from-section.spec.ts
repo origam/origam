@@ -28,7 +28,6 @@ test.describe('Create Screen from Screen Section wizard (real backend)', () => {
   test('Create Screen from Screen Section', async ({ page }) => {
     await page.goto('/');
 
-    await page.getByText('Root Menu').click();
     await page.getByTestId('tree-toggle-User Interface').click();
     await page.getByTestId('tree-toggle-Screen Sections').click();
     await page.getByTestId('tree-toggle-Dimensions').click();
