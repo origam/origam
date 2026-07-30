@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using NUnit.Framework;
 using Origam.DA.ObjectPersistence;
@@ -303,7 +304,10 @@ public class ModeledOpenApiDocumentGenerationTests
             var pageDocumenter = new ModeledOpenApiPageDocumenter(
                 pagePolicy,
                 new ModeledOpenApiSchemaFactory(),
-                new ModeledOpenApiExampleFactory(documentationService.Object)
+                new ModeledOpenApiExampleFactory(
+                    documentationService.Object,
+                    NullLogger<ModeledOpenApiExampleFactory>.Instance
+                )
             );
             var generator = new ModeledOpenApiDocumentGenerator(
                 new OpenIddictConfig(configuration),

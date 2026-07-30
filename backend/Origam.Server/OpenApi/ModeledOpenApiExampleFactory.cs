@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Xml.Linq;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Origam.Schema.GuiModel;
@@ -29,7 +30,10 @@ using Origam.Workbench.Services;
 
 namespace Origam.Server.OpenApi;
 
-public class ModeledOpenApiExampleFactory(IDocumentationService documentationService)
+public class ModeledOpenApiExampleFactory(
+    IDocumentationService documentationService,
+    ILogger<ModeledOpenApiExampleFactory> logger
+)
 {
     public string GetInvalidExampleMessage(AbstractPage page)
     {
@@ -108,7 +112,7 @@ public class ModeledOpenApiExampleFactory(IDocumentationService documentationSer
         return content.Count == 0 ? null : content;
     }
 
-    private static void AddDocumentedExample(
+    private void AddDocumentedExample(
         IDictionary<string, OpenApiMediaType> content,
         string mimeType,
         string example,
@@ -223,15 +227,19 @@ public class ModeledOpenApiExampleFactory(IDocumentationService documentationSer
         return result;
     }
 
-    private static bool IsXml(string value)
+    private bool IsXml(string value)
     {
         try
         {
             XDocument.Parse(value);
             return true;
         }
-        catch
+        catch (System.Xml.XmlException exception)
         {
+            logger.LogError(
+                exception: exception,
+                message: "Invalid XML example in modeled API documentation."
+            );
             return false;
         }
     }

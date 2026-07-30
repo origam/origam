@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using Origam.Schema;
 using Origam.Schema.GuiModel;
@@ -42,7 +43,10 @@ public class ModeledOpenApiDocumentProviderTests
         var pageDocumenter = new ModeledOpenApiPageDocumenter(
             pagePolicy,
             new ModeledOpenApiSchemaFactory(),
-            new ModeledOpenApiExampleFactory(documentationService: null)
+            new ModeledOpenApiExampleFactory(
+                documentationService: null,
+                NullLogger<ModeledOpenApiExampleFactory>.Instance
+            )
         );
         var generator = new ModeledOpenApiDocumentGenerator(
             new OpenIddictConfig(configuration),
