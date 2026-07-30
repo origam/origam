@@ -39,19 +39,6 @@ async function afterEachTest(browser){
   }
 }
 
-// Forwards errors from the browser to the test output. Without this an exception
-// thrown in the client is invisible and shows up only as a selector timeout.
-function logBrowserErrors(page){
-  page.on("pageerror", error => {
-    console.error("BROWSER PAGE ERROR: " + (error.stack || error.message));
-  });
-  page.on("console", message => {
-    if(message.type() === "error"){
-      console.error("BROWSER CONSOLE ERROR: " + message.text());
-    }
-  });
-}
-
 async function beforeEachTest(){
   const browser = await puppeteer.launch({
     ignoreHTTPSErrors: true,
@@ -70,7 +57,6 @@ async function beforeEachTest(){
     ]
   });
   const page = await browser.newPage();
-  logBrowserErrors(page);
   // await installMouseHelper(page); // uncomment to see the mouse movement
   await page.goto(backEndUrl);
   await sleep(500);
@@ -237,104 +223,38 @@ async function typeAndWaitForSelector(args){
   throw Error(`${args.selector} did not appear before timeout`);
 }
 
-// Records what is actually at the click coordinates. A click that misses its target
-// (a dropdown still being repositioned, an overlay on top) looks exactly like a click
-// that landed but did nothing, this tells the two apart.
-async function describeClickTarget(page, clickable){
-  try{
-    return await page.evaluate(element => {
-      const describe = node => {
-        if(!node){
-          return null;
-        }
-        const id = node.id ? "#" + node.id : "";
-        const className = typeof node.className === "string" && node.className
-          ? "." + node.className.trim().replace(/\s+/g, ".")
-          : "";
-        return node.tagName + id + className;
-      };
-      const rect = element.getBoundingClientRect();
-      const x = rect.left + rect.width / 2;
-      const y = rect.top + rect.height / 2;
-      const elementAtPoint = document.elementFromPoint(x, y);
-      return {
-        target: describe(element),
-        rect: {top: rect.top, left: rect.left, width: rect.width, height: rect.height},
-        clickPoint: {x: x, y: y},
-        elementAtClickPoint: describe(elementAtPoint),
-        hitsTarget: !!elementAtPoint
-          && (elementAtPoint === element || element.contains(elementAtPoint))
-      };
-    }, clickable);
-  }catch(error){
-    return {error: error.message};
-  }
-}
-
-// Waits until the element stops moving and returns its final click target. A dropdown
-// is rendered at a stale position and moved once it gets measured, so a click sent
-// right after it becomes visible can land next to it.
-async function waitForStableClickTarget(page, clickable){
-  let previous = null;
+// Waits until the element stops moving. A dropdown is rendered at a stale position and
+// moved once it gets measured, so a click sent right after it becomes visible can land
+// next to it.
+async function waitForStablePosition(page, clickable){
+  let previousRect = null;
   for (let i = 0; i < 20; i++) {
-    const current = await describeClickTarget(page, clickable);
-    if(current.error){
-      return current;
+    let rect;
+    try{
+      rect = await page.evaluate(element => {
+        const bounds = element.getBoundingClientRect();
+        return {
+          top: bounds.top, left: bounds.left,
+          width: bounds.width, height: bounds.height
+        };
+      }, clickable);
+    }catch(error){
+      return;
     }
-    if(previous && JSON.stringify(previous.rect) === JSON.stringify(current.rect)){
-      return current;
+    if(previousRect && JSON.stringify(previousRect) === JSON.stringify(rect)){
+      return;
     }
-    previous = current;
+    previousRect = rect;
     await sleep(50);
   }
   console.warn("The clickable kept moving, clicking it anyway");
-  return previous;
-}
-
-// Dumps the state of the page when an element does not appear. Tells apart the cases
-// when the element was never rendered, was rendered but is invisible, or the whole
-// application is gone.
-async function logPageStateOnTimeout(page, selector, clickTarget){
-  if(clickTarget){
-    console.error("CLICK TARGET BEFORE FIRST CLICK: " + JSON.stringify(clickTarget, null, 2));
-  }
-  try{
-    const state = await page.evaluate(selector => {
-      const describe = element => {
-        if(!element){
-          return null;
-        }
-        const rect = element.getBoundingClientRect();
-        const style = window.getComputedStyle(element);
-        return {
-          rect: {top: rect.top, left: rect.left, width: rect.width, height: rect.height},
-          display: style.display,
-          visibility: style.visibility,
-          opacity: style.opacity
-        };
-      };
-      const dropdownPortal = document.getElementById("dropdown-portal");
-      const root = document.getElementById("root");
-      return {
-        url: window.location.href,
-        target: selector ? describe(document.querySelector(selector)) : undefined,
-        modalWindowCount: document.querySelectorAll("[class*='modalWindow']").length,
-        dropdownPortalContentLength: dropdownPortal ? dropdownPortal.innerHTML.length : -1,
-        rootChildCount: root ? root.children.length : -1,
-        bodyText: document.body.innerText.substring(0, 500)
-      };
-    }, selector || null);
-    console.error("PAGE STATE ON TIMEOUT: " + JSON.stringify(state, null, 2));
-  }catch(error){
-    console.error("PAGE STATE ON TIMEOUT could not be read: " + error.message);
-  }
 }
 
 // args.reopen is an optional function returning a fresh clickable. It is needed when
 // the first click removes the element from the document (a dropdown closing itself),
 // because clicking the detached handle again can never succeed.
 async function clickAndWaitForSelector(args){
-  const clickTarget = await waitForStableClickTarget(args.page, args.clickable);
+  await waitForStablePosition(args.page, args.clickable);
   let clickable = args.clickable;
   try{
     await clickable.click();
@@ -360,7 +280,7 @@ async function clickAndWaitForSelector(args){
         }
       }
       try {
-        await waitForStableClickTarget(args.page, clickable);
+        await waitForStablePosition(args.page, clickable);
         await clickable.click();
       }catch(error){
         console.error(error)
@@ -368,12 +288,11 @@ async function clickAndWaitForSelector(args){
       }
     }
   }
-  await logPageStateOnTimeout(args.page, args.selector, clickTarget);
   throw Error(`${args.selector} did not appear before timeout`);
 }
 
 async function clickAndWaitForXPath(args){
-  const clickTarget = await waitForStableClickTarget(args.page, args.clickable);
+  await waitForStablePosition(args.page, args.clickable);
   await args.clickable.click();
   for (let i = 0; i < 3; i++) {
     try{
@@ -388,7 +307,6 @@ async function clickAndWaitForXPath(args){
       await args.clickable.click();
     }
   }
-  await logPageStateOnTimeout(args.page, null, clickTarget);
   throw Error(`${args.xPath} did not appear before timeout`);
 }
 
