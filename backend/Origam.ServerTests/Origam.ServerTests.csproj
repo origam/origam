@@ -5,6 +5,45 @@
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Client|AnyCPU' ">
+        <DefineConstants>ORIGAM_CLIENT</DefineConstants>
+        <OutputPath>bin\Release\</OutputPath>
+        <DebugSymbols>true</DebugSymbols>
+        <Optimize>true</Optimize>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Client|AnyCPU' ">
+        <DefineConstants>DEBUG;TRACE;ORIGAM_CLIENT</DefineConstants>
+        <OutputPath>bin\Debug\</OutputPath>
+        <DebugSymbols>true</DebugSymbols>
+        <Optimize>false</Optimize>
+        <DebugType>full</DebugType>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Server|AnyCPU' ">
+        <DefineConstants>ORIGAM_CLIENT;ORIGAM_SERVER</DefineConstants>
+        <OutputPath>bin\Release\</OutputPath>
+        <DebugSymbols>true</DebugSymbols>
+        <Optimize>true</Optimize>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Server|AnyCPU' ">
+        <DefineConstants>DEBUG;TRACE;ORIGAM_CLIENT;ORIGAM_SERVER</DefineConstants>
+        <OutputPath>bin\Debug\</OutputPath>
+        <DebugSymbols>true</DebugSymbols>
+        <Optimize>false</Optimize>
+        <DebugType>full</DebugType>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Architect|AnyCPU' ">
+        <DefineConstants>$(DefineConstants)</DefineConstants>
+        <OutputPath>bin\Release\</OutputPath>
+        <DebugSymbols>true</DebugSymbols>
+        <Optimize>true</Optimize>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Architect|AnyCPU' ">
+        <DefineConstants>DEBUG;TRACE</DefineConstants>
+        <OutputPath>bin\Debug\</OutputPath>
+        <DebugSymbols>true</DebugSymbols>
+        <Optimize>false</Optimize>
+        <DebugType>full</DebugType>
+    </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
     <PackageReference Include="Moq" Version="4.20.70" />
