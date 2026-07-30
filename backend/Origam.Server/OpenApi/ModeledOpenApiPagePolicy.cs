@@ -72,7 +72,6 @@ public class ModeledOpenApiPagePolicy(StartUpConfiguration startUpConfiguration)
 
     private static bool IsRuntimeCompatibleUrl(string url)
     {
-        return !string.IsNullOrWhiteSpace(url)
-            && !url.StartsWith(value: "/", comparisonType: StringComparison.Ordinal);
+        return !string.IsNullOrWhiteSpace(url) && !url.StartsWith('/');
     }
 }

@@ -25,15 +25,15 @@ namespace Origam.Server.OpenApi;
 
 public class ModeledOpenApiDocumentProvider
 {
-    private readonly Lazy<string> _document;
+    private readonly Lazy<string> document;
 
     public ModeledOpenApiDocumentProvider(ModeledOpenApiDocumentGenerator generator)
     {
-        _document = new Lazy<string>(generator.Generate, isThreadSafe: true);
+        document = new Lazy<string>(generator.Generate, isThreadSafe: true);
     }
 
     public string GetDocument()
     {
-        return _document.Value;
+        return document.Value;
     }
 }

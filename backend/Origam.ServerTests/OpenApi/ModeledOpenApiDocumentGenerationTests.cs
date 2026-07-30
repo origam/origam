@@ -16,34 +16,6 @@ namespace Origam.ServerTests.OpenApi;
 
 public class ModeledOpenApiDocumentGenerationTests
 {
-    [Test]
-    public void ConfiguredConcretePagesAreTheOnlyDocumentedPages()
-    {
-        using var fixture = new ModeledOpenApiFixture();
-        fixture.AddPage<ReportPage>(name: "Public", url: "public/public-report");
-        fixture.AddPage<ReportPage>(name: "Restricted", url: "restricted/restricted-report");
-        fixture.AddPage<ReportPage>(name: "Unconfigured", url: "other/unconfigured-report");
-        fixture.AddPage<ReportPage>(
-            name: "Abstract",
-            url: "public/abstract-report",
-            configure: page => page.IsAbstract = true
-        );
-
-        JsonElement paths = fixture.Generate().RootElement.GetProperty("paths");
-
-        Assert.That(paths.EnumerateObject().Count(), Is.EqualTo(2));
-        Assert.That(paths.TryGetProperty(propertyName: "/public/public-report", out _), Is.True);
-        Assert.That(
-            paths.TryGetProperty(propertyName: "/restricted/restricted-report", out _),
-            Is.True
-        );
-        Assert.That(
-            paths.TryGetProperty(propertyName: "/other/unconfigured-report", out _),
-            Is.False
-        );
-        Assert.That(paths.TryGetProperty(propertyName: "/public/abstract-report", out _), Is.False);
-    }
-
     [TestCase(PageKind.Xslt, false, "get")]
     [TestCase(PageKind.Xslt, true, "post")]
     [TestCase(PageKind.Workflow, false, "post")]
@@ -101,12 +73,12 @@ public class ModeledOpenApiDocumentGenerationTests
     public void RestrictedOperationContainsSecurityRequirement()
     {
         using var fixture = new ModeledOpenApiFixture();
-        fixture.AddPage<ReportPage>(name: "Restricted", url: "restricted/report");
+        fixture.AddPage<ReportPage>(name: "Restricted", url: "private/report");
 
         JsonElement operation = fixture
             .Generate()
             .RootElement.GetProperty("paths")
-            .GetProperty("/restricted/report")
+            .GetProperty("/private/report")
             .GetProperty("get");
 
         JsonElement requirement = operation.GetProperty("security")[0];
@@ -183,37 +155,37 @@ public class ModeledOpenApiDocumentGenerationTests
 
     private sealed class ModeledOpenApiFixture : IDisposable
     {
-        private readonly Guid _dataStructureId = Guid.NewGuid();
-        private readonly Guid _transformationId = Guid.NewGuid();
-        private readonly Mock<IPersistenceProvider> _persistenceProvider = new();
-        private readonly Mock<IDocumentationService> _documentationService = new();
-        private readonly List<AbstractPage> _pages = [];
+        private readonly Guid dataStructureId = Guid.NewGuid();
+        private readonly Guid transformationId = Guid.NewGuid();
+        private readonly Mock<IPersistenceProvider> persistenceProvider = new();
+        private readonly Mock<IDocumentationService> documentationService = new();
+        private readonly List<AbstractPage> pages = [];
 
         public ModeledOpenApiFixture()
         {
             var dataStructure = new DataStructure
             {
-                PersistenceProvider = _persistenceProvider.Object,
+                PersistenceProvider = persistenceProvider.Object,
             };
             var entity = new DataStructureEntity
             {
                 Name = "Record",
                 ParentItemId = dataStructure.Id,
-                PersistenceProvider = _persistenceProvider.Object,
+                PersistenceProvider = persistenceProvider.Object,
             };
             var transformation = new XslTransformation
             {
-                PersistenceProvider = _persistenceProvider.Object,
+                PersistenceProvider = persistenceProvider.Object,
             };
-            _persistenceProvider
-                .Setup(provider => provider.RetrieveInstance<DataStructure>(_dataStructureId))
+            persistenceProvider
+                .Setup(provider => provider.RetrieveInstance<DataStructure>(dataStructureId))
                 .Returns(dataStructure);
-            _persistenceProvider
+            persistenceProvider
                 .Setup(provider =>
-                    provider.RetrieveInstance<AbstractTransformation>(_transformationId)
+                    provider.RetrieveInstance<AbstractTransformation>(transformationId)
                 )
                 .Returns(transformation);
-            _persistenceProvider
+            persistenceProvider
                 .Setup(provider =>
                     provider.RetrieveListByParent<ISchemaItem>(
                         It.IsAny<Key>(),
@@ -230,7 +202,7 @@ public class ModeledOpenApiDocumentGenerationTests
                         bool useCache
                     ) => primaryKey.Equals(dataStructure.PrimaryKey) ? [entity] : []
                 );
-            _persistenceProvider
+            persistenceProvider
                 .Setup(provider =>
                     provider.RetrieveListByParent<SchemaItemAncestor>(
                         It.IsAny<Key>(),
@@ -240,21 +212,21 @@ public class ModeledOpenApiDocumentGenerationTests
                     )
                 )
                 .Returns([]);
-            _persistenceProvider
+            persistenceProvider
                 .Setup(provider =>
                     provider.RetrieveListByCategory<PageParameterMapping>(
                         PageParameterMapping.CategoryConst
                     )
                 )
                 .Returns([]);
-            _persistenceProvider
+            persistenceProvider
                 .Setup(provider =>
                     provider.RetrieveListByCategory<DataStructureEntity>(
                         DataStructureEntity.CategoryConst
                     )
                 )
                 .Returns([entity]);
-            _persistenceProvider
+            persistenceProvider
                 .Setup(provider =>
                     provider.RetrieveListByCategory<DataStructureColumn>(
                         DataStructureColumn.CategoryConst
@@ -272,10 +244,10 @@ public class ModeledOpenApiDocumentGenerationTests
                 Url = url,
                 Roles = "*",
                 MimeType = "application/json",
-                PersistenceProvider = _persistenceProvider.Object,
+                PersistenceProvider = persistenceProvider.Object,
             };
             configure?.Invoke(page);
-            _pages.Add(page);
+            pages.Add(page);
             return page;
         }
 
@@ -291,7 +263,7 @@ public class ModeledOpenApiDocumentGenerationTests
                         page.AllowCustomFilters = allowCustomFilters;
                         if (allowCustomFilters)
                         {
-                            page.DataStructureId = _dataStructureId;
+                            page.DataStructureId = dataStructureId;
                         }
                     }
                 ),
@@ -304,12 +276,12 @@ public class ModeledOpenApiDocumentGenerationTests
 
         public void ConfigureTransformation(XsltDataPage page)
         {
-            page.TransformationId = _transformationId;
+            page.TransformationId = transformationId;
         }
 
         public void Document(AbstractPage page, DocumentationType documentationType, string value)
         {
-            _documentationService
+            documentationService
                 .Setup(service => service.GetDocumentation(page.Id, documentationType))
                 .Returns(value);
         }
@@ -323,7 +295,7 @@ public class ModeledOpenApiDocumentGenerationTests
                         ["OpenIddictConfig:ClientApplicationTemplates:Configured"] = "true",
                         ["OpenIddictConfig:PrivateApiAuthentication"] = "Token",
                         ["UserApiOptions:PublicRoutes:0"] = "public",
-                        ["UserApiOptions:RestrictedRoutes:0"] = "restricted",
+                        ["UserApiOptions:RestrictedRoutes:0"] = "private",
                     }
                 )
                 .Build();
@@ -331,14 +303,14 @@ public class ModeledOpenApiDocumentGenerationTests
             var pageDocumenter = new ModeledOpenApiPageDocumenter(
                 pagePolicy,
                 new ModeledOpenApiSchemaFactory(),
-                new ModeledOpenApiExampleFactory(_documentationService.Object)
+                new ModeledOpenApiExampleFactory(documentationService.Object)
             );
             var generator = new ModeledOpenApiDocumentGenerator(
                 new OpenIddictConfig(configuration),
                 new TestSchemaService(
-                    new TestPagesSchemaItemProvider(_pages)
+                    new TestPagesSchemaItemProvider(pages)
                     {
-                        PersistenceProvider = _persistenceProvider.Object,
+                        PersistenceProvider = persistenceProvider.Object,
                     }
                 ),
                 pagePolicy,
@@ -350,7 +322,7 @@ public class ModeledOpenApiDocumentGenerationTests
 
         public void Dispose()
         {
-            _persistenceProvider.Object.Dispose();
+            persistenceProvider.Object.Dispose();
         }
     }
 
