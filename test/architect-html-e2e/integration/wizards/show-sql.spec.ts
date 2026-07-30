@@ -46,11 +46,6 @@ test.describe('Show SQL for data structure (real backend)', () => {
     await expect(code).toContainText('SELECT');
     await expect(code).toContainText('-- SQL statements for data structure: Dimension1');
 
-    // The statement is rendered by the server's SQL generator, so its shape depends
-    // on the configured database platform: MSSQL quotes identifiers with [brackets],
-    // PostgreSQL with "double quotes" and wraps the select in a temp table. Strip the
-    // quoting and normalize whitespace so this asserts on the generated statement
-    // instead of on whichever platform the server happens to be configured for.
     await expect
       .poll(async () => normalizeSql(await code.innerText()))
       .toContain(
