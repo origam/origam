@@ -1653,6 +1653,11 @@ Global
 		{121AF828-0B7B-473D-9CF6-8E002E234245}.Release Server|Any CPU.Build.0 = Release Server|Any CPU
 		{121AF828-0B7B-473D-9CF6-8E002E234245}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{121AF828-0B7B-473D-9CF6-8E002E234245}.Release|Any CPU.Build.0 = Release|Any CPU
+		{121AF828-0B7B-473D-9CF6-8E002E234245}.Debug Architect|Any CPU.ActiveCfg = Debug Architect|Any CPU
+		{121AF828-0B7B-473D-9CF6-8E002E234245}.Debug Architect Server|Any CPU.ActiveCfg = Debug Architect|Any CPU
+		{121AF828-0B7B-473D-9CF6-8E002E234245}.Debug Client|Any CPU.ActiveCfg = Debug Client|Any CPU
+		{121AF828-0B7B-473D-9CF6-8E002E234245}.Release Architect|Any CPU.ActiveCfg = Release Architect|Any CPU
+		{121AF828-0B7B-473D-9CF6-8E002E234245}.Release Architect Server|Any CPU.ActiveCfg = Release Architect|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
