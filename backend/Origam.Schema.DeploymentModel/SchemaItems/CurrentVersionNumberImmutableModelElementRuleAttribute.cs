@@ -25,7 +25,7 @@ using Origam.DA.ObjectPersistence;
 namespace Origam.Schema.DeploymentModel.SchemaItems;
 
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
-public class CurrentVersionNumberUnchangedModelElementRuleAttribute
+public class CurrentVersionNumberImmutableModelElementRuleAttribute
     : AbstractModelElementRuleAttribute
 {
     public override Exception CheckRule(object instance)

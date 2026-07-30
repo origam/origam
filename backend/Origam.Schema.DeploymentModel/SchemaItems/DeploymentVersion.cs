@@ -126,7 +126,7 @@ public class DeploymentVersion : AbstractSchemaItem, IDeploymentVersion
     [XmlAttribute("version")]
     [NotNullModelElementRule()]
     [ValidPackageVersionModelElementRule()]
-    [CurrentVersionNumberUnchangedModelElementRule()]
+    [CurrentVersionNumberImmutableModelElementRule()]
     [UniqueVersionValueModelElementRule()]
     public string VersionString
     {
