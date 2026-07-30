@@ -22,8 +22,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Models;
+using System.Text.Json.Nodes;
+using Microsoft.OpenApi;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
@@ -33,9 +33,9 @@ namespace Origam.Server.OpenApi;
 
 public class ModeledOpenApiSchemaFactory
 {
-    public IList<OpenApiParameter> CreateParameters(AbstractPage page)
+    public IList<IOpenApiParameter> CreateParameters(AbstractPage page)
     {
-        var parameters = new List<OpenApiParameter>();
+        var parameters = new List<IOpenApiParameter>();
         var mappingGroups = page.ChildItemsByType<PageParameterMapping>(
                 PageParameterMapping.CategoryConst
             )
@@ -81,7 +81,7 @@ public class ModeledOpenApiSchemaFactory
                                 )
                             ),
                     Schema = allMappingsAreLists
-                        ? new OpenApiSchema { Type = "array", Items = itemSchema }
+                        ? new OpenApiSchema { Type = JsonSchemaType.Array, Items = itemSchema }
                         : itemSchema,
                     Style = allMappingsAreLists ? ParameterStyle.Form : null,
                     Explode = false,
@@ -110,7 +110,7 @@ public class ModeledOpenApiSchemaFactory
             schema.Type == schemas[0].Type && schema.Format == schemas[0].Format
         )
             ? schemas[0]
-            : new OpenApiSchema { Type = "string" };
+            : new OpenApiSchema { Type = JsonSchemaType.String };
     }
 
     private static OpenApiSchema CreateParameterSchema(
@@ -124,7 +124,7 @@ public class ModeledOpenApiSchemaFactory
             dataType = mapping.DefaultValue.DataType;
         }
         return dataType == null
-            ? new OpenApiSchema { Type = "string" }
+            ? new OpenApiSchema { Type = JsonSchemaType.String }
             : CreateDataTypeSchema(dataType.Value);
     }
 
@@ -188,27 +188,59 @@ public class ModeledOpenApiSchemaFactory
     {
         return dataType switch
         {
-            OrigamDataType.Boolean => new OpenApiSchema { Type = "boolean" },
-            OrigamDataType.Byte => new OpenApiSchema { Type = "integer", Format = "int32" },
-            OrigamDataType.Currency => new OpenApiSchema { Type = "number", Format = "double" },
-            OrigamDataType.Date => new OpenApiSchema { Type = "string", Format = "date-time" },
-            OrigamDataType.Long => new OpenApiSchema { Type = "integer", Format = "int64" },
-            OrigamDataType.Float => new OpenApiSchema { Type = "number", Format = "double" },
-            OrigamDataType.Integer => new OpenApiSchema { Type = "integer", Format = "int32" },
+            OrigamDataType.Boolean => new OpenApiSchema { Type = JsonSchemaType.Boolean },
+            OrigamDataType.Byte => new OpenApiSchema
+            {
+                Type = JsonSchemaType.Integer,
+                Format = "int32",
+            },
+            OrigamDataType.Currency => new OpenApiSchema
+            {
+                Type = JsonSchemaType.Number,
+                Format = "double",
+            },
+            OrigamDataType.Date => new OpenApiSchema
+            {
+                Type = JsonSchemaType.String,
+                Format = "date-time",
+            },
+            OrigamDataType.Long => new OpenApiSchema
+            {
+                Type = JsonSchemaType.Integer,
+                Format = "int64",
+            },
+            OrigamDataType.Float => new OpenApiSchema
+            {
+                Type = JsonSchemaType.Number,
+                Format = "double",
+            },
+            OrigamDataType.Integer => new OpenApiSchema
+            {
+                Type = JsonSchemaType.Integer,
+                Format = "int32",
+            },
             OrigamDataType.UniqueIdentifier => new OpenApiSchema
             {
-                Type = "string",
+                Type = JsonSchemaType.String,
                 Format = "uuid",
             },
-            OrigamDataType.Blob => new OpenApiSchema { Type = "string", Format = "byte" },
+            OrigamDataType.Blob => new OpenApiSchema
+            {
+                Type = JsonSchemaType.String,
+                Format = "byte",
+            },
             OrigamDataType.Array => new OpenApiSchema
             {
-                Type = "array",
-                Items = new OpenApiSchema { Type = "string" },
+                Type = JsonSchemaType.Array,
+                Items = new OpenApiSchema { Type = JsonSchemaType.String },
             },
             OrigamDataType.Object or OrigamDataType.Xml or OrigamDataType.Geography =>
-                new OpenApiSchema { Type = "object", AdditionalPropertiesAllowed = true },
-            _ => new OpenApiSchema { Type = "string" },
+                new OpenApiSchema
+                {
+                    Type = JsonSchemaType.Object,
+                    AdditionalPropertiesAllowed = true,
+                },
+            _ => new OpenApiSchema { Type = JsonSchemaType.String },
         };
     }
 
@@ -219,7 +251,7 @@ public class ModeledOpenApiSchemaFactory
             Name = name,
             In = ParameterLocation.Query,
             Required = false,
-            Schema = new OpenApiSchema { Type = "integer", Format = "int32" },
+            Schema = new OpenApiSchema { Type = JsonSchemaType.Integer, Format = "int32" },
         };
     }
 
@@ -237,31 +269,26 @@ public class ModeledOpenApiSchemaFactory
         );
         var columnNameSchema = new OpenApiSchema
         {
-            Type = "string",
+            Type = JsonSchemaType.String,
             Description = string.Format(Resources.ModeledApiColumnDescription, entity.Name),
-            Enum = columns.Select(column => (IOpenApiAny)new OpenApiString(column.Name)).ToList(),
+            Enum = columns.Select(column => (JsonNode)column.Name).ToList(),
         };
         var orderingSchema = new OpenApiSchema
         {
-            Type = "object",
+            Type = JsonSchemaType.Object,
             Required = new HashSet<string> { "columnId", "direction" },
-            Properties = new Dictionary<string, OpenApiSchema>
+            Properties = new Dictionary<string, IOpenApiSchema>
             {
                 ["columnId"] = columnNameSchema,
                 ["direction"] = new OpenApiSchema
                 {
-                    Type = "string",
-                    Enum = new List<IOpenApiAny>
-                    {
-                        new OpenApiString("ASC"),
-                        new OpenApiString("DESC"),
-                    },
+                    Type = JsonSchemaType.String,
+                    Enum = new List<JsonNode> { "ASC", "DESC" },
                 },
                 ["lookupId"] = new OpenApiSchema
                 {
-                    Type = "string",
+                    Type = JsonSchemaType.String | JsonSchemaType.Null,
                     Format = "uuid",
-                    Nullable = true,
                 },
             },
         };
@@ -269,29 +296,33 @@ public class ModeledOpenApiSchemaFactory
             columns.FirstOrDefault()?.Name ?? Resources.ModeledApiExampleColumnName;
         return new OpenApiSchema
         {
-            Type = "object",
+            Type = JsonSchemaType.Object,
             Description = string.Format(
                 Resources.ModeledApiFilterInputDescription,
                 availableColumns
             ),
-            Properties = new Dictionary<string, OpenApiSchema>
+            Properties = new Dictionary<string, IOpenApiSchema>
             {
                 ["filter"] = new OpenApiSchema
                 {
-                    Type = "string",
+                    Type = JsonSchemaType.String,
                     Description = Resources.ModeledApiFilterExpressionDescription,
-                    Example = new OpenApiString($"[\"{exampleColumn}\",\"eq\",null]"),
+                    Example = $"[\"{exampleColumn}\",\"eq\",null]",
                 },
                 ["filterLookups"] = new OpenApiSchema
                 {
-                    Type = "object",
+                    Type = JsonSchemaType.Object,
                     Description = Resources.ModeledApiFilterLookupsDescription,
                     AdditionalPropertiesAllowed = true,
-                    AdditionalProperties = new OpenApiSchema { Type = "string", Format = "uuid" },
+                    AdditionalProperties = new OpenApiSchema
+                    {
+                        Type = JsonSchemaType.String,
+                        Format = "uuid",
+                    },
                 },
                 ["ordering"] = new OpenApiSchema
                 {
-                    Type = "array",
+                    Type = JsonSchemaType.Array,
                     Description = Resources.ModeledApiOrderingDescription,
                     Items = orderingSchema,
                 },
@@ -301,9 +332,8 @@ public class ModeledOpenApiSchemaFactory
 
     private static string GetOpenApiTypeName(OpenApiSchema schema)
     {
-        return string.IsNullOrWhiteSpace(schema.Format)
-            ? schema.Type
-            : $"{schema.Type}/{schema.Format}";
+        string typeName = (schema.Type & ~JsonSchemaType.Null).ToString().ToLowerInvariant();
+        return string.IsNullOrWhiteSpace(schema.Format) ? typeName : $"{typeName}/{schema.Format}";
     }
 
     public OpenApiSchema CreateDataStructureSchema(
@@ -319,7 +349,14 @@ public class ModeledOpenApiSchemaFactory
             entity => entity.Name,
             CreateEntityCollectionSchema
         );
-        OpenApiSchema mainSchema = new() { Type = "object", Properties = mainProperties };
+        OpenApiSchema mainSchema = new()
+        {
+            Type = JsonSchemaType.Object,
+            Properties = mainProperties.ToDictionary(
+                pair => pair.Key,
+                pair => (IOpenApiSchema)pair.Value
+            ),
+        };
 
         if (omitMainElement && rootEntities.Count == 1)
         {
@@ -332,8 +369,8 @@ public class ModeledOpenApiSchemaFactory
 
         return new OpenApiSchema
         {
-            Type = "object",
-            Properties = new Dictionary<string, OpenApiSchema> { ["ROOT"] = mainSchema },
+            Type = JsonSchemaType.Object,
+            Properties = new Dictionary<string, IOpenApiSchema> { ["ROOT"] = mainSchema },
         };
     }
 
@@ -342,7 +379,7 @@ public class ModeledOpenApiSchemaFactory
         OpenApiSchema rowSchema = CreateEntityRowSchema(entity);
         return entity.SerializeAsSingleJsonObject
             ? rowSchema
-            : new OpenApiSchema { Type = "array", Items = rowSchema };
+            : new OpenApiSchema { Type = JsonSchemaType.Array, Items = rowSchema };
     }
 
     private static OpenApiSchema CreateEntityRowSchema(DataStructureEntity entity)
@@ -360,15 +397,26 @@ public class ModeledOpenApiSchemaFactory
             properties[childEntity.Name] = CreateEntityCollectionSchema(childEntity);
         }
 
-        return new OpenApiSchema { Type = "object", Properties = properties };
+        return new OpenApiSchema
+        {
+            Type = JsonSchemaType.Object,
+            Properties = properties.ToDictionary(
+                pair => pair.Key,
+                pair => (IOpenApiSchema)pair.Value
+            ),
+        };
     }
 
     private static OpenApiSchema CreateColumnSchema(DataStructureColumn column)
     {
         var schema = CreateDataTypeSchema(column.DataType);
-        schema.Nullable = column.Field.AllowNulls;
+        if (column.Field.AllowNulls)
+        {
+            schema.Type |= JsonSchemaType.Null;
+        }
         if (
-            schema.Type == "string"
+            schema.Type.HasValue
+            && schema.Type.Value.HasFlag(JsonSchemaType.String)
             && column.Field.DataLength > 0
             && column.DataType is not OrigamDataType.Memo and not OrigamDataType.Xml
         )

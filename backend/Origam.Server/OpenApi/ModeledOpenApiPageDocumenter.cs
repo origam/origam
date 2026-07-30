@@ -19,10 +19,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.OpenApi.Models;
+using System.Net.Http;
+using Microsoft.OpenApi;
 using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
 using Origam.Schema.WorkflowModel;
@@ -40,11 +40,15 @@ public class ModeledOpenApiPageDocumenter(
     public void AddPage(OpenApiDocument document, AbstractPage page)
     {
         string path = "/" + page.Url;
-        if (!document.Paths.TryGetValue(path, out OpenApiPathItem pathItem))
+        if (!document.Paths.TryGetValue(path, out IOpenApiPathItem existingPathItem))
         {
-            pathItem = new OpenApiPathItem();
-            document.Paths.Add(path, pathItem);
+            existingPathItem = new OpenApiPathItem
+            {
+                Operations = new Dictionary<HttpMethod, OpenApiOperation>(),
+            };
+            document.Paths.Add(path, existingPathItem);
         }
+        var pathItem = (OpenApiPathItem)existingPathItem;
 
         switch (page)
         {
@@ -52,48 +56,52 @@ public class ModeledOpenApiPageDocumenter(
             {
                 if (dataPage.AllowCustomFilters)
                 {
-                    AddOperation(pathItem, OperationType.Post, page);
+                    AddOperation(document, pathItem, HttpMethod.Post, page);
                 }
                 else
                 {
-                    AddOperation(pathItem, OperationType.Get, page);
+                    AddOperation(document, pathItem, HttpMethod.Get, page);
                 }
                 break;
             }
 
             case WorkflowPage:
             {
-                AddOperation(pathItem, OperationType.Post, page);
+                AddOperation(document, pathItem, HttpMethod.Post, page);
                 break;
             }
 
             case ReportPage:
             case FileDownloadPage:
             {
-                AddOperation(pathItem, OperationType.Get, page);
+                AddOperation(document, pathItem, HttpMethod.Get, page);
                 break;
             }
 
             default:
             {
-                AddUnsupportedPageOperation(pathItem, page);
+                AddUnsupportedPageOperation(document, pathItem, page);
                 break;
             }
         }
         if (page.AllowPUT)
         {
-            AddOperation(pathItem, OperationType.Put, page);
+            AddOperation(document, pathItem, HttpMethod.Put, page);
         }
         if (page.AllowDELETE)
         {
-            AddOperation(pathItem, OperationType.Delete, page);
+            AddOperation(document, pathItem, HttpMethod.Delete, page);
         }
     }
 
-    private void AddUnsupportedPageOperation(OpenApiPathItem pathItem, AbstractPage page)
+    private void AddUnsupportedPageOperation(
+        OpenApiDocument document,
+        OpenApiPathItem pathItem,
+        AbstractPage page
+    )
     {
         pathItem.Operations.Add(
-            OperationType.Get,
+            HttpMethod.Get,
             new OpenApiOperation
             {
                 OperationId = $"{SanitizeOperationId(page.Name)}_unsupported",
@@ -103,7 +111,10 @@ public class ModeledOpenApiPageDocumenter(
                     page.GetType().FullName
                 ),
                 Deprecated = true,
-                Tags = new List<OpenApiTag> { new() { Name = pagePolicy.GetTagName(page) } },
+                Tags = new HashSet<OpenApiTagReference>
+                {
+                    new(pagePolicy.GetTagName(page), document, externalResource: null),
+                },
                 Responses = new OpenApiResponses
                 {
                     ["501"] = new OpenApiResponse
@@ -116,8 +127,9 @@ public class ModeledOpenApiPageDocumenter(
     }
 
     private void AddOperation(
+        OpenApiDocument document,
         OpenApiPathItem pathItem,
-        OperationType operationType,
+        HttpMethod operationType,
         AbstractPage page
     )
     {
@@ -137,11 +149,14 @@ public class ModeledOpenApiPageDocumenter(
                 Resources.ModeledApiEndpointDescription,
                 page.GetType().Name
             ),
-            Tags = new List<OpenApiTag> { new() { Name = pagePolicy.GetTagName(page) } },
+            Tags = new HashSet<OpenApiTagReference>
+            {
+                new(pagePolicy.GetTagName(page), document, externalResource: null),
+            },
             Parameters = schemaFactory.CreateParameters(page),
             Responses = CreateResponses(page),
         };
-        if (operationType == OperationType.Get && page is XsltDataPage { AllowCustomFilters: true })
+        if (operationType == HttpMethod.Get && page is XsltDataPage { AllowCustomFilters: true })
         {
             operation.Description += Resources.ModeledApiPostFiltersHint;
         }
@@ -159,15 +174,12 @@ public class ModeledOpenApiPageDocumenter(
                 new()
                 {
                     [
-                        new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference
-                            {
-                                Type = ReferenceType.SecurityScheme,
-                                Id = AuthenticationSchemeName,
-                            },
-                        }
-                    ] = Array.Empty<string>(),
+                        new OpenApiSecuritySchemeReference(
+                            AuthenticationSchemeName,
+                            document,
+                            externalResource: null
+                        )
+                    ] = new List<string>(),
                 },
             };
         }
@@ -175,9 +187,9 @@ public class ModeledOpenApiPageDocumenter(
         pathItem.Operations.Add(operationType, operation);
     }
 
-    private OpenApiRequestBody CreateRequestBody(AbstractPage page, OperationType operationType)
+    private OpenApiRequestBody CreateRequestBody(AbstractPage page, HttpMethod operationType)
     {
-        if (operationType is OperationType.Get or OperationType.Delete)
+        if (operationType == HttpMethod.Get || operationType == HttpMethod.Delete)
         {
             return null;
         }
@@ -189,14 +201,14 @@ public class ModeledOpenApiPageDocumenter(
         IDictionary<string, OpenApiMediaType> documentedExamples =
             page is WorkflowPage ? exampleFactory.CreateDocumentedExampleContent(page) : null;
         var fileMappings = mappings.OfType<PageParameterFileMapping>().ToList();
-        if (fileMappings.Count > 0 && operationType == OperationType.Post)
+        if (fileMappings.Count > 0 && operationType == HttpMethod.Post)
         {
-            var properties = new Dictionary<string, OpenApiSchema>();
+            var properties = new Dictionary<string, IOpenApiSchema>();
             foreach (PageParameterFileMapping mapping in fileMappings)
             {
                 properties[mapping.MappedParameter] = new OpenApiSchema
                 {
-                    Type = "string",
+                    Type = JsonSchemaType.String,
                     Format = "binary",
                 };
             }
@@ -204,7 +216,11 @@ public class ModeledOpenApiPageDocumenter(
             {
                 ["multipart/form-data"] = new()
                 {
-                    Schema = new OpenApiSchema { Type = "object", Properties = properties },
+                    Schema = new OpenApiSchema
+                    {
+                        Type = JsonSchemaType.Object,
+                        Properties = properties,
+                    },
                 },
             };
             ModeledOpenApiExampleFactory.AddExamples(multipartContent, documentedExamples);
@@ -215,8 +231,7 @@ public class ModeledOpenApiPageDocumenter(
             string.IsNullOrWhiteSpace(mapping.MappedParameter)
         );
         bool acceptsCustomFilters =
-            page is XsltDataPage { AllowCustomFilters: true }
-            && operationType == OperationType.Post;
+            page is XsltDataPage { AllowCustomFilters: true } && operationType == HttpMethod.Post;
         if (!hasContentMapping && !acceptsCustomFilters && documentedExamples == null)
         {
             return null;
@@ -228,7 +243,7 @@ public class ModeledOpenApiPageDocumenter(
             schema = schemaFactory.CreateCustomFilterSchema((XsltDataPage)page);
         }
         else if (
-            operationType == OperationType.Put
+            operationType == HttpMethod.Put
             && page is XsltDataPage dataPage
             && dataPage.DataStructure != null
         )
@@ -241,7 +256,11 @@ public class ModeledOpenApiPageDocumenter(
         }
         else
         {
-            schema = new OpenApiSchema { Type = "object", AdditionalPropertiesAllowed = true };
+            schema = new OpenApiSchema
+            {
+                Type = JsonSchemaType.Object,
+                AdditionalPropertiesAllowed = true,
+            };
         }
 
         var content = new Dictionary<string, OpenApiMediaType>
@@ -252,7 +271,7 @@ public class ModeledOpenApiPageDocumenter(
         {
             content["text/xml"] = new OpenApiMediaType
             {
-                Schema = new OpenApiSchema { Type = "string" },
+                Schema = new OpenApiSchema { Type = JsonSchemaType.String },
             };
         }
 
@@ -336,13 +355,13 @@ public class ModeledOpenApiPageDocumenter(
             {
                 [contentType] = new()
                 {
-                    Schema = new OpenApiSchema { Type = "string", Format = "binary" },
+                    Schema = new OpenApiSchema { Type = JsonSchemaType.String, Format = "binary" },
                 },
             };
         }
 
         string mimeType = string.IsNullOrWhiteSpace(page.MimeType) ? "text/plain" : page.MimeType;
-        OpenApiSchema responseSchema = new() { Type = "string" };
+        OpenApiSchema responseSchema = new() { Type = JsonSchemaType.String };
         if (page is XsltDataPage { Transformation: not null })
         {
             return exampleFactory.CreateDocumentedExampleContent(page);

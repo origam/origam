@@ -23,8 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Writers;
+using Microsoft.OpenApi;
 using Origam.Schema.GuiModel;
 using Origam.Server.Configuration;
 using Origam.Services;
@@ -58,7 +57,7 @@ public class ModeledOpenApiDocumentGenerator(
                 Name = tagName,
                 Description = string.Format(Resources.ModeledApiTagDescription, tagName),
             })
-            .ToList();
+            .ToHashSet();
 
         foreach (AbstractPage page in pages)
         {
@@ -68,7 +67,6 @@ public class ModeledOpenApiDocumentGenerator(
         using var stringWriter = new StringWriter();
         var writer = new OpenApiJsonWriter(stringWriter);
         document.SerializeAsV3(writer);
-        writer.Flush();
         return stringWriter.ToString();
     }
 
@@ -85,7 +83,7 @@ public class ModeledOpenApiDocumentGenerator(
             Paths = new OpenApiPaths(),
             Components = new OpenApiComponents
             {
-                SecuritySchemes = new Dictionary<string, OpenApiSecurityScheme>
+                SecuritySchemes = new Dictionary<string, IOpenApiSecurityScheme>
                 {
                     [ModeledOpenApiPageDocumenter.AuthenticationSchemeName] =
                         CreateAuthenticationScheme(),

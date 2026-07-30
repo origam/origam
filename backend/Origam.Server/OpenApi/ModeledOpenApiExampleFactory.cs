@@ -22,10 +22,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Xml.Linq;
 using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Origam.Schema.GuiModel;
 using Origam.Workbench.Services;
 
@@ -54,7 +54,7 @@ public class ModeledOpenApiExampleFactory(
         );
         if (
             !string.IsNullOrWhiteSpace(jsonExample)
-            && !TryCreateJsonExample(jsonExample, out IOpenApiAny _)
+            && !TryCreateJsonExample(jsonExample, out JsonNode _)
         )
         {
             return Resources.ModeledApiInvalidJsonExample;
@@ -96,7 +96,7 @@ public class ModeledOpenApiExampleFactory(
         string example = documentationService.GetDocumentation(page.Id, DocumentationType.EXAMPLE);
         if (!string.IsNullOrWhiteSpace(example))
         {
-            if (TryCreateJsonExample(example, out IOpenApiAny jsonExample))
+            if (TryCreateJsonExample(example, out JsonNode jsonExample))
             {
                 AddExample(content: content, mimeType: "application/json", example: jsonExample);
             }
@@ -105,7 +105,7 @@ public class ModeledOpenApiExampleFactory(
                 AddExample(
                     content: content,
                     mimeType: "text/xml",
-                    example: new OpenApiString(example)
+                    example: JsonValue.Create(example)
                 );
             }
         }
@@ -125,7 +125,7 @@ public class ModeledOpenApiExampleFactory(
             return;
         }
 
-        IOpenApiAny openApiExample;
+        JsonNode openApiExample;
         if (isJson)
         {
             if (!TryCreateJsonExample(example, out openApiExample))
@@ -139,7 +139,7 @@ public class ModeledOpenApiExampleFactory(
             {
                 return;
             }
-            openApiExample = new OpenApiString(example);
+            openApiExample = JsonValue.Create(example);
         }
         AddExample(content, mimeType, openApiExample);
     }
@@ -147,7 +147,7 @@ public class ModeledOpenApiExampleFactory(
     private static void AddExample(
         IDictionary<string, OpenApiMediaType> content,
         string mimeType,
-        IOpenApiAny example
+        JsonNode example
     )
     {
         if (!content.TryGetValue(mimeType, out OpenApiMediaType mediaType))
@@ -173,12 +173,11 @@ public class ModeledOpenApiExampleFactory(
         }
     }
 
-    private static bool TryCreateJsonExample(string value, out IOpenApiAny example)
+    private static bool TryCreateJsonExample(string value, out JsonNode example)
     {
         try
         {
-            using JsonDocument document = JsonDocument.Parse(value);
-            example = CreateOpenApiValue(document.RootElement);
+            example = JsonNode.Parse(value);
             return true;
         }
         catch (JsonException)
@@ -186,46 +185,6 @@ public class ModeledOpenApiExampleFactory(
             example = null;
             return false;
         }
-    }
-
-    private static IOpenApiAny CreateOpenApiValue(JsonElement element)
-    {
-        return element.ValueKind switch
-        {
-            JsonValueKind.Object => CreateOpenApiObject(element),
-            JsonValueKind.Array => CreateOpenApiArray(element),
-            JsonValueKind.String => new OpenApiString(element.GetString()),
-            JsonValueKind.Number when element.TryGetInt32(out int intValue) => new OpenApiInteger(
-                intValue
-            ),
-            JsonValueKind.Number when element.TryGetInt64(out long longValue) => new OpenApiLong(
-                longValue
-            ),
-            JsonValueKind.Number => new OpenApiDouble(element.GetDouble()),
-            JsonValueKind.True => new OpenApiBoolean(true),
-            JsonValueKind.False => new OpenApiBoolean(false),
-            _ => new OpenApiNull(),
-        };
-    }
-
-    private static OpenApiObject CreateOpenApiObject(JsonElement element)
-    {
-        var result = new OpenApiObject();
-        foreach (JsonProperty property in element.EnumerateObject())
-        {
-            result[property.Name] = CreateOpenApiValue(property.Value);
-        }
-        return result;
-    }
-
-    private static OpenApiArray CreateOpenApiArray(JsonElement element)
-    {
-        var result = new OpenApiArray();
-        foreach (JsonElement item in element.EnumerateArray())
-        {
-            result.Add(CreateOpenApiValue(item));
-        }
-        return result;
     }
 
     private bool IsXml(string value)
