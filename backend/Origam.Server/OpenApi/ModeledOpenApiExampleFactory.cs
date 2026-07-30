@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Xml.Linq;
@@ -234,11 +235,15 @@ public class ModeledOpenApiExampleFactory(
             XDocument.Parse(value);
             return true;
         }
-        catch (System.Xml.XmlException exception)
+        catch (System.Xml.XmlException)
+        {
+            return false;
+        }
+        catch (Exception exception)
         {
             logger.LogError(
                 exception: exception,
-                message: "Invalid XML example in modeled API documentation."
+                message: "Could not validate the modeled API XML example."
             );
             return false;
         }
