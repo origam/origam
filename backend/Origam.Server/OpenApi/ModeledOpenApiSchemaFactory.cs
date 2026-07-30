@@ -352,15 +352,12 @@ public class ModeledOpenApiSchemaFactory
             .ToDictionary(column => column.Name, CreateColumnSchema);
 
         foreach (
-            DataStructureEntity childEntity in entity.ChildItemsByType<DataStructureEntity>(
-                DataStructureEntity.CategoryConst
-            )
+            DataStructureEntity childEntity in entity
+                .ChildItemsByType<DataStructureEntity>(DataStructureEntity.CategoryConst)
+                .Where(childEntity => childEntity.Entity is IAssociation { IsParentChild: true })
         )
         {
-            if (childEntity.Entity is IAssociation { IsParentChild: true })
-            {
-                properties[childEntity.Name] = CreateEntityCollectionSchema(childEntity);
-            }
+            properties[childEntity.Name] = CreateEntityCollectionSchema(childEntity);
         }
 
         return new OpenApiSchema { Type = "object", Properties = properties };
