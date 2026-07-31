@@ -83,19 +83,33 @@ jobs:
         name: test-dlls
         path: backend
 
-    - name: Run NUnit tests
+    - name: Run Architect NUnit tests
       run:  |
        echo Linux platform is case sensitive filenames. For this reason it has to be renamed mvp.xml.dll to Mvp.Xml.dll.
        find . -name 'mvp.xml.dll' -exec sh -c 'f="{}"; mv -- "$f" "$(dirname {})/mvp.xml.x.dll"' \;
        find . -name 'mvp.xml.x.dll' -exec sh -c 'f="{}"; mv -- "$f" "$(dirname {})/Mvp.Xml.dll"' \;
-       dotnet test --logger "trx;logfilename=test-results.trx" backend/**Tests/bin/Release/*Tests.dll
+       dotnet test --logger "trx;logfilename=architect-test-results.trx" backend/**Tests/bin/Release/*Tests.dll
+
+    - name: Run Server NUnit tests
+      if: success() || failure()
+      run: |
+       dotnet test --logger "trx;logfilename=server-test-results.trx" backend/Origam.ServerTests/bin/Release/net8.0/Origam.ServerTests.dll
       
-    - name: Produce NUnit test report
+    - name: Produce Architect NUnit test report
       uses: dorny/test-reporter@v1
       if: success() || failure()
       with:
-        name: NUnit Results
-        path: TestResults/test-results.trx
+        name: Architect NUnit Results
+        path: TestResults/architect-test-results.trx
+        reporter: dotnet-trx
+        max-annotations: '0'
+
+    - name: Produce Server NUnit test report
+      uses: dorny/test-reporter@v1
+      if: success() || failure()
+      with:
+        name: Server NUnit Results
+        path: TestResults/server-test-results.trx
         reporter: dotnet-trx
         max-annotations: '0'
     
