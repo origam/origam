@@ -202,7 +202,7 @@ public class ModeledOpenApiExampleFactory(
         {
             logger.LogError(
                 exception: exception,
-                message: $"Could not validate the modeled API XML example \"{value}\""
+                message: string.Format(Resources.ModeledApiXmlExampleValidationFailed, value)
             );
             return false;
         }

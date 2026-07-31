@@ -861,6 +861,15 @@ namespace Origam.Server {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Could not validate the modeled API XML example "{0}".
+        /// </summary>
+        public static string ModeledApiXmlExampleValidationFailed {
+            get {
+                return ResourceManager.GetString("ModeledApiXmlExampleValidationFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Successful response. The response schema is not available..
         /// </summary>
         public static string ModeledApiMissingOutputDocumentationResponse {

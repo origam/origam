@@ -396,6 +396,9 @@
   <data name="ModeledApiInvalidXmlExample" xml:space="preserve">
     <value>The EXAMPLE_XML output documentation entry is not valid XML and cannot be displayed.</value>
   </data>
+  <data name="ModeledApiXmlExampleValidationFailed" xml:space="preserve">
+    <value>Could not validate the modeled API XML example "{0}"</value>
+  </data>
   <data name="ModeledApiMissingOutputDocumentationResponse" xml:space="preserve">
     <value>Successful response. The response schema is not available because the output documentation is not filled out. Add an EXAMPLE_JSON, EXAMPLE_XML or EXAMPLE documentation entry to expose an example response here.</value>
   </data>
