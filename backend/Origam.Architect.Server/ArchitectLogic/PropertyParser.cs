@@ -110,6 +110,11 @@ public class PropertyParser(IPersistenceService persistenceService)
             return persistenceService.SchemaProvider.RetrieveInstance<IPersistent>(id);
         }
 
+        if (property.PropertyType == typeof(object))
+        {
+            return value;
+        }
+
         throw new Exception(
             $"Type {property.PropertyType.Name} of property {property.Name} cannot be parsed."
         );

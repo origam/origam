@@ -230,6 +230,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "support", "support", "{208E
 		..\test\architect-html-e2e\integration\support\resetBackend.ts = ..\test\architect-html-e2e\integration\support\resetBackend.ts
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AI", "AI", "{A4F1E0B2-36FF-4D3D-A8F1-69D93E14D512}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.AI.Function.Calling", "Origam.AI.Function.Calling\Origam.AI.Function.Calling\Origam.AI.Function.Calling.csproj", "{26B30AA3-C93A-4C76-8843-1B7D91A9CFD5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug Architect Server|Any CPU = Debug Architect Server|Any CPU
@@ -1641,11 +1645,32 @@ Global
 		{09C89E0C-0F9E-48DF-A1C3-77FFB03E6D0D}.Release Server|Any CPU.Build.0 = Release|Any CPU
 		{09C89E0C-0F9E-48DF-A1C3-77FFB03E6D0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{09C89E0C-0F9E-48DF-A1C3-77FFB03E6D0D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{26B30AA3-C93A-4C76-8843-1B7D91A9CFD5}.Debug Architect Server|Any CPU.ActiveCfg = Debug|Any CPU
+		{26B30AA3-C93A-4C76-8843-1B7D91A9CFD5}.Debug Architect Server|Any CPU.Build.0 = Debug|Any CPU
+		{26B30AA3-C93A-4C76-8843-1B7D91A9CFD5}.Debug Architect|Any CPU.ActiveCfg = Debug|Any CPU
+		{26B30AA3-C93A-4C76-8843-1B7D91A9CFD5}.Debug Architect|Any CPU.Build.0 = Debug|Any CPU
+		{26B30AA3-C93A-4C76-8843-1B7D91A9CFD5}.Debug Client|Any CPU.ActiveCfg = Debug|Any CPU
+		{26B30AA3-C93A-4C76-8843-1B7D91A9CFD5}.Debug Client|Any CPU.Build.0 = Debug|Any CPU
+		{26B30AA3-C93A-4C76-8843-1B7D91A9CFD5}.Debug Server|Any CPU.ActiveCfg = Debug|Any CPU
+		{26B30AA3-C93A-4C76-8843-1B7D91A9CFD5}.Debug Server|Any CPU.Build.0 = Debug|Any CPU
+		{26B30AA3-C93A-4C76-8843-1B7D91A9CFD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26B30AA3-C93A-4C76-8843-1B7D91A9CFD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26B30AA3-C93A-4C76-8843-1B7D91A9CFD5}.Release Architect Server|Any CPU.ActiveCfg = Release|Any CPU
+		{26B30AA3-C93A-4C76-8843-1B7D91A9CFD5}.Release Architect Server|Any CPU.Build.0 = Release|Any CPU
+		{26B30AA3-C93A-4C76-8843-1B7D91A9CFD5}.Release Architect|Any CPU.ActiveCfg = Release|Any CPU
+		{26B30AA3-C93A-4C76-8843-1B7D91A9CFD5}.Release Architect|Any CPU.Build.0 = Release|Any CPU
+		{26B30AA3-C93A-4C76-8843-1B7D91A9CFD5}.Release Client|Any CPU.ActiveCfg = Release|Any CPU
+		{26B30AA3-C93A-4C76-8843-1B7D91A9CFD5}.Release Client|Any CPU.Build.0 = Release|Any CPU
+		{26B30AA3-C93A-4C76-8843-1B7D91A9CFD5}.Release Server|Any CPU.ActiveCfg = Release|Any CPU
+		{26B30AA3-C93A-4C76-8843-1B7D91A9CFD5}.Release Server|Any CPU.Build.0 = Release|Any CPU
+		{26B30AA3-C93A-4C76-8843-1B7D91A9CFD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26B30AA3-C93A-4C76-8843-1B7D91A9CFD5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{26B30AA3-C93A-4C76-8843-1B7D91A9CFD5} = {A4F1E0B2-36FF-4D3D-A8F1-69D93E14D512}
 		{ECA06542-5635-455E-B513-07F60222CA7D} = {E6C47023-1936-4A7C-93AD-13D4765E2F96}
 		{8C587DCB-0E49-4DCA-9AD5-EACC69C980C3} = {E6C47023-1936-4A7C-93AD-13D4765E2F96}
 		{01C6A542-4D42-4AFA-9744-5E92E71A8251} = {33DB2305-704F-4324-A189-498D728F0459}

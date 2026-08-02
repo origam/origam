@@ -1,3 +1,4 @@
+#region license
 /*
 Copyright 2005 - 2026 Advantage Solutions, s. r. o.
 
@@ -16,19 +17,22 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
+#endregion
 
-export interface IValidationError {
-  propertyName: string;
-  error: string;
-}
+namespace Origam.Architect.Server.ReturnModels;
 
-export interface ITabState {
-  tabId: string;
-  label: string;
-  isActive: boolean;
-  isDirty: boolean;
-  origamId?: string;
-  validationErrors?: IValidationError[];
-  save(): Generator<Promise<any>, void, any>;
-  dispose?(): void;
-}
+public record RelatedItem(string Id, string Name);
+
+public record EntityCard(
+    string Id,
+    string Name,
+    string Kind,
+    string Package,
+    List<string> Fields,
+    List<string> PrimaryKey,
+    List<RelatedItem> Structures,
+    List<RelatedItem> Screens,
+    List<RelatedItem> Panels,
+    List<RelatedItem> Lookups,
+    List<RelatedItem> WorkQueues
+);

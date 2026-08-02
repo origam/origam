@@ -91,13 +91,48 @@ export class EditorTabViewState {
     }.bind(this);
   }
 
-  openEditorBySchemaItemId(schemaItemId: string) {
+  openEditorByOrigamId(origamId: string) {
     return function* (
       this: EditorTabViewState,
     ): Generator<Promise<IApiTabData>, void, IApiTabData> {
-      const apiTabData = yield this.architectApi.openTab(schemaItemId);
-      const editorData = new EditorData(apiTabData, null);
+      const apiTabData = yield this.architectApi.openTab(origamId);
+      const treeNode =
+        this.rootStore.modelTreeState.findNodeById(apiTabData.node.id) ??
+        this.rootStore.modelTreeState.findNodeById(origamId);
+      const editorData = new EditorData(apiTabData, treeNode);
       this.openEditor(editorData);
+    }.bind(this);
+  }
+
+  reloadEditorsForOrigamIds(origamIds: string[]) {
+    return function* (this: EditorTabViewState): Generator<Promise<any>, void, any> {
+      const idSet = new Set(origamIds);
+      const targets = this.editorsContainers.filter(
+        editor =>
+          editor.state.origamId && idSet.has(editor.state.origamId) && !editor.state.isDirty,
+      );
+      if (targets.length === 0) {
+        return;
+      }
+
+      const rebuiltByTabId = new Map<string, EditorContainer>();
+      for (const editor of targets) {
+        const apiTabData = (yield this.architectApi.openTab(editor.state.origamId!)) as IApiTabData;
+        const rebuilt = this.toEditor(apiTabData);
+        if (rebuilt) {
+          rebuilt.state.isActive = editor.state.isActive;
+          rebuiltByTabId.set(editor.state.tabId, rebuilt);
+        }
+      }
+
+      this.editorsContainers = this.editorsContainers.map(editor => {
+        const rebuilt = rebuiltByTabId.get(editor.state.tabId);
+        if (!rebuilt) {
+          return editor;
+        }
+        editor.state.dispose?.();
+        return rebuilt;
+      });
     }.bind(this);
   }
 

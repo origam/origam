@@ -1,5 +1,6 @@
+#region license
 /*
-Copyright 2005 - 2026 Advantage Solutions, s. r. o.
+Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -16,19 +17,19 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
+#endregion
 
-export interface IValidationError {
-  propertyName: string;
-  error: string;
-}
+using System.ComponentModel;
+using Microsoft.SemanticKernel;
 
-export interface ITabState {
-  tabId: string;
-  label: string;
-  isActive: boolean;
-  isDirty: boolean;
-  origamId?: string;
-  validationErrors?: IValidationError[];
-  save(): Generator<Promise<any>, void, any>;
-  dispose?(): void;
+namespace Origam.AI.Function.Calling.Plugins;
+
+public class TimePlugin
+{
+    [KernelFunction]
+    [Description("Returns the current server time as an ISO 8601 string.")]
+    public string GetCurrentTime()
+    {
+        return DateTimeOffset.Now.ToString("O");
+    }
 }

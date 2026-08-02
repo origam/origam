@@ -56,6 +56,12 @@ export class ModelTreeState {
     return this.findNodeByIdRecursively(nodeId, this.modelNodes);
   }
 
+  highlightNode(nodeId: string | undefined): void {
+    const targetNode = this.findNodeByIdRecursively(nodeId, this.modelNodes);
+    this.highlightedNodeId = targetNode ? targetNode.id : null;
+    this.highlightToken += 1;
+  }
+
   *expandAndHighlightSchemaItem(args: {
     parentNodeIds: string[];
     schemaItemId: string;

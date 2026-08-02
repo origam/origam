@@ -17,18 +17,13 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-export interface IValidationError {
-  propertyName: string;
-  error: string;
-}
+import { AiChatPanel } from '@/ai/AiChatPanel';
+import S from '@/ai/AiChatApp.module.scss';
 
-export interface ITabState {
-  tabId: string;
-  label: string;
-  isActive: boolean;
-  isDirty: boolean;
-  origamId?: string;
-  validationErrors?: IValidationError[];
-  save(): Generator<Promise<any>, void, any>;
-  dispose?(): void;
+export function AiChatApp() {
+  return (
+    <div className={S.fullscreen}>
+      <AiChatPanel />
+    </div>
+  );
 }

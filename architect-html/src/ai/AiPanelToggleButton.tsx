@@ -17,18 +17,23 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-export interface IValidationError {
-  propertyName: string;
-  error: string;
-}
+import { RootStoreContext, T } from '@/main';
+import Button from '@components/Button/Button';
+import { observer } from 'mobx-react-lite';
+import { useContext } from 'react';
+import { VscCommentDiscussion } from 'react-icons/vsc';
 
-export interface ITabState {
-  tabId: string;
-  label: string;
-  isActive: boolean;
-  isDirty: boolean;
-  origamId?: string;
-  validationErrors?: IValidationError[];
-  save(): Generator<Promise<any>, void, any>;
-  dispose?(): void;
-}
+const AiPanelToggleButton = observer(() => {
+  const rootStore = useContext(RootStoreContext);
+  return (
+    <Button
+      type={rootStore.uiState.aiPanelVisible ? 'primary' : 'secondary'}
+      title={T('AI', 'app_ai')}
+      prefix={<VscCommentDiscussion />}
+      onClick={() => rootStore.uiState.toggleAiPanel()}
+      dataTestId="topbar-toggle-ai"
+    />
+  );
+});
+
+export default AiPanelToggleButton;

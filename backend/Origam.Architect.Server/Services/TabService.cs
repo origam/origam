@@ -87,6 +87,14 @@ public class TabService(
     {
         if (Guid.TryParse(parentId, out Guid parentGuid))
         {
+            if (
+                tabSchemaItems.TryGetValue(TabId.Default(parentGuid), out TabData tabData)
+                && tabData.Item is ISchemaItemFactory unsavedParentFactory
+            )
+            {
+                return unsavedParentFactory;
+            }
+
             IBrowserNode2 parentItem = persistenceProvider.RetrieveInstance<IBrowserNode2>(
                 parentGuid
             );

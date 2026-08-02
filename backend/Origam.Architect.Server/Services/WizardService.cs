@@ -222,8 +222,7 @@ public class WizardService(
             dsProvider
                 ?.ChildItemsByType<ISchemaItem>(AbstractDataStructure.CategoryConst)
                 .Select(item => item.Name)
-                .ToList()
-            ?? new List<string>();
+                .ToList() ?? new List<string>();
 
         return new ScreenWizardData
         {

@@ -148,10 +148,16 @@ public class TabController(
             return BadRequest("No Datasource selected can't save");
         }
 
+        ISchemaItem persistTarget = item;
+        while (persistTarget.ParentItem != null && !persistTarget.ParentItem.IsPersisted)
+        {
+            persistTarget = persistTarget.ParentItem;
+        }
+
         try
         {
             persistenceService.SchemaProvider.BeginTransaction();
-            item.Persist();
+            persistTarget.Persist();
             tabData.IsDirty = false;
             return Ok();
         }

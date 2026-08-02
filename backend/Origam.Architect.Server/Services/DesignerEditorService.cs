@@ -248,8 +248,7 @@ public class DesignerEditorService(
                             AbstractDataEntityColumn.CategoryConst
                         )
                         ?.FirstOrDefault(x => x.Name == bindingInfo?.Value)
-                        ?.Caption
-                    ?? bindingInfo?.Value;
+                        ?.Caption ?? bindingInfo?.Value;
             }
             apiControl.Name = caption ?? controlSetItem.Name;
         }

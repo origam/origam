@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 #endregion
 
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using Origam.Architect.Server.Services;
 
@@ -31,7 +32,7 @@ namespace Origam.Architect.Server.Controllers;
 public class SearchController(SearchService searchService) : ControllerBase
 {
     [HttpGet("Text")]
-    public ActionResult Text([FromQuery] string text)
+    public ActionResult Text([Required] [FromQuery] string text)
     {
         return Ok(searchService.SearchByText(text));
     }
