@@ -1,5 +1,4 @@
 using System.ComponentModel;
-using Microsoft.SemanticKernel;
 using Origam.AI.Function.Calling.Services;
 
 namespace Origam.AI.Function.Calling.Plugins;
@@ -24,7 +23,6 @@ public class SchemaExplorationPlugin
         _baseUrl = configuration.GetSection("Architect")["BaseUrl"] ?? "https://localhost:7099";
     }
 
-    [KernelFunction]
     [Description(
         "Gets the detailed YAML schema of a specific node/entity to explore its fields, filters, and relations. Use this before modifying an entity to understand its structure. Pass the entity's alias (e.g. ent_xxxxx)."
     )]
@@ -56,7 +54,6 @@ public class SchemaExplorationPlugin
         return string.IsNullOrWhiteSpace(yaml) ? "Node has no details or is empty." : yaml;
     }
 
-    [KernelFunction]
     [Description(
         "Searches the entire Origam schema horizontally for elements matching a specific query string. Returns a compact list of aliases and paths."
     )]

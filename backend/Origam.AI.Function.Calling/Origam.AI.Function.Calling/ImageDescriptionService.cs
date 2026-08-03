@@ -19,8 +19,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.ChatCompletion;
+using System.ClientModel;
+using Microsoft.Extensions.AI;
+using OpenAI;
 
 namespace Origam.AI.Function.Calling;
 
@@ -46,16 +47,14 @@ public class ImageDescriptionService
         CancellationToken cancellationToken
     )
     {
-        var kernelBuilder = Kernel.CreateBuilder();
-        kernelBuilder.AddOpenAIChatCompletion(
-            modelId: model,
-            endpoint: new Uri(endpoint),
-            apiKey: apiKey
-        );
-        var kernel = kernelBuilder.Build();
-        var chatCompletion = kernel.GetRequiredService<IChatCompletionService>();
+        var chatClient = new OpenAIClient(
+            new ApiKeyCredential(apiKey),
+            new OpenAIClientOptions { Endpoint = new Uri(endpoint) }
+        )
+            .GetChatClient(model)
+            .AsIChatClient();
 
-        var messageItems = new ChatMessageContentItemCollection
+        var messageItems = new List<AIContent>
         {
             new TextContent(
                 "Describe the attached image(s) in detail so a separate text-only assistant can "
@@ -70,20 +69,16 @@ public class ImageDescriptionService
             if (parsedImage is not null)
             {
                 messageItems.Add(
-                    new ImageContent(parsedImage.Value.Bytes, parsedImage.Value.MimeType)
+                    new DataContent(parsedImage.Value.Bytes, parsedImage.Value.MimeType)
                 );
             }
         }
 
-        var chatHistory = new ChatHistory();
-        chatHistory.AddUserMessage(messageItems);
-
-        var response = await chatCompletion.GetChatMessageContentAsync(
-            chatHistory,
-            executionSettings: null,
-            kernel: kernel,
+        var response = await chatClient.GetResponseAsync(
+            new List<ChatMessage> { new(ChatRole.User, messageItems) },
+            options: null,
             cancellationToken: cancellationToken
         );
-        return response.Content ?? "";
+        return response.Text ?? "";
     }
 }

@@ -19,36 +19,26 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Microsoft.SemanticKernel;
+using Microsoft.Agents.AI;
 
 namespace Origam.AI.Function.Calling;
 
 public static class TokenUsageReader
 {
     public static (int PromptTokens, int CompletionTokens, int TotalTokens) Read(
-        ChatMessageContent response
+        AgentResponse response
     )
     {
-        if (
-            response.Metadata is null
-            || !response.Metadata.TryGetValue(key: "Usage", out var usage)
-            || usage is null
-        )
+        var usage = response.Usage;
+        if (usage is null)
         {
             return (0, 0, 0);
         }
 
-        var usageType = usage.GetType();
-        int ReadProperty(string propertyName)
-        {
-            var value = usageType.GetProperty(propertyName)?.GetValue(usage);
-            return value is int intValue ? intValue : 0;
-        }
-
         return (
-            ReadProperty("InputTokenCount"),
-            ReadProperty("OutputTokenCount"),
-            ReadProperty("TotalTokenCount")
+            (int)(usage.InputTokenCount ?? 0),
+            (int)(usage.OutputTokenCount ?? 0),
+            (int)(usage.TotalTokenCount ?? 0)
         );
     }
 }

@@ -20,11 +20,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.Text.Json;
-using Microsoft.SemanticKernel;
+using Microsoft.Extensions.AI;
 
 namespace Origam.AI.Function.Calling;
 
-public class CreateNodeValidationFilter : IFunctionInvocationFilter
+public class CreateNodeValidationFilter : IToolInvocationFilter
 {
     private readonly IHttpClientFactory httpClientFactory;
     private readonly string architectBaseUrl;
@@ -39,9 +39,10 @@ public class CreateNodeValidationFilter : IFunctionInvocationFilter
             configuration.GetSection("Architect")["BaseUrl"] ?? "https://localhost:7099";
     }
 
-    public async Task OnFunctionInvocationAsync(
+    public async ValueTask<object?> OnFunctionInvocationAsync(
         FunctionInvocationContext context,
-        Func<FunctionInvocationContext, Task> next
+        ToolInvocation next,
+        CancellationToken cancellationToken
     )
     {
         string? nodeId = GetArgument(context.Arguments, name: "nodeId");
@@ -49,8 +50,7 @@ public class CreateNodeValidationFilter : IFunctionInvocationFilter
 
         if (string.IsNullOrWhiteSpace(nodeId) || string.IsNullOrWhiteSpace(newTypeName))
         {
-            await next(context);
-            return;
+            return await next(context, cancellationToken);
         }
 
         IReadOnlyList<string>? creatableTypes = await GetCreatableTypesAsync(nodeId);
@@ -60,17 +60,13 @@ public class CreateNodeValidationFilter : IFunctionInvocationFilter
             && !creatableTypes.Contains(newTypeName, StringComparer.OrdinalIgnoreCase)
         )
         {
-            context.Result = new FunctionResult(
-                context.Function,
-                BuildRejectionMessage(newTypeName, creatableTypes)
-            );
-            return;
+            return BuildRejectionMessage(newTypeName, creatableTypes);
         }
 
-        await next(context);
+        return await next(context, cancellationToken);
     }
 
-    private static string? GetArgument(KernelArguments arguments, string name)
+    private static string? GetArgument(AIFunctionArguments arguments, string name)
     {
         foreach (var pair in arguments)
         {

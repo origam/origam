@@ -19,9 +19,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.ChatCompletion;
-using Microsoft.SemanticKernel.Connectors.OpenAI;
+using System.ClientModel;
+using System.ClientModel.Primitives;
+using Microsoft.Agents.AI;
+using Microsoft.Extensions.AI;
+using OpenAI;
 using Origam.AI.Function.Calling;
 using Origam.AI.Function.Calling.Plugins;
 
@@ -170,52 +172,75 @@ app.MapPost(
 
         var modelIndexYaml = await modelIndexService.GetYamlAsync(cancellationToken);
 
-        var kernelBuilder = Kernel.CreateBuilder();
-        kernelBuilder.AddOpenAIChatCompletion(
-            modelId: model,
-            endpoint: new Uri(endpoint),
-            apiKey: apiKey,
-            httpClient: httpClientFactory.CreateClient("openai")
-        );
-        kernelBuilder.Plugins.AddFromType<TimePlugin>();
+        const int maxToolIterations = 80;
 
+        var timePlugin = new TimePlugin();
         var schemaPlugin = new SchemaExplorationPlugin(
             httpClientFactory,
             aliasMappingService,
             yamlSerializer,
             configuration
         );
-        kernelBuilder.Plugins.AddFromObject(schemaPlugin);
 
-        var kernel = kernelBuilder.Build();
+        var tools = new List<AITool>
+        {
+            AIFunctionFactory.Create(timePlugin.GetCurrentTime),
+            AIFunctionFactory.Create(schemaPlugin.ExploreNodeAsync),
+            AIFunctionFactory.Create(schemaPlugin.SearchSchemaAsync),
+        };
 
         var enabledSections = request.EnabledSections is { Count: > 0 }
             ? request.EnabledSections
             : Origam.AI.Function.Calling.Services.OpenApiSectionProvider.SafeDefaultSections;
         foreach (var sectionName in enabledSections)
         {
-            var sectionPlugin = await sectionProvider.GetPluginAsync(
-                sectionName,
-                cancellationToken
-            );
-            if (sectionPlugin is not null)
+            var sectionTools = await sectionProvider.GetToolsAsync(sectionName, cancellationToken);
+            if (sectionTools is not null)
             {
-                kernel.Plugins.Add(sectionPlugin);
+                tools.AddRange(sectionTools);
             }
         }
 
-        var functionTracker = new FunctionCallTracker();
-        kernel.FunctionInvocationFilters.Add(new ToolErrorFilter(toolErrorLogger));
-        kernel.FunctionInvocationFilters.Add(new AliasArgumentResolver(aliasMappingService));
-        kernel.FunctionInvocationFilters.Add(
-            new CreateNodeValidationFilter(httpClientFactory, configuration)
+        var functionTracker = new FunctionCallTracker(maxToolIterations);
+        var toolInvocation = ToolInvocationPipeline.Build(
+            new List<IToolInvocationFilter>
+            {
+                new ToolErrorFilter(toolErrorLogger),
+                new AliasArgumentResolver(aliasMappingService),
+                new CreateNodeValidationFilter(httpClientFactory, configuration),
+                functionTracker,
+            }
         );
-        kernel.FunctionInvocationFilters.Add(functionTracker);
-        var toolCallLimitFilter = new ToolCallLimitFilter(maxIterations: 80);
-        kernel.AutoFunctionInvocationFilters.Add(toolCallLimitFilter);
 
-        var chatCompletion = kernel.GetRequiredService<IChatCompletionService>();
-        var chatHistory = new ChatHistory();
+        var openAiClient = new OpenAIClient(
+            new ApiKeyCredential(apiKey),
+            new OpenAIClientOptions
+            {
+                Endpoint = new Uri(endpoint),
+                Transport = new HttpClientPipelineTransport(
+                    httpClientFactory.CreateClient("openai")
+                ),
+            }
+        );
+
+        var chatClient = new FunctionInvokingChatClient(
+            openAiClient.GetChatClient(model).AsIChatClient()
+        )
+        {
+            MaximumIterationsPerRequest = maxToolIterations,
+            FunctionInvoker = (context, invocationToken) =>
+                toolInvocation(context, invocationToken),
+        };
+
+        var agent = chatClient.AsAIAgent(
+            new ChatClientAgentOptions
+            {
+                ChatOptions = new ChatOptions { Tools = tools },
+                UseProvidedChatClientAsIs = true,
+            }
+        );
+
+        var chatHistory = new List<ChatMessage>();
 
         chatHistory.AddSystemMessage(
             "You are a helpful assistant for the ORIGAM low-code platform. "
@@ -418,21 +443,11 @@ app.MapPost(
 
         chatHistory.AddUserMessage(request.Message);
 
-        var executionSettings = new OpenAIPromptExecutionSettings
-        {
-            FunctionChoiceBehavior = FunctionChoiceBehavior.Auto(),
-        };
-
-        var response = await chatCompletion.GetChatMessageContentAsync(
-            chatHistory,
-            executionSettings,
-            kernel,
-            cancellationToken
-        );
+        var response = await agent.RunAsync(chatHistory, cancellationToken: cancellationToken);
 
         var usage = TokenUsageReader.Read(response);
 
-        var reply = SanitizeReply(response.Content ?? "", toolCallLimitFilter.LimitReached);
+        var reply = SanitizeReply(response.Text ?? "", functionTracker.LimitReached);
 
         var priorAssistantTurns = request.History?.Count(turn => turn.Role == "assistant") ?? 0;
         var totalAssistantTurns = priorAssistantTurns + 1;

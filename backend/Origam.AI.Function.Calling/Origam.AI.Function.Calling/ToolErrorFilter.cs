@@ -19,11 +19,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Microsoft.SemanticKernel;
+using Microsoft.Extensions.AI;
+using Origam.AI.Function.Calling.Services.OpenApi;
 
 namespace Origam.AI.Function.Calling;
 
-public class ToolErrorFilter : IFunctionInvocationFilter
+public class ToolErrorFilter : IToolInvocationFilter
 {
     private const int MaxLength = 4000;
     private const int MaxModelLength = 500;
@@ -37,40 +38,46 @@ public class ToolErrorFilter : IFunctionInvocationFilter
         this.logger = logger;
     }
 
-    public async Task OnFunctionInvocationAsync(
+    public async ValueTask<object?> OnFunctionInvocationAsync(
         FunctionInvocationContext context,
-        Func<FunctionInvocationContext, Task> next
+        ToolInvocation next,
+        CancellationToken cancellationToken
     )
     {
         try
         {
-            await next(context);
+            return await next(context, cancellationToken);
         }
-        catch (HttpOperationException exception)
+        catch (OpenApiInvocationException exception)
         {
-            var statusCode = exception.StatusCode.HasValue
-                ? ((int)exception.StatusCode.Value).ToString()
-                : "no response";
-            var arguments = Shorten(DescribeArguments(context.Arguments));
-            var response = Shorten(exception.ResponseContent);
-
             logger.LogWarning(
-                message: "{Function} -> {StatusCode}\n      arguments: {Arguments}\n      response: {Response}",
-                context.Function.Name,
-                statusCode,
-                arguments,
-                response
+                message: "{Function} -> {StatusCode}\n      url: {Url}\n      payload: {Payload}\n      arguments: {Arguments}\n      response: {Response}",
+                exception.FunctionName,
+                exception.StatusCode,
+                exception.RequestUrl,
+                Shorten(exception.RequestPayload),
+                Shorten(DescribeArguments(context.Arguments)),
+                Shorten(exception.ResponseBody)
             );
 
-            context.Result = new FunctionResult(
-                context.Function,
-                $"The tool call failed with HTTP status {statusCode}. The server responded: "
-                    + FirstLine(exception.ResponseContent)
+            return $"The tool call failed with HTTP status {exception.StatusCode}. The server responded: "
+                + FirstLine(exception.ResponseBody);
+        }
+        catch (Exception exception)
+        {
+            logger.LogWarning(
+                message: "{Function} threw {Type}\n      arguments: {Arguments}\n      message: {Message}",
+                context.Function.Name,
+                exception.GetType().Name,
+                Shorten(DescribeArguments(context.Arguments)),
+                Shorten(exception.Message)
             );
+
+            return $"The tool call failed: {FirstLine(exception.Message)}";
         }
     }
 
-    private static string DescribeArguments(KernelArguments arguments)
+    private static string DescribeArguments(AIFunctionArguments arguments)
     {
         return string.Join(
             separator: ", ",

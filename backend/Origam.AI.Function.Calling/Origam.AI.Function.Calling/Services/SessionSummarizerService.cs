@@ -1,7 +1,7 @@
+using System.ClientModel;
 using System.Text;
-using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.ChatCompletion;
-using Microsoft.SemanticKernel.Connectors.OpenAI;
+using Microsoft.Extensions.AI;
+using OpenAI;
 
 namespace Origam.AI.Function.Calling.Services;
 
@@ -34,16 +34,14 @@ public class SessionSummarizerService
             return existingSummary;
         }
 
-        var kernelBuilder = Kernel.CreateBuilder();
-        kernelBuilder.AddOpenAIChatCompletion(
-            modelId: model,
-            endpoint: new Uri(endpoint),
-            apiKey: apiKey
-        );
-        var kernel = kernelBuilder.Build();
-        var chat = kernel.GetRequiredService<IChatCompletionService>();
+        var chatClient = new OpenAIClient(
+            new ApiKeyCredential(apiKey),
+            new OpenAIClientOptions { Endpoint = new Uri(endpoint) }
+        )
+            .GetChatClient(model)
+            .AsIChatClient();
 
-        var chatHistory = new ChatHistory();
+        var chatHistory = new List<ChatMessage>();
         chatHistory.AddSystemMessage(
             "You maintain a compact running summary of an AI-assisted ORIGAM low-code editing "
                 + "session. Given the previous summary (if any) plus the latest conversation "
@@ -77,20 +75,14 @@ public class SessionSummarizerService
 
         chatHistory.AddUserMessage(payload.ToString());
 
-        var executionSettings = new OpenAIPromptExecutionSettings
-        {
-            FunctionChoiceBehavior = FunctionChoiceBehavior.None(),
-        };
-
         try
         {
-            var response = await chat.GetChatMessageContentAsync(
+            var response = await chatClient.GetResponseAsync(
                 chatHistory,
-                executionSettings,
-                kernel,
-                cancellationToken
+                options: null,
+                cancellationToken: cancellationToken
             );
-            var text = response.Content?.Trim() ?? string.Empty;
+            var text = response.Text?.Trim() ?? string.Empty;
             return string.IsNullOrWhiteSpace(text) ? existingSummary : text;
         }
         catch

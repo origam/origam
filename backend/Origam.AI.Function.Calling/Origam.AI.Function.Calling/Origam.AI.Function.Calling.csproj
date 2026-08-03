@@ -4,10 +4,9 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>Origam.AI.Function.Calling</RootNamespace>
-    <NoWarn>$(NoWarn);SKEXP0001;SKEXP0010;SKEXP0040</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.SemanticKernel" Version="1.65.0" />
-    <PackageReference Include="Microsoft.SemanticKernel.Plugins.OpenApi" Version="1.65.0" />
+    <PackageReference Include="Microsoft.Agents.AI" Version="1.16.0" />
+    <PackageReference Include="Microsoft.Agents.AI.OpenAI" Version="1.16.0" />
   </ItemGroup>
 </Project>

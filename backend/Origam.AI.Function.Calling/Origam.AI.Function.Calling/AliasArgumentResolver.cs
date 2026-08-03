@@ -21,12 +21,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Text.Json;
 using System.Text.RegularExpressions;
-using Microsoft.SemanticKernel;
+using Microsoft.Extensions.AI;
 using Origam.AI.Function.Calling.Services;
 
 namespace Origam.AI.Function.Calling;
 
-public class AliasArgumentResolver : IFunctionInvocationFilter
+public class AliasArgumentResolver : IToolInvocationFilter
 {
     private static readonly Regex AliasPattern = new(
         pattern: "^[A-Za-z]{1,8}_[0-9a-fA-F]{8}$",
@@ -40,14 +40,19 @@ public class AliasArgumentResolver : IFunctionInvocationFilter
         this.aliasMappingService = aliasMappingService;
     }
 
-    public async Task OnFunctionInvocationAsync(
+    public async ValueTask<object?> OnFunctionInvocationAsync(
         FunctionInvocationContext context,
-        Func<FunctionInvocationContext, Task> next
+        ToolInvocation next,
+        CancellationToken cancellationToken
     )
     {
-        foreach (var name in context.Arguments.Names.ToArray())
+        foreach (var name in context.Arguments.Keys.ToArray())
         {
-            var original = context.Arguments[name];
+            if (!context.Arguments.TryGetValue(name, out var original))
+            {
+                continue;
+            }
+
             var resolved = ResolveValue(original);
             if (!ReferenceEquals(resolved, original))
             {
@@ -55,7 +60,7 @@ public class AliasArgumentResolver : IFunctionInvocationFilter
             }
         }
 
-        await next(context);
+        return await next(context, cancellationToken);
     }
 
     private object? ResolveValue(object? value)

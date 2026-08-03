@@ -20,13 +20,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.Text.Json;
-using Microsoft.SemanticKernel;
+using Microsoft.Extensions.AI;
 
 namespace Origam.AI.Function.Calling;
 
 public record AffectedNode(string OrigamId, string? Label, string? ItemTypeName, string Action);
 
-public class FunctionCallTracker : IFunctionInvocationFilter
+public class FunctionCallTracker : IToolInvocationFilter
 {
     private static readonly string[] MutatingVerbs =
     {
@@ -42,37 +42,53 @@ public class FunctionCallTracker : IFunctionInvocationFilter
 
     private readonly List<string> invokedFunctions = new();
     private readonly List<AffectedNode> affectedNodes = new();
+    private readonly int maxIterations;
+
+    public FunctionCallTracker(int maxIterations)
+    {
+        this.maxIterations = maxIterations;
+    }
 
     public IReadOnlyList<string> InvokedFunctions => invokedFunctions;
     public IReadOnlyList<AffectedNode> AffectedNodes => affectedNodes;
     public bool ModelChanged { get; private set; }
+    public bool LimitReached { get; private set; }
 
-    public async Task OnFunctionInvocationAsync(
+    public async ValueTask<object?> OnFunctionInvocationAsync(
         FunctionInvocationContext context,
-        Func<FunctionInvocationContext, Task> next
+        ToolInvocation next,
+        CancellationToken cancellationToken
     )
     {
         invokedFunctions.Add(context.Function.Name);
-        await next(context);
+
+        if (context.Iteration >= maxIterations - 1)
+        {
+            LimitReached = true;
+        }
+
+        var result = await next(context, cancellationToken);
 
         try
         {
-            Inspect(context);
+            Inspect(context, result);
         }
         catch
         {
             // Result inspection is best-effort telemetry; never break the chat over it.
         }
+
+        return result;
     }
 
-    private void Inspect(FunctionInvocationContext context)
+    private void Inspect(FunctionInvocationContext context, object? result)
     {
         var functionName = context.Function.Name;
         var isMutating = MutatingVerbs.Any(verb =>
             functionName.Contains(value: verb, comparisonType: StringComparison.OrdinalIgnoreCase)
         );
 
-        var content = ExtractContent(context.Result?.GetValue<object?>());
+        var content = ExtractContent(result);
         var extractedFromResult = false;
 
         if (content is not null && LooksLikeJsonObject(content))
@@ -190,10 +206,17 @@ public class FunctionCallTracker : IFunctionInvocationFilter
         {
             if (context.Arguments.TryGetValue(argumentName, out var value) && value is not null)
             {
-                return value.ToString();
+                return AsString(value);
             }
         }
         return null;
+    }
+
+    private static string? AsString(object value)
+    {
+        return value is JsonElement { ValueKind: JsonValueKind.String } element
+            ? element.GetString()
+            : value.ToString();
     }
 
     private static string? ExtractContent(object? value)

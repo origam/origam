@@ -19,32 +19,24 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Microsoft.SemanticKernel;
+using Microsoft.Extensions.AI;
 
 namespace Origam.AI.Function.Calling;
 
-public class ToolCallLimitFilter : IAutoFunctionInvocationFilter
+public static class ChatMessageListExtensions
 {
-    private readonly int maxIterations;
-
-    public bool LimitReached { get; private set; }
-
-    public ToolCallLimitFilter(int maxIterations)
+    public static void AddSystemMessage(this List<ChatMessage> messages, string content)
     {
-        this.maxIterations = maxIterations;
+        messages.Add(new ChatMessage(ChatRole.System, content));
     }
 
-    public async Task OnAutoFunctionInvocationAsync(
-        AutoFunctionInvocationContext context,
-        Func<AutoFunctionInvocationContext, Task> next
-    )
+    public static void AddUserMessage(this List<ChatMessage> messages, string content)
     {
-        await next(context);
+        messages.Add(new ChatMessage(ChatRole.User, content));
+    }
 
-        if (context.RequestSequenceIndex >= maxIterations - 1)
-        {
-            LimitReached = true;
-            context.Terminate = true;
-        }
+    public static void AddAssistantMessage(this List<ChatMessage> messages, string content)
+    {
+        messages.Add(new ChatMessage(ChatRole.Assistant, content));
     }
 }

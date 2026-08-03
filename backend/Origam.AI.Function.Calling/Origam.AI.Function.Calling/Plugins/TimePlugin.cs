@@ -20,13 +20,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.ComponentModel;
-using Microsoft.SemanticKernel;
 
 namespace Origam.AI.Function.Calling.Plugins;
 
 public class TimePlugin
 {
-    [KernelFunction]
     [Description("Returns the current server time as an ISO 8601 string.")]
     public string GetCurrentTime()
     {

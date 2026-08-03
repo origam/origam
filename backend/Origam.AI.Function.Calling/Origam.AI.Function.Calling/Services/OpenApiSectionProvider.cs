@@ -21,8 +21,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.Plugins.OpenApi;
+using Microsoft.Extensions.AI;
+using Origam.AI.Function.Calling.Services.OpenApi;
 
 namespace Origam.AI.Function.Calling.Services;
 
@@ -34,7 +34,7 @@ public class ApiSection
     public required IReadOnlyList<SectionOperation> Operations { get; init; }
     public required HashSet<string> Paths { get; init; }
     public bool HasDestructive => Operations.Any(operation => operation.Destructive);
-    public KernelPlugin? Plugin { get; set; }
+    public IReadOnlyList<AITool>? Tools { get; set; }
 }
 
 public record SectionInfo(
@@ -126,7 +126,7 @@ public class OpenApiSectionProvider
             .ToArray();
     }
 
-    public async Task<KernelPlugin?> GetPluginAsync(
+    public async Task<IReadOnlyList<AITool>?> GetToolsAsync(
         string sectionName,
         CancellationToken cancellationToken
     )
@@ -141,35 +141,27 @@ public class OpenApiSectionProvider
             return null;
         }
 
-        if (section.Plugin is not null)
+        if (section.Tools is not null)
         {
-            return section.Plugin;
+            return section.Tools;
         }
 
         await loadLock.WaitAsync(cancellationToken);
         try
         {
-            if (section.Plugin is not null)
+            if (section.Tools is not null)
             {
-                return section.Plugin;
+                return section.Tools;
             }
 
-            using var stream = new MemoryStream(swaggerBytes!);
-            section.Plugin = await OpenApiKernelPluginFactory.CreateFromOpenApiAsync(
-                pluginName: SanitizePluginName(section.Name),
-                stream: stream,
-                executionParameters: new OpenApiFunctionExecutionParameters
-                {
-                    HttpClient = httpClientFactory.CreateClient("architect"),
-                    ServerUrlOverride = new Uri(architectBaseUrl),
-                    EnableDynamicPayload = true,
-                    EnablePayloadNamespacing = false,
-                    OperationSelectionPredicate = operation =>
-                        section.Paths.Contains(operation.Path),
-                },
-                cancellationToken: cancellationToken
+            section.Tools = OpenApiFunctionBuilder.Build(
+                swaggerBytes!,
+                section.Name,
+                section.Paths,
+                architectBaseUrl,
+                httpClientFactory
             );
-            return section.Plugin;
+            return section.Tools;
         }
         catch (Exception exception)
         {
@@ -368,13 +360,5 @@ public class OpenApiSectionProvider
                 value: "deploy",
                 comparisonType: StringComparison.OrdinalIgnoreCase
             );
-    }
-
-    private static string SanitizePluginName(string name)
-    {
-        var sanitized = new string(
-            name.Select(character => char.IsLetterOrDigit(character) ? character : '_').ToArray()
-        );
-        return string.IsNullOrWhiteSpace(sanitized) ? "Section" : sanitized;
     }
 }
