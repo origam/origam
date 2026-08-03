@@ -21,4 +21,4 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 namespace Origam.Composer.Interfaces.BuilderTasks;
 
-public interface IDownloadFileModelBuilderTask : IBuilderTask;
+public interface ICopyBundledModelBuilderTask : IBuilderTask;

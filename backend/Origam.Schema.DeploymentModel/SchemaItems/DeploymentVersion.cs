@@ -27,6 +27,7 @@ using System.Linq;
 using System.Xml.Serialization;
 using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
+using Origam.Schema.DeploymentModel.SchemaItems;
 using Origam.Services;
 using Origam.Workbench.Services;
 
@@ -96,6 +97,16 @@ public class DeploymentVersion : AbstractSchemaItem, IDeploymentVersion
     [Browsable(false)]
     public override bool UseFolders => false;
 
+    [Category("(Schema Item)")]
+    [StringNotEmptyModelElementRule]
+    [UniqueVersionValueModelElementRule]
+    [XmlAttribute("name")]
+    public override string Name
+    {
+        get => base.Name;
+        set => base.Name = value;
+    }
+
     [Browsable(false)]
     public bool IsCurrentVersion
     {
@@ -113,20 +124,14 @@ public class DeploymentVersion : AbstractSchemaItem, IDeploymentVersion
 
     [Category("Version Information")]
     [XmlAttribute("version")]
+    [NotNullModelElementRule()]
+    [ValidPackageVersionModelElementRule()]
+    [CurrentVersionNumberImmutableModelElementRule()]
+    [UniqueVersionValueModelElementRule()]
     public string VersionString
     {
         get => versionString;
-        set
-        {
-            if ((versionString != null) && (versionString != value) && IsCurrentVersion)
-            {
-                throw new InvalidOperationException(
-                    ResourceUtils.GetString("ErrorChangePackageVersion")
-                );
-            }
-            versionString = value;
-            Version = new PackageVersion(versionString);
-        }
+        set => versionString = value;
     }
 
     [Browsable(false)]
@@ -136,7 +141,18 @@ public class DeploymentVersion : AbstractSchemaItem, IDeploymentVersion
             .Cast<AbstractUpdateScriptActivity>();
 
     [Browsable(false)]
-    public PackageVersion Version { get; private set; } = new("0.0");
+    public PackageVersion Version
+    {
+        get
+        {
+            if (PackageVersion.TryParse(versionString, out PackageVersion parsedVersion))
+            {
+                return parsedVersion;
+            }
+
+            return new("0.0");
+        }
+    }
 
     [XmlAttribute("deploymentDependenciesCsv")]
     public string DeploymentDependenciesCsv;
