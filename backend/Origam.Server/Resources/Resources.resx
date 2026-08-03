@@ -369,8 +369,8 @@
   <data name="ModeledApiColumnDescription" xml:space="preserve">
     <value>A column in '{0}'.</value>
   </data>
-  <data name="ModeledApiDescription" xml:space="preserve">
-    <value>API endpoints defined in the active Origam application model.</value>
+  <data name="OpenApiDescription" xml:space="preserve">
+    <value>Public API endpoints defined in the active Origam application model and extension controllers.</value>
   </data>
   <data name="ModeledApiEndpointDescription" xml:space="preserve">
     <value>Modeled {0} endpoint.</value>
@@ -423,8 +423,8 @@
   <data name="ModeledApiTagDescription" xml:space="preserve">
     <value>Modeled API endpoints in the '{0}' folder.</value>
   </data>
-  <data name="ModeledApiTitle" xml:space="preserve">
-    <value>Origam Modeled API</value>
+  <data name="OpenApiTitle" xml:space="preserve">
+    <value>Origam API</value>
   </data>
   <data name="ModeledApiUncategorized" xml:space="preserve">
     <value>Uncategorized</value>

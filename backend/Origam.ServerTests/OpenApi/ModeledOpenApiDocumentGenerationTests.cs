@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Text.Json;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.OpenApi;
 using Moq;
 using NUnit.Framework;
 using Origam.DA.ObjectPersistence;
@@ -89,6 +90,24 @@ public class ModeledOpenApiDocumentGenerationTests
         Assert.That(path.TryGetProperty(propertyName: "put", out _), Is.True);
         Assert.That(path.TryGetProperty(propertyName: "delete", out _), Is.True);
         Assert.That(path.EnumerateObject().Count(), Is.EqualTo(3));
+    }
+
+    [Test]
+    public void ModeledOperationUsesModeledApiTag()
+    {
+        using var fixture = new ModeledOpenApiFixture();
+        fixture.AddPage<ReportPage>(name: "Sales", url: "public/sales");
+
+        JsonElement operation = fixture
+            .Generate()
+            .RootElement.GetProperty("paths")
+            .GetProperty("/public/sales")
+            .GetProperty("get");
+
+        Assert.That(
+            operation.GetProperty("tags")[0].GetString(),
+            Is.EqualTo("Modeled API — Uncategorized")
+        );
     }
 
     [Test]
@@ -342,7 +361,17 @@ public class ModeledOpenApiDocumentGenerationTests
                 pageDocumenter
             );
 
-            return JsonDocument.Parse(new ModeledOpenApiDocumentProvider(generator).GetDocument());
+            var document = new OpenApiDocument
+            {
+                Info = new OpenApiInfo { Title = "Combined API", Version = "1.0" },
+                Paths = new OpenApiPaths(),
+            };
+            generator.AddTo(document);
+
+            using var stringWriter = new StringWriter();
+            var writer = new OpenApiJsonWriter(stringWriter);
+            document.SerializeAsV3(writer);
+            return JsonDocument.Parse(stringWriter.ToString());
         }
 
         public void Dispose()

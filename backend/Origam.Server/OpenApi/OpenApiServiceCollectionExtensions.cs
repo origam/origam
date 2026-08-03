@@ -20,17 +20,22 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi;
+using Origam.Server.Configuration;
 using Origam.Services;
 using Origam.Workbench.Services;
 
 namespace Origam.Server.OpenApi;
 
-public static class ModeledOpenApiServiceCollectionExtensions
+public static class OpenApiServiceCollectionExtensions
 {
-    public static IServiceCollection AddModeledOpenApiDocumentation(
-        this IServiceCollection services
+    public static IServiceCollection AddOpenApiDocumentation(
+        this IServiceCollection services,
+        StartUpConfiguration startUpConfiguration
     )
     {
+        var extensionControllerPolicy = new ExtensionControllerOpenApiPolicy(startUpConfiguration);
+        services.AddSingleton(extensionControllerPolicy);
         services.AddSingleton(_ => ServiceManager.Services.GetService<ISchemaService>());
         services.AddSingleton(_ => ServiceManager.Services.GetService<IDocumentationService>());
         services.AddSingleton<ModeledOpenApiPagePolicy>();
@@ -38,7 +43,27 @@ public static class ModeledOpenApiServiceCollectionExtensions
         services.AddSingleton<ModeledOpenApiExampleFactory>();
         services.AddSingleton<ModeledOpenApiPageDocumenter>();
         services.AddSingleton<ModeledOpenApiDocumentGenerator>();
-        services.AddSingleton<ModeledOpenApiDocumentProvider>();
+        services.AddSingleton<OpenApiDocumentProvider>();
+        services.AddSwaggerGen(options =>
+        {
+            options.SwaggerDoc(
+                OpenApiDocumentProvider.DocumentName,
+                new OpenApiInfo
+                {
+                    Title = Resources.OpenApiTitle,
+                    Version = "1.0",
+                    Description = Resources.OpenApiDescription,
+                }
+            );
+            options.DocInclusionPredicate(
+                (_, apiDescription) => extensionControllerPolicy.IsDocumented(apiDescription)
+            );
+            options.TagActionsBy(apiDescription =>
+                [extensionControllerPolicy.GetTagName(apiDescription)]
+            );
+            options.CustomSchemaIds(type => type.FullName ?? type.Name);
+            options.DocumentFilter<ModeledOpenApiDocumentFilter>();
+        });
         return services;
     }
 }

@@ -21,7 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using Microsoft.OpenApi;
 using Origam.Schema.GuiModel;
@@ -37,10 +36,9 @@ public class ModeledOpenApiDocumentGenerator(
     ModeledOpenApiPageDocumenter pageDocumenter
 )
 {
-    public string Generate()
+    public void AddTo(OpenApiDocument document)
     {
         var pageProvider = schemaService.GetProvider<PagesSchemaItemProvider>();
-        var document = CreateDocument();
         var pages = pageProvider
             .ChildItems.OfType<AbstractPage>()
             .Where(pagePolicy.IsDocumented)
@@ -49,47 +47,28 @@ public class ModeledOpenApiDocumentGenerator(
             .ThenBy(page => page.Name)
             .ToList();
 
-        document.Tags = pages
-            .Select(pagePolicy.GetTagName)
-            .Distinct(StringComparer.OrdinalIgnoreCase)
-            .Select(tagName => new OpenApiTag
-            {
-                Name = tagName,
-                Description = string.Format(Resources.ModeledApiTagDescription, tagName),
-            })
-            .ToHashSet();
+        document.Tags ??= new HashSet<OpenApiTag>();
+        document.Tags.UnionWith(
+            pages
+                .Select(pagePolicy.GetTagName)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .Select(tagName => new OpenApiTag
+                {
+                    Name = tagName,
+                    Description = string.Format(Resources.ModeledApiTagDescription, tagName),
+                })
+                .ToHashSet()
+        );
+
+        document.Components ??= new OpenApiComponents();
+        document.Components.SecuritySchemes ??= new Dictionary<string, IOpenApiSecurityScheme>();
+        document.Components.SecuritySchemes[ModeledOpenApiPageDocumenter.AuthenticationSchemeName] =
+            CreateAuthenticationScheme();
 
         foreach (AbstractPage page in pages)
         {
             pageDocumenter.AddPage(document, page);
         }
-
-        using var stringWriter = new StringWriter();
-        var writer = new OpenApiJsonWriter(stringWriter);
-        document.SerializeAsV3(writer);
-        return stringWriter.ToString();
-    }
-
-    private OpenApiDocument CreateDocument()
-    {
-        return new OpenApiDocument
-        {
-            Info = new OpenApiInfo
-            {
-                Title = Resources.ModeledApiTitle,
-                Version = "1.0",
-                Description = Resources.ModeledApiDescription,
-            },
-            Paths = new OpenApiPaths(),
-            Components = new OpenApiComponents
-            {
-                SecuritySchemes = new Dictionary<string, IOpenApiSecurityScheme>
-                {
-                    [ModeledOpenApiPageDocumenter.AuthenticationSchemeName] =
-                        CreateAuthenticationScheme(),
-                },
-            },
-        };
     }
 
     private OpenApiSecurityScheme CreateAuthenticationScheme()

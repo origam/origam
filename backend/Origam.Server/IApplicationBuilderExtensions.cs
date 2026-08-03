@@ -39,13 +39,13 @@ namespace Origam.Server;
 
 public static class IApplicationBuilderExtensions
 {
-    public static void UseModeledOpenApiDocumentation(
+    public static void UseOpenApiDocumentation(
         this IApplicationBuilder app,
         bool enabled,
-        ModeledOpenApiDocumentProvider provider
+        OpenApiDocumentProvider provider
     )
     {
-        const string documentPath = "/openapi/modelled-api.json";
+        const string documentPath = "/openapi/api.json";
         const string userInterfacePath = "/api-docs";
         if (!enabled)
         {
@@ -82,11 +82,8 @@ public static class IApplicationBuilderExtensions
         app.UseSwaggerUI(options =>
         {
             options.RoutePrefix = userInterfacePath.TrimStart('/');
-            options.DocumentTitle = Resources.ModeledApiTitle;
-            options.SwaggerEndpoint(
-                url: "../openapi/modelled-api.json",
-                name: Resources.ModeledApiTitle
-            );
+            options.DocumentTitle = Resources.OpenApiTitle;
+            options.SwaggerEndpoint(url: "../openapi/api.json", name: Resources.OpenApiTitle);
             options.DocExpansion(DocExpansion.List);
         });
     }

@@ -97,7 +97,7 @@ public class Startup
     {
         ServicePointManager.SecurityProtocol = startUpConfiguration.SecurityProtocol;
         services.AddSingleton(startUpConfiguration);
-        services.AddModeledOpenApiDocumentation();
+        services.AddOpenApiDocumentation(startUpConfiguration);
         services.Configure<KestrelServerOptions>(options =>
         {
             options.AllowSynchronousIO = true;
@@ -544,7 +544,7 @@ public class Startup
         IApplicationBuilder app,
         IWebHostEnvironment env,
         ILoggerFactory loggerFactory,
-        ModeledOpenApiDocumentProvider modeledOpenApiDocumentProvider
+        OpenApiDocumentProvider openApiDocumentProvider
     )
     {
         loggerFactory.AddLog4Net();
@@ -581,9 +581,9 @@ public class Startup
         app.UseMiddleware<FatalErrorMiddleware>();
         app.UseMiddleware<OrigamErrorHandlingMiddleware>();
 
-        app.UseModeledOpenApiDocumentation(
+        app.UseOpenApiDocumentation(
             startUpConfiguration.OpenApiDocumentationEnabled,
-            modeledOpenApiDocumentProvider
+            openApiDocumentProvider
         );
         app.UseUserApi(startUpConfiguration, openIddictConfig);
         app.UseWorkQueueApi();

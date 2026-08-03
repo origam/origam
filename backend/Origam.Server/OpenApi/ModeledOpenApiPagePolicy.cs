@@ -29,6 +29,8 @@ namespace Origam.Server.OpenApi;
 
 public class ModeledOpenApiPagePolicy(StartUpConfiguration startUpConfiguration)
 {
+    private const string TagPrefix = "Modeled API — ";
+
     public bool IsDocumented(AbstractPage page)
     {
         return !page.IsAbstract
@@ -47,14 +49,16 @@ public class ModeledOpenApiPagePolicy(StartUpConfiguration startUpConfiguration)
 
     public string GetTagName(AbstractPage page)
     {
-        return page.Group == null
-            ? Resources.ModeledApiUncategorized
-            : string.Join(
-                separator: " / ",
-                values: page.Group.Path.Replace(oldValue: "\\", newValue: "/")
-                    .Split(separator: '/', options: StringSplitOptions.RemoveEmptyEntries)
-                    .AsEnumerable()
-            );
+        string groupName =
+            page.Group == null
+                ? Resources.ModeledApiUncategorized
+                : string.Join(
+                    separator: " / ",
+                    values: page.Group.Path.Replace(oldValue: "\\", newValue: "/")
+                        .Split(separator: '/', options: StringSplitOptions.RemoveEmptyEntries)
+                        .AsEnumerable()
+                );
+        return TagPrefix + groupName;
     }
 
     private static bool IsRouteIn(string pageUrl, IEnumerable<string> configuredRoutes)

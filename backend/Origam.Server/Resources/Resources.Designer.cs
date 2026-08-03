@@ -780,11 +780,11 @@ namespace Origam.Server {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to API endpoints defined in the active Origam application model..
+        ///   Looks up a localized string similar to Public API endpoints defined in the active Origam application model and extension controllers..
         /// </summary>
-        public static string ModeledApiDescription {
+        public static string OpenApiDescription {
             get {
-                return ResourceManager.GetString("ModeledApiDescription", resourceCulture);
+                return ResourceManager.GetString("OpenApiDescription", resourceCulture);
             }
         }
 
@@ -942,11 +942,11 @@ namespace Origam.Server {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Origam Modeled API.
+        ///   Looks up a localized string similar to Origam API.
         /// </summary>
-        public static string ModeledApiTitle {
+        public static string OpenApiTitle {
             get {
-                return ResourceManager.GetString("ModeledApiTitle", resourceCulture);
+                return ResourceManager.GetString("OpenApiTitle", resourceCulture);
             }
         }
 

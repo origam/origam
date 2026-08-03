@@ -20,20 +20,35 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.IO;
+using Microsoft.OpenApi;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace Origam.Server.OpenApi;
 
-public class ModeledOpenApiDocumentProvider
+public class OpenApiDocumentProvider
 {
+    public const string DocumentName = "api";
     private readonly Lazy<string> document;
 
-    public ModeledOpenApiDocumentProvider(ModeledOpenApiDocumentGenerator generator)
+    public OpenApiDocumentProvider(ISwaggerProvider swaggerProvider)
     {
-        document = new Lazy<string>(generator.Generate, isThreadSafe: true);
+        document = new Lazy<string>(
+            () => Serialize(swaggerProvider.GetSwagger(DocumentName)),
+            isThreadSafe: true
+        );
     }
 
     public string GetDocument()
     {
         return document.Value;
+    }
+
+    private static string Serialize(OpenApiDocument openApiDocument)
+    {
+        using var stringWriter = new StringWriter();
+        var writer = new OpenApiJsonWriter(stringWriter);
+        openApiDocument.SerializeAsV3(writer);
+        return stringWriter.ToString();
     }
 }

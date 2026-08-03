@@ -80,7 +80,7 @@
     <PackageReference Include="SixLabors.ImageSharp" Version="3.1.11" />
     <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="2.1.5" />
     <PackageReference Include="SoapCore" Version="1.2.1.14" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.2.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="10.2.3" />
     <PackageReference Include="UAParser" Version="3.1.47" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="8.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" />

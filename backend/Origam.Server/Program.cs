@@ -55,7 +55,7 @@ public class Program
                 );
                 if (startUpConfiguration.OpenApiDocumentationEnabled)
                 {
-                    provider.GetRequiredService<ModeledOpenApiDocumentProvider>().GetDocument();
+                    provider.GetRequiredService<OpenApiDocumentProvider>().GetDocument();
                 }
                 OpenIddictConfigManager
                     .CreateOrUpdateAsync(provider, identityServerConfig)

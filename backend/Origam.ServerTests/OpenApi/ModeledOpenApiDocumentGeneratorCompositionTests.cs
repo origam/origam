@@ -19,9 +19,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System.Text.Json;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.OpenApi;
 using NUnit.Framework;
 using Origam.Schema;
 using Origam.Schema.GuiModel;
@@ -32,10 +32,10 @@ using Origam.Workbench.Services;
 
 namespace Origam.ServerTests.OpenApi;
 
-public class ModeledOpenApiDocumentProviderTests
+public class ModeledOpenApiDocumentGeneratorCompositionTests
 {
     [Test]
-    public void GetDocumentReturnsCachedModeledApiDocument()
+    public void GeneratorAddsModeledApiToExistingDocument()
     {
         IConfiguration configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(
@@ -75,36 +75,25 @@ public class ModeledOpenApiDocumentProviderTests
             pagePolicy,
             pageDocumenter
         );
-        var provider = new ModeledOpenApiDocumentProvider(generator);
+        var document = new OpenApiDocument
+        {
+            Info = new OpenApiInfo { Title = "Combined API", Version = "1.0" },
+            Paths = new OpenApiPaths(),
+        };
 
-        string firstDocument = provider.GetDocument();
-        string secondDocument = provider.GetDocument();
+        generator.AddTo(document);
 
-        Assert.That(secondDocument, Is.SameAs(firstDocument));
-        using JsonDocument document = JsonDocument.Parse(firstDocument);
-        JsonElement root = document.RootElement;
-        Assert.That(
-            root.GetProperty("info").GetProperty("title").GetString(),
-            Is.EqualTo("Origam Modeled API")
-        );
-        Assert.That(root.GetProperty("info").GetProperty("version").GetString(), Is.EqualTo("1.0"));
-        JsonElement operation = root.GetProperty("paths")
-            .GetProperty("/reports/sales")
-            .GetProperty("get");
-        Assert.That(
-            operation.GetProperty("operationId").GetString(),
-            Is.EqualTo("Sales_report_get")
-        );
-        Assert.That(operation.GetProperty("summary").GetString(), Is.EqualTo("Sales report"));
-        Assert.That(
-            operation.TryGetProperty(propertyName: "security", out JsonElement _),
-            Is.False
-        );
-        JsonElement authenticationScheme = root.GetProperty("components")
-            .GetProperty("securitySchemes")
-            .GetProperty("OrigamAuthentication");
-        Assert.That(authenticationScheme.GetProperty("type").GetString(), Is.EqualTo("http"));
-        Assert.That(authenticationScheme.GetProperty("scheme").GetString(), Is.EqualTo("bearer"));
+        Assert.That(document.Info.Title, Is.EqualTo("Combined API"));
+        Assert.That(document.Paths.ContainsKey("/reports/sales"), Is.True);
+        OpenApiOperation operation = document.Paths["/reports/sales"].Operations![HttpMethod.Get];
+        Assert.That(operation.OperationId, Is.EqualTo("Sales_report_get"));
+        Assert.That(operation.Summary, Is.EqualTo("Sales report"));
+        Assert.That(operation.Security, Is.Null.Or.Empty);
+        IOpenApiSecurityScheme authenticationScheme = document.Components!.SecuritySchemes![
+            ModeledOpenApiPageDocumenter.AuthenticationSchemeName
+        ];
+        Assert.That(authenticationScheme.Type, Is.EqualTo(SecuritySchemeType.Http));
+        Assert.That(authenticationScheme.Scheme, Is.EqualTo("bearer"));
     }
 
     private sealed class TestPagesSchemaItemProvider(params AbstractPage[] pages)
