@@ -137,10 +137,12 @@ class WorkflowPageRequestHandler : AbstractPageRequestHandler
         }
         if (!handled)
         {
-            if (!string.IsNullOrEmpty(request.UrlReferrerAbsoluteUri))
-            {
-                response.Redirect(request.UrlReferrerAbsoluteUri);
-            }
+            HandleUnhandledSuccess(response);
         }
+    }
+
+    private static void HandleUnhandledSuccess(IResponseWrapper response)
+    {
+        response.StatusCode = 204;
     }
 }
