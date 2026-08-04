@@ -21,83 +21,96 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Microsoft.AspNetCore.Mvc;
 using Origam.Architect.Server.Models.Requests.Wizards;
-using Origam.Architect.Server.Services;
+using Origam.Architect.Server.Services.Wizards;
 
 namespace Origam.Architect.Server.Controllers;
 
 [ApiController]
 [Route("wizards")]
-public class WizardController(WizardService wizard) : ControllerBase
+public class WizardController(
+    FilterWizardService filterWizard,
+    ScreenWizardService screenWizard,
+    ScreenSectionWizardService screenSectionWizard,
+    ScreenFromSectionWizardService screenFromSectionWizard,
+    DataStructureWizardService dataStructureWizard,
+    DataStructureSqlWizardService dataStructureSqlWizard,
+    LookupWizardService lookupWizard,
+    MenuItemWizardService menuItemWizard,
+    RoleWizardService roleWizard,
+    WorkQueueWizardService workQueueWizard,
+    LocalizationChildEntityWizardService localizationChildEntityWizard
+) : ControllerBase
 {
     [HttpPost("filters")]
     public IActionResult CreateFilter([FromBody] CreateFilterModel input) =>
-        Ok(wizard.CreateFilter(input));
+        Ok(filterWizard.CreateFilter(input));
 
     [HttpPost("screens")]
     public IActionResult CreateScreen([FromBody] CreateScreenModel input) =>
-        Ok(wizard.CreateScreen(input));
+        Ok(screenWizard.CreateScreen(input));
 
     [HttpPost("lookups")]
     public IActionResult CreateLookup([FromBody] CreateLookupModel input) =>
-        Ok(wizard.CreateLookup(input));
+        Ok(lookupWizard.CreateLookup(input));
 
     [HttpPost("menu-items")]
     public IActionResult CreateMenuItem([FromBody] CreateMenuItemModel input) =>
-        Ok(wizard.CreateMenuItem(input));
+        Ok(menuItemWizard.CreateMenuItem(input));
 
     [HttpPost("workflow-menu-items")]
     public IActionResult CreateWorkflowMenuItem([FromBody] CreateWorkflowMenuItemModel input) =>
-        Ok(wizard.CreateWorkflowMenuItem(input));
+        Ok(menuItemWizard.CreateWorkflowMenuItem(input));
 
     [HttpPost("roles")]
     public IActionResult CreateRole([FromBody] CreateRoleModel input) =>
-        Ok(wizard.CreateRole(input));
+        Ok(roleWizard.CreateRole(input));
 
     [HttpPost("work-queue-classes")]
     public IActionResult CreateWorkQueueClass([FromBody] CreateWorkQueueModel input) =>
-        Ok(wizard.CreateWorkQueueClass(input));
+        Ok(workQueueWizard.CreateWorkQueueClass(input));
 
     [HttpPost("data-structures")]
     public IActionResult CreateDataStructure([FromBody] CreateDataStructureModel input) =>
-        Ok(wizard.CreateDataStructure(input));
+        Ok(dataStructureWizard.CreateDataStructure(input));
 
     [HttpGet("data-structures/wizard-data")]
     public IActionResult GetDataStructureWizardData([FromQuery] Guid entityId) =>
-        Ok(wizard.GetDataStructureWizardData(entityId));
+        Ok(dataStructureWizard.GetWizardData(entityId));
 
     [HttpPost("screens-from-section")]
     public IActionResult CreateScreenFromSection([FromBody] CreateScreenFromSectionModel input) =>
-        Ok(wizard.CreateScreenFromSection(input));
+        Ok(screenFromSectionWizard.CreateScreenFromSection(input));
 
     [HttpGet("screens-from-section/wizard-data")]
     public IActionResult GetScreenFromSectionWizardData([FromQuery] Guid screenSectionId) =>
-        Ok(wizard.GetScreenFromSectionWizardData(screenSectionId));
+        Ok(screenFromSectionWizard.GetWizardData(screenSectionId));
 
     [HttpGet("screens/wizard-data")]
     public IActionResult GetScreenWizardData([FromQuery] Guid entityId) =>
-        Ok(wizard.GetScreenWizardData(entityId));
+        Ok(screenWizard.GetWizardData(entityId));
 
     [HttpGet("lookups/wizard-data")]
     public IActionResult GetLookupWizardData([FromQuery] Guid entityId) =>
-        Ok(wizard.GetLookupWizardData(entityId));
+        Ok(lookupWizard.GetWizardData(entityId));
 
     [HttpGet("data-structures/{id}/sql")]
-    public IActionResult GetDataStructureSql(Guid id) => Ok(wizard.GetDataStructureSql(id));
+    public IActionResult GetDataStructureSql(Guid id) =>
+        Ok(dataStructureSqlWizard.GetDataStructureSql(id));
 
     [HttpGet("localization-child-entities/wizard-data")]
     public IActionResult GetLocalizationChildEntityWizardData([FromQuery] Guid entityId) =>
-        Ok(wizard.GetLocalizationChildEntityWizardData(entityId));
+        Ok(localizationChildEntityWizard.GetWizardData(entityId));
 
     [HttpPost("localization-child-entities")]
     public IActionResult CreateLocalizationChildEntity(
         [FromBody] CreateLocalizationChildEntityModel input
-    ) => Ok(wizard.CreateLocalizationChildEntity(input));
+    ) => Ok(localizationChildEntityWizard.CreateLocalizationChildEntity(input));
 
     [HttpGet("screen-sections/wizard-data")]
     public IActionResult GetScreenSectionWizardData([FromQuery] Guid entityId) =>
-        Ok(wizard.GetScreenSectionWizardData(entityId));
+        Ok(screenSectionWizard.GetWizardData(entityId));
 
     [HttpPost("screen-sections")]
     public IActionResult CreateScreenSection([FromBody] CreateScreenSectionModel input) =>
-        Ok(wizard.CreateScreenSection(input));
+        Ok(screenSectionWizard.CreateScreenSection(input));
 }
