@@ -53,17 +53,85 @@ public class CreateNodeValidationFilter : IToolInvocationFilter
             return await next(context, cancellationToken);
         }
 
-        IReadOnlyList<string>? creatableTypes = await GetCreatableTypesAsync(nodeId);
+        IReadOnlyList<CreatableType>? creatableTypes = await GetCreatableTypesAsync(
+            nodeId,
+            cancellationToken
+        );
 
-        if (
-            creatableTypes is { Count: > 0 }
-            && !creatableTypes.Contains(newTypeName, StringComparer.OrdinalIgnoreCase)
-        )
+        if (creatableTypes is not { Count: > 0 })
+        {
+            return await next(context, cancellationToken);
+        }
+
+        string? resolvedTypeName = ResolveTypeName(newTypeName, creatableTypes);
+        if (resolvedTypeName is null)
         {
             return BuildRejectionMessage(newTypeName, creatableTypes);
         }
 
+        if (!string.Equals(resolvedTypeName, newTypeName, StringComparison.Ordinal))
+        {
+            SetArgument(context.Arguments, name: "newTypeName", resolvedTypeName);
+        }
+
         return await next(context, cancellationToken);
+    }
+
+    private static string? ResolveTypeName(
+        string requested,
+        IReadOnlyList<CreatableType> creatableTypes
+    )
+    {
+        string trimmed = requested.Trim();
+
+        CreatableType? exactMatch = creatableTypes.FirstOrDefault(type =>
+            type.TypeName.Equals(trimmed, StringComparison.OrdinalIgnoreCase)
+            || type.Caption.Equals(trimmed, StringComparison.OrdinalIgnoreCase)
+            || ShortName(type.TypeName).Equals(trimmed, StringComparison.OrdinalIgnoreCase)
+        );
+        if (exactMatch is not null)
+        {
+            return exactMatch.TypeName;
+        }
+
+        string normalized = Normalize(trimmed);
+        if (normalized.Length == 0)
+        {
+            return null;
+        }
+
+        var normalizedMatches = creatableTypes
+            .Where(type =>
+                Normalize(type.Caption) == normalized
+                || Normalize(ShortName(type.TypeName)) == normalized
+            )
+            .ToList();
+        if (normalizedMatches.Count == 1)
+        {
+            return normalizedMatches[0].TypeName;
+        }
+
+        var partialMatches = creatableTypes
+            .Where(type =>
+                Normalize(type.Caption).Contains(normalized, StringComparison.Ordinal)
+                || Normalize(type.TypeName).Contains(normalized, StringComparison.Ordinal)
+            )
+            .ToList();
+
+        return partialMatches.Count == 1 ? partialMatches[0].TypeName : null;
+    }
+
+    private static string ShortName(string typeName)
+    {
+        int lastDot = typeName.LastIndexOf(value: '.');
+        return lastDot < 0 ? typeName : typeName.Substring(lastDot + 1);
+    }
+
+    private static string Normalize(string value)
+    {
+        return new string(
+            value.Where(char.IsLetterOrDigit).Select(char.ToLowerInvariant).ToArray()
+        );
     }
 
     private static string? GetArgument(AIFunctionArguments arguments, string name)
@@ -79,6 +147,17 @@ public class CreateNodeValidationFilter : IToolInvocationFilter
         return null;
     }
 
+    private static void SetArgument(AIFunctionArguments arguments, string name, string value)
+    {
+        string? existingKey = arguments
+            .Keys.ToArray()
+            .FirstOrDefault(key => string.Equals(key, name, StringComparison.OrdinalIgnoreCase));
+        if (existingKey is not null)
+        {
+            arguments[existingKey] = value;
+        }
+    }
+
     private static string? AsString(object? value)
     {
         return value switch
@@ -89,11 +168,15 @@ public class CreateNodeValidationFilter : IToolInvocationFilter
         };
     }
 
-    private async Task<IReadOnlyList<string>?> GetCreatableTypesAsync(string nodeId)
+    private async Task<IReadOnlyList<CreatableType>?> GetCreatableTypesAsync(
+        string nodeId,
+        CancellationToken cancellationToken
+    )
     {
         try
         {
-            using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(value: 10));
+            using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            timeout.CancelAfter(TimeSpan.FromSeconds(value: 10));
             var httpClient = httpClientFactory.CreateClient("architect");
             var requestUri = new Uri(
                 new Uri(architectBaseUrl),
@@ -107,7 +190,11 @@ public class CreateNodeValidationFilter : IToolInvocationFilter
             }
 
             var json = await response.Content.ReadAsStringAsync(timeout.Token);
-            return ParseTypeNames(json);
+            return ParseCreatableTypes(json);
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            throw;
         }
         catch
         {
@@ -115,7 +202,7 @@ public class CreateNodeValidationFilter : IToolInvocationFilter
         }
     }
 
-    private static IReadOnlyList<string>? ParseTypeNames(string json)
+    private static IReadOnlyList<CreatableType>? ParseCreatableTypes(string json)
     {
         using var document = JsonDocument.Parse(json);
         if (document.RootElement.ValueKind != JsonValueKind.Array)
@@ -123,7 +210,7 @@ public class CreateNodeValidationFilter : IToolInvocationFilter
             return null;
         }
 
-        var typeNames = new List<string>();
+        var creatableTypes = new List<CreatableType>();
         foreach (var element in document.RootElement.EnumerateArray())
         {
             if (element.ValueKind != JsonValueKind.Object)
@@ -131,37 +218,47 @@ public class CreateNodeValidationFilter : IToolInvocationFilter
                 continue;
             }
 
-            foreach (var property in element.EnumerateObject())
+            string? typeName = ReadText(element, propertyName: "typeName");
+            if (string.IsNullOrWhiteSpace(typeName))
             {
-                if (
-                    property.Name.Equals(
-                        value: "typeName",
-                        comparisonType: StringComparison.OrdinalIgnoreCase
-                    )
-                    && property.Value.ValueKind == JsonValueKind.String
-                )
-                {
-                    var value = property.Value.GetString();
-                    if (!string.IsNullOrWhiteSpace(value))
-                    {
-                        typeNames.Add(value);
-                    }
-                }
+                continue;
+            }
+
+            string caption = ReadText(element, propertyName: "caption") ?? typeName;
+            creatableTypes.Add(new CreatableType(caption, typeName));
+        }
+
+        return creatableTypes;
+    }
+
+    private static string? ReadText(JsonElement element, string propertyName)
+    {
+        foreach (var property in element.EnumerateObject())
+        {
+            if (
+                property.Name.Equals(propertyName, StringComparison.OrdinalIgnoreCase)
+                && property.Value.ValueKind == JsonValueKind.String
+            )
+            {
+                return property.Value.GetString();
             }
         }
 
-        return typeNames;
+        return null;
     }
 
     private static string BuildRejectionMessage(
         string newTypeName,
-        IReadOnlyList<string> creatableTypes
+        IReadOnlyList<CreatableType> creatableTypes
     )
     {
-        return $"CreateNode was blocked: '{newTypeName}' cannot be created under this parent node. "
-            + "Do not retry with this type. The item types that can actually be created here are: "
-            + string.Join(separator: ", ", creatableTypes)
-            + ". Pick a newTypeName from that list. Note that groups/folders "
+        return $"CreateNode was blocked: '{newTypeName}' does not match any item type that can be "
+            + "created under this parent node. Do not retry with this name. The item types that "
+            + "can actually be created here are: "
+            + string.Join(separator: ", ", creatableTypes.Select(type => type.Caption))
+            + ". Pass one of these captions as newTypeName. Note that groups/folders "
             + "(Origam.Schema.SchemaItemGroup) are not created with CreateNode.";
     }
+
+    private record CreatableType(string Caption, string TypeName);
 }

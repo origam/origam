@@ -52,6 +52,9 @@ public class OpenApiSectionProvider
         "Search",
         "Documentation",
         "Tab",
+        "Model",
+        "PropertyEditor",
+        "SectionEditor",
     };
 
     private static readonly HashSet<string> HttpMethods = new(StringComparer.OrdinalIgnoreCase)

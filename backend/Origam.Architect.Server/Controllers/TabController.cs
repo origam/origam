@@ -45,17 +45,91 @@ public class TabController(
     [HttpPost("CreateNode")]
     public OpenTabData CreateNode([Required] [FromBody] NewItemModel input)
     {
-        var tab = tabService.OpenTabWithNewItem(input.NodeId, input.NewTypeName);
+        TabData tab = tabService.OpenTabWithNewItem(input.NodeId, input.NewTypeName);
+
+        if (input.Changes is { Count: > 0 })
+        {
+            tabService.ChangesToTabData(
+                new ChangesModel { SchemaItemId = tab.Item.Id, Changes = input.Changes }
+            );
+        }
+
+        if (input.Persist)
+        {
+            if (HasRuleErrors(tab.Item))
+            {
+                return DiscardInvalidItem(tab);
+            }
+
+            if (CanPersist(tab.Item))
+            {
+                PersistItem(tab);
+            }
+        }
 
         TreeNode treeNode = treeNodeFactory.Create(tab.Item);
         return new OpenTabData(
             tabId: tab.Id,
             node: treeNode,
             data: GetData(treeNode, tab.Item),
+            isPersisted: tab.Item.IsPersisted,
+            parentNodeId: null,
+            isDirty: !tab.Item.IsPersisted
+        );
+    }
+
+    private OpenTabData DiscardInvalidItem(TabData tab)
+    {
+        TreeNode treeNode = treeNodeFactory.Create(tab.Item);
+        object data = GetData(treeNode, tab.Item);
+        if (data is IEnumerable<EditorProperty> properties)
+        {
+            data = properties.ToList();
+        }
+
+        tabService.CloseTab(tab.Id);
+
+        return new OpenTabData(
+            tabId: tab.Id,
+            node: treeNode,
+            data: data,
             isPersisted: false,
             parentNodeId: null,
-            isDirty: true
+            isDirty: false
         );
+    }
+
+    private bool HasRuleErrors(ISchemaItem item)
+    {
+        return propertyService
+            .GetEditorPropertiesWithErrors(item)
+            .Any(property => property.Errors is { Count: > 0 });
+    }
+
+    private static bool CanPersist(ISchemaItem item)
+    {
+        return item is not AbstractControlSet controlSet || controlSet.DataSourceId != Guid.Empty;
+    }
+
+    private void PersistItem(TabData tabData)
+    {
+        ISchemaItem persistTarget = tabData.Item;
+        while (persistTarget.ParentItem != null && !persistTarget.ParentItem.IsPersisted)
+        {
+            persistTarget = persistTarget.ParentItem;
+        }
+
+        try
+        {
+            persistenceService.SchemaProvider.BeginTransaction();
+            persistTarget.Persist();
+            tabData.IsDirty = false;
+        }
+        finally
+        {
+            persistenceService.SchemaProvider.EndTransaction();
+            gitNodeStatusService.ClearCache();
+        }
     }
 
     [HttpGet("GetOpen")]
@@ -148,23 +222,7 @@ public class TabController(
             return BadRequest("No Datasource selected can't save");
         }
 
-        ISchemaItem persistTarget = item;
-        while (persistTarget.ParentItem != null && !persistTarget.ParentItem.IsPersisted)
-        {
-            persistTarget = persistTarget.ParentItem;
-        }
-
-        try
-        {
-            persistenceService.SchemaProvider.BeginTransaction();
-            persistTarget.Persist();
-            tabData.IsDirty = false;
-            return Ok();
-        }
-        finally
-        {
-            persistenceService.SchemaProvider.EndTransaction();
-            gitNodeStatusService.ClearCache();
-        }
+        PersistItem(tabData);
+        return Ok();
     }
 }

@@ -27,7 +27,8 @@ public class SchemaExplorationPlugin
         "Gets the detailed YAML schema of a specific node/entity to explore its fields, filters, and relations. Use this before modifying an entity to understand its structure. Pass the entity's alias (e.g. ent_xxxxx)."
     )]
     public async Task<string> ExploreNodeAsync(
-        [Description("The short alias of the node to explore.")] string alias
+        [Description("The short alias of the node to explore.")] string alias,
+        CancellationToken cancellationToken
     )
     {
         string uuid;
@@ -41,14 +42,15 @@ public class SchemaExplorationPlugin
         }
 
         var response = await _httpClient.GetAsync(
-            $"{_baseUrl}/Model/GetSchemaNodeDetails?id={uuid}&depth=3"
+            $"{_baseUrl}/Model/GetSchemaNodeDetails?id={uuid}&depth=3",
+            cancellationToken
         );
         if (!response.IsSuccessStatusCode)
         {
             return $"Error: Backend returned {response.StatusCode}";
         }
 
-        var json = await response.Content.ReadAsStringAsync();
+        var json = await response.Content.ReadAsStringAsync(cancellationToken);
         var yaml = _yamlSerializer.SerializeFromJson(json);
 
         return string.IsNullOrWhiteSpace(yaml) ? "Node has no details or is empty." : yaml;
@@ -59,18 +61,20 @@ public class SchemaExplorationPlugin
     )]
     public async Task<string> SearchSchemaAsync(
         [Description("The search query or pattern to find (e.g. 'Translation', 'Active').")]
-            string query
+            string query,
+        CancellationToken cancellationToken
     )
     {
         var response = await _httpClient.GetAsync(
-            $"{_baseUrl}/Model/SearchSchema?query={Uri.EscapeDataString(query)}"
+            $"{_baseUrl}/Model/SearchSchema?query={Uri.EscapeDataString(query)}",
+            cancellationToken
         );
         if (!response.IsSuccessStatusCode)
         {
             return $"Error: Backend returned {response.StatusCode}";
         }
 
-        var json = await response.Content.ReadAsStringAsync();
+        var json = await response.Content.ReadAsStringAsync(cancellationToken);
         var yaml = _yamlSerializer.SerializeFromJson(json);
 
         return string.IsNullOrWhiteSpace(yaml) ? "No matches found." : yaml;

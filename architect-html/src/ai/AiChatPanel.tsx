@@ -83,7 +83,15 @@ type ApiSection = {
 
 const THREADS_STORAGE_KEY = 'origam-ai-threads';
 const ENABLED_SECTIONS_STORAGE_KEY = 'origam-ai-enabled-sections-v2';
-const SAFE_DEFAULT_SECTIONS = ['Wizard', 'Search', 'Documentation', 'Tab'];
+const SAFE_DEFAULT_SECTIONS = [
+  'Wizard',
+  'Search',
+  'Documentation',
+  'Tab',
+  'Model',
+  'PropertyEditor',
+  'SectionEditor',
+];
 const MAX_VISIBLE_NODES = 40;
 const GUID_PATTERN =
   /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
@@ -241,6 +249,7 @@ export function AiChatPanel() {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
+  const requestIdRef = useRef<string | null>(null);
   const toolsRef = useRef<HTMLDivElement>(null);
 
   const activeThread = threads.find(thread => thread.id === activeThreadId) ?? threads[0];
@@ -413,12 +422,15 @@ export function AiChatPanel() {
     setIsSending(true);
     const abortController = new AbortController();
     abortControllerRef.current = abortController;
+    const requestId = crypto.randomUUID();
+    requestIdRef.current = requestId;
     try {
       const focus = buildChatFocus(rootStore);
       const httpResponse = await fetch('/aichat/message', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          requestId,
           message: messageText,
           focus,
           summary,
@@ -472,11 +484,20 @@ export function AiChatPanel() {
       }
     } finally {
       abortControllerRef.current = null;
+      requestIdRef.current = null;
       setIsSending(false);
     }
   }
 
   function stopGeneration() {
+    const requestId = requestIdRef.current;
+    if (requestId) {
+      void fetch('/aichat/cancel', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ requestId }),
+      }).catch(() => undefined);
+    }
     abortControllerRef.current?.abort();
   }
 

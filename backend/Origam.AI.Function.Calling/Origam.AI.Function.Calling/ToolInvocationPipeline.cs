@@ -52,6 +52,11 @@ public static class ToolInvocationPipeline
                 filter.OnFunctionInvocationAsync(context, following, cancellationToken);
         }
 
-        return next;
+        var pipeline = next;
+        return (context, cancellationToken) =>
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            return pipeline(context, cancellationToken);
+        };
     }
 }

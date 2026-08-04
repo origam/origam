@@ -48,6 +48,10 @@ public class ToolErrorFilter : IToolInvocationFilter
         {
             return await next(context, cancellationToken);
         }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            throw;
+        }
         catch (OpenApiInvocationException exception)
         {
             logger.LogWarning(
