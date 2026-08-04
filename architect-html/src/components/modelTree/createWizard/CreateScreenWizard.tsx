@@ -163,7 +163,9 @@ export const CreateScreenWizard: React.FC<CreateScreenWizardProps> = observer(
       setModel(prev => ({
         ...prev,
         selectedFieldIds: new Set(
-          entityData.columns.filter(column => !column.isPrimaryKey).map(column => column.id),
+          entityData.columns
+            .filter(column => !column.isPrimaryKey && column.canGenerateControl)
+            .map(column => column.id),
         ),
       }));
     };
@@ -223,16 +225,6 @@ export const CreateScreenWizard: React.FC<CreateScreenWizardProps> = observer(
       if (step === 0) {
         return (
           <>
-            <h2 className={S.formTitle}>
-              {T("Let's name your screen", 'create_screen_basics_title')}
-            </h2>
-            <p className={S.formSubtitle}>
-              {T(
-                'A Screen ties a DataStructure to a Screen Section (Panel) and a Form. The name is used for all three artifacts.',
-                'create_screen_basics_subtitle',
-              )}
-            </p>
-
             <div className={S.field}>
               <label className={S.fieldLabel}>
                 {T('Name', 'create_screen_name_label')} <span className={S.required}>*</span>
@@ -297,18 +289,12 @@ export const CreateScreenWizard: React.FC<CreateScreenWizardProps> = observer(
       if (step === 1) {
         if (!entityData) return null;
         const columns = (entityData.columns ?? []).filter(column => !column.isPrimaryKey);
+        const noDefaultControlHint = T(
+          'This field has no default control, so it cannot be placed on a screen section.',
+          'wizard_field_no_default_control_hint',
+        );
         return (
           <>
-            <h2 className={S.formTitle}>
-              {T('Which columns should appear?', 'create_screen_fields_title')}
-            </h2>
-            <p className={S.formSubtitle}>
-              {T(
-                'Pick the entity fields that will be placed on the Screen Section. You can add or remove fields later in the section editor.',
-                'create_screen_fields_subtitle',
-              )}
-            </p>
-
             <div className={S.field}>
               <label className={S.fieldLabel}>
                 {T('Caption', 'create_screen_caption_label')}
@@ -365,39 +351,31 @@ export const CreateScreenWizard: React.FC<CreateScreenWizardProps> = observer(
               </div>
             </div>
 
-            <div
-              style={{
-                border: '1px solid var(--background3)',
-                borderRadius: 6,
-                flex: 1,
-                minHeight: 0,
-                overflowY: 'auto',
-                background: 'var(--background1)',
-              }}
-            >
+            <div className={S.fieldList}>
               {columns.map(column => {
                 const checked = model.selectedFieldIds.has(column.id);
+                const disabled = !column.canGenerateControl;
                 return (
                   <label
                     key={column.id}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 10,
-                      padding: '8px 12px',
-                      borderBottom: '1px solid var(--background3)',
-                      cursor: 'pointer',
-                      fontSize: 13,
-                      color: 'var(--background8)',
-                    }}
+                    title={disabled ? noDefaultControlHint : undefined}
+                    className={`${S.fieldOption} ${checked ? S.fieldOptionSelected : ''} ${
+                      disabled ? S.fieldOptionDisabled : ''
+                    }`}
                   >
                     <input
                       type="checkbox"
+                      className={S.fieldOptionCheckbox}
                       checked={checked}
+                      disabled={disabled}
                       onChange={() => toggleField(column.id)}
-                      style={{ accentColor: 'var(--brand)' }}
                     />
                     {column.name}
+                    {disabled && (
+                      <span className={S.fieldOptionBadge}>
+                        {T('no default control', 'wizard_field_no_default_control')}
+                      </span>
+                    )}
                   </label>
                 );
               })}
@@ -412,14 +390,6 @@ export const CreateScreenWizard: React.FC<CreateScreenWizardProps> = observer(
       );
       return (
         <>
-          <h2 className={S.formTitle}>{T('Ready to create', 'wizard_ready_title')}</h2>
-          <p className={S.formSubtitle}>
-            {T(
-              'Review what will be added to the model. You can edit everything afterward.',
-              'create_screen_review_subtitle',
-            )}
-          </p>
-
           <div className={S.reviewCard}>
             <div className={S.reviewCardHeader}>
               <div className={S.reviewCardIcon}>S</div>
@@ -428,7 +398,7 @@ export const CreateScreenWizard: React.FC<CreateScreenWizardProps> = observer(
                   {model.name || T('Untitled', 'wizard_untitled')}
                 </div>
                 <div style={{ fontSize: 12, color: 'var(--background6)' }}>
-                  {T('Screen + Section + DataStructure', 'create_screen_review_type')}
+                  {T('Screen + Screen Section + Data Structure', 'create_screen_review_type')}
                 </div>
               </div>
             </div>
@@ -454,10 +424,7 @@ export const CreateScreenWizard: React.FC<CreateScreenWizardProps> = observer(
                   {T('Selected fields', 'create_screen_review_selected_fields_title')}
                 </div>
                 <div style={{ fontSize: 12, color: 'var(--background6)' }}>
-                  {T(
-                    'Placed on the Screen Section in order',
-                    'create_screen_review_selected_fields_hint',
-                  )}
+                  {T('Placed on the Screen Section', 'create_screen_review_selected_fields_hint')}
                 </div>
               </div>
             </div>

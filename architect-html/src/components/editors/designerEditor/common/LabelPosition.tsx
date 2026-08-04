@@ -25,9 +25,11 @@ export enum LabelPosition {
   None,
 }
 
+export const defaultLabelPosition = LabelPosition.Left;
+
 export function parseLabelPosition(value: string | undefined | null): LabelPosition {
   if (value === undefined || value === null || value === '') {
-    return LabelPosition.None;
+    return defaultLabelPosition;
   }
   const intValue = parseInt(value);
   if (isNaN(intValue)) {

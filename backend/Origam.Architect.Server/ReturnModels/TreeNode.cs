@@ -53,6 +53,7 @@ public class TreeNode
     public NodeLevelType NodeLevelType { get; set; } = NodeLevelType.Item;
     public bool IsInActivePackage { get; set; } = true;
     public bool IsFileDirty { get; set; }
+    public string Role { get; set; }
 
     public static string ToTreeNodeId(IBrowserNode2 node)
     {
@@ -89,6 +90,7 @@ public class TreeNodeFactory(
             NodeLevelType = GetNodeLevelType(node),
             IsInActivePackage = IsInActivePackage(node),
             IsFileDirty = gitNodeStatusService.IsFileDirty(node as IPersistent),
+            Role = (node as IAuthorizationContextContainer)?.AuthorizationContext,
         };
     }
 

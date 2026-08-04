@@ -28,7 +28,6 @@ test.describe('Entity Relationship creation (real backend)', () => {
   test('Entity Relationship creation with incremental search', async ({ page }) => {
     await page.goto('/');
 
-    await page.getByText('Root Menu').click();
     await page.getByTestId('tree-toggle-Data').click();
     await page.getByTestId('tree-toggle-Entities').click();
     await page.getByTestId('tree-toggle-Dimensions').click();
