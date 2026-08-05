@@ -29,7 +29,7 @@ namespace Origam.AI.Function.Calling;
 public class AliasArgumentResolver : IToolInvocationFilter
 {
     private static readonly Regex AliasPattern = new(
-        pattern: "^[A-Za-z]{1,8}_[0-9a-fA-F]{8}$",
+        pattern: "^[A-Za-z]{1,4}_[0-9a-z]{1,10}$",
         options: RegexOptions.Compiled
     );
 

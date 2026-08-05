@@ -35,6 +35,33 @@ public static class ChatMessageListExtensions
         messages.Add(new ChatMessage(ChatRole.User, content));
     }
 
+    public static void AddUserMessage(
+        this List<ChatMessage> messages,
+        string content,
+        IReadOnlyList<string>? imageDataUris
+    )
+    {
+        if (imageDataUris is not { Count: > 0 })
+        {
+            messages.AddUserMessage(content);
+            return;
+        }
+
+        var messageContent = new List<AIContent> { new TextContent(content) };
+        foreach (var imageDataUri in imageDataUris)
+        {
+            var parsedImage = ImageDataUri.TryParse(imageDataUri);
+            if (parsedImage is not null)
+            {
+                messageContent.Add(
+                    new DataContent(parsedImage.Value.Bytes, parsedImage.Value.MimeType)
+                );
+            }
+        }
+
+        messages.Add(new ChatMessage(ChatRole.User, messageContent));
+    }
+
     public static void AddAssistantMessage(this List<ChatMessage> messages, string content)
     {
         messages.Add(new ChatMessage(ChatRole.Assistant, content));

@@ -132,8 +132,15 @@ public class OpenAiTrafficLogHandler : DelegatingHandler
             var usage = string.Empty;
             if (root.TryGetProperty(propertyName: "usage", out var usageElement))
             {
+                var cached = usageElement.TryGetProperty(
+                    propertyName: "prompt_tokens_details",
+                    out var promptDetails
+                )
+                    ? ReadNumber(promptDetails, name: "cached_tokens")
+                    : 0;
                 usage =
                     $", {ReadNumber(usageElement, name: "prompt_tokens")} prompt"
+                    + $" ({cached} cached)"
                     + $" + {ReadNumber(usageElement, name: "completion_tokens")} completion tokens";
             }
 

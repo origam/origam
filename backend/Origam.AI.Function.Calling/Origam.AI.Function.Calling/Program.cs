@@ -57,7 +57,6 @@ builder
     .AddHttpMessageHandler<OpenAiTrafficLogHandler>()
     .AddHttpMessageHandler<RateLimitRetryHandler>();
 builder.Services.AddSingleton<Origam.AI.Function.Calling.Services.OpenApiSectionProvider>();
-builder.Services.AddSingleton<ImageDescriptionService>();
 
 builder.Services.AddSingleton<Origam.AI.Function.Calling.Services.AliasMappingService>();
 builder.Services.AddSingleton<Origam.AI.Function.Calling.Services.YamlSchemaSerializer>();
@@ -146,7 +145,6 @@ app.MapPost(
     async (
         ChatRequest request,
         Origam.AI.Function.Calling.Services.OpenApiSectionProvider sectionProvider,
-        ImageDescriptionService imageDescriptionService,
         Origam.AI.Function.Calling.Services.AliasMappingService aliasMappingService,
         Origam.AI.Function.Calling.Services.YamlSchemaSerializer yamlSerializer,
         Origam.AI.Function.Calling.Services.ModelIndexService modelIndexService,
@@ -172,17 +170,7 @@ app.MapPost(
 
         try
         {
-            string? imageDescription = null;
-            if (request.Images is { Count: > 0 } && imageDescriptionService.IsConfigured)
-            {
-                imageDescription = await imageDescriptionService.DescribeAsync(
-                    request.Message,
-                    request.Images,
-                    cancellationToken
-                );
-            }
-
-            var modelIndexYaml = await modelIndexService.GetYamlAsync(cancellationToken);
+            var modelIndex = await modelIndexService.GetContentAsync(cancellationToken);
 
             const int maxToolIterations = 80;
 
@@ -313,7 +301,7 @@ app.MapPost(
                     + "(GetChildren, GetTopNodes) to re-verify it. Do not repeat a tool call "
                     + "with the same arguments you have already made in this conversation. When a "
                     + "tool needs an entity or field id, pass the alias id from MODEL INDEX or FOCUS "
-                    + "(for example n_c4b132a4) directly as the argument; never pass an all-zero or "
+                    + "(for example e_g7f2) directly as the argument; never pass an all-zero or "
                     + "made-up GUID. If you do not have the id, look it up first."
             );
 
@@ -403,7 +391,7 @@ app.MapPost(
                 chatHistory.AddSystemMessage(newItemTypeSection);
             }
 
-            if (!string.IsNullOrWhiteSpace(modelIndexYaml))
+            if (!string.IsNullOrWhiteSpace(modelIndex.Index))
             {
                 chatHistory.AddSystemMessage(
                     "## MODEL INDEX\n"
@@ -420,8 +408,13 @@ app.MapPost(
                         + "this index short; call ExploreNodeAsync on the entity if you need to "
                         + "confirm them. Use these ids directly in tool calls; you do NOT need to call "
                         + "SearchSchemaAsync for anything listed here.\n\n"
-                        + modelIndexYaml
+                        + modelIndex.Index
                 );
+            }
+
+            if (!string.IsNullOrWhiteSpace(modelIndex.Updates))
+            {
+                chatHistory.AddSystemMessage(modelIndex.Updates);
             }
 
             var focusMessage = BuildFocusSystemMessage(request.Focus, aliasMappingService);
@@ -460,16 +453,7 @@ app.MapPost(
                 }
             }
 
-            if (!string.IsNullOrWhiteSpace(imageDescription))
-            {
-                chatHistory.AddSystemMessage(
-                    "The user attached one or more images. A vision model transcribed them as "
-                        + "follows; treat this as the content of the attached images:\n"
-                        + imageDescription
-                );
-            }
-
-            chatHistory.AddUserMessage(request.Message);
+            chatHistory.AddUserMessage(request.Message, request.Images);
 
             var response = await agent.RunAsync(chatHistory, cancellationToken: cancellationToken);
 
@@ -504,7 +488,8 @@ app.MapPost(
                     usage.TotalTokens,
                     functionTracker.AffectedNodes,
                     functionTracker.ModelChanged,
-                    updatedSummary
+                    updatedSummary,
+                    usage.CachedTokens
                 )
             );
         }
@@ -679,5 +664,6 @@ public record ChatResponse(
     int TotalTokens,
     IReadOnlyList<AffectedNode> AffectedNodes,
     bool ModelChanged,
-    string? UpdatedSummary = null
+    string? UpdatedSummary = null,
+    int CachedTokens = 0
 );

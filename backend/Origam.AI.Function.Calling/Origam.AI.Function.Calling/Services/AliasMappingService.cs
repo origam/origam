@@ -1,13 +1,22 @@
 using System.Collections.Concurrent;
+using System.Globalization;
+using System.Text;
 
 namespace Origam.AI.Function.Calling.Services;
 
 public class AliasMappingService
 {
     private const string DefaultPrefix = "n";
+    private const int UuidDigitsUsed = 5;
+    private const string Base36Digits = "0123456789abcdefghijklmnopqrstuvwxyz";
+
     private readonly ConcurrentDictionary<string, string> _aliasToUuid = new(
         StringComparer.OrdinalIgnoreCase
     );
+    private readonly ConcurrentDictionary<string, string> _uuidToAlias = new(
+        StringComparer.OrdinalIgnoreCase
+    );
+    private readonly object _registrationLock = new();
 
     public string GetOrAddAlias(string uuid, string prefix = DefaultPrefix)
     {
@@ -22,15 +31,31 @@ public class AliasMappingService
         }
 
         var normalizedUuid = parsedGuid.ToString("D");
-        var alias = BuildAlias(normalizedUuid, prefix);
+        if (_uuidToAlias.TryGetValue(normalizedUuid, out var existingAlias))
+        {
+            return existingAlias;
+        }
 
-        _aliasToUuid.AddOrUpdate(
-            alias,
-            addValue: normalizedUuid,
-            updateValueFactory: (_, existing) => existing
-        );
+        lock (_registrationLock)
+        {
+            if (_uuidToAlias.TryGetValue(normalizedUuid, out existingAlias))
+            {
+                return existingAlias;
+            }
 
-        return alias;
+            var alias = BuildAlias(parsedGuid, prefix);
+            while (
+                _aliasToUuid.TryGetValue(alias, out var takenBy)
+                && !string.Equals(takenBy, normalizedUuid, StringComparison.OrdinalIgnoreCase)
+            )
+            {
+                alias += "x";
+            }
+
+            _aliasToUuid[alias] = normalizedUuid;
+            _uuidToAlias[normalizedUuid] = alias;
+            return alias;
+        }
     }
 
     public string ResolveUuid(string alias)
@@ -61,9 +86,27 @@ public class AliasMappingService
         GetOrAddAlias(uuid, prefix);
     }
 
-    private static string BuildAlias(string normalizedUuid, string prefix)
+    private static string BuildAlias(Guid uuid, string prefix)
     {
-        var shortPart = normalizedUuid.Substring(startIndex: 0, length: 8);
-        return $"{prefix}_{shortPart}";
+        var digits = uuid.ToString("N").Substring(startIndex: 0, length: UuidDigitsUsed);
+        var value = long.Parse(digits, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+        return $"{prefix}_{ToBase36(value)}";
+    }
+
+    private static string ToBase36(long value)
+    {
+        if (value == 0)
+        {
+            return "0";
+        }
+
+        var builder = new StringBuilder();
+        while (value > 0)
+        {
+            builder.Insert(index: 0, value: Base36Digits[(int)(value % 36)]);
+            value /= 36;
+        }
+
+        return builder.ToString();
     }
 }

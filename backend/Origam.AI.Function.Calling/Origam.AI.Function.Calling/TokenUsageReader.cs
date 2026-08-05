@@ -20,25 +20,50 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using Microsoft.Agents.AI;
+using Microsoft.Extensions.AI;
 
 namespace Origam.AI.Function.Calling;
 
 public static class TokenUsageReader
 {
-    public static (int PromptTokens, int CompletionTokens, int TotalTokens) Read(
+    public static (int PromptTokens, int CompletionTokens, int TotalTokens, int CachedTokens) Read(
         AgentResponse response
     )
     {
         var usage = response.Usage;
         if (usage is null)
         {
-            return (0, 0, 0);
+            return (0, 0, 0, 0);
         }
 
         return (
             (int)(usage.InputTokenCount ?? 0),
             (int)(usage.OutputTokenCount ?? 0),
-            (int)(usage.TotalTokenCount ?? 0)
+            (int)(usage.TotalTokenCount ?? 0),
+            ReadCachedTokens(usage)
         );
+    }
+
+    private static int ReadCachedTokens(UsageDetails usage)
+    {
+        if (usage.AdditionalCounts is null)
+        {
+            return 0;
+        }
+
+        foreach (var count in usage.AdditionalCounts)
+        {
+            if (
+                count.Key.Contains(
+                    value: "Cached",
+                    comparisonType: StringComparison.OrdinalIgnoreCase
+                )
+            )
+            {
+                return (int)count.Value;
+            }
+        }
+
+        return 0;
     }
 }

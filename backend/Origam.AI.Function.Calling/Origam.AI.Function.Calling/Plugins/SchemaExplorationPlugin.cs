@@ -24,7 +24,7 @@ public class SchemaExplorationPlugin
     }
 
     [Description(
-        "Gets the detailed YAML schema of a specific node/entity to explore its fields, filters, and relations. Use this before modifying an entity to understand its structure. Pass the entity's alias (e.g. ent_xxxxx)."
+        "Gets the detailed YAML schema of a specific node/entity to explore its fields, filters, and relations. Use this before modifying an entity to understand its structure. Pass the entity's alias (e.g. e_g7f2)."
     )]
     public async Task<string> ExploreNodeAsync(
         [Description("The short alias of the node to explore.")] string alias,
