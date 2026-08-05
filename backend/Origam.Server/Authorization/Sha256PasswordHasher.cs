@@ -19,8 +19,18 @@ public class Sha256PasswordHasher
         string providedPassword
     )
     {
+        if (string.IsNullOrEmpty(hashedPassword))
+        {
+            return PasswordVerificationResult.Failed;
+        }
         string[] parts = hashedPassword.Split(".");
-        if (!int.TryParse(parts[1], NumberStyles.HexNumber, provider: null, out int iterations))
+        if (
+            parts.Length != KEY_PARTS_LENGTH
+            || parts[0] != KEY_PREFIX
+            || !int.TryParse(parts[1], NumberStyles.HexNumber, provider: null, out int iterations)
+            || iterations <= 0
+            || iterations > IterationCount
+        )
         {
             return PasswordVerificationResult.Failed;
         }

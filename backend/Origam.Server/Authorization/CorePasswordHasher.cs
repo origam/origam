@@ -20,9 +20,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Runtime.CompilerServices;
 using BrockAllen.IdentityReboot;
 using Microsoft.AspNetCore.Identity;
 using Origam.Security.Common;
+
+[assembly: InternalsVisibleTo("Origam.ServerTests")]
 
 namespace Origam.Server.Authorization;
 
