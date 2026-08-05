@@ -67,8 +67,14 @@ public class ModeledOpenApiDocumentGenerationTests
         Assert.That(path.EnumerateObject().Count(), Is.EqualTo(1));
     }
 
-    [Test]
-    public void UpdateAndDeleteFlagsAddOperations()
+    [TestCase(true, false, "put")]
+    [TestCase(false, true, "delete")]
+    [TestCase(true, true, "put,delete")]
+    public void UpdateAndDeleteFlagsReplaceDefaultOperation(
+        bool allowPut,
+        bool allowDelete,
+        string expectedOperations
+    )
     {
         using var fixture = new ModeledOpenApiFixture();
         fixture.AddPage<ReportPage>(
@@ -76,8 +82,8 @@ public class ModeledOpenApiDocumentGenerationTests
             url: "public/mutable",
             configure: page =>
             {
-                page.AllowPUT = true;
-                page.AllowDELETE = true;
+                page.AllowPUT = allowPut;
+                page.AllowDELETE = allowDelete;
             }
         );
 
@@ -86,10 +92,10 @@ public class ModeledOpenApiDocumentGenerationTests
             .RootElement.GetProperty("paths")
             .GetProperty("/public/mutable");
 
-        Assert.That(path.TryGetProperty(propertyName: "get", out _), Is.True);
-        Assert.That(path.TryGetProperty(propertyName: "put", out _), Is.True);
-        Assert.That(path.TryGetProperty(propertyName: "delete", out _), Is.True);
-        Assert.That(path.EnumerateObject().Count(), Is.EqualTo(3));
+        Assert.That(
+            path.EnumerateObject().Select(operation => operation.Name),
+            Is.EquivalentTo(expectedOperations.Split(','))
+        );
     }
 
     [Test]

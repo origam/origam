@@ -50,6 +50,19 @@ public class ModeledOpenApiPageDocumenter(
         }
         var pathItem = (OpenApiPathItem)existingPathItem;
 
+        if (page.AllowPUT)
+        {
+            AddOperation(document, pathItem, HttpMethod.Put, page);
+        }
+        if (page.AllowDELETE)
+        {
+            AddOperation(document, pathItem, HttpMethod.Delete, page);
+        }
+        if (page.AllowPUT || page.AllowDELETE)
+        {
+            return;
+        }
+
         switch (page)
         {
             case XsltDataPage dataPage:
@@ -83,14 +96,6 @@ public class ModeledOpenApiPageDocumenter(
                 AddUnsupportedPageOperation(document, pathItem, page);
                 break;
             }
-        }
-        if (page.AllowPUT)
-        {
-            AddOperation(document, pathItem, HttpMethod.Put, page);
-        }
-        if (page.AllowDELETE)
-        {
-            AddOperation(document, pathItem, HttpMethod.Delete, page);
         }
     }
 
