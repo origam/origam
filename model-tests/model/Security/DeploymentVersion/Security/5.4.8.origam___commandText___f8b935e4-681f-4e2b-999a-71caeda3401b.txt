@@ -1,1 +1,1 @@
-﻿ALTER TABLE "OrigamUser" ALTER COLUMN "Password" varchar(1000);
+﻿ALTER TABLE "OrigamUser" ALTER COLUMN "Password" TYPE varchar(1000);
