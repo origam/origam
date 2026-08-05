@@ -32,7 +32,9 @@ export class YesNoQuestion extends React.Component<React.PropsWithChildren<{
   onYesClick?: (event: any) => void;
   onNoClick?: (event: any) => void;
 }>> {
-  refPrimaryBtn = (elm: any) => (this.elmPrimaryBtn = elm);
+  refPrimaryBtn = (elm: any) => {
+    this.elmPrimaryBtn = elm;
+  };
   elmPrimaryBtn: any;
   static contextType = MobXProviderContext;
 

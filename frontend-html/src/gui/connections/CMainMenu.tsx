@@ -538,7 +538,7 @@ export class CMainMenuFolderItem extends React.Component<React.PropsWithChildren
   static contextType = MobXProviderContext;
 
   declare context: any;
-  itemRef: RefObject<HTMLDivElement> = React.createRef();
+  itemRef: RefObject<HTMLDivElement | null> = React.createRef();
 
   componentDidMount() {
     this.mainMenuState.setReference(this.id, this.itemRef);

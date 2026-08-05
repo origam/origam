@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { inject, observer, Observer, Provider } from "mobx-react";
-import React from "react";
+import React, { JSX } from "react";
 import { IDataView } from "model/entities/types/IDataView";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";

@@ -77,7 +77,9 @@ export class DateTimeEditor extends React.Component<React.PropsWithChildren<{
 
   @observable.ref outputFormat = this.props.outputFormat;
 
-  refDropdowner = (elm: Dropdowner | null) => (this.elmDropdowner = elm);
+  refDropdowner = (elm: Dropdowner | null) => {
+    this.elmDropdowner = elm;
+  };
   elmDropdowner: Dropdowner | null = null;
 
   editorState = new DesktopEditorState(this.props.value);
@@ -210,7 +212,9 @@ export class DateTimeEditor extends React.Component<React.PropsWithChildren<{
     }, 30);
   }
 
-  refContainer = (elm: HTMLDivElement | null) => (this.elmContainer = elm);
+  refContainer = (elm: HTMLDivElement | null) => {
+    this.elmContainer = elm;
+  };
   elmContainer: HTMLDivElement | null = null;
   refInput = (elm: HTMLInputElement | null) => {
     this.elmInput = elm;

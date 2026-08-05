@@ -628,7 +628,9 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
   };
 
   elmInputElement: any;
-  refDropdownBody = (elm: any) => (this.elmDropdownBody = elm);
+  refDropdownBody = (elm: any) => {
+    this.elmDropdownBody = elm;
+  };
   elmDropdownBody: any;
 }
 

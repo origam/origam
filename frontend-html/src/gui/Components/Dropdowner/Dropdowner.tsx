@@ -130,10 +130,14 @@ export class Dropdowner extends React.Component<React.PropsWithChildren<{
     makeObservable(this);
   }
 
-  refMeasTrigger = (elm: any) => (this.elmMeasTrigger = elm);
+  refMeasTrigger = (elm: any) => {
+    this.elmMeasTrigger = elm;
+  };
   elmMeasTrigger: any | null = null;
 
-  refMeasDropdown = (elm: any) => (this.elmMeasDropdown = elm);
+  refMeasDropdown = (elm: any) => {
+    this.elmMeasDropdown = elm;
+  };
   elmMeasDropdown: any | null = null;
 
   @observable _isDropped = false;

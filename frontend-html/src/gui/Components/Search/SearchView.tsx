@@ -114,10 +114,12 @@ export class SearchView extends React.Component<React.PropsWithChildren<{
 
 export class SearchViewState {
   input: HTMLInputElement | undefined;
-  refInput = (elm: HTMLInputElement) => (this.input = elm);
+  refInput = (elm: HTMLInputElement) => {
+    this.input = elm;
+  };
 
-  scrollDivRef: RefObject<HTMLDivElement> = React.createRef();
-  resultElementMap: Map<string, RefObject<HTMLDivElement>> = new Map();
+  scrollDivRef: RefObject<HTMLDivElement | null> = React.createRef();
+  resultElementMap: Map<string, RefObject<HTMLDivElement | null>> = new Map();
 
   searcher: ISearcher;
 

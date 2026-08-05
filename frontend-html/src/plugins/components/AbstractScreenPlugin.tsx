@@ -23,6 +23,7 @@ import { EventHandler } from "utils/EventHandler";
 import { ILocalization } from "plugins/interfaces/ILocalization";
 import { ILocalizer } from "plugins/interfaces/ILocalizer";
 import { IScreenPluginData } from "plugins/interfaces/IScreenPluginData";
+import { JSX } from "react";
 
 // The abstract keyword had to be removed because of this issue:
 // https://github.com/vitejs/vite/issues/12955 

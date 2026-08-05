@@ -25,7 +25,9 @@ export class MapNavigationStore {
     makeObservable(this);
   }
 
-  refMapComponent = (elm: any) => (this.elmMapComponent = elm);
+  refMapComponent = (elm: any) => {
+    this.elmMapComponent = elm;
+  };
   elmMapComponent: {
     panToCenter(): void;
     panToSelectedObject(): void;

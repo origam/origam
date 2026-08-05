@@ -23,6 +23,7 @@ import { ISectionPluginData } from "plugins/interfaces/ISectionPluginData";
 import { ILocalization } from "plugins/interfaces/ILocalization";
 import { ILocalizer } from "plugins/interfaces/ILocalizer";
 import { ISectionPlugin } from "plugins/interfaces/ISectionPlugin";
+import { JSX } from "react";
 
 export abstract class AbstractSectionPlugin implements ISectionPlugin {
   constructor() {

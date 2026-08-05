@@ -87,7 +87,9 @@ export class MapPerspectiveCom extends React.Component<React.PropsWithChildren<I
   }
 
   elmMapDiv: HTMLDivElement | null = null;
-  refMapDiv = (elm: any) => (this.elmMapDiv = elm);
+  refMapDiv = (elm: any) => {
+    this.elmMapDiv = elm;
+  };
 
   leafletMap?: L.DrawMap;
 

@@ -38,7 +38,7 @@ export class WorkQueuesItem extends React.Component<React.PropsWithChildren<{
   static contextType = MobXProviderContext;
 
   declare context: any;
-  itemRef: RefObject<HTMLAnchorElement> = React.createRef();
+  itemRef: RefObject<HTMLAnchorElement | null> = React.createRef();
 
   componentDidMount() {
     if (this.props.id) {

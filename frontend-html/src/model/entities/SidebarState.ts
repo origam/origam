@@ -106,7 +106,7 @@ export class MainMenuState implements IMainMenuState {
   @observable
   private readonly folderStateMap: Map<string, boolean>;
 
-  refMap: Map<string, RefObject<HTMLElement>> = new Map();
+  refMap: Map<string, RefObject<HTMLElement | null>> = new Map();
 
   @observable
   private _highLightedItemId: string | undefined;

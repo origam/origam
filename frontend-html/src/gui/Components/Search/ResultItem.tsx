@@ -27,7 +27,7 @@ export class ResultItem extends React.Component<React.PropsWithChildren<{
   result: ISearchResult;
   onResultItemClick: () => void;
   selected: boolean;
-  registerElementRef: (id: string, ref: RefObject<HTMLDivElement>) => void;
+  registerElementRef: (id: string, ref: RefObject<HTMLDivElement | null>) => void;
 }>> {
   constructor(props: any, context?: any) {
     super(props, context);
@@ -38,8 +38,8 @@ export class ResultItem extends React.Component<React.PropsWithChildren<{
   @observable
   mouseOver = false;
 
-  divRef: RefObject<HTMLDivElement> = React.createRef();
-  descriptionRef: RefObject<HTMLDivElement> = React.createRef();
+  divRef: RefObject<HTMLDivElement | null> = React.createRef();
+  descriptionRef: RefObject<HTMLDivElement | null> = React.createRef();
 
   @observable
   isDescriptionTruncated = false;

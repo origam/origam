@@ -311,7 +311,7 @@ export const CheckListItem: React.FC<React.PropsWithChildren<{
 };
 
 class InputReference {
-  constructor(private inputRef: RefObject<HTMLInputElement>) {
+  constructor(private inputRef: RefObject<HTMLInputElement | null>) {
   }
 
   get x() {

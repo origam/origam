@@ -83,7 +83,9 @@ export class FilterSettingsComboBox extends React.Component<React.PropsWithChild
 
   measureThrottled = _.throttle(this.measureImm, 100);
 
-  refMeasure = (elm: any) => (this.elmMeasure = elm);
+  refMeasure = (elm: any) => {
+    this.elmMeasure = elm;
+  };
   elmMeasure: any;
 
   render() {

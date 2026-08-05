@@ -29,7 +29,9 @@ export class QuestionLogoutWithDirtyData extends React.Component<React.PropsWith
   onNoClick?: (event: any) => void;
   onYesClick?: (event: any) => void;
 }>> {
-  refPrimaryBtn = (elm: any) => (this.elmPrimaryBtn = elm);
+  refPrimaryBtn = (elm: any) => {
+    this.elmPrimaryBtn = elm;
+  };
   elmPrimaryBtn: any;
 
   componentDidMount() {

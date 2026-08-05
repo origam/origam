@@ -70,7 +70,9 @@ export class FormRoot extends React.Component<React.PropsWithChildren<{
   }
 
   elmFormRoot: HTMLDivElement | null = null;
-  refFormRoot = (elm: HTMLDivElement | null) => (this.elmFormRoot = elm);
+  refFormRoot = (elm: HTMLDivElement | null) => {
+    this.elmFormRoot = elm;
+  };
 
   render() {
     return (

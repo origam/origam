@@ -32,7 +32,9 @@ class SplitterPanel extends React.Component<React.PropsWithChildren<{
   size: number;
   className?: string;
 }>> {
-  refPanel = (elm: any) => (this.elmPanel = elm);
+  refPanel = (elm: any) => {
+    this.elmPanel = elm;
+  };
   elmPanel: HTMLDivElement | null = null;
 
   componentDidMount() {

@@ -52,10 +52,14 @@ export class SearchStore {
 
   @observable isDropped = false;
 
-  refSearchField = (elm: any) => (this.elmSearchField = elm);
+  refSearchField = (elm: any) => {
+    this.elmSearchField = elm;
+  };
   elmSearchField: any = null;
 
-  refDropdown = (elm: any) => (this.elmDropdown = elm);
+  refDropdown = (elm: any) => {
+    this.elmDropdown = elm;
+  };
   elmDropdown: any = null;
 
   @observable searchPhrase = "";

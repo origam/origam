@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import React, { useContext, useState } from "react";
+import React, { JSX, useContext, useState } from "react";
 import S from "gui/connections/MobileComponents/Form/ComboBox/ComboBox.module.scss";
 import cx from "classnames";
 import CS from "gui/Components/Dropdown/Dropdown.module.scss";

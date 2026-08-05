@@ -111,7 +111,7 @@ export const TagInputEditor = inject(({property}: any, {value}: any) => {
         }
       }, [beh, inputElement, props.autoFocus]);
 
-      const previousValueRef = useRef<string[]>();
+      const previousValueRef = useRef<string[] | undefined>(undefined);
 
       useEffect(() => {
         if (previousValueRef.current?.length !== value?.length) {

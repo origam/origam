@@ -40,12 +40,18 @@ export default class ColorEditor extends React.Component<React.PropsWithChildren
   onKeyDown?(event: any): void;
   subscribeToFocusManager?: (obj: IFocusable) => void;
 }>> {
-  refContainer = (elm: any) => (this.elmContainer = elm);
+  refContainer = (elm: any) => {
+    this.elmContainer = elm;
+  };
   elmContainer: any;
 
-  refDropdowner = (elm: any) => (this.elmDropdowner = elm);
+  refDropdowner = (elm: any) => {
+    this.elmDropdowner = elm;
+  };
   elmDropdowner: Dropdowner | null = null;
-  refDroppedPanelContainer = (elm: any) => (this.elmDroppedPanelContainer = elm);
+  refDroppedPanelContainer = (elm: any) => {
+    this.elmDroppedPanelContainer = elm;
+  };
   elmDroppedPanelContainer: any;
 
   elmInput: any = null;

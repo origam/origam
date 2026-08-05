@@ -27,7 +27,7 @@ import { getCurrentDecimalSeparator, getCurrentGroupSeparator } from "model/enti
 
 export interface INumberEditorModel {
   value: string;
-  inputRef: React.RefObject<HTMLInputElement>
+  inputRef: React.RefObject<HTMLInputElement | null>
   getInputType(): string;
   getInputMode(): "numeric" | "decimal" | "text" | "search" | "none" | "tel" | "url" | "email" | undefined;
   handleChange(event: any): void;
@@ -43,7 +43,7 @@ export function createNumberEditorModel(args:{props: NumberEditorProps, initValu
 class DesktopNumberEditorModel implements INumberEditorModel {
   @observable
   value: string = "";
-  inputRef: React.RefObject<HTMLInputElement> = React.createRef<HTMLInputElement>();
+  inputRef: React.RefObject<HTMLInputElement | null> = React.createRef<HTMLInputElement>();
 
   constructor(protected props: NumberEditorProps, initValue: string ) {
     makeObservable(this);

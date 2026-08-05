@@ -31,7 +31,7 @@ export class ResultGroup extends React.Component<React.PropsWithChildren<{
   group: ISearchResultGroup;
   onResultItemClick: (result: ISearchResult) => void;
   searcher: ISearcher;
-  registerElementRef: (id: string, ref: RefObject<HTMLDivElement>) => void;
+  registerElementRef: (id: string, ref: RefObject<HTMLDivElement | null>) => void;
 }>> {
 
   onGroupClick() {

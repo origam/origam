@@ -31,7 +31,9 @@ export class QuestionSaveData extends React.Component<React.PropsWithChildren<{
   onDontSaveClick?: (event: any) => void;
   onCancelClick?: (event: any) => void;
 }>> {
-  refPrimaryBtn = (elm: any) => (this.elmPrimaryBtn = elm);
+  refPrimaryBtn = (elm: any) => {
+    this.elmPrimaryBtn = elm;
+  };
   elmPrimaryBtn: any;
 
   componentDidMount() {

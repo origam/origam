@@ -24,7 +24,7 @@ import { action, computed, flow, observable,
 } from "mobx";
 import { inject, observer, Provider } from "mobx-react";
 import { onTableKeyDown } from "model/actions-ui/DataView/TableView/onTableKeyDown";
-import React, { useContext } from "react";
+import React, { JSX, useContext } from "react";
 import { onColumnHeaderClick } from "model/actions-ui/DataView/TableView/onColumnHeaderClick";
 import { ITablePanelView } from "model/entities/TablePanelView/types/ITablePanelView";
 import { IDataView } from "model/entities/types/IDataView";
