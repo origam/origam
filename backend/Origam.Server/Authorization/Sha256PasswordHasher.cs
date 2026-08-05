@@ -64,7 +64,7 @@ public class Sha256PasswordHasher
             saltBytes = Convert.FromBase64String(saltString);
             hashedPasswordBytes = Convert.FromBase64String(hashedPassword);
         }
-        catch
+        catch (Exception)
         {
             return PasswordVerificationResult.Failed;
         }
