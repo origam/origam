@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0"
+  xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0"
+  xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0">
+  <dv:DeploymentVersion
+    asi:abstract="false"
+    dv:deploymentDependenciesCsv="&#xD;&#xA;147fa70d-6519-4393-b5d0-87931f9fd609, 5.5.1"
+    x:id="f1350bd4-4086-41ad-af8a-f95d2cb2a565"
+    asi:name="5.4.8"
+    dv:version="5.4.8">
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="10"
+      scusa:commandText="-***-ExternalFile:5.4.8.origam___commandText___3d164c60-2590-4b79-ae0e-d17b69262607.txt"
+      x:id="3d164c60-2590-4b79-ae0e-d17b69262607"
+      asi:name="00010_OrigamUser_PssswordLength"
+      scusa:platform="MsSql"
+      scusa:service="DataService#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="20"
+      scusa:commandText="-***-ExternalFile:5.4.8.origam___commandText___f8b935e4-681f-4e2b-999a-71caeda3401b.txt"
+      x:id="f8b935e4-681f-4e2b-999a-71caeda3401b"
+      asi:name="00020_PG_OrigamUser_PasswordLength"
+      scusa:platform="PgSql"
+      scusa:service="DataService#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+  </dv:DeploymentVersion>
+</x:file>
