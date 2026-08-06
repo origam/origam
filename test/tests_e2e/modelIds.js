@@ -13,8 +13,13 @@ const detailEditorId = "editor_89be97a4-86e8-4036-b57a-36155e3f2322";
 const detailTabHandelId = "tabHandle_823ea459-bca5-476f-ab6f-9cb07769923e";
 const workflowTestItemId = "menu_40148463-634a-46cd-9ff2-5acb70f38d28";
 const reportWindowMenuItemId = "menu_3dc51183-a78e-4663-bd41-97b230de7b7d";
+// The only screen with a ColorPicker reachable from the Widgets package.
+const settingsMenuFolderId = "menu_1cd3d010-c1cf-4f5c-b81f-7896029b4ce0";
+const generalMenuFolderId = "menu_fbbfcbd2-4032-4bc0-b4db-076ff0bbd448";
+const systemColorsMenuItemId = "menu_db9a696b-f85b-4864-b049-36ea1ca86ee4";
 
 module.exports = {widgetsMenuItemId, sectionsMenuItemId, masterDetailMenuItemId,
   allDataTypesMenuId, allDataTypesLazyMenuItemsId, topMenuHeader, masterDataViewId,
   detailDataViewId, detailEditorId, detailTabHandelId, masterDetailLazyLoadedMenuItemId,
-  allDataTypesLazyDataViewId, workflowTestItemId, allDataTypesDataViewId, reportWindowMenuItemId};
+  allDataTypesLazyDataViewId, workflowTestItemId, allDataTypesDataViewId, reportWindowMenuItemId,
+  settingsMenuFolderId, generalMenuFolderId, systemColorsMenuItemId};
