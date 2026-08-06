@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { inject, observer, Observer, Provider } from "mobx-react";
-import React from "react";
+import React, { JSX } from "react";
 import { IDataView } from "model/entities/types/IDataView";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
@@ -52,23 +52,36 @@ import { IActionType } from "model/entities/types/IAction";
 import { MobileAction, MobileActionLink } from "gui/connections/MobileComponents/Form/MobileAction";
 
 
-@inject(({dataView}) => {
+@inject(({dataView}: any) => {
   return {dataView, xmlFormRootObject: dataView.formViewUI};
 })
 @observer
-export class MobileFormBuilder extends React.Component<{
+export class MobileFormBuilder extends React.Component<React.PropsWithChildren<{
   mobileState: MobileState
   xmlFormRootObject?: any;
   dataView?: IDataView;
-}> {
+}>> {
   static contextType = CtxPanelVisibility
+
+  declare context: any;
 
   componentDidMount() {
     document.addEventListener("click", event => this.notifyClick(event))
+    this.autoFocusIfNeeded();
+  }
+
+  componentDidUpdate() {
+    this.autoFocusIfNeeded();
   }
 
   componentWillUnmount() {
     document.removeEventListener("click", event => this.notifyClick(event));
+  }
+
+  autoFocusIfNeeded() {
+    if (this.props.dataView?.isFirst && this.context.isVisible) {
+      this.props.dataView.formFocusManager.autoFocus();
+    }
   }
 
   notifyClick(event: any) {
@@ -308,9 +321,6 @@ export class MobileFormBuilder extends React.Component<{
     const topItem = topItems[0];
     const form = recursiveBuild(topItem);
 
-    if (this.props.dataView?.isFirst && this.context.isVisible) {
-      focusManager.autoFocus();
-    }
     return form;
   }
 

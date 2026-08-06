@@ -19,7 +19,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { IConfigurationManager, ITableConfiguration } from "model/entities/TablePanelView/types/IConfigurationManager";
 import { ICustomConfiguration, TableConfiguration } from "model/entities/TablePanelView/tableConfiguration";
-import { observable } from "mobx";
+import { observable,
+  makeObservable
+} from "mobx";
 import { v4 as uuidv4 } from 'uuid';
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
 import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
@@ -42,6 +44,7 @@ export class ConfigurationManager implements IConfigurationManager {
     customConfigurations: ICustomConfiguration[],
     private layout: Layout // for debugging
   ) {
+    makeObservable(this);
     this.defaultTableConfiguration = defaultTableConfiguration;
     this.customTableConfigurations = customTableConfigurations;
     this.customConfigurationsMap = new Map(customConfigurations.map(i => [i.name, i.value]));

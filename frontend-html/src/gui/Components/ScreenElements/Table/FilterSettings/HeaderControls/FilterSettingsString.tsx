@@ -24,7 +24,9 @@ import {
 } from "gui/Components/ScreenElements/Table/FilterSettings/FilterSettingsComboBox";
 
 import CS from "./FilterSettingsCommon.module.scss";
-import { action, observable, runInAction } from "mobx";
+import { action, observable, runInAction,
+  makeObservable
+} from "mobx";
 import { observer } from "mobx-react";
 import { EDITOR_DALEY_MS, FilterSetting } from "./FilterSetting";
 import { Operator } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operator";
@@ -44,11 +46,11 @@ const OPERATORS = [
   Operator.isNotNull,
 ];
 
-const OpCombo: React.FC<{
+const OpCombo: React.FC<React.PropsWithChildren<{
   setting: any;
   id: string;
   onChange: () => void;
-}> = observer((props) => {
+}>> = observer((props) => {
   return (
     <FilterSettingsComboBox
       id={props.id}
@@ -73,14 +75,14 @@ const OpCombo: React.FC<{
 
 
 @observer
-class OpEditors extends React.Component<{
+class OpEditors extends React.Component<React.PropsWithChildren<{
   id: string;
   setting?: any;
   onCurrentValueChanged: (currentValue: string) => void;
   currentValue: string;
   onChange: () => void;
   autoFocus: boolean;
-}> {
+}>> {
 
   inputRef = (elm: any) => (this.inputTag = elm);
   inputTag: any;
@@ -123,12 +125,17 @@ class OpEditors extends React.Component<{
 }
 
 @observer
-export class FilterSettingsString extends React.Component<{
+export class FilterSettingsString extends React.Component<React.PropsWithChildren<{
   setting?: any;
   autoFocus: boolean;
   onChange: ()=>void;
   id:string;
-}> {
+}>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
 
   static get defaultSettings() {
     return new FilterSetting(OPERATORS[0].type)

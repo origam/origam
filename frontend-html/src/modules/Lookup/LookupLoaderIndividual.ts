@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { action } from "mobx";
+import { action, makeObservable } from "mobx";
 import { ILookupMultiResultListenerArgs, LookupLoaderMulti } from "./LookupLoaderMulti";
 import { PubSub } from "./common";
 import { TypeSymbol } from "dic/Container";
@@ -28,6 +28,7 @@ export interface ILookupIndividualResultListenerArgs {
 
 export class LookupLoaderIndividual {
   constructor(public lookupId: string, private loader: LookupLoaderMulti) {
+    makeObservable(this);
   }
 
   @action.bound

@@ -23,7 +23,7 @@ import "leaflet-draw";
 import "leaflet-draw/dist/leaflet.draw-src.js";
 import "leaflet-draw/dist/leaflet.draw-src.css";
 import "leaflet/dist/leaflet.css";
-import { action, autorun, computed, observable, reaction, runInAction } from "mobx";
+import { action, autorun, computed, observable, reaction, runInAction, makeObservable } from "mobx";
 import React from "react";
 import S from "./MapPerspectiveUI.module.scss";
 import { IMapObject, IMapObjectType } from "./stores/MapObjectsStore";
@@ -80,9 +80,16 @@ function getOptionsEPSG(options: any) {
   return undefined;
 }
 
-export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> {
+export class MapPerspectiveCom extends React.Component<React.PropsWithChildren<IMapPerspectiveComProps>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
   elmMapDiv: HTMLDivElement | null = null;
-  refMapDiv = (elm: any) => (this.elmMapDiv = elm);
+  refMapDiv = (elm: any) => {
+    this.elmMapDiv = elm;
+  };
 
   leafletMap?: L.DrawMap;
 
@@ -93,10 +100,35 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
 
   _disposers: any[] = [];
 
+  @observable.ref mapLayers = this.props.mapLayers;
+  @observable.ref mapCenter = this.props.mapCenter;
+  @observable.ref initialZoom = this.props.initialZoom;
+  @observable.ref lastDetailedObject = this.props.lastDetailedObject;
+  @observable.ref isReadOnly = this.props.isReadOnly;
+  @observable.ref isActive = this.props.isActive;
+  @observable.ref onLayerClick = this.props.onLayerClick;
+  @observable.ref getMapObjectsFn = this.props.getMapObjects;
+  @observable.ref getRoutefinderRouteFn = this.props.getRoutefinderRoute;
+  @observable.ref getRoutefinderEditablesFn = this.props.getRoutefinderEditables;
+
+  @action.bound
+  syncProps(props: IMapPerspectiveComProps) {
+    this.mapLayers = props.mapLayers;
+    this.mapCenter = props.mapCenter;
+    this.initialZoom = props.initialZoom;
+    this.lastDetailedObject = props.lastDetailedObject;
+    this.isReadOnly = props.isReadOnly;
+    this.isActive = props.isActive;
+    this.onLayerClick = props.onLayerClick;
+    this.getMapObjectsFn = props.getMapObjects;
+    this.getRoutefinderRouteFn = props.getRoutefinderRoute;
+    this.getRoutefinderEditablesFn = props.getRoutefinderEditables;
+  }
+
   panToCenter() {
-    if (this.props.mapCenter) {
+    if (this.mapCenter) {
       this.leafletMap?.panTo(
-        [this.props.mapCenter.coordinates[1], this.props.mapCenter.coordinates[0]],
+        [this.mapCenter.coordinates[1], this.mapCenter.coordinates[0]],
         {...MAP_ANIMATE_SETTING}
       );
     } else {
@@ -110,7 +142,7 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
 
   panToSelectedObject() {
     for (let [obj, lLayer] of this.mapDrawnObjectLayers) {
-      if (obj.id === this.props.lastDetailedObject?.id) {
+      if (obj.id === this.lastDetailedObject?.id) {
         this.panToLayer(lLayer);
         return;
       }
@@ -135,19 +167,20 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
 
   isPropMapCenterDifferent(prevProps: IMapPerspectiveComProps) {
     return (
-      this.props.mapCenter?.coordinates[0] !== prevProps.mapCenter?.coordinates[0] ||
-      this.props.mapCenter?.coordinates[1] !== prevProps.mapCenter?.coordinates[1]
+      this.mapCenter?.coordinates[0] !== prevProps.mapCenter?.coordinates[0] ||
+      this.mapCenter?.coordinates[1] !== prevProps.mapCenter?.coordinates[1]
     );
   }
 
   isPropActiveDifferent(prevProps: IMapPerspectiveComProps) {
-    return this.props.isActive !== prevProps.isActive;
+    return this.isActive !== prevProps.isActive;
   }
 
   componentDidUpdate(prevProps: IMapPerspectiveComProps) {
     runInAction(() => {
+      this.syncProps(this.props);
       if (this.isPropActiveDifferent(prevProps)) {
-        if (this.props.isActive) {
+        if (this.isActive) {
           this.mountLeaflet();
         } else {
           //this.unmountLeaflet();
@@ -206,7 +239,7 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
 
   highlightSelectedLayer() {
     for (let [obj, lLayer] of this.mapDrawnObjectLayers) {
-      if (obj.id === this.props.lastDetailedObject?.id) {
+      if (obj.id === this.lastDetailedObject?.id) {
         this.highlightLayer(obj, lLayer);
       } else {
         this.unHighlightLayer(obj, lLayer);
@@ -215,7 +248,7 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
   }
 
   @computed get layerList() {
-    return this.props.mapLayers
+    return this.mapLayers
       .map((rawLayer, index) => {
         if (rawLayer.type === "OSM") {
           return [
@@ -246,8 +279,7 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
   }
 
   @computed get mapDrawnObjectLayers() {
-    return this.props
-      .getMapObjects()
+    return this.getMapObjectsFn()
       .map((obj) => {
         let result: [IMapObject, L.Layer];
         switch (obj.type) {
@@ -316,8 +348,7 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
   }
 
   @computed get mapRoutefinderRoute() {
-    return this.props
-      .getRoutefinderRoute()
+    return this.getRoutefinderRouteFn()
       .map((obj) => {
         switch (obj.type) {
           case "LineString":
@@ -332,8 +363,7 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
   }
 
   @computed get mapRoutefinderEditables() {
-    return this.props
-      .getRoutefinderEditables()
+    return this.getRoutefinderEditablesFn()
       .map((obj) => {
         switch (obj.type) {
           case "LineString":
@@ -601,7 +631,7 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
         .map(([rawLayer, leaLayer]) => leaLayer),
     });
     this.leafletMap = this.lmap;
-    this.lmap.setZoom(this.props.initialZoom || 0);
+    this.lmap.setZoom(this.initialZoom || 0);
 
     const minZooms = this.layerList
       .map(([rawLayer, tileLayer]) => tileLayer.options.minZoom ?? 0);
@@ -635,9 +665,9 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
             } else if ((layer[1] as any).getLatLng) {
               allLayerBounds.extend((layer[1] as any).getLatLng());
             }
-            layer[1].on("click", () => this.props.onLayerClick?.(layer[0].id));
+            layer[1].on("click", () => this.onLayerClick?.(layer[0].id));
           }
-          if (!this.props.mapCenter && allLayerBounds.isValid() && !this.mapFittedToLayers) {
+          if (!this.mapCenter && allLayerBounds.isValid() && !this.mapFittedToLayers) {
             allLayerBounds = allLayerBounds.pad(0.1);
             const mapCenter = allLayerBounds.getCenter();
             this.lmap!.panTo(mapCenter);
@@ -680,7 +710,7 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
   mountLeaflet() {
     if (!this._isMounted) {
       this.initLeaflet();
-      if (!this.props.isReadOnly) {
+      if (!this.isReadOnly) {
         this.initLeafletDrawControls();
       }
       this._isMounted = true;
@@ -693,7 +723,7 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
         if (
           (this.contentRect?.bounds?.width || 0) > 40 &&
           (this.contentRect?.bounds?.height || 0) > 40 &&
-          this.props.isActive
+          this.isActive
         ) {
           this.mountLeaflet();
         }

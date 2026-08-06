@@ -223,9 +223,41 @@ async function typeAndWaitForSelector(args){
   throw Error(`${args.selector} did not appear before timeout`);
 }
 
+// Waits until the element stops moving. A dropdown is rendered at a stale position and
+// moved once it gets measured, so a click sent right after it becomes visible can land
+// next to it.
+async function waitForStablePosition(page, clickable){
+  let previousRect = null;
+  for (let i = 0; i < 20; i++) {
+    let rect;
+    try{
+      rect = await page.evaluate(element => {
+        const bounds = element.getBoundingClientRect();
+        return {
+          top: bounds.top, left: bounds.left,
+          width: bounds.width, height: bounds.height
+        };
+      }, clickable);
+    }catch(error){
+      return;
+    }
+    if(previousRect && JSON.stringify(previousRect) === JSON.stringify(rect)){
+      return;
+    }
+    previousRect = rect;
+    await sleep(50);
+  }
+  console.warn("The clickable kept moving, clicking it anyway");
+}
+
+// args.reopen is an optional function returning a fresh clickable. It is needed when
+// the first click removes the element from the document (a dropdown closing itself),
+// because clicking the detached handle again can never succeed.
 async function clickAndWaitForSelector(args){
+  await waitForStablePosition(args.page, args.clickable);
+  let clickable = args.clickable;
   try{
-    await args.clickable.click();
+    await clickable.click();
   }catch(error){
     console.error(error);
     await sleep(200);
@@ -240,11 +272,19 @@ async function clickAndWaitForSelector(args){
       if(error.name !== "TimeoutError"){
         console.error(error);
       }
+      if(args.reopen){
+        try{
+          clickable = await args.reopen();
+        }catch(reopenError){
+          console.error("Reopening the clickable failed: " + reopenError.message);
+        }
+      }
       try {
-        await args.clickable.click();
+        await waitForStablePosition(args.page, clickable);
+        await clickable.click();
       }catch(error){
         console.error(error)
-        await args.page.evaluate(x => x.click(), args.clickable);
+        await args.page.evaluate(x => x.click(), clickable);
       }
     }
   }
@@ -252,6 +292,7 @@ async function clickAndWaitForSelector(args){
 }
 
 async function clickAndWaitForXPath(args){
+  await waitForStablePosition(args.page, args.clickable);
   await args.clickable.click();
   for (let i = 0; i < 3; i++) {
     try{

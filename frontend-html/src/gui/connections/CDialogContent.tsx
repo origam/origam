@@ -24,8 +24,10 @@ import React from "react";
 import { getNewRecordScreenButtons } from "gui/connections/NewRecordScreen";
 
 @observer
-export class CDialogContent extends React.Component {
+export class CDialogContent extends React.Component<React.PropsWithChildren<{}>> {
   static contextType = MobXProviderContext;
+
+  declare context: any;
 
   get workbench() {
     return this.context.workbench;

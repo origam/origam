@@ -21,10 +21,10 @@ import React from "react";
 import SSplitter from "gui/Workbench/ScreenArea/CustomSplitter.module.scss";
 import { Splitter } from "gui/Components/Splitter/Splitter";
 
-export const WorkbenchPage: React.FC<{
+export const WorkbenchPage: React.FC<React.PropsWithChildren<{
   sidebar: React.ReactNode;
   mainbar: React.ReactNode;
-}> = props => (
+}>> = props => (
     <Splitter
       type="isHoriz"
       STYLE={SSplitter}

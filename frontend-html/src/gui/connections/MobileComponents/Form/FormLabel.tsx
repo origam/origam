@@ -21,10 +21,10 @@ import React from "react";
 import S from "gui/Components/Form/FormLabel.module.scss";
 import cx from "classnames";
 
-export const FormLabel: React.FC<{
+export const FormLabel: React.FC<React.PropsWithChildren<{
   title: string;
   foregroundColor: string | undefined;
-}> = props => {
+}>> = props => {
 
   return <div
     className={cx(S.root, "formItem")}

@@ -21,7 +21,9 @@ import { IDataView } from "./types/IDataView";
 import { IDataSource } from "./types/IDataSource";
 import { IComponentBinding } from "./types/IComponentBinding";
 import { IFormScreenLifecycle02 } from "./types/IFormScreenLifecycle";
-import { action, computed, observable } from "mobx";
+import { action, computed, observable,
+  makeObservable
+} from "mobx";
 import { IAction } from "./types/IAction";
 import { isLazyLoading } from "model/selectors/isLazyLoading";
 import {
@@ -50,6 +52,7 @@ export class FormScreen implements IFormScreen {
   notifications: IScreenNotification[] = [];
 
   constructor(data: IFormScreenData) {
+    makeObservable(this);
     Object.assign(this, data);
     this.formScreenLifecycle.parent = this;
     this.dataViews.forEach((o) => (o.parent = this));
@@ -264,6 +267,7 @@ export class FormScreenEnvelope implements IFormScreenEnvelope {
   $type_IFormScreenEnvelope: 1 = 1;
 
   constructor(data: IFormScreenEnvelopeData) {
+    makeObservable(this);
     Object.assign(this, data);
     this.formScreenLifecycle.parent = this;
   }

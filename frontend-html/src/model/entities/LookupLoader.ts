@@ -18,12 +18,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import _ from "lodash";
-import { action, computed, flow, observable, when } from "mobx";
+import { action, computed, flow, observable, when, makeObservable } from "mobx";
 import { handleError } from "model/actions/handleError";
 import { getApi } from "model/selectors/getApi";
 import { ILookupLoader } from "./types/ILookupLoader";
 
 export class LookupLoader implements ILookupLoader {
+  constructor() {
+    makeObservable(this);
+  }
+
   collectedQuery: {
     LookupId: string;
     MenuId: string | undefined;
