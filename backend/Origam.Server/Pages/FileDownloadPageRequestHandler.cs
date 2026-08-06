@@ -26,6 +26,7 @@ using System.Data;
 using Origam.DA;
 using Origam.Rule;
 using Origam.Schema.GuiModel;
+using Origam.Server.Common;
 using CoreServices = Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Server.Pages;
@@ -46,6 +47,10 @@ class FileDownloadPageRequestHandler : AbstractPageRequestHandler
         IResponseWrapper response
     )
     {
+        if (FeatureTools.IsFeatureOn(OrigamEvent.ApiRequest.FeatureCode))
+        {
+            OrigamEventTools.RecordPageRequest(page);
+        }
         FileDownloadPage fdPage = page as FileDownloadPage;
         QueryParameterCollection qparams = new QueryParameterCollection();
         Hashtable transformParams = new Hashtable();

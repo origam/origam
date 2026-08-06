@@ -23,10 +23,12 @@ using System;
 using System.Buffers;
 using System.Collections;
 using System.Data;
+using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using Origam.DA;
+using Origam.Schema.GuiModel;
 using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Server.Common;
@@ -41,6 +43,7 @@ public static class OrigamEventTools
     private static readonly JsonEncodedText Caption = JsonEncodedText.Encode("caption");
     private static readonly JsonEncodedText NumberOfRows = JsonEncodedText.Encode("numberOfRows");
     private static readonly JsonEncodedText Parameters = JsonEncodedText.Encode("parameters");
+    private static readonly JsonEncodedText ApiUrl = JsonEncodedText.Encode("apiUrl");
 
     public static void RecordSignInEvent()
     {
@@ -66,6 +69,50 @@ public static class OrigamEventTools
             eventId: OrigamEvent.ExportToExcel.EventId,
             details: CreateExportToExcelDetails(entityExportInfo, numberOfRows)
         );
+    }
+
+    public static void RecordPageRequest(AbstractPage page)
+    {
+        RecordEvent(
+            eventId: OrigamEvent.ApiRequest.EventId,
+            details: CreateNonXsltPageRequestDetails(page)
+        );
+    }
+
+    public static void RecordXsltPageRequest(AbstractPage page, DataSet data)
+    {
+        RecordEvent(
+            eventId: OrigamEvent.ApiRequest.EventId,
+            details: CreateXsltPageRequestDetails(page, data)
+        );
+    }
+
+    private static string CreateNonXsltPageRequestDetails(AbstractPage page)
+    {
+        return BuildJson(w =>
+        {
+            w.WriteStartObject();
+            w.WritePropertyName(ObjectId);
+            w.WriteStringValue(page.Id);
+            w.WritePropertyName(ApiUrl);
+            w.WriteStringValue(page.Url);
+            w.WriteEndObject();
+        });
+    }
+
+    private static string CreateXsltPageRequestDetails(AbstractPage page, DataSet data)
+    {
+        return BuildJson(w =>
+        {
+            w.WriteStartObject();
+            w.WritePropertyName(ObjectId);
+            w.WriteStringValue(page.Id);
+            w.WritePropertyName(ApiUrl);
+            w.WriteStringValue(page.Url);
+            w.WritePropertyName(NumberOfRows);
+            w.WriteNumberValue(data?.Tables.Cast<DataTable>().Sum(table => table.Rows.Count) ?? 0);
+            w.WriteEndObject();
+        });
     }
 
     private static string CreateExportToExcelDetails(

@@ -34,6 +34,7 @@ using Origam.Rule;
 using Origam.Rule.Xslt;
 using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
+using Origam.Server.Common;
 using Origam.Server.Model.UIService;
 using Origam.Service.Core;
 using Origam.Workbench.Services;
@@ -237,6 +238,10 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
                     }
                 }
             }
+        }
+        if (FeatureTools.IsFeatureOn(OrigamEvent.ApiRequest.FeatureCode))
+        {
+            OrigamEventTools.RecordXsltPageRequest(page, data);
         }
         if (!Analytics.Instance.IsAnalyticsEnabled || (xsltPage.LogTransformation == null))
         {
