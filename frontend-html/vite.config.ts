@@ -28,6 +28,7 @@ const useBasicSsl = !localHttpsCertificate;
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   const nodeEnv = mode === "production" ? "production" : "development";
+  const proxyTarget = process.env.VITE_PROXY_TARGET || 'https://localhost:44357';
 
   return {
 	plugins: [
@@ -127,57 +128,57 @@ export default defineConfig(({ mode }) => {
 	},
 	server: {
     https: localHttpsCertificate ?? {},
-    host: "localhost",
+    host: process.env.VITE_HOST || "localhost",
 		proxy: {
       // OpenIddict endpoints
       '/.well-known': {
-        target: 'https://localhost:44357',
+        target: proxyTarget,
         secure: false,
         changeOrigin: true,
+        xfwd: true,
       },
       '/connect': {
-        target: 'https://localhost:44357',
+        target: proxyTarget,
         secure: false,
         changeOrigin: true,
+        xfwd: true,
       },
       // ASP.NET Identity endpoints
       '/Account': {
-        target: 'https://localhost:44357',
+        target: proxyTarget,
         secure: false,
         changeOrigin: true,
+        xfwd: true,
       },
       '/account': {
-        target: 'https://localhost:44357',
+        target: proxyTarget,
         secure: false,
         changeOrigin: true,
+        xfwd: true,
       },
       // Origam.Server endpoints
 			'/internalApi':{
-				target: "https://localhost:44357",
+				target: proxyTarget,
 				secure: false
 			},
 			'/customAssets':{
-				target: "https://localhost:44357",
+				target: proxyTarget,
 				secure: false
 			},
 			'/chatrooms':{
-				target: "https://localhost:44357",
+				target: proxyTarget,
 				secure: false
 			},
 			'/api':{
-				target: "https://localhost:44357",
+				target: proxyTarget,
 				secure: false
 			},
 			'/assets':{
-				target: "https://localhost:44357",
+				target: proxyTarget,
 				secure: false
 			},
 			'/home':{
-				target: "https://localhost:44357",
-				secure: false
-			},
-			'/locale':{
-				target: "https://localhost:44357",
+				target: proxyTarget,
 				secure: false
 			}
 		}

@@ -1,0 +1,28 @@
+// For format details, see https://aka.ms/devcontainer.json
+{
+  "name": "ORIGAM",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "devcontainer",
+  // frontend/architect-frontend depend on `devcontainer`, not vice versa, so an
+  // editor that starts only the primary service + its deps would skip them —
+  // list the full stack.
+  "runServices": ["database", "devcontainer", "frontend", "architect-frontend"],
+  "workspaceFolder": "/workspaces/origam",
+
+  "forwardPorts": [8081, 8080, 47000],
+  "portsAttributes": {
+    "8081": { "label": "Architect API" },
+    "8080": { "label": "Runtime Server API" },
+    "47000": { "label": "DAP (netcoredbg)" }
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-dotnettools.csharp"
+      ]
+    }
+  },
+
+  "postCreateCommand": "dotnet restore /workspaces/origam/backend/Origam.sln"
+}
