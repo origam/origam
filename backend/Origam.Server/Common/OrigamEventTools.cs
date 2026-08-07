@@ -22,11 +22,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Buffers;
 using System.Collections;
+using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using Origam.DA;
+using Origam.Schema.GuiModel;
 using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Server.Common;
@@ -41,6 +44,9 @@ public static class OrigamEventTools
     private static readonly JsonEncodedText Caption = JsonEncodedText.Encode("caption");
     private static readonly JsonEncodedText NumberOfRows = JsonEncodedText.Encode("numberOfRows");
     private static readonly JsonEncodedText Parameters = JsonEncodedText.Encode("parameters");
+    private static readonly JsonEncodedText ApiUrl = JsonEncodedText.Encode("apiUrl");
+    private static readonly JsonEncodedText Name = JsonEncodedText.Encode("name");
+    private static readonly JsonEncodedText Value = JsonEncodedText.Encode("value");
 
     public static void RecordSignInEvent()
     {
@@ -66,6 +72,95 @@ public static class OrigamEventTools
             eventId: OrigamEvent.ExportToExcel.EventId,
             details: CreateExportToExcelDetails(entityExportInfo, numberOfRows)
         );
+    }
+
+    public static void RecordPageRequest(
+        AbstractPage page,
+        Dictionary<string, object> mappedParameters
+    )
+    {
+        RecordEvent(
+            eventId: OrigamEvent.ApiRequest.EventId,
+            details: CreateNonXsltPageRequestDetails(page, mappedParameters)
+        );
+    }
+
+    public static void RecordXsltPageRequest(
+        AbstractPage page,
+        Dictionary<string, object> mappedParameters,
+        DataSet data
+    )
+    {
+        RecordEvent(
+            eventId: OrigamEvent.ApiRequest.EventId,
+            details: CreatePageRequestDetails(
+                page,
+                mappedParameters,
+                data?.Tables.Cast<DataTable>().Sum(table => table.Rows.Count) ?? 0
+            )
+        );
+    }
+
+    private static string CreateNonXsltPageRequestDetails(
+        AbstractPage page,
+        Dictionary<string, object> mappedParameters
+    )
+    {
+        return BuildJson(w =>
+        {
+            w.WriteStartObject();
+            w.WritePropertyName(ObjectId);
+            w.WriteStringValue(page.Id);
+            w.WritePropertyName(ApiUrl);
+            w.WriteStringValue(page.Url);
+            w.WritePropertyName(Parameters);
+            w.WriteStartArray();
+            foreach (KeyValuePair<string, object> parameter in mappedParameters)
+            {
+                w.WriteStartObject();
+                w.WritePropertyName(Name);
+                w.WriteStringValue(parameter.Key);
+                w.WritePropertyName(Value);
+                w.WriteStringValue(parameter.Value?.ToString() ?? "");
+                w.WriteEndObject();
+            }
+            w.WriteEndArray();
+            w.WriteEndObject();
+        });
+    }
+
+    private static string CreatePageRequestDetails(
+        AbstractPage page,
+        Dictionary<string, object> parameters,
+        int? numberOfRows = null
+    )
+    {
+        return BuildJson(w =>
+        {
+            w.WriteStartObject();
+            w.WritePropertyName(ObjectId);
+            w.WriteStringValue(page.Id);
+            w.WritePropertyName(ApiUrl);
+            w.WriteStringValue(page.Url);
+            if (numberOfRows.HasValue)
+            {
+                w.WritePropertyName(NumberOfRows);
+                w.WriteNumberValue(numberOfRows.Value);
+            }
+            w.WritePropertyName(Parameters);
+            w.WriteStartArray();
+            foreach (KeyValuePair<string, object> parameter in parameters)
+            {
+                w.WriteStartObject();
+                w.WritePropertyName(Name);
+                w.WriteStringValue(parameter.Key);
+                w.WritePropertyName(Value);
+                w.WriteStringValue(parameter.Value?.ToString() ?? "");
+                w.WriteEndObject();
+            }
+            w.WriteEndArray();
+            w.WriteEndObject();
+        });
     }
 
     private static string CreateExportToExcelDetails(
