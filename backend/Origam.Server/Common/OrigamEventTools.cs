@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Buffers;
 using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -44,6 +45,8 @@ public static class OrigamEventTools
     private static readonly JsonEncodedText NumberOfRows = JsonEncodedText.Encode("numberOfRows");
     private static readonly JsonEncodedText Parameters = JsonEncodedText.Encode("parameters");
     private static readonly JsonEncodedText ApiUrl = JsonEncodedText.Encode("apiUrl");
+    private static readonly JsonEncodedText Name = JsonEncodedText.Encode("name");
+    private static readonly JsonEncodedText Value = JsonEncodedText.Encode("value");
 
     public static void RecordSignInEvent()
     {
@@ -71,23 +74,37 @@ public static class OrigamEventTools
         );
     }
 
-    public static void RecordPageRequest(AbstractPage page)
+    public static void RecordPageRequest(
+        AbstractPage page,
+        Dictionary<string, object> mappedParameters
+    )
     {
         RecordEvent(
             eventId: OrigamEvent.ApiRequest.EventId,
-            details: CreateNonXsltPageRequestDetails(page)
+            details: CreateNonXsltPageRequestDetails(page, mappedParameters)
         );
     }
 
-    public static void RecordXsltPageRequest(AbstractPage page, DataSet data)
+    public static void RecordXsltPageRequest(
+        AbstractPage page,
+        Dictionary<string, object> mappedParameters,
+        DataSet data
+    )
     {
         RecordEvent(
             eventId: OrigamEvent.ApiRequest.EventId,
-            details: CreateXsltPageRequestDetails(page, data)
+            details: CreatePageRequestDetails(
+                page,
+                mappedParameters,
+                data?.Tables.Cast<DataTable>().Sum(table => table.Rows.Count) ?? 0
+            )
         );
     }
 
-    private static string CreateNonXsltPageRequestDetails(AbstractPage page)
+    private static string CreateNonXsltPageRequestDetails(
+        AbstractPage page,
+        Dictionary<string, object> mappedParameters
+    )
     {
         return BuildJson(w =>
         {
@@ -96,11 +113,27 @@ public static class OrigamEventTools
             w.WriteStringValue(page.Id);
             w.WritePropertyName(ApiUrl);
             w.WriteStringValue(page.Url);
+            w.WritePropertyName(Parameters);
+            w.WriteStartArray();
+            foreach (KeyValuePair<string, object> parameter in mappedParameters)
+            {
+                w.WriteStartObject();
+                w.WritePropertyName(Name);
+                w.WriteStringValue(parameter.Key);
+                w.WritePropertyName(Value);
+                w.WriteStringValue(parameter.Value?.ToString() ?? "");
+                w.WriteEndObject();
+            }
+            w.WriteEndArray();
             w.WriteEndObject();
         });
     }
 
-    private static string CreateXsltPageRequestDetails(AbstractPage page, DataSet data)
+    private static string CreatePageRequestDetails(
+        AbstractPage page,
+        Dictionary<string, object> parameters,
+        int? numberOfRows = null
+    )
     {
         return BuildJson(w =>
         {
@@ -109,8 +142,23 @@ public static class OrigamEventTools
             w.WriteStringValue(page.Id);
             w.WritePropertyName(ApiUrl);
             w.WriteStringValue(page.Url);
-            w.WritePropertyName(NumberOfRows);
-            w.WriteNumberValue(data?.Tables.Cast<DataTable>().Sum(table => table.Rows.Count) ?? 0);
+            if (numberOfRows.HasValue)
+            {
+                w.WritePropertyName(NumberOfRows);
+                w.WriteNumberValue(numberOfRows.Value);
+            }
+            w.WritePropertyName(Parameters);
+            w.WriteStartArray();
+            foreach (KeyValuePair<string, object> parameter in parameters)
+            {
+                w.WriteStartObject();
+                w.WritePropertyName(Name);
+                w.WriteStringValue(parameter.Key);
+                w.WritePropertyName(Value);
+                w.WriteStringValue(parameter.Value?.ToString() ?? "");
+                w.WriteEndObject();
+            }
+            w.WriteEndArray();
             w.WriteEndObject();
         });
     }
