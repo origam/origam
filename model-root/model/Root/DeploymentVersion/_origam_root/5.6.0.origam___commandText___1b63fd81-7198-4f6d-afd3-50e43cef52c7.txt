@@ -16,6 +16,6 @@ END IF;
 IF EXISTS (select * from "Language" WHERE "TagIETF" = 'de-CH') THEN
 	INSERT INTO "OrigamEventType_l10n" ("Id", "refOrigamEventTypeId", "Name", "refLanguageId")
 	VALUES
-	('afa0e342-62aa-471e-a5a4-e19ecddb13b3', '31667b4e-3d34-47ee-aadd-b1c2034a178b', 'API-Anfrage', (select "Id" from "Language" where "TagIETF" like '%de-CH%'))	('5fcba9cc-0ce5-4051-98fd-1f880000ec0f', '62f161e9-b817-4631-93e3-360551257dc2', 'Export nach Excel', (select "Id" from "Language" where "TagIETF" like '%de-CH%'));
+	('afa0e342-62aa-471e-a5a4-e19ecddb13b3', '31667b4e-3d34-47ee-aadd-b1c2034a178b', 'API-Anfrage', (select "Id" from "Language" where "TagIETF" like '%de-CH%'));
 END IF;
 END $$;
