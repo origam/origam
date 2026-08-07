@@ -71,7 +71,6 @@ public static class OrigamEventTools
         );
     }
 
-    // enforce github validation
     public static void RecordPageRequest(AbstractPage page)
     {
         RecordEvent(
