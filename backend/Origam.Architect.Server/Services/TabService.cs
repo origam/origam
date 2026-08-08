@@ -45,7 +45,7 @@ public class TabService(
     {
         ISchemaItemFactory factory = GetParentItemFactory(parentId);
 
-        Type newItemType = Reflector.GetTypeByName(fullTypeName);
+        Type newItemType = ResolveNewItemType(factory, fullTypeName);
         object result = factory
             .GetType()
             .GetMethod("NewItem")
@@ -81,6 +81,39 @@ public class TabService(
 
         ISchemaItem item = (ISchemaItem)result;
         return tabSchemaItems.GetOrAdd(TabId.Default(item.Id), id => new TabData(item, id));
+    }
+
+    private static Type ResolveNewItemType(ISchemaItemFactory factory, string typeNameOrCaption)
+    {
+        Type[] newItemTypes = factory.NewItemTypes ?? [];
+        Type matchedType = newItemTypes.FirstOrDefault(type =>
+            type.FullName == typeNameOrCaption
+            || string.Equals(
+                type.SchemaItemDescription()?.Name,
+                typeNameOrCaption,
+                StringComparison.OrdinalIgnoreCase
+            )
+        );
+        if (matchedType != null)
+        {
+            return matchedType;
+        }
+
+        if (typeNameOrCaption != null && typeNameOrCaption.Contains('.'))
+        {
+            return Reflector.GetTypeByName(typeNameOrCaption);
+        }
+
+        throw new Exception(
+            string.Format(
+                Strings.NewItemTypeNotFound,
+                typeNameOrCaption,
+                string.Join(
+                    separator: ", ",
+                    newItemTypes.Select(type => type.SchemaItemDescription()?.Name ?? type.Name)
+                )
+            )
+        );
     }
 
     private ISchemaItemFactory GetParentItemFactory(string parentId)

@@ -240,6 +240,15 @@ namespace Origam.Architect.Server {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos; is not an item type that can be created here. Available types: {1}.
+        /// </summary>
+        internal static string NewItemTypeNotFound {
+            get {
+                return ResourceManager.GetString("NewItemTypeNotFound", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to List filter not found on entity..
         /// </summary>
         internal static string Wizard_ListFilterNotFound {

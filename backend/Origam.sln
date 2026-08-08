@@ -232,7 +232,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "support", "support", "{208E
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AI", "AI", "{A4F1E0B2-36FF-4D3D-A8F1-69D93E14D512}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.AI.Function.Calling", "Origam.AI.Function.Calling\Origam.AI.Function.Calling\Origam.AI.Function.Calling.csproj", "{26B30AA3-C93A-4C76-8843-1B7D91A9CFD5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.AI.Agent", "Origam.AI.Agent\Origam.AI.Agent.csproj", "{26B30AA3-C93A-4C76-8843-1B7D91A9CFD5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

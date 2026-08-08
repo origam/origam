@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import '@/App.css';
 import '@/colors.scss';
 import { RootStoreContext, T } from '@/main';
-import { AiChatPanel } from '@/ai/AiChatPanel';
+import { AiAgentPanel } from '@/ai/AiAgentPanel';
 import { EditorTabView } from '@components/editorTabView/EditorTabView';
 import ModelTree from '@components/modelTree/ModelTree';
 import { Packages } from '@components/packages/Packages';
@@ -92,7 +92,7 @@ const App = observer(() => {
         onSideBarWidthChange={width => rootStore.uiState.setSidebarWidth(width)}
         minSideBarWidth={SIDEBAR_MIN_WIDTH}
         maxSideBarWidth={SIDEBAR_MAX_WIDTH}
-        aiPanel={<AiChatPanel />}
+        aiPanel={<AiAgentPanel />}
         aiPanelVisible={rootStore.uiState.aiPanelVisible}
         aiPanelWidth={rootStore.uiState.aiPanelWidth}
         onAiPanelWidthChange={width => rootStore.uiState.setAiPanelWidth(width)}

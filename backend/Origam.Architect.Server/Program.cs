@@ -60,6 +60,7 @@ public class Program
         builder.Services.AddTransient<XsltService>();
         builder.Services.AddSingleton<SearchService>();
         builder.Services.AddSingleton<PropertyEditorService>();
+        builder.Services.AddSingleton<ItemTypeCatalogService>();
         builder.Services.AddSingleton<DesignerEditorService>();
         builder.Services.AddSingleton<DeploymentVersionCurrentService>();
         builder.Services.AddSingleton<DeploymentScriptRunnerService>();

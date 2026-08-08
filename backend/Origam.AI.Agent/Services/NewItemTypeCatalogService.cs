@@ -1,0 +1,276 @@
+#region license
+/*
+Copyright 2005 - 2026 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+#endregion
+
+using System.Text;
+using System.Text.Json;
+
+namespace Origam.AI.Agent.Services;
+
+public record ItemTypeProperty(string Name, string Type, IReadOnlyList<string> Values);
+
+public record ItemType(
+    string Caption,
+    string TypeName,
+    string? FolderName,
+    IReadOnlyList<string> Children,
+    IReadOnlyList<ItemTypeProperty> Properties
+);
+
+public record ItemTypeProvider(string Name, IReadOnlyList<string> Children);
+
+public record ItemTypeCatalog(
+    IReadOnlyList<ItemTypeProvider> Providers,
+    IReadOnlyList<ItemType> Types
+);
+
+public record ItemTypePromptSections(string Types, string Properties)
+{
+    public static readonly ItemTypePromptSections Empty = new(
+        Types: string.Empty,
+        Properties: string.Empty
+    );
+}
+
+public class NewItemTypeCatalogService
+{
+    private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
+
+    private readonly IHttpClientFactory httpClientFactory;
+    private readonly string architectBaseUrl;
+    private readonly SemaphoreSlim buildLock = new(initialCount: 1, maxCount: 1);
+
+    private ItemTypeCatalog? cachedCatalog;
+    private string? lastError;
+
+    public NewItemTypeCatalogService(
+        IHttpClientFactory httpClientFactory,
+        IConfiguration configuration
+    )
+    {
+        this.httpClientFactory = httpClientFactory;
+        architectBaseUrl =
+            configuration.GetSection("Architect")["BaseUrl"] ?? "https://localhost:7099";
+    }
+
+    public string? LastError => lastError;
+
+    public async Task<ItemTypePromptSections> GetPromptSectionsAsync(
+        ChatFocus? focus,
+        CancellationToken cancellationToken
+    )
+    {
+        ItemTypeCatalog? catalog = await GetCatalogAsync(cancellationToken);
+        return catalog is null
+            ? ItemTypePromptSections.Empty
+            : new ItemTypePromptSections(
+                Types: RenderTypes(catalog),
+                Properties: RenderProperties(catalog, focus)
+            );
+    }
+
+    private async Task<ItemTypeCatalog?> GetCatalogAsync(CancellationToken cancellationToken)
+    {
+        if (cachedCatalog is not null)
+        {
+            return cachedCatalog;
+        }
+
+        await buildLock.WaitAsync(cancellationToken);
+        try
+        {
+            cachedCatalog ??= await FetchCatalogAsync(cancellationToken);
+            return cachedCatalog;
+        }
+        finally
+        {
+            buildLock.Release();
+        }
+    }
+
+    private async Task<ItemTypeCatalog?> FetchCatalogAsync(CancellationToken cancellationToken)
+    {
+        try
+        {
+            var httpClient = httpClientFactory.CreateClient("architect");
+            var response = await httpClient.GetAsync(
+                $"{architectBaseUrl}/ItemTypeCatalog/Get",
+                cancellationToken
+            );
+            if (!response.IsSuccessStatusCode)
+            {
+                lastError = $"Architect returned {(int)response.StatusCode} for ItemTypeCatalog.";
+                return null;
+            }
+
+            var catalog = await response.Content.ReadFromJsonAsync<ItemTypeCatalog>(
+                JsonOptions,
+                cancellationToken
+            );
+            if (catalog is null || catalog.Types.Count == 0)
+            {
+                lastError = "Architect returned an empty item type catalog.";
+                return null;
+            }
+
+            lastError = null;
+            return catalog;
+        }
+        catch (Exception exception)
+        {
+            lastError = $"{exception.GetType().Name}: {exception.Message}";
+            return null;
+        }
+    }
+
+    private static string RenderTypes(ItemTypeCatalog catalog)
+    {
+        var builder = new StringBuilder();
+        builder.AppendLine("## ITEM TYPES YOU CAN CREATE");
+        builder.AppendLine(
+            "The complete list of what can be created under what. Pass the caption from this "
+                + "list to CreateNode as newTypeName (for example 'Database Field'); the server "
+                + "resolves it against the parent you named, so you do NOT need a GetMenuItems "
+                + "call first. 'Under X' is a top-level model folder, 'Inside X' is an item of "
+                + "that type. The Architect tree also shows grouping folders (Fields, Filters, "
+                + "Relationships and the like) - you do not need them, create directly under the "
+                + "owning item and the new item lands in the right folder by itself. If a type is "
+                + "not listed for the parent you have, it cannot be created there."
+        );
+
+        foreach (var provider in catalog.Providers.Where(provider => provider.Children.Count > 0))
+        {
+            builder.AppendLine(
+                $"Under {provider.Name}: {string.Join(separator: ", ", provider.Children)}"
+            );
+        }
+
+        foreach (var type in catalog.Types.Where(type => type.Children.Count > 0))
+        {
+            builder.AppendLine(
+                $"Inside {type.Caption}: {string.Join(separator: ", ", type.Children)}"
+            );
+        }
+
+        return builder.ToString();
+    }
+
+    private static string RenderProperties(ItemTypeCatalog catalog, ChatFocus? focus)
+    {
+        var typesInScope = GetTypesInScope(catalog, focus);
+        if (typesInScope.Count == 0)
+        {
+            return string.Empty;
+        }
+
+        var builder = new StringBuilder();
+        builder.AppendLine("## PROPERTIES OF THE TYPES AROUND WHAT THE USER HAS OPEN");
+        builder.AppendLine(
+            "The properties you may set on these types, as name(kind) or name[allowed|values] "
+                + "for enums. Pass them to CreateNode as changes: [{name, value}] and to the "
+                + "update tool the same way; enums take the value NAME, not a number, and "
+                + "(reference) properties take the id of an existing model item - look it up, "
+                + "never invent it. Properties not listed here are not settable. For a type that "
+                + "is not listed, create the item with Name only and read the 'props' the create "
+                + "response returns - they carry the same information for that type."
+        );
+
+        foreach (var type in typesInScope)
+        {
+            builder.AppendLine(
+                $"{type.Caption}: {string.Join(separator: ", ", type.Properties.Select(Describe))}"
+            );
+        }
+
+        return builder.ToString();
+    }
+
+    private static IReadOnlyList<ItemType> GetTypesInScope(
+        ItemTypeCatalog catalog,
+        ChatFocus? focus
+    )
+    {
+        var focusedCaptions = GetFocusedCaptions(focus);
+        if (focusedCaptions.Count == 0)
+        {
+            return [];
+        }
+
+        var typesByCaption = catalog
+            .Types.GroupBy(type => type.Caption, StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(
+                group => group.Key,
+                group => group.First(),
+                StringComparer.OrdinalIgnoreCase
+            );
+
+        var captionsInScope = new HashSet<string>(
+            focusedCaptions,
+            StringComparer.OrdinalIgnoreCase
+        );
+        foreach (string caption in focusedCaptions)
+        {
+            if (typesByCaption.TryGetValue(caption, out ItemType? focusedType))
+            {
+                captionsInScope.UnionWith(focusedType.Children);
+            }
+        }
+
+        return captionsInScope
+            .Select(caption =>
+                typesByCaption.TryGetValue(caption, out ItemType? type) ? type : null
+            )
+            .Where(type => type is not null && type.Properties.Count > 0)
+            .Select(type => type!)
+            .OrderBy(type => type.Caption, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+    }
+
+    private static IReadOnlyList<string> GetFocusedCaptions(ChatFocus? focus)
+    {
+        if (focus is null)
+        {
+            return [];
+        }
+
+        var captions = new List<string?>
+        {
+            focus.ActiveNode?.ItemTypeName,
+            focus.ActiveEditor?.ItemTypeName,
+        };
+        if (focus.OpenTabs is not null)
+        {
+            captions.AddRange(focus.OpenTabs.Select(tab => tab.ItemTypeName));
+        }
+
+        return captions
+            .Where(caption => !string.IsNullOrWhiteSpace(caption))
+            .Select(caption => caption!)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+    }
+
+    private static string Describe(ItemTypeProperty property)
+    {
+        return property.Values.Count > 0
+            ? $"{property.Name}[{string.Join(separator: "|", property.Values)}]"
+            : $"{property.Name}({property.Type})";
+    }
+}

@@ -103,7 +103,7 @@ export default defineConfig({
         target: 'https://localhost:7099',
         secure: false,
       },
-      '/aichat': {
+      '/agent': {
         target: 'http://localhost:5210',
         secure: false,
       },

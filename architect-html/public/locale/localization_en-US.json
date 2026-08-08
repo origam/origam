@@ -230,5 +230,6 @@
   "ai_chat_tools_functions": "{0} functions",
   "ai_chat_tools_caution": "Contains destructive operations (delete, deploy). Off by default.",
   "ai_chat_tools_caution_badge": "caution",
+  "ai_chat_tool_limit_reached": "I reached the tool-call limit for this turn, so I stopped before writing a summary. The steps shown above were executed - tell me to continue and I will finish and summarize what was done.",
   "app_ai": "AI"
 }

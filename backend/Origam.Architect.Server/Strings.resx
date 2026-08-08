@@ -102,4 +102,7 @@
     <data name="Wizard_ListFilterNotFound" xml:space="preserve">
         <value>List filter not found on entity.</value>
     </data>
+    <data name="NewItemTypeNotFound" xml:space="preserve">
+        <value>'{0}' is not an item type that can be created here. Available types: {1}</value>
+    </data>
 </root>
