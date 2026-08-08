@@ -49,6 +49,19 @@ public class WizardController(WizardService wizard) : ControllerBase
     public IActionResult CreateWorkQueueClass([FromBody] CreateWorkQueueModel input) =>
         Ok(wizard.CreateWorkQueueClass(input));
 
+    [HttpGet("filters/wizard-data")]
+    [EndpointDescription(
+        "The read-only step before creating a filter with POST /wizards/filters. Give it an "
+            + "entity id and it returns that entity's name, its columns (id, name, isPrimaryKey, "
+            + "dataType), the filters the entity already has, and the filter types that may be "
+            + "requested. Pick the column and the filter type from here and pass the column's id "
+            + "as columnId to POST /wizards/filters. This is the wizard-data endpoint for "
+            + "filters; the screen and lookup ones describe different wizards and must not be "
+            + "used to look up a column for a filter."
+    )]
+    public IActionResult GetFilterWizardData([FromQuery] Guid entityId) =>
+        Ok(wizard.GetFilterWizardData(entityId));
+
     [HttpGet("screens/wizard-data")]
     public IActionResult GetScreenWizardData([FromQuery] Guid entityId) =>
         Ok(wizard.GetScreenWizardData(entityId));

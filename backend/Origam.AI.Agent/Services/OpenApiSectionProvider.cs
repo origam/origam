@@ -20,7 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.Text.Json;
-using System.Text.Json.Nodes;
 using Microsoft.Extensions.AI;
 using Origam.AI.Agent.Services.OpenApi;
 
@@ -66,26 +65,11 @@ public class OpenApiSectionProvider
         "delete",
     };
 
-    private static readonly Dictionary<string, string> OperationDescriptionsByPath = new(
+    private static readonly HashSet<string> PathsNeverExposedAsTools = new(
         StringComparer.OrdinalIgnoreCase
     )
     {
-        ["/Tab/CreateNode"] =
-            "Create a new model item under a parent node. This is how you create database "
-            + "fields, virtual fields, function-call fields, lookup fields, relationships, "
-            + "parameters, filters, indexes, and even new entities. Set nodeId to the parent "
-            + "item's id and newTypeName to the item type's caption, for example 'Database "
-            + "Field' - ITEM TYPES YOU CAN CREATE lists every caption that is valid under every "
-            + "parent, so you do not need a GetMenuItems call first. Set the item's properties "
-            + "in the same call through changes: [{name, value}], and persist: true. The "
-            + "response returns the new item's editable properties and any validation errors "
-            + "(for example 'Name cannot be empty'). If newTypeName does not match, the error "
-            + "lists the captions that are valid for that parent - pick one of those.",
-        ["/Model/GetMenuItems"] =
-            "List the model-item types that can be created as children of the given node (the "
-            + "'New' context menu). Each entry has a caption (for example 'Database Field') and a "
-            + "typeName. Either one works as the newTypeName argument of CreateNode. You only "
-            + "need this tool for a parent that ITEM TYPES YOU CAN CREATE does not cover.",
+        "/Model/GetEntityIndex",
     };
 
     private readonly IHttpClientFactory httpClientFactory;
@@ -198,8 +182,7 @@ public class OpenApiSectionProvider
                 relativeUri: "swagger/v1/swagger.json"
             );
 
-            var downloadedBytes = await httpClient.GetByteArrayAsync(openApiUri, cancellationToken);
-            swaggerBytes = PatchDescriptions(downloadedBytes);
+            swaggerBytes = await httpClient.GetByteArrayAsync(openApiUri, cancellationToken);
             sections = ParseSections(swaggerBytes);
             LastError = null;
             return true;
@@ -215,45 +198,6 @@ public class OpenApiSectionProvider
         }
     }
 
-    private static byte[] PatchDescriptions(byte[] bytes)
-    {
-        JsonNode? root;
-        try
-        {
-            root = JsonNode.Parse(bytes);
-        }
-        catch (JsonException)
-        {
-            return bytes;
-        }
-
-        if (root?["paths"] is not JsonObject paths)
-        {
-            return bytes;
-        }
-
-        foreach (var entry in OperationDescriptionsByPath)
-        {
-            if (paths[entry.Key] is not JsonObject pathItem)
-            {
-                continue;
-            }
-
-            foreach (var methodEntry in pathItem)
-            {
-                if (
-                    HttpMethods.Contains(methodEntry.Key)
-                    && methodEntry.Value is JsonObject operation
-                )
-                {
-                    operation["description"] = entry.Value;
-                }
-            }
-        }
-
-        return JsonSerializer.SerializeToUtf8Bytes(root);
-    }
-
     private static Dictionary<string, ApiSection> ParseSections(byte[] bytes)
     {
         using var document = JsonDocument.Parse(bytes);
@@ -266,6 +210,11 @@ public class OpenApiSectionProvider
             foreach (var pathEntry in paths.EnumerateObject())
             {
                 var path = pathEntry.Name;
+                if (PathsNeverExposedAsTools.Contains(path))
+                {
+                    continue;
+                }
+
                 foreach (var methodEntry in pathEntry.Value.EnumerateObject())
                 {
                     var method = methodEntry.Name;

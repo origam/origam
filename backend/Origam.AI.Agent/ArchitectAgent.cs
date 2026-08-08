@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.Runtime.CompilerServices;
+using System.Runtime.ExceptionServices;
 using System.Text;
 using AGUI.Abstractions;
 using AGUI.Server;
@@ -143,34 +144,58 @@ public sealed class ArchitectAgent : DelegatingAIAgent
 
         var usage = new UsageDetails();
         var replyText = new StringBuilder();
+        Exception? streamFailure = null;
 
-        await foreach (
-            var update in InnerAgent
-                .RunStreamingAsync(conversation, session, runOptions, cancellationToken)
-                .ConfigureAwait(false)
-        )
+        var updates = InnerAgent
+            .RunStreamingAsync(conversation, session, runOptions, cancellationToken)
+            .GetAsyncEnumerator(cancellationToken);
+        try
         {
-            foreach (var content in update.Contents)
+            while (true)
             {
-                if (content is UsageContent usageContent)
+                AgentResponseUpdate update;
+                try
                 {
-                    usage.Add(usageContent.Details);
+                    if (!await updates.MoveNextAsync().ConfigureAwait(false))
+                    {
+                        break;
+                    }
+                    update = updates.Current;
                 }
-                else if (content is TextContent textContent)
+                catch (Exception exception)
                 {
-                    replyText.Append(textContent.Text);
+                    streamFailure = exception;
+                    break;
                 }
-            }
 
-            yield return update;
+                foreach (var content in update.Contents)
+                {
+                    if (content is UsageContent usageContent)
+                    {
+                        usage.Add(usageContent.Details);
+                    }
+                    else if (content is TextContent textContent)
+                    {
+                        replyText.Append(textContent.Text);
+                    }
+                }
+
+                yield return update;
+            }
+        }
+        finally
+        {
+            await updates.DisposeAsync().ConfigureAwait(false);
         }
 
-        var updatedSummary = await SummarizeAsync(
-            incomingMessages,
-            replyText.ToString(),
-            settings,
-            cancellationToken
-        );
+        var updatedSummary = streamFailure is null
+            ? await SummarizeAsync(
+                incomingMessages,
+                replyText.ToString(),
+                settings,
+                cancellationToken
+            )
+            : null;
 
         yield return AguiEvents.Create(
             AguiEvents.RunResultName,
@@ -182,6 +207,11 @@ public sealed class ArchitectAgent : DelegatingAIAgent
                 TokenUsageReader.Read(usage)
             )
         );
+
+        if (streamFailure is not null)
+        {
+            ExceptionDispatchInfo.Capture(streamFailure).Throw();
+        }
     }
 
     private async Task<IList<AITool>> BuildToolsAsync(

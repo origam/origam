@@ -43,6 +43,17 @@ public class TabController(
 ) : ControllerBase
 {
     [HttpPost("CreateNode")]
+    [EndpointDescription(
+        "Create a new model item under a parent node. This is how database fields, virtual "
+            + "fields, function-call fields, lookup fields, relationships, parameters, filters, "
+            + "indexes and whole entities are created. nodeId is the parent item's id, "
+            + "newTypeName is the item type's caption (for example 'Database Field') or its full "
+            + "type name, changes carries the properties to set immediately as [{name, value}], "
+            + "and persist writes the item to disk in the same call. The response returns the new "
+            + "item's id, whether it was saved, its editable properties and any validation errors. "
+            + "When newTypeName does not match, the error lists the captions that are valid under "
+            + "that parent."
+    )]
     public OpenTabData CreateNode([Required] [FromBody] NewItemModel input)
     {
         TabData tab = tabService.OpenTabWithNewItem(input.NodeId, input.NewTypeName);

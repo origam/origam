@@ -25,7 +25,7 @@ namespace Origam.AI.Agent;
 
 public class RateLimitRetryHandler : DelegatingHandler
 {
-    private const int MaxAttempts = 5;
+    private const int MaxAttempts = 9;
     private static readonly TimeSpan MaxDelay = TimeSpan.FromSeconds(60);
     private static readonly TimeSpan FallbackDelay = TimeSpan.FromSeconds(1);
 

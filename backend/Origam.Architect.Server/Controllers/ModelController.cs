@@ -188,6 +188,11 @@ public class ModelController(
     }
 
     [HttpGet("GetMenuItems")]
+    [EndpointDescription(
+        "List the model item types that can be created as children of the given node (the 'New' "
+            + "context menu). Each entry has a caption, for example 'Database Field', and a "
+            + "typeName; either one can be passed as newTypeName to POST /Tab/CreateNode."
+    )]
     public IEnumerable<MenuItemInfo> GetMenuItems(
         [FromQuery] string id,
         [FromQuery] bool isNonPersistentItem,
