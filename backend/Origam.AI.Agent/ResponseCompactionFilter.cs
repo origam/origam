@@ -127,6 +127,9 @@ public class ResponseCompactionFilter : IToolInvocationFilter
             ["name"] = GetString(node, propertyName: "nodeText"),
             ["type"] = GetString(node, propertyName: "itemTypeName"),
             ["saved"] = GetBoolean(root, propertyName: "isPersisted"),
+            ["parent"] = GetString(root, propertyName: "parentName"),
+            ["parentId"] = GetString(root, propertyName: "parentOrigamId"),
+            ["primaryKeyFieldId"] = GetString(root, propertyName: "primaryKeyFieldId"),
             ["props"] = values,
             ["errors"] = errors,
         };

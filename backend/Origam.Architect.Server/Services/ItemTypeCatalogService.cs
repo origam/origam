@@ -68,6 +68,7 @@ public class ItemTypeCatalogService(SchemaService schemaService)
             Type[] newItemTypes = GetNewItemTypes(provider);
             providers.Add(
                 new ItemTypeProviderInfo(
+                    provider.GetType().FullName,
                     provider.NodeText,
                     newItemTypes.Select(GetCaption).ToArray()
                 )

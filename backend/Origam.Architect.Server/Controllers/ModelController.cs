@@ -154,6 +154,17 @@ public class ModelController(
     }
 
     [HttpPost("DeleteSchemaItem")]
+    [EndpointDescription(
+        "Permanently delete a model item - a field, an entity, a filter, a relationship, a "
+            + "screen and so on - from the model and from disk. schemaItemId is the id of the "
+            + "item ITSELF: to delete a field pass that field's id, not its parent entity's id. "
+            + "The item must already be saved. There is no undo, and anything still referencing "
+            + "the deleted item stops working. On success returns {deleted, id, name} - treat "
+            + "that as proof the item is gone and do not call this again for the same id. A 404 "
+            + "means no saved item has that id, which usually means an earlier delete of it "
+            + "already succeeded; never retry the same id after a 404. A 400 carries the reason "
+            + "the model refused the delete."
+    )]
     public IActionResult DeleteSchemaItem([Required] [FromBody] DeleteModel input)
     {
         ISchemaItem instance = null;
@@ -168,9 +179,14 @@ public class ModelController(
 
         if (instance == null)
         {
-            return NotFound();
+            return NotFound(
+                $"No saved model item has id {input.SchemaItemId}. It was either never saved or "
+                    + "it has already been deleted - a previous delete of this id may have "
+                    + "succeeded. Do not repeat this call with the same id."
+            );
         }
 
+        string deletedName = instance.Name;
         try
         {
             persistenceProvider.BeginTransaction();
@@ -184,7 +200,7 @@ public class ModelController(
 
         persistenceProvider.EndTransaction();
         gitNodeStatusService.ClearCache();
-        return Ok();
+        return Ok(new DeleteResult(Deleted: true, Id: input.SchemaItemId, Name: deletedName));
     }
 
     [HttpGet("GetMenuItems")]
@@ -444,7 +460,7 @@ public class ModelController(
             var primaryKey = entity
                 .EntityColumns.Where(column => column.IsPrimaryKey && column.Name != null)
                 .OrderBy(column => column.Name)
-                .Select(column => column.Name)
+                .Select(column => new RelatedItem(column.Id.ToString("D"), column.Name))
                 .ToList();
 
             cards.Add(

@@ -91,12 +91,19 @@ public class PropertyParser(IPersistenceService persistenceService)
 
         if (property.PropertyType.IsEnum)
         {
-            if (Enum.TryParse(property.PropertyType, value, out var enumValue))
+            if (Enum.TryParse(property.PropertyType, value, ignoreCase: true, out var enumValue))
             {
                 return enumValue;
             }
 
-            throw MakeCouldNotParseException(property);
+            throw new Exception(
+                string.Format(
+                    Strings.PropertyEnumValueNotValid,
+                    value,
+                    property.Name,
+                    string.Join(separator: ", ", Enum.GetNames(property.PropertyType))
+                )
+            );
         }
 
         if (property.PropertyType == typeof(Guid))
@@ -106,7 +113,7 @@ public class PropertyParser(IPersistenceService persistenceService)
 
         if (property.PropertyType.IsAssignableTo(typeof(IPersistent)))
         {
-            Guid id = ParseGuid(value, property);
+            Guid id = ParseReferenceId(value, property);
             return persistenceService.SchemaProvider.RetrieveInstance<IPersistent>(id);
         }
 
@@ -117,6 +124,23 @@ public class PropertyParser(IPersistenceService persistenceService)
 
         throw new Exception(
             $"Type {property.PropertyType.Name} of property {property.Name} cannot be parsed."
+        );
+    }
+
+    private static Guid ParseReferenceId(string value, PropertyInfo property)
+    {
+        if (Guid.TryParse(value, out var guidValue))
+        {
+            return guidValue;
+        }
+
+        throw new Exception(
+            string.Format(
+                Strings.PropertyReferenceValueNotValid,
+                value,
+                property.Name,
+                property.PropertyType.Name
+            )
         );
     }
 

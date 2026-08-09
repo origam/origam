@@ -96,6 +96,15 @@ public class AliasArgumentResolver : IToolInvocationFilter
                 }
                 return items;
             }
+            case JsonValueKind.Object:
+            {
+                var properties = new Dictionary<string, object?>(StringComparer.Ordinal);
+                foreach (var property in element.EnumerateObject())
+                {
+                    properties[property.Name] = ResolveJsonElement(property.Value);
+                }
+                return properties;
+            }
             default:
                 return element;
         }
@@ -108,13 +117,6 @@ public class AliasArgumentResolver : IToolInvocationFilter
             return text;
         }
 
-        try
-        {
-            return aliasMappingService.ResolveUuid(text);
-        }
-        catch
-        {
-            return text;
-        }
+        return aliasMappingService.ResolveUuid(text);
     }
 }

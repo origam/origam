@@ -83,6 +83,10 @@ export default defineConfig({
         target: 'https://localhost:7099',
         secure: false,
       },
+      '/ChatHistory': {
+        target: 'https://localhost:7099',
+        secure: false,
+      },
       '/Icons': {
         target: 'http://localhost:5003',
         secure: false,
@@ -104,7 +108,7 @@ export default defineConfig({
         secure: false,
       },
       '/agent': {
-        target: 'http://localhost:5210',
+        target: 'https://localhost:7099',
         secure: false,
       },
     },

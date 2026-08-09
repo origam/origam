@@ -25,6 +25,7 @@ using Origam.Architect.Server.Models;
 using Origam.Architect.Server.ReturnModels;
 using Origam.Architect.Server.Services;
 using Origam.Schema;
+using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
 using Origam.Workbench.Services;
 
@@ -50,43 +51,92 @@ public class TabController(
             + "newTypeName is the item type's caption (for example 'Database Field') or its full "
             + "type name, changes carries the properties to set immediately as [{name, value}], "
             + "and persist writes the item to disk in the same call. The response returns the new "
-            + "item's id, whether it was saved, its editable properties and any validation errors. "
-            + "When newTypeName does not match, the error lists the captions that are valid under "
-            + "that parent."
+            + "item's id, whether it was saved, its editable properties and any validation errors, "
+            + "plus parentName and parentOrigamId telling you where the item actually landed - "
+            + "check those instead of re-reading the tree, and report that location to the user "
+            + "rather than saying you could not verify it. For a new entity the response also "
+            + "carries primaryKeyFieldId, the id of that entity's primary key field - pass it as "
+            + "ForeignKeyField when you create a foreign key pointing at this entity, instead of "
+            + "exploring the entity to find it. When newTypeName does not match, the error lists "
+            + "the captions that are valid under that parent."
     )]
     public OpenTabData CreateNode([Required] [FromBody] NewItemModel input)
     {
         TabData tab = tabService.OpenTabWithNewItem(input.NodeId, input.NewTypeName);
 
-        if (input.Changes is { Count: > 0 })
+        try
         {
-            tabService.ChangesToTabData(
-                new ChangesModel { SchemaItemId = tab.Item.Id, Changes = input.Changes }
-            );
+            if (input.Changes is { Count: > 0 })
+            {
+                tabService.ChangesToTabData(
+                    new ChangesModel { SchemaItemId = tab.Item.Id, Changes = input.Changes }
+                );
+            }
+
+            if (input.Persist)
+            {
+                if (HasRuleErrors(tab.Item))
+                {
+                    return DiscardInvalidItem(tab);
+                }
+
+                if (CanPersist(tab.Item))
+                {
+                    PersistItem(tab);
+                }
+            }
         }
-
-        if (input.Persist)
+        catch
         {
-            if (HasRuleErrors(tab.Item))
+            if (!tab.Item.IsPersisted)
             {
-                return DiscardInvalidItem(tab);
+                tabService.CloseTab(tab.Id);
             }
 
-            if (CanPersist(tab.Item))
-            {
-                PersistItem(tab);
-            }
+            throw;
         }
 
         TreeNode treeNode = treeNodeFactory.Create(tab.Item);
+        (string parentName, string parentOrigamId) = DescribeParent(tab.Item);
         return new OpenTabData(
             tabId: tab.Id,
             node: treeNode,
             data: GetData(treeNode, tab.Item),
             isPersisted: tab.Item.IsPersisted,
             parentNodeId: null,
-            isDirty: !tab.Item.IsPersisted
+            isDirty: !tab.Item.IsPersisted,
+            parentName: parentName,
+            parentOrigamId: parentOrigamId,
+            primaryKeyFieldId: DescribePrimaryKeyField(tab.Item)
         );
+    }
+
+    private static string DescribePrimaryKeyField(ISchemaItem item)
+    {
+        if (item is not IDataEntity entity)
+        {
+            return null;
+        }
+        return entity
+            .EntityColumns.FirstOrDefault(column =>
+                column.IsPrimaryKey && !column.ExcludeFromAllFields && column.Name != null
+            )
+            ?.Id.ToString("D");
+    }
+
+    private static (string Name, string OrigamId) DescribeParent(ISchemaItem item)
+    {
+        if (item.Group != null)
+        {
+            return (item.Group.NodeText, item.Group.Id.ToString());
+        }
+        if (item.ParentItem != null)
+        {
+            return (item.ParentItem.NodeText, item.ParentItem.Id.ToString());
+        }
+        return item.RootProvider == null
+            ? (null, null)
+            : (item.RootProvider.NodeText, item.RootProvider.GetType().FullName);
     }
 
     private OpenTabData DiscardInvalidItem(TabData tab)

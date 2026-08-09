@@ -31,6 +31,6 @@ public record ItemTypeInfo(
     ItemTypePropertyInfo[] Properties
 );
 
-public record ItemTypeProviderInfo(string Name, string[] Children);
+public record ItemTypeProviderInfo(string Id, string Name, string[] Children);
 
 public record ItemTypeCatalog(ItemTypeProviderInfo[] Providers, ItemTypeInfo[] Types);

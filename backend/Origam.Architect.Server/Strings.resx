@@ -102,7 +102,25 @@
     <data name="Wizard_ListFilterNotFound" xml:space="preserve">
         <value>List filter not found on entity.</value>
     </data>
+    <data name="ChatHistoryLocationUnknown" xml:space="preserve">
+        <value>Chat history cannot be stored because the model location is not configured.</value>
+    </data>
+    <data name="ChatImageInvalid" xml:space="preserve">
+        <value>The attached image could not be read.</value>
+    </data>
+    <data name="ChatImageTooLarge" xml:space="preserve">
+        <value>The attached image is larger than the 10 MB limit.</value>
+    </data>
+    <data name="ChatImageTypeNotSupported" xml:space="preserve">
+        <value>Only PNG, JPEG, GIF and WebP images can be attached.</value>
+    </data>
     <data name="NewItemTypeNotFound" xml:space="preserve">
         <value>'{0}' is not an item type that can be created here. Available types: {1}</value>
+    </data>
+    <data name="PropertyEnumValueNotValid" xml:space="preserve">
+        <value>'{0}' is not a valid value for property {1}. Allowed values: {2}</value>
+    </data>
+    <data name="PropertyReferenceValueNotValid" xml:space="preserve">
+        <value>'{0}' is not a valid value for property {1}. This property is a reference and takes the id (GUID) of an existing {2}, not its name. Look the item up and pass the id from the response.</value>
     </data>
 </root>

@@ -76,8 +76,10 @@ public class AliasMappingService
         }
 
         throw new InvalidOperationException(
-            $"Alias '{alias}' is not known. It may reference a schema element that no longer exists. "
-                + "Call SearchSchemaAsync or fetch the model index again to get valid aliases."
+            $"There is no item with id '{alias}'. An id can only be copied from MODEL INDEX, FOCUS "
+                + "or a tool response in this conversation - it can never be guessed, reconstructed "
+                + "or built from a name. Look the item up (ExploreNodeAsync on its parent, or "
+                + "SearchSchemaAsync) and use the id that response gives you."
         );
     }
 

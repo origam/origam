@@ -22,6 +22,7 @@ import {
   ApiSection,
   AttachedImage,
   ChatFocus,
+  ChatImage,
   ChatMessage,
   ChatThread,
   FocusItem,
@@ -32,8 +33,17 @@ import {
   parseRunResult,
   RUN_RESULT_EVENT_NAME,
 } from '@/ai/agui/ArchitectAgentClient';
+import {
+  blobToDataUrl,
+  deleteChatThread,
+  fetchChatImageAsDataUrl,
+  getChatThreads,
+  saveChatImage,
+  saveChatThread,
+} from '@/ai/ChatHistoryApi';
 import { T } from '@/main';
 import { AgentSubscriber, HttpAgent } from '@ag-ui/client';
+import { HttpError } from '@api/httpClient';
 import { TreeNode } from '@components/modelTree/TreeNode';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { RootStore } from '@stores/RootStore';
@@ -51,6 +61,9 @@ const SAFE_DEFAULT_SECTIONS = [
   'SectionEditor',
 ];
 const MAX_VISIBLE_NODES = 40;
+const HISTORY_RETRY_DELAYS = [1000, 2000, 4000, 8000];
+const MAX_IMAGE_BYTES = 10 * 1024 * 1024;
+const SUPPORTED_IMAGE_MIME_TYPES = ['image/png', 'image/jpeg', 'image/gif', 'image/webp'];
 const GUID_PATTERN =
   /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
 
@@ -66,13 +79,13 @@ export class AiAgentState {
   @observable accessor enabledSections: string[] = [];
 
   private runningAgent: HttpAgent | null = null;
+  private hasLoadedHistory: boolean = false;
   private isAborting: boolean = false;
   private streamedMessageIds = new Map<string, string>();
+  private pendingThreadSave: Promise<void> = Promise.resolve();
 
   constructor(private rootStore: RootStore) {
-    const storedThreads = loadStoredThreads();
-    this.threads =
-      storedThreads.length > 0 ? storedThreads : [createThread(this.defaultThreadTitle)];
+    this.threads = [createThread(this.defaultThreadTitle)];
     this.activeThreadId = this.threads[0].id;
     this.enabledSections = loadEnabledSections();
   }
@@ -91,6 +104,43 @@ export class AiAgentState {
 
   private get defaultThreadTitle(): string {
     return T('New chat', 'ai_chat_thread_default');
+  }
+
+  async loadHistory() {
+    for (let attempt = 0; ; attempt++) {
+      try {
+        const storedThreads = await migrateLegacyThreads(await getChatThreads());
+        this.applyLoadedThreads(storedThreads);
+        return;
+      } catch {
+        if (attempt >= HISTORY_RETRY_DELAYS.length) {
+          this.setHistoryError();
+          return;
+        }
+        await delay(HISTORY_RETRY_DELAYS[attempt]);
+      }
+    }
+  }
+
+  @action
+  private applyLoadedThreads(loadedThreads: ChatThread[]) {
+    const keptThreads = this.threads.filter(
+      thread =>
+        thread.messages.length > 0 || (this.hasLoadedHistory && thread.id === this.activeThreadId),
+    );
+    const keptThreadIds = new Set(keptThreads.map(thread => thread.id));
+    const merged = [
+      ...keptThreads,
+      ...loadedThreads.filter(thread => !keptThreadIds.has(thread.id)),
+    ];
+    if (merged.length === 0) {
+      return;
+    }
+    this.threads = merged;
+    if (!merged.some(thread => thread.id === this.activeThreadId)) {
+      this.activeThreadId = merged[0].id;
+    }
+    this.hasLoadedHistory = true;
   }
 
   async loadSections() {
@@ -120,16 +170,20 @@ export class AiAgentState {
     this.threads = [thread, ...this.threads];
     this.activeThreadId = thread.id;
     this.resetComposer();
-    this.persistThreads();
   }
 
   @action
   deleteActiveThread() {
-    const remaining = this.threads.filter(thread => thread.id !== this.activeThreadId);
+    const deletedThreadId = this.activeThreadId;
+    const remaining = this.threads.filter(thread => thread.id !== deletedThreadId);
     this.threads = remaining.length > 0 ? remaining : [createThread(this.defaultThreadTitle)];
     this.activeThreadId = this.threads[0].id;
     this.resetComposer();
-    this.persistThreads();
+    void deleteChatThread(deletedThreadId).catch((error: HttpError) => {
+      if (error.status !== 404) {
+        this.setHistoryError();
+      }
+    });
   }
 
   @action
@@ -153,11 +207,18 @@ export class AiAgentState {
     if (!files) {
       return;
     }
-    const imageFiles = Array.from(files).filter(file => file.type.startsWith('image/'));
+    const candidates = Array.from(files).filter(file => file.type.startsWith('image/'));
+    const supported = candidates.filter(
+      file => SUPPORTED_IMAGE_MIME_TYPES.includes(file.type) && file.size <= MAX_IMAGE_BYTES,
+    );
+    if (supported.length < candidates.length) {
+      this.setImageRejectedError();
+    }
     const loaded = await Promise.all(
-      imageFiles.map(async file => ({
+      supported.map(async file => ({
         id: crypto.randomUUID(),
-        dataUrl: await readFileAsDataUrl(file),
+        mimeType: file.type,
+        dataUrl: await blobToDataUrl(file),
       })),
     );
     this.appendAttachedImages(loaded);
@@ -183,9 +244,15 @@ export class AiAgentState {
     const thread = this.activeThread;
     const messageText =
       this.draft.trim() || T('What is in this image?', 'ai_chat_default_image_prompt');
-    const images = this.attachedImages.map(image => image.dataUrl);
+    const images: ChatImage[] = this.attachedImages.map(image => ({
+      id: image.id,
+      mimeType: image.mimeType,
+      dataUrl: image.dataUrl,
+    }));
 
     this.startRun(thread, messageText, images);
+    void this.uploadImages(thread.id, images);
+    await this.hydrateImages(thread);
 
     const agent = createArchitectAgent({
       threadId: thread.id,
@@ -207,7 +274,7 @@ export class AiAgentState {
     } catch (error) {
       this.reportRunError(error);
     } finally {
-      this.finishRun();
+      this.finishRun(thread);
     }
   }
 
@@ -253,7 +320,7 @@ export class AiAgentState {
   }
 
   @action
-  private startRun(thread: ChatThread, messageText: string, images: string[]) {
+  private startRun(thread: ChatThread, messageText: string, images: ChatImage[]) {
     if (thread.messages.length === 0 && this.draft.trim().length > 0) {
       thread.title = messageText.slice(0, 40);
     }
@@ -268,15 +335,15 @@ export class AiAgentState {
     this.isAborting = false;
     this.isRunning = true;
     this.resetComposer();
-    this.persistThreads();
+    this.persistThread(thread);
   }
 
   @action
-  private finishRun() {
+  private finishRun(thread: ChatThread) {
     this.isRunning = false;
     this.isAborting = false;
     this.runningAgent = null;
-    this.persistThreads();
+    this.persistThread(thread);
   }
 
   @action
@@ -285,7 +352,7 @@ export class AiAgentState {
       return;
     }
     this.errorText = T(
-      'Something went wrong. Is the AI service running on port 5210?',
+      'Something went wrong. Is the Architect server running and the AI API key configured?',
       'ai_chat_error',
     );
   }
@@ -295,7 +362,10 @@ export class AiAgentState {
     this.errorText =
       message && message.trim().length > 0
         ? message
-        : T('Something went wrong. Is the AI service running on port 5210?', 'ai_chat_error');
+        : T(
+            'Something went wrong. Is the Architect server running and the AI API key configured?',
+            'ai_chat_error',
+          );
   }
 
   @action
@@ -334,12 +404,13 @@ export class AiAgentState {
     if (!thread) {
       return;
     }
-    let message = this.pendingAssistantMessage(thread);
-    if (!message) {
-      message = { id: crypto.randomUUID(), role: 'assistant', text: '' };
-      thread.messages.push(message);
+    if (!this.pendingAssistantMessage(thread)) {
+      thread.messages.push({ id: crypto.randomUUID(), role: 'assistant', text: '' });
     }
-    message.calledFunctions = [...(message.calledFunctions ?? []), functionName];
+    const message = this.pendingAssistantMessage(thread);
+    if (message) {
+      message.calledFunctions = [...(message.calledFunctions ?? []), functionName];
+    }
   }
 
   @action
@@ -404,24 +475,68 @@ export class AiAgentState {
     this.attachedImages = [];
   }
 
-  private persistThreads() {
-    const withoutImageData = this.threads.map(thread => ({
-      ...thread,
-      messages: thread.messages.map(message => ({
-        id: message.id,
-        role: message.role,
-        text: message.text,
-        calledFunctions: message.calledFunctions,
-        affectedNodes: message.affectedNodes,
-        totalTokens: message.totalTokens,
-      })),
-    }));
-    try {
-      localStorage.setItem(THREADS_STORAGE_KEY, JSON.stringify(withoutImageData));
-    } catch {
+  @action
+  private setHistoryError() {
+    this.errorText = T(
+      'Chat history could not be read or saved on the server.',
+      'ai_chat_history_error',
+    );
+  }
+
+  @action
+  private setImageRejectedError() {
+    this.errorText = T(
+      'Only PNG, JPEG, GIF and WebP images up to 10 MB can be attached.',
+      'ai_chat_image_rejected',
+    );
+  }
+
+  private persistThread(thread: ChatThread) {
+    this.pendingThreadSave = saveChatThread(withoutImageData(thread)).catch(() =>
+      this.setHistoryError(),
+    );
+  }
+
+  private async uploadImages(threadId: string, images: ChatImage[]) {
+    if (images.length === 0) {
       return;
     }
+    await this.pendingThreadSave;
+    for (const image of images) {
+      if (!image.dataUrl) {
+        continue;
+      }
+      try {
+        await saveChatImage(threadId, image.id, image.mimeType, image.dataUrl);
+      } catch {
+        this.setHistoryError();
+      }
+    }
   }
+
+  private async hydrateImages(thread: ChatThread) {
+    const missing = thread.messages.flatMap(message =>
+      (message.images ?? []).filter(image => !image.dataUrl),
+    );
+    await Promise.all(
+      missing.map(async image => {
+        try {
+          this.applyImageData(image, await fetchChatImageAsDataUrl(thread.id, image.id));
+        } catch {
+          return;
+        }
+      }),
+    );
+  }
+
+  @action
+  private applyImageData(image: ChatImage, dataUrl: string) {
+    image.dataUrl = dataUrl;
+  }
+}
+
+function delay(milliseconds: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, milliseconds));
 }
 
 function createThread(title: string): ChatThread {
@@ -429,12 +544,39 @@ function createThread(title: string): ChatThread {
     id: crypto.randomUUID(),
     title,
     messages: [],
-    createdAt: Date.now(),
+    createdAt: new Date().toISOString(),
     tokensUsed: 0,
   };
 }
 
-function loadStoredThreads(): ChatThread[] {
+function withoutImageData(thread: ChatThread): ChatThread {
+  const plainThread = toJS(thread);
+  return {
+    ...plainThread,
+    messages: plainThread.messages.map(message => ({
+      ...message,
+      images: message.images?.map(image => ({ id: image.id, mimeType: image.mimeType })),
+    })),
+  };
+}
+
+async function migrateLegacyThreads(storedThreads: ChatThread[]): Promise<ChatThread[]> {
+  const legacyThreads = readLegacyThreads();
+  if (legacyThreads.length === 0) {
+    return storedThreads;
+  }
+  if (storedThreads.length === 0) {
+    for (const thread of legacyThreads) {
+      await saveChatThread(thread);
+    }
+    localStorage.removeItem(THREADS_STORAGE_KEY);
+    return legacyThreads;
+  }
+  localStorage.removeItem(THREADS_STORAGE_KEY);
+  return storedThreads;
+}
+
+function readLegacyThreads(): ChatThread[] {
   try {
     const raw = localStorage.getItem(THREADS_STORAGE_KEY);
     if (!raw) {
@@ -446,10 +588,13 @@ function loadStoredThreads(): ChatThread[] {
     }
     return parsed.map(thread => ({
       ...thread,
+      id: thread.id ?? crypto.randomUUID(),
       tokensUsed: thread.tokensUsed ?? 0,
+      createdAt: new Date(thread.createdAt ?? Date.now()).toISOString(),
       messages: (thread.messages ?? []).map((message: ChatMessage) => ({
         ...message,
         id: message.id ?? crypto.randomUUID(),
+        images: undefined,
       })),
     }));
   } catch {
@@ -471,15 +616,6 @@ function loadEnabledSections(): string[] {
   } catch {
     return [...SAFE_DEFAULT_SECTIONS];
   }
-}
-
-function readFileAsDataUrl(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result as string);
-    reader.onerror = () => reject(reader.error);
-    reader.readAsDataURL(file);
-  });
 }
 
 function tabIdToFocusItem(rootStore: RootStore, tabId: string, label: string): FocusItem {

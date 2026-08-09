@@ -7,19 +7,14 @@ namespace Origam.AI.Agent.Services;
 
 public class SessionSummarizerService
 {
-    private readonly string endpoint;
-    private readonly string model;
-    private readonly string apiKey;
+    private readonly AiConnectionSettings settings;
 
     public SessionSummarizerService(IConfiguration configuration)
     {
-        var section = configuration.GetSection("Ai");
-        endpoint = section["Endpoint"] ?? "https://integrate.api.nvidia.com/v1";
-        model = section["Model"] ?? "z-ai/glm-5.2";
-        apiKey = section["ApiKey"] ?? "";
+        settings = AiConnectionSettings.Read(configuration);
     }
 
-    public bool IsConfigured => !string.IsNullOrWhiteSpace(apiKey);
+    public bool IsConfigured => settings.HasApiKey;
 
     public async Task<string?> SummarizeAsync(
         string? existingSummary,
@@ -35,10 +30,10 @@ public class SessionSummarizerService
         }
 
         var chatClient = new OpenAIClient(
-            new ApiKeyCredential(apiKey),
-            new OpenAIClientOptions { Endpoint = new Uri(endpoint) }
+            new ApiKeyCredential(settings.ApiKey),
+            new OpenAIClientOptions { Endpoint = new Uri(settings.Endpoint) }
         )
-            .GetChatClient(model)
+            .GetChatClient(settings.Model)
             .AsIChatClient();
 
         var chatHistory = new List<ChatMessage>();

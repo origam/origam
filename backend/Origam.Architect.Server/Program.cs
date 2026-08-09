@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Reflection;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.FileProviders;
+using Origam.AI.Agent;
 using Origam.Architect.Server.ArchitectLogic;
 using Origam.Architect.Server.Configuration;
 using Origam.Architect.Server.ControlAdapter;
@@ -52,6 +53,7 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
         builder.Services.AddSingleton(deploymentService);
         builder.Services.AddSingleton<GitNodeStatusService>();
+        builder.Services.AddSingleton<ChatHistoryService>();
         builder.Services.AddSingleton<ModelTransactionRunner>();
         builder.Services.AddSingleton<TreeNodeFactory>();
         builder.Services.AddSingleton<EditorPropertyFactory>();
@@ -79,6 +81,8 @@ public class Program
             ISchemaDbCompareResultsService,
             SchemaDbCompareResultsService
         >();
+
+        builder.Services.AddOrigamAiAgent();
 
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
@@ -121,6 +125,7 @@ public class Program
         );
         app.UseSpaStaticFiles();
         app.MapControllers();
+        app.MapOrigamAiAgent();
         app.UseSpa(spa =>
         {
             spa.Options.SourcePath = spaConfig.PathToClientApplication;

@@ -24,13 +24,19 @@ export type AffectedNode = {
   action: string;
 };
 
+export type ChatImage = {
+  id: string;
+  mimeType: string;
+  dataUrl?: string;
+};
+
 export type ChatMessage = {
   id: string;
   role: 'user' | 'assistant';
   text: string;
   calledFunctions?: string[];
   affectedNodes?: AffectedNode[];
-  images?: string[];
+  images?: ChatImage[];
   totalTokens?: number;
 };
 
@@ -38,13 +44,14 @@ export type ChatThread = {
   id: string;
   title: string;
   messages: ChatMessage[];
-  createdAt: number;
+  createdAt: string;
   tokensUsed: number;
   summary?: string;
 };
 
 export type AttachedImage = {
   id: string;
+  mimeType: string;
   dataUrl: string;
 };
 

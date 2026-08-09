@@ -29,7 +29,7 @@ public record EntityCard(
     string Kind,
     string Package,
     List<string> Fields,
-    List<string> PrimaryKey,
+    List<RelatedItem> PrimaryKey,
     List<RelatedItem> Structures,
     List<RelatedItem> Screens,
     List<RelatedItem> Panels,

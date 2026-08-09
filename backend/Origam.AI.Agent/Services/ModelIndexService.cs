@@ -225,17 +225,26 @@ public class ModelIndexService
         return builder.ToString();
     }
 
-    private static void AppendFields(StringBuilder builder, EntityCard card)
+    private void AppendFields(StringBuilder builder, EntityCard card)
     {
         if (card.Fields == null || card.Fields.Count == 0)
         {
             return;
         }
 
-        var primaryKeys = new HashSet<string>(card.PrimaryKey, StringComparer.Ordinal);
+        var primaryKeyIds = new Dictionary<string, string>(StringComparer.Ordinal);
+        foreach (var primaryKeyField in card.PrimaryKey ?? new List<RelatedItem>())
+        {
+            primaryKeyIds[primaryKeyField.Name] = primaryKeyField.Id;
+        }
+
         var visibleFields = card
             .Fields.Where(field => !AuditFields.Contains(field))
-            .Select(field => primaryKeys.Contains(field) ? $"{field}*" : field)
+            .Select(field =>
+                primaryKeyIds.TryGetValue(field, out string? primaryKeyId)
+                    ? $"{field}*={aliasMappingService.GetOrAddAlias(primaryKeyId)}"
+                    : field
+            )
             .ToList();
 
         if (visibleFields.Count == 0)
@@ -281,7 +290,7 @@ public class ModelIndexService
         string Kind,
         string Package,
         List<string> Fields,
-        List<string> PrimaryKey,
+        List<RelatedItem> PrimaryKey,
         List<RelatedItem> Structures,
         List<RelatedItem> Screens,
         List<RelatedItem> Panels,

@@ -34,7 +34,7 @@ public record ItemType(
     IReadOnlyList<ItemTypeProperty> Properties
 );
 
-public record ItemTypeProvider(string Name, IReadOnlyList<string> Children);
+public record ItemTypeProvider(string Id, string Name, IReadOnlyList<string> Children);
 
 public record ItemTypeCatalog(
     IReadOnlyList<ItemTypeProvider> Providers,
@@ -52,6 +52,8 @@ public record ItemTypePromptSections(string Types, string Properties)
 public class NewItemTypeCatalogService
 {
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
+
+    private static readonly string[] AlwaysInScopeCaptions = ["Database Entity"];
 
     private readonly IHttpClientFactory httpClientFactory;
     private readonly string architectBaseUrl;
@@ -148,8 +150,17 @@ public class NewItemTypeCatalogService
             "The complete list of what can be created under what. Pass the caption from this "
                 + "list to CreateNode as newTypeName (for example 'Database Field'); the server "
                 + "resolves it against the parent you named, so you do NOT need a GetMenuItems "
-                + "call first. 'Under X' is a top-level model folder, 'Inside X' is an item of "
-                + "that type. The Architect tree also shows grouping folders (Fields, Filters, "
+                + "call first. 'Under X' is a top-level model folder and the nodeId printed "
+                + "beside it is what you pass to CreateNode when you create straight into that "
+                + "folder - copy it character for character, it is a type name rather than a "
+                + "GUID. Do not take that id out of GetTopNodes or GetChildren: their 'id' field "
+                + "is a display key that CreateNode rejects, and only the value printed here "
+                + "works. When the user names a sub-folder instead ('in the Dimensions folder'), "
+                + "that folder is an ordinary item with a GUID - take its id from FOCUS when it "
+                + "is listed there and otherwise look it up with SearchSchemaAsync, then pass "
+                + "that GUID as nodeId. 'Inside X' is an item of that type, and there nodeId is "
+                + "the id of the concrete item you are adding to. The Architect tree also shows "
+                + "grouping folders (Fields, Filters, "
                 + "Relationships and the like) - you do not need them, create directly under the "
                 + "owning item and the new item lands in the right folder by itself. If a type is "
                 + "not listed for the parent you have, it cannot be created there."
@@ -158,7 +169,8 @@ public class NewItemTypeCatalogService
         foreach (var provider in catalog.Providers.Where(provider => provider.Children.Count > 0))
         {
             builder.AppendLine(
-                $"Under {provider.Name}: {string.Join(separator: ", ", provider.Children)}"
+                $"Under {provider.Name} (nodeId: {provider.Id}): "
+                    + string.Join(separator: ", ", provider.Children)
             );
         }
 
@@ -181,7 +193,7 @@ public class NewItemTypeCatalogService
         }
 
         var builder = new StringBuilder();
-        builder.AppendLine("## PROPERTIES OF THE TYPES AROUND WHAT THE USER HAS OPEN");
+        builder.AppendLine("## PROPERTIES YOU CAN SET ON THESE ITEM TYPES");
         builder.AppendLine(
             "The properties you may set on these types, as name(kind) or name[allowed|values] "
                 + "for enums. Pass them to CreateNode as changes: [{name, value}] and to the "
@@ -207,12 +219,6 @@ public class NewItemTypeCatalogService
         ChatFocus? focus
     )
     {
-        var focusedCaptions = GetFocusedCaptions(focus);
-        if (focusedCaptions.Count == 0)
-        {
-            return [];
-        }
-
         var typesByCaption = catalog
             .Types.GroupBy(type => type.Caption, StringComparer.OrdinalIgnoreCase)
             .ToDictionary(
@@ -222,14 +228,14 @@ public class NewItemTypeCatalogService
             );
 
         var captionsInScope = new HashSet<string>(
-            focusedCaptions,
+            AlwaysInScopeCaptions.Concat(GetFocusedCaptions(focus)),
             StringComparer.OrdinalIgnoreCase
         );
-        foreach (string caption in focusedCaptions)
+        foreach (string caption in captionsInScope.ToList())
         {
-            if (typesByCaption.TryGetValue(caption, out ItemType? focusedType))
+            if (typesByCaption.TryGetValue(caption, out ItemType? scopedType))
             {
-                captionsInScope.UnionWith(focusedType.Children);
+                captionsInScope.UnionWith(scopedType.Children);
             }
         }
 

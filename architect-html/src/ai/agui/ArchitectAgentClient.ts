@@ -51,7 +51,7 @@ export function toAguiMessages(messages: ChatMessage[]): Message[] {
     }
 
     const imageParts = (message.images ?? [])
-      .map(toBinaryInputContent)
+      .map(image => (image.dataUrl ? toBinaryInputContent(image.dataUrl) : null))
       .filter((part): part is InputContent => part !== null);
 
     if (imageParts.length === 0) {

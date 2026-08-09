@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { AiAgentState } from '@/ai/AiAgentState';
 import S from '@/ai/AiAgentPanel.module.scss';
+import { chatImageUrl } from '@/ai/ChatHistoryApi';
 import { Markdown } from '@/ai/Markdown';
 import { RootStoreContext, T } from '@/main';
 import { observer } from 'mobx-react-lite';
@@ -40,6 +41,21 @@ export const AiAgentPanel = observer(function AiAgentPanel() {
 
   useEffect(() => {
     void state.loadSections();
+    void state.loadHistory();
+  }, [state]);
+
+  useEffect(() => {
+    function reloadHistoryWhenVisible() {
+      if (document.visibilityState === 'visible') {
+        void state.loadHistory();
+      }
+    }
+    document.addEventListener('visibilitychange', reloadHistoryWhenVisible);
+    window.addEventListener('focus', reloadHistoryWhenVisible);
+    return () => {
+      document.removeEventListener('visibilitychange', reloadHistoryWhenVisible);
+      window.removeEventListener('focus', reloadHistoryWhenVisible);
+    };
   }, [state]);
 
   useEffect(() => {
@@ -222,11 +238,11 @@ export const AiAgentPanel = observer(function AiAgentPanel() {
               </div>
               {message.images && message.images.length > 0 && (
                 <div className={S.messageImages}>
-                  {message.images.map((imageSource, imageIndex) => (
+                  {message.images.map(image => (
                     <img
-                      key={imageIndex}
+                      key={image.id}
                       className={S.messageImage}
-                      src={imageSource}
+                      src={image.dataUrl ?? chatImageUrl(activeThread.id, image.id)}
                       alt={T('Attached image', 'ai_chat_attached_image')}
                     />
                   ))}

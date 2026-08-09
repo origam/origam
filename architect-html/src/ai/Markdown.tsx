@@ -25,6 +25,8 @@ const INLINE_PATTERN =
 
 const LINK_PATTERN = /^\[([^\]]+)\]\(([^)]+)\)$/;
 
+const BETA_NOTICE_PATTERN = /^\s*ORIGAM AI \d+(\.\d+)* is in beta\b/;
+
 function isSafeUrl(url: string): boolean {
   return /^(https?:\/\/|mailto:)/i.test(url);
 }
@@ -276,8 +278,12 @@ export function Markdown({ text }: { text: string }) {
       paragraphLines.push(lines[index]);
       index += 1;
     }
+    const isBetaNotice = BETA_NOTICE_PATTERN.test(paragraphLines[0]);
     blocks.push(
-      <p key={`block-${blockKey++}`} className={S.paragraph}>
+      <p
+        key={`block-${blockKey++}`}
+        className={isBetaNotice ? `${S.paragraph} ${S.betaNotice}` : S.paragraph}
+      >
         {renderLines(paragraphLines, `p-${blockKey}`)}
       </p>,
     );

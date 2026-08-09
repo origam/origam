@@ -1,0 +1,219 @@
+﻿<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ORIGAM AI agent benchmark</title>
+<style>:root { color-scheme: light dark; }
+* { box-sizing: border-box; }
+body { margin: 0; padding: 32px; font: 14px/1.5 -apple-system, "Segoe UI", Roboto, sans-serif;
+       background: #f6f7f9; color: #1b1f23; }
+h1 { margin: 0 0 4px; font-size: 20px; }
+.meta { color: #6a737d; font-size: 13px; margin-bottom: 20px; }
+.meta a { color: inherit; }
+.cards { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 24px; }
+.card { background: #fff; border: 1px solid #e1e4e8; border-radius: 8px; padding: 12px 16px;
+        min-width: 110px; }
+.card .value { display: block; font-size: 20px; font-weight: 600; }
+.card .label { color: #6a737d; font-size: 12px; text-transform: uppercase;
+               letter-spacing: .04em; }
+.card.failed .value { color: #cb2431; }
+.card.passed .value { color: #22863a; }
+table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid #e1e4e8;
+        border-radius: 8px; overflow: hidden; }
+th, td { padding: 10px 12px; text-align: right; border-bottom: 1px solid #eaecef; }
+th:first-child, td:first-child { text-align: left; }
+th { background: #f6f8fa; font-size: 12px; text-transform: uppercase; color: #6a737d;
+     letter-spacing: .04em; }
+tr:last-child td { border-bottom: none; }
+tr.total td { font-weight: 600; background: #f6f8fa; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 12px;
+         font-weight: 600; }
+.badge.passed { background: #dcffe4; color: #22863a; }
+.badge.failed { background: #ffeef0; color: #cb2431; }
+.badge.other { background: #f1f8ff; color: #0366d6; }
+td.detail { padding: 0; }
+details { border-top: 1px solid #eaecef; }
+details > summary { cursor: pointer; padding: 8px 12px; color: #0366d6; font-size: 13px; }
+.turn { padding: 0 12px 12px 28px; }
+.label-row { font-size: 12px; text-transform: uppercase; letter-spacing: .04em;
+             color: #6a737d; margin: 12px 0 4px; }
+pre { margin: 0; padding: 10px 12px; background: #f6f8fa; border: 1px solid #eaecef;
+      border-radius: 6px; overflow-x: auto; white-space: pre-wrap; word-break: break-word;
+      font: 12px/1.45 ui-monospace, Consolas, monospace; }
+pre.failure { background: #ffeef0; border-color: #f9d0d5; color: #86181d; }
+ol.tools { margin: 0; padding-left: 20px; }
+ol.tools li { margin-bottom: 10px; }
+ol.tools code { font-weight: 600; }
+@media (prefers-color-scheme: dark) {
+  body { background: #0d1117; color: #c9d1d9; }
+  .card, table { background: #161b22; border-color: #30363d; }
+  th { background: #161b22; color: #8b949e; }
+  th, td, details { border-color: #21262d; }
+  tr.total td { background: #12171d; }
+  pre { background: #0d1117; border-color: #30363d; }
+  pre.failure { background: #2d1114; border-color: #6b2b31; color: #ffa198; }
+  .meta, .card .label, .label-row { color: #8b949e; }
+  .badge.passed { background: #12261a; color: #56d364; }
+  .badge.failed { background: #2d1114; color: #ff7b72; }
+  .badge.other { background: #10202f; color: #58a6ff; }
+}</style></head><body>
+<h1>ORIGAM AI agent benchmark</h1>
+<div class="meta">gpt-5.6-luna &middot; in-process Architect, package &#39;Api&#39; &middot; 2026-08-09 06:45 &middot; prices <a href="https://raw.githubusercontent.com/BerriAI/litellm/main/model_prices_and_context_window.json">LiteLLM catalogue</a></div>
+<div class="cards">
+<div class="card"><span class="value">3</span><span class="label">tests</span></div>
+<div class="card passed"><span class="value">3</span><span class="label">passed</span></div>
+<div class="card"><span class="value">0</span><span class="label">failed</span></div>
+<div class="card"><span class="value">11</span><span class="label">tool calls</span></div>
+<div class="card"><span class="value">272,860</span><span class="label">tokens</span></div>
+<div class="card"><span class="value">31.8 s</span><span class="label">duration</span></div>
+<div class="card"><span class="value">$0.056945</span><span class="label">cost</span></div>
+</div>
+<table><thead><tr>
+<th>test</th><th>status</th><th>turns</th><th>tools</th><th>prompt</th><th>cached</th><th>output</th><th>sec</th><th>USD</th>
+</tr></thead><tbody>
+<tr>
+<td>CreateNodeFunctionCall_ReallyCreatesTheEntityInTheModel</td>
+<td><span class="badge passed">Passed</span></td>
+<td>1</td>
+<td>1</td>
+<td>44,026</td>
+<td>0</td>
+<td>289</td>
+<td>6.1</td>
+<td>0.009152</td>
+</tr>
+<tr><td class="detail" colspan="9">
+<details><summary>
+turn 1 &#183; 1 tool calls &#183; 6.1 s &#183; $0.009152
+</summary><div class="turn">
+<div class="label-row">prompt</div>
+<pre>Create a new database entity named AiBenchmark5297f9b9 in dimensions folderDo not ask me to confirm anything, just create it.</pre>
+<div class="label-row">tool calls</div><ol class="tools">
+<li><code>Tab-PostTabCreatenode</code>
+<pre>{&quot;nodeId&quot;:&quot;n_4hq&quot;,&quot;newTypeName&quot;:&quot;Database Entity&quot;,&quot;changes&quot;:[{&quot;name&quot;:&quot;Name&quot;,&quot;value&quot;:&quot;AiBenchmark5297f9b9&quot;}],&quot;persist&quot;:true}</pre>
+<pre>{&quot;id&quot;:&quot;8075d51f-ff15-4b1c-bf03-e774dbf56a25&quot;,&quot;name&quot;:&quot;AiBenchmark5297f9b9&quot;,&quot;type&quot;:&quot;Database Entity&quot;,&quot;saved&quot;:true,&quot;parent&quot;:&quot;Dimensions&quot;,&quot;parentId&quot;:&quot;016bee9c-18e5-47bd-97cb-76eebabeb911&quot;,&quot;primaryKeyFieldId&quot;:&quot;c54413b6-eb88-49c8-a7ff-3bb942c1984e&quot;,&quot;props&quot;:&quot;Name=AiBenchmark5297f9b9; MappedObjectName=AiBenchmark5297f9b9; DatabaseObjectType=Table; GenerateDeploymentScript=true; LocalizationRelation=null; DescribingField=null; AuditingType=None; AuditingSecondReferenceKeyColumn=null; Caption=; Inheritable=false&quot;,&quot;errors&quot;:[]}</pre></li>
+</ol>
+<div class="label-row">reply</div>
+<pre>Created the new database entity **AiBenchmark5297f9b9** in the **Dimensions** folder.
+
+- Entity ID: `8075d51f-ff15-4b1c-bf03-e774dbf56a25`
+- Primary key was created automatically.
+- No additional fields were added.
+
+ORIGAM AI 0.0.1 is in beta and can make mistakes - please review the changes I made, and report anything that went wrong to the ORIGAM development team; every report makes ORIGAM AI more accurate.</pre>
+</div></details>
+</td></tr>
+<tr>
+<td>DeleteFollowUp_RemovesTheEntityTheAgentCreatedInTheSameConversation</td>
+<td><span class="badge passed">Passed</span></td>
+<td>2</td>
+<td>3</td>
+<td>110,912</td>
+<td>0</td>
+<td>685</td>
+<td>12.1</td>
+<td>0.023004</td>
+</tr>
+<tr><td class="detail" colspan="9">
+<details><summary>
+turn 1 &#183; 2 tool calls &#183; 7.1 s &#183; $0.013920
+</summary><div class="turn">
+<div class="label-row">prompt</div>
+<pre>Create a new database entity named AiBenchmarkDeleteMeb572973f with one database field named Name. Do not ask me to confirm anything, just create it.</pre>
+<div class="label-row">tool calls</div><ol class="tools">
+<li><code>Tab-PostTabCreatenode</code>
+<pre>{&quot;nodeId&quot;:&quot;Origam.Schema.EntityModel.EntityModelSchemaItemProvider&quot;,&quot;newTypeName&quot;:&quot;Database Entity&quot;,&quot;changes&quot;:[{&quot;name&quot;:&quot;Name&quot;,&quot;value&quot;:&quot;AiBenchmarkDeleteMeb572973f&quot;}],&quot;persist&quot;:true}</pre>
+<pre>{&quot;id&quot;:&quot;a476128d-3b70-448b-930f-756a39419a76&quot;,&quot;name&quot;:&quot;AiBenchmarkDeleteMeb572973f&quot;,&quot;type&quot;:&quot;Database Entity&quot;,&quot;saved&quot;:true,&quot;parent&quot;:&quot;Entities&quot;,&quot;parentId&quot;:&quot;Origam.Schema.EntityModel.EntityModelSchemaItemProvider&quot;,&quot;primaryKeyFieldId&quot;:&quot;c54413b6-eb88-49c8-a7ff-3bb942c1984e&quot;,&quot;props&quot;:&quot;Name=AiBenchmarkDeleteMeb572973f; MappedObjectName=AiBenchmarkDeleteMeb572973f; DatabaseObjectType=Table; GenerateDeploymentScript=true; LocalizationRelation=null; DescribingField=null; AuditingType=None; AuditingSecondReferenceKeyColumn=null; Caption=; Inheritable=false&quot;,&quot;errors&quot;:[]}</pre></li>
+<li><code>Tab-PostTabCreatenode</code>
+<pre>{&quot;nodeId&quot;:&quot;a476128d-3b70-448b-930f-756a39419a76&quot;,&quot;newTypeName&quot;:&quot;Database Field&quot;,&quot;changes&quot;:[{&quot;name&quot;:&quot;Name&quot;,&quot;value&quot;:&quot;Name&quot;}],&quot;persist&quot;:true}</pre>
+<pre>{&quot;id&quot;:&quot;a1be813c-9801-4e16-b940-c1f1c175d893&quot;,&quot;name&quot;:&quot;Name&quot;,&quot;type&quot;:&quot;Database Field&quot;,&quot;saved&quot;:true,&quot;parent&quot;:&quot;AiBenchmarkDeleteMeb572973f&quot;,&quot;parentId&quot;:&quot;a476128d-3b70-448b-930f-756a39419a76&quot;,&quot;primaryKeyFieldId&quot;:null,&quot;props&quot;:&quot;Name=Name; MappedColumnName=Name; MappedDataType=null; ExcludeFromAuditing=false; DataType=Boolean; DataLength=0; AllowNulls=true; IsPrimaryKey=false; Caption=; ExcludeFromAllFields=false; AutoIncrement=false; DefaultLookup=null; ForeignKeyEntity=null; ForeignKeyField=null; DefaultValue=null; DefaultValueParameter=null; XmlMappingType=Attribute; OnCopyAction=Copy; Inheritable=false&quot;,&quot;errors&quot;:[]}</pre></li>
+</ol>
+<div class="label-row">reply</div>
+<pre>Created the database entity **AiBenchmarkDeleteMeb572973f** with one database field named **Name**.
+
+The entity’s standard primary key was generated automatically. The `Name` field was created with ORIGAM’s default settings: **Boolean**, nullable, length 0.
+
+ORIGAM AI 0.0.1 is in beta and can make mistakes - please review the changes I made, and report anything that went wrong to the ORIGAM development team; every report makes ORIGAM AI more accurate.</pre>
+</div></details>
+<details><summary>
+turn 2 &#183; 1 tool calls &#183; 5.0 s &#183; $0.009085
+</summary><div class="turn">
+<div class="label-row">prompt</div>
+<pre>Now delete that entity you have just created, together with everything inside it. Do not ask me to confirm anything, just delete it.</pre>
+<div class="label-row">tool calls</div><ol class="tools">
+<li><code>Model-PostModelDeleteschemaitem</code>
+<pre>{&quot;schemaItemId&quot;:&quot;e_efs1&quot;}</pre>
+<pre>{&quot;deleted&quot;:true,&quot;id&quot;:&quot;a476128d-3b70-448b-930f-756a39419a76&quot;,&quot;name&quot;:&quot;AiBenchmarkDeleteMeb572973f&quot;}</pre></li>
+</ol>
+<div class="label-row">reply</div>
+<pre>Deleted the database entity **AiBenchmarkDeleteMeb572973f**, including everything inside it.
+
+ORIGAM AI 0.0.1 is in beta and can make mistakes - please review the changes I made, and report anything that went wrong to the ORIGAM development team; every report makes ORIGAM AI more accurate.</pre>
+</div></details>
+</td></tr>
+<tr>
+<td>OneToManyFunctionCalls_BothChildEntitiesPointAtTheMainEntity</td>
+<td><span class="badge passed">Passed</span></td>
+<td>1</td>
+<td>7</td>
+<td>115,549</td>
+<td>0</td>
+<td>1,399</td>
+<td>13.5</td>
+<td>0.024789</td>
+</tr>
+<tr><td class="detail" colspan="9">
+<details><summary>
+turn 1 &#183; 7 tool calls &#183; 13.5 s &#183; $0.024789
+</summary><div class="turn">
+<div class="label-row">prompt</div>
+<pre>Create three database entities named AiBenchmarkOrderd5b03ce6, AiBenchmarkOrderLined5b03ce6 and AiBenchmarkOrderNoted5b03ce6. AiBenchmarkOrderd5b03ce6 is the main entity and the other two are its children in a one-to-many relation: give each child a foreign key field named refAiBenchmarkOrderd5b03ce6Id that points at AiBenchmarkOrderd5b03ce6 and at its primary key. Do not ask me to confirm anything, just create everything.</pre>
+<div class="label-row">tool calls</div><ol class="tools">
+<li><code>Tab-PostTabCreatenode</code>
+<pre>{&quot;nodeId&quot;:&quot;Origam.Schema.EntityModel.EntityModelSchemaItemProvider&quot;,&quot;newTypeName&quot;:&quot;Database Entity&quot;,&quot;changes&quot;:[{&quot;name&quot;:&quot;Name&quot;,&quot;value&quot;:&quot;AiBenchmarkOrderd5b03ce6&quot;}],&quot;persist&quot;:true}</pre>
+<pre>{&quot;id&quot;:&quot;3c106c1c-e5a4-4a16-9a94-dd734d2dd765&quot;,&quot;name&quot;:&quot;AiBenchmarkOrderd5b03ce6&quot;,&quot;type&quot;:&quot;Database Entity&quot;,&quot;saved&quot;:true,&quot;parent&quot;:&quot;Entities&quot;,&quot;parentId&quot;:&quot;Origam.Schema.EntityModel.EntityModelSchemaItemProvider&quot;,&quot;primaryKeyFieldId&quot;:&quot;c54413b6-eb88-49c8-a7ff-3bb942c1984e&quot;,&quot;props&quot;:&quot;Name=AiBenchmarkOrderd5b03ce6; MappedObjectName=AiBenchmarkOrderd5b03ce6; DatabaseObjectType=Table; GenerateDeploymentScript=true; LocalizationRelation=null; DescribingField=null; AuditingType=None; AuditingSecondReferenceKeyColumn=null; Caption=; Inheritable=false&quot;,&quot;errors&quot;:[]}</pre></li>
+<li><code>Tab-PostTabCreatenode</code>
+<pre>{&quot;nodeId&quot;:&quot;Origam.Schema.EntityModel.EntityModelSchemaItemProvider&quot;,&quot;newTypeName&quot;:&quot;Database Entity&quot;,&quot;changes&quot;:[{&quot;name&quot;:&quot;Name&quot;,&quot;value&quot;:&quot;AiBenchmarkOrderLined5b03ce6&quot;}],&quot;persist&quot;:true}</pre>
+<pre>{&quot;id&quot;:&quot;af60e933-f0d3-483a-a49d-89d05dd6da37&quot;,&quot;name&quot;:&quot;AiBenchmarkOrderLined5b03ce6&quot;,&quot;type&quot;:&quot;Database Entity&quot;,&quot;saved&quot;:true,&quot;parent&quot;:&quot;Entities&quot;,&quot;parentId&quot;:&quot;Origam.Schema.EntityModel.EntityModelSchemaItemProvider&quot;,&quot;primaryKeyFieldId&quot;:&quot;c54413b6-eb88-49c8-a7ff-3bb942c1984e&quot;,&quot;props&quot;:&quot;Name=AiBenchmarkOrderLined5b03ce6; MappedObjectName=AiBenchmarkOrderLined5b03ce6; DatabaseObjectType=Table; GenerateDeploymentScript=true; LocalizationRelation=null; DescribingField=null; AuditingType=None; AuditingSecondReferenceKeyColumn=null; Caption=; Inheritable=false&quot;,&quot;errors&quot;:[]}</pre></li>
+<li><code>Tab-PostTabCreatenode</code>
+<pre>{&quot;nodeId&quot;:&quot;Origam.Schema.EntityModel.EntityModelSchemaItemProvider&quot;,&quot;newTypeName&quot;:&quot;Database Entity&quot;,&quot;changes&quot;:[{&quot;name&quot;:&quot;Name&quot;,&quot;value&quot;:&quot;AiBenchmarkOrderNoted5b03ce6&quot;}],&quot;persist&quot;:true}</pre>
+<pre>{&quot;id&quot;:&quot;c381c6f4-f22d-46df-9b0f-a2b95664edcb&quot;,&quot;name&quot;:&quot;AiBenchmarkOrderNoted5b03ce6&quot;,&quot;type&quot;:&quot;Database Entity&quot;,&quot;saved&quot;:true,&quot;parent&quot;:&quot;Entities&quot;,&quot;parentId&quot;:&quot;Origam.Schema.EntityModel.EntityModelSchemaItemProvider&quot;,&quot;primaryKeyFieldId&quot;:&quot;c54413b6-eb88-49c8-a7ff-3bb942c1984e&quot;,&quot;props&quot;:&quot;Name=AiBenchmarkOrderNoted5b03ce6; MappedObjectName=AiBenchmarkOrderNoted5b03ce6; DatabaseObjectType=Table; GenerateDeploymentScript=true; LocalizationRelation=null; DescribingField=null; AuditingType=None; AuditingSecondReferenceKeyColumn=null; Caption=; Inheritable=false&quot;,&quot;errors&quot;:[]}</pre></li>
+<li><code>Tab-PostTabCreatenode</code>
+<pre>{&quot;nodeId&quot;:&quot;af60e933-f0d3-483a-a49d-89d05dd6da37&quot;,&quot;newTypeName&quot;:&quot;Database Field&quot;,&quot;changes&quot;:[{&quot;name&quot;:&quot;Name&quot;,&quot;value&quot;:&quot;refAiBenchmarkOrderd5b03ce6Id&quot;},{&quot;name&quot;:&quot;DataType&quot;,&quot;value&quot;:&quot;UniqueIdentifier&quot;},{&quot;name&quot;:&quot;ForeignKeyEntity&quot;,&quot;value&quot;:&quot;3c106c1c-e5a4-4a16-9a94-dd734d2dd765&quot;},{&quot;name&quot;:&quot;ForeignKeyField&quot;,&quot;value&quot;:&quot;c54413b6-eb88-49c8-a7ff-3bb942c1984e&quot;}],&quot;persist&quot;:true}</pre>
+<pre>{&quot;id&quot;:&quot;95792f37-2b85-487a-8aa5-7f4f5dfbbbfe&quot;,&quot;name&quot;:&quot;refAiBenchmarkOrderd5b03ce6Id&quot;,&quot;type&quot;:&quot;Database Field&quot;,&quot;saved&quot;:true,&quot;parent&quot;:&quot;AiBenchmarkOrderLined5b03ce6&quot;,&quot;parentId&quot;:&quot;af60e933-f0d3-483a-a49d-89d05dd6da37&quot;,&quot;primaryKeyFieldId&quot;:null,&quot;props&quot;:&quot;Name=refAiBenchmarkOrderd5b03ce6Id; MappedColumnName=refAiBenchmarkOrderd5b03ce6Id; MappedDataType=null; ExcludeFromAuditing=false; DataType=UniqueIdentifier; DataLength=0; AllowNulls=true; IsPrimaryKey=false; Caption=; ExcludeFromAllFields=false; AutoIncrement=false; DefaultLookup=null; ForeignKeyEntity=3c106c1c-e5a4-4a16-9a94-dd734d2dd765; ForeignKeyField=c54413b6-eb88-49c8-a7ff-3bb942c1984e; DefaultValue=null; DefaultValueParameter=null; XmlMappingType=Attribute; OnCopyAction=Copy; Inheritable=false&quot;,&quot;errors&quot;:[]}</pre></li>
+<li><code>Tab-PostTabCreatenode</code>
+<pre>{&quot;nodeId&quot;:&quot;c381c6f4-f22d-46df-9b0f-a2b95664edcb&quot;,&quot;newTypeName&quot;:&quot;Database Field&quot;,&quot;changes&quot;:[{&quot;name&quot;:&quot;Name&quot;,&quot;value&quot;:&quot;refAiBenchmarkOrderd5b03ce6Id&quot;},{&quot;name&quot;:&quot;DataType&quot;,&quot;value&quot;:&quot;UniqueIdentifier&quot;},{&quot;name&quot;:&quot;ForeignKeyEntity&quot;,&quot;value&quot;:&quot;3c106c1c-e5a4-4a16-9a94-dd734d2dd765&quot;},{&quot;name&quot;:&quot;ForeignKeyField&quot;,&quot;value&quot;:&quot;c54413b6-eb88-49c8-a7ff-3bb942c1984e&quot;}],&quot;persist&quot;:true}</pre>
+<pre>{&quot;id&quot;:&quot;9e2dfa92-dc5d-4449-a399-e13556d33a2a&quot;,&quot;name&quot;:&quot;refAiBenchmarkOrderd5b03ce6Id&quot;,&quot;type&quot;:&quot;Database Field&quot;,&quot;saved&quot;:true,&quot;parent&quot;:&quot;AiBenchmarkOrderNoted5b03ce6&quot;,&quot;parentId&quot;:&quot;c381c6f4-f22d-46df-9b0f-a2b95664edcb&quot;,&quot;primaryKeyFieldId&quot;:null,&quot;props&quot;:&quot;Name=refAiBenchmarkOrderd5b03ce6Id; MappedColumnName=refAiBenchmarkOrderd5b03ce6Id; MappedDataType=null; ExcludeFromAuditing=false; DataType=UniqueIdentifier; DataLength=0; AllowNulls=true; IsPrimaryKey=false; Caption=; ExcludeFromAllFields=false; AutoIncrement=false; DefaultLookup=null; ForeignKeyEntity=3c106c1c-e5a4-4a16-9a94-dd734d2dd765; ForeignKeyField=c54413b6-eb88-49c8-a7ff-3bb942c1984e; DefaultValue=null; DefaultValueParameter=null; XmlMappingType=Attribute; OnCopyAction=Copy; Inheritable=false&quot;,&quot;errors&quot;:[]}</pre></li>
+<li><code>Tab-PostTabCreatenode</code>
+<pre>{&quot;nodeId&quot;:&quot;af60e933-f0d3-483a-a49d-89d05dd6da37&quot;,&quot;newTypeName&quot;:&quot;Relationship&quot;,&quot;changes&quot;:[{&quot;name&quot;:&quot;Name&quot;,&quot;value&quot;:&quot;AiBenchmarkOrderd5b03ce6&quot;},{&quot;name&quot;:&quot;RelatedEntity&quot;,&quot;value&quot;:&quot;3c106c1c-e5a4-4a16-9a94-dd734d2dd765&quot;},{&quot;name&quot;:&quot;IsParentChild&quot;,&quot;value&quot;:&quot;true&quot;}],&quot;persist&quot;:true}</pre>
+<pre>{&quot;id&quot;:&quot;f440de94-9de8-4994-ae06-6030acd484be&quot;,&quot;name&quot;:&quot;AiBenchmarkOrderd5b03ce6&quot;,&quot;type&quot;:&quot;Relationship&quot;,&quot;saved&quot;:true,&quot;parent&quot;:&quot;AiBenchmarkOrderLined5b03ce6&quot;,&quot;parentId&quot;:&quot;af60e933-f0d3-483a-a49d-89d05dd6da37&quot;,&quot;primaryKeyFieldId&quot;:null,&quot;props&quot;:&quot;RelatedEntity=3c106c1c-e5a4-4a16-9a94-dd734d2dd765; IsParentChild=true; IsSelfJoin=false; IsOR=false; Name=AiBenchmarkOrderd5b03ce6; Inheritable=false&quot;,&quot;errors&quot;:[]}</pre></li>
+<li><code>Tab-PostTabCreatenode</code>
+<pre>{&quot;nodeId&quot;:&quot;c381c6f4-f22d-46df-9b0f-a2b95664edcb&quot;,&quot;newTypeName&quot;:&quot;Relationship&quot;,&quot;changes&quot;:[{&quot;name&quot;:&quot;Name&quot;,&quot;value&quot;:&quot;AiBenchmarkOrderd5b03ce6&quot;},{&quot;name&quot;:&quot;RelatedEntity&quot;,&quot;value&quot;:&quot;3c106c1c-e5a4-4a16-9a94-dd734d2dd765&quot;},{&quot;name&quot;:&quot;IsParentChild&quot;,&quot;value&quot;:&quot;true&quot;}],&quot;persist&quot;:true}</pre>
+<pre>{&quot;id&quot;:&quot;5231898b-f450-4009-ad43-cde05e573710&quot;,&quot;name&quot;:&quot;AiBenchmarkOrderd5b03ce6&quot;,&quot;type&quot;:&quot;Relationship&quot;,&quot;saved&quot;:true,&quot;parent&quot;:&quot;AiBenchmarkOrderNoted5b03ce6&quot;,&quot;parentId&quot;:&quot;c381c6f4-f22d-46df-9b0f-a2b95664edcb&quot;,&quot;primaryKeyFieldId&quot;:null,&quot;props&quot;:&quot;RelatedEntity=3c106c1c-e5a4-4a16-9a94-dd734d2dd765; IsParentChild=true; IsSelfJoin=false; IsOR=false; Name=AiBenchmarkOrderd5b03ce6; Inheritable=false&quot;,&quot;errors&quot;:[]}</pre></li>
+</ol>
+<div class="label-row">reply</div>
+<pre>I’ll create the main entity first, then create both child entities and their foreign-key fields pointing to the main entity’s generated primary key.Created and saved:
+
+- **AiBenchmarkOrderd5b03ce6** — main database entity
+- **AiBenchmarkOrderLined5b03ce6** — child entity
+  - Foreign key: `refAiBenchmarkOrderd5b03ce6Id`
+  - One-to-many parent-child relationship to the main entity
+- **AiBenchmarkOrderNoted5b03ce6** — child entity
+  - Foreign key: `refAiBenchmarkOrderd5b03ce6Id`
+  - One-to-many parent-child relationship to the main entity
+
+No requested part was skipped.
+
+ORIGAM AI 0.0.1 is in beta and can make mistakes - please review the changes I made, and report anything that went wrong to the ORIGAM development team; every report makes ORIGAM AI more accurate.</pre>
+</div></details>
+</td></tr>
+<tr class="total">
+<td>TOTAL</td><td></td>
+<td>4</td>
+<td>11</td>
+<td>270,487</td>
+<td>0</td>
+<td>2,373</td>
+<td>31.8</td>
+<td>0.056945</td>
+</tr>
+</tbody></table></body></html>

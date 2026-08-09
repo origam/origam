@@ -70,6 +70,9 @@ public class OpenApiSectionProvider
     )
     {
         "/Model/GetEntityIndex",
+        "/ChatHistory/GetAll",
+        "/ChatHistory/Save",
+        "/ChatHistory/Delete",
     };
 
     private readonly IHttpClientFactory httpClientFactory;

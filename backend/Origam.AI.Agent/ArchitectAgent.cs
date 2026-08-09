@@ -26,6 +26,7 @@ using AGUI.Abstractions;
 using AGUI.Server;
 using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;
+using OpenAI.Responses;
 using Origam.AI.Agent.Services;
 using Origam.AI.Agent.Tools;
 
@@ -125,6 +126,12 @@ public sealed class ArchitectAgent : DelegatingAIAgent
         );
 
         var runChatOptions = incomingChatOptions?.Clone() ?? new ChatOptions();
+#pragma warning disable OPENAI001
+        runChatOptions.RawRepresentationFactory = _ => new CreateResponseOptions
+        {
+            StoredOutputEnabled = false,
+        };
+#pragma warning restore OPENAI001
         runChatOptions.Tools = await BuildToolsAsync(
             runChatOptions.Tools,
             settings.EnabledSections,
