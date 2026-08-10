@@ -7,7 +7,7 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="log4net" Version="3.3.0" />
+    <PackageReference Include="log4net" Version="3.3.2" />
     <PackageReference Include="MimeKit" Version="4.16.0" />
     <PackageReference Include="MimeTypeMapOfficial" Version="1.0.17" />
   </ItemGroup>
