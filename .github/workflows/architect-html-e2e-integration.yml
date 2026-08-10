@@ -54,7 +54,7 @@ jobs:
 
       # --- Build the Architect Server -------------------------------------
       - name: Restore backend
-        run: msbuild Origam.sln -t:restore /p:Configuration="Release Architect Server" -v:m
+        run: msbuild Origam.sln -t:restore /p:RestorePackagesConfig=true /p:Configuration="Release Architect Server" -v:m
         working-directory: backend
 
       - name: Build Architect Server

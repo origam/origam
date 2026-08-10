@@ -176,7 +176,7 @@ jobs:
       - name: Restore Packages
         run: |
           cd backend
-          msbuild Origam.sln -t:restore /p:Configuration="Release Architect Server" -v:m
+          msbuild Origam.sln -t:restore /p:RestorePackagesConfig=true /p:Configuration="Release Architect Server" -v:m
       - name: Build Server Architect
         run: |
           cd backend
@@ -205,7 +205,7 @@ jobs:
       - name: Restore Packages
         run: |
           cd backend
-          msbuild Origam.sln -t:restore /p:Configuration="Release Server" -v:m
+          msbuild Origam.sln -t:restore /p:RestorePackagesConfig=true /p:Configuration="Release Server" -v:m
       - name: Build Server
         run: |
           cd backend
