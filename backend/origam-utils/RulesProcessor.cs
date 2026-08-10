@@ -45,11 +45,15 @@ class RulesProcessor
         List<AbstractSchemaItemProvider> allproviders = new OrigamProviderBuilder()
             .SetSchemaProvider(persistence.SchemaProvider)
             .GetAll();
-        List<Dictionary<ISchemaItem, string>> errorFragments = ModelRules.GetErrors(
-            allproviders,
-            persistence,
-            new CancellationTokenSource().Token
-        );
+        List<Dictionary<ISchemaItem, string>> errorFragments;
+        using (CancellationTokenSource cancellationTokenSource = new CancellationTokenSource())
+        {
+            errorFragments = ModelRules.GetErrors(
+                allproviders,
+                persistence,
+                cancellationTokenSource.Token
+            );
+        }
         if (errorFragments.Count != 0)
         {
             StringBuilder sb = new StringBuilder("Rule violations in ");
