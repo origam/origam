@@ -76,7 +76,7 @@
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
     "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
     "@testing-library/dom": "^10.4.1",
-    "@types/react": "19.2.17",
+    "@types/react": "19.2.18",
     "@types/react-beautiful-dnd": "^13.1.8",
     "@types/react-dom": "19.2.3",
     "@types/uuid": "^11.0.0",
@@ -96,7 +96,7 @@
     "minimatch": "^9.0.7",
     "node-gyp": "^11.4.2",
     "tar": "^7.5.4",
-    "@types/react": "19.2.17",
+    "@types/react": "19.2.18",
     "@types/react-dom": "19.2.3",
     "@types/leaflet": "1.7.11",
     "@types/leaflet-draw": "1.0.13"
