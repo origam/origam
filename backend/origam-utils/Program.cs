@@ -517,13 +517,18 @@ public class Program
 
     private static int CreateHashIndex(CreateHashIndexOptions options)
     {
+        if (options == null)
+        {
+            throw new ArgumentNullException(nameof(options));
+        }
+
         if (log.IsInfoEnabled)
         {
             log.InfoFormat(
                 format: "Creating hash index file {1} on folder {0} with pattern {2}.",
-                options?.Input,
-                options?.Output,
-                options?.Mask
+                options.Input,
+                options.Output,
+                options.Mask
             );
         }
         var fileNames = Directory.GetFiles(options.Input, options.Mask);
