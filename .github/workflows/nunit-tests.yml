@@ -27,9 +27,13 @@ jobs:
     - name: Setup msbuild
       uses: microsoft/setup-msbuild@v1
 
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v2
+
     - name: Restore Packages
       run: |
-       msbuild backend/Origam.sln -t:restore /p:RestorePackagesConfig=true /p:Configuration="Release Architect" -v:m
+       nuget restore backend/Origam.ProjectAutomation/packages.config -PackagesDirectory backend/packages -NonInteractive
+       msbuild backend/Origam.sln -t:restore /p:Configuration="Release Architect" -v:m
     - name: Build Architect
       run: |
        msbuild backend/Origam.sln -warnaserror /p:Configuration="Release Architect" -v:m

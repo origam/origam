@@ -173,10 +173,14 @@ jobs:
       - name: setup-msbuild
         uses: microsoft/setup-msbuild@v1
 
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v2
+
       - name: Restore Packages
         run: |
           cd backend
-          msbuild Origam.sln -t:restore /p:RestorePackagesConfig=true /p:Configuration="Release Architect Server" -v:m
+          nuget restore Origam.ProjectAutomation/packages.config -PackagesDirectory packages -NonInteractive
+          msbuild Origam.sln -t:restore /p:Configuration="Release Architect Server" -v:m
       - name: Build Server Architect
         run: |
           cd backend
@@ -202,10 +206,14 @@ jobs:
       - name: setup-msbuild
         uses: microsoft/setup-msbuild@v1
 
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v2
+
       - name: Restore Packages
         run: |
           cd backend
-          msbuild Origam.sln -t:restore /p:RestorePackagesConfig=true /p:Configuration="Release Server" -v:m
+          nuget restore Origam.ProjectAutomation/packages.config -PackagesDirectory packages -NonInteractive
+          msbuild Origam.sln -t:restore /p:Configuration="Release Server" -v:m
       - name: Build Server
         run: |
           cd backend
