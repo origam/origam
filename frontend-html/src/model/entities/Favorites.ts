@@ -18,12 +18,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import xmlJs from "xml-js";
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { getApi } from "model/selectors/getApi";
 import { v4 as uuidv4 } from 'uuid';
 import { T } from "utils/translation";
 
 export class Favorites {
+  constructor() {
+    makeObservable(this);
+  }
+
   @observable
   public favoriteFolders: FavoriteFolder[] = [];
 
@@ -174,6 +178,7 @@ export class FavoriteFolder {
     items: string[],
     isPinned: boolean
   ) {
+    makeObservable(this);
     this.name = name;
     this.isPinned = isPinned;
     this.itemIds = items;

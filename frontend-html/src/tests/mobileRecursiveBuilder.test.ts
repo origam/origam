@@ -42,14 +42,14 @@ class MockFormScreen{
 
 class MockComponentFactory implements IComponentFactory{
   getDataView(args: { key: string; id: string; modelInstanceId: string; isHeadless: boolean }): React.ReactNode {
-    return {name: "MockDataViewComponent", props: {id: undefined}};
+    return {name: "MockDataViewComponent", props: {id: undefined}} as any as React.ReactNode;
   }
 
   getDetailNavigator(masterNavigationNode: INavigationNode): React.ReactNode {
     return {
       name: "MockDetailNavigatorComponent",
       node: masterNavigationNode,
-      props: {id: undefined}};
+      props: {id: undefined}} as any as React.ReactNode;
   }
 }
 

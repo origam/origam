@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { action, computed, flow, observable } from "mobx";
+import { action, computed, flow, observable, makeObservable } from "mobx";
 import { onFieldChangeG } from "model/actions-ui/DataView/TableView/onFieldChange";
 import { getSelectedRowIndex } from "model/selectors/DataView/getSelectedRowIndex";
 import { getCellValue } from "model/selectors/TablePanelView/getCellValue";
@@ -62,6 +62,7 @@ export class TablePanelView implements ITablePanelView {
   $type_ITablePanelView: 1 = 1;
 
   constructor(data: ITablePanelViewData) {
+    makeObservable(this);
     Object.assign(this, data);
     this.columnConfigurationModel.parent = this;
     this.filterConfiguration.parent = this;
@@ -662,6 +663,10 @@ export class TablePanelView implements ITablePanelView {
 }
 
 export class AggregationContainer {
+  constructor() {
+    makeObservable(this);
+  }
+
   @observable aggregationTypes: Map<string, AggregationType | undefined> = new Map<string,
     AggregationType | undefined>();
 

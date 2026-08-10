@@ -22,7 +22,8 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <PropertyGroup>
-    <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD;NETSTANDARD2_0</DefineConstants>
+    <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'"
+      >NETSTANDARD;NETSTANDARD2_0</DefineConstants>
     <Configurations>Debug Client;Debug Architect;Debug Server;Release Client;Release Architect;Release Server</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Client|AnyCPU' ">
@@ -123,7 +124,7 @@
     <PackageReference Include="Mvp.Xml.NetStandard">
       <Version>1.1.1</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.0" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.2" />
     <PackageReference Include="System.Security.Permissions">
       <Version>6.0.0</Version>
     </PackageReference>

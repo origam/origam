@@ -23,7 +23,7 @@ import cx from "classnames";
 
 import S from "gui/Components/MainMenu/MainMenuItem.module.scss";
 
-export class MainMenuItem extends React.Component<{
+export class MainMenuItem extends React.Component<React.PropsWithChildren<{
   icon: React.ReactNode;
   label: string;
   level: number;
@@ -37,7 +37,7 @@ export class MainMenuItem extends React.Component<{
   onClick?(event: any): void;
   onContextMenu?(event: any): void;
   refDom?: any;
-}> {
+}>> {
   render() {
     return (
       <div className={S.linkContainer} onContextMenu={this.props.onContextMenu}>

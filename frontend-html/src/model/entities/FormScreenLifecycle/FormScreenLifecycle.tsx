@@ -25,7 +25,8 @@ import {
   flow,
   observable,
   reaction,
-  when
+  when,
+  makeObservable
 } from "mobx";
 import { processActionResult } from "model/actions/Actions/processActionResult";
 import { closeForm } from "model/actions/closeForm";
@@ -180,6 +181,10 @@ enum IQuestionDeleteDataAnswer {
 export const closingScreens = new WeakSet<any>();
 
 export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
+  constructor() {
+    makeObservable(this);
+  }
+
   $type_IFormScreenLifecycle: 1 = 1;
 
   onClose: (() => void) | undefined;

@@ -22,7 +22,7 @@ import { onScreenTabCloseClick } from "model/actions-ui/ScreenTabHandleRow/onScr
 import { onSelectionDialogActionButtonClick } from "model/actions-ui/SelectionDialog/onSelectionDialogActionButtonClick";
 import { getIsScreenOrAnyDataViewWorking } from "model/selectors/FormScreen/getIsScreenOrAnyDataViewWorking";
 import { showDialog } from "model/selectors/getDialogStack";
-import React, { useEffect } from "react";
+import React, { JSX, useEffect } from "react";
 import { IOpenedScreen } from "../../../model/entities/types/IOpenedScreen";
 import { getWorkbenchLifecycle } from "../../../model/selectors/getWorkbenchLifecycle";
 import S from "./ScreenArea.module.scss";
@@ -37,11 +37,11 @@ import { ModalDialog } from "gui/Components/Dialog/ModalDialog";
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 import { CloseButton } from "gui/Components/Dialogs/CloseButton";
 
-export const DialogScreen: React.FC<{
+export const DialogScreen: React.FC<React.PropsWithChildren<{
   openedScreen: IOpenedScreen;
   bottomButtons: JSX.Element | null;
   showCloseButton: boolean
-}> = observer((props) => {
+}>> = observer((props) => {
   const key = `ScreenDialog@${props.openedScreen.menuItemId}@${props.openedScreen.order}`;
   const workbenchLifecycle = getWorkbenchLifecycle(props.openedScreen);
 

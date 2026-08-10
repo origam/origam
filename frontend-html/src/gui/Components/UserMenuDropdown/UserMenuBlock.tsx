@@ -20,11 +20,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import React from "react";
 import S from "gui/Components/UserMenuDropdown/UserMenuDropdown.module.scss";
 
-export const UserMenuBlock: React.FC<{
+export const UserMenuBlock: React.FC<React.PropsWithChildren<{
   userName: string;
   avatarLink: string | undefined;
   actionItems: React.ReactNode;
-}> = props => (
+}>> = props => (
   <div className={S.root}>
     <div className={S.avatarSection}>
       <div className={S.pictureSection}>

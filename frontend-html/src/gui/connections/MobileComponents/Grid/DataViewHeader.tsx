@@ -50,7 +50,9 @@ import React, { useContext } from "react";
 import Measure from "react-measure";
 import { T } from "utils/translation";
 import { getConfigurationManager } from "model/selectors/TablePanelView/getConfigurationManager";
-import { action, computed } from "mobx";
+import { action,
+  makeObservable
+} from "mobx";
 import { getPanelMenuActions } from "model/selectors/DataView/getPanelMenuActions";
 import { DropdownDivider } from "gui/Components/Dropdown/DropdownDivider";
 import { getAreCrudButtonsEnabled } from "model/selectors/DataView/getAreCrudButtonsEnabled";
@@ -73,33 +75,35 @@ import {
 } from "utils/keyShortcuts";
 
 @observer
-export class DataViewHeaderInner extends React.Component<{
+export class DataViewHeaderInner extends React.Component<React.PropsWithChildren<{
   isVisible: boolean;
   extension: DataViewHeaderExtension;
-}> {
+}>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
   static contextType = MobXProviderContext;
+
+  declare context: any;
 
   get dataView() {
     return this.context.dataView;
   }
 
-  state = {
-    hiddenActionIds: new Set<string>(),
-  };
-
   shouldBeShown(action: IAction) {
     return getIsEnabledAction(action) || action.mode !== IActionMode.ActiveRecord;
   }
 
-  @computed
   get relevantMenuActions() {
-    return this.allMenuActions
+    return getPanelMenuActions(this.dataView)
       .filter((action) => !action.groupId)
       .filter((action) => this.shouldBeShown(action));
   }
 
-  renderMenuActions(args: { setMenuDropped(state: boolean): void }) {
-    return this.relevantMenuActions.map((action) => {
+  renderMenuActions(args: { setMenuDropped(state: boolean): void; actions: IAction[] }) {
+    return args.actions.map((action) => {
       return (
         <DropdownItem
           key={action.id}
@@ -116,16 +120,6 @@ export class DataViewHeaderInner extends React.Component<{
 
   get mobileState(){
     return getMobileState(this.dataView);
-  }
-
-  @computed
-  get isBarVisible() {
-    return this.props.isVisible;
-  }
-
-  @computed
-  get allMenuActions() {
-    return getPanelMenuActions(this.dataView);
   }
 
   @action
@@ -189,6 +183,8 @@ export class DataViewHeaderInner extends React.Component<{
 
     const configurationManager = getConfigurationManager(dataView);
     const customTableConfigsExist = configurationManager.customTableConfigurations.length > 0;
+    const isBarVisible = this.props.isVisible;
+    const relevantMenuActions = this.relevantMenuActions;
     return (
       <Measure bounds={true}>
         {({measureRef, contentRect}) => {
@@ -197,10 +193,10 @@ export class DataViewHeaderInner extends React.Component<{
               {() => (
                 <DataViewHeader
                   domRef={measureRef}
-                  isVisible={this.isBarVisible}
+                  isVisible={isBarVisible}
                   className={"mobileDataViewHeader"}
                 >
-                  {this.isBarVisible &&
+                  {isBarVisible &&
                     <>
                       <div className="fullspaceBlock">
                         <DataViewHeaderGroup noShrink={true} className={"rowCount"} noDivider={true}>
@@ -402,8 +398,8 @@ export class DataViewHeaderInner extends React.Component<{
                                   {T("Delete View", "delete_current_column_config")}
                                 </DropdownItem>,
                               ]}
-                              {this.relevantMenuActions.length > 0 && <DropdownDivider/>}
-                              {this.renderMenuActions({setMenuDropped: setDropped})}
+                              {relevantMenuActions.length > 0 && <DropdownDivider/>}
+                              {this.renderMenuActions({setMenuDropped: setDropped, actions: relevantMenuActions})}
                             </Dropdown>
                           )}
                         />

@@ -23,10 +23,10 @@ import { MobileState } from "model/entities/MobileState/MobileState";
 import { MobileAction } from "gui/connections/MobileComponents/Form/MobileAction";
 import S from "gui/connections/MobileComponents/Form/ActionList.module.scss";
 
-export const ActionList: React.FC<{
+export const ActionList: React.FC<React.PropsWithChildren<{
   actions: IAction[],
   mobileState: MobileState
-}> = (props) => {
+}>> = (props) => {
   return (
     <div
       className={S.root + " formRootMobile"}

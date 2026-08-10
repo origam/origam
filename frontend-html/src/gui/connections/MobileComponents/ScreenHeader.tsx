@@ -22,7 +22,7 @@ import S from "./ScreenHeader.module.scss";
 import { MobXProviderContext, observer } from "mobx-react";
 import { getActiveScreen } from "model/selectors/getActiveScreen";
 
-export const ScreenHeader: React.FC<{}> = observer((props) => {
+export const ScreenHeader: React.FC<React.PropsWithChildren<{}>> = observer((props) => {
 
   const application = useContext(MobXProviderContext).application;
   const activeScreen = getActiveScreen(application);

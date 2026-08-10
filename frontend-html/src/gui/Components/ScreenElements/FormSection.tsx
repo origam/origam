@@ -20,13 +20,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import S from "./FormSection.module.css";
 import React from "react";
 
-export class FormSection extends React.Component<{
+export class FormSection extends React.Component<React.PropsWithChildren<{
   width: number;
   height: number;
   x: number;
   y: number;
   title: string;
-}> {
+}>> {
   render() {
     return (
       <div
