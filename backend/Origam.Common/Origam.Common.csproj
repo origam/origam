@@ -15,8 +15,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'"
-      >NETSTANDARD;NETSTANDARD2_0</DefineConstants
-    >
+      >NETSTANDARD;NETSTANDARD2_0</DefineConstants>
     <Configurations>Debug Client;Debug Architect;Debug Server;Release Client;Release Architect;Release Server</Configurations>
     <Version>0.0.0.0</Version>
   </PropertyGroup>
@@ -64,7 +63,7 @@
     <PackageReference Include="log4net" Version="3.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="6.0.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="Origam.Service.Core" Version="2.3.3" />
     <PackageReference Include="System.Drawing.Common" Version="8.0.21" />
     <PackageReference Include="System.IO.FileSystem" Version="4.3.0" />

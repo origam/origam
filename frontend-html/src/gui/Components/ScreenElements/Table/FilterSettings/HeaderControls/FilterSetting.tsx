@@ -19,7 +19,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { IFilterSetting } from "../../../../../../model/entities/types/IFilterSetting";
 
-import { observable } from "mobx";
+import { observable,
+  makeObservable
+} from "mobx";
 
 export const EDITOR_DALEY_MS = 500;
 
@@ -49,6 +51,7 @@ export class FilterSetting implements IFilterSetting {
   }
 
   constructor(type: string, isComplete: boolean = false, val1?: any, val2?: any) {
+    makeObservable(this);
     this.type = type;
     this.isComplete = isComplete;
     this.val1 = val1 ?? undefined;

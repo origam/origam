@@ -24,7 +24,7 @@ import { SidebarAlertCounter } from "gui/Components/Sidebar/AlertCounter";
 import { getWorkQueuesTotalItemsCount } from "model/selectors/WorkQueues/getWorkQueuesTotalItemCount";
 import { MobXProviderContext, observer } from "mobx-react";
 
-export const MenuButton: React.FC<{}> = observer((props) => {
+export const MenuButton: React.FC<React.PropsWithChildren<{}>> = observer((props) => {
 
   const context = useContext(MobXProviderContext)
 

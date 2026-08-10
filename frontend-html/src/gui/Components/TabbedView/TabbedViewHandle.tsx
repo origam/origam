@@ -24,7 +24,7 @@ import { Icon } from "gui/Components/Icon/Icon";
 import { observer } from "mobx-react";
 
 @observer
-export class TabbedViewHandle extends React.Component<{
+export class TabbedViewHandle extends React.Component<React.PropsWithChildren<{
   title?: string;
   id?: string;
   isActive?: boolean;
@@ -36,7 +36,7 @@ export class TabbedViewHandle extends React.Component<{
   onCloseMouseDown?(event: any): void;
   isInitializing?: boolean;
   refDom?: any;
-}> {
+}>> {
 
   renderCloseButton(){
     if(!this.props.hasCloseBtn){

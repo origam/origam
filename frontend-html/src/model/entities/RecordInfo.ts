@@ -19,10 +19,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { IRecordInfo } from "./types/IRecordInfo";
 import { getApi } from "model/selectors/getApi";
-import { action, observable } from "mobx";
+import { action, observable,
+  makeObservable
+} from "mobx";
 import { getSessionId } from "model/selectors/getSessionId";
 
 export class RecordInfo implements IRecordInfo {
+  constructor() {
+    makeObservable(this);
+  }
+
   $type_IRecordInfo: 1 = 1;
 
   @observable.ref info: any[] = [];

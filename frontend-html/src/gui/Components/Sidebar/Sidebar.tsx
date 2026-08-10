@@ -20,6 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import "gui/Components/Sidebar/Sidebar.scss";
 import React from "react";
 
-export const Sidebar: React.FC = props => (
+export const Sidebar: React.FC<React.PropsWithChildren<{}>> = props => (
   <div className={"sidebar"}>{props.children}</div>
 );

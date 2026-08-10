@@ -24,13 +24,13 @@ import cx from "classnames";
 
 const Svg = InlineSvg as React.ComponentType<InlineSvgProps>;
 
-export class Icon extends React.Component<{
+export class Icon extends React.Component<React.PropsWithChildren<{
   src: string;
   className?: string;
   tooltip?: string;
   style?: {[key: string]: string};
   onClick?: () => void;
-}> {
+}>> {
   render() {
     if (!this.props.src) {
       return null;

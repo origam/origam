@@ -21,6 +21,7 @@ import { IPlugin } from "./IPlugin";
 import { ILocalization } from "./ILocalization";
 import { ILocalizer } from "./ILocalizer";
 import { ISectionPluginData } from "./ISectionPluginData";
+import { JSX } from "react";
 
 export interface ISectionPlugin extends IPlugin {
   getScreenParameters: (() => { [key: string]: string }) | undefined;

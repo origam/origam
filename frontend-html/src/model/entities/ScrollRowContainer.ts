@@ -17,21 +17,18 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { action, computed, observable } from "mobx";
+import { action, computed, observable, makeObservable } from "mobx";
 import { MAX_CHUNKS_TO_HOLD, SCROLL_ROW_CHUNK, } from "../../gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
 import { IRowsContainer } from "./types/IRowsContainer";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { fixRowIdentifier } from "utils/dataRow";
 import { IProperty } from "model/entities/types/IProperty";
 
-// The constants have to be defined here for the unit tests to work.
-// const MAX_CHUNKS_TO_HOLD = 20;
-// const SCROLL_ROW_CHUNK = 1000;
-
 export class ScrollRowContainer implements IRowsContainer {
   $type_ScrollRowContainer: 1 = 1;
 
   constructor(rowIdGetter: (row: any[]) => string, parent: any) {
+    makeObservable(this);
     this.rowIdGetter = rowIdGetter;
     this.parent = parent;
   }
@@ -281,6 +278,7 @@ class RowChunk {
     rowIdGetter: (row: any[]) => string,
     isFinal: boolean | undefined
   ) {
+    makeObservable(this);
     this.rowIdGetter = rowIdGetter;
     this.isFinal = isFinal === undefined ? rows.length < SCROLL_ROW_CHUNK : isFinal;
     if (rowOffset < 0) {

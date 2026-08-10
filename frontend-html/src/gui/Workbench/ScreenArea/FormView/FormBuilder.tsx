@@ -46,15 +46,31 @@ import { TabIndex } from "model/entities/TabIndexOwner";
 import { BackupFocusPlaceHolder } from "gui/Workbench/ScreenArea/FormView/BackupFocusPlaceHolder";
 
 
-@inject(({dataView}) => {
+@inject(({dataView}: any) => {
   return {dataView, xmlFormRootObject: dataView.formViewUI};
 })
 @observer
-export class FormBuilder extends React.Component<{
+export class FormBuilder extends React.Component<React.PropsWithChildren<{
   xmlFormRootObject?: any;
   dataView?: IDataView;
-}> {
+}>> {
   static contextType = CtxPanelVisibility
+
+  declare context: any;
+
+  componentDidMount() {
+    this.autoFocusIfNeeded();
+  }
+
+  componentDidUpdate() {
+    this.autoFocusIfNeeded();
+  }
+
+  autoFocusIfNeeded() {
+    if (this.props.dataView?.isFirst && this.context.isVisible) {
+      this.props.dataView.formFocusManager.autoFocus();
+    }
+  }
 
   onKeyDown(event: any) {
     if (event.key === "Tab") {
@@ -70,30 +86,32 @@ export class FormBuilder extends React.Component<{
 
   buildForm() {
     const self = this;
-    const row = getSelectedRow(this.props.dataView);
-    const rowId = getSelectedRowId(this.props.dataView);
-    const dataTable = getDataTable(this.props.dataView);
+    const dataView = this.props.dataView;
+    const xmlFormRootObject = this.props.xmlFormRootObject;
+    const row = getSelectedRow(dataView);
+    const rowId = getSelectedRowId(dataView);
+    const dataTable = getDataTable(dataView);
     let backgroundColor: string | undefined;
     let foreGroundColor: string | undefined;
     if (row && rowId) {
-      backgroundColor = getRowStateRowBgColor(self.props.dataView, rowId);
+      backgroundColor = getRowStateRowBgColor(dataView, rowId);
       foreGroundColor = getRowStateForegroundColor(
-        self.props.dataView,
+        dataView,
         rowId || ""
       );
     }
-    const focusManager = self.props.dataView!.formFocusManager;
+    const focusManager = dataView!.formFocusManager;
 
     function recursive(xfo: any) {
       if (xfo.name === "FormRoot") {
         return (
           <FormRoot
             key={xfo.$iid}
-            dataView={self.props.dataView!}
+            dataView={dataView!}
             style={{backgroundColor}}
           >
             {xfo.elements.map((child: any) => recursive(child))}
-            <BackupFocusPlaceHolder ctx={self.props.dataView}/>
+            <BackupFocusPlaceHolder ctx={dataView}/>
           </FormRoot>
         );
       } else if (xfo.name === "FormElement" && xfo.attributes.Type === "FormSection") {
@@ -118,7 +136,7 @@ export class FormBuilder extends React.Component<{
           />
         );
       } else if (xfo.name === "Control" && xfo.attributes.Column === "RadioButton") {
-        const sourceField = getDataSourceFieldByName(self.props.dataView, xfo.attributes.Id);
+        const sourceField = getDataSourceFieldByName(dataView, xfo.attributes.Id);
 
         const checked = row
           ? String(dataTable.getCellValueByDataSourceField(row, sourceField!)) === xfo.attributes.Value
@@ -137,12 +155,12 @@ export class FormBuilder extends React.Component<{
               focusManager.subscribe(radioInput, xfo.attributes.Id, TabIndex.create(xfo.attributes.TabIndex))
             }
             labelColor={foreGroundColor}
-            onClick={() => self?.props?.dataView?.formFocusManager.stopAutoFocus()}
+            onClick={() => dataView?.formFocusManager.stopAutoFocus()}
             onSelected={(value) => {
-              const formScreenLifecycle = getFormScreenLifecycle(self.props.dataView);
+              const formScreenLifecycle = getFormScreenLifecycle(dataView);
               flow(function*() {
                 yield*formScreenLifecycle.updateRadioButtonValue(
-                  self.props.dataView!,
+                  dataView!,
                   row,
                   xfo.attributes.Id,
                   value
@@ -157,7 +175,7 @@ export class FormBuilder extends React.Component<{
           return (
             <Observer key={propertyId}>
               {() => {
-                let property = getDataViewPropertyById(self.props.dataView, propertyId);
+                let property = getDataViewPropertyById(dataView, propertyId);
                 if (row && property?.column === "Polymorph") {
                   property = property.getPolymophicProperty(row);
                 }
@@ -190,7 +208,7 @@ export class FormBuilder extends React.Component<{
                             subscribeToFocusManager={(radioInput) =>
                               focusManager.subscribe(radioInput, property!.id, property!.tabIndex)
                             }
-                            onClick={() => self?.props?.dataView?.formFocusManager.stopAutoFocus()}
+                            onClick={() => dataView?.formFocusManager.stopAutoFocus()}
                             labelColor={foreGroundColor}
                             />
                         </div>
@@ -227,11 +245,7 @@ export class FormBuilder extends React.Component<{
       }
     }
 
-    const form = recursive(this.props.xmlFormRootObject);
-    if (this.props.dataView?.isFirst && this.context.isVisible) {
-      focusManager.autoFocus();
-    }
-    return form;
+    return recursive(xmlFormRootObject);
   }
 
   render() {
