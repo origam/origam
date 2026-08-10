@@ -75,7 +75,7 @@ public class PasswordHasherTests
     {
         var sut = new Sha256PasswordHasher();
         int tooManyIterations = GetCurrentIterationCount(sut) + 1;
-        string hash = $"{Sha256PasswordHasher.KEY_PREFIX}.{tooManyIterations:X}.salt.hash";
+        string hash = $"{Sha256PasswordHasher.KeyPrefix}.{tooManyIterations:X}.salt.hash";
 
         PasswordVerificationResult result = sut.VerifyHashedPassword(hash, Password);
 
@@ -137,7 +137,7 @@ public class PasswordHasherTests
         );
         return string.Join(
             ".",
-            Sha256PasswordHasher.KEY_PREFIX,
+            Sha256PasswordHasher.KeyPrefix,
             iterations.ToString("X", CultureInfo.InvariantCulture),
             Convert.ToBase64String(salt),
             Convert.ToBase64String(subkey)
