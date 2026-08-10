@@ -52,8 +52,8 @@ class CorePasswordHasher : IPasswordHasher<IOrigamUser>
         string[] parts = hashedPassword.Split(".");
         string prefix = parts[0];
         if (
-            parts.Length != Sha256PasswordHasher.KEY_PARTS_LENGTH
-            || prefix != Sha256PasswordHasher.KEY_PREFIX
+            parts.Length != Sha256PasswordHasher.KeyPartsLength
+            || prefix != Sha256PasswordHasher.KeyPrefix
         )
         {
             var result = legacyHasher.VerifyHashedPassword(hashedPassword, providedPassword);
