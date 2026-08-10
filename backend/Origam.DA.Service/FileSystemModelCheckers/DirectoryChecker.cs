@@ -174,6 +174,7 @@ class DirectoryChecker : IFileSystemModelChecker
                     }
 
                     return parentId == Guid.Empty;
-                }) ?? false;
+                })
+            ?? false;
     }
 }

@@ -64,7 +64,6 @@ import { onFirstRowClick } from "model/actions-ui/DataView/onFirstRowClick";
 import { onLastRowClick } from "model/actions-ui/DataView/onLastRowClick";
 import { T } from "utils/translation";
 import { getConfigurationManager } from "model/selectors/TablePanelView/getConfigurationManager";
-import { computed } from "mobx";
 import { getPanelMenuActions } from "model/selectors/DataView/getPanelMenuActions";
 import { DropdownDivider } from "gui/Components/Dropdown/DropdownDivider";
 import { getTrueSelectedRowIndex } from "model/selectors/DataView/getTrueSelectedRowIndex";
@@ -79,40 +78,36 @@ import {
 } from "utils/keyShortcuts";
 
 @observer
-export class CDataViewHeaderInner extends React.Component<{
+export class CDataViewHeaderInner extends React.Component<React.PropsWithChildren<{
   isVisible: boolean;
   extension: DataViewHeaderExtension;
-}> {
+}>> {
   static contextType = MobXProviderContext;
+
+  declare context: any;
 
   get dataView() {
     return this.context.dataView;
   }
 
-  state = {
-    hiddenActionIds: new Set<string>(),
-  };
-
   shouldBeShown(action: IAction) {
     return getIsEnabledAction(action) || action.mode !== IActionMode.ActiveRecord;
   }
 
-  @computed
-  get relevantActions() {
-    return this.allActions
+  getRelevantActions(dataView: IDataView) {
+    return getPanelViewActions(dataView)
       .filter((action) => !action.groupId)
       .filter((action) => this.shouldBeShown(action));
   }
 
-  @computed
-  get relevantMenuActions() {
-    return this.allMenuActions
+  getRelevantMenuActions(dataView: IDataView) {
+    return getPanelMenuActions(dataView)
       .filter((action) => !action.groupId)
       .filter((action) => this.shouldBeShown(action));
   }
 
-  renderMenuActions(args: { setMenuDropped(state: boolean): void }) {
-    return this.relevantMenuActions.map((action) => {
+  renderMenuActions(args: { setMenuDropped(state: boolean): void; actions: IAction[] }) {
+    return args.actions.map((action) => {
       return (
         <DropdownItem
           key={action.id}
@@ -127,36 +122,15 @@ export class CDataViewHeaderInner extends React.Component<{
     });
   }
 
-  @computed
-  get isBarVisible() {
-    return this.props.isVisible || this.hasSomeRelevantActions;
-  }
-
-  @computed
-  get isActionsOnly() {
-    return !this.props.isVisible && this.hasSomeRelevantActions;
-  }
-
-  @computed
-  get hasSomeRelevantActions() {
+  hasSomeRelevantActions(actions: IAction[]) {
     return (
-      this.relevantActions.filter((action) => action.placement !== IActionPlacement.PanelMenu)
-        .length > 0
+      actions.filter((action) => action.placement !== IActionPlacement.PanelMenu).length > 0
     );
-  }
-
-  @computed
-  get allActions() {
-    return getPanelViewActions(this.dataView);
-  }
-
-  @computed
-  get allMenuActions() {
-    return getPanelMenuActions(this.dataView);
   }
 
   render() {
     const {dataView} = this;
+    const {extension, isVisible} = this.props;
     const label = getDataViewLabel(dataView);
     const isFilterSettingsVisible = getIsFilterControlsDisplayed(dataView);
     const onColumnConfigurationClickEvt = onColumnConfigurationClick(dataView);
@@ -193,6 +167,11 @@ export class CDataViewHeaderInner extends React.Component<{
 
     const configurationManager = getConfigurationManager(dataView);
     const customTableConfigsExist = configurationManager.customTableConfigurations.length > 0;
+    const relevantActions = this.getRelevantActions(dataView);
+    const relevantMenuActions = this.getRelevantMenuActions(dataView);
+    const hasSomeRelevantActions = this.hasSomeRelevantActions(relevantActions);
+    const isBarVisible = isVisible || hasSomeRelevantActions;
+    const isActionsOnly = !isVisible && hasSomeRelevantActions;
     return (
       <Measure bounds={true}>
         {({measureRef, contentRect}) => {
@@ -201,12 +180,12 @@ export class CDataViewHeaderInner extends React.Component<{
           return (
             <Observer>
               {() => (
-                <DataViewHeader domRef={measureRef} isVisible={this.isBarVisible}>
-                  {this.isBarVisible &&
-                  (this.isActionsOnly ? (
+                <DataViewHeader domRef={measureRef} isVisible={isBarVisible}>
+                  {isBarVisible &&
+                  (isActionsOnly ? (
                     <DataViewHeaderGroup grovable={true} noDivider={true}>
-                      {this.props.extension.render("actions")}
-                      <DataViewHeaderButtonGroup actions={this.relevantActions}/>
+                      {extension.render("actions")}
+                      <DataViewHeaderButtonGroup actions={relevantActions}/>
                     </DataViewHeaderGroup>
                   ) : (
                     <>
@@ -280,8 +259,8 @@ export class CDataViewHeaderInner extends React.Component<{
                         }
 
                         <DataViewHeaderGroup grovable={true}>
-                          {this.props.extension.render("actions")}
-                          <DataViewHeaderButtonGroup actions={this.relevantActions}/>
+                          {extension.render("actions")}
+                          <DataViewHeaderButtonGroup actions={relevantActions}/>
                         </DataViewHeaderGroup>
 
                         {!isBreak640 && (
@@ -322,7 +301,7 @@ export class CDataViewHeaderInner extends React.Component<{
                             </DataViewHeaderGroup>
 
                               <DataViewHeaderGroup noShrink={true} className={"rowCount"}>
-                                {renderRowCount(this.dataView)}
+                                {renderRowCount(dataView)}
                               </DataViewHeaderGroup>
                             </>
                           )}
@@ -445,8 +424,8 @@ export class CDataViewHeaderInner extends React.Component<{
                                     {T("Delete View", "delete_current_column_config")}
                                   </DropdownItem>,
                                 ]}
-                                {this.relevantMenuActions.length > 0 && <DropdownDivider />}
-                                {this.renderMenuActions({ setMenuDropped: setDropped })}
+                                {relevantMenuActions.length > 0 && <DropdownDivider />}
+                                {this.renderMenuActions({ setMenuDropped: setDropped, actions: relevantMenuActions })}
                               </Dropdown>
                             )}
                           />

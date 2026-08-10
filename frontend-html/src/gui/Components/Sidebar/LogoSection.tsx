@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import React from "react";
 import S from "gui/Components/Sidebar/LogoSection.module.scss";
 
-export class LogoSection extends React.Component {
+export class LogoSection extends React.Component<React.PropsWithChildren<{}>> {
   render() {
     return <div className={S.root}>{this.props.children}</div>;
   }

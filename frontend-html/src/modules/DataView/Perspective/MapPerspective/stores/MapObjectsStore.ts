@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { action, computed, flow, reaction } from "mobx";
+import { action, computed, flow, reaction, makeObservable } from "mobx";
 import { parse as wktParse, stringify as wktStringify } from "wkt";
 import { getDataSourceFieldIndexByName } from "model/selectors/DataSources/getDataSourceFieldIndexByName";
 import { MapRootStore } from "./MapRootStore";
@@ -34,6 +34,7 @@ import { runGeneratorInFlowWithHandler } from "utils/runInFlowWithHandler";
 
 export class MapObjectsStore {
   constructor(private root: MapRootStore) {
+    makeObservable(this);
   }
 
   get dataView() {
