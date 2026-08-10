@@ -38,6 +38,10 @@ updates:
         - "*"
     commit-message:
       prefix: "DEV: "
+    ignore:
+      # Keep mobx-react on the 6.x release line. Because the upgrade will be more complicated.
+      - dependency-name: "mobx-react"
+        versions: [">=7.0.0"]
   - package-ecosystem: "npm"
     directory: "/architect-html"
     open-pull-requests-limit: 20
