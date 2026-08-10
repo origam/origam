@@ -297,6 +297,14 @@ public class DocProcessor
 
     private void SaveSchemaXml()
     {
+        if (Path.IsPathRooted(xmlsourcefile))
+        {
+            throw new ArgumentException(
+                "The XML output file must be relative.",
+                nameof(xmlsourcefile)
+            );
+        }
+
         FileStream file = new FileStream(
             Path.Combine(DirectoryPath, xmlsourcefile),
             FileMode.Create,
@@ -340,7 +348,10 @@ public class DocProcessor
     private void MakeXmlSections(FormControlSet form)
     {
         DataSet dataset = new DatasetGenerator(false).CreateDataSet(form.DataStructure);
-        MakeXml(form.ChildItems[0] as ControlSetItem, form, dataset, dataMember: null);
+        ControlSetItem control =
+            form.ChildItems[0] as ControlSetItem
+            ?? throw new InvalidOperationException("The form does not contain a root control set.");
+        MakeXml(control, form, dataset, dataMember: null);
     }
 
     private void WriteStartElement(string element)
