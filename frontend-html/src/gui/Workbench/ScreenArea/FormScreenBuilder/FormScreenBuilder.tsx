@@ -27,11 +27,13 @@ import { ComponentFactory } from "gui/Workbench/ScreenArea/FormScreenBuilder/Com
 import { findUIRoot } from "xmlInterpreters/xmlUtils";
 
 @observer
-export class FormScreenBuilder extends React.Component<{
+export class FormScreenBuilder extends React.Component<React.PropsWithChildren<{
   title: string;
   xmlWindowObject: any;
-}> {
+}>> {
   static contextType = MobXProviderContext;
+
+  declare context: any;
 
   get formScreen(): IFormScreen {
     return this.context.formScreen.formScreen;

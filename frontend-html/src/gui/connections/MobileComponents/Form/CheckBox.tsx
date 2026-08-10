@@ -26,14 +26,14 @@ import { onFieldBlur } from "model/actions-ui/DataView/TableView/onFieldBlur";
 import { onFieldChange } from "model/actions-ui/DataView/TableView/onFieldChange";
 import { MobileBooleanInput } from "gui/connections/MobileComponents/Form/MobileBooleanInput";
 
-export const MobileCheckBox: React.FC<{
+export const MobileCheckBox: React.FC<React.PropsWithChildren<{
   isHidden?: boolean;
   checked: boolean;
   readOnly: boolean;
   onChange?: (event: any, value: any) => void;
   labelColor?: string;
   property?: IProperty;
-}> = inject(({property, formPanelView}) => {
+}>> = inject(({property, formPanelView}: any) => {
   const row = getSelectedRow(formPanelView)!;
   return {
     property,

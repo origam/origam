@@ -23,11 +23,11 @@ import S from "gui/connections/MobileComponents/Navigation/NavigationButton.modu
 import { Icon } from "gui/Components/Icon/Icon";
 import SN from "gui/connections/MobileComponents/Navigation/NavigationButton.module.scss";
 
-export const NavigationButton: React.FC<{
+export const NavigationButton: React.FC<React.PropsWithChildren<{
   label: string;
   onClick: () => void;
   isOpen?: boolean;
-}> = (props) => {
+}>> = (props) => {
 
   return (
     <div className={props.isOpen ? S.openRoot : ""}>

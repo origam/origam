@@ -17,12 +17,16 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { computed, observable } from "mobx";
+import { computed, observable, makeObservable } from "mobx";
 import { onRefreshChatrooms } from "model/actions/Chatrooms/onRefreshChatrooms";
 import { getApi } from "model/selectors/getApi";
 import { PeriodicLoader } from "utils/PeriodicLoader";
 
 export class Chatrooms {
+  constructor() {
+    makeObservable(this);
+  }
+
   *getChatroomsList(): any {
     const api = getApi(this);
     const chatrooms = yield api.getChatroomList();

@@ -19,7 +19,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { IGridDimensions } from "../../../Components/ScreenElements/Table/types";
 import { SimpleScrollState } from "../../../Components/ScreenElements/Table/SimpleScrollState";
-import { computed } from "mobx";
+import { computed,
+  makeObservable
+} from "mobx";
 import { getDataView } from "../../../../model/selectors/DataView/getDataView";
 import { rangeQuery } from "../../../../utils/arrays";
 import { IDataTable } from "../../../../model/entities/types/IDataTable";
@@ -39,6 +41,7 @@ export class VisibleRowsMonitor implements IVisibleRowsMonitor {
   scrollState: SimpleScrollState;
 
   constructor(ctx: any, gridDimensions: IGridDimensions, scrollState: SimpleScrollState) {
+    makeObservable(this);
     this.ctx = ctx;
     this.gridDimensions = gridDimensions;
     this.scrollState = scrollState;
@@ -76,6 +79,7 @@ export class OpenGroupVisibleRowsMonitor implements IVisibleRowsMonitor {
   private dataTable: IDataTable;
 
   constructor(ctx: any, gridDimensions: IGridDimensions, scrollState: SimpleScrollState) {
+    makeObservable(this);
     this.ctx = ctx;
     this.gridDimensions = gridDimensions;
     this.scrollState = scrollState;

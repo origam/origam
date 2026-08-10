@@ -21,7 +21,9 @@ import S from "gui/Components/Dialogs/ColumnsDialog.module.scss";
 import React from "react";
 import { AutoSizer, MultiGrid } from "react-virtualized";
 import { bind } from "bind-decorator";
-import { action, computed, flow, observable } from "mobx";
+import { action, computed, flow, observable,
+  makeObservable
+} from "mobx";
 import { observer, Observer } from "mobx-react";
 import { T } from "utils/translation";
 import { rowHeight } from "gui/Components/ScreenElements/Table/TableRendering/cells/cellsCommon";
@@ -47,18 +49,25 @@ import { requestFocus } from "utils/focus";
 const SCROLLBAR_SIZE = 20;
 
 @observer
-export class ColumnsDialog extends React.Component<{
+export class ColumnsDialog extends React.Component<React.PropsWithChildren<{
   model: ColumnConfigurationModel;
-}> {
+}>> {
 
   columnOptions: Map<string, IColumnOptions>;
   configuration: ITableConfiguration;
 
+  @observable.ref model = this.props.model;
+
   constructor(props: any) {
     super(props);
-    this.configuration = this.props.model.columnsConfiguration;
-    this.columnOptions = this.props.model.columnOptions;
+    makeObservable(this);
+    this.configuration = this.model.columnsConfiguration;
+    this.columnOptions = this.model.columnOptions;
     this.resetOrder();
+  }
+
+  componentDidUpdate() {
+    this.model = this.props.model;
   }
 
   @observable columnWidths = [70, 220, 110 - SCROLLBAR_SIZE, 150, 90];
@@ -154,33 +163,34 @@ export class ColumnsDialog extends React.Component<{
 
   @action.bound
   resetOrder() {
-    this.temporaryPropertiesOrder = [...this.props.model.tableViewProperties];
+    this.temporaryPropertiesOrder = [...this.model.tableViewProperties];
     this.selectedColumnId = this.temporaryPropertiesOrder[0]?.id || null;
   }
 
   *applyOrder() {    
     if (this.temporaryPropertiesOrder.length === 0) return;
-    this.props.model.setOrderIds(
+    this.model.setOrderIds(
       this.temporaryPropertiesOrder.map((property) => property.id)
     );
   }
 
   *handleOkClick() {
     yield* this.applyOrder();
-    this.props.model.onColumnConfigurationSubmit();
+    this.model.onColumnConfigurationSubmit();
   }
 
   *handleSaveAsClick() {
     yield* this.applyOrder();
-    this.props.model.onSaveAsClick()
+    this.model.onSaveAsClick()
   }
 
   render() {
+    const model = this.model;
     return (
       <ModalDialog
         title={T("Columns", "column_config_title")}
-        titleButtons={<CloseButton onClick={this.props.model.onColumnConfCancel}/>}
-        onEscape={()=> this.props.model.onColumnConfCancel()}
+        titleButtons={<CloseButton onClick={model.onColumnConfCancel}/>}
+        onEscape={()=> model.onColumnConfCancel()}
         buttonsCenter={
           <Observer>
             {() => (
@@ -197,7 +207,7 @@ export class ColumnsDialog extends React.Component<{
                 </button>
                 <button
                   tabIndex={0}
-                  onClick={this.props.model.onColumnConfCancel}
+                  onClick={model.onColumnConfCancel}
                 >
                   {T("Cancel", "button_cancel")}
                 </button>
@@ -231,6 +241,7 @@ export class ColumnsDialog extends React.Component<{
   }
 
   renderSettings() {
+    const model = this.model;
     return (
       <>
         <div className={S.columnTable}>
@@ -243,7 +254,7 @@ export class ColumnsDialog extends React.Component<{
                     fixedRowCount={1}
                     cellRenderer={this.renderSettingsCell}
                     columnCount={5}
-                    rowCount={1 + this.props.model.sortedColumnConfigs.length}
+                    rowCount={1 + model.sortedColumnConfigs.length}
                     columnWidth={({ index }: { index: number }) => {
                       return this.columnWidths[index];
                     }}
@@ -264,7 +275,7 @@ export class ColumnsDialog extends React.Component<{
             type="number"
             min={0}
             value={"" + this.configuration.fixedColumnCount}
-            onChange={this.props.model.handleFixedColumnsCountChange}
+            onChange={this.model.handleFixedColumnsCountChange}
           />
         </div>
       </>
@@ -329,7 +340,7 @@ export class ColumnsDialog extends React.Component<{
       aggregationType,
       groupingIndex,
       timeGroupingUnit,
-    } = this.props.model.sortedColumnConfigs[rowIndex];
+    } = this.model.sortedColumnConfigs[rowIndex];
 
     const { gridCaption, entity, canGroup, canAggregate, modelInstanceId } = this.columnOptions.get(propertyId)!;
 
@@ -343,7 +354,7 @@ export class ColumnsDialog extends React.Component<{
           <input
             type="checkbox"
             key={`${rowIndex}@${columnIndex}`}
-            onChange={(event: any) => this.props.model.setVisible(rowIndex, event.target.checked)}
+            onChange={(event: any) => this.model.setVisible(rowIndex, event.target.checked)}
             checked={isVisible}
           />
         );
@@ -357,7 +368,7 @@ export class ColumnsDialog extends React.Component<{
               type="checkbox"
               key={`${rowIndex}@${columnIndex}`}
               checked={groupingIndex > 0}
-              onChange={(event: any) => this.props.model.setGrouping(rowIndex, event.target.checked, entity)}
+              onChange={(event: any) => this.model.setGrouping(rowIndex, event.target.checked, entity)}
               disabled={!canGroup}
             />
             <div>
@@ -371,7 +382,7 @@ export class ColumnsDialog extends React.Component<{
             <SimpleDropdown
               options={timeunitOptions}
               selectedOption={selectedTimeUnitOption}
-              onOptionClick={option =>  this.props.model.setTimeGroupingUnit(rowIndex, option.value)}
+              onOptionClick={option =>  this.model.setTimeGroupingUnit(rowIndex, option.value)}
               className={S.dropdown}
             />
           );
@@ -390,7 +401,7 @@ export class ColumnsDialog extends React.Component<{
             <SimpleDropdown
               options={aggregationOptions}
               selectedOption={selectedAggregationOption}
-              onOptionClick={option => this.props.model.setAggregation(rowIndex, option.value)}
+              onOptionClick={option => this.model.setAggregation(rowIndex, option.value)}
               className={S.dropdown}
             />
           );
@@ -486,11 +497,11 @@ export class ColumnsDialog extends React.Component<{
 }
 
 @observer
-export class TableHeader extends React.Component<{
+export class TableHeader extends React.Component<React.PropsWithChildren<{
   columnIndex: number;
   columnWidth: number;
   style: any;
-}> {
+}>> {
   getHeader(columnIndex: number) {
     switch (columnIndex) {
       case 0:

@@ -24,7 +24,9 @@ import { Icon } from "gui/Components/Icon/Icon";
 import { T } from "utils/translation";
 import { ResultGroup } from "gui/Components/Search/ResultGroup";
 import { getSearcher } from "model/selectors/getSearcher";
-import { action, observable } from "mobx";
+import { action, observable,
+  makeObservable
+} from "mobx";
 import { ISearchResult } from "model/entities/types/ISearchResult";
 import { getMainMenuState } from "model/selectors/MainMenu/getMainMenuState";
 import { ISearcher } from "model/entities/types/ISearcher";
@@ -35,9 +37,14 @@ const DELAY_BEFORE_SERVER_SEARCH_MS = 1000;
 export const SEARCH_DIALOG_KEY = "Search Dialog";
 
 @observer
-export class SearchView extends React.Component<{
+export class SearchView extends React.Component<React.PropsWithChildren<{
   state: SearchViewState
-}> {
+}>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
 
   @observable
   resultContentHeight = 0;
@@ -107,10 +114,12 @@ export class SearchView extends React.Component<{
 
 export class SearchViewState {
   input: HTMLInputElement | undefined;
-  refInput = (elm: HTMLInputElement) => (this.input = elm);
+  refInput = (elm: HTMLInputElement) => {
+    this.input = elm;
+  };
 
-  scrollDivRef: RefObject<HTMLDivElement> = React.createRef();
-  resultElementMap: Map<string, RefObject<HTMLDivElement>> = new Map();
+  scrollDivRef: RefObject<HTMLDivElement | null> = React.createRef();
+  resultElementMap: Map<string, RefObject<HTMLDivElement | null>> = new Map();
 
   searcher: ISearcher;
 
@@ -122,6 +131,7 @@ export class SearchViewState {
   constructor(
     private ctx: any,
     private onCloseClick: () => void) {
+    makeObservable(this);
     this.searcher = getSearcher(this.ctx);
     this.searcher.clear();
   }

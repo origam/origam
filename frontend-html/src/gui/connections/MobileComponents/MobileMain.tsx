@@ -41,14 +41,23 @@ import {
 import { getActiveScreen } from "model/selectors/getActiveScreen";
 import { CDialogContent } from "gui/connections/CDialogContent";
 import "gui/connections/MobileComponents/mobile.scss"
-import { observable } from "mobx";
+import { observable,
+  makeObservable
+} from "mobx";
 import { viewportHeight } from "gui/Components/ScreenElements/Table/TableRendering/renderingValues";
 import { MobileSideBar } from "./MobileSideBar";
 
 @observer
-export class MobileMain extends React.Component<{}> {
+export class MobileMain extends React.Component<React.PropsWithChildren<{}>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
 
   static contextType = MobXProviderContext;
+
+  declare context: any;
 
   get mobileState(): MobileState {
     return this.context.application.mobileState;

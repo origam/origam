@@ -20,9 +20,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import S from "gui/Components/ScreenToolbar/ScreenToolbarAction.module.scss";
 import React from "react";
 import cx from "classnames";
-import { action } from "mobx";
+import { action, makeObservable } from "mobx";
 
-export class ScreenToolbarAction extends React.Component<{
+export class ScreenToolbarAction extends React.Component<React.PropsWithChildren<{
   icon?: React.ReactNode;
   label?: string;
   isHidden?: boolean;
@@ -33,7 +33,12 @@ export class ScreenToolbarAction extends React.Component<{
   onShortcut?(event: any): void;
   shortcutPredicate?(event: any): boolean;
   id?: string;
-}> {
+}>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
   @action.bound
   handleWindowKeyDown(event: any) {
     if (this.props.shortcutPredicate?.(event)) {

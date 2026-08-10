@@ -21,11 +21,11 @@ import React from "react";
 import S from "gui/Components/ScreenHeader/ScreenHeaderAction.module.scss";
 import cx from "classnames";
 
-export class ScreenHeaderAction extends React.Component<{
+export class ScreenHeaderAction extends React.Component<React.PropsWithChildren<{
   isActive?: boolean;
   className?: string;
   onClick?(event: any): void;
-}> {
+}>> {
   render() {
     return (
       <a

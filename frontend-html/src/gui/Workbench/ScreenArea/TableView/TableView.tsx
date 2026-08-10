@@ -19,10 +19,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { bind } from "bind-decorator";
-import { action, computed, flow, observable } from "mobx";
+import { action, computed, flow, observable,
+  makeObservable
+} from "mobx";
 import { inject, observer, Provider } from "mobx-react";
 import { onTableKeyDown } from "model/actions-ui/DataView/TableView/onTableKeyDown";
-import React, { useContext } from "react";
+import React, { JSX, useContext } from "react";
 import { onColumnHeaderClick } from "model/actions-ui/DataView/TableView/onColumnHeaderClick";
 import { ITablePanelView } from "model/entities/TablePanelView/types/ITablePanelView";
 import { IDataView } from "model/entities/types/IDataView";
@@ -69,7 +71,7 @@ interface ITableViewProps {
   onTableKeyDown?: (event: any) => void;
 }
 
-@inject(({dataView}) => {
+@inject(({dataView}: any) => {
   return {
     dataView,
     tablePanelView: dataView.tablePanelView,
@@ -80,13 +82,33 @@ interface ITableViewProps {
   };
 })
 @observer
-export class TableViewInner extends React.Component<ITableViewProps & { dataViewContext?: DataViewContext }> {
+export class TableViewInner extends React.Component<React.PropsWithChildren<ITableViewProps & { dataViewContext?: DataViewContext }>> {
   constructor(props: any) {
     super(props);
+    makeObservable(this);
 
-    this.props.dataView?.initializeNewScrollLoader();
-    getGroupingConfiguration(this.props.dataView).registerGroupingOnOffHandler(() => {
-      this.props.dataView?.initializeNewScrollLoader();
+    const dataView = props.dataView!;
+    const tablePanelView = props.tablePanelView!;
+
+    this.headerRenderer = new HeaderRenderer({
+      gridDimensions: dataView.gridDimensions,
+      tablePanelView: tablePanelView,
+      getFixedColumnCount: () => getFixedColumnsCount(tablePanelView),
+      getIsSelectionCheckboxes: () => getIsSelectionCheckboxesShown(tablePanelView),
+      dataView: dataView,
+      getColumnHeaders: () => getColumnHeaders(dataView),
+      getTableViewProperties: () => getTableViewProperties(dataView),
+      onColumnWidthChange: (propertyId, width) =>
+        onColumnWidthChanged(tablePanelView, propertyId, width),
+      onColumnOrderChange: (id1, id2) =>
+        onColumnOrderChangeFinished(tablePanelView, id1, id2),
+      onColumnOrderAttendantsChange: (idSource, idTarget) =>
+        this.onColumnOrderAttendantsChange(idSource, idTarget),
+    });
+
+    dataView.initializeNewScrollLoader();
+    getGroupingConfiguration(dataView).registerGroupingOnOffHandler(() => {
+      dataView.initializeNewScrollLoader();
     });
   }
 
@@ -156,21 +178,7 @@ export class TableViewInner extends React.Component<ITableViewProps & { dataView
 
   elmTable: RawTable | null = null;
 
-  headerRenderer = new HeaderRenderer({
-    gridDimensions: this.props.dataView!.gridDimensions,
-    tablePanelView: this.props.tablePanelView!,
-    getFixedColumnCount: () => getFixedColumnsCount(this.props.tablePanelView),
-    getIsSelectionCheckboxes: () => getIsSelectionCheckboxesShown(this.props.tablePanelView),
-    dataView: this.props.dataView!,
-    getColumnHeaders: () => getColumnHeaders(this.props.dataView),
-    getTableViewProperties: () => getTableViewProperties(this.props.dataView),
-    onColumnWidthChange: (propertyId, width) =>
-      onColumnWidthChanged(this.props.tablePanelView, propertyId, width),
-    onColumnOrderChange: (id1, id2) =>
-      onColumnOrderChangeFinished(this.props.tablePanelView, id1, id2),
-    onColumnOrderAttendantsChange: (idSource, idTarget) =>
-      this.onColumnOrderAttendantsChange(idSource, idTarget),
-  });
+  headerRenderer: HeaderRenderer;
 
   onColumnOrderAttendantsChange(idSource: string | undefined, idTarget: string | undefined) {
     this.props.tablePanelView!.setColumnOrderChangeAttendants(idSource, idTarget);
@@ -185,6 +193,7 @@ export class TableViewInner extends React.Component<ITableViewProps & { dataView
 
   render() {
     const self = this;
+    const tablePanelView = this.props.tablePanelView;
     const isSelectionCheckboxes = getIsSelectionCheckboxesShown(this.props.tablePanelView);
     const editingRowIndex = getSelectedRowIndex(this.props.tablePanelView);
     let editingColumnIndex = getSelectedColumnIndex(this.props.tablePanelView);
@@ -210,7 +219,7 @@ export class TableViewInner extends React.Component<ITableViewProps & { dataView
             headerContainers={self.headerRenderer.headerContainers}
             renderEditor={() => (
               <TableViewEditor
-                expand={this.props.tablePanelView?.expandEditorAfterMounting}
+                expand={tablePanelView?.expandEditorAfterMounting}
                 key={`${editingRowIndex}@${editingColumnIndex}`}/>
             )}
             onNoCellClick={onNoCellClick(this.props.tablePanelView)}
@@ -255,6 +264,7 @@ interface IHeaderRendererData {
 
 class HeaderRenderer implements IHeaderRendererData {
   constructor(data: IHeaderRendererData) {
+    makeObservable(this);
     Object.assign(this, data);
   }
 
