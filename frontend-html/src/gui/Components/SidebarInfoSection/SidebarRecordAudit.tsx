@@ -20,6 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import React from "react";
 import S from "gui/Components/SidebarInfoSection/SidebarRecordAudit.module.scss";
 
-export const SidebarRecordAudit: React.FC = props => (
+export const SidebarRecordAudit: React.FC<React.PropsWithChildren<{}>> = props => (
   <div className={S.root}>{props.children}</div>
 );

@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import React from "react";
-import { action, computed } from "mobx";
+import { action, computed, makeObservable } from "mobx";
 import { getDialogStack } from "../../selectors/DialogStack/getDialogStack";
 import { isLazyLoading } from "model/selectors/isLazyLoading";
 import { ITableConfiguration } from "./types/IConfigurationManager";
@@ -56,6 +56,10 @@ export interface IColumnOptions {
 export const dialogKey = "ColumnConfigurationDialog";
 
 export class ColumnConfigurationModel{
+  constructor() {
+    makeObservable(this);
+  }
+
 
   tableConfigBeforeChanges: ITableConfiguration | undefined;
 

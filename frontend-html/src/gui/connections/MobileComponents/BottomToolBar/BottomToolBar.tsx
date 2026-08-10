@@ -26,7 +26,9 @@ import { MobXProviderContext, observer } from "mobx-react";
 import { getScreenActionButtonsState } from "model/actions-ui/ScreenToolbar/saveButtonVisible";
 import { onSaveSessionClick } from "model/actions-ui/ScreenToolbar/onSaveSessionClick";
 import { onRefreshSessionClick } from "model/actions-ui/ScreenToolbar/onRefreshSessionClick";
-import { computed } from "mobx";
+import { computed, observable,
+  makeObservable
+} from "mobx";
 import { onWorkflowNextClick } from "model/actions-ui/ScreenHeader/onWorkflowNextClick";
 import { getActiveScreen } from "model/selectors/getActiveScreen";
 import { T } from "utils/translation";
@@ -35,20 +37,34 @@ import { BottomButton } from "gui/connections/MobileComponents/BottomToolBar/Bot
 import { ScreenLayoutState, TopLeftComponent } from "model/entities/MobileState/MobileLayoutState";
 
 @observer
-export class BottomToolBar extends React.Component<{
+export class BottomToolBar extends React.Component<React.PropsWithChildren<{
   mobileState: MobileState,
   ctx: any
-}> {
+}>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
 
   static contextType = MobXProviderContext;
+
+  declare context: any;
 
   get mobileState(): MobileState {
     return this.context.application.mobileState;
   }
 
+  @observable.ref
+  ctx = this.props.ctx;
+
+  componentDidUpdate() {
+    this.ctx = this.props.ctx;
+  }
+
   @computed
   get activeScreen() {
-    return getActiveScreen(this.props.ctx)?.content?.formScreen;
+    return getActiveScreen(this.ctx)?.content?.formScreen;
   }
 
   showNextButton() {

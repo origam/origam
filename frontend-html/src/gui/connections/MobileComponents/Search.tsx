@@ -23,10 +23,12 @@ import { MobXProviderContext } from "mobx-react";
 import { IWorkbench } from "model/entities/types/IWorkbench";
 import S from "./Search.module.scss";
 
-export class Search extends React.Component<{
-}> {
+export class Search extends React.Component<React.PropsWithChildren<{
+}>> {
 
   static contextType = MobXProviderContext;
+
+  declare context: any;
 
   get workbench(): IWorkbench {
     return this.context.workbench;

@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { action } from "mobx";
+import { action, makeObservable } from "mobx";
 import { TypeSymbol } from "dic/Container";
 import { Clock } from "./Clock";
 import { LookupLabelsCleanerReloader, } from "./LookupCleanerLoader";
@@ -27,6 +27,7 @@ export class LookupCacheMulti {
     private clock: Clock,
     private cleanerReloader: (lookupId: string) => LookupLabelsCleanerReloader
   ) {
+    makeObservable(this);
   }
 
   labels = new Map<string, Map<any, any>>();

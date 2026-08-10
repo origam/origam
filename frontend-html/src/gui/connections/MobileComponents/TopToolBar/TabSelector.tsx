@@ -32,10 +32,12 @@ import { Icon } from "gui/Components/Icon/Icon";
 import { getLabel } from "gui/connections/CScreenTabbedViewHandleRow";
 
 @observer
-export class TabSelector extends React.Component<{
+export class TabSelector extends React.Component<React.PropsWithChildren<{
   mobileState: MobileState
-}> {
+}>> {
   static contextType = MobXProviderContext;
+
+  declare context: any;
 
   get workbench(): IWorkbench {
     return this.context.workbench;

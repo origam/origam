@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { action, computed, observable } from "mobx";
+import { action, computed, observable, makeObservable } from "mobx";
 import _ from "lodash";
 import { IResultIndices, ISearcher } from "./types/ISearcher";
 import { ISearchResult, IServerSearchResult } from "./types/ISearchResult";
@@ -40,6 +40,10 @@ import { prepareForFilter } from "model/selectors/PortalSettings/getStringFilter
 
 
 export class Searcher implements ISearcher {
+  constructor() {
+    makeObservable(this);
+  }
+
   parent?: any;
   nodeIndex: NodeContainer[] = [];
   workQueueIndex: NodeContainer[] = [];
@@ -363,6 +367,7 @@ class SearchResultGroup implements ISearchResultGroup {
     public name: string,
     public results: ISearchResult[],
   ) {
+    makeObservable(this);
   }
 }
 

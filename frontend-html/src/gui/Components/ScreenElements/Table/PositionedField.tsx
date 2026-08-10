@@ -25,7 +25,7 @@ import S from "./PositionedField.module.css";
 import cx from "classnames";
 
 @observer
-export class PositionedField extends React.Component<IPositionedFieldProps> {
+export class PositionedField extends React.Component<React.PropsWithChildren<IPositionedFieldProps>> {
   render() {
     const {columnIndex, worldBounds, cellRectangle} = this.props;
     const columnLeft = cellRectangle.columnLeft;

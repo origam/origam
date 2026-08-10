@@ -67,7 +67,7 @@ export interface IMainMenuState extends IEditingState {
 
   flipIsOpen(menuId: string): void;
 
-  setReference(id: string, ref: RefObject<HTMLElement>): void;
+  setReference(id: string, ref: RefObject<HTMLElement | null>): void;
 
   scrollToItem(id: string): void
 }

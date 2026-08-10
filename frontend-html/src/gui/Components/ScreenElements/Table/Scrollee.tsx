@@ -21,7 +21,9 @@ import { observer } from "mobx-react";
 import * as React from "react";
 import { IScrolleeProps } from "./types";
 import S from "./Scrollee.module.css";
-import { action } from "mobx";
+import { action,
+  makeObservable
+} from "mobx";
 
 /*
   Component translating its content according to scrollOffsetSource.
@@ -29,7 +31,12 @@ import { action } from "mobx";
 
 // TODO: Maybe add hideOverflow property to disable content clipping? (or allow some custom class?)
 @observer
-export default class Scrollee extends React.Component<IScrolleeProps> {
+export default class Scrollee extends React.Component<React.PropsWithChildren<IScrolleeProps>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
 
   @action.bound
   handleFocus(event: any)  {

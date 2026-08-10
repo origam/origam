@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { action, comparer, computed, flow, IReactionDisposer, observable, reaction } from "mobx";
+import { action, comparer, computed, flow, IReactionDisposer, observable, reaction, makeObservable } from "mobx";
 import { IFilterConfiguration } from "./types/IFilterConfiguration";
 import { IOrderByDirection, IOrdering, IOrderingConfiguration } from "./types/IOrderingConfiguration";
 import { IRowsContainer } from "./types/IRowsContainer";
@@ -43,6 +43,7 @@ export class ListRowContainer implements IRowsContainer {
     rowIdGetter: (row: any[]) => string,
     parent: any
   ) {
+    makeObservable(this);
     this.orderingConfiguration = orderingConfiguration;
     this.filterConfiguration = filterConfiguration;
     this.rowIdGetter = rowIdGetter;

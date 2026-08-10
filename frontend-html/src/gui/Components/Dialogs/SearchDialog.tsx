@@ -23,10 +23,10 @@ import { SearchView, SearchViewState } from "gui/Components/Search/SearchView";
 import { ModalDialog } from "gui/Components/Dialog/ModalDialog";
 
 @observer
-export class SearchDialog extends React.Component<{
+export class SearchDialog extends React.Component<React.PropsWithChildren<{
   ctx: any;
   onCloseClick: () => void;
-}> {
+}>> {
 
   searchViewState =  new SearchViewState(this.props.ctx, this.props.onCloseClick);
 

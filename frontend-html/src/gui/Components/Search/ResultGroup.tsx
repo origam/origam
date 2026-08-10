@@ -26,13 +26,13 @@ import { ResultItem } from "gui/Components/Search/ResultItem";
 import { ISearcher } from "model/entities/types/ISearcher";
 
 @observer
-export class ResultGroup extends React.Component<{
+export class ResultGroup extends React.Component<React.PropsWithChildren<{
   name: string;
   group: ISearchResultGroup;
   onResultItemClick: (result: ISearchResult) => void;
   searcher: ISearcher;
-  registerElementRef: (id: string, ref: RefObject<HTMLDivElement>) => void;
-}> {
+  registerElementRef: (id: string, ref: RefObject<HTMLDivElement | null>) => void;
+}>> {
 
   onGroupClick() {
     this.props.group.isExpanded = !this.props.group.isExpanded;

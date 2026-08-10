@@ -24,7 +24,9 @@ import { UserMenuDropdown } from "gui/Components/UserMenuDropdown/UserMenuDropdo
 import { MobXProviderContext, observer } from "mobx-react";
 import { IApplication } from "model/entities/types/IApplication";
 import { getUserAvatarLink } from "model/selectors/User/getUserAvatarLink";
-import { action, computed } from "mobx";
+import { action, computed,
+  makeObservable
+} from "mobx";
 import { onScreenToolbarLogoutClick } from "model/actions-ui/ScreenToolbar/onScreenToolbarLogoutClick";
 import { getLoggedUserName } from "model/selectors/User/getLoggedUserName";
 import { TabSelector } from "gui/connections/MobileComponents/TopToolBar/TabSelector";
@@ -43,10 +45,17 @@ import { EditButton } from "gui/connections/MenuComponents/EditButton";
 import { T } from "utils/translation";
 
 @observer
-export class TopToolBar extends React.Component<{
+export class TopToolBar extends React.Component<React.PropsWithChildren<{
   mobileState: MobileState
-}> {
+}>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
   static contextType = MobXProviderContext;
+
+  declare context: any;
 
   get application(): IApplication {
     return this.context.application;

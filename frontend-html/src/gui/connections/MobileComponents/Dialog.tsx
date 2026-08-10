@@ -21,9 +21,9 @@ import React from "react";
 import S from "./Dialog.module.scss";
 
 
-export const Dialog: React.FC<{
+export const Dialog: React.FC<React.PropsWithChildren<{
   heading: string
-}> = (props) => {
+}>> = (props) => {
   return (
     <div className={S.root}>
       <div className={S.topBar}>

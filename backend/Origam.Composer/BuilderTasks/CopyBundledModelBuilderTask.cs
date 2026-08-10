@@ -70,10 +70,7 @@ public class CopyBundledModelBuilderTask : ICopyBundledModelBuilderTask
 
         foreach (DirectoryInfo subdirectory in sourceDirectory.GetDirectories())
         {
-            CopyDirectory(
-                subdirectory.FullName,
-                Path.Join(destinationDir, subdirectory.Name)
-            );
+            CopyDirectory(subdirectory.FullName, Path.Join(destinationDir, subdirectory.Name));
         }
     }
 

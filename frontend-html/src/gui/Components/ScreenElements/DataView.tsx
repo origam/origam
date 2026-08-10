@@ -28,7 +28,9 @@ import { DataViewLoading } from "./DataViewLoading";
 import { scopeFor } from "dic/Container";
 import { IDataViewBodyUI } from "modules/DataView/DataViewUI";
 import { TreeView } from "./TreeView";
-import { observable } from "mobx";
+import { observable,
+  makeObservable
+} from "mobx";
 import { getIsDataViewOrFormScreenWorking } from "model/selectors/DataView/getIsDataViewOrFormScreenWorking.1";
 import { EventHandler } from "utils/events";
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
@@ -42,6 +44,10 @@ export interface IDataViewHeaderExtensionItem {
 }
 
 export class DataViewHeaderExtension {
+  constructor() {
+    makeObservable(this);
+  }
+
   @observable items = new Map<number, IDataViewHeaderExtensionItem>();
 
   put(item: IDataViewHeaderExtensionItem) {
@@ -82,14 +88,14 @@ interface IDataViewProps {
   dataView?: IDataView;
 }
 
-@inject(({formScreen}, {id}) => {
+@inject(({formScreen}: any, {id}: any) => {
   const dataView = getDataViewById(formScreen, id);
   return {
     dataView,
   };
 })
 @observer
-export class DataViewInner extends React.Component<IDataViewProps> {
+export class DataViewInner extends React.Component<React.PropsWithChildren<IDataViewProps>> {
   dataViewHeaderExtension = new DataViewHeaderExtension();
 
   getDataViewStyle() {

@@ -23,12 +23,12 @@ import cx from "classnames";
 import { FormSectionHeader } from "gui/Components/Form/FormSectionHeader";
 import { FieldDimensions } from "gui/Components/Form/FieldDimensions";
 
-export const FormSection: React.FC<{
+export const FormSection: React.FC<React.PropsWithChildren<{
   title?: string;
   backgroundColor: string | undefined;
   foreGroundColor: string | undefined;
   dimensions: FieldDimensions;
-}> = (props) => {
+}>> = (props) => {
   const hasTitle = !!props.title;
   return (
     <div

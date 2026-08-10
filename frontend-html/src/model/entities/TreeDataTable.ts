@@ -22,7 +22,9 @@ import { IProperty } from "./types/IProperty";
 import { IRowsContainer } from "./types/IRowsContainer";
 import { IAdditionalRowData } from "./types/IAdditionalRecordData";
 import { IDataSourceField } from "./types/IDataSourceField";
-import { computed, observable } from "mobx";
+import { computed, observable,
+  makeObservable
+} from "mobx";
 import { getDataSource } from "../selectors/DataSources/getDataSource";
 
 export class TreeDataTable implements IDataTable {
@@ -59,6 +61,7 @@ export class TreeDataTable implements IDataTable {
   idProperty: string;
 
   constructor(idProperty: string, parentIdProperty: string) {
+    makeObservable(this);
     this.parentIdProperty = parentIdProperty;
     this.idProperty = idProperty;
   }
