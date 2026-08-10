@@ -1,4 +1,4 @@
-﻿<Project>
+<Project>
   <PropertyGroup>
 <!-- 
       Enabiling origam-utils causes the tests on github to fail with 
@@ -34,7 +34,7 @@
                                   PrivateAssets="all" IncludeAssets="build;analyzers;buildtransitive"/>
                 <PackageReference Include="Roslynator.Formatting.Analyzers" Version="4.15.0"
                                   PrivateAssets="all" IncludeAssets="build;analyzers;buildtransitive"/>
-                <PackageReference Include="CSharpier.MsBuild" Version="1.1.2"
+                <PackageReference Include="CSharpier.MsBuild" Version="1.3.0"
                                   PrivateAssets="all" IncludeAssets="build;analyzers;buildtransitive"/>
 		<PackageReference Include="Meziantou.Analyzer" Version="3.0.130"
                                   Condition="'$(DisableMeziantouAnalyzer)' != 'true'"
