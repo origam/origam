@@ -146,11 +146,19 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
             {
                 case "DELETE":
                 {
+                    if (FeatureTools.IsFeatureOn(OrigamEvent.ApiRequest.FeatureCode))
+                    {
+                        OrigamEventTools.RecordPageRequest(page, request.HttpMethod, parameters);
+                    }
                     HandleDelete(xsltPage, data, transformParams, ruleEngine);
                     return;
                 }
                 case "PUT":
                 {
+                    if (FeatureTools.IsFeatureOn(OrigamEvent.ApiRequest.FeatureCode))
+                    {
+                        OrigamEventTools.RecordPageRequest(page, request.HttpMethod, parameters);
+                    }
                     HandlePut(
                         parameters,
                         xsltPage,
@@ -241,7 +249,12 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
         }
         if (FeatureTools.IsFeatureOn(OrigamEvent.ApiRequest.FeatureCode))
         {
-            OrigamEventTools.RecordXsltPageRequest(page, parameters, data);
+            OrigamEventTools.RecordPageRequest(
+                page,
+                request.HttpMethod,
+                parameters,
+                numberOfRows: data?.Tables.Cast<DataTable>().Sum(table => table.Rows.Count) ?? 0
+            );
         }
         if (!Analytics.Instance.IsAnalyticsEnabled || (xsltPage.LogTransformation == null))
         {

@@ -43,7 +43,7 @@ class ReportPageRequestHandler : AbstractPageRequestHandler
     {
         if (FeatureTools.IsFeatureOn(OrigamEvent.ApiRequest.FeatureCode))
         {
-            OrigamEventTools.RecordPageRequest(page, parameters);
+            OrigamEventTools.RecordPageRequest(page, request.HttpMethod, parameters);
         }
         ReportPage reportPage = page as ReportPage;
         AbstractReport report = reportPage.Report as AbstractReport;

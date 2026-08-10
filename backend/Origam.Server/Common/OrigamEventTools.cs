@@ -24,7 +24,6 @@ using System.Buffers;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
@@ -47,6 +46,7 @@ public static class OrigamEventTools
     private static readonly JsonEncodedText ApiUrl = JsonEncodedText.Encode("apiUrl");
     private static readonly JsonEncodedText Name = JsonEncodedText.Encode("name");
     private static readonly JsonEncodedText Value = JsonEncodedText.Encode("value");
+    private static readonly JsonEncodedText Method = JsonEncodedText.Encode("method");
 
     public static void RecordSignInEvent()
     {
@@ -76,61 +76,20 @@ public static class OrigamEventTools
 
     public static void RecordPageRequest(
         AbstractPage page,
-        Dictionary<string, object> mappedParameters
-    )
-    {
-        RecordEvent(
-            eventId: OrigamEvent.ApiRequest.EventId,
-            details: CreateNonXsltPageRequestDetails(page, mappedParameters)
-        );
-    }
-
-    public static void RecordXsltPageRequest(
-        AbstractPage page,
+        string method,
         Dictionary<string, object> mappedParameters,
-        DataSet data
+        int? numberOfRows = null
     )
     {
         RecordEvent(
             eventId: OrigamEvent.ApiRequest.EventId,
-            details: CreatePageRequestDetails(
-                page,
-                mappedParameters,
-                data?.Tables.Cast<DataTable>().Sum(table => table.Rows.Count) ?? 0
-            )
+            details: CreatePageRequestDetails(page, method, mappedParameters, numberOfRows)
         );
-    }
-
-    private static string CreateNonXsltPageRequestDetails(
-        AbstractPage page,
-        Dictionary<string, object> mappedParameters
-    )
-    {
-        return BuildJson(w =>
-        {
-            w.WriteStartObject();
-            w.WritePropertyName(ObjectId);
-            w.WriteStringValue(page.Id);
-            w.WritePropertyName(ApiUrl);
-            w.WriteStringValue(page.Url);
-            w.WritePropertyName(Parameters);
-            w.WriteStartArray();
-            foreach (KeyValuePair<string, object> parameter in mappedParameters)
-            {
-                w.WriteStartObject();
-                w.WritePropertyName(Name);
-                w.WriteStringValue(parameter.Key);
-                w.WritePropertyName(Value);
-                w.WriteStringValue(parameter.Value?.ToString() ?? "");
-                w.WriteEndObject();
-            }
-            w.WriteEndArray();
-            w.WriteEndObject();
-        });
     }
 
     private static string CreatePageRequestDetails(
         AbstractPage page,
+        string method,
         Dictionary<string, object> parameters,
         int? numberOfRows = null
     )
@@ -142,6 +101,8 @@ public static class OrigamEventTools
             w.WriteStringValue(page.Id);
             w.WritePropertyName(ApiUrl);
             w.WriteStringValue(page.Url);
+            w.WritePropertyName(Method);
+            w.WriteStringValue(method);
             if (numberOfRows.HasValue)
             {
                 w.WritePropertyName(NumberOfRows);

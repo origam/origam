@@ -64,7 +64,7 @@ class WorkflowPageRequestHandler : AbstractPageRequestHandler
     {
         if (FeatureTools.IsFeatureOn(OrigamEvent.ApiRequest.FeatureCode))
         {
-            OrigamEventTools.RecordPageRequest(page, parameters);
+            OrigamEventTools.RecordPageRequest(page, request.HttpMethod, parameters);
         }
         WorkflowPage workflowPage = page as WorkflowPage;
         QueryParameterCollection qparams = new QueryParameterCollection();

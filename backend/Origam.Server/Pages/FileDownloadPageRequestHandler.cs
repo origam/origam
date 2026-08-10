@@ -49,7 +49,7 @@ class FileDownloadPageRequestHandler : AbstractPageRequestHandler
     {
         if (FeatureTools.IsFeatureOn(OrigamEvent.ApiRequest.FeatureCode))
         {
-            OrigamEventTools.RecordPageRequest(page, parameters);
+            OrigamEventTools.RecordPageRequest(page, request.HttpMethod, parameters);
         }
         FileDownloadPage fdPage = page as FileDownloadPage;
         QueryParameterCollection qparams = new QueryParameterCollection();
