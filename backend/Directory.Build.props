@@ -1,59 +1,85 @@
 ﻿<Project>
   <PropertyGroup>
-<!-- 
+    <!-- 
       Enabiling origam-utils causes the tests on github to fail with 
       System.PlatformNotSupportedException: System.Data.SqlClient is not supported on this platform.
       Replacing the System.Data.SqlClient with its newer counter part does not fix the problem.
 -->
-    <DisableStrictBuild Condition="'$(MSBuildProjectName)' == 'origam-utils'">true</DisableStrictBuild>
-<!--      
+    <DisableStrictBuild Condition="'$(MSBuildProjectName)' == 'origam-utils'"
+      >true</DisableStrictBuild>
+    <!--      
     Enabling Origam.Documentation causes this error during build:
     43>Origam.Documentation.csproj: Error MSB4057 : The target "CSharpierFormatInner" does not exist in the project.
 -->
-    <DisableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Documentation'">true</DisableStrictBuild>
-    <DisableMeziantouAnalyzer Condition="'$(TargetFramework)' == 'netstandard2.0' Or '$(TargetFramework)' == 'net472'">true</DisableMeziantouAnalyzer>
-    <DisableMeziantouAnalyzer Condition="'$(TargetFrameworks)' != '' And ($(TargetFrameworks.Contains('netstandard2.0')) Or $(TargetFrameworks.Contains('net472')))">true</DisableMeziantouAnalyzer>
-    <DisableMeziantouAnalyzer Condition="$([System.IO.File]::ReadAllText('$(MSBuildProjectFullPath)').Contains('TargetFrameworkVersion'))">true</DisableMeziantouAnalyzer>
+    <DisableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Documentation'"
+      >true</DisableStrictBuild>
+    <DisableMeziantouAnalyzer
+      Condition="'$(TargetFramework)' == 'netstandard2.0' Or '$(TargetFramework)' == 'net472'"
+      >true</DisableMeziantouAnalyzer>
+    <DisableMeziantouAnalyzer
+      Condition="'$(TargetFrameworks)' != '' And ($(TargetFrameworks.Contains('netstandard2.0')) Or $(TargetFrameworks.Contains('net472')))"
+      >true</DisableMeziantouAnalyzer>
+    <DisableMeziantouAnalyzer
+      Condition="$([System.IO.File]::ReadAllText('$(MSBuildProjectFullPath)').Contains('TargetFrameworkVersion'))"
+      >true</DisableMeziantouAnalyzer>
   </PropertyGroup>
-    <Choose>
-        <When Condition="'$(DisableStrictBuild)' != 'true'">
+  <Choose>
+    <When Condition="'$(DisableStrictBuild)' != 'true'">
+      <PropertyGroup>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <MeziantouAnalysisMode>None</MeziantouAnalysisMode>
+        <AnalysisLevel>8.0</AnalysisLevel>
+        <EnableNETAnalyzers>true</EnableNETAnalyzers>
+        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <CSharpier_FrameworkVersion>net8.0</CSharpier_FrameworkVersion>
+        <CSharpier_Check>false</CSharpier_Check>
+      </PropertyGroup>
 
-            <PropertyGroup>
-                <GenerateDocumentationFile>true</GenerateDocumentationFile>
-                <MeziantouAnalysisMode>None</MeziantouAnalysisMode>
-                <AnalysisLevel>8.0</AnalysisLevel>
-                <EnableNETAnalyzers>true</EnableNETAnalyzers>
-                <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-                <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-                <CSharpier_FrameworkVersion>net8.0</CSharpier_FrameworkVersion>
-                <CSharpier_Check>false</CSharpier_Check>
-            </PropertyGroup>
+      <ItemGroup>
+        <PackageReference
+          Include="Roslynator.Analyzers"
+          Version="4.15.0"
+          PrivateAssets="all"
+          IncludeAssets="build;analyzers;buildtransitive"
+        />
+        <PackageReference
+          Include="Roslynator.Formatting.Analyzers"
+          Version="4.15.0"
+          PrivateAssets="all"
+          IncludeAssets="build;analyzers;buildtransitive"
+        />
+        <PackageReference
+          Include="CSharpier.MsBuild"
+          Version="1.3.0"
+          PrivateAssets="all"
+          IncludeAssets="build;analyzers;buildtransitive"
+        />
+        <PackageReference
+          Include="Meziantou.Analyzer"
+          Version="3.0.137"
+          Condition="'$(DisableMeziantouAnalyzer)' != 'true'"
+          PrivateAssets="all"
+          IncludeAssets="build;analyzers;buildtransitive"
+        />
+        <EditorConfigFiles
+          Include="$(MSBuildThisFileDirectory)origam.globalconfig"
+          Condition="'$(DisableMeziantouAnalyzer)' != 'true'"
+        />
+        <ProjectReference
+          Include="$(MSBuildThisFileDirectory)Origam.Analyzers\Origam.Analyzers.csproj"
+          OutputItemType="Analyzer"
+          ReferenceOutputAssembly="false"
+          Condition="'$(MSBuildProjectName)' != 'Origam.Analyzers'"
+        />
+      </ItemGroup>
 
-            <ItemGroup>
-                <PackageReference Include="Roslynator.Analyzers" Version="4.15.0"
-                                  PrivateAssets="all" IncludeAssets="build;analyzers;buildtransitive"/>
-                <PackageReference Include="Roslynator.Formatting.Analyzers" Version="4.15.0"
-                                  PrivateAssets="all" IncludeAssets="build;analyzers;buildtransitive"/>
-                <PackageReference Include="CSharpier.MsBuild" Version="1.1.2"
-                                  PrivateAssets="all" IncludeAssets="build;analyzers;buildtransitive"/>
-		<PackageReference Include="Meziantou.Analyzer" Version="3.0.130"
-                                  Condition="'$(DisableMeziantouAnalyzer)' != 'true'"
-                                  PrivateAssets="all" IncludeAssets="build;analyzers;buildtransitive"/>
-                <EditorConfigFiles Include="$(MSBuildThisFileDirectory)origam.globalconfig"
-                                   Condition="'$(DisableMeziantouAnalyzer)' != 'true'"/>
-                <ProjectReference Include="$(MSBuildThisFileDirectory)Origam.Analyzers\Origam.Analyzers.csproj"
-                                  OutputItemType="Analyzer"
-                                  ReferenceOutputAssembly="false"
-                                  Condition="'$(MSBuildProjectName)' != 'Origam.Analyzers'"/>
-            </ItemGroup>
-
-            <PropertyGroup Condition="'$(Configuration)' == 'Release Server' or '$(Configuration)' == 'Release Architect Server' or '$(Configuration)' == 'Release Architect'">
-                <CSharpier_Check>true</CSharpier_Check>
-            </PropertyGroup>
-            
-        </When>
-    </Choose>
-    <PropertyGroup>
-        <NoWarn>$(NoWarn);CS1591;CS1573;RCS1075;RCS1102;CS1572;CS0419;CS1734;RCS1263;RCS1138;CS1587;CS1574;CS1570;RCS1139;CS1584;CS1658;</NoWarn>
-    </PropertyGroup>
+      <PropertyGroup Condition="'$(Configuration)' == 'Release Server' or '$(Configuration)' == 'Release Architect Server' or '$(Configuration)' == 'Release Architect'">
+        <CSharpier_Check>true</CSharpier_Check>
+      </PropertyGroup>
+    </When>
+  </Choose>
+  <PropertyGroup>
+    <NoWarn>$(NoWarn);CS1591;CS1573;RCS1075;RCS1102;CS1572;CS0419;CS1734;RCS1263;RCS1138;CS1587;CS1574;CS1570;RCS1139;CS1584;CS1658;</NoWarn>
+  </PropertyGroup>
 </Project>

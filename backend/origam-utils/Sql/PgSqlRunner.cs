@@ -27,19 +27,21 @@ namespace Origam.Utils.Sql;
 
 class PgSqlRunner : SqlRunner
 {
-    public PgSqlRunner(ILog log) : base(log) { }
+    public PgSqlRunner(ILog log)
+        : base(log) { }
 
     protected override string BuildRootVersionSql()
     {
-        return "SELECT 'Root package version: ' || \"Version\" FROM \"OrigamModelVersion\" " +
-               "WHERE \"refSchemaExtensionId\"='147fa70d-6519-4393-b5d0-87931f9fd609'";
+        return "SELECT 'Root package version: ' || \"Version\" FROM \"OrigamModelVersion\" "
+            + "WHERE \"refSchemaExtensionId\"='147fa70d-6519-4393-b5d0-87931f9fd609'";
     }
 
     protected override string BuildProcedureCall(string procedureName)
     {
-        string name = !procedureName.StartsWith("\"") && !procedureName.EndsWith("\"")
-            ? $"\"{procedureName}\""
-            : procedureName;
+        string name =
+            !procedureName.StartsWith("\"") && !procedureName.EndsWith("\"")
+                ? $"\"{procedureName}\""
+                : procedureName;
         return $"CALL {name}();";
     }
 

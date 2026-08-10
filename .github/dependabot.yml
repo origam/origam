@@ -11,6 +11,11 @@ updates:
         - "*"
     commit-message:
       prefix: "DEV: "
+    groups:
+      csharpier:
+        patterns:
+          - "csharpier"
+          - "CSharpier.MsBuild"
     ignore:
       # Origam targets .NET 8, so keep this package on the .NET 8-compatible major version until upgrade to .NET 10.
       - dependency-name: "Microsoft.Extensions.Logging.Log4Net.AspNetCore"
