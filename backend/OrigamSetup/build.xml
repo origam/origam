@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project name="ORIGAM Setup" basedir=".">
   <scriptdef name="input-swf-build-number" language="javascript">
-    <element name="fileset" type="fileset"/>
-    <![CDATA[
+    <element
+      name="fileset"
+      type="fileset"
+    /><![CDATA[
     log = project.createTask("echo");
     log.setMessage("Preparing fragment file for swf files...");  
     log.perform();
@@ -28,118 +30,123 @@
     log.perform();
     ]]>
   </scriptdef>
-  <property name="git-exec" value="C:\Program Files\Git\bin\git"/>
-  <property name="WIX_BIN" value="c:/Program Files (x86)/WiX Toolset v3.11/bin"/>
-  <target name="build-all" depends="build-architect-setup"/> <!-- depends="build-architect-bundle,build-architect-bundle-with-sql-server"/> -->
+  <property name="git-exec" value="C:\Program Files\Git\bin\git" />
+  <property name="WIX_BIN" value="c:/Program Files (x86)/WiX Toolset v3.11/bin" />
+  <target name="build-all" depends="build-architect-setup" />
+  <!-- depends="build-architect-bundle,build-architect-bundle-with-sql-server"/> -->
   <target name="build-architect-setup">
     <input-swf-build-number>
       <fileset id="swf-fileset" dir="./server_source">
-        <include name="*.swf"/>
+        <include name="*.swf" />
       </fileset>
     </input-swf-build-number>
-    <replace file="./ArchitectSetup.wxs" token="@buildNumber@" value="${buildNumber}"/>
-    <replace file="./ArchitectSetup.wxs" token="@branch@" value="${ProductName}"/>
+    <replace file="./ArchitectSetup.wxs" token="@buildNumber@" value="${buildNumber}" />
+    <replace file="./ArchitectSetup.wxs" token="@branch@" value="${ProductName}" />
     <exec executable="${WIX_BIN}/candle.exe" failonerror="true">
-      <arg value="-ext"/>
-      <arg value="WixSqlExtension"/>
-      <arg value="-ext"/>
-      <arg value="WixUtilExtension"/>
-      <arg value="ArchitectSetup.wxs"/>
+      <arg value="-ext" />
+      <arg value="WixSqlExtension" />
+      <arg value="-ext" />
+      <arg value="WixUtilExtension" />
+      <arg value="ArchitectSetup.wxs" />
     </exec>
     <exec executable="${WIX_BIN}/light.exe" failonerror="true">
-      <arg value="-ext"/>
-      <arg value="WixSqlExtension"/>
-      <arg value="-ext"/>
-      <arg value="WixUtilExtension"/>
-      <arg value="-ext"/>
-      <arg value="WixNetFxExtension"/>
-      <arg value="-sice:ICE20"/>
-      <arg value="-cultures:en-us"/>
-      <arg value="-loc"/>
-      <arg value="resources.en-us.wxl"/>
-      <arg value="-out"/>
-      <arg value="OrigamSetup.msi"/>
-      <arg value="ArchitectSetup.wixobj"/>
+      <arg value="-ext" />
+      <arg value="WixSqlExtension" />
+      <arg value="-ext" />
+      <arg value="WixUtilExtension" />
+      <arg value="-ext" />
+      <arg value="WixNetFxExtension" />
+      <arg value="-sice:ICE20" />
+      <arg value="-cultures:en-us" />
+      <arg value="-loc" />
+      <arg value="resources.en-us.wxl" />
+      <arg value="-out" />
+      <arg value="OrigamSetup.msi" />
+      <arg value="ArchitectSetup.wixobj" />
     </exec>
   </target>
   <target name="build-architect-bundle" depends="build-architect-setup">
     <exec executable="${WIX_BIN}/candle.exe" failonerror="true">
-      <arg value="-ext"/>
-      <arg value="WixBalExtension"/>
-      <arg value="-ext"/>
-      <arg value="WixUtilExtension"/>
-      <arg value="ArchitectBundle.wxs"/>
+      <arg value="-ext" />
+      <arg value="WixBalExtension" />
+      <arg value="-ext" />
+      <arg value="WixUtilExtension" />
+      <arg value="ArchitectBundle.wxs" />
     </exec>
     <exec executable="${WIX_BIN}/light.exe" failonerror="true">
-      <arg value="-ext"/>
-      <arg value="WixBalExtension"/>
-      <arg value="-ext"/>
-      <arg value="WixUtilExtension"/>
-      <arg value="ArchitectBundle.wixobj"/>
+      <arg value="-ext" />
+      <arg value="WixBalExtension" />
+      <arg value="-ext" />
+      <arg value="WixUtilExtension" />
+      <arg value="ArchitectBundle.wixobj" />
     </exec>
   </target>
   <target name="build-architect-bundle-with-sql-server" depends="build-architect-setup">
     <exec executable="${WIX_BIN}/candle.exe" failonerror="true">
-      <arg value="-ext"/>
-      <arg value="WixBalExtension"/>
-      <arg value="-ext"/>
-      <arg value="WixUtilExtension"/>
-      <arg value="ArchitectBundleWithSQLServer.wxs"/>
+      <arg value="-ext" />
+      <arg value="WixBalExtension" />
+      <arg value="-ext" />
+      <arg value="WixUtilExtension" />
+      <arg value="ArchitectBundleWithSQLServer.wxs" />
     </exec>
     <exec executable="${WIX_BIN}/light.exe" failonerror="true">
-      <arg value="-ext"/>
-      <arg value="WixBalExtension"/>
-      <arg value="-ext"/>
-      <arg value="WixUtilExtension"/>
-      <arg value="ArchitectBundleWithSQLServer.wixobj"/>
+      <arg value="-ext" />
+      <arg value="WixBalExtension" />
+      <arg value="-ext" />
+      <arg value="WixUtilExtension" />
+      <arg value="ArchitectBundleWithSQLServer.wixobj" />
     </exec>
   </target>
   <target name="build-server-setup">
     <input-swf-build-number>
       <fileset id="swf-fileset" dir="./server_source">
-        <include name="*.swf"/>
+        <include name="*.swf" />
       </fileset>
     </input-swf-build-number>
     <exec executable="${WIX_BIN}/candle.exe" failonerror="true">
-      <arg value="-ext"/>
-      <arg value="WixSqlExtension"/>
-      <arg value="-ext"/>
-      <arg value="WixUtilExtension"/>
-      <arg value="-ext"/>
-      <arg value="WixIISExtension"/>
-      <arg value="ServerSetup.wxs"/>
+      <arg value="-ext" />
+      <arg value="WixSqlExtension" />
+      <arg value="-ext" />
+      <arg value="WixUtilExtension" />
+      <arg value="-ext" />
+      <arg value="WixIISExtension" />
+      <arg value="ServerSetup.wxs" />
     </exec>
     <exec executable="${WIX_BIN}/light.exe" failonerror="true">
-      <arg value="-ext"/>
-      <arg value="WixSqlExtension"/>
-      <arg value="-ext"/>
-      <arg value="WixUtilExtension"/>
-      <arg value="-ext"/>
-      <arg value="WixIISExtension"/>
-      <arg value="-sice:ICE20"/>
-      <arg value="-cultures:en-us"/>
-      <arg value="-loc"/>
-      <arg value="resources.en-us.wxl"/>
-      <arg value="-out"/>
-      <arg value="ServerSetup.msi"/>
-      <arg value="ServerSetup.wixobj"/>
+      <arg value="-ext" />
+      <arg value="WixSqlExtension" />
+      <arg value="-ext" />
+      <arg value="WixUtilExtension" />
+      <arg value="-ext" />
+      <arg value="WixIISExtension" />
+      <arg value="-sice:ICE20" />
+      <arg value="-cultures:en-us" />
+      <arg value="-loc" />
+      <arg value="resources.en-us.wxl" />
+      <arg value="-out" />
+      <arg value="ServerSetup.msi" />
+      <arg value="ServerSetup.wixobj" />
     </exec>
   </target>
   <target name="create-release-notes">
-    <delete dir="rn" failonerror="false"/>
-    <mkdir dir="rn"/>
+    <delete dir="rn" failonerror="false" />
+    <mkdir dir="rn" />
     <exec dir="c:/TeamCity/src/origam-setup" executable="${git-exec}" failonerror="false">
-      <arg value="fetch"/>
+      <arg value="fetch" />
     </exec>
-    <exec dir="c:/TeamCity/src/origam-setup" executable="${git-exec}" output="rn/release-notes__Setup_${projectSuffix}_setup_${configurationSuffix}_${tc_buildNumber}_artifacts__setup__${branchMarker}.txt">
-      <arg value="log"/>
-      <arg value="^origin/${previousBranch}"/>
-      <arg value="origin/${currentBranch}"/>
-      <arg value="--oneline"/>
-      <arg value="--no-merges"/>
-      <arg value="--first-parent"/>
-      <arg value="--date=iso"/>
-      <arg value="--pretty=format:&quot;%H%x09%an%x09%ad%x09%s&quot;"/>
+    <exec
+      dir="c:/TeamCity/src/origam-setup"
+      executable="${git-exec}"
+      output="rn/release-notes__Setup_${projectSuffix}_setup_${configurationSuffix}_${tc_buildNumber}_artifacts__setup__${branchMarker}.txt"
+    >
+      <arg value="log" />
+      <arg value="^origin/${previousBranch}" />
+      <arg value="origin/${currentBranch}" />
+      <arg value="--oneline" />
+      <arg value="--no-merges" />
+      <arg value="--first-parent" />
+      <arg value="--date=iso" />
+      <arg value="--pretty=format:&quot;%H%x09%an%x09%ad%x09%s&quot;" />
     </exec>
   </target>
 </project>
