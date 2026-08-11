@@ -30,7 +30,7 @@ namespace Origam.Schema.DeploymentModel.SchemaItems;
 public class ValidPackageVersionModelElementRuleAttribute : AbstractModelElementRuleAttribute
 {
     private static readonly Regex VersionNumberRegex = new Regex(
-        @"^[0-9]+(\.[0-9]+){2,}$",
+        @"^[0-9]+(\.[0-9]+){1,}$",
         RegexOptions.CultureInvariant
     );
 
