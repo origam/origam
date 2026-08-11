@@ -52,9 +52,14 @@ jobs:
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
 
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v2
+
       # --- Build the Architect Server -------------------------------------
       - name: Restore backend
-        run: msbuild Origam.sln -t:restore /p:Configuration="Release Architect Server" -v:m
+        run: |
+          nuget restore Origam.ProjectAutomation/packages.config -PackagesDirectory packages -NonInteractive
+          msbuild Origam.sln -t:restore /p:Configuration="Release Architect Server" -v:m
         working-directory: backend
 
       - name: Build Architect Server
