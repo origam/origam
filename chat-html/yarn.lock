@@ -2570,7 +2570,7 @@ __metadata:
     uuid: "npm:^14.0.1"
     vite: "npm:^8.2.0"
     vite-tsconfig-paths: "npm:^6.1.1"
-    web-vitals: "npm:^6.0.1"
+    web-vitals: "npm:^6.1.0"
     ws: "npm:^8.21.1"
     xml-js: "npm:^1.6.11"
     xstate: "npm:^4.38.3"
@@ -5600,10 +5600,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"web-vitals@npm:^6.0.1":
-  version: 6.0.1
-  resolution: "web-vitals@npm:6.0.1"
-  checksum: 10c0/99661ff00749b55ab73e53629bb125c945d46835909b4bcdad5f01b1fa28a10aab301c6f86325a7f632894493c6c923b19c97c50e81cc8f243e8a0ca17eeafd6
+"web-vitals@npm:^6.1.0":
+  version: 6.1.0
+  resolution: "web-vitals@npm:6.1.0"
+  checksum: 10c0/ab1bf6a91cd618ca64c4aaf4644066221dea1fad0733ad2ec20461ca37e3d7e8e02cda014710c728ea938271d9a5eec65c23675eae5926e5df4ea16fb1edda92
   languageName: node
   linkType: hard
 
