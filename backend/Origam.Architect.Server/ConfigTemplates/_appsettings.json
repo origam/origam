@@ -6,6 +6,9 @@
     }
   },
   "AllowedHosts": "*",
+  "ChatHistory": {
+    "Path": ""
+  },
   "Ai": {
     "Endpoint": "https://api.openai.com/v1",
     "Model": "gpt-5.6-luna"

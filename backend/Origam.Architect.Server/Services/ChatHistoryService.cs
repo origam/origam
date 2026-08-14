@@ -21,16 +21,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using LibGit2Sharp;
+using Origam.Architect.Server.Configuration;
 using Origam.Architect.Server.Models;
+using Origam.Extensions;
 
 namespace Origam.Architect.Server.Services;
 
 public class ChatHistoryService
 {
-    private const int CurrentSchemaVersion = 2;
+    private const int CurrentSchemaVersion = 3;
+    private const string AiDirectoryName = "ai";
     private const string ChatsDirectoryName = "chats";
-    private const string ArchitectDirectoryName = "architect";
     private const string ImagesDirectoryName = "images";
     private const string ThreadFileName = "thread.json";
     private const int MaxImageBytes = 10 * 1024 * 1024;
@@ -67,10 +68,10 @@ public class ChatHistoryService
     private readonly object writeLock = new();
     private readonly string storageDirectory;
 
-    public ChatHistoryService(ILogger<ChatHistoryService> logger)
+    public ChatHistoryService(ILogger<ChatHistoryService> logger, IConfiguration configuration)
     {
         this.logger = logger;
-        storageDirectory = Path.Combine(ResolveChatsRoot(), ArchitectDirectoryName);
+        storageDirectory = ResolveStorageDirectory(configuration);
         Directory.CreateDirectory(storageDirectory);
         MoveFlatFilesIntoThreadDirectories();
     }
@@ -259,26 +260,24 @@ public class ChatHistoryService
         }
     }
 
-    private static string ResolveChatsRoot()
+    private static string ResolveStorageDirectory(IConfiguration configuration)
     {
-        string modelLocation = ConfigurationManager
-            .GetActiveConfiguration()
-            ?.ModelSourceControlLocation;
-        if (string.IsNullOrWhiteSpace(modelLocation))
+        string configuredPath = configuration.GetValue<string>(key: "ChatHistory:Path");
+        if (!string.IsNullOrWhiteSpace(configuredPath))
+        {
+            return Path.GetFullPath(configuredPath);
+        }
+
+        string clientApplicationPath = configuration
+            .GetSectionOrThrow("SpaConfig")
+            .Get<SpaConfig>()
+            .PathToClientApplication;
+        if (string.IsNullOrWhiteSpace(clientApplicationPath))
         {
             throw new Exception(Strings.ChatHistoryLocationUnknown);
         }
-
-        string repositoryPath = Repository.Discover(modelLocation);
-        if (repositoryPath == null)
-        {
-            return Path.Combine(
-                Directory.GetParent(modelLocation)?.FullName ?? modelLocation,
-                ChatsDirectoryName
-            );
-        }
-
-        using var repository = new Repository(repositoryPath);
-        return Path.Combine(repository.Info.WorkingDirectory, ChatsDirectoryName);
+        return Path.GetFullPath(
+            Path.Combine(clientApplicationPath, AiDirectoryName, ChatsDirectoryName)
+        );
     }
 }

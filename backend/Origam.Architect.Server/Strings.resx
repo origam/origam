@@ -60,6 +60,12 @@
     <data name="Wizard_EntityNotFound" xml:space="preserve">
         <value>Entity {0} not found</value>
     </data>
+    <data name="Wizard_DataStructureEntityUsedAsEntity" xml:space="preserve">
+        <value>{0} is a data structure entity, not an entity. Use the entity it points to: {1}.</value>
+    </data>
+    <data name="Wizard_NotAnEntity" xml:space="preserve">
+        <value>{0} is a {1}, not an entity. Pass the id of an entity.</value>
+    </data>
     <data name="Wizard_ScreenNameRequired" xml:space="preserve">
         <value>Screen name is required.</value>
     </data>
@@ -103,7 +109,7 @@
         <value>List filter not found on entity.</value>
     </data>
     <data name="ChatHistoryLocationUnknown" xml:space="preserve">
-        <value>Chat history cannot be stored because the model location is not configured.</value>
+        <value>Chat history cannot be stored because neither ChatHistory:Path nor SpaConfig:PathToClientApplication is configured.</value>
     </data>
     <data name="ChatImageInvalid" xml:space="preserve">
         <value>The attached image could not be read.</value>
@@ -119,6 +125,12 @@
     </data>
     <data name="PropertyEnumValueNotValid" xml:space="preserve">
         <value>'{0}' is not a valid value for property {1}. Allowed values: {2}</value>
+    </data>
+    <data name="PropertyReferenceTypeNotValid" xml:space="preserve">
+        <value>Property {0} takes a reference to a {1}, but the id you passed belongs to a {2}. Find or create a {1} and pass its id instead.</value>
+    </data>
+    <data name="SchemaItemNotFound" xml:space="preserve">
+        <value>This item is not in the model (id {0}). It was most likely discarded because it did not pass validation and was never saved.</value>
     </data>
     <data name="PropertyReferenceValueNotValid" xml:space="preserve">
         <value>'{0}' is not a valid value for property {1}. This property is a reference and takes the id (GUID) of an existing {2}, not its name. Look the item up and pass the id from the response.</value>

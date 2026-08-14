@@ -25,22 +25,25 @@ using Origam.AI.Agent.Services.OpenApi;
 
 namespace Origam.AI.Agent.Services;
 
-public record SectionOperation(string Method, string Path, string DisplayName, bool Destructive);
+public record SectionOperation(string Method, string Path, string Name, string Description);
 
 public class ApiSection
 {
     public required string Name { get; init; }
     public required IReadOnlyList<SectionOperation> Operations { get; init; }
     public required HashSet<string> Paths { get; init; }
-    public bool HasDestructive => Operations.Any(operation => operation.Destructive);
     public IReadOnlyList<AITool>? Tools { get; set; }
 }
 
+public record SectionFunctionInfo(string Name, string? Method, string? Path, string Description);
+
 public record SectionInfo(
     string Name,
+    string Description,
+    IReadOnlyList<string> Tags,
     int FunctionCount,
-    IReadOnlyList<string> Functions,
-    bool HasDestructive
+    IReadOnlyList<SectionFunctionInfo> Functions,
+    bool EnabledByDefault
 );
 
 public class OpenApiSectionProvider
@@ -49,11 +52,58 @@ public class OpenApiSectionProvider
     {
         "Wizard",
         "Search",
-        "Documentation",
         "Tab",
         "Model",
         "PropertyEditor",
-        "SectionEditor",
+        "CommunityWebSearch",
+        "ItemTypeCatalog",
+    };
+
+    public const string BetaTag = "beta";
+    public const string UnstableTag = "very unstable";
+
+    public const string AgentApiSectionName = "Origam.AI.Agent";
+
+    private static readonly HashSet<string> SectionsOutOfBeta = new(StringComparer.Ordinal)
+    {
+        "Model",
+        "Wizard",
+    };
+
+    private static readonly Dictionary<string, IReadOnlyList<string>> AdditionalSectionTags = new(
+        StringComparer.Ordinal
+    )
+    {
+        ["DeploymentScripts"] = new[] { UnstableTag },
+        ["DeploymentScriptsGenerator"] = new[] { UnstableTag },
+    };
+
+    private static readonly Dictionary<string, string> SectionDescriptions = new(
+        StringComparer.Ordinal
+    )
+    {
+        ["DeploymentScripts"] =
+            "Makes a deployment version current and runs its deployment scripts against the database.",
+        ["DeploymentScriptsGenerator"] =
+            "Compares the model with the database and adds the differences to a deployment version or back into the model.",
+        ["Documentation"] = "Opens and edits the documentation attached to a model element.",
+        ["ItemTypeCatalog"] =
+            "Lists the item types that can be created under a node and the properties each of them has.",
+        ["Model"] =
+            "Browses the model tree, reads node details, searches the schema and deletes model elements.",
+        ["Package"] = "Lists the packages of the model and switches the active one.",
+        ["PropertyEditor"] = "Writes property values on the element.",
+        ["ScreenEditor"] =
+            "Edits a screen opened in the designer: creates, updates and deletes the items on it.",
+        ["Search"] =
+            "Finds model elements by text and shows what references them and what they depend on.",
+        ["SectionEditor"] =
+            "Edits a screen section opened in the designer: creates, updates and deletes the items on it.",
+        ["Tab"] = "Opens, closes and saves editor tabs, and creates new model nodes inside them.",
+        ["Wizard"] =
+            "Creates screens, lookups, menu items, work queue classes and filters through the Architect wizards.",
+        ["Xslt"] =
+            "Validates and runs XSLT transformations and reads their parameters, settings and rule sets.",
     };
 
     private static readonly HashSet<string> HttpMethods = new(StringComparer.OrdinalIgnoreCase)
@@ -65,14 +115,20 @@ public class OpenApiSectionProvider
         "delete",
     };
 
+    private static readonly HashSet<string> SectionsNeverExposedAsTools = new(
+        StringComparer.Ordinal
+    )
+    {
+        "ChatHistory",
+        AgentApiSectionName,
+        "Test",
+    };
+
     private static readonly HashSet<string> PathsNeverExposedAsTools = new(
         StringComparer.OrdinalIgnoreCase
     )
     {
         "/Model/GetEntityIndex",
-        "/ChatHistory/GetAll",
-        "/ChatHistory/Save",
-        "/ChatHistory/Delete",
     };
 
     private readonly IHttpClientFactory httpClientFactory;
@@ -96,6 +152,18 @@ public class OpenApiSectionProvider
             configuration.GetSection("Architect")["BaseUrl"] ?? "https://localhost:7099";
     }
 
+    public static IReadOnlyList<string> TagsFor(string sectionName)
+    {
+        var tags = new List<string>();
+        if (!SectionsOutOfBeta.Contains(sectionName))
+        {
+            tags.Add(BetaTag);
+        }
+
+        tags.AddRange(AdditionalSectionTags.GetValueOrDefault(sectionName, Array.Empty<string>()));
+        return tags;
+    }
+
     public async Task<IReadOnlyList<SectionInfo>?> GetSectionsAsync(
         CancellationToken cancellationToken
     )
@@ -109,9 +177,18 @@ public class OpenApiSectionProvider
             .Values.OrderBy(section => section.Name, StringComparer.Ordinal)
             .Select(section => new SectionInfo(
                 section.Name,
+                SectionDescriptions.GetValueOrDefault(section.Name, string.Empty),
+                TagsFor(section.Name),
                 section.Operations.Count,
-                section.Operations.Select(operation => operation.DisplayName).ToArray(),
-                section.HasDestructive
+                section
+                    .Operations.Select(operation => new SectionFunctionInfo(
+                        operation.Name,
+                        operation.Method.ToUpperInvariant(),
+                        operation.Path,
+                        operation.Description
+                    ))
+                    .ToArray(),
+                SafeDefaultSections.Contains(section.Name)
             ))
             .ToArray();
     }
@@ -228,8 +305,13 @@ public class OpenApiSectionProvider
 
                     var operation = methodEntry.Value;
                     var tag = ReadFirstTag(operation);
-                    var displayName = ReadDisplayName(operation, method, path);
-                    var destructive = IsDestructive(method, path, tag);
+                    if (SectionsNeverExposedAsTools.Contains(tag))
+                    {
+                        continue;
+                    }
+
+                    var name = OpenApiFunctionBuilder.BuildToolName(tag, method, path);
+                    var description = ReadDescription(operation);
 
                     if (!operationsByTag.TryGetValue(tag, out var list))
                     {
@@ -237,7 +319,7 @@ public class OpenApiSectionProvider
                         operationsByTag[tag] = list;
                     }
 
-                    list.Add(new SectionOperation(method, path, displayName, destructive));
+                    list.Add(new SectionOperation(method, path, name, description));
                 }
             }
         }
@@ -274,46 +356,20 @@ public class OpenApiSectionProvider
         return "General";
     }
 
-    private static string ReadDisplayName(JsonElement operation, string method, string path)
+    private static string ReadDescription(JsonElement operation)
     {
-        if (
-            operation.TryGetProperty(propertyName: "operationId", out var operationId)
-            && operationId.ValueKind == JsonValueKind.String
-        )
+        foreach (var propertyName in new[] { "description", "summary" })
         {
-            var value = operationId.GetString();
-            if (!string.IsNullOrWhiteSpace(value))
+            if (
+                operation.TryGetProperty(propertyName, out var value)
+                && value.ValueKind == JsonValueKind.String
+                && !string.IsNullOrWhiteSpace(value.GetString())
+            )
             {
-                return value;
+                return value.GetString()!;
             }
         }
 
-        return $"{method.ToUpperInvariant()} {path}";
-    }
-
-    private static bool IsDestructive(string method, string path, string tag)
-    {
-        if (method.Equals(value: "delete", comparisonType: StringComparison.OrdinalIgnoreCase))
-        {
-            return true;
-        }
-
-        var haystack = $"{path} {tag}";
-        return haystack.Contains(
-                value: "delete",
-                comparisonType: StringComparison.OrdinalIgnoreCase
-            )
-            || haystack.Contains(
-                value: "remove",
-                comparisonType: StringComparison.OrdinalIgnoreCase
-            )
-            || haystack.Contains(
-                value: "closeall",
-                comparisonType: StringComparison.OrdinalIgnoreCase
-            )
-            || haystack.Contains(
-                value: "deploy",
-                comparisonType: StringComparison.OrdinalIgnoreCase
-            );
+        return string.Empty;
     }
 }

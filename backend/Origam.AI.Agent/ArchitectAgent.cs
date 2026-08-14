@@ -36,6 +36,16 @@ public sealed class ArchitectAgent : DelegatingAIAgent
 {
     private const int MaxToolIterations = 80;
     private const int SummarizeEveryAssistantTurns = 5;
+    private static readonly TimeSpan StreamIdleTimeout = TimeSpan.FromSeconds(value: 120);
+
+    private const string StreamStalledMessage =
+        "The model stopped responding - no data arrived for 120 seconds, so the run was "
+        + "cancelled. Nothing was left half-created in the model. Send the message again.";
+
+    private const string EmptyReplyMessage =
+        "The model ended this turn without a closing message, so anything it announced along the "
+        + "way may be unfinished. Only the items listed under Created / changed were really "
+        + "saved. Send the message again to have it carry on.";
 
     private readonly OpenApiSectionProvider sectionProvider;
     private readonly AliasMappingService aliasMappingService;
@@ -107,7 +117,8 @@ public sealed class ArchitectAgent : DelegatingAIAgent
                     cancellationToken
                 ),
                 settings,
-                aliasMappingService
+                aliasMappingService,
+                CustomInstructionsFile.Read(configuration)
             )
         );
         var incomingMessages = messages.ToList();
@@ -118,9 +129,13 @@ public sealed class ArchitectAgent : DelegatingAIAgent
             new List<IToolInvocationFilter>
             {
                 new ToolErrorFilter(toolErrorLogger),
-                new ResponseCompactionFilter(),
+                new ResponseCompactionFilter(newItemTypeCatalogService),
                 new AliasArgumentResolver(aliasMappingService),
-                new CreateNodeValidationFilter(httpClientFactory, configuration),
+                new CreateNodeValidationFilter(
+                    httpClientFactory,
+                    newItemTypeCatalogService,
+                    configuration
+                ),
                 toolTracker,
             }
         );
@@ -129,7 +144,7 @@ public sealed class ArchitectAgent : DelegatingAIAgent
 #pragma warning disable OPENAI001
         runChatOptions.RawRepresentationFactory = _ => new CreateResponseOptions
         {
-            StoredOutputEnabled = false,
+            StoredOutputEnabled = true,
         };
 #pragma warning restore OPENAI001
         runChatOptions.Tools = await BuildToolsAsync(
@@ -151,11 +166,15 @@ public sealed class ArchitectAgent : DelegatingAIAgent
 
         var usage = new UsageDetails();
         var replyText = new StringBuilder();
+        var closedWithText = false;
         Exception? streamFailure = null;
 
+        using var streamCancellation = CancellationTokenSource.CreateLinkedTokenSource(
+            cancellationToken
+        );
         var updates = InnerAgent
-            .RunStreamingAsync(conversation, session, runOptions, cancellationToken)
-            .GetAsyncEnumerator(cancellationToken);
+            .RunStreamingAsync(conversation, session, runOptions, streamCancellation.Token)
+            .GetAsyncEnumerator(streamCancellation.Token);
         try
         {
             while (true)
@@ -163,7 +182,16 @@ public sealed class ArchitectAgent : DelegatingAIAgent
                 AgentResponseUpdate update;
                 try
                 {
-                    if (!await updates.MoveNextAsync().ConfigureAwait(false))
+                    var moveNext = updates.MoveNextAsync().AsTask();
+                    if (
+                        await WaitForUpdateAsync(moveNext, streamCancellation).ConfigureAwait(false)
+                    )
+                    {
+                        streamFailure = new TimeoutException(StreamStalledMessage);
+                        break;
+                    }
+
+                    if (!await moveNext.ConfigureAwait(false))
                     {
                         break;
                     }
@@ -184,6 +212,11 @@ public sealed class ArchitectAgent : DelegatingAIAgent
                     else if (content is TextContent textContent)
                     {
                         replyText.Append(textContent.Text);
+                        closedWithText = textContent.Text.Length > 0 || closedWithText;
+                    }
+                    else if (content is FunctionCallContent or FunctionResultContent)
+                    {
+                        closedWithText = false;
                     }
                 }
 
@@ -192,7 +225,11 @@ public sealed class ArchitectAgent : DelegatingAIAgent
         }
         finally
         {
-            await updates.DisposeAsync().ConfigureAwait(false);
+            try
+            {
+                await updates.DisposeAsync().ConfigureAwait(false);
+            }
+            catch (OperationCanceledException) { }
         }
 
         var updatedSummary = streamFailure is null
@@ -203,6 +240,16 @@ public sealed class ArchitectAgent : DelegatingAIAgent
                 cancellationToken
             )
             : null;
+
+        if (streamFailure is null && !closedWithText)
+        {
+            yield return new AgentResponseUpdate(
+                new ChatResponseUpdate(ChatRole.Assistant, EmptyReplyMessage)
+                {
+                    MessageId = Guid.NewGuid().ToString(format: "N"),
+                }
+            );
+        }
 
         yield return AguiEvents.Create(
             AguiEvents.RunResultName,
@@ -242,6 +289,11 @@ public sealed class ArchitectAgent : DelegatingAIAgent
             AIFunctionFactory.Create(schemaTool.SearchSchemaAsync),
         };
 
+        if (enabledSections.Contains(CommunityWebSearchTool.SectionName))
+        {
+            tools.AddRange(CommunityWebSearchTool.CreateTools(httpClientFactory, configuration));
+        }
+
         foreach (var sectionName in enabledSections)
         {
             var sectionTools = await sectionProvider.GetToolsAsync(sectionName, cancellationToken);
@@ -257,6 +309,34 @@ public sealed class ArchitectAgent : DelegatingAIAgent
         }
 
         return tools;
+    }
+
+    private static async Task<bool> WaitForUpdateAsync(
+        Task<bool> moveNext,
+        CancellationTokenSource streamCancellation
+    )
+    {
+        using var idleTimeout = new CancellationTokenSource();
+        var completed = await Task.WhenAny(
+                moveNext,
+                Task.Delay(StreamIdleTimeout, idleTimeout.Token)
+            )
+            .ConfigureAwait(false);
+
+        if (completed == moveNext)
+        {
+            await idleTimeout.CancelAsync().ConfigureAwait(false);
+            return false;
+        }
+
+        await streamCancellation.CancelAsync().ConfigureAwait(false);
+        try
+        {
+            await moveNext.ConfigureAwait(false);
+        }
+        catch (Exception) { }
+
+        return true;
     }
 
     private async Task<string?> SummarizeAsync(

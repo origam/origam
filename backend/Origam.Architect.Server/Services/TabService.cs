@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Collections.Concurrent;
 using System.Reflection;
 using Origam.Architect.Server.ArchitectLogic;
+using Origam.Architect.Server.Exceptions;
 using Origam.Architect.Server.Models;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema;
@@ -185,14 +186,7 @@ public class TabService(
     {
         return tabSchemaItems.GetOrAdd(
             TabId.Default(schemaItemId),
-            tabId =>
-            {
-                ISchemaItem item = persistenceService.SchemaProvider.RetrieveInstance<ISchemaItem>(
-                    tabId.SchemaItemId,
-                    useCache: false
-                );
-                return new TabData(item, tabId);
-            }
+            tabId => new TabData(RetrieveSchemaItem(tabId.SchemaItemId), tabId)
         );
     }
 
@@ -200,15 +194,23 @@ public class TabService(
     {
         return tabSchemaItems.GetOrAdd(
             TabId.Documentation(schemaItemId),
-            tabId =>
-            {
-                ISchemaItem item = persistenceService.SchemaProvider.RetrieveInstance<ISchemaItem>(
-                    tabId.SchemaItemId,
-                    useCache: false
-                );
-                return new TabData(item, tabId);
-            }
+            tabId => new TabData(RetrieveSchemaItem(tabId.SchemaItemId), tabId)
         );
+    }
+
+    private ISchemaItem RetrieveSchemaItem(Guid schemaItemId)
+    {
+        ISchemaItem item = persistenceService.SchemaProvider.RetrieveInstance<ISchemaItem>(
+            schemaItemId,
+            useCache: false,
+            throwNotFoundException: false
+        );
+        if (item == null)
+        {
+            throw new SchemaItemNotFoundException(schemaItemId);
+        }
+
+        return item;
     }
 
     public void CloseTab(TabId tabId)
@@ -281,6 +283,35 @@ public class TabService(
     {
         return tabSchemaItems.Values.OrderBy(x => x.OpenedAt);
     }
+
+    public void InvalidateTabsInRoot(ISchemaItem changedRootItem, TabId changedByTabId)
+    {
+        if (changedRootItem == null)
+        {
+            return;
+        }
+
+        foreach (KeyValuePair<TabId, TabData> entry in tabSchemaItems.ToArray())
+        {
+            if (entry.Key.Equals(changedByTabId))
+            {
+                continue;
+            }
+
+            if (entry.Value.Item.RootItem?.Id != changedRootItem.Id)
+            {
+                continue;
+            }
+
+            if (entry.Value.IsDirty)
+            {
+                entry.Value.IsStale = true;
+                continue;
+            }
+
+            tabSchemaItems.TryRemove(entry.Key, out TabData _);
+        }
+    }
 }
 
 public class TabData(ISchemaItem item, TabId id)
@@ -291,4 +322,6 @@ public class TabData(ISchemaItem item, TabId id)
     public DateTime OpenedAt { get; } = DateTime.Now;
 
     public bool IsDirty { get; set; }
+
+    public bool IsStale { get; set; }
 }

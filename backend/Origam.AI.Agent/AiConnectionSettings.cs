@@ -23,7 +23,34 @@ namespace Origam.AI.Agent;
 
 public sealed record AiConnectionSettings(string Endpoint, string Model, string ApiKey)
 {
+    private static readonly Dictionary<string, string> RouterNamesByHost = new(
+        StringComparer.OrdinalIgnoreCase
+    )
+    {
+        ["api.openai.com"] = "OpenAI",
+        ["openrouter.ai"] = "OpenRouter",
+        ["integrate.api.nvidia.com"] = "NVIDIA",
+        ["api.anthropic.com"] = "Anthropic",
+        ["generativelanguage.googleapis.com"] = "Google",
+        ["api.deepseek.com"] = "DeepSeek",
+        ["api.mistral.ai"] = "Mistral",
+    };
+
     public bool HasApiKey => !string.IsNullOrWhiteSpace(ApiKey);
+
+    public string Router
+    {
+        get
+        {
+            if (!Uri.TryCreate(Endpoint, UriKind.Absolute, out var endpointUri))
+            {
+                return Endpoint;
+            }
+            return RouterNamesByHost.TryGetValue(endpointUri.Host, out var routerName)
+                ? routerName
+                : endpointUri.Host;
+        }
+    }
 
     public static AiConnectionSettings Read(IConfiguration configuration)
     {

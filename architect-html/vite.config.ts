@@ -46,6 +46,9 @@ export default defineConfig({
   },
   server: {
     ...(httpsDisabled ? {} : { https: {} }),
+    watch: {
+      ignored: ['**/ai/chats/**'],
+    },
     proxy: {
       '/Model': {
         target: 'https://localhost:7099',

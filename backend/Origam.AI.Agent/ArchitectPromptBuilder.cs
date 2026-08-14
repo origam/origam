@@ -31,12 +31,13 @@ public static class ArchitectPromptBuilder
         ModelIndexContent modelIndex,
         ItemTypePromptSections itemTypeSections,
         AgentRunSettings settings,
-        AliasMappingService aliasMappingService
+        AliasMappingService aliasMappingService,
+        string customInstructions
     )
     {
         var messages = new List<ChatMessage>();
 
-        messages.AddSystemMessage(PromptLibrary.Identity);
+        messages.AddSystemMessage(PromptLibrary.Replying);
         messages.AddSystemMessage(PromptLibrary.ToolUse);
         messages.AddSystemMessage(PromptLibrary.ModelItems);
 
@@ -70,6 +71,13 @@ public static class ArchitectPromptBuilder
         {
             messages.AddSystemMessage(
                 PromptLibrary.SessionSummaryHeader + "\n\n" + settings.Summary
+            );
+        }
+
+        if (!string.IsNullOrWhiteSpace(customInstructions))
+        {
+            messages.AddSystemMessage(
+                PromptLibrary.CustomInstructionsHeader + "\n\n" + customInstructions
             );
         }
 

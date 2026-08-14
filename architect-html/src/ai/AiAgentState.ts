@@ -19,12 +19,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import {
   AffectedNode,
-  ApiSection,
   AttachedImage,
   ChatFocus,
   ChatImage,
   ChatMessage,
   ChatThread,
+  ChatToolCall,
   FocusItem,
   FocusNode,
 } from '@/ai/AiAgentTypes';
@@ -33,6 +33,7 @@ import {
   parseRunResult,
   RUN_RESULT_EVENT_NAME,
 } from '@/ai/agui/ArchitectAgentClient';
+import { getAgentConnection } from '@/ai/AiPromptApi';
 import {
   blobToDataUrl,
   deleteChatThread,
@@ -50,19 +51,10 @@ import { RootStore } from '@stores/RootStore';
 import { action, observable, toJS } from 'mobx';
 
 const THREADS_STORAGE_KEY = 'origam-ai-threads';
-const ENABLED_SECTIONS_STORAGE_KEY = 'origam-ai-enabled-sections-v2';
-const SAFE_DEFAULT_SECTIONS = [
-  'Wizard',
-  'Search',
-  'Documentation',
-  'Tab',
-  'Model',
-  'PropertyEditor',
-  'SectionEditor',
-];
 const MAX_VISIBLE_NODES = 40;
 const HISTORY_RETRY_DELAYS = [1000, 2000, 4000, 8000];
 const MAX_IMAGE_BYTES = 10 * 1024 * 1024;
+const MAX_TOOL_RESULT_CHARS = 8000;
 const SUPPORTED_IMAGE_MIME_TYPES = ['image/png', 'image/jpeg', 'image/gif', 'image/webp'];
 const GUID_PATTERN =
   /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
@@ -74,9 +66,7 @@ export class AiAgentState {
   @observable accessor attachedImages: AttachedImage[] = [];
   @observable accessor isRunning: boolean = false;
   @observable accessor errorText: string | null = null;
-  @observable accessor sections: ApiSection[] = [];
-  @observable accessor sectionsAvailable: boolean = true;
-  @observable accessor enabledSections: string[] = [];
+  @observable accessor isApiKeyMissing: boolean = false;
 
   private runningAgent: HttpAgent | null = null;
   private hasLoadedHistory: boolean = false;
@@ -87,7 +77,6 @@ export class AiAgentState {
   constructor(private rootStore: RootStore) {
     this.threads = [createThread(this.defaultThreadTitle)];
     this.activeThreadId = this.threads[0].id;
-    this.enabledSections = loadEnabledSections();
   }
 
   get activeThread(): ChatThread {
@@ -122,6 +111,20 @@ export class AiAgentState {
     }
   }
 
+  async loadConnection() {
+    try {
+      const connection = await getAgentConnection();
+      this.setApiKeyMissing(!connection.hasApiKey);
+    } catch {
+      return;
+    }
+  }
+
+  @action
+  private setApiKeyMissing(isApiKeyMissing: boolean) {
+    this.isApiKeyMissing = isApiKeyMissing;
+  }
+
   @action
   private applyLoadedThreads(loadedThreads: ChatThread[]) {
     const keptThreads = this.threads.filter(
@@ -141,22 +144,6 @@ export class AiAgentState {
       this.activeThreadId = merged[0].id;
     }
     this.hasLoadedHistory = true;
-  }
-
-  async loadSections() {
-    try {
-      const response = await fetch('/agent/architect/sections');
-      const payload = await response.json();
-      this.applySections(payload.available !== false, payload.sections);
-    } catch {
-      this.applySections(false, []);
-    }
-  }
-
-  @action
-  private applySections(available: boolean, sections: unknown) {
-    this.sectionsAvailable = available;
-    this.sections = Array.isArray(sections) ? (sections as ApiSection[]) : [];
   }
 
   @action
@@ -189,18 +176,6 @@ export class AiAgentState {
   @action
   setDraft(draft: string) {
     this.draft = draft;
-  }
-
-  @action
-  toggleSection(sectionName: string) {
-    this.enabledSections = this.enabledSections.includes(sectionName)
-      ? this.enabledSections.filter(name => name !== sectionName)
-      : [...this.enabledSections, sectionName];
-    try {
-      localStorage.setItem(ENABLED_SECTIONS_STORAGE_KEY, JSON.stringify(this.enabledSections));
-    } catch {
-      return;
-    }
   }
 
   async addImageFiles(files: FileList | File[] | null) {
@@ -253,6 +228,7 @@ export class AiAgentState {
     this.startRun(thread, messageText, images);
     void this.uploadImages(thread.id, images);
     await this.hydrateImages(thread);
+    await this.rootStore.aiToolSectionsState.load();
 
     const agent = createArchitectAgent({
       threadId: thread.id,
@@ -265,7 +241,7 @@ export class AiAgentState {
       await agent.runAgent(
         {
           forwardedProps: {
-            enabledSections: [...this.enabledSections],
+            enabledSections: [...this.rootStore.aiToolSectionsState.enabledSections],
             summary: thread.summary,
           },
         },
@@ -306,7 +282,13 @@ export class AiAgentState {
         this.appendAssistantText(threadId, event.messageId, event.delta);
       },
       onToolCallStartEvent: ({ event }) => {
-        this.addCalledFunction(threadId, event.toolCallName);
+        this.addCalledFunction(threadId, event.toolCallName, event.toolCallId);
+      },
+      onToolCallArgsEvent: ({ event }) => {
+        this.appendToolCallArguments(threadId, event.toolCallId, event.delta);
+      },
+      onToolCallResultEvent: ({ event }) => {
+        this.setToolCallResult(threadId, event.toolCallId, event.content);
       },
       onCustomEvent: ({ event }) => {
         if (event.name === RUN_RESULT_EVENT_NAME) {
@@ -399,7 +381,7 @@ export class AiAgentState {
   }
 
   @action
-  private addCalledFunction(threadId: string, functionName: string) {
+  private addCalledFunction(threadId: string, functionName: string, toolCallId: string) {
     const thread = this.findThread(threadId);
     if (!thread) {
       return;
@@ -410,7 +392,46 @@ export class AiAgentState {
     const message = this.pendingAssistantMessage(thread);
     if (message) {
       message.calledFunctions = [...(message.calledFunctions ?? []), functionName];
+      message.toolCalls = [
+        ...(message.toolCalls ?? []),
+        { id: toolCallId, name: functionName, arguments: '' },
+      ];
     }
+  }
+
+  @action
+  private appendToolCallArguments(threadId: string, toolCallId: string, delta: string) {
+    const toolCall = this.findToolCall(threadId, toolCallId);
+    if (toolCall) {
+      toolCall.arguments += delta;
+    }
+  }
+
+  @action
+  private setToolCallResult(threadId: string, toolCallId: string, content: string) {
+    const toolCall = this.findToolCall(threadId, toolCallId);
+    if (toolCall) {
+      toolCall.result =
+        content.length <= MAX_TOOL_RESULT_CHARS
+          ? content
+          : `${content.slice(0, MAX_TOOL_RESULT_CHARS)}... [truncated]`;
+    }
+  }
+
+  private findToolCall(threadId: string, toolCallId: string): ChatToolCall | undefined {
+    const thread = this.findThread(threadId);
+    if (!thread) {
+      return undefined;
+    }
+    for (let index = thread.messages.length - 1; index >= 0; index--) {
+      const toolCall = thread.messages[index].toolCalls?.find(
+        candidate => candidate.id === toolCallId,
+      );
+      if (toolCall) {
+        return toolCall;
+      }
+    }
+    return undefined;
   }
 
   @action
@@ -599,22 +620,6 @@ function readLegacyThreads(): ChatThread[] {
     }));
   } catch {
     return [];
-  }
-}
-
-function loadEnabledSections(): string[] {
-  try {
-    const raw = localStorage.getItem(ENABLED_SECTIONS_STORAGE_KEY);
-    if (!raw) {
-      return [...SAFE_DEFAULT_SECTIONS];
-    }
-    const parsed = JSON.parse(raw);
-    if (!Array.isArray(parsed)) {
-      return [...SAFE_DEFAULT_SECTIONS];
-    }
-    return parsed.filter(item => typeof item === 'string');
-  } catch {
-    return [...SAFE_DEFAULT_SECTIONS];
   }
 }
 

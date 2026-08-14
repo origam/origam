@@ -53,11 +53,24 @@ public class ChatMessageModel
 
     public List<string> CalledFunctions { get; set; }
 
+    public List<ChatToolCallModel> ToolCalls { get; set; }
+
     public List<ChatAffectedNodeModel> AffectedNodes { get; set; }
 
     public List<ChatImageModel> Images { get; set; }
 
     public int? TotalTokens { get; set; }
+}
+
+public class ChatToolCallModel
+{
+    public string Id { get; set; }
+
+    public string Name { get; set; }
+
+    public string Arguments { get; set; }
+
+    public string Result { get; set; }
 }
 
 public class ChatImageModel

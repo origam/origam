@@ -32,7 +32,9 @@ public class OpenTabData(
     bool isDirty = false,
     string parentName = null,
     string parentOrigamId = null,
-    string primaryKeyFieldId = null
+    string primaryKeyFieldId = null,
+    bool isStale = false,
+    bool discarded = false
 )
 {
     public string TabId { get; } = tabId.ToString();
@@ -49,4 +51,6 @@ public class OpenTabData(
     public string ParentName { get; } = parentName;
     public string ParentOrigamId { get; } = parentOrigamId;
     public string PrimaryKeyFieldId { get; } = primaryKeyFieldId;
+    public bool IsStale { get; } = isStale;
+    public bool Discarded { get; } = discarded;
 }

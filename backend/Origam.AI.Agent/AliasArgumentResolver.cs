@@ -28,6 +28,8 @@ namespace Origam.AI.Agent;
 
 public class AliasArgumentResolver : IToolInvocationFilter
 {
+    public const string ResolveAliasesProperty = "resolveAliases";
+
     private static readonly Regex AliasPattern = new(
         pattern: "^[A-Za-z]{1,4}_[0-9a-z]{1,10}$",
         options: RegexOptions.Compiled
@@ -46,6 +48,16 @@ public class AliasArgumentResolver : IToolInvocationFilter
         CancellationToken cancellationToken
     )
     {
+        if (
+            context.Function.AdditionalProperties.TryGetValue(
+                ResolveAliasesProperty,
+                out var resolveAliases
+            ) && resolveAliases is false
+        )
+        {
+            return await next(context, cancellationToken);
+        }
+
         foreach (var name in context.Arguments.Keys.ToArray())
         {
             if (!context.Arguments.TryGetValue(name, out var original))

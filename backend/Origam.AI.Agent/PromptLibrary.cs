@@ -25,13 +25,15 @@ public static class PromptLibrary
 {
     private const string ResourcePrefix = "Origam.AI.Agent.Prompts.";
 
-    public static string Identity { get; } = Load("Identity.md");
+    public static string Replying { get; } = Load("Replying.md");
 
     public static string ToolUse { get; } = Load("ToolUse.md");
 
     public static string ModelItems { get; } = Load("ModelItems.md");
 
     public static string ModelIndexHeader { get; } = Load("Context/ModelIndex.md");
+
+    public static string CustomInstructionsHeader { get; } = Load("Context/CustomInstructions.md");
 
     public static string FocusHeader { get; } = Load("Context/Focus.md");
 

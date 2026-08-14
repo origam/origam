@@ -23,6 +23,7 @@ using System.Reflection;
 using Origam.Architect.Server.Attributes;
 using Origam.Architect.Server.ReturnModels;
 using Origam.Architect.Server.Utils;
+using Origam.DA.ObjectPersistence;
 using Origam.Schema;
 using Origam.Workbench.Services;
 
@@ -30,6 +31,10 @@ namespace Origam.Architect.Server.Services;
 
 public class ItemTypeCatalogService(SchemaService schemaService)
 {
+    private const int MinimumSamples = 3;
+    private const int MaxCommonValueLength = 60;
+    private const double DominantShare = 0.6;
+
     private readonly object buildLock = new();
     private ItemTypeCatalog cachedCatalog;
 
@@ -57,6 +62,7 @@ public class ItemTypeCatalogService(SchemaService schemaService)
         var typesToVisit = new Queue<Type>();
         var visitedTypes = new HashSet<Type>();
         var types = new List<ItemTypeInfo>();
+        Dictionary<Type, List<ISchemaItem>> existingItems = GroupExistingItemsByType();
 
         foreach (
             ISchemaItemProvider provider in schemaService.Providers.OrderBy(
@@ -82,13 +88,15 @@ public class ItemTypeCatalogService(SchemaService schemaService)
             Type[] childTypes = GetChildTypes(type);
             EnqueueAll(childTypes, typesToVisit, visitedTypes);
 
+            List<ISchemaItem> itemsOfType = existingItems.GetValueOrDefault(type) ?? [];
             types.Add(
                 new ItemTypeInfo(
                     Caption: GetCaption(type),
                     TypeName: type.FullName,
                     FolderName: type.SchemaItemDescription()?.FolderName,
                     Children: childTypes.Select(GetCaption).ToArray(),
-                    Properties: GetProperties(type)
+                    Properties: GetProperties(type, itemsOfType),
+                    ExistingCount: itemsOfType.Count
                 )
             );
         }
@@ -149,13 +157,94 @@ public class ItemTypeCatalogService(SchemaService schemaService)
         return type.SchemaItemDescription()?.Name ?? type.Name;
     }
 
-    private static ItemTypePropertyInfo[] GetProperties(Type type)
+    private static ItemTypePropertyInfo[] GetProperties(
+        Type type,
+        IReadOnlyList<ISchemaItem> existingItems
+    )
     {
         return type.GetProperties()
             .Where(IsSettableInEditor)
-            .Select(ToPropertyInfo)
+            .Select(property => ToPropertyInfo(property, existingItems))
             .OrderBy(property => property.Name, StringComparer.OrdinalIgnoreCase)
             .ToArray();
+    }
+
+    private Dictionary<Type, List<ISchemaItem>> GroupExistingItemsByType()
+    {
+        var itemsByType = new Dictionary<Type, List<ISchemaItem>>();
+        foreach (ISchemaItemProvider provider in schemaService.Providers)
+        {
+            try
+            {
+                foreach (ISchemaItem item in provider.ChildItems)
+                {
+                    Collect(item, itemsByType);
+                }
+            }
+            catch (Exception)
+            {
+                continue;
+            }
+        }
+
+        return itemsByType;
+    }
+
+    private static void Collect(ISchemaItem item, Dictionary<Type, List<ISchemaItem>> itemsByType)
+    {
+        if (!itemsByType.TryGetValue(item.GetType(), out List<ISchemaItem> items))
+        {
+            items = [];
+            itemsByType[item.GetType()] = items;
+        }
+        items.Add(item);
+
+        foreach (ISchemaItem child in item.ChildItemsRecursive)
+        {
+            if (!itemsByType.TryGetValue(child.GetType(), out List<ISchemaItem> childItems))
+            {
+                childItems = [];
+                itemsByType[child.GetType()] = childItems;
+            }
+            childItems.Add(child);
+        }
+    }
+
+    private static int CountItemsWithValue(
+        PropertyInfo property,
+        IReadOnlyList<ISchemaItem> existingItems
+    )
+    {
+        FieldInfo idField = GetReferenceIdField(property);
+        if (idField == null)
+        {
+            return 0;
+        }
+
+        return existingItems.Count(item => IsReferenceSet(idField, item));
+    }
+
+    private static FieldInfo GetReferenceIdField(PropertyInfo property)
+    {
+        string idFieldName = property.GetCustomAttribute<XmlReferenceAttribute>()?.IdField;
+        return idFieldName == null
+            ? null
+            : property.DeclaringType?.GetField(
+                idFieldName,
+                BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance
+            );
+    }
+
+    private static bool IsReferenceSet(FieldInfo idField, ISchemaItem item)
+    {
+        try
+        {
+            return idField.GetValue(item) is Guid value && value != Guid.Empty;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
     }
 
     private static bool IsSettableInEditor(PropertyInfo property)
@@ -168,22 +257,89 @@ public class ItemTypeCatalogService(SchemaService schemaService)
         return property.DeclaringType != typeof(AbstractSchemaItem) || property.Name == "Name";
     }
 
-    private static ItemTypePropertyInfo ToPropertyInfo(PropertyInfo property)
+    private static ItemTypePropertyInfo ToPropertyInfo(
+        PropertyInfo property,
+        IReadOnlyList<ISchemaItem> existingItems
+    )
     {
         Type propertyType =
             Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
 
-        return propertyType.IsEnum
-            ? new ItemTypePropertyInfo(
+        bool required = IsRequired(property);
+        if (propertyType.IsEnum)
+        {
+            return new ItemTypePropertyInfo(
                 Name: property.Name,
                 Type: "enum",
-                Values: Enum.GetNames(propertyType)
-            )
-            : new ItemTypePropertyInfo(
-                Name: property.Name,
-                Type: GetPropertyTypeName(property, propertyType),
-                Values: []
+                Values: Enum.GetNames(propertyType),
+                Required: required,
+                SetOnExisting: 0,
+                CommonValue: required ? GetCommonValue(property, existingItems) : null
             );
+        }
+
+        string typeName = GetPropertyTypeName(property, propertyType);
+        bool isReference = typeName == "reference";
+        return new ItemTypePropertyInfo(
+            Name: property.Name,
+            Type: typeName,
+            Values: [],
+            Required: required,
+            SetOnExisting: isReference ? CountItemsWithValue(property, existingItems) : 0,
+            CommonValue: required && !isReference ? GetCommonValue(property, existingItems) : null
+        );
+    }
+
+    private static string GetCommonValue(
+        PropertyInfo property,
+        IReadOnlyList<ISchemaItem> existingItems
+    )
+    {
+        if (existingItems.Count < MinimumSamples)
+        {
+            return null;
+        }
+
+        var counts = new Dictionary<string, int>(StringComparer.Ordinal);
+        foreach (ISchemaItem item in existingItems)
+        {
+            string text = ReadScalar(property, item);
+            if (string.IsNullOrWhiteSpace(text) || text.Length > MaxCommonValueLength)
+            {
+                continue;
+            }
+            counts[text] = counts.GetValueOrDefault(text) + 1;
+        }
+
+        if (counts.Count == 0)
+        {
+            return null;
+        }
+
+        KeyValuePair<string, int> mostCommon = counts.MaxBy(pair => pair.Value);
+        return
+            mostCommon.Value >= MinimumSamples
+            && mostCommon.Value >= existingItems.Count * DominantShare
+            ? mostCommon.Key
+            : null;
+    }
+
+    private static string ReadScalar(PropertyInfo property, ISchemaItem item)
+    {
+        try
+        {
+            return property.GetValue(item)?.ToString();
+        }
+        catch (Exception)
+        {
+            return null;
+        }
+    }
+
+    private static bool IsRequired(PropertyInfo property)
+    {
+        return property.GetCustomAttribute<NotNullModelElementRuleAttribute>() != null
+            || property.GetCustomAttribute<StringNotEmptyModelElementRuleAttribute>() != null;
     }
 
     private static string GetPropertyTypeName(PropertyInfo property, Type propertyType)

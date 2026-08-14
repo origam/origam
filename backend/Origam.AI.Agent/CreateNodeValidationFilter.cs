@@ -21,20 +21,24 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Text.Json;
 using Microsoft.Extensions.AI;
+using Origam.AI.Agent.Services;
 
 namespace Origam.AI.Agent;
 
 public class CreateNodeValidationFilter : IToolInvocationFilter
 {
     private readonly IHttpClientFactory httpClientFactory;
+    private readonly NewItemTypeCatalogService catalogService;
     private readonly string architectBaseUrl;
 
     public CreateNodeValidationFilter(
         IHttpClientFactory httpClientFactory,
+        NewItemTypeCatalogService catalogService,
         IConfiguration configuration
     )
     {
         this.httpClientFactory = httpClientFactory;
+        this.catalogService = catalogService;
         architectBaseUrl =
             configuration.GetSection("Architect")["BaseUrl"] ?? "https://localhost:7099";
     }
@@ -74,7 +78,108 @@ public class CreateNodeValidationFilter : IToolInvocationFilter
             SetArgument(context.Arguments, name: "newTypeName", resolvedTypeName);
         }
 
+        string? emptyRequired = FindEmptyRequiredProperty(context.Arguments, resolvedTypeName);
+        if (emptyRequired is not null)
+        {
+            return emptyRequired;
+        }
+
         return await next(context, cancellationToken);
+    }
+
+    private string? FindEmptyRequiredProperty(AIFunctionArguments arguments, string typeName)
+    {
+        ItemType? type = catalogService.CachedCatalog?.Types.FirstOrDefault(candidate =>
+            string.Equals(candidate.TypeName, typeName, StringComparison.Ordinal)
+        );
+        if (type is null)
+        {
+            return null;
+        }
+
+        foreach (var (name, value) in ReadChanges(arguments))
+        {
+            if (!string.IsNullOrWhiteSpace(value))
+            {
+                continue;
+            }
+
+            ItemTypeProperty? property = type.Properties.FirstOrDefault(candidate =>
+                candidate.Required
+                && string.Equals(candidate.Name, name, StringComparison.OrdinalIgnoreCase)
+            );
+            if (property is null)
+            {
+                continue;
+            }
+
+            string suggestion = string.IsNullOrWhiteSpace(property.CommonValue)
+                ? "Pick a value that suits what the user asked for"
+                : $"Existing {type.Caption} items in this model usually use \"{property.CommonValue}\"";
+
+            return $"CreateNode was blocked before it ran: '{name}' is required on {type.Caption} "
+                + "and you passed an empty value, which the server treats the same as leaving it "
+                + $"out - the item would have been rejected and thrown away. {suggestion}. "
+                + "Nothing was created, so call CreateNode again with the same arguments and a "
+                + $"real value for '{name}'.";
+        }
+
+        return null;
+    }
+
+    private static IEnumerable<(string Name, string? Value)> ReadChanges(
+        AIFunctionArguments arguments
+    )
+    {
+        string? raw = GetArgument(arguments, name: "changes");
+        if (string.IsNullOrWhiteSpace(raw))
+        {
+            yield break;
+        }
+
+        JsonElement parsed;
+        try
+        {
+            parsed = JsonDocument.Parse(raw).RootElement;
+        }
+        catch (JsonException)
+        {
+            yield break;
+        }
+
+        if (parsed.ValueKind != JsonValueKind.Array)
+        {
+            yield break;
+        }
+
+        foreach (JsonElement change in parsed.EnumerateArray())
+        {
+            if (change.ValueKind != JsonValueKind.Object)
+            {
+                continue;
+            }
+
+            string? name = ReadText(change, propertyName: "name");
+            if (name is not null)
+            {
+                yield return (name, ReadValue(change));
+            }
+        }
+    }
+
+    private static string? ReadValue(JsonElement change)
+    {
+        if (!change.TryGetProperty(propertyName: "value", out JsonElement value))
+        {
+            return null;
+        }
+
+        return value.ValueKind switch
+        {
+            JsonValueKind.Null or JsonValueKind.Undefined => null,
+            JsonValueKind.String => value.GetString(),
+            _ => value.GetRawText(),
+        };
     }
 
     private static string? ResolveTypeName(

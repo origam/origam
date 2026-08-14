@@ -86,12 +86,7 @@ public class EmptyStringAsNullGuidConverter : JsonConverter<Guid?>
             return null;
         }
 
-        if (Guid.TryParse(text, out Guid parsed))
-        {
-            return parsed;
-        }
-
-        throw new JsonException($"The value '{text}' is not a valid GUID.");
+        return Guid.TryParse(text, out Guid parsed) ? parsed : null;
     }
 
     public override void Write(Utf8JsonWriter writer, Guid? value, JsonSerializerOptions options)

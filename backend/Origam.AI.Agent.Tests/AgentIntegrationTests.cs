@@ -101,6 +101,12 @@ public sealed class AgentIntegrationTests
         agentClient?.Dispose();
     }
 
+    [SetUp]
+    public async Task DropTabsLeftOpenByThePreviousTest()
+    {
+        await CloseAllTabsAsync();
+    }
+
     [Test]
     [Category(MutatingCategory)]
     public async Task CreateNodeFunctionCall_ReallyCreatesTheEntityInTheModel()
@@ -246,6 +252,288 @@ public sealed class AgentIntegrationTests
         );
     }
 
+    [Test]
+    [Category(MutatingCategory)]
+    public async Task CommunityGuidedApi_ReadsTheForumGuideAndThenCreatesTheDataPage()
+    {
+        var suffix = Guid.NewGuid().ToString("N")[..8];
+        var entityName = "AiBenchmarkApi" + suffix;
+        var dataStructureName = "AiBenchmarkApi" + suffix + "Structure";
+        var pageName = "AiBenchmarkApi" + suffix + "Page";
+        var pageUrl = "api/public/aibenchmark" + suffix;
+        createdEntityNames.Add(pageName);
+        createdEntityNames.Add(dataStructureName);
+        createdEntityNames.Add(entityName);
+
+        var trace = await RunBenchmarkAsync(
+            prompt: "Search the ORIGAM community forum for the guide on how to create a simple "
+                + "API and read it before you touch the model, then build the API the way that "
+                + $"guide describes: a database entity named {entityName} with one database "
+                + $"field named Name, a data structure named {dataStructureName} over that "
+                + $"entity, and a data page named {pageName} that publishes that data structure "
+                + $"as JSON on the url {pageUrl}. Do not ask me to confirm anything, just create "
+                + "everything.",
+            DefaultSections
+        );
+
+        var toolNames = string.Join(separator: ", ", trace.ToolNames);
+        TestContext.WriteLine("tools: " + toolNames);
+
+        Assert.That(trace.ErrorMessage, Is.Null);
+
+        var createIndex = FirstToolIndex(trace, toolNameFragment: "CreateNode");
+        Assert.That(
+            createIndex,
+            Is.GreaterThanOrEqualTo(0),
+            "CreateNode was never called. Tools used: " + toolNames
+        );
+
+        var searchIndex = FirstToolIndex(trace, toolNameFragment: "SearchCommunity");
+        Assert.That(
+            searchIndex,
+            Is.GreaterThanOrEqualTo(0).And.LessThan(createIndex),
+            "The agent did not search the community forum before it started creating the API. "
+                + "Tools used: "
+                + toolNames
+        );
+
+        var readTopicIndex = FirstToolIndex(trace, toolNameFragment: "ReadCommunityTopic");
+        Assert.That(
+            readTopicIndex,
+            Is.GreaterThanOrEqualTo(0).And.LessThan(createIndex),
+            "The agent never opened a community topic before it started creating the API, so it "
+                + "built the API without the guide. Tools used: "
+                + toolNames
+        );
+
+        Assert.That(
+            trace.Result!.ModelChanged,
+            Is.True,
+            "The agent called CreateNode but nothing was persisted. " + trace.Describe()
+        );
+
+        var dataStructureMatches = await FindSchemaItemsAsync(
+            dataStructureName,
+            itemTypeName: "Data Structure"
+        );
+        Assert.That(
+            dataStructureMatches,
+            Is.Not.Empty,
+            $"The data structure '{dataStructureName}' the API should read from is not in the "
+                + "model. "
+                + trace.Describe()
+        );
+
+        var pageMatches = await FindSchemaItemsAsync(pageName, itemTypeName: "Data Page");
+        Assert.That(
+            pageMatches,
+            Is.Not.Empty,
+            $"The agent reported success but the data page '{pageName}' is not in the model. "
+                + trace.Describe()
+        );
+
+        var pageProperties = await ReadItemPropertiesAsync(pageMatches[0]);
+        Assert.That(
+            pageProperties.GetValueOrDefault(key: "Url", defaultValue: ""),
+            Does.Contain(pageUrl).IgnoreCase,
+            $"'{pageName}' was published on a different url. " + trace.Describe()
+        );
+        Assert.That(
+            pageProperties.GetValueOrDefault(key: "MimeType", defaultValue: ""),
+            Does.Contain("json").IgnoreCase,
+            $"'{pageName}' does not return JSON. " + trace.Describe()
+        );
+        Assert.That(
+            pageProperties.GetValueOrDefault(key: "DataStructure", defaultValue: ""),
+            Does.Contain(dataStructureMatches[0]).IgnoreCase,
+            $"'{pageName}' does not read from '{dataStructureName}' "
+                + $"({dataStructureMatches[0]}). "
+                + trace.Describe()
+        );
+    }
+
+    [Test]
+    [Category(MutatingCategory)]
+    public async Task UnguidedApi_BuildsTheJsonApiWithoutSearchingTheForum()
+    {
+        var suffix = Guid.NewGuid().ToString("N")[..8];
+        var entityName = "AiBenchmarkJsonApi" + suffix;
+        var dataStructureName = "AiBenchmarkJsonApi" + suffix + "Structure";
+        var pageName = "AiBenchmarkJsonApi" + suffix + "Page";
+        var pageUrl = "api/public/aibenchmarkjson" + suffix;
+        createdEntityNames.Add(pageName);
+        createdEntityNames.Add(dataStructureName);
+        createdEntityNames.Add(entityName);
+
+        var trace = await RunBenchmarkAsync(
+            prompt: $"Make me a public JSON API on the url {pageUrl} that returns the records of "
+                + $"a new database entity named {entityName} with one text field named Name. Call "
+                + $"the data structure {dataStructureName} and the data page {pageName}. Do not "
+                + "ask me to confirm anything, just build it.",
+            DefaultSections
+        );
+
+        var toolNames = string.Join(separator: ", ", trace.ToolNames);
+        TestContext.WriteLine("tools: " + toolNames);
+
+        Assert.That(trace.ErrorMessage, Is.Null);
+        Assert.That(
+            UsedTool(trace, toolNameFragment: "Community"),
+            Is.False,
+            "The community forum was available but this task is plain model work, so the agent "
+                + "should have built the API without spending calls on the forum. Tools used: "
+                + toolNames
+        );
+        Assert.That(
+            UsedTool(trace, toolNameFragment: "CreateNode"),
+            Is.True,
+            "CreateNode was never called. Tools used: " + toolNames
+        );
+        Assert.That(
+            trace.Result!.ModelChanged,
+            Is.True,
+            "The agent called CreateNode but nothing was persisted. " + trace.Describe()
+        );
+
+        var entityId = await RequireEntityAsync(entityName);
+        var fieldNames = (await ReadDatabaseFieldsAsync(entityId))
+            .Select(field => field.Name)
+            .ToList();
+        Assert.That(
+            fieldNames,
+            Does.Contain("Name"),
+            $"'{entityName}' has no database field named Name. Fields found: "
+                + string.Join(separator: ", ", fieldNames)
+                + ". "
+                + trace.Describe()
+        );
+
+        var dataStructureMatches = await FindSchemaItemsAsync(
+            dataStructureName,
+            itemTypeName: "Data Structure"
+        );
+        Assert.That(
+            dataStructureMatches,
+            Is.Not.Empty,
+            $"The data structure '{dataStructureName}' the API should read from is not in the "
+                + "model. "
+                + trace.Describe()
+        );
+
+        var pageMatches = await FindSchemaItemsAsync(pageName, itemTypeName: "Data Page");
+        Assert.That(
+            pageMatches,
+            Is.Not.Empty,
+            $"The agent reported success but the data page '{pageName}' is not in the model. "
+                + trace.Describe()
+        );
+
+        var pageProperties = await ReadPersistedPropertiesAsync(pageMatches[0]);
+        Assert.That(
+            pageProperties.GetValueOrDefault(key: "Url", defaultValue: ""),
+            Does.Contain(pageUrl).IgnoreCase,
+            $"'{pageName}' was published on a different url. " + trace.Describe()
+        );
+        Assert.That(
+            pageProperties.GetValueOrDefault(key: "MimeType", defaultValue: ""),
+            Does.Contain("json").IgnoreCase,
+            $"'{pageName}' does not return JSON. " + trace.Describe()
+        );
+        Assert.That(
+            pageProperties.GetValueOrDefault(key: "DataStructure", defaultValue: ""),
+            Does.Contain(dataStructureMatches[0]).IgnoreCase,
+            $"'{pageName}' does not read from '{dataStructureName}' "
+                + $"({dataStructureMatches[0]}). "
+                + trace.Describe()
+        );
+    }
+
+    [Test]
+    [Category(MutatingCategory)]
+    public async Task PropertyEditorFollowUp_ChangesTheUrlOfTheDataPageItAlreadyPersisted()
+    {
+        var suffix = Guid.NewGuid().ToString("N")[..8];
+        var entityName = "AiBenchmarkProperty" + suffix;
+        var dataStructureName = "AiBenchmarkProperty" + suffix + "Structure";
+        var pageName = "AiBenchmarkProperty" + suffix + "Page";
+        var originalUrl = "api/public/aibenchmarkproperty" + suffix;
+        var changedUrl = "api/public/aibenchmarkproperty" + suffix + "renamed";
+        createdEntityNames.Add(pageName);
+        createdEntityNames.Add(dataStructureName);
+        createdEntityNames.Add(entityName);
+        var conversation = new AgentConversation();
+
+        var createTrace = await RunBenchmarkAsync(
+            prompt: $"Create a database entity named {entityName} with one database field named "
+                + $"Name, a data structure named {dataStructureName} over that entity, and a data "
+                + $"page named {pageName} that publishes that data structure as JSON on the url "
+                + $"{originalUrl}. Do not ask me to confirm anything, just create everything.",
+            DefaultSections,
+            conversation
+        );
+
+        Assert.That(createTrace.ErrorMessage, Is.Null);
+
+        var pagesBeforeEdit = await FindSchemaItemsAsync(pageName, itemTypeName: "Data Page");
+        Assert.That(
+            pagesBeforeEdit,
+            Is.Not.Empty,
+            $"The setup turn left no data page named '{pageName}' in the model, so there is "
+                + "nothing for the follow-up turn to edit. "
+                + createTrace.Describe()
+        );
+
+        var pageId = pagesBeforeEdit[0];
+        Assert.That(
+            (await ReadPersistedPropertiesAsync(pageId)).GetValueOrDefault(
+                key: "Url",
+                defaultValue: ""
+            ),
+            Does.Contain(originalUrl).IgnoreCase,
+            $"The setup turn did not publish '{pageName}' on '{originalUrl}', so the follow-up "
+                + "turn would not be changing what this test assumes. "
+                + createTrace.Describe()
+        );
+
+        var editTrace = await RunBenchmarkAsync(
+            prompt: $"Now change the url of the data page {pageName} to {changedUrl}. Edit the "
+                + "page that already exists, do not create a second one, and do not ask me to "
+                + "confirm anything.",
+            DefaultSections,
+            conversation
+        );
+
+        var toolNames = string.Join(separator: ", ", editTrace.ToolNames);
+        TestContext.WriteLine("tools: " + toolNames);
+
+        Assert.That(editTrace.ErrorMessage, Is.Null);
+        Assert.That(
+            UsedTool(editTrace, toolNameFragment: "PropertyEditor"),
+            Is.True,
+            "The agent never called PropertyEditor/Update, so it did not edit the page it had "
+                + "already persisted. Tools used: "
+                + toolNames
+        );
+        Assert.That(
+            await FindSchemaItemsAsync(pageName, itemTypeName: "Data Page"),
+            Is.EqualTo(new[] { pageId }),
+            $"The agent replaced '{pageName}' instead of editing the page it had already "
+                + "persisted. "
+                + editTrace.Describe()
+        );
+        Assert.That(
+            (await ReadPersistedPropertiesAsync(pageId)).GetValueOrDefault(
+                key: "Url",
+                defaultValue: ""
+            ),
+            Does.Contain(changedUrl).IgnoreCase,
+            $"'{pageName}' still carries the old url once its tab is dropped and the item is "
+                + "read again. PropertyEditor/Update only writes the copy held in the open tab, "
+                + "so without a following Tab/PersistChanges the new url never reaches the disk. "
+                + editTrace.Describe()
+        );
+    }
+
     [TearDown]
     public void RecordTestOutcome()
     {
@@ -264,6 +552,8 @@ public sealed class AgentIntegrationTests
         {
             return;
         }
+
+        await CloseAllTabsAsync();
 
         foreach (var entityName in createdEntityNames)
         {
@@ -290,6 +580,26 @@ public sealed class AgentIntegrationTests
                 comparisonType: StringComparison.OrdinalIgnoreCase
             )
         );
+    }
+
+    private static int FirstToolIndex(AgentRunTrace trace, string toolNameFragment)
+    {
+        var names = trace.ToolNames;
+        for (var index = 0; index < names.Count; index++)
+        {
+            if (
+                names[index]
+                    .Contains(
+                        value: toolNameFragment,
+                        comparisonType: StringComparison.OrdinalIgnoreCase
+                    )
+            )
+            {
+                return index;
+            }
+        }
+
+        return -1;
     }
 
     private async Task<IReadOnlyList<string>> FindSchemaItemsAsync(
@@ -385,29 +695,90 @@ public sealed class AgentIntegrationTests
 
     private async Task<bool> PointsAtEntityAsync(string fieldId, string targetEntityId)
     {
-        using var response = await agentClient.Architect.PostAsJsonAsync(
-            requestUri: "/Tab/Open",
-            new { schemaItemId = fieldId },
+        try
+        {
+            using var response = await agentClient.Architect.PostAsJsonAsync(
+                requestUri: "/Tab/Open",
+                new { schemaItemId = fieldId },
+                CancellationToken.None
+            );
+            if (!response.IsSuccessStatusCode)
+            {
+                return false;
+            }
+
+            var body = await response.Content.ReadAsStringAsync(CancellationToken.None);
+            using var document = JsonDocument.Parse(body);
+            if (
+                !document.RootElement.TryGetProperty(propertyName: "data", out var properties)
+                || properties.ValueKind != JsonValueKind.Array
+            )
+            {
+                return false;
+            }
+
+            return ReadPropertyValue(properties, propertyName: "ForeignKeyEntity")
+                    .Contains(targetEntityId, StringComparison.OrdinalIgnoreCase)
+                && ReadPropertyValue(properties, propertyName: "ForeignKeyField").Length > 0;
+        }
+        finally
+        {
+            await CloseAllTabsAsync();
+        }
+    }
+
+    private async Task CloseAllTabsAsync()
+    {
+        using var response = await agentClient.Architect.PostAsync(
+            requestUri: "/Tab/CloseAll",
+            content: null,
             CancellationToken.None
         );
-        if (!response.IsSuccessStatusCode)
-        {
-            return false;
-        }
+        response.EnsureSuccessStatusCode();
+    }
+
+    private async Task<IReadOnlyDictionary<string, string>> ReadPersistedPropertiesAsync(
+        string itemId
+    )
+    {
+        await CloseAllTabsAsync();
+        return await ReadItemPropertiesAsync(itemId);
+    }
+
+    private async Task<IReadOnlyDictionary<string, string>> ReadItemPropertiesAsync(string itemId)
+    {
+        using var response = await agentClient.Architect.PostAsJsonAsync(
+            requestUri: "/Tab/Open",
+            new { schemaItemId = itemId },
+            CancellationToken.None
+        );
+        response.EnsureSuccessStatusCode();
 
         var body = await response.Content.ReadAsStringAsync(CancellationToken.None);
         using var document = JsonDocument.Parse(body);
+        var values = new Dictionary<string, string>(StringComparer.Ordinal);
         if (
             !document.RootElement.TryGetProperty(propertyName: "data", out var properties)
             || properties.ValueKind != JsonValueKind.Array
         )
         {
-            return false;
+            return values;
         }
 
-        return ReadPropertyValue(properties, propertyName: "ForeignKeyEntity")
-                .Contains(targetEntityId, StringComparison.OrdinalIgnoreCase)
-            && ReadPropertyValue(properties, propertyName: "ForeignKeyField").Length > 0;
+        foreach (var property in properties.EnumerateArray())
+        {
+            if (
+                property.TryGetProperty(propertyName: "name", out var name)
+                && name.GetString() is { } propertyName
+                && property.TryGetProperty(propertyName: "value", out var value)
+            )
+            {
+                values[propertyName] =
+                    value.ValueKind == JsonValueKind.Null ? string.Empty : value.ToString();
+            }
+        }
+
+        return values;
     }
 
     private sealed record DatabaseField(string Id, string Name);

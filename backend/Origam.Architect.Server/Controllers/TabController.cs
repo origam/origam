@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
+using Origam.AI.Agent;
 using Origam.Architect.Server.Models;
 using Origam.Architect.Server.ReturnModels;
 using Origam.Architect.Server.Services;
@@ -58,7 +59,11 @@ public class TabController(
             + "carries primaryKeyFieldId, the id of that entity's primary key field - pass it as "
             + "ForeignKeyField when you create a foreign key pointing at this entity, instead of "
             + "exploring the entity to find it. When newTypeName does not match, the error lists "
-            + "the captions that are valid under that parent."
+            + "the captions that are valid under that parent. When the response carries "
+            + "discarded true, the item failed validation and was thrown away - it does not exist, "
+            + "its id is dead, and this is not a successful creation. Read the errors, call "
+            + "CreateNode again with those properties filled in, and never report a discarded item "
+            + "as created."
     )]
     public OpenTabData CreateNode([Required] [FromBody] NewItemModel input)
     {
@@ -98,7 +103,7 @@ public class TabController(
 
         TreeNode treeNode = treeNodeFactory.Create(tab.Item);
         (string parentName, string parentOrigamId) = DescribeParent(tab.Item);
-        return new OpenTabData(
+        var openTabData = new OpenTabData(
             tabId: tab.Id,
             node: treeNode,
             data: GetData(treeNode, tab.Item),
@@ -109,6 +114,13 @@ public class TabController(
             parentOrigamId: parentOrigamId,
             primaryKeyFieldId: DescribePrimaryKeyField(tab.Item)
         );
+
+        if (input.Persist && tab.Item.IsPersisted)
+        {
+            tabService.CloseTab(tab.Id);
+        }
+
+        return openTabData;
     }
 
     private static string DescribePrimaryKeyField(ISchemaItem item)
@@ -156,7 +168,8 @@ public class TabController(
             data: data,
             isPersisted: false,
             parentNodeId: null,
-            isDirty: false
+            isDirty: false,
+            discarded: true
         );
     }
 
@@ -185,11 +198,13 @@ public class TabController(
             persistenceService.SchemaProvider.BeginTransaction();
             persistTarget.Persist();
             tabData.IsDirty = false;
+            tabData.IsStale = false;
         }
         finally
         {
             persistenceService.SchemaProvider.EndTransaction();
             gitNodeStatusService.ClearCache();
+            tabService.InvalidateTabsInRoot(persistTarget.RootItem, tabData.Id);
         }
     }
 
@@ -211,14 +226,16 @@ public class TabController(
                         data: GetData(treeNode, item),
                         isPersisted: item.IsPersisted,
                         parentNodeId: TreeNode.ToTreeNodeId(item.ParentItem),
-                        isDirty: tab.IsDirty
+                        isDirty: tab.IsDirty,
+                        isStale: tab.IsStale
                     ),
                     TabType.DocumentationEditor => new OpenTabData(
                         tabId: tab.Id,
                         node: treeNode,
                         data: documentationHelper.GetData(tab.DocumentationData, item.Name),
                         isPersisted: item.IsPersisted,
-                        isDirty: tab.IsDirty
+                        isDirty: tab.IsDirty,
+                        isStale: tab.IsStale
                     ),
                     _ => throw new Exception("Unknown tab type: " + tab.Id.Type),
                 };
@@ -284,6 +301,11 @@ public class TabController(
         }
 
         PersistItem(tabData);
+        if (Request.Headers.ContainsKey(AgentRequestHeader.Name))
+        {
+            tabService.CloseTab(tabData.Id);
+        }
+
         return Ok();
     }
 }

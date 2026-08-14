@@ -25,6 +25,7 @@ import {
   IDatabaseResultResponse,
   ISearchResult,
 } from '@api/IArchitectApi';
+import { AgentConnection, getAgentConnection, getCustomInstructions } from '@/ai/AiPromptApi';
 import { EditorData } from '@components/modelTree/EditorData';
 import { TreeNode } from '@components/modelTree/TreeNode';
 import { askYesNoQuestion, YesNoResult } from '@dialogs/DialogUtils';
@@ -39,6 +40,7 @@ import { CancellablePromise } from 'mobx/dist/api/flow';
 const SearchEditorId = 'SearchResultsEditor-Id';
 const ShowSqlEditorIdPrefix = 'ShowSqlEditor-';
 const DeploymentScriptsGeneratorModuleId = 'DeploymentScriptsGeneratorModule-Id';
+const AiSettingsModuleId = 'AiSettingsModule-Id';
 
 export class EditorTabViewState {
   @observable accessor editorsContainers: EditorContainer[] = [];
@@ -77,6 +79,7 @@ export class EditorTabViewState {
       architectApi: this.architectApi,
       modelTreeState: this.rootStore.modelTreeState,
       uiState: this.rootStore.uiState,
+      aiToolSectionsState: this.rootStore.aiToolSectionsState,
       runGeneratorHandled: this.runGeneratorHandled,
     });
   }
@@ -176,6 +179,49 @@ export class EditorTabViewState {
     }.bind(this);
   }
 
+  openAiSettingsModule() {
+    return function* (
+      this: EditorTabViewState,
+    ): Generator<Promise<[string, AgentConnection]>, void, [string, AgentConnection]> {
+      const existing = this.editorsContainers.find(
+        editor => editor.state.tabId === AiSettingsModuleId,
+      );
+      if (existing) {
+        this.setActiveEditor(AiSettingsModuleId);
+        return;
+      }
+
+      void this.rootStore.aiToolSectionsState.load();
+
+      const [customInstructions, connection] = yield Promise.all([
+        getCustomInstructions(),
+        getAgentConnection(),
+      ]);
+
+      const tempTabData: IApiTabData = {
+        tabId: AiSettingsModuleId,
+        tabType: 'AiSettingsModule',
+        parentNodeId: undefined,
+        isDirty: false,
+        node: {
+          id: '',
+          origamId: '',
+          nodeText: '',
+          editorType: null,
+        },
+        data: {
+          customInstructions,
+          model: connection.model,
+          router: connection.router,
+          hasApiKey: connection.hasApiKey,
+        },
+      };
+
+      const editorData = new EditorData(tempTabData, null);
+      this.openEditor(editorData, 'AiSettingsModule');
+    }.bind(this);
+  }
+
   openShowSqlEditor(dataStructureId: string, dataStructureName: string, sql: string) {
     const tabId = ShowSqlEditorIdPrefix + dataStructureId;
     const existing = this.editorsContainers.find(editor => editor.state.tabId === tabId);
@@ -256,6 +302,7 @@ export class EditorTabViewState {
       architectApi: this.architectApi,
       modelTreeState: this.rootStore.modelTreeState,
       uiState: this.rootStore.uiState,
+      aiToolSectionsState: this.rootStore.aiToolSectionsState,
       runGeneratorHandled: this.runGeneratorHandled,
     });
     if (!editor) {
@@ -340,7 +387,11 @@ export class EditorTabViewState {
 
       if (editorId === DeploymentScriptsGeneratorModuleId) {
         this.rootStore.uiState.setDsGeneratorState({ isOpen: false });
-      } else if (editorId !== SearchEditorId && !editorId.startsWith(ShowSqlEditorIdPrefix)) {
+      } else if (
+        editorId !== SearchEditorId &&
+        editorId !== AiSettingsModuleId &&
+        !editorId.startsWith(ShowSqlEditorIdPrefix)
+      ) {
         yield this.architectApi.closeTab(editorId);
       }
 

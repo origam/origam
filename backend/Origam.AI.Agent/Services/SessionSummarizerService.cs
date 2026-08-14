@@ -8,13 +8,15 @@ namespace Origam.AI.Agent.Services;
 public class SessionSummarizerService
 {
     private readonly AiConnectionSettings settings;
+    private readonly AiScriptStore scriptStore;
 
-    public SessionSummarizerService(IConfiguration configuration)
+    public SessionSummarizerService(IConfiguration configuration, AiScriptStore scriptStore)
     {
         settings = AiConnectionSettings.Read(configuration);
+        this.scriptStore = scriptStore;
     }
 
-    public bool IsConfigured => settings.HasApiKey;
+    public bool IsConfigured => settings.HasApiKey && scriptStore.Script is null;
 
     public async Task<string?> SummarizeAsync(
         string? existingSummary,

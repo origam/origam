@@ -24,14 +24,22 @@ using System.Text.Json;
 
 namespace Origam.AI.Agent.Services;
 
-public record ItemTypeProperty(string Name, string Type, IReadOnlyList<string> Values);
+public record ItemTypeProperty(
+    string Name,
+    string Type,
+    IReadOnlyList<string> Values,
+    bool Required,
+    int SetOnExisting,
+    string? CommonValue
+);
 
 public record ItemType(
     string Caption,
     string TypeName,
     string? FolderName,
     IReadOnlyList<string> Children,
-    IReadOnlyList<ItemTypeProperty> Properties
+    IReadOnlyList<ItemTypeProperty> Properties,
+    int ExistingCount
 );
 
 public record ItemTypeProvider(string Id, string Name, IReadOnlyList<string> Children);
@@ -73,6 +81,8 @@ public class NewItemTypeCatalogService
     }
 
     public string? LastError => lastError;
+
+    public ItemTypeCatalog? CachedCatalog => cachedCatalog;
 
     public async Task<ItemTypePromptSections> GetPromptSectionsAsync(
         ChatFocus? focus,
@@ -163,25 +173,98 @@ public class NewItemTypeCatalogService
                 + "grouping folders (Fields, Filters, "
                 + "Relationships and the like) - you do not need them, create directly under the "
                 + "owning item and the new item lands in the right folder by itself. If a type is "
-                + "not listed for the parent you have, it cannot be created there."
+                + "not listed for the parent you have, it cannot be created there. The number "
+                + "after a caption is how many items of that type this model already contains. "
+                + "When several types could serve the same purpose, take the one this model "
+                + "actually uses - a type with a handful of items is a specialised variant that "
+                + "usually drags extra required objects along with it, and picking it when the "
+                + "common one would do leaves you building things nobody asked for."
         );
+
+        var existingCounts = catalog
+            .Types.GroupBy(type => type.Caption, StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(
+                group => group.Key,
+                group => group.Max(type => type.ExistingCount),
+                StringComparer.OrdinalIgnoreCase
+            );
 
         foreach (var provider in catalog.Providers.Where(provider => provider.Children.Count > 0))
         {
             builder.AppendLine(
                 $"Under {provider.Name} (nodeId: {provider.Id}): "
-                    + string.Join(separator: ", ", provider.Children)
+                    + DescribeChildren(provider.Children, existingCounts)
             );
         }
 
         foreach (var type in catalog.Types.Where(type => type.Children.Count > 0))
         {
             builder.AppendLine(
-                $"Inside {type.Caption}: {string.Join(separator: ", ", type.Children)}"
+                $"Inside {type.Caption}: {DescribeChildren(type.Children, existingCounts)}"
             );
         }
 
+        AppendRequiredProperties(builder, catalog);
         return builder.ToString();
+    }
+
+    private static string DescribeChildren(
+        IReadOnlyList<string> children,
+        IReadOnlyDictionary<string, int> existingCounts
+    )
+    {
+        return string.Join(
+            separator: ", ",
+            children.Select(caption =>
+                existingCounts.TryGetValue(caption, out int count) && count > 0
+                    ? $"{caption} ({count})"
+                    : caption
+            )
+        );
+    }
+
+    private static void AppendRequiredProperties(StringBuilder builder, ItemTypeCatalog catalog)
+    {
+        var typesWithRequired = catalog
+            .Types.Select(type =>
+                (type.Caption, Required: type.Properties.Where(property => property.Required))
+            )
+            .Where(entry => entry.Required.Any())
+            .OrderBy(entry => entry.Caption, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+        if (typesWithRequired.Count == 0)
+        {
+            return;
+        }
+
+        builder.AppendLine();
+        builder.AppendLine("## PROPERTIES THAT MUST BE SET WHEN CREATING");
+        builder.AppendLine(
+            "Pass every property listed for the type in the same CreateNode call, each with a "
+                + "real value - an empty string counts as not set and gets the item rejected just "
+                + "as leaving it out does. When that happens the server throws the item away and "
+                + "answers with discarded true, costing you the whole attempt. 'usually X' is the "
+                + "value the existing items of that type in this model actually carry, so use it "
+                + "unless the user asked for something else. A type that is not listed here has "
+                + "no mandatory properties. This is the minimum, not the whole set - the create "
+                + "response comes back with every property the item has, each tagged with its "
+                + "kind, so read that instead of guessing what else to fill in. (reference) means "
+                + "the id of an existing item, never a name or a literal like 'GET'."
+        );
+
+        foreach (var (caption, required) in typesWithRequired)
+        {
+            builder.AppendLine(
+                $"{caption}: {string.Join(separator: ", ", required.Select(DescribeRequired))}"
+            );
+        }
+    }
+
+    private static string DescribeRequired(ItemTypeProperty property)
+    {
+        return string.IsNullOrWhiteSpace(property.CommonValue)
+            ? Describe(property)
+            : $"{Describe(property)} usually \"{property.CommonValue}\"";
     }
 
     private static string RenderProperties(ItemTypeCatalog catalog, ChatFocus? focus)

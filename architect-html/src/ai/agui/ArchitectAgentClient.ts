@@ -44,8 +44,31 @@ export function toAguiMessages(messages: ChatMessage[]): Message[] {
 
   for (const message of messages) {
     if (message.role === 'assistant') {
-      if (message.text.trim().length > 0) {
-        converted.push({ id: message.id, role: 'assistant', content: message.text });
+      const answeredCalls = (message.toolCalls ?? []).filter(
+        call => call.result !== undefined && call.name.length > 0,
+      );
+      if (message.text.trim().length === 0 && answeredCalls.length === 0) {
+        continue;
+      }
+      converted.push({
+        id: message.id,
+        role: 'assistant',
+        content: message.text,
+        ...(answeredCalls.length > 0 && {
+          toolCalls: answeredCalls.map(call => ({
+            id: call.id,
+            type: 'function' as const,
+            function: { name: call.name, arguments: call.arguments || '{}' },
+          })),
+        }),
+      });
+      for (const call of answeredCalls) {
+        converted.push({
+          id: `${message.id}-${call.id}`,
+          role: 'tool',
+          content: call.result ?? '',
+          toolCallId: call.id,
+        });
       }
       continue;
     }

@@ -56,8 +56,6 @@ public static class OpenApiFunctionBuilder
             return tools;
         }
 
-        var pluginName = SanitizeName(sectionName);
-
         foreach (var pathEntry in paths)
         {
             if (
@@ -79,7 +77,7 @@ public static class OpenApiFunctionBuilder
 
                 tools.Add(
                     BuildFunction(
-                        pluginName,
+                        sectionName,
                         pathEntry.Key,
                         methodEntry.Key,
                         operation,
@@ -95,7 +93,7 @@ public static class OpenApiFunctionBuilder
     }
 
     private static OpenApiFunction BuildFunction(
-        string pluginName,
+        string sectionName,
         string path,
         string method,
         JsonObject operation,
@@ -118,7 +116,7 @@ public static class OpenApiFunctionBuilder
         }
 
         return new OpenApiFunction(
-            $"{pluginName}-{BuildFunctionName(method, path)}",
+            BuildToolName(sectionName, method, path),
             ReadDescription(operation, method, path),
             JsonSerializer.Deserialize<JsonElement>(schema.ToJsonString()),
             new HttpMethod(method.ToUpperInvariant()),
@@ -301,6 +299,11 @@ public static class OpenApiFunctionBuilder
         }
 
         return $"{method.ToUpperInvariant()} {path}";
+    }
+
+    internal static string BuildToolName(string sectionName, string method, string path)
+    {
+        return $"{SanitizeName(sectionName)}-{BuildFunctionName(method, path)}";
     }
 
     private static string BuildFunctionName(string method, string path)

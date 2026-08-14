@@ -114,7 +114,21 @@ public class PropertyParser(IPersistenceService persistenceService)
         if (property.PropertyType.IsAssignableTo(typeof(IPersistent)))
         {
             Guid id = ParseReferenceId(value, property);
-            return persistenceService.SchemaProvider.RetrieveInstance<IPersistent>(id);
+            IPersistent referenced =
+                persistenceService.SchemaProvider.RetrieveInstance<IPersistent>(id);
+            if (referenced != null && !referenced.GetType().IsAssignableTo(property.PropertyType))
+            {
+                throw new Exception(
+                    string.Format(
+                        Strings.PropertyReferenceTypeNotValid,
+                        property.Name,
+                        property.PropertyType.Name,
+                        referenced.GetType().Name
+                    )
+                );
+            }
+
+            return referenced;
         }
 
         if (property.PropertyType == typeof(object))

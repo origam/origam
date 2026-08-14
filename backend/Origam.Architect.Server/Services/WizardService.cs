@@ -69,13 +69,41 @@ public class WizardService(
         [CreateFilterType.InList] = new("In", "GetBy", CreateParameter: true),
     };
 
-    public FilterWizardData GetFilterWizardData(Guid entityId)
+    private IDataEntity RetrieveEntity(Guid entityId)
     {
-        var entity =
-            persistenceProvider.RetrieveInstance<IDataEntity>(entityId)
+        var instance =
+            persistenceProvider.RetrieveInstance<IPersistent>(entityId)
             ?? throw new UserOrigamException(
                 string.Format(Strings.Wizard_EntityNotFound, entityId)
             );
+
+        if (instance is IDataEntity entity)
+        {
+            return entity;
+        }
+
+        if (
+            instance is DataStructureEntity dataStructureEntity
+            && dataStructureEntity.Entity is IDataEntity or IAssociation
+        )
+        {
+            throw new UserOrigamException(
+                string.Format(
+                    Strings.Wizard_DataStructureEntityUsedAsEntity,
+                    entityId,
+                    dataStructureEntity.EntityDefinition.Id
+                )
+            );
+        }
+
+        throw new UserOrigamException(
+            string.Format(Strings.Wizard_NotAnEntity, entityId, instance.GetType().Name)
+        );
+    }
+
+    public FilterWizardData GetFilterWizardData(Guid entityId)
+    {
+        var entity = RetrieveEntity(entityId);
 
         var columns = entity
             .EntityColumns.Where(column => !string.IsNullOrEmpty(column.ToString()))
@@ -229,11 +257,7 @@ public class WizardService(
 
     public ScreenWizardData GetScreenWizardData(Guid entityId)
     {
-        var entity =
-            persistenceProvider.RetrieveInstance<IDataEntity>(entityId)
-            ?? throw new UserOrigamException(
-                string.Format(Strings.Wizard_EntityNotFound, entityId)
-            );
+        var entity = RetrieveEntity(entityId);
 
         var columns = entity
             .EntityColumns.Where(column => !string.IsNullOrEmpty(column.ToString()))
@@ -271,11 +295,7 @@ public class WizardService(
             throw new UserOrigamException(Strings.Wizard_ScreenNameRequired);
         }
 
-        var entity =
-            persistenceProvider.RetrieveInstance<IDataEntity>(input.EntityId)
-            ?? throw new UserOrigamException(
-                string.Format(Strings.Wizard_EntityNotFound, input.EntityId)
-            );
+        var entity = RetrieveEntity(input.EntityId);
 
         if (input.SelectedFieldIds == null || input.SelectedFieldIds.Count == 0)
         {
@@ -350,11 +370,7 @@ public class WizardService(
 
     public CreateWizardResult CreateWorkQueueClass(CreateWorkQueueModel input)
     {
-        var entity =
-            persistenceProvider.RetrieveInstance<IDataEntity>(input.EntityId)
-            ?? throw new UserOrigamException(
-                string.Format(Strings.Wizard_EntityNotFound, input.EntityId)
-            );
+        var entity = RetrieveEntity(input.EntityId);
 
         if (input.SelectedFieldIds == null || input.SelectedFieldIds.Count == 0)
         {
@@ -500,11 +516,7 @@ public class WizardService(
 
     public LookupWizardData GetLookupWizardData(Guid entityId)
     {
-        var entity =
-            persistenceProvider.RetrieveInstance<IDataEntity>(entityId)
-            ?? throw new UserOrigamException(
-                string.Format(Strings.Wizard_EntityNotFound, entityId)
-            );
+        var entity = RetrieveEntity(entityId);
 
         var primaryKey =
             entity.EntityColumns.FirstOrDefault(column =>
@@ -544,11 +556,7 @@ public class WizardService(
             throw new UserOrigamException(Strings.Wizard_LookupNameRequired);
         }
 
-        var entity =
-            persistenceProvider.RetrieveInstance<IDataEntity>(input.EntityId)
-            ?? throw new UserOrigamException(
-                string.Format(Strings.Wizard_EntityNotFound, input.EntityId)
-            );
+        var entity = RetrieveEntity(input.EntityId);
 
         var idColumn =
             entity.EntityColumns.FirstOrDefault(column =>

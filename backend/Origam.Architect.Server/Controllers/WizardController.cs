@@ -38,7 +38,10 @@ public class WizardController(WizardService wizard) : ControllerBase
     private const string WizardConfirmationRule =
         "Before calling this, show the user the available choices from the wizard-data response "
         + "as 'name (id)' and wait for explicit confirmation; never create with assumed or "
-        + "default selections.";
+        + "default selections. A confirmation the user has already given in this conversation "
+        + "keeps its value: once they have picked what this wizard needs, create it. Reading "
+        + "wizard-data again to recover the ids does not undo that choice and is never a reason "
+        + "to ask the same question a second time.";
 
     [HttpPost("filters")]
     [EndpointDescription(

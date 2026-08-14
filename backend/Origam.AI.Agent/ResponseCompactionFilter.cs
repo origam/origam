@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Text;
 using System.Text.Json;
 using Microsoft.Extensions.AI;
+using Origam.AI.Agent.Services;
 
 namespace Origam.AI.Agent;
 
@@ -29,10 +30,19 @@ public class ResponseCompactionFilter : IToolInvocationFilter
 {
     private const int MaxValueLength = 120;
     private const int MaxPropertiesLength = 1500;
+    private const int MinimumExistingItems = 3;
+    private const double ConventionThreshold = 0.8;
 
     private static readonly JsonSerializerOptions SerializerOptions = new(
         JsonSerializerDefaults.Web
     );
+
+    private readonly NewItemTypeCatalogService catalogService;
+
+    public ResponseCompactionFilter(NewItemTypeCatalogService catalogService)
+    {
+        this.catalogService = catalogService;
+    }
 
     public async ValueTask<object?> OnFunctionInvocationAsync(
         FunctionInvocationContext context,
@@ -56,7 +66,7 @@ public class ResponseCompactionFilter : IToolInvocationFilter
         }
     }
 
-    private static string? Compact(string content)
+    private string? Compact(string content)
     {
         string trimmed = content.TrimStart();
         if (trimmed.Length == 0 || (trimmed[0] != '{' && trimmed[0] != '['))
@@ -95,7 +105,7 @@ public class ResponseCompactionFilter : IToolInvocationFilter
             : "[" + string.Join(separator: ",", compactedItems) + "]";
     }
 
-    private static string? CompactObject(JsonElement root)
+    private string? CompactObject(JsonElement root)
     {
         if (root.TryGetProperty(propertyName: "propertyUpdates", out JsonElement propertyUpdates))
         {
@@ -110,12 +120,18 @@ public class ResponseCompactionFilter : IToolInvocationFilter
         return null;
     }
 
-    private static string? CompactEditorTab(JsonElement root, JsonElement node)
+    private string? CompactEditorTab(JsonElement root, JsonElement node)
     {
+        string? itemTypeName = GetString(node, propertyName: "itemTypeName");
         if (
             node.ValueKind != JsonValueKind.Object
             || !root.TryGetProperty(propertyName: "data", out JsonElement data)
-            || !TryReadProperties(data, out string values, out List<string> errors)
+            || !TryReadProperties(
+                data,
+                GetConventionHints(itemTypeName),
+                out string values,
+                out List<string> errors
+            )
         )
         {
             return null;
@@ -125,7 +141,7 @@ public class ResponseCompactionFilter : IToolInvocationFilter
         {
             ["id"] = GetString(node, propertyName: "origamId"),
             ["name"] = GetString(node, propertyName: "nodeText"),
-            ["type"] = GetString(node, propertyName: "itemTypeName"),
+            ["type"] = itemTypeName,
             ["saved"] = GetBoolean(root, propertyName: "isPersisted"),
             ["parent"] = GetString(root, propertyName: "parentName"),
             ["parentId"] = GetString(root, propertyName: "parentOrigamId"),
@@ -134,12 +150,24 @@ public class ResponseCompactionFilter : IToolInvocationFilter
             ["errors"] = errors,
         };
 
+        if (GetBoolean(root, propertyName: "discarded") == true)
+        {
+            summary["discarded"] = true;
+        }
+
         return JsonSerializer.Serialize(summary, SerializerOptions);
     }
 
     private static string? CompactPropertyUpdates(JsonElement root, JsonElement propertyUpdates)
     {
-        if (!TryReadProperties(propertyUpdates, out string values, out List<string> errors))
+        if (
+            !TryReadProperties(
+                propertyUpdates,
+                hints: null,
+                out string values,
+                out List<string> errors
+            )
+        )
         {
             return null;
         }
@@ -154,8 +182,33 @@ public class ResponseCompactionFilter : IToolInvocationFilter
         return JsonSerializer.Serialize(summary, SerializerOptions);
     }
 
+    private IReadOnlyDictionary<string, string>? GetConventionHints(string? itemTypeName)
+    {
+        ItemType? type = catalogService.CachedCatalog?.Types.FirstOrDefault(candidate =>
+            string.Equals(candidate.Caption, itemTypeName, StringComparison.OrdinalIgnoreCase)
+        );
+        if (type is null || type.ExistingCount < MinimumExistingItems)
+        {
+            return null;
+        }
+
+        var hints = type
+            .Properties.Where(property =>
+                property.Type == "reference"
+                && property.SetOnExisting >= type.ExistingCount * ConventionThreshold
+            )
+            .ToDictionary(
+                property => property.Name,
+                property => $", set on {property.SetOnExisting} of {type.ExistingCount} existing",
+                StringComparer.OrdinalIgnoreCase
+            );
+
+        return hints.Count == 0 ? null : hints;
+    }
+
     private static bool TryReadProperties(
         JsonElement properties,
+        IReadOnlyDictionary<string, string>? hints,
         out string values,
         out List<string> errors
     )
@@ -205,7 +258,12 @@ public class ResponseCompactionFilter : IToolInvocationFilter
                 builder.Append("; ");
             }
 
-            builder.Append(name).Append('=').Append(DescribeValue(property));
+            string value = DescribeValue(property);
+            builder
+                .Append(name)
+                .Append(DescribeKind(property, name, value, hints))
+                .Append('=')
+                .Append(value);
         }
 
         values = builder.ToString();
@@ -258,6 +316,32 @@ public class ResponseCompactionFilter : IToolInvocationFilter
             && property.ValueKind == JsonValueKind.String
             ? property.GetString()
             : null;
+    }
+
+    private static string DescribeKind(
+        JsonElement property,
+        string name,
+        string value,
+        IReadOnlyDictionary<string, string>? hints
+    )
+    {
+        string kind = GetString(property, propertyName: "type") switch
+        {
+            "looukup" => "reference",
+            "enum" => "enum",
+            _ => string.Empty,
+        };
+
+        bool isEmpty = value.Length == 0 || value == "null";
+        string hint =
+            kind == "reference"
+            && isEmpty
+            && hints is not null
+            && hints.TryGetValue(name, out string? found)
+                ? found
+                : string.Empty;
+
+        return kind.Length == 0 ? string.Empty : $"({kind}{hint})";
     }
 
     private static bool? GetBoolean(JsonElement element, string propertyName)

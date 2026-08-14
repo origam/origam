@@ -99,6 +99,7 @@ public class ToolCallTracker : IToolInvocationFilter
             if (
                 root.TryGetProperty(propertyName: "node", out var nodeElement)
                 && nodeElement.ValueKind == JsonValueKind.Object
+                && !WasDiscarded(root)
             )
             {
                 var origamId = GetString(nodeElement, propertyName: "origamId");
@@ -155,6 +156,12 @@ public class ToolCallTracker : IToolInvocationFilter
                 }
             }
         }
+    }
+
+    private static bool WasDiscarded(JsonElement root)
+    {
+        return root.TryGetProperty(propertyName: "discarded", out var discarded)
+            && discarded.ValueKind == JsonValueKind.True;
     }
 
     private void AddNode(string origamId, string? label, string? itemTypeName, string action)

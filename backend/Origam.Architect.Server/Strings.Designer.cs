@@ -70,7 +70,7 @@ namespace Origam.Architect.Server {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Chat history cannot be stored because the model location is not configured..
+        ///   Looks up a localized string similar to Chat history cannot be stored because neither ChatHistory:Path nor SpaConfig:PathToClientApplication is configured..
         /// </summary>
         internal static string ChatHistoryLocationUnknown {
             get {
@@ -132,6 +132,24 @@ namespace Origam.Architect.Server {
             }
         }
         
+        /// <summary>
+        ///   Looks up a localized string similar to Property {0} takes a reference to a {1}, but the id you passed belongs to a {2}. Find or create a {1} and pass its id instead..
+        /// </summary>
+        internal static string PropertyReferenceTypeNotValid {
+            get {
+                return ResourceManager.GetString("PropertyReferenceTypeNotValid", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to This item is not in the model (id {0}). It was most likely discarded because it did not pass validation and was never saved..
+        /// </summary>
+        internal static string SchemaItemNotFound {
+            get {
+                return ResourceManager.GetString("SchemaItemNotFound", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Parameter named {0} was not found among Input Parameters..
         /// </summary>
@@ -222,6 +240,15 @@ namespace Origam.Architect.Server {
             }
         }
         
+        /// <summary>
+        ///   Looks up a localized string similar to {0} is a data structure entity, not an entity. Use the entity it points to: {1}..
+        /// </summary>
+        internal static string Wizard_DataStructureEntityUsedAsEntity {
+            get {
+                return ResourceManager.GetString("Wizard_DataStructureEntityUsedAsEntity", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to DataStructure {0} not found.
         /// </summary>
@@ -330,6 +357,15 @@ namespace Origam.Architect.Server {
             }
         }
         
+        /// <summary>
+        ///   Looks up a localized string similar to {0} is a {1}, not an entity. Pass the id of an entity..
+        /// </summary>
+        internal static string Wizard_NotAnEntity {
+            get {
+                return ResourceManager.GetString("Wizard_NotAnEntity", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Screen name is required..
         /// </summary>

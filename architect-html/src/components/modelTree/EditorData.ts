@@ -21,6 +21,7 @@ import {
   DocumentationEditorData,
   EditorSubType,
   EditorType,
+  IAiSettingsModuleData,
   IApiEditorNode,
   IApiEditorProperty,
   IApiTabData,
@@ -64,7 +65,8 @@ export class EditorData {
     | DocumentationEditorData
     | IDeploymentScriptsGeneratorModuleData
     | ISearchResultsEditorData
-    | IShowSqlEditorData;
+    | IShowSqlEditorData
+    | IAiSettingsModuleData;
 
   constructor(data: IApiTabData, parent: TreeNode | null) {
     this.editorId = data.tabId;

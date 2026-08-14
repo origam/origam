@@ -41,7 +41,8 @@ public class ModelController(
     SchemaService schemaService,
     IPersistenceService persistenceService,
     TreeNodeFactory treeNodeFactory,
-    GitNodeStatusService gitNodeStatusService
+    GitNodeStatusService gitNodeStatusService,
+    TabService tabService
 ) : ControllerBase
 {
     private readonly IPersistenceProvider persistenceProvider = persistenceService.SchemaProvider;
@@ -187,6 +188,7 @@ public class ModelController(
         }
 
         string deletedName = instance.Name;
+        ISchemaItem deletedRootItem = instance.RootItem;
         try
         {
             persistenceProvider.BeginTransaction();
@@ -200,6 +202,7 @@ public class ModelController(
 
         persistenceProvider.EndTransaction();
         gitNodeStatusService.ClearCache();
+        tabService.InvalidateTabsInRoot(deletedRootItem, changedByTabId: null);
         return Ok(new DeleteResult(Deleted: true, Id: input.SchemaItemId, Name: deletedName));
     }
 

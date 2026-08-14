@@ -28,20 +28,17 @@ import { useContext, useEffect, useRef, useState } from 'react';
 export const AiAgentPanel = observer(function AiAgentPanel() {
   const rootStore = useContext(RootStoreContext);
   const [state] = useState(() => new AiAgentState(rootStore));
-  const [isToolsOpen, setIsToolsOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const toolsRef = useRef<HTMLDivElement>(null);
 
   const activeThread = state.activeThread;
   const messages = state.messages;
   const lastMessage = messages[messages.length - 1];
-  const isWaitingForFirstToken = state.isRunning && lastMessage?.role !== 'assistant';
 
   useEffect(() => {
-    void state.loadSections();
     void state.loadHistory();
+    void state.loadConnection();
   }, [state]);
 
   useEffect(() => {
@@ -57,19 +54,6 @@ export const AiAgentPanel = observer(function AiAgentPanel() {
       window.removeEventListener('focus', reloadHistoryWhenVisible);
     };
   }, [state]);
-
-  useEffect(() => {
-    if (!isToolsOpen) {
-      return;
-    }
-    function handleClickOutside(event: MouseEvent) {
-      if (toolsRef.current && !toolsRef.current.contains(event.target as Node)) {
-        setIsToolsOpen(false);
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [isToolsOpen]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -105,6 +89,7 @@ export const AiAgentPanel = observer(function AiAgentPanel() {
         <div className={S.threadBar}>
           <select
             className={S.threadSelect}
+            data-test-id="ai-thread-select"
             value={activeThread.id}
             onChange={event => state.selectThread(event.target.value)}
           >
@@ -116,6 +101,7 @@ export const AiAgentPanel = observer(function AiAgentPanel() {
           </select>
           <button
             className={S.iconButton}
+            data-test-id="ai-new-chat"
             title={T('New chat', 'ai_chat_new')}
             onClick={() => state.createNewThread()}
           >
@@ -123,95 +109,31 @@ export const AiAgentPanel = observer(function AiAgentPanel() {
           </button>
           <button
             className={S.iconButton}
+            data-test-id="ai-delete-chat"
             title={T('Delete chat', 'ai_chat_delete')}
             onClick={() => state.deleteActiveThread()}
           >
             ✕
           </button>
-          <div className={S.toolsWrapper} ref={toolsRef}>
-            <button
-              className={S.iconButton}
-              title={T('Tools', 'ai_chat_tools')}
-              onClick={() => setIsToolsOpen(open => !open)}
-            >
-              🧩
-              {state.enabledSections.length > 0 && (
-                <span className={S.toolsCount}>{state.enabledSections.length}</span>
-              )}
-            </button>
-            {isToolsOpen && (
-              <div className={S.toolsPopover}>
-                <div className={S.toolsPopoverHeader}>
-                  <div className={S.toolsTitle}>{T('API sections', 'ai_chat_tools_title')}</div>
-                  <div className={S.toolsSubtitle}>
-                    {T(
-                      'Turn Swagger sections on or off. The assistant can only call tools from sections that are on.',
-                      'ai_chat_tools_subtitle',
-                    )}
-                  </div>
-                </div>
-                {!state.sectionsAvailable && (
-                  <div className={S.toolsUnavailable}>
-                    {T(
-                      'Sections unavailable. Is the Architect server running with Swagger?',
-                      'ai_chat_tools_unavailable',
-                    )}
-                  </div>
-                )}
-                <div className={S.toolsList}>
-                  {state.sections.map(section => {
-                    const isEnabled = state.enabledSections.includes(section.name);
-                    return (
-                      <div key={section.name} className={S.toolsItem}>
-                        <div className={S.toolsItemInfo}>
-                          <div className={S.toolsItemName}>
-                            {section.name}
-                            {section.hasDestructive && (
-                              <span
-                                className={S.toolsCaution}
-                                title={T(
-                                  'Contains destructive operations (delete, deploy). Off by default.',
-                                  'ai_chat_tools_caution',
-                                )}
-                              >
-                                {T('caution', 'ai_chat_tools_caution_badge')}
-                              </span>
-                            )}
-                          </div>
-                          <div className={S.toolsItemMeta}>
-                            {T(
-                              '{0} functions',
-                              'ai_chat_tools_functions',
-                              section.functionCount.toString(),
-                            )}
-                          </div>
-                        </div>
-                        <button
-                          type="button"
-                          role="switch"
-                          aria-checked={isEnabled}
-                          className={isEnabled ? `${S.switch} ${S.switchOn}` : S.switch}
-                          onClick={() => state.toggleSection(section.name)}
-                        >
-                          <span className={S.switchKnob} />
-                        </button>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-          </div>
         </div>
         {activeThread.tokensUsed > 0 && (
-          <div className={S.tokenBar}>
+          <div className={S.tokenBar} data-test-id="ai-token-bar">
             {T('Tokens used: {0}', 'ai_chat_tokens', activeThread.tokensUsed.toLocaleString())}
           </div>
         )}
       </div>
 
       <div className={S.messages}>
-        {messages.length === 0 && !state.errorText && (
+        {state.isApiKeyMissing && (
+          <div className={S.apiKeyNotice} data-test-id="ai-no-api-key">
+            {T(
+              'No AI API key is set, so the assistant cannot answer. Set Ai:ApiKey in the Architect server appsettings.json and restart the server.',
+              'ai_chat_no_api_key',
+            )}
+          </div>
+        )}
+
+        {messages.length === 0 && !state.errorText && !state.isApiKeyMissing && (
           <div className={S.empty}>
             {T('No messages yet. Try: "What time is it?"', 'ai_chat_empty')}
           </div>
@@ -220,6 +142,8 @@ export const AiAgentPanel = observer(function AiAgentPanel() {
         {messages.map(message => (
           <div
             key={message.id}
+            data-test-id="ai-message"
+            data-role={message.role}
             className={
               message.role === 'user' ? `${S.row} ${S.rowUser}` : `${S.row} ${S.rowAssistant}`
             }
@@ -291,7 +215,11 @@ export const AiAgentPanel = observer(function AiAgentPanel() {
                   {T('Called functions:', 'ai_chat_called_functions')}
                   <div>
                     {message.calledFunctions.map((functionName, functionIndex) => (
-                      <span key={`${functionName}-${functionIndex}`} className={S.pill}>
+                      <span
+                        key={`${functionName}-${functionIndex}`}
+                        data-test-id="ai-called-function"
+                        className={S.pill}
+                      >
                         {functionName}
                       </span>
                     ))}
@@ -307,15 +235,23 @@ export const AiAgentPanel = observer(function AiAgentPanel() {
           </div>
         ))}
 
-        {isWaitingForFirstToken && (
+        {state.isRunning && (
           <div className={`${S.row} ${S.rowAssistant}`}>
-            <div className={`${S.bubble} ${S.bubbleAssistant}`}>
-              {T('Thinking…', 'ai_chat_thinking')}
+            <div
+              className={`${S.bubble} ${S.bubbleAssistant} ${S.thinking}`}
+              data-test-id="ai-thinking"
+            >
+              <span className={S.spinner} />
+              <span className={S.thinkingLabel}>{T('Thinking…', 'ai_chat_thinking')}</span>
             </div>
           </div>
         )}
 
-        {state.errorText && <div className={S.error}>{state.errorText}</div>}
+        {state.errorText && (
+          <div className={S.error} data-test-id="ai-error">
+            {state.errorText}
+          </div>
+        )}
 
         <div ref={messagesEndRef} />
       </div>
@@ -352,6 +288,7 @@ export const AiAgentPanel = observer(function AiAgentPanel() {
           </button>
           <textarea
             ref={textareaRef}
+            data-test-id="ai-input"
             className={S.textarea}
             value={state.draft}
             onChange={event => state.setDraft(event.target.value)}
@@ -364,12 +301,13 @@ export const AiAgentPanel = observer(function AiAgentPanel() {
             disabled={state.isRunning}
           />
           {state.isRunning ? (
-            <button className={S.sendButton} onClick={() => state.stop()}>
+            <button className={S.sendButton} data-test-id="ai-stop" onClick={() => state.stop()}>
               {T('Stop', 'ai_chat_stop')}
             </button>
           ) : (
             <button
               className={S.sendButton}
+              data-test-id="ai-send"
               onClick={() => void state.send()}
               disabled={!state.canSend}
             >

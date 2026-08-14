@@ -30,11 +30,19 @@ export type ChatImage = {
   dataUrl?: string;
 };
 
+export type ChatToolCall = {
+  id: string;
+  name: string;
+  arguments: string;
+  result?: string;
+};
+
 export type ChatMessage = {
   id: string;
   role: 'user' | 'assistant';
   text: string;
   calledFunctions?: string[];
+  toolCalls?: ChatToolCall[];
   affectedNodes?: AffectedNode[];
   images?: ChatImage[];
   totalTokens?: number;
@@ -74,11 +82,20 @@ export type ChatFocus = {
   visibleNodes?: FocusNode[];
 };
 
+export type ApiSectionFunction = {
+  name: string;
+  method: string | null;
+  path: string | null;
+  description: string;
+};
+
 export type ApiSection = {
   name: string;
+  description: string;
+  tags: string[];
   functionCount: number;
-  functions: string[];
-  hasDestructive: boolean;
+  functions: ApiSectionFunction[];
+  enabledByDefault: boolean;
 };
 
 export type RunUsage = {

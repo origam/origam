@@ -21,14 +21,22 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 namespace Origam.Architect.Server.ReturnModels;
 
-public record ItemTypePropertyInfo(string Name, string Type, string[] Values);
+public record ItemTypePropertyInfo(
+    string Name,
+    string Type,
+    string[] Values,
+    bool Required,
+    int SetOnExisting,
+    string CommonValue
+);
 
 public record ItemTypeInfo(
     string Caption,
     string TypeName,
     string FolderName,
     string[] Children,
-    ItemTypePropertyInfo[] Properties
+    ItemTypePropertyInfo[] Properties,
+    int ExistingCount
 );
 
 public record ItemTypeProviderInfo(string Id, string Name, string[] Children);
