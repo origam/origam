@@ -67,27 +67,6 @@
     <PackageReference Include="Moq" Version="4.20.70" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Origam.Server\Authorization\CorePasswordHasher.cs">
-      <Link>Authorization\CorePasswordHasher.cs</Link>
-    </Compile>
-    <Compile Include="..\Origam.Server\Authorization\Sha256PasswordHasher.cs">
-      <Link>Authorization\Sha256PasswordHasher.cs</Link>
-    </Compile>
-    <Compile Include="..\Origam.Security.Common\IOrigamUser.cs">
-      <Link>Security\Common\IOrigamUser.cs</Link>
-    </Compile>
-    <Compile Include="..\Origam.Security.Common\InternalPasswordHasherWithLegacySupport.cs">
-      <Link>Security\Common\InternalPasswordHasherWithLegacySupport.cs</Link>
-    </Compile>
-    <Compile Include="..\Origam.Security.Common\BrockAllen.IdentityReboot\AdaptivePasswordHasher.cs">
-      <Link>Security\Common\BrockAllen.IdentityReboot\AdaptivePasswordHasher.cs</Link>
-    </Compile>
-    <Compile Include="..\Origam.Security.Common\BrockAllen.IdentityReboot\System.Web.Helpers.Crypto.cs">
-      <Link>Security\Common\BrockAllen.IdentityReboot\System.Web.Helpers.Crypto.cs</Link>
-    </Compile>
-    <Compile Include="..\Origam.Security.Common\BrockAllen.IdentityReboot\VerificationResult.cs">
-      <Link>Security\Common\BrockAllen.IdentityReboot\VerificationResult.cs</Link>
-    </Compile>
     <ProjectReference Include="..\Origam.Server\Origam.Server.csproj" />
   </ItemGroup>
 </Project>
