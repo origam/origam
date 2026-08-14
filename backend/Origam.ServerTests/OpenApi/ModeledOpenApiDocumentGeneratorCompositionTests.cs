@@ -39,7 +39,7 @@ public class ModeledOpenApiDocumentGeneratorCompositionTests
     {
         IConfiguration configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(
-                new Dictionary<string, string?>
+                new Dictionary<string, string>
                 {
                     ["OpenIddictConfig:ClientApplicationTemplates:Configured"] = "true",
                     ["OpenIddictConfig:PrivateApiAuthentication"] = "Token",

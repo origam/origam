@@ -84,13 +84,13 @@ public class ExtensionControllerOpenApiPolicyTests
     {
         IConfiguration configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(
-                new Dictionary<string, string?> { ["ExtensionDlls:0"] = extensionDll }
+                new Dictionary<string, string> { ["ExtensionDlls:0"] = extensionDll }
             )
             .Build();
         return new ExtensionControllerOpenApiPolicy(new StartUpConfiguration(configuration));
     }
 
-    private static ApiDescription CreateApiDescription(Type controllerType, string? httpMethod)
+    private static ApiDescription CreateApiDescription(Type controllerType, string httpMethod)
     {
         return new ApiDescription
         {
@@ -98,7 +98,7 @@ public class ExtensionControllerOpenApiPolicyTests
             ActionDescriptor = new ControllerActionDescriptor
             {
                 ControllerTypeInfo = controllerType.GetTypeInfo(),
-                RouteValues = new Dictionary<string, string?>
+                RouteValues = new Dictionary<string, string>
                 {
                     ["controller"] = controllerType.Name.Replace(
                         oldValue: "Controller",

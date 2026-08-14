@@ -282,7 +282,7 @@ public class ModeledOpenApiDocumentGenerationTests
                 .Returns([]);
         }
 
-        public T AddPage<T>(string name, string url, Action<T>? configure = null)
+        public T AddPage<T>(string name, string url, Action<T> configure = null)
             where T : AbstractPage, new()
         {
             var page = new T
@@ -337,7 +337,7 @@ public class ModeledOpenApiDocumentGenerationTests
         {
             IConfiguration configuration = new ConfigurationBuilder()
                 .AddInMemoryCollection(
-                    new Dictionary<string, string?>
+                    new Dictionary<string, string>
                     {
                         ["OpenIddictConfig:ClientApplicationTemplates:Configured"] = "true",
                         ["OpenIddictConfig:PrivateApiAuthentication"] = "Token",
