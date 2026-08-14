@@ -57,7 +57,7 @@
         />
         <PackageReference
           Include="Meziantou.Analyzer"
-          Version="3.0.138"
+          Version="3.0.140"
           Condition="'$(DisableMeziantouAnalyzer)' != 'true'"
           PrivateAssets="all"
           IncludeAssets="build;analyzers;buildtransitive"
