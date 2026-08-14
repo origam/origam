@@ -19,7 +19,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { observer } from "mobx-react";
 import React from "react";
-import { observable } from "mobx";
+import { observable,
+  makeObservable
+} from "mobx";
 import { T } from "utils/translation";
 import CS from "gui/Components/Dialogs/DialogsCommon.module.css";
 import S from "gui/Components/Dialogs/SaveFilterDialog.module.css";
@@ -28,11 +30,11 @@ import { ModalDialog } from "gui/Components/Dialog/ModalDialog";
 import { IOption, SimpleDropdown } from "gui/Components/Dialogs/SimpleDropdown";
 
 @observer
-export class ChooseFavoriteFolderDialog extends React.Component<{
+export class ChooseFavoriteFolderDialog extends React.Component<React.PropsWithChildren<{
   onCancelClick: (event: any) => void;
   onOkClick: (selectdFolderId: string) => void;
   favorites: FavoriteFolder[];
-}> {
+}>> {
   options: IOption<FavoriteFolder>[];
 
   @observable
@@ -40,6 +42,7 @@ export class ChooseFavoriteFolderDialog extends React.Component<{
 
   constructor(props: any) {
     super(props);
+    makeObservable(this);
     this.options = this.props.favorites.map((favorite) => {
       return {value: favorite, label: favorite.name};
     });

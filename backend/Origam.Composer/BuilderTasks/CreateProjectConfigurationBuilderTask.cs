@@ -30,9 +30,8 @@ using Origam.Extensions;
 
 namespace Origam.Composer.BuilderTasks;
 
-public class CreateProjectConfigurationBuilderTask(
-    IConnectionStringService connectionStringService
-) : ICreateProjectConfigurationBuilderTask
+public class CreateProjectConfigurationBuilderTask(IConnectionStringService connectionStringService)
+    : ICreateProjectConfigurationBuilderTask
 {
     public string Name => "Create project configuration";
     public BuilderTaskState State { get; set; } = BuilderTaskState.Prepared;

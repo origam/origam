@@ -29,11 +29,13 @@ import { NavigationButton } from "gui/connections/MobileComponents/Navigation/Na
 
 
 @observer
-export class StandaloneDetailNavigator extends React.Component<{
+export class StandaloneDetailNavigator extends React.Component<React.PropsWithChildren<{
   node: INavigationNode;
-}> {
+}>> {
 
   static contextType = MobXProviderContext;
+
+  declare context: any;
 
   get mobileState(): MobileState {
     return this.context.application.mobileState;
@@ -81,12 +83,14 @@ class ExtraButtons {
 export const ExtraButtonsContext = createContext<ExtraButtons | null>(null);
 
 @observer
-export class DetailNavigator extends React.Component<{
+export class DetailNavigator extends React.Component<React.PropsWithChildren<{
   node: INavigationNode;
   onNodeClick: (node: INavigationNode) => void;
-}> {
+}>> {
 
   static contextType = MobXProviderContext;
+
+  declare context: any;
 
   get breadCrumbsState(): BreadCrumbsState {
     return this.context.application.mobileState.breadCrumbsState;

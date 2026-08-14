@@ -18,7 +18,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { DateTimeEditor } from "gui/Components/ScreenElements/Editors/DateTimeEditor/DateTimeEditor";
-import { action, runInAction } from "mobx";
+import { action, runInAction,
+  makeObservable
+} from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 import {
@@ -49,11 +51,11 @@ const OPERATORS = [
   Operator.isNotNull
 ];
 
-const OpCombo: React.FC<{
+const OpCombo: React.FC<React.PropsWithChildren<{
   setting: any;
   onChange: (newSetting: any) => void;
   id: string;
-}> = observer((props) => {
+}>> = observer((props) => {
   return (
     <FilterSettingsComboBox
       id={props.id}
@@ -75,7 +77,7 @@ const OpCombo: React.FC<{
   );
 });
 
-const OpEditors: React.FC<{
+const OpEditors: React.FC<React.PropsWithChildren<{
   setting: IFilterSetting;
   onChange?: (newSetting: any) => void;
   onBlur?: (event: any) => Promise<void>;
@@ -83,7 +85,7 @@ const OpEditors: React.FC<{
   autoFocus: boolean;
   id: string;
   property: IProperty;
-}> = observer((props) => {
+}>> = observer((props) => {
   const {setting} = props;
   const dateFormatCs = getDefaultCsDateFormatDataFromCookie().defaultLongDateFormat;
   const dateFormatMoment = csToMomentFormat(dateFormatCs)!;
@@ -220,12 +222,17 @@ const OpEditors: React.FC<{
 });
 
 @observer
-export class FilterSettingsDate extends React.Component<{
+export class FilterSettingsDate extends React.Component<React.PropsWithChildren<{
   setting: IFilterSetting;
   autoFocus: boolean
   id: string;
   property: IProperty;
-}> {
+}>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
 
   static get defaultSettings() {
     return new FilterSetting(OPERATORS[0].type)

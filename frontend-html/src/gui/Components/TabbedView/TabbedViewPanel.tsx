@@ -22,7 +22,7 @@ import S from "gui/Components/TabbedView/TabbedViewPanel.module.scss";
 import cx from "classnames";
 import { CtxPanelVisibility } from "gui/contexts/GUIContexts";
 
-export const TabbedViewPanel: React.FC<{ isActive: boolean }> = props => {
+export const TabbedViewPanel: React.FC<React.PropsWithChildren<{ isActive: boolean }>> = props => {
   const ctxPanelVisibility = useContext(CtxPanelVisibility);
   return (
     <CtxPanelVisibility.Provider

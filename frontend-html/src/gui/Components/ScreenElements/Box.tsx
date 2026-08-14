@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import React from "react";
 import S from "./Box.module.css";
 
-export class Box extends React.Component {
+export class Box extends React.Component<React.PropsWithChildren<{}>> {
   render() {
     return <div className={S.box}>{this.props.children}</div>;
   }

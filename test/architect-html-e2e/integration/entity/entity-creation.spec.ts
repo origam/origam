@@ -28,7 +28,6 @@ test.describe('Database Entity creation (real backend)', () => {
   test('Database Entity creation', async ({ page }) => {
     await page.goto('/');
 
-    await page.getByText('Root Menu').click();
     await page.getByTestId('tree-toggle-Data').click();
     await page.getByTestId('tree-toggle-Data Structures').click();
     await page.getByTestId('tree-toggle-Dimensions').click();

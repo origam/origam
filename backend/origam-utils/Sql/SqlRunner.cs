@@ -59,23 +59,27 @@ abstract class SqlRunner : ISqlRunner
     public int GetRootVersion(Program.GetRootVersionOptions arguments)
     {
         string sqlCommand = BuildRootVersionSql();
-        return RunSqlCommand(new Program.RunSqlCommandOptions
-        {
-            Delay = arguments.Delay,
-            Attempts = arguments.Attempts,
-            SqlCommand = sqlCommand
-        });
+        return RunSqlCommand(
+            new Program.RunSqlCommandOptions
+            {
+                Delay = arguments.Delay,
+                Attempts = arguments.Attempts,
+                SqlCommand = sqlCommand,
+            }
+        );
     }
 
     public int RunSqlProcedure(Program.RunSqlProcedureCommandOptions arguments)
     {
         string sqlCommand = BuildProcedureCall(arguments.ProcedureName);
-        return RunSqlCommand(new Program.RunSqlCommandOptions
-        {
-            Delay = arguments.Delay,
-            Attempts = arguments.Attempts,
-            SqlCommand = sqlCommand
-        });
+        return RunSqlCommand(
+            new Program.RunSqlCommandOptions
+            {
+                Delay = arguments.Delay,
+                Attempts = arguments.Attempts,
+                SqlCommand = sqlCommand,
+            }
+        );
     }
 
     public int RunSqlCommand(Program.RunSqlCommandOptions arguments)

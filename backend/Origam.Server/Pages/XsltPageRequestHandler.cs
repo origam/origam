@@ -34,6 +34,7 @@ using Origam.Rule;
 using Origam.Rule.Xslt;
 using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
+using Origam.Server.Common;
 using Origam.Server.Model.UIService;
 using Origam.Service.Core;
 using Origam.Workbench.Services;
@@ -60,13 +61,13 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
         var transformParams = new Hashtable();
         var queryParameterCollection = new QueryParameterCollection();
         Hashtable preprocessorParams = GetPreprocessorParameters(request);
-        // convert parameters to QueryParameterCollection for data service and hashtable for transformation service
+        // convert mappedParameters to QueryParameterCollection for data service and hashtable for transformation service
         foreach (KeyValuePair<string, object> parameter in parameters)
         {
             queryParameterCollection.Add(new QueryParameter(parameter.Key, parameter.Value));
             transformParams.Add(parameter.Key, parameter.Value);
         }
-        // copy also the preprocessor parameters to the transformation parameters
+        // copy also the preprocessor mappedParameters to the transformation mappedParameters
         foreach (DictionaryEntry parameter in preprocessorParams)
         {
             transformParams.Add(parameter.Key, parameter.Value);
@@ -145,11 +146,19 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
             {
                 case "DELETE":
                 {
+                    if (FeatureTools.IsFeatureOn(OrigamEvent.ApiRequest.FeatureCode))
+                    {
+                        OrigamEventTools.RecordPageRequest(page, request.HttpMethod, parameters);
+                    }
                     HandleDelete(xsltPage, data, transformParams, ruleEngine);
                     return;
                 }
                 case "PUT":
                 {
+                    if (FeatureTools.IsFeatureOn(OrigamEvent.ApiRequest.FeatureCode))
+                    {
+                        OrigamEventTools.RecordPageRequest(page, request.HttpMethod, parameters);
+                    }
                     HandlePut(
                         parameters,
                         xsltPage,
@@ -237,6 +246,15 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
                     }
                 }
             }
+        }
+        if (FeatureTools.IsFeatureOn(OrigamEvent.ApiRequest.FeatureCode))
+        {
+            OrigamEventTools.RecordPageRequest(
+                page,
+                request.HttpMethod,
+                parameters,
+                numberOfRows: data?.Tables.Cast<DataTable>().Sum(table => table.Rows.Count) ?? 0
+            );
         }
         if (!Analytics.Instance.IsAnalyticsEnabled || (xsltPage.LogTransformation == null))
         {

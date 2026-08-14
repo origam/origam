@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import { parse as wktParse } from "wkt";
 import { MapRootStore } from "./MapRootStore";
 
@@ -52,6 +52,7 @@ export class MapLayer {
 
 export class MapSetupStore {
   constructor(private rootStore: MapRootStore) {
+    makeObservable(this);
   }
 
   mapLocationMember: string = "";

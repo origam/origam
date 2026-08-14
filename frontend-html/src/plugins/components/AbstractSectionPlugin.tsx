@@ -17,14 +17,19 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import { EventHandler } from "utils/EventHandler";
 import { ISectionPluginData } from "plugins/interfaces/ISectionPluginData";
 import { ILocalization } from "plugins/interfaces/ILocalization";
 import { ILocalizer } from "plugins/interfaces/ILocalizer";
 import { ISectionPlugin } from "plugins/interfaces/ISectionPlugin";
+import { JSX } from "react";
 
 export abstract class AbstractSectionPlugin implements ISectionPlugin {
+  constructor() {
+    makeObservable(this);
+  }
+
   $type_ISectionPlugin: 1 = 1; // required by the isISectionPlugin function
   id: string = ""
 

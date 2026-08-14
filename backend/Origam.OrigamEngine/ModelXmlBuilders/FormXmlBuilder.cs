@@ -2244,7 +2244,8 @@ public class FormXmlBuilder
                     csi.FirstParentOfType<PanelControlSet>()
                         ?.DataEntity?.ChildItems?.OfType<IDataEntityColumn>()
                         ?.FirstOrDefault(child => child.Name == bindingMember)
-                        ?.FieldType ?? "";
+                        ?.FieldType
+                    ?? "";
 
                 if (int.Parse(tabIndex) >= 0)
                 {

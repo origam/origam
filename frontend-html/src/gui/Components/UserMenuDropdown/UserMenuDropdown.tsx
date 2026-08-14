@@ -26,7 +26,7 @@ import { T } from "utils/translation";
 import S from "gui/Components/UserMenuDropdown/UserMenuDropdown.module.scss";
 import cx from "classnames";
 
-export const UserMenuDropdown: React.FC<{
+export const UserMenuDropdown: React.FC<React.PropsWithChildren<{
   handleLogoutClick: (event: any) => void,
   avatarLink: string | undefined,
   userName?: string,
@@ -34,7 +34,7 @@ export const UserMenuDropdown: React.FC<{
   ctx: any,
   onAboutClick: ()=> void;
   helpUrl: string | undefined
-}> = (props) => {
+}>> = (props) => {
 
   function onHelpClick() {
     window.open(props.helpUrl);

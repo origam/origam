@@ -19,10 +19,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { IOpenedScreens } from "./types/IOpenedScreens";
 import { IOpenedScreen } from "./types/IOpenedScreen";
-import { action, computed, observable } from "mobx";
+import { action, computed, observable,
+  makeObservable
+} from "mobx";
 import { IAction } from "./types/IAction";
 
 export class OpenedScreens implements IOpenedScreens {
+  constructor() {
+    makeObservable(this);
+  }
+
   $type_IOpenedScreens: 1 = 1;
 
   parent?: any;

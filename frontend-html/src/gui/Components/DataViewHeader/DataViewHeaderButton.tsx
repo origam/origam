@@ -21,14 +21,14 @@ import React from "react";
 import S from "gui/Components/DataViewHeader/DataViewHeaderButton.module.scss";
 import cx from "classnames";
 
-export const DataViewHeaderButton: React.FC<{
+export const DataViewHeaderButton: React.FC<React.PropsWithChildren<{
   domRef?: any;
   isHidden?: boolean;
   disabled?: boolean;
   title?: string;
   id?: string;
   onClick?(event: any): void;
-}> = (props) => (
+}>> = (props) => (
   <button
     id={props.id}
     title={props.title}
