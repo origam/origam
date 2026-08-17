@@ -28,13 +28,15 @@ import {
 import { inject, observer } from "mobx-react";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import { getRowStateDynamicLabel } from "model/selectors/RowState/getRowStateNameOverride";
-import { observable } from "mobx";
+import { observable,
+  makeObservable
+} from "mobx";
 import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
 import { getFieldErrorMessage } from "model/selectors/DataView/getFieldErrorMessage";
 import S from "gui/Components/Form/FormField.module.scss";
 import { MobileFormViewEditor } from "gui/connections/MobileComponents/Form/MobileFormViewEditor";
 
-@inject(({property}, {caption}) => {
+@inject(({property}: any, {caption}: any) => {
   const rowId = getSelectedRowId(property);
 
   const ovrCaption = getRowStateDynamicLabel(property, rowId || "", property.id);
@@ -45,7 +47,12 @@ import { MobileFormViewEditor } from "gui/connections/MobileComponents/Form/Mobi
   };
 })
 @observer
-export class MobileFormField extends React.Component<IFormFieldProps> {
+export class MobileFormField extends React.Component<React.PropsWithChildren<IFormFieldProps>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
 
   @observable
   dynamicTooltip: string | undefined | null;

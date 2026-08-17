@@ -30,7 +30,6 @@ test.describe('Entity Relationship creation (real backend)', () => {
     await page.goto('/');
     await closeAiPanel(page);
 
-    await page.getByText('Root Menu').click();
     await page.getByTestId('tree-toggle-Data').click();
     await page.getByTestId('tree-toggle-Entities').click();
     await page.getByTestId('tree-toggle-Dimensions').click();

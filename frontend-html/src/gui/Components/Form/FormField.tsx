@@ -25,7 +25,9 @@ import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowI
 import React from "react";
 import { formatTooltipPlaintext } from "../ToolTip/FormatTooltipText";
 import { FormViewEditor } from "gui/Workbench/ScreenArea/FormView/FormViewEditor";
-import { observable } from "mobx";
+import { observable,
+  makeObservable
+} from "mobx";
 import { FieldDimensions } from "gui/Components/Form/FieldDimensions";
 import { getFieldErrorMessage } from "model/selectors/DataView/getFieldErrorMessage";
 import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
@@ -56,7 +58,7 @@ export interface IFormFieldProps {
   property?: IProperty;
 }
 
-@inject(({property}, {caption}) => {
+@inject(({property}: any, {caption}: any) => {
   const rowId = getSelectedRowId(property);
 
   const ovrCaption = getRowStateDynamicLabel(property, rowId || "", property.id);
@@ -67,7 +69,12 @@ export interface IFormFieldProps {
   };
 })
 @observer
-export class FormField extends React.Component<IFormFieldProps> {
+export class FormField extends React.Component<React.PropsWithChildren<IFormFieldProps>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
 
   @observable
   dynamicTooltip: string | undefined | null;

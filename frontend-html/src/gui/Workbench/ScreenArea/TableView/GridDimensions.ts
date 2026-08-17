@@ -18,7 +18,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { IGridDimensions } from "../../../Components/ScreenElements/Table/types";
-import { action, computed } from "mobx";
+import { action, computed,
+  makeObservable
+} from "mobx";
 import { IProperty } from "../../../../model/entities/types/IProperty";
 import { getLeadingColumnCount } from "../../../../model/selectors/TablePanelView/getLeadingColumnCount";
 import { getIsSelectionCheckboxesShown } from "../../../../model/selectors/DataView/getIsSelectionCheckboxesShown";
@@ -35,6 +37,7 @@ export interface IGridDimensionsData {
 
 export class GridDimensions implements IGridDimensions {
   constructor(data: IGridDimensionsData) {
+    makeObservable(this);
     Object.assign(this, data);
   }
 

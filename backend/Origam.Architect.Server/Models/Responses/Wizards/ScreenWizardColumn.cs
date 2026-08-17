@@ -26,4 +26,5 @@ public class ScreenWizardColumn
     public Guid Id { get; set; }
     public string Name { get; set; }
     public bool IsPrimaryKey { get; set; }
+    public bool CanGenerateControl { get; set; }
 }

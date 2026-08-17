@@ -269,6 +269,17 @@ export const FilterableSelect = observer((props: FilterableSelectProps) => {
         onFocus={openDropdown}
         onClick={openDropdown}
         onKeyDown={onKeyDown}
+        onBlur={event => {
+          const nextTarget = event.relatedTarget as Node | null;
+          if (
+            nextTarget &&
+            (wrapperRef.current?.contains(nextTarget) || listRef.current?.contains(nextTarget))
+          ) {
+            return;
+          }
+          setOpen(false);
+          setFilter(null);
+        }}
       />
       <VscChevronDown className={S.selectIcon} />
       {open &&

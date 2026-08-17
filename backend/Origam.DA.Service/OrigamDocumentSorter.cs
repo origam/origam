@@ -116,13 +116,15 @@ class NamespaceInfo
                     ?.FirstOrDefault(attr =>
                         attr.Value.StartsWith("http://schemas.origam.com/model-persistence")
                     )
-                    ?.LocalName ?? "",
+                    ?.LocalName
+                ?? "",
             AbstractSchemaPrefix =
                 xmlAttributes
                     ?.FirstOrDefault(attr =>
                         attr.Value.StartsWith("http://schemas.origam.com/Origam.Schema.ISchemaItem")
                     )
-                    ?.LocalName ?? "",
+                    ?.LocalName
+                ?? "",
         };
     }
 

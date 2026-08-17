@@ -105,6 +105,6 @@ public class DataEntityIndex : AbstractSchemaItem
 
     public string MakeDatabaseName(IDataEntity table)
     {
-        return ((table as TableMappingItem)?.MappedObjectName ?? table.Name) + "_" + Name;
+        return Name;
     }
 }

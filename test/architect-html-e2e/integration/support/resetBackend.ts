@@ -21,6 +21,7 @@ import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import type { APIRequestContext } from '@playwright/test';
+import { activatePackage } from '@support/activatePackage';
 
 function findRepoRoot(): string {
   let dir = process.cwd();
@@ -36,6 +37,7 @@ function findRepoRoot(): string {
 
 const repoRoot = findRepoRoot();
 const MODEL_DIR = 'model-tests/model';
+const DEFAULT_PACKAGE = 'Root Menu';
 
 export function readModelFile(relativePath: string): string {
   return fs.readFileSync(path.join(repoRoot, MODEL_DIR, relativePath), 'utf8');
@@ -53,4 +55,6 @@ export async function resetBackend(request: APIRequestContext): Promise<void> {
   if (!response.ok()) {
     throw new Error(`POST /Test/Reset failed: ${response.status()} ${await response.text()}`);
   }
+
+  await activatePackage(request, DEFAULT_PACKAGE);
 }

@@ -33,7 +33,9 @@ import { CDialogContent } from "gui/connections/CDialogContent";
 import { getIsCurrentScreenFull } from "model/selectors/Workbench/getIsCurrentScreenFull";
 import { Fullscreen } from "gui/Components/Fullscreen/Fullscreen";
 import { onRootElementClick } from "model/actions/Global/onRootElementClick";
-import { action } from "mobx";
+import { action,
+  makeObservable
+} from "mobx";
 import S from "gui/Components/WorkbenchPage/WorkbenchPage.module.scss";
 import { MobileMain } from "gui/connections/MobileComponents/MobileMain";
 import { NotificationContainer } from "gui/connections/NotificationContainer";
@@ -41,8 +43,15 @@ import { IApplication } from "model/entities/types/IApplication";
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 
 @observer
-export class CWorkbenchPage extends React.Component {
+export class CWorkbenchPage extends React.Component<React.PropsWithChildren<{}>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
   static contextType = MobXProviderContext;
+
+  declare context: any;
 
   get workbench(): IWorkbench {
     return getWorkbench(this.context.application);

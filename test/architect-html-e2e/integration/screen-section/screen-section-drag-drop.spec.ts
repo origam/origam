@@ -30,7 +30,6 @@ test.describe('Screen Section drag and drop (real backend)', () => {
     await page.goto('/');
     await closeAiPanel(page);
 
-    await page.getByText('Root Menu').click();
     await page.getByTestId('tree-toggle-User Interface').click();
     await page.getByTestId('tree-toggle-Screen Sections').click();
     await page.getByTestId('tree-node-Screen Sections').click({ button: 'right' });

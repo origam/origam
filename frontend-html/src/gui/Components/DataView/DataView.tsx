@@ -20,6 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import React from "react";
 import S from "gui/Components/DataView/DataView.module.scss";
 
-export const DataView: React.FC = props => (
+export const DataView: React.FC<React.PropsWithChildren<{}>> = props => (
   <div className={S.root}>{props.children}</div>
 );

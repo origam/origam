@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { ILookup } from "model/entities/types/ILookup";
 import { IProperty } from "model/entities/types/IProperty";
-import { CancellablePromise } from "mobx/lib/api/flow";
+import { CancellablePromise } from "utils/CancellablePromise";
 import { IFilterSetting } from "model/entities/types/IFilterSetting";
 import React, { useContext, useState } from "react";
 import { MobXProviderContext } from "mobx-react";
@@ -39,7 +39,9 @@ import { TextCellDriver } from "modules/Editors/DropdownEditor/Cells/TextCellDri
 import { DropdownEditorSetup } from "modules/Editors/DropdownEditor/DropdownEditorSetup";
 import { TagInputEditor } from "gui/Components/ScreenElements/Editors/TagInputEditor";
 import S from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSettingsLookup.module.scss";
-import { action, computed } from "mobx";
+import { action, computed,
+  makeObservable
+} from "mobx";
 import {
   FilterDropDownApi
 } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/TagLookupFilterEditor";
@@ -153,6 +155,7 @@ export class FilterEditorData implements IDropdownEditorData {
     public setting: IFilterSetting,
     private onChange?: ()=>void
   ) {
+    makeObservable(this);
   }
 
   setValue(value: string[]) {

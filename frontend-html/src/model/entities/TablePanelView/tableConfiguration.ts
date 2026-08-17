@@ -22,7 +22,9 @@ import { ITablePanelView } from "model/entities/TablePanelView/types/ITablePanel
 import { getProperties } from "model/selectors/DataView/getProperties";
 import { TableColumnConfiguration } from "model/entities/TablePanelView/tableColumnConfiguration";
 import { IProperty } from "../types/IProperty";
-import { observable } from "mobx";
+import { observable,
+  makeObservable
+} from "mobx";
 import { Layout, parseLayout } from "model/entities/TablePanelView/layout";
 
 export interface ICustomConfiguration{
@@ -44,6 +46,7 @@ export class TableConfiguration implements ITableConfiguration {
   layout = Layout.Desktop;
 
   private constructor() {
+    makeObservable(this);
   }
 
   static create(

@@ -47,7 +47,6 @@ test.describe('Entity context menu New submenu (real backend)', () => {
   test('all New submenu items are revealed and visible', async ({ page }) => {
     await page.goto('/');
 
-    await page.getByText('Root Menu').click();
     await page.getByTestId('tree-toggle-Data').click();
     await page.getByTestId('tree-toggle-Entities').click();
     await page.getByTestId('tree-toggle-Dimensions').click();

@@ -108,7 +108,8 @@ public class CommunityWebSearchTool
         return typeof(CommunityWebSearchTool)
                 .GetMethod(methodName)
                 ?.GetCustomAttribute<DescriptionAttribute>()
-                ?.Description ?? string.Empty;
+                ?.Description
+            ?? string.Empty;
     }
 
     [Description(

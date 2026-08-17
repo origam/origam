@@ -48,6 +48,7 @@ export const CreateLookupWizard: React.FC<CreateLookupWizardProps> = observer(
     );
 
     const wizardRef = useRef<HTMLDivElement>(null);
+    const lastFocusedRef = useRef<HTMLElement | null>(null);
     const nameManuallyEditedRef = useRef(false);
     const [step, setStep] = useState(0);
     const [entityData, setEntityData] = useState<ILookupWizardEntityData | null>(null);
@@ -149,6 +150,17 @@ export const CreateLookupWizard: React.FC<CreateLookupWizardProps> = observer(
     }, [entityId, run, rootStore.architectApi]);
 
     useEffect(() => {
+      const onFocusOut = (event: FocusEvent) => {
+        const target = event.target as HTMLElement | null;
+        if (target && wizardRef.current?.contains(target)) {
+          lastFocusedRef.current = target;
+        }
+      };
+      document.addEventListener('focusout', onFocusOut);
+      return () => document.removeEventListener('focusout', onFocusOut);
+    }, []);
+
+    useEffect(() => {
       const onKeyDown = (event: KeyboardEvent) => {
         if (event.key === 'Escape') {
           event.stopPropagation();
@@ -170,7 +182,11 @@ export const CreateLookupWizard: React.FC<CreateLookupWizardProps> = observer(
           event.preventDefault();
           event.stopPropagation();
           const activeElement = document.activeElement as HTMLElement | null;
-          const activeIndex = activeElement ? focusableNodes.indexOf(activeElement) : -1;
+          const referenceElement =
+            activeElement && focusableNodes.includes(activeElement)
+              ? activeElement
+              : lastFocusedRef.current;
+          const activeIndex = referenceElement ? focusableNodes.indexOf(referenceElement) : -1;
           const direction = event.shiftKey ? -1 : 1;
           const nextIndex =
             activeIndex === -1
@@ -231,16 +247,6 @@ export const CreateLookupWizard: React.FC<CreateLookupWizardProps> = observer(
       if (step === 1) {
         return (
           <>
-            <h2 className={S.formTitle}>
-              {T("Let's name your lookup", 'create_lookup_basics_title')}
-            </h2>
-            <p className={S.formSubtitle}>
-              {T(
-                'A lookup defines how a foreign key value is resolved into a human-readable label across the application.',
-                'create_lookup_basics_subtitle',
-              )}
-            </p>
-
             <div className={S.field}>
               <label className={S.fieldLabel}>
                 {T('Name', 'create_lookup_name_label')} <span className={S.required}>*</span>
@@ -283,16 +289,6 @@ export const CreateLookupWizard: React.FC<CreateLookupWizardProps> = observer(
       if (step === 0) {
         return (
           <>
-            <h2 className={S.formTitle}>
-              {T('Where does the data come from?', 'create_lookup_source_title')}
-            </h2>
-            <p className={S.formSubtitle}>
-              {T(
-                'Choose which column shows as the display value, and the filters used to fetch records by id or build the dropdown list.',
-                'create_lookup_source_subtitle',
-              )}
-            </p>
-
             <div className={S.field}>
               <label className={S.fieldLabel}>
                 {T('Display Field', 'create_lookup_display_field_label')}{' '}
@@ -357,14 +353,6 @@ export const CreateLookupWizard: React.FC<CreateLookupWizardProps> = observer(
       if (!entityData) return null;
       return (
         <>
-          <h2 className={S.formTitle}>{T('Ready to create', 'wizard_ready_title')}</h2>
-          <p className={S.formSubtitle}>
-            {T(
-              'Review what will be added to the model. You can edit anything afterward.',
-              'create_lookup_review_subtitle',
-            )}
-          </p>
-
           <div className={S.reviewCard}>
             <div className={S.reviewCardHeader}>
               <div className={S.reviewCardIcon}>L</div>
@@ -463,16 +451,17 @@ export const CreateLookupWizard: React.FC<CreateLookupWizardProps> = observer(
                 {T('Step {0} of {1}', 'wizard_step_counter', step + 1, steps.length)}
               </div>
               <div className={S.footerBtns}>
-                <button className={S.btn} onClick={onCancel}>
+                <button type="button" className={S.btn} onClick={onCancel}>
                   {T('Cancel', 'wizard_btn_cancel')}
                 </button>
                 {step > 0 && (
-                  <button className={S.btn} onClick={back} disabled={submitting}>
+                  <button type="button" className={S.btn} onClick={back} disabled={submitting}>
                     {T('Back', 'wizard_btn_back')}
                   </button>
                 )}
                 {step < steps.length - 1 ? (
                   <button
+                    type="button"
                     className={`${S.btn} ${S.btnPrimary}`}
                     onClick={next}
                     disabled={!canAdvance || loading}
@@ -481,6 +470,7 @@ export const CreateLookupWizard: React.FC<CreateLookupWizardProps> = observer(
                   </button>
                 ) : (
                   <button
+                    type="button"
                     className={`${S.btn} ${S.btnPrimary}`}
                     onClick={submit}
                     disabled={submitting || loading}

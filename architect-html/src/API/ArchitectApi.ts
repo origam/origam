@@ -350,10 +350,86 @@ export class ArchitectApi implements IArchitectApi {
     return (await this.http.post('/wizards/work-queue-classes', request)).data;
   }
 
+  async getDataStructureWizardData(
+    entityId: string,
+  ): Promise<import('@api/IArchitectApi').IDataStructureWizardData> {
+    return (
+      await this.http.get('/wizards/data-structures/wizard-data', {
+        params: { entityId },
+      })
+    ).data;
+  }
+
+  async createDataStructure(
+    request: import('@api/IArchitectApi').ICreateDataStructureRequest,
+  ): Promise<import('@api/IArchitectApi').ICreateWizardResult> {
+    return (await this.http.post('/wizards/data-structures', request)).data;
+  }
+
+  async getScreenFromSectionWizardData(
+    screenSectionId: string,
+  ): Promise<import('@api/IArchitectApi').IScreenFromSectionWizardData> {
+    return (
+      await this.http.get('/wizards/screens-from-section/wizard-data', {
+        params: { screenSectionId },
+      })
+    ).data;
+  }
+
+  async createScreenFromSection(
+    request: import('@api/IArchitectApi').ICreateScreenFromSectionRequest,
+  ): Promise<import('@api/IArchitectApi').ICreateWizardResult> {
+    return (await this.http.post('/wizards/screens-from-section', request)).data;
+  }
+
   async createMenuItem(
     request: import('@api/IArchitectApi').ICreateMenuItemRequest,
   ): Promise<import('@api/IArchitectApi').ICreateWizardResult> {
     return (await this.http.post('/wizards/menu-items', request)).data;
+  }
+
+  async createWorkflowMenuItem(
+    request: import('@api/IArchitectApi').ICreateWorkflowMenuItemRequest,
+  ): Promise<import('@api/IArchitectApi').ICreateWizardResult> {
+    return (await this.http.post('/wizards/workflow-menu-items', request)).data;
+  }
+
+  async createRole(
+    request: import('@api/IArchitectApi').ICreateRoleRequest,
+  ): Promise<import('@api/IArchitectApi').ICreateWizardResult> {
+    return (await this.http.post('/wizards/roles', request)).data;
+  }
+
+  async getLocalizationChildEntityWizardData(
+    entityId: string,
+  ): Promise<import('@api/IArchitectApi').ILocalizationChildEntityWizardData> {
+    return (
+      await this.http.get('/wizards/localization-child-entities/wizard-data', {
+        params: { entityId },
+      })
+    ).data;
+  }
+
+  async createLocalizationChildEntity(
+    request: import('@api/IArchitectApi').ICreateLocalizationChildEntityRequest,
+  ): Promise<import('@api/IArchitectApi').ICreateWizardResult> {
+    return (await this.http.post('/wizards/localization-child-entities', request)).data;
+  }
+
+  async getScreenSectionWizardData(
+    entityId: string,
+  ): Promise<import('@api/IArchitectApi').IScreenSectionWizardData> {
+    return (
+      await this.http.get('/wizards/screen-sections/wizard-data', {
+        params: { entityId },
+      })
+    ).data;
+  }
+
+  async createScreenSection(
+    request: import('@api/IArchitectApi').ICreateScreenSectionRequest,
+  ): Promise<import('@api/IArchitectApi').ICreateWizardResult> {
+    return (await this.http.post('/wizards/screen-sections', request)).data;
   }
 
   async getDataStructureSql(

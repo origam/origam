@@ -78,6 +78,9 @@
     <data name="Wizard_FieldNotFoundOnEntity" xml:space="preserve">
         <value>Field {0} not found on entity.</value>
     </data>
+    <data name="Wizard_FieldCannotGenerateControl" xml:space="preserve">
+        <value>Field "{0}" cannot be placed on a screen automatically. Its data type has no default control, or it is a foreign key without a default lookup.</value>
+    </data>
     <data name="Wizard_DataStructureNotFound" xml:space="preserve">
         <value>DataStructure {0} not found</value>
     </data>
@@ -134,5 +137,32 @@
     </data>
     <data name="PropertyReferenceValueNotValid" xml:space="preserve">
         <value>'{0}' is not a valid value for property {1}. This property is a reference and takes the id (GUID) of an existing {2}, not its name. Look the item up and pass the id from the response.</value>
+    </data>
+    <data name="Wizard_DataStructureNameRequired" xml:space="preserve">
+        <value>Data structure name is required.</value>
+    </data>
+    <data name="Wizard_ScreenSectionNotFound" xml:space="preserve">
+        <value>Screen section {0} not found</value>
+    </data>
+    <data name="Wizard_WorkflowNotFound" xml:space="preserve">
+        <value>Workflow {0} not found</value>
+    </data>
+    <data name="Wizard_TableEntityNotFound" xml:space="preserve">
+        <value>Database Entity (TableMappingItem) {0} not found</value>
+    </data>
+    <data name="Wizard_ScreenSectionNameRequired" xml:space="preserve">
+        <value>Screen Section name is required.</value>
+    </data>
+    <data name="Wizard_ScreenSectionAlreadyExists" xml:space="preserve">
+        <value>A Screen Section named "{0}" already exists.</value>
+    </data>
+    <data name="Wizard_RoleItemNotFound" xml:space="preserve">
+        <value>Item {0} not found</value>
+    </data>
+    <data name="Wizard_RoleNotSpecific" xml:space="preserve">
+        <value>Create Role is only available for menu items with a specific role (not "*").</value>
+    </data>
+    <data name="Wizard_NoCurrentDeploymentVersion" xml:space="preserve">
+        <value>There is no current deployment version. Create a deployment version and make it current first.</value>
     </data>
 </root>

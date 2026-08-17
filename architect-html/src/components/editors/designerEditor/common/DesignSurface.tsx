@@ -158,8 +158,9 @@ export const DesignSurface: React.FC<{
               {component.data.identifier}
             </div>
             <div
-              className={`${S.designComponent} ${component.id} 
-            ${surfaceState.draggingComponentId === component.id ? S.dragging : ''} 
+              className={`${S.designComponent} ${component.id}
+            ${component.hasBorder ? '' : S.borderless}
+            ${surfaceState.draggingComponentId === component.id ? S.dragging : ''}
             ${surfaceState.selectedComponent?.id === component.id ? S.selected : ''}`}
               style={{
                 left: `${component.absoluteLeft}px`,

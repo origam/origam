@@ -21,13 +21,13 @@ import React from "react";
 import S from "gui/Components/Dropdown/DropdownItem.module.scss";
 import cx from "classnames";
 
-export const DropdownItem: React.FC<{
+export const DropdownItem: React.FC<React.PropsWithChildren<{
   className?: string;
   onClick?(event: any): void;
   isDisabled?: boolean;
   isSelected?: boolean;
   id?: string;
-}> = props => {
+}>> = props => {
   function getStyle() {
     if (props.isDisabled) {
       return "isDisabled"

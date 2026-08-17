@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { computed, observable } from "mobx";
+import { computed, observable, makeObservable } from "mobx";
 import { IGroupTreeNode } from "./types";
 import { IGrouper } from "../../../../../model/entities/types/IGrouper";
 import { IAggregation } from "../../../../../model/entities/types/IAggregation";
@@ -57,6 +57,7 @@ export interface IClientSideGroupItemData extends IGroupItemData {
 
 export class ClientSideGroupItem implements IClientSideGroupItemData, IGroupTreeNode {
   constructor(data: IClientSideGroupItemData) {
+    makeObservable(this);
     Object.assign(this, data);
   }
 
@@ -133,6 +134,7 @@ export class ClientSideGroupItem implements IClientSideGroupItemData, IGroupTree
 
 export class ServerSideGroupItem implements IGroupTreeNode {
   constructor(data: IServerSideGroupItemData) {
+    makeObservable(this);
     const dataTable = getDataTable(data.grouper);
     this._childRows = new ScrollRowContainer(
       (row: any[]) => dataTable.getRowId(row),
