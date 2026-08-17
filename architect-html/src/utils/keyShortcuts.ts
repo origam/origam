@@ -20,3 +20,26 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 export function isSaveShortcut(e: KeyboardEvent): boolean {
   return (e.ctrlKey || e.metaKey) && e.key === 's';
 }
+
+export function isCutShortcut(e: KeyboardEvent): boolean {
+  return (e.ctrlKey || e.metaKey) && !e.shiftKey && e.key === 'x';
+}
+
+export function isCopyShortcut(e: KeyboardEvent): boolean {
+  return (e.ctrlKey || e.metaKey) && !e.shiftKey && e.key === 'c';
+}
+
+export function isPasteShortcut(e: KeyboardEvent): boolean {
+  return (e.ctrlKey || e.metaKey) && !e.shiftKey && e.key === 'v';
+}
+
+// Places where the browser's own clipboard handling must win.
+export function isTypingTarget(e: KeyboardEvent): boolean {
+  const target = e.target as HTMLElement | null;
+  if (!target || !target.closest) {
+    return false;
+  }
+  return !!target.closest(
+    'input, textarea, select, [contenteditable="true"], .monaco-editor, .cm-editor',
+  );
+}

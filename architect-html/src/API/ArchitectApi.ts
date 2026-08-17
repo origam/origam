@@ -27,9 +27,12 @@ import {
   ICreateLookupRequest,
   ICreateWizardResult,
   IDatabaseResultResponse,
+  IDropTargetResult,
   ILookupWizardEntityData,
   IMenuItemInfo,
   IModelChange,
+  IMoveNodeResult,
+  INodeLoadData,
   IPackagesInfo,
   IParametersResult,
   IPropertyChange,
@@ -76,6 +79,21 @@ export class ArchitectApi implements IArchitectApi {
         },
       })
     ).data;
+  }
+
+  async getDropTargets(args: {
+    source: INodeLoadData;
+    targets: INodeLoadData[];
+  }): Promise<IDropTargetResult[]> {
+    return (await this.http.post('/Model/GetDropTargets', args)).data;
+  }
+
+  async moveNode(args: {
+    source: INodeLoadData;
+    target: INodeLoadData;
+    isCopy: boolean;
+  }): Promise<IMoveNodeResult> {
+    return (await this.http.post('/Model/MoveNode', args)).data;
   }
 
   async searchText(text: string): Promise<ISearchResult[]> {
