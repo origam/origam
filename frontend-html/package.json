@@ -83,7 +83,7 @@
     "@vitejs/plugin-react": "6.0.5",
     "browserslist": "^4.28.7",
     "browserslist-useragent-regexp": "^4.1.4",
-    "esbuild": "^0.28.1",
+    "esbuild": "^0.28.2",
     "identity-obj-proxy": "^3.0.0",
     "ts-jest": "^29.4.12",
     "vite": "^8.2.0",
