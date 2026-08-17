@@ -23,6 +23,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Microsoft.Extensions.AI;
+using Origam.AI.Agent.Strategy.Architect.Api;
 
 namespace Origam.AI.Agent.Services.OpenApi;
 
@@ -43,8 +44,7 @@ public static class OpenApiFunctionBuilder
         byte[] swaggerBytes,
         string sectionName,
         HashSet<string> selectedPaths,
-        string baseUrl,
-        IHttpClientFactory httpClientFactory
+        ArchitectApiClient architectApi
     )
     {
         var root = JsonNode.Parse(swaggerBytes) as JsonObject;
@@ -82,8 +82,7 @@ public static class OpenApiFunctionBuilder
                         methodEntry.Key,
                         operation,
                         components,
-                        baseUrl,
-                        httpClientFactory
+                        architectApi
                     )
                 );
             }
@@ -98,8 +97,7 @@ public static class OpenApiFunctionBuilder
         string method,
         JsonObject operation,
         JsonObject? components,
-        string baseUrl,
-        IHttpClientFactory httpClientFactory
+        ArchitectApiClient architectApi
     )
     {
         var properties = new JsonObject();
@@ -121,9 +119,8 @@ public static class OpenApiFunctionBuilder
             JsonSerializer.Deserialize<JsonElement>(schema.ToJsonString()),
             new HttpMethod(method.ToUpperInvariant()),
             path,
-            baseUrl,
             parameters,
-            httpClientFactory
+            architectApi
         );
     }
 

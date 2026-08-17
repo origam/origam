@@ -125,7 +125,6 @@ public class Program
         );
         app.UseSpaStaticFiles();
         app.MapControllers();
-        app.MapOrigamAiAgent();
         app.UseSpa(spa =>
         {
             spa.Options.SourcePath = spaConfig.PathToClientApplication;

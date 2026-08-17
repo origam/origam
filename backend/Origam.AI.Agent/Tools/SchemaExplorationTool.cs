@@ -1,27 +1,17 @@
 using System.ComponentModel;
 using Origam.AI.Agent.Services;
+using Origam.AI.Agent.Strategy.Architect;
+using Origam.AI.Agent.Strategy.Architect.Api;
 
 namespace Origam.AI.Agent.Tools;
 
-public class SchemaExplorationTool
+public class SchemaExplorationTool(
+    ArchitectApiClient architectApi,
+    AliasMappingService aliasMappingService,
+    YamlSchemaSerializer yamlSerializer
+)
 {
-    private readonly HttpClient _httpClient;
-    private readonly AliasMappingService _aliasMappingService;
-    private readonly YamlSchemaSerializer _yamlSerializer;
-    private readonly string _baseUrl;
-
-    public SchemaExplorationTool(
-        IHttpClientFactory httpClientFactory,
-        AliasMappingService aliasMappingService,
-        YamlSchemaSerializer yamlSerializer,
-        IConfiguration configuration
-    )
-    {
-        _httpClient = httpClientFactory.CreateClient("architect");
-        _aliasMappingService = aliasMappingService;
-        _yamlSerializer = yamlSerializer;
-        _baseUrl = configuration.GetSection("Architect")["BaseUrl"] ?? "https://localhost:7099";
-    }
+    private const int ExploreDepth = 3;
 
     [Description(
         "Gets the detailed YAML schema of a specific node/entity to explore its fields, filters, and relations. Use this before modifying an entity to understand its structure. Pass the entity's alias (e.g. e_g7f2)."
@@ -34,24 +24,24 @@ public class SchemaExplorationTool
         string uuid;
         try
         {
-            uuid = _aliasMappingService.ResolveUuid(alias);
+            uuid = aliasMappingService.ResolveUuid(alias);
         }
         catch (Exception ex)
         {
             return $"Error: {ex.Message}";
         }
 
-        var response = await _httpClient.GetAsync(
-            $"{_baseUrl}/Model/GetSchemaNodeDetails?id={uuid}&depth=3",
+        var response = await architectApi.GetSchemaNodeDetailsAsync(
+            uuid,
+            ExploreDepth,
             cancellationToken
         );
-        if (!response.IsSuccessStatusCode)
+        if (!response.IsSuccess)
         {
             return $"Error: Backend returned {response.StatusCode}";
         }
 
-        var json = await response.Content.ReadAsStringAsync(cancellationToken);
-        var yaml = _yamlSerializer.SerializeFromJson(json);
+        var yaml = yamlSerializer.SerializeFromJson(response.Body);
 
         return string.IsNullOrWhiteSpace(yaml) ? "Node has no details or is empty." : yaml;
     }
@@ -65,17 +55,13 @@ public class SchemaExplorationTool
         CancellationToken cancellationToken
     )
     {
-        var response = await _httpClient.GetAsync(
-            $"{_baseUrl}/Model/SearchSchema?query={Uri.EscapeDataString(query)}",
-            cancellationToken
-        );
-        if (!response.IsSuccessStatusCode)
+        var response = await architectApi.SearchSchemaAsync(query, cancellationToken);
+        if (!response.IsSuccess)
         {
             return $"Error: Backend returned {response.StatusCode}";
         }
 
-        var json = await response.Content.ReadAsStringAsync(cancellationToken);
-        var yaml = _yamlSerializer.SerializeFromJson(json);
+        var yaml = yamlSerializer.SerializeFromJson(response.Body);
 
         return string.IsNullOrWhiteSpace(yaml) ? "No matches found." : yaml;
     }

@@ -20,109 +20,72 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.ComponentModel;
-using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
-using System.Text.RegularExpressions;
 using Microsoft.Extensions.AI;
-using Origam.AI.Agent.Services;
+using Origam.AI.Agent.Configuration;
+using Origam.AI.Agent.Extensions;
+using Origam.AI.Agent.Invocation;
+using Origam.AI.Agent.Models.Responses;
+using Origam.AI.Agent.Services.Community;
 
 namespace Origam.AI.Agent.Tools;
 
 public class CommunityWebSearchTool
 {
     public const string SectionName = "CommunityWebSearch";
+    public const string HttpClientName = "community";
 
-    private const string DefaultBaseUrl = "https://community.origam.com";
     private const string SearchFunctionName = "SearchCommunity";
     private const string ReadTopicFunctionName = "ReadCommunityTopic";
     private const int MaxSearchResults = 8;
     private const int MaxBlurbLength = 240;
     private const int MaxTopicCharacters = 10000;
 
-    private static readonly Regex ImageTagPattern = new(
-        pattern: "<img[^>]*>",
-        options: RegexOptions.Compiled | RegexOptions.IgnoreCase
-    );
-
-    private static readonly Regex SourceAttributePattern = new(
-        pattern: "src\\s*=\\s*\"([^\"]+)\"",
-        options: RegexOptions.Compiled | RegexOptions.IgnoreCase
-    );
-
-    private static readonly Regex AltAttributePattern = new(
-        pattern: "alt\\s*=\\s*\"([^\"]*)\"",
-        options: RegexOptions.Compiled | RegexOptions.IgnoreCase
-    );
-
-    private static readonly Regex AttachmentMetaPattern = new(
-        pattern: "<div class=\"meta\">.*?</div>",
-        options: RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline
-    );
-
-    private static readonly Regex ListItemPattern = new(
-        pattern: "<li[^>]*>",
-        options: RegexOptions.Compiled | RegexOptions.IgnoreCase
-    );
-
-    private static readonly Regex BlockEndPattern = new(
-        pattern: "</(p|div|li|ul|ol|h[1-6]|blockquote|tr|pre)>|<br\\s*/?>",
-        options: RegexOptions.Compiled | RegexOptions.IgnoreCase
-    );
-
-    private static readonly Regex TagPattern = new(
-        pattern: "<[^>]+>",
-        options: RegexOptions.Compiled
-    );
-
-    private static readonly Regex RepeatedBlankLinePattern = new(
-        pattern: "\\n{3,}",
-        options: RegexOptions.Compiled
-    );
-
     private readonly HttpClient httpClient;
     private readonly string baseUrl;
+    private readonly CommunityHtmlToText htmlToText;
 
     private CommunityWebSearchTool(IHttpClientFactory httpClientFactory, string baseUrl)
     {
-        httpClient = httpClientFactory.CreateClient("community");
+        httpClient = httpClientFactory.CreateClient(HttpClientName);
         this.baseUrl = baseUrl;
+        htmlToText = new CommunityHtmlToText(baseUrl);
     }
 
     public static IReadOnlyList<AITool> CreateTools(
         IHttpClientFactory httpClientFactory,
-        IConfiguration configuration
+        CommunityOptions options
     )
     {
-        var baseUrl = ReadBaseUrl(configuration);
+        var baseUrl = options.ResolveBaseUrl();
         if (baseUrl is null)
         {
             return Array.Empty<AITool>();
         }
 
         var tool = new CommunityWebSearchTool(httpClientFactory, baseUrl);
-        return new AITool[]
-        {
+        return
+        [
             AIFunctionFactory.Create(tool.SearchCommunityAsync, CreateOptions(SearchFunctionName)),
             AIFunctionFactory.Create(
                 tool.ReadCommunityTopicAsync,
                 CreateOptions(ReadTopicFunctionName)
             ),
-        };
+        ];
     }
 
-    public static SectionInfo? GetSectionInfo(IConfiguration configuration)
+    public static SectionInfo? GetSectionInfo(CommunityOptions options, IReadOnlyList<string> tags)
     {
-        return ReadBaseUrl(configuration) is null
+        return options.ResolveBaseUrl() is null
             ? null
             : new SectionInfo(
                 SectionName,
                 Description: "Searches and reads the public ORIGAM community forum for product concepts and how-to guidance.",
-                Tags: OpenApiSectionProvider.TagsFor(SectionName),
+                Tags: tags,
                 FunctionCount: 2,
-                new[]
-                {
+                [
                     new SectionFunctionInfo(
                         SearchFunctionName,
                         Method: null,
@@ -135,7 +98,7 @@ public class CommunityWebSearchTool
                         Path: null,
                         ReadFunctionDescription(nameof(ReadCommunityTopicAsync))
                     ),
-                },
+                ],
                 EnabledByDefault: true
             );
     }
@@ -196,18 +159,6 @@ public class CommunityWebSearchTool
         }
     }
 
-    private static string? ReadBaseUrl(IConfiguration configuration)
-    {
-        var configured = configuration.GetSection("Ai").GetSection("Community")["BaseUrl"];
-        if (configured is null)
-        {
-            return DefaultBaseUrl;
-        }
-
-        var trimmed = configured.Trim().TrimEnd('/');
-        return trimmed.Length == 0 ? null : trimmed;
-    }
-
     private static AIFunctionFactoryOptions CreateOptions(string name)
     {
         return new AIFunctionFactoryOptions
@@ -243,14 +194,14 @@ public class CommunityWebSearchTool
         {
             foreach (var topic in topics.EnumerateArray())
             {
-                var topicId = ReadInt32(topic, propertyName: "id");
+                var topicId = topic.GetInt32OrNull(propertyName: "id");
                 if (topicId is null)
                 {
                     continue;
                 }
 
-                topicTitles[topicId.Value] = ReadString(topic, propertyName: "title") ?? "";
-                topicSlugs[topicId.Value] = ReadString(topic, propertyName: "slug") ?? "";
+                topicTitles[topicId.Value] = topic.GetStringOrNull(propertyName: "title") ?? "";
+                topicSlugs[topicId.Value] = topic.GetStringOrNull(propertyName: "slug") ?? "";
             }
         }
 
@@ -260,7 +211,7 @@ public class CommunityWebSearchTool
         {
             foreach (var post in posts.EnumerateArray())
             {
-                var topicId = ReadInt32(post, propertyName: "topic_id");
+                var topicId = post.GetInt32OrNull(propertyName: "topic_id");
                 if (topicId is null || !seenTopics.Add(topicId.Value))
                 {
                     continue;
@@ -271,7 +222,7 @@ public class CommunityWebSearchTool
                         separator: " | ",
                         topicId.Value.ToString(),
                         topicTitles.GetValueOrDefault(topicId.Value, defaultValue: ""),
-                        Shorten(ReadString(post, propertyName: "blurb") ?? "", MaxBlurbLength),
+                        Shorten(post.GetStringOrNull(propertyName: "blurb") ?? "", MaxBlurbLength),
                         BuildTopicUrl(
                             topicId.Value,
                             topicSlugs.GetValueOrDefault(topicId.Value, defaultValue: "")
@@ -291,8 +242,8 @@ public class CommunityWebSearchTool
 
     private string FormatTopic(JsonElement root, int topicId)
     {
-        var title = ReadString(root, propertyName: "title") ?? "";
-        var slug = ReadString(root, propertyName: "slug") ?? "";
+        var title = root.GetStringOrNull(propertyName: "title") ?? "";
+        var slug = root.GetStringOrNull(propertyName: "slug") ?? "";
 
         var builder = new StringBuilder();
         builder.AppendLine(title);
@@ -309,9 +260,9 @@ public class CommunityWebSearchTool
         var truncated = false;
         foreach (var post in posts.EnumerateArray())
         {
-            var author = ReadString(post, propertyName: "username") ?? "";
-            var postNumber = ReadInt32(post, propertyName: "post_number") ?? 0;
-            var text = HtmlToText(ReadString(post, propertyName: "cooked") ?? "");
+            var author = post.GetStringOrNull(propertyName: "username") ?? "";
+            var postNumber = post.GetInt32OrNull(propertyName: "post_number") ?? 0;
+            var text = htmlToText.Convert(post.GetStringOrNull(propertyName: "cooked") ?? "");
             if (text.Length == 0)
             {
                 continue;
@@ -351,46 +302,6 @@ public class CommunityWebSearchTool
         return builder.ToString().TrimEnd();
     }
 
-    private string HtmlToText(string html)
-    {
-        var withoutAttachmentMeta = AttachmentMetaPattern.Replace(html, string.Empty);
-        var withImageLinks = ImageTagPattern.Replace(
-            withoutAttachmentMeta,
-            match => DescribeImage(match.Value)
-        );
-        var withListMarkers = ListItemPattern.Replace(withImageLinks, replacement: "\n- ");
-        var withLineBreaks = BlockEndPattern.Replace(withListMarkers, replacement: "\n");
-        var withoutTags = TagPattern.Replace(withLineBreaks, string.Empty);
-        var decoded = WebUtility.HtmlDecode(withoutTags);
-        return RepeatedBlankLinePattern
-            .Replace(decoded.ReplaceLineEndings(replacementText: "\n"), replacement: "\n\n")
-            .Trim();
-    }
-
-    private string DescribeImage(string imageTag)
-    {
-        var source = SourceAttributePattern.Match(imageTag);
-        if (
-            !source.Success
-            || source.Groups[1].Value.Contains(value: "/images/emoji/", StringComparison.Ordinal)
-        )
-        {
-            return string.Empty;
-        }
-
-        var alt = AltAttributePattern.Match(imageTag);
-        var caption =
-            alt.Success && alt.Groups[1].Value.Trim().Length > 0
-                ? alt.Groups[1].Value.Trim()
-                : "image";
-        return $"![{caption}]({ToAbsoluteUrl(source.Groups[1].Value)})";
-    }
-
-    private string ToAbsoluteUrl(string url)
-    {
-        return url.StartsWith(value: "/", StringComparison.Ordinal) ? baseUrl + url : url;
-    }
-
     private string BuildTopicUrl(int topicId, string slug)
     {
         return slug.Length == 0 ? $"{baseUrl}/t/{topicId}" : $"{baseUrl}/t/{slug}/{topicId}";
@@ -402,24 +313,5 @@ public class CommunityWebSearchTool
         return singleLine.Length <= maxLength
             ? singleLine
             : singleLine.Substring(startIndex: 0, length: maxLength) + "...";
-    }
-
-    private static string? ReadString(JsonElement element, string propertyName)
-    {
-        return
-            element.TryGetProperty(propertyName, out var property)
-            && property.ValueKind == JsonValueKind.String
-            ? property.GetString()
-            : null;
-    }
-
-    private static int? ReadInt32(JsonElement element, string propertyName)
-    {
-        return
-            element.TryGetProperty(propertyName, out var property)
-            && property.ValueKind == JsonValueKind.Number
-            && property.TryGetInt32(out var value)
-            ? value
-            : null;
     }
 }

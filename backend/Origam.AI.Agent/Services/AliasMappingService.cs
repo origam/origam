@@ -1,22 +1,23 @@
 using System.Collections.Concurrent;
 using System.Globalization;
 using System.Text;
+using Origam.AI.Agent.Models;
 
 namespace Origam.AI.Agent.Services;
 
-public class AliasMappingService
+public class AliasMappingService(PromptPack prompts)
 {
     private const string DefaultPrefix = "n";
     private const int UuidDigitsUsed = 5;
     private const string Base36Digits = "0123456789abcdefghijklmnopqrstuvwxyz";
 
-    private readonly ConcurrentDictionary<string, string> _aliasToUuid = new(
+    private readonly ConcurrentDictionary<string, string> aliasToUuid = new(
         StringComparer.OrdinalIgnoreCase
     );
-    private readonly ConcurrentDictionary<string, string> _uuidToAlias = new(
+    private readonly ConcurrentDictionary<string, string> uuidToAlias = new(
         StringComparer.OrdinalIgnoreCase
     );
-    private readonly object _registrationLock = new();
+    private readonly object registrationLock = new();
 
     public string GetOrAddAlias(string uuid, string prefix = DefaultPrefix)
     {
@@ -31,29 +32,29 @@ public class AliasMappingService
         }
 
         var normalizedUuid = parsedGuid.ToString("D");
-        if (_uuidToAlias.TryGetValue(normalizedUuid, out var existingAlias))
+        if (uuidToAlias.TryGetValue(normalizedUuid, out var existingAlias))
         {
             return existingAlias;
         }
 
-        lock (_registrationLock)
+        lock (registrationLock)
         {
-            if (_uuidToAlias.TryGetValue(normalizedUuid, out existingAlias))
+            if (uuidToAlias.TryGetValue(normalizedUuid, out existingAlias))
             {
                 return existingAlias;
             }
 
             var alias = BuildAlias(parsedGuid, prefix);
             while (
-                _aliasToUuid.TryGetValue(alias, out var takenBy)
+                aliasToUuid.TryGetValue(alias, out var takenBy)
                 && !string.Equals(takenBy, normalizedUuid, StringComparison.OrdinalIgnoreCase)
             )
             {
                 alias += "x";
             }
 
-            _aliasToUuid[alias] = normalizedUuid;
-            _uuidToAlias[normalizedUuid] = alias;
+            aliasToUuid[alias] = normalizedUuid;
+            uuidToAlias[normalizedUuid] = alias;
             return alias;
         }
     }
@@ -70,17 +71,12 @@ public class AliasMappingService
             return parsedGuid.ToString("D");
         }
 
-        if (_aliasToUuid.TryGetValue(alias, out var uuid))
+        if (aliasToUuid.TryGetValue(alias, out var uuid))
         {
             return uuid;
         }
 
-        throw new InvalidOperationException(
-            $"There is no item with id '{alias}'. An id can only be copied from MODEL INDEX, FOCUS "
-                + "or a tool response in this conversation - it can never be guessed, reconstructed "
-                + "or built from a name. Look the item up (ExploreNodeAsync on its parent, or "
-                + "SearchSchemaAsync) and use the id that response gives you."
-        );
+        throw new InvalidOperationException(string.Format(prompts.UnknownAlias, alias));
     }
 
     public void Register(string uuid, string prefix = DefaultPrefix)

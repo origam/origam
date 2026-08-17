@@ -19,45 +19,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System.Text;
 using System.Text.Json;
 using Microsoft.Extensions.AI;
+using Origam.AI.Agent.Strategy.Architect.Api;
 
 namespace Origam.AI.Agent.Services.OpenApi;
-
-public enum OpenApiParameterLocation
-{
-    Path,
-    Query,
-    Body,
-}
-
-public record OpenApiParameter(string Name, OpenApiParameterLocation Location);
-
-public class OpenApiInvocationException : Exception
-{
-    public OpenApiInvocationException(
-        string functionName,
-        int statusCode,
-        string responseBody,
-        string requestUrl,
-        string requestPayload
-    )
-        : base($"{functionName} failed with HTTP status {statusCode}.")
-    {
-        FunctionName = functionName;
-        StatusCode = statusCode;
-        ResponseBody = responseBody;
-        RequestUrl = requestUrl;
-        RequestPayload = requestPayload;
-    }
-
-    public string FunctionName { get; }
-    public int StatusCode { get; }
-    public string ResponseBody { get; }
-    public string RequestUrl { get; }
-    public string RequestPayload { get; }
-}
 
 public class OpenApiFunction : AIFunction
 {
@@ -68,9 +34,8 @@ public class OpenApiFunction : AIFunction
     private readonly JsonElement schema;
     private readonly HttpMethod httpMethod;
     private readonly string pathTemplate;
-    private readonly string baseUrl;
     private readonly IReadOnlyList<OpenApiParameter> parameters;
-    private readonly IHttpClientFactory httpClientFactory;
+    private readonly ArchitectApiClient architectApi;
 
     public OpenApiFunction(
         string functionName,
@@ -78,9 +43,8 @@ public class OpenApiFunction : AIFunction
         JsonElement schema,
         HttpMethod httpMethod,
         string pathTemplate,
-        string baseUrl,
         IReadOnlyList<OpenApiParameter> parameters,
-        IHttpClientFactory httpClientFactory
+        ArchitectApiClient architectApi
     )
     {
         this.functionName = functionName;
@@ -88,9 +52,8 @@ public class OpenApiFunction : AIFunction
         this.schema = schema;
         this.httpMethod = httpMethod;
         this.pathTemplate = pathTemplate;
-        this.baseUrl = baseUrl;
         this.parameters = parameters;
-        this.httpClientFactory = httpClientFactory;
+        this.architectApi = architectApi;
     }
 
     public override string Name => functionName;
@@ -134,40 +97,33 @@ public class OpenApiFunction : AIFunction
             }
         }
 
-        var requestUrl = $"{baseUrl.TrimEnd('/')}/{relativePath.TrimStart('/')}";
+        var relativeUrl = relativePath;
         if (queryParts.Count > 0)
         {
-            requestUrl += "?" + string.Join(separator: "&", queryParts);
+            relativeUrl += "?" + string.Join(separator: "&", queryParts);
         }
 
         var payload = body.Count > 0 ? JsonSerializer.Serialize(body) : string.Empty;
 
-        using var request = new HttpRequestMessage(httpMethod, requestUrl);
-        if (body.Count > 0)
-        {
-            request.Content = new StringContent(
-                payload,
-                Encoding.UTF8,
-                mediaType: "application/json"
-            );
-        }
+        var response = await architectApi.SendAsync(
+            httpMethod,
+            relativeUrl,
+            payload,
+            cancellationToken
+        );
 
-        var httpClient = httpClientFactory.CreateClient("architect");
-        using var response = await httpClient.SendAsync(request, cancellationToken);
-        var content = await response.Content.ReadAsStringAsync(cancellationToken);
-
-        if (!response.IsSuccessStatusCode)
+        if (!response.IsSuccess)
         {
             throw new OpenApiInvocationException(
                 functionName,
                 (int)response.StatusCode,
-                content,
-                requestUrl,
+                response.Body,
+                response.RequestUrl,
                 payload
             );
         }
 
-        return string.IsNullOrWhiteSpace(content) ? EmptySuccessBody : content;
+        return string.IsNullOrWhiteSpace(response.Body) ? EmptySuccessBody : response.Body;
     }
 
     private static string Stringify(object value)
