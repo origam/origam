@@ -55,6 +55,8 @@ public class TreeNode
     public bool IsFileDirty { get; set; }
     public string Role { get; set; }
 
+    public bool CanDrag { get; set; }
+
     public static string ToTreeNodeId(IBrowserNode2 node)
     {
         return node == null ? null : node.NodeId + node.NodeText;
@@ -91,6 +93,7 @@ public class TreeNodeFactory(
             IsInActivePackage = IsInActivePackage(node),
             IsFileDirty = gitNodeStatusService.IsFileDirty(node as IPersistent),
             Role = (node as IAuthorizationContextContainer)?.AuthorizationContext,
+            CanDrag = node is ISchemaItem { IsPersisted: true },
         };
     }
 
