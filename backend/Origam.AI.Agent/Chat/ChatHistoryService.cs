@@ -33,8 +33,8 @@ public class ChatHistoryService
     public const string ImageTooLarge = "The attached image is larger than the 10 MB limit.";
 
     private const string ClientApplicationPathKey = "SpaConfig:PathToClientApplication";
-    private const string AiDirectoryName = "ai";
-    private const string ChatsDirectoryName = "chats";
+    private const string OrigamAiDirectoryName = "ai";
+    private const string OrigamAiChatHistoryDirectoryName = "chats";
     private const string ImagesDirectoryName = "images";
     private const string ThreadFileName = "thread.json";
     private const int MaxImageBytes = 10 * 1024 * 1024;
@@ -69,19 +69,19 @@ public class ChatHistoryService
 
     private readonly ILogger<ChatHistoryService> logger;
     private readonly object writeLock = new();
-    private readonly string storageDirectory;
+    private readonly string chatHistoryDirectory;
 
     public ChatHistoryService(ILogger<ChatHistoryService> logger, IConfiguration configuration)
     {
         this.logger = logger;
-        storageDirectory = ResolveStorageDirectory(configuration);
-        Directory.CreateDirectory(storageDirectory);
+        chatHistoryDirectory = ResolveOrigamAiChatHistoryDirectory(configuration);
+        Directory.CreateDirectory(chatHistoryDirectory);
     }
 
     public List<ChatThreadModel> LoadAll()
     {
         var threads = new List<ChatThreadModel>();
-        foreach (string directory in Directory.GetDirectories(storageDirectory))
+        foreach (string directory in Directory.GetDirectories(chatHistoryDirectory))
         {
             ChatThreadModel? thread = ReadThread(Path.Combine(directory, ThreadFileName));
             if (thread != null)
@@ -99,7 +99,7 @@ public class ChatHistoryService
         {
             string directory =
                 FindThreadDirectory(thread.Id)
-                ?? Path.Combine(storageDirectory, BuildDirectoryName(thread));
+                ?? Path.Combine(chatHistoryDirectory, BuildDirectoryName(thread));
             Directory.CreateDirectory(directory);
             WriteAllTextAtomically(Path.Combine(directory, ThreadFileName), json);
         }
@@ -224,7 +224,7 @@ public class ChatHistoryService
 
     private string? FindThreadDirectory(Guid threadId)
     {
-        return Directory.GetDirectories(storageDirectory, $"*{threadId:D}").FirstOrDefault();
+        return Directory.GetDirectories(chatHistoryDirectory, $"*{threadId:D}").FirstOrDefault();
     }
 
     private static string BuildDirectoryName(ChatThreadModel thread)
@@ -239,12 +239,14 @@ public class ChatHistoryService
         File.Move(temporaryFile, file, overwrite: true);
     }
 
-    private static string ResolveStorageDirectory(IConfiguration configuration)
+    private static string ResolveOrigamAiChatHistoryDirectory(IConfiguration configuration)
     {
         var clientApplicationPath = configuration.GetValue<string>(ClientApplicationPathKey);
         var root = string.IsNullOrWhiteSpace(clientApplicationPath)
             ? AppContext.BaseDirectory
             : clientApplicationPath;
-        return Path.GetFullPath(Path.Combine(root, AiDirectoryName, ChatsDirectoryName));
+        return Path.GetFullPath(
+            Path.Combine(root, OrigamAiDirectoryName, OrigamAiChatHistoryDirectoryName)
+        );
     }
 }

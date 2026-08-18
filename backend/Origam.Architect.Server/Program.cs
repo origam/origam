@@ -63,6 +63,7 @@ public class Program
         builder.Services.AddSingleton<SearchService>();
         builder.Services.AddSingleton<PropertyEditorService>();
         builder.Services.AddSingleton<ItemTypeCatalogService>();
+        builder.Services.AddSingleton<EntityIndexService>();
         builder.Services.AddSingleton<DesignerEditorService>();
         builder.Services.AddSingleton<DeploymentVersionCurrentService>();
         builder.Services.AddSingleton<DeploymentScriptRunnerService>();

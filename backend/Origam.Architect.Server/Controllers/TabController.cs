@@ -27,8 +27,6 @@ using Origam.Architect.Server.ReturnModels;
 using Origam.Architect.Server.Services;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
-using Origam.Schema.GuiModel;
-using Origam.Workbench.Services;
 
 namespace Origam.Architect.Server.Controllers;
 
@@ -36,12 +34,10 @@ namespace Origam.Architect.Server.Controllers;
 [Route("[controller]")]
 public class TabController(
     PropertyEditorService propertyService,
-    IPersistenceService persistenceService,
     DesignerEditorService sectionService,
     TreeNodeFactory treeNodeFactory,
     TabService tabService,
-    DocumentationHelperService documentationHelper,
-    GitNodeStatusService gitNodeStatusService
+    DocumentationHelperService documentationHelper
 ) : ControllerBase
 {
     [HttpPost("CreateNode")]
@@ -67,60 +63,55 @@ public class TabController(
     )]
     public OpenTabData CreateNode([Required] [FromBody] NewItemModel input)
     {
-        TabData tab = tabService.OpenTabWithNewItem(input.NodeId, input.NewTypeName);
+        NewItemResult result = tabService.CreateNode(input);
+        OpenTabData tabData = result.Discarded
+            ? DiscardedTabData(result.Tab)
+            : CreatedTabData(result.Tab);
 
-        try
+        if (result.CloseWhenDone)
         {
-            if (input.Changes is { Count: > 0 })
-            {
-                tabService.ChangesToTabData(
-                    new ChangesModel { SchemaItemId = tab.Item.Id, Changes = input.Changes }
-                );
-            }
-
-            if (input.Persist)
-            {
-                if (HasRuleErrors(tab.Item))
-                {
-                    return DiscardInvalidItem(tab);
-                }
-
-                if (CanPersist(tab.Item))
-                {
-                    PersistItem(tab);
-                }
-            }
-        }
-        catch
-        {
-            if (!tab.Item.IsPersisted)
-            {
-                tabService.CloseTab(tab.Id);
-            }
-
-            throw;
+            tabService.CloseTab(result.Tab.Id);
         }
 
-        TreeNode treeNode = treeNodeFactory.Create(tab.Item);
-        (string parentName, string parentOrigamId) = DescribeParent(tab.Item);
-        var openTabData = new OpenTabData(
+        return tabData;
+    }
+
+    private OpenTabData CreatedTabData(TabData tab)
+    {
+        ISchemaItem item = tab.Item;
+        TreeNode treeNode = treeNodeFactory.Create(item);
+        (string parentName, string parentOrigamId) = DescribeParent(item);
+        return new OpenTabData(
             tabId: tab.Id,
             node: treeNode,
-            data: GetData(treeNode, tab.Item),
-            isPersisted: tab.Item.IsPersisted,
+            data: GetData(treeNode, item),
+            isPersisted: item.IsPersisted,
             parentNodeId: null,
-            isDirty: !tab.Item.IsPersisted,
+            isDirty: !item.IsPersisted,
             parentName: parentName,
             parentOrigamId: parentOrigamId,
-            primaryKeyFieldId: DescribePrimaryKeyField(tab.Item)
+            primaryKeyFieldId: DescribePrimaryKeyField(item)
         );
+    }
 
-        if (input.Persist && tab.Item.IsPersisted)
+    private OpenTabData DiscardedTabData(TabData tab)
+    {
+        TreeNode treeNode = treeNodeFactory.Create(tab.Item);
+        object data = GetData(treeNode, tab.Item);
+        if (data is IEnumerable<EditorProperty> properties)
         {
-            tabService.CloseTab(tab.Id);
+            data = properties.ToList();
         }
 
-        return openTabData;
+        return new OpenTabData(
+            tabId: tab.Id,
+            node: treeNode,
+            data: data,
+            isPersisted: false,
+            parentNodeId: null,
+            isDirty: false,
+            discarded: true
+        );
     }
 
     private static string DescribePrimaryKeyField(ISchemaItem item)
@@ -149,63 +140,6 @@ public class TabController(
         return item.RootProvider == null
             ? (null, null)
             : (item.RootProvider.NodeText, item.RootProvider.GetType().FullName);
-    }
-
-    private OpenTabData DiscardInvalidItem(TabData tab)
-    {
-        TreeNode treeNode = treeNodeFactory.Create(tab.Item);
-        object data = GetData(treeNode, tab.Item);
-        if (data is IEnumerable<EditorProperty> properties)
-        {
-            data = properties.ToList();
-        }
-
-        tabService.CloseTab(tab.Id);
-
-        return new OpenTabData(
-            tabId: tab.Id,
-            node: treeNode,
-            data: data,
-            isPersisted: false,
-            parentNodeId: null,
-            isDirty: false,
-            discarded: true
-        );
-    }
-
-    private bool HasRuleErrors(ISchemaItem item)
-    {
-        return propertyService
-            .GetEditorPropertiesWithErrors(item)
-            .Any(property => property.Errors is { Count: > 0 });
-    }
-
-    private static bool CanPersist(ISchemaItem item)
-    {
-        return item is not AbstractControlSet controlSet || controlSet.DataSourceId != Guid.Empty;
-    }
-
-    private void PersistItem(TabData tabData)
-    {
-        ISchemaItem persistTarget = tabData.Item;
-        while (persistTarget.ParentItem != null && !persistTarget.ParentItem.IsPersisted)
-        {
-            persistTarget = persistTarget.ParentItem;
-        }
-
-        try
-        {
-            persistenceService.SchemaProvider.BeginTransaction();
-            persistTarget.Persist();
-            tabData.IsDirty = false;
-            tabData.IsStale = false;
-        }
-        finally
-        {
-            persistenceService.SchemaProvider.EndTransaction();
-            gitNodeStatusService.ClearCache();
-            tabService.InvalidateTabsInRoot(persistTarget.RootItem, tabData.Id);
-        }
     }
 
     [HttpGet("GetOpen")]
@@ -294,13 +228,12 @@ public class TabController(
     public IActionResult PersistChanges([FromBody] PersistModel input)
     {
         TabData tabData = tabService.OpenDefaultTab(input.SchemaItemId);
-        ISchemaItem item = tabData.Item;
-        if (item is AbstractControlSet controlSet && controlSet.DataSourceId == Guid.Empty)
+        if (!tabService.CanPersist(tabData.Item))
         {
             return BadRequest("No Datasource selected can't save");
         }
 
-        PersistItem(tabData);
+        tabService.PersistItem(tabData);
         if (Request.Headers.ContainsKey(AgentRequestHeader.Name))
         {
             tabService.CloseTab(tabData.Id);
