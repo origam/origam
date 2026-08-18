@@ -1,4 +1,4 @@
-#region license
+﻿#region license
 /*
 Copyright 2005 - 2026 Advantage Solutions, s. r. o.
 
@@ -29,7 +29,6 @@ namespace Origam.Architect.Server.Services;
 
 public class ChatHistoryService
 {
-    private const int CurrentSchemaVersion = 3;
     private const string AiDirectoryName = "ai";
     private const string ChatsDirectoryName = "chats";
     private const string ImagesDirectoryName = "images";
@@ -73,7 +72,6 @@ public class ChatHistoryService
         this.logger = logger;
         storageDirectory = ResolveStorageDirectory(configuration);
         Directory.CreateDirectory(storageDirectory);
-        MoveFlatFilesIntoThreadDirectories();
     }
 
     public List<ChatThreadModel> LoadAll()
@@ -92,8 +90,6 @@ public class ChatHistoryService
 
     public void Save(ChatThreadModel thread)
     {
-        thread.SchemaVersion = CurrentSchemaVersion;
-        thread.UpdatedAt = DateTime.UtcNow;
         string json = JsonSerializer.Serialize(thread, SerializerOptions);
         lock (writeLock)
         {
@@ -234,30 +230,6 @@ public class ChatHistoryService
         string temporaryFile = file + ".tmp";
         File.WriteAllText(temporaryFile, content);
         File.Move(temporaryFile, file, overwrite: true);
-    }
-
-    private void MoveFlatFilesIntoThreadDirectories()
-    {
-        foreach (string file in Directory.GetFiles(storageDirectory, searchPattern: "*.json"))
-        {
-            try
-            {
-                string directory = Path.Combine(
-                    storageDirectory,
-                    Path.GetFileNameWithoutExtension(file)
-                );
-                Directory.CreateDirectory(directory);
-                File.Move(file, Path.Combine(directory, ThreadFileName), overwrite: true);
-            }
-            catch (Exception exception)
-            {
-                logger.LogWarning(
-                    exception,
-                    message: "Cannot move chat history file {File} into its own directory",
-                    file
-                );
-            }
-        }
     }
 
     private static string ResolveStorageDirectory(IConfiguration configuration)

@@ -21,7 +21,6 @@ import { ApiSection } from '@/ai/AiAgentTypes';
 import { action, observable } from 'mobx';
 
 const SECTION_OVERRIDES_STORAGE_KEY = 'origam-ai-section-overrides';
-const LEGACY_ENABLED_SECTIONS_STORAGE_KEY = 'origam-ai-enabled-sections-v2';
 
 export class AiToolSectionsState {
   @observable accessor sections: ApiSection[] = [];
@@ -31,7 +30,10 @@ export class AiToolSectionsState {
 
   private pendingLoad: Promise<void> | null = null;
 
-  get enabledSections(): string[] {
+  get enabledSections(): string[] | null {
+    if (this.sections.length === 0) {
+      return null;
+    }
     return this.sections.filter(section => this.isEnabled(section)).map(section => section.name);
   }
 
@@ -53,11 +55,20 @@ export class AiToolSectionsState {
   private async fetchSections() {
     try {
       const response = await fetch('/agent/architect/sections');
+      if (!response.ok) {
+        this.markSectionsUnavailable();
+        return;
+      }
       const payload = await response.json();
       this.applySections(payload.available !== false, payload.sections, payload.baseUrl);
     } catch {
-      this.applySections(false, [], null);
+      this.markSectionsUnavailable();
     }
+  }
+
+  private markSectionsUnavailable() {
+    this.pendingLoad = null;
+    this.applySections(false, [], null);
   }
 
   @action
@@ -68,29 +79,6 @@ export class AiToolSectionsState {
       typeof baseUrl === 'string' && baseUrl.length > 0
         ? `${baseUrl.replace(/\/+$/, '')}/swagger/v1/swagger.json`
         : '';
-    this.migrateLegacySectionChoices();
-  }
-
-  private migrateLegacySectionChoices() {
-    const legacyEnabled = readLegacyEnabledSections();
-    if (!legacyEnabled || this.sections.length === 0) {
-      return;
-    }
-    const overrides = { ...this.overrides };
-    for (const section of this.sections) {
-      if (section.name in overrides) {
-        continue;
-      }
-      if (legacyEnabled.includes(section.name) && !section.enabledByDefault) {
-        overrides[section.name] = true;
-      }
-    }
-    this.setOverrides(overrides);
-    try {
-      localStorage.removeItem(LEGACY_ENABLED_SECTIONS_STORAGE_KEY);
-    } catch {
-      return;
-    }
   }
 }
 
@@ -117,18 +105,5 @@ function saveSectionOverrides(overrides: Record<string, boolean>) {
     localStorage.setItem(SECTION_OVERRIDES_STORAGE_KEY, JSON.stringify(overrides));
   } catch {
     return;
-  }
-}
-
-function readLegacyEnabledSections(): string[] | null {
-  try {
-    const raw = localStorage.getItem(LEGACY_ENABLED_SECTIONS_STORAGE_KEY);
-    if (!raw) {
-      return null;
-    }
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed.filter(item => typeof item === 'string') : null;
-  } catch {
-    return null;
   }
 }

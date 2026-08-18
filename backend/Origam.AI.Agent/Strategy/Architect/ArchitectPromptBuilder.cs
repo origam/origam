@@ -1,4 +1,4 @@
-#region license
+﻿#region license
 /*
 Copyright 2005 - 2026 Advantage Solutions, s. r. o.
 
@@ -121,22 +121,6 @@ public static class ArchitectPromptBuilder
                 builder
                     .Append(" — id: ")
                     .Append(aliasMappingService.GetOrAddAlias(focus.ActiveEditor.OrigamId));
-            }
-            builder.AppendLine();
-        }
-
-        if (focus.ActiveNode is not null)
-        {
-            builder.Append("Active tree node: ").Append(focus.ActiveNode.Label);
-            if (!string.IsNullOrWhiteSpace(focus.ActiveNode.ItemTypeName))
-            {
-                builder.Append(" (").Append(focus.ActiveNode.ItemTypeName).Append(')');
-            }
-            if (!string.IsNullOrWhiteSpace(focus.ActiveNode.OrigamId))
-            {
-                builder
-                    .Append(" — id: ")
-                    .Append(aliasMappingService.GetOrAddAlias(focus.ActiveNode.OrigamId));
             }
             builder.AppendLine();
         }

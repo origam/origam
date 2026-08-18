@@ -71,8 +71,6 @@ const STORAGE_DEFAULTS = {
   [EStorageKeys.SETTINGS]: defaultSettings,
   [EStorageKeys.DEPLOYMENT_SCRIPTS_GENERATOR_STATE]: defaultDsGeneratorState,
   [EStorageKeys.SIDEBAR_WIDTH]: SIDEBAR_DEFAULT_WIDTH,
-  [EStorageKeys.AI_PANEL_WIDTH]: AI_PANEL_DEFAULT_WIDTH,
-  [EStorageKeys.AI_PANEL_VISIBLE]: true,
   [EStorageKeys.PROPERTY_SECTION_COLLAPSED]: {} as TPropertySectionCollapsed,
 } as const;
 
@@ -178,7 +176,9 @@ export class UIState {
     return this.expandedNodes.includes(nodeId);
   }
 
-  loadStateFromLocalStorage<K extends EStorageKeys>(key: K): (typeof STORAGE_DEFAULTS)[K] {
+  loadStateFromLocalStorage<K extends keyof typeof STORAGE_DEFAULTS>(
+    key: K,
+  ): (typeof STORAGE_DEFAULTS)[K] {
     const def = STORAGE_DEFAULTS[key];
     const fallback = () => structuredClone(def) as (typeof STORAGE_DEFAULTS)[K];
     try {

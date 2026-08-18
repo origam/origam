@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { ChatFocus, ChatMessage, RunResult } from '@/ai/AiAgentTypes';
 import { HttpAgent, InputContent, Message } from '@ag-ui/client';
 
-export const ARCHITECT_AGENT_ENDPOINT = '/agent/architect';
+const ARCHITECT_AGENT_ENDPOINT = '/agent/architect';
 
 export const RUN_RESULT_EVENT_NAME = 'origam.agent.runResult';
 
@@ -39,7 +39,7 @@ export function createArchitectAgent(options: {
   });
 }
 
-export function toAguiMessages(messages: ChatMessage[]): Message[] {
+function toAguiMessages(messages: ChatMessage[]): Message[] {
   const converted: Message[] = [];
 
   for (const message of messages) {

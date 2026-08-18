@@ -1,4 +1,4 @@
-#region license
+﻿#region license
 /*
 Copyright 2005 - 2026 Advantage Solutions, s. r. o.
 
@@ -40,10 +40,8 @@ public class ToolCallTracker(int maxIterations) : IToolInvocationFilter
 
     private static readonly string[] TargetArgumentNames = ["schemaItemId", "SchemaItemId"];
 
-    private readonly List<string> invokedFunctions = new();
     private readonly List<AffectedNode> affectedNodes = new();
 
-    public IReadOnlyList<string> InvokedFunctions => invokedFunctions;
     public IReadOnlyList<AffectedNode> AffectedNodes => affectedNodes;
     public bool ModelChanged { get; private set; }
     public bool LimitReached { get; private set; }
@@ -54,8 +52,6 @@ public class ToolCallTracker(int maxIterations) : IToolInvocationFilter
         CancellationToken cancellationToken
     )
     {
-        invokedFunctions.Add(context.Function.Name);
-
         if (context.Iteration >= maxIterations - 1)
         {
             LimitReached = true;
@@ -67,10 +63,7 @@ public class ToolCallTracker(int maxIterations) : IToolInvocationFilter
         {
             Inspect(context, result);
         }
-        catch
-        {
-            // Result inspection is best-effort telemetry; never break the chat over it.
-        }
+        catch { }
 
         return result;
     }

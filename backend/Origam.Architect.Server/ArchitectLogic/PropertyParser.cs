@@ -108,14 +108,30 @@ public class PropertyParser(IPersistenceService persistenceService)
 
         if (property.PropertyType == typeof(Guid))
         {
-            return ParseGuid(value, property);
+            if (Guid.TryParse(value, out var guidValue))
+            {
+                return guidValue;
+            }
+
+            throw MakeCouldNotParseException(property);
         }
 
         if (property.PropertyType.IsAssignableTo(typeof(IPersistent)))
         {
-            Guid id = ParseReferenceId(value, property);
+            if (!Guid.TryParse(value, out var referenceId))
+            {
+                throw new Exception(
+                    string.Format(
+                        Strings.PropertyReferenceValueNotValid,
+                        value,
+                        property.Name,
+                        property.PropertyType.Name
+                    )
+                );
+            }
+
             IPersistent referenced =
-                persistenceService.SchemaProvider.RetrieveInstance<IPersistent>(id);
+                persistenceService.SchemaProvider.RetrieveInstance<IPersistent>(referenceId);
             if (referenced != null && !referenced.GetType().IsAssignableTo(property.PropertyType))
             {
                 throw new Exception(
@@ -139,33 +155,6 @@ public class PropertyParser(IPersistenceService persistenceService)
         throw new Exception(
             $"Type {property.PropertyType.Name} of property {property.Name} cannot be parsed."
         );
-    }
-
-    private static Guid ParseReferenceId(string value, PropertyInfo property)
-    {
-        if (Guid.TryParse(value, out var guidValue))
-        {
-            return guidValue;
-        }
-
-        throw new Exception(
-            string.Format(
-                Strings.PropertyReferenceValueNotValid,
-                value,
-                property.Name,
-                property.PropertyType.Name
-            )
-        );
-    }
-
-    private Guid ParseGuid(string value, PropertyInfo property)
-    {
-        if (Guid.TryParse(value, out var guidValue))
-        {
-            return guidValue;
-        }
-
-        throw MakeCouldNotParseException(property);
     }
 
     private Exception MakeCouldNotParseException(PropertyInfo property)

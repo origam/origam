@@ -1,4 +1,4 @@
-#region license
+﻿#region license
 /*
 Copyright 2005 - 2026 Advantage Solutions, s. r. o.
 
@@ -23,7 +23,6 @@ namespace Origam.AI.Agent.Models.Requests;
 
 public record ChatFocus(
     FocusItem? ActiveEditor = null,
-    FocusItem? ActiveNode = null,
     IReadOnlyList<FocusItem>? OpenTabs = null,
     IReadOnlyList<FocusNode>? VisibleNodes = null
 );

@@ -19,19 +19,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { expect, type APIRequestContext } from '@playwright/test';
 
-// Drives the scripted language model in Origam.AI.Agent. Any Architect Server
-// running in Development exposes /agent/test/script, and the agent answers from
-// the queued script instead of calling the real model for as long as one is
-// queued - so this works whether Playwright started the server or it was already
-// running from Visual Studio.
-//
-// One script covers one turn. The agent asks the model again after every round
-// of tool calls, so a turn that uses tools needs one step per round and a final
-// step that only produces text - that last step is what ends the turn.
-//
-// Always clear the script when the test is done: a script left queued would make
-// the developer's own chat answer from it instead of from the model.
-
 export interface AiScriptToolCall {
   name: string;
   arguments?: Record<string, unknown>;
@@ -40,10 +27,7 @@ export interface AiScriptToolCall {
 export interface AiScriptStep {
   text?: string;
   toolCalls?: AiScriptToolCall[];
-  // Held before the step produces anything, so a test can observe the pending
-  // state (the "Thinking…" bubble, the Stop button) before the answer arrives.
   delayMs?: number;
-  // Makes the model throw instead of answering, which surfaces as a failed run.
   error?: string;
 }
 
@@ -74,8 +58,6 @@ export async function deleteChatThreads(request: APIRequestContext): Promise<voi
   }
 }
 
-// The panel saves and deletes threads without awaiting the call, so a reload can
-// otherwise outrun the write it is supposed to read back.
 export async function waitForStoredMessages(
   request: APIRequestContext,
   expectedCount: number,

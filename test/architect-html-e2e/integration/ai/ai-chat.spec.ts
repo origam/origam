@@ -25,15 +25,6 @@ import {
   waitForStoredMessages,
 } from '@support/aiScript';
 
-// Chat history in the AI panel as it is really used - docked inside the full
-// Architect UI at "/", next to the model tree and the editors, not the bare
-// "/ai" page. The language model never runs: beforeEach queues a scripted
-// answer, and while a script is queued the agent answers from it and never
-// reaches the live client, so no request leaves the machine for the whole test.
-// Everything else is production code: the AG-UI stream, the assembled prompt
-// and the /ChatHistory endpoints behind the panel.
-//
-// The server keeps one queued script at a time, so tests here must not overlap.
 test.describe.configure({ mode: 'serial' });
 
 const SCRIPTED_ANSWER = 'The scripted model answered.';
@@ -57,8 +48,6 @@ async function openThread(page: Page, title: string) {
   await page.getByTestId('ai-thread-select').selectOption({ label: title });
 }
 
-// The panel is docked in the Architect layout and UiState.aiPanelVisible starts
-// out true, so a fresh browser context opens with it already showing.
 async function openArchitectWithAiPanel(page: Page) {
   await page.goto('/');
   await expect(page.getByTestId('topbar-toggle-ai')).toBeVisible();
@@ -72,9 +61,6 @@ async function reloadArchitect(page: Page) {
 
 test.describe('AI chat history', () => {
   test.beforeEach(async ({ request }) => {
-    // Stored threads are merged into the panel on load and the first of them
-    // becomes the active one, so chats left by an earlier run would show up as
-    // the conversation under test.
     await deleteChatThreads(request);
     await setAiScript(request, {
       steps: [{ text: SCRIPTED_ANSWER }],
@@ -84,7 +70,6 @@ test.describe('AI chat history', () => {
   });
 
   test.afterEach(async ({ request }) => {
-    // A script left queued would keep answering in the developer's own chat.
     await clearAiScript(request);
   });
 
@@ -108,7 +93,6 @@ test.describe('AI chat history', () => {
     await reloadArchitect(page);
     await expect(threadOptions(page)).toHaveCount(2);
 
-    // Both chats have to come back with their own messages, not merged into one.
     await openThread(page, 'First chat question');
     await expect(messagesWithText(page, 'First chat question')).toHaveCount(1);
     await expect(messagesWithText(page, 'Second chat question')).toHaveCount(0);

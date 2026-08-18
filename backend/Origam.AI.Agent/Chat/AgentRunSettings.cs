@@ -45,9 +45,7 @@ public record AgentRunSettings(
         var forwardedProperties = Deserialize<ForwardedProperties>(input.ForwardedProperties);
         var state = Deserialize<AgentState>(input.State);
 
-        var enabledSections = forwardedProperties?.EnabledSections is { Count: > 0 } sections
-            ? sections
-            : defaultSections;
+        var enabledSections = forwardedProperties?.EnabledSections ?? defaultSections;
 
         return new AgentRunSettings(enabledSections, forwardedProperties?.Summary, state?.Focus);
     }

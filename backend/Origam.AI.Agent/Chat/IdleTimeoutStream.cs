@@ -102,10 +102,7 @@ public sealed class IdleTimeoutStream(TimeSpan idleTimeout, string stalledMessag
         {
             await moveNext.ConfigureAwait(false);
         }
-        catch (Exception)
-        {
-            // ignored
-        }
+        catch (Exception) { }
 
         return true;
     }

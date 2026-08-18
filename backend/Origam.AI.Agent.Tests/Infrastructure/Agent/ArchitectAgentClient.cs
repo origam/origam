@@ -86,7 +86,7 @@ public sealed class ArchitectAgentClient : IDisposable
 
     public async Task<AgentRunTrace> RunAsync(
         string prompt,
-        IReadOnlyList<string> enabledSections,
+        IReadOnlyList<string>? enabledSections,
         CancellationToken cancellationToken,
         object? focus = null,
         AgentConversation? conversation = null
@@ -212,7 +212,7 @@ public sealed class ArchitectAgentClient : IDisposable
 
     private static HttpRequestMessage BuildRequest(
         string prompt,
-        IReadOnlyList<string> enabledSections,
+        IReadOnlyList<string>? enabledSections,
         object? focus,
         AgentConversation? conversation
     )

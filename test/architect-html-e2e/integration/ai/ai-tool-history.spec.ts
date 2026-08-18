@@ -25,16 +25,6 @@ import {
   waitForStoredMessages,
 } from '@support/aiScript';
 
-// A tool call the agent made in an earlier turn has to travel back to the model
-// with the next question, or the agent starts every turn blind and calls the
-// same read-only endpoints again to recover ids it already had.
-//
-// The language model never runs here: a queued script answers instead, so no
-// request leaves the machine. Everything else is production code - the AG-UI
-// stream that reports the call and its result, the panel that stores them and
-// the /ChatHistory endpoints that persist them.
-//
-// The server keeps one queued script at a time, so tests here must not overlap.
 test.describe.configure({ mode: 'serial' });
 
 const TOOL_NAME = 'GetCurrentTime';
@@ -76,7 +66,6 @@ test.describe('AI tool call history', () => {
   });
 
   test.afterEach(async ({ request }) => {
-    // A script left queued would keep answering in the developer's own chat.
     await clearAiScript(request);
   });
 

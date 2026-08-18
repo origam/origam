@@ -50,7 +50,6 @@ import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { RootStore } from '@stores/RootStore';
 import { action, observable, toJS } from 'mobx';
 
-const THREADS_STORAGE_KEY = 'origam-ai-threads';
 const MAX_VISIBLE_NODES = 40;
 const HISTORY_RETRY_DELAYS = [1000, 2000, 4000, 8000];
 const MAX_IMAGE_BYTES = 10 * 1024 * 1024;
@@ -98,8 +97,7 @@ export class AiAgentState {
   async loadHistory() {
     for (let attempt = 0; ; attempt++) {
       try {
-        const storedThreads = await migrateLegacyThreads(await getChatThreads());
-        this.applyLoadedThreads(storedThreads);
+        this.applyLoadedThreads(await getChatThreads());
         return;
       } catch {
         if (attempt >= HISTORY_RETRY_DELAYS.length) {
@@ -241,7 +239,7 @@ export class AiAgentState {
       await agent.runAgent(
         {
           forwardedProps: {
-            enabledSections: [...this.rootStore.aiToolSectionsState.enabledSections],
+            enabledSections: this.rootStore.aiToolSectionsState.enabledSections,
             summary: thread.summary,
           },
         },
@@ -579,48 +577,6 @@ function withoutImageData(thread: ChatThread): ChatThread {
       images: message.images?.map(image => ({ id: image.id, mimeType: image.mimeType })),
     })),
   };
-}
-
-async function migrateLegacyThreads(storedThreads: ChatThread[]): Promise<ChatThread[]> {
-  const legacyThreads = readLegacyThreads();
-  if (legacyThreads.length === 0) {
-    return storedThreads;
-  }
-  if (storedThreads.length === 0) {
-    for (const thread of legacyThreads) {
-      await saveChatThread(thread);
-    }
-    localStorage.removeItem(THREADS_STORAGE_KEY);
-    return legacyThreads;
-  }
-  localStorage.removeItem(THREADS_STORAGE_KEY);
-  return storedThreads;
-}
-
-function readLegacyThreads(): ChatThread[] {
-  try {
-    const raw = localStorage.getItem(THREADS_STORAGE_KEY);
-    if (!raw) {
-      return [];
-    }
-    const parsed = JSON.parse(raw);
-    if (!Array.isArray(parsed)) {
-      return [];
-    }
-    return parsed.map(thread => ({
-      ...thread,
-      id: thread.id ?? crypto.randomUUID(),
-      tokensUsed: thread.tokensUsed ?? 0,
-      createdAt: new Date(thread.createdAt ?? Date.now()).toISOString(),
-      messages: (thread.messages ?? []).map((message: ChatMessage) => ({
-        ...message,
-        id: message.id ?? crypto.randomUUID(),
-        images: undefined,
-      })),
-    }));
-  } catch {
-    return [];
-  }
 }
 
 function tabIdToFocusItem(rootStore: RootStore, tabId: string, label: string): FocusItem {

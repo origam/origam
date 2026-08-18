@@ -1,4 +1,4 @@
-#region license
+﻿#region license
 /*
 Copyright 2005 - 2026 Advantage Solutions, s. r. o.
 
@@ -25,16 +25,12 @@ namespace Origam.Architect.Server.Models;
 
 public class ChatThreadModel
 {
-    public int SchemaVersion { get; set; }
-
     [RequiredNonDefault]
     public Guid Id { get; set; }
 
     public string Title { get; set; }
 
     public DateTime CreatedAt { get; set; }
-
-    public DateTime UpdatedAt { get; set; }
 
     public int TokensUsed { get; set; }
 

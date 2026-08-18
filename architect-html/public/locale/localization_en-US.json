@@ -272,8 +272,6 @@
   "filter_label_like_param": "Filter (Like) with parameter",
   "filter_label_list_param": "Filter (List) with parameter",
   "filter_label_between_param": "Filter (Between) with parameters",
-  "ai_chat_title": "Origam AI · Function Calling",
-  "ai_chat_subtitle": "Ask something — the assistant calls a tool when it needs one.",
   "ai_chat_empty": "No messages yet. Try: \"What time is it?\"",
   "ai_chat_placeholder": "Message…  (Enter to send, Shift+Enter for newline)",
   "ai_chat_send": "Send",

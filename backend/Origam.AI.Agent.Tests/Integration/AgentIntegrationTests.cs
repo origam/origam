@@ -38,7 +38,7 @@ public sealed class AgentIntegrationTests
 {
     private const string ArchitectUrlVariable = "ORIGAM_ARCHITECT_URL";
     private const string MutatingCategory = "AiMutating";
-    private static readonly string[] DefaultSections = [];
+    private static readonly string[]? DefaultSections = null;
     private static readonly string[] ExpandedTreePath = ["Data", "Entities", "Dimensions"];
 
     private readonly List<string> createdEntityNames = [];
@@ -579,7 +579,7 @@ public sealed class AgentIntegrationTests
 
     private async Task<AgentRunTrace> RunBenchmarkAsync(
         string prompt,
-        IReadOnlyList<string> enabledSections,
+        IReadOnlyList<string>? enabledSections,
         AgentConversation? conversation = null
     )
     {

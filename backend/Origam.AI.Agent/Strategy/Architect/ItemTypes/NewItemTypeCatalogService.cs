@@ -1,4 +1,4 @@
-#region license
+﻿#region license
 /*
 Copyright 2005 - 2026 Advantage Solutions, s. r. o.
 
@@ -254,11 +254,7 @@ public class NewItemTypeCatalogService
             return [];
         }
 
-        var captions = new List<string?>
-        {
-            focus.ActiveNode?.ItemTypeName,
-            focus.ActiveEditor?.ItemTypeName,
-        };
+        var captions = new List<string?> { focus.ActiveEditor?.ItemTypeName };
         if (focus.OpenTabs is not null)
         {
             captions.AddRange(focus.OpenTabs.Select(tab => tab.ItemTypeName));

@@ -1,4 +1,4 @@
-#region license
+﻿#region license
 /*
 Copyright 2005 - 2026 Advantage Solutions, s. r. o.
 
@@ -35,10 +35,6 @@ public class YamlSchemaSerializer
         this.aliasMappingService = aliasMappingService;
     }
 
-    /// <summary>
-    /// Converts a JSON string representing a TreeNode (or list of TreeNodes) into compact YAML,
-    /// substituting OrigamId UUIDs with short aliases.
-    /// </summary>
     public string SerializeFromJson(string json)
     {
         if (string.IsNullOrWhiteSpace(json))
@@ -55,7 +51,7 @@ public class YamlSchemaSerializer
         }
         catch
         {
-            return json; // Fallback
+            return json;
         }
     }
 
@@ -106,7 +102,6 @@ public class YamlSchemaSerializer
             sb.Append(indentStr).Append("Id: ").AppendLine(alias);
         }
 
-        // Recursively serialize children if present
         var hasChildren =
             obj.TryGetProperty(propertyName: "children", out var childrenProp)
             || obj.TryGetProperty(propertyName: "Children", out childrenProp);

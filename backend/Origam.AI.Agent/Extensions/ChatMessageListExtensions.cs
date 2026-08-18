@@ -1,4 +1,4 @@
-#region license
+﻿#region license
 /*
 Copyright 2005 - 2026 Advantage Solutions, s. r. o.
 
@@ -33,10 +33,5 @@ public static class ChatMessageListExtensions
     public static void AddUserMessage(this List<ChatMessage> messages, string content)
     {
         messages.Add(new ChatMessage(ChatRole.User, content));
-    }
-
-    public static void AddAssistantMessage(this List<ChatMessage> messages, string content)
-    {
-        messages.Add(new ChatMessage(ChatRole.Assistant, content));
     }
 }

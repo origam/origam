@@ -1,4 +1,4 @@
-#region license
+﻿#region license
 /*
 Copyright 2005 - 2026 Advantage Solutions, s. r. o.
 
@@ -98,11 +98,6 @@ public class AliasMappingService(PromptPack prompts)
         }
 
         throw new InvalidOperationException(string.Format(prompts.UnknownAlias, alias));
-    }
-
-    public void Register(string uuid, string prefix = DefaultPrefix)
-    {
-        GetOrAddAlias(uuid, prefix);
     }
 
     private static string BuildAlias(Guid uuid, string prefix)
