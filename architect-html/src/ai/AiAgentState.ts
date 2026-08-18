@@ -45,6 +45,7 @@ import {
 import { T } from '@/main';
 import { AgentSubscriber, HttpAgent } from '@ag-ui/client';
 import { HttpError } from '@api/httpClient';
+import { ITabState } from '@components/editorTabView/ITabState';
 import { TreeNode } from '@components/modelTree/TreeNode';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { RootStore } from '@stores/RootStore';
@@ -55,8 +56,6 @@ const HISTORY_RETRY_DELAYS = [1000, 2000, 4000, 8000];
 const MAX_IMAGE_BYTES = 10 * 1024 * 1024;
 const MAX_TOOL_RESULT_CHARS = 8000;
 const SUPPORTED_IMAGE_MIME_TYPES = ['image/png', 'image/jpeg', 'image/gif', 'image/webp'];
-const GUID_PATTERN =
-  /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
 
 export class AiAgentState {
   @observable accessor threads: ChatThread[] = [];
@@ -579,14 +578,14 @@ function withoutImageData(thread: ChatThread): ChatThread {
   };
 }
 
-function tabIdToFocusItem(rootStore: RootStore, tabId: string, label: string): FocusItem {
-  if (!GUID_PATTERN.test(tabId)) {
-    return { label };
+function tabStateToFocusItem(rootStore: RootStore, state: ITabState): FocusItem {
+  if (!state.origamId) {
+    return { label: state.label };
   }
-  const node = rootStore.modelTreeState.findNodeById(tabId);
+  const node = rootStore.modelTreeState.findNodeById(state.origamId);
   return {
-    label,
-    origamId: tabId,
+    label: state.label,
+    origamId: state.origamId,
     itemTypeName: node?.itemTypeName ?? node?.nodeLevelType,
   };
 }
@@ -596,7 +595,7 @@ function buildChatFocus(rootStore: RootStore): ChatFocus {
 
   const activeState = rootStore.editorTabViewState.activeEditorState;
   if (activeState) {
-    focus.activeEditor = tabIdToFocusItem(rootStore, activeState.tabId, activeState.label);
+    focus.activeEditor = tabStateToFocusItem(rootStore, activeState);
   }
 
   const openTabs: FocusItem[] = [];
@@ -608,7 +607,7 @@ function buildChatFocus(rootStore: RootStore): ChatFocus {
     if (activeState && state.tabId === activeState.tabId) {
       continue;
     }
-    openTabs.push(tabIdToFocusItem(rootStore, state.tabId, state.label));
+    openTabs.push(tabStateToFocusItem(rootStore, state));
   }
   if (openTabs.length > 0) {
     focus.openTabs = openTabs;
