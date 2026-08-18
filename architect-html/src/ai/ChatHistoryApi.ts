@@ -24,15 +24,15 @@ import { HttpClient } from '@api/httpClient';
 const httpClient = new HttpClient(simpleErrorHandler);
 
 export async function getChatThreads(): Promise<ChatThread[]> {
-  return (await httpClient.get<ChatThread[]>('/ChatHistory/GetAll')).data;
+  return (await httpClient.get<ChatThread[]>('/agent/history')).data;
 }
 
 export async function saveChatThread(thread: ChatThread): Promise<void> {
-  await httpClient.post('/ChatHistory/Save', thread);
+  await httpClient.post('/agent/history/save', thread);
 }
 
 export async function deleteChatThread(threadId: string): Promise<void> {
-  await httpClient.post('/ChatHistory/Delete', { id: threadId });
+  await httpClient.post('/agent/history/delete', { id: threadId });
 }
 
 export async function saveChatImage(
@@ -41,7 +41,7 @@ export async function saveChatImage(
   mimeType: string,
   dataUrl: string,
 ): Promise<void> {
-  await httpClient.post('/ChatHistory/SaveImage', {
+  await httpClient.post('/agent/history/image', {
     threadId,
     imageId,
     mimeType,
@@ -50,7 +50,7 @@ export async function saveChatImage(
 }
 
 export function chatImageUrl(threadId: string, imageId: string): string {
-  return `/ChatHistory/Image?threadId=${encodeURIComponent(threadId)}&imageId=${encodeURIComponent(imageId)}`;
+  return `/agent/history/image?threadId=${encodeURIComponent(threadId)}&imageId=${encodeURIComponent(imageId)}`;
 }
 
 export async function fetchChatImageAsDataUrl(threadId: string, imageId: string): Promise<string> {

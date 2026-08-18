@@ -25,7 +25,6 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Origam.AI.Agent.Strategy.Architect;
 using Origam.AI.Agent.Strategy.Architect.Api;
 using Origam.AI.Agent.Tests.Infrastructure.Hosting;
 using Origam.Architect.Server;
@@ -37,10 +36,7 @@ public sealed class ArchitectApplicationFactory : WebApplicationFactory<Program>
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.UseEnvironment(Environments.Development);
-        builder.UseSetting(
-            ArchitectOptions.SectionName + ":BaseUrl",
-            AgentTestHost.ArchitectBaseUrl
-        );
+        builder.UseSetting(WebHostDefaults.ServerUrlsKey, AgentTestHost.ArchitectBaseUrl);
         builder.ConfigureTestServices(services =>
             services
                 .AddHttpClient(ArchitectApiClient.HttpClientName)

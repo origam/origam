@@ -19,26 +19,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.AI.Agent.Configuration;
+namespace Origam.AI.Agent.Models;
 
-public sealed class AiOptions
-{
-    public const string SectionName = "Ai";
-
-    public string Endpoint { get; set; } = "";
-
-    public string Model { get; set; } = "";
-
-    public string ApiKey { get; set; } = "";
-
-    public CommunityOptions Community { get; set; } = new();
-
-    public bool HasApiKey => !string.IsNullOrWhiteSpace(ApiKey);
-
-    public bool HasEndpoint => EndpointUri is not null;
-
-    public string Router => EndpointUri?.Host ?? Endpoint;
-
-    private Uri? EndpointUri =>
-        Uri.TryCreate(Endpoint, UriKind.Absolute, out var endpointUri) ? endpointUri : null;
-}
+public record ChatImageRequest(Guid ThreadId, Guid ImageId, string? MimeType, string? Data);

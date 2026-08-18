@@ -19,11 +19,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.AI.Agent.Strategy.Architect;
+namespace Origam.Architect.Server.ReturnModels;
 
-public sealed class ArchitectOptions
-{
-    public const string SectionName = "Architect";
-
-    public string BaseUrl { get; set; } = "";
-}
+public record RelatedItem(string Id, string Name);

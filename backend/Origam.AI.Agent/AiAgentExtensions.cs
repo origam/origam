@@ -37,7 +37,6 @@ public static class AiAgentExtensions
     public static IServiceCollection AddOrigamAiAgent(this IServiceCollection services)
     {
         services.AddOptions<AiOptions>().BindConfiguration(AiOptions.SectionName);
-        services.AddOptions<ArchitectOptions>().BindConfiguration(ArchitectOptions.SectionName);
 
         AddHttpClients(services);
 
@@ -45,7 +44,9 @@ public static class AiAgentExtensions
         services.AddSingleton<CustomInstructionsFile>();
         services.AddSingleton<AiScriptStore>();
         services.AddSingleton<SessionSummarizerService>();
+        services.AddSingleton<ChatHistoryService>();
 
+        services.AddSingleton<ArchitectBaseUrlProvider>();
         services.AddSingleton<IAgentTargetStrategy>(ArchitectTargetStrategy.Create);
 
         services.AddControllers().AddApplicationPart(typeof(AiAgentExtensions).Assembly);

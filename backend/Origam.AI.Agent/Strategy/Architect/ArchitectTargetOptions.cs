@@ -25,7 +25,7 @@ namespace Origam.AI.Agent.Strategy.Architect;
 
 public static class ArchitectTargetOptions
 {
-    public static TargetOptions Create(string baseUrl)
+    public static TargetOptions Create(Func<string> baseUrl)
     {
         return new TargetOptions
         {
@@ -51,7 +51,6 @@ public static class ArchitectTargetOptions
             },
             SectionsNeverExposedAsTools = new HashSet<string>(StringComparer.Ordinal)
             {
-                "ChatHistory",
                 OpenApiSectionProvider.AgentApiSectionName,
                 "Test",
             },

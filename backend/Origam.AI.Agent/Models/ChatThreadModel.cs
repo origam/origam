@@ -19,26 +19,19 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.AI.Agent.Configuration;
+namespace Origam.AI.Agent.Models;
 
-public sealed class AiOptions
+public class ChatThreadModel
 {
-    public const string SectionName = "Ai";
+    public Guid Id { get; set; }
 
-    public string Endpoint { get; set; } = "";
+    public string? Title { get; set; }
 
-    public string Model { get; set; } = "";
+    public DateTime CreatedAt { get; set; }
 
-    public string ApiKey { get; set; } = "";
+    public int TokensUsed { get; set; }
 
-    public CommunityOptions Community { get; set; } = new();
+    public string? Summary { get; set; }
 
-    public bool HasApiKey => !string.IsNullOrWhiteSpace(ApiKey);
-
-    public bool HasEndpoint => EndpointUri is not null;
-
-    public string Router => EndpointUri?.Host ?? Endpoint;
-
-    private Uri? EndpointUri =>
-        Uri.TryCreate(Endpoint, UriKind.Absolute, out var endpointUri) ? endpointUri : null;
+    public List<ChatMessageModel> Messages { get; set; } = new();
 }

@@ -25,7 +25,7 @@ public sealed class TargetOptions
 {
     public required string Name { get; init; }
 
-    public required string BaseUrl { get; init; }
+    public required Func<string> BaseUrl { get; init; }
 
     public IReadOnlyList<string> DefaultSections { get; init; } = [];
 

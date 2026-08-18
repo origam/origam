@@ -19,23 +19,24 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Microsoft.Extensions.Options;
-
 namespace Origam.AI.Agent.Configuration;
 
 public sealed class CustomInstructionsFile
 {
     private const string FileName = "Custom.md";
-    private const string DefaultDirectoryName = "Prompts";
+    private const string ClientApplicationPathKey = "SpaConfig:PathToClientApplication";
+    private const string AiDirectoryName = "ai";
+    private const string PromptsDirectoryName = "prompts";
 
     private readonly string directory;
 
-    public CustomInstructionsFile(IOptions<AiOptions> options)
+    public CustomInstructionsFile(IConfiguration configuration)
     {
-        var configuredPath = options.Value.PromptsPath;
-        directory = string.IsNullOrWhiteSpace(configuredPath)
-            ? Path.Combine(AppContext.BaseDirectory, DefaultDirectoryName)
-            : configuredPath;
+        var clientApplicationPath = configuration.GetValue<string>(ClientApplicationPathKey);
+        var root = string.IsNullOrWhiteSpace(clientApplicationPath)
+            ? AppContext.BaseDirectory
+            : clientApplicationPath;
+        directory = Path.GetFullPath(Path.Combine(root, AiDirectoryName, PromptsDirectoryName));
     }
 
     public string Read()

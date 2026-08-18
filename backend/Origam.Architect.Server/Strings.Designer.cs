@@ -68,42 +68,6 @@ namespace Origam.Architect.Server {
                 return ResourceManager.GetString("CategoryDocumentation", resourceCulture);
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Chat history cannot be stored because neither ChatHistory:Path nor SpaConfig:PathToClientApplication is configured..
-        /// </summary>
-        internal static string ChatHistoryLocationUnknown {
-            get {
-                return ResourceManager.GetString("ChatHistoryLocationUnknown", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to The attached image could not be read..
-        /// </summary>
-        internal static string ChatImageInvalid {
-            get {
-                return ResourceManager.GetString("ChatImageInvalid", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to The attached image is larger than the 10 MB limit..
-        /// </summary>
-        internal static string ChatImageTooLarge {
-            get {
-                return ResourceManager.GetString("ChatImageTooLarge", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Only PNG, JPEG, GIF and WebP images can be attached..
-        /// </summary>
-        internal static string ChatImageTypeNotSupported {
-            get {
-                return ResourceManager.GetString("ChatImageTypeNotSupported", resourceCulture);
-            }
-        }
 
         /// <summary>
         ///   Looks up a localized string similar to Unsupported deployment activity type.

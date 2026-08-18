@@ -54,7 +54,7 @@ export async function clearAiScript(request: APIRequestContext): Promise<void> {
 export async function deleteChatThreads(request: APIRequestContext): Promise<void> {
   const threads = await readChatThreads(request);
   for (const thread of threads) {
-    await request.post('/ChatHistory/Delete', { data: { id: thread.id } });
+    await request.post('/agent/history/delete', { data: { id: thread.id } });
   }
 }
 
@@ -73,9 +73,9 @@ export async function waitForStoredMessages(
 async function readChatThreads(
   request: APIRequestContext,
 ): Promise<{ id: string; messages: unknown[] }[]> {
-  const response = await request.get('/ChatHistory/GetAll');
+  const response = await request.get('/agent/history');
   if (!response.ok()) {
-    throw new Error(`GET /ChatHistory/GetAll failed: ${response.status()}`);
+    throw new Error(`GET /agent/history failed: ${response.status()}`);
   }
   return await response.json();
 }

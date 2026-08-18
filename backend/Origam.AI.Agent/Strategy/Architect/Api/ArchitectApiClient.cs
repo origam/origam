@@ -23,13 +23,16 @@ using System.Text;
 
 namespace Origam.AI.Agent.Strategy.Architect.Api;
 
-public sealed class ArchitectApiClient(IHttpClientFactory httpClientFactory, string baseUrl)
+public sealed class ArchitectApiClient(
+    IHttpClientFactory httpClientFactory,
+    ArchitectBaseUrlProvider baseUrlProvider
+)
 {
     public const string HttpClientName = "architect";
 
     private const string JsonMediaType = "application/json";
 
-    public string BaseUrl { get; } = baseUrl.TrimEnd('/');
+    public string BaseUrl => baseUrlProvider.BaseUrl;
 
     public Task<ArchitectResponse> GetSchemaNodeDetailsAsync(
         string nodeId,

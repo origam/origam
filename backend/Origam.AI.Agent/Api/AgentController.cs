@@ -93,7 +93,7 @@ public sealed class AgentController(
 
         return new AgentSections(
             available,
-            openApiProvider?.BaseUrl ?? strategy.Options.BaseUrl,
+            openApiProvider?.BaseUrl ?? strategy.Options.BaseUrl(),
             available ? null : openApiProvider?.LastError ?? UnreachableError,
             strategy.Options.DefaultSections,
             sectionLists

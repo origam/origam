@@ -39,7 +39,7 @@ interface StoredToolCall {
 }
 
 async function readStoredToolCalls(request: APIRequestContext): Promise<StoredToolCall[]> {
-  const response = await request.get('/ChatHistory/GetAll');
+  const response = await request.get('/agent/history');
   expect(response.ok()).toBe(true);
   const threads: { messages: { toolCalls?: StoredToolCall[] }[] }[] = await response.json();
   return threads.flatMap(thread => thread.messages.flatMap(message => message.toolCalls ?? []));

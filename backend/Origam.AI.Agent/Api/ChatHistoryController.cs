@@ -21,46 +21,57 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
-using Origam.Architect.Server.Models;
-using Origam.Architect.Server.Services;
+using Origam.AI.Agent.Chat;
+using Origam.AI.Agent.Models;
+using Origam.AI.Agent.Services.OpenApi;
 
-namespace Origam.Architect.Server.Controllers;
+namespace Origam.AI.Agent.Api;
 
 [ApiController]
-[Route("[controller]")]
-public class ChatHistoryController(ChatHistoryService chatHistoryService) : ControllerBase
+[Route("agent/history")]
+[Tags(OpenApiSectionProvider.AgentApiSectionName)]
+public sealed class ChatHistoryController(ChatHistoryService chatHistoryService) : ControllerBase
 {
-    [HttpGet("GetAll")]
+    [HttpGet]
     public List<ChatThreadModel> GetAll()
     {
         return chatHistoryService.LoadAll();
     }
 
-    [HttpPost("Save")]
+    [HttpPost("save")]
     public IActionResult Save([Required] [FromBody] ChatThreadModel thread)
     {
+        if (thread.Id == Guid.Empty)
+        {
+            return BadRequest();
+        }
         chatHistoryService.Save(thread);
         return Ok();
     }
 
-    [HttpPost("Delete")]
+    [HttpPost("delete")]
     public IActionResult Delete([Required] [FromBody] ChatThreadIdentifier thread)
     {
         return chatHistoryService.Delete(thread.Id) ? Ok() : NotFound();
     }
 
-    [HttpPost("SaveImage")]
+    [HttpPost("image")]
     public IActionResult SaveImage([Required] [FromBody] ChatImageRequest image)
     {
-        return chatHistoryService.SaveImage(image) ? Ok() : NotFound();
+        try
+        {
+            return chatHistoryService.SaveImage(image) ? Ok() : NotFound();
+        }
+        catch (ArgumentException exception)
+        {
+            return BadRequest(exception.Message);
+        }
     }
 
-    [HttpGet("Image")]
+    [HttpGet("image")]
     public IActionResult Image(Guid threadId, Guid imageId)
     {
-        ChatImageContent image = chatHistoryService.ReadImage(threadId, imageId);
+        ChatImageContent? image = chatHistoryService.ReadImage(threadId, imageId);
         return image == null ? NotFound() : File(image.Content, image.MimeType);
     }
 }
-
-public record ChatThreadIdentifier(Guid Id);

@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 /*
 Copyright 2005 - 2026 Advantage Solutions, s. r. o.
 
@@ -21,14 +21,18 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Origam.Architect.Server.Configuration;
-using Origam.Architect.Server.Models;
-using Origam.Extensions;
+using Origam.AI.Agent.Models;
 
-namespace Origam.Architect.Server.Services;
+namespace Origam.AI.Agent.Chat;
 
 public class ChatHistoryService
 {
+    public const string ImageTypeNotSupported =
+        "Only PNG, JPEG, GIF and WebP images can be attached.";
+    public const string ImageInvalid = "The attached image could not be read.";
+    public const string ImageTooLarge = "The attached image is larger than the 10 MB limit.";
+
+    private const string ClientApplicationPathKey = "SpaConfig:PathToClientApplication";
     private const string AiDirectoryName = "ai";
     private const string ChatsDirectoryName = "chats";
     private const string ImagesDirectoryName = "images";
@@ -79,7 +83,7 @@ public class ChatHistoryService
         var threads = new List<ChatThreadModel>();
         foreach (string directory in Directory.GetDirectories(storageDirectory))
         {
-            ChatThreadModel thread = ReadThread(Path.Combine(directory, ThreadFileName));
+            ChatThreadModel? thread = ReadThread(Path.Combine(directory, ThreadFileName));
             if (thread != null)
             {
                 threads.Add(thread);
@@ -105,7 +109,7 @@ public class ChatHistoryService
     {
         lock (writeLock)
         {
-            string directory = FindThreadDirectory(threadId);
+            string? directory = FindThreadDirectory(threadId);
             if (directory == null)
             {
                 return false;
@@ -118,16 +122,19 @@ public class ChatHistoryService
     public bool SaveImage(ChatImageRequest request)
     {
         if (
-            !ExtensionByMimeType.TryGetValue(request.MimeType ?? string.Empty, out string extension)
+            !ExtensionByMimeType.TryGetValue(
+                request.MimeType ?? string.Empty,
+                out string? extension
+            )
         )
         {
-            throw new UserOrigamException(Strings.ChatImageTypeNotSupported);
+            throw new ArgumentException(ImageTypeNotSupported);
         }
         byte[] content = DecodeImage(request.Data);
 
         lock (writeLock)
         {
-            string threadDirectory = FindThreadDirectory(request.ThreadId);
+            string? threadDirectory = FindThreadDirectory(request.ThreadId);
             if (threadDirectory == null)
             {
                 return false;
@@ -145,9 +152,9 @@ public class ChatHistoryService
         }
     }
 
-    public ChatImageContent ReadImage(Guid threadId, Guid imageId)
+    public ChatImageContent? ReadImage(Guid threadId, Guid imageId)
     {
-        string threadDirectory = FindThreadDirectory(threadId);
+        string? threadDirectory = FindThreadDirectory(threadId);
         if (threadDirectory == null)
         {
             return null;
@@ -159,7 +166,7 @@ public class ChatHistoryService
         }
         foreach (string file in Directory.GetFiles(imagesDirectory, $"{imageId:D}.*"))
         {
-            if (MimeTypeByExtension.TryGetValue(Path.GetExtension(file), out string mimeType))
+            if (MimeTypeByExtension.TryGetValue(Path.GetExtension(file), out string? mimeType))
             {
                 return new ChatImageContent(File.ReadAllBytes(file), mimeType);
             }
@@ -167,16 +174,16 @@ public class ChatHistoryService
         return null;
     }
 
-    private static byte[] DecodeImage(string data)
+    private static byte[] DecodeImage(string? data)
     {
         if (string.IsNullOrEmpty(data))
         {
-            throw new UserOrigamException(Strings.ChatImageInvalid);
+            throw new ArgumentException(ImageInvalid);
         }
         long minimumDecodedLength = ((long)data.Length / 4 * 3) - 2;
         if (minimumDecodedLength > MaxImageBytes)
         {
-            throw new UserOrigamException(Strings.ChatImageTooLarge);
+            throw new ArgumentException(ImageTooLarge);
         }
         byte[] content;
         try
@@ -185,16 +192,16 @@ public class ChatHistoryService
         }
         catch (FormatException)
         {
-            throw new UserOrigamException(Strings.ChatImageInvalid);
+            throw new ArgumentException(ImageInvalid);
         }
         if (content.Length > MaxImageBytes)
         {
-            throw new UserOrigamException(Strings.ChatImageTooLarge);
+            throw new ArgumentException(ImageTooLarge);
         }
         return content;
     }
 
-    private ChatThreadModel ReadThread(string file)
+    private ChatThreadModel? ReadThread(string file)
     {
         if (!File.Exists(file))
         {
@@ -215,7 +222,7 @@ public class ChatHistoryService
         }
     }
 
-    private string FindThreadDirectory(Guid threadId)
+    private string? FindThreadDirectory(Guid threadId)
     {
         return Directory.GetDirectories(storageDirectory, $"*{threadId:D}").FirstOrDefault();
     }
@@ -234,22 +241,10 @@ public class ChatHistoryService
 
     private static string ResolveStorageDirectory(IConfiguration configuration)
     {
-        string configuredPath = configuration.GetValue<string>(key: "ChatHistory:Path");
-        if (!string.IsNullOrWhiteSpace(configuredPath))
-        {
-            return Path.GetFullPath(configuredPath);
-        }
-
-        string clientApplicationPath = configuration
-            .GetSectionOrThrow("SpaConfig")
-            .Get<SpaConfig>()
-            .PathToClientApplication;
-        if (string.IsNullOrWhiteSpace(clientApplicationPath))
-        {
-            throw new Exception(Strings.ChatHistoryLocationUnknown);
-        }
-        return Path.GetFullPath(
-            Path.Combine(clientApplicationPath, AiDirectoryName, ChatsDirectoryName)
-        );
+        var clientApplicationPath = configuration.GetValue<string>(ClientApplicationPathKey);
+        var root = string.IsNullOrWhiteSpace(clientApplicationPath)
+            ? AppContext.BaseDirectory
+            : clientApplicationPath;
+        return Path.GetFullPath(Path.Combine(root, AiDirectoryName, ChatsDirectoryName));
     }
 }
