@@ -26,17 +26,15 @@ using Origam.Architect.Server.Models;
 using Origam.Architect.Server.ReturnModels;
 using Origam.Architect.Server.Services;
 using Origam.Schema;
-using Origam.Schema.EntityModel;
 
 namespace Origam.Architect.Server.Controllers;
 
 [ApiController]
 [Route("[controller]")]
 public class TabController(
-    PropertyEditorService propertyService,
-    DesignerEditorService sectionService,
     TreeNodeFactory treeNodeFactory,
     TabService tabService,
+    TabResponseFactory tabResponseFactory,
     DocumentationHelperService documentationHelper
 ) : ControllerBase
 {
@@ -65,8 +63,8 @@ public class TabController(
     {
         NewItemResult result = tabService.CreateNode(input);
         OpenTabData tabData = result.Discarded
-            ? DiscardedTabData(result.Tab)
-            : CreatedTabData(result.Tab);
+            ? tabResponseFactory.DiscardedTabData(result.Tab)
+            : tabResponseFactory.CreatedTabData(result.Tab);
 
         if (result.CloseWhenDone)
         {
@@ -74,72 +72,6 @@ public class TabController(
         }
 
         return tabData;
-    }
-
-    private OpenTabData CreatedTabData(TabData tab)
-    {
-        ISchemaItem item = tab.Item;
-        TreeNode treeNode = treeNodeFactory.Create(item);
-        (string parentName, string parentOrigamId) = DescribeParent(item);
-        return new OpenTabData(
-            tabId: tab.Id,
-            node: treeNode,
-            data: GetData(treeNode, item),
-            isPersisted: item.IsPersisted,
-            parentNodeId: null,
-            isDirty: !item.IsPersisted,
-            parentName: parentName,
-            parentOrigamId: parentOrigamId,
-            primaryKeyFieldId: DescribePrimaryKeyField(item)
-        );
-    }
-
-    private OpenTabData DiscardedTabData(TabData tab)
-    {
-        TreeNode treeNode = treeNodeFactory.Create(tab.Item);
-        object data = GetData(treeNode, tab.Item);
-        if (data is IEnumerable<EditorProperty> properties)
-        {
-            data = properties.ToList();
-        }
-
-        return new OpenTabData(
-            tabId: tab.Id,
-            node: treeNode,
-            data: data,
-            isPersisted: false,
-            parentNodeId: null,
-            isDirty: false,
-            discarded: true
-        );
-    }
-
-    private static string DescribePrimaryKeyField(ISchemaItem item)
-    {
-        if (item is not IDataEntity entity)
-        {
-            return null;
-        }
-        return entity
-            .EntityColumns.FirstOrDefault(column =>
-                column.IsPrimaryKey && !column.ExcludeFromAllFields && column.Name != null
-            )
-            ?.Id.ToString("D");
-    }
-
-    private static (string Name, string OrigamId) DescribeParent(ISchemaItem item)
-    {
-        if (item.Group != null)
-        {
-            return (item.Group.NodeText, item.Group.Id.ToString());
-        }
-        if (item.ParentItem != null)
-        {
-            return (item.ParentItem.NodeText, item.ParentItem.Id.ToString());
-        }
-        return item.RootProvider == null
-            ? (null, null)
-            : (item.RootProvider.NodeText, item.RootProvider.GetType().FullName);
     }
 
     [HttpGet("GetOpen")]
@@ -157,7 +89,7 @@ public class TabController(
                     TabType.Default => new OpenTabData(
                         tabId: tab.Id,
                         node: treeNode,
-                        data: GetData(treeNode, item),
+                        data: tabResponseFactory.GetEditorData(treeNode, item),
                         isPersisted: item.IsPersisted,
                         parentNodeId: TreeNode.ToTreeNodeId(item.ParentItem),
                         isDirty: tab.IsDirty,
@@ -188,26 +120,10 @@ public class TabController(
         var openTabData = new OpenTabData(
             tabId: tab.Id,
             node: treeNode,
-            data: GetData(treeNode, item),
+            data: tabResponseFactory.GetEditorData(treeNode, item),
             isPersisted: true
         );
         return Ok(openTabData);
-    }
-
-    private object GetData(TreeNode treeNode, ISchemaItem item)
-    {
-        object data = treeNode.DefaultEditor switch
-        {
-            EditorSubType.GridEditor => propertyService.GetEditorPropertiesWithErrors(item),
-            EditorSubType.DeploymentScriptsEditor => propertyService.GetEditorPropertiesWithErrors(
-                item
-            ),
-            EditorSubType.XsltEditor => propertyService.GetEditorPropertiesWithErrors(item),
-            EditorSubType.ScreenSectionEditor => sectionService.GetSectionEditorData(item),
-            EditorSubType.ScreenEditor => sectionService.GetScreenEditorData(item),
-            _ => null,
-        };
-        return data;
     }
 
     [HttpPost("Close")]

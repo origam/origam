@@ -59,6 +59,7 @@ public class Program
         builder.Services.AddSingleton<EditorPropertyFactory>();
         builder.Services.AddSingleton<PropertyParser>();
         builder.Services.AddSingleton<TabService>();
+        builder.Services.AddSingleton<TabResponseFactory>();
         builder.Services.AddTransient<XsltService>();
         builder.Services.AddSingleton<SearchService>();
         builder.Services.AddSingleton<PropertyEditorService>();

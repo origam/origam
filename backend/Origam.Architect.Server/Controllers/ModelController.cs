@@ -116,13 +116,7 @@ public class ModelController(
             };
         }
 
-        return provider
-            .ChildNodes()
-            .Cast<IBrowserNode2>()
-            .OrderBy(x => x.NodeText)
-            .Where(x => x is not ISchemaItem item || item.IsPersisted)
-            .Select(treeNodeFactory.Create)
-            .ToList();
+        return treeNodeFactory.CreateChildren(provider, depth: 0);
     }
 
     private List<TreeNode> GetProviderTopChildren(ISchemaItemProvider provider)
@@ -274,7 +268,7 @@ public class ModelController(
             {
                 return NotFound();
             }
-            var treeNode = LoadTreeRecursive(node, depth);
+            TreeNode treeNode = treeNodeFactory.CreateRecursive(node, depth);
             return Ok(treeNode);
         }
 
@@ -293,22 +287,6 @@ public class ModelController(
         };
         providerNode.Children = GetProviderTopChildren(provider);
         return Ok(providerNode);
-    }
-
-    private TreeNode LoadTreeRecursive(IBrowserNode2 node, int remainingDepth)
-    {
-        TreeNode treeNode = treeNodeFactory.Create(node);
-        if (remainingDepth > 0 && treeNode.HasChildNodes)
-        {
-            var children = node.ChildNodes()
-                .Cast<IBrowserNode2>()
-                .OrderBy(x => x.NodeText)
-                .Where(x => x is not ISchemaItem item || item.IsPersisted)
-                .Select(child => LoadTreeRecursive(child, remainingDepth - 1))
-                .ToList();
-            treeNode.Children = children;
-        }
-        return treeNode;
     }
 
     [HttpGet("GetEntityIndex")]
