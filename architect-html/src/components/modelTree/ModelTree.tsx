@@ -164,7 +164,7 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
       return;
     }
     event.dataTransfer.effectAllowed = 'copyMove';
-    // Firefox does not start a drag unless some data is attached.
+    // Firefox needs attached data to start a drag.
     event.dataTransfer.setData('text/plain', node.nodeText);
     onSelect();
     transfer.isDragging = true;
@@ -176,7 +176,6 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
     if (!transfer.isDragging) {
       return;
     }
-    // The container also handles dragover, it must not overwrite this row's verdict.
     event.stopPropagation();
     const isCopy = event.ctrlKey || event.metaKey;
     transfer.isCopyModifier = isCopy;
@@ -601,9 +600,10 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
   }
 
   const isHighlighted = highlightedNodeId === node.id;
-  const isCutSource = transfer.mode === 'cut' && transfer.isSource(node);
+  const isCutSource = transfer.isCutSource(node);
   const canPaste =
     transfer.hasSource &&
+    !transfer.isBusy &&
     (!transfer.dropTargets.has(node.id) || transfer.canDropOn(node, transfer.mode === 'copy'));
 
   useEffect(() => {
@@ -905,7 +905,7 @@ const ModelTree = observer(() => {
   const run = runInFlowWithHandler(rootStore.errorDialogController);
   const treeRef = useRef<HTMLDivElement | null>(null);
 
-  // dragover only fires while the pointer moves, the highlight must follow Ctrl too.
+  // dragover fires on movement only, the highlight has to follow Ctrl too.
   useEffect(() => {
     if (!transfer.isDragging) {
       return;
@@ -921,7 +921,6 @@ const ModelTree = observer(() => {
     };
   }, [transfer.isDragging, transfer]);
 
-  // Scoped to the tree so that Ctrl+C in an editor or an input keeps its normal meaning.
   const hasTreeFocus = () =>
     !!treeRef.current && treeRef.current.contains(document.activeElement);
 
@@ -974,7 +973,7 @@ const ModelTree = observer(() => {
       className={S.root}
       tabIndex={0}
       onMouseDown={() => treeRef.current?.focus({ preventScroll: true })}
-      // Empty space is never a drop target, an outside file must not navigate away.
+      // An outside file dropped on empty space must not navigate away.
       onDragOver={e => {
         if (transfer.isDragging) {
           e.dataTransfer.dropEffect = 'none';

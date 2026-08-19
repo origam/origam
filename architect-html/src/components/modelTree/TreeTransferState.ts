@@ -31,16 +31,16 @@ interface IDropFlags {
   canCopy: boolean;
 }
 
-// Clipboard and drag are the same operation with a different delay. The backend
-// decides whether a drop is legal, dropTargets caches it for synchronous dragover.
 export class TreeTransferState {
   @observable accessor mode: TransferMode | null = null;
   @observable accessor sourceNodeId: string | null = null;
   @observable accessor isDragging: boolean = false;
   @observable accessor isCopyModifier: boolean = false;
   @observable accessor hoverNodeId: string | null = null;
+  @observable accessor isBusy: boolean = false;
   @observable.ref accessor dropTargets: Map<string, IDropFlags> = new Map();
   @observable.ref private accessor sourceRef: INodeLoadData | null = null;
+  private generation = 0;
 
   constructor(private rootStore: RootStore) {}
 
@@ -50,6 +50,13 @@ export class TreeTransferState {
 
   isSource(node: TreeNode): boolean {
     return this.sourceNodeId === node.id;
+  }
+
+  isCutSource(node: TreeNode): boolean {
+    if (!this.isSource(node)) {
+      return false;
+    }
+    return this.isDragging ? !this.isCopyModifier : this.mode === 'cut';
   }
 
   canDropOn(node: TreeNode, isCopy: boolean): boolean {
@@ -72,32 +79,38 @@ export class TreeTransferState {
     node: TreeNode,
     mode: TransferMode,
   ): Generator<Promise<IDropTargetResult[]>, void, IDropTargetResult[]> {
+    const sourceRef = toNodeRef(node);
+    if (sourceRef.id !== this.sourceRef?.id || sourceRef.nodeText !== this.sourceRef?.nodeText) {
+      this.dropTargets = new Map();
+      this.generation++;
+    }
     this.mode = mode;
     this.sourceNodeId = node.id;
-    this.sourceRef = toNodeRef(node);
-    this.dropTargets = new Map();
+    this.sourceRef = sourceRef;
     yield* this.loadDropTargets(this.rootStore.modelTreeState.visibleNodes);
   }
 
   *addDropTargets(
     nodes: TreeNode[],
   ): Generator<Promise<IDropTargetResult[]>, void, IDropTargetResult[]> {
-    if (!this.sourceRef) {
-      return;
-    }
-    yield* this.loadDropTargets(nodes.filter(node => !this.dropTargets.has(node.id)));
+    yield* this.loadDropTargets(nodes);
   }
 
   private *loadDropTargets(
     nodes: TreeNode[],
   ): Generator<Promise<IDropTargetResult[]>, void, IDropTargetResult[]> {
-    if (!this.sourceRef || nodes.length === 0) {
+    const targets = nodes.filter(node => !this.dropTargets.has(node.id));
+    if (!this.sourceRef || targets.length === 0) {
       return;
     }
+    const generation = this.generation;
     const results = yield this.rootStore.architectApi.getDropTargets({
       source: this.sourceRef,
-      targets: nodes.map(toNodeRef),
+      targets: targets.map(toNodeRef),
     });
+    if (generation !== this.generation) {
+      return;
+    }
     const updated = new Map(this.dropTargets);
     for (const result of results) {
       updated.set(result.id, { canMove: result.canMove, canCopy: result.canCopy });
@@ -106,36 +119,42 @@ export class TreeTransferState {
   }
 
   *drop(target: TreeNode, isCopy: boolean): Generator<Promise<any>, boolean, any> {
-    // Captured before the first yield, the drop handler clears the state on return.
     const sourceRef = this.sourceRef;
     const source = this.rootStore.modelTreeState.findNodeById(this.sourceNodeId ?? undefined);
-    if (!sourceRef) {
-      return false;
-    }
-    if (!isCopy && !(yield* this.confirmUnsavedChanges(source))) {
+    if (!sourceRef || this.isBusy) {
       return false;
     }
 
-    const result: IMoveNodeResult = yield this.rootStore.architectApi.moveNode({
-      source: sourceRef,
-      target: toNodeRef(target),
-      isCopy: isCopy,
-    });
+    this.isBusy = true;
+    try {
+      if (!isCopy && !(yield* this.confirmUnsavedChanges(source, sourceRef))) {
+        return false;
+      }
 
-    yield* this.refreshAfterMove(source, target, result);
-    if (!isCopy) {
-      this.clear();
+      const result: IMoveNodeResult = yield this.rootStore.architectApi.moveNode({
+        source: sourceRef,
+        target: toNodeRef(target),
+        isCopy: isCopy,
+      });
+
+      yield* this.refreshAfterMove(source, target, result);
+      if (!isCopy) {
+        this.clear();
+      }
+      return true;
+    } finally {
+      this.isBusy = false;
     }
-    return true;
   }
 
-  // A move persists the same in memory instance, an open unsaved edit would go with it.
-  private *confirmUnsavedChanges(source: TreeNode | null): Generator<Promise<any>, boolean, any> {
-    if (!source) {
-      return true;
-    }
+  // Persist cascades to child items, so unsaved edits in the subtree get written too.
+  private *confirmUnsavedChanges(
+    source: TreeNode | null,
+    sourceRef: INodeLoadData,
+  ): Generator<Promise<any>, boolean, any> {
+    const movedIds = source ? this.collectSubtreeIds(source) : [sourceRef.id];
     const dirtyEditors = this.rootStore.editorTabViewState.editorsContainers.filter(
-      editor => editor.state.isDirty && editor.state.tabId.includes(source.origamId),
+      editor => editor.state.isDirty && movedIds.some(id => editor.state.tabId.includes(id)),
     );
     if (dirtyEditors.length === 0) {
       return true;
@@ -181,6 +200,7 @@ export class TreeTransferState {
   }
 
   clear() {
+    this.generation++;
     this.mode = null;
     this.sourceNodeId = null;
     this.sourceRef = null;
