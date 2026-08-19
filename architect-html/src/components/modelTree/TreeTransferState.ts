@@ -164,9 +164,9 @@ export class TreeTransferState {
       this.rootStore.dialogStack,
       T('Save changes', 'tree_move_save_changes_title'),
       T(
-        'Moving "{0}" saves the item. Do you want to save the changes you have open in its editor?',
+        'Moving "{0}" saves it together with its children. Do you want to save the changes you have open in their editors?',
         'tree_move_save_changes_question',
-        source.nodeText,
+        sourceRef.nodeText,
       ),
     );
     if (answer !== YesNoResult.Yes) {
@@ -176,6 +176,10 @@ export class TreeTransferState {
       yield* editor.state.save();
     }
     return true;
+  }
+
+  private collectSubtreeIds(node: TreeNode): string[] {
+    return [node.origamId, ...node.children.flatMap(child => this.collectSubtreeIds(child))];
   }
 
   private *refreshAfterMove(

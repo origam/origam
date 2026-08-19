@@ -34,7 +34,7 @@
   "tree_node_copy": "Copy",
   "tree_node_paste": "Paste",
   "tree_move_save_changes_title": "Save changes",
-  "tree_move_save_changes_question": "Moving \"{0}\" saves the item. Do you want to save the changes you have open in its editor?",
+  "tree_move_save_changes_question": "Moving \"{0}\" saves it together with its children. Do you want to save the changes you have open in their editors?",
   "tab_header_close_all": "Close All",
   "tab_header_close_all_but_this": "Close All But This",
   "grid_editor_title": "Editing: {0}",
