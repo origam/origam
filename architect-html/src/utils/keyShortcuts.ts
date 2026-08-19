@@ -21,19 +21,33 @@ export function isSaveShortcut(e: KeyboardEvent): boolean {
   return (e.ctrlKey || e.metaKey) && e.key === 's';
 }
 
+function isCtrlLetter(e: KeyboardEvent, letter: string): boolean {
+  return (
+    (e.ctrlKey || e.metaKey) &&
+    !e.shiftKey &&
+    !e.altKey &&
+    e.key.toLowerCase() === letter
+  );
+}
+
 export function isCutShortcut(e: KeyboardEvent): boolean {
-  return (e.ctrlKey || e.metaKey) && !e.shiftKey && e.key === 'x';
+  return isCtrlLetter(e, 'x');
 }
 
 export function isCopyShortcut(e: KeyboardEvent): boolean {
-  return (e.ctrlKey || e.metaKey) && !e.shiftKey && e.key === 'c';
+  return isCtrlLetter(e, 'c');
 }
 
 export function isPasteShortcut(e: KeyboardEvent): boolean {
-  return (e.ctrlKey || e.metaKey) && !e.shiftKey && e.key === 'v';
+  return isCtrlLetter(e, 'v');
 }
 
-// Places where the browser's own clipboard handling must win.
+export function hasTextSelection(): boolean {
+  const selection = window.getSelection();
+  return !!selection && !selection.isCollapsed && selection.toString().length > 0;
+}
+
+// Let the browser handle the clipboard here.
 export function isTypingTarget(e: KeyboardEvent): boolean {
   const target = e.target as HTMLElement | null;
   if (!target || !target.closest) {

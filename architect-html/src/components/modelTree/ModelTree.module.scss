@@ -21,6 +21,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   flex: 1;
   min-width: max-content;
   outline: none;
+
+  &:focus-visible {
+    outline: 1px solid var(--brand);
+    outline-offset: -1px;
+  }
 }
 
 .packageName {

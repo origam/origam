@@ -35,6 +35,7 @@ import { CreateScreenSectionWizard } from '@components/modelTree/createWizard/Cr
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import {
+  hasTextSelection,
   isCopyShortcut,
   isCutShortcut,
   isPasteShortcut,
@@ -941,6 +942,7 @@ const ModelTree = observer(() => {
       predicate: e =>
         isCopyShortcut(e) &&
         !isTypingTarget(e) &&
+        !hasTextSelection() &&
         hasTreeFocus() &&
         !!modelTreeState.selectedNode?.canDrag,
       handler: () => {
