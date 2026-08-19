@@ -69,9 +69,7 @@ export class TreeTransferState {
 
   isDropHighlighted(node: TreeNode): boolean {
     return (
-      this.isDragging &&
-      this.hoverNodeId === node.id &&
-      this.canDropOn(node, this.isCopyModifier)
+      this.isDragging && this.hoverNodeId === node.id && this.canDropOn(node, this.isCopyModifier)
     );
   }
 

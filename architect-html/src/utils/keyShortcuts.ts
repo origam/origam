@@ -22,12 +22,7 @@ export function isSaveShortcut(e: KeyboardEvent): boolean {
 }
 
 function isCtrlLetter(e: KeyboardEvent, letter: string): boolean {
-  return (
-    (e.ctrlKey || e.metaKey) &&
-    !e.shiftKey &&
-    !e.altKey &&
-    e.key.toLowerCase() === letter
-  );
+  return (e.ctrlKey || e.metaKey) && !e.shiftKey && !e.altKey && e.key.toLowerCase() === letter;
 }
 
 export function isCutShortcut(e: KeyboardEvent): boolean {

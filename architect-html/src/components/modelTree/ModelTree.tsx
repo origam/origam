@@ -814,12 +814,7 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
             >
               {T('Cut', 'tree_node_cut')}
             </Item>
-            <Item
-              id="copy"
-              data-test-id="tree-menu-copy"
-              disabled={!node.canDrag}
-              onClick={onCopy}
-            >
+            <Item id="copy" data-test-id="tree-menu-copy" disabled={!node.canDrag} onClick={onCopy}>
               {T('Copy', 'tree_node_copy')}
             </Item>
             <Item id="paste" data-test-id="tree-menu-paste" disabled={!canPaste} onClick={onPaste}>
@@ -921,8 +916,7 @@ const ModelTree = observer(() => {
     };
   }, [transfer.isDragging, transfer]);
 
-  const hasTreeFocus = () =>
-    !!treeRef.current && treeRef.current.contains(document.activeElement);
+  const hasTreeFocus = () => !!treeRef.current && treeRef.current.contains(document.activeElement);
 
   useKeyboardShortcuts([
     {
