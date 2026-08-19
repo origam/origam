@@ -94,11 +94,21 @@ public class SchemaItemMoveService(
 
         if (Guid.TryParse(reference.Id, out Guid id))
         {
-            return PersistenceProvider.RetrieveInstance<IBrowserNode2>(
+            var node = PersistenceProvider.RetrieveInstance<IBrowserNode2>(
                 id,
                 useCache: true,
                 throwNotFoundException: false
             );
+            if (node == null || !reference.IsNonPersistentItem)
+            {
+                return node;
+            }
+
+            return new NonpersistentSchemaItemNode
+            {
+                NodeText = reference.NodeText,
+                ParentNode = node,
+            };
         }
 
         return GetRootProviderById(reference.Id) as IBrowserNode2;
