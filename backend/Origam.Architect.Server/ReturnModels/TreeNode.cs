@@ -59,7 +59,17 @@ public class TreeNode
 
     public static string ToTreeNodeId(IBrowserNode2 node)
     {
-        return node == null ? null : node.NodeId + node.NodeText;
+        return node == null ? null : node.NodeId + ToNodeText(node);
+    }
+
+    public static string ToNodeText(IBrowserNode2 node)
+    {
+        if (node is Schema.DeploymentModel.ServiceCommandUpdateScriptActivity script)
+        {
+            return $"{node.NodeText} ({script.DatabaseType})";
+        }
+
+        return node.NodeText;
     }
 }
 
@@ -71,16 +81,11 @@ public class TreeNodeFactory(
 {
     public TreeNode Create(IBrowserNode2 node)
     {
-        string nodeText = node.NodeText;
-        if (node is Schema.DeploymentModel.ServiceCommandUpdateScriptActivity script)
-        {
-            nodeText = $"{node.NodeText} ({script.DatabaseType})";
-        }
         return new TreeNode
         {
             OrigamId = node.NodeId,
             Id = TreeNode.ToTreeNodeId(node),
-            NodeText = nodeText,
+            NodeText = TreeNode.ToNodeText(node),
             IsNonPersistentItem = node is NonpersistentSchemaItemNode,
             HasChildNodes = node.HasChildNodes,
             DefaultEditor = GetEditorType(node),
