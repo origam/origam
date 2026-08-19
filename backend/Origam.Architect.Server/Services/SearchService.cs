@@ -119,7 +119,7 @@ public class SearchService(
         }
     }
 
-    private static ISchemaItem GetRoot(ISchemaItem item)
+    public static ISchemaItem GetRoot(ISchemaItem item)
     {
         try
         {
@@ -136,7 +136,7 @@ public class SearchService(
         }
     }
 
-    private static List<string> GetParentNodeIds(ISchemaItem item, ISchemaItem root)
+    public static List<string> GetParentNodeIds(ISchemaItem item, ISchemaItem root)
     {
         try
         {

@@ -24,6 +24,7 @@ import {
   IApiTreeNode,
   IArchitectApi,
   IMenuItemInfo,
+  INodeLoadData,
   NodeLevelType,
 } from '@api/IArchitectApi';
 import { IEditorNode } from '@components/editorTabView/EditorTabViewState';
@@ -55,6 +56,7 @@ export class TreeNode implements IEditorNode {
     this.isInActivePackage = apiNode.isInActivePackage ?? true;
     this.isFileDirty = apiNode.isFileDirty ?? false;
     this.role = apiNode.role;
+    this.canDrag = apiNode.canDrag ?? false;
     this.children = apiNode.children
       ? apiNode.children.map(child => new TreeNode(child, this.rootStore, this))
       : [];
@@ -68,7 +70,7 @@ export class TreeNode implements IEditorNode {
   childrenInitialized: boolean;
   isNonPersistentItem: boolean;
   editorType: EditorSubType;
-  children: TreeNode[];
+  @observable.shallow accessor children: TreeNode[] = [];
   childrenIds: string[];
   iconUrl?: string;
   itemType?: string;
@@ -79,12 +81,17 @@ export class TreeNode implements IEditorNode {
   isInActivePackage: boolean;
   isFileDirty: boolean;
   role?: string;
+  canDrag: boolean;
 
   @observable accessor isLoading: boolean = false;
   @observable accessor contextMenuItems: IMenuItemInfo[] = [];
 
   get isExpanded() {
     return this.rootStore.uiState.isExpanded(this.id);
+  }
+
+  get hasChildNodes() {
+    return this.children.length > 0 || !this.childrenInitialized;
   }
 
   get isDeploymentVersion() {
@@ -180,4 +187,13 @@ export class TreeNode implements IEditorNode {
       this.rootStore.editorTabViewState.openEditor(editorData);
     }.bind(this);
   }
+}
+
+// TreeNode.id is a composite ui key, the api expects the origam id.
+export function toNodeRef(node: TreeNode): INodeLoadData {
+  return {
+    id: node.origamId,
+    nodeText: node.nodeText,
+    isNonPersistentItem: node.isNonPersistentItem,
+  };
 }
