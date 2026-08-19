@@ -37,7 +37,7 @@ public class ModelController(
     SchemaService schemaService,
     IPersistenceService persistenceService,
     TreeNodeFactory treeNodeFactory,
-    GitNodeStatusService gitNodeStatusService,
+    ModelTransactionRunner modelTransactionRunner,
     TabService tabService,
     EntityIndexService entityIndexService
 ) : ControllerBase
@@ -182,17 +182,13 @@ public class ModelController(
         ISchemaItem deletedRootItem = instance.RootItem;
         try
         {
-            persistenceProvider.BeginTransaction();
-            instance.Delete();
+            modelTransactionRunner.Run(() => instance.Delete());
         }
         catch (InvalidOperationException ex)
         {
-            persistenceProvider.EndTransactionDontSave();
             return StatusCode(statusCode: 400, ex.Message);
         }
 
-        persistenceProvider.EndTransaction();
-        gitNodeStatusService.ClearCache();
         tabService.InvalidateTabsInRoot(deletedRootItem, changedByTabId: null);
         return Ok(new DeleteResult(Deleted: true, Id: input.SchemaItemId, Name: deletedName));
     }
