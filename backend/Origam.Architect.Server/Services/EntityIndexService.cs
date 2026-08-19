@@ -38,144 +38,138 @@ public class EntityIndexService(SchemaService schemaService)
             return new List<EntityCard>();
         }
 
-        var allItems = schemaService
+        List<ISchemaItem> allItems = GetPersistedItems();
+        EntityUsages usages = IndexUsages(allItems);
+
+        return allItems
+            .OfType<IDataEntity>()
+            .OrderBy(entity => entity.Name)
+            .Select(entity => CreateCard(entity, usages))
+            .ToList();
+    }
+
+    private List<ISchemaItem> GetPersistedItems()
+    {
+        return schemaService
             .Providers.SelectMany(provider => provider.ChildItemsRecursive)
             .Where(item => item.IsPersisted)
             .ToList();
+    }
 
-        var entities = allItems.OfType<IDataEntity>().ToList();
+    private static EntityUsages IndexUsages(List<ISchemaItem> allItems)
+    {
+        return new EntityUsages(
+            StructuresByEntityId: IndexStructuresByEntityId(allItems),
+            ScreensByStructureId: GroupByDataSourceId(allItems.OfType<FormControlSet>()),
+            PanelsByEntityId: GroupByDataSourceId(allItems.OfType<PanelControlSet>()),
+            LookupsByStructureId: allItems
+                .OfType<AbstractDataLookup>()
+                .Where(lookup => lookup.ListDataStructureId != Guid.Empty)
+                .GroupBy(lookup => lookup.ListDataStructureId)
+                .ToDictionary(group => group.Key, group => group.ToList()),
+            WorkQueuesByEntityId: allItems
+                .OfType<WorkQueueClass>()
+                .Where(workQueue => workQueue.EntityId != Guid.Empty)
+                .GroupBy(workQueue => workQueue.EntityId)
+                .ToDictionary(group => group.Key, group => group.ToList())
+        );
+    }
 
+    private static Dictionary<Guid, List<DataStructure>> IndexStructuresByEntityId(
+        List<ISchemaItem> allItems
+    )
+    {
         var structuresByEntityId = new Dictionary<Guid, List<DataStructure>>();
         foreach (DataStructure structure in allItems.OfType<DataStructure>())
         {
-            foreach (DataStructureEntity dse in structure.Entities)
+            foreach (DataStructureEntity structureEntity in structure.Entities)
             {
-                IDataEntity linked = dse.EntityDefinition;
-                if (linked == null)
+                IDataEntity entity = structureEntity.EntityDefinition;
+                if (entity == null)
                 {
                     continue;
                 }
-                Guid entityId = (Guid)linked.PrimaryKey["Id"];
-                if (!structuresByEntityId.TryGetValue(entityId, out var list))
+
+                if (
+                    !structuresByEntityId.TryGetValue(entity.Id, out List<DataStructure> structures)
+                )
                 {
-                    list = new List<DataStructure>();
-                    structuresByEntityId[entityId] = list;
+                    structures = new List<DataStructure>();
+                    structuresByEntityId[entity.Id] = structures;
                 }
-                if (!list.Any(existing => existing.Id == structure.Id))
+
+                if (!structures.Any(existing => existing.Id == structure.Id))
                 {
-                    list.Add(structure);
+                    structures.Add(structure);
                 }
             }
         }
 
-        var screensByStructureId = allItems
-            .OfType<FormControlSet>()
-            .Where(screen => screen.DataSourceId != Guid.Empty)
-            .GroupBy(screen => screen.DataSourceId)
+        return structuresByEntityId;
+    }
+
+    private static Dictionary<Guid, List<TControlSet>> GroupByDataSourceId<TControlSet>(
+        IEnumerable<TControlSet> controlSets
+    )
+        where TControlSet : AbstractControlSet
+    {
+        return controlSets
+            .Where(controlSet => controlSet.DataSourceId != Guid.Empty)
+            .GroupBy(controlSet => controlSet.DataSourceId)
             .ToDictionary(group => group.Key, group => group.ToList());
+    }
 
-        var panelsByEntityId = allItems
-            .OfType<PanelControlSet>()
-            .Where(panel => panel.DataSourceId != Guid.Empty)
-            .GroupBy(panel => panel.DataSourceId)
-            .ToDictionary(group => group.Key, group => group.ToList());
+    private static EntityCard CreateCard(IDataEntity entity, EntityUsages usages)
+    {
+        List<DataStructure> structures = GetOrEmpty(usages.StructuresByEntityId, entity.Id);
+        List<FormControlSet> screens = structures
+            .SelectMany(structure => GetOrEmpty(usages.ScreensByStructureId, structure.Id))
+            .Distinct()
+            .ToList();
+        List<AbstractDataLookup> lookups = structures
+            .SelectMany(structure => GetOrEmpty(usages.LookupsByStructureId, structure.Id))
+            .Distinct()
+            .ToList();
 
-        var lookupsByStructureId = new Dictionary<Guid, List<AbstractDataLookup>>();
-        foreach (AbstractDataLookup lookup in allItems.OfType<AbstractDataLookup>())
-        {
-            if (lookup.ListDataStructureId == Guid.Empty)
-            {
-                continue;
-            }
-            if (!lookupsByStructureId.TryGetValue(lookup.ListDataStructureId, out var list))
-            {
-                list = new List<AbstractDataLookup>();
-                lookupsByStructureId[lookup.ListDataStructureId] = list;
-            }
-            list.Add(lookup);
-        }
-
-        var workQueuesByEntityId = allItems
-            .OfType<WorkQueueClass>()
-            .Where(workQueue => workQueue.EntityId != Guid.Empty)
-            .GroupBy(workQueue => workQueue.EntityId)
-            .ToDictionary(group => group.Key, group => group.ToList());
-
-        var cards = new List<EntityCard>(entities.Count);
-        foreach (IDataEntity entity in entities.OrderBy(entity => entity.Name))
-        {
-            var entityItem = (ISchemaItem)entity;
-            Guid entityId = (Guid)entityItem.PrimaryKey["Id"];
-
-            structuresByEntityId.TryGetValue(entityId, out var structures);
-            structures ??= new List<DataStructure>();
-
-            var screens = structures
-                .SelectMany(structure =>
-                    screensByStructureId.TryGetValue(structure.Id, out var list)
-                        ? list
-                        : Enumerable.Empty<FormControlSet>()
-                )
-                .Distinct()
-                .ToList();
-
-            var lookups = structures
-                .SelectMany(structure =>
-                    lookupsByStructureId.TryGetValue(structure.Id, out var list)
-                        ? list
-                        : Enumerable.Empty<AbstractDataLookup>()
-                )
-                .Distinct()
-                .ToList();
-
-            panelsByEntityId.TryGetValue(entityId, out var panels);
-            workQueuesByEntityId.TryGetValue(entityId, out var workQueues);
-
-            var fields = entity
+        return new EntityCard(
+            Id: entity.Id.ToString("D"),
+            Name: entity.Name,
+            Kind: entity.GetType().SchemaItemDescription()?.Name ?? entity.GetType().Name,
+            Package: entity.Group?.Name,
+            Fields: entity
                 .EntityColumns.Where(column => column.Name != null)
                 .OrderBy(column => column.Name)
                 .Select(column => column.Name)
-                .ToList();
-
-            var primaryKey = entity
-                .EntityColumns.Where(column => column.IsPrimaryKey && column.Name != null)
-                .OrderBy(column => column.Name)
-                .Select(column => new RelatedItem(column.Id.ToString("D"), column.Name))
-                .ToList();
-
-            cards.Add(
-                new EntityCard(
-                    Id: entityId.ToString("D"),
-                    Name: entity.Name,
-                    Kind: entity.GetType().SchemaItemDescription()?.Name ?? entity.GetType().Name,
-                    Package: entityItem.Group?.Name,
-                    Fields: fields,
-                    PrimaryKey: primaryKey,
-                    Structures: structures
-                        .Select(structure => new RelatedItem(
-                            structure.Id.ToString("D"),
-                            structure.Name
-                        ))
-                        .ToList(),
-                    Screens: screens
-                        .Select(screen => new RelatedItem(screen.Id.ToString("D"), screen.Name))
-                        .ToList(),
-                    Panels: (panels ?? new List<PanelControlSet>())
-                        .Select(panel => new RelatedItem(panel.Id.ToString("D"), panel.Name))
-                        .ToList(),
-                    Lookups: lookups
-                        .Select(lookup => new RelatedItem(lookup.Id.ToString("D"), lookup.Name))
-                        .ToList(),
-                    WorkQueues: (workQueues ?? new List<WorkQueueClass>())
-                        .Select(workQueue => new RelatedItem(
-                            workQueue.Id.ToString("D"),
-                            workQueue.Name
-                        ))
-                        .ToList()
-                )
-            );
-        }
-
-        return cards;
+                .ToList(),
+            PrimaryKey: ToRelatedItems(
+                entity
+                    .EntityColumns.Where(column => column.IsPrimaryKey && column.Name != null)
+                    .OrderBy(column => column.Name)
+            ),
+            Structures: ToRelatedItems(structures),
+            Screens: ToRelatedItems(screens),
+            Panels: ToRelatedItems(GetOrEmpty(usages.PanelsByEntityId, entity.Id)),
+            Lookups: ToRelatedItems(lookups),
+            WorkQueues: ToRelatedItems(GetOrEmpty(usages.WorkQueuesByEntityId, entity.Id))
+        );
     }
+
+    private static List<TItem> GetOrEmpty<TItem>(Dictionary<Guid, List<TItem>> itemsByKey, Guid key)
+    {
+        return itemsByKey.TryGetValue(key, out List<TItem> items) ? items : new List<TItem>();
+    }
+
+    private static List<RelatedItem> ToRelatedItems<TItem>(IEnumerable<TItem> items)
+        where TItem : ISchemaItem
+    {
+        return items.Select(item => new RelatedItem(item.Id.ToString("D"), item.Name)).ToList();
+    }
+
+    private record EntityUsages(
+        Dictionary<Guid, List<DataStructure>> StructuresByEntityId,
+        Dictionary<Guid, List<FormControlSet>> ScreensByStructureId,
+        Dictionary<Guid, List<PanelControlSet>> PanelsByEntityId,
+        Dictionary<Guid, List<AbstractDataLookup>> LookupsByStructureId,
+        Dictionary<Guid, List<WorkQueueClass>> WorkQueuesByEntityId
+    );
 }
