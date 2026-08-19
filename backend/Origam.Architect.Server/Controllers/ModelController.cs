@@ -145,7 +145,6 @@ public class ModelController(
         return moveService.GetRootProviderById(id);
     }
 
-    // Advisory only, MoveNode validates the rules again.
     [HttpPost("GetDropTargets")]
     public ActionResult<List<DropTargetResult>> GetDropTargets(
         [Required] [FromBody] DropTargetsModel input
@@ -153,7 +152,7 @@ public class ModelController(
     {
         if (schemaService.ActiveExtension == null)
         {
-            return BadRequest("No schema extension is active");
+            return BadRequest(Strings.Move_NoActivePackage);
         }
 
         return Ok(moveService.GetDropTargets(input.Source, input.Targets));

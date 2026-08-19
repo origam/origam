@@ -21,7 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 namespace Origam.Architect.Server.ReturnModels;
 
-// Id is composed the same way as TreeNode.Id so that the client can match it.
 public class DropTargetResult
 {
     public string Id { get; set; }

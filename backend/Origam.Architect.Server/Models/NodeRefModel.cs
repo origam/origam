@@ -21,8 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 namespace Origam.Architect.Server.Models;
 
-// Id is a schema item / group Guid or a root provider type name, NodeText
-// disambiguates folder nodes sharing the Guid of their parent.
 public class NodeRefModel
 {
     public string Id { get; set; }

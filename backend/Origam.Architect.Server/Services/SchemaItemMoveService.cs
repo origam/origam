@@ -57,7 +57,6 @@ public class DropDecision
         new() { Kind = DropKind.ToParentNode, TargetItem = targetItem };
 }
 
-// The drop rules follow the WinForms architect in Origam.Workbench/ExpressionBrowser.cs.
 public class SchemaItemMoveService(
     SchemaService schemaService,
     IPersistenceService persistenceService,
@@ -84,7 +83,6 @@ public class SchemaItemMoveService(
             .FirstOrDefault(provider => provider.NodeId == id);
     }
 
-    // Non persistent folder nodes carry the NodeId of their owning item.
     public IBrowserNode2 Resolve(NodeRefModel reference)
     {
         if (reference == null || string.IsNullOrWhiteSpace(reference.Id))
@@ -158,7 +156,6 @@ public class SchemaItemMoveService(
         IBrowserNode2 target =
             Resolve(targetReference) ?? throw new UserOrigamException(Strings.Move_TargetNotFound);
 
-        // GetDropTargets is only advisory, the model may have changed since then.
         DropDecision decision = Evaluate(source, target, isCopy);
         if (!decision.IsAllowed)
         {
@@ -191,7 +188,7 @@ public class SchemaItemMoveService(
             return DropDecision.Rejected(Strings.Move_TargetNotFound);
         }
 
-        // A copy always lands in the active package, a move keeps the original one.
+        // A copy lands in the active package, a move keeps the original one.
         if (!isCopy && !schemaService.CanEditItem(item))
         {
             return DropDecision.Rejected(
@@ -205,14 +202,13 @@ public class SchemaItemMoveService(
             return DropDecision.Rejected(Strings.Move_TargetIsSource);
         }
 
-        if (selfDepth > 0)
+        if (selfDepth > 0 && !isCopy)
         {
             return DropDecision.Rejected(
                 string.Format(Strings.Move_TargetIsDescendant, item.Name, target.NodeText)
             );
         }
 
-        // ISchemaItem also implements ISchemaItemProvider, hence the concrete base class.
         if (target is AbstractSchemaItemProvider targetProvider)
         {
             return EvaluateProviderDrop(item, targetProvider);
@@ -257,7 +253,7 @@ public class SchemaItemMoveService(
 
     private static DropDecision EvaluateGroupDrop(ISchemaItem item, SchemaItemGroup group)
     {
-        // Group.RootProvider is transient and empty here, RootItemType is persisted.
+        // Group.RootProvider is transient here, RootItemType is persisted.
         if (
             item.ParentItem != null
             || item.RootProvider is not AbstractSchemaItemProvider provider
@@ -272,7 +268,6 @@ public class SchemaItemMoveService(
         return DropDecision.ToGroup(group);
     }
 
-    // 0 when the target is the item itself, positive for its descendants, -1 otherwise.
     private static int GetAncestorDepth(IBrowserNode2 target, ISchemaItem item)
     {
         var current = target as ISchemaItem;
@@ -290,19 +285,40 @@ public class SchemaItemMoveService(
 
     private ISchemaItem MoveExisting(ISchemaItem item, DropDecision decision)
     {
-        transactionRunner.Run(() =>
+        ISchemaItemProvider rootProvider = item.RootProvider;
+        ISchemaItem oldParent = item.ParentItem;
+        SchemaItemGroup oldGroup = item.Group;
+        bool oldIsAbstract = item.IsAbstract;
+        try
         {
-            ApplyDecision(item, decision);
-            item.Persist();
-        });
+            transactionRunner.Run(() =>
+            {
+                ApplyDecision(item, decision);
+                item.Persist();
+            });
+        }
+        catch
+        {
+            // The transaction rolls back the files only, not the in memory item.
+            item.ParentItem = oldParent;
+            item.Group = oldGroup;
+            item.IsAbstract = oldIsAbstract;
+            ClearLocationCaches(rootProvider, oldParent, decision.TargetItem);
+            throw;
+        }
+
+        if (oldParent == null && decision.Kind == DropKind.ToParentNode)
+        {
+            rootProvider?.ClearCache();
+        }
+
         return item;
     }
 
     private ISchemaItem Copy(ISchemaItem original, DropDecision decision)
     {
         ISchemaItemProvider rootProvider = original.RootProvider;
-        // Clone() adds a top level clone straight into RootProvider.ChildItems, so the
-        // provider cache has to be reset once the clone found its real parent.
+        // Clone() puts a top level clone straight into RootProvider.ChildItems.
         var clone = (ISchemaItem)original.Clone();
         bool wasTopLevel = clone.ParentItem == null;
         try
@@ -322,10 +338,20 @@ public class SchemaItemMoveService(
         }
         catch
         {
-            rootProvider?.ClearCache();
-            decision.TargetItem?.ClearCache();
+            ClearLocationCaches(rootProvider, original.ParentItem, decision.TargetItem);
             throw;
         }
+    }
+
+    private static void ClearLocationCaches(
+        ISchemaItemProvider rootProvider,
+        ISchemaItem oldParent,
+        ISchemaItem newParent
+    )
+    {
+        rootProvider?.ClearCache();
+        oldParent?.ClearCache();
+        newParent?.ClearCache();
     }
 
     private static void ApplyDecision(ISchemaItem item, DropDecision decision)
@@ -344,6 +370,7 @@ public class SchemaItemMoveService(
             }
             case DropKind.ToParentNode:
             {
+                item.Group = null;
                 item.ParentNode = decision.TargetItem;
                 if (decision.TargetItem.IsAbstract && !item.IsAbstract)
                 {
@@ -354,8 +381,7 @@ public class SchemaItemMoveService(
         }
     }
 
-    // Two passes, the second one stores the model after UpdateReferences repointed
-    // the references from the original to the clone.
+    // Two passes, the second one runs after UpdateReferences repointed the clone.
     private void PersistClone(ISchemaItem clone)
     {
         var oldKeys = new Dictionary<Guid, ModelElementKey>();
