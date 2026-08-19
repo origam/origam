@@ -19,6 +19,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Architect.Server.Services;
+using Origam.Architect.Server.Services;
+
+namespace Origam.Architect.Server.Models;
 
 public record NewItemResult(TabData Tab, bool Discarded, bool CloseWhenDone);

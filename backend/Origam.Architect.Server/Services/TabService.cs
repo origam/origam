@@ -51,7 +51,7 @@ public class TabService(
         Type newItemType = ResolveNewItemType(factory, fullTypeName);
         object result = factory
             .GetType()
-            .GetMethod("NewItem")
+            .GetMethod("NewItem")!
             .MakeGenericMethod(newItemType)
             .Invoke(factory, new object[] { schemaService.ActiveSchemaExtensionId, null });
 
@@ -83,7 +83,7 @@ public class TabService(
         }
 
         ISchemaItem item = (ISchemaItem)result;
-        return tabSchemaItems.GetOrAdd(TabId.Default(item.Id), id => new TabData(item, id));
+        return tabSchemaItems.GetOrAdd(TabId.Default(item!.Id), id => new TabData(item, id));
     }
 
     private static Type ResolveNewItemType(ISchemaItemFactory factory, string typeNameOrCaption)
