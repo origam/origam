@@ -311,10 +311,7 @@ public class SchemaItemMoveService(
             {
                 ApplyDecision(clone, decision);
                 clone.SetExtensionRecursive(schemaService.ActiveExtension);
-                if (clone.ParentItem?.Id == original.ParentItem?.Id)
-                {
-                    clone.Name = GetUniqueCopyName(clone);
-                }
+                clone.Name = GetUniqueName(clone);
                 PersistClone(clone);
                 if (wasTopLevel && decision.Kind == DropKind.ToParentNode)
                 {
@@ -392,13 +389,18 @@ public class SchemaItemMoveService(
         clone.OldPrimaryKey = null;
     }
 
-    private static string GetUniqueCopyName(ISchemaItem clone)
+    private static string GetUniqueName(ISchemaItem clone)
     {
         HashSet<string> takenNames = GetSiblings(clone)
             .Where(sibling => sibling.Id != clone.Id)
             .Select(sibling => sibling.Name)
             .Where(name => name != null)
             .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        if (clone.Name == null || !takenNames.Contains(clone.Name))
+        {
+            return clone.Name;
+        }
 
         string candidate = string.Format(Strings.CopyOfName, clone.Name);
         for (int counter = 2; takenNames.Contains(candidate); counter++)
@@ -421,7 +423,8 @@ public class SchemaItemMoveService(
             return [];
         }
 
-        return item.RootProvider.ChildItems.Where(sibling => sibling.Group?.Id == item.Group?.Id);
+        // Groups split the provider visually only, top level names stay unique.
+        return item.RootProvider.ChildItems;
     }
 
     private static string ToNodeKey(NodeRefModel reference) => reference.Id + reference.NodeText;
