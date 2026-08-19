@@ -98,11 +98,27 @@ public class WizardController(
         Ok(menuItemWizard.CreateWorkflowMenuItem(input));
 
     [HttpPost("roles")]
+    [EndpointDescription(
+        "Creates the deployment activities that add a role to the database. There is no "
+            + "wizard-data endpoint for this wizard: itemId is the id of an existing model item "
+            + "that already carries one specific role, typically a menu item whose roles property "
+            + "names a single role. An item with no role, or with the role '*', is rejected - ask "
+            + "the user for a menu item with a concrete role, or create one first. The package "
+            + "must also have a current deployment version. The id must be a GUID copied "
+            + "character for character out of a tool response in this conversation - a name is "
+            + "rejected, and so is a GUID you produced yourself. Show the user the item you are "
+            + "about to use as 'name (id)' and wait for explicit confirmation before calling this."
+    )]
     public IActionResult CreateRole([FromBody] CreateRoleModel input) =>
         Ok(roleWizard.CreateRole(input));
 
     [HttpPost("work-queue-classes")]
-    [EndpointDescription("Creates a work queue class. " + WizardIdRule + WizardConfirmationRule)]
+    [EndpointDescription(
+        "Creates a work queue class. Pass Name to control what the class is called; leave it out "
+            + "and the entity name is used. "
+            + WizardIdRule
+            + WizardConfirmationRule
+    )]
     public IActionResult CreateWorkQueueClass([FromBody] CreateWorkQueueModel input) =>
         Ok(workQueueWizard.CreateWorkQueueClass(input));
 
