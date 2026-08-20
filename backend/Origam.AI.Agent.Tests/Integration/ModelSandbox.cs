@@ -31,12 +31,15 @@ public sealed class ModelSandbox
     private const string SandboxRootFolderName = "origam-ai-benchmark";
     private const string ModelLocationElement = "ModelSourceControlLocation";
     private const string ArchitectUrlVariable = "ORIGAM_ARCHITECT_URL";
+    private const string SettingsPathVariable = "ORIGAM_SETTINGS_PATH";
+    private const string ArchitectProjectFolderName = "Origam.Architect.Server";
 
     private static readonly TimeSpan StaleSandboxAge = TimeSpan.FromHours(6);
     private static readonly TimeSpan DeleteRetryDelay = TimeSpan.FromMilliseconds(300);
 
     private string settingsPath = string.Empty;
     private string settingsBackupPath = string.Empty;
+    private bool settingsWereBorrowed;
     private DirectoryInfo? sandboxRunDirectory;
     private EventHandler? processExitHandler;
 
@@ -51,21 +54,20 @@ public sealed class ModelSandbox
         settingsBackupPath = Path.Combine(AppContext.BaseDirectory, SettingsBackupFileName);
         RestoreSettings();
 
-        if (!File.Exists(settingsPath))
-        {
-            Assert.Ignore($"No {SettingsFileName} next to the test assembly, cannot sandbox it.");
-        }
-
-        var settings = XDocument.Load(settingsPath);
-        var modelLocations = settings.Descendants(ModelLocationElement).ToList();
-        var sourceModel = new DirectoryInfo(modelLocations.FirstOrDefault()?.Value ?? string.Empty);
-        if (modelLocations.Count == 0 || !sourceModel.Exists)
+        var source = FindUsableSettings();
+        if (source is null)
         {
             Assert.Ignore(
-                $"{ModelLocationElement} in {SettingsFileName} does not point at an existing "
-                    + "model, cannot sandbox it."
+                $"Found no {SettingsFileName} pointing at an existing model. Looked next to the "
+                    + $"test assembly and in {ArchitectProjectFolderName}\\bin; point "
+                    + $"{SettingsPathVariable} at one to override."
             );
+            return;
         }
+
+        var (sourceSettingsPath, settings) = source.Value;
+        var modelLocations = settings.Descendants(ModelLocationElement).ToList();
+        var sourceModel = new DirectoryInfo(modelLocations[0].Value);
 
         DeleteStaleSandboxes();
 
@@ -81,7 +83,15 @@ public sealed class ModelSandbox
         );
         CopyDirectory(sourceModel, sandboxModel);
 
-        File.Copy(settingsPath, settingsBackupPath, overwrite: true);
+        if (string.Equals(sourceSettingsPath, settingsPath, StringComparison.OrdinalIgnoreCase))
+        {
+            File.Copy(settingsPath, settingsBackupPath, overwrite: true);
+        }
+        else
+        {
+            settingsWereBorrowed = true;
+            TestContext.Progress.WriteLine($"settings borrowed from: {sourceSettingsPath}");
+        }
         processExitHandler = (_, _) => RestoreSettings();
         AppDomain.CurrentDomain.ProcessExit += processExitHandler;
 
@@ -121,13 +131,103 @@ public sealed class ModelSandbox
 
     private void RestoreSettings()
     {
-        if (string.IsNullOrEmpty(settingsBackupPath) || !File.Exists(settingsBackupPath))
+        if (!string.IsNullOrEmpty(settingsBackupPath) && File.Exists(settingsBackupPath))
         {
+            File.Copy(settingsBackupPath, settingsPath, overwrite: true);
+            File.Delete(settingsBackupPath);
             return;
         }
 
-        File.Copy(settingsBackupPath, settingsPath, overwrite: true);
-        File.Delete(settingsBackupPath);
+        if (settingsWereBorrowed && File.Exists(settingsPath))
+        {
+            File.Delete(settingsPath);
+            settingsWereBorrowed = false;
+        }
+    }
+
+    /// <summary>
+    /// The in-process Architect reads its settings from the folder it runs in, which is the test
+    /// output folder. A developer configures the Architect through its own UI, so the file lands
+    /// in the Architect's output folder instead - borrow it from there when it is missing here.
+    /// </summary>
+    private static (string Path, XDocument Settings)? FindUsableSettings()
+    {
+        foreach (var candidate in SettingsCandidates())
+        {
+            var settings = LoadSettingsWithAnExistingModel(candidate);
+            if (settings is not null)
+            {
+                return (candidate, settings);
+            }
+        }
+
+        return null;
+    }
+
+    private static IEnumerable<string> SettingsCandidates()
+    {
+        var fromVariable = Environment.GetEnvironmentVariable(SettingsPathVariable);
+        if (!string.IsNullOrWhiteSpace(fromVariable))
+        {
+            yield return Directory.Exists(fromVariable)
+                ? Path.Combine(fromVariable, SettingsFileName)
+                : fromVariable;
+            yield break;
+        }
+
+        yield return Path.Combine(AppContext.BaseDirectory, SettingsFileName);
+        foreach (var fromArchitectOutput in ArchitectOutputSettings())
+        {
+            yield return fromArchitectOutput;
+        }
+    }
+
+    private static IEnumerable<string> ArchitectOutputSettings()
+    {
+        for (
+            var folder = new DirectoryInfo(AppContext.BaseDirectory);
+            folder is not null;
+            folder = folder.Parent
+        )
+        {
+            var architectOutput = new DirectoryInfo(
+                Path.Combine(folder.FullName, ArchitectProjectFolderName, path3: "bin")
+            );
+            if (!architectOutput.Exists)
+            {
+                continue;
+            }
+
+            return architectOutput
+                .GetFiles(SettingsFileName, SearchOption.AllDirectories)
+                .OrderByDescending(file => file.LastWriteTimeUtc)
+                .Select(file => file.FullName);
+        }
+
+        return [];
+    }
+
+    private static XDocument? LoadSettingsWithAnExistingModel(string path)
+    {
+        if (!File.Exists(path))
+        {
+            return null;
+        }
+
+        XDocument settings;
+        try
+        {
+            settings = XDocument.Load(path);
+        }
+        catch (System.Xml.XmlException)
+        {
+            return null;
+        }
+
+        var modelLocation = settings.Descendants(ModelLocationElement).FirstOrDefault()?.Value;
+        return !string.IsNullOrWhiteSpace(modelLocation) && Directory.Exists(modelLocation)
+            ? settings
+            : null;
     }
 
     private static void DeleteStaleSandboxes()
