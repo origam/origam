@@ -18,6 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { expect, test } from '@playwright/test';
+import { closeAiPanel } from '@support/aiPanel';
 import { resetBackend } from '@support/resetBackend';
 
 test.describe('Deployment Version creation (real backend)', () => {
@@ -27,8 +28,8 @@ test.describe('Deployment Version creation (real backend)', () => {
 
     test('Deployment Version creation', async ({ page }) => {
         await page.goto('/');
+        await closeAiPanel(page);
 
-        await page.getByText('Root Menu').click();
         await page.getByTestId('tree-toggle-Common').click();
         await page.getByTestId('tree-toggle-Deployment').click();
         await page.getByTestId('tree-toggle-Root Menu').click();

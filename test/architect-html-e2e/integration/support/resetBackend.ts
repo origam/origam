@@ -39,6 +39,10 @@ const repoRoot = findRepoRoot();
 const MODEL_DIR = 'model-tests/model';
 const DEFAULT_PACKAGE = 'Root Menu';
 
+export function readModelFile(relativePath: string): string {
+  return fs.readFileSync(path.join(repoRoot, MODEL_DIR, relativePath), 'utf8');
+}
+
 export function restoreModelFiles(): void {
   execFileSync('git', ['checkout', '--', MODEL_DIR], { cwd: repoRoot, stdio: 'pipe' });
   execFileSync('git', ['clean', '-fd', MODEL_DIR], { cwd: repoRoot, stdio: 'pipe' });

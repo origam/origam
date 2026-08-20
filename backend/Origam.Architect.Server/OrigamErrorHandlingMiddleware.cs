@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.Data;
+using Origam.Architect.Server.Exceptions;
 using Origam.Extensions;
 using Origam.Service.Core;
 
@@ -62,6 +63,13 @@ public class OrigamErrorHandlingMiddleware(
                 {
                     context.Response.StatusCode = 420;
                     await WriteJsonAsync(context, GetReturnObject(ex, ex.Message));
+                    break;
+                }
+                case SchemaItemNotFoundException:
+                {
+                    logger.LogWarning(ex.Message);
+                    context.Response.StatusCode = StatusCodes.Status404NotFound;
+                    await WriteJsonAsync(context, new { message = ex.Message });
                     break;
                 }
                 default:

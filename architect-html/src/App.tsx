@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import '@/App.css';
 import '@/colors.scss';
 import { RootStoreContext, T } from '@/main';
+import { AiAgentPanel } from '@/ai/AiAgentPanel';
 import { EditorTabView } from '@components/editorTabView/EditorTabView';
 import ModelTree from '@components/modelTree/ModelTree';
 import { Packages } from '@components/packages/Packages';
@@ -35,7 +36,12 @@ import { useContext, useEffect } from 'react';
 import Output from '@components/properties/Output.tsx';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { isSaveShortcut } from '@/utils/keyShortcuts';
-import { SIDEBAR_MAX_WIDTH, SIDEBAR_MIN_WIDTH } from '@stores/UiState';
+import {
+  AI_PANEL_MAX_WIDTH,
+  AI_PANEL_MIN_WIDTH,
+  SIDEBAR_MAX_WIDTH,
+  SIDEBAR_MIN_WIDTH,
+} from '@stores/UiState';
 
 const App = observer(() => {
   const rootStore = useContext(RootStoreContext);
@@ -86,6 +92,12 @@ const App = observer(() => {
         onSideBarWidthChange={width => rootStore.uiState.setSidebarWidth(width)}
         minSideBarWidth={SIDEBAR_MIN_WIDTH}
         maxSideBarWidth={SIDEBAR_MAX_WIDTH}
+        aiPanel={<AiAgentPanel />}
+        aiPanelVisible={rootStore.uiState.aiPanelVisible}
+        aiPanelWidth={rootStore.uiState.aiPanelWidth}
+        onAiPanelWidthChange={width => rootStore.uiState.setAiPanelWidth(width)}
+        minAiPanelWidth={AI_PANEL_MIN_WIDTH}
+        maxAiPanelWidth={AI_PANEL_MAX_WIDTH}
         sideBar={
           <TabView
             width={rootStore.uiState.sidebarWidth}

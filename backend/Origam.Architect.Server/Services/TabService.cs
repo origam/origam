@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Collections.Concurrent;
 using System.Reflection;
 using Origam.Architect.Server.ArchitectLogic;
+using Origam.Architect.Server.Exceptions;
 using Origam.Architect.Server.Models;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema;
@@ -34,7 +35,9 @@ namespace Origam.Architect.Server.Services;
 public class TabService(
     SchemaService schemaService,
     IPersistenceService persistenceService,
-    PropertyParser propertyParser
+    PropertyParser propertyParser,
+    PropertyEditorService propertyEditorService,
+    GitNodeStatusService gitNodeStatusService
 )
 {
     private readonly IPersistenceProvider persistenceProvider = persistenceService.SchemaProvider;
@@ -45,10 +48,10 @@ public class TabService(
     {
         ISchemaItemFactory factory = GetParentItemFactory(parentId);
 
-        Type newItemType = Reflector.GetTypeByName(fullTypeName);
+        Type newItemType = ResolveNewItemType(factory, fullTypeName);
         object result = factory
             .GetType()
-            .GetMethod("NewItem")
+            .GetMethod("NewItem")!
             .MakeGenericMethod(newItemType)
             .Invoke(factory, new object[] { schemaService.ActiveSchemaExtensionId, null });
 
@@ -80,13 +83,54 @@ public class TabService(
         }
 
         ISchemaItem item = (ISchemaItem)result;
-        return tabSchemaItems.GetOrAdd(TabId.Default(item.Id), id => new TabData(item, id));
+        return tabSchemaItems.GetOrAdd(TabId.Default(item!.Id), id => new TabData(item, id));
+    }
+
+    private static Type ResolveNewItemType(ISchemaItemFactory factory, string typeNameOrCaption)
+    {
+        Type[] newItemTypes = factory.NewItemTypes ?? [];
+        Type matchedType = newItemTypes.FirstOrDefault(type =>
+            type.FullName == typeNameOrCaption
+            || string.Equals(
+                type.SchemaItemDescription()?.Name,
+                typeNameOrCaption,
+                StringComparison.OrdinalIgnoreCase
+            )
+        );
+        if (matchedType != null)
+        {
+            return matchedType;
+        }
+
+        if (typeNameOrCaption != null && typeNameOrCaption.Contains('.'))
+        {
+            return Reflector.GetTypeByName(typeNameOrCaption);
+        }
+
+        throw new Exception(
+            string.Format(
+                Strings.NewItemTypeNotFound,
+                typeNameOrCaption,
+                string.Join(
+                    separator: ", ",
+                    newItemTypes.Select(type => type.SchemaItemDescription()?.Name ?? type.Name)
+                )
+            )
+        );
     }
 
     private ISchemaItemFactory GetParentItemFactory(string parentId)
     {
         if (Guid.TryParse(parentId, out Guid parentGuid))
         {
+            if (
+                tabSchemaItems.TryGetValue(TabId.Default(parentGuid), out TabData tabData)
+                && tabData.Item is ISchemaItemFactory unsavedParentFactory
+            )
+            {
+                return unsavedParentFactory;
+            }
+
             IBrowserNode2 parentItem = persistenceProvider.RetrieveInstance<IBrowserNode2>(
                 parentGuid
             );
@@ -140,18 +184,89 @@ public class TabService(
         return null;
     }
 
+    public NewItemResult CreateNode(NewItemModel input)
+    {
+        TabData tab = OpenTabWithNewItem(input.NodeId, input.NewTypeName);
+
+        try
+        {
+            if (input.Changes is { Count: > 0 })
+            {
+                ChangesToTabData(
+                    new ChangesModel { SchemaItemId = tab.Item.Id, Changes = input.Changes }
+                );
+            }
+
+            if (input.Persist)
+            {
+                if (HasRuleErrors(tab.Item))
+                {
+                    return new NewItemResult(tab, Discarded: true, CloseWhenDone: true);
+                }
+
+                if (CanPersist(tab.Item))
+                {
+                    PersistItem(tab);
+                }
+            }
+        }
+        catch
+        {
+            if (!tab.Item.IsPersisted)
+            {
+                CloseTab(tab.Id);
+            }
+
+            throw;
+        }
+
+        return new NewItemResult(
+            tab,
+            Discarded: false,
+            CloseWhenDone: input.Persist && tab.Item.IsPersisted
+        );
+    }
+
+    public void PersistItem(TabData tabData)
+    {
+        ISchemaItem persistTarget = tabData.Item;
+        while (persistTarget.ParentItem != null && !persistTarget.ParentItem.IsPersisted)
+        {
+            persistTarget = persistTarget.ParentItem;
+        }
+
+        try
+        {
+            persistenceProvider.BeginTransaction();
+            persistTarget.Persist();
+            tabData.IsDirty = false;
+            tabData.IsStale = false;
+        }
+        finally
+        {
+            persistenceProvider.EndTransaction();
+            gitNodeStatusService.ClearCache();
+            InvalidateTabsInRoot(persistTarget.RootItem, tabData.Id);
+        }
+    }
+
+    public bool CanPersist(ISchemaItem item)
+    {
+        return item is not AbstractControlSet controlSet || controlSet.DataSourceId != Guid.Empty;
+    }
+
+    private bool HasRuleErrors(ISchemaItem item)
+    {
+        return propertyEditorService
+            .GetEditorPropertiesWithErrors(item)
+            .Any(property => property.Errors is { Count: > 0 });
+    }
+
     public TabData OpenDefaultTab(Guid schemaItemId)
     {
         return tabSchemaItems.GetOrAdd(
             TabId.Default(schemaItemId),
-            tabId =>
-            {
-                ISchemaItem item = persistenceService.SchemaProvider.RetrieveInstance<ISchemaItem>(
-                    tabId.SchemaItemId,
-                    useCache: false
-                );
-                return new TabData(item, tabId);
-            }
+            tabId => new TabData(RetrieveSchemaItem(tabId.SchemaItemId), tabId)
         );
     }
 
@@ -159,15 +274,23 @@ public class TabService(
     {
         return tabSchemaItems.GetOrAdd(
             TabId.Documentation(schemaItemId),
-            tabId =>
-            {
-                ISchemaItem item = persistenceService.SchemaProvider.RetrieveInstance<ISchemaItem>(
-                    tabId.SchemaItemId,
-                    useCache: false
-                );
-                return new TabData(item, tabId);
-            }
+            tabId => new TabData(RetrieveSchemaItem(tabId.SchemaItemId), tabId)
         );
+    }
+
+    private ISchemaItem RetrieveSchemaItem(Guid schemaItemId)
+    {
+        ISchemaItem item = persistenceService.SchemaProvider.RetrieveInstance<ISchemaItem>(
+            schemaItemId,
+            useCache: false,
+            throwNotFoundException: false
+        );
+        if (item == null)
+        {
+            throw new SchemaItemNotFoundException(schemaItemId);
+        }
+
+        return item;
     }
 
     public void CloseTab(TabId tabId)
@@ -240,6 +363,35 @@ public class TabService(
     {
         return tabSchemaItems.Values.OrderBy(x => x.OpenedAt);
     }
+
+    public void InvalidateTabsInRoot(ISchemaItem changedRootItem, TabId changedByTabId)
+    {
+        if (changedRootItem == null)
+        {
+            return;
+        }
+
+        foreach (KeyValuePair<TabId, TabData> entry in tabSchemaItems.ToArray())
+        {
+            if (entry.Key.Equals(changedByTabId))
+            {
+                continue;
+            }
+
+            if (entry.Value.Item.RootItem?.Id != changedRootItem.Id)
+            {
+                continue;
+            }
+
+            if (entry.Value.IsDirty)
+            {
+                entry.Value.IsStale = true;
+                continue;
+            }
+
+            tabSchemaItems.TryRemove(entry.Key, out TabData _);
+        }
+    }
 }
 
 public class TabData(ISchemaItem item, TabId id)
@@ -250,4 +402,6 @@ public class TabData(ISchemaItem item, TabId id)
     public DateTime OpenedAt { get; } = DateTime.Now;
 
     public bool IsDirty { get; set; }
+
+    public bool IsStale { get; set; }
 }

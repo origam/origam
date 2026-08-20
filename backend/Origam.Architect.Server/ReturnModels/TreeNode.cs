@@ -94,6 +94,26 @@ public class TreeNodeFactory(
         };
     }
 
+    public List<TreeNode> CreateChildren(IBrowserNode2 node, int depth)
+    {
+        return node.ChildNodes()
+            .Cast<IBrowserNode2>()
+            .OrderBy(childNode => childNode.NodeText)
+            .Where(childNode => childNode is not ISchemaItem item || item.IsPersisted)
+            .Select(childNode => CreateRecursive(childNode, depth))
+            .ToList();
+    }
+
+    public TreeNode CreateRecursive(IBrowserNode2 node, int remainingDepth)
+    {
+        TreeNode treeNode = Create(node);
+        if (remainingDepth > 0 && treeNode.HasChildNodes)
+        {
+            treeNode.Children = CreateChildren(node, remainingDepth - 1);
+        }
+        return treeNode;
+    }
+
     private DeploymentStatus? GetDeploymentStatus(IBrowserNode2 node)
     {
         if (node is not Schema.DeploymentModel.DeploymentVersion version)

@@ -18,6 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { expect, test } from '@playwright/test';
+import { closeAiPanel } from '@support/aiPanel';
 import { resetBackend } from '@support/resetBackend';
 
 test.describe('Entity Relationship creation (real backend)', () => {
@@ -27,6 +28,7 @@ test.describe('Entity Relationship creation (real backend)', () => {
 
   test('Entity Relationship creation with incremental search', async ({ page }) => {
     await page.goto('/');
+    await closeAiPanel(page);
 
     await page.getByTestId('tree-toggle-Data').click();
     await page.getByTestId('tree-toggle-Entities').click();

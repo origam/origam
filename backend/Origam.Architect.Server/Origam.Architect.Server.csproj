@@ -12,6 +12,7 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.9.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Origam.AI.Agent\Origam.AI.Agent.csproj" />
     <ProjectReference Include="..\Origam.Common\Origam.Common.csproj" />
     <ProjectReference Include="..\Origam.OrigamEngine\Origam.OrigamEngine.csproj" />
     <ProjectReference Include="..\Origam.ReflectorCache\Origam.ReflectorCache.csproj" />

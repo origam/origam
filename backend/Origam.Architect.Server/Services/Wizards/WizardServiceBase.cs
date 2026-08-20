@@ -62,7 +62,30 @@ public abstract class WizardServiceBase(
 
     protected IDataEntity RetrieveEntity(Guid entityId)
     {
-        return Retrieve<IDataEntity>(entityId, Strings.Wizard_EntityNotFound);
+        var instance = Retrieve<IPersistent>(entityId, Strings.Wizard_EntityNotFound);
+
+        if (instance is IDataEntity entity)
+        {
+            return entity;
+        }
+
+        if (
+            instance is DataStructureEntity dataStructureEntity
+            && dataStructureEntity.Entity is IDataEntity or IAssociation
+        )
+        {
+            throw new UserOrigamException(
+                string.Format(
+                    Strings.Wizard_DataStructureEntityUsedAsEntity,
+                    entityId,
+                    dataStructureEntity.EntityDefinition.Id
+                )
+            );
+        }
+
+        throw new UserOrigamException(
+            string.Format(Strings.Wizard_NotAnEntity, entityId, instance.GetType().Name)
+        );
     }
 
     protected static string RequireName(string name, string nameRequiredMessage)
