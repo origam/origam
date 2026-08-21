@@ -1,5 +1,5 @@
 /*
-Copyright 2005 - 2025 Advantage Solutions, s. r. o. 
+Copyright 2005 - 2026 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -17,20 +17,14 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-.root {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  min-height: 0;
+import { loader } from '@monaco-editor/react';
+import 'monaco-editor/esm/vs/basic-languages/sql/sql.contribution.js';
+import 'monaco-editor/esm/vs/basic-languages/xml/xml.contribution.js';
+import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
+import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker.js?worker';
 
-  .editorContainer {
-    flex: 1;
-    min-height: 0;
-  }
+self.MonacoEnvironment = {
+  getWorker: () => new EditorWorker(),
+};
 
-  .vimStatus {
-    flex-shrink: 0;
-    padding: 5px;
-    background: var(--background3);
-  }
-}
+loader.config({ monaco });
