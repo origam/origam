@@ -20,7 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import type { Locator, Page } from '@playwright/test';
 
 interface DragOptions {
-  // Ctrl turns the move into a copy.
   copy?: boolean;
   // Runs while the pointer rests on the target, before the drop.
   whileOverTarget?: () => Promise<void>;

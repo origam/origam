@@ -43,7 +43,6 @@ public enum MoveTargetKind
 
 public class MoveTargetResult
 {
-    // Id and NodeText are what MoveNode expects back as the target reference.
     public string Id { get; set; }
     public string NodeText { get; set; }
     public string Key { get; set; }

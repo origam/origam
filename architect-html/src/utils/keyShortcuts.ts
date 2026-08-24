@@ -42,7 +42,6 @@ export function hasTextSelection(): boolean {
   return !!selection && !selection.isCollapsed && selection.toString().length > 0;
 }
 
-// Let the browser handle the clipboard here.
 export function isTypingTarget(e: KeyboardEvent): boolean {
   const target = e.target as HTMLElement | null;
   if (!target || !target.closest) {

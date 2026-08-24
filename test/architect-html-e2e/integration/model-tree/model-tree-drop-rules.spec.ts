@@ -17,13 +17,13 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { expect, test, type APIRequestContext } from "@playwright/test";
-import fs from "node:fs";
-import { activatePackage } from "@support/activatePackage";
-import { modelFilePath, resetBackend } from "@support/resetBackend";
+import { expect, test, type APIRequestContext } from '@playwright/test';
+import fs from 'node:fs';
+import { activatePackage } from '@support/activatePackage';
+import { modelFilePath, resetBackend } from '@support/resetBackend';
 
-const PACKAGE = "AutomaticTests";
-const CONSTANTS_DIR = "AutomaticTests/DataConstant";
+const PACKAGE = 'AutomaticTests';
+const CONSTANTS_DIR = 'AutomaticTests/DataConstant';
 
 interface NodeRef {
   id: string;
@@ -35,41 +35,23 @@ function ref(id: string, nodeText: string): NodeRef {
   return { id, nodeText, isNonPersistentItem: false };
 }
 
-const UNGROUPED_CONSTANT = ref(
-  "024f30d7-64c1-43b7-8e0e-5d185597ae45",
-  "UngroupedConstant",
-);
-const CONSTANT_GROUP = ref(
-  "3fb9c2c0-6254-4733-9b49-6058514b1451",
-  "AutomaticTests",
-);
-const ENTITY_GROUP = ref(
-  "d79cfa79-5f2d-4e9f-a655-0bb55c8db553",
-  "AutomaticTests",
-);
-const CONSTANTS_ROOT = ref(
-  "Origam.Schema.EntityModel.DataConstantSchemaItemProvider",
-  "Constants",
-);
+const UNGROUPED_CONSTANT = ref('024f30d7-64c1-43b7-8e0e-5d185597ae45', 'UngroupedConstant');
+const CONSTANT_GROUP = ref('3fb9c2c0-6254-4733-9b49-6058514b1451', 'AutomaticTests');
+const ENTITY_GROUP = ref('d79cfa79-5f2d-4e9f-a655-0bb55c8db553', 'AutomaticTests');
+const CONSTANTS_ROOT = ref('Origam.Schema.EntityModel.DataConstantSchemaItemProvider', 'Constants');
 // Belongs to Root, which AutomaticTests references.
-const FOREIGN_CONSTANT = ref(
-  "e42f864f-5018-4967-abdc-5910439adc9a",
-  "InitialUserCreated",
-);
-const FOREIGN_GROUP = ref(
-  "9e00cfe2-ad80-40f2-aeb2-321dcc57325e",
-  "Attachments",
-);
+const FOREIGN_CONSTANT = ref('e42f864f-5018-4967-abdc-5910439adc9a', 'InitialUserCreated');
+const FOREIGN_GROUP = ref('9e00cfe2-ad80-40f2-aeb2-321dcc57325e', 'Attachments');
 
-test.describe("Model tree drop rules (real backend)", () => {
-  test.describe.configure({ mode: "default", timeout: 45_000 });
+test.describe('Model tree drop rules (real backend)', () => {
+  test.describe.configure({ mode: 'default', timeout: 45_000 });
 
   test.beforeEach(async ({ request }) => {
     await resetBackend(request);
     await activatePackage(request, PACKAGE);
   });
 
-  test("Only matching containers accept a constant", async ({ request }) => {
+  test('Only matching containers accept a constant', async ({ request }) => {
     const verdicts = await getDropTargets(request, UNGROUPED_CONSTANT, [
       CONSTANT_GROUP,
       CONSTANTS_ROOT,
@@ -96,7 +78,7 @@ test.describe("Model tree drop rules (real backend)", () => {
     });
   });
 
-  test("An item of another package can only be copied", async ({ request }) => {
+  test('An item of another package can only be copied', async ({ request }) => {
     const verdicts = await getDropTargets(request, FOREIGN_CONSTANT, [
       CONSTANT_GROUP,
       CONSTANTS_ROOT,
@@ -112,10 +94,8 @@ test.describe("Model tree drop rules (real backend)", () => {
     });
   });
 
-  test("A group is not a movable item", async ({ request }) => {
-    const verdicts = await getDropTargets(request, CONSTANT_GROUP, [
-      CONSTANTS_ROOT,
-    ]);
+  test('A group is not a movable item', async ({ request }) => {
+    const verdicts = await getDropTargets(request, CONSTANT_GROUP, [CONSTANTS_ROOT]);
 
     expect(verdicts.get(key(CONSTANTS_ROOT))).toEqual({
       canMove: false,
@@ -123,8 +103,8 @@ test.describe("Model tree drop rules (real backend)", () => {
     });
   });
 
-  test("A rejected move is refused and changes nothing", async ({ request }) => {
-    const response = await request.post("/Model/MoveNode", {
+  test('A rejected move is refused and changes nothing', async ({ request }) => {
+    const response = await request.post('/Model/MoveNode', {
       data: {
         source: UNGROUPED_CONSTANT,
         target: ENTITY_GROUP,
@@ -133,76 +113,56 @@ test.describe("Model tree drop rules (real backend)", () => {
     });
 
     expect(response.ok()).toBeFalsy();
-    expect(
-      fs.existsSync(modelFilePath(`${CONSTANTS_DIR}/UngroupedConstant.origam`)),
-    ).toBe(true);
+    expect(fs.existsSync(modelFilePath(`${CONSTANTS_DIR}/UngroupedConstant.origam`))).toBe(true);
   });
 
-  test("Copying an item of another package writes it into the active one", async ({
-    request,
-  }) => {
-    const response = await request.post("/Model/MoveNode", {
+  test('Copying an item of another package writes it into the active one', async ({ request }) => {
+    const response = await request.post('/Model/MoveNode', {
       data: { source: FOREIGN_CONSTANT, target: CONSTANT_GROUP, isCopy: true },
     });
 
     expect(response.ok(), await response.text()).toBeTruthy();
     const { node } = (await response.json()) as { node: { nodeText: string } };
-    expect(node.nodeText).toBe("Copy of InitialUserCreated");
+    expect(node.nodeText).toBe('Copy of InitialUserCreated');
 
     expect(
       fs.existsSync(
-        modelFilePath(
-          `${CONSTANTS_DIR}/AutomaticTests/Copy of InitialUserCreated.origam`,
-        ),
+        modelFilePath(`${CONSTANTS_DIR}/AutomaticTests/Copy of InitialUserCreated.origam`),
       ),
     ).toBe(true);
   });
 
-  test("Moving a constant into a group of another package repackages it", async ({
-    request,
-  }) => {
-    const response = await request.post("/Model/MoveNode", {
+  test('Moving a constant into a group of another package repackages it', async ({ request }) => {
+    const response = await request.post('/Model/MoveNode', {
       data: { source: UNGROUPED_CONSTANT, target: FOREIGN_GROUP, isCopy: false },
     });
 
     expect(response.ok(), await response.text()).toBeTruthy();
     expect(
-      fs.existsSync(
-        modelFilePath(
-          "Root/DataConstant/Attachments/UngroupedConstant.origam",
-        ),
-      ),
+      fs.existsSync(modelFilePath('Root/DataConstant/Attachments/UngroupedConstant.origam')),
     ).toBe(true);
-    expect(
-      fs.existsSync(modelFilePath(`${CONSTANTS_DIR}/UngroupedConstant.origam`)),
-    ).toBe(false);
+    expect(fs.existsSync(modelFilePath(`${CONSTANTS_DIR}/UngroupedConstant.origam`))).toBe(false);
     // The group belongs to Root, the source package must not grow a copy of it.
-    expect(fs.existsSync(modelFilePath(`${CONSTANTS_DIR}/Attachments`))).toBe(
-      false,
-    );
+    expect(fs.existsSync(modelFilePath(`${CONSTANTS_DIR}/Attachments`))).toBe(false);
   });
 
-  test("Copying a constant into a group of another package writes it there", async ({
+  test('Copying a constant into a group of another package writes it there', async ({
     request,
   }) => {
-    const response = await request.post("/Model/MoveNode", {
+    const response = await request.post('/Model/MoveNode', {
       data: { source: UNGROUPED_CONSTANT, target: FOREIGN_GROUP, isCopy: true },
     });
 
     expect(response.ok(), await response.text()).toBeTruthy();
     expect(
       fs.existsSync(
-        modelFilePath(
-          "Root/DataConstant/Attachments/Copy of UngroupedConstant.origam",
-        ),
+        modelFilePath('Root/DataConstant/Attachments/Copy of UngroupedConstant.origam'),
       ),
     ).toBe(true);
-    expect(
-      fs.existsSync(modelFilePath(`${CONSTANTS_DIR}/UngroupedConstant.origam`)),
-    ).toBe(true);
+    expect(fs.existsSync(modelFilePath(`${CONSTANTS_DIR}/UngroupedConstant.origam`))).toBe(true);
   });
 
-  test("Move targets of a constant are the provider and the constant groups", async ({
+  test('Move targets of a constant are the provider and the constant groups', async ({
     request,
   }) => {
     const targets = await getMoveTargets(request, UNGROUPED_CONSTANT);
@@ -210,28 +170,24 @@ test.describe("Model tree drop rules (real backend)", () => {
     expect(targets.get(key(CONSTANTS_ROOT))).toMatchObject({
       canMove: true,
       canCopy: true,
-      kind: "Provider",
+      kind: 'Provider',
     });
     expect(targets.get(key(CONSTANT_GROUP))).toMatchObject({
       canMove: true,
       canCopy: true,
-      kind: "Group",
+      kind: 'Group',
     });
     expect(targets.get(key(FOREIGN_GROUP))).toMatchObject({
       canMove: true,
       canCopy: true,
-      packageName: "Root",
+      packageName: 'Root',
     });
     expect(targets.has(key(ENTITY_GROUP))).toBe(false);
     // DataConstant has no CanMove override, so no item can become its parent.
-    expect([...targets.values()].some((target) => target.kind === "Item")).toBe(
-      false,
-    );
+    expect([...targets.values()].some(target => target.kind === 'Item')).toBe(false);
   });
 
-  test("Move targets of an item of another package are copy only", async ({
-    request,
-  }) => {
+  test('Move targets of an item of another package are copy only', async ({ request }) => {
     const targets = await getMoveTargets(request, FOREIGN_CONSTANT);
 
     expect(targets.size).toBeGreaterThan(0);
@@ -240,29 +196,27 @@ test.describe("Model tree drop rules (real backend)", () => {
     }
   });
 
-  test("A group has no move targets", async ({ request }) => {
+  test('A group has no move targets', async ({ request }) => {
     const targets = await getMoveTargets(request, CONSTANT_GROUP);
 
     expect(targets.size).toBe(0);
   });
 
-  test("A repeated copy gets a numbered name", async ({ request }) => {
+  test('A repeated copy gets a numbered name', async ({ request }) => {
     await copyIntoGroup(request);
     const second = await copyIntoGroup(request);
 
-    expect(second).toBe("Copy of UngroupedConstant (2)");
+    expect(second).toBe('Copy of UngroupedConstant (2)');
     expect(
       fs.existsSync(
-        modelFilePath(
-          `${CONSTANTS_DIR}/AutomaticTests/Copy of UngroupedConstant (2).origam`,
-        ),
+        modelFilePath(`${CONSTANTS_DIR}/AutomaticTests/Copy of UngroupedConstant (2).origam`),
       ),
     ).toBe(true);
   });
 });
 
 async function copyIntoGroup(request: APIRequestContext): Promise<string> {
-  const response = await request.post("/Model/MoveNode", {
+  const response = await request.post('/Model/MoveNode', {
     data: { source: UNGROUPED_CONSTANT, target: CONSTANT_GROUP, isCopy: true },
   });
   expect(response.ok(), await response.text()).toBeTruthy();
@@ -286,13 +240,13 @@ async function getMoveTargets(
   request: APIRequestContext,
   source: NodeRef,
 ): Promise<Map<string, MoveTarget>> {
-  const response = await request.post("/Model/GetMoveTargets", {
+  const response = await request.post('/Model/GetMoveTargets', {
     data: { source },
   });
   expect(response.ok(), await response.text()).toBeTruthy();
 
   const { targets } = (await response.json()) as { targets: MoveTarget[] };
-  return new Map(targets.map((target) => [target.key, target]));
+  return new Map(targets.map(target => [target.key, target]));
 }
 
 async function getDropTargets(
@@ -300,7 +254,7 @@ async function getDropTargets(
   source: NodeRef,
   targets: NodeRef[],
 ): Promise<Map<string, { canMove: boolean; canCopy: boolean }>> {
-  const response = await request.post("/Model/GetDropTargets", {
+  const response = await request.post('/Model/GetDropTargets', {
     data: { source, targets },
   });
   expect(response.ok(), await response.text()).toBeTruthy();
@@ -311,9 +265,6 @@ async function getDropTargets(
     canCopy: boolean;
   }[];
   return new Map(
-    results.map(result => [
-      result.id,
-      { canMove: result.canMove, canCopy: result.canCopy },
-    ]),
+    results.map(result => [result.id, { canMove: result.canMove, canCopy: result.canCopy }]),
   );
 }

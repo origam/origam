@@ -35,6 +35,7 @@ test.describe('Create Lookup wizard (real backend)', () => {
     await page.getByText('Actions', { exact: true }).click();
     await page.getByText('Create Lookup').click();
 
+    // Hovering a dropdown moves its highlight and Tab commits whatever is highlighted.
     await page.mouse.move(0, 0);
 
     const dialog = page.getByRole('dialog');
