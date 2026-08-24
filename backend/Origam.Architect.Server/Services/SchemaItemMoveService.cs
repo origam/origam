@@ -68,6 +68,7 @@ public class SchemaItemMoveService(
 {
     private const int MaxParentWalkDepth = 200;
     private const int MaxMoveTargets = 500;
+    private const int MaxMoveCandidates = 5000;
 
     private IPersistenceProvider PersistenceProvider => persistenceService.SchemaProvider;
 
@@ -128,6 +129,11 @@ public class SchemaItemMoveService(
 
         foreach (NodeRefModel targetReference in targetReferences)
         {
+            if (targetReference == null)
+            {
+                continue;
+            }
+
             IBrowserNode2 target = source == null ? null : Resolve(targetReference);
             (bool canMove, bool canCopy) = EvaluatePair(source, target);
             results.Add(
@@ -160,21 +166,32 @@ public class SchemaItemMoveService(
             package => package.Id,
             package => package.Name
         );
+        int examined = 0;
         foreach (IBrowserNode2 candidate in GetMoveCandidates(item, provider))
         {
+            // A provider can hold tens of thousands of items, the walk has to end somewhere.
+            if (examined == MaxMoveCandidates)
+            {
+                result.IsTruncated = true;
+                break;
+            }
+            examined++;
+
+            (bool canMove, bool canCopy) = EvaluatePair(item, candidate);
+            if (!canMove && !canCopy)
+            {
+                continue;
+            }
+
             if (result.Targets.Count == MaxMoveTargets)
             {
                 result.IsTruncated = true;
                 break;
             }
 
-            (bool canMove, bool canCopy) = EvaluatePair(item, candidate);
-            if (canMove || canCopy)
-            {
-                result.Targets.Add(
-                    ToMoveTarget(item, candidate, provider, canMove, canCopy, packageNames)
-                );
-            }
+            result.Targets.Add(
+                ToMoveTarget(item, candidate, provider, canMove, canCopy, packageNames)
+            );
         }
 
         return result;
@@ -209,12 +226,22 @@ public class SchemaItemMoveService(
         }
 
         // ChildItems merges inherited items in, one instance shows up under every descendant.
-        var seenIds = new HashSet<Guid>();
-        foreach (ISchemaItem candidate in provider.ChildItemsRecursive)
+        IEnumerable<ISchemaItem> descendants = WalkChildItems(provider.ChildItems);
+        foreach (ISchemaItem candidate in descendants.DistinctBy(node => node.Id))
         {
-            if (seenIds.Add(candidate.Id))
+            yield return candidate;
+        }
+    }
+
+    // ChildItemsRecursive materializes the whole provider, this stops where the caller does.
+    private static IEnumerable<ISchemaItem> WalkChildItems(IEnumerable<ISchemaItem> items)
+    {
+        foreach (ISchemaItem item in items)
+        {
+            yield return item;
+            foreach (ISchemaItem descendant in WalkChildItems(item.ChildItems))
             {
-                yield return candidate;
+                yield return descendant;
             }
         }
     }
@@ -346,7 +373,14 @@ public class SchemaItemMoveService(
             );
         }
 
-        int selfDepth = GetAncestorDepth(target, item);
+        int? selfDepth = GetAncestorDepth(target, item);
+        if (selfDepth == null)
+        {
+            return DropDecision.Rejected(
+                string.Format(Strings.Move_TargetChainUnknown, item.Name, target.NodeText)
+            );
+        }
+
         if (selfDepth == 0)
         {
             return DropDecision.Rejected(Strings.Move_TargetIsSource);
@@ -362,21 +396,12 @@ public class SchemaItemMoveService(
         return EvaluateTarget(item, target);
     }
 
-    // The move and copy verdicts differ in two guards only, so the expensive part runs once.
     public (bool CanMove, bool CanCopy) EvaluatePair(IBrowserNode2 source, IBrowserNode2 target)
     {
-        if (source is not ISchemaItem item || !item.IsPersisted || target == null)
-        {
-            return (false, false);
-        }
-
-        int selfDepth = GetAncestorDepth(target, item);
-        if (selfDepth == 0 || !EvaluateTarget(item, target).IsAllowed)
-        {
-            return (false, false);
-        }
-
-        return (selfDepth < 0 && schemaService.CanEditItem(item), true);
+        return (
+            Evaluate(source, target, isCopy: false).IsAllowed,
+            Evaluate(source, target, isCopy: true).IsAllowed
+        );
     }
 
     private static DropDecision EvaluateTarget(ISchemaItem item, IBrowserNode2 target)
@@ -440,11 +465,16 @@ public class SchemaItemMoveService(
         return DropDecision.ToGroup(group);
     }
 
-    private static int GetAncestorDepth(IBrowserNode2 target, ISchemaItem item)
+    // Null means the parent chain could not be walked and the relation stays unknown.
+    private static int? GetAncestorDepth(IBrowserNode2 target, ISchemaItem item)
     {
         var current = target as ISchemaItem;
-        for (int depth = 0; current != null && depth < MaxParentWalkDepth; depth++)
+        for (int depth = 0; current != null; depth++)
         {
+            if (depth == MaxParentWalkDepth)
+            {
+                return null;
+            }
             if (current.Id == item.Id)
             {
                 return depth;

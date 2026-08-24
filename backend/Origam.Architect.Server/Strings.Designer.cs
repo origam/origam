@@ -177,6 +177,15 @@ namespace Origam.Architect.Server {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to '{0}' cannot be moved to '{1}', the parent chain of the target is too deep or broken..
+        /// </summary>
+        internal static string Move_TargetChainUnknown {
+            get {
+                return ResourceManager.GetString("Move_TargetChainUnknown", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Only top level items can be moved directly into '{0}'..
         /// </summary>
         internal static string Move_ProviderRequiresTopLevelItem {

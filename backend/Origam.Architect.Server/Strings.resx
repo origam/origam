@@ -51,6 +51,9 @@
     <data name="Move_TargetIsDescendant" xml:space="preserve">
         <value>'{0}' cannot be moved into '{1}', which is one of its own children.</value>
     </data>
+    <data name="Move_TargetChainUnknown" xml:space="preserve">
+        <value>'{0}' cannot be moved to '{1}', the parent chain of the target is too deep or broken.</value>
+    </data>
     <data name="Move_ProviderRequiresTopLevelItem" xml:space="preserve">
         <value>Only top level items can be moved directly into '{0}'.</value>
     </data>
