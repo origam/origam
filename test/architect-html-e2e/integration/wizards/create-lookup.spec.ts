@@ -35,6 +35,8 @@ test.describe('Create Lookup wizard (real backend)', () => {
     await page.getByText('Actions', { exact: true }).click();
     await page.getByText('Create Lookup').click();
 
+    await page.mouse.move(0, 0);
+
     const dialog = page.getByRole('dialog');
 
     const displayField = dialog.getByRole('textbox').nth(0);
