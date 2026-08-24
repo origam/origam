@@ -22,7 +22,7 @@ import { IDropTargetResult, IMoveNodeResult, INodeLoadData } from '@api/IArchite
 import { TreeNode, toNodeRef } from '@components/modelTree/TreeNode';
 import { askYesNoQuestion, YesNoResult } from '@dialogs/DialogUtils';
 import { RootStore } from '@stores/RootStore';
-import { observable } from 'mobx';
+import { action, observable } from 'mobx';
 
 export type TransferMode = 'cut' | 'copy';
 
@@ -73,6 +73,22 @@ export class TreeTransferState {
     );
   }
 
+  @action
+  beginDrag(isCopy: boolean) {
+    this.isDragging = true;
+    this.isCopyModifier = isCopy;
+  }
+
+  @action
+  setCopyModifier(isCopy: boolean) {
+    this.isCopyModifier = isCopy;
+  }
+
+  @action
+  setHoverNode(nodeId: string | null) {
+    this.hoverNodeId = nodeId;
+  }
+
   *beginTransfer(
     node: TreeNode,
     mode: TransferMode,
@@ -118,8 +134,36 @@ export class TreeTransferState {
 
   *drop(target: TreeNode, isCopy: boolean): Generator<Promise<any>, boolean, any> {
     const sourceRef = this.sourceRef;
+    if (!sourceRef) {
+      return false;
+    }
     const source = this.rootStore.modelTreeState.findNodeById(this.sourceNodeId ?? undefined);
-    if (!sourceRef || this.isBusy) {
+    const moved = yield* this.executeMove(source, sourceRef, toNodeRef(target), target, isCopy);
+    if (moved && !isCopy) {
+      this.clear();
+    }
+    return moved;
+  }
+
+  // The target picked in the dialog does not have to be loaded in the tree, and the
+  // pending cut or copy must survive.
+  *moveTo(
+    source: TreeNode,
+    targetRef: INodeLoadData,
+    isCopy: boolean,
+  ): Generator<Promise<any>, boolean, any> {
+    const targetNode = this.rootStore.modelTreeState.findNodeById(targetRef.id);
+    return yield* this.executeMove(source, toNodeRef(source), targetRef, targetNode, isCopy);
+  }
+
+  private *executeMove(
+    source: TreeNode | null,
+    sourceRef: INodeLoadData,
+    targetRef: INodeLoadData,
+    targetNode: TreeNode | null,
+    isCopy: boolean,
+  ): Generator<Promise<any>, boolean, any> {
+    if (this.isBusy) {
       return false;
     }
 
@@ -131,14 +175,11 @@ export class TreeTransferState {
 
       const result: IMoveNodeResult = yield this.rootStore.architectApi.moveNode({
         source: sourceRef,
-        target: toNodeRef(target),
+        target: targetRef,
         isCopy: isCopy,
       });
 
-      yield* this.refreshAfterMove(source, target, result);
-      if (!isCopy) {
-        this.clear();
-      }
+      yield* this.refreshAfterMove(source, targetNode, result);
       return true;
     } finally {
       this.isBusy = false;
@@ -182,7 +223,7 @@ export class TreeTransferState {
 
   private *refreshAfterMove(
     source: TreeNode | null,
-    target: TreeNode,
+    target: TreeNode | null,
     result: IMoveNodeResult,
   ): Generator<Promise<any>, void, any> {
     const modelTreeState = this.rootStore.modelTreeState;
@@ -190,7 +231,7 @@ export class TreeTransferState {
     if (oldParent) {
       yield* oldParent.loadChildren.bind(oldParent)();
     }
-    if (target.childrenInitialized && target !== oldParent) {
+    if (target?.childrenInitialized && target !== oldParent) {
       yield* target.loadChildren.bind(target)();
     }
 
@@ -201,6 +242,7 @@ export class TreeTransferState {
     modelTreeState.selectNode(modelTreeState.findNodeById(result.node.origamId));
   }
 
+  @action
   clear() {
     this.generation++;
     this.mode = null;

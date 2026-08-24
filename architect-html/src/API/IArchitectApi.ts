@@ -33,6 +33,8 @@ export interface IArchitectApi {
     targets: INodeLoadData[];
   }): Promise<IDropTargetResult[]>;
 
+  getMoveTargets(source: INodeLoadData): Promise<IMoveTargetsResult>;
+
   moveNode(args: {
     source: INodeLoadData;
     target: INodeLoadData;
@@ -548,6 +550,26 @@ export interface IDropTargetResult {
 export interface IMoveNodeResult {
   node: IApiTreeNode;
   parentNodeIds: string[];
+}
+
+export type MoveTargetKind = 'Provider' | 'Group' | 'Item';
+
+export interface IMoveTarget {
+  id: string;
+  nodeText: string;
+  key: string;
+  path: string;
+  packageName: string;
+  kind: MoveTargetKind;
+  isInActivePackage: boolean;
+  isCurrentLocation: boolean;
+  canMove: boolean;
+  canCopy: boolean;
+}
+
+export interface IMoveTargetsResult {
+  targets: IMoveTarget[];
+  isTruncated: boolean;
 }
 
 export interface IPackagesInfo {

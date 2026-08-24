@@ -18,10 +18,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { RootStoreContext, T } from '@/main';
-import { CreateFilterType, ICreateWizardResult, ISearchResult } from '@api/IArchitectApi';
+import {
+  CreateFilterType,
+  ICreateWizardResult,
+  IMoveTargetsResult,
+  ISearchResult,
+} from '@api/IArchitectApi';
 import { Icon } from '@components/icon/Icon';
 import S from '@components/modelTree/ModelTree.module.scss';
-import { TreeNode } from '@components/modelTree/TreeNode';
+import { MoveToDialog } from '@components/modelTree/MoveToDialog';
+import { TreeNode, toNodeRef } from '@components/modelTree/TreeNode';
 import { CreateLookupWizard } from '@components/modelTree/createWizard/CreateLookupWizard';
 import { CreateScreenWizard } from '@components/modelTree/createWizard/CreateScreenWizard';
 import { CreateWorkQueueWizard } from '@components/modelTree/createWizard/CreateWorkQueueWizard';
@@ -158,6 +164,38 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
     run({ generator: () => transfer.drop(node, transfer.mode === 'copy') });
   }
 
+  function openMoveToDialog() {
+    run({
+      generator: function* () {
+        const result = (yield rootStore.architectApi.getMoveTargets(
+          toNodeRef(node),
+        )) as IMoveTargetsResult;
+        const closeDialog = rootStore.dialogStack.pushDialog(
+          '',
+          <MoveToDialog
+            sourceName={node.nodeText}
+            targets={result.targets}
+            isTruncated={result.isTruncated}
+            onCancel={() => closeDialog()}
+            onConfirm={(target, isCopy) => {
+              closeDialog();
+              run({
+                generator: () =>
+                  transfer.moveTo(
+                    node,
+                    { id: target.id, nodeText: target.nodeText, isNonPersistentItem: false },
+                    isCopy,
+                  ),
+              });
+            }}
+          />,
+          undefined,
+          false,
+        );
+      },
+    });
+  }
+
   function onDragStart(event: ReactDragEvent) {
     if (!node.canDrag) {
       event.preventDefault();
@@ -167,8 +205,7 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
     // Firefox needs attached data to start a drag.
     event.dataTransfer.setData('text/plain', node.nodeText);
     onSelect();
-    transfer.isDragging = true;
-    transfer.isCopyModifier = event.ctrlKey || event.metaKey;
+    transfer.beginDrag(event.ctrlKey || event.metaKey);
     run({ generator: () => transfer.beginTransfer(node, 'cut') });
   }
 
@@ -178,8 +215,8 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
     }
     event.stopPropagation();
     const isCopy = event.ctrlKey || event.metaKey;
-    transfer.isCopyModifier = isCopy;
-    transfer.hoverNodeId = node.id;
+    transfer.setCopyModifier(isCopy);
+    transfer.setHoverNode(node.id);
     if (!transfer.canDropOn(node, isCopy)) {
       event.dataTransfer.dropEffect = 'none';
       return;
@@ -213,7 +250,7 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
   function onDragLeave() {
     clearAutoExpand();
     if (transfer.hoverNodeId === node.id) {
-      transfer.hoverNodeId = null;
+      transfer.setHoverNode(null);
     }
   }
 
@@ -820,6 +857,14 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
             <Item id="paste" data-test-id="tree-menu-paste" disabled={!canPaste} onClick={onPaste}>
               {T('Paste', 'tree_node_paste')}
             </Item>
+            <Item
+              id="move-to"
+              data-test-id="tree-menu-move-to"
+              disabled={!node.canDrag}
+              onClick={openMoveToDialog}
+            >
+              {T('Move to...', 'tree_node_move_to')}
+            </Item>
             <Separator />
             {!node.isNonPersistentItem && (
               <Item id="edit" data-test-id="tree-menu-edit" onClick={() => onNodeDoubleClick(node)}>
@@ -906,7 +951,7 @@ const ModelTree = observer(() => {
       return;
     }
     const onModifierChange = (e: KeyboardEvent) => {
-      transfer.isCopyModifier = e.ctrlKey || e.metaKey;
+      transfer.setCopyModifier(e.ctrlKey || e.metaKey);
     };
     window.addEventListener('keydown', onModifierChange);
     window.addEventListener('keyup', onModifierChange);

@@ -21,7 +21,7 @@ import { IArchitectApi, IPackagesInfo } from '@api/IArchitectApi';
 import { TreeNode } from '@components/modelTree/TreeNode';
 import { TreeTransferState } from '@components/modelTree/TreeTransferState';
 import { RootStore } from '@stores/RootStore';
-import { computed, observable } from 'mobx';
+import { action, computed, observable } from 'mobx';
 
 export class ModelTreeState {
   @observable accessor modelNodes: TreeNode[] = [];
@@ -37,6 +37,7 @@ export class ModelTreeState {
     this.transfer = new TreeTransferState(rootStore);
   }
 
+  @action
   selectNode(node: TreeNode | null) {
     this.selectedNodeId = node?.id ?? null;
   }

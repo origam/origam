@@ -32,6 +32,7 @@ import {
   IMenuItemInfo,
   IModelChange,
   IMoveNodeResult,
+  IMoveTargetsResult,
   INodeLoadData,
   IPackagesInfo,
   IParametersResult,
@@ -86,6 +87,10 @@ export class ArchitectApi implements IArchitectApi {
     targets: INodeLoadData[];
   }): Promise<IDropTargetResult[]> {
     return (await this.http.post('/Model/GetDropTargets', args)).data;
+  }
+
+  async getMoveTargets(source: INodeLoadData): Promise<IMoveTargetsResult> {
+    return (await this.http.post('/Model/GetMoveTargets', { source: source })).data;
   }
 
   async moveNode(args: {
