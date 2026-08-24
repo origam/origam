@@ -195,6 +195,24 @@ namespace Origam.Architect.Server {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to '{0}' cannot be moved to package '{1}' because it depends on items in packages the target package does not reference: {2}.
+        /// </summary>
+        internal static string Move_DependenciesOutsideTargetPackage {
+            get {
+                return ResourceManager.GetString("Move_DependenciesOutsideTargetPackage", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to '{0}' cannot be moved to package '{1}' because items that use it would not be able to reach it: {2}.
+        /// </summary>
+        internal static string Move_UsagesCannotReachTargetPackage {
+            get {
+                return ResourceManager.GetString("Move_UsagesCannotReachTargetPackage", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Parameter named {0} was not found among Input Parameters..
         /// </summary>
         internal static string ParameterNotFound {

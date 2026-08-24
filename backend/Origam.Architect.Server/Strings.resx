@@ -57,6 +57,12 @@
     <data name="Move_NotAllowed" xml:space="preserve">
         <value>'{0}' cannot be moved to '{1}'.</value>
     </data>
+    <data name="Move_DependenciesOutsideTargetPackage" xml:space="preserve">
+        <value>'{0}' cannot be moved to package '{1}' because it depends on items in packages the target package does not reference: {2}</value>
+    </data>
+    <data name="Move_UsagesCannotReachTargetPackage" xml:space="preserve">
+        <value>'{0}' cannot be moved to package '{1}' because items that use it would not be able to reach it: {2}</value>
+    </data>
     <data name="XsltValidationFailed" xml:space="preserve">
         <value>XSLT validation failed. See output for details.</value>
     </data>

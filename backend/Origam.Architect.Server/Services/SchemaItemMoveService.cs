@@ -23,6 +23,7 @@ using Origam.Architect.Server.Models;
 using Origam.Architect.Server.ReturnModels;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema;
+using Origam.Schema.GuiModel;
 using Origam.UI;
 using Origam.Workbench.Services;
 
@@ -66,6 +67,7 @@ public class SchemaItemMoveService(
 )
 {
     private const int MaxParentWalkDepth = 200;
+    private const int MaxMoveTargets = 500;
 
     private IPersistenceProvider PersistenceProvider => persistenceService.SchemaProvider;
 
@@ -127,17 +129,165 @@ public class SchemaItemMoveService(
         foreach (NodeRefModel targetReference in targetReferences)
         {
             IBrowserNode2 target = source == null ? null : Resolve(targetReference);
+            (bool canMove, bool canCopy) = EvaluatePair(source, target);
             results.Add(
                 new DropTargetResult
                 {
                     Id = ToNodeKey(targetReference),
-                    CanMove = target != null && Evaluate(source, target, isCopy: false).IsAllowed,
-                    CanCopy = target != null && Evaluate(source, target, isCopy: true).IsAllowed,
+                    CanMove = canMove,
+                    CanCopy = canCopy,
                 }
             );
         }
 
         return results;
+    }
+
+    public MoveTargetsResult GetMoveTargets(NodeRefModel sourceReference)
+    {
+        var result = new MoveTargetsResult { Targets = [] };
+        if (
+            schemaService.ActiveExtension == null
+            || Resolve(sourceReference) is not ISchemaItem item
+            // RootProvider is only set when the item is reached through a provider.
+            || item.RootProvider is not AbstractSchemaItemProvider provider
+        )
+        {
+            return result;
+        }
+
+        Dictionary<Guid, string> packageNames = schemaService.LoadedPackages.ToDictionary(
+            package => package.Id,
+            package => package.Name
+        );
+        foreach (IBrowserNode2 candidate in GetMoveCandidates(item, provider))
+        {
+            if (result.Targets.Count == MaxMoveTargets)
+            {
+                result.IsTruncated = true;
+                break;
+            }
+
+            (bool canMove, bool canCopy) = EvaluatePair(item, candidate);
+            if (canMove || canCopy)
+            {
+                result.Targets.Add(
+                    ToMoveTarget(item, candidate, provider, canMove, canCopy, packageNames)
+                );
+            }
+        }
+
+        return result;
+    }
+
+    private static IEnumerable<IBrowserNode2> GetMoveCandidates(
+        ISchemaItem item,
+        AbstractSchemaItemProvider provider
+    )
+    {
+        // Providers and groups only ever accept top level items.
+        if (item.ParentItem == null)
+        {
+            yield return provider;
+            foreach (SchemaItemGroup group in provider.ChildGroups)
+            {
+                yield return group;
+                foreach (SchemaItemGroup childGroup in group.ChildGroupsRecursive)
+                {
+                    yield return childGroup;
+                }
+            }
+        }
+
+        // Without a CanMove override no item can become a parent, so skip the walk entirely.
+        if (
+            item.GetType().GetMethod(nameof(ISchemaItem.CanMove))?.DeclaringType
+            == typeof(AbstractSchemaItem)
+        )
+        {
+            yield break;
+        }
+
+        // ChildItems merges inherited items in, one instance shows up under every descendant.
+        var seenIds = new HashSet<Guid>();
+        foreach (ISchemaItem candidate in provider.ChildItemsRecursive)
+        {
+            if (seenIds.Add(candidate.Id))
+            {
+                yield return candidate;
+            }
+        }
+    }
+
+    private MoveTargetResult ToMoveTarget(
+        ISchemaItem item,
+        IBrowserNode2 candidate,
+        AbstractSchemaItemProvider provider,
+        bool canMove,
+        bool canCopy,
+        Dictionary<Guid, string> packageNames
+    )
+    {
+        Guid packageId = candidate switch
+        {
+            SchemaItemGroup group => group.SchemaExtensionId,
+            ISchemaItem schemaItem => schemaItem.SchemaExtensionId,
+            _ => schemaService.ActiveExtension.Id,
+        };
+        return new MoveTargetResult
+        {
+            Id = candidate.NodeId,
+            NodeText = TreeNode.ToNodeText(candidate),
+            Key = TreeNode.ToTreeNodeId(candidate),
+            Path = GetTargetPath(candidate, provider),
+            PackageName = packageNames.GetValueOrDefault(packageId),
+            Kind = GetTargetKind(candidate),
+            IsInActivePackage = packageId == schemaService.ActiveExtension.Id,
+            IsCurrentLocation = IsCurrentLocation(item, candidate),
+            CanMove = canMove,
+            CanCopy = canCopy,
+        };
+    }
+
+    private static string GetTargetPath(
+        IBrowserNode2 candidate,
+        AbstractSchemaItemProvider provider
+    )
+    {
+        string path = candidate switch
+        {
+            SchemaItemGroup group => group.Path,
+            ISchemaItem schemaItem => schemaItem.Path,
+            _ => null,
+        };
+        if (path == null)
+        {
+            return provider.NodeText;
+        }
+
+        string separator = System.IO.Path.DirectorySeparatorChar.ToString();
+        return provider.NodeText + "/" + path.Replace(separator, newValue: "/");
+    }
+
+    private static MoveTargetKind GetTargetKind(IBrowserNode2 candidate)
+    {
+        return candidate switch
+        {
+            AbstractSchemaItemProvider => MoveTargetKind.Provider,
+            SchemaItemGroup => MoveTargetKind.Group,
+            _ => MoveTargetKind.Item,
+        };
+    }
+
+    private static bool IsCurrentLocation(ISchemaItem item, IBrowserNode2 candidate)
+    {
+        return candidate switch
+        {
+            AbstractSchemaItemProvider => item.ParentItem == null && item.Group == null,
+            SchemaItemGroup group => item.Group != null && item.Group.Id == group.Id,
+            ISchemaItem parent => item.ParentItem != null && item.ParentItem.Id == parent.Id,
+            _ => false,
+        };
     }
 
     public MoveNodeResult Move(
@@ -209,6 +359,28 @@ public class SchemaItemMoveService(
             );
         }
 
+        return EvaluateTarget(item, target);
+    }
+
+    // The move and copy verdicts differ in two guards only, so the expensive part runs once.
+    public (bool CanMove, bool CanCopy) EvaluatePair(IBrowserNode2 source, IBrowserNode2 target)
+    {
+        if (source is not ISchemaItem item || !item.IsPersisted || target == null)
+        {
+            return (false, false);
+        }
+
+        int selfDepth = GetAncestorDepth(target, item);
+        if (selfDepth == 0 || !EvaluateTarget(item, target).IsAllowed)
+        {
+            return (false, false);
+        }
+
+        return (selfDepth < 0 && schemaService.CanEditItem(item), true);
+    }
+
+    private static DropDecision EvaluateTarget(ISchemaItem item, IBrowserNode2 target)
+    {
         if (target is AbstractSchemaItemProvider targetProvider)
         {
             return EvaluateProviderDrop(item, targetProvider);
@@ -289,12 +461,28 @@ public class SchemaItemMoveService(
         ISchemaItem oldParent = item.ParentItem;
         SchemaItemGroup oldGroup = item.Group;
         bool oldIsAbstract = item.IsAbstract;
+        Package oldPackage = item.Package;
+        Package targetPackage = ResolveTargetPackage(decision, oldPackage);
+        bool crossPackage = targetPackage != null && targetPackage.Id != oldPackage.Id;
+        if (crossPackage)
+        {
+            CheckDependenciesOrThrow(item, targetPackage);
+            CheckUsagesOrThrow(item, targetPackage);
+        }
         try
         {
             transactionRunner.Run(() =>
             {
                 ApplyDecision(item, decision);
+                if (crossPackage)
+                {
+                    SetPackageRecursive(item, targetPackage);
+                }
                 item.Persist();
+                if (crossPackage)
+                {
+                    PersistPanelControl(item);
+                }
             });
         }
         catch
@@ -303,6 +491,10 @@ public class SchemaItemMoveService(
             item.ParentItem = oldParent;
             item.Group = oldGroup;
             item.IsAbstract = oldIsAbstract;
+            if (crossPackage)
+            {
+                SetPackageRecursive(item, oldPackage);
+            }
             ClearLocationCaches(rootProvider, oldParent, decision.TargetItem);
             throw;
         }
@@ -318,6 +510,13 @@ public class SchemaItemMoveService(
     private ISchemaItem Copy(ISchemaItem original, DropDecision decision)
     {
         ISchemaItemProvider rootProvider = original.RootProvider;
+        // A drop on the root provider has no package of its own, that copy lands in the active one.
+        Package targetPackage = ResolveTargetPackage(decision, schemaService.ActiveExtension);
+        if (targetPackage.Id != original.SchemaExtensionId)
+        {
+            // The copy has the same dependencies as the original, usages do not exist yet.
+            CheckDependenciesOrThrow(original, targetPackage);
+        }
         // Clone() puts a top level clone straight into RootProvider.ChildItems.
         var clone = (ISchemaItem)original.Clone();
         bool wasTopLevel = clone.ParentItem == null;
@@ -326,7 +525,7 @@ public class SchemaItemMoveService(
             return transactionRunner.Run(() =>
             {
                 ApplyDecision(clone, decision);
-                clone.SetExtensionRecursive(schemaService.ActiveExtension);
+                clone.SetExtensionRecursive(targetPackage);
                 clone.Name = GetUniqueName(clone);
                 PersistClone(clone);
                 if (wasTopLevel && decision.Kind == DropKind.ToParentNode)
@@ -352,6 +551,112 @@ public class SchemaItemMoveService(
         rootProvider?.ClearCache();
         oldParent?.ClearCache();
         newParent?.ClearCache();
+    }
+
+    private static Package ResolveTargetPackage(DropDecision decision, Package fallback)
+    {
+        return decision.Kind switch
+        {
+            DropKind.ToGroup => decision.Group.Package,
+            DropKind.ToParentNode => decision.TargetItem.Package,
+            _ => fallback,
+        };
+    }
+
+    private static void SetPackageRecursive(ISchemaItem item, Package package)
+    {
+        item.SetExtensionRecursive(package);
+        GetPanelControl(item)?.SetExtensionRecursive(package);
+    }
+
+    private static void PersistPanelControl(ISchemaItem item)
+    {
+        GetPanelControl(item)?.Persist();
+    }
+
+    // A screen section is wrapped by a ControlItem living in another provider and file.
+    private static ISchemaItem GetPanelControl(ISchemaItem item)
+    {
+        return item is PanelControlSet panelControlSet ? panelControlSet.PanelControl : null;
+    }
+
+    private static void CheckDependenciesOrThrow(ISchemaItem item, Package targetPackage)
+    {
+        List<ISchemaItem> moved = GetMovedItems(item);
+        HashSet<Guid> movedIds = moved.Select(movedItem => movedItem.Id).ToHashSet();
+        HashSet<Guid> reachableFromTarget = GetReachablePackageIds(targetPackage);
+        List<ISchemaItem> unreachable = moved
+            .SelectMany(movedItem => movedItem.GetDependencies(ignoreErrors: true))
+            .Where(dependency =>
+                dependency != null
+                && !movedIds.Contains(dependency.Id)
+                && !reachableFromTarget.Contains(dependency.SchemaExtensionId)
+            )
+            .ToList();
+        if (unreachable.Count > 0)
+        {
+            throw new UserOrigamException(
+                string.Format(
+                    Strings.Move_DependenciesOutsideTargetPackage,
+                    item.Name,
+                    targetPackage.Name,
+                    FormatItemList(unreachable)
+                )
+            );
+        }
+    }
+
+    private void CheckUsagesOrThrow(ISchemaItem item, Package targetPackage)
+    {
+        List<ISchemaItem> moved = GetMovedItems(item);
+        HashSet<Guid> movedIds = moved.Select(movedItem => movedItem.Id).ToHashSet();
+        Dictionary<Guid, HashSet<Guid>> reachablePackages =
+            schemaService.LoadedPackages.ToDictionary(
+                package => package.Id,
+                GetReachablePackageIds
+            );
+        List<ISchemaItem> unreachable = moved
+            .SelectMany(movedItem => movedItem.GetUsage())
+            .Where(usage =>
+                usage != null
+                && !movedIds.Contains(usage.Id)
+                && !(
+                    reachablePackages.TryGetValue(usage.SchemaExtensionId, out var reachable)
+                    && reachable.Contains(targetPackage.Id)
+                )
+            )
+            .ToList();
+        if (unreachable.Count > 0)
+        {
+            throw new UserOrigamException(
+                string.Format(
+                    Strings.Move_UsagesCannotReachTargetPackage,
+                    item.Name,
+                    targetPackage.Name,
+                    FormatItemList(unreachable)
+                )
+            );
+        }
+    }
+
+    private static List<ISchemaItem> GetMovedItems(ISchemaItem item)
+    {
+        List<ISchemaItem> items = item.ChildItemsRecursive;
+        items.Add(item);
+        return items;
+    }
+
+    private static HashSet<Guid> GetReachablePackageIds(Package package)
+    {
+        return package
+            .IncludedPackages.Select(included => included.Id)
+            .Append(package.Id)
+            .ToHashSet();
+    }
+
+    private static string FormatItemList(IEnumerable<ISchemaItem> items)
+    {
+        return string.Join(separator: ", ", items.Select(item => item.Name).Distinct());
     }
 
     private static void ApplyDecision(ISchemaItem item, DropDecision decision)

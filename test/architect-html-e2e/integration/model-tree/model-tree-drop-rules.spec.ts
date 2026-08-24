@@ -56,6 +56,10 @@ const FOREIGN_CONSTANT = ref(
   "e42f864f-5018-4967-abdc-5910439adc9a",
   "InitialUserCreated",
 );
+const FOREIGN_GROUP = ref(
+  "9e00cfe2-ad80-40f2-aeb2-321dcc57325e",
+  "Attachments",
+);
 
 test.describe("Model tree drop rules (real backend)", () => {
   test.describe.configure({ mode: "default", timeout: 45_000 });
@@ -154,6 +158,94 @@ test.describe("Model tree drop rules (real backend)", () => {
     ).toBe(true);
   });
 
+  test("Moving a constant into a group of another package repackages it", async ({
+    request,
+  }) => {
+    const response = await request.post("/Model/MoveNode", {
+      data: { source: UNGROUPED_CONSTANT, target: FOREIGN_GROUP, isCopy: false },
+    });
+
+    expect(response.ok(), await response.text()).toBeTruthy();
+    expect(
+      fs.existsSync(
+        modelFilePath(
+          "Root/DataConstant/Attachments/UngroupedConstant.origam",
+        ),
+      ),
+    ).toBe(true);
+    expect(
+      fs.existsSync(modelFilePath(`${CONSTANTS_DIR}/UngroupedConstant.origam`)),
+    ).toBe(false);
+    // The group belongs to Root, the source package must not grow a copy of it.
+    expect(fs.existsSync(modelFilePath(`${CONSTANTS_DIR}/Attachments`))).toBe(
+      false,
+    );
+  });
+
+  test("Copying a constant into a group of another package writes it there", async ({
+    request,
+  }) => {
+    const response = await request.post("/Model/MoveNode", {
+      data: { source: UNGROUPED_CONSTANT, target: FOREIGN_GROUP, isCopy: true },
+    });
+
+    expect(response.ok(), await response.text()).toBeTruthy();
+    expect(
+      fs.existsSync(
+        modelFilePath(
+          "Root/DataConstant/Attachments/Copy of UngroupedConstant.origam",
+        ),
+      ),
+    ).toBe(true);
+    expect(
+      fs.existsSync(modelFilePath(`${CONSTANTS_DIR}/UngroupedConstant.origam`)),
+    ).toBe(true);
+  });
+
+  test("Move targets of a constant are the provider and the constant groups", async ({
+    request,
+  }) => {
+    const targets = await getMoveTargets(request, UNGROUPED_CONSTANT);
+
+    expect(targets.get(key(CONSTANTS_ROOT))).toMatchObject({
+      canMove: true,
+      canCopy: true,
+      kind: "Provider",
+    });
+    expect(targets.get(key(CONSTANT_GROUP))).toMatchObject({
+      canMove: true,
+      canCopy: true,
+      kind: "Group",
+    });
+    expect(targets.get(key(FOREIGN_GROUP))).toMatchObject({
+      canMove: true,
+      canCopy: true,
+      packageName: "Root",
+    });
+    expect(targets.has(key(ENTITY_GROUP))).toBe(false);
+    // DataConstant has no CanMove override, so no item can become its parent.
+    expect([...targets.values()].some((target) => target.kind === "Item")).toBe(
+      false,
+    );
+  });
+
+  test("Move targets of an item of another package are copy only", async ({
+    request,
+  }) => {
+    const targets = await getMoveTargets(request, FOREIGN_CONSTANT);
+
+    expect(targets.size).toBeGreaterThan(0);
+    for (const target of targets.values()) {
+      expect(target).toMatchObject({ canMove: false, canCopy: true });
+    }
+  });
+
+  test("A group has no move targets", async ({ request }) => {
+    const targets = await getMoveTargets(request, CONSTANT_GROUP);
+
+    expect(targets.size).toBe(0);
+  });
+
   test("A repeated copy gets a numbered name", async ({ request }) => {
     await copyIntoGroup(request);
     const second = await copyIntoGroup(request);
@@ -180,6 +272,27 @@ async function copyIntoGroup(request: APIRequestContext): Promise<string> {
 
 function key(node: NodeRef): string {
   return node.id + node.nodeText;
+}
+
+interface MoveTarget {
+  key: string;
+  kind: string;
+  packageName: string;
+  canMove: boolean;
+  canCopy: boolean;
+}
+
+async function getMoveTargets(
+  request: APIRequestContext,
+  source: NodeRef,
+): Promise<Map<string, MoveTarget>> {
+  const response = await request.post("/Model/GetMoveTargets", {
+    data: { source },
+  });
+  expect(response.ok(), await response.text()).toBeTruthy();
+
+  const { targets } = (await response.json()) as { targets: MoveTarget[] };
+  return new Map(targets.map((target) => [target.key, target]));
 }
 
 async function getDropTargets(

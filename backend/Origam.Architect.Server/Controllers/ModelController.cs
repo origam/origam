@@ -158,6 +158,19 @@ public class ModelController(
         return Ok(moveService.GetDropTargets(input.Source, input.Targets));
     }
 
+    [HttpPost("GetMoveTargets")]
+    public ActionResult<MoveTargetsResult> GetMoveTargets(
+        [Required] [FromBody] MoveTargetsModel input
+    )
+    {
+        if (schemaService.ActiveExtension == null)
+        {
+            return BadRequest(Strings.Move_NoActivePackage);
+        }
+
+        return Ok(moveService.GetMoveTargets(input.Source));
+    }
+
     [HttpPost("MoveNode")]
     public ActionResult<MoveNodeResult> MoveNode([Required] [FromBody] MoveNodeModel input)
     {
