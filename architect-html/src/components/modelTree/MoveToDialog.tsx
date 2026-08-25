@@ -33,6 +33,7 @@ interface MoveToDialogProps {
   onConfirm: (target: IMoveTarget, isCopy: boolean) => void;
 }
 
+// Two non breaking spaces - the dropdown collapses plain ones, so the indent would vanish.
 const INDENT = '  ';
 
 export const MoveToDialog = observer(

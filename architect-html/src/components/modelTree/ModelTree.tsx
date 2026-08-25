@@ -116,6 +116,14 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
     }
   }, [node.isExpanded, node.children, node, run]);
 
+  // A pending cut or copy only knows the nodes visible when it started.
+  useEffect(() => {
+    if (!node.isExpanded || !transfer.hasSource || transfer.hasVerdictsFor(node.children)) {
+      return;
+    }
+    run({ generator: () => transfer.loadTargetVerdicts(node.children) });
+  }, [node.isExpanded, node.children, transfer, run]);
+
   useEffect(
     () => () => {
       if (autoExpandTimer.current !== null) {
@@ -217,7 +225,7 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
     const isCopy = event.ctrlKey || event.metaKey;
     transfer.setCopyModifier(isCopy);
     transfer.setHoverNode(node.id);
-    if (!transfer.canTransferTo(node, isCopy)) {
+    if (!transfer.mayTransferTo(node, isCopy)) {
       event.dataTransfer.dropEffect = 'none';
       return;
     }
@@ -259,14 +267,12 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
     event.stopPropagation();
     clearAutoExpand();
     const isCopy = event.ctrlKey || event.metaKey;
-    if (transfer.canTransferTo(node, isCopy)) {
-      run({ generator: () => transfer.drop(node, isCopy) });
-    }
+    run({ generator: () => transfer.dropFromDrag(node, isCopy) });
   }
 
   function onDragEnd() {
     clearAutoExpand();
-    transfer.clear();
+    transfer.endDrag();
   }
 
   const onNodeDoubleClick = async (node: TreeNode) => {
@@ -641,8 +647,7 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
   const canPaste =
     transfer.hasSource &&
     !transfer.isBusy &&
-    (!transfer.targetVerdicts.has(node.id) ||
-      transfer.canTransferTo(node, transfer.clipboardMode === 'copy'));
+    transfer.mayTransferTo(node, transfer.clipboardMode === 'copy');
 
   useEffect(() => {
     if (isHighlighted) {

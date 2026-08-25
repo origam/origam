@@ -22,7 +22,7 @@ import { IMoveNodeResult, IMoveVerdict, INodeLoadData } from '@api/IArchitectApi
 import { TreeNode, toNodeRef } from '@components/modelTree/TreeNode';
 import { askYesNoQuestion, YesNoResult } from '@dialogs/DialogUtils';
 import { RootStore } from '@stores/RootStore';
-import { action, observable } from 'mobx';
+import { action, observable, when } from 'mobx';
 
 export type TransferMode = 'cut' | 'copy';
 
@@ -38,8 +38,10 @@ export class TreeTransferState {
   @observable accessor isCopyModifier: boolean = false;
   @observable accessor hoverNodeId: string | null = null;
   @observable accessor isBusy: boolean = false;
+  @observable accessor isLoadingVerdicts: boolean = false;
   @observable.ref accessor targetVerdicts: Map<string, ITransferVerdict> = new Map();
   @observable.ref private accessor sourceRef: INodeLoadData | null = null;
+  @observable accessor isDropping: boolean = false;
   private generation = 0;
 
   constructor(private rootStore: RootStore) {}
@@ -60,18 +62,31 @@ export class TreeTransferState {
   }
 
   canTransferTo(node: TreeNode, isCopy: boolean): boolean {
-    const flags = this.targetVerdicts.get(node.id);
-    if (!flags) {
+    const verdict = this.targetVerdicts.get(node.id);
+    if (!verdict) {
       return false;
     }
-    return isCopy ? flags.canCopy : flags.canMove;
+    return isCopy ? verdict.canCopy : verdict.canMove;
+  }
+
+  // Offers the target while its verdict is still on the way, drop() waits for the answer
+  // before it acts. Without it a fast drag would land on a node that looks forbidden.
+  mayTransferTo(node: TreeNode, isCopy: boolean): boolean {
+    if (!this.targetVerdicts.has(node.id)) {
+      return this.isLoadingVerdicts;
+    }
+    return this.canTransferTo(node, isCopy);
+  }
+
+  hasVerdictsFor(nodes: TreeNode[]): boolean {
+    return nodes.every(node => this.targetVerdicts.has(node.id));
   }
 
   isDropHighlighted(node: TreeNode): boolean {
     return (
       this.isDragging &&
       this.hoverNodeId === node.id &&
-      this.canTransferTo(node, this.isCopyModifier)
+      this.mayTransferTo(node, this.isCopyModifier)
     );
   }
 
@@ -112,23 +127,50 @@ export class TreeTransferState {
       return;
     }
     const generation = this.generation;
-    const results = yield this.rootStore.architectApi.getMoveVerdicts({
-      source: this.sourceRef,
-      targets: targets.map(toNodeRef),
-    });
+    this.isLoadingVerdicts = true;
+    let results: IMoveVerdict[];
+    try {
+      results = yield this.rootStore.architectApi.getMoveVerdicts({
+        source: this.sourceRef,
+        targets: targets.map(toNodeRef),
+      });
+    } finally {
+      this.isLoadingVerdicts = false;
+    }
     if (generation !== this.generation) {
       return;
     }
     const updated = new Map(this.targetVerdicts);
+    // A target left without an answer stays rejected, otherwise callers keep asking for it.
+    for (const target of targets) {
+      updated.set(target.id, { canMove: false, canCopy: false });
+    }
     for (const result of results) {
       updated.set(result.key, { canMove: result.canMove, canCopy: result.canCopy });
     }
     this.targetVerdicts = updated;
   }
 
+  // Keeps the drag state alive until the drop finishes, dragend fires while it still runs.
+  *dropFromDrag(target: TreeNode, isCopy: boolean): Generator<Promise<any>, boolean, any> {
+    this.isDropping = true;
+    try {
+      return yield* this.drop(target, isCopy);
+    } finally {
+      this.isDropping = false;
+      this.clear();
+    }
+  }
+
   *drop(target: TreeNode, isCopy: boolean): Generator<Promise<any>, boolean, any> {
     const sourceRef = this.sourceRef;
     if (!sourceRef) {
+      return false;
+    }
+    if (this.isLoadingVerdicts) {
+      yield when(() => !this.isLoadingVerdicts);
+    }
+    if (!this.canTransferTo(target, isCopy)) {
       return false;
     }
     const source = this.rootStore.modelTreeState.findNodeById(this.sourceNodeId ?? undefined);
@@ -234,6 +276,14 @@ export class TreeTransferState {
       schemaItemId: result.node.origamId,
     });
     modelTreeState.selectNode(modelTreeState.findNodeById(result.node.origamId));
+  }
+
+  @action
+  endDrag() {
+    if (this.isDropping) {
+      return;
+    }
+    this.clear();
   }
 
   @action

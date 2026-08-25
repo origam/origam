@@ -150,7 +150,7 @@ namespace Origam.Architect.Server {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to '{0}' belongs to package '{1}'. Only items from the active package can be moved. Hold Ctrl to create a copy instead..
+        ///   Looks up a localized string similar to '{0}' belongs to package '{1}'. Only items from the active package can be moved, it can only be copied..
         /// </summary>
         internal static string Move_NotInActivePackage {
             get {

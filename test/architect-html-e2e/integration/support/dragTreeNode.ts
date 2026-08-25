@@ -37,15 +37,10 @@ export async function dragTreeNode(
   const from = await centerOf(source);
   const to = await centerOf(target);
 
-  // dragover only reads the cached verdict, so it has to arrive before the drop.
-  const verdictsLoaded = page.waitForResponse(response =>
-    response.url().includes('/Model/GetMoveVerdicts'),
-  );
-
+  // No wait for the verdicts here on purpose, the drop has to survive a fast drag.
   await page.mouse.move(from.x, from.y);
   await page.mouse.down();
   await page.mouse.move(from.x, from.y + 10, { steps: 4 });
-  await verdictsLoaded;
 
   if (options.copy) {
     await page.keyboard.down('Control');
