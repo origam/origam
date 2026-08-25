@@ -72,6 +72,14 @@ public class SchemaItemMoveService(
 
     private IPersistenceProvider PersistenceProvider => persistenceService.SchemaProvider;
 
+    private void RequireActivePackage()
+    {
+        if (schemaService.ActiveExtension == null)
+        {
+            throw new UserOrigamException(Strings.Move_NoActivePackage);
+        }
+    }
+
     public ISchemaItemProvider GetRootProviderById(string id)
     {
         if (schemaService.ActiveExtension == null)
@@ -120,6 +128,7 @@ public class SchemaItemMoveService(
         List<NodeRefModel> targetReferences
     )
     {
+        RequireActivePackage();
         IBrowserNode2 source = ResolveNode(sourceReference);
         var results = new List<MoveVerdictResult>();
         if (targetReferences == null)
@@ -151,10 +160,10 @@ public class SchemaItemMoveService(
 
     public MoveTargetsResult GetMoveTargets(NodeRefModel sourceReference)
     {
+        RequireActivePackage();
         var result = new MoveTargetsResult { Targets = [] };
         if (
-            schemaService.ActiveExtension == null
-            || ResolveNode(sourceReference) is not ISchemaItem item
+            ResolveNode(sourceReference) is not ISchemaItem item
             // RootProvider is only set when the item is reached through a provider.
             || item.RootProvider is not AbstractSchemaItemProvider provider
         )
@@ -268,7 +277,6 @@ public class SchemaItemMoveService(
             Key = TreeNode.ToTreeNodeId(candidate),
             Path = GetTargetPath(candidate, provider),
             PackageName = packageNames.GetValueOrDefault(packageId),
-            Kind = GetTargetKind(candidate),
             IsInActivePackage = packageId == schemaService.ActiveExtension.Id,
             IsCurrentLocation = IsCurrentLocation(item, candidate),
             CanMove = canMove,
@@ -296,16 +304,6 @@ public class SchemaItemMoveService(
         return provider.NodeText + "/" + path.Replace(separator, newValue: "/");
     }
 
-    private static MoveTargetKind GetTargetKind(IBrowserNode2 candidate)
-    {
-        return candidate switch
-        {
-            AbstractSchemaItemProvider => MoveTargetKind.Provider,
-            SchemaItemGroup => MoveTargetKind.Group,
-            _ => MoveTargetKind.Item,
-        };
-    }
-
     private static bool IsCurrentLocation(ISchemaItem item, IBrowserNode2 candidate)
     {
         return candidate switch
@@ -323,11 +321,7 @@ public class SchemaItemMoveService(
         bool isCopy
     )
     {
-        if (schemaService.ActiveExtension == null)
-        {
-            throw new UserOrigamException(Strings.Move_NoActivePackage);
-        }
-
+        RequireActivePackage();
         IBrowserNode2 source =
             ResolveNode(sourceReference)
             ?? throw new UserOrigamException(Strings.Move_SourceNotFound);

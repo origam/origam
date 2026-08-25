@@ -552,15 +552,12 @@ export interface IMoveNodeResult {
   parentNodeIds: string[];
 }
 
-export type MoveTargetKind = 'Provider' | 'Group' | 'Item';
-
 export interface IMoveTarget {
   id: string;
   nodeText: string;
   key: string;
   path: string;
   packageName: string;
-  kind: MoveTargetKind;
   isInActivePackage: boolean;
   isCurrentLocation: boolean;
   canMove: boolean;

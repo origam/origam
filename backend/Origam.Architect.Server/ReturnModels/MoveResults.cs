@@ -34,13 +34,6 @@ public class MoveNodeResult
     public List<string> ParentNodeIds { get; set; }
 }
 
-public enum MoveTargetKind
-{
-    Provider,
-    Group,
-    Item,
-}
-
 public class MoveTargetResult
 {
     public string Id { get; set; }
@@ -48,7 +41,6 @@ public class MoveTargetResult
     public string Key { get; set; }
     public string Path { get; set; }
     public string PackageName { get; set; }
-    public MoveTargetKind Kind { get; set; }
     public bool IsInActivePackage { get; set; }
     public bool IsCurrentLocation { get; set; }
     public bool CanMove { get; set; }

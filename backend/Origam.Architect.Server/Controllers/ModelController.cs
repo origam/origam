@@ -150,11 +150,6 @@ public class ModelController(
         [Required] [FromBody] MoveVerdictsModel input
     )
     {
-        if (schemaService.ActiveExtension == null)
-        {
-            return BadRequest(Strings.Move_NoActivePackage);
-        }
-
         return Ok(moveService.GetMoveVerdicts(input.Source, input.Targets));
     }
 
@@ -163,11 +158,6 @@ public class ModelController(
         [Required] [FromBody] MoveTargetsModel input
     )
     {
-        if (schemaService.ActiveExtension == null)
-        {
-            return BadRequest(Strings.Move_NoActivePackage);
-        }
-
         return Ok(moveService.GetMoveTargets(input.Source));
     }
 

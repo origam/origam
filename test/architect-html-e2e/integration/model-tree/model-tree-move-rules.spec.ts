@@ -170,12 +170,12 @@ test.describe('Model tree move rules (real backend)', () => {
     expect(targets.get(key(CONSTANTS_ROOT))).toMatchObject({
       canMove: true,
       canCopy: true,
-      kind: 'Provider',
+      path: 'Constants',
     });
     expect(targets.get(key(CONSTANT_GROUP))).toMatchObject({
       canMove: true,
       canCopy: true,
-      kind: 'Group',
+      path: 'Constants/AutomaticTests',
     });
     expect(targets.get(key(FOREIGN_GROUP))).toMatchObject({
       canMove: true,
@@ -183,8 +183,8 @@ test.describe('Model tree move rules (real backend)', () => {
       packageName: 'Root',
     });
     expect(targets.has(key(ENTITY_GROUP))).toBe(false);
-    // DataConstant has no CanMove override, so no item can become its parent.
-    expect([...targets.values()].some(target => target.kind === 'Item')).toBe(false);
+    // DataConstant has no CanMove override, so no constant can become a parent.
+    expect(targets.has(key(FOREIGN_CONSTANT))).toBe(false);
   });
 
   test('Move targets of an item of another package are copy only', async ({ request }) => {
@@ -230,7 +230,7 @@ function key(node: NodeRef): string {
 
 interface MoveTarget {
   key: string;
-  kind: string;
+  path: string;
   packageName: string;
   canMove: boolean;
   canCopy: boolean;
