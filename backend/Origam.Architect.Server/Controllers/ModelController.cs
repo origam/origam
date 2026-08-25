@@ -145,9 +145,9 @@ public class ModelController(
         return moveService.GetRootProviderById(id);
     }
 
-    [HttpPost("GetDropTargets")]
-    public ActionResult<List<DropTargetResult>> GetDropTargets(
-        [Required] [FromBody] DropTargetsModel input
+    [HttpPost("GetMoveVerdicts")]
+    public ActionResult<List<MoveVerdictResult>> GetMoveVerdicts(
+        [Required] [FromBody] MoveVerdictsModel input
     )
     {
         if (schemaService.ActiveExtension == null)
@@ -155,7 +155,7 @@ public class ModelController(
             return BadRequest(Strings.Move_NoActivePackage);
         }
 
-        return Ok(moveService.GetDropTargets(input.Source, input.Targets));
+        return Ok(moveService.GetMoveVerdicts(input.Source, input.Targets));
     }
 
     [HttpPost("GetMoveTargets")]

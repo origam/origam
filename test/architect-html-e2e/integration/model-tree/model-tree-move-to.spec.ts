@@ -20,10 +20,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { expect, test, type Page } from '@playwright/test';
 import { activatePackage } from '@support/activatePackage';
 import {
-  expectDropTargets,
+  awaitMoveTargets,
+  awaitMoveVerdicts,
   expectModelFile,
-  expectMoveRequest,
-  expectMoveTargets,
+  expectMoveSucceeds,
   expectTreeSettled,
   menuItem,
   openConstants,
@@ -52,7 +52,7 @@ test.describe('Model tree move to dialog (real backend)', () => {
 
     await selectOption(page, 'move-to-package', 'Root');
     await selectOption(page, 'move-to-target', FOREIGN_GROUP);
-    await expectMoveRequest(page, () => page.getByTestId('move-to-button-move').click());
+    await expectMoveSucceeds(page, () => page.getByTestId('move-to-button-move').click());
 
     await expect(page.getByTestId('move-to-dialog')).toHaveCount(0);
     await expectTreeSettled(page, 'UngroupedConstant');
@@ -67,7 +67,7 @@ test.describe('Model tree move to dialog (real backend)', () => {
 
     await selectOption(page, 'move-to-package', 'Root');
     await selectOption(page, 'move-to-target', FOREIGN_GROUP);
-    await expectMoveRequest(page, () => page.getByTestId('move-to-button-copy').click());
+    await expectMoveSucceeds(page, () => page.getByTestId('move-to-button-copy').click());
 
     await expectModelFile('Root/DataConstant/Attachments/Copy of UngroupedConstant.origam', true);
     await expectModelFile(`${CONSTANTS_DIR}/UngroupedConstant.origam`, true);
@@ -112,7 +112,7 @@ test.describe('Model tree move to dialog (real backend)', () => {
 
     const constant = page.getByTestId('tree-node-UngroupedConstant');
     await constant.click();
-    await expectDropTargets(page, () => page.keyboard.press('Control+x'));
+    await awaitMoveVerdicts(page, () => page.keyboard.press('Control+x'));
     await expect(constant).toHaveClass(/cutNode/);
 
     await openMoveToDialog(page, 'InitialUserCreated');
@@ -138,7 +138,7 @@ test.describe('Model tree move to dialog (real backend)', () => {
 
 async function openMoveToDialog(page: Page, nodeText: string): Promise<void> {
   await openContextMenu(page, nodeText);
-  await expectMoveTargets(page, () => menuItem(page, nodeText, 'tree-menu-move-to').click());
+  await awaitMoveTargets(page, () => menuItem(page, nodeText, 'tree-menu-move-to').click());
   await expect(page.getByTestId('move-to-dialog')).toBeVisible();
 }
 

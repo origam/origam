@@ -21,9 +21,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 namespace Origam.Architect.Server.ReturnModels;
 
-public class DropTargetResult
+public class MoveVerdictResult
 {
-    public string Id { get; set; }
+    public string Key { get; set; }
     public bool CanMove { get; set; }
     public bool CanCopy { get; set; }
 }

@@ -161,7 +161,7 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
   }
 
   function onPaste() {
-    run({ generator: () => transfer.drop(node, transfer.mode === 'copy') });
+    run({ generator: () => transfer.drop(node, transfer.clipboardMode === 'copy') });
   }
 
   function openMoveToDialog() {
@@ -217,7 +217,7 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
     const isCopy = event.ctrlKey || event.metaKey;
     transfer.setCopyModifier(isCopy);
     transfer.setHoverNode(node.id);
-    if (!transfer.canDropOn(node, isCopy)) {
+    if (!transfer.canTransferTo(node, isCopy)) {
       event.dataTransfer.dropEffect = 'none';
       return;
     }
@@ -230,7 +230,7 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
       return;
     }
     clearAutoExpand();
-    if (node.isExpanded || !node.hasChildNodes || transfer.isSource(node)) {
+    if (node.isExpanded || !node.canExpand || transfer.isSource(node)) {
       return;
     }
     autoExpandTimer.current = window.setTimeout(() => {
@@ -241,7 +241,7 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
           if (!node.childrenInitialized) {
             yield* node.loadChildren.bind(node)();
           }
-          yield* transfer.addDropTargets(node.children);
+          yield* transfer.loadTargetVerdicts(node.children);
         },
       });
     }, AUTO_EXPAND_DELAY_MS);
@@ -259,7 +259,7 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
     event.stopPropagation();
     clearAutoExpand();
     const isCopy = event.ctrlKey || event.metaKey;
-    if (transfer.canDropOn(node, isCopy)) {
+    if (transfer.canTransferTo(node, isCopy)) {
       run({ generator: () => transfer.drop(node, isCopy) });
     }
   }
@@ -631,7 +631,7 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
   }
 
   function getSymbol() {
-    if (node.hasChildNodes) {
+    if (node.canExpand) {
       return node.isExpanded ? '▼' : '▶';
     }
   }
@@ -641,7 +641,8 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
   const canPaste =
     transfer.hasSource &&
     !transfer.isBusy &&
-    (!transfer.dropTargets.has(node.id) || transfer.canDropOn(node, transfer.mode === 'copy'));
+    (!transfer.targetVerdicts.has(node.id) ||
+      transfer.canTransferTo(node, transfer.clipboardMode === 'copy'));
 
   useEffect(() => {
     if (isHighlighted) {
@@ -997,7 +998,7 @@ const ModelTree = observer(() => {
         !!modelTreeState.selectedNode,
       handler: () => {
         const node = modelTreeState.selectedNode!;
-        run({ generator: () => transfer.drop(node, transfer.mode === 'copy') });
+        run({ generator: () => transfer.drop(node, transfer.clipboardMode === 'copy') });
       },
     },
     {

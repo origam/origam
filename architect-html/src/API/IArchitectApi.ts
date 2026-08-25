@@ -28,10 +28,10 @@ export interface IArchitectApi {
 
   getNodeChildren(node: INodeLoadData): Promise<IApiTreeNode[]>;
 
-  getDropTargets(args: {
+  getMoveVerdicts(args: {
     source: INodeLoadData;
     targets: INodeLoadData[];
-  }): Promise<IDropTargetResult[]>;
+  }): Promise<IMoveVerdict[]>;
 
   getMoveTargets(source: INodeLoadData): Promise<IMoveTargetsResult>;
 
@@ -541,8 +541,8 @@ export interface IApiTreeNode extends INodeLoadData {
 
 export type NodeLevelType = 'Category' | 'Provider' | 'Item';
 
-export interface IDropTargetResult {
-  id: string;
+export interface IMoveVerdict {
+  key: string;
   canMove: boolean;
   canCopy: boolean;
 }

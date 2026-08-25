@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { T } from '@/main';
-import { IDropTargetResult, IMoveNodeResult, INodeLoadData } from '@api/IArchitectApi';
+import { IMoveNodeResult, IMoveVerdict, INodeLoadData } from '@api/IArchitectApi';
 import { TreeNode, toNodeRef } from '@components/modelTree/TreeNode';
 import { askYesNoQuestion, YesNoResult } from '@dialogs/DialogUtils';
 import { RootStore } from '@stores/RootStore';
@@ -26,19 +26,19 @@ import { action, observable } from 'mobx';
 
 export type TransferMode = 'cut' | 'copy';
 
-interface IDropFlags {
+interface ITransferVerdict {
   canMove: boolean;
   canCopy: boolean;
 }
 
 export class TreeTransferState {
-  @observable accessor mode: TransferMode | null = null;
+  @observable accessor clipboardMode: TransferMode | null = null;
   @observable accessor sourceNodeId: string | null = null;
   @observable accessor isDragging: boolean = false;
   @observable accessor isCopyModifier: boolean = false;
   @observable accessor hoverNodeId: string | null = null;
   @observable accessor isBusy: boolean = false;
-  @observable.ref accessor dropTargets: Map<string, IDropFlags> = new Map();
+  @observable.ref accessor targetVerdicts: Map<string, ITransferVerdict> = new Map();
   @observable.ref private accessor sourceRef: INodeLoadData | null = null;
   private generation = 0;
 
@@ -56,11 +56,11 @@ export class TreeTransferState {
     if (!this.isSource(node)) {
       return false;
     }
-    return this.isDragging ? !this.isCopyModifier : this.mode === 'cut';
+    return this.isDragging ? !this.isCopyModifier : this.clipboardMode === 'cut';
   }
 
-  canDropOn(node: TreeNode, isCopy: boolean): boolean {
-    const flags = this.dropTargets.get(node.id);
+  canTransferTo(node: TreeNode, isCopy: boolean): boolean {
+    const flags = this.targetVerdicts.get(node.id);
     if (!flags) {
       return false;
     }
@@ -69,7 +69,9 @@ export class TreeTransferState {
 
   isDropHighlighted(node: TreeNode): boolean {
     return (
-      this.isDragging && this.hoverNodeId === node.id && this.canDropOn(node, this.isCopyModifier)
+      this.isDragging &&
+      this.hoverNodeId === node.id &&
+      this.canTransferTo(node, this.isCopyModifier)
     );
   }
 
@@ -92,44 +94,36 @@ export class TreeTransferState {
   *beginTransfer(
     node: TreeNode,
     mode: TransferMode,
-  ): Generator<Promise<IDropTargetResult[]>, void, IDropTargetResult[]> {
+  ): Generator<Promise<IMoveVerdict[]>, void, IMoveVerdict[]> {
     const sourceRef = toNodeRef(node);
     if (sourceRef.id !== this.sourceRef?.id || sourceRef.nodeText !== this.sourceRef?.nodeText) {
-      this.dropTargets = new Map();
+      this.targetVerdicts = new Map();
       this.generation++;
     }
-    this.mode = mode;
+    this.clipboardMode = mode;
     this.sourceNodeId = node.id;
     this.sourceRef = sourceRef;
-    yield* this.loadDropTargets(this.rootStore.modelTreeState.visibleNodes);
+    yield* this.loadTargetVerdicts(this.rootStore.modelTreeState.visibleNodes);
   }
 
-  *addDropTargets(
-    nodes: TreeNode[],
-  ): Generator<Promise<IDropTargetResult[]>, void, IDropTargetResult[]> {
-    yield* this.loadDropTargets(nodes);
-  }
-
-  private *loadDropTargets(
-    nodes: TreeNode[],
-  ): Generator<Promise<IDropTargetResult[]>, void, IDropTargetResult[]> {
-    const targets = nodes.filter(node => !this.dropTargets.has(node.id));
+  *loadTargetVerdicts(nodes: TreeNode[]): Generator<Promise<IMoveVerdict[]>, void, IMoveVerdict[]> {
+    const targets = nodes.filter(node => !this.targetVerdicts.has(node.id));
     if (!this.sourceRef || targets.length === 0) {
       return;
     }
     const generation = this.generation;
-    const results = yield this.rootStore.architectApi.getDropTargets({
+    const results = yield this.rootStore.architectApi.getMoveVerdicts({
       source: this.sourceRef,
       targets: targets.map(toNodeRef),
     });
     if (generation !== this.generation) {
       return;
     }
-    const updated = new Map(this.dropTargets);
+    const updated = new Map(this.targetVerdicts);
     for (const result of results) {
-      updated.set(result.id, { canMove: result.canMove, canCopy: result.canCopy });
+      updated.set(result.key, { canMove: result.canMove, canCopy: result.canCopy });
     }
-    this.dropTargets = updated;
+    this.targetVerdicts = updated;
   }
 
   *drop(target: TreeNode, isCopy: boolean): Generator<Promise<any>, boolean, any> {
@@ -245,12 +239,12 @@ export class TreeTransferState {
   @action
   clear() {
     this.generation++;
-    this.mode = null;
+    this.clipboardMode = null;
     this.sourceNodeId = null;
     this.sourceRef = null;
     this.isDragging = false;
     this.isCopyModifier = false;
     this.hoverNodeId = null;
-    this.dropTargets = new Map();
+    this.targetVerdicts = new Map();
   }
 }

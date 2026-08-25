@@ -90,7 +90,7 @@ export class TreeNode implements IEditorNode {
     return this.rootStore.uiState.isExpanded(this.id);
   }
 
-  get hasChildNodes() {
+  get canExpand() {
     return this.children.length > 0 || !this.childrenInitialized;
   }
 

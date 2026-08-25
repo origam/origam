@@ -45,11 +45,11 @@ export async function openContextMenu(page: Page, nodeText: string): Promise<voi
   );
   await page.getByTestId(`tree-node-${nodeText}`).click({ button: 'right' });
   await pendingResponse;
-  await expectStable(menuItem(page, nodeText, 'tree-menu-paste'));
+  await expectBoxSettled(menuItem(page, nodeText, 'tree-menu-paste'));
 }
 
 // The arriving items change the height of the menu, which moves it.
-export async function expectStable(locator: Locator): Promise<void> {
+export async function expectBoxSettled(locator: Locator): Promise<void> {
   let previous: string | null = null;
   await expect
     .poll(
@@ -66,17 +66,17 @@ export async function expectStable(locator: Locator): Promise<void> {
 }
 
 // The verdicts arrive for the whole tree and re-render every node.
-export async function expectDropTargets(page: Page, action: () => Promise<void>): Promise<void> {
-  await expectResponse(page, '/Model/GetDropTargets', action);
+export async function awaitMoveVerdicts(page: Page, action: () => Promise<void>): Promise<void> {
+  await awaitResponse(page, '/Model/GetMoveVerdicts', action);
 }
 
-export async function expectMoveTargets(page: Page, action: () => Promise<void>): Promise<void> {
-  await expectResponse(page, '/Model/GetMoveTargets', action);
+export async function awaitMoveTargets(page: Page, action: () => Promise<void>): Promise<void> {
+  await awaitResponse(page, '/Model/GetMoveTargets', action);
 }
 
 // Reports a server side rejection instead of a later missing node.
-export async function expectMoveRequest(page: Page, action: () => Promise<void>): Promise<void> {
-  const response = await expectResponse(page, '/Model/MoveNode', action);
+export async function expectMoveSucceeds(page: Page, action: () => Promise<void>): Promise<void> {
+  const response = await awaitResponse(page, '/Model/MoveNode', action);
   expect(response.ok(), await response.text()).toBeTruthy();
 }
 
@@ -89,7 +89,7 @@ export async function expectModelFile(relativePath: string, exists: boolean): Pr
     .toBe(exists);
 }
 
-async function expectResponse(page: Page, urlPart: string, action: () => Promise<void>) {
+async function awaitResponse(page: Page, urlPart: string, action: () => Promise<void>) {
   const pendingResponse = page.waitForResponse(response => response.url().includes(urlPart), {
     timeout: 10_000,
   });

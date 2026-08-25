@@ -43,7 +43,7 @@ const CONSTANTS_ROOT = ref('Origam.Schema.EntityModel.DataConstantSchemaItemProv
 const FOREIGN_CONSTANT = ref('e42f864f-5018-4967-abdc-5910439adc9a', 'InitialUserCreated');
 const FOREIGN_GROUP = ref('9e00cfe2-ad80-40f2-aeb2-321dcc57325e', 'Attachments');
 
-test.describe('Model tree drop rules (real backend)', () => {
+test.describe('Model tree move rules (real backend)', () => {
   test.describe.configure({ mode: 'default', timeout: 45_000 });
 
   test.beforeEach(async ({ request }) => {
@@ -52,7 +52,7 @@ test.describe('Model tree drop rules (real backend)', () => {
   });
 
   test('Only matching containers accept a constant', async ({ request }) => {
-    const verdicts = await getDropTargets(request, UNGROUPED_CONSTANT, [
+    const verdicts = await getMoveVerdicts(request, UNGROUPED_CONSTANT, [
       CONSTANT_GROUP,
       CONSTANTS_ROOT,
       ENTITY_GROUP,
@@ -79,7 +79,7 @@ test.describe('Model tree drop rules (real backend)', () => {
   });
 
   test('An item of another package can only be copied', async ({ request }) => {
-    const verdicts = await getDropTargets(request, FOREIGN_CONSTANT, [
+    const verdicts = await getMoveVerdicts(request, FOREIGN_CONSTANT, [
       CONSTANT_GROUP,
       CONSTANTS_ROOT,
     ]);
@@ -95,7 +95,7 @@ test.describe('Model tree drop rules (real backend)', () => {
   });
 
   test('A group is not a movable item', async ({ request }) => {
-    const verdicts = await getDropTargets(request, CONSTANT_GROUP, [CONSTANTS_ROOT]);
+    const verdicts = await getMoveVerdicts(request, CONSTANT_GROUP, [CONSTANTS_ROOT]);
 
     expect(verdicts.get(key(CONSTANTS_ROOT))).toEqual({
       canMove: false,
@@ -249,22 +249,22 @@ async function getMoveTargets(
   return new Map(targets.map(target => [target.key, target]));
 }
 
-async function getDropTargets(
+async function getMoveVerdicts(
   request: APIRequestContext,
   source: NodeRef,
   targets: NodeRef[],
 ): Promise<Map<string, { canMove: boolean; canCopy: boolean }>> {
-  const response = await request.post('/Model/GetDropTargets', {
+  const response = await request.post('/Model/GetMoveVerdicts', {
     data: { source, targets },
   });
   expect(response.ok(), await response.text()).toBeTruthy();
 
   const results = (await response.json()) as {
-    id: string;
+    key: string;
     canMove: boolean;
     canCopy: boolean;
   }[];
   return new Map(
-    results.map(result => [result.id, { canMove: result.canMove, canCopy: result.canCopy }]),
+    results.map(result => [result.key, { canMove: result.canMove, canCopy: result.canCopy }]),
   );
 }

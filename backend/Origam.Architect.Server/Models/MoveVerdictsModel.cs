@@ -23,7 +23,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Origam.Architect.Server.Models;
 
-public class DropTargetsModel
+public class MoveVerdictsModel
 {
     [Required]
     public NodeRefModel Source { get; set; }

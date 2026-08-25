@@ -38,14 +38,14 @@ export async function dragTreeNode(
   const to = await centerOf(target);
 
   // dragover only reads the cached verdict, so it has to arrive before the drop.
-  const dropTargetsLoaded = page.waitForResponse(response =>
-    response.url().includes('/Model/GetDropTargets'),
+  const verdictsLoaded = page.waitForResponse(response =>
+    response.url().includes('/Model/GetMoveVerdicts'),
   );
 
   await page.mouse.move(from.x, from.y);
   await page.mouse.down();
   await page.mouse.move(from.x, from.y + 10, { steps: 4 });
-  await dropTargetsLoaded;
+  await verdictsLoaded;
 
   if (options.copy) {
     await page.keyboard.down('Control');

@@ -21,9 +21,9 @@ import { expect, test } from '@playwright/test';
 import { activatePackage } from '@support/activatePackage';
 import { dragTreeNode } from '@support/dragTreeNode';
 import {
-  expectDropTargets,
+  awaitMoveVerdicts,
   expectModelFile,
-  expectMoveRequest,
+  expectMoveSucceeds,
   expectTreeSettled,
   menuItem,
   openConstants,
@@ -48,7 +48,7 @@ test.describe('Model tree move and copy (real backend)', () => {
     await openConstants(page);
     await page.getByTestId('tree-toggle-AutomaticTests').click();
 
-    await expectMoveRequest(page, () =>
+    await expectMoveSucceeds(page, () =>
       dragTreeNode(
         page,
         page.getByTestId('tree-node-GroupedConstant'),
@@ -69,11 +69,11 @@ test.describe('Model tree move and copy (real backend)', () => {
 
     const constant = page.getByTestId('tree-node-UngroupedConstant');
     await constant.click();
-    await expectDropTargets(page, () => page.keyboard.press('Control+x'));
+    await awaitMoveVerdicts(page, () => page.keyboard.press('Control+x'));
     await expect(constant).toHaveClass(/cutNode/);
 
     await page.getByTestId('tree-node-AutomaticTests').click();
-    await expectMoveRequest(page, () => page.keyboard.press('Control+v'));
+    await expectMoveSucceeds(page, () => page.keyboard.press('Control+v'));
 
     const group = page.getByTestId('tree-toggle-AutomaticTests');
     await expectTreeSettled(page, 'UngroupedConstant');
@@ -91,7 +91,7 @@ test.describe('Model tree move and copy (real backend)', () => {
     await openConstants(page);
     await page.getByTestId('tree-toggle-AutomaticTests').click();
 
-    await expectMoveRequest(page, () =>
+    await expectMoveSucceeds(page, () =>
       dragTreeNode(
         page,
         page.getByTestId('tree-node-GroupedConstant'),
@@ -113,12 +113,12 @@ test.describe('Model tree move and copy (real backend)', () => {
     await openConstants(page);
 
     await openContextMenu(page, 'UngroupedConstant');
-    await expectDropTargets(page, () =>
+    await awaitMoveVerdicts(page, () =>
       menuItem(page, 'UngroupedConstant', 'tree-menu-copy').click(),
     );
 
     await openContextMenu(page, 'AutomaticTests');
-    await expectMoveRequest(page, () =>
+    await expectMoveSucceeds(page, () =>
       menuItem(page, 'AutomaticTests', 'tree-menu-paste').click(),
     );
 
@@ -133,13 +133,13 @@ test.describe('Model tree move and copy (real backend)', () => {
     await openConstants(page);
 
     await openContextMenu(page, 'UngroupedConstant');
-    await expectDropTargets(page, () =>
+    await awaitMoveVerdicts(page, () =>
       menuItem(page, 'UngroupedConstant', 'tree-menu-cut').click(),
     );
     await expect(page.getByTestId('tree-node-UngroupedConstant')).toHaveClass(/cutNode/);
 
     await openContextMenu(page, 'AutomaticTests');
-    await expectMoveRequest(page, () =>
+    await expectMoveSucceeds(page, () =>
       menuItem(page, 'AutomaticTests', 'tree-menu-paste').click(),
     );
 
@@ -151,10 +151,10 @@ test.describe('Model tree move and copy (real backend)', () => {
     await openConstants(page);
 
     await page.getByTestId('tree-node-InitialUserCreated').click();
-    await expectDropTargets(page, () => page.keyboard.press('Control+c'));
+    await awaitMoveVerdicts(page, () => page.keyboard.press('Control+c'));
 
     await page.getByTestId('tree-node-AutomaticTests').click();
-    await expectMoveRequest(page, () => page.keyboard.press('Control+v'));
+    await expectMoveSucceeds(page, () => page.keyboard.press('Control+v'));
 
     await expect(page.getByTestId('tree-node-Copy of InitialUserCreated')).toBeVisible();
 
@@ -170,7 +170,7 @@ test.describe('Model tree move and copy (real backend)', () => {
 
     const constant = page.getByTestId('tree-node-UngroupedConstant');
     await constant.click();
-    await expectDropTargets(page, () => page.keyboard.press('Control+x'));
+    await awaitMoveVerdicts(page, () => page.keyboard.press('Control+x'));
     await expect(constant).toHaveClass(/cutNode/);
 
     await page.keyboard.press('Escape');
@@ -201,7 +201,7 @@ test.describe('Model tree move and copy (real backend)', () => {
     await openConstants(page);
     await page.getByTestId('tree-toggle-AutomaticTests').click();
 
-    await expectMoveRequest(page, () =>
+    await expectMoveSucceeds(page, () =>
       dragTreeNode(
         page,
         page.getByTestId('tree-node-GroupedConstant'),

@@ -29,33 +29,33 @@ using Origam.Workbench.Services;
 
 namespace Origam.Architect.Server.Services;
 
-public enum DropKind
+public enum MoveDestination
 {
     None,
-    ToRootProvider,
-    ToGroup,
-    ToParentNode,
+    RootProvider,
+    Group,
+    ParentItem,
 }
 
-public class DropDecision
+public class MoveDecision
 {
-    public DropKind Kind { get; init; }
+    public MoveDestination Kind { get; init; }
     public string ErrorMessage { get; init; }
     public SchemaItemGroup Group { get; init; }
     public ISchemaItem TargetItem { get; init; }
 
-    public bool IsAllowed => Kind != DropKind.None;
+    public bool IsAllowed => Kind != MoveDestination.None;
 
-    public static DropDecision Rejected(string message) =>
-        new() { Kind = DropKind.None, ErrorMessage = message };
+    public static MoveDecision Rejected(string message) =>
+        new() { Kind = MoveDestination.None, ErrorMessage = message };
 
-    public static DropDecision ToProvider() => new() { Kind = DropKind.ToRootProvider };
+    public static MoveDecision ToRootProvider() => new() { Kind = MoveDestination.RootProvider };
 
-    public static DropDecision ToGroup(SchemaItemGroup group) =>
-        new() { Kind = DropKind.ToGroup, Group = group };
+    public static MoveDecision ToGroup(SchemaItemGroup group) =>
+        new() { Kind = MoveDestination.Group, Group = group };
 
-    public static DropDecision ToParent(ISchemaItem targetItem) =>
-        new() { Kind = DropKind.ToParentNode, TargetItem = targetItem };
+    public static MoveDecision ToParentItem(ISchemaItem targetItem) =>
+        new() { Kind = MoveDestination.ParentItem, TargetItem = targetItem };
 }
 
 public class SchemaItemMoveService(
@@ -86,7 +86,7 @@ public class SchemaItemMoveService(
             .FirstOrDefault(provider => provider.NodeId == id);
     }
 
-    public IBrowserNode2 Resolve(NodeRefModel reference)
+    public IBrowserNode2 ResolveNode(NodeRefModel reference)
     {
         if (reference == null || string.IsNullOrWhiteSpace(reference.Id))
         {
@@ -115,13 +115,13 @@ public class SchemaItemMoveService(
         return GetRootProviderById(reference.Id) as IBrowserNode2;
     }
 
-    public List<DropTargetResult> GetDropTargets(
+    public List<MoveVerdictResult> GetMoveVerdicts(
         NodeRefModel sourceReference,
         List<NodeRefModel> targetReferences
     )
     {
-        IBrowserNode2 source = Resolve(sourceReference);
-        var results = new List<DropTargetResult>();
+        IBrowserNode2 source = ResolveNode(sourceReference);
+        var results = new List<MoveVerdictResult>();
         if (targetReferences == null)
         {
             return results;
@@ -134,12 +134,12 @@ public class SchemaItemMoveService(
                 continue;
             }
 
-            IBrowserNode2 target = source == null ? null : Resolve(targetReference);
-            (bool canMove, bool canCopy) = EvaluatePair(source, target);
+            IBrowserNode2 target = source == null ? null : ResolveNode(targetReference);
+            (bool canMove, bool canCopy) = EvaluateBothModes(source, target);
             results.Add(
-                new DropTargetResult
+                new MoveVerdictResult
                 {
-                    Id = ToNodeKey(targetReference),
+                    Key = ToNodeKey(targetReference),
                     CanMove = canMove,
                     CanCopy = canCopy,
                 }
@@ -154,7 +154,7 @@ public class SchemaItemMoveService(
         var result = new MoveTargetsResult { Targets = [] };
         if (
             schemaService.ActiveExtension == null
-            || Resolve(sourceReference) is not ISchemaItem item
+            || ResolveNode(sourceReference) is not ISchemaItem item
             // RootProvider is only set when the item is reached through a provider.
             || item.RootProvider is not AbstractSchemaItemProvider provider
         )
@@ -177,7 +177,7 @@ public class SchemaItemMoveService(
             }
             examined++;
 
-            (bool canMove, bool canCopy) = EvaluatePair(item, candidate);
+            (bool canMove, bool canCopy) = EvaluateBothModes(item, candidate);
             if (!canMove && !canCopy)
             {
                 continue;
@@ -329,11 +329,13 @@ public class SchemaItemMoveService(
         }
 
         IBrowserNode2 source =
-            Resolve(sourceReference) ?? throw new UserOrigamException(Strings.Move_SourceNotFound);
+            ResolveNode(sourceReference)
+            ?? throw new UserOrigamException(Strings.Move_SourceNotFound);
         IBrowserNode2 target =
-            Resolve(targetReference) ?? throw new UserOrigamException(Strings.Move_TargetNotFound);
+            ResolveNode(targetReference)
+            ?? throw new UserOrigamException(Strings.Move_TargetNotFound);
 
-        DropDecision decision = Evaluate(source, target, isCopy);
+        MoveDecision decision = Evaluate(source, target, isCopy);
         if (!decision.IsAllowed)
         {
             throw new UserOrigamException(decision.ErrorMessage);
@@ -348,27 +350,27 @@ public class SchemaItemMoveService(
         };
     }
 
-    public DropDecision Evaluate(IBrowserNode2 source, IBrowserNode2 target, bool isCopy)
+    public MoveDecision Evaluate(IBrowserNode2 source, IBrowserNode2 target, bool isCopy)
     {
         if (source is not ISchemaItem item)
         {
-            return DropDecision.Rejected(Strings.Move_SourceNotMovable);
+            return MoveDecision.Rejected(Strings.Move_SourceNotMovable);
         }
 
         if (!item.IsPersisted)
         {
-            return DropDecision.Rejected(string.Format(Strings.Move_SourceNotPersisted, item.Name));
+            return MoveDecision.Rejected(string.Format(Strings.Move_SourceNotPersisted, item.Name));
         }
 
         if (target == null)
         {
-            return DropDecision.Rejected(Strings.Move_TargetNotFound);
+            return MoveDecision.Rejected(Strings.Move_TargetNotFound);
         }
 
         // A copy lands in the active package, a move keeps the original one.
         if (!isCopy && !schemaService.CanEditItem(item))
         {
-            return DropDecision.Rejected(
+            return MoveDecision.Rejected(
                 string.Format(Strings.Move_NotInActivePackage, item.Name, item.PackageName)
             );
         }
@@ -376,27 +378,30 @@ public class SchemaItemMoveService(
         int? selfDepth = GetAncestorDepth(target, item);
         if (selfDepth == null)
         {
-            return DropDecision.Rejected(
+            return MoveDecision.Rejected(
                 string.Format(Strings.Move_TargetChainUnknown, item.Name, target.NodeText)
             );
         }
 
         if (selfDepth == 0)
         {
-            return DropDecision.Rejected(Strings.Move_TargetIsSource);
+            return MoveDecision.Rejected(Strings.Move_TargetIsSource);
         }
 
         if (selfDepth > 0 && !isCopy)
         {
-            return DropDecision.Rejected(
+            return MoveDecision.Rejected(
                 string.Format(Strings.Move_TargetIsDescendant, item.Name, target.NodeText)
             );
         }
 
-        return EvaluateTarget(item, target);
+        return EvaluateDestination(item, target);
     }
 
-    public (bool CanMove, bool CanCopy) EvaluatePair(IBrowserNode2 source, IBrowserNode2 target)
+    public (bool CanMove, bool CanCopy) EvaluateBothModes(
+        IBrowserNode2 source,
+        IBrowserNode2 target
+    )
     {
         return (
             Evaluate(source, target, isCopy: false).IsAllowed,
@@ -404,51 +409,51 @@ public class SchemaItemMoveService(
         );
     }
 
-    private static DropDecision EvaluateTarget(ISchemaItem item, IBrowserNode2 target)
+    private static MoveDecision EvaluateDestination(ISchemaItem item, IBrowserNode2 target)
     {
         if (target is AbstractSchemaItemProvider targetProvider)
         {
-            return EvaluateProviderDrop(item, targetProvider);
+            return EvaluateProviderTarget(item, targetProvider);
         }
 
         if (target is SchemaItemGroup targetGroup)
         {
-            return EvaluateGroupDrop(item, targetGroup);
+            return EvaluateGroupTarget(item, targetGroup);
         }
 
         if (target is ISchemaItem targetItem && item.CanMove(target))
         {
-            return DropDecision.ToParent(targetItem);
+            return MoveDecision.ToParentItem(targetItem);
         }
 
-        return DropDecision.Rejected(
+        return MoveDecision.Rejected(
             string.Format(Strings.Move_NotAllowed, item.Name, target.NodeText)
         );
     }
 
-    private static DropDecision EvaluateProviderDrop(
+    private static MoveDecision EvaluateProviderTarget(
         ISchemaItem item,
         AbstractSchemaItemProvider provider
     )
     {
         if (item.RootProvider == null || provider.NodeId != item.RootProvider.NodeId)
         {
-            return DropDecision.Rejected(
+            return MoveDecision.Rejected(
                 string.Format(Strings.Move_NotAllowed, item.Name, provider.NodeText)
             );
         }
 
         if (item.ParentItem != null)
         {
-            return DropDecision.Rejected(
+            return MoveDecision.Rejected(
                 string.Format(Strings.Move_ProviderRequiresTopLevelItem, provider.NodeText)
             );
         }
 
-        return DropDecision.ToProvider();
+        return MoveDecision.ToRootProvider();
     }
 
-    private static DropDecision EvaluateGroupDrop(ISchemaItem item, SchemaItemGroup group)
+    private static MoveDecision EvaluateGroupTarget(ISchemaItem item, SchemaItemGroup group)
     {
         // Group.RootProvider is transient here, RootItemType is persisted.
         if (
@@ -457,12 +462,12 @@ public class SchemaItemMoveService(
             || !string.Equals(group.RootItemType, provider.RootItemType, StringComparison.Ordinal)
         )
         {
-            return DropDecision.Rejected(
+            return MoveDecision.Rejected(
                 string.Format(Strings.Move_NotAllowed, item.Name, group.NodeText)
             );
         }
 
-        return DropDecision.ToGroup(group);
+        return MoveDecision.ToGroup(group);
     }
 
     // Null means the parent chain could not be walked and the relation stays unknown.
@@ -485,7 +490,7 @@ public class SchemaItemMoveService(
         return -1;
     }
 
-    private ISchemaItem MoveExisting(ISchemaItem item, DropDecision decision)
+    private ISchemaItem MoveExisting(ISchemaItem item, MoveDecision decision)
     {
         ISchemaItemProvider rootProvider = item.RootProvider;
         ISchemaItem oldParent = item.ParentItem;
@@ -529,7 +534,7 @@ public class SchemaItemMoveService(
             throw;
         }
 
-        if (oldParent == null && decision.Kind == DropKind.ToParentNode)
+        if (oldParent == null && decision.Kind == MoveDestination.ParentItem)
         {
             rootProvider?.ClearCache();
         }
@@ -537,7 +542,7 @@ public class SchemaItemMoveService(
         return item;
     }
 
-    private ISchemaItem Copy(ISchemaItem original, DropDecision decision)
+    private ISchemaItem Copy(ISchemaItem original, MoveDecision decision)
     {
         ISchemaItemProvider rootProvider = original.RootProvider;
         // A drop on the root provider has no package of its own, that copy lands in the active one.
@@ -558,7 +563,7 @@ public class SchemaItemMoveService(
                 clone.SetExtensionRecursive(targetPackage);
                 clone.Name = GetUniqueName(clone);
                 PersistClone(clone);
-                if (wasTopLevel && decision.Kind == DropKind.ToParentNode)
+                if (wasTopLevel && decision.Kind == MoveDestination.ParentItem)
                 {
                     rootProvider?.ClearCache();
                 }
@@ -583,12 +588,12 @@ public class SchemaItemMoveService(
         newParent?.ClearCache();
     }
 
-    private static Package ResolveTargetPackage(DropDecision decision, Package fallback)
+    private static Package ResolveTargetPackage(MoveDecision decision, Package fallback)
     {
         return decision.Kind switch
         {
-            DropKind.ToGroup => decision.Group.Package,
-            DropKind.ToParentNode => decision.TargetItem.Package,
+            MoveDestination.Group => decision.Group.Package,
+            MoveDestination.ParentItem => decision.TargetItem.Package,
             _ => fallback,
         };
     }
@@ -612,7 +617,7 @@ public class SchemaItemMoveService(
 
     private static void CheckDependenciesOrThrow(ISchemaItem item, Package targetPackage)
     {
-        List<ISchemaItem> moved = GetMovedItems(item);
+        List<ISchemaItem> moved = GetItemsToMove(item);
         HashSet<Guid> movedIds = moved.Select(movedItem => movedItem.Id).ToHashSet();
         HashSet<Guid> reachableFromTarget = GetReachablePackageIds(targetPackage);
         List<ISchemaItem> unreachable = moved
@@ -638,7 +643,7 @@ public class SchemaItemMoveService(
 
     private void CheckUsagesOrThrow(ISchemaItem item, Package targetPackage)
     {
-        List<ISchemaItem> moved = GetMovedItems(item);
+        List<ISchemaItem> moved = GetItemsToMove(item);
         HashSet<Guid> movedIds = moved.Select(movedItem => movedItem.Id).ToHashSet();
         Dictionary<Guid, HashSet<Guid>> reachablePackages =
             schemaService.LoadedPackages.ToDictionary(
@@ -669,7 +674,7 @@ public class SchemaItemMoveService(
         }
     }
 
-    private static List<ISchemaItem> GetMovedItems(ISchemaItem item)
+    private static List<ISchemaItem> GetItemsToMove(ISchemaItem item)
     {
         List<ISchemaItem> items = item.ChildItemsRecursive;
         items.Add(item);
@@ -689,21 +694,21 @@ public class SchemaItemMoveService(
         return string.Join(separator: ", ", items.Select(item => item.Name).Distinct());
     }
 
-    private static void ApplyDecision(ISchemaItem item, DropDecision decision)
+    private static void ApplyDecision(ISchemaItem item, MoveDecision decision)
     {
         switch (decision.Kind)
         {
-            case DropKind.ToRootProvider:
+            case MoveDestination.RootProvider:
             {
                 item.Group = null;
                 break;
             }
-            case DropKind.ToGroup:
+            case MoveDestination.Group:
             {
                 item.Group = decision.Group;
                 break;
             }
-            case DropKind.ToParentNode:
+            case MoveDestination.ParentItem:
             {
                 item.Group = null;
                 item.ParentNode = decision.TargetItem;
