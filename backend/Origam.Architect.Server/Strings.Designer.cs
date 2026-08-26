@@ -150,7 +150,16 @@ namespace Origam.Architect.Server {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to '{0}' belongs to package '{1}'. Only items from the active package can be moved, it can only be copied..
+        ///   Looks up a localized string similar to '{0}' cannot be moved, the package it belongs to is not loaded..
+        /// </summary>
+        internal static string Move_SourcePackageNotFound {
+            get {
+                return ResourceManager.GetString("Move_SourcePackageNotFound", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Only items from the active package can be moved. '{0}' belongs to package '{1}' and can only be copied..
         /// </summary>
         internal static string Move_NotInActivePackage {
             get {

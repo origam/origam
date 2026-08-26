@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.Architect.Server.Exceptions;
 using Origam.Architect.Server.Models;
 using Origam.Architect.Server.ReturnModels;
 using Origam.DA.ObjectPersistence;
@@ -342,8 +343,21 @@ public class SchemaItemMoveService(
         return new MoveNodeResult
         {
             Node = treeNodeFactory.Create(result),
-            ParentNodeIds = SearchService.GetParentNodeIds(result, SearchService.GetRoot(result)),
+            ParentNodeIds = GetParentNodeIdsOrEmpty(result),
         };
+    }
+
+    // The model is already written, a broken parent chain must not fail the move.
+    private static List<string> GetParentNodeIdsOrEmpty(ISchemaItem item)
+    {
+        try
+        {
+            return SearchService.GetParentNodeIds(item, SearchService.GetRoot(item));
+        }
+        catch (OrphanedSchemaReferenceException)
+        {
+            return [];
+        }
     }
 
     public MoveDecision Evaluate(IBrowserNode2 source, IBrowserNode2 target, bool isCopy)
@@ -500,7 +514,11 @@ public class SchemaItemMoveService(
         ISchemaItem oldParent = item.ParentItem;
         SchemaItemGroup oldGroup = item.Group;
         bool oldIsAbstract = item.IsAbstract;
-        Package oldPackage = item.Package;
+        Package oldPackage =
+            item.Package
+            ?? throw new UserOrigamException(
+                string.Format(Strings.Move_SourcePackageNotFound, item.Name)
+            );
         Package targetPackage = ResolveTargetPackage(decision, oldPackage);
         bool crossPackage = targetPackage != null && targetPackage.Id != oldPackage.Id;
         if (crossPackage)

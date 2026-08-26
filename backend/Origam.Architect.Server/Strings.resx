@@ -42,8 +42,11 @@
     <data name="Move_SourceNotPersisted" xml:space="preserve">
         <value>'{0}' has not been saved yet. Save it before moving or copying it.</value>
     </data>
+    <data name="Move_SourcePackageNotFound" xml:space="preserve">
+        <value>'{0}' cannot be moved, the package it belongs to is not loaded.</value>
+    </data>
     <data name="Move_NotInActivePackage" xml:space="preserve">
-        <value>'{0}' belongs to package '{1}'. Only items from the active package can be moved, it can only be copied.</value>
+        <value>Only items from the active package can be moved. '{0}' belongs to package '{1}' and can only be copied.</value>
     </data>
     <data name="Move_TargetIsSource" xml:space="preserve">
         <value>An item cannot be dropped onto itself.</value>
