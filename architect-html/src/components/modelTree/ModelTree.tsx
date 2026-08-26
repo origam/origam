@@ -175,9 +175,9 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
   function openMoveToDialog() {
     run({
       generator: function* () {
-        const result = (yield rootStore.architectApi.getMoveTargets(
-          toNodeRef(node),
-        )) as IMoveTargetsResult;
+        const result = (yield rootStore.architectApi.getMoveTargets({
+          source: toNodeRef(node),
+        })) as IMoveTargetsResult;
         const closeDialog = rootStore.dialogStack.pushDialog(
           '',
           <MoveToDialog

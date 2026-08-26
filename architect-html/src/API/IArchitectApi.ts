@@ -33,7 +33,7 @@ export interface IArchitectApi {
     targets: INodeLoadData[];
   }): Promise<IMoveVerdict[]>;
 
-  getMoveTargets(source: INodeLoadData): Promise<IMoveTargetsResult>;
+  getMoveTargets(args: { source: INodeLoadData }): Promise<IMoveTargetsResult>;
 
   moveNode(args: {
     source: INodeLoadData;
