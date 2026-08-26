@@ -168,6 +168,15 @@ namespace Origam.Architect.Server {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to '{0}' is already in '{1}'..
+        /// </summary>
+        internal static string Move_TargetIsCurrentLocation {
+            get {
+                return ResourceManager.GetString("Move_TargetIsCurrentLocation", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to '{0}' cannot be moved into '{1}', which is one of its own children..
         /// </summary>
         internal static string Move_TargetIsDescendant {

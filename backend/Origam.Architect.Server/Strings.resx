@@ -48,6 +48,9 @@
     <data name="Move_TargetIsSource" xml:space="preserve">
         <value>An item cannot be dropped onto itself.</value>
     </data>
+    <data name="Move_TargetIsCurrentLocation" xml:space="preserve">
+        <value>'{0}' is already in '{1}'.</value>
+    </data>
     <data name="Move_TargetIsDescendant" xml:space="preserve">
         <value>'{0}' cannot be moved into '{1}', which is one of its own children.</value>
     </data>

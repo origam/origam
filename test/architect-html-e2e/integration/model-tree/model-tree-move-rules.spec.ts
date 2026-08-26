@@ -63,8 +63,9 @@ test.describe('Model tree move rules (real backend)', () => {
       canMove: true,
       canCopy: true,
     });
+    // The constant already sits there, only a copy is left.
     expect(verdicts.get(key(CONSTANTS_ROOT))).toEqual({
-      canMove: true,
+      canMove: false,
       canCopy: true,
     });
     // A group of entities holds a different root item type.
@@ -110,6 +111,15 @@ test.describe('Model tree move rules (real backend)', () => {
         target: ENTITY_GROUP,
         isCopy: false,
       },
+    });
+
+    expect(response.ok()).toBeFalsy();
+    expect(fs.existsSync(modelFilePath(`${CONSTANTS_DIR}/UngroupedConstant.origam`))).toBe(true);
+  });
+
+  test('A move to the current location is refused', async ({ request }) => {
+    const response = await request.post('/Model/MoveNode', {
+      data: { source: UNGROUPED_CONSTANT, target: CONSTANTS_ROOT, isCopy: false },
     });
 
     expect(response.ok()).toBeFalsy();
@@ -168,9 +178,10 @@ test.describe('Model tree move rules (real backend)', () => {
     const targets = await getMoveTargets(request, UNGROUPED_CONSTANT);
 
     expect(targets.get(key(CONSTANTS_ROOT))).toMatchObject({
-      canMove: true,
+      canMove: false,
       canCopy: true,
       path: 'Constants',
+      isCurrentLocation: true,
     });
     expect(targets.get(key(CONSTANT_GROUP))).toMatchObject({
       canMove: true,
@@ -232,6 +243,7 @@ interface MoveTarget {
   key: string;
   path: string;
   packageName: string;
+  isCurrentLocation: boolean;
   canMove: boolean;
   canCopy: boolean;
 }

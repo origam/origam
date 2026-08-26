@@ -389,7 +389,15 @@ public class SchemaItemMoveService(
             );
         }
 
-        return EvaluateDestination(item, target);
+        MoveDecision decision = EvaluateDestination(item, target);
+        if (decision.IsAllowed && !isCopy && IsCurrentLocation(item, target))
+        {
+            return MoveDecision.Rejected(
+                string.Format(Strings.Move_TargetIsCurrentLocation, item.Name, target.NodeText)
+            );
+        }
+
+        return decision;
     }
 
     public (bool CanMove, bool CanCopy) EvaluateBothModes(
