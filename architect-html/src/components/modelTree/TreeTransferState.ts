@@ -26,6 +26,9 @@ import { action, observable, when } from 'mobx';
 
 export type TransferMode = 'cut' | 'copy';
 
+// A deeply expanded tree holds thousands of nodes.
+const VERDICT_BATCH_SIZE = 250;
+
 interface ITransferVerdict {
   canMove: boolean;
   canCopy: boolean;
@@ -131,7 +134,8 @@ export class TreeTransferState {
 
   *loadTargetVerdicts(nodes: TreeNode[]): Generator<Promise<IMoveVerdict[]>, void, IMoveVerdict[]> {
     const targets = nodes.filter(node => !this.requestedTargetIds.has(node.id));
-    if (!this.sourceRef || targets.length === 0) {
+    const sourceRef = this.sourceRef;
+    if (!sourceRef || targets.length === 0) {
       return;
     }
     const generation = this.generation;
@@ -139,24 +143,33 @@ export class TreeTransferState {
       this.requestedTargetIds.add(target.id);
     }
     this.pendingVerdictLoads++;
-    let results: IMoveVerdict[];
     try {
-      results = yield this.rootStore.architectApi.getMoveVerdicts({
-        source: this.sourceRef,
-        targets: targets.map(toNodeRef),
-      });
-    } catch (error) {
-      // A failed request must not block a later attempt for the same targets.
-      for (const target of targets) {
-        this.requestedTargetIds.delete(target.id);
+      for (let start = 0; start < targets.length; start += VERDICT_BATCH_SIZE) {
+        const batch = targets.slice(start, start + VERDICT_BATCH_SIZE);
+        let results: IMoveVerdict[];
+        try {
+          results = yield this.rootStore.architectApi.getMoveVerdicts({
+            source: sourceRef,
+            targets: batch.map(toNodeRef),
+          });
+        } catch (error) {
+          // A failed request must not block a later attempt for the same targets.
+          for (const target of targets.slice(start)) {
+            this.requestedTargetIds.delete(target.id);
+          }
+          throw error;
+        }
+        if (generation !== this.generation) {
+          return;
+        }
+        this.applyVerdicts(batch, results);
       }
-      throw error;
     } finally {
       this.pendingVerdictLoads--;
     }
-    if (generation !== this.generation) {
-      return;
-    }
+  }
+
+  private applyVerdicts(targets: TreeNode[], results: IMoveVerdict[]) {
     const updated = new Map(this.targetVerdicts);
     // A target left without an answer stays rejected, otherwise callers keep asking for it.
     for (const target of targets) {
