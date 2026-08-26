@@ -72,6 +72,9 @@
     <data name="Move_UsagesCannotReachTargetPackage" xml:space="preserve">
         <value>'{0}' cannot be moved to package '{1}' because items that use it would not be able to reach it: {2}</value>
     </data>
+    <data name="Move_UsagesNotChecked" xml:space="preserve">
+        <value>'{0}' cannot be moved to package '{1}' because the model reference index is not available. Reload the model and try again.</value>
+    </data>
     <data name="XsltValidationFailed" xml:space="preserve">
         <value>XSLT validation failed. See output for details.</value>
     </data>

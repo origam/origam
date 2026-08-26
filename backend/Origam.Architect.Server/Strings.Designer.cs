@@ -240,6 +240,15 @@ namespace Origam.Architect.Server {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to '{0}' cannot be moved to package '{1}' because the model reference index is not available. Reload the model and try again..
+        /// </summary>
+        internal static string Move_UsagesNotChecked {
+            get {
+                return ResourceManager.GetString("Move_UsagesNotChecked", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Parameter named {0} was not found among Input Parameters..
         /// </summary>
         internal static string ParameterNotFound {

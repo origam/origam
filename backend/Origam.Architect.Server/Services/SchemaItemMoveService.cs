@@ -708,8 +708,7 @@ public class SchemaItemMoveService(
                 package => package.Id,
                 GetReachablePackageIds
             );
-        List<ISchemaItem> unreachable = moved
-            .SelectMany(movedItem => movedItem.GetUsage())
+        List<ISchemaItem> unreachable = GetUsages(item, moved, targetPackage)
             .Where(usage =>
                 usage != null
                 && !movedIds.Contains(usage.Id)
@@ -730,6 +729,27 @@ public class SchemaItemMoveService(
                     targetPackage.Name,
                     FormatItemList(unreachable)
                 )
+            );
+        }
+    }
+
+    // GetUsage throws a plain exception when the reference index is missing.
+    private static List<ISchemaItem> GetUsages(
+        ISchemaItem item,
+        List<ISchemaItem> moved,
+        Package targetPackage
+    )
+    {
+        try
+        {
+            return moved.SelectMany(movedItem => movedItem.GetUsage()).ToList();
+        }
+        catch (Exception exception)
+        {
+            throw new UserOrigamException(
+                string.Format(Strings.Move_UsagesNotChecked, item.Name, targetPackage.Name),
+                exception.Message,
+                exception
             );
         }
     }
