@@ -971,6 +971,12 @@ const ModelTree = observer(() => {
 
   const hasTreeFocus = () => !!treeRef.current && treeRef.current.contains(document.activeElement);
 
+  const canPasteInto = (node: TreeNode | null) =>
+    transfer.hasSource &&
+    !transfer.isBusy &&
+    !!node &&
+    transfer.mayTransferTo(node, transfer.clipboardMode === 'copy');
+
   useKeyboardShortcuts([
     {
       predicate: e =>
@@ -1002,8 +1008,7 @@ const ModelTree = observer(() => {
         isPasteShortcut(e) &&
         !isTypingTarget(e) &&
         hasTreeFocus() &&
-        transfer.hasSource &&
-        !!modelTreeState.selectedNode,
+        canPasteInto(modelTreeState.selectedNode),
       handler: () => {
         const node = modelTreeState.selectedNode!;
         run({ generator: () => transfer.drop(node, transfer.clipboardMode === 'copy') });
