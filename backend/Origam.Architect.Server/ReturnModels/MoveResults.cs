@@ -50,5 +50,6 @@ public class MoveTargetResult
 public class MoveTargetsResult
 {
     public List<MoveTargetResult> Targets { get; set; }
+    public bool IsSourceInActivePackage { get; set; }
     public bool IsTruncated { get; set; }
 }

@@ -183,6 +183,7 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
           <MoveToDialog
             sourceName={node.nodeText}
             targets={result.targets}
+            isSourceInActivePackage={result.isSourceInActivePackage}
             isTruncated={result.isTruncated}
             onCancel={() => closeDialog()}
             onConfirm={(target, isCopy) => {

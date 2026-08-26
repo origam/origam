@@ -566,6 +566,7 @@ export interface IMoveTarget {
 
 export interface IMoveTargetsResult {
   targets: IMoveTarget[];
+  isSourceInActivePackage: boolean;
   isTruncated: boolean;
 }
 

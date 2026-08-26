@@ -28,6 +28,7 @@ import { KeyboardEvent, useMemo, useState } from 'react';
 interface MoveToDialogProps {
   sourceName: string;
   targets: IMoveTarget[];
+  isSourceInActivePackage: boolean;
   isTruncated: boolean;
   onCancel: () => void;
   onConfirm: (target: IMoveTarget, isCopy: boolean) => void;
@@ -37,7 +38,14 @@ interface MoveToDialogProps {
 const INDENT = '  ';
 
 export const MoveToDialog = observer(
-  ({ sourceName, targets, isTruncated, onCancel, onConfirm }: MoveToDialogProps) => {
+  ({
+    sourceName,
+    targets,
+    isSourceInActivePackage,
+    isTruncated,
+    onCancel,
+    onConfirm,
+  }: MoveToDialogProps) => {
     const packages = useMemo(
       () => [...new Set(targets.map(target => target.packageName))].sort(),
       [targets],
@@ -132,7 +140,7 @@ export const MoveToDialog = observer(
                   />
                 </span>
               </label>
-              {selected && !selected.canMove && (
+              {selected && !selected.canMove && !isSourceInActivePackage && (
                 <div className={S.note} data-test-id="move-to-copy-only">
                   {T(
                     'Only a copy can be created, {0} is not in the active package.',
@@ -141,13 +149,14 @@ export const MoveToDialog = observer(
                   )}
                 </div>
               )}
+              {selected && !selected.canMove && isSourceInActivePackage && (
+                <div className={S.note} data-test-id="move-to-copy-only-target">
+                  {T('Only a copy can be created for this target.', 'move_to_copy_only_target')}
+                </div>
+              )}
               {isTruncated && (
                 <div className={S.note}>
-                  {T(
-                    'Too many targets, only the first {0} are listed.',
-                    'move_to_truncated',
-                    String(targets.length),
-                  )}
+                  {T('Too many targets, the list is incomplete.', 'move_to_truncated')}
                 </div>
               )}
             </>

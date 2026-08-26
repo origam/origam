@@ -174,6 +174,7 @@ public class SchemaItemMoveService(
             return result;
         }
 
+        result.IsSourceInActivePackage = schemaService.CanEditItem(item);
         Dictionary<Guid, string> packageNames = schemaService.LoadedPackages.ToDictionary(
             package => package.Id,
             package => package.Name

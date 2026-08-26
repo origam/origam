@@ -179,7 +179,9 @@ test.describe('Model tree move rules (real backend)', () => {
   test('Move targets of a constant are the provider and the constant groups', async ({
     request,
   }) => {
-    const targets = await getMoveTargets(request, UNGROUPED_CONSTANT);
+    const { targets, isSourceInActivePackage } = await getMoveTargets(request, UNGROUPED_CONSTANT);
+
+    expect(isSourceInActivePackage).toBe(true);
 
     expect(targets.get(key(CONSTANTS_ROOT))).toMatchObject({
       canMove: false,
@@ -203,7 +205,9 @@ test.describe('Model tree move rules (real backend)', () => {
   });
 
   test('Move targets of an item of another package are copy only', async ({ request }) => {
-    const targets = await getMoveTargets(request, FOREIGN_CONSTANT);
+    const { targets, isSourceInActivePackage } = await getMoveTargets(request, FOREIGN_CONSTANT);
+
+    expect(isSourceInActivePackage).toBe(false);
 
     expect(targets.size).toBeGreaterThan(0);
     for (const target of targets.values()) {
@@ -212,7 +216,7 @@ test.describe('Model tree move rules (real backend)', () => {
   });
 
   test('A group has no move targets', async ({ request }) => {
-    const targets = await getMoveTargets(request, CONSTANT_GROUP);
+    const { targets } = await getMoveTargets(request, CONSTANT_GROUP);
 
     expect(targets.size).toBe(0);
   });
@@ -271,6 +275,11 @@ function key(node: NodeRef): string {
   return node.id + node.nodeText;
 }
 
+interface MoveTargetsResult {
+  targets: Map<string, MoveTarget>;
+  isSourceInActivePackage: boolean;
+}
+
 interface MoveTarget {
   key: string;
   path: string;
@@ -283,14 +292,20 @@ interface MoveTarget {
 async function getMoveTargets(
   request: APIRequestContext,
   source: NodeRef,
-): Promise<Map<string, MoveTarget>> {
+): Promise<MoveTargetsResult> {
   const response = await request.post('/Model/GetMoveTargets', {
     data: { source },
   });
   expect(response.ok(), await response.text()).toBeTruthy();
 
-  const { targets } = (await response.json()) as { targets: MoveTarget[] };
-  return new Map(targets.map(target => [target.key, target]));
+  const result = (await response.json()) as {
+    targets: MoveTarget[];
+    isSourceInActivePackage: boolean;
+  };
+  return {
+    targets: new Map(result.targets.map(target => [target.key, target])),
+    isSourceInActivePackage: result.isSourceInActivePackage,
+  };
 }
 
 async function getMoveVerdicts(
