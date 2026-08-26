@@ -42,6 +42,10 @@ const CONSTANTS_ROOT = ref('Origam.Schema.EntityModel.DataConstantSchemaItemProv
 // Belongs to Root, which AutomaticTests references.
 const FOREIGN_CONSTANT = ref('e42f864f-5018-4967-abdc-5910439adc9a', 'InitialUserCreated');
 const FOREIGN_GROUP = ref('9e00cfe2-ad80-40f2-aeb2-321dcc57325e', 'Attachments');
+// A screen section of Root together with the group it already sits in.
+const SCREEN_SECTION = ref('263a4b50-3920-4445-84c7-4df5b3065d74', 'DimensionEntityRelation');
+const SECTION_GROUP = ref('d3087181-fe7b-48dd-85b9-97a4f17f3b6d', 'Dimensions');
+const SECTIONS_PROVIDER = 'Origam.Schema.GuiModel.PanelSchemaItemProvider';
 
 test.describe('Model tree move rules (real backend)', () => {
   test.describe.configure({ mode: 'default', timeout: 45_000 });
@@ -213,6 +217,25 @@ test.describe('Model tree move rules (real backend)', () => {
     expect(targets.size).toBe(0);
   });
 
+  test('A copied screen section gets its own widget', async ({ request }) => {
+    await loadProviderItems(request, SECTIONS_PROVIDER);
+
+    const response = await request.post('/Model/MoveNode', {
+      data: { source: SCREEN_SECTION, target: SECTION_GROUP, isCopy: true },
+    });
+
+    expect(response.ok(), await response.text()).toBeTruthy();
+    expect(
+      fs.existsSync(
+        modelFilePath('Root/PanelControlSet/Dimensions/Copy of DimensionEntityRelation.origam'),
+      ),
+    ).toBe(true);
+    // Without its own ControlItem the copy cannot be placed on a screen.
+    expect(
+      fs.existsSync(modelFilePath('Root/Control/Copy of DimensionEntityRelation.origam')),
+    ).toBe(true);
+  });
+
   test('A repeated copy gets a numbered name', async ({ request }) => {
     await copyIntoGroup(request);
     const second = await copyIntoGroup(request);
@@ -233,6 +256,15 @@ async function copyIntoGroup(request: APIRequestContext): Promise<string> {
   expect(response.ok(), await response.text()).toBeTruthy();
   const { node } = (await response.json()) as { node: { nodeText: string } };
   return node.nodeText;
+}
+
+// An item only learns its provider while the provider lists it, which in the app happens
+// when the tree loads the branch. Constants get it from the specs that open the tree.
+async function loadProviderItems(request: APIRequestContext, providerId: string): Promise<void> {
+  const response = await request.get('/Model/GetChildren', {
+    params: { id: providerId, isNonPersistentItem: false, nodeText: '' },
+  });
+  expect(response.ok(), await response.text()).toBeTruthy();
 }
 
 function key(node: NodeRef): string {

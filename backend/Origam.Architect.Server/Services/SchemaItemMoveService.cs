@@ -63,12 +63,14 @@ public class SchemaItemMoveService(
     IPersistenceService persistenceService,
     ModelTransactionRunner transactionRunner,
     TreeNodeFactory treeNodeFactory,
-    IDocumentationService documentationService
+    IDocumentationService documentationService,
+    TabService tabService
 )
 {
     private const int MaxParentWalkDepth = 200;
     private const int MaxMoveTargets = 500;
     private const int MaxMoveCandidates = 5000;
+    private const string PanelControlType = "Origam.Gui.Win.AsPanel";
 
     private IPersistenceProvider PersistenceProvider => persistenceService.SchemaProvider;
 
@@ -565,6 +567,7 @@ public class SchemaItemMoveService(
                 clone.SetExtensionRecursive(targetPackage);
                 clone.Name = GetUniqueName(clone);
                 PersistClone(clone);
+                CreatePanelControl(clone, targetPackage);
                 if (wasTopLevel && decision.Kind == MoveDestination.ParentItem)
                 {
                     rootProvider?.ClearCache();
@@ -609,6 +612,36 @@ public class SchemaItemMoveService(
     private static void PersistPanelControl(ISchemaItem item)
     {
         GetPanelControl(item)?.Persist();
+    }
+
+    // PanelControl finds the wrapper by the set's own id, so a clone has none. The old
+    // Architect creates it when the cloned section is saved through ControlSetEditor.
+    private void CreatePanelControl(ISchemaItem clone, Package targetPackage)
+    {
+        if (clone is not PanelControlSet panelControlSet || panelControlSet.PanelControl != null)
+        {
+            return;
+        }
+
+        ControlItem control = schemaService
+            .GetProvider<UserControlSchemaItemProvider>()
+            .NewItem<ControlItem>(targetPackage.Id, group: null);
+        control.Name = panelControlSet.Name;
+        control.IsComplexType = true;
+        control.ControlType = typeof(PanelControlSet).ToString();
+        control.ControlNamespace = typeof(PanelControlSet).Namespace;
+        control.PanelControlSet = panelControlSet;
+        control.ControlToolBoxVisibility = ControlToolBoxVisibility.FormDesigner;
+        var ancestor = new SchemaItemAncestor
+        {
+            SchemaItem = control,
+            Ancestor = tabService.GetControlByType(PanelControlType),
+            PersistenceProvider = control.PersistenceProvider,
+        };
+        control.ThrowEventOnPersist = false;
+        control.Persist();
+        ancestor.Persist();
+        control.ThrowEventOnPersist = true;
     }
 
     // A screen section is wrapped by a ControlItem living in another provider and file.
