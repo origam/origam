@@ -98,6 +98,11 @@ const DeploymentBadges = observer(({ node }: { node: TreeNode }) => {
 
 const AUTO_EXPAND_DELAY_MS = 700;
 
+// The icon and the badges fire dragenter and dragleave too.
+function movedInsideRow(event: ReactDragEvent): boolean {
+  return event.currentTarget.contains(event.relatedTarget as Node | null);
+}
+
 const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number }) => {
   const rootStore = useContext(RootStoreContext);
   const editorTabViewState = rootStore.editorTabViewState;
@@ -235,8 +240,8 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
     event.dataTransfer.dropEffect = isCopy ? 'copy' : 'move';
   }
 
-  function onDragEnter() {
-    if (!transfer.isDragging) {
+  function onDragEnter(event: ReactDragEvent) {
+    if (!transfer.isDragging || movedInsideRow(event)) {
       return;
     }
     clearAutoExpand();
@@ -257,7 +262,10 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
     }, AUTO_EXPAND_DELAY_MS);
   }
 
-  function onDragLeave() {
+  function onDragLeave(event: ReactDragEvent) {
+    if (movedInsideRow(event)) {
+      return;
+    }
     clearAutoExpand();
     if (transfer.hoverNodeId === node.id) {
       transfer.setHoverNode(null);
