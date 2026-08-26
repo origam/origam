@@ -287,6 +287,14 @@ export class TreeTransferState {
     return true;
   }
 
+  // loadChildren gives up while a load is already running.
+  private *reloadChildren(node: TreeNode): Generator<Promise<any>, void, any> {
+    if (node.isLoading) {
+      yield when(() => !node.isLoading);
+    }
+    yield* node.loadChildren.bind(node)();
+  }
+
   private collectSubtreeIds(node: TreeNode): string[] {
     return [node.origamId, ...node.children.flatMap(child => this.collectSubtreeIds(child))];
   }
@@ -299,10 +307,10 @@ export class TreeTransferState {
     const modelTreeState = this.rootStore.modelTreeState;
     const oldParent = source?.parent ?? null;
     if (oldParent) {
-      yield* oldParent.loadChildren.bind(oldParent)();
+      yield* this.reloadChildren(oldParent);
     }
     if (target?.childrenInitialized && target !== oldParent) {
-      yield* target.loadChildren.bind(target)();
+      yield* this.reloadChildren(target);
     }
 
     yield* modelTreeState.expandAndHighlightSchemaItem.bind(modelTreeState)({
