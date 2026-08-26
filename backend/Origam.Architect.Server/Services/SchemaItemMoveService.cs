@@ -352,7 +352,7 @@ public class SchemaItemMoveService(
     {
         try
         {
-            return SearchService.GetParentNodeIds(item, SearchService.GetRoot(item));
+            return SchemaItemTreePath.GetParentNodeIds(item, SchemaItemTreePath.GetRoot(item));
         }
         catch (OrphanedSchemaReferenceException)
         {
