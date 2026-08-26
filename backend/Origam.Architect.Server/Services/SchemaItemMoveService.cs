@@ -279,7 +279,7 @@ public class SchemaItemMoveService(
             NodeText = TreeNode.ToNodeText(candidate),
             Key = TreeNode.ToTreeNodeId(candidate),
             Path = GetTargetPath(candidate, provider),
-            PackageName = packageNames.GetValueOrDefault(packageId),
+            PackageName = packageNames.GetValueOrDefault(packageId, defaultValue: ""),
             IsInActivePackage = packageId == schemaService.ActiveExtension.Id,
             IsCurrentLocation = IsCurrentLocation(item, candidate),
             CanMove = canMove,
@@ -389,7 +389,11 @@ public class SchemaItemMoveService(
         if (selfDepth == null)
         {
             return MoveDecision.Rejected(
-                string.Format(Strings.Move_TargetChainUnknown, item.Name, target.NodeText)
+                string.Format(
+                    Strings.Move_TargetChainUnknown,
+                    item.Name,
+                    TreeNode.ToNodeText(target)
+                )
             );
         }
 
@@ -401,7 +405,11 @@ public class SchemaItemMoveService(
         if (selfDepth > 0 && !isCopy)
         {
             return MoveDecision.Rejected(
-                string.Format(Strings.Move_TargetIsDescendant, item.Name, target.NodeText)
+                string.Format(
+                    Strings.Move_TargetIsDescendant,
+                    item.Name,
+                    TreeNode.ToNodeText(target)
+                )
             );
         }
 
@@ -409,7 +417,11 @@ public class SchemaItemMoveService(
         if (decision.IsAllowed && !isCopy && IsCurrentLocation(item, target))
         {
             return MoveDecision.Rejected(
-                string.Format(Strings.Move_TargetIsCurrentLocation, item.Name, target.NodeText)
+                string.Format(
+                    Strings.Move_TargetIsCurrentLocation,
+                    item.Name,
+                    TreeNode.ToNodeText(target)
+                )
             );
         }
 
@@ -421,10 +433,13 @@ public class SchemaItemMoveService(
         IBrowserNode2 target
     )
     {
-        return (
-            Evaluate(source, target, isCopy: false).IsAllowed,
-            Evaluate(source, target, isCopy: true).IsAllowed
-        );
+        // A move is allowed only where a copy is.
+        if (!Evaluate(source, target, isCopy: true).IsAllowed)
+        {
+            return (CanMove: false, CanCopy: false);
+        }
+
+        return (CanMove: Evaluate(source, target, isCopy: false).IsAllowed, CanCopy: true);
     }
 
     private static MoveDecision EvaluateDestination(ISchemaItem item, IBrowserNode2 target)
@@ -445,7 +460,7 @@ public class SchemaItemMoveService(
         }
 
         return MoveDecision.Rejected(
-            string.Format(Strings.Move_NotAllowed, item.Name, target.NodeText)
+            string.Format(Strings.Move_NotAllowed, item.Name, TreeNode.ToNodeText(target))
         );
     }
 
@@ -457,14 +472,17 @@ public class SchemaItemMoveService(
         if (item.RootProvider == null || provider.NodeId != item.RootProvider.NodeId)
         {
             return MoveDecision.Rejected(
-                string.Format(Strings.Move_NotAllowed, item.Name, provider.NodeText)
+                string.Format(Strings.Move_NotAllowed, item.Name, TreeNode.ToNodeText(provider))
             );
         }
 
         if (item.ParentItem != null)
         {
             return MoveDecision.Rejected(
-                string.Format(Strings.Move_ProviderRequiresTopLevelItem, provider.NodeText)
+                string.Format(
+                    Strings.Move_ProviderRequiresTopLevelItem,
+                    TreeNode.ToNodeText(provider)
+                )
             );
         }
 
@@ -481,7 +499,7 @@ public class SchemaItemMoveService(
         )
         {
             return MoveDecision.Rejected(
-                string.Format(Strings.Move_NotAllowed, item.Name, group.NodeText)
+                string.Format(Strings.Move_NotAllowed, item.Name, TreeNode.ToNodeText(group))
             );
         }
 
@@ -523,8 +541,9 @@ public class SchemaItemMoveService(
         bool crossPackage = targetPackage != null && targetPackage.Id != oldPackage.Id;
         if (crossPackage)
         {
-            CheckDependenciesOrThrow(item, targetPackage);
-            CheckUsagesOrThrow(item, targetPackage);
+            List<ISchemaItem> moved = GetItemsToMove(item);
+            CheckDependenciesOrThrow(item, moved, targetPackage);
+            CheckUsagesOrThrow(item, moved, targetPackage);
         }
         try
         {
@@ -572,7 +591,7 @@ public class SchemaItemMoveService(
         if (targetPackage.Id != original.SchemaExtensionId)
         {
             // The copy has the same dependencies as the original, usages do not exist yet.
-            CheckDependenciesOrThrow(original, targetPackage);
+            CheckDependenciesOrThrow(original, GetItemsToMove(original), targetPackage);
         }
         // Clone() puts a top level clone straight into RootProvider.ChildItems.
         var clone = (ISchemaItem)original.Clone();
@@ -648,9 +667,12 @@ public class SchemaItemMoveService(
         return item is PanelControlSet panelControlSet ? panelControlSet.PanelControl : null;
     }
 
-    private static void CheckDependenciesOrThrow(ISchemaItem item, Package targetPackage)
+    private static void CheckDependenciesOrThrow(
+        ISchemaItem item,
+        List<ISchemaItem> moved,
+        Package targetPackage
+    )
     {
-        List<ISchemaItem> moved = GetItemsToMove(item);
         HashSet<Guid> movedIds = moved.Select(movedItem => movedItem.Id).ToHashSet();
         HashSet<Guid> reachableFromTarget = GetReachablePackageIds(targetPackage);
         List<ISchemaItem> unreachable = moved
@@ -674,9 +696,12 @@ public class SchemaItemMoveService(
         }
     }
 
-    private void CheckUsagesOrThrow(ISchemaItem item, Package targetPackage)
+    private void CheckUsagesOrThrow(
+        ISchemaItem item,
+        List<ISchemaItem> moved,
+        Package targetPackage
+    )
     {
-        List<ISchemaItem> moved = GetItemsToMove(item);
         HashSet<Guid> movedIds = moved.Select(movedItem => movedItem.Id).ToHashSet();
         Dictionary<Guid, HashSet<Guid>> reachablePackages =
             schemaService.LoadedPackages.ToDictionary(
@@ -689,8 +714,10 @@ public class SchemaItemMoveService(
                 usage != null
                 && !movedIds.Contains(usage.Id)
                 && !(
-                    reachablePackages.TryGetValue(usage.SchemaExtensionId, out var reachable)
-                    && reachable.Contains(targetPackage.Id)
+                    reachablePackages.TryGetValue(
+                        usage.SchemaExtensionId,
+                        out HashSet<Guid> reachable
+                    ) && reachable.Contains(targetPackage.Id)
                 )
             )
             .ToList();
