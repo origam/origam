@@ -206,6 +206,7 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
   }
 
   function onDragStart(event: ReactDragEvent) {
+    // An img icon is dragged by the browser itself, even on a row that is not draggable.
     if (!node.canDrag) {
       event.preventDefault();
       return;
@@ -975,6 +976,7 @@ const ModelTree = observer(() => {
       predicate: e =>
         isCutShortcut(e) &&
         !isTypingTarget(e) &&
+        !hasTextSelection() &&
         hasTreeFocus() &&
         !!modelTreeState.selectedNode?.canDrag &&
         !!modelTreeState.selectedNode?.isInActivePackage,
