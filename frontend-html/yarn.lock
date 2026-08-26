@@ -5786,10 +5786,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mobx@npm:6.16.1":
-  version: 6.16.1
-  resolution: "mobx@npm:6.16.1"
-  checksum: 10c0/8450dab51fa133c9dde9f6c9b42cdc9f16c70cf2b989acc25b2cf2c66948def053ad3f1fdfc3bc256ece394e607e9c15dbfe88792ffa81a041e2ec92ae268cdb
+"mobx@npm:7.0.3":
+  version: 7.0.3
+  resolution: "mobx@npm:7.0.3"
+  checksum: 10c0/c6b560bbd7d2d9ee89ad833ba3b010375ecda0f60da12a08554ac817276e33bc7a6b6f0990e9690a50918f461a210e7538db7e52494c09c1211c26abde7f86e0
   languageName: node
   linkType: hard
 
@@ -6581,7 +6581,7 @@ __metadata:
     leaflet: "npm:^1.8.0"
     leaflet-draw: "npm:^1.0.4"
     lodash: "npm:^4.18.1"
-    mobx: "npm:6.16.1"
+    mobx: "npm:7.0.3"
     mobx-react: "npm:9.2.2"
     moment: "npm:^2.30.1"
     numeral: "npm:^2.0.6"
