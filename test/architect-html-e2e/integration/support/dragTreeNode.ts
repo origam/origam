@@ -21,11 +21,10 @@ import type { Locator, Page } from '@playwright/test';
 
 interface DragOptions {
   copy?: boolean;
-  // Runs while the pointer rests on the target, before the drop.
   whileOverTarget?: () => Promise<void>;
 }
 
-// Both nodes are measured up front, so they have to fit in the viewport together.
+// Both nodes are measured up front.
 export async function dragTreeNode(
   page: Page,
   source: Locator,

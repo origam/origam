@@ -142,7 +142,7 @@ async function openMoveToDialog(page: Page, nodeText: string): Promise<void> {
   await expect(page.getByTestId('move-to-dialog')).toBeVisible();
 }
 
-// The dropdown of a filterable select is rendered into a portal on the body.
+// The dropdown renders into a portal on the body.
 function dropdownOptions(page: Page) {
   return page.locator('body > ul > li').filter({ hasText: /\S/ });
 }
@@ -151,7 +151,7 @@ async function selectOption(page: Page, testId: string, optionText: string): Pro
   const input = page.getByTestId(testId).locator('input');
   await input.click();
   await input.fill(optionText);
-  // Options of nested groups are indented, so the text is not an exact match.
+  // Nested options are indented.
   await dropdownOptions(page)
     .filter({ hasText: new RegExp(`^\\s*${optionText}\\s*$`) })
     .first()

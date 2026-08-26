@@ -34,7 +34,7 @@ interface MoveToDialogProps {
   onConfirm: (target: IMoveTarget, isCopy: boolean) => void;
 }
 
-// Two non breaking spaces - the dropdown collapses plain ones, so the indent would vanish.
+// Non breaking - the dropdown collapses plain spaces.
 const INDENT = '  ';
 
 export const MoveToDialog = observer(
@@ -73,7 +73,6 @@ export const MoveToDialog = observer(
       }
     }
 
-    // A select that closed its own dropdown has already stopped the event.
     function onKeyDown(event: KeyboardEvent<HTMLDivElement>) {
       if (event.key === 'Escape') {
         onCancel();

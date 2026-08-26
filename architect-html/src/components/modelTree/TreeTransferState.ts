@@ -46,12 +46,10 @@ export class TreeTransferState {
   @observable.ref private accessor sourceRef: INodeLoadData | null = null;
   @observable accessor isDropping: boolean = false;
   private generation = 0;
-  // Kept apart from targetVerdicts so overlapping callers do not ask twice.
   private requestedTargetIds = new Set<string>();
 
   constructor(private rootStore: RootStore) {}
 
-  // A counter, not a flag - a finished request must not hide the ones still running.
   get isLoadingVerdicts(): boolean {
     return this.pendingVerdictLoads > 0;
   }
@@ -79,8 +77,7 @@ export class TreeTransferState {
     return isCopy ? verdict.canCopy : verdict.canMove;
   }
 
-  // Offers the target while its verdict is still on the way, drop() waits for the answer
-  // before it acts. Without it a fast drag would land on a node that looks forbidden.
+  // Optimistic while the verdict is on its way, drop() waits for the answer.
   mayTransferTo(node: TreeNode, isCopy: boolean): boolean {
     if (!this.targetVerdicts.has(node.id)) {
       return this.isLoadingVerdicts;
@@ -171,7 +168,7 @@ export class TreeTransferState {
 
   private applyVerdicts(targets: TreeNode[], results: IMoveVerdict[]) {
     const updated = new Map(this.targetVerdicts);
-    // A target left without an answer stays rejected, otherwise callers keep asking for it.
+    // An unanswered target stays rejected.
     for (const target of targets) {
       updated.set(target.id, { canMove: false, canCopy: false });
     }
@@ -181,7 +178,7 @@ export class TreeTransferState {
     this.targetVerdicts = updated;
   }
 
-  // Keeps the drag state alive until the drop finishes, dragend fires while it still runs.
+  // dragend fires while the drop is still running.
   *dropFromDrag(target: TreeNode, isCopy: boolean): Generator<Promise<any>, boolean, any> {
     this.isDropping = true;
     try {
@@ -197,7 +194,6 @@ export class TreeTransferState {
     if (!sourceRef) {
       return false;
     }
-    // The target may have been offered before its verdict arrived, or never asked about.
     if (!this.targetVerdicts.has(target.id)) {
       if (this.isLoadingVerdicts) {
         yield when(() => !this.isLoadingVerdicts);
@@ -215,8 +211,6 @@ export class TreeTransferState {
     return moved;
   }
 
-  // The target picked in the dialog does not have to be loaded in the tree, and the
-  // pending cut or copy must survive.
   *moveTo(
     source: TreeNode,
     targetRef: INodeLoadData,
@@ -256,7 +250,7 @@ export class TreeTransferState {
     }
   }
 
-  // Persist cascades to child items, so unsaved edits in the subtree get written too.
+  // Persist cascades to child items.
   private *confirmUnsavedChanges(
     source: TreeNode | null,
     sourceRef: INodeLoadData,

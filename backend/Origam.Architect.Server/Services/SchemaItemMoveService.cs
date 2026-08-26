@@ -181,7 +181,6 @@ public class SchemaItemMoveService(
         int examined = 0;
         foreach (IBrowserNode2 candidate in GetMoveCandidates(item, provider))
         {
-            // A provider can hold tens of thousands of items, the walk has to end somewhere.
             if (examined == MaxMoveCandidates)
             {
                 result.IsTruncated = true;
@@ -228,7 +227,7 @@ public class SchemaItemMoveService(
             }
         }
 
-        // Without a CanMove override no item can become a parent, so skip the walk entirely.
+        // Without a CanMove override no item can become a parent.
         if (
             item.GetType().GetMethod(nameof(ISchemaItem.CanMove))?.DeclaringType
             == typeof(AbstractSchemaItem)
@@ -237,7 +236,7 @@ public class SchemaItemMoveService(
             yield break;
         }
 
-        // ChildItems merges inherited items in, one instance shows up under every descendant.
+        // ChildItems merges inherited items in.
         IEnumerable<ISchemaItem> descendants = WalkChildItems(provider.ChildItems);
         foreach (ISchemaItem candidate in descendants.DistinctBy(node => node.Id))
         {
@@ -245,7 +244,7 @@ public class SchemaItemMoveService(
         }
     }
 
-    // ChildItemsRecursive materializes the whole provider, this stops where the caller does.
+    // ChildItemsRecursive materializes the whole provider.
     private static IEnumerable<ISchemaItem> WalkChildItems(IEnumerable<ISchemaItem> items)
     {
         foreach (ISchemaItem item in items)
@@ -387,7 +386,6 @@ public class SchemaItemMoveService(
             return MoveDecision.Rejected(Strings.Move_TargetNotFound);
         }
 
-        // A copy lands in the active package, a move keeps the original one.
         if (!isCopy && !schemaService.CanEditItem(item))
         {
             return MoveDecision.Rejected(
@@ -516,7 +514,7 @@ public class SchemaItemMoveService(
         return MoveDecision.ToGroup(group);
     }
 
-    // Null means the parent chain could not be walked and the relation stays unknown.
+    // Null means the chain could not be walked.
     private static int? GetAncestorDepth(IBrowserNode2 target, ISchemaItem item)
     {
         var current = target as ISchemaItem;
@@ -596,11 +594,11 @@ public class SchemaItemMoveService(
     private ISchemaItem Copy(ISchemaItem original, MoveDecision decision)
     {
         ISchemaItemProvider rootProvider = original.RootProvider;
-        // A drop on the root provider has no package of its own, that copy lands in the active one.
+        // The root provider has no package of its own.
         Package targetPackage = ResolveTargetPackage(decision, schemaService.ActiveExtension);
         if (targetPackage.Id != original.SchemaExtensionId)
         {
-            // The copy has the same dependencies as the original, usages do not exist yet.
+            // Usages of a copy do not exist yet.
             CheckDependenciesOrThrow(original, GetItemsToMove(original), targetPackage);
         }
         // Clone() puts a top level clone straight into RootProvider.ChildItems.
@@ -661,8 +659,7 @@ public class SchemaItemMoveService(
         GetPanelControl(item)?.Persist();
     }
 
-    // PanelControl finds the wrapper by the set's own id, so a clone has none. The old
-    // Architect creates it when the cloned section is saved through ControlSetEditor.
+    // PanelControl finds the wrapper by the set's own id, so a clone has none.
     private void CreatePanelControl(ISchemaItem clone, Package targetPackage)
     {
         if (clone is PanelControlSet { PanelControl: null } panelControlSet)
@@ -671,7 +668,6 @@ public class SchemaItemMoveService(
         }
     }
 
-    // A screen section is wrapped by a ControlItem living in another provider and file.
     private static ISchemaItem GetPanelControl(ISchemaItem item)
     {
         return item is PanelControlSet panelControlSet ? panelControlSet.PanelControl : null;
@@ -879,7 +875,7 @@ public class SchemaItemMoveService(
             return [];
         }
 
-        // Groups split the provider visually only, top level names stay unique.
+        // Groups split the provider visually only.
         return item.RootProvider.ChildItems;
     }
 

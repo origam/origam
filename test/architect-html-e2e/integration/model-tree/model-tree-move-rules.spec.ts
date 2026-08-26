@@ -42,7 +42,6 @@ const CONSTANTS_ROOT = ref('Origam.Schema.EntityModel.DataConstantSchemaItemProv
 // Belongs to Root, which AutomaticTests references.
 const FOREIGN_CONSTANT = ref('e42f864f-5018-4967-abdc-5910439adc9a', 'InitialUserCreated');
 const FOREIGN_GROUP = ref('9e00cfe2-ad80-40f2-aeb2-321dcc57325e', 'Attachments');
-// A screen section of Root together with the group it already sits in.
 const SCREEN_SECTION = ref('263a4b50-3920-4445-84c7-4df5b3065d74', 'DimensionEntityRelation');
 const SECTION_GROUP = ref('d3087181-fe7b-48dd-85b9-97a4f17f3b6d', 'Dimensions');
 const SECTIONS_PROVIDER = 'Origam.Schema.GuiModel.PanelSchemaItemProvider';
@@ -264,8 +263,7 @@ async function copyIntoGroup(request: APIRequestContext): Promise<string> {
   return node.nodeText;
 }
 
-// An item only learns its provider while the provider lists it, which in the app happens
-// when the tree loads the branch. Constants get it from the specs that open the tree.
+// An item only learns its provider while the provider lists it.
 async function loadProviderItems(request: APIRequestContext, providerId: string): Promise<void> {
   const response = await request.get('/Model/GetChildren', {
     params: { id: providerId, isNonPersistentItem: false, nodeText: '' },

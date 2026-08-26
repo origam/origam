@@ -121,7 +121,6 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
     }
   }, [node.isExpanded, node.children, node, run]);
 
-  // A pending cut or copy only knows the nodes visible when it started.
   useEffect(() => {
     if (!node.isExpanded || !transfer.hasSource || transfer.hasVerdictsFor(node.children)) {
       return;
@@ -211,7 +210,7 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
   }
 
   function onDragStart(event: ReactDragEvent) {
-    // An img icon is dragged by the browser itself, even on a row that is not draggable.
+    // The browser drags the icon img on its own.
     if (!node.canDrag) {
       event.preventDefault();
       return;

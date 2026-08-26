@@ -65,7 +65,6 @@ export async function expectBoxSettled(locator: Locator): Promise<void> {
     .toBe(true);
 }
 
-// The verdicts arrive for the whole tree and re-render every node.
 export async function awaitMoveVerdicts(page: Page, action: () => Promise<void>): Promise<void> {
   await awaitResponse(page, '/Model/GetMoveVerdicts', action);
 }
