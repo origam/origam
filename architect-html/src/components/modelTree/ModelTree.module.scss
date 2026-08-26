@@ -42,13 +42,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   padding-top: 2px;
 }
 
-.highlighted {
-  background-color: var(--background1);
-  box-shadow:
-    inset 3px 0 0 var(--brand),
-    0 0 0 1px var(--background4);
-}
-
 .categoryNode {
   background-color: var(--background4);
 
@@ -73,8 +66,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   text-wrap-mode: nowrap;
 }
 
+// Same specificity, the last rule wins.
 .selected {
   background-color: var(--background3);
+}
+
+.highlighted {
+  background-color: var(--background1);
+  box-shadow:
+    inset 3px 0 0 var(--brand),
+    0 0 0 1px var(--background4);
 }
 
 .dropTarget {
