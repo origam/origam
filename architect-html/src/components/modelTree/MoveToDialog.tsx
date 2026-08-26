@@ -62,10 +62,9 @@ export const MoveToDialog = observer(
     );
     const selected = packageTargets.find(target => target.key === targetKey) ?? null;
 
-    // The path starts with the provider, so its depth is the nesting level.
     const targetOptions: IDropDownValue[] = packageTargets.map(target => ({
       value: target.key,
-      name: INDENT.repeat(target.path.split('/').length - 1) + target.nodeText,
+      name: INDENT.repeat(target.depth) + target.nodeText,
     }));
 
     function confirmTarget(isCopy: boolean) {

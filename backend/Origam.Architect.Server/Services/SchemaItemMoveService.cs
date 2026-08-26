@@ -273,12 +273,14 @@ public class SchemaItemMoveService(
             ISchemaItem schemaItem => schemaItem.SchemaExtensionId,
             _ => schemaService.ActiveExtension.Id,
         };
+        (string path, int depth) = GetTargetLocation(candidate, provider);
         return new MoveTargetResult
         {
             Id = candidate.NodeId,
             NodeText = TreeNode.ToNodeText(candidate),
             Key = TreeNode.ToTreeNodeId(candidate),
-            Path = GetTargetPath(candidate, provider),
+            Path = path,
+            Depth = depth,
             PackageName = packageNames.GetValueOrDefault(packageId, defaultValue: ""),
             IsInActivePackage = packageId == schemaService.ActiveExtension.Id,
             IsCurrentLocation = IsCurrentLocation(item, candidate),
@@ -287,24 +289,32 @@ public class SchemaItemMoveService(
         };
     }
 
-    private static string GetTargetPath(
+    // ISchemaItem.Path skips the group, so path and depth come from one walk.
+    private static (string Path, int Depth) GetTargetLocation(
         IBrowserNode2 candidate,
         AbstractSchemaItemProvider provider
     )
     {
-        string path = candidate switch
+        var segments = new List<string>();
+        SchemaItemGroup group = candidate as SchemaItemGroup;
+        for (
+            ISchemaItem item = candidate as ISchemaItem;
+            item != null && segments.Count < MaxParentWalkDepth;
+            item = item.ParentItem
+        )
         {
-            SchemaItemGroup group => group.Path,
-            ISchemaItem schemaItem => schemaItem.Path,
-            _ => null,
-        };
-        if (path == null)
-        {
-            return provider.NodeText;
+            segments.Add(item.Name);
+            group = item.Group;
         }
 
-        string separator = System.IO.Path.DirectorySeparatorChar.ToString();
-        return provider.NodeText + "/" + path.Replace(separator, newValue: "/");
+        for (; group != null && segments.Count < MaxParentWalkDepth; group = group.ParentGroup)
+        {
+            segments.Add(group.Name);
+        }
+
+        segments.Add(provider.NodeText);
+        segments.Reverse();
+        return (string.Join(separator: "/", segments), segments.Count - 1);
     }
 
     private static bool IsCurrentLocation(ISchemaItem item, IBrowserNode2 candidate)

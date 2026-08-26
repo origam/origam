@@ -557,6 +557,7 @@ export interface IMoveTarget {
   nodeText: string;
   key: string;
   path: string;
+  depth: number;
   packageName: string;
   isInActivePackage: boolean;
   isCurrentLocation: boolean;

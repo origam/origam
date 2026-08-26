@@ -40,6 +40,7 @@ public class MoveTargetResult
     public string NodeText { get; set; }
     public string Key { get; set; }
     public string Path { get; set; }
+    public int Depth { get; set; }
     public string PackageName { get; set; }
     public bool IsInActivePackage { get; set; }
     public bool IsCurrentLocation { get; set; }

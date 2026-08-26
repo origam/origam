@@ -187,12 +187,14 @@ test.describe('Model tree move rules (real backend)', () => {
       canMove: false,
       canCopy: true,
       path: 'Constants',
+      depth: 0,
       isCurrentLocation: true,
     });
     expect(targets.get(key(CONSTANT_GROUP))).toMatchObject({
       canMove: true,
       canCopy: true,
       path: 'Constants/AutomaticTests',
+      depth: 1,
     });
     expect(targets.get(key(FOREIGN_GROUP))).toMatchObject({
       canMove: true,
@@ -283,6 +285,7 @@ interface MoveTargetsResult {
 interface MoveTarget {
   key: string;
   path: string;
+  depth: number;
   packageName: string;
   isCurrentLocation: boolean;
   canMove: boolean;
