@@ -23,11 +23,11 @@ import { HttpClient } from '@api/httpClient';
 const httpClient = new HttpClient(simpleErrorHandler);
 
 export async function getCustomInstructions(): Promise<string> {
-  return (await httpClient.get<{ text: string }>('/agent/prompt/custom')).data.text;
+  return (await httpClient.get<{ text: string }>('/agent/prompt/custom-instructions')).data.text;
 }
 
 export async function saveCustomInstructions(text: string): Promise<void> {
-  await httpClient.post('/agent/prompt/custom', { text });
+  await httpClient.post('/agent/prompt/custom-instructions', { text });
 }
 
 export interface AgentConnection {

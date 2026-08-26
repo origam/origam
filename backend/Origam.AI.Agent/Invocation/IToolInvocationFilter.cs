@@ -27,7 +27,7 @@ public interface IToolInvocationFilter
 {
     ValueTask<object?> OnFunctionInvocationAsync(
         FunctionInvocationContext context,
-        ToolInvocation next,
+        IToolInvocation next,
         CancellationToken cancellationToken
     );
 }

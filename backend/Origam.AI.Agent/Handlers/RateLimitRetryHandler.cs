@@ -102,7 +102,11 @@ public class RateLimitRetryHandler(ILogger<RateLimitRetryHandler> logger) : Dele
             await response.Content.LoadIntoBufferAsync();
             return await response.Content.ReadAsStringAsync(cancellationToken);
         }
-        catch (Exception)
+        catch (HttpRequestException)
+        {
+            return string.Empty;
+        }
+        catch (IOException)
         {
             return string.Empty;
         }

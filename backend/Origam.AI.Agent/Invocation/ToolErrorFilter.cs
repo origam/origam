@@ -33,13 +33,13 @@ public class ToolErrorFilter(ILogger<ToolErrorFilter> logger) : IToolInvocationF
 
     public async ValueTask<object?> OnFunctionInvocationAsync(
         FunctionInvocationContext context,
-        ToolInvocation next,
+        IToolInvocation next,
         CancellationToken cancellationToken
     )
     {
         try
         {
-            return await next(context, cancellationToken);
+            return await next.InvokeAsync(context, cancellationToken);
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {

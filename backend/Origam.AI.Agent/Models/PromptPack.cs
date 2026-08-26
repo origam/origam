@@ -76,7 +76,7 @@ public class PromptPack
         }
 
         throw new InvalidOperationException(
-            $"Prompt section '{sectionName}' is missing from bundle '{packName}.md' and from '{SharedPackName}.md'."
+            string.Format(Strings.PromptSectionMissing, sectionName, packName, SharedPackName)
         );
     }
 
@@ -86,7 +86,9 @@ public class PromptPack
         using var stream = typeof(PromptPack).Assembly.GetManifestResourceStream(resourceName);
         if (stream is null)
         {
-            throw new InvalidOperationException($"Prompt bundle '{resourceName}' is missing.");
+            throw new InvalidOperationException(
+                string.Format(Strings.PromptBundleMissing, resourceName)
+            );
         }
 
         using var reader = new StreamReader(stream);

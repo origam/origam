@@ -84,7 +84,7 @@ public class AliasMappingService(PromptPack prompts)
     {
         if (string.IsNullOrWhiteSpace(alias))
         {
-            throw new ArgumentException("Alias cannot be null or empty.");
+            throw new ArgumentException(Strings.AliasEmpty);
         }
 
         if (Guid.TryParse(alias, out var parsedGuid))

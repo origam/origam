@@ -39,11 +39,6 @@ public static class LiteLlmPricing
         CancellationToken cancellationToken
     )
     {
-        if (cachedCatalogue is not null)
-        {
-            return cachedCatalogue;
-        }
-
         await CatalogueGate.WaitAsync(cancellationToken);
         try
         {

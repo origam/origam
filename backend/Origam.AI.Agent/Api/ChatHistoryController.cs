@@ -50,9 +50,9 @@ public sealed class ChatHistoryController(ChatHistoryService chatHistoryService)
     }
 
     [HttpPost("delete")]
-    public IActionResult Delete([Required] [FromBody] ChatThreadIdentifier thread)
+    public IActionResult Delete(Guid threadId)
     {
-        return chatHistoryService.Delete(thread.Id) ? Ok() : NotFound();
+        return chatHistoryService.Delete(threadId) ? Ok() : NotFound();
     }
 
     [HttpPost("image")]

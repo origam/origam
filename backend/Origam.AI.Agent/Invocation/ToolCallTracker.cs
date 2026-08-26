@@ -48,7 +48,7 @@ public class ToolCallTracker(int maxIterations) : IToolInvocationFilter
 
     public async ValueTask<object?> OnFunctionInvocationAsync(
         FunctionInvocationContext context,
-        ToolInvocation next,
+        IToolInvocation next,
         CancellationToken cancellationToken
     )
     {
@@ -57,13 +57,13 @@ public class ToolCallTracker(int maxIterations) : IToolInvocationFilter
             LimitReached = true;
         }
 
-        var result = await next(context, cancellationToken);
+        var result = await next.InvokeAsync(context, cancellationToken);
 
         try
         {
             Inspect(context, result);
         }
-        catch { }
+        catch (JsonException) { }
 
         return result;
     }

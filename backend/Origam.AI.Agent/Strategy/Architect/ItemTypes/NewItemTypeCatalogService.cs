@@ -21,7 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Text;
 using System.Text.Json;
-using Origam.AI.Agent.Models;
 using Origam.AI.Agent.Models.Requests;
 using Origam.AI.Agent.Strategy.Architect.Api;
 
@@ -30,6 +29,8 @@ namespace Origam.AI.Agent.Strategy.Architect.ItemTypes;
 public class NewItemTypeCatalogService
 {
     private static readonly string[] AlwaysInScopeCaptions = ["Database Entity"];
+
+    private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
 
     private readonly ArchitectApiClient architectApi;
     private readonly ArchitectPromptPack prompts;
@@ -64,11 +65,6 @@ public class NewItemTypeCatalogService
 
     private async Task<ItemTypeCatalog?> GetCatalogAsync(CancellationToken cancellationToken)
     {
-        if (cachedCatalog is not null)
-        {
-            return cachedCatalog;
-        }
-
         await buildLock.WaitAsync(cancellationToken);
         try
         {
@@ -92,10 +88,7 @@ public class NewItemTypeCatalogService
                 return null;
             }
 
-            var catalog = JsonSerializer.Deserialize<ItemTypeCatalog>(
-                response.Body,
-                JsonDefaults.Web
-            );
+            var catalog = JsonSerializer.Deserialize<ItemTypeCatalog>(response.Body, JsonOptions);
             if (catalog is null || catalog.Types.Count == 0)
             {
                 lastError = "Architect returned an empty item type catalog.";

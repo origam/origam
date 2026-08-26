@@ -23,12 +23,12 @@ using System.ComponentModel;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using Microsoft.Extensions.AI;
 using Origam.AI.Agent.Configuration;
 using Origam.AI.Agent.Extensions;
 using Origam.AI.Agent.Invocation;
 using Origam.AI.Agent.Models.Responses;
-using Origam.AI.Agent.Services.Community;
 
 namespace Origam.AI.Agent.Tools;
 
@@ -42,16 +42,25 @@ public class CommunityWebSearchTool
     private const int MaxSearchResults = 8;
     private const int MaxBlurbLength = 240;
     private const int MaxTopicCharacters = 10000;
+    private const string UploadRoute = "/uploads/short-url/";
+
+    private static readonly Regex UploadUrlPattern = new(
+        pattern: "upload://([^\\s)\\]]+)",
+        options: RegexOptions.Compiled
+    );
+
+    private static readonly Regex RepeatedBlankLinePattern = new(
+        pattern: "\\n{3,}",
+        options: RegexOptions.Compiled
+    );
 
     private readonly HttpClient httpClient;
     private readonly string baseUrl;
-    private readonly CommunityHtmlToText htmlToText;
 
     private CommunityWebSearchTool(IHttpClientFactory httpClientFactory, string baseUrl)
     {
         httpClient = httpClientFactory.CreateClient(HttpClientName);
         this.baseUrl = baseUrl;
-        htmlToText = new CommunityHtmlToText(baseUrl);
     }
 
     public static IReadOnlyList<AITool> CreateTools(
@@ -140,7 +149,7 @@ public class CommunityWebSearchTool
     }
 
     [Description(
-        "Reads one topic of the ORIGAM community forum in full, as plain text. "
+        "Reads one topic of the ORIGAM community forum in full, as markdown. "
             + "Call it with a topic id returned by SearchCommunity, and only for the topics that look relevant. "
             + "Images inside posts are kept as markdown links, they are not loaded."
     )]
@@ -151,7 +160,10 @@ public class CommunityWebSearchTool
     {
         try
         {
-            using var document = await FetchAsync($"/t/{topicId}.json", cancellationToken);
+            using var document = await FetchAsync(
+                $"/t/{topicId}.json?include_raw=true",
+                cancellationToken
+            );
             return FormatTopic(document.RootElement, topicId);
         }
         catch (Exception exception)
@@ -263,7 +275,7 @@ public class CommunityWebSearchTool
         {
             var author = post.GetStringOrNull(propertyName: "username") ?? "";
             var postNumber = post.GetInt32OrNull(propertyName: "post_number") ?? 0;
-            var text = htmlToText.Convert(post.GetStringOrNull(propertyName: "cooked") ?? "");
+            var text = ToMarkdown(post.GetStringOrNull(propertyName: "raw") ?? "");
             if (text.Length == 0)
             {
                 continue;
@@ -301,6 +313,15 @@ public class CommunityWebSearchTool
         }
 
         return builder.ToString().TrimEnd();
+    }
+
+    private string ToMarkdown(string raw)
+    {
+        var withAbsoluteUploads = UploadUrlPattern.Replace(
+            raw.ReplaceLineEndings(replacementText: "\n"),
+            match => baseUrl + UploadRoute + match.Groups[1].Value
+        );
+        return RepeatedBlankLinePattern.Replace(withAbsoluteUploads, replacement: "\n\n").Trim();
     }
 
     private string BuildTopicUrl(int topicId, string slug)

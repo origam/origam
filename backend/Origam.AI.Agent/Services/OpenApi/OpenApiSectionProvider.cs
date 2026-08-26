@@ -111,11 +111,6 @@ public class OpenApiSectionProvider(ArchitectApiClient architectApi, TargetOptio
             return null;
         }
 
-        if (section.Tools is not null)
-        {
-            return section.Tools;
-        }
-
         await loadLock.WaitAsync(cancellationToken);
         try
         {
@@ -145,11 +140,6 @@ public class OpenApiSectionProvider(ArchitectApiClient architectApi, TargetOptio
 
     private async Task<bool> EnsureLoadedAsync(CancellationToken cancellationToken)
     {
-        if (sections is not null)
-        {
-            return true;
-        }
-
         await loadLock.WaitAsync(cancellationToken);
         try
         {

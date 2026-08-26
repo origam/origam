@@ -48,7 +48,7 @@ internal sealed class AgentStreamStartupFilter(IServiceProvider services) : ISta
 
         if (targets.Count == 0)
         {
-            throw new InvalidOperationException("The AI agent has no registered targets.");
+            throw new InvalidOperationException(Strings.AgentTargetsMissing);
         }
 
         if (!options.HasApiKey && !isDevelopment)

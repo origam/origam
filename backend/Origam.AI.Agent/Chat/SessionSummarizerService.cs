@@ -96,7 +96,11 @@ public class SessionSummarizerService(
             var text = response.Text?.Trim() ?? string.Empty;
             return string.IsNullOrWhiteSpace(text) ? existingSummary : text;
         }
-        catch
+        catch (ClientResultException)
+        {
+            return existingSummary;
+        }
+        catch (HttpRequestException)
         {
             return existingSummary;
         }

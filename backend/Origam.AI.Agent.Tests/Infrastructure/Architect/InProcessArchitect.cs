@@ -39,11 +39,6 @@ public static class InProcessArchitect
 
     public static async Task<HttpClient> GetClientAsync(CancellationToken cancellationToken)
     {
-        if (httpClient is not null)
-        {
-            return httpClient;
-        }
-
         await StartGate.WaitAsync(cancellationToken);
         try
         {

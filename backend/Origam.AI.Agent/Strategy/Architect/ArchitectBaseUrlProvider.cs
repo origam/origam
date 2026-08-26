@@ -42,10 +42,7 @@ public sealed class ArchitectBaseUrlProvider(IServer server)
             ) ?? serverAddresses.FirstOrDefault();
         if (address is null)
         {
-            throw new InvalidOperationException(
-                "The AI agent cannot determine the Architect base url because the server "
-                    + "reports no listening address."
-            );
+            throw new InvalidOperationException(Strings.ArchitectBaseUrlUnknown);
         }
 
         return ReplaceWildcardHost(address.TrimEnd('/'));

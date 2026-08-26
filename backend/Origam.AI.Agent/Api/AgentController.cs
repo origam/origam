@@ -55,13 +55,13 @@ public sealed class AgentController(
         );
     }
 
-    [HttpGet("prompt/custom")]
+    [HttpGet("prompt/custom-instructions")]
     public CustomInstructions GetCustomInstructions()
     {
         return new CustomInstructions(customInstructions.Read());
     }
 
-    [HttpPost("prompt/custom")]
+    [HttpPost("prompt/custom-instructions")]
     public IActionResult SaveCustomInstructions([FromBody] CustomInstructionsUpdate update)
     {
         customInstructions.Write(update.Text);

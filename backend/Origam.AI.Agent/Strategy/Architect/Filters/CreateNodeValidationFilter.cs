@@ -38,7 +38,7 @@ public class CreateNodeValidationFilter(
 
     public async ValueTask<object?> OnFunctionInvocationAsync(
         FunctionInvocationContext context,
-        ToolInvocation next,
+        IToolInvocation next,
         CancellationToken cancellationToken
     )
     {
@@ -47,14 +47,14 @@ public class CreateNodeValidationFilter(
 
         if (string.IsNullOrWhiteSpace(nodeId) || string.IsNullOrWhiteSpace(newTypeName))
         {
-            return await next(context, cancellationToken);
+            return await next.InvokeAsync(context, cancellationToken);
         }
 
         var creatableTypes = await GetCreatableTypesAsync(nodeId, cancellationToken);
 
         if (creatableTypes is not { Count: > 0 })
         {
-            return await next(context, cancellationToken);
+            return await next.InvokeAsync(context, cancellationToken);
         }
 
         string? resolvedTypeName = ResolveTypeName(newTypeName, creatableTypes);
@@ -74,7 +74,7 @@ public class CreateNodeValidationFilter(
             return emptyRequired;
         }
 
-        return await next(context, cancellationToken);
+        return await next.InvokeAsync(context, cancellationToken);
     }
 
     private string? FindEmptyRequiredProperty(AIFunctionArguments arguments, string typeName)

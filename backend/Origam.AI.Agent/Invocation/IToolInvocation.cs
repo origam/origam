@@ -23,7 +23,10 @@ using Microsoft.Extensions.AI;
 
 namespace Origam.AI.Agent.Invocation;
 
-public delegate ValueTask<object?> ToolInvocation(
-    FunctionInvocationContext context,
-    CancellationToken cancellationToken
-);
+public interface IToolInvocation
+{
+    ValueTask<object?> InvokeAsync(
+        FunctionInvocationContext context,
+        CancellationToken cancellationToken
+    );
+}

@@ -51,7 +51,7 @@ public sealed class OrigamAgent : DelegatingAIAgent
         if (target.ToolProviders.Count == 0)
         {
             throw new InvalidOperationException(
-                $"Agent target '{target.Name}' registered no tool providers."
+                string.Format(Strings.AgentTargetWithoutToolProviders, target.Name)
             );
         }
 
@@ -189,15 +189,14 @@ public sealed class OrigamAgent : DelegatingAIAgent
             cancellationToken
         );
 
-        var toolInvocation = ToolInvocationPipeline.Build(target.CreateFilters(toolTracker));
+        var toolInvocation = new ToolInvocationPipeline(target.CreateFilters(toolTracker));
         return new ChatClientAgentRunOptions
         {
             ChatOptions = runChatOptions,
             ChatClientFactory = innerChatClient => new FunctionInvokingChatClient(innerChatClient)
             {
                 MaximumIterationsPerRequest = MaxToolIterations,
-                FunctionInvoker = (context, invocationToken) =>
-                    toolInvocation(context, invocationToken),
+                FunctionInvoker = toolInvocation.InvokeAsync,
             },
         };
     }

@@ -47,9 +47,7 @@ internal static class OrigamAgentFactory
         var chatClient = services.GetRequiredService<IWebHostEnvironment>().IsDevelopment()
             ? new ScriptedChatClient(services.GetRequiredService<AiScriptStore>(), liveChatClient)
             : liveChatClient
-                ?? throw new InvalidOperationException(
-                    "The AI agent needs Ai:ApiKey and Ai:Endpoint to be configured."
-                );
+                ?? throw new InvalidOperationException(Strings.AgentApiKeyAndEndpointMissing);
 
         var baseAgent = chatClient.AsAIAgent(
             new ChatClientAgentOptions

@@ -23,7 +23,6 @@ using System.Text.Json;
 using AGUI.Abstractions;
 using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;
-using Origam.AI.Agent.Models;
 
 namespace Origam.AI.Agent.Chat;
 
@@ -31,12 +30,14 @@ public static class AguiEvents
 {
     public const string RunResultName = "origam.agent.runResult";
 
+    private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
+
     public static AgentResponseUpdate Create(string name, object payload)
     {
         var customEvent = new CustomEvent
         {
             Name = name,
-            Value = JsonSerializer.SerializeToElement(payload, JsonDefaults.Web),
+            Value = JsonSerializer.SerializeToElement(payload, JsonOptions),
         };
 
         return new AgentResponseUpdate(new ChatResponseUpdate { RawRepresentation = customEvent });

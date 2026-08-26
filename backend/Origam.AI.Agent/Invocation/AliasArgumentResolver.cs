@@ -44,7 +44,7 @@ public class AliasArgumentResolver : IToolInvocationFilter
 
     public async ValueTask<object?> OnFunctionInvocationAsync(
         FunctionInvocationContext context,
-        ToolInvocation next,
+        IToolInvocation next,
         CancellationToken cancellationToken
     )
     {
@@ -55,7 +55,7 @@ public class AliasArgumentResolver : IToolInvocationFilter
             ) && resolveAliases is false
         )
         {
-            return await next(context, cancellationToken);
+            return await next.InvokeAsync(context, cancellationToken);
         }
 
         foreach (var name in context.Arguments.Keys.ToArray())
@@ -72,7 +72,7 @@ public class AliasArgumentResolver : IToolInvocationFilter
             }
         }
 
-        return await next(context, cancellationToken);
+        return await next.InvokeAsync(context, cancellationToken);
     }
 
     private object? ResolveValue(object? value)

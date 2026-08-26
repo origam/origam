@@ -30,7 +30,7 @@ public class OpenApiInvocationException : Exception
         string requestUrl,
         string requestPayload
     )
-        : base($"{functionName} failed with HTTP status {statusCode}.")
+        : base(string.Format(Strings.OpenApiCallFailed, functionName, statusCode))
     {
         FunctionName = functionName;
         StatusCode = statusCode;

@@ -21,7 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Text;
 using System.Text.Json;
-using Origam.AI.Agent.Models;
 using Origam.AI.Agent.Services;
 using Origam.AI.Agent.Strategy.Architect.Api;
 
@@ -42,6 +41,8 @@ public class ModelIndexService
         "RecordUpdatedBy",
         "RecordUpdatedServer",
     };
+
+    private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
 
     private readonly ArchitectApiClient architectApi;
     private readonly AliasMappingService aliasMappingService;
@@ -162,7 +163,7 @@ public class ModelIndexService
             }
 
             lastError = null;
-            return JsonSerializer.Deserialize<List<EntityCard>>(response.Body, JsonDefaults.Web)
+            return JsonSerializer.Deserialize<List<EntityCard>>(response.Body, JsonOptions)
                 ?? new();
         }
         catch (Exception ex)

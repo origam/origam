@@ -27,11 +27,6 @@ namespace Origam.AI.Agent.Chat;
 
 public class ChatHistoryService
 {
-    public const string ImageTypeNotSupported =
-        "Only PNG, JPEG, GIF and WebP images can be attached.";
-    public const string ImageInvalid = "The attached image could not be read.";
-    public const string ImageTooLarge = "The attached image is larger than the 10 MB limit.";
-
     private const string ClientApplicationPathKey = "SpaConfig:PathToClientApplication";
     private const string OrigamAiDirectoryName = "ai";
     private const string OrigamAiChatHistoryDirectoryName = "chats";
@@ -128,7 +123,7 @@ public class ChatHistoryService
             )
         )
         {
-            throw new ArgumentException(ImageTypeNotSupported);
+            throw new ArgumentException(Strings.ImageTypeNotSupported);
         }
         byte[] content = DecodeImage(request.Data);
 
@@ -178,12 +173,12 @@ public class ChatHistoryService
     {
         if (string.IsNullOrEmpty(data))
         {
-            throw new ArgumentException(ImageInvalid);
+            throw new ArgumentException(Strings.ImageInvalid);
         }
         long minimumDecodedLength = ((long)data.Length / 4 * 3) - 2;
         if (minimumDecodedLength > MaxImageBytes)
         {
-            throw new ArgumentException(ImageTooLarge);
+            throw new ArgumentException(Strings.ImageTooLarge);
         }
         byte[] content;
         try
@@ -192,11 +187,11 @@ public class ChatHistoryService
         }
         catch (FormatException)
         {
-            throw new ArgumentException(ImageInvalid);
+            throw new ArgumentException(Strings.ImageInvalid);
         }
         if (content.Length > MaxImageBytes)
         {
-            throw new ArgumentException(ImageTooLarge);
+            throw new ArgumentException(Strings.ImageTooLarge);
         }
         return content;
     }
@@ -216,6 +211,7 @@ public class ChatHistoryService
             return thread?.Id == Guid.Empty ? null : thread;
         }
         catch (Exception exception)
+            when (exception is IOException or UnauthorizedAccessException or JsonException)
         {
             logger.LogWarning(exception, message: "Cannot read chat history file {File}", file);
             return null;

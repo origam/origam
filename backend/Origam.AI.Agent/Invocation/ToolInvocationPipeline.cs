@@ -19,28 +19,54 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Microsoft.Extensions.AI;
+
 namespace Origam.AI.Agent.Invocation;
 
-public static class ToolInvocationPipeline
+public sealed class ToolInvocationPipeline : IToolInvocation
 {
-    public static ToolInvocation Build(IReadOnlyList<IToolInvocationFilter> filters)
-    {
-        ToolInvocation next = (context, cancellationToken) =>
-            context.Function.InvokeAsync(context.Arguments, cancellationToken);
+    private readonly IToolInvocation entryPoint;
 
+    public ToolInvocationPipeline(IReadOnlyList<IToolInvocationFilter> filters)
+    {
+        IToolInvocation invocation = new FunctionCall();
         for (var index = filters.Count - 1; index >= 0; index--)
         {
-            var filter = filters[index];
-            var following = next;
-            next = (context, cancellationToken) =>
-                filter.OnFunctionInvocationAsync(context, following, cancellationToken);
+            invocation = new FilteredCall(filters[index], invocation);
         }
 
-        var pipeline = next;
-        return (context, cancellationToken) =>
+        entryPoint = invocation;
+    }
+
+    public ValueTask<object?> InvokeAsync(
+        FunctionInvocationContext context,
+        CancellationToken cancellationToken
+    )
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        return entryPoint.InvokeAsync(context, cancellationToken);
+    }
+
+    private sealed class FunctionCall : IToolInvocation
+    {
+        public ValueTask<object?> InvokeAsync(
+            FunctionInvocationContext context,
+            CancellationToken cancellationToken
+        )
         {
-            cancellationToken.ThrowIfCancellationRequested();
-            return pipeline(context, cancellationToken);
-        };
+            return context.Function.InvokeAsync(context.Arguments, cancellationToken);
+        }
+    }
+
+    private sealed class FilteredCall(IToolInvocationFilter filter, IToolInvocation next)
+        : IToolInvocation
+    {
+        public ValueTask<object?> InvokeAsync(
+            FunctionInvocationContext context,
+            CancellationToken cancellationToken
+        )
+        {
+            return filter.OnFunctionInvocationAsync(context, next, cancellationToken);
+        }
     }
 }

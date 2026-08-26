@@ -32,7 +32,7 @@ export async function saveChatThread(thread: ChatThread): Promise<void> {
 }
 
 export async function deleteChatThread(threadId: string): Promise<void> {
-  await httpClient.post('/agent/history/delete', { id: threadId });
+  await httpClient.post(`/agent/history/delete?threadId=${encodeURIComponent(threadId)}`);
 }
 
 export async function saveChatImage(

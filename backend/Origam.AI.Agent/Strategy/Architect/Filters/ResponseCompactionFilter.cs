@@ -24,7 +24,6 @@ using System.Text.Json;
 using Microsoft.Extensions.AI;
 using Origam.AI.Agent.Extensions;
 using Origam.AI.Agent.Invocation;
-using Origam.AI.Agent.Models;
 using Origam.AI.Agent.Strategy.Architect.ItemTypes;
 
 namespace Origam.AI.Agent.Strategy.Architect.Filters;
@@ -37,13 +36,15 @@ public class ResponseCompactionFilter(NewItemTypeCatalogService catalogService)
     private const int MinimumExistingItems = 3;
     private const double ConventionThreshold = 0.8;
 
+    private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
+
     public async ValueTask<object?> OnFunctionInvocationAsync(
         FunctionInvocationContext context,
-        ToolInvocation next,
+        IToolInvocation next,
         CancellationToken cancellationToken
     )
     {
-        object? result = await next(context, cancellationToken);
+        object? result = await next.InvokeAsync(context, cancellationToken);
         if (result is not string content)
         {
             return result;
@@ -148,7 +149,7 @@ public class ResponseCompactionFilter(NewItemTypeCatalogService catalogService)
             summary["discarded"] = true;
         }
 
-        return JsonSerializer.Serialize(summary, JsonDefaults.Web);
+        return JsonSerializer.Serialize(summary, JsonOptions);
     }
 
     private static string? CompactPropertyUpdates(JsonElement root, JsonElement propertyUpdates)
@@ -172,7 +173,7 @@ public class ResponseCompactionFilter(NewItemTypeCatalogService catalogService)
             ["errors"] = errors,
         };
 
-        return JsonSerializer.Serialize(summary, JsonDefaults.Web);
+        return JsonSerializer.Serialize(summary, JsonOptions);
     }
 
     private IReadOnlyDictionary<string, string>? GetConventionHints(string? itemTypeName)

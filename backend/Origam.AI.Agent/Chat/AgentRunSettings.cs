@@ -21,7 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Text.Json;
 using AGUI.Abstractions;
-using Origam.AI.Agent.Models;
 using Origam.AI.Agent.Models.Requests;
 
 namespace Origam.AI.Agent.Chat;
@@ -32,6 +31,8 @@ public record AgentRunSettings(
     ChatFocus? Focus
 )
 {
+    private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
+
     public static AgentRunSettings FromRunAgentInput(
         RunAgentInput? input,
         IReadOnlyList<string> defaultSections
@@ -60,7 +61,7 @@ public record AgentRunSettings(
 
         try
         {
-            return value.Deserialize<TPayload>(JsonDefaults.Web);
+            return value.Deserialize<TPayload>(JsonOptions);
         }
         catch (JsonException)
         {

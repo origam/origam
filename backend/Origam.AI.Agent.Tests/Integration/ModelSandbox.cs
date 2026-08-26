@@ -145,11 +145,6 @@ public sealed class ModelSandbox
         }
     }
 
-    /// <summary>
-    /// The in-process Architect reads its settings from the folder it runs in, which is the test
-    /// output folder. A developer configures the Architect through its own UI, so the file lands
-    /// in the Architect's output folder instead - borrow it from there when it is missing here.
-    /// </summary>
     private static (string Path, XDocument Settings)? FindUsableSettings()
     {
         foreach (var candidate in SettingsCandidates())
