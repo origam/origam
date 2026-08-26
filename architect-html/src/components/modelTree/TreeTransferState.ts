@@ -38,13 +38,20 @@ export class TreeTransferState {
   @observable accessor isCopyModifier: boolean = false;
   @observable accessor hoverNodeId: string | null = null;
   @observable accessor isBusy: boolean = false;
-  @observable accessor isLoadingVerdicts: boolean = false;
+  @observable private accessor pendingVerdictLoads: number = 0;
   @observable.ref accessor targetVerdicts: Map<string, ITransferVerdict> = new Map();
   @observable.ref private accessor sourceRef: INodeLoadData | null = null;
   @observable accessor isDropping: boolean = false;
   private generation = 0;
+  // Kept apart from targetVerdicts so overlapping callers do not ask twice.
+  private requestedTargetIds = new Set<string>();
 
   constructor(private rootStore: RootStore) {}
+
+  // A counter, not a flag - a finished request must not hide the ones still running.
+  get isLoadingVerdicts(): boolean {
+    return this.pendingVerdictLoads > 0;
+  }
 
   get hasSource(): boolean {
     return this.sourceRef !== null;
@@ -113,6 +120,7 @@ export class TreeTransferState {
     const sourceRef = toNodeRef(node);
     if (sourceRef.id !== this.sourceRef?.id || sourceRef.nodeText !== this.sourceRef?.nodeText) {
       this.targetVerdicts = new Map();
+      this.requestedTargetIds.clear();
       this.generation++;
     }
     this.clipboardMode = mode;
@@ -122,20 +130,29 @@ export class TreeTransferState {
   }
 
   *loadTargetVerdicts(nodes: TreeNode[]): Generator<Promise<IMoveVerdict[]>, void, IMoveVerdict[]> {
-    const targets = nodes.filter(node => !this.targetVerdicts.has(node.id));
+    const targets = nodes.filter(node => !this.requestedTargetIds.has(node.id));
     if (!this.sourceRef || targets.length === 0) {
       return;
     }
     const generation = this.generation;
-    this.isLoadingVerdicts = true;
+    for (const target of targets) {
+      this.requestedTargetIds.add(target.id);
+    }
+    this.pendingVerdictLoads++;
     let results: IMoveVerdict[];
     try {
       results = yield this.rootStore.architectApi.getMoveVerdicts({
         source: this.sourceRef,
         targets: targets.map(toNodeRef),
       });
+    } catch (error) {
+      // A failed request must not block a later attempt for the same targets.
+      for (const target of targets) {
+        this.requestedTargetIds.delete(target.id);
+      }
+      throw error;
     } finally {
-      this.isLoadingVerdicts = false;
+      this.pendingVerdictLoads--;
     }
     if (generation !== this.generation) {
       return;
@@ -167,8 +184,12 @@ export class TreeTransferState {
     if (!sourceRef) {
       return false;
     }
-    if (this.isLoadingVerdicts) {
-      yield when(() => !this.isLoadingVerdicts);
+    // The target may have been offered before its verdict arrived, or never asked about.
+    if (!this.targetVerdicts.has(target.id)) {
+      if (this.isLoadingVerdicts) {
+        yield when(() => !this.isLoadingVerdicts);
+      }
+      yield* this.loadTargetVerdicts([target]);
     }
     if (!this.canTransferTo(target, isCopy)) {
       return false;
@@ -296,5 +317,6 @@ export class TreeTransferState {
     this.isCopyModifier = false;
     this.hoverNodeId = null;
     this.targetVerdicts = new Map();
+    this.requestedTargetIds.clear();
   }
 }
