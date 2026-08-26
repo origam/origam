@@ -54,7 +54,7 @@ export async function clearAiScript(request: APIRequestContext): Promise<void> {
 export async function deleteChatThreads(request: APIRequestContext): Promise<void> {
   const threads = await readChatThreads(request);
   for (const thread of threads) {
-    await request.post('/agent/history/delete', { data: { id: thread.id } });
+    await request.post(`/agent/history/delete?threadId=${encodeURIComponent(thread.id)}`);
   }
 }
 
