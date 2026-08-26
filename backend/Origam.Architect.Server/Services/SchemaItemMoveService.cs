@@ -65,13 +65,12 @@ public class SchemaItemMoveService(
     ModelTransactionRunner transactionRunner,
     TreeNodeFactory treeNodeFactory,
     IDocumentationService documentationService,
-    TabService tabService
+    PanelControlFactory panelControlFactory
 )
 {
     private const int MaxParentWalkDepth = 200;
     private const int MaxMoveTargets = 500;
     private const int MaxMoveCandidates = 5000;
-    private const string PanelControlType = "Origam.Gui.Win.AsPanel";
 
     private IPersistenceProvider PersistenceProvider => persistenceService.SchemaProvider;
 
@@ -637,30 +636,10 @@ public class SchemaItemMoveService(
     // Architect creates it when the cloned section is saved through ControlSetEditor.
     private void CreatePanelControl(ISchemaItem clone, Package targetPackage)
     {
-        if (clone is not PanelControlSet panelControlSet || panelControlSet.PanelControl != null)
+        if (clone is PanelControlSet { PanelControl: null } panelControlSet)
         {
-            return;
+            panelControlFactory.Create(panelControlSet, targetPackage.Id);
         }
-
-        ControlItem control = schemaService
-            .GetProvider<UserControlSchemaItemProvider>()
-            .NewItem<ControlItem>(targetPackage.Id, group: null);
-        control.Name = panelControlSet.Name;
-        control.IsComplexType = true;
-        control.ControlType = typeof(PanelControlSet).ToString();
-        control.ControlNamespace = typeof(PanelControlSet).Namespace;
-        control.PanelControlSet = panelControlSet;
-        control.ControlToolBoxVisibility = ControlToolBoxVisibility.FormDesigner;
-        var ancestor = new SchemaItemAncestor
-        {
-            SchemaItem = control,
-            Ancestor = tabService.GetControlByType(PanelControlType),
-            PersistenceProvider = control.PersistenceProvider,
-        };
-        control.ThrowEventOnPersist = false;
-        control.Persist();
-        ancestor.Persist();
-        control.ThrowEventOnPersist = true;
     }
 
     // A screen section is wrapped by a ControlItem living in another provider and file.
