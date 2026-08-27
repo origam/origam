@@ -80,7 +80,8 @@ public class ModelGroupService(
         bool nameTaken =
             (factory as ISchemaItemProvider)?.ChildGroups.Any(existing =>
                 string.Equals(existing.NodeText?.Trim(), name, StringComparison.OrdinalIgnoreCase)
-            ) ?? false;
+            )
+            ?? false;
         if (nameTaken)
         {
             throw new UserOrigamException(Strings.Group_NameDuplicate);
