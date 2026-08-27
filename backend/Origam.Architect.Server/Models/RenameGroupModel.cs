@@ -20,13 +20,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.ComponentModel.DataAnnotations;
+using Origam.Server.Attributes;
 
 namespace Origam.Architect.Server.Models;
 
 public class RenameGroupModel
 {
-    [Required]
-    public string NodeId { get; set; }
+    [RequiredNonDefault]
+    public Guid NodeId { get; set; }
 
     [Required]
     public string Name { get; set; }

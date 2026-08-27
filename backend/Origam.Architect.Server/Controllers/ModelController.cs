@@ -333,13 +333,8 @@ public class ModelController(
         }
     }
 
-    private SchemaItemGroup ResolveGroup(string nodeId)
+    private SchemaItemGroup ResolveGroup(Guid groupId)
     {
-        if (!Guid.TryParse(nodeId, out Guid groupId))
-        {
-            return null;
-        }
-
         if (
             persistenceProvider.RetrieveInstance<IBrowserNode2>(groupId)
             is not SchemaItemGroup group
