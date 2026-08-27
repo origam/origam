@@ -38,7 +38,7 @@ public class ModelController(
     IPersistenceService persistenceService,
     TreeNodeFactory treeNodeFactory,
     GitNodeStatusService gitNodeStatusService,
-    ModelTransactionRunner transactionRunner
+    ModelGroupService modelGroupService
 ) : ControllerBase
 {
     private readonly IPersistenceProvider persistenceProvider = persistenceService.SchemaProvider;
@@ -93,7 +93,7 @@ public class ModelController(
             return Ok(childNodes);
         }
 
-        ISchemaItemProvider provider = GetRootProviderById(id);
+        ISchemaItemProvider provider = treeNodeFactory.FindRootProvider(id);
         if (provider == null)
         {
             return NotFound();
@@ -140,16 +140,6 @@ public class ModelController(
         return nodes;
     }
 
-    private ISchemaItemProvider GetRootProviderById(string id)
-    {
-        ISchemaItemProvider provider = schemaService
-            .ActiveExtension.ChildNodes()
-            .Cast<SchemaItemProviderGroup>()
-            .SelectMany(x => x.ChildNodes().Cast<ISchemaItemProvider>())
-            .FirstOrDefault(x => x.NodeId == id);
-        return provider;
-    }
-
     [HttpPost("DeleteSchemaItem")]
     public IActionResult DeleteSchemaItem([Required] [FromBody] DeleteModel input)
     {
@@ -185,237 +175,17 @@ public class ModelController(
     }
 
     [HttpPost("CreateGroup")]
-    public ActionResult<TreeNode> CreateGroup([Required] [FromBody] CreateGroupModel input)
-    {
-        if (schemaService.ActiveExtension == null)
-        {
-            return BadRequest("No schema extension is active");
-        }
-
-        string name = input.Name?.Trim();
-        string validationError = ValidateFolderName(name);
-        if (validationError != null)
-        {
-            return StatusCode(statusCode: 400, value: validationError);
-        }
-
-        ISchemaItemFactory factory = ResolveGroupParent(input.NodeId);
-        if (factory == null)
-        {
-            return NotFound();
-        }
-
-        // Pre-check only; a concurrent create is harmless - NewGroup auto-numbers collisions.
-        bool nameTaken =
-            (factory as ISchemaItemProvider)?.ChildGroups.Any(existing =>
-                string.Equals(existing.NodeText?.Trim(), name, StringComparison.OrdinalIgnoreCase)
-            ) ?? false;
-        if (nameTaken)
-        {
-            return StatusCode(statusCode: 400, value: "A folder with this name already exists.");
-        }
-
-        SchemaItemGroup group = transactionRunner.Run(() =>
-        {
-            SchemaItemGroup created = factory.NewGroup(schemaService.ActiveSchemaExtensionId, name);
-            if (created.Name != name)
-            {
-                // NewGroup auto-numbers when the name is a substring of a sibling group;
-                // the name is already validated as unique, so keep what the user typed.
-                created.NodeText = name;
-            }
-            return created;
-        });
-
-        return treeNodeFactory.Create(group);
-    }
-
-    private ISchemaItemFactory ResolveGroupParent(string nodeId)
-    {
-        if (Guid.TryParse(nodeId, out Guid schemaItemId))
-        {
-            return persistenceProvider.RetrieveInstance<IBrowserNode2>(schemaItemId)
-                as ISchemaItemFactory;
-        }
-        return GetRootProviderById(nodeId);
-    }
+    public ActionResult<TreeNode> CreateGroup([Required] [FromBody] CreateGroupModel input) =>
+        modelGroupService.Create(input);
 
     [HttpPost("RenameGroup")]
-    public ActionResult<TreeNode> RenameGroup([Required] [FromBody] RenameGroupModel input)
-    {
-        if (schemaService.ActiveExtension == null)
-        {
-            return BadRequest("No schema extension is active");
-        }
-
-        string name = input.Name?.Trim();
-        string validationError = ValidateFolderName(name);
-        if (validationError != null)
-        {
-            return StatusCode(statusCode: 400, value: validationError);
-        }
-
-        SchemaItemGroup group = ResolveGroup(input.NodeId);
-        if (group == null)
-        {
-            return NotFound();
-        }
-        if (!schemaService.IsItemFromExtension(group))
-        {
-            return StatusCode(
-                statusCode: 400,
-                value: "Only folders from the active package can be renamed."
-            );
-        }
-        if (!group.CanRenameTo(name))
-        {
-            return StatusCode(statusCode: 400, value: "A folder with this name already exists.");
-        }
-
-        // NodeText persists immediately and physically moves the folder on disk (not undone on
-        // rollback), so keep the transaction body minimal - nothing may fail after the move.
-        transactionRunner.Run(() =>
-        {
-            group.NodeText = name;
-        });
-
-        return treeNodeFactory.Create(group);
-    }
+    public ActionResult<TreeNode> RenameGroup([Required] [FromBody] RenameGroupModel input) =>
+        modelGroupService.Rename(input);
 
     [HttpPost("DeleteGroup")]
-    public ActionResult<DeleteGroupResult> DeleteGroup([Required] [FromBody] DeleteGroupModel input)
-    {
-        if (schemaService.ActiveExtension == null)
-        {
-            return BadRequest("No schema extension is active");
-        }
-
-        SchemaItemGroup group = ResolveGroup(input.NodeId);
-        if (group == null)
-        {
-            return NotFound();
-        }
-        if (!schemaService.CanDeleteItem(group))
-        {
-            return StatusCode(
-                statusCode: 400,
-                value: "Only folders from the active package can be deleted."
-            );
-        }
-
-        List<string> deletedSchemaItemIds = CollectSchemaItemIds(group).Distinct().ToList();
-
-        try
-        {
-            transactionRunner.Run(() => group.Delete());
-        }
-        catch (InvalidOperationException ex)
-        {
-            return StatusCode(statusCode: 400, value: ex.Message);
-        }
-
-        return new DeleteGroupResult { DeletedSchemaItemIds = deletedSchemaItemIds };
-    }
-
-    // ChildItemsRecursive skips subgroups; Delete() cascades into them, so recurse.
-    private static IEnumerable<string> CollectSchemaItemIds(SchemaItemGroup group)
-    {
-        foreach (ISchemaItem item in group.ChildItemsRecursive)
-        {
-            yield return item.Id.ToString();
-        }
-        foreach (SchemaItemGroup subGroup in group.ChildGroups)
-        {
-            foreach (string id in CollectSchemaItemIds(subGroup))
-            {
-                yield return id;
-            }
-        }
-    }
-
-    private SchemaItemGroup ResolveGroup(Guid groupId)
-    {
-        if (
-            persistenceProvider.RetrieveInstance<IBrowserNode2>(groupId)
-            is not SchemaItemGroup group
-        )
-        {
-            return null;
-        }
-
-        // A group fetched by id has no provider wiring; restore RootProvider so ChildItems works.
-        if (group.RootProvider == null && group.ParentItem == null)
-        {
-            group.RootProvider = schemaService
-                .Providers.OfType<AbstractSchemaItemProvider>()
-                .FirstOrDefault(provider => provider.RootItemType == group.RootItemType);
-        }
-
-        return group;
-    }
-
-    private static string ValidateFolderName(string name)
-    {
-        if (string.IsNullOrEmpty(name))
-        {
-            return "Folder name cannot be empty.";
-        }
-        if (
-            name.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0
-            || name.Contains('/')
-            || name.Contains('\\')
-        )
-        {
-            return "Folder name contains invalid characters.";
-        }
-        if (IsReservedOrUnsafeFolderName(name))
-        {
-            return "Folder name is reserved or not allowed.";
-        }
-        return null;
-    }
-
-    private static readonly HashSet<string> ReservedDeviceNames = new(
-        StringComparer.OrdinalIgnoreCase
-    )
-    {
-        "CON",
-        "PRN",
-        "AUX",
-        "NUL",
-        "COM1",
-        "COM2",
-        "COM3",
-        "COM4",
-        "COM5",
-        "COM6",
-        "COM7",
-        "COM8",
-        "COM9",
-        "LPT1",
-        "LPT2",
-        "LPT3",
-        "LPT4",
-        "LPT5",
-        "LPT6",
-        "LPT7",
-        "LPT8",
-        "LPT9",
-    };
-
-    private static bool IsReservedOrUnsafeFolderName(string name)
-    {
-        if (name == "." || name == "..")
-        {
-            return true;
-        }
-        if (name.EndsWith("."))
-        {
-            return true;
-        }
-        string baseName = name.Split('.')[0];
-        return ReservedDeviceNames.Contains(baseName);
-    }
+    public ActionResult<DeleteGroupResult> DeleteGroup(
+        [Required] [FromBody] DeleteGroupModel input
+    ) => modelGroupService.Delete(input);
 
     [HttpGet("GetMenuItems")]
     public IEnumerable<MenuItemInfo> GetMenuItems(
@@ -426,7 +196,7 @@ public class ModelController(
     {
         if (!Guid.TryParse(id, out Guid schemaItemId))
         {
-            ISchemaItemProvider provider = GetRootProviderById(id);
+            ISchemaItemProvider provider = treeNodeFactory.FindRootProvider(id);
             if (provider == null)
             {
                 return new List<MenuItemInfo>();

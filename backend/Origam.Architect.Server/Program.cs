@@ -73,6 +73,7 @@ public class Program
         builder.Services.AddSingleton<IAddToDeploymentService, AddToDeploymentService>();
         builder.Services.AddSingleton<IAddToModelService, AddToModelService>();
         builder.Services.AddSingleton<WizardService>();
+        builder.Services.AddSingleton<ModelGroupService>();
         builder.Services.AddSingleton<IPlatformResolveService, PlatformResolveService>();
         builder.Services.AddSingleton<
             ISchemaDbCompareResultsService,

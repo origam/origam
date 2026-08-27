@@ -87,6 +87,15 @@ public class TreeNodeFactory(SchemaService schemaService, GitNodeStatusService g
         };
     }
 
+    public ISchemaItemProvider FindRootProvider(string nodeId)
+    {
+        return schemaService
+            .ActiveExtension.ChildNodes()
+            .Cast<SchemaItemProviderGroup>()
+            .SelectMany(x => x.ChildNodes().Cast<ISchemaItemProvider>())
+            .FirstOrDefault(x => x.NodeId == nodeId);
+    }
+
     private NodeLevelType GetNodeLevelType(IBrowserNode2 node)
     {
         if (node is SchemaItemProviderGroup)
