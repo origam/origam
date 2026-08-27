@@ -351,4 +351,94 @@
   <data name="ActionButtonsCannotBeDisabled" xml:space="preserve">
     <value>The root section with the root entity can’t have action buttons disabled.</value>
   </data>
+  <data name="ErrorModeledApiDuplicateOperation" xml:space="preserve">
+    <value>The modeled API contains more than one {0} operation for '{1}'.</value>
+  </data>
+  <data name="ModeledApiAccessDeniedResponse" xml:space="preserve">
+    <value>Access denied.</value>
+  </data>
+  <data name="ModeledApiAccessTokenDescription" xml:space="preserve">
+    <value>Origam access token.</value>
+  </data>
+  <data name="ModeledApiAuthenticationCookieDescription" xml:space="preserve">
+    <value>Origam authentication cookie.</value>
+  </data>
+  <data name="ModeledApiAuthenticationRequiredResponse" xml:space="preserve">
+    <value>Authentication required.</value>
+  </data>
+  <data name="ModeledApiColumnDescription" xml:space="preserve">
+    <value>A column in '{0}'.</value>
+  </data>
+  <data name="OpenApiDescription" xml:space="preserve">
+    <value>Public API endpoints defined in the active Origam application model and extension controllers.</value>
+  </data>
+  <data name="ModeledApiEndpointDescription" xml:space="preserve">
+    <value>Modeled {0} endpoint.</value>
+  </data>
+  <data name="ModeledApiExampleColumnName" xml:space="preserve">
+    <value>ColumnName</value>
+  </data>
+  <data name="ModeledApiFailedResponse" xml:space="preserve">
+    <value>The modeled endpoint failed.</value>
+  </data>
+  <data name="ModeledApiFilterExpressionDescription" xml:space="preserve">
+    <value>Origam filter expression. A condition is ["column", "operator", value]. Combine conditions with ["$AND", ...] or ["$OR", ...]. Operators include eq, neq, gt, gte, lt, lte, starts, nstarts, ends, nends, contains, ncontains, like, in, nin, between and nbetween.</value>
+  </data>
+  <data name="ModeledApiFilterInputDescription" xml:space="preserve">
+    <value>Custom filtering and ordering input. Available columns: {0}.</value>
+  </data>
+  <data name="ModeledApiFilterLookupsDescription" xml:space="preserve">
+    <value>Optional map from a filter column name to the UUID of the lookup used to resolve that column.</value>
+  </data>
+  <data name="ModeledApiInvalidJsonExample" xml:space="preserve">
+    <value>The EXAMPLE_JSON output documentation entry is not valid JSON and cannot be displayed.</value>
+  </data>
+  <data name="ModeledApiInvalidXmlExample" xml:space="preserve">
+    <value>The EXAMPLE_XML output documentation entry is not valid XML and cannot be displayed.</value>
+  </data>
+  <data name="ModeledApiXmlExampleValidationFailed" xml:space="preserve">
+    <value>Could not validate the modeled API XML example "{0}"</value>
+  </data>
+  <data name="ModeledApiMissingOutputDocumentationResponse" xml:space="preserve">
+    <value>Successful response. The response schema is not available because the output documentation is not filled out. Add an EXAMPLE_JSON, EXAMPLE_XML or EXAMPLE documentation entry to expose an example response here.</value>
+  </data>
+  <data name="ModeledApiNotFoundResponse" xml:space="preserve">
+    <value>Modeled endpoint not found.</value>
+  </data>
+  <data name="ModeledApiOrderingDescription" xml:space="preserve">
+    <value>Optional custom ordering. Array order determines sort priority.</value>
+  </data>
+  <data name="ModeledApiParameterMapping" xml:space="preserve">
+    <value>Maps to the modeled parameter '{0}'.</value>
+  </data>
+  <data name="ModeledApiParametersMapping" xml:space="preserve">
+    <value>Maps to the modeled parameters {0}.</value>
+  </data>
+  <data name="ModeledApiPostFiltersHint" xml:space="preserve">
+    <value> Use the POST operation on the same path to send custom filters and ordering.</value>
+  </data>
+  <data name="ModeledApiSuccessfulResponse" xml:space="preserve">
+    <value>Successful response.</value>
+  </data>
+  <data name="ModeledApiTagDescription" xml:space="preserve">
+    <value>Modeled API endpoints in the '{0}' folder.</value>
+  </data>
+  <data name="OpenApiTitle" xml:space="preserve">
+    <value>Origam API</value>
+  </data>
+  <data name="ModeledApiUncategorized" xml:space="preserve">
+    <value>Uncategorized</value>
+  </data>
+  <data name="ModeledApiUnknownJsonResponse" xml:space="preserve">
+    <value>Successful response. This endpoint returns JSON data, but its response schema cannot be inferred from the Origam model.</value>
+  </data>
+  <data name="ModeledApiUnsupportedPageTypeDescription" xml:space="preserve">
+    <value>OpenAPI documentation generation is not implemented for the modeled page type '{0}'.</value>
+  </data>
+  <data name="ModeledApiUnsupportedPageTypeResponse" xml:space="preserve">
+    <value>OpenAPI documentation generation is not implemented for this modeled page type.</value>
+  </data>
+  <data name="ModeledApiUnsupportedPageTypeSummary" xml:space="preserve">
+    <value>Unsupported page type: {0}</value>
+  </data>
 </root>

@@ -18,6 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import {
+  DeploymentStatus,
   EditorSubType,
   IApiTabData,
   IApiTreeNode,
@@ -50,10 +51,12 @@ export class TreeNode implements IEditorNode {
     this.itemType = apiNode.itemType;
     this.itemTypeName = apiNode.itemTypeName;
     this.isCurrentVersion = apiNode.isCurrentVersion;
+    this.deploymentStatus = apiNode.deploymentStatus;
     this.nodeLevelType = apiNode.nodeLevelType ?? 'Item';
     this.isInActivePackage = apiNode.isInActivePackage ?? true;
     this.isFileDirty = apiNode.isFileDirty ?? false;
     this.isFolder = apiNode.isFolder ?? false;
+    this.role = apiNode.role;
     this.children = apiNode.children
       ? apiNode.children.map(child => new TreeNode(child, this.rootStore, this))
       : [];
@@ -73,10 +76,12 @@ export class TreeNode implements IEditorNode {
   itemType?: string;
   itemTypeName?: string;
   isCurrentVersion?: boolean;
+  deploymentStatus?: DeploymentStatus;
   nodeLevelType: NodeLevelType;
   isInActivePackage: boolean;
   isFileDirty: boolean;
   isFolder: boolean;
+  role?: string;
 
   @observable accessor isLoading: boolean = false;
   @observable accessor contextMenuItems: IMenuItemInfo[] = [];
@@ -114,12 +119,24 @@ export class TreeNode implements IEditorNode {
     return this.itemType === 'Origam.Schema.GuiModel.FormControlSet';
   }
 
+  get isScreenSection() {
+    return this.itemType === 'Origam.Schema.GuiModel.PanelControlSet';
+  }
+
   get isDataStructure() {
     return this.itemType === 'Origam.Schema.EntityModel.DataStructure';
   }
 
   get canCreateFolder() {
     return this.nodeLevelType === 'Provider' || this.isFolder;
+  }
+
+  get isSequentialWorkflow() {
+    return this.itemType === 'Origam.Schema.WorkflowModel.Workflow';
+  }
+
+  get hasSpecificRole() {
+    return !!this.role && this.role !== '*';
   }
 
   *loadChildren(): Generator<Promise<IApiTreeNode[]>, void, IApiTreeNode[]> {

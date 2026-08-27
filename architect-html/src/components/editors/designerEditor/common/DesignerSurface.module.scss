@@ -44,6 +44,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
   border: 1px solid var(--background8);
 
+  &.borderless {
+    border-color: transparent;
+  }
+
   &.selected {
     border: 1px solid var(--foreground3);
   }

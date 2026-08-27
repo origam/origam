@@ -25,13 +25,63 @@ import { TreeNode } from '@components/modelTree/TreeNode';
 import { CreateLookupWizard } from '@components/modelTree/createWizard/CreateLookupWizard';
 import { CreateScreenWizard } from '@components/modelTree/createWizard/CreateScreenWizard';
 import { CreateWorkQueueWizard } from '@components/modelTree/createWizard/CreateWorkQueueWizard';
+import { CreateDataStructureWizard } from '@components/modelTree/createWizard/CreateDataStructureWizard';
+import { CreateScreenFromSectionWizard } from '@components/modelTree/createWizard/CreateScreenFromSectionWizard';
 import { CreateMenuItemWizard } from '@components/modelTree/createWizard/CreateMenuItemWizard';
+import { CreateWorkflowMenuItemWizard } from '@components/modelTree/createWizard/CreateWorkflowMenuItemWizard';
+import { CreateRoleWizard } from '@components/modelTree/createWizard/CreateRoleWizard';
+import { CreateLocalizationChildEntityWizard } from '@components/modelTree/createWizard/CreateLocalizationChildEntityWizard';
+import { CreateScreenSectionWizard } from '@components/modelTree/createWizard/CreateScreenSectionWizard';
 import { askForName, askYesNoQuestion, YesNoResult } from '@dialogs/DialogUtils';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { observer } from 'mobx-react-lite';
 import { useContext, useEffect, useRef } from 'react';
-import { Item, Menu, Separator, Submenu, TriggerEvent, useContextMenu } from 'react-contexify';
-import 'react-contexify/ReactContexify.css';
+import {
+  Item,
+  Menu,
+  Separator,
+  Submenu,
+  TriggerEvent,
+  useContextMenu,
+} from '@origam/react-contexify';
+import '@origam/react-contexify/ReactContexify.css';
+
+const DeploymentBadges = observer(({ node }: { node: TreeNode }) => {
+  return (
+    <>
+      {node.deploymentStatus && (
+        <span
+          className={`${S.statusBadge} ${
+            node.deploymentStatus === 'Done' ? S.statusDone : S.statusPending
+          }`}
+          title={
+            node.deploymentStatus === 'Done'
+              ? T('Already deployed to the database.', 'tree_node_deployment_status_done_tooltip')
+              : T(
+                  'Not deployed to the database yet.',
+                  'tree_node_deployment_status_pending_tooltip',
+                )
+          }
+        >
+          {node.deploymentStatus === 'Done'
+            ? T('Done', 'tree_node_deployment_status_done')
+            : T('Pending', 'tree_node_deployment_status_pending')}
+        </span>
+      )}
+      {node.isCurrentVersion && (
+        <span
+          className={S.currentBadge}
+          title={T(
+            'The version new deployment scripts are added to.',
+            'tree_node_deployment_current_tooltip',
+          )}
+        >
+          {T('Current', 'tree_node_deployment_current')}
+        </span>
+      )}
+    </>
+  );
+});
 
 const RESERVED_DEVICE_NAME = /^(con|prn|aux|nul|com[1-9]|lpt[1-9])(\.|$)/i;
 const INVALID_FOLDER_NAME_CHARS = /[\\/:*?"<>|]/;
@@ -293,6 +343,106 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
     );
   }
 
+  function openCreateScreenSectionWizard() {
+    const closeDialog = rootStore.dialogStack.pushDialog(
+      '',
+      <CreateScreenSectionWizard
+        entityId={node.origamId}
+        parentNodeName={node.nodeText}
+        onCancel={() => closeDialog()}
+        onCreate={result => {
+          closeDialog();
+          run({
+            generator: function* () {
+              yield* rootStore.modelTreeState.loadPackageNodes.bind(rootStore.modelTreeState)();
+              showCreatedConfirmation(
+                T('Screen Section', 'wizard_artifact_screen_section'),
+                result?.searchResults ?? [],
+              );
+            },
+          });
+        }}
+      />,
+      undefined,
+      false,
+    );
+  }
+
+  function openCreateLocalizationChildEntityWizard() {
+    const closeDialog = rootStore.dialogStack.pushDialog(
+      '',
+      <CreateLocalizationChildEntityWizard
+        entityId={node.origamId}
+        parentNodeName={node.nodeText}
+        onCancel={() => closeDialog()}
+        onCreate={result => {
+          closeDialog();
+          run({
+            generator: function* () {
+              yield* rootStore.modelTreeState.loadPackageNodes.bind(rootStore.modelTreeState)();
+              showCreatedConfirmation(
+                T('Localization Child Entity', 'wizard_artifact_l10n_child_entity'),
+                result?.searchResults ?? [],
+              );
+            },
+          });
+        }}
+      />,
+      undefined,
+      false,
+    );
+  }
+
+  function openCreateDataStructureWizard() {
+    const closeDialog = rootStore.dialogStack.pushDialog(
+      '',
+      <CreateDataStructureWizard
+        entityId={node.origamId}
+        parentNodeName={node.nodeText}
+        onCancel={() => closeDialog()}
+        onCreate={result => {
+          closeDialog();
+          run({
+            generator: function* () {
+              yield* rootStore.modelTreeState.loadPackageNodes.bind(rootStore.modelTreeState)();
+              showCreatedConfirmation(
+                T('Data Structure', 'wizard_artifact_data_structure'),
+                result?.searchResults ?? [],
+              );
+            },
+          });
+        }}
+      />,
+      undefined,
+      false,
+    );
+  }
+
+  function openCreateScreenFromSectionWizard() {
+    const closeDialog = rootStore.dialogStack.pushDialog(
+      '',
+      <CreateScreenFromSectionWizard
+        screenSectionId={node.origamId}
+        parentNodeName={node.nodeText}
+        onCancel={() => closeDialog()}
+        onCreate={result => {
+          closeDialog();
+          run({
+            generator: function* () {
+              yield* rootStore.modelTreeState.loadPackageNodes.bind(rootStore.modelTreeState)();
+              showCreatedConfirmation(
+                T('Screen', 'wizard_artifact_screen'),
+                result?.searchResults ?? [],
+              );
+            },
+          });
+        }}
+      />,
+      undefined,
+      false,
+    );
+  }
+
   function showDataStructureSql() {
     run({
       generator: function* () {
@@ -374,6 +524,57 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
     });
   }
 
+  function openCreateWorkflowMenuItemWizard() {
+    const closeDialog = rootStore.dialogStack.pushDialog(
+      '',
+      <CreateWorkflowMenuItemWizard
+        workflowId={node.origamId}
+        parentNodeName={node.nodeText}
+        onCancel={() => closeDialog()}
+        onCreate={result => {
+          closeDialog();
+          run({
+            generator: function* () {
+              yield* rootStore.modelTreeState.loadPackageNodes.bind(rootStore.modelTreeState)();
+              showCreatedConfirmation(
+                T('Menu Item', 'wizard_artifact_menu_item'),
+                result?.searchResults ?? [],
+              );
+            },
+          });
+        }}
+      />,
+      undefined,
+      false,
+    );
+  }
+
+  function openCreateRoleWizard() {
+    const closeDialog = rootStore.dialogStack.pushDialog(
+      '',
+      <CreateRoleWizard
+        itemId={node.origamId}
+        itemName={node.nodeText}
+        role={node.role ?? ''}
+        onCancel={() => closeDialog()}
+        onCreate={result => {
+          closeDialog();
+          run({
+            generator: function* () {
+              yield* rootStore.modelTreeState.loadPackageNodes.bind(rootStore.modelTreeState)();
+              showCreatedConfirmation(
+                T('Role', 'wizard_artifact_role'),
+                result?.searchResults ?? [],
+              );
+            },
+          });
+        }}
+      />,
+      undefined,
+      false,
+    );
+  }
+
   function getSymbol() {
     if (node.children.length > 0 || !node.childrenInitialized) {
       return node.isExpanded ? '▼' : '▶';
@@ -426,6 +627,7 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
               <Icon src={node.iconUrl ?? '/Icons/generic.svg'} />
             </div>
             {node.nodeText}
+            <DeploymentBadges node={node} />
           </div>
           <Menu id={menuId} onVisibilityChange={onMenuVisibilityChange}>
             {node.contextMenuItems.length > 0 ? (
@@ -463,8 +665,20 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
                 <Item id="create-screen" onClick={openCreateScreenWizard}>
                   {T('Create Screen', 'tree_node_create_screen')}
                 </Item>
+                <Item id="create-screen-section" onClick={openCreateScreenSectionWizard}>
+                  {T('Create Screen Section', 'tree_node_create_screen_section')}
+                </Item>
                 <Item id="create-workqueue" onClick={openCreateWorkQueueWizard}>
                   {T('Create Workqueue class', 'tree_node_create_workqueue')}
+                </Item>
+                <Item id="create-data-structure" onClick={openCreateDataStructureWizard}>
+                  {T('Create Data Structure', 'tree_node_create_data_structure')}
+                </Item>
+                <Item
+                  id="create-l10n-child-entity"
+                  onClick={openCreateLocalizationChildEntityWizard}
+                >
+                  {T('Create Localization Child Entity', 'tree_node_create_l10n_child_entity')}
                 </Item>
               </Submenu>
             )}
@@ -475,10 +689,31 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
                 </Item>
               </Submenu>
             )}
+            {node.isScreenSection && (
+              <Submenu label={T('Actions', 'tree_node_submenu_actions')}>
+                <Item id="create-screen-from-section" onClick={openCreateScreenFromSectionWizard}>
+                  {T('Create Screen', 'tree_node_create_screen')}
+                </Item>
+              </Submenu>
+            )}
             {node.isDataStructure && (
               <Submenu label={T('Actions', 'tree_node_submenu_actions')}>
                 <Item id="show-sql" onClick={showDataStructureSql}>
                   {T('Show SQL', 'tree_node_show_sql')}
+                </Item>
+              </Submenu>
+            )}
+            {node.isSequentialWorkflow && (
+              <Submenu label={T('Actions', 'tree_node_submenu_actions')}>
+                <Item id="create-workflow-menu-item" onClick={openCreateWorkflowMenuItemWizard}>
+                  {T('Create Menu Item', 'tree_node_create_workflow_menu_item')}
+                </Item>
+              </Submenu>
+            )}
+            {node.hasSpecificRole && (
+              <Submenu label={T('Actions', 'tree_node_submenu_actions')}>
+                <Item id="create-role" onClick={openCreateRoleWizard}>
+                  {T('Create Role', 'tree_node_create_role')}
                 </Item>
               </Submenu>
             )}

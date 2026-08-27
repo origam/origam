@@ -36,8 +36,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'"
-      >NETSTANDARD;NETSTANDARD2_0</DefineConstants
-    >
+      >NETSTANDARD;NETSTANDARD2_0</DefineConstants>
     <Configurations>Debug Client;Debug Architect;Debug Server;Release Client;Release Architect;Release Server</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Client|AnyCPU' ">
@@ -118,6 +117,10 @@
     <ProjectReference Include="..\Origam.BI.SSRS\Origam.BI.SSRS.csproj">
       <Project>{720e0ebb-4b5c-491c-a621-8fa974e0307b}</Project>
       <Name>Origam.BI.SSRS</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.BI.XslFO\Origam.BI.XslFO.csproj">
+      <Project>{20c63172-7895-416f-b2c8-8b30b409947f}</Project>
+      <Name>Origam.BI.XslFO</Name>
     </ProjectReference>
     <ProjectReference Include="..\Origam.BI\Origam.BI.csproj">
       <Project>{54bff654-2a00-4a8a-86b0-06f124d769a1}</Project>

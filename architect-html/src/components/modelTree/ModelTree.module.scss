@@ -79,6 +79,46 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   font-weight: bold;
 }
 
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  height: 15px;
+  padding: 0 6px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.statusDone {
+  background-color: rgba(var(--ok1-rgb), 0.2);
+  color: #2e8b57;
+  border: 1px solid var(--ok1);
+}
+
+.statusPending {
+  background-color: rgba(var(--warning1-rgb), 0.25);
+  color: #916b00;
+}
+
+.currentBadge {
+  display: inline-flex;
+  align-items: center;
+  height: 16px;
+  padding: 0 7px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--background1);
+  background-color: var(--brand);
+}
+
 .loading {
   margin-left: 8px;
   font-style: italic;

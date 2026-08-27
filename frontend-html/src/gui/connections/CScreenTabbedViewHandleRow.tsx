@@ -43,8 +43,10 @@ import { T } from "utils/translation";
 import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
 
 @observer
-export class CScreenTabbedViewHandleRow extends React.Component {
+export class CScreenTabbedViewHandleRow extends React.Component<React.PropsWithChildren<{}>> {
   static contextType = MobXProviderContext;
+
+  declare context: any;
 
   get workbench(): IWorkbench {
     return this.context.workbench;
@@ -66,7 +68,7 @@ export class CScreenTabbedViewHandleRow extends React.Component {
 }
 
 @observer
-class CScreenTabbedViewHandle extends React.Component<{ item: IOpenedScreen }> {
+class CScreenTabbedViewHandle extends React.Component<React.PropsWithChildren<{ item: IOpenedScreen }>> {
 
   getIsLoading(){
     const {item} = this.props;

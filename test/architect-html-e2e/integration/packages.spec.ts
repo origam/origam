@@ -18,10 +18,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { expect, test } from '@playwright/test';
+import { resetBackend } from '@support/resetBackend';
+import { showPackagesTab } from '@support/showPackagesTab';
 
 // These tests hit the real Origam.Architect.Server. The packages below come
 // from the model in model-tests/model, served by /Package/GetAll.
 test.describe('Packages (real backend)', () => {
+  test.beforeEach(async ({ request }) => {
+    await resetBackend(request);
+  });
+
   test('loads the package list from the server', async ({ page }) => {
     // Assert the frontend actually called the backend and rendered the result.
     const packagesLoaded = page.waitForResponse(
@@ -30,12 +36,15 @@ test.describe('Packages (real backend)', () => {
     await page.goto('/');
     await packagesLoaded;
 
+    await showPackagesTab(page);
     await expect(page.getByText('Attachments', { exact: true })).toBeVisible();
     await expect(page.getByText('Audit', { exact: true })).toBeVisible();
   });
 
   test('clicking a package activates it on the backend', async ({ page }) => {
     await page.goto('/');
+
+    await showPackagesTab(page);
     const attachments = page.getByText('Attachments', { exact: true });
     await expect(attachments).toBeVisible();
 

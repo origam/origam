@@ -25,6 +25,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Origam.Server.Configuration;
+using Origam.Server.OpenApi;
 
 namespace Origam.Server;
 
@@ -52,6 +53,10 @@ public class Program
                     loggerFactory,
                     startUpConfiguration.ReloadModelWhenFilesChangesDetected
                 );
+                if (startUpConfiguration.OpenApiDocumentationEnabled)
+                {
+                    provider.GetRequiredService<OpenApiDocumentProvider>().GetDocument();
+                }
                 OpenIddictConfigManager
                     .CreateOrUpdateAsync(provider, identityServerConfig)
                     .GetAwaiter()

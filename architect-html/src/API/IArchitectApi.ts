@@ -143,7 +143,27 @@ export interface IArchitectApi {
 
   createWorkQueueClass(request: ICreateWorkQueueRequest): Promise<ICreateWizardResult>;
 
+  getDataStructureWizardData(entityId: string): Promise<IDataStructureWizardData>;
+  createDataStructure(request: ICreateDataStructureRequest): Promise<ICreateWizardResult>;
+
+  getScreenFromSectionWizardData(screenSectionId: string): Promise<IScreenFromSectionWizardData>;
+  createScreenFromSection(request: ICreateScreenFromSectionRequest): Promise<ICreateWizardResult>;
+
   createMenuItem(request: ICreateMenuItemRequest): Promise<ICreateWizardResult>;
+
+  createWorkflowMenuItem(request: ICreateWorkflowMenuItemRequest): Promise<ICreateWizardResult>;
+
+  createRole(request: ICreateRoleRequest): Promise<ICreateWizardResult>;
+
+  getLocalizationChildEntityWizardData(
+    entityId: string,
+  ): Promise<ILocalizationChildEntityWizardData>;
+  createLocalizationChildEntity(
+    request: ICreateLocalizationChildEntityRequest,
+  ): Promise<ICreateWizardResult>;
+
+  getScreenSectionWizardData(entityId: string): Promise<IScreenSectionWizardData>;
+  createScreenSection(request: ICreateScreenSectionRequest): Promise<ICreateWizardResult>;
 
   getDataStructureSql(dataStructureId: string): Promise<IGetDataStructureSqlResult>;
 }
@@ -175,6 +195,46 @@ export interface ICreateMenuItemRequest {
   role: string;
 }
 
+export interface ICreateWorkflowMenuItemRequest {
+  workflowId: string;
+  caption: string;
+  role: string;
+}
+
+export interface ICreateRoleRequest {
+  itemId: string;
+}
+
+export interface ILocalizationEntityColumn {
+  id: string;
+  name: string;
+}
+
+export interface ILocalizationChildEntityWizardData {
+  entityName: string;
+  translationEntityName: string;
+  columns: ILocalizationEntityColumn[];
+}
+
+export interface ICreateLocalizationChildEntityRequest {
+  entityId: string;
+  selectedFieldIds: string[];
+}
+
+export interface IScreenSectionWizardData {
+  entityName: string;
+  entityCaption: string;
+  columns: IScreenWizardColumn[];
+  existingScreenSectionNames: string[];
+}
+
+export interface ICreateScreenSectionRequest {
+  entityId: string;
+  name: string;
+  caption: string;
+  selectedFieldIds: string[];
+}
+
 export type CreateFilterType = 'Equal' | 'EqualParam' | 'Like' | 'LikeParam' | 'InList' | 'Between';
 
 export interface ICreateFilterRequest {
@@ -192,6 +252,7 @@ export interface IScreenWizardColumn {
   id: string;
   name: string;
   isPrimaryKey: boolean;
+  canGenerateControl: boolean;
 }
 
 export interface ICreateScreenRequest {
@@ -221,6 +282,26 @@ export interface ICreateLookupRequest {
   displayFieldId: string;
   idFilterId: string;
   listFilterId: string | null;
+}
+
+export interface IDataStructureWizardData {
+  entityName: string;
+  existingDataStructureNames: string[];
+}
+
+export interface ICreateDataStructureRequest {
+  entityId: string;
+  name: string;
+}
+
+export interface IScreenFromSectionWizardData {
+  sectionName: string;
+  existingDataStructureNames: string[];
+}
+
+export interface ICreateScreenFromSectionRequest {
+  screenSectionId: string;
+  name: string;
 }
 
 export interface ITransformationInput {
@@ -443,10 +524,12 @@ export interface IApiTreeNode extends INodeLoadData {
   itemType?: string;
   itemTypeName?: string;
   isCurrentVersion?: boolean;
+  deploymentStatus?: DeploymentStatus;
   nodeLevelType?: NodeLevelType;
   isInActivePackage?: boolean;
   isFileDirty?: boolean;
   isFolder?: boolean;
+  role?: string;
 }
 
 export interface IDeleteGroupResult {
@@ -474,6 +557,8 @@ export interface IDeploymentScriptsGeneratorModuleData {
   currentDeploymentVersionId: string | null;
   results: IDatabaseResult[];
 }
+
+export type DeploymentStatus = 'Pending' | 'Done';
 
 export interface DocumentationEditorData {
   label: string;

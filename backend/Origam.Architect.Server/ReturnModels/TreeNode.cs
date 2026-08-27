@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.Architect.Server.Enums;
 using Origam.Architect.Server.Services;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema;
@@ -48,10 +49,12 @@ public class TreeNode
     public string ItemType { get; set; }
     public string ItemTypeName { get; set; }
     public bool? IsCurrentVersion { get; set; }
+    public DeploymentStatus? DeploymentStatus { get; set; }
     public NodeLevelType NodeLevelType { get; set; } = NodeLevelType.Item;
     public bool IsInActivePackage { get; set; } = true;
     public bool IsFileDirty { get; set; }
     public bool IsFolder { get; set; }
+    public string Role { get; set; }
 
     public static string ToTreeNodeId(IBrowserNode2 node)
     {
@@ -59,7 +62,11 @@ public class TreeNode
     }
 }
 
-public class TreeNodeFactory(SchemaService schemaService, GitNodeStatusService gitNodeStatusService)
+public class TreeNodeFactory(
+    SchemaService schemaService,
+    GitNodeStatusService gitNodeStatusService,
+    IDeploymentService deploymentService
+)
 {
     public TreeNode Create(IBrowserNode2 node)
     {
@@ -80,10 +87,12 @@ public class TreeNodeFactory(SchemaService schemaService, GitNodeStatusService g
             ItemType = node.GetType().FullName,
             ItemTypeName = node.GetType().SchemaItemDescription()?.Name,
             IsCurrentVersion = (node as Schema.DeploymentModel.DeploymentVersion)?.IsCurrentVersion,
+            DeploymentStatus = GetDeploymentStatus(node),
             NodeLevelType = GetNodeLevelType(node),
             IsInActivePackage = IsInActivePackage(node),
             IsFileDirty = gitNodeStatusService.IsFileDirty(node as IPersistent),
             IsFolder = node is SchemaItemGroup,
+            Role = (node as IAuthorizationContextContainer)?.AuthorizationContext,
         };
     }
 
@@ -94,6 +103,22 @@ public class TreeNodeFactory(SchemaService schemaService, GitNodeStatusService g
             .Cast<SchemaItemProviderGroup>()
             .SelectMany(x => x.ChildNodes().Cast<ISchemaItemProvider>())
             .FirstOrDefault(x => x.NodeId == nodeId);
+    }
+
+    private DeploymentStatus? GetDeploymentStatus(IBrowserNode2 node)
+    {
+        if (node is not Schema.DeploymentModel.DeploymentVersion version)
+        {
+            return null;
+        }
+        if (!version.UpdateScriptActivities.Any())
+        {
+            return null;
+        }
+        PackageVersion deployedVersion = deploymentService.CurrentDeployedVersion(version.Package);
+        return version.Version <= deployedVersion
+            ? DeploymentStatus.Done
+            : DeploymentStatus.Pending;
     }
 
     private NodeLevelType GetNodeLevelType(IBrowserNode2 node)

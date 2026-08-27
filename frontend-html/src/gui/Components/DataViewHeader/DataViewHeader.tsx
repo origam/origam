@@ -21,11 +21,11 @@ import React from "react";
 import S from "gui/Components/DataViewHeader/DataViewHeader.module.scss";
 import cx from 'classnames';
 
-export const DataViewHeader: React.FC<{
+export const DataViewHeader: React.FC<React.PropsWithChildren<{
   domRef?: any,
   isVisible: boolean,
   className?: string
-}> = props => (
+}>> = props => (
   <div className={cx(S.root, "dataViewHeader", "noPrint", {isVisible: props.isVisible}, props.className)}>
 
     <div ref={props.domRef} className={S.inner}>

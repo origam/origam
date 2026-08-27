@@ -28,6 +28,7 @@ using Origam.Architect.Server.ControlAdapter;
 using Origam.Architect.Server.Interfaces.Services;
 using Origam.Architect.Server.ReturnModels;
 using Origam.Architect.Server.Services;
+using Origam.Architect.Server.Services.Wizards;
 using Origam.Architect.Server.Services.Xslt;
 using Origam.Extensions;
 using Origam.Workbench.Services;
@@ -72,8 +73,18 @@ public class Program
         builder.Services.AddSingleton<DocumentationHelperService>();
         builder.Services.AddSingleton<IAddToDeploymentService, AddToDeploymentService>();
         builder.Services.AddSingleton<IAddToModelService, AddToModelService>();
-        builder.Services.AddSingleton<WizardService>();
         builder.Services.AddSingleton<ModelGroupService>();
+        builder.Services.AddSingleton<FilterWizardService>();
+        builder.Services.AddSingleton<ScreenWizardService>();
+        builder.Services.AddSingleton<ScreenSectionWizardService>();
+        builder.Services.AddSingleton<ScreenFromSectionWizardService>();
+        builder.Services.AddSingleton<DataStructureWizardService>();
+        builder.Services.AddSingleton<DataStructureSqlWizardService>();
+        builder.Services.AddSingleton<LookupWizardService>();
+        builder.Services.AddSingleton<MenuItemWizardService>();
+        builder.Services.AddSingleton<RoleWizardService>();
+        builder.Services.AddSingleton<WorkQueueWizardService>();
+        builder.Services.AddSingleton<LocalizationChildEntityWizardService>();
         builder.Services.AddSingleton<IPlatformResolveService, PlatformResolveService>();
         builder.Services.AddSingleton<
             ISchemaDbCompareResultsService,

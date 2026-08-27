@@ -39,16 +39,21 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import S from "./WorkflowAction.module.scss";
 import React from "react";
 import cx from "classnames";
-import { action } from "mobx";
+import { action, makeObservable } from "mobx";
 
-export class WorkflowAction extends React.Component<{
+export class WorkflowAction extends React.Component<React.PropsWithChildren<{
   label: string;
   className?: string;
   onClick?(event: any): void;
   onShortcut?(event: any): void;
   shortcutPredicate?(event: any): boolean;
   id?: string;
-}> {
+}>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
   @action.bound
   handleWindowKeyDown(event: any) {
     if (this.props.shortcutPredicate?.(event)) {

@@ -115,7 +115,7 @@ const SinglePropertyEditor = observer(
           <input
             type="text"
             disabled={property.readOnly}
-            value={property.value != null ? String(property.value) : undefined}
+            value={property.value != null ? String(property.value) : ''}
             onChange={e => {
               const next = NO_WHITESPACE_PROPERTIES.has(property.name)
                 ? stripWhitespace(e.target.value)

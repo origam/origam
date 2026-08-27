@@ -143,6 +143,28 @@ public class GuiHelper
         return panel;
     }
 
+    public static bool CanBuildDefaultControl(IDataEntityColumn column)
+    {
+        switch (column.DataType)
+        {
+            case OrigamDataType.Integer:
+            case OrigamDataType.Long:
+            case OrigamDataType.Float:
+            case OrigamDataType.Currency:
+            case OrigamDataType.Memo:
+            case OrigamDataType.Geography:
+            case OrigamDataType.String:
+            case OrigamDataType.Boolean:
+            case OrigamDataType.Date:
+            case OrigamDataType.Object:
+                return true;
+            case OrigamDataType.UniqueIdentifier:
+                return column.DefaultLookup != null;
+            default:
+                return false;
+        }
+    }
+
     private static void BuildDefaultControl(
         ControlSetItem parentControl,
         IDataEntity entity,
@@ -152,6 +174,20 @@ public class GuiHelper
         int tabIndex
     )
     {
+        if (!CanBuildDefaultControl(column))
+        {
+            if (column.DataType == OrigamDataType.UniqueIdentifier)
+            {
+                throw new Exception(
+                    ResourceUtils.GetString("ErrorLookupNotSet", entity.Name + "/" + column.Name)
+                );
+            }
+            throw new ArgumentOutOfRangeException(
+                "DataType",
+                column.DataType,
+                "Default control of this data type is not supported by the control builder."
+            );
+        }
         var properties = new Hashtable
         {
             ["Left"] = x,
@@ -198,15 +234,6 @@ public class GuiHelper
             }
             case OrigamDataType.UniqueIdentifier:
             {
-                if (column.DefaultLookup == null)
-                {
-                    throw new Exception(
-                        ResourceUtils.GetString(
-                            "ErrorLookupNotSet",
-                            entity.Name + "/" + column.Name
-                        )
-                    );
-                }
                 properties["LookupId"] = column.DefaultLookup.PrimaryKey["Id"];
                 var comboBox = CreateControl(parentControl, GetComboBoxControl());
                 comboBox.Name = comboBox.ControlItem.Name + tabIndex;
@@ -224,14 +251,6 @@ public class GuiHelper
                     multiColumnAdapterFieldWrapper.ControlItem.Name + tabIndex;
                 PopulateControlProperties(multiColumnAdapterFieldWrapper, properties);
                 break;
-            }
-            default:
-            {
-                throw new ArgumentOutOfRangeException(
-                    "DataType",
-                    column.DataType,
-                    "Default control of this data type is not supported by the control builder."
-                );
             }
         }
     }

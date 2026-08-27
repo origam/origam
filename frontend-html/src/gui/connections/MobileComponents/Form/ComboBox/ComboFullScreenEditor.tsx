@@ -40,7 +40,7 @@ interface IComboFullScreenEditorProps {
   isLink?: boolean,
 }
 
-export const ComboFullScreenEditor: React.FC<IComboFullScreenEditorProps> = (props) => {
+export const ComboFullScreenEditor: React.FC<React.PropsWithChildren<IComboFullScreenEditorProps>> = (props) => {
 
   useEffect(()=>{
     props.behavior.handleInputChange({target:{value:""}});

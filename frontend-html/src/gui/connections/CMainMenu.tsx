@@ -24,7 +24,9 @@ import { inject, MobXProviderContext, Observer, observer } from "mobx-react";
 import { IApplication } from "model/entities/types/IApplication";
 import { getIsMainMenuLoading } from "model/selectors/MainMenu/getIsMainMenuLoading";
 import { getMainMenu } from "model/selectors/MainMenu/getMainMenu";
-import { action, observable } from "mobx";
+import { action, observable,
+  makeObservable
+} from "mobx";
 import { IWorkbench } from "model/entities/types/IWorkbench";
 import { onMainMenuItemClick } from "model/actions-ui/MainMenu/onMainMenuItemClick";
 import { getActiveScreen } from "model/selectors/getActiveScreen";
@@ -53,12 +55,19 @@ import { listFromNode, MenuItemList } from "./MenuItemList";
 
 @inject(mainMenuState => mainMenuState)
 @observer
-export class CMainMenu extends React.Component<{
+export class CMainMenu extends React.Component<React.PropsWithChildren<{
   isActive: boolean;
   onClick: () => void;
   mainMenuState?: IMainMenuState;
-}> {
+}>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
   static contextType = MobXProviderContext;
+
+  declare context: any;
 
   @observable
   mouseInHeader = false;
@@ -125,6 +134,7 @@ export class CMainMenu extends React.Component<{
 
   render() {
     const {application} = this;
+    const {isActive, mainMenuState, onClick} = this.props;
     const isLoading = getIsMainMenuLoading(application);
     const mainMenu = getMainMenu(application);
 
@@ -141,24 +151,24 @@ export class CMainMenu extends React.Component<{
         >
           <SidebarSectionHeader
             id={"menuHeader"}
-            isActive={this.props.isActive}
+            isActive={isActive}
             icon={<Icon src="./icons/menu.svg" tooltip={T("Menu", "menu")}/>}
             label={T("Menu", "menu")}
-            onClick={() => this.props.onClick()}
+            onClick={() => onClick()}
           />
           <Observer>
             {() =>
               <EditButton
                 isVisible={this.mouseInHeader}
-                isEnabled={this.props.mainMenuState!.editingEnabled}
+                isEnabled={mainMenuState!.editingEnabled}
                 onClick={() => this.onEditClick()}
                 tooltip={T("Manage Favourites", "manage_favorites")}
               />
             }
           </Observer>
         </div>
-        <SidebarSectionBody isActive={this.props.isActive}>
-          <MenuItemList ctx={application} editingState={this.props.mainMenuState!}/>
+        <SidebarSectionBody isActive={isActive}>
+          <MenuItemList ctx={application} editingState={mainMenuState!}/>
         </SidebarSectionBody>
       </>
     );
@@ -167,13 +177,15 @@ export class CMainMenu extends React.Component<{
 
 
 @observer
-export class CMainMenuCommandItem extends React.Component<{
+export class CMainMenuCommandItem extends React.Component<React.PropsWithChildren<{
   node: any;
   level: number;
   isOpen: boolean;
   editingState?: IEditingState;
-}> {
+}>> {
   static contextType = MobXProviderContext;
+
+  declare context: any;
 
   get workbench(): IWorkbench {
     return this.context.workbench;
@@ -189,10 +201,14 @@ export class CMainMenuCommandItem extends React.Component<{
 
   render() {
     const {props} = this;
-    const customAssetsRoute = getCustomAssetsRoute(this.workbench);
-    const activeScreen = getActiveScreen(this.workbench);
+    const {node, level, isOpen, editingState} = props;
+    const workbench = this.workbench;
+    const menuId = this.menuId;
+    const favorites = this.favorites;
+    const customAssetsRoute = getCustomAssetsRoute(workbench);
+    const activeScreen = getActiveScreen(workbench);
     const activeMenuItemId = activeScreen ? activeScreen.menuItemId : undefined;
-    const isOpenScreen = this.workbench.openedScreenIdSet.has(props.node.attributes.id);
+    const isOpenScreen = workbench.openedScreenIdSet.has(node.attributes.id);
     return (
       <Dropdowner
         trigger={({refTrigger, setDropped}) => (
@@ -201,27 +217,27 @@ export class CMainMenuCommandItem extends React.Component<{
           >
             <MainMenuItem
               refDom={refTrigger}
-              level={props.level}
-              id={"menu_" + props.node.attributes.id}
+              level={level}
+              id={"menu_" + node.attributes.id}
               isActive={false}
               icon={
                 <Icon
                   src={getIconUrl(
-                    props.node.attributes.icon,
-                    customAssetsRoute + "/" + props.node.attributes.icon
+                    node.attributes.icon,
+                    customAssetsRoute + "/" + node.attributes.icon
                   )}
-                  tooltip={props.node.attributes.label}
+                  tooltip={node.attributes.label}
                 />
               }
-              label={props.node.attributes.label}
-              isHidden={!props.isOpen}
+              label={node.attributes.label}
+              isHidden={!isOpen}
               // TODO: Implements selector for this idset
               isOpenedScreen={isOpenScreen}
-              isActiveScreen={activeMenuItemId === props.node.attributes.id}
+              isActiveScreen={activeMenuItemId === node.attributes.id}
               onClick={(event) =>
-                onMainMenuItemClick(this.workbench)({
+                onMainMenuItemClick(workbench)({
                   event,
-                  item: props.node,
+                  item: node,
                   idParameter: undefined,
                 })
               }
@@ -231,11 +247,11 @@ export class CMainMenuCommandItem extends React.Component<{
                 event.stopPropagation();
               }}
             />
-            {this.props.editingState?.editingEnabled &&
+            {editingState?.editingEnabled &&
               <FavoritesAddRemoveButton
-                isVisible={props.isOpen}
-                menuId={this.menuId}
-                ctx={this.workbench}/>
+                isVisible={isOpen}
+                menuId={menuId}
+                ctx={workbench}/>
             }
           </div>
         )}
@@ -244,9 +260,9 @@ export class CMainMenuCommandItem extends React.Component<{
             <DropdownItem
               onClick={(event: any) => {
                 setDropped(false);
-                onMainMenuItemClick(this.workbench)({
+                onMainMenuItemClick(workbench)({
                   event,
-                  item: props.node,
+                  item: node,
                   idParameter: undefined,
                 })
               }}
@@ -256,9 +272,9 @@ export class CMainMenuCommandItem extends React.Component<{
             <DropdownItem
               onClick={(event: any) => {
                 setDropped(false);
-                onMainMenuItemClick(this.workbench)({
+                onMainMenuItemClick(workbench)({
                   event,
-                  item: props.node,
+                  item: node,
                   idParameter: undefined,
                   forceOpenNew: true
                 })
@@ -266,24 +282,24 @@ export class CMainMenuCommandItem extends React.Component<{
             >
               {T("Open in New Tab", "open_in_new_tab")}
             </DropdownItem>
-            {(props.node.attributes.type === "FormReferenceMenuItem" ||
-                props.node.attributes.type === "FormReferenceMenuItem_WithSelection") &&
+            {(node.attributes.type === "FormReferenceMenuItem" ||
+                node.attributes.type === "FormReferenceMenuItem_WithSelection") &&
               <DropdownItem
                 onClick={(event: any) => {
                   setDropped(false);
-                  onResetColumnConfigClick(this.workbench)({
-                    item: props.node
+                  onResetColumnConfigClick(workbench)({
+                    item: node
                   })
                 }}
               >
                 {T("Reset Column Configuration", "reset_column_configuration")}
               </DropdownItem>
             }
-            {!this.favorites.isInAnyFavoriteFolder(this.menuId) && (
+            {!favorites.isInAnyFavoriteFolder(menuId) && (
               <DropdownItem
                 onClick={(event: any) => {
                   setDropped(false);
-                  onAddToFavoritesClicked(this.workbench, this.menuId);
+                  onAddToFavoritesClicked(workbench, menuId);
                 }}
               >
                 {T("Put to favourites", "put_to_favourites")}
@@ -297,13 +313,15 @@ export class CMainMenuCommandItem extends React.Component<{
 }
 
 @observer
-export class CFavoritesMenuItem extends React.Component<{
+export class CFavoritesMenuItem extends React.Component<React.PropsWithChildren<{
   node: any;
   level: number;
   isOpen: boolean;
   editingEnabled: boolean;
-}> {
+}>> {
   static contextType = MobXProviderContext;
+
+  declare context: any;
 
   get workbench(): IWorkbench {
     return this.context.workbench;
@@ -353,35 +371,40 @@ export class CFavoritesMenuItem extends React.Component<{
 
   render() {
     const {props} = this;
-    const activeScreen = getActiveScreen(this.workbench);
+    const {node, level, isOpen, editingEnabled} = props;
+    const workbench = this.workbench;
+    const menuId = this.menuId;
+    const favorites = this.favorites;
+    const activeScreen = getActiveScreen(workbench);
     const activeMenuItemId = activeScreen ? activeScreen.menuItemId : undefined;
-    const isOpenedScreen = this.workbench.openedScreenIdSet.has(props.node.attributes.id);
+    const isOpenedScreen = workbench.openedScreenIdSet.has(node.attributes.id);
+    const iconSrc = this.getIconSrc();
     return (
       <Dropdowner
         trigger={({refTrigger, setDropped}) => (
           <div className={cx(S.favoritesMenuItem, {openItem: isOpenedScreen})}>
             <MainMenuItem
               refDom={refTrigger}
-              level={props.level}
+              level={level}
               isActive={false}
               icon={
                 <div onClick={event => this.onIconClick(event)}>
                   <Icon
-                    src={this.getIconSrc()}
-                    tooltip={props.node.attributes.label}
-                    className={this.props.editingEnabled ? S.deleteIcon : ""}
+                    src={iconSrc}
+                    tooltip={node.attributes.label}
+                    className={editingEnabled ? S.deleteIcon : ""}
                   />
                 </div>
               }
-              label={props.node.attributes.label}
-              isHidden={!props.isOpen}
+              label={node.attributes.label}
+              isHidden={!isOpen}
               isOpenedScreen={isOpenedScreen}
-              isActiveScreen={activeMenuItemId === props.node.attributes.id}
+              isActiveScreen={activeMenuItemId === node.attributes.id}
               onClick={(event) => {
-                if (this.props.editingEnabled) return;
-                onMainMenuItemClick(this.workbench)({
+                if (editingEnabled) return;
+                onMainMenuItemClick(workbench)({
                   event,
-                  item: props.node,
+                  item: node,
                   idParameter: undefined,
                 })
               }
@@ -392,7 +415,7 @@ export class CFavoritesMenuItem extends React.Component<{
                 event.stopPropagation();
               }}
             />
-            {this.props.editingEnabled ? <i className={"fas fa-bars " + S.itemGrip}/> : null}
+            {editingEnabled ? <i className={"fas fa-bars " + S.itemGrip}/> : null}
           </div>
         )}
         content={({setDropped}) => (
@@ -403,9 +426,9 @@ export class CFavoritesMenuItem extends React.Component<{
             <DropdownItem
               onClick={(event: any) => {
                 setDropped(false);
-                onMainMenuItemClick(this.workbench)({
+                onMainMenuItemClick(workbench)({
                   event,
-                  item: props.node,
+                  item: node,
                   idParameter: undefined,
                   forceOpenNew: true
                 })
@@ -413,24 +436,24 @@ export class CFavoritesMenuItem extends React.Component<{
             >
               {T("Open in New Tab", "open_in_new_tab")}
             </DropdownItem>
-            {(props.node.attributes.type === "FormReferenceMenuItem" ||
-                props.node.attributes.type === "FormReferenceMenuItem_WithSelection") &&
+            {(node.attributes.type === "FormReferenceMenuItem" ||
+                node.attributes.type === "FormReferenceMenuItem_WithSelection") &&
               <DropdownItem
                 onClick={(event: any) => {
                   setDropped(false);
-                  onResetColumnConfigClick(this.workbench)({
-                    item: props.node
+                  onResetColumnConfigClick(workbench)({
+                    item: node
                   })
                 }}
               >
                 {T("Reset Column Configuration", "reset_column_configuration")}
               </DropdownItem>
             }
-            {this.favorites.isInAnyFavoriteFolder(this.menuId) && (
+            {favorites.isInAnyFavoriteFolder(menuId) && (
               <DropdownItem
                 onClick={(event: any) => {
                   setDropped(false);
-                  onRemoveFromFavoritesClicked(this.workbench, this.menuId);
+                  onRemoveFromFavoritesClicked(workbench, menuId);
                 }}
               >
                 {T("Remove from Favourites", "remove_from_favourites")}
@@ -470,11 +493,11 @@ export function onAddToFavoritesClicked(ctx: any, menuId: string) {
 }
 
 @observer
-class FavoritesAddRemoveButton extends React.Component<{
+class FavoritesAddRemoveButton extends React.Component<React.PropsWithChildren<{
   ctx: any;
   isVisible: boolean;
   menuId: string;
-}> {
+}>> {
   render() {
     const favorites = getFavorites(this.props.ctx);
     return (
@@ -501,14 +524,21 @@ class FavoritesAddRemoveButton extends React.Component<{
 }
 
 @observer
-export class CMainMenuFolderItem extends React.Component<{
+export class CMainMenuFolderItem extends React.Component<React.PropsWithChildren<{
   node: any;
   level: number;
   isOpen: boolean;
   editingState: IEditingState
-}> {
+}>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
   static contextType = MobXProviderContext;
-  itemRef: RefObject<HTMLDivElement> = React.createRef();
+
+  declare context: any;
+  itemRef: RefObject<HTMLDivElement | null> = React.createRef();
 
   componentDidMount() {
     this.mainMenuState.setReference(this.id, this.itemRef);

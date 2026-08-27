@@ -18,7 +18,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
-import { action, observable, runInAction } from "mobx";
+import { action, observable, runInAction,
+  makeObservable
+} from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 import S from "./ColorEditor.module.scss";
@@ -29,7 +31,7 @@ import { IFocusable } from "model/entities/FormFocusManager";
 import { requestFocus } from "utils/focus";
 
 @observer
-export default class ColorEditor extends React.Component<{
+export default class ColorEditor extends React.Component<React.PropsWithChildren<{
   value: string | null;
   isReadOnly?: boolean;
   onChange?: (value: string | null) => void;
@@ -37,13 +39,19 @@ export default class ColorEditor extends React.Component<{
   onBlur?: (event: any) => void;
   onKeyDown?(event: any): void;
   subscribeToFocusManager?: (obj: IFocusable) => void;
-}> {
-  refContainer = (elm: any) => (this.elmContainer = elm);
+}>> {
+  refContainer = (elm: any) => {
+    this.elmContainer = elm;
+  };
   elmContainer: any;
 
-  refDropdowner = (elm: any) => (this.elmDropdowner = elm);
+  refDropdowner = (elm: any) => {
+    this.elmDropdowner = elm;
+  };
   elmDropdowner: Dropdowner | null = null;
-  refDroppedPanelContainer = (elm: any) => (this.elmDroppedPanelContainer = elm);
+  refDroppedPanelContainer = (elm: any) => {
+    this.elmDroppedPanelContainer = elm;
+  };
   elmDroppedPanelContainer: any;
 
   elmInput: any = null;
@@ -56,6 +64,7 @@ export default class ColorEditor extends React.Component<{
 
   constructor(props: any) {
     super(props);
+    makeObservable(this);
     this.revertAppliedValue();
   }
 

@@ -294,6 +294,15 @@ namespace Origam.Architect.Server {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Field &quot;{0}&quot; cannot be placed on a screen automatically. Its data type has no default control, or it is a foreign key without a default lookup..
+        /// </summary>
+        internal static string Wizard_FieldCannotGenerateControl {
+            get {
+                return ResourceManager.GetString("Wizard_FieldCannotGenerateControl", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Screen (FormControlSet) {0} not found.
         /// </summary>
         internal static string Wizard_FormControlSetNotFound {
@@ -335,6 +344,87 @@ namespace Origam.Architect.Server {
         internal static string Wizard_MenuCaptionRequired {
             get {
                 return ResourceManager.GetString("Wizard_MenuCaptionRequired", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Data structure name is required..
+        /// </summary>
+        internal static string Wizard_DataStructureNameRequired {
+            get {
+                return ResourceManager.GetString("Wizard_DataStructureNameRequired", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Screen section {0} not found.
+        /// </summary>
+        internal static string Wizard_ScreenSectionNotFound {
+            get {
+                return ResourceManager.GetString("Wizard_ScreenSectionNotFound", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Workflow {0} not found.
+        /// </summary>
+        internal static string Wizard_WorkflowNotFound {
+            get {
+                return ResourceManager.GetString("Wizard_WorkflowNotFound", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Database Entity (TableMappingItem) {0} not found.
+        /// </summary>
+        internal static string Wizard_TableEntityNotFound {
+            get {
+                return ResourceManager.GetString("Wizard_TableEntityNotFound", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Screen Section name is required..
+        /// </summary>
+        internal static string Wizard_ScreenSectionNameRequired {
+            get {
+                return ResourceManager.GetString("Wizard_ScreenSectionNameRequired", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to A Screen Section named "{0}" already exists..
+        /// </summary>
+        internal static string Wizard_ScreenSectionAlreadyExists {
+            get {
+                return ResourceManager.GetString("Wizard_ScreenSectionAlreadyExists", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Item {0} not found.
+        /// </summary>
+        internal static string Wizard_RoleItemNotFound {
+            get {
+                return ResourceManager.GetString("Wizard_RoleItemNotFound", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Create Role is only available for menu items with a specific role (not "*")..
+        /// </summary>
+        internal static string Wizard_RoleNotSpecific {
+            get {
+                return ResourceManager.GetString("Wizard_RoleNotSpecific", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to There is no current deployment version. Create a deployment version and make it current first..
+        /// </summary>
+        internal static string Wizard_NoCurrentDeploymentVersion {
+            get {
+                return ResourceManager.GetString("Wizard_NoCurrentDeploymentVersion", resourceCulture);
             }
         }
 

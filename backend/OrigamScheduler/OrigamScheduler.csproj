@@ -7,8 +7,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'"
-      >NETSTANDARD;NETSTANDARD2_0</DefineConstants
-    >
+      >NETSTANDARD;NETSTANDARD2_0</DefineConstants>
     <Configurations>Debug Client;Debug Architect;Debug Server;Release Client;Release Architect;Release Server;Debug Architect Server;Release Architect Server</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Client|AnyCPU' ">
@@ -64,8 +63,8 @@
     <Optimize>true</Optimize>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.2" />
-    <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="9.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.10" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="10.0.10" />
     <PackageReference Include="Microsoft.Extensions.Logging.Log4Net.AspNetCore" Version="8.0.0" />
     <ProjectReference Include="..\Origam.Common\Origam.Common.csproj" />
     <ProjectReference Include="..\Origam.OrigamEngine\Origam.OrigamEngine.csproj" />

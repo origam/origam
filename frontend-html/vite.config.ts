@@ -31,20 +31,9 @@ export default defineConfig(({ mode }) => {
 
   return {
 	plugins: [
-		react({
-			babel: {
-				plugins: [
-					[
-						"@babel/plugin-proposal-decorators",
-						{ legacy: true }
-					],
-					[
-						"@babel/plugin-transform-class-properties",
-						{ loose: true },
-					],
-				],
-			},
-		}),
+		// Decorators are transformed by oxc from "experimentalDecorators" in tsconfig.json.
+		// @vitejs/plugin-react 6 has no babel pass, so a "babel" option here would be ignored.
+		react(),
     ...(useBasicSsl ? [basicSsl()] : []),
 	],
 	resolve: {
@@ -70,6 +59,10 @@ export default defineConfig(({ mode }) => {
 			{
 				find: 'process',
 				replacement: 'rollup-plugin-node-polyfills/polyfills/process-es6',
+			},
+			{
+				find: 'util',
+				replacement: 'rollup-plugin-node-polyfills/polyfills/util',
 			}
 		],
 	},

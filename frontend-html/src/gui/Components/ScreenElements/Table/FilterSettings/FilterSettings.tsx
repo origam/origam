@@ -22,11 +22,10 @@ import { FilterSettingsBoolean } from "./HeaderControls/FilterSettingsBoolean";
 import { IProperty } from "model/entities/types/IProperty";
 import { FilterSettingsString } from "./HeaderControls/FilterSettingsString";
 import { FilterSettingsDate } from "./HeaderControls/FilterSettingsDate";
-import { observer } from "mobx-react-lite";
 import { FilterSettingsNumber } from "./HeaderControls/FilterSettingsNumber";
 import { FilterSettingsLookup } from "./HeaderControls/FilterSettingsLookup";
 import { flow } from "mobx";
-import { MobXProviderContext } from "mobx-react";
+import { MobXProviderContext, observer } from "mobx-react";
 import { onApplyFilterSetting } from "model/actions-ui/DataView/TableView/onApplyFilterSetting";
 import { getFilterSettingByProperty } from "model/selectors/DataView/getFilterSettingByProperty";
 import { IFilterSetting } from "model/entities/types/IFilterSetting";
@@ -34,7 +33,7 @@ import { getAllLookupIds } from "model/entities/getAllLookupIds";
 import { FilterSettingsTagInput } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSettingsTagInput";
 import { getGridFocusManager } from "../../../../../model/entities/GridFocusManager";
 
-export const FilterSettings: React.FC<{ autoFocus: boolean, ctx: any }> = observer((props) => {
+export const FilterSettings: React.FC<React.PropsWithChildren<{ autoFocus: boolean, ctx: any }>> = observer((props) => {
   const property = useContext(MobXProviderContext).property as IProperty;
 
   function getSettings(defaultValue: IFilterSetting) {

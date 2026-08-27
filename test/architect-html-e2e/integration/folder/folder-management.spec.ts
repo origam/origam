@@ -21,13 +21,10 @@ import { expect, test, type Page } from '@playwright/test';
 import { resetBackend } from '@support/resetBackend';
 
 // A schema item provider that offers "New Folder" (nodeLevelType === 'Provider').
-// Reached via the same path the entity-creation spec uses.
-const PACKAGE = 'Root Menu';
 const PROVIDER = 'Data Structures';
 
 async function activateProvider(page: Page): Promise<void> {
   await page.goto('/');
-  await page.getByText(PACKAGE).click();
   await page.getByTestId('tree-toggle-Data').click();
   await expect(page.getByTestId('tree-node-' + PROVIDER)).toBeVisible();
 }

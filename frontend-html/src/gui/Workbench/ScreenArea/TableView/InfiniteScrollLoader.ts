@@ -19,7 +19,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { IGridDimensions } from "gui/Components/ScreenElements/Table/types";
 import { SimpleScrollState } from "gui/Components/ScreenElements/Table/SimpleScrollState";
-import { action, autorun, computed, flow, IReactionDisposer, reaction } from "mobx";
+import { action, autorun, computed, flow, IReactionDisposer, reaction,
+  makeObservable
+} from "mobx";
 import { getApi } from "model/selectors/getApi";
 import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
 import { getMenuItemId } from "model/selectors/getMenuItemId";
@@ -31,7 +33,7 @@ import { getUserFilters } from "model/selectors/DataView/getUserFilters";
 import { getUserOrdering } from "model/selectors/DataView/getUserOrdering";
 import { IVisibleRowsMonitor, OpenGroupVisibleRowsMonitor } from "./VisibleRowsMonitor";
 import { ScrollRowContainer } from "model/entities/ScrollRowContainer";
-import { CancellablePromise } from "mobx/lib/api/flow";
+import { CancellablePromise } from "utils/CancellablePromise";
 import { getUserFilterLookups } from "model/selectors/DataView/getUserFilterLookups";
 import { getDataView } from "../../../../model/selectors/DataView/getDataView";
 
@@ -88,6 +90,7 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
   visibleRowsMonitor: IVisibleRowsMonitor;
 
   constructor(data: IInfiniteScrollLoaderData) {
+    makeObservable(this);
     Object.assign(this, data);
     this.rowsContainer.registerResetListener(() => this.handleRowContainerReset());
     this.visibleRowsMonitor = new OpenGroupVisibleRowsMonitor(this.ctx, this.gridDimensions, this.scrollState);

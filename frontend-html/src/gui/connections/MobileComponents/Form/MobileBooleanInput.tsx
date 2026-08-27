@@ -19,11 +19,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import S from "gui/connections/MobileComponents/Form/MobileBooleanInput.module.scss";
 
-export const MobileBooleanInput: React.FC<{
+export const MobileBooleanInput: React.FC<React.PropsWithChildren<{
   checked: boolean | null | undefined;
   onChange: (event: IBooleanEvent)=> void;
   disabled?: boolean;
-}> = (props) => {
+}>> = (props) => {
 
   function onClick(){
     if(!props.disabled){
