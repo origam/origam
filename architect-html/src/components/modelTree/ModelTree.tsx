@@ -18,10 +18,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { RootStoreContext, T } from '@/main';
-import { CreateFilterType, ICreateWizardResult, ISearchResult } from '@api/IArchitectApi';
+import {
+  CreateFilterType,
+  ICreateWizardResult,
+  IMoveTargetsResult,
+  ISearchResult,
+} from '@api/IArchitectApi';
 import { Icon } from '@components/icon/Icon';
 import S from '@components/modelTree/ModelTree.module.scss';
-import { TreeNode } from '@components/modelTree/TreeNode';
+import { MoveToDialog } from '@components/modelTree/MoveToDialog';
+import { TreeNode, toNodeRef } from '@components/modelTree/TreeNode';
 import { CreateLookupWizard } from '@components/modelTree/createWizard/CreateLookupWizard';
 import { CreateScreenWizard } from '@components/modelTree/createWizard/CreateScreenWizard';
 import { CreateWorkQueueWizard } from '@components/modelTree/createWizard/CreateWorkQueueWizard';
@@ -33,8 +39,16 @@ import { CreateRoleWizard } from '@components/modelTree/createWizard/CreateRoleW
 import { CreateLocalizationChildEntityWizard } from '@components/modelTree/createWizard/CreateLocalizationChildEntityWizard';
 import { CreateScreenSectionWizard } from '@components/modelTree/createWizard/CreateScreenSectionWizard';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
+import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
+import {
+  hasTextSelection,
+  isCopyShortcut,
+  isCutShortcut,
+  isPasteShortcut,
+  isTypingTarget,
+} from '@/utils/keyShortcuts';
 import { observer } from 'mobx-react-lite';
-import { useContext, useEffect, useRef } from 'react';
+import { DragEvent as ReactDragEvent, useContext, useEffect, useRef } from 'react';
 import {
   Item,
   Menu,
@@ -82,20 +96,46 @@ const DeploymentBadges = observer(({ node }: { node: TreeNode }) => {
   );
 });
 
+const AUTO_EXPAND_DELAY_MS = 700;
+
+// The icon and the badges fire dragenter and dragleave too.
+function movedInsideRow(event: ReactDragEvent): boolean {
+  return event.currentTarget.contains(event.relatedTarget as Node | null);
+}
+
 const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number }) => {
   const rootStore = useContext(RootStoreContext);
   const editorTabViewState = rootStore.editorTabViewState;
-  const highlightedNodeId = rootStore.modelTreeState.highlightedNodeId;
-  const highlightToken = rootStore.modelTreeState.highlightToken;
+  const modelTreeState = rootStore.modelTreeState;
+  const transfer = modelTreeState.transfer;
+  const highlightedNodeId = modelTreeState.highlightedNodeId;
+  const highlightToken = modelTreeState.highlightToken;
   const menuId = 'SideMenu' + node.id;
   const run = runInFlowWithHandler(rootStore.errorDialogController);
   const nodeRef = useRef<HTMLDivElement | null>(null);
+  const autoExpandTimer = useRef<number | null>(null);
 
   useEffect(() => {
     if (node.isExpanded && !node.childrenInitialized && node.children.length === 0) {
       run({ generator: node.loadChildren.bind(node) });
     }
   }, [node.isExpanded, node.children, node, run]);
+
+  useEffect(() => {
+    if (!node.isExpanded || !transfer.hasSource || transfer.hasVerdictsFor(node.children)) {
+      return;
+    }
+    run({ generator: () => transfer.loadTargetVerdicts(node.children) });
+  }, [node.isExpanded, node.children, transfer, run]);
+
+  useEffect(
+    () => () => {
+      if (autoExpandTimer.current !== null) {
+        window.clearTimeout(autoExpandTimer.current);
+      }
+    },
+    [],
+  );
 
   const { show, hideAll } = useContextMenu({
     id: menuId,
@@ -106,8 +146,142 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
       event.preventDefault();
       return;
     }
+    onSelect();
     run({ generator: node.getMenuItems.bind(node) });
     show({ event, props: {} });
+  }
+
+  function onSelect() {
+    modelTreeState.selectNode(node);
+  }
+
+  function clearAutoExpand() {
+    if (autoExpandTimer.current !== null) {
+      window.clearTimeout(autoExpandTimer.current);
+      autoExpandTimer.current = null;
+    }
+  }
+
+  function onCut() {
+    onSelect();
+    run({ generator: () => transfer.beginTransfer(node, 'cut') });
+  }
+
+  function onCopy() {
+    onSelect();
+    run({ generator: () => transfer.beginTransfer(node, 'copy') });
+  }
+
+  function onPaste() {
+    run({ generator: () => transfer.drop(node, transfer.clipboardMode === 'copy') });
+  }
+
+  function openMoveToDialog() {
+    run({
+      generator: function* () {
+        const result = (yield rootStore.architectApi.getMoveTargets({
+          source: toNodeRef(node),
+        })) as IMoveTargetsResult;
+        const closeDialog = rootStore.dialogStack.pushDialog(
+          '',
+          <MoveToDialog
+            sourceName={node.nodeText}
+            targets={result.targets}
+            isSourceInActivePackage={result.isSourceInActivePackage}
+            isTruncated={result.isTruncated}
+            onCancel={() => closeDialog()}
+            onConfirm={(target, isCopy) => {
+              closeDialog();
+              run({
+                generator: () =>
+                  transfer.moveTo(
+                    node,
+                    { id: target.id, nodeText: target.nodeText, isNonPersistentItem: false },
+                    isCopy,
+                  ),
+              });
+            }}
+          />,
+          undefined,
+          false,
+        );
+      },
+    });
+  }
+
+  function onDragStart(event: ReactDragEvent) {
+    // The browser drags the icon img on its own.
+    if (!node.canDrag) {
+      event.preventDefault();
+      return;
+    }
+    event.dataTransfer.effectAllowed = 'copyMove';
+    // Firefox needs attached data to start a drag.
+    event.dataTransfer.setData('text/plain', node.nodeText);
+    onSelect();
+    transfer.beginDrag(event.ctrlKey || event.metaKey);
+    run({ generator: () => transfer.beginTransfer(node, 'cut') });
+  }
+
+  function onDragOver(event: ReactDragEvent) {
+    if (!transfer.isDragging) {
+      return;
+    }
+    event.stopPropagation();
+    const isCopy = event.ctrlKey || event.metaKey;
+    transfer.setCopyModifier(isCopy);
+    transfer.setHoverNode(node.id);
+    if (!transfer.mayTransferTo(node, isCopy)) {
+      event.dataTransfer.dropEffect = 'none';
+      return;
+    }
+    event.preventDefault();
+    event.dataTransfer.dropEffect = isCopy ? 'copy' : 'move';
+  }
+
+  function onDragEnter(event: ReactDragEvent) {
+    if (!transfer.isDragging || movedInsideRow(event)) {
+      return;
+    }
+    clearAutoExpand();
+    if (node.isExpanded || !node.canExpand || transfer.isSource(node)) {
+      return;
+    }
+    autoExpandTimer.current = window.setTimeout(() => {
+      autoExpandTimer.current = null;
+      run({
+        generator: function* (): Generator<Promise<any>, void, any> {
+          rootStore.uiState.setExpanded(node.id, true);
+          if (!node.childrenInitialized) {
+            yield* node.loadChildren.bind(node)();
+          }
+          yield* transfer.loadTargetVerdicts(node.children);
+        },
+      });
+    }, AUTO_EXPAND_DELAY_MS);
+  }
+
+  function onDragLeave(event: ReactDragEvent) {
+    if (movedInsideRow(event)) {
+      return;
+    }
+    clearAutoExpand();
+    if (transfer.hoverNodeId === node.id) {
+      transfer.setHoverNode(null);
+    }
+  }
+
+  function onDrop(event: ReactDragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    clearAutoExpand();
+    const isCopy = event.ctrlKey || event.metaKey;
+    run({ generator: () => transfer.dropFromDrag(node, isCopy) });
+  }
+
+  function onDragEnd() {
+    clearAutoExpand();
+    transfer.endDrag();
   }
 
   const onNodeDoubleClick = async (node: TreeNode) => {
@@ -472,12 +646,17 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
   }
 
   function getSymbol() {
-    if (node.children.length > 0 || !node.childrenInitialized) {
+    if (node.canExpand) {
       return node.isExpanded ? '▼' : '▶';
     }
   }
 
   const isHighlighted = highlightedNodeId === node.id;
+  const isCutSource = transfer.isCutSource(node);
+  const canPaste =
+    transfer.hasSource &&
+    !transfer.isBusy &&
+    transfer.mayTransferTo(node, transfer.clipboardMode === 'copy');
 
   useEffect(() => {
     if (isHighlighted) {
@@ -487,6 +666,7 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
 
   const rowClassNames = [
     isHighlighted ? S.highlighted : '',
+    modelTreeState.selectedNodeId === node.id ? S.selected : '',
     node.nodeLevelType === 'Category' ? S.categoryNode : '',
     node.nodeLevelType === 'Provider' ? S.providerNode : '',
   ]
@@ -498,6 +678,8 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
     node.isCurrentVersion ? S.currentVersion : '',
     !node.isInActivePackage && !node.isFileDirty ? S.crossPackage : '',
     node.isFileDirty ? S.dirty : '',
+    isCutSource ? S.cutNode : '',
+    transfer.isDropHighlighted(node) ? S.dropTarget : '',
   ]
     .filter(Boolean)
     .join(' ');
@@ -514,6 +696,14 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
             {getSymbol()}
           </div>
           <div
+            draggable={node.canDrag}
+            onDragStart={onDragStart}
+            onDragOver={onDragOver}
+            onDragEnter={onDragEnter}
+            onDragLeave={onDragLeave}
+            onDrop={onDrop}
+            onDragEnd={onDragEnd}
+            onClick={onSelect}
             onDoubleClick={() => onNodeDoubleClick(node)}
             onContextMenu={handleContextMenu}
             className={labelClassNames}
@@ -668,6 +858,29 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
               </Submenu>
             )}
             <Separator />
+            <Item
+              id="cut"
+              data-test-id="tree-menu-cut"
+              disabled={!node.canDrag || !node.isInActivePackage}
+              onClick={onCut}
+            >
+              {T('Cut', 'tree_node_cut')}
+            </Item>
+            <Item id="copy" data-test-id="tree-menu-copy" disabled={!node.canDrag} onClick={onCopy}>
+              {T('Copy', 'tree_node_copy')}
+            </Item>
+            <Item id="paste" data-test-id="tree-menu-paste" disabled={!canPaste} onClick={onPaste}>
+              {T('Paste', 'tree_node_paste')}
+            </Item>
+            <Item
+              id="move-to"
+              data-test-id="tree-menu-move-to"
+              disabled={!node.canDrag}
+              onClick={openMoveToDialog}
+            >
+              {T('Move to...', 'tree_node_move_to')}
+            </Item>
+            <Separator />
             {!node.isNonPersistentItem && (
               <Item id="edit" data-test-id="tree-menu-edit" onClick={() => onNodeDoubleClick(node)}>
                 {T('Edit', 'tree_node_edit')}
@@ -741,10 +954,95 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
 });
 
 const ModelTree = observer(() => {
-  const modelTreeState = useContext(RootStoreContext).modelTreeState;
+  const rootStore = useContext(RootStoreContext);
+  const modelTreeState = rootStore.modelTreeState;
+  const transfer = modelTreeState.transfer;
+  const run = runInFlowWithHandler(rootStore.errorDialogController);
+  const treeRef = useRef<HTMLDivElement | null>(null);
+
+  // dragover fires on movement only, the highlight has to follow Ctrl too.
+  useEffect(() => {
+    if (!transfer.isDragging) {
+      return;
+    }
+    const onModifierChange = (e: KeyboardEvent) => {
+      transfer.setCopyModifier(e.ctrlKey || e.metaKey);
+    };
+    window.addEventListener('keydown', onModifierChange);
+    window.addEventListener('keyup', onModifierChange);
+    return () => {
+      window.removeEventListener('keydown', onModifierChange);
+      window.removeEventListener('keyup', onModifierChange);
+    };
+  }, [transfer.isDragging, transfer]);
+
+  const hasTreeFocus = () => !!treeRef.current && treeRef.current.contains(document.activeElement);
+
+  const canPasteInto = (node: TreeNode | null) =>
+    transfer.hasSource &&
+    !transfer.isBusy &&
+    !!node &&
+    transfer.mayTransferTo(node, transfer.clipboardMode === 'copy');
+
+  useKeyboardShortcuts([
+    {
+      predicate: e =>
+        isCutShortcut(e) &&
+        !isTypingTarget(e) &&
+        !hasTextSelection() &&
+        hasTreeFocus() &&
+        !!modelTreeState.selectedNode?.canDrag &&
+        !!modelTreeState.selectedNode?.isInActivePackage,
+      handler: () => {
+        const node = modelTreeState.selectedNode!;
+        run({ generator: () => transfer.beginTransfer(node, 'cut') });
+      },
+    },
+    {
+      predicate: e =>
+        isCopyShortcut(e) &&
+        !isTypingTarget(e) &&
+        !hasTextSelection() &&
+        hasTreeFocus() &&
+        !!modelTreeState.selectedNode?.canDrag,
+      handler: () => {
+        const node = modelTreeState.selectedNode!;
+        run({ generator: () => transfer.beginTransfer(node, 'copy') });
+      },
+    },
+    {
+      predicate: e =>
+        isPasteShortcut(e) &&
+        !isTypingTarget(e) &&
+        hasTreeFocus() &&
+        canPasteInto(modelTreeState.selectedNode),
+      handler: () => {
+        const node = modelTreeState.selectedNode!;
+        run({ generator: () => transfer.drop(node, transfer.clipboardMode === 'copy') });
+      },
+    },
+    {
+      predicate: e => e.key === 'Escape' && hasTreeFocus() && transfer.hasSource,
+      handler: () => transfer.clear(),
+    },
+  ]);
 
   return (
-    <div className={S.root}>
+    <div
+      ref={treeRef}
+      className={S.root}
+      tabIndex={0}
+      onMouseDown={() => treeRef.current?.focus({ preventScroll: true })}
+      // An outside file dropped on empty space must not navigate away.
+      onDragOver={e => {
+        if (transfer.isDragging) {
+          e.dataTransfer.dropEffect = 'none';
+          return;
+        }
+        e.preventDefault();
+      }}
+      onDrop={e => e.preventDefault()}
+    >
       {modelTreeState.activePackageName && (
         <div className={S.packageName}>{modelTreeState.activePackageName}</div>
       )}

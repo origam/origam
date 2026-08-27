@@ -21,6 +21,60 @@
     <data name="CategoryDocumentation" xml:space="preserve">
         <value>Documentation</value>
     </data>
+    <data name="CopyOfName" xml:space="preserve">
+        <value>Copy of {0}</value>
+    </data>
+    <data name="CopyOfNameNumbered" xml:space="preserve">
+        <value>Copy of {0} ({1})</value>
+    </data>
+    <data name="Move_NoActivePackage" xml:space="preserve">
+        <value>No package is active. Select a package first.</value>
+    </data>
+    <data name="Move_SourceNotFound" xml:space="preserve">
+        <value>The item being moved no longer exists in the model.</value>
+    </data>
+    <data name="Move_TargetNotFound" xml:space="preserve">
+        <value>The drop target no longer exists in the model.</value>
+    </data>
+    <data name="Move_SourceNotMovable" xml:space="preserve">
+        <value>Only model items can be moved. Folders, categories and model groups cannot.</value>
+    </data>
+    <data name="Move_SourceNotPersisted" xml:space="preserve">
+        <value>'{0}' has not been saved yet. Save it before moving or copying it.</value>
+    </data>
+    <data name="Move_SourcePackageNotFound" xml:space="preserve">
+        <value>'{0}' cannot be moved, the package it belongs to is not loaded.</value>
+    </data>
+    <data name="Move_NotInActivePackage" xml:space="preserve">
+        <value>Only items from the active package can be moved. '{0}' belongs to package '{1}' and can only be copied.</value>
+    </data>
+    <data name="Move_TargetIsSource" xml:space="preserve">
+        <value>An item cannot be dropped onto itself.</value>
+    </data>
+    <data name="Move_TargetIsCurrentLocation" xml:space="preserve">
+        <value>'{0}' is already in '{1}'.</value>
+    </data>
+    <data name="Move_TargetIsDescendant" xml:space="preserve">
+        <value>'{0}' cannot be moved into '{1}', which is one of its own children.</value>
+    </data>
+    <data name="Move_TargetChainUnknown" xml:space="preserve">
+        <value>'{0}' cannot be moved to '{1}', the parent chain of the target is too deep or broken.</value>
+    </data>
+    <data name="Move_ProviderRequiresTopLevelItem" xml:space="preserve">
+        <value>Only top level items can be moved directly into '{0}'.</value>
+    </data>
+    <data name="Move_NotAllowed" xml:space="preserve">
+        <value>'{0}' cannot be moved to '{1}'.</value>
+    </data>
+    <data name="Move_DependenciesOutsideTargetPackage" xml:space="preserve">
+        <value>'{0}' cannot be moved to package '{1}' because it depends on items in packages the target package does not reference: {2}</value>
+    </data>
+    <data name="Move_UsagesCannotReachTargetPackage" xml:space="preserve">
+        <value>'{0}' cannot be moved to package '{1}' because items that use it would not be able to reach it: {2}</value>
+    </data>
+    <data name="Move_UsagesNotChecked" xml:space="preserve">
+        <value>'{0}' cannot be moved to package '{1}' because the model reference index is not available. Reload the model and try again.</value>
+    </data>
     <data name="XsltValidationFailed" xml:space="preserve">
         <value>XSLT validation failed. See output for details.</value>
     </data>

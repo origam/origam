@@ -30,6 +30,10 @@ import {
   ILookupWizardEntityData,
   IMenuItemInfo,
   IModelChange,
+  IMoveNodeResult,
+  IMoveTargetsResult,
+  IMoveVerdict,
+  INodeLoadData,
   IPackagesInfo,
   IParametersResult,
   IPropertyChange,
@@ -76,6 +80,25 @@ export class ArchitectApi implements IArchitectApi {
         },
       })
     ).data;
+  }
+
+  async getMoveVerdicts(args: {
+    source: INodeLoadData;
+    targets: INodeLoadData[];
+  }): Promise<IMoveVerdict[]> {
+    return (await this.http.post('/Model/GetMoveVerdicts', args)).data;
+  }
+
+  async getMoveTargets(args: { source: INodeLoadData }): Promise<IMoveTargetsResult> {
+    return (await this.http.post('/Model/GetMoveTargets', args)).data;
+  }
+
+  async moveNode(args: {
+    source: INodeLoadData;
+    target: INodeLoadData;
+    isCopy: boolean;
+  }): Promise<IMoveNodeResult> {
+    return (await this.http.post('/Model/MoveNode', args)).data;
   }
 
   async searchText(text: string): Promise<ISearchResult[]> {

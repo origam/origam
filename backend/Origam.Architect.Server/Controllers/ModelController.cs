@@ -37,7 +37,8 @@ public class ModelController(
     SchemaService schemaService,
     IPersistenceService persistenceService,
     TreeNodeFactory treeNodeFactory,
-    GitNodeStatusService gitNodeStatusService
+    GitNodeStatusService gitNodeStatusService,
+    SchemaItemMoveService moveService
 ) : ControllerBase
 {
     private readonly IPersistenceProvider persistenceProvider = persistenceService.SchemaProvider;
@@ -141,12 +142,29 @@ public class ModelController(
 
     private ISchemaItemProvider GetRootProviderById(string id)
     {
-        ISchemaItemProvider provider = schemaService
-            .ActiveExtension.ChildNodes()
-            .Cast<SchemaItemProviderGroup>()
-            .SelectMany(x => x.ChildNodes().Cast<ISchemaItemProvider>())
-            .FirstOrDefault(x => x.NodeId == id);
-        return provider;
+        return moveService.GetRootProviderById(id);
+    }
+
+    [HttpPost("GetMoveVerdicts")]
+    public ActionResult<List<MoveVerdictResult>> GetMoveVerdicts(
+        [Required] [FromBody] MoveVerdictsModel input
+    )
+    {
+        return Ok(moveService.GetMoveVerdicts(input.Source, input.Targets));
+    }
+
+    [HttpPost("GetMoveTargets")]
+    public ActionResult<MoveTargetsResult> GetMoveTargets(
+        [Required] [FromBody] MoveTargetsModel input
+    )
+    {
+        return Ok(moveService.GetMoveTargets(input.Source));
+    }
+
+    [HttpPost("MoveNode")]
+    public ActionResult<MoveNodeResult> MoveNode([Required] [FromBody] MoveNodeModel input)
+    {
+        return Ok(moveService.Move(input.Source, input.Target, input.IsCopy));
     }
 
     [HttpPost("DeleteSchemaItem")]

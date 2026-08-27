@@ -60,6 +60,8 @@ public class Program
         builder.Services.AddSingleton<TabService>();
         builder.Services.AddTransient<XsltService>();
         builder.Services.AddSingleton<SearchService>();
+        builder.Services.AddSingleton<PanelControlFactory>();
+        builder.Services.AddSingleton<SchemaItemMoveService>();
         builder.Services.AddSingleton<PropertyEditorService>();
         builder.Services.AddSingleton<DesignerEditorService>();
         builder.Services.AddSingleton<DeploymentVersionCurrentService>();
