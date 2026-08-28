@@ -32,6 +32,7 @@ import { CreateWorkflowMenuItemWizard } from '@components/modelTree/createWizard
 import { CreateRoleWizard } from '@components/modelTree/createWizard/CreateRoleWizard';
 import { CreateLocalizationChildEntityWizard } from '@components/modelTree/createWizard/CreateLocalizationChildEntityWizard';
 import { CreateScreenSectionWizard } from '@components/modelTree/createWizard/CreateScreenSectionWizard';
+import { askForName, askYesNoQuestion, YesNoResult } from '@dialogs/DialogUtils';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { observer } from 'mobx-react-lite';
 import { useContext, useEffect, useRef } from 'react';
@@ -82,6 +83,28 @@ const DeploymentBadges = observer(({ node }: { node: TreeNode }) => {
   );
 });
 
+const RESERVED_DEVICE_NAME = /^(con|prn|aux|nul|com[1-9]|lpt[1-9])(\.|$)/i;
+const INVALID_FOLDER_NAME_CHARS = /[\\/:*?"<>|]/;
+
+function hasControlChar(value: string): boolean {
+  for (const char of value) {
+    if (char.charCodeAt(0) < 0x20) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function isReservedOrUnsafeFolderName(name: string): boolean {
+  if (name === '.' || name === '..') {
+    return true;
+  }
+  if (name.endsWith('.')) {
+    return true;
+  }
+  return RESERVED_DEVICE_NAME.test(name);
+}
+
 const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number }) => {
   const rootStore = useContext(RootStoreContext);
   const editorTabViewState = rootStore.editorTabViewState;
@@ -131,7 +154,45 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
   }
 
   function onDelete() {
-    run({ generator: node.delete.bind(node) });
+    run({
+      generator: function* () {
+        if (node.isFolder) {
+          const answer = yield askYesNoQuestion(
+            rootStore.dialogStack,
+            T('Delete Folder', 'tree_node_delete_folder_title'),
+            T(
+              'Delete folder "{0}" and all of its contents? This cannot be undone.',
+              'tree_node_delete_folder_confirm',
+              node.nodeText,
+            ),
+          );
+          if (answer !== YesNoResult.Yes) {
+            return;
+          }
+        }
+        yield* node.delete.bind(node)();
+      },
+    });
+  }
+
+  function openRenameFolderDialog() {
+    run({
+      generator: function* () {
+        const siblingFolderNames = (node.parent?.children ?? [])
+          .filter(child => child.isFolder && child !== node)
+          .map(child => child.nodeText);
+        const name = (yield askForName(rootStore.dialogStack, {
+          title: T('Rename Folder', 'tree_node_rename_folder_title'),
+          label: T('Folder name', 'tree_node_new_folder_label'),
+          initialValue: node.nodeText,
+          validate: value => validateFolderName(value, siblingFolderNames),
+        })) as string | null;
+        if (!name || name === node.nodeText) {
+          return;
+        }
+        yield* node.rename(name)();
+      },
+    });
   }
 
   function openDocumentationEditor() {
@@ -420,6 +481,49 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
     );
   }
 
+  function validateFolderName(value: string, existingNames: string[]): string | null {
+    const name = value.trim();
+    if (name.length === 0) {
+      return T('Folder name cannot be empty.', 'create_folder_error_empty');
+    }
+    if (INVALID_FOLDER_NAME_CHARS.test(name) || hasControlChar(name)) {
+      return T('Folder name contains invalid characters.', 'create_folder_error_invalid_chars');
+    }
+    if (isReservedOrUnsafeFolderName(name)) {
+      return T('Folder name is reserved or not allowed.', 'create_folder_error_reserved');
+    }
+    const taken = existingNames.some(
+      existing => existing.trim().toLowerCase() === name.toLowerCase(),
+    );
+    if (taken) {
+      return T('A folder with this name already exists.', 'create_folder_error_duplicate');
+    }
+    return null;
+  }
+
+  function openNewFolderDialog() {
+    run({
+      generator: function* () {
+        if (!node.childrenInitialized) {
+          yield* node.loadChildren.bind(node)();
+        }
+        const existingFolderNames = node.children
+          .filter(child => child.isFolder)
+          .map(child => child.nodeText);
+        const name = (yield askForName(rootStore.dialogStack, {
+          title: T('New Folder', 'tree_node_new_folder_title'),
+          label: T('Folder name', 'tree_node_new_folder_label'),
+          placeholder: T('e.g. Lookups', 'tree_node_new_folder_placeholder'),
+          validate: value => validateFolderName(value, existingFolderNames),
+        })) as string | null;
+        if (!name) {
+          return;
+        }
+        yield* node.createGroup(name)();
+      },
+    });
+  }
+
   function openCreateWorkflowMenuItemWizard() {
     const closeDialog = rootStore.dialogStack.pushDialog(
       '',
@@ -542,6 +646,15 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
             ) : (
               <Item id="new" disabled data-test-id="tree-menu-new">
                 {T('New', 'tree_node_submenu_new')}
+              </Item>
+            )}
+            {node.canCreateFolder && (
+              <Item
+                id="new-folder"
+                data-test-id="tree-menu-new-folder"
+                onClick={openNewFolderDialog}
+              >
+                {T('New Folder', 'tree_node_new_folder')}
               </Item>
             )}
             {node.isDataEntity && (
@@ -673,7 +786,16 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
                 {T('Edit', 'tree_node_edit')}
               </Item>
             )}
-            {!node.isNonPersistentItem && (
+            {node.isFolder && node.isInActivePackage && (
+              <Item
+                id="rename-folder"
+                data-test-id="tree-menu-rename-folder"
+                onClick={openRenameFolderDialog}
+              >
+                {T('Rename', 'tree_node_rename_folder')}
+              </Item>
+            )}
+            {!node.isNonPersistentItem && (!node.isFolder || node.isInActivePackage) && (
               <Item id="delete" data-test-id="tree-menu-delete" onClick={onDelete}>
                 {T('Delete', 'tree_node_delete')}
               </Item>

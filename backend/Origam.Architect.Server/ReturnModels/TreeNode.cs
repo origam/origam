@@ -53,6 +53,7 @@ public class TreeNode
     public NodeLevelType NodeLevelType { get; set; } = NodeLevelType.Item;
     public bool IsInActivePackage { get; set; } = true;
     public bool IsFileDirty { get; set; }
+    public bool IsFolder { get; set; }
     public string Role { get; set; }
 
     public static string ToTreeNodeId(IBrowserNode2 node)
@@ -90,8 +91,18 @@ public class TreeNodeFactory(
             NodeLevelType = GetNodeLevelType(node),
             IsInActivePackage = IsInActivePackage(node),
             IsFileDirty = gitNodeStatusService.IsFileDirty(node as IPersistent),
+            IsFolder = node is SchemaItemGroup,
             Role = (node as IAuthorizationContextContainer)?.AuthorizationContext,
         };
+    }
+
+    public ISchemaItemProvider FindRootProvider(string nodeId)
+    {
+        return schemaService
+            .ActiveExtension.ChildNodes()
+            .Cast<SchemaItemProviderGroup>()
+            .SelectMany(x => x.ChildNodes().Cast<ISchemaItemProvider>())
+            .FirstOrDefault(x => x.NodeId == nodeId);
     }
 
     private DeploymentStatus? GetDeploymentStatus(IBrowserNode2 node)
