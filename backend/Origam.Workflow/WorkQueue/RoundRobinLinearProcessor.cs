@@ -37,9 +37,16 @@ public class RoundRobinLinearProcessor : LinearProcessor
         WorkQueueUtils workQueueUtils,
         RetryManager retryManager,
         WorkQueueThrottle workQueueThrottle,
+        ScheduledWorkQueueEntryManager scheduledWorkQueueEntryManager,
         int batchSize
     )
-        : base(itemProcessAction, workQueueUtils, retryManager, workQueueThrottle)
+        : base(
+            itemProcessAction,
+            workQueueUtils,
+            retryManager,
+            workQueueThrottle,
+            scheduledWorkQueueEntryManager
+        )
     {
         this.batchSize = batchSize;
     }

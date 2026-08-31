@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0"
+  xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0"
+  xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0">
+  <dv:DeploymentVersion
+    asi:abstract="false"
+    x:id="1f690c22-614c-47e8-85a0-97d6216544ac"
+    asi:name="5.7.0"
+    dv:version="5.7.0">
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="20"
+      scusa:commandText="-***-ExternalFile:5.7.0.origam___commandText___09ebe163-2daa-4ff7-adf0-c6989e35107a.txt"
+      x:id="09ebe163-2daa-4ff7-adf0-c6989e35107a"
+      asi:name="00020_PG_Database_Field_WorkQueueEntry.ScheduledTime"
+      scusa:platform="PgSql"
+      scusa:service="DataService#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="10"
+      scusa:commandText="-***-ExternalFile:5.7.0.origam___commandText___d1f9938d-67d8-473d-9482-ece57f23e4de.txt"
+      x:id="d1f9938d-67d8-473d-9482-ece57f23e4de"
+      asi:name="00010_Database_Field_WorkQueueEntry.ScheduledTime"
+      scusa:platform="MsSql"
+      scusa:service="DataService#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+  </dv:DeploymentVersion>
+</x:file>
