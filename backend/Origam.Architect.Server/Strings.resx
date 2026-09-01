@@ -153,4 +153,28 @@
     <data name="Wizard_NoCurrentDeploymentVersion" xml:space="preserve">
         <value>There is no current deployment version. Create a deployment version and make it current first.</value>
     </data>
+    <data name="Group_DeleteOutsideActivePackage" xml:space="preserve">
+        <value>Only folders from the active package can be deleted.</value>
+    </data>
+    <data name="Group_NameDuplicate" xml:space="preserve">
+        <value>A folder with this name already exists.</value>
+    </data>
+    <data name="Group_NameEmpty" xml:space="preserve">
+        <value>Folder name cannot be empty.</value>
+    </data>
+    <data name="Group_NameInvalidChars" xml:space="preserve">
+        <value>Folder name contains invalid characters.</value>
+    </data>
+    <data name="Group_NameReserved" xml:space="preserve">
+        <value>Folder name is reserved or not allowed.</value>
+    </data>
+    <data name="Group_NoActivePackage" xml:space="preserve">
+        <value>No package is active. Select a package first.</value>
+    </data>
+    <data name="Group_NotFound" xml:space="preserve">
+        <value>Folder not found.</value>
+    </data>
+    <data name="Group_RenameOutsideActivePackage" xml:space="preserve">
+        <value>Only folders from the active package can be renamed.</value>
+    </data>
 </root>

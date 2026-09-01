@@ -81,9 +81,7 @@ export class ModelTreeState {
       currentNodes = parentNode.children;
     }
 
-    const targetNode = this.findNodeByIdRecursively(args.schemaItemId, this.modelNodes);
-    this.highlightedNodeId = targetNode ? targetNode.id : null;
-    this.highlightToken += 1;
+    this.highlightNode(args.schemaItemId);
   }
 
   private findNodeByIdRecursively(nodeId: string | undefined, nodes: TreeNode[]): TreeNode | null {

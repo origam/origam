@@ -1,15 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
     <NoWarn>$(NoWarn);SYSLIB0023;SYSLIB0041;SYSLIB0045</NoWarn>
     <RunAnalyzers>false</RunAnalyzers>
     <TargetFramework>net8.0</TargetFramework>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
   <PropertyGroup>
     <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'"
       >NETSTANDARD;NETSTANDARD2_0</DefineConstants>
     <Configurations>Debug Client;Debug Architect;Debug Server;Release Client;Release Architect;Release Server</Configurations>
+    <Version>0.0.0.0</Version>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Client|AnyCPU' ">
     <DefineConstants>ORIGAM_CLIENT;$(DefineConstants)</DefineConstants>
@@ -60,31 +63,10 @@
     <PackageReference Include="NUnit3TestAdapter">
       <Version>6.2.0</Version>
     </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Moq" Version="4.20.70" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Origam.Server\Authorization\CorePasswordHasher.cs">
-      <Link>Authorization\CorePasswordHasher.cs</Link>
-    </Compile>
-    <Compile Include="..\Origam.Server\Authorization\Sha256PasswordHasher.cs">
-      <Link>Authorization\Sha256PasswordHasher.cs</Link>
-    </Compile>
-    <Compile Include="..\Origam.Security.Common\IOrigamUser.cs">
-      <Link>Security\Common\IOrigamUser.cs</Link>
-    </Compile>
-    <Compile Include="..\Origam.Security.Common\InternalPasswordHasherWithLegacySupport.cs">
-      <Link>Security\Common\InternalPasswordHasherWithLegacySupport.cs</Link>
-    </Compile>
-    <Compile Include="..\Origam.Security.Common\BrockAllen.IdentityReboot\AdaptivePasswordHasher.cs">
-      <Link>Security\Common\BrockAllen.IdentityReboot\AdaptivePasswordHasher.cs</Link>
-    </Compile>
-    <Compile Include="..\Origam.Security.Common\BrockAllen.IdentityReboot\System.Web.Helpers.Crypto.cs">
-      <Link>Security\Common\BrockAllen.IdentityReboot\System.Web.Helpers.Crypto.cs</Link>
-    </Compile>
-    <Compile Include="..\Origam.Security.Common\BrockAllen.IdentityReboot\VerificationResult.cs">
-      <Link>Security\Common\BrockAllen.IdentityReboot\VerificationResult.cs</Link>
-    </Compile>
+    <ProjectReference Include="..\Origam.Server\Origam.Server.csproj" />
   </ItemGroup>
 </Project>

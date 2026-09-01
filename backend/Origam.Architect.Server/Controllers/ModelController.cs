@@ -39,7 +39,8 @@ public class ModelController(
     TreeNodeFactory treeNodeFactory,
     ModelTransactionRunner modelTransactionRunner,
     TabService tabService,
-    EntityIndexService entityIndexService
+    EntityIndexService entityIndexService,
+    ModelGroupService modelGroupService
 ) : ControllerBase
 {
     private readonly IPersistenceProvider persistenceProvider = persistenceService.SchemaProvider;
@@ -94,7 +95,7 @@ public class ModelController(
             return Ok(childNodes);
         }
 
-        ISchemaItemProvider provider = GetRootProviderById(id);
+        ISchemaItemProvider provider = treeNodeFactory.FindRootProvider(id);
         if (provider == null)
         {
             return NotFound();
@@ -133,16 +134,6 @@ public class ModelController(
             )
             .ToList();
         return nodes;
-    }
-
-    private ISchemaItemProvider GetRootProviderById(string id)
-    {
-        ISchemaItemProvider provider = schemaService
-            .ActiveExtension.ChildNodes()
-            .Cast<SchemaItemProviderGroup>()
-            .SelectMany(x => x.ChildNodes().Cast<ISchemaItemProvider>())
-            .FirstOrDefault(x => x.NodeId == id);
-        return provider;
     }
 
     [HttpPost("DeleteSchemaItem")]
@@ -193,6 +184,19 @@ public class ModelController(
         return Ok(new DeleteResult(Deleted: true, Id: input.SchemaItemId, Name: deletedName));
     }
 
+    [HttpPost("CreateGroup")]
+    public ActionResult<TreeNode> CreateGroup([Required] [FromBody] CreateGroupModel input) =>
+        modelGroupService.Create(input);
+
+    [HttpPost("RenameGroup")]
+    public ActionResult<TreeNode> RenameGroup([Required] [FromBody] RenameGroupModel input) =>
+        modelGroupService.Rename(input);
+
+    [HttpPost("DeleteGroup")]
+    public ActionResult<DeleteGroupResult> DeleteGroup(
+        [Required] [FromBody] DeleteGroupModel input
+    ) => modelGroupService.Delete(input);
+
     [HttpGet("GetMenuItems")]
     [EndpointDescription(
         "List the model item types that can be created as children of the given node (the 'New' "
@@ -207,7 +211,7 @@ public class ModelController(
     {
         if (!Guid.TryParse(id, out Guid schemaItemId))
         {
-            ISchemaItemProvider provider = GetRootProviderById(id);
+            ISchemaItemProvider provider = treeNodeFactory.FindRootProvider(id);
             if (provider == null)
             {
                 return new List<MenuItemInfo>();
@@ -268,7 +272,7 @@ public class ModelController(
             return Ok(treeNode);
         }
 
-        ISchemaItemProvider provider = GetRootProviderById(id);
+        ISchemaItemProvider provider = treeNodeFactory.FindRootProvider(id);
         if (provider == null)
         {
             return NotFound();
