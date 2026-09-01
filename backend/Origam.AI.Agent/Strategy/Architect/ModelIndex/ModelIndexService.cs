@@ -28,6 +28,24 @@ namespace Origam.AI.Agent.Strategy.Architect.ModelIndex;
 
 public class ModelIndexService
 {
+    private record IndexEntry(string Id, string Package, string Text);
+
+    private record EntityCard(
+        string Id,
+        string Name,
+        string Kind,
+        string Package,
+        List<string> Fields,
+        List<RelatedItem> PrimaryKey,
+        List<RelatedItem> Structures,
+        List<RelatedItem> Screens,
+        List<RelatedItem> Panels,
+        List<RelatedItem> Lookups,
+        List<RelatedItem> WorkQueues
+    );
+
+    private record RelatedItem(string Id, string Name);
+
     private const int MaxUpdatesLength = 8000;
 
     private static readonly HashSet<string> AuditFields = new(StringComparer.Ordinal)
@@ -289,22 +307,4 @@ public class ModelIndexService
         }
         builder.AppendLine("]");
     }
-
-    private record IndexEntry(string Id, string Package, string Text);
-
-    private record EntityCard(
-        string Id,
-        string Name,
-        string Kind,
-        string Package,
-        List<string> Fields,
-        List<RelatedItem> PrimaryKey,
-        List<RelatedItem> Structures,
-        List<RelatedItem> Screens,
-        List<RelatedItem> Panels,
-        List<RelatedItem> Lookups,
-        List<RelatedItem> WorkQueues
-    );
-
-    private record RelatedItem(string Id, string Name);
 }
