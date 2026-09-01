@@ -42,7 +42,20 @@ public class DesignerEditorService(
 {
     private readonly Guid tabControlControlItemId = new("2e39362b-80a6-4430-a9bd-b3013583a2fe");
     private readonly Guid tabPageControlItemId = new("6d13ec20-3b17-456e-ae43-3021cb067a70");
-    private readonly List<string> implementedScreenWidgets = ["TabControl", "SplitPanel", "AsTree"];
+    private readonly List<string> implementedScreenWidgets =
+    [
+        "AsListView",
+        "AsReportPanel",
+        "AsTree",
+        "AsTree2",
+        "CollapsibleContainer",
+        "ExecuteWorkflowButton",
+        "GridLayoutPanel",
+        "Label",
+        "Panel",
+        "SplitPanel",
+        "TabControl",
+    ];
 
     public bool Update(AbstractControlSet screenSection, SectionEditorChangesModel input)
     {
@@ -251,7 +264,7 @@ public class DesignerEditorService(
                         ?.Caption
                     ?? bindingInfo?.Value;
             }
-            apiControl.Name = caption ?? controlSetItem.Name;
+            apiControl.Name = caption;
         }
         else
         {
@@ -287,13 +300,18 @@ public class DesignerEditorService(
 
         ControlAdapter.ControlAdapter controlAdapter = adapterFactory.Create(newItem);
 
-        IDataEntity dataEntity = persistenceService.SchemaProvider.RetrieveInstance<IDataEntity>(
-            screenSection.DataSourceId
-        );
-        DataSet dataSet = new DatasetGenerator(userDefinedParameters: false).CreateDataSet(
-            dataEntity
-        );
-        string caption = dataSet.Tables[0].Columns[itemModelData.FieldName]?.Caption;
+        DataSet dataSet = null;
+        string caption = null;
+        if (!string.IsNullOrEmpty(itemModelData.FieldName))
+        {
+            IDataEntity dataEntity =
+                persistenceService.SchemaProvider.RetrieveInstance<IDataEntity>(
+                    screenSection.DataSourceId
+                );
+            dataSet = new DatasetGenerator(userDefinedParameters: false).CreateDataSet(dataEntity);
+            caption = dataSet.Tables[0].Columns[itemModelData.FieldName]?.Caption;
+        }
+
         if (controlAdapter.Control is IAsControl asControl)
         {
             string boundPropertyName = asControl.DefaultBindableProperty;
@@ -303,7 +321,9 @@ public class DesignerEditorService(
             propertyBinding.Name = boundPropertyName;
             propertyBinding.Value = itemModelData.FieldName;
             propertyBinding.DesignDataSetPath =
-                dataSet.Tables[0].TableName + "." + itemModelData.FieldName;
+                dataSet == null
+                    ? null
+                    : dataSet.Tables[0].TableName + "." + itemModelData.FieldName;
             // The line dataSet.Tables[0].TableName + "." + itemModelData.FieldName was taken from
             // class Origam.Gui.Designer.DesignerHostImpl method TryCreateComponent. It does say there Tables[0]
             // Looks strange, we will have to see how well it works.

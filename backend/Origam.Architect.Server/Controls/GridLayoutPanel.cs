@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2025 Advantage Solutions, s. r. o.
+Copyright 2005 - 2026 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -20,31 +20,33 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.ComponentModel;
-using Origam.Architect.Server.Attributes;
-using Origam.Schema.EntityModel;
+using Origam.Schema.GuiModel;
 
 namespace Origam.Architect.Server.Controls;
 
-public class AsDropDown : LabeledEditor, IAsControl
+public class GridLayoutPanel : IControl
 {
-    public bool HideOnForm { get; set; }
+    [Category("Appearance")]
+    public string Text { get; set; }
 
-    [Category("(ORIGAM)")]
-    public string Caption { get; set; }
+    [Category("Layout")]
+    [Browsable(false)]
+    public int Top { get; set; }
 
-    [ReferenceProperty("DataLookup")]
-    [TypeConverter(typeof(DataLookupConverter))]
-    public Guid LookupId { get; set; }
+    [Category("Layout")]
+    [Browsable(false)]
+    public int Left { get; set; }
 
-    public bool ShowUniqueValues { get; set; }
+    [Category("Layout")]
+    [Browsable(false)]
+    public int Height { get; set; } = 200;
 
-    [Category("(ORIGAM)")]
-    public string GridColumnCaption { get; set; }
+    [Category("Layout")]
+    [Browsable(false)]
+    public int Width { get; set; } = 200;
 
-    public bool ReadOnly { get; set; }
+    [Category("Behavior")]
+    public int TabIndex { get; set; }
 
-    public Object LookupValue { get; set; }
-
-    [NotAModelProperty]
-    public string DefaultBindableProperty => "LookupValue";
+    public void Initialize(ControlSetItem controlSetItem) { }
 }

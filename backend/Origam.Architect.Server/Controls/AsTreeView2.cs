@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2025 Advantage Solutions, s. r. o.
+Copyright 2005 - 2026 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -20,31 +20,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.ComponentModel;
-using Origam.Architect.Server.Attributes;
-using Origam.Schema.EntityModel;
 
 namespace Origam.Architect.Server.Controls;
 
-public class AsDropDown : LabeledEditor, IAsControl
+public class AsTreeView2 : ControlBase
 {
-    public bool HideOnForm { get; set; }
+    [Category("Data")]
+    public string FormParameterName { get; set; }
 
-    [Category("(ORIGAM)")]
-    public string Caption { get; set; }
-
-    [ReferenceProperty("DataLookup")]
-    [TypeConverter(typeof(DataLookupConverter))]
-    public Guid LookupId { get; set; }
-
-    public bool ShowUniqueValues { get; set; }
-
-    [Category("(ORIGAM)")]
-    public string GridColumnCaption { get; set; }
-
-    public bool ReadOnly { get; set; }
-
-    public Object LookupValue { get; set; }
-
-    [NotAModelProperty]
-    public string DefaultBindableProperty => "LookupValue";
+    [Category("Data")]
+    public Guid TreeId { get; set; }
 }

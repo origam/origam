@@ -158,6 +158,7 @@ export const DesignSurface: React.FC<{
               {component.data.identifier}
             </div>
             <div
+              data-test-id="design-component"
               className={`${S.designComponent} ${component.id}
             ${component.hasBorder ? '' : S.borderless}
             ${surfaceState.draggingComponentId === component.id ? S.dragging : ''}

@@ -26,7 +26,7 @@ using Origam.Schema.EntityModel;
 
 namespace Origam.Architect.Server.Controls;
 
-public class Checklist : ControlBase
+public class Checklist : ControlBase, IAsControl
 {
     public bool ReadOnly { get; set; }
 
@@ -57,4 +57,7 @@ public class Checklist : ControlBase
     public CaptionPosition CaptionPosition { get; set; }
 
     public bool HideOnForm { get; set; }
+
+    [NotAModelProperty]
+    public string DefaultBindableProperty => "Value";
 }

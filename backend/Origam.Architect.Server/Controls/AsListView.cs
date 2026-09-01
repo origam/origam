@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2025 Advantage Solutions, s. r. o.
+Copyright 2005 - 2026 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -20,21 +20,20 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.ComponentModel;
-using Origam.Architect.Server.Attributes;
-using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
 
 namespace Origam.Architect.Server.Controls;
 
-public class AsRadioButton : IControl, IAsControl
+public class AsListView : IControl
 {
-    public bool ReadOnly { get; set; }
+    [Category("Data")]
+    public string DataMember { get; set; }
 
-    [Category("Appearance")]
-    public string Text { get; set; }
+    [Category("Data")]
+    public string ValueMember { get; set; }
 
-    [Browsable(false)]
-    public Object Value { get; set; }
+    [Category("Data")]
+    public string ColumnNames { get; set; }
 
     [Category("Layout")]
     [Browsable(false)]
@@ -55,12 +54,5 @@ public class AsRadioButton : IControl, IAsControl
     [Category("Behavior")]
     public int TabIndex { get; set; }
 
-    [ReferenceProperty("ValueConstant")]
-    [TypeConverter(typeof(DataConstantConverter))]
-    public Guid DataConstantId { get; set; }
-
-    public virtual void Initialize(ControlSetItem controlSetItem) { }
-
-    [NotAModelProperty]
-    public string DefaultBindableProperty => "Value";
+    public void Initialize(ControlSetItem controlSetItem) { }
 }

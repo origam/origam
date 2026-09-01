@@ -35,12 +35,19 @@ export enum ComponentType {
   TabPage = 'System.Windows.Forms.TabPage',
   AsTree = 'Origam.Gui.Win.AsTreeView',
   Label = 'System.Windows.Forms.Label',
-  CheckList = 'Origam.Gui.Win.Checklist',
+  Checklist = 'Origam.Gui.Win.Checklist',
   BlobControl = 'Origam.Gui.Win.BlobControl',
   ColorPicker = 'Origam.Gui.Win.ColorPicker',
   MultiColumnAdapterFieldWrapper = 'Origam.Gui.Win.MultiColumnAdapterFieldWrapper',
   ImageBox = 'Origam.Gui.Win.ImageBox',
   RadioButton = 'Origam.Gui.Win.AsRadioButton',
+  Panel = 'System.Windows.Forms.Panel',
+  GridLayoutPanel = 'Origam.Gui.Win.GridLayoutPanel',
+  CollapsibleContainer = 'Origam.Gui.Win.CollapsibleContainer',
+  AsListView = 'Origam.Gui.Win.AsListView',
+  AsReportPanel = 'Origam.BI.CrystalReports.AsReportPanel',
+  AsTree2 = 'Origam.Gui.Win.AsTreeView2',
+  ExecuteWorkflowButton = 'Origam.Gui.Win.ExecuteWorkflowButton',
 }
 
 export function parseComponentType(value: string): ComponentType {

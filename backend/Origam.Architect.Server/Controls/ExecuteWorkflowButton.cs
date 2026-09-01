@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2025 Advantage Solutions, s. r. o.
+Copyright 2005 - 2026 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -21,20 +21,31 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.ComponentModel;
 using Origam.Architect.Server.Attributes;
-using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
 
 namespace Origam.Architect.Server.Controls;
 
-public class AsRadioButton : IControl, IAsControl
+public class ExecuteWorkflowButton : IControl
 {
-    public bool ReadOnly { get; set; }
-
     [Category("Appearance")]
     public string Text { get; set; }
 
-    [Browsable(false)]
-    public Object Value { get; set; }
+    [Category("Data")]
+    public string DataMember { get; set; }
+
+    [ReferenceProperty("Workflow")]
+    [Category("(ORIGAM)")]
+    public Guid WorkflowId { get; set; }
+
+    [ReferenceProperty("Icon")]
+    [Category("(ORIGAM)")]
+    public Guid IconId { get; set; }
+
+    [Category("Behavior")]
+    public int ActionType { get; set; }
+
+    [Category("Behavior")]
+    public int MergeType { get; set; }
 
     [Category("Layout")]
     [Browsable(false)]
@@ -55,12 +66,5 @@ public class AsRadioButton : IControl, IAsControl
     [Category("Behavior")]
     public int TabIndex { get; set; }
 
-    [ReferenceProperty("ValueConstant")]
-    [TypeConverter(typeof(DataConstantConverter))]
-    public Guid DataConstantId { get; set; }
-
-    public virtual void Initialize(ControlSetItem controlSetItem) { }
-
-    [NotAModelProperty]
-    public string DefaultBindableProperty => "Value";
+    public void Initialize(ControlSetItem controlSetItem) { }
 }

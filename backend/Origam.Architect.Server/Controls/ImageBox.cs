@@ -20,12 +20,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.ComponentModel;
+using Origam.Architect.Server.Attributes;
 using Origam.Gui;
 using Origam.Schema.GuiModel;
 
 namespace Origam.Architect.Server.Controls;
 
-public class ImageBox : IControl
+public class ImageBox : IControl, IAsControl
 {
     [Category("(ORIGAM)")]
     [Description(
@@ -61,4 +62,7 @@ public class ImageBox : IControl
     public int TabIndex { get; set; }
 
     public virtual void Initialize(ControlSetItem controlSetItem) { }
+
+    [NotAModelProperty]
+    public string DefaultBindableProperty => "ImageData";
 }

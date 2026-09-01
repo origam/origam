@@ -20,11 +20,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.ComponentModel;
+using Origam.Architect.Server.Attributes;
 using Origam.Gui;
 
 namespace Origam.Architect.Server.Controls;
 
-public class ColorPicker : ControlBase
+public class ColorPicker : ControlBase, IAsControl
 {
     public bool ReadOnly { get; set; }
 
@@ -49,4 +50,7 @@ public class ColorPicker : ControlBase
 
     [Category("(ORIGAM)")]
     public int CaptionLength { get; set; }
+
+    [NotAModelProperty]
+    public string DefaultBindableProperty => "SelectedColor";
 }

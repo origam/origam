@@ -20,11 +20,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.ComponentModel;
+using Origam.Architect.Server.Attributes;
 using Origam.Gui;
 
 namespace Origam.Architect.Server.Controls;
 
-public class BlobControl : ControlBase
+public class BlobControl : ControlBase, IAsControl
 {
     [Category("Data Members")]
     public string DateLastModifiedMember { get; set; }
@@ -88,4 +89,7 @@ public class BlobControl : ControlBase
 
     [Category("Data Members")]
     public string FileSizeMember { get; set; }
+
+    [NotAModelProperty]
+    public string DefaultBindableProperty => "FileName";
 }

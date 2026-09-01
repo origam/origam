@@ -47,7 +47,7 @@ const Toolbox = observer(
     );
 
     return (
-      <div className={S.toolbox}>
+      <div data-test-id="toolbox" className={S.toolbox}>
         <div className={S.inputs}>
           <div className={S.inputContainer}>
             <div>{T('Data Source', 'tool_box_data_source')}</div>

@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { expect, test } from '@playwright/test';
+import { expect, Page, test } from '@playwright/test';
 import { resetBackend } from '@support/resetBackend';
 
 test.describe('Screen Section drag and drop (real backend)', () => {
@@ -25,7 +25,7 @@ test.describe('Screen Section drag and drop (real backend)', () => {
     await resetBackend(request);
   });
 
-  test('drag a field onto the design panel', async ({ page }) => {
+  async function openNewScreenSection(page: Page) {
     await page.goto('/');
 
     await page.getByTestId('tree-toggle-User Interface').click();
@@ -40,11 +40,53 @@ test.describe('Screen Section drag and drop (real backend)', () => {
 
     await page.getByRole('textbox').nth(1).click();
     await page.getByText('Attachment', { exact: true }).click();
+  }
+
+  test('drag a field onto the design panel', async ({ page }) => {
+    await openNewScreenSection(page);
 
     const field = page.getByText('FileName', { exact: true });
     const designSurface = page.getByTestId('design-surface');
 
     await field.dragTo(designSurface);
+
+    await expect(designSurface.getByText('File Name')).toBeVisible({ timeout: 15_000 });
+  });
+
+  test('drag a widget onto the design panel without selecting a field first', async ({ page }) => {
+    await openNewScreenSection(page);
+
+    const toolbox = page.getByTestId('toolbox');
+    const designSurface = page.getByTestId('design-surface');
+    const components = designSurface.getByTestId('design-component');
+
+    const initialCount = await components.count();
+
+    await toolbox.getByText('Widgets', { exact: true }).click();
+
+    await toolbox.getByText('AsTextBox', { exact: true }).dragTo(designSurface);
+    await expect(components).toHaveCount(initialCount + 1, { timeout: 15_000 });
+    await expect(designSurface.getByText('AsTextBox', { exact: true })).toHaveCount(0);
+
+    await toolbox.getByText('AsCheckBox', { exact: true }).dragTo(designSurface);
+    await expect(components).toHaveCount(initialCount + 2, { timeout: 15_000 });
+    await expect(designSurface.getByText('AsCheckBox', { exact: true })).toHaveCount(0);
+
+    await toolbox.getByText('GroupBox', { exact: true }).dragTo(designSurface);
+    await expect(components).toHaveCount(initialCount + 3, { timeout: 15_000 });
+    await expect(designSurface.getByText('Group Box', { exact: true })).toHaveCount(0);
+  });
+
+  test('drag a widget onto the design panel with a field selected', async ({ page }) => {
+    await openNewScreenSection(page);
+
+    const toolbox = page.getByTestId('toolbox');
+    const designSurface = page.getByTestId('design-surface');
+
+    await toolbox.getByText('FileName', { exact: true }).click();
+    await toolbox.getByText('Widgets', { exact: true }).click();
+
+    await toolbox.getByText('AsTextBox', { exact: true }).dragTo(designSurface);
 
     await expect(designSurface.getByText('File Name')).toBeVisible({ timeout: 15_000 });
   });
