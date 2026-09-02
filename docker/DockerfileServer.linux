@@ -21,6 +21,9 @@ RUN apt-get update \
 && mkdir /tmp/libgdiplus \
 && curl -fsSL https://codeload.github.com/mono/libgdiplus/tar.gz/94a49875487e296376f209fe64b921c6020f74c0 \
     | tar -xz --strip-components=1 -C /tmp/libgdiplus \
+&& mkdir -p /tmp/libgdiplus/external/googletest \
+&& curl -fsSL https://codeload.github.com/google/googletest/tar.gz/703bd9caab50b139428cea1aaff9974ebee5742e \
+    | tar -xz --strip-components=1 -C /tmp/libgdiplus/external/googletest \
 && cd /tmp/libgdiplus \
 && ./autogen.sh --with-pango --prefix=/usr \
 && make \
