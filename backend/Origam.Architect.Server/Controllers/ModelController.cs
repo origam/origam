@@ -24,6 +24,7 @@ using Microsoft.AspNetCore.Mvc;
 using Origam.Architect.Server.Models;
 using Origam.Architect.Server.ReturnModels;
 using Origam.Architect.Server.Services;
+using Origam.Architect.Server.Services.Move;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema;
 using Origam.UI;

@@ -249,6 +249,15 @@ namespace Origam.Architect.Server {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to '{0}' cannot be moved, the group it belongs to could not be loaded..
+        /// </summary>
+        internal static string Move_SourceGroupNotFound {
+            get {
+                return ResourceManager.GetString("Move_SourceGroupNotFound", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Parameter named {0} was not found among Input Parameters..
         /// </summary>
         internal static string ParameterNotFound {

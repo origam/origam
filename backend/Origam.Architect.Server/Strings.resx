@@ -75,6 +75,9 @@
     <data name="Move_UsagesNotChecked" xml:space="preserve">
         <value>'{0}' cannot be moved to package '{1}' because the model reference index is not available. Reload the model and try again.</value>
     </data>
+    <data name="Move_SourceGroupNotFound" xml:space="preserve">
+        <value>'{0}' cannot be moved, the group it belongs to could not be loaded.</value>
+    </data>
     <data name="XsltValidationFailed" xml:space="preserve">
         <value>XSLT validation failed. See output for details.</value>
     </data>
