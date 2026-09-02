@@ -153,7 +153,31 @@ public class ControlAdapter(
                     changesMade = true;
                 }
 
+                if (string.IsNullOrEmpty(propertyChange.Value))
+                {
+                    bindingInfo.IsDeleted = true;
+                    continue;
+                }
+
                 bindingInfo.Value = propertyChange.Value;
+                bindingInfo.DesignDataSetPath = GetDesignDataSetPath(propertyChange.Value);
+                continue;
+            }
+
+            if (
+                IsDefaultBindableProperty(propertyChange.Name)
+                && !string.IsNullOrEmpty(propertyChange.Value)
+            )
+            {
+                PropertyBindingInfo newBinding = controlSetItem.NewItem<PropertyBindingInfo>(
+                    schemaService.ActiveSchemaExtensionId,
+                    group: null
+                );
+                newBinding.ControlPropertyItem = FindPropertyItem(propertyChange.Name);
+                newBinding.Name = propertyChange.Name;
+                newBinding.Value = propertyChange.Value;
+                newBinding.DesignDataSetPath = GetDesignDataSetPath(propertyChange.Value);
+                changesMade = true;
                 continue;
             }
 
@@ -197,7 +221,22 @@ public class ControlAdapter(
                     .FirstOrDefault(item => item.ControlPropertyItem.Name == property.Name);
                 if (bindingInfo != null)
                 {
-                    return propertyFactory.Create(property, bindingInfo, dataSourceDropDownValues);
+                    return propertyFactory.CreateBoundProperty(
+                        property,
+                        bindingInfo.ControlPropertyId,
+                        bindingInfo.Value,
+                        dataSourceDropDownValues
+                    );
+                }
+
+                if (IsDefaultBindableProperty(property.Name))
+                {
+                    return propertyFactory.CreateBoundProperty(
+                        property,
+                        FindPropertyItem(property.Name).Id,
+                        boundFieldName: null,
+                        dataSourceDropDownValues
+                    );
                 }
 
                 PropertyValueItem valueItem = controlSetItem
@@ -231,6 +270,17 @@ public class ControlAdapter(
         var schemaItemProperties = GetSchemaItemProperties()
             .Select(property => propertyFactory.Create(property, this));
         return properties.Concat(schemaItemProperties).ToList();
+    }
+
+    private bool IsDefaultBindableProperty(string propertyName)
+    {
+        return Control is IAsControl asControl && asControl.DefaultBindableProperty == propertyName;
+    }
+
+    private string GetDesignDataSetPath(string fieldName)
+    {
+        IDataEntity dataEntity = (controlSetItem.RootItem as PanelControlSet)?.DataEntity;
+        return dataEntity == null ? null : dataEntity.Name + "." + fieldName;
     }
 
     private ControlPropertyItem FindPropertyItem(string propertyName)

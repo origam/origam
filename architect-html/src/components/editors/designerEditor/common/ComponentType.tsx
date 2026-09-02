@@ -72,7 +72,7 @@ export function toComponentType(origamType: OrigamDataType): ComponentType {
     case OrigamDataType.String:
       return ComponentType.AsTextBox;
     case OrigamDataType.Memo:
-      return ComponentType.TextArea;
+      return ComponentType.AsTextBox;
     case OrigamDataType.Integer:
     case OrigamDataType.Float:
     case OrigamDataType.Long:

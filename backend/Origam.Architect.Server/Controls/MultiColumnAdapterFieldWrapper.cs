@@ -45,7 +45,11 @@ public class MultiColumnAdapterFieldWrapper : IControl, IAsControl
     [Browsable(false)]
     public int Left { get; set; }
 
-    public void Initialize(ControlSetItem controlSetItem) { }
+    public void Initialize(ControlSetItem controlSetItem)
+    {
+        Height = 20;
+        Width = 400;
+    }
 
     [NotAModelProperty]
     public string DefaultBindableProperty => "ControlMember";

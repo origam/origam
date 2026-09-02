@@ -25,7 +25,7 @@ using Origam.Schema.EntityModel;
 
 namespace Origam.Architect.Server.Controls;
 
-public class AsDropDown : LabeledEditor, IAsControl
+public class AsDropDown : LabeledEditor, IAsControl, ILookupBoundControl
 {
     public bool HideOnForm { get; set; }
 

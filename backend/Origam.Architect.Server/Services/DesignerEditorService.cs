@@ -99,7 +99,7 @@ public class DesignerEditorService(
             }
 
             ControlAdapter.ControlAdapter controlAdapter = adapterFactory.Create(itemToUpdate);
-            editorIsDirty = controlAdapter.UpdateProperties(changes);
+            editorIsDirty |= controlAdapter.UpdateProperties(changes);
         }
 
         return editorIsDirty;
@@ -121,6 +121,7 @@ public class DesignerEditorService(
             List<EditorField> fields = GetFields(screenSection);
             DropDownValue[] dataSourceDropDownValues = fields
                 .Select(field => new DropDownValue(field.Name, field.Name))
+                .Prepend(new DropDownValue(string.Empty, string.Empty))
                 .ToArray();
             ApiControl apiControl = LoadContent(screenSection.MainItem, dataSourceDropDownValues);
             return new SectionEditorData
@@ -300,7 +301,6 @@ public class DesignerEditorService(
 
         ControlAdapter.ControlAdapter controlAdapter = adapterFactory.Create(newItem);
 
-        DataSet dataSet = null;
         string caption = null;
         if (!string.IsNullOrEmpty(itemModelData.FieldName))
         {
@@ -308,25 +308,36 @@ public class DesignerEditorService(
                 persistenceService.SchemaProvider.RetrieveInstance<IDataEntity>(
                     screenSection.DataSourceId
                 );
-            dataSet = new DatasetGenerator(userDefinedParameters: false).CreateDataSet(dataEntity);
+            DataSet dataSet = new DatasetGenerator(userDefinedParameters: false).CreateDataSet(
+                dataEntity
+            );
             caption = dataSet.Tables[0].Columns[itemModelData.FieldName]?.Caption;
-        }
+            IDataEntityColumn boundColumn = dataEntity
+                .ChildItemsByType<IDataEntityColumn>(AbstractDataEntityColumn.CategoryConst)
+                .FirstOrDefault(column => column.Name == itemModelData.FieldName);
 
-        if (controlAdapter.Control is IAsControl asControl)
-        {
-            string boundPropertyName = asControl.DefaultBindableProperty;
-            ControlPropertyItem propertyItem = FindPropertyItem(newItem, boundPropertyName);
-            PropertyBindingInfo propertyBinding = FindOrMakeBindingInfo(newItem, propertyItem);
-            propertyBinding.ControlPropertyItem = propertyItem;
-            propertyBinding.Name = boundPropertyName;
-            propertyBinding.Value = itemModelData.FieldName;
-            propertyBinding.DesignDataSetPath =
-                dataSet == null
-                    ? null
-                    : dataSet.Tables[0].TableName + "." + itemModelData.FieldName;
-            // The line dataSet.Tables[0].TableName + "." + itemModelData.FieldName was taken from
-            // class Origam.Gui.Designer.DesignerHostImpl method TryCreateComponent. It does say there Tables[0]
-            // Looks strange, we will have to see how well it works.
+            if (controlAdapter.Control is IAsControl asControl)
+            {
+                string boundPropertyName = asControl.DefaultBindableProperty;
+                ControlPropertyItem propertyItem = FindPropertyItem(newItem, boundPropertyName);
+                PropertyBindingInfo propertyBinding = FindOrMakeBindingInfo(newItem, propertyItem);
+                propertyBinding.ControlPropertyItem = propertyItem;
+                propertyBinding.Name = boundPropertyName;
+                propertyBinding.Value = itemModelData.FieldName;
+                propertyBinding.DesignDataSetPath =
+                    dataSet.Tables[0].TableName + "." + itemModelData.FieldName;
+                // The line dataSet.Tables[0].TableName + "." + itemModelData.FieldName was taken from
+                // class Origam.Gui.Designer.DesignerHostImpl method TryCreateComponent. It does say there Tables[0]
+                // Looks strange, we will have to see how well it works.
+            }
+
+            if (
+                controlAdapter.Control is ILookupBoundControl lookupControl
+                && boundColumn?.DefaultLookup != null
+            )
+            {
+                lookupControl.LookupId = (Guid)boundColumn.DefaultLookup.PrimaryKey["Id"];
+            }
         }
 
         controlAdapter.InitializeProperties(top: itemModelData.Top, left: itemModelData.Left);
@@ -340,6 +351,7 @@ public class DesignerEditorService(
 
         DropDownValue[] dataSourceDropDownValues = GetFields(screenSection)
             .Select(field => new DropDownValue(field.Name, field.Name))
+            .Prepend(new DropDownValue(string.Empty, string.Empty))
             .ToArray();
         return LoadItem(newItem, dataSourceDropDownValues);
     }

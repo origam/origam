@@ -48,5 +48,9 @@ public class Label : IControl
     [SettingsBindable(true)]
     public string Text { get; set; }
 
-    public void Initialize(ControlSetItem controlSetItem) { }
+    public void Initialize(ControlSetItem controlSetItem)
+    {
+        Height = 20;
+        Width = 200;
+    }
 }

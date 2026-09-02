@@ -18,6 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { expect, Page, test } from '@playwright/test';
+import { scanPropertyBindings } from '@support/modelAssertions';
 import { resetBackend } from '@support/resetBackend';
 
 test.describe('Screen Section drag and drop (real backend)', () => {
@@ -75,6 +76,18 @@ test.describe('Screen Section drag and drop (real backend)', () => {
     await toolbox.getByText('GroupBox', { exact: true }).dragTo(designSurface);
     await expect(components).toHaveCount(initialCount + 3, { timeout: 15_000 });
     await expect(designSurface.getByText('Group Box', { exact: true })).toHaveCount(0);
+
+    const saveResponse = page.waitForResponse(
+      response =>
+        response.request().method() === 'POST' && response.url().includes('/SectionEditor/Save'),
+      { timeout: 15_000 },
+    );
+    await page.getByTestId('save-button').click();
+    expect((await saveResponse).status()).toBe(200);
+
+    const bindingScan = scanPropertyBindings();
+    expect(bindingScan.bindingsScanned).toBeGreaterThan(300);
+    expect(bindingScan.offenders).toEqual([]);
   });
 
   test('drag a widget onto the design panel with a field selected', async ({ page }) => {

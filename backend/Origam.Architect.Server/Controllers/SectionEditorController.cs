@@ -43,7 +43,7 @@ public class SectionEditorController(
         {
             return BadRequest($"item id: {input.SchemaItemId} is not a PanelControlSet");
         }
-        tab.IsDirty = designerEditorService.Update(screenSection, input);
+        tab.IsDirty |= designerEditorService.Update(screenSection, input);
         var editorData = designerEditorService.GetSectionEditorData(screenSection);
         return Ok(new SectionEditorModel { Data = editorData, IsDirty = tab.IsDirty });
     }

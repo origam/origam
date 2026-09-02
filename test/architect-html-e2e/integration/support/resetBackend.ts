@@ -23,7 +23,7 @@ import path from 'node:path';
 import type { APIRequestContext } from '@playwright/test';
 import { activatePackage } from '@support/activatePackage';
 
-function findRepoRoot(): string {
+export function findRepoRoot(): string {
   let dir = process.cwd();
   while (!fs.existsSync(path.join(dir, 'model-tests'))) {
     const parent = path.dirname(dir);
@@ -36,7 +36,7 @@ function findRepoRoot(): string {
 }
 
 const repoRoot = findRepoRoot();
-const MODEL_DIR = 'model-tests/model';
+export const MODEL_DIR = 'model-tests/model';
 const DEFAULT_PACKAGE = 'Root Menu';
 
 export function restoreModelFiles(): void {

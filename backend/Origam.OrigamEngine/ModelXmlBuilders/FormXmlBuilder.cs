@@ -2255,7 +2255,11 @@ public class FormXmlBuilder
                 {
                     PanelLabelBuilder.Build(childrenElement, text, top, left, height, width);
                 }
-                else if (csi.ControlItem.Name == "RadioButton" && processEditControls)
+                else if (
+                    csi.ControlItem.Name == "RadioButton"
+                    && !string.IsNullOrEmpty(bindingMember)
+                    && processEditControls
+                )
                 {
                     if (!table.Columns.Contains(bindingMember))
                     {

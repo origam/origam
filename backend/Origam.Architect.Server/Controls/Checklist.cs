@@ -26,7 +26,7 @@ using Origam.Schema.EntityModel;
 
 namespace Origam.Architect.Server.Controls;
 
-public class Checklist : ControlBase, IAsControl
+public class Checklist : ControlBase, IAsControl, ILookupBoundControl
 {
     public bool ReadOnly { get; set; }
 

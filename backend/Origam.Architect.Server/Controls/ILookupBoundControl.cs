@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2025 Advantage Solutions, s. r. o.
+Copyright 2005 - 2026 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -19,28 +19,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System.ComponentModel;
-using Origam.Architect.Server.Attributes;
-
 namespace Origam.Architect.Server.Controls;
 
-public class TagInput : LabeledEditor, IAsControl, ILookupBoundControl
+public interface ILookupBoundControl
 {
-    [Category("(ORIGAM)")]
-    public string Caption { get; set; }
-
-    [Browsable(false)]
-    public Guid LookupId { get; set; }
-
-    public bool HideOnForm { get; set; }
-
-    public string Value { get; set; }
-
-    [Category("(ORIGAM)")]
-    public string GridColumnCaption { get; set; }
-
-    public bool ReadOnly { get; set; }
-
-    [NotAModelProperty]
-    public string DefaultBindableProperty => "Value";
+    Guid LookupId { get; set; }
 }
