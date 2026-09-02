@@ -18,8 +18,10 @@ RUN apt-get update \
 && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
 && apt-get update \
 && apt-get -y install libgif-dev autoconf libtool automake build-essential gettext libglib2.0-dev libcairo2-dev libtiff-dev libexif-dev libpango1.0-dev git nginx ssh yarn nodejs \
-&& git clone https://github.com/mono/libgdiplus.git /tmp/libgdiplus \
-&& cd libgdiplus \
+&& mkdir /tmp/libgdiplus \
+&& curl -fsSL https://codeload.github.com/mono/libgdiplus/tar.gz/94a49875487e296376f209fe64b921c6020f74c0 \
+    | tar -xz --strip-components=1 -C /tmp/libgdiplus \
+&& cd /tmp/libgdiplus \
 && ./autogen.sh --with-pango --prefix=/usr \
 && make \
 && make install \
