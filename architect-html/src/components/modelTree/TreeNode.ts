@@ -23,6 +23,7 @@ import {
   IApiTabData,
   IApiTreeNode,
   IArchitectApi,
+  IDeleteGroupResult,
   IMenuItemInfo,
   NodeLevelType,
 } from '@api/IArchitectApi';
@@ -54,6 +55,7 @@ export class TreeNode implements IEditorNode {
     this.nodeLevelType = apiNode.nodeLevelType ?? 'Item';
     this.isInActivePackage = apiNode.isInActivePackage ?? true;
     this.isFileDirty = apiNode.isFileDirty ?? false;
+    this.isFolder = apiNode.isFolder ?? false;
     this.role = apiNode.role;
     this.children = apiNode.children
       ? apiNode.children.map(child => new TreeNode(child, this.rootStore, this))
@@ -78,6 +80,7 @@ export class TreeNode implements IEditorNode {
   nodeLevelType: NodeLevelType;
   isInActivePackage: boolean;
   isFileDirty: boolean;
+  isFolder: boolean;
   role?: string;
 
   @observable accessor isLoading: boolean = false;
@@ -124,6 +127,10 @@ export class TreeNode implements IEditorNode {
     return this.itemType === 'Origam.Schema.EntityModel.DataStructure';
   }
 
+  get canCreateFolder() {
+    return this.nodeLevelType === 'Provider' || this.isFolder;
+  }
+
   get isSequentialWorkflow() {
     return this.itemType === 'Origam.Schema.WorkflowModel.Workflow';
   }
@@ -152,10 +159,31 @@ export class TreeNode implements IEditorNode {
   }
 
   *delete() {
-    yield this.architectApi.deleteSchemaItem(this.origamId);
+    const editorTabViewState = this.rootStore.editorTabViewState;
+    if (this.isFolder) {
+      const result = (yield this.architectApi.deleteGroup(this.origamId)) as IDeleteGroupResult;
+      yield* editorTabViewState.closeEditorsByOrigamIds(result.deletedSchemaItemIds)();
+    } else {
+      yield this.architectApi.deleteSchemaItem(this.origamId);
+      yield* editorTabViewState.closeEditorsByOrigamIds([this.origamId])();
+    }
     if (this.parent) {
       yield* this.parent.loadChildren.bind(this.parent)();
     }
+  }
+
+  rename(name: string) {
+    return function* (this: TreeNode): Generator<Promise<any>, void, any> {
+      const renamedNode: IApiTreeNode = yield this.architectApi.renameGroup(this, name);
+      const wasExpanded = this.isExpanded;
+      if (this.parent) {
+        yield* this.parent.loadChildren.bind(this.parent)();
+      }
+      if (wasExpanded) {
+        this.rootStore.uiState.setExpanded(renamedNode.id, true);
+      }
+      this.rootStore.modelTreeState.highlightNode(renamedNode.id);
+    }.bind(this);
   }
 
   *getMenuItems() {
@@ -174,10 +202,21 @@ export class TreeNode implements IEditorNode {
   }
 
   createNode(typeName: string) {
-    return function* (this: TreeNode): Generator<Promise<IApiTabData>, void, IApiTabData> {
-      const apiTabData = yield this.architectApi.createNode(this, typeName);
+    return function* (this: TreeNode): Generator<Promise<any>, void, any> {
+      const apiTabData: IApiTabData = yield this.architectApi.createNode(this, typeName);
       const editorData = new EditorData(apiTabData, this);
       this.rootStore.editorTabViewState.openEditor(editorData);
+      yield* this.loadChildren.bind(this)();
+      this.rootStore.uiState.setExpanded(this.id, true);
+    }.bind(this);
+  }
+
+  createGroup(name: string) {
+    return function* (this: TreeNode): Generator<Promise<any>, void, any> {
+      const createdNode: IApiTreeNode = yield this.architectApi.createGroup(this, name);
+      yield* this.loadChildren.bind(this)();
+      this.rootStore.uiState.setExpanded(this.id, true);
+      this.rootStore.modelTreeState.highlightNode(createdNode.id);
     }.bind(this);
   }
 }

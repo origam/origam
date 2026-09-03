@@ -37,7 +37,8 @@ public class ModelController(
     SchemaService schemaService,
     IPersistenceService persistenceService,
     TreeNodeFactory treeNodeFactory,
-    GitNodeStatusService gitNodeStatusService
+    GitNodeStatusService gitNodeStatusService,
+    ModelGroupService modelGroupService
 ) : ControllerBase
 {
     private readonly IPersistenceProvider persistenceProvider = persistenceService.SchemaProvider;
@@ -92,7 +93,7 @@ public class ModelController(
             return Ok(childNodes);
         }
 
-        ISchemaItemProvider provider = GetRootProviderById(id);
+        ISchemaItemProvider provider = treeNodeFactory.FindRootProvider(id);
         if (provider == null)
         {
             return NotFound();
@@ -139,16 +140,6 @@ public class ModelController(
         return nodes;
     }
 
-    private ISchemaItemProvider GetRootProviderById(string id)
-    {
-        ISchemaItemProvider provider = schemaService
-            .ActiveExtension.ChildNodes()
-            .Cast<SchemaItemProviderGroup>()
-            .SelectMany(x => x.ChildNodes().Cast<ISchemaItemProvider>())
-            .FirstOrDefault(x => x.NodeId == id);
-        return provider;
-    }
-
     [HttpPost("DeleteSchemaItem")]
     public IActionResult DeleteSchemaItem([Required] [FromBody] DeleteModel input)
     {
@@ -183,6 +174,19 @@ public class ModelController(
         return Ok();
     }
 
+    [HttpPost("CreateGroup")]
+    public ActionResult<TreeNode> CreateGroup([Required] [FromBody] CreateGroupModel input) =>
+        modelGroupService.Create(input);
+
+    [HttpPost("RenameGroup")]
+    public ActionResult<TreeNode> RenameGroup([Required] [FromBody] RenameGroupModel input) =>
+        modelGroupService.Rename(input);
+
+    [HttpPost("DeleteGroup")]
+    public ActionResult<DeleteGroupResult> DeleteGroup(
+        [Required] [FromBody] DeleteGroupModel input
+    ) => modelGroupService.Delete(input);
+
     [HttpGet("GetMenuItems")]
     public IEnumerable<MenuItemInfo> GetMenuItems(
         [FromQuery] string id,
@@ -192,7 +196,7 @@ public class ModelController(
     {
         if (!Guid.TryParse(id, out Guid schemaItemId))
         {
-            ISchemaItemProvider provider = GetRootProviderById(id);
+            ISchemaItemProvider provider = treeNodeFactory.FindRootProvider(id);
             if (provider == null)
             {
                 return new List<MenuItemInfo>();

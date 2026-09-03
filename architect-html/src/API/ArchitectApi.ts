@@ -27,6 +27,7 @@ import {
   ICreateLookupRequest,
   ICreateWizardResult,
   IDatabaseResultResponse,
+  IDeleteGroupResult,
   ILookupWizardEntityData,
   IMenuItemInfo,
   IModelChange,
@@ -213,6 +214,28 @@ export class ArchitectApi implements IArchitectApi {
         newTypeName: typeName,
       })
     ).data;
+  }
+
+  async createGroup(node: IApiTreeNode, name: string): Promise<IApiTreeNode> {
+    return (
+      await this.http.post('/Model/CreateGroup', {
+        nodeId: node.origamId,
+        name: name,
+      })
+    ).data;
+  }
+
+  async renameGroup(node: IApiTreeNode, name: string): Promise<IApiTreeNode> {
+    return (
+      await this.http.post('/Model/RenameGroup', {
+        nodeId: node.origamId,
+        name: name,
+      })
+    ).data;
+  }
+
+  async deleteGroup(nodeId: string): Promise<IDeleteGroupResult> {
+    return (await this.http.post('/Model/DeleteGroup', { nodeId: nodeId })).data;
   }
 
   async updateSectionEditor(args: {

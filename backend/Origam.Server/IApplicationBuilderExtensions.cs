@@ -30,13 +30,64 @@ using Microsoft.Extensions.FileProviders;
 using MoreLinq.Extensions;
 using Origam.Server.Configuration;
 using Origam.Server.Middleware;
+using Origam.Server.OpenApi;
 using Origam.Service.Core;
 using SoapCore;
+using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace Origam.Server;
 
 public static class IApplicationBuilderExtensions
 {
+    public static void UseOpenApiDocumentation(
+        this IApplicationBuilder app,
+        bool enabled,
+        OpenApiDocumentProvider provider
+    )
+    {
+        const string documentPath = "/openapi/api.json";
+        const string userInterfacePath = "/api-docs";
+        if (!enabled)
+        {
+            app.Map(
+                documentPath,
+                branch =>
+                    branch.Run(context =>
+                    {
+                        context.Response.StatusCode = StatusCodes.Status404NotFound;
+                        return System.Threading.Tasks.Task.CompletedTask;
+                    })
+            );
+            app.Map(
+                userInterfacePath,
+                branch =>
+                    branch.Run(context =>
+                    {
+                        context.Response.StatusCode = StatusCodes.Status404NotFound;
+                        return System.Threading.Tasks.Task.CompletedTask;
+                    })
+            );
+            return;
+        }
+
+        app.Map(
+            documentPath,
+            branch =>
+                branch.Run(async context =>
+                {
+                    context.Response.ContentType = "application/vnd.oai.openapi+json;version=3.0";
+                    await context.Response.WriteAsync(provider.GetDocument());
+                })
+        );
+        app.UseSwaggerUI(options =>
+        {
+            options.RoutePrefix = userInterfacePath.TrimStart('/');
+            options.DocumentTitle = Resources.OpenApiTitle;
+            options.SwaggerEndpoint(url: "../openapi/api.json", name: Resources.OpenApiTitle);
+            options.DocExpansion(DocExpansion.List);
+        });
+    }
+
     public static void UseCustomSpa(this IApplicationBuilder app, string pathToClientApp)
     {
         app.Use(
