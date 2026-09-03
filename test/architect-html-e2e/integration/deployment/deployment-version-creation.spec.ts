@@ -28,7 +28,6 @@ test.describe('Deployment Version creation (real backend)', () => {
     test('Deployment Version creation', async ({ page }) => {
         await page.goto('/');
 
-        await page.getByText('Root Menu').click();
         await page.getByTestId('tree-toggle-Common').click();
         await page.getByTestId('tree-toggle-Deployment').click();
         await page.getByTestId('tree-toggle-Root Menu').click();

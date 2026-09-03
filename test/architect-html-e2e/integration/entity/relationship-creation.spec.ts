@@ -47,8 +47,13 @@ test.describe('Entity Relationship creation (real backend)', () => {
     await page.getByTestId('save-button').click();
     await expect(page.getByTestId('save-button-disabled')).toBeVisible();
 
+    const relationshipsGroups = page.getByTestId('tree-toggle-Relationships');
+    await expect(relationshipsGroups).toHaveCount(1);
+    await page.getByTestId('tree-toggle-IDimension').click();
+    await expect(relationshipsGroups).toHaveCount(0);
+
     await page.getByTestId('tree-toggle-DimensionEntity').click();
-    await page.getByTestId('tree-toggle-Relationships').first().click();
+    await relationshipsGroups.click();
     await page.getByTestId('tree-node-SourceDimensionEntityRelation').dblclick();
     await expect(page.getByTestId('tab-SourceDimensionEntityRelation')).toBeVisible();
   });
