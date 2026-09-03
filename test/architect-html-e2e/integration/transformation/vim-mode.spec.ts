@@ -35,10 +35,15 @@ async function enableVimMode(page: Page) {
   await page.getByRole('button', { name: 'Close' }).click();
 }
 
+function editorCodeArea(page: Page) {
+  return page.getByTestId('code-editor').first().locator('.view-lines');
+}
+
 async function openTransformation(page: Page) {
   await page.getByTestId('tree-toggle-Business Logic').click();
   await page.getByTestId('tree-toggle-Transformations').click();
   await page.getByTestId(`tree-node-${TRANSFORMATION}`).dblclick();
+  await expect(editorCodeArea(page)).toContainText(FIRST_LINE, { timeout: 30_000 });
 }
 
 async function closeWithoutSaving(page: Page) {
@@ -61,7 +66,7 @@ test.describe('Vim mode in the transformation editor (real backend)', () => {
     await openTransformation(page);
 
     const statusBar = page.getByTestId('vim-status-bar').first();
-    const codeArea = page.getByTestId('code-editor').first().locator('.view-lines');
+    const codeArea = editorCodeArea(page);
 
     await expect(statusBar).toContainText('--NORMAL--');
 
@@ -92,7 +97,7 @@ test.describe('Vim mode in the transformation editor (real backend)', () => {
     await enableVimMode(page);
 
     const statusBar = page.getByTestId('vim-status-bar').first();
-    await page.getByTestId('code-editor').first().locator('.view-lines').click();
+    await editorCodeArea(page).click();
     await expect(statusBar).toContainText('--NORMAL--');
 
     const statusBox = await statusBar.boundingBox();
