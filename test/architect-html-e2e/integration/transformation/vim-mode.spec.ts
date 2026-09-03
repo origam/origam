@@ -39,6 +39,16 @@ function editorCodeArea(page: Page) {
   return page.getByTestId('code-editor').first().locator('.view-lines');
 }
 
+async function typeAndWaitForPropertyUpdates(page: Page, text: string) {
+  for (const character of text) {
+    const propertyUpdated = page.waitForResponse(
+      response => response.url().includes('/PropertyEditor/Update') && response.ok(),
+    );
+    await page.keyboard.type(character);
+    await propertyUpdated;
+  }
+}
+
 async function openTransformation(page: Page) {
   await page.getByTestId('tree-toggle-Business Logic').click();
   await page.getByTestId('tree-toggle-Transformations').click();
@@ -78,7 +88,7 @@ test.describe('Vim mode in the transformation editor (real backend)', () => {
     await page.keyboard.press('i');
     await expect(statusBar).toContainText('--INSERT--');
 
-    await page.keyboard.type('vimtest', { delay: 100 });
+    await typeAndWaitForPropertyUpdates(page, 'vimtest');
     await expect(codeArea).toContainText('vimtest');
 
     await page.keyboard.press('Escape');
