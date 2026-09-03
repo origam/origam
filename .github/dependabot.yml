@@ -17,6 +17,9 @@ updates:
           - "csharpier"
           - "CSharpier.MsBuild"
     ignore:
+      # Keep Microsoft.OpenApi on the 2.x release line. Upgrading to 3.x requires additional migration work.
+      - dependency-name: "Microsoft.OpenApi"
+        versions: [">=3.0.0"]
       # Origam targets .NET 8, so keep this package on the .NET 8-compatible major version until upgrade to .NET 10.
       - dependency-name: "Microsoft.Extensions.Logging.Log4Net.AspNetCore"
         versions: [">=9.0.0"]
