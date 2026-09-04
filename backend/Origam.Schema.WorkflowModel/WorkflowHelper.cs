@@ -416,12 +416,12 @@ public static class WorkflowHelper
             workQueueClass.WorkQueueStructure.Entities[0];
         foreach (var column in dataStructureEntity.Columns)
         {
-            var newMapping = workQueueClass.NewItem<WorkQueueClassEntityMapping>(
-                schemaService.ActiveSchemaExtensionId,
-                null
-            );
             if (column.Name == "refId")
             {
+                var newMapping = workQueueClass.NewItem<WorkQueueClassEntityMapping>(
+                    schemaService.ActiveSchemaExtensionId,
+                    null
+                );
                 newMapping.Name = column.Name;
                 newMapping.XPath = "/row/@Id";
                 newMapping.Persist();
@@ -446,6 +446,10 @@ public static class WorkflowHelper
                         && (column.Name != "NextAttemptTime")
                     )
                     {
+                        var newMapping = workQueueClass.NewItem<WorkQueueClassEntityMapping>(
+                            schemaService.ActiveSchemaExtensionId,
+                            null
+                        );
                         newMapping.Name = column.Name;
                         newMapping.XPath =
                             "/row/"

@@ -21,41 +21,57 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
+using Origam.AI.Agent.Extensions;
 using Origam.Architect.Server.Models;
 using Origam.Architect.Server.ReturnModels;
 using Origam.Architect.Server.Services;
 using Origam.Schema;
-using Origam.Schema.GuiModel;
-using Origam.Workbench.Services;
 
 namespace Origam.Architect.Server.Controllers;
 
 [ApiController]
 [Route("[controller]")]
 public class TabController(
-    PropertyEditorService propertyService,
-    IPersistenceService persistenceService,
-    DesignerEditorService sectionService,
     TreeNodeFactory treeNodeFactory,
     TabService tabService,
-    DocumentationHelperService documentationHelper,
-    GitNodeStatusService gitNodeStatusService
+    TabResponseFactory tabResponseFactory,
+    DocumentationHelperService documentationHelper
 ) : ControllerBase
 {
     [HttpPost("CreateNode")]
+    [EndpointDescription(
+        "Create a new model item under a parent node. This is how database fields, virtual "
+            + "fields, function-call fields, lookup fields, relationships, parameters, filters, "
+            + "indexes and whole entities are created. nodeId is the parent item's id, "
+            + "newTypeName is the item type's caption (for example 'Database Field') or its full "
+            + "type name, changes carries the properties to set immediately as [{name, value}], "
+            + "and persist writes the item to disk in the same call. The response returns the new "
+            + "item's id, whether it was saved, its editable properties and any validation errors, "
+            + "plus parentName and parentOrigamId telling you where the item actually landed - "
+            + "check those instead of re-reading the tree, and report that location to the user "
+            + "rather than saying you could not verify it. For a new entity the response also "
+            + "carries primaryKeyFieldId, the id of that entity's primary key field - pass it as "
+            + "ForeignKeyField when you create a foreign key pointing at this entity, instead of "
+            + "exploring the entity to find it. When newTypeName does not match, the error lists "
+            + "the captions that are valid under that parent. When the response carries "
+            + "discarded true, the item failed validation and was thrown away - it does not exist, "
+            + "its id is dead, and this is not a successful creation. Read the errors, call "
+            + "CreateNode again with those properties filled in, and never report a discarded item "
+            + "as created."
+    )]
     public OpenTabData CreateNode([Required] [FromBody] NewItemModel input)
     {
-        var tab = tabService.OpenTabWithNewItem(input.NodeId, input.NewTypeName);
+        NewItemResult result = tabService.CreateNode(input);
+        OpenTabData tabData = result.Discarded
+            ? tabResponseFactory.DiscardedTabData(result.Tab)
+            : tabResponseFactory.CreatedTabData(result.Tab);
 
-        TreeNode treeNode = treeNodeFactory.Create(tab.Item);
-        return new OpenTabData(
-            tabId: tab.Id,
-            node: treeNode,
-            data: GetData(treeNode, tab.Item),
-            isPersisted: false,
-            parentNodeId: null,
-            isDirty: true
-        );
+        if (result.CloseWhenDone)
+        {
+            tabService.CloseTab(result.Tab.Id);
+        }
+
+        return tabData;
     }
 
     [HttpGet("GetOpen")]
@@ -73,17 +89,19 @@ public class TabController(
                     TabType.Default => new OpenTabData(
                         tabId: tab.Id,
                         node: treeNode,
-                        data: GetData(treeNode, item),
+                        data: tabResponseFactory.GetEditorData(treeNode, item),
                         isPersisted: item.IsPersisted,
                         parentNodeId: TreeNode.ToTreeNodeId(item.ParentItem),
-                        isDirty: tab.IsDirty
+                        isDirty: tab.IsDirty,
+                        isStale: tab.IsStale
                     ),
                     TabType.DocumentationEditor => new OpenTabData(
                         tabId: tab.Id,
                         node: treeNode,
                         data: documentationHelper.GetData(tab.DocumentationData, item.Name),
                         isPersisted: item.IsPersisted,
-                        isDirty: tab.IsDirty
+                        isDirty: tab.IsDirty,
+                        isStale: tab.IsStale
                     ),
                     _ => throw new Exception("Unknown tab type: " + tab.Id.Type),
                 };
@@ -102,26 +120,10 @@ public class TabController(
         var openTabData = new OpenTabData(
             tabId: tab.Id,
             node: treeNode,
-            data: GetData(treeNode, item),
+            data: tabResponseFactory.GetEditorData(treeNode, item),
             isPersisted: true
         );
         return Ok(openTabData);
-    }
-
-    private object GetData(TreeNode treeNode, ISchemaItem item)
-    {
-        object data = treeNode.DefaultEditor switch
-        {
-            EditorSubType.GridEditor => propertyService.GetEditorPropertiesWithErrors(item),
-            EditorSubType.DeploymentScriptsEditor => propertyService.GetEditorPropertiesWithErrors(
-                item
-            ),
-            EditorSubType.XsltEditor => propertyService.GetEditorPropertiesWithErrors(item),
-            EditorSubType.ScreenSectionEditor => sectionService.GetSectionEditorData(item),
-            EditorSubType.ScreenEditor => sectionService.GetScreenEditorData(item),
-            _ => null,
-        };
-        return data;
     }
 
     [HttpPost("Close")]
@@ -142,23 +144,19 @@ public class TabController(
     public IActionResult PersistChanges([FromBody] PersistModel input)
     {
         TabData tabData = tabService.OpenDefaultTab(input.SchemaItemId);
-        ISchemaItem item = tabData.Item;
-        if (item is AbstractControlSet controlSet && controlSet.DataSourceId == Guid.Empty)
+        if (!tabService.CanPersist(tabData.Item))
         {
             return BadRequest("No Datasource selected can't save");
         }
 
-        try
+        tabService.PersistItem(tabData);
+
+        bool closeWhenDone = Request.IsFromAIAgent();
+        if (closeWhenDone)
         {
-            persistenceService.SchemaProvider.BeginTransaction();
-            item.Persist();
-            tabData.IsDirty = false;
-            return Ok();
+            tabService.CloseTab(tabData.Id);
         }
-        finally
-        {
-            persistenceService.SchemaProvider.EndTransaction();
-            gitNodeStatusService.ClearCache();
-        }
+
+        return Ok();
     }
 }

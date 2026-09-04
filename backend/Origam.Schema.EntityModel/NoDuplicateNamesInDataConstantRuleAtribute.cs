@@ -56,7 +56,10 @@ public class NoDuplicateNamesInDataConstantRuleAtribute : AbstractModelElementRu
             return null;
         }
 
-        if (dataconstant.RootProvider == null) { }
+        if (dataconstant.RootProvider == null)
+        {
+            return null;
+        }
         string instanceName = (string)Reflector.GetValue(instance.GetType(), instance, memberName);
         var itemWithDuplicateName = dataconstant
             .RootProvider.ChildItems.Where(item => item is DataConstant)

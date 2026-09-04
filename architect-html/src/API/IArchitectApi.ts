@@ -506,7 +506,8 @@ export type EditorType =
   | EditorSubType
   | 'DocumentationEditor'
   | 'SearchResultsEditor'
-  | 'ShowSqlEditor';
+  | 'ShowSqlEditor'
+  | 'AiSettingsModule';
 
 export interface INodeLoadData {
   id: string;
@@ -558,6 +559,13 @@ export interface IDeploymentScriptsGeneratorModuleData {
   results: IDatabaseResult[];
 }
 
+export interface IAiSettingsModuleData {
+  customInstructions: string;
+  model: string;
+  router: string;
+  hasApiKey: boolean;
+}
+
 export type DeploymentStatus = 'Pending' | 'Done';
 
 export interface DocumentationEditorData {
@@ -594,7 +602,8 @@ export interface IApiTabData {
     | DocumentationEditorData
     | IDeploymentScriptsGeneratorModuleData
     | ISearchResultsEditorData
-    | IShowSqlEditorData;
+    | IShowSqlEditorData
+    | IAiSettingsModuleData;
   isDirty: boolean;
 }
 

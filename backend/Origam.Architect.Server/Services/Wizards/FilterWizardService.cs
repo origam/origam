@@ -52,6 +52,34 @@ public class FilterWizardService(
         [CreateFilterType.InList] = new("In", "GetBy", CreateParameter: true),
     };
 
+    public FilterWizardData GetWizardData(Guid entityId)
+    {
+        var entity = RetrieveEntity(entityId);
+
+        var columns = entity
+            .EntityColumns.Where(column => !string.IsNullOrEmpty(column.ToString()))
+            .OrderBy(column => column.Name)
+            .Select(column => new FilterWizardColumn
+            {
+                Id = column.Id,
+                Name = column.Name,
+                IsPrimaryKey = column.IsPrimaryKey,
+                DataType = column.DataType.ToString(),
+            })
+            .ToList();
+
+        return new FilterWizardData
+        {
+            EntityName = entity.Name,
+            Columns = columns,
+            ExistingFilters = entity
+                .EntityFilters.OrderBy(filter => filter.Name)
+                .Select(filter => new IdName { Id = filter.Id, Name = filter.Name })
+                .ToList(),
+            FilterTypes = Enum.GetNames<CreateFilterType>().ToList(),
+        };
+    }
+
     public CreateWizardResult CreateFilter(CreateFilterModel input)
     {
         var column = Retrieve<IDataEntityColumn>(input.ColumnId, Strings.Wizard_ColumnNotFound);
