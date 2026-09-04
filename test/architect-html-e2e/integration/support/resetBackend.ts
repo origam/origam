@@ -39,9 +39,25 @@ const repoRoot = findRepoRoot();
 const MODEL_DIR = 'model-tests/model';
 const DEFAULT_PACKAGE = 'Root Menu';
 
+function runGit(args: string[]): void {
+  const deadline = Date.now() + 30_000;
+  for (;;) {
+    try {
+      execFileSync('git', args, { cwd: repoRoot, stdio: 'pipe' });
+      return;
+    } catch (error) {
+      const message = String((error as { stderr?: Buffer }).stderr ?? (error as Error).message);
+      if (!message.includes('index.lock') || Date.now() > deadline) {
+        throw new Error(`git ${args.join(' ')} failed: ${message}`);
+      }
+      Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 250);
+    }
+  }
+}
+
 export function restoreModelFiles(): void {
-  execFileSync('git', ['checkout', '--', MODEL_DIR], { cwd: repoRoot, stdio: 'pipe' });
-  execFileSync('git', ['clean', '-fd', MODEL_DIR], { cwd: repoRoot, stdio: 'pipe' });
+  runGit(['checkout', '--', MODEL_DIR]);
+  runGit(['clean', '-fd', MODEL_DIR]);
 }
 
 export async function resetBackend(request: APIRequestContext): Promise<void> {
