@@ -39,7 +39,7 @@
       <ItemGroup>
         <PackageReference
           Include="Roslynator.Analyzers"
-          Version="4.16.1"
+          Version="5.0.0"
           PrivateAssets="all"
           IncludeAssets="build;analyzers;buildtransitive"
         />
