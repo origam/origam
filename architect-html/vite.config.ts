@@ -10,6 +10,9 @@ import mkcert from 'vite-plugin-mkcert';
 // Local development keeps HTTPS by default.
 const httpsDisabled = process.env.VITE_DISABLE_HTTPS === 'true';
 
+const proxyTargetHttps = process.env.VITE_ARCHITECT_PROXY_TARGET_HTTPS ?? 'https://localhost:7099';
+const proxyTargetHttp = process.env.VITE_ARCHITECT_PROXY_TARGET_HTTP ?? 'http://localhost:5003';
+
 export default defineConfig({
   define: {
     __ORIGAM_ARCHITECT_HTML_VERSION__: JSON.stringify(
@@ -48,59 +51,59 @@ export default defineConfig({
     ...(httpsDisabled ? {} : { https: {} }),
     proxy: {
       '/Model': {
-        target: 'https://localhost:7099',
+        target: proxyTargetHttps,
         secure: false,
       },
       '/Package': {
-        target: 'https://localhost:7099',
+        target: proxyTargetHttps,
         secure: false,
       },
       '/Tab': {
-        target: 'https://localhost:7099',
+        target: proxyTargetHttps,
         secure: false,
       },
       '/Test': {
-        target: 'https://localhost:7099',
+        target: proxyTargetHttps,
         secure: false,
       },
       '/ScreenEditor': {
-        target: 'https://localhost:7099',
+        target: proxyTargetHttps,
         secure: false,
       },
       '/SectionEditor': {
-        target: 'https://localhost:7099',
+        target: proxyTargetHttps,
         secure: false,
       },
       '/PropertyEditor': {
-        target: 'https://localhost:7099',
+        target: proxyTargetHttps,
         secure: false,
       },
       '/Documentation': {
-        target: 'https://localhost:7099',
+        target: proxyTargetHttps,
         secure: false,
       },
       '/Xslt': {
-        target: 'https://localhost:7099',
+        target: proxyTargetHttps,
         secure: false,
       },
       '/Icons': {
-        target: 'http://localhost:5003',
+        target: proxyTargetHttp,
         secure: false,
       },
       '/DeploymentScripts': {
-        target: 'http://localhost:5003',
+        target: proxyTargetHttp,
         secure: false,
       },
       '/DeploymentScriptsGenerator': {
-        target: 'http://localhost:5003',
+        target: proxyTargetHttp,
         secure: false,
       },
       '/Search': {
-        target: 'http://localhost:5003',
+        target: proxyTargetHttp,
         secure: false,
       },
       '/wizards': {
-        target: 'https://localhost:7099',
+        target: proxyTargetHttps,
         secure: false,
       },
     },

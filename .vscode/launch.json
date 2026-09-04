@@ -1,0 +1,33 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug Architect.Server",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-architect",
+            "program": "${workspaceFolder}/backend/Origam.Architect.Server/bin/Debug Architect Server/net8.0/Origam.Architect.Server.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/backend/Origam.Architect.Server/bin/Debug Architect Server/net8.0",
+            "stopAtEntry": false,
+            "env": {
+                "ASPNETCORE_URLS": "http://+:8081"
+            },
+            "console": "internalConsole"
+        },
+        {
+            "name": "Debug Origam.Server",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-server",
+            "program": "${workspaceFolder}/backend/Origam.Server/bin/Debug/net8.0/Origam.Server.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/backend/Origam.Server/bin/Debug/net8.0",
+            "stopAtEntry": false,
+            "env": {
+                "ASPNETCORE_URLS": "http://+:8080"
+            },
+            "console": "internalConsole"
+        }
+    ]
+}
