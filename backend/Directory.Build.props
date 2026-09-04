@@ -45,7 +45,7 @@
         />
         <PackageReference
           Include="Roslynator.Formatting.Analyzers"
-          Version="4.15.0"
+          Version="5.0.0"
           PrivateAssets="all"
           IncludeAssets="build;analyzers;buildtransitive"
         />
