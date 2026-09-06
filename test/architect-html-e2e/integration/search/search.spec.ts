@@ -18,7 +18,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { expect, test } from '@playwright/test';
-import { resetBackend } from '@support/resetBackend';
+import { plantBrokenGroupReference } from '@support/modelDefects';
+import { reloadBackend, resetBackend } from '@support/resetBackend';
+
+// One of the tests damages the model files on disk, so they must not overlap.
+test.describe.configure({ mode: 'serial' });
 
 test.describe('Search virtual entity test', () => {
   test.beforeEach(async ({ request }) => {
@@ -33,5 +37,19 @@ test.describe('Search virtual entity test', () => {
     await expect(page.locator('tbody')).toContainText('IActive');
     await page.getByRole('cell', { name: 'Virtual Entity' }).first().click();
     await expect(page.locator('tbody')).toContainText('Virtual Entity');
+  });
+
+  // Search must not fail when an item's group is missing.
+  test('finds items whose group is missing', async ({ request }) => {
+    plantBrokenGroupReference();
+    await reloadBackend(request, 'Widgets');
+
+    const response = await request.get('/Search/Text', { params: { text: 'ArrayTest' } });
+    expect(response.ok()).toBeTruthy();
+
+    const results = await response.json();
+    expect(results.some((result: { foundIn: string }) => result.foundIn.includes('ArrayTest'))).toBe(
+      true,
+    );
   });
 });
