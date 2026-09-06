@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { ArchitectApi } from '@api/ArchitectApi';
 import { IArchitectApi } from '@api/IArchitectApi';
 import { EditorTabViewState } from '@components/editorTabView/EditorTabViewState';
+import { ModelCheckState } from '@components/modelCheck/ModelCheckState';
 import { ModelTreeState } from '@components/modelTree/ModelTreeState';
 import { PackagesState } from '@components/packages/PackagesState';
 import { PropertiesState } from '@components/properties/PropertiesState';
@@ -42,6 +43,7 @@ export class RootStore {
   public architectApi: IArchitectApi = new ArchitectApi();
   public dialogStack: IDialogStackState = new DialogStackState();
   public notificationState = new NotificationState();
+  public modelCheckState: ModelCheckState;
   public errorDialogController: ErrorDialogController;
   public progressBarState = new ProgressBarState();
   public propertiesState = new PropertiesState();
@@ -52,6 +54,7 @@ export class RootStore {
     this.errorDialogController = new ErrorDialogController(this.dialogStack);
     this.editorTabViewState = new EditorTabViewState(this);
     this.modelTreeState = new ModelTreeState(this);
+    this.modelCheckState = new ModelCheckState(this);
     this.packagesState = new PackagesState(
       this.progressBarState,
       this.sideBarTabViewState,

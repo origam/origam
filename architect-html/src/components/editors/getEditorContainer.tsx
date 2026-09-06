@@ -24,6 +24,7 @@ import {
   IApiEditorProperty,
   IArchitectApi,
   IDeploymentScriptsGeneratorModuleData,
+  IModelCheckResultsEditorData,
   ISearchResultsEditorData,
   IScreenEditorData,
   ISectionEditorData,
@@ -46,7 +47,9 @@ import { EditorContainer } from '@editors/EditorContainer.tsx';
 import { EditorProperty } from '@editors/gridEditor/EditorProperty';
 import GridEditor from '@editors/gridEditor/GridEditor';
 import { GridEditorState } from '@editors/gridEditor/GridEditorState';
+import ModelCheckResultsView from '@components/modelCheck/ModelCheckResultsView';
 import SearchResultsView from '@components/search/SearchResultsView';
+import { ModelCheckResultsTabState } from '@components/modelCheck/ModelCheckResultsTabState';
 import { SearchResultsTabState } from '@components/search/SearchResultsTabState';
 import { XsltEditorState } from '@editors/gridEditor/XsltEditorState.ts';
 import XsltEditor from '@editors/xsltEditor/XsltEditor';
@@ -198,6 +201,12 @@ export function getEditorContainer(args: {
       searchResultsData.results ?? [],
     );
     return new EditorContainer(editorState, <SearchResultsView editorState={editorState} />);
+  }
+
+  if (editorType === 'ModelCheckResultsEditor') {
+    const modelCheckData = data as IModelCheckResultsEditorData;
+    const editorState = new ModelCheckResultsTabState(editorData.editorId, modelCheckData.result);
+    return new EditorContainer(editorState, <ModelCheckResultsView editorState={editorState} />);
   }
 
   return null;

@@ -23,6 +23,7 @@ import {
   IApiTabData,
   IArchitectApi,
   IDatabaseResultResponse,
+  IModelCheckResult,
   ISearchResult,
 } from '@api/IArchitectApi';
 import { EditorData } from '@components/modelTree/EditorData';
@@ -30,6 +31,7 @@ import { TreeNode } from '@components/modelTree/TreeNode';
 import { askYesNoQuestion, YesNoResult } from '@dialogs/DialogUtils';
 import { EditorContainer } from '@editors/EditorContainer.tsx';
 import { getEditorContainer } from '@editors/getEditorContainer.tsx';
+import { ModelCheckResultsTabState } from '@components/modelCheck/ModelCheckResultsTabState.ts';
 import { SearchResultsTabState } from '@components/search/SearchResultsTabState.ts';
 import { FlowHandlerInput, runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { RootStore } from '@stores/RootStore';
@@ -37,6 +39,7 @@ import { observable } from 'mobx';
 import { CancellablePromise } from 'mobx/dist/api/flow';
 
 const SearchEditorId = 'SearchResultsEditor-Id';
+const ModelCheckEditorId = 'ModelCheckResultsEditor-Id';
 const ShowSqlEditorIdPrefix = 'ShowSqlEditor-';
 const DeploymentScriptsGeneratorModuleId = 'DeploymentScriptsGeneratorModule-Id';
 
@@ -205,6 +208,37 @@ export class EditorTabViewState {
     this.openEditor(editorData);
   }
 
+  openModelCheckResults(result: IModelCheckResult) {
+    const existingEditor = this.editorsContainers.find(
+      editor => editor.state instanceof ModelCheckResultsTabState,
+    );
+    if (existingEditor) {
+      const editorState = existingEditor.state as ModelCheckResultsTabState;
+      editorState.result = result;
+      this.setActiveEditor(editorState.tabId);
+      return;
+    }
+
+    const tempTabData: IApiTabData = {
+      tabId: ModelCheckEditorId,
+      tabType: 'ModelCheckResultsEditor',
+      parentNodeId: undefined,
+      isDirty: false,
+      node: {
+        id: '',
+        origamId: '',
+        nodeText: '',
+        editorType: null,
+      },
+      data: {
+        result,
+      },
+    };
+
+    const editorData = new EditorData(tempTabData, null);
+    this.openEditor(editorData);
+  }
+
   openEditor(editorData: EditorData, editorType?: EditorType) {
     const alreadyOpenEditor = this.editorsContainers.find(
       editor => editor.state.tabId === editorData.editorId,
@@ -305,7 +339,11 @@ export class EditorTabViewState {
 
       if (editorId === DeploymentScriptsGeneratorModuleId) {
         this.rootStore.uiState.setDsGeneratorState({ isOpen: false });
-      } else if (editorId !== SearchEditorId && !editorId.startsWith(ShowSqlEditorIdPrefix)) {
+      } else if (
+        editorId !== SearchEditorId &&
+        editorId !== ModelCheckEditorId &&
+        !editorId.startsWith(ShowSqlEditorIdPrefix)
+      ) {
         yield this.architectApi.closeTab(editorId);
       }
 
