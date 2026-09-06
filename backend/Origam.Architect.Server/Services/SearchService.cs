@@ -38,7 +38,9 @@ public class SearchService(
     {
         List<Guid> referencePackages = GetReferencePackages();
         var results = persistenceService.SchemaProvider.FullTextSearch<ISchemaItem>(text);
-        return results.Where(x => x != null).Select(result => GetResult(result, referencePackages));
+        return results
+            .Where(x => x != null)
+            .Select(result => BuildResult(result, referencePackages));
     }
 
     public IEnumerable<SearchResult> FindReferences(Guid schemaItemId)
@@ -52,7 +54,7 @@ public class SearchService(
         }
         return schemaItems
             .Where(x => x != null)
-            .Select(result => GetResult(result, referencePackages));
+            .Select(result => BuildResult(result, referencePackages));
     }
 
     public IEnumerable<SearchResult> FindDependencies(Guid schemaItemId)
@@ -61,7 +63,7 @@ public class SearchService(
         List<Guid> referencePackages = GetReferencePackages();
         return item.GetDependencies(false)
             .Where(x => x != null)
-            .Select(result => GetResult(result, referencePackages));
+            .Select(result => BuildResult(result, referencePackages));
     }
 
     public List<SearchResult> BuildResults(IEnumerable<ISchemaItem> items)
@@ -69,11 +71,11 @@ public class SearchService(
         List<Guid> referencePackages = GetReferencePackages();
         return items
             .Where(item => item != null)
-            .Select(item => GetResult(item, referencePackages))
+            .Select(item => BuildResult(item, referencePackages))
             .ToList();
     }
 
-    private List<Guid> GetReferencePackages()
+    public List<Guid> GetReferencePackages()
     {
         var referencePackages = schemaService
             .ActiveExtension.IncludedPackages.Select(x => x.Id)
@@ -82,7 +84,7 @@ public class SearchService(
         return referencePackages;
     }
 
-    private SearchResult GetResult(ISchemaItem item, List<Guid> referencePackages)
+    public SearchResult BuildResult(ISchemaItem item, List<Guid> referencePackages)
     {
         try
         {
