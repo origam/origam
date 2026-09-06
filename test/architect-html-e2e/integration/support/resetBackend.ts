@@ -39,18 +39,28 @@ const repoRoot = findRepoRoot();
 const MODEL_DIR = 'model-tests/model';
 const DEFAULT_PACKAGE = 'Root Menu';
 
+// Absolute path of the file model, for tests that edit it directly.
+export const modelDirectory = path.join(repoRoot, MODEL_DIR);
+
 export function restoreModelFiles(): void {
   execFileSync('git', ['checkout', '--', MODEL_DIR], { cwd: repoRoot, stdio: 'pipe' });
   execFileSync('git', ['clean', '-fd', MODEL_DIR], { cwd: repoRoot, stdio: 'pipe' });
 }
 
-export async function resetBackend(request: APIRequestContext): Promise<void> {
-  restoreModelFiles();
-
+// Reloads without repairing files first, for tests that need the planted damage to reach the live model.
+export async function reloadBackend(
+  request: APIRequestContext,
+  packageName: string = DEFAULT_PACKAGE,
+): Promise<void> {
   const response = await request.post('/Test/Reset');
   if (!response.ok()) {
     throw new Error(`POST /Test/Reset failed: ${response.status()} ${await response.text()}`);
   }
 
-  await activatePackage(request, DEFAULT_PACKAGE);
+  await activatePackage(request, packageName);
+}
+
+export async function resetBackend(request: APIRequestContext): Promise<void> {
+  restoreModelFiles();
+  await reloadBackend(request);
 }
