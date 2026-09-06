@@ -34,6 +34,8 @@ export interface IArchitectApi {
 
   searchDependencies(schemaItemId: string): Promise<ISearchResult[]>;
 
+  runModelCheck(): Promise<IModelCheckResult>;
+
   openTab(schemaItemId: string): Promise<IApiTabData>;
 
   closeTab(tabId: string): Promise<void>;
@@ -363,6 +365,31 @@ export interface ISearchResultsEditorData {
   results: ISearchResult[];
 }
 
+export interface IModelRuleError {
+  item: ISearchResult;
+  message: string;
+}
+
+export interface IModelFileError {
+  text: string;
+  link: string;
+}
+
+export interface IModelFileErrorSection {
+  caption: string;
+  errors: IModelFileError[];
+}
+
+export interface IModelCheckResult {
+  lastRunAt: string | null;
+  ruleErrors: IModelRuleError[];
+  fileErrorSections: IModelFileErrorSection[];
+}
+
+export interface IModelCheckResultsEditorData {
+  result: IModelCheckResult;
+}
+
 export interface IAddToDeploymentRequest {
   platform: string;
   deploymentVersionId: string;
@@ -506,6 +533,7 @@ export type EditorType =
   | EditorSubType
   | 'DocumentationEditor'
   | 'SearchResultsEditor'
+  | 'ModelCheckResultsEditor'
   | 'ShowSqlEditor';
 
 export interface INodeLoadData {
@@ -594,6 +622,7 @@ export interface IApiTabData {
     | DocumentationEditorData
     | IDeploymentScriptsGeneratorModuleData
     | ISearchResultsEditorData
+    | IModelCheckResultsEditorData
     | IShowSqlEditorData;
   isDirty: boolean;
 }

@@ -31,6 +31,7 @@ import {
   ILookupWizardEntityData,
   IMenuItemInfo,
   IModelChange,
+  IModelCheckResult,
   IPackagesInfo,
   IParametersResult,
   IPropertyChange,
@@ -87,6 +88,10 @@ export class ArchitectApi implements IArchitectApi {
         },
       })
     ).data;
+  }
+
+  async runModelCheck(): Promise<IModelCheckResult> {
+    return (await this.http.post('/ModelCheck/Run')).data;
   }
 
   async searchReferences(schemaItemId: string): Promise<ISearchResult[]> {
