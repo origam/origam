@@ -159,6 +159,33 @@ namespace Origam.Architect.Server {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The model validation is already running..
+        /// </summary>
+        internal static string ModelCheck_AlreadyRunning {
+            get {
+                return ResourceManager.GetString("ModelCheck_AlreadyRunning", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The model validation could not be completed: {0}.
+        /// </summary>
+        internal static string ModelCheck_Failed {
+            get {
+                return ResourceManager.GetString("ModelCheck_Failed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Load a package before running the model validation..
+        /// </summary>
+        internal static string ModelCheck_NoActivePackage {
+            get {
+                return ResourceManager.GetString("ModelCheck_NoActivePackage", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Parameter named {0} was not found among Input Parameters..
         /// </summary>
         internal static string ParameterNotFound {

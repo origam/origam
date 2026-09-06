@@ -156,4 +156,13 @@
     <data name="Group_RenameOutsideActivePackage" xml:space="preserve">
         <value>Only folders from the active package can be renamed.</value>
     </data>
+    <data name="ModelCheck_AlreadyRunning" xml:space="preserve">
+        <value>The model validation is already running.</value>
+    </data>
+    <data name="ModelCheck_Failed" xml:space="preserve">
+        <value>The model validation could not be completed: {0}</value>
+    </data>
+    <data name="ModelCheck_NoActivePackage" xml:space="preserve">
+        <value>Load a package before running the model validation.</value>
+    </data>
 </root>

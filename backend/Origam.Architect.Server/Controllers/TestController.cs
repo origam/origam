@@ -38,6 +38,7 @@ public class TestController(
     SchemaService schemaService,
     IPersistenceService persistenceService,
     TabService tabService,
+    ModelCheckService modelCheckService,
     IWebHostEnvironment environment
 ) : ControllerBase
 {
@@ -55,6 +56,8 @@ public class TestController(
 
         // Drop all open editor tabs (kept in the singleton TabService).
         tabService.CloseAllTabs();
+
+        modelCheckService.ClearCache();
 
         // Re-read the file model from disk. FlushCache/LoadSchema on their own
         // keep the cached file index, so files removed on disk (a git reset of
