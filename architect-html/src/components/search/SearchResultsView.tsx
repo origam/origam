@@ -17,29 +17,22 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { RootStoreContext, T } from '@/main';
-import { ISearchResult } from '@api/IArchitectApi';
-import { SearchResultsTabState } from '@components/search/SearchResultsTabState';
-import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
+import { T } from '@/main';
 import S from '@components/search/SearchResultsView.module.scss';
+import { SearchResultsTabState } from '@components/search/SearchResultsTabState';
+import SchemaItemResultsTable from '@components/schemaItemResults/SchemaItemResultsTable';
 import { observer } from 'mobx-react-lite';
-import { useContext } from 'react';
-import { VscWarning } from 'react-icons/vsc';
 
 const SearchResultsView = observer(({ editorState }: { editorState: SearchResultsTabState }) => {
-  const rootStore = useContext(RootStoreContext);
-  const run = runInFlowWithHandler(rootStore.errorDialogController);
-
-  function highlightInModelTree(result: ISearchResult) {
-    run({
-      generator: function* () {
-        yield* rootStore.modelTreeState.expandAndHighlightSchemaItem({
-          parentNodeIds: result.parentNodeIds ?? [],
-          schemaItemId: result.schemaId,
-        });
-      },
-    });
-  }
+  const rows = editorState.results.map(result => ({
+    key: result.schemaId,
+    result,
+    extraCell: result.isOrphaned
+      ? T('n/a', 'schema_item_results_not_applicable')
+      : result.packageReference
+        ? T('Yes', 'dialog_yes')
+        : T('No', 'dialog_no'),
+  }));
 
   return (
     <div className={S.root}>
@@ -49,65 +42,14 @@ const SearchResultsView = observer(({ editorState }: { editorState: SearchResult
         </span>
         <span className={S.count}>{editorState.results.length}</span>
       </div>
-      <div className={S.tableWrapper}>
-        <table className={S.table}>
-          <thead>
-            <tr>
-              <th className={S.statusColumn} aria-label="Status" />
-              <th>{T('Found in', 'editor_search_results_column_found_in')}</th>
-              <th>{T('Root type', 'editor_search_results_column_root_type')}</th>
-              <th>{T('Type', 'editor_search_results_column_type')}</th>
-              <th>{T('Folder', 'editor_search_results_column_folder')}</th>
-              <th>{T('Package', 'editor_search_results_column_package')}</th>
-              <th>{T('Package reference', 'editor_search_results_column_package_reference')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {[...editorState.results]
-              .sort((left, right) => left.foundIn.localeCompare(right.foundIn))
-              .map(result => (
-                <tr
-                  key={result.schemaId}
-                  className={result.isOrphaned ? S.orphanedRow : S.row}
-                  onClick={() => highlightInModelTree(result)}
-                >
-                  <td className={S.statusCell}>
-                    {result.isOrphaned && (
-                      <span
-                        className={S.orphanedMarker}
-                        title={T(
-                          'Orphaned reference — parent chain is broken',
-                          'editor_search_results_orphaned_note',
-                        )}
-                      >
-                        <VscWarning />
-                      </span>
-                    )}
-                  </td>
-                  <td>{result.foundIn}</td>
-                  <td>{result.isOrphaned ? 'n/a' : result.rootType}</td>
-                  <td>{result.type}</td>
-                  <td>{result.isOrphaned ? 'n/a' : result.folder}</td>
-                  <td>{result.isOrphaned ? 'n/a' : result.package}</td>
-                  <td>
-                    {result.isOrphaned
-                      ? 'n/a'
-                      : result.packageReference
-                        ? T('Yes', 'dialog_yes')
-                        : T('No', 'dialog_no')}
-                  </td>
-                </tr>
-              ))}
-            {editorState.results.length === 0 && (
-              <tr>
-                <td className={S.empty} colSpan={7}>
-                  {T('No results found.', 'editor_search_results_empty')}
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+      <SchemaItemResultsTable
+        rows={rows}
+        extraColumn={{
+          label: T('Package reference', 'editor_search_results_column_package_reference'),
+          position: 'last',
+        }}
+        emptyText={T('No results found.', 'editor_search_results_empty')}
+      />
     </div>
   );
 });
