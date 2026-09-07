@@ -37,8 +37,11 @@ export function menuItem(page: Page, nodeText: string, testId: string): Locator 
   return page.getByTestId(`tree-node-${nodeText}`).locator('xpath=..').getByTestId(testId);
 }
 
+// Clicking an item closes the menu only after its feedback animation and that
+// close hides every menu, so a menu opened too early would close with it.
 // The menu opens before its items arrive from the server.
 export async function openContextMenu(page: Page, nodeText: string): Promise<void> {
+  await expect(page.getByRole('menu')).toHaveCount(0);
   const pendingResponse = page.waitForResponse(
     response => response.url().includes('/Model/GetMenuItems'),
     { timeout: 10_000 },
