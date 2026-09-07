@@ -28,9 +28,5 @@ public record EntityCard(
     string Package,
     List<string> Fields,
     List<RelatedItem> PrimaryKey,
-    List<RelatedItem> Structures,
-    List<RelatedItem> Screens,
-    List<RelatedItem> Panels,
-    List<RelatedItem> Lookups,
-    List<RelatedItem> WorkQueues
+    List<RelatedItem> UsedBy
 );

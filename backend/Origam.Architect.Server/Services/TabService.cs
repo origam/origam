@@ -36,7 +36,6 @@ public class TabService(
     SchemaService schemaService,
     IPersistenceService persistenceService,
     PropertyParser propertyParser,
-    PropertyEditorService propertyEditorService,
     GitNodeStatusService gitNodeStatusService
 )
 {
@@ -184,49 +183,6 @@ public class TabService(
         return null;
     }
 
-    public NewItemResult CreateNode(NewItemModel input)
-    {
-        TabData tab = OpenTabWithNewItem(input.NodeId, input.NewTypeName);
-
-        try
-        {
-            if (input.Changes is { Count: > 0 })
-            {
-                ChangesToTabData(
-                    new ChangesModel { SchemaItemId = tab.Item.Id, Changes = input.Changes }
-                );
-            }
-
-            if (input.Persist)
-            {
-                if (HasRuleErrors(tab.Item))
-                {
-                    return new NewItemResult(tab, Discarded: true, CloseWhenDone: true);
-                }
-
-                if (CanPersist(tab.Item))
-                {
-                    PersistItem(tab);
-                }
-            }
-        }
-        catch
-        {
-            if (!tab.Item.IsPersisted)
-            {
-                CloseTab(tab.Id);
-            }
-
-            throw;
-        }
-
-        return new NewItemResult(
-            tab,
-            Discarded: false,
-            CloseWhenDone: input.Persist && tab.Item.IsPersisted
-        );
-    }
-
     public void PersistItem(TabData tabData)
     {
         ISchemaItem persistTarget = tabData.Item;
@@ -253,13 +209,6 @@ public class TabService(
     public bool CanPersist(ISchemaItem item)
     {
         return item is not AbstractControlSet controlSet || controlSet.DataSourceId != Guid.Empty;
-    }
-
-    private bool HasRuleErrors(ISchemaItem item)
-    {
-        return propertyEditorService
-            .GetEditorPropertiesWithErrors(item)
-            .Any(property => property.Errors is { Count: > 0 });
     }
 
     public TabData OpenDefaultTab(Guid schemaItemId)

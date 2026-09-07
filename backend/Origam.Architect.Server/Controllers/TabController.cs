@@ -34,6 +34,7 @@ namespace Origam.Architect.Server.Controllers;
 public class TabController(
     TreeNodeFactory treeNodeFactory,
     TabService tabService,
+    TreeService treeService,
     TabResponseFactory tabResponseFactory,
     DocumentationHelperService documentationHelper
 ) : ControllerBase
@@ -61,7 +62,7 @@ public class TabController(
     )]
     public OpenTabData CreateNode([Required] [FromBody] NewItemModel input)
     {
-        NewItemResult result = tabService.CreateNode(input);
+        NewItemResult result = treeService.CreateNode(input);
         OpenTabData tabData = result.Discarded
             ? tabResponseFactory.DiscardedTabData(result.Tab)
             : tabResponseFactory.CreatedTabData(result.Tab);

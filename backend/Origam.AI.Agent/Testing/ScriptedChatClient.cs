@@ -152,10 +152,7 @@ public sealed class ScriptedChatClient(AiScriptStore scriptStore, IChatClient? l
     private IChatClient RequireLiveChatClient()
     {
         return liveChatClient
-            ?? throw new InvalidOperationException(
-                "No AI API key is configured and no response is queued. "
-                    + "Set Ai:ApiKey, or POST /agent/test/script before starting a run."
-            );
+            ?? throw new InvalidOperationException(Strings.ScriptedClientNoApiKey);
     }
 
     private static ScriptedStep SelectStep(AiScript script, IEnumerable<ChatMessage> messages)
@@ -171,8 +168,11 @@ public sealed class ScriptedChatClient(AiScriptStore scriptStore, IChatClient? l
         if (completedToolRounds >= script.Steps.Count)
         {
             throw new InvalidOperationException(
-                $"The queued script has {script.Steps.Count} step(s) but step "
-                    + $"{completedToolRounds + 1} was requested. The last step must not call tools."
+                string.Format(
+                    Strings.ScriptedClientStepMissing,
+                    script.Steps.Count,
+                    completedToolRounds + 1
+                )
             );
         }
 

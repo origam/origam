@@ -39,9 +39,6 @@ public sealed class AgentController(
     IEnumerable<IAgentTargetStrategy> targets
 ) : ControllerBase
 {
-    private const string UnreachableError =
-        "Architect server unreachable (is it running with Swagger in Development?).";
-
     [HttpGet("health")]
     public AgentHealth Health()
     {
@@ -94,7 +91,7 @@ public sealed class AgentController(
         return new AgentSections(
             available,
             openApiProvider?.BaseUrl ?? strategy.Options.BaseUrl(),
-            available ? null : openApiProvider?.LastError ?? UnreachableError,
+            available ? null : openApiProvider?.LastError ?? Strings.ArchitectUnreachable,
             strategy.Options.DefaultSections,
             sectionLists
                 .Where(sections => sections is not null)

@@ -21,4 +21,4 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 namespace Origam.Architect.Server.ReturnModels;
 
-public record RelatedItem(string Id, string Name);
+public record RelatedItem(string Id, string Name, string Kind);

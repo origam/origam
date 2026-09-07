@@ -192,7 +192,9 @@ public class CommunityWebSearchTool
         var response = await httpClient.GetAsync(baseUrl + relativeUrl, cancellationToken);
         if (!response.IsSuccessStatusCode)
         {
-            throw new HttpRequestException($"{baseUrl} returned {(int)response.StatusCode}.");
+            throw new HttpRequestException(
+                string.Format(Strings.CommunityRequestFailed, baseUrl, (int)response.StatusCode)
+            );
         }
 
         var stream = await response.Content.ReadAsStreamAsync(cancellationToken);

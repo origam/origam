@@ -106,6 +106,33 @@ namespace Origam.AI.Agent {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Architect server unreachable (is it running with Swagger in Development?)..
+        /// </summary>
+        internal static string ArchitectUnreachable {
+            get {
+                return ResourceManager.GetString("ArchitectUnreachable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} returned {1}..
+        /// </summary>
+        internal static string CommunityRequestFailed {
+            get {
+                return ResourceManager.GetString("CommunityRequestFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Architect returned {0} when fetching entity index..
+        /// </summary>
+        internal static string EntityIndexRequestFailed {
+            get {
+                return ResourceManager.GetString("EntityIndexRequestFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The attached image could not be read..
         /// </summary>
         internal static string ImageInvalid {
@@ -133,6 +160,24 @@ namespace Origam.AI.Agent {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Architect returned an empty item type catalog..
+        /// </summary>
+        internal static string ItemTypeCatalogEmpty {
+            get {
+                return ResourceManager.GetString("ItemTypeCatalogEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Architect returned {0} for ItemTypeCatalog..
+        /// </summary>
+        internal static string ItemTypeCatalogRequestFailed {
+            get {
+                return ResourceManager.GetString("ItemTypeCatalogRequestFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} failed with HTTP status {1}..
         /// </summary>
         internal static string OpenApiCallFailed {
@@ -156,6 +201,141 @@ namespace Origam.AI.Agent {
         internal static string PromptSectionMissing {
             get {
                 return ResourceManager.GetString("PromptSectionMissing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No AI API key is configured and no response is queued. Set Ai:ApiKey, or POST /agent/test/script before starting a run..
+        /// </summary>
+        internal static string ScriptedClientNoApiKey {
+            get {
+                return ResourceManager.GetString("ScriptedClientNoApiKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The queued script has {0} step(s) but step {1} was requested. The last step must not call tools..
+        /// </summary>
+        internal static string ScriptedClientStepMissing {
+            get {
+                return ResourceManager.GetString("ScriptedClientStepMissing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Makes a deployment version current and runs its deployment scripts against the database..
+        /// </summary>
+        internal static string SectionDeploymentScriptsDescription {
+            get {
+                return ResourceManager.GetString("SectionDeploymentScriptsDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Compares the model with the database and adds the differences to a deployment version or back into the model..
+        /// </summary>
+        internal static string SectionDeploymentScriptsGeneratorDescription {
+            get {
+                return ResourceManager.GetString("SectionDeploymentScriptsGeneratorDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Opens and edits the documentation attached to a model element..
+        /// </summary>
+        internal static string SectionDocumentationDescription {
+            get {
+                return ResourceManager.GetString("SectionDocumentationDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lists the item types that can be created under a node and the properties each of them has..
+        /// </summary>
+        internal static string SectionItemTypeCatalogDescription {
+            get {
+                return ResourceManager.GetString("SectionItemTypeCatalogDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Browses the model tree, reads node details, searches the schema and deletes model elements..
+        /// </summary>
+        internal static string SectionModelDescription {
+            get {
+                return ResourceManager.GetString("SectionModelDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lists the packages of the model and switches the active one..
+        /// </summary>
+        internal static string SectionPackageDescription {
+            get {
+                return ResourceManager.GetString("SectionPackageDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Writes property values on the element..
+        /// </summary>
+        internal static string SectionPropertyEditorDescription {
+            get {
+                return ResourceManager.GetString("SectionPropertyEditorDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edits a screen opened in the designer: creates, updates and deletes the items on it..
+        /// </summary>
+        internal static string SectionScreenEditorDescription {
+            get {
+                return ResourceManager.GetString("SectionScreenEditorDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Finds model elements by text and shows what references them and what they depend on..
+        /// </summary>
+        internal static string SectionSearchDescription {
+            get {
+                return ResourceManager.GetString("SectionSearchDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edits a screen section opened in the designer: creates, updates and deletes the items on it..
+        /// </summary>
+        internal static string SectionSectionEditorDescription {
+            get {
+                return ResourceManager.GetString("SectionSectionEditorDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Opens, closes and saves editor tabs, and creates new model nodes inside them..
+        /// </summary>
+        internal static string SectionTabDescription {
+            get {
+                return ResourceManager.GetString("SectionTabDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Creates screens, lookups, menu items, work queue classes and filters through the Architect wizards..
+        /// </summary>
+        internal static string SectionWizardDescription {
+            get {
+                return ResourceManager.GetString("SectionWizardDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Validates and runs XSLT transformations and reads their parameters, settings and rule sets..
+        /// </summary>
+        internal static string SectionXsltDescription {
+            get {
+                return ResourceManager.GetString("SectionXsltDescription", resourceCulture);
             }
         }
     }

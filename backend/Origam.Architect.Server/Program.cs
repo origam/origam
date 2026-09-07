@@ -59,12 +59,13 @@ public class Program
         builder.Services.AddSingleton<EditorPropertyFactory>();
         builder.Services.AddSingleton<PropertyParser>();
         builder.Services.AddSingleton<TabService>();
+        builder.Services.AddSingleton<TreeService>();
         builder.Services.AddSingleton<TabResponseFactory>();
         builder.Services.AddTransient<XsltService>();
         builder.Services.AddSingleton<SearchService>();
         builder.Services.AddSingleton<PropertyEditorService>();
         builder.Services.AddSingleton<ItemTypeCatalogService>();
-        builder.Services.AddSingleton<EntityIndexService>();
+        builder.Services.AddSingleton<EntityCardService>();
         builder.Services.AddSingleton<DesignerEditorService>();
         builder.Services.AddSingleton<DeploymentVersionCurrentService>();
         builder.Services.AddSingleton<DeploymentScriptRunnerService>();

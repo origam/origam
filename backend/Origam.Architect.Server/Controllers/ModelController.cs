@@ -25,6 +25,7 @@ using Origam.Architect.Server.Models;
 using Origam.Architect.Server.ReturnModels;
 using Origam.Architect.Server.Services;
 using Origam.DA.ObjectPersistence;
+using Origam.DA.Service;
 using Origam.Schema;
 using Origam.UI;
 using Origam.Workbench.Services;
@@ -39,7 +40,7 @@ public class ModelController(
     TreeNodeFactory treeNodeFactory,
     ModelTransactionRunner modelTransactionRunner,
     TabService tabService,
-    EntityIndexService entityIndexService,
+    EntityCardService entityCardService,
     ModelGroupService modelGroupService
 ) : ControllerBase
 {
@@ -292,6 +293,10 @@ public class ModelController(
     [HttpGet("GetEntityIndex")]
     public ActionResult<List<EntityCard>> GetEntityIndex()
     {
-        return Ok(entityIndexService.Get());
+        if (!ReferenceIndexManager.Initialized)
+        {
+            return StatusCode(StatusCodes.Status503ServiceUnavailable);
+        }
+        return Ok(entityCardService.Get());
     }
 }

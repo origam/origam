@@ -37,14 +37,10 @@ public class ModelIndexService
         string Package,
         List<string> Fields,
         List<RelatedItem> PrimaryKey,
-        List<RelatedItem> Structures,
-        List<RelatedItem> Screens,
-        List<RelatedItem> Panels,
-        List<RelatedItem> Lookups,
-        List<RelatedItem> WorkQueues
+        List<RelatedItem> UsedBy
     );
 
-    private record RelatedItem(string Id, string Name);
+    private record RelatedItem(string Id, string Name, string Kind);
 
     private const int MaxUpdatesLength = 8000;
 
@@ -175,8 +171,10 @@ public class ModelIndexService
             var response = await architectApi.GetEntityIndexAsync(cancellationToken);
             if (!response.IsSuccess)
             {
-                lastError =
-                    $"Architect returned {(int)response.StatusCode} when fetching entity index.";
+                lastError = string.Format(
+                    Strings.EntityIndexRequestFailed,
+                    (int)response.StatusCode
+                );
                 return null;
             }
 
@@ -223,14 +221,26 @@ public class ModelIndexService
             .AppendLine(")");
 
         AppendFields(builder, card);
-        AppendRelated(builder, label: "s", card.Structures, prefix: "s");
-        AppendRelated(builder, label: "c", card.Screens, prefix: "c");
-        AppendRelated(builder, label: "p", card.Panels, prefix: "p");
-        AppendRelated(builder, label: "l", card.Lookups, prefix: "l");
-        AppendRelated(builder, label: "q", card.WorkQueues, prefix: "q");
+        foreach (var usersOfKind in (card.UsedBy ?? []).GroupBy(item => item.Kind))
+        {
+            AppendRelated(
+                builder,
+                label: usersOfKind.Key,
+                usersOfKind.ToList(),
+                prefix: AliasPrefix(usersOfKind.Key)
+            );
+        }
 
         var package = string.IsNullOrWhiteSpace(card.Package) ? "(no package)" : card.Package;
         return new IndexEntry(card.Id, package, builder.ToString());
+    }
+
+    private static string AliasPrefix(string kind)
+    {
+        return string.Concat(
+            kind.Split(separator: ' ', StringSplitOptions.RemoveEmptyEntries)
+                .Select(word => char.ToLowerInvariant(word[0]))
+        );
     }
 
     private static string Compose(List<IndexEntry> entries)

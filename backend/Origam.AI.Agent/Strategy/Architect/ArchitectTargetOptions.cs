@@ -1,4 +1,4 @@
-#region license
+﻿#region license
 /*
 Copyright 2005 - 2026 Advantage Solutions, s. r. o.
 
@@ -60,30 +60,20 @@ public static class ArchitectTargetOptions
             },
             SectionDescriptions = new Dictionary<string, string>(StringComparer.Ordinal)
             {
-                ["DeploymentScripts"] =
-                    "Makes a deployment version current and runs its deployment scripts against the database.",
+                ["DeploymentScripts"] = Strings.SectionDeploymentScriptsDescription,
                 ["DeploymentScriptsGenerator"] =
-                    "Compares the model with the database and adds the differences to a deployment version or back into the model.",
-                ["Documentation"] =
-                    "Opens and edits the documentation attached to a model element.",
-                ["ItemTypeCatalog"] =
-                    "Lists the item types that can be created under a node and the properties each of them has.",
-                ["Model"] =
-                    "Browses the model tree, reads node details, searches the schema and deletes model elements.",
-                ["Package"] = "Lists the packages of the model and switches the active one.",
-                ["PropertyEditor"] = "Writes property values on the element.",
-                ["ScreenEditor"] =
-                    "Edits a screen opened in the designer: creates, updates and deletes the items on it.",
-                ["Search"] =
-                    "Finds model elements by text and shows what references them and what they depend on.",
-                ["SectionEditor"] =
-                    "Edits a screen section opened in the designer: creates, updates and deletes the items on it.",
-                ["Tab"] =
-                    "Opens, closes and saves editor tabs, and creates new model nodes inside them.",
-                ["Wizard"] =
-                    "Creates screens, lookups, menu items, work queue classes and filters through the Architect wizards.",
-                ["Xslt"] =
-                    "Validates and runs XSLT transformations and reads their parameters, settings and rule sets.",
+                    Strings.SectionDeploymentScriptsGeneratorDescription,
+                ["Documentation"] = Strings.SectionDocumentationDescription,
+                ["ItemTypeCatalog"] = Strings.SectionItemTypeCatalogDescription,
+                ["Model"] = Strings.SectionModelDescription,
+                ["Package"] = Strings.SectionPackageDescription,
+                ["PropertyEditor"] = Strings.SectionPropertyEditorDescription,
+                ["ScreenEditor"] = Strings.SectionScreenEditorDescription,
+                ["Search"] = Strings.SectionSearchDescription,
+                ["SectionEditor"] = Strings.SectionSectionEditorDescription,
+                ["Tab"] = Strings.SectionTabDescription,
+                ["Wizard"] = Strings.SectionWizardDescription,
+                ["Xslt"] = Strings.SectionXsltDescription,
             },
         };
     }

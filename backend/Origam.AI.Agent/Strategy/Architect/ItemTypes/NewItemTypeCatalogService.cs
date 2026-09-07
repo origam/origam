@@ -84,14 +84,17 @@ public class NewItemTypeCatalogService
             var response = await architectApi.GetItemTypeCatalogAsync(cancellationToken);
             if (!response.IsSuccess)
             {
-                lastError = $"Architect returned {(int)response.StatusCode} for ItemTypeCatalog.";
+                lastError = string.Format(
+                    Strings.ItemTypeCatalogRequestFailed,
+                    (int)response.StatusCode
+                );
                 return null;
             }
 
             var catalog = JsonSerializer.Deserialize<ItemTypeCatalog>(response.Body, JsonOptions);
             if (catalog is null || catalog.Types.Count == 0)
             {
-                lastError = "Architect returned an empty item type catalog.";
+                lastError = Strings.ItemTypeCatalogEmpty;
                 return null;
             }
 
