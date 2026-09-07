@@ -38,11 +38,6 @@ public class SchemaItemMoveService(
     TreeNodeFactory treeNodeFactory
 )
 {
-    public ISchemaItemProvider GetRootProviderById(string id)
-    {
-        return nodeResolver.GetRootProviderById(id);
-    }
-
     public List<MoveVerdictResult> GetMoveVerdicts(
         NodeRefModel sourceReference,
         List<NodeRefModel> targetReferences

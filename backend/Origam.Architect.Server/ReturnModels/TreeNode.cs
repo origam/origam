@@ -102,6 +102,15 @@ public class TreeNodeFactory(
         };
     }
 
+    public ISchemaItemProvider FindRootProvider(string nodeId)
+    {
+        return schemaService
+            .ActiveExtension.ChildNodes()
+            .Cast<SchemaItemProviderGroup>()
+            .SelectMany(x => x.ChildNodes().Cast<ISchemaItemProvider>())
+            .FirstOrDefault(x => x.NodeId == nodeId);
+    }
+
     private DeploymentStatus? GetDeploymentStatus(IBrowserNode2 node)
     {
         if (node is not Schema.DeploymentModel.DeploymentVersion version)

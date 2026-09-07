@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using Origam.Architect.Server.Models;
+using Origam.Architect.Server.ReturnModels;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema;
 using Origam.UI;
@@ -27,22 +28,17 @@ using Origam.Workbench.Services;
 
 namespace Origam.Architect.Server.Services.Move;
 
-public class MoveNodeResolver(SchemaService schemaService, IPersistenceService persistenceService)
+public class MoveNodeResolver(
+    SchemaService schemaService,
+    IPersistenceService persistenceService,
+    TreeNodeFactory treeNodeFactory
+)
 {
     private IPersistenceProvider PersistenceProvider => persistenceService.SchemaProvider;
 
-    public ISchemaItemProvider GetRootProviderById(string id)
+    private ISchemaItemProvider GetRootProviderById(string id)
     {
-        if (schemaService.ActiveExtension == null)
-        {
-            return null;
-        }
-
-        return schemaService
-            .ActiveExtension.ChildNodes()
-            .Cast<SchemaItemProviderGroup>()
-            .SelectMany(group => group.ChildNodes().Cast<ISchemaItemProvider>())
-            .FirstOrDefault(provider => provider.NodeId == id);
+        return schemaService.ActiveExtension == null ? null : treeNodeFactory.FindRootProvider(id);
     }
 
     public IBrowserNode2 Resolve(NodeRefModel reference)

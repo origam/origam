@@ -59,6 +59,13 @@ import {
 } from '@origam/react-contexify';
 import '@origam/react-contexify/ReactContexify.css';
 
+const AUTO_EXPAND_DELAY_MS = 700;
+
+// The icon and the badges fire dragenter and dragleave too.
+function movedInsideRow(event: ReactDragEvent): boolean {
+  return event.currentTarget.contains(event.relatedTarget as Node | null);
+}
+
 const DeploymentBadges = observer(({ node }: { node: TreeNode }) => {
   return (
     <>
@@ -95,13 +102,6 @@ const DeploymentBadges = observer(({ node }: { node: TreeNode }) => {
     </>
   );
 });
-
-const AUTO_EXPAND_DELAY_MS = 700;
-
-// The icon and the badges fire dragenter and dragleave too.
-function movedInsideRow(event: ReactDragEvent): boolean {
-  return event.currentTarget.contains(event.relatedTarget as Node | null);
-}
 
 const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number }) => {
   const rootStore = useContext(RootStoreContext);

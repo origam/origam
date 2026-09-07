@@ -87,6 +87,24 @@ namespace Origam.Architect.Server {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Parameter named {0} was not found among Input Parameters..
+        /// </summary>
+        internal static string ParameterNotFound {
+            get {
+                return ResourceManager.GetString("ParameterNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to XSLT Validation.
+        /// </summary>
+        internal static string ValidationResultTitle {
+            get {
+                return ResourceManager.GetString("ValidationResultTitle", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Copy of {0}.
         /// </summary>
         internal static string CopyOfName {
@@ -254,24 +272,6 @@ namespace Origam.Architect.Server {
         internal static string Move_SourceGroupNotFound {
             get {
                 return ResourceManager.GetString("Move_SourceGroupNotFound", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Parameter named {0} was not found among Input Parameters..
-        /// </summary>
-        internal static string ParameterNotFound {
-            get {
-                return ResourceManager.GetString("ParameterNotFound", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to XSLT Validation.
-        /// </summary>
-        internal static string ValidationResultTitle {
-            get {
-                return ResourceManager.GetString("ValidationResultTitle", resourceCulture);
             }
         }
 

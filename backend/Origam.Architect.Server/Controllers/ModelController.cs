@@ -35,11 +35,11 @@ namespace Origam.Architect.Server.Controllers;
 [ApiController]
 [Route("[controller]")]
 public class ModelController(
+    SchemaItemMoveService moveService,
     SchemaService schemaService,
     IPersistenceService persistenceService,
     TreeNodeFactory treeNodeFactory,
-    GitNodeStatusService gitNodeStatusService,
-    SchemaItemMoveService moveService
+    GitNodeStatusService gitNodeStatusService
 ) : ControllerBase
 {
     private readonly IPersistenceProvider persistenceProvider = persistenceService.SchemaProvider;
@@ -94,7 +94,7 @@ public class ModelController(
             return Ok(childNodes);
         }
 
-        ISchemaItemProvider provider = GetRootProviderById(id);
+        ISchemaItemProvider provider = treeNodeFactory.FindRootProvider(id);
         if (provider == null)
         {
             return NotFound();
@@ -141,33 +141,6 @@ public class ModelController(
         return nodes;
     }
 
-    private ISchemaItemProvider GetRootProviderById(string id)
-    {
-        return moveService.GetRootProviderById(id);
-    }
-
-    [HttpPost("GetMoveVerdicts")]
-    public ActionResult<List<MoveVerdictResult>> GetMoveVerdicts(
-        [Required] [FromBody] MoveVerdictsModel input
-    )
-    {
-        return Ok(moveService.GetMoveVerdicts(input.Source, input.Targets));
-    }
-
-    [HttpPost("GetMoveTargets")]
-    public ActionResult<MoveTargetsResult> GetMoveTargets(
-        [Required] [FromBody] MoveTargetsModel input
-    )
-    {
-        return Ok(moveService.GetMoveTargets(input.Source));
-    }
-
-    [HttpPost("MoveNode")]
-    public ActionResult<MoveNodeResult> MoveNode([Required] [FromBody] MoveNodeModel input)
-    {
-        return Ok(moveService.Move(input.Source, input.Target, input.IsCopy));
-    }
-
     [HttpPost("DeleteSchemaItem")]
     public IActionResult DeleteSchemaItem([Required] [FromBody] DeleteModel input)
     {
@@ -211,7 +184,7 @@ public class ModelController(
     {
         if (!Guid.TryParse(id, out Guid schemaItemId))
         {
-            ISchemaItemProvider provider = GetRootProviderById(id);
+            ISchemaItemProvider provider = treeNodeFactory.FindRootProvider(id);
             if (provider == null)
             {
                 return new List<MenuItemInfo>();
@@ -248,5 +221,27 @@ public class ModelController(
             iconName: attr.Icon is string iconName ? iconName : null,
             iconIndex: attr.Icon is int iconIndex ? iconIndex : null
         );
+    }
+
+    [HttpPost("GetMoveVerdicts")]
+    public ActionResult<List<MoveVerdictResult>> GetMoveVerdicts(
+        [Required] [FromBody] MoveVerdictsModel input
+    )
+    {
+        return Ok(moveService.GetMoveVerdicts(input.Source, input.Targets));
+    }
+
+    [HttpPost("GetMoveTargets")]
+    public ActionResult<MoveTargetsResult> GetMoveTargets(
+        [Required] [FromBody] MoveTargetsModel input
+    )
+    {
+        return Ok(moveService.GetMoveTargets(input.Source));
+    }
+
+    [HttpPost("MoveNode")]
+    public ActionResult<MoveNodeResult> MoveNode([Required] [FromBody] MoveNodeModel input)
+    {
+        return Ok(moveService.Move(input.Source, input.Target, input.IsCopy));
     }
 }
