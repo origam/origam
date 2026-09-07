@@ -21,6 +21,14 @@
       scusa:service="DataService#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
+      ausa:activityOrder="90"
+      scusa:commandText="-***-ExternalFile:1.5.9.origam___commandText___5a9c6534-91c2-43b7-a171-8111d03fa60c.txt"
+      x:id="5a9c6534-91c2-43b7-a171-8111d03fa60c"
+      asi:name="00090_AddRole_ArrayTest2"
+      scusa:platform="MsSql"
+      scusa:service="DataService#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
       ausa:activityOrder="70"
       scusa:commandText="-***-ExternalFile:1.5.9.origam___commandText___6031e0c6-5195-434e-a20d-c5deaba153d4.txt"
       x:id="6031e0c6-5195-434e-a20d-c5deaba153d4"

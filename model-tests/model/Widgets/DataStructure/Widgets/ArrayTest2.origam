@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ads="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataStructure/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ds1="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0"
+  xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0">
+  <ds1:DataStructure
+    asi:abstract="false"
+    x:id="73c16730-17ee-44c4-a6cb-703bdd0b8cad"
+    ds1:localized="false"
+    asi:name="ArrayTest2">
+    <dse:DataStructureEntity
+      asi:abstract="false"
+      dse:allFields="true"
+      dse:concurrencyHandling="Standard"
+      dse:entity="ArrayTest#ArrayTest/10108bed-abbe-4932-8f03-ddd2ec9b618b"
+      x:id="f67debc4-105b-4e36-a77f-9035984f7dcf"
+      dse:ignoreCondition="None"
+      dse:ignoreImplicitFilters="false"
+      asi:name="ArrayTest"
+      dse:relationType="Normal"
+      dse:serializeAsSingleJsonObject="false"
+      dse:useUpsert="false" />
+  </ds1:DataStructure>
+</x:file>
