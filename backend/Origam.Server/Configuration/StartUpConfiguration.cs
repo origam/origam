@@ -50,6 +50,10 @@ public class StartUpConfiguration
             .GetSection("RestrictedRoutes")
             .GetChildren()
             .Select(c => c.Value);
+    public bool OpenApiDocumentationEnabled =>
+        configuration
+            .GetSection("UserApiOptions")
+            .GetValue(key: "OpenApiDocumentationEnabled", defaultValue: false);
     public bool EnableSoapInterface =>
         configuration.GetSection("SoapAPI").GetValue<bool>("Enabled");
 

@@ -39,7 +39,8 @@ public class ModelController(
     SchemaService schemaService,
     IPersistenceService persistenceService,
     TreeNodeFactory treeNodeFactory,
-    GitNodeStatusService gitNodeStatusService
+    GitNodeStatusService gitNodeStatusService,
+    ModelGroupService modelGroupService
 ) : ControllerBase
 {
     private readonly IPersistenceProvider persistenceProvider = persistenceService.SchemaProvider;
@@ -174,6 +175,19 @@ public class ModelController(
         gitNodeStatusService.ClearCache();
         return Ok();
     }
+
+    [HttpPost("CreateGroup")]
+    public ActionResult<TreeNode> CreateGroup([Required] [FromBody] CreateGroupModel input) =>
+        modelGroupService.Create(input);
+
+    [HttpPost("RenameGroup")]
+    public ActionResult<TreeNode> RenameGroup([Required] [FromBody] RenameGroupModel input) =>
+        modelGroupService.Rename(input);
+
+    [HttpPost("DeleteGroup")]
+    public ActionResult<DeleteGroupResult> DeleteGroup(
+        [Required] [FromBody] DeleteGroupModel input
+    ) => modelGroupService.Delete(input);
 
     [HttpGet("GetMenuItems")]
     public IEnumerable<MenuItemInfo> GetMenuItems(

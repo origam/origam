@@ -27,6 +27,7 @@ using Origam.BI;
 using Origam.Extensions;
 using Origam.Rule;
 using Origam.Schema.GuiModel;
+using Origam.Server.Common;
 using CoreServices = Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Server.Pages;
@@ -40,6 +41,10 @@ class ReportPageRequestHandler : AbstractPageRequestHandler
         IResponseWrapper response
     )
     {
+        if (FeatureTools.IsFeatureOn(OrigamEvent.ApiRequest.FeatureCode))
+        {
+            OrigamEventTools.RecordPageRequest(page, request.HttpMethod, parameters);
+        }
         ReportPage reportPage = page as ReportPage;
         AbstractReport report = reportPage.Report as AbstractReport;
         Hashtable hashParams = new Hashtable();

@@ -1,0 +1,21 @@
+﻿DO $$
+BEGIN
+-- localization into cs-CZ
+IF EXISTS (select * from "Language" WHERE "TagIETF" = 'cs-CZ') THEN
+	INSERT INTO "OrigamEventType_l10n" ("Id", "refOrigamEventTypeId", "Name", "refLanguageId")
+	VALUES
+	('2dbbd73a-9b9f-485f-b1bf-6878dce3c04d', '31667b4e-3d34-47ee-aadd-b1c2034a178b', 'Požadavek na API', (select "Id" from "Language" where "TagIETF" like '%cs-CZ%'));
+END IF;
+-- localization into de-DE
+IF EXISTS (select * from "Language" WHERE "TagIETF" = 'de-DE') THEN
+	INSERT INTO "OrigamEventType_l10n" ("Id", "refOrigamEventTypeId", "Name", "refLanguageId")
+	VALUES
+	('e2b6bbd6-2d02-45d5-9947-c1beace3cdf6', '31667b4e-3d34-47ee-aadd-b1c2034a178b', 'API-Anfrage', (select "Id" from "Language" where "TagIETF" like '%de-DE%'));
+END IF;
+-- localization into de-CH
+IF EXISTS (select * from "Language" WHERE "TagIETF" = 'de-CH') THEN
+	INSERT INTO "OrigamEventType_l10n" ("Id", "refOrigamEventTypeId", "Name", "refLanguageId")
+	VALUES
+	('afa0e342-62aa-471e-a5a4-e19ecddb13b3', '31667b4e-3d34-47ee-aadd-b1c2034a178b', 'API-Anfrage', (select "Id" from "Language" where "TagIETF" like '%de-CH%'));
+END IF;
+END $$;

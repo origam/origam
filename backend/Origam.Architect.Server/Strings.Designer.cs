@@ -87,6 +87,78 @@ namespace Origam.Architect.Server {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Only folders from the active package can be deleted..
+        /// </summary>
+        internal static string Group_DeleteOutsideActivePackage {
+            get {
+                return ResourceManager.GetString("Group_DeleteOutsideActivePackage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A folder with this name already exists..
+        /// </summary>
+        internal static string Group_NameDuplicate {
+            get {
+                return ResourceManager.GetString("Group_NameDuplicate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Folder name cannot be empty..
+        /// </summary>
+        internal static string Group_NameEmpty {
+            get {
+                return ResourceManager.GetString("Group_NameEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Folder name contains invalid characters..
+        /// </summary>
+        internal static string Group_NameInvalidChars {
+            get {
+                return ResourceManager.GetString("Group_NameInvalidChars", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Folder name is reserved or not allowed..
+        /// </summary>
+        internal static string Group_NameReserved {
+            get {
+                return ResourceManager.GetString("Group_NameReserved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No package is active. Select a package first..
+        /// </summary>
+        internal static string Group_NoActivePackage {
+            get {
+                return ResourceManager.GetString("Group_NoActivePackage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Folder not found..
+        /// </summary>
+        internal static string Group_NotFound {
+            get {
+                return ResourceManager.GetString("Group_NotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Only folders from the active package can be renamed..
+        /// </summary>
+        internal static string Group_RenameOutsideActivePackage {
+            get {
+                return ResourceManager.GetString("Group_RenameOutsideActivePackage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Parameter named {0} was not found among Input Parameters..
         /// </summary>
         internal static string ParameterNotFound {
