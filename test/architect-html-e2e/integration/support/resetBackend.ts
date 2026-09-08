@@ -60,13 +60,27 @@ export function restoreModelFiles(): void {
   runGit(['clean', '-fd', MODEL_DIR]);
 }
 
-export async function resetBackend(request: APIRequestContext): Promise<void> {
-  restoreModelFiles();
-
-  const response = await request.post('/Test/Reset');
+async function postOrThrow(request: APIRequestContext, url: string): Promise<void> {
+  const response = await request.post(url);
   if (!response.ok()) {
-    throw new Error(`POST /Test/Reset failed: ${response.status()} ${await response.text()}`);
+    throw new Error(`POST ${url} failed: ${response.status()} ${await response.text()}`);
   }
+}
+
+// Restoring the model files is bracketed by BeginReset/EndReset so the server
+// stops reacting to file changes while git rewrites model-tests/model, and
+// discards the events the restore produced instead of processing them a second
+// later, in the middle of the test that follows.
+export async function resetBackend(request: APIRequestContext): Promise<void> {
+  await postOrThrow(request, '/Test/BeginReset');
+  try {
+    restoreModelFiles();
+  } catch (error) {
+    // Resume the queue, but report what git did rather than what EndReset said.
+    await request.post('/Test/EndReset').catch(() => {});
+    throw error;
+  }
+  await postOrThrow(request, '/Test/EndReset');
 
   await activatePackage(request, DEFAULT_PACKAGE);
 }
