@@ -18,9 +18,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { expect, test, type APIRequestContext } from '@playwright/test';
-import fs from 'node:fs';
 import { activatePackage } from '@support/activatePackage';
-import { modelFilePath, resetBackend } from '@support/resetBackend';
+import { expectModelFile } from '@support/modelTree';
+import { resetBackend } from '@support/resetBackend';
 
 const PACKAGE = 'AutomaticTests';
 const CONSTANTS_DIR = 'AutomaticTests/DataConstant';
@@ -117,7 +117,7 @@ test.describe('Model tree move rules (real backend)', () => {
     });
 
     expect(response.ok()).toBeFalsy();
-    expect(fs.existsSync(modelFilePath(`${CONSTANTS_DIR}/UngroupedConstant.origam`))).toBe(true);
+    await expectModelFile(`${CONSTANTS_DIR}/UngroupedConstant.origam`, true);
   });
 
   test('A move to the current location is refused', async ({ request }) => {
@@ -126,7 +126,7 @@ test.describe('Model tree move rules (real backend)', () => {
     });
 
     expect(response.ok()).toBeFalsy();
-    expect(fs.existsSync(modelFilePath(`${CONSTANTS_DIR}/UngroupedConstant.origam`))).toBe(true);
+    await expectModelFile(`${CONSTANTS_DIR}/UngroupedConstant.origam`, true);
   });
 
   test('Copying an item of another package writes it into the active one', async ({ request }) => {
@@ -138,11 +138,10 @@ test.describe('Model tree move rules (real backend)', () => {
     const { node } = (await response.json()) as { node: { nodeText: string } };
     expect(node.nodeText).toBe('Copy of InitialUserCreated');
 
-    expect(
-      fs.existsSync(
-        modelFilePath(`${CONSTANTS_DIR}/AutomaticTests/Copy of InitialUserCreated.origam`),
-      ),
-    ).toBe(true);
+    await expectModelFile(
+      `${CONSTANTS_DIR}/AutomaticTests/Copy of InitialUserCreated.origam`,
+      true,
+    );
   });
 
   test('Moving a constant into a group of another package repackages it', async ({ request }) => {
@@ -151,12 +150,10 @@ test.describe('Model tree move rules (real backend)', () => {
     });
 
     expect(response.ok(), await response.text()).toBeTruthy();
-    expect(
-      fs.existsSync(modelFilePath('Root/DataConstant/Attachments/UngroupedConstant.origam')),
-    ).toBe(true);
-    expect(fs.existsSync(modelFilePath(`${CONSTANTS_DIR}/UngroupedConstant.origam`))).toBe(false);
+    await expectModelFile('Root/DataConstant/Attachments/UngroupedConstant.origam', true);
+    await expectModelFile(`${CONSTANTS_DIR}/UngroupedConstant.origam`, false);
     // The group belongs to Root, the source package must not grow a copy of it.
-    expect(fs.existsSync(modelFilePath(`${CONSTANTS_DIR}/Attachments`))).toBe(false);
+    await expectModelFile(`${CONSTANTS_DIR}/Attachments`, false);
   });
 
   test('Copying a constant into a group of another package writes it there', async ({
@@ -167,12 +164,8 @@ test.describe('Model tree move rules (real backend)', () => {
     });
 
     expect(response.ok(), await response.text()).toBeTruthy();
-    expect(
-      fs.existsSync(
-        modelFilePath('Root/DataConstant/Attachments/Copy of UngroupedConstant.origam'),
-      ),
-    ).toBe(true);
-    expect(fs.existsSync(modelFilePath(`${CONSTANTS_DIR}/UngroupedConstant.origam`))).toBe(true);
+    await expectModelFile('Root/DataConstant/Attachments/Copy of UngroupedConstant.origam', true);
+    await expectModelFile(`${CONSTANTS_DIR}/UngroupedConstant.origam`, true);
   });
 
   test('Move targets of a constant are the provider and the constant groups', async ({
@@ -230,15 +223,12 @@ test.describe('Model tree move rules (real backend)', () => {
     });
 
     expect(response.ok(), await response.text()).toBeTruthy();
-    expect(
-      fs.existsSync(
-        modelFilePath('Root/PanelControlSet/Dimensions/Copy of DimensionEntityRelation.origam'),
-      ),
-    ).toBe(true);
+    await expectModelFile(
+      'Root/PanelControlSet/Dimensions/Copy of DimensionEntityRelation.origam',
+      true,
+    );
     // Without its own ControlItem the copy cannot be placed on a screen.
-    expect(
-      fs.existsSync(modelFilePath('Root/Control/Copy of DimensionEntityRelation.origam')),
-    ).toBe(true);
+    await expectModelFile('Root/Control/Copy of DimensionEntityRelation.origam', true);
   });
 
   test('A repeated copy gets a numbered name', async ({ request }) => {
@@ -246,11 +236,10 @@ test.describe('Model tree move rules (real backend)', () => {
     const second = await copyIntoGroup(request);
 
     expect(second).toBe('Copy of UngroupedConstant (2)');
-    expect(
-      fs.existsSync(
-        modelFilePath(`${CONSTANTS_DIR}/AutomaticTests/Copy of UngroupedConstant (2).origam`),
-      ),
-    ).toBe(true);
+    await expectModelFile(
+      `${CONSTANTS_DIR}/AutomaticTests/Copy of UngroupedConstant (2).origam`,
+      true,
+    );
   });
 });
 
