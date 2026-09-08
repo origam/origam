@@ -38,7 +38,21 @@ public class FilePersistenceIndex : IDisposable
     );
     private ItemTracker itemTracker;
     private readonly ReaderWriterLockSlim readWriteLock = new ReaderWriterLockSlim();
-    public HashSet<Guid> LoadedPackages { internal get; set; }
+    private readonly HashSet<Guid> loadedPackages;
+
+    // The set is shared with the indexes cloned by RestrictToLoadedPackage, one
+    // of which the Persistor keeps for its whole life. Replacing the reference
+    // here would leave those clones looking at an outdated set of packages.
+    public HashSet<Guid> LoadedPackages
+    {
+        internal get => loadedPackages;
+        set =>
+            readWriteLock.RunWriter(() =>
+            {
+                loadedPackages.Clear();
+                loadedPackages.UnionWith(value);
+            });
+    }
     public IEnumerable<OrigamFile> OrigamFiles => ItemTracker.OrigamFiles;
     private ItemTracker ItemTracker
     {
@@ -50,7 +64,7 @@ public class FilePersistenceIndex : IDisposable
 
     protected FilePersistenceIndex(ItemTracker itemTracker, HashSet<Guid> loadedPackages)
     {
-        LoadedPackages = loadedPackages;
+        this.loadedPackages = loadedPackages;
         this.itemTracker = itemTracker;
     }
 
