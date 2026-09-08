@@ -513,6 +513,7 @@ public class DesignerEditorService(
 
     public bool SaveScreenSection(PanelControlSet screenSection)
     {
+        ValidateForRuntime(screenSection);
         var controlSchemaItemProvider = schemaService.GetProvider<UserControlSchemaItemProvider>();
         try
         {
@@ -559,6 +560,111 @@ public class DesignerEditorService(
         }
 
         return false;
+    }
+
+    private static void ValidateForRuntime(PanelControlSet screenSection)
+    {
+        foreach (ControlSetItem item in GetLiveControls(screenSection))
+        {
+            string controlName = item.ControlItem.Name;
+            if (
+                controlName == "RadioButton"
+                && IsBoundToField(item)
+                && (FindValueItem(item, propertyName: "DataConstantId")?.GuidValue ?? Guid.Empty)
+                    == Guid.Empty
+            )
+            {
+                throw new UserOrigamException(
+                    string.Format(Strings.SectionEditor_RadioButtonValueConstantMissing, item.Name)
+                );
+            }
+            if (
+                controlName == GuiHelper.CONTROL_NAME_MULTICOLUMNADAPTERFIELD
+                && IsBoundToField(item)
+                && !item.ChildItemsByType<ControlSetItem>(ControlSetItem.CategoryConst)
+                    .Any(child => !child.IsDeleted && RendersAsProperty(child))
+            )
+            {
+                throw new UserOrigamException(
+                    string.Format(Strings.SectionEditor_WrapperHasNoBoundWidgets, item.Name)
+                );
+            }
+            if (
+                controlName is GuiHelper.CONTROL_NAME_COMBOBOX or "TagInput" or "Checklist"
+                && IsBoundToField(item)
+                && (FindValueItem(item, propertyName: "LookupId")?.GuidValue ?? Guid.Empty)
+                    == Guid.Empty
+            )
+            {
+                throw new UserOrigamException(
+                    string.Format(Strings.SectionEditor_DropdownLookupMissing, item.Name)
+                );
+            }
+            if (controlName == "ColorPicker" && IsBoundToField(item))
+            {
+                string fieldName = BoundFieldName(item);
+                IDataEntityColumn field = screenSection
+                    .DataEntity?.ChildItemsByType<IDataEntityColumn>(
+                        AbstractDataEntityColumn.CategoryConst
+                    )
+                    .FirstOrDefault(column => column.Name == fieldName);
+                if (field != null && field.DataType != OrigamDataType.Integer)
+                {
+                    throw new UserOrigamException(
+                        string.Format(
+                            Strings.SectionEditor_ColorPickerFieldNotInteger,
+                            item.Name,
+                            fieldName
+                        )
+                    );
+                }
+            }
+        }
+    }
+
+    private static bool RendersAsProperty(ControlSetItem item)
+    {
+        return IsBoundToField(item)
+            && item.ControlItem.Name != "RadioButton"
+            && !(FindValueItem(item, propertyName: "HideOnForm")?.BoolValue ?? false);
+    }
+
+    private static IEnumerable<ControlSetItem> GetLiveControls(ISchemaItem parent)
+    {
+        foreach (
+            ControlSetItem item in parent.ChildItemsByType<ControlSetItem>(
+                ControlSetItem.CategoryConst
+            )
+        )
+        {
+            if (item.IsDeleted)
+            {
+                continue;
+            }
+            yield return item;
+            foreach (ControlSetItem descendant in GetLiveControls(item))
+            {
+                yield return descendant;
+            }
+        }
+    }
+
+    private static string BoundFieldName(ControlSetItem item)
+    {
+        return item.ChildItemsByType<PropertyBindingInfo>(PropertyBindingInfo.CategoryConst)
+            .FirstOrDefault(binding => !binding.IsDeleted && !string.IsNullOrEmpty(binding.Value))
+            ?.Value;
+    }
+
+    private static bool IsBoundToField(ControlSetItem item)
+    {
+        return BoundFieldName(item) != null;
+    }
+
+    private static PropertyValueItem FindValueItem(ControlSetItem item, string propertyName)
+    {
+        return item.ChildItemsByType<PropertyValueItem>(PropertyValueItem.CategoryConst)
+            .FirstOrDefault(value => value.ControlPropertyItem.Name == propertyName);
     }
 }
 

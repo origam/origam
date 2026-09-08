@@ -132,4 +132,16 @@
     <data name="Wizard_NoCurrentDeploymentVersion" xml:space="preserve">
         <value>There is no current deployment version. Create a deployment version and make it current first.</value>
     </data>
+    <data name="SectionEditor_RadioButtonValueConstantMissing" xml:space="preserve">
+        <value>Radio button "{0}" is bound to a field but has no Value Constant. Select a Value Constant in its properties.</value>
+    </data>
+    <data name="SectionEditor_WrapperHasNoBoundWidgets" xml:space="preserve">
+        <value>Multi Column Adapter Field Wrapper "{0}" contains no widget bound to a field. Drop at least one field inside it.</value>
+    </data>
+  <data name="SectionEditor_DropdownLookupMissing" xml:space="preserve">
+    <value>Widget "{0}" is bound to a field but has no Lookup. Select a Lookup in its properties.</value>
+  </data>
+  <data name="SectionEditor_ColorPickerFieldNotInteger" xml:space="preserve">
+    <value>Widget "{0}" is bound to field "{1}" which is not an Integer. A color editor requires an Integer field.</value>
+  </data>
 </root>

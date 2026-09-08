@@ -115,8 +115,9 @@ public class ControlAdapter(
                 }
                 if (propertyInfo.Name == nameof(MappingCondition))
                 {
-                    // Don't know how to implement it yet.
-                    return false;
+                    return controlSetItem.ParentItem is ControlSetItem parentItem
+                        && parentItem.ControlItem.Name
+                            == GuiHelper.CONTROL_NAME_MULTICOLUMNADAPTERFIELD;
                 }
 
                 return true;
@@ -140,6 +141,10 @@ public class ControlAdapter(
 
             if (!propertyChange.ControlPropertyId.HasValue)
             {
+                if (IsSchemaItemProperty(propertyChange.Name))
+                {
+                    continue;
+                }
                 throw new Exception($"{nameof(propertyChange.ControlPropertyId)} cannot be null");
             }
 
@@ -148,19 +153,23 @@ public class ControlAdapter(
                 .FirstOrDefault(item => item.ControlPropertyId == propertyChange.ControlPropertyId);
             if (bindingInfo != null)
             {
-                if (bindingInfo.Value != propertyChange.Value)
+                string newValue = string.IsNullOrEmpty(propertyChange.Value)
+                    ? null
+                    : propertyChange.Value;
+                string currentValue = bindingInfo.IsDeleted ? null : bindingInfo.Value;
+                if (currentValue != newValue)
                 {
                     changesMade = true;
                 }
 
-                if (string.IsNullOrEmpty(propertyChange.Value))
+                bindingInfo.IsDeleted = newValue == null;
+                if (newValue == null)
                 {
-                    bindingInfo.IsDeleted = true;
                     continue;
                 }
 
-                bindingInfo.Value = propertyChange.Value;
-                bindingInfo.DesignDataSetPath = GetDesignDataSetPath(propertyChange.Value);
+                bindingInfo.Value = newValue;
+                bindingInfo.DesignDataSetPath = GetDesignDataSetPath(newValue);
                 continue;
             }
 
@@ -218,7 +227,9 @@ public class ControlAdapter(
             {
                 PropertyBindingInfo bindingInfo = controlSetItem
                     .ChildItems.OfType<PropertyBindingInfo>()
-                    .FirstOrDefault(item => item.ControlPropertyItem.Name == property.Name);
+                    .FirstOrDefault(item =>
+                        !item.IsDeleted && item.ControlPropertyItem.Name == property.Name
+                    );
                 if (bindingInfo != null)
                 {
                     return propertyFactory.CreateBoundProperty(
@@ -270,6 +281,13 @@ public class ControlAdapter(
         var schemaItemProperties = GetSchemaItemProperties()
             .Select(property => propertyFactory.Create(property, this));
         return properties.Concat(schemaItemProperties).ToList();
+    }
+
+    private bool IsSchemaItemProperty(string propertyName)
+    {
+        return GetType()
+                .GetProperty(propertyName)
+                ?.GetCustomAttribute<SchemaItemPropertyAttribute>() != null;
     }
 
     private bool IsDefaultBindableProperty(string propertyName)

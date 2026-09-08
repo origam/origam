@@ -400,5 +400,41 @@ namespace Origam.Architect.Server {
                 return ResourceManager.GetString("XsltValidationSuccess", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Radio button &quot;{0}&quot; is bound to a field but has no Value Constant. Select a Value Constant in its properties..
+        /// </summary>
+        internal static string SectionEditor_RadioButtonValueConstantMissing {
+            get {
+                return ResourceManager.GetString("SectionEditor_RadioButtonValueConstantMissing", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Multi Column Adapter Field Wrapper &quot;{0}&quot; contains no widget bound to a field. Drop at least one field inside it..
+        /// </summary>
+        internal static string SectionEditor_WrapperHasNoBoundWidgets {
+            get {
+                return ResourceManager.GetString("SectionEditor_WrapperHasNoBoundWidgets", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Widget &quot;{0}&quot; is bound to a field but has no Lookup. Select a Lookup in its properties..
+        /// </summary>
+        internal static string SectionEditor_DropdownLookupMissing {
+            get {
+                return ResourceManager.GetString("SectionEditor_DropdownLookupMissing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Widget &quot;{0}&quot; is bound to field &quot;{1}&quot; which is not an Integer. A color editor requires an Integer field..
+        /// </summary>
+        internal static string SectionEditor_ColorPickerFieldNotInteger {
+            get {
+                return ResourceManager.GetString("SectionEditor_ColorPickerFieldNotInteger", resourceCulture);
+            }
+        }
     }
 }
