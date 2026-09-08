@@ -23,6 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using CSharpFunctionalExtensions;
 using Origam.DA.ObjectPersistence;
@@ -38,20 +39,15 @@ public class FilePersistenceIndex : IDisposable
     );
     private ItemTracker itemTracker;
     private readonly ReaderWriterLockSlim readWriteLock = new ReaderWriterLockSlim();
-    private readonly HashSet<Guid> loadedPackages;
+    private readonly StrongBox<HashSet<Guid>> loadedPackages;
 
-    // The set is shared with the indexes cloned by RestrictToLoadedPackage, one
-    // of which the Persistor keeps for its whole life. Replacing the reference
-    // here would leave those clones looking at an outdated set of packages.
+    // The holder is shared with the indexes cloned by RestrictToLoadedPackage, one
+    // of which the Persistor keeps for its whole life. Swapping the set inside it
+    // reaches every clone and stays atomic for readers on other threads.
     public HashSet<Guid> LoadedPackages
     {
-        internal get => loadedPackages;
-        set =>
-            readWriteLock.RunWriter(() =>
-            {
-                loadedPackages.Clear();
-                loadedPackages.UnionWith(value);
-            });
+        internal get => loadedPackages.Value;
+        set => loadedPackages.Value = value;
     }
     public IEnumerable<OrigamFile> OrigamFiles => ItemTracker.OrigamFiles;
     private ItemTracker ItemTracker
@@ -60,20 +56,20 @@ public class FilePersistenceIndex : IDisposable
     }
 
     public FilePersistenceIndex(OrigamPathFactory pathFactory)
-        : this(new ItemTracker(pathFactory), new HashSet<Guid>()) { }
+        : this(new ItemTracker(pathFactory), new StrongBox<HashSet<Guid>>(new HashSet<Guid>())) { }
 
-    protected FilePersistenceIndex(ItemTracker itemTracker, HashSet<Guid> loadedPackages)
+    protected FilePersistenceIndex(ItemTracker itemTracker, StrongBox<HashSet<Guid>> loadedPackages)
     {
         this.loadedPackages = loadedPackages;
         this.itemTracker = itemTracker;
     }
 
     internal static FilePersistenceIndex GetPackageIgnoringVersion(FilePersistenceIndex original) =>
-        new PackageIgnoringPersistenceIndex(original.ItemTracker, original.LoadedPackages);
+        new PackageIgnoringPersistenceIndex(original.ItemTracker, original.loadedPackages);
 
     internal static FilePersistenceIndex GetPackageRespectingVersion(
         FilePersistenceIndex original
-    ) => new FilePersistenceIndex(original.ItemTracker, original.LoadedPackages);
+    ) => new FilePersistenceIndex(original.ItemTracker, original.loadedPackages);
 
     public void ClearCache()
     {
@@ -292,7 +288,10 @@ public class FilePersistenceIndex : IDisposable
 
 internal class PackageIgnoringPersistenceIndex : FilePersistenceIndex
 {
-    public PackageIgnoringPersistenceIndex(ItemTracker itemTracker, HashSet<Guid> loadedPackages)
+    public PackageIgnoringPersistenceIndex(
+        ItemTracker itemTracker,
+        StrongBox<HashSet<Guid>> loadedPackages
+    )
         : base(itemTracker, loadedPackages) { }
 
     protected override bool BelongsToALoadedPackage(PersistedObjectInfo objInfo) => true;
