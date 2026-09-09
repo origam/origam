@@ -238,6 +238,13 @@
         asi:name="BlobControl"
         csi:requestSaveAfterChange="false"
         csi:widget="BlobControl#BlobControl/7dc84301-dc35-44b0-b766-390b4b6d3a9a">
+        <pbi:PropertyBindingInfo
+          asi:abstract="false"
+          pbi:designDataSetPath="ArrayTest.Text"
+          x:id="8545e5b7-3765-4f4d-8fec-d91e02915393"
+          asi:name="FileName"
+          apvi:propertyId="a02996d3-7766-4e1b-a5dc-125fa0fe165e"
+          pbi:value="Text" />
         <pvi1:PropertyValueItem
           asi:abstract="false"
           x:id="0046e664-ae46-4019-afa7-ca86a85dfdd4"
@@ -805,11 +812,11 @@
         csi:widget="AsDateBox#AsDateBox/c527a9ef-cd7b-44c5-ae2f-00e547c53d78">
         <pbi:PropertyBindingInfo
           asi:abstract="false"
-          pbi:designDataSetPath="ArrayTest.Text"
+          pbi:designDataSetPath="ArrayTest.TestDate"
           x:id="991c61db-a5b8-44fa-9f36-4bafbcc7ee62"
           asi:name="DateValue"
           apvi:propertyId="84e84a32-9b0a-4e60-9bf4-c0c5bffdc80d"
-          pbi:value="Text" />
+          pbi:value="TestDate" />
         <pvi1:PropertyValueItem
           asi:abstract="false"
           x:id="02ea2013-df78-4c19-a617-c983cbd48b3d"
@@ -995,6 +1002,13 @@
         asi:name="ImageBox"
         csi:requestSaveAfterChange="false"
         csi:widget="ImageBox#ImageBox/42314a5f-7951-43c5-bf8b-cfe83a12855d">
+        <pbi:PropertyBindingInfo
+          asi:abstract="false"
+          pbi:designDataSetPath="ArrayTest.Text"
+          x:id="1c401c9c-6c66-4e51-9c2e-e4986a5d085e"
+          asi:name="ImageData"
+          apvi:propertyId="d97cb877-ea98-4eab-8de0-063745f5fd88"
+          pbi:value="Text" />
         <pvi1:PropertyValueItem
           asi:abstract="false"
           x:id="0b8cb053-12eb-4263-bee3-6cb99b5a345d"
