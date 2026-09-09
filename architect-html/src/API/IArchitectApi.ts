@@ -516,10 +516,7 @@ export type EditorSubType =
   | null;
 
 export type EditorType =
-  | EditorSubType
-  | 'DocumentationEditor'
-  | 'SearchResultsEditor'
-  | 'ShowSqlEditor';
+  EditorSubType | 'DocumentationEditor' | 'SearchResultsEditor' | 'ShowSqlEditor';
 
 export interface INodeLoadData {
   id: string;
