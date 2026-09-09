@@ -600,14 +600,26 @@ public class DesignerEditorService(
                     string.Format(Strings.SectionEditor_DropdownLookupMissing, item.Name)
                 );
             }
+            if (controlName is "TagInput" or "Checklist" && IsBoundToField(item))
+            {
+                string fieldName = BoundFieldName(item);
+                IDataEntityColumn field = BoundField(screenSection, fieldName);
+                if (field != null && field.DataType != OrigamDataType.Array)
+                {
+                    throw new UserOrigamException(
+                        string.Format(
+                            Strings.SectionEditor_TagInputFieldNotArray,
+                            item.Name,
+                            fieldName,
+                            field.DataType
+                        )
+                    );
+                }
+            }
             if (controlName == "ColorPicker" && IsBoundToField(item))
             {
                 string fieldName = BoundFieldName(item);
-                IDataEntityColumn field = screenSection
-                    .DataEntity?.ChildItemsByType<IDataEntityColumn>(
-                        AbstractDataEntityColumn.CategoryConst
-                    )
-                    .FirstOrDefault(column => column.Name == fieldName);
+                IDataEntityColumn field = BoundField(screenSection, fieldName);
                 if (field != null && field.DataType != OrigamDataType.Integer)
                 {
                     throw new UserOrigamException(
@@ -659,6 +671,13 @@ public class DesignerEditorService(
     private static bool IsBoundToField(ControlSetItem item)
     {
         return BoundFieldName(item) != null;
+    }
+
+    private static IDataEntityColumn BoundField(PanelControlSet screenSection, string fieldName)
+    {
+        return screenSection
+            .DataEntity?.ChildItemsByType<IDataEntityColumn>(AbstractDataEntityColumn.CategoryConst)
+            .FirstOrDefault(column => column.Name == fieldName);
     }
 
     private static PropertyValueItem FindValueItem(ControlSetItem item, string propertyName)

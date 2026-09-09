@@ -144,4 +144,7 @@
   <data name="SectionEditor_ColorPickerFieldNotInteger" xml:space="preserve">
     <value>Widget "{0}" is bound to field "{1}" which is not an Integer. A color editor requires an Integer field.</value>
   </data>
+  <data name="SectionEditor_TagInputFieldNotArray" xml:space="preserve">
+    <value>Widget "{0}" is bound to field "{1}" whose data type is {2}. Tag Input and Checklist can only be bound to an array field, which is a field with data type Array, an Array Relation and an Array Value Field. Bind the widget to an array field, or use a Combo Box to edit a single value.</value>
+  </data>
 </root>

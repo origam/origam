@@ -436,5 +436,14 @@ namespace Origam.Architect.Server {
                 return ResourceManager.GetString("SectionEditor_ColorPickerFieldNotInteger", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Widget &quot;{0}&quot; is bound to field &quot;{1}&quot; whose data type is {2}. Tag Input and Checklist can only be bound to an array field, which is a field with data type Array, an Array Relation and an Array Value Field. Bind the widget to an array field, or use a Combo Box to edit a single value..
+        /// </summary>
+        internal static string SectionEditor_TagInputFieldNotArray {
+            get {
+                return ResourceManager.GetString("SectionEditor_TagInputFieldNotArray", resourceCulture);
+            }
+        }
     }
 }
