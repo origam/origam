@@ -13,7 +13,7 @@
     "fix": "yarn format && yarn lint:fix"
   },
   "dependencies": {
-    "@babel/plugin-proposal-decorators": "^7.29.7",
+    "@babel/plugin-proposal-decorators": "^8.0.2",
     "@monaco-editor/react": "^4.7.0",
     "@origam/react-contexify": "github:origam/origam-react-contexify#v6.0.1-origam.0",
     "classnames": "^2.5.1",
