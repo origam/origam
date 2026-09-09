@@ -24,6 +24,7 @@ using Microsoft.AspNetCore.Mvc;
 using Origam.Architect.Server.Models;
 using Origam.Architect.Server.ReturnModels;
 using Origam.Architect.Server.Services;
+using Origam.Architect.Server.Services.Move;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema;
 using Origam.UI;
@@ -34,6 +35,7 @@ namespace Origam.Architect.Server.Controllers;
 [ApiController]
 [Route("[controller]")]
 public class ModelController(
+    SchemaItemMoveService moveService,
     SchemaService schemaService,
     IPersistenceService persistenceService,
     TreeNodeFactory treeNodeFactory,
@@ -233,5 +235,27 @@ public class ModelController(
             iconName: attr.Icon is string iconName ? iconName : null,
             iconIndex: attr.Icon is int iconIndex ? iconIndex : null
         );
+    }
+
+    [HttpPost("GetMoveVerdicts")]
+    public ActionResult<List<MoveVerdictResult>> GetMoveVerdicts(
+        [Required] [FromBody] MoveVerdictsModel input
+    )
+    {
+        return Ok(moveService.GetMoveVerdicts(input.Source, input.Targets));
+    }
+
+    [HttpPost("GetMoveTargets")]
+    public ActionResult<MoveTargetsResult> GetMoveTargets(
+        [Required] [FromBody] MoveTargetsModel input
+    )
+    {
+        return Ok(moveService.GetMoveTargets(input.Source));
+    }
+
+    [HttpPost("MoveNode")]
+    public ActionResult<MoveNodeResult> MoveNode([Required] [FromBody] MoveNodeModel input)
+    {
+        return Ok(moveService.Move(input.Source, input.Target, input.IsCopy));
     }
 }
