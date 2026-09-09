@@ -34,6 +34,7 @@ export default defineConfig({
       '@components': path.resolve(__dirname, 'src/components'),
       '@editors': path.resolve(__dirname, 'src/components/editors'),
       '@modules': path.resolve(__dirname, 'src/modules'),
+      'monaco-editor/esm/vs': 'monaco-editor',
     },
   },
   css: {
