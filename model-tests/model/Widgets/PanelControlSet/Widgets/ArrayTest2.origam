@@ -915,11 +915,11 @@
         csi:widget="AsCheckBox#AsCheckBox/48dc8d6a-21c1-4e12-96de-c3a5eb67434d">
         <pbi:PropertyBindingInfo
           asi:abstract="false"
-          pbi:designDataSetPath="ArrayTest.Text"
+          pbi:designDataSetPath="ArrayTest.TestBool"
           x:id="4b99578f-62a7-458f-99a6-726b1a5dcc3e"
           asi:name="Value"
           apvi:propertyId="a53a1860-c6dd-4659-ac33-6d6c7bf8d6f2"
-          pbi:value="Text" />
+          pbi:value="TestBool" />
         <pvi1:PropertyValueItem
           asi:abstract="false"
           x:id="00cd8722-0283-440c-a392-1aa8016787fe"

@@ -93,6 +93,19 @@
       asi:name="Text"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Boolean"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="5b4a932c-28c4-417e-98a5-239bb3dc7b63"
+      adec:isPrimaryKey="false"
+      fmi:mappedColumnName="TestBool"
+      asi:name="TestBool"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
     <sia:ancestor
       sia:ancestor="IOrigamEntity2#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
       x:id="66a23512-1b0e-4325-9870-26d57e68da6d" />
