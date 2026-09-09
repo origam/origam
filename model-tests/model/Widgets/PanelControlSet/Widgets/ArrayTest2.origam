@@ -686,11 +686,11 @@
         csi:widget="AsTextBox#AsTextBox/7d1ec946-017e-4a00-9d92-d4d6b9fabffc">
         <pbi:PropertyBindingInfo
           asi:abstract="false"
-          pbi:designDataSetPath="ArrayTest.refBusinessPartnerId"
+          pbi:designDataSetPath="ArrayTest.Text"
           x:id="844d09e5-ef52-43e3-828a-4904f36e52c1"
           asi:name="Value"
           apvi:propertyId="e4c1751b-7b33-42d3-b945-11971cdf7c56"
-          pbi:value="refBusinessPartnerId" />
+          pbi:value="Text" />
         <pvi1:PropertyValueItem
           asi:abstract="false"
           x:id="037071b7-79e3-4829-be64-99728d673071"
@@ -819,11 +819,11 @@
         csi:widget="AsDateBox#AsDateBox/c527a9ef-cd7b-44c5-ae2f-00e547c53d78">
         <pbi:PropertyBindingInfo
           asi:abstract="false"
-          pbi:designDataSetPath="ArrayTest.refBusinessPartnerId"
+          pbi:designDataSetPath="ArrayTest.Text"
           x:id="991c61db-a5b8-44fa-9f36-4bafbcc7ee62"
           asi:name="DateValue"
           apvi:propertyId="84e84a32-9b0a-4e60-9bf4-c0c5bffdc80d"
-          pbi:value="refBusinessPartnerId" />
+          pbi:value="Text" />
         <pvi1:PropertyValueItem
           asi:abstract="false"
           x:id="02ea2013-df78-4c19-a617-c983cbd48b3d"
@@ -929,11 +929,11 @@
         csi:widget="AsCheckBox#AsCheckBox/48dc8d6a-21c1-4e12-96de-c3a5eb67434d">
         <pbi:PropertyBindingInfo
           asi:abstract="false"
-          pbi:designDataSetPath="ArrayTest.refBusinessPartnerId"
+          pbi:designDataSetPath="ArrayTest.Text"
           x:id="4b99578f-62a7-458f-99a6-726b1a5dcc3e"
           asi:name="Value"
           apvi:propertyId="a53a1860-c6dd-4659-ac33-6d6c7bf8d6f2"
-          pbi:value="refBusinessPartnerId" />
+          pbi:value="Text" />
         <pvi1:PropertyValueItem
           asi:abstract="false"
           x:id="00cd8722-0283-440c-a392-1aa8016787fe"

@@ -37,7 +37,7 @@
     frmi:refreshPortalAfterSave="false"
     frmi:requestSaveAfterUpdate="false"
     ami:roles="*"
-    frmi:screen="ArrayTest#ArrayTest/64266781-83b6-44e2-919e-49fb63be0691" />
+    frmi:screen="ArrayTest2#ArrayTest2/382aac06-4420-4327-90f6-0c5d7823ccf7" />
   <frmi:MenuItem
     asi:abstract="false"
     ami:alwaysOpenNew="false"
