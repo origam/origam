@@ -161,7 +161,7 @@
           x:id="c74c6f63-1ae1-4f92-969b-ab1a7aa3e7bd"
           asi:name="LookupId"
           apvi:propertyId="61c678bc-15aa-4ffc-a696-5524ae54c93f"
-          pvi1:value="cd77ad29-7048-467b-92e1-7064c6dc693e" />
+          pvi1:value="08d82ef5-df38-48d6-a276-ee5b7f027bd6" />
         <pvi1:PropertyValueItem
           asi:abstract="false"
           x:id="c9b7e3f6-939b-49f9-935a-d11e3f87c41e"
@@ -218,7 +218,7 @@
           x:id="48f78709-d9bc-4f23-805a-0d44b6e6142b"
           asi:name="LookupId"
           apvi:propertyId="4432a6c2-76b4-4347-af1e-335d3e292dbf"
-          pvi1:value="cd77ad29-7048-467b-92e1-7064c6dc693e" />
+          pvi1:value="08d82ef5-df38-48d6-a276-ee5b7f027bd6" />
         <pvi1:PropertyValueItem
           asi:abstract="false"
           x:id="4f6c6d27-fa96-49cb-859f-f8b096972052"
@@ -547,7 +547,8 @@
           asi:abstract="false"
           x:id="ce9e8fcb-df31-4206-b6c0-08db798da55d"
           asi:name="Value"
-          apvi:propertyId="f9be9e38-d92f-423b-9380-f7095680908f" />
+          apvi:propertyId="f9be9e38-d92f-423b-9380-f7095680908f"
+          pvi1:value="false" />
         <pvi1:PropertyValueItem
           asi:abstract="false"
           x:id="e3f71c1f-e3fa-4ac4-b5ae-4c869b05df25"
@@ -574,6 +575,13 @@
         asi:name="TagInput"
         csi:requestSaveAfterChange="false"
         csi:widget="TagInput#TagInput/91f24905-44d2-46e9-b040-80e3f64eefea">
+        <pbi:PropertyBindingInfo
+          asi:abstract="false"
+          pbi:designDataSetPath="ArrayTest.refBusinessPartnerId"
+          x:id="0947b991-5e4a-4b67-81d2-f19edfbe1121"
+          asi:name="Value"
+          apvi:propertyId="8dff4eb2-e609-405d-9716-4d4595a71f72"
+          pbi:value="refBusinessPartnerId" />
         <pvi1:PropertyValueItem
           asi:abstract="false"
           x:id="0e97f9ec-4fa9-4e51-a879-7dc26cb13abf"
@@ -649,7 +657,7 @@
           x:id="ec9ae6d1-2b0d-4742-a93e-c2347f9ec6ad"
           asi:name="LookupId"
           apvi:propertyId="127a03e9-d7a9-4f97-82dc-961b0bbad9ce"
-          pvi1:value="00000000-0000-0000-0000-000000000000" />
+          pvi1:value="08d82ef5-df38-48d6-a276-ee5b7f027bd6" />
         <pvi1:PropertyValueItem
           asi:abstract="false"
           x:id="f510e396-4e90-4241-867e-f48e0162fab1"
@@ -969,7 +977,8 @@
           asi:abstract="false"
           x:id="bc19d567-cb0a-40e5-b1c7-c4259f46062b"
           asi:name="Value"
-          apvi:propertyId="a53a1860-c6dd-4659-ac33-6d6c7bf8d6f2" />
+          apvi:propertyId="a53a1860-c6dd-4659-ac33-6d6c7bf8d6f2"
+          pvi1:value="false" />
         <pvi1:PropertyValueItem
           asi:abstract="false"
           x:id="c6eb628b-c66f-4d88-9dcc-c92734b828bc"
