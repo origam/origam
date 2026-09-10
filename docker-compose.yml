@@ -1,0 +1,99 @@
+# ORIGAM development stack: database + .NET backend (built from backend/) +
+# Vite dev server. The DB password is NOT baked in — set it in docker/dev/.env
+# (copy from docker/dev/.env.example). ps/logs/config/build run without it; only
+# `up` needs it (the DB won't start without a password):
+#
+#   docker compose --env-file docker/dev/.env up -d
+#   docker compose --env-file docker/dev/.env -f docker-compose.yml -f docker-compose.postgres.yml up -d
+#   docker compose build server                   # rebuild after C# changes (no --env-file needed)
+#
+# App:             https://localhost:5173 (self-signed cert)
+# Backend/Swagger: http://localhost:8080
+# SQL Server:      localhost:1433 (sa — password in docker/dev/.env)
+# PostgreSQL:      localhost:5432 (origam — password in docker/dev/.env)
+
+name: origam-dev
+
+services:
+  database:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "${MSSQL_SA_PASSWORD:-}"
+      MSSQL_AGENT_ENABLED: "true"
+    ports:
+      - "${MSSQL_PORT:-1433}:1433"
+    volumes:
+      - origam-db-data:/var/opt/mssql
+      - ./docker/dev/initdb:/docker-entrypoint-initdb.d:ro
+    entrypoint: ["/bin/bash", "/docker-entrypoint-initdb.d/run-init.sh"]
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          '/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "${MSSQL_SA_PASSWORD:-}" -C -Q ''SELECT 1'' || exit 1',
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+
+  # PostgreSQL database (opt-in). See docker-compose.postgres.yml.
+
+  server:
+    build:
+      context: .
+      dockerfile: docker/DockerfileServer.dev
+    image: origam/server:dev
+    environment:
+      - DatabaseType=mssql
+      - ExternalDomain_SetOnStart=https://localhost:${FRONTEND_PORT:-5173}
+      - OpenIddictConfig__AccessTokenIssuer=https://localhost:${FRONTEND_PORT:-5173}
+      - OrigamSettings__Name=${OrigamSettings__Name:-DevProject}
+      - OrigamSettings__DefaultSchemaExtensionId=${OrigamSettings__DefaultSchemaExtensionId:-f17329d6-3143-420a-a2e6-30e431eea51d}
+      - OrigamSettings__DataConnectionString=${OrigamSettings__DataConnectionString:-Encrypt=False;Data Source=database,1433;Initial Catalog=origam-dev;User ID=sa;Password=${MSSQL_SA_PASSWORD:-};}
+      - OrigamSettings__ModelSourceControlLocation=${OrigamSettings__ModelSourceControlLocation:-/home/origam/projectData/model}
+      - TZ=Europe/Prague
+    ports:
+      - "${SERVER_PORT:-8080}:8080"
+    entrypoint: ["/bin/bash", "/home/origam/server_bin/entrypoint.dev.sh"]
+    volumes:
+      - ./model-tests/model:/home/origam/projectData/model
+      - ./docker/dev/entrypoint.dev.sh:/home/origam/server_bin/entrypoint.dev.sh
+      - ./docker/dev/log4net.config:/home/origam/server_bin/log4net.config
+      # Persist the Data Protection key ring (auth cookies break on recreate otherwise).
+      - origam-dataprotection:/home/origam/.aspnet/DataProtection-Keys
+    depends_on:
+      database:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -s -o /dev/null http://localhost:8080/ || exit 1",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 40s
+
+  frontend:
+    build:
+      context: ./frontend-html
+      dockerfile: ../docker/DockerfileVite.dev
+    image: origam/frontend:dev
+    ports:
+      - "${FRONTEND_PORT:-5173}:5173"
+    volumes:
+      - ./frontend-html:/src/frontend-html
+    environment:
+      - VITE_PROXY_TARGET=http://server:8080
+      - VITE_HOST=0.0.0.0
+      # OIDC endpoints are proxied through Vite, so the authority is the SPA origin.
+      - VITE_OIDC_AUTHORITY=https://localhost:${FRONTEND_PORT:-5173}
+    depends_on:
+      - server
+
+volumes:
+  origam-db-data:
+  origam-dataprotection:

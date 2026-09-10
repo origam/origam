@@ -25,3 +25,6 @@ RuntimeModelConfiguration.json
 /docker/debug/model-test_Linux.env
 /docker/debug/model-test_Windows.cmd
 /docker/debug/model-test_Windows.env
+/docker/dev/.env
+/.devcontainer/.env
+/docker-compose.override.yml

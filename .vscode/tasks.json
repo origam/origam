@@ -1,0 +1,18 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build-architect",
+            "type": "shell",
+            "command": "bash .devcontainer/debug-build-architect.sh",
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "build-server",
+            "type": "shell",
+            "command": "bash .devcontainer/debug-build-server.sh",
+            "problemMatcher": "$msCompile",
+            "group": { "kind": "build", "isDefault": true }
+        }
+    ]
+}
