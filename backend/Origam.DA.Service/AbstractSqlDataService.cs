@@ -425,6 +425,10 @@ public abstract class AbstractSqlDataService : AbstractDataService
             {
                 dataset.EnforceConstraints = enforceConstraints;
             }
+            catch (ConstraintException)
+            {
+                throw new ConstraintException(DatasetTools.GetDatasetErrors(dataset));
+            }
             catch (Exception ex)
             {
                 try
