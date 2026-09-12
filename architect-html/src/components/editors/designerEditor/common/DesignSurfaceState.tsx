@@ -404,11 +404,4 @@ const minComponentHeight = 20;
 const minComponentWidth = 20;
 
 export type ResizeHandle =
-  | 'top'
-  | 'right'
-  | 'bottom'
-  | 'left'
-  | 'topLeft'
-  | 'topRight'
-  | 'bottomRight'
-  | 'bottomLeft';
+  'top' | 'right' | 'bottom' | 'left' | 'topLeft' | 'topRight' | 'bottomRight' | 'bottomLeft';

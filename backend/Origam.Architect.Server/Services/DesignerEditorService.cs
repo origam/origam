@@ -36,8 +36,8 @@ public class DesignerEditorService(
     SchemaService schemaService,
     IPersistenceService persistenceService,
     IDocumentationService documentationService,
-    TabService tabService,
-    ControlAdapterFactory adapterFactory
+    ControlAdapterFactory adapterFactory,
+    PanelControlFactory panelControlFactory
 )
 {
     private readonly Guid tabControlControlItemId = new("2e39362b-80a6-4430-a9bd-b3013583a2fe");
@@ -481,7 +481,6 @@ public class DesignerEditorService(
 
     public bool SaveScreenSection(PanelControlSet screenSection)
     {
-        var controlSchemaItemProvider = schemaService.GetProvider<UserControlSchemaItemProvider>();
         try
         {
             bool createWidget = !screenSection.IsPersisted;
@@ -499,25 +498,7 @@ public class DesignerEditorService(
             screenSection.OldPrimaryKey = null;
             if (createWidget)
             {
-                ControlItem newControl = controlSchemaItemProvider.NewItem<ControlItem>(
-                    schemaService.ActiveSchemaExtensionId,
-                    group: null
-                );
-                newControl.Name = screenSection.Name;
-                newControl.IsComplexType = true;
-                Type t = typeof(PanelControlSet);
-                newControl.ControlType = t.ToString();
-                newControl.ControlNamespace = t.Namespace;
-                newControl.PanelControlSet = screenSection;
-                newControl.ControlToolBoxVisibility = ControlToolBoxVisibility.FormDesigner;
-                SchemaItemAncestor ancestor = new SchemaItemAncestor();
-                ancestor.SchemaItem = newControl;
-                ancestor.Ancestor = tabService.GetControlByType("Origam.Gui.Win.AsPanel");
-                ancestor.PersistenceProvider = newControl.PersistenceProvider;
-                newControl.ThrowEventOnPersist = false;
-                newControl.Persist();
-                ancestor.Persist();
-                newControl.ThrowEventOnPersist = true;
+                panelControlFactory.Create(screenSection, schemaService.ActiveSchemaExtensionId);
                 return true;
             }
         }

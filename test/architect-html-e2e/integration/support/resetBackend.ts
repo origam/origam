@@ -43,18 +43,52 @@ export function readModelFile(relativePath: string): string {
   return fs.readFileSync(path.join(repoRoot, MODEL_DIR, relativePath), 'utf8');
 }
 
-export function restoreModelFiles(): void {
-  execFileSync('git', ['checkout', '--', MODEL_DIR], { cwd: repoRoot, stdio: 'pipe' });
-  execFileSync('git', ['clean', '-fd', MODEL_DIR], { cwd: repoRoot, stdio: 'pipe' });
+function runGit(args: string[]): void {
+  const deadline = Date.now() + 30_000;
+  for (;;) {
+    try {
+      execFileSync('git', args, { cwd: repoRoot, stdio: 'pipe' });
+      return;
+    } catch (error) {
+      const message = String((error as { stderr?: Buffer }).stderr ?? (error as Error).message);
+      if (!message.includes('index.lock') || Date.now() > deadline) {
+        throw new Error(`git ${args.join(' ')} failed: ${message}`);
+      }
+      Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 250);
+    }
+  }
 }
 
-export async function resetBackend(request: APIRequestContext): Promise<void> {
-  restoreModelFiles();
+export function restoreModelFiles(): void {
+  runGit(['checkout', '--', MODEL_DIR]);
+  runGit(['clean', '-fd', MODEL_DIR]);
+}
 
-  const response = await request.post('/Test/Reset');
+async function postOrThrow(request: APIRequestContext, url: string): Promise<void> {
+  const response = await request.post(url);
   if (!response.ok()) {
-    throw new Error(`POST /Test/Reset failed: ${response.status()} ${await response.text()}`);
+    throw new Error(`POST ${url} failed: ${response.status()} ${await response.text()}`);
   }
+}
+
+// Restoring the model files is bracketed by BeginReset/EndReset so the server
+// stops reacting to file changes while git rewrites model-tests/model, and
+// discards the events the restore produced instead of processing them a second
+// later, in the middle of the test that follows.
+export async function resetBackend(request: APIRequestContext): Promise<void> {
+  await postOrThrow(request, '/Test/BeginReset');
+  try {
+    restoreModelFiles();
+  } catch (error) {
+    // Resume the queue, but report what git did rather than what EndReset said.
+    await request.post('/Test/EndReset').catch(() => {});
+    throw error;
+  }
+  await postOrThrow(request, '/Test/EndReset');
 
   await activatePackage(request, DEFAULT_PACKAGE);
+}
+
+export function modelFilePath(relativePath: string): string {
+  return path.join(repoRoot, MODEL_DIR, relativePath);
 }

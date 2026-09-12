@@ -28,6 +28,19 @@ export interface IArchitectApi {
 
   getNodeChildren(node: INodeLoadData): Promise<IApiTreeNode[]>;
 
+  getMoveVerdicts(args: {
+    source: INodeLoadData;
+    targets: INodeLoadData[];
+  }): Promise<IMoveVerdict[]>;
+
+  getMoveTargets(args: { source: INodeLoadData }): Promise<IMoveTargetsResult>;
+
+  moveNode(args: {
+    source: INodeLoadData;
+    target: INodeLoadData;
+    isCopy: boolean;
+  }): Promise<IMoveNodeResult>;
+
   searchSchemaByAllFields(query: string): Promise<ISearchResult[]>;
 
   searchReferences(schemaItemId: string): Promise<ISearchResult[]>;
@@ -531,6 +544,7 @@ export interface IApiTreeNode extends INodeLoadData {
   isFileDirty?: boolean;
   isFolder?: boolean;
   role?: string;
+  canDrag?: boolean;
 }
 
 export interface IDeleteGroupResult {
@@ -538,6 +552,36 @@ export interface IDeleteGroupResult {
 }
 
 export type NodeLevelType = 'Category' | 'Provider' | 'Item';
+
+export interface IMoveVerdict {
+  key: string;
+  canMove: boolean;
+  canCopy: boolean;
+}
+
+export interface IMoveNodeResult {
+  node: IApiTreeNode;
+  parentNodeIds: string[];
+}
+
+export interface IMoveTarget {
+  id: string;
+  nodeText: string;
+  key: string;
+  path: string;
+  depth: number;
+  packageName: string;
+  isInActivePackage: boolean;
+  isCurrentLocation: boolean;
+  canMove: boolean;
+  canCopy: boolean;
+}
+
+export interface IMoveTargetsResult {
+  targets: IMoveTarget[];
+  isSourceInActivePackage: boolean;
+  isTruncated: boolean;
+}
 
 export interface IPackagesInfo {
   packages: IPackage[];

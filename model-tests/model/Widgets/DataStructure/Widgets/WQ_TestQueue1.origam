@@ -163,6 +163,18 @@
       <dsc:DataStructureColumn
         asi:abstract="false"
         dsc:aggregation="None"
+        dsc:field="ScheduledTime#WorkQueueEntry/ScheduledTime/fdf12a03-65d3-4903-8593-00e5d45baf06"
+        dsc:hideInOutput="false"
+        x:id="a56ee17d-76dd-4c70-800e-ecc0f5e27835"
+        asi:name="ScheduledTime"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
         dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/InRetry/95a60cea-1977-45dc-b663-3d601e8c4364"
         dsc:hideInOutput="false"
         x:id="b7affaba-b69a-4854-b108-d262ae295042"

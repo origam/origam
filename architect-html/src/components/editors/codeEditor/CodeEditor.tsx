@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { RootStoreContext } from '@/main';
 import S from '@editors/codeEditor/CodeEditor.module.scss';
+import '@editors/codeEditor/monacoSetup';
 import Editor, { EditorProps } from '@monaco-editor/react';
 import { observer } from 'mobx-react-lite';
 import * as monacoVim from 'monaco-vim';
@@ -92,7 +93,7 @@ const CodeEditor = observer(
     };
 
     return (
-      <div className={S.root}>
+      <div className={S.root} data-test-id="code-editor">
         <div className={S.editorContainer}>
           <Editor
             height="100%"
@@ -109,7 +110,9 @@ const CodeEditor = observer(
             }}
           />
         </div>
-        {uiState.settings.isVimEnabled && <div ref={vimStatusBarRef} className={S.vimStatus} />}
+        {uiState.settings.isVimEnabled && (
+          <div ref={vimStatusBarRef} className={S.vimStatus} data-test-id="vim-status-bar" />
+        )}
       </div>
     );
   },

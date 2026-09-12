@@ -52,6 +52,9 @@ const serverCwd = process.env.ARCHITECT_SERVER_CWD ?? serverDir;
 export default defineConfig({
   ...sharedConfig,
   testDir: './integration',
+  fullyParallel: false,
+  workers: 1,
+  expect: { timeout: 15_000 },
   // Activating a package against a fresh database triggers a server-side deploy
   // (CI starts from an empty origam-demo), so allow generous per-test time.
   timeout: 120_000,
