@@ -237,7 +237,7 @@ public class EditorPropertyFactory
             property.GetCustomAttribute<ReferencePropertyAttribute>() != null;
         if (isReferenceProperty || type.IsAssignableTo(typeof(ISchemaItem)))
         {
-            return property.GetSetMethod() == null ? "string" : "looukup";
+            return property.GetSetMethod() == null ? "string" : LookupTypeName;
         }
 
         return "string";
