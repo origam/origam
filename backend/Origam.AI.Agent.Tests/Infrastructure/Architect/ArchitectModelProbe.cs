@@ -35,7 +35,7 @@ public sealed class ArchitectModelProbe(HttpClient architect)
     )
     {
         var body = await architect.GetStringAsync(
-            requestUri: "/Search/SearchSchema?query=" + Uri.EscapeDataString(exactName),
+            requestUri: "/Search/SearchSchemaByName?query=" + Uri.EscapeDataString(exactName),
             CancellationToken.None
         );
 

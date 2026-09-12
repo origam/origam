@@ -35,14 +35,14 @@ public class SearchService(
     ILogger<SearchService> logger
 )
 {
-    public IEnumerable<SearchResult> SearchByText(string text)
+    public IEnumerable<SearchResult> SearchSchemaByAllFields(string query)
     {
         List<Guid> referencePackages = GetReferencePackages();
-        var results = persistenceService.SchemaProvider.FullTextSearch<ISchemaItem>(text);
+        var results = persistenceService.SchemaProvider.FullTextSearch<ISchemaItem>(query);
         return results.Where(x => x != null).Select(result => GetResult(result, referencePackages));
     }
 
-    public List<TreeNode> SearchSchema(string query)
+    public List<TreeNode> SearchSchemaByName(string query)
     {
         var results = new List<TreeNode>();
         if (schemaService.ActiveExtension == null)

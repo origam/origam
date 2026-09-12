@@ -32,21 +32,21 @@ namespace Origam.Architect.Server.Controllers;
 [Route("[controller]")]
 public class SearchController(SearchService searchService) : ControllerBase
 {
-    [HttpGet("Text")]
-    public ActionResult Text([Required] [FromQuery] string text)
+    [HttpGet("SearchSchemaByAllFields")]
+    public ActionResult SearchSchemaByAllFields([Required] [FromQuery] string query)
     {
-        return Ok(searchService.SearchByText(text));
+        return Ok(searchService.SearchSchemaByAllFields(query));
     }
 
-    [HttpGet("SearchSchema")]
-    public ActionResult<List<TreeNode>> SearchSchema([Required] [FromQuery] string query)
+    [HttpGet("SearchSchemaByName")]
+    public ActionResult<List<TreeNode>> SearchSchemaByName([Required] [FromQuery] string query)
     {
         if (string.IsNullOrWhiteSpace(query))
         {
             return BadRequest("Query cannot be empty");
         }
 
-        return Ok(searchService.SearchSchema(query));
+        return Ok(searchService.SearchSchemaByName(query));
     }
 
     [HttpGet("References")]

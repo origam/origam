@@ -52,7 +52,7 @@ public sealed class ArchitectApiClient(
     )
     {
         return GetAsync(
-            $"/Search/SearchSchema?query={Uri.EscapeDataString(query)}",
+            $"/Search/SearchSchemaByName?query={Uri.EscapeDataString(query)}",
             cancellationToken
         );
     }

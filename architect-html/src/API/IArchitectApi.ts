@@ -28,7 +28,7 @@ export interface IArchitectApi {
 
   getNodeChildren(node: INodeLoadData): Promise<IApiTreeNode[]>;
 
-  searchText(text: string): Promise<ISearchResult[]>;
+  searchSchemaByAllFields(query: string): Promise<ISearchResult[]>;
 
   searchReferences(schemaItemId: string): Promise<ISearchResult[]>;
 
