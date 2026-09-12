@@ -225,7 +225,7 @@ public class TabService(
 
             object newValue = propertyParser.Parse(propertyToChange, change.Value, tab.Item);
             object oldValue = propertyToChange.GetValue(tab.Item);
-            if (oldValue != newValue)
+            if (!Equals(oldValue, newValue))
             {
                 tab.IsDirty = true;
             }
