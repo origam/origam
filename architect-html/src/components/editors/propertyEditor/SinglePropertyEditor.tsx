@@ -63,6 +63,7 @@ const SinglePropertyEditor = observer(
             options={property.dropDownValues}
             selectedValue={selectedValue}
             disabled={property.readOnly}
+            dataTestId={`property-select-${property.name}`}
             onChange={value => onValueChange(property, value)}
           />
         );
@@ -76,6 +77,7 @@ const SinglePropertyEditor = observer(
               checked={property.value as boolean}
               onChange={e => onValueChange(property, e.target.checked)}
               disabled={property.readOnly}
+              data-test-id={`property-checkbox-${property.name}`}
               className={S.checkbox}
             />
           </div>
@@ -115,6 +117,7 @@ const SinglePropertyEditor = observer(
           <input
             type="text"
             disabled={property.readOnly}
+            data-test-id={`property-input-${property.name}`}
             value={property.value != null ? String(property.value) : ''}
             onChange={e => {
               const next = NO_WHITESPACE_PROPERTIES.has(property.name)
