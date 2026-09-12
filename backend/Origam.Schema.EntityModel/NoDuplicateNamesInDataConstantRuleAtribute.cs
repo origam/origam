@@ -40,7 +40,7 @@ public class NoDuplicateNamesInDataConstantRuleAtribute : AbstractModelElementRu
     {
         if (string.IsNullOrEmpty(memberName))
         {
-            CheckRule(instance);
+            return CheckRule(instance);
         }
 
         if (memberName != "Name")
@@ -51,20 +51,24 @@ public class NoDuplicateNamesInDataConstantRuleAtribute : AbstractModelElementRu
             );
         }
 
-        if (!(instance is DataConstant dataconstant))
+        if (instance is not DataConstant dataConstant)
         {
             return null;
         }
 
-        if (dataconstant.RootProvider == null) { }
-        string instanceName = (string)Reflector.GetValue(instance.GetType(), instance, memberName);
-        var itemWithDuplicateName = dataconstant
-            .RootProvider.ChildItems.Where(item => item is DataConstant)
-            .Where(item => item.Name == instanceName)
-            .FirstOrDefault(item => item.Id != dataconstant.Id);
-        if (itemWithDuplicateName != null)
+        // An item loaded by id has no RootProvider, so ask the persistence provider.
+        if (dataConstant.PersistenceProvider == null)
         {
-            return new DataException(dataconstant.Name + " contains duplicate  names ");
+            return null;
+        }
+
+        string instanceName = (string)Reflector.GetValue(instance.GetType(), instance, memberName);
+        bool duplicateExists = dataConstant
+            .PersistenceProvider.RetrieveListByCategory<DataConstant>(DataConstant.CategoryConst)
+            .Any(other => other.Id != dataConstant.Id && other.Name == instanceName);
+        if (duplicateExists)
+        {
+            return new DataException("Duplicate data constant name: " + instanceName);
         }
         return null;
     }
