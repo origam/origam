@@ -79,7 +79,7 @@ export class EditorProperty implements IApiEditorProperty {
     if (
       this.type === 'looukup' &&
       this._value != null &&
-      this.dropDownValues.map(x => x.value).includes(!this._value)
+      !this.dropDownValues.map(x => x.value).includes(this._value)
     ) {
       this._value = null;
     }
