@@ -139,7 +139,29 @@ public class PropertyParser(IPersistenceService persistenceService)
             return value;
         }
 
-        return converter.ConvertFrom(context, CultureInfo.InvariantCulture, value);
+        object converted;
+        try
+        {
+            converted = converter.ConvertFrom(context, CultureInfo.InvariantCulture, value);
+        }
+        catch (Exception exception)
+        {
+            throw new UserOrigamException(
+                string.Format(Strings.Property_ValueNotRead, property.Name, exception.Message),
+                exception.StackTrace,
+                exception
+            );
+        }
+
+        // A converter answers text it cannot match with null, which would clear the value.
+        if (converted == null)
+        {
+            throw new UserOrigamException(
+                string.Format(Strings.Property_ValueNotOffered, property.Name, value)
+            );
+        }
+
+        return converted;
     }
 
     private Guid ParseGuid(string value, PropertyInfo property)

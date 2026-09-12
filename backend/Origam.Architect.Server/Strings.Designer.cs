@@ -643,5 +643,23 @@ namespace Origam.Architect.Server {
                 return ResourceManager.GetString("XsltValidationSuccess", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The value of {0} could not be read. {1}.
+        /// </summary>
+        internal static string Property_ValueNotRead {
+            get {
+                return ResourceManager.GetString("Property_ValueNotRead", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to "{1}" is not one of the values offered for {0}..
+        /// </summary>
+        internal static string Property_ValueNotOffered {
+            get {
+                return ResourceManager.GetString("Property_ValueNotOffered", resourceCulture);
+            }
+        }
     }
 }
