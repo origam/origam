@@ -29,7 +29,7 @@ import {
 
 export class EditorProperty implements IApiEditorProperty {
   name: string;
-  type: PropertyType;
+  @observable accessor type: PropertyType;
   @observable protected accessor _value: PropertyValue;
   @observable.shallow accessor dropDownValues: IDropDownValue[];
   category: string | null;
@@ -73,6 +73,7 @@ export class EditorProperty implements IApiEditorProperty {
       return;
     }
     this.errors = propertyUpdate.errors ?? [];
+    this.type = propertyUpdate.type;
     this.dropDownValues = propertyUpdate.dropDownValues;
     this.value = propertyUpdate.value;
     if (

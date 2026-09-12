@@ -494,6 +494,7 @@ export enum OrigamDataType {
 
 export interface IPropertyUpdate {
   propertyName: string;
+  type: PropertyType;
   value: PropertyValue;
   errors: string[];
   dropDownValues: IDropDownValue[];
