@@ -132,7 +132,11 @@ public class ControlAdapter(
                 .FirstOrDefault(x => x.Name == propertyChange.Name);
             if (schemaItemProperty != null)
             {
-                object parsedValue = propertyParser.Parse(schemaItemProperty, propertyChange.Value);
+                object parsedValue = propertyParser.Parse(
+                    schemaItemProperty,
+                    propertyChange.Value,
+                    instance: this
+                );
                 schemaItemProperty.SetValue(this, parsedValue);
                 changesMade = true;
                 continue;

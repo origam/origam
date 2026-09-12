@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Collections;
 using System.ComponentModel;
+using System.Globalization;
 using System.Reflection;
 using Origam.Architect.Server.Attributes;
 using Origam.Architect.Server.ReturnModels;
@@ -34,6 +35,9 @@ namespace Origam.Architect.Server.Services;
 
 public class EditorPropertyFactory
 {
+    // Spelling kept as is, the frontend expects this exact name.
+    private const string LookupTypeName = "looukup";
+
     public EditorProperty CreateIfMarkedAsEditable(PropertyInfo property, ISchemaItem item)
     {
         if (!PropertyUtils.CanBeEdited(property))
@@ -49,14 +53,22 @@ public class EditorPropertyFactory
         string category = property.GetAttribute<CategoryAttribute>()?.Category;
         string description = property.GetAttribute<DescriptionAttribute>()?.Description;
 
+        TypeConverter converter = PropertyUtils.CreateConverter(property);
+        var context = new Context(instance);
+        DropDownValue[] dropDownValues = GetAvailableValues(property, converter, context);
         object value = property.GetValue(instance);
+
+        // An untyped property is edited in its converter's text space.
+        bool editedAsText = PropertyUtils.IsUntyped(property) && dropDownValues.Length > 0;
 
         return new EditorProperty(
             name: property.Name,
             controlPropertyId: null,
-            type: ToPropertyTypeName(property),
-            value: ToSerializableValue(value, property),
-            dropDownValues: GetAvailableValues(property, instance),
+            type: editedAsText ? LookupTypeName : ToPropertyTypeName(property),
+            value: editedAsText
+                ? converter.ConvertToString(context, CultureInfo.InvariantCulture, value)
+                : ToSerializableValue(value, property),
+            dropDownValues: dropDownValues,
             category: category,
             description: description,
             readOnly: property.GetSetMethod() == null
@@ -72,7 +84,7 @@ public class EditorPropertyFactory
         return new EditorProperty(
             name: property.Name,
             controlPropertyId: bindingInfo.ControlPropertyId,
-            type: "looukup",
+            type: LookupTypeName,
             value: bindingInfo.Value,
             dropDownValues: dropDownValues,
             category: "Data",
@@ -94,7 +106,11 @@ public class EditorPropertyFactory
             controlPropertyId: controlPropertyId,
             type: ToPropertyTypeName(property),
             value: typedValue,
-            dropDownValues: GetAvailableValues(property, instance: null),
+            dropDownValues: GetAvailableValues(
+                property,
+                PropertyUtils.CreateConverter(property),
+                new Context(instance: null)
+            ),
             category: category,
             description: description,
             readOnly: property.GetSetMethod() == null
@@ -125,7 +141,11 @@ public class EditorPropertyFactory
         return value;
     }
 
-    private DropDownValue[] GetAvailableValues(PropertyInfo property, object instance)
+    private DropDownValue[] GetAvailableValues(
+        PropertyInfo property,
+        TypeConverter converter,
+        ITypeDescriptorContext context
+    )
     {
         bool isReferenceProperty =
             property.GetCustomAttribute<ReferencePropertyAttribute>() != null;
@@ -154,36 +174,40 @@ public class EditorPropertyFactory
                 .ToArray();
         }
 
-        var converterType = property.GetAttribute<TypeConverterAttribute>()?.ConverterTypeName;
-        if (converterType == null)
+        if (converter == null)
         {
             return [];
         }
 
-        Type type = Type.GetType(converterType);
-        if (type == null)
-        {
-            throw new Exception($"Could not find type {converterType}");
-        }
-
-        object converterInstance = Activator.CreateInstance(type);
-        MethodInfo getValuesMethod = type.GetMethod(
-            name: "GetStandardValues",
-            new Type[] { typeof(ITypeDescriptorContext) }
-        )!;
-        var context = new Context(instance);
-        var values =
-            getValuesMethod.Invoke(converterInstance, new object[] { context })
-            as TypeConverter.StandardValuesCollection;
+        TypeConverter.StandardValuesCollection values = converter.GetStandardValues(context);
         if (values == null || values.Count == 0)
         {
             return [];
         }
 
         return values
-            .Cast<ISchemaItem>()
-            .Select(x => new DropDownValue(x?.Name ?? "", x?.Id))
+            .Cast<object>()
+            .Select(value => ToDropDownValue(value, converter, context))
             .ToArray();
+    }
+
+    // Plain values are identified by their display text.
+    private static DropDownValue ToDropDownValue(
+        object value,
+        TypeConverter converter,
+        ITypeDescriptorContext context
+    )
+    {
+        if (value is ISchemaItem schemaItem)
+        {
+            return new DropDownValue(schemaItem.Name, schemaItem.Id);
+        }
+        if (value == null)
+        {
+            return new DropDownValue(Name: "", Value: null);
+        }
+        string text = converter.ConvertToString(context, CultureInfo.InvariantCulture, value) ?? "";
+        return new DropDownValue(text, text);
     }
 
     private string ToPropertyTypeName(PropertyInfo property)

@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.ComponentModel;
 using System.Reflection;
+using Origam.Extensions;
 
 namespace Origam.Architect.Server.Utils;
 
@@ -31,5 +32,29 @@ public static class PropertyUtils
         var browsableAttribute = (BrowsableAttribute)
             Attribute.GetCustomAttribute(property, typeof(BrowsableAttribute), inherit: true);
         return browsableAttribute?.Browsable ?? true;
+    }
+
+    public static bool IsUntyped(PropertyInfo property)
+    {
+        return property.PropertyType == typeof(object);
+    }
+
+    public static TypeConverter CreateConverter(PropertyInfo property)
+    {
+        string converterTypeName = property
+            .GetAttribute<TypeConverterAttribute>()
+            ?.ConverterTypeName;
+        if (converterTypeName == null)
+        {
+            return null;
+        }
+
+        Type type = Type.GetType(converterTypeName);
+        if (type == null)
+        {
+            throw new Exception($"Could not find type {converterTypeName}");
+        }
+
+        return Activator.CreateInstance(type) as TypeConverter;
     }
 }

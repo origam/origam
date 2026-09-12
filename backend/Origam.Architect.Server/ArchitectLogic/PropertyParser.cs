@@ -19,7 +19,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System.ComponentModel;
+using System.Globalization;
 using System.Reflection;
+using Origam.Architect.Server.ReturnModels;
+using Origam.Architect.Server.Utils;
 using Origam.DA.ObjectPersistence;
 using Origam.Workbench.Services;
 
@@ -27,7 +31,7 @@ namespace Origam.Architect.Server.ArchitectLogic;
 
 public class PropertyParser(IPersistenceService persistenceService)
 {
-    public object Parse(PropertyInfo property, string value)
+    public object Parse(PropertyInfo property, string value, object instance)
     {
         if (value == null)
         {
@@ -37,6 +41,11 @@ public class PropertyParser(IPersistenceService persistenceService)
         if (property.PropertyType == typeof(string))
         {
             return value;
+        }
+
+        if (PropertyUtils.IsUntyped(property))
+        {
+            return ParseUntyped(property, value, instance);
         }
 
         if (property.PropertyType == typeof(bool))
@@ -113,6 +122,24 @@ public class PropertyParser(IPersistenceService persistenceService)
         throw new Exception(
             $"Type {property.PropertyType.Name} of property {property.Name} cannot be parsed."
         );
+    }
+
+    // Untyped properties are edited in the converter's text space, invariant.
+    private static object ParseUntyped(PropertyInfo property, string value, object instance)
+    {
+        if (value.Length == 0)
+        {
+            return null;
+        }
+
+        TypeConverter converter = PropertyUtils.CreateConverter(property);
+        var context = new Context(instance);
+        if (converter == null || !converter.CanConvertFrom(context, typeof(string)))
+        {
+            return value;
+        }
+
+        return converter.ConvertFrom(context, CultureInfo.InvariantCulture, value);
     }
 
     private Guid ParseGuid(string value, PropertyInfo property)
