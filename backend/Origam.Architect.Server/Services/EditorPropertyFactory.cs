@@ -53,9 +53,11 @@ public class EditorPropertyFactory
         string category = property.GetAttribute<CategoryAttribute>()?.Category;
         string description = property.GetAttribute<DescriptionAttribute>()?.Description;
 
-        TypeConverter converter = PropertyUtils.CreateConverter(property);
         var context = new Context(instance);
-        DropDownValue[] dropDownValues = GetAvailableValues(property, converter, context);
+        (DropDownValue[] dropDownValues, TypeConverter converter) = GetAvailableValues(
+            property,
+            context
+        );
         object value = property.GetValue(instance);
 
         // An untyped property is edited in its converter's text space.
@@ -106,11 +108,7 @@ public class EditorPropertyFactory
             controlPropertyId: controlPropertyId,
             type: ToPropertyTypeName(property),
             value: typedValue,
-            dropDownValues: GetAvailableValues(
-                property,
-                PropertyUtils.CreateConverter(property),
-                new Context(instance: null)
-            ),
+            dropDownValues: GetAvailableValues(property, new Context(instance: null)).Values,
             category: category,
             description: description,
             readOnly: property.GetSetMethod() == null
@@ -141,9 +139,8 @@ public class EditorPropertyFactory
         return value;
     }
 
-    private DropDownValue[] GetAvailableValues(
+    private (DropDownValue[] Values, TypeConverter Converter) GetAvailableValues(
         PropertyInfo property,
-        TypeConverter converter,
         ITypeDescriptorContext context
     )
     {
@@ -163,32 +160,39 @@ public class EditorPropertyFactory
             )
         )
         {
-            return [];
+            return ([], null);
         }
 
         if (property.PropertyType.IsEnum)
         {
-            return Enum.GetValues(property.PropertyType)
-                .Cast<object>()
-                .Select(x => new DropDownValue(x.ToString(), (int)x))
-                .ToArray();
+            return (
+                Enum.GetValues(property.PropertyType)
+                    .Cast<object>()
+                    .Select(x => new DropDownValue(x.ToString(), (int)x))
+                    .ToArray(),
+                null
+            );
         }
 
+        TypeConverter converter = PropertyUtils.CreateConverter(property);
         if (converter == null)
         {
-            return [];
+            return ([], null);
         }
 
         TypeConverter.StandardValuesCollection values = converter.GetStandardValues(context);
         if (values == null || values.Count == 0)
         {
-            return [];
+            return ([], converter);
         }
 
-        return values
-            .Cast<object>()
-            .Select(value => ToDropDownValue(value, converter, context))
-            .ToArray();
+        return (
+            values
+                .Cast<object>()
+                .Select(value => ToDropDownValue(value, converter, context))
+                .ToArray(),
+            converter
+        );
     }
 
     // Plain values are identified by their display text.
