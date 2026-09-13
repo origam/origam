@@ -24,6 +24,7 @@ import { IPropertyManager } from '@editors/propertyEditor/IPropertyManager.tsx';
 import { FilterableSelect } from '@editors/propertyEditor/FilterableSelect.tsx';
 import { NumericPropertyInput } from '@editors/propertyEditor/NumericPropertyInput.tsx';
 import S from '@editors/propertyEditor/SinglePropertyEditor.module.scss';
+import { UntypedPropertyInput } from '@editors/propertyEditor/UntypedPropertyInput.tsx';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler.ts';
 import { observer } from 'mobx-react-lite';
 import { useContext } from 'react';
@@ -98,6 +99,25 @@ const SinglePropertyEditor = observer(
             <NumericPropertyInput
               property={property}
               type={property.type}
+              onChange={value => onValueChange(property, value)}
+            />
+          </div>
+        );
+      }
+
+      if (property.type === 'untyped') {
+        return (
+          <div className={S.inputWithCopyButton}>
+            <button
+              type="button"
+              className={S.copyButton}
+              onClick={handleCopyToClipboard}
+              title="Copy to clipboard"
+            >
+              <VscCopy />
+            </button>
+            <UntypedPropertyInput
+              property={property}
               onChange={value => onValueChange(property, value)}
             />
           </div>

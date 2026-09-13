@@ -37,6 +37,7 @@ public class EditorPropertyFactory
 {
     // Spelling kept as is, the frontend expects this exact name.
     private const string LookupTypeName = "looukup";
+    private const string UntypedTypeName = "untyped";
 
     public EditorProperty CreateIfMarkedAsEditable(PropertyInfo property, ISchemaItem item)
     {
@@ -60,13 +61,16 @@ public class EditorPropertyFactory
         );
         object value = property.GetValue(instance);
 
+        bool untyped = PropertyUtils.IsUntyped(property);
         // An untyped property is edited in its converter's text space.
-        bool editedAsText = PropertyUtils.IsUntyped(property) && dropDownValues.Length > 0;
+        bool editedAsText = untyped && dropDownValues.Length > 0;
 
         return new EditorProperty(
             name: property.Name,
             controlPropertyId: null,
-            type: editedAsText ? LookupTypeName : ToPropertyTypeName(property),
+            type: editedAsText ? LookupTypeName
+                : untyped ? UntypedTypeName
+                : ToPropertyTypeName(property),
             value: editedAsText
                 ? converter.ConvertToString(context, CultureInfo.InvariantCulture, value)
                 : ToSerializableValue(value, property),

@@ -309,9 +309,7 @@ async function openStringConstantAs(page: Page, dataType: string): Promise<void>
 }
 
 async function fillProperty(page: Page, propertyName: string, value: string): Promise<void> {
-  await awaitPropertyUpdate(page, () =>
-    page.getByTestId(`property-input-${propertyName}`).fill(value),
-  );
+  await awaitPropertyUpdate(page, () => fillAndLeave(page, propertyName, value));
 }
 
 async function fillRejectedProperty(
@@ -320,10 +318,17 @@ async function fillRejectedProperty(
   value: string,
 ): Promise<void> {
   const response = await propertyUpdateResponse(page, () =>
-    page.getByTestId(`property-input-${propertyName}`).fill(value),
+    fillAndLeave(page, propertyName, value),
   );
   expect(response.status(), await response.text()).toBe(420);
   await page.getByRole('button', { name: 'Ok', exact: true }).click();
+}
+
+// A value of a constant is sent only once the input is left.
+async function fillAndLeave(page: Page, propertyName: string, value: string): Promise<void> {
+  const input = page.getByTestId(`property-input-${propertyName}`);
+  await input.fill(value);
+  await input.press('Tab');
 }
 
 // Returns the statuses of updates the server rejected while typing.
