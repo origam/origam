@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { expect, test, type Locator, type Page } from '@playwright/test';
+import { expect, test, type Locator, type Page, type Response } from '@playwright/test';
 import fs from 'node:fs';
 import { activatePackage } from '@support/activatePackage';
 import { openConstants } from '@support/modelTree';
@@ -35,8 +35,8 @@ const STRING_FILE = 'Root/DataConstant/DefaultMailWorkQueueName.origam';
 const LOOKUP_CONSTANT = 'DimensionType_Sales';
 const LOOKUP_GROUPS = ['Dimensions', 'DimensionType'];
 
-const COMMA_CULTURE = 'cs-CZ';
-const DECIMAL_VALUE = '1234.5';
+const SERVER_CULTURES = ['cs-CZ', 'en-US'];
+const DECIMAL_TYPES = ['Currency', 'Float'];
 
 // The Yes/No labels are localized, so options are addressed by position.
 const TRUE_OPTION = 0;
@@ -159,30 +159,63 @@ test.describe('Data Constant editor (real backend)', () => {
       .toBeNull();
   });
 
-  // Regression: the value came back as text parsed by the server culture.
-  test.describe('on a server with a comma decimal separator', () => {
-    test.beforeEach(async ({ request }) => {
-      await setServerCulture(request, COMMA_CULTURE);
+  for (const culture of SERVER_CULTURES) {
+    test.describe(`on a ${culture} server`, () => {
+      test.beforeEach(async ({ request }) => {
+        await setServerCulture(request, culture);
+      });
+
+      test.afterEach(async ({ request }) => {
+        await setServerCulture(request, null);
+      });
+
+      for (const dataType of DECIMAL_TYPES) {
+        test(`stores a ${dataType} value typed with a decimal point`, async ({ page }) => {
+          await openStringConstantAs(page, dataType);
+
+          await fillProperty(page, 'Value', '1234.5');
+          await save(page);
+
+          await expectModelFile(STRING_FILE, content => content.includes('dc:value="1234.5"'));
+        });
+
+        test(`rejects a ${dataType} value typed with a decimal comma`, async ({ page }) => {
+          await openStringConstantAs(page, dataType);
+
+          await fillRejectedProperty(page, 'Value', '12,5');
+          await save(page);
+
+          await expectModelFile(STRING_FILE, content => !content.includes('dc:value="125"'));
+        });
+      }
+
+      test('rejects an Integer value that is not a whole number', async ({ page }) => {
+        await openStringConstantAs(page, 'Integer');
+
+        await fillRejectedProperty(page, 'Value', '12,5');
+      });
+
+      test('stores a Date value typed as an ISO date', async ({ page }) => {
+        await openStringConstantAs(page, 'Date');
+
+        await fillProperty(page, 'Value', '2026-02-01');
+        await save(page);
+
+        await expectModelFile(STRING_FILE, content =>
+          content.includes('dc:value="2026-02-01T00:00:00"'),
+        );
+      });
+
+      test('rejects a Date value typed in a local format', async ({ page }) => {
+        await openStringConstantAs(page, 'Date');
+
+        await fillRejectedProperty(page, 'Value', '01.02.2026');
+        await save(page);
+
+        await expectModelFile(STRING_FILE, content => !content.includes('2026-01-02'));
+      });
     });
-
-    test.afterEach(async ({ request }) => {
-      await setServerCulture(request, null);
-    });
-
-    test('stores a decimal value as typed', async ({ page }) => {
-      await openConstants(page);
-      await openConstantEditor(page, STRING_CONSTANT);
-
-      await pickNamedOption(page, page.getByTestId('property-select-DataType'), 'Currency');
-      await expect(valueInput(page)).toBeVisible();
-      await fillProperty(page, 'Value', DECIMAL_VALUE);
-      await save(page);
-
-      await expectModelFile(STRING_FILE, content =>
-        content.includes(`dc:value="${DECIMAL_VALUE}"`),
-      );
-    });
-  });
+  }
 });
 
 function valueSelect(page: Page): Locator {
@@ -219,10 +252,29 @@ async function openConstantEditor(page: Page, nodeText: string): Promise<void> {
   await expect(page.getByTestId('property-input-Name')).toHaveValue(nodeText);
 }
 
+async function openStringConstantAs(page: Page, dataType: string): Promise<void> {
+  await openConstants(page);
+  await openConstantEditor(page, STRING_CONSTANT);
+  await pickNamedOption(page, page.getByTestId('property-select-DataType'), dataType);
+  await expect(valueInput(page)).toBeVisible();
+}
+
 async function fillProperty(page: Page, propertyName: string, value: string): Promise<void> {
   await awaitPropertyUpdate(page, () =>
     page.getByTestId(`property-input-${propertyName}`).fill(value),
   );
+}
+
+async function fillRejectedProperty(
+  page: Page,
+  propertyName: string,
+  value: string,
+): Promise<void> {
+  const response = await propertyUpdateResponse(page, () =>
+    page.getByTestId(`property-input-${propertyName}`).fill(value),
+  );
+  expect(response.status(), await response.text()).toBe(420);
+  await page.getByRole('button', { name: 'Ok', exact: true }).click();
 }
 
 // The drop down renders into a portal on the body, virtual list spacers carry
@@ -251,13 +303,17 @@ async function pickNamedOption(page: Page, select: Locator, text: string): Promi
 }
 
 async function awaitPropertyUpdate(page: Page, action: () => Promise<void>): Promise<void> {
+  const response = await propertyUpdateResponse(page, action);
+  expect(response.ok(), await response.text()).toBeTruthy();
+}
+
+async function propertyUpdateResponse(page: Page, action: () => Promise<void>): Promise<Response> {
   const pendingResponse = page.waitForResponse(
     response => response.url().includes('/PropertyEditor/Update'),
     { timeout: 10_000 },
   );
   await action();
-  const response = await pendingResponse;
-  expect(response.ok(), await response.text()).toBeTruthy();
+  return pendingResponse;
 }
 
 async function save(page: Page): Promise<void> {
