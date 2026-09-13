@@ -147,7 +147,7 @@ public class PropertyParser(IPersistenceService persistenceService)
         {
             converted = converter.ConvertFrom(context, CultureInfo.InvariantCulture, value);
         }
-        catch (Exception exception)
+        catch (Exception exception) when (PropertyUtils.IsRejectedValueException(exception))
         {
             throw PropertyUtils.MakeValueNotReadException(property, exception);
         }

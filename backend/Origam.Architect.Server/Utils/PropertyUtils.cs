@@ -65,15 +65,19 @@ public static class PropertyUtils
             property.SetValue(instance, value);
         }
         catch (TargetInvocationException exception)
-            when (exception.InnerException
-                    is FormatException
-                        or OverflowException
-                        or InvalidCastException
-                        or ArgumentException
-            )
+            when (IsRejectedValueException(exception.InnerException))
         {
             throw MakeValueNotReadException(property, exception.InnerException);
         }
+    }
+
+    public static bool IsRejectedValueException(Exception exception)
+    {
+        return exception
+            is FormatException
+                or OverflowException
+                or InvalidCastException
+                or ArgumentException;
     }
 
     public static UserOrigamException MakeValueNotReadException(
