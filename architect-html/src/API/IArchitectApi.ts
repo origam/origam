@@ -517,10 +517,7 @@ export type EditorSubType =
   | null;
 
 export type EditorType =
-  | EditorSubType
-  | 'DocumentationEditor'
-  | 'SearchResultsEditor'
-  | 'ShowSqlEditor';
+  EditorSubType | 'DocumentationEditor' | 'SearchResultsEditor' | 'ShowSqlEditor';
 
 export interface INodeLoadData {
   id: string;
@@ -594,13 +591,7 @@ export interface IPackage {
 }
 
 export type PropertyType =
-  | 'boolean'
-  | 'enum'
-  | 'string'
-  | 'integer'
-  | 'float'
-  | 'looukup'
-  | 'untyped';
+  'boolean' | 'enum' | 'string' | 'integer' | 'float' | 'looukup' | 'untyped';
 
 export type PropertyValue = boolean | number | string | string[] | null;
 
