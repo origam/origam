@@ -134,12 +134,13 @@ public class ModelCheckService(
                 {
                     continue;
                 }
-                SearchResult item = BuildItem(entry.Key, referencePackages);
-                if (item == null)
-                {
-                    continue;
-                }
-                ruleErrors.Add(new ModelRuleError { Item = item, Message = entry.Value });
+                ruleErrors.Add(
+                    new ModelRuleError
+                    {
+                        Item = BuildItem(entry.Key, referencePackages),
+                        Message = entry.Value,
+                    }
+                );
             }
         }
         return ruleErrors;
@@ -153,7 +154,6 @@ public class ModelCheckService(
         }
         catch (Exception ex)
         {
-            // A single unreadable item must not lose the whole run.
             if (logger.IsEnabled(LogLevel.Warning))
             {
                 logger.LogWarning(
@@ -161,7 +161,14 @@ public class ModelCheckService(
                     $"Could not build a model check result for schema item {schemaItem.Id}"
                 );
             }
-            return null;
+            // An item we cannot describe still has a violation worth reporting.
+            return new SearchResult
+            {
+                SchemaId = schemaItem.Id,
+                Type = schemaItem.ItemType,
+                FoundIn = schemaItem.Id.ToString(),
+                IsOrphaned = true,
+            };
         }
     }
 
