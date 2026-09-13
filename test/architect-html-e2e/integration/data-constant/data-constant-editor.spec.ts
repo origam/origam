@@ -159,7 +159,7 @@ test.describe('Data Constant editor (real backend)', () => {
       .toBeNull();
   });
 
-  // The value goes out as JSON and comes back as text parsed by the server culture.
+  // Regression: the value came back as text parsed by the server culture.
   test.describe('on a server with a comma decimal separator', () => {
     test.beforeEach(async ({ request }) => {
       await setServerCulture(request, COMMA_CULTURE);

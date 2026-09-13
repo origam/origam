@@ -113,8 +113,8 @@ public class TestController(
         }
     }
 
-    // Edited values are parsed with the server culture, so tests of that round
-    // trip pin it instead of trusting the machine. Empty name restores it.
+    // Edited values must not depend on the server culture, so tests pin a
+    // non-invariant one instead of trusting the machine. Empty name restores it.
     [HttpPost("SetCulture")]
     public IActionResult SetCulture([FromQuery] string name)
     {
