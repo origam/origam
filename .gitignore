@@ -25,3 +25,6 @@ RuntimeModelConfiguration.json
 /docker/debug/model-test_Linux.env
 /docker/debug/model-test_Windows.cmd
 /docker/debug/model-test_Windows.env
+/architect-html/ai/chats
+/architect-html/ai/prompts
+/backend/Origam.AI.Agent.Tests/benchmark-report.html

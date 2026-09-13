@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { AiToolSectionsState } from '@/ai/AiToolSectionsState';
 import { ArchitectApi } from '@api/ArchitectApi';
 import { IArchitectApi } from '@api/IArchitectApi';
 import { EditorTabViewState } from '@components/editorTabView/EditorTabViewState';
@@ -46,6 +47,7 @@ export class RootStore {
   public progressBarState = new ProgressBarState();
   public propertiesState = new PropertiesState();
   public translations = new TranslationsStore();
+  public aiToolSectionsState = new AiToolSectionsState();
   @observable public accessor output: string = '';
 
   constructor() {

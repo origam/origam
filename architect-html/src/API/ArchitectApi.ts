@@ -102,11 +102,11 @@ export class ArchitectApi implements IArchitectApi {
     return (await this.http.post('/Model/MoveNode', args)).data;
   }
 
-  async searchText(text: string): Promise<ISearchResult[]> {
+  async searchSchemaByAllFields(query: string): Promise<ISearchResult[]> {
     return (
-      await this.http.get('/Search/Text', {
+      await this.http.get('/Search/SearchSchemaByAllFields', {
         params: {
-          text,
+          query,
         },
       })
     ).data;

@@ -23,6 +23,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.Architect.Server.Exceptions;
 using Origam.Architect.Server.Models.Requests;
+using Origam.Architect.Server.ReturnModels;
 using Origam.Schema;
 using Origam.Workbench.Services;
 
@@ -34,11 +35,44 @@ public class SearchService(
     ILogger<SearchService> logger
 )
 {
-    public IEnumerable<SearchResult> SearchByText(string text)
+    public IEnumerable<SearchResult> SearchSchemaByAllFields(string query)
     {
         List<Guid> referencePackages = GetReferencePackages();
-        var results = persistenceService.SchemaProvider.FullTextSearch<ISchemaItem>(text);
+        var results = persistenceService.SchemaProvider.FullTextSearch<ISchemaItem>(query);
         return results.Where(x => x != null).Select(result => GetResult(result, referencePackages));
+    }
+
+    public List<TreeNode> SearchSchemaByName(string query)
+    {
+        var results = new List<TreeNode>();
+        if (schemaService.ActiveExtension == null)
+        {
+            return results;
+        }
+
+        foreach (ISchemaItemProvider provider in schemaService.Providers)
+        {
+            var matches = provider
+                .ChildItemsRecursive.Where(x =>
+                    x.Name != null && x.Name.Contains(query, StringComparison.OrdinalIgnoreCase)
+                )
+                .Take(50 - results.Count)
+                .Select(x => new TreeNode
+                {
+                    OrigamId = x.Id.ToString("D"),
+                    NodeText = x.Name,
+                    ItemType = x.GetType().FullName,
+                    ItemTypeName = x.GetType().SchemaItemDescription()?.Name,
+                });
+
+            results.AddRange(matches);
+            if (results.Count >= 50)
+            {
+                break;
+            }
+        }
+
+        return results;
     }
 
     public IEnumerable<SearchResult> FindReferences(Guid schemaItemId)

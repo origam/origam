@@ -1,0 +1,104 @@
+/*
+Copyright 2005 - 2026 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+$animation-duration: 0.2s;
+$animation-duration-fast: 0.1s;
+$animation-easing: ease-in-out;
+
+.root {
+  position: relative;
+  display: inline-flex;
+}
+
+.button {
+  display: flex;
+  align-items: stretch;
+  overflow: hidden;
+
+  border-radius: 0.25rem;
+  border: 1px solid var(--brand);
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.08);
+  transition: all $animation-duration $animation-easing;
+
+  user-select: none;
+
+  &:hover {
+    transform: translateY(-2px) scale(1.025);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  }
+
+  &:active {
+    transform: translateY(0) scale(1.02);
+    transition: all $animation-duration-fast $animation-easing;
+  }
+}
+
+.primary {
+  background: var(--brand);
+  color: #fff;
+}
+
+.secondary {
+  background: #fff;
+  color: var(--brand);
+}
+
+.main,
+.toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0.5rem 1rem;
+  border: none;
+  background: none;
+  color: inherit;
+
+  font: inherit;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.main {
+  gap: 0.5rem;
+}
+
+.divider {
+  width: 1px;
+
+  .primary & {
+    background: rgba(255, 255, 255, 0.45);
+  }
+
+  .secondary & {
+    background: rgba(var(--brand-rgb), 0.45);
+  }
+}
+
+.toggle {
+  padding: 0.5rem 0.5625rem;
+
+  .primary & {
+    background: rgba(0, 0, 0, 0.09);
+  }
+
+  .secondary & {
+    background: rgba(var(--brand-rgb), 0.08);
+  }
+}

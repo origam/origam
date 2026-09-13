@@ -1,0 +1,47 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>Origam.AI.Agent</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Prompts\**\*.md" Exclude="Prompts\Custom.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Using Include="Microsoft.AspNetCore.Builder" />
+    <Using Include="Microsoft.AspNetCore.Hosting" />
+    <Using Include="Microsoft.AspNetCore.Http" />
+    <Using Include="Microsoft.AspNetCore.Routing" />
+    <Using Include="Microsoft.Extensions.Configuration" />
+    <Using Include="Microsoft.Extensions.DependencyInjection" />
+    <Using Include="Microsoft.Extensions.Hosting" />
+    <Using Include="Microsoft.Extensions.Logging" />
+    <Using Include="System.Net.Http.Json" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Agents.AI" Version="1.17.0" />
+    <PackageReference
+      Include="Microsoft.Agents.AI.Hosting.AGUI.AspNetCore"
+      Version="1.17.0-preview.260804.1"
+    />
+    <PackageReference Include="Microsoft.Agents.AI.OpenAI" Version="1.17.0" />
+    <PackageReference Include="Microsoft.Extensions.AI.OpenAI" Version="10.7.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Strings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Strings.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Strings.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+</Project>

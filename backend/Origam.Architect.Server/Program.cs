@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Reflection;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.FileProviders;
+using Origam.AI.Agent;
 using Origam.Architect.Server.ArchitectLogic;
 using Origam.Architect.Server.Configuration;
 using Origam.Architect.Server.ControlAdapter;
@@ -59,6 +60,8 @@ public class Program
         builder.Services.AddSingleton<EditorPropertyFactory>();
         builder.Services.AddSingleton<PropertyParser>();
         builder.Services.AddSingleton<TabService>();
+        builder.Services.AddSingleton<TreeService>();
+        builder.Services.AddSingleton<TabResponseFactory>();
         builder.Services.AddTransient<XsltService>();
         builder.Services.AddSingleton<SearchService>();
         builder.Services.AddSingleton<PanelControlFactory>();
@@ -70,6 +73,7 @@ public class Program
         builder.Services.AddSingleton<SchemaItemCopier>();
         builder.Services.AddSingleton<SchemaItemMoveService>();
         builder.Services.AddSingleton<PropertyEditorService>();
+        builder.Services.AddSingleton<ItemTypeCatalogService>();
         builder.Services.AddSingleton<DesignerEditorService>();
         builder.Services.AddSingleton<DeploymentVersionCurrentService>();
         builder.Services.AddSingleton<DeploymentScriptRunnerService>();
@@ -99,6 +103,8 @@ public class Program
             ISchemaDbCompareResultsService,
             SchemaDbCompareResultsService
         >();
+
+        builder.Services.AddOrigamAiAgent();
 
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();

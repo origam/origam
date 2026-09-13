@@ -27,6 +27,7 @@ export interface ITabState {
   label: string;
   isActive: boolean;
   isDirty: boolean;
+  origamId?: string;
   validationErrors?: IValidationError[];
   save(): Generator<Promise<any>, void, any>;
   dispose?(): void;

@@ -34,7 +34,11 @@ export function PackageItem(props: { package: IPackage; isSelected?: boolean }) 
   }
 
   return (
-    <div className={S.root + ' ' + (props.isSelected ? S.selected : '')} onClick={onPackageClick}>
+    <div
+      className={S.root + ' ' + (props.isSelected ? S.selected : '')}
+      data-test-id={`package-${props.package.name}`}
+      onClick={onPackageClick}
+    >
       {props.package.name}
     </div>
   );

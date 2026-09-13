@@ -37,6 +37,10 @@ export abstract class DesignerEditorState implements IDesignerEditorState {
   @observable accessor isActive: boolean = false;
   @observable accessor isDirty: boolean = false;
 
+  get origamId() {
+    return this.editorNode.origamId;
+  }
+
   get label() {
     return this.toolbox.name;
   }

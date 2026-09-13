@@ -44,7 +44,9 @@ const SearchInput = observer(() => {
 
     run({
       generator: function* () {
-        const results = (yield rootStore.architectApi.searchText(trimmedText)) as ISearchResult[];
+        const results = (yield rootStore.architectApi.searchSchemaByAllFields(
+          trimmedText,
+        )) as ISearchResult[];
         if (latestQueryRef.current !== trimmedText) {
           return;
         }

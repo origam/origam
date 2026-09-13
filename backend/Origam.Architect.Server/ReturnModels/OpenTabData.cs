@@ -29,7 +29,12 @@ public class OpenTabData(
     object data,
     bool isPersisted,
     string parentNodeId = null,
-    bool isDirty = false
+    bool isDirty = false,
+    string parentName = null,
+    string parentOrigamId = null,
+    string primaryKeyFieldId = null,
+    bool isStale = false,
+    bool discarded = false
 )
 {
     public string TabId { get; } = tabId.ToString();
@@ -43,4 +48,9 @@ public class OpenTabData(
     public bool IsPersisted { get; } = isPersisted;
     public string ParentNodeId { get; } = parentNodeId;
     public bool IsDirty { get; } = isDirty;
+    public string ParentName { get; } = parentName;
+    public string ParentOrigamId { get; } = parentOrigamId;
+    public string PrimaryKeyFieldId { get; } = primaryKeyFieldId;
+    public bool IsStale { get; } = isStale;
+    public bool Discarded { get; } = discarded;
 }
