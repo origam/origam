@@ -17,7 +17,14 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { expect, test, type Locator, type Page, type Response } from '@playwright/test';
+import {
+  expect,
+  test,
+  type Locator,
+  type Page,
+  type Request,
+  type Response,
+} from '@playwright/test';
 import fs from 'node:fs';
 import { activatePackage } from '@support/activatePackage';
 import { openConstants } from '@support/modelTree';
@@ -37,6 +44,9 @@ const LOOKUP_GROUPS = ['Dimensions', 'DimensionType'];
 
 const SERVER_CULTURES = ['cs-CZ', 'en-US'];
 const DECIMAL_TYPES = ['Currency', 'Float'];
+
+// Longer than an input debounce, a user stops like this in the middle of a value.
+const TYPING_PAUSE_MS = 500;
 
 // The Yes/No labels are localized, so options are addressed by position.
 const TRUE_OPTION = 0;
@@ -216,6 +226,45 @@ test.describe('Data Constant editor (real backend)', () => {
       });
     });
   }
+
+  // A partially typed value must neither be rejected nor overwrite the typed text.
+  test.describe('typed character by character', () => {
+    for (const dataType of DECIMAL_TYPES) {
+      test(`keeps a ${dataType} value with a decimal point`, async ({ page }) => {
+        await openStringConstantAs(page, dataType);
+
+        const rejectedUpdates = await typeProperty(page, 'Value', '1234.5');
+
+        expect(rejectedUpdates).toEqual([]);
+        await expect(valueInput(page)).toHaveValue('1234.5');
+        await save(page);
+        await expectModelFile(STRING_FILE, content => content.includes('dc:value="1234.5"'));
+      });
+    }
+
+    test('keeps a negative Integer value', async ({ page }) => {
+      await openStringConstantAs(page, 'Integer');
+
+      const rejectedUpdates = await typeProperty(page, 'Value', '-12');
+
+      expect(rejectedUpdates).toEqual([]);
+      await expect(valueInput(page)).toHaveValue('-12');
+      await save(page);
+      await expectModelFile(STRING_FILE, content => content.includes('dc:value="-12"'));
+    });
+
+    test('accepts a Date value', async ({ page }) => {
+      await openStringConstantAs(page, 'Date');
+
+      const rejectedUpdates = await typeProperty(page, 'Value', '2026-02-01');
+
+      expect(rejectedUpdates).toEqual([]);
+      await save(page);
+      await expectModelFile(STRING_FILE, content =>
+        content.includes('dc:value="2026-02-01T00:00:00"'),
+      );
+    });
+  });
 });
 
 function valueSelect(page: Page): Locator {
@@ -275,6 +324,46 @@ async function fillRejectedProperty(
   );
   expect(response.status(), await response.text()).toBe(420);
   await page.getByRole('button', { name: 'Ok', exact: true }).click();
+}
+
+// Returns the statuses of updates the server rejected while typing.
+async function typeProperty(page: Page, propertyName: string, text: string): Promise<number[]> {
+  const updates = trackPropertyUpdates(page);
+  const input = page.getByTestId(`property-input-${propertyName}`);
+  await input.selectText();
+  for (const character of text) {
+    await page.keyboard.type(character);
+    await updates.settle();
+  }
+  await input.press('Tab');
+  await updates.settle();
+  return updates.rejected;
+}
+
+function trackPropertyUpdates(page: Page) {
+  const pending = new Set<Request>();
+  const rejected: number[] = [];
+  const isUpdate = (request: Request) => request.url().includes('/PropertyEditor/Update');
+  const finish = (request: Request) => pending.delete(request);
+  page.on('request', request => {
+    if (isUpdate(request)) {
+      pending.add(request);
+    }
+  });
+  page.on('response', response => {
+    if (isUpdate(response.request()) && response.status() >= 400) {
+      rejected.push(response.status());
+    }
+  });
+  page.on('requestfinished', finish);
+  page.on('requestfailed', finish);
+  return {
+    rejected,
+    settle: async () => {
+      await page.waitForTimeout(TYPING_PAUSE_MS);
+      await expect.poll(() => pending.size).toBe(0);
+    },
+  };
 }
 
 // The drop down renders into a portal on the body, virtual list spacers carry
