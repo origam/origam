@@ -219,4 +219,7 @@
     <data name="Property_ValueNotOffered" xml:space="preserve">
         <value>"{1}" is not one of the values offered for {0}.</value>
     </data>
+    <data name="Property_ConverterNotFound" xml:space="preserve">
+        <value>Type converter {0} of property {1} could not be found.</value>
+    </data>
 </root>

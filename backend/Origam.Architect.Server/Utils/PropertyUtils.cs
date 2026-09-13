@@ -52,7 +52,9 @@ public static class PropertyUtils
         Type type = Type.GetType(converterTypeName);
         if (type == null)
         {
-            throw new Exception($"Could not find type {converterTypeName}");
+            throw new Exception(
+                string.Format(Strings.Property_ConverterNotFound, converterTypeName, property.Name)
+            );
         }
 
         return Activator.CreateInstance(type) as TypeConverter;

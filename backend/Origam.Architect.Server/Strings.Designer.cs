@@ -168,6 +168,15 @@ namespace Origam.Architect.Server {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Type converter {0} of property {1} could not be found..
+        /// </summary>
+        internal static string Property_ConverterNotFound {
+            get {
+                return ResourceManager.GetString("Property_ConverterNotFound", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to &quot;{1}&quot; is not one of the values offered for {0}..
         /// </summary>
         internal static string Property_ValueNotOffered {
