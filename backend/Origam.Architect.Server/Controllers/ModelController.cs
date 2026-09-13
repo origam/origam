@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using Origam.Architect.Server.Models;
 using Origam.Architect.Server.ReturnModels;
@@ -30,7 +31,6 @@ using Origam.DA.Service.SchemaInfo;
 using Origam.Schema;
 using Origam.UI;
 using Origam.Workbench.Services;
-using System.ComponentModel.DataAnnotations;
 
 namespace Origam.Architect.Server.Controllers;
 
