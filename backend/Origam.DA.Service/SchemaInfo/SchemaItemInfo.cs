@@ -19,6 +19,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Architect.Server.ReturnModels;
+using System.Collections.Generic;
 
-public record RelatedItem(string Id, string Name, string Kind);
+namespace Origam.DA.Service.SchemaInfo;
+
+public record SchemaItemInfo(
+    string Id,
+    string Name,
+    string Kind,
+    string Package,
+    List<string> Fields,
+    List<RelatedItem> PrimaryKey,
+    List<RelatedItem> UsedBy
+);

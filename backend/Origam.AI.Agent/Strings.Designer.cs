@@ -124,11 +124,11 @@ namespace Origam.AI.Agent {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Architect returned {0} when fetching entity index..
+        ///   Looks up a localized string similar to Architect returned {0} when fetching schema item infos..
         /// </summary>
-        internal static string EntityIndexRequestFailed {
+        internal static string SchemaItemInfosRequestFailed {
             get {
-                return ResourceManager.GetString("EntityIndexRequestFailed", resourceCulture);
+                return ResourceManager.GetString("SchemaItemInfosRequestFailed", resourceCulture);
             }
         }
         

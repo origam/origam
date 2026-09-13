@@ -19,7 +19,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using Origam.Architect.Server.Models;
 using Origam.Architect.Server.ReturnModels;
@@ -27,9 +26,11 @@ using Origam.Architect.Server.Services;
 using Origam.Architect.Server.Services.Move;
 using Origam.DA.ObjectPersistence;
 using Origam.DA.Service;
+using Origam.DA.Service.SchemaInfo;
 using Origam.Schema;
 using Origam.UI;
 using Origam.Workbench.Services;
+using System.ComponentModel.DataAnnotations;
 
 namespace Origam.Architect.Server.Controllers;
 
@@ -42,7 +43,6 @@ public class ModelController(
     TreeNodeFactory treeNodeFactory,
     ModelTransactionRunner modelTransactionRunner,
     TabService tabService,
-    EntityCardService entityCardService,
     ModelGroupService modelGroupService
 ) : ControllerBase
 {
@@ -292,14 +292,18 @@ public class ModelController(
         return Ok(providerNode);
     }
 
-    [HttpGet("GetEntityIndex")]
-    public ActionResult<List<EntityCard>> GetEntityIndex()
+    [HttpGet("GetSchemaItemInfos")]
+    public ActionResult<List<SchemaItemInfo>> GetSchemaItemInfos()
     {
         if (!ReferenceIndexManager.Initialized)
         {
             return StatusCode(StatusCodes.Status503ServiceUnavailable);
         }
-        return Ok(entityCardService.Get());
+        if (schemaService.ActiveExtension == null)
+        {
+            return new List<SchemaItemInfo>();
+        }
+        return ((FilePersistenceProvider)persistenceProvider).RetrieveSchemaItemInfos();
     }
 
     [HttpPost("GetMoveVerdicts")]

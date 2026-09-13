@@ -378,4 +378,7 @@
   <data name="ErrorWhenSettingConfigProperty" xml:space="preserve">
     <value>An error occurred when trying to set runtime config value "{0}" of property "{1}" on object id: "{2}". Configuration file: "{3}"</value>
   </data>
+  <data name="ReferenceIndexNotReady" xml:space="preserve">
+    <value>Index of references is being built. Please wait.</value>
+  </data>
 </root>

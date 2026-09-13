@@ -57,9 +57,9 @@ public sealed class ArchitectApiClient(
         );
     }
 
-    public Task<ArchitectResponse> GetEntityIndexAsync(CancellationToken cancellationToken)
+    public Task<ArchitectResponse> GetSchemaItemInfosAsync(CancellationToken cancellationToken)
     {
-        return GetAsync(relativeUrl: "/Model/GetEntityIndex", cancellationToken);
+        return GetAsync(relativeUrl: "/Model/GetSchemaItemInfos", cancellationToken);
     }
 
     public Task<ArchitectResponse> GetMenuItemsAsync(

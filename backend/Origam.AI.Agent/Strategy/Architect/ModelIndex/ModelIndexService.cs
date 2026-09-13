@@ -30,7 +30,7 @@ public class ModelIndexService
 {
     private record IndexEntry(string Id, string Package, string Text);
 
-    private record EntityCard(
+    private record SchemaItemInfo(
         string Id,
         string Name,
         string Kind,
@@ -82,8 +82,8 @@ public class ModelIndexService
 
     public async Task<ModelIndexContent> GetContentAsync(CancellationToken cancellationToken)
     {
-        var cards = await FetchCardsAsync(cancellationToken);
-        if (cards is null)
+        var schemaItems = await FetchSchemaItemInfosAsync(cancellationToken);
+        if (schemaItems is null)
         {
             return new ModelIndexContent(snapshotYaml, string.Empty);
         }
@@ -91,7 +91,7 @@ public class ModelIndexService
         await snapshotLock.WaitAsync(cancellationToken);
         try
         {
-            var entries = RenderEntries(cards);
+            var entries = RenderEntries(schemaItems);
 
             if (snapshotEntries is null)
             {
@@ -164,22 +164,24 @@ public class ModelIndexService
         return builder.ToString();
     }
 
-    private async Task<List<EntityCard>?> FetchCardsAsync(CancellationToken cancellationToken)
+    private async Task<List<SchemaItemInfo>?> FetchSchemaItemInfosAsync(
+        CancellationToken cancellationToken
+    )
     {
         try
         {
-            var response = await architectApi.GetEntityIndexAsync(cancellationToken);
+            var response = await architectApi.GetSchemaItemInfosAsync(cancellationToken);
             if (!response.IsSuccess)
             {
                 lastError = string.Format(
-                    Strings.EntityIndexRequestFailed,
+                    Strings.SchemaItemInfosRequestFailed,
                     (int)response.StatusCode
                 );
                 return null;
             }
 
             lastError = null;
-            return JsonSerializer.Deserialize<List<EntityCard>>(response.Body, JsonOptions)
+            return JsonSerializer.Deserialize<List<SchemaItemInfo>>(response.Body, JsonOptions)
                 ?? new();
         }
         catch (Exception ex)
@@ -189,22 +191,25 @@ public class ModelIndexService
         }
     }
 
-    private List<IndexEntry> RenderEntries(List<EntityCard> cards)
+    private List<IndexEntry> RenderEntries(List<SchemaItemInfo> schemaItems)
     {
-        return cards
+        return schemaItems
             .OrderBy(
-                card => string.IsNullOrWhiteSpace(card.Package) ? "(no package)" : card.Package,
+                schemaItem =>
+                    string.IsNullOrWhiteSpace(schemaItem.Package)
+                        ? "(no package)"
+                        : schemaItem.Package,
                 StringComparer.OrdinalIgnoreCase
             )
-            .ThenBy(card => card.Name, StringComparer.OrdinalIgnoreCase)
+            .ThenBy(schemaItem => schemaItem.Name, StringComparer.OrdinalIgnoreCase)
             .Select(RenderEntry)
             .ToList();
     }
 
-    private IndexEntry RenderEntry(EntityCard card)
+    private IndexEntry RenderEntry(SchemaItemInfo schemaItem)
     {
-        var entityAlias = aliasMappingService.GetOrAddAlias(card.Id, prefix: "e");
-        var kindCode = card.Kind.StartsWith(
+        var entityAlias = aliasMappingService.GetOrAddAlias(schemaItem.Id, prefix: "e");
+        var kindCode = schemaItem.Kind.StartsWith(
             value: "Database",
             comparisonType: StringComparison.OrdinalIgnoreCase
         )
@@ -213,15 +218,15 @@ public class ModelIndexService
 
         var builder = new StringBuilder();
         builder
-            .Append(card.Name)
+            .Append(schemaItem.Name)
             .Append('(')
             .Append(entityAlias)
             .Append(',')
             .Append(kindCode)
             .AppendLine(")");
 
-        AppendFields(builder, card);
-        foreach (var usersOfKind in (card.UsedBy ?? []).GroupBy(item => item.Kind))
+        AppendFields(builder, schemaItem);
+        foreach (var usersOfKind in (schemaItem.UsedBy ?? []).GroupBy(item => item.Kind))
         {
             AppendRelated(
                 builder,
@@ -231,8 +236,10 @@ public class ModelIndexService
             );
         }
 
-        var package = string.IsNullOrWhiteSpace(card.Package) ? "(no package)" : card.Package;
-        return new IndexEntry(card.Id, package, builder.ToString());
+        var package = string.IsNullOrWhiteSpace(schemaItem.Package)
+            ? "(no package)"
+            : schemaItem.Package;
+        return new IndexEntry(schemaItem.Id, package, builder.ToString());
     }
 
     private static string AliasPrefix(string kind)
@@ -261,20 +268,20 @@ public class ModelIndexService
         return builder.ToString();
     }
 
-    private void AppendFields(StringBuilder builder, EntityCard card)
+    private void AppendFields(StringBuilder builder, SchemaItemInfo schemaItem)
     {
-        if (card.Fields == null || card.Fields.Count == 0)
+        if (schemaItem.Fields == null || schemaItem.Fields.Count == 0)
         {
             return;
         }
 
         var primaryKeyIds = new Dictionary<string, string>(StringComparer.Ordinal);
-        foreach (var primaryKeyField in card.PrimaryKey ?? new List<RelatedItem>())
+        foreach (var primaryKeyField in schemaItem.PrimaryKey ?? new List<RelatedItem>())
         {
             primaryKeyIds[primaryKeyField.Name] = primaryKeyField.Id;
         }
 
-        var visibleFields = card
+        var visibleFields = schemaItem
             .Fields.Where(field => !AuditFields.Contains(field))
             .Select(field =>
                 primaryKeyIds.TryGetValue(field, out string? primaryKeyId)

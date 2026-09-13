@@ -39,8 +39,8 @@
     <data name="CommunityRequestFailed" xml:space="preserve">
         <value>{0} returned {1}.</value>
     </data>
-    <data name="EntityIndexRequestFailed" xml:space="preserve">
-        <value>Architect returned {0} when fetching entity index.</value>
+    <data name="SchemaItemInfosRequestFailed" xml:space="preserve">
+        <value>Architect returned {0} when fetching schema item infos.</value>
     </data>
     <data name="ImageInvalid" xml:space="preserve">
         <value>The attached image could not be read.</value>

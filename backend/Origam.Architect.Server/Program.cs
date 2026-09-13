@@ -74,7 +74,6 @@ public class Program
         builder.Services.AddSingleton<SchemaItemMoveService>();
         builder.Services.AddSingleton<PropertyEditorService>();
         builder.Services.AddSingleton<ItemTypeCatalogService>();
-        builder.Services.AddSingleton<EntityCardService>();
         builder.Services.AddSingleton<DesignerEditorService>();
         builder.Services.AddSingleton<DeploymentVersionCurrentService>();
         builder.Services.AddSingleton<DeploymentScriptRunnerService>();
