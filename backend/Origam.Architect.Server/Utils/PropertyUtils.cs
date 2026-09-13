@@ -57,4 +57,34 @@ public static class PropertyUtils
 
         return Activator.CreateInstance(type) as TypeConverter;
     }
+
+    public static void SetValue(PropertyInfo property, object instance, object value)
+    {
+        try
+        {
+            property.SetValue(instance, value);
+        }
+        catch (TargetInvocationException exception)
+            when (exception.InnerException
+                    is FormatException
+                        or OverflowException
+                        or InvalidCastException
+                        or ArgumentException
+            )
+        {
+            throw MakeValueNotReadException(property, exception.InnerException);
+        }
+    }
+
+    public static UserOrigamException MakeValueNotReadException(
+        PropertyInfo property,
+        Exception exception
+    )
+    {
+        return new UserOrigamException(
+            string.Format(Strings.Property_ValueNotRead, property.Name, exception.Message),
+            exception.StackTrace,
+            exception
+        );
+    }
 }

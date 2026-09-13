@@ -23,6 +23,7 @@ using System.Collections.Concurrent;
 using System.Reflection;
 using Origam.Architect.Server.ArchitectLogic;
 using Origam.Architect.Server.Models;
+using Origam.Architect.Server.Utils;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema;
 using Origam.Schema.GuiModel;
@@ -230,7 +231,7 @@ public class TabService(
                 tab.IsDirty = true;
             }
 
-            propertyToChange.SetValue(tab.Item, newValue);
+            PropertyUtils.SetValue(propertyToChange, tab.Item, newValue);
         }
 
         return tab;

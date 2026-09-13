@@ -28,6 +28,7 @@ using Origam.Architect.Server.Controls;
 using Origam.Architect.Server.Models;
 using Origam.Architect.Server.ReturnModels;
 using Origam.Architect.Server.Services;
+using Origam.Architect.Server.Utils;
 using Origam.Extensions;
 using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
@@ -137,7 +138,7 @@ public class ControlAdapter(
                     propertyChange.Value,
                     instance: this
                 );
-                schemaItemProperty.SetValue(this, parsedValue);
+                PropertyUtils.SetValue(schemaItemProperty, this, parsedValue);
                 changesMade = true;
                 continue;
             }

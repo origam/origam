@@ -146,11 +146,7 @@ public class PropertyParser(IPersistenceService persistenceService)
         }
         catch (Exception exception)
         {
-            throw new UserOrigamException(
-                string.Format(Strings.Property_ValueNotRead, property.Name, exception.Message),
-                exception.StackTrace,
-                exception
-            );
+            throw PropertyUtils.MakeValueNotReadException(property, exception);
         }
 
         // A converter answers text it cannot match with null, which would clear the value.
