@@ -42,10 +42,7 @@ const entityWithColumnsFile = path.join(
   'Widgets/DataEntity/Widgets/ArrayTest.origam',
 );
 const entityDirectory = path.join(modelDirectory, 'Widgets/DataEntity/Widgets');
-const orphanFileDirectory = path.join(
-  modelDirectory,
-  'AutomaticTests/DataEntity/AutomaticTests',
-);
+const orphanFileDirectory = path.join(modelDirectory, 'AutomaticTests/DataEntity/AutomaticTests');
 
 function replaceOnce(filePath: string, search: string, replacement: string): void {
   const content = fs.readFileSync(filePath, 'utf8');

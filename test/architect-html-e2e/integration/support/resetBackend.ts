@@ -28,7 +28,9 @@ function findRepoRoot(): string {
   while (!fs.existsSync(path.join(dir, 'model-tests'))) {
     const parent = path.dirname(dir);
     if (parent === dir) {
-      throw new Error('Could not locate the repository root (no model-tests directory above the current working directory).');
+      throw new Error(
+        'Could not locate the repository root (no model-tests directory above the current working directory).',
+      );
     }
     dir = parent;
   }

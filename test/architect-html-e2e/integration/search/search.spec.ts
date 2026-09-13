@@ -47,8 +47,8 @@ test.describe('Search virtual entity test', () => {
     expect(response.ok()).toBeTruthy();
 
     const results = await response.json();
-    expect(results.some((result: { foundIn: string }) => result.foundIn.includes('ArrayTest'))).toBe(
-      true,
-    );
+    expect(
+      results.some((result: { foundIn: string }) => result.foundIn.includes('ArrayTest')),
+    ).toBe(true);
   });
 });
