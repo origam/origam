@@ -143,7 +143,7 @@ test.describe('Data Constant editor (real backend)', () => {
 
     await expect(page.getByTestId('property-label-Name')).toHaveAttribute(
       'title',
-      new RegExp(`Duplicate data constant name: ${BOOLEAN_CONSTANT}`),
+      new RegExp(`already uses the name '${BOOLEAN_CONSTANT}'`),
     );
     expect(serverErrors).toEqual([]);
   });
