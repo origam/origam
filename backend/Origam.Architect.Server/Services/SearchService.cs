@@ -89,16 +89,17 @@ public class SearchService(
         try
         {
             ISchemaItem root = GetRoot(item);
+            List<SchemaItemGroup> groups = GetGroupChain(root);
             return new SearchResult
             {
                 SchemaId = item.Id,
                 Type = item.ModelDescription() ?? item.ItemType,
                 RootType = root.ModelDescription() ?? root.ItemType,
                 FoundIn = item.Path,
-                Folder = root.Group?.Path ?? "",
+                Folder = groups.Count == 0 ? "" : groups[0].Path,
                 Package = item.PackageName,
                 PackageReference = referencePackages.Contains(item.SchemaExtensionId),
-                ParentNodeIds = GetParentNodeIds(item, root),
+                ParentNodeIds = GetParentNodeIds(item, root, groups),
                 IsOrphaned = false,
             };
         }
@@ -138,7 +139,35 @@ public class SearchService(
         }
     }
 
-    private static List<string> GetParentNodeIds(ISchemaItem item, ISchemaItem root)
+    // Group and ParentGroup throw when a group id no longer resolves. That is a
+    // broken folder, not a broken item, so the chain is dropped and the item is
+    // still reported - just without a folder.
+    private List<SchemaItemGroup> GetGroupChain(ISchemaItem root)
+    {
+        var groups = new List<SchemaItemGroup>();
+        try
+        {
+            for (SchemaItemGroup group = root.Group; group != null; group = group.ParentGroup)
+            {
+                groups.Add(group);
+            }
+            return groups;
+        }
+        catch (Exception ex)
+        {
+            if (logger.IsEnabled(LogLevel.Warning))
+            {
+                logger.LogWarning(ex, $"Could not read the group of schema item {root.Id}");
+            }
+            return [];
+        }
+    }
+
+    private static List<string> GetParentNodeIds(
+        ISchemaItem item,
+        ISchemaItem root,
+        List<SchemaItemGroup> groups
+    )
     {
         try
         {
@@ -156,7 +185,7 @@ public class SearchService(
                 AddFolderNameIfAny(ids, parent);
             }
 
-            for (SchemaItemGroup group = root.Group; group != null; group = group.ParentGroup)
+            foreach (SchemaItemGroup group in groups)
             {
                 ids.Add(group.Id.ToString());
             }
