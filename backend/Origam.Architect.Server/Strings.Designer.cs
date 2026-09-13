@@ -166,7 +166,25 @@ namespace Origam.Architect.Server {
                 return ResourceManager.GetString("ParameterNotFound", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to &quot;{1}&quot; is not one of the values offered for {0}..
+        /// </summary>
+        internal static string Property_ValueNotOffered {
+            get {
+                return ResourceManager.GetString("Property_ValueNotOffered", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The value of {0} could not be read. {1}.
+        /// </summary>
+        internal static string Property_ValueNotRead {
+            get {
+                return ResourceManager.GetString("Property_ValueNotRead", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to XSLT Validation.
         /// </summary>
@@ -641,24 +659,6 @@ namespace Origam.Architect.Server {
         internal static string XsltValidationSuccess {
             get {
                 return ResourceManager.GetString("XsltValidationSuccess", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The value of {0} could not be read. {1}.
-        /// </summary>
-        internal static string Property_ValueNotRead {
-            get {
-                return ResourceManager.GetString("Property_ValueNotRead", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to "{1}" is not one of the values offered for {0}..
-        /// </summary>
-        internal static string Property_ValueNotOffered {
-            get {
-                return ResourceManager.GetString("Property_ValueNotOffered", resourceCulture);
             }
         }
     }
