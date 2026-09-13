@@ -57,7 +57,7 @@ test.describe('Data Constant editor (real backend)', () => {
     await openConstants(page);
     await openConstantEditor(page, BOOLEAN_CONSTANT);
 
-    expect(serverErrors).toEqual([]);
+    await expectNoServerErrors(page, serverErrors);
   });
 
   test('opens the editor of a constant bound to a lookup', async ({ page }) => {
@@ -69,7 +69,7 @@ test.describe('Data Constant editor (real backend)', () => {
     }
     await openConstantEditor(page, LOOKUP_CONSTANT);
 
-    expect(serverErrors).toEqual([]);
+    await expectNoServerErrors(page, serverErrors);
   });
 
   test('offers a drop down for a Boolean value', async ({ page }) => {
@@ -145,7 +145,7 @@ test.describe('Data Constant editor (real backend)', () => {
       'title',
       new RegExp(`already uses the name '${BOOLEAN_CONSTANT}'`),
     );
-    expect(serverErrors).toEqual([]);
+    await expectNoServerErrors(page, serverErrors);
   });
 
   // The rule used to throw for every constant, unique names included.
@@ -203,6 +203,13 @@ function collectServerErrors(page: Page): string[] {
     }
   });
   return errors;
+}
+
+// The editor keeps loading after the awaited element shows up, so the requests
+// still in flight have to land before the collected errors mean anything.
+async function expectNoServerErrors(page: Page, serverErrors: string[]): Promise<void> {
+  await page.waitForLoadState('networkidle');
+  expect(serverErrors).toEqual([]);
 }
 
 async function openConstantEditor(page: Page, nodeText: string): Promise<void> {
