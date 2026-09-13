@@ -22,7 +22,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
 using Origam.DA.Common;
@@ -266,28 +265,28 @@ public class DataConstant : AbstractSchemaItem
                 case OrigamDataType.Memo:
                 case OrigamDataType.String:
                 {
-                    string stringValue = Convert.ToString(value, CultureInfo.InvariantCulture);
+                    string stringValue = Convert.ToString(value);
                     this.StringValue = stringValue;
                     break;
                 }
 
                 case OrigamDataType.Integer:
                 {
-                    int intValue = Convert.ToInt32(value, CultureInfo.InvariantCulture);
+                    int intValue = Convert.ToInt32(value);
                     this.IntValue = intValue;
                     break;
                 }
 
                 case OrigamDataType.Currency:
                 {
-                    decimal currencyValue = Convert.ToDecimal(value, CultureInfo.InvariantCulture);
+                    decimal currencyValue = Convert.ToDecimal(value);
                     this.CurrencyValue = currencyValue;
                     break;
                 }
 
                 case OrigamDataType.Float:
                 {
-                    decimal floatValue = Convert.ToDecimal(value, CultureInfo.InvariantCulture);
+                    decimal floatValue = Convert.ToDecimal(value);
                     this.FloatValue = floatValue;
                     break;
                 }
@@ -301,16 +300,13 @@ public class DataConstant : AbstractSchemaItem
 
                 case OrigamDataType.Date:
                 {
-                    if (string.IsNullOrEmpty(Convert.ToString(value, CultureInfo.InvariantCulture)))
+                    if (string.IsNullOrEmpty(Convert.ToString(value)))
                     {
                         this.DateValue = null;
                     }
                     else
                     {
-                        DateTime dateValue = Convert.ToDateTime(
-                            value,
-                            CultureInfo.InvariantCulture
-                        );
+                        DateTime dateValue = Convert.ToDateTime(value);
                         this.DateValue = dateValue;
                     }
                     break;
