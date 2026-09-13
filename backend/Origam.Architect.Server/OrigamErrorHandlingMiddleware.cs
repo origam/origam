@@ -61,7 +61,7 @@ public class OrigamErrorHandlingMiddleware(
                 case IUserException:
                 {
                     context.Response.StatusCode = 420;
-                    await WriteJsonAsync(context, GetReturnObject(ex, ex.Message));
+                    await WriteJsonAsync(context, new { message = ex.Message });
                     break;
                 }
                 default:
