@@ -523,9 +523,38 @@ public class FilePersistenceProvider : AbstractPersistenceProvider, IFilePersist
             .SelectMany(checker =>
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                return checker.GetErrors();
+                return RunChecker(checker);
             })
             .Where(errorSection => !errorSection.IsEmpty)
             .ToList();
+    }
+
+    // A failing checker is reported as its own section; others still run.
+    private static List<ModelErrorSection> RunChecker(IFileSystemModelChecker checker)
+    {
+        string checkerName = checker.GetType().Name;
+        try
+        {
+            // Force enumeration here to catch exceptions from lazy checkers.
+            return checker.GetErrors().ToList();
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
+        catch (Exception exception)
+        {
+            var failureMessages = new List<ErrorMessage>
+            {
+                new ErrorMessage(text: exception.Message),
+            };
+            return new List<ModelErrorSection>
+            {
+                new ModelErrorSection(
+                    caption: $"{checkerName} Could Not Finish",
+                    errorMessages: failureMessages
+                ),
+            };
+        }
     }
 }
