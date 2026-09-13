@@ -39,7 +39,6 @@ const repoRoot = findRepoRoot();
 const MODEL_DIR = 'model-tests/model';
 const DEFAULT_PACKAGE = 'Root Menu';
 
-// Absolute path of the file model, for tests that edit it directly.
 export const modelDirectory = path.join(repoRoot, MODEL_DIR);
 
 export function restoreModelFiles(): void {

@@ -21,7 +21,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { modelDirectory } from '@support/resetBackend';
 
-// Plants defects for the validator to report; resetBackend() restores them after each test.
+// Planted defects stay on disk until the next resetBackend().
 
 // Well-formed guids that are deliberately not in the model.
 export const missingId = 'deadbeef-0000-0000-0000-000000000001';

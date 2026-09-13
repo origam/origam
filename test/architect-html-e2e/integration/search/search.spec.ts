@@ -39,7 +39,6 @@ test.describe('Search virtual entity test', () => {
     await expect(page.locator('tbody')).toContainText('Virtual Entity');
   });
 
-  // Search must not fail when an item's group is missing.
   test('finds items whose group is missing', async ({ request }) => {
     plantBrokenGroupReference();
     await reloadBackend(request, 'Widgets');
