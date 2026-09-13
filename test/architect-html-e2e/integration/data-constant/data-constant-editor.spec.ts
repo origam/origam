@@ -185,7 +185,7 @@ test.describe('Data Constant editor (real backend)', () => {
           await fillRejectedProperty(page, 'Value', '12,5');
           await save(page);
 
-          await expectModelFile(STRING_FILE, content => !content.includes('dc:value="125"'));
+          await expectModelFile(STRING_FILE, content => !/dc:value="12[.,]?5"/.test(content));
         });
       }
 
@@ -212,7 +212,7 @@ test.describe('Data Constant editor (real backend)', () => {
         await fillRejectedProperty(page, 'Value', '01.02.2026');
         await save(page);
 
-        await expectModelFile(STRING_FILE, content => !content.includes('2026-01-02'));
+        await expectModelFile(STRING_FILE, content => !content.includes('dc:value="2026-'));
       });
     });
   }
