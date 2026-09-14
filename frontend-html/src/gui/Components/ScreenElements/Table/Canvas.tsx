@@ -22,7 +22,14 @@ import S from "./Canvas.module.css";
 import { action, makeObservable } from "mobx";
 import { CPR } from "utils/canvas";
 
-export class Canvas extends React.Component<React.PropsWithChildren<{ width: number; height: number, refCanvasElement: any }>> {
+interface ICanvasProps {
+  width: number;
+  height: number;
+  refCanvasElement: (element: HTMLCanvasElement | null) => void;
+  onSizeCommitted: (context: CanvasRenderingContext2D) => void;
+}
+
+export class Canvas extends React.Component<React.PropsWithChildren<ICanvasProps>> {
   constructor(props: any, context?: any) {
     super(props, context);
     makeObservable(this);
@@ -40,6 +47,15 @@ export class Canvas extends React.Component<React.PropsWithChildren<{ width: num
       this.ctxCanvas = elm.getContext("2d");
     } else {
       this.ctxCanvas = null;
+    }
+  }
+
+  componentDidUpdate(previousProps: Readonly<ICanvasProps>) {
+    if (
+      this.ctxCanvas &&
+      (previousProps.width !== this.props.width || previousProps.height !== this.props.height)
+    ) {
+      this.props.onSizeCommitted(this.ctxCanvas);
     }
   }
 
