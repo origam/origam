@@ -29,7 +29,7 @@
       Version="1.17.0-preview.260804.1"
     />
     <PackageReference Include="Microsoft.Agents.AI.OpenAI" Version="1.17.0" />
-    <PackageReference Include="Microsoft.Extensions.AI.OpenAI" Version="10.7.0" />
+    <PackageReference Include="Microsoft.Extensions.AI.OpenAI" Version="10.9.0" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Update="Strings.resx">
