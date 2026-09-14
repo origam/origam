@@ -77,6 +77,7 @@
   "editor_search_results_references_title": "References of: {0}",
   "editor_search_results_dependencies_title": "Dependencies of: {0}",
   "modelcheck_button_label": "Validate model",
+  "modelcheck_button_running": "Validating model...",
   "modelcheck_results_title": "Model validator",
   "modelcheck_results_checked_at": "Last check {0}",
   "modelcheck_results_empty": "No problems found.",

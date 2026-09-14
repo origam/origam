@@ -21,23 +21,47 @@ import { IModelCheckResult } from '@api/IArchitectApi';
 import { RootStore } from '@stores/RootStore';
 import { observable } from 'mobx';
 
+export function formatRunTime(lastRunAt: string) {
+  return new Date(lastRunAt).toLocaleString(undefined, {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+  });
+}
+
 export class ModelCheckState {
   @observable accessor isRunning = false;
+  @observable accessor lastResult: IModelCheckResult | null = null;
 
   constructor(private rootStore: RootStore) {}
+
+  get problemCount() {
+    if (!this.lastResult) {
+      return 0;
+    }
+    const fileProblemCount = this.lastResult.fileErrorSections.reduce(
+      (count, section) => count + section.errors.length,
+      0,
+    );
+    return this.lastResult.ruleErrors.length + fileProblemCount;
+  }
+
+  *loadLastResult(): Generator<Promise<any>, void, any> {
+    const result = (yield this.rootStore.architectApi.getModelCheckResult()) as IModelCheckResult;
+    // The server returns an empty result until the first run.
+    this.lastResult = result.lastRunAt ? result : null;
+  }
 
   *run(): Generator<Promise<any>, void, any> {
     if (this.isRunning) {
       return;
     }
     this.isRunning = true;
-    this.rootStore.progressBarState.isWorking = true;
     try {
       const result = (yield this.rootStore.architectApi.runModelCheck()) as IModelCheckResult;
+      this.lastResult = result;
       this.rootStore.editorTabViewState.openModelCheckResults(result);
     } finally {
       this.isRunning = false;
-      this.rootStore.progressBarState.isWorking = false;
     }
   }
 }

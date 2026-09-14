@@ -19,10 +19,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { RootStoreContext, T } from '@/main';
 import Button from '@components/Button/Button';
+import S from '@components/modelCheck/ModelCheckButton.module.scss';
+import { formatRunTime } from '@components/modelCheck/ModelCheckState';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { observer } from 'mobx-react-lite';
 import { useContext } from 'react';
-import { VscChecklist } from 'react-icons/vsc';
+import { VscCheck, VscChecklist, VscLoading } from 'react-icons/vsc';
 
 const ModelCheckButtonHOC = observer(() => {
   const rootStore = useContext(RootStoreContext);
@@ -37,12 +39,36 @@ const ModelCheckButtonHOC = observer(() => {
     return null;
   }
 
+  const isRunning = modelCheckState.isRunning;
+  const lastResult = modelCheckState.lastResult;
+  const problemCount = modelCheckState.problemCount;
+  const label = isRunning
+    ? T('Validating model...', 'modelcheck_button_running')
+    : T('Validate model', 'modelcheck_button_label');
+
   return (
     <Button
       type="secondary"
-      title={T('Validate model', 'modelcheck_button_label')}
-      prefix={<VscChecklist />}
-      isDisabled={modelCheckState.isRunning}
+      title={
+        <>
+          {label}
+          {!isRunning && lastResult?.lastRunAt && (
+            <span
+              className={problemCount > 0 ? S.badgeError : S.badgeOk}
+              title={T(
+                'Last check {0}',
+                'modelcheck_results_checked_at',
+                formatRunTime(lastResult.lastRunAt),
+              )}
+              data-test-id="topbar-check-model-badge"
+            >
+              {problemCount > 0 ? problemCount : <VscCheck />}
+            </span>
+          )}
+        </>
+      }
+      prefix={isRunning ? <VscLoading className={S.spinner} /> : <VscChecklist />}
+      isDisabled={isRunning}
       onClick={handleOnClick}
       dataTestId="topbar-check-model"
     />

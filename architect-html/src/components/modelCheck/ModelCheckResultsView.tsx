@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { T } from '@/main';
 import { IModelFileError, IModelFileErrorSection } from '@api/IArchitectApi';
 import { ModelCheckResultsTabState } from '@components/modelCheck/ModelCheckResultsTabState';
+import { formatRunTime } from '@components/modelCheck/ModelCheckState';
 import S from '@components/modelCheck/ModelCheckResultsView.module.scss';
 import SchemaItemResultsTable from '@components/schemaItemResults/SchemaItemResultsTable';
 import { observer } from 'mobx-react-lite';
@@ -34,13 +35,6 @@ import {
 } from 'react-icons/vsc';
 
 const guidPattern = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/gi;
-
-function formatRunTime(lastRunAt: string) {
-  return new Date(lastRunAt).toLocaleString(undefined, {
-    dateStyle: 'medium',
-    timeStyle: 'short',
-  });
-}
 
 function separatorIndex(path: string) {
   return Math.max(path.lastIndexOf('\\'), path.lastIndexOf('/'));
