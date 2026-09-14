@@ -5,13 +5,13 @@ __metadata:
   version: 8
   cacheKey: 10c0
 
-"@ag-ui/client@npm:0.0.57":
-  version: 0.0.57
-  resolution: "@ag-ui/client@npm:0.0.57"
+"@ag-ui/client@npm:0.0.59":
+  version: 0.0.59
+  resolution: "@ag-ui/client@npm:0.0.59"
   dependencies:
-    "@ag-ui/core": "npm:0.0.57"
-    "@ag-ui/encoder": "npm:0.0.57"
-    "@ag-ui/proto": "npm:0.0.57"
+    "@ag-ui/core": "npm:0.0.59"
+    "@ag-ui/encoder": "npm:0.0.59"
+    "@ag-ui/proto": "npm:0.0.59"
     "@types/uuid": "npm:^10.0.0"
     compare-versions: "npm:^6.1.1"
     fast-json-patch: "npm:^3.1.1"
@@ -19,37 +19,37 @@ __metadata:
     untruncate-json: "npm:^0.0.1"
     uuid: "npm:^11.1.0"
     zod: "npm:^3.22.4"
-  checksum: 10c0/396f25f91896b1993134d30c7a4604afded351d2fe475c874a48550793d74f5295e444126733865f8b2a7d847839f0fb75369a869e7a73a824f4cb685979fa6c
+  checksum: 10c0/c3d06f2370fdca8398495826b7eb701deae3a4abb32fe2951b1a7e47e9aeb60f2c71f5b6e623ed0ca43f043e0a63c02452a03546b363cccea678b247f682b3af
   languageName: node
   linkType: hard
 
-"@ag-ui/core@npm:0.0.57":
-  version: 0.0.57
-  resolution: "@ag-ui/core@npm:0.0.57"
+"@ag-ui/core@npm:0.0.59":
+  version: 0.0.59
+  resolution: "@ag-ui/core@npm:0.0.59"
   dependencies:
     zod: "npm:^3.22.4"
-  checksum: 10c0/df7ba9682b70fd839945fdd7b0742d71f06782682c9f8d337efe11cdd22cf5091b2a96bb104747e41734abce9a571c1206eb33c3623aa2073399202cb4b85eb2
+  checksum: 10c0/8e4946f699a2f1e5eee92f7058a43e0ab2d6fcac786646869fb81b56ec42741e0ffb89c29dbce48231c5cc22a97c75eb8e3ce0f71e5cad3ede6e55348c6f80e1
   languageName: node
   linkType: hard
 
-"@ag-ui/encoder@npm:0.0.57":
-  version: 0.0.57
-  resolution: "@ag-ui/encoder@npm:0.0.57"
+"@ag-ui/encoder@npm:0.0.59":
+  version: 0.0.59
+  resolution: "@ag-ui/encoder@npm:0.0.59"
   dependencies:
-    "@ag-ui/core": "npm:0.0.57"
-    "@ag-ui/proto": "npm:0.0.57"
-  checksum: 10c0/dc95d6107e41adcaa476ceb7d8dc482378866d211f7292c1d3f6959d16b79c917d3f208f01e18f5ddde6cefefe85139da0f2f46507443bdfff9e99c00dde95ea
+    "@ag-ui/core": "npm:0.0.59"
+    "@ag-ui/proto": "npm:0.0.59"
+  checksum: 10c0/288e9e94042921b2cdbe539397ae922a3482c98221ffe74f122011f3f9f7180c8fc77256af9a2a16b2d0b28e47fc5acca6288c656c71c3c6a0566679175fa2fc
   languageName: node
   linkType: hard
 
-"@ag-ui/proto@npm:0.0.57":
-  version: 0.0.57
-  resolution: "@ag-ui/proto@npm:0.0.57"
+"@ag-ui/proto@npm:0.0.59":
+  version: 0.0.59
+  resolution: "@ag-ui/proto@npm:0.0.59"
   dependencies:
-    "@ag-ui/core": "npm:0.0.57"
+    "@ag-ui/core": "npm:0.0.59"
     "@bufbuild/protobuf": "npm:^2.2.5"
     "@protobuf-ts/protoc": "npm:^2.11.1"
-  checksum: 10c0/21bff76d609a76a948f977312363307610e3928f6a4fc02396aa1d51621991b4ef9090e1998e3ae41213d9bae64497d37cca542b7ed4f2f2aab05777ce05a761
+  checksum: 10c0/bcd2a8fccc40d4b8a0ce5967b7343b48a2557ae66aa68e857b9c02ecd588497fdc998cc091b725cf9281953f3dbfac938fa42c6ac876da1576b7913afc7b145e
   languageName: node
   linkType: hard
 
@@ -1629,7 +1629,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "architect-html@workspace:."
   dependencies:
-    "@ag-ui/client": "npm:0.0.57"
+    "@ag-ui/client": "npm:0.0.59"
     "@babel/core": "npm:^7.29.7"
     "@babel/plugin-proposal-decorators": "npm:^7.29.7"
     "@monaco-editor/react": "npm:^4.7.0"
