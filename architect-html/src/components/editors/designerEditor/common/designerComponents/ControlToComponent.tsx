@@ -34,6 +34,9 @@ import { GroupBox } from '@editors/designerEditor/common/designerComponents/Grou
 import { BlobControl } from '@editors/designerEditor/common/designerComponents/BlobControl.tsx';
 import { RadioButton } from '@editors/designerEditor/common/designerComponents/RadioButton.tsx';
 import { MultiColumnAdapterFieldWrapper } from '@editors/designerEditor/common/designerComponents/MultiColumnAdapterFieldWrapper.tsx';
+import { AsDropDown } from '@editors/designerEditor/common/designerComponents/AsDropDown.tsx';
+import { AsDateBox } from '@editors/designerEditor/common/designerComponents/AsDateBox.tsx';
+import { TagInput } from '@editors/designerEditor/common/designerComponents/TagInput.tsx';
 
 export async function controlToComponent(
   control: IApiControl,
@@ -68,6 +71,39 @@ export async function controlToComponent(
 
     case ComponentType.BlobControl:
       return new BlobControl({
+        id: control.id,
+        parent: parent,
+        data: {
+          type: componentType,
+          identifier: control.name,
+        },
+        properties: properties,
+      });
+
+    case ComponentType.AsCombo:
+      return new AsDropDown({
+        id: control.id,
+        parent: parent,
+        data: {
+          type: componentType,
+          identifier: control.name,
+        },
+        properties: properties,
+      });
+
+    case ComponentType.AsDateBox:
+      return new AsDateBox({
+        id: control.id,
+        parent: parent,
+        data: {
+          type: componentType,
+          identifier: control.name,
+        },
+        properties: properties,
+      });
+
+    case ComponentType.TagInput:
+      return new TagInput({
         id: control.id,
         parent: parent,
         data: {
@@ -204,7 +240,6 @@ export async function controlToComponent(
         properties: properties,
       });
 
-    case ComponentType.AsCombo:
     case ComponentType.AsTree:
     case ComponentType.AsTree2:
     case ComponentType.AsListView:
@@ -212,8 +247,6 @@ export async function controlToComponent(
     case ComponentType.ExecuteWorkflowButton:
     case ComponentType.AsTextBox:
     case ComponentType.ColorPicker:
-    case ComponentType.TagInput:
-    case ComponentType.AsDateBox:
     case ComponentType.TextArea:
     case ComponentType.ImageBox:
       return new Component({

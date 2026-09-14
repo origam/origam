@@ -21,6 +21,7 @@ import { sectionLayer } from '@editors/designerEditor/common/Layers.ts';
 import { ReactElement } from 'react';
 import S from '@editors/designerEditor/common/designerComponents/Components.module.scss';
 import { Component } from '@editors/designerEditor/common/designerComponents/Component.tsx';
+import { ComponentType } from '@editors/designerEditor/common/ComponentType';
 
 export class GroupBox extends Component {
   get canHaveChildren(): boolean {
@@ -31,9 +32,15 @@ export class GroupBox extends Component {
     return this.countParents() + sectionLayer;
   }
 
+  get hasBorder(): boolean {
+    return this.data.type !== ComponentType.GroupBox;
+  }
+
   getDesignerRepresentation(): ReactElement | null {
+    const className =
+      this.data.type === ComponentType.GroupBox ? S.groupBoxWithChamfer : S.groupBoxContent;
     return (
-      <div className={S.groupBoxContent}>
+      <div className={className}>
         <div className={S.groupBoxHeader}>
           {this.properties.find(x => x.name === 'Text')?.value}
         </div>

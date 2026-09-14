@@ -88,7 +88,7 @@ export class ScreenSectionEditorState extends DesignerEditorState {
       });
 
       const newComponent = yield controlToComponent(apiControl, null);
-      newComponent.width = newComponent.width ?? 400;
+      newComponent.width = newComponent.width ?? 200;
       newComponent.height = newComponent.height ?? 20;
       newComponent.parent = parent;
       this.surface.components.push(newComponent);

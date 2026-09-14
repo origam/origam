@@ -1,5 +1,5 @@
 /*
-Copyright 2005 - 2025 Advantage Solutions, s. r. o.
+Copyright 2005 - 2026 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -17,25 +17,27 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Component } from '@editors/designerEditor/common/designerComponents/Component.tsx';
 import { ReactElement } from 'react';
+import { VscChevronDown, VscEllipsis } from 'react-icons/vsc';
 import S from '@editors/designerEditor/common/designerComponents/Components.module.scss';
+import { Component } from '@editors/designerEditor/common/designerComponents/Component.tsx';
+import { EditorBox } from '@editors/designerEditor/common/designerComponents/EditorBox.tsx';
 
-export class RadioButton extends Component {
+export class AsDropDown extends Component {
   get hasBorder(): boolean {
     return false;
   }
 
   getDesignerRepresentation(): ReactElement | null {
     return (
-      <div className={S.designSurfaceEditorContainer}>
-        <div className={S.checkList}>
-          <div className={S.checklistItem}>
-            <input type="radio" className="checkbox undefined" />
-            <div>{this.properties.find(x => x.name === 'Text')?.value}</div>
-          </div>
+      <EditorBox>
+        <div className={S.editorButton}>
+          <VscEllipsis />
         </div>
-      </div>
+        <div className={`${S.editorButton} ${S.dropDownButton}`}>
+          <VscChevronDown />
+        </div>
+      </EditorBox>
     );
   }
 }

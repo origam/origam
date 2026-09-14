@@ -23,6 +23,7 @@ using System.ComponentModel;
 using Origam.Architect.Server.Attributes;
 using Origam.Gui;
 using Origam.Schema.EntityModel;
+using Origam.Schema.GuiModel;
 
 namespace Origam.Architect.Server.Controls;
 
@@ -60,4 +61,9 @@ public class Checklist : ControlBase, IAsControl, ILookupBoundControl
 
     [NotAModelProperty]
     public string DefaultBindableProperty => "Value";
+
+    public override void Initialize(ControlSetItem controlSetItem)
+    {
+        Height = 20;
+    }
 }
