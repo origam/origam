@@ -60,6 +60,9 @@ test.describe('Model validation', () => {
     await expect(page.getByTestId('model-check-empty')).toBeVisible();
     await expect(page.getByTestId('model-check-summary')).toContainText('No problems found');
     await expect(page.getByTestId('model-check-file-section')).toHaveCount(0);
+    const badge = page.getByTestId('topbar-check-model-badge');
+    await expect(badge).toBeVisible();
+    await expect(badge).toHaveText('');
   });
 
   test('reports an identifier longer than the database allows', async ({ page }) => {
@@ -136,6 +139,7 @@ test.describe('Model validation', () => {
     await expect(summary).toContainText('2 file problems');
     await expect(fileSection(page, 'Invalid References Between Origam Files')).toBeVisible();
     await expect(fileSection(page, 'not referenced by any model element')).toBeVisible();
+    await expect(page.getByTestId('topbar-check-model-badge')).toHaveText('3');
   });
 
   test('replaces the previous results when it runs again', async ({ page }) => {
@@ -151,5 +155,39 @@ test.describe('Model validation', () => {
       timeout: VALIDATION_TIMEOUT,
     });
     await expect(page.getByTestId('model-check-file-section')).toHaveCount(0);
+  });
+
+  test('shows no badge before the first run', async ({ page }) => {
+    const lastResultLoaded = page.waitForResponse(response =>
+      response.url().endsWith('/ModelCheck/Result'),
+    );
+    await page.goto('/');
+    await lastResultLoaded;
+
+    await expect(page.getByTestId('topbar-check-model')).toBeVisible();
+    await expect(page.getByTestId('topbar-check-model-badge')).toHaveCount(0);
+    await expect(page.getByTestId('model-check-results')).toHaveCount(0);
+  });
+
+  test('reopens the results after a reload', async ({ page }) => {
+    plantOrphanFile();
+    await runValidation(page);
+
+    await page.reload();
+
+    await expect(fileSection(page, 'not referenced by any model element')).toBeVisible();
+    await expect(page.getByTestId('topbar-check-model-badge')).toHaveText('1');
+  });
+
+  test('keeps closed results closed after a reload', async ({ page }) => {
+    await runValidation(page);
+    await page.getByTestId('tab-close-Model validator').getByRole('img').click();
+    await expect(page.getByTestId('model-check-results')).toHaveCount(0);
+
+    await page.reload();
+
+    // The badge appears together with the restore, so the tab would be open by now.
+    await expect(page.getByTestId('topbar-check-model-badge')).toBeVisible();
+    await expect(page.getByTestId('model-check-results')).toHaveCount(0);
   });
 });
