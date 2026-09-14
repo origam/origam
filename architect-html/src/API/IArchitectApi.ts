@@ -41,7 +41,7 @@ export interface IArchitectApi {
     isCopy: boolean;
   }): Promise<IMoveNodeResult>;
 
-  searchText(text: string): Promise<ISearchResult[]>;
+  searchSchemaByAllFields(query: string): Promise<ISearchResult[]>;
 
   searchReferences(schemaItemId: string): Promise<ISearchResult[]>;
 
@@ -516,7 +516,11 @@ export type EditorSubType =
   | null;
 
 export type EditorType =
-  EditorSubType | 'DocumentationEditor' | 'SearchResultsEditor' | 'ShowSqlEditor';
+  | EditorSubType
+  | 'DocumentationEditor'
+  | 'SearchResultsEditor'
+  | 'ShowSqlEditor'
+  | 'AiSettingsModule';
 
 export interface INodeLoadData {
   id: string;
@@ -599,6 +603,13 @@ export interface IDeploymentScriptsGeneratorModuleData {
   results: IDatabaseResult[];
 }
 
+export interface IAiSettingsModuleData {
+  customInstructions: string;
+  model: string;
+  router: string;
+  hasApiKey: boolean;
+}
+
 export type DeploymentStatus = 'Pending' | 'Done';
 
 export interface DocumentationEditorData {
@@ -635,7 +646,8 @@ export interface IApiTabData {
     | DocumentationEditorData
     | IDeploymentScriptsGeneratorModuleData
     | ISearchResultsEditorData
-    | IShowSqlEditorData;
+    | IShowSqlEditorData
+    | IAiSettingsModuleData;
   isDirty: boolean;
 }
 

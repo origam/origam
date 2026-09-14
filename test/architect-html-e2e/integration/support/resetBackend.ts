@@ -39,6 +39,10 @@ const repoRoot = findRepoRoot();
 const MODEL_DIR = 'model-tests/model';
 const DEFAULT_PACKAGE = 'Root Menu';
 
+export function readModelFile(relativePath: string): string {
+  return fs.readFileSync(path.join(repoRoot, MODEL_DIR, relativePath), 'utf8');
+}
+
 function runGit(args: string[]): void {
   const deadline = Date.now() + 30_000;
   for (;;) {

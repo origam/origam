@@ -30,4 +30,6 @@ public class CreateWorkQueueModel
 
     [Required]
     public List<Guid> SelectedFieldIds { get; set; } = new();
+
+    public string Name { get; set; }
 }
