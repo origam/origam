@@ -67,6 +67,16 @@ export class EditorTabViewState {
         console.error('Failed to auto-open Deployment Scripts Generator module:', err);
       }
     }
+
+    try {
+      const modelCheckState = this.rootStore.modelCheckState;
+      yield* modelCheckState.loadLastResult();
+      if (modelCheckState.lastResult && this.rootStore.uiState.modelCheckState.isOpen) {
+        this.openModelCheckResults(modelCheckState.lastResult);
+      }
+    } catch (err) {
+      console.error('Failed to restore the model validation results:', err);
+    }
   }
 
   private toEditor(data: IApiTabData) {
@@ -237,6 +247,7 @@ export class EditorTabViewState {
 
     const editorData = new EditorData(tempTabData, null);
     this.openEditor(editorData);
+    this.rootStore.uiState.setModelCheckOpen(true);
   }
 
   openEditor(editorData: EditorData, editorType?: EditorType) {
@@ -305,6 +316,7 @@ export class EditorTabViewState {
       this.editorsContainers = [];
       yield this.architectApi.closeAllTabs();
       this.rootStore.uiState.setDsGeneratorState({ isOpen: false });
+      this.rootStore.uiState.setModelCheckOpen(false);
       return true;
     }.bind(this);
   }
@@ -339,11 +351,9 @@ export class EditorTabViewState {
 
       if (editorId === DeploymentScriptsGeneratorModuleId) {
         this.rootStore.uiState.setDsGeneratorState({ isOpen: false });
-      } else if (
-        editorId !== SearchEditorId &&
-        editorId !== ModelCheckEditorId &&
-        !editorId.startsWith(ShowSqlEditorIdPrefix)
-      ) {
+      } else if (editorId === ModelCheckEditorId) {
+        this.rootStore.uiState.setModelCheckOpen(false);
+      } else if (editorId !== SearchEditorId && !editorId.startsWith(ShowSqlEditorIdPrefix)) {
         yield this.architectApi.closeTab(editorId);
       }
 
