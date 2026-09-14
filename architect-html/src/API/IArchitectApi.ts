@@ -36,6 +36,8 @@ export interface IArchitectApi {
 
   runModelCheck(): Promise<IModelCheckResult>;
 
+  getModelCheckResult(): Promise<IModelCheckResult>;
+
   openTab(schemaItemId: string): Promise<IApiTabData>;
 
   closeTab(tabId: string): Promise<void>;

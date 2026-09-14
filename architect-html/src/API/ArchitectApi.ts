@@ -94,6 +94,10 @@ export class ArchitectApi implements IArchitectApi {
     return (await this.http.post('/ModelCheck/Run')).data;
   }
 
+  async getModelCheckResult(): Promise<IModelCheckResult> {
+    return (await this.http.get('/ModelCheck/Result')).data;
+  }
+
   async searchReferences(schemaItemId: string): Promise<ISearchResult[]> {
     return (
       await this.http.get('/Search/References', {
