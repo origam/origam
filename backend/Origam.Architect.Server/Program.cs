@@ -22,12 +22,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Reflection;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.FileProviders;
+using Origam.AI.Agent;
 using Origam.Architect.Server.ArchitectLogic;
 using Origam.Architect.Server.Configuration;
 using Origam.Architect.Server.ControlAdapter;
 using Origam.Architect.Server.Interfaces.Services;
 using Origam.Architect.Server.ReturnModels;
 using Origam.Architect.Server.Services;
+using Origam.Architect.Server.Services.Move;
 using Origam.Architect.Server.Services.Wizards;
 using Origam.Architect.Server.Services.Xslt;
 using Origam.Extensions;
@@ -58,9 +60,20 @@ public class Program
         builder.Services.AddSingleton<EditorPropertyFactory>();
         builder.Services.AddSingleton<PropertyParser>();
         builder.Services.AddSingleton<TabService>();
+        builder.Services.AddSingleton<TreeService>();
+        builder.Services.AddSingleton<TabResponseFactory>();
         builder.Services.AddTransient<XsltService>();
         builder.Services.AddSingleton<SearchService>();
+        builder.Services.AddSingleton<PanelControlFactory>();
+        builder.Services.AddSingleton<MoveNodeResolver>();
+        builder.Services.AddSingleton<MoveRuleEvaluator>();
+        builder.Services.AddSingleton<MoveTargetFinder>();
+        builder.Services.AddSingleton<CrossPackageMoveValidator>();
+        builder.Services.AddSingleton<SchemaItemMover>();
+        builder.Services.AddSingleton<SchemaItemCopier>();
+        builder.Services.AddSingleton<SchemaItemMoveService>();
         builder.Services.AddSingleton<PropertyEditorService>();
+        builder.Services.AddSingleton<ItemTypeCatalogService>();
         builder.Services.AddSingleton<DesignerEditorService>();
         builder.Services.AddSingleton<DeploymentVersionCurrentService>();
         builder.Services.AddSingleton<DeploymentScriptRunnerService>();
@@ -73,6 +86,7 @@ public class Program
         builder.Services.AddSingleton<DocumentationHelperService>();
         builder.Services.AddSingleton<IAddToDeploymentService, AddToDeploymentService>();
         builder.Services.AddSingleton<IAddToModelService, AddToModelService>();
+        builder.Services.AddSingleton<ModelGroupService>();
         builder.Services.AddSingleton<FilterWizardService>();
         builder.Services.AddSingleton<ScreenWizardService>();
         builder.Services.AddSingleton<ScreenSectionWizardService>();
@@ -89,6 +103,8 @@ public class Program
             ISchemaDbCompareResultsService,
             SchemaDbCompareResultsService
         >();
+
+        builder.Services.AddOrigamAiAgent();
 
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();

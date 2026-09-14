@@ -37,19 +37,22 @@ public class LinearProcessor : IWorkQueueProcessor
     private readonly WorkQueueUtils workQueueUtils;
     private readonly RetryManager retryManager;
     private readonly WorkQueueThrottle workQueueThrottle;
+    private readonly ScheduledWorkQueueEntryManager scheduledWorkQueueEntryManager;
     private readonly Action<WorkQueueRow, DataRow> itemProcessAction;
 
     public LinearProcessor(
         Action<WorkQueueRow, DataRow> itemProcessAction,
         WorkQueueUtils workQueueUtils,
         RetryManager retryManager,
-        WorkQueueThrottle workQueueThrottle
+        WorkQueueThrottle workQueueThrottle,
+        ScheduledWorkQueueEntryManager scheduledWorkQueueEntryManager
     )
     {
         this.itemProcessAction = itemProcessAction;
         this.workQueueUtils = workQueueUtils;
         this.retryManager = retryManager;
         this.workQueueThrottle = workQueueThrottle;
+        this.scheduledWorkQueueEntryManager = scheduledWorkQueueEntryManager;
     }
 
     public virtual void Run(IEnumerable<WorkQueueRow> queues, CancellationToken cancellationToken)
@@ -161,9 +164,10 @@ public class LinearProcessor : IWorkQueueProcessor
                 foreach (DataRow queueRow in queueTable.Rows)
                 {
                     if (
-                        (bool)queueRow["IsLocked"] == false
+                        !(bool)queueRow["IsLocked"]
                         && retryManager.CanRunNow(queueRow, queue, processErrors)
                         && workQueueThrottle.CanRunNow(queue)
+                        && scheduledWorkQueueEntryManager.CanRunNow(queueRow)
                     )
                     {
                         result = DatasetTools.CloneRow(queueRow);

@@ -53,11 +53,24 @@ public class TreeNode
     public NodeLevelType NodeLevelType { get; set; } = NodeLevelType.Item;
     public bool IsInActivePackage { get; set; } = true;
     public bool IsFileDirty { get; set; }
+    public bool IsFolder { get; set; }
     public string Role { get; set; }
+
+    public bool CanDrag { get; set; }
 
     public static string ToTreeNodeId(IBrowserNode2 node)
     {
-        return node == null ? null : node.NodeId + node.NodeText;
+        return node == null ? null : node.NodeId + ToNodeText(node);
+    }
+
+    public static string ToNodeText(IBrowserNode2 node)
+    {
+        if (node is Schema.DeploymentModel.ServiceCommandUpdateScriptActivity script)
+        {
+            return $"{node.NodeText} ({script.DatabaseType})";
+        }
+
+        return node.NodeText;
     }
 }
 
@@ -69,16 +82,11 @@ public class TreeNodeFactory(
 {
     public TreeNode Create(IBrowserNode2 node)
     {
-        string nodeText = node.NodeText;
-        if (node is Schema.DeploymentModel.ServiceCommandUpdateScriptActivity script)
-        {
-            nodeText = $"{node.NodeText} ({script.DatabaseType})";
-        }
         return new TreeNode
         {
             OrigamId = node.NodeId,
             Id = TreeNode.ToTreeNodeId(node),
-            NodeText = nodeText,
+            NodeText = TreeNode.ToNodeText(node),
             IsNonPersistentItem = node is NonpersistentSchemaItemNode,
             HasChildNodes = node.HasChildNodes,
             DefaultEditor = GetEditorType(node),
@@ -90,8 +98,39 @@ public class TreeNodeFactory(
             NodeLevelType = GetNodeLevelType(node),
             IsInActivePackage = IsInActivePackage(node),
             IsFileDirty = gitNodeStatusService.IsFileDirty(node as IPersistent),
+            IsFolder = node is SchemaItemGroup,
             Role = (node as IAuthorizationContextContainer)?.AuthorizationContext,
+            CanDrag = node is ISchemaItem { IsPersisted: true },
         };
+    }
+
+    public List<TreeNode> CreateChildren(IBrowserNode2 node, int depth)
+    {
+        return node.ChildNodes()
+            .Cast<IBrowserNode2>()
+            .OrderBy(childNode => childNode.NodeText)
+            .Where(childNode => childNode is not ISchemaItem item || item.IsPersisted)
+            .Select(childNode => CreateRecursive(childNode, depth))
+            .ToList();
+    }
+
+    public TreeNode CreateRecursive(IBrowserNode2 node, int remainingDepth)
+    {
+        TreeNode treeNode = Create(node);
+        if (remainingDepth > 0 && treeNode.HasChildNodes)
+        {
+            treeNode.Children = CreateChildren(node, remainingDepth - 1);
+        }
+        return treeNode;
+    }
+
+    public ISchemaItemProvider FindRootProvider(string nodeId)
+    {
+        return schemaService
+            .ActiveExtension.ChildNodes()
+            .Cast<SchemaItemProviderGroup>()
+            .SelectMany(x => x.ChildNodes().Cast<ISchemaItemProvider>())
+            .FirstOrDefault(x => x.NodeId == nodeId);
     }
 
     private DeploymentStatus? GetDeploymentStatus(IBrowserNode2 node)

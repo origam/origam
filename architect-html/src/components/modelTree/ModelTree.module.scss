@@ -20,6 +20,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 .root {
   flex: 1;
   min-width: max-content;
+  outline: none;
+
+  &:focus-visible {
+    outline: 1px solid var(--brand);
+    outline-offset: -1px;
+  }
 }
 
 .packageName {
@@ -34,13 +40,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   cursor: pointer;
   padding-bottom: 2px;
   padding-top: 2px;
-}
-
-.highlighted {
-  background-color: var(--background1);
-  box-shadow:
-    inset 3px 0 0 var(--brand),
-    0 0 0 1px var(--background4);
 }
 
 .categoryNode {
@@ -65,6 +64,27 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   align-items: center;
   gap: 4px;
   text-wrap-mode: nowrap;
+}
+
+// Same specificity, the last rule wins.
+.selected {
+  background-color: var(--background3);
+}
+
+.highlighted {
+  background-color: var(--background1);
+  box-shadow:
+    inset 3px 0 0 var(--brand),
+    0 0 0 1px var(--background4);
+}
+
+.dropTarget {
+  background-color: var(--background1);
+  box-shadow: inset 0 0 0 1px var(--brand);
+}
+
+.cutNode {
+  opacity: 0.5;
 }
 
 .crossPackage {

@@ -699,6 +699,15 @@ namespace Origam.DA.Service {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Index of references is being built. Please wait..
+        /// </summary>
+        internal static string ReferenceIndexNotReady {
+            get {
+                return ResourceManager.GetString("ReferenceIndexNotReady", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SortSet not found.
         /// </summary>
         internal static string SortSetNotFound {

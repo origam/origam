@@ -91,38 +91,70 @@ public class PropertyParser(IPersistenceService persistenceService)
 
         if (property.PropertyType.IsEnum)
         {
-            if (Enum.TryParse(property.PropertyType, value, out var enumValue))
+            if (Enum.TryParse(property.PropertyType, value, ignoreCase: true, out var enumValue))
             {
                 return enumValue;
+            }
+
+            throw new Exception(
+                string.Format(
+                    Strings.PropertyEnumValueNotValid,
+                    value,
+                    property.Name,
+                    string.Join(separator: ", ", Enum.GetNames(property.PropertyType))
+                )
+            );
+        }
+
+        if (property.PropertyType == typeof(Guid))
+        {
+            if (Guid.TryParse(value, out var guidValue))
+            {
+                return guidValue;
             }
 
             throw MakeCouldNotParseException(property);
         }
 
-        if (property.PropertyType == typeof(Guid))
-        {
-            return ParseGuid(value, property);
-        }
-
         if (property.PropertyType.IsAssignableTo(typeof(IPersistent)))
         {
-            Guid id = ParseGuid(value, property);
-            return persistenceService.SchemaProvider.RetrieveInstance<IPersistent>(id);
+            if (!Guid.TryParse(value, out var referenceId))
+            {
+                throw new Exception(
+                    string.Format(
+                        Strings.PropertyReferenceValueNotValid,
+                        value,
+                        property.Name,
+                        property.PropertyType.Name
+                    )
+                );
+            }
+
+            IPersistent referenced =
+                persistenceService.SchemaProvider.RetrieveInstance<IPersistent>(referenceId);
+            if (referenced != null && !referenced.GetType().IsAssignableTo(property.PropertyType))
+            {
+                throw new Exception(
+                    string.Format(
+                        Strings.PropertyReferenceTypeNotValid,
+                        property.Name,
+                        property.PropertyType.Name,
+                        referenced.GetType().Name
+                    )
+                );
+            }
+
+            return referenced;
+        }
+
+        if (property.PropertyType == typeof(object))
+        {
+            return value;
         }
 
         throw new Exception(
             $"Type {property.PropertyType.Name} of property {property.Name} cannot be parsed."
         );
-    }
-
-    private Guid ParseGuid(string value, PropertyInfo property)
-    {
-        if (Guid.TryParse(value, out var guidValue))
-        {
-            return guidValue;
-        }
-
-        throw MakeCouldNotParseException(property);
     }
 
     private Exception MakeCouldNotParseException(PropertyInfo property)

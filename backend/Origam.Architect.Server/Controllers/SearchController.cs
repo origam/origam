@@ -21,7 +21,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 #endregion
 
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
+using Origam.Architect.Server.ReturnModels;
 using Origam.Architect.Server.Services;
 
 namespace Origam.Architect.Server.Controllers;
@@ -30,10 +32,21 @@ namespace Origam.Architect.Server.Controllers;
 [Route("[controller]")]
 public class SearchController(SearchService searchService) : ControllerBase
 {
-    [HttpGet("Text")]
-    public ActionResult Text([FromQuery] string text)
+    [HttpGet("SearchSchemaByAllFields")]
+    public ActionResult SearchSchemaByAllFields([Required] [FromQuery] string query)
     {
-        return Ok(searchService.SearchByText(text));
+        return Ok(searchService.SearchSchemaByAllFields(query));
+    }
+
+    [HttpGet("SearchSchemaByName")]
+    public ActionResult<List<TreeNode>> SearchSchemaByName([Required] [FromQuery] string query)
+    {
+        if (string.IsNullOrWhiteSpace(query))
+        {
+            return BadRequest("Query cannot be empty");
+        }
+
+        return Ok(searchService.SearchSchemaByName(query));
     }
 
     [HttpGet("References")]

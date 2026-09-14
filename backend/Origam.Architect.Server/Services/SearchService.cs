@@ -23,6 +23,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.Architect.Server.Exceptions;
 using Origam.Architect.Server.Models.Requests;
+using Origam.Architect.Server.ReturnModels;
 using Origam.Schema;
 using Origam.Workbench.Services;
 
@@ -34,11 +35,44 @@ public class SearchService(
     ILogger<SearchService> logger
 )
 {
-    public IEnumerable<SearchResult> SearchByText(string text)
+    public IEnumerable<SearchResult> SearchSchemaByAllFields(string query)
     {
         List<Guid> referencePackages = GetReferencePackages();
-        var results = persistenceService.SchemaProvider.FullTextSearch<ISchemaItem>(text);
+        var results = persistenceService.SchemaProvider.FullTextSearch<ISchemaItem>(query);
         return results.Where(x => x != null).Select(result => GetResult(result, referencePackages));
+    }
+
+    public List<TreeNode> SearchSchemaByName(string query)
+    {
+        var results = new List<TreeNode>();
+        if (schemaService.ActiveExtension == null)
+        {
+            return results;
+        }
+
+        foreach (ISchemaItemProvider provider in schemaService.Providers)
+        {
+            var matches = provider
+                .ChildItemsRecursive.Where(x =>
+                    x.Name != null && x.Name.Contains(query, StringComparison.OrdinalIgnoreCase)
+                )
+                .Take(50 - results.Count)
+                .Select(x => new TreeNode
+                {
+                    OrigamId = x.Id.ToString("D"),
+                    NodeText = x.Name,
+                    ItemType = x.GetType().FullName,
+                    ItemTypeName = x.GetType().SchemaItemDescription()?.Name,
+                });
+
+            results.AddRange(matches);
+            if (results.Count >= 50)
+            {
+                break;
+            }
+        }
+
+        return results;
     }
 
     public IEnumerable<SearchResult> FindReferences(Guid schemaItemId)
@@ -86,7 +120,7 @@ public class SearchService(
     {
         try
         {
-            ISchemaItem root = GetRoot(item);
+            ISchemaItem root = SchemaItemTreePath.GetRoot(item);
             return new SearchResult
             {
                 SchemaId = item.Id,
@@ -96,7 +130,7 @@ public class SearchService(
                 Folder = root.Group?.Path ?? "",
                 Package = item.PackageName,
                 PackageReference = referencePackages.Contains(item.SchemaExtensionId),
-                ParentNodeIds = GetParentNodeIds(item, root),
+                ParentNodeIds = SchemaItemTreePath.GetParentNodeIds(item, root),
                 IsOrphaned = false,
             };
         }
@@ -116,67 +150,6 @@ public class SearchService(
                 FoundIn = item.Name ?? item.Id.ToString(),
                 IsOrphaned = true,
             };
-        }
-    }
-
-    private static ISchemaItem GetRoot(ISchemaItem item)
-    {
-        try
-        {
-            ISchemaItem root = item;
-            for (ISchemaItem parent = item.ParentItem; parent != null; parent = parent.ParentItem)
-            {
-                root = parent;
-            }
-            return root;
-        }
-        catch (Exception ex)
-        {
-            throw new OrphanedSchemaReferenceException(item.Id, ex);
-        }
-    }
-
-    private static List<string> GetParentNodeIds(ISchemaItem item, ISchemaItem root)
-    {
-        try
-        {
-            if (root.RootProvider is not AbstractSchemaItemProvider provider)
-            {
-                return [];
-            }
-
-            var ids = new List<string>();
-            AddFolderNameIfAny(ids, item);
-
-            for (ISchemaItem parent = item.ParentItem; parent != null; parent = parent.ParentItem)
-            {
-                ids.Add(parent.Id.ToString());
-                AddFolderNameIfAny(ids, parent);
-            }
-
-            for (SchemaItemGroup group = root.Group; group != null; group = group.ParentGroup)
-            {
-                ids.Add(group.Id.ToString());
-            }
-
-            ids.Add(provider.NodeId);
-            ids.Add(provider.Group);
-            ids.Reverse();
-
-            return ids;
-        }
-        catch (Exception ex)
-        {
-            throw new OrphanedSchemaReferenceException(item.Id, ex);
-        }
-
-        static void AddFolderNameIfAny(List<string> target, ISchemaItem schemaItem)
-        {
-            var folderName = schemaItem?.GetType().SchemaItemDescription()?.FolderName;
-            if (!string.IsNullOrWhiteSpace(folderName))
-            {
-                target.Add(folderName);
-            }
         }
     }
 }

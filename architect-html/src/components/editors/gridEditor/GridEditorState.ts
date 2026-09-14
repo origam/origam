@@ -58,6 +58,10 @@ export class GridEditorState implements ITabState, IPropertyManager {
       .map(p => ({ propertyName: p.name, error: p.error! }));
   }
 
+  get origamId() {
+    return this.editorNode.origamId;
+  }
+
   get label() {
     const nameValue = this.properties.find(x => x.name === 'Name')?.value;
     return typeof nameValue === 'string' ? nameValue : '';
@@ -79,8 +83,8 @@ export class GridEditorState implements ITabState, IPropertyManager {
     try {
       this.isSaving = true;
       yield this.architectApi.persistChanges(this.editorNode.origamId);
-      if (this.editorNode.parent?.parent) {
-        yield* this.editorNode.parent.parent.loadChildren();
+      if (this.editorNode.parent) {
+        yield* this.editorNode.parent.loadChildren();
       }
       this._isDirty = false;
     } finally {

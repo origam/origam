@@ -18,6 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { expect, Page, test } from '@playwright/test';
+import { closeAiPanel } from '@support/aiPanel';
 import { scanPropertyBindings } from '@support/modelAssertions';
 import { resetBackend } from '@support/resetBackend';
 
@@ -28,6 +29,7 @@ test.describe('Screen Section drag and drop (real backend)', () => {
 
   async function openNewScreenSection(page: Page) {
     await page.goto('/');
+    await closeAiPanel(page);
 
     await page.getByTestId('tree-toggle-User Interface').click();
     await page.getByTestId('tree-toggle-Screen Sections').click();
