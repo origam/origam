@@ -25,6 +25,8 @@ enum EStorageKeys {
   SETTINGS = 'settings',
   DEPLOYMENT_SCRIPTS_GENERATOR_STATE = 'deploymentScriptsGeneratorState',
   SIDEBAR_WIDTH = 'sidebarWidth',
+  AI_PANEL_WIDTH = 'aiPanelWidth',
+  AI_PANEL_VISIBLE = 'aiPanelVisible',
   PROPERTY_SECTION_COLLAPSED = 'propertySectionCollapsed',
   MODEL_CHECK_STATE = 'modelCheckState',
 }
@@ -38,6 +40,10 @@ function isCollapsedByDefault(category: string): boolean {
 export const SIDEBAR_MIN_WIDTH = 250;
 export const SIDEBAR_MAX_WIDTH = 1200;
 const SIDEBAR_DEFAULT_WIDTH = 400;
+
+export const AI_PANEL_MIN_WIDTH = 300;
+export const AI_PANEL_MAX_WIDTH = 800;
+const AI_PANEL_DEFAULT_WIDTH = 380;
 
 type TSettings = {
   isVimEnabled: boolean;
@@ -83,6 +89,11 @@ function clampSidebarWidth(value: number): number {
   return Math.min(SIDEBAR_MAX_WIDTH, Math.max(SIDEBAR_MIN_WIDTH, value));
 }
 
+function clampAiPanelWidth(value: number): number {
+  if (!Number.isFinite(value)) return AI_PANEL_DEFAULT_WIDTH;
+  return Math.min(AI_PANEL_MAX_WIDTH, Math.max(AI_PANEL_MIN_WIDTH, value));
+}
+
 export class UIState {
   @observable accessor expandedNodes: string[] = [];
   @observable accessor settings: TSettings = { ...defaultSettings };
@@ -90,6 +101,8 @@ export class UIState {
     ...defaultDsGeneratorState,
   };
   @observable accessor sidebarWidth: number = SIDEBAR_DEFAULT_WIDTH;
+  @observable accessor aiPanelWidth: number = AI_PANEL_DEFAULT_WIDTH;
+  @observable accessor aiPanelVisible: boolean = true;
   @observable accessor propertySectionCollapsed: TPropertySectionCollapsed = {};
   @observable accessor modelCheckState: IModelCheckPersistedState = {
     ...defaultModelCheckState,
@@ -110,6 +123,16 @@ export class UIState {
     if (rawSidebarWidth !== null) {
       const parsed = Number.parseFloat(rawSidebarWidth);
       this.sidebarWidth = clampSidebarWidth(parsed);
+    }
+
+    const rawAiPanelWidth = localStorage.getItem(EStorageKeys.AI_PANEL_WIDTH);
+    if (rawAiPanelWidth !== null) {
+      this.aiPanelWidth = clampAiPanelWidth(Number.parseFloat(rawAiPanelWidth));
+    }
+
+    const rawAiPanelVisible = localStorage.getItem(EStorageKeys.AI_PANEL_VISIBLE);
+    if (rawAiPanelVisible !== null) {
+      this.aiPanelVisible = rawAiPanelVisible === 'true';
     }
 
     this.propertySectionCollapsed = this.loadStateFromLocalStorage(
@@ -141,6 +164,19 @@ export class UIState {
     localStorage.setItem(EStorageKeys.SIDEBAR_WIDTH, String(clamped));
   }
 
+  @action
+  setAiPanelWidth(width: number) {
+    const clamped = clampAiPanelWidth(width);
+    this.aiPanelWidth = clamped;
+    localStorage.setItem(EStorageKeys.AI_PANEL_WIDTH, String(clamped));
+  }
+
+  @action
+  toggleAiPanel() {
+    this.aiPanelVisible = !this.aiPanelVisible;
+    localStorage.setItem(EStorageKeys.AI_PANEL_VISIBLE, String(this.aiPanelVisible));
+  }
+
   setExpanded(nodeId: string, expanded: boolean) {
     if (expanded) {
       if (!this.expandedNodes.includes(nodeId)) {
@@ -156,7 +192,9 @@ export class UIState {
     return this.expandedNodes.includes(nodeId);
   }
 
-  loadStateFromLocalStorage<K extends EStorageKeys>(key: K): (typeof STORAGE_DEFAULTS)[K] {
+  loadStateFromLocalStorage<K extends keyof typeof STORAGE_DEFAULTS>(
+    key: K,
+  ): (typeof STORAGE_DEFAULTS)[K] {
     const def = STORAGE_DEFAULTS[key];
     const fallback = () => structuredClone(def) as (typeof STORAGE_DEFAULTS)[K];
     try {

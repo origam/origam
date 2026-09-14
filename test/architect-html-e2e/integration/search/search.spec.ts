@@ -43,7 +43,9 @@ test.describe('Search virtual entity test', () => {
     plantBrokenGroupReference();
     await reloadBackend(request, 'Widgets');
 
-    const response = await request.get('/Search/Text', { params: { text: 'ArrayTest' } });
+    const response = await request.get('/Search/SearchSchemaByAllFields', {
+      params: { query: 'ArrayTest' },
+    });
     expect(response.ok()).toBeTruthy();
 
     const results = await response.json();

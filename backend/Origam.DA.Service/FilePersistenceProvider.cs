@@ -29,8 +29,10 @@ using CSharpFunctionalExtensions;
 using Origam.DA.ObjectPersistence;
 using Origam.DA.Service.FileSystemModeCheckers;
 using Origam.DA.Service.FileSystemModelCheckers;
+using Origam.DA.Service.SchemaInfo;
 using Origam.Extensions;
 using Origam.Schema;
+using Origam.Schema.EntityModel;
 
 namespace Origam.DA.Service;
 
@@ -495,6 +497,100 @@ public class FilePersistenceProvider : AbstractPersistenceProvider, IFilePersist
             throwNotFoundException: false
         );
         return retrievedInstance != null;
+    }
+
+    public List<SchemaItemInfo> RetrieveSchemaItemInfos()
+    {
+        return RetrieveList<IDataEntity>()
+            .OrderBy(entity => entity.Name)
+            .Select(CreateSchemaItemInfo)
+            .ToList();
+    }
+
+    private SchemaItemInfo CreateSchemaItemInfo(IDataEntity entity)
+    {
+        return new SchemaItemInfo(
+            Id: entity.Id.ToString("D"),
+            Name: entity.Name,
+            Kind: KindOf(entity),
+            Package: entity.Group?.Name,
+            Fields: entity
+                .EntityColumns.Where(column => column.Name != null)
+                .OrderBy(column => column.Name)
+                .Select(column => column.Name)
+                .ToList(),
+            PrimaryKey: ToRelatedItems(
+                entity.EntityPrimaryKey.Where(column => column.Name != null)
+            ),
+            UsedBy: ToRelatedItems(RetrieveRootItemsUsingEntity(entity.Id))
+        );
+    }
+
+    private static List<RelatedItem> ToRelatedItems(IEnumerable<ISchemaItem> items)
+    {
+        return items
+            .Select(item => new RelatedItem(item.Id.ToString("D"), item.Name, KindOf(item)))
+            .OrderBy(item => item.Kind)
+            .ThenBy(item => item.Name)
+            .ToList();
+    }
+
+    private static string KindOf(ISchemaItem item)
+    {
+        return item.ModelDescription() ?? item.GetType().Name;
+    }
+
+    private List<ISchemaItem> RetrieveRootItemsUsingEntity(Guid entityId)
+    {
+        List<ISchemaItem> directRoots = RetrieveNonEntityRootItemsReferencing(entityId);
+        var rootsById = new Dictionary<Guid, ISchemaItem>();
+        foreach (
+            ISchemaItem root in directRoots.Concat(
+                directRoots.SelectMany(directRoot =>
+                    RetrieveNonEntityRootItemsReferencing(directRoot.Id)
+                )
+            )
+        )
+        {
+            rootsById[root.Id] = root;
+        }
+        return rootsById.Values.ToList();
+    }
+
+    private List<ISchemaItem> RetrieveNonEntityRootItemsReferencing(Guid itemId)
+    {
+        return RetrieveReferencingRootItems(itemId).Where(root => root is not IDataEntity).ToList();
+    }
+
+    private List<ISchemaItem> RetrieveReferencingRootItems(Guid itemId)
+    {
+        if (!ReferenceIndexManager.Initialized)
+        {
+            throw new InvalidOperationException(Strings.ReferenceIndexNotReady);
+        }
+        var rootInfosById = new Dictionary<Guid, PersistedObjectInfo>();
+        foreach (ReferenceInfo reference in ReferenceIndexManager.GetReferences(itemId).ToList())
+        {
+            PersistedObjectInfo rootInfo = FindRootObjectInfo(reference.Id);
+            if (rootInfo != null && rootInfo.Id != itemId)
+            {
+                rootInfosById[rootInfo.Id] = rootInfo;
+            }
+        }
+        return rootInfosById
+            .Values.Select(rootInfo => RetrieveInstance(rootInfo))
+            .OfType<ISchemaItem>()
+            .ToList();
+    }
+
+    private PersistedObjectInfo FindRootObjectInfo(Guid id)
+    {
+        PersistedObjectInfo objectInfo = FindPersistedObjectInfo(id);
+        while (objectInfo != null && objectInfo.ParentId != Guid.Empty)
+        {
+            objectInfo = FindPersistedObjectInfo(objectInfo.ParentId);
+        }
+        return objectInfo;
     }
 
     public List<ModelErrorSection> GetFileErrors(

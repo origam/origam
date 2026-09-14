@@ -18,6 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import DeploymentScriptsGeneratorButtonHOC from '@/modules/deploymentScriptsGenerator/DeploymentScriptsGeneratorButtonHOC';
+import AiPanelToggleButton from '@/ai/AiPanelToggleButton';
 import GuidGeneratorButton from '@components/GuidGeneratorButton/GuidGeneratorButton';
 import Logo from '@components/logo/Logo';
 import ModelCheckButtonHOC from '@components/modelCheck/ModelCheckButtonHOC';
@@ -37,6 +38,7 @@ const TopBar = () => {
           <SearchInput />
           <ModelCheckButtonHOC />
           <DeploymentScriptsGeneratorButtonHOC />
+          <AiPanelToggleButton />
           <SettingsButtonHOC />
         </div>
       </div>

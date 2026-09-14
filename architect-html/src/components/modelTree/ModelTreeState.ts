@@ -19,18 +19,45 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { IArchitectApi, IPackagesInfo } from '@api/IArchitectApi';
 import { TreeNode } from '@components/modelTree/TreeNode';
+import { TreeTransferState } from '@components/modelTree/TreeTransferState';
 import { RootStore } from '@stores/RootStore';
-import { computed, observable } from 'mobx';
+import { action, computed, observable } from 'mobx';
 
 export class ModelTreeState {
   @observable accessor modelNodes: TreeNode[] = [];
   @observable accessor packagesInfo: IPackagesInfo | null = null;
   @observable accessor highlightedNodeId: string | null = null;
   @observable accessor highlightToken: number = 0;
+  @observable accessor selectedNodeId: string | null = null;
+  readonly transfer: TreeTransferState;
   private architectApi: IArchitectApi;
 
   constructor(private rootStore: RootStore) {
     this.architectApi = this.rootStore.architectApi;
+    this.transfer = new TreeTransferState(rootStore);
+  }
+
+  @action
+  selectNode(node: TreeNode | null) {
+    this.selectedNodeId = node?.id ?? null;
+  }
+
+  get selectedNode(): TreeNode | null {
+    return this.findNodeById(this.selectedNodeId ?? undefined);
+  }
+
+  get visibleNodes(): TreeNode[] {
+    const result: TreeNode[] = [];
+    const collect = (nodes: TreeNode[]) => {
+      for (const node of nodes) {
+        result.push(node);
+        if (node.isExpanded) {
+          collect(node.children);
+        }
+      }
+    };
+    collect(this.modelNodes);
+    return result;
   }
 
   @computed
@@ -50,14 +77,17 @@ export class ModelTreeState {
 
     const apiNodes = yield this.architectApi.getTopModelNodes();
     this.modelNodes = apiNodes.map((node: any) => new TreeNode(node, this.rootStore));
+    this.selectedNodeId = null;
+    this.transfer.clear();
   }
 
   findNodeById(nodeId: string | undefined): TreeNode | null {
     return this.findNodeByIdRecursively(nodeId, this.modelNodes);
   }
 
-  highlightNode(nodeId: string | null) {
-    this.highlightedNodeId = nodeId;
+  highlightNode(nodeId: string | undefined): void {
+    const targetNode = this.findNodeByIdRecursively(nodeId, this.modelNodes);
+    this.highlightedNodeId = targetNode ? targetNode.id : null;
     this.highlightToken += 1;
   }
 
@@ -80,8 +110,7 @@ export class ModelTreeState {
       currentNodes = parentNode.children;
     }
 
-    const targetNode = this.findNodeByIdRecursively(args.schemaItemId, this.modelNodes);
-    this.highlightNode(targetNode ? targetNode.id : null);
+    this.highlightNode(args.schemaItemId);
   }
 
   private findNodeByIdRecursively(nodeId: string | undefined, nodes: TreeNode[]): TreeNode | null {
