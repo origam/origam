@@ -37,11 +37,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   //display: none;
   display: flex;
   flex-direction: column;
-  transform: translate(-0.01%, -0.01%);
-  max-width: 0px;
+  // Keep inactive sections measured so their canvases do not resize on activation.
+  visibility: hidden;
   &:global(.isActive) {
     //display: flex;
-    transform: unset;
-    max-width: unset;
+    visibility: inherit;
   }
 }
