@@ -32,6 +32,8 @@ export class HttpError extends Error {
   response?: { data: any; status: number };
 }
 
+const USER_ERROR_STATUS = 420;
+
 function buildUrl(url: string, params?: Record<string, unknown>): string {
   if (!params) return url;
   const search = new URLSearchParams();
@@ -113,9 +115,11 @@ export class HttpClient {
           : data && typeof data === 'object' && 'message' in (data as any)
             ? String((data as any).message)
             : '';
-      const message = bodyMessage
-        ? `Request failed with status ${response.status}: ${bodyMessage}`
-        : `Request failed with status ${response.status}`;
+      const message = !bodyMessage
+        ? `Request failed with status ${response.status}`
+        : response.status === USER_ERROR_STATUS
+          ? bodyMessage
+          : `Request failed with status ${response.status}: ${bodyMessage}`;
       const err = new HttpError(message);
       err.status = response.status;
       err.response = { data, status: response.status };

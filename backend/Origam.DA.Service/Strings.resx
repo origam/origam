@@ -381,4 +381,7 @@
   <data name="ReferenceIndexNotReady" xml:space="preserve">
     <value>Index of references is being built. Please wait.</value>
   </data>
+  <data name="ModelCheckerCouldNotFinish" xml:space="preserve">
+    <value>{0} Could Not Finish</value>
+  </data>
 </root>

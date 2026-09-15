@@ -1,0 +1,98 @@
+/*
+Copyright 2005 - 2026 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+.tableWrapper {
+  flex: 1;
+  min-width: 0;
+  overflow: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+
+  thead {
+    background-color: var(--background2);
+    border-bottom: 1px solid var(--background4);
+
+    th {
+      text-align: left;
+      padding: 0.25rem 0.5rem;
+      color: var(--background7);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+  }
+}
+
+.row {
+  border-bottom: 1px solid var(--background3);
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--background2);
+  }
+
+  td {
+    padding: 0.25rem 0.5rem;
+    color: var(--background6);
+  }
+}
+
+.orphanedRow {
+  border-bottom: 1px solid var(--background3);
+  cursor: pointer;
+  background-color: rgba(229, 62, 62, 0.12);
+
+  &:hover {
+    background-color: rgba(229, 62, 62, 0.2);
+  }
+
+  td {
+    padding: 0.25rem 0.5rem;
+    color: var(--background7);
+  }
+}
+
+.statusColumn {
+  width: 1%;
+  white-space: nowrap;
+}
+
+.statusCell {
+  width: 1%;
+  white-space: nowrap;
+}
+
+.orphanedMarker {
+  display: inline-flex;
+  align-items: center;
+  color: #c53030;
+
+  svg {
+    flex-shrink: 0;
+  }
+}
+
+.empty {
+  text-align: center;
+  color: var(--background6);
+  padding: 0.75rem 0.5rem;
+}
