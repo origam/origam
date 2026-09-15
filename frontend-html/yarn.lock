@@ -3313,10 +3313,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"codsen-utils@npm:^1.9.0":
-  version: 1.9.0
-  resolution: "codsen-utils@npm:1.9.0"
-  checksum: 10c0/62b50dff25b895975d12ea690795f7b2ea1e075951e373ec2ad81144b17cf736109081b35677644b839d07edc3c6bb39560a73abd03607c2d863061533f5ca2e
+"codsen-format-diagnostic-value@npm:^1.1.1":
+  version: 1.1.1
+  resolution: "codsen-format-diagnostic-value@npm:1.1.1"
+  checksum: 10c0/494bcca246b059dd4bce276c43a2f5b0731556d9c44b107f994277f9a11d266e0e4e58b74f16f4389eb09b610b1f566d56f6de16a5ba9349a538f3abf4e41cea
+  languageName: node
+  linkType: hard
+
+"codsen-utils@npm:^1.10.1":
+  version: 1.10.1
+  resolution: "codsen-utils@npm:1.10.1"
+  dependencies:
+    codsen-format-diagnostic-value: "npm:^1.1.1"
+  checksum: 10c0/07824472bd374730bf365a9199458262dac3b75ab39d2d94edd67f429b7f002ec3d6399214fa3152f8b18214eda1efeec95eb52cca2aa9ebf63c5b8096d6aaae
   languageName: node
   linkType: hard
 
@@ -4348,10 +4357,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"html-entities@npm:^2.6.0":
-  version: 2.6.0
-  resolution: "html-entities@npm:2.6.0"
-  checksum: 10c0/7c8b15d9ea0cd00dc9279f61bab002ba6ca8a7a0f3c36ed2db3530a67a9621c017830d1d2c1c65beb9b8e3436ea663e9cf8b230472e0e413359399413b27c8b7
+"html-entity-codec@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "html-entity-codec@npm:1.1.0"
+  checksum: 10c0/6ec8fa0c7c7f9c5148af9eb03059657eb75759457b3b83550a65ff776bae7b5294355eec63524319588eabfb8fb44b8814efb7241eaa1dbfe7c7794ec589e89b
   languageName: node
   linkType: hard
 
@@ -6474,43 +6483,43 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ranges-apply@npm:^7.2.2":
-  version: 7.2.2
-  resolution: "ranges-apply@npm:7.2.2"
+"ranges-apply@npm:^7.2.4":
+  version: 7.2.4
+  resolution: "ranges-apply@npm:7.2.4"
   dependencies:
-    codsen-utils: "npm:^1.9.0"
-    ranges-merge: "npm:^9.2.2"
-  checksum: 10c0/28942cedd50a1967ac9d24cb6be1e5135d937ed6ee6baf9b03b8297bf6f205d6b4a190db003d2b1b1c67e426086d34ebe6111813887ab567bc99f1399761ccc4
+    codsen-utils: "npm:^1.10.1"
+    ranges-merge: "npm:^9.2.4"
+  checksum: 10c0/5d981039010f60d949e161df89648df0773be95dcece28614626fa3da7b5eab61565b40c2d86b8b88626b455ce8b5afc9b760be67ea49ece64971cdb09c52b4c
   languageName: node
   linkType: hard
 
-"ranges-merge@npm:^9.2.2":
-  version: 9.2.2
-  resolution: "ranges-merge@npm:9.2.2"
+"ranges-merge@npm:^9.2.4":
+  version: 9.2.4
+  resolution: "ranges-merge@npm:9.2.4"
   dependencies:
-    codsen-utils: "npm:^1.9.0"
-    ranges-sort: "npm:^6.2.1"
-  checksum: 10c0/f4bfcf3c38aea9c32eac0bb235167e07629734225603de3199d36b8d21183d14fc5d88911a3ab4575688a36cf492177b2f58bb5b9ed14a607a37cfbd62c8e95d
+    codsen-utils: "npm:^1.10.1"
+    ranges-sort: "npm:^6.2.3"
+  checksum: 10c0/356a2b16fff812e72a800d58d4724e77dd58d08a5c32f825335bb9369a8693b189452a3d30ceb50c111ab8cbf8fe2c6a5878ceda3703458c5a02d4dea9ab0e15
   languageName: node
   linkType: hard
 
-"ranges-push@npm:^7.2.1":
-  version: 7.2.1
-  resolution: "ranges-push@npm:7.2.1"
+"ranges-push@npm:^7.3.1":
+  version: 7.3.1
+  resolution: "ranges-push@npm:7.3.1"
   dependencies:
-    codsen-utils: "npm:^1.9.0"
-    ranges-sort: "npm:^6.2.1"
-    string-collapse-leading-whitespace: "npm:^7.2.0"
-  checksum: 10c0/516f2e3f78f6e404dbbf2f273aeaca43bfd04bffeddcc883f0c02548e16a399ed7831ee9bb00b1ac9f905973690825ebf823d81107084b33ce1407d145f0178d
+    codsen-utils: "npm:^1.10.1"
+    ranges-sort: "npm:^6.2.3"
+    string-collapse-leading-whitespace: "npm:^7.3.1"
+  checksum: 10c0/380870635fcda9ad029559790608a59f52285068d30f69be1a937681436ba36910026280bdc59a629d27776860ea7aed0cd1748a478ef5748cd8a27f91f73be7
   languageName: node
   linkType: hard
 
-"ranges-sort@npm:^6.2.1":
-  version: 6.2.1
-  resolution: "ranges-sort@npm:6.2.1"
+"ranges-sort@npm:^6.2.3":
+  version: 6.2.3
+  resolution: "ranges-sort@npm:6.2.3"
   dependencies:
-    codsen-utils: "npm:^1.9.0"
-  checksum: 10c0/d26003efd4da582f87d4ef834586eaf4f843203ddb3b162c6a0ed0e1cff62d5887d733871fcee16f649de3c16688a50a8d1fc9cc50ada7ef8af7ee36b621d0c2
+    codsen-utils: "npm:^1.10.1"
+  checksum: 10c0/fec1ad01dd1e6dc6716c550cfab014491ffc00ec20b5b49b8d97aa03211f6c883ec8bceeec8518d1f87b4d58e9077de686af923a2a6a4a7a6e7d458bbb08eb80
   languageName: node
   linkType: hard
 
@@ -6743,7 +6752,7 @@ __metadata:
     react-virtualized: "npm:^9.22.6"
     sass: "npm:^1.103.1"
     stream-browserify: "npm:^3.0.0"
-    string-strip-html: "npm:^13.6.2"
+    string-strip-html: "npm:^13.7.2"
     ts-jest: "npm:^29.4.12"
     typescript: "npm:^6.0.3"
     uuid: "npm:^14.0.2"
@@ -7233,19 +7242,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"string-collapse-leading-whitespace@npm:^7.2.0":
-  version: 7.2.0
-  resolution: "string-collapse-leading-whitespace@npm:7.2.0"
-  checksum: 10c0/dd7b28981858f73115810f6520faeba9ed0d2228a75d1e38dead334eca203bac8c42d46606816c003e445e777373f7384b788f31c6bff770d33367be507903dd
+"string-collapse-leading-whitespace@npm:^7.3.1":
+  version: 7.3.1
+  resolution: "string-collapse-leading-whitespace@npm:7.3.1"
+  checksum: 10c0/521f81e5490e95b4903449ffd0ec3fe7f401dda51d62c6c419befb9ca6dc7bf19ec1efa40b5b319e6c3e74de0e887edd376b64d797343c5f34d5dc095ba74378
   languageName: node
   linkType: hard
 
-"string-left-right@npm:^6.2.1":
-  version: 6.2.1
-  resolution: "string-left-right@npm:6.2.1"
+"string-left-right@npm:^6.2.3":
+  version: 6.2.3
+  resolution: "string-left-right@npm:6.2.3"
   dependencies:
-    codsen-utils: "npm:^1.9.0"
-  checksum: 10c0/3f9fe6277c5fbee6fb887e8b72de03e68d6f87f83fdb72b6be861a2d1edebdca047adc4eb778f9ef0fe7d44152a6e39af465813580abdf8b47b92d3d5ed6e92a
+    codsen-utils: "npm:^1.10.1"
+  checksum: 10c0/2065f3deae93bb693d85b3e6bcefca0fd3046ec5d7a93aadb7e084bff308893b9f54cd2cba0b7a4a34ef2bb767568747a108709bcf7190966f3d1e419b15e5b8
   languageName: node
   linkType: hard
 
@@ -7259,16 +7268,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"string-strip-html@npm:^13.6.2":
-  version: 13.6.2
-  resolution: "string-strip-html@npm:13.6.2"
+"string-strip-html@npm:^13.7.2":
+  version: 13.7.2
+  resolution: "string-strip-html@npm:13.7.2"
   dependencies:
-    codsen-utils: "npm:^1.9.0"
-    html-entities: "npm:^2.6.0"
-    ranges-apply: "npm:^7.2.2"
-    ranges-push: "npm:^7.2.1"
-    string-left-right: "npm:^6.2.1"
-  checksum: 10c0/dfb73aaee8c25e6b44110d23a8d7ab7cfca91c369eeeccba82298bfe622ea14f6b347993623826cba273daf08fcace62689355b8b5a149608ec9e300f48665a4
+    codsen-utils: "npm:^1.10.1"
+    html-entity-codec: "npm:^1.1.0"
+    ranges-apply: "npm:^7.2.4"
+    ranges-push: "npm:^7.3.1"
+    string-left-right: "npm:^6.2.3"
+  checksum: 10c0/e379487ea923f341dd77556bd4760c9a2ab9a5b20e01cde77f589a77643af627d5705833da3b9754779a2b33481811ba335fb678888b1691e6c4c185459de8cf
   languageName: node
   linkType: hard
 
