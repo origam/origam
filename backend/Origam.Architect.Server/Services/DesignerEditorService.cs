@@ -639,6 +639,26 @@ public class DesignerEditorService(
                 }
             }
         }
+        ValidateFieldsBoundOnce(screenSection);
+    }
+
+    private static void ValidateFieldsBoundOnce(PanelControlSet screenSection)
+    {
+        var fieldBoundTwice = GetLiveControls(screenSection)
+            .Where(item => IsBoundToField(item) && item.ControlItem.Name != "RadioButton")
+            .GroupBy(BoundFieldName)
+            .FirstOrDefault(group => group.Count() > 1);
+        if (fieldBoundTwice == null)
+        {
+            return;
+        }
+        throw new UserOrigamException(
+            string.Format(
+                Strings.SectionEditor_FieldBoundTwice,
+                fieldBoundTwice.Key,
+                string.Join(separator: ", ", fieldBoundTwice.Select(item => item.Name))
+            )
+        );
     }
 
     private static bool RendersAsProperty(ControlSetItem item)

@@ -123,6 +123,9 @@
   <data name="ErrorUnknownMenuType" xml:space="preserve">
     <value>Unsupported menu type.</value>
   </data>
+  <data name="ErrorFieldBoundTwice" xml:space="preserve">
+    <value>Field '{0}.{1}' is bound by more than one control in the screen section '{2}'. Only one control can be bound to a field.</value>
+  </data>
   <data name="WorkQueueFormTitle" xml:space="preserve">
     <value>Messages</value>
   </data>

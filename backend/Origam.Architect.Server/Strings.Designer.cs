@@ -752,5 +752,14 @@ namespace Origam.Architect.Server {
                 return ResourceManager.GetString("SectionEditor_TagInputFieldNotArray", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Field &quot;{0}&quot; is bound by more than one widget: {1}. Only one widget can be bound to a field..
+        /// </summary>
+        internal static string SectionEditor_FieldBoundTwice {
+            get {
+                return ResourceManager.GetString("SectionEditor_FieldBoundTwice", resourceCulture);
+            }
+        }
     }
 }
