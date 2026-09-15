@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="AgentApiKeyAndEndpointMissing" xml:space="preserve">
+        <value>The AI agent needs Ai:ApiKey and Ai:Endpoint to be configured.</value>
+    </data>
+    <data name="AgentTargetsMissing" xml:space="preserve">
+        <value>The AI agent has no registered targets.</value>
+    </data>
+    <data name="AgentTargetWithoutToolProviders" xml:space="preserve">
+        <value>Agent target '{0}' registered no tool providers.</value>
+    </data>
+    <data name="AliasEmpty" xml:space="preserve">
+        <value>Alias cannot be null or empty.</value>
+    </data>
+    <data name="ArchitectBaseUrlUnknown" xml:space="preserve">
+        <value>The AI agent cannot determine the Architect base url because the server reports no listening address.</value>
+    </data>
+    <data name="ArchitectUnreachable" xml:space="preserve">
+        <value>Architect server unreachable (is it running with Swagger in Development?).</value>
+    </data>
+    <data name="CommunityRequestFailed" xml:space="preserve">
+        <value>{0} returned {1}.</value>
+    </data>
+    <data name="SchemaItemInfosRequestFailed" xml:space="preserve">
+        <value>Architect returned {0} when fetching schema item infos.</value>
+    </data>
+    <data name="ImageInvalid" xml:space="preserve">
+        <value>The attached image could not be read.</value>
+    </data>
+    <data name="ImageTooLarge" xml:space="preserve">
+        <value>The attached image is larger than the 10 MB limit.</value>
+    </data>
+    <data name="ImageTypeNotSupported" xml:space="preserve">
+        <value>Only PNG, JPEG, GIF and WebP images can be attached.</value>
+    </data>
+    <data name="ItemTypeCatalogEmpty" xml:space="preserve">
+        <value>Architect returned an empty item type catalog.</value>
+    </data>
+    <data name="ItemTypeCatalogRequestFailed" xml:space="preserve">
+        <value>Architect returned {0} for ItemTypeCatalog.</value>
+    </data>
+    <data name="OpenApiCallFailed" xml:space="preserve">
+        <value>{0} failed with HTTP status {1}.</value>
+    </data>
+    <data name="PromptBundleMissing" xml:space="preserve">
+        <value>Prompt bundle '{0}' is missing.</value>
+    </data>
+    <data name="PromptSectionMissing" xml:space="preserve">
+        <value>Prompt section '{0}' is missing from bundle '{1}.md' and from '{2}.md'.</value>
+    </data>
+    <data name="ScriptedClientNoApiKey" xml:space="preserve">
+        <value>No AI API key is configured and no response is queued. Set Ai:ApiKey, or POST /agent/test/script before starting a run.</value>
+    </data>
+    <data name="ScriptedClientStepMissing" xml:space="preserve">
+        <value>The queued script has {0} step(s) but step {1} was requested. The last step must not call tools.</value>
+    </data>
+    <data name="SectionDeploymentScriptsDescription" xml:space="preserve">
+        <value>Makes a deployment version current and runs its deployment scripts against the database.</value>
+    </data>
+    <data name="SectionDeploymentScriptsGeneratorDescription" xml:space="preserve">
+        <value>Compares the model with the database and adds the differences to a deployment version or back into the model.</value>
+    </data>
+    <data name="SectionDocumentationDescription" xml:space="preserve">
+        <value>Opens and edits the documentation attached to a model element.</value>
+    </data>
+    <data name="SectionItemTypeCatalogDescription" xml:space="preserve">
+        <value>Lists the item types that can be created under a node and the properties each of them has.</value>
+    </data>
+    <data name="SectionModelDescription" xml:space="preserve">
+        <value>Browses the model tree, reads node details, searches the schema and deletes model elements.</value>
+    </data>
+    <data name="SectionPackageDescription" xml:space="preserve">
+        <value>Lists the packages of the model and switches the active one.</value>
+    </data>
+    <data name="SectionPropertyEditorDescription" xml:space="preserve">
+        <value>Writes property values on the element.</value>
+    </data>
+    <data name="SectionScreenEditorDescription" xml:space="preserve">
+        <value>Edits a screen opened in the designer: creates, updates and deletes the items on it.</value>
+    </data>
+    <data name="SectionSearchDescription" xml:space="preserve">
+        <value>Finds model elements by text and shows what references them and what they depend on.</value>
+    </data>
+    <data name="SectionSectionEditorDescription" xml:space="preserve">
+        <value>Edits a screen section opened in the designer: creates, updates and deletes the items on it.</value>
+    </data>
+    <data name="SectionTabDescription" xml:space="preserve">
+        <value>Opens, closes and saves editor tabs, and creates new model nodes inside them.</value>
+    </data>
+    <data name="SectionWizardDescription" xml:space="preserve">
+        <value>Creates screens, lookups, menu items, work queue classes and filters through the Architect wizards.</value>
+    </data>
+    <data name="SectionXsltDescription" xml:space="preserve">
+        <value>Validates and runs XSLT transformations and reads their parameters, settings and rule sets.</value>
+    </data>
+</root>

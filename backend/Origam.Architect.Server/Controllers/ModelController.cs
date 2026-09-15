@@ -26,6 +26,8 @@ using Origam.Architect.Server.ReturnModels;
 using Origam.Architect.Server.Services;
 using Origam.Architect.Server.Services.Move;
 using Origam.DA.ObjectPersistence;
+using Origam.DA.Service;
+using Origam.DA.Service.SchemaInfo;
 using Origam.Schema;
 using Origam.UI;
 using Origam.Workbench.Services;
@@ -39,7 +41,8 @@ public class ModelController(
     SchemaService schemaService,
     IPersistenceService persistenceService,
     TreeNodeFactory treeNodeFactory,
-    GitNodeStatusService gitNodeStatusService,
+    ModelTransactionRunner modelTransactionRunner,
+    TabService tabService,
     ModelGroupService modelGroupService
 ) : ControllerBase
 {
@@ -117,13 +120,7 @@ public class ModelController(
             };
         }
 
-        return provider
-            .ChildNodes()
-            .Cast<IBrowserNode2>()
-            .OrderBy(x => x.NodeText)
-            .Where(x => x is not ISchemaItem item || item.IsPersisted)
-            .Select(treeNodeFactory.Create)
-            .ToList();
+        return treeNodeFactory.CreateChildren(provider, depth: 0);
     }
 
     private List<TreeNode> GetProviderTopChildren(ISchemaItemProvider provider)
@@ -143,6 +140,17 @@ public class ModelController(
     }
 
     [HttpPost("DeleteSchemaItem")]
+    [EndpointDescription(
+        "Permanently delete a model item - a field, an entity, a filter, a relationship, a "
+            + "screen and so on - from the model and from disk. schemaItemId is the id of the "
+            + "item ITSELF: to delete a field pass that field's id, not its parent entity's id. "
+            + "The item must already be saved. There is no undo, and anything still referencing "
+            + "the deleted item stops working. On success returns {deleted, id, name} - treat "
+            + "that as proof the item is gone and do not call this again for the same id. A 404 "
+            + "means no saved item has that id, which usually means an earlier delete of it "
+            + "already succeeded; never retry the same id after a 404. A 400 carries the reason "
+            + "the model refused the delete."
+    )]
     public IActionResult DeleteSchemaItem([Required] [FromBody] DeleteModel input)
     {
         ISchemaItem instance = null;
@@ -157,23 +165,26 @@ public class ModelController(
 
         if (instance == null)
         {
-            return NotFound();
+            return NotFound(
+                $"No saved model item has id {input.SchemaItemId}. It was either never saved or "
+                    + "it has already been deleted - a previous delete of this id may have "
+                    + "succeeded. Do not repeat this call with the same id."
+            );
         }
 
+        string deletedName = instance.Name;
+        ISchemaItem deletedRootItem = instance.RootItem;
         try
         {
-            persistenceProvider.BeginTransaction();
-            instance.Delete();
+            modelTransactionRunner.Run(() => instance.Delete());
         }
         catch (InvalidOperationException ex)
         {
-            persistenceProvider.EndTransactionDontSave();
             return StatusCode(statusCode: 400, ex.Message);
         }
 
-        persistenceProvider.EndTransaction();
-        gitNodeStatusService.ClearCache();
-        return Ok();
+        tabService.InvalidateTabsInRoot(deletedRootItem, changedByTabId: null);
+        return Ok(new DeleteResult(Deleted: true, Id: input.SchemaItemId, Name: deletedName));
     }
 
     [HttpPost("CreateGroup")]
@@ -190,6 +201,11 @@ public class ModelController(
     ) => modelGroupService.Delete(input);
 
     [HttpGet("GetMenuItems")]
+    [EndpointDescription(
+        "List the model item types that can be created as children of the given node (the 'New' "
+            + "context menu). Each entry has a caption, for example 'Database Field', and a "
+            + "typeName; either one can be passed as newTypeName to POST /Tab/CreateNode."
+    )]
     public IEnumerable<MenuItemInfo> GetMenuItems(
         [FromQuery] string id,
         [FromQuery] bool isNonPersistentItem,
@@ -235,6 +251,59 @@ public class ModelController(
             iconName: attr.Icon is string iconName ? iconName : null,
             iconIndex: attr.Icon is int iconIndex ? iconIndex : null
         );
+    }
+
+    [HttpGet("GetSchemaNodeDetails")]
+    public ActionResult<TreeNode> GetSchemaNodeDetails(
+        [FromQuery] string id,
+        [FromQuery] int depth = 3
+    )
+    {
+        if (string.IsNullOrWhiteSpace(id))
+        {
+            return BadRequest("Id cannot be empty");
+        }
+
+        if (Guid.TryParse(id, out var guidId))
+        {
+            IBrowserNode2 node = persistenceProvider.RetrieveInstance<IBrowserNode2>(guidId);
+            if (node == null)
+            {
+                return NotFound();
+            }
+            TreeNode treeNode = treeNodeFactory.CreateRecursive(node, depth);
+            return Ok(treeNode);
+        }
+
+        ISchemaItemProvider provider = treeNodeFactory.FindRootProvider(id);
+        if (provider == null)
+        {
+            return NotFound();
+        }
+
+        var providerNode = new TreeNode
+        {
+            Id = id,
+            OrigamId = id,
+            NodeText = provider.NodeText,
+            NodeLevelType = NodeLevelType.Provider,
+        };
+        providerNode.Children = GetProviderTopChildren(provider);
+        return Ok(providerNode);
+    }
+
+    [HttpGet("GetSchemaItemInfos")]
+    public ActionResult<List<SchemaItemInfo>> GetSchemaItemInfos()
+    {
+        if (!ReferenceIndexManager.Initialized)
+        {
+            return StatusCode(StatusCodes.Status503ServiceUnavailable);
+        }
+        if (schemaService.ActiveExtension == null)
+        {
+            return new List<SchemaItemInfo>();
+        }
+        return ((FilePersistenceProvider)persistenceProvider).RetrieveSchemaItemInfos();
     }
 
     [HttpPost("GetMoveVerdicts")]

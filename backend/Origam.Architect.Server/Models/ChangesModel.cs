@@ -19,18 +19,27 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System.Text.Json.Serialization;
+
 namespace Origam.Architect.Server.Models;
 
 public class ChangesModel
 {
     public Guid SchemaItemId { get; set; }
+
+    [JsonConverter(typeof(EmptyStringAsNullGuidConverter))]
     public Guid? ParentSchemaItemId { get; set; }
+
     public List<PropertyChange> Changes { get; set; }
 }
 
 public class PropertyChange
 {
     public string Name { get; set; }
+
+    [JsonConverter(typeof(EmptyStringAsNullGuidConverter))]
     public Guid? ControlPropertyId { get; set; }
+
+    [JsonConverter(typeof(AnyJsonValueToStringConverter))]
     public string Value { get; set; }
 }

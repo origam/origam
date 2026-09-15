@@ -17,10 +17,12 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { AiToolSectionsState } from '@/ai/AiToolSectionsState';
 import { T } from '@/main';
 import {
   DocumentationEditorData,
   EditorType,
+  IAiSettingsModuleData,
   IApiEditorProperty,
   IArchitectApi,
   IDeploymentScriptsGeneratorModuleData,
@@ -32,6 +34,8 @@ import {
 import { EditorData } from '@components/modelTree/EditorData';
 import { ModelTreeState } from '@components/modelTree/ModelTreeState';
 import { PropertiesState } from '@components/properties/PropertiesState';
+import AiSettingsModule from '@modules/aiSettings/AiSettingsModule';
+import AiSettingsModuleState from '@modules/aiSettings/AiSettingsModuleState';
 import DeploymentScriptsEditor from '@editors/DeploymentScriptsEditor/DeploymentScriptsEditor';
 import DeploymentScriptsGeneratorModule from '@modules/deploymentScriptsGenerator/DeploymentScriptsGeneratorModule';
 import DeploymentScriptsGeneratorModuleState from '@modules/deploymentScriptsGenerator/DeploymentScriptsGeneratorModuleState';
@@ -63,10 +67,24 @@ export function getEditorContainer(args: {
   architectApi: IArchitectApi;
   modelTreeState: ModelTreeState;
   uiState: UIState;
+  aiToolSectionsState: AiToolSectionsState;
   runGeneratorHandled: (args: FlowHandlerInput) => CancellablePromise<any>;
 }) {
   const { editorType, editorData, propertiesState, architectApi, modelTreeState, uiState } = args;
   const { node, data, isDirty } = editorData;
+
+  if (editorType === 'AiSettingsModule') {
+    const editorDataTyped = data as IAiSettingsModuleData;
+    const editorState = new AiSettingsModuleState(
+      editorData.editorId,
+      editorDataTyped.customInstructions ?? '',
+      editorDataTyped.model ?? '',
+      editorDataTyped.router ?? '',
+      editorDataTyped.hasApiKey ?? true,
+      args.aiToolSectionsState,
+    );
+    return new EditorContainer(editorState, <AiSettingsModule editorState={editorState} />);
+  }
 
   if (editorType === 'DeploymentScriptsGeneratorModule') {
     const editorDataTyped = data as IDeploymentScriptsGeneratorModuleData;

@@ -61,6 +61,10 @@ export class XsltEditorState implements ITabViewState, ITabState, IPropertyManag
   @observable public accessor targetDataStructureId: string | undefined;
   private readonly transformPropertyName: string;
 
+  get origamId() {
+    return this.editorNode.origamId;
+  }
+
   get xsl(): string {
     const value = this.gridEditorState.properties.find(
       x => x.name === this.transformPropertyName,
