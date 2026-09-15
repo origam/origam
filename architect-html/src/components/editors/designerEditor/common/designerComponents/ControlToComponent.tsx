@@ -37,6 +37,7 @@ import { MultiColumnAdapterFieldWrapper } from '@editors/designerEditor/common/d
 import { AsDropDown } from '@editors/designerEditor/common/designerComponents/AsDropDown.tsx';
 import { AsDateBox } from '@editors/designerEditor/common/designerComponents/AsDateBox.tsx';
 import { TagInput } from '@editors/designerEditor/common/designerComponents/TagInput.tsx';
+import { ImageBox } from '@editors/designerEditor/common/designerComponents/ImageBox.tsx';
 
 export async function controlToComponent(
   control: IApiControl,
@@ -240,6 +241,17 @@ export async function controlToComponent(
         properties: properties,
       });
 
+    case ComponentType.ImageBox:
+      return new ImageBox({
+        id: control.id,
+        parent: parent,
+        data: {
+          type: componentType,
+          identifier: control.name,
+        },
+        properties: properties,
+      });
+
     case ComponentType.AsTree:
     case ComponentType.AsTree2:
     case ComponentType.AsListView:
@@ -248,7 +260,6 @@ export async function controlToComponent(
     case ComponentType.AsTextBox:
     case ComponentType.ColorPicker:
     case ComponentType.TextArea:
-    case ComponentType.ImageBox:
       return new Component({
         id: control.id,
         parent: parent,

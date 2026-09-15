@@ -43,6 +43,6 @@ public abstract class LabeledEditor : ControlBase
     public override void Initialize(ControlSetItem controlSetItem)
     {
         Height = 20;
-        Width = 200;
+        Width = 100;
     }
 }

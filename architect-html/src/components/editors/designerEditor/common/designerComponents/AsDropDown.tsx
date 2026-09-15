@@ -28,6 +28,10 @@ export class AsDropDown extends Component {
     return false;
   }
 
+  get canResizeHeight(): boolean {
+    return false;
+  }
+
   getDesignerRepresentation(): ReactElement | null {
     return (
       <EditorBox>

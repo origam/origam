@@ -37,13 +37,18 @@ export class GroupBox extends Component {
   }
 
   getDesignerRepresentation(): ReactElement | null {
-    const className =
-      this.data.type === ComponentType.GroupBox ? S.groupBoxWithChamfer : S.groupBoxContent;
-    return (
-      <div className={className}>
-        <div className={S.groupBoxHeader}>
-          {this.properties.find(x => x.name === 'Text')?.value}
+    const text = this.properties.find(x => x.name === 'Text')?.value;
+    if (this.data.type === ComponentType.GroupBox) {
+      return (
+        <div className={S.groupBoxWithChamfer}>
+          <div className={S.groupBoxChamfer}>{text}</div>
+          <div className={S.groupBoxChamferBody}></div>
         </div>
+      );
+    }
+    return (
+      <div className={S.groupBoxContent}>
+        <div className={S.groupBoxHeader}>{text}</div>
       </div>
     );
   }

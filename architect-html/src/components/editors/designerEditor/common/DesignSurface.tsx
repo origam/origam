@@ -193,16 +193,19 @@ export const DesignSurface: React.FC<{
                 component.designerRepresentation
               )}
               {surfaceState.selectedComponent?.id === component.id &&
-                [
-                  'top',
-                  'right',
-                  'bottom',
-                  'left',
-                  'topLeft',
-                  'topRight',
-                  'bottomRight',
-                  'bottomLeft',
-                ].map(handle => (
+                (component.canResizeHeight
+                  ? [
+                      'top',
+                      'right',
+                      'bottom',
+                      'left',
+                      'topLeft',
+                      'topRight',
+                      'bottomRight',
+                      'bottomLeft',
+                    ]
+                  : ['right', 'left']
+                ).map(handle => (
                   <div
                     key={component.id + handle}
                     className={`${S.resizeHandle} ${S[handle]}`}

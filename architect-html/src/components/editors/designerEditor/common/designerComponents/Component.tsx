@@ -186,7 +186,7 @@ export class Component {
         };
       case LabelPosition.Right:
         return {
-          left: `${this.absoluteLeft + this.width}px`,
+          left: `${this.absoluteLeft + this.width + 10}px`,
           top: `${this.absoluteTop}px`,
           width: `${this.labelWidth}px`,
           height: `${this.height}px`,
@@ -234,6 +234,10 @@ export class Component {
 
   get hasBorder(): boolean {
     return true;
+  }
+
+  get canResizeHeight(): boolean {
+    return this.get('Multiline') !== false;
   }
 
   update() {}

@@ -56,7 +56,10 @@ const SinglePropertyEditor = observer(
       if (property.type === 'enum' || property.type === 'looukup') {
         const selectedValue =
           property.type === 'enum'
-            ? (property.dropDownValues.find(x => x.name === property.value)?.value ?? '')
+            ? (property.dropDownValues.find(
+                option =>
+                  option.name === property.value || String(option.value) === String(property.value),
+              )?.value ?? '')
             : (property.value ?? '');
         return (
           <FilterableSelect

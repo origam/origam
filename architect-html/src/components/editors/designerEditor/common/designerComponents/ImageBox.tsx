@@ -18,27 +18,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { ReactElement } from 'react';
-import { VscCalendar } from 'react-icons/vsc';
 import S from '@editors/designerEditor/common/designerComponents/Components.module.scss';
 import { Component } from '@editors/designerEditor/common/designerComponents/Component.tsx';
-import { EditorBox } from '@editors/designerEditor/common/designerComponents/EditorBox.tsx';
 
-export class AsDateBox extends Component {
+export class ImageBox extends Component {
   get hasBorder(): boolean {
     return false;
   }
 
-  get canResizeHeight(): boolean {
-    return false;
-  }
-
   getDesignerRepresentation(): ReactElement | null {
-    return (
-      <EditorBox>
-        <div className={`${S.editorButton} ${S.calendarButton}`}>
-          <VscCalendar />
-        </div>
-      </EditorBox>
-    );
+    return <div className={S.dottedFrame}></div>;
   }
 }

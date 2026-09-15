@@ -28,12 +28,10 @@ export class RadioButton extends Component {
 
   getDesignerRepresentation(): ReactElement | null {
     return (
-      <div className={S.designSurfaceEditorContainer}>
-        <div className={S.checkList}>
-          <div className={S.checklistItem}>
-            <input type="radio" className="checkbox undefined" />
-            <div>{this.properties.find(x => x.name === 'Text')?.value}</div>
-          </div>
+      <div className={S.checkList}>
+        <div className={S.checklistItem}>
+          <input type="radio" className="checkbox undefined" />
+          <div>{this.properties.find(x => x.name === 'Text')?.value}</div>
         </div>
       </div>
     );

@@ -348,12 +348,38 @@ public class DesignerEditorService(
         {
             textValueItem.Value = caption;
         }
+        if (controlAdapter.Control is Label && string.IsNullOrEmpty(itemModelData.FieldName))
+        {
+            newItem.Name = GetUniqueControlName(screenSection, newItem);
+            if (textValueItem != null)
+            {
+                textValueItem.Value = newItem.Name;
+            }
+        }
 
         DropDownValue[] dataSourceDropDownValues = GetFields(screenSection)
             .Select(field => new DropDownValue(field.Name, field.Name))
             .Prepend(new DropDownValue(string.Empty, string.Empty))
             .ToArray();
         return LoadItem(newItem, dataSourceDropDownValues);
+    }
+
+    private static string GetUniqueControlName(
+        PanelControlSet screenSection,
+        ControlSetItem newItem
+    )
+    {
+        HashSet<string> usedNames = screenSection
+            .ChildItemsRecursive.OfType<ControlSetItem>()
+            .Where(item => item != newItem)
+            .Select(item => item.Name)
+            .ToHashSet();
+        int index = 1;
+        while (usedNames.Contains(newItem.ControlItem.Name + index))
+        {
+            index++;
+        }
+        return newItem.ControlItem.Name + index;
     }
 
     private PropertyBindingInfo FindOrMakeBindingInfo(

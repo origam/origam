@@ -52,11 +52,11 @@ public class ImageBox : IControl, IAsControl
 
     [Category("Layout")]
     [Browsable(false)]
-    public int Height { get; set; } = 200;
+    public int Height { get; set; } = 50;
 
     [Category("Layout")]
     [Browsable(false)]
-    public int Width { get; set; } = 200;
+    public int Width { get; set; } = 100;
 
     [Category("Behavior")]
     public int TabIndex { get; set; }

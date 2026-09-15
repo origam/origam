@@ -47,8 +47,8 @@ public class MultiColumnAdapterFieldWrapper : IControl, IAsControl
 
     public void Initialize(ControlSetItem controlSetItem)
     {
-        Height = 20;
-        Width = 400;
+        Height = 100;
+        Width = 200;
     }
 
     [NotAModelProperty]
