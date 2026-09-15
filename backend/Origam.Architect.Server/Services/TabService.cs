@@ -24,6 +24,7 @@ using System.Reflection;
 using Origam.Architect.Server.ArchitectLogic;
 using Origam.Architect.Server.Exceptions;
 using Origam.Architect.Server.Models;
+using Origam.Architect.Server.Utils;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema;
 using Origam.Schema.GuiModel;
@@ -295,14 +296,14 @@ public class TabService(
                 );
             }
 
-            object newValue = propertyParser.Parse(propertyToChange, change.Value);
+            object newValue = propertyParser.Parse(propertyToChange, change.Value, tab.Item);
             object oldValue = propertyToChange.GetValue(tab.Item);
-            if (oldValue != newValue)
+            if (!Equals(oldValue, newValue))
             {
                 tab.IsDirty = true;
             }
 
-            propertyToChange.SetValue(tab.Item, newValue);
+            PropertyUtils.SetValue(propertyToChange, tab.Item, newValue);
         }
 
         return tab;
