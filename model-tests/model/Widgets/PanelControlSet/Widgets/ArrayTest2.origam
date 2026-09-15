@@ -184,7 +184,7 @@
           x:id="d64b9497-fcce-471a-8f97-12dcc7c5bc42"
           asi:name="Left"
           apvi:propertyId="b8e55ffb-706a-42bb-a39d-97b7299d7c15"
-          pvi1:value="145" />
+          pvi1:value="142" />
       </csi:ControlSetItem>
       <csi:ControlSetItem
         asi:abstract="false"
@@ -604,7 +604,7 @@
           x:id="2a8756b6-82e1-42d8-b423-b3a485d91bcc"
           asi:name="Top"
           apvi:propertyId="4c86350e-9435-4364-874e-e7b0bcf4e4fb"
-          pvi1:value="169" />
+          pvi1:value="164" />
         <pvi1:PropertyValueItem
           asi:abstract="false"
           x:id="6c54c0d3-7eec-4cac-ab1d-5406e02c43e2"
@@ -679,11 +679,11 @@
         csi:widget="AsTextBox#AsTextBox/7d1ec946-017e-4a00-9d92-d4d6b9fabffc">
         <pbi:PropertyBindingInfo
           asi:abstract="false"
-          pbi:designDataSetPath="ArrayTest.Text"
+          pbi:designDataSetPath="ArrayTest.Text2"
           x:id="844d09e5-ef52-43e3-828a-4904f36e52c1"
           asi:name="Value"
           apvi:propertyId="e4c1751b-7b33-42d3-b945-11971cdf7c56"
-          pbi:value="Text" />
+          pbi:value="Text2" />
         <pvi1:PropertyValueItem
           asi:abstract="false"
           x:id="037071b7-79e3-4829-be64-99728d673071"

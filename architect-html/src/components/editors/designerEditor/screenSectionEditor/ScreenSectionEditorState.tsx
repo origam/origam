@@ -107,6 +107,16 @@ export class ScreenSectionEditorState extends DesignerEditorState {
     yield* super.save();
   }
 
+  *refreshFields(): Generator<Promise<any>, void, any> {
+    const updateResult = yield this.architectApi.updateSectionEditor({
+      schemaItemId: this.toolbox.id,
+      name: this.toolbox.name,
+      selectedDataSourceId: this.toolbox.selectedDataSourceId,
+      modelChanges: [],
+    });
+    this.sectionToolbox.fields = updateResult.data.fields;
+  }
+
   protected *update(): Generator<Promise<any>, void, any> {
     const modelChanges = this.surface.components.map(x => {
       return {
