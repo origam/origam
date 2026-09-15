@@ -647,7 +647,7 @@ public class FilePersistenceProvider : AbstractPersistenceProvider, IFilePersist
             return new List<ModelErrorSection>
             {
                 new ModelErrorSection(
-                    caption: $"{checkerName} Could Not Finish",
+                    caption: string.Format(Strings.ModelCheckerCouldNotFinish, checkerName),
                     errorMessages: failureMessages
                 ),
             };
