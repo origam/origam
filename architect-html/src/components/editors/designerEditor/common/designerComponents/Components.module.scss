@@ -169,6 +169,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   color: var(--background1);
 }
 
+.colorPickerButton {
+  box-sizing: border-box;
+  align-self: flex-start;
+  width: 100%;
+  height: 100%;
+  border: 1px solid var(--background4);
+}
+
 .calendarButton {
   border-left: none;
   background-color: transparent;

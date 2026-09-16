@@ -44,7 +44,7 @@ public class BlobControl : ControlBase, IAsControl
     public Guid BlobLookupId { get; set; }
 
     [Category("(ORIGAM)")]
-    public int CaptionLength { get; set; }
+    public int CaptionLength { get; set; } = 100;
 
     [Category("Data Members")]
     public string OriginalPathMember { get; set; }

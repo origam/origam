@@ -2491,7 +2491,7 @@ public class FormXmlBuilder
                             MultiColumnAdapterFieldWrapperBuilder.Build(
                                 propertyElement,
                                 csi,
-                                controlMember
+                                string.IsNullOrEmpty(controlMember) ? bindingMember : controlMember
                             );
                             RenderPanel(
                                 panel,

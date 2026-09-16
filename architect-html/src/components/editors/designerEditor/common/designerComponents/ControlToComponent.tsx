@@ -38,6 +38,7 @@ import { AsDropDown } from '@editors/designerEditor/common/designerComponents/As
 import { AsDateBox } from '@editors/designerEditor/common/designerComponents/AsDateBox.tsx';
 import { TagInput } from '@editors/designerEditor/common/designerComponents/TagInput.tsx';
 import { ImageBox } from '@editors/designerEditor/common/designerComponents/ImageBox.tsx';
+import { ColorPicker } from '@editors/designerEditor/common/designerComponents/ColorPicker.tsx';
 
 export async function controlToComponent(
   control: IApiControl,
@@ -252,13 +253,23 @@ export async function controlToComponent(
         properties: properties,
       });
 
+    case ComponentType.ColorPicker:
+      return new ColorPicker({
+        id: control.id,
+        parent: parent,
+        data: {
+          type: componentType,
+          identifier: control.name,
+        },
+        properties: properties,
+      });
+
     case ComponentType.AsTree:
     case ComponentType.AsTree2:
     case ComponentType.AsListView:
     case ComponentType.AsReportPanel:
     case ComponentType.ExecuteWorkflowButton:
     case ComponentType.AsTextBox:
-    case ComponentType.ColorPicker:
     case ComponentType.TextArea:
       return new Component({
         id: control.id,

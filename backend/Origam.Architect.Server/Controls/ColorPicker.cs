@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.ComponentModel;
 using Origam.Architect.Server.Attributes;
 using Origam.Gui;
+using Origam.Schema.GuiModel;
 
 namespace Origam.Architect.Server.Controls;
 
@@ -49,8 +50,14 @@ public class ColorPicker : ControlBase, IAsControl
     public bool HideOnForm { get; set; }
 
     [Category("(ORIGAM)")]
-    public int CaptionLength { get; set; }
+    public int CaptionLength { get; set; } = 100;
 
     [NotAModelProperty]
     public string DefaultBindableProperty => "SelectedColor";
+
+    public override void Initialize(ControlSetItem controlSetItem)
+    {
+        Height = 24;
+        Width = 24;
+    }
 }

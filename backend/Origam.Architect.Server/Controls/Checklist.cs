@@ -46,7 +46,7 @@ public class Checklist : ControlBase, IAsControl, ILookupBoundControl
     public int ColumnWidth { get; set; }
 
     [Category("(ORIGAM)")]
-    public int CaptionLength { get; set; }
+    public int CaptionLength { get; set; } = 100;
 
     [Category("(ORIGAM)")]
     public string GridColumnCaption { get; set; }
