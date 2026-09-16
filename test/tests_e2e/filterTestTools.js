@@ -1,239 +1,104 @@
-const {sleep, catchRequests, clickAndWaitForXPath, typeAndWaitForSelector, clickAndWaitForSelector} = require("./testTools");
+const { expect } = require("@playwright/test");
+
+async function selectFilterOperator(page, propertyId, optionText) {
+  const combo = page.locator(`#combo_${propertyId}`);
+  const option = page
+    .locator(`#dropdown_combo_${propertyId}`)
+    .getByText(optionText, { exact: true });
+
+  await expect(async () => {
+    await combo.click();
+    await expect(option).toBeVisible({ timeout: 2_000 });
+  }).toPass({ timeout: 15_000 });
+  await option.click();
+}
 
 async function removeFocusFromDateInput(page, inputId) {
-
-  await page.keyboard.press("Tab");
-  await sleep(300);
-
-  for (let i = 0; i < 5; i++) {
-    const activeElement = await page.evaluateHandle(() => document.activeElement);
-    const inputIsActive = await page.evaluate(activeElement => activeElement.attributes["id"], activeElement) === inputId;
-    if(inputIsActive){
-      await page.keyboard.press("Tab");
-      await sleep(300);
-    }else{
-      return;
-    }
+  const input = page.locator(`#${inputId}`);
+  for (let attempt = 0; attempt < 5 && await input.evaluate(element => element === document.activeElement); attempt += 1) {
+    await input.press("Tab");
   }
+  await expect(input).not.toBeFocused();
 }
 
-async function setDateFilter(args){
-  const inputId = "input_" + args.propertyId;
-  const comboId = "combo_" +  args.propertyId;
-  const dropdownId = "dropdown_combo_" + args.propertyId;
+async function setDateFilter({ page, propertyId, comboOptionText, value }) {
+  const inputId = `input_${propertyId}`;
+  await selectFilterOperator(page, propertyId, comboOptionText);
+  if (value === undefined) return;
 
-  await sleep(200);
-  let waitForRequests = catchRequests(args.page);
-
-  const text1FilterCombo = await args.page.waitForSelector(
-    `#${comboId}`,
-    { visible: true }
-  );
-  await sleep(200);
-
-  const optionDiv = await clickAndWaitForXPath({
-    page: args.page,
-    clickable: text1FilterCombo,
-    xPath: `//div[@id='${dropdownId}']/div[text()='${args.comboOptionText}']`
-  });
-
-  await optionDiv.click();
-
-  if(args.value === undefined){
-    return;
-  }
-
-  await args.page.waitForSelector(
-    `#${inputId}`,
-    {visible: true});
-
-  await args.page.focus(`#${inputId}`)
-  await args.page.keyboard.type(args.value)
-
-  await sleep(500);
-  await removeFocusFromDateInput(args.page, inputId);
-  await waitForRequests;
+  const input = page.locator(`#${inputId}`);
+  await input.evaluate(element => element.value = "");
+  await input.pressSequentially(value);
+  await removeFocusFromDateInput(page, inputId);
 }
 
-async function setTwoFieldDateFilter(args){
-  const fromInputId = "from_input_" + args.propertyId;
-  const toInputId = "to_input_" + args.propertyId;
-  const comboId = "combo_" + args.propertyId;
-  const dropdownId = "dropdown_combo_" + args.propertyId;
+async function setTwoFieldDateFilter({
+  page,
+  propertyId,
+  comboOptionText,
+  fromValue,
+  toValue,
+}) {
+  await selectFilterOperator(page, propertyId, comboOptionText);
+  const fromInput = page.locator(`#from_input_${propertyId}`);
+  const toInput = page.locator(`#to_input_${propertyId}`);
 
-  let waitForRequests = catchRequests(args.page);
-  const text1FilterCombo = await args.page.waitForSelector(
-    `#${comboId}`,
-    { visible: true }
-  );
+  await fromInput.evaluate(element => element.value = "");
+  await fromInput.pressSequentially(fromValue);
+  await removeFocusFromDateInput(page, `from_input_${propertyId}`);
+  await expect(fromInput).toHaveValue(`${fromValue} 00:00:00`);
 
-  const optionDiv = await clickAndWaitForXPath({
-    page: args.page,
-    clickable: text1FilterCombo,
-    xPath: `//div[@id='${dropdownId}']/div[text()='${args.comboOptionText}']`,
-  });
-
-  await optionDiv.click();
-
-  const fromInput = await args.page.waitForSelector(
-    `#${fromInputId}`,
-    {visible: true});
-
-  await args.page.focus(`#${fromInputId}`)
-  await args.page.keyboard.type(args.fromValue)
-
-  await sleep(500);
-  await removeFocusFromDateInput(args.page, fromInputId);
-  await sleep(300);
-  const finalFromValue = await args.page.evaluate(x => x.value, fromInput);
-  expect(finalFromValue).toBe(args.fromValue+" 00:00:00");
-
-  const toInput = await args.page.waitForSelector(
-    `#${toInputId}`,
-    {visible: true});
-
-  await args.page.focus(`#${toInputId}`)
-  await args.page.keyboard.type(args.toValue)
-
-  await sleep(500);
-  await removeFocusFromDateInput(args.page, toInputId);
-  await sleep(200);
-  const finalToValue = await args.page.evaluate(x => x.value, toInput);
-  expect(finalToValue).toBe(args.toValue+" 00:00:00");
-
-  await waitForRequests;
+  await toInput.evaluate(element => element.value = "");
+  await toInput.pressSequentially(toValue);
+  await removeFocusFromDateInput(page, `to_input_${propertyId}`);
+  await expect(toInput).toHaveValue(`${toValue} 00:00:00`);
 }
 
-async function setFilter(args){
-  const inputId = "input_" + args.propertyId;
-  const comboId = "combo_" +  args.propertyId;
-  const dropdownId = "dropdown_combo_" + args.propertyId;
-
-  let waitForRequests = catchRequests(args.page);
-  const text1FilterCombo = await args.page.waitForSelector(
-    `#${comboId}`,
-    { visible: true }
-  );
-
-  await sleep(200);
-
-  const optionDiv = await clickAndWaitForXPath({
-    page: args.page,
-    clickable: text1FilterCombo,
-    xPath: `//div[@id='${dropdownId}']/div[text()='${args.comboOptionText}']`
-  });
-
-  await optionDiv.click();
-
-  if(args.value === undefined){
-    return;
-  }
-  const input = await args.page.waitForSelector(
-    `#${inputId}`,
-    {visible: true});
-
-  await args.page.evaluate(x => x.value = "", input);
-  const filterValue = await args.page.evaluate(x => x.value, input);
-  expect(filterValue).toBe("");
-
-  await args.page.focus(`#${inputId}`)
-  await args.page.keyboard.type(args.value)
-  await waitForRequests;
+async function setFilter({ page, propertyId, comboOptionText, value }) {
+  await selectFilterOperator(page, propertyId, comboOptionText);
+  if (value === undefined) return;
+  const input = page.locator(`#input_${propertyId}`);
+  await input.evaluate(element => element.value = "");
+  await input.pressSequentially(value);
 }
 
-async function setTwoFieldFilter(args){
-  const fromInputId = "from_input_" + args.propertyId;
-  const toInputId = "to_input_" + args.propertyId;
-  const comboId = "combo_" + args.propertyId;
-  const dropdownId = "dropdown_combo_" + args.propertyId;
-
-  let waitForRequests = catchRequests(args.page);
-  const text1FilterCombo = await args.page.waitForSelector(
-    `#${comboId}`,
-    { visible: true }
-  );
-  await sleep(200);
-
-  const optionDiv = await clickAndWaitForXPath({
-    page: args.page,
-    clickable: text1FilterCombo,
-    xPath: `//div[@id='${dropdownId}']/div[text()='${args.comboOptionText}']`
-  });
-
-  await optionDiv.click();
-
-  const fromInput = await args.page.waitForSelector(
-    `#${fromInputId}`,
-    {visible: true});
-  await args.page.evaluate(x => x.value = "", fromInput);
-  const fromFilterValue = await args.page.evaluate(x => x.value, fromInput);
-  expect(fromFilterValue).toBe("");
-
-  await args.page.focus(`#${fromInputId}`)
-  await args.page.keyboard.type(args.fromValue)
-
-  const toInput = await args.page.waitForSelector(
-    `#${toInputId}`,
-    {visible: true});
-  await args.page.evaluate(x => x.value = "", toInput);
-  const toFilterValue = await args.page.evaluate(x => x.value, toInput);
-  expect(toFilterValue).toBe("");
-
-  await args.page.focus(`#${toInputId}`)
-  await args.page.keyboard.type(args.toValue)
-  await waitForRequests;
+async function setTwoFieldFilter({
+  page,
+  propertyId,
+  comboOptionText,
+  fromValue,
+  toValue,
+}) {
+  await selectFilterOperator(page, propertyId, comboOptionText);
+  const fromInput = page.locator(`#from_input_${propertyId}`);
+  const toInput = page.locator(`#to_input_${propertyId}`);
+  await fromInput.evaluate(element => element.value = "");
+  await fromInput.pressSequentially(fromValue);
+  await toInput.evaluate(element => element.value = "");
+  await toInput.pressSequentially(toValue);
 }
 
-async function setComboFilter(args){
-  const inputId = "input_" + args.propertyId;
-  const comboId = "combo_" +  args.propertyId;
-  const dropdownId = "dropdown_combo_" + args.propertyId;
+async function setComboFilter({ page, propertyId, comboOptionText, value }) {
+  await selectFilterOperator(page, propertyId, comboOptionText);
+  if (value === undefined) return;
 
-  await sleep(200);
-
-  const text1FilterCombo = await args.page.waitForSelector(
-    `#${comboId}`,
-    { visible: true }
-  );
-  const optionDiv = await clickAndWaitForXPath({
-    page: args.page,
-    clickable: text1FilterCombo,
-    xPath: `//div[@id='${dropdownId}']/div[text()='${args.comboOptionText}']`
-  });
-
-  await optionDiv.click();
-
-  if(args.value === undefined){
-    return;
-  }
-
-  await args.page.waitForSelector(
-    `#${inputId}`,
-    {visible: true});
-
-  const tagOptionDiv = await typeAndWaitForSelector({
-    page: args.page,
-    inputId: inputId,
-    selector: `div .cell.ord1.withCursor`,
-    value: args.value
-  });
-
-  await tagOptionDiv.click();
+  const input = page.locator(`#input_${propertyId}`);
+  await input.evaluate(element => element.value = "");
+  await input.pressSequentially(value);
+  await page.locator("div .cell.ord1.withCursor").first().click();
 }
 
-async function openFilters(args){
-  const filterButton = await args.page.waitForSelector(
-    `#${args.dataViewId} [class*='test-filter-button']`,
-    {visible: true});
-
-  await sleep(300);
-
-  await clickAndWaitForSelector({
-    page: args.page,
-    clickable: filterButton,
-    selector:`#input_${args.aPropertyId}`
-  });
+async function openFilters({ page, dataViewId, aPropertyId }) {
+  await page.locator(`#${dataViewId} [class*="test-filter-button"]`).click();
+  await expect(page.locator(`#input_${aPropertyId}`)).toBeVisible();
+  await page.waitForLoadState("networkidle");
 }
 
-
-module.exports = {setDateFilter, setTwoFieldDateFilter, setFilter, setTwoFieldFilter, setComboFilter, openFilters};
+module.exports = {
+  openFilters,
+  setComboFilter,
+  setDateFilter,
+  setFilter,
+  setTwoFieldDateFilter,
+  setTwoFieldFilter,
+};

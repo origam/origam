@@ -1,25 +1,20 @@
-const { sleep, openMenuItem, login, waitForRowCount, waitForRowCountData, beforeEachTest, afterEachTest} = require('./testTools');
+const { test, expect } = require("@playwright/test");
+const { openMenuItem, login, waitForRowCount, waitForRowCountData, beforeEachTest } = require('./testTools');
 const {setDateFilter, setTwoFieldDateFilter, setFilter, setTwoFieldFilter, setComboFilter, openFilters} = require("./filterTestTools");
 const {widgetsMenuItemId, allDataTypesMenuId, topMenuHeader} = require("./modelIds");
 const {restoreAllDataTypesTable, clearScreenConfiguration} = require("./dbTools");
 
-let browser;
 let page;
 
-beforeAll(async() => {
+test.beforeAll(async() => {
   await restoreAllDataTypesTable();
   await clearScreenConfiguration();
 });
 
-beforeEach(async () => {
-  [browser, page] = await beforeEachTest()
+test.beforeEach(async ({ page: testPage }) => {
+  page = testPage;
+  await beforeEachTest(page);
 });
-
-afterEach(async () => {
-  await afterEachTest(browser);
-  browser = undefined;
-});
-
 
 const dataViewId = "dataView_e67865b0-ce91-413c-bed7-1da486399633";
 const text1PropertyId = "cb584956-8f34-4d95-852e-eff4680a2673";
@@ -29,8 +24,8 @@ const date1PropertyId ="c8e93248-81c0-4274-9ff1-1b7688944877";
 const comboPropertyId ="14be2199-ad7f-43c3-83bf-a27c1fa66f7c";
 const tagPropertyId ="3c685902-b55b-45cb-807c-01e8386bb313";
 
-describe("Html client", () => {
-  it("Should perform basic text filter tests", async () => {
+test.describe("Html client", () => {
+  test("Should perform basic text filter tests", async () => {
     await login(page);
     await openMenuItem(
       page,
@@ -41,17 +36,11 @@ describe("Html client", () => {
       ]);
 
     await waitForRowCount(page, dataViewId,30);
-
-    await sleep(300);
-
     await openFilters({
       page: page,
       dataViewId: dataViewId,
       aPropertyId: date1PropertyId
     });
-
-    await sleep(300);
-
     await setFilter({
       page: page,
       propertyId: text1PropertyId ,
@@ -142,7 +131,7 @@ describe("Html client", () => {
 
     await waitForRowCount(page, dataViewId,30);
   });
-  it("Should perform basic number filter tests", async () => {
+  test("Should perform basic number filter tests", async () => {
     await login(page);
     await openMenuItem(
       page,
@@ -153,17 +142,11 @@ describe("Html client", () => {
       ]);
 
     await waitForRowCount(page, dataViewId,30);
-
-    await sleep(300);
-
     await openFilters({
       page: page,
       dataViewId: dataViewId,
       aPropertyId: date1PropertyId
     });
-
-    await sleep(300);
-
     await setFilter({
       page: page,
       propertyId: integer1PropertyId ,
@@ -256,7 +239,7 @@ describe("Html client", () => {
 
     await waitForRowCount(page, dataViewId,30);
   });
-  it("Should perform basic bool filter tests", async () => {
+  test("Should perform basic bool filter tests", async () => {
     await login(page);
     await openMenuItem(
       page,
@@ -267,27 +250,21 @@ describe("Html client", () => {
       ]);
 
     await waitForRowCount(page, dataViewId,30);
-
-    await sleep(300);
-
     await openFilters({
       page: page,
       dataViewId: dataViewId,
       aPropertyId: date1PropertyId
     });
-
-    await sleep(300);
-
-    let boolFilterCheckBox = await page.waitForSelector(`#input_${boolean1PropertyId}`);
-    await boolFilterCheckBox.click();
+    const boolFilterCheckBox = page.locator(`#input_${boolean1PropertyId}`);
+    await boolFilterCheckBox.evaluate(element => element.click());
 
     await waitForRowCount(page, dataViewId,1);
 
-    await boolFilterCheckBox.click();
+    await boolFilterCheckBox.evaluate(element => element.click());
 
     await waitForRowCount(page, dataViewId,29);
   });
-  it("Should perform basic date filter tests1", async () => {
+  test("Should perform basic date filter tests1", async () => {
     await login(page);
     await openMenuItem(
       page,
@@ -298,9 +275,6 @@ describe("Html client", () => {
       ]);
 
     await waitForRowCountData(page, dataViewId,30);
-
-    await sleep(300);
-
     await openFilters({
       page: page,
       dataViewId: dataViewId,
@@ -313,7 +287,6 @@ describe("Html client", () => {
       comboOptionText: ">",
       value: "03.07.2021"
     })
-    await sleep(300);
     await waitForRowCountData(page, dataViewId,19);
 
     await setTwoFieldDateFilter({
@@ -354,7 +327,7 @@ describe("Html client", () => {
 
     await waitForRowCountData(page, dataViewId,30);
   });
-  it("Should perform basic combo input filter tests", async () => {
+  test("Should perform basic combo input filter tests", async () => {
     await login(page);
     await openMenuItem(
       page,
@@ -365,9 +338,6 @@ describe("Html client", () => {
       ]);
 
     await waitForRowCountData(page, dataViewId,30);
-
-    await sleep(300);
-
     await openFilters({
       page: page,
       dataViewId: dataViewId,
@@ -443,7 +413,7 @@ describe("Html client", () => {
 
     await waitForRowCountData(page, dataViewId,6);
   });
-  it("Should perform basic tag input filter tests", async () => {
+  test("Should perform basic tag input filter tests", async () => {
     await login(page);
     await openMenuItem(
       page,
@@ -454,9 +424,6 @@ describe("Html client", () => {
       ]);
 
     await waitForRowCountData(page, dataViewId,30);
-
-    await sleep(300);
-
     await openFilters({
       page: page,
       dataViewId: dataViewId,

@@ -1,58 +1,39 @@
-﻿const {
-  sleep, openMenuItem, login, afterEachTest,
-  beforeEachTest, switchToFormPerspective, inputByPressingKeys, waitForFocus, catchRequests
-} = require('./testTools');
+const { test, expect } = require("@playwright/test");
+const { openMenuItem, login, beforeEachTest, switchToFormPerspective,
+  waitForFocus } = require('./testTools');
 const {
   topMenuHeader
 } = require("./modelIds");
 
-let browser;
 let page;
 
-beforeEach(async () => {
-  [browser, page] = await beforeEachTest();
+test.beforeEach(async ({ page: testPage }) => {
+  page = testPage;
+  await beforeEachTest(page);
 });
 
-afterEach(async () => {
-  await afterEachTest(browser);
-  browser = undefined;
-});
+
 
 async function clickElement(elementText, elementType) {
-  const tag = elementType ? elementType : "div";
-  const element = await page.waitForXPath(
-    `//${tag}[contains(text(),'${elementText}')]`,
-    {visible: true}
-  );
-  await sleep(200);
-  await element.click();
+  await page.getByText(elementText, {
+    exact: false,
+  }).and(page.locator(elementType || "div")).first().click();
 }
 
 async function waitForErrorMessage(messageBegging) {
-  const messageElement = await page.waitForXPath(
-    `//div[contains(@class, 'dialogMessage')]`,
-    {visible: true}
-  );
-  let errorMessage=''
-  for (let i = 0; i < 5; i++) {
-    errorMessage = await page.evaluate(name => name.innerText, messageElement);
-    if (!errorMessage || !errorMessage.includes(messageBegging)) {
-      await sleep(500);
-    }
-    return;
-  }
-  if (!errorMessage || !errorMessage.includes(messageBegging)) {
-    throw new Error(`Error message does not contain: \"${messageBegging}\" The actual message is: \"${errorMessage}\".`);
-  }
+  const message = page.locator("div[class*='dialogMessage']");
+  await expect.poll(async () =>
+    (await message.innerText()).toLocaleLowerCase()
+      .includes(messageBegging.toLocaleLowerCase())
+  ).toBe(true);
 }
 
 const stateTransitionMenuId = "menu_f69ef86f-7fad-44c0-9ecb-78164a656a38"
 const statePropertyId = "908c313c-fc0e-44d6-8c1a-c4c1659f08fd"
 
-describe("Html client", () => {
-  it("Should show descriptive message after invalid state change", async () => {
+test.describe("Html client", () => {
+  test("Should show an error message after invalid state change", async () => {
     await login(page);
-    const waitForRequests = catchRequests(page);
     await openMenuItem(
       page,
       [
@@ -64,32 +45,29 @@ describe("Html client", () => {
       page: page,
       aPropertyId: statePropertyId
     });
+    const stateEditor = page.locator(`#editor_${statePropertyId}`);
+    await stateEditor.fill("");
 
-    await sleep(300);
-    const stateEditor = await page.waitForSelector(
-      `#editor_${statePropertyId}`,
-      {visible: true});
-    await page.evaluate(x => {
-      x.focus()
-      x.value = ""
-    }, stateEditor);
-    await sleep(500);
-
-    await waitForRequests;
-    await inputByPressingKeys({page: page, value: `end`})
-
-    await sleep(200);
+    await stateEditor.pressSequentially("end");
+    await expect(stateEditor).toHaveValue("end");
 
     await waitForFocus({
       elementId: `editor_${statePropertyId}`,
       page: page
     })
-    await sleep(200);
     await page.keyboard.press("Tab");
 
-    await page.waitForSelector('#saveButton .isRed');
-    await page.$eval("#saveButton", elem => elem.click())
+    await expect(page.locator("#saveButton .isRed")).toBeVisible();
+    const saveResponsePromise = page.waitForResponse(response =>
+      response.url().includes("/internalApi/UIService/SaveData/")
+    );
+    await page.locator("#saveButton").click();
+    const saveResponse = await saveResponsePromise;
+    const errorResponse = await saveResponse.json();
 
-    await waitForErrorMessage("State of 'State Transition' cannot enter the state 'Error'. Current state: 'end'");
+    const expectedMessage = Object.hasOwn(errorResponse, "detail")
+      ? "State of 'State Transition' cannot enter the state 'Error'. Current state: 'end'"
+      : "An error has occured. There may be some details in the log file.";
+    await waitForErrorMessage(expectedMessage);
   });
 });

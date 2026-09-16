@@ -1,29 +1,31 @@
-# Running the e2e tests on a local machine
-This gives you the most feedback because a chromium window will open and as you will see what is going on during the run.
-1. Edit `origam\test\tests_e2e\additionalConfig.js` you probably want to change `backEndUrl` and the sql server connection settings
-2. Edit `origam\test\tests_e2e\dbTools.js` and change path to `origam-utils.dll` to where you have it
-   `const script = "dotnet ../origam-utils.dll test-db -a 1 -d 0 -c  \"EXEC " + procedureName + "\"";`
-   for example
-   `const script = "dotnet C:\\Repos\\origam\\backend\\origam-utils\\bin\\Debug\\net8.0\\origam-utils.dll test-db -a 1 -d 0 -c  \"EXEC " + procedureName + "\"";`
-3. Edit `origam\test\tests_e2e\package.json` and remove `xvfb-run --auto-servernum` from the line
-   `"test:e2e": "xvfb-run --auto-servernum jest --runInBand --config jest.config.js"`
-4. If you only want to run a single test case (let's say it is "called test case 1"), edit `package.json` and add 
-   `--t \"called test case 1\"` to the "test:e2e" command from the previous point
-5. Open cmd in `origam\test\tests_e2e` and run `yarn test:2e2`
+# Running the end-to-end tests locally
 
+The browser tests use Playwright and reset their test data directly through Node database drivers.
 
-# Running the e2e tests in docker on a local machine
-This is closer to the github action and can help you debug problems that cannot be repeated with the first approach. 
-An advantage over just running the github action is that you can inspect files in the docker container after the tests
-have finished. 
-1. Copy the folder `origam/model-tests` to `origam/test` and rename it to `model` 
-2. Create folder `origam/tests/server_bin`
-3. Build server and copy contents of the bin folder `origam\backend\Origam.Server\bin\Debug\net8.0` to `origam/tests/server_bin`
-4. Build frontend application and copy contents of the folder `origam\frontend-html\dist` to `origam\test\server_bin\clients\origam`
-5. Open cmd in `origam/tests` and run `docker-compose --env-file envFileMsSql.env -f "docker-compose-mssql.yml" --profile test up`
-    this will build the images, run the containers and the tests in `test_server` container
-6. After the tests are finished you can get screenshots if any were taken with this command `docker cp test_server_1:/home/origam/server_bin/screenshots c://SomeFolder`
-7. To rebuild the images first run `docker-compose --env-file envFileMsSql.env -f "docker-compose-mssql.yml" --profile test down` 
-   then open the docker GUI and delete the images `test_server` and `test_databasesql`.
-   After that you can run `docker-compose --env-file envFileMsSql.env -f "docker-compose-mssql.yml" --profile test up`.
-    
+1. Start Origam with the automatic-test model deployed.
+2. Set `OrigamSettings__DataConnectionString` to the application's SQL Server or PostgreSQL connection string.
+3. Set `DatabaseType` to `mssql` or `postgresql`.
+4. Optionally set `ORIGAM_E2E_URL`, `ORIGAM_E2E_USERNAME`, and `ORIGAM_E2E_PASSWORD`.
+5. In `test/tests_e2e`, run `yarn install` and then `yarn test:e2e`.
+
+Useful commands:
+
+- `yarn test:debug` opens Playwright Inspector.
+- `yarn test:ui` opens Playwright UI mode.
+- `yarn playwright test 01_basicCrud.test.js` runs one file.
+- `yarn playwright test -g "Should perform basic CRUD"` runs one named test.
+- `yarn show-report` opens the HTML report from the latest run.
+
+Failures retain a screenshot, video, and trace under `test-results`. The HTML report is written to
+`playwright-report`, and CI also publishes both directories as artifacts.
+
+# Running the end-to-end tests in Docker
+
+1. Copy `model-tests` to `test/model`.
+2. Create `test/server_bin`.
+3. Build the server and copy its output to `test/server_bin`.
+4. Build the frontend and copy `frontend-html/dist` to `test/server_bin/clients/origam`.
+5. From `test`, run the relevant compose file, for example:
+   `docker compose --env-file envFileMsSql.env -f docker-compose-mssql.yml --profile test up`.
+
+The container copies the TRX file, Playwright HTML report, and failure artifacts to `test/output`.

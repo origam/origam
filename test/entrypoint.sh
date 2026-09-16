@@ -97,27 +97,35 @@ cd /home/origam/server_bin
 print_title "Start server and wait for database to be available"
 start_server
 
-echo "Waiting for Origam.Server.dll to initialize DB..."
-dotnet origam-utils.dll get-root-version --attempts 5 --delay 5000
-return_code=$?
-if [[ "$return_code" != 0 ]]; then
+echo "Waiting for Origam.Server.dll to accept requests..."
+server_ready=false
+for attempt in {1..30}; do
+  if curl --fail --silent --insecure https://localhost/ > /dev/null; then
+    server_ready=true
+    break
+  fi
+  sleep 1
+done
+if [[ "$server_ready" != true ]]; then
   print_error "DB initialization failed"
   echo "Origam.Server.dll output:"
   print_file_contents origam-output.txt
   exit 1
 else
-  echo " DB initialized"
+  echo " Server initialized"
 fi
 
 print_title "Run frontend integration tests"
 cd tests_e2e
-yarn install --ignore-engines > /dev/null 2>&1
+yarn install > /dev/null 2>&1
 yarn test:e2e
 if [[ $? -eq 0 ]]; then
   sudo cp frontend-integration-test-results.trx /home/origam/output/
+  sudo cp -r playwright-report test-results /home/origam/output/ 2>/dev/null || true
   echo "Success."
 else
   sudo cp frontend-integration-test-results.trx /home/origam/output/
+  sudo cp -r playwright-report test-results /home/origam/output/ 2>/dev/null || true
   print_error "Frontend integration tests failed"
   exit 1
 fi

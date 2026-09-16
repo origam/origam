@@ -1,26 +1,23 @@
-const { sleep, openMenuItem, login, waitForRowCount, waitForRowCountData, clickAndWaitForSelector, clickAndWaitForXPath,
-  catchRequests, waitForRowSelected, beforeEachTest, afterEachTest
+const { test, expect } = require("@playwright/test");
+const { openMenuItem, login, waitForRowCountData,
+  waitForRowSelected, getTableData, beforeEachTest
 } = require('./testTools');
-const {installMouseHelper} = require('./installMouseHelper_');
 const {widgetsMenuItemId, allDataTypesMenuId, allDataTypesLazyMenuItemsId, topMenuHeader} = require("./modelIds");
 const {restoreAllDataTypesTable, clearScreenConfiguration} = require("./dbTools");
 
-let browser;
 let page;
 
-beforeAll(async() => {
+test.beforeAll(async() => {
   await restoreAllDataTypesTable();
   await clearScreenConfiguration();
 });
 
-beforeEach(async () => {
-  [browser, page] = await beforeEachTest()
+test.beforeEach(async ({ page: testPage }) => {
+  page = testPage;
+  await beforeEachTest(page);
 });
 
-afterEach(async () => {
-  await afterEachTest(browser);
-  browser = undefined;
-});
+
 
 
 const dataViewId = "dataView_e67865b0-ce91-413c-bed7-1da486399633";
@@ -35,81 +32,66 @@ const tagPropertyId ="3c685902-b55b-45cb-807c-01e8386bb313";
 // item closes the dropdown, so a retry has to open the menu again instead of clicking
 // the detached item.
 async function openColumnConfiguration() {
-  const openConfigMenuItem = async () => {
-    const threeDotMenuButton = await page.waitForSelector(
-      `#${dataViewId} .threeDotMenu`,
-      {visible: true}
-    );
-    return clickAndWaitForSelector({
-      page: page,
-      clickable: threeDotMenuButton,
-      selector: "#columnConfigItem"
-    });
-  };
-
-  const configMenuItem = await openConfigMenuItem();
-  return clickAndWaitForSelector({
-    page: page,
-    clickable: configMenuItem,
-    selector: "#columnConfigOk",
-    reopen: openConfigMenuItem
-  });
+  await page.locator(`#${dataViewId} .threeDotMenu`).click();
+  await page.locator("#columnConfigItem").click();
+  const okButton = page.locator("#columnConfigOk");
+  await expect(okButton).toBeVisible();
+  return okButton;
 }
 
-async function setGrouping() {
+async function setGroupingCheckbox(propertyId, expectedIndex) {
+  const checkbox = page.locator(`#group_by_${propertyId}`);
+  const index = page.locator(`#group_index_${propertyId}`);
+
+  await expect(async () => {
+    if ((await index.innerText()) !== expectedIndex) {
+      await checkbox.click();
+    }
+    await expect(index).toHaveText(expectedIndex, { timeout: 2_000 });
+  }).toPass({ timeout: 20_000 });
+}
+
+async function setGrouping(expectedRowCount) {
   const columnConfigOk = await openColumnConfiguration();
 
-  const groupByText1CheckBox = await page.waitForSelector(
-    `#group_by_${text1PropertyId}`,
-    {visible: true}
-  )
-  await clickAndWaitForXPath({
-    page: page,
-    clickable: groupByText1CheckBox,
-    xPath: `//*[@id='group_index_${text1PropertyId}']/div[text()='1']`
-  });
-
-  const groupByInt1CheckBox = await page.waitForSelector(
-    `#group_by_${integer1PropertyId}`,
-    {visible: true}
-  );
-  await clickAndWaitForXPath({
-    page: page,
-    clickable: groupByInt1CheckBox,
-    xPath: `//*[@id='group_index_${integer1PropertyId}']/div[text()='2']`
-  });
-
-  columnConfigOk.click();
+  await setGroupingCheckbox(text1PropertyId, "1");
+  await setGroupingCheckbox(integer1PropertyId, "2");
+  await page.evaluate(() => { window.tableDebugMonitor = undefined; });
+  await columnConfigOk.click();
+  await waitForRowCountData(page, dataViewId, expectedRowCount);
 }
 
 async function clearGrouping() {
   const columnConfigOk = await openColumnConfiguration();
 
-  const groupByText1CheckBox = await page.waitForSelector(
-    `#group_by_${text1PropertyId}`,
-    {visible: true}
-  )
-  await clickAndWaitForXPath({
-    page: page,
-    clickable: groupByText1CheckBox,
-    xPath: `//*[@id='group_index_${text1PropertyId}']/div[not(text())]`
-  });
-
-  const groupByInt1CheckBox = await page.waitForSelector(
-    `#group_by_${integer1PropertyId}`,
-    {visible: true}
-  );
-  await clickAndWaitForXPath({
-    page: page,
-    clickable: groupByInt1CheckBox,
-    xPath: `//*[@id='group_index_${integer1PropertyId}']/div[not(text())]`
-  });
-
-  columnConfigOk.click();
+  await setGroupingCheckbox(text1PropertyId, "");
+  await setGroupingCheckbox(integer1PropertyId, "");
+  await page.evaluate(() => { window.tableDebugMonitor = undefined; });
+  await columnConfigOk.click();
+  return getTableData(page, dataViewId);
 }
 
-describe("Html client", () => {
-  it("Should perform grouping tests", async () => {
+async function clickTableAndWaitForRender(tableArea, position) {
+  await page.evaluate(() => { window.tableDebugMonitor = undefined; });
+  await tableArea.click({ position });
+  await getTableData(page, dataViewId);
+}
+
+async function clickLazyGroupAndWaitForResponse(tableArea, position, endpoint) {
+  await page.evaluate(() => { window.tableDebugMonitor = undefined; });
+  const responsePromise = page.waitForResponse(response =>
+    response.request().method() === "POST" && response.url().endsWith(endpoint)
+  );
+  const [response] = await Promise.all([
+    responsePromise,
+    tableArea.click({ position }),
+  ]);
+  expect(response.ok()).toBe(true);
+  await getTableData(page, dataViewId);
+}
+
+test.describe("Html client", () => {
+  test("Should perform grouping tests", async () => {
     await login(page);
     await openMenuItem(
       page,
@@ -119,50 +101,32 @@ describe("Html client", () => {
         allDataTypesMenuId
       ]);
 
-    let waitForRequests = catchRequests(page);
-    await waitForRowCount(page, dataViewId, 30);
+    await waitForRowCountData(page, dataViewId, 30);
 
-    await setGrouping();
-
-    await waitForRequests;
-    await sleep(2000);
+    await setGrouping(30);
 
     const rowHeight = 30;
-    const tableArea = await page.$(`#${dataViewId}  [class*='_cellAreaContainer']`);
-    const box = await tableArea.boundingBox();
+    const tableArea = page.locator(`#${dataViewId} [class*='_cellAreaContainer']`);
 
-    // open first group on the first level
-    await page.mouse.click(
-      box.x + rowHeight / 2,
-      box.y + rowHeight / 2
-    );
-
-    await sleep(1000);
-
-    // open second group on the second level
-    await page.mouse.click(
-      box.x + rowHeight,
-      box.y + rowHeight * 2
-    );
-    await sleep(1000);
-
-    // select first row in the open group
-    await page.mouse.click(
-      box.x + rowHeight * 2,
-      box.y + rowHeight * 3
-    );
+    await clickTableAndWaitForRender(tableArea, {
+      x: rowHeight / 2,
+      y: rowHeight / 2,
+    });
+    await clickTableAndWaitForRender(tableArea, {
+      x: rowHeight,
+      y: rowHeight * 2,
+    });
+    await tableArea.click({
+      position: { x: rowHeight * 2, y: rowHeight * 3 },
+    });
 
     const rowData = await waitForRowSelected(page, dataViewId, 1);
     expect(rowData && rowData.rowCount).toBe( '2 (30)');
 
-    waitForRequests = catchRequests(page);
-    await clearGrouping()
-
-    await waitForRowCount(page, dataViewId, 30);
-    await waitForRequests;
-    await sleep(1000);
+    const ungroupedTableData = await clearGrouping();
+    expect(ungroupedTableData.data).toHaveLength(30);
   })
-  it("Should perform grouping tests lazy loaded", async () => {
+  test("Should perform grouping tests lazy loaded", async () => {
     await login(page);
     await openMenuItem(
       page,
@@ -172,38 +136,24 @@ describe("Html client", () => {
         allDataTypesLazyMenuItemsId
       ]);
 
-    let waitForRequests = catchRequests(page);
     await waitForRowCountData(page, dataViewId, 2099);
 
-    await setGrouping();
+    await setGrouping(2099);
 
-    await waitForRequests;
-    await sleep(1000);
+    const rowHeight = 25;
+    const tableArea = page.locator(`#${dataViewId} [class*='_cellAreaContainer']`);
 
-    const rowHeight = 30;
-    const tableArea = await page.$(`#${dataViewId}  [class*='_cellAreaContainer']`);
-    const box = await tableArea.boundingBox();
-
-    // open first group on the first level
-    await page.mouse.click(
-      box.x + rowHeight / 2,
-      box.y + rowHeight / 2
-    );
-
-    await sleep(1000);
-
-    // open second group on the second level
-    await page.mouse.click(
-      box.x + rowHeight,
-      box.y + rowHeight * 2
-    );
-    await sleep(1000);
-
-    // select first row in the open group
-    await page.mouse.click(
-      box.x + rowHeight * 2,
-      box.y + rowHeight * 3
-    );
+    await clickLazyGroupAndWaitForResponse(tableArea, {
+      x: rowHeight / 2,
+      y: rowHeight / 2,
+    }, "/internalApi/UIService/GetGroups");
+    await clickLazyGroupAndWaitForResponse(tableArea, {
+      x: rowHeight + (rowHeight / 5),
+      y: rowHeight * 2.5,
+    }, "/internalApi/UIService/GetRows");
+    await tableArea.click({
+      position: { x: rowHeight * 2, y: rowHeight * 3.5 },
+    });
 
     const rowData = await waitForRowSelected(page, dataViewId, 1);
     expect(rowData && rowData.rowCount).toBe( '2 (2099)');
