@@ -167,6 +167,7 @@ const TabLabel = observer(({ tabPage, onClick }: { tabPage: TabPage; onClick: ()
 });
 
 export class TabPage extends Component {
+  @observable accessor hideChildren: boolean = false;
   @observable private accessor _isActive: boolean = false;
   private getChildren: (component: Component) => Component[];
 

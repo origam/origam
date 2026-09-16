@@ -31,7 +31,7 @@ export class Component {
   data: IComponentData;
   @observable accessor properties: EditorProperty[];
   @observable.ref private accessor _designerRepresentation: ReactElement | null = null;
-  @observable accessor hideChildren = false;
+  accessor hideChildren = false;
 
   get designerRepresentation(): ReactElement | null {
     if (this.parent && !this.parent.isActive) {

@@ -160,9 +160,6 @@ export async function controlToComponent(
       });
 
     case ComponentType.GroupBox:
-    case ComponentType.Panel:
-    case ComponentType.GridLayoutPanel:
-    case ComponentType.CollapsibleContainer:
       return new GroupBox({
         id: control.id,
         parent: parent,
@@ -265,10 +262,6 @@ export async function controlToComponent(
       });
 
     case ComponentType.AsTree:
-    case ComponentType.AsTree2:
-    case ComponentType.AsListView:
-    case ComponentType.AsReportPanel:
-    case ComponentType.ExecuteWorkflowButton:
     case ComponentType.AsTextBox:
     case ComponentType.TextArea:
       return new Component({

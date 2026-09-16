@@ -42,20 +42,7 @@ public class DesignerEditorService(
 {
     private readonly Guid tabControlControlItemId = new("2e39362b-80a6-4430-a9bd-b3013583a2fe");
     private readonly Guid tabPageControlItemId = new("6d13ec20-3b17-456e-ae43-3021cb067a70");
-    private readonly List<string> implementedScreenWidgets =
-    [
-        "AsListView",
-        "AsReportPanel",
-        "AsTree",
-        "AsTree2",
-        "CollapsibleContainer",
-        "ExecuteWorkflowButton",
-        "GridLayoutPanel",
-        "Label",
-        "Panel",
-        "SplitPanel",
-        "TabControl",
-    ];
+    private readonly List<string> implementedScreenWidgets = ["TabControl", "SplitPanel", "AsTree"];
 
     public bool Update(AbstractControlSet screenSection, SectionEditorChangesModel input)
     {

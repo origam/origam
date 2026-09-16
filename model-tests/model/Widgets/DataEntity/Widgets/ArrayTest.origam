@@ -82,33 +82,6 @@
       asi:abstract="false"
       adec:allowNulls="true"
       adec:autoIncrement="false"
-      adec:dataType="Date"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="3f2a2a6a-69e7-4a5a-9b98-d322e50e266f"
-      adec:isPrimaryKey="false"
-      fmi:mappedColumnName="TestDate"
-      asi:name="TestDate"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="true"
-      adec:autoIncrement="false"
-      adec:dataLength="52"
-      adec:dataType="String"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="41b16c5d-d0d3-436c-92bc-d0e8c1bd75bf"
-      adec:isPrimaryKey="false"
-      fmi:mappedColumnName="Text2"
-      asi:name="Text2"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="true"
-      adec:autoIncrement="false"
       adec:dataLength="50"
       adec:dataType="String"
       adec:excludeFromAllFields="false"
@@ -118,19 +91,6 @@
       adec:label="Text"
       fmi:mappedColumnName="Text"
       asi:name="Text"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="true"
-      adec:autoIncrement="false"
-      adec:dataType="Boolean"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="5b4a932c-28c4-417e-98a5-239bb3dc7b63"
-      adec:isPrimaryKey="false"
-      fmi:mappedColumnName="TestBool"
-      asi:name="TestBool"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute" />
     <sia:ancestor
