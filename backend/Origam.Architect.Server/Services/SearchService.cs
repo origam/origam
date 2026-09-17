@@ -39,7 +39,9 @@ public class SearchService(
     {
         List<Guid> referencePackages = GetReferencePackages();
         var results = persistenceService.SchemaProvider.FullTextSearch<ISchemaItem>(query);
-        return results.Where(x => x != null).Select(result => GetResult(result, referencePackages));
+        return results
+            .Where(x => x != null)
+            .Select(result => BuildResult(result, referencePackages));
     }
 
     public List<TreeNode> SearchSchemaByName(string query)
@@ -86,7 +88,7 @@ public class SearchService(
         }
         return schemaItems
             .Where(x => x != null)
-            .Select(result => GetResult(result, referencePackages));
+            .Select(result => BuildResult(result, referencePackages));
     }
 
     public IEnumerable<SearchResult> FindDependencies(Guid schemaItemId)
@@ -95,7 +97,7 @@ public class SearchService(
         List<Guid> referencePackages = GetReferencePackages();
         return item.GetDependencies(false)
             .Where(x => x != null)
-            .Select(result => GetResult(result, referencePackages));
+            .Select(result => BuildResult(result, referencePackages));
     }
 
     public List<SearchResult> BuildResults(IEnumerable<ISchemaItem> items)
@@ -103,11 +105,11 @@ public class SearchService(
         List<Guid> referencePackages = GetReferencePackages();
         return items
             .Where(item => item != null)
-            .Select(item => GetResult(item, referencePackages))
+            .Select(item => BuildResult(item, referencePackages))
             .ToList();
     }
 
-    private List<Guid> GetReferencePackages()
+    public List<Guid> GetReferencePackages()
     {
         var referencePackages = schemaService
             .ActiveExtension.IncludedPackages.Select(x => x.Id)
@@ -116,21 +118,22 @@ public class SearchService(
         return referencePackages;
     }
 
-    private SearchResult GetResult(ISchemaItem item, List<Guid> referencePackages)
+    public SearchResult BuildResult(ISchemaItem item, List<Guid> referencePackages)
     {
         try
         {
             ISchemaItem root = SchemaItemTreePath.GetRoot(item);
+            List<SchemaItemGroup> groups = GetGroupChain(root);
             return new SearchResult
             {
                 SchemaId = item.Id,
                 Type = item.ModelDescription() ?? item.ItemType,
                 RootType = root.ModelDescription() ?? root.ItemType,
                 FoundIn = item.Path,
-                Folder = root.Group?.Path ?? "",
+                Folder = groups.Count == 0 ? "" : groups[0].Path,
                 Package = item.PackageName,
                 PackageReference = referencePackages.Contains(item.SchemaExtensionId),
-                ParentNodeIds = SchemaItemTreePath.GetParentNodeIds(item, root),
+                ParentNodeIds = SchemaItemTreePath.GetParentNodeIds(item, root, groups),
                 IsOrphaned = false,
             };
         }
@@ -150,6 +153,30 @@ public class SearchService(
                 FoundIn = item.Name ?? item.Id.ToString(),
                 IsOrphaned = true,
             };
+        }
+    }
+
+    // Group and ParentGroup throw when a group id no longer resolves. That is a
+    // broken folder, not a broken item, so the chain is dropped and the item is
+    // still reported - just without a folder.
+    private List<SchemaItemGroup> GetGroupChain(ISchemaItem root)
+    {
+        var groups = new List<SchemaItemGroup>();
+        try
+        {
+            for (SchemaItemGroup group = root.Group; group != null; group = group.ParentGroup)
+            {
+                groups.Add(group);
+            }
+            return groups;
+        }
+        catch (Exception ex)
+        {
+            if (logger.IsEnabled(LogLevel.Warning))
+            {
+                logger.LogWarning(ex, $"Could not read the group of schema item {root.Id}");
+            }
+            return [];
         }
     }
 }

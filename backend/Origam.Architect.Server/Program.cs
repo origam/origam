@@ -64,6 +64,7 @@ public class Program
         builder.Services.AddSingleton<TabResponseFactory>();
         builder.Services.AddTransient<XsltService>();
         builder.Services.AddSingleton<SearchService>();
+        builder.Services.AddSingleton<ModelCheckService>();
         builder.Services.AddSingleton<PanelControlFactory>();
         builder.Services.AddSingleton<MoveNodeResolver>();
         builder.Services.AddSingleton<MoveRuleEvaluator>();

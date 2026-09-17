@@ -273,4 +273,13 @@
     <data name="Wizard_LookupAlreadyExists" xml:space="preserve">
         <value>A Lookup named "{0}" already exists.</value>
     </data>
+    <data name="ModelCheck_AlreadyRunning" xml:space="preserve">
+        <value>The model validation is already running.</value>
+    </data>
+    <data name="ModelCheck_Failed" xml:space="preserve">
+        <value>The model validation could not be completed: {0}</value>
+    </data>
+    <data name="ModelCheck_NoActivePackage" xml:space="preserve">
+        <value>Load a package before running the model validation.</value>
+    </data>
 </root>
