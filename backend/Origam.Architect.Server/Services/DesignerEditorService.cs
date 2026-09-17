@@ -277,7 +277,12 @@ public class DesignerEditorService(
                 : screenSection.GetChildByIdRecursive(itemModelData.ParentControlSetItemId);
         if (parent == null)
         {
-            throw new Exception($"Parent object {itemModelData.ParentControlSetItemId} not found");
+            throw new UserOrigamException(
+                string.Format(
+                    Strings.DesignerEditor_ParentControlNotFound,
+                    itemModelData.ParentControlSetItemId
+                )
+            );
         }
 
         ControlItem controlItem = FindSectionWidget(itemModelData.ComponentType);
@@ -439,23 +444,17 @@ public class DesignerEditorService(
 
     private static IEnumerable<FormControlSet> ScreensUsing(PanelControlSet screenSection)
     {
-        try
-        {
-            return screenSection
-                .GetUsage()
-                .SelectMany(item =>
-                    item is ControlItem controlItem ? controlItem.GetUsage() : [item]
-                )
-                .Select(item => item.RootItem)
-                .OfType<FormControlSet>()
-                .DistinctBy(screen => screen.Id)
-                .ToList();
-        }
-        catch (Exception exception)
-            when (exception.Message == ResourceUtils.GetString("ErrorBuildReferenceIndex"))
+        if (!ReferenceIndexManager.Initialized)
         {
             return [];
         }
+        return screenSection
+            .GetUsage()
+            .SelectMany(item => item is ControlItem controlItem ? controlItem.GetUsage() : [item])
+            .Select(item => item.RootItem)
+            .OfType<FormControlSet>()
+            .DistinctBy(screen => screen.Id)
+            .ToList();
     }
 
     private ControlItem FindSectionWidget(string controlType)
@@ -668,7 +667,12 @@ public class DesignerEditorService(
         ISchemaItem parent = screen.GetChildByIdRecursive(itemModelData.ParentControlSetItemId);
         if (parent == null)
         {
-            throw new Exception($"Parent object {itemModelData.ParentControlSetItemId} not found");
+            throw new UserOrigamException(
+                string.Format(
+                    Strings.DesignerEditor_ParentControlNotFound,
+                    itemModelData.ParentControlSetItemId
+                )
+            );
         }
 
         ControlItem controlItem = schemaService

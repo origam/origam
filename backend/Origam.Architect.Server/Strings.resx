@@ -237,6 +237,9 @@
   <data name="SectionEditor_NoDataSource" xml:space="preserve">
     <value>The screen section has no entity, so a widget cannot be bound to a field. Set the section's entity first.</value>
   </data>
+  <data name="DesignerEditor_ParentControlNotFound" xml:space="preserve">
+    <value>Parent control {0} was not found.</value>
+  </data>
   <data name="SectionEditor_FieldMissingInDataStructure" xml:space="preserve">
     <value>Field "{0}" is not part of data structure "{1}" used by the screens {2}, so those screens cannot open. Add it with POST /Tab/CreateNode: nodeId = {3} (the data structure entity), newTypeName 'Field', changes Name = "{0}" and Field = {4}, persist true; or clear ExcludeFromAllFields on the entity field.</value>
   </data>

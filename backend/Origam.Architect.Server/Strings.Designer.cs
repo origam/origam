@@ -817,6 +817,15 @@ namespace Origam.Architect.Server {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Parent control {0} was not found..
+        /// </summary>
+        internal static string DesignerEditor_ParentControlNotFound {
+            get {
+                return ResourceManager.GetString("DesignerEditor_ParentControlNotFound", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Field &quot;{0}&quot; is not part of data structure &quot;{1}&quot; used by the screens {2}, so those screens cannot open. Add it with POST /Tab/CreateNode: nodeId = {3} (the data structure entity), newTypeName &apos;Field&apos;, changes Name = &quot;{0}&quot; and Field = {4}, persist true; or clear ExcludeFromAllFields on the entity field..
         /// </summary>
         internal static string SectionEditor_FieldMissingInDataStructure {
