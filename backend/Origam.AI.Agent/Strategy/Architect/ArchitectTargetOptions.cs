@@ -38,6 +38,7 @@ public static class ArchitectTargetOptions
                 "Tab",
                 "Model",
                 "PropertyEditor",
+                "SectionEditor",
                 "CommunityWebSearch",
                 "ItemTypeCatalog",
             ],

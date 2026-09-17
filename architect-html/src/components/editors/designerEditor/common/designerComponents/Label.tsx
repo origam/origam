@@ -22,6 +22,10 @@ import S from '@editors/designerEditor/common/designerComponents/Components.modu
 import { Component } from '@editors/designerEditor/common/designerComponents/Component.tsx';
 
 export class Label extends Component {
+  get hasBorder(): boolean {
+    return false;
+  }
+
   getDesignerRepresentation(): ReactElement | null {
     return (
       <div className={S.designSurfaceEditorContainer}>

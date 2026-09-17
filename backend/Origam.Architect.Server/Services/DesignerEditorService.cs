@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.Data;
+using System.Xml;
 using Origam.Architect.Server.ControlAdapter;
 using Origam.Architect.Server.Controls;
 using Origam.Architect.Server.Models;
@@ -43,19 +44,23 @@ public class DesignerEditorService(
     private readonly Guid tabControlControlItemId = new("2e39362b-80a6-4430-a9bd-b3013583a2fe");
     private readonly Guid tabPageControlItemId = new("6d13ec20-3b17-456e-ae43-3021cb067a70");
     private readonly List<string> implementedScreenWidgets = ["TabControl", "SplitPanel", "AsTree"];
+    private const int PanelGrowMargin = 20;
 
     public bool Update(AbstractControlSet screenSection, SectionEditorChangesModel input)
     {
         bool editorIsDirty = false;
-        if (screenSection.Name != input.Name)
+        if (input.Name != null && screenSection.Name != input.Name)
         {
             screenSection.Name = input.Name;
             editorIsDirty = true;
         }
 
-        if (screenSection.DataSourceId != input.SelectedDataSourceId)
+        if (
+            input.SelectedDataSourceId is { } selectedDataSourceId
+            && screenSection.DataSourceId != selectedDataSourceId
+        )
         {
-            screenSection.DataSourceId = input.SelectedDataSourceId;
+            screenSection.DataSourceId = selectedDataSourceId;
             editorIsDirty = true;
         }
 
@@ -71,22 +76,18 @@ public class DesignerEditorService(
             }
 
             if (
-                itemToUpdate.Id != screenSection.MainItem.Id
-                && itemToUpdate.ParentItemId != (changes.ParentSchemaItemId ?? Guid.Empty)
+                changes.ParentSchemaItemId is { } newParentId
+                && itemToUpdate.Id != screenSection.MainItem.Id
+                && itemToUpdate.ParentItemId != newParentId
             )
             {
+                ISchemaItem newParent = screenSection.GetChildByIdRecursive(newParentId);
                 itemToUpdate.ParentItem.ChildItems.Remove(itemToUpdate);
-                if (changes.ParentSchemaItemId != null)
-                {
-                    ISchemaItem newParent = screenSection.GetChildByIdRecursive(
-                        changes.ParentSchemaItemId.Value
-                    );
-                    newParent.ChildItems.Add(itemToUpdate);
-                }
+                newParent.ChildItems.Add(itemToUpdate);
             }
 
             ControlAdapter.ControlAdapter controlAdapter = adapterFactory.Create(itemToUpdate);
-            editorIsDirty = controlAdapter.UpdateProperties(changes);
+            editorIsDirty |= controlAdapter.UpdateProperties(changes);
         }
 
         return editorIsDirty;
@@ -108,6 +109,7 @@ public class DesignerEditorService(
             List<EditorField> fields = GetFields(screenSection);
             DropDownValue[] dataSourceDropDownValues = fields
                 .Select(field => new DropDownValue(field.Name, field.Name))
+                .Prepend(new DropDownValue(string.Empty, string.Empty))
                 .ToArray();
             ApiControl apiControl = LoadContent(screenSection.MainItem, dataSourceDropDownValues);
             return new SectionEditorData
@@ -118,6 +120,7 @@ public class DesignerEditorService(
                 RootControl = apiControl,
                 SelectedDataSourceId = screenSection.DataEntity?.Id ?? Guid.Empty,
                 Fields = GetFields(screenSection),
+                Warnings = FindDataStructureWarnings(screenSection),
             };
         }
 
@@ -229,6 +232,7 @@ public class DesignerEditorService(
         {
             Type = controlSetItem.ControlItem.ControlType,
             Id = controlSetItem.Id,
+            BoundField = BoundFieldName(controlSetItem),
             Properties = controlAdapter.GetEditorProperties(dataSourceDropDownValues),
         };
 
@@ -251,7 +255,7 @@ public class DesignerEditorService(
                         ?.Caption
                     ?? bindingInfo?.Value;
             }
-            apiControl.Name = caption ?? controlSetItem.Name;
+            apiControl.Name = caption;
         }
         else
         {
@@ -266,47 +270,65 @@ public class DesignerEditorService(
         PanelControlSet screenSection
     )
     {
-        ISchemaItem parent = screenSection.GetChildByIdRecursive(
-            itemModelData.ParentControlSetItemId
-        );
+        ISchemaItem parent =
+            itemModelData.ParentControlSetItemId == Guid.Empty
+            || itemModelData.ParentControlSetItemId == screenSection.Id
+                ? screenSection.MainItem
+                : screenSection.GetChildByIdRecursive(itemModelData.ParentControlSetItemId);
         if (parent == null)
         {
-            throw new Exception($"Parent object {itemModelData.ParentControlSetItemId} not found");
+            throw new UserOrigamException(
+                string.Format(
+                    Strings.DesignerEditor_ParentControlNotFound,
+                    itemModelData.ParentControlSetItemId
+                )
+            );
         }
 
-        ControlItem controlItem = schemaService
-            .GetProvider<UserControlSchemaItemProvider>()
-            .ChildItems.OfType<ControlItem>()
-            .First(item => item.ControlType == itemModelData.ComponentType);
+        ControlItem controlItem = FindSectionWidget(itemModelData.ComponentType);
+        IDataEntityColumn boundColumn = string.IsNullOrEmpty(itemModelData.FieldName)
+            ? null
+            : FindBoundColumn(screenSection, itemModelData.FieldName);
         ControlSetItem newItem = parent.NewItem<ControlSetItem>(
             schemaService.ActiveSchemaExtensionId,
             group: null
         );
         newItem.ControlItem = controlItem;
-        newItem.Name = itemModelData.FieldName ?? controlItem.Name;
+        newItem.Name = boundColumn == null ? controlItem.Name : itemModelData.FieldName;
 
         ControlAdapter.ControlAdapter controlAdapter = adapterFactory.Create(newItem);
 
-        IDataEntity dataEntity = persistenceService.SchemaProvider.RetrieveInstance<IDataEntity>(
-            screenSection.DataSourceId
-        );
-        DataSet dataSet = new DatasetGenerator(userDefinedParameters: false).CreateDataSet(
-            dataEntity
-        );
-        string caption = dataSet.Tables[0].Columns[itemModelData.FieldName]?.Caption;
-        if (controlAdapter.Control is IAsControl asControl)
+        string caption = null;
+        if (boundColumn != null)
         {
-            string boundPropertyName = asControl.DefaultBindableProperty;
-            ControlPropertyItem propertyItem = FindPropertyItem(newItem, boundPropertyName);
-            PropertyBindingInfo propertyBinding = FindOrMakeBindingInfo(newItem, propertyItem);
-            propertyBinding.ControlPropertyItem = propertyItem;
-            propertyBinding.Name = boundPropertyName;
-            propertyBinding.Value = itemModelData.FieldName;
-            propertyBinding.DesignDataSetPath =
-                dataSet.Tables[0].TableName + "." + itemModelData.FieldName;
-            // The line dataSet.Tables[0].TableName + "." + itemModelData.FieldName was taken from
-            // class Origam.Gui.Designer.DesignerHostImpl method TryCreateComponent. It does say there Tables[0]
-            // Looks strange, we will have to see how well it works.
+            IDataEntity dataEntity = screenSection.DataEntity;
+            DataSet dataSet = new DatasetGenerator(userDefinedParameters: false).CreateDataSet(
+                dataEntity
+            );
+            caption = dataSet.Tables[0].Columns[itemModelData.FieldName]?.Caption;
+
+            if (controlAdapter.Control is IAsControl asControl)
+            {
+                string boundPropertyName = asControl.DefaultBindableProperty;
+                ControlPropertyItem propertyItem = FindPropertyItem(newItem, boundPropertyName);
+                PropertyBindingInfo propertyBinding = FindOrMakeBindingInfo(newItem, propertyItem);
+                propertyBinding.ControlPropertyItem = propertyItem;
+                propertyBinding.Name = boundPropertyName;
+                propertyBinding.Value = itemModelData.FieldName;
+                propertyBinding.DesignDataSetPath =
+                    dataSet.Tables[0].TableName + "." + itemModelData.FieldName;
+                // The line dataSet.Tables[0].TableName + "." + itemModelData.FieldName was taken from
+                // class Origam.Gui.Designer.DesignerHostImpl method TryCreateComponent. It does say there Tables[0]
+                // Looks strange, we will have to see how well it works.
+            }
+
+            if (
+                controlAdapter.Control is ILookupBoundControl lookupControl
+                && boundColumn.DefaultLookup != null
+            )
+            {
+                lookupControl.LookupId = (Guid)boundColumn.DefaultLookup.PrimaryKey["Id"];
+            }
         }
 
         controlAdapter.InitializeProperties(top: itemModelData.Top, left: itemModelData.Left);
@@ -317,11 +339,244 @@ public class DesignerEditorService(
         {
             textValueItem.Value = caption;
         }
+        if (controlAdapter.Control is Label && string.IsNullOrEmpty(itemModelData.FieldName))
+        {
+            newItem.Name = GetUniqueControlName(screenSection, newItem);
+            if (textValueItem != null)
+            {
+                textValueItem.Value = newItem.Name;
+            }
+        }
+
+        GrowRootPanel(screenSection.MainItem, newItem);
 
         DropDownValue[] dataSourceDropDownValues = GetFields(screenSection)
             .Select(field => new DropDownValue(field.Name, field.Name))
+            .Prepend(new DropDownValue(string.Empty, string.Empty))
             .ToArray();
-        return LoadItem(newItem, dataSourceDropDownValues);
+        ApiControl createdControl = LoadItem(newItem, dataSourceDropDownValues);
+        if (boundColumn != null)
+        {
+            createdControl.Warnings = FindDataStructureWarnings(screenSection, [boundColumn]);
+        }
+        return createdControl;
+    }
+
+    public List<string> FindDataStructureWarnings(
+        PanelControlSet screenSection,
+        IReadOnlyList<IDataEntityColumn> fields = null
+    )
+    {
+        IDataEntity entity = screenSection.DataEntity;
+        if (entity == null)
+        {
+            return [];
+        }
+        fields ??= GetLiveControls(screenSection)
+            .Select(BoundFieldName)
+            .Where(fieldName => fieldName != null)
+            .Distinct()
+            .Select(fieldName => BoundField(screenSection, fieldName))
+            .Where(field => field != null)
+            .ToList();
+        var warnings = new List<string>();
+        var screensByDataStructure = ScreensUsing(screenSection)
+            .Where(screen => screen.DataSourceId != Guid.Empty)
+            .GroupBy(screen => screen.DataSourceId);
+        foreach (IGrouping<Guid, FormControlSet> screens in screensByDataStructure)
+        {
+            DataStructure dataStructure = screens.First().DataStructure;
+            DataStructureEntity dataStructureEntity = dataStructure?.Entities.FirstOrDefault(
+                candidate => candidate.EntityId == entity.Id
+            );
+            if (dataStructureEntity == null)
+            {
+                continue;
+            }
+            string screenNames = string.Join(
+                separator: ", ",
+                screens.Select(screen => screen.Name)
+            );
+            foreach (IDataEntityColumn field in fields)
+            {
+                if (!dataStructureEntity.ExistsEntityFieldAsColumn(field))
+                {
+                    warnings.Add(
+                        string.Format(
+                            Strings.SectionEditor_FieldMissingInDataStructure,
+                            field.Name,
+                            dataStructure.Name,
+                            screenNames,
+                            dataStructureEntity.Id,
+                            field.Id
+                        )
+                    );
+                }
+                if (
+                    field is DetachedField { DataType: OrigamDataType.Array } arrayField
+                    && arrayField.ArrayRelation != null
+                    && !HasRelationEntity(dataStructureEntity, arrayField.ArrayRelationId)
+                )
+                {
+                    warnings.Add(
+                        string.Format(
+                            Strings.SectionEditor_ArrayRelationMissingInDataStructure,
+                            field.Name,
+                            arrayField.ArrayRelation.Name,
+                            dataStructure.Name,
+                            screenNames,
+                            dataStructureEntity.Id,
+                            arrayField.ArrayRelationId
+                        )
+                    );
+                }
+            }
+        }
+        return warnings;
+    }
+
+    private static bool HasRelationEntity(DataStructureEntity dataStructureEntity, Guid relationId)
+    {
+        return dataStructureEntity
+            .ChildItemsByType<DataStructureEntity>(DataStructureEntity.CategoryConst)
+            .Any(child => child.EntityId == relationId && child.Columns.Count > 0);
+    }
+
+    private static IEnumerable<FormControlSet> ScreensUsing(PanelControlSet screenSection)
+    {
+        if (!ReferenceIndexManager.Initialized)
+        {
+            return [];
+        }
+        return screenSection
+            .GetUsage()
+            .SelectMany(item => item is ControlItem controlItem ? controlItem.GetUsage() : [item])
+            .Select(item => item.RootItem)
+            .OfType<FormControlSet>()
+            .DistinctBy(screen => screen.Id)
+            .ToList();
+    }
+
+    private ControlItem FindSectionWidget(string controlType)
+    {
+        List<ControlItem> controlItems = schemaService
+            .GetProvider<UserControlSchemaItemProvider>()
+            .ChildItems.OfType<ControlItem>()
+            .ToList();
+        ControlItem controlItem = controlItems.FirstOrDefault(item =>
+            item.ControlType == controlType
+        );
+        if (controlItem != null)
+        {
+            return controlItem;
+        }
+        IEnumerable<string> sectionWidgetTypes = controlItems
+            .Where(item =>
+                item.ControlToolBoxVisibility
+                    is ControlToolBoxVisibility.PanelDesigner
+                        or ControlToolBoxVisibility.PanelAndFormDesigner
+            )
+            .Select(item => item.ControlType)
+            .Where(type => type is not ("Origam.Gui.Win.AsForm" or "Origam.Gui.Win.AsPanel"))
+            .OrderBy(type => type);
+        throw new UserOrigamException(
+            string.Format(
+                Strings.SectionEditor_UnknownWidgetType,
+                controlType,
+                string.Join(separator: ", ", sectionWidgetTypes)
+            )
+        );
+    }
+
+    private static IDataEntityColumn FindBoundColumn(
+        PanelControlSet screenSection,
+        string fieldName
+    )
+    {
+        if (screenSection.DataEntity == null)
+        {
+            throw new UserOrigamException(Strings.SectionEditor_NoDataSource);
+        }
+        return BoundField(screenSection, fieldName)
+            ?? throw new UserOrigamException(
+                string.Format(
+                    Strings.SectionEditor_FieldNotFound,
+                    fieldName,
+                    screenSection.DataEntity.Name,
+                    string.Join(
+                        separator: ", ",
+                        GetFields(screenSection).Select(field => field.Name)
+                    )
+                )
+            );
+    }
+
+    private void GrowRootPanel(ControlSetItem rootPanel, ControlSetItem newItem)
+    {
+        int right = IntValue(newItem, propertyName: "Width");
+        int bottom = IntValue(newItem, propertyName: "Height");
+        for (
+            ISchemaItem item = newItem;
+            item is ControlSetItem control && control.Id != rootPanel.Id;
+            item = item.ParentItem
+        )
+        {
+            right += IntValue(control, propertyName: "Left");
+            bottom += IntValue(control, propertyName: "Top");
+        }
+
+        var changes = new List<PropertyChange>();
+        if (right > IntValue(rootPanel, propertyName: "Width"))
+        {
+            changes.Add(
+                new PropertyChange
+                {
+                    Name = "Width",
+                    Value = XmlConvert.ToString(right + PanelGrowMargin),
+                }
+            );
+        }
+        if (bottom > IntValue(rootPanel, propertyName: "Height"))
+        {
+            changes.Add(
+                new PropertyChange
+                {
+                    Name = "Height",
+                    Value = XmlConvert.ToString(bottom + PanelGrowMargin),
+                }
+            );
+        }
+        if (changes.Count > 0)
+        {
+            adapterFactory
+                .Create(rootPanel)
+                .UpdateProperties(
+                    new ChangesModel { SchemaItemId = rootPanel.Id, Changes = changes }
+                );
+        }
+    }
+
+    private static int IntValue(ControlSetItem item, string propertyName)
+    {
+        return FindValueItem(item, propertyName)?.IntValue ?? 0;
+    }
+
+    private static string GetUniqueControlName(
+        PanelControlSet screenSection,
+        ControlSetItem newItem
+    )
+    {
+        HashSet<string> usedNames = screenSection
+            .ChildItemsRecursive.OfType<ControlSetItem>()
+            .Where(item => item != newItem)
+            .Select(item => item.Name)
+            .ToHashSet();
+        int index = 1;
+        while (usedNames.Contains(newItem.ControlItem.Name + index))
+        {
+            index++;
+        }
+        return newItem.ControlItem.Name + index;
     }
 
     private PropertyBindingInfo FindOrMakeBindingInfo(
@@ -412,7 +667,12 @@ public class DesignerEditorService(
         ISchemaItem parent = screen.GetChildByIdRecursive(itemModelData.ParentControlSetItemId);
         if (parent == null)
         {
-            throw new Exception($"Parent object {itemModelData.ParentControlSetItemId} not found");
+            throw new UserOrigamException(
+                string.Format(
+                    Strings.DesignerEditor_ParentControlNotFound,
+                    itemModelData.ParentControlSetItemId
+                )
+            );
         }
 
         ControlItem controlItem = schemaService
@@ -481,6 +741,7 @@ public class DesignerEditorService(
 
     public bool SaveScreenSection(PanelControlSet screenSection)
     {
+        ValidateForRuntime(screenSection);
         try
         {
             bool createWidget = !screenSection.IsPersisted;
@@ -509,6 +770,150 @@ public class DesignerEditorService(
 
         return false;
     }
+
+    private static void ValidateForRuntime(PanelControlSet screenSection)
+    {
+        foreach (ControlSetItem item in GetLiveControls(screenSection))
+        {
+            string controlName = item.ControlItem.Name;
+            if (
+                controlName == "RadioButton"
+                && IsBoundToField(item)
+                && (FindValueItem(item, propertyName: "DataConstantId")?.GuidValue ?? Guid.Empty)
+                    == Guid.Empty
+            )
+            {
+                throw new UserOrigamException(
+                    string.Format(Strings.SectionEditor_RadioButtonValueConstantMissing, item.Name)
+                );
+            }
+            if (
+                controlName == GuiHelper.CONTROL_NAME_MULTICOLUMNADAPTERFIELD
+                && IsBoundToField(item)
+                && !item.ChildItemsByType<ControlSetItem>(ControlSetItem.CategoryConst)
+                    .Any(child => !child.IsDeleted && RendersAsProperty(child))
+            )
+            {
+                throw new UserOrigamException(
+                    string.Format(Strings.SectionEditor_WrapperHasNoBoundWidgets, item.Name)
+                );
+            }
+            if (
+                controlName is GuiHelper.CONTROL_NAME_COMBOBOX or "TagInput" or "Checklist"
+                && IsBoundToField(item)
+                && (FindValueItem(item, propertyName: "LookupId")?.GuidValue ?? Guid.Empty)
+                    == Guid.Empty
+            )
+            {
+                throw new UserOrigamException(
+                    string.Format(Strings.SectionEditor_DropdownLookupMissing, item.Name)
+                );
+            }
+            if (controlName is "TagInput" or "Checklist" && IsBoundToField(item))
+            {
+                string fieldName = BoundFieldName(item);
+                IDataEntityColumn field = BoundField(screenSection, fieldName);
+                if (field != null && field.DataType != OrigamDataType.Array)
+                {
+                    throw new UserOrigamException(
+                        string.Format(
+                            Strings.SectionEditor_TagInputFieldNotArray,
+                            item.Name,
+                            fieldName,
+                            field.DataType
+                        )
+                    );
+                }
+            }
+            if (controlName == "ColorPicker" && IsBoundToField(item))
+            {
+                string fieldName = BoundFieldName(item);
+                IDataEntityColumn field = BoundField(screenSection, fieldName);
+                if (field != null && field.DataType != OrigamDataType.Integer)
+                {
+                    throw new UserOrigamException(
+                        string.Format(
+                            Strings.SectionEditor_ColorPickerFieldNotInteger,
+                            item.Name,
+                            fieldName
+                        )
+                    );
+                }
+            }
+        }
+        ValidateFieldsBoundOnce(screenSection);
+    }
+
+    private static void ValidateFieldsBoundOnce(PanelControlSet screenSection)
+    {
+        var fieldBoundTwice = GetLiveControls(screenSection)
+            .Where(item => IsBoundToField(item) && item.ControlItem.Name != "RadioButton")
+            .GroupBy(BoundFieldName)
+            .FirstOrDefault(group => group.Count() > 1);
+        if (fieldBoundTwice == null)
+        {
+            return;
+        }
+        throw new UserOrigamException(
+            string.Format(
+                Strings.SectionEditor_FieldBoundTwice,
+                fieldBoundTwice.Key,
+                string.Join(separator: ", ", fieldBoundTwice.Select(item => item.Name))
+            )
+        );
+    }
+
+    private static bool RendersAsProperty(ControlSetItem item)
+    {
+        return IsBoundToField(item)
+            && item.ControlItem.Name != "RadioButton"
+            && !(FindValueItem(item, propertyName: "HideOnForm")?.BoolValue ?? false);
+    }
+
+    private static IEnumerable<ControlSetItem> GetLiveControls(ISchemaItem parent)
+    {
+        foreach (
+            ControlSetItem item in parent.ChildItemsByType<ControlSetItem>(
+                ControlSetItem.CategoryConst
+            )
+        )
+        {
+            if (item.IsDeleted)
+            {
+                continue;
+            }
+            yield return item;
+            foreach (ControlSetItem descendant in GetLiveControls(item))
+            {
+                yield return descendant;
+            }
+        }
+    }
+
+    private static string BoundFieldName(ControlSetItem item)
+    {
+        return item.ChildItemsByType<PropertyBindingInfo>(PropertyBindingInfo.CategoryConst)
+            .FirstOrDefault(binding => !binding.IsDeleted && !string.IsNullOrEmpty(binding.Value))
+            ?.Value;
+    }
+
+    private static bool IsBoundToField(ControlSetItem item)
+    {
+        return BoundFieldName(item) != null;
+    }
+
+    private static IDataEntityColumn BoundField(PanelControlSet screenSection, string fieldName)
+    {
+        return screenSection
+            .DataEntity?.ChildItemsByType<IDataEntityColumn>(AbstractDataEntityColumn.CategoryConst)
+            .FirstOrDefault(column => column.Name == fieldName);
+    }
+
+    private static PropertyValueItem FindValueItem(ControlSetItem item, string propertyName)
+    {
+        return item.ChildItemsByType<PropertyValueItem>(PropertyValueItem.CategoryConst)
+            .FirstOrDefault(value => value.ControlPropertyItem.Name == propertyName);
+    }
 }
 
 public class ScreenEditorItem
@@ -522,6 +927,8 @@ public class ApiControl
     public Guid Id { get; set; }
     public string Type { get; set; }
     public string Name { get; set; }
+    public string BoundField { get; set; }
+    public List<string> Warnings { get; set; }
     public List<EditorProperty> Properties { get; set; }
     public List<ApiControl> Children { get; set; } = new();
 }

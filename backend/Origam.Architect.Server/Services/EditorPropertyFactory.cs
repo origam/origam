@@ -28,7 +28,6 @@ using Origam.Architect.Server.Utils;
 using Origam.DA.ObjectPersistence;
 using Origam.Extensions;
 using Origam.Schema;
-using Origam.Schema.GuiModel;
 
 namespace Origam.Architect.Server.Services;
 
@@ -63,17 +62,18 @@ public class EditorPropertyFactory
         );
     }
 
-    public EditorProperty Create(
+    public EditorProperty CreateBoundProperty(
         PropertyInfo property,
-        PropertyBindingInfo bindingInfo,
+        Guid controlPropertyId,
+        string boundFieldName,
         DropDownValue[] dropDownValues
     )
     {
         return new EditorProperty(
             name: property.Name,
-            controlPropertyId: bindingInfo.ControlPropertyId,
+            controlPropertyId: controlPropertyId,
             type: "looukup",
-            value: bindingInfo.Value,
+            value: boundFieldName,
             dropDownValues: dropDownValues,
             category: "Data",
             description: "The data bindings for the control.",

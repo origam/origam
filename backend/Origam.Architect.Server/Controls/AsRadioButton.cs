@@ -26,7 +26,7 @@ using Origam.Schema.GuiModel;
 
 namespace Origam.Architect.Server.Controls;
 
-public class AsRadioButton : IControl
+public class AsRadioButton : IControl, IAsControl
 {
     public bool ReadOnly { get; set; }
 
@@ -59,5 +59,12 @@ public class AsRadioButton : IControl
     [TypeConverter(typeof(DataConstantConverter))]
     public Guid DataConstantId { get; set; }
 
-    public virtual void Initialize(ControlSetItem controlSetItem) { }
+    public virtual void Initialize(ControlSetItem controlSetItem)
+    {
+        Height = 20;
+        Width = 150;
+    }
+
+    [NotAModelProperty]
+    public string DefaultBindableProperty => "Value";
 }

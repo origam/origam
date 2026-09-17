@@ -105,12 +105,80 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   }
 }
 
-.blobControl {
-  flex-grow: 1;
-  border: 1px solid var(--background5);
-  background-color: var(--foreground1);
-  color: var(--background1);
+.groupBoxWithChamfer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+
+.groupBoxChamfer {
+  position: relative;
+  align-self: flex-start;
+  min-width: 8px;
+  height: 16px;
+  margin-bottom: -8px;
+  padding: 0 6px;
+  line-height: 16px;
+  white-space: nowrap;
+  border-radius: 8px 8px 0 0;
+  background-color: var(--background3);
+}
+
+.groupBoxChamferBody {
+  flex: 1;
+  border-radius: 8px;
+  background-color: var(--background3);
+}
+
+.dottedFrame {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  border: 1px dotted var(--background7);
+}
+
+.editorBox {
+  display: flex;
+  justify-content: flex-end;
+  align-self: flex-start;
+  width: 100%;
+  height: 100%;
+  max-height: 20px;
+  border: 1px solid var(--background8);
+  background-color: var(--background1);
+
+  &.readOnly {
+    background-color: var(--background3);
+  }
+}
+
+.editorButton {
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 16px;
+  font-size: 12px;
+  border-left: 1px solid var(--background4);
+  background-color: var(--background3);
+  color: var(--background7);
+}
+
+.dropDownButton {
+  background-color: var(--background6);
+  color: var(--background1);
+}
+
+.colorPickerButton {
+  box-sizing: border-box;
+  align-self: flex-start;
+  width: 100%;
+  height: 100%;
+  border: 1px solid var(--background4);
+}
+
+.calendarButton {
+  border-left: none;
+  background-color: transparent;
+  color: var(--brand);
 }

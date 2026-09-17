@@ -26,6 +26,10 @@ export class AsCheckBox extends Component {
     return false;
   }
 
+  get canResizeHeight(): boolean {
+    return false;
+  }
+
   getDesignerRepresentation(): ReactElement | null {
     return (
       <div className={S.designSurfaceEditorContainer}>

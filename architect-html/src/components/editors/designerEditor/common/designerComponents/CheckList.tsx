@@ -18,29 +18,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { ReactElement } from 'react';
-import S from '@editors/designerEditor/common/designerComponents/Components.module.scss';
 import { Component } from '@editors/designerEditor/common/designerComponents/Component.tsx';
-import { T } from '@/main';
+import { EditorBox } from '@editors/designerEditor/common/designerComponents/EditorBox.tsx';
 
 export class CheckList extends Component {
+  get hasBorder(): boolean {
+    return false;
+  }
+
   getDesignerRepresentation(): ReactElement | null {
-    return (
-      <div className={S.designSurfaceEditorContainer}>
-        <div className={S.checkList}>
-          <div className={S.checklistItem}>
-            <input type="checkbox" className="checkbox undefined" />
-            <div>{T('Option A', 'check_list_option_A')}</div>
-          </div>
-          <div className={S.checklistItem}>
-            <input type="checkbox" className="checkbox undefined" />
-            <div>{T('Option B', 'check_list_option_B')}</div>
-          </div>
-          <div className={S.checklistItem}>
-            <input type="checkbox" className="checkbox undefined" />
-            <div>{T('Option C', 'check_list_option_C')}</div>
-          </div>
-        </div>
-      </div>
-    );
+    return <EditorBox readOnly />;
   }
 }
