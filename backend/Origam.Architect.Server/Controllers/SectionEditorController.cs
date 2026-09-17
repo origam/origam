@@ -81,8 +81,8 @@ public class SectionEditorController(
 
         return BadRequest($"item id: {input.EditorSchemaItemId} is not a PanelControlSet");
     }
-    
-    //TODO: Its is very ugly description but for beta unstable Origam AI Support maybe it's okay for now later its needs some improvements 
+
+    //TODO: Its is very ugly description but for beta unstable Origam AI Support maybe it's okay for now later its needs some improvements
     [HttpPost("CreateItem")]
     [EndpointDescription(
         "Adds one widget to an existing screen section in its designer and returns it; a new "
