@@ -43,7 +43,16 @@ public static class SchemaItemTreePath
         }
     }
 
-    public static List<string> GetParentNodeIds(ISchemaItem item, ISchemaItem root)
+    public static List<string> GetParentNodeIds(ISchemaItem item, ISchemaItem root) =>
+        GetParentNodeIds(item, root, EnumerateGroups(root));
+
+    // Lazy groups are read inside the try block, so a broken group chain is
+    // reported as an orphaned reference.
+    public static List<string> GetParentNodeIds(
+        ISchemaItem item,
+        ISchemaItem root,
+        IEnumerable<SchemaItemGroup> groups
+    )
     {
         try
         {
@@ -61,7 +70,7 @@ public static class SchemaItemTreePath
                 AddFolderNameIfAny(ids, parent);
             }
 
-            for (SchemaItemGroup group = root.Group; group != null; group = group.ParentGroup)
+            foreach (SchemaItemGroup group in groups)
             {
                 ids.Add(group.Id.ToString());
             }
@@ -84,6 +93,14 @@ public static class SchemaItemTreePath
             {
                 target.Add(folderName);
             }
+        }
+    }
+
+    private static IEnumerable<SchemaItemGroup> EnumerateGroups(ISchemaItem root)
+    {
+        for (SchemaItemGroup group = root.Group; group != null; group = group.ParentGroup)
+        {
+            yield return group;
         }
     }
 }

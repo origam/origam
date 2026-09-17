@@ -1,5 +1,5 @@
 /*
-Copyright 2005 - 2025 Advantage Solutions, s. r. o.
+Copyright 2005 - 2026 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -17,31 +17,45 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-.root {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  padding: 0.5rem;
-  gap: 0.5rem;
-}
-
-.header {
+@mixin badge {
+  position: absolute;
+  top: -0.5rem;
+  right: -0.5rem;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  justify-content: center;
+  box-sizing: border-box;
+  min-width: 1.25rem;
+  height: 1.25rem;
+  padding: 0 0.3rem;
+  border-radius: 0.625rem;
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 600;
+  line-height: 1;
 }
 
-.title {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--background7);
+.badgeError {
+  @include badge;
+
+  background-color: rgb(var(--error1-rgb));
 }
 
-.count {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--background6);
-  background-color: var(--background3);
-  border-radius: 999px;
-  padding: 0.1rem 0.5rem;
+.badgeOk {
+  @include badge;
+
+  background-color: rgb(var(--ok1-rgb));
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
