@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.ComponentModel;
 using System.Reflection;
 using Origam.Extensions;
+using Origam.Schema.EntityModel;
 
 namespace Origam.Architect.Server.Utils;
 
@@ -62,6 +63,17 @@ public static class PropertyUtils
 
     public static void SetValue(PropertyInfo property, object instance, object value)
     {
+        // The Value setter converts text by the machine culture, the editor uses the XML format.
+        if (
+            instance is DataConstant dataConstant
+            && property.Name == nameof(DataConstant.Value)
+            && value is string text
+        )
+        {
+            SetDataConstantValue(property, dataConstant, text);
+            return;
+        }
+
         try
         {
             property.SetValue(instance, value);
@@ -70,6 +82,28 @@ public static class PropertyUtils
             when (IsRejectedValueException(exception.InnerException))
         {
             throw MakeValueNotReadException(property, exception.InnerException);
+        }
+    }
+
+    private static void SetDataConstantValue(
+        PropertyInfo property,
+        DataConstant dataConstant,
+        string value
+    )
+    {
+        try
+        {
+            dataConstant.XmlValue = value;
+        }
+        catch (NotSupportedException)
+        {
+            throw new UserOrigamException(
+                string.Format(Strings.Property_DataTypeWithoutValue, dataConstant.DataType)
+            );
+        }
+        catch (Exception exception) when (IsRejectedValueException(exception))
+        {
+            throw MakeValueNotReadException(property, exception);
         }
     }
 

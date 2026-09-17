@@ -205,6 +205,15 @@ namespace Origam.Architect.Server {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to A data constant of data type {0} cannot have a value..
+        /// </summary>
+        internal static string Property_DataTypeWithoutValue {
+            get {
+                return ResourceManager.GetString("Property_DataTypeWithoutValue", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to &quot;{1}&quot; is not one of the values offered for {0}..
         /// </summary>
         internal static string Property_ValueNotOffered {

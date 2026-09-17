@@ -243,4 +243,7 @@
     <data name="Property_ConverterNotFound" xml:space="preserve">
         <value>Type converter {0} of property {1} could not be found.</value>
     </data>
+    <data name="Property_DataTypeWithoutValue" xml:space="preserve">
+        <value>A data constant of data type {0} cannot have a value.</value>
+    </data>
 </root>

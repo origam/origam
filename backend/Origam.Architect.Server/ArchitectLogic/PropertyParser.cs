@@ -22,12 +22,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.ComponentModel;
 using System.Globalization;
 using System.Reflection;
-using System.Xml;
 using Origam.Architect.Server.ReturnModels;
 using Origam.Architect.Server.Utils;
 using Origam.DA.ObjectPersistence;
-using Origam.Schema;
-using Origam.Schema.EntityModel;
 using Origam.Workbench.Services;
 
 namespace Origam.Architect.Server.ArchitectLogic;
@@ -197,38 +194,7 @@ public class PropertyParser(IPersistenceService persistenceService)
             );
         }
 
-        if (converted is string text && instance is DataConstant dataConstant)
-        {
-            return ParseDataConstantValue(property, text, dataConstant.DataType);
-        }
-
         return converted;
-    }
-
-    // The model setter parses by the machine culture, the editor shows the XML format.
-    private static object ParseDataConstantValue(
-        PropertyInfo property,
-        string value,
-        OrigamDataType dataType
-    )
-    {
-        try
-        {
-            return dataType switch
-            {
-                OrigamDataType.Integer => XmlConvert.ToInt32(value),
-                OrigamDataType.Currency or OrigamDataType.Float => XmlConvert.ToDecimal(value),
-                OrigamDataType.Date => XmlConvert.ToDateTime(
-                    value,
-                    XmlDateTimeSerializationMode.Unspecified
-                ),
-                _ => value,
-            };
-        }
-        catch (Exception exception) when (exception is FormatException or OverflowException)
-        {
-            throw PropertyUtils.MakeValueNotReadException(property, exception);
-        }
     }
 
     private Exception MakeCouldNotParseException(PropertyInfo property)
