@@ -29,6 +29,7 @@ using Origam.Architect.Server.Utils;
 using Origam.DA.ObjectPersistence;
 using Origam.Extensions;
 using Origam.Schema;
+using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
 
 namespace Origam.Architect.Server.Services;
@@ -73,7 +74,7 @@ public class EditorPropertyFactory
                 : ToPropertyTypeName(property),
             value: editedAsText
                 ? converter.ConvertToString(context, CultureInfo.InvariantCulture, value)
-                : ToSerializableValue(value, property),
+                : ToSerializableValue(value, property, instance),
             dropDownValues: dropDownValues,
             category: category,
             description: description,
@@ -119,8 +120,13 @@ public class EditorPropertyFactory
         );
     }
 
-    private object ToSerializableValue(object value, PropertyInfo property)
+    private object ToSerializableValue(object value, PropertyInfo property, object instance)
     {
+        // Shown in the XML format PropertyUtils.SetValue reads, a JSON number would lose it.
+        if (instance is DataConstant dataConstant && property.Name == nameof(DataConstant.Value))
+        {
+            return dataConstant.XmlValue;
+        }
         if (value is ISchemaItem schemaItem && property.GetSetMethod() == null)
         {
             return schemaItem.ToString();
