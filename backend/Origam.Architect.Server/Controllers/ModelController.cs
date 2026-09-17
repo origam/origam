@@ -130,9 +130,8 @@ public class ModelController(
             .OrderBy(x => x.NodeText)
             .Select(treeNodeFactory.Create)
             .Concat(
-                provider
-                    .ChildItems.Where(x => x.Group == null)
-                    .OrderBy(x => x.NodeText)
+                TreeNodeFactory
+                    .OrderForTree(provider.ChildItems.Where(x => x.Group == null))
                     .Select(treeNodeFactory.Create)
             )
             .ToList();

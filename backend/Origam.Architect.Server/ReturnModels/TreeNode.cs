@@ -106,12 +106,22 @@ public class TreeNodeFactory(
 
     public List<TreeNode> CreateChildren(IBrowserNode2 node, int depth)
     {
-        return node.ChildNodes()
-            .Cast<IBrowserNode2>()
-            .OrderBy(childNode => childNode.NodeText)
+        return OrderForTree(node.ChildNodes().Cast<IBrowserNode2>())
             .Where(childNode => childNode is not ISchemaItem item || item.IsPersisted)
             .Select(childNode => CreateRecursive(childNode, depth))
             .ToList();
+    }
+
+    public static IOrderedEnumerable<IBrowserNode2> OrderForTree(IEnumerable<IBrowserNode2> nodes)
+    {
+        // Version throws on an unsaved version.
+        return nodes
+            .OrderBy(node =>
+                node is Schema.DeploymentModel.DeploymentVersion { VersionString: not null } version
+                    ? version.Version
+                    : null
+            )
+            .ThenBy(node => node.NodeText);
     }
 
     public TreeNode CreateRecursive(IBrowserNode2 node, int remainingDepth)
