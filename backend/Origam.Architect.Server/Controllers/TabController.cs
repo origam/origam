@@ -43,7 +43,9 @@ public class TabController(
     [EndpointDescription(
         "Create a new model item under a parent node. This is how database fields, virtual "
             + "fields, function-call fields, lookup fields, relationships, parameters, filters, "
-            + "indexes and whole entities are created. nodeId is the parent item's id, "
+            + "indexes and whole entities are created; widgets of a screen section are not "
+            + "created here but with POST /SectionEditor/CreateItem. nodeId is the parent "
+            + "item's id, "
             + "newTypeName is the item type's caption (for example 'Database Field') or its full "
             + "type name, changes carries the properties to set immediately as [{name, value}], "
             + "and persist writes the item to disk in the same call. The response returns the new "

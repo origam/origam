@@ -228,6 +228,24 @@
   <data name="SectionEditor_FieldBoundTwice" xml:space="preserve">
     <value>Field "{0}" is bound by more than one widget: {1}. Only one widget can be bound to a field.</value>
   </data>
+  <data name="SectionEditor_UnknownWidgetType" xml:space="preserve">
+    <value>Widget type "{0}" cannot be placed on a screen section. Use one of: {1}</value>
+  </data>
+  <data name="SectionEditor_FieldNotFound" xml:space="preserve">
+    <value>Field "{0}" does not exist on entity "{1}". Available fields: {2}</value>
+  </data>
+  <data name="SectionEditor_NoDataSource" xml:space="preserve">
+    <value>The screen section has no entity, so a widget cannot be bound to a field. Set the section's entity first.</value>
+  </data>
+  <data name="SectionEditor_FieldMissingInDataStructure" xml:space="preserve">
+    <value>Field "{0}" is not part of data structure "{1}" used by the screens {2}, so those screens cannot open. Add it with POST /Tab/CreateNode: nodeId = {3} (the data structure entity), newTypeName 'Field', changes Name = "{0}" and Field = {4}, persist true; or clear ExcludeFromAllFields on the entity field.</value>
+  </data>
+  <data name="SectionEditor_ArrayRelationMissingInDataStructure" xml:space="preserve">
+    <value>Array field "{0}" needs its relation "{1}" in data structure "{2}" used by the screens {3}, or those screens cannot open. Add it with POST /Tab/CreateNode: nodeId = {4} (the data structure entity), newTypeName 'Entity', changes Entity = {5} and AllFields = true, persist true.</value>
+  </data>
+  <data name="ControlAdapter_PropertyNotFound" xml:space="preserve">
+    <value>Property "{0}" does not exist on widget "{1}". Available properties: {2}</value>
+  </data>
     <data name="Group_DeleteOutsideActivePackage" xml:space="preserve">
         <value>Only folders from the active package can be deleted.</value>
     </data>
@@ -251,5 +269,8 @@
     </data>
     <data name="Group_RenameOutsideActivePackage" xml:space="preserve">
         <value>Only folders from the active package can be renamed.</value>
+    </data>
+    <data name="Wizard_LookupAlreadyExists" xml:space="preserve">
+        <value>A Lookup named "{0}" already exists.</value>
     </data>
 </root>

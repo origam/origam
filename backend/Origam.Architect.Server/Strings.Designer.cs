@@ -761,5 +761,68 @@ namespace Origam.Architect.Server {
                 return ResourceManager.GetString("SectionEditor_FieldBoundTwice", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Widget type &quot;{0}&quot; cannot be placed on a screen section. Use one of: {1}.
+        /// </summary>
+        internal static string SectionEditor_UnknownWidgetType {
+            get {
+                return ResourceManager.GetString("SectionEditor_UnknownWidgetType", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Field &quot;{0}&quot; does not exist on entity &quot;{1}&quot;. Available fields: {2}.
+        /// </summary>
+        internal static string SectionEditor_FieldNotFound {
+            get {
+                return ResourceManager.GetString("SectionEditor_FieldNotFound", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The screen section has no entity, so a widget cannot be bound to a field. Set the section&apos;s entity first..
+        /// </summary>
+        internal static string SectionEditor_NoDataSource {
+            get {
+                return ResourceManager.GetString("SectionEditor_NoDataSource", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Field &quot;{0}&quot; is not part of data structure &quot;{1}&quot; used by the screens {2}, so those screens cannot open. Add it with POST /Tab/CreateNode: nodeId = {3} (the data structure entity), newTypeName &apos;Field&apos;, changes Name = &quot;{0}&quot; and Field = {4}, persist true; or clear ExcludeFromAllFields on the entity field..
+        /// </summary>
+        internal static string SectionEditor_FieldMissingInDataStructure {
+            get {
+                return ResourceManager.GetString("SectionEditor_FieldMissingInDataStructure", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Array field &quot;{0}&quot; needs its relation &quot;{1}&quot; in data structure &quot;{2}&quot; used by the screens {3}, or those screens cannot open. Add it with POST /Tab/CreateNode: nodeId = {4} (the data structure entity), newTypeName &apos;Entity&apos;, changes Entity = {5} and AllFields = true, persist true..
+        /// </summary>
+        internal static string SectionEditor_ArrayRelationMissingInDataStructure {
+            get {
+                return ResourceManager.GetString("SectionEditor_ArrayRelationMissingInDataStructure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Property &quot;{0}&quot; does not exist on widget &quot;{1}&quot;. Available properties: {2}.
+        /// </summary>
+        internal static string ControlAdapter_PropertyNotFound {
+            get {
+                return ResourceManager.GetString("ControlAdapter_PropertyNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A Lookup named &quot;{0}&quot; already exists..
+        /// </summary>
+        internal static string Wizard_LookupAlreadyExists {
+            get {
+                return ResourceManager.GetString("Wizard_LookupAlreadyExists", resourceCulture);
+            }
+        }
     }
 }

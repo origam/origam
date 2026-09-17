@@ -139,18 +139,19 @@ public class ControlAdapter(
                 continue;
             }
 
-            if (!propertyChange.ControlPropertyId.HasValue)
+            if (
+                !propertyChange.ControlPropertyId.HasValue
+                && IsSchemaItemProperty(propertyChange.Name)
+            )
             {
-                if (IsSchemaItemProperty(propertyChange.Name))
-                {
-                    continue;
-                }
-                throw new Exception($"{nameof(propertyChange.ControlPropertyId)} cannot be null");
+                continue;
             }
 
+            Guid controlPropertyId =
+                propertyChange.ControlPropertyId ?? FindPropertyItem(propertyChange.Name).Id;
             PropertyBindingInfo bindingInfo = controlSetItem
                 .ChildItems.OfType<PropertyBindingInfo>()
-                .FirstOrDefault(item => item.ControlPropertyId == propertyChange.ControlPropertyId);
+                .FirstOrDefault(item => item.ControlPropertyId == controlPropertyId);
             if (bindingInfo != null)
             {
                 string newValue = string.IsNullOrEmpty(propertyChange.Value)
@@ -192,7 +193,7 @@ public class ControlAdapter(
 
             PropertyValueItem valueItem = controlSetItem
                 .ChildItems.OfType<PropertyValueItem>()
-                .FirstOrDefault(item => item.ControlPropertyId == propertyChange.ControlPropertyId);
+                .FirstOrDefault(item => item.ControlPropertyId == controlPropertyId);
 
             if (valueItem == null)
             {
@@ -202,7 +203,7 @@ public class ControlAdapter(
                     schemaService.ActiveSchemaExtensionId,
                     group: null
                 );
-                valueItem.ControlPropertyId = propertyChange.ControlPropertyId.Value;
+                valueItem.ControlPropertyId = controlPropertyId;
                 valueItem.Name = propertyChange.Name;
             }
 
@@ -303,15 +304,30 @@ public class ControlAdapter(
 
     private ControlPropertyItem FindPropertyItem(string propertyName)
     {
-        var propertyItem = controlSetItem
+        string controlPropertyName =
+            Control
+                .GetType()
+                .GetProperties()
+                .FirstOrDefault(property =>
+                    property.GetAttribute<ReferencePropertyAttribute>()?.Name == propertyName
+                )
+                ?.Name
+            ?? propertyName;
+        List<ControlPropertyItem> propertyItems = controlSetItem
             .ControlItem.ChildItemsByType<ControlPropertyItem>(ControlPropertyItem.CategoryConst)
-            .FirstOrDefault(x => x.Name == propertyName);
-        if (propertyItem == null)
-        {
-            throw new Exception("ControlPropertyItem " + propertyName + " not found");
-        }
-
-        return propertyItem;
+            .ToList();
+        return propertyItems.FirstOrDefault(x => x.Name == controlPropertyName)
+            ?? throw new UserOrigamException(
+                string.Format(
+                    Strings.ControlAdapter_PropertyNotFound,
+                    propertyName,
+                    controlSetItem.ControlItem.Name,
+                    string.Join(
+                        separator: ", ",
+                        propertyItems.Select(item => item.Name).OrderBy(name => name)
+                    )
+                )
+            );
     }
 
     public void InitializeProperties(int top, int left, int? height = null, int? width = null)

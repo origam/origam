@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2025 Advantage Solutions, s. r. o.
+Copyright 2005 - 2026 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -19,12 +19,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Architect.Server.Models;
+namespace Origam.AI.Agent.Tests.Infrastructure.Architect;
 
-public class SectionEditorChangesModel
-{
-    public Guid SchemaItemId { get; set; }
-    public string Name { get; set; }
-    public Guid? SelectedDataSourceId { get; set; }
-    public List<ChangesModel> ModelChanges { get; set; } = [];
-}
+public sealed record EntityField(string Id, string Name, string ItemTypeName);

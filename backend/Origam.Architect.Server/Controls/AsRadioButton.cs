@@ -59,7 +59,11 @@ public class AsRadioButton : IControl, IAsControl
     [TypeConverter(typeof(DataConstantConverter))]
     public Guid DataConstantId { get; set; }
 
-    public virtual void Initialize(ControlSetItem controlSetItem) { }
+    public virtual void Initialize(ControlSetItem controlSetItem)
+    {
+        Height = 20;
+        Width = 150;
+    }
 
     [NotAModelProperty]
     public string DefaultBindableProperty => "Value";
