@@ -83,7 +83,7 @@ export class EditorTabViewState {
 
   private toEditor(data: IApiTabData) {
     const treeNode = this.rootStore.modelTreeState.findNodeById(data.node.id);
-    const editorData = new EditorData(data, treeNode);
+    const editorData = new EditorData(data, treeNode?.parent ?? null);
 
     return getEditorContainer({
       editorType: editorData.editorType,
@@ -102,7 +102,7 @@ export class EditorTabViewState {
       this: EditorTabViewState,
     ): Generator<Promise<IApiTabData>, void, IApiTabData> {
       const apiTabData = yield this.architectApi.openTab(node.origamId);
-      const editorData = new EditorData(apiTabData, node);
+      const editorData = new EditorData(apiTabData, node.parent);
       this.openEditor(editorData);
     }.bind(this);
   }
@@ -115,7 +115,7 @@ export class EditorTabViewState {
       const treeNode =
         this.rootStore.modelTreeState.findNodeById(apiTabData.node.id) ??
         this.rootStore.modelTreeState.findNodeById(origamId);
-      const editorData = new EditorData(apiTabData, treeNode);
+      const editorData = new EditorData(apiTabData, treeNode?.parent ?? null);
       this.openEditor(editorData);
     }.bind(this);
   }
@@ -157,7 +157,7 @@ export class EditorTabViewState {
       this: EditorTabViewState,
     ): Generator<Promise<IApiTabData>, void, IApiTabData> {
       const apiTabData = yield this.architectApi.openDocumentationEditor(node.origamId);
-      const editorData = new EditorData(apiTabData, node);
+      const editorData = new EditorData(apiTabData, node.parent);
       this.openEditor(editorData, 'DocumentationEditor');
     }.bind(this);
   }

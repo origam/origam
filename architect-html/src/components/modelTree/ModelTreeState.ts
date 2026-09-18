@@ -113,6 +113,16 @@ export class ModelTreeState {
     this.highlightNode(args.schemaItemId);
   }
 
+  *reloadParentOf(
+    origamId: string,
+    fallbackParent: TreeNode | null,
+  ): Generator<Promise<any>, void, any> {
+    const parent = this.findNodeById(origamId)?.parent ?? fallbackParent;
+    if (parent) {
+      yield* parent.loadChildren();
+    }
+  }
+
   private findNodeByIdRecursively(nodeId: string | undefined, nodes: TreeNode[]): TreeNode | null {
     if (!nodeId) {
       return null;
