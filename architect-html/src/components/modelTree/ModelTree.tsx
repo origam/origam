@@ -780,6 +780,7 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
   const labelClassNames = [
     S.iconAndText,
     node.isCurrentVersion ? S.currentVersion : '',
+    node.isBold ? S.bold : '',
     !node.isInActivePackage && !node.isFileDirty ? S.crossPackage : '',
     node.isFileDirty ? S.dirty : '',
     isCutSource ? S.cutNode : '',
