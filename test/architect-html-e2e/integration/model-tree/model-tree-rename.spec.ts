@@ -46,11 +46,13 @@ test.describe('Model tree rename from the property editor (real backend)', () =>
 
   test('saving a renamed item updates its tree node', async ({ page }) => {
     await openConstants(page);
+    await expect(page.getByTestId(`tree-node-${UNGROUPED_CONSTANT}`)).not.toHaveClass(/dirty/);
     await page.getByTestId(`tree-node-${UNGROUPED_CONSTANT}`).dblclick();
 
     await renameInEditorAndSave(page, UNGROUPED_CONSTANT, 'RenamedConstant');
 
     await expectTreeRenamed(page, UNGROUPED_CONSTANT, 'RenamedConstant');
+    await expect(page.getByTestId('tree-node-RenamedConstant')).toHaveClass(/dirty/);
   });
 
   test('saving a renamed item inside a folder updates its tree node', async ({ page }) => {
