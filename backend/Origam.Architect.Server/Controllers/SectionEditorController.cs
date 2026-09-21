@@ -23,6 +23,7 @@ using Microsoft.AspNetCore.Mvc;
 using Origam.Architect.Server.Models;
 using Origam.Architect.Server.ReturnModels;
 using Origam.Architect.Server.Services;
+using Origam.Architect.Server.Services.SectionEditor;
 using Origam.Schema;
 using Origam.Schema.GuiModel;
 
@@ -32,6 +33,7 @@ namespace Origam.Architect.Server.Controllers;
 [Route("[controller]")]
 public class SectionEditorController(
     DesignerEditorService designerEditorService,
+    SectionWidgetFactory sectionWidgetFactory,
     TabService tabService
 ) : ControllerBase
 {
@@ -131,10 +133,7 @@ public class SectionEditorController(
         ISchemaItem item = tab.Item;
         if (item is PanelControlSet screenSection)
         {
-            ApiControl apiControl = designerEditorService.CreateNewItem(
-                itemModelData,
-                screenSection
-            );
+            ApiControl apiControl = sectionWidgetFactory.Create(itemModelData, screenSection);
             tab.IsDirty = true;
             return Ok(apiControl);
         }
@@ -162,7 +161,7 @@ public class SectionEditorController(
             return Ok(
                 new SectionSaveResult
                 {
-                    Warnings = designerEditorService.FindDataStructureWarnings(screenSection),
+                    Warnings = ScreenSectionWarningFinder.FindWarnings(screenSection),
                 }
             );
         }
