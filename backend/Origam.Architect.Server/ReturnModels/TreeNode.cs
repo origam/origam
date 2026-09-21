@@ -54,7 +54,7 @@ public class TreeNode
     public bool IsInActivePackage { get; set; } = true;
     public bool IsFileDirty { get; set; }
     public bool IsFolder { get; set; }
-    public bool IsBold { get; set; }
+    public bool IsMandatoryField { get; set; }
     public string Role { get; set; }
 
     public bool CanDrag { get; set; }
@@ -100,7 +100,7 @@ public class TreeNodeFactory(
             IsInActivePackage = IsInActivePackage(node),
             IsFileDirty = gitNodeStatusService.IsFileDirty(node as IPersistent),
             IsFolder = node is SchemaItemGroup,
-            IsBold = node.FontStyle == "Bold",
+            IsMandatoryField = node.FontStyle == "Bold",
             Role = (node as IAuthorizationContextContainer)?.AuthorizationContext,
             CanDrag = node is ISchemaItem { IsPersisted: true },
         };
