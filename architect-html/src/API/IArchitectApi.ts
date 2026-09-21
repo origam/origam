@@ -523,6 +523,7 @@ export enum OrigamDataType {
 
 export interface IPropertyUpdate {
   propertyName: string;
+  type: PropertyType;
   value: PropertyValue;
   errors: string[];
   dropDownValues: IDropDownValue[];
@@ -623,7 +624,8 @@ export interface IPackage {
   name: string;
 }
 
-export type PropertyType = 'boolean' | 'enum' | 'string' | 'integer' | 'float' | 'looukup';
+export type PropertyType =
+  'boolean' | 'enum' | 'string' | 'integer' | 'float' | 'looukup' | 'untyped';
 
 export type PropertyValue = boolean | number | string | string[] | null;
 

@@ -221,7 +221,43 @@ namespace Origam.Architect.Server {
                 return ResourceManager.GetString("ParameterNotFound", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to Type converter {0} of property {1} could not be found..
+        /// </summary>
+        internal static string Property_ConverterNotFound {
+            get {
+                return ResourceManager.GetString("Property_ConverterNotFound", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to A data constant of data type {0} cannot have a value..
+        /// </summary>
+        internal static string Property_DataTypeWithoutValue {
+            get {
+                return ResourceManager.GetString("Property_DataTypeWithoutValue", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to &quot;{1}&quot; is not one of the values offered for {0}..
+        /// </summary>
+        internal static string Property_ValueNotOffered {
+            get {
+                return ResourceManager.GetString("Property_ValueNotOffered", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The value of {0} could not be read. {1}.
+        /// </summary>
+        internal static string Property_ValueNotRead {
+            get {
+                return ResourceManager.GetString("Property_ValueNotRead", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to &apos;{0}&apos; is not a valid value for property {1}. Allowed values: {2}.
         /// </summary>
