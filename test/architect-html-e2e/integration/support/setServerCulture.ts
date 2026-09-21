@@ -1,6 +1,5 @@
-#region license
 /*
-Copyright 2005 - 2025 Advantage Solutions, s. r. o.
+Copyright 2005 - 2026 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -17,17 +16,17 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
 
-namespace Origam.Architect.Server.ReturnModels;
+import type { APIRequestContext } from '@playwright/test';
 
-public class PropertyUpdate
-{
-    public string PropertyName { get; set; }
-
-    // An edit can change which editor a property needs, so the type travels along.
-    public string Type { get; set; }
-    public object Value { get; set; }
-    public List<string> Errors { get; set; }
-    public DropDownValue[] DropDownValues { get; set; }
+// Null hands the server back to the culture of the machine.
+export async function setServerCulture(
+  request: APIRequestContext,
+  culture: string | null,
+): Promise<void> {
+  const url = `/Test/SetCulture?name=${encodeURIComponent(culture ?? '')}`;
+  const response = await request.post(url);
+  if (!response.ok()) {
+    throw new Error(`POST ${url} failed: ${response.status()} ${await response.text()}`);
+  }
 }

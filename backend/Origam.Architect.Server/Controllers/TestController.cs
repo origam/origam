@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System.Globalization;
 using Microsoft.AspNetCore.Mvc;
 using Origam.Architect.Server.Services;
 using Origam.DA.Service;
@@ -113,6 +114,22 @@ public class TestController(
             // change how every following test behaves.
             GetFileEventQueue()?.Continue();
         }
+    }
+
+    // Edited values must not depend on the server culture, so tests pin a
+    // non-invariant one instead of trusting the machine. Empty name restores it.
+    [HttpPost("SetCulture")]
+    public IActionResult SetCulture([FromQuery] string name)
+    {
+        if (!environment.IsDevelopment())
+        {
+            return NotFound();
+        }
+
+        CultureInfo.DefaultThreadCurrentCulture = string.IsNullOrEmpty(name)
+            ? null
+            : new CultureInfo(name);
+        return Ok();
     }
 
     private FileEventQueue GetFileEventQueue() =>
