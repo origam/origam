@@ -285,4 +285,28 @@
     <data name="ModelCheck_NoActivePackage" xml:space="preserve">
         <value>Load a package before running the model validation.</value>
     </data>
+    <data name="ScreenEditor_WidgetNotFound" xml:space="preserve">
+        <value>Found {1} screen widgets named "{0}". Pass in controlName the name of a screen section, TabPage, or one of: {2}</value>
+    </data>
+    <data name="ScreenEditor_ParentCannotHoldWidget" xml:space="preserve">
+        <value>A "{0}" cannot be placed into "{1}" ({2}). Widgets go into the screen itself, a SplitPanel, a Panel or a TabPage; a TabPage goes into a TabControl.</value>
+    </data>
+    <data name="ScreenEditor_SplitPanelFull" xml:space="preserve">
+        <value>SplitPanel "{0}" already has two children. Put the widget into another container, for example a second SplitPanel nested in this one.</value>
+    </data>
+    <data name="ScreenEditor_MoreRootWidgets" xml:space="preserve">
+        <value>The client shows only the first widget placed directly on the screen, the others ({0}) stay hidden. Keep one SplitPanel or TabControl on the screen and move the rest into it with parentSchemaItemId.</value>
+    </data>
+    <data name="ScreenEditor_DataMemberMissing" xml:space="preserve">
+        <value>DataMember "{1}" of "{0}" is not an entity of the screen's data structure, so the client cannot open the screen. Set DataMember to one of: {2}</value>
+    </data>
+    <data name="ScreenEditor_SplitPanelNeedsTwo" xml:space="preserve">
+        <value>SplitPanel "{0}" must hold exactly two widgets.</value>
+    </data>
+    <data name="ScreenEditor_NoDataSource" xml:space="preserve">
+        <value>The screen has no data structure and cannot be saved. Set it with ScreenEditor/Update and selectedDataSourceId first.</value>
+    </data>
+    <data name="ScreenEditor_TreeColumnMissing" xml:space="preserve">
+        <value>AsTree "{0}" has no {1}. Set it to the name of a field of the tree's entity, otherwise the client cannot build the tree.</value>
+    </data>
 </root>

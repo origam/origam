@@ -31,7 +31,7 @@ export class Component {
   data: IComponentData;
   @observable accessor properties: EditorProperty[];
   @observable.ref private accessor _designerRepresentation: ReactElement | null = null;
-  accessor hideChildren = false;
+  @observable accessor hideChildren = false;
 
   get designerRepresentation(): ReactElement | null {
     if (this.parent && !this.parent.isActive) {
@@ -232,6 +232,10 @@ export class Component {
     return false;
   }
 
+  canAcceptChild(child?: Component): boolean {
+    return this.canHaveChildren && child !== this;
+  }
+
   get hasBorder(): boolean {
     return true;
   }
@@ -241,4 +245,8 @@ export class Component {
   }
 
   update() {}
+
+  onChildrenChanged() {
+    this.update();
+  }
 }

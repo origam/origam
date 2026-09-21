@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2025 Advantage Solutions, s. r. o.
+Copyright 2005 - 2026 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -24,12 +24,8 @@ using Origam.Schema.GuiModel;
 
 namespace Origam.Architect.Server.Controls;
 
-public class TabPage : IControl
+public class Panel : IControl
 {
-    [Localizable(true)]
-    [Browsable(true)]
-    public string Text { get; set; }
-
     [Category("Layout")]
     [Browsable(false)]
     public int Top { get; set; }
@@ -46,19 +42,8 @@ public class TabPage : IControl
     [Browsable(false)]
     public int Width { get; set; } = 200;
 
-    public void Initialize(ControlSetItem controlSetItem)
-    {
-        var tabs = controlSetItem.ParentItem.ChildItems.OfType<ControlSetItem>().ToList();
-        Text = controlSetItem.Name;
-        string height = tabs.First().GetPropertyOrNull("Height")?.Value;
-        if (!string.IsNullOrEmpty(height))
-        {
-            Height = int.Parse(height);
-        }
-        string width = tabs.First().GetPropertyOrNull("Width")?.Value;
-        if (!string.IsNullOrEmpty(width))
-        {
-            Width = int.Parse(width);
-        }
-    }
+    [Category("Behavior")]
+    public int TabIndex { get; set; }
+
+    public void Initialize(ControlSetItem controlSetItem) { }
 }

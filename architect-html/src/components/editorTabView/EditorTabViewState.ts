@@ -124,8 +124,7 @@ export class EditorTabViewState {
     return function* (this: EditorTabViewState): Generator<Promise<any>, void, any> {
       const idSet = new Set(origamIds);
       const targets = this.editorsContainers.filter(
-        editor =>
-          editor.state.origamId && idSet.has(editor.state.origamId) && !editor.state.isDirty,
+        editor => editor.state.origamId && idSet.has(editor.state.origamId),
       );
       if (targets.length === 0) {
         return;

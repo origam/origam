@@ -43,8 +43,35 @@ public class DesignerEditorService(
 {
     private readonly Guid tabControlControlItemId = new("2e39362b-80a6-4430-a9bd-b3013583a2fe");
     private readonly Guid tabPageControlItemId = new("6d13ec20-3b17-456e-ae43-3021cb067a70");
-    private readonly List<string> implementedScreenWidgets = ["TabControl", "SplitPanel", "AsTree"];
+    private readonly List<string> implementedScreenWidgets =
+    [
+        "AsTree",
+        "Label",
+        "Panel",
+        "SplitPanel",
+        "TabControl",
+    ];
+    private readonly List<string> screenContainers = ["AsForm", "Panel", "SplitPanel", "TabPage"];
+    private readonly List<string> treeColumnProperties =
+    [
+        "IDColumn",
+        "ParentIDColumn",
+        "NameColumn",
+    ];
+    private readonly List<string> layoutProperties =
+    [
+        "Height",
+        "Left",
+        "Orientation",
+        "TabIndex",
+        "Top",
+        "Width",
+    ];
     private const int PanelGrowMargin = 20;
+    private const int SplitPanelGap = 10;
+    private const int MinSplitChildSize = 20;
+    private const int TabPageOffsetLeft = 5;
+    private const int TabPageOffsetTop = 20;
 
     public bool Update(AbstractControlSet screenSection, SectionEditorChangesModel input)
     {
@@ -144,28 +171,13 @@ public class DesignerEditorService(
                 .ToList();
             dataSources.Insert(index: 0, DataSource.Empty);
 
-            var userControlProvider = schemaService.GetProvider<UserControlSchemaItemProvider>();
-
-            var sections = userControlProvider
-                .ChildItems.OfType<ControlItem>()
-                .Where(item =>
-                    item.ControlType != "Origam.Gui.Win.AsForm"
-                    && item.IsComplexType
-                    && item.ControlToolBoxVisibility != ControlToolBoxVisibility.Nowhere
-                )
+            var sections = GetControlItems()
+                .Where(IsScreenSection)
                 .Select(item => new ToolBoxItem { Name = item.Name, Id = item.Id })
                 .OrderBy(x => x.Name);
 
-            var widgets = userControlProvider
-                .ChildItems.OfType<ControlItem>()
-                .Where(item =>
-                    item.ControlType != "Origam.Gui.Win.AsForm"
-                    && !item.IsComplexType
-                    && item.ControlToolBoxVisibility
-                        is ControlToolBoxVisibility.FormDesigner
-                            or ControlToolBoxVisibility.PanelAndFormDesigner
-                )
-                .Where(item => implementedScreenWidgets.Contains(item.Name))
+            var widgets = GetControlItems()
+                .Where(IsScreenWidget)
                 .Select(item => new ToolBoxItem { Name = item.Name, Id = item.Id })
                 .OrderBy(x => x.Name);
 
@@ -179,10 +191,35 @@ public class DesignerEditorService(
                 SelectedDataSourceId = screen.DataSourceId,
                 Sections = sections,
                 Widgets = widgets,
+                DataMembers = GetDataMembers(screen).ToList(),
+                Warnings = FindScreenWarnings(screen),
             };
         }
 
         return null;
+    }
+
+    private IEnumerable<ControlItem> GetControlItems()
+    {
+        return schemaService
+            .GetProvider<UserControlSchemaItemProvider>()
+            .ChildItems.OfType<ControlItem>()
+            .Where(item => item.ControlType != "Origam.Gui.Win.AsForm");
+    }
+
+    private static bool IsScreenSection(ControlItem item)
+    {
+        return item.IsComplexType
+            && item.ControlToolBoxVisibility != ControlToolBoxVisibility.Nowhere;
+    }
+
+    private bool IsScreenWidget(ControlItem item)
+    {
+        return !item.IsComplexType
+            && item.ControlToolBoxVisibility
+                is ControlToolBoxVisibility.FormDesigner
+                    or ControlToolBoxVisibility.PanelAndFormDesigner
+            && (implementedScreenWidgets.Contains(item.Name) || IsPlugin(item));
     }
 
     private static List<EditorField> GetFields(PanelControlSet screenSection)
@@ -260,9 +297,72 @@ public class DesignerEditorService(
         else
         {
             apiControl.Name = controlSetItem.RootItem.Name;
+            if (controlSetItem.RootItem is FormControlSet screen)
+            {
+                AddDataMemberDropDown(apiControl.Properties, screen);
+            }
         }
 
         return apiControl;
+    }
+
+    private static bool IsPlugin(ControlItem controlItem)
+    {
+        return controlItem.ControlType
+            is "Origam.Gui.Win.ScreenLevelPlugin"
+                or "Origam.Gui.Win.SectionLevelPlugin";
+    }
+
+    private static void AddDataMemberDropDown(
+        List<EditorProperty> properties,
+        FormControlSet screen
+    )
+    {
+        int index = properties.FindIndex(property => property.Name == "DataMember");
+        if (index < 0)
+        {
+            return;
+        }
+
+        EditorProperty dataMember = properties[index];
+        string currentValue = dataMember.Value as string ?? string.Empty;
+        DropDownValue[] dropDownValues = GetDataMembers(screen)
+            .Append(currentValue)
+            .Prepend(string.Empty)
+            .Distinct()
+            .Select(path => new DropDownValue(path, path))
+            .ToArray();
+        properties[index] = new EditorProperty(
+            name: dataMember.Name,
+            controlPropertyId: dataMember.ControlPropertyId,
+            type: "looukup",
+            value: dataMember.Value,
+            dropDownValues: dropDownValues,
+            category: dataMember.Category,
+            description: dataMember.Description,
+            readOnly: dataMember.ReadOnly
+        );
+    }
+
+    private static IEnumerable<string> GetDataMembers(FormControlSet screen)
+    {
+        if (screen.DataStructure == null)
+        {
+            return [];
+        }
+
+        return screen
+            .DataStructure.ChildItemsByType<DataStructureEntity>(DataStructureEntity.CategoryConst)
+            .SelectMany(entity => GetDataMembers(entity, parentPath: null));
+    }
+
+    private static IEnumerable<string> GetDataMembers(DataStructureEntity entity, string parentPath)
+    {
+        string path = parentPath == null ? entity.Name : parentPath + "." + entity.Name;
+        return entity
+            .ChildItemsByType<DataStructureEntity>(DataStructureEntity.CategoryConst)
+            .SelectMany(child => GetDataMembers(child, path))
+            .Prepend(path);
     }
 
     public ApiControl CreateNewItem(
@@ -627,12 +727,13 @@ public class DesignerEditorService(
 
     public ScreenEditorItem CreateNewItem(
         ScreenEditorItemModel itemModelData,
-        FormControlSet screen
+        FormControlSet screen,
+        bool fitToParent = false
     )
     {
         var (newItem, sectionControl) = LoadControl(itemModelData, screen);
 
-        if (itemModelData.ControlItemId == tabControlControlItemId)
+        if (newItem.ControlItem.Id == tabControlControlItemId)
         {
             for (int i = 0; i < 2; i++)
             {
@@ -652,6 +753,11 @@ public class DesignerEditorService(
             }
         }
 
+        if (fitToParent)
+        {
+            ArrangeChildren((ControlSetItem)newItem.ParentItem, splitEvenly: true);
+        }
+
         return new ScreenEditorItem
         {
             ScreenItem = LoadContent(newItem, []),
@@ -664,7 +770,12 @@ public class DesignerEditorService(
         FormControlSet screen
     )
     {
-        ISchemaItem parent = screen.GetChildByIdRecursive(itemModelData.ParentControlSetItemId);
+        ControlSetItem parent =
+            itemModelData.ParentControlSetItemId == Guid.Empty
+            || itemModelData.ParentControlSetItemId == screen.Id
+                ? screen.MainItem
+                : screen.GetChildByIdRecursive(itemModelData.ParentControlSetItemId)
+                    as ControlSetItem;
         if (parent == null)
         {
             throw new UserOrigamException(
@@ -675,17 +786,15 @@ public class DesignerEditorService(
             );
         }
 
-        ControlItem controlItem = schemaService
-            .GetProvider<UserControlSchemaItemProvider>()
-            .ChildItems.OfType<ControlItem>()
-            .First(item => item.Id == itemModelData.ControlItemId); // This will have to be done some other way in case of a plugin. See ControlSetEditor.GetControlbyType(Type type)
+        ControlItem controlItem = FindControlItem(itemModelData);
+        ValidateParent(parent, controlItem);
 
         ControlSetItem newItem = parent.NewItem<ControlSetItem>(
             schemaService.ActiveSchemaExtensionId,
             group: null
         );
         newItem.ControlItem = controlItem;
-        newItem.Name = controlItem.Name;
+        newItem.Name = CreateUniqueName(screen, controlItem);
 
         ApiControl sectionControl = null;
         object height = null;
@@ -704,7 +813,342 @@ public class DesignerEditorService(
             height: (int?)height,
             width: (int?)width
         );
+        PropertyValueItem tabIndex = newItem.GetPropertyOrNull("TabIndex");
+        if (tabIndex != null)
+        {
+            tabIndex.Value = XmlConvert.ToString(NextTabIndex(parent, newItem));
+        }
         return new Tuple<ControlSetItem, ApiControl>(newItem, sectionControl);
+    }
+
+    private ControlItem FindControlItem(ScreenEditorItemModel itemModelData)
+    {
+        if (itemModelData.ControlItemId != Guid.Empty)
+        {
+            return GetControlItems().First(item => item.Id == itemModelData.ControlItemId); // This will have to be done some other way in case of a plugin. See ControlSetEditor.GetControlbyType(Type type)
+        }
+
+        List<ControlItem> matches = GetControlItems()
+            .Where(item =>
+                IsScreenSection(item) || IsScreenWidget(item) || item.Id == tabPageControlItemId
+            )
+            .Where(item =>
+                string.Equals(
+                    item.Name,
+                    itemModelData.ControlName,
+                    StringComparison.OrdinalIgnoreCase
+                )
+            )
+            .ToList();
+        if (matches.Count != 1)
+        {
+            throw new UserOrigamException(
+                string.Format(
+                    Strings.ScreenEditor_WidgetNotFound,
+                    itemModelData.ControlName,
+                    matches.Count,
+                    string.Join(
+                        separator: ", ",
+                        GetControlItems().Where(IsScreenWidget).Select(item => item.Name)
+                    )
+                )
+            );
+        }
+
+        return matches[0];
+    }
+
+    private void ValidateParent(ControlSetItem parent, ControlItem controlItem)
+    {
+        string parentType = parent.ControlItem.Name;
+        bool canHold =
+            controlItem.Id == tabPageControlItemId
+                ? parentType == "TabControl"
+                : screenContainers.Contains(parentType);
+        if (!canHold)
+        {
+            throw new UserOrigamException(
+                string.Format(
+                    Strings.ScreenEditor_ParentCannotHoldWidget,
+                    controlItem.Name,
+                    parent.Name,
+                    parentType
+                )
+            );
+        }
+
+        if (parentType == "SplitPanel" && GetLiveChildren(parent).Count >= 2)
+        {
+            throw new UserOrigamException(
+                string.Format(Strings.ScreenEditor_SplitPanelFull, parent.Name)
+            );
+        }
+    }
+
+    private static List<ControlSetItem> GetLiveChildren(ControlSetItem container)
+    {
+        return container
+            .ChildItemsByType<ControlSetItem>(ControlSetItem.CategoryConst)
+            .Where(item => !item.IsDeleted)
+            .OrderBy(item => IntValue(item, propertyName: "TabIndex"))
+            .ToList();
+    }
+
+    public void ArrangeChanged(FormControlSet screen, SectionEditorChangesModel input)
+    {
+        foreach (ChangesModel changes in input.ModelChanges)
+        {
+            bool layoutChanged =
+                changes.ParentSchemaItemId != null
+                || changes.Changes.Any(change => layoutProperties.Contains(change.Name));
+            if (
+                !layoutChanged
+                || screen.GetChildByIdRecursive(changes.SchemaItemId)
+                    is not ControlSetItem changedItem
+            )
+            {
+                continue;
+            }
+
+            if (changes.Changes.Any(change => change.Name == "Orientation"))
+            {
+                DockSplitPanelChildren(
+                    changedItem,
+                    GetLiveChildren(changedItem),
+                    splitEvenly: true
+                );
+            }
+
+            ArrangeChildren(
+                changedItem.ParentItem as ControlSetItem ?? changedItem,
+                splitEvenly: false
+            );
+        }
+    }
+
+    private void ArrangeChildren(ControlSetItem container, bool splitEvenly)
+    {
+        List<ControlSetItem> children = GetLiveChildren(container);
+        switch (container.ControlItem.Name)
+        {
+            case "SplitPanel":
+            {
+                DockSplitPanelChildren(container, children, splitEvenly);
+                break;
+            }
+            case "AsForm":
+            {
+                FillParent(
+                    children,
+                    width: IntValue(container, propertyName: "Width"),
+                    height: IntValue(container, propertyName: "Height")
+                );
+                break;
+            }
+            case "TabPage":
+            {
+                var tabControl = (ControlSetItem)container.ParentItem;
+                FillParent(
+                    children,
+                    width: IntValue(tabControl, propertyName: "Width") - (TabPageOffsetLeft * 2),
+                    height: IntValue(tabControl, propertyName: "Height")
+                        - TabPageOffsetTop
+                        - TabPageOffsetLeft
+                );
+                break;
+            }
+        }
+
+        foreach (ControlSetItem child in children)
+        {
+            ArrangeChildren(child, splitEvenly: false);
+        }
+    }
+
+    private void FillParent(List<ControlSetItem> children, int width, int height)
+    {
+        if (children.Count == 1 && children[0].ControlItem.Name != "Label")
+        {
+            SetBounds(children[0], top: 0, left: 0, width, height);
+        }
+    }
+
+    private void DockSplitPanelChildren(
+        ControlSetItem splitPanel,
+        List<ControlSetItem> children,
+        bool splitEvenly
+    )
+    {
+        if (children.Count == 0)
+        {
+            return;
+        }
+
+        bool isHorizontal = FindValueItem(splitPanel, propertyName: "Orientation")?.Value != "1";
+        int splitWidth = IntValue(splitPanel, propertyName: "Width");
+        int splitHeight = IntValue(splitPanel, propertyName: "Height");
+        int innerWidth = splitWidth - (SplitPanelGap * 2);
+        int innerHeight = splitHeight - (SplitPanelGap * 2);
+        bool halve = splitEvenly && children.Count > 1;
+        int firstWidth = isHorizontal
+            ? innerWidth
+            : LimitFirstChildSize(
+                halve
+                    ? (innerWidth - SplitPanelGap) / 2
+                    : IntValue(children[0], propertyName: "Width"),
+                innerWidth
+            );
+        int firstHeight = isHorizontal
+            ? LimitFirstChildSize(
+                halve
+                    ? (innerHeight - SplitPanelGap) / 2
+                    : IntValue(children[0], propertyName: "Height"),
+                innerHeight
+            )
+            : innerHeight;
+        SetBounds(children[0], top: SplitPanelGap, left: SplitPanelGap, firstWidth, firstHeight);
+        if (children.Count < 2)
+        {
+            return;
+        }
+
+        int secondTop = isHorizontal ? firstHeight + (SplitPanelGap * 2) : SplitPanelGap;
+        int secondLeft = isHorizontal ? SplitPanelGap : firstWidth + (SplitPanelGap * 2);
+        SetBounds(
+            children[1],
+            secondTop,
+            secondLeft,
+            width: isHorizontal
+                ? innerWidth
+                : Math.Max(MinSplitChildSize, splitWidth - SplitPanelGap - secondLeft),
+            height: isHorizontal
+                ? Math.Max(MinSplitChildSize, splitHeight - SplitPanelGap - secondTop)
+                : innerHeight
+        );
+    }
+
+    private static int LimitFirstChildSize(int size, int available)
+    {
+        return Math.Max(
+            MinSplitChildSize,
+            Math.Min(size, available - SplitPanelGap - MinSplitChildSize)
+        );
+    }
+
+    private void SetBounds(ControlSetItem item, int top, int left, int width, int height)
+    {
+        adapterFactory
+            .Create(item)
+            .UpdateProperties(
+                new ChangesModel
+                {
+                    SchemaItemId = item.Id,
+                    Changes =
+                    [
+                        new PropertyChange { Name = "Top", Value = XmlConvert.ToString(top) },
+                        new PropertyChange { Name = "Left", Value = XmlConvert.ToString(left) },
+                        new PropertyChange { Name = "Width", Value = XmlConvert.ToString(width) },
+                        new PropertyChange { Name = "Height", Value = XmlConvert.ToString(height) },
+                    ],
+                }
+            );
+    }
+
+    public List<string> FindScreenWarnings(FormControlSet screen)
+    {
+        var warnings = new List<string>();
+        if (screen.MainItem == null)
+        {
+            return warnings;
+        }
+
+        List<ControlSetItem> rootWidgets = GetLiveChildren(screen.MainItem);
+        if (rootWidgets.Count > 1)
+        {
+            warnings.Add(
+                string.Format(
+                    Strings.ScreenEditor_MoreRootWidgets,
+                    string.Join(separator: ", ", rootWidgets.Select(item => item.Name))
+                )
+            );
+        }
+
+        List<string> dataMembers = GetDataMembers(screen).ToList();
+        foreach (ControlSetItem item in GetLiveControls(screen))
+        {
+            PropertyValueItem dataMember = FindValueItem(item, propertyName: "DataMember");
+            bool needsDataMember =
+                item.ControlItem.IsComplexType
+                || item.ControlItem.Name == "AsTree"
+                || item.ControlItem.ControlType == "Origam.Gui.Win.SectionLevelPlugin";
+            if (needsDataMember && !dataMembers.Contains(dataMember?.Value))
+            {
+                warnings.Add(
+                    string.Format(
+                        Strings.ScreenEditor_DataMemberMissing,
+                        item.Name,
+                        dataMember?.Value,
+                        string.Join(separator: ", ", dataMembers)
+                    )
+                );
+            }
+
+            if (item.ControlItem.Name == "AsTree")
+            {
+                warnings.AddRange(
+                    treeColumnProperties
+                        .Where(property =>
+                            string.IsNullOrEmpty(FindValueItem(item, property)?.Value)
+                        )
+                        .Select(property =>
+                            string.Format(
+                                Strings.ScreenEditor_TreeColumnMissing,
+                                item.Name,
+                                property
+                            )
+                        )
+                );
+            }
+
+            if (item.ControlItem.Name == "SplitPanel" && GetLiveChildren(item).Count != 2)
+            {
+                warnings.Add(string.Format(Strings.ScreenEditor_SplitPanelNeedsTwo, item.Name));
+            }
+        }
+
+        return warnings;
+    }
+
+    private static string CreateUniqueName(FormControlSet screen, ControlItem controlItem)
+    {
+        string baseName = controlItem.IsComplexType ? "AsPanel" : controlItem.Name;
+        HashSet<string> usedNames = screen
+            .ChildItemsRecursive.OfType<ControlSetItem>()
+            .Where(item => !item.IsDeleted)
+            .Select(item => item.Name)
+            .ToHashSet();
+        if (!controlItem.IsComplexType && !usedNames.Contains(baseName))
+        {
+            return baseName;
+        }
+
+        int number = 1;
+        while (usedNames.Contains(baseName + number))
+        {
+            number++;
+        }
+
+        return baseName + number;
+    }
+
+    private static int NextTabIndex(ISchemaItem parent, ControlSetItem newItem)
+    {
+        return parent
+                .ChildItemsByType<ControlSetItem>(ControlSetItem.CategoryConst)
+                .Where(item => item.Id != newItem.Id && !item.IsDeleted)
+                .Select(item => item.GetPropertyOrNull("TabIndex")?.IntValue ?? -1)
+                .DefaultIfEmpty(-1)
+                .Max() + 1;
     }
 
     public void DeleteItem(List<Guid> schemaItemIds, ISchemaItem rootItem)

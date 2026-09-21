@@ -98,7 +98,9 @@ export class DesignSurfaceState implements IComponentProvider {
   updateComponents(control: IApiControl) {
     const currentComponent = this.components.find(x => x.id === control.id)!;
     for (const property of currentComponent.properties) {
-      property.value = control.properties.find(x => x.name === property.name)!.value;
+      const updatedProperty = control.properties.find(x => x.name === property.name)!;
+      property.value = updatedProperty.value;
+      property.dropDownValues = updatedProperty.dropDownValues;
     }
     for (const childControl of control.children) {
       this.updateComponents(childControl);
@@ -161,18 +163,18 @@ export class DesignSurfaceState implements IComponentProvider {
       draggingComponent.data.type !== ComponentType.AsPanel
     ) {
       const targetParent = this.findComponentAt(mouseX, mouseY, draggingComponent);
+      const previousParent = draggingComponent.parent;
       if (targetParent && draggingComponent.parent != targetParent) {
-        draggingComponent.relativeLeft =
-          (draggingComponent.parent?.absoluteLeft ?? 0) -
-          targetParent.absoluteLeft +
-          draggingComponent.relativeLeft;
-        draggingComponent.relativeTop =
-          (draggingComponent.parent?.absoluteTop ?? 0) -
-          targetParent.absoluteTop +
-          draggingComponent.relativeTop;
+        const absoluteLeft = draggingComponent.absoluteLeft;
+        const absoluteTop = draggingComponent.absoluteTop;
         draggingComponent.parent = targetParent;
+        draggingComponent.absoluteLeft = absoluteLeft;
+        draggingComponent.absoluteTop = absoluteTop;
+        previousParent?.update();
+        targetParent.onChildrenChanged();
+      } else {
+        targetParent?.update();
       }
-      targetParent.update();
       this.updatePanelSize(draggingComponent);
     }
 
@@ -195,7 +197,7 @@ export class DesignSurfaceState implements IComponentProvider {
       this.components.filter(
         comp =>
           (excludeIds.length == 0 || !excludeIds.includes(comp.id)) &&
-          comp.canHaveChildren &&
+          comp.canAcceptChild(excludeComponent) &&
           comp.isActive &&
           comp.isPointInside(mouseX, mouseY),
       ) ?? this.panel;
@@ -342,6 +344,7 @@ export class DesignSurfaceState implements IComponentProvider {
   @action
   endResizing() {
     this.resizeState.component?.update();
+    this.resizeState.component?.parent?.update();
     this.resizeState = {
       component: null,
       handle: null,

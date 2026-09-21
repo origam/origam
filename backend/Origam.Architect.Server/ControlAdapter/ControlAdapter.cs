@@ -281,7 +281,29 @@ public class ControlAdapter(
             });
         var schemaItemProperties = GetSchemaItemProperties()
             .Select(property => propertyFactory.Create(property, this));
-        return properties.Concat(schemaItemProperties).ToList();
+        return properties.Concat(GetPluginProperties()).Concat(schemaItemProperties).ToList();
+    }
+
+    private IEnumerable<EditorProperty> GetPluginProperties()
+    {
+        if (controlSetItem.ControlItem.Ancestors.Count == 0)
+        {
+            return [];
+        }
+
+        return controlSetItem
+            .ControlItem.ChildItemsByType<ControlPropertyItem>(ControlPropertyItem.CategoryConst)
+            .Where(propertyItem => Control.GetType().GetProperty(propertyItem.Name) == null)
+            .Select(propertyItem =>
+            {
+                PropertyValueItem valueItem = controlSetItem
+                    .ChildItems.OfType<PropertyValueItem>()
+                    .FirstOrDefault(item => item.ControlPropertyId == propertyItem.Id);
+                object defaultValue = propertyItem.SystemType.IsValueType
+                    ? Activator.CreateInstance(propertyItem.SystemType)
+                    : null;
+                return propertyFactory.Create(propertyItem, valueItem?.TypedValue ?? defaultValue);
+            });
     }
 
     private bool IsSchemaItemProperty(string propertyName)

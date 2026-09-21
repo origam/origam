@@ -106,22 +106,15 @@ export class ScreenEditorState extends DesignerEditorState {
   create(x: number, y: number) {
     return function* (this: ScreenEditorState): Generator<Promise<any>, void, any> {
       const parent = this.surface.findComponentAt(x, y);
-
-      let currentParent: Component | null = parent;
-      let relativeX = x;
-      let relativeY = y;
-      while (currentParent !== null) {
-        relativeX -= currentParent.relativeLeft;
-        relativeY -= currentParent.relativeTop;
-        currentParent = currentParent.parent;
-      }
+      const relativeX = x - parent.absoluteLeft - parent.childOffsetLeft;
+      const relativeY = y - parent.absoluteTop - parent.childOffsetTop;
 
       const screenEditorItem = yield this.architectApi.createScreenEditorItem({
         editorSchemaItemId: this.editorNode.origamId,
         parentControlSetItemId: parent.id,
         controlItemId: this.surface.draggedComponentData!.identifier!,
-        top: Math.round(relativeY),
-        left: Math.round(relativeX),
+        top: Math.max(0, Math.round(relativeY)),
+        left: Math.max(0, Math.round(relativeX)),
       });
 
       const sectionLoader = getSectionLoader(this.architectApi, this.editorNode.origamId);
@@ -142,10 +135,9 @@ export class ScreenEditorState extends DesignerEditorState {
       this.surface.draggedComponentData = null;
       this.isDirty = true;
 
-      const panelSizeChanged = this.surface.updatePanelSize(rootComponent);
-      if (panelSizeChanged) {
-        yield* this.update() as any;
-      }
+      parent.onChildrenChanged();
+      this.surface.updatePanelSize(rootComponent);
+      yield* this.update() as any;
     }.bind(this);
   }
 

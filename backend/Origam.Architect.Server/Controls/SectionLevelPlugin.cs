@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2025 Advantage Solutions, s. r. o.
+Copyright 2005 - 2026 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -19,14 +19,18 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Architect.Server.Models;
+using System.ComponentModel;
 
-public class ScreenEditorItemModel
+namespace Origam.Architect.Server.Controls;
+
+public class SectionLevelPlugin : ScreenLevelPlugin
 {
-    public Guid EditorSchemaItemId { get; set; }
-    public Guid ParentControlSetItemId { get; set; }
-    public Guid ControlItemId { get; set; }
-    public string ControlName { get; set; }
-    public int Top { get; set; }
-    public int Left { get; set; }
+    [Category("Data")]
+    public string DataMember { get; set; }
+
+    [Category("Data")]
+    [Description(
+        "Must be set for exactly one plugin per screen to true if there is no master grid present."
+    )]
+    public bool AllowNavigation { get; set; } = true;
 }

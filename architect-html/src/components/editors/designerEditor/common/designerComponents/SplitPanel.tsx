@@ -26,6 +26,22 @@ import { EditorProperty } from '@editors/gridEditor/EditorProperty';
 import { ReactElement } from 'react';
 
 const childGap = 10;
+const minChildSize = 20;
+
+function limitFirstChildSize(size: number, available: number): number {
+  return Math.max(minChildSize, Math.min(size, available - childGap - minChildSize));
+}
+
+function getTabIndex(child: Component): number {
+  return Number(child.get('TabIndex') ?? 0);
+}
+
+function setTabIndex(child: Component, tabIndex: number) {
+  const tabIndexProperty = child.getProperty('TabIndex');
+  if (tabIndexProperty) {
+    tabIndexProperty.value = tabIndex;
+  }
+}
 
 export class SplitPanel extends Component {
   get canHaveChildren(): boolean {
@@ -55,99 +71,76 @@ export class SplitPanel extends Component {
     this.properties.push(newOrientationProperty);
   }
 
+  canAcceptChild(child?: Component): boolean {
+    return this.getChildren(this).filter(existing => existing.id !== child?.id).length < 2;
+  }
+
   update() {
-    const children = this.getChildren(this);
-    if (children.length == 0) {
+    this.layout(false);
+  }
+
+  onChildrenChanged() {
+    this.layout(true);
+  }
+
+  private layout(splitEvenly: boolean) {
+    const orientation = this.getOrientation();
+    if (orientation !== Orientation.Horizontal && orientation !== Orientation.Vertical) {
+      throw new Error(`Unknown split panel orientation "${orientation}"`);
+    }
+    const isHorizontal = orientation === Orientation.Horizontal;
+    const [firstChild, secondChild] = this.getChildren(this).sort(
+      (childA, childB) =>
+        (isHorizontal
+          ? childA.relativeTop - childB.relativeTop
+          : childA.relativeLeft - childB.relativeLeft) || getTabIndex(childA) - getTabIndex(childB),
+    );
+    if (!firstChild) {
       return;
     }
-    if (children.length > 2) {
-      throw new Error('Split panel cannot have more than 2 children');
+    const innerWidth = this.width - childGap * 2;
+    const innerHeight = this.height - childGap * 2;
+    if (splitEvenly && secondChild) {
+      firstChild.width = Math.round((innerWidth - childGap) / 2);
+      firstChild.height = Math.round((innerHeight - childGap) / 2);
     }
-    const orientation = this.getOrientation();
-    switch (orientation) {
-      case Orientation.Horizontal: {
-        const { upperChild, lowerChild } = this.getUpperAndLowerChild(children);
-        upperChild.relativeTop = childGap;
-        upperChild.relativeLeft = childGap;
-        upperChild.width = Math.round(this.width - childGap * 2);
-        upperChild.height = Math.round(this.height / 2 - childGap * 1.5);
-        if (lowerChild) {
-          lowerChild.relativeTop = Math.round(this.height / 2 + childGap * 0.5);
-          lowerChild.relativeLeft = childGap;
-          lowerChild.width = Math.round(this.width - childGap * 2);
-          lowerChild.height = Math.round(this.height / 2 - childGap * 1.5);
-        }
-        break;
-      }
-      case Orientation.Vertical: {
-        const { leftChild, rightChild } = this.getLeftAndRightChild(children);
-        leftChild.relativeLeft = childGap;
-        leftChild.relativeTop = childGap;
-        leftChild.width = Math.round(this.width / 2 - childGap * 1.5);
-        leftChild.height = Math.round(this.height - childGap * 2);
-        if (rightChild) {
-          rightChild.relativeTop = childGap;
-          rightChild.relativeLeft = Math.round(this.width / 2 + childGap * 0.5);
-          rightChild.width = Math.round(this.width / 2 - childGap * 1.5);
-          rightChild.height = Math.round(this.height - childGap * 2);
-        }
-        break;
-      }
-      default:
-        throw new Error(`Unknown split panel orientation "${orientation}"`);
+    firstChild.relativeTop = childGap;
+    firstChild.relativeLeft = childGap;
+    firstChild.width = isHorizontal
+      ? innerWidth
+      : limitFirstChildSize(firstChild.width, innerWidth);
+    firstChild.height = isHorizontal
+      ? limitFirstChildSize(firstChild.height, innerHeight)
+      : innerHeight;
+    setTabIndex(firstChild, 0);
+    if (!secondChild) {
+      return;
     }
+    secondChild.relativeTop = isHorizontal ? firstChild.height + childGap * 2 : childGap;
+    secondChild.relativeLeft = isHorizontal ? childGap : firstChild.width + childGap * 2;
+    secondChild.width = isHorizontal
+      ? innerWidth
+      : Math.max(minChildSize, this.width - childGap - secondChild.relativeLeft);
+    secondChild.height = isHorizontal
+      ? Math.max(minChildSize, this.height - childGap - secondChild.relativeTop)
+      : innerHeight;
+    setTabIndex(secondChild, 1);
   }
 
   private getOrientation() {
     const propertyValue = this.get('Orientation');
     switch (propertyValue) {
+      case 0:
       case '0':
       case 'Horizontal':
         return Orientation.Horizontal;
+      case 1:
       case '1':
       case 'Vertical':
         return Orientation.Vertical;
       default:
         return propertyValue;
     }
-  }
-
-  getUpperAndLowerChild(children: Component[]) {
-    if (children.length == 1) {
-      return {
-        upperChild: children[0],
-        lowerChild: undefined,
-      };
-    }
-    if (children[0].relativeTop < children[1].relativeTop) {
-      return {
-        upperChild: children[0],
-        lowerChild: children[1],
-      };
-    }
-    return {
-      upperChild: children[1],
-      lowerChild: children[0],
-    };
-  }
-
-  getLeftAndRightChild(children: Component[]) {
-    if (children.length == 1) {
-      return {
-        leftChild: children[0],
-        rightChild: undefined,
-      };
-    }
-    if (children[0].relativeLeft > children[1].relativeLeft) {
-      return {
-        leftChild: children[0],
-        rightChild: children[1],
-      };
-    }
-    return {
-      leftChild: children[1],
-      rightChild: children[0],
-    };
   }
 
   getDesignerRepresentation(): ReactElement | null {
@@ -169,7 +162,7 @@ class OrientationProperty extends EditorProperty {
 
   set value(value: PropertyValue) {
     super.value = value;
-    this.splitPanel.update();
+    this.splitPanel.onChildrenChanged();
   }
 }
 

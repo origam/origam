@@ -1,6 +1,5 @@
-#region license
 /*
-Copyright 2005 - 2025 Advantage Solutions, s. r. o.
+Copyright 2005 - 2026 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -17,16 +16,21 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
 
-namespace Origam.Architect.Server.Models;
+import { Component } from '@editors/designerEditor/common/designerComponents/Component';
+import S from '@editors/designerEditor/common/designerComponents/Components.module.scss';
+import { ReactElement } from 'react';
 
-public class ScreenEditorItemModel
-{
-    public Guid EditorSchemaItemId { get; set; }
-    public Guid ParentControlSetItemId { get; set; }
-    public Guid ControlItemId { get; set; }
-    public string ControlName { get; set; }
-    public int Top { get; set; }
-    public int Left { get; set; }
+const nodeIndents = [0, 1, 2, 1, 0, 1];
+
+export class AsTree extends Component {
+  getDesignerRepresentation(): ReactElement | null {
+    return (
+      <div className={S.tree}>
+        {nodeIndents.map((indent, index) => (
+          <div key={index} className={S.treeNode} style={{ marginLeft: `${indent * 16}px` }} />
+        ))}
+      </div>
+    );
+  }
 }

@@ -52,5 +52,6 @@ public class Label : IControl
     {
         Height = 20;
         Width = 200;
+        Text = controlSetItem.Name;
     }
 }

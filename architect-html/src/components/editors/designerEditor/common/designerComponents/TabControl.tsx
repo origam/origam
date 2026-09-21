@@ -91,6 +91,10 @@ export class TabControl extends Component {
     return false;
   }
 
+  get hasBorder(): boolean {
+    return false;
+  }
+
   get childOffsetLeft() {
     return 5;
   }
@@ -107,11 +111,12 @@ export class TabControl extends Component {
             <div className={S.tabs}>
               {this.tabs
                 .slice()
-                .sort((a, b) => a.get('Text').localeCompare(b.get('Text')))
+                .sort((a, b) => a.get('SchemaItemName').localeCompare(b.get('SchemaItemName')))
                 .map(tab => (
                   <TabLabel key={tab.id} onClick={() => this.setVisible(tab.id)} tabPage={tab} />
                 ))}
             </div>
+            <div className={S.tabPageBody}></div>
           </div>
         )}
       </Observer>
@@ -167,7 +172,6 @@ const TabLabel = observer(({ tabPage, onClick }: { tabPage: TabPage; onClick: ()
 });
 
 export class TabPage extends Component {
-  @observable accessor hideChildren: boolean = false;
   @observable private accessor _isActive: boolean = false;
   private getChildren: (component: Component) => Component[];
 
