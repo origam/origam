@@ -309,4 +309,16 @@
     <data name="ScreenEditor_TreeColumnMissing" xml:space="preserve">
         <value>AsTree "{0}" has no {1}. Set it to the name of a field of the tree's entity, otherwise the client cannot build the tree.</value>
     </data>
+    <data name="Property_ValueNotRead" xml:space="preserve">
+        <value>The value of {0} could not be read. {1}</value>
+    </data>
+    <data name="Property_ValueNotOffered" xml:space="preserve">
+        <value>"{1}" is not one of the values offered for {0}.</value>
+    </data>
+    <data name="Property_ConverterNotFound" xml:space="preserve">
+        <value>Type converter {0} of property {1} could not be found.</value>
+    </data>
+    <data name="Property_DataTypeWithoutValue" xml:space="preserve">
+        <value>A data constant of data type {0} cannot have a value.</value>
+    </data>
 </root>

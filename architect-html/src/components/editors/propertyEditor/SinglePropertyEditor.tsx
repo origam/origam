@@ -24,6 +24,7 @@ import { IPropertyManager } from '@editors/propertyEditor/IPropertyManager.tsx';
 import { FilterableSelect } from '@editors/propertyEditor/FilterableSelect.tsx';
 import { NumericPropertyInput } from '@editors/propertyEditor/NumericPropertyInput.tsx';
 import S from '@editors/propertyEditor/SinglePropertyEditor.module.scss';
+import { UntypedPropertyInput } from '@editors/propertyEditor/UntypedPropertyInput.tsx';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler.ts';
 import { observer } from 'mobx-react-lite';
 import { useContext } from 'react';
@@ -66,6 +67,7 @@ const SinglePropertyEditor = observer(
             options={property.dropDownValues}
             selectedValue={selectedValue}
             disabled={property.readOnly}
+            dataTestId={`property-select-${property.name}`}
             onChange={value => onValueChange(property, value)}
           />
         );
@@ -79,6 +81,7 @@ const SinglePropertyEditor = observer(
               checked={property.value as boolean}
               onChange={e => onValueChange(property, e.target.checked)}
               disabled={property.readOnly}
+              data-test-id={`property-checkbox-${property.name}`}
               className={S.checkbox}
             />
           </div>
@@ -105,6 +108,25 @@ const SinglePropertyEditor = observer(
         );
       }
 
+      if (property.type === 'untyped') {
+        return (
+          <div className={S.inputWithCopyButton}>
+            <button
+              type="button"
+              className={S.copyButton}
+              onClick={handleCopyToClipboard}
+              title="Copy to clipboard"
+            >
+              <VscCopy />
+            </button>
+            <UntypedPropertyInput
+              property={property}
+              onChange={value => onValueChange(property, value)}
+            />
+          </div>
+        );
+      }
+
       return (
         <div className={S.inputWithCopyButton}>
           <button
@@ -118,6 +140,7 @@ const SinglePropertyEditor = observer(
           <input
             type="text"
             disabled={property.readOnly}
+            data-test-id={`property-input-${property.name}`}
             value={property.value != null ? String(property.value) : ''}
             onChange={e => {
               const next = NO_WHITESPACE_PROPERTIES.has(property.name)
