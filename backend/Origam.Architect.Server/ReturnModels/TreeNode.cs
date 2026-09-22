@@ -114,11 +114,10 @@ public class TreeNodeFactory(
 
     public static IOrderedEnumerable<IBrowserNode2> OrderForTree(IEnumerable<IBrowserNode2> nodes)
     {
-        // Version throws on an unsaved version.
         return nodes
             .OrderBy(node =>
                 node is Schema.DeploymentModel.DeploymentVersion { VersionString: not null } version
-                    ? version.Version
+                    ? version
                     : null
             )
             .ThenBy(node => node.NodeText);
