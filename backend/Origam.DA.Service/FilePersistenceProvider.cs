@@ -149,6 +149,7 @@ public class FilePersistenceProvider : AbstractPersistenceProvider, IFilePersist
 
     public override void EndTransactionDontSave()
     {
+        base.EndTransactionDontSave();
         persistor.EndTransactionDontSave();
         Maybe<XmlLoadError> result = ReloadFiles();
         if (result.HasValue)

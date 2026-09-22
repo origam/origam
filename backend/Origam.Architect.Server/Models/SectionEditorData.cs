@@ -31,6 +31,7 @@ public class SectionEditorData
     public Guid SchemaExtensionId { get; set; }
     public Guid SelectedDataSourceId { get; set; }
     public IEnumerable<EditorField> Fields { get; set; }
+    public List<string> Warnings { get; set; }
     public ApiControl RootControl { get; set; }
 }
 
