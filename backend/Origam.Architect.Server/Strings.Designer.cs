@@ -896,5 +896,14 @@ namespace Origam.Architect.Server {
                 return ResourceManager.GetString("Wizard_LookupAlreadyExists", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Entity &quot;{0}&quot; of this screen section is not part of data structure &quot;{1}&quot; used by the screens {2}, so those screens cannot open. Either point the screen section back at an entity of &quot;{1}&quot;, or add &quot;{0}&quot; to &quot;{1}&quot; and set the DataMember of the section on those screens to it..
+        /// </summary>
+        internal static string SectionEditor_EntityMissingInDataStructure {
+            get {
+                return ResourceManager.GetString("SectionEditor_EntityMissingInDataStructure", resourceCulture);
+            }
+        }
     }
 }
