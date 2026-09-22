@@ -53,10 +53,7 @@ public static class ScreenSectionWarningFinder
         foreach (IGrouping<Guid, FormControlSet> screens in screensByDataStructure)
         {
             DataStructure dataStructure = screens.First().DataStructure;
-            DataStructureEntity dataStructureEntity = dataStructure?.Entities.FirstOrDefault(
-                candidate => candidate.EntityId == entity.Id
-            );
-            if (dataStructureEntity == null)
+            if (dataStructure == null)
             {
                 continue;
             }
@@ -64,6 +61,21 @@ public static class ScreenSectionWarningFinder
                 separator: ", ",
                 screens.Select(screen => screen.Name)
             );
+            DataStructureEntity dataStructureEntity = dataStructure.Entities.FirstOrDefault(
+                candidate => candidate.EntityDefinition?.Id == entity.Id
+            );
+            if (dataStructureEntity == null)
+            {
+                warnings.Add(
+                    string.Format(
+                        Strings.SectionEditor_EntityMissingInDataStructure,
+                        entity.Name,
+                        dataStructure.Name,
+                        screenNames
+                    )
+                );
+                continue;
+            }
             foreach (IDataEntityColumn field in fields)
             {
                 warnings.AddRange(

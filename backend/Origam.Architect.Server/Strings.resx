@@ -321,4 +321,7 @@
     <data name="Property_DataTypeWithoutValue" xml:space="preserve">
         <value>A data constant of data type {0} cannot have a value.</value>
     </data>
+    <data name="SectionEditor_EntityMissingInDataStructure" xml:space="preserve">
+        <value>Entity "{0}" of this screen section is not part of data structure "{1}" used by the screens {2}, so those screens cannot open. Either point the screen section back at an entity of "{1}", or add "{0}" to "{1}" and set the DataMember of the section on those screens to it.</value>
+    </data>
 </root>
