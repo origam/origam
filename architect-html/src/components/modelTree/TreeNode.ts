@@ -57,6 +57,7 @@ export class TreeNode implements IEditorNode {
     this.isInActivePackage = apiNode.isInActivePackage ?? true;
     this.isFileDirty = apiNode.isFileDirty ?? false;
     this.isFolder = apiNode.isFolder ?? false;
+    this.isMandatoryField = apiNode.isMandatoryField ?? false;
     this.role = apiNode.role;
     this.canDrag = apiNode.canDrag ?? false;
     this.children = apiNode.children
@@ -83,6 +84,7 @@ export class TreeNode implements IEditorNode {
   isInActivePackage: boolean;
   isFileDirty: boolean;
   isFolder: boolean;
+  isMandatoryField: boolean;
   role?: string;
   canDrag: boolean;
 
