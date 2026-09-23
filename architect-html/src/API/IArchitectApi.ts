@@ -575,6 +575,7 @@ export interface IApiTreeNode extends INodeLoadData {
   isInActivePackage?: boolean;
   isFileDirty?: boolean;
   isFolder?: boolean;
+  isMandatoryField?: boolean;
   role?: string;
   canDrag?: boolean;
 }
