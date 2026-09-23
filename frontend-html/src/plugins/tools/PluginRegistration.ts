@@ -18,9 +18,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 
-import { registerPlugin } from "plugins/tools/PluginLibrary";
-import { TestPlugin } from "plugins/implementations/TestPlugin/TestPlugin";
-
 export function registerPlugins() {
-  registerPlugin("TestPlugin", () => new TestPlugin());
+
 }
