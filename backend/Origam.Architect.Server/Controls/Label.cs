@@ -26,18 +26,22 @@ namespace Origam.Architect.Server.Controls;
 
 public class Label : IControl
 {
+    [Category("Layout")]
     [Browsable(false)]
     public int Left { get; set; }
 
+    [Category("Layout")]
     [Browsable(false)]
     public int Width { get; set; }
 
+    [Category("Layout")]
     [Browsable(false)]
     public int Height { get; set; }
 
     [Category("Behavior")]
     public int TabIndex { get; set; }
 
+    [Category("Layout")]
     [Browsable(false)]
     public int Top { get; set; }
 
@@ -45,6 +49,7 @@ public class Label : IControl
         "System.Drawing.Design.UITypeEditor, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
         "System.ComponentModel.Design.MultilineStringEditor, System.Design, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
     )]
+    [Category("Appearance")]
     [SettingsBindable(true)]
     public string Text { get; set; }
 

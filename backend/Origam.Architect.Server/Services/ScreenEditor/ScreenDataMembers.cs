@@ -29,6 +29,13 @@ public static class ScreenDataMembers
 {
     public static IEnumerable<string> GetDataMembers(FormControlSet screen)
     {
+        return GetDataMemberEntities(screen).Select(member => member.Key);
+    }
+
+    public static IEnumerable<KeyValuePair<string, DataStructureEntity>> GetDataMemberEntities(
+        FormControlSet screen
+    )
+    {
         if (screen.DataStructure == null)
         {
             return [];
@@ -36,16 +43,19 @@ public static class ScreenDataMembers
 
         return screen
             .DataStructure.ChildItemsByType<DataStructureEntity>(DataStructureEntity.CategoryConst)
-            .SelectMany(entity => GetDataMembers(entity, parentPath: null));
+            .SelectMany(entity => GetDataMemberEntities(entity, parentPath: null));
     }
 
-    private static IEnumerable<string> GetDataMembers(DataStructureEntity entity, string parentPath)
+    private static IEnumerable<KeyValuePair<string, DataStructureEntity>> GetDataMemberEntities(
+        DataStructureEntity entity,
+        string parentPath
+    )
     {
         string path = parentPath == null ? entity.Name : parentPath + "." + entity.Name;
         return entity
             .ChildItemsByType<DataStructureEntity>(DataStructureEntity.CategoryConst)
-            .SelectMany(child => GetDataMembers(child, path))
-            .Prepend(path);
+            .SelectMany(child => GetDataMemberEntities(child, path))
+            .Prepend(new KeyValuePair<string, DataStructureEntity>(path, entity));
     }
 
     public static void AddDropDown(List<EditorProperty> properties, FormControlSet screen)

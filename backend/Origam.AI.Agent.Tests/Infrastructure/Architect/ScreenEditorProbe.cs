@@ -24,9 +24,9 @@ using System.Text.Json;
 
 namespace Origam.AI.Agent.Tests.Infrastructure.Architect;
 
-public sealed class SectionEditorProbe(HttpClient architect)
+public sealed class ScreenEditorProbe(HttpClient architect)
 {
-    public async Task<DesignerWidget> ReadPersistedAsync(string sectionId)
+    public async Task<ScreenEditorContent> ReadPersistedAsync(string screenId)
     {
         using var closeResponse = await architect.PostAsync(
             requestUri: "/Tab/CloseAll",
@@ -34,22 +34,38 @@ public sealed class SectionEditorProbe(HttpClient architect)
             CancellationToken.None
         );
         closeResponse.EnsureSuccessStatusCode();
-        return await ReadAsync(sectionId);
+        return await ReadAsync(screenId);
     }
 
-    public async Task<DesignerWidget> ReadAsync(string sectionId)
+    public async Task<ScreenEditorContent> ReadAsync(string screenId)
     {
         using var response = await architect.PostAsJsonAsync(
-            requestUri: "/SectionEditor/Update",
-            new { schemaItemId = sectionId, modelChanges = Array.Empty<object>() },
+            requestUri: "/ScreenEditor/Update",
+            new { schemaItemId = screenId, modelChanges = Array.Empty<object>() },
             CancellationToken.None
         );
         response.EnsureSuccessStatusCode();
 
         var body = await response.Content.ReadAsStringAsync(CancellationToken.None);
         using var document = JsonDocument.Parse(body);
-        return DesignerWidget.FromJson(
-            document.RootElement.GetProperty("data").GetProperty("rootControl")
+        var data = document.RootElement.GetProperty("data");
+        return new ScreenEditorContent(
+            DesignerWidget.FromJson(data.GetProperty("rootControl")),
+            ReadStrings(data, propertyName: "warnings"),
+            ReadStrings(data, propertyName: "dataMembers")
         );
+    }
+
+    private static IReadOnlyList<string> ReadStrings(JsonElement data, string propertyName)
+    {
+        if (
+            !data.TryGetProperty(propertyName, out var values)
+            || values.ValueKind != JsonValueKind.Array
+        )
+        {
+            return [];
+        }
+
+        return values.EnumerateArray().Select(value => value.GetString() ?? string.Empty).ToList();
     }
 }

@@ -575,7 +575,10 @@ public class DesignerEditorService(
             );
         }
 
-        List<string> dataMembers = ScreenDataMembers.GetDataMembers(screen).ToList();
+        List<KeyValuePair<string, DataStructureEntity>> dataMemberEntities = ScreenDataMembers
+            .GetDataMemberEntities(screen)
+            .ToList();
+        List<string> dataMembers = dataMemberEntities.Select(member => member.Key).ToList();
         foreach (ControlSetItem item in GetLiveControls(screen))
         {
             PropertyValueItem dataMember = FindValueItem(item, propertyName: "DataMember");
@@ -593,6 +596,34 @@ public class DesignerEditorService(
                         string.Join(separator: ", ", dataMembers)
                     )
                 );
+            }
+            else if (
+                item.ControlItem.IsComplexType
+                && item.ControlItem.PanelControlSet is { DataEntity: { } sectionEntity } section
+            )
+            {
+                DataStructureEntity shownEntity = dataMemberEntities
+                    .First(member => member.Key == dataMember.Value)
+                    .Value;
+                if (shownEntity.EntityDefinition?.Id == sectionEntity.Id)
+                {
+                    warnings.AddRange(
+                        ScreenSectionWarningFinder.FindFieldWarnings(section, shownEntity, screen)
+                    );
+                }
+                else
+                {
+                    warnings.Add(
+                        FindEntityMismatch(
+                            screen,
+                            item.Name,
+                            section,
+                            dataMember.Value,
+                            shownEntity.EntityDefinition,
+                            dataMemberEntities
+                        )
+                    );
+                }
             }
 
             if (item.ControlItem.Name == "AsTree")
@@ -619,6 +650,62 @@ public class DesignerEditorService(
         }
 
         return warnings;
+    }
+
+    private static string FindEntityMismatch(
+        FormControlSet screen,
+        string widgetName,
+        PanelControlSet section,
+        string dataMember,
+        IDataEntity shownEntity,
+        List<KeyValuePair<string, DataStructureEntity>> dataMemberEntities
+    )
+    {
+        IDataEntity sectionEntity = section.DataEntity;
+        List<string> fittingDataMembers = dataMemberEntities
+            .Where(member => member.Value.EntityDefinition?.Id == sectionEntity.Id)
+            .Select(member => member.Key)
+            .ToList();
+        if (fittingDataMembers.Count == 0)
+        {
+            string warning = string.Format(
+                Strings.ScreenEditor_SectionEntityNotInDataStructure,
+                widgetName,
+                sectionEntity.Name,
+                screen.DataStructure.Name,
+                dataMember,
+                shownEntity?.Name
+            );
+            List<string> dataSources = ScreenSectionWarningFinder
+                .ScreensUsing(section)
+                .Select(other => other.DataStructure)
+                .Where(dataStructure =>
+                    dataStructure?.Entities.Any(entity =>
+                        entity.EntityDefinition?.Id == sectionEntity.Id
+                    ) == true
+                )
+                .Select(dataStructure => dataStructure.Name)
+                .Distinct()
+                .ToList();
+            return dataSources.Count == 0
+                ? warning
+                : warning
+                    + " "
+                    + string.Format(
+                        Strings.ScreenEditor_SectionDataSourceHint,
+                        section.Name,
+                        string.Join(separator: ", ", dataSources)
+                    );
+        }
+
+        return string.Format(
+            Strings.ScreenEditor_DataMemberOfOtherEntity,
+            widgetName,
+            sectionEntity.Name,
+            dataMember,
+            shownEntity?.Name,
+            string.Join(separator: ", ", fittingDataMembers)
+        );
     }
 
     private static string CreateUniqueName(FormControlSet screen, ControlItem controlItem)

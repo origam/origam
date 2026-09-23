@@ -300,6 +300,15 @@
     <data name="ScreenEditor_DataMemberMissing" xml:space="preserve">
         <value>DataMember "{1}" of "{0}" is not an entity of the screen's data structure, so the client cannot open the screen. Set DataMember to one of: {2}</value>
     </data>
+    <data name="ScreenEditor_DataMemberOfOtherEntity" xml:space="preserve">
+        <value>"{0}" is a screen section of entity "{1}", but its DataMember "{2}" is entity "{3}", so the client cannot open the screen. Set DataMember to one of: {4}</value>
+    </data>
+    <data name="ScreenEditor_SectionEntityNotInDataStructure" xml:space="preserve">
+        <value>"{0}" is a screen section of entity "{1}", but the data structure "{2}" of the screen has no entity "{1}": its DataMember "{3}" is entity "{4}", so the client cannot open the screen. Pick a data source that holds "{1}", or use a screen section of an entity that "{2}" holds.</value>
+    </data>
+    <data name="ScreenEditor_SectionDataSourceHint" xml:space="preserve">
+        <value>Screens that already use "{0}" take their data from: {1}.</value>
+    </data>
     <data name="ScreenEditor_SplitPanelNeedsTwo" xml:space="preserve">
         <value>SplitPanel "{0}" must hold exactly two widgets.</value>
     </data>

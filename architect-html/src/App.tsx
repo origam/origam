@@ -92,7 +92,7 @@ const App = observer(() => {
         onSideBarWidthChange={width => rootStore.uiState.setSidebarWidth(width)}
         minSideBarWidth={SIDEBAR_MIN_WIDTH}
         maxSideBarWidth={SIDEBAR_MAX_WIDTH}
-        aiPanel={<AiAgentPanel />}
+        aiPanel={<AiAgentPanel onClose={() => rootStore.uiState.toggleAiPanel()} />}
         aiPanelVisible={rootStore.uiState.aiPanelVisible}
         aiPanelWidth={rootStore.uiState.aiPanelWidth}
         onAiPanelWidthChange={width => rootStore.uiState.setAiPanelWidth(width)}

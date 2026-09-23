@@ -39,13 +39,7 @@ public static class ScreenSectionWarningFinder
         {
             return [];
         }
-        fields ??= GetLiveControls(screenSection)
-            .Select(BoundFieldName)
-            .Where(fieldName => fieldName != null)
-            .Distinct()
-            .Select(fieldName => BoundField(screenSection, fieldName))
-            .Where(field => field != null)
-            .ToList();
+        fields ??= BoundFields(screenSection);
         var warnings = new List<string>();
         var screensByDataStructure = ScreensUsing(screenSection)
             .Where(screen => screen.DataSourceId != Guid.Empty)
@@ -84,6 +78,29 @@ public static class ScreenSectionWarningFinder
             }
         }
         return warnings;
+    }
+
+    public static IEnumerable<string> FindFieldWarnings(
+        PanelControlSet screenSection,
+        DataStructureEntity dataStructureEntity,
+        FormControlSet screen
+    )
+    {
+        return BoundFields(screenSection)
+            .SelectMany(field =>
+                FindFieldWarnings(field, screen.DataStructure, dataStructureEntity, screen.Name)
+            );
+    }
+
+    private static List<IDataEntityColumn> BoundFields(PanelControlSet screenSection)
+    {
+        return GetLiveControls(screenSection)
+            .Select(BoundFieldName)
+            .Where(fieldName => fieldName != null)
+            .Distinct()
+            .Select(fieldName => BoundField(screenSection, fieldName))
+            .Where(field => field != null)
+            .ToList();
     }
 
     private static IEnumerable<string> FindFieldWarnings(
@@ -129,7 +146,7 @@ public static class ScreenSectionWarningFinder
             .Any(child => child.EntityId == relationId && child.Columns.Count > 0);
     }
 
-    private static IEnumerable<FormControlSet> ScreensUsing(PanelControlSet screenSection)
+    public static IEnumerable<FormControlSet> ScreensUsing(PanelControlSet screenSection)
     {
         if (!ReferenceIndexManager.Initialized)
         {

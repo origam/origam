@@ -36,6 +36,7 @@ export abstract class DesignerEditorState implements IDesignerEditorState {
 
   @observable accessor isActive: boolean = false;
   @observable accessor isDirty: boolean = false;
+  @observable.shallow accessor warnings: string[] = [];
 
   get origamId() {
     return this.editorNode.origamId;
@@ -57,6 +58,7 @@ export abstract class DesignerEditorState implements IDesignerEditorState {
     loadComponent?: (componentId: string) => Promise<ReactElement>,
   ) {
     this.isDirty = isDirty;
+    this.warnings = editorData.warnings ?? [];
     this.toolbox = toolbox;
     this.surface = new DesignSurfaceState(
       editorData,
@@ -66,7 +68,10 @@ export abstract class DesignerEditorState implements IDesignerEditorState {
       loadComponent,
     );
     propertiesState.onPropertyUpdated = this.onPropertyUpdated.bind(this);
-    toolbox.onNameTopPropertiesChanged = () => (this.isDirty = true);
+    toolbox.onNameTopPropertiesChanged = warnings => {
+      this.isDirty = true;
+      this.warnings = warnings;
+    };
   }
 
   *onPropertyUpdated(

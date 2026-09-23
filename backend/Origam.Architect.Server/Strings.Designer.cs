@@ -943,6 +943,33 @@ namespace Origam.Architect.Server {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &quot;{0}&quot; is a screen section of entity &quot;{1}&quot;, but its DataMember &quot;{2}&quot; is entity &quot;{3}&quot;, so the client cannot open the screen. Set DataMember to one of: {4}.
+        /// </summary>
+        internal static string ScreenEditor_DataMemberOfOtherEntity {
+            get {
+                return ResourceManager.GetString("ScreenEditor_DataMemberOfOtherEntity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &quot;{0}&quot; is a screen section of entity &quot;{1}&quot;, but the data structure &quot;{2}&quot; of the screen has no entity &quot;{1}&quot;: its DataMember &quot;{3}&quot; is entity &quot;{4}&quot;, so the client cannot open the screen. Pick a data source that holds &quot;{1}&quot;, or use a screen section of an entity that &quot;{2}&quot; holds..
+        /// </summary>
+        internal static string ScreenEditor_SectionEntityNotInDataStructure {
+            get {
+                return ResourceManager.GetString("ScreenEditor_SectionEntityNotInDataStructure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Screens that already use &quot;{0}&quot; take their data from: {1}...
+        /// </summary>
+        internal static string ScreenEditor_SectionDataSourceHint {
+            get {
+                return ResourceManager.GetString("ScreenEditor_SectionDataSourceHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SplitPanel &quot;{0}&quot; must hold exactly two widgets..
         /// </summary>
         internal static string ScreenEditor_SplitPanelNeedsTwo {

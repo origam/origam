@@ -46,6 +46,10 @@ export class PropertiesState implements IPropertyManager {
     return this.provider?.components ?? [];
   }
 
+  get verbs() {
+    return this.provider?.verbs ?? [];
+  }
+
   getComponentLabel(component: Component | undefined) {
     if (!component) {
       return '';

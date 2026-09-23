@@ -61,6 +61,7 @@ export class ScreenSectionEditorState extends DesignerEditorState {
         schemaItemIds: components.map(x => x.id),
       });
       yield* this.surface.loadComponents(newData.data.rootControl);
+      this.warnings = newData.data.warnings ?? [];
       this.isDirty = true;
     }.bind(this);
   }
@@ -98,6 +99,8 @@ export class ScreenSectionEditorState extends DesignerEditorState {
       const panelSizeChanged = this.surface.updatePanelSize(newComponent);
       if (panelSizeChanged) {
         yield* this.update() as any;
+      } else {
+        yield* this.refreshFields();
       }
     }.bind(this);
   }
@@ -115,6 +118,7 @@ export class ScreenSectionEditorState extends DesignerEditorState {
       modelChanges: [],
     });
     this.sectionToolbox.fields = updateResult.data.fields;
+    this.warnings = updateResult.data.warnings ?? [];
   }
 
   protected *update(): Generator<Promise<any>, void, any> {
@@ -136,6 +140,7 @@ export class ScreenSectionEditorState extends DesignerEditorState {
     this.toolbox.name = newData.name;
     this.toolbox.selectedDataSourceId = newData.selectedDataSourceId;
     this.sectionToolbox.fields = newData.fields;
+    this.warnings = newData.warnings ?? [];
     yield* this.surface.loadComponents(newData.rootControl);
   }
 }

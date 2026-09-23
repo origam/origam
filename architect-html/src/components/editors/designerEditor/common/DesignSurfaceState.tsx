@@ -26,7 +26,10 @@ import { FlowHandlerInput } from '@errors/runInFlowWithHandler';
 import { action, observable } from 'mobx';
 import { CancellablePromise } from 'mobx/dist/api/flow';
 import { ReactElement } from 'react';
-import { IComponentProvider } from '@editors/designerEditor/common/IComponentProvider.tsx';
+import {
+  IComponentProvider,
+  IDesignerVerb,
+} from '@editors/designerEditor/common/IComponentProvider.tsx';
 
 export class DesignSurfaceState implements IComponentProvider {
   @observable public accessor components: Component[] = [];
@@ -53,6 +56,11 @@ export class DesignSurfaceState implements IComponentProvider {
   };
   panel: Component = null as any; // will be assigned in loadComponents
   panelId: string | undefined;
+  getVerbs: (component: Component) => IDesignerVerb[] = () => [];
+
+  get verbs(): IDesignerVerb[] {
+    return this.selectedComponent ? this.getVerbs(this.selectedComponent) : [];
+  }
 
   get isDragging() {
     return !!this.dragState.component;
@@ -191,7 +199,7 @@ export class DesignSurfaceState implements IComponentProvider {
 
   findComponentAt(mouseX: number, mouseY: number, excludeComponent?: Component) {
     const excludeIds = excludeComponent
-      ? [...this.getChildren(excludeComponent).map(x => x.id), excludeComponent.id]
+      ? [...this.getDescendants(excludeComponent).map(x => x.id), excludeComponent.id]
       : [];
     const componentsUnderPoint =
       this.components.filter(
@@ -204,7 +212,6 @@ export class DesignSurfaceState implements IComponentProvider {
     const components1 = componentsUnderPoint.sort(
       (comp1, comp2) => comp2.countParents() - comp1.countParents(),
     );
-    console.log(components1[0]);
     return components1[0];
   }
 
@@ -241,6 +248,10 @@ export class DesignSurfaceState implements IComponentProvider {
 
   getChildren(component: Component) {
     return this.components.filter(x => x.parent?.id === component.id)!;
+  }
+
+  private getDescendants(component: Component): Component[] {
+    return this.getChildren(component).flatMap(child => [child, ...this.getDescendants(child)]);
   }
 
   updatePanelSize(draggingComponent: Component) {

@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { T } from '@/main';
 import { IArchitectApi, IScreenEditorData } from '@api/IArchitectApi';
 import { IEditorNode } from '@components/editorTabView/EditorTabViewState';
 import { PropertiesState } from '@components/properties/PropertiesState';
@@ -25,8 +26,9 @@ import {
   controlToComponent,
   toComponentRecursive,
 } from '@editors/designerEditor/common/designerComponents/ControlToComponent';
-import { TabControl } from '@editors/designerEditor/common/designerComponents/TabControl';
+import { TabControl, TabPage } from '@editors/designerEditor/common/designerComponents/TabControl';
 import { DesignerEditorState } from '@editors/designerEditor/common/DesignerEditorState';
+import { IDesignerVerb } from '@editors/designerEditor/common/IComponentProvider';
 import { SectionItem } from '@editors/designerEditor/common/SectionItem';
 import { ScreenToolboxState } from '@editors/designerEditor/screenEditor/ScreenToolboxState';
 import { toChanges } from '@editors/gridEditor/EditorProperty';
@@ -59,6 +61,34 @@ export class ScreenEditorState extends DesignerEditorState {
       getSectionLoader(architectApi, editorNode.origamId),
     );
     this.screenToolbox = screenToolboxState;
+    this.surface.getVerbs = component => this.getTabVerbs(component);
+  }
+
+  private getTabVerbs(component: Component): IDesignerVerb[] {
+    const tabControl = component instanceof TabPage ? component.parent : component;
+    if (!(tabControl instanceof TabControl)) {
+      return [];
+    }
+    const activeTab = tabControl.activeTab;
+    return [
+      {
+        id: 'add-tab',
+        label: T('Add Tab', 'screen_editor_add_tab'),
+        disabled: false,
+        action: this.createTabPage(tabControl),
+      },
+      {
+        id: 'remove-tab',
+        label: T('Remove Tab', 'screen_editor_remove_tab'),
+        disabled: !activeTab || tabControl.numberOfTabs === 1,
+        action: function* (this: ScreenEditorState): Generator<Promise<any>, void, any> {
+          yield* this.delete(activeTab!.getAllChildren())();
+          this.surface.selectComponent(
+            this.surface.components.find(candidate => candidate.id === tabControl.id),
+          );
+        }.bind(this),
+      },
+    ];
   }
 
   delete(components: Component[]) {
@@ -68,6 +98,7 @@ export class ScreenEditorState extends DesignerEditorState {
         schemaItemIds: components.map(x => x.id),
       });
       yield* this.surface.loadComponents(newData.data.rootControl);
+      this.warnings = newData.data.warnings ?? [];
       this.isDirty = true;
     }.bind(this);
   }
@@ -95,6 +126,10 @@ export class ScreenEditorState extends DesignerEditorState {
       this.surface.components.push(newComponent);
       this.surface.draggedComponentData = null;
       this.isDirty = true;
+      tabControl.setVisible(newComponent.id);
+      if (this.surface.selectedComponent?.parent === tabControl) {
+        this.surface.selectComponent(newComponent);
+      }
 
       const panelSizeChanged = this.surface.updatePanelSize(newComponent);
       if (panelSizeChanged) {
@@ -164,6 +199,7 @@ export class ScreenEditorState extends DesignerEditorState {
     const newData = updateResult.data;
     this.toolbox.name = newData.name;
     this.toolbox.selectedDataSourceId = newData.selectedDataSourceId;
+    this.warnings = newData.warnings ?? [];
     this.surface.updateComponents(newData.rootControl);
   }
 }

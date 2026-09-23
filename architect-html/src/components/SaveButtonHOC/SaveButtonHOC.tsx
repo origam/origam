@@ -35,8 +35,10 @@ const SaveButtonHOC = observer(() => {
     return null;
   }
 
+  const warnings = activeEditor.warnings ?? [];
+
   const handleSave = () => {
-    if (!activeEditor.isDirty) return;
+    if (!activeEditor.isDirty || warnings.length > 0) return;
 
     runInFlowWithHandler(rootStore.errorDialogController)({
       generator: function* () {
@@ -50,12 +52,18 @@ const SaveButtonHOC = observer(() => {
     });
   };
 
-  const isDisabled = !activeEditor.isDirty;
+  const isDisabled = !activeEditor.isDirty || warnings.length > 0;
   const validationErrors = activeEditor.validationErrors ?? [];
   const showMissing = isDisabled && validationErrors.length > 0;
 
   return (
     <div className={S.root} data-test-id={isDisabled ? 'save-button-disabled' : undefined}>
+      {warnings.length > 0 && (
+        <div className={S.missingFields} title={warnings.join('\n')}>
+          <VscWarning />
+          <span>{T('Fix the warnings to save', 'save_blocked_by_warnings')}</span>
+        </div>
+      )}
       {showMissing && (
         <div
           className={S.missingFields}

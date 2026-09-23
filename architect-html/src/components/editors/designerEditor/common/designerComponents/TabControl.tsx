@@ -37,8 +37,18 @@ export class TabControl extends Component {
     return this.countParents() + screenLayer;
   }
 
+  @observable private accessor activeTabId: string | undefined = undefined;
+
   get numberOfTabs() {
-    return this.tabs.length;
+    return this.ownTabs.length;
+  }
+
+  get activeTab() {
+    return this.ownTabs.find(tab => tab.id === this.activeTabId) ?? this.ownTabs[0];
+  }
+
+  private get ownTabs() {
+    return this.tabs.filter(tab => tab.parent === this);
   }
 
   constructor(args: {
@@ -51,14 +61,16 @@ export class TabControl extends Component {
   }
 
   registerTab(tab: TabPage) {
-    const isActive = this.tabs.length === 0; // i.e.  the first registered tab will be active
+    this.activeTabId ??= tab.id; // i.e.  the first registered tab will be active
+    const isActive = tab.id === this.activeTabId;
     tab.initializeVisibility(isActive, isActive ? this.hideChildren : true); // We need to recursively hide children of inactive tabs
-    this.tabs.push(tab);
+    this.tabs = [...this.tabs.filter(registered => registered.id !== tab.id), tab];
   }
 
   @action
   setVisible(tabId: string) {
-    for (const tab of this.tabs) {
+    this.activeTabId = tabId;
+    for (const tab of this.ownTabs) {
       tab.isActive = tab.id === tabId;
     }
   }
@@ -109,8 +121,7 @@ export class TabControl extends Component {
         {() => (
           <div className={S.tabPageContainer}>
             <div className={S.tabs}>
-              {this.tabs
-                .slice()
+              {this.ownTabs
                 .sort((a, b) => a.get('SchemaItemName').localeCompare(b.get('SchemaItemName')))
                 .map(tab => (
                   <TabLabel key={tab.id} onClick={() => this.setVisible(tab.id)} tabPage={tab} />
@@ -158,7 +169,7 @@ const TabLabel = observer(({ tabPage, onClick }: { tabPage: TabPage; onClick: ()
   return (
     <>
       <div
-        className={tabPage.isActive ? S.activeTab : ''}
+        className={(tabPage.parent as TabControl).activeTab === tabPage ? S.activeTab : ''}
         onClick={event => {
           (event as any).clickedComponent = tabPage;
           onClick();

@@ -1,3 +1,4 @@
+#region license
 /*
 Copyright 2005 - 2026 Advantage Solutions, s. r. o.
 
@@ -16,20 +17,12 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
+#endregion
 
-export interface IValidationError {
-  propertyName: string;
-  error: string;
-}
+namespace Origam.AI.Agent.Tests.Infrastructure.Architect;
 
-export interface ITabState {
-  tabId: string;
-  label: string;
-  isActive: boolean;
-  isDirty: boolean;
-  origamId?: string;
-  validationErrors?: IValidationError[];
-  warnings?: string[];
-  save(): Generator<Promise<any>, void, any>;
-  dispose?(): void;
+public sealed record TestScreen(string Name, string Id)
+{
+    public ActiveEditorFocus Focus =>
+        new(new ChatFocusNode(Name, ItemTypeName: "Screen", Id, Path: "root"));
 }
