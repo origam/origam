@@ -34,7 +34,7 @@
                 "PostLogoutRedirectUris": [ "ExternalDomain" ]
             },
             "ServerClient":{
-                "ClientSecret": "serverSecret",
+                "ClientSecret": "serverSecret"
             }
         }
     },
