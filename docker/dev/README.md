@@ -10,7 +10,7 @@ config).
 
 ```bash
 # From the repository root:
-cp docker/dev/.env.example docker/dev/.env   # set the DB password (gitignored)
+cp -n docker/dev/.env.example docker/dev/.env   # set the DB password (gitignored)
 docker compose --env-file docker/dev/.env up -d
 
 # First run builds the backend image (a few minutes). Subsequent starts reuse
@@ -50,9 +50,9 @@ To point the stack at your own model, use a compose override (do **not** edit
 `docker-compose.yml` directly — it is committed):
 
 ```bash
-cp docker-compose.override.yml.example docker-compose.override.yml
+cp -n docker-compose.override.yml.example docker-compose.override.yml
 # edit the model path and OrigamSettings__DefaultSchemaExtensionId (your root package id)
-docker compose up
+docker compose --env-file docker/dev/.env up
 ```
 
 `docker-compose.override.yml` is gitignored; `docker compose up` auto-merges it
@@ -73,7 +73,7 @@ creates a super-user, signs you in, and locks itself after one use.
 ## Rebuilding after source changes
 
 - **Frontend:** no rebuild needed — Vite hot-reloads on save.
-- **Backend (C#):** `docker compose build server` then `docker compose up -d`.
+- **Backend (C#):** `docker compose build server` then `docker compose --env-file docker/dev/.env up -d`.
 
 ## Databases
 
@@ -103,8 +103,8 @@ docker compose --env-file docker/dev/.env --profile architect up -d
 ```
 
 It builds from source like `server`: after C# changes, `docker compose build
-architect` then `docker compose --profile architect up -d` recreates the
-container. It shares
+architect` then `docker compose --env-file docker/dev/.env --profile architect
+up -d` recreates the container. It shares
 the database and model with the runtime server, and waits for that server to
 report healthy; the architect does not deploy the schema itself.
 
@@ -122,7 +122,7 @@ docker compose exec server bash      # shell into the server container
 
 ## Troubleshooting
 
-- **`up` fails with a compose "dependency failed" error or the database never gets healthy:** you ran `docker compose up` without the password, so MSSQL can't start. Copy `docker/dev/.env.example` to `docker/dev/.env` and start with `--env-file docker/dev/.env` (see Quick Start).
+- **`up` fails with a compose "dependency failed" error or the database never gets healthy:** you ran `docker compose up` without the password, so MSSQL can't start. Copy (`cp -n`) `docker/dev/.env.example` to `docker/dev/.env` and start with `--env-file docker/dev/.env` (see Quick Start).
 - **Port conflicts:** host ports are overridable in `docker/dev/.env` (`MSSQL_PORT`, `SERVER_PORT`, `FRONTEND_PORT`, `ARCHITECT_PORT`, `ARCHITECT_FRONTEND_PORT`); `FRONTEND_PORT` also retunes OIDC so login works on the new port.
 - **Model not loading:** check the mount (`docker compose exec server ls -la
   /home/origam/projectData/model`) and the server logs. A mismatched

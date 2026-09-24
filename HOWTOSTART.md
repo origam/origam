@@ -19,7 +19,8 @@ It builds the backend from source and runs the frontend via Vite (hot reload),
 against the bundled demo model. Linux, macOS, and Windows hosts all work.
 
 ```bash
-docker compose up -d
+cp -n docker/dev/.env.example docker/dev/.env   # set the DB password (gitignored)
+docker compose --env-file docker/dev/.env up -d
 ```
 
 The app is then at `https://localhost:5173`. See

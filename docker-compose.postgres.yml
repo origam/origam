@@ -1,5 +1,5 @@
 # Swap SQL Server for PostgreSQL. Run with both files:
-#   docker compose -f docker-compose.yml -f docker-compose.postgres.yml up -d
+#   docker compose --env-file docker/dev/.env -f docker-compose.yml -f docker-compose.postgres.yml up -d
 # Postgres creates the DB/user from env; Origam's deployment creates the schema.
 
 services:
