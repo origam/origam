@@ -1,8 +1,8 @@
 #!/bin/bash
 # Build + run Origam.Architect.Server from source (devcontainer).
 # The architect doesn't deploy the DB schema on a fresh database — run the
-# runtime server once first (it deploys the schema), e.g.:
-#   docker compose up server database
+# runtime server once first (it deploys the schema): .devcontainer/run-server.sh,
+# or F5 with the Debug Origam.Server configuration.
 # To debug instead of run, see netcoredbg-server.sh.
 
 set -e
