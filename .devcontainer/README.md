@@ -1,23 +1,50 @@
 # ORIGAM devcontainer (full-stack dev/debug on Linux)
 
-A sandboxed, editor-attached dev environment. One `docker compose up` brings up
-SQL Server + the dev container — backends **and** the Vite frontends run inside
-the dev container (started on demand). Reopen in VS Code/Cursor to debug the
-.NET backends with breakpoints.
+A sandboxed, editor-attached dev environment: a SQL Server database plus one
+dev container — the backends **and** the Vite frontends run inside it (started
+on demand). Reopen in VS Code/Cursor to debug the .NET backends with
+breakpoints.
 
 Builds the **net8.0 subset** of Origam (Server, Architect.Server, Scheduler). The
 net472 projects (the WinForms architect, Gui.Win) don't build on Linux. The C#
 extension will warn about them on load — cosmetic, ignorable.
 
+(The **architect** below = Origam's modeler: the `architect-html/` UI plus its
+backend, `Origam.Architect.Server`. Not the legacy WinForms modeler, Gui.Win,
+which won't build here.)
+
 ## Open it
 
-VS Code / Cursor (Dev Containers extension) → **Dev Containers: Reopen in Container**.
+1. Create the env file — the default password works out of the box:
+   ```bash
+   cp -n .devcontainer/.env.example .devcontainer/.env
+   ```
+2. VS Code / Cursor (Dev Containers extension) → **Dev Containers: Reopen in
+   Container**.
+
 Compose brings up two long-running services, `database` (mssql) and `devcontainer`
 (the editor attaches here), plus a one-shot `db-init` that creates the database
 and exits.
 
 All ports are published by compose (no editor port-forwarding): server 8080,
-architect 8081, frontends 5173/5174, DAP 47000 — each overridable in `.env`.
+architect 8081, frontends 5173/5174, and 47000 for debugger attach (DAP,
+Debug Adapter Protocol) — each overridable in `.env`.
+
+### First run
+
+1. Run and Debug view (⇧⌘D / Ctrl+Shift+D) → pick **Debug Origam.Server** →
+   F5 (builds, stages config, deploys the DB schema on a fresh database).
+   (Cursor: resolve the C#-extension conflict first — see
+   [Debugging in your editor](#debugging-in-your-editor).)
+2. Terminal → Run Task → **serve-frontend**.
+3. Open [https://localhost:5173](https://localhost:5173) (accept Vite's
+   self-signed cert) →
+   [Account/RegisterInitialUser](https://localhost:5173/Account/RegisterInitialUser)
+   → create the admin user → log in.
+
+That's the full loop: breakpoints in the server, clicks in the browser. The
+sections below cover the rest (architect, scheduler, other editors, swapping
+the database or the model).
 
 ## Debug the backends (F5)
 
@@ -25,7 +52,8 @@ architect 8081, frontends 5173/5174, DAP 47000 — each overridable in `.env`.
 into `bin/` before launch:
 
 - **Debug Origam.Server** — runtime server on 8080. Full OIDC; deploys the schema
-  on a fresh DB. Seed a user once via `https://localhost:5173/Account/RegisterInitialUser`,
+  on a fresh DB. Seed a user once via
+  [Account/RegisterInitialUser](https://localhost:5173/Account/RegisterInitialUser),
   then login through the frontend.
 - **Debug Architect.Server** — architect backend on 8081. Doesn't deploy schema
   on a fresh DB; run the server once first to warm it.
@@ -56,8 +84,9 @@ Task) or a shell in the container:
 `FRONTEND_PORT`/`ARCHITECT_FRONTEND_PORT` in `.devcontainer/.env` remap the
 published host ports (the runtime one also retunes OIDC, so login keeps working).
 
-Both proxy to `localhost:8080`/`8081`. F5 the server, then load the frontend in
-a browser, click through, hit breakpoints.
+Both proxy to `localhost:8080`/`8081`. With the server running (see
+[First run](#first-run)), load the frontend in a browser, click through, hit
+breakpoints.
 
 node_modules live in named volumes and are installed on first container creation
 by `postCreateCommand`. Install or upgrade packages inside the container:
@@ -91,18 +120,16 @@ The app layer is database-agnostic (`PgSqlDataService`). Switch:
 
 ## DB password / model
 
-Copy `.devcontainer/.env.example` to `.devcontainer/.env` (gitignored) and set
-`MSSQL_SA_PASSWORD`. Compose auto-loads `.env` from `.devcontainer/`, so no
-`--env-file` flag is needed:
+The password lives in `.devcontainer/.env` (gitignored; created in [Open it](#open-it)) —
+compose auto-loads it, no `--env-file` flag needed. To use your own model instead
+of the bundled test model, add:
 
 ```
-MSSQL_SA_PASSWORD=YourPassword
 OrigamSettings__ModelSourceControlLocation=/workspaces/origam/your-model
 OrigamSettings__DefaultSchemaExtensionId=<your root package id>
 ```
 
-The `OrigamSettings__*` vars are optional and default to the bundled test
-model; `MSSQL_SA_PASSWORD` is required. The model path must be inside the repo
+The `OrigamSettings__*` vars are optional. The model path must be inside the repo
 mount (`/workspaces/origam/...`).
 
 ## Debugging in your editor
