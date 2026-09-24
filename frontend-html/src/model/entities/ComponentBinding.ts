@@ -23,7 +23,9 @@ import {
   IComponentBindingPair,
   IComponentBindingPairData
 } from "./types/IComponentBinding";
-import { computed } from "mobx";
+import { computed,
+  makeObservable
+} from "mobx";
 import { IDataView } from "./types/IDataView";
 import { getFormScreen } from "../selectors/FormScreen/getFormScreen";
 import { getDataTable } from "../selectors/DataView/getDataTable";
@@ -42,6 +44,7 @@ export class ComponentBinding implements IComponentBinding {
   $type_IComponentBinding: 1 = 1;
 
   constructor(data: IComponentBindingData) {
+    makeObservable(this);
     Object.assign(this, data);
     this.bindingPairs.forEach(o => (o.parent = this));
   }

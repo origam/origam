@@ -1,0 +1,8 @@
+﻿CREATE TABLE [ArrayTest] (
+	[Text] NVarChar(50) NULL,
+	[refBusinessPartnerId] UniqueIdentifier NULL,
+	[RecordCreated] DateTime NULL,
+	[RecordUpdatedBy] UniqueIdentifier NULL,
+	[Id] UniqueIdentifier NOT NULL PRIMARY KEY NONCLUSTERED,
+	[RecordCreatedBy] UniqueIdentifier NULL,
+	[RecordUpdated] DateTime NULL);

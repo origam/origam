@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import React from "react";
 import S from "gui/Components/SidebarInfoSection/SidebarRecordInfo.module.scss";
 
-export const SidebarRecordInfo: React.FC<{ lines: string[] }> = props => (
+export const SidebarRecordInfo: React.FC<React.PropsWithChildren<{ lines: string[] }>> = props => (
   <div className={S.root}>
     {props.lines.map((line, idx) => (
       <p key={idx} dangerouslySetInnerHTML={{__html: line}}/>

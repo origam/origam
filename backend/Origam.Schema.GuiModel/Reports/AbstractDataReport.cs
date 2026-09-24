@@ -33,7 +33,7 @@ namespace Origam.Schema.GuiModel;
 /// Summary description for AbstractDataReport.
 /// </summary>
 [ClassMetaVersion("6.0.0")]
-public abstract class AbstractDataReport : AbstractReport
+public abstract class AbstractDataReport : AbstractReport, IDataReport
 {
     public AbstractDataReport()
         : base() { }

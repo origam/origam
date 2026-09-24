@@ -35,7 +35,7 @@ export enum ComponentType {
   TabPage = 'System.Windows.Forms.TabPage',
   AsTree = 'Origam.Gui.Win.AsTreeView',
   Label = 'System.Windows.Forms.Label',
-  CheckList = 'Origam.Gui.Win.Checklist',
+  Checklist = 'Origam.Gui.Win.Checklist',
   BlobControl = 'Origam.Gui.Win.BlobControl',
   ColorPicker = 'Origam.Gui.Win.ColorPicker',
   MultiColumnAdapterFieldWrapper = 'Origam.Gui.Win.MultiColumnAdapterFieldWrapper',
@@ -65,7 +65,7 @@ export function toComponentType(origamType: OrigamDataType): ComponentType {
     case OrigamDataType.String:
       return ComponentType.AsTextBox;
     case OrigamDataType.Memo:
-      return ComponentType.TextArea;
+      return ComponentType.AsTextBox;
     case OrigamDataType.Integer:
     case OrigamDataType.Float:
     case OrigamDataType.Long:

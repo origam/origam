@@ -1950,9 +1950,11 @@ public class FormXmlBuilder
         bool processContainers,
         bool processEditControls,
         bool forceReadOnly,
-        string parentTabIndex = null
+        string parentTabIndex = null,
+        HashSet<string> boundMembers = null
     )
     {
+        boundMembers ??= new HashSet<string>();
         if (string.IsNullOrWhiteSpace(parentTabIndex))
         {
             int itemTabIndex =
@@ -2244,7 +2246,8 @@ public class FormXmlBuilder
                     csi.FirstParentOfType<PanelControlSet>()
                         ?.DataEntity?.ChildItems?.OfType<IDataEntityColumn>()
                         ?.FirstOrDefault(child => child.Name == bindingMember)
-                        ?.FieldType ?? "";
+                        ?.FieldType
+                    ?? "";
 
                 if (int.Parse(tabIndex) >= 0)
                 {
@@ -2254,7 +2257,11 @@ public class FormXmlBuilder
                 {
                     PanelLabelBuilder.Build(childrenElement, text, top, left, height, width);
                 }
-                else if (csi.ControlItem.Name == "RadioButton" && processEditControls)
+                else if (
+                    csi.ControlItem.Name == "RadioButton"
+                    && !string.IsNullOrEmpty(bindingMember)
+                    && processEditControls
+                )
                 {
                     if (!table.Columns.Contains(bindingMember))
                     {
@@ -2316,7 +2323,8 @@ public class FormXmlBuilder
                         processContainers: true,
                         processEditControls: true,
                         forceReadOnly: readOnly,
-                        parentTabIndex: tabIndex
+                        parentTabIndex: tabIndex,
+                        boundMembers: boundMembers
                     );
                 }
                 else if (bindingMember != "" & processEditControls) // property (entry field)
@@ -2331,6 +2339,17 @@ public class FormXmlBuilder
                                 + "' not found in a data structure for the form '"
                                 + panel.RootItem.Path
                                 + "'"
+                        );
+                    }
+                    if (!boundMembers.Add(bindingMember))
+                    {
+                        throw new Exception(
+                            string.Format(
+                                ResourceUtils.GetString("ErrorFieldBoundTwice"),
+                                table.TableName,
+                                bindingMember,
+                                panel.RootItem.Path
+                            )
                         );
                     }
                     XmlElement propertyElement = AsPanelPropertyBuilder.CreateProperty(
@@ -2472,7 +2491,7 @@ public class FormXmlBuilder
                             MultiColumnAdapterFieldWrapperBuilder.Build(
                                 propertyElement,
                                 csi,
-                                controlMember
+                                string.IsNullOrEmpty(controlMember) ? bindingMember : controlMember
                             );
                             RenderPanel(
                                 panel,
@@ -2483,7 +2502,8 @@ public class FormXmlBuilder
                                 csi,
                                 false,
                                 true,
-                                readOnly
+                                readOnly,
+                                boundMembers: boundMembers
                             );
                             XmlNode propertyNames = propertyElement.SelectSingleNode(
                                 "PropertyNames"

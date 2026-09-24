@@ -22,15 +22,22 @@ import React from "react";
 import { T } from "utils/translation";
 import CS from "gui/Components/Dialogs/DialogsCommon.module.css";
 import S from "gui/Components/Dialogs/SaveFilterDialog.module.css";
-import { observable } from "mobx";
+import { observable,
+  makeObservable
+} from "mobx";
 import { ModalDialog } from "gui/Components/Dialog/ModalDialog";
 import { requestFocus } from "utils/focus";
 
 @observer
-export class SaveFilterDialog extends React.Component<{
+export class SaveFilterDialog extends React.Component<React.PropsWithChildren<{
   onCancelClick: (event: any) => void;
   onOkClick: (name: string, isGlobal: boolean) => void;
-}> {
+}>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
   @observable
   filterName: string = "";
 

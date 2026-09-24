@@ -18,12 +18,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { IScrollState } from "./types";
-import { action, observable } from "mobx";
+import { action, observable,
+  makeObservable
+} from "mobx";
 
 export class SimpleScrollState implements IScrollState {
   scrollToFunction: ((coords: { scrollLeft?: number; scrollTop?: number }) => void) | undefined;
 
   constructor(scrollTop: number, scrollLeft: number) {
+    makeObservable(this);
     this.scrollTop = scrollTop;
     this.scrollLeft = scrollLeft;
   }

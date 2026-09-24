@@ -27,7 +27,9 @@ import { getEntity } from "model/selectors/DataView/getEntity";
 import { getSessionId } from "model/selectors/getSessionId";
 import { IApi } from "model/entities/types/IApi";
 import { IProperty } from "model/entities/types/IProperty";
-import { action, flow, observable } from "mobx";
+import { action, flow, observable,
+  makeObservable
+} from "mobx";
 import S from "./BlobEditor.module.scss";
 import { IProcessCRUDResult } from "model/actions/Actions/processActionResult";
 import { processCRUDResult } from "model/actions/DataLoading/processCRUDResult";
@@ -49,7 +51,7 @@ import moment from "moment";
 import { toOrigamServerString } from "utils/moment";
 import { getEditorInputSuppressionProps } from "gui/Components/ScreenElements/Editors/editorInputSuppression";
 
-@inject(({property}: { property: IProperty }, {value}) => {
+@inject(({property}: any, {value}: any) => {
   return {
     api: getApi(property),
     processCRUDResult: (result: any) => processCRUDResult(property, result),
@@ -67,7 +69,7 @@ import { getEditorInputSuppressionProps } from "gui/Components/ScreenElements/Ed
   };
 })
 @observer
-export class BlobEditor extends React.Component<{
+export class BlobEditor extends React.Component<React.PropsWithChildren<{
   value: string;
   api?: IApi;
   isReadOnly: boolean;
@@ -88,7 +90,12 @@ export class BlobEditor extends React.Component<{
   onKeyDown?(event: any): void;
   onChange?(event: any, value: string): void;
   onEditorBlur?(event: any): void;
-}> {
+}>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
   elmInput: HTMLInputElement | null = null;
   refInput = (elm: HTMLInputElement | any) => {
     this.elmInput = elm;
@@ -322,6 +329,9 @@ export class BlobEditor extends React.Component<{
       );
     }
 
+    const property = this.props.Property;
+    const isReadOnly = this.props.isReadOnly;
+
     return (
       <div className={S.blobEditor + " " + CS.control}>
         <input
@@ -356,7 +366,7 @@ export class BlobEditor extends React.Component<{
                   onClick={(event: any) => {
                     setDropped(false);
                     runInFlowWithHandler({
-                      ctx: this.props.Property!,
+                      ctx: property!,
                       action: async () => await this.download({isPreview: false}),
                     });
                   }}
@@ -364,11 +374,11 @@ export class BlobEditor extends React.Component<{
                   {T("Download", "blob_download")}
                 </DropdownItem>
                 <DropdownItem
-                  isDisabled={this.props.isReadOnly}
+                  isDisabled={isReadOnly}
                   onClick={(event: any) => {
                     setDropped(false);
                     runGeneratorInFlowWithHandler({
-                      ctx: this.props.Property!,
+                      ctx: property!,
                       generator: this.delete.bind(this)(),
                     });
                   }}
@@ -379,7 +389,7 @@ export class BlobEditor extends React.Component<{
                   onClick={(event: any) => {
                     setDropped(false);
                     runInFlowWithHandler({
-                      ctx: this.props.Property!,
+                      ctx: property!,
                       action: async () => await this.download({isPreview: true}),
                     });
                   }}

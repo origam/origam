@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { action, observable } from "mobx";
+import { action, observable, makeObservable } from "mobx";
 import { IDialogStack } from "./types/IDialogStack";
 import { IDialogInfo } from "./types/IDialogInfo";
 import { IDialogDimensions } from "../../gui/Components/Dialog/types";
@@ -25,6 +25,10 @@ import { IDialogDimensions } from "../../gui/Components/Dialog/types";
 let nextId = 0;
 
 export class DialogStack implements IDialogStack {
+  constructor() {
+    makeObservable(this);
+  }
+
   parent?: any;
   @observable.shallow stackedDialogs: Array<IDialogInfo> = [];
 

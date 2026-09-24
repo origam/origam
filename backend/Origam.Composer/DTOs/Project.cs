@@ -28,7 +28,6 @@ public class Project
     #region General
     public bool CommandsAddWindowsContainers { get; set; }
     public Enums.CommandOutputFormat CommandsOutputFormat { get; set; }
-    public string OrigamRepositoryUrl => "https://github.com/origam/origam/archive/master.zip";
     #endregion
 
     #region DB
@@ -74,9 +73,13 @@ public class Project
     #endregion
 
     #region WebUser
-    public required string WebAdminUsername { get; set; }
-    public required string WebAdminPassword { get; set; }
-    public required string WebAdminEmail { get; set; }
+    public string WebAdminUsername { get; init; }
+    public string WebAdminPassword { get; init; }
+    public string WebAdminEmail { get; init; }
+    public bool ShouldCreateWebAdmin =>
+        !string.IsNullOrWhiteSpace(WebAdminUsername)
+        && !string.IsNullOrWhiteSpace(WebAdminPassword)
+        && !string.IsNullOrWhiteSpace(WebAdminEmail);
     #endregion
 
     #region Docker

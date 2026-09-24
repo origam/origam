@@ -27,9 +27,15 @@ import {
   ICreateLookupRequest,
   ICreateWizardResult,
   IDatabaseResultResponse,
+  IDeleteGroupResult,
   ILookupWizardEntityData,
   IMenuItemInfo,
   IModelChange,
+  IModelCheckResult,
+  IMoveNodeResult,
+  IMoveTargetsResult,
+  IMoveVerdict,
+  INodeLoadData,
   IPackagesInfo,
   IParametersResult,
   IPropertyChange,
@@ -78,14 +84,41 @@ export class ArchitectApi implements IArchitectApi {
     ).data;
   }
 
-  async searchText(text: string): Promise<ISearchResult[]> {
+  async getMoveVerdicts(args: {
+    source: INodeLoadData;
+    targets: INodeLoadData[];
+  }): Promise<IMoveVerdict[]> {
+    return (await this.http.post('/Model/GetMoveVerdicts', args)).data;
+  }
+
+  async getMoveTargets(args: { source: INodeLoadData }): Promise<IMoveTargetsResult> {
+    return (await this.http.post('/Model/GetMoveTargets', args)).data;
+  }
+
+  async moveNode(args: {
+    source: INodeLoadData;
+    target: INodeLoadData;
+    isCopy: boolean;
+  }): Promise<IMoveNodeResult> {
+    return (await this.http.post('/Model/MoveNode', args)).data;
+  }
+
+  async searchSchemaByAllFields(query: string): Promise<ISearchResult[]> {
     return (
-      await this.http.get('/Search/Text', {
+      await this.http.get('/Search/SearchSchemaByAllFields', {
         params: {
-          text,
+          query,
         },
       })
     ).data;
+  }
+
+  async runModelCheck(): Promise<IModelCheckResult> {
+    return (await this.http.post('/ModelCheck/Run')).data;
+  }
+
+  async getModelCheckResult(): Promise<IModelCheckResult> {
+    return (await this.http.get('/ModelCheck/Result')).data;
   }
 
   async searchReferences(schemaItemId: string): Promise<ISearchResult[]> {
@@ -213,6 +246,28 @@ export class ArchitectApi implements IArchitectApi {
         newTypeName: typeName,
       })
     ).data;
+  }
+
+  async createGroup(node: IApiTreeNode, name: string): Promise<IApiTreeNode> {
+    return (
+      await this.http.post('/Model/CreateGroup', {
+        nodeId: node.origamId,
+        name: name,
+      })
+    ).data;
+  }
+
+  async renameGroup(node: IApiTreeNode, name: string): Promise<IApiTreeNode> {
+    return (
+      await this.http.post('/Model/RenameGroup', {
+        nodeId: node.origamId,
+        name: name,
+      })
+    ).data;
+  }
+
+  async deleteGroup(nodeId: string): Promise<IDeleteGroupResult> {
+    return (await this.http.post('/Model/DeleteGroup', { nodeId: nodeId })).data;
   }
 
   async updateSectionEditor(args: {
@@ -350,10 +405,86 @@ export class ArchitectApi implements IArchitectApi {
     return (await this.http.post('/wizards/work-queue-classes', request)).data;
   }
 
+  async getDataStructureWizardData(
+    entityId: string,
+  ): Promise<import('@api/IArchitectApi').IDataStructureWizardData> {
+    return (
+      await this.http.get('/wizards/data-structures/wizard-data', {
+        params: { entityId },
+      })
+    ).data;
+  }
+
+  async createDataStructure(
+    request: import('@api/IArchitectApi').ICreateDataStructureRequest,
+  ): Promise<import('@api/IArchitectApi').ICreateWizardResult> {
+    return (await this.http.post('/wizards/data-structures', request)).data;
+  }
+
+  async getScreenFromSectionWizardData(
+    screenSectionId: string,
+  ): Promise<import('@api/IArchitectApi').IScreenFromSectionWizardData> {
+    return (
+      await this.http.get('/wizards/screens-from-section/wizard-data', {
+        params: { screenSectionId },
+      })
+    ).data;
+  }
+
+  async createScreenFromSection(
+    request: import('@api/IArchitectApi').ICreateScreenFromSectionRequest,
+  ): Promise<import('@api/IArchitectApi').ICreateWizardResult> {
+    return (await this.http.post('/wizards/screens-from-section', request)).data;
+  }
+
   async createMenuItem(
     request: import('@api/IArchitectApi').ICreateMenuItemRequest,
   ): Promise<import('@api/IArchitectApi').ICreateWizardResult> {
     return (await this.http.post('/wizards/menu-items', request)).data;
+  }
+
+  async createWorkflowMenuItem(
+    request: import('@api/IArchitectApi').ICreateWorkflowMenuItemRequest,
+  ): Promise<import('@api/IArchitectApi').ICreateWizardResult> {
+    return (await this.http.post('/wizards/workflow-menu-items', request)).data;
+  }
+
+  async createRole(
+    request: import('@api/IArchitectApi').ICreateRoleRequest,
+  ): Promise<import('@api/IArchitectApi').ICreateWizardResult> {
+    return (await this.http.post('/wizards/roles', request)).data;
+  }
+
+  async getLocalizationChildEntityWizardData(
+    entityId: string,
+  ): Promise<import('@api/IArchitectApi').ILocalizationChildEntityWizardData> {
+    return (
+      await this.http.get('/wizards/localization-child-entities/wizard-data', {
+        params: { entityId },
+      })
+    ).data;
+  }
+
+  async createLocalizationChildEntity(
+    request: import('@api/IArchitectApi').ICreateLocalizationChildEntityRequest,
+  ): Promise<import('@api/IArchitectApi').ICreateWizardResult> {
+    return (await this.http.post('/wizards/localization-child-entities', request)).data;
+  }
+
+  async getScreenSectionWizardData(
+    entityId: string,
+  ): Promise<import('@api/IArchitectApi').IScreenSectionWizardData> {
+    return (
+      await this.http.get('/wizards/screen-sections/wizard-data', {
+        params: { entityId },
+      })
+    ).data;
+  }
+
+  async createScreenSection(
+    request: import('@api/IArchitectApi').ICreateScreenSectionRequest,
+  ): Promise<import('@api/IArchitectApi').ICreateWizardResult> {
+    return (await this.http.post('/wizards/screen-sections', request)).data;
   }
 
   async getDataStructureSql(

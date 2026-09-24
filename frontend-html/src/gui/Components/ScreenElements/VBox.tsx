@@ -21,10 +21,10 @@ import React from "react";
 import cx from 'classnames';
 import S from './HBoxVBox.module.scss';
 
-export class VBox extends React.Component<{
+export class VBox extends React.Component<React.PropsWithChildren<{
   width?: number;
   height?: number;
-}> {
+}>> {
   getVBoxStyle() {
     return {
       width: this.props.width,

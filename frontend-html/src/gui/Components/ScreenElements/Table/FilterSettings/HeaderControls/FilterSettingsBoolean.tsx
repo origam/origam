@@ -23,7 +23,9 @@ import { FilterSettingsComboBox, FilterSettingsComboBoxItem } from "../FilterSet
 
 import { Checkbox } from "gui/Components/CheckBox/Checkbox";
 import { observer } from "mobx-react";
-import { action } from "mobx";
+import { action,
+  makeObservable
+} from "mobx";
 import { FilterSetting } from "./FilterSetting";
 import { Operator } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operator";
 import { MobileBooleanInput } from "gui/connections/MobileComponents/Form/MobileBooleanInput";
@@ -33,11 +35,16 @@ import S from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls
 const OPERATORS: Operator[] = [Operator.equals];
 
 @observer
-export class FilterSettingsBoolean extends React.Component<{
+export class FilterSettingsBoolean extends React.Component<React.PropsWithChildren<{
   setting?: any;
   id: string;
   ctx: any;
-}> {
+}>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
 
   static get defaultSettings() {
     return new FilterSetting(OPERATORS[0].type)

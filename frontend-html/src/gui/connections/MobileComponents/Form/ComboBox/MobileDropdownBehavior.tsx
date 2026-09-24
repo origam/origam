@@ -22,7 +22,9 @@ import { IDropdownEditorApi } from "modules/Editors/DropdownEditor/DropdownEdito
 import { IDropdownEditorData } from "modules/Editors/DropdownEditor/DropdownEditorData";
 import { DropdownDataTable } from "modules/Editors/DropdownEditor/DropdownTableModel";
 import { DropdownEditorLookupListCache } from "modules/Editors/DropdownEditor/DropdownEditorLookupListCache";
-import { action, computed, flow, observable } from "mobx";
+import { action, computed, flow, observable,
+  makeObservable
+} from "mobx";
 import {
   CancellablePromise,
   EagerlyLoadedGrid,
@@ -60,6 +62,7 @@ export class MobileDropdownBehavior implements IDropdownEditorBehavior{
   private onTextOverflowChanged?: (tooltip: string | null | undefined) => void;
 
   constructor(args: IMobileBehaviorData) {
+    makeObservable(this);
     this.api = args.api;
     this.data = args.data;
     this.dataTable = args.dataTable;

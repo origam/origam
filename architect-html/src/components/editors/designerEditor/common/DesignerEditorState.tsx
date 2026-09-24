@@ -37,6 +37,10 @@ export abstract class DesignerEditorState implements IDesignerEditorState {
   @observable accessor isActive: boolean = false;
   @observable accessor isDirty: boolean = false;
 
+  get origamId() {
+    return this.editorNode.origamId;
+  }
+
   get label() {
     return this.toolbox.name;
   }
@@ -80,8 +84,8 @@ export abstract class DesignerEditorState implements IDesignerEditorState {
   protected abstract update(): Generator<Promise<any>, void, any>;
 
   *save(): Generator<Promise<any>, void, any> {
-    if (this.editorNode.parent?.parent) {
-      yield* this.editorNode.parent.parent.loadChildren();
+    if (this.editorNode.parent) {
+      yield* this.editorNode.parent.loadChildren();
     }
     this.isDirty = false;
   }

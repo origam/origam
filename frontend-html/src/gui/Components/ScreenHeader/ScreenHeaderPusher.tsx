@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import React from "react";
 import S from "gui/Components/ScreenHeader/ScreenHeaderPusher.module.scss";
 
-export class ScreenHeaderPusher extends React.Component {
+export class ScreenHeaderPusher extends React.Component<React.PropsWithChildren<{}>> {
   render() {
     return <div className={S.root}/>;
   }

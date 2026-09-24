@@ -31,23 +31,33 @@ const date1PropertyId ="c8e93248-81c0-4274-9ff1-1b7688944877";
 const comboPropertyId ="14be2199-ad7f-43c3-83bf-a27c1fa66f7c";
 const tagPropertyId ="3c685902-b55b-45cb-807c-01e8386bb313";
 
-async function setGrouping() {
-  const threeDotMenuButton = await page.waitForSelector(
-    `#${dataViewId} .threeDotMenu`,
-    {visible: true}
-  )
+// Opens the column configuration dialog and returns its OK button. Clicking the menu
+// item closes the dropdown, so a retry has to open the menu again instead of clicking
+// the detached item.
+async function openColumnConfiguration() {
+  const openConfigMenuItem = async () => {
+    const threeDotMenuButton = await page.waitForSelector(
+      `#${dataViewId} .threeDotMenu`,
+      {visible: true}
+    );
+    return clickAndWaitForSelector({
+      page: page,
+      clickable: threeDotMenuButton,
+      selector: "#columnConfigItem"
+    });
+  };
 
-  const configMenuItem = await clickAndWaitForSelector({
-    page: page,
-    clickable: threeDotMenuButton,
-    selector: "#columnConfigItem"
-  });
-
-  const columnConfigOk = await clickAndWaitForSelector({
+  const configMenuItem = await openConfigMenuItem();
+  return clickAndWaitForSelector({
     page: page,
     clickable: configMenuItem,
-    selector: "#columnConfigOk"
+    selector: "#columnConfigOk",
+    reopen: openConfigMenuItem
   });
+}
+
+async function setGrouping() {
+  const columnConfigOk = await openColumnConfiguration();
 
   const groupByText1CheckBox = await page.waitForSelector(
     `#group_by_${text1PropertyId}`,
@@ -73,22 +83,7 @@ async function setGrouping() {
 }
 
 async function clearGrouping() {
-  const threeDotMenuButton = await page.waitForSelector(
-    `#${dataViewId} .threeDotMenu`,
-    {visible: true}
-  )
-
-  const configMenuItem = await clickAndWaitForSelector({
-    page: page,
-    clickable: threeDotMenuButton,
-    selector: "#columnConfigItem"
-  });
-
-  const columnConfigOk = await clickAndWaitForSelector({
-    page: page,
-    clickable: configMenuItem,
-    selector: "#columnConfigOk"
-  });
+  const columnConfigOk = await openColumnConfiguration();
 
   const groupByText1CheckBox = await page.waitForSelector(
     `#group_by_${text1PropertyId}`,

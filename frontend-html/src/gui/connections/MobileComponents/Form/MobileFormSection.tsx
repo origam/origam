@@ -27,12 +27,12 @@ import S from "gui/connections/MobileComponents/Form/MobileFormSection.module.sc
 
 const emptyDimensions = new FieldDimensions();
 
-export const MobileFormSection: React.FC<{
+export const MobileFormSection: React.FC<React.PropsWithChildren<{
   title?: string;
   startOpen: boolean;
   backgroundColor: string | undefined;
   foreGroundColor: string | undefined;
-}> = (props) => {
+}>> = (props) => {
 
   const [isOpen, setOpen] = useState(props.startOpen);
   const hasTitle = !!props.title;

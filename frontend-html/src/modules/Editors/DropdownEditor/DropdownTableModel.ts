@@ -18,7 +18,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { TypeSymbol } from "dic/Container";
-import { action, computed, observable } from "mobx";
+import { action, computed, observable,
+  makeObservable
+} from "mobx";
 import { EagerlyLoadedGrid, LazilyLoadedGrid } from "./DropdownEditorCommon";
 import { IDropdownEditorData } from "./DropdownEditorData";
 import { DropdownEditorSetup } from "modules/Editors/DropdownEditor/DropdownEditorSetup";
@@ -28,6 +30,7 @@ export class DropdownDataTable {
     private setup: () => DropdownEditorSetup,
     private dropdownEditorData: IDropdownEditorData
   ) {
+    makeObservable(this);
   }
 
   @observable.shallow allRows: any[][] = [];
@@ -162,6 +165,10 @@ export interface IDropdownColumnDriver {
 }
 
 export class DropdownColumnDrivers {
+  constructor() {
+    makeObservable(this);
+  }
+
   @observable
   allDrivers: IDropdownColumnDriver[] = [];
 

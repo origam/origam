@@ -71,7 +71,7 @@ import { flashColor2htmlColor, htmlColor2FlashColor } from "utils/flashColorForm
 import { IUpdateChanges } from "model/entities/types/IFormScreenLifecycle";
 
 
-@inject(({property, formPanelView}) => {
+@inject(({property, formPanelView}: any) => {
   return {
     property,
     onEditorBlur: () => onFieldBlur(formPanelView)(),
@@ -90,7 +90,7 @@ import { IUpdateChanges } from "model/entities/types/IFormScreenLifecycle";
   };
 })
 @observer
-export class FormViewEditor extends React.Component<{
+export class FormViewEditor extends React.Component<React.PropsWithChildren<{
   xmlNode?: any;
   value?: any;
   textualValue?: any;
@@ -101,7 +101,7 @@ export class FormViewEditor extends React.Component<{
   backgroundColor?: string;
   onTextOverflowChanged?: (tooltip: string | null | undefined) => void;
   dock?: IDockType;
-}> {
+}>> {
   focusManager: FormFocusManager;
 
   constructor(props: any) {

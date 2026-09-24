@@ -22,7 +22,7 @@ import S from "gui/Components/Dialogs/AboutView.module.scss";
 import { IAboutInfo } from "model/entities/types/IAboutInfo";
 import { T } from "utils/translation";
 
-export class AboutView extends React.Component<{ aboutInfo: IAboutInfo }> {
+export class AboutView extends React.Component<React.PropsWithChildren<{ aboutInfo: IAboutInfo }>> {
   render() {
     const customClientBuildVersion = (window as any).ORIGAM_CUSTOM_CLIENT_BUILD as string;
     const uiPluginVersions = (window as any).ORIGAM_UI_PLUGINS as string;

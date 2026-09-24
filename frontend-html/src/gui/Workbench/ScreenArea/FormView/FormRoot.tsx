@@ -20,16 +20,23 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import S from "./FormRoot.module.scss";
 import React from "react";
 import { observer } from "mobx-react";
-import { action, observable } from "mobx";
+import { action, observable,
+  makeObservable
+} from "mobx";
 import cx from "classnames";
 import { IDataView } from "model/entities/types/IDataView";
 
 @observer
-export class FormRoot extends React.Component<{
+export class FormRoot extends React.Component<React.PropsWithChildren<{
   className?: string;
   dataView: IDataView;
   style?: any
-}> {
+}>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
 
   @observable
   disableOverflow = false;
@@ -63,7 +70,9 @@ export class FormRoot extends React.Component<{
   }
 
   elmFormRoot: HTMLDivElement | null = null;
-  refFormRoot = (elm: HTMLDivElement | null) => (this.elmFormRoot = elm);
+  refFormRoot = (elm: HTMLDivElement | null) => {
+    this.elmFormRoot = elm;
+  };
 
   render() {
     return (

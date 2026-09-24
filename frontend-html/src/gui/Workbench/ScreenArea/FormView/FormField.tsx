@@ -30,7 +30,7 @@ export enum ICaptionPosition {
   None = "None"
 }
 
-@inject(({property}) => {
+@inject(({property}: any) => {
   const rowId = getSelectedRowId(property);
   const isHidden = !getRowStateAllowRead(property, rowId || "", property.id);
   return {
@@ -38,7 +38,7 @@ export enum ICaptionPosition {
   };
 })
 @observer
-export class FormField extends React.Component<{
+export class FormField extends React.Component<React.PropsWithChildren<{
   Id: string;
   Name: string;
   CaptionLength: number;
@@ -50,7 +50,7 @@ export class FormField extends React.Component<{
   Y: number;
   X: number;
   isHidden?: boolean;
-}> {
+}>> {
   fieldNameStyle() {
     // TODO: !!! Proper typing of props (numbers instead of strings etc...)
 

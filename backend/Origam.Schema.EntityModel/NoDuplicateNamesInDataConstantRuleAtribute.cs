@@ -23,6 +23,8 @@ using System;
 using System.Data;
 using System.Linq;
 using Origam.DA.ObjectPersistence;
+using Origam.Services;
+using Origam.Workbench.Services;
 
 namespace Origam.Schema.EntityModel;
 
@@ -40,7 +42,7 @@ public class NoDuplicateNamesInDataConstantRuleAtribute : AbstractModelElementRu
     {
         if (string.IsNullOrEmpty(memberName))
         {
-            CheckRule(instance);
+            return CheckRule(instance);
         }
 
         if (memberName != "Name")
@@ -51,20 +53,35 @@ public class NoDuplicateNamesInDataConstantRuleAtribute : AbstractModelElementRu
             );
         }
 
-        if (!(instance is DataConstant dataconstant))
+        if (instance is not DataConstant dataConstant)
         {
             return null;
         }
 
-        if (dataconstant.RootProvider == null) { }
         string instanceName = (string)Reflector.GetValue(instance.GetType(), instance, memberName);
-        var itemWithDuplicateName = dataconstant
-            .RootProvider.ChildItems.Where(item => item is DataConstant)
-            .Where(item => item.Name == instanceName)
-            .FirstOrDefault(item => item.Id != dataconstant.Id);
-        if (itemWithDuplicateName != null)
+        // An empty name belongs to StringNotEmptyModelElementRule.
+        if (string.IsNullOrEmpty(instanceName))
         {
-            return new DataException(dataconstant.Name + " contains duplicate  names ");
+            return null;
+        }
+
+        // The architect caches the provider's child items, a persistence lookup reloads them all.
+        DataConstantSchemaItemProvider constants = ServiceManager
+            .Services.GetService<ISchemaService>()
+            ?.GetProvider<DataConstantSchemaItemProvider>();
+        if (constants == null)
+        {
+            return null;
+        }
+
+        bool duplicateExists = constants
+            .ChildItems.OfType<DataConstant>()
+            .Any(other => other.Id != dataConstant.Id && other.Name == instanceName);
+        if (duplicateExists)
+        {
+            return new DataException(
+                ResourceUtils.GetString("ErrorDuplicateDataConstantName", instanceName)
+            );
         }
         return null;
     }

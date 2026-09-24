@@ -29,7 +29,9 @@ import { getCanvasFontSize, getTextWidth } from "utils/textMeasurement";
 import { DropdownColumnDrivers, DropdownDataTable } from "modules/Editors/DropdownEditor/DropdownTableModel";
 import { BoundingRect } from "react-measure";
 import { IDropdownEditorBehavior } from "modules/Editors/DropdownEditor/DropdownEditorBehavior";
-import { observable } from "mobx";
+import { observable,
+  makeObservable
+} from "mobx";
 import { T } from "utils/translation";
 import { CtxDropdownCtrlRect, CtxDropdownRefBody } from "gui/Components/Dropdown/DropdownCommon";
 
@@ -93,14 +95,14 @@ function AddNewDropDown(props: {rowHeight: number}) {
 }
 
 @observer
-export class DropdownEditorTable extends  React.Component<{
+export class DropdownEditorTable extends  React.Component<React.PropsWithChildren<{
   drivers: DropdownColumnDrivers,
   dataTable: DropdownDataTable,
   rectCtrl: BoundingRect,
   beh: IDropdownEditorBehavior,
   rowHeight: number,
   height?: number
-}> {
+}>> {
   refMultiGrid = createRef<MultiGrid>();
   @observable
   scrollbarSize = { horiz: 0, vert: 0 };
@@ -138,6 +140,7 @@ export class DropdownEditorTable extends  React.Component<{
 
   constructor(props: any) {
     super(props);
+    makeObservable(this);
   }
 
   handleScrollbarPresenceChange(args: {
@@ -154,13 +157,16 @@ export class DropdownEditorTable extends  React.Component<{
 
   renderTableCell({columnIndex, key, parent, rowIndex, style}: GridCellProps) {
     const Prov = CtxCell.Provider as any;
+    const drivers = this.props.drivers;
+    const hasHeader = this.hasHeader;
+    const bodyRowIndex = rowIndex - (hasHeader ? 1 : 0);
     return (
       <Prov
         key={key}
         value={{visibleColumnIndex: columnIndex, visibleRowIndex: rowIndex}}
         style={style}
       >
-        {(this.hasHeader && rowIndex > 0) || !this.hasHeader ? (
+        {(hasHeader && rowIndex > 0) || !hasHeader ? (
           <div
             style={style}
             className={cx({ isHoveredRow: rowIndex === this.hoveredRowIndex })}
@@ -174,9 +180,7 @@ export class DropdownEditorTable extends  React.Component<{
             <Observer>
               {() => (
                 <>
-                  {this.props.drivers
-                    .getDriver(columnIndex)
-                    .bodyCellDriver.render(rowIndex - (this.hasHeader ? 1 : 0))}
+                  {drivers.getDriver(columnIndex).bodyCellDriver.render(bodyRowIndex)}
                 </>
               )}
             </Observer>
@@ -184,7 +188,7 @@ export class DropdownEditorTable extends  React.Component<{
         ) : (
           <div style={style}>
             <Observer>
-              {() => <>{this.props.drivers.getDriver(columnIndex).headerCellDriver.render()}</>}
+              {() => <>{drivers.getDriver(columnIndex).headerCellDriver.render()}</>}
             </Observer>
           </div>
         )}

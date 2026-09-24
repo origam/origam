@@ -21,6 +21,7 @@ import { IPlugin } from "./IPlugin";
 import { ILocalization } from "./ILocalization";
 import { ILocalizer } from "./ILocalizer";
 import { IScreenPluginData } from "./IScreenPluginData";
+import { JSX } from "react";
 
 
 export interface IScreenPlugin extends IPlugin {

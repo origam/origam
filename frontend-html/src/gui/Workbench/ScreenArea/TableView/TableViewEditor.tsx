@@ -52,7 +52,7 @@ import { flashColor2htmlColor, htmlColor2FlashColor } from "utils/flashColorForm
 import { getWorkbenchLifecycle } from "model/selectors/getWorkbenchLifecycle";
 import { onDropdownEditorClick } from "model/actions/DropdownEditor/onDropdownEditorClick";
 
-@inject(({tablePanelView}) => {
+@inject(({tablePanelView}: any) => {
   const row = getSelectedRow(tablePanelView)!;
   const property = getSelectedProperty(tablePanelView)!;
   const actualProperty =
@@ -82,14 +82,14 @@ import { onDropdownEditorClick } from "model/actions/DropdownEditor/onDropdownEd
   };
 })
 @observer
-export class TableViewEditor extends React.Component<{
+export class TableViewEditor extends React.Component<React.PropsWithChildren<{
   property?: IProperty;
   getCellValue?: () => any;
   onChange?: (event: any, value: any) => Promise<void>;
   onEditorBlur?: (event: any) => Promise<void>;
   onEditorKeyDown?: (event: any) => void;
   expand?: boolean
-}> {
+}>> {
 
   componentDidMount() {
     const focusManager = getGridFocusManager(this.props.property);

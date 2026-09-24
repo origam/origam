@@ -22,14 +22,16 @@ import { observer } from "mobx-react";
 import S from "./Header.module.scss";
 import { IOrderByDirection } from "model/entities/types/IOrderingConfiguration";
 import { Draggable, DraggableProvided } from "react-beautiful-dnd";
-import { action, observable } from "mobx";
+import { action, observable,
+  makeObservable
+} from "mobx";
 import cx from "classnames";
 import { formatTooltipPlaintext } from "gui/Components/ToolTip/FormatTooltipText";
 
 const MIN_COLUMN_WIDTH = 30;
 
 @observer
-export class Header extends React.Component<{
+export class Header extends React.Component<React.PropsWithChildren<{
   id: string;
   width: number;
   label: string;
@@ -45,7 +47,12 @@ export class Header extends React.Component<{
   onColumnWidthChangeFinished: (id: string, newWidth: number) => void;
   onClick?: (event: any, id: string) => void;
   isDragDisabled: boolean;
-}> {
+}>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
   width0: number = 0;
   mouseX0: number = 0;
   mouseY0: number = 0;

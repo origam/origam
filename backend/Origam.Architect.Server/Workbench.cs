@@ -40,7 +40,8 @@ public class Workbench
         MethodBase.GetCurrentMethod().DeclaringType
     );
 
-    private readonly CancellationTokenSource modelCheckCancellationTokenSource = new();
+    private readonly CancellationTokenSource backgroundInitializationCancellationTokenSource =
+        new();
     private SchemaService schema;
 
     public Workbench(SchemaService schema)
@@ -157,7 +158,7 @@ public class Workbench
         {
             return;
         }
-        var cancellationToken = modelCheckCancellationTokenSource.Token;
+        var cancellationToken = backgroundInitializationCancellationTokenSource.Token;
         Task.Factory.StartNew(
                 () =>
                 {
@@ -167,7 +168,6 @@ public class Workbench
                     )
                     {
                         IndexReferences(independentPersistenceService, cancellationToken);
-                        DoModelChecks(independentPersistenceService, cancellationToken);
                     }
                 },
                 cancellationToken
@@ -208,21 +208,5 @@ public class Workbench
                 ReferenceIndexManager.Add(item);
             });
         ReferenceIndexManager.Initialize();
-    }
-
-    private void DoModelChecks(
-        FilePersistenceService independentPersistenceService,
-        CancellationToken cancellationToken
-    )
-    {
-        List<Dictionary<ISchemaItem, string>> errorFragments = ModelRules.GetErrors(
-            schemaProviders: new OrigamProviderBuilder()
-                .SetSchemaProvider(independentPersistenceService.SchemaProvider)
-                .GetAll(),
-            independentPersistenceService: independentPersistenceService,
-            cancellationToken: cancellationToken
-        );
-        var persistenceProvider = (FilePersistenceProvider)
-            independentPersistenceService.SchemaProvider;
     }
 }

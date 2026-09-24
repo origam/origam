@@ -29,9 +29,9 @@ import { DropdownItem } from "gui/Components/Dropdown/DropdownItem";
 import { DataViewHeaderDropDownItem } from "gui/Components/DataViewHeader/DataViewHeaderDropDownItem";
 import uiActions from "model/actions-ui-tree";
 
-export class DataViewHeaderButtonGroup extends React.Component<{
+export class DataViewHeaderButtonGroup extends React.Component<React.PropsWithChildren<{
   actions: IAction[];
-}> {
+}>> {
 
   renderActions() {
     return this.props.actions.map((action, idx) =>

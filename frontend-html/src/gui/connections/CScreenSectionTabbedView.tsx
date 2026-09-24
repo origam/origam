@@ -22,7 +22,9 @@ import { observer, Observer } from "mobx-react";
 import { TabbedViewPanel } from "gui/Components/TabbedView/TabbedViewPanel";
 import { TabbedViewHandleRow } from "gui/Components/TabbedView/TabbedViewHandleRow";
 import { TabbedViewHandle } from "gui/Components/TabbedView/TabbedViewHandle";
-import { action, observable } from "mobx";
+import { action, observable,
+  makeObservable
+} from "mobx";
 import { TabbedView } from "gui/Components/TabbedView/TabbedView";
 import { TabbedViewPanelsContainer } from "gui/Components/TabbedView/TabbedViewPanelsContainer";
 import { IDataView } from "model/entities/types/IDataView";
@@ -31,12 +33,17 @@ import { find, findUIChildren } from "xmlInterpreters/xmlUtils";
 import { getScreenFocusManager } from "model/selectors/FormScreen/getScreenFocusManager";
 
 @observer
-export class CScreenSectionTabbedView extends React.Component<{
+export class CScreenSectionTabbedView extends React.Component<React.PropsWithChildren<{
   boxes: any[];
   id: string;
   nextNode: (node: any) => React.ReactNode;
   dataViewMap: Map<string, IDataView>
-}> {
+}>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
   @observable activePanelId: string =
     this.props.boxes.length > 0 ? this.props.boxes[0].attributes.Id : "";
 
@@ -68,7 +75,7 @@ export class CScreenSectionTabbedView extends React.Component<{
   }
 
   render() {
-    const {boxes} = this.props;
+    const {boxes, nextNode} = this.props;
     return (
       <TabbedView>
         <TabbedViewHandleRow>
@@ -96,7 +103,7 @@ export class CScreenSectionTabbedView extends React.Component<{
                   key={box.attributes.Id}
                   isActive={this.activePanelId === box.attributes.Id}
                 >
-                  {findUIChildren(box).map((child) => this.props.nextNode(child))}
+                  {findUIChildren(box).map((child) => nextNode(child))}
                 </TabbedViewPanel>
               )}
             </Observer>

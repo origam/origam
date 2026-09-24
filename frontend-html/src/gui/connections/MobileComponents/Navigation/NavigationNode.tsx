@@ -19,7 +19,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { ReactNode } from "react";
 import { IDataView } from "model/entities/types/IDataView";
-import { action, computed, observable } from "mobx";
+import { action, computed, observable,
+  makeObservable
+} from "mobx";
 import { MobileState } from "model/entities/MobileState/MobileState";
 import { BreadCrumbNode } from "gui/connections/MobileComponents/Navigation/BreadCrumbs";
 import { IFormScreen } from "model/entities/types/IFormScreen";
@@ -47,6 +49,10 @@ export interface INavigationNode {
 }
 
 export class NavigationNode implements INavigationNode {
+  constructor() {
+    makeObservable(this);
+  }
+
   private _children: INavigationNode[] = [];
   private _name: string = "";
   private _dataView: IDataView | undefined;
@@ -151,6 +157,7 @@ export class NavigatorState{
   currentNode: INavigationNode;
 
   constructor(private mobileState: MobileState, node: INavigationNode) {
+    makeObservable(this);
     this.currentNode = node;
   }
 

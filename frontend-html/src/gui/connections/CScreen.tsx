@@ -31,7 +31,7 @@ import { IFormScreenEnvelope } from "model/entities/types/IFormScreen";
 import { onIFrameClick } from "model/actions/WebScreen/onIFrameClick";
 import { onScreenTabCloseClick } from "model/actions-ui/ScreenTabHandleRow/onScreenTabCloseClick";
 
-const WebScreenComposite: React.FC<{ openedScreen: IOpenedScreen }> = observer((props) => {
+const WebScreenComposite: React.FC<React.PropsWithChildren<{ openedScreen: IOpenedScreen }>> = observer((props) => {
   const {openedScreen} = props;
   const [isLoading, setLoading] = useState(false);
   const refIFrame = useRef<any>(null);
@@ -127,9 +127,9 @@ const WebScreenComposite: React.FC<{ openedScreen: IOpenedScreen }> = observer((
 });
 
 @observer
-export class CScreen extends React.Component<{
+export class CScreen extends React.Component<React.PropsWithChildren<{
   openedScreen: IOpenedScreen;
-}> {
+}>> {
   render() {
     const {openedScreen} = this.props;
     if (openedScreen.screenUrl) {
@@ -152,10 +152,10 @@ export class CScreen extends React.Component<{
 }
 
 @observer
-class CScreenInner extends React.Component<{
+class CScreenInner extends React.Component<React.PropsWithChildren<{
   openedScreen: IOpenedScreen;
   formScreen: IFormScreenEnvelope;
-}> {
+}>> {
   render() {
     const {openedScreen, formScreen} = this.props;
     return (

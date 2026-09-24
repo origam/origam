@@ -25,7 +25,7 @@ import {
   FilterEditorData,
 } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/TagFilterEditor";
 import { IFilterSetting } from "model/entities/types/IFilterSetting";
-import { CancellablePromise } from "mobx/lib/api/flow";
+import { CancellablePromise } from "utils/CancellablePromise";
 import { ILookup } from "model/entities/types/ILookup";
 import { IProperty } from "model/entities/types/IProperty";
 import { MobXProviderContext } from "mobx-react";
@@ -43,14 +43,14 @@ import {
   FilterDropDownApi
 } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/TagLookupFilterEditor";
 
-export const MobileTagFilterEditor: React.FC<{
+export const MobileTagFilterEditor: React.FC<React.PropsWithChildren<{
   setting: IFilterSetting;
   getOptions: (searchTerm: string) => CancellablePromise<Array<any>>;
   lookup: ILookup;
   property: IProperty;
   autoFocus: boolean;
   id: string;
-}> = (props) => {
+}>> = (props) => {
   return <MobileTagInputEditor
     key={props.id}
     isReadOnly={false}

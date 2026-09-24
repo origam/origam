@@ -25,7 +25,7 @@ import { FieldDimensions } from "gui/Components/Form/FieldDimensions";
 import cx from "classnames";
 
 
-export class RadioButton extends React.Component<{
+export class RadioButton extends React.Component<React.PropsWithChildren<{
   caption: string;
   fieldDimensions: FieldDimensions;
   name: string;
@@ -37,7 +37,7 @@ export class RadioButton extends React.Component<{
   onClick: () => void;
   labelColor?: string;
   className?: string;
-}> {
+}>> {
   inputId = uuidv4();
   elmInput: HTMLInputElement | null = null;
   refInput = (elm: HTMLInputElement | any) => {

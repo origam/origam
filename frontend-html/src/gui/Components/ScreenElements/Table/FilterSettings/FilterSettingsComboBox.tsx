@@ -21,16 +21,23 @@ import React from "react";
 
 import S from "./FilterSettingsComboBox.module.scss";
 import { Observer, observer } from "mobx-react";
-import { action, observable } from "mobx";
+import { action, observable,
+  makeObservable
+} from "mobx";
 import { createPortal } from "react-dom";
 import Measure from "react-measure";
 import _ from "lodash";
 
 @observer
-export class FilterSettingsComboBox extends React.Component<{
+export class FilterSettingsComboBox extends React.Component<React.PropsWithChildren<{
   trigger: React.ReactNode;
   id: string;
-}> {
+}>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
   @observable isDroppedDown = false;
 
   refDropdown = React.createRef<HTMLDivElement>();
@@ -76,22 +83,25 @@ export class FilterSettingsComboBox extends React.Component<{
 
   measureThrottled = _.throttle(this.measureImm, 100);
 
-  refMeasure = (elm: any) => (this.elmMeasure = elm);
+  refMeasure = (elm: any) => {
+    this.elmMeasure = elm;
+  };
   elmMeasure: any;
 
   render() {
+    const {id, trigger, children} = this.props;
     return (
       <Measure ref={this.refMeasure} bounds={true}>
         {({measureRef: refTriggerMeasure, contentRect: triggerContentRect}) => (
           <Observer>
             {() => (
-              <div id={this.props.id} className={S.container} ref={this.refDropdown}>
+              <div id={id} className={S.container} ref={this.refDropdown}>
                 <div
                   ref={refTriggerMeasure}
                   className={S.trigger}
                   onClick={this.handleTriggerClick}
                 >
-                  {this.props.trigger}
+                  {trigger}
                   <div className={S.dropdownSymbol}>
                     <i className="fas fa-caret-down"/>
                   </div>
@@ -99,7 +109,7 @@ export class FilterSettingsComboBox extends React.Component<{
                 {this.isDroppedDown &&
                   createPortal(
                     <div
-                      id={"dropdown_" + this.props.id}
+                      id={"dropdown_" + id}
                       className={S.dropdown}
                       onClick={this.handleDropdownClick}
                       style={{
@@ -109,7 +119,7 @@ export class FilterSettingsComboBox extends React.Component<{
                         minWidth: triggerContentRect.bounds?.width,
                       }}
                     >
-                      {this.props.children}
+                      {children}
                     </div>,
                     document.getElementById("dropdown-portal")!
                   )}
@@ -122,9 +132,9 @@ export class FilterSettingsComboBox extends React.Component<{
   }
 }
 
-export const FilterSettingsComboBoxItem: React.FC<{
+export const FilterSettingsComboBoxItem: React.FC<React.PropsWithChildren<{
   onClick?: (event: any) => void;
-}> = (props) => (
+}>> = (props) => (
   <div className={S.dropdownItem} onClick={props.onClick}>
     {props.children}
   </div>

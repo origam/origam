@@ -18,14 +18,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
-import { action, observable } from "mobx";
+import { action, observable, override,
+  makeObservable
+} from "mobx";
 import * as React from "react";
 import { NumberEditorProps } from "gui/Components/ScreenElements/Editors/NumberEditor";
 import { getCurrentDecimalSeparator, getCurrentGroupSeparator } from "model/entities/NumberFormating";
 
 export interface INumberEditorModel {
   value: string;
-  inputRef: React.RefObject<HTMLInputElement>
+  inputRef: React.RefObject<HTMLInputElement | null>
   getInputType(): string;
   getInputMode(): "numeric" | "decimal" | "text" | "search" | "none" | "tel" | "url" | "email" | undefined;
   handleChange(event: any): void;
@@ -41,9 +43,10 @@ export function createNumberEditorModel(args:{props: NumberEditorProps, initValu
 class DesktopNumberEditorModel implements INumberEditorModel {
   @observable
   value: string = "";
-  inputRef: React.RefObject<HTMLInputElement> = React.createRef<HTMLInputElement>();
+  inputRef: React.RefObject<HTMLInputElement | null> = React.createRef<HTMLInputElement>();
 
   constructor(protected props: NumberEditorProps, initValue: string ) {
+    makeObservable(this);
     this.value = initValue;
   }
 
@@ -83,6 +86,11 @@ class DesktopNumberEditorModel implements INumberEditorModel {
 }
 
 class MobileNumberEditorModel extends DesktopNumberEditorModel {
+  constructor(props: NumberEditorProps, initValue: string) {
+    super(props, initValue);
+    makeObservable(this);
+  }
+
 
   getInputType() {
     return this.props.isPassword ? "password" : "numeric";
@@ -92,7 +100,7 @@ class MobileNumberEditorModel extends DesktopNumberEditorModel {
     return "decimal";
   }
 
-  @action.bound handleChange(event: any) {
+  @override handleChange(event: any) {
     const {cleanValue, invalidCharactersBeforeCursor} = getValidCharacters(event, this.props.property.isInteger);
     if (isValidNumber(cleanValue)) {
       this.value = cleanValue;

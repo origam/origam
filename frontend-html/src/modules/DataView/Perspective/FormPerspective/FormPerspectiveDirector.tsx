@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import React, { useContext } from "react";
-import { action } from "mobx";
+import { action, makeObservable } from "mobx";
 import { IDataViewBodyUI, IDataViewToolbarUI } from "modules/DataView/DataViewUI";
 import { TypeSymbol } from "dic/Container";
 import { SectionViewSwitchers } from "modules/DataView/DataViewTypes";
@@ -47,6 +47,7 @@ export class FormPerspectiveDirector implements IIId {
     public formPerspective = IFormPerspective(),
     public perspective = IPerspective()
   ) {
+    makeObservable(this);
   }
 
   @action.bound
@@ -94,9 +95,9 @@ export class FormPerspectiveDirector implements IIId {
   }
 }
 
-const FormPerspectiveDirectorComponent: React.FC<{
+const FormPerspectiveDirectorComponent: React.FC<React.PropsWithChildren<{
   formPerspectiveActive: boolean;
-}> = observer((props) => {
+}>> = observer((props) => {
   const application = useContext(MobXProviderContext).application as IApplication
 
   return (

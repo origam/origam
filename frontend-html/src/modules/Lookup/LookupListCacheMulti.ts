@@ -18,11 +18,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { TypeSymbol } from "dic/Container";
-import { action } from "mobx";
+import { action,
+  makeObservable
+} from "mobx";
 import { IClock } from "./Clock";
 
 export class LookupListCacheMulti {
   constructor(private clock = IClock()) {
+    makeObservable(this);
   }
 
   lists = new Map<string, any[][]>();

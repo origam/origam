@@ -22,7 +22,9 @@ import S from "gui/Components/Search/SearchResults.module.scss";
 import { ISearchResult, isIMenuSearchResult } from "model/entities/types/ISearchResult";
 import { observer } from "mobx-react";
 import { ISearchResultGroup } from "model/entities/types/ISearchResultGroup";
-import { observable } from "mobx";
+import { observable,
+  makeObservable
+} from "mobx";
 import { Icon } from "gui/Components/Icon/Icon";
 import { Dropdown } from "../Dropdown/Dropdown";
 import { DropdownItem } from "../Dropdown/DropdownItem";
@@ -31,10 +33,10 @@ import { Dropdowner } from "../Dropdowner/Dropdowner";
 import { getFavorites } from "../../../model/selectors/MainMenu/getFavorites";
 import { onAddToFavoritesClicked } from "../../connections/CMainMenu";
 
-export class SearchResults extends React.Component<{
+export class SearchResults extends React.Component<React.PropsWithChildren<{
   groups: ISearchResultGroup[];
   ctx: any;
-}> {
+}>> {
 
   render() {
     return (
@@ -51,11 +53,16 @@ export class SearchResults extends React.Component<{
 }
 
 @observer
-export class ResultGroup extends React.Component<{
+export class ResultGroup extends React.Component<React.PropsWithChildren<{
   name: string;
   ctx: any;
   results: ISearchResult[];
-}> {
+}>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
   @observable
   isExpanded = true;
 
@@ -68,6 +75,8 @@ export class ResultGroup extends React.Component<{
   }
 
   render() {
+    const {ctx, name, results} = this.props;
+    const favorites = getFavorites(ctx);
     return (
       <>
         <div className={S.resultGroupRow} onClick={() => this.onGroupClick()}>
@@ -77,11 +86,11 @@ export class ResultGroup extends React.Component<{
             <i className={"fas fa-angle-down " + S.arrow}/>
           )}
           <div className={S.groupName}>
-            {this.props.name}
+            {name}
           </div>
         </div>
         <div className={S.dropDownParent}>
-          {this.isExpanded && this.props.results.map(result =>
+          {this.isExpanded && results.map(result =>
             <Dropdowner
               key={result.id}
               trigger={({refTrigger, setDropped}) => (
@@ -97,11 +106,11 @@ export class ResultGroup extends React.Component<{
               )}
               content={({setDropped}) => (
                 <Dropdown>
-                  {isIMenuSearchResult(result) && !this.favorites.isInAnyFavoriteFolder(result.id) && (
+                  {isIMenuSearchResult(result) && !favorites.isInAnyFavoriteFolder(result.id) && (
                     <DropdownItem
                       onClick={(event: any) => {
                         setDropped(false);
-                        onAddToFavoritesClicked(this.props.ctx, result.id);
+                        onAddToFavoritesClicked(ctx, result.id);
                       }}
                     >
                       {T("Put to favourites", "put_to_favourites")}

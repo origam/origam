@@ -171,20 +171,18 @@ public static class OpenIddictConfigManager
             descriptor.PostLogoutRedirectUris.Add(uriObject);
         }
 
-        descriptor.Permissions.AddRange(
-            [
-                Permissions.Endpoints.Authorization,
-                Permissions.Endpoints.Token,
-                Permissions.Endpoints.EndSession,
-                Permissions.GrantTypes.AuthorizationCode,
-                Permissions.ResponseTypes.Code,
-                Permissions.GrantTypes.RefreshToken,
-                Permissions.Prefixes.Scope + "openid",
-                Permissions.Scopes.Profile,
-                Permissions.Prefixes.Scope + "offline_access",
-                Permissions.Prefixes.Scope + InternalApiScope,
-            ]
-        );
+        descriptor.Permissions.AddRange([
+            Permissions.Endpoints.Authorization,
+            Permissions.Endpoints.Token,
+            Permissions.Endpoints.EndSession,
+            Permissions.GrantTypes.AuthorizationCode,
+            Permissions.ResponseTypes.Code,
+            Permissions.GrantTypes.RefreshToken,
+            Permissions.Prefixes.Scope + "openid",
+            Permissions.Scopes.Profile,
+            Permissions.Prefixes.Scope + "offline_access",
+            Permissions.Prefixes.Scope + InternalApiScope,
+        ]);
 
         var result = await apps.FindByClientIdAsync("origamMobileClient");
         if (result is not OpenIddictEntityFrameworkCoreApplication application)

@@ -18,7 +18,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { IDialogInfo, IOpenedScreen, IOpenedScreenData } from "./types/IOpenedScreen";
-import { action, computed, observable } from "mobx";
+import { action, computed, observable,
+  makeObservable
+} from "mobx";
 import { IFormScreenEnvelope } from "./types/IFormScreen";
 import { IMainMenuItemType } from "./types/IMainMenu";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
@@ -38,6 +40,7 @@ export class OpenedScreen implements IOpenedScreen {
   isBeingClosed = false;
 
   constructor(data: IOpenedScreenData) {
+    makeObservable(this);
     Object.assign(this, data);
     this.content.parent = this;
   }

@@ -29,6 +29,7 @@ export class PackagesState {
   @observable.shallow accessor packages: IPackage[] = [];
   @observable accessor activePackageId: string | undefined;
   private activePackageChanged = false;
+  private packagesLoading = false;
 
   constructor(
     private progressBarState: ProgressBarState,
@@ -40,11 +41,19 @@ export class PackagesState {
   ) {}
 
   *loadPackages(): Generator<Promise<IPackagesInfo>, void, IPackagesInfo> {
-    const packagesInfo = yield this.architectApi.getPackages();
-    this.packages = packagesInfo.packages ?? [];
-    if (packagesInfo.activePackageId) {
-      yield* this.setActivePackage(packagesInfo.activePackageId)() as any;
-      this.activePackageChanged = true;
+    if (this.packagesLoading) {
+      return;
+    }
+    this.packagesLoading = true;
+    try {
+      const packagesInfo = yield this.architectApi.getPackages();
+      this.packages = packagesInfo.packages ?? [];
+      if (packagesInfo.activePackageId) {
+        yield* this.setActivePackage(packagesInfo.activePackageId)() as any;
+        this.activePackageChanged = true;
+      }
+    } finally {
+      this.packagesLoading = false;
     }
   }
 

@@ -49,10 +49,10 @@ function effMouseEventBlocking(setBlocked: (state: boolean) => void) {
   window.addEventListener("mousedown", handleMouseDown);
 }
 
-export const EmbeddedWebpage: React.FC<{
+export const EmbeddedWebpage: React.FC<React.PropsWithChildren<{
   id: string;
   height?: number;
-}> = props => {
+}>> = props => {
   const [isBlocked, setBlocked] = useState(false);
   useEffect(() => effMouseEventBlocking(setBlocked), []);
   return (

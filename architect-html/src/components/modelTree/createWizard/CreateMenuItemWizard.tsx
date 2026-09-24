@@ -92,16 +92,6 @@ export const CreateMenuItemWizard: React.FC<CreateMenuItemWizardProps> = observe
       if (step === 0) {
         return (
           <>
-            <h2 className={S.formTitle}>
-              {T('Configure menu entry', 'create_menu_item_basics_title')}
-            </h2>
-            <p className={S.formSubtitle}>
-              {T(
-                'A Form Reference menu item will be added under the Main Menu, pointing to this screen.',
-                'create_menu_item_basics_subtitle',
-              )}
-            </p>
-
             <div className={S.field}>
               <label className={S.fieldLabel}>
                 {T('Caption', 'create_menu_item_caption_label')}{' '}

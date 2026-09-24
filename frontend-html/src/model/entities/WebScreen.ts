@@ -19,7 +19,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { IReloader, IWebScreen } from "./types/IWebScreen";
 import { IOpenedScreen } from "./types/IOpenedScreen";
-import { action, observable } from "mobx";
+import { action, observable,
+  makeObservable
+} from "mobx";
 import { IFormScreenEnvelope } from "./types/IFormScreen";
 import { IMainMenuItemType } from "./types/IMainMenu";
 import { EventHandler } from "utils/EventHandler";
@@ -38,6 +40,7 @@ export class WebScreen implements IWebScreen, IOpenedScreen {
     public order: number,
     public canRefresh: boolean
   ) {
+    makeObservable(this);
     this.tabTitle = title;
     this.formTitle = title;
   }

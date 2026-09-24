@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import Axios from "axios";
-import { action, flow } from "mobx";
+import { action, flow, makeObservable } from "mobx";
 import { navigateAsChild } from "model/actions/DataView/navigateAsChild";
 import { handleError } from "model/actions/handleError";
 import { getBindingChildren } from "model/selectors/DataView/getBindingChildren";
@@ -46,6 +46,10 @@ import { getUserFilterLookups } from "model/selectors/DataView/getUserFilterLook
 import { runGeneratorInFlowWithHandler } from "utils/runInFlowWithHandler";
 
 export class DataViewLifecycle implements IDataViewLifecycle {
+  constructor() {
+    makeObservable(this);
+  }
+
   $type_IDataViewLifecycle: 1 = 1;
   monitor: FlowBusyMonitor = new FlowBusyMonitor();
   reactToRowChanges = true;

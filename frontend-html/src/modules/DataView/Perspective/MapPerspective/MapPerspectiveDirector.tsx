@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import React, { PropsWithChildren, useContext, useEffect } from "react";
 import cx from "classnames";
-import { action, flow } from "mobx";
+import { action, flow, makeObservable } from "mobx";
 import { IDataViewBodyUI, IDataViewToolbarUI } from "modules/DataView/DataViewUI";
 import { TypeSymbol } from "dic/Container";
 import { SectionViewSwitchers } from "modules/DataView/DataViewTypes";
@@ -44,6 +44,7 @@ export class MapPerspectiveDirector implements IIId {
     public mapPerspective = IMapPerspective(),
     public perspective = IPerspective()
   ) {
+    makeObservable(this);
     this.toolbarActionsExtension = new ToolbarActionsExtension(this.mapPerspective, () => this.rootStore);
   }
 

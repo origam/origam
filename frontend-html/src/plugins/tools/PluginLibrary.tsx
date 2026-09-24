@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { getDataView } from "model/selectors/DataView/getDataView";
 import { createScreenPluginData, createSectionPluginData } from "./PluginData";
-import React, { Fragment } from "react";
+import React, { Fragment, JSX } from "react";
 import { registerPlugins } from "plugins/tools/PluginRegistration";
 import { Localizer } from "plugins/tools/Localizer";
 import { Observer } from "mobx-react";

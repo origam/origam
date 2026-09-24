@@ -21,13 +21,13 @@ import React, { useCallback, useEffect, useState } from "react";
 import S from "gui/Components/WebScreen/WebScreen.module.scss";
 import cx from "classnames";
 
-export const WebScreen: React.FC<{
+export const WebScreen: React.FC<React.PropsWithChildren<{
   source: string;
   isLoading?: boolean;
   refIFrame?: any;
   onLoad?: any;
   onLoadStart?: any;
-}> = props => {
+}>> = props => {
   const [mouseDowned, setMouseDowned] = useState(false);
   useEffect(() => {
     const handleMouseDown = () => {

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ads="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataStructure/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ds1="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0"
+  xmlns:dsc="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureColumn/6.0.1"
+  xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0"
+  xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0"
+  xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0"
+  xmlns:dsm="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureMethod/6.0.0"
+  xmlns:dsss="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSet/6.0.0"
+  xmlns:dsssi="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSetItem/6.0.0">
+  <ds1:DataStructure
+    asi:abstract="false"
+    x:id="4139a764-c186-4cb4-a145-ac945ba941a4"
+    ds1:localized="false"
+    asi:name="AllDataTypesDetail_ArrayFilterTest">
+    <dse:DataStructureEntity
+      asi:abstract="false"
+      dse:allFields="true"
+      dse:concurrencyHandling="Standard"
+      dse:entity="AllDataTypes#AllDataTypes/7a2338f2-7290-4cec-b0ad-2c0ee6386885"
+      x:id="e87dbacc-b6b4-4cd4-b9d5-77cfa3fd6659"
+      dse:ignoreCondition="None"
+      dse:ignoreImplicitFilters="false"
+      asi:name="AllDataTypes"
+      dse:relationType="Normal"
+      dse:serializeAsSingleJsonObject="false"
+      dse:useUpsert="false">
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="ArrayTestId#AllDataTypes/ArrayTestId/b959b347-0ff4-47b6-958e-60cec7cf8a23"
+        dsc:hideInOutput="false"
+        x:id="0d04277a-2193-4f3b-a1ab-fbad636410dc"
+        asi:name="ArrayTestId"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dse:DataStructureEntity
+        asi:abstract="false"
+        dse:allFields="true"
+        dse:concurrencyHandling="Standard"
+        dse:entity="AllDataTypesDetail#AllDataTypes/AllDataTypesDetail/e77bcbd3-3ec0-4560-ae7c-6c7a64cbc43e"
+        x:id="b7760db7-4766-4e0d-90cf-6dad2e8a765a"
+        dse:ignoreCondition="None"
+        dse:ignoreImplicitFilters="false"
+        asi:name="AllDataTypesDetail"
+        dse:relationType="Normal"
+        dse:serializeAsSingleJsonObject="false"
+        dse:useUpsert="false" />
+      <dse:DataStructureEntity
+        asi:abstract="false"
+        dse:allFields="true"
+        dse:concurrencyHandling="Standard"
+        dse:entity="TagInputBinding#AllDataTypes/TagInputBinding/9a7b8c2c-f8a8-4fed-8470-895d2618499a"
+        x:id="d9ccdaf3-72c4-4665-b67f-1d57c72d8815"
+        dse:ignoreCondition="None"
+        dse:ignoreImplicitFilters="false"
+        asi:name="TagInputBinding"
+        dse:relationType="Normal"
+        dse:serializeAsSingleJsonObject="false"
+        dse:useUpsert="false" />
+    </dse:DataStructureEntity>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="8b529d6a-2af0-4419-8df1-3ab85f860da9"
+      asi:name="GetId">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="AllDataTypes#AllDataTypesDetail_ArrayFilterTest/AllDataTypes/e87dbacc-b6b4-4cd4-b9d5-77cfa3fd6659"
+        dsfsf:filter="GetId#IOrigamEntity2/GetId/e0649cee-8033-435f-9831-211b7ad47c0b"
+        x:id="6c32bd01-c11f-45fa-b79c-b7a4e793f6e1"
+        asi:name="AllDataTypes_GetId"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+    <dsss:DataStructureSortSet
+      asi:abstract="false"
+      x:id="0087972a-9ee3-4ee6-80e4-84a2827bb714"
+      asi:name="Sort">
+      <dsssi:DataStructureSortSetItem
+        asi:abstract="false"
+        dsssi:entity="AllDataTypes#AllDataTypesDetail_ArrayFilterTest/AllDataTypes/e87dbacc-b6b4-4cd4-b9d5-77cfa3fd6659"
+        dsssi:fieldName="Text1"
+        x:id="ad650d65-4ea2-474c-a036-95066f0904db"
+        asi:name="AllDataTypes_0_Text1"
+        dsssi:sortDirection="Ascending" />
+    </dsss:DataStructureSortSet>
+  </ds1:DataStructure>
+</x:file>

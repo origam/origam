@@ -24,9 +24,9 @@ import { FormScreenBuilder } from "gui/Workbench/ScreenArea/FormScreenBuilder/Fo
 
 
 @observer
-export class DialogScreenBuilder extends React.Component<{
+export class DialogScreenBuilder extends React.Component<React.PropsWithChildren<{
   openedScreen: IOpenedScreen;
-}> {
+}>> {
   render() {
     const {openedScreen} = this.props;
     const {content} = openedScreen;

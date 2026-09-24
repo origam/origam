@@ -26,7 +26,9 @@ import { SidebarSectionDivider } from "gui/Components/Sidebar/SidebarSectionDivi
 import { SidebarSectionHeader } from "gui/Components/Sidebar/SidebarSectionHeader";
 import React from "react";
 import { CMainMenu } from "gui/connections/CMainMenu";
-import { action, reaction } from "mobx";
+import { action, reaction,
+  makeObservable
+} from "mobx";
 import { SidebarSectionBody } from "gui/Components/Sidebar/SidebarSectionBody";
 import { MobXProviderContext, observer, Provider } from "mobx-react";
 import { getWorkQueuesTotalItemsCount } from "model/selectors/WorkQueues/getWorkQueuesTotalItemCount";
@@ -51,8 +53,15 @@ import { DragDropContext } from 'react-beautiful-dnd';
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 
 @observer
-export class CSidebar extends React.Component {
+export class CSidebar extends React.Component<React.PropsWithChildren<{}>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
   static contextType = MobXProviderContext;
+
+  declare context: any;
 
   get workbench(): IWorkbench {
     return this.context.workbench;
@@ -75,19 +84,21 @@ export class CSidebar extends React.Component {
   disposers: any[] = [];
 
   componentDidMount() {
+    const workbench = this.workbench;
+    const sidebarState = this.sidebarState;
     this.disposers.push(
-      addRecordInfoExpandRequestHandler(this.workbench)(this.handleExpandRecordInfo),
-      addRecordAuditExpandRequestHandler(this.workbench)(this.handleExpandRecordAuditLog)
+      addRecordInfoExpandRequestHandler(workbench)(this.handleExpandRecordInfo),
+      addRecordAuditExpandRequestHandler(workbench)(this.handleExpandRecordAuditLog)
     );
     this.disposers.push(
       reaction(
-        () => getFavorites(this.workbench).favoriteFolders,
+        () => getFavorites(workbench).favoriteFolders,
         (favoriteFolders) => {
           const firstNonEmpty = favoriteFolders.find(
             (folder) => folder.itemIds.length > 0 && !folder.isPinned
           );
           if (firstNonEmpty) {
-            this.sidebarState.activeSection = firstNonEmpty.id;
+            sidebarState.activeSection = firstNonEmpty.id;
           }
         },
         {fireImmediately: true}
@@ -150,11 +161,13 @@ export class CSidebar extends React.Component {
   }
 
   render() {
-    const showChat = getShowChat(this.workbench);
-    const showWorkQues = getShowWorkQues(this.workbench);
-    const notificationBox = getNotifications(this.workbench)?.notificationBox;
-    const logoUrl = getLogoUrl(this.workbench);
-    const favorites = getFavorites(this.workbench);
+    const workbench = this.workbench;
+    const sidebarState = this.sidebarState;
+    const showChat = getShowChat(workbench);
+    const showWorkQues = getShowWorkQues(workbench);
+    const notificationBox = getNotifications(workbench)?.notificationBox;
+    const logoUrl = getLogoUrl(workbench);
+    const favorites = getFavorites(workbench);
 
     return (
       <Sidebar>
@@ -167,13 +180,13 @@ export class CSidebar extends React.Component {
             )}
           </div>
         </LogoSection>
-        <DragDropContext onDragEnd={(result) => onDragEndAction(result, this.workbench)}>
+        <DragDropContext onDragEnd={(result) => onDragEndAction(result, workbench)}>
           {favorites.favoriteFolders
             .filter((folder) => folder.isPinned)
             .map((folder) => (
               <CFavorites
                 key={folder.id}
-                ctx={this.workbench}
+                ctx={workbench}
                 folder={folder}
                 isActive={true}
                 forceOpen={true}/>
@@ -188,49 +201,49 @@ export class CSidebar extends React.Component {
             .map((folder) => (
               <CFavorites
                 key={folder.id}
-                ctx={this.workbench}
+                ctx={workbench}
                 folder={folder}
-                isActive={this.sidebarState.activeSection === folder.id}
-                onHeaderClick={() => (this.sidebarState.activeSection = folder.id)}
+                isActive={sidebarState.activeSection === folder.id}
+                onHeaderClick={() => (sidebarState.activeSection = folder.id)}
               />
             ))}
-          <SidebarSection isActive={this.sidebarState.activeSection === "Menu"}>
-            <Provider mainMenuState={this.sidebarState.mainMenuState}>
+          <SidebarSection isActive={sidebarState.activeSection === "Menu"}>
+            <Provider mainMenuState={sidebarState.mainMenuState}>
               <CMainMenu
-                isActive={this.sidebarState.activeSection === "Menu"}
-                onClick={() => this.sidebarState.activeSection = "Menu"}
+                isActive={sidebarState.activeSection === "Menu"}
+                onClick={() => sidebarState.activeSection = "Menu"}
               />
             </Provider>
           </SidebarSection>
-          {!isMobileLayoutActive(this.workbench) &&
+          {!isMobileLayoutActive(workbench) &&
             <>
-              <SidebarSection isActive={this.sidebarState.activeSection === "Info"}>
+              <SidebarSection isActive={sidebarState.activeSection === "Info"}>
                 <SidebarSectionDivider/>
                 <SidebarSectionHeader
-                  isActive={this.sidebarState.activeSection === "Info"}
+                  isActive={sidebarState.activeSection === "Info"}
                   icon={<Icon src="./icons/info.svg" tooltip={T("Info", "infopanel_title")}/>}
                   label={T("Info", "infopanel_title")}
-                  onClick={() => (this.sidebarState.activeSection = "Info")}
+                  onClick={() => (sidebarState.activeSection = "Info")}
                 />
-                <SidebarSectionBody isActive={this.sidebarState.activeSection === "Info"}>
-                  <CSidebarInfoSection activeSubsection={this.sidebarState.activeInfoSubsection}/>
+                <SidebarSectionBody isActive={sidebarState.activeSection === "Info"}>
+                  <CSidebarInfoSection activeSubsection={sidebarState.activeInfoSubsection}/>
                 </SidebarSectionBody>
               </SidebarSection>
-              <SidebarSection isActive={this.sidebarState.activeSection === "Search"}>
+              <SidebarSection isActive={sidebarState.activeSection === "Search"}>
                 <SidebarSectionDivider/>
                 <SidebarSectionHeader
-                  isActive={this.sidebarState.activeSection === "Search"}
+                  isActive={sidebarState.activeSection === "Search"}
                   icon={
                     <Icon
                       src="./icons/search.svg"
-                      tooltip={T("Search", "search_result", this.sidebarState.resultCount)}
+                      tooltip={T("Search", "search_result", sidebarState.resultCount)}
                     />
                   }
-                  label={T("Search", "search_result", this.sidebarState.resultCount)}
-                  onClick={() => (this.sidebarState.activeSection = "Search")}
+                  label={T("Search", "search_result", sidebarState.resultCount)}
+                  onClick={() => (sidebarState.activeSection = "Search")}
                 />
-                <SidebarSectionBody isActive={this.sidebarState.activeSection === "Search"}>
-                  <SearchResults groups={this.sidebarState.searchResultGroups} ctx={this.workbench}/>
+                <SidebarSectionBody isActive={sidebarState.activeSection === "Search"}>
+                  <SearchResults groups={sidebarState.searchResultGroups} ctx={workbench}/>
                 </SidebarSectionBody>
                 <SidebarSectionDivider/>
               </SidebarSection>

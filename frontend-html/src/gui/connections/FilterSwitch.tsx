@@ -30,7 +30,7 @@ import {
 import {
   saveColumnConfigurations
 } from "model/actions/DataView/TableView/saveColumnConfigurations";
-import { observer } from "mobx-react-lite";
+import { observer } from "mobx-react";
 import {
   getFilterConfiguration
 } from "model/selectors/DataView/getFilterConfiguration";

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ads="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataStructure/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ds1="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0"
+  xmlns:dsc="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureColumn/6.0.1"
+  xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0">
+  <ds1:DataStructure
+    asi:abstract="false"
+    x:id="634df903-88bd-4b06-9315-1e127314f41e"
+    ds1:localized="false"
+    asi:name="AllDataTypes_WithDetail">
+    <dse:DataStructureEntity
+      asi:abstract="false"
+      dse:allFields="true"
+      dse:concurrencyHandling="Standard"
+      dse:entity="AllDataTypes#AllDataTypes/7a2338f2-7290-4cec-b0ad-2c0ee6386885"
+      x:id="f479b9a4-44e6-4659-8d49-02b44e7a7fef"
+      dse:ignoreCondition="None"
+      dse:ignoreImplicitFilters="false"
+      asi:name="AllDataTypes"
+      dse:relationType="Normal"
+      dse:serializeAsSingleJsonObject="false"
+      dse:useUpsert="false">
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="refTagInputSourceId#AllDataTypes/refTagInputSourceId/7142586a-1798-4f99-af0a-9166319d11e0"
+        dsc:hideInOutput="false"
+        x:id="3a2fd824-759a-4455-93da-22c44189b44b"
+        dsc:lookup="TagInputSource_Label_GetId#TagInputSource_Label_GetId/991a8bec-5169-4506-9457-7f91c27bb5fd"
+        asi:name="TagInputSourceLabel_DataStructure"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="true"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="ArrayTestId#AllDataTypes/ArrayTestId/b959b347-0ff4-47b6-958e-60cec7cf8a23"
+        dsc:hideInOutput="false"
+        x:id="40f59ee2-37d5-4d01-96a8-9fd1c3573c35"
+        asi:name="ArrayTestId"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dse:DataStructureEntity
+        asi:abstract="false"
+        dse:allFields="true"
+        dse:concurrencyHandling="Standard"
+        dse:entity="TagInputBinding#AllDataTypes/TagInputBinding/9a7b8c2c-f8a8-4fed-8470-895d2618499a"
+        x:id="aa2f584c-4ce5-475c-9fb5-8929778f32d7"
+        dse:ignoreCondition="None"
+        dse:ignoreImplicitFilters="false"
+        asi:name="TagInputBinding"
+        dse:relationType="Normal"
+        dse:serializeAsSingleJsonObject="false"
+        dse:useUpsert="false" />
+      <dse:DataStructureEntity
+        asi:abstract="false"
+        dse:allFields="true"
+        dse:concurrencyHandling="Standard"
+        dse:entity="AllDataTypesDetail#AllDataTypes/AllDataTypesDetail/e77bcbd3-3ec0-4560-ae7c-6c7a64cbc43e"
+        x:id="ab8d4280-2040-4e6a-8e80-9ce09e631954"
+        dse:ignoreCondition="None"
+        dse:ignoreImplicitFilters="false"
+        asi:name="AllDataTypesDetail"
+        dse:relationType="Normal"
+        dse:serializeAsSingleJsonObject="false"
+        dse:useUpsert="false" />
+    </dse:DataStructureEntity>
+  </ds1:DataStructure>
+</x:file>

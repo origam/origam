@@ -18,11 +18,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { PeriodicLoader } from "utils/PeriodicLoader";
-import { observable } from "mobx";
+import { observable,
+  makeObservable
+} from "mobx";
 import { getApi } from "model/selectors/getApi";
 import { getNotificationBoxContent } from "model/actions/Notifications/GetNotificationBoxContent";
 
 export class Notifications {
+  constructor() {
+    makeObservable(this);
+  }
+
   @observable
   notificationBox: any;
 

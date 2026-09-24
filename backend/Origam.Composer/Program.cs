@@ -45,7 +45,11 @@ class Program
         services.AddSingleton<IProjectBuilderService, ProjectBuilderService>();
         services.AddSingleton<IPasswordGeneratorService, PasswordGeneratorService>();
         services.AddSingleton<IFileSystemService, FileSystemService>();
-        services.AddSingleton<IDownloadFileModelBuilderTask, DownloadFileModelBuilderTask>();
+        services.AddSingleton<ICopyBundledModelBuilderTask, CopyBundledModelBuilderTask>();
+        services.AddSingleton<
+            ICreateProjectConfigurationBuilderTask,
+            CreateProjectConfigurationBuilderTask
+        >();
         services.AddSingleton<ICreateDatabaseBuilderTask, CreateDatabaseBuilderTask>();
         services.AddSingleton<
             IApplyDatabasePermissionsBuilderTask,

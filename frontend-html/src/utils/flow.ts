@@ -17,12 +17,16 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 
 export const busyDelayMillis = 500;
 
 // Delays setting "isWorkingDelayed" property by "busyDelayMillis" after "inFlow" counter is incremented from 0 to 1
 export class FlowBusyMonitor {
+  constructor() {
+    makeObservable(this);
+  }
+
   @observable _inFlow = 0;
   @observable isWorkingDelayed = false;
   @observable isWorking = false;

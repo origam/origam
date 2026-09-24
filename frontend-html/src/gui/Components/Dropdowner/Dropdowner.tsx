@@ -21,17 +21,22 @@ import React from "react";
 import ReactDOM from "react-dom";
 import Measure, { ContentRect } from "react-measure";
 import S from "./Dropdowner.module.scss";
-import { action, observable } from "mobx";
+import { action, observable, makeObservable } from "mobx";
 import { observer, Observer } from "mobx-react";
 
-class DroppedBox extends React.Component<{
+class DroppedBox extends React.Component<React.PropsWithChildren<{
   triggerRect: ContentRect;
   dropdownRect: ContentRect;
   dropdownRef: any;
   openEvent?: MouseEvent;
   onCloseRequest?: (event: any) => void;
   onOutsideInteraction?: (event: any) => void;
-}> {
+}>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
   elmDropdown: HTMLDivElement | null = null;
   refDropdown = (elm: HTMLDivElement | null) => {
     this.elmDropdown = elm;
@@ -105,7 +110,7 @@ class DroppedBox extends React.Component<{
 }
 
 @observer
-export class Dropdowner extends React.Component<{
+export class Dropdowner extends React.Component<React.PropsWithChildren<{
   className?: string;
   style?: any;
   trigger: (args: {
@@ -119,11 +124,20 @@ export class Dropdowner extends React.Component<{
   onDroppedUp?: () => void;
   onContainerMouseDown?(event: any): void;
   onOutsideInteraction?(event: any): void;
-}> {
-  refMeasTrigger = (elm: any) => (this.elmMeasTrigger = elm);
+}>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
+  refMeasTrigger = (elm: any) => {
+    this.elmMeasTrigger = elm;
+  };
   elmMeasTrigger: any | null = null;
 
-  refMeasDropdown = (elm: any) => (this.elmMeasDropdown = elm);
+  refMeasDropdown = (elm: any) => {
+    this.elmMeasDropdown = elm;
+  };
   elmMeasDropdown: any | null = null;
 
   @observable _isDropped = false;
@@ -170,6 +184,14 @@ export class Dropdowner extends React.Component<{
 
   render() {
     (() => this.isDropped)();
+    const className = this.props.className;
+    const style = this.props.style;
+    const onContainerMouseDown = this.props.onContainerMouseDown;
+    const trigger = this.props.trigger;
+    const content = this.props.content;
+    const onOutsideInteraction = this.props.onOutsideInteraction;
+    const onDroppedUp = this.props.onDroppedUp;
+
     return (
       <Measure bounds={true} ref={this.refMeasTrigger}>
         {({measureRef: mRefTrigger, contentRect: cRectTrigger, measure: measureTrigger}) => (
@@ -184,12 +206,12 @@ export class Dropdowner extends React.Component<{
                   <div
                     className={
                       S.dropdownerContainer +
-                      (this.props.className ? ` ${this.props.className}` : "")
+                      (className ? ` ${className}` : "")
                     }
-                    style={this.props.style}
-                    onMouseDown={this.props.onContainerMouseDown}
+                    style={style}
+                    onMouseDown={onContainerMouseDown}
                   >
-                    {this.props.trigger({
+                    {trigger({
                       refTrigger: mRefTrigger,
                       measure: this.reMeasure,
                       setDropped: this.setDropped,
@@ -203,11 +225,11 @@ export class Dropdowner extends React.Component<{
                         dropdownRef={mRefDropdown}
                         onCloseRequest={() => {
                           this.setDropped(false);
-                          this.props.onDroppedUp?.();
+                          onDroppedUp?.();
                         }}
-                        onOutsideInteraction={this.props.onOutsideInteraction}
+                        onOutsideInteraction={onOutsideInteraction}
                       >
-                        {this.props.content({setDropped: this.setDropped})}
+                        {content({setDropped: this.setDropped})}
                       </DroppedBox>
                     )}
                   </div>

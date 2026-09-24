@@ -20,6 +20,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 .root {
   flex: 1;
   min-width: max-content;
+  outline: none;
+
+  &:focus-visible {
+    outline: 1px solid var(--brand);
+    outline-offset: -1px;
+  }
 }
 
 .packageName {
@@ -34,13 +40,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   cursor: pointer;
   padding-bottom: 2px;
   padding-top: 2px;
-}
-
-.highlighted {
-  background-color: var(--background1);
-  box-shadow:
-    inset 3px 0 0 var(--brand),
-    0 0 0 1px var(--background4);
 }
 
 .categoryNode {
@@ -67,6 +66,27 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   text-wrap-mode: nowrap;
 }
 
+// Same specificity, the last rule wins.
+.selected {
+  background-color: var(--background3);
+}
+
+.highlighted {
+  background-color: var(--background1);
+  box-shadow:
+    inset 3px 0 0 var(--brand),
+    0 0 0 1px var(--background4);
+}
+
+.dropTarget {
+  background-color: var(--background1);
+  box-shadow: inset 0 0 0 1px var(--brand);
+}
+
+.cutNode {
+  opacity: 0.5;
+}
+
 .crossPackage {
   color: var(--background6);
 }
@@ -77,6 +97,50 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 .currentVersion {
   font-weight: bold;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  height: 15px;
+  padding: 0 6px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.statusDone {
+  background-color: rgba(var(--ok1-rgb), 0.2);
+  color: #2e8b57;
+  border: 1px solid var(--ok1);
+}
+
+.statusPending {
+  background-color: rgba(var(--warning1-rgb), 0.25);
+  color: #916b00;
+}
+
+.currentBadge {
+  display: inline-flex;
+  align-items: center;
+  height: 16px;
+  padding: 0 7px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--background1);
+  background-color: var(--brand);
 }
 
 .loading {

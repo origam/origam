@@ -17,8 +17,9 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { bind } from "@decorize/bind";
-import { action, computed } from "mobx";
+import { action, computed,
+  makeObservable
+} from "mobx";
 import { DataViewData } from "modules/DataView/DataViewData";
 import { RowCursor } from "modules/DataView/TableCursor";
 import { DropdownEditorSetup } from "modules/Editors/DropdownEditor/DropdownEditorSetup";
@@ -36,13 +37,13 @@ export interface IDropdownEditorData {
   setValue(value: string[]): void;
 }
 
-@bind
 export class DropdownEditorData implements IDropdownEditorData {
   constructor(
     private dataTable: DataViewData,
     private rowCursor: RowCursor,
     private setup: () => DropdownEditorSetup
   ) {
+    makeObservable(this);
   }
 
   setValue(value: string[]) {

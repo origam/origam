@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import _ from "lodash";
-import { action, comparer, computed, flow, observable, reaction } from "mobx";
+import { action, comparer, computed, flow, observable, reaction, makeObservable } from "mobx";
 import { getDataView } from "model/selectors/DataView/getDataView";
 import { getDataViewPropertyById } from "model/selectors/DataView/getDataViewPropertyById";
 import { getDataTable } from "../selectors/DataView/getDataTable";
@@ -30,6 +30,7 @@ import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSou
 
 export class FilterConfiguration implements IFilterConfiguration {
   constructor(implicitFilters: IImplicitFilter[], alwaysShowFilters: boolean) {
+    makeObservable(this);
     this.implicitFilters = implicitFilters;
     this.isFilterControlsDisplayed = alwaysShowFilters
     this.start();

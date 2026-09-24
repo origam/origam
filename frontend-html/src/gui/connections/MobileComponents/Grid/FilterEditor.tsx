@@ -26,9 +26,9 @@ import S from "./FilterEditor.module.scss";
 import { getTotalRowCount } from "model/selectors/DataView/getTotalGroupRowCount";
 import { T } from "utils/translation";
 
-export const FilterEditor: React.FC<{
+export const FilterEditor: React.FC<React.PropsWithChildren<{
   dataView: IDataView
-}> = observer((props) => {
+}>> = observer((props) => {
 
   const propertiesToDisplay = getTableViewProperties(props.dataView)
     .filter(prop => prop.column !== "Image");

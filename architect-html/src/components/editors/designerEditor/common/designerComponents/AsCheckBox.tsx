@@ -22,6 +22,14 @@ import S from '@editors/designerEditor/common/designerComponents/Components.modu
 import { ReactElement } from 'react';
 
 export class AsCheckBox extends Component {
+  get hasBorder(): boolean {
+    return false;
+  }
+
+  get canResizeHeight(): boolean {
+    return false;
+  }
+
   getDesignerRepresentation(): ReactElement | null {
     return (
       <div className={S.designSurfaceEditorContainer}>

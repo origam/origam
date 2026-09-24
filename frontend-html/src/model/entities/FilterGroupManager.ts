@@ -19,7 +19,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { IFilterGroup } from "model/entities/types/IFilterGroup";
 import { IFilterConfiguration } from "model/entities/types/IFilterConfiguration";
-import { action, observable } from "mobx";
+import { action, observable,
+  makeObservable
+} from "mobx";
 import { IFilter } from "model/entities/types/IFilter";
 import { IUIGridFilterFieldConfiguration, } from "model/entities/types/IApi";
 import { filterTypeToNumber } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operator";
@@ -49,6 +51,7 @@ export class FilterGroupManager implements IFilterSwitchContainer{
   }
 
   constructor(private filterConfiguration: IFilterConfiguration, alwaysShowFilters: boolean) {
+    makeObservable(this);
     this.ctx = filterConfiguration;
     filterConfiguration.registerFilteringOnOffHandler(filteringOn => {
       if (!filteringOn) {

@@ -24,7 +24,7 @@ import cx from "classnames";
 import { MultiGrid } from "react-virtualized";
 import { requestFocus } from "utils/focus";
 
-export const WorkflowFinishedPanel: React.FC<{
+export const WorkflowFinishedPanel: React.FC<React.PropsWithChildren<{
   isCloseButton: boolean;
   isRepeatButton: boolean;
   onCloseClick?(event: any): void;
@@ -32,7 +32,7 @@ export const WorkflowFinishedPanel: React.FC<{
   message: string;
   repeatDisabled: boolean;
 
-}> = (props) => {
+}>> = (props) => {
   const repeatButton = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {

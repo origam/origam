@@ -21,6 +21,7 @@ import { IHeaderContainer } from "gui/Workbench/ScreenArea/TableView/TableView";
 import { ITableRow } from "./TableRendering/types";
 import { BoundingRect } from "react-measure";
 import { ICellRectangle } from "model/entities/TablePanelView/types/ICellRectangle";
+import { JSX } from "react";
 
 export type ICellType =
   | "Text"

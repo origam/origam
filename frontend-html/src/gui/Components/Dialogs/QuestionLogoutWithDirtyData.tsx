@@ -25,11 +25,13 @@ import { ModalDialog } from "gui/Components/Dialog/ModalDialog";
 import { requestFocus } from "utils/focus";
 
 @observer
-export class QuestionLogoutWithDirtyData extends React.Component<{
+export class QuestionLogoutWithDirtyData extends React.Component<React.PropsWithChildren<{
   onNoClick?: (event: any) => void;
   onYesClick?: (event: any) => void;
-}> {
-  refPrimaryBtn = (elm: any) => (this.elmPrimaryBtn = elm);
+}>> {
+  refPrimaryBtn = (elm: any) => {
+    this.elmPrimaryBtn = elm;
+  };
   elmPrimaryBtn: any;
 
   componentDidMount() {

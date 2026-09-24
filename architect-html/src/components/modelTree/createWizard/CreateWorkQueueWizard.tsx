@@ -134,21 +134,6 @@ export const CreateWorkQueueWizard: React.FC<CreateWorkQueueWizardProps> = obser
         const columns = entityData?.columns ?? [];
         return (
           <>
-            <h2 className={S.formTitle}>
-              {T('Which columns to track?', 'create_workqueue_fields_title')}
-            </h2>
-            <p className={S.formSubtitle}>
-              {T(
-                'The WorkQueue Class will be created with name',
-                'create_workqueue_fields_subtitle_pre',
-              )}{' '}
-              <strong>{entityData?.entityName ?? '…'}</strong>
-              {T(
-                '. Pick the columns that should be exposed on the work queue records.',
-                'create_workqueue_fields_subtitle_post',
-              )}
-            </p>
-
             <div className={S.field}>
               <label className={S.fieldLabel}>
                 {T('Caption', 'create_workqueue_caption_label')}
@@ -207,37 +192,19 @@ export const CreateWorkQueueWizard: React.FC<CreateWorkQueueWizardProps> = obser
               </div>
             </div>
 
-            <div
-              style={{
-                border: '1px solid var(--background3)',
-                borderRadius: 6,
-                flex: 1,
-                minHeight: 0,
-                overflowY: 'auto',
-                background: 'var(--background1)',
-              }}
-            >
+            <div className={S.fieldList}>
               {columns.map(column => {
                 const checked = selectedFieldIds.has(column.id);
                 return (
                   <label
                     key={column.id}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 10,
-                      padding: '8px 12px',
-                      borderBottom: '1px solid var(--background3)',
-                      cursor: 'pointer',
-                      fontSize: 13,
-                      color: 'var(--background8)',
-                    }}
+                    className={`${S.fieldOption} ${checked ? S.fieldOptionSelected : ''}`}
                   >
                     <input
                       type="checkbox"
+                      className={S.fieldOptionCheckbox}
                       checked={checked}
                       onChange={() => toggleField(column.id)}
-                      style={{ accentColor: 'var(--brand)' }}
                     />
                     {column.name}
                   </label>
@@ -252,14 +219,6 @@ export const CreateWorkQueueWizard: React.FC<CreateWorkQueueWizardProps> = obser
       const selected = (entityData.columns ?? []).filter(column => selectedFieldIds.has(column.id));
       return (
         <>
-          <h2 className={S.formTitle}>{T('Ready to create', 'wizard_ready_title')}</h2>
-          <p className={S.formSubtitle}>
-            {T(
-              'Review what will be added. You can adjust the WorkQueue Class afterward in its editor.',
-              'create_workqueue_review_subtitle',
-            )}
-          </p>
-
           <div className={S.reviewCard}>
             <div className={S.reviewCardHeader}>
               <div className={S.reviewCardIcon}>W</div>

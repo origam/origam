@@ -249,7 +249,7 @@
       asi:abstract="false"
       adec:allowNulls="true"
       adec:autoIncrement="false"
-      adec:dataLength="100"
+      adec:dataLength="1000"
       adec:dataType="String"
       adec:excludeFromAllFields="false"
       fmi:excludeFromAuditing="false"

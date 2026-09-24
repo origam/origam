@@ -17,9 +17,13 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { action } from "mobx";
+import { action, makeObservable } from "mobx";
 
 export class LookupCacheDependencies {
+  constructor() {
+    makeObservable(this);
+  }
+
   // Mapping semantics: {LookupCacheKey: [LookupId]}
   items = new Map<string, Set<string>>();
 

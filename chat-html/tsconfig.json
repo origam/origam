@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ESNext",
     "types": ["vite/client", "node", "jest"],
-    "useDefineForClassFields": true,
+    "useDefineForClassFields": false,
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "allowJs": false,
     "skipLibCheck": true,

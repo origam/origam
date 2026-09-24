@@ -15,19 +15,20 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
-*/
+*/
+
 import { observer } from "mobx-react";
 import React from "react";
 import S from "gui/connections/MenuComponents/EditButton.module.scss";
 import CS from "gui/connections/MenuComponents/HeaderButton.module.scss";
 
 @observer
-export class EditButton extends React.Component<{
+export class EditButton extends React.Component<React.PropsWithChildren<{
   isEnabled: boolean;
   isVisible: boolean;
   onClick: () => void;
   tooltip: string;
-}> {
+}>> {
 
   getClass() {
     let className = `fas  fa-edit ${CS.headerIcon} ${S.editIcon}`;

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
+  xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:dei="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndex/6.0.0"
+  xmlns:deif="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndexField/6.0.0"
+  xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0"
+  xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0"
+  xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0"
+  xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0"
+  xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0">
+  <tmi:DataEntity
+    asi:abstract="false"
+    ade:audit="None"
+    tmi:databaseObjectType="Table"
+    tmi:generateDeploymentScript="true"
+    x:id="91eb8ce5-c4d5-40df-a8cb-04ac178fb9e3"
+    tmi:mappedObjectName="AllDataTypesDetail"
+    asi:name="AllDataTypesDetail"
+    ade:readOnly="false">
+    <dei:DataEntityIndex
+      asi:abstract="false"
+      dei:generateDeploymentScript="true"
+      x:id="57df4434-6f7f-498d-a1b2-ca8214fa49f3"
+      asi:name="ix_AllDataTypes"
+      dei:unique="false">
+      <deif:DataEntityIndexField
+        asi:abstract="false"
+        deif:field="refAllDataTypesId#AllDataTypesDetail/refAllDataTypesId/3b68df5f-782b-4546-b6ce-309f94b49479"
+        x:id="8fa330ad-bec8-418c-a463-4f8b4cdd6233"
+        asi:name="0_refAllDataTypesId"
+        deif:sortOrder="Ascending" />
+    </dei:DataEntityIndex>
+    <eri:EntityRelation
+      asi:abstract="false"
+      x:id="6f7944bd-4aca-4ee0-b729-8f75c47d4ed2"
+      asi:name="ArrayTest"
+      eri:or="false"
+      eri:parentChild="false"
+      eri:relatedEntity="ArrayTest#ArrayTest/10108bed-abbe-4932-8f03-ddd2ec9b618b"
+      eri:selfJoin="false">
+      <ercpi:EntityRelationColumnPair
+        asi:abstract="false"
+        ercpi:baseEntityField="refArrayTestId#AllDataTypesDetail/refArrayTestId/df3272ef-4d3f-4b0f-a30b-5ed7a706ffce"
+        x:id="a9eae18a-b935-421e-bddf-de7aabb51c5d"
+        asi:name="ArrayTestKey1"
+        ercpi:relatedEntityField="Id#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e" />
+    </eri:EntityRelation>
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="UniqueIdentifier"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      adec:foreignKeyEntity="AllDataTypes#AllDataTypes/7a2338f2-7290-4cec-b0ad-2c0ee6386885"
+      adec:foreignKeyField="Id#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+      x:id="3b68df5f-782b-4546-b6ce-309f94b49479"
+      adec:isPrimaryKey="false"
+      adec:label="sdf"
+      fmi:mappedColumnName="refAllDataTypesId"
+      asi:name="refAllDataTypesId"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="UniqueIdentifier"
+      adec:defaultLookup="ArrayTest_Text#ArrayTest_Text/ac42c31f-b978-4dd6-906a-3a736eeeb85f"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      adec:foreignKeyEntity="ArrayTest#ArrayTest/10108bed-abbe-4932-8f03-ddd2ec9b618b"
+      adec:foreignKeyField="Id#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+      x:id="df3272ef-4d3f-4b0f-a30b-5ed7a706ffce"
+      adec:isPrimaryKey="false"
+      adec:label="Array Test Id"
+      fmi:mappedColumnName="refArrayTestId"
+      asi:name="refArrayTestId"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <sia:ancestor
+      sia:ancestor="IOrigamEntity2#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="9cfe4308-b0da-49aa-bde0-4e18021b740f" />
+  </tmi:DataEntity>
+</x:file>

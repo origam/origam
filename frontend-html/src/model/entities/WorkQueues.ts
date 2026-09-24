@@ -20,10 +20,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { IWorkQueues } from "./types/IWorkQueues";
 import { getApi } from "model/selectors/getApi";
 import { onRefreshWorkQueues } from "model/actions-ui/WorkQueues/onRefreshWorkQueues";
-import { computed, observable } from "mobx";
+import { computed, observable,
+  makeObservable
+} from "mobx";
 import { PeriodicLoader } from "utils/PeriodicLoader";
 
 export class WorkQueues implements IWorkQueues {
+  constructor() {
+    makeObservable(this);
+  }
+
   $type_IWorkQueues: 1 = 1;
 
   *getWorkQueueList(): any {

@@ -28,11 +28,28 @@ export interface IArchitectApi {
 
   getNodeChildren(node: INodeLoadData): Promise<IApiTreeNode[]>;
 
-  searchText(text: string): Promise<ISearchResult[]>;
+  getMoveVerdicts(args: {
+    source: INodeLoadData;
+    targets: INodeLoadData[];
+  }): Promise<IMoveVerdict[]>;
+
+  getMoveTargets(args: { source: INodeLoadData }): Promise<IMoveTargetsResult>;
+
+  moveNode(args: {
+    source: INodeLoadData;
+    target: INodeLoadData;
+    isCopy: boolean;
+  }): Promise<IMoveNodeResult>;
+
+  searchSchemaByAllFields(query: string): Promise<ISearchResult[]>;
 
   searchReferences(schemaItemId: string): Promise<ISearchResult[]>;
 
   searchDependencies(schemaItemId: string): Promise<ISearchResult[]>;
+
+  runModelCheck(): Promise<IModelCheckResult>;
+
+  getModelCheckResult(): Promise<IModelCheckResult>;
 
   openTab(schemaItemId: string): Promise<IApiTabData>;
 
@@ -54,6 +71,12 @@ export interface IArchitectApi {
   getMenuItems(node: INodeLoadData): Promise<IMenuItemInfo[]>;
 
   createNode(node: INodeLoadData, typeName: string): Promise<IApiTabData>;
+
+  createGroup(node: INodeLoadData, name: string): Promise<IApiTreeNode>;
+
+  renameGroup(node: INodeLoadData, name: string): Promise<IApiTreeNode>;
+
+  deleteGroup(nodeId: string): Promise<IDeleteGroupResult>;
 
   updateSectionEditor(args: {
     schemaItemId: string | undefined;
@@ -137,7 +160,27 @@ export interface IArchitectApi {
 
   createWorkQueueClass(request: ICreateWorkQueueRequest): Promise<ICreateWizardResult>;
 
+  getDataStructureWizardData(entityId: string): Promise<IDataStructureWizardData>;
+  createDataStructure(request: ICreateDataStructureRequest): Promise<ICreateWizardResult>;
+
+  getScreenFromSectionWizardData(screenSectionId: string): Promise<IScreenFromSectionWizardData>;
+  createScreenFromSection(request: ICreateScreenFromSectionRequest): Promise<ICreateWizardResult>;
+
   createMenuItem(request: ICreateMenuItemRequest): Promise<ICreateWizardResult>;
+
+  createWorkflowMenuItem(request: ICreateWorkflowMenuItemRequest): Promise<ICreateWizardResult>;
+
+  createRole(request: ICreateRoleRequest): Promise<ICreateWizardResult>;
+
+  getLocalizationChildEntityWizardData(
+    entityId: string,
+  ): Promise<ILocalizationChildEntityWizardData>;
+  createLocalizationChildEntity(
+    request: ICreateLocalizationChildEntityRequest,
+  ): Promise<ICreateWizardResult>;
+
+  getScreenSectionWizardData(entityId: string): Promise<IScreenSectionWizardData>;
+  createScreenSection(request: ICreateScreenSectionRequest): Promise<ICreateWizardResult>;
 
   getDataStructureSql(dataStructureId: string): Promise<IGetDataStructureSqlResult>;
 }
@@ -169,6 +212,46 @@ export interface ICreateMenuItemRequest {
   role: string;
 }
 
+export interface ICreateWorkflowMenuItemRequest {
+  workflowId: string;
+  caption: string;
+  role: string;
+}
+
+export interface ICreateRoleRequest {
+  itemId: string;
+}
+
+export interface ILocalizationEntityColumn {
+  id: string;
+  name: string;
+}
+
+export interface ILocalizationChildEntityWizardData {
+  entityName: string;
+  translationEntityName: string;
+  columns: ILocalizationEntityColumn[];
+}
+
+export interface ICreateLocalizationChildEntityRequest {
+  entityId: string;
+  selectedFieldIds: string[];
+}
+
+export interface IScreenSectionWizardData {
+  entityName: string;
+  entityCaption: string;
+  columns: IScreenWizardColumn[];
+  existingScreenSectionNames: string[];
+}
+
+export interface ICreateScreenSectionRequest {
+  entityId: string;
+  name: string;
+  caption: string;
+  selectedFieldIds: string[];
+}
+
 export type CreateFilterType = 'Equal' | 'EqualParam' | 'Like' | 'LikeParam' | 'InList' | 'Between';
 
 export interface ICreateFilterRequest {
@@ -186,6 +269,7 @@ export interface IScreenWizardColumn {
   id: string;
   name: string;
   isPrimaryKey: boolean;
+  canGenerateControl: boolean;
 }
 
 export interface ICreateScreenRequest {
@@ -215,6 +299,26 @@ export interface ICreateLookupRequest {
   displayFieldId: string;
   idFilterId: string;
   listFilterId: string | null;
+}
+
+export interface IDataStructureWizardData {
+  entityName: string;
+  existingDataStructureNames: string[];
+}
+
+export interface ICreateDataStructureRequest {
+  entityId: string;
+  name: string;
+}
+
+export interface IScreenFromSectionWizardData {
+  sectionName: string;
+  existingDataStructureNames: string[];
+}
+
+export interface ICreateScreenFromSectionRequest {
+  screenSectionId: string;
+  name: string;
 }
 
 export interface ITransformationInput {
@@ -274,6 +378,31 @@ export interface ISearchResult {
 export interface ISearchResultsEditorData {
   query: string;
   results: ISearchResult[];
+}
+
+export interface IModelRuleError {
+  item: ISearchResult;
+  message: string;
+}
+
+export interface IModelFileError {
+  text: string;
+  link: string;
+}
+
+export interface IModelFileErrorSection {
+  caption: string;
+  errors: IModelFileError[];
+}
+
+export interface IModelCheckResult {
+  lastRunAt: string | null;
+  ruleErrors: IModelRuleError[];
+  fileErrorSections: IModelFileErrorSection[];
+}
+
+export interface IModelCheckResultsEditorData {
+  result: IModelCheckResult;
 }
 
 export interface IAddToDeploymentRequest {
@@ -394,6 +523,7 @@ export enum OrigamDataType {
 
 export interface IPropertyUpdate {
   propertyName: string;
+  type: PropertyType;
   value: PropertyValue;
   errors: string[];
   dropDownValues: IDropDownValue[];
@@ -419,7 +549,9 @@ export type EditorType =
   | EditorSubType
   | 'DocumentationEditor'
   | 'SearchResultsEditor'
-  | 'ShowSqlEditor';
+  | 'ModelCheckResultsEditor'
+  | 'ShowSqlEditor'
+  | 'AiSettingsModule';
 
 export interface INodeLoadData {
   id: string;
@@ -437,12 +569,51 @@ export interface IApiTreeNode extends INodeLoadData {
   itemType?: string;
   itemTypeName?: string;
   isCurrentVersion?: boolean;
+  deploymentStatus?: DeploymentStatus;
   nodeLevelType?: NodeLevelType;
   isInActivePackage?: boolean;
   isFileDirty?: boolean;
+  isFolder?: boolean;
+  isMandatoryField?: boolean;
+  role?: string;
+  canDrag?: boolean;
+}
+
+export interface IDeleteGroupResult {
+  deletedSchemaItemIds: string[];
 }
 
 export type NodeLevelType = 'Category' | 'Provider' | 'Item';
+
+export interface IMoveVerdict {
+  key: string;
+  canMove: boolean;
+  canCopy: boolean;
+}
+
+export interface IMoveNodeResult {
+  node: IApiTreeNode;
+  parentNodeIds: string[];
+}
+
+export interface IMoveTarget {
+  id: string;
+  nodeText: string;
+  key: string;
+  path: string;
+  depth: number;
+  packageName: string;
+  isInActivePackage: boolean;
+  isCurrentLocation: boolean;
+  canMove: boolean;
+  canCopy: boolean;
+}
+
+export interface IMoveTargetsResult {
+  targets: IMoveTarget[];
+  isSourceInActivePackage: boolean;
+  isTruncated: boolean;
+}
 
 export interface IPackagesInfo {
   packages: IPackage[];
@@ -454,7 +625,8 @@ export interface IPackage {
   name: string;
 }
 
-export type PropertyType = 'boolean' | 'enum' | 'string' | 'integer' | 'float' | 'looukup';
+export type PropertyType =
+  'boolean' | 'enum' | 'string' | 'integer' | 'float' | 'looukup' | 'untyped';
 
 export type PropertyValue = boolean | number | string | string[] | null;
 
@@ -463,6 +635,15 @@ export interface IDeploymentScriptsGeneratorModuleData {
   currentDeploymentVersionId: string | null;
   results: IDatabaseResult[];
 }
+
+export interface IAiSettingsModuleData {
+  customInstructions: string;
+  model: string;
+  router: string;
+  hasApiKey: boolean;
+}
+
+export type DeploymentStatus = 'Pending' | 'Done';
 
 export interface DocumentationEditorData {
   label: string;
@@ -498,7 +679,9 @@ export interface IApiTabData {
     | DocumentationEditorData
     | IDeploymentScriptsGeneratorModuleData
     | ISearchResultsEditorData
-    | IShowSqlEditorData;
+    | IModelCheckResultsEditorData
+    | IShowSqlEditorData
+    | IAiSettingsModuleData;
   isDirty: boolean;
 }
 

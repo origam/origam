@@ -19,7 +19,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { observer } from "mobx-react";
 import React, { CSSProperties, useContext, useState } from "react";
-import { observable } from "mobx";
+import { observable,
+  makeObservable
+} from "mobx";
 import { v4 as uuidv4 } from 'uuid';
 import S from "./SimpleDropdown.module.scss";
 import CS from "gui/Components/Dropdown/Dropdown.module.scss";
@@ -29,13 +31,18 @@ import { DropdownLayout } from "gui/Components/Dropdown/DropdownLayout";
 import { CtxDropdownRefBody, CtxDropdownRefCtrl } from "gui/Components/Dropdown/DropdownCommon";
 
 @observer
-export class SimpleDropdown<T> extends React.Component<{
+export class SimpleDropdown<T> extends React.Component<React.PropsWithChildren<{
   width?: string,
   options: IOption<T>[],
   selectedOption: IOption<T>,
   onOptionClick: (option: IOption<T>) => void
   className?: string;
-}> {
+}>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
   id = "SimpleDropdown_" + uuidv4()
 
   @observable

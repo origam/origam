@@ -62,6 +62,10 @@ class WorkflowPageRequestHandler : AbstractPageRequestHandler
         IResponseWrapper response
     )
     {
+        if (FeatureTools.IsFeatureOn(OrigamEvent.ApiRequest.FeatureCode))
+        {
+            OrigamEventTools.RecordPageRequest(page, request.HttpMethod, parameters);
+        }
         WorkflowPage workflowPage = page as WorkflowPage;
         QueryParameterCollection qparams = new QueryParameterCollection();
         Hashtable transformParams = new Hashtable();
@@ -137,10 +141,12 @@ class WorkflowPageRequestHandler : AbstractPageRequestHandler
         }
         if (!handled)
         {
-            if (!string.IsNullOrEmpty(request.UrlReferrerAbsoluteUri))
-            {
-                response.Redirect(request.UrlReferrerAbsoluteUri);
-            }
+            HandleUnhandledSuccess(response);
         }
+    }
+
+    private static void HandleUnhandledSuccess(IResponseWrapper response)
+    {
+        response.StatusCode = 204;
     }
 }

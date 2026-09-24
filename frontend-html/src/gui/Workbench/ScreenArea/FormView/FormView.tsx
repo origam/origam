@@ -23,15 +23,15 @@ import { inject, observer, Provider } from "mobx-react";
 import { IFormPanelView } from "model/entities/FormPanelView/types/IFormPanelView";
 import cx from "classnames";
 
-@inject(({dataView}) => {
+@inject(({dataView}: any) => {
   return {
     formPanelView: dataView.formPanelView,
   };
 })
 @observer
-export class FormView extends React.Component<{
+export class FormView extends React.Component<React.PropsWithChildren<{
   formPanelView?: IFormPanelView;
-}> {
+}>> {
   render() {
     return (
       <Provider formPanelView={this.props.formPanelView}>

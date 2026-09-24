@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.ComponentModel.DataAnnotations;
 using Spectre.Console.Cli;
+using ValidationResult = Spectre.Console.ValidationResult;
 
 namespace Origam.Composer.Commands;
 
@@ -40,7 +41,7 @@ public class CreateCommandSettings : CommandSettings
     #region Database
 
     [CommandOption("--db-type <TYPE>", true)]
-    [AllowedValues("mssql", "postgres")]
+    [AllowedValues("mssql", "postgresql")]
     public required string DbType { get; set; }
 
     [CommandOption("--db-host <HOST>", true)]
@@ -74,16 +75,32 @@ public class CreateCommandSettings : CommandSettings
     [CommandOption("--p-folder <FOLDER>", true)]
     public required string ProjectFolder { get; set; }
 
-    [CommandOption("--p-admin-username <NAME>", true)]
-    public required string ProjectWebAdminUsername { get; set; }
+    [CommandOption("--p-admin-username <NAME>")]
+    public string ProjectWebAdminUsername { get; set; }
 
-    [CommandOption("--p-admin-password <PASSWORD>", true)]
-    public required string ProjectWebAdminPassword { get; set; }
+    [CommandOption("--p-admin-password <PASSWORD>")]
+    public string ProjectWebAdminPassword { get; set; }
 
-    [CommandOption("--p-admin-email <EMAIL>", true)]
-    public required string ProjectWebAdminEmail { get; set; }
+    [CommandOption("--p-admin-email <EMAIL>")]
+    public string ProjectWebAdminEmail { get; set; }
 
     #endregion
+
+    public override ValidationResult Validate()
+    {
+        int adminValueCount = new[]
+        {
+            ProjectWebAdminUsername,
+            ProjectWebAdminPassword,
+            ProjectWebAdminEmail,
+        }.Count(value => !string.IsNullOrWhiteSpace(value));
+
+        return adminValueCount is 0 or 3
+            ? ValidationResult.Success()
+            : ValidationResult.Error(
+                "--p-admin-username, --p-admin-password and --p-admin-email must be supplied together."
+            );
+    }
 
     #region Architect
 

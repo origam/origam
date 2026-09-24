@@ -18,7 +18,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { IDataTable, IDataTableData } from "./types/IDataTable";
-import { action, computed, observable } from "mobx";
+import { action, computed, observable,
+  makeObservable
+} from "mobx";
 import { IProperty } from "./types/IProperty";
 import { getDataView } from "../selectors/DataView/getDataView";
 import { IAdditionalRowData } from "./types/IAdditionalRecordData";
@@ -40,6 +42,7 @@ export class DataTable implements IDataTable {
   rowsAddedSinceSave = 0;
 
   constructor(data: IDataTableData) {
+    makeObservable(this);
     Object.assign(this, data);
     this.rowsContainer = getRowContainer(
       data.formScreenLifecycle,

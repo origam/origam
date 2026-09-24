@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import React, { useContext, useState } from "react";
 import { ILookup } from "model/entities/types/ILookup";
 import { IProperty } from "model/entities/types/IProperty";
-import { CancellablePromise } from "mobx/lib/api/flow";
+import { CancellablePromise } from "utils/CancellablePromise";
 import { MobXProviderContext, observer } from "mobx-react";
 import { IMobileDropdownContext } from "gui/connections/MobileComponents/Form/ComboBox/ComboBox";
 import { IDropdownEditorApi } from "modules/Editors/DropdownEditor/DropdownEditorApi";
@@ -42,7 +42,7 @@ import { getMobileState } from "model/selectors/getMobileState";
 import { EditLayoutState } from "model/entities/MobileState/MobileLayoutState";
 import { IFilterSetting } from "model/entities/types/IFilterSetting";
 
-export const MobileTagLookupFilterEditor: React.FC<{
+export const MobileTagLookupFilterEditor: React.FC<React.PropsWithChildren<{
   lookup: ILookup;
   property: IProperty;
   getOptions: (searchTerm: string) => CancellablePromise<Array<any>>;
@@ -51,7 +51,7 @@ export const MobileTagLookupFilterEditor: React.FC<{
   autoFocus: boolean;
   setting: IFilterSetting;
   id?: string;
-}> = observer((props) => {
+}>> = observer((props) => {
   return (
     <MobileTagInputEditor
       key={props.id}

@@ -94,5 +94,81 @@ namespace Origam.BI {
                 return ResourceManager.GetString("PathNotOnReportPath", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to XSL-FO renderer returned an empty PDF response. Renderer URL: {0}.
+        /// </summary>
+        public static string XslFOEmptyDocument {
+            get {
+                return ResourceManager.GetString("XslFOEmptyDocument", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to XSL-FO report format &apos;{0}&apos; is not supported. Only &apos;pdf&apos; is supported..
+        /// </summary>
+        public static string XslFOFormatNotSupported {
+            get {
+                return ResourceManager.GetString("XslFOFormatNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not call XSL-FO renderer at &apos;{0}&apos;..
+        /// </summary>
+        public static string XslFORendererCallFailed {
+            get {
+                return ResourceManager.GetString("XslFORendererCallFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;Could not decode renderer response as UTF-8. Response length: {0} bytes.&gt;.
+        /// </summary>
+        public static string XslFORendererDecodeFailed {
+            get {
+                return ResourceManager.GetString("XslFORendererDecodeFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to XSL-FO renderer returned an empty PDF response. Renderer URL: {0}.
+        /// </summary>
+        public static string XslFORendererEmptyResponse {
+            get {
+                return ResourceManager.GetString("XslFORendererEmptyResponse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to XSL-FO renderer failed.
+        ///Renderer URL: {0}
+        ///HTTP status: {1} {2}
+        ///Response:
+        ///{3}.
+        /// </summary>
+        public static string XslFORendererFailed {
+            get {
+                return ResourceManager.GetString("XslFORendererFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid XSL-FO renderer URL &apos;{0}&apos;. Check XSLFO_RENDERER_URL..
+        /// </summary>
+        public static string XslFORendererInvalidUrl {
+            get {
+                return ResourceManager.GetString("XslFORendererInvalidUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to XSL-FO renderer did not respond within {0} seconds. Renderer URL: {1}.
+        /// </summary>
+        public static string XslFORendererTimeout {
+            get {
+                return ResourceManager.GetString("XslFORendererTimeout", resourceCulture);
+            }
+        }
     }
 }

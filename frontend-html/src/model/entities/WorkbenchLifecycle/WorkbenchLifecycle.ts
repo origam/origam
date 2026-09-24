@@ -41,7 +41,9 @@ import { assignIIds } from "xmlInterpreters/xmlUtils";
 import { DEBUG_CLOSE_ALL_FORMS } from "utils/debugHelpers";
 import { getOpenedScreen } from "../../selectors/getOpenedScreen";
 import { onWorkflowNextClick } from "model/actions-ui/ScreenHeader/onWorkflowNextClick";
-import { observable } from "mobx";
+import { observable,
+  makeObservable
+} from "mobx";
 import { IUserInfo } from "model/entities/types/IUserInfo";
 import { getChatrooms } from "model/selectors/Chatrooms/getChatrooms";
 import { openNewUrl } from "model/actions/Workbench/openNewUrl";
@@ -70,6 +72,10 @@ export enum IRefreshOnReturnType {
 }
 
 export class WorkbenchLifecycle implements IWorkbenchLifecycle {
+  constructor() {
+    makeObservable(this);
+  }
+
   $type_IWorkbenchLifecycle: 1 = 1;
 
   @observable

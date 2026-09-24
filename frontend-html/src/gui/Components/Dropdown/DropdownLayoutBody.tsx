@@ -23,8 +23,9 @@ import { Rect } from "react-measure";
 import { CtxDropdownBodyRect, CtxDropdownCtrlRect } from "./DropdownCommon";
 
 export function DropdownLayoutBody(
-  props: PropsWithChildren<{ render: () => React.ReactNode, minSideMargin: number }>
+  props: PropsWithChildren<{ render?: () => React.ReactNode, minSideMargin?: number }>
 ) {
+  const { render = () => null, minSideMargin = 50 } = props;
 
   const rectBody = useContext(CtxDropdownBodyRect);
   const rectCtrl = useContext(CtxDropdownCtrlRect);
@@ -37,13 +38,13 @@ export function DropdownLayoutBody(
       rect.top = rectCtrl.bottom;
     }
 
-    if (rectCtrl.left! + rectBody.width! > window.innerWidth - props.minSideMargin) {
-      rect.left = Math.max(props.minSideMargin, window.innerWidth - rectBody.width! - props.minSideMargin);
+    if (rectCtrl.left! + rectBody.width! > window.innerWidth - minSideMargin) {
+      rect.left = Math.max(minSideMargin, window.innerWidth - rectBody.width! - minSideMargin);
     } else {
       rect.left = rectCtrl.left;
     }
 
-    rect.width = Math.min(Math.max(rectCtrl.width!, rectBody.width!), window.innerWidth - 2 * props.minSideMargin);
+    rect.width = Math.min(Math.max(rectCtrl.width!, rectBody.width!), window.innerWidth - 2 * minSideMargin);
     rect.height = rectBody.height;
 
     return rect;
@@ -63,12 +64,7 @@ export function DropdownLayoutBody(
         height: rectBodyCom.height,
       }}
     >
-      {props.render()}
+      {render()}
     </div>
   );
 }
-
-DropdownLayoutBody.defaultProps = {
-  render: () => null,
-  minSideMargin: 50
-};

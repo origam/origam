@@ -22,12 +22,12 @@ import S from "gui/connections/MobileComponents/BottomToolBar/BottomIcon.module.
 import { Icon } from "gui/Components/Icon/Icon";
 import cx from "classnames";
 
-export const BottomIcon: React.FC<{
+export const BottomIcon: React.FC<React.PropsWithChildren<{
   iconPath?: string;
   onClick: ()=>void;
   hidden?: boolean;
   className?: string;
-}> = (props) => {
+}>> = (props) => {
   return (
     <div
       className={cx(S.root, "bottomBarItem")}

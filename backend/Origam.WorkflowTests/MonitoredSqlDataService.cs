@@ -79,12 +79,12 @@ public class SqlDataServiceMonitor
     public void TraceUpdateData(DataSet dataset)
     {
         var deletesWorkQueueEntry =
-            dataset
-                is {
-                    Tables: [
-                        { TableName: "WorkQueueEntry", Rows: [{ RowState: DataRowState.Deleted }] },
-                    ]
-                };
+            dataset is
+            {
+                Tables: [
+                    { TableName: "WorkQueueEntry", Rows: [{ RowState: DataRowState.Deleted }] },
+                ]
+            };
         if (deletesWorkQueueEntry)
         {
             dataset.Tables[0].Rows[0].RejectChanges();

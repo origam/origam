@@ -15,18 +15,19 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
-*/
+*/
+
 import { observer } from "mobx-react";
 import React from "react";
 import CS from "gui/connections/MenuComponents/HeaderButton.module.scss";
 import { T } from "utils/translation";
 
 @observer
-export class PinButton extends React.Component<{
+export class PinButton extends React.Component<React.PropsWithChildren<{
   isPinned: boolean
   isVisible: boolean;
   onClick: () => void;
-}> {
+}>> {
 
   getClass() {
     let className = "fas fa-thumbtack " + CS.headerIcon;

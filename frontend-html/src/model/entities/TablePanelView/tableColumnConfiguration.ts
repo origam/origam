@@ -18,7 +18,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { IColumnConfiguration } from "model/entities/TablePanelView/types/IConfigurationManager";
-import { observable } from "mobx";
+import { observable,
+  makeObservable
+} from "mobx";
 import { AggregationType } from "model/entities/types/AggregationType";
 import { GroupingUnit } from "model/entities/types/GroupingUnit";
 
@@ -39,6 +41,7 @@ export class TableColumnConfiguration implements IColumnConfiguration {
     public propertyId: string,
     defaultWidth: number
   ) {
+    makeObservable(this);
     this.width = defaultWidth;
   }
 

@@ -18,6 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { expect, test } from '@playwright/test';
+import { closeAiPanel } from '@support/aiPanel';
 import { resetBackend } from '@support/resetBackend';
 
 test.describe('Entity Relationship creation (real backend)', () => {
@@ -27,8 +28,8 @@ test.describe('Entity Relationship creation (real backend)', () => {
 
   test('Entity Relationship creation with incremental search', async ({ page }) => {
     await page.goto('/');
+    await closeAiPanel(page);
 
-    await page.getByText('Root Menu').click();
     await page.getByTestId('tree-toggle-Data').click();
     await page.getByTestId('tree-toggle-Entities').click();
     await page.getByTestId('tree-toggle-Dimensions').click();
@@ -48,10 +49,13 @@ test.describe('Entity Relationship creation (real backend)', () => {
     await page.getByTestId('save-button').click();
     await expect(page.getByTestId('save-button-disabled')).toBeVisible();
 
+    const relationshipsGroups = page.getByTestId('tree-toggle-Relationships');
+    await expect(relationshipsGroups).toHaveCount(1);
+    await page.getByTestId('tree-toggle-IDimension').click();
+    await expect(relationshipsGroups).toHaveCount(0);
+
     await page.getByTestId('tree-toggle-DimensionEntity').click();
-    await page.getByTestId('tree-toggle-Relationships').click();
-    await page.getByTestId('tree-toggle-Dimension4').click();
-    await page.getByTestId('tree-toggle-_Ancestors').first().click();
+    await relationshipsGroups.click();
     await page.getByTestId('tree-node-SourceDimensionEntityRelation').dblclick();
     await expect(page.getByTestId('tab-SourceDimensionEntityRelation')).toBeVisible();
   });

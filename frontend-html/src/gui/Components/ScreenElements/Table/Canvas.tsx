@@ -19,10 +19,22 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import React from "react";
 import S from "./Canvas.module.css";
-import { action, computed } from "mobx";
+import { action, makeObservable } from "mobx";
 import { CPR } from "utils/canvas";
 
-export class Canvas extends React.Component<{ width: number; height: number, refCanvasElement: any }> {
+interface ICanvasProps {
+  width: number;
+  height: number;
+  refCanvasElement: (element: HTMLCanvasElement | null) => void;
+  onSizeCommitted: (context: CanvasRenderingContext2D) => void;
+}
+
+export class Canvas extends React.Component<React.PropsWithChildren<ICanvasProps>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
   firstVisibleRowIndex = 0;
   lastVisibleRowIndex = 0;
 
@@ -38,27 +50,31 @@ export class Canvas extends React.Component<{ width: number; height: number, ref
     }
   }
 
-  @computed
+  componentDidUpdate(previousProps: Readonly<ICanvasProps>) {
+    if (
+      this.ctxCanvas &&
+      (previousProps.width !== this.props.width || previousProps.height !== this.props.height)
+    ) {
+      this.props.onSizeCommitted(this.ctxCanvas);
+    }
+  }
+
   public get canvasWidthPX() {
     return Math.ceil(this.props.width * CPR()) || 0;
   }
 
-  @computed
   public get canvasHeightPX() {
     return Math.ceil(this.props.height * CPR()) || 0;
   }
 
-  @computed
   public get canvasWidthCSS() {
     return Math.ceil(this.props.width * CPR()) / CPR() || 0;
   }
 
-  @computed
   public get canvasHeightCSS() {
     return Math.ceil(this.props.height * CPR()) / CPR() || 0;
   }
 
-  @computed
   public get canvasProps() {
     return {
       width: this.canvasWidthPX,

@@ -17,12 +17,13 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { action } from "mobx";
+import { action, makeObservable } from "mobx";
 import { LookupCacheMulti } from "./LookupCacheMulti";
 import { TypeSymbol } from "dic/Container";
 
 export class LookupCacheIndividual {
   constructor(private lookupId: string, private cache: LookupCacheMulti) {
+    makeObservable(this);
   }
 
   getLookupLabels() {

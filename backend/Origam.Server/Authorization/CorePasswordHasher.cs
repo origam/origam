@@ -20,20 +20,23 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Runtime.CompilerServices;
 using BrockAllen.IdentityReboot;
 using Microsoft.AspNetCore.Identity;
 using Origam.Security.Common;
 
-namespace Origam.Server;
+[assembly: InternalsVisibleTo("Origam.ServerTests")]
+
+namespace Origam.Server.Authorization;
 
 class CorePasswordHasher : IPasswordHasher<IOrigamUser>
 {
-    private readonly InternalPasswordHasherWithLegacySupport internalHasher =
-        new InternalPasswordHasherWithLegacySupport();
+    private readonly InternalPasswordHasherWithLegacySupport legacyHasher = new();
+    private readonly Sha256PasswordHasher currentHasher = new();
 
     public string HashPassword(IOrigamUser user, string password)
     {
-        return internalHasher.HashPassword(password);
+        return currentHasher.HashPassword(password);
     }
 
     public PasswordVerificationResult VerifyHashedPassword(
@@ -42,11 +45,25 @@ class CorePasswordHasher : IPasswordHasher<IOrigamUser>
         string providedPassword
     )
     {
-        VerificationResult verificationResult = internalHasher.VerifyHashedPassword(
-            hashedPassword,
-            providedPassword
-        );
-        return ToAspNetCoreResult(verificationResult);
+        if (string.IsNullOrEmpty(hashedPassword))
+        {
+            return PasswordVerificationResult.Failed;
+        }
+        string[] parts = hashedPassword.Split(".");
+        string prefix = parts[0];
+        if (
+            parts.Length != Sha256PasswordHasher.KeyPartsLength
+            || prefix != Sha256PasswordHasher.KeyPrefix
+        )
+        {
+            var result = legacyHasher.VerifyHashedPassword(hashedPassword, providedPassword);
+            return ToAspNetCoreResult(
+                (result == VerificationResult.Success)
+                    ? VerificationResult.SuccessRehashNeeded
+                    : result
+            );
+        }
+        return currentHasher.VerifyHashedPassword(hashedPassword, providedPassword);
     }
 
     private static PasswordVerificationResult ToAspNetCoreResult(VerificationResult result)

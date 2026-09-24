@@ -63,7 +63,7 @@ const SaveButtonHOC = observer(() => {
         >
           <VscWarning />
           <span>
-            <strong>{T('Required:', 'save_required_fields_label')}</strong>{' '}
+            <strong>{T('Errors:', 'save_validation_errors_label')}</strong>{' '}
             {validationErrors.map(e => e.propertyName).join(', ')}
           </span>
         </div>

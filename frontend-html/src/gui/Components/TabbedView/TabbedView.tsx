@@ -20,6 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import React from "react";
 import S from "gui/Components/TabbedView/TabbedView.module.scss";
 
-export const TabbedView: React.FC = props => (
+export const TabbedView: React.FC<React.PropsWithChildren<{}>> = props => (
   <div className={S.root}>{props.children}</div>
 );

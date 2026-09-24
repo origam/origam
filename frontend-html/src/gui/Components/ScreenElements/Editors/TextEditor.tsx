@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { action, observable } from "mobx";
+import { action, observable, makeObservable } from "mobx";
 import { Observer, observer } from "mobx-react";
 import * as React from "react";
 import { useCallback, useEffect, useState } from "react";
@@ -40,7 +40,7 @@ import {
 } from "gui/Components/ScreenElements/Editors/editorInputSuppression";
 
 @observer
-export class TextEditor extends React.Component<{
+export class TextEditor extends React.Component<React.PropsWithChildren<{
   id?: string;
   value: string | null;
   isMultiline?: boolean;
@@ -62,7 +62,12 @@ export class TextEditor extends React.Component<{
   onMount?(onChange?: (value: any) => void): void;
   onTextOverflowChanged?: (tooltip: string | null | undefined) => void;
   dock?: IDockType;
-}> {
+}>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
   disposers: any[] = [];
   lastAutoUpdatedValue = this.props.value;
   updateInterval: NodeJS.Timeout | undefined;

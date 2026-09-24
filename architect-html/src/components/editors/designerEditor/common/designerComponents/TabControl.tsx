@@ -28,7 +28,7 @@ import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { action, observable } from 'mobx';
 import { Observer, observer } from 'mobx-react-lite';
 import { ReactElement, useContext } from 'react';
-import { TriggerEvent, useContextMenu } from 'react-contexify';
+import { TriggerEvent, useContextMenu } from '@origam/react-contexify';
 
 export class TabControl extends Component {
   @observable private accessor tabs: TabPage[] = [];

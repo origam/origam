@@ -37,6 +37,7 @@ export default defineConfig({
       '@components': path.resolve(__dirname, 'src/components'),
       '@editors': path.resolve(__dirname, 'src/components/editors'),
       '@modules': path.resolve(__dirname, 'src/modules'),
+      'monaco-editor/esm/vs': 'monaco-editor',
     },
   },
   css: {
@@ -45,10 +46,13 @@ export default defineConfig({
     },
   },
   build: {
-    chunkSizeWarningLimit: 4000, // size in kB
+    chunkSizeWarningLimit: 5000, // size in kB
   },
   server: {
     ...(httpsDisabled ? {} : { https: {} }),
+    watch: {
+      ignored: ['**/ai/chats/**'],
+    },
     proxy: {
       '/Model': {
         target: proxyTargetHttps,
@@ -102,8 +106,16 @@ export default defineConfig({
         target: proxyTargetHttp,
         secure: false,
       },
+      '/ModelCheck': {
+        target: 'http://localhost:5003',
+        secure: false,
+      },
       '/wizards': {
         target: proxyTargetHttps,
+        secure: false,
+      },
+      '/agent': {
+        target: 'https://localhost:7099',
         secure: false,
       },
     },

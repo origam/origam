@@ -21,9 +21,9 @@ import React from "react";
 import S from "gui/Components/ScreenHeader/ScreenHeader.module.scss";
 import cx from "classnames";
 
-export class ScreenHeader extends React.Component<{
+export class ScreenHeader extends React.Component<React.PropsWithChildren<{
   isLoading?: boolean;
-}> {
+}>> {
   render() {
     return (
       <div className={cx(S.root, "noPrint", "screenHeader")}>

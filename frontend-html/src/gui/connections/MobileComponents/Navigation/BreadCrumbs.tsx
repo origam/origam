@@ -22,7 +22,7 @@ import S from "gui/connections/MobileComponents/Navigation/BreadCrumbs.module.sc
 import { MobXProviderContext, observer } from "mobx-react";
 import { BreadCrumbsState } from "model/entities/MobileState/BreadCrumbsState";
 
-export const BreadCrumbs: React.FC<{}> = observer((props) => {
+export const BreadCrumbs: React.FC<React.PropsWithChildren<{}>> = observer((props) => {
   const breadCrumbsState = useContext(MobXProviderContext).application.mobileState.breadCrumbsState as BreadCrumbsState;
   const breadCrumbList = breadCrumbsState.visibleNodes;
 

@@ -19,7 +19,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { bind } from "bind-decorator";
 import _ from "lodash";
-import { action, computed, observable } from "mobx";
+import { action, computed, observable,
+  makeObservable
+} from "mobx";
 import { observer, Observer } from "mobx-react";
 import { showDialog } from "model/selectors/getDialogStack";
 import React from "react";
@@ -48,6 +50,10 @@ function NewExternalPromise<T>() {
 }
 
 export class ErrorDialogController implements IErrorDialogController {
+  constructor() {
+    makeObservable(this);
+  }
+
   @observable errorStack: Array<{
     id: number;
     error: any;
@@ -170,10 +176,10 @@ export class ErrorDialogController implements IErrorDialogController {
 }
 
 @observer
-export class ErrorDialogComponent extends React.Component<{
+export class ErrorDialogComponent extends React.Component<React.PropsWithChildren<{
   errorMessages: Array<{ id: number; message: string; timestamp: string }>;
   onOkClick?: (event: any) => void;
-}> {
+}>> {
   render() {
     return (
       <ModalDialog

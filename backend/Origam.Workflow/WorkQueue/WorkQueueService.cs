@@ -51,7 +51,7 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
     private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
         System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType
     );
-    private const string WQ_EVENT_ONCREATE = "fe40902f-8a44-477e-96f9-d157eee16a0f";
+    private readonly string WQ_EVENT_ONCREATE = "fe40902f-8a44-477e-96f9-d157eee16a0f";
     private readonly core.ICoreDataService dataService = core.DataService.Instance;
     private CancellationTokenSource cancellationTokenSource = new();
     private readonly WorkQueueUtils workQueueUtils;
@@ -63,6 +63,7 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
     private bool externalQueueAdapterBusy = false;
     private bool queueAutoProcessBusy = false;
     private readonly RetryManager retryManager = new();
+    private readonly ScheduledWorkQueueEntryManager scheduledWorkQueueEntryManager = new();
     private static readonly Guid DS_METHOD_WQ_GETACTIVEQUEUES = new(
         "0b45c721-65d2-4305-b34a-cd0d07387ea1"
     );
@@ -94,13 +95,15 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
                 ProcessQueueItem,
                 workQueueUtils,
                 retryManager,
-                workQueueThrottle
+                workQueueThrottle,
+                scheduledWorkQueueEntryManager
             ),
             WorkQueueProcessingMode.RoundRobin => new RoundRobinLinearProcessor(
                 ProcessQueueItem,
                 workQueueUtils,
                 retryManager,
                 workQueueThrottle,
+                scheduledWorkQueueEntryManager,
                 settings.RoundRobinBatchSize
             ),
             _ => throw new NotImplementedException(

@@ -24,7 +24,7 @@ import { MobXProviderContext, observer } from "mobx-react";
 import { getDialogStack } from "../../../model/selectors/DialogStack/getDialogStack";
 import { IDialogInfo } from "model/entities/types/IDialogInfo";
 
-export const ApplicationDialogStack: React.FC = observer(() => {
+export const ApplicationDialogStack: React.FC<React.PropsWithChildren<{}>> = observer(() => {
   const dialogStack = getDialogStack(
     useContext(MobXProviderContext).application
   );
@@ -32,10 +32,10 @@ export const ApplicationDialogStack: React.FC = observer(() => {
 });
 
 @observer
-export class DialogStack extends React.Component<{
+export class DialogStack extends React.Component<React.PropsWithChildren<{
   stackedDialogs: Array<IDialogInfo>;
   close: (componentKey: string) => void;
-}> {
+}>> {
 
   onOverlayClick(dialogInfo: IDialogInfo) {
     if (dialogInfo.closeOnClickOutside) {

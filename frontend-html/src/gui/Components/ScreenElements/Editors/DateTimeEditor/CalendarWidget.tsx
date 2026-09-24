@@ -19,16 +19,21 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { observer } from "mobx-react";
 import * as React from "react";
 import moment from "moment";
-import { action, observable } from "mobx";
+import { action, observable, makeObservable } from "mobx";
 import S from "gui/Components/ScreenElements/Editors/DateTimeEditor/CalendarWidget.module.scss";
 import cx from "classnames";
 
 @observer
-export class CalendarWidget extends React.Component<{
+export class CalendarWidget extends React.Component<React.PropsWithChildren<{
   initialDisplayDate?: moment.Moment;
   selectedDay?: moment.Moment;
   onDayClick?(event: any, day: moment.Moment): void;
-}> {
+}>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
   @observable.ref
   displayedMonth = moment(this.props.initialDisplayDate).startOf("month");
 

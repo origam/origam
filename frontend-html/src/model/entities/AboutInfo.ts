@@ -18,11 +18,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { IAboutInfo } from "model/entities/types/IAboutInfo";
-import { observable } from "mobx";
+import { observable,
+  makeObservable
+} from "mobx";
 import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
 import { getApi } from "model/selectors/getApi";
 
 export class About {
+  constructor() {
+    makeObservable(this);
+  }
+
   @observable
   info: IAboutInfo = {commitId: "", linkToCommit: "", serverVersion: ""};
 

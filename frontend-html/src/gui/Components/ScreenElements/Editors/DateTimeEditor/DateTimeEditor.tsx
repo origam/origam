@@ -18,7 +18,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
-import { action, computed, flow, observable, runInAction } from "mobx";
+import { action, computed, flow, observable, runInAction,
+  makeObservable
+} from "mobx";
 import { observer, Observer } from "mobx-react";
 import moment from "moment";
 import * as React from "react";
@@ -36,6 +38,7 @@ import { getEditorInputSuppressionProps } from "gui/Components/ScreenElements/Ed
 
 class DesktopEditorState implements IEditorState{
   constructor(value: string | null) {
+    makeObservable(this);
     this.initialValue = value;
   }
 
@@ -44,7 +47,7 @@ class DesktopEditorState implements IEditorState{
 }
 
 @observer
-export class DateTimeEditor extends React.Component<{
+export class DateTimeEditor extends React.Component<React.PropsWithChildren<{
   id?: string;
   value: string | null;
   outputFormat: string;
@@ -62,12 +65,21 @@ export class DateTimeEditor extends React.Component<{
   onEditorBlur?: (event: any) => Promise<void>;
   subscribeToFocusManager?: (obj: IFocusable, onBlur: ()=> Promise<void>) => void;
   className?: string;
-}> {
+}>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
   @observable isDroppedDown = false;
 
   @observable isShowFormatHintTooltip = false;
 
-  refDropdowner = (elm: Dropdowner | null) => (this.elmDropdowner = elm);
+  @observable.ref outputFormat = this.props.outputFormat;
+
+  refDropdowner = (elm: Dropdowner | null) => {
+    this.elmDropdowner = elm;
+  };
   elmDropdowner: Dropdowner | null = null;
 
   editorState = new DesktopEditorState(this.props.value);
@@ -133,8 +145,9 @@ export class DateTimeEditor extends React.Component<{
     this.disposers.forEach((d) => d());
   }
 
-  componentDidUpdate(prevProps: { value: string | null }) {
+  componentDidUpdate(prevProps: { value: string | null; outputFormat: string }) {
     runInAction(() => {
+      this.outputFormat = this.props.outputFormat;
       if (prevProps.value !== null && this.props.value === null) {
         this.editorModel.dirtyTextualValue = "";
       }
@@ -199,7 +212,9 @@ export class DateTimeEditor extends React.Component<{
     }, 30);
   }
 
-  refContainer = (elm: HTMLDivElement | null) => (this.elmContainer = elm);
+  refContainer = (elm: HTMLDivElement | null) => {
+    this.elmContainer = elm;
+  };
   elmContainer: HTMLDivElement | null = null;
   refInput = (elm: HTMLInputElement | null) => {
     this.elmInput = elm;
@@ -219,7 +234,7 @@ export class DateTimeEditor extends React.Component<{
   @computed get isTooltipShown() {
     return (
       this.editorModel.textFieldValue !== undefined &&
-      (!moment(this.editorModel.textFieldValue, this.props.outputFormat) ||
+      (!moment(this.editorModel.textFieldValue, this.outputFormat) ||
         this.editorModel.formattedMomentValue !== this.editorModel.textFieldValue)
     );
   }
@@ -251,6 +266,17 @@ export class DateTimeEditor extends React.Component<{
   }
 
   renderWithCalendarWidget() {
+    const {
+      backgroundColor,
+      className,
+      foregroundColor,
+      id,
+      isReadOnly,
+      onClick,
+      onDoubleClick,
+      outputFormatToShow,
+    } = this.props;
+
     return (
       <Dropdowner
         ref={this.refDropdowner}
@@ -270,18 +296,18 @@ export class DateTimeEditor extends React.Component<{
                     <FormatHintTooltip
                       boundingRect={this.inputRect}
                       line1={this.editorModel.autocompletedText}
-                      line2={this.props.outputFormatToShow}
+                      line2={outputFormatToShow}
                     />
                   )}
                   <input
-                    id={this.props.id}
-                    title={this.editorModel.autocompletedText + '\n' + this.props.outputFormatToShow}
+                    id={id}
+                    title={this.editorModel.autocompletedText + '\n' + outputFormatToShow}
                     style={{
-                      color: this.props.foregroundColor,
-                      backgroundColor: this.props.backgroundColor,
+                      color: foregroundColor,
+                      backgroundColor: backgroundColor,
                     }}
                     {...getEditorInputSuppressionProps()}
-                    className={S.input +" "+ this.props.className + " " + (this.props.isReadOnly ? S.readOnlyInput : "")}
+                    className={S.input +" "+ className + " " + (isReadOnly ? S.readOnlyInput : "")}
                     type="text"
                     onBlur={event => this.handleInputBlur(event)()}
                     onFocus={this.handleFocus}
@@ -289,10 +315,10 @@ export class DateTimeEditor extends React.Component<{
                       this.refInput(elm);
                     }}
                     value={this.editorModel.textFieldValue}
-                    readOnly={this.props.isReadOnly}
+                    readOnly={isReadOnly}
                     onChange={this.handleTextFieldChange}
-                    onClick={this.props.onClick}
-                    onDoubleClick={this.props.onDoubleClick}
+                    onClick={onClick}
+                    onDoubleClick={onDoubleClick}
                     onKeyDown={this.handleKeyDown}
                     onDragStart={(e: any) =>  e.preventDefault()}
                   />
@@ -300,7 +326,7 @@ export class DateTimeEditor extends React.Component<{
               )}
             </Observer>
 
-            {!this.props.isReadOnly && (
+            {!isReadOnly && (
               <div
                 className={S.dropdownSymbol}
                 onMouseDown={() => setDropped(true)}

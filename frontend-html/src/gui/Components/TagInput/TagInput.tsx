@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import React from "react";
 import S from "./TagInput.module.css";
 
-export const TagInput: React.FC<{ className?: string }> = (props) => {
+export const TagInput: React.FC<React.PropsWithChildren<{ className?: string }>> = (props) => {
   return (
     <div className={S.tagInputContainer + (props.className ? ` ${props.className}` : "")}>
       {props.children}
@@ -28,12 +28,12 @@ export const TagInput: React.FC<{ className?: string }> = (props) => {
   );
 };
 
-export const TagInputAdd: React.FC<{
+export const TagInputAdd: React.FC<React.PropsWithChildren<{
   domRef?: any;
   className?: string;
   onClick: (event: any) => void;
   onMouseDown?: (event: any) => void;
-}> = (props) => {
+}>> = (props) => {
 
   return (
     <div
@@ -47,10 +47,10 @@ export const TagInputAdd: React.FC<{
   );
 };
 
-export const TagInputItemDelete: React.FC<{
+export const TagInputItemDelete: React.FC<React.PropsWithChildren<{
   onClick?: (event: any) => void;
   className?: string;
-}> = (props) => {
+}>> = (props) => {
   return (
     <div
       className={S.tagInputItemDelete + (props.className ? ` ${props.className}` : "")}
@@ -61,7 +61,7 @@ export const TagInputItemDelete: React.FC<{
   );
 };
 
-export const TagInputItem: React.FC<{ className?: string }> = (props) => {
+export const TagInputItem: React.FC<React.PropsWithChildren<{ className?: string }>> = (props) => {
   return (
     <div className={S.tagInputItem + (props.className ? ` ${props.className}` : "")}>
       {props.children}

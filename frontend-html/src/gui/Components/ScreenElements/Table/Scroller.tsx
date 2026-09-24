@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { action, observable } from "mobx";
+import { action, observable, makeObservable } from "mobx";
 import * as React from "react";
 import { IScrollerProps } from "./types";
 import { MobXProviderContext, observer } from "mobx-react";
@@ -29,8 +29,15 @@ import { requestFocus } from "utils/focus";
   Two divs broadcasting the outer one's scroll state to scrollOffsetTarget.
 */
 @observer
-export default class Scroller extends React.Component<IScrollerProps> {
+export default class Scroller extends React.Component<React.PropsWithChildren<IScrollerProps>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
   static contextType = MobXProviderContext;
+
+  declare context: any;
 
   @observable.ref private elmScrollerDiv: HTMLDivElement | null = null;
   private lastScrollLeft: number = 0;
@@ -98,6 +105,10 @@ export default class Scroller extends React.Component<IScrollerProps> {
     return this.elmScrollerDiv
       ? this.elmScrollerDiv.offsetWidth - this.elmScrollerDiv.clientWidth
       : 0;
+  }
+
+  public containsElement(element: EventTarget | null) {
+    return element instanceof Node && !!this.elmScrollerDiv?.contains(element);
   }
 
   public focus() {
@@ -221,6 +232,7 @@ class SequentialSingleDoubleClickHandler {
   private readonly doubleClickDelayMillis = busyDelayMillis;
 
   constructor(runOnclick: (event: any) => void) {
+    makeObservable(this);
     this.runOnclick = runOnclick;
   }
 

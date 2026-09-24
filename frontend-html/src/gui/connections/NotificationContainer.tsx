@@ -26,9 +26,11 @@ import cx from "classnames";
 import { Icon } from "gui/Components/Icon/Icon";
 
 @observer
-export class NotificationContainer extends React.Component<{}> {
+export class NotificationContainer extends React.Component<React.PropsWithChildren<{}>> {
 
   static contextType = MobXProviderContext;
+
+  declare context: any;
 
   get workbench(): IWorkbench {
     return this.context.workbench;

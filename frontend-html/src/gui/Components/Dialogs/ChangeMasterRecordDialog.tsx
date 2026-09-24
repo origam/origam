@@ -25,13 +25,15 @@ import { ModalDialog } from "gui/Components/Dialog/ModalDialog";
 import { requestFocus } from "utils/focus";
 
 @observer
-export class ChangeMasterRecordDialog extends React.Component<{
+export class ChangeMasterRecordDialog extends React.Component<React.PropsWithChildren<{
   screenTitle: string;
   onSaveClick?: (event: any) => void;
   onDontSaveClick?: (event: any) => void;
   onCancelClick?: (event: any) => void;
-}> {
-  refPrimaryBtn = (elm: any) => (this.elmPrimaryBtn = elm);
+}>> {
+  refPrimaryBtn = (elm: any) => {
+    this.elmPrimaryBtn = elm;
+  };
   elmPrimaryBtn: any;
 
   componentDidMount() {

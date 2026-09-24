@@ -17,13 +17,14 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import { TypeSymbol } from "dic/Container";
 
 export const IRowCursor = TypeSymbol<RowCursor>("IRowCursor");
 
 export class RowCursor {
   constructor(private getSelectedRowId: () => string | undefined) {
+    makeObservable(this);
   }
 
   @computed get selectedId(): string | undefined {
@@ -35,6 +36,7 @@ export const IColumnCursor = TypeSymbol<ColumnCursor>("IColumnCursor");
 
 export class ColumnCursor {
   constructor(private getSelectedColumnId: () => string | undefined) {
+    makeObservable(this);
   }
 
   @computed get selectedId(): string | undefined {

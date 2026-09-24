@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import React, { PropsWithChildren, useContext } from "react";
 import S from "gui/Components/DataViewHeader/DataViewHeaderAction.module.scss";
 import cx from "classnames";
-import { action } from "mobx";
+import { action, makeObservable } from "mobx";
 import { CtxDataView, DataViewContext } from "../ScreenElements/DataView";
 
 interface IDataViewHeaderActionProps {
@@ -38,7 +38,12 @@ interface IDataViewHeaderActionProps {
   shortcutPredicate?(event: any): boolean;
 }
 
-export class DataViewHeaderActionInner extends React.Component<IDataViewHeaderActionProps & { dataViewContext?: DataViewContext }> {
+export class DataViewHeaderActionInner extends React.Component<React.PropsWithChildren<IDataViewHeaderActionProps & { dataViewContext?: DataViewContext }>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
   @action.bound
   handleMouseDown(event: any) {
     if (!this.props.isDisabled && this.props.onMouseDown) {

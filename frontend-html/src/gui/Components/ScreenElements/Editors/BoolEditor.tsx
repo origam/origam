@@ -24,7 +24,7 @@ import cx from "classnames";
 import { IFocusable } from "../../../../model/entities/FormFocusManager";
 
 @observer
-export class BoolEditor extends React.Component<{
+export class BoolEditor extends React.Component<React.PropsWithChildren<{
   value: boolean;
   isReadOnly: boolean;
   readOnlyNoGrey?: boolean;
@@ -36,7 +36,7 @@ export class BoolEditor extends React.Component<{
   centered?: boolean;
   id?: string;
   subscribeToFocusManager?: (obj: IFocusable) => void;
-}> {
+}>> {
   elmInput: HTMLInputElement | null = null;
   refInput = (elm: HTMLInputElement | any) => {
     this.elmInput = elm;

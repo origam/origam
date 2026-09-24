@@ -27,8 +27,12 @@ jobs:
     - name: Setup msbuild
       uses: microsoft/setup-msbuild@v1
 
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v2
+
     - name: Restore Packages
       run: |
+       nuget restore backend/Origam.ProjectAutomation/packages.config -PackagesDirectory backend/packages -NonInteractive
        msbuild backend/Origam.sln -t:restore /p:Configuration="Release Architect" -v:m
     - name: Build Architect
       run: |
@@ -36,12 +40,44 @@ jobs:
     - name: Build Origam.CommonTests
       run: |
        msbuild backend/Origam.sln -warnaserror -t:build /p:Configuration="Release Architect" /t:Common\Origam_CommonTests:Publish -v:m
-
-    - name: Upload testing artifact
+    - name: Upload Architect testing artifact
       uses: actions/upload-artifact@v4
       with:
-        name: test-dlls
+        name: architect-test-dlls
         path: "backend/**Tests/bin/Release"
+        include-hidden-files: true
+        retention-days: 1
+        if-no-files-found: error
+
+  buildServer:
+    name: BuildServer
+    runs-on: windows-2022
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: ['csharp']
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Setup msbuild
+      uses: microsoft/setup-msbuild@v1
+
+    - name: Restore Origam.ServerTests
+      run: |
+       msbuild backend/Origam.ServerTests/Origam.ServerTests.csproj -t:restore /p:Configuration="Release Server" -v:m
+
+    - name: Build Origam.ServerTests
+      run: |
+       msbuild backend/Origam.ServerTests/Origam.ServerTests.csproj -warnaserror -t:publish /p:Configuration="Release Server" -v:m
+
+    - name: Upload Server testing artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: server-test-dlls
+        path: "backend/Origam.ServerTests/bin/Release"
         include-hidden-files: true
         retention-days: 1
         if-no-files-found: error
@@ -76,27 +112,86 @@ jobs:
     - name: Download testing artefact
       uses: actions/download-artifact@v4
       with:
-        name: test-dlls
+        name: architect-test-dlls
         path: backend
 
-    - name: Run NUnit tests
+    - name: Run Architect NUnit tests
       run:  |
        echo Linux platform is case sensitive filenames. For this reason it has to be renamed mvp.xml.dll to Mvp.Xml.dll.
        find . -name 'mvp.xml.dll' -exec sh -c 'f="{}"; mv -- "$f" "$(dirname {})/mvp.xml.x.dll"' \;
        find . -name 'mvp.xml.x.dll' -exec sh -c 'f="{}"; mv -- "$f" "$(dirname {})/Mvp.Xml.dll"' \;
-       dotnet test --logger "trx;logfilename=test-results.trx" backend/**Tests/bin/Release/*Tests.dll
-      
-    - name: Produce NUnit test report
+       dotnet test --logger "trx;logfilename=architect-test-results.trx" backend/**Tests/bin/Release/*Tests.dll
+
+    - name: Produce Architect NUnit test report
       uses: dorny/test-reporter@v1
       if: success() || failure()
       with:
-        name: NUnit Results
-        path: TestResults/test-results.trx
+        name: Architect NUnit Results
+        path: TestResults/architect-test-results.trx
         reporter: dotnet-trx
         max-annotations: '0'
-    
-    - name: Delete artifact
+
+  serverTests:
+    needs: buildServer
+    name: Server Tests
+    runs-on: ubuntu-22.04
+    permissions:
+      actions: read
+      contents: read
+      checks: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: ['csharp']
+
+    steps:
+    - name: Specify dotnet version to use
+      run: |
+        dotnet new globaljson --sdk-version 8.0.401
+
+    - name: Install dotnet
+      uses: actions/setup-dotnet@v3
+      with:
+        global-json-file: global.json
+
+    - name: Download testing artefact
+      uses: actions/download-artifact@v4
+      with:
+        name: server-test-dlls
+        path: backend/Origam.ServerTests/bin/Release
+
+    - name: Run Server NUnit tests
+      run: |
+       dotnet test --logger "trx;logfilename=server-test-results.trx" backend/Origam.ServerTests/bin/Release/net8.0/Origam.ServerTests.dll
+
+    - name: Produce Server NUnit test report
+      uses: dorny/test-reporter@v1
+      if: success() || failure()
+      with:
+        name: Server NUnit Results
+        path: TestResults/server-test-results.trx
+        reporter: dotnet-trx
+        max-annotations: '0'
+
+  cleanupArtifacts:
+    needs: [tests, serverTests]
+    if: always()
+    name: Cleanup artifacts
+    runs-on: ubuntu-22.04
+    permissions:
+      actions: write
+      contents: read
+
+    steps:
+    - name: Delete Architect testing artifact
       uses: geekyeggo/delete-artifact@v5
       with:
-          name: test-dlls
+          name: architect-test-dlls
+          failOnError: false
+
+    - name: Delete Server testing artifact
+      uses: geekyeggo/delete-artifact@v5
+      with:
+          name: server-test-dlls
           failOnError: false

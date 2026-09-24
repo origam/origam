@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { action, computed, observable } from "mobx";
+import { action, computed, observable, makeObservable } from "mobx";
 import { createWorkbench } from "../factories/createWorkbench";
 import { getApi } from "../selectors/getApi";
 import { getApplication } from "../selectors/getApplication";
@@ -32,6 +32,10 @@ import React from "react";
 import { getDialogStack } from "model/selectors/DialogStack/getDialogStack";
 
 export class ApplicationLifecycle implements IApplicationLifecycle {
+  constructor() {
+    makeObservable(this);
+  }
+
   $type_IApplicationLifecycle: 1 = 1;
 
   @observable loginPageMessage?: string | undefined;

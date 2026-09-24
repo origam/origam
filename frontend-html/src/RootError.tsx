@@ -23,9 +23,9 @@ import cx from "classnames";
 import { T } from "utils/translation";
 import { logoff } from "oauth";
 
-export class RootError extends React.Component<{
+export class RootError extends React.Component<React.PropsWithChildren<{
   error: any
-}> {
+}>> {
 
   getHelpUrl() {
     if (window.navigator?.platform?.toLowerCase()?.includes("win")) { // platform is deprecated but there seems to be no alternative

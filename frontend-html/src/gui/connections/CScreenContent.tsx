@@ -25,8 +25,10 @@ import React from "react";
 import { CScreen } from "gui/connections/CScreen";
 
 @observer
-export class CScreenContent extends React.Component {
+export class CScreenContent extends React.Component<React.PropsWithChildren<{}>> {
   static contextType = MobXProviderContext;
+
+  declare context: any;
 
   get workbench(): IWorkbench {
     return this.context.workbench;

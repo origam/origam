@@ -95,9 +95,9 @@ public class UserApiProcessor
             }
             if (code != 200)
             {
+                context.Response.Clear();
                 context.Response.StatusCode = code;
                 context.Response.ContentType = resultContentType;
-                context.Response.Clear();
                 if (code == 500)
                 {
                     context.Response.Write("Multiple routes.");

@@ -17,9 +17,9 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { action, observable, runInAction } from "mobx";
+import { action, observable, runInAction, makeObservable } from "mobx";
 import { observer } from "mobx-react";
-import { CancellablePromise } from "mobx/lib/api/flow";
+import { CancellablePromise } from "utils/CancellablePromise";
 import React from "react";
 import {
   FilterSettingsComboBox,
@@ -62,11 +62,11 @@ function operatorGroupChanges(oldOperator: string, newOperator: string) {
     !lookupOperatorTypes.includes(newOperator) && lookupOperatorTypes.includes(oldOperator)
 }
 
-const OpCombo: React.FC<{
+const OpCombo: React.FC<React.PropsWithChildren<{
   setting: any;
   enableLookupTypeFilters: boolean
   id: string;
-}> = observer((props) => {
+}>> = observer((props) => {
   return (
     <FilterSettingsComboBox
       id={props.id}
@@ -102,14 +102,19 @@ export interface ITagEditorItem {
 }
 
 @observer
-class OpEditors extends React.Component<{
+class OpEditors extends React.Component<React.PropsWithChildren<{
   setting: IFilterSetting;
   getOptions: (searchTerm: string) => CancellablePromise<Array<any>>;
   lookup: ILookup;
   property: IProperty;
   autoFocus: boolean;
   id: string;
-}> {
+}>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
 
   @action.bound handleSelectedItemsChange(items: Array<any>) {
     this.props.setting.val1 = [...items];
@@ -177,14 +182,14 @@ class OpEditors extends React.Component<{
 }
 
 @observer
-export class FilterSettingsLookup extends React.Component<{
+export class FilterSettingsLookup extends React.Component<React.PropsWithChildren<{
   getOptions: (searchTerm: string) => CancellablePromise<Array<any>>;
   lookup: ILookup;
   property: IProperty;
   setting: IFilterSetting;
   autoFocus: boolean;
   id: string;
-}> {
+}>> {
   static get defaultSettings() {
     return new LookupFilterSetting(OPERATORS[0].type)
   }
@@ -259,6 +264,7 @@ export class LookupFilterSetting implements IFilterSetting {
   }
 
   constructor(type: string, isComplete = false, val1?: string, val2?: any) {
+    makeObservable(this);
     this.type = type;
     this.isComplete = isComplete;
     if (Array.isArray(val1)) {

@@ -44,8 +44,10 @@ import { getIsTopmostNonDialogScreen } from "model/selectors/getIsTopmostNonDial
 import { getTopmostOpenedNonDialogScreenItem } from "model/selectors/getTopmostNonDialogScreenItem";
 
 @observer
-export class CScreenHeader extends React.Component {
+export class CScreenHeader extends React.Component<React.PropsWithChildren<{}>> {
   static contextType = MobXProviderContext;
+
+  declare context: any;
 
   get workbench(): IWorkbench {
     return this.context.workbench;
@@ -65,7 +67,7 @@ export class CScreenHeader extends React.Component {
 }
 
 @observer
-class CScreenHeaderInner extends React.Component<{ activeScreen: IOpenedScreen }> {
+class CScreenHeaderInner extends React.Component<React.PropsWithChildren<{ activeScreen: IOpenedScreen }>> {
   render() {
     const {activeScreen} = this.props;
     const {content} = activeScreen;

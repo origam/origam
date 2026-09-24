@@ -20,7 +20,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import React, { RefObject, useContext, useEffect, useRef, useState } from "react";
 import S from "./CheckList.module.scss";
 import { MobXProviderContext, observer } from "mobx-react";
-import { action, computed, flow, observable } from "mobx";
+import { action, computed, flow, observable,
+  makeObservable
+} from "mobx";
 import { IApi } from "model/entities/types/IApi";
 import { getApi } from "model/selectors/getApi";
 import { getDataStructureEntityId } from "model/selectors/DataView/getDataStructureEntityId";
@@ -55,6 +57,10 @@ export interface IRawCheckListProps {
 }
 
 export class CheckListControler {
+  constructor() {
+    makeObservable(this);
+  }
+
   @observable lookupList: string[][] = [];
 
   @computed get items() {
@@ -104,14 +110,14 @@ export class CheckListControler {
   @observable.ref props: IRawCheckListProps = undefined as any;
 }
 
-export const CheckList: React.FC<{
+export const CheckList: React.FC<React.PropsWithChildren<{
   value: string[];
   onChange?(newValue: string[]): void;
   isReadonly?: boolean;
   subscribeToFocusManager?: (obj: IFocusable) => void;
   onKeyDown(event: any): void;
   onClick: () => void;
-}> = observer((props) => {
+}>> = observer((props) => {
   const {property} = useContext(MobXProviderContext);
 
   return (
@@ -137,7 +143,7 @@ export const CheckList: React.FC<{
   );
 });
 
-export const CheckListRaw: React.FC<IRawCheckListProps> = observer((props) => {
+export const CheckListRaw: React.FC<React.PropsWithChildren<IRawCheckListProps>> = observer((props) => {
   const [controller] = useState(() => new CheckListControler());
   controller.props = props;
 
@@ -215,7 +221,7 @@ export const CheckListRaw: React.FC<IRawCheckListProps> = observer((props) => {
   );
 });
 
-export const CheckListItem: React.FC<{
+export const CheckListItem: React.FC<React.PropsWithChildren<{
   checked: boolean;
   onClick?(event: any): void;
   tabIndex?: number;
@@ -227,7 +233,7 @@ export const CheckListItem: React.FC<{
   label: string;
   subscribeToFocusManager?: (obj: IFocusable) => void;
   onKeyDown?(event: any): void;
-}> = (props) => {
+}>> = (props) => {
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
   const refInput = useRef<HTMLInputElement>(null);
@@ -305,7 +311,7 @@ export const CheckListItem: React.FC<{
 };
 
 class InputReference {
-  constructor(private inputRef: RefObject<HTMLInputElement>) {
+  constructor(private inputRef: RefObject<HTMLInputElement | null>) {
   }
 
   get x() {

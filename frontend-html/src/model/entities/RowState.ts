@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import _ from "lodash";
-import { action, computed, createAtom, flow, IAtom, observable } from "mobx";
+import { action, computed, createAtom, flow, IAtom, observable, makeObservable } from "mobx";
 import { getEntity } from "model/selectors/DataView/getEntity";
 import { getApi } from "model/selectors/getApi";
 import { getSessionId } from "model/selectors/getSessionId";
@@ -43,6 +43,7 @@ export class RowState implements IRowState {
   disposers: (()=> void)[] = [];
 
   constructor(debouncingDelayMilliseconds?: number) {
+    makeObservable(this);
     this.triggerLoadDebounced = _.debounce(
       this.triggerLoadImm,
       debouncingDelayMilliseconds == undefined ? 0 : debouncingDelayMilliseconds);
@@ -309,12 +310,14 @@ class RowStateRequest {
     rowId: string,
     public atom?: IAtom
   ) {
+    makeObservable(this);
     this.rowId = rowId;
   }
 
   dispose() {
-    this.atom?.onBecomeUnobservedListeners?.clear();
-    this.atom?.onBecomeObservedListeners?.clear();
+    const atom = this.atom as any;
+    atom?.onBecomeUnobservedListeners?.clear?.();
+    atom?.onBecomeObservedListeners?.clear?.();
     this.atom = undefined;
     this.isValid = false;
     this.processingSate = undefined;

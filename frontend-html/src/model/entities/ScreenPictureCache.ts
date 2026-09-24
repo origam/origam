@@ -17,10 +17,14 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { action, createAtom, observable } from "mobx";
+import { action, createAtom, observable, makeObservable } from "mobx";
 import { processedImageURL } from "utils/image";
 
 export class ScreenPictureCache {
+  constructor() {
+    makeObservable(this);
+  }
+
   @observable items = new Map<string, any>();
   atoms = new Map<string, any>();
 

@@ -67,9 +67,18 @@
 		<value> (Current)</value>
 	</data>
 	<data name="ErrorChangePackageVersion">
-		<value>Cannot change version number of the current package version</value>
+		<value>Cannot change the version number of '{0}' because it is the package's current version. Make another version current first, then change this one.</value>
 	</data>
 	<data name="ErrorDeploymentVersionUnknownType">
 		<value>This type is not supported by DeploymentVersion</value>
+	</data>
+	<data name="MemberNameRequired">
+		<value>Member name cannot be empty.</value>
+	</data>
+	<data name="ErrorInvalidPackageVersion">
+		<value>'{0}' is not a valid version number. Use at least three dot-separated numbers such as 1.0.0.</value>
+	</data>
+	<data name="ErrorDuplicateDeploymentVersionValue">
+		<value>Another deployment version in this package already uses '{0}'. Choose a unique value.</value>
 	</data>
 </root>

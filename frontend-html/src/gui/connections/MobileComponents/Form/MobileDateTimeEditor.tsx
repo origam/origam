@@ -40,7 +40,7 @@ import { T } from "utils/translation";
 import { getEditorInputSuppressionProps } from "gui/Components/ScreenElements/Editors/editorInputSuppression";
 
 
-export const MobileDateTimeEditor: React.FC<{
+export const MobileDateTimeEditor: React.FC<React.PropsWithChildren<{
   id?: string;
   value: string | null;
   outputFormat: string;
@@ -59,7 +59,7 @@ export const MobileDateTimeEditor: React.FC<{
   editorState?: IEditorState;
   showClearButton?: boolean;
   inputClass?: string
-}> = observer((props) => {
+}>> = observer((props) => {
 
   const mobileState = useContext(MobXProviderContext).application.mobileState as MobileState;
 
@@ -119,12 +119,12 @@ export const MobileDateTimeEditor: React.FC<{
   );
 });
 
-export const FullScreenDateTimeEditor: React.FC<{
+export const FullScreenDateTimeEditor: React.FC<React.PropsWithChildren<{
   id?: string;
   onClick?: (event: any) => void;
   editorModel: DateEditorModel;
   property: IProperty
-}> = observer((props) => {
+}>> = observer((props) => {
 
   return (
     <div className={S.fullScreenEditorRoot}>

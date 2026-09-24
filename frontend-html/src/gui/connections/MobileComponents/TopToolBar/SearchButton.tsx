@@ -23,9 +23,9 @@ import { Icon } from "gui/Components/Icon/Icon";
 import { MobileState } from "model/entities/MobileState/MobileState";
 import { SearchLayoutState } from "model/entities/MobileState/MobileLayoutState";
 
-export const SearchButton: React.FC<{
+export const SearchButton: React.FC<React.PropsWithChildren<{
   mobileState: MobileState
-}> = (props) => {
+}>> = (props) => {
   return (
     <div
       className={S.root}

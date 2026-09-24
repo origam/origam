@@ -35,7 +35,7 @@ import { onFieldChange } from "model/actions-ui/DataView/TableView/onFieldChange
 import { MobileDateTimeEditor } from "gui/connections/MobileComponents/Form/MobileDateTimeEditor";
 import { onFieldBlur } from "model/actions-ui/DataView/TableView/onFieldBlur";
 
-export const MobileFormViewEditor: React.FC<{
+export const MobileFormViewEditor: React.FC<React.PropsWithChildren<{
   value?: any;
   textualValue?: any;
   isRichText: boolean;
@@ -43,7 +43,7 @@ export const MobileFormViewEditor: React.FC<{
   xmlNode: any;
   onTextOverflowChanged?: (tooltip: string | null | undefined) => void;
   backgroundColor?: string;
-}> = (props) => {
+}>> = (props) => {
 
   const mobileState = useContext(MobXProviderContext).application.mobileState as MobileState;
   const rowId = getSelectedRowId(props.property);

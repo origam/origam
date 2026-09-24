@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { action, computed, flow, observable } from "mobx";
+import { action, computed, flow, observable, makeObservable } from "mobx";
 import { getDefaultCsDateFormatDataFromCookie } from "utils/cookies";
 import DateCompleter from "gui/Components/ScreenElements/Editors/DateCompleter";
 import moment, { Moment } from "moment";
@@ -38,6 +38,7 @@ export class DateEditorModel {
     private onEditorBlur?: (event: any) => Promise<void>,
     private onChangeByCalendar?: (event: any, isoDay: string) => void
   ) {
+    makeObservable(this);
   }
 
   @action.bound

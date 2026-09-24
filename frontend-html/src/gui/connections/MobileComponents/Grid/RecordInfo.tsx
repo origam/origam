@@ -22,9 +22,9 @@ import S from "gui/connections/MobileComponents/Grid/RecordInfo.module.scss";
 import { SidebarRecordInfo } from "gui/Components/SidebarInfoSection/SidebarRecordInfo";
 import { IRecordInfo } from "model/entities/types/IRecordInfo";
 
-export const RecordInfo: React.FC<{
+export const RecordInfo: React.FC<React.PropsWithChildren<{
   recordInfo: IRecordInfo
-}> = (props) => {
+}>> = (props) => {
   return (
     <div className={S.root}>
         {props.recordInfo.info.length > 0 && (

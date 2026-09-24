@@ -20,10 +20,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import React from "react";
 import S from "gui/connections/MobileComponents/Grid/InputClearButton.module.scss";
 
-export const InputClearButton: React.FC<{
+export const InputClearButton: React.FC<React.PropsWithChildren<{
   visible: boolean;
   onClick: (event: any) => void;
-}> = (props) => {
+}>> = (props) => {
 
   if(!props.visible){
     return null;

@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { ILookup } from "model/entities/types/ILookup";
 import { IProperty } from "model/entities/types/IProperty";
-import { CancellablePromise } from "mobx/lib/api/flow";
+import { CancellablePromise } from "utils/CancellablePromise";
 import React, { useContext, useState } from "react";
 import { MobXProviderContext } from "mobx-react";
 import {
@@ -39,7 +39,9 @@ import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGrou
 import { DropdownEditorSetup } from "modules/Editors/DropdownEditor/DropdownEditorSetup";
 import { TagInputEditor } from "gui/Components/ScreenElements/Editors/TagInputEditor";
 import S from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSettingsLookup.module.scss";
-import { action, computed, observable } from "mobx";
+import { action, computed, observable,
+  makeObservable
+} from "mobx";
 
 export function TagLookupFilterEditor(props: {
   lookup: ILookup;
@@ -163,6 +165,7 @@ export class FilterDropDownApi implements IDropdownEditorApi {
 
 export class FilterEditorData implements IDropdownEditorData {
   constructor(private onChange: (selectedItems: Array<any>) => void) {
+    makeObservable(this);
   }
 
   setValue(value: string | string[] | null) {

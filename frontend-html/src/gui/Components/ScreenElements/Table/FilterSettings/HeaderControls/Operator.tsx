@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import React from "react";
+import React, { JSX } from "react";
 import { T } from "utils/translation";
 
 export class Operator {

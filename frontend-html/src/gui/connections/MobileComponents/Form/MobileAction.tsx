@@ -26,11 +26,11 @@ import { T } from "utils/translation";
 import { MobileState } from "model/entities/MobileState/MobileState";
 import { ActionList } from "gui/connections/MobileComponents/Form/ActionList";
 
-export const MobileAction: React.FC<{
+export const MobileAction: React.FC<React.PropsWithChildren<{
   action: IAction,
   mobileState: MobileState,
   onClick?: ()=> Promise<void>
-}> = (props) => {
+}>> = (props) => {
 
   async function onClick(event: React.MouseEvent<HTMLButtonElement>) {
     if (props.onClick){
@@ -49,11 +49,11 @@ export const MobileAction: React.FC<{
   );
 }
 
-export const MobileActionLink: React.FC<{
+export const MobileActionLink: React.FC<React.PropsWithChildren<{
   linkAction: IAction,
   actions: IAction[],
   mobileState: MobileState
-}> = (props) => {
+}>> = (props) => {
 
   function onClick(event: React.MouseEvent<HTMLButtonElement>) {
     props.mobileState.layoutState = new EditLayoutState(

@@ -73,7 +73,7 @@
       x:id="60fedd95-3830-4cf0-bf8f-080925c21206"
       asi:name="00070_PG_OrigamFeatureList_NewValues"
       scusa:platform="PgSql"
-      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+      scusa:service="DataService#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
       ausa:activityOrder="110"

@@ -23,13 +23,13 @@ import S from "gui/connections/MobileComponents/BottomToolBar/BottomButton.modul
 import { Icon } from "gui/Components/Icon/Icon";
 import cx from "classnames";
 
-export const BottomButton: React.FC<{
+export const BottomButton: React.FC<React.PropsWithChildren<{
   iconPath: string;
   caption: string;
   disabled?: boolean;
   onClick: () => void;
   className?: string;
-}> = (props) => {
+}>> = (props) => {
   return (
     <div className={cx(S.root, "bottomBarItem")}>
       <button

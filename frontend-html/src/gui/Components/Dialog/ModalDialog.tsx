@@ -23,7 +23,7 @@ import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 import { ModalWindow } from "gui/Components/Dialogs/ModalWindow";
 import { isPhoneLayoutActive } from "model/selectors/isPhoneLayoutActive";
 
-export const ModalDialog: React.FC<{
+export const ModalDialog: React.FC<React.PropsWithChildren<{
   title: React.ReactNode;
   titleButtons: React.ReactNode;
   titleIsWorking?: boolean;
@@ -37,7 +37,7 @@ export const ModalDialog: React.FC<{
   onKeyDown?: (event: any) => void;
   onWindowMove?: (top: number, left: number)=>void;
   mustRunFullScreenInMobile?: boolean;
-}> = (props) => {
+}>> = (props) => {
   const application = useContext(MobXProviderContext).application;
 
   const onModalKeyDown = (event: any) => {

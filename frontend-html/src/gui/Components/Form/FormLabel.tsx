@@ -21,11 +21,11 @@ import React from "react";
 import S from "gui/Components/Form/FormLabel.module.scss";
 import { FieldDimensions } from "gui/Components/Form/FieldDimensions";
 
-export const FormLabel: React.FC<{
+export const FormLabel: React.FC<React.PropsWithChildren<{
   title: string;
   fieldDimensions: FieldDimensions
   foregroundColor: string | undefined;
-}> = props => {
+}>> = props => {
 
   function getStyle() {
     const style = props.fieldDimensions.asStyle();

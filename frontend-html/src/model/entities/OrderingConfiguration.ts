@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { action, computed, flow, observable } from "mobx";
+import { action, computed, flow, observable, makeObservable } from "mobx";
 import {
   IOrderByColumnSetting,
   IOrderByDirection,
@@ -54,6 +54,7 @@ export class OrderingConfiguration implements IOrderingConfiguration {
   private defaultOrderings: IOrdering[];
 
   constructor(defaultOrderings: IOrdering[] | undefined) {
+    makeObservable(this);
     this.defaultOrderings = defaultOrderings ?? [];
     this.userOrderings = this.defaultOrderings;
   }

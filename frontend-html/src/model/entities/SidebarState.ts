@@ -18,7 +18,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { IInfoSubsection } from "gui/connections/types";
-import { action, observable } from "mobx";
+import { action, observable,
+  makeObservable
+} from "mobx";
 import { onSidebarAuditSectionExpanded } from "model/actions-ui/RecordInfo/onSidebarAuditSectionExpanded";
 import { onSidebarInfoSectionCollapsed } from "model/actions-ui/RecordInfo/onSidebarInfoSectionCollapsed";
 import { onSidebarInfoSectionExpanded } from "model/actions-ui/RecordInfo/onSidebarInfoSectionExpanded";
@@ -33,6 +35,10 @@ export interface ISidebarState {
 }
 
 export class SidebarState implements ISidebarState{
+  constructor() {
+    makeObservable(this);
+  }
+
 
   @observable
   searchResultGroups: ISearchResultGroup[] = [];
@@ -86,6 +92,7 @@ export class MainMenuState implements IMainMenuState {
   private readonly folderStateKey = "folderState";
 
   constructor() {
+    makeObservable(this);
     this.folderStateMap = this.restoreFolderState();
   }
 
@@ -99,7 +106,7 @@ export class MainMenuState implements IMainMenuState {
   @observable
   private readonly folderStateMap: Map<string, boolean>;
 
-  refMap: Map<string, RefObject<HTMLElement>> = new Map();
+  refMap: Map<string, RefObject<HTMLElement | null>> = new Map();
 
   @observable
   private _highLightedItemId: string | undefined;

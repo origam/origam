@@ -22,7 +22,7 @@ import S from "./TabbedPanel.module.scss";
 import { observer } from "mobx-react";
 
 @observer
-export class TabBody extends React.Component<{ isActive: boolean }> {
+export class TabBody extends React.Component<React.PropsWithChildren<{ isActive: boolean }>> {
   render() {
     return (
       <div className={S.tabBody + (!this.props.isActive ? " hidden" : "")}>
@@ -33,11 +33,11 @@ export class TabBody extends React.Component<{ isActive: boolean }> {
 }
 
 @observer
-export class TabHandle extends React.Component<{
+export class TabHandle extends React.Component<React.PropsWithChildren<{
   isActive: boolean;
   label: string;
   onClick: (event: any) => void;
-}> {
+}>> {
   render() {
     return (
       <div
@@ -51,9 +51,9 @@ export class TabHandle extends React.Component<{
 }
 
 @observer
-export class TabbedPanel extends React.Component<{
+export class TabbedPanel extends React.Component<React.PropsWithChildren<{
   handles: React.ReactNode;
-}> {
+}>> {
   render() {
     return (
       <div className={S.tabbedPanel}>

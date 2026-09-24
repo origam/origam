@@ -19,9 +19,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import React from "react";
 
-export const DataViewHeaderDropDownItem: React.FC<{
+export const DataViewHeaderDropDownItem: React.FC<React.PropsWithChildren<{
   onClick?(event: any): void;
-}> = (props) => (
+}>> = (props) => (
   <div onClick={props.onClick}>
     {props.children}
   </div>

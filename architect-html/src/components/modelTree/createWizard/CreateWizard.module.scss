@@ -269,6 +269,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   margin-left: 4px;
 }
 
+.fieldError {
+  font-size: 11px;
+  color: var(--error1);
+  font-weight: 400;
+}
+
 .input,
 .select {
   height: 34px;
@@ -369,6 +375,111 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   gap: 12px;
 }
 
+.fieldList {
+  flex-grow: 1;
+  min-height: 0;
+  overflow-y: auto;
+  border: 1px solid var(--background4);
+  border-radius: 8px;
+  background: var(--background1);
+}
+
+.fieldOption {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 12px;
+  border-bottom: 1px solid var(--background3);
+  cursor: pointer;
+  font-size: 13px;
+  line-height: 1.2;
+  color: var(--background7);
+  transition:
+    background 120ms ease,
+    color 120ms ease;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background: var(--background2);
+    color: var(--background8);
+  }
+
+  &.fieldOptionSelected {
+    background: rgba(var(--brand-rgb), 0.06);
+    color: var(--background8);
+    font-weight: 500;
+
+    &:hover {
+      background: rgba(var(--brand-rgb), 0.1);
+    }
+  }
+
+  &.fieldOptionDisabled {
+    cursor: default;
+    opacity: 0.55;
+
+    &:hover {
+      background: none;
+      color: var(--background7);
+    }
+  }
+}
+
+.fieldOptionCheckbox {
+  width: 14px;
+  height: 14px;
+  min-width: 14px;
+  margin: 0;
+  padding: 0;
+  border-radius: 3px;
+  accent-color: var(--brand);
+  cursor: pointer;
+
+  &:disabled {
+    cursor: default;
+  }
+}
+
+.fieldOptionBadge {
+  margin-left: auto;
+  padding: 1px 8px;
+  border-radius: 10px;
+  background: var(--background3);
+  color: var(--background6);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+.fieldListEmpty {
+  padding: 16px 12px;
+  font-size: 13px;
+  color: var(--background6);
+}
+
+.group {
+  border: 1px solid var(--background4);
+  border-radius: 8px;
+  padding: 16px 16px 4px;
+  margin: 4px 0 16px;
+  min-inline-size: 0;
+  transition: opacity 160ms ease;
+}
+
+.groupTitle {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--background7);
+  padding: 0 6px;
+}
+
+.groupDisabled {
+  opacity: 0.5;
+}
+
 .preview {
   margin-top: 24px;
   padding: 16px;
@@ -422,11 +533,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   margin-bottom: 10px;
   padding-bottom: 8px;
   border-bottom: 1px solid var(--background3);
+
+  > div {
+    min-width: 0;
+  }
 }
 
 .reviewCardIcon {
   width: 28px;
   height: 28px;
+  flex-shrink: 0;
   border-radius: 6px;
   background: var(--background3);
   color: var(--brand);
@@ -441,6 +557,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   font-size: 14px;
   font-weight: 600;
   color: var(--background8);
+  overflow-wrap: anywhere;
 }
 
 .reviewKv {

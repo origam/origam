@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { TypeSymbol } from "dic/Container";
 import { MobXProviderContext, Observer } from "mobx-react";
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, JSX, useContext, useEffect, useState } from "react";
 import { DropdownEditorApi } from "./DropdownEditorApi";
 import { DropdownEditorBehavior} from "./DropdownEditorBehavior";
 import { DropdownEditorBody } from "./DropdownEditorBody";

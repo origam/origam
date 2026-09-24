@@ -20,7 +20,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { IWorkbench, IWorkbenchData } from "./types/IWorkbench";
 import { IMainMenuEnvelope } from "./types/IMainMenu";
 import { IWorkbenchLifecycle } from "./types/IWorkbenchLifecycle";
-import { action, computed, observable } from "mobx";
+import { action, computed, observable,
+  makeObservable
+} from "mobx";
 import { ISearcher } from "./types/ISearcher";
 import { IOpenedScreens } from "./types/IOpenedScreens";
 import { IWorkQueues } from "./types/IWorkQueues";
@@ -38,6 +40,7 @@ export class Workbench implements IWorkbench {
   $type_IWorkbench: 1 = 1;
 
   constructor(data: IWorkbenchData) {
+    makeObservable(this);
     Object.assign(this, data);
     this.workbenchLifecycle.parent = this;
     this.searcher.parent = this;

@@ -28,3 +28,6 @@ RuntimeModelConfiguration.json
 /docker/dev/.env
 /.devcontainer/.env
 /docker-compose.override.yml
+/architect-html/ai/chats
+/architect-html/ai/prompts
+/backend/Origam.AI.Agent.Tests/benchmark-report.html

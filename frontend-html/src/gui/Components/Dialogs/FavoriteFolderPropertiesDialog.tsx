@@ -19,7 +19,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { observer } from "mobx-react";
 import React from "react";
-import { observable } from "mobx";
+import { observable,
+  makeObservable
+} from "mobx";
 import { T } from "utils/translation";
 import CS from "gui/Components/Dialogs/DialogsCommon.module.css";
 import S from "gui/Components/Dialogs/FavoriteFolderPropertiesDialog.module.scss";
@@ -27,13 +29,18 @@ import { ModalDialog } from "gui/Components/Dialog/ModalDialog";
 import { requestFocus } from "utils/focus";
 
 @observer
-export class FavoriteFolderPropertiesDialog extends React.Component<{
+export class FavoriteFolderPropertiesDialog extends React.Component<React.PropsWithChildren<{
   title: string;
   name?: string;
   isPinned?: boolean;
   onCancelClick: (event: any) => void;
   onOkClick: (name: string, isPinned: boolean) => void;
-}> {
+}>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
   @observable
   groupName: string = this.props.name ?? "";
 

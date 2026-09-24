@@ -582,6 +582,15 @@ namespace Origam.DA.Service {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} Could Not Finish.
+        /// </summary>
+        internal static string ModelCheckerCouldNotFinish {
+            get {
+                return ResourceManager.GetString("ModelCheckerCouldNotFinish", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No changes in dataset.
         /// </summary>
         internal static string NoChangesInDataSet {
@@ -695,6 +704,15 @@ namespace Origam.DA.Service {
         internal static string ProviderNotInitialized {
             get {
                 return ResourceManager.GetString("ProviderNotInitialized", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Index of references is being built. Please wait..
+        /// </summary>
+        internal static string ReferenceIndexNotReady {
+            get {
+                return ResourceManager.GetString("ReferenceIndexNotReady", resourceCulture);
             }
         }
         

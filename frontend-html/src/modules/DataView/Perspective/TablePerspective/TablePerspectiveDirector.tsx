@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import React from "react";
-import { action, flow } from "mobx";
+import { action, flow, makeObservable } from "mobx";
 import { IDataViewBodyUI, IDataViewToolbarUI } from "modules/DataView/DataViewUI";
 import { TypeSymbol } from "dic/Container";
 import { SectionViewSwitchers } from "modules/DataView/DataViewTypes";
@@ -42,6 +42,7 @@ export class TablePerspectiveDirector implements IIId {
     public tablePerspective = ITablePerspective(),
     public perspective = IPerspective()
   ) {
+    makeObservable(this);
   }
 
   @action.bound

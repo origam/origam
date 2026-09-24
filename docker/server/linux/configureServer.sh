@@ -53,7 +53,7 @@ if [[ -n ${gitPullOnStart} && ${gitPullOnStart} == true ]]; then
 			   if [ -f custom.js ]; then
 					cp custom.js /home/origam/server_bin/assets/identity/js/custom.js
 			   fi
-			   if [ -f reverse-proxy.conf ]; then
+			   if [[ "${SKIP_NGINX:-false}" = "false" && -f reverse-proxy.conf ]]; then
 					sudo cp reverse-proxy.conf /etc/nginx/sites-available/reverse-proxy.conf
 					sudo /etc/init.d/nginx restart
 			   fi
@@ -116,7 +116,7 @@ if [[ -n ${gitConfPullOnStart} && ${gitConfPullOnStart} == true ]]; then
 		   if [ -f custom.js ]; then
 			cp custom.js /home/origam/server_bin/assets/identity/js/custom.js
 		   fi
-		   if [ -f reverse-proxy.conf ]; then
+		   if [[ "${SKIP_NGINX:-false}" = "false" && -f reverse-proxy.conf ]]; then
 				sudo cp reverse-proxy.conf /etc/nginx/sites-available/reverse-proxy.conf
 				sudo /etc/init.d/nginx restart
 		   fi
@@ -170,5 +170,3 @@ export gitConfUrl
 export gitConfSshUrl
 export gitConfSshKey
 export gitConfSshDomain
-export OrigamSettings_DbUsername
-export OrigamSettings_DbPassword

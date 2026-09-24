@@ -21,13 +21,16 @@ import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import type { APIRequestContext } from '@playwright/test';
+import { activatePackage } from '@support/activatePackage';
 
-function findRepoRoot(): string {
+export function findRepoRoot(): string {
   let dir = process.cwd();
   while (!fs.existsSync(path.join(dir, 'model-tests'))) {
     const parent = path.dirname(dir);
     if (parent === dir) {
-      throw new Error('Could not locate the repository root (no model-tests directory above the current working directory).');
+      throw new Error(
+        'Could not locate the repository root (no model-tests directory above the current working directory).',
+      );
     }
     dir = parent;
   }
@@ -35,18 +38,72 @@ function findRepoRoot(): string {
 }
 
 const repoRoot = findRepoRoot();
-const MODEL_DIR = 'model-tests/model';
+export const MODEL_DIR = 'model-tests/model';
+const DEFAULT_PACKAGE = 'Root Menu';
 
-export function restoreModelFiles(): void {
-  execFileSync('git', ['checkout', '--', MODEL_DIR], { cwd: repoRoot, stdio: 'pipe' });
-  execFileSync('git', ['clean', '-fd', MODEL_DIR], { cwd: repoRoot, stdio: 'pipe' });
+export const modelDirectory = path.join(repoRoot, MODEL_DIR);
+
+export function readModelFile(relativePath: string): string {
+  return fs.readFileSync(path.join(repoRoot, MODEL_DIR, relativePath), 'utf8');
 }
 
-export async function resetBackend(request: APIRequestContext): Promise<void> {
-  restoreModelFiles();
-
-  const response = await request.post('/Test/Reset');
-  if (!response.ok()) {
-    throw new Error(`POST /Test/Reset failed: ${response.status()} ${await response.text()}`);
+function runGit(args: string[]): void {
+  const deadline = Date.now() + 30_000;
+  for (;;) {
+    try {
+      execFileSync('git', args, { cwd: repoRoot, stdio: 'pipe' });
+      return;
+    } catch (error) {
+      const message = String((error as { stderr?: Buffer }).stderr ?? (error as Error).message);
+      if (!message.includes('index.lock') || Date.now() > deadline) {
+        throw new Error(`git ${args.join(' ')} failed: ${message}`);
+      }
+      Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 250);
+    }
   }
+}
+
+export function restoreModelFiles(): void {
+  runGit(['checkout', '--', MODEL_DIR]);
+  runGit(['clean', '-fd', MODEL_DIR]);
+}
+
+async function postOrThrow(request: APIRequestContext, url: string): Promise<void> {
+  const response = await request.post(url);
+  if (!response.ok()) {
+    throw new Error(`POST ${url} failed: ${response.status()} ${await response.text()}`);
+  }
+}
+
+// Restoring the model files is bracketed by BeginReset/EndReset so the server
+// stops reacting to file changes while git rewrites model-tests/model, and
+// discards the events the restore produced instead of processing them a second
+// later, in the middle of the test that follows.
+export async function resetBackend(request: APIRequestContext): Promise<void> {
+  await postOrThrow(request, '/Test/BeginReset');
+  try {
+    restoreModelFiles();
+  } catch (error) {
+    // Resume the queue, but report what git did rather than what EndReset said.
+    await request.post('/Test/EndReset').catch(() => {});
+    throw error;
+  }
+  await postOrThrow(request, '/Test/EndReset');
+
+  await activatePackage(request, DEFAULT_PACKAGE);
+}
+
+// Reloads without repairing files first, for tests that need the planted damage to reach the live model.
+export async function reloadBackend(
+  request: APIRequestContext,
+  packageName: string = DEFAULT_PACKAGE,
+): Promise<void> {
+  await postOrThrow(request, '/Test/BeginReset');
+  await postOrThrow(request, '/Test/EndReset');
+
+  await activatePackage(request, packageName);
+}
+
+export function modelFilePath(relativePath: string): string {
+  return path.join(repoRoot, MODEL_DIR, relativePath);
 }

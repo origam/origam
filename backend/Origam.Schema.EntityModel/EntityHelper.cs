@@ -652,6 +652,11 @@ public static class EntityHelper
         return CreateLanguageTranslationChildEntity(parentEntity, selectedFields, null);
     }
 
+    public static string LanguageTranslationChildEntityName(TableMappingItem parentEntity)
+    {
+        return $"{parentEntity.Name}_l10n";
+    }
+
     public static TableMappingItem CreateLanguageTranslationChildEntity(
         TableMappingItem parentEntity,
         ICollection selectedFields,
@@ -660,7 +665,11 @@ public static class EntityHelper
     {
         var schemaService = ServiceManager.Services.GetService<ISchemaService>();
         // create child entity (based on IOrigamEntity2)
-        var newEntity = CreateTable($"{parentEntity.Name}_l10n", parentEntity.Group, false);
+        var newEntity = CreateTable(
+            LanguageTranslationChildEntityName(parentEntity),
+            parentEntity.Group,
+            false
+        );
         var entityCaption = string.IsNullOrEmpty(parentEntity.Caption)
             ? parentEntity.Name
             : parentEntity.Caption;

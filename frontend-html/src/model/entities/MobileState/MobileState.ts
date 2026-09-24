@@ -16,7 +16,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-import { observable, reaction } from "mobx";
+import { observable, reaction, makeObservable } from "mobx";
 import { IWorkbench } from "model/entities/types/IWorkbench";
 import { getWorkbenchLifecycle } from "model/selectors/getWorkbenchLifecycle";
 import { IFormScreen } from "model/entities/types/IFormScreen";
@@ -29,6 +29,10 @@ import { ISidebarState } from "model/entities/SidebarState";
 import { getWorkbench } from "model/selectors/getWorkbench";
 
 export class MobileState {
+  constructor() {
+    makeObservable(this);
+  }
+
   _workbench: IWorkbench | undefined;
 
   @observable
@@ -99,6 +103,9 @@ export class MobileState {
 }
 
 export class MobileSidebarState implements IEditingState, ISidebarState {
+  constructor() {
+    makeObservable(this);
+  }
 
   public ctx: any;
 
@@ -121,7 +128,7 @@ export class MobileSidebarState implements IEditingState, ISidebarState {
   flipEditEnabled(): void {
     this.editingEnabled = !this.editingEnabled;
   }
-  
+
   @observable
   editingEnabled = false;
 }

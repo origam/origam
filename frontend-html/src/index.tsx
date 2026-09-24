@@ -19,11 +19,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 
 import axios from "axios";
-import { flow } from "mobx";
+import { configure, flow } from "mobx";
 import { getApi } from "model/selectors/getApi";
 import { ensureLogin, userManager } from "oauth";
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import { Root } from "Root";
 import "./index.scss";
 import { createApplication } from "./model/factories/createApplication";
@@ -51,6 +51,14 @@ import {
   isSearchShortcut,
   isSaveShortcut
 } from "utils/keyShortcuts";
+
+configure({ enforceActions: "never" });
+
+const rootElement = document.getElementById("root");
+if (!rootElement) {
+  throw new Error("Root element was not found.");
+}
+const root = createRoot(rootElement);
 
 if (import.meta.env.DEV) {
   axios.defaults.timeout = 3600000;
@@ -130,7 +138,7 @@ async function main() {
     const application = createApplication();
     await initLocaleCookie(application);
     await translationsInit(application);
-    ReactDOM.render(<RootError error={e}/>, document.getElementById("root"));
+    root.render(<RootError error={e}/>);
     return;
   }
   if (user) {
@@ -154,7 +162,7 @@ async function main() {
 
     await translationsInit(application);
 
-    ReactDOM.render(<Root application={application}/>, document.getElementById("root"));
+    root.render(<Root application={application}/>);
   }
 }
 

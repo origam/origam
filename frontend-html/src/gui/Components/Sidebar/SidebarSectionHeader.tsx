@@ -21,7 +21,7 @@ import React from "react";
 import cx from "classnames";
 import S from "gui/Components/Sidebar/SidebarSectionHeader.module.scss";
 
-export class SidebarSectionHeader extends React.Component<{
+export class SidebarSectionHeader extends React.Component<React.PropsWithChildren<{
   icon: React.ReactNode;
   label: React.ReactNode;
   isActive: boolean;
@@ -29,7 +29,7 @@ export class SidebarSectionHeader extends React.Component<{
   refDom?: any;
   onContextMenu?: (event: any) => void;
   id?: string;
-}> {
+}>> {
   render() {
     return (
       <a

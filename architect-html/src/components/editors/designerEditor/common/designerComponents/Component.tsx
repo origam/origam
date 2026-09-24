@@ -150,7 +150,9 @@ export class Component {
     this.id = args.id;
     this.data = args.data;
     this.properties = args.properties;
-    this._labelPosition = parseLabelPosition(this.get('CaptionPosition'));
+    this._labelPosition = this.getProperty('CaptionPosition')
+      ? parseLabelPosition(this.get('CaptionPosition'))
+      : LabelPosition.None;
     this.parent = args.parent;
     if (this.parent) {
       this.hideChildren = this.parent.hideChildren;
@@ -184,7 +186,7 @@ export class Component {
         };
       case LabelPosition.Right:
         return {
-          left: `${this.absoluteLeft + this.width}px`,
+          left: `${this.absoluteLeft + this.width + 10}px`,
           top: `${this.absoluteTop}px`,
           width: `${this.labelWidth}px`,
           height: `${this.height}px`,
@@ -228,6 +230,14 @@ export class Component {
 
   get canHaveChildren(): boolean {
     return false;
+  }
+
+  get hasBorder(): boolean {
+    return true;
+  }
+
+  get canResizeHeight(): boolean {
+    return this.get('Multiline') !== false;
   }
 
   update() {}

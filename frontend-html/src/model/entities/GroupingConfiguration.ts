@@ -17,11 +17,15 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { action, computed, observable } from "mobx";
+import { action, computed, observable, makeObservable } from "mobx";
 import { IGroupingConfiguration, IGroupingSettings } from "./types/IGroupingConfiguration";
 import { GroupingUnit } from "./types/GroupingUnit";
 
 export class GroupingConfiguration implements IGroupingConfiguration {
+  constructor() {
+    makeObservable(this);
+  }
+
   @observable groupingSettings: Map<string, IGroupingSettings> = new Map();
   onOffHandlers: (() => void)[] = [];
 

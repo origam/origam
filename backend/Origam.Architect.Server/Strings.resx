@@ -21,6 +21,63 @@
     <data name="CategoryDocumentation" xml:space="preserve">
         <value>Documentation</value>
     </data>
+    <data name="CopyOfName" xml:space="preserve">
+        <value>Copy of {0}</value>
+    </data>
+    <data name="CopyOfNameNumbered" xml:space="preserve">
+        <value>Copy of {0} ({1})</value>
+    </data>
+    <data name="Move_NoActivePackage" xml:space="preserve">
+        <value>No package is active. Select a package first.</value>
+    </data>
+    <data name="Move_SourceNotFound" xml:space="preserve">
+        <value>The item being moved no longer exists in the model.</value>
+    </data>
+    <data name="Move_TargetNotFound" xml:space="preserve">
+        <value>The drop target no longer exists in the model.</value>
+    </data>
+    <data name="Move_SourceNotMovable" xml:space="preserve">
+        <value>Only model items can be moved. Folders, categories and model groups cannot.</value>
+    </data>
+    <data name="Move_SourceNotPersisted" xml:space="preserve">
+        <value>'{0}' has not been saved yet. Save it before moving or copying it.</value>
+    </data>
+    <data name="Move_SourcePackageNotFound" xml:space="preserve">
+        <value>'{0}' cannot be moved, the package it belongs to is not loaded.</value>
+    </data>
+    <data name="Move_NotInActivePackage" xml:space="preserve">
+        <value>Only items from the active package can be moved. '{0}' belongs to package '{1}' and can only be copied.</value>
+    </data>
+    <data name="Move_TargetIsSource" xml:space="preserve">
+        <value>An item cannot be dropped onto itself.</value>
+    </data>
+    <data name="Move_TargetIsCurrentLocation" xml:space="preserve">
+        <value>'{0}' is already in '{1}'.</value>
+    </data>
+    <data name="Move_TargetIsDescendant" xml:space="preserve">
+        <value>'{0}' cannot be moved into '{1}', which is one of its own children.</value>
+    </data>
+    <data name="Move_TargetChainUnknown" xml:space="preserve">
+        <value>'{0}' cannot be moved to '{1}', the parent chain of the target is too deep or broken.</value>
+    </data>
+    <data name="Move_ProviderRequiresTopLevelItem" xml:space="preserve">
+        <value>Only top level items can be moved directly into '{0}'.</value>
+    </data>
+    <data name="Move_NotAllowed" xml:space="preserve">
+        <value>'{0}' cannot be moved to '{1}'.</value>
+    </data>
+    <data name="Move_DependenciesOutsideTargetPackage" xml:space="preserve">
+        <value>'{0}' cannot be moved to package '{1}' because it depends on items in packages the target package does not reference: {2}</value>
+    </data>
+    <data name="Move_UsagesCannotReachTargetPackage" xml:space="preserve">
+        <value>'{0}' cannot be moved to package '{1}' because items that use it would not be able to reach it: {2}</value>
+    </data>
+    <data name="Move_UsagesNotChecked" xml:space="preserve">
+        <value>'{0}' cannot be moved to package '{1}' because the model reference index is not available. Reload the model and try again.</value>
+    </data>
+    <data name="Move_SourceGroupNotFound" xml:space="preserve">
+        <value>'{0}' cannot be moved, the group it belongs to could not be loaded.</value>
+    </data>
     <data name="XsltValidationFailed" xml:space="preserve">
         <value>XSLT validation failed. See output for details.</value>
     </data>
@@ -60,6 +117,12 @@
     <data name="Wizard_EntityNotFound" xml:space="preserve">
         <value>Entity {0} not found</value>
     </data>
+    <data name="Wizard_DataStructureEntityUsedAsEntity" xml:space="preserve">
+        <value>{0} is a data structure entity, not an entity. Use the entity it points to: {1}.</value>
+    </data>
+    <data name="Wizard_NotAnEntity" xml:space="preserve">
+        <value>{0} is a {1}, not an entity. Pass the id of an entity.</value>
+    </data>
     <data name="Wizard_ScreenNameRequired" xml:space="preserve">
         <value>Screen name is required.</value>
     </data>
@@ -71,6 +134,9 @@
     </data>
     <data name="Wizard_FieldNotFoundOnEntity" xml:space="preserve">
         <value>Field {0} not found on entity.</value>
+    </data>
+    <data name="Wizard_FieldCannotGenerateControl" xml:space="preserve">
+        <value>Field "{0}" cannot be placed on a screen automatically. Its data type has no default control, or it is a foreign key without a default lookup.</value>
     </data>
     <data name="Wizard_DataStructureNotFound" xml:space="preserve">
         <value>DataStructure {0} not found</value>
@@ -101,5 +167,137 @@
     </data>
     <data name="Wizard_ListFilterNotFound" xml:space="preserve">
         <value>List filter not found on entity.</value>
+    </data>
+    <data name="NewItemTypeNotFound" xml:space="preserve">
+        <value>'{0}' is not an item type that can be created here. Available types: {1}</value>
+    </data>
+    <data name="PropertyEnumValueNotValid" xml:space="preserve">
+        <value>'{0}' is not a valid value for property {1}. Allowed values: {2}</value>
+    </data>
+    <data name="PropertyReferenceTypeNotValid" xml:space="preserve">
+        <value>Property {0} takes a reference to a {1}, but the id you passed belongs to a {2}. Find or create a {1} and pass its id instead.</value>
+    </data>
+    <data name="SchemaItemNotFound" xml:space="preserve">
+        <value>This item is not in the model (id {0}). It was most likely discarded because it did not pass validation and was never saved.</value>
+    </data>
+    <data name="PropertyReferenceValueNotValid" xml:space="preserve">
+        <value>'{0}' is not a valid value for property {1}. This property is a reference and takes the id (GUID) of an existing {2}, not its name. Look the item up and pass the id from the response.</value>
+    </data>
+    <data name="Wizard_DataStructureNameRequired" xml:space="preserve">
+        <value>Data structure name is required.</value>
+    </data>
+    <data name="Wizard_ScreenSectionNotFound" xml:space="preserve">
+        <value>Screen section {0} not found</value>
+    </data>
+    <data name="Wizard_WorkflowNotFound" xml:space="preserve">
+        <value>Workflow {0} not found</value>
+    </data>
+    <data name="Wizard_TableEntityNotFound" xml:space="preserve">
+        <value>Database Entity (TableMappingItem) {0} not found</value>
+    </data>
+    <data name="Wizard_ScreenSectionNameRequired" xml:space="preserve">
+        <value>Screen Section name is required.</value>
+    </data>
+    <data name="Wizard_ScreenSectionAlreadyExists" xml:space="preserve">
+        <value>A Screen Section named "{0}" already exists.</value>
+    </data>
+    <data name="Wizard_RoleItemNotFound" xml:space="preserve">
+        <value>Item {0} not found</value>
+    </data>
+    <data name="Wizard_RoleNotSpecific" xml:space="preserve">
+        <value>Create Role is only available for menu items with a specific role (not "*").</value>
+    </data>
+    <data name="Wizard_NoCurrentDeploymentVersion" xml:space="preserve">
+        <value>There is no current deployment version. Create a deployment version and make it current first.</value>
+    </data>
+    <data name="SectionEditor_RadioButtonValueConstantMissing" xml:space="preserve">
+        <value>Radio button "{0}" is bound to a field but has no Value Constant. Select a Value Constant in its properties.</value>
+    </data>
+    <data name="SectionEditor_WrapperHasNoBoundWidgets" xml:space="preserve">
+        <value>Multi Column Adapter Field Wrapper "{0}" contains no widget bound to a field. Drop at least one field inside it.</value>
+    </data>
+  <data name="SectionEditor_DropdownLookupMissing" xml:space="preserve">
+    <value>Widget "{0}" is bound to a field but has no Lookup. Select a Lookup in its properties.</value>
+  </data>
+  <data name="SectionEditor_ColorPickerFieldNotInteger" xml:space="preserve">
+    <value>Widget "{0}" is bound to field "{1}" which is not an Integer. A color editor requires an Integer field.</value>
+  </data>
+  <data name="SectionEditor_TagInputFieldNotArray" xml:space="preserve">
+    <value>Widget "{0}" is bound to field "{1}" whose data type is {2}. Tag Input and Checklist can only be bound to an array field, which is a field with data type Array, an Array Relation and an Array Value Field. Bind the widget to an array field, or use a Combo Box to edit a single value.</value>
+  </data>
+  <data name="SectionEditor_FieldBoundTwice" xml:space="preserve">
+    <value>Field "{0}" is bound by more than one widget: {1}. Only one widget can be bound to a field.</value>
+  </data>
+  <data name="SectionEditor_UnknownWidgetType" xml:space="preserve">
+    <value>Widget type "{0}" cannot be placed on a screen section. Use one of: {1}</value>
+  </data>
+  <data name="SectionEditor_FieldNotFound" xml:space="preserve">
+    <value>Field "{0}" does not exist on entity "{1}". Available fields: {2}</value>
+  </data>
+  <data name="SectionEditor_NoDataSource" xml:space="preserve">
+    <value>The screen section has no entity, so a widget cannot be bound to a field. Set the section's entity first.</value>
+  </data>
+  <data name="DesignerEditor_ParentControlNotFound" xml:space="preserve">
+    <value>Parent control {0} was not found.</value>
+  </data>
+  <data name="SectionEditor_FieldMissingInDataStructure" xml:space="preserve">
+    <value>Field "{0}" is not part of data structure "{1}" used by the screens {2}, so those screens cannot open. Add it with POST /Tab/CreateNode: nodeId = {3} (the data structure entity), newTypeName 'Field', changes Name = "{0}" and Field = {4}, persist true; or clear ExcludeFromAllFields on the entity field.</value>
+  </data>
+  <data name="SectionEditor_ArrayRelationMissingInDataStructure" xml:space="preserve">
+    <value>Array field "{0}" needs its relation "{1}" in data structure "{2}" used by the screens {3}, or those screens cannot open. Add it with POST /Tab/CreateNode: nodeId = {4} (the data structure entity), newTypeName 'Entity', changes Entity = {5} and AllFields = true, persist true.</value>
+  </data>
+  <data name="ControlAdapter_PropertyNotFound" xml:space="preserve">
+    <value>Property "{0}" does not exist on widget "{1}". Available properties: {2}</value>
+  </data>
+    <data name="Group_DeleteOutsideActivePackage" xml:space="preserve">
+        <value>Only folders from the active package can be deleted.</value>
+    </data>
+    <data name="Group_NameDuplicate" xml:space="preserve">
+        <value>A folder with this name already exists.</value>
+    </data>
+    <data name="Group_NameEmpty" xml:space="preserve">
+        <value>Folder name cannot be empty.</value>
+    </data>
+    <data name="Group_NameInvalidChars" xml:space="preserve">
+        <value>Folder name contains invalid characters.</value>
+    </data>
+    <data name="Group_NameReserved" xml:space="preserve">
+        <value>Folder name is reserved or not allowed.</value>
+    </data>
+    <data name="Group_NoActivePackage" xml:space="preserve">
+        <value>No package is active. Select a package first.</value>
+    </data>
+    <data name="Group_NotFound" xml:space="preserve">
+        <value>Folder not found.</value>
+    </data>
+    <data name="Group_RenameOutsideActivePackage" xml:space="preserve">
+        <value>Only folders from the active package can be renamed.</value>
+    </data>
+    <data name="Wizard_LookupAlreadyExists" xml:space="preserve">
+        <value>A Lookup named "{0}" already exists.</value>
+    </data>
+    <data name="ModelCheck_AlreadyRunning" xml:space="preserve">
+        <value>The model validation is already running.</value>
+    </data>
+    <data name="ModelCheck_Failed" xml:space="preserve">
+        <value>The model validation could not be completed: {0}</value>
+    </data>
+    <data name="ModelCheck_NoActivePackage" xml:space="preserve">
+        <value>Load a package before running the model validation.</value>
+    </data>
+    <data name="Property_ValueNotRead" xml:space="preserve">
+        <value>The value of {0} could not be read. {1}</value>
+    </data>
+    <data name="Property_ValueNotOffered" xml:space="preserve">
+        <value>"{1}" is not one of the values offered for {0}.</value>
+    </data>
+    <data name="Property_ConverterNotFound" xml:space="preserve">
+        <value>Type converter {0} of property {1} could not be found.</value>
+    </data>
+    <data name="Property_DataTypeWithoutValue" xml:space="preserve">
+        <value>A data constant of data type {0} cannot have a value.</value>
+    </data>
+    <data name="SectionEditor_EntityMissingInDataStructure" xml:space="preserve">
+        <value>Entity "{0}" of this screen section is not part of data structure "{1}" used by the screens {2}, so those screens cannot open. Either point the screen section back at an entity of "{1}", or add "{0}" to "{1}" and set the DataMember of the section on those screens to it.</value>
     </data>
 </root>

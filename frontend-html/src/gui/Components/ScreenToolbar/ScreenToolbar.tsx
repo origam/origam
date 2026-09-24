@@ -21,7 +21,7 @@ import React from "react";
 import S from 'gui/Components/ScreenToolbar/ScreenToolbar.module.scss';
 
 
-export class ScreenToolbar extends React.Component {
+export class ScreenToolbar extends React.Component<React.PropsWithChildren<{}>> {
   render() {
     return <div className={S.root + " noPrint"}>{this.props.children}</div>;
   }

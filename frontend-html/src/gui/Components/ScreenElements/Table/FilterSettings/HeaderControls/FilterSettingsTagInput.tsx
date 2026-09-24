@@ -17,9 +17,9 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { observable, runInAction } from "mobx";
+import { observable, runInAction, makeObservable } from "mobx";
 import { observer } from "mobx-react";
-import { CancellablePromise } from "mobx/lib/api/flow";
+import { CancellablePromise } from "utils/CancellablePromise";
 import React from "react";
 import {
   FilterSettingsComboBox,
@@ -40,10 +40,10 @@ const OPERATORS = [
   Operator.isNotNull
 ];
 
-const OpCombo: React.FC<{
+const OpCombo: React.FC<React.PropsWithChildren<{
   setting: IFilterSetting
   id: string;
-}> = observer((props) => {
+}>> = observer((props) => {
   return (
     <FilterSettingsComboBox
       id={props.id}
@@ -76,14 +76,14 @@ export interface ITagEditorItem {
 }
 
 @observer
-class OpEditors extends React.Component<{
+class OpEditors extends React.Component<React.PropsWithChildren<{
   setting: IFilterSetting;
   getOptions: (searchTerm: string) => CancellablePromise<Array<any>>;
   lookup: ILookup;
   property: IProperty;
   autoFocus: boolean;
   id: string;
-}> {
+}>> {
 
   render() {
     const {setting} = this.props;
@@ -121,14 +121,14 @@ class OpEditors extends React.Component<{
 }
 
 @observer
-export class FilterSettingsTagInput extends React.Component<{
+export class FilterSettingsTagInput extends React.Component<React.PropsWithChildren<{
   getOptions: (searchTerm: string) => CancellablePromise<Array<any>>;
   lookup: ILookup;
   property: IProperty;
   setting: IFilterSetting;
   autoFocus: boolean;
   id: string;
-}> {
+}>> {
   static get defaultSettings() {
     return new TagInputFilterSetting(OPERATORS[0].type)
   }
@@ -190,6 +190,7 @@ export class TagInputFilterSetting implements IFilterSetting {
   }
 
   constructor(type: string, isComplete = false, val1?: string, val2?: any) {
+    makeObservable(this);
     this.type = type;
     this.isComplete = isComplete;
     if (val1 !== undefined && val1 !== null) {

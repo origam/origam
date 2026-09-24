@@ -21,15 +21,22 @@ import { observer } from "mobx-react";
 import React from "react";
 import { setAllSelectionStates } from "model/actions-tree/setAllSelectionStates";
 import S from "./SelectionCheckboxHeader.module.scss";
-import { action } from "mobx";
+import { action,
+  makeObservable
+} from "mobx";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
 import { isLazyLoading } from "model/selectors/isLazyLoading";
 
 @observer
-export class SelectionCheckBoxHeader extends React.Component<{
+export class SelectionCheckBoxHeader extends React.Component<React.PropsWithChildren<{
   width: number;
   dataView: any;
-}> {
+}>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
   @action.bound
   handleCheckAllClick(event: any) {
     this.props.dataView.selectAllCheckboxChecked = 

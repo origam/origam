@@ -22,36 +22,45 @@ import { IWorkbench } from "model/entities/types/IWorkbench";
 import { MobXProviderContext, observer } from "mobx-react";
 import { getWorkQueuesItems } from "model/selectors/WorkQueues/getWorkQueuesItems";
 import { WorkQueuesItem } from "gui/Components/WorkQueues/WorkQueuesItem";
-import { computed } from "mobx";
+import { makeObservable } from "mobx";
 import { Icon } from "gui/Components/Icon/Icon";
 import { onWorkQueuesListItemClick } from "model/actions-ui/WorkQueues/onWorkQueuesListItemClick";
 import { getActiveScreen } from "model/selectors/getActiveScreen";
 
 @observer
-export class CWorkQueues extends React.Component {
+export class CWorkQueues extends React.Component<React.PropsWithChildren<{}>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
   static contextType = MobXProviderContext;
+
+  declare context: any;
 
   get workbench(): IWorkbench {
     return this.context.workbench;
   }
 
-  @computed get sortedItems() {
-    const workQueueItems = [...getWorkQueuesItems(this.workbench)];
+  getSortedItems(workbench: IWorkbench) {
+    const workQueueItems = [...getWorkQueuesItems(workbench)];
     workQueueItems.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
     return workQueueItems;
   }
 
   render() {
+    const workbench = this.workbench;
+    const sortedItems = this.getSortedItems(workbench);
     return (
       <>
-        {this.sortedItems.map(item => {
-          const activeScreen = getActiveScreen(this.workbench);
+        {sortedItems.map(item => {
+          const activeScreen = getActiveScreen(workbench);
           const activeMenuItemId = activeScreen ? activeScreen.menuItemId : undefined;
           return (
             <WorkQueuesItem
               key={item.id}
               isEmphasized={item.countTotal > 0}
-              isOpenedScreen={this.workbench.openedScreenIdSet.has(item.id)}
+              isOpenedScreen={workbench.openedScreenIdSet.has(item.id)}
               isActiveScreen={activeMenuItemId === item.id}
               icon={<Icon src="./icons/work-queue.svg" tooltip={item.name}/>}
               tooltip={item.name}
@@ -62,7 +71,7 @@ export class CWorkQueues extends React.Component {
                 </>
               }
               id={item.id}
-              onClick={event => onWorkQueuesListItemClick(this.workbench)(event, item)}
+              onClick={event => onWorkQueuesListItemClick(workbench)(event, item)}
             />
           );
         })}

@@ -31,8 +31,10 @@ import { IUrlOpenMethod } from "model/entities/types/IUrlOpenMethod";
 import { T } from "utils/translation";
 
 @observer
-export class CChatSection extends React.Component {
+export class CChatSection extends React.Component<React.PropsWithChildren<{}>> {
   static contextType = MobXProviderContext;
+
+  declare context: any;
 
   get workbench(): IWorkbench {
     return this.context.workbench;

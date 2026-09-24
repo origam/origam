@@ -26,7 +26,7 @@ import { IDesignerEditorState } from '@editors/designerEditor/common/IDesignerEd
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { observer } from 'mobx-react-lite';
 import React, { useContext, useEffect, useRef } from 'react';
-import { Item, Menu } from 'react-contexify';
+import { Item, Menu } from '@origam/react-contexify';
 
 export const DesignSurface: React.FC<{
   designerState: IDesignerEditorState;
@@ -158,8 +158,10 @@ export const DesignSurface: React.FC<{
               {component.data.identifier}
             </div>
             <div
-              className={`${S.designComponent} ${component.id} 
-            ${surfaceState.draggingComponentId === component.id ? S.dragging : ''} 
+              data-test-id="design-component"
+              className={`${S.designComponent} ${component.id}
+            ${component.hasBorder ? '' : S.borderless}
+            ${surfaceState.draggingComponentId === component.id ? S.dragging : ''}
             ${surfaceState.selectedComponent?.id === component.id ? S.selected : ''}`}
               style={{
                 left: `${component.absoluteLeft}px`,
@@ -191,16 +193,19 @@ export const DesignSurface: React.FC<{
                 component.designerRepresentation
               )}
               {surfaceState.selectedComponent?.id === component.id &&
-                [
-                  'top',
-                  'right',
-                  'bottom',
-                  'left',
-                  'topLeft',
-                  'topRight',
-                  'bottomRight',
-                  'bottomLeft',
-                ].map(handle => (
+                (component.canResizeHeight
+                  ? [
+                      'top',
+                      'right',
+                      'bottom',
+                      'left',
+                      'topLeft',
+                      'topRight',
+                      'bottomRight',
+                      'bottomLeft',
+                    ]
+                  : ['right', 'left']
+                ).map(handle => (
                   <div
                     key={component.id + handle}
                     className={`${S.resizeHandle} ${S[handle]}`}

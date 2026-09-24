@@ -18,9 +18,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { IAdditionalRowData, } from "./types/IAdditionalRecordData";
-import { observable } from "mobx";
+import { observable,
+  makeObservable
+} from "mobx";
 
 export class AdditionalRowData implements IAdditionalRowData {
+  constructor() {
+    makeObservable(this);
+  }
+
   $type_IAdditionalRowData: 1 = 1;
 
   @observable dirtyNew: boolean = false;

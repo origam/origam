@@ -25,8 +25,10 @@ import { ApplicationDialogStack } from "gui/Components/Dialog/DialogStack";
 import { IWorkbench } from "model/entities/types/IWorkbench";
 
 @observer
-export class CMain extends React.Component {
+export class CMain extends React.Component<React.PropsWithChildren<{}>> {
   static contextType = MobXProviderContext;
+
+  declare context: any;
 
   get application(): IApplication {
     return this.context.application;

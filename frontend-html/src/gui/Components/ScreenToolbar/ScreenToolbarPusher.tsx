@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import React from "react";
 import S from "gui/Components/ScreenToolbar/ScreenToolbarPusher.module.scss";
 
-export class ScreenToolbarPusher extends React.Component {
+export class ScreenToolbarPusher extends React.Component<React.PropsWithChildren<{}>> {
   render() {
     return <div className={S.root}/>;
   }

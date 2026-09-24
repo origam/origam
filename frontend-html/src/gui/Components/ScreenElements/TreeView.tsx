@@ -20,25 +20,35 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { observer } from "mobx-react";
 import React from "react";
 import { IDataView } from "../../../model/entities/types/IDataView";
-import { action, computed, observable } from "mobx";
+import { action, computed, observable,
+  makeObservable
+} from "mobx";
 import S from "./TreeView.module.scss";
 import cx from "classnames";
 import { isTreeDataTable, TreeDataTable } from "../../../model/entities/TreeDataTable";
 import { runGeneratorInFlowWithHandler } from "utils/runInFlowWithHandler";
 
 @observer
-export class TreeView extends React.Component<{ dataView: IDataView }> {
+export class TreeView extends React.Component<React.PropsWithChildren<{ dataView: IDataView }>> {
   constructor(props: Readonly<{ dataView: IDataView }>) {
     super(props);
+    makeObservable(this);
 
-    if (!isTreeDataTable(this.props.dataView.dataTable)) {
+    if (!isTreeDataTable(this.dataView.dataTable)) {
       throw new Error("TreeView requires TreeDataTable to work properly");
     }
   }
 
+  @observable.ref
+  dataView = this.props.dataView;
+
+  componentDidUpdate() {
+    this.dataView = this.props.dataView;
+  }
+
   @computed
   get nodes() {
-    const nodes = this.props.dataView.dataTable.rows.map(
+    const nodes = this.dataView.dataTable.rows.map(
       (row) => new Node({
         id: this.getRowId(row),
         label: this.getLabel(row),
@@ -57,15 +67,15 @@ export class TreeView extends React.Component<{ dataView: IDataView }> {
   }
 
   getRowId(row: any) {
-    return this.props.dataView.dataTable.getRowId(row);
+    return this.dataView.dataTable.getRowId(row);
   }
 
   getParentId(row: any) {
-    return (this.props.dataView.dataTable as TreeDataTable).getParentId(row);
+    return (this.dataView.dataTable as TreeDataTable).getParentId(row);
   }
 
   private getLabel(row: any[]) {
-    return (this.props.dataView.dataTable as TreeDataTable).getLabel(row);
+    return (this.dataView.dataTable as TreeDataTable).getLabel(row);
   }
 
   @observable
@@ -76,7 +86,7 @@ export class TreeView extends React.Component<{ dataView: IDataView }> {
     runGeneratorInFlowWithHandler({
       ctx: this.props.dataView,
       generator: function*(){
-        yield*self.props.dataView.setSelectedRowId  (node.id);
+        yield*self.dataView.setSelectedRowId  (node.id);
       }()
     })
   }
@@ -98,7 +108,7 @@ export class TreeView extends React.Component<{ dataView: IDataView }> {
             <Row
               key={node.id}
               node={node}
-              isSelected={node.id === this.props.dataView.selectedRowId}
+              isSelected={node.id === this.dataView.selectedRowId}
               onRowClick={() => this.onRowClick(node)}
               onCaretClick={() => this.onCaretClick(node)}
             />
@@ -121,6 +131,7 @@ class Node {
   }
 
   constructor(args: { id: string, label: string, row: any[], expansionGetter: (nodeId: string) => boolean }) {
+    makeObservable(this);
     this.id = args.id;
     this.label = args.label;
     this.row = args.row;
@@ -159,12 +170,17 @@ class Node {
   }
 }
 
-class Row extends React.Component<{
+class Row extends React.Component<React.PropsWithChildren<{
   node: Node;
   isSelected: boolean;
   onRowClick: () => void;
   onCaretClick: () => void;
-}> {
+}>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
   getIndent() {
     return this.props.node.level * 20 + "px";
   }

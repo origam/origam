@@ -63,12 +63,6 @@
     <data name="Sources_folder_already_exists" xml:space="preserve">
         <value>Sources folder {0} already exists and is not empty.</value>
     </data>
-    <data name="RepositoryZipPath_not_set" xml:space="preserve">
-        <value>RepositoryZipPath is not set.</value>
-    </data>
-    <data name="Model_root_directory_not_found" xml:space="preserve">
-        <value>Model root directory not found at: {0}</value>
-    </data>
     <data name="Source_directory_not_found" xml:space="preserve">
         <value>Source directory not found: {0}</value>
     </data>

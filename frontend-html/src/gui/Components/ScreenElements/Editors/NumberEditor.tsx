@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { action } from "mobx";
+import { action, makeObservable } from "mobx";
 import * as React from "react";
 import S from "./NumberEditor.module.scss";
 import cx from "classnames";
@@ -57,7 +57,12 @@ export interface NumberEditorProps
 }
 
 @observer
-export class NumberEditor extends React.Component<NumberEditorProps, any> {
+export class NumberEditor extends React.Component<React.PropsWithChildren<NumberEditorProps>, any> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
   model =  createNumberEditorModel({props: this.props, initValue: this.formatForDisplay(this.props.value)});
 
   formatForDisplay(value: string | number | null){

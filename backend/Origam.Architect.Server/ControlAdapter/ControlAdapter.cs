@@ -28,6 +28,7 @@ using Origam.Architect.Server.Controls;
 using Origam.Architect.Server.Models;
 using Origam.Architect.Server.ReturnModels;
 using Origam.Architect.Server.Services;
+using Origam.Architect.Server.Utils;
 using Origam.Extensions;
 using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
@@ -115,8 +116,9 @@ public class ControlAdapter(
                 }
                 if (propertyInfo.Name == nameof(MappingCondition))
                 {
-                    // Don't know how to implement it yet.
-                    return false;
+                    return controlSetItem.ParentItem is ControlSetItem parentItem
+                        && parentItem.ControlItem.Name
+                            == GuiHelper.CONTROL_NAME_MULTICOLUMNADAPTERFIELD;
                 }
 
                 return true;
@@ -132,34 +134,71 @@ public class ControlAdapter(
                 .FirstOrDefault(x => x.Name == propertyChange.Name);
             if (schemaItemProperty != null)
             {
-                object parsedValue = propertyParser.Parse(schemaItemProperty, propertyChange.Value);
-                schemaItemProperty.SetValue(this, parsedValue);
+                object parsedValue = propertyParser.Parse(
+                    schemaItemProperty,
+                    propertyChange.Value,
+                    instance: this
+                );
+                PropertyUtils.SetValue(schemaItemProperty, this, parsedValue);
                 changesMade = true;
                 continue;
             }
 
-            if (!propertyChange.ControlPropertyId.HasValue)
+            if (
+                !propertyChange.ControlPropertyId.HasValue
+                && IsSchemaItemProperty(propertyChange.Name)
+            )
             {
-                throw new Exception($"{nameof(propertyChange.ControlPropertyId)} cannot be null");
+                continue;
             }
 
+            Guid controlPropertyId =
+                propertyChange.ControlPropertyId ?? FindPropertyItem(propertyChange.Name).Id;
             PropertyBindingInfo bindingInfo = controlSetItem
                 .ChildItems.OfType<PropertyBindingInfo>()
-                .FirstOrDefault(item => item.ControlPropertyId == propertyChange.ControlPropertyId);
+                .FirstOrDefault(item => item.ControlPropertyId == controlPropertyId);
             if (bindingInfo != null)
             {
-                if (bindingInfo.Value != propertyChange.Value)
+                string newValue = string.IsNullOrEmpty(propertyChange.Value)
+                    ? null
+                    : propertyChange.Value;
+                string currentValue = bindingInfo.IsDeleted ? null : bindingInfo.Value;
+                if (currentValue != newValue)
                 {
                     changesMade = true;
                 }
 
-                bindingInfo.Value = propertyChange.Value;
+                bindingInfo.IsDeleted = newValue == null;
+                if (newValue == null)
+                {
+                    continue;
+                }
+
+                bindingInfo.Value = newValue;
+                bindingInfo.DesignDataSetPath = GetDesignDataSetPath(newValue);
+                continue;
+            }
+
+            if (
+                IsDefaultBindableProperty(propertyChange.Name)
+                && !string.IsNullOrEmpty(propertyChange.Value)
+            )
+            {
+                PropertyBindingInfo newBinding = controlSetItem.NewItem<PropertyBindingInfo>(
+                    schemaService.ActiveSchemaExtensionId,
+                    group: null
+                );
+                newBinding.ControlPropertyItem = FindPropertyItem(propertyChange.Name);
+                newBinding.Name = propertyChange.Name;
+                newBinding.Value = propertyChange.Value;
+                newBinding.DesignDataSetPath = GetDesignDataSetPath(propertyChange.Value);
+                changesMade = true;
                 continue;
             }
 
             PropertyValueItem valueItem = controlSetItem
                 .ChildItems.OfType<PropertyValueItem>()
-                .FirstOrDefault(item => item.ControlPropertyId == propertyChange.ControlPropertyId);
+                .FirstOrDefault(item => item.ControlPropertyId == controlPropertyId);
 
             if (valueItem == null)
             {
@@ -169,7 +208,7 @@ public class ControlAdapter(
                     schemaService.ActiveSchemaExtensionId,
                     group: null
                 );
-                valueItem.ControlPropertyId = propertyChange.ControlPropertyId.Value;
+                valueItem.ControlPropertyId = controlPropertyId;
                 valueItem.Name = propertyChange.Name;
             }
 
@@ -194,10 +233,27 @@ public class ControlAdapter(
             {
                 PropertyBindingInfo bindingInfo = controlSetItem
                     .ChildItems.OfType<PropertyBindingInfo>()
-                    .FirstOrDefault(item => item.ControlPropertyItem.Name == property.Name);
+                    .FirstOrDefault(item =>
+                        !item.IsDeleted && item.ControlPropertyItem.Name == property.Name
+                    );
                 if (bindingInfo != null)
                 {
-                    return propertyFactory.Create(property, bindingInfo, dataSourceDropDownValues);
+                    return propertyFactory.CreateBoundProperty(
+                        property,
+                        bindingInfo.ControlPropertyId,
+                        bindingInfo.Value,
+                        dataSourceDropDownValues
+                    );
+                }
+
+                if (IsDefaultBindableProperty(property.Name))
+                {
+                    return propertyFactory.CreateBoundProperty(
+                        property,
+                        FindPropertyItem(property.Name).Id,
+                        boundFieldName: null,
+                        dataSourceDropDownValues
+                    );
                 }
 
                 PropertyValueItem valueItem = controlSetItem
@@ -233,17 +289,50 @@ public class ControlAdapter(
         return properties.Concat(schemaItemProperties).ToList();
     }
 
+    private bool IsSchemaItemProperty(string propertyName)
+    {
+        return GetType()
+                .GetProperty(propertyName)
+                ?.GetCustomAttribute<SchemaItemPropertyAttribute>() != null;
+    }
+
+    private bool IsDefaultBindableProperty(string propertyName)
+    {
+        return Control is IAsControl asControl && asControl.DefaultBindableProperty == propertyName;
+    }
+
+    private string GetDesignDataSetPath(string fieldName)
+    {
+        IDataEntity dataEntity = (controlSetItem.RootItem as PanelControlSet)?.DataEntity;
+        return dataEntity == null ? null : dataEntity.Name + "." + fieldName;
+    }
+
     private ControlPropertyItem FindPropertyItem(string propertyName)
     {
-        var propertyItem = controlSetItem
+        string controlPropertyName =
+            Control
+                .GetType()
+                .GetProperties()
+                .FirstOrDefault(property =>
+                    property.GetAttribute<ReferencePropertyAttribute>()?.Name == propertyName
+                )
+                ?.Name
+            ?? propertyName;
+        List<ControlPropertyItem> propertyItems = controlSetItem
             .ControlItem.ChildItemsByType<ControlPropertyItem>(ControlPropertyItem.CategoryConst)
-            .FirstOrDefault(x => x.Name == propertyName);
-        if (propertyItem == null)
-        {
-            throw new Exception("ControlPropertyItem " + propertyName + " not found");
-        }
-
-        return propertyItem;
+            .ToList();
+        return propertyItems.FirstOrDefault(x => x.Name == controlPropertyName)
+            ?? throw new UserOrigamException(
+                string.Format(
+                    Strings.ControlAdapter_PropertyNotFound,
+                    propertyName,
+                    controlSetItem.ControlItem.Name,
+                    string.Join(
+                        separator: ", ",
+                        propertyItems.Select(item => item.Name).OrderBy(name => name)
+                    )
+                )
+            );
     }
 
     public void InitializeProperties(int top, int left, int? height = null, int? width = null)

@@ -1,0 +1,37 @@
+diff --git a/node_modules/react-beautiful-dnd/dist/react-beautiful-dnd.cjs.js b/node_modules/react-beautiful-dnd/dist/react-beautiful-dnd.cjs.js
+index 9470100..51031a0 100644
+--- a/node_modules/react-beautiful-dnd/dist/react-beautiful-dnd.cjs.js
++++ b/node_modules/react-beautiful-dnd/dist/react-beautiful-dnd.cjs.js
+@@ -8516,11 +8516,14 @@ var ConnectedDroppable = reactRedux.connect(makeMapStateToProps$1, mapDispatchTo
+   pure: true,
+   areStatePropsEqual: isStrictEqual
+ })(Droppable);
+-ConnectedDroppable.defaultProps = defaultProps;
++var DroppableWithDefaultProps = function DroppableWithDefaultProps(props) {
++  return React__default.createElement(ConnectedDroppable, _extends({}, defaultProps, props));
++};
++DroppableWithDefaultProps.displayName = 'Droppable';
+ 
+ exports.DragDropContext = DragDropContext;
+ exports.Draggable = PublicDraggable;
+-exports.Droppable = ConnectedDroppable;
++exports.Droppable = DroppableWithDefaultProps;
+ exports.resetServerContext = resetServerContext;
+ exports.useKeyboardSensor = useKeyboardSensor;
+ exports.useMouseSensor = useMouseSensor;
+diff --git a/node_modules/react-beautiful-dnd/dist/react-beautiful-dnd.esm.js b/node_modules/react-beautiful-dnd/dist/react-beautiful-dnd.esm.js
+index 8703ec1..3f4b9e6 100644
+--- a/node_modules/react-beautiful-dnd/dist/react-beautiful-dnd.esm.js
++++ b/node_modules/react-beautiful-dnd/dist/react-beautiful-dnd.esm.js
+@@ -8509,6 +8509,9 @@ var ConnectedDroppable = connect(makeMapStateToProps$1, mapDispatchToProps$1, nu
+   pure: true,
+   areStatePropsEqual: isStrictEqual
+ })(Droppable);
+-ConnectedDroppable.defaultProps = defaultProps;
++var DroppableWithDefaultProps = function DroppableWithDefaultProps(props) {
++  return React.createElement(ConnectedDroppable, _extends({}, defaultProps, props));
++};
++DroppableWithDefaultProps.displayName = 'Droppable';
+ 
+-export { DragDropContext, PublicDraggable as Draggable, ConnectedDroppable as Droppable, resetServerContext, useKeyboardSensor, useMouseSensor, useTouchSensor };
++export { DragDropContext, PublicDraggable as Draggable, DroppableWithDefaultProps as Droppable, resetServerContext, useKeyboardSensor, useMouseSensor, useTouchSensor };

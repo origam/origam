@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import React from "react";
 import S from "./DataViewLoading.module.css";
 
-export class DataViewLoading extends React.Component {
+export class DataViewLoading extends React.Component<React.PropsWithChildren<{}>> {
   render() {
     return (
       <div className={S.container}>

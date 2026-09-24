@@ -24,7 +24,9 @@ import {
 } from "gui/Components/ScreenElements/Table/FilterSettings/FilterSettingsComboBox";
 
 import CS from "./FilterSettingsCommon.module.scss";
-import { action, observable, runInAction } from "mobx";
+import { action, observable, runInAction,
+  makeObservable
+} from "mobx";
 import { observer } from "mobx-react";
 import { EDITOR_DALEY_MS, FilterSetting } from "./FilterSetting";
 import { Operator } from "./Operator";
@@ -46,11 +48,11 @@ const OPERATORS =
     Operator.isNotNull
   ];
 
-const OpCombo: React.FC<{
+const OpCombo: React.FC<React.PropsWithChildren<{
   setting: any;
   onChange: () => void;
   id: string;
-}> = observer((props) => {
+}>> = observer((props) => {
   return (
     <FilterSettingsComboBox
       id={props.id}
@@ -73,7 +75,7 @@ const OpCombo: React.FC<{
 });
 
 @observer
-class OpEditors extends React.Component<{
+class OpEditors extends React.Component<React.PropsWithChildren<{
   setting?: any;
   onBlur?: (event: any) => void;
   allowDecimalSeparator: boolean;
@@ -83,7 +85,7 @@ class OpEditors extends React.Component<{
   onCurrentValue2Changed: ((value2: any) => void);
   autoFocus: boolean;
   id: string;
-}> {
+}>> {
 
   inputRef = React.createRef<HTMLInputElement>();
 
@@ -176,13 +178,18 @@ class OpEditors extends React.Component<{
 }
 
 @observer
-export class FilterSettingsNumber extends React.Component<{
+export class FilterSettingsNumber extends React.Component<React.PropsWithChildren<{
   setting?: any;
   allowDecimalSeparator: boolean;
   autoFocus: boolean;
   onChange: ()=>void;
   id: string;
-}> {
+}>> {
+  constructor(props: any, context?: any) {
+    super(props, context);
+    makeObservable(this);
+  }
+
 
   static get defaultSettings() {
     return new FilterSetting(OPERATORS[0].type)

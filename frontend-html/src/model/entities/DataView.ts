@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { action, computed, observable, reaction } from "mobx";
+import { action, computed, observable, reaction, makeObservable } from "mobx";
 import { getParentRow } from "model/selectors/DataView/getParentRow";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import { getDataSourceByEntity } from "model/selectors/DataSources/getDataSourceByEntity";
@@ -108,6 +108,7 @@ export class DataView implements IDataView {
   @observable aggregationData: IAggregation[] = [];
 
   constructor(data: IDataViewData) {
+    makeObservable(this);
     Object.assign(this, data);
     this.properties.forEach((o) => (o.parent = this));
     this.actions.forEach((o) => (o.parent = this));

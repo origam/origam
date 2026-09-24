@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 import { IWorkbench } from "model/entities/types/IWorkbench";
-import { action, computed, observable } from "mobx";
+import { action, computed, observable, makeObservable } from "mobx";
 import { IFormScreen } from "model/entities/types/IFormScreen";
 import { IBreadCrumbNode, RootBreadCrumbNode } from "gui/connections/MobileComponents/Navigation/BreadCrumbs";
 import { IDataView } from "model/entities/types/IDataView";
@@ -27,6 +27,9 @@ import { getActiveScreen } from "model/selectors/getActiveScreen";
 const detailId = "Detail";
 
 export class BreadCrumbsState {
+  constructor() {
+    makeObservable(this);
+  }
 
   workbench: IWorkbench | undefined;
 

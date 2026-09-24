@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { action, createAtom, IAtom, observable } from "mobx";
+import { action, createAtom, IAtom, observable, makeObservable } from "mobx";
 import _ from "lodash";
 import { LookupCacheIndividual } from "./LookupCacheIndividual";
 import { ILookupIndividualResultListenerArgs, LookupLoaderIndividual, } from "./LookupLoaderIndividual";
@@ -25,6 +25,7 @@ import { TypeSymbol } from "dic/Container";
 
 export class LookupResolver {
   constructor(private cache: LookupCacheIndividual, private loader: LookupLoaderIndividual) {
+    makeObservable(this);
   }
 
   @observable

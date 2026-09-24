@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { action, createAtom, observable } from "mobx";
+import { action, createAtom, observable, makeObservable } from "mobx";
 import { PubSub } from "./common";
 import { LookupApi } from "./LookupApi";
 import { Clock } from "./Clock";
@@ -29,6 +29,7 @@ export interface ILookupMultiResultListenerArgs {
 
 export class LookupLoaderMulti {
   constructor(private clock: Clock, private api: LookupApi) {
+    makeObservable(this);
     this.triggerLoadDeb = clock.debounce(this.triggerLoadImm, 667);
   }
 

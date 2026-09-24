@@ -21,14 +21,14 @@ import React from "react";
 import cx from "classnames";
 import S from "gui/Components/DataViewHeader/DataViewHeaderGroup.module.scss";
 
-export const DataViewHeaderGroup: React.FC<{
+export const DataViewHeaderGroup: React.FC<React.PropsWithChildren<{
   isHidden?: boolean;
   noShrink?: boolean;
   className?: string;
   noDivider?: boolean;
   domRef?: any;
   grovable?: boolean;
-}> = (props) => (
+}>> = (props) => (
   <div
     className={cx(S.root, props.className, {
       isHidden: props.isHidden,
