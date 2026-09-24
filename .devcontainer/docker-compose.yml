@@ -62,6 +62,11 @@ services:
       - ExternalDomain_SetOnStart=https://localhost:${FRONTEND_PORT:-5173}
       - OpenIddictConfig__AccessTokenIssuer=https://localhost:${FRONTEND_PORT:-5173}
       - EnableChat=${EnableChat:-false}
+      # @origam/react-contexify is a github: dep Yarn packs from a clone; the
+      # fork has no .gitattributes, so the pack differs per OS and yarn.lock
+      # carries the Windows checksum (what CI runs on). Drop this env when the
+      # fork is fixed or the dep moves to a registry (community.origam.com/t/4616).
+      - YARN_CHECKSUM_BEHAVIOR=ignore
       # Vite dev servers run in this container (vite-dev tasks). Proxy targets
       # point at the backends on localhost — same container.
       - VITE_PROXY_TARGET=http://localhost:8080

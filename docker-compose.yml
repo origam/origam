@@ -158,6 +158,9 @@ services:
       - VITE_ARCHITECT_PROXY_TARGET_HTTPS=http://architect:8081
       - VITE_ARCHITECT_PROXY_TARGET_HTTP=http://architect:8081
       - VITE_HOST=0.0.0.0
+      # Linux install vs the Windows-packed react-contexify checksum in
+      # yarn.lock (see the comment in .devcontainer/docker-compose.yml).
+      - YARN_CHECKSUM_BEHAVIOR=ignore
       # No auth → no Secure cookies; serve HTTP and avoid vite-plugin-mkcert's
       # update-ca-certificates dep (absent in node:24-slim).
       - VITE_DISABLE_HTTPS=true
