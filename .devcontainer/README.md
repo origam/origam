@@ -132,6 +132,40 @@ OrigamSettings__DefaultSchemaExtensionId=<your root package id>
 The `OrigamSettings__*` vars are optional. The model path must be inside the repo
 mount (`/workspaces/origam/...`).
 
+### A model in another checkout
+
+The container only mounts this repo, so a model outside it — e.g. a model in
+a sibling checkout — needs one extra bind. Create
+`.devcontainer/docker-compose.local.yml` (gitignored):
+
+```yaml
+services:
+  devcontainer:
+    volumes:
+      - ../../other-checkout:/workspaces/other-checkout
+```
+
+Add `"docker-compose.local.yml"` to `devcontainer.json`'s `dockerComposeFile`
+array, then **Dev Containers: Rebuild Container**. The file must exist before
+it's listed (the extension refuses to open otherwise), and don't commit the
+`devcontainer.json` edit — every checkout lacking the gitignored file would
+fail to open. (The array entry is needed because the extension passes `-f`
+explicitly, which disables compose's override auto-discovery.) Point `.env`
+at the model:
+
+```
+OrigamSettings__ModelSourceControlLocation=/workspaces/other-checkout/model
+OrigamSettings__DefaultSchemaExtensionId=<root package id>
+```
+
+The root package id is the `x:id` of the `<p:package>` element in your
+project's root package — the top-level package the model opens through, not
+necessarily one literally named `Root`.
+
+**Heads-up:** these builds upgrade older model files to the current
+meta-model **in place, on load**, silently. Branch the model checkout before
+opening it here.
+
 ## Debugging in your editor
 
 `devcontainer.json` declares `ms-dotnettools.csharp` (the official C#
