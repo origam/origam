@@ -7,5 +7,12 @@ services:
     volumes:
       - ./path/to/your/model:/home/origam/projectData/model
     environment:
-      # Must match your model's root package id.
+      # Must match your model's root package id: the x:id of the <p:package>
+      # element in the root (top-level) package's .origamPackage file.
+      - OrigamSettings__DefaultSchemaExtensionId=00000000-0000-0000-0000-000000000000
+  # Keep the architect profile (--profile architect) on the same model:
+  architect:
+    volumes:
+      - ./path/to/your/model:/home/origam/projectData/model
+    environment:
       - OrigamSettings__DefaultSchemaExtensionId=00000000-0000-0000-0000-000000000000

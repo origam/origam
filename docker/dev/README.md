@@ -59,6 +59,10 @@ docker compose --env-file docker/dev/.env up
 on top of the committed `docker-compose.yml`. Verify the merged config with
 `docker compose config`.
 
+The example also re-points the architect profile. Both backends upgrade older
+model files to the current meta-model in place on first load — branch the model
+checkout before pointing the stack at it.
+
 `MSSQL_SA_PASSWORD` (and `POSTGRES_PASSWORD` for the postgres stack) are required in
 `docker/dev/.env`; a model swap needs the override file above because it also
 changes the bind mount.
