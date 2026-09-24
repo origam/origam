@@ -65,6 +65,7 @@ COPY --chown=origam:origam server/server_bin server/_appsettings.template \
 server/_OrigamSettings.template \
 server/linux/configureServer.sh \
 server/linux/fill_origam_settings_config.sh \
+server/linux/stage_server_config.sh \
 server/linux/entrypoint.sh \
 shared/linux/bootstrap.sh \
 server/log4net.server.config \
@@ -84,5 +85,6 @@ RUN rm -rf logs \
 && mkdir logs \
 && chmod +x configureServer.sh \
 && chmod +x fill_origam_settings_config.sh \
+&& chmod +x stage_server_config.sh \
 && chmod +x entrypoint.sh
 ENTRYPOINT ["/bin/bash", "-c", "./entrypoint.sh"]

@@ -60,6 +60,7 @@ COPY --chown=origam:origam --from=build /out/scheduler /home/origam/scheduler_bi
 
 COPY --chown=origam:origam docker/server/linux/configureServer.sh \
      docker/server/linux/fill_origam_settings_config.sh \
+     docker/server/linux/stage_server_config.sh \
      docker/server/linux/entrypoint.sh \
      docker/shared/linux/bootstrap.sh \
      docker/server/log4net.server.config \
@@ -81,7 +82,7 @@ COPY --chown=origam:origam docker/server/linux/cleanUpEnvironment.sh \
      /home/origam/Setup/
 
 RUN cd /home/origam/server_bin && mkdir -p logs \
- && chmod +x configureServer.sh fill_origam_settings_config.sh entrypoint.sh \
+ && chmod +x configureServer.sh fill_origam_settings_config.sh stage_server_config.sh entrypoint.sh \
  && cd /home/origam/scheduler_bin && chmod +x configureScheduler.sh fill_origam_settings_config.sh \
  && cd /home/origam/Setup && chmod +x cleanUpEnvironment.sh cleanUpEnvironmentRoot.sh
 
