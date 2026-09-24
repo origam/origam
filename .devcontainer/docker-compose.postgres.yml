@@ -1,0 +1,37 @@
+# PostgreSQL for the devcontainer stack. Run with both files:
+#   docker compose -f .devcontainer/docker-compose.yml -f .devcontainer/docker-compose.postgres.yml up -d
+# Requires POSTGRES_PASSWORD in .devcontainer/.env (the database name mirrors
+# the mssql default so the staged OrigamSettings work unchanged).
+
+services:
+  database:
+    image: postgres:18
+    user: !reset null
+    volumes: !override
+      # 18+ images want the mount at /var/lib/postgresql (data in a subdirectory,
+      # so pg_upgrade can cross versions without mount-boundary issues).
+      - devcontainer-postgres-data:/var/lib/postgresql
+    healthcheck: !override
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-origam} -d ${POSTGRES_DB:-origam-dev}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    environment: !override
+      POSTGRES_USER: "${POSTGRES_USER:-origam}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:-}"
+      POSTGRES_DB: "${POSTGRES_DB:-origam-dev}"
+
+  # Postgres creates the database itself (POSTGRES_DB); the base db-init is an
+  # mssql sqlcmd call, so replace it with a no-op on the postgres image.
+  db-init:
+    image: postgres:18
+    entrypoint: ["/bin/true"]
+
+  devcontainer:
+    environment:
+      - DatabaseType=postgresql
+      - OrigamSettings__DataConnectionString=sslmode=disable;Application Name=Origam;Host=database;Port=5432;Username=${POSTGRES_USER:-origam};Password=${POSTGRES_PASSWORD:-};Database=${POSTGRES_DB:-origam-dev};Pooling=True;Search Path=${POSTGRES_DB:-origam-dev},public
+
+volumes:
+  devcontainer-postgres-data:
