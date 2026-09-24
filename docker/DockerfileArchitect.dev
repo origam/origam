@@ -1,6 +1,6 @@
 # ORIGAM Architect Server — development image for the HTML modeler backend.
 # The architect-html frontend runs separately via DockerfileVite.dev
-# (see docker-compose.architect.yml).
+# (both services are defined in docker-compose.yml under the `architect` profile).
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 

@@ -27,12 +27,14 @@ The DB password is required (no default is baked in). `up` reads it from
 
 ## Services
 
-| Service  | Image                      | Port  | Notes                                            |
-|----------|----------------------------|-------|--------------------------------------------------|
-| database | mcr.microsoft.com/mssql/server:2022-latest | 1433 | SQL Server; healthchecked for dependents         |
-| db-init  | (same image, one-shot)     | —     | Creates the `origam-dev` DB if absent; exits     |
-| server   | origam/server:dev (built)  | 8080  | .NET backend, built from `backend/`              |
-| frontend | origam/frontend:dev (built)| 5173  | Vite dev server for `frontend-html` (HMR)        |
+| Service           | Image                                       | Port  | Notes                                           |
+|-------------------|---------------------------------------------|-------|-------------------------------------------------|
+| database          | mcr.microsoft.com/mssql/server:2022-latest  | 1433  | SQL Server; healthchecked for dependents        |
+| db-init           | (same image, one-shot)                      | —     | Creates the `origam-dev` DB if absent; exits    |
+| server            | origam/server:dev (built)                   | 8080  | .NET backend, built from `backend/`             |
+| frontend          | origam/frontend:dev (built)                 | 5173  | Vite dev server for `frontend-html` (HMR)       |
+| architect         | origam/architect:dev (built)                | 8081  | Modeler API; opt-in (`--profile architect`)     |
+| architect-frontend| origam/architect-frontend:dev (built)       | 5174  | Vite dev server for `architect-html`; opt-in    |
 
 The server runs the published `Origam.Server.dll` (no nginx in dev). The Vite
 dev server proxies API/auth paths (`/internalApi`, `/connect`, `/Account`, …)
@@ -86,7 +88,25 @@ docker compose --env-file docker/dev/.env -f docker-compose.yml -f docker-compos
 The postgres file overrides the `database` service (and neutralizes `db-init`,
 which postgres doesn't need) and points the backend at it; no other changes
 needed. The model deploys onto a fresh Postgres DB on
-first boot.
+first boot. The postgres file also sets DatabaseType and the connection
+string for architect, so the profile runs on Postgres too.
+
+## HTML Architect (optional)
+
+The modeler (Origam.Architect.Server + a Vite dev server for
+`architect-html`) is off by default; start it with a profile:
+
+```bash
+docker compose --env-file docker/dev/.env --profile architect up -d
+# Architect UI:  http://localhost:5174
+# Architect API: http://localhost:8081
+```
+
+It builds from source like `server`: after C# changes, `docker compose build
+architect` then `docker compose --profile architect up -d` recreates the
+container. It shares
+the database and model with the runtime server, and waits for that server to
+report healthy; the architect does not deploy the schema itself.
 
 ## Useful Commands
 
@@ -94,6 +114,8 @@ first boot.
 docker compose logs -f server        # follow backend logs
 docker compose logs -f frontend      # follow Vite logs
 docker compose down                  # stop the stack
+# `down` does not stop the architect (profile service); use
+# `docker compose --profile architect down`
 docker compose down -v               # stop and WIPE the database volume
 docker compose exec server bash      # shell into the server container
 ```
