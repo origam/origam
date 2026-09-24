@@ -21,6 +21,7 @@ case "$TARGET" in
   server)
     BIN="/workspaces/origam/backend/Origam.Server/bin/Debug/net8.0"
     DLL="Origam.Server.dll"
+    export ASPNETCORE_ENVIRONMENT=Development
     export ASPNETCORE_URLS="http://+:8080"
     # Must match the browser-facing origin or login 401s (ID2088).
     export OpenIddictConfig__AccessTokenIssuer="${OpenIddictConfig__AccessTokenIssuer:-https://localhost:5173}"
