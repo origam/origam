@@ -14,5 +14,6 @@ CONFIG="$CONFIG" bash /workspaces/origam/.devcontainer/debug-build-server.sh
 BIN="Origam.Server/bin/${CONFIG%% *}/net8.0"
 
 cd "$BIN"
+export ASPNETCORE_ENVIRONMENT=Development
 export ASPNETCORE_URLS="http://+:8080"
 exec dotnet Origam.Server.dll

@@ -30,6 +30,13 @@ export ExternalDomain_SetOnStart="${ExternalDomain_SetOnStart:-https://localhost
 source ../docker/server/linux/stage_server_config.sh
 stage_server_config ../docker/server "$BIN"
 
+# Dev logging defaults + per-dev overrides: the default host auto-loads
+# appsettings.Development.json (run paths set ASPNETCORE_ENVIRONMENT=
+# Development). The shipped template caps Logging at Warning with a
+# Microsoft.* wildcard, which empties the console; this overlay restores
+# request logs. cp -n so a developer's edit in bin survives rebuilds.
+cp -n /workspaces/origam/.devcontainer/server-appsettings.Development.json "$BIN/appsettings.Development.json"
+
 cp ../docker/dev/log4net.config "$BIN/log4net.config"
 
 # PathToClientApp is hardcoded to /home/origam/server_bin/clients/origam in the

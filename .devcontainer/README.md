@@ -30,6 +30,17 @@ into `bin/` before launch:
 - **Debug Architect.Server** — architect backend on 8081. Note: the architect does
   **not** deploy schema on a fresh DB, so run the server once first to warm it.
 
+Server console logging runs at Information with request lines and single-line
+timestamps (the shipped template would keep it near-empty at Warning); the run
+paths set `ASPNETCORE_ENVIRONMENT=Development` to load it. The shared default is
+`.devcontainer/server-appsettings.Development.json`; it is staged into the
+server's bin as `appsettings.Development.json` with `cp -n`, and the bin copy
+is the one to edit for per-dev tweaks:
+`backend/Origam.Server/bin/Debug/net8.0/appsettings.Development.json`
+(it survives rebuilds; a deleted `bin/` resets it to the default). The same
+events also land in the console and rolling log through log4net, so each
+request appears twice, in two formats.
+
 Run the backends without debugging:
 
 ```bash
