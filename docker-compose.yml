@@ -16,7 +16,8 @@ name: origam-dev
 
 services:
   database:
-    image: mcr.microsoft.com/mssql/server:2019-latest
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    user: "0:0"
     environment:
       ACCEPT_EULA: "Y"
       MSSQL_SA_PASSWORD: "${MSSQL_SA_PASSWORD:-}"
@@ -25,8 +26,6 @@ services:
       - "${MSSQL_PORT:-1433}:1433"
     volumes:
       - origam-db-data:/var/opt/mssql
-      - ./docker/dev/initdb:/docker-entrypoint-initdb.d:ro
-    entrypoint: ["/bin/bash", "/docker-entrypoint-initdb.d/run-init.sh"]
     healthcheck:
       test:
         [
@@ -37,6 +36,23 @@ services:
       timeout: 5s
       retries: 10
       start_period: 60s
+
+  # One-shot: creates the origam-dev database the server connects to. The
+  # Origam server deploys the schema itself on first boot.
+  db-init:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    depends_on:
+      database:
+        condition: service_healthy
+    environment:
+      MSSQL_SA_PASSWORD: "${MSSQL_SA_PASSWORD:-}"
+    restart: "no"
+    entrypoint:
+      [
+        "/bin/bash",
+        "-c",
+        '/opt/mssql-tools18/bin/sqlcmd -S database -U sa -P "$$MSSQL_SA_PASSWORD" -C -b -Q "IF DB_ID(''origam-dev'') IS NULL CREATE DATABASE [origam-dev] ELSE PRINT ''origam-dev already exists''"',
+      ]
 
   # PostgreSQL database (opt-in). See docker-compose.postgres.yml.
 
@@ -66,6 +82,8 @@ services:
     depends_on:
       database:
         condition: service_healthy
+      db-init:
+        condition: service_completed_successfully
     healthcheck:
       test:
         [

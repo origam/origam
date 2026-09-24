@@ -12,9 +12,10 @@ needed here. The C# extension will warn about them on load — cosmetic, ignorab
 ## Open it
 
 VS Code / Cursor (Dev Containers extension) → **Dev Containers: Reopen in Container**.
-Compose brings up two services: `database` (mssql) and `devcontainer` (the editor
-attaches here; it carries the .NET SDK, netcoredbg, node/corepack, and hosts the
-Vite dev servers on demand).
+Compose brings up two long-running services: `database` (mssql) and `devcontainer`
+(the editor attaches here; it carries the .NET SDK, netcoredbg, node/corepack, and
+hosts the Vite dev servers on demand) — plus a one-shot `db-init` that creates
+the database and exits.
 
 All ports are published by compose (no editor port-forwarding): server 8080,
 architect 8081, frontends 5173/5174, DAP 47000 — each overridable in `.env`.

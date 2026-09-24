@@ -3,8 +3,8 @@
 Builds and runs the Origam backend from source alongside a database (SQL Server
 by default, PostgreSQL optional) and a Vite dev server for `frontend-html`.
 The compose file lives at the **repository root** (`docker-compose.yml`);
-this directory holds the supporting files (entrypoint, DB init scripts, env
-overrides, log4net config).
+this directory holds the supporting files (entrypoints, env overrides, log4net
+config).
 
 ## Quick Start
 
@@ -29,7 +29,8 @@ The DB password is required (no default is baked in). `up` reads it from
 
 | Service  | Image                      | Port  | Notes                                            |
 |----------|----------------------------|-------|--------------------------------------------------|
-| database | mcr.microsoft.com/mssql/server:2019-latest | 1433 | SQL Server; bootstraps `origam-dev` DB on first start |
+| database | mcr.microsoft.com/mssql/server:2022-latest | 1433 | SQL Server; healthchecked for dependents         |
+| db-init  | (same image, one-shot)     | —     | Creates the `origam-dev` DB if absent; exits     |
 | server   | origam/server:dev (built)  | 8080  | .NET backend, built from `backend/`              |
 | frontend | origam/frontend:dev (built)| 5173  | Vite dev server for `frontend-html` (HMR)        |
 
@@ -82,8 +83,9 @@ docker compose --env-file docker/dev/.env -f docker-compose.yml -f docker-compos
 # Postgres: localhost:5432  (origam — password in docker/dev/.env)
 ```
 
-The postgres file overrides the `database` service and points the backend at
-it; no other changes needed. The model deploys onto a fresh Postgres DB on
+The postgres file overrides the `database` service (and neutralizes `db-init`,
+which postgres doesn't need) and points the backend at it; no other changes
+needed. The model deploys onto a fresh Postgres DB on
 first boot.
 
 ## Useful Commands
@@ -98,7 +100,7 @@ docker compose exec server bash      # shell into the server container
 
 ## Troubleshooting
 
-- **`up` fails with "MSSQL_SA_PASSWORD is not set":** you ran `docker compose up` without the password. Copy `docker/dev/.env.example` to `docker/dev/.env` and start with `--env-file docker/dev/.env` (see Quick Start).
+- **`up` fails with a compose "dependency failed" error or the database never gets healthy:** you ran `docker compose up` without the password, so MSSQL can't start. Copy `docker/dev/.env.example` to `docker/dev/.env` and start with `--env-file docker/dev/.env` (see Quick Start).
 - **Port conflicts:** host ports are overridable in `docker/dev/.env` (`MSSQL_PORT`, `SERVER_PORT`, `FRONTEND_PORT`, `ARCHITECT_PORT`, `ARCHITECT_FRONTEND_PORT`); `FRONTEND_PORT` also retunes OIDC so login works on the new port.
 - **Model not loading:** check the mount (`docker compose exec server ls -la
   /home/origam/projectData/model`) and the server logs. A mismatched
