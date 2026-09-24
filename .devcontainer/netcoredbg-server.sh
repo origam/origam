@@ -3,7 +3,7 @@
 # a DAP bridge, an MCP agent) — the editor-agnostic alternative to vsdbg.
 # Build + stage first (the debugger launches the built DLL):
 #   bash .devcontainer/debug-build-architect.sh   # or debug-build-server.sh
-# Then attach to localhost:$PORT (forwarded by devcontainer.json). The launched
+# Then attach to localhost:$PORT (published by compose as "${DAP_PORT:-47000}:47000"). The launched
 # process inherits cwd + the env below unless the client overrides them.
 
 set -e
@@ -14,6 +14,7 @@ case "$TARGET" in
   architect)
     BIN="/workspaces/origam/backend/Origam.Architect.Server/bin/Debug Architect Server/net8.0"
     DLL="Origam.Architect.Server.dll"
+    export ASPNETCORE_ENVIRONMENT=Development
     export ASPNETCORE_URLS="http://+:8081"
     BUILD_HINT="bash .devcontainer/debug-build-architect.sh"
     ;;

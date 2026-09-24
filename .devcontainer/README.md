@@ -1,7 +1,8 @@
 # ORIGAM devcontainer (full-stack dev/debug on Linux)
 
 A sandboxed, editor-attached dev environment. One `docker compose up` brings up
-SQL Server + the dev container + **both** frontends (frontend-html, architect-html).
+SQL Server + the dev container — backends **and** all three Vite frontends run
+inside the dev container (started on demand), so the editor sees one machine.
 Reopen in VS Code/Cursor to debug the .NET backends with breakpoints.
 
 Builds the **net8.0 subset** of Origam (Server, Architect.Server, Scheduler). The
@@ -11,8 +12,12 @@ needed here. The C# extension will warn about them on load — cosmetic, ignorab
 ## Open it
 
 VS Code / Cursor (Dev Containers extension) → **Dev Containers: Reopen in Container**.
-Compose brings up: `database` (mssql), `devcontainer` (editor attaches here),
-`frontend` (5173), `architect-frontend` (5174).
+Compose brings up two services: `database` (mssql) and `devcontainer` (the editor
+attaches here; it carries the .NET SDK, netcoredbg, node/corepack, and hosts the
+Vite dev servers on demand).
+
+All ports are published by compose (no editor port-forwarding): server 8080,
+architect 8081, frontends 5173/5174, DAP 47000 — each overridable in `.env`.
 
 ## Debug the backends (F5)
 
@@ -30,19 +35,47 @@ Run the backends without debugging:
 ```bash
 .devcontainer/run-architect.sh         # architect, 8081
 .devcontainer/run-server.sh            # runtime server, 8080
+.devcontainer/run-scheduler.sh         # work-queue scheduler (no port)
 ```
 
 ## Use the frontends
 
-- `https://localhost:5173` — runtime app (login via the debugged server). Accept
-  Vite's self-signed cert.
-- `http://localhost:5174` — architect UI (no auth; HTTP).
+Vite does **not** auto-run — start what you need from VS Code (Terminal → Run
+Task) or a shell in the container:
 
-These ports are overridable via `FRONTEND_PORT`/`ARCHITECT_FRONTEND_PORT` in `.devcontainer/.env` (the runtime one also retunes OIDC).
+- task **serve-frontend** → `https://localhost:5173` — runtime app (login via the
+  debugged server; accept Vite's self-signed cert).
+- task **serve-architect-frontend** → `http://localhost:5174` — architect UI (no auth).
 
-Both proxy to `devcontainer:8080`/`8081` — i.e. to whatever backend you launched
+`FRONTEND_PORT`/`ARCHITECT_FRONTEND_PORT` in `.devcontainer/.env` remap the
+published host ports (the runtime one also retunes OIDC, so login keeps working).
+
+Both proxy to `localhost:8080`/`8081` — i.e. to whatever backend you launched
 from the editor. So: F5 the server, then load the frontend in a browser, hit
 breakpoints as you click.
+
+node_modules live in named volumes (Linux binaries, off the host tree), so the
+Vite tasks run without touching the host, and the editor gets TypeScript
+intellisense. `postCreateCommand` installs them on first container creation
+(yarn 4 via corepack, pinned by `packageManager` in each package.json).
+Install/upgrade packages inside the container: `cd frontend-html && yarn ...`.
+
+### Origam AI (architect)
+
+`backend/Origam.AI.Agent` is hosted by the architect server; see its README for
+the settings. Inside the container you follow the same flow: edit
+`Ai:ApiKey` in the architect bin's `appsettings.Development.json`
+(`backend/Origam.Architect.Server/bin/Debug Architect Server/net8.0/`) — it's
+staged from `.devcontainer/architect-appsettings.Development.json` with `cp -n`,
+so your key survives rebuilds.
+
+### Chat (optional)
+
+The Origam chat UI (`chat-html`) is served by the runtime server at `/chatrooms`
+in production. In the devcontainer it's off by default; `EnableChat=true` in
+`.env` makes the server build task build chat-html and stage it into
+`bin/clients/chat` (mirroring the published image). Open it from the app's user
+menu — it loads in the same browser origin, so login carries over.
 
 ## DB password / model
 
@@ -85,7 +118,8 @@ PORT=48000 .devcontainer/netcoredbg-server.sh server
 
 Build + stage configs first (the script launches the already-built DLL):
 `bash .devcontainer/debug-build-architect.sh` (architect) or `bash .devcontainer/debug-build-server.sh`
-(server). Then attach your DAP client to `localhost:47000` (forwarded to the host).
+(server). Then attach your DAP client to `localhost:47000` (published by
+compose as `${DAP_PORT:-47000}:47000`).
 
 The devcontainer spec has no `extends`, so the repo can only declare one C#
 extension — the table above is how non-VS-Code editors layer netcoredbg on top.
@@ -98,10 +132,26 @@ Two separate things, both kept intentionally:
   entrypoint, for running/evaluating/QA — no editor.
 - **This devcontainer**: source + PDBs, editor-attached, for changing code.
 
-They share Dockerfiles/templates but stage config differently. **If you change
-appsettings substitutions in one path, update the other** — e.g.
-`debug-build-server.sh` and `docker/server/linux/configureServer.sh` both do the
-`pathchatapp`/`chatinterval`/`ExternalDomain` sed substitutions; keep them in sync.
+They share Dockerfiles, templates, and the staging helper: `configureServer.sh`
+and `debug-build-server.sh` both source `docker/server/linux/stage_server_config.sh`,
+so the appsettings substitutions stay in sync. The architect additionally stages
+an `appsettings.Development.json` (see above).
+
+## Using Origam in downstream projects
+
+Products built on Origam pin a published runtime image in their own devcontainer
+(`FROM origam/server:<version>.<build>.linux`) and layer project-specific
+extensions on top. To try a newer Origam version there:
+
+1. Bump the `FROM` tag. Docker Hub has per-build tags (`2026.8.1.4368.linux`),
+   per-version aliases (`2026.8.1.linux`), rolling (`master-latest.linux`), and
+   alpha pre-releases (`2026.9.alpha.N.linux`).
+2. The image's `_OrigamSettings.template` sets `ExecuteUpgradeScriptsOnStart=true`,
+   so the first start against an older model database applies the upgrade
+   scripts — expect a longer first boot, and back the database up first.
+3. Rebuild the project's extension projects against the new source if APIs
+   changed, and check the release notes for plugin-facing breaks (e.g. the
+   frontend plugin changes in 2026.7).
 
 ## Not included
 

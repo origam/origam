@@ -1,4 +1,4 @@
-# Devcontainer for ORIGAM backend dev/debug on Linux (net8.0 subset only).
+# Devcontainer for ORIGAM full-stack dev/debug on Linux (net8.0 subset only).
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0
 
@@ -20,3 +20,14 @@ RUN ARCH=$(dpkg --print-architecture) \
  && curl -fsSL "https://github.com/Samsung/netcoredbg/releases/download/3.1.3-1062/netcoredbg-linux-${ARCH}.tar.gz" \
     | tar -xz -C /opt \
  && ln -s /opt/netcoredbg/netcoredbg /usr/local/bin/netcoredbg
+
+# Node 22 + corepack (yarn) so the Vite dev servers of all three frontends run
+# here on demand and the IDE gets TypeScript types from node_modules volumes.
+RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
+ && apt-get update \
+ && apt-get -y install --no-install-recommends nodejs jq ripgrep vim \
+ && rm -rf /var/lib/apt/lists/* \
+ && corepack enable
+# Corepack prompts before downloading the packageManager-pinned version; that
+# hangs non-interactive contexts (postCreateCommand, tasks), so silence it.
+ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0

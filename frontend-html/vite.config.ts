@@ -169,6 +169,10 @@ export default defineConfig(({ mode }) => {
 				target: proxyTarget,
 				secure: false
 			},
+			'/chatAssets':{
+				target: proxyTarget,
+				secure: false
+			},
 			'/api':{
 				target: proxyTarget,
 				secure: false

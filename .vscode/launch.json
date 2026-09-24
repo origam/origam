@@ -11,6 +11,7 @@
             "cwd": "${workspaceFolder}/backend/Origam.Architect.Server/bin/Debug Architect Server/net8.0",
             "stopAtEntry": false,
             "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development",
                 "ASPNETCORE_URLS": "http://+:8081"
             },
             "console": "internalConsole"

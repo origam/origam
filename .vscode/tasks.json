@@ -13,6 +13,44 @@
             "command": "bash .devcontainer/debug-build-server.sh",
             "problemMatcher": "$msCompile",
             "group": { "kind": "build", "isDefault": true }
+        },
+        {
+            "label": "serve-frontend",
+            "type": "shell",
+            "command": "yarn dev --host 0.0.0.0",
+            "options": {
+                "cwd": "${workspaceFolder}/frontend-html"
+            },
+            "isBackground": true,
+            "presentation": { "reveal": "silent", "panel": "dedicated" },
+            "problemMatcher": {
+                "owner": "vite",
+                "pattern": { "regexp": "\\b\\B" },
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "VITE v",
+                    "endsPattern": "ready in"
+                }
+            }
+        },
+        {
+            "label": "serve-architect-frontend",
+            "type": "shell",
+            "command": "yarn dev --host 0.0.0.0 --port 5174",
+            "options": {
+                "cwd": "${workspaceFolder}/architect-html"
+            },
+            "isBackground": true,
+            "presentation": { "reveal": "silent", "panel": "dedicated" },
+            "problemMatcher": {
+                "owner": "vite",
+                "pattern": { "regexp": "\\b\\B" },
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "VITE v",
+                    "endsPattern": "ready in"
+                }
+            }
         }
     ]
 }
