@@ -5,6 +5,7 @@
 services:
   database:
     image: postgres:16
+    user: !reset null
     entrypoint: !reset []
     ports: !override
       - "5432:5432"
@@ -20,6 +21,13 @@ services:
       POSTGRES_USER: "${POSTGRES_USER:-origam}"
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:-}"
       POSTGRES_DB: "${POSTGRES_DB:-origam}"
+
+  # Postgres creates the database itself (POSTGRES_DB); the base db-init is an
+  # mssql sqlcmd call, so replace it with a no-op on the postgres image.
+  db-init:
+    image: postgres:16
+    user: !reset null
+    entrypoint: ["/bin/true"]
 
   server:
     environment:
