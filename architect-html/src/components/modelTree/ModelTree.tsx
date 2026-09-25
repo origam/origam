@@ -833,7 +833,9 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
                     {item.caption}
                   </Item>
                 ))}
-                {node.unusedParameterNames.length > 0 && <Separator />}
+                {node.newTypeMenuItems.length > 0 && node.unusedParameterNames.length > 0 && (
+                  <Separator />
+                )}
                 {node.unusedParameterNames.map(name => (
                   <Submenu key={name} label={name} data-test-id={`tree-menu-new-param-${name}`}>
                     {node.parameterMenuItems(name).map(item => (

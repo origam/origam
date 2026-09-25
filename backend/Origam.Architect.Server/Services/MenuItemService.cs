@@ -57,11 +57,16 @@ public class MenuItemService(
             ? new NonpersistentSchemaItemNode { NodeText = nodeText, ParentNode = instance }
             : (ISchemaItemFactory)instance;
 
+        List<string> unusedNames = GetUnusedNames(factory, instance as ISchemaItem).ToList();
+        Type[] nameableTypes =
+            unusedNames.Count > 0
+                ? factory.NewItemTypes.Intersect(factory.NameableTypes).ToArray()
+                : [];
         List<MenuItemInfo> menuItems = factory
-            .NewItemTypes.Select(type => CreateMenuItemInfo(type, name: null))
+            .NewItemTypes.Where(type => !nameableTypes.Contains(type))
+            .Select(type => CreateMenuItemInfo(type, name: null))
             .ToList();
-        Type[] nameableTypes = factory.NewItemTypes.Intersect(factory.NameableTypes).ToArray();
-        foreach (string name in GetUnusedNames(factory, instance as ISchemaItem))
+        foreach (string name in unusedNames)
         {
             menuItems.AddRange(nameableTypes.Select(type => CreateMenuItemInfo(type, name)));
         }
