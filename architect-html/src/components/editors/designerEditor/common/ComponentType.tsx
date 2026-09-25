@@ -41,6 +41,9 @@ export enum ComponentType {
   MultiColumnAdapterFieldWrapper = 'Origam.Gui.Win.MultiColumnAdapterFieldWrapper',
   ImageBox = 'Origam.Gui.Win.ImageBox',
   RadioButton = 'Origam.Gui.Win.AsRadioButton',
+  Panel = 'System.Windows.Forms.Panel',
+  ScreenLevelPlugin = 'Origam.Gui.Win.ScreenLevelPlugin',
+  SectionLevelPlugin = 'Origam.Gui.Win.SectionLevelPlugin',
 }
 
 export function parseComponentType(value: string): ComponentType {

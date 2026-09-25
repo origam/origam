@@ -32,6 +32,8 @@ public class ScreenEditorData
     public IEnumerable<ToolBoxItem> Sections { get; set; }
     public IEnumerable<ToolBoxItem> Widgets { get; set; }
     public ApiControl RootControl { get; set; }
+    public List<string> DataMembers { get; set; }
+    public List<string> Warnings { get; set; }
 }
 
 public class ToolBoxItem

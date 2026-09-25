@@ -239,11 +239,6 @@ public class SectionWidgetFactory(
         }
     }
 
-    private static int IntValue(ControlSetItem item, string propertyName)
-    {
-        return FindValueItem(item, propertyName)?.IntValue ?? 0;
-    }
-
     private static string GetUniqueControlName(
         PanelControlSet screenSection,
         ControlSetItem newItem

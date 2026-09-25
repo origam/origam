@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import ActionPanel from '@/components/ActionPanel/ActionPanel';
 import SaveButtonHOC from '@/components/SaveButtonHOC/SaveButtonHOC';
 import { T } from '@/main';
+import { DesignerWarnings } from '@editors/designerEditor/common/DesignerWarnings';
 import { DesignSurface } from '@editors/designerEditor/common/DesignSurface';
 import S from '@editors/designerEditor/screenEditor/ScreenEditor.module.scss';
 import { ScreenEditorState } from '@editors/designerEditor/screenEditor/ScreenEditorState';
@@ -40,6 +41,7 @@ const ScreenEditor = ({ designerState }: { designerState: ScreenEditorState }) =
               designerState.screenToolbox.toolboxState.name,
             )}
             buttons={<SaveButtonHOC />}
+            body={<DesignerWarnings designerState={designerState} />}
           />
         </div>
         <div className={S.box}>

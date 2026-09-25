@@ -16,6 +16,7 @@
   "xsl_editor_tab5": "Settings",
   "save_button_label": "Save",
   "save_validation_errors_label": "Errors:",
+  "save_blocked_by_warnings": "Fix the warnings to save",
   "guid_button_label": "Generate GUID",
   "guid_button_copied_label": "Copied!",
   "guid_button_copy_prompt": "Copy GUID",
@@ -329,10 +330,12 @@
   "ai_chat_thread_default": "New chat",
   "ai_chat_new": "New chat",
   "ai_chat_delete": "Delete chat",
+  "ai_chat_delete_confirm": "Delete the chat \"{0}\"? It cannot be restored.",
+  "ai_chat_close_panel": "Close the AI panel",
   "ai_chat_attach": "Attach image",
   "ai_chat_remove_image": "Remove image",
   "ai_chat_attached_image": "Attached image",
-  "ai_chat_default_image_prompt": "What is in this image?",
+  "ai_chat_open_image": "Open the image",
   "ai_chat_stop": "Stop",
   "ai_chat_tokens": "Tokens used: {0}",
   "ai_chat_msg_tokens": "{0} tokens",
@@ -353,5 +356,8 @@
   "ai_settings_tools_reset": "Reset to defaults",
   "ai_settings_tools_unavailable": "Sections unavailable. Is the Architect server running with Swagger?",
   "ai_settings_tools_functions": "{0} functions",
-  "ai_settings_save": "Save"
+  "ai_settings_save": "Save",
+  "property_lookup_no_value": "(none)",
+  "screen_editor_add_tab": "Add Tab",
+  "screen_editor_remove_tab": "Remove Tab"
 }

@@ -28,16 +28,36 @@ namespace Origam.Architect.Server.Services.SectionEditor;
 
 public static class ScreenSectionValidator
 {
+    private static readonly HashSet<string> WidgetsRequiringField =
+    [
+        GuiHelper.CONTROL_NAME_TEXTBOX,
+        GuiHelper.CONTROL_NAME_COMBOBOX,
+        GuiHelper.CONTROL_NAME_CHECKBOX,
+        GuiHelper.CONTROL_NAME_DATEBOX,
+        GuiHelper.CONTROL_NAME_TAGINPUT,
+        GuiHelper.CONTROL_NAME_CHECKLIST,
+        GuiHelper.CONTROL_NAME_BLOBCONTROL,
+        GuiHelper.CONTROL_NAME_IMAGEBOX,
+        GuiHelper.CONTROL_NAME_COLORPICKER,
+        GuiHelper.CONTROL_NAME_RADIOBUTTON,
+    ];
+
     public static void ValidateForRuntime(PanelControlSet screenSection)
     {
         foreach (ControlSetItem item in GetLiveControls(screenSection))
         {
+            string controlName = item.ControlItem.Name;
             if (!IsBoundToField(item))
             {
+                if (WidgetsRequiringField.Contains(controlName))
+                {
+                    throw new UserOrigamException(
+                        string.Format(Strings.SectionEditor_WidgetFieldMissing, item.Name)
+                    );
+                }
                 continue;
             }
-            string controlName = item.ControlItem.Name;
-            if (controlName == "RadioButton")
+            if (controlName == GuiHelper.CONTROL_NAME_RADIOBUTTON)
             {
                 RequireGuidProperty(
                     item,
@@ -49,7 +69,12 @@ public static class ScreenSectionValidator
             {
                 RequireChildRenderedAsProperty(item);
             }
-            if (controlName is GuiHelper.CONTROL_NAME_COMBOBOX or "TagInput" or "Checklist")
+            if (
+                controlName
+                is GuiHelper.CONTROL_NAME_COMBOBOX
+                    or GuiHelper.CONTROL_NAME_TAGINPUT
+                    or GuiHelper.CONTROL_NAME_CHECKLIST
+            )
             {
                 RequireGuidProperty(
                     item,
@@ -57,11 +82,11 @@ public static class ScreenSectionValidator
                     Strings.SectionEditor_DropdownLookupMissing
                 );
             }
-            if (controlName is "TagInput" or "Checklist")
+            if (controlName is GuiHelper.CONTROL_NAME_TAGINPUT or GuiHelper.CONTROL_NAME_CHECKLIST)
             {
                 RequireArrayField(screenSection, item);
             }
-            if (controlName == "ColorPicker")
+            if (controlName == GuiHelper.CONTROL_NAME_COLORPICKER)
             {
                 RequireIntegerField(screenSection, item);
             }
@@ -131,7 +156,9 @@ public static class ScreenSectionValidator
     private static void ValidateFieldsBoundOnce(PanelControlSet screenSection)
     {
         var fieldBoundTwice = GetLiveControls(screenSection)
-            .Where(item => IsBoundToField(item) && item.ControlItem.Name != "RadioButton")
+            .Where(item =>
+                IsBoundToField(item) && item.ControlItem.Name != GuiHelper.CONTROL_NAME_RADIOBUTTON
+            )
             .GroupBy(BoundFieldName)
             .FirstOrDefault(group => group.Count() > 1);
         if (fieldBoundTwice == null)
@@ -150,7 +177,7 @@ public static class ScreenSectionValidator
     private static bool RendersAsProperty(ControlSetItem item)
     {
         return IsBoundToField(item)
-            && item.ControlItem.Name != "RadioButton"
+            && item.ControlItem.Name != GuiHelper.CONTROL_NAME_RADIOBUTTON
             && !(FindValueItem(item, propertyName: "HideOnForm")?.BoolValue ?? false);
     }
 }

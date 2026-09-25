@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import ActionPanel from '@/components/ActionPanel/ActionPanel';
 import SaveButtonHOC from '@/components/SaveButtonHOC/SaveButtonHOC';
 import { RootStoreContext, T } from '@/main';
+import { DesignerWarnings } from '@editors/designerEditor/common/DesignerWarnings';
 import { DesignSurface } from '@editors/designerEditor/common/DesignSurface';
 import S from '@editors/designerEditor/screenSectionEditor/ScreenSectionEditor.module.scss';
 import { ScreenSectionEditorState } from '@editors/designerEditor/screenSectionEditor/ScreenSectionEditorState';
@@ -56,6 +57,7 @@ export const ScreenSectionEditor = observer(
               designerState.sectionToolbox.toolboxState.name,
             )}
             buttons={<SaveButtonHOC />}
+            body={<DesignerWarnings designerState={designerState} />}
           />
         </div>
         <div className={S.box}>

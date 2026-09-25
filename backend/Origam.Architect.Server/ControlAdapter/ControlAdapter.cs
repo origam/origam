@@ -76,6 +76,11 @@ public class ControlAdapter(
     [SchemaItemProperty]
     public string SchemaItemId => controlSetItem.Id.ToString();
 
+    [ReadOnly(true)]
+    [Category("(ORIGAM)")]
+    [SchemaItemProperty]
+    public string Panel => controlSetItem.ControlItem.Name;
+
     [Category("Behavior")]
     [Description(
         "If set to true, client will attempt to send save request after each change, if there are no errors."
@@ -120,6 +125,10 @@ public class ControlAdapter(
                         && parentItem.ControlItem.Name
                             == GuiHelper.CONTROL_NAME_MULTICOLUMNADAPTERFIELD;
                 }
+                if (propertyInfo.Name == nameof(Panel))
+                {
+                    return controlSetItem.ControlItem.IsComplexType;
+                }
 
                 return true;
             });
@@ -139,8 +148,9 @@ public class ControlAdapter(
                     propertyChange.Value,
                     instance: this
                 );
+                object oldValue = schemaItemProperty.GetValue(this);
                 PropertyUtils.SetValue(schemaItemProperty, this, parsedValue);
-                changesMade = true;
+                changesMade |= !Equals(oldValue, schemaItemProperty.GetValue(this));
                 continue;
             }
 
@@ -286,7 +296,29 @@ public class ControlAdapter(
             });
         var schemaItemProperties = GetSchemaItemProperties()
             .Select(property => propertyFactory.Create(property, this));
-        return properties.Concat(schemaItemProperties).ToList();
+        return properties.Concat(GetPluginProperties()).Concat(schemaItemProperties).ToList();
+    }
+
+    private IEnumerable<EditorProperty> GetPluginProperties()
+    {
+        if (controlSetItem.ControlItem.Ancestors.Count == 0)
+        {
+            return [];
+        }
+
+        return controlSetItem
+            .ControlItem.ChildItemsByType<ControlPropertyItem>(ControlPropertyItem.CategoryConst)
+            .Where(propertyItem => Control.GetType().GetProperty(propertyItem.Name) == null)
+            .Select(propertyItem =>
+            {
+                PropertyValueItem valueItem = controlSetItem
+                    .ChildItems.OfType<PropertyValueItem>()
+                    .FirstOrDefault(item => item.ControlPropertyId == propertyItem.Id);
+                object defaultValue = propertyItem.SystemType.IsValueType
+                    ? Activator.CreateInstance(propertyItem.SystemType)
+                    : null;
+                return propertyFactory.Create(propertyItem, valueItem?.TypedValue ?? defaultValue);
+            });
     }
 
     private bool IsSchemaItemProperty(string propertyName)
@@ -349,57 +381,44 @@ public class ControlAdapter(
                 schemaService.ActiveSchemaExtensionId,
                 group: null
             );
-            object value = property.GetValue(Control);
-            ControlPropertyItem propertyItem = FindPropertyItem(property.Name);
-            propertyItem.Name = property.Name;
-            propertyValueItem.ControlPropertyItem = propertyItem;
+            propertyValueItem.ControlPropertyItem = FindPropertyItem(property.Name);
             propertyValueItem.Name = property.Name;
-            if (property.PropertyType == typeof(int))
+            propertyValueItem.Value = GetInitialValue(property, top, left, height, width);
+        }
+    }
+
+    private string GetInitialValue(
+        PropertyInfo property,
+        int top,
+        int left,
+        int? height,
+        int? width
+    )
+    {
+        if (property.PropertyType == typeof(int))
+        {
+            switch (property.Name)
             {
-                propertyItem.PropertyType = ControlPropertyValueType.Integer;
-                if (property.Name == "Top")
-                {
-                    propertyValueItem.Value = XmlConvert.ToString(top);
-                }
-                else if (property.Name == "Left")
-                {
-                    propertyValueItem.Value = XmlConvert.ToString(left);
-                }
-                else if (height.HasValue && property.Name == "Height")
-                {
-                    propertyValueItem.Value = XmlConvert.ToString(height.Value);
-                }
-                else if (width.HasValue && property.Name == "Width")
-                {
-                    propertyValueItem.Value = XmlConvert.ToString(width.Value);
-                }
-                else
-                {
-                    propertyValueItem.Value =
-                        value == null ? null : XmlConvert.ToString((int)value);
-                }
-            }
-            else if (property.PropertyType == typeof(bool))
-            {
-                propertyItem.PropertyType = ControlPropertyValueType.Boolean;
-                propertyValueItem.Value = value == null ? null : XmlConvert.ToString((bool)value);
-            }
-            else if (property.PropertyType == typeof(Guid))
-            {
-                propertyItem.PropertyType = ControlPropertyValueType.UniqueIdentifier;
-                propertyValueItem.Value = value == null ? null : XmlConvert.ToString((Guid)value);
-            }
-            else if (property.PropertyType.IsEnum)
-            {
-                propertyItem.PropertyType = ControlPropertyValueType.String;
-                propertyValueItem.Value = Convert.ToInt32(value).ToString();
-            }
-            else
-            {
-                propertyItem.PropertyType = ControlPropertyValueType.String;
-                propertyValueItem.Value = value?.ToString();
+                case "Top":
+                    return XmlConvert.ToString(top);
+                case "Left":
+                    return XmlConvert.ToString(left);
+                case "Height" when height.HasValue:
+                    return XmlConvert.ToString(height.Value);
+                case "Width" when width.HasValue:
+                    return XmlConvert.ToString(width.Value);
             }
         }
+
+        return property.GetValue(Control) switch
+        {
+            null => null,
+            int number => XmlConvert.ToString(number),
+            bool flag => XmlConvert.ToString(flag),
+            Guid id => XmlConvert.ToString(id),
+            Enum choice => Convert.ToInt32(choice).ToString(),
+            var other => other.ToString(),
+        };
     }
 }
 

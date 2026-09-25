@@ -56,7 +56,7 @@ test.describe('Screen Section drag and drop (real backend)', () => {
     await expect(designSurface.getByText('File Name')).toBeVisible({ timeout: 15_000 });
   });
 
-  test('drag a widget onto the design panel without selecting a field first', async ({ page }) => {
+  test('a widget dropped without a field is refused on save', async ({ page }) => {
     await openNewScreenSection(page);
 
     const toolbox = page.getByTestId('toolbox');
@@ -85,7 +85,9 @@ test.describe('Screen Section drag and drop (real backend)', () => {
       { timeout: 15_000 },
     );
     await page.getByTestId('save-button').click();
-    expect((await saveResponse).status()).toBe(200);
+    expect((await saveResponse).status()).toBe(420);
+    await expect(page.getByText('is not bound to a field')).toBeVisible();
+    await page.getByRole('button', { name: 'Ok', exact: true }).click();
 
     const bindingScan = scanPropertyBindings();
     expect(bindingScan.bindingsScanned).toBeGreaterThan(300);

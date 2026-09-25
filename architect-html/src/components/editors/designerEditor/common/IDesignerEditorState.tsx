@@ -23,6 +23,7 @@ import { DesignSurfaceState } from '@editors/designerEditor/common/DesignSurface
 
 export interface IDesignerEditorState extends ITabState {
   surface: DesignSurfaceState;
+  warnings: string[];
 
   delete(components: Component[]): any;
 

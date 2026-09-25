@@ -96,4 +96,9 @@ public static class ScreenSectionBindings
         return item.ChildItemsByType<PropertyValueItem>(PropertyValueItem.CategoryConst)
             .FirstOrDefault(value => value.ControlPropertyItem.Name == propertyName);
     }
+
+    public static int IntValue(ControlSetItem item, string propertyName)
+    {
+        return FindValueItem(item, propertyName)?.IntValue ?? 0;
+    }
 }

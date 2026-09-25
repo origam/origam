@@ -23,6 +23,7 @@ import { LabelPosition, parseLabelPosition } from '@editors/designerEditor/commo
 import { controlLayer } from '@editors/designerEditor/common/Layers';
 import { EditorProperty } from '@editors/gridEditor/EditorProperty';
 import { action, observable } from 'mobx';
+import { Observer } from 'mobx-react-lite';
 import { ReactElement } from 'react';
 
 export class Component {
@@ -31,7 +32,7 @@ export class Component {
   data: IComponentData;
   @observable accessor properties: EditorProperty[];
   @observable.ref private accessor _designerRepresentation: ReactElement | null = null;
-  accessor hideChildren = false;
+  @observable accessor hideChildren = false;
 
   get designerRepresentation(): ReactElement | null {
     if (this.parent && !this.parent.isActive) {
@@ -137,6 +138,10 @@ export class Component {
     return controlLayer;
   }
 
+  get isReadOnly(): boolean {
+    return this.get('ReadOnly') === true;
+  }
+
   get isActive(): boolean {
     return !this.hideChildren;
   }
@@ -223,13 +228,25 @@ export class Component {
   getDesignerRepresentation(): ReactElement | null {
     return (
       <div className={S.designSurfaceEditorContainer}>
-        <div className={S.designSurfaceInput}></div>
+        <Observer>
+          {() => (
+            <div
+              className={
+                this.isReadOnly ? `${S.designSurfaceInput} ${S.readOnly}` : S.designSurfaceInput
+              }
+            ></div>
+          )}
+        </Observer>
       </div>
     );
   }
 
   get canHaveChildren(): boolean {
     return false;
+  }
+
+  canAcceptChild(child?: Component): boolean {
+    return this.canHaveChildren && child !== this;
   }
 
   get hasBorder(): boolean {
@@ -241,4 +258,8 @@ export class Component {
   }
 
   update() {}
+
+  onChildrenChanged() {
+    this.update();
+  }
 }

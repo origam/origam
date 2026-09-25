@@ -26,7 +26,7 @@ namespace Origam.AI.Agent.Tests.Infrastructure.Architect;
 
 public sealed class SectionEditorProbe(HttpClient architect)
 {
-    public async Task<SectionWidget> ReadPersistedAsync(string sectionId)
+    public async Task<DesignerWidget> ReadPersistedAsync(string sectionId)
     {
         using var closeResponse = await architect.PostAsync(
             requestUri: "/Tab/CloseAll",
@@ -37,7 +37,7 @@ public sealed class SectionEditorProbe(HttpClient architect)
         return await ReadAsync(sectionId);
     }
 
-    public async Task<SectionWidget> ReadAsync(string sectionId)
+    public async Task<DesignerWidget> ReadAsync(string sectionId)
     {
         using var response = await architect.PostAsJsonAsync(
             requestUri: "/SectionEditor/Update",
@@ -48,41 +48,8 @@ public sealed class SectionEditorProbe(HttpClient architect)
 
         var body = await response.Content.ReadAsStringAsync(CancellationToken.None);
         using var document = JsonDocument.Parse(body);
-        return ReadWidget(document.RootElement.GetProperty("data").GetProperty("rootControl"));
-    }
-
-    private static SectionWidget ReadWidget(JsonElement control)
-    {
-        var properties = new Dictionary<string, string>(StringComparer.Ordinal);
-        foreach (var property in control.GetProperty("properties").EnumerateArray())
-        {
-            if (
-                property.TryGetProperty(propertyName: "name", out var name)
-                && name.GetString() is { } propertyName
-                && property.TryGetProperty(propertyName: "value", out var value)
-            )
-            {
-                properties[propertyName] =
-                    value.ValueKind == JsonValueKind.Null ? string.Empty : value.ToString();
-            }
-        }
-
-        var children = new List<SectionWidget>();
-        if (
-            control.TryGetProperty(propertyName: "children", out var childElements)
-            && childElements.ValueKind == JsonValueKind.Array
-        )
-        {
-            children.AddRange(childElements.EnumerateArray().Select(ReadWidget));
-        }
-
-        return new SectionWidget(
-            control.GetProperty("type").GetString() ?? string.Empty,
-            control.TryGetProperty(propertyName: "boundField", out var boundField)
-                ? boundField.GetString()
-                : null,
-            properties,
-            children
+        return DesignerWidget.FromJson(
+            document.RootElement.GetProperty("data").GetProperty("rootControl")
         );
     }
 }

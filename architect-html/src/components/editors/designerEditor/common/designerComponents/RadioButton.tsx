@@ -18,6 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Component } from '@editors/designerEditor/common/designerComponents/Component.tsx';
+import { Observer } from 'mobx-react-lite';
 import { ReactElement } from 'react';
 import S from '@editors/designerEditor/common/designerComponents/Components.module.scss';
 
@@ -28,12 +29,16 @@ export class RadioButton extends Component {
 
   getDesignerRepresentation(): ReactElement | null {
     return (
-      <div className={S.checkList}>
-        <div className={S.checklistItem}>
-          <input type="radio" className="checkbox undefined" />
-          <div>{this.properties.find(x => x.name === 'Text')?.value}</div>
-        </div>
-      </div>
+      <Observer>
+        {() => (
+          <div className={S.checkList}>
+            <div className={S.checklistItem}>
+              <input type="radio" className="checkbox undefined" disabled={this.isReadOnly} />
+              <div>{this.get('Text')}</div>
+            </div>
+          </div>
+        )}
+      </Observer>
     );
   }
 }

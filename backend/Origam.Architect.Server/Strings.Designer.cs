@@ -826,6 +826,15 @@ namespace Origam.Architect.Server {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Widget &quot;{0}&quot; is not bound to a field. Select a field for it in its properties or delete it..
+        /// </summary>
+        internal static string SectionEditor_WidgetFieldMissing {
+            get {
+                return ResourceManager.GetString("SectionEditor_WidgetFieldMissing", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Widget type &quot;{0}&quot; cannot be placed on a screen section. Use one of: {1}.
         /// </summary>
         internal static string SectionEditor_UnknownWidgetType {
@@ -894,6 +903,105 @@ namespace Origam.Architect.Server {
         internal static string Wizard_LookupAlreadyExists {
             get {
                 return ResourceManager.GetString("Wizard_LookupAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Found {1} screen widgets named &quot;{0}&quot;. Pass in controlName the name of a screen section, TabPage, or one of: {2}.
+        /// </summary>
+        internal static string ScreenEditor_WidgetNotFound {
+            get {
+                return ResourceManager.GetString("ScreenEditor_WidgetNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A &quot;{0}&quot; cannot be placed into &quot;{1}&quot; ({2}). Widgets go into the screen itself, a SplitPanel, a Panel or a TabPage; a TabPage goes into a TabControl..
+        /// </summary>
+        internal static string ScreenEditor_ParentCannotHoldWidget {
+            get {
+                return ResourceManager.GetString("ScreenEditor_ParentCannotHoldWidget", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SplitPanel &quot;{0}&quot; already has two children. Put the widget into another container, for example a second SplitPanel nested in this one..
+        /// </summary>
+        internal static string ScreenEditor_SplitPanelFull {
+            get {
+                return ResourceManager.GetString("ScreenEditor_SplitPanelFull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The client shows only the first widget placed directly on the screen, the others ({0}) stay hidden. Keep one SplitPanel or TabControl on the screen and move the rest into it with parentSchemaItemId..
+        /// </summary>
+        internal static string ScreenEditor_MoreRootWidgets {
+            get {
+                return ResourceManager.GetString("ScreenEditor_MoreRootWidgets", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DataMember &quot;{1}&quot; of &quot;{0}&quot; is not an entity of the screen&apos;s data structure, so the client cannot open the screen. Set DataMember to one of: {2}.
+        /// </summary>
+        internal static string ScreenEditor_DataMemberMissing {
+            get {
+                return ResourceManager.GetString("ScreenEditor_DataMemberMissing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &quot;{0}&quot; is a screen section of entity &quot;{1}&quot;, but its DataMember &quot;{2}&quot; is entity &quot;{3}&quot;, so the client cannot open the screen. Set DataMember to one of: {4}.
+        /// </summary>
+        internal static string ScreenEditor_DataMemberOfOtherEntity {
+            get {
+                return ResourceManager.GetString("ScreenEditor_DataMemberOfOtherEntity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &quot;{0}&quot; is a screen section of entity &quot;{1}&quot;, but the data structure &quot;{2}&quot; of the screen has no entity &quot;{1}&quot;: its DataMember &quot;{3}&quot; is entity &quot;{4}&quot;, so the client cannot open the screen. Pick a data source that holds &quot;{1}&quot;, or use a screen section of an entity that &quot;{2}&quot; holds..
+        /// </summary>
+        internal static string ScreenEditor_SectionEntityNotInDataStructure {
+            get {
+                return ResourceManager.GetString("ScreenEditor_SectionEntityNotInDataStructure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Screens that already use &quot;{0}&quot; take their data from: {1}...
+        /// </summary>
+        internal static string ScreenEditor_SectionDataSourceHint {
+            get {
+                return ResourceManager.GetString("ScreenEditor_SectionDataSourceHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SplitPanel &quot;{0}&quot; must hold exactly two widgets..
+        /// </summary>
+        internal static string ScreenEditor_SplitPanelNeedsTwo {
+            get {
+                return ResourceManager.GetString("ScreenEditor_SplitPanelNeedsTwo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The screen has no data structure and cannot be saved. Set it with ScreenEditor/Update and selectedDataSourceId first..
+        /// </summary>
+        internal static string ScreenEditor_NoDataSource {
+            get {
+                return ResourceManager.GetString("ScreenEditor_NoDataSource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AsTree &quot;{0}&quot; has no {1}. Set it to the name of a field of the tree&apos;s entity, otherwise the client cannot build the tree..
+        /// </summary>
+        internal static string ScreenEditor_TreeColumnMissing {
+            get {
+                return ResourceManager.GetString("ScreenEditor_TreeColumnMissing", resourceCulture);
             }
         }
         

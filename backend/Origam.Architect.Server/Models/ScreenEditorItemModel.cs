@@ -26,6 +26,7 @@ public class ScreenEditorItemModel
     public Guid EditorSchemaItemId { get; set; }
     public Guid ParentControlSetItemId { get; set; }
     public Guid ControlItemId { get; set; }
+    public string ControlName { get; set; }
     public int Top { get; set; }
     public int Left { get; set; }
 }

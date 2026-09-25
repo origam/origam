@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.Architect.Server.ControlAdapter;
 using Origam.Architect.Server.ReturnModels;
+using Origam.Architect.Server.Services.ScreenEditor;
 using Origam.Architect.Server.Services.SectionEditor;
 using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
@@ -89,6 +90,10 @@ public class ApiControlFactory(ControlAdapterFactory adapterFactory)
         else
         {
             apiControl.Name = controlSetItem.RootItem.Name;
+            if (controlSetItem.RootItem is FormControlSet screen)
+            {
+                ScreenDataMembers.AddDropDown(apiControl.Properties, screen);
+            }
         }
 
         return apiControl;

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:acs1="http://schemas.origam.com/Origam.Schema.GuiModel.AbstractControlSet/6.0.0"
+  xmlns:apvi="http://schemas.origam.com/Origam.Schema.GuiModel.AbstractPropertyValueItem/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:csi="http://schemas.origam.com/Origam.Schema.GuiModel.ControlSetItem/6.0.0"
+  xmlns:fcs="http://schemas.origam.com/Origam.Schema.GuiModel.FormControlSet/6.0.0"
+  xmlns:pvi1="http://schemas.origam.com/Origam.Schema.GuiModel.PropertyValueItem/6.0.0">
+  <fcs:FormControlSet
+    asi:abstract="false"
+    fcs:dataStructure="Users#Users/01194cd6-6cff-41bb-9ed8-d3642c909598"
+    x:id="17a659ef-9ae5-4263-8269-3f9b11c1a464"
+    asi:name="ScreenTreeDemo">
+    <csi:ControlSetItem
+      asi:abstract="false"
+      x:id="d126abf9-bc80-4a84-a0b4-7d34ddf05e80"
+      csi:isAlternative="false"
+      csi:level="100"
+      asi:name="NewComponent"
+      csi:requestSaveAfterChange="false"
+      csi:widget="AsForm#AsForm/ff32a695-c533-4262-87d6-e4cd4451e2c9">
+      <csi:ControlSetItem
+        asi:abstract="false"
+        x:id="43fb9e2b-5817-4b15-8b1d-7170349e50d6"
+        csi:isAlternative="false"
+        csi:level="100"
+        asi:name="AsTree"
+        csi:requestSaveAfterChange="false"
+        csi:widget="AsTree#AsTree/2b24863a-0f20-440b-bc6e-bf8fb4665665">
+        <pvi1:PropertyValueItem
+          asi:abstract="false"
+          x:id="5c4777ef-bf89-4d4a-86a5-f338c1969bee"
+          asi:name="Top"
+          apvi:propertyId="f25a8be1-f9a7-4eec-b9f1-3d25cd15c747"
+          pvi1:value="25" />
+        <pvi1:PropertyValueItem
+          asi:abstract="false"
+          x:id="7c5f3ead-2918-41f8-97b6-ed9400de52b1"
+          asi:name="Left"
+          apvi:propertyId="f30dce6f-7a3c-429a-b256-abdaf25bfaca"
+          pvi1:value="25" />
+        <pvi1:PropertyValueItem
+          asi:abstract="false"
+          x:id="84c7e770-b4e3-4522-808d-81119e107d2e"
+          asi:name="Width"
+          apvi:propertyId="ca2d9056-ef91-48f6-a79e-f9c523fcc84f"
+          pvi1:value="200" />
+        <pvi1:PropertyValueItem
+          asi:abstract="false"
+          x:id="cc690e27-2a20-48b4-9052-a30c66cc2d54"
+          asi:name="ParentIDColumn"
+          apvi:propertyId="145cf6d0-61a5-4dbd-846e-024423bff37b"
+          pvi1:value="ParentId" />
+        <pvi1:PropertyValueItem
+          asi:abstract="false"
+          x:id="e24b5886-410a-4260-8d1c-4aea7f001c1d"
+          asi:name="TabIndex"
+          apvi:propertyId="b72fae12-6b92-4ed4-a0c3-cae71c521c9e"
+          pvi1:value="0" />
+        <pvi1:PropertyValueItem
+          asi:abstract="false"
+          x:id="e252396b-29fe-48d8-9979-8ae74aafc0df"
+          asi:name="NameColumn"
+          apvi:propertyId="e914897b-29e4-4609-81ce-bebc6300c674"
+          pvi1:value="Name" />
+        <pvi1:PropertyValueItem
+          asi:abstract="false"
+          x:id="e41c7438-e302-42cd-a26b-1e158b28f848"
+          asi:name="DataMember"
+          apvi:propertyId="da588742-d374-4ffd-ba44-306abbc11e14"
+          pvi1:value="BusinessPartner" />
+        <pvi1:PropertyValueItem
+          asi:abstract="false"
+          x:id="e7779baf-b9a3-4227-afdc-d39e666d69d8"
+          asi:name="Height"
+          apvi:propertyId="67e3c765-253d-484b-8966-7d47ec206934"
+          pvi1:value="200" />
+        <pvi1:PropertyValueItem
+          asi:abstract="false"
+          x:id="eab4121f-cfda-4ac2-904e-252fe3c37890"
+          asi:name="StyleId"
+          apvi:propertyId="bdc60ecb-7700-48af-acf1-add51bf0c05e"
+          pvi1:value="00000000-0000-0000-0000-000000000000" />
+        <pvi1:PropertyValueItem
+          asi:abstract="false"
+          x:id="fd0067ea-f8d7-4c8b-b228-b9176d8051b8"
+          asi:name="IDColumn"
+          apvi:propertyId="827952d8-5742-4167-bb71-574e05b65358"
+          pvi1:value="Id" />
+      </csi:ControlSetItem>
+      <pvi1:PropertyValueItem
+        asi:abstract="false"
+        x:id="549836cd-82eb-4679-8183-ad56fefaa116"
+        asi:name="ExtraControlBindings"
+        apvi:propertyId="3cd32bca-fad9-49b4-8641-3ff4e77e567a" />
+      <pvi1:PropertyValueItem
+        asi:abstract="false"
+        x:id="6265c688-e5b9-4537-bea3-79e63ec4f994"
+        asi:name="Height"
+        apvi:propertyId="3ec90be1-7cc2-481d-aed3-85505560eb70"
+        pvi1:value="500" />
+      <pvi1:PropertyValueItem
+        asi:abstract="false"
+        x:id="723d3770-e7f8-4620-b64b-f925126d2bd1"
+        asi:name="Width"
+        apvi:propertyId="99f5687f-be11-49ec-a2eb-fba58d945b3e"
+        pvi1:value="500" />
+      <pvi1:PropertyValueItem
+        asi:abstract="false"
+        x:id="8a4e9b19-3635-4e20-8bb6-94b81539cdea"
+        asi:name="Left"
+        apvi:propertyId="fde5e452-b2a4-4f38-968a-29e20625b699"
+        pvi1:value="15" />
+      <pvi1:PropertyValueItem
+        asi:abstract="false"
+        x:id="9129a136-384f-4f88-b630-9dc5cd0620ff"
+        asi:name="Top"
+        apvi:propertyId="2d33a742-193c-42b2-8a21-c8c6ccedfd6c"
+        pvi1:value="15" />
+    </csi:ControlSetItem>
+  </fcs:FormControlSet>
+</x:file>

@@ -465,6 +465,7 @@ export interface IDesignerEditorData {
   schemaExtensionId: string;
   rootControl: IApiControl;
   selectedDataSourceId: string;
+  warnings: string[];
 }
 
 export interface ISectionEditorData extends IDesignerEditorData {

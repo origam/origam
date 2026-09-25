@@ -37,10 +37,11 @@ namespace Origam.Architect.Server.Controllers;
 // on disk itself (`git checkout`/`git clean` of model-tests/model) and the server
 // cannot see when that starts or ends:
 //
-//   POST /Test/BeginReset  -> stop reacting to file changes
+//   POST /Test/BeginReset  -> forget the tabs while their files still exist,
+//                             stop reacting to file changes
 //   (caller restores the model files on disk)
-//   POST /Test/EndReset    -> forget the tabs, re-read the clean model, discard
-//                             the file events the restore produced
+//   POST /Test/EndReset    -> re-read the clean model, discard the file events
+//                             the restore produced
 //
 // Doing it in one call would leave the restore's events in FileEventQueue, which
 // only processes them a second after the last change - that is, in the middle of
@@ -63,6 +64,7 @@ public class TestController(
             return NotFound();
         }
 
+        tabService.CloseAllTabs();
         GetFileEventQueue()?.Pause();
         return Ok();
     }
@@ -80,9 +82,6 @@ public class TestController(
         SecurityManager.SetServerIdentity();
         try
         {
-            // Drop all open editor tabs (kept in the singleton TabService).
-            tabService.CloseAllTabs();
-
             modelCheckService.ClearCache();
 
             // Re-read the file model from disk. FlushCache/LoadSchema on their own
