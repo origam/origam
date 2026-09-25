@@ -6,15 +6,17 @@
   xmlns:xdp="http://schemas.origam.com/Origam.Schema.GuiModel.XsltDataPage/6.2.0">
   <xdp:Page
     asi:abstract="false"
+    xdp:allowCustomFilters="false"
     ap:allowDelete="false"
     ap:allowPut="false"
     xdp:disableConstraintForInputValidation="false"
-    x:id="364acf08-c352-447f-b419-100de0f96795"
+    x:id="cfca82d1-fdc2-43f8-9450-9cb2783fadaf"
     ap:mimeType="text/html"
-    asi:name="LinkReportAPI"
+    asi:name="PublicLinkReportAPI"
+    xdp:omitJsonMainElement="false"
     xdp:omitJsonRootElement="false"
     xdp:processGetReadRowLevelRules="false"
     ap:roles="*"
-    xdp:transformation="Widgets/Transformation/Widgets/LinkReportHtml.origam#LinkReportHtml/c286449e-09ed-42d1-9a25-45937026bc05"
+    xdp:transformation="LinkReportHtml#LinkReportHtml/c286449e-09ed-42d1-9a25-45937026bc05"
     ap:url="api/public/link-report" />
 </x:file>
