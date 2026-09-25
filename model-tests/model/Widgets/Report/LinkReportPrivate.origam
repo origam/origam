@@ -7,9 +7,9 @@
   <wr1:Report
     asi:abstract="false"
     wr1:forceExternalUrl="false"
-    x:id="1802bcc1-dff2-420c-b26a-af6041702622"
+    x:id="26d18bb2-774f-4b27-9722-4c383301a2bc"
     wr1:isUrlEscaped="false"
-    asi:name="LinkReport"
+    asi:name="LinkReportPrivate"
     wr1:openMethod="OrigamTab"
-    wr1:url="/api/public/link-report" />
+    wr1:url="/api/private/link-report" />
 </x:file>

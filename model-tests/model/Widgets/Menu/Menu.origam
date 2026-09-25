@@ -41,18 +41,36 @@
   <rrmi:MenuItem
     asi:abstract="false"
     ami:alwaysOpenNew="false"
-    ami:displayName="LinkReport"
+    ami:displayName="LinkReportPublic"
     rrmi:exportFormatType="HTML"
     x:id="3dc51183-a78e-4663-bd41-97b230de7b7d"
-    asi:name="LinkReport"
+    asi:name="LinkReportPublic"
     ami:openExclusively="false"
     ami:order="100"
     x:parentId="147775f5-451d-4efd-8634-7f27a2cf50a6"
-    rrmi:report="Widgets/Report/LinkReport.origam#LinkReport/1802bcc1-dff2-420c-b26a-af6041702622"
+    rrmi:report="LinkReportPublic#LinkReportPublic/1802bcc1-dff2-420c-b26a-af6041702622"
     ami:roles="*">
     <sdpm:SelectionDialogParameterMapping
       asi:abstract="false"
       x:id="567ff3db-6028-49a7-b581-1d139faa2315"
+      sdpm:itemType="SelectionDialogParameterMapping"
+      asi:name="NewSelectionDialogParameterMapping" />
+  </rrmi:MenuItem>
+  <rrmi:MenuItem
+    asi:abstract="false"
+    ami:alwaysOpenNew="false"
+    ami:displayName="LinkReportPrivate"
+    rrmi:exportFormatType="HTML"
+    x:id="7bc54025-6b02-42c3-8ba3-65b77a458fce"
+    asi:name="LinkReportPrivate"
+    ami:openExclusively="false"
+    ami:order="100"
+    x:parentId="147775f5-451d-4efd-8634-7f27a2cf50a6"
+    rrmi:report="LinkReportPrivate#LinkReportPrivate/26d18bb2-774f-4b27-9722-4c383301a2bc"
+    ami:roles="*">
+    <sdpm:SelectionDialogParameterMapping
+      asi:abstract="false"
+      x:id="af713f83-05a0-48e4-8fce-b4cedf78e979"
       sdpm:itemType="SelectionDialogParameterMapping"
       asi:name="NewSelectionDialogParameterMapping" />
   </rrmi:MenuItem>
