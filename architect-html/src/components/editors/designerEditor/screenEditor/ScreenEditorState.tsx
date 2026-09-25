@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { IArchitectApi, IScreenEditorData } from '@api/IArchitectApi';
 import { IEditorNode } from '@components/editorTabView/EditorTabViewState';
+import { ModelTreeState } from '@components/modelTree/ModelTreeState';
 import { PropertiesState } from '@components/properties/PropertiesState';
 import { Component } from '@editors/designerEditor/common/designerComponents/Component';
 import {
@@ -45,6 +46,7 @@ export class ScreenEditorState extends DesignerEditorState {
     propertiesState: PropertiesState,
     screenToolboxState: ScreenToolboxState,
     architectApi: IArchitectApi,
+    modelTreeState: ModelTreeState,
     runGeneratorHandled: (args: FlowHandlerInput) => CancellablePromise<any>,
   ) {
     super(
@@ -55,6 +57,7 @@ export class ScreenEditorState extends DesignerEditorState {
       propertiesState,
       screenToolboxState.toolboxState,
       architectApi,
+      modelTreeState,
       runGeneratorHandled,
       getSectionLoader(architectApi, editorNode.origamId),
     );

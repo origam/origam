@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { IArchitectApi, IDesignerEditorData, IUpdatePropertiesResult } from '@api/IArchitectApi';
 import { EditorProperty } from '@components/editors/gridEditor/EditorProperty';
 import { IEditorNode } from '@components/editorTabView/EditorTabViewState';
+import { ModelTreeState } from '@components/modelTree/ModelTreeState';
 import { PropertiesState } from '@components/properties/PropertiesState';
 import { Component } from '@editors/designerEditor/common/designerComponents/Component';
 import { DesignSurfaceState } from '@editors/designerEditor/common/DesignSurfaceState';
@@ -53,6 +54,7 @@ export abstract class DesignerEditorState implements IDesignerEditorState {
     propertiesState: PropertiesState,
     toolbox: ToolboxState,
     protected architectApi: IArchitectApi,
+    private modelTreeState: ModelTreeState,
     runGeneratorHandled: (args: FlowHandlerInput) => CancellablePromise<any>,
     loadComponent?: (componentId: string) => Promise<ReactElement>,
   ) {
@@ -84,9 +86,7 @@ export abstract class DesignerEditorState implements IDesignerEditorState {
   protected abstract update(): Generator<Promise<any>, void, any>;
 
   *save(): Generator<Promise<any>, void, any> {
-    if (this.editorNode.parent) {
-      yield* this.editorNode.parent.loadChildren();
-    }
+    yield* this.modelTreeState.reloadParentOf(this.editorNode.origamId, this.editorNode.parent);
     this.isDirty = false;
   }
 }
