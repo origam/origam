@@ -19,7 +19,7 @@
     "@origam/react-contexify": "github:origam/origam-react-contexify#v6.0.1-origam.0",
     "classnames": "^2.5.1",
     "lodash": "^4.18.1",
-    "mobx": "^6.16.1",
+    "mobx": "^7.0.3",
     "mobx-react-lite": "^4.1.1",
     "moment": "^2.31.0",
     "monaco-editor": "^0.56.0",
