@@ -5,51 +5,55 @@ __metadata:
   version: 8
   cacheKey: 10c0
 
-"@ag-ui/client@npm:0.0.59":
-  version: 0.0.59
-  resolution: "@ag-ui/client@npm:0.0.59"
+"@ag-ui/client@npm:1.0.0":
+  version: 1.0.0
+  resolution: "@ag-ui/client@npm:1.0.0"
   dependencies:
-    "@ag-ui/core": "npm:0.0.59"
-    "@ag-ui/encoder": "npm:0.0.59"
-    "@ag-ui/proto": "npm:0.0.59"
+    "@ag-ui/core": "npm:1.0.0"
+    "@ag-ui/encoder": "npm:1.0.0"
+    "@ag-ui/proto": "npm:1.0.0"
     "@types/uuid": "npm:^10.0.0"
     compare-versions: "npm:^6.1.1"
     fast-json-patch: "npm:^3.1.1"
     rxjs: "npm:7.8.1"
     untruncate-json: "npm:^0.0.1"
     uuid: "npm:^11.1.0"
-    zod: "npm:^3.22.4"
-  checksum: 10c0/c3d06f2370fdca8398495826b7eb701deae3a4abb32fe2951b1a7e47e9aeb60f2c71f5b6e623ed0ca43f043e0a63c02452a03546b363cccea678b247f682b3af
+    zod: "npm:^3.25.76"
+  checksum: 10c0/509b98e09f8eece0aced7c1fd12cfeb2ea9e9d11539a85d6815965cb2788bb930be37d5e7911cadc32fe903d0b593aa0de43fc484ba9452448e8b10d29934dd2
   languageName: node
   linkType: hard
 
-"@ag-ui/core@npm:0.0.59":
-  version: 0.0.59
-  resolution: "@ag-ui/core@npm:0.0.59"
-  dependencies:
-    zod: "npm:^3.22.4"
-  checksum: 10c0/8e4946f699a2f1e5eee92f7058a43e0ab2d6fcac786646869fb81b56ec42741e0ffb89c29dbce48231c5cc22a97c75eb8e3ce0f71e5cad3ede6e55348c6f80e1
+"@ag-ui/core@npm:1.0.0":
+  version: 1.0.0
+  resolution: "@ag-ui/core@npm:1.0.0"
+  peerDependencies:
+    zod: ^3.25.18 || ^4.0.0
+  peerDependenciesMeta:
+    zod:
+      optional: true
+  checksum: 10c0/5fc740a448f99e644b7903be77fe5239ef7a64557e75c058f8f69d6043b1b54ddfd9e5182480e49ac48f1125df91b369cdd7501bfd9e34ce38837b278d488481
   languageName: node
   linkType: hard
 
-"@ag-ui/encoder@npm:0.0.59":
-  version: 0.0.59
-  resolution: "@ag-ui/encoder@npm:0.0.59"
+"@ag-ui/encoder@npm:1.0.0":
+  version: 1.0.0
+  resolution: "@ag-ui/encoder@npm:1.0.0"
   dependencies:
-    "@ag-ui/core": "npm:0.0.59"
-    "@ag-ui/proto": "npm:0.0.59"
-  checksum: 10c0/288e9e94042921b2cdbe539397ae922a3482c98221ffe74f122011f3f9f7180c8fc77256af9a2a16b2d0b28e47fc5acca6288c656c71c3c6a0566679175fa2fc
+    "@ag-ui/core": "npm:1.0.0"
+    "@ag-ui/proto": "npm:1.0.0"
+  checksum: 10c0/b6c6bc0238e67f4977a482a1f6938eeacc7e032976622e524e3f87056df338b4e598d421e19dc74d9565b7bbc551c32085c8733015f2a808d848d9347b534258
   languageName: node
   linkType: hard
 
-"@ag-ui/proto@npm:0.0.59":
-  version: 0.0.59
-  resolution: "@ag-ui/proto@npm:0.0.59"
+"@ag-ui/proto@npm:1.0.0":
+  version: 1.0.0
+  resolution: "@ag-ui/proto@npm:1.0.0"
   dependencies:
-    "@ag-ui/core": "npm:0.0.59"
+    "@ag-ui/core": "npm:1.0.0"
     "@bufbuild/protobuf": "npm:^2.2.5"
     "@protobuf-ts/protoc": "npm:^2.11.1"
-  checksum: 10c0/bcd2a8fccc40d4b8a0ce5967b7343b48a2557ae66aa68e857b9c02ecd588497fdc998cc091b725cf9281953f3dbfac938fa42c6ac876da1576b7913afc7b145e
+    zod: "npm:^3.25.76"
+  checksum: 10c0/69debd2969715813cd397c87d82aee0a9e6ee3da80c642e5f2d7cd5722202e5290e7521e95793032a2a18d02a9fe1aedf3329f86a0d51f232a026aa96bd6f029
   languageName: node
   linkType: hard
 
@@ -1629,7 +1633,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "architect-html@workspace:."
   dependencies:
-    "@ag-ui/client": "npm:0.0.59"
+    "@ag-ui/client": "npm:1.0.0"
     "@babel/core": "npm:^7.29.7"
     "@babel/plugin-proposal-decorators": "npm:^7.29.7"
     "@monaco-editor/react": "npm:^4.7.0"
@@ -5595,16 +5599,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zod@npm:^3.22.4":
-  version: 3.25.76
-  resolution: "zod@npm:3.25.76"
-  checksum: 10c0/5718ec35e3c40b600316c5b4c5e4976f7fee68151bc8f8d90ec18a469be9571f072e1bbaace10f1e85cf8892ea12d90821b200e980ab46916a6166a4260a983c
-  languageName: node
-  linkType: hard
-
 "zod@npm:^3.25.0 || ^4.0.0":
   version: 4.1.12
   resolution: "zod@npm:4.1.12"
   checksum: 10c0/b64c1feb19e99d77075261eaf613e0b2be4dfcd3551eff65ad8b4f2a079b61e379854d066f7d447491fcf193f45babd8095551a9d47973d30b46b6d8e2c46774
+  languageName: node
+  linkType: hard
+
+"zod@npm:^3.25.76":
+  version: 3.25.76
+  resolution: "zod@npm:3.25.76"
+  checksum: 10c0/5718ec35e3c40b600316c5b4c5e4976f7fee68151bc8f8d90ec18a469be9571f072e1bbaace10f1e85cf8892ea12d90821b200e980ab46916a6166a4260a983c
   languageName: node
   linkType: hard
