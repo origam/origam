@@ -201,6 +201,7 @@ export class ScreenEditorState extends DesignerEditorState {
     this.toolbox.selectedDataSourceId = newData.selectedDataSourceId;
     this.warnings = newData.warnings ?? [];
     this.surface.updateComponents(newData.rootControl);
+    this.surface.restorePointerStates();
   }
 }
 

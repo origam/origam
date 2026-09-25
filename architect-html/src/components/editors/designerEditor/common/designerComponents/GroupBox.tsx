@@ -18,6 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { sectionLayer } from '@editors/designerEditor/common/Layers.ts';
+import { Observer } from 'mobx-react-lite';
 import { ReactElement } from 'react';
 import S from '@editors/designerEditor/common/designerComponents/Components.module.scss';
 import { Component } from '@editors/designerEditor/common/designerComponents/Component.tsx';
@@ -37,18 +38,17 @@ export class GroupBox extends Component {
   }
 
   getDesignerRepresentation(): ReactElement | null {
-    const text = this.properties.find(x => x.name === 'Text')?.value;
     if (this.data.type === ComponentType.GroupBox) {
       return (
         <div className={S.groupBoxWithChamfer}>
-          <div className={S.groupBoxChamfer}>{text}</div>
+          <Observer>{() => <div className={S.groupBoxChamfer}>{this.get('Text')}</div>}</Observer>
           <div className={S.groupBoxChamferBody}></div>
         </div>
       );
     }
     return (
       <div className={S.groupBoxContent}>
-        <div className={S.groupBoxHeader}>{text}</div>
+        <Observer>{() => <div className={S.groupBoxHeader}>{this.get('Text')}</div>}</Observer>
       </div>
     );
   }

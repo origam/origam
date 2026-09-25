@@ -228,6 +228,9 @@
   <data name="SectionEditor_FieldBoundTwice" xml:space="preserve">
     <value>Field "{0}" is bound by more than one widget: {1}. Only one widget can be bound to a field.</value>
   </data>
+  <data name="SectionEditor_WidgetFieldMissing" xml:space="preserve">
+    <value>Widget "{0}" is not bound to a field. Select a field for it in its properties or delete it.</value>
+  </data>
   <data name="SectionEditor_UnknownWidgetType" xml:space="preserve">
     <value>Widget type "{0}" cannot be placed on a screen section. Use one of: {1}</value>
   </data>

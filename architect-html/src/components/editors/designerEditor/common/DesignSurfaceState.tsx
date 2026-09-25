@@ -35,25 +35,8 @@ export class DesignSurfaceState implements IComponentProvider {
   @observable public accessor components: Component[] = [];
   @observable accessor draggedComponentData: IComponentData | null = null;
   @observable public accessor selectedComponent: Component | null = null;
-  @observable accessor dragState: DragState = {
-    component: null,
-    startX: 0,
-    startY: 0,
-    originalLeft: 0,
-    originalTop: 0,
-    didDrag: false,
-    startedAt: undefined,
-  };
-  @observable accessor resizeState: ResizeState = {
-    component: null,
-    handle: null,
-    startX: 0,
-    startY: 0,
-    originalWidth: 0,
-    originalHeight: 0,
-    originalLeft: 0,
-    originalTop: 0,
-  };
+  @observable accessor dragState: DragState = idleDragState();
+  @observable accessor resizeState: ResizeState = idleResizeState();
   panel: Component = null as any; // will be assigned in loadComponents
   panelId: string | undefined;
   getVerbs: (component: Component) => IDesignerVerb[] = () => [];
@@ -101,6 +84,25 @@ export class DesignSurfaceState implements IComponentProvider {
     this.propertiesState.setComponentProvider(this);
     this.panel = this.components.find(x => x.id === this.panelId)!;
     this.reselectComponent();
+    this.restorePointerStates();
+  }
+
+  @action
+  restorePointerStates() {
+    if (this.dragState.component) {
+      const draggedId = this.dragState.component.id;
+      this.dragState.component = this.components.find(x => x.id === draggedId) ?? null;
+      if (this.dragState.didDrag) {
+        this.updateDragging(this.dragState.lastX, this.dragState.lastY);
+      }
+    }
+    if (this.resizeState.component) {
+      const resizedId = this.resizeState.component.id;
+      this.resizeState.component = this.components.find(x => x.id === resizedId) ?? null;
+      if (this.resizeState.didResize) {
+        this.updateResizing(this.resizeState.lastX, this.resizeState.lastY);
+      }
+    }
   }
 
   updateComponents(control: IApiControl) {
@@ -133,13 +135,23 @@ export class DesignSurfaceState implements IComponentProvider {
   updateDragging(mouseX: number, mouseY: number) {
     if (!this.dragState.component) return;
 
-    const dx = mouseX - this.dragState.startX;
-    const dy = mouseY - this.dragState.startY;
-    const left = this.dragState.originalLeft + dx;
-    const top = this.dragState.originalTop + dy;
-
-    this.updatePosition(this.dragState.component, left, top);
+    const dx = Math.round(mouseX - this.dragState.startX);
+    const dy = Math.round(mouseY - this.dragState.startY);
+    if (
+      !this.dragState.didDrag &&
+      Math.abs(dx) < dragStartDistance &&
+      Math.abs(dy) < dragStartDistance
+    ) {
+      return;
+    }
     this.dragState.didDrag = true;
+    this.dragState.lastX = mouseX;
+    this.dragState.lastY = mouseY;
+    this.updatePosition(
+      this.dragState.component,
+      this.dragState.originalLeft + dx,
+      this.dragState.originalTop + dy,
+    );
   }
 
   @action
@@ -152,19 +164,22 @@ export class DesignSurfaceState implements IComponentProvider {
       component,
       startX: mouseX,
       startY: mouseY,
+      lastX: mouseX,
+      lastY: mouseY,
       originalLeft: component.absoluteLeft,
       originalTop: component.absoluteTop,
       didDrag: false,
-      startedAt: new Date(),
     };
   }
 
   @action
   endDragging(mouseX: number, mouseY: number) {
-    if (!this.dragState.component || !this.dragState.startedAt) {
+    const draggingComponent = this.dragState.component;
+    const didDrag = this.dragState.didDrag;
+    this.dragState = idleDragState();
+    if (!draggingComponent || !didDrag) {
       return;
     }
-    const draggingComponent = this.dragState.component;
 
     if (
       draggingComponent.data.type !== ComponentType.GroupBox &&
@@ -183,56 +198,32 @@ export class DesignSurfaceState implements IComponentProvider {
       } else {
         targetParent?.update();
       }
-      this.updatePanelSize(draggingComponent);
     }
-
-    this.dragState = {
-      component: null,
-      startX: 0,
-      startY: 0,
-      originalLeft: 0,
-      originalTop: 0,
-      didDrag: false,
-      startedAt: undefined,
-    };
+    draggingComponent.relativeLeft = Math.max(0, draggingComponent.relativeLeft);
+    draggingComponent.relativeTop = Math.max(0, draggingComponent.relativeTop);
+    this.updatePanelSize(draggingComponent);
   }
 
   findComponentAt(mouseX: number, mouseY: number, excludeComponent?: Component) {
     const excludeIds = excludeComponent
       ? [...this.getDescendants(excludeComponent).map(x => x.id), excludeComponent.id]
       : [];
-    const componentsUnderPoint =
-      this.components.filter(
-        comp =>
-          (excludeIds.length == 0 || !excludeIds.includes(comp.id)) &&
-          comp.canAcceptChild(excludeComponent) &&
-          comp.isActive &&
-          comp.isPointInside(mouseX, mouseY),
-      ) ?? this.panel;
+    const componentsUnderPoint = this.components.filter(
+      comp =>
+        (excludeIds.length == 0 || !excludeIds.includes(comp.id)) &&
+        comp.canAcceptChild(excludeComponent) &&
+        comp.isActive &&
+        comp.isPointInside(mouseX, mouseY),
+    );
     const components1 = componentsUnderPoint.sort(
       (comp1, comp2) => comp2.countParents() - comp1.countParents(),
     );
-    return components1[0];
+    return components1[0] ?? this.panel;
   }
 
   onDesignerMouseUp(x: number, y: number) {
     return function* (this: DesignSurfaceState) {
       if (this.isDragging) {
-        const dragTimeMilliSeconds = new Date().getTime() - this.dragState.startedAt!.getTime();
-        if (dragTimeMilliSeconds < 300 && this.dragState.component) {
-          this.dragState.component.absoluteTop = this.dragState.originalTop;
-          this.dragState.component.absoluteLeft = this.dragState.originalLeft;
-          this.dragState = {
-            component: null,
-            startX: 0,
-            startY: 0,
-            originalLeft: 0,
-            originalTop: 0,
-            didDrag: false,
-            startedAt: undefined,
-          };
-          return;
-        }
         const didDrag = this.dragState.didDrag;
         this.endDragging(x, y);
         if (didDrag) {
@@ -240,8 +231,11 @@ export class DesignSurfaceState implements IComponentProvider {
         }
       }
       if (this.isResizing) {
+        const didResize = this.resizeState.didResize;
         this.endResizing();
-        yield* this.updateEditor();
+        if (didResize) {
+          yield* this.updateEditor();
+        }
       }
     }.bind(this);
   }
@@ -275,10 +269,13 @@ export class DesignSurfaceState implements IComponentProvider {
       handle,
       startX: mouseX,
       startY: mouseY,
+      lastX: mouseX,
+      lastY: mouseY,
       originalWidth: component.width,
       originalHeight: component.height,
       originalLeft: component.absoluteLeft,
       originalTop: component.absoluteTop,
+      didResize: false,
     };
   }
 
@@ -287,8 +284,14 @@ export class DesignSurfaceState implements IComponentProvider {
     if (!this.resizeState.component || !this.resizeState.handle) return;
 
     const component = this.resizeState.component;
-    const deltaX = mouseX - this.resizeState.startX;
-    const deltaY = mouseY - this.resizeState.startY;
+    const deltaX = Math.round(mouseX - this.resizeState.startX);
+    const deltaY = Math.round(mouseY - this.resizeState.startY);
+    if (!this.resizeState.didResize && deltaX === 0 && deltaY === 0) {
+      return;
+    }
+    this.resizeState.didResize = true;
+    this.resizeState.lastX = mouseX;
+    this.resizeState.lastY = mouseY;
     const { originalWidth, originalHeight, originalLeft, originalTop } = this.resizeState;
 
     switch (this.resizeState.handle) {
@@ -354,37 +357,35 @@ export class DesignSurfaceState implements IComponentProvider {
 
   @action
   endResizing() {
-    this.resizeState.component?.update();
-    this.resizeState.component?.parent?.update();
-    this.resizeState = {
-      component: null,
-      handle: null,
-      startX: 0,
-      startY: 0,
-      originalWidth: 0,
-      originalHeight: 0,
-      originalLeft: 0,
-      originalTop: 0,
-    };
+    const resizedComponent = this.resizeState.component;
+    const didResize = this.resizeState.didResize;
+    this.resizeState = idleResizeState();
+    if (!resizedComponent || !didResize) {
+      return;
+    }
+    if (resizedComponent.relativeLeft < 0) {
+      resizedComponent.width = Math.max(
+        minComponentWidth,
+        resizedComponent.width + resizedComponent.relativeLeft,
+      );
+      resizedComponent.relativeLeft = 0;
+    }
+    if (resizedComponent.relativeTop < 0) {
+      resizedComponent.height = Math.max(
+        minComponentHeight,
+        resizedComponent.height + resizedComponent.relativeTop,
+      );
+      resizedComponent.relativeTop = 0;
+    }
+    resizedComponent.update();
+    resizedComponent.parent?.update();
+    this.updatePanelSize(resizedComponent);
   }
 
   @action
   updatePosition(component: Component, left: number, top: number) {
     component.absoluteLeft = left;
     component.absoluteTop = top;
-
-    if (component.canHaveChildren) {
-      for (const comp of this.components) {
-        if (
-          comp.parent?.id === component.id &&
-          comp.relativeLeft !== undefined &&
-          comp.relativeTop !== undefined
-        ) {
-          comp.absoluteLeft = comp.relativeLeft + component.absoluteLeft;
-          comp.absoluteTop = comp.relativeTop + component.absoluteTop;
-        }
-      }
-    }
   }
 
   @action
@@ -397,10 +398,11 @@ interface DragState {
   component: Component | null;
   startX: number;
   startY: number;
+  lastX: number;
+  lastY: number;
   originalLeft: number;
   originalTop: number;
   didDrag: boolean;
-  startedAt: Date | undefined;
 }
 
 interface ResizeState {
@@ -408,11 +410,45 @@ interface ResizeState {
   handle: ResizeHandle | null;
   startX: number;
   startY: number;
+  lastX: number;
+  lastY: number;
   originalWidth: number;
   originalHeight: number;
   originalLeft: number;
   originalTop: number;
+  didResize: boolean;
 }
+
+function idleDragState(): DragState {
+  return {
+    component: null,
+    startX: 0,
+    startY: 0,
+    lastX: 0,
+    lastY: 0,
+    originalLeft: 0,
+    originalTop: 0,
+    didDrag: false,
+  };
+}
+
+function idleResizeState(): ResizeState {
+  return {
+    component: null,
+    handle: null,
+    startX: 0,
+    startY: 0,
+    lastX: 0,
+    lastY: 0,
+    originalWidth: 0,
+    originalHeight: 0,
+    originalLeft: 0,
+    originalTop: 0,
+    didResize: false,
+  };
+}
+
+const dragStartDistance = 3;
 
 const minComponentHeight = 20;
 const minComponentWidth = 20;

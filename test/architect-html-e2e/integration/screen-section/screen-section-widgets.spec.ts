@@ -62,6 +62,19 @@ function findWidget(control: ApiControl, shortType: string): ApiControl | undefi
   return undefined;
 }
 
+function findControl(control: ApiControl, id: string): ApiControl | undefined {
+  if (control.id === id) {
+    return control;
+  }
+  for (const child of control.children) {
+    const found = findControl(child, id);
+    if (found) {
+      return found;
+    }
+  }
+  return undefined;
+}
+
 function findFile(directory: string, fileName: string): string | undefined {
   for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
     const entryPath = path.join(directory, entry.name);
@@ -178,11 +191,15 @@ class SectionEditor {
     return this.toolbox.getByText(name, { exact: true }).filter({ visible: true });
   }
 
-  private component(control: ApiControl): Locator {
+  component(control: ApiControl): Locator {
     return this.surface.locator(`[class~="${control.id}"]`);
   }
 
-  private propertyInput(name: string): Locator {
+  async checkProperty(name: string): Promise<void> {
+    await this.awaitUpdate(() => this.page.getByTestId(`property-checkbox-${name}`).check());
+  }
+
+  propertyInput(name: string): Locator {
     return this.page
       .locator('span', { hasText: new RegExp(`^${name}$`) })
       .locator('xpath=../following-sibling::div[1]//input');
@@ -338,6 +355,111 @@ test.describe('Screen section widgets (real backend)', () => {
     expect(propertyValue(savedRadioButton, 'Value')).toBe('Text1');
     expect(propertyValue(savedRadioButton, 'Text')).toBe('Yes');
     expect(propertyValue(savedRadioButton, 'ValueConstant')).toBe(REPORT_TEMPLATE_NAME_CONSTANT_ID);
+  });
+
+  test('GroupBox text follows the Text property before the server answers', async ({ page }) => {
+    await editor.openNew('AllDataTypes');
+    const groupBox = await editor.dropWidget('GroupBox');
+    await editor.select(groupBox);
+
+    let releaseUpdate = () => {};
+    const updateHeld = new Promise<void>(resolve => (releaseUpdate = resolve));
+    await page.route('**/SectionEditor/Update', async route => {
+      await updateHeld;
+      await route.continue();
+    });
+    const updated = page.waitForResponse(response =>
+      response.url().includes('/SectionEditor/Update'),
+    );
+    await editor.propertyInput('Text').fill('Group');
+    await expect(editor.component(groupBox)).toContainText('Group');
+    releaseUpdate();
+    await updated;
+    await page.unroute('**/SectionEditor/Update');
+    await expect(editor.component(groupBox)).toContainText('Group');
+  });
+
+  test('Ctrl+S saves with a non-English keyboard layout', async ({ page }) => {
+    await editor.openNew('AllDataTypes');
+    await editor.dropWidget('AsTextBox', 'Text1');
+
+    const saved = page.waitForResponse(response =>
+      response.url().includes('/SectionEditor/Save'),
+    );
+    await page.evaluate(() =>
+      window.dispatchEvent(
+        new KeyboardEvent('keydown', { key: 'ы', code: 'KeyS', ctrlKey: true, bubbles: true }),
+      ),
+    );
+    const response = await saved;
+    expect(response.ok(), await response.text()).toBeTruthy();
+    await expect(page.getByTestId('save-button-disabled')).toBeVisible();
+  });
+
+  test('Ctrl+S saves the value still being typed in a property', async ({ page }) => {
+    await editor.openNew('AllDataTypes');
+    const textBox = await editor.dropWidget('AsTextBox', 'Text1');
+    await editor.select(textBox);
+    await editor.propertyInput('Top').fill('137');
+
+    const saved = page.waitForResponse(response =>
+      response.url().includes('/SectionEditor/Save'),
+    );
+    await page.keyboard.press('Control+s');
+    const response = await saved;
+    expect(response.ok(), await response.text()).toBeTruthy();
+    const sectionFile = findFile(modelFilePath('Widgets/PanelControlSet'), SECTION_FILE_NAME);
+    expect(fs.readFileSync(sectionFile!, 'utf8')).toContain('value="137"');
+  });
+
+  test('ReadOnly paints a widget grey and takes the buttons off a combo', async () => {
+    const white = 'rgb(255, 255, 255)';
+    const grey = 'rgb(233, 232, 240)';
+    await editor.openNew('AllDataTypes');
+    const tagInput = await editor.dropWidget('TagInput', 'TagInput');
+    const tagInputBox = editor.component(tagInput).locator('div').first();
+    await expect(tagInputBox).toHaveCSS('background-color', white);
+    await editor.select(tagInput);
+    await editor.checkProperty('ReadOnly');
+    await expect(tagInputBox).toHaveCSS('background-color', grey);
+
+    const comboBox = await editor.dropWidget('AsCombo', 'refTagInputSourceId');
+    const comboBoxBox = editor.component(comboBox).locator('div').first();
+    await expect(comboBoxBox.locator('svg')).toHaveCount(2);
+    await editor.select(comboBox);
+    await editor.checkProperty('ReadOnly');
+    await expect(comboBoxBox).toHaveCSS('background-color', grey);
+    await expect(comboBoxBox.locator('svg')).toHaveCount(0);
+  });
+
+  test('a quick drag that leaves the surface still moves the widget', async ({ page }) => {
+    await editor.openNew('AllDataTypes');
+    const textBox = await editor.dropWidget('AsTextBox', 'Text1');
+    const box = (await editor.component(textBox).boundingBox())!;
+    const toolbox = (await editor.toolbox.boundingBox())!;
+    const startX = box.x + 20;
+    const startY = box.y + 10;
+
+    await page.mouse.move(startX, startY);
+    await page.mouse.down();
+    await page.mouse.move(startX + 30, startY + 10);
+    await page.mouse.move(toolbox.x + 20, startY + 10);
+    await page.mouse.move(startX + 60, startY + 30);
+    const updated = page.waitForResponse(
+      response =>
+        response.url().includes('/SectionEditor/Update') &&
+        response.request().postDataJSON().modelChanges.length > 0,
+    );
+    await page.mouse.up();
+    const response = await updated;
+    expect(response.ok(), await response.text()).toBeTruthy();
+
+    const rootControl = (await response.json()).data.rootControl as ApiControl;
+    const movedTextBox = findControl(rootControl, textBox.id)!;
+    expect(propertyValue(movedTextBox, 'Left')).toBe(
+      (propertyValue(textBox, 'Left') as number) + 60,
+    );
+    expect(propertyValue(movedTextBox, 'Top')).toBe((propertyValue(textBox, 'Top') as number) + 30);
   });
 
   test('MultiColumnAdapterFieldWrapper with two children mapped to constants', async () => {

@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { Observer } from 'mobx-react-lite';
 import { ReactElement } from 'react';
 import { VscChevronRight } from 'react-icons/vsc';
 import S from '@editors/designerEditor/common/designerComponents/Components.module.scss';
@@ -33,9 +34,15 @@ export class ColorPicker extends Component {
 
   getDesignerRepresentation(): ReactElement | null {
     return (
-      <div className={`${S.editorButton} ${S.colorPickerButton}`}>
-        <VscChevronRight />
-      </div>
+      <Observer>
+        {() => (
+          <div
+            className={`${S.editorButton} ${S.colorPickerButton} ${this.isReadOnly ? S.readOnly : ''}`}
+          >
+            <VscChevronRight />
+          </div>
+        )}
+      </Observer>
     );
   }
 }

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:dsc="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureColumn/6.0.1"
+  xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0">
+  <dsc:DataStructureColumn
+    asi:abstract="false"
+    dsc:aggregation="None"
+    dsc:field="UserRoles#BusinessPartner/UserRoles/2f004dbe-8a11-442c-b163-6fa5f6e69388"
+    dsc:hideInOutput="false"
+    x:id="af34655a-f57e-4481-8ee4-ae1f0d00bfc9"
+    asi:name="UserRoles"
+    x:parentId="79bede18-ff01-49cd-8703-94aa6bfe787c"
+    dsc:upsertType="Replace"
+    dsc:useCopiedValue="false"
+    dsc:useLookupValue="false"
+    dsc:writeOnly="false"
+    dsc:xmlMappingType="Default" />
+  <dse:DataStructureEntity
+    asi:abstract="false"
+    dse:allFields="true"
+    dse:concurrencyHandling="Standard"
+    dse:entity="AggregationChildData#AggregationChildData/db44d966-41a2-4078-b3e7-f54a6613b81e"
+    x:id="6f6b5a02-d7f3-411a-89f4-3cc8bc2744c8"
+    dse:ignoreCondition="None"
+    dse:ignoreImplicitFilters="false"
+    asi:name="AggregationChildData"
+    x:parentId="01194cd6-6cff-41bb-9ed8-d3642c909598"
+    dse:relationType="Normal"
+    dse:serializeAsSingleJsonObject="false"
+    dse:useUpsert="false" />
+</x:file>

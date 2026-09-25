@@ -18,11 +18,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 export function isSaveShortcut(e: KeyboardEvent): boolean {
-  return (e.ctrlKey || e.metaKey) && e.key === 's';
+  return isCtrlLetter(e, 's');
+}
+
+function pressedLetter(e: KeyboardEvent): string {
+  const key = e.key.toLowerCase();
+  const isNonLatinLetter = /^\p{L}$/u.test(key) && !/^\p{Script=Latin}$/u.test(key);
+  return isNonLatinLetter ? e.code.replace(/^Key/, '').toLowerCase() : key;
 }
 
 function isCtrlLetter(e: KeyboardEvent, letter: string): boolean {
-  return (e.ctrlKey || e.metaKey) && !e.shiftKey && !e.altKey && e.key.toLowerCase() === letter;
+  return (e.ctrlKey || e.metaKey) && !e.shiftKey && !e.altKey && pressedLetter(e) === letter;
 }
 
 export function isCutShortcut(e: KeyboardEvent): boolean {

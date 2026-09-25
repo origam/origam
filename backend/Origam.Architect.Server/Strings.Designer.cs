@@ -826,6 +826,15 @@ namespace Origam.Architect.Server {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Widget &quot;{0}&quot; is not bound to a field. Select a field for it in its properties or delete it..
+        /// </summary>
+        internal static string SectionEditor_WidgetFieldMissing {
+            get {
+                return ResourceManager.GetString("SectionEditor_WidgetFieldMissing", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Widget type &quot;{0}&quot; cannot be placed on a screen section. Use one of: {1}.
         /// </summary>
         internal static string SectionEditor_UnknownWidgetType {

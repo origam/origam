@@ -36,6 +36,7 @@ import { useContext, useEffect } from 'react';
 import Output from '@components/properties/Output.tsx';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { isSaveShortcut } from '@/utils/keyShortcuts';
+import { canSave } from '@components/editorTabView/ITabState';
 import {
   AI_PANEL_MAX_WIDTH,
   AI_PANEL_MIN_WIDTH,
@@ -67,8 +68,9 @@ const App = observer(() => {
     {
       predicate: isSaveShortcut,
       handler: () => {
+        (document.activeElement as HTMLElement | null)?.blur();
         const activeEditor = rootStore.editorTabViewState.activeEditorState;
-        if (!activeEditor?.isDirty) return;
+        if (!activeEditor || !canSave(activeEditor)) return;
         runInFlowWithHandler(rootStore.errorDialogController)({
           generator: function* () {
             rootStore.progressBarState.isWorking = true;

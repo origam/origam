@@ -24,6 +24,7 @@ import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { observer } from 'mobx-react-lite';
 import { useContext } from 'react';
 import { VscSave, VscWarning } from 'react-icons/vsc';
+import { canSave } from '@components/editorTabView/ITabState';
 
 const SaveButtonHOC = observer(() => {
   const rootStore = useContext(RootStoreContext);
@@ -38,7 +39,7 @@ const SaveButtonHOC = observer(() => {
   const warnings = activeEditor.warnings ?? [];
 
   const handleSave = () => {
-    if (!activeEditor.isDirty || warnings.length > 0) return;
+    if (!canSave(activeEditor)) return;
 
     runInFlowWithHandler(rootStore.errorDialogController)({
       generator: function* () {
@@ -52,7 +53,7 @@ const SaveButtonHOC = observer(() => {
     });
   };
 
-  const isDisabled = !activeEditor.isDirty || warnings.length > 0;
+  const isDisabled = !canSave(activeEditor);
   const validationErrors = activeEditor.validationErrors ?? [];
   const showMissing = isDisabled && validationErrors.length > 0;
 

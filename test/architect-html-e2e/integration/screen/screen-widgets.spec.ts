@@ -592,6 +592,16 @@ test.describe('Screen editor widgets (real backend)', () => {
     await editor.chooseProperty('DataMember', ALL_DATA_TYPES);
     await expect(editor.warnings.filter({ hasText: ARRAY_FIELD }).first()).toBeVisible();
     await expect(page.getByTestId('save-button-disabled')).toBeVisible();
+    const savedByShortcut = page
+      .waitForRequest(request => request.url().includes('/Tab/PersistChanges'), {
+        timeout: 1_000,
+      })
+      .then(
+        () => true,
+        () => false,
+      );
+    await page.keyboard.press('Control+s');
+    expect(await savedByShortcut).toBe(false);
 
     await editor.chooseDataSource(ALL_DATA_TYPES_WITH_DETAIL);
 

@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { Component } from '@editors/designerEditor/common/designerComponents/Component';
 import S from '@editors/designerEditor/common/designerComponents/Components.module.scss';
+import { Observer } from 'mobx-react-lite';
 import { ReactElement } from 'react';
 
 export class AsCheckBox extends Component {
@@ -32,10 +33,20 @@ export class AsCheckBox extends Component {
 
   getDesignerRepresentation(): ReactElement | null {
     return (
-      <div className={S.designSurfaceEditorContainer}>
-        <div className={S.designSurfaceCheckbox}></div>
-        <div>{this.properties.find(x => x.name === 'Text')?.value}</div>
-      </div>
+      <Observer>
+        {() => (
+          <div className={S.designSurfaceEditorContainer}>
+            <div
+              className={
+                this.isReadOnly
+                  ? `${S.designSurfaceCheckbox} ${S.readOnly}`
+                  : S.designSurfaceCheckbox
+              }
+            ></div>
+            <div>{this.get('Text')}</div>
+          </div>
+        )}
+      </Observer>
     );
   }
 }

@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { Observer } from 'mobx-react-lite';
 import { ReactElement } from 'react';
 import { VscChevronDown, VscEllipsis } from 'react-icons/vsc';
 import S from '@editors/designerEditor/common/designerComponents/Components.module.scss';
@@ -34,14 +35,22 @@ export class AsDropDown extends Component {
 
   getDesignerRepresentation(): ReactElement | null {
     return (
-      <EditorBox>
-        <div className={S.editorButton}>
-          <VscEllipsis />
-        </div>
-        <div className={`${S.editorButton} ${S.dropDownButton}`}>
-          <VscChevronDown />
-        </div>
-      </EditorBox>
+      <Observer>
+        {() => (
+          <EditorBox readOnly={this.isReadOnly}>
+            {!this.isReadOnly && (
+              <>
+                <div className={S.editorButton}>
+                  <VscEllipsis />
+                </div>
+                <div className={`${S.editorButton} ${S.dropDownButton}`}>
+                  <VscChevronDown />
+                </div>
+              </>
+            )}
+          </EditorBox>
+        )}
+      </Observer>
     );
   }
 }
