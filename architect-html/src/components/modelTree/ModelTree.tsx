@@ -823,7 +823,7 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
           <Menu id={menuId} onVisibilityChange={onMenuVisibilityChange}>
             {node.contextMenuItems.length > 0 ? (
               <Submenu label={T('New', 'tree_node_submenu_new')} data-test-id="tree-menu-new">
-                {node.contextMenuItems.map(item => (
+                {node.newTypeMenuItems.map(item => (
                   <Item
                     key={item.typeName + item.caption}
                     id={item.typeName}
@@ -832,6 +832,21 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
                   >
                     {item.caption}
                   </Item>
+                ))}
+                {node.unusedParameterNames.length > 0 && <Separator />}
+                {node.unusedParameterNames.map(name => (
+                  <Submenu key={name} label={name} data-test-id={`tree-menu-new-param-${name}`}>
+                    {node.parameterMenuItems(name).map(item => (
+                      <Item
+                        key={item.typeName + item.caption}
+                        id={`${name}-${item.typeName}`}
+                        data-test-id={`tree-menu-new-param-${name}-${item.typeName}`}
+                        onClick={() => run({ generator: node.createNode(item.typeName, name) })}
+                      >
+                        {item.caption}
+                      </Item>
+                    ))}
+                  </Submenu>
                 ))}
               </Submenu>
             ) : (
