@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 /*
 Copyright 2005 - 2026 Advantage Solutions, s. r. o.
 
@@ -19,106 +19,28 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System.Globalization;
 using NUnit.Framework;
-using Origam.AI.Agent.Models.Responses;
 using Origam.AI.Agent.Tests.Infrastructure.Agent;
 using Origam.AI.Agent.Tests.Infrastructure.Architect;
-using Origam.AI.Agent.Tests.Infrastructure.Benchmark;
 
 namespace Origam.AI.Agent.Tests.Integration;
 
 [TestFixture]
-[Explicit(
-    "Calls a live LLM and costs money. Boots Architect in-process; needs the ORIGAM model on "
-        + "disk and an AI API key in appsettings.Development.json."
-)]
-[Category("AiIntegration")]
-public sealed class AgentIntegrationTests
+[Explicit(AgentIntegrationTestBase.ExplicitReason)]
+[Category(AgentIntegrationTestBase.IntegrationCategory)]
+public sealed class AgentIntegrationTests : AgentIntegrationTestBase
 {
-    private const string ArchitectUrlVariable = "ORIGAM_ARCHITECT_URL";
-    private const string MutatingCategory = "AiMutating";
-    private static readonly string[]? DefaultSections = null;
-    private static readonly string[] ExpandedTreePath = ["Data", "Entities", "Dimensions"];
-
-    private readonly List<string> createdEntityNames = [];
-
-    private ArchitectAgentClient agentClient = null!;
-    private ArchitectModelProbe model = null!;
-    private AgentHealth agentHealth = null!;
-    private ChatFocusPayload chatFocus = null!;
-
-    [OneTimeSetUp]
-    public async Task ConnectToArchitect()
-    {
-        var liveUrl = Environment.GetEnvironmentVariable(ArchitectUrlVariable);
-        string backend;
-        if (string.IsNullOrWhiteSpace(liveUrl))
-        {
-            try
-            {
-                agentClient = new ArchitectAgentClient(
-                    await InProcessArchitect.GetClientAsync(CancellationToken.None)
-                );
-            }
-            catch (Exception exception)
-            {
-                Assert.Ignore(
-                    $"The in-process Architect did not boot: {exception.GetType().Name}: "
-                        + exception.Message
-                );
-            }
-            backend = $"in-process Architect, package '{InProcessArchitect.ActivePackageName}'";
-        }
-        else
-        {
-            agentClient = new ArchitectAgentClient(liveUrl);
-            backend = $"live Architect at {liveUrl}";
-        }
-
-        var health = await agentClient.TryGetHealthAsync(CancellationToken.None);
-        if (health is null)
-        {
-            Assert.Ignore($"No agent endpoint answering on the {backend}.");
-        }
-
-        agentHealth = health!;
-        model = new ArchitectModelProbe(agentClient.Architect);
-        chatFocus = await ChatFocusFactory.FromExpandedPathAsync(
-            agentClient.Architect,
-            ExpandedTreePath,
-            CancellationToken.None
-        );
-        BenchmarkReport.Backend = backend;
-        TestContext.Progress.WriteLine(
-            $"{backend} | {agentHealth.Model} @ {agentHealth.Endpoint} "
-                + $"(key configured: {agentHealth.HasApiKey})"
-        );
-    }
-
-    [OneTimeTearDown]
-    public void DisconnectFromArchitectServer()
-    {
-        agentClient?.Dispose();
-    }
-
-    [SetUp]
-    public async Task DropTabsLeftOpenByThePreviousTest()
-    {
-        await model.CloseAllTabsAsync();
-    }
-
     [Test]
     [Category(MutatingCategory)]
     public async Task CreateNodeFunctionCall_ReallyCreatesTheEntityInTheModel()
     {
         var entityName = "AiBenchmark" + Guid.NewGuid().ToString("N")[..8];
-        createdEntityNames.Add(entityName);
+        CreatedEntityNames.Add(entityName);
 
         var trace = await RunBenchmarkAsync(
             prompt: $"Create a new database entity named {entityName} in dimensions folder"
                 + "Do not ask me to confirm anything, just create it.",
-            DefaultSections
+            ChatFocus
         );
 
         var toolNames = trace.DescribeToolNames();
@@ -137,11 +59,55 @@ public sealed class AgentIntegrationTests
         );
         Assert.That(trace.Result.AffectedNodes, Is.Not.Empty);
 
-        var matches = await model.FindSchemaItemsAsync(entityName);
+        var matches = await Model.FindSchemaItemsAsync(entityName);
         Assert.That(
             matches,
             Is.Not.Empty,
             $"The agent reported success but '{entityName}' is not in the model."
+        );
+    }
+
+    [Test]
+    [Category(MutatingCategory)]
+    public async Task LookupWizard_CreatesTheLookupAndItsDataStructure()
+    {
+        var lookupName = "AiLookup" + Guid.NewGuid().ToString("N")[..8];
+        var dataStructureName = "Lookup" + lookupName;
+        CreatedEntityNames.Add(lookupName);
+        CreatedEntityNames.Add(dataStructureName);
+
+        var trace = await RunBenchmarkAsync(
+            prompt: $"Create a lookup named {lookupName} for the entity Dimension1: display "
+                + "field Name, id filter GetId, no list filter. Do not ask me to confirm "
+                + "anything, just create it.",
+            ChatFocus
+        );
+
+        var toolNames = trace.DescribeToolNames();
+        TestContext.WriteLine("tools: " + toolNames);
+
+        Assert.That(trace.ErrorMessage, Is.Null);
+        Assert.That(
+            trace.UsedTool("PostWizardsLookups"),
+            Is.True,
+            "The lookup wizard was never called. Tools used: " + toolNames
+        );
+        Assert.That(
+            trace.Result!.ModelChanged,
+            Is.True,
+            "The agent called the lookup wizard but nothing was persisted. " + trace.Describe()
+        );
+
+        var builder = new ArchitectModelBuilder(AgentClient.Architect);
+        Assert.That(
+            await builder.FindItemIdAsync(lookupName, WidgetTestModel.LookupTypeName),
+            Is.Not.Null,
+            $"The agent reported success but the lookup '{lookupName}' is not in the model."
+        );
+        Assert.That(
+            await builder.FindItemIdAsync(dataStructureName, itemTypeName: "Data Structure"),
+            Is.Not.Null,
+            $"The lookup was created but its data structure '{dataStructureName}' is not in the model."
         );
     }
 
@@ -153,9 +119,9 @@ public sealed class AgentIntegrationTests
         var mainEntityName = "AiBenchmarkOrder" + suffix;
         var firstChildEntityName = "AiBenchmarkOrderLine" + suffix;
         var secondChildEntityName = "AiBenchmarkOrderNote" + suffix;
-        createdEntityNames.Add(firstChildEntityName);
-        createdEntityNames.Add(secondChildEntityName);
-        createdEntityNames.Add(mainEntityName);
+        CreatedEntityNames.Add(firstChildEntityName);
+        CreatedEntityNames.Add(secondChildEntityName);
+        CreatedEntityNames.Add(mainEntityName);
 
         var trace = await RunBenchmarkAsync(
             prompt: $"Create three database entities named {mainEntityName}, "
@@ -164,7 +130,7 @@ public sealed class AgentIntegrationTests
                 + $"give each child a foreign key field named ref{mainEntityName}Id that points "
                 + $"at {mainEntityName} and at its primary key. Do not ask me to confirm "
                 + "anything, just create everything.",
-            DefaultSections
+            ChatFocus
         );
 
         var toolNames = trace.DescribeToolNames();
@@ -182,9 +148,9 @@ public sealed class AgentIntegrationTests
         {
             var childEntityId = await RequireEntityAsync(childEntityName);
             var foreignKeyFields = new List<string>();
-            foreach (var field in await model.ReadDatabaseFieldsAsync(childEntityId))
+            foreach (var field in await Model.ReadDatabaseFieldsAsync(childEntityId))
             {
-                if (await model.PointsAtEntityAsync(field.Id, mainEntityId))
+                if (await Model.PointsAtEntityAsync(field.Id, mainEntityId))
                 {
                     foreignKeyFields.Add(field.Id);
                 }
@@ -205,13 +171,13 @@ public sealed class AgentIntegrationTests
     public async Task DeleteFollowUp_RemovesTheEntityTheAgentCreatedInTheSameConversation()
     {
         var entityName = "AiBenchmarkDeleteMe" + Guid.NewGuid().ToString("N")[..8];
-        createdEntityNames.Add(entityName);
+        CreatedEntityNames.Add(entityName);
         var conversation = new AgentConversation();
 
         var createTrace = await RunBenchmarkAsync(
             prompt: $"Create a new database entity named {entityName} with one database field "
                 + "named Name. Do not ask me to confirm anything, just create it.",
-            DefaultSections,
+            ChatFocus,
             conversation
         );
 
@@ -223,7 +189,7 @@ public sealed class AgentIntegrationTests
         );
 
         var entityId = await RequireEntityAsync(entityName);
-        var fieldNames = (await model.ReadDatabaseFieldsAsync(entityId)).Select(field =>
+        var fieldNames = (await Model.ReadDatabaseFieldsAsync(entityId)).Select(field =>
             field.Name
         );
         Assert.That(
@@ -236,7 +202,7 @@ public sealed class AgentIntegrationTests
         var deleteTrace = await RunBenchmarkAsync(
             prompt: "Now delete that entity you have just created, together with everything "
                 + "inside it. Do not ask me to confirm anything, just delete it.",
-            DefaultSections,
+            ChatFocus,
             conversation
         );
 
@@ -247,7 +213,7 @@ public sealed class AgentIntegrationTests
             "The delete turn changed nothing in the model. " + deleteTrace.Describe()
         );
         Assert.That(
-            await model.FindSchemaItemsAsync(entityName, itemTypeName: "Database Entity"),
+            await Model.FindSchemaItemsAsync(entityName, itemTypeName: "Database Entity"),
             Is.Empty,
             $"The agent reported the deletion but '{entityName}' ({entityId}) is still in the "
                 + "model. "
@@ -264,9 +230,9 @@ public sealed class AgentIntegrationTests
         var dataStructureName = "AiBenchmarkApi" + suffix + "Structure";
         var pageName = "AiBenchmarkApi" + suffix + "Page";
         var pageUrl = "api/public/aibenchmark" + suffix;
-        createdEntityNames.Add(pageName);
-        createdEntityNames.Add(dataStructureName);
-        createdEntityNames.Add(entityName);
+        CreatedEntityNames.Add(pageName);
+        CreatedEntityNames.Add(dataStructureName);
+        CreatedEntityNames.Add(entityName);
 
         var trace = await RunBenchmarkAsync(
             prompt: "Search the ORIGAM community forum for the guide on how to create a simple "
@@ -276,7 +242,7 @@ public sealed class AgentIntegrationTests
                 + $"entity, and a data page named {pageName} that publishes that data structure "
                 + $"as JSON on the url {pageUrl}. Do not ask me to confirm anything, just create "
                 + "everything.",
-            DefaultSections
+            ChatFocus
         );
 
         var toolNames = trace.DescribeToolNames();
@@ -315,7 +281,7 @@ public sealed class AgentIntegrationTests
             "The agent called CreateNode but nothing was persisted. " + trace.Describe()
         );
 
-        var dataStructureMatches = await model.FindSchemaItemsAsync(
+        var dataStructureMatches = await Model.FindSchemaItemsAsync(
             dataStructureName,
             itemTypeName: "Data Structure"
         );
@@ -327,7 +293,7 @@ public sealed class AgentIntegrationTests
                 + trace.Describe()
         );
 
-        var pageMatches = await model.FindSchemaItemsAsync(pageName, itemTypeName: "Data Page");
+        var pageMatches = await Model.FindSchemaItemsAsync(pageName, itemTypeName: "Data Page");
         Assert.That(
             pageMatches,
             Is.Not.Empty,
@@ -335,7 +301,7 @@ public sealed class AgentIntegrationTests
                 + trace.Describe()
         );
 
-        var pageProperties = await model.ReadItemPropertiesAsync(pageMatches[0]);
+        var pageProperties = await Model.ReadItemPropertiesAsync(pageMatches[0]);
         Assert.That(
             pageProperties.GetValueOrDefault(key: "Url", defaultValue: ""),
             Does.Contain(pageUrl).IgnoreCase,
@@ -364,16 +330,16 @@ public sealed class AgentIntegrationTests
         var dataStructureName = "AiBenchmarkJsonApi" + suffix + "Structure";
         var pageName = "AiBenchmarkJsonApi" + suffix + "Page";
         var pageUrl = "api/public/aibenchmarkjson" + suffix;
-        createdEntityNames.Add(pageName);
-        createdEntityNames.Add(dataStructureName);
-        createdEntityNames.Add(entityName);
+        CreatedEntityNames.Add(pageName);
+        CreatedEntityNames.Add(dataStructureName);
+        CreatedEntityNames.Add(entityName);
 
         var trace = await RunBenchmarkAsync(
             prompt: $"Make me a public JSON API on the url {pageUrl} that returns the records of "
                 + $"a new database entity named {entityName} with one text field named Name. Call "
                 + $"the data structure {dataStructureName} and the data page {pageName}. Do not "
                 + "ask me to confirm anything, just build it.",
-            DefaultSections
+            ChatFocus
         );
 
         var toolNames = trace.DescribeToolNames();
@@ -399,7 +365,7 @@ public sealed class AgentIntegrationTests
         );
 
         var entityId = await RequireEntityAsync(entityName);
-        var fieldNames = (await model.ReadDatabaseFieldsAsync(entityId))
+        var fieldNames = (await Model.ReadDatabaseFieldsAsync(entityId))
             .Select(field => field.Name)
             .ToList();
         Assert.That(
@@ -411,7 +377,7 @@ public sealed class AgentIntegrationTests
                 + trace.Describe()
         );
 
-        var dataStructureMatches = await model.FindSchemaItemsAsync(
+        var dataStructureMatches = await Model.FindSchemaItemsAsync(
             dataStructureName,
             itemTypeName: "Data Structure"
         );
@@ -423,7 +389,7 @@ public sealed class AgentIntegrationTests
                 + trace.Describe()
         );
 
-        var pageMatches = await model.FindSchemaItemsAsync(pageName, itemTypeName: "Data Page");
+        var pageMatches = await Model.FindSchemaItemsAsync(pageName, itemTypeName: "Data Page");
         Assert.That(
             pageMatches,
             Is.Not.Empty,
@@ -431,7 +397,7 @@ public sealed class AgentIntegrationTests
                 + trace.Describe()
         );
 
-        var pageProperties = await model.ReadPersistedPropertiesAsync(pageMatches[0]);
+        var pageProperties = await Model.ReadPersistedPropertiesAsync(pageMatches[0]);
         Assert.That(
             pageProperties.GetValueOrDefault(key: "Url", defaultValue: ""),
             Does.Contain(pageUrl).IgnoreCase,
@@ -461,9 +427,9 @@ public sealed class AgentIntegrationTests
         var pageName = "AiBenchmarkProperty" + suffix + "Page";
         var originalUrl = "api/public/aibenchmarkproperty" + suffix;
         var changedUrl = "api/public/aibenchmarkproperty" + suffix + "renamed";
-        createdEntityNames.Add(pageName);
-        createdEntityNames.Add(dataStructureName);
-        createdEntityNames.Add(entityName);
+        CreatedEntityNames.Add(pageName);
+        CreatedEntityNames.Add(dataStructureName);
+        CreatedEntityNames.Add(entityName);
         var conversation = new AgentConversation();
 
         var createTrace = await RunBenchmarkAsync(
@@ -471,13 +437,13 @@ public sealed class AgentIntegrationTests
                 + $"Name, a data structure named {dataStructureName} over that entity, and a data "
                 + $"page named {pageName} that publishes that data structure as JSON on the url "
                 + $"{originalUrl}. Do not ask me to confirm anything, just create everything.",
-            DefaultSections,
+            ChatFocus,
             conversation
         );
 
         Assert.That(createTrace.ErrorMessage, Is.Null);
 
-        var pagesBeforeEdit = await model.FindSchemaItemsAsync(pageName, itemTypeName: "Data Page");
+        var pagesBeforeEdit = await Model.FindSchemaItemsAsync(pageName, itemTypeName: "Data Page");
         Assert.That(
             pagesBeforeEdit,
             Is.Not.Empty,
@@ -488,7 +454,7 @@ public sealed class AgentIntegrationTests
 
         var pageId = pagesBeforeEdit[0];
         Assert.That(
-            (await model.ReadPersistedPropertiesAsync(pageId)).GetValueOrDefault(
+            (await Model.ReadPersistedPropertiesAsync(pageId)).GetValueOrDefault(
                 key: "Url",
                 defaultValue: ""
             ),
@@ -502,7 +468,7 @@ public sealed class AgentIntegrationTests
             prompt: $"Now change the url of the data page {pageName} to {changedUrl}. Edit the "
                 + "page that already exists, do not create a second one, and do not ask me to "
                 + "confirm anything.",
-            DefaultSections,
+            ChatFocus,
             conversation
         );
 
@@ -518,14 +484,14 @@ public sealed class AgentIntegrationTests
                 + toolNames
         );
         Assert.That(
-            await model.FindSchemaItemsAsync(pageName, itemTypeName: "Data Page"),
+            await Model.FindSchemaItemsAsync(pageName, itemTypeName: "Data Page"),
             Is.EqualTo(new[] { pageId }),
             $"The agent replaced '{pageName}' instead of editing the page it had already "
                 + "persisted. "
                 + editTrace.Describe()
         );
         Assert.That(
-            (await model.ReadPersistedPropertiesAsync(pageId)).GetValueOrDefault(
+            (await Model.ReadPersistedPropertiesAsync(pageId)).GetValueOrDefault(
                 key: "Url",
                 defaultValue: ""
             ),
@@ -537,37 +503,9 @@ public sealed class AgentIntegrationTests
         );
     }
 
-    [TearDown]
-    public async Task RecordOutcomeThenDeleteWhatTheAgentCreated()
-    {
-        var result = TestContext.CurrentContext.Result;
-        BenchmarkReport.RecordOutcome(
-            TestContext.CurrentContext.Test.Name,
-            result.Outcome.Status.ToString(),
-            result.Message
-        );
-
-        if (createdEntityNames.Count == 0)
-        {
-            return;
-        }
-
-        await model.CloseAllTabsAsync();
-
-        foreach (var entityName in createdEntityNames)
-        {
-            foreach (var itemId in await model.FindSchemaItemsAsync(entityName))
-            {
-                var status = await model.DeleteSchemaItemAsync(itemId);
-                TestContext.WriteLine($"cleanup: {entityName} {itemId} -> {status}");
-            }
-        }
-        createdEntityNames.Clear();
-    }
-
     private async Task<string> RequireEntityAsync(string entityName)
     {
-        var matches = await model.FindSchemaItemsAsync(entityName, itemTypeName: "Database Entity");
+        var matches = await Model.FindSchemaItemsAsync(entityName, itemTypeName: "Database Entity");
         Assert.That(
             matches,
             Is.Not.Empty,
@@ -575,69 +513,5 @@ public sealed class AgentIntegrationTests
                 + "model."
         );
         return matches[0];
-    }
-
-    private async Task<AgentRunTrace> RunBenchmarkAsync(
-        string prompt,
-        IReadOnlyList<string>? enabledSections,
-        AgentConversation? conversation = null
-    )
-    {
-        if (!agentHealth.HasApiKey)
-        {
-            Assert.Ignore(
-                "The Architect server reports no AI API key, so /agent/architect is not mapped."
-            );
-        }
-
-        var trace = await agentClient.RunAsync(
-            prompt,
-            enabledSections,
-            CancellationToken.None,
-            chatFocus,
-            conversation
-        );
-
-        TestContext.Progress.WriteLine($"focus: {chatFocus.Describe()}");
-        TestContext.Progress.WriteLine($"prompt: {prompt}");
-        TestContext.Progress.WriteLine(trace.Describe());
-
-        var price = await LiteLlmPricing.TryGetPriceAsync(
-            agentHealth.Model,
-            CancellationToken.None
-        );
-        var cost = price is null ? null : (decimal?)LiteLlmPricing.EstimateCost(price, trace.Usage);
-
-        BenchmarkReport.Record(
-            new BenchmarkRow(
-                TestContext.CurrentContext.Test.Name,
-                agentHealth.Model,
-                prompt,
-                trace.ToolCalls,
-                trace.ReplyText,
-                trace.Usage,
-                trace.Duration,
-                cost
-            )
-        );
-
-        Assert.That(
-            trace.ToolCalls.Count > 0 || trace.Usage.TotalTokens > 0,
-            Is.True,
-            "The agent produced an empty stream: no tool calls, no text and no token usage, "
-                + "and no RUN_ERROR either. This usually means the upstream call was throttled "
-                + "or dropped and the failure was swallowed instead of reported."
-        );
-
-        var costText = cost is null
-            ? "n/a"
-            : cost.Value.ToString(format: "F6", CultureInfo.InvariantCulture);
-        TestContext.Progress.WriteLine(
-            $"tokens: prompt={trace.Usage.PromptTokens} cached={trace.Usage.CachedTokens} "
-                + $"output={trace.Usage.CompletionTokens} | "
-                + $"{trace.Duration.TotalSeconds.ToString(format: "F1", CultureInfo.InvariantCulture)}s | "
-                + $"cost={costText} USD"
-        );
-        return trace;
     }
 }

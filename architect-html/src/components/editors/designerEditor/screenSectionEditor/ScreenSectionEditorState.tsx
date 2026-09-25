@@ -91,7 +91,7 @@ export class ScreenSectionEditorState extends DesignerEditorState {
       });
 
       const newComponent = yield controlToComponent(apiControl, null);
-      newComponent.width = newComponent.width ?? 400;
+      newComponent.width = newComponent.width ?? 100;
       newComponent.height = newComponent.height ?? 20;
       newComponent.parent = parent;
       this.surface.components.push(newComponent);
@@ -108,6 +108,16 @@ export class ScreenSectionEditorState extends DesignerEditorState {
   *save(): Generator<Promise<any>, void, any> {
     yield this.architectApi.persistSectionEditorChanges(this.editorNode.origamId);
     yield* super.save();
+  }
+
+  *refreshFields(): Generator<Promise<any>, void, any> {
+    const updateResult = yield this.architectApi.updateSectionEditor({
+      schemaItemId: this.toolbox.id,
+      name: this.toolbox.name,
+      selectedDataSourceId: this.toolbox.selectedDataSourceId,
+      modelChanges: [],
+    });
+    this.sectionToolbox.fields = updateResult.data.fields;
   }
 
   protected *update(): Generator<Promise<any>, void, any> {

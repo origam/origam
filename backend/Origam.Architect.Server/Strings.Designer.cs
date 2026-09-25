@@ -221,7 +221,43 @@ namespace Origam.Architect.Server {
                 return ResourceManager.GetString("ParameterNotFound", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to Type converter {0} of property {1} could not be found..
+        /// </summary>
+        internal static string Property_ConverterNotFound {
+            get {
+                return ResourceManager.GetString("Property_ConverterNotFound", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to A data constant of data type {0} cannot have a value..
+        /// </summary>
+        internal static string Property_DataTypeWithoutValue {
+            get {
+                return ResourceManager.GetString("Property_DataTypeWithoutValue", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to &quot;{1}&quot; is not one of the values offered for {0}..
+        /// </summary>
+        internal static string Property_ValueNotOffered {
+            get {
+                return ResourceManager.GetString("Property_ValueNotOffered", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The value of {0} could not be read. {1}.
+        /// </summary>
+        internal static string Property_ValueNotRead {
+            get {
+                return ResourceManager.GetString("Property_ValueNotRead", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to &apos;{0}&apos; is not a valid value for property {1}. Allowed values: {2}.
         /// </summary>
@@ -732,6 +768,141 @@ namespace Origam.Architect.Server {
         internal static string XsltValidationSuccess {
             get {
                 return ResourceManager.GetString("XsltValidationSuccess", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Radio button &quot;{0}&quot; is bound to a field but has no Value Constant. Select a Value Constant in its properties..
+        /// </summary>
+        internal static string SectionEditor_RadioButtonValueConstantMissing {
+            get {
+                return ResourceManager.GetString("SectionEditor_RadioButtonValueConstantMissing", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Multi Column Adapter Field Wrapper &quot;{0}&quot; contains no widget bound to a field. Drop at least one field inside it..
+        /// </summary>
+        internal static string SectionEditor_WrapperHasNoBoundWidgets {
+            get {
+                return ResourceManager.GetString("SectionEditor_WrapperHasNoBoundWidgets", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Widget &quot;{0}&quot; is bound to a field but has no Lookup. Select a Lookup in its properties..
+        /// </summary>
+        internal static string SectionEditor_DropdownLookupMissing {
+            get {
+                return ResourceManager.GetString("SectionEditor_DropdownLookupMissing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Widget &quot;{0}&quot; is bound to field &quot;{1}&quot; which is not an Integer. A color editor requires an Integer field..
+        /// </summary>
+        internal static string SectionEditor_ColorPickerFieldNotInteger {
+            get {
+                return ResourceManager.GetString("SectionEditor_ColorPickerFieldNotInteger", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Widget &quot;{0}&quot; is bound to field &quot;{1}&quot; whose data type is {2}. Tag Input and Checklist can only be bound to an array field, which is a field with data type Array, an Array Relation and an Array Value Field. Bind the widget to an array field, or use a Combo Box to edit a single value..
+        /// </summary>
+        internal static string SectionEditor_TagInputFieldNotArray {
+            get {
+                return ResourceManager.GetString("SectionEditor_TagInputFieldNotArray", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Field &quot;{0}&quot; is bound by more than one widget: {1}. Only one widget can be bound to a field..
+        /// </summary>
+        internal static string SectionEditor_FieldBoundTwice {
+            get {
+                return ResourceManager.GetString("SectionEditor_FieldBoundTwice", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Widget type &quot;{0}&quot; cannot be placed on a screen section. Use one of: {1}.
+        /// </summary>
+        internal static string SectionEditor_UnknownWidgetType {
+            get {
+                return ResourceManager.GetString("SectionEditor_UnknownWidgetType", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Field &quot;{0}&quot; does not exist on entity &quot;{1}&quot;. Available fields: {2}.
+        /// </summary>
+        internal static string SectionEditor_FieldNotFound {
+            get {
+                return ResourceManager.GetString("SectionEditor_FieldNotFound", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The screen section has no entity, so a widget cannot be bound to a field. Set the section&apos;s entity first..
+        /// </summary>
+        internal static string SectionEditor_NoDataSource {
+            get {
+                return ResourceManager.GetString("SectionEditor_NoDataSource", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Parent control {0} was not found..
+        /// </summary>
+        internal static string DesignerEditor_ParentControlNotFound {
+            get {
+                return ResourceManager.GetString("DesignerEditor_ParentControlNotFound", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Field &quot;{0}&quot; is not part of data structure &quot;{1}&quot; used by the screens {2}, so those screens cannot open. Add it with POST /Tab/CreateNode: nodeId = {3} (the data structure entity), newTypeName &apos;Field&apos;, changes Name = &quot;{0}&quot; and Field = {4}, persist true; or clear ExcludeFromAllFields on the entity field..
+        /// </summary>
+        internal static string SectionEditor_FieldMissingInDataStructure {
+            get {
+                return ResourceManager.GetString("SectionEditor_FieldMissingInDataStructure", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Array field &quot;{0}&quot; needs its relation &quot;{1}&quot; in data structure &quot;{2}&quot; used by the screens {3}, or those screens cannot open. Add it with POST /Tab/CreateNode: nodeId = {4} (the data structure entity), newTypeName &apos;Entity&apos;, changes Entity = {5} and AllFields = true, persist true..
+        /// </summary>
+        internal static string SectionEditor_ArrayRelationMissingInDataStructure {
+            get {
+                return ResourceManager.GetString("SectionEditor_ArrayRelationMissingInDataStructure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Property &quot;{0}&quot; does not exist on widget &quot;{1}&quot;. Available properties: {2}.
+        /// </summary>
+        internal static string ControlAdapter_PropertyNotFound {
+            get {
+                return ResourceManager.GetString("ControlAdapter_PropertyNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A Lookup named &quot;{0}&quot; already exists..
+        /// </summary>
+        internal static string Wizard_LookupAlreadyExists {
+            get {
+                return ResourceManager.GetString("Wizard_LookupAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Entity &quot;{0}&quot; of this screen section is not part of data structure &quot;{1}&quot; used by the screens {2}, so those screens cannot open. Either point the screen section back at an entity of &quot;{1}&quot;, or add &quot;{0}&quot; to &quot;{1}&quot; and set the DataMember of the section on those screens to it..
+        /// </summary>
+        internal static string SectionEditor_EntityMissingInDataStructure {
+            get {
+                return ResourceManager.GetString("SectionEditor_EntityMissingInDataStructure", resourceCulture);
             }
         }
     }

@@ -111,6 +111,16 @@ public class ResponseCompactionFilter(NewItemTypeCatalogService catalogService)
             return CompactEditorTab(root, node);
         }
 
+        if (root.TryGetProperty(propertyName: "data", out JsonElement data) && HasRootControl(data))
+        {
+            return CompactDesignerUpdate(root, data);
+        }
+
+        if (IsWidget(root))
+        {
+            return JsonSerializer.Serialize(CompactWidget(root), JsonOptions);
+        }
+
         return null;
     }
 
@@ -120,12 +130,6 @@ public class ResponseCompactionFilter(NewItemTypeCatalogService catalogService)
         if (
             node.ValueKind != JsonValueKind.Object
             || !root.TryGetProperty(propertyName: "data", out JsonElement data)
-            || !TryReadProperties(
-                data,
-                GetConventionHints(itemTypeName),
-                out string values,
-                out List<string> errors
-            )
         )
         {
             return null;
@@ -137,12 +141,31 @@ public class ResponseCompactionFilter(NewItemTypeCatalogService catalogService)
             ["name"] = node.GetStringOrNull(propertyName: "nodeText"),
             ["type"] = itemTypeName,
             ["saved"] = root.GetBooleanOrNull(propertyName: "isPersisted"),
-            ["parent"] = root.GetStringOrNull(propertyName: "parentName"),
-            ["parentId"] = root.GetStringOrNull(propertyName: "parentOrigamId"),
-            ["primaryKeyFieldId"] = root.GetStringOrNull(propertyName: "primaryKeyFieldId"),
-            ["props"] = values,
-            ["errors"] = errors,
         };
+
+        if (HasRootControl(data))
+        {
+            AppendDesignerData(summary, data);
+        }
+        else if (
+            TryReadProperties(
+                data,
+                GetConventionHints(itemTypeName),
+                out string values,
+                out List<string> errors
+            )
+        )
+        {
+            summary["parent"] = root.GetStringOrNull(propertyName: "parentName");
+            summary["parentId"] = root.GetStringOrNull(propertyName: "parentOrigamId");
+            summary["primaryKeyFieldId"] = root.GetStringOrNull(propertyName: "primaryKeyFieldId");
+            summary["props"] = values;
+            summary["errors"] = errors;
+        }
+        else
+        {
+            return null;
+        }
 
         if (root.GetBooleanOrNull(propertyName: "discarded") == true)
         {
@@ -150,6 +173,116 @@ public class ResponseCompactionFilter(NewItemTypeCatalogService catalogService)
         }
 
         return JsonSerializer.Serialize(summary, JsonOptions);
+    }
+
+    private static bool HasRootControl(JsonElement data)
+    {
+        return data.ValueKind == JsonValueKind.Object
+            && data.TryGetProperty(propertyName: "rootControl", out JsonElement rootControl)
+            && rootControl.ValueKind == JsonValueKind.Object;
+    }
+
+    private static bool IsWidget(JsonElement element)
+    {
+        return element.TryGetProperty(propertyName: "properties", out JsonElement properties)
+            && properties.ValueKind == JsonValueKind.Array
+            && element.GetStringOrNull(propertyName: "type") is not null
+            && element.GetStringOrNull(propertyName: "id") is not null;
+    }
+
+    private static string CompactDesignerUpdate(JsonElement root, JsonElement data)
+    {
+        var summary = new Dictionary<string, object?>(StringComparer.Ordinal)
+        {
+            ["isDirty"] = root.GetBooleanOrNull(propertyName: "isDirty"),
+            ["name"] = data.GetStringOrNull(propertyName: "name"),
+        };
+        AppendDesignerData(summary, data);
+        return JsonSerializer.Serialize(summary, JsonOptions);
+    }
+
+    private static void AppendDesignerData(Dictionary<string, object?> summary, JsonElement data)
+    {
+        summary["dataSourceId"] = data.GetStringOrNull(propertyName: "selectedDataSourceId");
+        if (
+            data.TryGetProperty(propertyName: "fields", out JsonElement fields)
+            && fields.ValueKind == JsonValueKind.Array
+        )
+        {
+            summary["fields"] = string.Join(
+                separator: ", ",
+                fields
+                    .EnumerateArray()
+                    .Select(field =>
+                        field.GetStringOrNull(propertyName: "name")
+                        + "("
+                        + field.GetStringOrNull(propertyName: "type")
+                        + ")"
+                    )
+            );
+        }
+
+        summary["root"] = CompactWidget(data.GetProperty("rootControl"));
+        AppendWarnings(summary, data);
+    }
+
+    private static void AppendWarnings(Dictionary<string, object?> summary, JsonElement element)
+    {
+        if (
+            element.TryGetProperty(propertyName: "warnings", out JsonElement warnings)
+            && warnings.ValueKind == JsonValueKind.Array
+            && warnings.GetArrayLength() > 0
+        )
+        {
+            summary["warnings"] = warnings
+                .EnumerateArray()
+                .Select(warning => warning.GetString())
+                .ToList();
+        }
+    }
+
+    private static Dictionary<string, object?> CompactWidget(JsonElement widget)
+    {
+        var summary = new Dictionary<string, object?>(StringComparer.Ordinal)
+        {
+            ["id"] = widget.GetStringOrNull(propertyName: "id"),
+            ["type"] = widget.GetStringOrNull(propertyName: "type"),
+            ["name"] = widget.GetStringOrNull(propertyName: "name"),
+        };
+        if (widget.GetStringOrNull(propertyName: "boundField") is string boundField)
+        {
+            summary["field"] = boundField;
+        }
+
+        if (
+            widget.TryGetProperty(propertyName: "properties", out JsonElement properties)
+            && TryReadProperties(
+                properties,
+                hints: null,
+                out string values,
+                out List<string> errors,
+                skipEmpty: true
+            )
+        )
+        {
+            summary["props"] = values;
+            if (errors.Count > 0)
+            {
+                summary["errors"] = errors;
+            }
+        }
+
+        if (
+            widget.TryGetProperty(propertyName: "children", out JsonElement children)
+            && children.ValueKind == JsonValueKind.Array
+            && children.GetArrayLength() > 0
+        )
+        {
+            summary["children"] = children.EnumerateArray().Select(CompactWidget).ToList();
+        }
+
+        AppendWarnings(summary, widget);
+        return summary;
     }
 
     private static string? CompactPropertyUpdates(JsonElement root, JsonElement propertyUpdates)
@@ -204,7 +337,8 @@ public class ResponseCompactionFilter(NewItemTypeCatalogService catalogService)
         JsonElement properties,
         IReadOnlyDictionary<string, string>? hints,
         out string values,
-        out List<string> errors
+        out List<string> errors,
+        bool skipEmpty = false
     )
     {
         values = string.Empty;
@@ -240,6 +374,12 @@ public class ResponseCompactionFilter(NewItemTypeCatalogService catalogService)
                 continue;
             }
 
+            string value = DescribeValue(property);
+            if (skipEmpty && (value.Length == 0 || value == "null"))
+            {
+                continue;
+            }
+
             if (builder.Length >= MaxPropertiesLength)
             {
                 builder.Append("; ...");
@@ -252,7 +392,6 @@ public class ResponseCompactionFilter(NewItemTypeCatalogService catalogService)
                 builder.Append("; ");
             }
 
-            string value = DescribeValue(property);
             builder
                 .Append(name)
                 .Append(DescribeKind(property, name, value, hints))

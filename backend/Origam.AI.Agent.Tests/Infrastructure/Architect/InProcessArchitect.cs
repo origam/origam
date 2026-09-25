@@ -67,6 +67,27 @@ public static class InProcessArchitect
         }
     }
 
+    public static async Task<bool> ActivatePackageAsync(string packageName)
+    {
+        if (httpClient is null)
+        {
+            return false;
+        }
+
+        var packages = await ReadPackagesAsync(httpClient, CancellationToken.None);
+        var index = packages.FindIndex(entry =>
+            string.Equals(entry.Name, packageName, StringComparison.OrdinalIgnoreCase)
+        );
+        if (index < 0)
+        {
+            return false;
+        }
+
+        await SetActivePackageAsync(httpClient, packages[index].Id, CancellationToken.None);
+        ActivePackageName = packages[index].Name;
+        return true;
+    }
+
     public static void Shutdown()
     {
         httpClient?.Dispose();
@@ -80,36 +101,54 @@ public static class InProcessArchitect
         CancellationToken cancellationToken
     )
     {
-        var body = await client.GetStringAsync(requestUri: "/Package/GetAll", cancellationToken);
-        using var document = JsonDocument.Parse(body);
-        var packages = document
-            .RootElement.GetProperty("packages")
-            .EnumerateArray()
-            .Select(entry => new
-            {
-                Id = entry.GetProperty("id").GetString(),
-                Name = entry.GetProperty("name").GetString(),
-            })
-            .Where(entry => entry.Id is not null)
-            .ToList();
-
+        var packages = await ReadPackagesAsync(client, cancellationToken);
         if (packages.Count == 0)
         {
             return null;
         }
 
         var requestedName = Environment.GetEnvironmentVariable(PackageVariable);
-        var chosen =
-            packages.FirstOrDefault(entry =>
-                string.Equals(entry.Name, requestedName, StringComparison.OrdinalIgnoreCase)
-            ) ?? packages[0];
+        var index = packages.FindIndex(entry =>
+            string.Equals(entry.Name, requestedName, StringComparison.OrdinalIgnoreCase)
+        );
+        var chosen = packages[index < 0 ? 0 : index];
 
+        await SetActivePackageAsync(client, chosen.Id, cancellationToken);
+        return chosen.Name;
+    }
+
+    private static async Task SetActivePackageAsync(
+        HttpClient client,
+        string packageId,
+        CancellationToken cancellationToken
+    )
+    {
         using var response = await client.PostAsJsonAsync(
             requestUri: "/Package/SetActive",
-            new { id = chosen.Id },
+            new { id = packageId },
             cancellationToken
         );
         response.EnsureSuccessStatusCode();
-        return chosen.Name;
+    }
+
+    private static async Task<List<(string Id, string Name)>> ReadPackagesAsync(
+        HttpClient client,
+        CancellationToken cancellationToken
+    )
+    {
+        var body = await client.GetStringAsync(requestUri: "/Package/GetAll", cancellationToken);
+        using var document = JsonDocument.Parse(body);
+        return document
+            .RootElement.GetProperty("packages")
+            .EnumerateArray()
+            .Select(entry =>
+                (
+                    Id: entry.GetProperty("id").GetString(),
+                    Name: entry.GetProperty("name").GetString()
+                )
+            )
+            .Where(entry => entry.Id is not null)
+            .Select(entry => (Id: entry.Id!, Name: entry.Name ?? string.Empty))
+            .ToList();
     }
 }

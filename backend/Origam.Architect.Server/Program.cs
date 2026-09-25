@@ -30,6 +30,7 @@ using Origam.Architect.Server.Interfaces.Services;
 using Origam.Architect.Server.ReturnModels;
 using Origam.Architect.Server.Services;
 using Origam.Architect.Server.Services.Move;
+using Origam.Architect.Server.Services.SectionEditor;
 using Origam.Architect.Server.Services.Wizards;
 using Origam.Architect.Server.Services.Xslt;
 using Origam.Extensions;
@@ -75,6 +76,8 @@ public class Program
         builder.Services.AddSingleton<SchemaItemMoveService>();
         builder.Services.AddSingleton<PropertyEditorService>();
         builder.Services.AddSingleton<ItemTypeCatalogService>();
+        builder.Services.AddSingleton<ApiControlFactory>();
+        builder.Services.AddSingleton<SectionWidgetFactory>();
         builder.Services.AddSingleton<DesignerEditorService>();
         builder.Services.AddSingleton<DeploymentVersionCurrentService>();
         builder.Services.AddSingleton<DeploymentScriptRunnerService>();
@@ -127,12 +130,8 @@ public class Program
         });
 
         var app = builder.Build();
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseSwagger();
-            app.UseSwaggerUI();
-        }
-
+        app.UseSwagger();
+        app.UseSwaggerUI();
         app.UseMiddleware<OrigamErrorHandlingMiddleware>();
         app.UseMiddleware<ServerIdentityMiddleware>();
         app.UseStaticFiles();

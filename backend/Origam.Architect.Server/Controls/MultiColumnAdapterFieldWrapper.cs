@@ -20,11 +20,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.ComponentModel;
+using Origam.Architect.Server.Attributes;
 using Origam.Schema.GuiModel;
 
 namespace Origam.Architect.Server.Controls;
 
-public class MultiColumnAdapterFieldWrapper : IControl
+public class MultiColumnAdapterFieldWrapper : IControl, IAsControl
 {
     [Browsable(false)]
     public int Top { get; set; }
@@ -44,5 +45,12 @@ public class MultiColumnAdapterFieldWrapper : IControl
     [Browsable(false)]
     public int Left { get; set; }
 
-    public void Initialize(ControlSetItem controlSetItem) { }
+    public void Initialize(ControlSetItem controlSetItem)
+    {
+        Height = 100;
+        Width = 200;
+    }
+
+    [NotAModelProperty]
+    public string DefaultBindableProperty => "ControlMember";
 }

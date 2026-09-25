@@ -85,7 +85,10 @@ export class GridEditorState implements ITabState, IPropertyManager {
     try {
       this.isSaving = true;
       yield this.architectApi.persistChanges(this.editorNode.origamId);
-      yield* this.modelTreeState.reloadParentOf(this.editorNode.origamId, this.editorNode.parent);
+      const treeNode = this.editorNode.parent;
+      const fallbackParent =
+        treeNode?.origamId === this.editorNode.origamId ? treeNode.parent : treeNode;
+      yield* this.modelTreeState.reloadParentOf(this.editorNode.origamId, fallbackParent);
       this._isDirty = false;
     } finally {
       this.isSaving = false;

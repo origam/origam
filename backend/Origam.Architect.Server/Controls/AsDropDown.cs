@@ -25,7 +25,7 @@ using Origam.Schema.EntityModel;
 
 namespace Origam.Architect.Server.Controls;
 
-public class AsDropDown : LabeledEditor
+public class AsDropDown : LabeledEditor, IAsControl, ILookupBoundControl
 {
     public bool HideOnForm { get; set; }
 
@@ -42,4 +42,9 @@ public class AsDropDown : LabeledEditor
     public string GridColumnCaption { get; set; }
 
     public bool ReadOnly { get; set; }
+
+    public Object LookupValue { get; set; }
+
+    [NotAModelProperty]
+    public string DefaultBindableProperty => "LookupValue";
 }
