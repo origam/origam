@@ -1,5 +1,16 @@
 <Project>
   <!--
+    The "... Architect Server" configs define ORIGAM_SERVER so ReflectorCache
+    excludes Origam.Gui.Win (net472/WinForms, unbuildable on the Linux SDK ->
+    NETSDK1136). ORIGAM_CLIENT is intentionally left undefined so
+    MetaModelUpgradeMode stays "Upgrade" (needed by the model editor). Both
+    Debug and Release so dev/debug builds work.
+  -->
+  <PropertyGroup Condition="$(Configuration.EndsWith('Architect Server'))">
+    <DefineConstants>$(DefineConstants);ORIGAM_SERVER</DefineConstants>
+  </PropertyGroup>
+
+  <!--
     For legacy non-SDK csproj files (those that contain TargetFrameworkVersion),
     Directory.Build.props sets DisableMeziantouAnalyzer=true and skips the
     Meziantou.Analyzer PackageReference. 

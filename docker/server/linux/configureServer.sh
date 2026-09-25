@@ -134,27 +134,8 @@ if [ ! -d "$PROJECT_DATA_DIRECTORY" ]; then
 	exit 1
 fi
 
-cp _appsettings.template appsettings.prepare
-
-if [[ ! -z ${ExternalDomain_SetOnStart} ]]; then
-	rm -f appsettings.json
-	cp appsettings.prepare appsettings.json 
-	sed -i "s|ExternalDomain|${ExternalDomain_SetOnStart}|" appsettings.json
-fi
-
-if [[ ! -z ${EnableChat} && ${EnableChat} == true ]]; then
-	sed -i "s|pathchatapp|/home/origam/server_bin/clients/chat|" appsettings.json
-	sed -i "s|chatinterval|10000|" appsettings.json
-else
-	sed -i "s|pathchatapp||" appsettings.json
-	sed -i "s|chatinterval|0|" appsettings.json
-fi
-
-ORIGAM_SETTINGS_FILE="OrigamSettings.config"
-cp _OrigamSettings.template "$ORIGAM_SETTINGS_FILE"
-
-source fill_origam_settings_config.sh
-fill_origam_settings_config "$ORIGAM_SETTINGS_FILE" "${DatabaseType}"
+source stage_server_config.sh
+stage_server_config . .
 
 export gitUrl
 export gitBranch

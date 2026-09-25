@@ -1,0 +1,100 @@
+# DB + dev container on a shared network (devcontainer reaches the DB at
+# database:1433). Editors attach to the `devcontainer` service; see
+# devcontainer.json. The repo is mounted at /workspaces/origam.
+services:
+  database:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    user: "0:0"
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "${MSSQL_SA_PASSWORD:-}"
+      MSSQL_AGENT_ENABLED: "true"
+    volumes:
+      - devcontainer-db-data:/var/opt/mssql
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          '/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "${MSSQL_SA_PASSWORD:-}" -C -Q ''SELECT 1'' || exit 1',
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+
+  # One-shot: creates the origam-dev database the backends connect to. The
+  # Origam server deploys the schema itself on first boot.
+  db-init:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    depends_on:
+      database:
+        condition: service_healthy
+    environment:
+      MSSQL_SA_PASSWORD: "${MSSQL_SA_PASSWORD:-}"
+    restart: "no"
+    entrypoint:
+      [
+        "/bin/bash",
+        "-c",
+        '/opt/mssql-tools18/bin/sqlcmd -S database -U sa -P "$$MSSQL_SA_PASSWORD" -C -b -Q "IF DB_ID(''origam-dev'') IS NULL CREATE DATABASE [origam-dev] ELSE PRINT ''origam-dev already exists''"',
+      ]
+
+  devcontainer:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    image: origam/devcontainer:dev
+    command: sleep infinity
+    depends_on:
+      database:
+        condition: service_healthy
+      db-init:
+        condition: service_completed_successfully
+    # Everything the backends AND the on-demand Vite dev servers need (see
+    # .vscode/tasks.json). The DB-side OrigamSettings__* are consumed by
+    # debug-build-server.sh / run-server.sh staging.
+    environment:
+      - DatabaseType=mssql
+      - OrigamSettings__Name=${OrigamSettings__Name:-DevProject}
+      - OrigamSettings__DefaultSchemaExtensionId=${OrigamSettings__DefaultSchemaExtensionId:-f17329d6-3143-420a-a2e6-30e431eea51d}
+      - OrigamSettings__DataConnectionString=${OrigamSettings__DataConnectionString:-Encrypt=False;Data Source=database,1433;Initial Catalog=origam-dev;User ID=sa;Password=${MSSQL_SA_PASSWORD:-};}
+      - OrigamSettings__ModelSourceControlLocation=${OrigamSettings__ModelSourceControlLocation:-/workspaces/origam/model-tests/model}
+      - ExternalDomain_SetOnStart=https://localhost:${FRONTEND_PORT:-5173}
+      - OpenIddictConfig__AccessTokenIssuer=https://localhost:${FRONTEND_PORT:-5173}
+      - EnableChat=${EnableChat:-false}
+      # @origam/react-contexify is a github: dep Yarn packs from a clone; the
+      # fork has no .gitattributes, so the pack differs per OS and yarn.lock
+      # carries the Windows checksum (what CI runs on). Drop this env when the
+      # fork is fixed or the dep moves to a registry (community.origam.com/t/4616).
+      - YARN_CHECKSUM_BEHAVIOR=ignore
+      # Vite dev servers run in this container (vite-dev tasks). Proxy targets
+      # point at the backends on localhost — same container.
+      - VITE_PROXY_TARGET=http://localhost:8080
+      - VITE_ARCHITECT_PROXY_TARGET_HTTPS=http://localhost:8081
+      - VITE_ARCHITECT_PROXY_TARGET_HTTP=http://localhost:8081
+      - VITE_HOST=0.0.0.0
+      - VITE_DISABLE_HTTPS=true
+      - VITE_OIDC_AUTHORITY=https://localhost:${FRONTEND_PORT:-5173}
+    ports:
+      - "${SERVER_PORT:-8080}:8080"
+      - "${FRONTEND_PORT:-5173}:5173"
+      - "${ARCHITECT_PORT:-8081}:8081"
+      - "${ARCHITECT_FRONTEND_PORT:-5174}:5174"
+      - "${DAP_PORT:-47000}:47000"
+    volumes:
+      - ..:/workspaces/origam:cached
+      - devcontainer-nuget:/root/.nuget/packages
+      - devcontainer-dataprotection:/root/.aspnet/DataProtection-Keys
+      # Frontend deps live in named volumes (Linux binaries, off the host tree).
+      # vite runs on demand from this container; VS Code gets TS types from them.
+      - devcontainer-frontend-node-modules:/workspaces/origam/frontend-html/node_modules
+      - devcontainer-architect-node-modules:/workspaces/origam/architect-html/node_modules
+      - devcontainer-chat-node-modules:/workspaces/origam/chat-html/node_modules
+
+volumes:
+  devcontainer-db-data:
+  devcontainer-nuget:
+  devcontainer-dataprotection:
+  devcontainer-frontend-node-modules:
+  devcontainer-architect-node-modules:
+  devcontainer-chat-node-modules:
