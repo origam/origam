@@ -25,6 +25,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features.Authentication;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using OpenIddict.Validation.AspNetCore;
 
@@ -76,6 +77,10 @@ public class UserApiTokenAuthenticationMiddleware
         var result = await context.AuthenticateAsync(
             OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme
         );
+        if (!(result?.Succeeded ?? false) && IsSameOriginFrameRequest(context.Request))
+        {
+            result = await context.AuthenticateAsync(IdentityConstants.ApplicationScheme);
+        }
         if (result?.Principal != null)
         {
             context.User = result.Principal;
@@ -88,6 +93,12 @@ public class UserApiTokenAuthenticationMiddleware
             context.Features.Set<IAuthenticateResultFeature>(authFeatures);
         }
         await _next(context);
+    }
+
+    private static bool IsSameOriginFrameRequest(HttpRequest request)
+    {
+        return request.Headers["Sec-Fetch-Dest"] == "iframe"
+            && request.Headers["Sec-Fetch-Site"] == "same-origin";
     }
 }
 
