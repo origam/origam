@@ -70,7 +70,7 @@ export interface IArchitectApi {
 
   getMenuItems(node: INodeLoadData): Promise<IMenuItemInfo[]>;
 
-  createNode(node: INodeLoadData, typeName: string): Promise<IApiTabData>;
+  createNode(node: INodeLoadData, typeName: string, name?: string | null): Promise<IApiTabData>;
 
   createGroup(node: INodeLoadData, name: string): Promise<IApiTreeNode>;
 
@@ -534,6 +534,7 @@ export interface IMenuItemInfo {
   typeName: string;
   iconName: string;
   iconIndex: number | null;
+  name: string | null;
 }
 
 export type EditorSubType =
