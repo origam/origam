@@ -75,6 +75,24 @@ start_server() {
   ./configureServer.sh
   export ASPNETCORE_URLS="http://+:8080"
   dotnet Origam.Server.dll > origam-output.txt 2>&1 &
+  server_pid=$!
+}
+
+restart_server_with_private_api_authentication() {
+  kill "${server_pid}"
+  wait "${server_pid}"
+  export OpenIddictConfig__PrivateApiAuthentication="$1"
+  cd /home/origam/server_bin
+  dotnet Origam.Server.dll >> origam-output.txt 2>&1 &
+  server_pid=$!
+  for attempt in {1..60}; do
+    if [[ "$(curl -sk -o /dev/null -w "%{http_code}" https://localhost/)" == "200" ]]; then
+      return 0
+    fi
+    sleep 2
+  done
+  print_error "Server did not start with PrivateApiAuthentication=$1"
+  exit 1
 }
 
 fill_origam_settings_for_workflow_tests(){
@@ -119,6 +137,19 @@ if [[ $? -eq 0 ]]; then
 else
   sudo cp frontend-integration-test-results.trx /home/origam/output/
   print_error "Frontend integration tests failed"
+  exit 1
+fi
+
+print_title "Run user API integration tests in Cookie mode"
+restart_server_with_private_api_authentication Cookie
+cd /home/origam/server_bin/tests_e2e
+yarn test:e2e userApi
+if [[ $? -eq 0 ]]; then
+  sudo cp frontend-integration-test-results.trx /home/origam/output/frontend-integration-test-results-cookie-mode.trx
+  echo "Success."
+else
+  sudo cp frontend-integration-test-results.trx /home/origam/output/frontend-integration-test-results-cookie-mode.trx
+  print_error "User API integration tests in Cookie mode failed"
   exit 1
 fi
 
