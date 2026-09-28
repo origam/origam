@@ -58,7 +58,10 @@ public static class ScreenDataMembers
             .Prepend(new KeyValuePair<string, DataStructureEntity>(path, entity));
     }
 
-    public static void AddDropDown(List<EditorProperty> properties, FormControlSet screen)
+    public static void ConvertDataMemberToLookup(
+        List<EditorProperty> properties,
+        FormControlSet screen
+    )
     {
         int index = properties.FindIndex(property => property.Name == "DataMember");
         if (index < 0)

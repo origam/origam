@@ -92,7 +92,7 @@ public class ApiControlFactory(ControlAdapterFactory adapterFactory)
             apiControl.Name = controlSetItem.RootItem.Name;
             if (controlSetItem.RootItem is FormControlSet screen)
             {
-                ScreenDataMembers.AddDropDown(apiControl.Properties, screen);
+                ScreenDataMembers.ConvertDataMemberToLookup(apiControl.Properties, screen);
             }
         }
 
