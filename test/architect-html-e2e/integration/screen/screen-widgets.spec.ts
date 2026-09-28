@@ -487,6 +487,62 @@ test.describe('Screen editor widgets (real backend)', () => {
     await expect(editor.verb('add-tab')).toBeEnabled();
   });
 
+  test('a TabControl alone is saved with its two tab pages', async () => {
+    await editor.openNew();
+    await editor.drop('Widgets', 'TabControl', editor.surface, {
+      x: 60,
+      y: 60,
+    });
+
+    await expect(editor.warnings).toHaveCount(0);
+    await editor.save();
+
+    const screenXml = readModelFile(SCREEN_FILE);
+    for (const widget of ['TabControl', 'TabPage']) {
+      expect(screenXml).toContain('#' + widget + '/');
+    }
+    const savedTabControl = findControl(await editor.readScreen(), 'TabControl')!;
+    expect(savedTabControl.children.map(tab => property(tab, 'SchemaItemName')?.value)).toEqual([
+      'TabPage',
+      'TabPage1',
+    ]);
+  });
+
+  test('a TabControl with a widget on each page is saved without warnings', async () => {
+    await editor.openNew();
+    const tabControl = await editor.drop('Widgets', 'TabControl', editor.surface, {
+      x: 60,
+      y: 60,
+    });
+    const insidePage = { x: 40, y: 60 };
+    const tabLabel = (name: string) => editor.surface.getByText(name, { exact: true });
+
+    const section = await editor.drop(
+      'Screen Sections',
+      MASTER_SECTION,
+      editor.component(tabControl),
+      insidePage,
+    );
+    await tabLabel('TabPage1').click();
+    const label = await editor.drop('Widgets', 'Label', editor.component(tabControl), insidePage);
+    await tabLabel('TabPage').click();
+    await editor.select(section);
+    await editor.chooseProperty('DataMember', MASTER_DATA_MEMBER);
+
+    await expect(editor.warnings).toHaveCount(0);
+    await editor.save();
+
+    const screenXml = readModelFile(SCREEN_FILE);
+    for (const widget of ['TabControl', 'TabPage', 'Label']) {
+      expect(screenXml).toContain('#' + widget + '/');
+    }
+    const screen = await editor.readScreen();
+    const firstPageWidgets = findControl(screen, 'TabPage')!.children;
+    expect(firstPageWidgets.map(child => child.id)).toEqual([section.id]);
+    expect(property(firstPageWidgets[0], 'DataMember')?.value).toBe(MASTER_DATA_MEMBER);
+    expect(findControl(screen, 'TabPage1')!.children.map(child => child.id)).toEqual([label.id]);
+  });
+
   test('dragging a widget into a Panel makes it a child of that Panel', async () => {
     await editor.openNew();
     const panel = await editor.drop('Widgets', 'Panel', editor.surface, {
