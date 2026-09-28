@@ -239,11 +239,19 @@ export class ArchitectApi implements IArchitectApi {
     return (await this.http.get(`/Tab/GetOpen`)).data;
   }
 
-  async createNode(node: IApiTreeNode, typeName: string): Promise<IApiTabData> {
+  async createNode(
+    node: IApiTreeNode,
+    typeName: string,
+    name?: string | null,
+  ): Promise<IApiTabData> {
+    const changes: IPropertyChange[] = name
+      ? [{ name: 'Name', controlPropertyId: null, value: name }]
+      : [];
     return (
       await this.http.post('/Tab/CreateNode', {
         nodeId: node.origamId,
         newTypeName: typeName,
+        changes,
       })
     ).data;
   }

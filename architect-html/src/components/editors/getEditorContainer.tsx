@@ -119,6 +119,7 @@ export function getEditorContainer(args: {
       properties,
       isDirty,
       architectApi,
+      modelTreeState,
     );
     return new EditorContainer(editorState, <DeploymentScriptsEditor editorState={editorState} />);
   }
@@ -131,6 +132,7 @@ export function getEditorContainer(args: {
       properties,
       isDirty,
       architectApi,
+      modelTreeState,
     );
     const editorComponent = <GridEditor editorState={editorState} title={editorState.title} />;
     return new EditorContainer(editorState, editorComponent);
@@ -144,6 +146,7 @@ export function getEditorContainer(args: {
       properties,
       isDirty,
       architectApi,
+      modelTreeState,
     );
     const editorComponent = <XsltEditor editorState={editorState} />;
     return new EditorContainer(editorState, editorComponent);
@@ -160,6 +163,7 @@ export function getEditorContainer(args: {
       propertiesState,
       sectionToolboxState,
       architectApi,
+      modelTreeState,
       args.runGeneratorHandled,
     );
     const editorComponent = <ScreenSectionEditor designerState={state} />;
@@ -177,6 +181,7 @@ export function getEditorContainer(args: {
       propertiesState,
       screenToolboxState,
       architectApi,
+      modelTreeState,
       args.runGeneratorHandled,
     );
     const editorComponent = <ScreenEditor designerState={state} />;
@@ -191,6 +196,7 @@ export function getEditorContainer(args: {
       documentationData,
       isDirty,
       architectApi,
+      modelTreeState,
     );
     const editorComponent = (
       <GridEditor

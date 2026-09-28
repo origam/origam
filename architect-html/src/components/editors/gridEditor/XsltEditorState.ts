@@ -31,6 +31,7 @@ import { GridEditorState } from '@editors/gridEditor/GridEditorState.ts';
 import { observable } from 'mobx';
 import { ITabViewState } from '@components/tabView/ITabViewState.ts';
 import { IEditorNode } from '@components/editorTabView/EditorTabViewState.ts';
+import { ModelTreeState } from '@components/modelTree/ModelTreeState.ts';
 import { EditorProperty } from '@editors/gridEditor/EditorProperty.ts';
 import { ITabState } from '@/components/editorTabView/ITabState';
 import { IPropertyManager } from '@editors/propertyEditor/IPropertyManager.tsx';
@@ -78,6 +79,7 @@ export class XsltEditorState implements ITabViewState, ITabState, IPropertyManag
     properties: EditorProperty[] | undefined,
     isDirty: boolean,
     private architectApi: IArchitectApi,
+    modelTreeState: ModelTreeState,
   ) {
     this.gridEditorState = new GridEditorState(
       tabId,
@@ -85,6 +87,7 @@ export class XsltEditorState implements ITabViewState, ITabState, IPropertyManag
       properties,
       isDirty,
       architectApi,
+      modelTreeState,
     );
     this.nameProperty = properties?.find(prop => prop.name === 'Name');
     this.targetStructureProperty = properties?.find(prop => prop.name === 'Structure');

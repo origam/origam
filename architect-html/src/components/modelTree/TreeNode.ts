@@ -91,6 +91,21 @@ export class TreeNode implements IEditorNode {
   @observable accessor isLoading: boolean = false;
   @observable accessor contextMenuItems: IMenuItemInfo[] = [];
 
+  get newTypeMenuItems() {
+    return this.contextMenuItems.filter(item => !item.name);
+  }
+
+  get unusedParameterNames() {
+    const names = this.contextMenuItems
+      .map(item => item.name)
+      .filter((name): name is string => !!name);
+    return [...new Set(names)];
+  }
+
+  parameterMenuItems(name: string) {
+    return this.contextMenuItems.filter(item => item.name === name);
+  }
+
   get isExpanded() {
     return this.rootStore.uiState.isExpanded(this.id);
   }
@@ -210,9 +225,9 @@ export class TreeNode implements IEditorNode {
     yield this.architectApi.runUpdateScriptActivity(this.origamId);
   }
 
-  createNode(typeName: string) {
+  createNode(typeName: string, name?: string | null) {
     return function* (this: TreeNode): Generator<Promise<any>, void, any> {
-      const apiTabData: IApiTabData = yield this.architectApi.createNode(this, typeName);
+      const apiTabData: IApiTabData = yield this.architectApi.createNode(this, typeName, name);
       const editorData = new EditorData(apiTabData, this);
       this.rootStore.editorTabViewState.openEditor(editorData);
       yield* this.loadChildren.bind(this)();

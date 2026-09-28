@@ -21,6 +21,7 @@ import { T } from '@/main';
 import { IArchitectApi, IUpdatePropertiesResult } from '@api/IArchitectApi';
 import { IEditorNode } from '@components/editorTabView/EditorTabViewState';
 import { ITabState, IValidationError } from '@/components/editorTabView/ITabState';
+import { ModelTreeState } from '@components/modelTree/ModelTreeState';
 import { EditorProperty, toChanges } from '@editors/gridEditor/EditorProperty';
 import { IPropertyManager } from '@editors/propertyEditor/IPropertyManager';
 import { computed, observable } from 'mobx';
@@ -37,6 +38,7 @@ export class GridEditorState implements ITabState, IPropertyManager {
     properties: EditorProperty[] | undefined,
     isDirty: boolean,
     protected architectApi: IArchitectApi,
+    protected modelTreeState: ModelTreeState,
   ) {
     this._isDirty = isDirty;
     this.properties = properties ?? [];
@@ -84,11 +86,9 @@ export class GridEditorState implements ITabState, IPropertyManager {
       this.isSaving = true;
       yield this.architectApi.persistChanges(this.editorNode.origamId);
       const treeNode = this.editorNode.parent;
-      const nodeToReload =
+      const fallbackParent =
         treeNode?.origamId === this.editorNode.origamId ? treeNode.parent : treeNode;
-      if (nodeToReload) {
-        yield* nodeToReload.loadChildren();
-      }
+      yield* this.modelTreeState.reloadParentOf(this.editorNode.origamId, fallbackParent);
       this._isDirty = false;
     } finally {
       this.isSaving = false;
