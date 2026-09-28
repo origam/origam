@@ -24,6 +24,7 @@ using Origam.AI.Agent.Extensions;
 using Origam.Architect.Server.Models;
 using Origam.Architect.Server.ReturnModels;
 using Origam.Architect.Server.Services;
+using Origam.Architect.Server.Services.ScreenEditor;
 using Origam.Schema;
 using Origam.Schema.GuiModel;
 
@@ -167,7 +168,7 @@ public class ScreenEditorController(DesignerEditorService designerService, TabSe
             tabService.CloseTab(tabData.Id);
         }
 
-        return Ok(new SectionSaveResult { Warnings = designerService.FindScreenWarnings(screen) });
+        return Ok(new SectionSaveResult { Warnings = ScreenWarningFinder.FindWarnings(screen) });
     }
 
     [HttpGet("GetSections")]

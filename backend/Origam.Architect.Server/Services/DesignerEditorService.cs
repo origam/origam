@@ -53,12 +53,6 @@ public class DesignerEditorService(
         "TabControl",
     ];
     private readonly List<string> screenContainers = ["AsForm", "Panel", "SplitPanel", "TabPage"];
-    private readonly List<string> treeColumnProperties =
-    [
-        "IDColumn",
-        "ParentIDColumn",
-        "NameColumn",
-    ];
     private readonly List<string> layoutProperties =
     [
         "Height",
@@ -190,7 +184,7 @@ public class DesignerEditorService(
                 Sections = sections,
                 Widgets = widgets,
                 DataMembers = ScreenDataMembers.GetDataMembers(screen).ToList(),
-                Warnings = FindScreenWarnings(screen),
+                Warnings = ScreenWarningFinder.FindWarnings(screen),
             };
         }
 
@@ -387,15 +381,6 @@ public class DesignerEditorService(
         }
     }
 
-    private static List<ControlSetItem> GetLiveChildren(ControlSetItem container)
-    {
-        return container
-            .ChildItemsByType<ControlSetItem>(ControlSetItem.CategoryConst)
-            .Where(item => !item.IsDeleted)
-            .OrderBy(item => IntValue(item, propertyName: "TabIndex"))
-            .ToList();
-    }
-
     public void ArrangeChanged(FormControlSet screen, SectionEditorChangesModel input)
     {
         foreach (ChangesModel changes in input.ModelChanges)
@@ -554,159 +539,6 @@ public class DesignerEditorService(
                     ],
                 }
             );
-    }
-
-    public List<string> FindScreenWarnings(FormControlSet screen)
-    {
-        var warnings = new List<string>();
-        if (screen.MainItem == null)
-        {
-            return warnings;
-        }
-
-        List<ControlSetItem> rootWidgets = GetLiveChildren(screen.MainItem);
-        if (rootWidgets.Count > 1)
-        {
-            warnings.Add(
-                string.Format(
-                    Strings.ScreenEditor_MoreRootWidgets,
-                    string.Join(separator: ", ", rootWidgets.Select(item => item.Name))
-                )
-            );
-        }
-
-        List<KeyValuePair<string, DataStructureEntity>> dataMemberEntities = ScreenDataMembers
-            .GetDataMemberEntities(screen)
-            .ToList();
-        List<string> dataMembers = dataMemberEntities.Select(member => member.Key).ToList();
-        foreach (ControlSetItem item in GetLiveControls(screen))
-        {
-            PropertyValueItem dataMember = FindValueItem(item, propertyName: "DataMember");
-            bool needsDataMember =
-                item.ControlItem.IsComplexType
-                || item.ControlItem.Name == "AsTree"
-                || item.ControlItem.ControlType == "Origam.Gui.Win.SectionLevelPlugin";
-            if (needsDataMember && !dataMembers.Contains(dataMember?.Value))
-            {
-                warnings.Add(
-                    string.Format(
-                        Strings.ScreenEditor_DataMemberMissing,
-                        item.Name,
-                        dataMember?.Value,
-                        string.Join(separator: ", ", dataMembers)
-                    )
-                );
-            }
-            else if (
-                item.ControlItem.IsComplexType
-                && item.ControlItem.PanelControlSet is { DataEntity: { } sectionEntity } section
-            )
-            {
-                DataStructureEntity shownEntity = dataMemberEntities
-                    .First(member => member.Key == dataMember.Value)
-                    .Value;
-                if (shownEntity.EntityDefinition?.Id == sectionEntity.Id)
-                {
-                    warnings.AddRange(
-                        ScreenSectionWarningFinder.FindFieldWarnings(section, shownEntity, screen)
-                    );
-                }
-                else
-                {
-                    warnings.Add(
-                        FindEntityMismatch(
-                            screen,
-                            item.Name,
-                            section,
-                            dataMember.Value,
-                            shownEntity.EntityDefinition,
-                            dataMemberEntities
-                        )
-                    );
-                }
-            }
-
-            if (item.ControlItem.Name == "AsTree")
-            {
-                warnings.AddRange(
-                    treeColumnProperties
-                        .Where(property =>
-                            string.IsNullOrEmpty(FindValueItem(item, property)?.Value)
-                        )
-                        .Select(property =>
-                            string.Format(
-                                Strings.ScreenEditor_TreeColumnMissing,
-                                item.Name,
-                                property
-                            )
-                        )
-                );
-            }
-
-            if (item.ControlItem.Name == "SplitPanel" && GetLiveChildren(item).Count != 2)
-            {
-                warnings.Add(string.Format(Strings.ScreenEditor_SplitPanelNeedsTwo, item.Name));
-            }
-        }
-
-        warnings.AddRange(DataStructureWarningFinder.FindWarnings(screen));
-        return warnings.Distinct().ToList();
-    }
-
-    private static string FindEntityMismatch(
-        FormControlSet screen,
-        string widgetName,
-        PanelControlSet section,
-        string dataMember,
-        IDataEntity shownEntity,
-        List<KeyValuePair<string, DataStructureEntity>> dataMemberEntities
-    )
-    {
-        IDataEntity sectionEntity = section.DataEntity;
-        List<string> fittingDataMembers = dataMemberEntities
-            .Where(member => member.Value.EntityDefinition?.Id == sectionEntity.Id)
-            .Select(member => member.Key)
-            .ToList();
-        if (fittingDataMembers.Count == 0)
-        {
-            string warning = string.Format(
-                Strings.ScreenEditor_SectionEntityNotInDataStructure,
-                widgetName,
-                sectionEntity.Name,
-                screen.DataStructure.Name,
-                dataMember,
-                shownEntity?.Name
-            );
-            List<string> dataSources = ScreenSectionWarningFinder
-                .ScreensUsing(section)
-                .Select(other => other.DataStructure)
-                .Where(dataStructure =>
-                    dataStructure?.Entities.Any(entity =>
-                        entity.EntityDefinition?.Id == sectionEntity.Id
-                    ) == true
-                )
-                .Select(dataStructure => dataStructure.Name)
-                .Distinct()
-                .ToList();
-            return dataSources.Count == 0
-                ? warning
-                : warning
-                    + " "
-                    + string.Format(
-                        Strings.ScreenEditor_SectionDataSourceHint,
-                        section.Name,
-                        string.Join(separator: ", ", dataSources)
-                    );
-        }
-
-        return string.Format(
-            Strings.ScreenEditor_DataMemberOfOtherEntity,
-            widgetName,
-            sectionEntity.Name,
-            dataMember,
-            shownEntity?.Name,
-            string.Join(separator: ", ", fittingDataMembers)
-        );
     }
 
     private static string CreateUniqueName(FormControlSet screen, ControlItem controlItem)
