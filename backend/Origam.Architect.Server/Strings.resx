@@ -321,6 +321,9 @@
     <data name="ScreenEditor_TreeColumnMissing" xml:space="preserve">
         <value>AsTree "{0}" has no {1}. Set it to the name of a field of the tree's entity, otherwise the client cannot build the tree.</value>
     </data>
+    <data name="ScreenEditor_DuplicateEntityName" xml:space="preserve">
+        <value>Data structure "{1}" has more than one entity named "{0}" (ids {2}), so the client cannot open the screen. Entity names must be unique in the whole data structure: delete the extra entities or rename them.</value>
+    </data>
     <data name="Property_ValueNotRead" xml:space="preserve">
         <value>The value of {0} could not be read. {1}</value>
     </data>

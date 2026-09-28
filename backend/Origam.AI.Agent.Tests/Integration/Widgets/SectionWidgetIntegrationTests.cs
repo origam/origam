@@ -26,7 +26,6 @@ using Origam.AI.Agent.Tests.Infrastructure.Architect;
 namespace Origam.AI.Agent.Tests.Integration.Widgets;
 
 [TestFixture]
-[Explicit(AgentIntegrationTestBase.ExplicitReason)]
 [Category(AgentIntegrationTestBase.IntegrationCategory)]
 public sealed class SectionWidgetIntegrationTests : AgentIntegrationTestBase
 {

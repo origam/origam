@@ -649,7 +649,8 @@ public class DesignerEditorService(
             }
         }
 
-        return warnings;
+        warnings.AddRange(DataStructureWarningFinder.FindWarnings(screen));
+        return warnings.Distinct().ToList();
     }
 
     private static string FindEntityMismatch(
@@ -795,6 +796,8 @@ public class DesignerEditorService(
                 panelControlFactory.Create(screenSection, schemaService.ActiveSchemaExtensionId);
                 return true;
             }
+
+            RenamePanelControlIfNameDiffers(screenSection);
         }
         finally
         {
@@ -802,6 +805,20 @@ public class DesignerEditorService(
         }
 
         return false;
+    }
+
+    private static void RenamePanelControlIfNameDiffers(PanelControlSet screenSection)
+    {
+        ControlItem panelControl = screenSection.PanelControl;
+        if (panelControl == null || panelControl.Name == screenSection.Name)
+        {
+            return;
+        }
+
+        panelControl.Name = screenSection.Name;
+        panelControl.ThrowEventOnPersist = false;
+        panelControl.Persist();
+        panelControl.ThrowEventOnPersist = true;
     }
 }
 

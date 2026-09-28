@@ -1004,6 +1004,15 @@ namespace Origam.Architect.Server {
                 return ResourceManager.GetString("ScreenEditor_TreeColumnMissing", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Data structure &quot;{1}&quot; has more than one entity named &quot;{0}&quot; (ids {2}), so the client cannot open the screen. Entity names must be unique in the whole data structure: delete the extra entities or rename them..
+        /// </summary>
+        internal static string ScreenEditor_DuplicateEntityName {
+            get {
+                return ResourceManager.GetString("ScreenEditor_DuplicateEntityName", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Looks up a localized string similar to Entity &quot;{0}&quot; of this screen section is not part of data structure &quot;{1}&quot; used by the screens {2}, so those screens cannot open. Either point the screen section back at an entity of &quot;{1}&quot;, or add &quot;{0}&quot; to &quot;{1}&quot; and set the DataMember of the section on those screens to it..

@@ -103,7 +103,7 @@ public static class ScreenSectionWarningFinder
             .ToList();
     }
 
-    private static IEnumerable<string> FindFieldWarnings(
+    public static IEnumerable<string> FindFieldWarnings(
         IDataEntityColumn field,
         DataStructure dataStructure,
         DataStructureEntity dataStructureEntity,
