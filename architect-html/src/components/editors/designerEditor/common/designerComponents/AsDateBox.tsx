@@ -17,7 +17,6 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Observer } from 'mobx-react-lite';
 import { ReactElement } from 'react';
 import { VscCalendar } from 'react-icons/vsc';
 import S from '@editors/designerEditor/common/designerComponents/Components.module.scss';
@@ -35,17 +34,11 @@ export class AsDateBox extends Component {
 
   getDesignerRepresentation(): ReactElement | null {
     return (
-      <Observer>
-        {() => (
-          <EditorBox readOnly={this.isReadOnly}>
-            {!this.isReadOnly && (
-              <div className={`${S.editorButton} ${S.calendarButton}`}>
-                <VscCalendar />
-              </div>
-            )}
-          </EditorBox>
-        )}
-      </Observer>
+      <EditorBox>
+        <div className={`${S.editorButton} ${S.calendarButton}`}>
+          <VscCalendar />
+        </div>
+      </EditorBox>
     );
   }
 }

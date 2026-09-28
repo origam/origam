@@ -17,7 +17,6 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Observer } from 'mobx-react-lite';
 import { ReactElement } from 'react';
 import { Component } from '@editors/designerEditor/common/designerComponents/Component.tsx';
 import { EditorBox } from '@editors/designerEditor/common/designerComponents/EditorBox.tsx';
@@ -28,6 +27,6 @@ export class CheckList extends Component {
   }
 
   getDesignerRepresentation(): ReactElement | null {
-    return <Observer>{() => <EditorBox readOnly={this.isReadOnly} />}</Observer>;
+    return <EditorBox />;
   }
 }

@@ -417,19 +417,19 @@ test.describe('Screen section widgets (real backend)', () => {
     const grey = 'rgb(233, 232, 240)';
     await editor.openNew('AllDataTypes');
     const tagInput = await editor.dropWidget('TagInput', 'TagInput');
-    const tagInputBox = editor.component(tagInput).locator('div').first();
+    const tagInputBox = editor.component(tagInput).locator('[class*="editorBox"]');
     await expect(tagInputBox).toHaveCSS('background-color', white);
     await editor.select(tagInput);
     await editor.checkProperty('ReadOnly');
     await expect(tagInputBox).toHaveCSS('background-color', grey);
 
     const comboBox = await editor.dropWidget('AsCombo', 'refTagInputSourceId');
-    const comboBoxBox = editor.component(comboBox).locator('div').first();
-    await expect(comboBoxBox.locator('svg')).toHaveCount(2);
+    const comboBoxBox = editor.component(comboBox).locator('[class*="editorBox"]');
+    await expect(comboBoxBox.locator('svg').filter({ visible: true })).toHaveCount(2);
     await editor.select(comboBox);
     await editor.checkProperty('ReadOnly');
     await expect(comboBoxBox).toHaveCSS('background-color', grey);
-    await expect(comboBoxBox.locator('svg')).toHaveCount(0);
+    await expect(comboBoxBox.locator('svg').filter({ visible: true })).toHaveCount(0);
   });
 
   test('a quick drag that leaves the surface still moves the widget', async ({ page }) => {

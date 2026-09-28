@@ -40,7 +40,22 @@ export class Component {
     }
     if (!this._designerRepresentation) {
       action(() => {
-        this._designerRepresentation = this.getDesignerRepresentation();
+        this._designerRepresentation = this.getDesignerRepresentation() && (
+          <Observer>
+            {() => (
+              <div
+                className={
+                  this.isReadOnly
+                    ? `${S.designerRepresentation} ${S.readOnly}`
+                    : S.designerRepresentation
+                }
+                data-component-type={this.data.type}
+              >
+                {this.getDesignerRepresentation()}
+              </div>
+            )}
+          </Observer>
+        );
       })();
     }
     return this._designerRepresentation;
@@ -228,15 +243,7 @@ export class Component {
   getDesignerRepresentation(): ReactElement | null {
     return (
       <div className={S.designSurfaceEditorContainer}>
-        <Observer>
-          {() => (
-            <div
-              className={
-                this.isReadOnly ? `${S.designSurfaceInput} ${S.readOnly}` : S.designSurfaceInput
-              }
-            ></div>
-          )}
-        </Observer>
+        <div className={S.designSurfaceInput}></div>
       </div>
     );
   }
