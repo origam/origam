@@ -77,17 +77,13 @@ public class UserApiTokenAuthenticationMiddleware
         var result = await context.AuthenticateAsync(
             OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme
         );
-        if (!(result?.Succeeded ?? false) && IsSameOriginFrameRequest(context.Request))
+        if (!result.Succeeded && IsSameOriginFrameRequest(context.Request))
         {
             result = await context.AuthenticateAsync(IdentityConstants.ApplicationScheme);
         }
-        if (result?.Principal != null)
+        if (result.Succeeded)
         {
             context.User = result.Principal;
-        }
-
-        if (result?.Succeeded ?? false)
-        {
             var authFeatures = new OrigamAuthenticationFeatures(result);
             context.Features.Set<IHttpAuthenticationFeature>(authFeatures);
             context.Features.Set<IAuthenticateResultFeature>(authFeatures);
