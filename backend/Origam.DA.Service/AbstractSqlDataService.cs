@@ -248,6 +248,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
             try
             {
                 connection.Open();
+                ValidateIsolationLevel(connection, isolationLevel);
                 transaction = connection.BeginTransaction(isolationLevel);
             }
             catch
@@ -284,6 +285,24 @@ public abstract class AbstractSqlDataService : AbstractDataService
             }
         }
         return transaction;
+    }
+
+    protected virtual void ValidateIsolationLevel(
+        IDbConnection connection,
+        IsolationLevel isolationLevel
+    ) { }
+
+    private IDbTransaction GetTransaction(string transactionId)
+    {
+        if (
+            transactionId != null
+            && ResourceMonitor.GetTransaction(transactionId, ConnectionString)
+                is OrigamDbTransaction existingTransaction
+        )
+        {
+            return existingTransaction.Transaction;
+        }
+        return GetTransaction(transactionId, DatabaseIsolationSettings.DefaultIsolationLevel);
     }
 
     public override DataSet LoadDataSet(
@@ -470,7 +489,10 @@ public abstract class AbstractSqlDataService : AbstractDataService
                 }
                 catch (Exception ex)
                 {
-                    log.LogOrigamError("Failed to roll back the data load transaction.", ex);
+                    if (log.IsErrorEnabled)
+                    {
+                        log.LogOrigamError("Failed to roll back the data load transaction.", ex);
+                    }
                 }
             }
             throw;
@@ -1397,7 +1419,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
         var result = 0;
         var profile =
             SecurityManager.GetProfileProvider().GetProfile(userProfile.Identity) as UserProfile;
-        IDbTransaction transaction = GetTransaction(transactionId, IsolationLevel.ReadCommitted);
+        IDbTransaction transaction = GetTransaction(transactionId);
         IDbConnection connection = transaction.Connection;
         try
         {
@@ -1485,7 +1507,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
     {
         var profile =
             SecurityManager.GetProfileProvider().GetProfile(userProfile.Identity) as UserProfile;
-        IDbTransaction transaction = GetTransaction(transactionId, IsolationLevel.ReadCommitted);
+        IDbTransaction transaction = GetTransaction(transactionId);
         IDbConnection connection = transaction.Connection;
         try
         {
@@ -1539,7 +1561,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
         }
         else
         {
-            transaction = GetTransaction(transactionId, IsolationLevel.ReadCommitted);
+            transaction = GetTransaction(transactionId);
             connection = transaction.Connection;
         }
         try
