@@ -55,7 +55,11 @@ public class MenuItemService(
 
         ISchemaItemFactory factory = isNonPersistentItem
             ? new NonpersistentSchemaItemNode { NodeText = nodeText, ParentNode = instance }
-            : (ISchemaItemFactory)instance;
+            : instance as ISchemaItemFactory;
+        if (factory == null)
+        {
+            return [];
+        }
 
         List<string> unusedNames = GetUnusedNames(factory, instance as ISchemaItem).ToList();
         Type[] nameableTypes =

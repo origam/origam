@@ -47,7 +47,8 @@ export async function openContextMenu(page: Page, nodeText: string): Promise<voi
     { timeout: 10_000 },
   );
   await page.getByTestId(`tree-node-${nodeText}`).click({ button: 'right' });
-  await pendingResponse;
+  const response = await pendingResponse;
+  expect(response.ok(), await response.text()).toBeTruthy();
   await expectBoxSettled(menuItem(page, nodeText, 'tree-menu-paste'));
 }
 
