@@ -286,24 +286,16 @@ public abstract class AbstractSqlDataService : AbstractDataService
         }
         return transaction;
     }
+    
+    private IDbTransaction GetTransaction(string transactionId)
+    {
+        return GetTransaction(transactionId, DatabaseIsolationSettings.DefaultIsolationLevel);
+    }
 
     protected virtual void ValidateIsolationLevel(
         IDbConnection connection,
         IsolationLevel isolationLevel
     ) { }
-
-    private IDbTransaction GetTransaction(string transactionId)
-    {
-        if (
-            transactionId != null
-            && ResourceMonitor.GetTransaction(transactionId, ConnectionString)
-                is OrigamDbTransaction existingTransaction
-        )
-        {
-            return existingTransaction.Transaction;
-        }
-        return GetTransaction(transactionId, DatabaseIsolationSettings.DefaultIsolationLevel);
-    }
 
     public override DataSet LoadDataSet(
         DataStructureQuery dataStructureQuery,
