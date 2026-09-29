@@ -892,6 +892,17 @@
   <wrmi:MenuItem
     asi:abstract="false"
     ami:alwaysOpenNew="false"
+    ami:displayName="ProcessDataLoadedByUIAction"
+    x:id="978a95e5-c636-42d7-b29e-6af7b51feeaf"
+    asi:name="ProcessDataLoadedByUIAction"
+    ami:openExclusively="false"
+    ami:order="100"
+    x:parentId="147775f5-451d-4efd-8634-7f27a2cf50a6"
+    ami:roles="*"
+    wrmi:workflow="ProcessDataLoadedByUIAction#ProcessDataLoadedByUIAction/5c8fa520-8d36-4f7a-84fe-0e17c4923696" />
+  <wrmi:MenuItem
+    asi:abstract="false"
+    ami:alwaysOpenNew="false"
     ami:displayName="Workflow Trace Test"
     x:id="9e820d35-0fe0-4684-9a7a-3afd303c139f"
     asi:name="WorkflowTraceTest"
