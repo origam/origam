@@ -18,7 +18,7 @@ afterEach(async () => {
 
 function testsForAuthenticationMode(authentication, name, tests) {
   const serverAuthentication =
-    process.env.OpenIddictConfig__PrivateApiAuthentication || "Token";
+    process.env.OpenIddictConfig__PrivateApiAuthentication || "Cookie";
   const describeWhenServerMatches =
     serverAuthentication === authentication ? describe : describe.skip;
   describeWhenServerMatches(name, tests);
