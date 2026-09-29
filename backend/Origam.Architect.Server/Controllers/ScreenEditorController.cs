@@ -35,7 +35,7 @@ namespace Origam.Architect.Server.Controllers;
 public class ScreenEditorController(
     DesignerEditorService designerService,
     ScreenEditorService screenEditorService,
-    ScreenLayoutArranger layoutArranger,
+    ScreenAutoLayout autoLayout,
     TabService tabService
 ) : ControllerBase
 {
@@ -78,7 +78,7 @@ public class ScreenEditorController(
         tab.IsDirty |= designerService.Update(screenSection, input);
         if (Request.IsFromAIAgent())
         {
-            layoutArranger.ArrangeChanged(screenSection, input);
+            autoLayout.ArrangeChanged(screenSection, input);
         }
         var editorData = screenEditorService.GetScreenEditorData(screenSection);
         return Ok(new ScreenEditorModel { Data = editorData, IsDirty = tab.IsDirty });

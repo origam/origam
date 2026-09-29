@@ -36,7 +36,7 @@ public class ScreenEditorService(
     ControlAdapterFactory adapterFactory,
     ApiControlFactory apiControlFactory,
     ScreenToolbox toolbox,
-    ScreenLayoutArranger layoutArranger
+    ScreenAutoLayout autoLayout
 )
 {
     private readonly List<string> screenContainers = ["AsForm", "Panel", "SplitPanel", "TabPage"];
@@ -103,7 +103,7 @@ public class ScreenEditorService(
 
         if (fitToParent)
         {
-            layoutArranger.ArrangeChildren((ControlSetItem)newItem.ParentItem, splitEvenly: true);
+            autoLayout.ArrangeChildren((ControlSetItem)newItem.ParentItem, splitEvenly: true);
         }
 
         return new ScreenEditorItem

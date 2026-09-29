@@ -81,7 +81,7 @@ public class Program
         builder.Services.AddSingleton<SectionWidgetFactory>();
         builder.Services.AddSingleton<DesignerEditorService>();
         builder.Services.AddSingleton<ScreenToolbox>();
-        builder.Services.AddSingleton<ScreenLayoutArranger>();
+        builder.Services.AddSingleton<ScreenAutoLayout>();
         builder.Services.AddSingleton<ScreenEditorService>();
         builder.Services.AddSingleton<DeploymentVersionCurrentService>();
         builder.Services.AddSingleton<DeploymentScriptRunnerService>();

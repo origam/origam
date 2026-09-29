@@ -27,7 +27,7 @@ using static Origam.Architect.Server.Services.SectionEditor.ScreenSectionBinding
 
 namespace Origam.Architect.Server.Services.ScreenEditor;
 
-public class ScreenLayoutArranger(ControlAdapterFactory adapterFactory)
+public class ScreenAutoLayout(ControlAdapterFactory adapterFactory)
 {
     private readonly List<string> layoutProperties =
     [
