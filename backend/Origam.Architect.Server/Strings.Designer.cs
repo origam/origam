@@ -869,6 +869,15 @@ namespace Origam.Architect.Server {
                 return ResourceManager.GetString("DesignerEditor_ParentControlNotFound", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Child with id: {0} not found in {1}.
+        /// </summary>
+        internal static string DesignerEditor_ChildNotFound {
+            get {
+                return ResourceManager.GetString("DesignerEditor_ChildNotFound", resourceCulture);
+            }
+        }
 
         /// <summary>
         ///   Looks up a localized string similar to Field &quot;{0}&quot; is not part of data structure &quot;{1}&quot; used by the screens {2}, so those screens cannot open. Add it with POST /Tab/CreateNode: nodeId = {3} (the data structure entity), newTypeName &apos;Field&apos;, changes Name = &quot;{0}&quot; and Field = {4}, persist true; or clear ExcludeFromAllFields on the entity field..
@@ -1011,6 +1020,24 @@ namespace Origam.Architect.Server {
         internal static string ScreenEditor_DuplicateEntityName {
             get {
                 return ResourceManager.GetString("ScreenEditor_DuplicateEntityName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No package is active. Select a package first..
+        /// </summary>
+        internal static string ScreenEditor_NoActivePackage {
+            get {
+                return ResourceManager.GetString("ScreenEditor_NoActivePackage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to item id: {0} is not a FormControlSet.
+        /// </summary>
+        internal static string ScreenEditor_NotAScreen {
+            get {
+                return ResourceManager.GetString("ScreenEditor_NotAScreen", resourceCulture);
             }
         }
         

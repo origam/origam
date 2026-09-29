@@ -30,6 +30,7 @@ using Origam.Architect.Server.Interfaces.Services;
 using Origam.Architect.Server.ReturnModels;
 using Origam.Architect.Server.Services;
 using Origam.Architect.Server.Services.Move;
+using Origam.Architect.Server.Services.ScreenEditor;
 using Origam.Architect.Server.Services.SectionEditor;
 using Origam.Architect.Server.Services.Wizards;
 using Origam.Architect.Server.Services.Xslt;
@@ -79,6 +80,9 @@ public class Program
         builder.Services.AddSingleton<ApiControlFactory>();
         builder.Services.AddSingleton<SectionWidgetFactory>();
         builder.Services.AddSingleton<DesignerEditorService>();
+        builder.Services.AddSingleton<ScreenToolbox>();
+        builder.Services.AddSingleton<ScreenLayoutArranger>();
+        builder.Services.AddSingleton<ScreenEditorService>();
         builder.Services.AddSingleton<DeploymentVersionCurrentService>();
         builder.Services.AddSingleton<DeploymentScriptRunnerService>();
         builder.Services.AddSingleton<ControlAdapterFactory>();

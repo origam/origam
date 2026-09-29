@@ -32,8 +32,12 @@ namespace Origam.Architect.Server.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class ScreenEditorController(DesignerEditorService designerService, TabService tabService)
-    : ControllerBase
+public class ScreenEditorController(
+    DesignerEditorService designerService,
+    ScreenEditorService screenEditorService,
+    ScreenLayoutArranger layoutArranger,
+    TabService tabService
+) : ControllerBase
 {
     [HttpPost("Update")]
     [EndpointDescription(
@@ -74,9 +78,9 @@ public class ScreenEditorController(DesignerEditorService designerService, TabSe
         tab.IsDirty |= designerService.Update(screenSection, input);
         if (Request.IsFromAIAgent())
         {
-            designerService.ArrangeChanged(screenSection, input);
+            layoutArranger.ArrangeChanged(screenSection, input);
         }
-        var editorData = designerService.GetScreenEditorData(screenSection);
+        var editorData = screenEditorService.GetScreenEditorData(screenSection);
         return Ok(new ScreenEditorModel { Data = editorData, IsDirty = tab.IsDirty });
     }
 
@@ -94,7 +98,7 @@ public class ScreenEditorController(DesignerEditorService designerService, TabSe
         {
             designerService.DeleteItem(input.SchemaItemIds, screenSection);
             tab.IsDirty = true;
-            var editorData = designerService.GetScreenEditorData(screenSection);
+            var editorData = screenEditorService.GetScreenEditorData(screenSection);
             return new ScreenEditorModel { Data = editorData, IsDirty = true };
         }
 
@@ -128,7 +132,7 @@ public class ScreenEditorController(DesignerEditorService designerService, TabSe
         ISchemaItem item = tab.Item;
         if (item is FormControlSet screenSection)
         {
-            ScreenEditorItem newItem = designerService.CreateNewItem(
+            ScreenEditorItem newItem = screenEditorService.CreateNewItem(
                 itemModelData,
                 screenSection,
                 fitToParent: Request.IsFromAIAgent()
@@ -154,7 +158,7 @@ public class ScreenEditorController(DesignerEditorService designerService, TabSe
         TabData tabData = tabService.OpenDefaultTab(input.SchemaItemId);
         if (tabData.Item is not FormControlSet screen)
         {
-            return BadRequest($"item id: {input.SchemaItemId} is not a FormControlSet");
+            return BadRequest(string.Format(Strings.ScreenEditor_NotAScreen, input.SchemaItemId));
         }
 
         if (!tabService.CanPersist(screen))
@@ -181,7 +185,7 @@ public class ScreenEditorController(DesignerEditorService designerService, TabSe
         ISchemaItem item = tab.Item;
         if (item is FormControlSet screenSection)
         {
-            return designerService.LoadSections(screenSection, sectionIds);
+            return screenEditorService.LoadSections(screenSection, sectionIds);
         }
 
         return BadRequest($"item id: {editorSchemaItemId} is not a PanelControlSet");

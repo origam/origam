@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2025 Advantage Solutions, s. r. o.
+Copyright 2005 - 2026 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -19,31 +19,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.Architect.Server.ReturnModels;
-using Origam.Schema;
+namespace Origam.Architect.Server.ReturnModels;
 
-namespace Origam.Architect.Server.Models;
-
-public class SectionEditorData
+public class ApiControl
 {
-    public List<DataSource> DataSources { get; set; }
+    public Guid Id { get; set; }
+    public string Type { get; set; }
     public string Name { get; set; }
-    public Guid SchemaExtensionId { get; set; }
-    public Guid SelectedDataSourceId { get; set; }
-    public IEnumerable<EditorField> Fields { get; set; }
+    public string BoundField { get; set; }
     public List<string> Warnings { get; set; }
-    public ApiControl RootControl { get; set; }
-}
-
-public class DataSource
-{
-    public static DataSource Empty = new DataSource { Name = "", SchemaItemId = Guid.Empty };
-    public Guid SchemaItemId { get; set; }
-    public string Name { get; set; }
-}
-
-public class EditorField
-{
-    public OrigamDataType Type { get; set; }
-    public string Name { get; set; }
+    public List<EditorProperty> Properties { get; set; }
+    public List<ApiControl> Children { get; set; } = new();
 }
