@@ -286,7 +286,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
         }
         return transaction;
     }
-    
+
     private IDbTransaction GetTransaction(string transactionId)
     {
         return GetTransaction(transactionId, DatabaseIsolationSettings.DefaultIsolationLevel);
@@ -491,8 +491,14 @@ public abstract class AbstractSqlDataService : AbstractDataService
         }
         finally
         {
-            localTransaction?.Dispose();
-            localConnection?.Dispose();
+            try
+            {
+                localTransaction?.Dispose();
+            }
+            finally
+            {
+                localConnection?.Dispose();
+            }
         }
     }
 
