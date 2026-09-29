@@ -150,7 +150,11 @@ public class ControlAdapter(
                 );
                 object oldValue = schemaItemProperty.GetValue(this);
                 PropertyUtils.SetValue(schemaItemProperty, this, parsedValue);
-                changesMade |= !Equals(oldValue, schemaItemProperty.GetValue(this));
+                if (!Equals(oldValue, schemaItemProperty.GetValue(this)))
+                {
+                    changesMade = true;
+                }
+
                 continue;
             }
 
