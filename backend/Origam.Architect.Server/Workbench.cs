@@ -143,7 +143,9 @@ public class Workbench
         ServiceManager.Services.AddService(new DataLookupService());
         ServiceManager.Services.AddService(new DeploymentService());
         ServiceManager.Services.AddService(new ParameterService());
-        ServiceManager.Services.AddService(new Origam.Workflow.WorkQueue.WorkQueueService());
+        ServiceManager.Services.AddService(
+            new Origam.Workflow.WorkQueue.WorkQueueService(runBackgroundTasks: false)
+        );
         ServiceManager.Services.AddService(new AttachmentService());
         ServiceManager.Services.AddService(new RuleEngineService());
 
