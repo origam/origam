@@ -38,8 +38,7 @@ public static class PropertyUtils
     public static bool IsHiddenByDerivedProperty(PropertyInfo property, PropertyInfo[] properties)
     {
         return properties.Any(other =>
-            other.Name == property.Name
-            && other.DeclaringType!.IsSubclassOf(property.DeclaringType!)
+            other.Name == property.Name && other.DeclaringType.IsSubclassOf(property.DeclaringType)
         );
     }
 

@@ -45,7 +45,7 @@ public class ModelController(
     TabService tabService,
     ModelGroupService modelGroupService,
     MenuItemService menuItemService,
-    RootProviderRestorer rootProviderRestorer
+    SchemaNodeRetriever schemaNodeRetriever
 ) : ControllerBase
 {
     private readonly IPersistenceProvider persistenceProvider = persistenceService.SchemaProvider;
@@ -112,8 +112,7 @@ public class ModelController(
 
     private List<TreeNode> GetChildren(Guid id, bool isNonPersistentItem, string nodeText)
     {
-        IBrowserNode2 provider = persistenceProvider.RetrieveInstance<IBrowserNode2>(id);
-        rootProviderRestorer.Restore(provider);
+        IBrowserNode2 provider = schemaNodeRetriever.Retrieve<IBrowserNode2>(id);
         if (isNonPersistentItem)
         {
             provider = new NonpersistentSchemaItemNode

@@ -21,7 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.Architect.Server.Models;
 using Origam.Architect.Server.ReturnModels;
-using Origam.DA.ObjectPersistence;
 using Origam.Schema;
 using Origam.UI;
 using Origam.Workbench.Services;
@@ -30,13 +29,10 @@ namespace Origam.Architect.Server.Services.Move;
 
 public class MoveNodeResolver(
     SchemaService schemaService,
-    IPersistenceService persistenceService,
     TreeNodeFactory treeNodeFactory,
-    RootProviderRestorer rootProviderRestorer
+    SchemaNodeRetriever schemaNodeRetriever
 )
 {
-    private IPersistenceProvider PersistenceProvider => persistenceService.SchemaProvider;
-
     private ISchemaItemProvider GetRootProviderById(string id)
     {
         return schemaService.ActiveExtension == null ? null : treeNodeFactory.FindRootProvider(id);
@@ -51,12 +47,11 @@ public class MoveNodeResolver(
 
         if (Guid.TryParse(reference.Id, out Guid id))
         {
-            var node = PersistenceProvider.RetrieveInstance<IBrowserNode2>(
+            var node = schemaNodeRetriever.Retrieve<IBrowserNode2>(
                 id,
                 useCache: true,
                 throwNotFoundException: false
             );
-            rootProviderRestorer.Restore(node);
             if (node == null || !reference.IsNonPersistentItem)
             {
                 return node;

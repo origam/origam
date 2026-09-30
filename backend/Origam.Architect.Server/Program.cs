@@ -92,7 +92,7 @@ public class Program
         builder.Services.AddSingleton<IAddToModelService, AddToModelService>();
         builder.Services.AddSingleton<ModelGroupService>();
         builder.Services.AddSingleton<MenuItemService>();
-        builder.Services.AddSingleton<RootProviderRestorer>();
+        builder.Services.AddSingleton<SchemaNodeRetriever>();
         builder.Services.AddSingleton<FilterWizardService>();
         builder.Services.AddSingleton<ScreenWizardService>();
         builder.Services.AddSingleton<ScreenSectionWizardService>();

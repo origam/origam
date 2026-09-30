@@ -31,7 +31,6 @@ using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
 using Origam.Schema.RuleModel;
-using Origam.UI;
 using Origam.Workbench.Services;
 
 namespace Origam.Architect.Server.Services;
@@ -41,7 +40,7 @@ public class TabService(
     IPersistenceService persistenceService,
     PropertyParser propertyParser,
     GitNodeStatusService gitNodeStatusService,
-    RootProviderRestorer rootProviderRestorer
+    SchemaNodeRetriever schemaNodeRetriever
 )
 {
     private readonly IPersistenceProvider persistenceProvider = persistenceService.SchemaProvider;
@@ -143,11 +142,7 @@ public class TabService(
                 return unsavedParentFactory;
             }
 
-            IBrowserNode2 parentItem = persistenceProvider.RetrieveInstance<IBrowserNode2>(
-                parentGuid
-            );
-            rootProviderRestorer.Restore(parentItem);
-            return (ISchemaItemFactory)parentItem;
+            return schemaNodeRetriever.Retrieve<ISchemaItemFactory>(parentGuid);
         }
 
         ISchemaItemProvider provider = schemaService.Providers.FirstOrDefault(provider =>
@@ -243,7 +238,7 @@ public class TabService(
 
     private ISchemaItem RetrieveSchemaItem(Guid schemaItemId)
     {
-        ISchemaItem item = persistenceService.SchemaProvider.RetrieveInstance<ISchemaItem>(
+        ISchemaItem item = schemaNodeRetriever.Retrieve<ISchemaItem>(
             schemaItemId,
             useCache: false,
             throwNotFoundException: false
@@ -253,7 +248,6 @@ public class TabService(
             throw new SchemaItemNotFoundException(schemaItemId);
         }
 
-        rootProviderRestorer.Restore(item);
         return item;
     }
 

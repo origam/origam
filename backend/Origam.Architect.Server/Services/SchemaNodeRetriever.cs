@@ -20,14 +20,32 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using Origam.Schema;
-using Origam.UI;
 using Origam.Workbench.Services;
 
 namespace Origam.Architect.Server.Services;
 
-public class RootProviderRestorer(SchemaService schemaService)
+public class SchemaNodeRetriever(
+    SchemaService schemaService,
+    IPersistenceService persistenceService
+)
 {
-    public void Restore(IBrowserNode2 node)
+    public T Retrieve<T>(Guid id)
+    {
+        return WithRootProvider(persistenceService.SchemaProvider.RetrieveInstance<T>(id));
+    }
+
+    public T Retrieve<T>(Guid id, bool useCache, bool throwNotFoundException)
+    {
+        return WithRootProvider(
+            persistenceService.SchemaProvider.RetrieveInstance<T>(
+                id,
+                useCache,
+                throwNotFoundException
+            )
+        );
+    }
+
+    private T WithRootProvider<T>(T node)
     {
         if (node is SchemaItemGroup { RootProvider: null, ParentItem: null } group)
         {
@@ -37,6 +55,7 @@ public class RootProviderRestorer(SchemaService schemaService)
         {
             rootItem.RootProvider = FindProvider(rootItem.ItemType);
         }
+        return node;
     }
 
     private ISchemaItemProvider FindProvider(string rootItemType)

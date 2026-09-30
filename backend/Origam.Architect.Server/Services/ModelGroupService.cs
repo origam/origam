@@ -33,7 +33,7 @@ public class ModelGroupService(
     IPersistenceService persistenceService,
     TreeNodeFactory treeNodeFactory,
     ModelTransactionRunner transactionRunner,
-    RootProviderRestorer rootProviderRestorer
+    SchemaNodeRetriever schemaNodeRetriever
 )
 {
     private static readonly HashSet<string> ReservedDeviceNames = new(
@@ -172,15 +172,11 @@ public class ModelGroupService(
 
     private SchemaItemGroup ResolveGroup(Guid groupId)
     {
-        if (
-            persistenceProvider.RetrieveInstance<IBrowserNode2>(groupId)
-            is not SchemaItemGroup group
-        )
+        if (schemaNodeRetriever.Retrieve<IBrowserNode2>(groupId) is not SchemaItemGroup group)
         {
             throw new UserOrigamException(Strings.Group_NotFound);
         }
 
-        rootProviderRestorer.Restore(group);
         return group;
     }
 

@@ -20,21 +20,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using Origam.Architect.Server.ReturnModels;
-using Origam.DA.ObjectPersistence;
 using Origam.Schema;
 using Origam.UI;
-using Origam.Workbench.Services;
 
 namespace Origam.Architect.Server.Services;
 
 public class MenuItemService(
-    IPersistenceService persistenceService,
     TreeNodeFactory treeNodeFactory,
-    RootProviderRestorer rootProviderRestorer
+    SchemaNodeRetriever schemaNodeRetriever
 )
 {
-    private readonly IPersistenceProvider persistenceProvider = persistenceService.SchemaProvider;
-
     public IEnumerable<MenuItemInfo> GetMenuItems(
         string id,
         bool isNonPersistentItem,
@@ -52,8 +47,7 @@ public class MenuItemService(
             return provider.NewItemTypes.Select(type => CreateMenuItemInfo(type, name: null));
         }
 
-        IBrowserNode2 instance = persistenceProvider.RetrieveInstance<IBrowserNode2>(schemaItemId);
-        rootProviderRestorer.Restore(instance);
+        IBrowserNode2 instance = schemaNodeRetriever.Retrieve<IBrowserNode2>(schemaItemId);
 
         ISchemaItemFactory factory = isNonPersistentItem
             ? new NonpersistentSchemaItemNode { NodeText = nodeText, ParentNode = instance }

@@ -80,11 +80,7 @@ public class MoveRuleEvaluator(SchemaService schemaService)
             );
         }
 
-        if (
-            !isCopy
-            && target is ISchemaItem targetItem
-            && targetItem.ChildItems.Any(child => child.Id == item.Id && child.DerivedFrom != null)
-        )
+        if (!isCopy && InheritsItem(target, item))
         {
             return MoveDecision.Rejected(
                 string.Format(
@@ -197,6 +193,12 @@ public class MoveRuleEvaluator(SchemaService schemaService)
         }
 
         return MoveDecision.ToGroup(group);
+    }
+
+    private static bool InheritsItem(IBrowserNode2 target, ISchemaItem item)
+    {
+        return target is ISchemaItem targetItem
+            && targetItem.ChildItems.Any(child => child.Id == item.Id && child.DerivedFrom != null);
     }
 
     // Null means the chain could not be walked.
