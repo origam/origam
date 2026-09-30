@@ -22,14 +22,16 @@ import { ReactElement } from 'react';
 import S from '@editors/designerEditor/common/designerComponents/Components.module.scss';
 
 export class RadioButton extends Component {
+  get hasBorder(): boolean {
+    return false;
+  }
+
   getDesignerRepresentation(): ReactElement | null {
     return (
-      <div className={S.designSurfaceEditorContainer}>
-        <div className={S.checkList}>
-          <div className={S.checklistItem}>
-            <input type="radio" className="checkbox undefined" />
-            <div>{this.properties.find(x => x.name === 'Text')?.value}</div>
-          </div>
+      <div className={S.checkList}>
+        <div className={S.checklistItem}>
+          <input type="radio" className="checkbox undefined" />
+          <div>{this.properties.find(x => x.name === 'Text')?.value}</div>
         </div>
       </div>
     );

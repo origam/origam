@@ -28,11 +28,28 @@ export interface IArchitectApi {
 
   getNodeChildren(node: INodeLoadData): Promise<IApiTreeNode[]>;
 
-  searchText(text: string): Promise<ISearchResult[]>;
+  getMoveVerdicts(args: {
+    source: INodeLoadData;
+    targets: INodeLoadData[];
+  }): Promise<IMoveVerdict[]>;
+
+  getMoveTargets(args: { source: INodeLoadData }): Promise<IMoveTargetsResult>;
+
+  moveNode(args: {
+    source: INodeLoadData;
+    target: INodeLoadData;
+    isCopy: boolean;
+  }): Promise<IMoveNodeResult>;
+
+  searchSchemaByAllFields(query: string): Promise<ISearchResult[]>;
 
   searchReferences(schemaItemId: string): Promise<ISearchResult[]>;
 
   searchDependencies(schemaItemId: string): Promise<ISearchResult[]>;
+
+  runModelCheck(): Promise<IModelCheckResult>;
+
+  getModelCheckResult(): Promise<IModelCheckResult>;
 
   openTab(schemaItemId: string): Promise<IApiTabData>;
 
@@ -53,7 +70,7 @@ export interface IArchitectApi {
 
   getMenuItems(node: INodeLoadData): Promise<IMenuItemInfo[]>;
 
-  createNode(node: INodeLoadData, typeName: string): Promise<IApiTabData>;
+  createNode(node: INodeLoadData, typeName: string, name?: string | null): Promise<IApiTabData>;
 
   createGroup(node: INodeLoadData, name: string): Promise<IApiTreeNode>;
 
@@ -363,6 +380,31 @@ export interface ISearchResultsEditorData {
   results: ISearchResult[];
 }
 
+export interface IModelRuleError {
+  item: ISearchResult;
+  message: string;
+}
+
+export interface IModelFileError {
+  text: string;
+  link: string;
+}
+
+export interface IModelFileErrorSection {
+  caption: string;
+  errors: IModelFileError[];
+}
+
+export interface IModelCheckResult {
+  lastRunAt: string | null;
+  ruleErrors: IModelRuleError[];
+  fileErrorSections: IModelFileErrorSection[];
+}
+
+export interface IModelCheckResultsEditorData {
+  result: IModelCheckResult;
+}
+
 export interface IAddToDeploymentRequest {
   platform: string;
   deploymentVersionId: string;
@@ -481,6 +523,7 @@ export enum OrigamDataType {
 
 export interface IPropertyUpdate {
   propertyName: string;
+  type: PropertyType;
   value: PropertyValue;
   errors: string[];
   dropDownValues: IDropDownValue[];
@@ -491,6 +534,7 @@ export interface IMenuItemInfo {
   typeName: string;
   iconName: string;
   iconIndex: number | null;
+  name: string | null;
 }
 
 export type EditorSubType =
@@ -506,7 +550,9 @@ export type EditorType =
   | EditorSubType
   | 'DocumentationEditor'
   | 'SearchResultsEditor'
-  | 'ShowSqlEditor';
+  | 'ModelCheckResultsEditor'
+  | 'ShowSqlEditor'
+  | 'AiSettingsModule';
 
 export interface INodeLoadData {
   id: string;
@@ -529,7 +575,9 @@ export interface IApiTreeNode extends INodeLoadData {
   isInActivePackage?: boolean;
   isFileDirty?: boolean;
   isFolder?: boolean;
+  isMandatoryField?: boolean;
   role?: string;
+  canDrag?: boolean;
 }
 
 export interface IDeleteGroupResult {
@@ -537,6 +585,36 @@ export interface IDeleteGroupResult {
 }
 
 export type NodeLevelType = 'Category' | 'Provider' | 'Item';
+
+export interface IMoveVerdict {
+  key: string;
+  canMove: boolean;
+  canCopy: boolean;
+}
+
+export interface IMoveNodeResult {
+  node: IApiTreeNode;
+  parentNodeIds: string[];
+}
+
+export interface IMoveTarget {
+  id: string;
+  nodeText: string;
+  key: string;
+  path: string;
+  depth: number;
+  packageName: string;
+  isInActivePackage: boolean;
+  isCurrentLocation: boolean;
+  canMove: boolean;
+  canCopy: boolean;
+}
+
+export interface IMoveTargetsResult {
+  targets: IMoveTarget[];
+  isSourceInActivePackage: boolean;
+  isTruncated: boolean;
+}
 
 export interface IPackagesInfo {
   packages: IPackage[];
@@ -548,7 +626,8 @@ export interface IPackage {
   name: string;
 }
 
-export type PropertyType = 'boolean' | 'enum' | 'string' | 'integer' | 'float' | 'looukup';
+export type PropertyType =
+  'boolean' | 'enum' | 'string' | 'integer' | 'float' | 'looukup' | 'untyped';
 
 export type PropertyValue = boolean | number | string | string[] | null;
 
@@ -556,6 +635,13 @@ export interface IDeploymentScriptsGeneratorModuleData {
   possibleDeploymentVersions: IDeploymentVersion[];
   currentDeploymentVersionId: string | null;
   results: IDatabaseResult[];
+}
+
+export interface IAiSettingsModuleData {
+  customInstructions: string;
+  model: string;
+  router: string;
+  hasApiKey: boolean;
 }
 
 export type DeploymentStatus = 'Pending' | 'Done';
@@ -594,7 +680,9 @@ export interface IApiTabData {
     | DocumentationEditorData
     | IDeploymentScriptsGeneratorModuleData
     | ISearchResultsEditorData
-    | IShowSqlEditorData;
+    | IModelCheckResultsEditorData
+    | IShowSqlEditorData
+    | IAiSettingsModuleData;
   isDirty: boolean;
 }
 

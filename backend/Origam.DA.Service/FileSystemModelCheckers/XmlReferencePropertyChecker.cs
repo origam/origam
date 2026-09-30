@@ -73,10 +73,8 @@ class XmlReferencePropertyChecker : IFileSystemModelChecker
                     return null;
                 }
 
-                var referencedObject = filePersistenceProvider.RetrieveInstance<IFilePersistent>(
-                    refId
-                );
-                if (referencedObject == null)
+                // Has() doesn't throw when the id is missing - that's what we report.
+                if (!filePersistenceProvider.Has(refId))
                 {
                     return new ErrorMessage(
                         text: "Instance with id: "

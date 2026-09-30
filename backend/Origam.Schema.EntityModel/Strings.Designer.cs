@@ -348,6 +348,15 @@ namespace Origam.Schema.EntityModel {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Another data constant already uses the name &apos;{0}&apos;. Choose a unique name..
+        /// </summary>
+        internal static string ErrorDuplicateDataConstantName {
+            get {
+                return ResourceManager.GetString("ErrorDuplicateDataConstantName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to IsDynamic parameter must to be set to True.
         /// </summary>
         internal static string ErrorDynamicParameter {

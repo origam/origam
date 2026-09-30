@@ -42,8 +42,18 @@ public class WorkQueueWizardService(
 
         var generated = new List<ISchemaItem>();
         Transaction.Run(() =>
-            WorkflowHelper.CreateWorkQueueClass(entity, selectedColumns, generated)
-        );
+        {
+            var workQueueClass = WorkflowHelper.CreateWorkQueueClass(
+                entity,
+                selectedColumns,
+                generated
+            );
+            if (!string.IsNullOrWhiteSpace(input.Name))
+            {
+                workQueueClass.Name = input.Name.Trim();
+                workQueueClass.Persist();
+            }
+        });
 
         return BuildResult(generated);
     }

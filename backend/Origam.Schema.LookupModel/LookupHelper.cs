@@ -132,7 +132,10 @@ public static class LookupHelper
         var schemaService = ServiceManager.Services.GetService<ISchemaService>();
         var dataLookupSchemaItemProvider =
             schemaService.GetProvider<DataLookupSchemaItemProvider>();
-        var schemaItemGroup = dataLookupSchemaItemProvider.GetGroup(fromEntity.Group.Name);
+        var schemaItemGroup =
+            fromEntity.Group == null
+                ? null
+                : dataLookupSchemaItemProvider.GetGroup(fromEntity.Group.Name);
         var dataServiceLookup = CreateDataServiceLookup(
             name,
             schemaItemGroup,

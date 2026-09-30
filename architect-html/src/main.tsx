@@ -18,6 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import App from '@/App';
+import { AiAgentApp } from '@/ai/AiAgentApp';
 import '@/index.css';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { RootStore } from '@stores/RootStore';
@@ -40,10 +41,12 @@ async function main() {
   const locale = getLocaleFromCookie();
   await run({ generator: rootStore.translations.setLocale(locale) });
 
+  const isAiAgentRoute = window.location.pathname.startsWith('/ai');
+
   root.render(
     <React.StrictMode>
       <RootStoreContext.Provider value={rootStore}>
-        <App />
+        {isAiAgentRoute ? <AiAgentApp /> : <App />}
       </RootStoreContext.Provider>
     </React.StrictMode>,
   );

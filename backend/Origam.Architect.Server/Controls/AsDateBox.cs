@@ -30,6 +30,8 @@ public class AsDateBox : LabeledEditor, IAsControl
 
     public bool ReadOnly { get; set; }
 
+    public string Format { get; }
+
     public string CustomFormat { get; set; } = "dd.MMMM yyyy";
 
     [Category("(ORIGAM)")]
