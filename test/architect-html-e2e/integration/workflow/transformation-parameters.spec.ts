@@ -17,29 +17,17 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import fs from 'node:fs';
 import { expect, test, type Locator, type Page } from '@playwright/test';
 import { activatePackage } from '@support/activatePackage';
-import { expectBoxSettled } from '@support/modelTree';
-import { modelFilePath, reloadBackend, resetBackend } from '@support/resetBackend';
+import { removeContextReference } from '@support/modelDefects';
+import { openNodeMenu } from '@support/modelTree';
+import { reloadBackend, resetBackend } from '@support/resetBackend';
 
 const WORKFLOW_PACKAGE = 'Workflow';
 const WORKFLOW_FILE = 'Workflow/Workflow/Workflow/BooleanContextStoreTest.origam';
 const PARAMETER_NAME = 'boolean';
 const CONTEXT_REFERENCE_TYPE = 'Origam.Schema.WorkflowModel.ContextReference';
 const CONTEXT_STORE_NAME = 'BooleanContextStore';
-
-function removeParameterReference(): void {
-  const filePath = modelFilePath(WORKFLOW_FILE);
-  const content = fs.readFileSync(filePath, 'utf8');
-  const reference = new RegExp(
-    `<cr:WorkflowContextReference[^>]*asi:name="${PARAMETER_NAME}"[^>]*>\\s*`,
-  );
-  if (!reference.test(content)) {
-    throw new Error(`"${PARAMETER_NAME}" reference was not found in ${filePath}.`);
-  }
-  fs.writeFileSync(filePath, content.replace(reference, ''), 'utf8');
-}
 
 async function expandTransformParameters(page: Page): Promise<Locator> {
   await page.goto('/');
@@ -53,21 +41,6 @@ async function expandTransformParameters(page: Page): Promise<Locator> {
 
   // The task folder comes first, the Transform method parameter second.
   return page.getByTestId('tree-node-Parameters').nth(1);
-}
-
-async function openNodeMenu(page: Page, node: Locator): Promise<Locator> {
-  // A menu opened while the previous one is still closing would close with it.
-  await expect(page.getByRole('menu')).toHaveCount(0);
-  const pendingResponse = page.waitForResponse(
-    response => response.url().includes('/Model/GetMenuItems'),
-    { timeout: 10_000 },
-  );
-  await node.click({ button: 'right' });
-  await pendingResponse;
-
-  const menu = node.locator('xpath=..');
-  await expectBoxSettled(menu.getByTestId('tree-menu-paste'));
-  return menu;
 }
 
 async function selectContextStore(page: Page): Promise<void> {
@@ -87,7 +60,7 @@ test.describe('Transformation parameters in a workflow (real backend)', () => {
   });
 
   test('offers an unreferenced parameter by name until it is saved', async ({ page, request }) => {
-    removeParameterReference();
+    removeContextReference(WORKFLOW_FILE, PARAMETER_NAME);
     await reloadBackend(request, WORKFLOW_PACKAGE);
     const parametersNode = await expandTransformParameters(page);
 
