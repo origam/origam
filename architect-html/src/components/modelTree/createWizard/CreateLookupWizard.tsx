@@ -241,7 +241,10 @@ export const CreateLookupWizard: React.FC<CreateLookupWizardProps> = observer(
       () => (entityData?.filters ?? []).map(filter => ({ value: filter.id, name: filter.name })),
       [entityData?.filters],
     );
-    const listFilterOptions = idFilterOptions;
+    const listFilterOptions = useMemo<IDropDownValue[]>(
+      () => [{ value: '', name: '' }, ...idFilterOptions],
+      [idFilterOptions],
+    );
 
     const renderStep = () => {
       if (step === 1) {

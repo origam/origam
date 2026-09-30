@@ -27,6 +27,7 @@ using Origam.Schema;
 using Origam.Schema.DeploymentModel;
 using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
+using Origam.Schema.LookupModel;
 using Origam.Services;
 using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
@@ -62,7 +63,30 @@ public abstract class WizardServiceBase(
 
     protected IDataEntity RetrieveEntity(Guid entityId)
     {
-        return Retrieve<IDataEntity>(entityId, Strings.Wizard_EntityNotFound);
+        var instance = Retrieve<IPersistent>(entityId, Strings.Wizard_EntityNotFound);
+
+        if (instance is IDataEntity entity)
+        {
+            return entity;
+        }
+
+        if (
+            instance is DataStructureEntity dataStructureEntity
+            && dataStructureEntity.Entity is IDataEntity or IAssociation
+        )
+        {
+            throw new UserOrigamException(
+                string.Format(
+                    Strings.Wizard_DataStructureEntityUsedAsEntity,
+                    entityId,
+                    dataStructureEntity.EntityDefinition.Id
+                )
+            );
+        }
+
+        throw new UserOrigamException(
+            string.Format(Strings.Wizard_NotAnEntity, entityId, instance.GetType().Name)
+        );
     }
 
     protected static string RequireName(string name, string nameRequiredMessage)
@@ -112,6 +136,17 @@ public abstract class WizardServiceBase(
             throw new UserOrigamException(
                 string.Format(Strings.Wizard_DataStructureAlreadyExists, name)
             );
+        }
+    }
+
+    protected static void RequireUniqueLookupName(string name)
+    {
+        var lookupNames = GetItemNames<DataLookupSchemaItemProvider>(
+            AbstractDataLookup.CategoryConst
+        );
+        if (ContainsName(lookupNames, name))
+        {
+            throw new UserOrigamException(string.Format(Strings.Wizard_LookupAlreadyExists, name));
         }
     }
 

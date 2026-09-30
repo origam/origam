@@ -35,10 +35,25 @@ async function enableVimMode(page: Page) {
   await page.getByRole('button', { name: 'Close' }).click();
 }
 
+function editorCodeArea(page: Page) {
+  return page.getByTestId('code-editor').first().locator('.view-lines');
+}
+
+async function typeAndWaitForPropertyUpdates(page: Page, text: string) {
+  for (const character of text) {
+    const propertyUpdated = page.waitForResponse(
+      response => response.url().includes('/PropertyEditor/Update') && response.ok(),
+    );
+    await page.keyboard.type(character);
+    await propertyUpdated;
+  }
+}
+
 async function openTransformation(page: Page) {
   await page.getByTestId('tree-toggle-Business Logic').click();
   await page.getByTestId('tree-toggle-Transformations').click();
   await page.getByTestId(`tree-node-${TRANSFORMATION}`).dblclick();
+  await expect(editorCodeArea(page)).toContainText(FIRST_LINE, { timeout: 30_000 });
 }
 
 async function closeWithoutSaving(page: Page) {
@@ -61,7 +76,7 @@ test.describe('Vim mode in the transformation editor (real backend)', () => {
     await openTransformation(page);
 
     const statusBar = page.getByTestId('vim-status-bar').first();
-    const codeArea = page.getByTestId('code-editor').first().locator('.view-lines');
+    const codeArea = editorCodeArea(page);
 
     await expect(statusBar).toContainText('--NORMAL--');
 
@@ -73,7 +88,7 @@ test.describe('Vim mode in the transformation editor (real backend)', () => {
     await page.keyboard.press('i');
     await expect(statusBar).toContainText('--INSERT--');
 
-    await page.keyboard.type('vimtest', { delay: 100 });
+    await typeAndWaitForPropertyUpdates(page, 'vimtest');
     await expect(codeArea).toContainText('vimtest');
 
     await page.keyboard.press('Escape');
@@ -92,7 +107,7 @@ test.describe('Vim mode in the transformation editor (real backend)', () => {
     await enableVimMode(page);
 
     const statusBar = page.getByTestId('vim-status-bar').first();
-    await page.getByTestId('code-editor').first().locator('.view-lines').click();
+    await editorCodeArea(page).click();
     await expect(statusBar).toContainText('--NORMAL--');
 
     const statusBox = await statusBar.boundingBox();

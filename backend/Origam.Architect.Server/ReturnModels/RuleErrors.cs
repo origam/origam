@@ -24,6 +24,9 @@ namespace Origam.Architect.Server.ReturnModels;
 public class PropertyUpdate
 {
     public string PropertyName { get; set; }
+
+    // An edit can change which editor a property needs, so the type travels along.
+    public string Type { get; set; }
     public object Value { get; set; }
     public List<string> Errors { get; set; }
     public DropDownValue[] DropDownValues { get; set; }

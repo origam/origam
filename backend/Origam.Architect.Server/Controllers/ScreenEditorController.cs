@@ -41,7 +41,7 @@ public class ScreenEditorController(DesignerEditorService designerService, TabSe
             return BadRequest($"item id: {input.SchemaItemId} is not a PanelControlSet");
         }
 
-        tab.IsDirty = designerService.Update(screenSection, input);
+        tab.IsDirty |= designerService.Update(screenSection, input);
         var editorData = designerService.GetScreenEditorData(screenSection);
         return Ok(new ScreenEditorModel { Data = editorData, IsDirty = tab.IsDirty });
     }

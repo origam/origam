@@ -30,4 +30,8 @@ public class NewItemModel
 
     [Required]
     public string NewTypeName { get; set; }
+
+    public List<PropertyChange> Changes { get; set; }
+
+    public bool Persist { get; set; }
 }
