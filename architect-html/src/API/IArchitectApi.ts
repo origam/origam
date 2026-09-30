@@ -183,10 +183,18 @@ export interface IArchitectApi {
   createScreenSection(request: ICreateScreenSectionRequest): Promise<ICreateWizardResult>;
 
   getDataStructureSql(dataStructureId: string): Promise<IGetDataStructureSqlResult>;
+  getDataStructureFilterSetSql(filterSetId: string): Promise<IGetDataStructureFilterSetSqlResult>;
 }
 
 export interface IGetDataStructureSqlResult {
   dataStructureId: string;
+  dataStructureName: string;
+  sql: string;
+}
+
+export interface IGetDataStructureFilterSetSqlResult {
+  filterSetId: string;
+  filterSetName: string;
   dataStructureName: string;
   sql: string;
 }
