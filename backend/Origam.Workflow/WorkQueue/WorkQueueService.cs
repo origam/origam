@@ -59,6 +59,7 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
     private readonly WorkQueueThrottle workQueueThrottle;
     private readonly Timer loadExternalWorkQueuesTimer = new(60_000);
     private readonly Timer queueAutoProcessTimer;
+    private readonly bool runBackgroundTasks;
     private bool serviceBeingUnloaded = false;
     private bool externalQueueAdapterBusy = false;
     private bool queueAutoProcessBusy = false;
@@ -73,11 +74,9 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
     private static readonly Guid DS_WORKQUEUE = new("7b44a488-ac98-4fe1-a427-55de0ff9e12e");
     private static readonly Guid DS_SORTSET_WQ_SORT = new("c1ec9d9e-09a2-47ad-b5e4-b57107c4dc34");
 
-    public WorkQueueService()
-        : this(10_000) { }
-
-    public WorkQueueService(int queueProcessIntervalMillis)
+    public WorkQueueService(int queueProcessIntervalMillis = 10_000, bool runBackgroundTasks = true)
     {
+        this.runBackgroundTasks = runBackgroundTasks;
         queueAutoProcessTimer = new Timer(queueProcessIntervalMillis);
         var schemaService = ServiceManager.Services.GetService<SchemaService>();
         var dataLookupService = ServiceManager.Services.GetService<IDataLookupService>();
@@ -2358,6 +2357,10 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
 
     private void schemaService_SchemaLoaded(object sender, bool isInteractive)
     {
+        if (!runBackgroundTasks)
+        {
+            return;
+        }
         OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
         if (settings.LoadExternalWorkQueues)
         {
