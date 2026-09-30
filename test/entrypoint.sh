@@ -4,6 +4,10 @@ trap 'rc=$?; if [[ $rc -ne 0 ]]; then
   echo
   echo "=== Origam server output ==="
   cat /home/origam/server_bin/origam-output.txt 2>/dev/null || true
+  echo "=== nginx error log ==="
+  sudo cat /var/log/nginx/error.log 2>/dev/null || true
+  echo "=== nginx access log (last 300 lines) ==="
+  sudo tail -n 300 /var/log/nginx/access.log 2>/dev/null || true
   echo "============================"
 fi' EXIT
 
