@@ -20,6 +20,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import S from '@components/topLayout/TopLayout.module.scss';
 import { ReactNode, useCallback, useEffect, useRef } from 'react';
 
+type DragTarget = 'sidebar' | 'ai';
+
+const MIN_EDITOR_WIDTH = 200;
+
 const TopLayout = ({
   topToolBar,
   editorArea,
@@ -28,6 +32,12 @@ const TopLayout = ({
   onSideBarWidthChange,
   minSideBarWidth,
   maxSideBarWidth,
+  aiPanel,
+  aiPanelVisible,
+  aiPanelWidth,
+  onAiPanelWidthChange,
+  minAiPanelWidth,
+  maxAiPanelWidth,
 }: {
   topToolBar: ReactNode;
   editorArea: ReactNode;
@@ -36,24 +46,58 @@ const TopLayout = ({
   onSideBarWidthChange: (width: number) => void;
   minSideBarWidth: number;
   maxSideBarWidth: number;
+  aiPanel: ReactNode;
+  aiPanelVisible: boolean;
+  aiPanelWidth: number;
+  onAiPanelWidthChange: (width: number) => void;
+  minAiPanelWidth: number;
+  maxAiPanelWidth: number;
 }) => {
   const mainAreaRef = useRef<HTMLDivElement | null>(null);
-  const draggingRef = useRef(false);
+  const draggingRef = useRef<{ target: DragTarget; startX: number; startWidth: number } | null>(
+    null,
+  );
 
   const handlePointerMove = useCallback(
     (pointerEvent: PointerEvent) => {
-      if (!draggingRef.current || !mainAreaRef.current) return;
+      const dragging = draggingRef.current;
+      if (!dragging || !mainAreaRef.current) return;
       const mainAreaRect = mainAreaRef.current.getBoundingClientRect();
-      const proposedWidth = mainAreaRect.right - pointerEvent.clientX;
-      const upperBound = Math.min(maxSideBarWidth, mainAreaRect.width - 200);
-      const clampedWidth = Math.min(upperBound, Math.max(minSideBarWidth, proposedWidth));
-      onSideBarWidthChange(clampedWidth);
+      const delta =
+        dragging.target === 'ai'
+          ? pointerEvent.clientX - dragging.startX
+          : dragging.startX - pointerEvent.clientX;
+      const proposedWidth = dragging.startWidth + delta;
+      if (dragging.target === 'sidebar') {
+        const otherWidth = aiPanelVisible ? aiPanelWidth : 0;
+        const upperBound = Math.min(
+          maxSideBarWidth,
+          mainAreaRect.width - otherWidth - MIN_EDITOR_WIDTH,
+        );
+        onSideBarWidthChange(Math.min(upperBound, Math.max(minSideBarWidth, proposedWidth)));
+      } else {
+        const upperBound = Math.min(
+          maxAiPanelWidth,
+          mainAreaRect.width - sideBarWidth - MIN_EDITOR_WIDTH,
+        );
+        onAiPanelWidthChange(Math.min(upperBound, Math.max(minAiPanelWidth, proposedWidth)));
+      }
     },
-    [onSideBarWidthChange, minSideBarWidth, maxSideBarWidth],
+    [
+      onSideBarWidthChange,
+      onAiPanelWidthChange,
+      minSideBarWidth,
+      maxSideBarWidth,
+      minAiPanelWidth,
+      maxAiPanelWidth,
+      aiPanelVisible,
+      aiPanelWidth,
+      sideBarWidth,
+    ],
   );
 
   const stopDragging = useCallback(() => {
-    draggingRef.current = false;
+    draggingRef.current = null;
     document.body.style.cursor = '';
     document.body.style.userSelect = '';
   }, []);
@@ -69,23 +113,38 @@ const TopLayout = ({
     };
   }, [handlePointerMove, stopDragging]);
 
-  const onSplitterPointerDown = (pointerEvent: React.PointerEvent<HTMLDivElement>) => {
-    pointerEvent.preventDefault();
-    draggingRef.current = true;
-    document.body.style.cursor = 'col-resize';
-    document.body.style.userSelect = 'none';
-  };
+  const startDragging =
+    (target: DragTarget, startWidth: number) =>
+    (pointerEvent: React.PointerEvent<HTMLDivElement>) => {
+      pointerEvent.preventDefault();
+      draggingRef.current = { target, startX: pointerEvent.clientX, startWidth };
+      document.body.style.cursor = 'col-resize';
+      document.body.style.userSelect = 'none';
+    };
 
   return (
     <div className={S.root}>
       <div className={S.topToolbar}>{topToolBar}</div>
       <div className={S.mainArea} ref={mainAreaRef}>
+        {aiPanelVisible && (
+          <>
+            <div className={S.sideBar} style={{ width: aiPanelWidth, minWidth: aiPanelWidth }}>
+              {aiPanel}
+            </div>
+            <div
+              className={S.splitter}
+              role="separator"
+              aria-orientation="vertical"
+              onPointerDown={startDragging('ai', aiPanelWidth)}
+            />
+          </>
+        )}
         <div className={S.editorArea}>{editorArea}</div>
         <div
           className={S.splitter}
           role="separator"
           aria-orientation="vertical"
-          onPointerDown={onSplitterPointerDown}
+          onPointerDown={startDragging('sidebar', sideBarWidth)}
         />
         <div className={S.sideBar} style={{ width: sideBarWidth, minWidth: sideBarWidth }}>
           {sideBar}

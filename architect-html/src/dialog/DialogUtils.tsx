@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { T } from '@/main';
 import { YesNoQuestion } from '@dialogs/components/YesNoQuestion';
+import { NameInputDialog } from '@dialogs/components/NameInputDialog';
 import { IDialogStackState } from '@dialogs/types';
 import { action } from 'mobx';
 import { Info } from '@/dialog/components/Info.tsx';
@@ -62,6 +63,42 @@ export enum YesNoResult {
   Cancel,
 }
 
+export function askForName(
+  dialogStack: IDialogStackState,
+  args: {
+    title: string;
+    label: string;
+    initialValue?: string;
+    placeholder?: string;
+    validate?: (value: string) => string | null;
+  },
+): Promise<string | null> {
+  return new Promise(
+    action((resolve: (value: string | null) => void) => {
+      const closeDialog = dialogStack.pushDialog(
+        '',
+        <NameInputDialog
+          screenTitle={args.title}
+          label={args.label}
+          okLabel={T('OK', 'dialog_ok')}
+          cancelLabel={T('Cancel', 'dialog_cancel')}
+          initialValue={args.initialValue}
+          placeholder={args.placeholder}
+          validate={args.validate}
+          onOkClick={value => {
+            closeDialog();
+            resolve(value);
+          }}
+          onCancelClick={() => {
+            closeDialog();
+            resolve(null);
+          }}
+        />,
+      );
+    }),
+  );
+}
+
 export function showInfo(
   dialogStack: IDialogStackState,
   title: string,
@@ -73,7 +110,7 @@ export function showInfo(
         '',
         <Info
           screenTitle={title}
-          okLabel={T('Ok', 'dialog_ok')}
+          okLabel={T('OK', 'dialog_ok')}
           message={text}
           onOkClick={() => {
             closeDialog();

@@ -287,7 +287,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   }
 
   *onRequestScreenReload(): Generator<unknown, any, unknown> {
-    yield*this.flushData();
+    yield*this.flushData(true);
     if (!getIsFormScreenDirty(this) || getIsSuppressSave(this)) {
       yield*this.refreshSession();
       return;
@@ -886,7 +886,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }
   }
 
-  *flushData() {
+  *flushData(ignoreUpdateErrors?: boolean) {
     while(
       this.workflowAbortEntered > 0 || 
       this.workflowNextEntered > 0 || 
@@ -904,9 +904,17 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       const formScreen = getFormScreen(this);
       const dataViews = formScreen.dataViews;
       for (let dataView of dataViews) {
-        const updates = yield*this.runUpdateObject(dataView);
-        if(updates) {
-          updateList.push(updates);
+        try {
+          const updates = yield*this.runUpdateObject(dataView);
+          if(updates) {
+            updateList.push(updates);
+          }
+        }
+        catch (error: any) {
+          if (!ignoreUpdateErrors) {
+            throw error;
+          }
+          console.warn(`Ignored updateObject error: ${error?.message}\n${error?.stack}`);
         }
       }
       if (formScreen.requestSaveAfterUpdate && updateList.length > 0) {

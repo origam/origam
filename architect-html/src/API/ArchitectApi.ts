@@ -27,9 +27,15 @@ import {
   ICreateLookupRequest,
   ICreateWizardResult,
   IDatabaseResultResponse,
+  IDeleteGroupResult,
   ILookupWizardEntityData,
   IMenuItemInfo,
   IModelChange,
+  IModelCheckResult,
+  IMoveNodeResult,
+  IMoveTargetsResult,
+  IMoveVerdict,
+  INodeLoadData,
   IPackagesInfo,
   IParametersResult,
   IPropertyChange,
@@ -78,14 +84,41 @@ export class ArchitectApi implements IArchitectApi {
     ).data;
   }
 
-  async searchText(text: string): Promise<ISearchResult[]> {
+  async getMoveVerdicts(args: {
+    source: INodeLoadData;
+    targets: INodeLoadData[];
+  }): Promise<IMoveVerdict[]> {
+    return (await this.http.post('/Model/GetMoveVerdicts', args)).data;
+  }
+
+  async getMoveTargets(args: { source: INodeLoadData }): Promise<IMoveTargetsResult> {
+    return (await this.http.post('/Model/GetMoveTargets', args)).data;
+  }
+
+  async moveNode(args: {
+    source: INodeLoadData;
+    target: INodeLoadData;
+    isCopy: boolean;
+  }): Promise<IMoveNodeResult> {
+    return (await this.http.post('/Model/MoveNode', args)).data;
+  }
+
+  async searchSchemaByAllFields(query: string): Promise<ISearchResult[]> {
     return (
-      await this.http.get('/Search/Text', {
+      await this.http.get('/Search/SearchSchemaByAllFields', {
         params: {
-          text,
+          query,
         },
       })
     ).data;
+  }
+
+  async runModelCheck(): Promise<IModelCheckResult> {
+    return (await this.http.post('/ModelCheck/Run')).data;
+  }
+
+  async getModelCheckResult(): Promise<IModelCheckResult> {
+    return (await this.http.get('/ModelCheck/Result')).data;
   }
 
   async searchReferences(schemaItemId: string): Promise<ISearchResult[]> {
@@ -206,13 +239,43 @@ export class ArchitectApi implements IArchitectApi {
     return (await this.http.get(`/Tab/GetOpen`)).data;
   }
 
-  async createNode(node: IApiTreeNode, typeName: string): Promise<IApiTabData> {
+  async createNode(
+    node: IApiTreeNode,
+    typeName: string,
+    name?: string | null,
+  ): Promise<IApiTabData> {
+    const changes: IPropertyChange[] = name
+      ? [{ name: 'Name', controlPropertyId: null, value: name }]
+      : [];
     return (
       await this.http.post('/Tab/CreateNode', {
         nodeId: node.origamId,
         newTypeName: typeName,
+        changes,
       })
     ).data;
+  }
+
+  async createGroup(node: IApiTreeNode, name: string): Promise<IApiTreeNode> {
+    return (
+      await this.http.post('/Model/CreateGroup', {
+        nodeId: node.origamId,
+        name: name,
+      })
+    ).data;
+  }
+
+  async renameGroup(node: IApiTreeNode, name: string): Promise<IApiTreeNode> {
+    return (
+      await this.http.post('/Model/RenameGroup', {
+        nodeId: node.origamId,
+        name: name,
+      })
+    ).data;
+  }
+
+  async deleteGroup(nodeId: string): Promise<IDeleteGroupResult> {
+    return (await this.http.post('/Model/DeleteGroup', { nodeId: nodeId })).data;
   }
 
   async updateSectionEditor(args: {

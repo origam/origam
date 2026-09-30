@@ -565,9 +565,12 @@ public class WorkflowEngine : IDisposable
     private void HandleStepException(IWorkflowStep step, Exception exception)
     {
         SetStepStatus(step, WorkflowStepResult.Failure);
-        if (exception is RuleException && log.IsDebugEnabled)
+        if (exception is RuleException)
         {
-            log.Debug($"{step?.GetType().Name} {step?.Path} failed.");
+            if (log.IsDebugEnabled)
+            {
+                log.Debug($"{step?.GetType().Name} {step?.Path} failed.");
+            }
         }
         else if (log.IsErrorEnabled)
         {
@@ -670,7 +673,14 @@ public class WorkflowEngine : IDisposable
                 exception.Message
             );
         }
-        if (exception is not WorkflowCancelledByUserException && log.IsErrorEnabled)
+        if (exception is RuleException)
+        {
+            if (log.IsDebugEnabled)
+            {
+                log.Debug($"{exception.Message}\n{workflowStackTrace}", exception);
+            }
+        }
+        else if (exception is not WorkflowCancelledByUserException && log.IsErrorEnabled)
         {
             log.LogOrigamError($"{exception.Message}\n{workflowStackTrace}", exception);
         }

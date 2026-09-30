@@ -1,0 +1,5 @@
+﻿insert into [OrigamFeatureList]
+	([Id], [ReferenceCode], [DisplayName], [Description], [IsFeatureOn])
+values
+('9a8045fc-78bc-4871-8df7-d1ffa694b46d', 'EVENT_API_REQUEST', 'Event - API Request',
+'When turned on API request is recorded in the table OrigamEvent.', 0)

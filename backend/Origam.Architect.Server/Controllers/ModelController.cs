@@ -24,7 +24,10 @@ using Microsoft.AspNetCore.Mvc;
 using Origam.Architect.Server.Models;
 using Origam.Architect.Server.ReturnModels;
 using Origam.Architect.Server.Services;
+using Origam.Architect.Server.Services.Move;
 using Origam.DA.ObjectPersistence;
+using Origam.DA.Service;
+using Origam.DA.Service.SchemaInfo;
 using Origam.Schema;
 using Origam.UI;
 using Origam.Workbench.Services;
@@ -34,10 +37,14 @@ namespace Origam.Architect.Server.Controllers;
 [ApiController]
 [Route("[controller]")]
 public class ModelController(
+    SchemaItemMoveService moveService,
     SchemaService schemaService,
     IPersistenceService persistenceService,
     TreeNodeFactory treeNodeFactory,
-    GitNodeStatusService gitNodeStatusService
+    ModelTransactionRunner modelTransactionRunner,
+    TabService tabService,
+    ModelGroupService modelGroupService,
+    MenuItemService menuItemService
 ) : ControllerBase
 {
     private readonly IPersistenceProvider persistenceProvider = persistenceService.SchemaProvider;
@@ -92,7 +99,7 @@ public class ModelController(
             return Ok(childNodes);
         }
 
-        ISchemaItemProvider provider = GetRootProviderById(id);
+        ISchemaItemProvider provider = treeNodeFactory.FindRootProvider(id);
         if (provider == null)
         {
             return NotFound();
@@ -114,13 +121,7 @@ public class ModelController(
             };
         }
 
-        return provider
-            .ChildNodes()
-            .Cast<IBrowserNode2>()
-            .OrderBy(x => x.NodeText)
-            .Where(x => x is not ISchemaItem item || item.IsPersisted)
-            .Select(treeNodeFactory.Create)
-            .ToList();
+        return treeNodeFactory.CreateChildren(provider, depth: 0);
     }
 
     private List<TreeNode> GetProviderTopChildren(ISchemaItemProvider provider)
@@ -139,17 +140,18 @@ public class ModelController(
         return nodes;
     }
 
-    private ISchemaItemProvider GetRootProviderById(string id)
-    {
-        ISchemaItemProvider provider = schemaService
-            .ActiveExtension.ChildNodes()
-            .Cast<SchemaItemProviderGroup>()
-            .SelectMany(x => x.ChildNodes().Cast<ISchemaItemProvider>())
-            .FirstOrDefault(x => x.NodeId == id);
-        return provider;
-    }
-
     [HttpPost("DeleteSchemaItem")]
+    [EndpointDescription(
+        "Permanently delete a model item - a field, an entity, a filter, a relationship, a "
+            + "screen and so on - from the model and from disk. schemaItemId is the id of the "
+            + "item ITSELF: to delete a field pass that field's id, not its parent entity's id. "
+            + "The item must already be saved. There is no undo, and anything still referencing "
+            + "the deleted item stops working. On success returns {deleted, id, name} - treat "
+            + "that as proof the item is gone and do not call this again for the same id. A 404 "
+            + "means no saved item has that id, which usually means an earlier delete of it "
+            + "already succeeded; never retry the same id after a 404. A 400 carries the reason "
+            + "the model refused the delete."
+    )]
     public IActionResult DeleteSchemaItem([Required] [FromBody] DeleteModel input)
     {
         ISchemaItem instance = null;
@@ -164,70 +166,128 @@ public class ModelController(
 
         if (instance == null)
         {
-            return NotFound();
+            return NotFound(
+                $"No saved model item has id {input.SchemaItemId}. It was either never saved or "
+                    + "it has already been deleted - a previous delete of this id may have "
+                    + "succeeded. Do not repeat this call with the same id."
+            );
         }
 
+        string deletedName = instance.Name;
+        ISchemaItem deletedRootItem = instance.RootItem;
         try
         {
-            persistenceProvider.BeginTransaction();
-            instance.Delete();
+            modelTransactionRunner.Run(() => instance.Delete());
         }
         catch (InvalidOperationException ex)
         {
-            persistenceProvider.EndTransactionDontSave();
             return StatusCode(statusCode: 400, ex.Message);
         }
 
-        persistenceProvider.EndTransaction();
-        gitNodeStatusService.ClearCache();
-        return Ok();
+        tabService.InvalidateTabsInRoot(deletedRootItem, changedByTabId: null);
+        return Ok(new DeleteResult(Deleted: true, Id: input.SchemaItemId, Name: deletedName));
     }
 
+    [HttpPost("CreateGroup")]
+    public ActionResult<TreeNode> CreateGroup([Required] [FromBody] CreateGroupModel input) =>
+        modelGroupService.Create(input);
+
+    [HttpPost("RenameGroup")]
+    public ActionResult<TreeNode> RenameGroup([Required] [FromBody] RenameGroupModel input) =>
+        modelGroupService.Rename(input);
+
+    [HttpPost("DeleteGroup")]
+    public ActionResult<DeleteGroupResult> DeleteGroup(
+        [Required] [FromBody] DeleteGroupModel input
+    ) => modelGroupService.Delete(input);
+
     [HttpGet("GetMenuItems")]
+    [EndpointDescription(
+        "List the model item types that can be created as children of the given node (the 'New' "
+            + "context menu). Each entry has a caption, for example 'Database Field', and a "
+            + "typeName; either one can be passed as newTypeName to POST /Tab/CreateNode. Entries "
+            + "with a name are parameters the node expects but does not reference yet (for example "
+            + "the xsl:param of a transformation called from a workflow step); create them by "
+            + "passing a change that sets Name to that value."
+    )]
     public IEnumerable<MenuItemInfo> GetMenuItems(
         [FromQuery] string id,
         [FromQuery] bool isNonPersistentItem,
         [FromQuery] string nodeText
+    ) => menuItemService.GetMenuItems(id, isNonPersistentItem, nodeText);
+
+    [HttpGet("GetSchemaNodeDetails")]
+    public ActionResult<TreeNode> GetSchemaNodeDetails(
+        [FromQuery] string id,
+        [FromQuery] int depth = 3
     )
     {
-        if (!Guid.TryParse(id, out Guid schemaItemId))
+        if (string.IsNullOrWhiteSpace(id))
         {
-            ISchemaItemProvider provider = GetRootProviderById(id);
-            if (provider == null)
-            {
-                return new List<MenuItemInfo>();
-            }
-
-            return provider.NewItemTypes.Select(GetMenuInfo);
+            return BadRequest("Id cannot be empty");
         }
 
-        IBrowserNode2 instance = persistenceProvider.RetrieveInstance<IBrowserNode2>(schemaItemId);
+        if (Guid.TryParse(id, out var guidId))
+        {
+            IBrowserNode2 node = persistenceProvider.RetrieveInstance<IBrowserNode2>(guidId);
+            if (node == null)
+            {
+                return NotFound();
+            }
+            TreeNode treeNode = treeNodeFactory.CreateRecursive(node, depth);
+            return Ok(treeNode);
+        }
 
-        ISchemaItemFactory factory = isNonPersistentItem
-            ? new NonpersistentSchemaItemNode { NodeText = nodeText, ParentNode = instance }
-            : (ISchemaItemFactory)instance;
+        ISchemaItemProvider provider = treeNodeFactory.FindRootProvider(id);
+        if (provider == null)
+        {
+            return NotFound();
+        }
 
-        return factory.NewItemTypes.Select(GetMenuInfo);
+        var providerNode = new TreeNode
+        {
+            Id = id,
+            OrigamId = id,
+            NodeText = provider.NodeText,
+            NodeLevelType = NodeLevelType.Provider,
+        };
+        providerNode.Children = GetProviderTopChildren(provider);
+        return Ok(providerNode);
     }
 
-    private MenuItemInfo GetMenuInfo(Type type)
+    [HttpGet("GetSchemaItemInfos")]
+    public ActionResult<List<SchemaItemInfo>> GetSchemaItemInfos()
     {
-        SchemaItemDescriptionAttribute attr = type.SchemaItemDescription();
-        if (attr is null)
+        if (!ReferenceIndexManager.Initialized)
         {
-            return new MenuItemInfo(
-                caption: type.Name,
-                typeName: type.FullName,
-                iconName: null,
-                iconIndex: null
-            );
+            return StatusCode(StatusCodes.Status503ServiceUnavailable);
         }
+        if (schemaService.ActiveExtension == null)
+        {
+            return new List<SchemaItemInfo>();
+        }
+        return ((FilePersistenceProvider)persistenceProvider).RetrieveSchemaItemInfos();
+    }
 
-        return new MenuItemInfo(
-            caption: attr.Name,
-            typeName: type.FullName,
-            iconName: attr.Icon is string iconName ? iconName : null,
-            iconIndex: attr.Icon is int iconIndex ? iconIndex : null
-        );
+    [HttpPost("GetMoveVerdicts")]
+    public ActionResult<List<MoveVerdictResult>> GetMoveVerdicts(
+        [Required] [FromBody] MoveVerdictsModel input
+    )
+    {
+        return Ok(moveService.GetMoveVerdicts(input.Source, input.Targets));
+    }
+
+    [HttpPost("GetMoveTargets")]
+    public ActionResult<MoveTargetsResult> GetMoveTargets(
+        [Required] [FromBody] MoveTargetsModel input
+    )
+    {
+        return Ok(moveService.GetMoveTargets(input.Source));
+    }
+
+    [HttpPost("MoveNode")]
+    public ActionResult<MoveNodeResult> MoveNode([Required] [FromBody] MoveNodeModel input)
+    {
+        return Ok(moveService.Move(input.Source, input.Target, input.IsCopy));
     }
 }
