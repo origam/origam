@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Reflection;
 using Origam.Architect.Server.ReturnModels;
+using Origam.Architect.Server.Utils;
 using Origam.DA;
 using Origam.Extensions;
 using Origam.Schema;
@@ -71,8 +72,9 @@ public class PropertyEditorService(EditorPropertyFactory propertyFactory)
             return xsltProperties;
         }
 
-        IEnumerable<EditorProperty> properties = item.GetType()
-            .GetProperties()
+        PropertyInfo[] allProperties = item.GetType().GetProperties();
+        IEnumerable<EditorProperty> properties = allProperties
+            .Where(prop => !PropertyUtils.IsHiddenByDerivedProperty(prop, allProperties))
             .Select(prop => propertyFactory.CreateIfMarkedAsEditable(prop, item))
             .Where(x => x != null);
         return properties;

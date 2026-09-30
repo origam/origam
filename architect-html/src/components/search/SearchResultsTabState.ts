@@ -19,7 +19,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { ISearchResult } from '@api/IArchitectApi';
 import { ITabState } from '@/components/editorTabView/ITabState';
-import { T } from '@/main';
 import { observable } from 'mobx';
 
 export class SearchResultsTabState implements ITabState {
@@ -34,10 +33,11 @@ export class SearchResultsTabState implements ITabState {
     public tabId: string,
     query: string,
     results: ISearchResult[],
+    label: string,
   ) {
     this.results = results;
     this.query = query;
-    this.label = T('Search: {0}', 'editor_search_results_title', query);
+    this.label = label;
   }
 
   save(): Generator<Promise<any>, void, any> {

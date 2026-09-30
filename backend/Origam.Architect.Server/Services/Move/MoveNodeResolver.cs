@@ -31,7 +31,8 @@ namespace Origam.Architect.Server.Services.Move;
 public class MoveNodeResolver(
     SchemaService schemaService,
     IPersistenceService persistenceService,
-    TreeNodeFactory treeNodeFactory
+    TreeNodeFactory treeNodeFactory,
+    RootProviderRestorer rootProviderRestorer
 )
 {
     private IPersistenceProvider PersistenceProvider => persistenceService.SchemaProvider;
@@ -55,6 +56,7 @@ public class MoveNodeResolver(
                 useCache: true,
                 throwNotFoundException: false
             );
+            rootProviderRestorer.Restore(node);
             if (node == null || !reference.IsNonPersistentItem)
             {
                 return node;

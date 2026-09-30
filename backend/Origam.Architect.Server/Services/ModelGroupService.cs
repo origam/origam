@@ -32,7 +32,8 @@ public class ModelGroupService(
     SchemaService schemaService,
     IPersistenceService persistenceService,
     TreeNodeFactory treeNodeFactory,
-    ModelTransactionRunner transactionRunner
+    ModelTransactionRunner transactionRunner,
+    RootProviderRestorer rootProviderRestorer
 )
 {
     private static readonly HashSet<string> ReservedDeviceNames = new(
@@ -179,14 +180,7 @@ public class ModelGroupService(
             throw new UserOrigamException(Strings.Group_NotFound);
         }
 
-        // A group fetched by id has no provider wiring; restore RootProvider so ChildItems works.
-        if (group.RootProvider == null && group.ParentItem == null)
-        {
-            group.RootProvider = schemaService
-                .Providers.OfType<AbstractSchemaItemProvider>()
-                .FirstOrDefault(provider => provider.RootItemType == group.RootItemType);
-        }
-
+        rootProviderRestorer.Restore(group);
         return group;
     }
 

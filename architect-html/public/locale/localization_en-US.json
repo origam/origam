@@ -353,5 +353,6 @@
   "ai_settings_tools_reset": "Reset to defaults",
   "ai_settings_tools_unavailable": "Sections unavailable. Is the Architect server running with Swagger?",
   "ai_settings_tools_functions": "{0} functions",
-  "ai_settings_save": "Save"
+  "ai_settings_save": "Save",
+  "error_dialog_server_error": "Server error occurred. Please check server log for more details."
 }

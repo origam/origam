@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { T } from '@/main';
 import { Icon } from '@components/icon/Icon';
 import { ModalWindow } from '@dialogs/ModalWindow';
 import { IDialogStackState } from '@dialogs/types';
@@ -83,8 +84,11 @@ export class ErrorDialogController {
 
       let errorMessage = handlePlainText() || handleMessageField() || handleRuntimeException();
 
-      if (errItem.error?.request?.status === 500 || errItem.error?.request?.status === 409) {
-        errorMessage = 'Server error occurred. Please check server log for more details.';
+      if (errItem.error?.status === 500 || errItem.error?.status === 409) {
+        errorMessage = T(
+          'Server error occurred. Please check server log for more details.',
+          'error_dialog_server_error',
+        );
       }
 
       return {

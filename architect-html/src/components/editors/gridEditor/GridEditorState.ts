@@ -64,14 +64,18 @@ export class GridEditorState implements ITabState, IPropertyManager {
     return this.editorNode.origamId;
   }
 
-  get label() {
+  private get name() {
     const nameValue = this.properties.find(x => x.name === 'Name')?.value;
     return typeof nameValue === 'string' ? nameValue : '';
   }
 
+  get label() {
+    return this.name || this.editorNode.itemTypeName || '';
+  }
+
   get title(): string {
     const typeName = this.editorNode.itemTypeName;
-    const label = this.label;
+    const label = this.name;
     if (typeName && label) {
       return T('{0}: {1}', 'grid_editor_title_full', typeName, label);
     }

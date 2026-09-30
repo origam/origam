@@ -223,6 +223,7 @@ export function getEditorContainer(args: {
       editorData.editorId,
       searchResultsData.query ?? '',
       searchResultsData.results ?? [],
+      searchResultsData.label ?? '',
     );
     return new EditorContainer(editorState, <SearchResultsView editorState={editorState} />);
   }

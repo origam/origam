@@ -80,6 +80,21 @@ public class MoveRuleEvaluator(SchemaService schemaService)
             );
         }
 
+        if (
+            !isCopy
+            && target is ISchemaItem targetItem
+            && targetItem.ChildItems.Any(child => child.Id == item.Id && child.DerivedFrom != null)
+        )
+        {
+            return MoveDecision.Rejected(
+                string.Format(
+                    Strings.Move_TargetInheritsSource,
+                    item.Name,
+                    TreeNode.ToNodeText(target)
+                )
+            );
+        }
+
         MoveDecision decision = EvaluateDestination(item, target);
         if (decision.IsAllowed && !isCopy && IsCurrentLocation(item, target))
         {

@@ -29,7 +29,8 @@ namespace Origam.Architect.Server.Services;
 
 public class MenuItemService(
     IPersistenceService persistenceService,
-    TreeNodeFactory treeNodeFactory
+    TreeNodeFactory treeNodeFactory,
+    RootProviderRestorer rootProviderRestorer
 )
 {
     private readonly IPersistenceProvider persistenceProvider = persistenceService.SchemaProvider;
@@ -52,6 +53,7 @@ public class MenuItemService(
         }
 
         IBrowserNode2 instance = persistenceProvider.RetrieveInstance<IBrowserNode2>(schemaItemId);
+        rootProviderRestorer.Restore(instance);
 
         ISchemaItemFactory factory = isNonPersistentItem
             ? new NonpersistentSchemaItemNode { NodeText = nodeText, ParentNode = instance }

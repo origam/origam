@@ -44,7 +44,8 @@ public class ModelController(
     ModelTransactionRunner modelTransactionRunner,
     TabService tabService,
     ModelGroupService modelGroupService,
-    MenuItemService menuItemService
+    MenuItemService menuItemService,
+    RootProviderRestorer rootProviderRestorer
 ) : ControllerBase
 {
     private readonly IPersistenceProvider persistenceProvider = persistenceService.SchemaProvider;
@@ -112,6 +113,7 @@ public class ModelController(
     private List<TreeNode> GetChildren(Guid id, bool isNonPersistentItem, string nodeText)
     {
         IBrowserNode2 provider = persistenceProvider.RetrieveInstance<IBrowserNode2>(id);
+        rootProviderRestorer.Restore(provider);
         if (isNonPersistentItem)
         {
             provider = new NonpersistentSchemaItemNode
@@ -157,7 +159,9 @@ public class ModelController(
         ISchemaItem instance = null;
         foreach (ISchemaItemProvider provider in schemaService.Providers)
         {
-            instance = provider.ChildItemsRecursive.FirstOrDefault(x => x.Id == input.SchemaItemId);
+            instance = provider.ChildItemsRecursive.FirstOrDefault(x =>
+                x.Id == input.SchemaItemId && x.DerivedFrom == null
+            );
             if (instance != null)
             {
                 break;

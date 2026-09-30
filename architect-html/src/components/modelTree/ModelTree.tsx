@@ -1026,12 +1026,12 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
                 {T('Rename', 'tree_node_rename_folder')}
               </Item>
             )}
-            {!node.isNonPersistentItem && (!node.isFolder || node.isInActivePackage) && (
+            {node.canDelete && (
               <Item id="delete" data-test-id="tree-menu-delete" onClick={onDelete}>
                 {T('Delete', 'tree_node_delete')}
               </Item>
             )}
-            {!node.isNonPersistentItem && (
+            {node.isSchemaItem && (
               <Item
                 id="documentation"
                 data-test-id="tree-menu-documentation"
@@ -1040,12 +1040,12 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
                 {T('Documentation', 'tree_node_documentation')}
               </Item>
             )}
-            {!node.isNonPersistentItem && (
+            {node.isSchemaItem && (
               <Item id="references" data-test-id="tree-menu-references" onClick={findReferences}>
                 {T('Find references', 'tree_node_references')}
               </Item>
             )}
-            {!node.isNonPersistentItem && (
+            {node.isSchemaItem && (
               <Item
                 id="dependencies"
                 data-test-id="tree-menu-dependencies"

@@ -378,6 +378,7 @@ export interface ISearchResult {
 export interface ISearchResultsEditorData {
   query: string;
   results: ISearchResult[];
+  label: string;
 }
 
 export interface IModelRuleError {

@@ -40,7 +40,8 @@ public class TabService(
     SchemaService schemaService,
     IPersistenceService persistenceService,
     PropertyParser propertyParser,
-    GitNodeStatusService gitNodeStatusService
+    GitNodeStatusService gitNodeStatusService,
+    RootProviderRestorer rootProviderRestorer
 )
 {
     private readonly IPersistenceProvider persistenceProvider = persistenceService.SchemaProvider;
@@ -145,6 +146,7 @@ public class TabService(
             IBrowserNode2 parentItem = persistenceProvider.RetrieveInstance<IBrowserNode2>(
                 parentGuid
             );
+            rootProviderRestorer.Restore(parentItem);
             return (ISchemaItemFactory)parentItem;
         }
 
@@ -251,6 +253,7 @@ public class TabService(
             throw new SchemaItemNotFoundException(schemaItemId);
         }
 
+        rootProviderRestorer.Restore(item);
         return item;
     }
 

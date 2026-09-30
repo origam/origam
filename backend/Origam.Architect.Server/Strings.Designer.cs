@@ -385,6 +385,15 @@ namespace Origam.Architect.Server {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to '{0}' cannot be moved into '{1}', which already inherits it..
+        /// </summary>
+        internal static string Move_TargetInheritsSource {
+            get {
+                return ResourceManager.GetString("Move_TargetInheritsSource", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to '{0}' cannot be moved into '{1}', which is one of its own children..
         /// </summary>
         internal static string Move_TargetIsDescendant {

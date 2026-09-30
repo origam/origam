@@ -292,6 +292,7 @@ export class EditorTabViewState {
       data: {
         query: queryText,
         results,
+        label,
       },
     };
 

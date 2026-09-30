@@ -151,6 +151,14 @@ export class TreeNode implements IEditorNode {
     return this.itemType === 'Origam.Schema.EntityModel.DataStructure';
   }
 
+  get isSchemaItem() {
+    return !!this.editorType;
+  }
+
+  get canDelete() {
+    return this.isFolder ? this.isInActivePackage : this.isSchemaItem;
+  }
+
   get canCreateFolder() {
     return this.nodeLevelType === 'Provider' || this.isFolder;
   }

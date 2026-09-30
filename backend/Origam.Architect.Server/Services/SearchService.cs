@@ -88,6 +88,7 @@ public class SearchService(
         }
         return schemaItems
             .Where(x => x != null)
+            .DistinctBy(x => x.Id)
             .Select(result => BuildResult(result, referencePackages));
     }
 
@@ -97,6 +98,7 @@ public class SearchService(
         List<Guid> referencePackages = GetReferencePackages();
         return item.GetDependencies(false)
             .Where(x => x != null)
+            .DistinctBy(x => x.Id)
             .Select(result => BuildResult(result, referencePackages));
     }
 
