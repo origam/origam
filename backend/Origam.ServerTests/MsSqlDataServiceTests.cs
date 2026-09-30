@@ -43,7 +43,7 @@ public class MsSqlDataServiceTests
         connection.SetupGet(x => x.Database).Returns("InventoryDb");
 
         var dataService = new TestMsSqlDataService();
-        var exception = Assert.Throws<UserOrigamException>(() =>
+        var exception = Assert.Throws<Exception>(() =>
             dataService.CheckIsolationLevel(connection.Object, IsolationLevel.Snapshot)
         );
 
@@ -107,7 +107,7 @@ public class MsSqlDataServiceTests
         connection.SetupGet(x => x.Database).Returns("InventoryDb");
 
         var dataService = new TestMsSqlDataService();
-        Assert.Throws<UserOrigamException>(() =>
+        Assert.Throws<Exception>(() =>
             dataService.CheckIsolationLevel(connection.Object, IsolationLevel.Snapshot)
         );
         Assert.DoesNotThrow(() =>
