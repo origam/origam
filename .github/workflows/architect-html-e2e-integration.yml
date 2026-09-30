@@ -94,6 +94,8 @@ jobs:
           SqlLocalDB create MSSQLLocalDB 2>$null
           SqlLocalDB start MSSQLLocalDB
           sqlcmd -S "(localdb)\MSSQLLocalDB" -Q "IF DB_ID('origam-demo') IS NULL CREATE DATABASE [origam-demo];"
+          sqlcmd -S "(localdb)\MSSQLLocalDB" -Q "ALTER DATABASE [origam-demo] SET ALLOW_SNAPSHOT_ISOLATION ON;" -b
+          if ($LASTEXITCODE -ne 0) { throw "Failed to enable snapshot isolation for origam-demo" }
           sqlcmd -S "(localdb)\MSSQLLocalDB" -Q "SELECT name FROM sys.databases;"
 
       # --- Server runtime configuration -----------------------------------
