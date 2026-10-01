@@ -23,6 +23,7 @@ import { LabelPosition, parseLabelPosition } from '@editors/designerEditor/commo
 import { controlLayer } from '@editors/designerEditor/common/Layers';
 import { EditorProperty } from '@editors/gridEditor/EditorProperty';
 import { action, observable } from 'mobx';
+import { Observer } from 'mobx-react-lite';
 import { ReactElement } from 'react';
 
 export class Component {
@@ -31,7 +32,7 @@ export class Component {
   data: IComponentData;
   @observable accessor properties: EditorProperty[];
   @observable.ref private accessor _designerRepresentation: ReactElement | null = null;
-  accessor hideChildren = false;
+  @observable accessor hideChildren = false;
 
   get designerRepresentation(): ReactElement | null {
     if (this.parent && !this.parent.isActive) {
@@ -39,7 +40,22 @@ export class Component {
     }
     if (!this._designerRepresentation) {
       action(() => {
-        this._designerRepresentation = this.getDesignerRepresentation();
+        this._designerRepresentation = this.getDesignerRepresentation() && (
+          <Observer>
+            {() => (
+              <div
+                className={
+                  this.isReadOnly
+                    ? `${S.designerRepresentation} ${S.readOnly}`
+                    : S.designerRepresentation
+                }
+                data-component-type={this.data.type}
+              >
+                {this.getDesignerRepresentation()}
+              </div>
+            )}
+          </Observer>
+        );
       })();
     }
     return this._designerRepresentation;
@@ -137,6 +153,10 @@ export class Component {
     return controlLayer;
   }
 
+  get isReadOnly(): boolean {
+    return this.get('ReadOnly') === true;
+  }
+
   get isActive(): boolean {
     return !this.hideChildren;
   }
@@ -232,6 +252,10 @@ export class Component {
     return false;
   }
 
+  canAcceptChild(child?: Component): boolean {
+    return this.canHaveChildren && child !== this;
+  }
+
   get hasBorder(): boolean {
     return true;
   }
@@ -241,4 +265,8 @@ export class Component {
   }
 
   update() {}
+
+  onChildrenChanged() {
+    this.update();
+  }
 }

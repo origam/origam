@@ -39,6 +39,8 @@ import { AsDateBox } from '@editors/designerEditor/common/designerComponents/AsD
 import { TagInput } from '@editors/designerEditor/common/designerComponents/TagInput.tsx';
 import { ImageBox } from '@editors/designerEditor/common/designerComponents/ImageBox.tsx';
 import { ColorPicker } from '@editors/designerEditor/common/designerComponents/ColorPicker.tsx';
+import { AsTree } from '@editors/designerEditor/common/designerComponents/AsTree.tsx';
+import { Panel } from '@editors/designerEditor/common/designerComponents/Panel.tsx';
 
 export async function controlToComponent(
   control: IApiControl,
@@ -116,6 +118,8 @@ export async function controlToComponent(
       });
 
     case ComponentType.Label:
+    case ComponentType.ScreenLevelPlugin:
+    case ComponentType.SectionLevelPlugin:
       return new Label({
         id: control.id,
         parent: parent,
@@ -261,7 +265,28 @@ export async function controlToComponent(
         properties: properties,
       });
 
+    case ComponentType.Panel:
+      return new Panel({
+        id: control.id,
+        parent: parent,
+        data: {
+          type: componentType,
+          identifier: control.name,
+        },
+        properties: properties,
+      });
+
     case ComponentType.AsTree:
+      return new AsTree({
+        id: control.id,
+        parent: parent,
+        data: {
+          type: componentType,
+          identifier: control.name,
+        },
+        properties: properties,
+      });
+
     case ComponentType.AsTextBox:
     case ComponentType.TextArea:
       return new Component({
