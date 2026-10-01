@@ -342,7 +342,7 @@ jobs:
         if: success() || failure()
         with:
           name: Frontend Integration Test Results
-          path: test/output/frontend-integration-test-results.trx
+          path: test/output/frontend-integration-test-results*.trx
           reporter: dotnet-trx
           max-annotations: '0'
 
@@ -412,7 +412,7 @@ jobs:
         if: success() || failure()
         with:
           name: Frontend Integration Test Results
-          path: test/output/frontend-integration-test-results.trx
+          path: test/output/frontend-integration-test-results*.trx
           reporter: dotnet-trx
           max-annotations: '0'
 
