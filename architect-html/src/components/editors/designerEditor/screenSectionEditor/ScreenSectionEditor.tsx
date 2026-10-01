@@ -19,35 +19,52 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import ActionPanel from '@/components/ActionPanel/ActionPanel';
 import SaveButtonHOC from '@/components/SaveButtonHOC/SaveButtonHOC';
-import { T } from '@/main';
+import { RootStoreContext, T } from '@/main';
 import { DesignSurface } from '@editors/designerEditor/common/DesignSurface';
 import S from '@editors/designerEditor/screenSectionEditor/ScreenSectionEditor.module.scss';
 import { ScreenSectionEditorState } from '@editors/designerEditor/screenSectionEditor/ScreenSectionEditorState';
 import { SectionToolbox } from '@editors/designerEditor/screenSectionEditor/SectionToolbox';
+import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
+import { observer } from 'mobx-react-lite';
+import { useContext, useEffect, useRef } from 'react';
 
-export const ScreenSectionEditor = ({
-  designerState,
-}: {
-  designerState: ScreenSectionEditorState;
-}) => {
-  return (
-    <div className={S.root}>
-      <div>
-        <ActionPanel
-          title={T(
-            'Screen section editor: {0}',
-            'screen_section_editor_title',
-            designerState.sectionToolbox.toolboxState.name,
-          )}
-          buttons={<SaveButtonHOC />}
-        />
+export const ScreenSectionEditor = observer(
+  ({ designerState }: { designerState: ScreenSectionEditorState }) => {
+    const rootStore = useContext(RootStoreContext);
+    const run = runInFlowWithHandler(rootStore.errorDialogController);
+    const wasInactive = useRef(false);
+
+    useEffect(() => {
+      if (!designerState.isActive) {
+        wasInactive.current = true;
+        return;
+      }
+      if (!wasInactive.current) {
+        return;
+      }
+      wasInactive.current = false;
+      run({ generator: designerState.refreshFields() });
+    }, [designerState, designerState.isActive, run]);
+
+    return (
+      <div className={S.root}>
+        <div>
+          <ActionPanel
+            title={T(
+              'Screen section editor: {0}',
+              'screen_section_editor_title',
+              designerState.sectionToolbox.toolboxState.name,
+            )}
+            buttons={<SaveButtonHOC />}
+          />
+        </div>
+        <div className={S.box}>
+          <SectionToolbox designerState={designerState} />
+          <DesignSurface designerState={designerState} />
+        </div>
       </div>
-      <div className={S.box}>
-        <SectionToolbox designerState={designerState} />
-        <DesignSurface designerState={designerState} />
-      </div>
-    </div>
-  );
-};
+    );
+  },
+);
 
 export default ScreenSectionEditor;

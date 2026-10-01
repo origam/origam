@@ -60,7 +60,10 @@ public abstract class AbstractPersistenceProvider : IPersistenceProvider
         }
     }
 
-    public virtual void EndTransactionDontSave() { }
+    public virtual void EndTransactionDontSave()
+    {
+        transactionEndEventQueue.Clear();
+    }
 
     public abstract object RetrieveValue(Guid instanceId, Type parentType, string fieldName);
 

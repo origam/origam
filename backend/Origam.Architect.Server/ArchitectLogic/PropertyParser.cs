@@ -19,7 +19,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System.ComponentModel;
+using System.Globalization;
 using System.Reflection;
+using Origam.Architect.Server.ReturnModels;
+using Origam.Architect.Server.Utils;
 using Origam.DA.ObjectPersistence;
 using Origam.Workbench.Services;
 
@@ -27,7 +31,7 @@ namespace Origam.Architect.Server.ArchitectLogic;
 
 public class PropertyParser(IPersistenceService persistenceService)
 {
-    public object Parse(PropertyInfo property, string value)
+    public object Parse(PropertyInfo property, string value, object instance)
     {
         if (value == null)
         {
@@ -37,6 +41,11 @@ public class PropertyParser(IPersistenceService persistenceService)
         if (property.PropertyType == typeof(string))
         {
             return value;
+        }
+
+        if (PropertyUtils.IsUntyped(property))
+        {
+            return ParseUntyped(property, value, instance);
         }
 
         if (property.PropertyType == typeof(bool))
@@ -91,23 +100,60 @@ public class PropertyParser(IPersistenceService persistenceService)
 
         if (property.PropertyType.IsEnum)
         {
-            if (Enum.TryParse(property.PropertyType, value, out var enumValue))
+            if (Enum.TryParse(property.PropertyType, value, ignoreCase: true, out var enumValue))
             {
                 return enumValue;
+            }
+
+            throw new Exception(
+                string.Format(
+                    Strings.PropertyEnumValueNotValid,
+                    value,
+                    property.Name,
+                    string.Join(separator: ", ", Enum.GetNames(property.PropertyType))
+                )
+            );
+        }
+
+        if (property.PropertyType == typeof(Guid))
+        {
+            if (Guid.TryParse(value, out var guidValue))
+            {
+                return guidValue;
             }
 
             throw MakeCouldNotParseException(property);
         }
 
-        if (property.PropertyType == typeof(Guid))
-        {
-            return ParseGuid(value, property);
-        }
-
         if (property.PropertyType.IsAssignableTo(typeof(IPersistent)))
         {
-            Guid id = ParseGuid(value, property);
-            return persistenceService.SchemaProvider.RetrieveInstance<IPersistent>(id);
+            if (!Guid.TryParse(value, out var referenceId))
+            {
+                throw new Exception(
+                    string.Format(
+                        Strings.PropertyReferenceValueNotValid,
+                        value,
+                        property.Name,
+                        property.PropertyType.Name
+                    )
+                );
+            }
+
+            IPersistent referenced =
+                persistenceService.SchemaProvider.RetrieveInstance<IPersistent>(referenceId);
+            if (referenced != null && !referenced.GetType().IsAssignableTo(property.PropertyType))
+            {
+                throw new Exception(
+                    string.Format(
+                        Strings.PropertyReferenceTypeNotValid,
+                        property.Name,
+                        property.PropertyType.Name,
+                        referenced.GetType().Name
+                    )
+                );
+            }
+
+            return referenced;
         }
 
         throw new Exception(
@@ -115,14 +161,40 @@ public class PropertyParser(IPersistenceService persistenceService)
         );
     }
 
-    private Guid ParseGuid(string value, PropertyInfo property)
+    // Untyped properties are edited in the converter's text space, invariant.
+    private static object ParseUntyped(PropertyInfo property, string value, object instance)
     {
-        if (Guid.TryParse(value, out var guidValue))
+        if (value.Length == 0)
         {
-            return guidValue;
+            return null;
         }
 
-        throw MakeCouldNotParseException(property);
+        TypeConverter converter = PropertyUtils.CreateConverter(property);
+        var context = new Context(instance);
+        if (converter == null || !converter.CanConvertFrom(context, typeof(string)))
+        {
+            return value;
+        }
+
+        object converted;
+        try
+        {
+            converted = converter.ConvertFrom(context, CultureInfo.InvariantCulture, value);
+        }
+        catch (Exception exception) when (PropertyUtils.IsRejectedValueException(exception))
+        {
+            throw PropertyUtils.MakeValueNotReadException(property, exception);
+        }
+
+        // A converter answers text it cannot match with null, which would clear the value.
+        if (converted == null)
+        {
+            throw new UserOrigamException(
+                string.Format(Strings.Property_ValueNotOffered, property.Name, value)
+            );
+        }
+
+        return converted;
     }
 
     private Exception MakeCouldNotParseException(PropertyInfo property)

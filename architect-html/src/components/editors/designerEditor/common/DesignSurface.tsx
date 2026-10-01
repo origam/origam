@@ -158,6 +158,7 @@ export const DesignSurface: React.FC<{
               {component.data.identifier}
             </div>
             <div
+              data-test-id="design-component"
               className={`${S.designComponent} ${component.id}
             ${component.hasBorder ? '' : S.borderless}
             ${surfaceState.draggingComponentId === component.id ? S.dragging : ''}
@@ -192,16 +193,19 @@ export const DesignSurface: React.FC<{
                 component.designerRepresentation
               )}
               {surfaceState.selectedComponent?.id === component.id &&
-                [
-                  'top',
-                  'right',
-                  'bottom',
-                  'left',
-                  'topLeft',
-                  'topRight',
-                  'bottomRight',
-                  'bottomLeft',
-                ].map(handle => (
+                (component.canResizeHeight
+                  ? [
+                      'top',
+                      'right',
+                      'bottom',
+                      'left',
+                      'topLeft',
+                      'topRight',
+                      'bottomRight',
+                      'bottomLeft',
+                    ]
+                  : ['right', 'left']
+                ).map(handle => (
                   <div
                     key={component.id + handle}
                     className={`${S.resizeHandle} ${S[handle]}`}
