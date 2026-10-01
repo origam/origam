@@ -198,6 +198,10 @@ public class WizardController(
     public IActionResult GetDataStructureSql(Guid id) =>
         Ok(dataStructureSqlWizard.GetDataStructureSql(id));
 
+    [HttpGet("data-structure-filter-sets/{id}/sql")]
+    public IActionResult GetDataStructureFilterSetSql(Guid id) =>
+        Ok(dataStructureSqlWizard.GetDataStructureFilterSetSql(id));
+
     [HttpGet("localization-child-entities/wizard-data")]
     public IActionResult GetLocalizationChildEntityWizardData([FromQuery] Guid entityId) =>
         Ok(localizationChildEntityWizard.GetWizardData(entityId));

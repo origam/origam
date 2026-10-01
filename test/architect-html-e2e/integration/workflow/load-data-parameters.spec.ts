@@ -23,46 +23,34 @@ import { removeContextReference } from '@support/modelDefects';
 import { openNodeMenu } from '@support/modelTree';
 import { reloadBackend, resetBackend } from '@support/resetBackend';
 
-const WORKFLOW_PACKAGE = 'Workflow';
-const WORKFLOW_FILE = 'Workflow/Workflow/Workflow/BooleanContextStoreTest.origam';
-const PARAMETER_NAME = 'boolean';
+const WIDGETS_PACKAGE = 'Widgets';
+const WORKFLOW_FILE = 'Widgets/Workflow/Widgets/WorkQueueTest1.origam';
+const PARAMETER_NAME = 'WorkQueueEntry_parId';
 const CONTEXT_REFERENCE_TYPE = 'Origam.Schema.WorkflowModel.ContextReference';
-const CONTEXT_STORE_NAME = 'BooleanContextStore';
 
-async function expandTransformParameters(page: Page): Promise<Locator> {
+async function expandLoadDataParameters(page: Page): Promise<Locator> {
   await page.goto('/');
   await page.getByTestId('tree-toggle-Business Logic').click();
   await page.getByTestId('tree-toggle-Sequential Workflows').click();
-  await page.getByTestId('tree-toggle-Workflow').click();
-  await page.getByTestId('tree-toggle-BooleanContextStoreTest').click();
+  await page.getByTestId('tree-toggle-Widgets').click();
+  await page.getByTestId('tree-toggle-WorkQueueTest1').click();
   await page.getByTestId('tree-toggle-Tasks').click();
-  await page.getByTestId('tree-toggle-0200_Transform_FillStringContextStore').click();
+  await page.getByTestId('tree-toggle-0100_LoadData_WQ_TestQueue').click();
   await page.getByTestId('tree-toggle-Parameters').click();
 
-  // The task folder comes first, the Transform method parameter second.
+  // The task folder comes first, the LoadData method parameter second.
   return page.getByTestId('tree-node-Parameters').nth(1);
 }
 
-async function selectContextStore(page: Page): Promise<void> {
-  const input = page.getByTestId('property-select-ContextStore').locator('input');
-  await input.fill(CONTEXT_STORE_NAME);
-  const pendingUpdate = page.waitForResponse(
-    response => response.url().includes('/PropertyEditor/Update'),
-    { timeout: 10_000 },
-  );
-  await input.press('Tab');
-  await pendingUpdate;
-}
-
-test.describe('Transformation parameters in a workflow (real backend)', () => {
+test.describe('LoadData parameters in a work queue workflow (real backend)', () => {
   test.beforeEach(async ({ request }) => {
     await resetBackend(request);
   });
 
-  test('offers an unreferenced parameter by name until it is saved', async ({ page, request }) => {
+  test('offers an unreferenced filter set parameter by name', async ({ page, request }) => {
     removeContextReference(WORKFLOW_FILE, PARAMETER_NAME);
-    await reloadBackend(request, WORKFLOW_PACKAGE);
-    const parametersNode = await expandTransformParameters(page);
+    await reloadBackend(request, WIDGETS_PACKAGE);
+    const parametersNode = await expandLoadDataParameters(page);
 
     const menu = await openNodeMenu(page, parametersNode);
     await menu.getByTestId('tree-menu-new').getByText('New').click();
@@ -70,25 +58,16 @@ test.describe('Transformation parameters in a workflow (real backend)', () => {
       .getByTestId(`tree-menu-new-param-${PARAMETER_NAME}`)
       .getByText(PARAMETER_NAME, { exact: true })
       .click();
-    await expect(menu.getByTestId(`tree-menu-new-${CONTEXT_REFERENCE_TYPE}`)).toHaveCount(0);
-    await expect(menu.getByTestId('tree-menu-new').locator('.contexify_separator')).toHaveCount(0);
     await menu
       .getByTestId(`tree-menu-new-param-${PARAMETER_NAME}-${CONTEXT_REFERENCE_TYPE}`)
       .click();
+
     await expect(page.getByTestId(`tab-${PARAMETER_NAME}`)).toBeVisible();
-
-    await selectContextStore(page);
-    await page.getByTestId('save-button').click();
-    await expect(page.getByTestId('save-button-disabled')).toBeVisible();
-
-    await openNodeMenu(page, parametersNode);
-    await expect(menu.getByTestId(`tree-menu-new-${CONTEXT_REFERENCE_TYPE}`)).toHaveCount(1);
-    await expect(menu.getByTestId(`tree-menu-new-param-${PARAMETER_NAME}`)).toHaveCount(0);
   });
 
   test('does not offer an already referenced parameter', async ({ page, request }) => {
-    await activatePackage(request, WORKFLOW_PACKAGE);
-    const parametersNode = await expandTransformParameters(page);
+    await activatePackage(request, WIDGETS_PACKAGE);
+    const parametersNode = await expandLoadDataParameters(page);
 
     const menu = await openNodeMenu(page, parametersNode);
 

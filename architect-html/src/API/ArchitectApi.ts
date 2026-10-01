@@ -500,6 +500,12 @@ export class ArchitectApi implements IArchitectApi {
   ): Promise<import('@api/IArchitectApi').IGetDataStructureSqlResult> {
     return (await this.http.get(`/wizards/data-structures/${dataStructureId}/sql`)).data;
   }
+
+  async getDataStructureFilterSetSql(
+    filterSetId: string,
+  ): Promise<import('@api/IArchitectApi').IGetDataStructureFilterSetSqlResult> {
+    return (await this.http.get(`/wizards/data-structure-filter-sets/${filterSetId}/sql`)).data;
+  }
 }
 
 export function simpleErrorHandler(error: any) {

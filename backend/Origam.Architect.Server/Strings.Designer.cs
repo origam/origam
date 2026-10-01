@@ -520,6 +520,15 @@ namespace Origam.Architect.Server {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to DataStructure filter set {0} not found.
+        /// </summary>
+        internal static string Wizard_DataStructureFilterSetNotFound {
+            get {
+                return ResourceManager.GetString("Wizard_DataStructureFilterSetNotFound", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to DataStructure {0} not found.
         /// </summary>
         internal static string Wizard_DataStructureNotFound {
