@@ -231,6 +231,14 @@ export class RawTable extends React.Component<React.PropsWithChildren<ITableProp
     }
   }
 
+  @action.bound handleCanvasSizeCommitted(ctxCanvas: CanvasRenderingContext2D) {
+    this.tableRenderer.drawTable(
+      ctxCanvas,
+      this.props.fixedColumnCount,
+      this.props.tableRows
+    );
+  }
+
   @action.bound refMeasure(elm: Measure | null) {
     this.elmMeasure = elm;
   }
@@ -543,6 +551,7 @@ export class RawTable extends React.Component<React.PropsWithChildren<ITableProp
                         <div className={S.canvasRow}>
                           <Canvas
                             refCanvasElement={this.refCanvasElement}
+                            onSizeCommitted={this.handleCanvasSizeCommitted}
                             width={contentRect.bounds!.width}
                             height={contentRect.bounds!.height}
                           />

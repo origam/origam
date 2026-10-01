@@ -23,10 +23,11 @@ using System.ComponentModel;
 using Origam.Architect.Server.Attributes;
 using Origam.Gui;
 using Origam.Schema.EntityModel;
+using Origam.Schema.GuiModel;
 
 namespace Origam.Architect.Server.Controls;
 
-public class Checklist : ControlBase
+public class Checklist : ControlBase, IAsControl, ILookupBoundControl
 {
     public bool ReadOnly { get; set; }
 
@@ -45,7 +46,7 @@ public class Checklist : ControlBase
     public int ColumnWidth { get; set; }
 
     [Category("(ORIGAM)")]
-    public int CaptionLength { get; set; }
+    public int CaptionLength { get; set; } = 100;
 
     [Category("(ORIGAM)")]
     public string GridColumnCaption { get; set; }
@@ -57,4 +58,12 @@ public class Checklist : ControlBase
     public CaptionPosition CaptionPosition { get; set; }
 
     public bool HideOnForm { get; set; }
+
+    [NotAModelProperty]
+    public string DefaultBindableProperty => "Value";
+
+    public override void Initialize(ControlSetItem controlSetItem)
+    {
+        Height = 20;
+    }
 }

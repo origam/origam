@@ -31,7 +31,11 @@ export class MultiColumnAdapterFieldWrapper extends Component {
     return sectionLayer + 1;
   }
 
+  get hasBorder(): boolean {
+    return false;
+  }
+
   getDesignerRepresentation(): ReactElement | null {
-    return <div className={S.panel}></div>;
+    return <div className={S.dottedFrame}></div>;
   }
 }

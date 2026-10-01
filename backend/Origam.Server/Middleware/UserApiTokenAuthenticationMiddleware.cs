@@ -86,12 +86,8 @@ public class UserApiTokenAuthenticationMiddleware
             var authFeatures = new OrigamAuthenticationFeatures(result);
             context.Features.Set<IHttpAuthenticationFeature>(authFeatures);
             context.Features.Set<IAuthenticateResultFeature>(authFeatures);
-            await _next(context);
         }
-        else
-        {
-            context.Response.StatusCode = 401;
-        }
+        await _next(context);
     }
 }
 

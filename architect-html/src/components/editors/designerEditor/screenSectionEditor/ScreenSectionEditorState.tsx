@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { IArchitectApi, ISectionEditorData } from '@api/IArchitectApi';
 import { IEditorNode } from '@components/editorTabView/EditorTabViewState';
+import { ModelTreeState } from '@components/modelTree/ModelTreeState';
 import { PropertiesState } from '@components/properties/PropertiesState';
 import { Component } from '@editors/designerEditor/common/designerComponents/Component';
 import { controlToComponent } from '@editors/designerEditor/common/designerComponents/ControlToComponent';
@@ -39,6 +40,7 @@ export class ScreenSectionEditorState extends DesignerEditorState {
     propertiesState: PropertiesState,
     sectionToolboxState: SectionToolboxState,
     architectApi: IArchitectApi,
+    modelTreeState: ModelTreeState,
     runGeneratorHandled: (args: FlowHandlerInput) => CancellablePromise<any>,
   ) {
     super(
@@ -49,6 +51,7 @@ export class ScreenSectionEditorState extends DesignerEditorState {
       propertiesState,
       sectionToolboxState.toolboxState,
       architectApi,
+      modelTreeState,
       runGeneratorHandled,
     );
     this.sectionToolbox = sectionToolboxState;
@@ -88,7 +91,7 @@ export class ScreenSectionEditorState extends DesignerEditorState {
       });
 
       const newComponent = yield controlToComponent(apiControl, null);
-      newComponent.width = newComponent.width ?? 400;
+      newComponent.width = newComponent.width ?? 100;
       newComponent.height = newComponent.height ?? 20;
       newComponent.parent = parent;
       this.surface.components.push(newComponent);
@@ -105,6 +108,16 @@ export class ScreenSectionEditorState extends DesignerEditorState {
   *save(): Generator<Promise<any>, void, any> {
     yield this.architectApi.persistSectionEditorChanges(this.editorNode.origamId);
     yield* super.save();
+  }
+
+  *refreshFields(): Generator<Promise<any>, void, any> {
+    const updateResult = yield this.architectApi.updateSectionEditor({
+      schemaItemId: this.toolbox.id,
+      name: this.toolbox.name,
+      selectedDataSourceId: this.toolbox.selectedDataSourceId,
+      modelChanges: [],
+    });
+    this.sectionToolbox.fields = updateResult.data.fields;
   }
 
   protected *update(): Generator<Promise<any>, void, any> {

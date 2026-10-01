@@ -66,6 +66,7 @@ const PropertyEditor = observer(
                   <div className={S.property} key={property.name}>
                     <div
                       title={property.error}
+                      data-test-id={`property-label-${property.name}`}
                       className={cn(S.propertyName, { [S.errorProperty]: property.error })}
                     >
                       {property.error && <VscWarning className={S.errorIcon} />}
