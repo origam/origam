@@ -114,13 +114,7 @@ public class TreeNodeFactory(
 
     public static IOrderedEnumerable<IBrowserNode2> OrderForTree(IEnumerable<IBrowserNode2> nodes)
     {
-        return nodes
-            .OrderBy(node =>
-                node is Schema.DeploymentModel.DeploymentVersion { VersionString: not null } version
-                    ? version
-                    : null
-            )
-            .ThenBy(node => node.NodeText);
+        return nodes.OrderBy(node => node);
     }
 
     public TreeNode CreateRecursive(IBrowserNode2 node, int remainingDepth)
