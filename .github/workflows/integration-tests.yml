@@ -179,7 +179,6 @@ jobs:
       - name: Restore Packages
         run: |
           cd backend
-          nuget restore Origam.ProjectAutomation/packages.config -PackagesDirectory packages -NonInteractive
           msbuild Origam.sln -t:restore /p:Configuration="Release Architect Server" -v:m
       - name: Build Server Architect
         run: |
@@ -212,7 +211,6 @@ jobs:
       - name: Restore Packages
         run: |
           cd backend
-          nuget restore Origam.ProjectAutomation/packages.config -PackagesDirectory packages -NonInteractive
           msbuild Origam.sln -t:restore /p:Configuration="Release Server" -v:m
       - name: Build Server
         run: |
@@ -344,7 +342,7 @@ jobs:
         if: success() || failure()
         with:
           name: Frontend Integration Test Results
-          path: test/output/frontend-integration-test-results.trx
+          path: test/output/frontend-integration-test-results*.trx
           reporter: dotnet-trx
           max-annotations: '0'
 
@@ -414,7 +412,7 @@ jobs:
         if: success() || failure()
         with:
           name: Frontend Integration Test Results
-          path: test/output/frontend-integration-test-results.trx
+          path: test/output/frontend-integration-test-results*.trx
           reporter: dotnet-trx
           max-annotations: '0'
 

@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { T } from '@/main';
 import { IDropDownValue } from '@api/IArchitectApi';
 import S from '@editors/propertyEditor/SinglePropertyEditor.module.scss';
 import { observer } from 'mobx-react-lite';
@@ -337,7 +338,7 @@ export const FilterableSelect = observer((props: FilterableSelectProps) => {
                     setHighlight(index);
                   }}
                 >
-                  {option.name}
+                  {option.name === '' ? T('(none)', 'property_lookup_no_value') : option.name}
                 </li>
               );
             })}

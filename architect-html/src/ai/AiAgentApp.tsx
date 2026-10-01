@@ -19,11 +19,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { AiAgentPanel } from '@/ai/AiAgentPanel';
 import S from '@/ai/AiAgentApp.module.scss';
+import { ApplicationDialogStack } from '@dialogs/DialogStack';
 
 export function AiAgentApp() {
   return (
     <div className={S.fullscreen}>
       <AiAgentPanel />
+      <ApplicationDialogStack />
     </div>
   );
 }

@@ -72,6 +72,15 @@ public static class ScreenSectionBindings
         }
     }
 
+    public static List<ControlSetItem> GetLiveChildren(ControlSetItem container)
+    {
+        return container
+            .ChildItemsByType<ControlSetItem>(ControlSetItem.CategoryConst)
+            .Where(item => !item.IsDeleted)
+            .OrderBy(item => IntValue(item, propertyName: "TabIndex"))
+            .ToList();
+    }
+
     public static string BoundFieldName(ControlSetItem item)
     {
         return item.ChildItemsByType<PropertyBindingInfo>(PropertyBindingInfo.CategoryConst)
@@ -95,5 +104,10 @@ public static class ScreenSectionBindings
     {
         return item.ChildItemsByType<PropertyValueItem>(PropertyValueItem.CategoryConst)
             .FirstOrDefault(value => value.ControlPropertyItem.Name == propertyName);
+    }
+
+    public static int IntValue(ControlSetItem item, string propertyName)
+    {
+        return FindValueItem(item, propertyName)?.IntValue ?? 0;
     }
 }

@@ -20,8 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import S from '@editors/designerEditor/common/designerComponents/Components.module.scss';
 import { ReactNode } from 'react';
 
-export const EditorBox = (props: { readOnly?: boolean; children?: ReactNode }) => (
-  <div className={props.readOnly ? `${S.editorBox} ${S.readOnly}` : S.editorBox}>
-    {props.children}
-  </div>
+export const EditorBox = (props: { children?: ReactNode }) => (
+  <div className={S.editorBox}>{props.children}</div>
 );

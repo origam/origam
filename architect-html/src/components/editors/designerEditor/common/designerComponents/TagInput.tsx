@@ -27,6 +27,6 @@ export class TagInput extends Component {
   }
 
   getDesignerRepresentation(): ReactElement | null {
-    return <EditorBox readOnly />;
+    return <EditorBox />;
   }
 }

@@ -56,14 +56,35 @@ async function beforeEachTest(){
       "--no-sandbox",
     ]
   });
-  const page = await browser.newPage();
-  // await installMouseHelper(page); // uncomment to see the mouse movement
-  await page.goto(backEndUrl);
-  await sleep(500);
-  await page.evaluate(() => {
-    localStorage.setItem("debugCloseAllForms", "1");
+  try {
+    const page = await browser.newPage();
+    // await installMouseHelper(page); // uncomment to see the mouse movement
+    const loginPageOpened = waitForLoginPage(page);
+    await page.goto(backEndUrl);
+    await loginPageOpened;
+    await page.evaluate(() => {
+      localStorage.setItem("debugCloseAllForms", "1");
+    });
+    return [browser, page]
+  } catch (error) {
+    await browser.close();
+    throw error;
+  }
+}
+
+function waitForLoginPage(page) {
+  return new Promise((resolve, reject) => {
+    const timeout = setTimeout(
+      () => reject(new Error("The login page was not opened")),
+      30000
+    );
+    page.on("framenavigated", frame => {
+      if (frame === page.mainFrame() && frame.url().includes("/Account/Login")) {
+        clearTimeout(timeout);
+        resolve();
+      }
+    });
   });
-  return [browser, page]
 }
 
 

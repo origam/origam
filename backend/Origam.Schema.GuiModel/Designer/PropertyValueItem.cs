@@ -140,39 +140,50 @@ public class PropertyValueItem : AbstractPropertyValueItem
 
     private void UseXmlPersistedValue()
     {
-        if (ControlPropertyItem != null && _xmlPersistedValue != null)
+        if (ControlPropertyItem == null)
         {
-            switch (ControlPropertyItem.PropertyType)
+            return;
+        }
+
+        if (_xmlPersistedValue == null)
+        {
+            IntValue = 0;
+            BoolValue = false;
+            StringValue = null;
+            GuidValue = Guid.Empty;
+            return;
+        }
+
+        switch (ControlPropertyItem.PropertyType)
+        {
+            case ControlPropertyValueType.Integer:
             {
-                case ControlPropertyValueType.Integer:
-                {
-                    IntValue = XmlConvert.ToInt32(_xmlPersistedValue);
-                    break;
-                }
+                IntValue = XmlConvert.ToInt32(_xmlPersistedValue);
+                break;
+            }
 
-                case ControlPropertyValueType.Boolean:
-                {
-                    BoolValue = XmlConvert.ToBoolean(_xmlPersistedValue);
-                    break;
-                }
+            case ControlPropertyValueType.Boolean:
+            {
+                BoolValue = XmlConvert.ToBoolean(_xmlPersistedValue);
+                break;
+            }
 
-                case ControlPropertyValueType.Xml:
-                case ControlPropertyValueType.String:
-                {
-                    StringValue = _xmlPersistedValue;
-                    break;
-                }
+            case ControlPropertyValueType.Xml:
+            case ControlPropertyValueType.String:
+            {
+                StringValue = _xmlPersistedValue;
+                break;
+            }
 
-                case ControlPropertyValueType.UniqueIdentifier:
-                {
-                    GuidValue = XmlConvert.ToGuid(_xmlPersistedValue);
-                    break;
-                }
+            case ControlPropertyValueType.UniqueIdentifier:
+            {
+                GuidValue = XmlConvert.ToGuid(_xmlPersistedValue);
+                break;
+            }
 
-                default:
-                {
-                    throw new ArgumentOutOfRangeException("PropertyType");
-                }
+            default:
+            {
+                throw new ArgumentOutOfRangeException("PropertyType");
             }
         }
     }

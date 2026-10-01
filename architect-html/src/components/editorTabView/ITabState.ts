@@ -29,6 +29,11 @@ export interface ITabState {
   isDirty: boolean;
   origamId?: string;
   validationErrors?: IValidationError[];
+  warnings?: string[];
   save(): Generator<Promise<any>, void, any>;
   dispose?(): void;
+}
+
+export function canSave(tabState: ITabState): boolean {
+  return tabState.isDirty && !tabState.warnings?.length;
 }

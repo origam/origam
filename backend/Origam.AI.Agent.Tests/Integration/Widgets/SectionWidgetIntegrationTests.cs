@@ -26,7 +26,6 @@ using Origam.AI.Agent.Tests.Infrastructure.Architect;
 namespace Origam.AI.Agent.Tests.Integration.Widgets;
 
 [TestFixture]
-[Explicit(AgentIntegrationTestBase.ExplicitReason)]
 [Category(AgentIntegrationTestBase.IntegrationCategory)]
 public sealed class SectionWidgetIntegrationTests : AgentIntegrationTestBase
 {
@@ -473,7 +472,7 @@ public sealed class SectionWidgetIntegrationTests : AgentIntegrationTestBase
         return trace;
     }
 
-    private async Task<SectionWidget> ReadSectionAsync(AgentRunTrace trace)
+    private async Task<DesignerWidget> ReadSectionAsync(AgentRunTrace trace)
     {
         var section = await new SectionEditorProbe(AgentClient.Architect).ReadPersistedAsync(
             widgets.SectionId
@@ -487,7 +486,7 @@ public sealed class SectionWidgetIntegrationTests : AgentIntegrationTestBase
         return section;
     }
 
-    private async Task<SectionWidget> RequireWidgetAsync(
+    private async Task<DesignerWidget> RequireWidgetAsync(
         AgentRunTrace trace,
         string shortType,
         string boundField
@@ -504,7 +503,7 @@ public sealed class SectionWidgetIntegrationTests : AgentIntegrationTestBase
         return widget!;
     }
 
-    private static string DescribeAll(SectionWidget section, AgentRunTrace trace)
+    private static string DescribeAll(DesignerWidget section, AgentRunTrace trace)
     {
         return "Widgets: " + section.Describe() + Environment.NewLine + trace.Describe();
     }

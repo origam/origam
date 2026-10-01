@@ -30,7 +30,7 @@ export class RadioButton extends Component {
     return (
       <div className={S.checkList}>
         <div className={S.checklistItem}>
-          <input type="radio" className="checkbox undefined" />
+          <input type="radio" className="checkbox undefined" disabled={this.isReadOnly} />
           <div>{this.properties.find(x => x.name === 'Text')?.value}</div>
         </div>
       </div>
