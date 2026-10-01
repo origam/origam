@@ -29,9 +29,6 @@ namespace Origam.AI.Agent.Tests.Integration;
 
 public abstract class AgentIntegrationTestBase
 {
-    public const string ExplicitReason =
-        "Calls a live LLM and costs money. Boots Architect in-process; needs the ORIGAM model on "
-        + "disk and an AI API key in appsettings.Development.json.";
     public const string IntegrationCategory = "AiIntegration";
     protected const string MutatingCategory = "AiMutating";
 

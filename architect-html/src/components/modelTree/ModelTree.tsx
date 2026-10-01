@@ -630,6 +630,19 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
     });
   }
 
+  function showDataStructureFilterSetSql() {
+    run({
+      generator: function* () {
+        const result = yield rootStore.architectApi.getDataStructureFilterSetSql(node.origamId);
+        rootStore.editorTabViewState.openShowSqlEditor(
+          result.filterSetId,
+          `${result.dataStructureName} / ${result.filterSetName}`,
+          result.sql,
+        );
+      },
+    });
+  }
+
   function openCreateMenuItemWizard() {
     const closeDialog = rootStore.dialogStack.pushDialog(
       '',
@@ -907,6 +920,13 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
             {node.isDataStructure && (
               <Submenu label={T('Actions', 'tree_node_submenu_actions')}>
                 <Item id="show-sql" onClick={showDataStructureSql}>
+                  {T('Show SQL', 'tree_node_show_sql')}
+                </Item>
+              </Submenu>
+            )}
+            {node.isDataStructureFilterSet && (
+              <Submenu label={T('Actions', 'tree_node_submenu_actions')}>
+                <Item id="show-filter-set-sql" onClick={showDataStructureFilterSetSql}>
                   {T('Show SQL', 'tree_node_show_sql')}
                 </Item>
               </Submenu>

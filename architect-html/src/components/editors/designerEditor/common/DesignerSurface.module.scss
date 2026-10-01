@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   position: relative;
   background-color: var(--background1);
   overflow: auto;
+  user-select: none;
   margin-right: 15px;
   margin-bottom: 15px;
 }

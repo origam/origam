@@ -107,3 +107,16 @@ export function plantBrokenGroupReference(): { missingGroupId: string } {
   fs.writeFileSync(path.join(entityDirectory, '.origamGroupReference'), content, 'utf8');
   return { missingGroupId };
 }
+
+// Leaves the parameter the reference was named after unreferenced.
+export function removeContextReference(relativePath: string, referenceName: string): void {
+  const filePath = path.join(modelDirectory, relativePath);
+  const content = fs.readFileSync(filePath, 'utf8');
+  const reference = new RegExp(
+    `<cr:WorkflowContextReference[^>]*asi:name="${referenceName}"[^>]*>\\s*`,
+  );
+  if (!reference.test(content)) {
+    throw new Error(`"${referenceName}" reference was not found in ${filePath}.`);
+  }
+  fs.writeFileSync(filePath, content.replace(reference, ''), 'utf8');
+}

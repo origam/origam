@@ -24,6 +24,7 @@ using System.Xml;
 using Origam.Architect.Server.ControlAdapter;
 using Origam.Architect.Server.Controls;
 using Origam.Architect.Server.Models;
+using Origam.Architect.Server.ReturnModels;
 using Origam.DA.Service;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
@@ -237,11 +238,6 @@ public class SectionWidgetFactory(
                     new ChangesModel { SchemaItemId = rootPanel.Id, Changes = changes }
                 );
         }
-    }
-
-    private static int IntValue(ControlSetItem item, string propertyName)
-    {
-        return FindValueItem(item, propertyName)?.IntValue ?? 0;
     }
 
     private static string GetUniqueControlName(

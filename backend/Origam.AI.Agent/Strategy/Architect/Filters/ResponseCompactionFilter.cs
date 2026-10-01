@@ -121,6 +121,14 @@ public class ResponseCompactionFilter(NewItemTypeCatalogService catalogService)
             return JsonSerializer.Serialize(CompactWidget(root), JsonOptions);
         }
 
+        if (
+            root.TryGetProperty(propertyName: "screenItem", out JsonElement screenItem)
+            && IsWidget(screenItem)
+        )
+        {
+            return JsonSerializer.Serialize(CompactWidget(screenItem), JsonOptions);
+        }
+
         return null;
     }
 
@@ -219,6 +227,17 @@ public class ResponseCompactionFilter(NewItemTypeCatalogService catalogService)
                         + field.GetStringOrNull(propertyName: "type")
                         + ")"
                     )
+            );
+        }
+
+        if (
+            data.TryGetProperty(propertyName: "dataMembers", out JsonElement dataMembers)
+            && dataMembers.ValueKind == JsonValueKind.Array
+        )
+        {
+            summary["dataMembers"] = string.Join(
+                separator: ", ",
+                dataMembers.EnumerateArray().Select(dataMember => dataMember.GetString())
             );
         }
 

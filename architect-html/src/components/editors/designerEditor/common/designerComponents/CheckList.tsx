@@ -27,6 +27,6 @@ export class CheckList extends Component {
   }
 
   getDesignerRepresentation(): ReactElement | null {
-    return <EditorBox readOnly />;
+    return <EditorBox />;
   }
 }

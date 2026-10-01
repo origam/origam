@@ -61,7 +61,7 @@ export const SectionToolbox: React.FC<{
       <div
         key={field.name}
         draggable
-        onClick={() => (sectionToolbox.selectedFieldName = field.name)}
+        onClick={action(() => (sectionToolbox.selectedFieldName = field.name))}
         onDragStart={() => onFieldDragStart(field)}
         className={S.toolboxField + ' ' + (isSelected ? S.selectedField : '')}
       >

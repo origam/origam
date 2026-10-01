@@ -22,15 +22,17 @@ import S from '@/ai/AiAgentPanel.module.scss';
 import { chatImageUrl } from '@/ai/ChatHistoryApi';
 import { Markdown } from '@/ai/Markdown';
 import { RootStoreContext, T } from '@/main';
+import { askYesNoQuestion, YesNoResult } from '@dialogs/DialogUtils';
 import { observer } from 'mobx-react-lite';
 import { useContext, useEffect, useRef, useState } from 'react';
 
-export const AiAgentPanel = observer(function AiAgentPanel() {
+export const AiAgentPanel = observer(function AiAgentPanel({ onClose }: { onClose?: () => void }) {
   const rootStore = useContext(RootStoreContext);
   const [state] = useState(() => new AiAgentState(rootStore));
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [previewedImage, setPreviewedImage] = useState<string | null>(null);
 
   const activeThread = state.activeThread;
   const messages = state.messages;
@@ -56,6 +58,16 @@ export const AiAgentPanel = observer(function AiAgentPanel() {
   }, [state]);
 
   useEffect(() => {
+    function closePreviewOnEscape(event: KeyboardEvent) {
+      if (event.key === 'Escape') {
+        setPreviewedImage(null);
+      }
+    }
+    document.addEventListener('keydown', closePreviewOnEscape);
+    return () => document.removeEventListener('keydown', closePreviewOnEscape);
+  }, []);
+
+  useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages.length, lastMessage?.text.length, state.isRunning]);
 
@@ -72,6 +84,21 @@ export const AiAgentPanel = observer(function AiAgentPanel() {
     if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault();
       void state.send();
+    }
+  }
+
+  async function deleteActiveThread() {
+    const answer = await askYesNoQuestion(
+      rootStore.dialogStack,
+      T('Delete chat', 'ai_chat_delete'),
+      T(
+        'Delete the chat "{0}"? It cannot be restored.',
+        'ai_chat_delete_confirm',
+        activeThread.title,
+      ),
+    );
+    if (answer === YesNoResult.Yes) {
+      state.deleteActiveThread();
     }
   }
 
@@ -111,10 +138,20 @@ export const AiAgentPanel = observer(function AiAgentPanel() {
             className={S.iconButton}
             data-test-id="ai-delete-chat"
             title={T('Delete chat', 'ai_chat_delete')}
-            onClick={() => state.deleteActiveThread()}
+            onClick={() => void deleteActiveThread()}
           >
-            ✕
+            −
           </button>
+          {onClose && (
+            <button
+              className={S.iconButton}
+              data-test-id="ai-close-panel"
+              title={T('Close the AI panel', 'ai_chat_close_panel')}
+              onClick={onClose}
+            >
+              ✕
+            </button>
+          )}
         </div>
         {activeThread.tokensUsed > 0 && (
           <div className={S.tokenBar} data-test-id="ai-token-bar">
@@ -162,14 +199,19 @@ export const AiAgentPanel = observer(function AiAgentPanel() {
               </div>
               {message.images && message.images.length > 0 && (
                 <div className={S.messageImages}>
-                  {message.images.map(image => (
-                    <img
-                      key={image.id}
-                      className={S.messageImage}
-                      src={image.dataUrl ?? chatImageUrl(activeThread.id, image.id)}
-                      alt={T('Attached image', 'ai_chat_attached_image')}
-                    />
-                  ))}
+                  {message.images.map(image => {
+                    const source = image.dataUrl ?? chatImageUrl(activeThread.id, image.id);
+                    return (
+                      <img
+                        key={image.id}
+                        className={S.messageImage}
+                        src={source}
+                        alt={T('Attached image', 'ai_chat_attached_image')}
+                        title={T('Open the image', 'ai_chat_open_image')}
+                        onClick={() => setPreviewedImage(source)}
+                      />
+                    );
+                  })}
                 </div>
               )}
               {message.role === 'assistant'
@@ -265,6 +307,8 @@ export const AiAgentPanel = observer(function AiAgentPanel() {
                   className={S.thumbnailImage}
                   src={image.dataUrl}
                   alt={T('Attached image', 'ai_chat_attached_image')}
+                  title={T('Open the image', 'ai_chat_open_image')}
+                  onClick={() => setPreviewedImage(image.dataUrl)}
                 />
                 <button
                   className={S.thumbnailRemove}
@@ -327,6 +371,15 @@ export const AiAgentPanel = observer(function AiAgentPanel() {
           }}
         />
       </div>
+      {previewedImage && (
+        <div
+          className={S.imagePreview}
+          data-test-id="ai-image-preview"
+          onClick={() => setPreviewedImage(null)}
+        >
+          <img src={previewedImage} alt={T('Attached image', 'ai_chat_attached_image')} />
+        </div>
+      )}
     </div>
   );
 });

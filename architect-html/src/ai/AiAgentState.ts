@@ -214,8 +214,7 @@ export class AiAgentState {
     }
 
     const thread = this.activeThread;
-    const messageText =
-      this.draft.trim() || T('What is in this image?', 'ai_chat_default_image_prompt');
+    const messageText = this.draft.trim();
     const images: ChatImage[] = this.attachedImages.map(image => ({
       id: image.id,
       mimeType: image.mimeType,

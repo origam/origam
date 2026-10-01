@@ -24,6 +24,7 @@ import S from '@editors/designerEditor/common/DesignerSurface.module.scss';
 import { ResizeHandle } from '@editors/designerEditor/common/DesignSurfaceState';
 import { IDesignerEditorState } from '@editors/designerEditor/common/IDesignerEditorState';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
+import { isTypingTarget } from '@/utils/keyShortcuts';
 import { observer } from 'mobx-react-lite';
 import React, { useContext, useEffect, useRef } from 'react';
 import { Item, Menu } from '@origam/react-contexify';
@@ -33,12 +34,18 @@ export const DesignSurface: React.FC<{
 }> = observer(({ designerState }) => {
   const surfaceState = designerState.surface;
   const surfaceRef = useRef<HTMLDivElement>(null);
+  const ignoreNextSurfaceClick = useRef(false);
   const rootStore = useContext(RootStoreContext);
   const run = runInFlowWithHandler(rootStore.errorDialogController);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Delete' && surfaceState.selectedComponent) {
+      if (
+        e.key === 'Delete' &&
+        surfaceState.selectedComponent &&
+        designerState.isActive &&
+        !isTypingTarget(e)
+      ) {
         run({ generator: designerState.delete([surfaceState.selectedComponent]) });
       }
     };
@@ -55,6 +62,15 @@ export const DesignSurface: React.FC<{
     };
   }, [surfaceState]);
 
+  const toSurfacePoint = (e: { clientX: number; clientY: number }) => {
+    const surface = surfaceRef.current!;
+    const surfaceRect = surface.getBoundingClientRect();
+    return {
+      x: e.clientX - surfaceRect.left + surface.scrollLeft,
+      y: e.clientY - surfaceRect.top + surface.scrollTop,
+    };
+  };
+
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
   };
@@ -64,49 +80,46 @@ export const DesignSurface: React.FC<{
     if (!surfaceState.draggedComponentData || !surfaceRef.current) {
       return;
     }
-    const surfaceRect = surfaceRef.current.getBoundingClientRect();
-    const dropX = e.clientX - surfaceRect.left;
-    const dropY = e.clientY - surfaceRect.top;
+    const dropPoint = toSurfacePoint(e);
+    run({ generator: designerState.create(dropPoint.x, dropPoint.y) });
+  };
 
-    run({ generator: designerState.create(dropX, dropY) });
+  const trackPointerUntilRelease = () => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!surfaceRef.current) return;
+      const point = toSurfacePoint(e);
+      if (surfaceState.isResizing) {
+        surfaceState.updateResizing(point.x, point.y);
+      } else if (surfaceState.isDragging) {
+        surfaceState.updateDragging(point.x, point.y);
+      }
+    };
+    const handleMouseUp = (e: MouseEvent) => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+      if (!surfaceRef.current) return;
+      if (surfaceState.dragState.didDrag || surfaceState.resizeState.didResize) {
+        ignoreNextSurfaceClick.current = true;
+        setTimeout(() => (ignoreNextSurfaceClick.current = false));
+      }
+      const point = toSurfacePoint(e);
+      run({ generator: surfaceState.onDesignerMouseUp(point.x, point.y) });
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseup', handleMouseUp);
   };
 
   const handleComponentMouseDown = (e: React.MouseEvent, component: Component) => {
-    if (!surfaceRef.current) return;
+    if (e.button !== 0 || !surfaceRef.current) return;
 
     // Prevent dragging when clicking resize handles
     if ((e.target as HTMLElement).classList.contains(S.resizeHandle)) {
       return;
     }
 
-    const surfaceRect = surfaceRef.current.getBoundingClientRect();
-    const mouseX = e.clientX - surfaceRect.left;
-    const mouseY = e.clientY - surfaceRect.top;
-
-    surfaceState.startDragging(component, mouseX, mouseY);
-  };
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!surfaceRef.current) return;
-    const surfaceRect = surfaceRef.current.getBoundingClientRect();
-    const mouseX = e.clientX - surfaceRect.left;
-    const mouseY = e.clientY - surfaceRect.top;
-
-    if (surfaceState.isResizing) {
-      surfaceState.updateResizing(mouseX, mouseY);
-    } else if (surfaceState.isDragging) {
-      surfaceState.updateDragging(mouseX, mouseY);
-    }
-  };
-
-  const handleMouseUp = (e: React.MouseEvent) => {
-    if (!surfaceRef.current) return;
-
-    const rect = surfaceRef.current.getBoundingClientRect();
-    const mouseX = e.clientX - rect.left + surfaceRef.current.scrollLeft;
-    const mouseY = e.clientY - rect.top + surfaceRef.current.scrollTop;
-
-    run({ generator: surfaceState.onDesignerMouseUp(mouseX, mouseY) });
+    const point = toSurfacePoint(e);
+    surfaceState.startDragging(component, point.x, point.y);
+    trackPointerUntilRelease();
   };
 
   const handleComponentClick = (event: React.MouseEvent, component: Component) => {
@@ -118,18 +131,19 @@ export const DesignSurface: React.FC<{
   };
 
   const handleSurfaceClick = () => {
+    if (ignoreNextSurfaceClick.current) {
+      return;
+    }
     surfaceState.selectComponent(null);
   };
 
   const handleResizeStart = (e: React.MouseEvent, component: Component, handle: ResizeHandle) => {
     e.stopPropagation();
-    if (!surfaceRef.current) return;
+    if (e.button !== 0 || !surfaceRef.current) return;
 
-    const surfaceRect = surfaceRef.current.getBoundingClientRect();
-    const mouseX = e.clientX - surfaceRect.left;
-    const mouseY = e.clientY - surfaceRect.top;
-
-    surfaceState.startResizing(component, handle, mouseX, mouseY);
+    const point = toSurfacePoint(e);
+    surfaceState.startResizing(component, handle, point.x, point.y);
+    trackPointerUntilRelease();
   };
 
   return (
@@ -139,9 +153,6 @@ export const DesignSurface: React.FC<{
       className={S.designSurface}
       onDragOver={handleDragOver}
       onDrop={onDrop}
-      onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}
-      onMouseLeave={handleMouseUp}
       onClick={handleSurfaceClick}
     >
       {surfaceState.components
