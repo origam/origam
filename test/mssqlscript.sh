@@ -16,10 +16,6 @@ if [[ -f "first" ]]; then
   /opt/mssql-tools18/bin/sqlcmd -S localhost -U SA -P "$SA_PASSWORD" -Q "CREATE DATABASE origam" -No
   echo "Database 'origam' created."
 
-  echo "Enabling snapshot isolation for database 'origam'..."
-  /opt/mssql-tools18/bin/sqlcmd -S localhost -U SA -P "$SA_PASSWORD" -Q "ALTER DATABASE [origam] SET ALLOW_SNAPSHOT_ISOLATION ON" -No -b || exit 1
-  echo "Snapshot isolation enabled."
-
   echo "Creating login and user for 'origam' with db_owner role..."
   /opt/mssql-tools18/bin/sqlcmd -S localhost -U SA -P "$SA_PASSWORD" -Q "CREATE LOGIN origam WITH PASSWORD = '$USER_PASSWORD'; USE origam; CREATE USER origam FOR LOGIN origam; EXEC sp_addrolemember N'db_owner', N'origam'" -No
   echo "Login and user 'origam' created and assigned db_owner role."
