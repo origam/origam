@@ -37,7 +37,7 @@ public class MsSqlDataServiceTests
     public void SqlServerExplainsDisabledSnapshotIsolation()
     {
         var command = new Mock<IDbCommand>();
-        command.Setup(x => x.ExecuteScalar()).Returns(0);
+        command.Setup(x => x.ExecuteScalar()).Returns(0); // Database reports snapshot isolation disabled.
         var connection = new Mock<IDbConnection>();
         connection.Setup(x => x.CreateCommand()).Returns(command.Object);
         connection.SetupGet(x => x.Database).Returns("InventoryDb");
@@ -55,7 +55,7 @@ public class MsSqlDataServiceTests
     public void SqlServerAcceptsEnabledSnapshotIsolation()
     {
         var command = new Mock<IDbCommand>();
-        command.Setup(x => x.ExecuteScalar()).Returns(1);
+        command.Setup(x => x.ExecuteScalar()).Returns(1); // Database reports snapshot isolation enabled.
         var connection = new Mock<IDbConnection>();
         connection.Setup(x => x.CreateCommand()).Returns(command.Object);
 
@@ -69,7 +69,7 @@ public class MsSqlDataServiceTests
     public void SqlServerChecksSnapshotIsolationOnlyOncePerDatabase()
     {
         var command = new Mock<IDbCommand>();
-        command.Setup(x => x.ExecuteScalar()).Returns(1);
+        command.Setup(x => x.ExecuteScalar()).Returns(1); // Database reports snapshot isolation enabled.
         var connection = new Mock<IDbConnection>();
         connection.Setup(x => x.CreateCommand()).Returns(command.Object);
         connection.SetupGet(x => x.Database).Returns("InventoryDb");
@@ -85,7 +85,7 @@ public class MsSqlDataServiceTests
     public void SqlServerChecksSnapshotIsolationForEachServiceInstance()
     {
         var command = new Mock<IDbCommand>();
-        command.Setup(x => x.ExecuteScalar()).Returns(1);
+        command.Setup(x => x.ExecuteScalar()).Returns(1); // Database reports snapshot isolation enabled.
         var connection = new Mock<IDbConnection>();
         connection.Setup(x => x.CreateCommand()).Returns(command.Object);
 
@@ -101,7 +101,7 @@ public class MsSqlDataServiceTests
     public void SqlServerRetriesFailedSnapshotIsolationCheck()
     {
         var command = new Mock<IDbCommand>();
-        command.SetupSequence(x => x.ExecuteScalar()).Returns(0).Returns(1);
+        command.SetupSequence(x => x.ExecuteScalar()).Returns(0).Returns(1); // Database reports disabled, then enabled on retry.
         var connection = new Mock<IDbConnection>();
         connection.Setup(x => x.CreateCommand()).Returns(command.Object);
         connection.SetupGet(x => x.Database).Returns("InventoryDb");
