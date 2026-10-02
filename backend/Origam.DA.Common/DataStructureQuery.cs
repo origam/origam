@@ -70,7 +70,7 @@ public class DataStructureQuery
     public Guid DefaultSetId;
     public Guid SortSetId;
     public QueryParameterCollection Parameters = new QueryParameterCollection();
-    public IsolationLevel IsolationLevel = IsolationLevel.ReadCommitted;
+    public readonly IsolationLevel IsolationLevel = DatabaseIsolationSettings.DefaultIsolationLevel;
     public CustomOrderings CustomOrderings { get; set; }
     public CustomFilters CustomFilters { get; set; }
     public bool Paging
