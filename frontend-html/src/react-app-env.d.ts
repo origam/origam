@@ -26,6 +26,7 @@ interface ImportMetaEnv {
   readonly VITE_REACT_APP_ORIGAM_CUSTOM_CLIENT_BUILD?: string;
   readonly VITE_REACT_APP_ORIGAM_UI_PLUGINS?: string;
   readonly VITE_REACT_APP_ORIGAM_SERVER_PLUGINS?: string;
+  readonly VITE_OIDC_AUTHORITY?: string;
 }
 
 interface ImportMeta {

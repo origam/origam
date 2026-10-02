@@ -1,0 +1,14 @@
+# Vite dev server for frontend-html. Source is bind-mounted at runtime, so
+# dependencies install on start (into the mounted node_modules), not at build.
+
+FROM node:24-slim
+
+WORKDIR /src/frontend-html
+
+# corepack + classic node-modules linker (the toolchain expects a real tree).
+RUN corepack enable \
+ && yarn config set nodeLinker node-modules
+
+EXPOSE 5173
+
+CMD ["sh", "-c", "yarn install --immutable && yarn dev --host 0.0.0.0"]
