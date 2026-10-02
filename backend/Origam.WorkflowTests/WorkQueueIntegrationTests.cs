@@ -132,27 +132,6 @@ public class WorkQueueIntegrationTests
     }
 
     [Test]
-    public void ShouldNotProcessWorkQueuesWithoutBackgroundTasks()
-    {
-        OrigamEngine.OrigamEngine.ConnectRuntime(
-            configName: "LinearWorkQueueProcessor",
-            customServiceFactory: new TestRuntimeServiceFactory(runBackgroundTasks: false)
-        );
-        SqlManager sqlManager = SqlManagerFactory.Create(
-            DataService.Instance,
-            DataServiceFactory.GetDataService()
-        );
-        List<Guid> createdWorkQueueEntryIds = sqlManager.InsertWorkQueueEntries();
-
-        Thread.Sleep(5000);
-
-        Assert.That(
-            sqlManager.GetWorkQueueEntryCount(),
-            Is.EqualTo(createdWorkQueueEntryIds.Count)
-        );
-    }
-
-    [Test]
     public void ShouldTestThrottling()
     {
         const int throttlingIntervalSeconds = 20;
@@ -343,13 +322,10 @@ public class WorkQueueIntegrationTests
     }
 }
 
-class TestRuntimeServiceFactory(bool runBackgroundTasks = true) : RuntimeServiceFactory
+class TestRuntimeServiceFactory : RuntimeServiceFactory
 {
     protected override IWorkQueueService CreateWorkQueueService()
     {
-        return new WorkQueueService(
-            queueProcessIntervalMillis: 1000,
-            runBackgroundTasks: runBackgroundTasks
-        );
+        return new WorkQueueService(queueProcessIntervalMillis: 1000);
     }
 }
