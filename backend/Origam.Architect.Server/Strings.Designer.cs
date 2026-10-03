@@ -682,6 +682,15 @@ namespace Origam.Architect.Server {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Data constant {0} not found.
+        /// </summary>
+        internal static string Wizard_DataConstantNotFound {
+            get {
+                return ResourceManager.GetString("Wizard_DataConstantNotFound", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Database Entity (TableMappingItem) {0} not found.
         /// </summary>
         internal static string Wizard_TableEntityNotFound {

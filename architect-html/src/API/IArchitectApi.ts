@@ -170,6 +170,10 @@ export interface IArchitectApi {
 
   createWorkflowMenuItem(request: ICreateWorkflowMenuItemRequest): Promise<ICreateWizardResult>;
 
+  createDataConstantMenuItem(
+    request: ICreateDataConstantMenuItemRequest,
+  ): Promise<ICreateWizardResult>;
+
   createRole(request: ICreateRoleRequest): Promise<ICreateWizardResult>;
 
   getLocalizationChildEntityWizardData(
@@ -222,6 +226,12 @@ export interface ICreateMenuItemRequest {
 
 export interface ICreateWorkflowMenuItemRequest {
   workflowId: string;
+  caption: string;
+  role: string;
+}
+
+export interface ICreateDataConstantMenuItemRequest {
+  dataConstantId: string;
   caption: string;
   role: string;
 }

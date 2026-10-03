@@ -457,6 +457,12 @@ export class ArchitectApi implements IArchitectApi {
     return (await this.http.post('/wizards/workflow-menu-items', request)).data;
   }
 
+  async createDataConstantMenuItem(
+    request: import('@api/IArchitectApi').ICreateDataConstantMenuItemRequest,
+  ): Promise<import('@api/IArchitectApi').ICreateWizardResult> {
+    return (await this.http.post('/wizards/data-constant-menu-items', request)).data;
+  }
+
   async createRole(
     request: import('@api/IArchitectApi').ICreateRoleRequest,
   ): Promise<import('@api/IArchitectApi').ICreateWizardResult> {

@@ -35,6 +35,7 @@ import { CreateDataStructureWizard } from '@components/modelTree/createWizard/Cr
 import { CreateScreenFromSectionWizard } from '@components/modelTree/createWizard/CreateScreenFromSectionWizard';
 import { CreateMenuItemWizard } from '@components/modelTree/createWizard/CreateMenuItemWizard';
 import { CreateWorkflowMenuItemWizard } from '@components/modelTree/createWizard/CreateWorkflowMenuItemWizard';
+import { CreateDataConstantMenuItemWizard } from '@components/modelTree/createWizard/CreateDataConstantMenuItemWizard';
 import { CreateRoleWizard } from '@components/modelTree/createWizard/CreateRoleWizard';
 import { CreateLocalizationChildEntityWizard } from '@components/modelTree/createWizard/CreateLocalizationChildEntityWizard';
 import { CreateScreenSectionWizard } from '@components/modelTree/createWizard/CreateScreenSectionWizard';
@@ -736,6 +737,31 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
     );
   }
 
+  function openCreateDataConstantMenuItemWizard() {
+    const closeDialog = rootStore.dialogStack.pushDialog(
+      '',
+      <CreateDataConstantMenuItemWizard
+        dataConstantId={node.origamId}
+        parentNodeName={node.nodeText}
+        onCancel={() => closeDialog()}
+        onCreate={result => {
+          closeDialog();
+          run({
+            generator: function* () {
+              yield* rootStore.modelTreeState.loadPackageNodes.bind(rootStore.modelTreeState)();
+              showCreatedConfirmation(
+                T('Menu Item', 'wizard_artifact_menu_item'),
+                result?.searchResults ?? [],
+              );
+            },
+          });
+        }}
+      />,
+      undefined,
+      false,
+    );
+  }
+
   function openCreateRoleWizard() {
     const closeDialog = rootStore.dialogStack.pushDialog(
       '',
@@ -935,6 +961,16 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
               <Submenu label={T('Actions', 'tree_node_submenu_actions')}>
                 <Item id="create-workflow-menu-item" onClick={openCreateWorkflowMenuItemWizard}>
                   {T('Create Menu Item', 'tree_node_create_workflow_menu_item')}
+                </Item>
+              </Submenu>
+            )}
+            {node.isDataConstant && (
+              <Submenu label={T('Actions', 'tree_node_submenu_actions')}>
+                <Item
+                  id="create-data-constant-menu-item"
+                  onClick={openCreateDataConstantMenuItemWizard}
+                >
+                  {T('Create Menu Item', 'tree_node_create_data_constant_menu_item')}
                 </Item>
               </Submenu>
             )}
