@@ -135,7 +135,7 @@ export const CreateDataConstantMenuItemWizard: React.FC<CreateDataConstantMenuIt
                 <span className={S.previewBadge}>
                   {T('Menu Item', 'wizard_artifact_menu_item')}
                 </span>
-                <span>{caption || '<caption>'}</span>
+                <span>{caption || T('<caption>', 'wizard_caption_placeholder')}</span>
               </div>
             </div>
           </>

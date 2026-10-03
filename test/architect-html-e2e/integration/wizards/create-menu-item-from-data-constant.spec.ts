@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { expect, test, type Page } from '@playwright/test';
 import { activatePackage } from '@support/activatePackage';
-import { openConstants } from '@support/modelTree';
+import { openConstants, openContextMenu } from '@support/modelTree';
 import { readModelFile, resetBackend } from '@support/resetBackend';
 
 const CONSTANT = 'ReportTemplateName';
@@ -28,7 +28,7 @@ const CONSTANT_ID = 'fe570c7e-fe40-4712-84cc-807face163ce';
 async function openWizard(page: Page) {
   await openConstants(page);
   await page.getByTestId('tree-toggle-Widgets').click();
-  await page.getByTestId(`tree-node-${CONSTANT}`).click({ button: 'right' });
+  await openContextMenu(page, CONSTANT);
   await page.getByText('Actions', { exact: true }).click();
   await page.getByText('Create Menu Item').click();
 
@@ -65,9 +65,14 @@ test.describe('Create Menu Item from Data Constant wizard (real backend)', () =>
     await expect(page.locator('tbody')).toContainText(`Menu\\${CONSTANT}`);
     await expect(page.locator('#root')).toContainText('Search results for "Menu Item"');
 
-    const menuFile = readModelFile('Widgets/Menu/Menu.origam');
-    expect(menuFile).toContain(`dcrmi:constant="${CONSTANT}#${CONSTANT}/${CONSTANT_ID}"`);
-    expect(menuFile).toContain('ami:displayName="ConstantMenuCaption"');
-    expect(menuFile).toContain(`ami:roles="${CONSTANT}"`);
+    const savedMenuItem = readModelFile('Widgets/Menu/Menu.origam')
+      .split('/>')
+      .find(element => element.includes('ami:displayName="ConstantMenuCaption"'));
+    expect(savedMenuItem).toContain('<dcrmi:MenuItem');
+    expect(savedMenuItem).toContain(`/${CONSTANT_ID}"`);
+    expect(savedMenuItem).toContain(`ami:roles="${CONSTANT}"`);
+    expect(readModelFile('Widgets/DeploymentVersion/Widgets/1.5.9.origam')).toContain(
+      `_AddRole_${CONSTANT}`,
+    );
   });
 });

@@ -120,6 +120,7 @@
   "wizard_what_created": "What will be created",
   "wizard_created_from_entity": "Created from entity",
   "wizard_untitled": "Untitled",
+  "wizard_caption_placeholder": "<caption>",
   "wizard_select_all": "Select all",
   "wizard_clear": "Clear",
   "wizard_fields_selected_count": "{0} of {1} selected",
