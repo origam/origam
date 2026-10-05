@@ -163,6 +163,10 @@ export class TreeNode implements IEditorNode {
     return this.itemType === 'Origam.Schema.WorkflowModel.Workflow';
   }
 
+  get isDataConstant() {
+    return this.itemType === 'Origam.Schema.EntityModel.DataConstant';
+  }
+
   get hasSpecificRole() {
     return !!this.role && this.role !== '*';
   }

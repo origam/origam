@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.Architect.Server.Models.Requests.Wizards;
 using Origam.Architect.Server.Models.Responses.Wizards;
 using Origam.Schema;
+using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
 using Origam.Schema.MenuModel;
 using Origam.Schema.WorkflowModel;
@@ -54,6 +55,20 @@ public class MenuItemWizardService(
         return CreateMenuItemWithSystemRole(
             input.Role,
             role => MenuHelper.CreateMenuItem(caption, role, workflow)
+        );
+    }
+
+    public CreateWizardResult CreateDataConstantMenuItem(CreateDataConstantMenuItemModel input)
+    {
+        var caption = RequireName(input.Caption, Strings.Wizard_MenuCaptionRequired);
+        var constant = Retrieve<DataConstant>(
+            input.DataConstantId,
+            Strings.Wizard_DataConstantNotFound
+        );
+
+        return CreateMenuItemWithSystemRole(
+            input.Role,
+            role => MenuHelper.CreateMenuItem(caption, role, constant)
         );
     }
 

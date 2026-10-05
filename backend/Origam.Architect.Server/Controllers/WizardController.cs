@@ -99,6 +99,16 @@ public class WizardController(
     public IActionResult CreateWorkflowMenuItem([FromBody] CreateWorkflowMenuItemModel input) =>
         Ok(menuItemWizard.CreateWorkflowMenuItem(input));
 
+    [HttpPost("data-constant-menu-items")]
+    [EndpointDescription(
+        "Creates a menu item for an existing data constant. "
+            + WizardIdRule
+            + WizardConfirmationRule
+    )]
+    public IActionResult CreateDataConstantMenuItem(
+        [FromBody] CreateDataConstantMenuItemModel input
+    ) => Ok(menuItemWizard.CreateDataConstantMenuItem(input));
+
     [HttpPost("roles")]
     [EndpointDescription(
         "Creates the deployment activities that add a role to the database. There is no "

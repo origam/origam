@@ -192,6 +192,9 @@
     <data name="Wizard_WorkflowNotFound" xml:space="preserve">
         <value>Workflow {0} not found</value>
     </data>
+    <data name="Wizard_DataConstantNotFound" xml:space="preserve">
+        <value>Data constant {0} not found</value>
+    </data>
     <data name="Wizard_TableEntityNotFound" xml:space="preserve">
         <value>Database Entity (TableMappingItem) {0} not found</value>
     </data>
