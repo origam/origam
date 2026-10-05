@@ -370,8 +370,7 @@ export interface ITransformResult {
 }
 
 export interface IValidationResult {
-  title: string;
-  text: string;
+  isValid: boolean;
   output: string;
 }
 

@@ -38,14 +38,20 @@ public class XsltController(XsltService xsltService) : ControllerBase
             TargetDataStructureId: model.TargetDataStructureId,
             RuleSetId: model.RuleSetId,
             InputXml: "<ROOT/>",
-            Parameters: null
+            Parameters:
+            [
+                .. model.Parameters.Select(parameter => new ParameterData(
+                    name: parameter.Name,
+                    type: parameter.Type,
+                    textValue: parameter.Value
+                )),
+            ]
         );
         ValidationResult result = xsltService.Validate(input);
         return Ok(
             new ValidationResponse
             {
-                Text = result.Text,
-                Title = result.Title,
+                IsValid = result.IsValid,
                 Xml = result.Xml,
                 Output = result.Output,
             }
