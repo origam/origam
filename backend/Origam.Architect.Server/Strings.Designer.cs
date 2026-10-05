@@ -277,15 +277,6 @@ namespace Origam.Architect.Server {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to XSLT Validation.
-        /// </summary>
-        internal static string ValidationResultTitle {
-            get {
-                return ResourceManager.GetString("ValidationResultTitle", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Copy of {0}.
         /// </summary>
         internal static string CopyOfName {
@@ -768,15 +759,6 @@ namespace Origam.Architect.Server {
         internal static string WrongParameterType {
             get {
                 return ResourceManager.GetString("WrongParameterType", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to XSLT validation failed. See output for details..
-        /// </summary>
-        internal static string XsltValidationFailed {
-            get {
-                return ResourceManager.GetString("XsltValidationFailed", resourceCulture);
             }
         }
         

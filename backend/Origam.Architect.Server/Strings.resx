@@ -78,9 +78,6 @@
     <data name="Move_SourceGroupNotFound" xml:space="preserve">
         <value>'{0}' cannot be moved, the group it belongs to could not be loaded.</value>
     </data>
-    <data name="XsltValidationFailed" xml:space="preserve">
-        <value>XSLT validation failed. See output for details.</value>
-    </data>
     <data name="XsltValidationSuccess" xml:space="preserve">
         <value>XSLT is valid.</value>
     </data>
@@ -89,9 +86,6 @@
     </data>
     <data name="WrongParameterType" xml:space="preserve">
         <value>Parameter type {0} is not OrigamDataType.</value>
-    </data>
-    <data name="ValidationResultTitle" xml:space="preserve">
-        <value>XSLT Validation</value>
     </data>
     <data name="DeploymentScripts_ModelNotSavedBeforeVersionChange" xml:space="preserve">
         <value>Model not saved. Please, save the model before setting the version.</value>

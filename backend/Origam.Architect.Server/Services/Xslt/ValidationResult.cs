@@ -23,6 +23,5 @@ namespace Origam.Architect.Server.Services.Xslt;
 
 public class ValidationResult : TransformationResult
 {
-    public string Title { get; init; } = Strings.ValidationResultTitle;
-    public string Text { get; set; } = String.Empty;
+    public bool IsValid { get; set; }
 }

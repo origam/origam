@@ -54,6 +54,23 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   animation: slideOut 160ms ease-in forwards;
 }
 
+.notification.error {
+  border-left-color: var(--error1);
+
+  .icon {
+    background: rgba(var(--error1-rgb), 0.14);
+    color: var(--error1);
+  }
+
+  .progress {
+    background: rgba(var(--error1-rgb), 0.18);
+  }
+
+  .progressBar {
+    background: var(--error1);
+  }
+}
+
 @keyframes slideIn {
   from {
     opacity: 0;

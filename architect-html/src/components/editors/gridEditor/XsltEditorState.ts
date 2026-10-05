@@ -139,6 +139,7 @@ export class XsltEditorState implements ITabViewState, ITabState, IPropertyManag
       sourceDataStructureId: this.sourceDataStructureId ? this.sourceDataStructureId : undefined,
       targetDataStructureId: this.targetDataStructureId ? this.targetDataStructureId : undefined,
       ruleSetId: this.ruleSetId,
+      parameters: this.parameterData,
     });
   }
   *transform(): Generator<Promise<any>, ITransformResult, any> {
@@ -149,13 +150,17 @@ export class XsltEditorState implements ITabViewState, ITabState, IPropertyManag
       targetDataStructureId: this.targetDataStructureId ? this.targetDataStructureId : undefined,
       ruleSetId: this.ruleSetId,
       inputXml: this.inputXml,
-      parameters: this.parameters.map(name => {
-        return {
-          name,
-          type: this.parameterTypes.get(name) ?? OrigamDataType.String,
-          value: this.parameterValues.get(name) ?? '',
-        };
-      }),
+      parameters: this.parameterData,
+    });
+  }
+
+  private get parameterData(): IParameterData[] {
+    return this.parameters.map(name => {
+      return {
+        name,
+        type: this.parameterTypes.get(name) ?? OrigamDataType.String,
+        value: this.parameterValues.get(name) ?? '',
+      };
     });
   }
   *getXsltParameters(): Generator<Promise<any>, IParametersResult, any> {
@@ -165,6 +170,11 @@ export class XsltEditorState implements ITabViewState, ITabState, IPropertyManag
 
   setParameters(parameters: IParameterData[]) {
     this.parameters = parameters.map(x => x.name);
+    for (const parameter of parameters) {
+      if (!this.parameterTypes.has(parameter.name)) {
+        this.parameterTypes.set(parameter.name, parameter.type);
+      }
+    }
   }
 
   *loadSettings(): Generator<Promise<ShemaItemInfo[]>, void, ShemaItemInfo[]> {
