@@ -132,7 +132,8 @@ export class XsltEditorState implements ITabViewState, ITabState, IPropertyManag
     return this.gridEditorState.label;
   }
 
-  *validate(): Generator<Promise<IValidationResult>, IValidationResult, IValidationResult> {
+  *validate(): Generator<Promise<any>, IValidationResult, any> {
+    yield* this.gridEditorState.sendUnsentValue();
     return yield this.architectApi.validateTransformation({
       schemaItemId: this.editorNode.origamId,
       sourceDataStructureId: this.sourceDataStructureId ? this.sourceDataStructureId : undefined,
@@ -140,7 +141,8 @@ export class XsltEditorState implements ITabViewState, ITabState, IPropertyManag
       ruleSetId: this.ruleSetId,
     });
   }
-  *transform(): Generator<Promise<ITransformResult>, ITransformResult, ITransformResult> {
+  *transform(): Generator<Promise<any>, ITransformResult, any> {
+    yield* this.gridEditorState.sendUnsentValue();
     return yield this.architectApi.runTransformation({
       schemaItemId: this.editorNode.origamId,
       sourceDataStructureId: this.sourceDataStructureId ? this.sourceDataStructureId : undefined,
@@ -156,11 +158,8 @@ export class XsltEditorState implements ITabViewState, ITabState, IPropertyManag
       }),
     });
   }
-  *getXsltParameters(): Generator<
-    Promise<IParametersResult>,
-    IParametersResult,
-    IParametersResult
-  > {
+  *getXsltParameters(): Generator<Promise<any>, IParametersResult, any> {
+    yield* this.gridEditorState.sendUnsentValue();
     return yield this.architectApi.getXsltParameters(this.editorNode.origamId);
   }
 
@@ -183,10 +182,14 @@ export class XsltEditorState implements ITabViewState, ITabState, IPropertyManag
     }
   }
 
-  *onTransformChange(value: string | undefined) {
+  onTransformChange(value: string | undefined) {
     const textProperty = this.gridEditorState.properties.find(
       x => x.name === this.transformPropertyName,
     )!;
-    yield* this.gridEditorState.onPropertyUpdated(textProperty, value);
+    this.gridEditorState.setUnsentValue(textProperty, value ?? '');
+  }
+
+  *sendUnsentValue(): Generator<Promise<any>, void, any> {
+    yield* this.gridEditorState.sendUnsentValue();
   }
 }

@@ -20,10 +20,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import ActionPanel from '@/components/ActionPanel/ActionPanel';
 import SaveButtonHOC from '@/components/SaveButtonHOC/SaveButtonHOC';
 import { showInfo } from '@/dialog/DialogUtils.tsx';
+import { useDebouncedCallback } from '@/hooks/useDebouncedCallback';
 import { RootStoreContext, T } from '@/main';
 import Button from '@components/Button/Button.tsx';
 import { TabView } from '@components/tabView/TabView';
 import CodeEditor from '@editors/codeEditor/CodeEditor';
+import { UnsentValueDelayMs } from '@editors/gridEditor/GridEditorState.ts';
 import { XsltEditorState } from '@editors/gridEditor/XsltEditorState.ts';
 import { ParametersEditor } from '@editors/xsltEditor/ParametersEditor.tsx';
 import { Settings } from '@editors/xsltEditor/Settings.tsx';
@@ -38,12 +40,15 @@ export const ResultTabIndex = 3;
 const XsltEditor = observer(({ editorState }: { editorState: XsltEditorState }) => {
   const rootStore = useContext(RootStoreContext);
 
-  const handleTransformChange = (value: string | undefined) => {
+  const sendUnsentValueLater = useDebouncedCallback(() => {
     runInFlowWithHandler(rootStore.errorDialogController)({
-      generator: function* () {
-        yield* editorState.onTransformChange(value);
-      },
+      generator: () => editorState.sendUnsentValue(),
     });
+  }, UnsentValueDelayMs);
+
+  const handleTransformChange = (value: string | undefined) => {
+    editorState.onTransformChange(value);
+    sendUnsentValueLater();
   };
 
   const handleInputChange = (value: string | undefined) => {
