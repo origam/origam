@@ -197,6 +197,8 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
   }
 
   function onPaste() {
+    // Paste disables itself while busy, which cancels the menu's close-on-click animation.
+    hideAll();
     run({ generator: () => transfer.drop(node, transfer.clipboardMode === 'copy') });
   }
 
