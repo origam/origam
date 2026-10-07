@@ -54,7 +54,7 @@ public class ParameterData
         return Enum.GetValues(typeof(OrigamDataType))
                 .Cast<OrigamDataType?>()
                 .FirstOrDefault(origamType => origamType.ToString() == type)
-            ?? throw new ArgumentException(string.Format(Strings.WrongParameterType, type));
+            ?? throw new UserOrigamException(string.Format(Strings.WrongParameterType, type));
     }
 
     public object Value
@@ -63,7 +63,12 @@ public class ParameterData
         {
             if (Type == OrigamDataType.Xml)
             {
-                return new XmlContainer(TextValue);
+                return new XmlContainer(TextValue.Trim());
+            }
+            // A blank text cannot be converted. Left out, the parameter keeps its XSL default.
+            if (string.IsNullOrWhiteSpace(TextValue) && Type != OrigamDataType.String)
+            {
+                return null;
             }
             Type systemType = DatasetGenerator.ConvertDataType(Type);
 

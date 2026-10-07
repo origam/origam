@@ -63,6 +63,7 @@ const XsltEditor = observer(({ editorState }: { editorState: XsltEditorState }) 
         editorState.setParameters(result.parameters);
         if (result.output) {
           rootStore.output = result.output;
+          rootStore.sideBarTabViewState.showOutput();
         }
       },
     });

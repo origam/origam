@@ -355,7 +355,7 @@ export interface ShemaItemInfo {
 
 export interface IParametersResult {
   output: string;
-  parameters: IParameterData[];
+  parameters: IParameterData[] | null;
 }
 
 export interface IParameterData {
