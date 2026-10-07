@@ -28,7 +28,7 @@ import {
   ShemaItemInfo,
 } from '@api/IArchitectApi.ts';
 import { GridEditorState } from '@editors/gridEditor/GridEditorState.ts';
-import { observable } from 'mobx';
+import { action, observable } from 'mobx';
 import { ITabViewState } from '@components/tabView/ITabViewState.ts';
 import { IEditorNode } from '@components/editorTabView/EditorTabViewState.ts';
 import { ModelTreeState } from '@components/modelTree/ModelTreeState.ts';
@@ -38,7 +38,7 @@ import { IPropertyManager } from '@editors/propertyEditor/IPropertyManager.tsx';
 
 export class XsltEditorState implements ITabViewState, ITabState, IPropertyManager {
   @observable public accessor activeTabIndex = 0;
-  @observable public accessor parameters: string[] = [];
+  @observable public accessor parameters: string[] | undefined;
   @observable public accessor xmlResult = '';
   @observable public accessor inputXml = '<ROOT>\n</ROOT>';
   @observable public accessor parameterValues = new Map<string, string>();
@@ -155,7 +155,7 @@ export class XsltEditorState implements ITabViewState, ITabState, IPropertyManag
   }
 
   private get parameterData(): IParameterData[] {
-    return this.parameters.map(name => {
+    return (this.parameters ?? []).map(name => {
       return {
         name,
         type: this.parameterTypes.get(name) ?? OrigamDataType.String,
@@ -168,13 +168,24 @@ export class XsltEditorState implements ITabViewState, ITabState, IPropertyManag
     return yield this.architectApi.getXsltParameters(this.editorNode.origamId);
   }
 
-  setParameters(parameters: IParameterData[]) {
-    this.parameters = parameters.map(x => x.name);
-    for (const parameter of parameters) {
-      if (!this.parameterTypes.has(parameter.name)) {
+  @action
+  setParameters(parameters: IParameterData[] | null) {
+    for (const parameter of parameters ?? []) {
+      if (!this.parameters?.includes(parameter.name)) {
         this.parameterTypes.set(parameter.name, parameter.type);
       }
     }
+    this.parameters = parameters?.map(x => x.name);
+  }
+
+  @action
+  setParameterType(name: string, type: OrigamDataType) {
+    this.parameterTypes.set(name, type);
+  }
+
+  @action
+  setParameterValue(name: string, value: string) {
+    this.parameterValues.set(name, value);
   }
 
   *loadSettings(): Generator<Promise<ShemaItemInfo[]>, void, ShemaItemInfo[]> {
