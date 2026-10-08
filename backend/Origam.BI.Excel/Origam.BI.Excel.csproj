@@ -53,7 +53,7 @@
   <ItemGroup>
     <PackageReference Include="NPOI" Version="2.7.4" />
     <PackageReference Include="Origam.Service.Core" Version="2.3.3" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.11" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="4.1.2" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Origam.Workbench.Services\Origam.Workbench.Services.csproj" />

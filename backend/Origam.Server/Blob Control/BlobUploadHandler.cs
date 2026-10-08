@@ -21,7 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.IO;
 using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
@@ -58,10 +57,12 @@ public class BlobUploadHandler
         int destWidth = (int)(sourceWidth * nPercent);
         int destHeight = (int)(sourceHeight * nPercent);
         Image backgroundImage = new Image<Rgba32>(width, height);
-        backgroundImage.Mutate(x => x.Fill(Color.Black));
-        using Image resizedImage = sourceImage.Clone(ctx => ctx.Resize(destWidth, destHeight));
-        backgroundImage.Mutate(x =>
-            x.DrawImage(resizedImage, new Point(destX, destY), opacity: 1f)
+        backgroundImage.Mutate(context => context.BackgroundColor(Color.Black));
+        using Image resizedImage = sourceImage.Clone(context =>
+            context.Resize(destWidth, destHeight)
+        );
+        backgroundImage.Mutate(context =>
+            context.DrawImage(resizedImage, new Point(destX, destY), opacity: 1f)
         );
         return backgroundImage;
     }

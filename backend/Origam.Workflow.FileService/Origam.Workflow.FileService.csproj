@@ -68,7 +68,7 @@
       <Version>2.7.4</Version>
     </PackageReference>
     <PackageReference Include="SixLabors.ImageSharp">
-      <Version>3.1.11</Version>
+      <Version>4.1.2</Version>
     </PackageReference>
     <PackageReference Include="TypeExtender">
       <Version>1.0.3</Version>

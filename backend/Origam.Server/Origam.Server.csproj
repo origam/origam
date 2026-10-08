@@ -77,8 +77,8 @@
     <PackageReference Include="OpenIddict.Server.AspNetCore" Version="7.1.0" />
     <PackageReference Include="OpenIddict.Validation.AspNetCore" Version="7.1.0" />
     <PackageReference Include="Origam.Service.Core" Version="2.3.3" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.11" />
-    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="2.1.5" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="4.1.2" />
+    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="3.1.2" />
     <PackageReference Include="SoapCore" Version="1.2.1.14" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="10.2.3" />
     <PackageReference Include="UAParser" Version="3.1.47" />

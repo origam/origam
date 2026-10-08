@@ -340,9 +340,12 @@ public class BlobController : AbstractController
         }
         var destWidth = (int)(sourceWidth * percent);
         var destHeight = (int)(sourceHeight * percent);
-        using var backgroundImage = new Image<Rgba32>(width, height, Color.Black);
-        image.Mutate(x => x.Resize(destWidth, destHeight));
-        backgroundImage.Mutate(x => x.DrawImage(image, new Point(destX, destY), opacity: 1f));
+        using var backgroundImage = new Image<Rgba32>(width, height);
+        image.Mutate(context => context.BackgroundColor(Color.Black));
+        image.Mutate(context => context.Resize(destWidth, destHeight));
+        backgroundImage.Mutate(context =>
+            context.DrawImage(image, new Point(destX, destY), opacity: 1f)
+        );
         using var memoryStream = new MemoryStream();
         backgroundImage.Save(memoryStream, format);
         return memoryStream.ToArray();
