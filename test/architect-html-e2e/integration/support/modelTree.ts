@@ -37,18 +37,25 @@ export function menuItem(page: Page, nodeText: string, testId: string): Locator 
   return page.getByTestId(`tree-node-${nodeText}`).locator('xpath=..').getByTestId(testId);
 }
 
+export async function openContextMenu(page: Page, nodeText: string): Promise<void> {
+  await openNodeMenu(page, page.getByTestId(`tree-node-${nodeText}`));
+}
+
 // Clicking an item closes the menu only after its feedback animation and that
 // close hides every menu, so a menu opened too early would close with it.
 // The menu opens before its items arrive from the server.
-export async function openContextMenu(page: Page, nodeText: string): Promise<void> {
+export async function openNodeMenu(page: Page, node: Locator): Promise<Locator> {
   await expect(page.getByRole('menu')).toHaveCount(0);
   const pendingResponse = page.waitForResponse(
     response => response.url().includes('/Model/GetMenuItems'),
     { timeout: 10_000 },
   );
-  await page.getByTestId(`tree-node-${nodeText}`).click({ button: 'right' });
+  await node.click({ button: 'right' });
   await pendingResponse;
-  await expectBoxSettled(menuItem(page, nodeText, 'tree-menu-paste'));
+
+  const menu = node.locator('xpath=..');
+  await expectBoxSettled(menu.getByTestId('tree-menu-paste'));
+  return menu;
 }
 
 // The arriving items change the height of the menu, which moves it.

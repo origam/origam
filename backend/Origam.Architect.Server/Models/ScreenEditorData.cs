@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.Architect.Server.Services;
+using Origam.Architect.Server.ReturnModels;
 
 namespace Origam.Architect.Server.Models;
 
@@ -32,6 +32,8 @@ public class ScreenEditorData
     public IEnumerable<ToolBoxItem> Sections { get; set; }
     public IEnumerable<ToolBoxItem> Widgets { get; set; }
     public ApiControl RootControl { get; set; }
+    public List<string> DataMembers { get; set; }
+    public List<string> Warnings { get; set; }
 }
 
 public class ToolBoxItem

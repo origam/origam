@@ -151,12 +151,20 @@ export class TreeNode implements IEditorNode {
     return this.itemType === 'Origam.Schema.EntityModel.DataStructure';
   }
 
+  get isDataStructureFilterSet() {
+    return this.itemType === 'Origam.Schema.EntityModel.DataStructureFilterSet';
+  }
+
   get canCreateFolder() {
     return this.nodeLevelType === 'Provider' || this.isFolder;
   }
 
   get isSequentialWorkflow() {
     return this.itemType === 'Origam.Schema.WorkflowModel.Workflow';
+  }
+
+  get isDataConstant() {
+    return this.itemType === 'Origam.Schema.EntityModel.DataConstant';
   }
 
   get hasSpecificRole() {

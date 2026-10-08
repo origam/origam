@@ -141,6 +141,16 @@ export class ArchitectApi implements IArchitectApi {
     ).data;
   }
 
+  async locateSchemaItem(schemaItemId: string): Promise<ISearchResult> {
+    return (
+      await this.http.get('/Search/Locate', {
+        params: {
+          schemaItemId,
+        },
+      })
+    ).data;
+  }
+
   async openTab(schemaItemId: string): Promise<IApiTabData> {
     return (await this.http.post('/Tab/Open', { schemaItemId: schemaItemId })).data;
   }
@@ -457,6 +467,12 @@ export class ArchitectApi implements IArchitectApi {
     return (await this.http.post('/wizards/workflow-menu-items', request)).data;
   }
 
+  async createDataConstantMenuItem(
+    request: import('@api/IArchitectApi').ICreateDataConstantMenuItemRequest,
+  ): Promise<import('@api/IArchitectApi').ICreateWizardResult> {
+    return (await this.http.post('/wizards/data-constant-menu-items', request)).data;
+  }
+
   async createRole(
     request: import('@api/IArchitectApi').ICreateRoleRequest,
   ): Promise<import('@api/IArchitectApi').ICreateWizardResult> {
@@ -499,6 +515,12 @@ export class ArchitectApi implements IArchitectApi {
     dataStructureId: string,
   ): Promise<import('@api/IArchitectApi').IGetDataStructureSqlResult> {
     return (await this.http.get(`/wizards/data-structures/${dataStructureId}/sql`)).data;
+  }
+
+  async getDataStructureFilterSetSql(
+    filterSetId: string,
+  ): Promise<import('@api/IArchitectApi').IGetDataStructureFilterSetSqlResult> {
+    return (await this.http.get(`/wizards/data-structure-filter-sets/${filterSetId}/sql`)).data;
   }
 }
 

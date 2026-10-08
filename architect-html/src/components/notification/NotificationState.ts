@@ -20,12 +20,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { ISearchResult } from '@api/IArchitectApi';
 import { action, observable } from 'mobx';
 
-export type NotificationKind = 'success' | 'info';
+export type NotificationKind = 'success' | 'info' | 'error';
 
 export interface IActionResultNotification {
   id: number;
+  key?: string;
   kind: NotificationKind;
   title: string;
+  subtitle?: string;
   results: ISearchResult[];
   onShowResult?: () => void;
   durationMs: number;
@@ -43,19 +45,28 @@ export class NotificationState {
 
   @action.bound
   pushActionResult(input: {
+    key?: string;
     title: string;
-    results: ISearchResult[];
+    subtitle?: string;
+    results?: ISearchResult[];
     onShowResult?: () => void;
     kind?: NotificationKind;
     durationMs?: number;
   }): number {
+    if (input.key) {
+      this.notifications
+        .filter(notification => notification.key === input.key)
+        .forEach(notification => this.dismiss(notification.id));
+    }
     const id = this.nextId++;
     const duration = input.durationMs ?? DEFAULT_DURATION_MS;
     const notification: IActionResultNotification = {
       id,
+      key: input.key,
       kind: input.kind ?? 'success',
       title: input.title,
-      results: input.results,
+      subtitle: input.subtitle,
+      results: input.results ?? [],
       onShowResult: input.onShowResult,
       durationMs: duration,
     };

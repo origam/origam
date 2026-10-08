@@ -23,7 +23,7 @@ import { IActionResultNotification } from '@components/notification/Notification
 import { observer } from 'mobx-react-lite';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { VscPass } from 'react-icons/vsc';
+import { VscError, VscPass } from 'react-icons/vsc';
 
 export const NotificationContainer: React.FC = observer(() => {
   const notificationState = useContext(RootStoreContext).notificationState;
@@ -49,11 +49,13 @@ const NotificationCard: React.FC<{ notification: IActionResultNotification }> = 
 
     const count = notification.results.length;
     const subtitle =
-      count === 0
+      notification.subtitle ??
+      (count === 0
         ? T('No items reported by server', 'notification_no_items')
         : count === 1
           ? T('{0} item added to the model', 'notification_items_added_singular', count)
-          : T('{0} items added to the model', 'notification_items_added_plural', count);
+          : T('{0} items added to the model', 'notification_items_added_plural', count));
+    const isError = notification.kind === 'error';
     const hasAction = !!notification.onShowResult && count > 0;
 
     useEffect(() => {
@@ -85,16 +87,14 @@ const NotificationCard: React.FC<{ notification: IActionResultNotification }> = 
 
     return (
       <div
-        className={S.notification}
+        className={`${S.notification} ${isError ? S.error : ''}`}
         role="status"
         tabIndex={-1}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
         onKeyDown={onKeyDown}
       >
-        <div className={S.icon}>
-          <VscPass />
-        </div>
+        <div className={S.icon}>{isError ? <VscError /> : <VscPass />}</div>
         <div className={S.body}>
           <div className={S.title}>{notification.title}</div>
           <div className={S.subtitle}>{subtitle}</div>

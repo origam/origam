@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.Architect.Server.Services;
+using Origam.Architect.Server.ReturnModels;
 using Origam.Schema;
 
 namespace Origam.Architect.Server.Models;

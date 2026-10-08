@@ -30,6 +30,7 @@ using Origam.DA.ObjectPersistence;
 using Origam.Extensions;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
+using Origam.Schema.GuiModel;
 
 namespace Origam.Architect.Server.Services;
 
@@ -117,6 +118,26 @@ public class EditorPropertyFactory
             category: category,
             description: description,
             readOnly: property.GetSetMethod() == null
+        );
+    }
+
+    public EditorProperty Create(ControlPropertyItem propertyItem, object typedValue)
+    {
+        string type = propertyItem.PropertyType switch
+        {
+            ControlPropertyValueType.Integer => "integer",
+            ControlPropertyValueType.Boolean => "boolean",
+            _ => "string",
+        };
+        return new EditorProperty(
+            name: propertyItem.Name,
+            controlPropertyId: propertyItem.Id,
+            type: type,
+            value: typedValue,
+            dropDownValues: [],
+            category: "Data",
+            description: null,
+            readOnly: false
         );
     }
 

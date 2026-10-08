@@ -47,6 +47,8 @@ export interface IArchitectApi {
 
   searchDependencies(schemaItemId: string): Promise<ISearchResult[]>;
 
+  locateSchemaItem(schemaItemId: string): Promise<ISearchResult>;
+
   runModelCheck(): Promise<IModelCheckResult>;
 
   getModelCheckResult(): Promise<IModelCheckResult>;
@@ -170,6 +172,10 @@ export interface IArchitectApi {
 
   createWorkflowMenuItem(request: ICreateWorkflowMenuItemRequest): Promise<ICreateWizardResult>;
 
+  createDataConstantMenuItem(
+    request: ICreateDataConstantMenuItemRequest,
+  ): Promise<ICreateWizardResult>;
+
   createRole(request: ICreateRoleRequest): Promise<ICreateWizardResult>;
 
   getLocalizationChildEntityWizardData(
@@ -183,10 +189,18 @@ export interface IArchitectApi {
   createScreenSection(request: ICreateScreenSectionRequest): Promise<ICreateWizardResult>;
 
   getDataStructureSql(dataStructureId: string): Promise<IGetDataStructureSqlResult>;
+  getDataStructureFilterSetSql(filterSetId: string): Promise<IGetDataStructureFilterSetSqlResult>;
 }
 
 export interface IGetDataStructureSqlResult {
   dataStructureId: string;
+  dataStructureName: string;
+  sql: string;
+}
+
+export interface IGetDataStructureFilterSetSqlResult {
+  filterSetId: string;
+  filterSetName: string;
   dataStructureName: string;
   sql: string;
 }
@@ -214,6 +228,12 @@ export interface ICreateMenuItemRequest {
 
 export interface ICreateWorkflowMenuItemRequest {
   workflowId: string;
+  caption: string;
+  role: string;
+}
+
+export interface ICreateDataConstantMenuItemRequest {
+  dataConstantId: string;
   caption: string;
   role: string;
 }
@@ -337,7 +357,7 @@ export interface ShemaItemInfo {
 
 export interface IParametersResult {
   output: string;
-  parameters: IParameterData[];
+  parameters: IParameterData[] | null;
 }
 
 export interface IParameterData {
@@ -352,8 +372,7 @@ export interface ITransformResult {
 }
 
 export interface IValidationResult {
-  title: string;
-  text: string;
+  isValid: boolean;
   output: string;
 }
 
@@ -465,6 +484,7 @@ export interface IDesignerEditorData {
   schemaExtensionId: string;
   rootControl: IApiControl;
   selectedDataSourceId: string;
+  warnings: string[];
 }
 
 export interface ISectionEditorData extends IDesignerEditorData {

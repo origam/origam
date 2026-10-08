@@ -28,7 +28,7 @@ import {
   ShemaItemInfo,
 } from '@api/IArchitectApi.ts';
 import { GridEditorState } from '@editors/gridEditor/GridEditorState.ts';
-import { observable } from 'mobx';
+import { action, observable } from 'mobx';
 import { ITabViewState } from '@components/tabView/ITabViewState.ts';
 import { IEditorNode } from '@components/editorTabView/EditorTabViewState.ts';
 import { ModelTreeState } from '@components/modelTree/ModelTreeState.ts';
@@ -38,7 +38,7 @@ import { IPropertyManager } from '@editors/propertyEditor/IPropertyManager.tsx';
 
 export class XsltEditorState implements ITabViewState, ITabState, IPropertyManager {
   @observable public accessor activeTabIndex = 0;
-  @observable public accessor parameters: string[] = [];
+  @observable public accessor parameters: string[] | undefined;
   @observable public accessor xmlResult = '';
   @observable public accessor inputXml = '<ROOT>\n</ROOT>';
   @observable public accessor parameterValues = new Map<string, string>();
@@ -132,40 +132,60 @@ export class XsltEditorState implements ITabViewState, ITabState, IPropertyManag
     return this.gridEditorState.label;
   }
 
-  *validate(): Generator<Promise<IValidationResult>, IValidationResult, IValidationResult> {
+  *validate(): Generator<Promise<any>, IValidationResult, any> {
+    yield* this.gridEditorState.sendUnsentValue();
     return yield this.architectApi.validateTransformation({
       schemaItemId: this.editorNode.origamId,
       sourceDataStructureId: this.sourceDataStructureId ? this.sourceDataStructureId : undefined,
       targetDataStructureId: this.targetDataStructureId ? this.targetDataStructureId : undefined,
       ruleSetId: this.ruleSetId,
+      parameters: this.parameterData,
     });
   }
-  *transform(): Generator<Promise<ITransformResult>, ITransformResult, ITransformResult> {
+  *transform(): Generator<Promise<any>, ITransformResult, any> {
+    yield* this.gridEditorState.sendUnsentValue();
     return yield this.architectApi.runTransformation({
       schemaItemId: this.editorNode.origamId,
       sourceDataStructureId: this.sourceDataStructureId ? this.sourceDataStructureId : undefined,
       targetDataStructureId: this.targetDataStructureId ? this.targetDataStructureId : undefined,
       ruleSetId: this.ruleSetId,
       inputXml: this.inputXml,
-      parameters: this.parameters.map(name => {
-        return {
-          name,
-          type: this.parameterTypes.get(name) ?? OrigamDataType.String,
-          value: this.parameterValues.get(name) ?? '',
-        };
-      }),
+      parameters: this.parameterData,
     });
   }
-  *getXsltParameters(): Generator<
-    Promise<IParametersResult>,
-    IParametersResult,
-    IParametersResult
-  > {
+
+  private get parameterData(): IParameterData[] {
+    return (this.parameters ?? []).map(name => {
+      return {
+        name,
+        type: this.parameterTypes.get(name) ?? OrigamDataType.String,
+        value: this.parameterValues.get(name) ?? '',
+      };
+    });
+  }
+  *getXsltParameters(): Generator<Promise<any>, IParametersResult, any> {
+    yield* this.gridEditorState.sendUnsentValue();
     return yield this.architectApi.getXsltParameters(this.editorNode.origamId);
   }
 
-  setParameters(parameters: IParameterData[]) {
-    this.parameters = parameters.map(x => x.name);
+  @action
+  setParameters(parameters: IParameterData[] | null) {
+    for (const parameter of parameters ?? []) {
+      if (!this.parameters?.includes(parameter.name)) {
+        this.parameterTypes.set(parameter.name, parameter.type);
+      }
+    }
+    this.parameters = parameters?.map(x => x.name);
+  }
+
+  @action
+  setParameterType(name: string, type: OrigamDataType) {
+    this.parameterTypes.set(name, type);
+  }
+
+  @action
+  setParameterValue(name: string, value: string) {
+    this.parameterValues.set(name, value);
   }
 
   *loadSettings(): Generator<Promise<ShemaItemInfo[]>, void, ShemaItemInfo[]> {
@@ -183,10 +203,14 @@ export class XsltEditorState implements ITabViewState, ITabState, IPropertyManag
     }
   }
 
-  *onTransformChange(value: string | undefined) {
+  onTransformChange(value: string | undefined) {
     const textProperty = this.gridEditorState.properties.find(
       x => x.name === this.transformPropertyName,
     )!;
-    yield* this.gridEditorState.onPropertyUpdated(textProperty, value);
+    this.gridEditorState.setUnsentValue(textProperty, value ?? '');
+  }
+
+  *sendUnsentValue(): Generator<Promise<any>, void, any> {
+    yield* this.gridEditorState.sendUnsentValue();
   }
 }

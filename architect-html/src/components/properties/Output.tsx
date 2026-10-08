@@ -24,7 +24,7 @@ import { RootStoreContext } from '@/main.tsx';
 const Output = observer(() => {
   const rootStore = useContext(RootStoreContext);
 
-  return <div>{rootStore.output}</div>;
+  return <div data-test-id="output">{rootStore.output}</div>;
 });
 
 export default Output;

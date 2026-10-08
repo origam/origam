@@ -99,6 +99,16 @@ public class WizardController(
     public IActionResult CreateWorkflowMenuItem([FromBody] CreateWorkflowMenuItemModel input) =>
         Ok(menuItemWizard.CreateWorkflowMenuItem(input));
 
+    [HttpPost("data-constant-menu-items")]
+    [EndpointDescription(
+        "Creates a menu item for an existing data constant. "
+            + WizardIdRule
+            + WizardConfirmationRule
+    )]
+    public IActionResult CreateDataConstantMenuItem(
+        [FromBody] CreateDataConstantMenuItemModel input
+    ) => Ok(menuItemWizard.CreateDataConstantMenuItem(input));
+
     [HttpPost("roles")]
     [EndpointDescription(
         "Creates the deployment activities that add a role to the database. There is no "
@@ -197,6 +207,10 @@ public class WizardController(
     [HttpGet("data-structures/{id}/sql")]
     public IActionResult GetDataStructureSql(Guid id) =>
         Ok(dataStructureSqlWizard.GetDataStructureSql(id));
+
+    [HttpGet("data-structure-filter-sets/{id}/sql")]
+    public IActionResult GetDataStructureFilterSetSql(Guid id) =>
+        Ok(dataStructureSqlWizard.GetDataStructureFilterSetSql(id));
 
     [HttpGet("localization-child-entities/wizard-data")]
     public IActionResult GetLocalizationChildEntityWizardData([FromQuery] Guid entityId) =>

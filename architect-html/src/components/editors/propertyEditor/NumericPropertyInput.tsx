@@ -59,9 +59,10 @@ export const NumericPropertyInput: React.FC<{
       value={inputValue}
       onChange={e => onValueChange(e.target.value)}
       onBlur={() => {
+        window.clearTimeout(debounceRef.current);
         if (inputValue.trim() === '') {
           setInputValue(property.value != null ? String(property.value) : '');
-        } else {
+        } else if (parseValue(inputValue) !== property.value) {
           onChange(parseValue(inputValue));
         }
       }}

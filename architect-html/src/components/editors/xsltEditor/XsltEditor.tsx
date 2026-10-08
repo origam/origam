@@ -19,11 +19,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import ActionPanel from '@/components/ActionPanel/ActionPanel';
 import SaveButtonHOC from '@/components/SaveButtonHOC/SaveButtonHOC';
-import { showInfo } from '@/dialog/DialogUtils.tsx';
+import { useDebouncedCallback } from '@/hooks/useDebouncedCallback';
 import { RootStoreContext, T } from '@/main';
 import Button from '@components/Button/Button.tsx';
 import { TabView } from '@components/tabView/TabView';
 import CodeEditor from '@editors/codeEditor/CodeEditor';
+import { UnsentValueDelayMs } from '@editors/gridEditor/GridEditorState.ts';
 import { XsltEditorState } from '@editors/gridEditor/XsltEditorState.ts';
 import { ParametersEditor } from '@editors/xsltEditor/ParametersEditor.tsx';
 import { Settings } from '@editors/xsltEditor/Settings.tsx';
@@ -34,16 +35,21 @@ import { useContext } from 'react';
 import { VscCheck, VscPlay } from 'react-icons/vsc';
 
 export const ResultTabIndex = 3;
+const XsltValidationNotificationKey = 'xslt-validation';
+const XsltValidationNotificationDurationMs = 11_250;
 
 const XsltEditor = observer(({ editorState }: { editorState: XsltEditorState }) => {
   const rootStore = useContext(RootStoreContext);
 
-  const handleTransformChange = (value: string | undefined) => {
+  const sendUnsentValueLater = useDebouncedCallback(() => {
     runInFlowWithHandler(rootStore.errorDialogController)({
-      generator: function* () {
-        yield* editorState.onTransformChange(value);
-      },
+      generator: () => editorState.sendUnsentValue(),
     });
+  }, UnsentValueDelayMs);
+
+  const handleTransformChange = (value: string | undefined) => {
+    editorState.onTransformChange(value);
+    sendUnsentValueLater();
   };
 
   const handleInputChange = (value: string | undefined) => {
@@ -57,6 +63,7 @@ const XsltEditor = observer(({ editorState }: { editorState: XsltEditorState }) 
         editorState.setParameters(result.parameters);
         if (result.output) {
           rootStore.output = result.output;
+          rootStore.sideBarTabViewState.showOutput();
         }
       },
     });
@@ -76,7 +83,26 @@ const XsltEditor = observer(({ editorState }: { editorState: XsltEditorState }) 
         const result = yield* editorState.validate();
         rootStore.output = result.output;
         rootStore.sideBarTabViewState.showOutput();
-        yield showInfo(rootStore.dialogStack, result.title, result.text);
+        if (result.isValid) {
+          rootStore.notificationState.pushActionResult({
+            key: XsltValidationNotificationKey,
+            durationMs: XsltValidationNotificationDurationMs,
+            title: T('XSLT is valid', 'xslt_validation_success_title'),
+            subtitle: T(
+              '{0} passed validation',
+              'xslt_validation_success_subtitle',
+              editorState.label,
+            ),
+          });
+        } else {
+          rootStore.notificationState.pushActionResult({
+            key: XsltValidationNotificationKey,
+            durationMs: XsltValidationNotificationDurationMs,
+            kind: 'error',
+            title: T('XSLT validation failed', 'xslt_validation_failed_title'),
+            subtitle: T('See the output for details', 'xslt_validation_failed_subtitle'),
+          });
+        }
       },
     });
   }
