@@ -55,8 +55,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="log4net" Version="3.4.0" />
-    <PackageReference Include="NPOI" Version="2.7.4" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="4.1.2" />
+    <PackageReference Include="NPOI" Version="2.7.6" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Origam.Common\Origam.Common.csproj" />

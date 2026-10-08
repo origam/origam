@@ -40,10 +40,6 @@ using Origam.Server.Extensions;
 using Origam.Server.Model.Blob;
 using Origam.Server.Model.UIService;
 using Origam.Workbench.Services;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
 
 namespace Origam.Server.Controller;
 
@@ -231,9 +227,6 @@ public class BlobController : AbstractController
             {
                 try
                 {
-                    // The image is loaded to check that the input actually
-                    // represents an image
-                    using var image = Image.Load(input);
                     var parameterService = ServiceManager.Services.GetService<IParameterService>();
                     var width = (int)
                         parameterService.GetParameterValue(
@@ -247,7 +240,7 @@ public class BlobController : AbstractController
                         );
                     var row = blobUploadRequest.Row;
                     var thumbnailMember = blobUploadRequest.ThumbnailMember;
-                    row[thumbnailMember] = ResizeImage(input, width, height);
+                    row[thumbnailMember] = BlobUploadHandler.ResizeImage(input, width, height);
                 }
                 catch
                 {
@@ -311,43 +304,5 @@ public class BlobController : AbstractController
             throw new NullReferenceException("Member not set.");
         }
         return false;
-    }
-
-    private static byte[] ResizeImage(byte[] byteArrayImage, int width, int height)
-    {
-        IImageFormat format = Image.DetectFormat(byteArrayImage);
-        if (format == null)
-        {
-            throw new InvalidOperationException("Unable to detect image format.");
-        }
-        using Image image = Image.Load(byteArrayImage);
-        var sourceWidth = image.Width;
-        var sourceHeight = image.Height;
-        var destX = 0;
-        var destY = 0;
-        float percent;
-        var percentWidth = width / (float)sourceWidth;
-        var percentHeight = height / (float)sourceHeight;
-        if (percentHeight < percentWidth)
-        {
-            percent = percentHeight;
-            destX = Convert.ToInt16((width - (sourceWidth * percent)) / 2);
-        }
-        else
-        {
-            percent = percentWidth;
-            destY = Convert.ToInt16((height - (sourceHeight * percent)) / 2);
-        }
-        var destWidth = (int)(sourceWidth * percent);
-        var destHeight = (int)(sourceHeight * percent);
-        using var backgroundImage = new Image<Rgba32>(width, height);
-        image.Mutate(context => context.BackgroundColor(Color.Black));
-        image.Mutate(context => context.Resize(destWidth, destHeight));
-        backgroundImage.Mutate(context =>
-            context.DrawImage(image, new Point(destX, destY), opacity: 1f)
-        );
-        using var memoryStream = new MemoryStream();
-        backgroundImage.Save(memoryStream, format);
-        return memoryStream.ToArray();
     }
 }

@@ -19,24 +19,50 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System.IO;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats.Png;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
+using System;
+using SkiaSharp;
 
 public class BlobUploadHandler
 {
-    public static byte[] FixedSizeBytes(Image image, int width, int height)
+    public static byte[] FixedSizeBytes(SKBitmap image, int width, int height)
     {
-        using Image thumbnail = FixedSize(image, width, height);
-        using var memoryStream = new MemoryStream();
-        thumbnail.SaveAsPng(memoryStream, new PngEncoder());
-        return memoryStream.ToArray();
+        using SKBitmap thumbnail = FixedSize(image, width, height, transparentPadding: false);
+        return Encode(thumbnail, SKEncodedImageFormat.Png);
     }
 
-    private static Image FixedSize(Image sourceImage, int width, int height)
+    public static byte[] ResizeImage(byte[] bytes, int width, int height)
     {
+        using var stream = new SKMemoryStream(bytes);
+        using var codec = SKCodec.Create(stream);
+        if (codec == null)
+        {
+            throw new ArgumentException(message: null, nameof(bytes));
+        }
+        using SKBitmap image = SKBitmap.Decode(codec);
+        using SKBitmap thumbnail = FixedSize(image, width, height, transparentPadding: true);
+        return Encode(thumbnail, codec.EncodedFormat);
+    }
+
+    private static byte[] Encode(SKBitmap bitmap, SKEncodedImageFormat format)
+    {
+        using SKImage image = SKImage.FromBitmap(bitmap);
+        // Skia can decode formats such as GIF and BMP but cannot encode them.
+        using SKData data =
+            image.Encode(format, quality: 75)
+            ?? image.Encode(SKEncodedImageFormat.Png, quality: 100);
+        return data.ToArray();
+    }
+
+    private static SKBitmap FixedSize(
+        SKBitmap sourceImage,
+        int width,
+        int height,
+        bool transparentPadding
+    )
+    {
+        ArgumentNullException.ThrowIfNull(sourceImage);
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(width);
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(height);
         int sourceWidth = sourceImage.Width;
         int sourceHeight = sourceImage.Height;
         int destX = 0;
@@ -47,23 +73,27 @@ public class BlobUploadHandler
         if (nPercentH < nPercentW)
         {
             nPercent = nPercentH;
-            destX = System.Convert.ToInt16((width - (sourceWidth * nPercent)) / 2);
+            destX = Convert.ToInt32((width - (sourceWidth * nPercent)) / 2);
         }
         else
         {
             nPercent = nPercentW;
-            destY = System.Convert.ToInt16((height - (sourceHeight * nPercent)) / 2);
+            destY = Convert.ToInt32((height - (sourceHeight * nPercent)) / 2);
         }
-        int destWidth = (int)(sourceWidth * nPercent);
-        int destHeight = (int)(sourceHeight * nPercent);
-        Image backgroundImage = new Image<Rgba32>(width, height);
-        backgroundImage.Mutate(context => context.BackgroundColor(Color.Black));
-        using Image resizedImage = sourceImage.Clone(context =>
-            context.Resize(destWidth, destHeight)
-        );
-        backgroundImage.Mutate(context =>
-            context.DrawImage(resizedImage, new Point(destX, destY), opacity: 1f)
-        );
+        int destWidth = Math.Max(val1: 1, (int)(sourceWidth * nPercent));
+        int destHeight = Math.Max(val1: 1, (int)(sourceHeight * nPercent));
+        var backgroundImage = new SKBitmap(width, height, SKColorType.Rgba8888, SKAlphaType.Premul);
+        using var canvas = new SKCanvas(backgroundImage);
+        canvas.Clear(transparentPadding ? SKColors.Transparent : SKColors.Black);
+        var destination = new SKRect(destX, destY, destX + destWidth, destY + destHeight);
+        using var paint = new SKPaint { Color = SKColors.Black };
+        canvas.DrawRect(destination, paint);
+        using SKImage image = SKImage.FromBitmap(sourceImage);
+        var sampling =
+            destWidth == sourceWidth && destHeight == sourceHeight
+                ? new SKSamplingOptions(SKFilterMode.Nearest)
+                : new SKSamplingOptions(SKCubicResampler.Mitchell);
+        canvas.DrawImage(image, destination, sampling);
         return backgroundImage;
     }
 }
