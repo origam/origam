@@ -376,6 +376,7 @@
   "ai_settings_tools_functions": "{0} functions",
   "ai_settings_save": "Save",
   "property_lookup_no_value": "(none)",
+  "property_open_referenced_item": "Open",
   "screen_editor_add_tab": "Add Tab",
   "screen_editor_remove_tab": "Remove Tab"
 }

@@ -141,6 +141,16 @@ export class ArchitectApi implements IArchitectApi {
     ).data;
   }
 
+  async locateSchemaItem(schemaItemId: string): Promise<ISearchResult> {
+    return (
+      await this.http.get('/Search/Locate', {
+        params: {
+          schemaItemId,
+        },
+      })
+    ).data;
+  }
+
   async openTab(schemaItemId: string): Promise<IApiTabData> {
     return (await this.http.post('/Tab/Open', { schemaItemId: schemaItemId })).data;
   }

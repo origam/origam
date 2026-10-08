@@ -47,6 +47,8 @@ export interface IArchitectApi {
 
   searchDependencies(schemaItemId: string): Promise<ISearchResult[]>;
 
+  locateSchemaItem(schemaItemId: string): Promise<ISearchResult>;
+
   runModelCheck(): Promise<IModelCheckResult>;
 
   getModelCheckResult(): Promise<IModelCheckResult>;
