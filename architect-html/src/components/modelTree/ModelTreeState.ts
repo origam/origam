@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { IArchitectApi, IPackagesInfo } from '@api/IArchitectApi';
+import { IArchitectApi, IPackagesInfo, ISearchResult } from '@api/IArchitectApi';
 import { TreeNode } from '@components/modelTree/TreeNode';
 import { TreeTransferState } from '@components/modelTree/TreeTransferState';
 import { RootStore } from '@stores/RootStore';
@@ -111,6 +111,15 @@ export class ModelTreeState {
     }
 
     this.highlightNode(args.schemaItemId);
+  }
+
+  *revealSchemaItem(schemaItemId: string): Generator<Promise<any>, void, any> {
+    const result: ISearchResult = yield this.architectApi.locateSchemaItem(schemaItemId);
+    this.rootStore.sideBarTabViewState.showModelTree();
+    yield* this.expandAndHighlightSchemaItem({
+      parentNodeIds: result.parentNodeIds ?? [],
+      schemaItemId,
+    });
   }
 
   *reloadParentOf(
