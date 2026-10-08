@@ -847,7 +847,7 @@ public class DatasetTools
         }
         else
         {
-            if (table.Columns.Contains("RecordUpdated") & row.RowState != DataRowState.Added)
+            if (table.Columns.Contains("RecordUpdated") && row.RowState != DataRowState.Added)
             {
                 DataColumn col = table.Columns["RecordUpdated"];
                 row[col] = DateTime.Now;
