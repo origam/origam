@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { RootStoreContext } from '@/main.tsx';
+import { RootStoreContext, T } from '@/main.tsx';
 import { PropertyValue } from '@api/IArchitectApi';
 import { EditorProperty } from '@editors/gridEditor/EditorProperty.ts';
 import { IPropertyManager } from '@editors/propertyEditor/IPropertyManager.tsx';
@@ -28,10 +28,15 @@ import { UntypedPropertyInput } from '@editors/propertyEditor/UntypedPropertyInp
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler.ts';
 import { observer } from 'mobx-react-lite';
 import { useContext } from 'react';
-import { VscCopy } from 'react-icons/vsc';
+import { VscCopy, VscLinkExternal } from 'react-icons/vsc';
 
 const NO_WHITESPACE_PROPERTIES = new Set(['Name', 'MappedObjectName']);
 const stripWhitespace = (value: string) => value.replace(/\s+/gu, '');
+
+// Bound fields and converter lookups hold text, not a model reference.
+const GUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/iu;
+const isSchemaItemId = (value: PropertyValue) =>
+  typeof value === 'string' && GUID_PATTERN.test(value);
 
 const SinglePropertyEditor = observer(
   (props: { property: EditorProperty; propertyManager: IPropertyManager; compact?: boolean }) => {
@@ -41,6 +46,15 @@ const SinglePropertyEditor = observer(
       if (props.property.value != null) {
         await navigator.clipboard.writeText(props.property.value.toString());
       }
+    };
+
+    const handleOpenReferencedItem = (schemaItemId: string) => {
+      runInFlowWithHandler(rootStore.errorDialogController)({
+        generator: function* () {
+          yield* rootStore.editorTabViewState.openEditorByOrigamId(schemaItemId)();
+          yield* rootStore.modelTreeState.revealSchemaItem(schemaItemId);
+        },
+      });
     };
 
     const onValueChange = (property: EditorProperty, value: PropertyValue) => {
@@ -62,7 +76,7 @@ const SinglePropertyEditor = observer(
                   option.name === property.value || String(option.value) === String(property.value),
               )?.value ?? '')
             : (property.value ?? '');
-        return (
+        const select = (
           <FilterableSelect
             options={property.dropDownValues}
             selectedValue={selectedValue}
@@ -70,6 +84,24 @@ const SinglePropertyEditor = observer(
             dataTestId={`property-select-${property.name}`}
             onChange={value => onValueChange(property, value)}
           />
+        );
+        if (property.type !== 'looukup' || !isSchemaItemId(property.value)) {
+          return select;
+        }
+        return (
+          <div className={S.inputWithCopyButton}>
+            <button
+              type="button"
+              className={`${S.copyButton} ${S.openButton}`}
+              onClick={() => handleOpenReferencedItem(String(property.value))}
+              title="Open in editor"
+              data-test-id={`property-open-${property.name}`}
+            >
+              <VscLinkExternal />
+              {T('Open', 'property_open_referenced_item')}
+            </button>
+            {select}
+          </div>
         );
       }
 
