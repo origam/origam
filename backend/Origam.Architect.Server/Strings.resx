@@ -348,4 +348,22 @@
     <data name="Wizard_DataStructureFilterSetNotFound" xml:space="preserve">
         <value>DataStructure filter set {0} not found</value>
     </data>
+    <data name="Package_NameEmpty" xml:space="preserve">
+        <value>Package name cannot be empty.</value>
+    </data>
+    <data name="Package_NameInvalidChars" xml:space="preserve">
+        <value>Package name contains invalid characters.</value>
+    </data>
+    <data name="Package_NameReserved" xml:space="preserve">
+        <value>Package name is reserved or not allowed.</value>
+    </data>
+    <data name="Package_NameDuplicate" xml:space="preserve">
+        <value>A package with this name already exists.</value>
+    </data>
+    <data name="Package_NotFound" xml:space="preserve">
+        <value>The package was not found.</value>
+    </data>
+    <data name="Package_ReferencedBy" xml:space="preserve">
+        <value>Package "{0}" cannot be deleted because it is referenced by: {1}.</value>
+    </data>
 </root>

@@ -194,7 +194,61 @@ namespace Origam.Architect.Server {
                 return ResourceManager.GetString("NewItemTypeNotFound", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to A package with this name already exists..
+        /// </summary>
+        internal static string Package_NameDuplicate {
+            get {
+                return ResourceManager.GetString("Package_NameDuplicate", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Package name cannot be empty..
+        /// </summary>
+        internal static string Package_NameEmpty {
+            get {
+                return ResourceManager.GetString("Package_NameEmpty", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Package name contains invalid characters..
+        /// </summary>
+        internal static string Package_NameInvalidChars {
+            get {
+                return ResourceManager.GetString("Package_NameInvalidChars", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Package name is reserved or not allowed..
+        /// </summary>
+        internal static string Package_NameReserved {
+            get {
+                return ResourceManager.GetString("Package_NameReserved", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The package was not found..
+        /// </summary>
+        internal static string Package_NotFound {
+            get {
+                return ResourceManager.GetString("Package_NotFound", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Package &quot;{0}&quot; cannot be deleted because it is referenced by: {1}..
+        /// </summary>
+        internal static string Package_ReferencedBy {
+            get {
+                return ResourceManager.GetString("Package_ReferencedBy", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Property {0} takes a reference to a {1}, but the id you passed belongs to a {2}. Find or create a {1} and pass its id instead..
         /// </summary>
