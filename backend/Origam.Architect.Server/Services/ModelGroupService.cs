@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.Architect.Server.Models;
 using Origam.Architect.Server.ReturnModels;
+using Origam.Architect.Server.Utils;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema;
 using Origam.UI;
@@ -35,34 +36,6 @@ public class ModelGroupService(
     ModelTransactionRunner transactionRunner
 )
 {
-    private static readonly HashSet<string> ReservedDeviceNames = new(
-        StringComparer.OrdinalIgnoreCase
-    )
-    {
-        "CON",
-        "PRN",
-        "AUX",
-        "NUL",
-        "COM1",
-        "COM2",
-        "COM3",
-        "COM4",
-        "COM5",
-        "COM6",
-        "COM7",
-        "COM8",
-        "COM9",
-        "LPT1",
-        "LPT2",
-        "LPT3",
-        "LPT4",
-        "LPT5",
-        "LPT6",
-        "LPT7",
-        "LPT8",
-        "LPT9",
-    };
-
     private readonly IPersistenceProvider persistenceProvider = persistenceService.SchemaProvider;
 
     public TreeNode Create(CreateGroupModel input)
@@ -197,33 +170,15 @@ public class ModelGroupService(
         {
             throw new UserOrigamException(Strings.Group_NameEmpty);
         }
-        if (
-            name.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0
-            || name.Contains('/')
-            || name.Contains('\\')
-        )
+        if (FileNameRules.HasInvalidChars(name))
         {
             throw new UserOrigamException(Strings.Group_NameInvalidChars);
         }
-        if (IsReservedOrUnsafeName(name))
+        if (FileNameRules.IsReservedOrUnsafe(name))
         {
             throw new UserOrigamException(Strings.Group_NameReserved);
         }
         return name;
-    }
-
-    private static bool IsReservedOrUnsafeName(string name)
-    {
-        if (name == "." || name == "..")
-        {
-            return true;
-        }
-        if (name.EndsWith("."))
-        {
-            return true;
-        }
-        string baseName = name.Split('.')[0];
-        return ReservedDeviceNames.Contains(baseName);
     }
 
     // ChildItemsRecursive skips subgroups; Delete() cascades into them, so recurse.
