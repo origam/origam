@@ -24,6 +24,10 @@ export interface IArchitectApi {
 
   setActivePackage(packageId: string): Promise<void>;
 
+  createPackage(name: string): Promise<IPackage>;
+
+  deletePackage(packageId: string): Promise<void>;
+
   getTopModelNodes(): Promise<IApiTreeNode[]>;
 
   getNodeChildren(node: INodeLoadData): Promise<IApiTreeNode[]>;

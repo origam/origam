@@ -36,6 +36,7 @@ import {
   IMoveTargetsResult,
   IMoveVerdict,
   INodeLoadData,
+  IPackage,
   IPackagesInfo,
   IParametersResult,
   IPropertyChange,
@@ -66,6 +67,14 @@ export class ArchitectApi implements IArchitectApi {
 
   async getPackages(): Promise<IPackagesInfo> {
     return (await this.http.get('/Package/GetAll')).data;
+  }
+
+  async createPackage(name: string): Promise<IPackage> {
+    return (await this.http.post('/Package/Create', { name })).data;
+  }
+
+  async deletePackage(packageId: string): Promise<void> {
+    await this.http.post('/Package/Delete', { id: packageId });
   }
 
   async getTopModelNodes(): Promise<IApiTreeNode[]> {

@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { observable } from 'mobx';
+import { action, observable } from 'mobx';
 import { IArchitectApi, IPackage, IPackagesInfo } from '@api/IArchitectApi';
 import { EditorTabViewState } from '@components/editorTabView/EditorTabViewState';
 import { ModelTreeState } from '@components/modelTree/ModelTreeState';
@@ -28,6 +28,7 @@ import { UIState } from '@stores/UiState';
 export class PackagesState {
   @observable.shallow accessor packages: IPackage[] = [];
   @observable accessor activePackageId: string | undefined;
+  @observable accessor selectedPackageId: string | undefined;
   private activePackageChanged = false;
   private packagesLoading = false;
 
@@ -86,5 +87,65 @@ export class PackagesState {
       }
       this.activePackageChanged = true;
     }.bind(this);
+  }
+
+  @action
+  selectPackage(packageId: string) {
+    this.selectedPackageId = packageId;
+  }
+
+  createPackage(name: string) {
+    return function* (this: PackagesState): Generator<any, void, any> {
+      const proceed: boolean = yield* this.editorTabViewState.closeAllEditors()();
+      if (!proceed) {
+        return;
+      }
+      this.progressBarState.isWorking = true;
+      try {
+        const createdPackage: IPackage = yield this.architectApi.createPackage(name);
+        yield* this.reloadPackages();
+        this.selectedPackageId = createdPackage.id;
+        this.sideBarTabViewState.showModelTree();
+      } finally {
+        this.progressBarState.isWorking = false;
+      }
+    }.bind(this);
+  }
+
+  deletePackage(packageId: string) {
+    return function* (this: PackagesState): Generator<any, void, any> {
+      if (packageId === this.activePackageId) {
+        const proceed: boolean = yield* this.editorTabViewState.closeAllEditors()();
+        if (!proceed) {
+          return;
+        }
+      }
+      this.progressBarState.isWorking = true;
+      try {
+        yield this.architectApi.deletePackage(packageId);
+        yield* this.reloadPackages();
+      } catch (error) {
+        // The server may have unloaded the active package before the delete failed.
+        yield* this.reloadPackages();
+        throw error;
+      } finally {
+        this.progressBarState.isWorking = false;
+      }
+    }.bind(this);
+  }
+
+  private *reloadPackages(): Generator<Promise<any>, void, any> {
+    const previousActivePackageId = this.activePackageId;
+    const packagesInfo: IPackagesInfo = yield this.architectApi.getPackages();
+    this.packages = packagesInfo.packages ?? [];
+    this.activePackageId = packagesInfo.activePackageId ?? undefined;
+    if (!this.packages.some(x => x.id === this.selectedPackageId)) {
+      this.selectedPackageId = undefined;
+    }
+    if (this.activePackageId !== previousActivePackageId) {
+      this.uiState.clearExpandedNodes();
+      this.activePackageChanged = true;
+      yield* this.modelTreeState.loadPackageNodes();
+    }
   }
 }
