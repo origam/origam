@@ -6734,7 +6734,7 @@ __metadata:
     react-virtualized: "npm:^9.22.6"
     sass: "npm:^1.105.0"
     stream-browserify: "npm:^3.0.0"
-    string-strip-html: "npm:^13.7.5"
+    string-strip-html: "npm:^13.7.7"
     ts-jest: "npm:^29.4.13"
     typescript: "npm:^6.0.3"
     uuid: "npm:^14.0.2"
@@ -7240,16 +7240,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"string-strip-html@npm:^13.7.5":
-  version: 13.7.5
-  resolution: "string-strip-html@npm:13.7.5"
+"string-strip-html@npm:^13.7.7":
+  version: 13.7.7
+  resolution: "string-strip-html@npm:13.7.7"
   dependencies:
     codsen-utils: "npm:^1.10.3"
     html-entity-codec: "npm:^1.1.0"
     ranges-apply: "npm:^7.2.6"
     ranges-push: "npm:^7.3.3"
     string-left-right: "npm:^6.2.5"
-  checksum: 10c0/2c5eb2e6660631d3fdec9152314674a66bfada9922209f64d3e780b1b0d5fa0d083a91ca953b642f59a7afe006b10c595e942b7f18d227a1c1ed01aafa43272a
+  checksum: 10c0/aac98e71e41c43fa20289398597a8300660c036833b47e5f31ec899b8bb06366ea282be955699b9f44e0e5b6b7f5a38a04f8415a74062fa0d915d69715730bbb
   languageName: node
   linkType: hard
 
