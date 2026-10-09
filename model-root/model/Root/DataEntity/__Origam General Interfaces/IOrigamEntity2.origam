@@ -219,14 +219,14 @@
       adec:label="Time Created"
       fmi:mappedColumnName="RecordCreated"
       asi:name="RecordCreated"
-      adec:onCopyAction="Copy"
+      adec:onCopyAction="Initialize"
       adec:xmlMappingType="Attribute" />
     <fmi:DataEntityColumn
       asi:abstract="true"
       adec:allowNulls="true"
       adec:autoIncrement="false"
       adec:dataType="UniqueIdentifier"
-      adec:defaultLookup="Root/DataLookup/__system/LookupBusinessPartner.origam#LookupBusinessPartner/08d82ef5-df38-48d6-a276-ee5b7f027bd6"
+      adec:defaultLookup="LookupBusinessPartner#LookupBusinessPartner/08d82ef5-df38-48d6-a276-ee5b7f027bd6"
       adec:excludeFromAllFields="false"
       fmi:excludeFromAuditing="true"
       x:id="ad2d2efe-9cb0-4141-ac28-25b8ed68580b"
@@ -234,7 +234,7 @@
       adec:label="Updated By"
       fmi:mappedColumnName="RecordUpdatedBy"
       asi:name="RecordUpdatedBy"
-      adec:onCopyAction="Copy"
+      adec:onCopyAction="Initialize"
       adec:xmlMappingType="Attribute" />
     <fmi:DataEntityColumn
       asi:abstract="true"
@@ -254,7 +254,7 @@
       adec:allowNulls="true"
       adec:autoIncrement="false"
       adec:dataType="UniqueIdentifier"
-      adec:defaultLookup="Root/DataLookup/__system/LookupBusinessPartner.origam#LookupBusinessPartner/08d82ef5-df38-48d6-a276-ee5b7f027bd6"
+      adec:defaultLookup="LookupBusinessPartner#LookupBusinessPartner/08d82ef5-df38-48d6-a276-ee5b7f027bd6"
       adec:excludeFromAllFields="false"
       fmi:excludeFromAuditing="true"
       x:id="cbcf7bb8-10d0-4576-98f5-1210b10bae5f"
@@ -262,7 +262,7 @@
       adec:label="Created By"
       fmi:mappedColumnName="RecordCreatedBy"
       asi:name="RecordCreatedBy"
-      adec:onCopyAction="Copy"
+      adec:onCopyAction="Initialize"
       adec:xmlMappingType="Attribute" />
     <fmi:DataEntityColumn
       asi:abstract="true"
@@ -276,7 +276,7 @@
       adec:label="Time Updated"
       fmi:mappedColumnName="RecordUpdated"
       asi:name="RecordUpdated"
-      adec:onCopyAction="Copy"
+      adec:onCopyAction="Initialize"
       adec:xmlMappingType="Attribute" />
     <sia:ancestor
       sia:ancestor="Root/DataEntity/__Origam General Interfaces/ISupportsPaging.origam#ISupportsPaging/e43666db-c897-46a0-9386-5b04385e40e0"

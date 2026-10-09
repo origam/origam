@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0">
+  <dv:DeploymentVersion
+    asi:abstract="false"
+    x:id="65cf9dd7-227b-4dcf-bb91-3a73c91271b5"
+    asi:name="6.0.0"
+    dv:version="6.0.0" />
+</x:file>

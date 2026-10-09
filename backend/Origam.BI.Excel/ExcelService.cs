@@ -217,7 +217,7 @@ public class ExcelService : IReportService
                 }
                 case CellType.Unknown:
                 {
-                    cell.SetCellType(NPOI.SS.UserModel.CellType.Unknown);
+                    cell.SetCellType(NPOI.SS.UserModel.CellType._None);
                     cell.SetCellValue(value);
                     break;
                 }
