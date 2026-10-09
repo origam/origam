@@ -15,6 +15,7 @@
   "xsl_editor_tab4": "Result",
   "xsl_editor_tab5": "Settings",
   "xsl_editor_parameters_empty": "No input parameters. Declare them in the XSL, e.g. <xsl:param name=\"date\" AS:DataType=\"Date\"/>.",
+  "xsl_editor_parameter_type": "Type",
   "save_button_label": "Save",
   "save_validation_errors_label": "Errors:",
   "save_blocked_by_warnings": "Fix the warnings to save",

@@ -17,18 +17,53 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-.parameter {
+.root {
   display: flex;
+  flex: 1;
+  min-height: 0;
   gap: 1rem;
+  margin: 1rem;
 }
 
 .emptyMessage {
-  margin-top: 1rem;
+  margin: 1rem;
 }
 
 .parameterList {
+  flex: 0 0 12rem;
+  overflow-y: auto;
+  border: 1px solid var(--background4);
+}
+
+.parameterItem {
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.selected {
+  background: var(--background3);
+}
+
+.parameterDetail {
   display: flex;
+  flex: 1;
   flex-direction: column;
+  min-width: 0;
+  gap: 0.5rem;
+}
+
+.typeRow {
+  display: flex;
+  align-items: center;
   gap: 1rem;
-  margin-top: 1rem;
+}
+
+.valueEditor {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  border: 1px solid var(--background4);
 }
