@@ -81,7 +81,7 @@
     <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="3.119.4" />
     <PackageReference
       Include="SkiaSharp.NativeAssets.NanoServer"
-      Version="3.119.4"
+      Version="4.153.1"
       GeneratePathProperty="true"
       ExcludeAssets="all"
     />
