@@ -1,5 +1,6 @@
+#region license
 /*
-Copyright 2005 - 2025 Advantage Solutions, s. r. o. 
+Copyright 2005 - 2026 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -16,15 +17,14 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
+#endregion
 
-.root {
-  flex: 1;
-  padding-top: 8px;
-}
+using System.ComponentModel.DataAnnotations;
 
-.toolbar {
-  display: flex;
-  justify-content: flex-end;
-  gap: 4px;
-  padding: 0 8px 8px;
+namespace Origam.Architect.Server.Models;
+
+public class CreatePackageModel
+{
+    [Required]
+    public string Name { get; set; }
 }

@@ -49,6 +49,7 @@ import {
   isPasteShortcut,
   isTypingTarget,
 } from '@/utils/keyShortcuts';
+import { hasInvalidFileNameChars, isReservedOrUnsafeFileName } from '@/utils/fileNameRules';
 import { observer } from 'mobx-react-lite';
 import { DragEvent as ReactDragEvent, useContext, useEffect, useRef } from 'react';
 import {
@@ -104,28 +105,6 @@ const DeploymentBadges = observer(({ node }: { node: TreeNode }) => {
     </>
   );
 });
-
-const RESERVED_DEVICE_NAME = /^(con|prn|aux|nul|com[1-9]|lpt[1-9])(\.|$)/i;
-const INVALID_FOLDER_NAME_CHARS = /[\\/:*?"<>|]/;
-
-function hasControlChar(value: string): boolean {
-  for (const char of value) {
-    if (char.charCodeAt(0) < 0x20) {
-      return true;
-    }
-  }
-  return false;
-}
-
-function isReservedOrUnsafeFolderName(name: string): boolean {
-  if (name === '.' || name === '..') {
-    return true;
-  }
-  if (name.endsWith('.')) {
-    return true;
-  }
-  return RESERVED_DEVICE_NAME.test(name);
-}
 
 const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number }) => {
   const rootStore = useContext(RootStoreContext);
@@ -676,10 +655,10 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
     if (name.length === 0) {
       return T('Folder name cannot be empty.', 'create_folder_error_empty');
     }
-    if (INVALID_FOLDER_NAME_CHARS.test(name) || hasControlChar(name)) {
+    if (hasInvalidFileNameChars(name)) {
       return T('Folder name contains invalid characters.', 'create_folder_error_invalid_chars');
     }
-    if (isReservedOrUnsafeFolderName(name)) {
+    if (isReservedOrUnsafeFileName(name)) {
       return T('Folder name is reserved or not allowed.', 'create_folder_error_reserved');
     }
     const taken = existingNames.some(

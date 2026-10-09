@@ -378,5 +378,18 @@
   "property_lookup_no_value": "(none)",
   "property_open_referenced_item": "Open",
   "screen_editor_add_tab": "Add Tab",
-  "screen_editor_remove_tab": "Remove Tab"
+  "screen_editor_remove_tab": "Remove Tab",
+  "packages_add": "New Package",
+  "packages_delete": "Delete",
+  "packages_references": "References",
+  "packages_references_title": "References of {0}",
+  "packages_references_cycle": "would create a circular reference",
+  "packages_delete_title": "Delete Package",
+  "packages_delete_question": "Do you really want to delete the package \"{0}\"? Its folder will be removed from the model.",
+  "packages_new_title": "New Package",
+  "packages_new_label": "Package name",
+  "packages_error_name_empty": "Package name cannot be empty.",
+  "packages_error_name_invalid_chars": "Package name contains invalid characters.",
+  "packages_error_name_reserved": "Package name is reserved or not allowed.",
+  "packages_error_name_duplicate": "A package with this name already exists."
 }

@@ -1,5 +1,5 @@
 /*
-Copyright 2005 - 2025 Advantage Solutions, s. r. o. 
+Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -17,17 +17,28 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { RootStoreContext } from '@/main';
+import { RootStoreContext, T } from '@/main';
 import { IPackage } from '@api/IArchitectApi';
+import Button from '@components/Button/Button';
 import S from '@components/packages/PackageItem.module.scss';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
+import { observer } from 'mobx-react-lite';
 import { useContext } from 'react';
+import { VscReferences, VscTrash } from 'react-icons/vsc';
 
-export function PackageItem(props: { package: IPackage; isSelected?: boolean }) {
+interface PackageItemProps {
+  package: IPackage;
+  onDelete: () => void;
+  onEditReferences: () => void;
+}
+
+export const PackageItem = observer((props: PackageItemProps) => {
   const rootStore = useContext(RootStoreContext);
   const packagesState = rootStore.packagesState;
+  const isActive = packagesState.activePackageId === props.package.id;
+  const isSelected = packagesState.selectedPackageId === props.package.id;
 
-  async function onPackageClick() {
+  function onPackageDoubleClick() {
     runInFlowWithHandler(rootStore.errorDialogController)({
       generator: packagesState.setActivePackageClick(props.package.id),
     });
@@ -35,11 +46,41 @@ export function PackageItem(props: { package: IPackage; isSelected?: boolean }) 
 
   return (
     <div
-      className={S.root + ' ' + (props.isSelected ? S.selected : '')}
+      className={`${S.root} ${isSelected ? S.selected : ''} ${isActive ? S.active : ''}`}
       data-test-id={`package-${props.package.name}`}
-      onClick={onPackageClick}
+      data-selected={isSelected}
+      data-active={isActive}
+      onClick={() => packagesState.selectPackage(props.package.id)}
+      onDoubleClick={onPackageDoubleClick}
     >
-      {props.package.name}
+      <span className={S.name}>{props.package.name}</span>
+      {isSelected && (
+        // Keeps the clicks from selecting or activating the row underneath.
+        <span
+          className={S.actions}
+          onClick={event => event.stopPropagation()}
+          onDoubleClick={event => event.stopPropagation()}
+        >
+          {isActive && (
+            <Button
+              type="secondary"
+              isCompact
+              title={T('References', 'packages_references')}
+              prefix={<VscReferences />}
+              onClick={props.onEditReferences}
+              dataTestId={`package-references-${props.package.name}`}
+            />
+          )}
+          <Button
+            type="secondary"
+            isCompact
+            title={T('Delete', 'packages_delete')}
+            prefix={<VscTrash />}
+            onClick={props.onDelete}
+            dataTestId={`package-delete-${props.package.name}`}
+          />
+        </span>
+      )}
     </div>
   );
-}
+});

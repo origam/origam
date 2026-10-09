@@ -1,5 +1,6 @@
+#region license
 /*
-Copyright 2005 - 2025 Advantage Solutions, s. r. o. 
+Copyright 2005 - 2026 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -16,15 +17,20 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
+#endregion
 
-.root {
-  flex: 1;
-  padding-top: 8px;
+namespace Origam.Architect.Server.ReturnModels;
+
+public class PackageReferencesInfo
+{
+    public Guid PackageId { get; set; }
+    public List<PackageReferenceCandidate> Candidates { get; set; }
 }
 
-.toolbar {
-  display: flex;
-  justify-content: flex-end;
-  gap: 4px;
-  padding: 0 8px 8px;
+public class PackageReferenceCandidate
+{
+    public Guid Id { get; set; }
+    public string Name { get; set; }
+    public bool IsReferenced { get; set; }
+    public bool CreatesCycle { get; set; }
 }
