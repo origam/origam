@@ -366,4 +366,16 @@
     <data name="Package_ReferencedBy" xml:space="preserve">
         <value>Package "{0}" cannot be deleted because it is referenced by: {1}.</value>
     </data>
+    <data name="Package_ReferencesOnlyActive" xml:space="preserve">
+        <value>Only the references of the active package can be edited.</value>
+    </data>
+    <data name="Package_ReferenceSelf" xml:space="preserve">
+        <value>A package cannot reference itself.</value>
+    </data>
+    <data name="Package_ReferenceCycle" xml:space="preserve">
+        <value>Package "{0}" cannot be referenced because it already includes package "{1}".</value>
+    </data>
+    <data name="Package_ReferenceStillUsed" xml:space="preserve">
+        <value>Package "{0}" cannot be removed from the references because "{1}" uses "{2}" from it.</value>
+    </data>
 </root>

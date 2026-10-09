@@ -29,8 +29,11 @@ namespace Origam.Architect.Server.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class PackageController(SchemaService schemaService, PackageService packageService)
-    : ControllerBase
+public class PackageController(
+    SchemaService schemaService,
+    PackageService packageService,
+    PackageReferenceService packageReferenceService
+) : ControllerBase
 {
     [HttpGet("GetAll")]
     public PackagesInfo GetAll()
@@ -68,6 +71,16 @@ public class PackageController(SchemaService schemaService, PackageService packa
     public ActionResult Delete([FromBody] DeletePackageModel input)
     {
         packageService.Delete(input);
+        return Ok();
+    }
+
+    [HttpGet("References")]
+    public PackageReferencesInfo GetReferences() => packageReferenceService.GetReferences();
+
+    [HttpPost("UpdateReferences")]
+    public ActionResult UpdateReferences([FromBody] UpdatePackageReferencesModel input)
+    {
+        packageReferenceService.UpdateReferences(input);
         return Ok();
     }
 }

@@ -250,6 +250,42 @@ namespace Origam.Architect.Server {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Package &quot;{0}&quot; cannot be referenced because it already includes package &quot;{1}&quot;..
+        /// </summary>
+        internal static string Package_ReferenceCycle {
+            get {
+                return ResourceManager.GetString("Package_ReferenceCycle", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to A package cannot reference itself..
+        /// </summary>
+        internal static string Package_ReferenceSelf {
+            get {
+                return ResourceManager.GetString("Package_ReferenceSelf", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Only the references of the active package can be edited..
+        /// </summary>
+        internal static string Package_ReferencesOnlyActive {
+            get {
+                return ResourceManager.GetString("Package_ReferencesOnlyActive", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Package &quot;{0}&quot; cannot be removed from the references because &quot;{1}&quot; uses &quot;{2}&quot; from it..
+        /// </summary>
+        internal static string Package_ReferenceStillUsed {
+            get {
+                return ResourceManager.GetString("Package_ReferenceStillUsed", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Property {0} takes a reference to a {1}, but the id you passed belongs to a {2}. Find or create a {1} and pass its id instead..
         /// </summary>
         internal static string PropertyReferenceTypeNotValid {

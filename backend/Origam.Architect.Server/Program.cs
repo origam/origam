@@ -96,6 +96,7 @@ public class Program
         builder.Services.AddSingleton<IAddToModelService, AddToModelService>();
         builder.Services.AddSingleton<ModelGroupService>();
         builder.Services.AddSingleton<PackageService>();
+        builder.Services.AddSingleton<PackageReferenceService>();
         builder.Services.AddSingleton<MenuItemService>();
         builder.Services.AddSingleton<FilterWizardService>();
         builder.Services.AddSingleton<ScreenWizardService>();
