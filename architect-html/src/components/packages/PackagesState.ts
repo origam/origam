@@ -134,6 +134,23 @@ export class PackagesState {
     }.bind(this);
   }
 
+  updateReferences(packageId: string, referencedPackageIds: string[]) {
+    return function* (this: PackagesState): Generator<any, void, any> {
+      // The server reloads the package, so open editors would point at stale items.
+      const proceed: boolean = yield* this.editorTabViewState.closeAllEditors()();
+      if (!proceed) {
+        return;
+      }
+      this.progressBarState.isWorking = true;
+      try {
+        yield this.architectApi.updatePackageReferences(packageId, referencedPackageIds);
+        yield* this.modelTreeState.loadPackageNodes();
+      } finally {
+        this.progressBarState.isWorking = false;
+      }
+    }.bind(this);
+  }
+
   private *reloadPackages(): Generator<Promise<any>, void, any> {
     const previousActivePackageId = this.activePackageId;
     const packagesInfo: IPackagesInfo = yield this.architectApi.getPackages();

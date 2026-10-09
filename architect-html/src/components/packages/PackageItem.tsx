@@ -24,9 +24,15 @@ import S from '@components/packages/PackageItem.module.scss';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { observer } from 'mobx-react-lite';
 import { useContext } from 'react';
-import { VscTrash } from 'react-icons/vsc';
+import { VscReferences, VscTrash } from 'react-icons/vsc';
 
-export const PackageItem = observer((props: { package: IPackage; onDelete: () => void }) => {
+interface PackageItemProps {
+  package: IPackage;
+  onDelete: () => void;
+  onEditReferences: () => void;
+}
+
+export const PackageItem = observer((props: PackageItemProps) => {
   const rootStore = useContext(RootStoreContext);
   const packagesState = rootStore.packagesState;
   const isActive = packagesState.activePackageId === props.package.id;
@@ -51,10 +57,20 @@ export const PackageItem = observer((props: { package: IPackage; onDelete: () =>
       {isSelected && (
         // Keeps the clicks from selecting or activating the row underneath.
         <span
-          className={S.deleteButton}
+          className={S.actions}
           onClick={event => event.stopPropagation()}
           onDoubleClick={event => event.stopPropagation()}
         >
+          {isActive && (
+            <Button
+              type="secondary"
+              isCompact
+              title={T('References', 'packages_references')}
+              prefix={<VscReferences />}
+              onClick={props.onEditReferences}
+              dataTestId={`package-references-${props.package.name}`}
+            />
+          )}
           <Button
             type="secondary"
             isCompact

@@ -28,6 +28,10 @@ export interface IArchitectApi {
 
   deletePackage(packageId: string): Promise<void>;
 
+  getPackageReferences(): Promise<IPackageReferencesInfo>;
+
+  updatePackageReferences(packageId: string, referencedPackageIds: string[]): Promise<void>;
+
   getTopModelNodes(): Promise<IApiTreeNode[]>;
 
   getNodeChildren(node: INodeLoadData): Promise<IApiTreeNode[]>;
@@ -646,6 +650,18 @@ export interface IPackagesInfo {
 export interface IPackage {
   id: string;
   name: string;
+}
+
+export interface IPackageReferencesInfo {
+  packageId: string;
+  candidates: IPackageReferenceCandidate[];
+}
+
+export interface IPackageReferenceCandidate {
+  id: string;
+  name: string;
+  isReferenced: boolean;
+  createsCycle: boolean;
 }
 
 export type PropertyType =

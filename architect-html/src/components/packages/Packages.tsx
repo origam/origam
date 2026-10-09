@@ -19,9 +19,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { RootStoreContext, T } from '@/main';
 import { hasInvalidFileNameChars, isReservedOrUnsafeFileName } from '@/utils/fileNameRules';
-import { IPackage } from '@api/IArchitectApi';
+import { IPackage, IPackageReferencesInfo } from '@api/IArchitectApi';
 import Button from '@components/Button/Button';
 import { PackageItem } from '@components/packages/PackageItem';
+import { askForPackageReferences } from '@components/packages/PackageReferencesDialog';
 import S from '@components/packages/Packages.module.scss';
 import { askForName, askYesNoQuestion, YesNoResult } from '@dialogs/DialogUtils';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
@@ -96,6 +97,24 @@ export const Packages: React.FC = observer(() => {
     });
   }
 
+  function editReferences(pkg: IPackage) {
+    run({
+      generator: function* () {
+        const referencesInfo =
+          (yield rootStore.architectApi.getPackageReferences()) as IPackageReferencesInfo;
+        const referencedPackageIds = (yield askForPackageReferences(
+          rootStore.dialogStack,
+          pkg.name,
+          referencesInfo.candidates,
+        )) as string[] | null;
+        if (!referencedPackageIds) {
+          return;
+        }
+        yield* packagesState.updateReferences(referencesInfo.packageId, referencedPackageIds)();
+      },
+    });
+  }
+
   return (
     <div className={S.root}>
       <div className={S.toolbar}>
@@ -108,7 +127,12 @@ export const Packages: React.FC = observer(() => {
         />
       </div>
       {packagesState.packages.map(x => (
-        <PackageItem key={x.id} package={x} onDelete={() => deletePackage(x)} />
+        <PackageItem
+          key={x.id}
+          package={x}
+          onDelete={() => deletePackage(x)}
+          onEditReferences={() => editReferences(x)}
+        />
       ))}
     </div>
   );
