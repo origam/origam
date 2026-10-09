@@ -34,6 +34,12 @@ const ROOT_REFERENCE = 'Root#147fa70d-6519-4393-b5d0-87931f9fd609';
 
 const STRING_CONSTANT = 'DefaultMailWorkQueueName';
 
+// References Root Menu, so Root Menu cannot reference it back.
+const WIDGETS_PACKAGE = 'Widgets';
+const WIDGETS_ID = 'f17329d6-3143-420a-a2e6-30e431eea51d';
+const ATTACHMENTS_ID = 'bb8c67fb-44c1-4b41-8fce-4d50cd5a759d';
+const ROOT_ID = '147fa70d-6519-4393-b5d0-87931f9fd609';
+
 function packageItem(page: Page, name: string): Locator {
   return page.getByTestId(`package-${name}`);
 }
@@ -70,6 +76,30 @@ async function createPackage(page: Page, name: string): Promise<void> {
   await page.getByRole('button', { name: 'OK' }).click();
   const response = await created;
   expect(response.ok(), await response.text()).toBeTruthy();
+}
+
+async function openReferences(page: Page, name: string): Promise<void> {
+  await packageItem(page, name).click();
+  const loaded = page.waitForResponse(response => response.url().includes('/Package/References'));
+  await page.getByTestId(`package-references-${name}`).click();
+  expect((await loaded).ok()).toBeTruthy();
+}
+
+function referenceCheckbox(page: Page, name: string): Locator {
+  return page.getByTestId(`package-reference-${name}`);
+}
+
+async function saveReferences(page: Page): Promise<void> {
+  const updated = page.waitForResponse(response =>
+    response.url().includes('/Package/UpdateReferences'),
+  );
+  await page.getByRole('button', { name: 'OK' }).click();
+  const response = await updated;
+  expect(response.ok(), await response.text()).toBeTruthy();
+}
+
+function readPackageFile(name: string): string {
+  return fs.readFileSync(modelFilePath(`${name}/.origamPackage`), 'utf8');
 }
 
 async function confirmDelete(page: Page): Promise<void> {
@@ -272,5 +302,87 @@ test.describe('Packages (real backend)', () => {
     await expect(page.getByTestId(`tab-dirty-${STRING_CONSTANT}`)).toBeVisible();
     await expectActive(page, REFERENCED_PACKAGE);
     expect(deleteRequests).toHaveLength(0);
+  });
+
+  test('offers editing references only for the active package', async ({ page }) => {
+    await openPackages(page);
+
+    await packageItem(page, OTHER_PACKAGE).click();
+    await expect(page.getByTestId(`package-references-${OTHER_PACKAGE}`)).toHaveCount(0);
+
+    await packageItem(page, DEFAULT_PACKAGE).click();
+    await expect(page.getByTestId(`package-references-${DEFAULT_PACKAGE}`)).toBeVisible();
+  });
+
+  test('adds a reference and shows the referenced package in the tree', async ({ page }) => {
+    await openPackages(page);
+    await createPackage(page, NEW_PACKAGE);
+    await showPackagesTab(page);
+
+    await openReferences(page, NEW_PACKAGE);
+    await expect(referenceCheckbox(page, REFERENCED_PACKAGE)).toBeChecked();
+    await referenceCheckbox(page, WIDGETS_PACKAGE).check();
+    await saveReferences(page);
+
+    expect(readPackageFile(NEW_PACKAGE)).toContain(WIDGETS_ID);
+    await page.getByText('Model', { exact: true }).click();
+    await page.getByTestId('tree-toggle-Data').click();
+    await page.getByTestId('tree-toggle-Constants').click();
+    await expect(page.getByTestId(`tree-node-${WIDGETS_PACKAGE}`)).toBeVisible();
+  });
+
+  test('removes an unused reference', async ({ page }) => {
+    await openPackages(page);
+    await createPackage(page, NEW_PACKAGE);
+    await showPackagesTab(page);
+    await openReferences(page, NEW_PACKAGE);
+    await referenceCheckbox(page, OTHER_PACKAGE).check();
+    await saveReferences(page);
+    expect(readPackageFile(NEW_PACKAGE)).toContain(ATTACHMENTS_ID);
+
+    await openReferences(page, NEW_PACKAGE);
+    await referenceCheckbox(page, OTHER_PACKAGE).uncheck();
+    await saveReferences(page);
+
+    expect(readPackageFile(NEW_PACKAGE)).not.toContain(ATTACHMENTS_ID);
+  });
+
+  test('does not offer a reference that would create a cycle', async ({ page }) => {
+    await openPackages(page);
+
+    await openReferences(page, DEFAULT_PACKAGE);
+
+    await expect(referenceCheckbox(page, REFERENCED_PACKAGE)).toBeChecked();
+    await expect(referenceCheckbox(page, WIDGETS_PACKAGE)).toBeDisabled();
+    await expect(page.getByText('would create a circular reference').first()).toBeVisible();
+  });
+
+  test('refuses to remove a reference that is still used', async ({ page, request }) => {
+    await activatePackage(request, OTHER_PACKAGE);
+    await openPackages(page);
+
+    await openReferences(page, OTHER_PACKAGE);
+    await referenceCheckbox(page, REFERENCED_PACKAGE).uncheck();
+    const updated = page.waitForResponse(response =>
+      response.url().includes('/Package/UpdateReferences'),
+    );
+    await page.getByRole('button', { name: 'OK' }).click();
+    expect((await updated).status()).toBe(420);
+
+    await expect(page.getByText('cannot be removed from the references because')).toBeVisible();
+    await page.getByRole('button', { name: 'Ok', exact: true }).click();
+    expect(readPackageFile(OTHER_PACKAGE)).toContain(ROOT_ID);
+  });
+
+  test('cancelling the references dialog changes nothing', async ({ page }) => {
+    await openPackages(page);
+    const updateRequests = trackRequests(page, '/Package/UpdateReferences');
+
+    await openReferences(page, DEFAULT_PACKAGE);
+    await referenceCheckbox(page, OTHER_PACKAGE).check();
+    await page.getByRole('button', { name: 'Cancel' }).click();
+
+    await expect(referenceCheckbox(page, OTHER_PACKAGE)).toHaveCount(0);
+    expect(updateRequests).toHaveLength(0);
   });
 });
