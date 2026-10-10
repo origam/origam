@@ -122,6 +122,58 @@ public class Config : IConfig
         }
     }
 
+    public string GetString(string[] appSettingsPath)
+    {
+        if (appSettingsPath == null)
+        {
+            return null;
+        }
+
+        string keyDouble = string.Join("__", appSettingsPath);
+        string value = Environment.GetEnvironmentVariable(keyDouble);
+        if (!string.IsNullOrWhiteSpace(value))
+        {
+            return value;
+        }
+
+        string keyColon = string.Join(":", appSettingsPath);
+        value = Environment.GetEnvironmentVariable(keyColon);
+        if (!string.IsNullOrWhiteSpace(value))
+        {
+            return value;
+        }
+
+        var secretsId = userSecretsId.Value;
+        if (!string.IsNullOrWhiteSpace(secretsId))
+        {
+            var secretsPath = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                "Microsoft",
+                "UserSecrets",
+                secretsId,
+                "secrets.json"
+            );
+            if (TryGetJsonValue(secretsPath, appSettingsPath, out value))
+            {
+                return value;
+            }
+        }
+
+        string basePath = AppContext.BaseDirectory;
+        string environment =
+            Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")
+            ?? Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT")
+            ?? "Production";
+        var environmentPath = Path.Combine(basePath, $"appsettings.{environment}.json");
+        if (TryGetJsonValue(environmentPath, appSettingsPath, out value))
+        {
+            return value;
+        }
+
+        var appsettingsPath = Path.Combine(basePath, "appsettings.json");
+        return TryGetJsonValue(appsettingsPath, appSettingsPath, out value) ? value : null;
+    }
+
     public long? GetValue(string[] appSettingsPath)
     {
         if (appSettingsPath == null)

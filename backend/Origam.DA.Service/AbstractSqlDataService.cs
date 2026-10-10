@@ -245,8 +245,17 @@ public abstract class AbstractSqlDataService : AbstractDataService
         if (transactionId == null)
         {
             var connection = GetConnection(ConnectionString);
-            connection.Open();
-            transaction = connection.BeginTransaction(isolationLevel);
+            try
+            {
+                connection.Open();
+                ValidateIsolationLevel(connection, isolationLevel);
+                transaction = connection.BeginTransaction(isolationLevel);
+            }
+            catch
+            {
+                connection.Dispose();
+                throw;
+            }
         }
         else
         {
@@ -277,6 +286,16 @@ public abstract class AbstractSqlDataService : AbstractDataService
         }
         return transaction;
     }
+
+    private IDbTransaction GetTransaction(string transactionId)
+    {
+        return GetTransaction(transactionId, DatabaseIsolationSettings.DefaultIsolationLevel);
+    }
+
+    protected virtual void ValidateIsolationLevel(
+        IDbConnection connection,
+        IsolationLevel isolationLevel
+    ) { }
 
     public override DataSet LoadDataSet(
         DataStructureQuery dataStructureQuery,
@@ -373,76 +392,114 @@ public abstract class AbstractSqlDataService : AbstractDataService
         {
             throw new Exception("Paging is allowed only on data structures with a single entity.");
         }
-        bool enforceConstraints = dataset.EnforceConstraints;
-        dataset.EnforceConstraints = false;
-        foreach (DataStructureEntity entity in entities)
+        IDbTransaction localTransaction = null;
+        IDbConnection localConnection = null;
+        try
         {
-            if (LoadWillReturnZeroResults(dataset, entity, query.DataSourceType))
+            if (transactionId == null)
             {
-                continue;
+                localTransaction = GetTransaction(null, query.IsolationLevel);
+                localConnection = localTransaction.Connection;
             }
-            // Skip self joins, they are just relations, not really entities
-            if (
-                (entity.Columns.Count > 0)
-                && !(entity.Entity is IAssociation association && association.IsSelfJoin)
-            )
+            bool enforceConstraints = dataset.EnforceConstraints;
+            dataset.EnforceConstraints = false;
+            foreach (DataStructureEntity entity in entities)
             {
-                var loader = new DataLoader
+                if (LoadWillReturnZeroResults(dataset, entity, query.DataSourceType))
                 {
-                    ConnectionString = connectionString,
-                    DataService = this,
-                    Dataset = dataset,
-                    TransactionId = transactionId,
-                };
-                if (transactionId != null)
-                {
-                    loader.Transaction = GetTransaction(transactionId, query.IsolationLevel);
+                    continue;
                 }
-                loader.DataStructure = dataStructure;
-                loader.Entity = entity;
-                loader.FilterSet = filterSet;
-                loader.SortSet = sortSet;
-                loader.Query = query;
-                loader.Timeout = timeout;
-                loader.CurrentProfile = currentProfile;
-                loader.Fill();
+                // Skip self joins, they are just relations, not really entities
+                if (
+                    (entity.Columns.Count > 0)
+                    && !(entity.Entity is IAssociation association && association.IsSelfJoin)
+                )
+                {
+                    var loader = new DataLoader
+                    {
+                        ConnectionString = connectionString,
+                        DataService = this,
+                        Dataset = dataset,
+                        TransactionId = transactionId,
+                        Transaction =
+                            localTransaction ?? GetTransaction(transactionId, query.IsolationLevel),
+                    };
+                    loader.DataStructure = dataStructure;
+                    loader.Entity = entity;
+                    loader.FilterSet = filterSet;
+                    loader.SortSet = sortSet;
+                    loader.Query = query;
+                    loader.Timeout = timeout;
+                    loader.CurrentProfile = currentProfile;
+                    loader.Fill();
+                }
             }
-        }
-        if (query.EnforceConstraints)
-        {
-            try
-            {
-                dataset.EnforceConstraints = enforceConstraints;
-            }
-            catch (ConstraintException)
-            {
-                throw new ConstraintException(DatasetTools.GetDatasetErrors(dataset));
-            }
-            catch (Exception ex)
+            if (query.EnforceConstraints)
             {
                 try
                 {
-                    log.LogOrigamError(DebugClass.ListRowErrors(dataset), ex);
-                    using (
-                        var writer = System.IO.File.CreateText(
-                            AppDomain.CurrentDomain.BaseDirectory
-                                + @"\debug\"
-                                + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss-")
-                                + DateTime.Now.Ticks
-                                + "___MsSqlDataService_error.txt"
-                        )
-                    )
+                    dataset.EnforceConstraints = enforceConstraints;
+                }
+                catch (ConstraintException)
+                {
+                    throw new ConstraintException(DatasetTools.GetDatasetErrors(dataset));
+                }
+                catch (Exception ex)
+                {
+                    try
                     {
-                        writer.WriteLine(DebugClass.ListRowErrors(dataset));
-                        writer.Close();
+                        log.LogOrigamError(DebugClass.ListRowErrors(dataset), ex);
+                        using (
+                            var writer = System.IO.File.CreateText(
+                                AppDomain.CurrentDomain.BaseDirectory
+                                    + @"\debug\"
+                                    + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss-")
+                                    + DateTime.Now.Ticks
+                                    + "___MsSqlDataService_error.txt"
+                            )
+                        )
+                        {
+                            writer.WriteLine(DebugClass.ListRowErrors(dataset));
+                            writer.Close();
+                        }
+                    }
+                    catch { }
+                    throw;
+                }
+            }
+            DatasetTools.SetExpressions(expressions);
+            localTransaction?.Commit();
+            return dataset;
+        }
+        catch
+        {
+            if (localTransaction != null)
+            {
+                try
+                {
+                    localTransaction.Rollback();
+                }
+                catch (Exception ex)
+                {
+                    if (log.IsErrorEnabled)
+                    {
+                        log.LogOrigamError("Failed to roll back the data load transaction.", ex);
                     }
                 }
-                catch { }
-                throw;
+            }
+            throw;
+        }
+        finally
+        {
+            try
+            {
+                localTransaction?.Dispose();
+            }
+            finally
+            {
+                localConnection?.Dispose();
             }
         }
-        DatasetTools.SetExpressions(expressions);
-        return dataset;
     }
 
     private bool LoadWillReturnZeroResults(
@@ -1360,7 +1417,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
         var result = 0;
         var profile =
             SecurityManager.GetProfileProvider().GetProfile(userProfile.Identity) as UserProfile;
-        IDbTransaction transaction = GetTransaction(transactionId, IsolationLevel.ReadCommitted);
+        IDbTransaction transaction = GetTransaction(transactionId);
         IDbConnection connection = transaction.Connection;
         try
         {
@@ -1448,7 +1505,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
     {
         var profile =
             SecurityManager.GetProfileProvider().GetProfile(userProfile.Identity) as UserProfile;
-        IDbTransaction transaction = GetTransaction(transactionId, IsolationLevel.ReadCommitted);
+        IDbTransaction transaction = GetTransaction(transactionId);
         IDbConnection connection = transaction.Connection;
         try
         {
@@ -1502,7 +1559,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
         }
         else
         {
-            transaction = GetTransaction(transactionId, IsolationLevel.ReadCommitted);
+            transaction = GetTransaction(transactionId);
             connection = transaction.Connection;
         }
         try

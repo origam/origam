@@ -24,6 +24,7 @@ namespace Origam.Config;
 public interface IConfig
 {
     public long? GetValue(string[] appSettingsPath);
+    public string GetString(string[] appSettingsPath);
 }
 
 public static class ConfigFactory
