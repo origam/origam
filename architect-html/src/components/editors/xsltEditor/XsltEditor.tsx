@@ -182,9 +182,7 @@ const XsltEditor = observer(({ editorState }: { editorState: XsltEditorState }) 
             node: (
               <div className={S.editorBox}>
                 {renderActionPanel()}
-                <div className={S.propertiesBox}>
-                  <ParametersEditor editorState={editorState} />
-                </div>
+                <ParametersEditor editorState={editorState} />
               </div>
             ),
           },
