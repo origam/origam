@@ -24,17 +24,15 @@ import { GridEditorState } from '@editors/gridEditor/GridEditorState';
 import PropertyEditor from '@editors/propertyEditor/PropertyEditor';
 import { observer } from 'mobx-react-lite';
 
-const GridEditor = observer(
-  ({ editorState, title }: { editorState: GridEditorState; title: string }) => {
-    return (
-      <div className={S.root}>
-        <ActionPanel title={title} buttons={<SaveButtonHOC />} />
-        <div className={S.propertiesBox}>
-          <PropertyEditor propertyManager={editorState} properties={editorState.properties} />
-        </div>
+const GridEditor = observer(({ editorState }: { editorState: GridEditorState }) => {
+  return (
+    <div className={S.root}>
+      <ActionPanel title={editorState.title} buttons={<SaveButtonHOC />} />
+      <div className={S.propertiesBox}>
+        <PropertyEditor propertyManager={editorState} properties={editorState.properties} />
       </div>
-    );
-  },
-);
+    </div>
+  );
+});
 
 export default GridEditor;

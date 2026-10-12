@@ -28,10 +28,12 @@ import S from '@editors/DeploymentScriptsEditor/DeploymentScriptsEditor.module.s
 import { GridEditorState, UnsentValueDelayMs } from '@editors/gridEditor/GridEditorState';
 import PropertyEditor from '@editors/propertyEditor/PropertyEditor';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
-import { useContext } from 'react';
+import { observer } from 'mobx-react-lite';
+import { useContext, useState } from 'react';
 
-const DeploymentScriptsEditor = ({ editorState }: { editorState: GridEditorState }) => {
+const DeploymentScriptsEditor = observer(({ editorState }: { editorState: GridEditorState }) => {
   const rootStore = useContext(RootStoreContext);
+  const [tabViewState] = useState(() => new TabViewState());
 
   const sendUnsentValueLater = useDebouncedCallback(() => {
     runInFlowWithHandler(rootStore.errorDialogController)({
@@ -49,7 +51,7 @@ const DeploymentScriptsEditor = ({ editorState }: { editorState: GridEditorState
     <div className={S.root}>
       <TabView
         width={400}
-        state={new TabViewState()}
+        state={tabViewState}
         items={[
           {
             label: T('SQL', 'editor_DeploymentScripts_TabLabel_Sql'),
@@ -101,6 +103,6 @@ const DeploymentScriptsEditor = ({ editorState }: { editorState: GridEditorState
       />
     </div>
   );
-};
+});
 
 export default DeploymentScriptsEditor;

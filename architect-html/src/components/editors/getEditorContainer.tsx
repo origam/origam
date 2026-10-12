@@ -134,7 +134,7 @@ export function getEditorContainer(args: {
       architectApi,
       modelTreeState,
     );
-    const editorComponent = <GridEditor editorState={editorState} title={editorState.title} />;
+    const editorComponent = <GridEditor editorState={editorState} />;
     return new EditorContainer(editorState, editorComponent);
   }
 

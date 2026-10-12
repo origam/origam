@@ -25,11 +25,12 @@ import { DesignSurface } from '@editors/designerEditor/common/DesignSurface';
 import S from '@editors/designerEditor/screenEditor/ScreenEditor.module.scss';
 import { ScreenEditorState } from '@editors/designerEditor/screenEditor/ScreenEditorState';
 import { ScreenToolbox } from '@editors/designerEditor/screenEditor/ScreenToolbox';
+import { observer } from 'mobx-react-lite';
 import { createContext } from 'react';
 
 export const DesignerStateContext = createContext<ScreenEditorState | null>(null);
 
-const ScreenEditor = ({ designerState }: { designerState: ScreenEditorState }) => {
+const ScreenEditor = observer(({ designerState }: { designerState: ScreenEditorState }) => {
   return (
     <DesignerStateContext.Provider value={designerState}>
       <div className={S.root}>
@@ -51,6 +52,6 @@ const ScreenEditor = ({ designerState }: { designerState: ScreenEditorState }) =
       </div>
     </DesignerStateContext.Provider>
   );
-};
+});
 
 export default ScreenEditor;
