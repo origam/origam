@@ -2310,13 +2310,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-virtualized@npm:^9.22.2":
-  version: 9.22.3
-  resolution: "@types/react-virtualized@npm:9.22.3"
+"@types/react-virtualized@npm:^9.22.4":
+  version: 9.22.4
+  resolution: "@types/react-virtualized@npm:9.22.4"
   dependencies:
     "@types/prop-types": "npm:*"
     "@types/react": "npm:*"
-  checksum: 10c0/75dc74be860ed09d2dc502ff73450dec4ed7f6771034b12bb8875df2a316c6481102413e877d8b078d2a1cd3ea30f94fb39b88b4f0956041b4b9b30ba510a8bb
+  checksum: 10c0/71ec1fb89d6a02724104cbf022102052f3ad21b582b61cc20ad11ab0b3b539aebe17a7272382c1a144731cf715aaa64e419156b76d9d6798e79bd992288df491
   languageName: node
   linkType: hard
 
@@ -2698,7 +2698,7 @@ __metadata:
     "@types/react-highlight-words": "npm:^0.20.1"
     "@types/react-router": "npm:^5.1.18"
     "@types/react-router-dom": "npm:^5.3.2"
-    "@types/react-virtualized": "npm:^9.22.2"
+    "@types/react-virtualized": "npm:^9.22.4"
     "@types/uuid": "npm:^11.0.0"
     "@vitejs/plugin-basic-ssl": "npm:^2.3.0"
     "@vitejs/plugin-react": "npm:^6.1.1"
