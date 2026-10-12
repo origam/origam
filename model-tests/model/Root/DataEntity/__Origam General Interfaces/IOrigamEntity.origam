@@ -182,7 +182,7 @@
       adec:label="Time Created"
       fmi:mappedColumnName="RecordCreated"
       asi:name="RecordCreated"
-      adec:onCopyAction="Copy"
+      adec:onCopyAction="Initialize"
       adec:xmlMappingType="Element" />
     <fmi:DataEntityColumn
       asi:abstract="true"
@@ -196,7 +196,7 @@
       adec:label="Created By"
       fmi:mappedColumnName="RecordCreatedBy"
       asi:name="RecordCreatedBy"
-      adec:onCopyAction="Copy"
+      adec:onCopyAction="Initialize"
       adec:xmlMappingType="Element" />
     <fmi:DataEntityColumn
       asi:abstract="true"
@@ -224,7 +224,7 @@
       adec:label="Time Updated (Server)"
       fmi:mappedColumnName="RecordUpdatedServer"
       asi:name="RecordUpdatedServer"
-      adec:onCopyAction="Copy"
+      adec:onCopyAction="Initialize"
       adec:xmlMappingType="Element" />
     <fmi:DataEntityColumn
       asi:abstract="true"
@@ -238,7 +238,7 @@
       adec:label="Time Updated"
       fmi:mappedColumnName="RecordUpdated"
       asi:name="RecordUpdated"
-      adec:onCopyAction="Copy"
+      adec:onCopyAction="Initialize"
       adec:xmlMappingType="Element" />
     <fmi:DataEntityColumn
       asi:abstract="true"
@@ -252,7 +252,7 @@
       adec:label="Time Created (Server)"
       fmi:mappedColumnName="RecordCreatedServer"
       asi:name="RecordCreatedServer"
-      adec:onCopyAction="Copy"
+      adec:onCopyAction="Initialize"
       adec:xmlMappingType="Element" />
     <fmi:DataEntityColumn
       asi:abstract="true"
@@ -266,7 +266,7 @@
       adec:label="Updated By"
       fmi:mappedColumnName="RecordUpdatedBy"
       asi:name="RecordUpdatedBy"
-      adec:onCopyAction="Copy"
+      adec:onCopyAction="Initialize"
       adec:xmlMappingType="Element" />
     <sia:ancestor
       sia:ancestor="Root/DataEntity/__Origam General Interfaces/ISupportsPaging.origam#ISupportsPaging/e43666db-c897-46a0-9386-5b04385e40e0"

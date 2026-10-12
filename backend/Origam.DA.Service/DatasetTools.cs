@@ -816,7 +816,7 @@ public class DatasetTools
         DataTable table = row.Table;
         if (isNew)
         {
-            if (table.Columns.Contains("RecordCreated"))
+            if (table.Columns.Contains("RecordCreated") && row["RecordCreated"] == DBNull.Value)
             {
                 DataColumn col = table.Columns["RecordCreated"];
                 row[col] = DateTime.Now;
@@ -828,7 +828,11 @@ public class DatasetTools
                     changedColumns.Add(col.ExtendedProperties["Id"], col);
                 }
             }
-            if (table.Columns.Contains("RecordCreatedBy") && profileId != null)
+            if (
+                table.Columns.Contains("RecordCreatedBy")
+                && (row["RecordCreatedBy"] == DBNull.Value)
+                && (profileId != null)
+            )
             {
                 DataColumn col = table.Columns["RecordCreatedBy"];
                 row[col] = profileId;
@@ -839,16 +843,6 @@ public class DatasetTools
                 {
                     changedColumns.Add(col.ExtendedProperties["Id"], col);
                 }
-            }
-            if (table.Columns.Contains("RecordUpdated"))
-            {
-                DataColumn col = table.Columns["RecordUpdated"];
-                row[col] = DBNull.Value;
-            }
-            if (table.Columns.Contains("RecordUpdatedBy"))
-            {
-                DataColumn col = table.Columns["RecordUpdatedBy"];
-                row[col] = DBNull.Value;
             }
         }
         else
@@ -867,8 +861,8 @@ public class DatasetTools
             }
             if (
                 table.Columns.Contains("RecordUpdatedBy")
-                && row.RowState != DataRowState.Added
-                && profileId != null
+                & row.RowState != DataRowState.Added
+                & profileId != null
             )
             {
                 DataColumn col = table.Columns["RecordUpdatedBy"];

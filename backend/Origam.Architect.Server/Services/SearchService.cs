@@ -91,6 +91,12 @@ public class SearchService(
             .Select(result => BuildResult(result, referencePackages));
     }
 
+    public SearchResult Locate(Guid schemaItemId)
+    {
+        var item = persistenceService.SchemaProvider.RetrieveInstance<ISchemaItem>(schemaItemId);
+        return BuildResult(item, GetReferencePackages());
+    }
+
     public IEnumerable<SearchResult> FindDependencies(Guid schemaItemId)
     {
         var item = persistenceService.SchemaProvider.RetrieveInstance<ISchemaItem>(schemaItemId);

@@ -77,7 +77,7 @@ public class ExcelTools
 
     private static void SetHSSFWorkbookSubject(HSSFWorkbook workbook, string subject)
     {
-        SummaryInformation si = PropertySetFactory.CreateSummaryInformation();
+        SummaryInformation si = PropertySetFactory.NewSummaryInformation();
         si.Subject = subject;
         workbook.SummaryInformation = si;
     }

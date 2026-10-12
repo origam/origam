@@ -40,7 +40,7 @@ using Origam.Schema.GuiModel;
 using Origam.Schema.WorkflowModel;
 using Origam.Service.Core;
 using Origam.Workbench.Services;
-using SixLabors.ImageSharp;
+using SkiaSharp;
 
 namespace Origam.Server.Pages;
 
@@ -808,7 +808,7 @@ public class UserApiProcessor
             // get a thumbnail
             try
             {
-                using Image image = Image.Load(file.InputStream);
+                using SKBitmap image = SKBitmap.Decode(file.InputStream);
                 fileBytes = BlobUploadHandler.FixedSizeBytes(
                     image,
                     fileMapping.ThumbnailWidth,
