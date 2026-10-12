@@ -22,7 +22,7 @@
     "mobx": "^6.16.1",
     "mobx-react-lite": "^4.1.1",
     "moment": "^2.31.0",
-    "monaco-editor": "^0.56.0",
+    "monaco-editor": "^0.57.0",
     "monaco-vim": "^0.4.4",
     "react": "^19.2.8",
     "react-dnd": "^16.0.1",
