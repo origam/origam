@@ -392,15 +392,14 @@ public abstract class AbstractSqlDataService : AbstractDataService
         {
             throw new Exception("Paging is allowed only on data structures with a single entity.");
         }
-        IDbTransaction localTransaction = null;
-        IDbConnection localConnection = null;
+        bool newTransaction = transactionId == null;
+        if (newTransaction)
+        {
+            transactionId = Guid.NewGuid().ToString();
+        }
         try
         {
-            if (transactionId == null)
-            {
-                localTransaction = GetTransaction(null, query.IsolationLevel);
-                localConnection = localTransaction.Connection;
-            }
+            IDbTransaction transaction = GetTransaction(transactionId, query.IsolationLevel);
             bool enforceConstraints = dataset.EnforceConstraints;
             dataset.EnforceConstraints = false;
             foreach (DataStructureEntity entity in entities)
@@ -421,8 +420,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
                         DataService = this,
                         Dataset = dataset,
                         TransactionId = transactionId,
-                        Transaction =
-                            localTransaction ?? GetTransaction(transactionId, query.IsolationLevel),
+                        Transaction = transaction,
                     };
                     loader.DataStructure = dataStructure;
                     loader.Entity = entity;
@@ -468,37 +466,19 @@ public abstract class AbstractSqlDataService : AbstractDataService
                 }
             }
             DatasetTools.SetExpressions(expressions);
-            localTransaction?.Commit();
+            if (newTransaction)
+            {
+                ResourceMonitor.Commit(transactionId);
+            }
             return dataset;
         }
         catch
         {
-            if (localTransaction != null)
+            if (newTransaction)
             {
-                try
-                {
-                    localTransaction.Rollback();
-                }
-                catch (Exception ex)
-                {
-                    if (log.IsErrorEnabled)
-                    {
-                        log.LogOrigamError("Failed to roll back the data load transaction.", ex);
-                    }
-                }
+                ResourceMonitor.Rollback(transactionId);
             }
             throw;
-        }
-        finally
-        {
-            try
-            {
-                localTransaction?.Dispose();
-            }
-            finally
-            {
-                localConnection?.Dispose();
-            }
         }
     }
 
