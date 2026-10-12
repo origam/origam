@@ -34,7 +34,7 @@ test.describe('Entity Relationship creation (real backend)', () => {
     await page.getByTestId('tree-toggle-Entities').click();
     await page.getByTestId('tree-toggle-Dimensions').click();
     await page.getByTestId('tree-node-IDimension').click({ button: 'right' });
-    await page.getByText('New').click();
+    await page.getByTestId('tree-menu-new').getByText('New').click();
     await page.getByText('Relationship').click();
 
     await page.getByRole('textbox').nth(2).click();
