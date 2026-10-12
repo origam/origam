@@ -30,7 +30,6 @@ public class DatabaseIsolationSettingsTests
 {
     [TestCase(null)]
     [TestCase("")]
-    [TestCase("  ")]
     public void MissingSettingUsesReadCommitted(string value)
     {
         Assert.That(
@@ -40,7 +39,7 @@ public class DatabaseIsolationSettingsTests
     }
 
     [TestCase("Snapshot", IsolationLevel.Snapshot)]
-    [TestCase("read committed", IsolationLevel.ReadCommitted)]
+    [TestCase("ReadCommitted", IsolationLevel.ReadCommitted)]
     [TestCase("ReadUncommitted", IsolationLevel.ReadUncommitted)]
     [TestCase("RepeatableRead", IsolationLevel.RepeatableRead)]
     [TestCase("Serializable", IsolationLevel.Serializable)]
@@ -57,6 +56,16 @@ public class DatabaseIsolationSettingsTests
     [TestCase("2")]
     [TestCase("-1")]
     [TestCase("not-an-isolation-level")]
+    [TestCase("  ")]
+    [TestCase("read committed")]
+    [TestCase("Read Committed")]
+    [TestCase("readcommitted")]
+    [TestCase("READCOMMITTED")]
+    [TestCase("snapshot")]
+    [TestCase("SNAPSHOT")]
+    [TestCase(" Snapshot")]
+    [TestCase("Snapshot ")]
+    [TestCase("\tSnapshot\n")]
     public void RejectsUnsupportedIsolationLevel(string value)
     {
         var exception = Assert.Throws<ArgumentException>(() =>

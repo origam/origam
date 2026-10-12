@@ -32,23 +32,22 @@ public static class DatabaseIsolationSettings
 
     public static IsolationLevel Parse(string configuredValue)
     {
-        if (string.IsNullOrWhiteSpace(configuredValue))
+        if (string.IsNullOrEmpty(configuredValue))
         {
             return IsolationLevel.ReadCommitted;
         }
 
-        string value = configuredValue.Trim().Replace(" ", "").ToUpperInvariant();
-        switch (value)
+        switch (configuredValue)
         {
-            case "READCOMMITTED":
+            case "ReadCommitted":
                 return IsolationLevel.ReadCommitted;
-            case "READUNCOMMITTED":
+            case "ReadUncommitted":
                 return IsolationLevel.ReadUncommitted;
-            case "REPEATABLEREAD":
+            case "RepeatableRead":
                 return IsolationLevel.RepeatableRead;
-            case "SERIALIZABLE":
+            case "Serializable":
                 return IsolationLevel.Serializable;
-            case "SNAPSHOT":
+            case "Snapshot":
                 return IsolationLevel.Snapshot;
         }
 
