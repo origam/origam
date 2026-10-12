@@ -122,8 +122,12 @@ async function openInputParameters(page: Page) {
   await parametersLoaded;
 }
 
-function parameterTypeSelect(page: Page, parameterName: string) {
-  return page.getByText(parameterName, { exact: true }).locator('xpath=following-sibling::select');
+async function selectParameter(page: Page, parameterName: string) {
+  await page.getByTestId(`xslt-parameter-${parameterName}`).click();
+}
+
+function parameterTypeSelect(page: Page) {
+  return page.getByTestId('xslt-parameter-type');
 }
 
 test.describe('XSLT validation result (real backend)', () => {
@@ -199,7 +203,8 @@ test.describe('XSLT validation result (real backend)', () => {
     await successToast(page).getByRole('button', { name: 'Dismiss' }).click();
 
     await openInputParameters(page);
-    await expect(parameterTypeSelect(page, NODE_SET_PARAMETER)).toHaveValue('Xml');
+    await selectParameter(page, NODE_SET_PARAMETER);
+    await expect(parameterTypeSelect(page)).toHaveValue('Xml');
     await validate(page);
     await expect(successToast(page)).toBeVisible();
   });
@@ -212,7 +217,8 @@ test.describe('XSLT validation result (real backend)', () => {
     await expect(failureToast(page)).toBeVisible();
 
     await openInputParameters(page);
-    await parameterTypeSelect(page, NODE_SET_PARAMETER).selectOption('Xml');
+    await selectParameter(page, NODE_SET_PARAMETER);
+    await parameterTypeSelect(page).selectOption('Xml');
     await validate(page);
     await expect(successToast(page)).toBeVisible();
     await expect(failureToast(page)).toHaveCount(0);
