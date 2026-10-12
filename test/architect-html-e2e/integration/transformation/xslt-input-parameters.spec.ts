@@ -94,7 +94,7 @@ const TYPED_PARAMETERS = [
   {
     name: 'items',
     type: 'Xml',
-    value: '<items><item/><item/></items>',
+    value: '<items>\n<item/>\n<item/>\n</items>',
     result: '<ItemCount>2</ItemCount>',
   },
   { name: 'note', type: 'String', value: 'typed', result: '<Note>typed</Note>' },
@@ -143,6 +143,24 @@ async function openInputParameters(page: Page): Promise<Response> {
   return parametersLoaded;
 }
 
+function parameterValueEditor(page: Page) {
+  return page.getByTestId('xslt-parameter-value').locator('.view-lines');
+}
+
+async function selectParameter(page: Page, name: string): Promise<void> {
+  await page.getByTestId(`xslt-parameter-${name}`).click();
+}
+
+async function setParameterValue(page: Page, value: string): Promise<void> {
+  await parameterValueEditor(page).click();
+  await page.keyboard.press('Control+A');
+  await page.keyboard.press('Delete');
+  if (value) {
+    // insertText bypasses Monaco's tag auto-closing
+    await page.keyboard.insertText(value);
+  }
+}
+
 async function transform(page: Page): Promise<void> {
   const transformed = page.waitForResponse(response => response.url().includes('/Xslt/Transform'));
   await page.getByText('Transform', { exact: true }).filter({ visible: true }).click();
@@ -171,8 +189,8 @@ test.describe('Input parameters of the XSLT editor (real backend)', () => {
     const response = await openInputParameters(page);
 
     expect(response.status()).toBe(200);
-    await expect(page.getByTestId('xslt-parameter-type-greeting')).toHaveValue('String');
-    await expect(page.getByTestId('xslt-parameter-value-greeting')).toHaveValue('');
+    await expect(page.getByTestId('xslt-parameter-type')).toHaveValue('String');
+    await expect(parameterValueEditor(page)).toHaveText('');
   });
 
   test('passes an entered value to the transformation', async ({ page, request }) => {
@@ -180,7 +198,7 @@ test.describe('Input parameters of the XSLT editor (real backend)', () => {
     await openTransformation(page);
     await openInputParameters(page);
 
-    await page.getByTestId('xslt-parameter-value-greeting').fill('Hello from E2E');
+    await setParameterValue(page, 'Hello from E2E');
     await transform(page);
 
     await expect(visibleCodeEditor(page)).toContainText('<Greeting>Hello from E2E</Greeting>');
@@ -205,7 +223,8 @@ test.describe('Input parameters of the XSLT editor (real backend)', () => {
     await openInputParameters(page);
 
     for (const { name, type } of TYPED_PARAMETERS) {
-      await expect(page.getByTestId(`xslt-parameter-type-${name}`)).toHaveValue(type);
+      await selectParameter(page, name);
+      await expect(page.getByTestId('xslt-parameter-type')).toHaveValue(type);
     }
   });
 
@@ -215,8 +234,9 @@ test.describe('Input parameters of the XSLT editor (real backend)', () => {
     await openInputParameters(page);
 
     for (const { name, type, value } of TYPED_PARAMETERS) {
-      await page.getByTestId(`xslt-parameter-type-${name}`).selectOption(type);
-      await page.getByTestId(`xslt-parameter-value-${name}`).fill(value);
+      await selectParameter(page, name);
+      await page.getByTestId('xslt-parameter-type').selectOption(type);
+      await setParameterValue(page, value);
     }
     await transform(page);
 
@@ -243,9 +263,9 @@ test.describe('Input parameters of the XSLT editor (real backend)', () => {
       await plantTransformation(request, TYPED_DEFAULTS_XSL);
       await openTransformation(page);
       await openInputParameters(page);
-      await expect(page.getByTestId('xslt-parameter-type-count')).toHaveValue('Integer');
       for (const name of ['isActive', 'count', 'items']) {
-        await page.getByTestId(`xslt-parameter-value-${name}`).fill(value);
+        await selectParameter(page, name);
+        await setParameterValue(page, value);
       }
 
       await transform(page);

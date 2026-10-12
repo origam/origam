@@ -18,8 +18,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { observer } from 'mobx-react-lite';
+import cn from 'classnames';
 import { XsltEditorState } from '@editors/gridEditor/XsltEditorState.ts';
 import { OrigamDataType } from '@api/IArchitectApi.ts';
+import CodeEditor from '@editors/codeEditor/CodeEditor';
 import S from '@editors/xsltEditor/ParametersEditor.module.scss';
 import { T } from '@/main';
 
@@ -45,39 +47,60 @@ export const ParametersEditor = observer(({ editorState }: ParametersEditorProps
     );
   }
 
+  const selectedParameter = editorState.selectedParameter;
   return (
-    <div className={S.parameterList}>
-      {parameters.map(parameter => (
-        <Parameter key={parameter} name={parameter} editorState={editorState} />
-      ))}
+    <div className={S.root}>
+      <div className={S.parameterList}>
+        {parameters.map(parameter => (
+          <div
+            key={parameter}
+            className={cn(S.parameterItem, { [S.selected]: parameter === selectedParameter })}
+            onClick={() => editorState.selectParameter(parameter)}
+            data-test-id={`xslt-parameter-${parameter}`}
+          >
+            {parameter}
+          </div>
+        ))}
+      </div>
+      {selectedParameter && (
+        <ParameterDetail
+          key={selectedParameter}
+          name={selectedParameter}
+          editorState={editorState}
+        />
+      )}
     </div>
   );
 });
 
-const Parameter = observer(
+const ParameterDetail = observer(
   ({ name, editorState }: { name: string; editorState: XsltEditorState }) => {
     const type = editorState.parameterTypes.get(name) ?? OrigamDataType.String;
     const value = editorState.parameterValues.get(name) ?? '';
 
     return (
-      <div className={S.parameter} data-test-id={`xslt-parameter-${name}`}>
-        <div>{name}</div>
-        <select
-          value={type}
-          onChange={e => editorState.setParameterType(name, e.target.value as OrigamDataType)}
-          data-test-id={`xslt-parameter-type-${name}`}
-        >
-          {ORIGAM_DATA_TYPES.map(type => (
-            <option key={type} value={type}>
-              {type}
-            </option>
-          ))}
-        </select>
-        <input
-          onChange={e => editorState.setParameterValue(name, e.target.value)}
-          value={value}
-          data-test-id={`xslt-parameter-value-${name}`}
-        />
+      <div className={S.parameterDetail}>
+        <div className={S.typeRow}>
+          <div>{T('Type', 'xsl_editor_parameter_type')}</div>
+          <select
+            value={type}
+            onChange={e => editorState.setParameterType(name, e.target.value as OrigamDataType)}
+            data-test-id="xslt-parameter-type"
+          >
+            {ORIGAM_DATA_TYPES.map(type => (
+              <option key={type} value={type}>
+                {type}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className={S.valueEditor} data-test-id="xslt-parameter-value">
+          <CodeEditor
+            defaultLanguage="xml"
+            value={value}
+            onChange={text => editorState.setParameterValue(name, text ?? '')}
+          />
+        </div>
       </div>
     );
   },

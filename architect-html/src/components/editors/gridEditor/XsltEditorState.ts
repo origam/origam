@@ -39,6 +39,7 @@ import { IPropertyManager } from '@editors/propertyEditor/IPropertyManager.tsx';
 export class XsltEditorState implements ITabViewState, ITabState, IPropertyManager {
   @observable public accessor activeTabIndex = 0;
   @observable public accessor parameters: string[] | undefined;
+  @observable public accessor selectedParameter: string | undefined;
   @observable public accessor xmlResult = '';
   @observable public accessor inputXml = '<ROOT>\n</ROOT>';
   @observable public accessor parameterValues = new Map<string, string>();
@@ -176,6 +177,14 @@ export class XsltEditorState implements ITabViewState, ITabState, IPropertyManag
       }
     }
     this.parameters = parameters?.map(x => x.name);
+    if (!this.selectedParameter || !this.parameters?.includes(this.selectedParameter)) {
+      this.selectedParameter = this.parameters?.[0];
+    }
+  }
+
+  @action
+  selectParameter(name: string) {
+    this.selectedParameter = name;
   }
 
   @action
