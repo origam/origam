@@ -78,7 +78,7 @@
     <PackageReference Include="OpenIddict.Validation.AspNetCore" Version="7.1.0" />
     <PackageReference Include="Origam.Service.Core" Version="2.3.3" />
     <PackageReference Include="SkiaSharp" Version="3.119.4" />
-    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="3.119.4" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="4.153.1" />
     <PackageReference
       Include="SkiaSharp.NativeAssets.NanoServer"
       Version="3.119.4"
