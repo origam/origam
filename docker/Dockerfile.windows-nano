@@ -26,6 +26,9 @@ RUN mkdir scheduler_bin
 
 # Copy application files
 COPY server/server_bin server_bin/
+# Nano Server needs its own Skia binary; the shared output also contains Win32 assets.
+COPY server/server_bin/native/nanoserver/libSkiaSharp.dll server_bin/libSkiaSharp.dll
+COPY server/server_bin/native/nanoserver/libSkiaSharp.dll server_bin/runtimes/win-x64/native/libSkiaSharp.dll
 COPY server/client_source client_source/
 COPY server/scheduler_bin scheduler_bin/
 
