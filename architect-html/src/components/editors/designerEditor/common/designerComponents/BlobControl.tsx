@@ -18,16 +18,23 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { ReactElement } from 'react';
+import { VscChevronDown } from 'react-icons/vsc';
 import S from '@editors/designerEditor/common/designerComponents/Components.module.scss';
 import { Component } from '@editors/designerEditor/common/designerComponents/Component.tsx';
-import { T } from '@/main';
+import { EditorBox } from '@editors/designerEditor/common/designerComponents/EditorBox.tsx';
 
 export class BlobControl extends Component {
+  get hasBorder(): boolean {
+    return false;
+  }
+
   getDesignerRepresentation(): ReactElement | null {
     return (
-      <div className={S.designSurfaceEditorContainer}>
-        <label className={S.blobControl}>{T('Load', 'blob_control_label')}</label>
-      </div>
+      <EditorBox>
+        <div className={`${S.editorButton} ${S.dropDownButton}`}>
+          <VscChevronDown />
+        </div>
+      </EditorBox>
     );
   }
 }

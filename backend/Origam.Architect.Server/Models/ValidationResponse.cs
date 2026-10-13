@@ -25,6 +25,5 @@ public class ValidationResponse
 {
     public string Output { get; set; }
     public string Xml { get; set; }
-    public string Title { get; init; }
-    public string Text { get; set; }
+    public bool IsValid { get; set; }
 }

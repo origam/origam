@@ -57,6 +57,7 @@ export class TreeNode implements IEditorNode {
     this.isInActivePackage = apiNode.isInActivePackage ?? true;
     this.isFileDirty = apiNode.isFileDirty ?? false;
     this.isFolder = apiNode.isFolder ?? false;
+    this.isMandatoryField = apiNode.isMandatoryField ?? false;
     this.role = apiNode.role;
     this.canDrag = apiNode.canDrag ?? false;
     this.children = apiNode.children
@@ -83,11 +84,27 @@ export class TreeNode implements IEditorNode {
   isInActivePackage: boolean;
   isFileDirty: boolean;
   isFolder: boolean;
+  isMandatoryField: boolean;
   role?: string;
   canDrag: boolean;
 
   @observable accessor isLoading: boolean = false;
   @observable accessor contextMenuItems: IMenuItemInfo[] = [];
+
+  get newTypeMenuItems() {
+    return this.contextMenuItems.filter(item => !item.name);
+  }
+
+  get unusedParameterNames() {
+    const names = this.contextMenuItems
+      .map(item => item.name)
+      .filter((name): name is string => !!name);
+    return [...new Set(names)];
+  }
+
+  parameterMenuItems(name: string) {
+    return this.contextMenuItems.filter(item => item.name === name);
+  }
 
   get isExpanded() {
     return this.rootStore.uiState.isExpanded(this.id);
@@ -134,12 +151,20 @@ export class TreeNode implements IEditorNode {
     return this.itemType === 'Origam.Schema.EntityModel.DataStructure';
   }
 
+  get isDataStructureFilterSet() {
+    return this.itemType === 'Origam.Schema.EntityModel.DataStructureFilterSet';
+  }
+
   get canCreateFolder() {
     return this.nodeLevelType === 'Provider' || this.isFolder;
   }
 
   get isSequentialWorkflow() {
     return this.itemType === 'Origam.Schema.WorkflowModel.Workflow';
+  }
+
+  get isDataConstant() {
+    return this.itemType === 'Origam.Schema.EntityModel.DataConstant';
   }
 
   get hasSpecificRole() {
@@ -208,9 +233,9 @@ export class TreeNode implements IEditorNode {
     yield this.architectApi.runUpdateScriptActivity(this.origamId);
   }
 
-  createNode(typeName: string) {
+  createNode(typeName: string, name?: string | null) {
     return function* (this: TreeNode): Generator<Promise<any>, void, any> {
-      const apiTabData: IApiTabData = yield this.architectApi.createNode(this, typeName);
+      const apiTabData: IApiTabData = yield this.architectApi.createNode(this, typeName, name);
       const editorData = new EditorData(apiTabData, this);
       this.rootStore.editorTabViewState.openEditor(editorData);
       yield* this.loadChildren.bind(this)();

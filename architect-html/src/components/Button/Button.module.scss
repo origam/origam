@@ -44,6 +44,13 @@ $animation-easing: ease-in-out;
     }
   }
 
+  &.compact {
+    gap: 0.25rem;
+    padding: 0.125rem 0.5rem;
+    font-size: 0.8125rem;
+    line-height: 1.25;
+  }
+
   &.disabled {
     cursor: not-allowed;
     pointer-events: none;

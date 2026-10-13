@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { IArchitectApi, IDesignerEditorData, IUpdatePropertiesResult } from '@api/IArchitectApi';
 import { EditorProperty } from '@components/editors/gridEditor/EditorProperty';
 import { IEditorNode } from '@components/editorTabView/EditorTabViewState';
+import { ModelTreeState } from '@components/modelTree/ModelTreeState';
 import { PropertiesState } from '@components/properties/PropertiesState';
 import { Component } from '@editors/designerEditor/common/designerComponents/Component';
 import { DesignSurfaceState } from '@editors/designerEditor/common/DesignSurfaceState';
@@ -36,6 +37,7 @@ export abstract class DesignerEditorState implements IDesignerEditorState {
 
   @observable accessor isActive: boolean = false;
   @observable accessor isDirty: boolean = false;
+  @observable.shallow accessor warnings: string[] = [];
 
   get origamId() {
     return this.editorNode.origamId;
@@ -53,10 +55,12 @@ export abstract class DesignerEditorState implements IDesignerEditorState {
     propertiesState: PropertiesState,
     toolbox: ToolboxState,
     protected architectApi: IArchitectApi,
+    private modelTreeState: ModelTreeState,
     runGeneratorHandled: (args: FlowHandlerInput) => CancellablePromise<any>,
     loadComponent?: (componentId: string) => Promise<ReactElement>,
   ) {
     this.isDirty = isDirty;
+    this.warnings = editorData.warnings ?? [];
     this.toolbox = toolbox;
     this.surface = new DesignSurfaceState(
       editorData,
@@ -66,7 +70,10 @@ export abstract class DesignerEditorState implements IDesignerEditorState {
       loadComponent,
     );
     propertiesState.onPropertyUpdated = this.onPropertyUpdated.bind(this);
-    toolbox.onNameTopPropertiesChanged = () => (this.isDirty = true);
+    toolbox.onNameTopPropertiesChanged = warnings => {
+      this.isDirty = true;
+      this.warnings = warnings;
+    };
   }
 
   *onPropertyUpdated(
@@ -84,9 +91,7 @@ export abstract class DesignerEditorState implements IDesignerEditorState {
   protected abstract update(): Generator<Promise<any>, void, any>;
 
   *save(): Generator<Promise<any>, void, any> {
-    if (this.editorNode.parent) {
-      yield* this.editorNode.parent.loadChildren();
-    }
+    yield* this.modelTreeState.reloadParentOf(this.editorNode.origamId, this.editorNode.parent);
     this.isDirty = false;
   }
 }

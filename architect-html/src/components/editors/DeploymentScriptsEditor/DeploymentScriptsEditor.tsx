@@ -21,10 +21,11 @@ import ActionPanel from '@/components/ActionPanel/ActionPanel';
 import SaveButtonHOC from '@/components/SaveButtonHOC/SaveButtonHOC';
 import { TabView } from '@/components/tabView/TabView';
 import { TabViewState } from '@/components/tabView/TabViewState';
+import { useDebouncedCallback } from '@/hooks/useDebouncedCallback';
 import { RootStoreContext, T } from '@/main';
 import CodeEditor from '@editors/codeEditor/CodeEditor';
 import S from '@editors/DeploymentScriptsEditor/DeploymentScriptsEditor.module.scss';
-import { GridEditorState } from '@editors/gridEditor/GridEditorState';
+import { GridEditorState, UnsentValueDelayMs } from '@editors/gridEditor/GridEditorState';
 import PropertyEditor from '@editors/propertyEditor/PropertyEditor';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { useContext } from 'react';
@@ -32,13 +33,16 @@ import { useContext } from 'react';
 const DeploymentScriptsEditor = ({ editorState }: { editorState: GridEditorState }) => {
   const rootStore = useContext(RootStoreContext);
 
-  const handleInputChange = (value: any) => {
-    const textProperty = editorState.properties.find(x => x.name === 'CommandText')!;
+  const sendUnsentValueLater = useDebouncedCallback(() => {
     runInFlowWithHandler(rootStore.errorDialogController)({
-      generator: function* () {
-        yield* editorState.onPropertyUpdated(textProperty, value);
-      },
+      generator: () => editorState.sendUnsentValue(),
     });
+  }, UnsentValueDelayMs);
+
+  const handleInputChange = (value: string | undefined) => {
+    const textProperty = editorState.properties.find(x => x.name === 'CommandText')!;
+    editorState.setUnsentValue(textProperty, value ?? '');
+    sendUnsentValueLater();
   };
 
   return (

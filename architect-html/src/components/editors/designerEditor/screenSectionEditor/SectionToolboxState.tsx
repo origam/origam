@@ -50,7 +50,7 @@ export class SectionToolboxState {
   private updateTopProperties() {
     return function* (
       this: SectionToolboxState,
-    ): Generator<Promise<ISectionEditorModel>, void, ISectionEditorModel> {
+    ): Generator<Promise<ISectionEditorModel>, string[], ISectionEditorModel> {
       const updateResult = yield this.architectApi.updateSectionEditor({
         schemaItemId: this.toolboxState.id,
         name: this.toolboxState.name,
@@ -61,6 +61,7 @@ export class SectionToolboxState {
       this.toolboxState.name = newData.name;
       this.toolboxState.selectedDataSourceId = newData.selectedDataSourceId;
       this.fields = newData.fields;
+      return newData.warnings ?? [];
     }.bind(this);
   }
 }

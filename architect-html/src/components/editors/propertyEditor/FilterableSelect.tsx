@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { T } from '@/main';
 import { IDropDownValue } from '@api/IArchitectApi';
 import S from '@editors/propertyEditor/SinglePropertyEditor.module.scss';
 import { observer } from 'mobx-react-lite';
@@ -29,6 +30,7 @@ interface FilterableSelectProps {
   selectedValue: any;
   disabled?: boolean;
   className?: string;
+  dataTestId?: string;
   autoFocus?: boolean;
   onChange: (value: any) => void;
 }
@@ -37,7 +39,7 @@ const VIRTUAL_OVERSCAN = 5;
 const DEFAULT_ITEM_HEIGHT = 26;
 
 export const FilterableSelect = observer((props: FilterableSelectProps) => {
-  const { options, selectedValue, disabled, className, autoFocus, onChange } = props;
+  const { options, selectedValue, disabled, className, dataTestId, autoFocus, onChange } = props;
 
   const selectedOption = useMemo(
     () => options.find(option => String(option.value) === String(selectedValue)),
@@ -253,7 +255,11 @@ export const FilterableSelect = observer((props: FilterableSelectProps) => {
   };
 
   return (
-    <div className={S.selectWrapper + (className ? ' ' + className : '')} ref={wrapperRef}>
+    <div
+      className={S.selectWrapper + (className ? ' ' + className : '')}
+      data-test-id={dataTestId}
+      ref={wrapperRef}
+    >
       <input
         ref={inputRef}
         type="text"
@@ -332,7 +338,7 @@ export const FilterableSelect = observer((props: FilterableSelectProps) => {
                     setHighlight(index);
                   }}
                 >
-                  {option.name}
+                  {option.name === '' ? T('(none)', 'property_lookup_no_value') : option.name}
                 </li>
               );
             })}

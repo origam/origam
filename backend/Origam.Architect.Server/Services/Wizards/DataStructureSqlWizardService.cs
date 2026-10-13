@@ -45,6 +45,33 @@ public class DataStructureSqlWizardService(
             Strings.Wizard_DataStructureNotFound
         );
 
+        return new GetDataStructureSqlResult
+        {
+            DataStructureId = dataStructure.Id,
+            DataStructureName = dataStructure.Name,
+            Sql = GenerateSql(dataStructure, filterSet: null),
+        };
+    }
+
+    public GetDataStructureFilterSetSqlResult GetDataStructureFilterSetSql(Guid filterSetId)
+    {
+        var filterSet = Retrieve<DataStructureFilterSet>(
+            filterSetId,
+            Strings.Wizard_DataStructureFilterSetNotFound
+        );
+        var dataStructure = (DataStructure)filterSet.RootItem;
+
+        return new GetDataStructureFilterSetSqlResult
+        {
+            FilterSetId = filterSet.Id,
+            FilterSetName = filterSet.Name,
+            DataStructureName = dataStructure.Name,
+            Sql = GenerateSql(dataStructure, filterSet),
+        };
+    }
+
+    private static string GenerateSql(DataStructure dataStructure, DataStructureFilterSet filterSet)
+    {
         if (DataServiceFactory.GetDataService() is not AbstractSqlDataService dataService)
         {
             throw new UserOrigamException(Strings.Wizard_DataServiceNotSql);
@@ -56,6 +83,16 @@ public class DataStructureSqlWizardService(
 
         var output = new StringBuilder();
         output.AppendLine($"-- SQL statements for data structure: {dataStructure.Name}");
+        if (filterSet != null)
+        {
+            output.AppendLine(
+                sqlGenerator.SelectParameterDeclarationsSql(
+                    filter: filterSet,
+                    paging: false,
+                    columnName: null
+                )
+            );
+        }
         var tmpTables = new List<string>();
         foreach (var dsEntity in dataStructure.Entities.Where(entity => entity.Columns.Count > 0))
         {
@@ -69,7 +106,7 @@ public class DataStructureSqlWizardService(
                 sqlGenerator.SelectSql(
                     ds: dataStructure,
                     entity: dsEntity,
-                    filter: null,
+                    filter: filterSet,
                     sortSet: null,
                     columnsInfo: ColumnsInfo.Empty,
                     parameters: new Hashtable(),
@@ -80,12 +117,6 @@ public class DataStructureSqlWizardService(
             output.AppendLine(";");
         }
         output.AppendLine(sqlGenerator.CreateDataStructureFooterSql(tmpTables));
-
-        return new GetDataStructureSqlResult
-        {
-            DataStructureId = dataStructure.Id,
-            DataStructureName = dataStructure.Name,
-            Sql = output.ToString(),
-        };
+        return output.ToString();
     }
 }

@@ -26,6 +26,7 @@ import {
   IApiEditorProperty,
   IArchitectApi,
   IDeploymentScriptsGeneratorModuleData,
+  IModelCheckResultsEditorData,
   ISearchResultsEditorData,
   IScreenEditorData,
   ISectionEditorData,
@@ -50,7 +51,9 @@ import { EditorContainer } from '@editors/EditorContainer.tsx';
 import { EditorProperty } from '@editors/gridEditor/EditorProperty';
 import GridEditor from '@editors/gridEditor/GridEditor';
 import { GridEditorState } from '@editors/gridEditor/GridEditorState';
+import ModelCheckResultsView from '@components/modelCheck/ModelCheckResultsView';
 import SearchResultsView from '@components/search/SearchResultsView';
+import { ModelCheckResultsTabState } from '@components/modelCheck/ModelCheckResultsTabState';
 import { SearchResultsTabState } from '@components/search/SearchResultsTabState';
 import { XsltEditorState } from '@editors/gridEditor/XsltEditorState.ts';
 import XsltEditor from '@editors/xsltEditor/XsltEditor';
@@ -116,6 +119,7 @@ export function getEditorContainer(args: {
       properties,
       isDirty,
       architectApi,
+      modelTreeState,
     );
     return new EditorContainer(editorState, <DeploymentScriptsEditor editorState={editorState} />);
   }
@@ -128,6 +132,7 @@ export function getEditorContainer(args: {
       properties,
       isDirty,
       architectApi,
+      modelTreeState,
     );
     const editorComponent = <GridEditor editorState={editorState} title={editorState.title} />;
     return new EditorContainer(editorState, editorComponent);
@@ -141,6 +146,7 @@ export function getEditorContainer(args: {
       properties,
       isDirty,
       architectApi,
+      modelTreeState,
     );
     const editorComponent = <XsltEditor editorState={editorState} />;
     return new EditorContainer(editorState, editorComponent);
@@ -157,6 +163,7 @@ export function getEditorContainer(args: {
       propertiesState,
       sectionToolboxState,
       architectApi,
+      modelTreeState,
       args.runGeneratorHandled,
     );
     const editorComponent = <ScreenSectionEditor designerState={state} />;
@@ -174,6 +181,7 @@ export function getEditorContainer(args: {
       propertiesState,
       screenToolboxState,
       architectApi,
+      modelTreeState,
       args.runGeneratorHandled,
     );
     const editorComponent = <ScreenEditor designerState={state} />;
@@ -188,6 +196,7 @@ export function getEditorContainer(args: {
       documentationData,
       isDirty,
       architectApi,
+      modelTreeState,
     );
     const editorComponent = (
       <GridEditor
@@ -216,6 +225,12 @@ export function getEditorContainer(args: {
       searchResultsData.results ?? [],
     );
     return new EditorContainer(editorState, <SearchResultsView editorState={editorState} />);
+  }
+
+  if (editorType === 'ModelCheckResultsEditor') {
+    const modelCheckData = data as IModelCheckResultsEditorData;
+    const editorState = new ModelCheckResultsTabState(editorData.editorId, modelCheckData.result);
+    return new EditorContainer(editorState, <ModelCheckResultsView editorState={editorState} />);
   }
 
   return null;

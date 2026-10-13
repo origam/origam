@@ -23,6 +23,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
+using Origam.Architect.Server.Models.Requests;
 using Origam.Architect.Server.ReturnModels;
 using Origam.Architect.Server.Services;
 
@@ -59,5 +60,11 @@ public class SearchController(SearchService searchService) : ControllerBase
     public ActionResult Dependencies([FromQuery] Guid schemaItemId)
     {
         return Ok(searchService.FindDependencies(schemaItemId));
+    }
+
+    [HttpGet("Locate")]
+    public ActionResult<SearchResult> Locate([FromQuery] Guid schemaItemId)
+    {
+        return Ok(searchService.Locate(schemaItemId));
     }
 }

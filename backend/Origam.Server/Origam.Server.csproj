@@ -72,14 +72,20 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.11" />
     <PackageReference Include="OpenIddict.AspNetCore" Version="7.1.0" />
-    <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="7.6.1" />
-    <PackageReference Include="OpenIddict.Quartz" Version="7.6.1" />
+    <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="7.7.1" />
+    <PackageReference Include="OpenIddict.Quartz" Version="7.7.1" />
     <PackageReference Include="OpenIddict.Server.AspNetCore" Version="7.1.0" />
     <PackageReference Include="OpenIddict.Validation.AspNetCore" Version="7.1.0" />
     <PackageReference Include="Origam.Service.Core" Version="2.3.3" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.11" />
-    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="2.1.5" />
-    <PackageReference Include="SoapCore" Version="1.2.1.14" />
+    <PackageReference Include="SkiaSharp" Version="4.153.1" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="4.153.1" />
+    <PackageReference
+      Include="SkiaSharp.NativeAssets.NanoServer"
+      Version="4.153.1"
+      GeneratePathProperty="true"
+      ExcludeAssets="all"
+    />
+    <PackageReference Include="SoapCore" Version="1.2.1.16" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="10.2.3" />
     <PackageReference Include="UAParser" Version="3.1.47" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="8.0.8" />
@@ -90,6 +96,14 @@
     />
     <PackageReference Include="Microsoft.AspNetCore.DataProtection.Abstractions" Version="8.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.8" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Keep Nano Server's binary separate from Win32 for the shared publish output. -->
+    <Content Include="$(PkgSkiaSharp_NativeAssets_NanoServer)/runtimes/win-x64/native/libSkiaSharp.dll">
+      <Link>native/nanoserver/libSkiaSharp.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\origam-utils\origam-utils.csproj" />

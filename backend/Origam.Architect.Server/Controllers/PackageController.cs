@@ -20,14 +20,20 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using Microsoft.AspNetCore.Mvc;
+using Origam.Architect.Server.Models;
 using Origam.Architect.Server.ReturnModels;
+using Origam.Architect.Server.Services;
 using Origam.Workbench.Services;
 
 namespace Origam.Architect.Server.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class PackageController(SchemaService schemaService) : ControllerBase
+public class PackageController(
+    SchemaService schemaService,
+    PackageService packageService,
+    PackageReferenceService packageReferenceService
+) : ControllerBase
 {
     [HttpGet("GetAll")]
     public PackagesInfo GetAll()
@@ -55,6 +61,26 @@ public class PackageController(SchemaService schemaService) : ControllerBase
         }
         SecurityManager.SetServerIdentity();
         schemaService.LoadSchema(package.Id);
+        return Ok();
+    }
+
+    [HttpPost("Create")]
+    public PackageModel Create([FromBody] CreatePackageModel input) => packageService.Create(input);
+
+    [HttpPost("Delete")]
+    public ActionResult Delete([FromBody] DeletePackageModel input)
+    {
+        packageService.Delete(input);
+        return Ok();
+    }
+
+    [HttpGet("References")]
+    public PackageReferencesInfo GetReferences() => packageReferenceService.GetReferences();
+
+    [HttpPost("UpdateReferences")]
+    public ActionResult UpdateReferences([FromBody] UpdatePackageReferencesModel input)
+    {
+        packageReferenceService.UpdateReferences(input);
         return Ok();
     }
 }

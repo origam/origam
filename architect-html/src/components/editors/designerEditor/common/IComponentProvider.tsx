@@ -19,7 +19,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { Component } from '@editors/designerEditor/common/designerComponents/Component.tsx';
 
+export interface IDesignerVerb {
+  id: string;
+  label: string;
+  disabled: boolean;
+  action: () => Generator<Promise<any>, void, any>;
+}
+
 export interface IComponentProvider {
   components: Component[];
   selectedComponent: Component | null;
+  verbs: IDesignerVerb[];
 }

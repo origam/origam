@@ -312,7 +312,7 @@ public class CreateNodeValidationFilter(
             creatableTypes.Add(new CreatableType(caption, typeName));
         }
 
-        return creatableTypes;
+        return creatableTypes.DistinctBy(type => type.TypeName).ToList();
     }
 
     private string BuildRejectionMessage(

@@ -24,9 +24,13 @@ using System.Reflection;
 using Origam.Architect.Server.ArchitectLogic;
 using Origam.Architect.Server.Exceptions;
 using Origam.Architect.Server.Models;
+using Origam.Architect.Server.Services.Xslt;
+using Origam.Architect.Server.Utils;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema;
+using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
+using Origam.Schema.RuleModel;
 using Origam.UI;
 using Origam.Workbench.Services;
 
@@ -79,6 +83,14 @@ public class TabService(
             rootControl.GetProperty("Width").Value = "500";
             rootControl.GetProperty("Top").Value = "15";
             rootControl.GetProperty("Left").Value = "15";
+        }
+        else if (result is XslTransformation transformation)
+        {
+            transformation.TextStore = XslTemplates.Transformation;
+        }
+        else if (result is XslRule rule)
+        {
+            rule.Xsl = XslTemplates.Rule;
         }
 
         ISchemaItem item = (ISchemaItem)result;
@@ -295,14 +307,14 @@ public class TabService(
                 );
             }
 
-            object newValue = propertyParser.Parse(propertyToChange, change.Value);
+            object newValue = propertyParser.Parse(propertyToChange, change.Value, tab.Item);
             object oldValue = propertyToChange.GetValue(tab.Item);
-            if (oldValue != newValue)
+            PropertyUtils.SetValue(propertyToChange, tab.Item, newValue);
+            // Read back, the setter may store the parsed value converted, e.g. text as a number.
+            if (!Equals(oldValue, propertyToChange.GetValue(tab.Item)))
             {
                 tab.IsDirty = true;
             }
-
-            propertyToChange.SetValue(tab.Item, newValue);
         }
 
         return tab;

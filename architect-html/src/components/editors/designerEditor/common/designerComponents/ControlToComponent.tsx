@@ -34,6 +34,13 @@ import { GroupBox } from '@editors/designerEditor/common/designerComponents/Grou
 import { BlobControl } from '@editors/designerEditor/common/designerComponents/BlobControl.tsx';
 import { RadioButton } from '@editors/designerEditor/common/designerComponents/RadioButton.tsx';
 import { MultiColumnAdapterFieldWrapper } from '@editors/designerEditor/common/designerComponents/MultiColumnAdapterFieldWrapper.tsx';
+import { AsDropDown } from '@editors/designerEditor/common/designerComponents/AsDropDown.tsx';
+import { AsDateBox } from '@editors/designerEditor/common/designerComponents/AsDateBox.tsx';
+import { TagInput } from '@editors/designerEditor/common/designerComponents/TagInput.tsx';
+import { ImageBox } from '@editors/designerEditor/common/designerComponents/ImageBox.tsx';
+import { ColorPicker } from '@editors/designerEditor/common/designerComponents/ColorPicker.tsx';
+import { AsTree } from '@editors/designerEditor/common/designerComponents/AsTree.tsx';
+import { Panel } from '@editors/designerEditor/common/designerComponents/Panel.tsx';
 
 export async function controlToComponent(
   control: IApiControl,
@@ -44,7 +51,7 @@ export async function controlToComponent(
   const properties = control.properties.map(prop => new EditorProperty(prop));
   const componentType = parseComponentType(control.type);
   switch (componentType) {
-    case ComponentType.CheckList:
+    case ComponentType.Checklist:
       return new CheckList({
         id: control.id,
         parent: parent,
@@ -77,7 +84,42 @@ export async function controlToComponent(
         properties: properties,
       });
 
+    case ComponentType.AsCombo:
+      return new AsDropDown({
+        id: control.id,
+        parent: parent,
+        data: {
+          type: componentType,
+          identifier: control.name,
+        },
+        properties: properties,
+      });
+
+    case ComponentType.AsDateBox:
+      return new AsDateBox({
+        id: control.id,
+        parent: parent,
+        data: {
+          type: componentType,
+          identifier: control.name,
+        },
+        properties: properties,
+      });
+
+    case ComponentType.TagInput:
+      return new TagInput({
+        id: control.id,
+        parent: parent,
+        data: {
+          type: componentType,
+          identifier: control.name,
+        },
+        properties: properties,
+      });
+
     case ComponentType.Label:
+    case ComponentType.ScreenLevelPlugin:
+    case ComponentType.SectionLevelPlugin:
       return new Label({
         id: control.id,
         parent: parent,
@@ -201,14 +243,52 @@ export async function controlToComponent(
         properties: properties,
       });
 
-    case ComponentType.AsCombo:
-    case ComponentType.AsTree:
-    case ComponentType.AsTextBox:
-    case ComponentType.ColorPicker:
-    case ComponentType.TagInput:
-    case ComponentType.AsDateBox:
-    case ComponentType.TextArea:
     case ComponentType.ImageBox:
+      return new ImageBox({
+        id: control.id,
+        parent: parent,
+        data: {
+          type: componentType,
+          identifier: control.name,
+        },
+        properties: properties,
+      });
+
+    case ComponentType.ColorPicker:
+      return new ColorPicker({
+        id: control.id,
+        parent: parent,
+        data: {
+          type: componentType,
+          identifier: control.name,
+        },
+        properties: properties,
+      });
+
+    case ComponentType.Panel:
+      return new Panel({
+        id: control.id,
+        parent: parent,
+        data: {
+          type: componentType,
+          identifier: control.name,
+        },
+        properties: properties,
+      });
+
+    case ComponentType.AsTree:
+      return new AsTree({
+        id: control.id,
+        parent: parent,
+        data: {
+          type: componentType,
+          identifier: control.name,
+        },
+        properties: properties,
+      });
+
+    case ComponentType.AsTextBox:
+    case ComponentType.TextArea:
       return new Component({
         id: control.id,
         parent: parent,

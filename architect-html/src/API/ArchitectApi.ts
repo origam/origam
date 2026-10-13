@@ -31,10 +31,13 @@ import {
   ILookupWizardEntityData,
   IMenuItemInfo,
   IModelChange,
+  IModelCheckResult,
   IMoveNodeResult,
   IMoveTargetsResult,
   IMoveVerdict,
   INodeLoadData,
+  IPackage,
+  IPackageReferencesInfo,
   IPackagesInfo,
   IParametersResult,
   IPropertyChange,
@@ -65,6 +68,22 @@ export class ArchitectApi implements IArchitectApi {
 
   async getPackages(): Promise<IPackagesInfo> {
     return (await this.http.get('/Package/GetAll')).data;
+  }
+
+  async createPackage(name: string): Promise<IPackage> {
+    return (await this.http.post('/Package/Create', { name })).data;
+  }
+
+  async deletePackage(packageId: string): Promise<void> {
+    await this.http.post('/Package/Delete', { id: packageId });
+  }
+
+  async getPackageReferences(): Promise<IPackageReferencesInfo> {
+    return (await this.http.get('/Package/References')).data;
+  }
+
+  async updatePackageReferences(packageId: string, referencedPackageIds: string[]): Promise<void> {
+    await this.http.post('/Package/UpdateReferences', { packageId, referencedPackageIds });
   }
 
   async getTopModelNodes(): Promise<IApiTreeNode[]> {
@@ -112,6 +131,14 @@ export class ArchitectApi implements IArchitectApi {
     ).data;
   }
 
+  async runModelCheck(): Promise<IModelCheckResult> {
+    return (await this.http.post('/ModelCheck/Run')).data;
+  }
+
+  async getModelCheckResult(): Promise<IModelCheckResult> {
+    return (await this.http.get('/ModelCheck/Result')).data;
+  }
+
   async searchReferences(schemaItemId: string): Promise<ISearchResult[]> {
     return (
       await this.http.get('/Search/References', {
@@ -125,6 +152,16 @@ export class ArchitectApi implements IArchitectApi {
   async searchDependencies(schemaItemId: string): Promise<ISearchResult[]> {
     return (
       await this.http.get('/Search/Dependencies', {
+        params: {
+          schemaItemId,
+        },
+      })
+    ).data;
+  }
+
+  async locateSchemaItem(schemaItemId: string): Promise<ISearchResult> {
+    return (
+      await this.http.get('/Search/Locate', {
         params: {
           schemaItemId,
         },
@@ -230,11 +267,19 @@ export class ArchitectApi implements IArchitectApi {
     return (await this.http.get(`/Tab/GetOpen`)).data;
   }
 
-  async createNode(node: IApiTreeNode, typeName: string): Promise<IApiTabData> {
+  async createNode(
+    node: IApiTreeNode,
+    typeName: string,
+    name?: string | null,
+  ): Promise<IApiTabData> {
+    const changes: IPropertyChange[] = name
+      ? [{ name: 'Name', controlPropertyId: null, value: name }]
+      : [];
     return (
       await this.http.post('/Tab/CreateNode', {
         nodeId: node.origamId,
         newTypeName: typeName,
+        changes,
       })
     ).data;
   }
@@ -440,6 +485,12 @@ export class ArchitectApi implements IArchitectApi {
     return (await this.http.post('/wizards/workflow-menu-items', request)).data;
   }
 
+  async createDataConstantMenuItem(
+    request: import('@api/IArchitectApi').ICreateDataConstantMenuItemRequest,
+  ): Promise<import('@api/IArchitectApi').ICreateWizardResult> {
+    return (await this.http.post('/wizards/data-constant-menu-items', request)).data;
+  }
+
   async createRole(
     request: import('@api/IArchitectApi').ICreateRoleRequest,
   ): Promise<import('@api/IArchitectApi').ICreateWizardResult> {
@@ -482,6 +533,12 @@ export class ArchitectApi implements IArchitectApi {
     dataStructureId: string,
   ): Promise<import('@api/IArchitectApi').IGetDataStructureSqlResult> {
     return (await this.http.get(`/wizards/data-structures/${dataStructureId}/sql`)).data;
+  }
+
+  async getDataStructureFilterSetSql(
+    filterSetId: string,
+  ): Promise<import('@api/IArchitectApi').IGetDataStructureFilterSetSqlResult> {
+    return (await this.http.get(`/wizards/data-structure-filter-sets/${filterSetId}/sql`)).data;
   }
 }
 

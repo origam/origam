@@ -234,6 +234,9 @@
   <data name="ErrorNotDateTime" xml:space="preserve">
     <value>DateValue must be of type DateTime or null.</value>
   </data>
+  <data name="ErrorDuplicateDataConstantName" xml:space="preserve">
+    <value>Another data constant already uses the name '{0}'. Choose a unique name.</value>
+  </data>
   <data name="ErrorConvertToGuid" xml:space="preserve">
     <value>Cannot convert to Guid</value>
   </data>

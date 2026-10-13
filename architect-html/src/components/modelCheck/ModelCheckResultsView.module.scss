@@ -1,0 +1,297 @@
+/*
+Copyright 2005 - 2026 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+$monospace: 'Consolas', 'SFMono-Regular', 'Menlo', monospace;
+
+.root {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  background-color: var(--background2);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.75rem;
+  padding: 0.6rem 1rem;
+  background-color: var(--background1);
+  border-bottom: 1px solid var(--background3);
+}
+
+.runAt {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--background5);
+}
+
+.summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+@mixin pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 999px;
+  padding: 0.15rem 0.6rem;
+  border: 1px solid transparent;
+
+  svg {
+    flex-shrink: 0;
+    font-size: 13px;
+  }
+}
+
+.pillError {
+  @include pill;
+
+  color: #b02a37;
+  background-color: rgba(var(--error1-rgb), 0.12);
+  border-color: rgba(var(--error1-rgb), 0.35);
+}
+
+.pillOk {
+  @include pill;
+
+  color: #2f7d46;
+  background-color: rgba(var(--ok1-rgb), 0.15);
+  border-color: rgba(var(--ok1-rgb), 0.45);
+}
+
+.content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 1rem;
+  min-height: 0;
+  padding: 1rem;
+  overflow: auto;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.sectionIcon {
+  color: var(--error1);
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.sectionTitle {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--background6);
+}
+
+.count {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--background1);
+  background-color: var(--background5);
+  border-radius: 999px;
+  padding: 0.05rem 0.45rem;
+}
+
+.card {
+  background-color: var(--background1);
+  border: 1px solid var(--background3);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  background-color: var(--background2);
+  border: none;
+  border-bottom: 1px solid var(--background3);
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+  color: var(--background7);
+
+  &:hover {
+    background-color: var(--background3);
+  }
+
+  svg {
+    flex-shrink: 0;
+    color: var(--background6);
+  }
+}
+
+.cardTitle {
+  flex: 1;
+  min-width: 0;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.cardCount {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--background6);
+  background-color: var(--background3);
+  border: 1px solid var(--background4);
+  border-radius: 999px;
+  padding: 0.05rem 0.45rem;
+}
+
+.problemList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.problem {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--background2);
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background-color: var(--background2);
+  }
+}
+
+.problemIcon {
+  flex-shrink: 0;
+  margin-top: 0.15rem;
+  color: var(--warning2);
+  font-size: 14px;
+}
+
+.problemBody {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.problemText {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--background7);
+}
+
+.idChip {
+  font-family: $monospace;
+  font-size: 12px;
+  color: var(--background7);
+  background-color: var(--background2);
+  border: 1px solid var(--background3);
+  border-radius: 3px;
+  padding: 0 0.25rem;
+  white-space: nowrap;
+}
+
+.fileChip {
+  font-family: $monospace;
+  font-size: 12px;
+  color: var(--foreground3);
+  background-color: rgba(var(--foreground1-rgb), 0.08);
+  border: 1px solid rgba(var(--foreground1-rgb), 0.25);
+  border-radius: 3px;
+  padding: 0 0.25rem;
+  white-space: nowrap;
+}
+
+.pathLine {
+  display: flex;
+  align-items: baseline;
+  gap: 0.3rem;
+  min-width: 0;
+  font-family: $monospace;
+  font-size: 11px;
+}
+
+.pathIcon {
+  flex-shrink: 0;
+  color: var(--background5);
+  font-size: 12px;
+  transform: translateY(0.1rem);
+}
+
+.pathText {
+  min-width: 0;
+  word-break: break-all;
+}
+
+.pathDirectory {
+  color: var(--background5);
+}
+
+.pathFileName {
+  color: var(--background7);
+  font-weight: 600;
+}
+
+.message {
+  display: inline-block;
+  white-space: pre-wrap;
+  min-width: 18rem;
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 3rem 1rem;
+  color: var(--background6);
+}
+
+.emptyIcon {
+  font-size: 28px;
+  color: var(--ok1);
+}
+
+.emptyTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--background7);
+}

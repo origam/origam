@@ -34,7 +34,7 @@
         <value>The AI agent cannot determine the Architect base url because the server reports no listening address.</value>
     </data>
     <data name="ArchitectUnreachable" xml:space="preserve">
-        <value>Architect server unreachable (is it running with Swagger in Development?).</value>
+        <value>Architect server unreachable (is its Swagger endpoint available?).</value>
     </data>
     <data name="CommunityRequestFailed" xml:space="preserve">
         <value>{0} returned {1}.</value>

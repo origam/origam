@@ -160,6 +160,33 @@ namespace Origam.Architect.Server {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The model validation is already running..
+        /// </summary>
+        internal static string ModelCheck_AlreadyRunning {
+            get {
+                return ResourceManager.GetString("ModelCheck_AlreadyRunning", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The model validation could not be completed: {0}.
+        /// </summary>
+        internal static string ModelCheck_Failed {
+            get {
+                return ResourceManager.GetString("ModelCheck_Failed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Load a package before running the model validation..
+        /// </summary>
+        internal static string ModelCheck_NoActivePackage {
+            get {
+                return ResourceManager.GetString("ModelCheck_NoActivePackage", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to &apos;{0}&apos; is not an item type that can be created here. Available types: {1}.
         /// </summary>
         internal static string NewItemTypeNotFound {
@@ -167,7 +194,97 @@ namespace Origam.Architect.Server {
                 return ResourceManager.GetString("NewItemTypeNotFound", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to A package with this name already exists..
+        /// </summary>
+        internal static string Package_NameDuplicate {
+            get {
+                return ResourceManager.GetString("Package_NameDuplicate", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Package name cannot be empty..
+        /// </summary>
+        internal static string Package_NameEmpty {
+            get {
+                return ResourceManager.GetString("Package_NameEmpty", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Package name contains invalid characters..
+        /// </summary>
+        internal static string Package_NameInvalidChars {
+            get {
+                return ResourceManager.GetString("Package_NameInvalidChars", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Package name is reserved or not allowed..
+        /// </summary>
+        internal static string Package_NameReserved {
+            get {
+                return ResourceManager.GetString("Package_NameReserved", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The package was not found..
+        /// </summary>
+        internal static string Package_NotFound {
+            get {
+                return ResourceManager.GetString("Package_NotFound", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Package &quot;{0}&quot; cannot be deleted because it is referenced by: {1}..
+        /// </summary>
+        internal static string Package_ReferencedBy {
+            get {
+                return ResourceManager.GetString("Package_ReferencedBy", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Package &quot;{0}&quot; cannot be referenced because it already includes package &quot;{1}&quot;..
+        /// </summary>
+        internal static string Package_ReferenceCycle {
+            get {
+                return ResourceManager.GetString("Package_ReferenceCycle", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to A package cannot reference itself..
+        /// </summary>
+        internal static string Package_ReferenceSelf {
+            get {
+                return ResourceManager.GetString("Package_ReferenceSelf", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Only the references of the active package can be edited..
+        /// </summary>
+        internal static string Package_ReferencesOnlyActive {
+            get {
+                return ResourceManager.GetString("Package_ReferencesOnlyActive", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Package &quot;{0}&quot; cannot be removed from the references because &quot;{1}&quot; uses &quot;{2}&quot; from it..
+        /// </summary>
+        internal static string Package_ReferenceStillUsed {
+            get {
+                return ResourceManager.GetString("Package_ReferenceStillUsed", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Property {0} takes a reference to a {1}, but the id you passed belongs to a {2}. Find or create a {1} and pass its id instead..
         /// </summary>
@@ -194,7 +311,43 @@ namespace Origam.Architect.Server {
                 return ResourceManager.GetString("ParameterNotFound", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to Type converter {0} of property {1} could not be found..
+        /// </summary>
+        internal static string Property_ConverterNotFound {
+            get {
+                return ResourceManager.GetString("Property_ConverterNotFound", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to A data constant of data type {0} cannot have a value..
+        /// </summary>
+        internal static string Property_DataTypeWithoutValue {
+            get {
+                return ResourceManager.GetString("Property_DataTypeWithoutValue", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to &quot;{1}&quot; is not one of the values offered for {0}..
+        /// </summary>
+        internal static string Property_ValueNotOffered {
+            get {
+                return ResourceManager.GetString("Property_ValueNotOffered", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The value of {0} could not be read. {1}.
+        /// </summary>
+        internal static string Property_ValueNotRead {
+            get {
+                return ResourceManager.GetString("Property_ValueNotRead", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to &apos;{0}&apos; is not a valid value for property {1}. Allowed values: {2}.
         /// </summary>
@@ -210,15 +363,6 @@ namespace Origam.Architect.Server {
         internal static string PropertyReferenceValueNotValid {
             get {
                 return ResourceManager.GetString("PropertyReferenceValueNotValid", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to XSLT Validation.
-        /// </summary>
-        internal static string ValidationResultTitle {
-            get {
-                return ResourceManager.GetString("ValidationResultTitle", resourceCulture);
             }
         }
         
@@ -457,6 +601,15 @@ namespace Origam.Architect.Server {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to DataStructure filter set {0} not found.
+        /// </summary>
+        internal static string Wizard_DataStructureFilterSetNotFound {
+            get {
+                return ResourceManager.GetString("Wizard_DataStructureFilterSetNotFound", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to DataStructure {0} not found.
         /// </summary>
         internal static string Wizard_DataStructureNotFound {
@@ -610,6 +763,15 @@ namespace Origam.Architect.Server {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Data constant {0} not found.
+        /// </summary>
+        internal static string Wizard_DataConstantNotFound {
+            get {
+                return ResourceManager.GetString("Wizard_DataConstantNotFound", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Database Entity (TableMappingItem) {0} not found.
         /// </summary>
         internal static string Wizard_TableEntityNotFound {
@@ -691,20 +853,290 @@ namespace Origam.Architect.Server {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to XSLT validation failed. See output for details..
-        /// </summary>
-        internal static string XsltValidationFailed {
-            get {
-                return ResourceManager.GetString("XsltValidationFailed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to XSLT is valid..
         /// </summary>
         internal static string XsltValidationSuccess {
             get {
                 return ResourceManager.GetString("XsltValidationSuccess", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Radio button &quot;{0}&quot; is bound to a field but has no Value Constant. Select a Value Constant in its properties..
+        /// </summary>
+        internal static string SectionEditor_RadioButtonValueConstantMissing {
+            get {
+                return ResourceManager.GetString("SectionEditor_RadioButtonValueConstantMissing", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Multi Column Adapter Field Wrapper &quot;{0}&quot; contains no widget bound to a field. Drop at least one field inside it..
+        /// </summary>
+        internal static string SectionEditor_WrapperHasNoBoundWidgets {
+            get {
+                return ResourceManager.GetString("SectionEditor_WrapperHasNoBoundWidgets", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Widget &quot;{0}&quot; is bound to a field but has no Lookup. Select a Lookup in its properties..
+        /// </summary>
+        internal static string SectionEditor_DropdownLookupMissing {
+            get {
+                return ResourceManager.GetString("SectionEditor_DropdownLookupMissing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Widget &quot;{0}&quot; is bound to field &quot;{1}&quot; which is not an Integer. A color editor requires an Integer field..
+        /// </summary>
+        internal static string SectionEditor_ColorPickerFieldNotInteger {
+            get {
+                return ResourceManager.GetString("SectionEditor_ColorPickerFieldNotInteger", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Widget &quot;{0}&quot; is bound to field &quot;{1}&quot; whose data type is {2}. Tag Input and Checklist can only be bound to an array field, which is a field with data type Array, an Array Relation and an Array Value Field. Bind the widget to an array field, or use a Combo Box to edit a single value..
+        /// </summary>
+        internal static string SectionEditor_TagInputFieldNotArray {
+            get {
+                return ResourceManager.GetString("SectionEditor_TagInputFieldNotArray", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Field &quot;{0}&quot; is bound by more than one widget: {1}. Only one widget can be bound to a field..
+        /// </summary>
+        internal static string SectionEditor_FieldBoundTwice {
+            get {
+                return ResourceManager.GetString("SectionEditor_FieldBoundTwice", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Widget &quot;{0}&quot; is not bound to a field. Select a field for it in its properties or delete it..
+        /// </summary>
+        internal static string SectionEditor_WidgetFieldMissing {
+            get {
+                return ResourceManager.GetString("SectionEditor_WidgetFieldMissing", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Widget type &quot;{0}&quot; cannot be placed on a screen section. Use one of: {1}.
+        /// </summary>
+        internal static string SectionEditor_UnknownWidgetType {
+            get {
+                return ResourceManager.GetString("SectionEditor_UnknownWidgetType", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Field &quot;{0}&quot; does not exist on entity &quot;{1}&quot;. Available fields: {2}.
+        /// </summary>
+        internal static string SectionEditor_FieldNotFound {
+            get {
+                return ResourceManager.GetString("SectionEditor_FieldNotFound", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The screen section has no entity, so a widget cannot be bound to a field. Set the section&apos;s entity first..
+        /// </summary>
+        internal static string SectionEditor_NoDataSource {
+            get {
+                return ResourceManager.GetString("SectionEditor_NoDataSource", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Parent control {0} was not found..
+        /// </summary>
+        internal static string DesignerEditor_ParentControlNotFound {
+            get {
+                return ResourceManager.GetString("DesignerEditor_ParentControlNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Child with id: {0} not found in {1}.
+        /// </summary>
+        internal static string DesignerEditor_ChildNotFound {
+            get {
+                return ResourceManager.GetString("DesignerEditor_ChildNotFound", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Field &quot;{0}&quot; is not part of data structure &quot;{1}&quot; used by the screens {2}, so those screens cannot open. Add it with POST /Tab/CreateNode: nodeId = {3} (the data structure entity), newTypeName &apos;Field&apos;, changes Name = &quot;{0}&quot; and Field = {4}, persist true; or clear ExcludeFromAllFields on the entity field..
+        /// </summary>
+        internal static string SectionEditor_FieldMissingInDataStructure {
+            get {
+                return ResourceManager.GetString("SectionEditor_FieldMissingInDataStructure", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Array field &quot;{0}&quot; needs its relation &quot;{1}&quot; in data structure &quot;{2}&quot; used by the screens {3}, or those screens cannot open. Add it with POST /Tab/CreateNode: nodeId = {4} (the data structure entity), newTypeName &apos;Entity&apos;, changes Entity = {5} and AllFields = true, persist true..
+        /// </summary>
+        internal static string SectionEditor_ArrayRelationMissingInDataStructure {
+            get {
+                return ResourceManager.GetString("SectionEditor_ArrayRelationMissingInDataStructure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Property &quot;{0}&quot; does not exist on widget &quot;{1}&quot;. Available properties: {2}.
+        /// </summary>
+        internal static string ControlAdapter_PropertyNotFound {
+            get {
+                return ResourceManager.GetString("ControlAdapter_PropertyNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A Lookup named &quot;{0}&quot; already exists..
+        /// </summary>
+        internal static string Wizard_LookupAlreadyExists {
+            get {
+                return ResourceManager.GetString("Wizard_LookupAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Found {1} screen widgets named &quot;{0}&quot;. Pass in controlName the name of a screen section, TabPage, or one of: {2}.
+        /// </summary>
+        internal static string ScreenEditor_WidgetNotFound {
+            get {
+                return ResourceManager.GetString("ScreenEditor_WidgetNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A &quot;{0}&quot; cannot be placed into &quot;{1}&quot; ({2}). Widgets go into the screen itself, a SplitPanel, a Panel or a TabPage; a TabPage goes into a TabControl..
+        /// </summary>
+        internal static string ScreenEditor_ParentCannotHoldWidget {
+            get {
+                return ResourceManager.GetString("ScreenEditor_ParentCannotHoldWidget", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SplitPanel &quot;{0}&quot; already has two children. Put the widget into another container, for example a second SplitPanel nested in this one..
+        /// </summary>
+        internal static string ScreenEditor_SplitPanelFull {
+            get {
+                return ResourceManager.GetString("ScreenEditor_SplitPanelFull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The client shows only the first widget placed directly on the screen, the others ({0}) stay hidden. Keep one SplitPanel or TabControl on the screen and move the rest into it with parentSchemaItemId..
+        /// </summary>
+        internal static string ScreenEditor_MoreRootWidgets {
+            get {
+                return ResourceManager.GetString("ScreenEditor_MoreRootWidgets", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DataMember &quot;{1}&quot; of &quot;{0}&quot; is not an entity of the screen&apos;s data structure, so the client cannot open the screen. Set DataMember to one of: {2}.
+        /// </summary>
+        internal static string ScreenEditor_DataMemberMissing {
+            get {
+                return ResourceManager.GetString("ScreenEditor_DataMemberMissing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &quot;{0}&quot; is a screen section of entity &quot;{1}&quot;, but its DataMember &quot;{2}&quot; is entity &quot;{3}&quot;, so the client cannot open the screen. Set DataMember to one of: {4}.
+        /// </summary>
+        internal static string ScreenEditor_DataMemberOfOtherEntity {
+            get {
+                return ResourceManager.GetString("ScreenEditor_DataMemberOfOtherEntity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &quot;{0}&quot; is a screen section of entity &quot;{1}&quot;, but the data structure &quot;{2}&quot; of the screen has no entity &quot;{1}&quot;: its DataMember &quot;{3}&quot; is entity &quot;{4}&quot;, so the client cannot open the screen. Pick a data source that holds &quot;{1}&quot;, or use a screen section of an entity that &quot;{2}&quot; holds..
+        /// </summary>
+        internal static string ScreenEditor_SectionEntityNotInDataStructure {
+            get {
+                return ResourceManager.GetString("ScreenEditor_SectionEntityNotInDataStructure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Screens that already use &quot;{0}&quot; take their data from: {1}...
+        /// </summary>
+        internal static string ScreenEditor_SectionDataSourceHint {
+            get {
+                return ResourceManager.GetString("ScreenEditor_SectionDataSourceHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SplitPanel &quot;{0}&quot; must hold exactly two widgets..
+        /// </summary>
+        internal static string ScreenEditor_SplitPanelNeedsTwo {
+            get {
+                return ResourceManager.GetString("ScreenEditor_SplitPanelNeedsTwo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The screen has no data structure and cannot be saved. Set it with ScreenEditor/Update and selectedDataSourceId first..
+        /// </summary>
+        internal static string ScreenEditor_NoDataSource {
+            get {
+                return ResourceManager.GetString("ScreenEditor_NoDataSource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AsTree &quot;{0}&quot; has no {1}. Set it to the name of a field of the tree&apos;s entity, otherwise the client cannot build the tree..
+        /// </summary>
+        internal static string ScreenEditor_TreeColumnMissing {
+            get {
+                return ResourceManager.GetString("ScreenEditor_TreeColumnMissing", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Data structure &quot;{1}&quot; has more than one entity named &quot;{0}&quot; (ids {2}), so the client cannot open the screen. Entity names must be unique in the whole data structure: delete the extra entities or rename them..
+        /// </summary>
+        internal static string ScreenEditor_DuplicateEntityName {
+            get {
+                return ResourceManager.GetString("ScreenEditor_DuplicateEntityName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No package is active. Select a package first..
+        /// </summary>
+        internal static string ScreenEditor_NoActivePackage {
+            get {
+                return ResourceManager.GetString("ScreenEditor_NoActivePackage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to item id: {0} is not a FormControlSet.
+        /// </summary>
+        internal static string ScreenEditor_NotAScreen {
+            get {
+                return ResourceManager.GetString("ScreenEditor_NotAScreen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Entity &quot;{0}&quot; of this screen section is not part of data structure &quot;{1}&quot; used by the screens {2}, so those screens cannot open. Either point the screen section back at an entity of &quot;{1}&quot;, or add &quot;{0}&quot; to &quot;{1}&quot; and set the DataMember of the section on those screens to it..
+        /// </summary>
+        internal static string SectionEditor_EntityMissingInDataStructure {
+            get {
+                return ResourceManager.GetString("SectionEditor_EntityMissingInDataStructure", resourceCulture);
             }
         }
     }

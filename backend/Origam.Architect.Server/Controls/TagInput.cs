@@ -21,15 +21,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.ComponentModel;
 using Origam.Architect.Server.Attributes;
+using Origam.Schema.EntityModel;
 
 namespace Origam.Architect.Server.Controls;
 
-public class TagInput : LabeledEditor, IAsControl
+public class TagInput : LabeledEditor, IAsControl, ILookupBoundControl
 {
     [Category("(ORIGAM)")]
     public string Caption { get; set; }
 
-    [Browsable(false)]
+    [ReferenceProperty("DataLookup")]
+    [TypeConverter(typeof(DataLookupConverter))]
     public Guid LookupId { get; set; }
 
     public bool HideOnForm { get; set; }

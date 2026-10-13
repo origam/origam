@@ -20,4 +20,5 @@ jobs:
           cd backend
           dotnet tool restore
           dotnet csharpier check Origam.Architect.Server
+          dotnet csharpier check Origam.ProjectAutomation
 

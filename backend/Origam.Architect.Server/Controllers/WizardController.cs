@@ -48,12 +48,14 @@ public class WizardController(
         + "wizard-data endpoint again. Only the Name property is free text. ";
 
     private const string WizardConfirmationRule =
-        "Before calling this, show the user the available choices from the wizard-data response "
-        + "as 'name (id)' and wait for explicit confirmation; never create with assumed or "
-        + "default selections. A confirmation the user has already given in this conversation "
-        + "keeps its value: once they have picked what this wizard needs, create it. Reading "
-        + "wizard-data again to recover the ids does not undo that choice and is never a reason "
-        + "to ask the same question a second time.";
+        "The user must choose what this wizard needs; never create with assumed or default "
+        + "selections. When the user's request already names the choices (for example the "
+        + "display field and the filters, or the fields to show), that is the confirmation: "
+        + "take the matching ids from the wizard-data response and create at once, without "
+        + "asking again. Only when a choice is missing show the available options from "
+        + "wizard-data as 'name (id)' and wait for the user to pick. A choice the user has "
+        + "already made in this conversation keeps its value: reading wizard-data again to "
+        + "recover the ids is never a reason to ask the same question a second time.";
 
     [HttpPost("filters")]
     [EndpointDescription(
@@ -97,6 +99,16 @@ public class WizardController(
     public IActionResult CreateWorkflowMenuItem([FromBody] CreateWorkflowMenuItemModel input) =>
         Ok(menuItemWizard.CreateWorkflowMenuItem(input));
 
+    [HttpPost("data-constant-menu-items")]
+    [EndpointDescription(
+        "Creates a menu item for an existing data constant. "
+            + WizardIdRule
+            + WizardConfirmationRule
+    )]
+    public IActionResult CreateDataConstantMenuItem(
+        [FromBody] CreateDataConstantMenuItemModel input
+    ) => Ok(menuItemWizard.CreateDataConstantMenuItem(input));
+
     [HttpPost("roles")]
     [EndpointDescription(
         "Creates the deployment activities that add a role to the database. There is no "
@@ -131,10 +143,24 @@ public class WizardController(
         Ok(dataStructureWizard.GetWizardData(entityId));
 
     [HttpPost("screens-from-section")]
+    [EndpointDescription(
+        "Creates a screen showing an existing screen section, together with the data "
+            + "structure the screen reads. Call GET /wizards/screens-from-section/wizard-data "
+            + "first; Name becomes the name of both the screen and its data structure and must "
+            + "not clash with an existing data structure. The screen still needs a menu item "
+            + "(POST /wizards/menu-items) before users can open it. "
+            + WizardIdRule
+            + WizardConfirmationRule
+    )]
     public IActionResult CreateScreenFromSection([FromBody] CreateScreenFromSectionModel input) =>
         Ok(screenFromSectionWizard.CreateScreenFromSection(input));
 
     [HttpGet("screens-from-section/wizard-data")]
+    [EndpointDescription(
+        "The read-only step before creating a screen from a screen section with "
+            + "POST /wizards/screens-from-section. Give it a screen section id and it returns "
+            + "the section's name and the data structure names that are already taken."
+    )]
     public IActionResult GetScreenFromSectionWizardData([FromQuery] Guid screenSectionId) =>
         Ok(screenFromSectionWizard.GetWizardData(screenSectionId));
 
@@ -182,6 +208,10 @@ public class WizardController(
     public IActionResult GetDataStructureSql(Guid id) =>
         Ok(dataStructureSqlWizard.GetDataStructureSql(id));
 
+    [HttpGet("data-structure-filter-sets/{id}/sql")]
+    public IActionResult GetDataStructureFilterSetSql(Guid id) =>
+        Ok(dataStructureSqlWizard.GetDataStructureFilterSetSql(id));
+
     [HttpGet("localization-child-entities/wizard-data")]
     public IActionResult GetLocalizationChildEntityWizardData([FromQuery] Guid entityId) =>
         Ok(localizationChildEntityWizard.GetWizardData(entityId));
@@ -192,10 +222,27 @@ public class WizardController(
     ) => Ok(localizationChildEntityWizard.CreateLocalizationChildEntity(input));
 
     [HttpGet("screen-sections/wizard-data")]
+    [EndpointDescription(
+        "The read-only step before creating a screen section with "
+            + "POST /wizards/screen-sections. Give it an entity id and it returns the fields "
+            + "that can be shown (id, name, isPrimaryKey) and the screen section names that are "
+            + "already taken. Pick the fields and pass their ids as selectedFieldIds to "
+            + "POST /wizards/screen-sections."
+    )]
     public IActionResult GetScreenSectionWizardData([FromQuery] Guid entityId) =>
         Ok(screenSectionWizard.GetWizardData(entityId));
 
     [HttpPost("screen-sections")]
+    [EndpointDescription(
+        "Creates a screen section for one entity with a widget for each selected field, laid "
+            + "out automatically. Call GET /wizards/screen-sections/wizard-data first and take "
+            + "the field ids from its response; leave primary-key fields out unless the user "
+            + "explicitly asks for one. Name must be unique among screen sections and Caption "
+            + "is the title users see. To add or change widgets on a section that already "
+            + "exists use the SectionEditor tools instead. "
+            + WizardIdRule
+            + WizardConfirmationRule
+    )]
     public IActionResult CreateScreenSection([FromBody] CreateScreenSectionModel input) =>
         Ok(screenSectionWizard.CreateScreenSection(input));
 }

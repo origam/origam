@@ -582,6 +582,15 @@ namespace Origam.DA.Service {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} Could Not Finish.
+        /// </summary>
+        internal static string ModelCheckerCouldNotFinish {
+            get {
+                return ResourceManager.GetString("ModelCheckerCouldNotFinish", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No changes in dataset.
         /// </summary>
         internal static string NoChangesInDataSet {

@@ -26,7 +26,7 @@ export class ToolboxState {
   @observable accessor selectedDataSourceId: string;
   @observable accessor isDirty: boolean = false;
   tabViewState: TabViewState = new TabViewState();
-  onNameTopPropertiesChanged: (() => void) | undefined = undefined;
+  onNameTopPropertiesChanged: ((warnings: string[]) => void) | undefined = undefined;
 
   constructor(
     public dataSources: IDataSource[],
@@ -34,7 +34,7 @@ export class ToolboxState {
     public schemaExtensionId: string,
     selectedDataSourceId: string,
     public id: string,
-    private updateTopProperties: () => () => Generator<Promise<any>, void, any>,
+    private updateTopProperties: () => () => Generator<Promise<any>, string[], any>,
   ) {
     this.name = name;
     this.selectedDataSourceId = selectedDataSourceId;
@@ -43,9 +43,9 @@ export class ToolboxState {
   selectedDataSourceIdChanged(value: string) {
     return function* (this: ToolboxState) {
       this.selectedDataSourceId = value;
-      yield* this.updateTopProperties()();
+      const warnings = yield* this.updateTopProperties()();
       if (this.onNameTopPropertiesChanged) {
-        this.onNameTopPropertiesChanged();
+        this.onNameTopPropertiesChanged(warnings);
       }
     }.bind(this);
   }
@@ -53,9 +53,9 @@ export class ToolboxState {
   nameChanged(value: string) {
     return function* (this: ToolboxState) {
       this.name = value;
-      yield* this.updateTopProperties()();
+      const warnings = yield* this.updateTopProperties()();
       if (this.onNameTopPropertiesChanged) {
-        this.onNameTopPropertiesChanged();
+        this.onNameTopPropertiesChanged(warnings);
       }
     }.bind(this);
   }

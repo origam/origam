@@ -19,7 +19,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System.ComponentModel;
+using System.Globalization;
 using System.Reflection;
+using Origam.Architect.Server.ReturnModels;
+using Origam.Architect.Server.Utils;
 using Origam.DA.ObjectPersistence;
 using Origam.Workbench.Services;
 
@@ -27,7 +31,7 @@ namespace Origam.Architect.Server.ArchitectLogic;
 
 public class PropertyParser(IPersistenceService persistenceService)
 {
-    public object Parse(PropertyInfo property, string value)
+    public object Parse(PropertyInfo property, string value, object instance)
     {
         if (value == null)
         {
@@ -37,6 +41,11 @@ public class PropertyParser(IPersistenceService persistenceService)
         if (property.PropertyType == typeof(string))
         {
             return value;
+        }
+
+        if (PropertyUtils.IsUntyped(property))
+        {
+            return ParseUntyped(property, value, instance);
         }
 
         if (property.PropertyType == typeof(bool))
@@ -147,14 +156,45 @@ public class PropertyParser(IPersistenceService persistenceService)
             return referenced;
         }
 
-        if (property.PropertyType == typeof(object))
+        throw new Exception(
+            $"Type {property.PropertyType.Name} of property {property.Name} cannot be parsed."
+        );
+    }
+
+    // Untyped properties are edited in the converter's text space, invariant.
+    private static object ParseUntyped(PropertyInfo property, string value, object instance)
+    {
+        if (value.Length == 0)
+        {
+            return null;
+        }
+
+        TypeConverter converter = PropertyUtils.CreateConverter(property);
+        var context = new Context(instance);
+        if (converter == null || !converter.CanConvertFrom(context, typeof(string)))
         {
             return value;
         }
 
-        throw new Exception(
-            $"Type {property.PropertyType.Name} of property {property.Name} cannot be parsed."
-        );
+        object converted;
+        try
+        {
+            converted = converter.ConvertFrom(context, CultureInfo.InvariantCulture, value);
+        }
+        catch (Exception exception) when (PropertyUtils.IsRejectedValueException(exception))
+        {
+            throw PropertyUtils.MakeValueNotReadException(property, exception);
+        }
+
+        // A converter answers text it cannot match with null, which would clear the value.
+        if (converted == null)
+        {
+            throw new UserOrigamException(
+                string.Format(Strings.Property_ValueNotOffered, property.Name, value)
+            );
+        }
+
+        return converted;
     }
 
     private Exception MakeCouldNotParseException(PropertyInfo property)

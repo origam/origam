@@ -24,6 +24,14 @@ export interface IArchitectApi {
 
   setActivePackage(packageId: string): Promise<void>;
 
+  createPackage(name: string): Promise<IPackage>;
+
+  deletePackage(packageId: string): Promise<void>;
+
+  getPackageReferences(): Promise<IPackageReferencesInfo>;
+
+  updatePackageReferences(packageId: string, referencedPackageIds: string[]): Promise<void>;
+
   getTopModelNodes(): Promise<IApiTreeNode[]>;
 
   getNodeChildren(node: INodeLoadData): Promise<IApiTreeNode[]>;
@@ -47,6 +55,12 @@ export interface IArchitectApi {
 
   searchDependencies(schemaItemId: string): Promise<ISearchResult[]>;
 
+  locateSchemaItem(schemaItemId: string): Promise<ISearchResult>;
+
+  runModelCheck(): Promise<IModelCheckResult>;
+
+  getModelCheckResult(): Promise<IModelCheckResult>;
+
   openTab(schemaItemId: string): Promise<IApiTabData>;
 
   closeTab(tabId: string): Promise<void>;
@@ -66,7 +80,7 @@ export interface IArchitectApi {
 
   getMenuItems(node: INodeLoadData): Promise<IMenuItemInfo[]>;
 
-  createNode(node: INodeLoadData, typeName: string): Promise<IApiTabData>;
+  createNode(node: INodeLoadData, typeName: string, name?: string | null): Promise<IApiTabData>;
 
   createGroup(node: INodeLoadData, name: string): Promise<IApiTreeNode>;
 
@@ -166,6 +180,10 @@ export interface IArchitectApi {
 
   createWorkflowMenuItem(request: ICreateWorkflowMenuItemRequest): Promise<ICreateWizardResult>;
 
+  createDataConstantMenuItem(
+    request: ICreateDataConstantMenuItemRequest,
+  ): Promise<ICreateWizardResult>;
+
   createRole(request: ICreateRoleRequest): Promise<ICreateWizardResult>;
 
   getLocalizationChildEntityWizardData(
@@ -179,10 +197,18 @@ export interface IArchitectApi {
   createScreenSection(request: ICreateScreenSectionRequest): Promise<ICreateWizardResult>;
 
   getDataStructureSql(dataStructureId: string): Promise<IGetDataStructureSqlResult>;
+  getDataStructureFilterSetSql(filterSetId: string): Promise<IGetDataStructureFilterSetSqlResult>;
 }
 
 export interface IGetDataStructureSqlResult {
   dataStructureId: string;
+  dataStructureName: string;
+  sql: string;
+}
+
+export interface IGetDataStructureFilterSetSqlResult {
+  filterSetId: string;
+  filterSetName: string;
   dataStructureName: string;
   sql: string;
 }
@@ -210,6 +236,12 @@ export interface ICreateMenuItemRequest {
 
 export interface ICreateWorkflowMenuItemRequest {
   workflowId: string;
+  caption: string;
+  role: string;
+}
+
+export interface ICreateDataConstantMenuItemRequest {
+  dataConstantId: string;
   caption: string;
   role: string;
 }
@@ -333,7 +365,7 @@ export interface ShemaItemInfo {
 
 export interface IParametersResult {
   output: string;
-  parameters: IParameterData[];
+  parameters: IParameterData[] | null;
 }
 
 export interface IParameterData {
@@ -348,8 +380,7 @@ export interface ITransformResult {
 }
 
 export interface IValidationResult {
-  title: string;
-  text: string;
+  isValid: boolean;
   output: string;
 }
 
@@ -374,6 +405,31 @@ export interface ISearchResult {
 export interface ISearchResultsEditorData {
   query: string;
   results: ISearchResult[];
+}
+
+export interface IModelRuleError {
+  item: ISearchResult;
+  message: string;
+}
+
+export interface IModelFileError {
+  text: string;
+  link: string;
+}
+
+export interface IModelFileErrorSection {
+  caption: string;
+  errors: IModelFileError[];
+}
+
+export interface IModelCheckResult {
+  lastRunAt: string | null;
+  ruleErrors: IModelRuleError[];
+  fileErrorSections: IModelFileErrorSection[];
+}
+
+export interface IModelCheckResultsEditorData {
+  result: IModelCheckResult;
 }
 
 export interface IAddToDeploymentRequest {
@@ -436,6 +492,7 @@ export interface IDesignerEditorData {
   schemaExtensionId: string;
   rootControl: IApiControl;
   selectedDataSourceId: string;
+  warnings: string[];
 }
 
 export interface ISectionEditorData extends IDesignerEditorData {
@@ -494,6 +551,7 @@ export enum OrigamDataType {
 
 export interface IPropertyUpdate {
   propertyName: string;
+  type: PropertyType;
   value: PropertyValue;
   errors: string[];
   dropDownValues: IDropDownValue[];
@@ -504,6 +562,7 @@ export interface IMenuItemInfo {
   typeName: string;
   iconName: string;
   iconIndex: number | null;
+  name: string | null;
 }
 
 export type EditorSubType =
@@ -519,6 +578,7 @@ export type EditorType =
   | EditorSubType
   | 'DocumentationEditor'
   | 'SearchResultsEditor'
+  | 'ModelCheckResultsEditor'
   | 'ShowSqlEditor'
   | 'AiSettingsModule';
 
@@ -543,6 +603,7 @@ export interface IApiTreeNode extends INodeLoadData {
   isInActivePackage?: boolean;
   isFileDirty?: boolean;
   isFolder?: boolean;
+  isMandatoryField?: boolean;
   role?: string;
   canDrag?: boolean;
 }
@@ -593,7 +654,20 @@ export interface IPackage {
   name: string;
 }
 
-export type PropertyType = 'boolean' | 'enum' | 'string' | 'integer' | 'float' | 'looukup';
+export interface IPackageReferencesInfo {
+  packageId: string;
+  candidates: IPackageReferenceCandidate[];
+}
+
+export interface IPackageReferenceCandidate {
+  id: string;
+  name: string;
+  isReferenced: boolean;
+  createsCycle: boolean;
+}
+
+export type PropertyType =
+  'boolean' | 'enum' | 'string' | 'integer' | 'float' | 'looukup' | 'untyped';
 
 export type PropertyValue = boolean | number | string | string[] | null;
 
@@ -646,6 +720,7 @@ export interface IApiTabData {
     | DocumentationEditorData
     | IDeploymentScriptsGeneratorModuleData
     | ISearchResultsEditorData
+    | IModelCheckResultsEditorData
     | IShowSqlEditorData
     | IAiSettingsModuleData;
   isDirty: boolean;

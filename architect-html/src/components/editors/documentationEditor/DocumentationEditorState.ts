@@ -23,6 +23,7 @@ import {
   IUpdatePropertiesResult,
 } from '@api/IArchitectApi';
 import { IEditorNode } from '@components/editorTabView/EditorTabViewState';
+import { ModelTreeState } from '@components/modelTree/ModelTreeState';
 import { EditorProperty, toChanges } from '@editors/gridEditor/EditorProperty';
 import { GridEditorState } from '@editors/gridEditor/GridEditorState';
 
@@ -33,9 +34,10 @@ export class DocumentationEditorState extends GridEditorState {
     private documentationData: DocumentationEditorData,
     isDirty: boolean,
     architectApi: IArchitectApi,
+    modelTreeState: ModelTreeState,
   ) {
     const properties = documentationData.properties.map(property => new EditorProperty(property));
-    super(editorId, editorNode, properties, isDirty, architectApi);
+    super(editorId, editorNode, properties, isDirty, architectApi, modelTreeState);
   }
 
   get label() {
@@ -46,9 +48,7 @@ export class DocumentationEditorState extends GridEditorState {
     try {
       this.isSaving = true;
       yield this.architectApi.persistDocumentationChanges(this.editorNode.origamId);
-      if (this.editorNode.parent) {
-        yield* this.editorNode.parent.loadChildren();
-      }
+      yield* this.modelTreeState.reloadParentOf(this.editorNode.origamId, this.editorNode.parent);
       this._isDirty = false;
     } finally {
       this.isSaving = false;

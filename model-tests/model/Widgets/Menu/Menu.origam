@@ -41,18 +41,36 @@
   <rrmi:MenuItem
     asi:abstract="false"
     ami:alwaysOpenNew="false"
-    ami:displayName="LinkReport"
+    ami:displayName="LinkReportPublic"
     rrmi:exportFormatType="HTML"
     x:id="3dc51183-a78e-4663-bd41-97b230de7b7d"
-    asi:name="LinkReport"
+    asi:name="LinkReportPublic"
     ami:openExclusively="false"
     ami:order="100"
     x:parentId="147775f5-451d-4efd-8634-7f27a2cf50a6"
-    rrmi:report="Widgets/Report/LinkReport.origam#LinkReport/1802bcc1-dff2-420c-b26a-af6041702622"
+    rrmi:report="LinkReportPublic#LinkReportPublic/1802bcc1-dff2-420c-b26a-af6041702622"
     ami:roles="*">
     <sdpm:SelectionDialogParameterMapping
       asi:abstract="false"
       x:id="567ff3db-6028-49a7-b581-1d139faa2315"
+      sdpm:itemType="SelectionDialogParameterMapping"
+      asi:name="NewSelectionDialogParameterMapping" />
+  </rrmi:MenuItem>
+  <rrmi:MenuItem
+    asi:abstract="false"
+    ami:alwaysOpenNew="false"
+    ami:displayName="LinkReportPrivate"
+    rrmi:exportFormatType="HTML"
+    x:id="5619f201-dc00-488c-85f6-e1d2c6c3732d"
+    asi:name="LinkReportPrivate"
+    ami:openExclusively="false"
+    ami:order="100"
+    x:parentId="147775f5-451d-4efd-8634-7f27a2cf50a6"
+    rrmi:report="LinkReportPrivate#LinkReportPrivate/0ec82e9f-542f-42e6-b262-5a674d72816f"
+    ami:roles="*">
+    <sdpm:SelectionDialogParameterMapping
+      asi:abstract="false"
+      x:id="abdfe94b-c934-4812-bcbc-45280af9638b"
       sdpm:itemType="SelectionDialogParameterMapping"
       asi:name="NewSelectionDialogParameterMapping" />
   </rrmi:MenuItem>
@@ -889,6 +907,17 @@
     x:parentId="147775f5-451d-4efd-8634-7f27a2cf50a6"
     ami:roles="*"
     wrmi:workflow="Widgets/Workflow/Widgets/TestOAuthRequest.origam#TestOAuthRequest/4af5f7a5-3fbe-459b-aa6c-6ac2e7613b4f" />
+  <wrmi:MenuItem
+    asi:abstract="false"
+    ami:alwaysOpenNew="false"
+    ami:displayName="ProcessDataLoadedByUIAction"
+    x:id="978a95e5-c636-42d7-b29e-6af7b51feeaf"
+    asi:name="ProcessDataLoadedByUIAction"
+    ami:openExclusively="false"
+    ami:order="100"
+    x:parentId="147775f5-451d-4efd-8634-7f27a2cf50a6"
+    ami:roles="*"
+    wrmi:workflow="ProcessDataLoadedByUIAction#ProcessDataLoadedByUIAction/5c8fa520-8d36-4f7a-84fe-0e17c4923696" />
   <wrmi:MenuItem
     asi:abstract="false"
     ami:alwaysOpenNew="false"

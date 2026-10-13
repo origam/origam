@@ -23,6 +23,7 @@ import {
   IApiTabData,
   IArchitectApi,
   IDatabaseResultResponse,
+  IModelCheckResult,
   ISearchResult,
 } from '@api/IArchitectApi';
 import { AgentConnection, getAgentConnection, getCustomInstructions } from '@/ai/AiPromptApi';
@@ -31,6 +32,7 @@ import { TreeNode } from '@components/modelTree/TreeNode';
 import { askYesNoQuestion, YesNoResult } from '@dialogs/DialogUtils';
 import { EditorContainer } from '@editors/EditorContainer.tsx';
 import { getEditorContainer } from '@editors/getEditorContainer.tsx';
+import { ModelCheckResultsTabState } from '@components/modelCheck/ModelCheckResultsTabState.ts';
 import { SearchResultsTabState } from '@components/search/SearchResultsTabState.ts';
 import { FlowHandlerInput, runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { RootStore } from '@stores/RootStore';
@@ -38,6 +40,7 @@ import { observable } from 'mobx';
 import { CancellablePromise } from 'mobx/dist/api/flow';
 
 const SearchEditorId = 'SearchResultsEditor-Id';
+const ModelCheckEditorId = 'ModelCheckResultsEditor-Id';
 const ShowSqlEditorIdPrefix = 'ShowSqlEditor-';
 const DeploymentScriptsGeneratorModuleId = 'DeploymentScriptsGeneratorModule-Id';
 const AiSettingsModuleId = 'AiSettingsModule-Id';
@@ -66,11 +69,21 @@ export class EditorTabViewState {
         console.error('Failed to auto-open Deployment Scripts Generator module:', err);
       }
     }
+
+    try {
+      const modelCheckState = this.rootStore.modelCheckState;
+      yield* modelCheckState.loadLastResult();
+      if (modelCheckState.lastResult && this.rootStore.uiState.modelCheckState.isOpen) {
+        this.openModelCheckResults(modelCheckState.lastResult);
+      }
+    } catch (err) {
+      console.error('Failed to restore the model validation results:', err);
+    }
   }
 
   private toEditor(data: IApiTabData) {
     const treeNode = this.rootStore.modelTreeState.findNodeById(data.node.id);
-    const editorData = new EditorData(data, treeNode);
+    const editorData = new EditorData(data, treeNode?.parent ?? null);
 
     return getEditorContainer({
       editorType: editorData.editorType,
@@ -89,7 +102,7 @@ export class EditorTabViewState {
       this: EditorTabViewState,
     ): Generator<Promise<IApiTabData>, void, IApiTabData> {
       const apiTabData = yield this.architectApi.openTab(node.origamId);
-      const editorData = new EditorData(apiTabData, node);
+      const editorData = new EditorData(apiTabData, node.parent);
       this.openEditor(editorData);
     }.bind(this);
   }
@@ -102,7 +115,7 @@ export class EditorTabViewState {
       const treeNode =
         this.rootStore.modelTreeState.findNodeById(apiTabData.node.id) ??
         this.rootStore.modelTreeState.findNodeById(origamId);
-      const editorData = new EditorData(apiTabData, treeNode);
+      const editorData = new EditorData(apiTabData, treeNode?.parent ?? null);
       this.openEditor(editorData);
     }.bind(this);
   }
@@ -111,8 +124,7 @@ export class EditorTabViewState {
     return function* (this: EditorTabViewState): Generator<Promise<any>, void, any> {
       const idSet = new Set(origamIds);
       const targets = this.editorsContainers.filter(
-        editor =>
-          editor.state.origamId && idSet.has(editor.state.origamId) && !editor.state.isDirty,
+        editor => editor.state.origamId && idSet.has(editor.state.origamId),
       );
       if (targets.length === 0) {
         return;
@@ -144,7 +156,7 @@ export class EditorTabViewState {
       this: EditorTabViewState,
     ): Generator<Promise<IApiTabData>, void, IApiTabData> {
       const apiTabData = yield this.architectApi.openDocumentationEditor(node.origamId);
-      const editorData = new EditorData(apiTabData, node);
+      const editorData = new EditorData(apiTabData, node.parent);
       this.openEditor(editorData, 'DocumentationEditor');
     }.bind(this);
   }
@@ -286,6 +298,38 @@ export class EditorTabViewState {
     this.openEditor(editorData);
   }
 
+  openModelCheckResults(result: IModelCheckResult) {
+    const existingEditor = this.editorsContainers.find(
+      editor => editor.state instanceof ModelCheckResultsTabState,
+    );
+    if (existingEditor) {
+      const editorState = existingEditor.state as ModelCheckResultsTabState;
+      editorState.result = result;
+      this.setActiveEditor(editorState.tabId);
+      return;
+    }
+
+    const tempTabData: IApiTabData = {
+      tabId: ModelCheckEditorId,
+      tabType: 'ModelCheckResultsEditor',
+      parentNodeId: undefined,
+      isDirty: false,
+      node: {
+        id: '',
+        origamId: '',
+        nodeText: '',
+        editorType: null,
+      },
+      data: {
+        result,
+      },
+    };
+
+    const editorData = new EditorData(tempTabData, null);
+    this.openEditor(editorData);
+    this.rootStore.uiState.setModelCheckOpen(true);
+  }
+
   openEditor(editorData: EditorData, editorType?: EditorType) {
     const alreadyOpenEditor = this.editorsContainers.find(
       editor => editor.state.tabId === editorData.editorId,
@@ -353,6 +397,7 @@ export class EditorTabViewState {
       this.editorsContainers = [];
       yield this.architectApi.closeAllTabs();
       this.rootStore.uiState.setDsGeneratorState({ isOpen: false });
+      this.rootStore.uiState.setModelCheckOpen(false);
       return true;
     }.bind(this);
   }
@@ -387,6 +432,8 @@ export class EditorTabViewState {
 
       if (editorId === DeploymentScriptsGeneratorModuleId) {
         this.rootStore.uiState.setDsGeneratorState({ isOpen: false });
+      } else if (editorId === ModelCheckEditorId) {
+        this.rootStore.uiState.setModelCheckOpen(false);
       } else if (
         editorId !== SearchEditorId &&
         editorId !== AiSettingsModuleId &&

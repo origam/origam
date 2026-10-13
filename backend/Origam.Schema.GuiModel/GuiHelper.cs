@@ -36,6 +36,12 @@ public class GuiHelper
     public const string CONTROL_NAME_DATEBOX = "AsDateBox";
     public const string CONTROL_NAME_FORM = "AsForm";
     public const string CONTROL_NAME_MULTICOLUMNADAPTERFIELD = "MultiColumnAdapterFieldWrapper";
+    public const string CONTROL_NAME_TAGINPUT = "TagInput";
+    public const string CONTROL_NAME_CHECKLIST = "Checklist";
+    public const string CONTROL_NAME_BLOBCONTROL = "BlobControl";
+    public const string CONTROL_NAME_IMAGEBOX = "ImageBox";
+    public const string CONTROL_NAME_COLORPICKER = "ColorPicker";
+    public const string CONTROL_NAME_RADIOBUTTON = "RadioButton";
 
     public static FormControlSet CreateForm(
         DataStructure dataSource,
