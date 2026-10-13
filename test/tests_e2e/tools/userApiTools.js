@@ -2,10 +2,9 @@ const { userName, password, serverClientSecret } = require("../additionalConfig"
 
 async function getStatusCode(page, path, headers = {}) {
   return await page.evaluate(
-    async (requestPath, requestHeaders) =>
+    async ({ requestPath, requestHeaders }) =>
       (await fetch(requestPath, { headers: requestHeaders })).status,
-    path,
-    headers
+    { requestPath: path, requestHeaders: headers }
   );
 }
 
