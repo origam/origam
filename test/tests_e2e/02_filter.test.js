@@ -1,4 +1,4 @@
-const { test, expect } = require("@playwright/test");
+const { test } = require("@playwright/test");
 const { openMenuItem, login, waitForRowCount, waitForRowCountData, beforeEachTest } = require('./testTools');
 const {setDateFilter, setTwoFieldDateFilter, setFilter, setTwoFieldFilter, setComboFilter, openFilters} = require("./filterTestTools");
 const {widgetsMenuItemId, allDataTypesMenuId, topMenuHeader} = require("./modelIds");
