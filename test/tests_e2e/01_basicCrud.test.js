@@ -165,8 +165,8 @@ test.describe("Html client", () => {
     let detailRowCountData = await waitForRowCountData(page, detailDataViewId, 0);
     expect(detailRowCountData.selectedRow).toBe("-");
     expect(detailRowCountData.rowCount).toBe("0");
-    await selectMasterRow(1);
 
+    await selectMasterRow(1);
     detailRowCountData = await waitForRowCountData(page, detailDataViewId, 1);
     expect(detailRowCountData.selectedRow).toBe("1");
     expect(detailRowCountData.rowCount).toBe("1");

@@ -45,16 +45,26 @@ function modelInstanceId(dataViewId) {
   return dataViewId.startsWith("dataView_") ? dataViewId.slice(9) : dataViewId;
 }
 
-async function getTableData(page, dataViewId) {
+async function getTableData(page, dataViewId, afterRenderRevision) {
   const id = modelInstanceId(dataViewId);
   let tableData;
   await expect.poll(async () => {
     tableData = await page.evaluate(key => window.tableDebugMonitor?.[key], id);
     const workState = await getApplicationWorkState(page);
-    return Boolean(tableData?.rendered && workState.ready);
+    return Boolean(tableData?.rendered && workState.ready && (
+      afterRenderRevision === undefined || tableData.renderRevision > afterRenderRevision
+    ));
   }, { timeout: 60_000 }).toBe(true);
-  await page.evaluate(() => { window.tableDebugMonitor = undefined; });
   return tableData;
+}
+
+async function performAndWaitForTableRender(page, dataViewId, action) {
+  const renderRevision = await page.evaluate(
+    key => window.tableDebugMonitor?.[key]?.renderRevision ?? 0,
+    modelInstanceId(dataViewId)
+  );
+  await action();
+  return getTableData(page, dataViewId, renderRevision);
 }
 
 async function waitForRowCount(page, dataViewId, expectedRowCount) {
@@ -66,7 +76,6 @@ async function waitForRowCount(page, dataViewId, expectedRowCount) {
     return tableData?.rendered && workState.ready ? tableData.data.length : undefined;
   }, { timeout: 60_000 }).toBe(expectedRowCount);
   await waitForDataViewLoadingToFinish(page, dataViewId);
-  await page.evaluate(() => { window.tableDebugMonitor = undefined; });
   return tableData;
 }
 
@@ -93,7 +102,6 @@ async function waitForRowCountData(page, dataViewId, expectedRowCount) {
       : 0;
     return stablePollCount >= 3 ? result.rowCount : undefined;
   }, { intervals: [250, 500, 1_000], timeout: 120_000 }).toBe(String(expectedRowCount));
-  await page.evaluate(() => { window.tableDebugMonitor = undefined; });
   return result;
 }
 
@@ -163,6 +171,7 @@ module.exports = {
   inputByPressingKeys,
   login,
   openMenuItem,
+  performAndWaitForTableRender,
   switchLanguageTo,
   switchToFormPerspective,
   switchToTablePerspective,

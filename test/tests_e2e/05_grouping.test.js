@@ -1,6 +1,6 @@
 const { test, expect } = require("@playwright/test");
 const { openMenuItem, login, waitForRowCountData,
-  waitForRowSelected, getTableData, beforeEachTest
+  waitForRowSelected, performAndWaitForTableRender, beforeEachTest
 } = require('./testTools');
 const {widgetsMenuItemId, allDataTypesMenuId, allDataTypesLazyMenuItemsId, topMenuHeader} = require("./modelIds");
 const {restoreAllDataTypesTable, clearScreenConfiguration} = require("./dbTools");
@@ -56,7 +56,6 @@ async function setGrouping(expectedRowCount) {
 
   await setGroupingCheckbox(text1PropertyId, "1");
   await setGroupingCheckbox(integer1PropertyId, "2");
-  await page.evaluate(() => { window.tableDebugMonitor = undefined; });
   await columnConfigOk.click();
   await waitForRowCountData(page, dataViewId, expectedRowCount);
 }
@@ -66,28 +65,24 @@ async function clearGrouping() {
 
   await setGroupingCheckbox(text1PropertyId, "");
   await setGroupingCheckbox(integer1PropertyId, "");
-  await page.evaluate(() => { window.tableDebugMonitor = undefined; });
-  await columnConfigOk.click();
-  return getTableData(page, dataViewId);
+  return performAndWaitForTableRender(page, dataViewId, () => columnConfigOk.click());
 }
 
 async function clickTableAndWaitForRender(tableArea, position) {
-  await page.evaluate(() => { window.tableDebugMonitor = undefined; });
-  await tableArea.click({ position });
-  await getTableData(page, dataViewId);
+  await performAndWaitForTableRender(page, dataViewId, () => tableArea.click({ position }));
 }
 
 async function clickLazyGroupAndWaitForResponse(tableArea, position, endpoint) {
-  await page.evaluate(() => { window.tableDebugMonitor = undefined; });
-  const responsePromise = page.waitForResponse(response =>
-    response.request().method() === "POST" && response.url().endsWith(endpoint)
-  );
-  const [response] = await Promise.all([
-    responsePromise,
-    tableArea.click({ position }),
-  ]);
-  expect(response.ok()).toBe(true);
-  await getTableData(page, dataViewId);
+  await performAndWaitForTableRender(page, dataViewId, async () => {
+    const responsePromise = page.waitForResponse(response =>
+      response.request().method() === "POST" && response.url().endsWith(endpoint)
+    );
+    const [response] = await Promise.all([
+      responsePromise,
+      tableArea.click({ position }),
+    ]);
+    expect(response.ok()).toBe(true);
+  });
 }
 
 test.describe("Html client", () => {
