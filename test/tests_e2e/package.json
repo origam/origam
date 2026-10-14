@@ -5,6 +5,7 @@
   "packageManager": "yarn@1.22.22",
   "dependencies": {
     "@playwright/test": "^1.63.0",
+    "dotenv": "^16.6.1",
     "mssql": "^12.7.2",
     "pg": "^8.23.0",
     "playwright-trx-reporter": "^1.0.10"
@@ -17,6 +18,8 @@
     "test:e2e": "playwright test",
     "test:debug": "playwright test --debug",
     "test:ui": "playwright test --ui",
+    "test:ui:mssql": "node runUi.js mssql",
+    "test:ui:postgresql": "node runUi.js postgresql",
     "show-report": "playwright show-report"
   }
 }

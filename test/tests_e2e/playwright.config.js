@@ -14,6 +14,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 const { defineConfig } = require("@playwright/test");
+require("dotenv").config({ path: require("path").join(__dirname, ".env"), quiet: true });
 const { backEndUrl } = require("./additionalConfig");
 
 module.exports = defineConfig({
@@ -34,7 +35,7 @@ module.exports = defineConfig({
     actionTimeout: 60_000,
     baseURL: backEndUrl,
     channel: "chrome",
-    headless: process.env.CI === "true",
+    headless: (process.env.ORIGAM_E2E_HEADLESS ?? process.env.CI) === "true",
     ignoreHTTPSErrors: true,
     viewport: { width: 1800, height: 2000 },
     screenshot: "only-on-failure",
