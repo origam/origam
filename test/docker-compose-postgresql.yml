@@ -32,6 +32,9 @@ services:
     environment:
       - BUILDKIT_PROGRESS=tty
       - CI=true
+      - ORIGAM_E2E_RUNNER=${ORIGAM_E2E_RUNNER:-playwright}
+      - ORIGAM_E2E_HEADLESS=true
+      - PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome
     ports:
       - "443:443"
     depends_on:

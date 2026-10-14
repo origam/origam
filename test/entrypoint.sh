@@ -137,30 +137,50 @@ else
   echo " Server initialized"
 fi
 
-print_title "Run frontend integration tests"
-cd tests_e2e
-yarn install > /dev/null 2>&1
+test_runner="${ORIGAM_E2E_RUNNER:-playwright}"
+case "$test_runner" in
+  playwright)
+    test_directory=/home/origam/server_bin/tests_e2e
+    ;;
+  legacy)
+    test_directory=/home/origam/server_bin/tests_e2e_legacy
+    ;;
+  *)
+    print_error "Unknown ORIGAM_E2E_RUNNER: $test_runner"
+    exit 1
+    ;;
+esac
+
+print_title "Run $test_runner frontend integration tests"
+cd "$test_directory"
+if [[ "$test_runner" == legacy ]]; then
+  yarn install --frozen-lockfile --ignore-scripts || exit 1
+else
+  yarn install --frozen-lockfile || exit 1
+fi
 yarn test:e2e
 if [[ $? -eq 0 ]]; then
-  sudo cp frontend-integration-test-results.trx /home/origam/output/
+  sudo cp frontend-integration-test-results.trx "/home/origam/output/frontend-integration-test-results-$test_runner.trx"
   sudo cp -r playwright-report test-results /home/origam/output/ 2>/dev/null || true
+  sudo cp -r screenshots /home/origam/output/legacy-screenshots 2>/dev/null || true
   echo "Success."
 else
-  sudo cp frontend-integration-test-results.trx /home/origam/output/
+  sudo cp frontend-integration-test-results.trx "/home/origam/output/frontend-integration-test-results-$test_runner.trx"
   sudo cp -r playwright-report test-results /home/origam/output/ 2>/dev/null || true
+  sudo cp -r screenshots /home/origam/output/legacy-screenshots 2>/dev/null || true
   print_error "Frontend integration tests failed"
   exit 1
 fi
 
 print_title "Run user API integration tests in Cookie mode"
 restart_server_with_private_api_authentication Cookie
-cd /home/origam/server_bin/tests_e2e
+cd "$test_directory"
 yarn test:e2e userApi
 if [[ $? -eq 0 ]]; then
-  sudo cp frontend-integration-test-results.trx /home/origam/output/frontend-integration-test-results-cookie-mode.trx
+  sudo cp frontend-integration-test-results.trx "/home/origam/output/frontend-integration-test-results-$test_runner-cookie-mode.trx"
   echo "Success."
 else
-  sudo cp frontend-integration-test-results.trx /home/origam/output/frontend-integration-test-results-cookie-mode.trx
+  sudo cp frontend-integration-test-results.trx "/home/origam/output/frontend-integration-test-results-$test_runner-cookie-mode.trx"
   print_error "User API integration tests in Cookie mode failed"
   exit 1
 fi

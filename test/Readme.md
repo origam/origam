@@ -1,6 +1,7 @@
 # Running the end-to-end tests locally
 
 The browser tests use Playwright and reset their test data directly through Node database drivers.
+The original Jest/Puppeteer suite is retained separately in `tests_e2e_legacy` for comparison.
 
 1. Start Origam with the automatic-test model deployed.
 2. In `test/tests_e2e`, run `yarn install`.
@@ -54,3 +55,39 @@ Failures retain a screenshot, video, and trace under `test-results`. The HTML re
    `docker compose --env-file envFileMsSql.env -f docker-compose-mssql.yml --profile test up`.
 
 The container copies the TRX file, Playwright HTML report, and failure artifacts to `test/output`.
+
+# Comparing the legacy and Playwright suites locally
+
+Install the Playwright dependencies as above, then install the frozen legacy dependencies:
+
+```powershell
+cd test/tests_e2e_legacy
+corepack yarn@1.22.22 install --frozen-lockfile --ignore-scripts
+cd ..
+node run-e2e.js mssql
+```
+
+Use `postgresql` instead of `mssql` for that profile. The comparison launcher loads
+`tests_e2e/.env.mssql` or `tests_e2e/.env.postgresql`, forces both runners into headless mode,
+and runs legacy followed by Playwright. It runs the second suite even if the first fails,
+then returns a failure exit code if either failed. Both suites reset shared test data, so
+do not run them concurrently against the same application/database.
+
+To run just one suite or selected files:
+
+```powershell
+node run-e2e.js mssql legacy
+node run-e2e.js mssql playwright
+node run-e2e.js mssql both 01_basicCrud.test.js
+```
+
+The launcher finds installed Chrome and a built `origam-utils.dll` automatically. To override
+them, set `PUPPETEER_EXECUTABLE_PATH` and `ORIGAM_E2E_UTILS_PATH` in the active profile.
+The .NET utility uses `OrigamSettings.config` beside its executable; ensure it targets the
+same test database as the running application. Legacy reports are written inside
+`tests_e2e_legacy`, and Playwright reports inside `tests_e2e`.
+
+GitHub runs a separate job for each runner and database (four jobs in total), using the same
+application image and model with an isolated server/database per job. Both authentication
+phases are retained. Reports and diagnostic artifacts identify the runner and database.
+Docker selects Playwright by default; set `ORIGAM_E2E_RUNNER=legacy` to select the old suite.

@@ -49,6 +49,7 @@ COPY --chown=origam:origam tests_workflow \
     /home/origam/tests_workflow/
 
 COPY --chown=origam:origam tests_e2e /home/origam/server_bin/tests_e2e/
+COPY --chown=origam:origam tests_e2e_legacy /home/origam/server_bin/tests_e2e_legacy/
 COPY --chown=origam:origam model /home/origam/projectData/model/
 
 WORKDIR /home/origam/server_bin
