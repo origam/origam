@@ -1,4 +1,4 @@
-const { sleep, openMenuItem, login, waitForRowCountData, catchRequests, clickAndWaitForXPath,
+const { sleep, openMenuItem, login, waitForRowCountData, catchRequests,
   getTableData, beforeEachTest, afterEachTest
 } = require('./testTools');
 const {widgetsMenuItemId, allDataTypesLazyMenuItemsId, topMenuHeader} = require("./modelIds");
@@ -58,14 +58,14 @@ describe("Html client", () => {
     await waitForRowCountData(page, dataViewId,2099);
 
     await sleep(300);
-    const table = await page.waitForSelector(
+    await page.waitForSelector(
       `#${dataViewId} .horiz-scrollbar`,
       { visible: true, timeout: 3000 }
     );
     await sleep(500);
     await waitForRequests
 
-    await autoScroll(page, table);
+    await autoScroll(page);
 
     const tableData = await getTableData(page, dataViewId);
     const rows = tableData.data

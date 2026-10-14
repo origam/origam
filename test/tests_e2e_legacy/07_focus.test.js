@@ -1,13 +1,11 @@
-const { sleep, openMenuItem, login, waitForRowCountData, switchToFormPerspective,
-  inputByPressingKeys, switchLanguageTo, waitForFocus,
-  switchToTablePerspective, catchRequests, beforeEachTest, afterEachTest, xPathContainsClass
+const { sleep, openMenuItem, login, waitForRowCountData, switchLanguageTo,
+  catchRequests, beforeEachTest, afterEachTest, xPathContainsClass
 } = require('./testTools');
 const {widgetsMenuItemId,topMenuHeader, allDataTypesLazyDataViewId,
   masterDataViewId, sectionsMenuItemId, masterDetailLazyLoadedMenuItemId, allDataTypesLazyMenuItemsId
 } = require("./modelIds");
 const { clearScreenConfiguration,
   restoreAllDataTypesTable} = require("./dbTools");
-const expect = require("expect");
 const {openFilters, setFilter} = require("./filterTestTools");
 
 let browser;

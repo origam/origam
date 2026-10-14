@@ -2,7 +2,7 @@ const { test, expect } = require("@playwright/test");
 const { openMenuItem, login, waitForRowCountData, switchLanguageTo,
   beforeEachTest, waitForRowSelected } = require('./testTools');
 const {widgetsMenuItemId,topMenuHeader, allDataTypesLazyDataViewId,
-  masterDataViewId, sectionsMenuItemId, masterDetailLazyLoadedMenuItemId, allDataTypesLazyMenuItemsId, detailDataViewId
+  sectionsMenuItemId, masterDetailLazyLoadedMenuItemId, allDataTypesLazyMenuItemsId
 } = require("./modelIds");
 const { clearScreenConfiguration, restoreWidgetSectionTestMasterForRefreshTest,
   restoreAllDataTypesTable} = require("./dbTools");

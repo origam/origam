@@ -1,9 +1,6 @@
 const { test, expect } = require("@playwright/test");
 const { openMenuItem, login, waitForRowCount, beforeEachTest } = require('./testTools');
-const {widgetsMenuItemId, allDataTypesMenuId, topMenuHeader,  allDataTypesDataViewId,
-  detailTabHandelId,
-  detailDataViewId,
-  masterDataViewId
+const {widgetsMenuItemId, allDataTypesMenuId, topMenuHeader, allDataTypesDataViewId
 } = require("./modelIds");
 const {restoreAllDataTypesTable, clearScreenConfiguration} = require("./dbTools");
 

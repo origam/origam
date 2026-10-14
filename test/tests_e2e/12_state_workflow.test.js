@@ -14,12 +14,6 @@ test.beforeEach(async ({ page: testPage }) => {
 
 
 
-async function clickElement(elementText, elementType) {
-  await page.getByText(elementText, {
-    exact: false,
-  }).and(page.locator(elementType || "div")).first().click();
-}
-
 async function waitForErrorMessage(messageBegging) {
   const message = page.locator("div[class*='dialogMessage']");
   await expect.poll(async () =>

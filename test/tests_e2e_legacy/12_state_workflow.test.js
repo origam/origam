@@ -18,16 +18,6 @@ afterEach(async () => {
   browser = undefined;
 });
 
-async function clickElement(elementText, elementType) {
-  const tag = elementType ? elementType : "div";
-  const element = await page.waitForXPath(
-    `//${tag}[contains(text(),'${elementText}')]`,
-    {visible: true}
-  );
-  await sleep(200);
-  await element.click();
-}
-
 async function waitForErrorMessage(messageBegging) {
   const messageElement = await page.waitForXPath(
     `//div[contains(@class, 'dialogMessage')]`,

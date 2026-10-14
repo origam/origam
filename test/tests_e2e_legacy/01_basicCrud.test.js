@@ -1,10 +1,9 @@
-const { sleep, xPathContainsClass, openMenuItem, login, getRowCountData, catchRequests, waitForRowCount, afterEachTest,
+const { sleep, xPathContainsClass, openMenuItem, login, getRowCountData, catchRequests, afterEachTest,
   beforeEachTest
 } = require('./testTools');
 const {widgetsMenuItemId, sectionsMenuItemId, masterDetailMenuItemId,
   topMenuHeader, masterDataViewId, detailDataViewId, detailEditorId, detailTabHandelId} = require("./modelIds");
 const { restoreWidgetSectionTestMaster, clearScreenConfiguration} = require("./dbTools");
-const {installMouseHelper} = require("./installMouseHelper_");
 
 let browser;
 let page;

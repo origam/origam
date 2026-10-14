@@ -1,15 +1,12 @@
-const { sleep, openMenuItem, login, waitForRowCountData, switchToFormPerspective,
-  inputByPressingKeys, switchLanguageTo, waitForFocus,
-  switchToTablePerspective, catchRequests, beforeEachTest, afterEachTest, xPathContainsClass, waitForRowCount,
+const { sleep, openMenuItem, login, waitForRowCountData, switchLanguageTo,
+  beforeEachTest, afterEachTest,
   waitForRowSelected
 } = require('./testTools');
 const {widgetsMenuItemId,topMenuHeader, allDataTypesLazyDataViewId,
-  masterDataViewId, sectionsMenuItemId, masterDetailLazyLoadedMenuItemId, allDataTypesLazyMenuItemsId, detailDataViewId
+  sectionsMenuItemId, masterDetailLazyLoadedMenuItemId, allDataTypesLazyMenuItemsId
 } = require("./modelIds");
 const { clearScreenConfiguration, restoreWidgetSectionTestMasterForRefreshTest,
   restoreAllDataTypesTable} = require("./dbTools");
-const expect = require("expect");
-const {openFilters, setFilter} = require("./filterTestTools");
 const {installMouseHelper} = require("./installMouseHelper_");
 
 let browser;

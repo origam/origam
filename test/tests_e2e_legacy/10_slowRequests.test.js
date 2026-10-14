@@ -1,9 +1,6 @@
-const { sleep, openMenuItem, login, waitForRowCount, waitForRowCountData, beforeEachTest, afterEachTest, getRowCountData
+const { sleep, openMenuItem, login, waitForRowCount, beforeEachTest, afterEachTest
 } = require('./testTools');
-const {widgetsMenuItemId, allDataTypesMenuId, topMenuHeader,  allDataTypesDataViewId,
-  detailTabHandelId,
-  detailDataViewId,
-  masterDataViewId
+const {widgetsMenuItemId, allDataTypesMenuId, topMenuHeader, allDataTypesDataViewId
 } = require("./modelIds");
 const {restoreAllDataTypesTable, clearScreenConfiguration} = require("./dbTools");
 const expect = require("expect");
