@@ -384,4 +384,7 @@
   <data name="ModelCheckerCouldNotFinish" xml:space="preserve">
     <value>{0} Could Not Finish</value>
   </data>
+  <data name="SnapshotIsolationNotEnabled" xml:space="preserve">
+    <value>Snapshot isolation was requested, but it is not enabled for database '{0}'. Enable ALLOW_SNAPSHOT_ISOLATION for this database.</value>
+  </data>
 </root>
