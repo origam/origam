@@ -90,7 +90,9 @@ restart_server_with_private_api_authentication() {
   dotnet Origam.Server.dll >> origam-output.txt 2>&1 &
   server_pid=$!
   for attempt in {1..60}; do
-    if [[ "$(curl -sk -o /dev/null -w "%{http_code}" https://localhost/)" == "200" ]]; then
+    if [[ "$(curl -s -H 'X-Forwarded-Proto: https' -H 'Host: localhost' -o /dev/null -w "%{http_code}" http://127.0.0.1:8080/)" == "200" ]]; then
+      # Clear per-worker upstream failures recorded while the backend was stopped.
+      sudo /etc/init.d/nginx reload || exit 1
       return 0
     fi
     sleep 2
@@ -122,7 +124,7 @@ start_server
 echo "Waiting for Origam.Server.dll to accept requests..."
 server_ready=false
 for attempt in {1..30}; do
-  if curl --fail --silent --insecure https://localhost/ > /dev/null; then
+  if curl --fail --silent -H 'X-Forwarded-Proto: https' -H 'Host: localhost' http://127.0.0.1:8080/ > /dev/null; then
     server_ready=true
     break
   fi
@@ -134,6 +136,7 @@ if [[ "$server_ready" != true ]]; then
   print_file_contents origam-output.txt
   exit 1
 else
+  sudo /etc/init.d/nginx reload || exit 1
   echo " Server initialized"
 fi
 

@@ -28,7 +28,7 @@ module.exports = defineConfig({
   reporter: [
     ["list"],
     ["html", { outputFolder: "playwright-report", open: "never" }],
-    ["playwright-trx-reporter", { outputFile: "frontend-integration-test-results.trx" }],
+    ["./trxReporter.js", { outputFile: "frontend-integration-test-results.trx" }],
   ],
   outputDir: "test-results",
   use: {

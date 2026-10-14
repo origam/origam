@@ -101,6 +101,9 @@ describe("Html client", () => {
     expect(rectColor).toBe("rgb(208, 2, 27)");
 
     // Enter applies the picked color and closes the picker, Escape would revert it.
+    await page.waitForFunction(selector =>
+      document.querySelector(selector)?.parentElement.contains(document.activeElement),
+      {}, sketchPickerSelector);
     await page.keyboard.press("Enter");
     await page.waitForSelector(sketchPickerSelector, {hidden: true});
 

@@ -100,7 +100,7 @@ test.describe("Html client", () => {
 
     await setGrouping(30);
 
-    const rowHeight = 30;
+    const rowHeight = 25;
     const tableArea = page.locator(`#${dataViewId} [class*='_cellAreaContainer']`);
 
     await clickTableAndWaitForRender(tableArea, {
@@ -108,13 +108,14 @@ test.describe("Html client", () => {
       y: rowHeight / 2,
     });
     await clickTableAndWaitForRender(tableArea, {
-      x: rowHeight,
-      y: rowHeight * 2,
+      x: rowHeight + (rowHeight / 5),
+      y: rowHeight * 2.5,
     });
     await tableArea.click({
-      position: { x: rowHeight * 2, y: rowHeight * 3 },
+      position: { x: rowHeight * 2, y: rowHeight * 3.5 },
     });
 
+    await waitForRowCountData(page, dataViewId, "2 (30)");
     const rowData = await waitForRowSelected(page, dataViewId, 1);
     expect(rowData && rowData.rowCount).toBe( '2 (30)');
 
