@@ -1,7 +1,6 @@
 const { sleep, openMenuItem, login, waitForRowCount, waitForRowCountData, clickAndWaitForSelector, clickAndWaitForXPath,
   catchRequests, waitForRowSelected, beforeEachTest, afterEachTest
 } = require('./testTools');
-const {installMouseHelper} = require('./installMouseHelper_');
 const {widgetsMenuItemId, allDataTypesMenuId, allDataTypesLazyMenuItemsId, topMenuHeader} = require("./modelIds");
 const {restoreAllDataTypesTable, clearScreenConfiguration} = require("./dbTools");
 
@@ -26,10 +25,6 @@ afterEach(async () => {
 const dataViewId = "dataView_e67865b0-ce91-413c-bed7-1da486399633";
 const text1PropertyId = "cb584956-8f34-4d95-852e-eff4680a2673";
 const integer1PropertyId = "3f3f6be7-6e87-48d7-9ac1-89ac30dc43ce";
-const boolean1PropertyId ="d63fbdbb-3bbc-43c9-a9f2-a8585c42bbae";
-const date1PropertyId ="c8e93248-81c0-4274-9ff1-1b7688944877";
-const comboPropertyId ="14be2199-ad7f-43c3-83bf-a27c1fa66f7c";
-const tagPropertyId ="3c685902-b55b-45cb-807c-01e8386bb313";
 
 // Opens the column configuration dialog and returns its OK button. Clicking the menu
 // item closes the dropdown, so a retry has to open the menu again instead of clicking
