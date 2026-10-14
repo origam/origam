@@ -18,7 +18,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { AiToolSectionsState } from '@/ai/AiToolSectionsState';
-import { T } from '@/main';
 import {
   DocumentationEditorData,
   EditorType,
@@ -134,7 +133,7 @@ export function getEditorContainer(args: {
       architectApi,
       modelTreeState,
     );
-    const editorComponent = <GridEditor editorState={editorState} title={editorState.title} />;
+    const editorComponent = <GridEditor editorState={editorState} />;
     return new EditorContainer(editorState, editorComponent);
   }
 
@@ -198,12 +197,7 @@ export function getEditorContainer(args: {
       architectApi,
       modelTreeState,
     );
-    const editorComponent = (
-      <GridEditor
-        editorState={editorState}
-        title={T('Documentation: {0}', 'documentation_editor_title', documentationData.label)}
-      />
-    );
+    const editorComponent = <GridEditor editorState={editorState} />;
     return new EditorContainer(editorState, editorComponent);
   }
 

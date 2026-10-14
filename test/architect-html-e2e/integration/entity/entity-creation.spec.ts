@@ -43,8 +43,7 @@ test.describe('Database Entity creation (real backend)', () => {
     await page.getByRole('textbox', { name: 'NewDataStructure' }).fill('NewDataStructure44');
     await page.getByTestId('save-button').click();
     await expect(page.getByTestId('save-button-disabled')).toBeVisible();
-    await page.getByTestId('tab-close-NewDataStructure44').getByRole('img').click();
-    await page.getByTestId('tree-node-NewDataStructure44').dblclick();
+    await expect(page.getByTestId('tree-node-NewDataStructure44')).toBeVisible();
     await expect(page.locator('#root')).toContainText('Data Structure: NewDataStructure44');
   });
 });

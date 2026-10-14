@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { T } from '@/main';
 import {
   DocumentationEditorData,
   IArchitectApi,
@@ -42,6 +43,10 @@ export class DocumentationEditorState extends GridEditorState {
 
   get label() {
     return `[${this.documentationData.label}]`;
+  }
+
+  get title(): string {
+    return T('Documentation: {0}', 'documentation_editor_title', this.documentationData.label);
   }
 
   *save(): Generator<Promise<any>, void, any> {
