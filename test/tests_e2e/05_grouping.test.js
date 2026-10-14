@@ -70,6 +70,9 @@ async function clearGrouping() {
 
 async function clickTableAndWaitForRender(tableArea, position) {
   await performAndWaitForTableRender(page, dataViewId, () => tableArea.click({ position }));
+  // Scroller suppresses separate clicks during its 500 ms double-click window,
+  // even when the first click has already finished rendering.
+  await page.waitForTimeout(500);
 }
 
 async function clickLazyGroupAndWaitForResponse(tableArea, position, endpoint) {
@@ -83,6 +86,7 @@ async function clickLazyGroupAndWaitForResponse(tableArea, position, endpoint) {
     ]);
     expect(response.ok()).toBe(true);
   });
+  await page.waitForTimeout(500);
 }
 
 test.describe("Html client", () => {
