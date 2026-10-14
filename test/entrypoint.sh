@@ -157,6 +157,7 @@ if [[ "$test_runner" == legacy ]]; then
   yarn install --frozen-lockfile --ignore-scripts || exit 1
 else
   yarn install --frozen-lockfile || exit 1
+  yarn playwright install ffmpeg || exit 1
 fi
 yarn test:e2e
 if [[ $? -eq 0 ]]; then

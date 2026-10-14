@@ -27,13 +27,6 @@ async function login(page) {
 
 
 async function afterEachTest(browser){
-  const pages = await browser.pages();
-  try{
-    await Promise.all(pages.map(async page => await page.close()));
-  }catch(e){
-    console.warn(e);
-  }
-  await sleep(200);
   if(browser) {
     await browser.close();
   }

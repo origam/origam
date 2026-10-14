@@ -89,8 +89,11 @@ describe("Html client", () => {
     const presetSwatch = await page.waitForSelector(
       `${sketchPickerSelector} [title='${presetColor}']`,
       {visible: true});
-    await presetSwatch.click();
-    await sleep(500);
+    await clickAndWaitForSelector({
+      page,
+      clickable: presetSwatch,
+      selector: `${colorRectSelector}[style*='rgb(208, 2, 27)']`
+    });
 
     const rectColor = await page.$eval(
       colorRectSelector,
@@ -99,7 +102,7 @@ describe("Html client", () => {
 
     // Enter applies the picked color and closes the picker, Escape would revert it.
     await page.keyboard.press("Enter");
-    await sleep(500);
+    await page.waitForSelector(sketchPickerSelector, {hidden: true});
 
     expect(await page.$(sketchPickerSelector)).toBeNull();
     const appliedColor = await page.$eval(
