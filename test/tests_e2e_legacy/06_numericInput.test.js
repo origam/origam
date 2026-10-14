@@ -15,7 +15,7 @@ beforeAll(async() => {
 });
 
 beforeEach(async () => {
-  [browser, page] = await beforeEachTest()
+  [browser, page] = await beforeEachTest();
 });
 
 afterEach(async () => {
@@ -57,14 +57,14 @@ describe("Html client", () => {
     await sleep(500);
 
     await waitForRequests;
-    await inputByPressingKeys({page: page, value: `-123456${decimalSeparator}789`})
+    await inputByPressingKeys({page: page, value: `-123456${decimalSeparator}789`});
 
     await sleep(200);
 
     await waitForFocus({
       elementId: `editor_${currencyPropertyId}`,
       page: page
-    })
+    });
     await sleep(200);
     await page.keyboard.press("Tab");
 

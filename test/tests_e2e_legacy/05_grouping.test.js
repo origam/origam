@@ -13,7 +13,7 @@ beforeAll(async() => {
 });
 
 beforeEach(async () => {
-  [browser, page] = await beforeEachTest()
+  [browser, page] = await beforeEachTest();
 });
 
 afterEach(async () => {
@@ -57,7 +57,7 @@ async function setGrouping() {
   const groupByText1CheckBox = await page.waitForSelector(
     `#group_by_${text1PropertyId}`,
     {visible: true}
-  )
+  );
   await clickAndWaitForXPath({
     page: page,
     clickable: groupByText1CheckBox,
@@ -83,7 +83,7 @@ async function clearGrouping() {
   const groupByText1CheckBox = await page.waitForSelector(
     `#group_by_${text1PropertyId}`,
     {visible: true}
-  )
+  );
   await clickAndWaitForXPath({
     page: page,
     clickable: groupByText1CheckBox,
@@ -151,12 +151,12 @@ describe("Html client", () => {
     expect(rowData && rowData.rowCount).toBe( '2 (30)');
 
     waitForRequests = catchRequests(page);
-    await clearGrouping()
+    await clearGrouping();
 
     await waitForRowCount(page, dataViewId, 30);
     await waitForRequests;
     await sleep(1000);
-  })
+  });
   it("Should perform grouping tests lazy loaded", async () => {
     await login(page);
     await openMenuItem(
@@ -203,8 +203,8 @@ describe("Html client", () => {
     const rowData = await waitForRowSelected(page, dataViewId, 1);
     expect(rowData && rowData.rowCount).toBe( '2 (2099)');
 
-    await clearGrouping()
+    await clearGrouping();
 
     await waitForRowCountData(page, dataViewId, 2099);
-  })
+  });
 });

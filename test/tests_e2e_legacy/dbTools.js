@@ -51,4 +51,4 @@ async function putNumericTestDataToAllDataTypes(){
 }
 
 module.exports = { restoreAllDataTypesTable, restoreWidgetSectionTestMaster, clearScreenConfiguration,
-  putNumericTestDataToAllDataTypes, restoreWidgetSectionTestMasterForRefreshTest }
+  putNumericTestDataToAllDataTypes, restoreWidgetSectionTestMasterForRefreshTest };

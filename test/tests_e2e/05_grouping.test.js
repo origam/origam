@@ -121,7 +121,7 @@ test.describe("Html client", () => {
 
     const ungroupedTableData = await clearGrouping();
     expect(ungroupedTableData.data).toHaveLength(30);
-  })
+  });
   test("Should perform grouping tests lazy loaded", async () => {
     await login(page);
     await openMenuItem(
@@ -154,8 +154,8 @@ test.describe("Html client", () => {
     const rowData = await waitForRowSelected(page, dataViewId, 1);
     expect(rowData && rowData.rowCount).toBe( '2 (2099)');
 
-    await clearGrouping()
+    await clearGrouping();
 
     await waitForRowCountData(page, dataViewId, 2099);
-  })
+  });
 });

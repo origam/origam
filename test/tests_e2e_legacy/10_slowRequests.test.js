@@ -14,7 +14,7 @@ beforeAll(async() => {
 });
 
 beforeEach(async () => {
-  [browser, page] = await beforeEachTest()
+  [browser, page] = await beforeEachTest();
 });
 
 afterEach(async () => {
@@ -42,7 +42,7 @@ async function throttleRequests(){
     'downloadThroughput': 500 * 1024 / 8,
     'uploadThroughput': 500 * 1024 / 8,
     'latency': 20
-  })
+  });
 }
 
 async function cancelRequestThrottling(){
@@ -52,7 +52,7 @@ async function cancelRequestThrottling(){
     'downloadThroughput': -1,
     'uploadThroughput': -1,
     'latency': 0
-  })
+  });
 }
 
 describe("Html client", () => {
@@ -84,7 +84,7 @@ describe("Html client", () => {
     await page.keyboard.press("e");
     await page.keyboard.press("f");
 
-    let [input] = await page.$x(`//input[@id='${text1InputId}']`)
+    let [input] = await page.$x(`//input[@id='${text1InputId}']`);
     const inputValue = await page.evaluate(x => x.value, input);
     expect(inputValue).toContain('abcdef');
 

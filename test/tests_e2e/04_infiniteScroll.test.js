@@ -47,8 +47,8 @@ test.describe("Html client", () => {
     await expect(page.locator(`#${dataViewId} .horiz-scrollbar`)).toBeVisible();
 
     const tableData = await scrollToLastRow(page);
-    const rows = tableData.data
-    const lastRow = rows[rows.length - 1]
+    const rows = tableData.data;
+    const lastRow = rows[rows.length - 1];
     expect(lastRow["Text1"]).toBe("txt2109");
 
   });

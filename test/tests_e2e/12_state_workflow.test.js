@@ -22,8 +22,8 @@ async function waitForErrorMessage(messageBegging) {
   ).toBe(true);
 }
 
-const stateTransitionMenuId = "menu_f69ef86f-7fad-44c0-9ecb-78164a656a38"
-const statePropertyId = "908c313c-fc0e-44d6-8c1a-c4c1659f08fd"
+const stateTransitionMenuId = "menu_f69ef86f-7fad-44c0-9ecb-78164a656a38";
+const statePropertyId = "908c313c-fc0e-44d6-8c1a-c4c1659f08fd";
 
 test.describe("Html client", () => {
   test("Should show an error message after invalid state change", async () => {
@@ -48,7 +48,7 @@ test.describe("Html client", () => {
     await waitForFocus({
       elementId: `editor_${statePropertyId}`,
       page: page
-    })
+    });
     await page.keyboard.press("Tab");
 
     await expect(page.locator("#saveButton .isRed")).toBeVisible();

@@ -16,7 +16,7 @@ beforeAll(async() => {
 });
 
 beforeEach(async () => {
-  [browser, page] = await beforeEachTest()
+  [browser, page] = await beforeEachTest();
 });
 
 afterEach(async () => {
@@ -59,8 +59,8 @@ describe("Html client", () => {
     await page.$eval(`#${masterDataViewId} .addRow`, elem => elem.click());
 
     await page.waitForFunction(`document.activeElement == document.getElementById("${firstColumnEditorId}")`);
-    await page.focus(`#${firstColumnEditorId}`)
-    await page.keyboard.type("test")
+    await page.focus(`#${firstColumnEditorId}`);
+    await page.keyboard.type("test");
     await page.keyboard.press("Tab");
     await sleep(200);
     await waitForRequests;
@@ -93,7 +93,7 @@ describe("Html client", () => {
 
     const text1PropertyFilterInputId = "input_" + text1PropertyId;
 
-    await page.focus(`#${text1PropertyFilterInputId}`)
+    await page.focus(`#${text1PropertyFilterInputId}`);
     await setFilter({
       page: page,
       propertyId: text1PropertyId ,

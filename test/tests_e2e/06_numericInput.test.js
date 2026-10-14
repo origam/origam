@@ -48,12 +48,12 @@ test.describe("Html client", () => {
     const numberEditor = page.locator(`#editor_${currencyPropertyId}`);
     await numberEditor.focus();
 
-    await inputByPressingKeys({page: page, value: `-123456${decimalSeparator}789`})
+    await inputByPressingKeys({page: page, value: `-123456${decimalSeparator}789`});
 
     await waitForFocus({
       elementId: `editor_${currencyPropertyId}`,
       page: page
-    })
+    });
     await page.keyboard.press("Tab");
 
     await expect(numberEditor).toHaveValue(`-123${thousandsSeparator}456${decimalSeparator}789`);

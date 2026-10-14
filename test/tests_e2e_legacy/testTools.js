@@ -5,14 +5,14 @@ const puppeteer = require("puppeteer");
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 async function login(page) {
-    const userNameInput = await page.waitForXPath(
+  await page.waitForXPath(
     `//input[@id='userNameInput']`,
     { visible: true }
   );
   await page.$eval(`#userNameInput`, (element, value) => element.value = value, userName);
   await sleep(200);
 
-  const passwordInput = await page.waitForXPath(`//input[@id='passInput']`, {
+  await page.waitForXPath(`//input[@id='passInput']`, {
     visible: true,
   });
   await page.$eval(`#passInput`, (element, value) => element.value = value, password);
@@ -59,7 +59,7 @@ async function beforeEachTest(){
     await page.evaluate(() => {
       localStorage.setItem("debugCloseAllForms", "1");
     });
-    return [browser, page]
+    return [browser, page];
   } catch (error) {
     await browser.close();
     throw error;
@@ -101,14 +101,14 @@ async function getImage(page, element){
 }
 
 function xPathContainsClass(className){
-  return `contains(concat(' ',normalize-space(@class),' '),' ${className} ')`
+  return `contains(concat(' ',normalize-space(@class),' '),' ${className} ')`;
 }
 
 async function waitForRowCount(page, dataViewId, expectedRowCount){
   const modelInstanceId = dataViewId.substring(9);
   const timeoutMs = 10_000;
   const evalDelayMs = 50;
-  let tableData
+  let tableData;
   for (let i = 0; i < timeoutMs / evalDelayMs; i++) {
     tableData = await page.evaluate(
       modelInstanceId => window.tableDebugMonitor && window.tableDebugMonitor[modelInstanceId],
@@ -127,21 +127,21 @@ async function waitForRowCount(page, dataViewId, expectedRowCount){
 async function takeScreenShot(page, name){
   const screenDir = require("path").join(__dirname, "screenshots");
   if(!fs.existsSync(screenDir)){
-    fs.mkdirSync(screenDir)
+    fs.mkdirSync(screenDir);
   }
   const dateTime =new Date().toISOString()
     .replace(/T/, ' ')
     .replace(/Z/, '')
     .replace(/\./, '_')
     .replace(/:/, '_')
-    .replace(/:/, '_')
+    .replace(/:/, '_');
   await page.screenshot({path: `${screenDir}/${name}_${dateTime}.png`});
 }
 
 async function waitForRowCountData(page, dataViewId, expectedRowCount) {
   let countData;
   for (let i = 0; i < 200; i++) {
-    countData = await getRowCountData(page, dataViewId)
+    countData = await getRowCountData(page, dataViewId);
     if(countData.rowCount === expectedRowCount.toString()){
       return countData;
     }
@@ -155,7 +155,7 @@ async function getTableData(page, dataViewId){
   const modelInstanceId = dataViewId.substring(9);
   const timeoutMs = 10_000;
   const evalDelayMs = 50;
-  let tableData
+  let tableData;
   for (let i = 0; i < timeoutMs / evalDelayMs; i++) {
     tableData = await page.evaluate(
       modelInstanceId => window.tableDebugMonitor && window.tableDebugMonitor[modelInstanceId],
@@ -216,8 +216,8 @@ function catchRequests(page, reqs = 0) {
 
 async function typeAndWaitForSelector(args){
 
-  await args.page.focus(`#${args.inputId}`)
-  await args.page.keyboard.type(args.value)
+  await args.page.focus(`#${args.inputId}`);
+  await args.page.keyboard.type(args.value);
 
   for (let i = 0; i < 3; i++) {
     try{
@@ -228,8 +228,8 @@ async function typeAndWaitForSelector(args){
 
     }catch(TimeoutError){
       await sleep(30000);
-      await args.page.focus(`#${args.inputId}`)
-      await args.page.keyboard.type(args.value)
+      await args.page.focus(`#${args.inputId}`);
+      await args.page.keyboard.type(args.value);
     }
   }
   await sleep(30000);
@@ -280,7 +280,7 @@ async function clickAndWaitForSelector(args){
       return await args.page.waitForSelector(
         args.selector,
         {visible: true, timeout: 5000}
-      )
+      );
     }catch(error){
       if(error.name !== "TimeoutError"){
         console.error(error);
@@ -296,7 +296,7 @@ async function clickAndWaitForSelector(args){
         await waitForStablePosition(args.page, clickable);
         await clickable.click();
       }catch(error){
-        console.error(error)
+        console.error(error);
         await args.page.evaluate(x => x.click(), clickable);
       }
     }

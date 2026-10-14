@@ -13,7 +13,7 @@ beforeAll(async() => {
 });
 
 beforeEach(async () => {
-  [browser, page] = await beforeEachTest()
+  [browser, page] = await beforeEachTest();
 });
 
 afterEach(async () => {
@@ -63,13 +63,13 @@ describe("Html client", () => {
       { visible: true, timeout: 3000 }
     );
     await sleep(500);
-    await waitForRequests
+    await waitForRequests;
 
     await autoScroll(page);
 
     const tableData = await getTableData(page, dataViewId);
-    const rows = tableData.data
-    const lastRow = rows[rows.length - 1]
+    const rows = tableData.data;
+    const lastRow = rows[rows.length - 1];
     expect(lastRow["Text1"]).toBe("txt2109");
 
     // await sleep(60000);

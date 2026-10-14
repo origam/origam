@@ -14,7 +14,7 @@ beforeAll(async() => {
 });
 
 beforeEach(async () => {
-  [browser, page] = await beforeEachTest()
+  [browser, page] = await beforeEachTest();
 });
 
 afterEach(async () => {
@@ -31,17 +31,17 @@ async function addRowToMaster(firstColumnValue, secondColumnValue) {
   await page.$eval(`#${masterDataViewId} .addRow`, elem => elem.click());
 
   await page.waitForFunction(`document.activeElement == document.getElementById("${firstColumnEditorId}")`);
-  await page.focus(`#${firstColumnEditorId}`)
-  await page.keyboard.type(firstColumnValue)
+  await page.focus(`#${firstColumnEditorId}`);
+  await page.keyboard.type(firstColumnValue);
 
   await sleep(200);
-  await page.focus(`#${firstColumnEditorId}`)
+  await page.focus(`#${firstColumnEditorId}`);
   await page.keyboard.press("Tab");
 
   await page.waitForFunction(`document.activeElement == document.getElementById("${secondColumnEditorId}")`);
 
-  await page.focus(`#${secondColumnEditorId}`)
-  await page.keyboard.type(secondColumnValue)
+  await page.focus(`#${secondColumnEditorId}`);
+  await page.keyboard.type(secondColumnValue);
   await waitForRequests;
   await sleep(100);
 }
@@ -51,8 +51,8 @@ async function addRowToDetail(detailValue) {
   await page.$eval(`#${detailDataViewId} .addRow`, elem => elem.click());
   await page.waitForFunction(`document.activeElement == document.getElementById("${detailEditorId}")`);
   await sleep(100);
-  await page.focus(`#${detailEditorId}`)
-  await page.keyboard.type(detailValue)
+  await page.focus(`#${detailEditorId}`);
+  await page.keyboard.type(detailValue);
   await sleep(100);
 }
 

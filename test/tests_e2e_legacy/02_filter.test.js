@@ -12,7 +12,7 @@ beforeAll(async() => {
 });
 
 beforeEach(async () => {
-  [browser, page] = await beforeEachTest()
+  [browser, page] = await beforeEachTest();
 });
 
 afterEach(async () => {
@@ -66,7 +66,7 @@ describe("Html client", () => {
       propertyId: text1PropertyId ,
       comboOptionText: "begins with",
       value: "txt3"
-    })
+    });
 
     await waitForRowCount(page, dataViewId,10);
 
@@ -75,7 +75,7 @@ describe("Html client", () => {
       propertyId: text1PropertyId ,
       comboOptionText: "not begins with",
       value: "txt3"
-    })
+    });
 
     await waitForRowCount(page, dataViewId,20);
 
@@ -84,7 +84,7 @@ describe("Html client", () => {
       propertyId: text1PropertyId ,
       comboOptionText: "not contains",
       value: "2"
-    })
+    });
 
     await waitForRowCount(page, dataViewId,18);
 
@@ -93,7 +93,7 @@ describe("Html client", () => {
       propertyId: text1PropertyId ,
       comboOptionText: "ends with",
       value: "5"
-    })
+    });
 
     await waitForRowCount(page, dataViewId,3);
 
@@ -102,7 +102,7 @@ describe("Html client", () => {
       propertyId: text1PropertyId ,
       comboOptionText: "not ends with",
       value: "5"
-    })
+    });
 
     await waitForRowCount(page, dataViewId,27);
 
@@ -111,7 +111,7 @@ describe("Html client", () => {
       propertyId: text1PropertyId ,
       comboOptionText: "=",
       value: "txt25"
-    })
+    });
 
     await waitForRowCount(page, dataViewId,1);
 
@@ -120,7 +120,7 @@ describe("Html client", () => {
       propertyId: text1PropertyId ,
       comboOptionText: "≠",
       value: "txt25"
-    })
+    });
 
     await waitForRowCount(page, dataViewId,29);
 
@@ -129,7 +129,7 @@ describe("Html client", () => {
       propertyId: text1PropertyId ,
       comboOptionText: "is null",
       value: undefined
-    })
+    });
 
     await waitForRowCount(page, dataViewId,0);
 
@@ -138,7 +138,7 @@ describe("Html client", () => {
       propertyId: text1PropertyId ,
       comboOptionText: "is not null",
       value: undefined
-    })
+    });
 
     await waitForRowCount(page, dataViewId,30);
   });
@@ -169,7 +169,7 @@ describe("Html client", () => {
       propertyId: integer1PropertyId ,
       comboOptionText: "=",
       value: "20"
-    })
+    });
 
     await waitForRowCount(page, dataViewId,1);
 
@@ -178,7 +178,7 @@ describe("Html client", () => {
       propertyId: integer1PropertyId ,
       comboOptionText: "≠",
       value: "20"
-    })
+    });
 
     await waitForRowCount(page, dataViewId,29);
 
@@ -187,7 +187,7 @@ describe("Html client", () => {
       propertyId: integer1PropertyId ,
       comboOptionText: "≤",
       value: "11"
-    })
+    });
 
     await waitForRowCount(page, dataViewId,11);
 
@@ -196,7 +196,7 @@ describe("Html client", () => {
       propertyId: integer1PropertyId ,
       comboOptionText: "≥",
       value: "11"
-    })
+    });
 
     await waitForRowCount(page, dataViewId,20);
 
@@ -205,7 +205,7 @@ describe("Html client", () => {
       propertyId: integer1PropertyId ,
       comboOptionText: "<",
       value: "11"
-    })
+    });
 
     await waitForRowCount(page, dataViewId,10);
 
@@ -214,7 +214,7 @@ describe("Html client", () => {
       propertyId: integer1PropertyId ,
       comboOptionText: ">",
       value: "11"
-    })
+    });
 
     await waitForRowCount(page, dataViewId,19);
 
@@ -224,7 +224,7 @@ describe("Html client", () => {
       comboOptionText: "between",
       fromValue: "5",
       toValue: "14",
-    })
+    });
 
     await waitForRowCount(page, dataViewId,9);
 
@@ -234,7 +234,7 @@ describe("Html client", () => {
       comboOptionText: "not between",
       fromValue: "5",
       toValue: "14",
-    })
+    });
 
     await waitForRowCount(page, dataViewId,21);
 
@@ -243,7 +243,7 @@ describe("Html client", () => {
         propertyId: integer1PropertyId ,
         comboOptionText: "is null",
         value: undefined
-      })
+      });
 
     await waitForRowCount(page, dataViewId,0);
 
@@ -252,7 +252,7 @@ describe("Html client", () => {
         propertyId: integer1PropertyId ,
         comboOptionText: "is not null",
         value: undefined
-      })
+      });
 
     await waitForRowCount(page, dataViewId,30);
   });
@@ -312,7 +312,7 @@ describe("Html client", () => {
       propertyId: date1PropertyId ,
       comboOptionText: ">",
       value: "03.07.2021"
-    })
+    });
     await sleep(300);
     await waitForRowCountData(page, dataViewId,19);
 
@@ -322,7 +322,7 @@ describe("Html client", () => {
       comboOptionText: "between",
       fromValue: "03.07.2021",
       toValue: "15.07.2021",
-    })
+    });
 
     await waitForRowCountData(page, dataViewId,13);
 
@@ -332,7 +332,7 @@ describe("Html client", () => {
       comboOptionText: "not between",
       fromValue: "03.07.2021",
       toValue: "15.07.2021",
-    })
+    });
 
     await waitForRowCountData(page, dataViewId,17);
 
@@ -341,7 +341,7 @@ describe("Html client", () => {
       propertyId: date1PropertyId ,
       comboOptionText: "is null",
       value: undefined
-    })
+    });
 
     await waitForRowCountData(page, dataViewId,0);
 
@@ -350,7 +350,7 @@ describe("Html client", () => {
       propertyId: date1PropertyId ,
       comboOptionText: "is not null",
       value: undefined
-    })
+    });
 
     await waitForRowCountData(page, dataViewId,30);
   });
@@ -379,7 +379,7 @@ describe("Html client", () => {
       propertyId: comboPropertyId ,
       comboOptionText: "=",
       value: "Label1"
-    })
+    });
 
     await waitForRowCountData(page, dataViewId,2);
 
@@ -387,7 +387,7 @@ describe("Html client", () => {
       page: page,
       propertyId: comboPropertyId ,
       comboOptionText: "≠",
-    })
+    });
 
     await waitForRowCountData(page, dataViewId,4);
 
@@ -396,7 +396,7 @@ describe("Html client", () => {
       propertyId: comboPropertyId ,
       comboOptionText: "begins with",
       value: "Lab"
-    })
+    });
 
     await waitForRowCountData(page, dataViewId,6);
 
@@ -404,7 +404,7 @@ describe("Html client", () => {
       page: page,
       propertyId: comboPropertyId ,
       comboOptionText: "not begins with",
-    })
+    });
 
     await waitForRowCountData(page, dataViewId,24);
 
@@ -413,7 +413,7 @@ describe("Html client", () => {
       propertyId: comboPropertyId ,
       comboOptionText: "contains",
       value: "Label2"
-    })
+    });
 
     await waitForRowCountData(page, dataViewId,2);
 
@@ -421,7 +421,7 @@ describe("Html client", () => {
       page: page,
       propertyId: comboPropertyId ,
       comboOptionText: "not contains",
-    })
+    });
 
     await waitForRowCountData(page, dataViewId,28);
 
@@ -430,7 +430,7 @@ describe("Html client", () => {
       propertyId: comboPropertyId ,
       comboOptionText: "is null",
       value: undefined
-    })
+    });
 
     await waitForRowCountData(page, dataViewId,24);
 
@@ -439,7 +439,7 @@ describe("Html client", () => {
       propertyId: comboPropertyId ,
       comboOptionText: "is not null",
       value: undefined
-    })
+    });
 
     await waitForRowCountData(page, dataViewId,6);
   });
@@ -468,7 +468,7 @@ describe("Html client", () => {
       propertyId: tagPropertyId ,
       comboOptionText: "=",
       value: "Label1"
-    })
+    });
 
     await waitForRowCountData(page, dataViewId,2);
 
@@ -476,7 +476,7 @@ describe("Html client", () => {
       page: page,
       propertyId: tagPropertyId ,
       comboOptionText: "≠",
-    })
+    });
 
     await waitForRowCountData(page, dataViewId,28);
 
@@ -485,7 +485,7 @@ describe("Html client", () => {
       propertyId: tagPropertyId ,
       comboOptionText: "is null",
       value: undefined
-    })
+    });
 
     await waitForRowCountData(page, dataViewId,26);
 
@@ -494,7 +494,7 @@ describe("Html client", () => {
       propertyId: tagPropertyId ,
       comboOptionText: "is not null",
       value: undefined
-    })
+    });
 
     await waitForRowCountData(page, dataViewId,4);
   });

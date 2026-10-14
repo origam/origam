@@ -23,7 +23,7 @@ async function waitForErrorMessage(messageBegging) {
     `//div[contains(@class, 'dialogMessage')]`,
     {visible: true}
   );
-  let errorMessage=''
+  let errorMessage='';
   for (let i = 0; i < 5; i++) {
     errorMessage = await page.evaluate(name => name.innerText, messageElement);
     if (!errorMessage || !errorMessage.includes(messageBegging)) {
@@ -36,8 +36,8 @@ async function waitForErrorMessage(messageBegging) {
   }
 }
 
-const stateTransitionMenuId = "menu_f69ef86f-7fad-44c0-9ecb-78164a656a38"
-const statePropertyId = "908c313c-fc0e-44d6-8c1a-c4c1659f08fd"
+const stateTransitionMenuId = "menu_f69ef86f-7fad-44c0-9ecb-78164a656a38";
+const statePropertyId = "908c313c-fc0e-44d6-8c1a-c4c1659f08fd";
 
 describe("Html client", () => {
   it("Should show descriptive message after invalid state change", async () => {
@@ -60,25 +60,25 @@ describe("Html client", () => {
       `#editor_${statePropertyId}`,
       {visible: true});
     await page.evaluate(x => {
-      x.focus()
-      x.value = ""
+      x.focus();
+      x.value = "";
     }, stateEditor);
     await sleep(500);
 
     await waitForRequests;
-    await inputByPressingKeys({page: page, value: `end`})
+    await inputByPressingKeys({page: page, value: `end`});
 
     await sleep(200);
 
     await waitForFocus({
       elementId: `editor_${statePropertyId}`,
       page: page
-    })
+    });
     await sleep(200);
     await page.keyboard.press("Tab");
 
     await page.waitForSelector('#saveButton .isRed');
-    await page.$eval("#saveButton", elem => elem.click())
+    await page.$eval("#saveButton", elem => elem.click());
 
     await waitForErrorMessage("State of 'State Transition' cannot enter the state 'Error'. Current state: 'end'");
   });

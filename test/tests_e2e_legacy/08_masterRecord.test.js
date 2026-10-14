@@ -18,7 +18,7 @@ beforeAll(async() => {
 });
 
 beforeEach(async () => {
-  [browser, page] = await beforeEachTest()
+  [browser, page] = await beforeEachTest();
 });
 
 afterEach(async () => {
@@ -78,9 +78,9 @@ describe("Html client", () => {
     await nextButton.click();
     await waitForRowSelected(page,allDataTypesLazyDataViewId, 2);
 
-    await page.focus(`#${text1InputId}`)
+    await page.focus(`#${text1InputId}`);
     await page.waitForFunction(`document.activeElement == document.getElementById("${text1InputId}")`);
-    await page.keyboard.type("test")
+    await page.keyboard.type("test");
 
     await sleep(500);
     const tablePerspectiveButton = await page.$(`#${allDataTypesLazyDataViewId} .tablePerspectiveButton `);

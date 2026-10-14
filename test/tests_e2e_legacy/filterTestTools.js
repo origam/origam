@@ -47,8 +47,8 @@ async function setDateFilter(args){
     `#${inputId}`,
     {visible: true});
 
-  await args.page.focus(`#${inputId}`)
-  await args.page.keyboard.type(args.value)
+  await args.page.focus(`#${inputId}`);
+  await args.page.keyboard.type(args.value);
 
   await sleep(500);
   await removeFocusFromDateInput(args.page, inputId);
@@ -79,8 +79,8 @@ async function setTwoFieldDateFilter(args){
     `#${fromInputId}`,
     {visible: true});
 
-  await args.page.focus(`#${fromInputId}`)
-  await args.page.keyboard.type(args.fromValue)
+  await args.page.focus(`#${fromInputId}`);
+  await args.page.keyboard.type(args.fromValue);
 
   await sleep(500);
   await removeFocusFromDateInput(args.page, fromInputId);
@@ -92,8 +92,8 @@ async function setTwoFieldDateFilter(args){
     `#${toInputId}`,
     {visible: true});
 
-  await args.page.focus(`#${toInputId}`)
-  await args.page.keyboard.type(args.toValue)
+  await args.page.focus(`#${toInputId}`);
+  await args.page.keyboard.type(args.toValue);
 
   await sleep(500);
   await removeFocusFromDateInput(args.page, toInputId);
@@ -136,8 +136,8 @@ async function setFilter(args){
   const filterValue = await args.page.evaluate(x => x.value, input);
   expect(filterValue).toBe("");
 
-  await args.page.focus(`#${inputId}`)
-  await args.page.keyboard.type(args.value)
+  await args.page.focus(`#${inputId}`);
+  await args.page.keyboard.type(args.value);
   await waitForRequests;
 }
 
@@ -169,8 +169,8 @@ async function setTwoFieldFilter(args){
   const fromFilterValue = await args.page.evaluate(x => x.value, fromInput);
   expect(fromFilterValue).toBe("");
 
-  await args.page.focus(`#${fromInputId}`)
-  await args.page.keyboard.type(args.fromValue)
+  await args.page.focus(`#${fromInputId}`);
+  await args.page.keyboard.type(args.fromValue);
 
   const toInput = await args.page.waitForSelector(
     `#${toInputId}`,
@@ -179,8 +179,8 @@ async function setTwoFieldFilter(args){
   const toFilterValue = await args.page.evaluate(x => x.value, toInput);
   expect(toFilterValue).toBe("");
 
-  await args.page.focus(`#${toInputId}`)
-  await args.page.keyboard.type(args.toValue)
+  await args.page.focus(`#${toInputId}`);
+  await args.page.keyboard.type(args.toValue);
   await waitForRequests;
 }
 
