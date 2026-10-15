@@ -30,9 +30,10 @@ const Properties = observer(() => {
   const run = runInFlowWithHandler(rootStore.errorDialogController);
 
   return (
-    <div>
+    <div data-test-id="properties">
       {propertiesState.components.length ? (
         <select
+          data-test-id="properties-component-select"
           value={propertiesState.selectedComponent?.id}
           onChange={e => propertiesState.setSelectedComponent(e.target.value)}
         >
