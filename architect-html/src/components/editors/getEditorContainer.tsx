@@ -33,7 +33,6 @@ import {
 } from '@api/IArchitectApi';
 import { EditorData } from '@components/modelTree/EditorData';
 import { ModelTreeState } from '@components/modelTree/ModelTreeState';
-import { PropertiesState } from '@components/properties/PropertiesState';
 import AiSettingsModule from '@modules/aiSettings/AiSettingsModule';
 import AiSettingsModuleState from '@modules/aiSettings/AiSettingsModuleState';
 import DeploymentScriptsEditor from '@editors/DeploymentScriptsEditor/DeploymentScriptsEditor';
@@ -65,14 +64,13 @@ import { CancellablePromise } from 'mobx/dist/api/flow';
 export function getEditorContainer(args: {
   editorType: EditorType;
   editorData: EditorData;
-  propertiesState: PropertiesState;
   architectApi: IArchitectApi;
   modelTreeState: ModelTreeState;
   uiState: UIState;
   aiToolSectionsState: AiToolSectionsState;
   runGeneratorHandled: (args: FlowHandlerInput) => CancellablePromise<any>;
 }) {
-  const { editorType, editorData, propertiesState, architectApi, modelTreeState, uiState } = args;
+  const { editorType, editorData, architectApi, modelTreeState, uiState } = args;
   const { node, data, isDirty } = editorData;
 
   if (editorType === 'AiSettingsModule') {
@@ -159,7 +157,6 @@ export function getEditorContainer(args: {
       node,
       isDirty,
       sectionData,
-      propertiesState,
       sectionToolboxState,
       architectApi,
       modelTreeState,
@@ -177,7 +174,6 @@ export function getEditorContainer(args: {
       node,
       isDirty,
       screenData,
-      propertiesState,
       screenToolboxState,
       architectApi,
       modelTreeState,

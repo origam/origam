@@ -47,7 +47,9 @@ export class RootStore {
   public modelCheckState: ModelCheckState;
   public errorDialogController: ErrorDialogController;
   public progressBarState = new ProgressBarState();
-  public propertiesState = new PropertiesState();
+  public propertiesState = new PropertiesState(
+    () => this.editorTabViewState.activeEditorState?.componentProvider,
+  );
   public translations = new TranslationsStore();
   public aiToolSectionsState = new AiToolSectionsState();
   @observable public accessor output: string = '';

@@ -17,11 +17,16 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { IApiControl, IDesignerEditorData } from '@api/IArchitectApi';
-import { PropertiesState } from '@components/properties/PropertiesState';
+import {
+  IApiControl,
+  IDesignerEditorData,
+  IUpdatePropertiesResult,
+  PropertyValue,
+} from '@api/IArchitectApi';
 import { ComponentType, IComponentData } from '@editors/designerEditor/common/ComponentType';
 import { Component } from '@editors/designerEditor/common/designerComponents/Component';
 import { toComponentRecursive } from '@editors/designerEditor/common/designerComponents/ControlToComponent';
+import { EditorProperty } from '@editors/gridEditor/EditorProperty';
 import { FlowHandlerInput } from '@errors/runInFlowWithHandler';
 import { action, observable } from 'mobx';
 import { CancellablePromise } from 'mobx/dist/api/flow';
@@ -59,7 +64,6 @@ export class DesignSurfaceState implements IComponentProvider {
 
   constructor(
     editorData: IDesignerEditorData,
-    private propertiesState: PropertiesState,
     private updateEditor: () => Generator<Promise<any>, void, any>,
     runGeneratorHandled: (args: FlowHandlerInput) => CancellablePromise<any>,
     private loadComponent?: (componentId: string) => Promise<ReactElement>,
@@ -81,7 +85,6 @@ export class DesignSurfaceState implements IComponentProvider {
       this.loadComponent,
     );
     this.components = components;
-    this.propertiesState.setComponentProvider(this);
     this.panel = this.components.find(x => x.id === this.panelId)!;
     this.reselectComponent();
     this.restorePointerStates();
@@ -127,8 +130,15 @@ export class DesignSurfaceState implements IComponentProvider {
 
   @action
   selectComponent(component: Component | null | undefined) {
-    this.propertiesState.setComponentProvider(this);
     this.selectedComponent = component ?? null;
+  }
+
+  *onPropertyUpdated(
+    property: EditorProperty,
+    value: PropertyValue,
+  ): Generator<Promise<IUpdatePropertiesResult>, void, IUpdatePropertiesResult> {
+    property.value = value;
+    yield* this.updateEditor() as any;
   }
 
   @action
@@ -386,11 +396,6 @@ export class DesignSurfaceState implements IComponentProvider {
   updatePosition(component: Component, left: number, top: number) {
     component.absoluteLeft = left;
     component.absoluteTop = top;
-  }
-
-  @action
-  onClose() {
-    this.propertiesState.setComponentProvider(undefined);
   }
 }
 
