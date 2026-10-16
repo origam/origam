@@ -88,7 +88,6 @@ export class EditorTabViewState {
     return getEditorContainer({
       editorType: editorData.editorType,
       editorData: editorData,
-      propertiesState: this.rootStore.propertiesState,
       architectApi: this.architectApi,
       modelTreeState: this.rootStore.modelTreeState,
       uiState: this.rootStore.uiState,
@@ -342,7 +341,6 @@ export class EditorTabViewState {
     const editor = getEditorContainer({
       editorType: editorType === undefined ? editorData.editorType : editorType,
       editorData: editorData,
-      propertiesState: this.rootStore.propertiesState,
       architectApi: this.architectApi,
       modelTreeState: this.rootStore.modelTreeState,
       uiState: this.rootStore.uiState,

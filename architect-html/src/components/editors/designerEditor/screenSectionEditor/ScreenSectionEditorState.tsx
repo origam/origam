@@ -21,7 +21,6 @@ import { T } from '@/main';
 import { IArchitectApi, ISectionEditorData } from '@api/IArchitectApi';
 import { IEditorNode } from '@components/editorTabView/EditorTabViewState';
 import { ModelTreeState } from '@components/modelTree/ModelTreeState';
-import { PropertiesState } from '@components/properties/PropertiesState';
 import { Component } from '@editors/designerEditor/common/designerComponents/Component';
 import { controlToComponent } from '@editors/designerEditor/common/designerComponents/ControlToComponent';
 import { DesignerEditorState } from '@editors/designerEditor/common/DesignerEditorState';
@@ -41,7 +40,6 @@ export class ScreenSectionEditorState extends DesignerEditorState {
     editorNode: IEditorNode,
     isDirty: boolean,
     sectionEditorData: ISectionEditorData,
-    propertiesState: PropertiesState,
     sectionToolboxState: SectionToolboxState,
     architectApi: IArchitectApi,
     modelTreeState: ModelTreeState,
@@ -52,7 +50,6 @@ export class ScreenSectionEditorState extends DesignerEditorState {
       editorNode,
       isDirty,
       sectionEditorData,
-      propertiesState,
       sectionToolboxState.toolboxState,
       architectApi,
       modelTreeState,

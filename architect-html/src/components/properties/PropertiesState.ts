@@ -17,21 +17,14 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { IUpdatePropertiesResult } from '@api/IArchitectApi';
-import { EditorProperty } from '@editors/gridEditor/EditorProperty';
-import { IPropertyManager } from '@editors/propertyEditor/IPropertyManager';
-import { observable } from 'mobx';
-
 import { IComponentProvider } from '@editors/designerEditor/common/IComponentProvider.tsx';
 import { Component } from '@editors/designerEditor/common/designerComponents/Component.tsx';
 
-export class PropertiesState implements IPropertyManager {
-  @observable private accessor provider: IComponentProvider | undefined;
+export class PropertiesState {
+  constructor(private getProvider: () => IComponentProvider | undefined) {}
 
-  setComponentProvider(provider: IComponentProvider | undefined) {
-    if (this.provider !== provider) {
-      this.provider = provider;
-    }
+  get provider() {
+    return this.getProvider();
   }
 
   get selectedComponent() {
@@ -63,14 +56,5 @@ export class PropertiesState implements IPropertyManager {
     if (this.provider) {
       this.provider.selectedComponent = this.provider?.components.find(x => x.id === id) ?? null;
     }
-  }
-
-  onPropertyUpdated(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _property: EditorProperty,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _value: any,
-  ): Generator<Promise<IUpdatePropertiesResult>, void, IUpdatePropertiesResult> {
-    throw new Error('Method not implemented.');
   }
 }

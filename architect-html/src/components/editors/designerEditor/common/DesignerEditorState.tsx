@@ -17,11 +17,9 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { IArchitectApi, IDesignerEditorData, IUpdatePropertiesResult } from '@api/IArchitectApi';
-import { EditorProperty } from '@components/editors/gridEditor/EditorProperty';
+import { IArchitectApi, IDesignerEditorData } from '@api/IArchitectApi';
 import { IEditorNode } from '@components/editorTabView/EditorTabViewState';
 import { ModelTreeState } from '@components/modelTree/ModelTreeState';
-import { PropertiesState } from '@components/properties/PropertiesState';
 import { Component } from '@editors/designerEditor/common/designerComponents/Component';
 import { DesignSurfaceState } from '@editors/designerEditor/common/DesignSurfaceState';
 import { IDesignerEditorState } from '@editors/designerEditor/common/IDesignerEditorState';
@@ -47,12 +45,15 @@ export abstract class DesignerEditorState implements IDesignerEditorState {
     return this.toolbox.name;
   }
 
+  get componentProvider() {
+    return this.surface;
+  }
+
   protected constructor(
     public tabId: string,
     protected editorNode: IEditorNode,
     isDirty: boolean,
     editorData: IDesignerEditorData,
-    propertiesState: PropertiesState,
     toolbox: ToolboxState,
     protected architectApi: IArchitectApi,
     private modelTreeState: ModelTreeState,
@@ -64,24 +65,14 @@ export abstract class DesignerEditorState implements IDesignerEditorState {
     this.toolbox = toolbox;
     this.surface = new DesignSurfaceState(
       editorData,
-      propertiesState,
       this.update.bind(this),
       runGeneratorHandled,
       loadComponent,
     );
-    propertiesState.onPropertyUpdated = this.onPropertyUpdated.bind(this);
     toolbox.onNameTopPropertiesChanged = warnings => {
       this.isDirty = true;
       this.warnings = warnings;
     };
-  }
-
-  *onPropertyUpdated(
-    property: EditorProperty,
-    value: any,
-  ): Generator<Promise<IUpdatePropertiesResult>, void, IUpdatePropertiesResult> {
-    property.value = value;
-    yield* this.update() as any;
   }
 
   public abstract delete(components: Component[]): void;
