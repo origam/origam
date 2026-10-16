@@ -27,6 +27,7 @@ import { useContext } from 'react';
 const Properties = observer(() => {
   const rootStore = useContext(RootStoreContext);
   const propertiesState = rootStore.propertiesState;
+  const provider = propertiesState.provider;
   const run = runInFlowWithHandler(rootStore.errorDialogController);
 
   return (
@@ -34,7 +35,7 @@ const Properties = observer(() => {
       {propertiesState.components.length ? (
         <select
           data-test-id="properties-component-select"
-          value={propertiesState.selectedComponent?.id}
+          value={propertiesState.selectedComponent?.id ?? ''}
           onChange={e => propertiesState.setSelectedComponent(e.target.value)}
         >
           {[undefined, ...propertiesState.components].map(component => (
@@ -44,7 +45,14 @@ const Properties = observer(() => {
           ))}
         </select>
       ) : null}
-      <PropertyEditor propertyManager={propertiesState} properties={propertiesState.properties} />
+      {/* Keyed and bound to its own provider so a pending edit cannot land in another tab. */}
+      {provider && (
+        <PropertyEditor
+          key={propertiesState.selectedComponent?.id}
+          propertyManager={provider}
+          properties={propertiesState.properties}
+        />
+      )}
       {propertiesState.verbs.length > 0 && (
         <div className={S.verbs}>
           {propertiesState.verbs.map(verb => (

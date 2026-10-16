@@ -17,17 +17,13 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { IUpdatePropertiesResult, PropertyValue } from '@api/IArchitectApi';
-import { EditorProperty } from '@editors/gridEditor/EditorProperty';
-import { IPropertyManager } from '@editors/propertyEditor/IPropertyManager';
-
 import { IComponentProvider } from '@editors/designerEditor/common/IComponentProvider.tsx';
 import { Component } from '@editors/designerEditor/common/designerComponents/Component.tsx';
 
-export class PropertiesState implements IPropertyManager {
+export class PropertiesState {
   constructor(private getProvider: () => IComponentProvider | undefined) {}
 
-  private get provider() {
+  get provider() {
     return this.getProvider();
   }
 
@@ -59,15 +55,6 @@ export class PropertiesState implements IPropertyManager {
   setSelectedComponent(id: string | undefined): void {
     if (this.provider) {
       this.provider.selectedComponent = this.provider?.components.find(x => x.id === id) ?? null;
-    }
-  }
-
-  *onPropertyUpdated(
-    property: EditorProperty,
-    value: PropertyValue,
-  ): Generator<Promise<IUpdatePropertiesResult>, void, IUpdatePropertiesResult> {
-    if (this.provider) {
-      yield* this.provider.onPropertyUpdated(property, value);
     }
   }
 }
