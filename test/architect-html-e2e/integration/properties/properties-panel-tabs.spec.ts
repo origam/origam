@@ -83,6 +83,12 @@ class DesignerTabs {
     await expect(this.componentSelect).toHaveValue(tab.widgetId);
   }
 
+  propertyInput(name: string): Locator {
+    return this.properties
+      .getByTestId(`property-label-${name}`)
+      .locator('xpath=following-sibling::div[1]//input');
+  }
+
   // Inactive tabs stay in the DOM, only hidden.
   private widget(tab: DesignerTab): Locator {
     return this.page
@@ -119,6 +125,7 @@ test.describe('Properties panel follows the active section tab (real backend)', 
 
     await tabs.activate(ARRAY_TEST_SECTION);
 
+    await expect(tabs.properties).toBeVisible();
     await expect(tabs.properties.locator('[data-test-id^="property-"]')).toHaveCount(0);
   });
 
@@ -163,6 +170,20 @@ test.describe('Properties panel follows the active screen tab (real backend)', (
 
     await tabs.activate(WIDGET_SECTION_TEST_SCREEN);
 
+    await expect(tabs.properties).toBeVisible();
     await expect(tabs.properties.locator('[data-test-id^="property-"]')).toHaveCount(0);
+  });
+
+  test('a property edit goes to the screen of the active tab', async ({ page }) => {
+    for (const screen of [WIDGET_SECTION_TEST_SCREEN, ARRAY_TEST_SCREEN]) {
+      await tabs.activate(screen);
+      await tabs.selectWidget(screen);
+      const updated = page.waitForResponse(response =>
+        response.url().includes('/ScreenEditor/Update'),
+      );
+      await tabs.propertyInput('Top').fill('123');
+      const request = (await updated).request();
+      expect(request.postDataJSON().schemaItemId, screen.label).toBe(screen.schemaItemId);
+    }
   });
 });
