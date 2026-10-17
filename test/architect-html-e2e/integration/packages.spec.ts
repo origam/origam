@@ -30,7 +30,7 @@ const OTHER_PACKAGE = 'Attachments';
 // Every other package references it.
 const REFERENCED_PACKAGE = 'Root';
 const NEW_PACKAGE = 'E2EPackage';
-const ROOT_REFERENCE = 'Root#147fa70d-6519-4393-b5d0-87931f9fd609';
+const ROOT_REFERENCE = 'Root/.origamPackage#147fa70d-6519-4393-b5d0-87931f9fd609';
 
 const STRING_CONSTANT = 'DefaultMailWorkQueueName';
 
