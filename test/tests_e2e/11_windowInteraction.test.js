@@ -1,28 +1,24 @@
-const {
-    sleep, openMenuItem, login, afterEachTest, beforeEachTest
-} = require('./testTools');
+const { test, expect } = require("@playwright/test");
+const { openMenuItem, login, beforeEachTest } = require('./testTools');
 const { clearScreenConfiguration } = require("./dbTools");
 const { topMenuHeader, reportWindowMenuItemId } = require("./modelIds");
 
 
-let browser;
 let page;
 
-beforeAll(async () => {
+test.beforeAll(async () => {
     await clearScreenConfiguration();
 });
 
-beforeEach(async () => {
-    [browser, page] = await beforeEachTest()
+test.beforeEach(async ({ page: testPage }) => {
+  page = testPage;
+  await beforeEachTest(page);
 });
 
-afterEach(async () => {
-    await afterEachTest(browser);
-    browser = undefined;
-});
 
-describe("Html client", () => {
-    it("Should open and close report window", async () => {
+
+test.describe("Html client", () => {
+    test("Should open and close report window", async () => {
         await login(page);
         await openMenuItem(
             page,
@@ -31,12 +27,8 @@ describe("Html client", () => {
                 reportWindowMenuItemId,
             ]);
 
-        let reportWindowTab = await page.waitForXPath(`//*[contains(@class, 'tabHandle')]`, { visible: true });
-        await sleep(500);
-
+        const reportWindowTab = page.locator("[class*='tabHandle']");
         await reportWindowTab.click();
-        
-        reportWindowTab = await page.$(`[class*='tabHandle']`);
-        expect(reportWindowTab).toBeNull();
+        await expect(reportWindowTab).toHaveCount(0);
     });
 });
