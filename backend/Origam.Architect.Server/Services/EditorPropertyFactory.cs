@@ -39,6 +39,7 @@ public class EditorPropertyFactory
     // Spelling kept as is, the frontend expects this exact name.
     private const string LookupTypeName = "looukup";
     private const string UntypedTypeName = "untyped";
+    private const string FieldBindingTypeName = "fieldBinding";
 
     public EditorProperty CreateIfMarkedAsEditable(PropertyInfo property, ISchemaItem item)
     {
@@ -92,7 +93,7 @@ public class EditorPropertyFactory
         return new EditorProperty(
             name: property.Name,
             controlPropertyId: controlPropertyId,
-            type: LookupTypeName,
+            type: FieldBindingTypeName,
             value: boundFieldName,
             dropDownValues: dropDownValues,
             category: "Data",
