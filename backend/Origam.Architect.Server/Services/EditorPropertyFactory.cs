@@ -92,7 +92,7 @@ public class EditorPropertyFactory
         return new EditorProperty(
             name: property.Name,
             controlPropertyId: controlPropertyId,
-            type: LookupTypeName,
+            type: "fieldBinding",
             value: boundFieldName,
             dropDownValues: dropDownValues,
             category: "Data",

@@ -58,7 +58,11 @@ const SinglePropertyEditor = observer(
     };
 
     const renderControl = (property: EditorProperty) => {
-      if (property.type === 'enum' || property.type === 'looukup') {
+      if (
+        property.type === 'enum' ||
+        property.type === 'looukup' ||
+        property.type === 'fieldBinding'
+      ) {
         const selectedValue =
           property.type === 'enum'
             ? (property.dropDownValues.find(
@@ -70,6 +74,7 @@ const SinglePropertyEditor = observer(
           <FilterableSelect
             options={property.dropDownValues}
             selectedValue={selectedValue}
+            allowCustomValue={property.type === 'fieldBinding'}
             disabled={property.readOnly}
             dataTestId={`property-select-${property.name}`}
             onChange={value => onValueChange(property, value)}

@@ -32,6 +32,7 @@ interface FilterableSelectProps {
   className?: string;
   dataTestId?: string;
   autoFocus?: boolean;
+  allowCustomValue?: boolean;
   onChange: (value: any) => void;
 }
 
@@ -39,13 +40,23 @@ const VIRTUAL_OVERSCAN = 5;
 const DEFAULT_ITEM_HEIGHT = 26;
 
 export const FilterableSelect = observer((props: FilterableSelectProps) => {
-  const { options, selectedValue, disabled, className, dataTestId, autoFocus, onChange } = props;
+  const {
+    options,
+    selectedValue,
+    disabled,
+    className,
+    dataTestId,
+    autoFocus,
+    allowCustomValue,
+    onChange,
+  } = props;
 
   const selectedOption = useMemo(
     () => options.find(option => String(option.value) === String(selectedValue)),
     [options, selectedValue],
   );
-  const selectedLabel = selectedOption?.name ?? '';
+  const selectedLabel =
+    selectedOption?.name ?? (allowCustomValue ? String(selectedValue ?? '') : '');
 
   const [open, setOpen] = useState(false);
   const [filter, setFilter] = useState<string | null>(null);
@@ -69,6 +80,8 @@ export const FilterableSelect = observer((props: FilterableSelectProps) => {
   const isScrollingRef = useRef(false);
   const scrollEndTimeoutRef = useRef<number | null>(null);
   const suppressOpenOnNextFocusRef = useRef(false);
+  const committedRef = useRef(false);
+  const navigatedRef = useRef(false);
 
   useEffect(() => {
     if (autoFocus && inputRef.current && document.activeElement !== inputRef.current) {
@@ -85,6 +98,7 @@ export const FilterableSelect = observer((props: FilterableSelectProps) => {
 
   const commit = useCallback(
     (value: any, options?: { keepFocus?: boolean }) => {
+      committedRef.current = true;
       onChange(value);
       setOpen(false);
       setFilter(null);
@@ -105,7 +119,9 @@ export const FilterableSelect = observer((props: FilterableSelectProps) => {
         listRef.current &&
         !listRef.current.contains(target)
       ) {
-        if (filter != null && filteredOptions[highlight]) {
+        if (allowCustomValue && filter != null) {
+          commit(filter);
+        } else if (filter != null && filteredOptions[highlight]) {
           commit(filteredOptions[highlight].value);
         } else {
           setOpen(false);
@@ -115,7 +131,7 @@ export const FilterableSelect = observer((props: FilterableSelectProps) => {
     };
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
-  }, [open, filter, filteredOptions, highlight, commit]);
+  }, [open, filter, filteredOptions, highlight, commit, allowCustomValue]);
 
   useLayoutEffect(() => {
     if (!open || !wrapperRef.current) return;
@@ -211,6 +227,7 @@ export const FilterableSelect = observer((props: FilterableSelectProps) => {
       return;
     }
     setOpen(true);
+    navigatedRef.current = false;
     highlightSourceRef.current = 'keyboard';
     setHighlight(
       Math.max(
@@ -228,12 +245,17 @@ export const FilterableSelect = observer((props: FilterableSelectProps) => {
         highlightSourceRef.current = 'keyboard';
         setHighlight(current => Math.min(filteredOptions.length - 1, current + 1));
       }
+      navigatedRef.current = true;
     } else if (event.key === 'ArrowUp') {
       event.preventDefault();
       highlightSourceRef.current = 'keyboard';
       setHighlight(current => Math.max(0, current - 1));
+      navigatedRef.current = true;
     } else if (event.key === 'Enter') {
-      if (open && filteredOptions[highlight]) {
+      if (allowCustomValue && (!navigatedRef.current || !filteredOptions[highlight])) {
+        event.preventDefault();
+        commit(filter ?? selectedValue, { keepFocus: true });
+      } else if (open && filteredOptions[highlight]) {
         event.preventDefault();
         commit(filteredOptions[highlight].value, { keepFocus: true });
       }
@@ -245,7 +267,9 @@ export const FilterableSelect = observer((props: FilterableSelectProps) => {
       setOpen(false);
       setFilter(null);
     } else if (event.key === 'Tab') {
-      if (open && filter != null && filteredOptions[highlight]) {
+      if (allowCustomValue && filter != null) {
+        commit(filter, { keepFocus: true });
+      } else if (open && filter != null && filteredOptions[highlight]) {
         commit(filteredOptions[highlight].value, { keepFocus: true });
       } else {
         setOpen(false);
@@ -267,6 +291,8 @@ export const FilterableSelect = observer((props: FilterableSelectProps) => {
         className={S.filterableInput}
         value={filter ?? selectedLabel}
         onChange={event => {
+          committedRef.current = false;
+          navigatedRef.current = false;
           setFilter(event.target.value);
           setOpen(true);
           highlightSourceRef.current = 'keyboard';
@@ -282,6 +308,9 @@ export const FilterableSelect = observer((props: FilterableSelectProps) => {
             (wrapperRef.current?.contains(nextTarget) || listRef.current?.contains(nextTarget))
           ) {
             return;
+          }
+          if (allowCustomValue && filter != null && !committedRef.current) {
+            commit(filter, { keepFocus: true });
           }
           setOpen(false);
           setFilter(null);
