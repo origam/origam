@@ -44,12 +44,19 @@ test.describe('Open referenced item from the XSLT settings (real backend)', () =
     const settingsLoaded = page.waitForResponse(
       response => response.url().includes('/Xslt/Settings') && response.ok(),
     );
-    await page.getByText('Settings', { exact: true }).click();
+    await page
+      .getByText('Settings', { exact: true })
+      .and(page.locator(':not([data-test-id="topbar-settings"] *)'))
+      .click();
     await settingsLoaded;
     const openButton = page.getByTestId('xslt-settings-open-source-structure');
     await expect(openButton).toHaveCount(0);
 
-    await page.getByTestId('xslt-settings-source-structure').selectOption({ label: STRUCTURE });
+    await page
+      .getByText('Source Structure', { exact: true })
+      .locator('xpath=..')
+      .locator('select')
+      .selectOption({ label: STRUCTURE });
     await openButton.click();
 
     await expect(page.getByTestId(`tab-${STRUCTURE}`)).toHaveClass(/activeTab/);
