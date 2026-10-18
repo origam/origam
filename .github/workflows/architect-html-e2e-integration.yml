@@ -178,7 +178,7 @@ jobs:
           # host) with the build dir as its working dir / content root.
           ARCHITECT_SERVER_CMD: 'dotnet "${{ env.SERVER_DLL }}" --urls "https://localhost:7099;http://localhost:5003"'
           ARCHITECT_SERVER_CWD: ${{ env.SERVER_DIR }}
-        run: yarn test:e2e:integration --shard=${{ matrix.shard }}/6 --reporter=blob,github,list
+        run: yarn test:e2e:integration --shard=${{ matrix.shard }}/6 "--reporter=blob,github,list"
         working-directory: test/architect-html-e2e
 
       # --- Artifacts -------------------------------------------------------
