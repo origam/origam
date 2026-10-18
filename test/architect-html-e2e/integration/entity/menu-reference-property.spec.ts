@@ -47,7 +47,7 @@ test.describe('Menu reference properties (real backend)', () => {
     }
     await page.getByTestId('tree-node-MenuBinding').dblclick();
     await expect(page.getByTestId('property-select-MenuItem').locator('input')).toHaveValue(
-      /^Menu[\\/]TestMenuBinding[\\/]UserAccount$/,
+      /^Menu[\\/]Widgets[\\/]TestMenuBinding[\\/]UserAccount$/,
     );
   });
 
