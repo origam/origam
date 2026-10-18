@@ -667,7 +667,7 @@ export interface IPackageReferenceCandidate {
 }
 
 export type PropertyType =
-  'boolean' | 'enum' | 'string' | 'integer' | 'float' | 'looukup' | 'untyped';
+  'boolean' | 'enum' | 'string' | 'integer' | 'float' | 'looukup' | 'untyped' | 'color';
 
 export type PropertyValue = boolean | number | string | string[] | null;
 

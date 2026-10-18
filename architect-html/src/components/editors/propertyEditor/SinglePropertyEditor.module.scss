@@ -17,6 +17,16 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+@mixin crossedOutSwatch {
+  background: linear-gradient(
+      to top right,
+      transparent calc(50% - 1px),
+      var(--foreground1) 50%,
+      transparent calc(50% + 1px)
+    )
+    var(--background1) !important;
+}
+
 .root {
   display: block;
   width: 100%;
@@ -158,6 +168,29 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     .selectWrapper {
       flex: 1 1 auto;
       min-width: 0;
+    }
+
+    .colorPicker {
+      flex: 0 0 24px;
+      width: 24px;
+      height: 24px;
+      padding: 0;
+      cursor: pointer;
+
+      &:disabled {
+        cursor: not-allowed;
+      }
+    }
+
+    // A browser drops a whole selector list with an unknown pseudo element.
+    .colorPickerEmpty {
+      &::-webkit-color-swatch {
+        @include crossedOutSwatch;
+      }
+
+      &::-moz-color-swatch {
+        @include crossedOutSwatch;
+      }
     }
 
     .copyButton {
