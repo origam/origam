@@ -68,15 +68,12 @@ public class EditorPropertyFactory
         bool editedAsText = untyped && dropDownValues.Length > 0;
         bool stringLookup = property.PropertyType == typeof(string) && dropDownValues.Length > 0;
 
-        string propertyType = ToPropertyTypeName(property);
-        if (untyped)
+        string propertyType = property switch
         {
-            propertyType = UntypedTypeName;
-        }
-        if (editedAsText || stringLookup)
-        {
-            propertyType = LookupTypeName;
-        }
+            _ when editedAsText || stringLookup => LookupTypeName,
+            _ when untyped => UntypedTypeName,
+            _ => ToPropertyTypeName(property),
+        };
 
         object serializedValue = value switch
         {
