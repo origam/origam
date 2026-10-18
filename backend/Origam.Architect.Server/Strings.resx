@@ -378,4 +378,13 @@
     <data name="Package_ReferenceStillUsed" xml:space="preserve">
         <value>Package "{0}" cannot be removed from the references because "{1}" uses "{2}" from it.</value>
     </data>
+    <data name="Property_ColorNotValid" xml:space="preserve">
+        <value>"{1}" is not a valid color for {0}. Use a color name, #RRGGBB or R, G, B.</value>
+    </data>
+    <data name="Property_ColorNotOpaque" xml:space="preserve">
+        <value>"{1}" cannot be used for {0}, the color has to be opaque.</value>
+    </data>
+    <data name="Property_SystemColorNotAllowed" xml:space="preserve">
+        <value>"{1}" cannot be used for {0}, a system color depends on the machine.</value>
+    </data>
 </root>

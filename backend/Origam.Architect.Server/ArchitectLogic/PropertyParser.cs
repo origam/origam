@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.ComponentModel;
+using System.Drawing;
 using System.Globalization;
 using System.Reflection;
 using Origam.Architect.Server.ReturnModels;
@@ -33,6 +34,12 @@ public class PropertyParser(IPersistenceService persistenceService)
 {
     public object Parse(PropertyInfo property, string value, object instance)
     {
+        // Before the null check, an empty color comes as null.
+        if (property.PropertyType == typeof(Color))
+        {
+            return ParseColor(property, value);
+        }
+
         if (value == null)
         {
             return null;
@@ -195,6 +202,54 @@ public class PropertyParser(IPersistenceService persistenceService)
         }
 
         return converted;
+    }
+
+    private static Color ParseColor(PropertyInfo property, string value)
+    {
+        string text = value?.Trim() ?? "";
+        if (Color.FromName(text).IsSystemColor)
+        {
+            throw MakeColorException(Strings.Property_SystemColorNotAllowed, property, text);
+        }
+
+        Color color = ReadColor(property, text);
+        if (color.A != 255 && color.ToArgb() != 0)
+        {
+            throw MakeColorException(Strings.Property_ColorNotOpaque, property, text);
+        }
+
+        // Same form as the getter returns, so an unchanged color compares equal.
+        return Color.FromArgb(color.ToArgb());
+    }
+
+    // ColorTranslator would read R, G, B by the server culture.
+    private static Color ReadColor(PropertyInfo property, string text)
+    {
+        bool isHex = text.StartsWith('#');
+        if (isHex && text.Length is not (4 or 7))
+        {
+            throw MakeColorException(Strings.Property_ColorNotValid, property, text);
+        }
+
+        try
+        {
+            return isHex
+                ? ColorTranslator.FromHtml(text)
+                : (Color)new ColorConverter().ConvertFromInvariantString(text);
+        }
+        catch (Exception exception) when (PropertyUtils.IsRejectedValueException(exception))
+        {
+            throw MakeColorException(Strings.Property_ColorNotValid, property, text);
+        }
+    }
+
+    private static UserOrigamException MakeColorException(
+        string format,
+        PropertyInfo property,
+        string text
+    )
+    {
+        return new UserOrigamException(string.Format(format, property.Name, text));
     }
 
     private Exception MakeCouldNotParseException(PropertyInfo property)

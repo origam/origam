@@ -313,6 +313,24 @@ namespace Origam.Architect.Server {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to &quot;{1}&quot; cannot be used for {0}, the color has to be opaque..
+        /// </summary>
+        internal static string Property_ColorNotOpaque {
+            get {
+                return ResourceManager.GetString("Property_ColorNotOpaque", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &quot;{1}&quot; is not a valid color for {0}. Use a color name, #RRGGBB or R, G, B..
+        /// </summary>
+        internal static string Property_ColorNotValid {
+            get {
+                return ResourceManager.GetString("Property_ColorNotValid", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Type converter {0} of property {1} could not be found..
         /// </summary>
         internal static string Property_ConverterNotFound {
@@ -330,6 +348,15 @@ namespace Origam.Architect.Server {
             }
         }
 
+        /// <summary>
+        ///   Looks up a localized string similar to &quot;{1}&quot; cannot be used for {0}, a system color depends on the machine..
+        /// </summary>
+        internal static string Property_SystemColorNotAllowed {
+            get {
+                return ResourceManager.GetString("Property_SystemColorNotAllowed", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to &quot;{1}&quot; is not one of the values offered for {0}..
         /// </summary>
