@@ -31,6 +31,7 @@ using Origam.Extensions;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
+using Origam.Schema.MenuModel;
 
 namespace Origam.Architect.Server.Services;
 
@@ -73,7 +74,9 @@ public class EditorPropertyFactory
                 : untyped ? UntypedTypeName
                 : ToPropertyTypeName(property),
             value: editedAsText
-                ? converter.ConvertToString(context, CultureInfo.InvariantCulture, value)
+                    ? converter.ConvertToString(context, CultureInfo.InvariantCulture, value)
+                : converter is MenuItemConverter && value is AbstractMenuItem menuItem
+                    ? menuItem.Path
                 : ToSerializableValue(value, property, instance),
             dropDownValues: dropDownValues,
             category: category,

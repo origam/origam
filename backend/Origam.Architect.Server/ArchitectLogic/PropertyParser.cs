@@ -25,6 +25,7 @@ using System.Reflection;
 using Origam.Architect.Server.ReturnModels;
 using Origam.Architect.Server.Utils;
 using Origam.DA.ObjectPersistence;
+using Origam.Schema.MenuModel;
 using Origam.Workbench.Services;
 
 namespace Origam.Architect.Server.ArchitectLogic;
@@ -44,6 +45,15 @@ public class PropertyParser(IPersistenceService persistenceService)
         }
 
         if (PropertyUtils.IsUntyped(property))
+        {
+            return ParseUntyped(property, value, instance);
+        }
+
+        if (
+            property.PropertyType.IsAssignableTo(typeof(AbstractMenuItem))
+            && !Guid.TryParse(value, out _)
+            && PropertyUtils.CreateConverter(property) is MenuItemConverter
+        )
         {
             return ParseUntyped(property, value, instance);
         }
