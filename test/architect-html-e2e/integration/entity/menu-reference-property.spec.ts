@@ -64,7 +64,8 @@ test.describe('Menu reference properties (real backend)', () => {
     expect(savedMenuReference()).toContain(`/AllDataTypes_Edit1/${TARGET_MENU_ID}`);
 
     await reloadBackend(request, 'Widgets');
-    await openMenuAction(page);
+    await page.reload();
+    await openMenuActionEditor(page);
     await expect(menuInput(page)).toHaveValue(TARGET_PATH);
   });
 
@@ -82,7 +83,8 @@ test.describe('Menu reference properties (real backend)', () => {
     expect(savedMenuReference() ?? '').toBe('');
 
     await reloadBackend(request, 'Widgets');
-    await openMenuAction(page);
+    await page.reload();
+    await openMenuActionEditor(page);
     await expect(menuInput(page)).toHaveValue('');
   });
 
@@ -136,6 +138,10 @@ async function openMenuAction(page: Page): Promise<void> {
   for (const node of ['Data', 'Entities', 'Widgets', 'AllDataTypes', 'UI Actions']) {
     await page.getByTestId(`tree-toggle-${node}`).click();
   }
+  await openMenuActionEditor(page);
+}
+
+async function openMenuActionEditor(page: Page): Promise<void> {
   await page.getByTestId('tree-node-SingleRecord').dblclick();
   await expect(page.getByTestId('property-input-Name')).toHaveValue('SingleRecord');
 }
