@@ -33,7 +33,7 @@ export const ColorPropertyInput = observer(
     const storedText = property.value != null ? String(property.value) : '';
     const [shownColor, setShownColor] = useState(storedText);
     const [syncedText, setSyncedText] = useState(storedText);
-    // A pending or rejected typed name keeps the last color the server knows.
+    // Rejected text keeps the last color the server knows.
     if (syncedText !== storedText) {
       setSyncedText(storedText);
       if (storedText === '' || HEX_COLOR.test(storedText)) {

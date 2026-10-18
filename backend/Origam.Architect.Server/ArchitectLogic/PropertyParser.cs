@@ -207,49 +207,29 @@ public class PropertyParser(IPersistenceService persistenceService)
     private static Color ParseColor(PropertyInfo property, string value)
     {
         string text = value?.Trim() ?? "";
-        if (Color.FromName(text).IsSystemColor)
+        if (text.Length == 0)
         {
-            throw MakeColorException(Strings.Property_SystemColorNotAllowed, property, text);
+            // ARGB zero means no color, compared equal with what the getter returns for it.
+            return Color.FromArgb(0);
         }
 
-        Color color = ReadColor(property, text);
-        if (color.A != 255 && color.ToArgb() != 0)
+        if (
+            text.Length != 7
+            || text[0] != '#'
+            || !int.TryParse(
+                text.AsSpan(1),
+                NumberStyles.AllowHexSpecifier,
+                CultureInfo.InvariantCulture,
+                out int rgb
+            )
+        )
         {
-            throw MakeColorException(Strings.Property_ColorNotOpaque, property, text);
+            throw new UserOrigamException(
+                string.Format(Strings.Property_ColorNotValid, property.Name, text)
+            );
         }
 
-        // Same form as the getter returns, so an unchanged color compares equal.
-        return Color.FromArgb(color.ToArgb());
-    }
-
-    // ColorTranslator would read R, G, B by the server culture.
-    private static Color ReadColor(PropertyInfo property, string text)
-    {
-        bool isHex = text.StartsWith('#');
-        if (isHex && text.Length is not (4 or 7))
-        {
-            throw MakeColorException(Strings.Property_ColorNotValid, property, text);
-        }
-
-        try
-        {
-            return isHex
-                ? ColorTranslator.FromHtml(text)
-                : (Color)new ColorConverter().ConvertFromInvariantString(text);
-        }
-        catch (Exception exception) when (PropertyUtils.IsRejectedValueException(exception))
-        {
-            throw MakeColorException(Strings.Property_ColorNotValid, property, text);
-        }
-    }
-
-    private static UserOrigamException MakeColorException(
-        string format,
-        PropertyInfo property,
-        string text
-    )
-    {
-        return new UserOrigamException(string.Format(format, property.Name, text));
+        return Color.FromArgb(alpha: 255, baseColor: Color.FromArgb(rgb));
     }
 
     private Exception MakeCouldNotParseException(PropertyInfo property)

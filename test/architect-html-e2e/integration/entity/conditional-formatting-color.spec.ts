@@ -30,7 +30,6 @@ import {
   save,
 } from '@support/propertyEditor';
 import { readModelFile, resetBackend } from '@support/resetBackend';
-import { setServerCulture } from '@support/setServerCulture';
 
 const PACKAGE = 'Root';
 const ENTITY_FILE = 'Root/DataEntity/Work Queue/WorkQueueEntry.origam';
@@ -83,19 +82,17 @@ test.describe('Color property of a conditional formatting rule (real backend)', 
     );
   });
 
-  for (const typedColor of ['Red', '#f00']) {
-    test(`stores a color typed as ${typedColor}`, async ({ page }) => {
-      await openRuleEditor(page);
+  test('stores a typed color', async ({ page }) => {
+    await openRuleEditor(page);
 
-      await fillProperty(page, 'BackgroundColor', typedColor);
+    await fillProperty(page, 'BackgroundColor', '#FF0000');
 
-      await expect(page.getByTestId('property-input-BackgroundColor')).toHaveValue('#ff0000');
-      await save(page);
-      await expectModelFileContent(ENTITY_FILE, content =>
-        content.includes(`ecf:backgroundColor="${RED_ARGB}"`),
-      );
-    });
-  }
+    await expect(page.getByTestId('property-input-BackgroundColor')).toHaveValue('#ff0000');
+    await save(page);
+    await expectModelFileContent(ENTITY_FILE, content =>
+      content.includes(`ecf:backgroundColor="${RED_ARGB}"`),
+    );
+  });
 
   test('removes a cleared color', async ({ page }) => {
     await openRuleEditor(page);
@@ -109,9 +106,9 @@ test.describe('Color property of a conditional formatting rule (real backend)', 
   test('keeps the rule untouched when the same color is typed', async ({ page }) => {
     await openRuleEditor(page);
 
-    await fillProperty(page, 'BackgroundColor', 'CornflowerBlue');
+    await fillProperty(page, 'BackgroundColor', STORED_BACKGROUND_HEX.toUpperCase());
 
-    // The typed name is shown until the server answer is applied.
+    // The typed text is shown until the server answer is applied.
     await expect(page.getByTestId('property-input-BackgroundColor')).toHaveValue(
       STORED_BACKGROUND_HEX,
     );
@@ -119,7 +116,7 @@ test.describe('Color property of a conditional formatting rule (real backend)', 
     await expect(page.getByTestId('save-button-disabled')).toBeVisible();
   });
 
-  for (const rejectedColor of ['Redd', 'Transparent', 'Control']) {
+  for (const rejectedColor of ['Red', '#f00', '#ff00001']) {
     test(`rejects ${rejectedColor} as a color`, async ({ page }) => {
       await openRuleEditor(page);
 
@@ -130,28 +127,6 @@ test.describe('Color property of a conditional formatting rule (real backend)', 
       );
     });
   }
-
-  test.describe('on a cs-CZ server', () => {
-    test.beforeEach(async ({ request }) => {
-      await setServerCulture(request, 'cs-CZ');
-    });
-
-    test.afterEach(async ({ request }) => {
-      await setServerCulture(request, null);
-    });
-
-    // The same as SystemColors.Control.
-    test('stores a color typed as R, G, B', async ({ page }) => {
-      await openRuleEditor(page);
-
-      await fillProperty(page, 'BackgroundColor', '240, 240, 240');
-      await save(page);
-
-      await expectModelFileContent(ENTITY_FILE, content =>
-        content.includes('ecf:backgroundColor="-986896"'),
-      );
-    });
-  });
 });
 
 async function openRuleEditor(page: Page): Promise<void> {
