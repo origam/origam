@@ -1,3 +1,22 @@
+/*
+Copyright 2005 - 2026 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+
 import { expect, test, type APIRequestContext, type Page } from '@playwright/test';
 import { activatePackage } from '@support/activatePackage';
 import { readModelFile, reloadBackend, resetBackend } from '@support/resetBackend';
@@ -91,6 +110,25 @@ test.describe('Menu reference properties (real backend)', () => {
     await save(page);
     expect(savedMenuReference()).toContain(`/AllDataTypes_Edit1/${TARGET_MENU_ID}`);
   });
+
+  for (const [format, value] of [
+    ['path', 'Menu'],
+    ['GUID', '147775f5-451d-4efd-8634-7f27a2cf50a6'],
+  ]) {
+    test(`rejects an incompatible reference submitted as a ${format}`, async ({ page, request }) => {
+      await openMenuAction(page);
+      const originalReference = savedMenuReference();
+
+      const response = await updateMenu(request, value);
+      expect(response.status(), await response.text()).toBe(420);
+      expect(await response.text()).toContain('AbstractMenuItem');
+
+      await page.reload();
+      await expect(menuInput(page)).toHaveValue(ORIGINAL_PATH);
+      expect(savedMenuReference()).toBe(originalReference);
+      await expect(page.getByTestId('save-button-disabled')).toBeVisible();
+    });
+  }
 });
 
 async function openMenuAction(page: Page): Promise<void> {

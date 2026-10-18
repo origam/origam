@@ -46,16 +46,22 @@ public class PropertyParser(IPersistenceService persistenceService)
 
         if (PropertyUtils.IsUntyped(property))
         {
-            return ParseUntyped(property, value, instance);
+            return ParseConvertedValue(
+                property,
+                value,
+                instance,
+                PropertyUtils.CreateConverter(property)
+            );
         }
 
         if (
             property.PropertyType.IsAssignableTo(typeof(AbstractMenuItem))
             && !Guid.TryParse(value, out _)
-            && PropertyUtils.CreateConverter(property) is MenuItemConverter
+            && PropertyUtils.CreateConverter(property) is MenuItemConverter converter
         )
         {
-            return ParseUntyped(property, value, instance);
+            object converted = ParseConvertedValue(property, value, instance, converter);
+            return ValidateReferenceType(property, converted);
         }
 
         if (property.PropertyType == typeof(bool))
@@ -151,19 +157,7 @@ public class PropertyParser(IPersistenceService persistenceService)
 
             IPersistent referenced =
                 persistenceService.SchemaProvider.RetrieveInstance<IPersistent>(referenceId);
-            if (referenced != null && !referenced.GetType().IsAssignableTo(property.PropertyType))
-            {
-                throw new Exception(
-                    string.Format(
-                        Strings.PropertyReferenceTypeNotValid,
-                        property.Name,
-                        property.PropertyType.Name,
-                        referenced.GetType().Name
-                    )
-                );
-            }
-
-            return referenced;
+            return ValidateReferenceType(property, referenced);
         }
 
         throw new Exception(
@@ -171,19 +165,52 @@ public class PropertyParser(IPersistenceService persistenceService)
         );
     }
 
-    // Untyped properties are edited in the converter's text space, invariant.
-    private static object ParseUntyped(PropertyInfo property, string value, object instance)
+    private static object ValidateReferenceType(PropertyInfo property, object referenced)
+    {
+        if (referenced != null && !property.PropertyType.IsInstanceOfType(referenced))
+        {
+            throw new UserOrigamException(
+                string.Format(
+                    Strings.PropertyReferenceTypeNotValid,
+                    property.Name,
+                    property.PropertyType.Name,
+                    referenced.GetType().Name
+                )
+            );
+        }
+
+        return referenced;
+    }
+
+    // Converter-backed properties are edited in the converter's text space, invariant.
+    private static object ParseConvertedValue(
+        PropertyInfo property,
+        string value,
+        object instance,
+        TypeConverter converter
+    )
     {
         if (value.Length == 0)
         {
             return null;
         }
 
-        TypeConverter converter = PropertyUtils.CreateConverter(property);
         var context = new Context(instance);
         if (converter == null || !converter.CanConvertFrom(context, typeof(string)))
         {
-            return value;
+            if (PropertyUtils.IsUntyped(property))
+            {
+                return value;
+            }
+
+            throw new UserOrigamException(
+                string.Format(
+                    Strings.PropertyReferenceValueNotValid,
+                    value,
+                    property.Name,
+                    property.PropertyType.Name
+                )
+            );
         }
 
         object converted;

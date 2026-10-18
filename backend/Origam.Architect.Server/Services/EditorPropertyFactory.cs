@@ -67,17 +67,31 @@ public class EditorPropertyFactory
         // An untyped property is edited in its converter's text space.
         bool editedAsText = untyped && dropDownValues.Length > 0;
 
+        object serializedValue;
+        if (editedAsText)
+        {
+            serializedValue = converter.ConvertToString(
+                context,
+                CultureInfo.InvariantCulture,
+                value
+            );
+        }
+        else if (converter is MenuItemConverter && value is AbstractMenuItem menuItem)
+        {
+            serializedValue = menuItem.Path;
+        }
+        else
+        {
+            serializedValue = ToSerializableValue(value, property, instance);
+        }
+
         return new EditorProperty(
             name: property.Name,
             controlPropertyId: null,
             type: editedAsText ? LookupTypeName
                 : untyped ? UntypedTypeName
                 : ToPropertyTypeName(property),
-            value: editedAsText
-                    ? converter.ConvertToString(context, CultureInfo.InvariantCulture, value)
-                : converter is MenuItemConverter && value is AbstractMenuItem menuItem
-                    ? menuItem.Path
-                : ToSerializableValue(value, property, instance),
+            value: serializedValue,
             dropDownValues: dropDownValues,
             category: category,
             description: description,
