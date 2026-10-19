@@ -37,6 +37,7 @@ const RULE = '90_Blue_SR_WorkQueueEntry_InRetryIsTrue_*';
 const STORED_BACKGROUND = '-10185235';
 const STORED_BACKGROUND_HEX = '#6495ed';
 const RED_ARGB = '-65536';
+const BLACK_ARGB = '-16777216';
 
 test.describe('Color property of a conditional formatting rule (real backend)', () => {
   test.use({ actionTimeout: 10_000, navigationTimeout: 20_000 });
@@ -101,6 +102,33 @@ test.describe('Color property of a conditional formatting rule (real backend)', 
     await save(page);
 
     await expectModelFileContent(ENTITY_FILE, content => !content.includes('ecf:backgroundColor='));
+  });
+
+  test('removes black with the clear button', async ({ page }) => {
+    await openRuleEditor(page);
+    await fillProperty(page, 'BackgroundColor', '#000000');
+    await save(page);
+    await expectModelFileContent(ENTITY_FILE, content =>
+      content.includes(`ecf:backgroundColor="${BLACK_ARGB}"`),
+    );
+
+    await awaitPropertyUpdate(page, () =>
+      page.getByTestId('property-clear-BackgroundColor').click(),
+    );
+
+    await expect(page.getByTestId('property-input-BackgroundColor')).toHaveValue('');
+    await expect(page.getByTestId('property-color-BackgroundColor')).toHaveClass(
+      /colorPickerEmpty/,
+    );
+    await expect(page.getByTestId('property-clear-BackgroundColor')).toBeDisabled();
+    await save(page);
+    await expectModelFileContent(ENTITY_FILE, content => !content.includes('ecf:backgroundColor='));
+  });
+
+  test('disables the clear button for an unset color', async ({ page }) => {
+    await openRuleEditor(page);
+
+    await expect(page.getByTestId('property-clear-ForegroundColor')).toBeDisabled();
   });
 
   test('keeps the rule untouched when the same color is typed', async ({ page }) => {
