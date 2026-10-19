@@ -188,6 +188,8 @@ jobs:
   build-server:
     name: build-server
     runs-on: windows-2025
+    env:
+      NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
     permissions:
       actions: read
       contents: read
@@ -207,6 +209,14 @@ jobs:
 
       - name: Setup NuGet
         uses: NuGet/setup-nuget@v2
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v5
+        with:
+          path: ${{ env.NUGET_PACKAGES }}
+          key: ${{ runner.os }}-nuget-server-v1-${{ hashFiles('backend/**/*.csproj', 'backend/**/*.props', 'backend/**/*.targets', 'backend/**/packages.config', 'backend/**/packages.lock.json', '**/[Nn]u[Gg]et.[Cc]onfig', 'backend/global.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-server-v1-
 
       - name: Restore Packages
         run: |
