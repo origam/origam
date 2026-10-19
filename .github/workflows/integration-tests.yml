@@ -295,6 +295,7 @@ jobs:
       - name: Build test image with cached Docker layers
         uses: docker/bake-action@v7
         with:
+          source: .
           files: test/docker-bake.hcl
           set: |
             e2e.output=type=docker,dest=${{ runner.temp }}/origam-e2e.tar
