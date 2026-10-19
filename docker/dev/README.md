@@ -112,6 +112,21 @@ up -d` recreates the container. It shares
 the database and model with the runtime server, and waits for that server to
 report healthy; the architect does not deploy the schema itself.
 
+Origam AI runs inside the Architect. Its settings come from this stack's env
+file, not from a tracked one: `AI_ENDPOINT` (default
+`https://api.openai.com/v1`), `AI_MODEL` (no default, set the id your provider
+offers) and `AI_API_KEY` in `docker/dev/.env`. Recreate the container to apply
+them:
+
+```bash
+docker compose --env-file docker/dev/.env --profile architect up -d architect
+```
+
+`restart` keeps the old environment. The chat panel's own notice names
+`appsettings.json`, which these variables override, so the key goes here.
+Without a key the panel says so; an empty or wrong model only shows up as a
+failed first message.
+
 ## Useful Commands
 
 ```bash

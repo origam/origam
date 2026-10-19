@@ -107,7 +107,7 @@ export default defineConfig({
         secure: false,
       },
       '/ModelCheck': {
-        target: 'http://localhost:5003',
+        target: proxyTargetHttps,
         secure: false,
       },
       '/wizards': {
@@ -115,7 +115,7 @@ export default defineConfig({
         secure: false,
       },
       '/agent': {
-        target: 'https://localhost:7099',
+        target: proxyTargetHttps,
         secure: false,
       },
     },
