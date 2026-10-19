@@ -81,7 +81,7 @@ COPY --chown=origam:origam docker/server/linux/cleanUpEnvironment.sh \
      docker/server/linux/cleanUpEnvironmentRoot.sh \
      /home/origam/Setup/
 
-RUN cd /home/origam/server_bin && mkdir -p logs \
+RUN cd /home/origam/server_bin && mkdir -p logs && chown origam:origam logs \
  && chmod +x configureServer.sh fill_origam_settings_config.sh stage_server_config.sh entrypoint.sh \
  && cd /home/origam/scheduler_bin && chmod +x configureScheduler.sh fill_origam_settings_config.sh \
  && cd /home/origam/Setup && chmod +x cleanUpEnvironment.sh cleanUpEnvironmentRoot.sh
