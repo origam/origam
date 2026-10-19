@@ -379,6 +379,7 @@
   "property_lookup_no_value": "(none)",
   "property_open_referenced_item": "Open",
   "property_copy_to_clipboard": "Copy to clipboard",
+  "property_remove_color": "Remove color",
   "screen_editor_add_tab": "Add Tab",
   "screen_editor_remove_tab": "Remove Tab",
   "packages_add": "New Package",

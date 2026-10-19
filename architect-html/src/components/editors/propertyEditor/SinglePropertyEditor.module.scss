@@ -193,7 +193,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
       }
     }
 
-    .copyButton {
+    .copyButton,
+    .clearColorButton {
       background: transparent;
       border: 1px solid var(--background4);
       border-radius: 0.25rem;
@@ -217,6 +218,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
       &:active {
         background-color: var(--background3);
       }
+    }
+
+    .clearColorButton:disabled {
+      background: transparent;
+      border-color: var(--background4);
+      cursor: not-allowed;
+      opacity: 0.5;
     }
   }
 }

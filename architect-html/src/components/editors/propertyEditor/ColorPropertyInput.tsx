@@ -17,11 +17,13 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { T } from '@/main.tsx';
 import { EditorProperty } from '@editors/gridEditor/EditorProperty.ts';
 import S from '@editors/propertyEditor/SinglePropertyEditor.module.scss';
 import { UntypedPropertyInput } from '@editors/propertyEditor/UntypedPropertyInput.tsx';
 import { observer } from 'mobx-react-lite';
 import { useEffect, useEffectEvent, useRef, useState } from 'react';
+import { VscClose } from 'react-icons/vsc';
 
 const HEX_COLOR = /^#[0-9a-f]{6}$/i;
 const NO_COLOR = '#000000';
@@ -67,6 +69,16 @@ export const ColorPropertyInput = observer(
           onChange={e => setShownColor(e.target.value)}
         />
         <UntypedPropertyInput property={property} onChange={props.onChange} />
+        <button
+          type="button"
+          className={S.clearColorButton}
+          disabled={property.readOnly || storedText === ''}
+          data-test-id={`property-clear-${property.name}`}
+          title={T('Remove color', 'property_remove_color')}
+          onClick={() => props.onChange('')}
+        >
+          <VscClose />
+        </button>
       </>
     );
   },
