@@ -39,8 +39,8 @@ module.exports = defineConfig({
     ignoreHTTPSErrors: true,
     viewport: { width: 1800, height: 2000 },
     screenshot: "only-on-failure",
-    trace: "retain-on-failure",
-    video: "retain-on-failure",
+    trace: "on-first-retry",
+    video: "on-first-retry",
     launchOptions: {
       args: process.env.CI
         ? ["--disable-dev-shm-usage", "--disable-setuid-sandbox", "--no-sandbox"]

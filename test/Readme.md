@@ -42,7 +42,9 @@ Useful commands:
 - `yarn playwright test -g "Should perform basic CRUD"` runs one named test.
 - `yarn show-report` opens the HTML report from the latest run.
 
-Failures retain a screenshot, video, and trace under `test-results`. The HTML report is written to
+Failures retain screenshots under `test-results`. Videos and traces are recorded only on the
+first retry; CI retries failed tests once, while local runs have no retries by default. To capture
+retry diagnostics locally, use `yarn test:e2e --retries=1`. The HTML report is written to
 `playwright-report`, and CI also publishes both directories as artifacts.
 
 # Running the end-to-end tests in Docker
