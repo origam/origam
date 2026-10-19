@@ -156,12 +156,6 @@ esac
 
 print_title "Run $test_runner frontend integration tests"
 cd "$test_directory"
-if [[ "$test_runner" == legacy ]]; then
-  yarn install --frozen-lockfile --ignore-scripts || exit 1
-else
-  yarn install --frozen-lockfile || exit 1
-  yarn playwright install ffmpeg || exit 1
-fi
 yarn test:e2e
 if [[ $? -eq 0 ]]; then
   sudo cp frontend-integration-test-results.trx "/home/origam/output/frontend-integration-test-results-$test_runner.trx"

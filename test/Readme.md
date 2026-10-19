@@ -69,6 +69,15 @@ Chrome, and fonts on this stage, then copies the application from the server ima
 to application binaries therefore do not invalidate the expensive test-tool installation layers.
 Local builds keep using `origam-server-linux` as both the application and runtime image by default.
 
+Playwright and legacy JavaScript dependencies are installed in separate image stages using only
+each runner's `package.json` and `yarn.lock`. The Playwright stage also installs FFmpeg into the
+`origam` user's browser cache. The final image contains both runners' dependencies and FFmpeg,
+so container startup does not install packages or download test tools. Changes to application
+or test source files reuse these dependency layers; changing a runner's dependency files
+rebuilds its installation layer. Host `node_modules` directories are excluded from the build context.
+For local Docker runs, rebuild the test image with `docker compose ... up --build` after changing
+dependency files.
+
 CI loads the complete E2E image and builds the selected database image with its own cache.
 Compose runs with `--no-build` so test jobs use those prepared images. The first run without
 a matching cache builds the layers normally; subsequent runs report reused layers as `CACHED`.

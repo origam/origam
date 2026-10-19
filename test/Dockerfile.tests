@@ -35,6 +35,20 @@ RUN set -eux; \
 # Install gawk
 RUN apt-get -qq update && apt-get -qq install -y --no-install-recommends gawk && rm -rf /var/lib/apt/lists/*
 
+FROM test-dependencies AS playwright-dependencies
+
+USER origam
+WORKDIR /home/origam/server_bin/tests_e2e
+COPY --chown=origam:origam tests_e2e/package.json tests_e2e/yarn.lock ./
+RUN yarn install --frozen-lockfile \
+ && yarn playwright install ffmpeg
+
+FROM test-dependencies AS legacy-dependencies
+
+USER origam
+WORKDIR /home/origam/server_bin/tests_e2e_legacy
+COPY --chown=origam:origam tests_e2e_legacy/package.json tests_e2e_legacy/yarn.lock ./
+RUN yarn install --frozen-lockfile --ignore-scripts
 
 FROM test-dependencies AS tests
 
@@ -56,6 +70,9 @@ COPY --chown=origam:origam tests_workflow \
 
 COPY --chown=origam:origam tests_e2e /home/origam/server_bin/tests_e2e/
 COPY --chown=origam:origam tests_e2e_legacy /home/origam/server_bin/tests_e2e_legacy/
+COPY --from=playwright-dependencies --chown=origam:origam /home/origam/server_bin/tests_e2e/node_modules /home/origam/server_bin/tests_e2e/node_modules/
+COPY --from=playwright-dependencies --chown=origam:origam /home/origam/.cache/ms-playwright /home/origam/.cache/ms-playwright/
+COPY --from=legacy-dependencies --chown=origam:origam /home/origam/server_bin/tests_e2e_legacy/node_modules /home/origam/server_bin/tests_e2e_legacy/node_modules/
 COPY --chown=origam:origam model /home/origam/projectData/model/
 
 WORKDIR /home/origam/server_bin
