@@ -1,6 +1,6 @@
 require("dotenv").config({ path: require("path").join(__dirname, ".env"), quiet: true });
-const userName = process.env.ORIGAM_E2E_USERNAME || "washi";
-const password = process.env.ORIGAM_E2E_PASSWORD || "blabla";
+const userName = process.env.ORIGAM_E2E_USERNAME || "username";
+const password = process.env.ORIGAM_E2E_PASSWORD || "password";
 const backEndUrl = process.env.ORIGAM_E2E_URL || "https://localhost";
 const serverClientSecret = process.env.ORIGAM_E2E_SERVER_CLIENT_SECRET || "serverSecret";
 
