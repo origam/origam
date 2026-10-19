@@ -17,29 +17,24 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-const { sleep, openMenuItem, login, switchLanguageTo,
-  beforeEachTest, afterEachTest
-} = require('./testTools');
+const { test, expect } = require("@playwright/test");
+const { openMenuItem, login, switchLanguageTo, beforeEachTest } = require('./testTools');
 const {topMenuHeader, widgetsMenuItemId, allDataTypesMenuId,
   allDataTypesLazyMenuItemsId} = require("./modelIds");
 const { clearScreenConfiguration } = require("./dbTools");
-const expect = require("expect");
 
-let browser;
 let page;
 
-beforeAll(async() => {
+test.beforeAll(async() => {
   await clearScreenConfiguration();
 });
 
-beforeEach(async () => {
-  [browser, page] = await beforeEachTest()
+test.beforeEach(async ({ page: testPage }) => {
+  page = testPage;
+  await beforeEachTest(page);
 });
 
-afterEach(async () => {
-  await afterEachTest(browser);
-  browser = undefined;
-});
+
 
 const menuHeaderSelector = "[class*='_topMenuHeader']";
 const favoritesHeaderSelector = "[class*='_favoritesFolderHeader']";
@@ -57,62 +52,63 @@ function draggableSelector(menuItemId) {
 // The edit button is hidden until the section header is hovered. Enabling editing
 // in one section disables it in all the others.
 async function flipEditing(page, headerSelector) {
-  const header = await page.waitForSelector(headerSelector, {visible: true});
+  const header = page.locator(headerSelector);
   await header.hover();
-  await sleep(300);
-  const editButton = await page.waitForSelector(`${headerSelector} i.fa-edit`, {visible: true});
-  await editButton.click();
-  await sleep(300);
+  await page.locator(`${headerSelector} i.fa-edit`)
+    .evaluate(element => element.click());
 }
 
 async function addToFavorites(page, menuItemId) {
-  const [addButton] = await page.$x(
-    `//div[contains(@class,'favoritesMenuItem')][.//*[@id='${menuItemId}']]` +
-    `//div[contains(@class,'addToFavoritesIconContainer')]`);
-  if (!addButton) {
-    throw new Error(`Add to favorites button of ${menuItemId} was not found.`);
-  }
-  await addButton.click();
-  await page.waitForSelector(dialogSelector, {visible: true});
-  await sleep(300);
+  const menuItem = page.locator("div[class*='favoritesMenuItem']", {
+    has: page.locator(`#${menuItemId}`),
+  });
+  const addButton = menuItem.locator("div[class*='addToFavoritesIconContainer']");
+  const dialog = page.locator(dialogSelector);
+  await expect(async () => {
+    if (!await dialog.isVisible()) {
+      await addButton.click();
+    }
+    await expect(dialog).toBeVisible({ timeout: 2_000 });
+  }).toPass({ timeout: 20_000 });
   // The ok button of the folder dialog is focused when the dialog opens.
   await page.keyboard.press("Enter");
-  await page.waitForSelector(dialogSelector, {hidden: true});
-  await sleep(300);
+  await expect(dialog).toBeHidden();
 }
 
 // The favorites section and the menu section cannot be open at the same time
 // unless the folder is pinned.
 async function openFavoritesSection(page) {
-  if (await page.$(favoritesListSelector)) {
+  if (await page.locator(favoritesListSelector).count()) {
     return;
   }
-  const header = await page.waitForSelector(`${favoritesHeaderSelector} a`, {visible: true});
-  await header.click();
-  await page.waitForSelector(favoritesListSelector, {visible: true});
-  await sleep(300);
+  await page.locator(`${favoritesHeaderSelector} a`).click();
+  await expect(page.locator(favoritesListSelector)).toBeVisible();
 }
 
 async function removeFromFavorites(page, menuItemId) {
-  const deleteIcon = await page.$(`${draggableSelector(menuItemId)} [class*='_deleteIcon']`);
-  if (!deleteIcon) {
-    console.warn(`Delete icon of ${menuItemId} was not found, the favorite was left behind.`);
+  const favorite = page.locator(draggableSelector(menuItemId));
+  if (await favorite.count() === 0) {
     return;
   }
+  const editButton = page.locator(`${favoritesHeaderSelector} i.fa-edit`);
+  if (!(await editButton.getAttribute("class")).includes("headerIconActive")) {
+    await flipEditing(page, favoritesHeaderSelector);
+  }
+  const deleteIcon = favorite.locator("svg").first();
+  await expect(deleteIcon).toBeVisible();
   await deleteIcon.click();
-  await sleep(500);
+  await expect(favorite).toBeHidden();
 }
 
 async function getFavoritePosition(page, menuItemId) {
-  const ids = await page.$$eval(
-    `${favoritesListSelector} [data-rbd-draggable-id]`,
-    elements => elements.map(element => element.getAttribute("data-rbd-draggable-id")));
+  const ids = await page.locator(`${favoritesListSelector} [data-rbd-draggable-id]`)
+    .evaluateAll(elements => elements.map(element => element.getAttribute("data-rbd-draggable-id")));
   return ids.indexOf(draggableIdOf(menuItemId));
 }
 
 async function dragOnto(page, sourceSelector, targetSelector) {
-  const source = await page.waitForSelector(sourceSelector, {visible: true});
-  const target = await page.waitForSelector(targetSelector, {visible: true});
+  const source = page.locator(sourceSelector);
+  const target = page.locator(targetSelector);
   const sourceBox = await source.boundingBox();
   const targetBox = await target.boundingBox();
   const startX = sourceBox.x + sourceBox.width / 2;
@@ -120,21 +116,24 @@ async function dragOnto(page, sourceSelector, targetSelector) {
 
   await page.mouse.move(startX, startY);
   await page.mouse.down();
-  await sleep(200);
+  await waitForAnimationFrame(page);
   // react-beautiful-dnd ignores movements below its sloppy click threshold.
   await page.mouse.move(startX, startY - 10);
-  await sleep(200);
+  await waitForAnimationFrame(page);
   await page.mouse.move(
     targetBox.x + targetBox.width / 2,
     targetBox.y + targetBox.height / 2 - 5,
     {steps: 20});
-  await sleep(500);
+  await waitForAnimationFrame(page);
   await page.mouse.up();
-  await sleep(1000);
 }
 
-describe("Html client", () => {
-  it("Should reorder favorites by dragging", async () => {
+async function waitForAnimationFrame(page) {
+  await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => resolve())));
+}
+
+test.describe("Html client", () => {
+  test("Should reorder favorites by dragging", async () => {
     await switchLanguageTo({locale: "cs-CZ", page: page});
     await login(page);
     await openMenuItem(
@@ -143,7 +142,6 @@ describe("Html client", () => {
         topMenuHeader,
         widgetsMenuItemId
       ]);
-    await sleep(500);
 
     await flipEditing(page, menuHeaderSelector);
     await addToFavorites(page, allDataTypesMenuId);
@@ -162,9 +160,11 @@ describe("Html client", () => {
       draggableSelector(allDataTypesLazyMenuItemsId),
       draggableSelector(allDataTypesMenuId));
 
-    const firstPositionAfter = await getFavoritePosition(page, allDataTypesMenuId);
-    const secondPositionAfter = await getFavoritePosition(page, allDataTypesLazyMenuItemsId);
-    expect(secondPositionAfter).toBeLessThan(firstPositionAfter);
+    await expect.poll(async () => {
+      const firstPositionAfter = await getFavoritePosition(page, allDataTypesMenuId);
+      const secondPositionAfter = await getFavoritePosition(page, allDataTypesLazyMenuItemsId);
+      return secondPositionAfter < firstPositionAfter;
+    }).toBe(true);
 
     await removeFromFavorites(page, allDataTypesMenuId);
     await removeFromFavorites(page, allDataTypesLazyMenuItemsId);

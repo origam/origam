@@ -1,403 +1,183 @@
-const {userName, password, backEndUrl} = require("./additionalConfig");
-const fs = require('fs');
-const puppeteer = require("puppeteer");
+const { expect } = require("@playwright/test");
+const { userName, password } = require("./additionalConfig");
 
-const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+async function beforeEachTest(page) {
+  await page.addInitScript(() => {
+    localStorage.setItem("debugCloseAllForms", "1");
+    localStorage.setItem("debugApplicationState", "1");
+  });
+  await page.goto("/");
+}
+
+async function getApplicationWorkState(page) {
+  return page.evaluate(() => window.origamDebug?.getApplicationWorkState() ?? ({
+    ready: false,
+    reasons: ["debug-monitor:unavailable"],
+  }));
+}
+
+async function waitForApplicationReady(page, timeout = 120_000) {
+  let stablePollCount = 0;
+  await expect.poll(async () => {
+    const state = await getApplicationWorkState(page);
+    stablePollCount = state.ready ? stablePollCount + 1 : 0;
+    return stablePollCount >= 2 ? state : undefined;
+  }, { intervals: [100, 250, 500], timeout }).toEqual({ ready: true, reasons: [] });
+}
 
 async function login(page) {
-    const userNameInput = await page.waitForXPath(
-    `//input[@id='userNameInput']`,
-    { visible: true }
-  );
-  await page.$eval(`#userNameInput`, (element, value) => element.value = value, userName);
-  await sleep(200);
-
-  const passwordInput = await page.waitForXPath(`//input[@id='passInput']`, {
-    visible: true,
-  });
-  await page.$eval(`#passInput`, (element, value) => element.value = value, password);
-  await sleep(200);
-
-  const loginButton = await page.waitForXPath(`//a[@id='loginButton']`, {
-    visible: true,
-  });
-  await sleep(500); // give the translations some time to load
-  await loginButton.click();
+  await page.waitForLoadState("networkidle", { timeout: 60_000 });
+  await page.locator("#userNameInput").fill(userName);
+  await page.locator("#passInput").fill(password);
+  const loginButton = page.locator("#loginButton");
+  const menuHeader = page.locator("#menuHeader");
+  await loginButton.evaluate(element => element.click());
+  await expect(menuHeader).toBeVisible({ timeout: 120_000 });
+  await waitForApplicationReady(page);
 }
-
-
-async function afterEachTest(browser){
-  const pages = await browser.pages();
-  try{
-    await Promise.all(pages.map(async page => await page.close()));
-  }catch(e){
-    console.warn(e);
-  }
-  await sleep(200);
-  if(browser) {
-    await browser.close();
-  }
-}
-
-async function beforeEachTest(){
-  const browser = await puppeteer.launch({
-    ignoreHTTPSErrors: true,
-    //devtools: true,
-    // slowMo: 50,
-    headless: false,
-    defaultViewport: {
-      width: 1800,
-      height: 2000, // to make all 30 lines visible and avoid the need for scrolling
-    },
-    args: [
-      "--disable-gpu",
-      "--disable-dev-shm-usage",
-      "--disable-setuid-sandbox",
-      "--no-sandbox",
-    ]
-  });
-  try {
-    const page = await browser.newPage();
-    // await installMouseHelper(page); // uncomment to see the mouse movement
-    const loginPageOpened = waitForLoginPage(page);
-    await page.goto(backEndUrl);
-    await loginPageOpened;
-    await page.evaluate(() => {
-      localStorage.setItem("debugCloseAllForms", "1");
-    });
-    return [browser, page]
-  } catch (error) {
-    await browser.close();
-    throw error;
-  }
-}
-
-function waitForLoginPage(page) {
-  return new Promise((resolve, reject) => {
-    const timeout = setTimeout(
-      () => reject(new Error("The login page was not opened")),
-      30000
-    );
-    page.on("framenavigated", frame => {
-      if (frame === page.mainFrame() && frame.url().includes("/Account/Login")) {
-        clearTimeout(timeout);
-        resolve();
-      }
-    });
-  });
-}
-
 
 async function openMenuItem(page, menuItemIdList) {
-  for (const menuItemId of menuItemIdList) {
-    const menuItem = await page.waitForXPath(
-      `//*[@id='${menuItemId}']`,
-      {visible: true}
-    );
-    await sleep(100);
-    await menuItem.click();
-  }
+  for (const menuItemId of menuItemIdList) await page.locator(`#${menuItemId}`).click();
+  await waitForApplicationReady(page);
 }
 
-async function getImage(page, element){
-  const elementBounds = await element.boundingBox();
-  return page.screenshot({
-    clip: elementBounds,
-  });
+function modelInstanceId(dataViewId) {
+  return dataViewId.startsWith("dataView_") ? dataViewId.slice(9) : dataViewId;
 }
 
-function xPathContainsClass(className){
-  return `contains(concat(' ',normalize-space(@class),' '),' ${className} ')`
+async function getTableData(page, dataViewId, afterRenderRevision) {
+  const id = modelInstanceId(dataViewId);
+  let tableData;
+  await expect.poll(async () => {
+    tableData = await page.evaluate(key => window.tableDebugMonitor?.[key], id);
+    const workState = await getApplicationWorkState(page);
+    return Boolean(tableData?.rendered && workState.ready && (
+      afterRenderRevision === undefined || tableData.renderRevision > afterRenderRevision
+    ));
+  }, { timeout: 60_000 }).toBe(true);
+  return tableData;
 }
 
-async function waitForRowCount(page, dataViewId, expectedRowCount){
-  const modelInstanceId = dataViewId.substring(9);
-  const timeoutMs = 10_000;
-  const evalDelayMs = 50;
-  let tableData
-  for (let i = 0; i < timeoutMs / evalDelayMs; i++) {
-    tableData = await page.evaluate(
-      modelInstanceId => window.tableDebugMonitor && window.tableDebugMonitor[modelInstanceId],
-      modelInstanceId);
-    if(tableData && tableData.rendered && tableData.data.length === expectedRowCount){
-      await page.evaluate(() => window.tableDebugMonitor = undefined);
-      return tableData;
-    }
-    await sleep(evalDelayMs);
-  }
-  await page.evaluate(() => window.tableDebugMonitor = undefined);
-  const rowCount = tableData ?  tableData.data.length : 0;
-  expect(rowCount).toBe(expectedRowCount);
+async function performAndWaitForTableRender(page, dataViewId, action) {
+  const renderRevision = await page.evaluate(
+    key => window.tableDebugMonitor?.[key]?.renderRevision ?? 0,
+    modelInstanceId(dataViewId)
+  );
+  await action();
+  return getTableData(page, dataViewId, renderRevision);
 }
 
-async function takeScreenShot(page, name){
-  const screenDir = process.platform === "win32"
-    ? "screenshots"
-    : "/home/origam/server_bin/screenshots";
-  if(!fs.existsSync(screenDir)){
-    fs.mkdirSync(screenDir)
-  }
-  const dateTime =new Date().toISOString()
-    .replace(/T/, ' ')
-    .replace(/Z/, '')
-    .replace(/\./, '_')
-    .replace(/:/, '_')
-    .replace(/:/, '_')
-  await page.screenshot({path: `${screenDir}/${name}_${dateTime}.png`});
-}
-
-async function waitForRowCountData(page, dataViewId, expectedRowCount) {
-  let countData;
-  for (let i = 0; i < 200; i++) {
-    countData = await getRowCountData(page, dataViewId)
-    if(countData.rowCount === expectedRowCount.toString()){
-      return countData;
-    }
-    await sleep(50);
-  }
-  await takeScreenShot(page, `Error expectedRowCount ${expectedRowCount} `);
-  throw new Error(`Row count did not change before timeout, expectedRowCount: ${expectedRowCount},  countData.rowCount: ${countData.rowCount}`);
-}
-
-async function getTableData(page, dataViewId){
-  const modelInstanceId = dataViewId.substring(9);
-  const timeoutMs = 10_000;
-  const evalDelayMs = 50;
-  let tableData
-  for (let i = 0; i < timeoutMs / evalDelayMs; i++) {
-    tableData = await page.evaluate(
-      modelInstanceId => window.tableDebugMonitor && window.tableDebugMonitor[modelInstanceId],
-      modelInstanceId);
-    if(tableData && tableData.rendered){
-      await page.evaluate(() => window.tableDebugMonitor = undefined);
-      return tableData;
-    }
-    await sleep(evalDelayMs);
-  }
+async function waitForRowCount(page, dataViewId, expectedRowCount) {
+  const id = modelInstanceId(dataViewId);
+  let tableData;
+  await expect.poll(async () => {
+    tableData = await page.evaluate(key => window.tableDebugMonitor?.[key], id);
+    const workState = await getApplicationWorkState(page);
+    return tableData?.rendered && workState.ready ? tableData.data.length : undefined;
+  }, { timeout: 60_000 }).toBe(expectedRowCount);
+  await waitForDataViewLoadingToFinish(page, dataViewId);
+  return tableData;
 }
 
 async function getRowCountData(page, dataViewId) {
-  const rowCountElement =  await page.waitForSelector(`#${dataViewId} .rowCount`,{visible: true});
-  let rowCountText = await page.evaluate(x => x.textContent, rowCountElement);
-  const rowCountData = rowCountText
-    .split("/")
-    .map(x => x.trim())
-    .filter(x=> x !== "");
-  return {
-    rowCount: rowCountData[1],
-    selectedRow: rowCountData[0]};
+  const text = await page.locator(`#${dataViewId} .rowCount`).innerText({ timeout: 120_000 });
+  const [selectedRow, rowCount] = text.split("/").map(value => value.trim());
+  return { rowCount, selectedRow };
 }
 
-async function waitForRowSelected(page, dataViewId, rowNumber){
-  const timeoutMs = 10_000;
-  const testDelayMs = 50;
-  let rowCountData;
-  for (let i = 0; i < timeoutMs / testDelayMs ; i++) {
-    rowCountData = await getRowCountData(page, dataViewId);
-    if(rowCountData.selectedRow === rowNumber.toString()){
-      return rowCountData;
-    }
-    await sleep(testDelayMs);
-  }
-  expect(rowCountData && rowCountData.selectedRow).toBe(rowNumber.toString());
+async function waitForRowCountData(page, dataViewId, expectedRowCount) {
+  let result;
+  let stablePollCount = 0;
+  await expect.poll(async () => {
+    result = await getRowCountData(page, dataViewId);
+    const loadingFinished = await page.evaluate(dataViewId => {
+      const loadingIndicators = Array.from(document.querySelectorAll(
+        `#${dataViewId} [class*="DataViewLoading-module__container"]`
+      ));
+      return loadingIndicators.every(element => element.offsetParent === null);
+    }, dataViewId);
+    const workState = await getApplicationWorkState(page);
+    stablePollCount = loadingFinished && workState.ready && result.rowCount === String(expectedRowCount)
+      ? stablePollCount + 1
+      : 0;
+    return stablePollCount >= 3 ? result.rowCount : undefined;
+  }, { intervals: [250, 500, 1_000], timeout: 120_000 }).toBe(String(expectedRowCount));
+  return result;
 }
 
-function catchRequests(page, reqs = 0) {
-  const started = () => (reqs = reqs + 1);
-  const ended = () => (reqs = reqs - 1);
-  page.on('request', started);
-  page.on('requestfailed', ended);
-  page.on('requestfinished', ended);
-  return async (timeout = 5000, success = false) => {
-    while (true) {
-      if (reqs < 1) break;
-      await new Promise((yay) => setTimeout(yay, 100));
-      if ((timeout = timeout - 100) < 0) {
-        throw new Error('Timeout');
-      }
-    }
-    page.off('request', started);
-    page.off('requestfailed', ended);
-    page.off('requestfinished', ended);
-  };
+async function waitForDataViewLoadingToFinish(page, dataViewId) {
+  const loadingIndicators = page.locator(
+    `#${dataViewId} [class*="DataViewLoading-module__container"]`
+  );
+  await expect.poll(async () => loadingIndicators.evaluateAll(elements =>
+    elements.every(element => element.offsetParent === null)
+  ), { timeout: 120_000 }).toBe(true);
 }
 
-async function typeAndWaitForSelector(args){
-
-  await args.page.focus(`#${args.inputId}`)
-  await args.page.keyboard.type(args.value)
-
-  for (let i = 0; i < 3; i++) {
-    try{
-     return await args.page.waitForSelector(
-        args.selector,
-       {visible: true, timeout: 3000}
-      );
-
-    }catch(TimeoutError){
-      await sleep(30000);
-      await args.page.focus(`#${args.inputId}`)
-      await args.page.keyboard.type(args.value)
-    }
-  }
-  await sleep(30000);
-  throw Error(`${args.selector} did not appear before timeout`);
+async function waitForRowSelected(page, dataViewId, expectedRow, timeout = 60_000) {
+  let result;
+  await expect.poll(async () => {
+    result = await getRowCountData(page, dataViewId);
+    return result.selectedRow;
+  }, { timeout }).toBe(String(expectedRow));
+  return result;
 }
 
-// Waits until the element stops moving. A dropdown is rendered at a stale position and
-// moved once it gets measured, so a click sent right after it becomes visible can land
-// next to it.
-async function waitForStablePosition(page, clickable){
-  let previousRect = null;
-  for (let i = 0; i < 20; i++) {
-    let rect;
-    try{
-      rect = await page.evaluate(element => {
-        const bounds = element.getBoundingClientRect();
-        return {
-          top: bounds.top, left: bounds.left,
-          width: bounds.width, height: bounds.height
-        };
-      }, clickable);
-    }catch(error){
-      return;
-    }
-    if(previousRect && JSON.stringify(previousRect) === JSON.stringify(rect)){
-      return;
-    }
-    previousRect = rect;
-    await sleep(50);
-  }
-  console.warn("The clickable kept moving, clicking it anyway");
+async function switchToFormPerspective({ page, aPropertyId }) {
+  await page.locator(".formPerspectiveButton").click();
+  await expect(page.locator(`#editor_${aPropertyId}`)).toBeVisible();
 }
 
-// args.reopen is an optional function returning a fresh clickable. It is needed when
-// the first click removes the element from the document (a dropdown closing itself),
-// because clicking the detached handle again can never succeed.
-async function clickAndWaitForSelector(args){
-  await waitForStablePosition(args.page, args.clickable);
-  let clickable = args.clickable;
-  try{
-    await clickable.click();
-  }catch(error){
-    console.error(error);
-    await sleep(200);
-  }
-  for (let i = 0; i < 3; i++) {
-    try{
-      return await args.page.waitForSelector(
-        args.selector,
-        {visible: true, timeout: 5000}
-      )
-    }catch(error){
-      if(error.name !== "TimeoutError"){
-        console.error(error);
-      }
-      if(args.reopen){
-        try{
-          clickable = await args.reopen();
-        }catch(reopenError){
-          console.error("Reopening the clickable failed: " + reopenError.message);
-        }
-      }
-      try {
-        await waitForStablePosition(args.page, clickable);
-        await clickable.click();
-      }catch(error){
-        console.error(error)
-        await args.page.evaluate(x => x.click(), clickable);
-      }
-    }
-  }
-  throw Error(`${args.selector} did not appear before timeout`);
+async function switchToTablePerspective({ page }) {
+  await page.locator(".tablePerspectiveButton").click();
+  await expect(page.locator(".tablePerspectiveDirector")).toBeVisible();
 }
 
-async function clickAndWaitForXPath(args){
-  await waitForStablePosition(args.page, args.clickable);
-  await args.clickable.click();
-  for (let i = 0; i < 3; i++) {
-    try{
-      return await args.page.waitForXPath(
-        args.xPath,
-        { visible: true, timeout: 3000 }
-      );
-    }catch(error){
-      if(error.name !== "TimeoutError"){
-        console.error(error);
-      }
-      await args.clickable.click();
-    }
-  }
-  throw Error(`${args.xPath} did not appear before timeout`);
+async function inputByPressingKeys({ page, value }) { await page.keyboard.type(value); }
+
+async function switchLanguageTo({ page, locale }) {
+  const languageLink = page.locator(`#languageLinkContainer a[value="${locale}"]`);
+  await expect(languageLink).toBeVisible({ timeout: 120_000 });
+  await Promise.all([
+    page.waitForNavigation({ waitUntil: "domcontentloaded", timeout: 120_000 }),
+    languageLink.evaluate((element, locale) => {
+      const form = document.getElementById("languageSelectForm");
+      const input = document.createElement("input");
+      input.type = "hidden";
+      input.name = "culture";
+      input.value = locale;
+      form.append(input);
+      form.submit();
+    }, locale),
+  ]);
+  await expect.poll(async () => {
+    const cookies = await page.context().cookies();
+    const localeCookie = cookies.find(cookie => cookie.name === "origamCurrentLocale");
+    return localeCookie
+      ? decodeURIComponent(localeCookie.value).startsWith(`c=${locale}|`)
+      : false;
+  }, { timeout: 120_000 }).toBe(true);
+  await expect(page.locator("#loginButton")).toBeVisible({ timeout: 120_000 });
 }
 
-async function switchToFormPerspective(args){
-  const switchButton = await args.page.waitForSelector(
-    `.formPerspectiveButton`,
-    {visible: true});
-  await sleep(300);
-
-  await clickAndWaitForSelector({
-    page: args.page,
-    clickable: switchButton,
-    selector:`#editor_${args.aPropertyId}`
-  });
+async function waitForFocus({ page, elementId }) {
+  await expect(page.locator(`#${elementId}`)).toBeFocused();
 }
 
-async function switchToTablePerspective(args){
-  const switchButton = await args.page.waitForSelector(
-    `.tablePerspectiveButton`,
-    {visible: true});
-  await sleep(300);
-
-  await clickAndWaitForSelector({
-    page: args.page,
-    clickable: switchButton,
-    selector:`.tablePerspectiveDirector`
-  });
-}
-
-async function inputByPressingKeys(args){
-  for (const key of args.value) {
-    await args.page.keyboard.press(key);
-    await sleep(100);
-  }
-}
-
-async function switchLanguageTo(args){
-
-  const languageLinkContainer = await args.page.waitForSelector(
-    "#languageLinkContainer",
-    {visible: true});
-  await sleep(300);
-
-  await args.page.evaluate((container, locale) =>
-      Array.from(container.children)
-        .filter(element=> element.tagName === "A" &&  element.attributes["value"].value === locale)
-        .forEach(element => element.click())
-    ,languageLinkContainer, args.locale);
-}
-
-async function waitForFocus(args){
-
-  const element = await args.page.waitForSelector(
-    "#" + args.elementId,
-    {visible: true});
-
-  await sleep(300);
-
-  for (let i = 0; i < 10 ; i++) {
-    await args.page.evaluate(x => x.focus(), element);
-    await sleep(100);
-    const focusedElementId = await args.page.evaluate(x => document.activeElement.attributes["id"].nodeValue);
-    if(focusedElementId === args.elementId){
-      return;
-    }
-  }
-  throw new Error("Could not set focus to:" + args.elementId);
-}
-
-module.exports = {sleep, xPathContainsClass, getImage, openMenuItem, login, getRowCountData, waitForRowCountData,
-  getTableData, waitForRowCount, catchRequests, waitForRowSelected, clickAndWaitForXPath, clickAndWaitForSelector,
-  typeAndWaitForSelector, switchToFormPerspective, inputByPressingKeys, switchLanguageTo, waitForFocus,
-  switchToTablePerspective, afterEachTest, beforeEachTest};
+module.exports = {
+  beforeEachTest,
+  getRowCountData,
+  getTableData,
+  inputByPressingKeys,
+  login,
+  openMenuItem,
+  performAndWaitForTableRender,
+  switchLanguageTo,
+  switchToFormPerspective,
+  switchToTablePerspective,
+  waitForFocus,
+  waitForApplicationReady,
+  waitForRowCount,
+  waitForRowCountData,
+  waitForRowSelected,
+};
