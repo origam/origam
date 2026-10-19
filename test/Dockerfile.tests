@@ -1,5 +1,7 @@
 ARG SERVER_IMAGE=origam-server-linux
-FROM ${SERVER_IMAGE}
+ARG SERVER_RUNTIME_IMAGE=${SERVER_IMAGE}
+FROM ${SERVER_IMAGE} AS application
+FROM ${SERVER_RUNTIME_IMAGE} AS test-dependencies
 
 # Ensure we run privileged steps as root
 USER root
@@ -34,6 +36,10 @@ RUN set -eux; \
 RUN apt-get -qq update && apt-get -qq install -y --no-install-recommends gawk && rm -rf /var/lib/apt/lists/*
 
 
+FROM test-dependencies AS tests
+
+COPY --from=application --chown=origam:origam /home/origam/ /home/origam/
+
 # Copy test files
 USER origam
 WORKDIR /home/origam
@@ -55,4 +61,4 @@ COPY --chown=origam:origam model /home/origam/projectData/model/
 WORKDIR /home/origam/server_bin
 RUN chmod +x entrypoint.sh
 
-# The source server image starts the entrypoint.sh, no need to change it here
+ENTRYPOINT ["/bin/bash", "-c", "./entrypoint.sh"]

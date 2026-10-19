@@ -56,6 +56,23 @@ Failures retain a screenshot, video, and trace under `test-results`. The HTML re
 
 The container copies the TRX file, Playwright HTML report, and failure artifacts to `test/output`.
 
+# Docker layer caching in CI
+
+The integration workflow uses `test/docker-bake.hcl` to build the complete E2E image once
+and share it with all four database/runner jobs. BuildKit restores and exports Docker layers
+through the GitHub Actions cache, using separate scopes for the server, E2E image, and each
+database image.
+
+The server Dockerfile exposes a `base` stage containing the runtime dependencies and shared
+configuration, before application binaries are copied. The E2E Dockerfile installs the SDK,
+Chrome, and fonts on this stage, then copies the application from the server image. Changes
+to application binaries therefore do not invalidate the expensive test-tool installation layers.
+Local builds keep using `origam-server-linux` as both the application and runtime image by default.
+
+CI loads the complete E2E image and builds the selected database image with its own cache.
+Compose runs with `--no-build` so test jobs use those prepared images. The first run without
+a matching cache builds the layers normally; subsequent runs report reused layers as `CACHED`.
+
 # Comparing the legacy and Playwright suites locally
 
 Install the Playwright dependencies as above, then install the frozen legacy dependencies:

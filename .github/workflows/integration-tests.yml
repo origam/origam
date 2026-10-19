@@ -278,21 +278,32 @@ jobs:
           name: htmlfrontendbuild
           path: docker/server/server_bin/clients/origam
 
-      - name: Build base server image for tests
-        run: |
-          cd docker
-          docker build -t origam-server-linux -f DockerfileServer.linux .
+      - name: Download workflow integration tests artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: workflowbuild
+          path: test/tests_workflow
 
-      - name: Save image as artifact
+      - name: Copy model to test directory
         run: |
-          docker save origam-server-linux:latest -o origam-server-linux.tar
-        shell: bash
+          mkdir test/model
+          cp -r model-tests test/model
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Build test image with cached Docker layers
+        uses: docker/bake-action@v7
+        with:
+          files: test/docker-bake.hcl
+          set: |
+            e2e.output=type=docker,dest=${{ runner.temp }}/origam-e2e.tar
 
       - name: Upload image artifact
         uses: actions/upload-artifact@v4
         with:
           name: server-image
-          path: origam-server-linux.tar
+          path: ${{ runner.temp }}/origam-e2e.tar
           retention-days: 1
 
   integration-tests-mssql:
@@ -318,17 +329,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7
 
-      - name: Download workflow integration tests artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: workflowbuild
-          path: test/tests_workflow
-
-      - name: Copy model to test directory
-        run: |
-          mkdir test/model
-          cp -r model-tests test/model
-
       - name: Download prebuilt server image
         uses: actions/download-artifact@v4
         with:
@@ -336,13 +336,26 @@ jobs:
           path: .
 
       - name: Load prebuilt server image
-        run: docker load -i origam-server-linux.tar
+        run: docker load -i origam-e2e.tar
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Build database image with cached Docker layers
+        uses: docker/build-push-action@v7
+        with:
+          context: test
+          file: test/Dockerfile.mssql
+          load: true
+          tags: origam-e2e-mssql:latest
+          cache-from: type=gha,scope=origam-e2e-mssql
+          cache-to: type=gha,scope=origam-e2e-mssql,mode=max
 
       - name: Run Tests
         run: |
           cd test
           mkdir output
-          docker compose --env-file envFileMsSql.env -f "docker-compose-mssql.yml" --profile test up --abort-on-container-exit --exit-code-from server-mssql
+          docker compose --env-file envFileMsSql.env -f "docker-compose-mssql.yml" --profile test up --no-build --pull never --abort-on-container-exit --exit-code-from server-mssql
 
       - name: Clean up
         if: always()
@@ -402,17 +415,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7
 
-      - name: Download workflow integration tests artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: workflowbuild
-          path: test/tests_workflow
-
-      - name: Copy model to test directory
-        run: |
-          mkdir test/model
-          cp -r model-tests test/model
-
       - name: Download prebuilt server image
         uses: actions/download-artifact@v4
         with:
@@ -420,13 +422,26 @@ jobs:
           path: .
 
       - name: Load prebuilt server image
-        run: docker load -i origam-server-linux.tar
+        run: docker load -i origam-e2e.tar
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Build database image with cached Docker layers
+        uses: docker/build-push-action@v7
+        with:
+          context: test
+          file: test/Dockerfile.postgresql
+          load: true
+          tags: origam-e2e-postgresql:latest
+          cache-from: type=gha,scope=origam-e2e-postgresql
+          cache-to: type=gha,scope=origam-e2e-postgresql,mode=max
 
       - name: Run Tests
         run: |
           cd test
           mkdir output
-          docker compose --env-file envFilePostgres.env -f "docker-compose-postgresql.yml" --profile test up --abort-on-container-exit --exit-code-from server-postgres
+          docker compose --env-file envFilePostgres.env -f "docker-compose-postgresql.yml" --profile test up --no-build --pull never --abort-on-container-exit --exit-code-from server-postgres
 
       - name: Clean up
         if: always()
