@@ -21,8 +21,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 #endregion
 
+using System;
+using Moq;
 using NUnit.Framework;
+using Origam.DA.ObjectPersistence;
 using Origam.DA.Service;
+using Origam.DA.Service.NamespaceMapping;
+using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Workbench.Services;
 
@@ -31,6 +36,58 @@ namespace Origam.DA.ServiceTests;
 [TestFixture]
 public class InstanceWriterTests
 {
+    [OneTimeSetUp]
+    public void SetUpNamespaceMappings()
+    {
+        PropertyToNamespaceMapping.AddMapping(typeof(TableMappingItem));
+        PropertyToNamespaceMapping.AddMapping(typeof(EntityRelationItem));
+    }
+
+    [TestCase(null, "")]
+    [TestCase("", "")]
+    [TestCase("Entity/Field", "Entity/Field/")]
+    [TestCase("Entity\\Field", "Entity/Field/")]
+    public void ShouldWriteRelativeFilePathInReference(string subPath, string expectedSubPath)
+    {
+        var referenceId = Guid.NewGuid();
+        var referencedEntity = new Mock<IDataEntity>();
+        var persistentEntity = referencedEntity.As<IFilePersistent>();
+        persistentEntity
+            .SetupGet(entity => entity.RelativeFilePath)
+            .Returns("Package\\Entities\\Target.origam");
+        persistentEntity.SetupGet(entity => entity.Path).Returns(subPath);
+        persistentEntity
+            .SetupGet(entity => entity.PrimaryKey)
+            .Returns(new ModelElementKey(referenceId));
+        referencedEntity.Setup(entity => entity.ToString()).Returns("Target");
+        var provider = new Mock<IPersistenceProvider>();
+        provider
+            .Setup(persistence =>
+                persistence.RetrieveInstance(
+                    typeof(ISchemaItem),
+                    It.Is<Key>(key => (Guid)key["Id"] == referenceId)
+                )
+            )
+            .Returns(referencedEntity.Object);
+        var itemToWrite = new EntityRelationItem
+        {
+            Name = "TestRelation",
+            RelatedEntityId = referenceId,
+            PersistenceProvider = provider.Object,
+        };
+        var document = new OrigamXmlDocument();
+        var writer = new InstanceWriter(new NullExternalFileManager(), document);
+
+        writer.Write(itemToWrite);
+
+        var reference = document.SelectSingleNode("//@*[local-name()='relatedEntity']");
+        Assert.That(reference, Is.Not.Null);
+        Assert.That(
+            reference.Value,
+            Is.EqualTo("Package/Entities/Target.origam#" + expectedSubPath + referenceId)
+        );
+    }
+
     [Test]
     public void ShouldWriteFile()
     {
