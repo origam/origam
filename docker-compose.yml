@@ -10,9 +10,7 @@
 # App:             https://localhost:5173 (self-signed cert)
 # Backend/Swagger: http://localhost:8080
 # SQL Server:      localhost:1433 (sa — password in docker/dev/.env)
-# PostgreSQL:      localhost:5432 (origam — password in docker/dev/.env)
-
-name: origam-dev
+# PostgreSQL:      localhost:5432 (origam — password in docker/dev/.env, port POSTGRES_PORT)
 
 services:
   database:
@@ -60,7 +58,6 @@ services:
     build:
       context: .
       dockerfile: docker/DockerfileServer.dev
-    image: origam/server:dev
     environment:
       - DatabaseType=mssql
       - ExternalDomain_SetOnStart=https://localhost:${FRONTEND_PORT:-5173}
@@ -99,7 +96,6 @@ services:
     build:
       context: ./frontend-html
       dockerfile: ../docker/DockerfileVite.dev
-    image: origam/frontend:dev
     ports:
       - "${FRONTEND_PORT:-5173}:5173"
     volumes:
@@ -121,7 +117,6 @@ services:
     build:
       context: .
       dockerfile: docker/DockerfileArchitect.dev
-    image: origam/architect:dev
     environment:
       - DatabaseType=mssql
       - OrigamSettings__Name=${OrigamSettings__Name:-DevProject}
@@ -152,7 +147,6 @@ services:
     build:
       context: ./architect-html
       dockerfile: ../docker/DockerfileVite.dev
-    image: origam/architect-frontend:dev
     ports:
       - "${ARCHITECT_FRONTEND_PORT:-5174}:5173"
     volumes:

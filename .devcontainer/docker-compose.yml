@@ -43,7 +43,6 @@ services:
     build:
       context: ..
       dockerfile: .devcontainer/Dockerfile
-    image: origam/devcontainer:dev
     command: sleep infinity
     depends_on:
       database:

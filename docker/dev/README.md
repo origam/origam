@@ -31,14 +31,32 @@ The DB password is required (no default is baked in). `up` reads it from
 |-------------------|---------------------------------------------|-------|-------------------------------------------------|
 | database          | mcr.microsoft.com/mssql/server:2022-latest  | 1433  | SQL Server; healthchecked for dependents        |
 | db-init           | (same image, one-shot)                      | —     | Creates the `origam-dev` DB if absent; exits    |
-| server            | origam/server:dev (built)                   | 8080  | .NET backend, built from `backend/`             |
-| frontend          | origam/frontend:dev (built)                 | 5173  | Vite dev server for `frontend-html` (HMR)       |
-| architect         | origam/architect:dev (built)                | 8081  | Modeler API; opt-in (`--profile architect`)     |
-| architect-frontend| origam/architect-frontend:dev (built)       | 5174  | Vite dev server for `architect-html`; opt-in    |
+| server            | built, `<project>-server`                   | 8080  | .NET backend, built from `backend/`             |
+| frontend          | built, `<project>-frontend`                 | 5173  | Vite dev server for `frontend-html` (HMR)       |
+| architect         | built, `<project>-architect`                | 8081  | Modeler API; opt-in (`--profile architect`)     |
+| architect-frontend| built, `<project>-architect-frontend`       | 5174  | Vite dev server for `architect-html`; opt-in    |
 
 The server runs the published `Origam.Server.dll` (no nginx in dev). The Vite
 dev server proxies API/auth paths (`/internalApi`, `/connect`, `/Account`, …)
-to `http://server:8080`.
+to `http://server:8080`. `<project>` in the image column is the compose project:
+the checkout's directory name unless `-p` names it (see Several checkouts).
+
+## Several checkouts
+
+Compose names the project, and with it the containers, the volumes and the built
+images, after the directory. A second checkout in a directory of the same name
+(`.../origam` again) therefore collides with the first: one database volume, and
+`docker compose down` in one stops the other. Give each one its own name on the
+command line:
+
+```bash
+docker compose --env-file docker/dev/.env -p origam-2026-2 up -d
+```
+
+Use the same `-p` for the commands that address that stack later (`down`, `logs`,
+`ps`, `exec`, `build`); the images are built as `origam-2026-2-server` and so on.
+Remap the host ports in `docker/dev/.env` too when both run at once; the
+PostgreSQL port has its own `POSTGRES_PORT`.
 
 ## Model
 
@@ -86,7 +104,7 @@ SQL Server is the default. To use PostgreSQL instead:
 ```bash
 docker compose --env-file docker/dev/.env -f docker-compose.yml -f docker-compose.postgres.yml up -d
 # Frontend: https://localhost:5173
-# Postgres: localhost:5432  (origam — password in docker/dev/.env)
+# Postgres: localhost:5432  (origam — password in docker/dev/.env, port POSTGRES_PORT)
 ```
 
 The postgres file overrides the `database` service (and neutralizes `db-init`,
@@ -142,7 +160,7 @@ docker compose exec server bash      # shell into the server container
 ## Troubleshooting
 
 - **`up` fails with a compose "dependency failed" error or the database never gets healthy:** you ran `docker compose up` without the password, so MSSQL can't start. Copy (`cp -n`) `docker/dev/.env.example` to `docker/dev/.env` and start with `--env-file docker/dev/.env` (see Quick Start).
-- **Port conflicts:** host ports are overridable in `docker/dev/.env` (`MSSQL_PORT`, `SERVER_PORT`, `FRONTEND_PORT`, `ARCHITECT_PORT`, `ARCHITECT_FRONTEND_PORT`); `FRONTEND_PORT` also retunes OIDC so login works on the new port.
+- **Port conflicts:** host ports are overridable in `docker/dev/.env` (`MSSQL_PORT`, `SERVER_PORT`, `FRONTEND_PORT`, `ARCHITECT_PORT`, `ARCHITECT_FRONTEND_PORT`, `POSTGRES_PORT`); `FRONTEND_PORT` also retunes OIDC so login works on the new port.
 - **Model not loading:** check the mount (`docker compose exec server ls -la
   /home/origam/projectData/model`) and the server logs. A mismatched
   `OrigamSettings__DefaultSchemaExtensionId` is the usual cause.
